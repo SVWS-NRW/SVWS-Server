@@ -28,14 +28,14 @@ export class KursblockungAlgorithmusSMatchingW extends KursblockungAlgorithmusS 
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in diese Methode noch nicht
 	 * auf Schienen verteilt werden.
 	 *
-	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pLogger Logger zum Protokollieren von Warnungen und Fehlern.
-	 * @param pDynDat Die dynamischen Blockungsdaten.
+	 * @param random     Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param logger     Logger zum Protokollieren von Warnungen und Fehlern.
+	 * @param dynDateb   Die dynamischen Blockungsdaten.
 	 */
-	public constructor(pRandom: Random, pLogger: Logger, pDynDat: KursblockungDynDaten) {
-		super(pRandom, pLogger, pDynDat);
-		this.schuelerArr = pDynDat.gibSchuelerArray(false);
-		this.perm = KursblockungStatic.gibPermutation(this._random, this.schuelerArr.length);
+	public constructor(random: Random, logger: Logger, dynDateb: KursblockungDynDaten) {
+		super(random, logger, dynDateb);
+		this.schuelerArr = dynDateb.gibSchuelerArray(false);
+		this.perm = KursblockungStatic.gibPermutation(this.rnd, this.schuelerArr.length);
 	}
 
 	/**
@@ -59,7 +59,7 @@ export class KursblockungAlgorithmusSMatchingW extends KursblockungAlgorithmusS 
 	 */
 	private verteileAlleSchueler(): boolean {
 		let verbesserung: boolean = false;
-		KursblockungStatic.aktionPermutiere(this._random, this.perm);
+		KursblockungStatic.aktionPermutiere(this.rnd, this.perm);
 		for (let p: number = 0; p < this.schuelerArr.length; p++) {
 			const i: number = this.perm[p];
 			verbesserung = verbesserung || this.verteileEinenSchueler(this.schuelerArr[i]);
@@ -74,7 +74,7 @@ export class KursblockungAlgorithmusSMatchingW extends KursblockungAlgorithmusS 
 		schueler.aktionKurseVerteilenNurFachartenMitEinemErlaubtenKurs();
 		schueler.aktionKurseVerteilenNurMultikurseZufaellig();
 		schueler.aktionKurseVerteilenMitBipartiteMatchingGewichtetem();
-		const cmp: number = this.dynDaten.gibStatistik().gibBewertungZustandS_NW_KD();
+		const cmp: number = this.dynDaten.gibStatistik().gibBewertungZustandS1NW2KD();
 		if (cmp < 0) {
 			schueler.aktionZustandLadenS();
 		}

@@ -12,7 +12,7 @@ export class KursblockungDynStatistik extends JavaObject {
 	/**
 	 * Logger für Benutzerhinweise, Warnungen und Fehler.
 	 */
-	private readonly _logger: Logger;
+	private readonly log: Logger;
 
 	/**
 	 *  In der Matrix ist zu jedem Kursart-Paar eine Bewertung die angibt, wie gut es wäre wenn zwei Kurses dieser
@@ -112,11 +112,11 @@ export class KursblockungDynStatistik extends JavaObject {
 	/**
 	 * Initialisiert alle Attribute mit Dummy-Werten.
 	 *
-	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
+	 * @param logger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 */
-	constructor(pLogger: Logger) {
+	constructor(logger: Logger) {
 		super();
-		this._logger = pLogger;
+		this.log = logger;
 		this.clear();
 	}
 
@@ -180,9 +180,9 @@ export class KursblockungDynStatistik extends JavaObject {
 	 * @param pPrefix Ein String-Prefix vor der Ausgabe.
 	 */
 	debug(pPrefix: string): void {
-		this._logger.modifyIndent(+4);
-		this._logger.logLn(JavaString.format("%s, RV = %d, NW = %d, FW = %d, KDs = %d = %s", pPrefix, this.bewertungRegelverletzungen, this.bewertungNichtwahlen, this.bewertungFachartPaar, this.bewertungKursdifferenzenMaxIndex, Arrays.toString(this.bewertungKursdifferenzen)));
-		this._logger.modifyIndent(-4);
+		this.log.modifyIndent(+4);
+		this.log.logLn(JavaString.format("%s, RV = %d, NW = %d, FW = %d, KDs = %d = %s", pPrefix, this.bewertungRegelverletzungen, this.bewertungNichtwahlen, this.bewertungFachartPaar, this.bewertungKursdifferenzenMaxIndex, Arrays.toString(this.bewertungKursdifferenzen)));
+		this.log.modifyIndent(-4);
 	}
 
 	/**
@@ -241,114 +241,144 @@ export class KursblockungDynStatistik extends JavaObject {
 	}
 
 	/**
-	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes S sich
+	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdifferenzen) des Zustandes S sich
 	 * verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 *
-	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes K sich
+	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdifferenzen) des Zustandes K sich
 	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 */
-	gibBewertungZustandS_NW_KD(): number {
-		if (this.bewertungRegelverletzungen > this.bewertungRegelverletzungenSaveS)
+	gibBewertungZustandS1NW2KD(): number {
+		if (this.bewertungRegelverletzungen > this.bewertungRegelverletzungenSaveS) {
 			return -1;
-		if (this.bewertungRegelverletzungen < this.bewertungRegelverletzungenSaveS)
+		}
+		if (this.bewertungRegelverletzungen < this.bewertungRegelverletzungenSaveS) {
 			return +1;
-		if (this.bewertungNichtwahlen > this.bewertungNichtwahlenSaveS)
+		}
+		if (this.bewertungNichtwahlen > this.bewertungNichtwahlenSaveS) {
 			return -1;
-		if (this.bewertungNichtwahlen < this.bewertungNichtwahlenSaveS)
+		}
+		if (this.bewertungNichtwahlen < this.bewertungNichtwahlenSaveS) {
 			return +1;
+		}
 		for (let i: number = this.bewertungKursdifferenzen.length - 1; i >= 0; i--) {
-			if (this.bewertungKursdifferenzen[i] > this.bewertungKursdifferenzenSaveS[i])
+			if (this.bewertungKursdifferenzen[i] > this.bewertungKursdifferenzenSaveS[i]) {
 				return -1;
-			if (this.bewertungKursdifferenzen[i] < this.bewertungKursdifferenzenSaveS[i])
+			}
+			if (this.bewertungKursdifferenzen[i] < this.bewertungKursdifferenzenSaveS[i]) {
 				return +1;
+			}
 		}
 		return 0;
 	}
 
 	/**
-	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes K sich
+	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdifferenzen) des Zustandes K sich
 	 * verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 *
-	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes K sich
+	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdifferenzen) des Zustandes K sich
 	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 */
-	gibCompareZustandK_NW_KD_FW(): number {
-		if (this.bewertungRegelverletzungen > this.bewertungRegelverletzungenSaveK)
+	gibCompareZustandK1NW2KD3FW(): number {
+		if (this.bewertungRegelverletzungen > this.bewertungRegelverletzungenSaveK) {
 			return -1;
-		if (this.bewertungRegelverletzungen < this.bewertungRegelverletzungenSaveK)
-			return +1;
-		if (this.bewertungNichtwahlen > this.bewertungNichtwahlenSaveK)
-			return -1;
-		if (this.bewertungNichtwahlen < this.bewertungNichtwahlenSaveK)
-			return +1;
-		for (let i: number = this.bewertungKursdifferenzen.length - 1; i >= 0; i--) {
-			if (this.bewertungKursdifferenzen[i] > this.bewertungKursdifferenzenSaveK[i])
-				return -1;
-			if (this.bewertungKursdifferenzen[i] < this.bewertungKursdifferenzenSaveK[i])
-				return +1;
 		}
-		if (this.bewertungFachartPaar > this.bewertungFachartPaarSaveK)
-			return -1;
-		if (this.bewertungFachartPaar < this.bewertungFachartPaarSaveK)
+		if (this.bewertungRegelverletzungen < this.bewertungRegelverletzungenSaveK) {
 			return +1;
+		}
+		if (this.bewertungNichtwahlen > this.bewertungNichtwahlenSaveK) {
+			return -1;
+		}
+		if (this.bewertungNichtwahlen < this.bewertungNichtwahlenSaveK) {
+			return +1;
+		}
+		for (let i: number = this.bewertungKursdifferenzen.length - 1; i >= 0; i--) {
+			if (this.bewertungKursdifferenzen[i] > this.bewertungKursdifferenzenSaveK[i]) {
+				return -1;
+			}
+			if (this.bewertungKursdifferenzen[i] < this.bewertungKursdifferenzenSaveK[i]) {
+				return +1;
+			}
+		}
+		if (this.bewertungFachartPaar > this.bewertungFachartPaarSaveK) {
+			return -1;
+		}
+		if (this.bewertungFachartPaar < this.bewertungFachartPaarSaveK) {
+			return +1;
+		}
 		return 0;
 	}
 
 	/**
 	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Fachwahlmatrix, Nichtwahlen,
-	 * Kursdiffenzen) des Zustandes K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
+	 * Kursdifferenzen) des Zustandes K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 *
-	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Fachwahlmatrix, Nichtwahlen, Kursdiffenzen) des
+	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Fachwahlmatrix, Nichtwahlen, Kursdifferenzen) des
 	 *         Zustandes K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 */
-	gibCompareZustandK_FW_NW_KD(): number {
-		if (this.bewertungRegelverletzungen > this.bewertungRegelverletzungenSaveK)
+	gibCompareZustandK1FW2NW3KD(): number {
+		if (this.bewertungRegelverletzungen > this.bewertungRegelverletzungenSaveK) {
 			return -1;
-		if (this.bewertungRegelverletzungen < this.bewertungRegelverletzungenSaveK)
+		}
+		if (this.bewertungRegelverletzungen < this.bewertungRegelverletzungenSaveK) {
 			return +1;
-		if (this.bewertungFachartPaar > this.bewertungFachartPaarSaveK)
+		}
+		if (this.bewertungFachartPaar > this.bewertungFachartPaarSaveK) {
 			return -1;
-		if (this.bewertungFachartPaar < this.bewertungFachartPaarSaveK)
+		}
+		if (this.bewertungFachartPaar < this.bewertungFachartPaarSaveK) {
 			return +1;
-		if (this.bewertungNichtwahlen > this.bewertungNichtwahlenSaveK)
+		}
+		if (this.bewertungNichtwahlen > this.bewertungNichtwahlenSaveK) {
 			return -1;
-		if (this.bewertungNichtwahlen < this.bewertungNichtwahlenSaveK)
+		}
+		if (this.bewertungNichtwahlen < this.bewertungNichtwahlenSaveK) {
 			return +1;
+		}
 		for (let i: number = this.bewertungKursdifferenzen.length - 1; i >= 0; i--) {
-			if (this.bewertungKursdifferenzen[i] > this.bewertungKursdifferenzenSaveK[i])
+			if (this.bewertungKursdifferenzen[i] > this.bewertungKursdifferenzenSaveK[i]) {
 				return -1;
-			if (this.bewertungKursdifferenzen[i] < this.bewertungKursdifferenzenSaveK[i])
+			}
+			if (this.bewertungKursdifferenzen[i] < this.bewertungKursdifferenzenSaveK[i]) {
 				return +1;
+			}
 		}
 		return 0;
 	}
 
 	/**
-	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen, FachartPaar) des
+	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdifferenzen, FachartPaar) des
 	 * Zustandes-G sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 *
-	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen, FachartPaar) des Zustandes-G sich
+	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdifferenzen, FachartPaar) des Zustandes-G sich
 	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 */
-	gibCompareZustandG_NW_KD_FW(): number {
-		if (this.bewertungRegelverletzungen > this.bewertungRegelverletzungenSaveG)
+	gibCompareZustandG1NW2KD3FW(): number {
+		if (this.bewertungRegelverletzungen > this.bewertungRegelverletzungenSaveG) {
 			return -1;
-		if (this.bewertungRegelverletzungen < this.bewertungRegelverletzungenSaveG)
-			return +1;
-		if (this.bewertungNichtwahlen > this.bewertungNichtwahlenSaveG)
-			return -1;
-		if (this.bewertungNichtwahlen < this.bewertungNichtwahlenSaveG)
-			return +1;
-		for (let i: number = this.bewertungKursdifferenzen.length - 1; i >= 0; i--) {
-			if (this.bewertungKursdifferenzen[i] > this.bewertungKursdifferenzenSaveG[i])
-				return -1;
-			if (this.bewertungKursdifferenzen[i] < this.bewertungKursdifferenzenSaveG[i])
-				return +1;
 		}
-		if (this.bewertungFachartPaar > this.bewertungFachartPaarSaveG)
-			return -1;
-		if (this.bewertungFachartPaar < this.bewertungFachartPaarSaveG)
+		if (this.bewertungRegelverletzungen < this.bewertungRegelverletzungenSaveG) {
 			return +1;
+		}
+		if (this.bewertungNichtwahlen > this.bewertungNichtwahlenSaveG) {
+			return -1;
+		}
+		if (this.bewertungNichtwahlen < this.bewertungNichtwahlenSaveG) {
+			return +1;
+		}
+		for (let i: number = this.bewertungKursdifferenzen.length - 1; i >= 0; i--) {
+			if (this.bewertungKursdifferenzen[i] > this.bewertungKursdifferenzenSaveG[i]) {
+				return -1;
+			}
+			if (this.bewertungKursdifferenzen[i] < this.bewertungKursdifferenzenSaveG[i]) {
+				return +1;
+			}
+		}
+		if (this.bewertungFachartPaar > this.bewertungFachartPaarSaveG) {
+			return -1;
+		}
+		if (this.bewertungFachartPaar < this.bewertungFachartPaarSaveG) {
+			return +1;
+		}
 		return 0;
 	}
 
@@ -359,20 +389,26 @@ export class KursblockungDynStatistik extends JavaObject {
 	 *
 	 * @return TRUE, falls dieses Objekt besser ist als das übergebene Objekt b.
 	 */
-	public gibIstBesser_NW_KD_FW_Als(b: KursblockungDynStatistik): boolean {
-		if (this.bewertungRegelverletzungen < b.bewertungRegelverletzungen)
+	public gibIstBesserAls1NW2KD3FW(b: KursblockungDynStatistik): boolean {
+		if (this.bewertungRegelverletzungen < b.bewertungRegelverletzungen) {
 			return true;
-		if (this.bewertungRegelverletzungen > b.bewertungRegelverletzungen)
+		}
+		if (this.bewertungRegelverletzungen > b.bewertungRegelverletzungen) {
 			return false;
-		if (this.bewertungNichtwahlen < b.bewertungNichtwahlen)
+		}
+		if (this.bewertungNichtwahlen < b.bewertungNichtwahlen) {
 			return true;
-		if (this.bewertungNichtwahlen > b.bewertungNichtwahlen)
+		}
+		if (this.bewertungNichtwahlen > b.bewertungNichtwahlen) {
 			return false;
+		}
 		for (let i: number = this.bewertungKursdifferenzen.length - 1; i >= 0; i--) {
-			if (this.bewertungKursdifferenzen[i] < b.bewertungKursdifferenzen[i])
+			if (this.bewertungKursdifferenzen[i] < b.bewertungKursdifferenzen[i]) {
 				return true;
-			if (this.bewertungKursdifferenzen[i] > b.bewertungKursdifferenzen[i])
+			}
+			if (this.bewertungKursdifferenzen[i] > b.bewertungKursdifferenzen[i]) {
 				return false;
+			}
 		}
 		return (this.bewertungFachartPaar < b.bewertungFachartPaar);
 	}
@@ -436,8 +472,9 @@ export class KursblockungDynStatistik extends JavaObject {
 	 */
 	aktionKursdifferenzHinzufuegen(pIndex: number): void {
 		this.bewertungKursdifferenzen[pIndex]++;
-		if (pIndex > this.bewertungKursdifferenzenMaxIndex)
+		if (pIndex > this.bewertungKursdifferenzenMaxIndex) {
 			this.bewertungKursdifferenzenMaxIndex = pIndex;
+		}
 	}
 
 	/**
@@ -452,9 +489,11 @@ export class KursblockungDynStatistik extends JavaObject {
 	 */
 	aktionKursdifferenzEntfernen(pIndex: number): void {
 		this.bewertungKursdifferenzen[pIndex]--;
-		if (pIndex === this.bewertungKursdifferenzenMaxIndex)
-			while ((this.bewertungKursdifferenzen[this.bewertungKursdifferenzenMaxIndex] === 0) && (this.bewertungKursdifferenzenMaxIndex > 0))
+		if (pIndex === this.bewertungKursdifferenzenMaxIndex) {
+			while ((this.bewertungKursdifferenzen[this.bewertungKursdifferenzenMaxIndex] === 0) && (this.bewertungKursdifferenzenMaxIndex > 0)) {
 				this.bewertungKursdifferenzenMaxIndex--;
+			}
+		}
 	}
 
 	/**
@@ -519,10 +558,13 @@ export class KursblockungDynStatistik extends JavaObject {
 
 	private static gibAnzahlGemeinsamerSchienen(kurs1: KursblockungDynKurs, kurs2: KursblockungDynKurs): number {
 		let summe: number = 0;
-		for (const schienenNr1 of kurs1.gibSchienenLage())
-			for (const schienenNr2 of kurs2.gibSchienenLage())
-				if (schienenNr1 === schienenNr2)
+		for (const schienenNr1 of kurs1.gibSchienenLage()) {
+			for (const schienenNr2 of kurs2.gibSchienenLage()) {
+				if (schienenNr1 === schienenNr2) {
 					summe++;
+				}
+			}
+		}
 		return summe;
 	}
 

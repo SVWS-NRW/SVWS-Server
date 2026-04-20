@@ -17,12 +17,12 @@ public final class KursblockungAlgorithmusKSchnellW extends KursblockungAlgorith
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in diese Methode noch nicht
 	 * auf Schienen verteilt werden.
 	 *
-	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
-	 * @param pDynDat Die dynamischen Blockungsdaten.
+	 * @param random     Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param logger     Logger für Benutzerhinweise, Warnungen und Fehler.
+	 * @param dynDaten   Die dynamischen Blockungsdaten.
 	 */
-	public KursblockungAlgorithmusKSchnellW(final @NotNull Random pRandom, final @NotNull Logger pLogger, final @NotNull KursblockungDynDaten pDynDat) {
-		super(pRandom, pLogger, pDynDat);
+	public KursblockungAlgorithmusKSchnellW(final @NotNull Random random, final @NotNull Logger logger, final @NotNull KursblockungDynDaten dynDaten) {
+		super(random, logger, dynDaten);
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public final class KursblockungAlgorithmusKSchnellW extends KursblockungAlgorith
 
 	/**
 	 * Kurslage wird ein wenig zufällig verändert und bewertet.
-	 * Falls sich die Bewertung verschlechter, wird die Veränderung rückgängig gemacht.
+	 * Falls sich die Bewertung verschlechtert, wird die Veränderung rückgängig gemacht.
 	 */
 	private void veraendereDieKurslageZufaelligEinWenig() {
 		// Ein 1-* Kurse wandern zufällig in eine andere Schiene.
@@ -73,11 +73,11 @@ public final class KursblockungAlgorithmusKSchnellW extends KursblockungAlgorith
 			dynDaten.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
 
 			// Besser? --> Speichern und Abbruch
-			if (dynDaten.gibCompareZustandK_NW_KD_FW() > 0) {
+			if (dynDaten.gibCompareZustandK1NW2KD3FW() > 0) {
 				dynDaten.aktionZustandSpeichernK();
 				return;
 			}
-		} while (_random.nextBoolean());
+		} while (rnd.nextBoolean());
 
 		// Verschlechterung rückgängig machen.
 		dynDaten.aktionZustandLadenK();

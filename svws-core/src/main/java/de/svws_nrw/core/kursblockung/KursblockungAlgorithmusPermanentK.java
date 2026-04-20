@@ -15,10 +15,10 @@ import jakarta.validation.constraints.NotNull;
 public abstract class KursblockungAlgorithmusPermanentK {
 
 	/** Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. */
-	final @NotNull Random _random;
+	final @NotNull Random rnd;
 
 	/** Logger für Benutzerhinweise, Warnungen und Fehler. */
-	final @NotNull Logger logger;
+	final @NotNull Logger log;
 
 	/** Die aktuellen Blockungsdaten. Dieses Objekt dient zur Manipulation der Daten während des Blockungsvorganges. */
 	final @NotNull KursblockungDynDaten dynDaten;
@@ -27,14 +27,14 @@ public abstract class KursblockungAlgorithmusPermanentK {
 	 * Der Konstruktor stellt einen Logger und die bei der Blockung benötigten dynamischen Daten den Unterklassen zur
 	 * Verfügung.
 	 *
-	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pLogger   Logger für Benutzerhinweise, Warnungen und Fehler.
-	 * @param input     Die Eingabedaten.
+	 * @param random   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param logger   Logger für Benutzerhinweise, Warnungen und Fehler.
+	 * @param input    Die Eingabedaten.
 	 */
-	protected KursblockungAlgorithmusPermanentK(final @NotNull Random pRandom, final @NotNull Logger pLogger, final @NotNull GostBlockungsdatenManager input) {
-		_random = pRandom;
-		logger = pLogger;
-		dynDaten = new KursblockungDynDaten(pRandom, pLogger, input);
+	protected KursblockungAlgorithmusPermanentK(final @NotNull Random random, final @NotNull Logger logger, final @NotNull GostBlockungsdatenManager input) {
+		rnd = random;
+		log = logger;
+		dynDaten = new KursblockungDynDaten(random, logger, input);
 	}
 
 	/**

@@ -19,7 +19,7 @@ export class KursblockungDynKurs extends JavaObject {
 	/**
 	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 */
-	private readonly _random: Random;
+	private readonly rnd: Random;
 
 	/**
 	 * Die ID des Kurses, welche von der Datenbank kommt.
@@ -127,7 +127,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 */
 	constructor(pRandom: Random, pSchienenLage: Array<KursblockungDynSchiene>, pSchienenLageFixiert: number, pSchienenFrei: Array<KursblockungDynSchiene>, pKursID: number, pFachart: KursblockungDynFachart, pLogger: Logger, pInternalID: number, pSchuelerAnzahl: number) {
 		super();
-		this._random = pRandom;
+		this.rnd = pRandom;
 		this.schienenLage = pSchienenLage;
 		this.schienenLageFixiert = pSchienenLageFixiert;
 		this.schienenFrei = pSchienenFrei;
@@ -422,7 +422,7 @@ export class KursblockungDynKurs extends JavaObject {
 			return;
 		}
 		for (let i1: number = this.schienenLageFixiert; i1 < this.schienenLage.length; i1++) {
-			const i2: number = this._random.nextInt(this.schienenFrei.length);
+			const i2: number = this.rnd.nextInt(this.schienenFrei.length);
 			const schiene1: KursblockungDynSchiene = this.schienenLage[i1];
 			const schiene2: KursblockungDynSchiene = this.schienenFrei[i2];
 			schiene1.aktionKursEntfernen(this);
@@ -523,7 +523,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 *
 	 * @param maxSuS  Die maximale Anzahl an SuS für diesen Kurs.
 	 */
-	regel_15_setzeMaxSuS(maxSuS: number): void {
+	setzeMaxSuS(maxSuS: number): void {
 		this.schuelerAnzahlMaximal = maxSuS;
 		for (const istFixiert of this.schuelerFixiert)
 			if (istFixiert)
@@ -535,7 +535,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 *
 	 * @param internalSchuelerID  Die interne ID des Schülers.
 	 */
-	regel_04_setzeSchuelerFixierung(internalSchuelerID: number): void {
+	setzeSchuelerFixierung(internalSchuelerID: number): void {
 		this.schuelerFixiert[internalSchuelerID] = true;
 	}
 

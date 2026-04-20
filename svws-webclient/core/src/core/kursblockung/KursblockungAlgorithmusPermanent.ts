@@ -20,14 +20,14 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 
 	private static readonly TOP_ERGEBNISSE: number = 3;
 
-	private readonly _random: Random = new Random();
+	private readonly rnd: Random = new Random();
 
-	private readonly _logger: Logger = new Logger();
+	private readonly log: Logger = new Logger();
 
 	/**
 	 * Die TOP-Ergebnisse werden als {@link KursblockungDynDaten}-Objekt gespeichert, da diese sortierbar sind.
 	 */
-	private readonly _top: ArrayList<KursblockungDynDaten>;
+	private readonly topErgebnisse: ArrayList<KursblockungDynDaten>;
 
 	/**
 	 * Jeder Algorithmus hat sein eigenes {@link KursblockungDynDaten}-Objekt. Das ist wichtig.
@@ -37,22 +37,22 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 	/**
 	 * Die Eingabe-Daten von der GUI.
 	 */
-	private readonly _input: GostBlockungsdatenManager;
+	private readonly input: GostBlockungsdatenManager;
 
 	/**
 	 * Die Zeitspanne nachdem alle Algorithmen neu erzeugt werden.
 	 */
-	private _zeitMax: number = 0;
+	private zeitMax: number = 0;
 
 	/**
 	 * Die Zeitspanne reduziert sich schrittweise, da die GUI nur kurze Rechenintervalle dem Algorithmus gibt.
 	 */
-	private _zeitRest: number = 0;
+	private zeitRest: number = 0;
 
 	/**
 	 * Der Index des aktuellen Algorithmus der als nächstes ausgeführt wird.
 	 */
-	private _currentIndex: number = 0;
+	private currentIndex: number = 0;
 
 
 	/**
@@ -62,14 +62,14 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 	 */
 	public constructor(pInput: GostBlockungsdatenManager) {
 		super();
-		const seed: number = this._random.nextLong();
-		this._logger.logLn("KursblockungAlgorithmusPermanent: Seed = " + seed);
-		this._input = pInput;
-		this._zeitMax = KursblockungAlgorithmusPermanent.MILLIS_START;
-		this._zeitRest = KursblockungAlgorithmusPermanent.MILLIS_START;
-		this._currentIndex = 0;
-		this._top = new ArrayList();
-		this.algorithmenK = [new KursblockungAlgorithmusPermanentKMatching(this._random, this._logger, this._input), new KursblockungAlgorithmusPermanentKSchuelervorschlag(this._random, this._logger, this._input), new KursblockungAlgorithmusPermanentKSchuelervorschlagSingle(this._random, this._logger, this._input), new KursblockungAlgorithmusPermanentKOptimiereBest(this._random, this._logger, this._input, null), new KursblockungAlgorithmusPermanentKOptimiereBest(this._random, this._logger, this._input, null)];
+		const seed: number = this.rnd.nextLong();
+		this.log.logLn("KursblockungAlgorithmusPermanent: Seed = " + seed);
+		this.input = pInput;
+		this.zeitMax = KursblockungAlgorithmusPermanent.MILLIS_START;
+		this.zeitRest = KursblockungAlgorithmusPermanent.MILLIS_START;
+		this.currentIndex = 0;
+		this.topErgebnisse = new ArrayList();
+		this.algorithmenK = [new KursblockungAlgorithmusPermanentKMatching(this.rnd, this.log, this.input), new KursblockungAlgorithmusPermanentKSchuelervorschlag(this.rnd, this.log, this.input), new KursblockungAlgorithmusPermanentKSchuelervorschlagSingle(this.rnd, this.log, this.input), new KursblockungAlgorithmusPermanentKOptimiereBest(this.rnd, this.log, this.input, null), new KursblockungAlgorithmusPermanentKOptimiereBest(this.rnd, this.log, this.input, null)];
 	}
 
 	/**
@@ -81,11 +81,11 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 	public next(zeitProAufruf: number): boolean {
 		const zeitStart: number = System.currentTimeMillis();
 		const zeitEnde: number = zeitStart + zeitProAufruf;
-		this.algorithmenK[this._currentIndex].next(zeitEnde);
-		this._currentIndex = (this._currentIndex + 1) % this.algorithmenK.length;
-		this._zeitRest -= (System.currentTimeMillis() - zeitStart);
-		if (this._zeitRest < 100) {
-			this._neustart();
+		this.algorithmenK[this.currentIndex].next(zeitEnde);
+		this.currentIndex = (this.currentIndex + 1) % this.algorithmenK.length;
+		this.zeitRest -= (System.currentTimeMillis() - zeitStart);
+		if (this.zeitRest < 100) {
+			this.neustart();
 			return true;
 		}
 		return false;
@@ -96,34 +96,36 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 	 *
 	 * @return TRUE, falls mindestens ein Algorithmus ein besseres Ergebnis gefunden hat.
 	 */
-	private _neustart(): number {
+	private neustart(): number {
 		let verbesserungen: number = 0;
 		for (let iK: number = 0; iK < this.algorithmenK.length; iK++) {
 			this.algorithmenK[iK].ladeBestMitSchuelerverteilung();
 			let eingefuegt: boolean = false;
-			for (let i: number = 0; (i < this._top.size()) && (!eingefuegt); i++)
-				if (this.algorithmenK[iK].dynDaten.gibIstBesser_NW_KD_FW_Als(this._top.get(i))) {
-					this._top.add(i, this.algorithmenK[iK].dynDaten);
+			for (let i: number = 0; (i < this.topErgebnisse.size()) && (!eingefuegt); i++) {
+				if (this.algorithmenK[iK].dynDaten.gibIstBesserAls1NW2KD3FW(this.topErgebnisse.get(i))) {
+					this.topErgebnisse.add(i, this.algorithmenK[iK].dynDaten);
 					eingefuegt = true;
 				}
+			}
 			if (eingefuegt) {
 				verbesserungen++;
-				if (this._top.size() > KursblockungAlgorithmusPermanent.TOP_ERGEBNISSE)
-					this._top.removeLast();
+				if (this.topErgebnisse.size() > KursblockungAlgorithmusPermanent.TOP_ERGEBNISSE) {
+					this.topErgebnisse.removeLast();
+				}
 			} else {
-				if (this._top.size() < KursblockungAlgorithmusPermanent.TOP_ERGEBNISSE) {
-					this._top.addLast(this.algorithmenK[iK].dynDaten);
+				if (this.topErgebnisse.size() < KursblockungAlgorithmusPermanent.TOP_ERGEBNISSE) {
+					this.topErgebnisse.addLast(this.algorithmenK[iK].dynDaten);
 					verbesserungen++;
 				}
 			}
 		}
-		this.algorithmenK[0] = new KursblockungAlgorithmusPermanentKMatching(this._random, this._logger, this._input);
-		this.algorithmenK[1] = new KursblockungAlgorithmusPermanentKSchuelervorschlag(this._random, this._logger, this._input);
-		this.algorithmenK[2] = new KursblockungAlgorithmusPermanentKSchuelervorschlagSingle(this._random, this._logger, this._input);
-		this.algorithmenK[3] = new KursblockungAlgorithmusPermanentKOptimiereBest(this._random, this._logger, this._input, this._gibTopElementOrNull());
-		this.algorithmenK[4] = new KursblockungAlgorithmusPermanentKOptimiereBest(this._random, this._logger, this._input, this._gibTopElementOrNull());
-		this._zeitMax = (this._zeitMax * 1.5) as number;
-		this._zeitRest = this._zeitMax;
+		this.algorithmenK[0] = new KursblockungAlgorithmusPermanentKMatching(this.rnd, this.log, this.input);
+		this.algorithmenK[1] = new KursblockungAlgorithmusPermanentKSchuelervorschlag(this.rnd, this.log, this.input);
+		this.algorithmenK[2] = new KursblockungAlgorithmusPermanentKSchuelervorschlagSingle(this.rnd, this.log, this.input);
+		this.algorithmenK[3] = new KursblockungAlgorithmusPermanentKOptimiereBest(this.rnd, this.log, this.input, this.gibTopElementOrNull());
+		this.algorithmenK[4] = new KursblockungAlgorithmusPermanentKOptimiereBest(this.rnd, this.log, this.input, this.gibTopElementOrNull());
+		this.zeitMax = (this.zeitMax * 1.5) as number;
+		this.zeitRest = this.zeitMax;
 		return verbesserungen;
 	}
 
@@ -132,11 +134,12 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 	 *
 	 * @return ein zufälliges Element aus der TOP-Liste (oder NULL);
 	 */
-	private _gibTopElementOrNull(): KursblockungDynDaten | null {
-		if (this._top.isEmpty())
+	private gibTopElementOrNull(): KursblockungDynDaten | null {
+		if (this.topErgebnisse.isEmpty()) {
 			return null;
-		let index: number = this._random.nextInt(this._top.size());
-		return this._top.get(index);
+		}
+		const index: number = this.rnd.nextInt(this.topErgebnisse.size());
+		return this.topErgebnisse.get(index);
 	}
 
 	/**
@@ -147,8 +150,9 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 	 */
 	public getBlockungsergebnisse(): List<GostBlockungsergebnisManager> {
 		const list: List<GostBlockungsergebnisManager> = new ArrayList<GostBlockungsergebnisManager>();
-		for (let i: number = 0; i < this._top.size(); i++)
-			list.add(this._top.get(i).gibErzeugtesKursblockungOutput(this._input, i));
+		for (let i: number = 0; i < this.topErgebnisse.size(); i++) {
+			list.add(this.topErgebnisse.get(i).gibErzeugtesKursblockungOutput(this.input, i));
+		}
 		return list;
 	}
 

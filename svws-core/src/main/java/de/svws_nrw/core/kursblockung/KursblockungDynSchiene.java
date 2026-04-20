@@ -20,7 +20,7 @@ public class KursblockungDynSchiene {
 	private final int nr;
 
 	/** Logger für Benutzerhinweise, Warnungen und Fehler. */
-	private final @NotNull Logger logger;
+	private final @NotNull Logger log;
 
 	/** Die aktuellen Kurse in dieser Schiene. Über die ID (Long-Wert der GUI) kann man schnell darauf zugreifen. */
 	private final @NotNull HashMap<Long, KursblockungDynKurs> kursMap;
@@ -31,15 +31,15 @@ public class KursblockungDynSchiene {
 	/**
 	 * Im Konstruktor werden die Referenzen übernommen und das HashMap erzeugt.
 	 *
-	 * @param pLogger     Logger für Benutzerhinweise, Warnungen und Fehler.
-	 * @param pNr         Die Nummer der Schiene.
-	 * @param pStatistik  Das Statistik-Objekt wird über die aktuellen Kurs-Paarungen informiert.
+	 * @param logger      Logger für Benutzerhinweise, Warnungen und Fehler.
+	 * @param nummer      Die Nummer der Schiene.
+	 * @param statistik   Das Statistik-Objekt wird über die aktuellen Kurs-Paarungen informiert.
 	 */
-	public KursblockungDynSchiene(final @NotNull Logger pLogger, final int pNr, final @NotNull KursblockungDynStatistik pStatistik) {
-		logger = pLogger;
-		nr = pNr;
-		kursMap = new HashMap<>();
-		statistik = pStatistik;
+	public KursblockungDynSchiene(final @NotNull Logger logger, final int nummer, final @NotNull KursblockungDynStatistik statistik) {
+		this.log = logger;
+		this.nr = nummer;
+		this.kursMap = new HashMap<>();
+		this.statistik = statistik;
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class KursblockungDynSchiene {
 		final long kursID = kurs1.gibDatenbankID();
 		if (kursMap.containsKey(kursID)) {
 			final String fehler = "Kurs '" + kurs1.toString() + "' soll in Schiene " + nr + ", ist aber bereits drin.";
-			logger.logLn(LogLevel.ERROR, fehler);
+			log.logLn(LogLevel.ERROR, fehler);
 			throw new DeveloperNotificationException(fehler);
 		}
 
@@ -86,7 +86,7 @@ public class KursblockungDynSchiene {
 		final long kursID = kurs1.gibDatenbankID();
 		if (!kursMap.containsKey(kursID)) {
 			final String fehler = "Kurs '" + kurs1.toString() + "' soll aus Schiene " + nr + " entfernt werden, ist aber nicht drin.";
-			logger.logLn(LogLevel.ERROR, fehler);
+			log.logLn(LogLevel.ERROR, fehler);
 			throw new DeveloperNotificationException(fehler);
 		}
 
@@ -144,14 +144,14 @@ public class KursblockungDynSchiene {
 	 * @param nurMultikurse Falls TRUE, werden nur Multikurse angezeigt.
 	 */
 	public void debug(final boolean nurMultikurse) {
-		logger.modifyIndent(+4);
+		log.modifyIndent(+4);
 		for (final @NotNull KursblockungDynKurs k : kursMap.values()) {
 			if ((nurMultikurse) && (k.gibSchienenAnzahl() < 2)) {
 				continue;
 			}
-			logger.logLn("    " + k.toString());
+			log.logLn("    " + k.toString());
 		}
-		logger.modifyIndent(-4);
+		log.modifyIndent(-4);
 	}
 
 	/**
@@ -167,13 +167,13 @@ public class KursblockungDynSchiene {
 	/**
 	 * Ausgabe der Kurse (4 eingerückt) dieser Schiene zusammen mit den SuS (8 eingerückt) der Kurse.
 	 *
-	 * @param _schuelerArr  Die Menge alle SuS.
+	 * @param schuelerMenge   Die Menge alle SuS.
 	 */
-	public void printlnKurseUndSchueler(final @NotNull KursblockungDynSchueler @NotNull [] _schuelerArr) {
+	public void printlnKurseUndSchueler(final @NotNull KursblockungDynSchueler @NotNull [] schuelerMenge) {
 		System.out.println("Schiene " + (nr + 1));
 		for (final @NotNull KursblockungDynKurs k : kursMap.values()) {
 			System.out.println("    ID " + k.gibDatenbankID() + ", " + k.gibFachart() + ", Fach-ID=" + k.gibFachID());
-			for (final @NotNull KursblockungDynSchueler s : _schuelerArr) {
+			for (final @NotNull KursblockungDynSchueler s : schuelerMenge) {
 				if (s.gibIstInKurs(k)) {
 					System.out.println("        ID " + s.gibDatenbankID() + ", " + s.gibRepresentation());
 				}

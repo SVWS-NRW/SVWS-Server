@@ -20,7 +20,7 @@ export class KursblockungDynSchiene extends JavaObject {
 	/**
 	 * Logger für Benutzerhinweise, Warnungen und Fehler.
 	 */
-	private readonly logger: Logger;
+	private readonly log: Logger;
 
 	/**
 	 * Die aktuellen Kurse in dieser Schiene. Über die ID (Long-Wert der GUI) kann man schnell darauf zugreifen.
@@ -36,16 +36,16 @@ export class KursblockungDynSchiene extends JavaObject {
 	/**
 	 * Im Konstruktor werden die Referenzen übernommen und das HashMap erzeugt.
 	 *
-	 * @param pLogger     Logger für Benutzerhinweise, Warnungen und Fehler.
-	 * @param pNr         Die Nummer der Schiene.
-	 * @param pStatistik  Das Statistik-Objekt wird über die aktuellen Kurs-Paarungen informiert.
+	 * @param logger      Logger für Benutzerhinweise, Warnungen und Fehler.
+	 * @param nummer      Die Nummer der Schiene.
+	 * @param statistik   Das Statistik-Objekt wird über die aktuellen Kurs-Paarungen informiert.
 	 */
-	public constructor(pLogger: Logger, pNr: number, pStatistik: KursblockungDynStatistik) {
+	public constructor(logger: Logger, nummer: number, statistik: KursblockungDynStatistik) {
 		super();
-		this.logger = pLogger;
-		this.nr = pNr;
+		this.log = logger;
+		this.nr = nummer;
 		this.kursMap = new HashMap();
-		this.statistik = pStatistik;
+		this.statistik = statistik;
 	}
 
 	/**
@@ -66,7 +66,7 @@ export class KursblockungDynSchiene extends JavaObject {
 		const kursID: number = kurs1.gibDatenbankID();
 		if (this.kursMap.containsKey(kursID)) {
 			const fehler: string | null = "Kurs '" + kurs1.toString() + "' soll in Schiene " + this.nr + ", ist aber bereits drin.";
-			this.logger.logLn(LogLevel.ERROR, fehler);
+			this.log.logLn(LogLevel.ERROR, fehler);
 			throw new DeveloperNotificationException(fehler)
 		}
 		kurs1.gibFachart().aktionSchieneWurdeHinzugefuegt(this);
@@ -85,7 +85,7 @@ export class KursblockungDynSchiene extends JavaObject {
 		const kursID: number = kurs1.gibDatenbankID();
 		if (!this.kursMap.containsKey(kursID)) {
 			const fehler: string | null = "Kurs '" + kurs1.toString() + "' soll aus Schiene " + this.nr + " entfernt werden, ist aber nicht drin.";
-			this.logger.logLn(LogLevel.ERROR, fehler);
+			this.log.logLn(LogLevel.ERROR, fehler);
 			throw new DeveloperNotificationException(fehler)
 		}
 		this.kursMap.remove(kursID);
@@ -137,14 +137,14 @@ export class KursblockungDynSchiene extends JavaObject {
 	 * @param nurMultikurse Falls TRUE, werden nur Multikurse angezeigt.
 	 */
 	public debug(nurMultikurse: boolean): void {
-		this.logger.modifyIndent(+4);
+		this.log.modifyIndent(+4);
 		for (const k of this.kursMap.values()) {
 			if ((nurMultikurse) && (k.gibSchienenAnzahl() < 2)) {
 				continue;
 			}
-			this.logger.logLn("    " + k.toString());
+			this.log.logLn("    " + k.toString());
 		}
-		this.logger.modifyIndent(-4);
+		this.log.modifyIndent(-4);
 	}
 
 	/**
@@ -160,13 +160,13 @@ export class KursblockungDynSchiene extends JavaObject {
 	/**
 	 * Ausgabe der Kurse (4 eingerückt) dieser Schiene zusammen mit den SuS (8 eingerückt) der Kurse.
 	 *
-	 * @param _schuelerArr  Die Menge alle SuS.
+	 * @param schuelerMenge   Die Menge alle SuS.
 	 */
-	public printlnKurseUndSchueler(_schuelerArr: Array<KursblockungDynSchueler>): void {
+	public printlnKurseUndSchueler(schuelerMenge: Array<KursblockungDynSchueler>): void {
 		console.log(JSON.stringify("Schiene " + (this.nr + 1)));
 		for (const k of this.kursMap.values()) {
 			console.log(JSON.stringify("    ID " + k.gibDatenbankID() + ", " + k.gibFachart() + ", Fach-ID=" + k.gibFachID()));
-			for (const s of _schuelerArr) {
+			for (const s of schuelerMenge) {
 				if (s.gibIstInKurs(k)) {
 					console.log(JSON.stringify("        ID " + s.gibDatenbankID() + ", " + s.gibRepresentation()));
 				}

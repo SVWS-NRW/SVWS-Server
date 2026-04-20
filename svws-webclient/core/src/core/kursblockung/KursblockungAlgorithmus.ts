@@ -21,7 +21,7 @@ import { Class } from '../../java/lang/Class';
 
 export class KursblockungAlgorithmus extends Service {
 
-	private readonly _random: Random = new Random();
+	private readonly rnd: Random = new Random();
 
 
 	/**
@@ -35,16 +35,16 @@ export class KursblockungAlgorithmus extends Service {
 	 * Berechnet eine Menge von Blockungsergebnissen für den übergebenen Blockungsdaten-Manager und gib eine Liste
 	 * von Blockungsergebnis-Manager zurück.
 	 *
-	 * @param pInput   der Blockungsdaten-Manager
+	 * @param input   der Blockungsdaten-Manager
 	 *
 	 * @return die Liste mit den Blockungsergebnis-Managern
 	 */
-	public handle(pInput: GostBlockungsdatenManager): ArrayList<GostBlockungsergebnisManager> {
+	public handle(input: GostBlockungsdatenManager): ArrayList<GostBlockungsergebnisManager> {
 		this.logger.modifyIndent(+4);
-		const seed: number = this._random.nextLong();
+		const seed: number = this.rnd.nextLong();
 		const random: Random = new Random(seed);
 		this.logger.log(LogLevel.APP, "Erster nextInt() Aufruf liefert " + seed);
-		const dynDaten: KursblockungDynDaten = new KursblockungDynDaten(random, this.logger, pInput);
+		const dynDaten: KursblockungDynDaten = new KursblockungDynDaten(random, this.logger, input);
 		const zeitBedarf: number = dynDaten.gibBlockungszeitMillis();
 		const zeitEndeGesamt: number = System.currentTimeMillis() + zeitBedarf;
 		const kursblockungOutputs: ArrayList<GostBlockungsergebnisManager> = new ArrayList<GostBlockungsergebnisManager>();
@@ -55,7 +55,7 @@ export class KursblockungAlgorithmus extends Service {
 			for (const algorithmus of algorithmenK) {
 				const zeitEndeK: number = System.currentTimeMillis() + zeitProK;
 				do {
-					KursblockungAlgorithmus.verwendeAlgorithmusK(algorithmus, zeitEndeK, dynDaten, algorithmenS, kursblockungOutputs, pInput);
+					KursblockungAlgorithmus.verwendeAlgorithmusK(algorithmus, zeitEndeK, dynDaten, algorithmenS, kursblockungOutputs, input);
 				} while (System.currentTimeMillis() < zeitEndeK);
 				if ((System.currentTimeMillis() + zeitProK) > zeitEndeGesamt) {
 					break;
@@ -72,12 +72,12 @@ export class KursblockungAlgorithmus extends Service {
 		dynDaten.aktionZustandSpeichernK();
 		for (const algorithmus of algorithmenS) {
 			algorithmus.berechne();
-			if (dynDaten.gibCompareZustandK_NW_KD_FW() > 0) {
+			if (dynDaten.gibCompareZustandK1NW2KD3FW() > 0) {
 				dynDaten.aktionZustandSpeichernK();
 			}
 		}
 		dynDaten.aktionZustandLadenK();
-		if (dynDaten.gibCompareZustandG_NW_KD_FW() > 0) {
+		if (dynDaten.gibCompareZustandG1NW2KD3FW() > 0) {
 			dynDaten.aktionZustandSpeichernG();
 		}
 		const out: GostBlockungsergebnisManager = dynDaten.gibErzeugtesKursblockungOutput(pInput, outputs.size() + 1);

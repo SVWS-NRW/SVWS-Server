@@ -9,12 +9,12 @@ export abstract class KursblockungAlgorithmusS extends JavaObject {
 	/**
 	 *  Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 */
-	protected readonly _random: Random;
+	protected readonly rnd: Random;
 
 	/**
 	 *  Logger für Benutzerhinweise, Warnungen und Fehler.
 	 */
-	protected readonly logger: Logger;
+	protected readonly log: Logger;
 
 	/**
 	 *  Die aktuellen Blockungsdaten. Dieses Objekt dient zur Manipulation der Daten während des Blockungsvorganges.
@@ -26,14 +26,14 @@ export abstract class KursblockungAlgorithmusS extends JavaObject {
 	 * Der Konstruktor stellt einen Logger und die bei der Blockung benötigten dynamischen Daten den Unterklassen zur
 	 * Verfügung.
 	 *
-	 * @param pRandom  Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param logger   Logger für Benutzerhinweise, Warnungen und Fehler.
-	 * @param dynDaten Die aktuellen Blockungsdaten.
+	 * @param random     Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param logger     Logger für Benutzerhinweise, Warnungen und Fehler.
+	 * @param dynDaten   Die aktuellen Blockungsdaten.
 	 */
-	protected constructor(pRandom: Random, logger: Logger, dynDaten: KursblockungDynDaten) {
+	protected constructor(random: Random, logger: Logger, dynDaten: KursblockungDynDaten) {
 		super();
-		this._random = pRandom;
-		this.logger = logger;
+		this.rnd = random;
+		this.log = logger;
 		this.dynDaten = dynDaten;
 	}
 

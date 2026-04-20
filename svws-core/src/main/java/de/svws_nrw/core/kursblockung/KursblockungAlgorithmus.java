@@ -20,7 +20,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class KursblockungAlgorithmus extends Service {
 
-	private final @NotNull Random _random = new Random();
+	private final @NotNull Random rnd = new Random();
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -33,21 +33,21 @@ public final class KursblockungAlgorithmus extends Service {
 	 * Berechnet eine Menge von Blockungsergebnissen für den übergebenen Blockungsdaten-Manager und gib eine Liste
 	 * von Blockungsergebnis-Manager zurück.
 	 *
-	 * @param pInput   der Blockungsdaten-Manager
+	 * @param input   der Blockungsdaten-Manager
 	 *
 	 * @return die Liste mit den Blockungsergebnis-Managern
 	 */
-	public @NotNull ArrayList<@NotNull GostBlockungsergebnisManager> handle(final @NotNull GostBlockungsdatenManager pInput) {
+	public @NotNull ArrayList<@NotNull GostBlockungsergebnisManager> handle(final @NotNull GostBlockungsdatenManager input) {
 		// Logger-Einrückung (relativ +4).
 		logger.modifyIndent(+4);
 
 		// Random-Objekt erzeugen (Größter Integer Wert in TypeScript --> 9007199254740991L).
-		final long seed = _random.nextLong();
+		final long seed = rnd.nextLong();
 		final @NotNull Random random = new Random(seed);
 		logger.log(LogLevel.APP, "Erster nextInt() Aufruf liefert " + seed);
 
 		// Konvertierung von 'KursblockungInput' zu 'KursblockungDynamischeDaten'.
-		final @NotNull KursblockungDynDaten dynDaten = new KursblockungDynDaten(random, logger, pInput);
+		final @NotNull KursblockungDynDaten dynDaten = new KursblockungDynDaten(random, logger, input);
 		final long zeitBedarf = dynDaten.gibBlockungszeitMillis();
 		final long zeitEndeGesamt = System.currentTimeMillis() + zeitBedarf;
 
@@ -83,7 +83,7 @@ public final class KursblockungAlgorithmus extends Service {
 				final long zeitEndeK = System.currentTimeMillis() + zeitProK;
 				do {
 					// System.out.println("Zeit " + zeitProK + " Algorithmus " + iK)
-					verwendeAlgorithmusK(algorithmus, zeitEndeK, dynDaten, algorithmenS, kursblockungOutputs, pInput);
+					verwendeAlgorithmusK(algorithmus, zeitEndeK, dynDaten, algorithmenS, kursblockungOutputs, input);
 				} while (System.currentTimeMillis() < zeitEndeK);
 
 				// Zeit abgelaufen?
@@ -119,7 +119,7 @@ public final class KursblockungAlgorithmus extends Service {
 			algorithmus.berechne();
 
 			// Bessere SuS-Verteilung gefunden?
-			if (dynDaten.gibCompareZustandK_NW_KD_FW() > 0) {
+			if (dynDaten.gibCompareZustandK1NW2KD3FW() > 0) {
 				dynDaten.aktionZustandSpeichernK();
 			}
 		}
@@ -128,9 +128,7 @@ public final class KursblockungAlgorithmus extends Service {
 		dynDaten.aktionZustandLadenK();
 
 		// Gibt es einen neuen besten globalen Zustand?
-		if (dynDaten.gibCompareZustandG_NW_KD_FW() > 0) {
-			// dynDaten.debug()
-			// dynDaten.gibStatistik().debug("*" + kursblockungAlgorithmusK)
+		if (dynDaten.gibCompareZustandG1NW2KD3FW() > 0) {
 			dynDaten.aktionZustandSpeichernG();
 		}
 

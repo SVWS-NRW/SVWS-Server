@@ -28,14 +28,14 @@ public final class KursblockungAlgorithmusSSchnellW extends KursblockungAlgorith
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in dieser Methode noch nicht
 	 * auf Schienen verteilt werden.
 	 *
-	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pLogger Logger zum Protokollieren von Warnungen und Fehlern.
-	 * @param pDynDat Die dynamischen Blockungsdaten.
+	 * @param random     Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param logger     Logger zum Protokollieren von Warnungen und Fehlern.
+	 * @param dynDaten   Die dynamischen Blockungsdaten.
 	 */
-	public KursblockungAlgorithmusSSchnellW(final @NotNull Random pRandom, final @NotNull Logger pLogger, final @NotNull KursblockungDynDaten pDynDat) {
-		super(pRandom, pLogger, pDynDat);
-		schuelerArr = pDynDat.gibSchuelerArrayAlle();
-		perm = KursblockungStatic.gibPermutation(_random, schuelerArr.length);
+	public KursblockungAlgorithmusSSchnellW(final @NotNull Random random, final @NotNull Logger logger, final @NotNull KursblockungDynDaten dynDaten) {
+		super(random, logger, dynDaten);
+		schuelerArr = dynDaten.gibSchuelerArrayAlle();
+		perm = KursblockungStatic.gibPermutation(rnd, schuelerArr.length);
 	}
 
 	/**
@@ -62,7 +62,7 @@ public final class KursblockungAlgorithmusSSchnellW extends KursblockungAlgorith
 	private boolean verteileSchuelerAlle() {
 		boolean verbesserung = false;
 
-		KursblockungStatic.aktionPermutiere(_random, perm);
+		KursblockungStatic.aktionPermutiere(rnd, perm);
 		for (int p = 0; p < schuelerArr.length; p++) {
 			final int i = perm[p];
 			verbesserung |= verteileSchuelerEiner(schuelerArr[i]);
@@ -83,7 +83,7 @@ public final class KursblockungAlgorithmusSSchnellW extends KursblockungAlgorith
 		schueler.aktionKurseVerteilenMitBipartiteMatchingGewichtetem();
 
 		// Schlechter? --> Kurszuordnung zurück.
-		final int cmp = dynDaten.gibStatistik().gibBewertungZustandS_NW_KD();
+		final int cmp = dynDaten.gibStatistik().gibBewertungZustandS1NW2KD();
 		if (cmp < 0) {
 			schueler.aktionZustandLadenS();
 		}

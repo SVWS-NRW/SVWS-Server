@@ -13,7 +13,7 @@ import jakarta.validation.constraints.NotNull;
 public class KursblockungMatrix {
 
 	/** Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. */
-	private final @NotNull Random _random;
+	private final @NotNull Random rnd;
 
 	/** Die Werte der Matrix [Zeile][Spalte]. */
 	private final @NotNull long @NotNull [] @NotNull [] matrix;
@@ -64,13 +64,15 @@ public class KursblockungMatrix {
 	 * Matching). */
 	private final @NotNull long[] distanzC;
 
-	/** Erzeugt eine neue Matrix mit {@code rows} Zeilen und {@code cols} Spalten.
+	/**
+	 * Erzeugt eine neue Matrix mit {@code rows} Zeilen und {@code cols} Spalten.
 	 *
-	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param rows    Die Anzahl der Zeilen der Matrix.
-	 * @param cols    Die Anzahl der Spalten der Matrix. */
-	public KursblockungMatrix(final @NotNull Random pRandom, final int rows, final int cols) {
-		this._random = pRandom;
+	 * @param random   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param rows     Die Anzahl der Zeilen der Matrix.
+	 * @param cols     Die Anzahl der Spalten der Matrix.
+	 */
+	public KursblockungMatrix(final @NotNull Random random, final int rows, final int cols) {
+		this.rnd = random;
 		this.rows = rows;
 		this.cols = cols;
 		this.matrix = new long[rows][cols];
@@ -116,16 +118,16 @@ public class KursblockungMatrix {
 			// Knoten r wird als besucht definiert und der Queue hinzugefügt
 			Arrays.fill(besuchtR, false); // Abgearbeitete R-Knoten
 			Arrays.fill(vorgaengerCzuR, -1); // Vorgänger bei der Breitensuche
-			int queue_first = 0; // Index zum Entfernen
-			int queue_last = 0; // Index zum Hinzufügen
-			queueR[queue_last] = r;
-			queue_last++;
+			int queueFirst = 0; // Index zum Entfernen
+			int queueLast = 0; // Index zum Hinzufügen
+			queueR[queueLast] = r;
+			queueLast++;
 			besuchtR[r] = true;
 
 			// Breitensuche vom Knoten der in der Queue ist.
-			while (queue_first < queue_last) {
-				final int vonR = queueR[queue_first];
-				queue_first++;
+			while (queueFirst < queueLast) {
+				final int vonR = queueR[queueFirst];
+				queueFirst++;
 				for (int pseudoC = 0; pseudoC < cols; pseudoC++) {
 					final int ueberC = permC[pseudoC]; // ggf. zufällige c-Reihenfolge
 					if ((matrix[vonR][ueberC] != 0) && (r2c[vonR] != ueberC)) { // Es existiert eine Vorwärts-Kante.
@@ -142,14 +144,14 @@ public class KursblockungMatrix {
 								c2 = saveC;
 							}
 							// Abbruch der Breitensuche
-							queue_last = queue_first;
+							queueLast = queueFirst;
 							break;
 						}
 						// Ist der Weg zurück noch unbesucht?
 						if (!besuchtR[zuR]) {
 							besuchtR[zuR] = true;
-							queueR[queue_last] = zuR;
-							queue_last++;
+							queueR[queueLast] = zuR;
+							queueLast++;
 							vorgaengerCzuR[ueberC] = vonR;
 						}
 					}
@@ -381,7 +383,7 @@ public class KursblockungMatrix {
 	private void permutiere(final @NotNull int[] perm) {
 		final int laenge = perm.length;
 		for (int i = 0; i < laenge; i++) {
-			final int j = _random.nextInt(laenge);
+			final int j = rnd.nextInt(laenge);
 			// Tausche
 			final int saveI = perm[i];
 			final int saveJ = perm[j];
@@ -436,7 +438,7 @@ public class KursblockungMatrix {
 	public void fuelleMitZufallszahlenVonBis(final int von, final int bis) {
 		for (int r = 0; r < rows; r++) {
 			for (int c = 0; c < cols; c++) {
-				matrix[r][c] = _random.nextLong((bis - von) + 1L) + von;
+				matrix[r][c] = rnd.nextLong((bis - von) + 1L) + von;
 			}
 		}
 	}

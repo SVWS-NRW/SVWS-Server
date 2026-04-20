@@ -18,7 +18,7 @@ public class KursblockungDynKurs {
 	private static final int MAX_SUS_DEFAULT = 1000;
 
 	/** Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. */
-	private final @NotNull Random _random;
+	private final @NotNull Random rnd;
 
 	/** Die ID des Kurses, welche von der Datenbank kommt. */
 	private final long databaseID;
@@ -97,7 +97,7 @@ public class KursblockungDynKurs {
 			final @NotNull Logger pLogger,
 			final int pInternalID,
 			final int pSchuelerAnzahl) {
-		_random = pRandom;
+		rnd = pRandom;
 		schienenLage = pSchienenLage;
 		schienenLageFixiert = pSchienenLageFixiert;
 		schienenFrei = pSchienenFrei;
@@ -399,7 +399,7 @@ public class KursblockungDynKurs {
 		// Es gilt: (schienenLageFixiert < schienenLage.length)
 		// ______&& (schienenFrei.length > 0)
 		for (int i1 = schienenLageFixiert; i1 < schienenLage.length; i1++) {
-			final int i2 = _random.nextInt(schienenFrei.length);
+			final int i2 = rnd.nextInt(schienenFrei.length);
 			final @NotNull KursblockungDynSchiene schiene1 = schienenLage[i1];
 			final @NotNull KursblockungDynSchiene schiene2 = schienenFrei[i2];
 			schiene1.aktionKursEntfernen(this);
@@ -523,7 +523,7 @@ public class KursblockungDynKurs {
 	 *
 	 * @param maxSuS  Die maximale Anzahl an SuS für diesen Kurs.
 	 */
-	void regel_15_setzeMaxSuS(final int maxSuS) {
+	void setzeMaxSuS(final int maxSuS) {
 		schuelerAnzahlMaximal = maxSuS;
 
 		// Verringere die Obergrenze um die Anzahl der fixierten SuS.
@@ -537,7 +537,7 @@ public class KursblockungDynKurs {
 	 *
 	 * @param internalSchuelerID  Die interne ID des Schülers.
 	 */
-	void regel_04_setzeSchuelerFixierung(final int internalSchuelerID) {
+	void setzeSchuelerFixierung(final int internalSchuelerID) {
 		schuelerFixiert[internalSchuelerID] = true;
 	}
 

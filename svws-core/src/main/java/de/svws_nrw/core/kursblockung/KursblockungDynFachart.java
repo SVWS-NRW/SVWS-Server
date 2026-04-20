@@ -18,7 +18,7 @@ import jakarta.validation.constraints.NotNull;
 public class KursblockungDynFachart {
 
 	/** Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. */
-	private final @NotNull Random _random;
+	private final @NotNull Random rnd;
 
 	/** Eine laufende Nummer der Fachart. */
 	private final int nr;
@@ -51,10 +51,10 @@ public class KursblockungDynFachart {
 	private final @NotNull int @NotNull [][] schuelerZusammenMitSchueler;
 
 	/** Wie oft die Fachart pro Schiene aktuell vertreten ist. */
-	private final @NotNull int[] _schienenCounter;
+	private final @NotNull int[] schieneToAnzahl;
 
-	/** Maximal erlaubte Anzahl von Kursen (dieser Fachart) pro Schiene. */
-	private int _maxKurseProSchiene; // Wert 0 = deaktiviert
+	/** Maximal erlaubte Anzahl von Kursen (dieser Fachart) pro Schiene. Der Wert von 0 deaktiviert die Regel.*/
+	private int regelMaxKurseProSchiene;
 
 
 	/**
@@ -74,7 +74,7 @@ public class KursblockungDynFachart {
 			final @NotNull KursblockungDynStatistik pStatistik,
 			final int schuelerAnzahl,
 			final int schienenAnzahl) {
-		_random = pRandom;
+		rnd = pRandom;
 		nr = pNr;
 		gostFach = pGostFach;
 		gostKursart = pGostKursart;
@@ -85,8 +85,8 @@ public class KursblockungDynFachart {
 		schuelerAnzNow = 0;
 		schuelerVerbotenMitSchueler = new int[schuelerAnzahl][0];
 		schuelerZusammenMitSchueler = new int[schuelerAnzahl][0];
-		_schienenCounter = new int[schienenAnzahl];
-		_maxKurseProSchiene = 0;
+		schieneToAnzahl = new int[schienenAnzahl];
+		regelMaxKurseProSchiene = 0;
 	}
 
 	/**
@@ -189,10 +189,13 @@ public class KursblockungDynFachart {
 	 */
 	KursblockungDynKurs gibKleinstenKursInSchieneFuerSchueler(final int pSchiene, final @NotNull KursblockungDynSchueler s) {
 		for (final @NotNull KursblockungDynKurs kurs : kursArr) {
-			if (kurs.gibIstErlaubtFuerSchueler(s))
-				for (final int c : kurs.gibSchienenLage()) // Suche passende Schiene.
-					if (c == pSchiene)
+			if (kurs.gibIstErlaubtFuerSchueler(s)) {
+				for (final int c : kurs.gibSchienenLage()) { // Suche passende Schiene.
+					if (c == pSchiene) {
 						return kurs;
+					}
+				}
+			}
 		}
 		return null;
 	}
@@ -203,9 +206,11 @@ public class KursblockungDynFachart {
 	 * @return TRUE, falls mindestens ein Kurs dieser Fachart ein Multikurs ist.
 	 */
 	boolean gibHatMultikurs() {
-		for (final @NotNull KursblockungDynKurs kurs : kursArr)
-			if (kurs.gibSchienenAnzahl() > 1)
+		for (final @NotNull KursblockungDynKurs kurs : kursArr) {
+			if (kurs.gibSchienenAnzahl() > 1) {
 				return true;
+			}
+		}
 
 		return false;
 	}
@@ -219,9 +224,11 @@ public class KursblockungDynFachart {
 	 * @return TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c ist.
 	 */
 	boolean gibHatSchuelerKursInSchiene(final int pSchiene, final @NotNull KursblockungDynSchueler s) {
-		for (final @NotNull KursblockungDynKurs kurs : kursArr)
-			if (kurs.gibIstErlaubtFuerSchueler(s) && kurs.gibIstInSchiene(pSchiene))
+		for (final @NotNull KursblockungDynKurs kurs : kursArr) {
+			if (kurs.gibIstErlaubtFuerSchueler(s) && kurs.gibIstInSchiene(pSchiene)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -234,9 +241,11 @@ public class KursblockungDynFachart {
 	 * @return TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c wandern darf.
 	 */
 	boolean gibHatSchuelerKursMitFreierSchiene(final int pSchiene, final @NotNull KursblockungDynSchueler s) {
-		for (final @NotNull KursblockungDynKurs kurs : kursArr)
-			if (kurs.gibIstErlaubtFuerSchueler(s) && kurs.gibIstSchieneFrei(pSchiene))
+		for (final @NotNull KursblockungDynKurs kurs : kursArr) {
+			if (kurs.gibIstErlaubtFuerSchueler(s) && kurs.gibIstSchieneFrei(pSchiene)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -353,7 +362,7 @@ public class KursblockungDynFachart {
 	 * @param pSchiene  Die Schiene, in die einer Kurs der Fachart wandern soll.
 	 */
 	void aktionZufaelligerKursWandertNachSchiene(final int pSchiene) {
-		final @NotNull int[] perm = KursblockungStatic.gibPermutation(_random, kursArr.length);
+		final @NotNull int[] perm = KursblockungStatic.gibPermutation(rnd, kursArr.length);
 
 		for (final int i : perm) {
 			final KursblockungDynKurs kurs = kursArr[i];
@@ -373,11 +382,12 @@ public class KursblockungDynFachart {
 	 */
 	void aktionSchieneWurdeHinzugefuegt(final @NotNull KursblockungDynSchiene schiene) {
 		// Erhöhen der Anzahl pro Schiene.
-		_schienenCounter[schiene.gibNr()]++;
+		schieneToAnzahl[schiene.gibNr()]++;
 
 		// Ist die Regel aktiviert und wird sie mehr verletzt?
-		if ((_maxKurseProSchiene >= 1) && (_schienenCounter[schiene.gibNr()] > _maxKurseProSchiene))
+		if ((regelMaxKurseProSchiene >= 1) && (schieneToAnzahl[schiene.gibNr()] > regelMaxKurseProSchiene)) {
 			statistik.regelverletzungVeraendern(+1);
+		}
 	}
 
 	/**
@@ -387,11 +397,12 @@ public class KursblockungDynFachart {
 	 */
 	void aktionSchieneWurdeEntfernt(final @NotNull KursblockungDynSchiene schiene) {
 		// Ist die Regel aktiviert und wird sie nun weniger verletzt?
-		if ((_maxKurseProSchiene >= 1) && (_schienenCounter[schiene.gibNr()] > _maxKurseProSchiene))
+		if ((regelMaxKurseProSchiene >= 1) && (schieneToAnzahl[schiene.gibNr()] > regelMaxKurseProSchiene)) {
 			statistik.regelverletzungVeraendern(-1);
+		}
 
 		// Reduzieren der Anzahl pro Schiene.
-		_schienenCounter[schiene.gibNr()]--;
+		schieneToAnzahl[schiene.gibNr()]--;
 	}
 
 	/**
@@ -400,8 +411,9 @@ public class KursblockungDynFachart {
 	 * @param schuelerArr  Das Array mit den Schülerdaten.
 	 */
 	void debug(final @NotNull KursblockungDynSchueler @NotNull [] schuelerArr) {
-		for (final @NotNull KursblockungDynKurs kurs : kursArr)
+		for (final @NotNull KursblockungDynKurs kurs : kursArr) {
 			kurs.debug(schuelerArr);
+		}
 	}
 
 	/**
@@ -410,7 +422,7 @@ public class KursblockungDynFachart {
 	 * @param internalID1  Die interne ID des 1. Schülers.
 	 * @param internalID2  Die interne ID des 2. Schülers.
 	 */
-	void regel_schueler_verbieten_mit_schueler(final int internalID1, final int internalID2) {
+	void setzeSchuelerVerbietenMitSchueler(final int internalID1, final int internalID2) {
 		schuelerVerbotenMitSchueler[internalID1] = ArrayUtils.erweitern(schuelerVerbotenMitSchueler[internalID1], internalID2);
 		schuelerVerbotenMitSchueler[internalID2] = ArrayUtils.erweitern(schuelerVerbotenMitSchueler[internalID2], internalID1);
 	}
@@ -421,7 +433,7 @@ public class KursblockungDynFachart {
 	 * @param internalID1  Die interne ID des 1. Schülers.
 	 * @param internalID2  Die interne ID des 2. Schülers.
 	 */
-	void regel_schueler_zusammen_mit_schueler(final int internalID1, final int internalID2) {
+	void setzeSchuelerZusammenMitSchueler(final int internalID1, final int internalID2) {
 		schuelerZusammenMitSchueler[internalID1] = ArrayUtils.erweitern(schuelerZusammenMitSchueler[internalID1], internalID2);
 		schuelerZusammenMitSchueler[internalID2] = ArrayUtils.erweitern(schuelerZusammenMitSchueler[internalID2], internalID1);
 	}
@@ -431,13 +443,15 @@ public class KursblockungDynFachart {
 	 *
 	 * @param maximalProSchiene  Die maximale Anzahl pro Schiene.
 	 */
-	void regel_18_maximalProSchiene(final int maximalProSchiene) {
-		_maxKurseProSchiene = maximalProSchiene;
+	void setzeMaxAnzahlProSchiene(final int maximalProSchiene) {
+		regelMaxKurseProSchiene = maximalProSchiene;
 
 		// Die Regelverletzungen (pro Schiene) müssen neuberechnet werden.
-		for (int schienenNr = 0; schienenNr < _schienenCounter.length; schienenNr++)
-			if (_schienenCounter[schienenNr] > _maxKurseProSchiene)
-				statistik.regelverletzungVeraendern(_schienenCounter[schienenNr] - _maxKurseProSchiene);
+		for (int schienenNr = 0; schienenNr < schieneToAnzahl.length; schienenNr++) {
+			if (schieneToAnzahl[schienenNr] > regelMaxKurseProSchiene) {
+				statistik.regelverletzungVeraendern(schieneToAnzahl[schienenNr] - regelMaxKurseProSchiene);
+			}
+		}
 	}
 
 	/**

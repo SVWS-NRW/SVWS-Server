@@ -44,70 +44,70 @@ import jakarta.validation.constraints.NotNull;
 public class KursblockungDynDaten {
 
 	/** Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. */
-	private final @NotNull Random _random;
+	private final @NotNull Random rnd;
 
 	/** Logger für Benutzerhinweise, Warnungen und Fehler. */
-	private final @NotNull Logger _logger;
+	private final @NotNull Logger log;
 
 	/** Alle Regeln nach ihrer ID gruppiert und in einer Liste der Reihenfolge nach gespeichert. */
-	private final @NotNull Map<GostKursblockungRegelTyp, List<GostBlockungRegel>> _regelMap;
+	private final @NotNull Map<GostKursblockungRegelTyp, List<GostBlockungRegel>> regelMap;
 
 	/** Die maximale Blockungszeit in Millisekunden. */
-	private final long _maxTimeMillis;
+	private final long maxTimeMillis;
 
 	/** Diese Datenstruktur speichert die Schienen und ihre Kurse. */
-	private @NotNull KursblockungDynSchiene @NotNull [] _schienenArr;
+	private @NotNull KursblockungDynSchiene @NotNull [] schienenMenge;
 
 	/** Alles Kurse. */
-	private @NotNull KursblockungDynKurs @NotNull [] _kursArr;
+	private @NotNull KursblockungDynKurs @NotNull [] kursMenge;
 
 	/** Alle Kurse, die noch über Schienen wandern können. */
-	private @NotNull KursblockungDynKurs @NotNull [] _kursArrFrei;
+	private @NotNull KursblockungDynKurs @NotNull [] kursMengeFrei;
 
 	/** Map für schnellen Zugriff auf die Kurse über ihre ID. */
-	private final @NotNull HashMap<Long, KursblockungDynKurs> _kursMap;
+	private final @NotNull HashMap<Long, KursblockungDynKurs> kursMap;
 
 	/** Alle Facharten. Fachart meint Fach + Kursart, z.B. "D;GK". */
-	private @NotNull KursblockungDynFachart @NotNull [] _fachartArr;
+	private @NotNull KursblockungDynFachart @NotNull [] fachartMenge;
 
 	/** Map für schnellen Zugriff auf die Facharten über FachID und KursartID. */
-	private final @NotNull HashMap2D<Long, Integer, KursblockungDynFachart> _fachartMap2D;
+	private final @NotNull HashMap2D<Long, Integer, KursblockungDynFachart> fachartMap2D;
 
 	/** Alle SuS. */
-	private @NotNull KursblockungDynSchueler @NotNull [] _schuelerArr;
+	private @NotNull KursblockungDynSchueler @NotNull [] schuelerMenge;
 
 	/** Map für schnellen Zugriff auf die SuS über ihre ID. */
-	private final @NotNull HashMap<Long, KursblockungDynSchueler> _schuelerMap;
+	private final @NotNull HashMap<Long, KursblockungDynSchueler> schuelerMap;
 
 	/** Das Statistik-Objekt speichert die aktuellen Nichtwahlen, Kursdifferenzen und weitere Daten. */
-	private final @NotNull KursblockungDynStatistik _statistik;
+	private final @NotNull KursblockungDynStatistik statistik;
 
 	/**
 	 * Der Konstruktor der Klasse liest alle Daten von {@link GostBlockungsdatenManager} ein und baut die relevanten Datenstrukturen auf.
 	 *
-	 * @param random  Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param logger  Ein {@link Logger}-Objekt für Benutzerhinweise, Warnungen und Fehler.
-	 * @param input   Die Eingabedaten (Schnittstelle zur GUI).
+	 * @param random   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param logger   Ein {@link Logger}-Objekt für Benutzerhinweise, Warnungen und Fehler.
+	 * @param input    Die Eingabedaten (Schnittstelle zur GUI).
 	 */
 	public KursblockungDynDaten(final @NotNull Random random, final @NotNull Logger logger, final @NotNull GostBlockungsdatenManager input) {
-		_random = random;
-		_logger = logger;
-		_regelMap = new ArrayMap<>(GostKursblockungRegelTyp.values()); // Konstruktor für Enum-Typen.
-		_maxTimeMillis = input.getMaxTimeMillis();
+		rnd = random;
+		log = logger;
+		regelMap = new ArrayMap<>(GostKursblockungRegelTyp.values()); // Konstruktor für Enum-Typen.
+		maxTimeMillis = input.getMaxTimeMillis();
 
-		_schienenArr = new KursblockungDynSchiene[0];
+		schienenMenge = new KursblockungDynSchiene[0];
 
-		_kursArr = new KursblockungDynKurs[0];
-		_kursArrFrei = new KursblockungDynKurs[0];
-		_kursMap = new HashMap<>();
+		kursMenge = new KursblockungDynKurs[0];
+		kursMengeFrei = new KursblockungDynKurs[0];
+		kursMap = new HashMap<>();
 
-		_fachartArr = new KursblockungDynFachart[0];
-		_fachartMap2D = new HashMap2D<>();
+		fachartMenge = new KursblockungDynFachart[0];
+		fachartMap2D = new HashMap2D<>();
 
-		_schuelerArr = new KursblockungDynSchueler[0];
-		_schuelerMap = new HashMap<>();
+		schuelerMenge = new KursblockungDynSchueler[0];
+		schuelerMap = new HashMap<>();
 
-		_statistik = new KursblockungDynStatistik(_logger);
+		statistik = new KursblockungDynStatistik(log);
 
 		// Definiert: ---
 		fehlerBeiReferenzen(input);
@@ -122,17 +122,17 @@ public class KursblockungDynDaten {
 		fehlerBeiSchienenErzeugung(input.schieneGetAnzahl());
 
 		// Definiert: fachartArr
-		fehlerBeiFachartenErstellung(input, _schuelerArr.length, _schienenArr.length);
+		fehlerBeiFachartenErstellung(input, schuelerMenge.length, schienenMenge.length);
 
 		// Definiert: schueler[i].fachartArr
-		fehlerBeiSchuelerFachwahlenErstellung(input, _schuelerArr);
+		fehlerBeiSchuelerFachwahlenErstellung(input, schuelerMenge);
 
 		// Definiert: statistik
-		fehlerBeiStatistikErstellung(_fachartArr, _schuelerArr, input);
+		fehlerBeiStatistikErstellung(fachartMenge, schuelerMenge, input);
 
 		// Benötigt: fachartArr
 		// Definiert: kursArr
-		fehlerBeiKursErstellung(input, _schuelerArr.length);
+		fehlerBeiKursErstellung(input, schuelerMenge.length);
 
 		// Benötigt: kursArr
 		// Definiert: kursArrFrei
@@ -142,21 +142,21 @@ public class KursblockungDynDaten {
 		// Definiert: fachartArr[i].kursArr
 		fehlerBeiFachartKursArrayErstellung();
 
-		fehlerBeiRegel_4_oder_5_SCHUELER_KURS_VARIANTEN();
+		fehlerBeiRegel4oder5();
 
-		fehlerBeiRegel_7_oder_8_KURS_MIT_KURS_VARIANTEN();
+		fehlerBeiRegel7oder8();
 
-		fehlerBeiRegel_9_KURS_MIT_DUMMY_SUS_AUFFUELLEN();
+		fehlerBeiRegel9();
 
-		fehlerBeiRegel_10_LEHRKRAEFTE_BEACHTEN(input);
+		fehlerBeiRegel10(input);
 
-		fehlerBeiRegel_11_bis_14_SCHUELER_MIT_SCHUELER_VARIANTEN(input);
+		fehlerBeiRegel11bis14(input);
 
-		fehlerBeiRegel_15_KURS_MAXIMALE_SCHUELERANZAHL(); // Muss nach Regel 4 (Schüler-Kurs-Fixierung) passieren.
+		fehlerBeiRegel15(); // Muss nach Regel 4 (Schüler-Kurs-Fixierung) passieren.
 
-		fehlerBeiRegel_16_SCHUELER_IGNORIEREN();
+		fehlerBeiRegel16();
 
-		fehlerBeiRegel_18_FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE();
+		fehlerBeiRegel18();
 
 		// Zustände Speichern
 		aktionZustandSpeichernS();
@@ -248,10 +248,11 @@ public class KursblockungDynDaten {
 
 		// #################### Schüler ####################
 		final @NotNull HashSet<Long> setSchueler = new HashSet<>();
-		for (final @NotNull Schueler gSchueler : input.daten().schueler)
+		for (final @NotNull Schueler gSchueler : input.daten().schueler) {
 			DeveloperNotificationException.ifSetAddsDuplicate(
 					"Schüler ID=%d ist bereits vorhanden in 'setSchueler'.".formatted(gSchueler.id),
 					setSchueler, gSchueler.id);
+		}
 
 		// #################### KursblockungInputFachwahl ####################
 
@@ -282,63 +283,64 @@ public class KursblockungDynDaten {
 			final @NotNull GostKursblockungRegelTyp gostRegel = GostKursblockungRegelTyp.fromTyp(iRegel.typ);
 
 			final @NotNull Long @NotNull [] daten = iRegel.parameter.toArray(new Long[0]);
-			for (int i = 0; i < daten.length; i++)
+			for (int i = 0; i < daten.length; i++) {
 				DeveloperNotificationException.ifNull("daten[" + i + "]", daten[i]);
+			}
 
 			switch (gostRegel) {
 				case KURSART_SPERRE_SCHIENEN_VON_BIS:
-					schritt01FehlerBeiReferenzen_Regeltyp1(daten, setKursarten, schienenAnzahl);
+					fehlerBeiReferenzenRegeltyp1(daten, setKursarten, schienenAnzahl);
 					break;
 				case KURS_FIXIERE_IN_SCHIENE:
-					schritt01FehlerBeiReferenzen_Regeltyp2(daten, setKurse, schienenAnzahl);
+					fehlerBeiReferenzenRegeltyp2(daten, setKurse, schienenAnzahl);
 					break;
 				case KURS_SPERRE_IN_SCHIENE:
-					schritt01FehlerBeiReferenzen_Regeltyp3(daten, setKurse, schienenAnzahl);
+					fehlerBeiReferenzenRegeltyp3(daten, setKurse, schienenAnzahl);
 					break;
 				case SCHUELER_FIXIEREN_IN_KURS:
-					schritt01FehlerBeiReferenzen_Regeltyp4(daten, setSchueler, setKurse);
+					fehlerBeiReferenzenRegeltyp4(daten, setSchueler, setKurse);
 					break;
 				case SCHUELER_VERBIETEN_IN_KURS:
-					schritt01FehlerBeiReferenzen_Regeltyp5(daten, setSchueler, setKurse);
+					fehlerBeiReferenzenRegeltyp5(daten, setSchueler, setKurse);
 					break;
 				case KURSART_ALLEIN_IN_SCHIENEN_VON_BIS:
-					schritt01FehlerBeiReferenzen_Regeltyp6(daten, setKursarten, schienenAnzahl);
+					fehlerBeiReferenzenRegeltyp6(daten, setKursarten, schienenAnzahl);
 					break;
 				case KURS_VERBIETEN_MIT_KURS:
-					schritt01FehlerBeiReferenzen_Regeltyp7(daten, setKurse);
+					fehlerBeiReferenzenRegeltyp7(daten, setKurse);
 					break;
 				case KURS_ZUSAMMEN_MIT_KURS:
-					schritt01FehlerBeiReferenzen_Regeltyp8(daten, setKurse);
+					fehlerBeiReferenzenRegeltyp8(daten, setKurse);
 					break;
 				case KURS_MIT_DUMMY_SUS_AUFFUELLEN:
-					schritt01FehlerBeiReferenzen_Regeltyp9(daten, setKurse);
+					fehlerBeiReferenzenRegeltyp9(daten, setKurse);
 					break;
 				case LEHRKRAEFTE_BEACHTEN:
-					schritt01FehlerBeiReferenzen_Regeltyp10(daten);
+					fehlerBeiReferenzenRegeltyp10(daten);
 					break;
 				case SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH:
-					schritt01FehlerBeiReferenzen_Regeltyp11(daten, setSchueler, setFaecher);
+					fehlerBeiReferenzenRegeltyp11(daten, setSchueler, setFaecher);
 					break;
 				case SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH:
-					schritt01FehlerBeiReferenzen_Regeltyp12(daten, setSchueler, setFaecher);
+					fehlerBeiReferenzenRegeltyp12(daten, setSchueler, setFaecher);
 					break;
 				case SCHUELER_ZUSAMMEN_MIT_SCHUELER:
-					schritt01FehlerBeiReferenzen_Regeltyp13(daten, setSchueler);
+					fehlerBeiReferenzenRegeltyp13(daten, setSchueler);
 					break;
 				case SCHUELER_VERBIETEN_MIT_SCHUELER:
-					schritt01FehlerBeiReferenzen_Regeltyp14(daten, setSchueler);
+					fehlerBeiReferenzenRegeltyp14(daten, setSchueler);
 					break;
 				case KURS_MAXIMALE_SCHUELERANZAHL:
-					schritt01FehlerBeiReferenzen_Regeltyp15(daten, setKurse);
+					fehlerBeiReferenzenRegeltyp15(daten, setKurse);
 					break;
 				case SCHUELER_IGNORIEREN:
-					schritt01FehlerBeiReferenzen_Regeltyp16(daten, setSchueler);
+					fehlerBeiReferenzenRegeltyp16(daten, setSchueler);
 					break;
 				case KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN:
-					schritt01FehlerBeiReferenzen_Regeltyp17(daten, setKurse);
+					fehlerBeiReferenzenRegeltyp17(daten, setKurse);
 					break;
 				case FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE:
-					schritt01FehlerBeiReferenzen_Regeltyp18(daten, setFaecher, setKursarten);
+					fehlerBeiReferenzenRegeltyp18(daten, setFaecher, setKursarten);
 					break;
 				default:
 					throw new DeveloperNotificationException("Unbekannter Regeltyp!");
@@ -349,7 +351,7 @@ public class KursblockungDynDaten {
 	}
 
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp1(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Integer> setKursarten,
+	private static void fehlerBeiReferenzenRegeltyp1(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Integer> setKursarten,
 			final int schienenAnzahl) {
 
 		final int length = daten.length;
@@ -374,7 +376,7 @@ public class KursblockungDynDaten {
 	}
 
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp2(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse,
+	private static void fehlerBeiReferenzenRegeltyp2(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse,
 			final int schienenAnzahl) {
 
 		final int length = daten.length;
@@ -398,7 +400,7 @@ public class KursblockungDynDaten {
 	}
 
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp3(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse,
+	private static void fehlerBeiReferenzenRegeltyp3(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse,
 			final int schienenAnzahl) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue(
@@ -415,7 +417,7 @@ public class KursblockungDynDaten {
 	}
 
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp4(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler,
+	private static void fehlerBeiReferenzenRegeltyp4(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler,
 			final @NotNull HashSet<Long> setKurse) {
 
 		final int length = daten.length;
@@ -438,7 +440,7 @@ public class KursblockungDynDaten {
 	}
 
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp5(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler,
+	private static void fehlerBeiReferenzenRegeltyp5(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler,
 	        final @NotNull HashSet<Long> setKurse) {
 	    final int length = daten.length;
 	    DeveloperNotificationException.ifTrue(
@@ -453,7 +455,7 @@ public class KursblockungDynDaten {
 	}
 
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp6(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Integer> setKursarten,
+	private static void fehlerBeiReferenzenRegeltyp6(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Integer> setKursarten,
 			final int schienenAnzahl) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue(
@@ -471,7 +473,7 @@ public class KursblockungDynDaten {
 	}
 
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp7(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse) {
+	private static void fehlerBeiReferenzenRegeltyp7(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue(
 				"KURS_VERBIETEN_MIT_KURS daten.length=%d, statt 2!".formatted(length),
@@ -489,7 +491,7 @@ public class KursblockungDynDaten {
 	}
 
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp8(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse) {
+	private static void fehlerBeiReferenzenRegeltyp8(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue(
 				"KURS_ZUSAMMEN_MIT_KURS daten.length=%d, statt 2!".formatted(length),
@@ -507,7 +509,7 @@ public class KursblockungDynDaten {
 	}
 
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp9(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse) {
+	private static void fehlerBeiReferenzenRegeltyp9(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue(
 				"KURS_MIT_DUMMY_SUS_AUFFUELLEN daten.length=%d, statt 2!".formatted(length),
@@ -522,7 +524,7 @@ public class KursblockungDynDaten {
 	}
 
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp10(final @NotNull Long @NotNull [] daten) {
+	private static void fehlerBeiReferenzenRegeltyp10(final @NotNull Long @NotNull [] daten) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue(
 				"LEHRKRAEFTE_BEACHTEN daten.length=%d, statt 0!".formatted(length),
@@ -530,7 +532,7 @@ public class KursblockungDynDaten {
 	}
 
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp11(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler,
+	private static void fehlerBeiReferenzenRegeltyp11(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler,
 			final @NotNull HashSet<Long> setFaecher) {
 
 		final int length = daten.length;
@@ -556,7 +558,7 @@ public class KursblockungDynDaten {
 	}
 
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp12(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler,
+	private static void fehlerBeiReferenzenRegeltyp12(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler,
 			final @NotNull HashSet<Long> setFaecher) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue(
@@ -573,7 +575,7 @@ public class KursblockungDynDaten {
 	}
 
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp13(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler) {
+	private static void fehlerBeiReferenzenRegeltyp13(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue(
 				"SCHUELER_ZUSAMMEN_MIT_SCHUELER daten.length=%d, statt 2!".formatted(length),
@@ -586,7 +588,7 @@ public class KursblockungDynDaten {
 	}
 
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp14(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler) {
+	private static void fehlerBeiReferenzenRegeltyp14(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue(
 				"SCHUELER_VERBIETEN_MIT_SCHUELER daten.length=%d, statt 2!".formatted(length),
@@ -599,7 +601,7 @@ public class KursblockungDynDaten {
 	}
 
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp15(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse) {
+	private static void fehlerBeiReferenzenRegeltyp15(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue(
 				"KURS_MAXIMALE_SCHUELERANZAHL daten.length=%d, statt 2!".formatted(length),
@@ -614,7 +616,7 @@ public class KursblockungDynDaten {
 	}
 
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp16(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler) {
+	private static void fehlerBeiReferenzenRegeltyp16(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue(
 				"SCHUELER_IGNORIEREN daten.length=%d, statt 1!".formatted(length),
@@ -625,7 +627,7 @@ public class KursblockungDynDaten {
 	}
 
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp17(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse) {
+	private static void fehlerBeiReferenzenRegeltyp17(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue(
 				"KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN daten.length=%d, statt 1!".formatted(length),
@@ -636,7 +638,7 @@ public class KursblockungDynDaten {
 	}
 
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp18(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setFaecher,
+	private static void fehlerBeiReferenzenRegeltyp18(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setFaecher,
 			final @NotNull HashSet<Integer> setKursarten) {
 		final int length = daten.length;
 		DeveloperNotificationException.ifTrue(
@@ -663,7 +665,7 @@ public class KursblockungDynDaten {
 			DeveloperNotificationException.ifSetAddsDuplicate("regelDatabaseIDs", regelDatabaseIDs, iRegel.id);
 			// Regel zur Liste hinzufügen (ggf. Liste erzeugen).
 			final @NotNull GostKursblockungRegelTyp regelTyp = GostKursblockungRegelTyp.fromTyp(iRegel.typ);
-			MapUtils.getOrCreateArrayList(_regelMap, regelTyp).add(iRegel);
+			MapUtils.getOrCreateArrayList(regelMap, regelTyp).add(iRegel);
 		}
 	}
 
@@ -671,23 +673,25 @@ public class KursblockungDynDaten {
 		final @NotNull HashSet<Long> setSchueler = new HashSet<>();
 
 		// Schüler sammeln.
-		for (final @NotNull Schueler gSchueler : input.daten().schueler)
+		for (final @NotNull Schueler gSchueler : input.daten().schueler) {
 			setSchueler.add(gSchueler.id);
+		}
 
 		// Schüler-Fachwahlen Überprüfen.
-		for (final @NotNull GostFachwahl fachwahl : input.daten().fachwahlen)
+		for (final @NotNull GostFachwahl fachwahl : input.daten().fachwahlen) {
 			DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, fachwahl.schuelerID);
+		}
 
 		final int nSchueler = setSchueler.size();
 		final int nSchienen = input.schieneGetAnzahl();
 		final int nKurse = input.kursGetAnzahl();
 
-		_schuelerArr = new KursblockungDynSchueler[nSchueler];
+		schuelerMenge = new KursblockungDynSchueler[nSchueler];
 		int i = 0;
 		for (final long sID : setSchueler) {
-			final @NotNull KursblockungDynSchueler schueler = new KursblockungDynSchueler(_logger, _random, sID, _statistik, nSchienen, nKurse, i);
-			_schuelerArr[i] = schueler;
-			_schuelerMap.put(sID, schueler);
+			final @NotNull KursblockungDynSchueler schueler = new KursblockungDynSchueler(log, rnd, sID, statistik, nSchienen, nKurse, i);
+			schuelerMenge[i] = schueler;
+			schuelerMap.put(sID, schueler);
 			i++;
 		}
 	}
@@ -701,10 +705,10 @@ public class KursblockungDynDaten {
 			final @NotNull GostFach fach = input.faecherManager().getOrException(gKurs.fach_id);
 			final @NotNull GostKursart kursart = GostKursart.fromID(gKurs.kursart);
 
-			KursblockungDynFachart dynFachart = _fachartMap2D.getOrNull(fach.id, kursart.id);
+			KursblockungDynFachart dynFachart = fachartMap2D.getOrNull(fach.id, kursart.id);
 			if (dynFachart == null) {
-				dynFachart = new KursblockungDynFachart(_random, nFacharten, fach, kursart, _statistik, nSchueler, nSchienen);
-				_fachartMap2D.put(fach.id, kursart.id, dynFachart);
+				dynFachart = new KursblockungDynFachart(rnd, nFacharten, fach, kursart, statistik, nSchueler, nSchienen);
+				fachartMap2D.put(fach.id, kursart.id, dynFachart);
 				nFacharten++;
 			}
 
@@ -716,10 +720,10 @@ public class KursblockungDynDaten {
 			final @NotNull GostFach fach = input.faecherManager().getOrException(iFachwahl.fachID);
 			final @NotNull GostKursart kursart = GostKursart.fromID(iFachwahl.kursartID);
 
-			KursblockungDynFachart dynFachart = _fachartMap2D.getOrNull(fach.id, kursart.id);
+			KursblockungDynFachart dynFachart = fachartMap2D.getOrNull(fach.id, kursart.id);
 			if (dynFachart == null) {
-				dynFachart = new KursblockungDynFachart(_random, nFacharten, fach, kursart, _statistik, nSchueler, nSchienen);
-				_fachartMap2D.put(fach.id, kursart.id, dynFachart);
+				dynFachart = new KursblockungDynFachart(rnd, nFacharten, fach, kursart, statistik, nSchueler, nSchienen);
+				fachartMap2D.put(fach.id, kursart.id, dynFachart);
 				nFacharten++;
 			}
 
@@ -729,14 +733,16 @@ public class KursblockungDynDaten {
 		DeveloperNotificationException.ifSmaller("nFacharten", nFacharten, 1);
 
 		// fachartMap --> fachartArr
-		_fachartArr = new KursblockungDynFachart[nFacharten];
-		for (final @NotNull KursblockungDynFachart fachart : _fachartMap2D.getNonNullValuesAsList())
-			_fachartArr[fachart.gibNr()] = fachart;
+		fachartMenge = new KursblockungDynFachart[nFacharten];
+		for (final @NotNull KursblockungDynFachart fachart : fachartMap2D.getNonNullValuesAsList()) {
+			fachartMenge[fachart.gibNr()] = fachart;
+		}
 
 		// Verteile Kurse verschwunden? --> Fehler
 		int kursSumme = 0;
-		for (final @NotNull KursblockungDynFachart fa : _fachartArr)
+		for (final @NotNull KursblockungDynFachart fa : fachartMenge) {
 			kursSumme += fa.gibKurseMax();
+		}
 		DeveloperNotificationException.ifTrue("Die Summe aller auf die Facharten verteilten Kurse ist ungleich der Gesamtkursanzahl.", kursSumme != nKurse);
 	}
 
@@ -782,40 +788,43 @@ public class KursblockungDynDaten {
 		// Berechne "bewertungMatrixFachart".
 		final int cMALUS_KOLLISION = 10000;
 		final int cMALUS_DIAGONALE = 1000;
-		for (int i1 = 0; i1 < nFacharten; i1++)
+		for (int i1 = 0; i1 < nFacharten; i1++) {
 			for (int i2 = 0; i2 < nFacharten; i2++) {
 				final int kurseVonFachart1 = fachartArr[i1].gibKurseMax();
 				final int kurseVonFachart2 = fachartArr[i2].gibKurseMax();
 				final int nr1 = fachartArr[i1].gibNr();
 				final int nr2 = fachartArr[i2].gibNr();
 				bewertungMatrixFachart[nr1][nr2] = (nr1 == nr2) ? cMALUS_DIAGONALE : 0;
-				if ((wahlenMatrixFachart[nr1][nr2] == 0) || (kurseVonFachart1 == 0) || (kurseVonFachart2 == 0))
+				if ((wahlenMatrixFachart[nr1][nr2] == 0) || (kurseVonFachart1 == 0) || (kurseVonFachart2 == 0)) {
 					continue;
+				}
 				// Ab hier: Es gibt von beiden Facharten mindestens einen Kurs
 				//          und es gibt mindestens einen S. der beide Fächer gewählt hat.
 				final int nenner = kurseVonFachart1 * kurseVonFachart2; // mindestens 1
 				bewertungMatrixFachart[nr1][nr2] += cMALUS_KOLLISION / nenner;
 			}
+		}
 
-		_statistik.aktionInitialisiere(bewertungMatrixFachart, susArr.length, fachartArr.length, input.kursGetAnzahl());
+		statistik.aktionInitialisiere(bewertungMatrixFachart, susArr.length, fachartArr.length, input.kursGetAnzahl());
 	}
 
 	private void fehlerBeiSchienenErzeugung(final int nSchienen) {
-		_schienenArr = new KursblockungDynSchiene[nSchienen];
-		for (int nr = 0; nr < nSchienen; nr++)
-			_schienenArr[nr] = new KursblockungDynSchiene(_logger, nr, _statistik);
+		schienenMenge = new KursblockungDynSchiene[nSchienen];
+		for (int nr = 0; nr < nSchienen; nr++) {
+			schienenMenge[nr] = new KursblockungDynSchiene(log, nr, statistik);
+		}
 	}
 
 	private void fehlerBeiKursErstellung(final @NotNull GostBlockungsdatenManager input, final int nSchueler) {
 		final int nKurse = input.kursGetAnzahl();
 		final int nSchienen = input.schieneGetAnzahl();
 
-		_kursArr = new KursblockungDynKurs[nKurse];
+		kursMenge = new KursblockungDynKurs[nKurse];
 		int i = 0;
 		for (final @NotNull GostBlockungKurs kurs : input.daten().kurse) {
 			final @NotNull KursblockungDynKurs dynKurs = schritt08FehlerBeiKursErstellungErzeuge(input, kurs, nSchienen, i, nSchueler);
-			_kursArr[i] = dynKurs;
-			DeveloperNotificationException.ifMapPutOverwrites(_kursMap, kurs.id, dynKurs);
+			kursMenge[i] = dynKurs;
+			DeveloperNotificationException.ifMapPutOverwrites(kursMap, kurs.id, dynKurs);
 			i++;
 		}
 
@@ -831,54 +840,60 @@ public class KursblockungDynDaten {
 		// Fehler: Kurs belegt zu viele Schienen.
 		DeveloperNotificationException.ifGreater(
 				"Der Kurs mit ID=%d und NR=%d belegt zu viele (%d) Schienen!".formatted(kurs.id, kursNr, kurs.anzahlSchienen),
-				kurs.anzahlSchienen, _schienenArr.length);
+				kurs.anzahlSchienen, schienenMenge.length);
 
 		// Alle Schienen, in denen der Kurs gerade ist. Anfangs leer.
 		final @NotNull List<KursblockungDynSchiene> schieneLage = new ArrayList<>();
 
 		// 'Frei' beinhaltet zunächst alle Schienen permutiert.
-		final @NotNull List<KursblockungDynSchiene> schieneFrei = ListUtils.getCopyAsArrayListPermuted(_schienenArr, _random);
+		final @NotNull List<KursblockungDynSchiene> schieneFrei = ListUtils.getCopyAsArrayListPermuted(schienenMenge, rnd);
 
 		// Regel 1: Entferne alle Schienen, die durch die Kursart gesperrt sind.
-		for (final @NotNull GostBlockungRegel regel1 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
+		for (final @NotNull GostBlockungRegel regel1 : MapUtils.getOrCreateArrayList(regelMap, GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS)) {
 			if (kurs.kursart == regel1.parameter.get(0)) {
 				final int von = regel1.parameter.get(1).intValue(); // DB-Schiene ist 1-indiziert!
 				final int bis = regel1.parameter.get(2).intValue(); // DB-Schiene ist 1-indiziert!
-				for (int schiene = von; schiene <= bis; schiene++)
-					schieneFrei.remove(_schienenArr[schiene - 1]); // Intern 0-indiziert!
+				for (int schiene = von; schiene <= bis; schiene++) {
+					schieneFrei.remove(schienenMenge[schiene - 1]); // Intern 0-indiziert!
+				}
 			}
+		}
 
 		// Regel 6: Entferne alle Schienen, die durch die Kursart gesperrt sind.
-		for (final @NotNull GostBlockungRegel regel6 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS)) {
+		for (final @NotNull GostBlockungRegel regel6 : MapUtils.getOrCreateArrayList(regelMap, GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS)) {
 			final boolean kursartStimmt = kurs.kursart == regel6.parameter.get(0);
 			final int von = regel6.parameter.get(1).intValue(); // DB-Schiene ist 1-indiziert!
 			final int bis = regel6.parameter.get(2).intValue(); // DB-Schiene ist 1-indiziert!
 			for (int schiene = 1; schiene <= nSchienen; schiene++) {
 				final boolean innerhalb = (von <= schiene) && (schiene <= bis);
-				if (innerhalb != kursartStimmt)
-					schieneFrei.remove(_schienenArr[schiene - 1]); // Intern 0-indiziert!
+				if (innerhalb != kursartStimmt) {
+					schieneFrei.remove(schienenMenge[schiene - 1]); // Intern 0-indiziert!
+				}
 			}
 		}
 
 		// Regel 3: Entferne alle Schienen, die explizit gesperrt sind.
-		for (final @NotNull GostBlockungRegel regel3 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE))
+		for (final @NotNull GostBlockungRegel regel3 : MapUtils.getOrCreateArrayList(regelMap, GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE)) {
 			if (kurs.id == regel3.parameter.get(0)) {
 				final int schiene = regel3.parameter.get(1).intValue(); // DB-Schiene ist 1-indiziert!
-				schieneFrei.remove(_schienenArr[schiene - 1]); // Intern 0-indiziert!
+				schieneFrei.remove(schienenMenge[schiene - 1]); // Intern 0-indiziert!
 			}
+		}
 
 		// Regel 2: Fixiere Kurse in Schienen.
-		for (final @NotNull GostBlockungRegel regel2 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
+		for (final @NotNull GostBlockungRegel regel2 : MapUtils.getOrCreateArrayList(regelMap, GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE)) {
 			if (kurs.id == regel2.parameter.get(0)) {
 				final int schiene = regel2.parameter.get(1).intValue(); // DB-Schiene ist 1-indiziert!
-				final @NotNull KursblockungDynSchiene dynSchiene = _schienenArr[schiene - 1]; // Intern 0-indiziert!
-				if (schieneLage.contains(dynSchiene))
+				final @NotNull KursblockungDynSchiene dynSchiene = schienenMenge[schiene - 1]; // Intern 0-indiziert!
+				if (schieneLage.contains(dynSchiene)) {
 					continue; // Doppelt-Fixierungen ignorieren
+				}
 				UserNotificationException.ifTrue("Die Regel 'KURS_FIXIERE_IN_SCHIENE' will Kurs (id=" + kurs.id + ") in Schiene (" + schiene
 						+ ") fixieren, aber die Schiene wurde bereits gesperrt!", !schieneFrei.contains(dynSchiene));
 				schieneFrei.remove(dynSchiene);
 				schieneLage.add(dynSchiene);
 			}
+		}
 
 		// Fehler: Zu viel fixiert?
 		final int anzahlFixierterSchienen = schieneLage.size();
@@ -902,36 +917,40 @@ public class KursblockungDynDaten {
 		final @NotNull KursblockungDynSchiene @NotNull [] schienenFreiArray = schieneFrei.toArray(new KursblockungDynSchiene[0]);
 		final @NotNull KursblockungDynFachart dynFachart = gibFachart(kurs.fach_id, kurs.kursart);
 
-		return new KursblockungDynKurs(_random, schienenLageArray, anzahlFixierterSchienen, schienenFreiArray, kurs.id, dynFachart, _logger, kursNr, nSchueler);
+		return new KursblockungDynKurs(rnd, schienenLageArray, anzahlFixierterSchienen, schienenFreiArray, kurs.id, dynFachart, log, kursNr, nSchueler);
 	}
 
 	private void fehlerBeiKursFreiErstellung() {
 		// Zähle Kurse mit Freiheitsgraden.
 		int nKursFrei = 0;
-		for (final KursblockungDynKurs kurs : _kursArr)
-			if (kurs.gibHatFreiheitsgrade())
+		for (final KursblockungDynKurs kurs : kursMenge) {
+			if (kurs.gibHatFreiheitsgrade()) {
 				nKursFrei++;
+			}
+		}
 
 		// Kopiere Kurse mit Freiheitsgraden.
-		_kursArrFrei = new KursblockungDynKurs[nKursFrei];
+		kursMengeFrei = new KursblockungDynKurs[nKursFrei];
 		int j = 0;
-		for (final @NotNull KursblockungDynKurs kurs : _kursArr)
+		for (final @NotNull KursblockungDynKurs kurs : kursMenge) {
 			if (kurs.gibHatFreiheitsgrade()) {
-				_kursArrFrei[j] = kurs;
+				kursMengeFrei[j] = kurs;
 				j++;
 			}
+		}
 	}
 
 	private void fehlerBeiFachartKursArrayErstellung() {
-		final int nFacharten = _fachartArr.length;
+		final int nFacharten = fachartMenge.length;
 
 		// Map: Fachart-Nummer --> Liste der Kurse
 		final @NotNull HashMap<Integer, List<KursblockungDynKurs>> mapFachartList = new HashMap<>();
-		for (int i = 0; i < nFacharten; i++)
+		for (int i = 0; i < nFacharten; i++) {
 			mapFachartList.put(i, new ArrayList<>());
+		}
 
 		// Pro Kurs: Der Fachart-Liste hinzufügen.
-		for (final @NotNull KursblockungDynKurs kurs : _kursArr) {
+		for (final @NotNull KursblockungDynKurs kurs : kursMenge) {
 			final int fachartNr = kurs.gibFachart().gibNr();
 			DeveloperNotificationException.ifMapGetIsNull(mapFachartList, fachartNr).add(kurs);
 		}
@@ -940,45 +959,48 @@ public class KursblockungDynDaten {
 		for (int fachartNr = 0; fachartNr < nFacharten; fachartNr++) {
 			final List<KursblockungDynKurs> list = DeveloperNotificationException.ifMapGetIsNull(mapFachartList, fachartNr);
 			final @NotNull KursblockungDynKurs @NotNull [] tmpKursArr = list.toArray(new KursblockungDynKurs[0]);
-			_fachartArr[fachartNr].aktionSetKurse(tmpKursArr);
+			fachartMenge[fachartNr].aktionSetKurse(tmpKursArr);
 		}
 
 	}
 
-	private void fehlerBeiRegel_4_oder_5_SCHUELER_KURS_VARIANTEN() {
+	private void fehlerBeiRegel4oder5() {
 		// Regel 4 - SCHUELER_FIXIEREN_IN_KURS
 		final @NotNull HashMap<Long, List<Long>> mapSchuelerZuFixierungen = new HashMap<>();
-		for (final @NotNull GostBlockungRegel regel4 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS)) {
+		for (final @NotNull GostBlockungRegel regel4 : MapUtils.getOrCreateArrayList(regelMap, GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS)) {
 			final long schuelerID = regel4.parameter.get(0);
 			final long kursID = regel4.parameter.get(1);
 			MapUtils.getOrCreateArrayList(mapSchuelerZuFixierungen, schuelerID).add(kursID);
 			final @NotNull KursblockungDynSchueler schueler = gibSchueler(schuelerID);
 			final @NotNull KursblockungDynKurs fixierterKurs = gibKurs(kursID);
 			// Alle anderen Kurse der selben Fachart verbieten ...
-			for (final @NotNull KursblockungDynKurs kurs : fixierterKurs.gibFachart().gibKurse())
-				if (kurs == fixierterKurs)
-					kurs.regel_04_setzeSchuelerFixierung(schueler.internalSchuelerID);
-				else
+			for (final @NotNull KursblockungDynKurs kurs : fixierterKurs.gibFachart().gibKurse()) {
+				if (kurs == fixierterKurs) {
+					kurs.setzeSchuelerFixierung(schueler.internalSchuelerID);
+				} else {
 					schueler.aktionSetzeKursSperrung(kurs.gibInternalID());
+				}
+			}
 		}
 
 		// Regel 4 - SCHUELER_FIXIEREN_IN_KURS (Spezialfall - Pro Schüler: Alle Kurspaar-Fixierungen Kurs-Kurs-Zusammen verbieten))
 		for (final long idSchueler : mapSchuelerZuFixierungen.keySet()) {
 			final @NotNull List<Long> listKursIDs = MapUtils.getOrCreateArrayList(mapSchuelerZuFixierungen, idSchueler);
 			// Alle (sortierten) Kurs-Paarungen durchgehen und KURS_VERBIETEN_MIT_KURS definieren.
-			for (int index2 = 1; index2 < listKursIDs.size(); index2++)
+			for (int index2 = 1; index2 < listKursIDs.size(); index2++) {
 				for (int index1 = 0; index1 < index2; index1++) {
 					final long kursID1 = listKursIDs.get(index1);
 					final long kursID2 = listKursIDs.get(index2);
 					final @NotNull KursblockungDynKurs kurs1 = gibKurs(kursID1);
 					final @NotNull KursblockungDynKurs kurs2 = gibKurs(kursID2);
-					_statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
+					statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
 				}
+			}
 		}
 
 
 		// Regel 5 - SCHUELER_VERBIETEN_IN_KURS
-		for (final @NotNull GostBlockungRegel regel5 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS)) {
+		for (final @NotNull GostBlockungRegel regel5 : MapUtils.getOrCreateArrayList(regelMap, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS)) {
 			final long schuelerID = regel5.parameter.get(0);
 			final long kursID = regel5.parameter.get(1);
 			final @NotNull KursblockungDynSchueler schueler = gibSchueler(schuelerID);
@@ -988,71 +1010,80 @@ public class KursblockungDynDaten {
 		}
 	}
 
-	private void fehlerBeiRegel_7_oder_8_KURS_MIT_KURS_VARIANTEN() {
+	private void fehlerBeiRegel7oder8() {
 		// Regel 7 - KURS_VERBIETEN_MIT_KURS
-		for (final @NotNull GostBlockungRegel regel7 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS)) {
+		for (final @NotNull GostBlockungRegel regel7 : MapUtils.getOrCreateArrayList(regelMap, GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS)) {
 			final long kursID1 = regel7.parameter.get(0);
 			final long kursID2 = regel7.parameter.get(1);
 			final @NotNull KursblockungDynKurs kurs1 = gibKurs(kursID1);
 			final @NotNull KursblockungDynKurs kurs2 = gibKurs(kursID2);
-			_statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
+			statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
 		}
 
 		// Regel 8 - KURS_ZUSAMMEN_MIT_KURS
-		for (final @NotNull GostBlockungRegel regel8 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS)) {
+		for (final @NotNull GostBlockungRegel regel8 : MapUtils.getOrCreateArrayList(regelMap, GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS)) {
 			final long kursID1 = regel8.parameter.get(0);
 			final long kursID2 = regel8.parameter.get(1);
 			final @NotNull KursblockungDynKurs kurs1 = gibKurs(kursID1);
 			final @NotNull KursblockungDynKurs kurs2 = gibKurs(kursID2);
-			_statistik.regelHinzufuegenKursZusammenMitKurs(kurs1, kurs2);
+			statistik.regelHinzufuegenKursZusammenMitKurs(kurs1, kurs2);
 		}
 	}
 
-	private void fehlerBeiRegel_9_KURS_MIT_DUMMY_SUS_AUFFUELLEN() {
+	private void fehlerBeiRegel9() {
 		// Regel 9 - KURS_MIT_DUMMY_SUS_AUFFUELLEN
-		for (final @NotNull GostBlockungRegel regel9 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN)) {
+		for (final @NotNull GostBlockungRegel regel9 : MapUtils.getOrCreateArrayList(regelMap, GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN)) {
 			final long kursID = regel9.parameter.get(0);
 			final int susAnzahl = regel9.parameter.get(1).intValue();
 			final @NotNull KursblockungDynKurs kurs = gibKurs(kursID);
 
-			for (int i = 0; i < susAnzahl; i++)
+			for (int i = 0; i < susAnzahl; i++) {
 				kurs.aktionSchuelerDummyHinzufuegen();
+			}
 		}
 	}
 
-	private void fehlerBeiRegel_10_LEHRKRAEFTE_BEACHTEN(final @NotNull GostBlockungsdatenManager pInput) {
-		final List<GostBlockungRegel> regelnTyp10 = MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN);
-		if (regelnTyp10.isEmpty())
+	private void fehlerBeiRegel10(final @NotNull GostBlockungsdatenManager pInput) {
+		final List<GostBlockungRegel> regelnTyp10 = MapUtils.getOrCreateArrayList(regelMap, GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN);
+		if (regelnTyp10.isEmpty()) {
 			return;
+		}
 
 		DeveloperNotificationException.ifGreater("Liste of regelnTyp10", regelnTyp10.size(), 1);
 
 		// Sammle zunächst alle potentiellen Kurse.
 		final @NotNull ArrayList<GostBlockungKurs> vKurseMitLehrkraft = new ArrayList<>();
-		for (final @NotNull GostBlockungKurs gKurs : pInput.daten().kurse)
-			if (!gKurs.lehrer.isEmpty())
+		for (final @NotNull GostBlockungKurs gKurs : pInput.daten().kurse) {
+			if (!gKurs.lehrer.isEmpty()) {
 				vKurseMitLehrkraft.add(gKurs);
+			}
+		}
 
 		// Finde Kurse mit der selben Lehrkraft
-		for (final @NotNull GostBlockungKurs gKurs1 : vKurseMitLehrkraft)
-			for (final @NotNull GostBlockungKurs gKurs2 : vKurseMitLehrkraft)
-				if (gKurs1.id < gKurs2.id)
-					for (final @NotNull GostBlockungKursLehrer gLehr1 : gKurs1.lehrer)
-						for (final @NotNull GostBlockungKursLehrer gLehr2 : gKurs2.lehrer)
+		for (final @NotNull GostBlockungKurs gKurs1 : vKurseMitLehrkraft) {
+			for (final @NotNull GostBlockungKurs gKurs2 : vKurseMitLehrkraft) {
+				if (gKurs1.id < gKurs2.id) {
+					for (final @NotNull GostBlockungKursLehrer gLehr1 : gKurs1.lehrer) {
+						for (final @NotNull GostBlockungKursLehrer gLehr2 : gKurs2.lehrer) {
 							if (gLehr1.id == gLehr2.id) {
 								final @NotNull KursblockungDynKurs kurs1 = gibKurs(gKurs1.id);
 								final @NotNull KursblockungDynKurs kurs2 = gibKurs(gKurs2.id);
-								_statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
+								statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
 							}
+						}
+					}
+				}
+			}
+		}
 	}
 
-	private void fehlerBeiRegel_11_bis_14_SCHUELER_MIT_SCHUELER_VARIANTEN(final @NotNull GostBlockungsdatenManager input) {
+	private void fehlerBeiRegel11bis14(final @NotNull GostBlockungsdatenManager input) {
 		// Das Set dient dazu, Widersprüche/Dopplungen bei den Regeln zu finden.
 		final @NotNull HashSet<LongArrayKey> setSSF = new HashSet<>();
 		final @NotNull String fehlermeldungDopplung = "Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!";
 
 		// Regel 11: SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH
-		for (final @NotNull GostBlockungRegel regel11 : MapUtils.getOrCreateArrayList(_regelMap,
+		for (final @NotNull GostBlockungRegel regel11 : MapUtils.getOrCreateArrayList(regelMap,
 				GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH)) {
 			final long idS1 = regel11.parameter.get(0);
 			final long idS2 = regel11.parameter.get(1);
@@ -1064,11 +1095,11 @@ public class KursblockungDynDaten {
 			// Regel 11 persistieren
 			final @NotNull KursblockungDynSchueler sch1 = gibSchueler(idS1);
 			final @NotNull KursblockungDynSchueler sch2 = gibSchueler(idS2);
-			sch1.regel_11_zusammen_mit_schueler_in_fach(sch2, idF);
+			sch1.setzeZusammenMitSchuelerInFach(sch2, idF);
 		}
 
 		// Regel 12: SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH
-		for (final @NotNull GostBlockungRegel regel12 : MapUtils.getOrCreateArrayList(_regelMap,
+		for (final @NotNull GostBlockungRegel regel12 : MapUtils.getOrCreateArrayList(regelMap,
 				GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH)) {
 			final long idS1 = regel12.parameter.get(0);
 			final long idS2 = regel12.parameter.get(1);
@@ -1080,11 +1111,11 @@ public class KursblockungDynDaten {
 			// Regel 12 persistieren
 			final @NotNull KursblockungDynSchueler sch1 = gibSchueler(idS1);
 			final @NotNull KursblockungDynSchueler sch2 = gibSchueler(idS2);
-			sch1.regel_12_verbieten_mit_schueler_in_fach(sch2, idF);
+			sch1.setzeVerbietenMitSchuelerInFach(sch2, idF);
 		}
 
 		// Regel 13: SCHUELER_ZUSAMMEN_MIT_SCHUELER
-		for (final @NotNull GostBlockungRegel regel13 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER)) {
+		for (final @NotNull GostBlockungRegel regel13 : MapUtils.getOrCreateArrayList(regelMap, GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER)) {
 			final long idS1 = regel13.parameter.get(0);
 			final long idS2 = regel13.parameter.get(1);
 			for (final @NotNull GostFach fach : input.schuelerGetFachListeGemeinsamerFacharten(idS1, idS2)) {
@@ -1095,12 +1126,12 @@ public class KursblockungDynDaten {
 				// Regel 13 persistieren
 				final @NotNull KursblockungDynSchueler sch1 = gibSchueler(idS1);
 				final @NotNull KursblockungDynSchueler sch2 = gibSchueler(idS2);
-				sch1.regel_13_zusammen_mit_schueler(sch2);
+				sch1.setzeZusammenMitSchueler(sch2);
 			}
 		}
 
 		// Regel 14: SCHUELER_VERBIETEN_MIT_SCHUELER
-		for (final @NotNull GostBlockungRegel r14 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER)) {
+		for (final @NotNull GostBlockungRegel r14 : MapUtils.getOrCreateArrayList(regelMap, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER)) {
 			final long idS1 = r14.parameter.get(0);
 			final long idS2 = r14.parameter.get(1);
 			for (final @NotNull GostFach fach : input.schuelerGetFachListeGemeinsamerFacharten(idS1, idS2)) {
@@ -1112,52 +1143,52 @@ public class KursblockungDynDaten {
 			// Regel 14 persistieren
 			final @NotNull KursblockungDynSchueler sch1 = gibSchueler(idS1);
 			final @NotNull KursblockungDynSchueler sch2 = gibSchueler(idS2);
-			sch1.regel_14_verbieten_mit_schueler(sch2);
+			sch1.setzeVerbietenMitSchueler(sch2);
 		}
 
 	}
 
-	private void fehlerBeiRegel_15_KURS_MAXIMALE_SCHUELERANZAHL() {
-		for (final @NotNull GostBlockungRegel r15 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL)) {
+	private void fehlerBeiRegel15() {
+		for (final @NotNull GostBlockungRegel r15 : MapUtils.getOrCreateArrayList(regelMap, GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL)) {
 			final long idKurs = r15.parameter.get(0);
 			final int maxSuS = r15.parameter.get(1).intValue();
 
 			final @NotNull KursblockungDynKurs kurs = gibKurs(idKurs);
-			kurs.regel_15_setzeMaxSuS(maxSuS);
+			kurs.setzeMaxSuS(maxSuS);
 		}
 	}
 
-	private void fehlerBeiRegel_16_SCHUELER_IGNORIEREN() {
-		for (final @NotNull GostBlockungRegel r16 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.SCHUELER_IGNORIEREN)) {
+	private void fehlerBeiRegel16() {
+		for (final @NotNull GostBlockungRegel r16 : MapUtils.getOrCreateArrayList(regelMap, GostKursblockungRegelTyp.SCHUELER_IGNORIEREN)) {
 			final long idSchueler = r16.parameter.get(0);
 
 			final @NotNull KursblockungDynSchueler schueler = gibSchueler(idSchueler);
-			schueler.regel_16_sperre();
+			schueler.setzeSperreBeiKursverteilung();
 		}
 	}
 
-	private void fehlerBeiRegel_18_FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE() {
-		for (final @NotNull GostBlockungRegel r18 : MapUtils.getOrCreateArrayList(_regelMap,
+	private void fehlerBeiRegel18() {
+		for (final @NotNull GostBlockungRegel r18 : MapUtils.getOrCreateArrayList(regelMap,
 				GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE)) {
 			final long idFach = r18.parameter.get(0);
 			final int idKursart = r18.parameter.get(1).intValue();
 			final int maximalProSchiene = r18.parameter.get(2).intValue();
 
 			final @NotNull KursblockungDynFachart fachart = gibFachart(idFach, idKursart);
-			fachart.regel_18_maximalProSchiene(maximalProSchiene);
+			fachart.setzeMaxAnzahlProSchiene(maximalProSchiene);
 		}
 	}
 
 	private @NotNull KursblockungDynFachart gibFachart(final long fachID, final int kursart) {
-		return _fachartMap2D.getOrException(fachID, kursart);
+		return fachartMap2D.getOrException(fachID, kursart);
 	}
 
 	private @NotNull KursblockungDynSchueler gibSchueler(final long schuelerID) {
-		return DeveloperNotificationException.ifMapGetIsNull(_schuelerMap, schuelerID);
+		return DeveloperNotificationException.ifMapGetIsNull(schuelerMap, schuelerID);
 	}
 
 	private @NotNull KursblockungDynKurs gibKurs(final long kursID) {
-		return DeveloperNotificationException.ifMapGetIsNull(_kursMap, kursID);
+		return DeveloperNotificationException.ifMapGetIsNull(kursMap, kursID);
 	}
 
 	// ########################################
@@ -1179,12 +1210,13 @@ public class KursblockungDynDaten {
 
 		// Erzeuge die Kurs-Schienen-Zuordnungen. Verwende Update-Objekte, da nur eine Regelvalidierung am Ende erfolgt.
 		final @NotNull Set<GostBlockungsergebnisKursSchienenZuordnung> kursSchienenZuordnungen = new HashSet<>();
-		for (final @NotNull KursblockungDynKurs dynKurs : _kursArr)
+		for (final @NotNull KursblockungDynKurs dynKurs : kursMenge) {
 			for (final int schienenNr : dynKurs.gibSchienenLage()) {
 				final long idKurs = dynKurs.gibDatenbankID();
 				final long idSchiene = out.getOfSchieneID(schienenNr + 1); // Manager hat eine 1-Indizierung der Schiene!
 				kursSchienenZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchienenZuordnung(idKurs, idSchiene));
 			}
+		}
 
 		// UPDATE - Kurs - Schiene
 		final @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate uKursSchienen =
@@ -1193,24 +1225,27 @@ public class KursblockungDynDaten {
 
 		// Erzeuge die Kurs-Schüler-Zuordnungen. Verwende Update-Objekte, da nur eine Regelvalidierung am Ende erfolgt.
 		final @NotNull Set<GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen = new HashSet<>();
-		for (final @NotNull KursblockungDynSchueler dynSchueler : _schuelerArr)
-			for (final KursblockungDynKurs kurs : dynSchueler.gibKurswahlen())
+		for (final @NotNull KursblockungDynSchueler dynSchueler : schuelerMenge) {
+			for (final KursblockungDynKurs kurs : dynSchueler.gibKurswahlen()) {
 				if (kurs != null) {
 					// Set verhindert Duplikate (sollte hier nicht vorkommen).
 					final long idKurs = kurs.gibDatenbankID();
 					final long idSchueler = dynSchueler.gibDatenbankID();
 					kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
 				}
+			}
+		}
 
 		// Erzeuge durch Regeln forcierte Schüler-Kurs-Zuordnungen.
 		// Das kann später zu Kollisionen führen, was aber richtig ist.
-		for (final @NotNull GostBlockungRegel gRegel : pDataManager.regelGetListe())
+		for (final @NotNull GostBlockungRegel gRegel : pDataManager.regelGetListe()) {
 			if (gRegel.typ == GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ) {
 				// Set verhindert Duplikate (das ist in diesem Fall möglich).
 				final long idSchueler = gRegel.parameter.get(0);
 				final long idKurs = gRegel.parameter.get(1);
 				kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
 			}
+		}
 
 		// UPDATE - Kurs - Schüler
 		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate uKursSchueler =
@@ -1227,7 +1262,7 @@ public class KursblockungDynDaten {
 	 */
 	@NotNull
 	Logger gibLogger() {
-		return _logger;
+		return log;
 	}
 
 	/**
@@ -1237,7 +1272,7 @@ public class KursblockungDynDaten {
 	 */
 	@NotNull
 	Random gibRandom() {
-		return _random;
+		return rnd;
 	}
 
 	/**
@@ -1246,7 +1281,7 @@ public class KursblockungDynDaten {
 	 * @return Das Statistik-Objekt (für Anfragen zu Nichtwahlen, Kursdifferenzen, etc.).
 	 */
 	public @NotNull KursblockungDynStatistik gibStatistik() {
-		return _statistik;
+		return statistik;
 	}
 
 	/**
@@ -1256,7 +1291,7 @@ public class KursblockungDynDaten {
 	 * @return Liefert die maximale Blockungszeit in Millisekunden.
 	 */
 	long gibBlockungszeitMillis() {
-		return _maxTimeMillis;
+		return maxTimeMillis;
 	}
 
 	/**
@@ -1266,7 +1301,7 @@ public class KursblockungDynDaten {
 	 * @return Liefert die maximal erlaubte Anzahl an Schienen.
 	 */
 	public int gibSchienenAnzahl() {
-		return _schienenArr.length;
+		return schienenMenge.length;
 	}
 
 	/**
@@ -1276,7 +1311,7 @@ public class KursblockungDynDaten {
 	 */
 	@NotNull
 	KursblockungDynKurs @NotNull [] gibKurseAlle() {
-		return _kursArr;
+		return kursMenge;
 	}
 
 	/**
@@ -1286,7 +1321,7 @@ public class KursblockungDynDaten {
 	 */
 	@NotNull
 	KursblockungDynKurs @NotNull [] gibKurseDieFreiSind() {
-		return _kursArrFrei;
+		return kursMengeFrei;
 	}
 
 	/**
@@ -1295,7 +1330,7 @@ public class KursblockungDynDaten {
 	 * @return Anzahl aller Kurse, deren Schienenlage noch veränderbar ist.
 	 */
 	int gibKurseDieFreiSindAnzahl() {
-		return _kursArrFrei.length;
+		return kursMengeFrei.length;
 	}
 
 	/**
@@ -1305,7 +1340,7 @@ public class KursblockungDynDaten {
 	 * @return Long-Wert, der einer Bewertung der Fachwahlmatrix entspricht.
 	 */
 	long gibBewertungFachartPaar() {
-		return _statistik.gibBewertungFachartPaar();
+		return statistik.gibBewertungFachartPaar();
 	}
 
 	/**
@@ -1320,16 +1355,19 @@ public class KursblockungDynDaten {
 	KursblockungDynSchueler @NotNull [] gibSchuelerArray(final boolean pNurMultiKurse) {
 		if (pNurMultiKurse) {
 			final @NotNull LinkedCollection<KursblockungDynSchueler> list = new LinkedCollection<>();
-			for (final KursblockungDynSchueler schueler : _schuelerArr)
-				if (schueler.gibHatMultikurs())
+			for (final KursblockungDynSchueler schueler : schuelerMenge) {
+				if (schueler.gibHatMultikurs()) {
 					list.addLast(schueler);
+				}
+			}
 
 			final @NotNull KursblockungDynSchueler @NotNull [] temp = new KursblockungDynSchueler[list.size()];
-			for (int i = 0; i < temp.length; i++)
+			for (int i = 0; i < temp.length; i++) {
 				temp[i] = list.removeFirst();
+			}
 			return temp;
 		}
-		return _schuelerArr;
+		return schuelerMenge;
 	}
 
 	/**
@@ -1339,67 +1377,56 @@ public class KursblockungDynDaten {
 	 */
 	@NotNull
 	KursblockungDynSchueler @NotNull [] gibSchuelerArrayAlle() {
-		return _schuelerArr;
+		return schuelerMenge;
 	}
 
 	/**
-	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes S sich
+	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdifferenzen) des Zustandes S sich
 	 * verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 *
-	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes S sich
+	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdifferenzen) des Zustandes S sich
 	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 */
 	int gibBewertungJetztBesserAlsS() {
-		return _statistik.gibBewertungZustandS_NW_KD();
+		return statistik.gibBewertungZustandS1NW2KD();
 	}
 
 	/**
-	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Nichtwahlen, Kursdiffenzen,
+	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Nichtwahlen, Kursdifferenzen,
 	 * Fachwahlmatrix) des Zustandes-K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 *
-	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Nichtwahlen, Kursdiffenzen, Fachwahlmatrix) des
+	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Nichtwahlen, Kursdifferenzen, Fachwahlmatrix) des
 	 *         Zustandes-K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 */
-	int gibCompareZustandK_NW_KD_FW() {
-		return _statistik.gibCompareZustandK_NW_KD_FW();
+	int gibCompareZustandK1NW2KD3FW() {
+		return statistik.gibCompareZustandK1NW2KD3FW();
 	}
 
 	/**
-	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Nichtwahlen, Kursdiffenzen,
+	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Nichtwahlen, Kursdifferenzen,
 	 * Fachwahlmatrix) des Zustandes-G sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 *
-	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Nichtwahlen, Kursdiffenzen, Fachwahlmatrix) des
+	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Nichtwahlen, Kursdifferenzen, Fachwahlmatrix) des
 	 *         Zustandes-G sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 */
-	int gibCompareZustandG_NW_KD_FW() {
-		return _statistik.gibCompareZustandG_NW_KD_FW();
+	int gibCompareZustandG1NW2KD3FW() {
+		return statistik.gibCompareZustandG1NW2KD3FW();
 	}
 
 	/**
 	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Fachwahlmatrix, Nichtwahlen,
-	 * Kursdiffenzen) des Zustandes K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
+	 * Kursdifferenzen) des Zustandes K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 *
-	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Fachwahlmatrix, Nichtwahlen, Kursdiffenzen) des
+	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Reihenfolge: Fachwahlmatrix, Nichtwahlen, Kursdifferenzen) des
 	 *         Zustandes K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
 	 */
-	int gibBewertungK_FW_NW_KD_JetztBesser() {
-		return _statistik.gibCompareZustandK_FW_NW_KD();
+	int gibBewertungK1FW2NW3KD() {
+		return statistik.gibCompareZustandK1FW2NW3KD();
 	}
 
 	// ########################################
 	// ########### SETTER / ACTIONS ###########
 	// ########################################
-
-	/**
-	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes S sich
-	 * verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
-	 *
-	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen) des Zustandes K sich
-	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
-	 */
-	int gibBewertung_NW_KD_JetztS() {
-		return _statistik.gibBewertungZustandS_NW_KD();
-	}
 
 	/**
 	 * Liefert TRUE, falls dieses Objekt besser ist als das übergebene Objekt b.
@@ -1408,8 +1435,8 @@ public class KursblockungDynDaten {
 	 *
 	 * @return TRUE, falls dieses Objekt besser ist als das übergebene Objekt b.
 	 */
-	boolean gibIstBesser_NW_KD_FW_Als(final @NotNull KursblockungDynDaten b) {
-		return _statistik.gibIstBesser_NW_KD_FW_Als(b._statistik);
+	boolean gibIstBesserAls1NW2KD3FW(final @NotNull KursblockungDynDaten b) {
+		return statistik.gibIstBesserAls1NW2KD3FW(b.statistik);
 	}
 
 	/**
@@ -1420,9 +1447,11 @@ public class KursblockungDynDaten {
 	 * @return true, falls der Kurs in der Schiene ist.
 	 */
 	public boolean gibIstKursInSchiene(final int idKursDB, final int schieneDB) {
-		for (final @NotNull KursblockungDynKurs k : _kursArr)
-			if ((k.gibDatenbankID() == idKursDB) && (k.gibIstInSchiene(schieneDB - 1)))
+		for (final @NotNull KursblockungDynKurs k : kursMenge) {
+			if ((k.gibDatenbankID() == idKursDB) && (k.gibIstInSchiene(schieneDB - 1))) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -1434,11 +1463,15 @@ public class KursblockungDynDaten {
 	 * @return true, falls der Kurs in der Schiene ist.
 	 */
 	public boolean gibIstSchuelerInKurs(final int idSchuelerDB, final int idKursDB) {
-		for (final @NotNull KursblockungDynKurs k : _kursArr)
-			if (k.gibDatenbankID() == idKursDB)
-				for (final @NotNull KursblockungDynSchueler s : _schuelerArr)
-					if ((s.gibDatenbankID() == idSchuelerDB) && (s.gibIstInKurs(k)))
+		for (final @NotNull KursblockungDynKurs k : kursMenge) {
+			if (k.gibDatenbankID() == idKursDB) {
+				for (final @NotNull KursblockungDynSchueler s : schuelerMenge) {
+					if ((s.gibDatenbankID() == idSchuelerDB) && (s.gibIstInKurs(k))) {
 						return true;
+					}
+				}
+			}
+		}
 		return false;
 	}
 
@@ -1449,7 +1482,7 @@ public class KursblockungDynDaten {
 	 * @return true, falls die übergebene Schiene nur LK-Kurse enthält (oder keine Kurse).
 	 */
 	public boolean gibHatSchieneNurLK(final int schienenNr1indiziert) {
-		return _schienenArr[schienenNr1indiziert - 1].gibHatNurLK();
+		return schienenMenge[schienenNr1indiziert - 1].gibHatNurLK();
 	}
 
 	/**
@@ -1459,7 +1492,7 @@ public class KursblockungDynDaten {
 	 * @return true, falls die übergebene Schiene keine LK-Kurse enthält.
 	 */
 	public boolean gibHatSchieneKeineLK(final int schienenNr1indiziert) {
-		return _schienenArr[schienenNr1indiziert - 1].gibHatKeineLK();
+		return schienenMenge[schienenNr1indiziert - 1].gibHatKeineLK();
 	}
 
 	/**
@@ -1469,9 +1502,11 @@ public class KursblockungDynDaten {
 	 * @return die Anzahl an SuS in dem Kurs (oder -1 falls der Kurs nicht existiert).
 	 */
 	public int gibKursgroesseDesKurses(final int idKursDB) {
-		for (final @NotNull KursblockungDynKurs k : _kursArr)
-			if (k.gibDatenbankID() == idKursDB)
+		for (final @NotNull KursblockungDynKurs k : kursMenge) {
+			if (k.gibDatenbankID() == idKursDB) {
 				return k.gibSchuelerAnzahl();
+			}
+		}
 		return -1;
 	}
 
@@ -1482,9 +1517,11 @@ public class KursblockungDynDaten {
 	 * @return die Kursdifferenz der Fachart des übergebenen Kurses (oder -1 falls der Kurs nicht existiert)..
 	 */
 	public int gibKursdifferenzDesKurses(final int idKursDB) {
-		for (final @NotNull KursblockungDynKurs k : _kursArr)
-			if (k.gibDatenbankID() == idKursDB)
+		for (final @NotNull KursblockungDynKurs k : kursMenge) {
+			if (k.gibDatenbankID() == idKursDB) {
 				return k.gibFachart().gibKursdifferenz();
+			}
+		}
 		return -1;
 	}
 
@@ -1492,39 +1529,45 @@ public class KursblockungDynDaten {
 	 * Speichert die Bewertung, die Kursverteilung und die Schülerverteilung im Zustand S.
 	 */
 	void aktionZustandSpeichernS() {
-		_statistik.aktionBewertungSpeichernS();
+		statistik.aktionBewertungSpeichernS();
 
-		for (final @NotNull KursblockungDynKurs kurs : _kursArr)
+		for (final @NotNull KursblockungDynKurs kurs : kursMenge) {
 			kurs.aktionZustandSpeichernS();
+		}
 
-		for (final @NotNull KursblockungDynSchueler schueler : _schuelerArr)
+		for (final @NotNull KursblockungDynSchueler schueler : schuelerMenge) {
 			schueler.aktionZustandSpeichernS();
+		}
 	}
 
 	/**
 	 * Speichert die Bewertung, die Kursverteilung und die Schülerverteilung im Zustand K.
 	 */
 	void aktionZustandSpeichernK() {
-		_statistik.aktionBewertungSpeichernK();
+		statistik.aktionBewertungSpeichernK();
 
-		for (final @NotNull KursblockungDynKurs kurs : _kursArr)
+		for (final @NotNull KursblockungDynKurs kurs : kursMenge) {
 			kurs.aktionZustandSpeichernK();
+		}
 
-		for (final @NotNull KursblockungDynSchueler schueler : _schuelerArr)
+		for (final @NotNull KursblockungDynSchueler schueler : schuelerMenge) {
 			schueler.aktionZustandSpeichernK();
+		}
 	}
 
 	/**
 	 * Speichert die Bewertung, die Kursverteilung und die Schülerverteilung im Zustand G.
 	 */
 	void aktionZustandSpeichernG() {
-		_statistik.aktionBewertungSpeichernG();
+		statistik.aktionBewertungSpeichernG();
 
-		for (final @NotNull KursblockungDynKurs kurs : _kursArr)
+		for (final @NotNull KursblockungDynKurs kurs : kursMenge) {
 			kurs.aktionZustandSpeichernG();
+		}
 
-		for (final @NotNull KursblockungDynSchueler schueler : _schuelerArr)
+		for (final @NotNull KursblockungDynSchueler schueler : schuelerMenge) {
 			schueler.aktionZustandSpeichernG();
+		}
 	}
 
 	/**
@@ -1534,16 +1577,19 @@ public class KursblockungDynDaten {
 		// Die Reihenfolge ist wichtig!
 
 		// 1) Alle SuS aus den Kursen entfernen
-		for (final @NotNull KursblockungDynSchueler schueler : _schuelerArr)
+		for (final @NotNull KursblockungDynSchueler schueler : schuelerMenge) {
 			schueler.aktionKurseAlleEntfernen();
+		}
 
 		// 2) Dann Kurse verschieben
-		for (final @NotNull KursblockungDynKurs kurs : _kursArr)
+		for (final @NotNull KursblockungDynKurs kurs : kursMenge) {
 			kurs.aktionZustandLadenS();
+		}
 
 		// 3) Dann SuS den Kursen hinzufügen.
-		for (final @NotNull KursblockungDynSchueler schueler : _schuelerArr)
+		for (final @NotNull KursblockungDynSchueler schueler : schuelerMenge) {
 			schueler.aktionZustandLadenS();
+		}
 	}
 
 	/**
@@ -1553,16 +1599,19 @@ public class KursblockungDynDaten {
 		// Die Reihenfolge ist wichtig!
 
 		// 1) Alle SuS aus den Kursen entfernen
-		for (final @NotNull KursblockungDynSchueler schueler : _schuelerArr)
+		for (final @NotNull KursblockungDynSchueler schueler : schuelerMenge) {
 			schueler.aktionKurseAlleEntfernen();
+		}
 
 		// 2) Dann Kurse verschieben
-		for (final @NotNull KursblockungDynKurs kurs : _kursArr)
+		for (final @NotNull KursblockungDynKurs kurs : kursMenge) {
 			kurs.aktionZustandLadenK();
+		}
 
 		// 3) Dann SuS den Kursen hinzufügen.
-		for (final @NotNull KursblockungDynSchueler schueler : _schuelerArr)
+		for (final @NotNull KursblockungDynSchueler schueler : schuelerMenge) {
 			schueler.aktionZustandLadenK();
+		}
 	}
 
 	/**
@@ -1579,16 +1628,19 @@ public class KursblockungDynDaten {
 		// Die Reihenfolge ist wichtig!
 
 		// 1) Alle SuS aus den Kursen entfernen
-		for (final @NotNull KursblockungDynSchueler schueler : _schuelerArr)
+		for (final @NotNull KursblockungDynSchueler schueler : schuelerMenge) {
 			schueler.aktionKurseAlleEntfernen();
+		}
 
 		// 2) Dann Kurse verschieben
-		for (int i = 0; i < _kursArr.length; i++)
-			_kursArr[i].aktionZustandLadenVon(b._kursArr[i], _schienenArr);
+		for (int i = 0; i < kursMenge.length; i++) {
+			kursMenge[i].aktionZustandLadenVon(b.kursMenge[i], schienenMenge);
+		}
 
 		// 3) Dann SuS den Kursen hinzufügen.
-		for (int i = 0; i < _schuelerArr.length; i++)
-			_schuelerArr[i].aktionZustandLadenVon(b._schuelerArr[i], _kursArr);
+		for (int i = 0; i < schuelerMenge.length; i++) {
+			schuelerMenge[i].aktionZustandLadenVon(b.schuelerMenge[i], kursMenge);
+		}
 	}
 
 	/**
@@ -1598,16 +1650,19 @@ public class KursblockungDynDaten {
 		// Die Reihenfolge ist wichtig!
 
 		// 1) Alle SuS aus den Kursen entfernen
-		for (final @NotNull KursblockungDynSchueler schueler : _schuelerArr)
+		for (final @NotNull KursblockungDynSchueler schueler : schuelerMenge) {
 			schueler.aktionKurseAlleEntfernen();
+		}
 
 		// 2) Dann Kurse verschieben
-		for (final @NotNull KursblockungDynKurs kurs : _kursArr)
+		for (final @NotNull KursblockungDynKurs kurs : kursMenge) {
 			kurs.aktionZustandLadenG();
+		}
 
 		// 3) Dann SuS den Kursen hinzufügen.
-		for (final @NotNull KursblockungDynSchueler schueler : _schuelerArr)
+		for (final @NotNull KursblockungDynSchueler schueler : schuelerMenge) {
 			schueler.aktionZustandLadenG();
+		}
 	}
 
 	/**
@@ -1617,39 +1672,44 @@ public class KursblockungDynDaten {
 		// Die Reihenfolge ist wichtig!
 
 		// 1) Alle SuS aus den Kursen entfernen
-		for (final @NotNull KursblockungDynSchueler schueler : _schuelerArr)
+		for (final @NotNull KursblockungDynSchueler schueler : schuelerMenge) {
 			schueler.aktionKurseAlleEntfernen();
+		}
 
 		// 2) Dann Kurse verschieben
-		for (final @NotNull KursblockungDynKurs kurs : _kursArr)
+		for (final @NotNull KursblockungDynKurs kurs : kursMenge) {
 			kurs.aktionZustandLadenK();
+		}
 	}
 
 	/**
 	 * Entfernt alle SuS aus ihren Kursen.
 	 */
 	void aktionSchuelerAusAllenKursenEntfernen() {
-		for (final @NotNull KursblockungDynSchueler s : _schuelerArr)
+		for (final @NotNull KursblockungDynSchueler s : schuelerMenge) {
 			s.aktionKurseAlleEntfernen();
+		}
 	}
 
 	/**
 	 * Verteilt alle Kurse auf ihre Schienen zufällig. Kurse die keinen Freiheitsgrad haben, werden dabei ignoriert.
 	 */
 	void aktionKurseFreieZufaelligVerteilen() {
-		for (final @NotNull KursblockungDynKurs kurs : _kursArrFrei)
+		for (final @NotNull KursblockungDynKurs kurs : kursMengeFrei) {
 			kurs.aktionZufaelligVerteilen();
+		}
 	}
 
 	/**
 	 * Verteilt genau einen Kurs zufällig. Kurse die keinen Freiheitsgrad haben, werden dabei ignoriert.
 	 */
 	void aktionKursVerteilenEinenZufaelligenFreien() {
-		if (_kursArrFrei.length == 0)
+		if (kursMengeFrei.length == 0) {
 			return;
+		}
 
-		final int index = _random.nextInt(_kursArrFrei.length);
-		final @NotNull KursblockungDynKurs kurs = _kursArrFrei[index];
+		final int index = rnd.nextInt(kursMengeFrei.length);
+		final @NotNull KursblockungDynKurs kurs = kursMengeFrei[index];
 		kurs.aktionZufaelligVerteilen();
 	}
 
@@ -1657,14 +1717,16 @@ public class KursblockungDynDaten {
 	 * Verteilt einen Kurs zufällig. Kurse die keinen Freiheitsgrad haben und Multikurse, werden dabei ignoriert.
 	 */
 	void aktionKursFreienEinenZufaelligVerteilenAberNichtMultikurse() {
-		if (_kursArrFrei.length == 0)
+		if (kursMengeFrei.length == 0) {
 			return;
+		}
 
-		final int[] perm = KursblockungStatic.gibPermutation(_random, _kursArrFrei.length);
+		final int[] perm = KursblockungStatic.gibPermutation(rnd, kursMengeFrei.length);
 		for (final int index : perm) {
-			final @NotNull KursblockungDynKurs kurs = _kursArrFrei[index];
-			if (kurs.gibSchienenAnzahl() == 1)
+			final @NotNull KursblockungDynKurs kurs = kursMengeFrei[index];
+			if (kurs.gibSchienenAnzahl() == 1) {
 				kurs.aktionZufaelligVerteilen();
+			}
 		}
 	}
 
@@ -1672,12 +1734,14 @@ public class KursblockungDynDaten {
 	 * Verändert die Lage der Kurse einer zufälligen Fachgruppe komplett neu.
 	 */
 	public void aktionKursVerteilenEineZufaelligeFachgruppe() {
-		if (_fachartArr.length == 0)
+		if (fachartMenge.length == 0) {
 			return;
+		}
 
-		final int fachgruppenIndex = _random.nextInt(_fachartArr.length);
-		for (final @NotNull KursblockungDynKurs kurs: _fachartArr[fachgruppenIndex].gibKurse())
+		final int fachgruppenIndex = rnd.nextInt(fachartMenge.length);
+		for (final @NotNull KursblockungDynKurs kurs: fachartMenge[fachgruppenIndex].gibKurse()) {
 			kurs.aktionZufaelligVerteilen();
+		}
 	}
 
 	/**
@@ -1691,9 +1755,9 @@ public class KursblockungDynDaten {
 		boolean kurslagenVeraenderung = false;
 
 		// In zufälliger Reihenfolge SuS durchgehen...
-		final @NotNull int[] perm = KursblockungStatic.gibPermutation(_random, _schuelerArr.length);
+		final @NotNull int[] perm = KursblockungStatic.gibPermutation(rnd, schuelerMenge.length);
 		for (final int p : perm) {
-			final KursblockungDynSchueler schueler = _schuelerArr[p];
+			final KursblockungDynSchueler schueler = schuelerMenge[p];
 			schueler.aktionKurseVerteilenNurMultikurseZufaellig();
 			kurslagenVeraenderung |= schueler.aktionKurseVerteilenNachDeinemWunsch();
 		}
@@ -1712,9 +1776,9 @@ public class KursblockungDynDaten {
 		boolean kurslagenVeraenderung = false;
 
 		// Suche einen unzufriedenen Schüler...
-		final @NotNull int[] perm = KursblockungStatic.gibPermutation(_random, _schuelerArr.length);
+		final @NotNull int[] perm = KursblockungStatic.gibPermutation(rnd, schuelerMenge.length);
 		for (final int p : perm) {
-			final KursblockungDynSchueler schueler = _schuelerArr[p];
+			final KursblockungDynSchueler schueler = schuelerMenge[p];
 			// Berechne die Nichtwahlen des Schülers.
 			schueler.aktionKurseVerteilenNurMultikurseZufaellig();
 			schueler.aktionKurseVerteilenMitBipartiteMatching();
@@ -1738,10 +1802,10 @@ public class KursblockungDynDaten {
 	 * Kurse mit Hilfe eines bipartiten Matching-Algorithmus verteilt. Bereits belegte Facharten werden übersprungen.
 	 */
 	public void aktionSchuelerVerteilenMitBipartitemMatching() {
-		final @NotNull int[] perm = KursblockungStatic.gibPermutation(_random, _schuelerArr.length);
+		final @NotNull int[] perm = KursblockungStatic.gibPermutation(rnd, schuelerMenge.length);
 
 		for (final int i : perm) {
-			final KursblockungDynSchueler schueler = _schuelerArr[i];
+			final KursblockungDynSchueler schueler = schuelerMenge[i];
 			schueler.aktionKurseVerteilenNurMultikurseZufaellig();
 			schueler.aktionKurseVerteilenNurFachartenMitEinemErlaubtenKurs();
 			schueler.aktionKurseVerteilenMitBipartiteMatching();
@@ -1753,10 +1817,10 @@ public class KursblockungDynDaten {
 	 * Kurse mit Hilfe eines gewichteten Bipartiten-Matching-Algorithmus verteilt.
 	 */
 	public void aktionSchuelerVerteilenMitGewichtetenBipartitemMatching() {
-		final @NotNull int[] perm = KursblockungStatic.gibPermutation(_random, _schuelerArr.length);
+		final @NotNull int[] perm = KursblockungStatic.gibPermutation(rnd, schuelerMenge.length);
 
 		for (final int i : perm) {
-			final KursblockungDynSchueler schueler = _schuelerArr[i];
+			final KursblockungDynSchueler schueler = schuelerMenge[i];
 			schueler.aktionKurseVerteilenNurMultikurseZufaellig();
 			schueler.aktionKurseVerteilenNurFachartenMitEinemErlaubtenKurs();
 			schueler.aktionKurseVerteilenMitBipartiteMatchingGewichtetem();
@@ -1770,9 +1834,11 @@ public class KursblockungDynDaten {
 	 * @param idKursDB      Die Datenbank-ID des Kurses.
 	 */
 	public void aktionSchuelerSetzenInKurs(final int idSchuelerDB, final int idKursDB) {
-		for (final @NotNull KursblockungDynSchueler schueler : _schuelerArr)
-			if (schueler.gibDatenbankID() == idSchuelerDB)
+		for (final @NotNull KursblockungDynSchueler schueler : schuelerMenge) {
+			if (schueler.gibDatenbankID() == idSchuelerDB) {
 				schueler.aktionKursSetzen(idKursDB);
+			}
+		}
 	}
 
 	/**
@@ -1782,9 +1848,11 @@ public class KursblockungDynDaten {
 	 * @param idKursDB      Die Datenbank-ID des Kurses.
 	 */
 	public void aktionSchuelerEntfernenAusKurs(final int idSchuelerDB, final int idKursDB) {
-		for (final @NotNull KursblockungDynSchueler schueler : _schuelerArr)
-			if (schueler.gibDatenbankID() == idSchuelerDB)
+		for (final @NotNull KursblockungDynSchueler schueler : schuelerMenge) {
+			if (schueler.gibDatenbankID() == idSchuelerDB) {
 				schueler.aktionKursEntfernen(idKursDB);
+			}
+		}
 	}
 
 	/**
@@ -1794,56 +1862,61 @@ public class KursblockungDynDaten {
 	 * @param schieneDB Die Datenbank-ID der Schiene (1-indiziert!).
 	 */
 	public void aktionSetzeKursInSchiene(final int idKursDB, final int schieneDB) {
-		for (final @NotNull KursblockungDynKurs k : _kursArr)
-			if (k.gibDatenbankID() == idKursDB)
+		for (final @NotNull KursblockungDynKurs k : kursMenge) {
+			if (k.gibDatenbankID() == idKursDB) {
 				k.aktionSetzeInSchiene(schieneDB - 1);
+			}
+		}
 	}
 
 	/**
 	 * Debug Ausgaben. Nur für Testzwecke.
 	 */
 	public void debug() {
-		_logger.modifyIndent(+4);
+		log.modifyIndent(+4);
 
-		_logger.logLn("########## Schienen ##########");
-		for (int i = 0; i < _schienenArr.length; i++) {
-			_logger.logLn("Schiene " + (i + 1));
-			_schienenArr[i].debug(false);
+		log.logLn("########## Schienen ##########");
+		for (int i = 0; i < schienenMenge.length; i++) {
+			log.logLn("Schiene " + (i + 1));
+			schienenMenge[i].debug(false);
 		}
 
-		_logger.logLn("########## Facharten ##########");
-		for (final @NotNull KursblockungDynFachart fa : _fachartArr) {
-			_logger.logLn("Fachart " + fa + " --> " + fa.gibKursdifferenz());
-			fa.debug(_schuelerArr);
+		log.logLn("########## Facharten ##########");
+		for (final @NotNull KursblockungDynFachart fa : fachartMenge) {
+			log.logLn("Fachart " + fa + " --> " + fa.gibKursdifferenz());
+			fa.debug(schuelerMenge);
 		}
 
-		_logger.modifyIndent(-4);
+		log.modifyIndent(-4);
 
-		_statistik.debug("");
+		statistik.debug("");
 	}
 
 	/**
 	 * Debug Ausgaben (Schienen und Kurse)
 	 */
 	public void printlnSchienenUndKurse() {
-		for (int i = 0; i < _schienenArr.length; i++)
-			_schienenArr[i].printlnKurse();
+		for (int i = 0; i < schienenMenge.length; i++) {
+			schienenMenge[i].printlnKurse();
+		}
 	}
 
 	/**
 	 * Debug-Ausgabe der Schienen mit ihre Kursen und ihren SuS.
 	 */
 	public void printlnSchienenUndKurseUndSchueler() {
-		for (int i = 0; i < _schienenArr.length; i++)
-			_schienenArr[i].printlnKurseUndSchueler(_schuelerArr);
+		for (int i = 0; i < schienenMenge.length; i++) {
+			schienenMenge[i].printlnKurseUndSchueler(schuelerMenge);
+		}
 	}
 
 	/**
 	 * Debug-Ausgabe aller Facharten mit den zugehörigen Kursen.
 	 */
 	public void printlnFacharten() {
-		for (final @NotNull KursblockungDynFachart fachart : _fachartArr)
+		for (final @NotNull KursblockungDynFachart fachart : fachartMenge) {
 			fachart.printlnKurse();
+		}
 	}
 
 }

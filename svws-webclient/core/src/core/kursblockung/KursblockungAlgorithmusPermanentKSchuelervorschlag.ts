@@ -11,9 +11,9 @@ export class KursblockungAlgorithmusPermanentKSchuelervorschlag extends Kursbloc
 	/**
 	 * Im Konstruktor wird ein zufälliger Anfangszustand erzeugt.
 	 *
-	 * @param random  Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param logger  Logger für Benutzerhinweise, Warnungen und Fehler.
-	 * @param input   Die dynamischen Blockungsdaten.
+	 * @param random   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param logger   Logger für Benutzerhinweise, Warnungen und Fehler.
+	 * @param input    Die dynamischen Blockungsdaten.
 	 */
 	public constructor(random: Random, logger: Logger, input: GostBlockungsdatenManager) {
 		super(random, logger, input);
@@ -48,13 +48,13 @@ export class KursblockungAlgorithmusPermanentKSchuelervorschlag extends Kursbloc
 			this.dynDaten.aktionKursVerteilenEinenZufaelligenFreien();
 		}
 		this.dynDaten.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
-		if (this.dynDaten.gibCompareZustandK_NW_KD_FW() > 0) {
+		if (this.dynDaten.gibCompareZustandK1NW2KD3FW() > 0) {
 			this.dynDaten.aktionZustandSpeichernK();
 			return;
 		}
 		this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 		this.dynDaten.aktionSchuelerVerteilenMitBipartitemMatching();
-		if (this.dynDaten.gibCompareZustandK_NW_KD_FW() > 0) {
+		if (this.dynDaten.gibCompareZustandK1NW2KD3FW() > 0) {
 			this.dynDaten.aktionZustandSpeichernK();
 			return;
 		}
@@ -66,11 +66,11 @@ export class KursblockungAlgorithmusPermanentKSchuelervorschlag extends Kursbloc
 			this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 			this.dynDaten.aktionKursVerteilenEinenZufaelligenFreien();
 			this.dynDaten.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
-			if (this.dynDaten.gibCompareZustandK_NW_KD_FW() > 0) {
+			if (this.dynDaten.gibCompareZustandK1NW2KD3FW() > 0) {
 				this.dynDaten.aktionZustandSpeichernK();
 				return;
 			}
-		} while (this._random.nextBoolean());
+		} while (this.rnd.nextBoolean());
 		this.dynDaten.aktionZustandLadenK();
 	}
 

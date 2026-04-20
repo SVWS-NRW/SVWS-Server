@@ -23,12 +23,12 @@ public final class KursblockungAlgorithmusKFachwahlmatrix extends KursblockungAl
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in diese Methode noch nicht
 	 * auf Schienen verteilt werden.
 	 *
-	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
-	 * @param pDynDat Die dynamischen Blockungsdaten.
+	 * @param random     Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param logger     Logger für Benutzerhinweise, Warnungen und Fehler.
+	 * @param dynDaten   Die dynamischen Blockungsdaten.
 	 */
-	public KursblockungAlgorithmusKFachwahlmatrix(final @NotNull Random pRandom, final @NotNull Logger pLogger, final @NotNull KursblockungDynDaten pDynDat) {
-		super(pRandom, pLogger, pDynDat);
+	public KursblockungAlgorithmusKFachwahlmatrix(final @NotNull Random random, final @NotNull Logger logger, final @NotNull KursblockungDynDaten dynDaten) {
+		super(random, logger, dynDaten);
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public final class KursblockungAlgorithmusKFachwahlmatrix extends KursblockungAl
 	}
 
 	/**
-	 * Die Lage einiger Kurse wird verändert. Falls sich die Bewertung verschlechter,
+	 * Die Lage einiger Kurse wird verändert. Falls sich die Bewertung verschlechtert,
 	 * wird die Veränderung rückgängig gemacht.
 	 *
 	 * @return TRUE, falls sich die Bewertung verbessert hat.
@@ -77,11 +77,11 @@ public final class KursblockungAlgorithmusKFachwahlmatrix extends KursblockungAl
 			// Zustand-K besser?
 			// Die Bewertung von Nichtwahlen und Kursdifferenzen ändert sich nicht, da keine
 			// SuS verteilt werden. Aber die Bewertung der Fachwahlen FW = Fachart-Paar kann kleiner werden.
-			if (dynDaten.gibCompareZustandK_NW_KD_FW() > 0) {
+			if (dynDaten.gibCompareZustandK1NW2KD3FW() > 0) {
 				dynDaten.aktionZustandSpeichernK();
 				return true;
 			}
-		} while (_random.nextBoolean());
+		} while (rnd.nextBoolean());
 
 		// Zustand laden.
 		dynDaten.aktionZustandLadenK();

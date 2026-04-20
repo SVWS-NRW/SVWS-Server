@@ -16,10 +16,10 @@ import jakarta.validation.constraints.NotNull;
 public class KursblockungDynSchueler {
 
 	/** Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. */
-	private final @NotNull Random _random;
+	private final @NotNull Random rnd;
 
 	/** Logger für Benutzerhinweise, Warnungen und Fehler. */
-	private final @NotNull Logger _logger;
+	private final @NotNull Logger log;
 
 	/** Die ID (von der GUI) des Schülers, beispielsweise 42. */
 	private final long guiID;
@@ -60,32 +60,32 @@ public class KursblockungDynSchueler {
 	/**
 	 * Im Konstruktor wird {@code pSchueler} in ein Objekt dieser Klasse umgewandelt.
 	 *
-	 * @param pRandom         Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pLogger         Logger für Benutzerhinweise, Warnungen und Fehler.
-	 * @param pStatistik      Referenz um die Nichtwahlen mitzuteilen.
-	 * @param pSchuelerID     Die ID des Schülers von der GUI/DB.
-	 * @param pSchienenAnzahl Wir benötigt, um {@link #schieneBelegt} zu initialisieren.
-	 * @param pKursAnzahl     Die Anzahl aller Kurse. Wird benötigt, damit {@link #kursGesperrt} initialisiert werden kann.
-	 * @param pInternalID     Eine interne ID für schnellen Zugriff.
+	 * @param random           Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param logger           Logger für Benutzerhinweise, Warnungen und Fehler.
+	 * @param statistik        Referenz um die Nichtwahlen mitzuteilen.
+	 * @param schuelerID       Die ID des Schülers von der GUI/DB.
+	 * @param schienenAnzahl   Wir benötigt, um {@link #schieneBelegt} zu initialisieren.
+	 * @param kursAnzahl       Die Anzahl aller Kurse. Wird benötigt, damit {@link #kursGesperrt} initialisiert werden kann.
+	 * @param internalID       Eine interne ID für schnellen Zugriff.
 	 */
-	KursblockungDynSchueler(final @NotNull Logger pLogger, final @NotNull Random pRandom, final long pSchuelerID,
-			final @NotNull KursblockungDynStatistik pStatistik, final int pSchienenAnzahl, final int pKursAnzahl, final int pInternalID) {
-		_random = pRandom;
-		_logger = pLogger;
-		guiID = pSchuelerID;
-		internalSchuelerID = pInternalID;
-		representation = "Schüler " + pSchuelerID;
-		statistik = pStatistik;
-		fachartArr = new KursblockungDynFachart[0];
-		fachartZuKurs = new KursblockungDynKurs[0];
-		fachartZuKursSaveS = new KursblockungDynKurs[0];
-		fachartZuKursSaveK = new KursblockungDynKurs[0];
-		fachartZuKursSaveG = new KursblockungDynKurs[0];
-		nichtwahlen = 0;
-		schieneBelegt = new boolean[pSchienenAnzahl];
-		kursGesperrt = new boolean[pKursAnzahl];
-		regel16schuelerIgnorieren = false;
-		matrix = new KursblockungMatrix(_random, 0, 0);
+	KursblockungDynSchueler(final @NotNull Logger logger, final @NotNull Random random, final long schuelerID,
+			final @NotNull KursblockungDynStatistik statistik, final int schienenAnzahl, final int kursAnzahl, final int internalID) {
+		this.rnd = random;
+		this.log = logger;
+		this.guiID = schuelerID;
+		this.internalSchuelerID = internalID;
+		this.representation = "Schüler " + schuelerID;
+		this.statistik = statistik;
+		this.fachartArr = new KursblockungDynFachart[0];
+		this.fachartZuKurs = new KursblockungDynKurs[0];
+		this.fachartZuKursSaveS = new KursblockungDynKurs[0];
+		this.fachartZuKursSaveK = new KursblockungDynKurs[0];
+		this.fachartZuKursSaveG = new KursblockungDynKurs[0];
+		this.nichtwahlen = 0;
+		this.schieneBelegt = new boolean[schienenAnzahl];
+		this.kursGesperrt = new boolean[kursAnzahl];
+		this.regel16schuelerIgnorieren = false;
+		this.matrix = new KursblockungMatrix(rnd, 0, 0);
 	}
 
 	/**
@@ -148,9 +148,11 @@ public class KursblockungDynSchueler {
 	 * @return TRUE, falls der Schüler mindestens einen Multikurs hat.
 	 */
 	boolean gibHatMultikurs() {
-		for (final @NotNull KursblockungDynFachart fachart : fachartArr)
-			if (fachart.gibHatMultikurs())
+		for (final @NotNull KursblockungDynFachart fachart : fachartArr) {
+			if (fachart.gibHatMultikurs()) {
 				return true;
+			}
+		}
 
 		return false;
 	}
@@ -173,9 +175,11 @@ public class KursblockungDynSchueler {
 	 * @return TRUE, falls dieser Schüler dem übergebenen Kurs zugeordnet ist.
 	 */
 	public boolean gibIstInKurs(final KursblockungDynKurs kurs) {
-		for (final KursblockungDynKurs zugeordneterKurs : fachartZuKurs)
-			if (zugeordneterKurs == kurs)
+		for (final KursblockungDynKurs zugeordneterKurs : fachartZuKurs) {
+			if (zugeordneterKurs == kurs) {
 				return true;
+			}
+		}
 
 		return false;
 	}
@@ -192,9 +196,11 @@ public class KursblockungDynSchueler {
 	 * @return die zum Fach zugehörige Fachart (= Fachwahl) des Schülers.
 	 */
 	private @NotNull KursblockungDynFachart gibFachartZuFachID(final long idFach) {
-		for (final @NotNull KursblockungDynFachart fachart : fachartArr)
-			if (fachart.gibFach().id == idFach)
+		for (final @NotNull KursblockungDynFachart fachart : fachartArr) {
+			if (fachart.gibFach().id == idFach) {
 				return fachart;
+			}
+		}
 
 		throw new DeveloperNotificationException(representation + " hat kein Fach mit ID = " + idFach + "!");
 	}
@@ -215,7 +221,7 @@ public class KursblockungDynSchueler {
 		nichtwahlen = nFacharten;
 
 		// FachartArr sortieren --> geringe Kursanzahl zuerst.
-		for (int i = 1; i < nFacharten; i++)
+		for (int i = 1; i < nFacharten; i++) {
 			for (int j = i; j >= 1; j--) {
 				final int anzL = fachartArr[j - 1].gibKurseMax();
 				final int anzR = fachartArr[j].gibKurseMax();
@@ -226,8 +232,9 @@ public class KursblockungDynSchueler {
 					fachartArr[j] = fL;
 				}
 			}
+		}
 
-		matrix = new KursblockungMatrix(_random, nFacharten, schieneBelegt.length);
+		matrix = new KursblockungMatrix(rnd, nFacharten, schieneBelegt.length);
 	}
 
 	/**
@@ -289,10 +296,11 @@ public class KursblockungDynSchueler {
 			if (kursB != null) {
 				final KursblockungDynKurs kurs = kursArr[kursB.gibInternalID()];
 
-				if (kurs.gibIstErlaubtFuerSchueler(this))
+				if (kurs.gibIstErlaubtFuerSchueler(this)) {
 					aktionKursHinzufuegen(i, kurs);
-				else
+				} else {
 					throw new DeveloperNotificationException("FEHLER: Schüler " + guiID + " darf den Kurs " + kurs.gibDatenbankID() + " nicht wählen.");
+				}
 			}
 		}
 	}
@@ -311,8 +319,9 @@ public class KursblockungDynSchueler {
 		for (int i = 0; i < fachartArr.length; i++) {
 			final KursblockungDynKurs kurs = fachartZuKurs[i];
 			// Kurs vorhanden? --> Entferne S. aus dem Kurs.
-			if (kurs != null)
+			if (kurs != null) {
 				aktionKursEntfernen(i, kurs);
+			}
 		}
 	}
 
@@ -320,37 +329,41 @@ public class KursblockungDynSchueler {
 	 * Verteilt alle Kurse des S., die über mehr als eine Schiene gehen.
 	 */
 	void aktionKurseVerteilenNurMultikurseZufaellig() {
-		final @NotNull int[] perm = KursblockungStatic.gibPermutation(_random, fachartArr.length);
+		final @NotNull int[] perm = KursblockungStatic.gibPermutation(rnd, fachartArr.length);
 
 		for (int pFachart = 0; pFachart < fachartArr.length; pFachart++) {
 			final int iFachart = perm[pFachart];
 
 			// Bereits belegte Facharten überspringen.
-			if (fachartZuKurs[iFachart] != null)
+			if (fachartZuKurs[iFachart] != null) {
 				continue;
+			}
 
 			// Facharten ohne Multikurse überspringen.
 			final @NotNull KursblockungDynFachart fachart = fachartArr[iFachart];
-			if (!fachart.gibHatMultikurs())
+			if (!fachart.gibHatMultikurs()) {
 				continue;
+			}
 
 			// Alle Kurse der Fachart durchgehen und probieren, ob wählbar.
 			final @NotNull KursblockungDynKurs @NotNull [] kurse = fachart.gibKurse();
-			final @NotNull int[] perm2 = KursblockungStatic.gibPermutation(_random, kurse.length);
+			final @NotNull int[] perm2 = KursblockungStatic.gibPermutation(rnd, kurse.length);
 			for (final int i : perm2) {
 				final @NotNull KursblockungDynKurs kurs = kurse[i];
 
 				// Überspringt nicht erlaubte Kurse.
-				if (!kurs.gibIstErlaubtFuerSchueler(this))
+				if (!kurs.gibIstErlaubtFuerSchueler(this)) {
 					continue;
+				}
 
 				// Der Kurs ist wählbar, wenn jede Schiene des Kurses frei ist.
 				boolean waehlbar = true;
-				for (final int nr : kurs.gibSchienenLage())
+				for (final int nr : kurs.gibSchienenLage()) {
 					if (schieneBelegt[nr]) {
 						waehlbar = false;
 						break;
 					}
+				}
 
 				// Falls wählbar, dann Kurs hinzufügen und zur nächsten Fachart gehen.
 				if (waehlbar) {
@@ -367,8 +380,9 @@ public class KursblockungDynSchueler {
 	void aktionKurseVerteilenNurFachartenMitEinemErlaubtenKurs() {
 		for (int iFachart = 0; iFachart < fachartArr.length; iFachart++) {
 			// Bereits belegte Facharten ignorieren.
-			if (fachartZuKurs[iFachart] != null)
+			if (fachartZuKurs[iFachart] != null) {
 				continue;
+			}
 
 			// Hole Kurse der Fachart
 			final @NotNull KursblockungDynFachart fachart = fachartArr[iFachart];
@@ -376,25 +390,30 @@ public class KursblockungDynSchueler {
 
 			// Facharten mit mehr als einen Kurs ignorieren.
 			int erlaubt = 0;
-			for (final @NotNull KursblockungDynKurs kurs : kurse)
-				if (kurs.gibIstErlaubtFuerSchueler(this))
+			for (final @NotNull KursblockungDynKurs kurs : kurse) {
+				if (kurs.gibIstErlaubtFuerSchueler(this)) {
 					erlaubt++;
-			if (erlaubt != 1)
+				}
+			}
+			if (erlaubt != 1) {
 				continue;
+			}
 
 			// Alle Kurse der Facharten durchgehen und probieren, ob wählbar. Es wird genau ein Kurs sein.
 			for (final @NotNull KursblockungDynKurs kurs : kurse) {
 				// Überspringt nicht erlaubte Kurse.
-				if (!kurs.gibIstErlaubtFuerSchueler(this))
+				if (!kurs.gibIstErlaubtFuerSchueler(this)) {
 					continue;
+				}
 
 				// Der Kurs ist wählbar, wenn jede Schiene des Kurses frei ist.
 				boolean waehlbar = true;
-				for (final int nr : kurs.gibSchienenLage())
+				for (final int nr : kurs.gibSchienenLage()) {
 					if (schieneBelegt[nr]) {
 						waehlbar = false;
 						break;
 					}
+				}
 
 				// Falls wählbar, dann Kurs hinzufügen und zur nächsten Fachart gehen.
 				if (waehlbar) {
@@ -417,21 +436,25 @@ public class KursblockungDynSchueler {
 		for (int r = 0; r < fachartArr.length; r++) {
 
 			// Zeile löschen.
-			for (int c = 0; c < schieneBelegt.length; c++)
+			for (int c = 0; c < schieneBelegt.length; c++) {
 				data[r][c] = _INFINITY;
+			}
 
 			// Überspringe, falls bereits zugeordnet oder die Fachart über mehrere Schienen geht.
-			if ((fachartZuKurs[r] != null) || fachartArr[r].gibHatMultikurs())
+			if ((fachartZuKurs[r] != null) || fachartArr[r].gibHatMultikurs()) {
 				continue;
+			}
 
 
 			// Bewertung der Zeile
-			for (int c = 0; c < schieneBelegt.length; c++)
+			for (int c = 0; c < schieneBelegt.length; c++) {
 				if (!schieneBelegt[c]) {
 					final KursblockungDynKurs kurs = fachartArr[r].gibKleinstenKursInSchieneFuerSchueler(c, this);
-					if (kurs != null)
+					if (kurs != null) {
 						data[r][c] = kurs.gibGewichtetesMatchingBewertung();
+					}
 				}
+			}
 		}
 
 		// Berechnen
@@ -441,24 +464,28 @@ public class KursblockungDynSchueler {
 		for (int r = 0; r < fachartArr.length; r++) {
 
 			// Überspringe, falls bereits zugeordnet oder die Fachart über mehrere Schienen geht.
-			if ((fachartZuKurs[r] != null) || fachartArr[r].gibHatMultikurs())
+			if ((fachartZuKurs[r] != null) || fachartArr[r].gibHatMultikurs()) {
 				continue;
+			}
 
 			// Kein Matching-Partner gefunden?
 			final int c = r2c[r];
-			if (c < 0)
+			if (c < 0) {
 				continue;
+			}
 
 			// Matching ungültig?
-			if (data[r][c] == _INFINITY)
+			if (data[r][c] == _INFINITY) {
 				continue;
+			}
 
 			// Zuordnen
 			final KursblockungDynKurs kursGefunden = fachartArr[r].gibKleinstenKursInSchieneFuerSchueler(c, this);
-			if (kursGefunden != null)
+			if (kursGefunden != null) {
 				aktionKursHinzufuegen(r, kursGefunden);
-			else
+			} else {
 				throw new DeveloperNotificationException("FEHLER: Kein Kurs in [" + r + "/" + c + "] gefunden!");
+			}
 		}
 
 	}
@@ -473,20 +500,24 @@ public class KursblockungDynSchueler {
 		for (int r = 0; r < fachartArr.length; r++) {
 
 			// Zeile löschen.
-			for (int c = 0; c < schieneBelegt.length; c++)
+			for (int c = 0; c < schieneBelegt.length; c++) {
 				data[r][c] = 0;
+			}
 
 			// Kurs bereits zugeordnet ODER Multikurs? --> Zeile überspringen
-			if ((fachartZuKurs[r] != null) || fachartArr[r].gibHatMultikurs())
+			if ((fachartZuKurs[r] != null) || fachartArr[r].gibHatMultikurs()) {
 				continue;
+			}
 
 			// Bewertung der Zeile
-			for (int c = 0; c < schieneBelegt.length; c++)
+			for (int c = 0; c < schieneBelegt.length; c++) {
 				if (!schieneBelegt[c]) {
 					final KursblockungDynKurs kurs = fachartArr[r].gibKleinstenKursInSchieneFuerSchueler(c, this);
-					if (kurs != null)
+					if (kurs != null) {
 						data[r][c] = 1;
+					}
 				}
+			}
 		}
 
 		// Berechnen
@@ -494,20 +525,23 @@ public class KursblockungDynSchueler {
 		for (int r = 0; r < fachartArr.length; r++) {
 
 			// Kurs bereits zugeordnet ODER Multikurs? --> Zeile überspringen
-			if ((fachartZuKurs[r] != null) || fachartArr[r].gibHatMultikurs())
+			if ((fachartZuKurs[r] != null) || fachartArr[r].gibHatMultikurs()) {
 				continue;
+			}
 
 			// Keinen Matching-Partner gefunden?
 			final int c = r2c[r];
-			if (c == -1)
+			if (c == -1) {
 				continue;
+			}
 
 			// Zuordnen
 			final KursblockungDynKurs kursGefunden = fachartArr[r].gibKleinstenKursInSchieneFuerSchueler(c, this);
-			if (kursGefunden != null)
+			if (kursGefunden != null) {
 				aktionKursHinzufuegen(r, kursGefunden);
-			else
+			} else {
 				throw new DeveloperNotificationException("FEHLER: Kein Kurs in [" + r + "/" + c + "] gefunden!");
+			}
 		}
 
 	}
@@ -530,54 +564,62 @@ public class KursblockungDynSchueler {
 			final KursblockungDynFachart fachart = fachartArr[r];
 
 			// Zeile löschen.
-			for (int c = 0; c < schieneBelegt.length; c++)
+			for (int c = 0; c < schieneBelegt.length; c++) {
 				data[r][c] = _VAL_UNGUELTIG;
+			}
 
 			// Überspringe, falls bereits zugeordnet oder die Fachart über mehrere Schienen geht.
-			if ((fachartZuKurs[r] != null) || fachart.gibHatMultikurs())
+			if ((fachartZuKurs[r] != null) || fachart.gibHatMultikurs()) {
 				continue;
+			}
 
 			// Bewerte die Zeile, falls die Schiene c nicht belegt ist.
-			for (int c = 0; c < schieneBelegt.length; c++)
+			for (int c = 0; c < schieneBelegt.length; c++) {
 				if (!schieneBelegt[c]) {
-					if (fachart.gibHatSchuelerKursInSchiene(c, this))
+					if (fachart.gibHatSchuelerKursInSchiene(c, this)) {
 						data[r][c] = _VAL_KURS_GEWAEHLT;
-					else
+					} else {
 						data[r][c] = fachart.gibHatSchuelerKursMitFreierSchiene(c, this) ? _VAL_KURS_MUSS_WANDERN : _VAL_UNGUELTIG;
+					}
 				}
+			}
 		}
 
 		// 2) Matching Berechnen
 		final @NotNull int[] r2c = matrix.gibMinimalesBipartitesMatchingGewichtet(true);
 
 		// 3) Zuordnen
-		boolean kurslage_veraendert = false;
+		boolean kurslageHatSichVeraendert = false;
 		for (int r = 0; r < fachartArr.length; r++) {
 			final KursblockungDynFachart fachart = fachartArr[r];
 
 			// Überspringe, falls bereits zugeordnet oder die Fachart über mehrere Schienen geht.
-			if ((fachartZuKurs[r] != null) || fachart.gibHatMultikurs())
+			if ((fachartZuKurs[r] != null) || fachart.gibHatMultikurs()) {
 				continue;
+			}
 
 			// Keinen Matching-Partner gefunden?
 			final int c = r2c[r];
-			if (c < 0)
+			if (c < 0) {
 				continue;
+			}
 
 			// Alle Kurse der Fachart nicht wählbar, alle gesperrt?
-			if (data[r][c] == _VAL_UNGUELTIG)
+			if (data[r][c] == _VAL_UNGUELTIG) {
 				continue;
+			}
 
 			// S. wäre in diesem Kurs, aber S. trotzdem nicht hinzufügen, da dies nur eine Simulation ist.
-			if (data[r][c] == _VAL_KURS_GEWAEHLT)
+			if (data[r][c] == _VAL_KURS_GEWAEHLT) {
 				continue;
+			}
 
 			// VAL_KURS_MUSS_WANDERN
 			fachart.aktionZufaelligerKursWandertNachSchiene(c);
-			kurslage_veraendert = true;
+			kurslageHatSichVeraendert = true;
 		}
 
-		return kurslage_veraendert;
+		return kurslageHatSichVeraendert;
 	}
 
 	/**
@@ -587,30 +629,33 @@ public class KursblockungDynSchueler {
 	 * Schienen in den der Kurs sind frei sind.
 	 */
 	void aktionKurseVerteilenZufaellig() {
-		final @NotNull int[] perm = KursblockungStatic.gibPermutation(_random, fachartArr.length);
+		final @NotNull int[] perm = KursblockungStatic.gibPermutation(rnd, fachartArr.length);
 
 		for (int pFachart = 0; pFachart < fachartArr.length; pFachart++) {
 			final int iFachart = perm[pFachart];
 
 			// Bereits belegte Facharten ignorieren.
-			if (fachartZuKurs[iFachart] != null)
+			if (fachartZuKurs[iFachart] != null) {
 				continue;
+			}
 
 			// Alle Kurse der Facharten durchgehen und probieren, ob wählbar.
 			final @NotNull KursblockungDynFachart fachart = fachartArr[iFachart];
 			final @NotNull KursblockungDynKurs @NotNull [] kurse = fachart.gibKurse();
 			for (final @NotNull KursblockungDynKurs kurs : kurse) {
 				// Überspringt nicht erlaubte Kurse.
-				if (!kurs.gibIstErlaubtFuerSchueler(this))
+				if (!kurs.gibIstErlaubtFuerSchueler(this)) {
 					continue;
+				}
 
 				// Der Kurs ist wählbar, wenn jede Schiene des Kurses frei ist.
 				boolean waehlbar = true;
-				for (final int nr : kurs.gibSchienenLage())
+				for (final int nr : kurs.gibSchienenLage()) {
 					if (schieneBelegt[nr]) {
 						waehlbar = false;
 						break;
 					}
+				}
 
 				// Falls wählbar, dann Kurs hinzufügen und zur nächsten Fachart gehen.
 				if (waehlbar) {
@@ -631,21 +676,23 @@ public class KursblockungDynSchueler {
 	 * Ausgabe der aktuellen Kurslage zum debuggen.
 	 */
 	void debugKurswahlen() {
-		_logger.modifyIndent(+4);
-		_logger.logLn("");
-		_logger.logLn(representation);
+		log.modifyIndent(+4);
+		log.logLn("");
+		log.logLn(representation);
 		final HashSet<Integer> setSchienenLage = new HashSet<>();
 		for (final KursblockungDynKurs kurs : fachartZuKurs) {
-			if (kurs == null)
+			if (kurs == null) {
 				continue;
-			_logger.logLn("    " + kurs.toString() + "    " + Arrays.toString(kurs.gibSchienenLage()));
-			for (final int schiene : kurs.gibSchienenLage())
+			}
+			log.logLn("    " + kurs.toString() + "    " + Arrays.toString(kurs.gibSchienenLage()));
+			for (final int schiene : kurs.gibSchienenLage()) {
 				if (!setSchienenLage.add(schiene)) {
-					_logger.logLn("Kollision");
+					log.logLn("Kollision");
 					return;
 				}
+			}
 		}
-		_logger.modifyIndent(-4);
+		log.modifyIndent(-4);
 	}
 
 	/**
@@ -654,15 +701,16 @@ public class KursblockungDynSchueler {
 	 * @param that    Der übergebene Schüler.
 	 * @param idFach  Die Datenbank-ID des Faches.
 	 */
-	void regel_11_zusammen_mit_schueler_in_fach(final @NotNull KursblockungDynSchueler that, final long idFach) {
+	void setzeZusammenMitSchuelerInFach(final @NotNull KursblockungDynSchueler that, final long idFach) {
 		final @NotNull KursblockungDynFachart fachart1 = this.gibFachartZuFachID(idFach);
 		final @NotNull KursblockungDynFachart fachart2 = that.gibFachartZuFachID(idFach);
 
-		if (fachart1.gibNr() != fachart2.gibNr())
+		if (fachart1.gibNr() != fachart2.gibNr()) {
 			throw new DeveloperNotificationException("Regel 11:" + representation + " bei " + fachart1 + " und " + that.representation + " bei " + fachart2
 					+ " haben nicht die selbe Kursart!");
+		}
 
-		fachart1.regel_schueler_zusammen_mit_schueler(this.internalSchuelerID, that.internalSchuelerID);
+		fachart1.setzeSchuelerZusammenMitSchueler(this.internalSchuelerID, that.internalSchuelerID);
 	}
 
 	/**
@@ -671,15 +719,16 @@ public class KursblockungDynSchueler {
 	 * @param that    Der übergebene Schüler.
 	 * @param idFach  Die Datenbank-ID des Faches.
 	 */
-	void regel_12_verbieten_mit_schueler_in_fach(final @NotNull KursblockungDynSchueler that, final long idFach) {
+	void setzeVerbietenMitSchuelerInFach(final @NotNull KursblockungDynSchueler that, final long idFach) {
 		final @NotNull KursblockungDynFachart fachart1 = this.gibFachartZuFachID(idFach);
 		final @NotNull KursblockungDynFachart fachart2 = that.gibFachartZuFachID(idFach);
 
-		if (fachart1.gibNr() != fachart2.gibNr())
+		if (fachart1.gibNr() != fachart2.gibNr()) {
 			throw new DeveloperNotificationException("Regel 12:" + representation + " bei " + fachart1 + " und " + that.representation + " bei " + fachart2
 					+ " haben nicht die selbe Kursart!");
+		}
 
-		fachart1.regel_schueler_verbieten_mit_schueler(this.internalSchuelerID, that.internalSchuelerID);
+		fachart1.setzeSchuelerVerbietenMitSchueler(this.internalSchuelerID, that.internalSchuelerID);
 	}
 
 	/**
@@ -687,11 +736,14 @@ public class KursblockungDynSchueler {
 	 *
 	 * @param that  Der übergebene Schüler.
 	 */
-	public void regel_13_zusammen_mit_schueler(final @NotNull KursblockungDynSchueler that) {
-		for (final @NotNull KursblockungDynFachart fachart1 : fachartArr)
-			for (final @NotNull KursblockungDynFachart fachart2 : fachartArr)
-				if (fachart1.gibNr() == fachart2.gibNr())
-					fachart1.regel_schueler_zusammen_mit_schueler(this.internalSchuelerID, that.internalSchuelerID);
+	public void setzeZusammenMitSchueler(final @NotNull KursblockungDynSchueler that) {
+		for (final @NotNull KursblockungDynFachart fachart1 : fachartArr) {
+			for (final @NotNull KursblockungDynFachart fachart2 : fachartArr) {
+				if (fachart1.gibNr() == fachart2.gibNr()) {
+					fachart1.setzeSchuelerZusammenMitSchueler(this.internalSchuelerID, that.internalSchuelerID);
+				}
+			}
+		}
 	}
 
 	/**
@@ -699,19 +751,23 @@ public class KursblockungDynSchueler {
 	 *
 	 * @param that  Der übergebene Schüler.
 	 */
-	void regel_14_verbieten_mit_schueler(final @NotNull KursblockungDynSchueler that) {
-		for (final @NotNull KursblockungDynFachart fachart1 : fachartArr)
-			for (final @NotNull KursblockungDynFachart fachart2 : fachartArr)
-				if (fachart1.gibNr() == fachart2.gibNr())
-					fachart1.regel_schueler_verbieten_mit_schueler(this.internalSchuelerID, that.internalSchuelerID);
+	void setzeVerbietenMitSchueler(final @NotNull KursblockungDynSchueler that) {
+		for (final @NotNull KursblockungDynFachart fachart1 : fachartArr) {
+			for (final @NotNull KursblockungDynFachart fachart2 : fachartArr) {
+				if (fachart1.gibNr() == fachart2.gibNr()) {
+					fachart1.setzeSchuelerVerbietenMitSchueler(this.internalSchuelerID, that.internalSchuelerID);
+				}
+			}
+		}
 	}
 
 	/**
-	 * Wendet an, dasss der Schüler bei der Blockung nicht auf Kurse verteilt werden soll.
+	 * Wendet an, dass der Schüler bei der Blockung nicht auf Kurse verteilt werden soll.
 	 */
-	void regel_16_sperre() {
-		for (int i = 0; i < schieneBelegt.length; i++)
+	void setzeSperreBeiKursverteilung() {
+		for (int i = 0; i < schieneBelegt.length; i++) {
 			schieneBelegt[i] = true;
+		}
 		regel16schuelerIgnorieren = true;
 	}
 
@@ -722,10 +778,11 @@ public class KursblockungDynSchueler {
 			final KursblockungDynKurs kurs = wahl[i];
 
 			if (kurs != null) {
-				if (kurs.gibIstErlaubtFuerSchueler(this))
+				if (kurs.gibIstErlaubtFuerSchueler(this)) {
 					aktionKursHinzufuegen(i, kurs);
-				else
+				} else {
 					throw new DeveloperNotificationException("FEHLER: Schüler " + guiID + " darf den Kurs " + kurs.gibDatenbankID() + " nicht wählen.");
+				}
 			}
 		}
 	}
@@ -760,13 +817,15 @@ public class KursblockungDynSchueler {
 	public void aktionKursSetzen(final int idKursDB) {
 		for (int fachartIndex = 0; fachartIndex < fachartArr.length; fachartIndex++) {
 			final @NotNull KursblockungDynFachart fachart = fachartArr[fachartIndex];
-			for (final @NotNull KursblockungDynKurs kurs : fachart.gibKurse())
+			for (final @NotNull KursblockungDynKurs kurs : fachart.gibKurse()) {
 				if ((kurs.gibDatenbankID() == idKursDB) && (kurs.gibIstErlaubtFuerSchueler(this))) {
 					final KursblockungDynKurs kursVorher = fachartZuKurs[fachartIndex];
-					if (kursVorher != null)
+					if (kursVorher != null) {
 						aktionKursEntfernen(fachartIndex, kursVorher);
+					}
 					aktionKursHinzufuegen(fachartIndex, kurs);
 				}
+			}
 		}
 	}
 
@@ -778,12 +837,14 @@ public class KursblockungDynSchueler {
 	public void aktionKursEntfernen(final int idKursDB) {
 		for (int fachartIndex = 0; fachartIndex < fachartArr.length; fachartIndex++) {
 			final @NotNull KursblockungDynFachart fachart = fachartArr[fachartIndex];
-			for (final @NotNull KursblockungDynKurs kurs : fachart.gibKurse())
+			for (final @NotNull KursblockungDynKurs kurs : fachart.gibKurse()) {
 				if (kurs.gibDatenbankID() == idKursDB) {
 					final KursblockungDynKurs kursVorher = fachartZuKurs[fachartIndex];
-					if (kursVorher != null)
+					if (kursVorher != null) {
 						aktionKursEntfernen(fachartIndex, kursVorher);
+					}
 				}
+			}
 		}
 	}
 }

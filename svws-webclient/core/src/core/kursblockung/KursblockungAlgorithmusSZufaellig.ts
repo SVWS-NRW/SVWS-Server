@@ -16,26 +16,26 @@ export class KursblockungAlgorithmusSZufaellig extends KursblockungAlgorithmusS 
 	/**
 	 *  Array der SuS, deren Kurse verteilt werden sollen.
 	 */
-	private readonly _schuelerArr: Array<KursblockungDynSchueler>;
+	private readonly schuelerMenge: Array<KursblockungDynSchueler>;
 
 	/**
 	 *  Zur Speicherung einer zufälligen Permutation der Indizes der Schüler.
 	 */
-	private readonly _perm: Array<number>;
+	private readonly schuelerPermutation: Array<number>;
 
 
 	/**
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in dieser Methode noch nicht
 	 * auf Schienen verteilt werden.
 	 *
-	 * @param random Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param logger Logger zum Protokollieren von Warnungen und Fehlern.
-	 * @param dynDat Die dynamischen Blockungsdaten.
+	 * @param random     Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param logger     Logger zum Protokollieren von Warnungen und Fehlern.
+	 * @param dynDaten   Die dynamischen Blockungsdaten.
 	 */
-	public constructor(random: Random, logger: Logger, dynDat: KursblockungDynDaten) {
-		super(random, logger, dynDat);
-		this._schuelerArr = dynDat.gibSchuelerArrayAlle();
-		this._perm = KursblockungStatic.gibPermutation(this._random, this._schuelerArr.length);
+	public constructor(random: Random, logger: Logger, dynDaten: KursblockungDynDaten) {
+		super(random, logger, dynDaten);
+		this.schuelerMenge = dynDaten.gibSchuelerArrayAlle();
+		this.schuelerPermutation = KursblockungStatic.gibPermutation(this.rnd, this.schuelerMenge.length);
 	}
 
 	/**
@@ -59,10 +59,10 @@ export class KursblockungAlgorithmusSZufaellig extends KursblockungAlgorithmusS 
 	 */
 	private verteileSchuelerAlle(): boolean {
 		let verbesserung: boolean = false;
-		KursblockungStatic.aktionPermutiere(this._random, this._perm);
-		for (let p: number = 0; p < this._schuelerArr.length; p++) {
-			const i: number = this._perm[p];
-			verbesserung = verbesserung || this.verteileSchuelerEiner(this._schuelerArr[i]);
+		KursblockungStatic.aktionPermutiere(this.rnd, this.schuelerPermutation);
+		for (let p: number = 0; p < this.schuelerMenge.length; p++) {
+			const i: number = this.schuelerPermutation[p];
+			verbesserung = verbesserung || this.verteileSchuelerEiner(this.schuelerMenge[i]);
 		}
 		return verbesserung;
 	}
@@ -73,7 +73,7 @@ export class KursblockungAlgorithmusSZufaellig extends KursblockungAlgorithmusS 
 		schueler.aktionKurseAlleEntfernen();
 		schueler.aktionKurseVerteilenNurFachartenMitEinemErlaubtenKurs();
 		schueler.aktionKurseVerteilenZufaellig();
-		const cmp: number = this.dynDaten.gibStatistik().gibBewertungZustandS_NW_KD();
+		const cmp: number = this.dynDaten.gibStatistik().gibBewertungZustandS1NW2KD();
 		if (cmp < 0) {
 			schueler.aktionZustandLadenS();
 		}

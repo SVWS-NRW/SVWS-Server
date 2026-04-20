@@ -18,9 +18,9 @@ public final class KursblockungAlgorithmusPermanentKFachgruppe extends Kursblock
 	/**
 	 * Im Konstruktor wird ein zufälliger Anfangszustand erzeugt.
 	 *
-	 * @param random  Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param logger  Logger für Benutzerhinweise, Warnungen und Fehler.
-	 * @param input   Die dynamischen Blockungsdaten.
+	 * @param random   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param logger   Logger für Benutzerhinweise, Warnungen und Fehler.
+	 * @param input    Die dynamischen Blockungsdaten.
 	 */
 	public KursblockungAlgorithmusPermanentKFachgruppe(final @NotNull Random random, final @NotNull Logger logger,
 			final @NotNull GostBlockungsdatenManager input) {
@@ -60,7 +60,7 @@ public final class KursblockungAlgorithmusPermanentKFachgruppe extends Kursblock
 
 			// Schülerverteilungsstrategie 1
 			dynDaten.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
-			if (dynDaten.gibCompareZustandK_NW_KD_FW() > 0) {
+			if (dynDaten.gibCompareZustandK1NW2KD3FW() > 0) {
 				dynDaten.aktionZustandSpeichernK();
 				return; // Speichern und aufhören, da besser.
 			}
@@ -68,12 +68,12 @@ public final class KursblockungAlgorithmusPermanentKFachgruppe extends Kursblock
 			// Schülerverteilungsstrategie 2
 			dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 			dynDaten.aktionSchuelerVerteilenMitBipartitemMatching();
-			if (dynDaten.gibCompareZustandK_NW_KD_FW() > 0) {
+			if (dynDaten.gibCompareZustandK1NW2KD3FW() > 0) {
 				dynDaten.aktionZustandSpeichernK();
 				return; // Speichern und aufhören, da besser.
 			}
 
-		} while (_random.nextBoolean());
+		} while (rnd.nextBoolean());
 
 		// Verschlechterung rückgängig machen.
 		dynDaten.aktionZustandLadenK();

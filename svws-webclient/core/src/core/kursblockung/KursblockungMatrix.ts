@@ -12,7 +12,7 @@ export class KursblockungMatrix extends JavaObject {
 	/**
 	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 */
-	private readonly _random: Random;
+	private readonly rnd: Random;
 
 	/**
 	 * Die Werte der Matrix [Zeile][Spalte].
@@ -93,15 +93,15 @@ export class KursblockungMatrix extends JavaObject {
 
 
 	/**
-	 *Erzeugt eine neue Matrix mit {@code rows} Zeilen und {@code cols} Spalten.
+	 * Erzeugt eine neue Matrix mit {@code rows} Zeilen und {@code cols} Spalten.
 	 *
-	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param rows    Die Anzahl der Zeilen der Matrix.
-	 * @param cols    Die Anzahl der Spalten der Matrix.
+	 * @param random   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param rows     Die Anzahl der Zeilen der Matrix.
+	 * @param cols     Die Anzahl der Spalten der Matrix.
 	 */
-	public constructor(pRandom: Random, rows: number, cols: number) {
+	public constructor(random: Random, rows: number, cols: number) {
 		super();
-		this._random = pRandom;
+		this.rnd = random;
 		this.rows = rows;
 		this.cols = cols;
 		this.matrix = [...Array(rows)].map(e => Array(cols).fill(0));
@@ -138,14 +138,14 @@ export class KursblockungMatrix extends JavaObject {
 			const r: number = this.permR[pseudoR];
 			Arrays.fill(this.besuchtR, false);
 			Arrays.fill(this.vorgaengerCzuR, -1);
-			let queue_first: number = 0;
-			let queue_last: number = 0;
-			this.queueR[queue_last] = r;
-			queue_last++;
+			let queueFirst: number = 0;
+			let queueLast: number = 0;
+			this.queueR[queueLast] = r;
+			queueLast++;
 			this.besuchtR[r] = true;
-			while (queue_first < queue_last) {
-				const vonR: number = this.queueR[queue_first];
-				queue_first++;
+			while (queueFirst < queueLast) {
+				const vonR: number = this.queueR[queueFirst];
+				queueFirst++;
 				for (let pseudoC: number = 0; pseudoC < this.cols; pseudoC++) {
 					const ueberC: number = this.permC[pseudoC];
 					if ((this.matrix[vonR][ueberC] !== 0) && (this.r2c[vonR] !== ueberC)) {
@@ -160,13 +160,13 @@ export class KursblockungMatrix extends JavaObject {
 								this.r2c[r2] = c2;
 								c2 = saveC;
 							}
-							queue_last = queue_first;
+							queueLast = queueFirst;
 							break;
 						}
 						if (!this.besuchtR[zuR]) {
 							this.besuchtR[zuR] = true;
-							this.queueR[queue_last] = zuR;
-							queue_last++;
+							this.queueR[queueLast] = zuR;
+							queueLast++;
 							this.vorgaengerCzuR[ueberC] = vonR;
 						}
 					}
@@ -338,7 +338,7 @@ export class KursblockungMatrix extends JavaObject {
 	private permutiere(perm: Array<number>): void {
 		const laenge: number = perm.length;
 		for (let i: number = 0; i < laenge; i++) {
-			const j: number = this._random.nextInt(laenge);
+			const j: number = this.rnd.nextInt(laenge);
 			const saveI: number = perm[i];
 			const saveJ: number = perm[j];
 			perm[i] = saveJ;
@@ -396,7 +396,7 @@ export class KursblockungMatrix extends JavaObject {
 	public fuelleMitZufallszahlenVonBis(von: number, bis: number): void {
 		for (let r: number = 0; r < this.rows; r++) {
 			for (let c: number = 0; c < this.cols; c++) {
-				this.matrix[r][c] = this._random.nextLong((bis - von) + 1) + von;
+				this.matrix[r][c] = this.rnd.nextLong((bis - von) + 1) + von;
 			}
 		}
 	}

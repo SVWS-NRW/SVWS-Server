@@ -17,12 +17,12 @@ export class KursblockungAlgorithmusKSchuelervorschlag extends KursblockungAlgor
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in diese Methode noch nicht
 	 * auf Schienen verteilt werden.
 	 *
-	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
-	 * @param pDynDat Die dynamischen Blockungsdaten.
+	 * @param random     Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param logger     Logger für Benutzerhinweise, Warnungen und Fehler.
+	 * @param dynDaten   Die dynamischen Blockungsdaten.
 	 */
-	public constructor(pRandom: Random, pLogger: Logger, pDynDat: KursblockungDynDaten) {
-		super(pRandom, pLogger, pDynDat);
+	public constructor(random: Random, logger: Logger, dynDaten: KursblockungDynDaten) {
+		super(random, logger, dynDaten);
 	}
 
 	public toString(): string {
@@ -31,7 +31,7 @@ export class KursblockungAlgorithmusKSchuelervorschlag extends KursblockungAlgor
 
 	/**
 	 * Der Algorithmus entfernt zunächst alle SuS aus ihren Kursen. Anschließend werden die Kurse zufällig verteilt.
-	 * Anschließend verändert der Algorithmus die Lage eines zufälligen Kurses. Falls sich die Bewertung verschlechter,
+	 * Anschließend verändert der Algorithmus die Lage eines zufälligen Kurses. Falls sich die Bewertung verschlechtert,
 	 * wird die Veränderung rückgängig gemacht.
 	 */
 	public berechne(pEndzeit: number): void {
@@ -54,7 +54,7 @@ export class KursblockungAlgorithmusKSchuelervorschlag extends KursblockungAlgor
 	}
 
 	/**
-	 * Kurslage wird durch Schüler-Wünsche verändert. Falls sich die Bewertung verschlechter, wird die Veränderung
+	 * Kurslage wird durch Schüler-Wünsche verändert. Falls sich die Bewertung verschlechtert, wird die Veränderung
 	 * rückgängig gemacht.
 	 *
 	 * @return true, wenn der Zustand angepasst wurde
@@ -63,7 +63,7 @@ export class KursblockungAlgorithmusKSchuelervorschlag extends KursblockungAlgor
 		this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 		this.dynDaten.aktionKurseVerteilenNachSchuelerwunsch();
 		this.dynDaten.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
-		const compare: number = this.dynDaten.gibCompareZustandK_NW_KD_FW();
+		const compare: number = this.dynDaten.gibCompareZustandK1NW2KD3FW();
 		if (compare >= 0) {
 			this.dynDaten.aktionZustandSpeichernK();
 			return compare > 0;
@@ -73,7 +73,7 @@ export class KursblockungAlgorithmusKSchuelervorschlag extends KursblockungAlgor
 	}
 
 	/**
-	 * Kurslage wird ein wenig zufällig verändert und bewertet. Falls sich die Bewertung verschlechter, wird die
+	 * Kurslage wird ein wenig zufällig verändert und bewertet. Falls sich die Bewertung verschlechtert, wird die
 	 * Veränderung rückgängig gemacht.
 	 *
 	 * @return true, wenn der Zustand angepasst wurde
@@ -83,12 +83,12 @@ export class KursblockungAlgorithmusKSchuelervorschlag extends KursblockungAlgor
 			this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 			this.dynDaten.aktionKursVerteilenEinenZufaelligenFreien();
 			this.dynDaten.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
-			const cmp: number = this.dynDaten.gibCompareZustandK_NW_KD_FW();
+			const cmp: number = this.dynDaten.gibCompareZustandK1NW2KD3FW();
 			if (cmp > 0) {
 				this.dynDaten.aktionZustandSpeichernK();
 				return true;
 			}
-		} while (this._random.nextBoolean());
+		} while (this.rnd.nextBoolean());
 		this.dynDaten.aktionZustandLadenK();
 		return false;
 	}

@@ -17,12 +17,12 @@ export class KursblockungAlgorithmusKMatching extends KursblockungAlgorithmusK {
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in diese Methode noch nicht
 	 * auf Schienen verteilt werden.
 	 *
-	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
-	 * @param pDynDat Die dynamischen Blockungsdaten.
+	 * @param random     Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param logger     Logger für Benutzerhinweise, Warnungen und Fehler.
+	 * @param dynDaten   Die dynamischen Blockungsdaten.
 	 */
-	public constructor(pRandom: Random, pLogger: Logger, pDynDat: KursblockungDynDaten) {
-		super(pRandom, pLogger, pDynDat);
+	public constructor(random: Random, logger: Logger, dynDaten: KursblockungDynDaten) {
+		super(random, logger, dynDaten);
 	}
 
 	public toString(): string {
@@ -64,11 +64,11 @@ export class KursblockungAlgorithmusKMatching extends KursblockungAlgorithmusK {
 			this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 			this.dynDaten.aktionKursVerteilenEinenZufaelligenFreien();
 			this.dynDaten.aktionSchuelerVerteilenMitBipartitemMatching();
-			if (this.dynDaten.gibCompareZustandK_NW_KD_FW() > 0) {
+			if (this.dynDaten.gibCompareZustandK1NW2KD3FW() > 0) {
 				this.dynDaten.aktionZustandSpeichernK();
 				return true;
 			}
-		} while (this._random.nextBoolean());
+		} while (this.rnd.nextBoolean());
 		this.dynDaten.aktionZustandLadenK();
 		return false;
 	}
@@ -84,12 +84,12 @@ export class KursblockungAlgorithmusKMatching extends KursblockungAlgorithmusK {
 			this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 			this.dynDaten.aktionKursVerteilenEinenZufaelligenFreien();
 			this.dynDaten.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
-			const cmp: number = this.dynDaten.gibCompareZustandK_NW_KD_FW();
+			const cmp: number = this.dynDaten.gibCompareZustandK1NW2KD3FW();
 			if (cmp > 0) {
 				this.dynDaten.aktionZustandSpeichernK();
 				return true;
 			}
-		} while (this._random.nextBoolean());
+		} while (this.rnd.nextBoolean());
 		this.dynDaten.aktionZustandLadenK();
 		return false;
 	}

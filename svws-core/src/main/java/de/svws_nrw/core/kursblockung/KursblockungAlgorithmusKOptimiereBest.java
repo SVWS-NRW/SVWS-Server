@@ -20,13 +20,13 @@ public final class KursblockungAlgorithmusKOptimiereBest extends KursblockungAlg
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in diese Methode noch nicht
 	 * auf Schienen verteilt werden.
 	 *
-	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
-	 * @param pDynDat Die dynamischen Blockungsdaten.
+	 * @param random     Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param logger     Logger für Benutzerhinweise, Warnungen und Fehler.
+	 * @param dynDaten   Die dynamischen Blockungsdaten.
 	 */
-	public KursblockungAlgorithmusKOptimiereBest(final @NotNull Random pRandom, final @NotNull Logger pLogger, final @NotNull KursblockungDynDaten pDynDat) {
-		super(pRandom, pLogger, pDynDat);
-		algoS = new KursblockungAlgorithmusSSchnellW(pRandom, pLogger, pDynDat);
+	public KursblockungAlgorithmusKOptimiereBest(final @NotNull Random random, final @NotNull Logger logger, final @NotNull KursblockungDynDaten dynDaten) {
+		super(random, logger, dynDaten);
+		algoS = new KursblockungAlgorithmusSSchnellW(random, logger, dynDaten);
 	}
 
 	@Override
@@ -71,11 +71,11 @@ public final class KursblockungAlgorithmusKOptimiereBest extends KursblockungAlg
 			algoS.berechne();
 
 			// Besser? --> Speichern und Abbruch
-			if (dynDaten.gibCompareZustandK_NW_KD_FW() > 0) {
+			if (dynDaten.gibCompareZustandK1NW2KD3FW() > 0) {
 				dynDaten.aktionZustandSpeichernK();
 				return;
 			}
-		} while (_random.nextBoolean());
+		} while (rnd.nextBoolean());
 
 		// Verschlechterung rückgängig machen.
 		dynDaten.aktionZustandLadenK();

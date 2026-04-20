@@ -23,13 +23,13 @@ public final class KursblockungAlgorithmusKSchuelervorschlag extends Kursblockun
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in diese Methode noch nicht
 	 * auf Schienen verteilt werden.
 	 *
-	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
-	 * @param pDynDat Die dynamischen Blockungsdaten.
+	 * @param random     Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param logger     Logger für Benutzerhinweise, Warnungen und Fehler.
+	 * @param dynDaten   Die dynamischen Blockungsdaten.
 	 */
-	public KursblockungAlgorithmusKSchuelervorschlag(final @NotNull Random pRandom, final @NotNull Logger pLogger,
-			final @NotNull KursblockungDynDaten pDynDat) {
-		super(pRandom, pLogger, pDynDat);
+	public KursblockungAlgorithmusKSchuelervorschlag(final @NotNull Random random, final @NotNull Logger logger,
+			final @NotNull KursblockungDynDaten dynDaten) {
+		super(random, logger, dynDaten);
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public final class KursblockungAlgorithmusKSchuelervorschlag extends Kursblockun
 
 	/**
 	 * Der Algorithmus entfernt zunächst alle SuS aus ihren Kursen. Anschließend werden die Kurse zufällig verteilt.
-	 * Anschließend verändert der Algorithmus die Lage eines zufälligen Kurses. Falls sich die Bewertung verschlechter,
+	 * Anschließend verändert der Algorithmus die Lage eines zufälligen Kurses. Falls sich die Bewertung verschlechtert,
 	 * wird die Veränderung rückgängig gemacht.
 	 */
 	@Override
@@ -78,7 +78,7 @@ public final class KursblockungAlgorithmusKSchuelervorschlag extends Kursblockun
 	}
 
 	/**
-	 * Kurslage wird durch Schüler-Wünsche verändert. Falls sich die Bewertung verschlechter, wird die Veränderung
+	 * Kurslage wird durch Schüler-Wünsche verändert. Falls sich die Bewertung verschlechtert, wird die Veränderung
 	 * rückgängig gemacht.
 	 *
 	 * @return true, wenn der Zustand angepasst wurde
@@ -95,7 +95,7 @@ public final class KursblockungAlgorithmusKSchuelervorschlag extends Kursblockun
 		dynDaten.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
 
 		// Besser oder gleich? --> Speichern.
-		final int compare = dynDaten.gibCompareZustandK_NW_KD_FW();
+		final int compare = dynDaten.gibCompareZustandK1NW2KD3FW();
 		if (compare >= 0) {
 			dynDaten.aktionZustandSpeichernK();
 			return compare > 0; // besser?
@@ -107,7 +107,7 @@ public final class KursblockungAlgorithmusKSchuelervorschlag extends Kursblockun
 	}
 
 	/**
-	 * Kurslage wird ein wenig zufällig verändert und bewertet. Falls sich die Bewertung verschlechter, wird die
+	 * Kurslage wird ein wenig zufällig verändert und bewertet. Falls sich die Bewertung verschlechtert, wird die
 	 * Veränderung rückgängig gemacht.
 	 *
 	 * @return true, wenn der Zustand angepasst wurde
@@ -125,12 +125,12 @@ public final class KursblockungAlgorithmusKSchuelervorschlag extends Kursblockun
 			dynDaten.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
 
 			// Besser? --> Speichern.
-			final int cmp = dynDaten.gibCompareZustandK_NW_KD_FW();
+			final int cmp = dynDaten.gibCompareZustandK1NW2KD3FW();
 			if (cmp > 0) {
 				dynDaten.aktionZustandSpeichernK();
 				return true;
 			}
-		} while (_random.nextBoolean());
+		} while (rnd.nextBoolean());
 
 		// Schlechter
 		dynDaten.aktionZustandLadenK();

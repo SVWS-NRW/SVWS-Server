@@ -16,7 +16,7 @@ export class KursblockungDynFachart extends JavaObject {
 	/**
 	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 */
-	private readonly _random: Random;
+	private readonly rnd: Random;
 
 	/**
 	 * Eine laufende Nummer der Fachart.
@@ -71,12 +71,12 @@ export class KursblockungDynFachart extends JavaObject {
 	/**
 	 * Wie oft die Fachart pro Schiene aktuell vertreten ist.
 	 */
-	private readonly _schienenCounter: Array<number>;
+	private readonly schieneToAnzahl: Array<number>;
 
 	/**
-	 * Maximal erlaubte Anzahl von Kursen (dieser Fachart) pro Schiene.
+	 * Maximal erlaubte Anzahl von Kursen (dieser Fachart) pro Schiene. Der Wert von 0 deaktiviert die Regel.
 	 */
-	private _maxKurseProSchiene: number = 0;
+	private regelMaxKurseProSchiene: number = 0;
 
 
 	/**
@@ -90,7 +90,7 @@ export class KursblockungDynFachart extends JavaObject {
 	 */
 	constructor(pRandom: Random, pNr: number, pGostFach: GostFach, pGostKursart: GostKursart, pStatistik: KursblockungDynStatistik, schuelerAnzahl: number, schienenAnzahl: number) {
 		super();
-		this._random = pRandom;
+		this.rnd = pRandom;
 		this.nr = pNr;
 		this.gostFach = pGostFach;
 		this.gostKursart = pGostKursart;
@@ -101,8 +101,8 @@ export class KursblockungDynFachart extends JavaObject {
 		this.schuelerAnzNow = 0;
 		this.schuelerVerbotenMitSchueler = [...Array(schuelerAnzahl)].map(e => Array(0).fill(0));
 		this.schuelerZusammenMitSchueler = [...Array(schuelerAnzahl)].map(e => Array(0).fill(0));
-		this._schienenCounter = Array(schienenAnzahl).fill(0);
-		this._maxKurseProSchiene = 0;
+		this.schieneToAnzahl = Array(schienenAnzahl).fill(0);
+		this.regelMaxKurseProSchiene = 0;
 	}
 
 	/**
@@ -198,10 +198,13 @@ export class KursblockungDynFachart extends JavaObject {
 	 */
 	gibKleinstenKursInSchieneFuerSchueler(pSchiene: number, s: KursblockungDynSchueler): KursblockungDynKurs | null {
 		for (const kurs of this.kursArr) {
-			if (kurs.gibIstErlaubtFuerSchueler(s))
-				for (const c of kurs.gibSchienenLage())
-					if (c === pSchiene)
+			if (kurs.gibIstErlaubtFuerSchueler(s)) {
+				for (const c of kurs.gibSchienenLage()) {
+					if (c === pSchiene) {
 						return kurs;
+					}
+				}
+			}
 		}
 		return null;
 	}
@@ -212,9 +215,11 @@ export class KursblockungDynFachart extends JavaObject {
 	 * @return TRUE, falls mindestens ein Kurs dieser Fachart ein Multikurs ist.
 	 */
 	gibHatMultikurs(): boolean {
-		for (const kurs of this.kursArr)
-			if (kurs.gibSchienenAnzahl() > 1)
+		for (const kurs of this.kursArr) {
+			if (kurs.gibSchienenAnzahl() > 1) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -227,9 +232,11 @@ export class KursblockungDynFachart extends JavaObject {
 	 * @return TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c ist.
 	 */
 	gibHatSchuelerKursInSchiene(pSchiene: number, s: KursblockungDynSchueler): boolean {
-		for (const kurs of this.kursArr)
-			if (kurs.gibIstErlaubtFuerSchueler(s) && kurs.gibIstInSchiene(pSchiene))
+		for (const kurs of this.kursArr) {
+			if (kurs.gibIstErlaubtFuerSchueler(s) && kurs.gibIstInSchiene(pSchiene)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -242,9 +249,11 @@ export class KursblockungDynFachart extends JavaObject {
 	 * @return TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c wandern darf.
 	 */
 	gibHatSchuelerKursMitFreierSchiene(pSchiene: number, s: KursblockungDynSchueler): boolean {
-		for (const kurs of this.kursArr)
-			if (kurs.gibIstErlaubtFuerSchueler(s) && kurs.gibIstSchieneFrei(pSchiene))
+		for (const kurs of this.kursArr) {
+			if (kurs.gibIstErlaubtFuerSchueler(s) && kurs.gibIstSchieneFrei(pSchiene)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -349,7 +358,7 @@ export class KursblockungDynFachart extends JavaObject {
 	 * @param pSchiene  Die Schiene, in die einer Kurs der Fachart wandern soll.
 	 */
 	aktionZufaelligerKursWandertNachSchiene(pSchiene: number): void {
-		const perm: Array<number> = KursblockungStatic.gibPermutation(this._random, this.kursArr.length);
+		const perm: Array<number> = KursblockungStatic.gibPermutation(this.rnd, this.kursArr.length);
 		for (const i of perm) {
 			const kurs: KursblockungDynKurs | null = this.kursArr[i];
 			if (kurs.gibIstSchieneFrei(pSchiene)) {
@@ -366,9 +375,10 @@ export class KursblockungDynFachart extends JavaObject {
 	 * @param schiene  Die Schiene um die es geht.
 	 */
 	aktionSchieneWurdeHinzugefuegt(schiene: KursblockungDynSchiene): void {
-		this._schienenCounter[schiene.gibNr()]++;
-		if ((this._maxKurseProSchiene >= 1) && (this._schienenCounter[schiene.gibNr()] > this._maxKurseProSchiene))
+		this.schieneToAnzahl[schiene.gibNr()]++;
+		if ((this.regelMaxKurseProSchiene >= 1) && (this.schieneToAnzahl[schiene.gibNr()] > this.regelMaxKurseProSchiene)) {
 			this.statistik.regelverletzungVeraendern(+1);
+		}
 	}
 
 	/**
@@ -377,9 +387,10 @@ export class KursblockungDynFachart extends JavaObject {
 	 * @param schiene  Die Schiene um die es geht.
 	 */
 	aktionSchieneWurdeEntfernt(schiene: KursblockungDynSchiene): void {
-		if ((this._maxKurseProSchiene >= 1) && (this._schienenCounter[schiene.gibNr()] > this._maxKurseProSchiene))
+		if ((this.regelMaxKurseProSchiene >= 1) && (this.schieneToAnzahl[schiene.gibNr()] > this.regelMaxKurseProSchiene)) {
 			this.statistik.regelverletzungVeraendern(-1);
-		this._schienenCounter[schiene.gibNr()]--;
+		}
+		this.schieneToAnzahl[schiene.gibNr()]--;
 	}
 
 	/**
@@ -388,8 +399,9 @@ export class KursblockungDynFachart extends JavaObject {
 	 * @param schuelerArr  Das Array mit den Schülerdaten.
 	 */
 	debug(schuelerArr: Array<KursblockungDynSchueler>): void {
-		for (const kurs of this.kursArr)
+		for (const kurs of this.kursArr) {
 			kurs.debug(schuelerArr);
+		}
 	}
 
 	/**
@@ -398,7 +410,7 @@ export class KursblockungDynFachart extends JavaObject {
 	 * @param internalID1  Die interne ID des 1. Schülers.
 	 * @param internalID2  Die interne ID des 2. Schülers.
 	 */
-	regel_schueler_verbieten_mit_schueler(internalID1: number, internalID2: number): void {
+	setzeSchuelerVerbietenMitSchueler(internalID1: number, internalID2: number): void {
 		this.schuelerVerbotenMitSchueler[internalID1] = ArrayUtils.erweitern(this.schuelerVerbotenMitSchueler[internalID1], internalID2);
 		this.schuelerVerbotenMitSchueler[internalID2] = ArrayUtils.erweitern(this.schuelerVerbotenMitSchueler[internalID2], internalID1);
 	}
@@ -409,7 +421,7 @@ export class KursblockungDynFachart extends JavaObject {
 	 * @param internalID1  Die interne ID des 1. Schülers.
 	 * @param internalID2  Die interne ID des 2. Schülers.
 	 */
-	regel_schueler_zusammen_mit_schueler(internalID1: number, internalID2: number): void {
+	setzeSchuelerZusammenMitSchueler(internalID1: number, internalID2: number): void {
 		this.schuelerZusammenMitSchueler[internalID1] = ArrayUtils.erweitern(this.schuelerZusammenMitSchueler[internalID1], internalID2);
 		this.schuelerZusammenMitSchueler[internalID2] = ArrayUtils.erweitern(this.schuelerZusammenMitSchueler[internalID2], internalID1);
 	}
@@ -419,11 +431,13 @@ export class KursblockungDynFachart extends JavaObject {
 	 *
 	 * @param maximalProSchiene  Die maximale Anzahl pro Schiene.
 	 */
-	regel_18_maximalProSchiene(maximalProSchiene: number): void {
-		this._maxKurseProSchiene = maximalProSchiene;
-		for (let schienenNr: number = 0; schienenNr < this._schienenCounter.length; schienenNr++)
-			if (this._schienenCounter[schienenNr] > this._maxKurseProSchiene)
-				this.statistik.regelverletzungVeraendern(this._schienenCounter[schienenNr] - this._maxKurseProSchiene);
+	setzeMaxAnzahlProSchiene(maximalProSchiene: number): void {
+		this.regelMaxKurseProSchiene = maximalProSchiene;
+		for (let schienenNr: number = 0; schienenNr < this.schieneToAnzahl.length; schienenNr++) {
+			if (this.schieneToAnzahl[schienenNr] > this.regelMaxKurseProSchiene) {
+				this.statistik.regelverletzungVeraendern(this.schieneToAnzahl[schienenNr] - this.regelMaxKurseProSchiene);
+			}
+		}
 	}
 
 	/**

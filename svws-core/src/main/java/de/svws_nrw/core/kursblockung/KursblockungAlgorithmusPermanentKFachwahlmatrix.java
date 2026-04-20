@@ -24,9 +24,9 @@ public final class KursblockungAlgorithmusPermanentKFachwahlmatrix extends Kursb
 	/**
 	 * Im Konstruktor wird ein zufälliger Anfangszustand erzeugt.
 	 *
-	 * @param random  Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param logger  Logger für Benutzerhinweise, Warnungen und Fehler.
-	 * @param input   Die dynamischen Blockungsdaten.
+	 * @param random   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param logger   Logger für Benutzerhinweise, Warnungen und Fehler.
+	 * @param input    Die dynamischen Blockungsdaten.
 	 */
 	public KursblockungAlgorithmusPermanentKFachwahlmatrix(final @NotNull Random random, final @NotNull Logger logger,
 			final @NotNull GostBlockungsdatenManager input) {
@@ -59,11 +59,11 @@ public final class KursblockungAlgorithmusPermanentKFachwahlmatrix extends Kursb
 			// Besser? --> Speichern.
 			// Die Bewertung von Nichtwahlen und Kursdifferenzen ändert sich nicht, da keine
 			// SuS verteilt werden. Aber die Bewertung der Fachwahlen FW = Fachart-Paar kann kleiner werden.
-			if (dynDaten.gibCompareZustandK_NW_KD_FW() > 0) {
+			if (dynDaten.gibCompareZustandK1NW2KD3FW() > 0) {
 				dynDaten.aktionZustandSpeichernK();
 				return;
 			}
-		} while (_random.nextBoolean());
+		} while (rnd.nextBoolean());
 
 		// Verschlechterung rückgängig machen.
 		dynDaten.aktionZustandLadenK();

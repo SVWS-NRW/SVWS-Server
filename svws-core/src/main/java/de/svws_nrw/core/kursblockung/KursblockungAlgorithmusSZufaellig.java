@@ -22,25 +22,25 @@ public final class KursblockungAlgorithmusSZufaellig extends KursblockungAlgorit
 	/**
 	 * Array der SuS, deren Kurse verteilt werden sollen.
 	 */
-	private final @NotNull KursblockungDynSchueler @NotNull [] _schuelerArr;
+	private final @NotNull KursblockungDynSchueler @NotNull [] schuelerMenge;
 
 	/**
 	 * Zur Speicherung einer zufälligen Permutation der Indizes der Schüler.
 	 */
-	private final @NotNull int[] _perm;
+	private final @NotNull int[] schuelerPermutation;
 
 	/**
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in dieser Methode noch nicht
 	 * auf Schienen verteilt werden.
 	 *
-	 * @param random Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param logger Logger zum Protokollieren von Warnungen und Fehlern.
-	 * @param dynDat Die dynamischen Blockungsdaten.
+	 * @param random     Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param logger     Logger zum Protokollieren von Warnungen und Fehlern.
+	 * @param dynDaten   Die dynamischen Blockungsdaten.
 	 */
-	public KursblockungAlgorithmusSZufaellig(final @NotNull Random random, final @NotNull Logger logger, final @NotNull KursblockungDynDaten dynDat) {
-		super(random, logger, dynDat);
-		_schuelerArr = dynDat.gibSchuelerArrayAlle();
-		_perm = KursblockungStatic.gibPermutation(_random, _schuelerArr.length);
+	public KursblockungAlgorithmusSZufaellig(final @NotNull Random random, final @NotNull Logger logger, final @NotNull KursblockungDynDaten dynDaten) {
+		super(random, logger, dynDaten);
+		schuelerMenge = dynDaten.gibSchuelerArrayAlle();
+		schuelerPermutation = KursblockungStatic.gibPermutation(rnd, schuelerMenge.length);
 	}
 
 	/**
@@ -72,10 +72,10 @@ public final class KursblockungAlgorithmusSZufaellig extends KursblockungAlgorit
 	private boolean verteileSchuelerAlle() {
 		boolean verbesserung = false;
 
-		KursblockungStatic.aktionPermutiere(_random, _perm);
-		for (int p = 0; p < _schuelerArr.length; p++) {
-			final int i = _perm[p];
-			verbesserung |= verteileSchuelerEiner(_schuelerArr[i]);
+		KursblockungStatic.aktionPermutiere(rnd, schuelerPermutation);
+		for (int p = 0; p < schuelerMenge.length; p++) {
+			final int i = schuelerPermutation[p];
+			verbesserung |= verteileSchuelerEiner(schuelerMenge[i]);
 		}
 
 		return verbesserung;
@@ -92,7 +92,7 @@ public final class KursblockungAlgorithmusSZufaellig extends KursblockungAlgorit
 		schueler.aktionKurseVerteilenZufaellig();
 
 		// Schlechter? --> Kurszuordnung zurück.
-		final int cmp = dynDaten.gibStatistik().gibBewertungZustandS_NW_KD();
+		final int cmp = dynDaten.gibStatistik().gibBewertungZustandS1NW2KD();
 		if (cmp < 0) {
 			schueler.aktionZustandLadenS();
 		}

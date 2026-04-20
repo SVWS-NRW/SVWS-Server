@@ -10,12 +10,12 @@ export abstract class KursblockungAlgorithmusPermanentK extends JavaObject {
 	/**
 	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 */
-	readonly _random: Random;
+	readonly rnd: Random;
 
 	/**
 	 * Logger für Benutzerhinweise, Warnungen und Fehler.
 	 */
-	readonly logger: Logger;
+	readonly log: Logger;
 
 	/**
 	 * Die aktuellen Blockungsdaten. Dieses Objekt dient zur Manipulation der Daten während des Blockungsvorganges.
@@ -27,15 +27,15 @@ export abstract class KursblockungAlgorithmusPermanentK extends JavaObject {
 	 * Der Konstruktor stellt einen Logger und die bei der Blockung benötigten dynamischen Daten den Unterklassen zur
 	 * Verfügung.
 	 *
-	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pLogger   Logger für Benutzerhinweise, Warnungen und Fehler.
-	 * @param input     Die Eingabedaten.
+	 * @param random   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param logger   Logger für Benutzerhinweise, Warnungen und Fehler.
+	 * @param input    Die Eingabedaten.
 	 */
-	protected constructor(pRandom: Random, pLogger: Logger, input: GostBlockungsdatenManager) {
+	protected constructor(random: Random, logger: Logger, input: GostBlockungsdatenManager) {
 		super();
-		this._random = pRandom;
-		this.logger = pLogger;
-		this.dynDaten = new KursblockungDynDaten(pRandom, pLogger, input);
+		this.rnd = random;
+		this.log = logger;
+		this.dynDaten = new KursblockungDynDaten(random, logger, input);
 	}
 
 	/**

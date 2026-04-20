@@ -23,12 +23,12 @@ public final class KursblockungAlgorithmusKMatching extends KursblockungAlgorith
 	 * Im Konstruktor kann die Klasse die jeweiligen Datenstrukturen aufbauen. Kurse dürfen in diese Methode noch nicht
 	 * auf Schienen verteilt werden.
 	 *
-	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
-	 * @param pDynDat Die dynamischen Blockungsdaten.
+	 * @param random     Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param logger     Logger für Benutzerhinweise, Warnungen und Fehler.
+	 * @param dynDaten   Die dynamischen Blockungsdaten.
 	 */
-	public KursblockungAlgorithmusKMatching(final @NotNull Random pRandom, final @NotNull Logger pLogger, final @NotNull KursblockungDynDaten pDynDat) {
-		super(pRandom, pLogger, pDynDat);
+	public KursblockungAlgorithmusKMatching(final @NotNull Random random, final @NotNull Logger logger, final @NotNull KursblockungDynDaten dynDaten) {
+		super(random, logger, dynDaten);
 	}
 
 	@Override
@@ -94,11 +94,11 @@ public final class KursblockungAlgorithmusKMatching extends KursblockungAlgorith
 			dynDaten.aktionSchuelerVerteilenMitBipartitemMatching();
 
 			// Besser? --> Speichern.
-			if (dynDaten.gibCompareZustandK_NW_KD_FW() > 0) {
+			if (dynDaten.gibCompareZustandK1NW2KD3FW() > 0) {
 				dynDaten.aktionZustandSpeichernK();
 				return true;
 			}
-		} while (_random.nextBoolean());
+		} while (rnd.nextBoolean());
 
 		// Verschlechterung rückgängig machen.
 		dynDaten.aktionZustandLadenK();
@@ -124,12 +124,12 @@ public final class KursblockungAlgorithmusKMatching extends KursblockungAlgorith
 			dynDaten.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
 
 			// Besser? --> Speichern.
-			final int cmp = dynDaten.gibCompareZustandK_NW_KD_FW();
+			final int cmp = dynDaten.gibCompareZustandK1NW2KD3FW();
 			if (cmp > 0) {
 				dynDaten.aktionZustandSpeichernK();
 				return true;
 			}
-		} while (_random.nextBoolean());
+		} while (rnd.nextBoolean());
 
 		// Schlechter
 		dynDaten.aktionZustandLadenK();
