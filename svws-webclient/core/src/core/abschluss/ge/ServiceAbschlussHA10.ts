@@ -168,8 +168,8 @@ export class ServiceAbschlussHA10 extends Service {
 		if (hatNP) {
 			this.logger.logLn(LogLevel.DEBUG, logIndent + " -> zu viele Defizite: " + ((fg1_mangelhaft === 2) ? "2x5 in FG1, aber kein weiteres Defizit in FG2" : "3 Defizite nicht erlaubt"));
 			this.logger.logLn(LogLevel.INFO, " -> Hinweis: Nachprüfungen in ZP10-Fächern nicht möglich");
-			const np_faecher: List<string> = (fg1_mangelhaft === 2) ? faecher.fg1.getKuerzel(ServiceAbschlussHA10.filterMangelhaftOhneZP10Faecher) : faecher.getKuerzel(ServiceAbschlussHA10.filterMangelhaftOhneZP10Faecher);
-			const abschlussergebnis: AbschlussErgebnis = AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.HA10, np_faecher);
+			const npFaecher: List<string> = (fg1_mangelhaft === 2) ? faecher.fg1.getKuerzel(ServiceAbschlussHA10.filterMangelhaftOhneZP10Faecher) : faecher.getKuerzel(ServiceAbschlussHA10.filterMangelhaftOhneZP10Faecher);
+			const abschlussergebnis: AbschlussErgebnis = AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.HA10, npFaecher);
 			this.logger.logLn(LogLevel.INFO, AbschlussManager.hatNachpruefungsmoeglichkeit(abschlussergebnis) ? (" -> Nachprüfungsmöglichkeit(en) in " + AbschlussManager.getNPFaecherString(abschlussergebnis)) : " -> also: kein Nachprüfungsmöglichkeit.");
 			return abschlussergebnis;
 		}

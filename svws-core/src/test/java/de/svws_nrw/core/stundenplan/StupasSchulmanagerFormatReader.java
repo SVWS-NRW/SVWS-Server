@@ -108,12 +108,12 @@ public class StupasSchulmanagerFormatReader {
 		final List<StupasSchulmanagerFormatLine> list2 = new ArrayList<>();
 
 		// Nach (ID, Wochentag, Stunde) gruppieren.
-		final HashMap3D<Integer, Integer, Integer, List<StupasSchulmanagerFormatLine>> unterrichtmenge_by_id_and_wochentag_and_stunde = new HashMap3D<>();
+		final HashMap3D<Integer, Integer, Integer, List<StupasSchulmanagerFormatLine>> map3dIdWochentagStundeNachListLine = new HashMap3D<>();
 		for (final StupasSchulmanagerFormatLine line : list)
-			Map3DUtils.getOrCreateArrayList(unterrichtmenge_by_id_and_wochentag_and_stunde, line.KursId, line.Wochentag, line.Stunde).add(line);
+			Map3DUtils.getOrCreateArrayList(map3dIdWochentagStundeNachListLine, line.KursId, line.Wochentag, line.Stunde).add(line);
 
 		// Nach (ID, Wochentag, Stunde) konvertieren.
-		for (final List<StupasSchulmanagerFormatLine> gruppe : unterrichtmenge_by_id_and_wochentag_and_stunde.getNonNullValuesAsList())
+		for (final List<StupasSchulmanagerFormatLine> gruppe : map3dIdWochentagStundeNachListLine.getNonNullValuesAsList())
 			convertWochentypenWochentagStunde(list2, gruppe);
 
 		return list2;
@@ -148,13 +148,13 @@ public class StupasSchulmanagerFormatReader {
 
 	private void importiere(final StundenplanManager m, final List<StupasSchulmanagerFormatLine> list) {
 		// Daten nach der Lerngruppen-ID (Kurs-ID) gruppieren.
-		final HashMap<Integer, List<StupasSchulmanagerFormatLine>> unterrichtmenge_by_id = new HashMap<>();
+		final HashMap<Integer, List<StupasSchulmanagerFormatLine>> mapIdNachListLine = new HashMap<>();
 		for (final StupasSchulmanagerFormatLine line : list)
-			MapUtils.getOrCreateArrayList(unterrichtmenge_by_id, line.KursId).add(line);
+			MapUtils.getOrCreateArrayList(mapIdNachListLine, line.KursId).add(line);
 
 		// Rekursiv importieren.
-		for (final Integer key : unterrichtmenge_by_id.keySet())
-			importiereKlassenOderKursunterricht(m, unterrichtmenge_by_id.get(key));
+		for (final Integer key : mapIdNachListLine.keySet())
+			importiereKlassenOderKursunterricht(m, mapIdNachListLine.get(key));
 	}
 
 	//	Id;KursId;Art;Lehrerkuerzel;Fach;Kurs;Raum;Wochentag;Stunde;Bezeichnung;Woche;Klassen;Kopplung

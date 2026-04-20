@@ -78,8 +78,9 @@ class TestBKGymMarkierungsalgorithmus {
 		final Map<String, BKGymFach[]> tempTestJahrgaengeFaecher =
 				ResourceUtils.json2Classes("de.svws_nrw.core.abschluss.bk.d", "Jahrgang_", "_Faecher", BKGymFach[].class);
 		assert (tempTestJahrgaengeFaecher != null) && (tempTestJahrgaengeFaecher.size() != 0) : "Fehler beim Laden der Gost-Fächer der Testjahrgänge!";
-		for (final Map.Entry<String, BKGymFach[]> entry : tempTestJahrgaengeFaecher.entrySet())
+		for (final Map.Entry<String, BKGymFach[]> entry : tempTestJahrgaengeFaecher.entrySet()) {
 			testJahrgaengeFaecher.put(entry.getKey(), Arrays.asList(entry.getValue()));
+		}
 		System.out.println("  FERTIG!");
 
 		System.out.println("- Lade die Abiturdaten aus den JSON-Resourcen und ordne sie den Jahrgängen zu...");
@@ -88,8 +89,9 @@ class TestBKGymMarkierungsalgorithmus {
 		assert (tempTestAbiturdaten != null) && (tempTestAbiturdaten.size() != 0) : "Fehler beim Laden der Abiturdaten!";
 		for (final Map.Entry<String, BKGymAbiturdaten> entry : tempTestAbiturdaten.entrySet()) {
 			final String[] ids = entry.getKey().split("_");
-			if (ids.length != 2)
+			if (ids.length != 2) {
 				fail("Fehler beim Laden der Abiturdaten - ungültiger Dateiname: Jahrgang_" + entry.getKey() + "_Abiturdaten");
+			}
 			HashMap<String, BKGymAbiturdaten> mapSchuelerJahrgang = testAbiturdaten.get(ids[0]);
 			if (mapSchuelerJahrgang == null) {
 				mapSchuelerJahrgang = new HashMap<>();
@@ -103,15 +105,17 @@ class TestBKGymMarkierungsalgorithmus {
 		final Map<String, BKGymAbiturMarkierungsalgorithmusErgebnis> tempTestErgebnisseMarkierungsalgorithmus =
 				ResourceUtils.json2Classes("de.svws_nrw.core.abschluss.bk.d", "Jahrgang_", "_Markierungsalgorithmus",
 						BKGymAbiturMarkierungsalgorithmusErgebnis.class);
-		if ((tempTestErgebnisseMarkierungsalgorithmus == null) || (tempTestErgebnisseMarkierungsalgorithmus.size() == 0))
+		if ((tempTestErgebnisseMarkierungsalgorithmus == null) || (tempTestErgebnisseMarkierungsalgorithmus.size() == 0)) {
 			return;
+		}
 		assert (tempTestErgebnisseMarkierungsalgorithmus != null) && (tempTestErgebnisseMarkierungsalgorithmus.size() != 0)
 				: "Fehler beim Laden der Ergebnisse für den Abitur-Markierungsalgorithmus!";
 		for (final Map.Entry<String, BKGymAbiturMarkierungsalgorithmusErgebnis> entry : tempTestErgebnisseMarkierungsalgorithmus.entrySet()) {
 			final String[] ids = entry.getKey().split("_");
-			if (ids.length != 2)
+			if (ids.length != 2) {
 				fail("Fehler beim Laden der Ergebnisse des Abitur-Markierungsalgorithmus - ungültiger Dateiname: Jahrgang_" + entry.getKey()
 						+ "_Markierungsalgorihmus");
+			}
 			HashMap<String, BKGymAbiturMarkierungsalgorithmusErgebnis> mapSchuelerJahrgang = testErgebnisseMarkierungsalgorihmus.get(ids[0]);
 			if (mapSchuelerJahrgang == null) {
 				mapSchuelerJahrgang = new HashMap<>();
@@ -138,21 +142,20 @@ class TestBKGymMarkierungsalgorithmus {
 
 		final ArrayList<DynamicTest> tests = new ArrayList<>();
 		testAbiturdaten.forEach((jahrgang, mapSchuelerJahrgang) -> {
-			mapSchuelerJahrgang.forEach((schueler_id, abidaten) -> {
-//				if (schueler_id.equals("0098")) {
+			mapSchuelerJahrgang.forEach((idSchueler, abidaten) -> {
 				// Lese BKGymFaecher
 				final List<BKGymFach> bkGymFaecher = testJahrgaengeFaecher.get(jahrgang);
-				assert bkGymFaecher != null : "Fehler bei den Testfällen: Für den Abiturjahrgang '" + jahrgang + "' der Test-Abiturdaten '" + schueler_id
+				assert bkGymFaecher != null : "Fehler bei den Testfällen: Für den Abiturjahrgang '" + jahrgang + "' der Test-Abiturdaten '" + idSchueler
 						+ "' wurden keine Test-Fächerdaten des beruflichen Gymnasiums gefunden.";
 				// Lese Ergebnis des Abitur-Markierungsergebnis ein, sofern eines vorhanden ist.
 				final var testJahrgangErgebnisseMarkierungsalgorithmus = testErgebnisseMarkierungsalgorihmus.get(jahrgang);
-				final var vergleichErgebnisMarkierungsalgorithmus = testJahrgangErgebnisseMarkierungsalgorithmus == null ? null : testJahrgangErgebnisseMarkierungsalgorithmus.get(schueler_id);
+				final var vergleichErgebnisMarkierungsalgorithmus = testJahrgangErgebnisseMarkierungsalgorithmus == null ? null : testJahrgangErgebnisseMarkierungsalgorithmus.get(idSchueler);
 				// Füge Test für den Abitur-Markierungsalgorithmus hinzu
 				tests.add(DynamicTest.dynamicTest(
-						"Testjahrgang " + jahrgang + " - Abiturdaten " + schueler_id + " - Markierungsalgorithmus",
+						"Testjahrgang " + jahrgang + " - Abiturdaten " + idSchueler + " - Markierungsalgorithmus",
 						() -> {
 							System.out.println();
-							System.out.println("- Test: Markierungsalgorithmus für die Abiturdaten " + schueler_id + " des Testjahrgangs " + jahrgang + ":");
+							System.out.println("- Test: Markierungsalgorithmus für die Abiturdaten " + idSchueler + " des Testjahrgangs " + jahrgang + ":");
 							final BKGymFaecherManager faecherManager = new BKGymFaecherManager(abidaten.schuljahrAbitur, bkGymFaecher);
 							final Schulgliederung sgl = Schulgliederung.data().getWertByID(abidaten.idSchulgliederung);
 							final BKGymAbiturdatenManager manager =
@@ -160,14 +163,15 @@ class TestBKGymMarkierungsalgorithmus {
 							final BKGymAbiturMarkierungsalgorithmusErgebnis ergebnis = manager.getErgebnisMarkierungsalgorithmus();
 							if (!ergebnis.log.isEmpty()) {
 								System.out.println("  Log:");
-								for (final String text : ergebnis.log)
+								for (final String text : ergebnis.log) {
 									System.out.println("	" + text);
+								}
 							}
 
 							if (vergleichErgebnisMarkierungsalgorithmus == null) {
 								//erzeuge JSON mit Markierungsergebnis
-								mapper.writer(pp).writeValue(new File(pfadTestdaten + "/Jahrgang_" + jahrgang + "_" + schueler_id + "_Markierungsalgorithmus.json"), ergebnis);
-								System.out.println("Neuer Testfall " + jahrgang + "_" + schueler_id + ": Das Ergebnis des Markierungsalgorithmus wurde erstmalig erzeugt. Bitte prüfen und ggfs. korrigieren");
+								mapper.writer(pp).writeValue(new File(pfadTestdaten + "/Jahrgang_" + jahrgang + "_" + idSchueler + "_Markierungsalgorithmus.json"), ergebnis);
+								System.out.println("Neuer Testfall " + jahrgang + "_" + idSchueler + ": Das Ergebnis des Markierungsalgorithmus wurde erstmalig erzeugt. Bitte prüfen und ggfs. korrigieren");
 								fail("Neuer Testfall: Das Ergebnis des Markierungsalgorithmus wurde erstmalig erzeugt. Bitte prüfen und ggfs. korrigieren: " + System.lineSeparator());
 							} else {
 								// Prüfe den Erfolg der Markierung
@@ -181,16 +185,17 @@ class TestBKGymMarkierungsalgorithmus {
 								// Prüfe, ob sich die dokumentierten Markierungen des Testfalls von den gefundenen unterscheiden.
 								final String vergleichsergebnis = vergleicheMarkierungsergebnisse(new ArrayList<>(vergleichErgebnisMarkierungsalgorithmus.markierungen),
 										new ArrayList<>(ergebnis.markierungen), faecherManager);
-								if (!vergleichsergebnis.isEmpty())
+								if (!vergleichsergebnis.isEmpty()) {
 									fail("Fehler: Die Markierung des Markierungsalgorithmus stimmen nicht mit dem Testfall überein: " + System.lineSeparator() + vergleichsergebnis);
+								}
 								// prüfe, ob die Logeinträge identisch sind
 								final String vergleichLog = vergleicheLogs(vergleichErgebnisMarkierungsalgorithmus.log, ergebnis.log);
-								if (!vergleichLog.isEmpty())
+								if (!vergleichLog.isEmpty()) {
 									fail("Fehler: Die Log-Einträge des Markierungsalgorithmus stimmen nicht mit dem Testfall überein: " + System.lineSeparator() + vergleichLog);
+								}
 							}
 							System.out.println("  Test erfolgreich beendet.");
 						}));
-//				}
 				});
 		});
 		return tests.stream();
@@ -248,8 +253,9 @@ class TestBKGymMarkierungsalgorithmus {
 			neuhinzu.add(markierungAlsString(neu.get(j++), faecherManager));
 		}
 
-		if (!fehlend.isEmpty() || !neuhinzu.isEmpty())
+		if (!fehlend.isEmpty() || !neuhinzu.isEmpty()) {
 			return "Fehlende Einträge: " + fehlend + System.lineSeparator() + "Hinzugekommene Markierungen: " + neuhinzu;
+		}
 
 		return "";
 	}
@@ -301,8 +307,9 @@ class TestBKGymMarkierungsalgorithmus {
 	 */
 	private static String markierungAlsString(final BKGymAbiturMarkierungsalgorithmusMarkierung markierung, final BKGymFaecherManager faecherManager) {
 		final BKGymFach fbFach = faecherManager.get(markierung.fachID);
-		if ((fbFach == null) || (fbFach.kuerzelAnzeige == null))
+		if ((fbFach == null) || (fbFach.kuerzelAnzeige == null)) {
 			return "";
+		}
 
 		return "Fach=" + fbFach.kuerzelAnzeige + ", Halbjahr=" + GostHalbjahr.kuerzelFromIDOrException(markierung.halbjahrID) + ", Punkte="
 		+ (markierung.punkte == null ? -1 : markierung.punkte);

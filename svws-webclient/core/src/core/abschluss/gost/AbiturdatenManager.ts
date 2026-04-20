@@ -1871,7 +1871,7 @@ export class AbiturdatenManager extends JavaObject {
 		for (const zulFach of faecher) {
 			let vorhanden: boolean = true;
 			for (const halbjahr of GostHalbjahr.values()) {
-				let belegung_vorhanden: boolean = false;
+				let belegungVorhanden: boolean = false;
 				for (const fb of fachbelegungen) {
 					const fbFach: GostFach | null = this.faecherManager.get(fb.fachID);
 					if (fbFach === null) {
@@ -1880,11 +1880,11 @@ export class AbiturdatenManager extends JavaObject {
 					const fbZulFach: Fach = Fach.getBySchluesselOrDefault(fbFach.kuerzel);
 					const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = fb.belegungen[halbjahr.id];
 					if ((zulFach as unknown === fbZulFach as unknown) && (belegungHalbjahr !== null) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
-						belegung_vorhanden = true;
+						belegungVorhanden = true;
 						break;
 					}
 				}
-				if (!belegung_vorhanden) {
+				if (!belegungVorhanden) {
 					vorhanden = false;
 					break;
 				}
@@ -1936,14 +1936,14 @@ export class AbiturdatenManager extends JavaObject {
 		for (const zulFach of faecher) {
 			let vorhanden: boolean = true;
 			for (const halbjahr of GostHalbjahr.values()) {
-				let belegung_vorhanden: boolean = false;
+				let belegungVorhanden: boolean = false;
 				for (const fb of fachbelegungen) {
 					if (this.istBelegungDurchgaengigSchriftlichInQPhase(zulFach, halbjahr, fb)) {
-						belegung_vorhanden = true;
+						belegungVorhanden = true;
 						break;
 					}
 				}
-				if (!belegung_vorhanden) {
+				if (!belegungVorhanden) {
 					vorhanden = false;
 					break;
 				}

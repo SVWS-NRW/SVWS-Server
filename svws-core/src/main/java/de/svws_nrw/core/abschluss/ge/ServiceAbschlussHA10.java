@@ -202,10 +202,10 @@ public class ServiceAbschlussHA10 extends Service {
 			logger.logLn(LogLevel.DEBUG, logIndent + " -> zu viele Defizite: "
 					+ ((fg1_mangelhaft == 2) ? "2x5 in FG1, aber kein weiteres Defizit in FG2" : "3 Defizite nicht erlaubt"));
 			logger.logLn(LogLevel.INFO, " -> Hinweis: Nachprüfungen in ZP10-Fächern nicht möglich");
-			final @NotNull List<String> np_faecher = (fg1_mangelhaft == 2)
+			final @NotNull List<String> npFaecher = (fg1_mangelhaft == 2)
 					? faecher.fg1.getKuerzel(filterMangelhaftOhneZP10Faecher)
 					: faecher.getKuerzel(filterMangelhaftOhneZP10Faecher);
-			final @NotNull AbschlussErgebnis abschlussergebnis = AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.HA10, np_faecher);
+			final @NotNull AbschlussErgebnis abschlussergebnis = AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.HA10, npFaecher);
 			logger.logLn(LogLevel.INFO, AbschlussManager.hatNachpruefungsmoeglichkeit(abschlussergebnis)
 					? (" -> Nachprüfungsmöglichkeit(en) in " + AbschlussManager.getNPFaecherString(abschlussergebnis))
 					: " -> also: kein Nachprüfungsmöglichkeit.");

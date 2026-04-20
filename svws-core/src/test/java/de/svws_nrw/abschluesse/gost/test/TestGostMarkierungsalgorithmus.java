@@ -138,33 +138,33 @@ class TestGostMarkierungsalgorithmus {
 	Stream<DynamicTest> testBelegpruefung() {
 		final ArrayList<DynamicTest> tests = new ArrayList<>();
 		testAbiturdaten.forEach((jahrgang, mapSchuelerJahrgang) -> {
-			mapSchuelerJahrgang.forEach((schueler_id, abidaten) -> {
+			mapSchuelerJahrgang.forEach((idSchueler, abidaten) -> {
 				// Lese GostJahrgangsdaten
 				final GostJahrgangsdaten gostJahrgangsdaten = testGostJahrgaenge.get(jahrgang);
-				assert gostJahrgangsdaten != null : "Fehler bei den Testfällen: Für den Abiturjahrgang '" + jahrgang + "' der Test-Abiturdaten '" + schueler_id
+				assert gostJahrgangsdaten != null : "Fehler bei den Testfällen: Für den Abiturjahrgang '" + jahrgang + "' der Test-Abiturdaten '" + idSchueler
 						+ "' wurden keine Jahrgangsdaten der gymnasialen Oberstufe gefunden.";
 				// Lese GostFaecher
 				final List<GostFach> gostFaecher = testGostJahrgaengeFaecher.get(jahrgang);
-				assert gostFaecher != null : "Fehler bei den Testfällen: Für den Abiturjahrgang '" + jahrgang + "' der Test-Abiturdaten '" + schueler_id
+				assert gostFaecher != null : "Fehler bei den Testfällen: Für den Abiturjahrgang '" + jahrgang + "' der Test-Abiturdaten '" + idSchueler
 						+ "' wurden keine Test-Fächerdaten der gymnasialen Oberstufe gefunden.";
 				final List<GostJahrgangFachkombination> gostFachkombinationen = testGostJahrgaengeFachkombinationen.get(jahrgang);
 				assert gostFachkombinationen != null : "Fehler bei den Testfällen: Für den Abiturjahrgang '" + jahrgang + "' der Test-Abiturdaten '"
-						+ schueler_id + "' wurden keine Test-Fachkombinationen der gymnasialen Oberstufe gefunden.";
+						+ idSchueler + "' wurden keine Test-Fachkombinationen der gymnasialen Oberstufe gefunden.";
 				// Lese Ergebnis des Abitur-Markierungsergebnis ein, sofern eines vorhanden ist.
 				final var testJahrgangErgebnisseMarkierungsalgorihmus = testErgebnisseMarkierungsalgorihmus.get(jahrgang);
 				if (testJahrgangErgebnisseMarkierungsalgorihmus == null) {
 					return;
 				}
-				final var vergleichErgebnisMarkierungsalgorihmus = testJahrgangErgebnisseMarkierungsalgorihmus.get(schueler_id);
+				final var vergleichErgebnisMarkierungsalgorihmus = testJahrgangErgebnisseMarkierungsalgorihmus.get(idSchueler);
 				if (vergleichErgebnisMarkierungsalgorihmus == null) {
 					return;
 				}
 				// Füge Test für den Abitur-Markierungsalgorithmus hinzu
 				tests.add(DynamicTest.dynamicTest(
-						"Testjahrgang " + jahrgang + " - Abiturdaten " + schueler_id + " - Markierungsalgorithmus",
+						"Testjahrgang " + jahrgang + " - Abiturdaten " + idSchueler + " - Markierungsalgorithmus",
 						() -> {
 							System.out.println();
-							System.out.println("- Test: Markierungsalgorithmus für die Abiturdaten " + schueler_id + " des Testjahrgangs " + jahrgang + ":");
+							System.out.println("- Test: Markierungsalgorithmus für die Abiturdaten " + idSchueler + " des Testjahrgangs " + jahrgang + ":");
 							final GostFaecherManager faecherManager =
 									new GostFaecherManager(gostJahrgangsdaten.abiturjahr - 1, gostFaecher, gostFachkombinationen);
 							final AbiturdatenManager manager =

@@ -43,12 +43,12 @@ public final class Schwerpunkt extends GostBelegpruefung {
 
 	@Override
 	protected void pruefeEF1() {
-		final @NotNull Fremdsprachen pruefung_sprachen = ((@NotNull Fremdsprachen) pruefungen_vorher[0]);
-		final @NotNull Naturwissenschaften pruefung_nawi = ((@NotNull Naturwissenschaften) pruefungen_vorher[1]);
+		final @NotNull Fremdsprachen pruefungSprachen = ((@NotNull Fremdsprachen) pruefungen_vorher[0]);
+		final @NotNull Naturwissenschaften pruefungNawi = ((@NotNull Naturwissenschaften) pruefungen_vorher[1]);
 
-		this._hatSchwerpunktFremdsprachen = (pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2);
+		this._hatSchwerpunktFremdsprachen = (pruefungSprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2);
 		this._hatSchwerpunktNaturwissenschaften =
-				(pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1);
+				(pruefungNawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefungNawi.getAnzahlDurchgehendSchritflichBelegt() >= 1);
 
 		// Prüfe, ob insgesamt so viele Fremdsprachen und Naturwissenschaften gewählt wurden, dass zunächst kein Schwerpunkt vorliegt.
 		// Dann liegt kein Belegungsfehler vor.
@@ -77,12 +77,12 @@ public final class Schwerpunkt extends GostBelegpruefung {
 
 	@Override
 	protected void pruefeGesamt() {
-		final @NotNull Fremdsprachen pruefung_sprachen = ((@NotNull Fremdsprachen) pruefungen_vorher[0]);
-		final @NotNull Naturwissenschaften pruefung_nawi = ((@NotNull Naturwissenschaften) pruefungen_vorher[1]);
+		final @NotNull Fremdsprachen pruefungSprachen = ((@NotNull Fremdsprachen) pruefungen_vorher[0]);
+		final @NotNull Naturwissenschaften pruefungNawi = ((@NotNull Naturwissenschaften) pruefungen_vorher[1]);
 
-		this._hatSchwerpunktFremdsprachen = (pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2);
+		this._hatSchwerpunktFremdsprachen = (pruefungSprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2);
 		this._hatSchwerpunktNaturwissenschaften =
-				(pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1);
+				(pruefungNawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefungNawi.getAnzahlDurchgehendSchritflichBelegt() >= 1);
 
 		// Prüfe, ob insgesamt so viele Fremdsprachen und Naturwissenschaften gewählt wurden, dass zunächst kein Schwerpunkt vorliegt.
 		// Dann liegt kein Belegungsfehler vor.

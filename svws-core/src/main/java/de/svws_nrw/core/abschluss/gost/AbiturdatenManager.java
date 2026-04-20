@@ -1980,7 +1980,7 @@ public class AbiturdatenManager {
 		for (final Fach zulFach : faecher) {
 			boolean vorhanden = true;
 			for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
-				boolean belegung_vorhanden = false;
+				boolean belegungVorhanden = false;
 				for (final AbiturFachbelegung fb : fachbelegungen) {
 					final GostFach fbFach = faecherManager.get(fb.fachID);
 					if (fbFach == null) {
@@ -1989,11 +1989,11 @@ public class AbiturdatenManager {
 					final @NotNull Fach fbZulFach = Fach.getBySchluesselOrDefault(fbFach.kuerzel);
 					final AbiturFachbelegungHalbjahr belegungHalbjahr = fb.belegungen[halbjahr.id];
 					if ((zulFach == fbZulFach) && (belegungHalbjahr != null) && (!istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
-						belegung_vorhanden = true;
+						belegungVorhanden = true;
 						break;
 					}
 				}
-				if (!belegung_vorhanden) {
+				if (!belegungVorhanden) {
 					vorhanden = false;
 					break;
 				}
@@ -2051,14 +2051,14 @@ public class AbiturdatenManager {
 		for (final Fach zulFach : faecher) {
 			boolean vorhanden = true;
 			for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
-				boolean belegung_vorhanden = false;
+				boolean belegungVorhanden = false;
 				for (final AbiturFachbelegung fb : fachbelegungen) {
 					if (istBelegungDurchgaengigSchriftlichInQPhase(zulFach, halbjahr, fb)) {
-						belegung_vorhanden = true;
+						belegungVorhanden = true;
 						break;
 					}
 				}
-				if (!belegung_vorhanden) {
+				if (!belegungVorhanden) {
 					vorhanden = false;
 					break;
 				}

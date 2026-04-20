@@ -162,38 +162,38 @@ class TestGostBelegpruefung {
 	Stream<DynamicTest> testBelegpruefung() {
 		final ArrayList<DynamicTest> tests = new ArrayList<>();
 		testAbiturdaten.forEach((jahrgang, mapSchuelerJahrgang) -> {
-			mapSchuelerJahrgang.forEach((schueler_id, abidaten) -> {
+			mapSchuelerJahrgang.forEach((idSchueler, abidaten) -> {
 				// Lese GostJahrgangsdaten
 				final GostJahrgangsdaten gostJahrgangsdaten = testGostJahrgaenge.get(jahrgang);
-				assert gostJahrgangsdaten != null : "Fehler bei den Testfällen: Für den Abiturjahrgang '" + jahrgang + "' der Test-Abiturdaten '" + schueler_id
+				assert gostJahrgangsdaten != null : "Fehler bei den Testfällen: Für den Abiturjahrgang '" + jahrgang + "' der Test-Abiturdaten '" + idSchueler
 						+ "' wurden keine Jahrgangsdaten der gymnasialen Oberstufe gefunden.";
 				// Lese GostFaecher
 				final List<GostFach> gostFaecher = testGostJahrgaengeFaecher.get(jahrgang);
-				assert gostFaecher != null : "Fehler bei den Testfällen: Für den Abiturjahrgang '" + jahrgang + "' der Test-Abiturdaten '" + schueler_id
+				assert gostFaecher != null : "Fehler bei den Testfällen: Für den Abiturjahrgang '" + jahrgang + "' der Test-Abiturdaten '" + idSchueler
 						+ "' wurden keine Test-Fächerdaten der gymnasialen Oberstufe gefunden.";
 				final List<GostJahrgangFachkombination> gostFachkombinationen = testGostJahrgaengeFachkombinationen.get(jahrgang);
 				assert gostFachkombinationen != null : "Fehler bei den Testfällen: Für den Abiturjahrgang '" + jahrgang + "' der Test-Abiturdaten '"
-						+ schueler_id + "' wurden keine Test-Fachkombinationen der gymnasialen Oberstufe gefunden.";
+						+ idSchueler + "' wurden keine Test-Fachkombinationen der gymnasialen Oberstufe gefunden.";
 				// Lese EF1-Belegprüefungsergebnis
 				final var testJahrgangBelegpruefungsergebnisseEF1 = testBelegpruefungsergebnisseEF1.get(jahrgang);
 				assert testJahrgangBelegpruefungsergebnisseEF1 != null : "Es konnte kein Jahrgang " + jahrgang
-						+ " mit EF1-Belegprüfungsergebnissen als json-Dateien für den Vergleich bei den Abiturdaten " + schueler_id + " gefunden werden.";
-				final var vergleichErgebnisEF1 = testJahrgangBelegpruefungsergebnisseEF1.get(schueler_id);
-				assert vergleichErgebnisEF1 != null : "Es konnte kein EF1-Belegprüfungsergebnis für die Abiturdaten " + schueler_id + " (Jahrgang " + jahrgang
+						+ " mit EF1-Belegprüfungsergebnissen als json-Dateien für den Vergleich bei den Abiturdaten " + idSchueler + " gefunden werden.";
+				final var vergleichErgebnisEF1 = testJahrgangBelegpruefungsergebnisseEF1.get(idSchueler);
+				assert vergleichErgebnisEF1 != null : "Es konnte kein EF1-Belegprüfungsergebnis für die Abiturdaten " + idSchueler + " (Jahrgang " + jahrgang
 						+ ") als json-Datei für den Vergleich gefunden werden.";
 				// Lese Gesamt-Belegprüefungsergebnis
 				final var testJahrgangBelegpruefungsergebnisseGesamt = testBelegpruefungsergebnisseGesamt.get(jahrgang);
 				assert testJahrgangBelegpruefungsergebnisseGesamt != null : "Es konnte kein Jahrgang " + jahrgang
-						+ " mit Gesamt-Belegprüfungsergebnissen als json-Dateien für den Vergleich bei den Abiturdaten " + schueler_id + " gefunden werden.";
-				final var vergleichErgebnisGesamt = testJahrgangBelegpruefungsergebnisseGesamt.get(schueler_id);
-				assert vergleichErgebnisGesamt != null : "Es konnte kein Gesamt-Belegprüfungsergebnis für die Abiturdaten " + schueler_id + " (Jahrgang "
+						+ " mit Gesamt-Belegprüfungsergebnissen als json-Dateien für den Vergleich bei den Abiturdaten " + idSchueler + " gefunden werden.";
+				final var vergleichErgebnisGesamt = testJahrgangBelegpruefungsergebnisseGesamt.get(idSchueler);
+				assert vergleichErgebnisGesamt != null : "Es konnte kein Gesamt-Belegprüfungsergebnis für die Abiturdaten " + idSchueler + " (Jahrgang "
 						+ jahrgang + ") als json-Datei für den Vergleich gefunden werden.";
 				// Füge Test für die EF1-Belegprüfung hinzu
 				tests.add(DynamicTest.dynamicTest(
-						"Testjahrgang " + jahrgang + " - Abiturdaten " + schueler_id + " - Belegprüfung EF1",
+						"Testjahrgang " + jahrgang + " - Abiturdaten " + idSchueler + " - Belegprüfung EF1",
 						() -> {
 							System.out.println();
-							System.out.println("- Test: EF1-Belegprüfung die Abiturdaten " + schueler_id + " des Testjahrgangs " + jahrgang + ":");
+							System.out.println("- Test: EF1-Belegprüfung die Abiturdaten " + idSchueler + " des Testjahrgangs " + jahrgang + ":");
 							final GostFaecherManager faecherManager =
 									new GostFaecherManager(gostJahrgangsdaten.abiturjahr - 1, gostFaecher, gostFachkombinationen);
 							final AbiturdatenManager manager = new AbiturdatenManager(ServerMode.DEV, abidaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.EF1);
@@ -233,10 +233,10 @@ class TestGostBelegpruefung {
 						}));
 				// Füge Test für die Gesamt-Belegprüfung hinzu
 				tests.add(DynamicTest.dynamicTest(
-						"Testjahrgang " + jahrgang + " - Abiturdaten " + schueler_id + " - Belegprüfung Gesamt",
+						"Testjahrgang " + jahrgang + " - Abiturdaten " + idSchueler + " - Belegprüfung Gesamt",
 						() -> {
 							System.out.println();
-							System.out.println("- Test: Gesamt-Belegprüfung die Abiturdaten " + schueler_id + " des Testjahrgangs " + jahrgang + ":");
+							System.out.println("- Test: Gesamt-Belegprüfung die Abiturdaten " + idSchueler + " des Testjahrgangs " + jahrgang + ":");
 							final GostFaecherManager faecherManager =
 									new GostFaecherManager(gostJahrgangsdaten.abiturjahr - 1, gostFaecher, gostFachkombinationen);
 							final AbiturdatenManager manager =

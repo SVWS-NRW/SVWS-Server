@@ -134,21 +134,21 @@ class TestBKGymBelegpruefung {
 
 		final ArrayList<DynamicTest> tests = new ArrayList<>();
 		testAbiturdaten.forEach((jahrgang, mapSchuelerJahrgang) -> {
-			mapSchuelerJahrgang.forEach((schueler_id, abidaten) -> {
+			mapSchuelerJahrgang.forEach((idSchueler, abidaten) -> {
 //			  if (schueler_id.equals("0286")) {
 				// Lese BKGymFaecher
 				final List<BKGymFach> bkGymFaecher = testJahrgaengeFaecher.get(jahrgang);
-				assert bkGymFaecher != null : "Fehler bei den Testfällen: Für den Abiturjahrgang '" + jahrgang + "' der Test-Abiturdaten '" + schueler_id
+				assert bkGymFaecher != null : "Fehler bei den Testfällen: Für den Abiturjahrgang '" + jahrgang + "' der Test-Abiturdaten '" + idSchueler
 						+ "' wurden keine Test-Fächerdaten des beruflichen Gymnasiums gefunden.";
 				// Lese Belegprüfungsergebnis
 				final var testJahrgangBelegpruefungsergebnisse = testBelegpruefungsergebnisse.get(jahrgang);
-				final var vergleichErgebnisBelegpruefungsalgorithmus = testJahrgangBelegpruefungsergebnisse == null ? null : testJahrgangBelegpruefungsergebnisse.get(schueler_id);
+				final var vergleichErgebnisBelegpruefungsalgorithmus = testJahrgangBelegpruefungsergebnisse == null ? null : testJahrgangBelegpruefungsergebnisse.get(idSchueler);
 				// Füge Test für die Belegprüfung hinzu
 				tests.add(DynamicTest.dynamicTest(
-						"Testjahrgang " + jahrgang + " - Abiturdaten " + schueler_id + " - Belegprüfung",
+						"Testjahrgang " + jahrgang + " - Abiturdaten " + idSchueler + " - Belegprüfung",
 						() -> {
 							System.out.println();
-							System.out.println("- Test: Belegprüfung die Abiturdaten " + schueler_id + " des Testjahrgangs " + jahrgang + ":");
+							System.out.println("- Test: Belegprüfung die Abiturdaten " + idSchueler + " des Testjahrgangs " + jahrgang + ":");
 							final BKGymFaecherManager faecherManager = new BKGymFaecherManager(abidaten.schuljahrAbitur, bkGymFaecher);
 							final Schulgliederung sgl = Schulgliederung.data().getWertByID(abidaten.idSchulgliederung);
 							final BKGymAbiturdatenManager manager =
@@ -168,8 +168,8 @@ class TestBKGymBelegpruefung {
 
 							if (vergleichErgebnisBelegpruefungsalgorithmus == null) {
 								//erzeuge JSON mit Markierungsergebnis
-								mapper.writer(pp).writeValue(new File(pfadTestdaten + "/Jahrgang_" + jahrgang + "_" + schueler_id + "_Belegpruefungsergebnis.json"), ergebnis);
-								System.out.println("Neuer Testfall " + jahrgang + "_" + schueler_id + ": Das Ergebnis der Belegprüfung wurde erstmalig erzeugt. Bitte prüfen und ggfs. korrigieren.");
+								mapper.writer(pp).writeValue(new File(pfadTestdaten + "/Jahrgang_" + jahrgang + "_" + idSchueler + "_Belegpruefungsergebnis.json"), ergebnis);
+								System.out.println("Neuer Testfall " + jahrgang + "_" + idSchueler + ": Das Ergebnis der Belegprüfung wurde erstmalig erzeugt. Bitte prüfen und ggfs. korrigieren.");
 								fail("Neuer Testfall: Das Ergebnis der Belegprüfung wurde erstmalig erzeugt. Bitte prüfen und ggfs. korrigieren. " + System.lineSeparator());
 							} else {
 								// Prüfe den Erfolg der Belegprüfung

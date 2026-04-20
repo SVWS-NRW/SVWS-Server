@@ -36,10 +36,10 @@ export class Schwerpunkt extends GostBelegpruefung {
 	}
 
 	protected pruefeEF1(): void {
-		const pruefung_sprachen: Fremdsprachen = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Fremdsprachen(this.pruefungen_vorher[0]));
-		const pruefung_nawi: Naturwissenschaften = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Naturwissenschaften(this.pruefungen_vorher[1]));
-		this._hatSchwerpunktFremdsprachen = (pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2);
-		this._hatSchwerpunktNaturwissenschaften = (pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1);
+		const pruefungSprachen: Fremdsprachen = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Fremdsprachen(this.pruefungen_vorher[0]));
+		const pruefungNawi: Naturwissenschaften = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Naturwissenschaften(this.pruefungen_vorher[1]));
+		this._hatSchwerpunktFremdsprachen = (pruefungSprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2);
+		this._hatSchwerpunktNaturwissenschaften = (pruefungNawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefungNawi.getAnzahlDurchgehendSchritflichBelegt() >= 1);
 		if (this._hatSchwerpunktFremdsprachen && (this._hatSchwerpunktNaturwissenschaften)) {
 			return;
 		}
@@ -55,10 +55,10 @@ export class Schwerpunkt extends GostBelegpruefung {
 	}
 
 	protected pruefeGesamt(): void {
-		const pruefung_sprachen: Fremdsprachen = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Fremdsprachen(this.pruefungen_vorher[0]));
-		const pruefung_nawi: Naturwissenschaften = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Naturwissenschaften(this.pruefungen_vorher[1]));
-		this._hatSchwerpunktFremdsprachen = (pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2);
-		this._hatSchwerpunktNaturwissenschaften = (pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1);
+		const pruefungSprachen: Fremdsprachen = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Fremdsprachen(this.pruefungen_vorher[0]));
+		const pruefungNawi: Naturwissenschaften = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Naturwissenschaften(this.pruefungen_vorher[1]));
+		this._hatSchwerpunktFremdsprachen = (pruefungSprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2);
+		this._hatSchwerpunktNaturwissenschaften = (pruefungNawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefungNawi.getAnzahlDurchgehendSchritflichBelegt() >= 1);
 		if (this._hatSchwerpunktFremdsprachen && this._hatSchwerpunktNaturwissenschaften) {
 			return;
 		}
