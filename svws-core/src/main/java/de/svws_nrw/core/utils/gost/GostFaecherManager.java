@@ -30,28 +30,28 @@ public class GostFaecherManager {
 	private final int schuljahr;
 
 	/** Die Liste der Fächer, die im Manager vorhanden sind. */
-	private final @NotNull List<GostFach> _faecher = new ArrayList<>();
+	private final @NotNull List<GostFach> listFaecher = new ArrayList<>();
 
 	/** Eine HashMap für den schnellen Zugriff auf ein Fach anhand der ID */
-	private final @NotNull HashMap<Long, GostFach> _map = new HashMap<>();
+	private final @NotNull HashMap<Long, GostFach> mapIdFachNachFach = new HashMap<>();
 
 	/** Eine HashMap für den schnellen Zugriff auf die Fächer anhand des Statistik-Kürzels des Faches */
-	private final @NotNull HashMap<String, List<GostFach>> _mapByKuerzel = new HashMap<>();
+	private final @NotNull HashMap<String, List<GostFach>> mapStatistikKuerzelNachListFach = new HashMap<>();
 
 	/** Eine HashMap für den schnellen Zugriff auf die Fremdsprachen-Fächer anhand des Sprachenkürzels */
-	private final @NotNull HashMap<String, List<GostFach>> _mapBySprachkuerzel = new HashMap<>();
+	private final @NotNull HashMap<String, List<GostFach>> mapSprachenKuerzelNachListFach = new HashMap<>();
 
 	/** Eine Map für den schnellen Zugriff auf die Fächer, welche als Leitfächer zur Verfügung stehen. */
-	private final @NotNull List<GostFach> _leitfaecher = new ArrayList<>();
+	private final @NotNull List<GostFach> listLeitfaecher = new ArrayList<>();
 
 	/** Die Liste der erforderlichen oder nicht erlaubten Fachkombinationen */
-	private final @NotNull List<GostJahrgangFachkombination> _fachkombis = new ArrayList<>();
+	private final @NotNull List<GostJahrgangFachkombination> listFachkombinationen = new ArrayList<>();
 
 	/** Die Liste mit den geforderten Fachkombinationen */
-	private final @NotNull List<GostJahrgangFachkombination> _fachkombisErforderlich = new ArrayList<>();
+	private final @NotNull List<GostJahrgangFachkombination> listFachkombinationenErforderlich = new ArrayList<>();
 
 	/** Die Liste mit den nicht erlaubten Fachkombinationen */
-	private final @NotNull List<GostJahrgangFachkombination> _fachkombisVerboten = new ArrayList<>();
+	private final @NotNull List<GostJahrgangFachkombination> listFachkombinationenVerboten = new ArrayList<>();
 
 
 	/**
@@ -113,7 +113,7 @@ public class GostFaecherManager {
 	private boolean addFachInternal(final @NotNull GostFach fach) throws DeveloperNotificationException {
 		// Füge das Fach hinzu, wenn es nicht bereits vorhanden ist und gültig ist...
 		DeveloperNotificationException.ifSmaller("fach.id", fach.id, 0);
-		if (_map.containsKey(fach.id)) {
+		if (mapIdFachNachFach.containsKey(fach.id)) {
 			return false;
 		}
 		final Fach zf = Fach.getBySchluesselOrDefault(fach.kuerzel);
@@ -121,27 +121,27 @@ public class GostFaecherManager {
 		if (fke == null) {
 			return false;
 		}
-		_map.put(fach.id, fach);
-		List<GostFach> listForKuerzel = _mapByKuerzel.get(fach.kuerzel);
+		mapIdFachNachFach.put(fach.id, fach);
+		List<GostFach> listForKuerzel = mapStatistikKuerzelNachListFach.get(fach.kuerzel);
 		if (listForKuerzel == null) {
 			listForKuerzel = new ArrayList<>();
-			_mapByKuerzel.put(fach.kuerzel, listForKuerzel);
+			mapStatistikKuerzelNachListFach.put(fach.kuerzel, listForKuerzel);
 		}
 		listForKuerzel.add(fach);
 		if (fach.istFremdsprache && fke.istFremdsprache) {
-			List<GostFach> listForSprachkuerzel = _mapBySprachkuerzel.get(fke.kuerzel);
+			List<GostFach> listForSprachkuerzel = mapSprachenKuerzelNachListFach.get(fke.kuerzel);
 			if (listForSprachkuerzel == null) {
 				listForSprachkuerzel = new ArrayList<>();
-				_mapBySprachkuerzel.put(fke.kuerzel, listForSprachkuerzel);
+				mapSprachenKuerzelNachListFach.put(fke.kuerzel, listForSprachkuerzel);
 			}
 			listForSprachkuerzel.add(fach);
 		}
-		final boolean added = _faecher.add(fach);
+		final boolean added = listFaecher.add(fach);
 		// Prüfe, ob das Fach als Leitfach geeignet ist, d.h. kein Vertiefungs-, Projekt- oder Ersatzfach ist
 		if (!GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach)) {
 			final Fachgruppe fg = Fach.getBySchluesselOrDefault(fach.kuerzel).getFachgruppe(schuljahr);
 			if ((fg != Fachgruppe.FG_VX) && (fg != Fachgruppe.FG_PX)) {
-				_leitfaecher.add(fach);
+				listLeitfaecher.add(fach);
 			}
 		}
 		return added;
@@ -152,8 +152,8 @@ public class GostFaecherManager {
 	 * Führt eine Sortierung der Fächer anhand des Sortierungsfeldes durch.
 	 */
 	private void sort() {
-		_faecher.sort(comp);
-		_leitfaecher.sort(comp);
+		listFaecher.sort(comp);
+		listLeitfaecher.sort(comp);
 	}
 
 
@@ -185,11 +185,11 @@ public class GostFaecherManager {
 					+ fach2.kuerzelAnzeige + kursart2;
 		}
 		if (typ == GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH) {
-			_fachkombisErforderlich.add(fachkombi);
+			listFachkombinationenErforderlich.add(fachkombi);
 		} else if (typ == GostLaufbahnplanungFachkombinationTyp.VERBOTEN) {
-			_fachkombisVerboten.add(fachkombi);
+			listFachkombinationenVerboten.add(fachkombi);
 		}
-		return _fachkombis.add(fachkombi);
+		return listFachkombinationen.add(fachkombi);
 	}
 
 
@@ -267,7 +267,7 @@ public class GostFaecherManager {
 	 * @return Das fach mit der angegebenen ID oder null, falls es das Fach nicht gibt.
 	 */
 	public GostFach get(final long id) {
-		return _map.get(id);
+		return mapIdFachNachFach.get(id);
 	}
 
 
@@ -281,7 +281,7 @@ public class GostFaecherManager {
 	 * @throws DeveloperNotificationException Falls ein Fach mit der ID nicht bekannt ist.
 	 */
 	public @NotNull GostFach getOrException(final long idFach) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifMapGetIsNull(_map, idFach);
+		return DeveloperNotificationException.ifMapGetIsNull(mapIdFachNachFach, idFach);
 	}
 
 
@@ -293,7 +293,7 @@ public class GostFaecherManager {
 	 * @return eine Liste der Fächer, welche das angegebene Statistik-Kürzel haben
 	 */
 	public @NotNull List<GostFach> getByKuerzel(final @NotNull String kuerzel) {
-		final List<GostFach> faecher = _mapByKuerzel.get(kuerzel);
+		final List<GostFach> faecher = mapStatistikKuerzelNachListFach.get(kuerzel);
 		return (faecher == null) ? new ArrayList<>() : faecher;
 	}
 
@@ -306,7 +306,7 @@ public class GostFaecherManager {
 	 * @return eine Liste der Fächer, welche das angegebene Sprachkürzel haben
 	 */
 	public @NotNull List<GostFach> getBySprachkuerzel(final @NotNull String sprache) {
-		final List<GostFach> faecher = _mapBySprachkuerzel.get(sprache);
+		final List<GostFach> faecher = mapSprachenKuerzelNachListFach.get(sprache);
 		return (faecher == null) ? new ArrayList<>() : faecher;
 	}
 
@@ -317,7 +317,7 @@ public class GostFaecherManager {
 	 * @return true, wenn die Liste der Fächer leer ist.
 	 */
 	public boolean isEmpty() {
-		return _faecher.isEmpty();
+		return listFaecher.isEmpty();
 	}
 
 
@@ -328,7 +328,7 @@ public class GostFaecherManager {
 	 * @return die interne Liste der Fächer
 	 */
 	public @NotNull List<GostFach> faecher() {
-		return new ArrayList<>(_faecher);
+		return new ArrayList<>(listFaecher);
 	}
 
 	/**
@@ -338,7 +338,7 @@ public class GostFaecherManager {
 	 */
 	public @NotNull List<GostFach> getFaecherSchriftlichMoeglich() {
 		final @NotNull List<GostFach> faecherSchriftlichMoeglich = new ArrayList<>();
-		for (final @NotNull GostFach f : _faecher) {
+		for (final @NotNull GostFach f : listFaecher) {
 			final Fach zf = Fach.getBySchluesselOrDefault(f.kuerzel);
 			if ((zf == Fach.PX) || (zf == Fach.VX) || (zf == Fach.VO) || (zf == Fach.IN)) {
 				continue;
@@ -354,7 +354,7 @@ public class GostFaecherManager {
 	 * @return die interne Liste mit den Leitfächern
 	 */
 	public @NotNull List<GostFach> getLeitfaecher() {
-		return _leitfaecher;
+		return listLeitfaecher;
 	}
 
 
@@ -366,7 +366,7 @@ public class GostFaecherManager {
 	 */
 	public @NotNull List<String> getFremdsprachenkuerzel() {
 		final @NotNull List<String> result = new ArrayList<>();
-		result.addAll(_mapBySprachkuerzel.keySet());
+		result.addAll(mapSprachenKuerzelNachListFach.keySet());
 		result.sort((final @NotNull String a, final @NotNull String b) -> a.compareToIgnoreCase(b));
 		return result;
 	}
@@ -378,7 +378,7 @@ public class GostFaecherManager {
 	 * @return die interne Liste mit den Fachkombinationen
 	 */
 	public @NotNull List<GostJahrgangFachkombination> getFachkombinationen() {
-		return this._fachkombis;
+		return this.listFachkombinationen;
 	}
 
 	/**
@@ -387,7 +387,7 @@ public class GostFaecherManager {
 	 * @return die interne Liste mit den geforderten Fachkombinationen
 	 */
 	public @NotNull List<GostJahrgangFachkombination> getFachkombinationenErforderlich() {
-		return this._fachkombisErforderlich;
+		return this.listFachkombinationenErforderlich;
 	}
 
 	/**
@@ -396,7 +396,7 @@ public class GostFaecherManager {
 	 * @return die interne Liste mit den nicht erlaubten Fachkombinationen
 	 */
 	public @NotNull List<GostJahrgangFachkombination> getFachkombinationenVerboten() {
-		return this._fachkombisVerboten;
+		return this.listFachkombinationenVerboten;
 	}
 
 
@@ -408,7 +408,7 @@ public class GostFaecherManager {
 	 * @return true, wenn es sich um ein Projektkurs-Fach handelt und ansonsten false.
 	 */
 	public boolean fachIstProjektkurs(final long id) {
-		final GostFach fach = _map.get(id);
+		final GostFach fach = mapIdFachNachFach.get(id);
 		if (fach == null) {
 			return false;
 		}
@@ -424,7 +424,7 @@ public class GostFaecherManager {
 	 * @return true, wenn es sich um einen Vertiefungskurs handelt und ansonsten false.
 	 */
 	public boolean fachIstVertiefungskurs(final long id) {
-		final GostFach fach = _map.get(id);
+		final GostFach fach = mapIdFachNachFach.get(id);
 		if (fach == null) {
 			return false;
 		}
@@ -439,7 +439,7 @@ public class GostFaecherManager {
 	 * @return true, wenn es sich um Kunst handelt und ansonsten false.
 	 */
 	public boolean fachIstKunst(final long id) {
-		final GostFach fach = _map.get(id);
+		final GostFach fach = mapIdFachNachFach.get(id);
 		if (fach == null) {
 			return false;
 		}
@@ -454,7 +454,7 @@ public class GostFaecherManager {
 	 * @return true, wenn es sich um Musik handelt und ansonsten false.
 	 */
 	public boolean fachIstMusik(final long id) {
-		final GostFach fach = _map.get(id);
+		final GostFach fach = mapIdFachNachFach.get(id);
 		if (fach == null) {
 			return false;
 		}

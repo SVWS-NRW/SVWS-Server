@@ -31,42 +31,42 @@ export class GostFaecherManager extends JavaObject {
 	/**
 	 * Die Liste der Fächer, die im Manager vorhanden sind.
 	 */
-	private readonly _faecher: List<GostFach> = new ArrayList<GostFach>();
+	private readonly listFaecher: List<GostFach> = new ArrayList<GostFach>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf ein Fach anhand der ID
 	 */
-	private readonly _map: HashMap<number, GostFach> = new HashMap<number, GostFach>();
+	private readonly mapIdFachNachFach: HashMap<number, GostFach> = new HashMap<number, GostFach>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Fächer anhand des Statistik-Kürzels des Faches
 	 */
-	private readonly _mapByKuerzel: HashMap<string, List<GostFach>> = new HashMap<string, List<GostFach>>();
+	private readonly mapStatistikKuerzelNachListFach: HashMap<string, List<GostFach>> = new HashMap<string, List<GostFach>>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Fremdsprachen-Fächer anhand des Sprachenkürzels
 	 */
-	private readonly _mapBySprachkuerzel: HashMap<string, List<GostFach>> = new HashMap<string, List<GostFach>>();
+	private readonly mapSprachenKuerzelNachListFach: HashMap<string, List<GostFach>> = new HashMap<string, List<GostFach>>();
 
 	/**
 	 * Eine Map für den schnellen Zugriff auf die Fächer, welche als Leitfächer zur Verfügung stehen.
 	 */
-	private readonly _leitfaecher: List<GostFach> = new ArrayList<GostFach>();
+	private readonly listLeitfaecher: List<GostFach> = new ArrayList<GostFach>();
 
 	/**
 	 * Die Liste der erforderlichen oder nicht erlaubten Fachkombinationen
 	 */
-	private readonly _fachkombis: List<GostJahrgangFachkombination> = new ArrayList<GostJahrgangFachkombination>();
+	private readonly listFachkombinationen: List<GostJahrgangFachkombination> = new ArrayList<GostJahrgangFachkombination>();
 
 	/**
 	 * Die Liste mit den geforderten Fachkombinationen
 	 */
-	private readonly _fachkombisErforderlich: List<GostJahrgangFachkombination> = new ArrayList<GostJahrgangFachkombination>();
+	private readonly listFachkombinationenErforderlich: List<GostJahrgangFachkombination> = new ArrayList<GostJahrgangFachkombination>();
 
 	/**
 	 * Die Liste mit den nicht erlaubten Fachkombinationen
 	 */
-	private readonly _fachkombisVerboten: List<GostJahrgangFachkombination> = new ArrayList<GostJahrgangFachkombination>();
+	private readonly listFachkombinationenVerboten: List<GostJahrgangFachkombination> = new ArrayList<GostJahrgangFachkombination>();
 
 
 	/**
@@ -137,7 +137,7 @@ export class GostFaecherManager extends JavaObject {
 	 */
 	private addFachInternal(fach: GostFach): boolean {
 		DeveloperNotificationException.ifSmaller("fach.id", fach.id, 0);
-		if (this._map.containsKey(fach.id)) {
+		if (this.mapIdFachNachFach.containsKey(fach.id)) {
 			return false;
 		}
 		const zf: Fach | null = Fach.getBySchluesselOrDefault(fach.kuerzel);
@@ -145,26 +145,26 @@ export class GostFaecherManager extends JavaObject {
 		if (fke === null) {
 			return false;
 		}
-		this._map.put(fach.id, fach);
-		let listForKuerzel: List<GostFach> | null = this._mapByKuerzel.get(fach.kuerzel);
+		this.mapIdFachNachFach.put(fach.id, fach);
+		let listForKuerzel: List<GostFach> | null = this.mapStatistikKuerzelNachListFach.get(fach.kuerzel);
 		if (listForKuerzel === null) {
 			listForKuerzel = new ArrayList();
-			this._mapByKuerzel.put(fach.kuerzel, listForKuerzel);
+			this.mapStatistikKuerzelNachListFach.put(fach.kuerzel, listForKuerzel);
 		}
 		listForKuerzel.add(fach);
 		if (fach.istFremdsprache && fke.istFremdsprache) {
-			let listForSprachkuerzel: List<GostFach> | null = this._mapBySprachkuerzel.get(fke.kuerzel);
+			let listForSprachkuerzel: List<GostFach> | null = this.mapSprachenKuerzelNachListFach.get(fke.kuerzel);
 			if (listForSprachkuerzel === null) {
 				listForSprachkuerzel = new ArrayList();
-				this._mapBySprachkuerzel.put(fke.kuerzel, listForSprachkuerzel);
+				this.mapSprachenKuerzelNachListFach.put(fke.kuerzel, listForSprachkuerzel);
 			}
 			listForSprachkuerzel.add(fach);
 		}
-		const added: boolean = this._faecher.add(fach);
+		const added: boolean = this.listFaecher.add(fach);
 		if (!GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach)) {
 			const fg: Fachgruppe | null = Fach.getBySchluesselOrDefault(fach.kuerzel).getFachgruppe(this.schuljahr);
 			if ((fg as unknown !== Fachgruppe.FG_VX as unknown) && (fg as unknown !== Fachgruppe.FG_PX as unknown)) {
-				this._leitfaecher.add(fach);
+				this.listLeitfaecher.add(fach);
 			}
 		}
 		return added;
@@ -174,8 +174,8 @@ export class GostFaecherManager extends JavaObject {
 	 * Führt eine Sortierung der Fächer anhand des Sortierungsfeldes durch.
 	 */
 	private sort(): void {
-		this._faecher.sort(GostFaecherManager.comp);
-		this._leitfaecher.sort(GostFaecherManager.comp);
+		this.listFaecher.sort(GostFaecherManager.comp);
+		this.listLeitfaecher.sort(GostFaecherManager.comp);
 	}
 
 	/**
@@ -203,12 +203,12 @@ export class GostFaecherManager extends JavaObject {
 			fachkombi.hinweistext = fach1.kuerzelAnzeige + kursart1 + ((typ as unknown === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH as unknown) ? " erfordert " : " erlaubt kein ") + fach2.kuerzelAnzeige + kursart2;
 		}
 		if (typ as unknown === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH as unknown) {
-			this._fachkombisErforderlich.add(fachkombi);
+			this.listFachkombinationenErforderlich.add(fachkombi);
 		} else
 			if (typ as unknown === GostLaufbahnplanungFachkombinationTyp.VERBOTEN as unknown) {
-				this._fachkombisVerboten.add(fachkombi);
+				this.listFachkombinationenVerboten.add(fachkombi);
 			}
-		return this._fachkombis.add(fachkombi);
+		return this.listFachkombinationen.add(fachkombi);
 	}
 
 	/**
@@ -290,7 +290,7 @@ export class GostFaecherManager extends JavaObject {
 	 * @return Das fach mit der angegebenen ID oder null, falls es das Fach nicht gibt.
 	 */
 	public get(id: number): GostFach | null {
-		return this._map.get(id);
+		return this.mapIdFachNachFach.get(id);
 	}
 
 	/**
@@ -303,7 +303,7 @@ export class GostFaecherManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls ein Fach mit der ID nicht bekannt ist.
 	 */
 	public getOrException(idFach: number): GostFach {
-		return DeveloperNotificationException.ifMapGetIsNull(this._map, idFach);
+		return DeveloperNotificationException.ifMapGetIsNull(this.mapIdFachNachFach, idFach);
 	}
 
 	/**
@@ -314,7 +314,7 @@ export class GostFaecherManager extends JavaObject {
 	 * @return eine Liste der Fächer, welche das angegebene Statistik-Kürzel haben
 	 */
 	public getByKuerzel(kuerzel: string): List<GostFach> {
-		const faecher: List<GostFach> | null = this._mapByKuerzel.get(kuerzel);
+		const faecher: List<GostFach> | null = this.mapStatistikKuerzelNachListFach.get(kuerzel);
 		return (faecher === null) ? new ArrayList() : faecher;
 	}
 
@@ -326,7 +326,7 @@ export class GostFaecherManager extends JavaObject {
 	 * @return eine Liste der Fächer, welche das angegebene Sprachkürzel haben
 	 */
 	public getBySprachkuerzel(sprache: string): List<GostFach> {
-		const faecher: List<GostFach> | null = this._mapBySprachkuerzel.get(sprache);
+		const faecher: List<GostFach> | null = this.mapSprachenKuerzelNachListFach.get(sprache);
 		return (faecher === null) ? new ArrayList() : faecher;
 	}
 
@@ -336,7 +336,7 @@ export class GostFaecherManager extends JavaObject {
 	 * @return true, wenn die Liste der Fächer leer ist.
 	 */
 	public isEmpty(): boolean {
-		return this._faecher.isEmpty();
+		return this.listFaecher.isEmpty();
 	}
 
 	/**
@@ -346,7 +346,7 @@ export class GostFaecherManager extends JavaObject {
 	 * @return die interne Liste der Fächer
 	 */
 	public faecher(): List<GostFach> {
-		return new ArrayList<GostFach>(this._faecher);
+		return new ArrayList<GostFach>(this.listFaecher);
 	}
 
 	/**
@@ -356,7 +356,7 @@ export class GostFaecherManager extends JavaObject {
 	 */
 	public getFaecherSchriftlichMoeglich(): List<GostFach> {
 		const faecherSchriftlichMoeglich: List<GostFach> = new ArrayList<GostFach>();
-		for (const f of this._faecher) {
+		for (const f of this.listFaecher) {
 			const zf: Fach | null = Fach.getBySchluesselOrDefault(f.kuerzel);
 			if ((zf as unknown === Fach.PX as unknown) || (zf as unknown === Fach.VX as unknown) || (zf as unknown === Fach.VO as unknown) || (zf as unknown === Fach.IN as unknown)) {
 				continue;
@@ -372,7 +372,7 @@ export class GostFaecherManager extends JavaObject {
 	 * @return die interne Liste mit den Leitfächern
 	 */
 	public getLeitfaecher(): List<GostFach> {
-		return this._leitfaecher;
+		return this.listLeitfaecher;
 	}
 
 	/**
@@ -383,7 +383,7 @@ export class GostFaecherManager extends JavaObject {
 	 */
 	public getFremdsprachenkuerzel(): List<string> {
 		const result: List<string> = new ArrayList<string>();
-		result.addAll(this._mapBySprachkuerzel.keySet());
+		result.addAll(this.mapSprachenKuerzelNachListFach.keySet());
 		result.sort({ compare: (a: string, b: string) => JavaString.compareToIgnoreCase(a, b) });
 		return result;
 	}
@@ -394,7 +394,7 @@ export class GostFaecherManager extends JavaObject {
 	 * @return die interne Liste mit den Fachkombinationen
 	 */
 	public getFachkombinationen(): List<GostJahrgangFachkombination> {
-		return this._fachkombis;
+		return this.listFachkombinationen;
 	}
 
 	/**
@@ -403,7 +403,7 @@ export class GostFaecherManager extends JavaObject {
 	 * @return die interne Liste mit den geforderten Fachkombinationen
 	 */
 	public getFachkombinationenErforderlich(): List<GostJahrgangFachkombination> {
-		return this._fachkombisErforderlich;
+		return this.listFachkombinationenErforderlich;
 	}
 
 	/**
@@ -412,7 +412,7 @@ export class GostFaecherManager extends JavaObject {
 	 * @return die interne Liste mit den nicht erlaubten Fachkombinationen
 	 */
 	public getFachkombinationenVerboten(): List<GostJahrgangFachkombination> {
-		return this._fachkombisVerboten;
+		return this.listFachkombinationenVerboten;
 	}
 
 	/**
@@ -423,7 +423,7 @@ export class GostFaecherManager extends JavaObject {
 	 * @return true, wenn es sich um ein Projektkurs-Fach handelt und ansonsten false.
 	 */
 	public fachIstProjektkurs(id: number): boolean {
-		const fach: GostFach | null = this._map.get(id);
+		const fach: GostFach | null = this.mapIdFachNachFach.get(id);
 		if (fach === null) {
 			return false;
 		}
@@ -438,7 +438,7 @@ export class GostFaecherManager extends JavaObject {
 	 * @return true, wenn es sich um einen Vertiefungskurs handelt und ansonsten false.
 	 */
 	public fachIstVertiefungskurs(id: number): boolean {
-		const fach: GostFach | null = this._map.get(id);
+		const fach: GostFach | null = this.mapIdFachNachFach.get(id);
 		if (fach === null) {
 			return false;
 		}
@@ -453,7 +453,7 @@ export class GostFaecherManager extends JavaObject {
 	 * @return true, wenn es sich um Kunst handelt und ansonsten false.
 	 */
 	public fachIstKunst(id: number): boolean {
-		const fach: GostFach | null = this._map.get(id);
+		const fach: GostFach | null = this.mapIdFachNachFach.get(id);
 		if (fach === null) {
 			return false;
 		}
@@ -468,7 +468,7 @@ export class GostFaecherManager extends JavaObject {
 	 * @return true, wenn es sich um Musik handelt und ansonsten false.
 	 */
 	public fachIstMusik(id: number): boolean {
-		const fach: GostFach | null = this._map.get(id);
+		const fach: GostFach | null = this.mapIdFachNachFach.get(id);
 		if (fach === null) {
 			return false;
 		}
