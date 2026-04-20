@@ -23,7 +23,14 @@ Folgende Konfigurationen können vorgenommen werden:
 - MariaDB-Konfiguration
 - Installationspfade
 - Erstellung eines Keystores für TLS
-- Import von Testdaten
+
+## Hinweis zu Testdaten
+
+Der Installer legt bewusst keine Testdaten an. Für den produktiven Betrieb
+wird ein leeres Schema erstellt; Testdaten sind nicht mehr Teil des
+Installationspfades. Wer eine befüllte Datenbank für Testzwecke benötigt,
+kann ein bestehendes Schema über den Admin-Client bzw. den Migrations-/
+Import-Endpunkt (`POST /api/schema/import/{schema}/sqlite`) einspielen.
 
 
 ## Wichtige Hinweise

@@ -37,7 +37,6 @@ password1=$(head /dev/urandom | tr -dc $CHARS | fold -w $LENGTH | head -n 1)
 
 export CREATE_MARIADB=J
 export CREATE_KEYSTORE=J
-export CREATE_TESTDATA=J
 export MARIADB_ROOT_PASSWORD=${password1}
 export MARIADB_HOST=localhost
 
