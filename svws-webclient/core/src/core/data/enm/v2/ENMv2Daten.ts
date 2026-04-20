@@ -20,7 +20,7 @@ export class ENMv2Daten extends JavaObject {
 	/**
 	 * Die Revision des ENM-Datenformates, um zu überprüfen, ob die Datei in dem richtigen Format vorliegt (-1 für Entwickler-Revisionen und ansonsten aufsteigend ab 1
 	 */
-	public enmRevision: number = 1;
+	public enmRevision: number = 2;
 
 	/**
 	 * Die Schulnummer, für welche die ENM-Daten generiert wurden.

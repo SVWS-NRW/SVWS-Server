@@ -12,7 +12,7 @@ use \PDOStatement as PDOStatement;
 class ImportManager {
 
     /** Die ENM-Revision mit welcher diese Klasse arbeitet */
-    public int $enmRevisionRequired = 1;
+    public int $enmRevisionRequired = 2;
 
     /** Die Datenbank-Verbindung für die Verbindung zur WeNoM-Datenbank */
     protected DBConnection $conn;
