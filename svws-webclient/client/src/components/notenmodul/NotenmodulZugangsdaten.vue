@@ -18,18 +18,28 @@
 			<div class="h-full overflow-auto flex gap-16">
 				<ui-table-grid name="Schüler" :manager="() => gridManager">
 					<template #header>
-						<th class="text-left">Kürzel</th>
-						<th class="text-left">Nachname, Vorname</th>
-						<th class="text-left">Dienst-Email</th>
-						<th class="text-left">Initialkennwort</th>
-						<th class="text-center">2FA</th>
+						<template v-for="col of gridManager.cols.values()" :key="col.name">
+							<th v-if="col.kuerzel === 'Auswahl'" class="flex items-center justify-center">
+								<svws-ui-checkbox :model-value="(auswahl.length === gridManager.daten.size()) && (auswahl.length > 0)"
+									:indeterminate="(auswahl.length > 0) && (auswahl.length < gridManager.daten.size())"
+									@update:model-value="value => auswahl = value ? [...gridManager.daten] : []" />
+							</th>
+							<th v-else class="flex justify-center" :class="[col.kuerzel === '2FA' ? 'text-center' : 'text-left']">
+								{{ col.kuerzel }}
+							</th>
+						</template>
 					</template>
 					<template #default="{ row: lehrer }">
+						<td class="flex items-center justify-center">
+							<svws-ui-checkbox :model-value="auswahl.includes(lehrer)" @update:model-value="toggleSelection(lehrer)" />
+						</td>
 						<td @click="open(lehrer.id)" class="flex flex-row items-center justify-start gap-2">
 							<span class="cursor-pointer icon-sm i-ri-link" title="Zum Lehrerbereich wechseln" />
 							{{ lehrer.kuerzel }}
 						</td>
-						<td class="text-left">{{ lehrer.nachname }}, {{ lehrer.vorname }}</td>
+						<td class="text-left flex justify-center">
+							{{ lehrer.nachname }}, {{ lehrer.vorname }}
+						</td>
 						<td class="flex items-center flex-row justify-start gap-2">
 							<svws-ui-tooltip v-if="(lehrer.eMailDienstlich === null) || (lehrer.eMailDienstlich.trim().length === 0)">
 								<span class="icon i-ri-alert-line icon-ui-danger" />
@@ -57,7 +67,7 @@
 								<span>fehlt</span>
 							</div>
 						</td>
-						<td class="text-left">
+						<td class="text-left flex justify-center">
 							<div v-if="mapEnmInitialKennwoerter().get(lehrer.id) !== null" @click="copyToClipboard(lehrer, 'kennwort')" class="cursor-pointer flex gap-2 items-center">
 								{{ mapEnmInitialKennwoerter().get(lehrer.id) }}
 								<span v-if="lehrer.istInitialPassword" class="icon-sm i-ri-file-copy-line" :class="{ 'ping-normal': ((ping?.id === lehrer.id) && (pingType === 'kennwort')) }" />
@@ -84,7 +94,7 @@
 						</td>
 					</template>
 				</ui-table-grid>
-				<div v-if="selected !== null">
+				<div v-if="(selected !== null) && (auswahl.length === 0)">
 					<div class="text-headline-md">{{ selected.nachname }}, {{ selected.vorname }}</div>
 					<div class="mb-4">Individuelle Einstellungen für die Zugangsdaten der ausgewählten Lehrkraft</div>
 					<div class="content-card mt-4">
@@ -128,6 +138,44 @@
 						</div>
 					</div>
 				</div>
+				<div v-else-if="auswahl.length > 0">
+					<div class="text-headline-md">{{ auswahl.length === 1 ? 'Lehrkraft' : 'Lehrkräfte' }} bearbeiten</div>
+					<div class="content-card mt-4">
+						<div class="content-card--header">
+							<div class="content-card--headline">Passwort</div>
+						</div>
+						<div class="content-card--content">
+							<div>
+								Die Passwörter werden auf das Initialpasswort zurückgesetzt
+								<div class="flex items-center">
+									<svws-ui-button type="primary" @click="update(null)">Passwörter zurücksetzen</svws-ui-button>
+									<span v-if="pingType === 'resetPassword'" class="icon-xl i-ri-check-line icon-ui-success" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="content-card mt-4">
+						<div class="content-card--header">
+							<div class="content-card--headline">Zwei-Faktor-Authentifizierung</div>
+						</div>
+						<div class="content-card--content">
+							<div>
+								Welche Art der Zwei-Faktor-Authentifizierung soll verwendet werden
+								<div class="flex gap-2">
+									<svws-ui-button @click="art2faAuswahl(0)" :disabled="!auswahl.some(l => l.art2FA === 1)">Kein 2FA</svws-ui-button>
+									<svws-ui-button @click="art2faAuswahl(1)" :disabled="!auswahl.some(l => l.art2FA === 0)">TOTP</svws-ui-button>
+								</div>
+							</div>
+							<div v-if="auswahl.some(l => l.art2FA === 1)" class="mt-4">
+								Zwei-Faktor-Authentifizierung (2FA)
+								<div class="flex items-center">
+									<svws-ui-button type="primary" @click="reset">TOTP Shared Secrets zurücksetzen</svws-ui-button>
+									<span v-if="pingType === 'resetTotp'" class="icon-xl i-ri-check-line icon-ui-success" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -137,13 +185,23 @@
 
 	import { computed, ref, triggerRef } from 'vue';
 	import type { NotenmodulZugangsdatenProps } from './NotenmodulZugangsdatenProps';
-	import type { ENMv2Lehrer, List } from "@core";
-	import { ArrayList, DeveloperNotificationException } from "@core";
+	import type { List } from "@core";
+	import { ArrayList, DeveloperNotificationException, ENMv2Lehrer } from "@core";
 	import { GridManager, SelectManager } from '@ui';
 
 	const props = defineProps<NotenmodulZugangsdatenProps>();
 	const search = ref<string>("");
 	const passwort = ref<string>("");
+	const auswahl = ref<ENMv2Lehrer[]>([]);
+
+	function toggleSelection(row: ENMv2Lehrer) {
+		const idx = auswahl.value.indexOf(row);
+		if (idx === -1) {
+			auswahl.value.push(row);
+		} else {
+			auswahl.value.splice(idx, 1);
+		}
+	}
 
 	const art2fa = computed({
 		get: () => selected.value?.art2FA ?? 0,
@@ -155,6 +213,16 @@
 			}
 		},
 	});
+
+	async function art2faAuswahl(type: number) {
+		for (const lehrer of auswahl.value) {
+			if (lehrer.art2FA !== type) {
+				await props.set2fa(type, lehrer.id);
+			}
+			lehrer.art2FA = type;
+		}
+		triggerRef(lehrerListe);
+	}
 
 	const validatorEmail = (value: string | null): boolean => ((value === null) || (value === '')) ? true : (
 		/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))[^@]?$/.test(value) ||
@@ -271,6 +339,13 @@
 	}
 
 	async function update(value: string | null) {
+		if ((auswahl.value.length > 0) && (value === null)) {
+			for (const lehrer of auswahl.value) {
+				await props.updatePassword(null, lehrer.id);
+			}
+			pingTimer(new ENMv2Lehrer(), 'resetPassword');
+			return;
+		}
 		if (selected.value === null) {
 			return;
 		}
@@ -282,6 +357,13 @@
 	}
 
 	async function reset() {
+		if (auswahl.value.length > 0) {
+			for (const lehrer of auswahl.value) {
+				await props.resetTotp(lehrer.id);
+			}
+			pingTimer(new ENMv2Lehrer(), 'resetTotp');
+			return;
+		}
 		if (selected.value === null) {
 			return;
 		}
@@ -294,6 +376,7 @@
 		getRowKey: row => `ID_${row.id}`,
 		allowEmptyRowSelection: true,
 		columns: [
+			{ kuerzel: "Auswahl", name: "Auswahl", width: "3rem", hideable: false },
 			{ kuerzel: "Kürzel", name: "Kürzel", width: '1fr' },
 			{ kuerzel: "Nachname, Vorname", name: "Nachname, Vorname", width: '5fr' },
 			{ kuerzel: "Dienst-Email", name: "Dienst-Email", width: '5fr' },
@@ -333,7 +416,12 @@
 	}).value;
 </script>
 
-<style lang="css" scoped>
+<style scoped>
+
+	:deep(.svws-ui-checkbox) input[type="checkbox"] {
+		margin: 0px !important;
+		padding: 0px !important;
+	}
 
 	@keyframes ping-normal {
 		0% { transform: scale(0.2); opacity: 0.8; }
