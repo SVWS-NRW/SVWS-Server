@@ -21,43 +21,43 @@ public final class AVLMapNode<K, V> implements Entry<K, V> {
 	/**
 	 * Der Schlüsselwert des Baum-Eintrags.
 	 */
-	final @NotNull K _key;
+	final @NotNull K key;
 
 	/**
 	 * Der zum Schlüsselwert zugeordnete Wert des Baum-Eintrags.
 	 */
 	@NotNull
-	V _val;
+	V value;
 
 	/**
 	 * Der Vorgänger-Knoten.
 	 */
-	AVLMapNode<K, V> _prev = null; // NULL-Wert erlaubt.
+	AVLMapNode<K, V> prev = null; // NULL-Wert erlaubt.
 
 	/**
 	 * Der Nachfolger-Knoten.
 	 */
-	AVLMapNode<K, V> _next = null; // NULL-Wert erlaubt.
+	AVLMapNode<K, V> next = null; // NULL-Wert erlaubt.
 
 	/**
 	 * Das linke Kind des Knotens.
 	 */
-	AVLMapNode<K, V> _childL = null; // NULL-Wert erlaubt.
+	AVLMapNode<K, V> childL = null; // NULL-Wert erlaubt.
 
 	/**
 	 * Das rechte Kind des Knotens.
 	 */
-	AVLMapNode<K, V> _childR = null; // NULL-Wert erlaubt.
+	AVLMapNode<K, V> childR = null; // NULL-Wert erlaubt.
 
 	/**
 	 * Die Höhe des Teilbaums dieses Knotens.
 	 */
-	int _height = 1;
+	int height = 1;
 
 	/**
 	 * Die Summe aller Elemente der Sub-Bäume plus diesem Element.
 	 */
-	int _size = 1;
+	int size = 1;
 
 	/**
 	 * Erstellt ein neues Blatt des Baumes.
@@ -66,13 +66,13 @@ public final class AVLMapNode<K, V> implements Entry<K, V> {
 	 * @param val Der Wert (Value), welcher dem Schlüssel (Key) zugeordnet ist. Der Wert darf nicht NULL sein.
 	 */
 	AVLMapNode(final @NotNull K key, final @NotNull V val) {
-		_key = key;
-		_val = val;
+		this.key = key;
+		this.value = val;
 	}
 
 	@Override
 	public @NotNull String toString() {
-		return "[" + _key + ", " + _val + "]";
+		return "[" + key + ", " + value + "]";
 	}
 
 	@Override
@@ -84,22 +84,22 @@ public final class AVLMapNode<K, V> implements Entry<K, V> {
 			return false;
 		}
 		final Entry<?, ?> e = (Entry<?, ?>) o;
-		return _key.equals(e.getKey()) && (_val.equals(e.getValue()));
+		return key.equals(e.getKey()) && (value.equals(e.getValue()));
 	}
 
 	@Override
 	public int hashCode() {
-		return _key.hashCode() ^ _val.hashCode();
+		return key.hashCode() ^ value.hashCode();
 	}
 
 	@Override
 	public @NotNull K getKey() {
-		return _key;
+		return key;
 	}
 
 	@Override
 	public @NotNull V getValue() {
-		return _val;
+		return value;
 	}
 
 	@Override

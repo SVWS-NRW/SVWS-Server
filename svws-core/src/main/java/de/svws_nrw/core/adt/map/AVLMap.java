@@ -357,7 +357,7 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 		}
 		// Alten Wert (Value) sichern.
 		final AVLMapNode<K, V> node = nodeGetOrNull(key, iv);
-		final V old = (node == null) ? null : node._val;
+		final V old = (node == null) ? null : node.value;
 		// Entry einfügen.
 		root = nodePutRecursive(root, key, value);
 		return old;
@@ -487,12 +487,12 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 			if (n1 == null) {
 				throw new NullPointerException(); // kann/sollte nicht passieren.
 			}
-			if (valEquals(n1._val, value)) {
+			if (valEquals(n1.value, value)) {
 				return true;
 			}
-			n1 = n1._next; // iv-Check nicht nötig.
+			n1 = n1.next; // iv-Check nicht nötig.
 		}
-		return valEquals(n2._val, value);
+		return valEquals(n2.value, value);
 	}
 
 	/**
@@ -531,7 +531,7 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 		if (node == null) {
 			return false;
 		}
-		return valEquals(node._val, e.getValue());
+		return valEquals(node.value, e.getValue());
 	}
 
 	/**
@@ -578,7 +578,7 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 		}
 		// Schlüssel (Key) löschen.
 		root = nodeRemoveKeyRecursive(root, key);
-		return old._val;
+		return old.value;
 	}
 
 	/**
@@ -668,7 +668,7 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 		if (root == null) {
 			throw new NullPointerException(); // Transpiler-Hilfe
 		}
-		root = nodeRemoveKeyRecursive(root, node._key);
+		root = nodeRemoveKeyRecursive(root, node.key);
 		return node;
 	}
 
@@ -687,8 +687,8 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 		if (root == null) {
 			throw new NullPointerException(); // kann/sollte nicht passieren.
 		}
-		root = nodeRemoveKeyRecursive(root, node._key);
-		return node._key;
+		root = nodeRemoveKeyRecursive(root, node.key);
+		return node.key;
 	}
 
 	/**
@@ -706,7 +706,7 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 		if (root == null) {
 			throw new NullPointerException(); // kann/sollte nicht passieren.
 		}
-		root = nodeRemoveKeyRecursive(root, node._key);
+		root = nodeRemoveKeyRecursive(root, node.key);
 		return node;
 	}
 
@@ -725,8 +725,8 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 		if (root == null) {
 			throw new NullPointerException(); // kann/sollte nicht passieren.
 		}
-		root = nodeRemoveKeyRecursive(root, node._key);
-		return node._key;
+		root = nodeRemoveKeyRecursive(root, node.key);
+		return node.key;
 	}
 
 	/**
@@ -745,7 +745,7 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 		if (n2 == null) {
 			return 0; // Transpiler-Hilfe
 		}
-		return (nodeIndexOf(n2._key) - nodeIndexOf(n1._key)) + 1;
+		return (nodeIndexOf(n2.key) - nodeIndexOf(n1.key)) + 1;
 	}
 
 	/**
@@ -857,7 +857,7 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	V bcGetValueOfKeyOrNull(final @NotNull Object objKey, final @NotNull AVLMapIntervall<K> iv) {
 		final @NotNull K key = (@NotNull K) objKey;
 		final AVLMapNode<K, V> node = nodeGetOrNull(key, iv);
-		return (node == null) ? null : node._val;
+		return (node == null) ? null : node.value;
 	}
 
 	/**
@@ -1012,7 +1012,7 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	// ##########################################################
 
 	private K keyOrNull(final AVLMapNode<K, V> node) {
-		return (node == null) ? null : node._key;
+		return (node == null) ? null : node.key;
 	}
 
 	private boolean valEquals(final V v1, final V v2) {
@@ -1023,7 +1023,7 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 		if (node == null) {
 			throw new NoSuchElementException();
 		}
-		return node._key;
+		return node.key;
 	}
 
 	private int compare(final @NotNull K key1, final @NotNull K key2) {
@@ -1058,7 +1058,7 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 		if (node == null) {
 			return null;
 		}
-		final int cmpNodeKey = compare(node._key, key);
+		final int cmpNodeKey = compare(node.key, key);
 		return (cmpNodeKey >= 0) ? node : nodeNextOrNull(node, iv);
 	}
 
@@ -1067,7 +1067,7 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 		if (node == null) {
 			return null;
 		}
-		final int cmpNodeKey = compare(node._key, key);
+		final int cmpNodeKey = compare(node.key, key);
 		return (cmpNodeKey > 0) ? node : nodeNextOrNull(node, iv);
 	}
 
@@ -1076,7 +1076,7 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 		if (node == null) {
 			return null;
 		}
-		final int cmpNodeKey = compare(node._key, key);
+		final int cmpNodeKey = compare(node.key, key);
 		return (cmpNodeKey <= 0) ? node : nodePrevOrNull(node, iv);
 	}
 
@@ -1085,24 +1085,24 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 		if (node == null) {
 			return null;
 		}
-		final int cmpNodeKey = compare(node._key, key);
+		final int cmpNodeKey = compare(node.key, key);
 		return (cmpNodeKey < 0) ? node : nodePrevOrNull(node, iv);
 	}
 
 	private AVLMapNode<K, V> nodeNextOrNull(final @NotNull AVLMapNode<K, V> node, final @NotNull AVLMapIntervall<K> iv) {
-		final AVLMapNode<K, V> next = node._next;
+		final AVLMapNode<K, V> next = node.next;
 		if (next == null) {
 			return null;
 		}
-		return isOutOfRange(next._key, iv) ? null : next;
+		return isOutOfRange(next.key, iv) ? null : next;
 	}
 
 	private AVLMapNode<K, V> nodePrevOrNull(final @NotNull AVLMapNode<K, V> node, final @NotNull AVLMapIntervall<K> iv) {
-		final AVLMapNode<K, V> prev = node._prev;
+		final AVLMapNode<K, V> prev = node.prev;
 		if (prev == null) {
 			return null;
 		}
-		return isOutOfRange(prev._key, iv) ? null : prev;
+		return isOutOfRange(prev.key, iv) ? null : prev;
 	}
 
 	private AVLMapNode<K, V> nodeGetOrNull(final @NotNull K key, final @NotNull AVLMapIntervall<K> iv) {
@@ -1110,7 +1110,7 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 		if (node == null) {
 			return null;
 		}
-		return (compare(key, node._key) == 0) ? node : null;
+		return (compare(key, node.key) == 0) ? node : null;
 	}
 
 	// Der KEY muss im Baum existieren!
@@ -1122,16 +1122,16 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 			if (current == null) {
 				throw new NullPointerException(); // kann/sollte nicht passieren.
 			}
-			final int cmp = compare(key, current._key);
+			final int cmp = compare(key, current.key);
 			if (cmp < 0) {
-				current = current._childL;
+				current = current.childL;
 				continue;
 			}
-			final AVLMapNode<K, V> left = current._childL;
-			final int sizeL = (left == null) ? 0 : left._size;
+			final AVLMapNode<K, V> left = current.childL;
+			final int sizeL = (left == null) ? 0 : left.size;
 			if (cmp > 0) {
 				index += sizeL + 1;
-				current = current._childR;
+				current = current.childR;
 				continue;
 			}
 			return index + sizeL;
@@ -1144,31 +1144,31 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 
 		while (current != null) {
 			// Fall: Gültiger Bereich liegt links
-			final int cmpToKey = compare(iv.to, current._key);
+			final int cmpToKey = compare(iv.to, current.key);
 			if ((cmpToKey < 0) || ((cmpToKey == 0) && (!iv.toInc))) {
-				current = current._childL;
+				current = current.childL;
 				continue;
 			}
 
 			// Fall: Gültiger Bereich liegt rechts
-			final int cmpFromKey = compare(iv.from, current._key);
+			final int cmpFromKey = compare(iv.from, current.key);
 			if ((cmpFromKey > 0) || ((cmpFromKey == 0) && (!iv.fromInc))) {
-				current = current._childR;
+				current = current.childR;
 				continue;
 			}
 
 			last = current;
-			final int cmp = compare(key, current._key);
+			final int cmp = compare(key, current.key);
 
 			// Fall: Links weitersuchen
 			if (cmp < 0) {
-				current = current._childL;
+				current = current.childL;
 				continue;
 			}
 
 			// Fall: Rechts weitersuchen
 			if (cmp > 0) {
-				current = current._childR;
+				current = current.childR;
 				continue;
 			}
 
@@ -1180,19 +1180,19 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	}
 
 	private @NotNull AVLMapNode<K, V> nodePutRecursive(final @NotNull AVLMapNode<K, V> current, final @NotNull K key, final @NotNull V value) {
-		final int cmp = compare(key, current._key);
+		final int cmp = compare(key, current.key);
 
 		if (cmp == 0) { // Key gefunden --> Value ersetzen
-			current._val = value;
+			current.value = value;
 			return current;
 		}
 
 		if (cmp < 0) { // links (einfügen oder weitersuchen)
-			current._childL = (current._childL == null) ? nodeCreateLeaf(current._prev, current, key, value)
-			: nodePutRecursive(current._childL, key, value);
+			current.childL = (current.childL == null) ? nodeCreateLeaf(current.prev, current, key, value)
+			: nodePutRecursive(current.childL, key, value);
 		} else { // rechts (einfügen oder weitersuchen)
-			current._childR = (current._childR == null) ? nodeCreateLeaf(current, current._next, key, value)
-			: nodePutRecursive(current._childR, key, value);
+			current.childR = (current.childR == null) ? nodeCreateLeaf(current, current.next, key, value)
+			: nodePutRecursive(current.childR, key, value);
 		}
 
 		return nodeRevalidate(current); // ggf. rotieren?
@@ -1201,12 +1201,12 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	private @NotNull AVLMapNode<K, V> nodeCreateLeaf(final AVLMapNode<K, V> prev, final AVLMapNode<K, V> next, final @NotNull K key, final @NotNull V value) {
 		final AVLMapNode<K, V> child = new AVLMapNode<>(key, value);
 		if (prev != null) {
-			prev._next = child;
-			child._prev = prev;
+			prev.next = child;
+			child.prev = prev;
 		}
 		if (next != null) {
-			next._prev = child;
-			child._next = next;
+			next.prev = child;
+			child.next = next;
 		}
 		return child;
 	}
@@ -1214,68 +1214,68 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	// Darf nur aufgerufen werden, wenn der Schlüssel existiert!
 	// return NULL möglich!
 	private AVLMapNode<K, V> nodeRemoveKeyRecursive(final @NotNull AVLMapNode<K, V> current, final @NotNull K key) {
-		final int cmp = compare(key, current._key);
+		final int cmp = compare(key, current.key);
 		// Fall: Links weitersuchen
 		if (cmp < 0) {
-			if (current._childL == null) {
+			if (current.childL == null) {
 				throw new NullPointerException(); // kann/sollte nicht passieren.
 			}
-			current._childL = nodeRemoveKeyRecursive(current._childL, key);
+			current.childL = nodeRemoveKeyRecursive(current.childL, key);
 			return nodeRevalidate(current);
 		}
 		// Fall: Rechts weitersuchen
 		if (cmp > 0) {
-			if (current._childR == null) {
+			if (current.childR == null) {
 				throw new NullPointerException(); // kann/sollte nicht passieren.
 			}
-			current._childR = nodeRemoveKeyRecursive(current._childR, key);
+			current.childR = nodeRemoveKeyRecursive(current.childR, key);
 			return nodeRevalidate(current);
 		}
 		// Fall (cmp == 0): Direkt löschen (rechtes Kind hochziehen)
-		if (current._childL == null) {
+		if (current.childL == null) {
 			nodeRemovePrevNext(current);
-			return current._childR; // _revalidateNode nicht nötig
+			return current.childR; // _revalidateNode nicht nötig
 		}
 		// Fall (cmp == 0): Direkt löschen (linkes Kind hochziehen)
-		if (current._childR == null) {
+		if (current.childR == null) {
 			nodeRemovePrevNext(current);
-			return current._childL; // _revalidateNode nicht nötig
+			return current.childL; // _revalidateNode nicht nötig
 		}
 		// Fall (cmp == 0): Lösche 'next', ersetze dann 'current' durch 'next'.
-		final AVLMapNode<K, V> next = current._next;
+		final AVLMapNode<K, V> next = current.next;
 		if (next == null) {
 			throw new NullPointerException(); // kann/sollte nicht passieren.
 		}
-		current._childR = nodeRemoveKeyRecursive(current._childR, next._key);
+		current.childR = nodeRemoveKeyRecursive(current.childR, next.key);
 		return nodeRevalidate(nodeReplaceReferencesFromAwithB(next, current));
 	}
 
 	private @NotNull AVLMapNode<K, V> nodeReplaceReferencesFromAwithB(final @NotNull AVLMapNode<K, V> a, final @NotNull AVLMapNode<K, V> b) {
-		a._childL = b._childL;
-		a._childR = b._childR;
-		final AVLMapNode<K, V> p = b._prev;
-		final AVLMapNode<K, V> n = b._next;
-		a._prev = p;
-		a._next = n;
+		a.childL = b.childL;
+		a.childR = b.childR;
+		final AVLMapNode<K, V> p = b.prev;
+		final AVLMapNode<K, V> n = b.next;
+		a.prev = p;
+		a.next = n;
 		if (p != null) {
-			p._next = a;
+			p.next = a;
 		}
 		if (n != null) {
-			n._prev = a;
+			n.prev = a;
 		}
 		return a;
 	}
 
 	private void nodeRemovePrevNext(final @NotNull AVLMapNode<K, V> current) {
 		// Speichere 'next' und 'prev'.
-		final AVLMapNode<K, V> nodeP = current._prev;
-		final AVLMapNode<K, V> nodeN = current._next;
+		final AVLMapNode<K, V> nodeP = current.prev;
+		final AVLMapNode<K, V> nodeN = current.next;
 		// Entkopple 'current'
 		if (nodeP != null) {
-			nodeP._next = nodeN;
+			nodeP.next = nodeN;
 		}
 		if (nodeN != null) {
-			nodeN._prev = nodeP;
+			nodeN.prev = nodeP;
 		}
 	}
 
@@ -1292,22 +1292,22 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 
 		// right sub-tree has more height
 		if (heightBalance > +1) {
-			if (node._childR == null) {
+			if (node.childR == null) {
 				throw new NullPointerException(); // kann/sollte nicht passieren.
 			}
-			if (nodeGetHeightBalance(node._childR) < 0) {
-				node._childR = nodeRotateRight(node._childR);
+			if (nodeGetHeightBalance(node.childR) < 0) {
+				node.childR = nodeRotateRight(node.childR);
 			}
 			return nodeRotateLeft(node);
 		}
 
 		// left sub-tree has more height
 		if (heightBalance < -1) {
-			if (node._childL == null) {
+			if (node.childL == null) {
 				throw new NullPointerException(); // kann/sollte nicht passieren.
 			}
-			if (nodeGetHeightBalance(node._childL) > 0) {
-				node._childL = nodeRotateLeft(node._childL);
+			if (nodeGetHeightBalance(node.childL) > 0) {
+				node.childL = nodeRotateLeft(node.childL);
 			}
 			return nodeRotateRight(node);
 		}
@@ -1317,24 +1317,24 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	}
 
 	private @NotNull AVLMapNode<K, V> nodeRotateLeft(final @NotNull AVLMapNode<K, V> nodeM) {
-		if (nodeM._childR == null) {
+		if (nodeM.childR == null) {
 			throw new NullPointerException(); // kann/sollte nicht passieren.
 		}
-		final @NotNull AVLMapNode<K, V> nodeR = nodeM._childR;
-		nodeM._childR = nodeR._childL;
-		nodeR._childL = nodeM;
+		final @NotNull AVLMapNode<K, V> nodeR = nodeM.childR;
+		nodeM.childR = nodeR.childL;
+		nodeR.childL = nodeM;
 		nodeRevalidateHeightAndSize(nodeM);
 		nodeRevalidateHeightAndSize(nodeR);
 		return nodeR;
 	}
 
 	private @NotNull AVLMapNode<K, V> nodeRotateRight(final @NotNull AVLMapNode<K, V> nodeM) {
-		if (nodeM._childL == null) {
+		if (nodeM.childL == null) {
 			throw new NullPointerException(); // kann/sollte nicht passieren.
 		}
-		final @NotNull AVLMapNode<K, V> nodeL = nodeM._childL;
-		nodeM._childL = nodeL._childR;
-		nodeL._childR = nodeM;
+		final @NotNull AVLMapNode<K, V> nodeL = nodeM.childL;
+		nodeM.childL = nodeL.childR;
+		nodeL.childR = nodeM;
 		nodeRevalidateHeightAndSize(nodeM);
 		nodeRevalidateHeightAndSize(nodeL);
 		return nodeL;
@@ -1342,19 +1342,19 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 
 	private void nodeRevalidateHeightAndSize(final @NotNull AVLMapNode<K, V> node) {
 		// revalidate size
-		final int sizeL = (node._childL == null) ? 0 : node._childL._size;
-		final int sizeR = (node._childR == null) ? 0 : node._childR._size;
-		node._size = sizeL + sizeR + 1;
+		final int sizeL = (node.childL == null) ? 0 : node.childL.size;
+		final int sizeR = (node.childR == null) ? 0 : node.childR.size;
+		node.size = sizeL + sizeR + 1;
 
 		// revalidate height
-		final int heightL = (node._childL == null) ? 0 : node._childL._height;
-		final int heightR = (node._childR == null) ? 0 : node._childR._height;
-		node._height = Math.max(heightL, heightR) + 1;
+		final int heightL = (node.childL == null) ? 0 : node.childL.height;
+		final int heightR = (node.childR == null) ? 0 : node.childR.height;
+		node.height = Math.max(heightL, heightR) + 1;
 	}
 
 	private int nodeGetHeightBalance(final @NotNull AVLMapNode<K, V> node) {
-		final int heightL = (node._childL == null) ? 0 : node._childL._height;
-		final int heightR = (node._childR == null) ? 0 : node._childR._height;
+		final int heightL = (node.childL == null) ? 0 : node.childL.height;
+		final int heightR = (node.childR == null) ? 0 : node.childR.height;
 		return heightR - heightL;
 	}
 

@@ -23,7 +23,7 @@ public final class AVLMapSubKeySet<K, V> implements NavigableSet<K> {
 	/**
 	 * Die {@link AVLMap} auf der dieses Sub-Set operiert.
 	 */
-	private final @NotNull AVLMapSubMap<K, V> _sub;
+	private final @NotNull AVLMapSubMap<K, V> delegate;
 
 	/**
 	 * Erstellt eine neues Sub-Set auf die übergebene {@link AVLMap}.
@@ -31,163 +31,163 @@ public final class AVLMapSubKeySet<K, V> implements NavigableSet<K> {
 	 * @param sub Die {@link AVLMap} auf der operiert wird.
 	 */
 	AVLMapSubKeySet(final @NotNull AVLMapSubMap<K, V> sub) {
-		_sub = sub;
+		this.delegate = sub;
 	}
 
 	@Override
 	public @NotNull String toString() {
-		return _sub.toString();
+		return delegate.toString();
 	}
 
 	@Override
 	public @NotNull Comparator<? super K> comparator() {
-		return _sub.comparator();
+		return delegate.comparator();
 	}
 
 	@Override
 	public @NotNull K first() {
-		return _sub.firstKey();
+		return delegate.firstKey();
 	}
 
 	@Override
 	public @NotNull K last() {
-		return _sub.lastKey();
+		return delegate.lastKey();
 	}
 
 	@Override
 	public int size() {
-		return _sub.size();
+		return delegate.size();
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return _sub.isEmpty();
+		return delegate.isEmpty();
 	}
 
 	@Override
 	public boolean contains(final @NotNull Object o) {
-		return _sub.containsKey(o);
+		return delegate.containsKey(o);
 	}
 
 	@Override
 	public @NotNull Object @NotNull [] toArray() {
-		return _sub.bcGetArrayListOfKeys().toArray();
+		return delegate.bcGetArrayListOfKeys().toArray();
 	}
 
 	@Override
 	public <@NotNull T> @NotNull T @NotNull [] toArray(final @NotNull T @NotNull [] a) {
-		return _sub.bcGetArrayListOfKeys().toArray(a);
+		return delegate.bcGetArrayListOfKeys().toArray(a);
 	}
 
 	@Override
 	public boolean add(final @NotNull K e) {
-		return _sub.bcAddKey(e);
+		return delegate.bcAddKey(e);
 	}
 
 	@Override
 	public boolean remove(final @NotNull Object o) {
-		return _sub.bcRemoveKeyReturnBool(o);
+		return delegate.bcRemoveKeyReturnBool(o);
 	}
 
 	@Override
 	public boolean containsAll(final @NotNull Collection<?> c) {
-		return _sub.bcContainsAllKeys(c);
+		return delegate.bcContainsAllKeys(c);
 	}
 
 	@Override
 	public boolean addAll(final @NotNull Collection<? extends K> c) {
-		return _sub.bcAddAllKeys(c);
+		return delegate.bcAddAllKeys(c);
 	}
 
 	@Override
 	public boolean retainAll(final @NotNull Collection<?> c) {
-		return _sub.bcRetainAllKeys(c);
+		return delegate.bcRetainAllKeys(c);
 	}
 
 	@Override
 	public boolean removeAll(final @NotNull Collection<?> c) {
-		return _sub.bcRemoveAllKeys(c);
+		return delegate.bcRemoveAllKeys(c);
 	}
 
 	@Override
 	public void clear() {
-		_sub.clear();
+		delegate.clear();
 	}
 
 	@Override
 	public K lower(final @NotNull K e) { // return NULL erlaubt.
-		return _sub.bcGetLowerKeyOrNull(e);
+		return delegate.bcGetLowerKeyOrNull(e);
 	}
 
 	@Override
 	public K floor(final @NotNull K e) { // return NULL erlaubt.
-		return _sub.bcGetFloorKeyOrNull(e);
+		return delegate.bcGetFloorKeyOrNull(e);
 	}
 
 	@Override
 	public K ceiling(final @NotNull K e) { // return NULL erlaubt.
-		return _sub.bcGetCeilingKeyOrNull(e);
+		return delegate.bcGetCeilingKeyOrNull(e);
 	}
 
 	@Override
 	public K higher(final @NotNull K e) { // return NULL erlaubt.
-		return _sub.bcGetHigherKeyOrNull(e);
+		return delegate.bcGetHigherKeyOrNull(e);
 	}
 
 	@Override
 	public K pollFirst() { // return NULL erlaubt.
-		return _sub.bcPollFirstKeyOrNull();
+		return delegate.bcPollFirstKeyOrNull();
 	}
 
 	@Override
 	public K pollLast() { // return NULL erlaubt.
-		return _sub.bcPollLastKeyOrNull();
+		return delegate.bcPollLastKeyOrNull();
 	}
 
 	@Override
 	public @NotNull Iterator<K> iterator() {
-		return _sub.bcGetSubKeySetIterator();
+		return delegate.bcGetSubKeySetIterator();
 	}
 
 	@Override
 	public @NotNull NavigableSet<K> descendingSet() {
-		return _sub.bcGetSubKeySetDescending();
+		return delegate.bcGetSubKeySetDescending();
 	}
 
 	@Override
 	public @NotNull Iterator<K> descendingIterator() {
-		return _sub.bcGetSubKeySetDescendingIterator();
+		return delegate.bcGetSubKeySetDescendingIterator();
 	}
 
 	@Override
 	public @NotNull NavigableSet<K> subSet(final @NotNull K fromElement, final boolean fromInclusive, final @NotNull K toElement,
 			final boolean toInclusive) {
-		return _sub.bcGetSubKeySet(fromElement, fromInclusive, toElement, toInclusive);
+		return delegate.bcGetSubKeySet(fromElement, fromInclusive, toElement, toInclusive);
 	}
 
 	@Override
 	public @NotNull NavigableSet<K> headSet(final @NotNull K toElement, final boolean inclusive) {
-		return _sub.bcGetSubKeyHeadSet(toElement, inclusive);
+		return delegate.bcGetSubKeyHeadSet(toElement, inclusive);
 	}
 
 	@Override
 	public @NotNull NavigableSet<K> tailSet(final @NotNull K fromElement, final boolean inclusive) {
-		return _sub.bcGetSubKeyTailSet(fromElement, inclusive);
+		return delegate.bcGetSubKeyTailSet(fromElement, inclusive);
 	}
 
 	@Override
 	public @NotNull SortedSet<K> subSet(final @NotNull K fromElement, final @NotNull K toElement) {
-		return _sub.bcGetSubKeySet(fromElement, toElement);
+		return delegate.bcGetSubKeySet(fromElement, toElement);
 	}
 
 	@Override
 	public @NotNull SortedSet<K> headSet(final @NotNull K toElement) {
-		return _sub.bcGetSubKeyHeadSet(toElement);
+		return delegate.bcGetSubKeyHeadSet(toElement);
 	}
 
 	@Override
 	public @NotNull SortedSet<K> tailSet(final @NotNull K fromElement) {
-		return _sub.bcGetSubKeyTailSet(fromElement);
+		return delegate.bcGetSubKeyTailSet(fromElement);
 	}
 
 }

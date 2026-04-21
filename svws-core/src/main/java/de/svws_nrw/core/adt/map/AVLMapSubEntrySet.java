@@ -24,7 +24,7 @@ public final class AVLMapSubEntrySet<K, V> implements Set<Map.Entry<K, V>> {
 	/**
 	 * Die {@link AVLMapSubMap} auf der diese Sup-Map operiert.
 	 */
-	private final @NotNull AVLMapSubMap<K, V> _sub;
+	private final @NotNull AVLMapSubMap<K, V> delegate;
 
 	/**
 	 * Erstellt ein neues SubEntrySet auf die übergebene {@link AVLMap}.
@@ -32,77 +32,77 @@ public final class AVLMapSubEntrySet<K, V> implements Set<Map.Entry<K, V>> {
 	 * @param sub Die {@link AVLMapSubMap} auf der operiert wird.
 	 */
 	AVLMapSubEntrySet(final @NotNull AVLMapSubMap<K, V> sub) {
-		_sub = sub;
+		this.delegate = sub;
 	}
 
 	@Override
 	public @NotNull String toString() {
-		return _sub.toString();
+		return delegate.toString();
 	}
 
 	@Override
 	public int size() {
-		return _sub.size();
+		return delegate.size();
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return _sub.isEmpty();
+		return delegate.isEmpty();
 	}
 
 	@Override
 	public boolean contains(final @NotNull Object o) {
-		return _sub.bcContainsEntry(o);
+		return delegate.bcContainsEntry(o);
 	}
 
 	@Override
 	public @NotNull Iterator<Entry<K, V>> iterator() {
-		return _sub.bcGetSubEntrySetIterator();
+		return delegate.bcGetSubEntrySetIterator();
 	}
 
 	@Override
 	public @NotNull Object[] toArray() {
-		return _sub.bcGetArrayListOfEntries().toArray();
+		return delegate.bcGetArrayListOfEntries().toArray();
 	}
 
 	@Override
 	public <T> @NotNull T[] toArray(final @NotNull T[] a) {
-		return _sub.bcGetArrayListOfEntries().toArray(a);
+		return delegate.bcGetArrayListOfEntries().toArray(a);
 	}
 
 	@Override
 	public boolean add(final @NotNull Entry<K, V> e) {
-		return _sub.bcAddEntryReturnBool(e);
+		return delegate.bcAddEntryReturnBool(e);
 	}
 
 	@Override
 	public boolean remove(final @NotNull Object o) {
-		return _sub.bcRemoveEntry(o);
+		return delegate.bcRemoveEntry(o);
 	}
 
 	@Override
 	public boolean containsAll(final @NotNull Collection<?> c) {
-		return _sub.bcContainsAllEntries(c);
+		return delegate.bcContainsAllEntries(c);
 	}
 
 	@Override
 	public boolean addAll(final @NotNull Collection<? extends Entry<K, V>> c) {
-		return _sub.bcAddAllEntries(c);
+		return delegate.bcAddAllEntries(c);
 	}
 
 	@Override
 	public boolean retainAll(final @NotNull Collection<?> c) {
-		return _sub.bcRetainAllEntries(c);
+		return delegate.bcRetainAllEntries(c);
 	}
 
 	@Override
 	public boolean removeAll(final @NotNull Collection<?> c) {
-		return _sub.bcRemoveAllEntries(c);
+		return delegate.bcRemoveAllEntries(c);
 	}
 
 	@Override
 	public void clear() {
-		_sub.clear();
+		delegate.clear();
 	}
 
 }

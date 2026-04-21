@@ -19,7 +19,7 @@ public final class AVLMapSubCollection<K, V> implements Collection<V> {
 	/**
 	 * Die {@link AVLMapSubMap} auf der diese Sub-Collection operiert.
 	 */
-	private final @NotNull AVLMapSubMap<K, V> _sub;
+	private final @NotNull AVLMapSubMap<K, V> delegate;
 
 	/**
 	 * Erstellt eine neue Sub-Collection zur übergebenen {@link AVLMapSubMap}.
@@ -27,7 +27,7 @@ public final class AVLMapSubCollection<K, V> implements Collection<V> {
 	 * @param sub Die {@link AVLMapSubMap} auf der diese Sub-Collection operiert.
 	 */
 	AVLMapSubCollection(final @NotNull AVLMapSubMap<K, V> sub) {
-		_sub = sub;
+		this.delegate = sub;
 	}
 
 
@@ -47,38 +47,38 @@ public final class AVLMapSubCollection<K, V> implements Collection<V> {
 		sb.append("], size = ");
 		sb.append(size());
 		sb.append(" --> ");
-		sb.append(_sub.toString());
+		sb.append(delegate.toString());
 		return sb.toString();
 	}
 
 	@Override
 	public int size() {
-		return _sub.size();
+		return delegate.size();
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return _sub.isEmpty();
+		return delegate.isEmpty();
 	}
 
 	@Override
 	public boolean contains(final @NotNull Object o) { // contains VALUE not KEY!!!
-		return _sub.containsValue(o);
+		return delegate.containsValue(o);
 	}
 
 	@Override
 	public @NotNull Iterator<V> iterator() {
-		return _sub.bcGetSubCollectionIterator();
+		return delegate.bcGetSubCollectionIterator();
 	}
 
 	@Override
 	public @NotNull Object[] toArray() {
-		return _sub.bcGetArrayListOfValues().toArray();
+		return delegate.bcGetArrayListOfValues().toArray();
 	}
 
 	@Override
 	public <T> @NotNull T[] toArray(final @NotNull T[] a) {
-		return _sub.bcGetArrayListOfValues().toArray(a);
+		return delegate.bcGetArrayListOfValues().toArray(a);
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public final class AVLMapSubCollection<K, V> implements Collection<V> {
 
 	@Override
 	public boolean containsAll(final @NotNull Collection<?> c) {
-		return _sub.bcContainsAllValues(c);
+		return delegate.bcContainsAllValues(c);
 	}
 
 	@Override
@@ -113,7 +113,7 @@ public final class AVLMapSubCollection<K, V> implements Collection<V> {
 
 	@Override
 	public void clear() {
-		_sub.clear(); // clears VALUES (and their KEYS)
+		delegate.clear(); // clears VALUES (and their KEYS)
 	}
 
 }

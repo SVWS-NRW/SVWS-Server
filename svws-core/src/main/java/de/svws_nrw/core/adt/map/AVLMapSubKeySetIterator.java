@@ -19,18 +19,18 @@ class AVLMapSubKeySetIterator<K, V> implements Iterator<K> {
 	/**
 	 * Die {@link AVLMap} auf der diese Sup-Map operiert.
 	 */
-	private final @NotNull AVLMapSubMap<K, V> _sub;
+	private final @NotNull AVLMapSubMap<K, V> delegate;
 
 	/**
 	 * Der aktuelle Eintrag. Ein NULL-Wert bedeutet, dass das Element bereits entfernt wurde oder der Iterator auf
 	 * einer ungültigen Position ist (z.B. vor dem ersten Element).
 	 */
-	private AVLMapNode<K, V> _current; // NULL-Wert erlaubt.
+	private AVLMapNode<K, V> current; // NULL-Wert erlaubt.
 
 	/**
 	 * Der nächste Eintrag.
 	 */
-	private AVLMapNode<K, V> _next; // NULL-Wert erlaubt.
+	private AVLMapNode<K, V> next; // NULL-Wert erlaubt.
 
 	/**
 	 * Erstellt einen neuen KEY-Iterator für die angegebene {@link AVLMapSubMap} im gültigen Bereich
@@ -39,33 +39,33 @@ class AVLMapSubKeySetIterator<K, V> implements Iterator<K> {
 	 * @param sub Die {@link AVLMapSubMap} auf der operiert wird.
 	 */
 	AVLMapSubKeySetIterator(final @NotNull AVLMapSubMap<K, V> sub) {
-		_sub = sub;
-		_current = null;
-		_next = _sub.bcGetFirstEntryAsNode();
+		this.delegate = sub;
+		this.current = null;
+		this.next = delegate.bcGetFirstEntryAsNode();
 	}
 
 	@Override
 	public @NotNull K next() {
-		if (_next == null) {
+		if (next == null) {
 			throw new NoSuchElementException();
 		}
-		_current = _next;
-		_next = _sub.bcGetNextEntryOrNull(_next);
-		return _current._key;
+		current = next;
+		next = delegate.bcGetNextEntryOrNull(next);
+		return current.key;
 	}
 
 	@Override
 	public final boolean hasNext() {
-		return _next != null;
+		return next != null;
 	}
 
 	@Override
 	public void remove() {
-		if (_current == null) {
+		if (current == null) {
 			throw new IllegalStateException();
 		}
-		_sub.remove(_current._key);
-		_current = null;
+		delegate.remove(current.key);
+		current = null;
 	}
 
 }
