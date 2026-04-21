@@ -5,17 +5,21 @@
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField" span="full"
-						v-model="data.bezeichnung"
-						:valid="() => fieldIsValid('bezeichnung')" :min-len="1" :max-len="100" required :disabled="!hatKompetenzAdd" />
+						v-model="model.proxy.bezeichnung"
+						:validation="() => model.getFehler('bezeichnung')"
+						:max-len="100" required />
 					<svws-ui-text-input placeholder="Bemerkung" span="full"
-						v-model="data.bemerkung"
-						:valid="() => fieldIsValid('bemerkung')" :max-len="50" :disabled="!hatKompetenzAdd" />
+						v-model="model.proxy.bemerkung"
+						:validation="() => model.getFehler('bemerkung')"
+						:max-len="50" />
 					<svws-ui-text-input placeholder="Telefon" type="tel"
-						v-model="data.tel"
-						:valid="() => fieldIsValid('tel')" :max-len="20" :disabled="!hatKompetenzAdd" />
+						v-model="model.proxy.tel"
+						:validation="() => model.getFehler('tel')"
+						:max-len="20" />
 					<svws-ui-text-input placeholder="E-Mail-Adresse" type="email"
-						v-model="data.email"
-						:valid="() => fieldIsValid('email')" :max-len="40" :disabled="!hatKompetenzAdd" />
+						v-model="model.proxy.email"
+						:validation="() => model.getFehler('email')"
+						:max-len="40" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />
@@ -23,24 +27,28 @@
 			<svws-ui-content-card title="Adresse">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input placeholder="Straße" span="full"
-						v-model="strasse"
-						:valid="() => fieldIsValid('strassenname')" :max-len="55" :disabled="!hatKompetenzAdd" />
+						v-model="model.proxy.strassenname"
+						:validation="() => model.getFehler('strassenname')"
+						:max-len="55" />
 					<svws-ui-text-input placeholder="PLZ"
-						v-model="data.plz"
-						:valid="() => fieldIsValid('plz')" :max-len="10" :disabled="!hatKompetenzAdd" />
+						v-model="model.proxy.plz"
+						:validation="() => model.getFehler('plz')"
+						:max-len="10" />
 					<svws-ui-text-input placeholder="Wohnort"
-						v-model="data.ort"
-						:valid="() => fieldIsValid('ort')" :max-len="30" :disabled="!hatKompetenzAdd" />
+						v-model="model.proxy.ort"
+						:validation="() => model.getFehler('ort')"
+						:max-len="30" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />
 			<!-- Sonstige -->
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-input-number placeholder="Sortierung"
-					v-model="data.sortierung"
-					:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled="!hatKompetenzAdd" :removable="false" />
+					v-model="model.proxy.sortierung"
+					:validation="() => model.getFehler('sortierung')"
+					:min="0" :max="32000" :removable="false" required />
 				<svws-ui-spacing />
-				<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!hatKompetenzAdd">
+				<svws-ui-checkbox v-model="model.proxy.istSichtbar">
 					Sichtbar
 				</svws-ui-checkbox>
 			</svws-ui-input-wrapper>
@@ -59,73 +67,17 @@
 
 <script setup lang="ts">
 
-	import { AdressenUtils, BenutzerKompetenz, Kindergarten } from "@core";
+	import { BenutzerKompetenz, Kindergarten } from "@core";
 	import { computed, ref, watch } from "vue";
 	import type { KindergaertenNeuProps } from "~/components/schule/kataloge/kindergaerten/KindergaertenNeuProps";
-	import { emailIsValid, isUniqueInList, mandatoryInputIsValid, numberHasDecimals, numberIsValid, optionalInputIsValid, phoneNumberIsValid } from "~/util/validation/Validation";
+	import { KindergaertenModelProxy } from "./modelproxy/KindergaertenModelProxy";
 
 	const props = defineProps<KindergaertenNeuProps>();
 	const data = ref<Kindergarten>(Object.assign(new Kindergarten(), { istSichtbar: true, sortierung: 32000 }));
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const isLoading = ref<boolean>(false);
-
-	const strasse = computed({
-		get: () => AdressenUtils.combineStrasse(data.value.strassenname, data.value.hausNr, data.value.hausNrZusatz),
-		set: (adresse: string) => {
-			const [strassenname, hausNr, hausNrZusatz] = AdressenUtils.splitStrasse(adresse);
-			data.value.strassenname = strassenname;
-			data.value.hausNr = hausNr;
-			data.value.hausNrZusatz = hausNrZusatz;
-		},
-	});
-
-	// --- validate ---
-
-	const formIsValid = computed(() => {
-		return Object.keys(data.value)
-			.every((field: string) => fieldIsValid(field as keyof Kindergarten));
-	});
-
-	const fieldIsValid = (field: keyof Kindergarten): boolean => {
-		switch (field) {
-			case 'bezeichnung':
-				return bezeichnungIsValid(data.value.bezeichnung, 100);
-			case 'strassenname':
-				return strasseIsValid();
-			case 'ort':
-				return optionalInputIsValid(data.value.ort, 30);
-			case 'plz':
-				return optionalInputIsValid(data.value.plz, 10);
-			case 'tel':
-				return phoneNumberIsValid(data.value.tel, 20);
-			case 'email':
-				return emailIsValid(data.value.email, 40);
-			case 'bemerkung':
-				return optionalInputIsValid(data.value.bemerkung, 50);
-			case 'sortierung':
-				return sortierungIsValid(data.value.sortierung);
-			default:
-				return true;
-		}
-	};
-
-	function bezeichnungIsValid(bezeichnung: string | null, maxLength: number): boolean {
-		return mandatoryInputIsValid(bezeichnung, maxLength)
-			&& isUniqueInList(bezeichnung, props.manager().liste.list(), "bezeichnung");
-	}
-
-	function strasseIsValid() {
-		return optionalInputIsValid(data.value.strassenname, 55) &&
-			optionalInputIsValid(data.value.hausNr, 10) &&
-			optionalInputIsValid(data.value.hausNrZusatz, 30);
-	}
-
-	function sortierungIsValid(sortierung: number): boolean {
-		return !numberHasDecimals(sortierung)
-			&& numberIsValid(sortierung, true, 0, 32000);
-	}
-
-	// --- util ---
+	const model = new KindergaertenModelProxy(() => data.value, () => props.manager().liste.list());
+	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
 
 	async function addKindergarten() {
 		if (isLoading.value) {
@@ -134,7 +86,7 @@
 
 		props.checkpoint.active = false;
 		isLoading.value = true;
-		const { id, referenziertInAnderenTabellen, ...partialData } = data.value;
+		const { id, referenziertInAnderenTabellen, ...partialData } = model.proxy;
 		await props.add(partialData);
 		isLoading.value = false;
 	}
