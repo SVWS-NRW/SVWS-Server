@@ -26,50 +26,50 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Merkmale")
-@JsonPropertyOrder({"ID", "Schule", "Schueler", "Kurztext", "Langtext", "SchulnrEigner"})
+@JsonPropertyOrder({"id", "istSchulmerkmal", "istSchuelermerkmal", "kuerzel", "bezeichnung", "SchulnrEigner"})
 public final class MigrationDTOMerkmale {
 
 	/** Die Datenbankabfrage für alle DTOs */
 	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOMerkmale e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM MigrationDTOMerkmale e WHERE e.ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOMerkmale e WHERE e.id = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOMerkmale e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOMerkmale e WHERE e.id IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOMerkmale e WHERE e.ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOMerkmale e WHERE e.id IS NOT NULL";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
-	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOMerkmale e WHERE e.ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes id */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOMerkmale e WHERE e.id = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
-	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOMerkmale e WHERE e.ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes id */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOMerkmale e WHERE e.id IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Schule */
-	public static final String QUERY_BY_SCHULE = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Schule = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes istSchulmerkmal */
+	public static final String QUERY_BY_ISTSCHULMERKMAL = "SELECT e FROM MigrationDTOMerkmale e WHERE e.istSchulmerkmal = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schule */
-	public static final String QUERY_LIST_BY_SCHULE = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Schule IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes istSchulmerkmal */
+	public static final String QUERY_LIST_BY_ISTSCHULMERKMAL = "SELECT e FROM MigrationDTOMerkmale e WHERE e.istSchulmerkmal IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Schueler */
-	public static final String QUERY_BY_SCHUELER = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Schueler = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes istSchuelermerkmal */
+	public static final String QUERY_BY_ISTSCHUELERMERKMAL = "SELECT e FROM MigrationDTOMerkmale e WHERE e.istSchuelermerkmal = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schueler */
-	public static final String QUERY_LIST_BY_SCHUELER = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Schueler IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes istSchuelermerkmal */
+	public static final String QUERY_LIST_BY_ISTSCHUELERMERKMAL = "SELECT e FROM MigrationDTOMerkmale e WHERE e.istSchuelermerkmal IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Kurztext */
-	public static final String QUERY_BY_KURZTEXT = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Kurztext = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes kuerzel */
+	public static final String QUERY_BY_KUERZEL = "SELECT e FROM MigrationDTOMerkmale e WHERE e.kuerzel = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kurztext */
-	public static final String QUERY_LIST_BY_KURZTEXT = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Kurztext IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes kuerzel */
+	public static final String QUERY_LIST_BY_KUERZEL = "SELECT e FROM MigrationDTOMerkmale e WHERE e.kuerzel IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Langtext */
-	public static final String QUERY_BY_LANGTEXT = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Langtext = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOMerkmale e WHERE e.bezeichnung = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Langtext */
-	public static final String QUERY_LIST_BY_LANGTEXT = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Langtext IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOMerkmale e WHERE e.bezeichnung IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
 	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOMerkmale e WHERE e.SchulnrEigner = ?1";
@@ -81,7 +81,7 @@ public final class MigrationDTOMerkmale {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public Long id;
 
 	/** Merkmal kann der Schule zugewiesen werden */
 	@Column(name = "Schule")
@@ -89,7 +89,7 @@ public final class MigrationDTOMerkmale {
 	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
 	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
 	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
-	public Boolean Schule;
+	public Boolean istSchulmerkmal;
 
 	/** Merkmal kann auch einem einzelnen Schüler auf Individualdaten II zugewiesen werden */
 	@Column(name = "Schueler")
@@ -97,17 +97,17 @@ public final class MigrationDTOMerkmale {
 	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
 	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
 	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
-	public Boolean Schueler;
+	public Boolean istSchuelermerkmal;
 
 	/** Kurztext des Merkmals zB OGS */
 	@Column(name = "Kurztext")
 	@JsonProperty
-	public String Kurztext;
+	public String kuerzel;
 
 	/** Langtext des Merkmal zB offener Ganztag */
 	@Column(name = "Langtext")
 	@JsonProperty
-	public String Langtext;
+	public String bezeichnung;
 
 	/** Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden */
 	@Column(name = "SchulnrEigner")
@@ -123,13 +123,13 @@ public final class MigrationDTOMerkmale {
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse MigrationDTOMerkmale ohne eine Initialisierung der Attribute.
-	 * @param ID   der Wert für das Attribut ID
+	 * @param id   der Wert für das Attribut id
 	 */
-	public MigrationDTOMerkmale(final Long ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
+	public MigrationDTOMerkmale(final Long id) {
+		if (id == null) {
+			throw new NullPointerException("id must not be null");
 		}
-		this.ID = ID;
+		this.id = id;
 	}
 
 
@@ -145,11 +145,11 @@ public final class MigrationDTOMerkmale {
 			return false;
 		}
 		MigrationDTOMerkmale other = (MigrationDTOMerkmale) obj;
-		if (ID == null) {
-			if (other.ID != null) {
+		if (id == null) {
+			if (other.id != null) {
 				return false;
 			}
-		} else if (!ID.equals(other.ID)) {
+		} else if (!id.equals(other.id)) {
 			return false;
 		}
 		return true;
@@ -159,7 +159,7 @@ public final class MigrationDTOMerkmale {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -171,7 +171,7 @@ public final class MigrationDTOMerkmale {
 	 */
 	@Override
 	public String toString() {
-		return "MigrationDTOMerkmale(ID=" + this.ID + ", Schule=" + this.Schule + ", Schueler=" + this.Schueler + ", Kurztext=" + this.Kurztext + ", Langtext=" + this.Langtext + ", SchulnrEigner=" + this.SchulnrEigner + ")";
+		return "MigrationDTOMerkmale(id=" + this.id + ", istSchulmerkmal=" + this.istSchulmerkmal + ", istSchuelermerkmal=" + this.istSchuelermerkmal + ", kuerzel=" + this.kuerzel + ", bezeichnung=" + this.bezeichnung + ", SchulnrEigner=" + this.SchulnrEigner + ")";
 	}
 
 }

@@ -63,7 +63,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		super(conn);
 		setAttributesNotPatchable("id");
 		this.entlassartenByBezeichnung = conn.queryAll(DTOEntlassarten.class).stream().collect(Collectors.toMap(e -> e.Bezeichnung, e -> e));
-		this.merkmaleByKurztext = conn.queryAll(DTOMerkmale.class).stream().collect(Collectors.toMap(m -> m.Kurztext, m -> m));
+		this.merkmaleByKurztext = conn.queryAll(DTOMerkmale.class).stream().collect(Collectors.toMap(m -> m.kuerzel, m -> m));
 		this.schulenBySchulnummer = conn.queryAll(DTOSchuleNRW.class).stream().collect(Collectors.toMap(s -> s.SchulNr, s -> s));
 	}
 

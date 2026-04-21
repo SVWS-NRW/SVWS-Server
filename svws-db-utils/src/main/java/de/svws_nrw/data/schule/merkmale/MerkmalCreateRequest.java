@@ -1,28 +1,25 @@
-package de.svws_nrw.core.data.schule;
+package de.svws_nrw.data.schule.merkmale;
 
-import de.svws_nrw.transpiler.TranspilerDTO;
+import de.svws_nrw.data.util.NoLeadingOrTrailingWhitespaces;
+import de.svws_nrw.data.util.NoWhitespaces;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
-/**
- * Diese Klasse wird bei der Kommunikation über die Open-Api-Schnittstelle verwendet.
- * Sie beschreibt wie die Daten des Merkmals übergeben werden.
- */
-@XmlRootElement
-@Schema(description = "Das Merkmal einer Schule")
-@TranspilerDTO
-public class Merkmal {
-
-	/** Die ID des Merkmals */
-	@Schema(description = "Die ID des Merkmals", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
-	public long id;
+public class MerkmalCreateRequest {
 
 	/** Das Kuerzel des Merkmals */
 	@Schema(description = "Das Kuerzel des Merkmals", example = "GANZTAG")
+	@NotBlank
+	@Size(max = 10)
+	@NoWhitespaces
 	public String kuerzel;
 
 	/** Die Bezeichnung des Merkmals */
 	@Schema(description = "Die Bezeichnung des Merkmals", example = "Ganztagsschule")
+	@NotBlank
+	@Size(max = 100)
+	@NoLeadingOrTrailingWhitespaces
 	public String bezeichnung;
 
 	/** Gibt an, ob das Merkmal einer Schule zugewiesen werden kann */
@@ -32,7 +29,5 @@ public class Merkmal {
 	/** Gibt an, ob das Merkmal einem Schueler zugewiesen werden kann */
 	@Schema(description = "Gibt an, ob das Merkmal einem Schueler zugewiesen werden kann", example = "true")
 	public boolean istSchuelermerkmal;
-
-
 
 }

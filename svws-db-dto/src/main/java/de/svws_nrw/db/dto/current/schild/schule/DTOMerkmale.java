@@ -26,56 +26,56 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Merkmale")
-@JsonPropertyOrder({"ID", "Schule", "Schueler", "Kurztext", "Langtext"})
+@JsonPropertyOrder({"id", "istSchulmerkmal", "istSchuelermerkmal", "kuerzel", "bezeichnung"})
 public final class DTOMerkmale {
 
 	/** Die Datenbankabfrage für alle DTOs */
 	public static final String QUERY_ALL = "SELECT e FROM DTOMerkmale e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM DTOMerkmale e WHERE e.ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM DTOMerkmale e WHERE e.id = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM DTOMerkmale e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOMerkmale e WHERE e.id IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOMerkmale e WHERE e.ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOMerkmale e WHERE e.id IS NOT NULL";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
-	public static final String QUERY_BY_ID = "SELECT e FROM DTOMerkmale e WHERE e.ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes id */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOMerkmale e WHERE e.id = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
-	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOMerkmale e WHERE e.ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes id */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOMerkmale e WHERE e.id IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Schule */
-	public static final String QUERY_BY_SCHULE = "SELECT e FROM DTOMerkmale e WHERE e.Schule = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes istSchulmerkmal */
+	public static final String QUERY_BY_ISTSCHULMERKMAL = "SELECT e FROM DTOMerkmale e WHERE e.istSchulmerkmal = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schule */
-	public static final String QUERY_LIST_BY_SCHULE = "SELECT e FROM DTOMerkmale e WHERE e.Schule IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes istSchulmerkmal */
+	public static final String QUERY_LIST_BY_ISTSCHULMERKMAL = "SELECT e FROM DTOMerkmale e WHERE e.istSchulmerkmal IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Schueler */
-	public static final String QUERY_BY_SCHUELER = "SELECT e FROM DTOMerkmale e WHERE e.Schueler = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes istSchuelermerkmal */
+	public static final String QUERY_BY_ISTSCHUELERMERKMAL = "SELECT e FROM DTOMerkmale e WHERE e.istSchuelermerkmal = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schueler */
-	public static final String QUERY_LIST_BY_SCHUELER = "SELECT e FROM DTOMerkmale e WHERE e.Schueler IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes istSchuelermerkmal */
+	public static final String QUERY_LIST_BY_ISTSCHUELERMERKMAL = "SELECT e FROM DTOMerkmale e WHERE e.istSchuelermerkmal IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Kurztext */
-	public static final String QUERY_BY_KURZTEXT = "SELECT e FROM DTOMerkmale e WHERE e.Kurztext = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes kuerzel */
+	public static final String QUERY_BY_KUERZEL = "SELECT e FROM DTOMerkmale e WHERE e.kuerzel = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kurztext */
-	public static final String QUERY_LIST_BY_KURZTEXT = "SELECT e FROM DTOMerkmale e WHERE e.Kurztext IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes kuerzel */
+	public static final String QUERY_LIST_BY_KUERZEL = "SELECT e FROM DTOMerkmale e WHERE e.kuerzel IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Langtext */
-	public static final String QUERY_BY_LANGTEXT = "SELECT e FROM DTOMerkmale e WHERE e.Langtext = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOMerkmale e WHERE e.bezeichnung = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Langtext */
-	public static final String QUERY_LIST_BY_LANGTEXT = "SELECT e FROM DTOMerkmale e WHERE e.Langtext IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOMerkmale e WHERE e.bezeichnung IN ?1";
 
 	/** ID des Merkmals das an der Schule vorhanden ist */
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public long ID;
+	public long id;
 
 	/** Merkmal kann der Schule zugewiesen werden */
 	@Column(name = "Schule")
@@ -83,7 +83,7 @@ public final class DTOMerkmale {
 	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
 	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
 	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
-	public Boolean Schule;
+	public Boolean istSchulmerkmal;
 
 	/** Merkmal kann auch einem einzelnen Schüler auf Individualdaten II zugewiesen werden */
 	@Column(name = "Schueler")
@@ -91,17 +91,17 @@ public final class DTOMerkmale {
 	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
 	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
 	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
-	public Boolean Schueler;
+	public Boolean istSchuelermerkmal;
 
 	/** Kurztext des Merkmals zB OGS */
 	@Column(name = "Kurztext")
 	@JsonProperty
-	public String Kurztext;
+	public String kuerzel;
 
 	/** Langtext des Merkmal zB offener Ganztag */
 	@Column(name = "Langtext")
 	@JsonProperty
-	public String Langtext;
+	public String bezeichnung;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOMerkmale ohne eine Initialisierung der Attribute.
@@ -112,10 +112,10 @@ public final class DTOMerkmale {
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOMerkmale ohne eine Initialisierung der Attribute.
-	 * @param ID   der Wert für das Attribut ID
+	 * @param id   der Wert für das Attribut id
 	 */
-	public DTOMerkmale(final long ID) {
-		this.ID = ID;
+	public DTOMerkmale(final long id) {
+		this.id = id;
 	}
 
 
@@ -131,14 +131,14 @@ public final class DTOMerkmale {
 			return false;
 		}
 		DTOMerkmale other = (DTOMerkmale) obj;
-		return ID == other.ID;
+		return id == other.id;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Long.hashCode(ID);
+		result = prime * result + Long.hashCode(id);
 		return result;
 	}
 
@@ -150,7 +150,7 @@ public final class DTOMerkmale {
 	 */
 	@Override
 	public String toString() {
-		return "DTOMerkmale(ID=" + this.ID + ", Schule=" + this.Schule + ", Schueler=" + this.Schueler + ", Kurztext=" + this.Kurztext + ", Langtext=" + this.Langtext + ")";
+		return "DTOMerkmale(id=" + this.id + ", istSchulmerkmal=" + this.istSchulmerkmal + ", istSchuelermerkmal=" + this.istSchuelermerkmal + ", kuerzel=" + this.kuerzel + ", bezeichnung=" + this.bezeichnung + ")";
 	}
 
 }

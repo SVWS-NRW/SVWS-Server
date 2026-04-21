@@ -39,7 +39,7 @@ public final class DataSchuelerMerkmale extends DataManagerRevised<Long, DTOSchu
 		super(conn);
 		setAttributesNotPatchable("id", ID_SCHUELER);
 		setAttributesRequiredOnCreation(ID_MERKMAL, ID_SCHUELER);
-		merkmale = conn.queryAll(DTOMerkmale.class).stream().collect(Collectors.toMap(m -> m.Kurztext, m -> m));
+		merkmale = conn.queryAll(DTOMerkmale.class).stream().collect(Collectors.toMap(m -> m.kuerzel, m -> m));
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public final class DataSchuelerMerkmale extends DataManagerRevised<Long, DTOSchu
 		final SchuelerSchulbesuchMerkmal merkmal = new SchuelerSchulbesuchMerkmal();
 		merkmal.id = dto.ID;
 		merkmal.idSchueler = dto.Schueler_ID;
-		merkmal.idMerkmal = Optional.ofNullable(dto.Kurztext).map(merkmale::get).map(m -> m.ID).orElse(null);
+		merkmal.idMerkmal = Optional.ofNullable(dto.Kurztext).map(merkmale::get).map(m -> m.id).orElse(null);
 		merkmal.datumVon = dto.DatumVon;
 		merkmal.datumBis = dto.DatumBis;
 		return merkmal;
@@ -108,7 +108,7 @@ public final class DataSchuelerMerkmale extends DataManagerRevised<Long, DTOSchu
 			case ID_SCHUELER -> mapIdSchueler(dto, value, name);
 			case ID_MERKMAL -> {
 				final Long id = JSONMapper.convertToLong(value, false, ID_MERKMAL);
-				dto.Kurztext = merkmale.values().stream().filter(m -> m.ID == id).findFirst().map(m -> m.Kurztext)
+				dto.Kurztext = merkmale.values().stream().filter(m -> m.id == id).findFirst().map(m -> m.kuerzel)
 						.orElseThrow(() -> new ApiOperationException(Status.BAD_REQUEST, "Zur id %d existiert kein Merkmal.".formatted(id)));
 			}
 			case "datumVon" -> dto.DatumVon = JSONMapper.convertToString(value, true, true, null, "DatumVon");

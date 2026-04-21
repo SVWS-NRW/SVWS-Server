@@ -49,7 +49,7 @@ class DataSchuelerMerkmaleTest {
 	@BeforeEach
 	void setUp() {
 		final var merkmal = new DTOMerkmale(1L);
-		merkmal.Kurztext = "GANZTAG";
+		merkmal.kuerzel = "GANZTAG";
 		when(this.conn.queryAll(DTOMerkmale.class)).thenReturn(List.of(merkmal));
 		dataSchuelerMerkmale = new DataSchuelerMerkmale(conn);
 	}
@@ -176,8 +176,8 @@ class DataSchuelerMerkmaleTest {
 	void mapMultipleTest() {
 		final var dto = getDtoMerkmal();
 		final var merkmal = new DTOMerkmale(1L);
-		merkmal.Kurztext = "GANZTAG";
-		assertThat(DataSchuelerMerkmale.mapMultiple(List.of(dto), Map.of(merkmal.Kurztext, merkmal)))
+		merkmal.kuerzel = "GANZTAG";
+		assertThat(DataSchuelerMerkmale.mapMultiple(List.of(dto), Map.of(merkmal.kuerzel, merkmal)))
 				.allSatisfy(item -> assertThat(item)
 						.isInstanceOf(SchuelerSchulbesuchMerkmal.class)
 						.hasFieldOrPropertyWithValue("id", dto.ID)
@@ -222,7 +222,7 @@ class DataSchuelerMerkmaleTest {
 				arguments("id", 35),
 				arguments("idSchueler", 1001L),
 				arguments("idMerkmal", 1),
-				arguments("davonVon", "2007-08-01"),
+				arguments("datumVon", "2007-08-01"),
 				arguments("datumBis", "2008-07-31"),
 				arguments("unknownArgument", "oh oh ! das wollen wir auf keinen Fall!")
 		);
