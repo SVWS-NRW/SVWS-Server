@@ -22,7 +22,16 @@ export class Arrays extends JavaObject {
 	}
 
 	public static copyOf<T>(original: Array<T>, newLength: number): Array<T> {
-		return original.slice();
+		// Entspricht Arrays.copyOf in Java: Das Ergebnis hat genau newLength Elemente.
+		// Wird das Original gekürzt, so werden die überschüssigen Einträge verworfen;
+		// ist newLength größer als die Länge des Originals, werden die fehlenden
+		// Einträge mit null aufgefüllt (entspricht dem Java-Default-Wert für Objekt-Arrays).
+		if (newLength < 0)
+			throw new Error("newLength must not be negative");
+		const copy: Array<T> = original.slice(0, newLength);
+		while (copy.length < newLength)
+			copy.push(null as unknown as T);
+		return copy;
 	}
 
 	public static deepEquals(a1: Array<unknown> | null, a2: Array<unknown> | null): boolean {

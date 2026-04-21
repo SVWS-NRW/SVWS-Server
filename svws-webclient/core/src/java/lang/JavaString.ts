@@ -32,7 +32,11 @@ export abstract class JavaString {
 	}
 
 	public static matches(s: string, regex: string): boolean {
-		const regexp = new RegExp(regex);
+		// Java-Semantik: String.matches verlangt, dass der komplette String dem Muster entspricht.
+		// In JavaScript prüft RegExp.test dagegen auf ein beliebiges Teilstück, daher muss das
+		// Muster hier mit ^ und $ verankert werden. Das zusätzliche "(?:...)" stellt sicher,
+		// dass Alternativen im Muster (z.B. "a|b") korrekt geklammert sind.
+		const regexp = new RegExp("^(?:" + regex + ")$");
 		return regexp.test(s);
 	}
 
