@@ -12,12 +12,12 @@ export class ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 	/**
 	 * Die Beschäftigungsart
 	 */
-	private readonly _idBeschaeftigungsart: Supplier<number>;
+	private readonly _beschaeftigungsart: Supplier<LehrerBeschaeftigungsart | null>;
 
 	/**
 	 * Der Einsatzstatus
 	 */
-	private readonly _idEinsatzstatus: Supplier<number>;
+	private readonly _einsatzstatus: Supplier<LehrerEinsatzstatus | null>;
 
 	private static readonly setEinsatzstatus2: JavaSet<LehrerEinsatzstatus> = java_util_Set_of(LehrerEinsatzstatus.A, LehrerEinsatzstatus.B);
 
@@ -27,20 +27,20 @@ export class ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param idBeschaeftigungsart   die Beschäftigungsart
-	 * @param idEinsatzstatus        der Einsatzstatus
+	 * @param beschaeftigungsart   die Beschäftigungsart
+	 * @param einsatzstatus        der Einsatzstatus
 	 * @param kontext                der Kontext des Validators
 	 */
-	public constructor(idBeschaeftigungsart: Supplier<number>, idEinsatzstatus: Supplier<number>, kontext: ValidatorKontext) {
+	public constructor(beschaeftigungsart: Supplier<LehrerBeschaeftigungsart | null>, einsatzstatus: Supplier<LehrerEinsatzstatus | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._idBeschaeftigungsart = idBeschaeftigungsart;
-		this._idEinsatzstatus = idEinsatzstatus;
+		this._beschaeftigungsart = beschaeftigungsart;
+		this._einsatzstatus = einsatzstatus;
 	}
 
 	protected pruefe(): boolean {
-		const idBeschaeftigungsart: number | null = this._idBeschaeftigungsart.get();
-		const idEinsatzstatus: number | null = this._idEinsatzstatus.get();
-		if (ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart.setEinsatzstatus2.contains(LehrerEinsatzstatus.data().getWertByID(idEinsatzstatus)) && (LehrerBeschaeftigungsart.X as unknown === LehrerBeschaeftigungsart.data().getWertByID(idBeschaeftigungsart) as unknown)) {
+		const beschaeftigungsart: LehrerBeschaeftigungsart | null = this._beschaeftigungsart.get();
+		const einsatzstatus: LehrerEinsatzstatus | null = this._einsatzstatus.get();
+		if ((einsatzstatus === null) || ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart.setEinsatzstatus2.contains(einsatzstatus) && (LehrerBeschaeftigungsart.X as unknown === beschaeftigungsart as unknown)) {
 			this.addFehler(2, ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart.FEHLERTEXT);
 			return false;
 		}

@@ -7,8 +7,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdaten;
 import de.svws_nrw.asd.data.statistik.StatistikGesamt;
+import de.svws_nrw.asd.types.lehrer.LehrerBeschaeftigungsart;
+import de.svws_nrw.asd.types.lehrer.LehrerEinsatzstatus;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.asd.utils.json.JsonReader;
@@ -37,21 +38,16 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 class TestValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart {
 
 	private static final String TESTDATEN_LPPB11 = """
-			13,  1, 0, false
-			13,  2, 0, true
-			13,  1, 1, true
-			 1,  1, 0, true
-			 1,  2, 7, true
+			'G',  'A'  , 0, false
+			'G',  'tr' , 0, true
+			'G',  'A'  , 1, true
+			'tr', 'A'  , 0, true
+			'tr', 'tr' , 7, true
 			""";
 
 	/** Stammdaten der Schule */
 	static final StatistikGesamt testdaten_001 =
 			JsonReader.fromResource("de/svws_nrw/asd/validate/Testdaten_001_StatistikGesamt.json", StatistikGesamt.class);
-
-	/** Personalabschnittsdaten des Lehrers */
-	static final LehrerPersonalabschnittsdaten LehrerPersonalabschnittsdaten_Plausibel = JsonReader.fromResource(
-			"de/svws_nrw/asd/validate/lehrer/Testdaten_002_LehrerPersonalabschnittsdaten.json",
-			LehrerPersonalabschnittsdaten.class);
 
 	/**
 	 * Initialisiert die Core-Types, damit die Tests ausgeführt werden können.
@@ -68,20 +64,16 @@ class TestValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigun
 	 *
 	 * CoreType: LehrerPersonalabschnittsdaten
 	 *
-	 * @param idBeschaeftigungsart
-	 * @param idEinsatzstatus
+	 * @param beschaeftigungsart
+	 * @param einsatzstatus
 	 * @param pflichtstundensoll
 	 * @param result     gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
 	@DisplayName("Tests für ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart")
 	@ParameterizedTest
 	@CsvSource(textBlock = TESTDATEN_LPPB11)
-	void testValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(final Long idBeschaeftigungsart, final Long idEinsatzstatus,
+	void testValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(final String beschaeftigungsart, final String einsatzstatus,
 			final double pflichtstundensoll, final boolean result) {
-		// Testdaten setzen
-		LehrerPersonalabschnittsdaten_Plausibel.idBeschaeftigungsart = idBeschaeftigungsart;
-		LehrerPersonalabschnittsdaten_Plausibel.idEinsatzstatus = idEinsatzstatus;
-		LehrerPersonalabschnittsdaten_Plausibel.pflichtstundensoll = pflichtstundensoll;
 
 		// Erzeuge den Kontext für die Validierung
 		final ValidatorKontext kontext =
@@ -89,8 +81,8 @@ class TestValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigun
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart validator =
 				new ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(
-						() -> idBeschaeftigungsart,
-						() -> idEinsatzstatus,
+						() -> LehrerBeschaeftigungsart.data().getWertByBezeichnerOrNull(beschaeftigungsart),
+						() -> LehrerEinsatzstatus.data().getWertByBezeichnerOrNull(einsatzstatus),
 						() -> pflichtstundensoll,
 						kontext);
 

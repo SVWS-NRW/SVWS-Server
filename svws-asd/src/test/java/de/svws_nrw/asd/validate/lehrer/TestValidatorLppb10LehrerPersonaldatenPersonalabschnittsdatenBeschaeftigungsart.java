@@ -8,6 +8,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import de.svws_nrw.asd.data.statistik.StatistikGesamt;
+import de.svws_nrw.asd.types.lehrer.LehrerBeschaeftigungsart;
+import de.svws_nrw.asd.types.lehrer.LehrerEinsatzstatus;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.asd.utils.json.JsonReader;
@@ -36,11 +38,11 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 class TestValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart {
 
 	private static final String TESTDATEN_LPPB10 = """
-		15, 3, true
-		 1, 1, true
-		 1, 3, true
-		15, 1, false
-		15, 2, false
+		'X', 'DEFAULT'  , true
+		'tr', 'A' , true
+		'tr', 'DEFAULT' , true
+		'X', 'A'  , false
+		'X', 'B'  , false
 		""";
 
 	/** Stammdaten der Schule */
@@ -62,14 +64,14 @@ class TestValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigun
 	 *
 	 * CoreType: LehrerPersonalabschnittsdaten
 	 *
-	 * @param idBeschaeftigungsart
-	 * @param idEinsatzstatus
+	 * @param beschaeftigungsart
+	 * @param einsatzstatus
 	 * @param result     gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
 	@DisplayName("Tests für ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart")
 	@ParameterizedTest
 	@CsvSource(textBlock = TESTDATEN_LPPB10)
-	void testValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(final Long idBeschaeftigungsart, final Long idEinsatzstatus,
+	void testValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(final String beschaeftigungsart, final String einsatzstatus,
 			final boolean result) {
 
 		// Erzeuge den Kontext für die Validierung
@@ -78,8 +80,8 @@ class TestValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigun
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart validator =
 				new ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(
-						() -> idBeschaeftigungsart,
-						() -> idEinsatzstatus,
+						() -> LehrerBeschaeftigungsart.data().getWertByBezeichnerOrNull(beschaeftigungsart),
+						() -> LehrerEinsatzstatus.data().getWertByBezeichnerOrNull(einsatzstatus),
 						kontext);
 
 		assertEquals(result, validator.pruefe());

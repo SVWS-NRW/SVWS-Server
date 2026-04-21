@@ -16,10 +16,10 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart extends Validator {
 
 	/** Die Beschäftigungsart */
-	private final @NotNull Supplier<Long> _idBeschaeftigungsart;
+	private final @NotNull Supplier<@AllowNull LehrerBeschaeftigungsart> _beschaeftigungsart;
 
 	/** Der Einsatzstatus */
-	private final @NotNull Supplier<Long> _idEinsatzstatus;
+	private final @NotNull Supplier<@AllowNull LehrerEinsatzstatus> _einsatzstatus;
 
 	/** Das Pflichtstundensoll */
 	private final @NotNull Supplier<@AllowNull Double> _pflichtstundensoll;
@@ -27,38 +27,39 @@ public final class ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBesc
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param idBeschaeftigungsart     	die Beschäftigungsart
-	 * @param idEinsatzstatus     		der Einsatzstatus
+	 * @param beschaeftigungsart     	die Beschäftigungsart
+	 * @param einsatzstatus     		der Einsatzstatus
 	 * @param pflichtstundensoll     	das Pflichtstundensoll
 	 * @param kontext   				der Kontext des Validators
 	 */
 	public ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(
-			final @NotNull Supplier<Long> idBeschaeftigungsart,
-			final @NotNull Supplier<Long> idEinsatzstatus,
+			final @NotNull Supplier<@AllowNull LehrerBeschaeftigungsart> beschaeftigungsart,
+			final @NotNull Supplier<@AllowNull LehrerEinsatzstatus> einsatzstatus,
 			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this._idBeschaeftigungsart = idBeschaeftigungsart;
-		this._idEinsatzstatus = idEinsatzstatus;
+		this._beschaeftigungsart = beschaeftigungsart;
+		this._einsatzstatus = einsatzstatus;
 		this._pflichtstundensoll = pflichtstundensoll;
 	}
 
 
 	@Override
 	protected boolean pruefe() {
-		final Long idBeschaeftigungsart = this._idBeschaeftigungsart.get();
-		final Long idEinsatzstatus = this._idEinsatzstatus.get();
+		final LehrerBeschaeftigungsart beschaeftigungsart = this._beschaeftigungsart.get();
+		final LehrerEinsatzstatus einsatzstatus = this._einsatzstatus.get();
 
 		// LPPB3 ex BW15
 		final Double pflichtstundensoll = this._pflichtstundensoll.get();
+
 		if (pflichtstundensoll == null) { //Wenn der Pflichtstundensoll nicht gesetzt ist, kann diese Prüfung nicht durchgeführt werden.
 			return true;
 		}
 		final String fehlertext3 = "Laut Ihren Angaben handelt es sich um eine voll abgeordnete Lehrkraft mit Gestellungsvertrag. Es ist zu erwarten, "
 				+ "dass eine Lehrkraft mit Gestellungsvertrag Unterricht an Ihrer Schule erteilt. Bitte überprüfen Sie Ihre Angaben.";
 
-		if ((LehrerBeschaeftigungsart.G == LehrerBeschaeftigungsart.data().getWertByID(idBeschaeftigungsart))
-				&& (LehrerEinsatzstatus.A == LehrerEinsatzstatus.data().getWertByID(idEinsatzstatus))
+		if ((LehrerBeschaeftigungsart.G == beschaeftigungsart)
+				&& (LehrerEinsatzstatus.A == einsatzstatus)
 				&& pflichtstundensoll == 0) {
 			this.addFehler(3, fehlertext3);
 			return false;

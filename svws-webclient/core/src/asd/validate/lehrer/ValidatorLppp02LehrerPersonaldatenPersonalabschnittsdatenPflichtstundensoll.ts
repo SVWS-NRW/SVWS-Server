@@ -14,26 +14,25 @@ export class ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstu
 	/**
 	 * Der Einsatzstatus
 	 */
-	private readonly _idEinsatzstatus: Supplier<number | null>;
+	private readonly _einsatzstatus: Supplier<LehrerEinsatzstatus | null>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param pflichtstundensoll    das Pflichtstundensoll
-	 * @param idEinsatzstatus       der Einsatzstatus
+	 * @param einsatzstatus       der Einsatzstatus
 	 * @param kontext               der Kontext des Validators
 	 */
-	public constructor(pflichtstundensoll: Supplier<number | null>, idEinsatzstatus: Supplier<number | null>, kontext: ValidatorKontext) {
+	public constructor(pflichtstundensoll: Supplier<number | null>, einsatzstatus: Supplier<LehrerEinsatzstatus | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._pflichtstundensoll = pflichtstundensoll;
-		this._idEinsatzstatus = idEinsatzstatus;
+		this._einsatzstatus = einsatzstatus;
 	}
 
 	protected pruefe(): boolean {
 		const pflichtstundensoll: number | null = this._pflichtstundensoll.get();
-		const idEinsatzstatus: number | null = this._idEinsatzstatus.get();
-		const einsatzstatus: LehrerEinsatzstatus | null = (idEinsatzstatus === null) ? null : LehrerEinsatzstatus.data().getWertByID(idEinsatzstatus);
+		const einsatzstatus: LehrerEinsatzstatus | null = this._einsatzstatus.get();
 		if ((einsatzstatus as unknown === LehrerEinsatzstatus.B as unknown) && (pflichtstundensoll === 0.0)) {
 			this.addFehler(2, "Bei Lehrkräften, die von einer anderen Schule abgeordnet wurden (Einsatzstatus = 'B'), darf das Pflichtstundensoll nicht 0,00 betragen.");
 			return false;

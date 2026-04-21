@@ -2,6 +2,8 @@ package de.svws_nrw.asd.validate.lehrer;
 
 import java.util.function.Supplier;
 
+import de.svws_nrw.asd.types.lehrer.LehrerBeschaeftigungsart;
+import de.svws_nrw.asd.types.lehrer.LehrerEinsatzstatus;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 import de.svws_nrw.transpiler.annotations.AllowNull;
@@ -31,9 +33,13 @@ public final class ValidatorLppp00LehrerPersonaldatenPersonalabschnittsdatenPfli
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this._pflichtstundensoll = pflichtstundensoll;
+		final @NotNull Supplier<@AllowNull LehrerEinsatzstatus> einsatzstatus = () -> LehrerEinsatzstatus.data().getWertByIDOrNull(idEinsatzstatus.get());
+		final @NotNull Supplier<@AllowNull LehrerBeschaeftigungsart> beschaeftigungsart =
+				() -> LehrerBeschaeftigungsart.data().getWertByIDOrNull(idBeschaeftigungsart.get());
 		_validatoren.add(new ValidatorLppp10LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, kontext));
-		_validatoren.add(new ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, idEinsatzstatus, kontext));
-		_validatoren.add(new ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, idEinsatzstatus, idBeschaeftigungsart, kontext));
+		_validatoren.add(new ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, einsatzstatus, kontext));
+		_validatoren.add(new ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, einsatzstatus, beschaeftigungsart,
+				kontext));
 	}
 
 

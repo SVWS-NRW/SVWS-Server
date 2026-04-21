@@ -18,12 +18,12 @@ export class ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstu
 	/**
 	 * Der Einsatzstatus
 	 */
-	private readonly _idEinsatzstatus: Supplier<number | null>;
+	private readonly _einsatzstatus: Supplier<LehrerEinsatzstatus | null>;
 
 	/**
 	 * Die Beschäftigungsart
 	 */
-	private readonly _idBeschaeftigungsart: Supplier<number | null>;
+	private readonly _beschaeftigungsart: Supplier<LehrerBeschaeftigungsart | null>;
 
 	private static readonly setBeschaeftigungsart: JavaSet<LehrerBeschaeftigungsart> = java_util_Set_of(LehrerBeschaeftigungsart.WV, LehrerBeschaeftigungsart.WT);
 
@@ -34,24 +34,22 @@ export class ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstu
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param pflichtstundensoll     das Pflichtstundensoll
-	 * @param idEinsatzstatus        der Einsatzstatus
-	 * @param idBeschaeftigungsart   die Beschäftigungsart
+	 * @param einsatzstatus        der Einsatzstatus
+	 * @param beschaeftigungsart   die Beschäftigungsart
 	 * @param kontext                der Kontext des Validators
 	 */
-	public constructor(pflichtstundensoll: Supplier<number | null>, idEinsatzstatus: Supplier<number | null>, idBeschaeftigungsart: Supplier<number | null>, kontext: ValidatorKontext) {
+	public constructor(pflichtstundensoll: Supplier<number | null>, einsatzstatus: Supplier<LehrerEinsatzstatus | null>, beschaeftigungsart: Supplier<LehrerBeschaeftigungsart | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._pflichtstundensoll = pflichtstundensoll;
-		this._idEinsatzstatus = idEinsatzstatus;
-		this._idBeschaeftigungsart = idBeschaeftigungsart;
+		this._einsatzstatus = einsatzstatus;
+		this._beschaeftigungsart = beschaeftigungsart;
 	}
 
 	protected pruefe(): boolean {
 		const pflichtstundensoll: number | null = this._pflichtstundensoll.get();
-		const idEinsatzstatus: number | null = this._idEinsatzstatus.get();
-		const einsatzstatus: LehrerEinsatzstatus | null = (idEinsatzstatus === null) ? null : LehrerEinsatzstatus.data().getWertByID(idEinsatzstatus);
-		const idBeschaeftigungsart: number | null = this._idBeschaeftigungsart.get();
-		const beschaeftigungsart: LehrerBeschaeftigungsart | null = (idBeschaeftigungsart === null) ? null : LehrerBeschaeftigungsart.data().getWertByID(idBeschaeftigungsart);
-		if ((pflichtstundensoll === 0.0) && (!JavaObject.equalsTranspiler(LehrerEinsatzstatus.A, (einsatzstatus))) && (!ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll.setBeschaeftigungsart.contains(beschaeftigungsart))) {
+		const einsatzstatus: LehrerEinsatzstatus | null = this._einsatzstatus.get();
+		const beschaeftigungsart: LehrerBeschaeftigungsart | null = this._beschaeftigungsart.get();
+		if ((pflichtstundensoll === 0.0) && (!JavaObject.equalsTranspiler(LehrerEinsatzstatus.A, (einsatzstatus))) && ((beschaeftigungsart === null) || !ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll.setBeschaeftigungsart.contains(beschaeftigungsart))) {
 			this.addFehler(3, ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll.FEHLERTEXT);
 			return false;
 		}

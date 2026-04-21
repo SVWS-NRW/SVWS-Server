@@ -20,10 +20,10 @@ public final class ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPfli
 	private final @NotNull Supplier<@AllowNull Double> _pflichtstundensoll;
 
 	/** Der Einsatzstatus */
-	private final @NotNull Supplier<@AllowNull Long> _idEinsatzstatus;
+	private final @NotNull Supplier<@AllowNull LehrerEinsatzstatus> _einsatzstatus;
 
 	/** Die Beschäftigungsart */
-	private final @NotNull Supplier<@AllowNull Long> _idBeschaeftigungsart;
+	private final @NotNull Supplier<@AllowNull LehrerBeschaeftigungsart> _beschaeftigungsart;
 	private static final @NotNull Set<LehrerBeschaeftigungsart> setBeschaeftigungsart = Set.of(LehrerBeschaeftigungsart.WV, LehrerBeschaeftigungsart.WT);
 	private static final @NotNull String FEHLERTEXT =
 			"Ist bei einer Lehrkraft im Feld 'Pflichtstundensoll' der Wert = 0.00 eingetragen, so muss das Feld 'Einsatzstatus' den Schlüssel"
@@ -34,32 +34,30 @@ public final class ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPfli
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param pflichtstundensoll     das Pflichtstundensoll
-	 * @param idEinsatzstatus        der Einsatzstatus
-	 * @param idBeschaeftigungsart   die Beschäftigungsart
+	 * @param einsatzstatus        der Einsatzstatus
+	 * @param beschaeftigungsart   die Beschäftigungsart
 	 * @param kontext                der Kontext des Validators
 	 */
 	public ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(
 			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
-			final @NotNull Supplier<@AllowNull Long> idEinsatzstatus,
-			final @NotNull Supplier<@AllowNull Long> idBeschaeftigungsart,
+			final @NotNull Supplier<@AllowNull LehrerEinsatzstatus> einsatzstatus,
+			final @NotNull Supplier<@AllowNull LehrerBeschaeftigungsart> beschaeftigungsart,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this._pflichtstundensoll = pflichtstundensoll;
-		this._idEinsatzstatus = idEinsatzstatus;
-		this._idBeschaeftigungsart = idBeschaeftigungsart;
+		this._einsatzstatus = einsatzstatus;
+		this._beschaeftigungsart = beschaeftigungsart;
 	}
 
 
 	@Override
 	protected boolean pruefe() {
 		final Double pflichtstundensoll = this._pflichtstundensoll.get();
-		final Long idEinsatzstatus = this._idEinsatzstatus.get();
-		final LehrerEinsatzstatus einsatzstatus = (idEinsatzstatus == null) ? null : LehrerEinsatzstatus.data().getWertByID(idEinsatzstatus);
-		final Long idBeschaeftigungsart = this._idBeschaeftigungsart.get();
-		final LehrerBeschaeftigungsart beschaeftigungsart =
-				(idBeschaeftigungsart == null) ? null : LehrerBeschaeftigungsart.data().getWertByID(idBeschaeftigungsart);
+		final LehrerEinsatzstatus einsatzstatus = this._einsatzstatus.get();
+		final LehrerBeschaeftigungsart beschaeftigungsart = this._beschaeftigungsart.get();
 
-		if ((pflichtstundensoll == 0.0) && (!LehrerEinsatzstatus.A.equals(einsatzstatus)) && (!setBeschaeftigungsart.contains(beschaeftigungsart))) {
+		if ((pflichtstundensoll == 0.0) && (!LehrerEinsatzstatus.A.equals(einsatzstatus))
+				&& ((beschaeftigungsart == null) || !setBeschaeftigungsart.contains(beschaeftigungsart))) {
 			this.addFehler(3, FEHLERTEXT);
 			return false;
 		}

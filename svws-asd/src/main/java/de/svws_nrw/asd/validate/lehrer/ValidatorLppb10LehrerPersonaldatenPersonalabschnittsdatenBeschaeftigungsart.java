@@ -7,6 +7,7 @@ import de.svws_nrw.asd.types.lehrer.LehrerBeschaeftigungsart;
 import de.svws_nrw.asd.types.lehrer.LehrerEinsatzstatus;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -16,10 +17,10 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart extends Validator {
 
 	/** Die Beschäftigungsart */
-	private final @NotNull Supplier<Long> _idBeschaeftigungsart;
+	private final @NotNull Supplier<@AllowNull LehrerBeschaeftigungsart> _beschaeftigungsart;
 
 	/** Der Einsatzstatus */
-	private final @NotNull Supplier<Long> _idEinsatzstatus;
+	private final @NotNull Supplier<@AllowNull LehrerEinsatzstatus> _einsatzstatus;
 	private static final @NotNull Set<LehrerEinsatzstatus> setEinsatzstatus2 = Set.of(LehrerEinsatzstatus.A, LehrerEinsatzstatus.B);
 	private static final @NotNull String FEHLERTEXT =
 			"Bei einer unentgeltlich beschäftigten Lehrkraft (Feld 'Beschäftigungsart' = 'Unentgeltlich Beschäftigte') "
@@ -29,28 +30,28 @@ public final class ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBesc
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param idBeschaeftigungsart   die Beschäftigungsart
-	 * @param idEinsatzstatus        der Einsatzstatus
+	 * @param beschaeftigungsart   die Beschäftigungsart
+	 * @param einsatzstatus        der Einsatzstatus
 	 * @param kontext                der Kontext des Validators
 	 */
 	public ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(
-			final @NotNull Supplier<Long> idBeschaeftigungsart,
-			final @NotNull Supplier<Long> idEinsatzstatus,
+			final @NotNull Supplier<@AllowNull LehrerBeschaeftigungsart> beschaeftigungsart,
+			final @NotNull Supplier<@AllowNull LehrerEinsatzstatus> einsatzstatus,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this._idBeschaeftigungsart = idBeschaeftigungsart;
-		this._idEinsatzstatus = idEinsatzstatus;
+		this._beschaeftigungsart = beschaeftigungsart;
+		this._einsatzstatus = einsatzstatus;
 	}
 
 
 	@Override
 	protected boolean pruefe() {
-		final Long idBeschaeftigungsart = this._idBeschaeftigungsart.get();
-		final Long idEinsatzstatus = this._idEinsatzstatus.get();
+		final LehrerBeschaeftigungsart beschaeftigungsart = this._beschaeftigungsart.get();
+		final LehrerEinsatzstatus einsatzstatus = this._einsatzstatus.get();
 
 		// LPPB2 ex BI7
-		if (setEinsatzstatus2.contains(LehrerEinsatzstatus.data().getWertByID(idEinsatzstatus))
-				&& (LehrerBeschaeftigungsart.X == LehrerBeschaeftigungsart.data().getWertByID(idBeschaeftigungsart))) {
+		if ((einsatzstatus == null) || setEinsatzstatus2.contains(einsatzstatus)
+				&& (LehrerBeschaeftigungsart.X == beschaeftigungsart)) {
 			this.addFehler(2, FEHLERTEXT);
 			return false;
 		}

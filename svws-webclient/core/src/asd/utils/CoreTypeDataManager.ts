@@ -328,6 +328,17 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	}
 
 	/**
+	 * Gibt den Core-Type-Wert für den angegebenen Bezeichner zurück oder null, falls zum Bezeichner kein Wert gefunden wird..
+	 *
+	 * @param bezeichner   der Bezeichner
+	 *
+	 * @return der Core-Type-Wert oder null
+	 */
+	public getWertByBezeichnerOrNull(bezeichner: string): U | null {
+		return this._mapBezeichnerToEnum.get(bezeichner);
+	}
+
+	/**
 	 * Gibt die Core-Type-Werte für die angegebenen Bezeichner zurück.
 	 *
 	 * @param bezeichner   die Lister der Bezeichner

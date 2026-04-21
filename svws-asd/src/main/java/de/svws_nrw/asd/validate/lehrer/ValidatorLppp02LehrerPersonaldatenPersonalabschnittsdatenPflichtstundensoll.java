@@ -18,30 +18,29 @@ public final class ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPfli
 	private final @NotNull Supplier<@AllowNull Double> _pflichtstundensoll;
 
 	/** Der Einsatzstatus */
-	private final @NotNull Supplier<@AllowNull Long> _idEinsatzstatus;
+	private final @NotNull Supplier<@AllowNull LehrerEinsatzstatus> _einsatzstatus;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param pflichtstundensoll    das Pflichtstundensoll
-	 * @param idEinsatzstatus       der Einsatzstatus
+	 * @param einsatzstatus       der Einsatzstatus
 	 * @param kontext               der Kontext des Validators
 	 */
 	public ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(
 			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
-			final @NotNull Supplier<@AllowNull Long> idEinsatzstatus,
+			final @NotNull Supplier<@AllowNull LehrerEinsatzstatus> einsatzstatus,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this._pflichtstundensoll = pflichtstundensoll;
-		this._idEinsatzstatus = idEinsatzstatus;
+		this._einsatzstatus = einsatzstatus;
 	}
 
 
 	@Override
 	protected boolean pruefe() {
 		final Double pflichtstundensoll = this._pflichtstundensoll.get();
-		final Long idEinsatzstatus = this._idEinsatzstatus.get();
-		final LehrerEinsatzstatus einsatzstatus = (idEinsatzstatus == null) ? null : LehrerEinsatzstatus.data().getWertByID(idEinsatzstatus);
+		final LehrerEinsatzstatus einsatzstatus = this._einsatzstatus.get();
 
 		if ((einsatzstatus == LehrerEinsatzstatus.B) && (pflichtstundensoll == 0.0)) {
 			this.addFehler(2,
