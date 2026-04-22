@@ -1,3 +1,4 @@
+import type { Ref } from "vue";
 import { computed, type ComputedRef } from "vue";
 import type { UiSelectDropdown, UiSelectSelectionMethods, UiSelectState } from "../manager/UiSelectTypes";
 import { ValidatorFehlerart } from '../../../../../../core/src/asd/validate/ValidatorFehlerart';
@@ -6,7 +7,8 @@ export function useUiSelectStyles<T>(
 	state: ComputedRef<UiSelectState<T>>,
 	attrs: Record<string, any>,
 	selectionMethods: UiSelectSelectionMethods<T>,
-	dropdown: UiSelectDropdown<T>
+	dropdown: UiSelectDropdown<T>,
+	focusOnInput: Ref<boolean>
 ): {
 	filteredHtmlAttributes: ComputedRef<Record<string, any>>,
 	backgroundColorClass: ComputedRef<string>,
@@ -177,7 +179,7 @@ export function useUiSelectStyles<T>(
 	}
 
 
-	const moveLabel = computed(() => selectionMethods.hasSelection() || (state.value.search !== '' && state.value.searchable));
+	const moveLabel = computed(() => selectionMethods.hasSelection() || focusOnInput.value);
 
 	const showLabel = computed((): boolean =>
 		!state.value.headless || !moveLabel.value

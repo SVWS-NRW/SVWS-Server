@@ -58,7 +58,10 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						:model-value="manager().auswahl().sortierung"
 						@change="patchSortierung"
-						:valid="sortierungIsValid" :min="0" :max="32000" :readonly="!hatKompetenzUpdate" :removable="false" />
+						:valid="sortierungIsValid"
+						:min="0" :max="32000"
+						:readonly="!hatKompetenzUpdate"
+						:removable="false" required />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="istSichtbar" :readonly="!hatKompetenzUpdate">
 						Sichtbar

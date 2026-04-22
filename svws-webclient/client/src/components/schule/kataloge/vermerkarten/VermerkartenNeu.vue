@@ -15,7 +15,9 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
-						:min="0" :max="32000" :removable="false" />
+						:min="0" :max="32000"
+						:disabled
+						:removable="false" required />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="model.proxy.istSichtbar">
 						Sichtbar
@@ -39,7 +41,7 @@
 <script setup lang="ts">
 	import { computed, ref, watch } from "vue";
 	import type { VermerkartenNeuProps } from "./VermerkartenNeuProps";
-	import { VermerkartEintrag } from "@core";
+	import { BenutzerKompetenz, VermerkartEintrag } from "@core";
 	import { VermerkartenModelProxy } from "~/components/schule/kataloge/vermerkarten/modelproxy/VermerkartenModelProxy";
 
 	const props = defineProps<VermerkartenNeuProps>();
@@ -47,6 +49,8 @@
 	const initialData = ref<VermerkartEintrag>(Object.assign(new VermerkartEintrag(), { istSichtbar: true }));
 	const model = new VermerkartenModelProxy(() => initialData.value, props.manager);
 	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
+	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 
 
 	async function addVermerkart() {

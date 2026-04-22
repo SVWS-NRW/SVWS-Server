@@ -16,7 +16,7 @@
 				</div>
 				<!-- Label -->
 				<div v-if="showLabel"
-					:class="[labelClasses, 'ui-select--label absolute transition-all duration-100 ease-in-out pointer-events-none rounded whitespace-nowrap max-w-fit flex justify-center items-center gap-1 px-1 -translate-y-1/2']">
+					:class="[labelClasses, 'z-10 ui-select--label absolute transition-all duration-100 ease-in-out pointer-events-none rounded whitespace-nowrap max-w-fit flex justify-center items-center gap-1 px-1 -translate-y-1/2']">
 					<span v-if="statistics" class="ui-select--label--statistics cursor-pointer flex">
 						<svws-ui-tooltip position="right">
 							<span :class="[disabled ? 'icon-ui-disabled' : 'icon-ui-statistic', 'icon i-ri-bar-chart-2-line pointer-events-auto']"
@@ -33,7 +33,9 @@
 					<span v-if="required" class="ui-select--label--required cursor-pointer flex items-end" aria-label="erforderlich">
 						<span :class="[iconColorClass, 'icon-xs i-ri-asterisk font-normal relative -top-0.5']" />
 					</span>
-					<ui-validation-tooltip v-if="validationResult.hasFehler" :validation-result :disabled />
+					<span class="cursor-pointer pointer-events-auto inline-block -my-1">
+						<ui-validation-tooltip v-if="validationResult.hasFehler" :validation-result :disabled />
+					</span>
 					<svws-ui-tooltip position="right" v-if="readonly" class="ui-select--label--readonly cursor-pointer pointer-events-auto">
 						<span :class="[labelIconClass, 'icon-xs i-ri-lock-line shrink-0']" aria-label="schreibgeschützt" />
 						<template #content>
@@ -60,7 +62,7 @@
 						<!-- Such-Input -->
 						<input v-if="searchable && !disabled && !readonly" :id="`uiSelectInput_${state.instanceId}`" ref="uiSelectSearch" type="text" role="combobox"
 							tabindex="0" v-bind="searchInputAriaAttrs" v-model="search"
-							:class="[focusClass, 'ui-select--search row-start-1 col-start-1 outline-none font-normal h-5']"
+							:class="[focusClass, 'ui-select--search row-start-1 col-start-1 outline-none font-normal h-5 w-full']"
 							@focus="focusSelect" @blur="unfocusInput" @input="handleSearchInput">
 					</div>
 				</div>

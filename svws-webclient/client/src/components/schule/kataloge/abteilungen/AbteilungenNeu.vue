@@ -28,7 +28,9 @@
 						<svws-ui-input-number placeholder="Sortierung"
 							v-model="modelProxy.proxy.sortierung"
 							:validation="() => modelProxy.getFehler('sortierung')"
-							:min="0" :max="32000" />
+							:min="0" :max="32000"
+							:disabled
+							:removeable="false" required />
 						<svws-ui-spacing />
 						<svws-ui-checkbox v-model="modelProxy.proxy.istSichtbar">
 							Sichtbar
@@ -92,6 +94,7 @@
 	const klassenToAdd = ref<KlassenListeEintrag[]>([]);
 	const klassenIdsToAdd = computed<List<number>>(() => Arrays.asList(klassenToAdd.value.map(klasse => klasse.id)));
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 	const availableLehrer = computed(() => props.manager().lehrerById.values());
 	const mussFehlerExists = computed(() => [...modelProxy.getAlleFehler()].some(fehler => fehler.getFehlerart().ordinal() === ValidatorFehlerart.MUSS.ordinal()));
 

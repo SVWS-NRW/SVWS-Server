@@ -40,6 +40,8 @@ export class OrtsteilModelProxy extends ModelProxy<OrtsteilKatalogEintrag> {
 		this.addValidator(new ValidatorInputRequired(() => this.proxy.ortsteil), 'ortsteil');
 		this.addValidator(new ValidatorStringIsUniqueInList(() => this.proxy, (data: OrtsteilKatalogEintrag) => data.id, (data: OrtsteilKatalogEintrag) => data.ortsteil, ortsteile, false), 'ortsteil');
 		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.ortsteil, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'ortsteil');
+		// Ort
+		this.addValidator(new ValidatorInputRequired(() => this.proxy.ort_id), 'ort_id');
 		// sortierung
 		this.addValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
 	}
@@ -53,9 +55,11 @@ export class OrtsteilModelProxy extends ModelProxy<OrtsteilKatalogEintrag> {
 				this.proxy.bezeichnungOrt = ort.ortsname;
 				this.proxy.plzOrt = ort.plz;
 				// notwendig, damit plz und ortsname nach patchen in der Auswahlliste angezeigt werden
-				this.manager().daten().ort_id = ort.id;
-				this.manager().daten().bezeichnungOrt = ort.ortsname;
-				this.manager().daten().plzOrt = ort.plz;
+				if (this.manager().hasDaten()) {
+					this.manager().daten().ort_id = ort.id;
+					this.manager().daten().bezeichnungOrt = ort.ortsname;
+					this.manager().daten().plzOrt = ort.plz;
+				}
 			}
 		},
 	});

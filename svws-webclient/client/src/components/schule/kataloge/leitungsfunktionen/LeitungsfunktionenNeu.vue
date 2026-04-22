@@ -15,7 +15,9 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
-						:min="0" :max="32000" :removable="false" />
+						:min="0" :max="32000"
+						:disabled
+						:removable="false" required />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="model.proxy.istSichtbar">
 						Sichtbar
@@ -40,7 +42,7 @@
 
 <script setup lang="ts">
 
-	import { Leitungsfunktion } from "@core";
+	import { BenutzerKompetenz, Leitungsfunktion } from "@core";
 	import type { LeitungsfunktionenNeuProps } from "~/components/schule/kataloge/leitungsfunktionen/LeitungsfunktionenNeuProps";
 	import { computed, ref, watch } from "vue";
 	import { LeitungsfunktionenModelProxy } from "~/components/schule/kataloge/leitungsfunktionen/modelproxy/LeitungsfunktionenModelProxy";
@@ -49,6 +51,8 @@
 	const initialData = ref<Leitungsfunktion>(Object.assign(new Leitungsfunktion(), { istSichtbar: true }));
 	const model = new LeitungsfunktionenModelProxy(() => initialData.value, props.manager);
 	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
+	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 
 	const isLoading = ref<boolean>(false);
 

@@ -9,6 +9,7 @@
 						:max-len="30" required />
 					<ui-select label="Ort"
 						v-model="model.ort.value"
+						:validation="() => model.getFehler('ort_id')"
 						:manager="ortManager"
 						searchable required :removable="false" />
 				</svws-ui-input-wrapper>
@@ -19,7 +20,9 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
-						:min="0" :max="32000" :removable="false" />
+						:min="0" :max="32000"
+						:disabled
+						:removable="false" required />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="model.proxy.istSichtbar">
 						Sichtbar
@@ -43,7 +46,7 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import { type OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
+	import { BenutzerKompetenz, type OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
 	import type { OrtsteileNeuProps } from "~/components/schule/kataloge/ortsteile/OrtsteileNeuProps";
 	import { SelectManager } from "@ui";
 	import { OrtsteilModelProxy } from "~/components/schule/kataloge/ortsteile/modelproxy/OrtsteilModelProxy";
@@ -55,6 +58,8 @@
 	const orte = computed(() => orteById.value.values());
 	const initialData = ref<OrtsteilKatalogEintrag>(Object.assign(new OrtsteilKatalogEintrag(), { istSichtbar: true, sortierung: 32000 }));
 	const model = new OrtsteilModelProxy(() => initialData.value, () => props.manager(), orteById.value);
+	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 
 	const ortManager = new SelectManager({
 		options: orte,

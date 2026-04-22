@@ -17,11 +17,11 @@
 						v-model="model.selectedFach.value"
 						:manager="fachKuerzelSelectManager"
 						:validation="() => model.getFehler('kuerzelStatistik')"
-						required :removable="false" statistics :disabled="!hatKompetenzAdd" searchable />
+						required :removable="false" statistics :disabled searchable />
 					<ui-select label="Fach ASD-Text"
 						v-model="model.selectedFach.value"
 						:manager="fachTextSelectManager"
-						required :removable="false" statistics :disabled="!hatKompetenzAdd" searchable />
+						required :removable="false" statistics :disabled searchable />
 					<ui-select label="Bilinguale Sachfachsprache"
 						v-model="model.selectedSachfachsprache.value"
 						:manager="sachfachspracheManager"
@@ -98,7 +98,9 @@
 						v-model="model.proxy.sortierung"
 						@commit="model.patch"
 						:validation="() => model.getFehler('sortierung')"
-						:min="0" :max="32000" required :removable="false" :disabled="!hatKompetenzAdd" />
+						:min="0" :max="32000"
+						:disabled
+						:removable="false" required />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="model.proxy.istSichtbar" :disabled="!hatKompetenzAdd">
 						Sichtbar
@@ -131,6 +133,7 @@
 	const model = new FachModelProxy(() => initialData.value, () => props.manager().liste.list(), props.schuljahr);
 	const isLoading = ref<boolean>(false);
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const disabled = computed(() => !hatKompetenzAdd.value);
 	const istGrundschule = computed(() => props.manager().schulform() === Schulform.G);
 	const istBerufskolleg = computed(() => props.manager().schulform() === Schulform.BK || props.manager().schulform() === Schulform.SB);
 	const hatGymnasialeOberstufe = computed(() => props.manager().schulform().daten(props.schuljahr)?.hatGymOb ?? false);

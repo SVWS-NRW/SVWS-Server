@@ -98,7 +98,9 @@
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
 						@commit="model.patch"
-						:min="0" :max="32000" required :removable="false" :readonly="!hatKompetenzUpdate" />
+						:min="0" :max="32000"
+						:readonly
+						:removable="false" required />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="model.proxy.istSichtbar" :readonly="!hatKompetenzUpdate">
 						Sichtbar
@@ -118,6 +120,8 @@
 
 	const props = defineProps<FaecherDatenProps>();
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const readonly = computed(() => !hatKompetenzUpdate.value);
+
 	const model = new FachModelProxy(
 		() => props.manager().daten(),
 		() => props.manager().liste.list(),

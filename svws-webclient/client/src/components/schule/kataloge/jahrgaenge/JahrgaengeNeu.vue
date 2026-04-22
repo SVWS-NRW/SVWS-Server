@@ -52,7 +52,9 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
-						:min="0" :max="32000" :removable="false" />
+						:min="0" :max="32000"
+						:disabled
+						:removable="false" required />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="model.proxy.istSichtbar"
 						:validation="() => model.getFehler('istSichtbar')">
@@ -77,13 +79,15 @@
 <script setup lang="ts">
 	import type { JahrgaengeNeuProps } from "./JahrgaengeNeuProps";
 	import { computed, ref, watch } from "vue";
-	import { Bildungsstufe, Jahrgaenge, JahrgangsDaten, Schulgliederung } from "@core";
+	import { BenutzerKompetenz, Bildungsstufe, Jahrgaenge, JahrgangsDaten, Schulgliederung } from "@core";
 	import { CoreTypeSelectManager, SelectManager } from "@ui";
 	import { JahrgangModelProxy } from "~/components/schule/kataloge/jahrgaenge/modelproxy/JahrgangModelProxy";
 
 	const props = defineProps<JahrgaengeNeuProps>();
 	const initialData = ref<JahrgangsDaten>(Object.assign(new JahrgangsDaten(), { istSichtbar: true, sortierung: 32000, anzahlRestabschnitte: 0 }));
 	const model = new JahrgangModelProxy(() => initialData.value, () => props.manager().liste.list(), props.schuljahr);
+	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 	const isLoading = ref<boolean>(false);
 	const jahrgaenge = computed<JahrgangsDaten[]>(() => [...props.manager().liste.list()]);
 	const folgeJahrgangManager = new SelectManager({

@@ -5,10 +5,10 @@
 				<div class="pb-4 flex flex-row gap-6 items-center">
 					<svws-ui-radio-option label=" Schule aus NRW erstellen "
 						v-model="isInternal"
-						:value="true" :disabled="!hatKompetenzAdd" />
+						:value="true" :disabled />
 					<svws-ui-radio-option label=" Externe Schule erstellen "
 						v-model="isInternal"
-						:value="false" :disabled="!hatKompetenzAdd" />
+						:value="false" :disabled />
 				</div>
 				<svws-ui-tooltip v-if="!isInternal" color="primary" :show-arrow="false" :indicator="false">
 					<template #content>
@@ -17,7 +17,7 @@
 					<ui-select label="Schulen außerhalb von NRW und Privatschulen" class="pb-4 w-full"
 						:manager="externeSchulenSelectManager"
 						v-model="selectedExterneSchulen"
-						:disabled="!hatKompetenzAdd" />
+						:disabled />
 				</svws-ui-tooltip>
 				<ui-select v-if="isInternal"
 					label="Schulen innerhalb NRW" class="pb-4 w-full"
@@ -30,47 +30,50 @@
 						<ui-select label="Schulform"
 							:manager="schulformenSelectManager"
 							v-model="selectedSchulformen"
-							:disabled="!hatKompetenzAdd" />
+							:disabled />
 						<svws-ui-text-input placeholder="Statistik-Schulnummer"
 							:model-value="data.schulnummerStatistik"
-							:valid="() => fieldIsValid('schulnummerStatistik')" :disabled="!hatKompetenzAdd" readonly required />
+							:valid="() => fieldIsValid('schulnummerStatistik')" :disabled readonly required />
 						<svws-ui-text-input placeholder="Kürzel"
 							v-model="data.kuerzel"
-							:valid="() => fieldIsValid('kuerzel')" :max-len="10" :disabled="!hatKompetenzAdd" />
+							:valid="() => fieldIsValid('kuerzel')" :max-len="10" :disabled />
 						<svws-ui-text-input placeholder="Schulname"
 							v-model="data.name"
-							:valid="() => fieldIsValid('name')" :min-len="1" :max-len="120" :disabled="!hatKompetenzAdd" required />
+							:valid="() => fieldIsValid('name')" :min-len="1" :max-len="120" :disabled required />
 						<svws-ui-text-input placeholder="Kurzbezeichnung"
 							v-model="data.kurzbezeichnung"
-							:valid="() => fieldIsValid('kurzbezeichnung')" :min-len="1" :max-len="40" :disabled="!hatKompetenzAdd" required />
+							:valid="() => fieldIsValid('kurzbezeichnung')" :min-len="1" :max-len="40" :disabled required />
 						<svws-ui-text-input placeholder="Schulleitung"
 							v-model="data.schulleiter"
-							:valid="() => fieldIsValid('schulleiter')" :max-len="40" :disabled="!hatKompetenzAdd" />
+							:valid="() => fieldIsValid('schulleiter')" :max-len="40" :disabled />
 						<svws-ui-text-input placeholder="Straße"
 							v-model="strasse"
-							:valid="() => fieldIsValid('strassenname')" :max-len="55" :disabled="!hatKompetenzAdd" />
+							:valid="() => fieldIsValid('strassenname')" :max-len="55" :disabled />
 						<svws-ui-text-input placeholder="PLZ"
 							v-model="data.plz"
-							:valid="() => fieldIsValid('plz')" :max-len="10" :disabled="!hatKompetenzAdd" />
+							:valid="() => fieldIsValid('plz')" :max-len="10" :disabled />
 						<svws-ui-text-input placeholder="Ort"
 							v-model="data.ort"
-							:valid="() => fieldIsValid('ort')" :max-len="50" :disabled="!hatKompetenzAdd" />
+							:valid="() => fieldIsValid('ort')" :max-len="50" :disabled />
 						<svws-ui-text-input placeholder="Telefon" type="tel"
 							v-model="data.telefon"
-							:valid="() => fieldIsValid('telefon')" :max-len="20" :disabled="!hatKompetenzAdd" />
+							:valid="() => fieldIsValid('telefon')" :max-len="20" :disabled />
 						<svws-ui-text-input placeholder="Fax" type="tel"
 							v-model="data.fax"
-							:valid="() => fieldIsValid('fax')" :max-len="20" :disabled="!hatKompetenzAdd" />
+							:valid="() => fieldIsValid('fax')" :max-len="20" :disabled />
 						<svws-ui-text-input placeholder="E-Mail-Adresse" type="email"
 							v-model="data.email"
-							:valid="() => fieldIsValid('email')" :max-len="40" :disabled="!hatKompetenzAdd" />
+							:valid="() => fieldIsValid('email')" :max-len="40" :disabled />
 					</svws-ui-input-wrapper>
 					<svws-ui-spacing :size="2" />
 					<svws-ui-content-card title="Ansicht & Sortierung">
 						<svws-ui-input-wrapper :grid="2">
 							<svws-ui-input-number placeholder="Sortierung"
 								v-model="data.sortierung"
-								:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled="schuleAlreadyCreated || !hatKompetenzAdd" :removable="false" />
+								:valid="() => fieldIsValid('sortierung')"
+								:min="0" :max="32000"
+								:disabled="schuleAlreadyCreated || !hatKompetenzAdd"
+								:removable="false" required />
 							<svws-ui-spacing />
 							<svws-ui-checkbox v-model="data.istSichtbar" :disabled="schuleAlreadyCreated || !hatKompetenzAdd">
 								Sichtbar
@@ -109,6 +112,7 @@
 	const data = ref<SchulEintrag>(Object.assign(new SchulEintrag(), { sortierung: 32000, istSichtbar: true }));
 	const isLoading = ref<boolean>(false);
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 	const isInternal = ref<boolean>(true);
 	const selectedSchulenKatalogEintrag = ref<SchulenKatalogEintrag>();
 	const schuljahr = computed<number>(() => props.manager().getSchuljahr());

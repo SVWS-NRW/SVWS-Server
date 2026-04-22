@@ -6,7 +6,7 @@
 					<svws-ui-text-input placeholder="Bezeichnung" span="2"
 						v-model="model.proxy.bezeichnung"
 						:validation="() => model.getFehler('bezeichnung')"
-						:min-len="1" :max-len="30" required :disabled="!hatKompetenzAdd" />
+						:min-len="1" :max-len="30" required :disabled />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />
@@ -15,9 +15,11 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
-						:min="0" :max="32000" :removable="false" :readonly="!hatKompetenzAdd" />
+						:min="0" :max="32000"
+						:disabled
+						:removable="false" required />
 					<svws-ui-spacing />
-					<svws-ui-checkbox v-model="model.proxy.istSichtbar" :disabled="!hatKompetenzAdd">
+					<svws-ui-checkbox v-model="model.proxy.istSichtbar" :disabled>
 						Sichtbar
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
@@ -44,6 +46,7 @@
 
 	const props = defineProps<ErzieherartenNeuProps>();
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 	const initialData = ref<Erzieherart>(Object.assign(new Erzieherart(), { istSichtbar: true, sortierung: 32000 }));
 	const model = new ErzieherartenModelProxy(() => initialData.value, () => props.manager());
 	const formIsValid = computed(() => model.getAlleFehler().isEmpty());

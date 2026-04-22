@@ -98,7 +98,7 @@ export function useUiSelectUtils<T>(
 		getSecondaryTextColor,
 		searchInputAriaAttrs,
 		getOptionClasses,
-		showLabel } = useUiSelectStyles(state, attrs, selectionMethods, dropdown);
+		showLabel } = useUiSelectStyles(state, attrs, selectionMethods, dropdown, focusOnInput);
 
 	watch(highlightedIndex, async () => {
 		await nextTick(() => {

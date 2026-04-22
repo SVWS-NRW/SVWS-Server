@@ -5,7 +5,7 @@
 				<svws-ui-textarea-input placeholder="Kompetenzbeschreibung" class="contentFocusField"
 					v-model="model.proxy.floskelText"
 					:validation="() => model.getFehler('floskelText')"
-					:max-len="255" :disabled="!hatKompetenzAdd" required />
+					:max-len="255" :disabled required />
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input v-if="model.istASV.value" placeholder="Fach"
 						model-value="ASV"
@@ -14,23 +14,23 @@
 						:manager="faecherManager"
 						v-model="model.fach.value"
 						:validation="() => model.getFehler('idFach')"
-						:disabled="!hatKompetenzAdd" required />
+						:disabled required />
 					<svws-ui-checkbox class="my-auto"
 						v-model="model.istASV.value"
 						:validation="() => model.getFehler('istASV')"
-						:disabled="!hatKompetenzAdd">
+						:disabled>
 						ASV
 					</svws-ui-checkbox>
 					<ui-select label="Schulgliederung"
 						v-model="model.schulgliederung.value"
 						:manager="schulgliederungSelectManager"
-						:disabled="!hatKompetenzAdd" />
+						:disabled />
 					<ui-select label="Abschnitt"
 						v-model="model.abschnitt.value"
 						:manager="abschnittSelectManager"
-						:removable="false" :disabled="!hatKompetenzAdd" required />
+						:removable="false" :disabled required />
 					<svws-ui-checkbox v-model="model.proxy.istAktiv"
-						:disabled="!hatKompetenzAdd">
+						:disabled>
 						Aktiv
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
@@ -41,7 +41,9 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
-						:min="0" :max="32000" :removable="false" />
+						:min="0" :max="32000"
+						:disabled
+						:removeable="false" required />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="model.proxy.istSichtbar"
 						:validation="() => model.getFehler('istSichtbar')">
@@ -83,6 +85,7 @@
 	const model = new AnkreuzkompetenzenModelProxy(() => data.value, () => props.manager().liste.list(), () => props.manager().faecherById, props.schuljahr);
 	const isLoading = ref<boolean>(false);
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 	const jahrgaengeToBeAdded = ref<JahrgangsDaten[]>([]);
 	const jahrgaengeIdsToBeAdded = computed<List<number>>(() => Arrays.asList(jahrgaengeToBeAdded.value.map(jahrgang => jahrgang.id)));
 

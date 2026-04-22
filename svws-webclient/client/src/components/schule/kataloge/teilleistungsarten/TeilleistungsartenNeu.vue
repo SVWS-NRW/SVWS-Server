@@ -17,7 +17,9 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="modelProxy.proxy.sortierung"
 						:validation="() => modelProxy.getFehler('sortierung')"
-						:min="0" :max="32000" :disabled :removable="false" />
+						:min="0" :max="32000"
+						:disabled
+						:removable="false" required />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="modelProxy.proxy.istSichtbar" :disabled>
 						Sichtbar

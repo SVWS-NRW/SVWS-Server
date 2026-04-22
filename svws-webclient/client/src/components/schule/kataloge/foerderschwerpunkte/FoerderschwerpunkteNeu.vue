@@ -5,10 +5,12 @@
 				<svws-ui-input-wrapper :grid="2">
 					<ui-select label="Förderschwerpunkt ASD-Kürzel"
 						v-model="model.foerderschwerpunkt.value"
+						:validation="() => model.getFehler('kuerzelStatistik')"
 						:manager="foerderschwerpunktKuerzelManager"
 						statistics searchable required :removable="false" />
 					<ui-select label="Förderschwerpunkt ASD-Text"
 						v-model="model.foerderschwerpunkt.value"
+						:validation="() => model.getFehler('kuerzelStatistik')"
 						:manager="foerderschwerpunktTextManager"
 						searchable :removable="false" statistics required />
 					<svws-ui-text-input placeholder="Interne Bezeichnung" span="2"
@@ -23,7 +25,9 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
-						:min="0" :max="32000" :removable="false" />
+						:min="0" :max="32000"
+						:disabled
+						:removable="false" required />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="model.proxy.istSichtbar">
 						Sichtbar
@@ -47,7 +51,7 @@
 
 	import { computed, ref, watch } from "vue";
 	import type { FoerderschwerpunkteNeuProps } from "~/components/schule/kataloge/foerderschwerpunkte/FoerderschwerpunkteNeuProps";
-	import { Foerderschwerpunkt, FoerderschwerpunktEintrag } from "@core";
+	import { BenutzerKompetenz, Foerderschwerpunkt, FoerderschwerpunktEintrag } from "@core";
 	import { CoreTypeSelectManager } from "@ui";
 	import { FoerderschwerpunkteModelProxy } from "~/components/schule/kataloge/foerderschwerpunkte/modelproxy/FoerderschwerpunkteModelProxy";
 
@@ -56,6 +60,8 @@
 	const initialData = ref<FoerderschwerpunktEintrag>(Object.assign(new FoerderschwerpunktEintrag(), { istSichtbar: true, sortierung: 32000 }));
 	const model = new FoerderschwerpunkteModelProxy(() => initialData.value, () => props.manager(), props.schuljahr);
 	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
+	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 
 	const foerderschwerpunktKuerzelManager = new CoreTypeSelectManager({
 		clazz: Foerderschwerpunkt.class,

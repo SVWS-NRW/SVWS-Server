@@ -25,7 +25,9 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
-						:min="0" :max="32000" :removable="false" />
+						:min="0" :max="32000"
+						:disabled
+						:removable="false" required />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="model.proxy.istSichtbar">
 						Sichtbar
@@ -50,12 +52,15 @@
 	import type { EinwilligungsartenNeuProps } from "~/components/schule/kataloge/einwilligungsarten/EinwilligungsartenNeuProps";
 	import { computed, ref, watch } from "vue";
 	import type { EinwilligungsschluesselKatalogEintrag, List } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import { ArrayList, Einwilligungsart, Einwilligungsschluessel, PersonTyp } from "@core";
 	import { CoreTypeSelectManager, SelectManager } from "@ui";
 	import { EinwilligungsartModelProxy } from "~/components/schule/kataloge/einwilligungsarten/modelproxy/EinwilligungsartModelProxy";
 
 	const props = defineProps<EinwilligungsartenNeuProps>();
 	const isLoading = ref<boolean>(false);
+	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 	const initialData = ref<Einwilligungsart>(Object.assign(new Einwilligungsart(), { istSichtbar: true, idPersonTyp: PersonTyp.SCHUELER.id }));
 	const model = new EinwilligungsartModelProxy(() => initialData.value, props.manager, props.schuljahr);
 	const formIsValid = computed(() => model.getAlleFehler().isEmpty());

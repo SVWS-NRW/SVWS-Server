@@ -15,7 +15,9 @@
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
 						@commit="model.patch"
-						:min="0" :max="32000" :removable="false" />
+						:min="0" :max="32000"
+						:readonly
+						:removable="false" required />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="model.proxy.istSichtbar">
 						Sichtbar
@@ -30,8 +32,12 @@
 
 	import type { LeitungsfunktionenDatenProps } from "./LeitungsfunktionenDatenProps";
 	import { LeitungsfunktionenModelProxy } from "~/components/schule/kataloge/leitungsfunktionen/modelproxy/LeitungsfunktionenModelProxy";
+	import { BenutzerKompetenz } from "@core";
+	import { computed } from "vue";
 
 	const props = defineProps<LeitungsfunktionenDatenProps>();
 	const model = new LeitungsfunktionenModelProxy(() => props.manager().daten(), props.manager, props.patch);
+	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const readonly = computed<boolean>(() => !hatKompetenzAdd.value);
 
 </script>

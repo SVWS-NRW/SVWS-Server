@@ -77,7 +77,9 @@
 							<svws-ui-input-number placeholder="Sortierung"
 								v-model="model.proxy.sortierung"
 								:validation="() => model.getFehler('sortierung')"
-								:min="0" :max="32000" :removable="false" required />
+								:min="0" :max="32000"
+								:disabled
+								:removeable="false" required />
 							<svws-ui-spacing />
 							<svws-ui-checkbox v-model="model.proxy.istSichtbar">
 								Sichtbar
@@ -102,7 +104,7 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import { Betrieb, type Betriebsart, type OrtKatalogEintrag } from "@core";
+	import { BenutzerKompetenz, Betrieb, type Betriebsart, type OrtKatalogEintrag } from "@core";
 	import type { BetriebeNeuProps } from "~/components/schule/kataloge/betriebe/BetriebeNeuProps";
 	import { SelectManager } from "@ui";
 	import { BetriebModelProxy } from "~/components/schule/kataloge/betriebe/modelproxy/BetriebModelProxy";
@@ -111,6 +113,8 @@
 	const initialData = ref<Betrieb>(Object.assign(new Betrieb(), { istSichtbar: true, sortierung: 32000, anzahlRestabschnitte: 0 }));
 	const model = new BetriebModelProxy(() => initialData.value, () => props.manager());
 	const isLoading = ref<boolean>(false);
+	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
 	const betriebsartenById = computed<Map<number, Betriebsart>>(() => props.manager().betriebsartenById);
 	const orteById = computed<Map<number, OrtKatalogEintrag>>(() => props.manager().orteById);

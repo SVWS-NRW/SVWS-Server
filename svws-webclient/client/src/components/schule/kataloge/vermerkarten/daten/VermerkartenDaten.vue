@@ -17,7 +17,9 @@
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
 						@commit="model.patch"
-						:min="0" :max="32000" :removable="false" />
+						:min="0" :max="32000"
+						:readonly
+						:removable="false" required />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="model.proxy.istSichtbar">
 						Sichtbar
@@ -49,9 +51,13 @@
 	import type { DataTableColumn } from "@ui";
 	import type { VermerkartenDatenProps } from "./VermerkartenDatenProps";
 	import { VermerkartenModelProxy } from "~/components/schule/kataloge/vermerkarten/modelproxy/VermerkartenModelProxy";
+	import { BenutzerKompetenz } from "@core";
+	import { computed } from "vue";
 
 	const props = defineProps<VermerkartenDatenProps>();
 	const model = new VermerkartenModelProxy(() => props.manager().daten(), props.manager, props.patch);
+	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const readonly = computed<boolean>(() => !hatKompetenzAdd.value);
 
 	const columns: DataTableColumn[] = [
 		{ key: "linkToSchueler", label: " ", fixedWidth: 1.75, align: "center" },

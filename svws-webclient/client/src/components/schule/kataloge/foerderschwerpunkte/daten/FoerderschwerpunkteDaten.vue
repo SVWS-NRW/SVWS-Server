@@ -5,10 +5,12 @@
 				<svws-ui-input-wrapper :grid="2">
 					<ui-select label="Förderschwerpunkt ASD-Kürzel"
 						v-model="model.foerderschwerpunkt.value"
+						:validation="() => model.getFehler('kuerzelStatistik')"
 						:manager="foerderschwerpunktKuerzelManager"
 						searchable required :removable="false" statistics />
 					<ui-select label="Förderschwerpunkt ASD-Text" class="contentFocusField"
 						v-model="model.foerderschwerpunkt.value"
+						:validation="() => model.getFehler('kuerzelStatistik')"
 						:manager="foerderschwerpunktTextManager"
 						searchable :removable="false" statistics required />
 					<svws-ui-text-input placeholder="Interne Bezeichnung" span="2"
@@ -25,7 +27,9 @@
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
 						@commit="model.patch"
-						:min="0" :max="32000" :removable="false" />
+						:min="0" :max="32000"
+						:readonly
+						:removable="false" required />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="model.proxy.istSichtbar">
 						Sichtbar
@@ -38,13 +42,16 @@
 
 <script setup lang="ts">
 
-	import { Foerderschwerpunkt } from "@core";
+	import { BenutzerKompetenz, Foerderschwerpunkt } from "@core";
 	import type { FoerderschwerpunkteDatenProps } from "~/components/schule/kataloge/foerderschwerpunkte/daten/FoerderschwerpunkteDatenProps";
 	import { CoreTypeSelectManager } from "@ui";
 	import { FoerderschwerpunkteModelProxy } from "~/components/schule/kataloge/foerderschwerpunkte/modelproxy/FoerderschwerpunkteModelProxy";
+	import { computed } from "vue";
 
 	const props = defineProps<FoerderschwerpunkteDatenProps>();
 	const model = new FoerderschwerpunkteModelProxy(() => props.manager().daten(), props.manager, props.schuljahr, props.patch);
+	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const readonly = computed<boolean>(() => !hatKompetenzAdd.value);
 
 	const foerderschwerpunktKuerzelManager = new CoreTypeSelectManager({
 		clazz: Foerderschwerpunkt.class,

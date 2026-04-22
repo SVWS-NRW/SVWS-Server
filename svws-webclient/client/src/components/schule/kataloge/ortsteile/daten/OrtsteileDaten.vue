@@ -10,6 +10,7 @@
 						:max-len="30" required :readonly />
 					<ui-select label="Ort"
 						v-model="model.ort.value"
+						:validation="() => model.getFehler('ort_id')"
 						:manager="ortSelectManager"
 						searchable required :removable="false" :readonly />
 				</svws-ui-input-wrapper>
@@ -21,7 +22,9 @@
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
 						@commit="model.patch"
-						:min="0" :max="32000" :readonly :removable="false" />
+						:min="0" :max="32000"
+						:readonly
+						:removable="false" required />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="model.proxy.istSichtbar" :readonly>
 						Sichtbar

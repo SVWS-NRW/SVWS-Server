@@ -12,6 +12,7 @@
 					:max-len="50" required />
 				<ui-select label="Floskelgruppenart"
 					v-model="model.selectedFloskelgruppenart.value"
+					:validation="() => model.getFehler('idFloskelgruppenart')"
 					:manager="floskelgruppenartManager"
 					:removable="false" searchable required />
 			</svws-ui-input-wrapper>

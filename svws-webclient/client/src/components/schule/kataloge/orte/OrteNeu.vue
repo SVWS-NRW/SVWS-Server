@@ -6,19 +6,19 @@
 					<svws-ui-text-input placeholder="PLZ" class="contentFocusField"
 						v-model="model.proxy.plz"
 						:validation="() => model.getFehler('plz')"
-						:max-len="10" :disabled="!hatKompetenzAdd" required />
+						:max-len="10" :disabled required />
 					<svws-ui-text-input placeholder="Ortsname"
 						v-model="model.proxy.ortsname"
 						:validation="() => model.getFehler('ortsname')"
-						:max-len="50" :disabled="!hatKompetenzAdd" required />
+						:max-len="50" :disabled required />
 					<svws-ui-text-input placeholder="Kreis"
 						v-model="model.proxy.kreis"
 						:validation="() => model.getFehler('kreis')"
-						:max-len="3" :disabled="!hatKompetenzAdd" />
+						:max-len="3" :disabled />
 					<svws-ui-text-input placeholder="Land"
 						v-model="model.proxy.kuerzelBundesland"
 						:validation="() => model.getFehler('kuerzelBundesland')"
-						:max-len="2" :disabled="!hatKompetenzAdd" />
+						:max-len="2" :disabled />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />
@@ -27,9 +27,11 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
-						:min="0" :max="32000" :disabled="!hatKompetenzAdd" :removable="false" />
+						:min="0" :max="32000"
+						:disabled
+						:removable="false" required />
 					<svws-ui-spacing />
-					<svws-ui-checkbox v-model="model.proxy.istSichtbar" :disabled="!hatKompetenzAdd">
+					<svws-ui-checkbox v-model="model.proxy.istSichtbar" :disabled>
 						Sichtbar
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
@@ -59,6 +61,7 @@
 	const model = new OrtModelProxy(() => initialData.value, () => props.manager().liste.list());
 	const isLoading = ref<boolean>(false);
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 
 	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
 

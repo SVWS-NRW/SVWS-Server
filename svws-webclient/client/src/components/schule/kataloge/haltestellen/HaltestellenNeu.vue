@@ -9,7 +9,7 @@
 						:max-len="30" required />
 					<svws-ui-input-number placeholder="Entfernung zur Schule"
 						v-model=" model.proxy.entfernungSchule"
-						:min="0" :disabled="!hatKompetenzAdd" />
+						:min="0" :disabled />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />
@@ -18,7 +18,9 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
-						:min="0" :max="32000" :removable="false" />
+						:min="0" :max="32000"
+						:disabled
+						:removable="false" required />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="model.proxy.istSichtbar">
 						Sichtbar
@@ -48,6 +50,7 @@
 	const props = defineProps<HaltestellenNeuProps>();
 	const isLoading = ref<boolean>(false);
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 
 	const initialData = ref<Haltestelle>(Object.assign(new Haltestelle(), { istSichtbar: true }));
 	const model = new HaltestellenModelProxy(() => initialData.value, props.manager);

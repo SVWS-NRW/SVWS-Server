@@ -6,28 +6,28 @@
 					<svws-ui-text-input placeholder="Kürzel" class="contentFocusField"
 						v-model="model.proxy.kuerzel"
 						:validation="() => model.getFehler('kuerzel')"
-						:max-len="10" :disabled="!hatKompetenzAdd" required />
+						:max-len="10" :disabled required />
 					<svws-ui-textarea-input placeholder="Text"
 						v-model="model.proxy.text"
 						:validation="() => model.getFehler('text')"
-						:disabled="!hatKompetenzAdd" required @keydown.enter.prevent />
+						:disabled required @keydown.enter.prevent />
 					<svws-ui-input-wrapper :grid="2">
 						<ui-select label="Floskelgruppe"
 							v-model="model.selectedFloskelgruppe.value"
 							:manager="floskelgruppenManager"
-							:disabled="!hatKompetenzAdd" :removable="false" searchable required />
+							:disabled :removable="false" searchable required />
 						<ui-select v-if="model.hatFloskelgruppeArtFach.value" label="Fach"
 							v-model="model.selectedFach.value"
 							:manager="faecherManager"
-							:disabled="!hatKompetenzAdd" searchable />
+							:disabled searchable />
 						<div v-else />
 						<ui-select label="Jahrgang"
 							v-model="model.selectedJahrgang.value"
 							:manager="jahrgaengeManager"
-							:disabled="!hatKompetenzAdd" searchable removable />
+							:disabled searchable removable />
 						<ui-select label="Niveau"
 							v-model="model.selectedNiveau.value"
-							:disabled="!hatKompetenzAdd" :manager="niveauManager" />
+							:disabled :manager="niveauManager" />
 					</svws-ui-input-wrapper>
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
@@ -38,7 +38,7 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
-						:min="0" :max="32000" :disabled="!hatKompetenzAdd" :removable="false" required />
+						:min="0" :max="32000" :disabled :removable="false" required />
 					<svws-ui-spacing />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
@@ -67,6 +67,7 @@
 	const model = new FloskelModelProxy(() => initialData.value, () => props.manager().liste.list(), props.manager);
 	const isLoading = ref<boolean>(false);
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 
 	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
 

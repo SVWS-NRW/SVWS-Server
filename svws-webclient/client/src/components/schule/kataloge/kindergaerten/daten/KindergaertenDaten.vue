@@ -31,7 +31,7 @@
 			<svws-ui-content-card title="Adresse">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input placeholder="Straße" span="full"
-						v-model="model.proxy.strassenname"
+						v-model="model.adresse.value"
 						:validation="() => model.getFehler('strassenname')"
 						@commit="model.patch"
 						:max-len="55" :readonly="!hatKompetenzUpdate" />

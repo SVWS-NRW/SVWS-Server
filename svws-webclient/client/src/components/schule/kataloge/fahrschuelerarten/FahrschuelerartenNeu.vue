@@ -15,7 +15,9 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
-						:min="0" :max="32000" :removable="false" />
+						:min="0" :max="32000"
+						:disabled
+						:removable="false" required />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="model.proxy.istSichtbar">
 						Sichtbar
@@ -38,7 +40,7 @@
 <script setup lang="ts">
 
 	import type { FahrschuelerartenNeuProps } from "~/components/schule/kataloge/fahrschuelerarten/FahrschuelerartenNeuProps";
-	import { Fahrschuelerart } from "@core";
+	import { BenutzerKompetenz, Fahrschuelerart } from "@core";
 	import { computed, ref, watch } from "vue";
 	import { FahrschuelerartenModelProxy } from "~/components/schule/kataloge/fahrschuelerarten/modelproxy/FahrschuelerartenModelProxy";
 
@@ -48,6 +50,8 @@
 	const initialData = ref<Fahrschuelerart>(Object.assign(new Fahrschuelerart(), { istSichtbar: true }));
 	const model = new FahrschuelerartenModelProxy(() => initialData.value, props.manager);
 	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
+	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 
 
 	async function addFahrschuelerart() {
