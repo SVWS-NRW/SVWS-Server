@@ -17764,6 +17764,9 @@ export class ApiServer extends BaseApi {
 	}
 
 
+	// API-Methode getStatistikExport konnte nicht nach Typescript transpiliert werden
+
+
 	/**
 	 * Implementierung der GET-Methode getStatistikGesamt für den Zugriff auf die URL https://{hostname}/db/{schema}/statistik/gesamt
 	 *

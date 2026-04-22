@@ -43,7 +43,7 @@ public class APIStatistik {
 	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
-	 * @return die aktuellen Statistikdaten für die Schule
+	 * @return die aktuellen Statistik-Daten für die Schule
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
@@ -60,6 +60,32 @@ public class APIStatistik {
 		return StatistikControllerFactory.getAdmin(request)
 				.getControllerStatistikGesamt()
 				.getStatistikGesamt();
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Statistik-Daten im Export-Format.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die aktuellen Statistik-Daten für die Schule im Export-Format
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	@GET
+	@GZIP
+	@Path("/export")
+	@Operation(summary = "Gibt die Statistikdaten im Export-Format für die Schule zurück.",
+			description = "Gibt die Statistikdaten im Export-Format für die Schule zurück."
+					+ "Es wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Statistikdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Statistikdaten",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Object.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Statistikdaten anzusehen.")
+	public Response getStatistikExport(@PathParam("schema") final String schema, @Context final HttpServletRequest request)
+			throws ApiOperationException {
+		return StatistikControllerFactory.getAdmin(request)
+				.getControllerStatistikGesamt()
+				.getStatistikExport();
 	}
 
 }

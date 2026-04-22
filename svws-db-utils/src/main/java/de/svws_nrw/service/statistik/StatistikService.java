@@ -3,6 +3,8 @@ package de.svws_nrw.service.statistik;
 import static de.svws_nrw.data.TransactionSupport.transactional;
 
 import de.svws_nrw.asd.data.statistik.StatistikGesamt;
+import de.svws_nrw.asd.export.aggregation.AggregationStatistikExport;
+import de.svws_nrw.asd.export.data.StatistikExport;
 
 /**
  * Ein Service für den Zugriff auf die Statistikdaten
@@ -82,6 +84,20 @@ public final class StatistikService {
 			daten.foederschwerpunkte = foerderschwerpunktStatistikService.getList();
 			daten.religionen = religionStatistikService.getList();
 			return daten;
+		});
+	}
+
+	/**
+	 * Bestimmt die Exportdaten für die Statistik.
+	 *
+	 * @return die Exportdaten für die Statistik
+	 */
+	public StatistikExport getExport() {
+		return transactional(() -> {
+			final StatistikGesamt daten = get();
+			final AggregationStatistikExport aggregationStatistikExport = new AggregationStatistikExport(daten);
+			aggregationStatistikExport.run();
+			return aggregationStatistikExport.getStatistikExport();
 		});
 	}
 

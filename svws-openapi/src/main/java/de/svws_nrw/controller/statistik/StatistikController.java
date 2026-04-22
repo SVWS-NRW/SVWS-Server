@@ -16,4 +16,13 @@ public interface StatistikController {
 	 */
 	Response getStatistikGesamt();
 
+	/**
+	 * Aggregiert die Statistik-Relevanten Daten aus der SVWS-DB und gibt diese
+	 * im Export-Format als Response zurück. Dabei wird zunächst geprüft, ob der Benutzer die
+	 * notwendigen Berechtigungen hat.
+	 *
+	 * @return die Response
+	 */
+	Response getStatistikExport();
+
 }
