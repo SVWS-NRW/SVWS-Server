@@ -5432,7 +5432,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um Schüler-Kerngruppe auf mehrere Kurse zu verteilen.
-	 * <br>(1) Die SuS werden entsprechende der Methode {@link #kursSchuelerUpdate_03a_VERSCHIEBE_SCHUELER_ZU_KURSEN} verschoben.
+	 * <br>(1) Die SuS werden entsprechende der Methode {@link #kursSchuelerUpdate03aVerschiebeSchuelerZuKursen} verschoben.
 	 * <br>(2) Falls "zielKurseLeeren", werden alle SuS aus dem Ziel-Kurs entfernt, die nicht zur Kerngruppe gehören.
 	 *
 	 * @param idQuellKurs                       Der Quell-Kurs definiert die Kerngruppe.
