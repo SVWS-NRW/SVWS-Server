@@ -1,11 +1,7 @@
 {
 	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
-		"isolatedModules": false,
 		"outDir": "./dist",
-		"paths": {
-			"~/*": ["./src/*"],
-		}
 	},
 	"include": [
 		"./*.ts",

@@ -1,0 +1,11 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"types": ["node"],
+		"outDir": "./dist",
+		"paths": {
+			"@core": ["../../svws-webclient/core/src/index.ts"],
+		}
+	},
+	"include": ["./*.ts"],
+}

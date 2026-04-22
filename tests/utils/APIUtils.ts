@@ -34,13 +34,14 @@ export const privilegedApiServer: ApiServer = new ApiServer(backendURL, "Admin",
  *
  * @return Liefert ein {@link Result} Objekt zurück.
  */
-export async function handleRequest <A extends any[], R>(apiCtx: ApiServer, method: (...args: A) => Promise<R>, ...methodArgs: A): Promise<Result<R>> {
+export async function handleRequest<A extends any[], R>(apiCtx: ApiServer, method: (...args: A) => Promise<R>, ...methodArgs: A): Promise<Result<R>> {
 	try {
-		return { content: (await method.call(apiCtx, ...methodArgs)) }
-	} catch(e) {
-		if (e instanceof Error)
-			return { error: e, response: e instanceof OpenApiError ? e.response : null }
-		else
-			return { }
+		return { content: (await method.call(apiCtx, ...methodArgs)) };
+	} catch (e) {
+		if (e instanceof Error) {
+			return { error: e, response: e instanceof OpenApiError ? e.response : null };
+		} else {
+			return { };
+		}
 	}
 }

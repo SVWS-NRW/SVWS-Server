@@ -1,16 +1,13 @@
 {
 	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
-		"isolatedModules": false,
+		"types": ["node"],
 		"outDir": "./dist",
-		"baseUrl": "../vite_tests",
 		"paths": {
-			"@core": ["../../svws-webclient/core/src/index.ts"]
+			"@core/*": ["../../svws-webclient/core/src/*"],
+			"@enm/*": ["../../svws-webclient/enmserver/src/*"]
 		}
 	},
-	"include": [
-		"./*.ts",
-		"./tests/**/*",
-		"../../svws-webclient/core/src/index.ts"
-	]
+	"include": ["./*.ts", "utils/**/*", "tests/**/*", "../../svws-webclient/enmserver/src/*.ts"],
+	"exclude": ["../../svws-webclient/**/index.ts"],
 }
