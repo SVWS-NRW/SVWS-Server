@@ -1,5 +1,5 @@
 import { OpenApiError } from "@core/api/OpenApiError";
-import { UserNotificationException } from "@core/index";
+import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
 
 export class BaseApi {
 
@@ -56,9 +56,7 @@ export class BaseApi {
 	 */
 	public setBasicAuth(password: string): void {
 		const tmp = (new TextEncoder()).encode(this.username + ":" + password);
-		if (this.username !== '') {
-			this.headers.Authorization = "Basic " + btoa(String.fromCodePoint(...tmp));
-		}
+		this.headers.Authorization = "Basic " + btoa(String.fromCodePoint(...tmp));
 	}
 
 

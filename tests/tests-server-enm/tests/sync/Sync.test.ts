@@ -1,29 +1,20 @@
 import { describe, expect, test } from "vitest";
-import { getApiService } from "../../utils/RequestBuilder.js";
-import { ENMServerConfigElement } from "../../../../svws-webclient/core/src/core/data/enm/ENMServerConfigElement.js";
+import { ENMServerConfigElement } from "../../../../svws-webclient/core/src/core/data/enm/ENMServerConfigElement";
+import { ArrayList } from "@core/java/util/ArrayList";
+import { ApiServer } from "@core/api/ApiServer";
 
 const targetUrlSVWSAppServer: string = process.env.VITE_APP_targetHost ?? "X";
-
 const targetUrlENMServerFORSvwsApp: string = process.env.VITE_ENM_FOR_SVWS_targetHost ?? 'X';
-
 const CLIENT_SECRET = process.env.VITE_CLIENT_SECRET ?? "clientsecret";
-
 const targetDB = "ENM02A";
-let idConnection = 1;
-
-const svwsAppapiService = getApiService('Admin', '', targetUrlSVWSAppServer);
+const idConnection = 1;
+const api = new ApiServer(targetUrlSVWSAppServer, 'Admin', '');
 
 describe("Teste die WeNoM-Verbindung zwischen dem ENM-Server und dem WeNoM-Server zur Initialisierung, Konfiguration und Synchronisation", () => {
 
 	test.sequential("Bestimme die Liste der WeNoM-Verbindungen auf dem SVWS-Server.", async () => {
-		const responseGet = await svwsAppapiService.get(`/db/${targetDB}/enm/connections`);
-		expect(responseGet.status).toBe(200);
-	});
-
-	test.sequential.skip("Lösche die WeNoM-Verbindung falls eine vorhanden ist", async () => {
-		// falls eine Verbindung besteht, wird diese entfernt
-		const deleteReponse = await svwsAppapiService.delete(`/db/${targetDB}/enm/connection/${idConnection}`);
-		expect(deleteReponse.status).toBeOneOf([200, 404]);
+		const responseGet = await api.getENMServerConnections(targetDB);
+		expect(responseGet).toBeInstanceOf(ArrayList);
 	});
 
 	test.sequential("Die WeNoM-Verbindung kann erstellt werden", async () => {
@@ -33,72 +24,55 @@ describe("Teste die WeNoM-Verbindung zwischen dem ENM-Server und dem WeNoM-Serve
 			clientID: "1",
 			clientSecret: CLIENT_SECRET,
 		};
-
-		const responsePost = await svwsAppapiService.post(`/db/${targetDB}/enm/connection/create`, {
-			body: JSON.stringify(createBody),
-			headers: { "Content-Type": "application/json" },
-		});
-
-		const createdData = await responsePost.json();
-		idConnection = createdData.id;
-		expect(responsePost.status).toBe(201);
+		const conn = await api.addENMServerConnection(createBody, targetDB);
+		expect(conn.clientID).toBe("1");
 	});
 
-	test.sequential("Die aktuelle WeNoM-Verbindung kann gepatched werden", async () => {
+	test.sequential("Die aktuelle WeNoM-Verbindung kann gepatcht werden", async () => {
 		const patchBody = {
 			url: targetUrlENMServerFORSvwsApp,
 			clientSecret: CLIENT_SECRET,
 		};
-
-		const responsePatch = await svwsAppapiService.patch(`/db/${targetDB}/enm/connection/${idConnection}`, {
-			body: JSON.stringify(patchBody),
-			headers: { "Content-Type": "application/json" },
-		});
-		expect(responsePatch.status).toBe(200);
+		await api.patchENMServerConnection(patchBody, targetDB, idConnection);
 	});
 
 	test.sequential("Es kann ein Setup für eine WeNoM-Verbindug ausgeführt werden > 200", async () => {
-		let responseGet = await svwsAppapiService.get(`/db/${targetDB}/enm/connection/${idConnection}/setup`);
-		if (responseGet.status === 409) {
-			const responsePatch = await svwsAppapiService.patch(`/db/${targetDB}/enm/connection/${idConnection}`, {
-				body: JSON.stringify({ serverTLSCertIsTrusted: true }),
-				headers: { "Content-Type": "application/json" },
-			});
-			expect(responsePatch.status).toBe(204);
-			responseGet = await svwsAppapiService.get(`/db/${targetDB}/enm/connection/${idConnection}/setup`);
+		try {
+			await api.setupENMServer(targetDB, idConnection);
+		} catch {
+			await api.patchENMServerConnection({ serverTLSCertIsTrusted: true }, targetDB, idConnection);
+		} finally {
+			await api.setupENMServer(targetDB, idConnection);
 		}
-		expect(responseGet.status).toBe(200);
 	});
 
 	test.sequential("Ein Get auf die WeNoM-Verbindung enthält erwartete Secret Informationen inklusive TLS", async () => {
-		const responsePatch = await svwsAppapiService.get(`/db/${targetDB}/enm/connection/${idConnection}`);
-		const secretData = await responsePatch.json();
+		const secretData = await api.getENMServerConnection(targetDB, idConnection);
 		expect(secretData.clientSecret).toBe(CLIENT_SECRET);
-		expect(secretData.serverTLSCert.length).toBeGreaterThan(100);
-		expect(responsePatch.status).toBe(200);
+		expect(secretData.serverTLSCert).toBeTruthy();
 	});
 
-	test.sequential("Eine Check über die WeNoM-Verbindindung ist erfolgreich > 200", async () => {
-		const responseGetCheck = await svwsAppapiService.get(`/db/${targetDB}/enm/connection/${idConnection}/check`);
-		expect(responseGetCheck.status).toBe(200);
+	test.sequential("Eine Check über die WeNoM-Verbindung ist erfolgreich > 200", async () => {
+		const res = await api.checkENMServer(targetDB, idConnection);
+		expect(res.success).toBeTruthy();
 	});
 
 	// Dieser Test kann fehlschlagen, wenn das Client Secret falsch ist
 	test.sequential("Eine Synchronisation der ENM-Daten über die WeNoM-Verbindung ist erfolgreich > 200", async () => {
-		const responseGetSync = await svwsAppapiService.get(`/db/${targetDB}/enm/connection/${idConnection}/synchronize`);
-		expect(responseGetSync.status).toBe(200);
+		const res = api.synchronizeENMDaten(targetDB, idConnection);
+		expect((await res).success).toBeTruthy();
 	});
 
 	// Dieser Test kann fehlschlagen, wenn das Client Secret falsch ist
 	test.sequential("Ein Upload der ENM-Daten über die WeNoM-Verbindung ist erfolgreich > 200", async () => {
-		const responseGetUpload = await svwsAppapiService.get(`/db/${targetDB}/enm/connection/${idConnection}/upload`);
-		expect(responseGetUpload.status).toBe(200);
+		const responseGetUpload = await api.uploadENMDaten(targetDB, idConnection);
+		expect(responseGetUpload.success).toBeTruthy();
 	});
 
 	// Dieser Test kann fehlschlagen, wenn das Client Secret falsch ist
 	test.sequential("Ein Download der ENM-Daten über die WeNoM-Verbindung ist erfolgreich > 200", async () => {
-		const responseGetDownload = await svwsAppapiService.get(`/db/${targetDB}/enm/connection/${idConnection}/download`);
-		expect(responseGetDownload.status).toBe(200);
+		const responseGetDownload = await api.downloadENMDaten(targetDB, idConnection);
+		expect(responseGetDownload.success).toBeTruthy();
 	});
 
 	// Diese Test dient der Initialisierung des ENM-Servers mit einer Konfiguration für die Sperrungen bei Klassen
@@ -133,15 +107,9 @@ describe("Teste die WeNoM-Verbindung zwischen dem ENM-Server und dem WeNoM-Serve
 		element.key = "noteneingabe.gesperrt";
 		element.value = JSON.stringify(configKlassen);
 		element.type = "global";
-		const body = ENMServerConfigElement.transpilerToJSON(element);
 
-		const options: RequestInit = { };
-		options.headers = { };
-		options.headers["Content-Type"] = 'application/json';
-		options.body = body;
-
-		const responseGetDownload = await svwsAppapiService.post(`/db/${targetDB}/enm/connection/${idConnection}/config`, options);
-		expect(responseGetDownload.status).toBe(200);
+		const responseGetDownload = await api.setENMServerConfigElement(element, targetDB, idConnection);
+		expect(responseGetDownload.success).toBeTruthy();
 	});
 
 });

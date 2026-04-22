@@ -1,7 +1,7 @@
-import path from "path";
-import {existsSync} from "fs";
-import {readFile} from 'fs/promises';
-import assert from 'node:assert'
+import path from "node:path";
+import { existsSync } from "node:fs";
+import { readFile } from 'node:fs/promises';
+import assert from 'node:assert';
 
 // Pfad zur primären Konfigurationsdatei
 const configPath = '../../config/tests/config.json';
@@ -33,16 +33,16 @@ export async function loadConfig(): Promise<TestConfig> {
 	const fileContent = await readFile(_configPath, 'utf-8');
 	const _config = JSON.parse(fileContent);
 
-	assert(_config.localTestRunBackendURL !== undefined)
-	assert(_config.localTestRunFrontendURL !== undefined)
-	assert(_config.localTestRunENMURL !== undefined)
-	assert(_config.localTestRunDBSchema !== undefined)
+	assert(_config.localTestRunBackendURL !== undefined);
+	assert(_config.localTestRunFrontendURL !== undefined);
+	assert(_config.localTestRunENMURL !== undefined);
+	assert(_config.localTestRunDBSchema !== undefined);
 
 	return {
 		localTestRunBackendURL: _config.localTestRunBackendURL,
 		localTestRunFrontendURL: _config.localTestRunFrontendURL,
 		localTestRunENMURL: _config.localTestRunENMURL,
-		localTestRunDBSchema: _config.localTestRunDBSchema
+		localTestRunDBSchema: _config.localTestRunDBSchema,
 	} as TestConfig;
 
 }

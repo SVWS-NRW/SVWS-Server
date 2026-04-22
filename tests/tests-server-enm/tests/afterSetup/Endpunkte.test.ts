@@ -1,539 +1,251 @@
 import { beforeAll, describe, expect, test } from "vitest";
-import { getApiService } from "../../utils/RequestBuilder.js";
-import type { ENMv2Leistung } from "@core";
-import { ENMv2Daten, ENMv2Schueler, ENMv2SchuelerAnkreuzkompetenz } from "@core";
+import { ApiEnmServerTest } from "../../utils/ApiEnmServerTest";
 import { enmURL } from "../../../utils/APIUtils";
+import { BenutzerConfigElement } from "@core/core/data/benutzer/BenutzerConfigElement";
+import type { ENMv2Leistung } from "@core/core/data/enm/v2/ENMv2Leistung";
+import type { ENMv2Teilleistung } from "@core/core/data/enm/v2/ENMv2Teilleistung";
+import type { ENMv2LeistungBemerkungen } from "@core/core/data/enm/v2/ENMv2LeistungBemerkungen";
+import type { ENMv2SchuelerAnkreuzkompetenz } from "@core/core/data/enm/v2/ENMv2SchuelerAnkreuzkompetenz";
+import type { ENMv2Lernabschnitt } from "@core/core/data/enm/v2/ENMv2Lernabschnitt";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ServerMode } from "@core/core/types/ServerMode";
 
 const targetUrlENMServer: string = enmURL;
-
-const apiServiceAuth = getApiService('T.Giesen@lmail.de', 'UD73Js0Uro', targetUrlENMServer);
-const apiServiceAuthWrongTeacher = getApiService('D.Berthold@lmail.de', 'uXkpaRLY', targetUrlENMServer);
-
-function findSchueler(data: ENMv2Daten, id: number): ENMv2Schueler {
-	let schueler = new ENMv2Schueler();
-	for (const s of data.schueler) {
-		if (s.id === id) {
-			schueler = s;
-			break;
-		}
-	}
-	return schueler;
-}
+let apiServiceAuth: ApiEnmServerTest;
+let apiServiceAuthWrongTeacher: ApiEnmServerTest;
 
 beforeAll(async () => {
+	apiServiceAuth = new ApiEnmServerTest(targetUrlENMServer, 'T.Giesen@lmail.de', 'UD73Js0Uro');
 	await apiServiceAuth.login();
+	apiServiceAuthWrongTeacher = new ApiEnmServerTest(targetUrlENMServer, 'D.Berthold@lmail.de', 'uXkpaRLY');
 	await apiServiceAuthWrongTeacher.login();
 });
 
-describe("Das Bearbeiten von Bemerkungen führt zu keinen Redundanzen im Child Array", async () => {
-
-	test("Keine Duplikate in Leistungen", async () => {
-		const response = await apiServiceAuth.get(`/api/daten`);
-		expect(response.status).toBe(200);
-
-		// Extrahier einen Schüler aus den Daten
-		const _data = ENMv2Daten.transpilerFromJSON(await (await response.blob()).text());
-		let schueler = new ENMv2Schueler();
-		for (const s of _data.schueler) {
-			if (s.id === 3029) {
-				schueler = s;
-				break;
-			}
-		}
-
-		// Überprüfe das die entsprechenden Daten vom Schüler passen
-		expect(schueler.nachname).toBe("Lindemann");
-		expect(schueler.vorname).toBe("Stefanie");
-
-		// Bemerkung wird manipuliert
-		const bodyDataPost = {
-			id: schueler.id,
-			patch: {
-				ASV: "Test",
-				AUE: "Test",
-				LELS: "Test",
-				ZB: "Test",
-				foerderbemerkungen: "Test",
-				individuelleVersetzungsbemerkungen: "Test",
-				schulformEmpf: "Test",
-			},
-		};
-		const postResponse = await apiServiceAuth.post(`/api/bemerkungen`, { body: JSON.stringify(bodyDataPost) });
-		expect(postResponse.status).toBe(204);
-
-		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
-		expect(responseAfterEdit.status).toBe(200);
-		const _dataAfterEdit = ENMv2Daten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
-		// Extrahier einen Schüler aus den Daten
-		let schuelerAfterEdit = new ENMv2Schueler();
-		for (const s of _dataAfterEdit.schueler) {
-			if (s.id === 3029) {
-				schuelerAfterEdit = s;
-				break;
-			}
-		}
-
-		const leistungsDaten = [...schuelerAfterEdit.leistungsdaten];
-
-		const prevalences: number [] = [];
-		leistungsDaten.forEach((ld: ENMv2Leistung) => {
-			const prevalence = leistungsDaten.filter((ldd: ENMv2Leistung) => {
-				return ldd.id === ld.id;
-			}).length;
-			prevalences.push(prevalence);
-		});
-
-		// Alle Element sollen nur ein mal vorkommen dürfen
-		expect(prevalences.filter((p) => p !== 1)).toStrictEqual([]);
+describe("Die Daten aus dem ENM-Server entsprechen den Erwartungen", async () => {
+	test("getServerMode", async () => {
+		const res = await apiServiceAuth.getServerMode();
+		expect(res).toBe(ServerMode.STABLE);
 	});
-
-	test("Keine Duplikate in Ankreuzkompetenzen", async () => {
-		const response = await apiServiceAuth.get(`/api/daten`);
-		expect(response.status).toBe(200);
-
-		// Extrahier einen Schüler aus den Daten
-		const _data = ENMv2Daten.transpilerFromJSON(await (await response.blob()).text());
-		const schueler = findSchueler(_data, 3029);
-
-		// Überprüfe das die entsprechenden Daten vom Schüler passen
-		expect(schueler.nachname).toBe("Lindemann");
-		expect(schueler.vorname).toBe("Stefanie");
-
-		// Bemerkung wird manipuliert
-		const bodyDataPost = {
-			id: schueler.id,
-			patch: {
-				ASV: "Test",
-				AUE: "Test",
-				LELS: "Test",
-				ZB: "Test",
-				foerderbemerkungen: "Test",
-				individuelleVersetzungsbemerkungen: "Test",
-				schulformEmpf: "Test",
-			},
-		};
-		const postResponse = await apiServiceAuth.post(`/api/bemerkungen`, { body: JSON.stringify(bodyDataPost) });
-		expect(postResponse.status).toBe(204);
-
-		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
-		expect(responseAfterEdit.status).toBe(200);
-		const _dataAfterEdit = ENMv2Daten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
-		// Extrahier einen Schüler aus den Daten
-		const schuelerAfterEdit = findSchueler(_dataAfterEdit, 3029);
-
-		const ankreuzkompetenzenDaten = [...schuelerAfterEdit.ankreuzkompetenzen];
-
-		const prevalences: number[] = [];
-		ankreuzkompetenzenDaten.forEach(ak => {
-			const prevalence = ankreuzkompetenzenDaten.filter(akk => {
-				return akk.id === ak.id;
-			}).length;
-			prevalences.push(prevalence);
-		});
-
-		// Alle Elemente sollen nur ein mal vorkommen dürfen
-		expect(prevalences.filter((p) => p !== 1)).toStrictEqual([]);
+	test("getSchulform", async () => {
+		const res = await apiServiceAuth.getSchulform();
+		expect(res).toBe(Schulform.G);
+	});
+	test("getLehrerENMDaten", async () => {
+		const daten = await apiServiceAuth.getLehrerENMDaten();
+		expect(daten.lehrer.size()).toBe(23);
+		expect(daten.schueler.size()).toBe(77);
+	});
+	test("isAlive", async () => {
+		await apiServiceAuth.isAlive();
+	});
+	test("getClientConfig", async () => {
+		const config = await apiServiceAuth.getClientConfig();
+		expect(config.global).toBeDefined();
+		expect(config.user).toBeDefined();
 	});
 });
 
-describe("Das Bearbeiten von Leistungen führt zu keinen Redundanzen im Child Array", async () => {
-	test("Keine Duplikate in Leistungen", async () => {
-		const response = await apiServiceAuth.get(`/api/daten`);
-		expect(response.status).toBe(200);
 
-		// Extrahier einen Schüler aus den Daten
-		const _data = ENMv2Daten.transpilerFromJSON(await (await response.blob()).text());
-		const schueler = findSchueler(_data, 3014);
 
-		// Überprüfe das die entsprechenden Daten vom Schüler passen
-		expect(schueler.nachname).toBe("Steuber");
-		expect(schueler.vorname).toBe("Andreas");
+describe("Patches verändern die Daten", async () => {
 
-		const leistungsId = schueler.leistungsdaten.getFirst().id;
-		expect(leistungsId).toBe(4048);
-
-		const bodyData = {
-			id: leistungsId,
-			noteQuartal: "NB",
-			note: "6",
-			istGemahnt: true,
-			fehlstundenFach: 3,
-			fachbezogeneBemerkungen: "ist ein test",
-		};
-
-		const responsePost = await apiServiceAuth.post(`/api/leistung`, {
-			body: JSON.stringify(bodyData),
-		});
-
-		expect(responsePost.status).toBe(204);
-
-		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
-		expect(responseAfterEdit.status).toBe(200);
-		const _dataAfterEdit = ENMv2Daten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
-
-		// Extrahier einen Schüler aus den Daten
-		const schuelerAfterEdit = findSchueler(_dataAfterEdit, 3014);
-
-		const teilLeistungsDaten = [...schuelerAfterEdit.leistungsdaten.getFirst().teilleistungen];
-
-		const prevalences: number [] = [];
-		teilLeistungsDaten.forEach(ld => {
-			const prevalence = teilLeistungsDaten.filter(ldd => {
-				return ldd.id === ld.id;
-			}).length;
-			prevalences.push(prevalence);
-		});
-
-		// Alle Element sollen nur ein mal vorkommen dürfen
-		expect(prevalences.filter((p) => p !== 1)).toStrictEqual([]);
-	});
-});
-
-describe("Leistung und Teilleistung können bearbeitet werden", () => {
-	test("Leistungen", async () => {
-		const response = await apiServiceAuth.get(`/api/daten`);
-		expect(response.status).toBe(200);
-		const _data = ENMv2Daten.transpilerFromJSON(await (await response.blob()).text());
-
-		const schueler = findSchueler(_data, 2889);
-
+	test("patchENMLeistung", async () => {
+		// Bestimme den Test-Schüler
+		const idSchueler = 2889;
+		const schueler = await apiServiceAuth.testLadeSchueler(idSchueler);
 		expect(schueler.nachname).toBe("Winter");
 		expect(schueler.vorname).toBe("Jessika");
 
-		const leistungsId = schueler.leistungsdaten.getFirst().id;
-		expect(leistungsId).toBe(4060);
-
-		const data = schueler.leistungsdaten.getFirst();
-		const strippedData = [data.id, data.noteQuartal, data.note, data.istGemahnt, data.fehlstundenFach, data.fachbezogeneBemerkungen];
-
-		expect(strippedData).toMatchSnapshot();
-
-		// Diese Daten werden patched
-		const bodyData = {
-			id: leistungsId,
+		// Führe einen Patch auf die Leistungsdaten aus
+		const datum = schueler.leistungsdaten.getFirst();
+		expect(datum.note).toBe(null);
+		const patch: Partial<ENMv2Leistung> = {
+			id: datum.id,
 			noteQuartal: "NB",
-			note: "6",
+			note: "5",
 			istGemahnt: true,
 			fehlstundenFach: 3,
-			fachbezogeneBemerkungen: "ist ein test",
+			fehlstundenUnentschuldigtFach: 2,
+			fachbezogeneBemerkungen: "Eine Testbemerkung",
 		};
-		const responsePost = await apiServiceAuth.post(`/api/leistung`, {
-			body: JSON.stringify(bodyData),
-		});
-		expect(responsePost.status).toBe(204);
-		//
-		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
-		const _dataAfterEdit = ENMv2Daten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
+		await apiServiceAuth.patchENMLeistung(patch);
 
-		const testLisaAfterEdit = findSchueler(_dataAfterEdit, 2889);
+		// Lade den Schüler erneut und prüfe, ob die Daten korrekt gepatcht wurden
+		const schuelerNeu = await apiServiceAuth.testLadeSchueler(idSchueler);
+		const datumNeu = schuelerNeu.leistungsdaten.getFirst();
+		expect(datumNeu.noteQuartal).toBe(patch.noteQuartal);
+		expect(datumNeu.note).toBe(patch.note);
+		expect(datumNeu.istGemahnt).toBe(patch.istGemahnt);
+		expect(datumNeu.fehlstundenFach).toBe(patch.fehlstundenFach);
+		expect(datumNeu.fehlstundenUnentschuldigtFach).toBe(patch.fehlstundenUnentschuldigtFach);
+		expect(datumNeu.fachbezogeneBemerkungen).toBe(patch.fachbezogeneBemerkungen);
 
-		const dataAfterEdit = testLisaAfterEdit.leistungsdaten.getFirst();
-		const strippedDataAfterEdit = [dataAfterEdit.id, dataAfterEdit.noteQuartal, dataAfterEdit.note, dataAfterEdit.istGemahnt, dataAfterEdit.fehlstundenFach, dataAfterEdit.fachbezogeneBemerkungen];
-
-		expect(strippedDataAfterEdit).toMatchSnapshot();
+		// Prüfe, ob ein Patch durch einen Lehrer, der diese Daten nicht bearbeiten darf fehlschlägt
+		await ApiEnmServerTest.testErrorStatus(() => apiServiceAuthWrongTeacher.patchENMLeistung(patch), 403);
 	});
 
+	test("patchENMSchuelerLernabschnitt", async () => {
+		// Lade den Test-Schüler
+		const idSchueler = 3029;
+		const schueler = await apiServiceAuth.testLadeSchueler(idSchueler);
+		expect(schueler.nachname).toBe("Lindemann");
+		expect(schueler.vorname).toBe("Stefanie");
 
-	test("Teilleistungen", async () => {
-		const response = await apiServiceAuth.get(`/api/daten`);
+		// Führe einen Patch auf die Bemerkungen aus
+		const datum = schueler.lernabschnitt;
+		const patch: Partial<ENMv2Lernabschnitt> = {
+			id: datum.id,
+			fehlstundenGesamt: 100,
+			fehlstundenGesamtUnentschuldigt: 42,
+		};
+		await apiServiceAuth.patchENMSchuelerLernabschnitt(patch);
 
-		// Request war erfolgreich
-		expect(response.status).toBe(200);
-		const _data = ENMv2Daten.transpilerFromJSON(await (await response.blob()).text());
+		// Lade den Schüler erneut und prüfe, ob die Daten korrekt gepatcht wurden
+		const schuelerNeu = await apiServiceAuth.testLadeSchueler(idSchueler);
+		const datumNeu = schuelerNeu.lernabschnitt;
+		expect(datumNeu.id).toBe(patch.id);
+		expect(datumNeu.fehlstundenGesamt).toBe(patch.fehlstundenGesamt);
+		expect(datumNeu.fehlstundenGesamtUnentschuldigt).toBe(patch.fehlstundenGesamtUnentschuldigt);
 
-		const testSchueler = findSchueler(_data, 3029);
+		// Prüfe, ob ein Patch durch einen Lehrer, der diese Daten nicht bearbeiten darf fehlschlägt
+		await ApiEnmServerTest.testErrorStatus(() => apiServiceAuthWrongTeacher.patchENMSchuelerLernabschnitt(patch), 403);
+	});
 
-		// Überprüfe das die entsprechende ID zum Schüler passt
-		expect(testSchueler.nachname).toBe("Lindemann");
-		expect(testSchueler.vorname).toBe("Stefanie");
+	test("patchENMSchuelerBemerkungen", async () => {
+		// Lade den Test-Schüler
+		const idSchueler = 3074;
+		const schueler = await apiServiceAuth.testLadeSchueler(idSchueler);
+		expect(schueler.nachname).toBe("Fusenig");
+		expect(schueler.vorname).toBe("Kristin");
 
-		// Überprüfe den Snapshot der Leistungsdaten
-		const strippedData: { id: number; note: string | null }[] = [];
-		for (const tl of testSchueler.leistungsdaten.get(8).teilleistungen) {
-			strippedData.push({ id: tl.id, note: tl.note });
-		}
+		// Führe einen Patch auf die Bemerkungen aus
+		const patch: Partial<ENMv2LeistungBemerkungen> = {
+			ASV: "Test",
+			AUE: "Test",
+			ZB: "Test",
+		};
+		await apiServiceAuth.patchENMSchuelerBemerkungen(idSchueler, patch);
 
-		expect(strippedData).toMatchSnapshot();
+		// Lade den Schüler erneut und prüfe, ob die Daten korrekt gepatcht wurden
+		const schuelerNeu = await apiServiceAuth.testLadeSchueler(idSchueler);
+		expect(schuelerNeu.bemerkungen.ASV).toBe(patch.ASV);
+		expect(schuelerNeu.bemerkungen.AUE).toBe(patch.AUE);
+		expect(schuelerNeu.bemerkungen.ZB).toBe(patch.ZB);
 
-		// Diese TeilleistungsIds werden patched
-		const patchedTeilleistungen = [15776, 15777, 15778];
-		for (const patchID of patchedTeilleistungen) {
-			// Füge jeder der Teileistungen die Note 6 hinzu
-			const bodyData = {
-				id: patchID,
+		// Prüfe, ob ein Patch durch einen Lehrer, der diese Daten nicht bearbeiten darf fehlschlägt
+		await ApiEnmServerTest.testErrorStatus(() => apiServiceAuthWrongTeacher.patchENMSchuelerBemerkungen(idSchueler, patch), 403);
+	});
+
+	test("patchENMTeilleistung", async () => {
+		// Lade den Test-Schüler
+		const idSchueler = 3029;
+		const schueler = await apiServiceAuth.testLadeSchueler(idSchueler);
+		expect(schueler.nachname).toBe("Lindemann");
+		expect(schueler.vorname).toBe("Stefanie");
+
+		// Führe Patches auf die Teilleistungen aus
+		const leistungsdaten = schueler.leistungsdaten.get(8);
+		const patches = new Array<Partial<ENMv2Teilleistung>>;
+		for (const datum of leistungsdaten.teilleistungen) {
+			const patch: Partial<ENMv2Teilleistung> = {
+				id: datum.id,
 				note: "6",
 			};
-			const postResponse = await apiServiceAuth.post(`/api/teilleistung`, { body: JSON.stringify(bodyData) });
-
-			// Post war erfolgreich
-			expect(postResponse.status).toBe(204);
+			await apiServiceAuth.patchENMTeilleistung(patch);
+			patches.push(patch);
 		}
 
-		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
-		expect(responseAfterEdit).toBeDefined();
-		expect(responseAfterEdit.status).toBe(200);
-		const _dataAfterEdit = ENMv2Daten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
-
-		const testSchuelerAfterEdit = findSchueler(_dataAfterEdit, 3029);
-
-		const strippedDataAfterEdit: { id: number; note: string | null }[] = [];
-		for (const tl of testSchuelerAfterEdit.leistungsdaten.get(8).teilleistungen) {
-			strippedDataAfterEdit.push({ id: tl.id, note: tl.note });
+		// Lade den Schüler erneut und prüfe, ob die Daten korrekt gepatcht wurden
+		const schuelerNeu = await apiServiceAuth.testLadeSchueler(idSchueler);
+		const leistungsdatenNeu = schuelerNeu.leistungsdaten.get(8);
+		for (let i = 0; i < leistungsdatenNeu.teilleistungen.size(); i++) {
+			const datumNeu = leistungsdatenNeu.teilleistungen.get(i);
+			const patch = patches[i];
+			expect(datumNeu.id).toBe(patch.id);
+			expect(datumNeu.note).toBe(patch.note);
 		}
 
-		expect(strippedDataAfterEdit).toMatchSnapshot();
-	});
-});
-
-describe("Clientconfig können bearbeitet werden", () => {
-	test("Clientconfig", async () => {
-		const response = await apiServiceAuth.get(`/api/clientconfig`);
-		expect(response.status).toBe(200);
-		const _data = await response.text();
-		expect(_data).toMatchSnapshot();
-
-		// Diese Daten werden patched
-		const bodyData = {
-			"key": "testkey",
-			"value": "testvalue",
-		};
-
-		const responsePUT = await apiServiceAuth.put(`/api/clientconfig`, {
-			body: JSON.stringify(bodyData),
-			headers: { "Content-Type": "application/json" },
-		});
-
-		expect(responsePUT.status).toBe(204);
-
-		const responseAfterPUT = await apiServiceAuth.get(`/api/clientconfig`);
-		expect(responseAfterPUT.status).toBe(200);
-		const _responseContentAfterPut = await responseAfterPUT.text();
-		expect(_responseContentAfterPut).toMatchSnapshot();
-	});
-});
-
-describe("Bemerkungen können bearbeitet werden", () => {
-	test("Anpassung von Bemerkungen von Schueler der nicht der gleichen Klasse wie Lehrer zugeordnet ist, ist verboten", async () => {
-		const response = await apiServiceAuthWrongTeacher.get(`/api/daten`);
-		expect(response.status).toBe(200);
-		const _data = ENMv2Daten.transpilerFromJSON(await (await response.blob()).text());
-
-		const schueler = findSchueler(_data, 3029);
-
-		// Diese Daten werden patched
-		const bodyData = {
-			id: schueler.id,
-			patch: {
-				ASV: "Test",
-				AUE: "Test",
-				LELS: "Test",
-				ZB: "Test",
-				foerderbemerkungen: "Test",
-				individuelleVersetzungsbemerkungen: "Test",
-				schulformEmpf: "Test",
-			},
-		};
-		const responsePost = await apiServiceAuthWrongTeacher.post(`/api/bemerkungen`, { body: JSON.stringify(bodyData) });
-
-		expect(responsePost.status).toBe(403);
+		// Prüfe, ob ein Patch durch einen Lehrer, der diese Daten nicht bearbeiten darf fehlschlägt
+		await ApiEnmServerTest.testErrorStatus(() => apiServiceAuthWrongTeacher.patchENMTeilleistung(patches[0]), 403);
 	});
 
-	test("Bemerkungen", async () => {
-		const response = await apiServiceAuth.get(`/api/daten`);
-		expect(response.status).toBe(200);
-		const _data = ENMv2Daten.transpilerFromJSON(await (await response.blob()).text());
-
-		const schueler = findSchueler(_data, 3074);
-
-		// Überprüfe das die entsprechende ID zum Schüler passt
+	test("patchENMSchuelerAnkreuzkompetenzen", async () => {
+		// Lade den Test-Schüler
+		const idSchueler = 3074;
+		const schueler = await apiServiceAuth.testLadeSchueler(idSchueler);
 		expect(schueler.nachname).toBe("Fusenig");
 		expect(schueler.vorname).toBe("Kristin");
 
-		const data = schueler.bemerkungen;
-		const strippedData = [data.ASV, data.AUE, data.LELS, data.ZB, data.foerderbemerkungen, data.individuelleVersetzungsbemerkungen, data.schulformEmpf];
-		expect(strippedData).toMatchSnapshot();
-
-		// Diese Daten werden patched
-		const bodyData = {
-			id: schueler.id,
-			patch: {
-				ASV: "Test",
-				AUE: "Test",
-				LELS: "Test",
-				ZB: "Test",
-				foerderbemerkungen: "Test",
-				individuelleVersetzungsbemerkungen: "Test",
-				schulformEmpf: "Test",
-			},
+		// Führe einen Patch auf den ersten Eintrag zu Ankreuzkompetenzen aus
+		const datum = schueler.ankreuzkompetenzen.getFirst();
+		const patch: Partial<ENMv2SchuelerAnkreuzkompetenz> = {
+			id: datum.id,
+			stufen: [false, false, true, true, false],
 		};
-		const responsePost = await apiServiceAuth.post(`/api/bemerkungen`, { body: JSON.stringify(bodyData) });
-		expect(responsePost.status).toBe(204);
+		await apiServiceAuth.patchENMSchuelerAnkreuzkompetenzen(patch);
 
-		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
-		const _dataAfterEdit = ENMv2Daten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
+		// Lade den Schüler erneut und prüfe, ob die Daten korrekt gepatcht wurden
+		const schuelerNeu = await apiServiceAuth.testLadeSchueler(idSchueler);
+		const datumNeu = schuelerNeu.ankreuzkompetenzen.getFirst();
+		expect(datumNeu.id).toBe(patch.id);
+		expect(datumNeu.stufen).toStrictEqual(patch.stufen);
 
-		const testSchuelerAfterEdit = findSchueler(_dataAfterEdit, 3074);
-
-		const dataAfterEdit = testSchuelerAfterEdit.bemerkungen;
-		const strippedDataAfterEdit = [dataAfterEdit.ASV, dataAfterEdit.AUE, dataAfterEdit.LELS, dataAfterEdit.ZB, dataAfterEdit.foerderbemerkungen, dataAfterEdit.individuelleVersetzungsbemerkungen, dataAfterEdit.schulformEmpf];
-		expect(strippedDataAfterEdit).toMatchSnapshot();
+		// Prüfe, ob ein Patch durch einen Lehrer, der diese Daten nicht bearbeiten darf fehlschlägt
+		await ApiEnmServerTest.testErrorStatus(() => apiServiceAuthWrongTeacher.patchENMSchuelerAnkreuzkompetenzen(patch), 403);
 	});
+
 });
 
-describe("Ankreuzkompetenzen können bearbeitet werden", () => {
-	const targetAnkreuzKompetenzId = 18153;
 
-	test("Ankreuzkompetenzen mit unbekannter ID", async () => {
-		const bodyData = {
-			id: 9999999999,
-			stufen: [true, true, true, true, true],
-		};
 
-		const responsePost = await apiServiceAuth.post(`/api/ankreuzkompetenz`, { body: JSON.stringify(bodyData) });
-		expect(responsePost.status).toBe(404);
-	});
+describe("Das Bearbeiten der Config", async () => {
 
-	test("Anpassung von Ankreuzkompetenzen von Schueler der nicht der gleichen Klasse wie Lehrer zugeordnet ist ist verboten", async () => {
-		const bodyData = {
-			id: targetAnkreuzKompetenzId,
-			stufen: [true, true, true, true, true],
-		};
-		const responsePost = await apiServiceAuthWrongTeacher.post(`/api/ankreuzkompetenz`, { body: JSON.stringify(bodyData) });
-		expect(responsePost.status).toBe(403);
-	});
+	test.sequential("Ein Wert in der Config kann neu angelegt werden", async () => {
+		// Setze den Wert
+		await apiServiceAuth.setClientConfigUserKey("Zitroneneis", "Lieblingseis");
 
-	test.skip("Ankreuzkompetenzen GET", async () => {
-		const response = await apiServiceAuth.get(`/api/daten`);
-
-		expect(response.status).toBe(200);
-
-		const _data = ENMv2Daten.transpilerFromJSON(await (await response.blob()).text());
-
-		const schueler = findSchueler(_data, 3074);
-
-		// Überprüfe das die entsprechenden Daten vom Schüler passen
-		expect(schueler.nachname).toBe("Fusenig");
-		expect(schueler.vorname).toBe("Kristin");
-
-		let data = new ENMv2SchuelerAnkreuzkompetenz();
-		for (const ak of schueler.ankreuzkompetenzen) {
-			if (ak.id === targetAnkreuzKompetenzId) {
-				data = ak;
-				break;
+		// Lese die Config aus und suche den neu gesetzten Wert
+		const configNeu = await apiServiceAuth.getClientConfig();
+		let item = new BenutzerConfigElement();
+		for (const datum of configNeu.user) {
+			if (datum.key === "Lieblingseis") {
+				item = datum;
 			}
 		}
-
-		const strippedData = [data.id, data.kompetenzID, data.stufen];
-		expect(strippedData).toMatchSnapshot();
-
-		// Diese Daten werden patched
-		const bodyData = {
-			id: targetAnkreuzKompetenzId,
-			stufen: [true, true, true, true, true],
-		};
-
-		const responsePost = await apiServiceAuth.post(`/api/ankreuzkompetenz`, { body: JSON.stringify(bodyData) });
-		expect(responsePost.status).toBe(200);
-
-		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
-		expect(responseAfterEdit.status).toBe(200);
-
-		const _dataAfterEdit = ENMv2Daten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
-
-		const schuelerAfterEdit = findSchueler(_dataAfterEdit, 3074);
-
-		let dataAfterEdit = new ENMv2SchuelerAnkreuzkompetenz();
-		for (const ak of schuelerAfterEdit.ankreuzkompetenzen) {
-			if (ak.id === targetAnkreuzKompetenzId) {
-				dataAfterEdit = ak;
-				break;
-			}
-		}
-		const strippedDataAfterEdit = [dataAfterEdit.id, dataAfterEdit.kompetenzID, dataAfterEdit.stufen];
-
-		expect(strippedDataAfterEdit).toMatchSnapshot();
-	});
-});
-
-describe("Passwort Management durch create_pwt", () => {
-	test("Fehlender Parameter im JSON führt zu Fehler", async () => {
-		// Diese Daten werden patched
-		const bodyData = {
-			notUsed: "Die Dienst-E-Mail ist erforderlich.",
-		};
-
-		const responsePost = await apiServiceAuth.post(`/api/create_pwt`, { body: JSON.stringify(bodyData) });
-		expect(await responsePost.text()).toContain("Die Dienst-E-Mail ist erforderlich");
-		expect(responsePost.status).toBe(400);
+		expect(item.value).toBe("Zitroneneis");
 	});
 
-	test("Unbekannte Email erzeugt Fehler", async () => {
-		// Diese Daten werden patched
-		const bodyData = {
-			eMailDienstlich: "notused@email.de",
-		};
+	test.sequential("Ein Wert in der Config kann geändert werden", async () => {
+		// Lade die Konfiguration und bestimme das erste Element
+		const config = await apiServiceAuth.getClientConfig();
+		const datum = config.user.getFirst();
+		expect(datum.key).toBe('Lieblingseis');
+		expect(datum.value).toBe('Zitroneneis');
 
-		const responsePost = await apiServiceAuth.post(`/api/create_pwt`, { body: JSON.stringify(bodyData) });
-		expect(await responsePost.text()).toContain("Mehrere Lehrer mit dieser E-Mail-Adresse gefunden");
-		expect(responsePost.status).toBe(409);
+		// Setze den Wert neu
+		const neuerWert = "Schokoladeneis";
+		await apiServiceAuth.setClientConfigUserKey(neuerWert, datum.key);
+
+		// Lade die Konfiguration nue und prüfe, ob jetzt der neue Wert gesetzt ist
+		const configNeu = await apiServiceAuth.getClientConfig();
+		const datumNeu = configNeu.user.getFirst();
+		expect(datumNeu.value).toBe(neuerWert);
 	});
 
-	test("Korrekte Email -> 204", async () => {
-		// Diese Daten werden patched
-		const bodyData = {
-			eMailDienstlich: "D.Berthold@lmail.de",
-		};
+	test.sequential("Ein Wert in der Config kann gelöscht werden", async () => {
+		// Lade die Konfiguration und bestimme das erste Element
+		const config = await apiServiceAuth.getClientConfig();
+		const datum = config.user.getFirst();
+		expect(datum.key).toBe('Lieblingseis');
+		expect(datum.value).toBe('Schokoladeneis');
 
-		const responsePost = await apiServiceAuth.post(`/api/create_pwt`, { body: JSON.stringify(bodyData) });
-		console.log(await responsePost.text());
-		expect(responsePost.status).toBe(204);
+		// Setze den Wert neu
+		const neuerWert = null;
+		await apiServiceAuth.setClientConfigUserKey(neuerWert, datum.key);
+
+		// Lade die Konfiguration nue und prüfe, ob jetzt der neue vorhanden ist
+		const configNeu = await apiServiceAuth.getClientConfig();
+		expect(configNeu.user.isEmpty()).toBeTruthy();
 	});
 
-	test("Korrekte Email doppelt führt zu einem Fehler", async () => {
-		const bodyData = {
-			eMailDienstlich: "D.Berthold@lmail.de",
-		};
-
-		await apiServiceAuth.post(`/api/create_pwt`, { body: JSON.stringify(bodyData) });
-
-		const responsePost = await apiServiceAuth.post(`/api/create_pwt`, { body: JSON.stringify(bodyData) });
-		expect(await responsePost.text()).toContain("Bitte warten Sie, bevor Sie es erneut versuchen.");
-		expect(responsePost.status).toBe(429);
-	});
-});
-
-describe("Test Lernabschnitte", () => {
-	test("Post Lernabschnitte", async () => {
-		const response = await apiServiceAuth.get(`/api/daten`);
-		expect(response.status).toBe(200);
-		const _data = ENMv2Daten.transpilerFromJSON(await (await response.blob()).text());
-
-		const schuelerID = 3029;
-
-		const schueler = findSchueler(_data, schuelerID);
-
-		const lernabschnittID = 12452;
-		expect(schueler.lernabschnitt.id).toBe(lernabschnittID);
-
-		const bodyData = {
-			id: lernabschnittID,
-			fehlstundenGesamt: 1337,
-
-		};
-
-		const responseOfPost = await apiServiceAuth.post(`/api/lernabschnitt`, {
-			body: JSON.stringify(bodyData),
-		});
-		console.log(await responseOfPost.text());
-		expect(responseOfPost.status).toBe(204);
-
-		const responseAfterPost = await apiServiceAuth.get(`/api/daten`);
-		expect(responseAfterPost.status).toBe(200);
-		const _dataAfterPost = ENMv2Daten.transpilerFromJSON(await (await responseAfterPost.blob()).text());
-
-		const schuelerAfterPost = findSchueler(_dataAfterPost, schuelerID);
-
-		expect(schuelerAfterPost.lernabschnitt.fehlstundenGesamt).toBe(1337);
-
-	});
 });

@@ -55,6 +55,7 @@
 		"svws-webclient/enmserver",
 		"svws-webclient/laufbahnplanung",
 		"svws-webclient/ui",
-		"tests/tests-server-api"
+		"tests/tests-server-api",
+		"tests/tests-server-enm"
 	]
 }

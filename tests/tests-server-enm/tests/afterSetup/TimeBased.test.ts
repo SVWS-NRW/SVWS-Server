@@ -1,10 +1,10 @@
 import { describe, expect, test } from "vitest";
-import { getApiService } from "../../utils/RequestBuilder.js";
+import { ApiEnmServerTest } from "../../utils/ApiEnmServerTest";
 import { enmURL } from "../../../utils/APIUtils";
 
 const targetUrlENMServer: string = enmURL;
 
-const apiServiceNoAuth = getApiService('', '', targetUrlENMServer);
+const apiServiceNoAuth = new ApiEnmServerTest(targetUrlENMServer, '', '');
 
 async function multipleRequest(requestFunction: () => Promise<any>, interval: number, amount: number): Promise<void> {
 	for (let i = 0; i < amount; i++) {
@@ -20,150 +20,150 @@ const ErrorCodeTimingProtected = 403;
 
 describe.skip(`Zeit basierte Angriffe auf verschiedene POST Endpunkte führen zu ${ErrorCodeTimingProtected}`, () => {
 	test(`ankreuzkompetenz > ${ErrorCodeTimingProtected}`, async () => {
-		await multipleRequest(() => apiServiceNoAuth.post(`/api/ankreuzkompetenz`), 100, 10);
-		const response = await apiServiceNoAuth.post(`/api/ankreuzkompetenz`);
+		await multipleRequest(() => apiServiceNoAuth.testEmptyPost(`/api/ankreuzkompetenz`), 100, 10);
+		const response = await apiServiceNoAuth.testEmptyPost(`/api/ankreuzkompetenz`);
 		expect(response.status).toBe(ErrorCodeTimingProtected);
 	});
 
 	test(`bemerkungen > ${ErrorCodeTimingProtected}`, async () => {
-		await multipleRequest(() => apiServiceNoAuth.post(`/api/bemerkungen`), 100, 10);
-		const response = await apiServiceNoAuth.post(`/api/bemerkungen`);
+		await multipleRequest(() => apiServiceNoAuth.testEmptyPost(`/api/bemerkungen`), 100, 10);
+		const response = await apiServiceNoAuth.testEmptyPost(`/api/bemerkungen`);
 		expect(response.status).toBe(ErrorCodeTimingProtected);
 	});
 
 	test(`clientconfig > ${ErrorCodeTimingProtected}`, async () => {
-		await multipleRequest(() => apiServiceNoAuth.post(`/api/clientconfig`), 100, 10);
-		const response = await apiServiceNoAuth.post(`/api/clientconfig`);
+		await multipleRequest(() => apiServiceNoAuth.testEmptyPost(`/api/clientconfig`), 100, 10);
+		const response = await apiServiceNoAuth.testEmptyPost(`/api/clientconfig`);
 		expect(response.status).toBe(ErrorCodeTimingProtected);
 	});
 
 	test(`daten > ${ErrorCodeTimingProtected}`, async () => {
-		await multipleRequest(() => apiServiceNoAuth.post(`/api/daten`), 100, 10);
-		const response = await apiServiceNoAuth.post(`/api/daten`);
+		await multipleRequest(() => apiServiceNoAuth.testEmptyPost(`/api/daten`), 100, 10);
+		const response = await apiServiceNoAuth.testEmptyPost(`/api/daten`);
 		expect(response.status).toBe(ErrorCodeTimingProtected);
 	});
 
 	test(`leistung > ${ErrorCodeTimingProtected}`, async () => {
-		await multipleRequest(() => apiServiceNoAuth.post(`/api/leistung`), 100, 10);
-		const response = await apiServiceNoAuth.post(`/api/leistung`);
+		await multipleRequest(() => apiServiceNoAuth.testEmptyPost(`/api/leistung`), 100, 10);
+		const response = await apiServiceNoAuth.testEmptyPost(`/api/leistung`);
 		expect(response.status).toBe(ErrorCodeTimingProtected);
 	});
 
 	test(`lernabschnitt > ${ErrorCodeTimingProtected}`, async () => {
-		await multipleRequest(() => apiServiceNoAuth.post(`/api/lernabschnitt`), 100, 10);
-		const response = await apiServiceNoAuth.post(`/api/lernabschnitt`);
+		await multipleRequest(() => apiServiceNoAuth.testEmptyPost(`/api/lernabschnitt`), 100, 10);
+		const response = await apiServiceNoAuth.testEmptyPost(`/api/lernabschnitt`);
 		expect(response.status).toBe(ErrorCodeTimingProtected);
 	});
 
 	test(`mode > ${ErrorCodeTimingProtected}`, async () => {
-		await multipleRequest(() => apiServiceNoAuth.post(`/api/mode`), 100, 10);
-		const response = await apiServiceNoAuth.post(`/api/mode`);
+		await multipleRequest(() => apiServiceNoAuth.testEmptyPost(`/api/mode`), 100, 10);
+		const response = await apiServiceNoAuth.testEmptyPost(`/api/mode`);
 		expect(response.status).toBe(ErrorCodeTimingProtected);
 	});
 
 	test(`teilleistung > ${ErrorCodeTimingProtected}`, async () => {
-		await multipleRequest(() => apiServiceNoAuth.post(`/api/teilleistung`), 100, 10);
-		const response = await apiServiceNoAuth.post(`/api/teilleistung`);
+		await multipleRequest(() => apiServiceNoAuth.testEmptyPost(`/api/teilleistung`), 100, 10);
+		const response = await apiServiceNoAuth.testEmptyPost(`/api/teilleistung`);
 		expect(response.status).toBe(ErrorCodeTimingProtected);
 	});
 });
 
 describe.skip(`Zeit basierte Angriffe auf verschiedene GET Endpunkte führen zu ${ErrorCodeTimingProtected}`, () => {
 	test(`ankreuzkompetenz > ${ErrorCodeTimingProtected}`, async () => {
-		await multipleRequest(() => apiServiceNoAuth.get(`/api/ankreuzkompetenz`), 100, 10);
-		const response = await apiServiceNoAuth.get(`/api/ankreuzkompetenz`);
+		await multipleRequest(() => apiServiceNoAuth.testGet(`/api/ankreuzkompetenz`), 100, 10);
+		const response = await apiServiceNoAuth.testGet(`/api/ankreuzkompetenz`);
 		expect(response.status).toBe(ErrorCodeTimingProtected);
 	});
 
 	test(`bemerkungen > ${ErrorCodeTimingProtected}`, async () => {
-		await multipleRequest(() => apiServiceNoAuth.get(`/api/bemerkungen`), 100, 10);
-		const response = await apiServiceNoAuth.get(`/api/bemerkungen`);
+		await multipleRequest(() => apiServiceNoAuth.testGet(`/api/bemerkungen`), 100, 10);
+		const response = await apiServiceNoAuth.testGet(`/api/bemerkungen`);
 		expect(response.status).toBe(ErrorCodeTimingProtected);
 	});
 
 	test(`clientconfig > ${ErrorCodeTimingProtected}`, async () => {
-		await multipleRequest(() => apiServiceNoAuth.get(`/api/clientconfig`), 100, 10);
-		const response = await apiServiceNoAuth.get(`/api/clientconfig`);
+		await multipleRequest(() => apiServiceNoAuth.testGet(`/api/clientconfig`), 100, 10);
+		const response = await apiServiceNoAuth.testGet(`/api/clientconfig`);
 		expect(response.status).toBe(ErrorCodeTimingProtected);
 	});
 
 	test(`daten > ${ErrorCodeTimingProtected}`, async () => {
-		await multipleRequest(() => apiServiceNoAuth.get(`/api/daten`), 100, 10);
-		const response = await apiServiceNoAuth.get(`/api/daten`);
+		await multipleRequest(() => apiServiceNoAuth.testGet(`/api/daten`), 100, 10);
+		const response = await apiServiceNoAuth.testGet(`/api/daten`);
 		expect(response.status).toBe(ErrorCodeTimingProtected);
 	});
 
 	test(`leistung > ${ErrorCodeTimingProtected}`, async () => {
-		await multipleRequest(() => apiServiceNoAuth.get(`/api/leistung`), 100, 10);
-		const response = await apiServiceNoAuth.get(`/api/leistung`);
+		await multipleRequest(() => apiServiceNoAuth.testGet(`/api/leistung`), 100, 10);
+		const response = await apiServiceNoAuth.testGet(`/api/leistung`);
 		expect(response.status).toBe(ErrorCodeTimingProtected);
 	});
 
 	test(`lernabschnitt > ${ErrorCodeTimingProtected}`, async () => {
-		await multipleRequest(() => apiServiceNoAuth.get(`/api/lernabschnitt`), 100, 10);
-		const response = await apiServiceNoAuth.get(`/api/lernabschnitt`);
+		await multipleRequest(() => apiServiceNoAuth.testGet(`/api/lernabschnitt`), 100, 10);
+		const response = await apiServiceNoAuth.testGet(`/api/lernabschnitt`);
 		expect(response.status).toBe(ErrorCodeTimingProtected);
 	});
 
 	test(`mode > ${ErrorCodeTimingProtected}`, async () => {
-		await multipleRequest(() => apiServiceNoAuth.get(`/api/mode`), 100, 10);
-		const response = await apiServiceNoAuth.get(`/api/mode`);
+		await multipleRequest(() => apiServiceNoAuth.testGet(`/api/mode`), 100, 10);
+		const response = await apiServiceNoAuth.testGet(`/api/mode`);
 		expect(response.status).toBe(ErrorCodeTimingProtected);
 	});
 
 	test(`teilleistung > ${ErrorCodeTimingProtected}`, async () => {
-		await multipleRequest(() => apiServiceNoAuth.get(`/api/teilleistung`), 100, 10);
-		const response = await apiServiceNoAuth.get(`/api/teilleistung`);
+		await multipleRequest(() => apiServiceNoAuth.testGet(`/api/teilleistung`), 100, 10);
+		const response = await apiServiceNoAuth.testGet(`/api/teilleistung`);
 		expect(response.status).toBe(ErrorCodeTimingProtected);
 	});
 });
 
 describe.skip(`Zeit basierte Angriffe auf verschiedene PUT Endpunkte führen zu ${ErrorCodeTimingProtected}`, () => {
 	test(`ankreuzkompetenz > ${ErrorCodeTimingProtected}`, async () => {
-		await multipleRequest(() => apiServiceNoAuth.put(`/api/ankreuzkompetenz`), 100, 10);
-		const response = await apiServiceNoAuth.put(`/api/ankreuzkompetenz`);
+		await multipleRequest(() => apiServiceNoAuth.testEmptyPut(`/api/ankreuzkompetenz`), 100, 10);
+		const response = await apiServiceNoAuth.testEmptyPut(`/api/ankreuzkompetenz`);
 		expect(response.status).toBe(ErrorCodeTimingProtected);
 	});
 
 	test(`bemerkungen > ${ErrorCodeTimingProtected}`, async () => {
-		await multipleRequest(() => apiServiceNoAuth.put(`/api/bemerkungen`), 100, 10);
-		const response = await apiServiceNoAuth.put(`/api/bemerkungen`);
+		await multipleRequest(() => apiServiceNoAuth.testEmptyPut(`/api/bemerkungen`), 100, 10);
+		const response = await apiServiceNoAuth.testEmptyPut(`/api/bemerkungen`);
 		expect(response.status).toBe(ErrorCodeTimingProtected);
 	});
 
 	test(`clientconfig > ${ErrorCodeTimingProtected}`, async () => {
-		await multipleRequest(() => apiServiceNoAuth.put(`/api/clientconfig`), 100, 10);
-		const response = await apiServiceNoAuth.put(`/api/clientconfig`);
+		await multipleRequest(() => apiServiceNoAuth.testEmptyPut(`/api/clientconfig`), 100, 10);
+		const response = await apiServiceNoAuth.testEmptyPut(`/api/clientconfig`);
 		expect(response.status).toBe(ErrorCodeTimingProtected);
 	});
 
 	test(`daten > ${ErrorCodeTimingProtected}`, async () => {
-		await multipleRequest(() => apiServiceNoAuth.put(`/api/daten`), 100, 10);
-		const response = await apiServiceNoAuth.put(`/api/daten`);
+		await multipleRequest(() => apiServiceNoAuth.testEmptyPut(`/api/daten`), 100, 10);
+		const response = await apiServiceNoAuth.testEmptyPut(`/api/daten`);
 		expect(response.status).toBe(ErrorCodeTimingProtected);
 	});
 
 	test(`leistung > ${ErrorCodeTimingProtected}`, async () => {
-		await multipleRequest(() => apiServiceNoAuth.put(`/api/leistung`), 100, 10);
-		const response = await apiServiceNoAuth.put(`/api/leistung`);
+		await multipleRequest(() => apiServiceNoAuth.testEmptyPut(`/api/leistung`), 100, 10);
+		const response = await apiServiceNoAuth.testEmptyPut(`/api/leistung`);
 		expect(response.status).toBe(ErrorCodeTimingProtected);
 	});
 
 	test(`lernabschnitt > ${ErrorCodeTimingProtected}`, async () => {
-		await multipleRequest(() => apiServiceNoAuth.put(`/api/lernabschnitt`), 100, 10);
-		const response = await apiServiceNoAuth.put(`/api/lernabschnitt`);
+		await multipleRequest(() => apiServiceNoAuth.testEmptyPut(`/api/lernabschnitt`), 100, 10);
+		const response = await apiServiceNoAuth.testEmptyPut(`/api/lernabschnitt`);
 		expect(response.status).toBe(ErrorCodeTimingProtected);
 	});
 
 	test(`mode > ${ErrorCodeTimingProtected}`, async () => {
-		await multipleRequest(() => apiServiceNoAuth.put(`/api/mode`), 100, 10);
-		const response = await apiServiceNoAuth.put(`/api/mode`);
+		await multipleRequest(() => apiServiceNoAuth.testEmptyPut(`/api/mode`), 100, 10);
+		const response = await apiServiceNoAuth.testEmptyPut(`/api/mode`);
 		expect(response.status).toBe(ErrorCodeTimingProtected);
 	});
 
 	test(`teilleistung > ${ErrorCodeTimingProtected}`, async () => {
-		await multipleRequest(() => apiServiceNoAuth.put(`/api/teilleistung`), 100, 10);
-		const response = await apiServiceNoAuth.put(`/api/teilleistung`);
+		await multipleRequest(() => apiServiceNoAuth.testEmptyPut(`/api/teilleistung`), 100, 10);
+		const response = await apiServiceNoAuth.testEmptyPut(`/api/teilleistung`);
 		expect(response.status).toBe(ErrorCodeTimingProtected);
 	});
 });

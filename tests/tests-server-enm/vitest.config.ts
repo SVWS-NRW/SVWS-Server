@@ -5,6 +5,7 @@ export default defineConfig({
 	test: {
 		globals: true,
 		testTimeout: 20000,
+		setupFiles: ['./setup-tls.ts', './setup-coretypes.ts'],
 		outputFile: "./build/test-results/api-test-results.xml",
 		reporters: ["default", "junit"],
 		silent: false,
@@ -12,7 +13,8 @@ export default defineConfig({
 	resolve: {
 		alias: {
 			"~": resolve(__dirname, "src"),
-			"@core": resolve(__dirname, '../../svws-webclient/core/src/index.ts'),
+			"@core": resolve(__dirname, '../../svws-webclient/core/src'),
+			"@enm": resolve(__dirname, '../../svws-webclient/enmserver/src'),
 		},
 	},
 });
