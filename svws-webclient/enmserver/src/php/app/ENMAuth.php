@@ -27,6 +27,9 @@ class ENMAuth {
     // Das Token bei einer Bearer-Authentifizierung
     protected $authToken = null;
 
+    // Ein neues Kennwort, sofern es in einer Passwort-Session bei der Authentifizierung enthalten war
+    protected $newPassword = null;
+
 
     /**
      * Erstellt ein neues Authentifizierungsobjekt mit den Informationen aus dem HTTP-Request
@@ -154,6 +157,28 @@ class ENMAuth {
 
 
     /**
+     * Erstellt ein aktuelles JWT für eine Session für einen Lehrer, welche zum Ersetzen eines Kennwortes bestimmt ist.
+     *
+     * @param string $sessionKey   der Session-Key für das Signieren des JWT
+     * @param string $idLehrer     die ID des Lehrers
+     * @param string $expTime      die Zeit in Sekunden für die Gültigkeit des JWT
+     *
+     * @return string | false   das JSON mit dem JWT
+     */
+    public static function createJsonWebTokenWithPassword(string $sessionKey, int $idLehrer, int $expTime): string | false {
+        // Erstelle das Json-Web-Token mit einer Gültigkeit von 8 Stunden
+        $payload = [
+            'sub' => $idLehrer,
+            'pwd' => Password::generate(),
+            'exp' => time() + $expTime,
+            'iat' => time()
+        ];
+        $jwt = Http::createJsonWebToken($payload, $sessionKey);
+        return json_encode([ 'token' => $jwt, 'id' => $idLehrer ]);
+    }
+
+
+    /**
      * Prüft das Json-Web-Token und gibt bei erfolgreicher Authentifizierung das Lehrer-Objekt des
      * angemeldeten Benutzers zurück.
      *
@@ -193,7 +218,6 @@ class ENMAuth {
             Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server", error="invalid_token", error_description="The access token has expired"');
         }
 
-        // Schneller ID-Lookup statt teurem Passwort-Hash-Vergleich
         $lehrer = $this->db->getENMLehrerByID((int) $payload->sub);
         if (!$lehrer) {
             Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server"');
@@ -205,6 +229,49 @@ class ENMAuth {
 
         return $lehrer;
     }
+
+
+    /**
+     * Prüft das spezielle Json-Web-Token für die erzwungene Passwortänderung und gibt
+     * bei erfolgreicher Authentifizierung das Lehrer-Objekt zurück.
+     *
+     * @return object   das Lehrer-Objekt des angemeldeten Benutzers
+     */
+    public function pruefeLehrerPasswordChangeSession(): object {
+        if (strcasecmp(($this->authMethod ?? ''), "Bearer") !== 0) {
+            Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server"');
+        }
+
+        $payload = Http::verifyJsonWebToken($this->authToken, $this->config->getClientChangePasswordSessionKey());
+        if (!$payload || ($payload->exp < time())) {
+            Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server", error="invalid_token", error_description="The password change token has expired"');
+        }
+
+        $lehrer = $this->db->getENMLehrerByID((int) $payload->sub);
+        if (!$lehrer) {
+            Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server"');
+        }
+
+        // Prüfe, ob das Initial-Kennwort nicht schon angepasst wurde (verhindere Replay-Attacken mit dem Token)
+        if (!$lehrer->istInitialPassword) {
+            Http::exit403Forbidden();
+        }
+
+        $this->newPassword = $payload->pwd;
+        return $lehrer;
+    }
+
+
+    /**
+     * Gibt das neue Kennwort zurück, falls eine erfolgreiche Authentifizierung bei einer Passwort-Änderungs-Session
+     * vorliegt.
+     *
+     * @return string | null das neue Kennwort
+     */
+    public function getNewPassword(): string | null {
+        return $this->newPassword;
+    }
+
 
     /**
      * Bestimmt den TOTP-Token für das angegebene Zeitfenster
@@ -329,6 +396,20 @@ class ENMAuth {
         if (!$hasMethod) {
             Http::exit403Forbidden();
         }
+    }
+
+
+    /**
+     * Ändert das Kennwort eines Benutzers.
+     *
+     * @param object $lehrer        das authentifizierte Lehrer-Objekt
+     * @param string | null $newPassword   das neue Kennwort
+     */
+    public function updatePassword(object $lehrer, string | null $newPassword): void {
+        if (($newPassword === null) || !Config::validatePassword($newPassword)) {
+            Http::exit400BadRequest("Das neue Passwort entspricht nicht den Richtlinien.");
+        }
+        $this->db->setLehrerKennwort($lehrer->id, $newPassword);
     }
 
 }
