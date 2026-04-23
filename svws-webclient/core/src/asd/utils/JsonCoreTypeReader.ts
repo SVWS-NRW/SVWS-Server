@@ -135,6 +135,8 @@ import { Herkunftsschulnummer } from "../types/schule/Herkunftsschulnummer";
 import { ReformpaedagogikKatalogEintrag } from "../data/schule/ReformpaedagogikKatalogEintrag";
 import { Reformpaedagogik } from "../types/schule/Reformpaedagogik";
 import { CoreTypeData } from "../data/CoreTypeData";
+import { DQRNiveauKatalogEintrag } from "../data/schule/DQRNiveauKatalogEintrag";
+import { DQRNiveau } from "../types/schule/DQRNiveau";
 
 /**
  * Die Klasse dient dem Einlesen der Daten für Core-Types und der Fehlerart-Kontexte von Validatoren.
@@ -215,6 +217,7 @@ export class JsonCoreTypeReader {
 		{ key: "BerufskollegBerufsebene3", entry: BerufskollegBerufsebeneKatalogEintrag, type: BerufskollegBerufsebene3, simple: true },
 		{ key: "Herkunftsschulnummer", entry: HerkunftsschulnummerKatalogEintrag, type: Herkunftsschulnummer, simple: true },
 		{ key: "Reformpaedagogik", entry: ReformpaedagogikKatalogEintrag, type: Reformpaedagogik, simple: true },
+		{ key: "DQRNiveau", entry: DQRNiveauKatalogEintrag, type: DQRNiveau, simple: true },
 	];
 
 	/**

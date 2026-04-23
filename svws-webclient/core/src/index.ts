@@ -192,6 +192,7 @@ export { BerufskollegAnlageKatalogEintrag } from './asd/data/schule/Berufskolleg
 export { BerufskollegBerufsebeneKatalogEintrag } from './asd/data/schule/BerufskollegBerufsebeneKatalogEintrag';
 export { BildungsgangTypKatalogEintrag } from './asd/data/schule/BildungsgangTypKatalogEintrag';
 export { BildungsstufeKatalogEintrag } from './asd/data/schule/BildungsstufeKatalogEintrag';
+export { DQRNiveauKatalogEintrag } from './asd/data/schule/DQRNiveauKatalogEintrag';
 export { EinwilligungsschluesselKatalogEintrag } from './asd/data/schule/EinwilligungsschluesselKatalogEintrag';
 export { FloskelgruppenartKatalogEintrag } from './asd/data/schule/FloskelgruppenartKatalogEintrag';
 export { FoerderschwerpunktKatalogEintrag } from './asd/data/schule/FoerderschwerpunktKatalogEintrag';
@@ -283,6 +284,7 @@ export { BerufskollegBerufsebene3 } from './asd/types/schule/BerufskollegBerufse
 export { BerufskollegBildungsgangTyp } from './asd/types/schule/BerufskollegBildungsgangTyp';
 export { BerufskollegOrganisationsformen } from './asd/types/schule/BerufskollegOrganisationsformen';
 export { Bildungsstufe } from './asd/types/schule/Bildungsstufe';
+export { DQRNiveau } from './asd/types/schule/DQRNiveau';
 export { Einwilligungsschluessel } from './asd/types/schule/Einwilligungsschluessel';
 export { Floskelgruppenart } from './asd/types/schule/Floskelgruppenart';
 export { Foerderschwerpunkt } from './asd/types/schule/Foerderschwerpunkt';
@@ -904,7 +906,6 @@ export { LogData } from './core/logger/LogData';
 export { LogLevel } from './core/logger/LogLevel';
 export { Logger } from './core/logger/Logger';
 export { StundenplanblockungAlgorithmus } from './core/stundenplanblockung/StundenplanblockungAlgorithmus';
-export { DQR } from './core/types/DQR';
 export { KursFortschreibungsart } from './core/types/KursFortschreibungsart';
 export { PersonalTyp } from './core/types/PersonalTyp';
 export { ServerMode } from './core/types/ServerMode';
