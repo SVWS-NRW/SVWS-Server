@@ -48,6 +48,12 @@ export interface AuthState {
 	/** Gibt den Benutzernamen zurück, der aktuell authentifiziert ist oder sich aktuell im Login-Vorgang befindet **/
 	get username(): string;
 
+	/** Gibt an, ob gerade eine Passwort-Änderung stattfindet. */
+	get pendingPasswordChange(): boolean;
+
+	/** Gibt das generierte Passwort zurück, wenn gerade eine Passwort-Änderung stattfindet. */
+	get generatedPassword(): string | null;
+
 	/** Gibt an, ob der Passwort-Login erfolgreich war, aber der zweite Faktor noch geprüft werden muss */
 	get pending2FA(): boolean;
 
@@ -72,6 +78,13 @@ export interface AuthState {
 	 * @returns eine Promise bezüglich des Login-Erfolgs
 	 */
 	login(username: string, password: string): Promise<boolean>;
+
+	/**
+	 * Bestätigt die Änderung des Kennwortes, sofern ein neue Kennwort vom Server bereitsteht.
+	 *
+	 * @returns eine Promise bezüglich des Erfolges beim Bestätigen des kennwortes
+	 */
+	confirmPasswordChange(): Promise<boolean>;
 
 	/**
 	 * Prüft den übergebenen TOTP-Token, um den Login-Vorgang bei einer Zwei-Faktor-Authentifizierung abzuschließen.

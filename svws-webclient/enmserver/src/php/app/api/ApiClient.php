@@ -72,6 +72,13 @@ class ApiClient {
                     'call' => fn($config, $db, $auth, $lehrer) => $this->putClientConfig($db, $lehrer)
                 ]
             ],
+            'change_password' => [
+                'POST' => [
+                    'init' => fn() => $this->createAppContext(),
+                    'auth' => fn($config, $db, $auth) => $auth->pruefeLehrerPasswordChangeSession(),
+                    'call' => fn($config, $db, $auth, $lehrer) => $this->changePassword($config, $auth, $lehrer)
+                ]
+            ],
             'create_pwt' => [
                 'POST' => [
                     'init' => fn() => $this->createAppContext(),
@@ -211,12 +218,13 @@ class ApiClient {
 
 
     /**
-     * Authentifiziert den Lehrer und gibt ein JSON-Web-Token (JWT) zurück.
+     * Authentifiziert den Lehrer mit dem ersten Faktor. Ist ein zweiter Faktor aktiviert,
+     * so wird dies zurückgemeldet (202). Ansonsten wird das JSON-Web-Token (JWT) zurückgegeben (200)
      *
      * @param Config $config   die WeNoM-Server-Konfiguration
      * @param object $lehrer   das authentifizierte Lehrer-Objekt
      */
-    private function login(Config $config, object $lehrer): void {
+    private function continueLogin(Config $config, object $lehrer): void {
         // Fall 0: 2FA deaktiviert (für den Lehrer)
         if ($lehrer->art2FA === 0) {
             $jwt = ENMAuth::createJsonWebToken($config->getClientSessionKey(), $lehrer->id, $config->getLifetimeAccessToken());
@@ -241,6 +249,44 @@ class ApiClient {
             Http::exit202AcceptedJson($jwt);
         }
         Http::exit400BadRequest("Eine 2FA mit der ID ".$lehrer->art2FA." wird vom Server noch nicht unterstützt.");
+    }
+
+
+    /**
+     * Authentifiziert den Lehrer mit dem ersten Faktor.
+     * Wird dabei ein Initial-Kennwort verwendet, so wird eine Änderung des Kennwortes gefordert.
+     * Ansonsten wird entweder ein JSON-Web-Token (JWT) zurückgegeben oder ein zweiter Faktor angefordert.
+     *
+     * @param Config $config   die WeNoM-Server-Konfiguration
+     * @param object $lehrer   das authentifizierte Lehrer-Objekt
+     */
+    private function login(Config $config, object $lehrer): void {
+        if ($lehrer->istInitialPassword) {
+            $jwt = ENMAuth::createJsonWebTokenWithPassword($config->getClientChangePasswordSessionKey(), $lehrer->id, $config->getLifetimeChangePasswordToken());
+            $token = json_decode($jwt);
+            Http::exit202AcceptedJson(json_encode([
+                'token' => $token,
+                'changePassword' => true
+            ]));
+        }
+        $this->continueLogin($config, $lehrer);
+    }
+
+
+    /**
+     * Ändert das Initial-Kennwort eines Benutzers und setzt danach den Login fort.
+     *
+     * @param Config $config   die Konfiguration
+     * @param ENMAuth $auth    die Klasse für Authentifizierung
+     * @param object $lehrer   das authentifizierte Lehrer-Objekt
+     */
+    private function changePassword(Config $config, ENMAuth $auth, object $lehrer): void {
+        $newPassword = $auth->getNewPassword();
+        if ($newPassword === null) {
+            Http::exit400BadRequest("Kein neues Passwort im Token gefunden.");
+        }
+        $auth->updatePassword($lehrer, $newPassword);
+        $this->continueLogin($config, $lehrer);
     }
 
 

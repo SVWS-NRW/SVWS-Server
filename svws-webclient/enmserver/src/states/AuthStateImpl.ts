@@ -33,6 +33,12 @@ class AuthStateImpl implements AuthState {
 	// Gibt an, ob der Client beim Server authentifiziert ist
 	private readonly _authenticated = ref<boolean>(false);
 
+	// Gibt an, ob gerade eine Passwort-Änderung stattfindet
+	private readonly _pendingPasswordChange = ref<boolean>(false);
+
+	// Gibt das generierte Passwort zurück, wenn gerade eine Passwort-Änderung stattfindet
+	private readonly _generatedPassword = ref<string | null>(null);
+
 	// Gibt an, ob die Authentifizierung mit einem ersten Faktor erfolgreich war, aber noch auf einen zweiten Faktor gewartet wird.
 	private readonly _pending2FA = ref<boolean>(false);
 
@@ -125,6 +131,16 @@ class AuthStateImpl implements AuthState {
 	/** Gibt den Status zurück, ob aktuell ein Benutzer authentifiziert ist */
 	public get authenticated(): boolean {
 		return this._authenticated.value;
+	}
+
+	/** Gibt an, ob gerade eine Passwort-Änderung stattfindet. */
+	public get pendingPasswordChange(): boolean {
+		return this._pendingPasswordChange.value;
+	}
+
+	/** Gibt das generierte Passwort zurück, wenn gerade eine Passwort-Änderung stattfindet. */
+	public get generatedPassword(): string | null {
+		return this._generatedPassword.value;
 	}
 
 	/** Gibt an, ob der Passwort-Login erfolgreich war, aber der zweite Faktor noch geprüft werden muss */
@@ -263,6 +279,41 @@ class AuthStateImpl implements AuthState {
 			const result = await this._api.login();
 			this._token.value = result.token;
 
+			// Wenn die Änderung eines Initial-Kennwortes gefordert wird ...
+			if (result.isChangePassword) {
+				this._pendingPasswordChange.value = true;
+				const payload = this.getTokenPayload() as JWTPayload & { pwd: string };
+				this._generatedPassword.value = payload.pwd;
+				this._authenticated.value = false;
+				return true;
+			}
+
+			// Wenn 2FA aktiv ist, dann muss dieser noch geprüft werden ...
+			if (result.isTotp) {
+				this._pending2FA.value = true;
+				this._totpSetup.value = result.setup;
+				this._authenticated.value = false;
+				return true;
+			}
+
+			// ... und wenn nicht, dann kann der Login abgeschlossen werden
+			await this.finalizeLogin();
+			return true;
+		} catch {
+			await this.logout();
+			return false;
+		}
+	}
+
+
+	public async confirmPasswordChange(): Promise<boolean> {
+		try {
+			const result = await this.api.changePassword();
+			this._token.value = result.token;
+
+			this._pendingPasswordChange.value = false;
+			this._generatedPassword.value = null;
+
 			// Wenn 2FA aktiv ist, dann muss dieser noch geprüft werden ...
 			if (result.isTotp) {
 				this._pending2FA.value = true;
@@ -318,6 +369,7 @@ class AuthStateImpl implements AuthState {
 	public async logout(): Promise<void> {
 		this._authenticated.value = false;
 		this._pending2FA.value = false;
+		this._pendingPasswordChange.value = false;
 		this._token.value = null;
 		this._totpSetup.value = null;
 		this._username = "";

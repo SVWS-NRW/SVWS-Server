@@ -780,4 +780,25 @@ class Database {
         $this->conn->commitTransaction();
     }
 
+
+    public function setLehrerKennwort(int $idLehrer, string $newPassword): void {
+        $lehrer = $this->getENMLehrerByID($idLehrer);
+        if ($lehrer === null) {
+            Http::exit404NotFound("Die Lehrer-Daten wurden nicht gefunden.");
+        }
+        $hash = password_hash($newPassword, PASSWORD_DEFAULT);
+        $lehrer->passwordHash = str_replace('$2y$', '$2a$', $hash);
+        $lehrer->istInitialPassword = false;
+        $lehrer->tsPasswordHash = date('Y-m-d H:i:s.v');
+        $updatedLehrer = json_encode($lehrer, JSON_UNESCAPED_SLASHES);
+        $this->conn->beginTransaction();
+        $stmt = $this->conn->prepareStatement("UPDATE Lehrer SET passwordHash=:passwordHash, tsPasswordHash=:tsPasswordHash, daten=:daten WHERE id=:id");
+        $this->conn->bindStatementValue($stmt, ":id", $idLehrer, PDO::PARAM_INT);
+        $this->conn->bindStatementValue($stmt, ":passwordHash", $lehrer->passwordHash, PDO::PARAM_STR);
+        $this->conn->bindStatementValue($stmt, ":tsPasswordHash", $lehrer->tsPasswordHash, PDO::PARAM_STR);
+        $this->conn->bindStatementValue($stmt, ":daten", $updatedLehrer, PDO::PARAM_STR);
+        $this->conn->executeStatement($stmt);
+        $this->conn->commitTransaction();
+    }
+
 }

@@ -37,11 +37,14 @@ class Config {
     // Die Lebensdauer für ein Access-Token einer Client-Verbindung (Default: 8 h)
     protected int $lifetimeAccessToken = 8 * 3600;
 
-    // Die Lebensdauer für ein Access-Token einer Client-Verbindung (Default: 2 min)
+    // Die Lebensdauer für ein Access-Token einer Client-Verbindung für die TOTP-Abfrage (Default: 2 min)
     protected int $lifetimeTotpAccessToken = 120;
 
-    // Die Lebensdauer für ein Access-Token einer Client-Verbindung (Default: 10 min)
+    // Die Lebensdauer für ein Access-Token einer Client-Verbindung für die TOTP-Abfrage bei einer Erstanmeldung (Default: 10 min)
     protected int $lifetimeTotpAccessTokenInitial = 600;
+
+    // Die Lebensdauer für ein Access-Token einer Client-Verbindung für das Ändern des Initialkennwortes (Default: 10 min)
+    protected int $lifetimeChangePasswordToken = 600;
 
     // Die Größe des Zeitfensters bei der TOTP-Token-Prüfung in Sekunden (Default: 30 sec)
     protected int $totpTimeslice = 30;
@@ -181,6 +184,15 @@ class Config {
 
 
     /**
+     * Erzeugt einen neuen, vom Client-Secret abgeleiteten, Schlüssel für das Ändern des Kennwortes
+     * verwendet werden kann. Dies ist eine zusätzliche Schutz-Maßnahme für das Client-Secret.
+     */
+    public function getClientChangePasswordSessionKey(): string {
+        return hash_hmac('sha256', 'WeNoM-Password-Session', $this->getClientSecret());
+    }
+
+
+    /**
      * Erzeugt einen neuen, vom Client-Secret abgeleiteten, Schlüssel für Client-Login-TOTP-Sessions.
      * Dies ist eine zusätzliche Schutz-Maßnahme für das Client-Secret.
      */
@@ -218,6 +230,17 @@ class Config {
     public function getLifetimeTotpAccessTokenInitial(): int {
         return $this->lifetimeTotpAccessTokenInitial;
     }
+
+
+    /**
+     * Gibt die Lebendsdauer für ein Access-Token für das Ändern eines Initial-Kennwortes zurück.
+     *
+     * @return int die Lebensdauer
+     */
+    public function getLifetimeChangePasswordToken	(): int {
+        return $this->lifetimeChangePasswordToken;
+    }
+
 
     /**
      * Gibt die Größe des Zeitfensters bei der TOTP-Token-Prüfung in Sekunden zurück.

@@ -13,6 +13,7 @@ export interface ApiLoginData {
 	idLehrer: number;
 	token: string;
 	isTotp: boolean;
+	isChangePassword: boolean;
 	setup: {
 		secret: string, issuer: string, account: string
 	} | null;
@@ -40,17 +41,38 @@ export class ApiEnmServer extends BaseApi {
 	 */
 	public async login(): Promise<ApiLoginData> {
 		const response = await super.postTextBased("/api/login", 'application/json', 'application/json', null);
-
-		const isTotp = (response.status === 202);
-
 		const data = JSON.parse(response.data);
+
+		const isChangePassword = ((response.status === 202) && (data.changePassword !== undefined) && (data.changePassword === true));
+		const isTotp = (response.status === 202) && (!isChangePassword);
+
 		const setup = data.setup ?? null;
-		const jwt = (setup === null) ? data : data.token;
+		const jwt = (setup === null) && (!isChangePassword) ? data : data.token;
 		this.setBearerToken(jwt.token);
 
-		return { idLehrer: jwt.id, token: jwt.token, isTotp, setup };
+		return { idLehrer: jwt.id, token: jwt.token, isTotp, isChangePassword, setup };
 	}
 
+
+	/**
+	 * Führt das Setzen eines Kennwortes durch. Dafür muss die API in einer entsprechenden Session sein, welche
+	 * das neue Kennwort des Servers beinhaltet.
+	 *
+	 * @returns ein Objekt mit der ID des angemeldeten Lehrers und ggf. weiteren Informationen für die Erstanmeldung eines Benutzers
+	 */
+	public async changePassword(): Promise<ApiLoginData> {
+		const response = await super.postTextBased("/api/change_password", 'application/json', 'application/json', null);
+
+		const isTotp = (response.status === 202);
+		const data = JSON.parse(response.data);
+
+		const setup = data.setup ?? null;
+		const jwt = (setup === null) ? data : data.token;
+
+		this.setBearerToken(jwt.token);
+
+		return { idLehrer: jwt.id, token: jwt.token, isTotp, isChangePassword: false, setup };
+	}
 
 	/**
 	 * Schließt den Login-Vorgang durch Überprüfung des TOTP-Codes ab.

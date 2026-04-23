@@ -5,6 +5,18 @@ import { assert, expect } from "vitest";
 
 export class ApiEnmServerTest extends ApiEnmServer {
 
+	get testUser() {
+		return this.username;
+	}
+
+	get testAuthorization(): string {
+		return this.headers.Authorization;
+	}
+
+	set testAuthorization(auth: string) {
+		this.headers.Authorization = auth;
+	}
+
 	async testLogin(): Promise<ApiLoginData> {
 		return await this.login();
 	}
