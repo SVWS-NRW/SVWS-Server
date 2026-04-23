@@ -124,10 +124,12 @@
 					<span>{{ manager().merkmaleById.get(s.idMerkmal ?? -1)?.bezeichnung ?? " - " }}</span>
 				</template>
 				<template #cell(datumVon)="{ rowData: s }">
-					<span>{{ formatDate(s.datumVon) }}</span>
+					<span>{{ formatToLocalDate(s.datumVon) }}</span>
+					<span>{{ formatToLocalDate(s.datumVon) }}</span>
 				</template>
 				<template #cell(datumBis)="{ rowData: s }">
-					<span>{{ formatDate(s.datumBis) }}</span>
+					<span>{{ formatToLocalDate(s.datumBis) }}</span>
+					<span>{{ formatToLocalDate(s.datumBis) }}</span>
 				</template>
 				<template #actions v-if="hatKompetenzUpdate">
 					<svws-ui-button @click="deleteAuswahlMerkmale" type="trash" :disabled="(auswahlMerkmale.length === 0) || !hatKompetenzUpdate" />
@@ -169,10 +171,12 @@
 					<span>{{ manager().schulenById.get(rowData.idSchule ?? -1)?.name ?? '-' }}</span>
 				</template>
 				<template #cell(datumVon)="{ rowData }">
-					<span>{{ formatDate(rowData.datumVon) }}</span>
+					<span>{{ formatToLocalDate(rowData.datumVon) }}</span>
+					<span>{{ formatToLocalDate(rowData.datumVon) }}</span>
 				</template>
 				<template #cell(datumBis)="{ rowData }">
-					<span>{{ formatDate(rowData.datumBis) }}</span>
+					<span>{{ formatToLocalDate(rowData.datumBis) }}</span>
+					<span>{{ formatToLocalDate(rowData.datumBis) }}</span>
 				</template>
 				<template #cell(jahrgangVon)="{ rowData }">
 					<span>{{ rowData.jahrgangVon }}</span>
@@ -245,7 +249,8 @@
 	} from "@core";
 	import type { SchuelerSchulbesuchProps } from './SSchuelerSchulbesuchProps';
 	import { CoreTypeSelectManager, type DataTableColumn, SelectManager } from "@ui";
-	import { coreTypeDataFilter, filterSchulenEintraege, formatDate } from "~/utils/helfer";
+	import { coreTypeDataFilter, filterSchulenEintraege } from "~/utils/helfer";
+	import { formatToLocalDate } from "~/utils/date";
 	import { ref, computed, watch } from "vue";
 
 	const props = defineProps<SchuelerSchulbesuchProps>();

@@ -1,0 +1,210 @@
+<template>
+	<slot :open-modal />
+
+	<div class="absolute">
+		<svws-ui-modal v-model:show="show" size="medium">
+			<template #modalTitle>
+				<span>
+					Eintrag zur Wiedervorlage {{ mode === "create" ? 'anlegen' : 'bearbeiten' }}
+				</span>
+			</template>
+
+			<template #modalContent>
+				<svws-ui-content-card>
+					<h3 class="text-left flex items-center">
+						<template v-if="type === 'general'">
+							<span>Allgemein</span>
+						</template>
+						<template v-else-if="personName">
+							<span :class="`icon ${icon} mr-2`" />
+							<span>{{ personName }}</span>
+						</template>
+					</h3>
+
+					<svws-ui-input-wrapper :grid="2">
+						<svws-ui-textarea-input placeholder="Bemerkung"
+							v-model="modelProxy.proxy.bemerkung"
+							:validation="() => modelProxy.getFehler('bemerkung')" />
+
+						<div class="flex flex-col">
+							<svws-ui-text-input type="date"
+								placeholder="Wiedervorlage am"
+								v-model="modelProxy.proxy.tsWiedervorlage"
+								:min-date="dateToday()"
+								:validation="() => modelProxy.getFehler('tsWiedervorlage')"
+								removable />
+
+							<svws-ui-select label="Sichtbar für folgenden Benutzergruppen"
+								v-model="modelProxy.proxy.idBenutzergruppe"
+								:empty-text="() => 'keine'"
+								:disabled="benutzerGruppen.isEmpty()"
+								:items="benutzerGruppen"
+								:item-text="item => item.bezeichnung"
+								removable />
+							<svws-ui-checkbox v-model="modelProxy.proxy.automatischErledigt">Eintrag automatisch löschen</svws-ui-checkbox>
+						</div>
+					</svws-ui-input-wrapper>
+				</svws-ui-content-card>
+			</template>
+
+			<template #modalActions>
+				<svws-ui-button type="secondary" @click="closeModal()">Abbrechen</svws-ui-button>
+				<svws-ui-button type="primary" @click="submit()" :disabled="hatFehler">
+					{{ mode === "create" ? 'Anlegen' : 'Speichern' }}
+				</svws-ui-button>
+			</template>
+		</svws-ui-modal>
+	</div>
+</template>
+
+<script setup lang="ts">
+	import { computed, ref, toRaw, watch } from 'vue';
+	import type { BenutzergruppeListeEintrag, List, WiedervorlageEintrag } from "@core";
+	import { ArrayList } from "@core";
+	import { api } from "~/router/Api";
+	import { dateToday, dateTodayPlus, formatDateToDateTime } from "~/utils/date";
+	import type { Wiedervorlage } from "~/components/wiedervorlage/Wiedervorlage";
+	import { WiedervorlageModelProxy } from "~/components/wiedervorlage/WiedervorlageModelProxy";
+
+	const props = withDefaults(defineProps<{
+		personId: number,
+		personName?: string,
+		mode?: "create" | "edit",
+		type?: "general" | "schueler" | "lehrkraft" | "erzieher",
+	}>(), {
+		mode: "create",
+		type: "general",
+		personName: undefined,
+	});
+
+	const show = ref<boolean>(false);
+
+	const defaultValue: Wiedervorlage = {
+		idBenutzergruppe: null,
+		typPerson: null,
+		idPerson: null,
+		bemerkung: "",
+		tsWiedervorlage: null,
+		automatischErledigt: true,
+	};
+
+	const modelProxy = new WiedervorlageModelProxy(() => defaultValue);
+
+	const benutzerGruppen = ref<List<BenutzergruppeListeEintrag>>(new ArrayList());
+
+	const hatFehler = computed(() => {
+		return modelProxy.getAlleFehler().size() > 0;
+	});
+
+	const icon = computed(() => {
+		if (props.type === "schueler") {
+			return "i-ri-group-line";
+		}
+		if (props.type === "lehrkraft") {
+			return "i-ri-briefcase-line";
+		}
+		return null;
+	});
+
+	function getTypPerson() {
+		if (props.type === "erzieher") {
+			return 3;
+		}
+		if (props.type === "schueler") {
+			return 2;
+		}
+		if (props.type === "lehrkraft") {
+			return 1;
+		}
+		return null;
+	}
+
+	function setInitialData() {
+		modelProxy.proxy.idPerson = props.personId;
+		modelProxy.proxy.typPerson = getTypPerson();
+
+		if (props.mode === "create") {
+			modelProxy.proxy.tsWiedervorlage = dateTodayPlus({ days: 7 });
+		}
+	}
+
+	function resetModal() {
+		modelProxy.reset();
+		setInitialData();
+	}
+
+	async function openModal() {
+		// reset data to inital data
+		resetModal();
+
+		// open Modal
+		show.value = true;
+
+		// fetch benutzergruppen
+		// (Note: Can be moved to e.g. app cache in further implementation steps)
+		await fetchBenutzergruppen();
+	}
+
+	function closeModal() {
+		show.value = false;
+	}
+
+	async function submit() {
+		const data = toRaw(modelProxy.proxy);
+
+		const submitData: Partial<WiedervorlageEintrag> = {
+			...data,
+			tsWiedervorlage: data.tsWiedervorlage === null ? null : (formatDateToDateTime(data.tsWiedervorlage) ?? null),
+			idBenutzergruppe: data.idBenutzergruppe?.id ?? null,
+		};
+
+		if (props.mode === "create") {
+			await create(submitData);
+		} else {
+			await update(submitData);
+		}
+	}
+
+	async function create(data: Partial<WiedervorlageEintrag>) {
+		return api.server.addWiedervorlageEintrag(
+			data,
+			api.schema).then(() => {
+				// add confirmation notification?
+				closeModal();
+			});
+	}
+
+	async function update(data: Partial<WiedervorlageEintrag>) {
+		// add update in further implementation steps
+	}
+
+	async function fetchBenutzergruppen() {
+		if (!benutzerGruppen.value.isEmpty()) {
+			return;
+		}
+
+		if (api.benutzerIstAdmin) {
+			benutzerGruppen.value = await api.server.getBenutzergruppenliste(api.schema).then(data => {
+				return data;
+			});
+		} else {
+			benutzerGruppen.value = await api.server.getBenutzerDatenEigene(api.schema).then(data => {
+				return data.gruppen;
+			});
+		}
+	}
+
+	watch(
+		() => [props.personId],
+		() => {
+			modelProxy.proxy.idPerson = props.personId;
+		}
+	);
+
+	watch(
+		() => [props.type],
+		() => {
+			modelProxy.proxy.typPerson = getTypPerson();
+		}
+	);
+</script>

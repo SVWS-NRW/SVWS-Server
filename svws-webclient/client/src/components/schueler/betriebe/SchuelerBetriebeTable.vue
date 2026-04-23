@@ -22,10 +22,10 @@
 				{{ manager().beschaeftigungsartenById.get(value)?.bezeichnung }}
 			</template>
 			<template #cell(vertragsbeginn)="{ value }">
-				{{ formatDate(value) }}
+				{{ formatToLocalDate(value, "—") }}
 			</template>
 			<template #cell(vertragsende)="{ value }">
-				{{ formatDate(value) }}
+				{{ formatToLocalDate(value, "—") }}
 			</template>
 			<template #cell(idBetreuungslehrer)="{ value }">
 				{{ lehrerName(value) }}
@@ -68,6 +68,7 @@
 <script setup lang="ts">
 
 	import { ref, computed } from 'vue';
+	import { formatToLocalDate } from "~/utils/date";
 	import type { DataTableColumn, SchuelerBetriebeManager } from "@ui";
 	import type { List, SchuelerBetrieb } from "@core";
 	import { Schulform, ArrayList } from "@core";
@@ -143,18 +144,6 @@
 	function ansprechpartnerName(id: number) {
 		const ansprechpartner = props.manager().ansprechpartnerById.get(id);
 		return (ansprechpartner === undefined) ? '' : `${ansprechpartner.name}, ${ansprechpartner.rufname}`;
-	}
-
-	// --- Formatiert ein Datum in das Format 01.01.2020 ---
-	function formatDate(dateString: string | null): string {
-		if (dateString === null) {
-			return "—";
-		}
-		const date = new Date(dateString);
-		if (Number.isNaN(date.getTime())) {
-			return "—";
-		}
-		return date.toLocaleDateString("de-DE");
 	}
 
 </script>

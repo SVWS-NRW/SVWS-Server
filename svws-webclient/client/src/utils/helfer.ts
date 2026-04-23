@@ -189,11 +189,3 @@ export function coreTypeDataFilter(items: CoreTypeData[], search: string): CoreT
 	return items.filter(item => item.schluessel.toLowerCase().includes(searchLower) || item.text.toLowerCase().includes(searchLower)
 			|| item.kuerzel.toLowerCase().includes(searchLower));
 }
-
-/** Formatiert ein Datum in das Format 01.01.2020 */
-export function formatDate(dateString: string | null): string {
-	if (dateString === null) {
-		return "";
-	}
-	return new Date(dateString).toLocaleDateString("de-DE");
-}

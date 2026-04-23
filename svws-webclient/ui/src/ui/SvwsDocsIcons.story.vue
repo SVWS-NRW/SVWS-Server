@@ -198,6 +198,11 @@
 						<td>Ausgeklappt Pfeil</td>
 						<td><code>{{ '<' }}span class="icon i-ri-arrow-up-s-line"{{ ' />' }}</code></td>
 					</tr>
+					<tr>
+						<th><span class="icon i-ri-alarm-line" /></th>
+						<td>Wiedervorlage</td>
+						<td><code>{{ '<' }}span class="icon i-ri-alarm-line"{{ ' />' }}</code></td>
+					</tr>
 				</tbody>
 			</table>
 		</Variant>

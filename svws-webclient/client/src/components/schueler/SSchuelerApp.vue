@@ -3,7 +3,9 @@
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<template v-if="((activeViewType === ViewType.DEFAULT) || (activeViewType === ViewType.NEU))">
-					<svws-ui-avatar :src="foto ? `data:image/png;base64, ${foto}` : undefined" :alt="foto !== null ? `Foto von ${vorname} ${nachname}` : ''" upload capture @image:base64="foto => patch({ foto })" />
+					<svws-ui-avatar :src="foto ? `data:image/png;base64, ${foto}` : undefined"
+						:alt="foto !== null ? `Foto von ${vorname} ${nachname}` : ''" upload capture
+						@image:base64="foto => patch({ foto })" />
 					<div v-if="manager().hasDaten()" class="svws-headline-wrapper">
 						<h2 class="svws-headline">
 							<span>{{ vorname }} {{ nachname }}</span>
@@ -72,7 +74,9 @@
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
-	const primarschulformen = new Set([Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.S, Schulform.KS, Schulform.V]);
+	const primarschulformen = new Set(
+		[Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.S, Schulform.KS, Schulform.V]
+	);
 	const primarstufe = computed(() => primarschulformen.has(props.schulform));
 	const epJahre = computed<string | null>(() => {
 		if (!primarstufe.value) {

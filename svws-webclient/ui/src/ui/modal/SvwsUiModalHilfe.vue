@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<svws-ui-button type="secondary" @click="show = true">
-			<span class="icon i-ri-question-line" />
+			<span class="icon i-ri-question-line" aria-hidden="true" />
 			<span>Hilfe</span>
 		</svws-ui-button>
 		<svws-ui-modal v-model:show="show" size="help" class="hidden">

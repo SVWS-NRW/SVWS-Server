@@ -1049,6 +1049,13 @@
 	mask-position: center;
 }
 
+@utility i-ri-alarm-line {
+	mask-image: url(@icons/System/alarm-line.svg);
+	-webkit-mask-image: url(@icons/System/alarm-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
 @utility i-ri-verified-badge-line {
 	mask-image: url(@icons/Business/verified-badge-line.svg);
 	-webkit-mask-image: url(@icons/Business/verified-badge-line.svg);

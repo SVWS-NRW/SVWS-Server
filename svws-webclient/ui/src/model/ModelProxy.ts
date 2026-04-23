@@ -100,10 +100,9 @@ export class ModelProxy<T extends object> {
 
 		// Erzeuge zunächst initial einen Proxy und setze diesen in einer ShallowRef - Reaktivität von getProxy()
 		this._proxy = shallowRef(this.createNewProxy());
+
 		watch(this._dataForProxy, () => {
-			this._proxy.value = this.createNewProxy();
-			this._pending.value = <Partial<T>>{};
-			this.validate();
+			this.reset();
 		});
 	}
 
@@ -209,7 +208,6 @@ export class ModelProxy<T extends object> {
 		}
 	}
 
-
 	/**
 	 * Gibt den aktuellen Pending-State zurück.
 	 *
@@ -286,6 +284,15 @@ export class ModelProxy<T extends object> {
 	 */
 	public toggleValidation(prop: keyof T): void {
 		this._validation.toggle(prop);
+	}
+
+	/**
+	 * Setzt das Proxy-Objekt zurück auf die Default Daten aus der Config
+	 */
+	public reset(): void {
+		this._proxy.value = this.createNewProxy();
+		this._pending.value = <Partial<T>>{};
+		this.validate();
 	}
 
 }
