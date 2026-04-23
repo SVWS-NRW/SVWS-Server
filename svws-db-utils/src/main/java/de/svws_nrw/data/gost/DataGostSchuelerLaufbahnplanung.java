@@ -579,9 +579,13 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 			fb.fachID = fbel.fachID;
 			fb.abiturFach = fbel.abiturFach;
 			for (int i = 0; i < GostHalbjahr.maxHalbjahre; i++) {
-				final GostKursart kursart = (fbel.belegungen[i] == null) ? null : GostKursart.fromKuerzel(fbel.belegungen[i].kursartKuerzel);
+				final String strKursart = (fbel.belegungen[i] == null) ? null : fbel.belegungen[i].kursartKuerzel;
+				final GostKursart kursart = (strKursart == null) ? null : GostKursart.fromKuerzel(strKursart);
 				fb.kursart[i] = (kursart == null) ? null : kursart.kuerzel;
 				fb.schriftlich[i] = (kursart != null) && fbel.belegungen[i].schriftlich;
+				if ("AT".equals(strKursart)) {
+					fb.kursart[i] = "AT";
+				}
 			}
 			schuelerDaten.fachbelegungen.add(fb);
 		}
