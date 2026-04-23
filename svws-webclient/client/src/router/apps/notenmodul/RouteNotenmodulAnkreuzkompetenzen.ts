@@ -71,6 +71,7 @@ export class RouteNotenmodulAnkreuzkompetenzen extends RouteAuswahlNode<EnmLerng
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams, to: RouteNode<any, any>, to_params: RouteParams): Promise<void> {
 		await this.data.entferneDaten();
+		routeNotenmodul.data.setAuswahlKlassen([]);
 		if (!(to.name.startsWith("notenmodul"))) {
 			await routeNotenmodul.data.entferneDaten();
 		}

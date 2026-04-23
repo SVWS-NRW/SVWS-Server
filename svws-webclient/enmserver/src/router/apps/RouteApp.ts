@@ -50,6 +50,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			if (to.name === this.name) {
 				return this.defaultChild!.getRoute();
 			}
+			this.data.setAuswahlKlassen([]);
 			// Prüfe, ob die View aktualisiert werden muss
 			let cur: RouteNode<any, any> = to;
 			while (cur.parent !== this) {

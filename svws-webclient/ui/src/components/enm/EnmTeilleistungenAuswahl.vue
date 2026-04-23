@@ -33,7 +33,11 @@
 		{ key: "klassen", label: "Klasse(n)" },
 	];
 
-	onBeforeMount(() => props.setAuswahlEinzel(getFirst()));
+	onBeforeMount(() => {
+		if ((props.auswahlEinzel() === null) && (props.auswahlMehrfach().length === 0)) {
+			props.setAuswahlEinzel(getFirst());
+		}
+	});
 
 	const rowsFiltered = computed<Iterable<EnmLerngruppenAuswahlEintrag>>(() => {
 		const searchValueLowerCase = search.value.toLocaleLowerCase();
