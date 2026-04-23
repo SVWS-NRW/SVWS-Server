@@ -1,15 +1,17 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { OrteStatistikGesamt } from '../../../asd/data/statistik/OrteStatistikGesamt';
 import { KlassenStatistikGesamt } from '../../../asd/data/statistik/KlassenStatistikGesamt';
 import { SchuelerStatistikGesamt } from '../../../asd/data/statistik/SchuelerStatistikGesamt';
-import { FoerderschwerpunktStatistikGesamt } from '../../../asd/data/statistik/FoerderschwerpunktStatistikGesamt';
+import { FachStatistikGesamt } from '../../../asd/data/statistik/FachStatistikGesamt';
 import { ReligionStatistikGesamt } from '../../../asd/data/statistik/ReligionStatistikGesamt';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { LehrerStatistikGesamt } from '../../../asd/data/statistik/LehrerStatistikGesamt';
 import { SchuleStatistikGesamt } from '../../../asd/data/statistik/SchuleStatistikGesamt';
-import type { List } from '../../../java/util/List';
-import { Class } from '../../../java/lang/Class';
 import { JahrgaengeStatistikGesamt } from '../../../asd/data/statistik/JahrgaengeStatistikGesamt';
+import { OrteStatistikGesamt } from '../../../asd/data/statistik/OrteStatistikGesamt';
+import { FoerderschwerpunktStatistikGesamt } from '../../../asd/data/statistik/FoerderschwerpunktStatistikGesamt';
+import { LehrerStatistikGesamt } from '../../../asd/data/statistik/LehrerStatistikGesamt';
+import type { List } from '../../../java/util/List';
+import { KursStatistikGesamt } from '../../../asd/data/statistik/KursStatistikGesamt';
+import { Class } from '../../../java/lang/Class';
 
 export class StatistikGesamt extends JavaObject {
 
@@ -52,6 +54,16 @@ export class StatistikGesamt extends JavaObject {
 	 * Der Katalog der Religionen.
 	 */
 	public religionen: List<ReligionStatistikGesamt> = new ArrayList<ReligionStatistikGesamt>();
+
+	/**
+	 * Der Katalog der Fächer.
+	 */
+	public faecher: List<FachStatistikGesamt> = new ArrayList<FachStatistikGesamt>();
+
+	/**
+	 * Der Katalog der Kurse.
+	 */
+	public kurse: List<KursStatistikGesamt> = new ArrayList<KursStatistikGesamt>();
 
 
 	/**
@@ -110,6 +122,16 @@ export class StatistikGesamt extends JavaObject {
 		if (obj.religionen !== undefined) {
 			for (const elem of obj.religionen) {
 				result.religionen.add(ReligionStatistikGesamt.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
+		if (obj.faecher !== undefined) {
+			for (const elem of obj.faecher) {
+				result.faecher.add(FachStatistikGesamt.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
+		if (obj.kurse !== undefined) {
+			for (const elem of obj.kurse) {
+				result.kurse.add(KursStatistikGesamt.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -171,6 +193,22 @@ export class StatistikGesamt extends JavaObject {
 			const elem = obj.religionen.get(i);
 			result += ReligionStatistikGesamt.transpilerToJSON(elem);
 			if (i < obj.religionen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"faecher" : [ ';
+		for (let i = 0; i < obj.faecher.size(); i++) {
+			const elem = obj.faecher.get(i);
+			result += FachStatistikGesamt.transpilerToJSON(elem);
+			if (i < obj.faecher.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"kurse" : [ ';
+		for (let i = 0; i < obj.kurse.size(); i++) {
+			const elem = obj.kurse.get(i);
+			result += KursStatistikGesamt.transpilerToJSON(elem);
+			if (i < obj.kurse.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
@@ -250,6 +288,26 @@ export class StatistikGesamt extends JavaObject {
 				const elem = obj.religionen.get(i);
 				result += ReligionStatistikGesamt.transpilerToJSON(elem);
 				if (i < obj.religionen.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (obj.faecher !== undefined) {
+			result += '"faecher" : [ ';
+			for (let i = 0; i < obj.faecher.size(); i++) {
+				const elem = obj.faecher.get(i);
+				result += FachStatistikGesamt.transpilerToJSON(elem);
+				if (i < obj.faecher.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (obj.kurse !== undefined) {
+			result += '"kurse" : [ ';
+			for (let i = 0; i < obj.kurse.size(); i++) {
+				const elem = obj.kurse.get(i);
+				result += KursStatistikGesamt.transpilerToJSON(elem);
+				if (i < obj.kurse.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';

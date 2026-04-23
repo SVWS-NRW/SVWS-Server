@@ -131,6 +131,8 @@ public class SchuelerStatistikGesamt {
 	// TODO Nur BK, SB: boolean Wert, ob es sich um einen Ausbildungsbetrieb handelt.
 	// TODO Nur BK, SB: boolean Wert, ob es sich um einen Träger handelt.
 
+	// TODO Feld ExterneSchulNr einbauen (KoOp-Schüler nur bei Status extern)
+
 	// **** Informationen zu der besuchten Grundschule
 
 	/** Die ID der Einschulungsart in die Grundschule. */

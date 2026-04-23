@@ -1,4 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { ArrayList } from '../../../java/util/ArrayList';
+import { SchuelerLeistungsdatenStatistikGesamt } from '../../../asd/data/statistik/SchuelerLeistungsdatenStatistikGesamt';
+import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 
 export class SchuelerLernabschnittStatistikGesamt extends JavaObject {
@@ -68,6 +71,11 @@ export class SchuelerLernabschnittStatistikGesamt extends JavaObject {
 	 */
 	public versetzungsvermerk: string | null = null;
 
+	/**
+	 * Die Leistungsdaten des Schülers in diesem Lernabschnitt.
+	 */
+	public leistungsdaten: List<SchuelerLeistungsdatenStatistikGesamt> = new ArrayList<SchuelerLeistungsdatenStatistikGesamt>();
+
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -108,6 +116,11 @@ export class SchuelerLernabschnittStatistikGesamt extends JavaObject {
 		result.idFoerderschwerpunkt1 = (obj.idFoerderschwerpunkt1 === undefined) ? null : obj.idFoerderschwerpunkt1 === null ? null : obj.idFoerderschwerpunkt1;
 		result.idFoerderschwerpunkt2 = (obj.idFoerderschwerpunkt2 === undefined) ? null : obj.idFoerderschwerpunkt2 === null ? null : obj.idFoerderschwerpunkt2;
 		result.versetzungsvermerk = (obj.versetzungsvermerk === undefined) ? null : obj.versetzungsvermerk === null ? null : obj.versetzungsvermerk;
+		if (obj.leistungsdaten !== undefined) {
+			for (const elem of obj.leistungsdaten) {
+				result.leistungsdaten.add(SchuelerLeistungsdatenStatistikGesamt.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
 		return result;
 	}
 
@@ -126,6 +139,14 @@ export class SchuelerLernabschnittStatistikGesamt extends JavaObject {
 		result += '"idFoerderschwerpunkt1" : ' + ((obj.idFoerderschwerpunkt1 === null) ? 'null' : obj.idFoerderschwerpunkt1.toString()) + ',';
 		result += '"idFoerderschwerpunkt2" : ' + ((obj.idFoerderschwerpunkt2 === null) ? 'null' : obj.idFoerderschwerpunkt2.toString()) + ',';
 		result += '"versetzungsvermerk" : ' + ((obj.versetzungsvermerk === null) ? 'null' : JSON.stringify(obj.versetzungsvermerk)) + ',';
+		result += '"leistungsdaten" : [ ';
+		for (let i = 0; i < obj.leistungsdaten.size(); i++) {
+			const elem = obj.leistungsdaten.get(i);
+			result += SchuelerLeistungsdatenStatistikGesamt.transpilerToJSON(elem);
+			if (i < obj.leistungsdaten.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -171,6 +192,16 @@ export class SchuelerLernabschnittStatistikGesamt extends JavaObject {
 		}
 		if (obj.versetzungsvermerk !== undefined) {
 			result += '"versetzungsvermerk" : ' + ((obj.versetzungsvermerk === null) ? 'null' : JSON.stringify(obj.versetzungsvermerk)) + ',';
+		}
+		if (obj.leistungsdaten !== undefined) {
+			result += '"leistungsdaten" : [ ';
+			for (let i = 0; i < obj.leistungsdaten.size(); i++) {
+				const elem = obj.leistungsdaten.get(i);
+				result += SchuelerLeistungsdatenStatistikGesamt.transpilerToJSON(elem);
+				if (i < obj.leistungsdaten.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
