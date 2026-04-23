@@ -3,7 +3,9 @@ package de.svws_nrw.module.reporting.types.jahrgang;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
+import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
+import de.svws_nrw.module.reporting.sortierung.ReportingSortierungService;
 import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingSchueler;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
@@ -135,8 +137,15 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 	@Override
 	public List<ReportingSchueler> schueler() {
 		if (super.schueler().isEmpty()) {
+			// Prüfe, ob Service und Logger abrufbar sind. Andernfalls würden Standardsortierungen verwendet werden.
+			final ReportingSortierungService sortierungService = (this.reportingRepository != null) ? this.reportingRepository.sortierungService() : null;
+			final Logger logger = (this.reportingRepository != null) ? this.reportingRepository.logger() : null;
+
 			final Optional<Comparator<ReportingSchueler>> optionalComparator =
-					ComparatorFactory.buildOptionalComparator(this.reportingRepository, ReportingSchueler.class.getSimpleName(),
+					ComparatorFactory.buildOptionalComparator(
+							sortierungService,
+							logger,
+							ReportingSchueler.class.getSimpleName(),
 							SortierungRegistryReportingSchueler.sortierungRegistry());
 			super.schueler = optionalComparator.map(
 					reportingSchuelerComparator -> klassen().stream().flatMap(k -> k.schueler().stream()).sorted(reportingSchuelerComparator).toList())

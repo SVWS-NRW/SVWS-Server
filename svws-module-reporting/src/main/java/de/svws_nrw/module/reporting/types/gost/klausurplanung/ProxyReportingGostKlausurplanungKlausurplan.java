@@ -13,8 +13,10 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
+import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.module.reporting.filterung.ReportingFilterDataType;
+import de.svws_nrw.module.reporting.sortierung.ReportingSortierungService;
 import de.svws_nrw.module.reporting.types.lerngruppen.ProxyReportingKurs;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
@@ -116,8 +118,16 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 		initSchuelerklausuren();
 
 		// 7. Sortiere alle Schülerklausuren, sowohl in der Gesamtliste als auch bei den Kursklausuren.
+
+		// Prüfe, ob Service und Logger abrufbar sind. Andernfalls würden Standardsortierungen verwendet werden.
+		final ReportingSortierungService sortierungService = (this.reportingRepository != null) ? this.reportingRepository.sortierungService() : null;
+		final Logger logger = (this.reportingRepository != null) ? this.reportingRepository.logger() : null;
+
 		final Optional<Comparator<ReportingGostKlausurplanungSchuelerklausur>> optionalComparator =
-				ComparatorFactory.buildOptionalComparator(this.reportingRepository, ReportingGostKlausurplanungSchuelerklausur.class.getSimpleName(),
+				ComparatorFactory.buildOptionalComparator(
+						sortierungService,
+						logger,
+						ReportingGostKlausurplanungSchuelerklausur.class.getSimpleName(),
 						SortierungRegistryReportingGostKlausurplanungSchuelerklausur.sortierungRegistry());
 
 		if (optionalComparator.isPresent()) {

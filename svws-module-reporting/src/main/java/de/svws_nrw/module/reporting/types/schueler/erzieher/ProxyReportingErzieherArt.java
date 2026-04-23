@@ -1,8 +1,6 @@
 package de.svws_nrw.module.reporting.types.schueler.erzieher;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.erzieher.Erzieherart;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 
 
 /**
@@ -10,23 +8,17 @@ import de.svws_nrw.module.reporting.repositories.ReportingRepository;
  */
 public class ProxyReportingErzieherArt extends ReportingErzieherArt {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
-	@JsonIgnore
-	private final ReportingRepository reportingRepository;
-
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingErzieherArt}.
 	 *
-	 * @param reportingRepository Repository für das Reporting.
 	 * @param erzieherart Stammdaten-Objekt aus der DB.
 	 */
-	public ProxyReportingErzieherArt(final ReportingRepository reportingRepository, final Erzieherart erzieherart) {
+	public ProxyReportingErzieherArt(final Erzieherart erzieherart) {
 		super(ersetzeNullBlankTrim(erzieherart.bezeichnung),
 				erzieherart.id,
 				erzieherart.sortierung
 		);
-		this.reportingRepository = reportingRepository;
 	}
 
 
@@ -49,15 +41,5 @@ public class ProxyReportingErzieherArt extends ReportingErzieherArt {
 	@Override
 	public boolean equals(final Object obj) {
 		return super.equals(obj);
-	}
-
-
-	/**
-	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
-	 *
-	 * @return Repository für das Reporting
-	 */
-	public ReportingRepository reportingRepository() {
-		return reportingRepository;
 	}
 }

@@ -53,14 +53,33 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 				new HashMap<>());
 
 		this.reportingRepository = reportingRepository;
+	}
 
-		super.folgenderAbschnitt =
-				(schuljahresabschnitt.idFolgeAbschnitt != null) ? this.reportingRepository.schuljahresabschnitt(schuljahresabschnitt.idFolgeAbschnitt) : null;
-		super.vorherigerAbschnitt =
-				(schuljahresabschnitt.idVorigerAbschnitt != null) ? this.reportingRepository.schuljahresabschnitt(schuljahresabschnitt.idVorigerAbschnitt)
-						: null;
 
-		// Die weiteren Daten werden später durch lazy-loading ergänzt
+	/**
+	 * Gibt den folgenden Schuljahresabschnitt zurück (lazy-loading).
+	 *
+	 * @return Der folgende Schuljahresabschnitt oder null.
+	 */
+	@Override
+	public ReportingSchuljahresabschnitt folgenderAbschnitt() {
+		if ((super.folgenderAbschnitt == null) && (super.idFolgenderAbschnitt != null)) {
+			super.folgenderAbschnitt = this.reportingRepository.schuljahresabschnitt(super.idFolgenderAbschnitt);
+		}
+		return super.folgenderAbschnitt;
+	}
+
+	/**
+	 * Gibt den vorherigen Schuljahresabschnitt zurück (lazy-loading).
+	 *
+	 * @return Der vorherige Schuljahresabschnitt oder null.
+	 */
+	@Override
+	public ReportingSchuljahresabschnitt vorherigerAbschnitt() {
+		if ((super.vorherigerAbschnitt == null) && (super.idVorherigerAbschnitt != null)) {
+			super.vorherigerAbschnitt = this.reportingRepository.schuljahresabschnitt(super.idVorherigerAbschnitt);
+		}
+		return super.vorherigerAbschnitt;
 	}
 
 

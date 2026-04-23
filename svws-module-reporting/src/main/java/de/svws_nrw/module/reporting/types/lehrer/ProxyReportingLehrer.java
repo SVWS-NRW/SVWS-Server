@@ -80,7 +80,7 @@ public class ProxyReportingLehrer extends ReportingLehrer {
 		this.factoryUnterrichte = new ProxyReportingLehrerFactoryUnterricht(this.reportingRepository, this);
 
 		lehrerStammdaten.leitungsfunktionen
-				.forEach(leitungsfunktion -> super.leitungsfunktionen.add(new ProxyReportingLehrerLeitungsfunktion(reportingRepository, leitungsfunktion)));
+				.forEach(leitungsfunktion -> super.leitungsfunktionen.add(new ProxyReportingLehrerLeitungsfunktion(leitungsfunktion)));
 
 		// Füge Stammdaten des Lehrers für weitere Verwendung in der Map im Repository hinzu.
 		reportingRepository.mapLehrerStammdaten().putIfAbsent(super.id(), lehrerStammdaten);
