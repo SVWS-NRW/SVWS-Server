@@ -206,6 +206,9 @@ export class RouteData {
 				if (fach.kuerzel === "PX") {
 					hjBelegung.wochenstunden = fach.wochenstundenQualifikationsphase;
 				}
+				if (kursart === "AT") {
+					hjBelegung.notenkuerzel = "AT";
+				}
 				belegung.belegungen[hj.id] = hjBelegung;
 				belegung.letzteKursart = kursart;
 			}
@@ -379,6 +382,10 @@ export class RouteData {
 			} else if (w === "LK") {
 				hjBelegung.kursartKuerzel = GostKursart.LK.kuerzel;
 				hjBelegung.schriftlich = true;
+			} else if (w === "AT") {
+				hjBelegung.kursartKuerzel = w;
+				hjBelegung.schriftlich = false;
+				hjBelegung.notenkuerzel = w;
 			}
 			hjBelegung.biliSprache = fach.biliSprache;
 			belegung.belegungen[hj.id] = hjBelegung;
