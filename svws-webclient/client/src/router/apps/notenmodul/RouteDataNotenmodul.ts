@@ -95,8 +95,6 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 		this.setPatchedState({
 			daten: null,
 			manager: null,
-			auswahlLerngruppen: [],
-			auswahlLerngruppe: null,
 			auswahlKlassen: [],
 			auswahlKlasse: null,
 		});

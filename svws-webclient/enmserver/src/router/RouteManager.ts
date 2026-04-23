@@ -33,7 +33,7 @@ export class RouteManager {
 	protected _routeLocation: RouteLocationNormalized | undefined = undefined;
 
 	/** Der aktuelle Fehlerstatus der Route */
-	private _errorstate = reactive<RouteStateError>({
+	private readonly _errorstate = reactive<RouteStateError>({
 		code: undefined,
 		error: undefined,
 	});
@@ -364,10 +364,8 @@ export class RouteManager {
 						}
 					}
 				}
-			} else {
-				if (authState.mode !== ServerMode.STABLE) {
-					console.log("Failed Routing '" + from.fullPath + "' --> '" + to.fullPath + "'"); //  + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node?.name + " " + JSON.stringify(to.params)
-				}
+			} else if (authState.mode !== ServerMode.STABLE) {
+				console.log("Failed Routing '" + from.fullPath + "' --> '" + to.fullPath + "'"); //  + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node?.name + " " + JSON.stringify(to.params)
 			}
 		} catch (e) {
 			console.log("Unexpected routing error:", e);
