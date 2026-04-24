@@ -43,7 +43,8 @@ export class RouteNotenmodulZugangsdaten extends RouteNode<RouteDataNotenmodulZu
 			open: this.data.open,
 			manager: () => routeNotenmodul.data.manager,
 			mapEnmInitialKennwoerter: () => this.data.mapEnmInitialKennwoerter,
-			updatePassword: this.data.updatePassword,
+			resetPassword: this.data.resetPassword,
+			generateInitialPassword: this.data.generateInitialPassword,
 			resetTotp: this.data.resetTotp,
 			set2fa: this.data.set2fa,
 		};

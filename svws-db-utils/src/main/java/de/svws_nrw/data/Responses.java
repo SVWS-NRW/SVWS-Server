@@ -1,5 +1,7 @@
 package de.svws_nrw.data;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -8,6 +10,9 @@ import jakarta.ws.rs.core.Response.Status;
  * Utility-Class für das Erzeugen von Responses
  */
 public final class Responses {
+
+	/** Der Jackson2-Objekt-Mapper für das Konvertieren */
+	public static final ObjectMapper mapper = new ObjectMapper();
 
 	private Responses() {
 		// keine Implementierung erlaubt

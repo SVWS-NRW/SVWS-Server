@@ -37,7 +37,7 @@ public final class Revision18Updates extends SchemaRevisionUpdateSQL {
 			final long idLehrer = ((Number) datensatz[0]).longValue();
 			final String altKennwort = String.valueOf(datensatz[1]);
 			final boolean isBCryptHash = altKennwort.startsWith("$2a$10$");
-			final String initial = isBCryptHash ? Passwords.generateRandomPasswordWithoutSpecialChars(10) : altKennwort;
+			final String initial = isBCryptHash ? new String(Passwords.generateRandomPasswordWithoutSpecialChars()) : altKennwort;
 			final String hash = isBCryptHash ? altKennwort : BCrypt.hashpw(altKennwort, BCrypt.gensalt());
 			conn.transactionNativeUpdate("INSERT INTO LehrerNotenmodulCredentials(Lehrer_ID, Initialkennwort, PasswordHash) VALUES (%d,'%s','%s')"
 					.formatted(idLehrer, initial, hash));

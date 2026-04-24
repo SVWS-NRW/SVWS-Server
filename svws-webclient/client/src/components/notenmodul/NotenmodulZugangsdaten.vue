@@ -16,7 +16,7 @@
 		</svws-ui-header>
 		<div class="page ">
 			<div class="h-full overflow-auto flex gap-16">
-				<ui-table-grid name="Schüler" :manager="() => gridManager">
+				<ui-table-grid name="Lehrer" :manager="() => gridManager">
 					<template #header>
 						<template v-for="col of gridManager.cols.values()" :key="col.name">
 							<th v-if="col.kuerzel === 'Auswahl'" class="flex items-center justify-center">
@@ -69,12 +69,14 @@
 						</td>
 						<td class="text-left flex justify-center">
 							<div v-if="mapEnmInitialKennwoerter().get(lehrer.id) !== null" @click="copyToClipboard(lehrer, 'kennwort')" class="cursor-pointer flex gap-2 items-center">
-								{{ mapEnmInitialKennwoerter().get(lehrer.id) }}
+								<span class="font-mono tracking-wider select-all">
+									{{ mapEnmInitialKennwoerter().get(lehrer.id) }}
+								</span>
 								<span v-if="lehrer.istInitialPassword" class="icon-sm i-ri-file-copy-line" :class="{ 'ping-normal': ((ping?.id === lehrer.id) && (pingType === 'kennwort')) }" />
 								<svws-ui-tooltip v-else>
 									<span class="icon-sm i-ri-error-warning-line icon-ui-caution" />
 									<template #content>
-										Es wurde ein individuelles Kennwort gesetzt. Dies wird hier nicht angezeigt.
+										Eine erste Anmeldung vom Benutzer am Wenom hat stattgefunden und es wurde ein neues Passwort generiert. Dies wird hier nicht angezeigt.
 									</template>
 								</svws-ui-tooltip>
 							</div>
@@ -103,18 +105,17 @@
 						</div>
 						<div class="content-card--content">
 							<div class="">
-								Das Passwort wird auf das Initialpasswort zurückgesetzt
+								Das Passwort wird auf das Initialpasswort zurückgesetzt. Bei der nächsten Anmeldung des Benutzers wird ein individuelles Passwort generiert.
 								<div class="flex items-center">
-									<svws-ui-button type="primary" @click="update(null)">Passwort zurücksetzen</svws-ui-button>
+									<svws-ui-button type="primary" @click="doResetPassword()">Passwort zurücksetzen</svws-ui-button>
 									<span v-if="pingType === 'resetPassword'" class="icon-xl i-ri-check-line icon-ui-success" />
 								</div>
 							</div>
 							<div class="mt-4">
-								Ein individuelles, vom Initialkennwort abweichendes Passwort, setzen
-								<svws-ui-text-input placeholder="Passwort festlegen" :min-len="6" v-model="passwort" />
+								Ersetze das Initialpasswort mit einem Neuen.
 								<div class="flex items-center">
-									<svws-ui-button :disabled="passwort.length < 6" type="primary" @click="update(passwort)">Passwort&nbsp;setzen</svws-ui-button>
-									<span v-if="pingType === 'updatePassword'" class="icon-xl i-ri-check-line icon-ui-success" />
+									<svws-ui-button type="primary" @click="doGenerateInitialPassword()">Neues Initialpasswort</svws-ui-button>
+									<span v-if="pingType === 'generateInitialPassword'" class="icon-xl i-ri-check-line icon-ui-success" />
 								</div>
 							</div>
 						</div>
@@ -148,7 +149,7 @@
 							<div>
 								Die Passwörter werden auf das Initialpasswort zurückgesetzt
 								<div class="flex items-center">
-									<svws-ui-button type="primary" @click="update(null)">Passwörter zurücksetzen</svws-ui-button>
+									<svws-ui-button type="primary" @click="doResetPassword()">Passwörter zurücksetzen</svws-ui-button>
 									<span v-if="pingType === 'resetPassword'" class="icon-xl i-ri-check-line icon-ui-success" />
 								</div>
 							</div>
@@ -191,7 +192,6 @@
 
 	const props = defineProps<NotenmodulZugangsdatenProps>();
 	const search = ref<string>("");
-	const passwort = ref<string>("");
 	const auswahl = ref<ENMv2Lehrer[]>([]);
 
 	function toggleSelection(row: ENMv2Lehrer) {
@@ -313,9 +313,9 @@
 	});
 
 	const ping = ref<ENMv2Lehrer | null>(null);
-	const pingType = ref<'mail' | 'kennwort' | 'resetPassword' | 'updatePassword' | 'resetTotp' | null>(null);
+	const pingType = ref<'mail' | 'kennwort' | 'resetPassword' | 'generateInitialPassword' | 'resetTotp' | null>(null);
 
-	function pingTimer(lehrer: ENMv2Lehrer, type: 'mail' | 'kennwort' | 'resetPassword' | 'updatePassword' | 'resetTotp') {
+	function pingTimer(lehrer: ENMv2Lehrer, type: 'mail' | 'kennwort' | 'resetPassword' | 'generateInitialPassword' | 'resetTotp') {
 		ping.value = lehrer;
 		pingType.value = type;
 		setTimeout(() => {
@@ -338,10 +338,10 @@
 		}
 	}
 
-	async function update(value: string | null) {
-		if ((auswahl.value.length > 0) && (value === null)) {
+	async function doResetPassword() {
+		if (auswahl.value.length > 0) {
 			for (const lehrer of auswahl.value) {
-				await props.updatePassword(null, lehrer.id);
+				await props.resetPassword(lehrer.id);
 			}
 			pingTimer(new ENMv2Lehrer(), 'resetPassword');
 			return;
@@ -349,11 +349,18 @@
 		if (selected.value === null) {
 			return;
 		}
-		await props.updatePassword(value, selected.value.id);
-		const type = value === null ? "resetPassword" : "updatePassword";
-		pingTimer(selected.value, type);
-		selected.value.istInitialPassword = (value === null);
-		passwort.value = "";
+		await props.resetPassword(selected.value.id);
+		pingTimer(selected.value, "resetPassword");
+		selected.value.istInitialPassword = true;
+	}
+
+	async function doGenerateInitialPassword() {
+		if (selected.value === null) {
+			return;
+		}
+		const newInitialPassword = await props.generateInitialPassword(selected.value.id);
+		props.mapEnmInitialKennwoerter().put(selected.value.id, newInitialPassword);
+		pingTimer(selected.value, "generateInitialPassword");
 	}
 
 	async function reset() {

@@ -37,16 +37,14 @@
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card v-if="benutzertyp === BenutzerTyp.LEHRER" title="Webnotenmanager-Passwort ändern">
-			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input class="contentFocusField" placeholder="Erste Eingabe neues Passwort" v-model.trim="erstesPasswortWenom" :type="passwortAnzeigenWenom ? 'text' : 'password'" :min-len="6" />
-				<svws-ui-text-input placeholder="Zweite Eingabe neues Passwort" v-model.trim="zweitesPasswortWenom" type="password" :min-len="6" />
-				<svws-ui-checkbox v-model="passwortAnzeigenWenom">Passwort anzeigen</svws-ui-checkbox>
-			</svws-ui-input-wrapper>
-			<div class="flex gap-4">
-				<svws-ui-button :type="okWenom === null ? 'secondary': ok === true ? 'primary' : 'danger'" @click="passwordWenom" :disabled="(erstesPasswortWenom !== zweitesPasswortWenom) || (erstesPasswortWenom.length < 6)"> Passwort ändern </svws-ui-button>
-				<svws-ui-button :type="okResetWenom === null ? 'secondary': ok === true ? 'primary' : 'danger'" @click="passwordResetWenom"> Passwort zurücksetzen </svws-ui-button>
+			<div v-if="wenomInitialkennwort().length > 0" class="min-w-fit max-w-fit bg-ui-5 p-4 border-2 border-dashed border-ui-100 rounded-lg text-2xl font-mono text-center tracking-widest mb-4 select-all flex">
+				<!-- {{ wenomInitialkennwort().match(/.{1,4}/g)?.join(' - ') }} -->
+				{{ wenomInitialkennwort() }}
 			</div>
-			{{ okWenom === true ? "Das Passwort wurde geändert" : okWenom === false ? 'Es gab einen Fehler bei der Passwortänderung' : '' }}
+			<div class="flex gap-4">
+				<svws-ui-button type="primary" @click="getWenomInitialkennwort"> Initialpasswort anzeigen </svws-ui-button>
+				<svws-ui-button :type="okResetWenom === null ? 'secondary': ok === true ? 'primary' : 'danger'" @click="passwordResetWenom"> Auf Initialpasswort zurücksetzen </svws-ui-button>
+			</div>
 			{{ okResetWenom === true ? "Das Passwort wurde zurückgesetzt" : okResetWenom === false ? 'Es gab einen Fehler beim Zurücksetzen des Passworts' : '' }}
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Ansicht">
@@ -79,9 +77,6 @@
 
 	const ok = ref<boolean | null>(null);
 
-	const erstesPasswortWenom = ref('');
-	const zweitesPasswortWenom = ref('');
-	const passwortAnzeigenWenom = ref(false);
 	const okWenom = ref<boolean | null>(null);
 	const okResetWenom = ref<boolean | null>(null);
 
@@ -98,13 +93,6 @@
 		ok.value = await props.patchPasswort(erstesPasswort.value, zweitesPasswort.value);
 		erstesPasswort.value = "";
 		zweitesPasswort.value = "";
-	}
-
-	async function passwordWenom() {
-		okResetWenom.value = null;
-		okWenom.value = await props.patchPasswortWenom(erstesPasswortWenom.value, zweitesPasswortWenom.value);
-		erstesPasswortWenom.value = "";
-		zweitesPasswortWenom.value = "";
 	}
 
 	async function passwordResetWenom() {

@@ -14,6 +14,14 @@ public interface NotenmodulCredentialsController {
 	 */
 	Response getInitialkennwoerter();
 
+	/**
+	 * Gibt für den angegebenen Lehrer das Initialkennwort zurück.
+	 *
+	 * @param idLehrer   die ID des Lehrers
+	 *
+	 * @return das Initialkennwort
+	 */
+	Response getInitialkennwort(long idLehrer);
 
 	/**
 	 * Erstellt für alle Lehrer initiale Credentials, sofern ein Lehrer nicht bereits welche besitzt.
@@ -35,15 +43,13 @@ public interface NotenmodulCredentialsController {
 
 
 	/**
-	 * Setzt das Kennwort des Lehrers auf das übergebene Kennwort. Das Initialkennwort bleibt dabei
-	 * bestehen oder wird durch ein generiertes gesetzt, wenn der Lehrer vorher kein Initialkennwort hatte.
+	 * Generiert für einen Lehrers ein neues Initialkennwort.
 	 *
 	 * @param idLehrer   die ID des Lehrers
-	 * @param password   das neu zu setzende Kennwort
 	 *
 	 * @return die HTTP-Response
 	 */
-	Response setPassword(long idLehrer, String password);
+	Response generateInitialPassword(long idLehrer);
 
 
 	/**
