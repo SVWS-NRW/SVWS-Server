@@ -1,4 +1,4 @@
-package de.svws_nrw.data.util;
+package de.svws_nrw.validation.constraints;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -6,6 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import de.svws_nrw.validation.validator.NoWhitespacesValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

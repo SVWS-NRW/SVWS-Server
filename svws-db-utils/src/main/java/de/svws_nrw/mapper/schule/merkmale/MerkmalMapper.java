@@ -1,7 +1,9 @@
-package de.svws_nrw.data.schule.merkmale;
+package de.svws_nrw.mapper.schule.merkmale;
 
 import de.svws_nrw.core.data.schule.Merkmal;
 import de.svws_nrw.db.dto.current.schild.schule.DTOMerkmale;
+import de.svws_nrw.service.schule.merkmale.MerkmalCreateRequest;
+import de.svws_nrw.service.schule.merkmale.MerkmalPatchRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

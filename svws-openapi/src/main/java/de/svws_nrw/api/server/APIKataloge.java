@@ -32,9 +32,9 @@ import de.svws_nrw.data.kataloge.teilleistungsarten.TeilleistungsartPatchRequest
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
 import de.svws_nrw.data.schule.DataBeschaeftigungsarten;
 import de.svws_nrw.data.schule.DataKindergaerten;
-import de.svws_nrw.data.schule.merkmale.MerkmalControllerFactory;
-import de.svws_nrw.data.schule.merkmale.MerkmalCreateRequest;
-import de.svws_nrw.data.schule.merkmale.MerkmalPatchRequest;
+import de.svws_nrw.controller.schule.merkmale.MerkmalControllerFactory;
+import de.svws_nrw.service.schule.merkmale.MerkmalCreateRequest;
+import de.svws_nrw.service.schule.merkmale.MerkmalPatchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;

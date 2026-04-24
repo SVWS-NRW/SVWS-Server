@@ -1,5 +1,6 @@
-package de.svws_nrw.data.util;
+package de.svws_nrw.validation.validator;
 
+import de.svws_nrw.validation.constraints.NoLeadingOrTrailingWhitespaces;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.apache.commons.lang3.StringUtils;

@@ -1,8 +1,11 @@
-package de.svws_nrw.data.schule.merkmale;
+package de.svws_nrw.controller.schule.merkmale;
 
 import java.util.List;
 
 import de.svws_nrw.data.Responses;
+import de.svws_nrw.service.schule.merkmale.MerkmalCreateRequest;
+import de.svws_nrw.service.schule.merkmale.MerkmalPatchRequest;
+import de.svws_nrw.service.schule.merkmale.MerkmalService;
 import de.svws_nrw.validation.BeanValidator;
 import jakarta.validation.ValidationException;
 import jakarta.ws.rs.core.Response;
@@ -10,7 +13,7 @@ import jakarta.ws.rs.core.Response;
 
 public final class MerkmalController {
 
-	private final  MerkmalService merkmalService;
+	private final MerkmalService merkmalService;
 
 	/**
 	 * Erstellt einen neuen MerkmalController mit dem angegebenen Service.

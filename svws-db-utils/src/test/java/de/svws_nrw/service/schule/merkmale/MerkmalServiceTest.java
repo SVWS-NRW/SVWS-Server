@@ -1,10 +1,11 @@
-package de.svws_nrw.data.schule.merkmale;
+package de.svws_nrw.service.schule.merkmale;
 
 import java.util.List;
 import java.util.function.Supplier;
 
 import de.svws_nrw.core.data.schule.Merkmal;
 import de.svws_nrw.data.TransactionSupport;
+import de.svws_nrw.mapper.schule.merkmale.MerkmalMapper;
 import de.svws_nrw.db.dto.current.schild.schule.DTOMerkmale;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.schule.merkmale.MerkmalRepository;

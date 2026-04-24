@@ -1,7 +1,7 @@
-package de.svws_nrw.data.schule.merkmale;
+package de.svws_nrw.service.schule.merkmale;
 
-import de.svws_nrw.data.util.NoLeadingOrTrailingWhitespaces;
-import de.svws_nrw.data.util.NoWhitespaces;
+import de.svws_nrw.validation.constraints.NoLeadingOrTrailingWhitespaces;
+import de.svws_nrw.validation.constraints.NoWhitespaces;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

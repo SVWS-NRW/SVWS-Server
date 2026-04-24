@@ -1,10 +1,13 @@
-package de.svws_nrw.data.schule.merkmale;
+package de.svws_nrw.controller.schule.merkmale;
 
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.mapper.schule.merkmale.MerkmalMapper;
 import de.svws_nrw.repo.schule.merkmale.MerkmalRepositoryFactory;
+import de.svws_nrw.service.schule.merkmale.MerkmalService;
+import de.svws_nrw.service.schule.merkmale.MerkmalServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

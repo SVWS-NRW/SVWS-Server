@@ -1,5 +1,6 @@
-package de.svws_nrw.data.util;
+package de.svws_nrw.validation.validator;
 
+import de.svws_nrw.validation.constraints.NoLeadingOrTrailingWhitespaces;
 import jakarta.validation.ConstraintValidatorContext;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,22 +16,26 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
 @ExtendWith(MockitoExtension.class)
-class NoWhitespacesValidatorTest {
+class NoLeadingOrTrailingWhitespacesValidatorTest {
 
 	@Mock
 	private ConstraintValidatorContext context;
 
 	@InjectMocks
-	private NoWhitespacesValidator validator;
+	private NoLeadingOrTrailingWhitespacesValidator validator;
 
 	@ParameterizedTest
 	@NullSource
 	@ValueSource(strings = {
+			"A",
+			"TestString",
+			"Test String",
+			"Test   String   Value",
+			"Test\tString",
+			"Test-String_123!@#",
 			"",
 			"   ",
-			"TestString",
-			"Test123",
-			"Test-String_123"
+			" "
 	})
 	@DisplayName("isValid | Gültige Strings")
 	void isValid_validStrings(final String value) {
@@ -41,13 +46,15 @@ class NoWhitespacesValidatorTest {
 
 	@ParameterizedTest
 	@ValueSource(strings = {
-			"Test String",
 			" TestString",
 			"TestString ",
-			"Test   String",
-			"Test\tString",
-			"Test\nString",
-			"Test\rString"
+			" TestString ",
+			"   TestString",
+			"TestString   ",
+			"\tTestString",
+			"TestString\t",
+			"\nTestString",
+			"TestString\n"
 	})
 	@DisplayName("isValid | Ungültige Strings")
 	void isValid_invalidStrings(final String value) {
@@ -66,16 +73,16 @@ class NoWhitespacesValidatorTest {
 		// Keine Assertion nötig - Test prüft nur, dass keine Exception geworfen wird
 	}
 
-	private NoWhitespaces createMockAnnotation() {
-		return new NoWhitespaces() {
+	private NoLeadingOrTrailingWhitespaces createMockAnnotation() {
+		return new NoLeadingOrTrailingWhitespaces() {
 			@Override
 			public Class<? extends java.lang.annotation.Annotation> annotationType() {
-				return NoWhitespaces.class;
+				return NoLeadingOrTrailingWhitespaces.class;
 			}
 
 			@Override
 			public String message() {
-				return "Darf keine Leerzeichen enthalten";
+				return "Darf keine führenden oder nachgestellten Leerzeichen enthalten";
 			}
 
 			@Override

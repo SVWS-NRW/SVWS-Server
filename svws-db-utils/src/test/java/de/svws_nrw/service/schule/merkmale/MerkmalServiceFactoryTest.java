@@ -1,5 +1,6 @@
-package de.svws_nrw.data.schule.merkmale;
+package de.svws_nrw.service.schule.merkmale;
 
+import de.svws_nrw.mapper.schule.merkmale.MerkmalMapper;
 import de.svws_nrw.repo.schule.merkmale.MerkmalRepository;
 import de.svws_nrw.repo.schule.merkmale.MerkmalRepositoryFactory;
 import org.junit.jupiter.api.DisplayName;
