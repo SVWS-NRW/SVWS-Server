@@ -32,6 +32,10 @@ export class RouteBenutzerprofilNutzereinstellungen extends RouteNode<RouteDataB
 		}
 	}
 
+	public async leave(from: RouteNode<any, any>, from_params: RouteParams, to: RouteNode<any, any>, to_params: RouteParams): Promise<void> {
+		this.data.reset();
+	}
+
 	public getProps(to: RouteLocationNormalized): NutzereinstellungenAppProps {
 		return {
 			benutzer: () => this.data.benutzer,
@@ -41,8 +45,9 @@ export class RouteBenutzerprofilNutzereinstellungen extends RouteNode<RouteDataB
 			benutzerEMailDaten: () => this.data.benutzerEMailDaten,
 			patchBenutzerEMailDaten: this.data.patchBenutzerEMailDaten,
 			patchPasswort: this.data.patchPasswort,
-			patchPasswortWenom: this.data.patchPasswortWenom,
 			resetPasswordWenom: this.data.passwordResetWenom,
+			getWenomInitialkennwort: this.data.getWenomInitialkennwort,
+			wenomInitialkennwort: () => this.data.wenomInitialkennwort,
 			aes: api.aes,
 		};
 	}

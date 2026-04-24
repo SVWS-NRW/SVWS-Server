@@ -2610,28 +2610,31 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode setENMLehrerPassword für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/credentials/set/{id : \d+}
+	 * Implementierung der POST-Methode generateENMLehrerInitialPassword für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/credentials/set/{id : \d+}
 	 *
-	 * Setzt das Kennwort des Lehrers für das externe Notenmodul auf das übergebene Kennwort. Ist noch kein Initialkennwort gesetzt, so wird ein neues erzeugt, allerdings das übergebene Kennwort gesetzt.
+	 * Setzt das Kennwort des Lehrers für das externe Notenmodul auf das übergebene Kennwort. Ist ein Initialkennwort gesetzt, so wird dieses ersetzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 204: Das Kennwort wurde gesetzt.
+	 *   Code 200: Das Kennwort wurde erzeugt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: String
 	 *   Code 400: Das Kennwort ist leer oder entspricht nicht den Minimal-Anforderungen.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte zum Setzen des Kennwortes.
 	 *   Code 404: Die ID des Lehrers ist in der DB nicht vorhanden.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {string | null} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Das Kennwort wurde erzeugt.
 	 */
-	public async setENMLehrerPassword(data : string | null, schema : string, id : number) : Promise<void> {
+	public async generateENMLehrerInitialPassword(schema : string, id : number) : Promise<string> {
 		const path = "/db/{schema}/enm/credentials/set/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = JSON.stringify(data);
-		await super.postJSON(path, body);
-		return;
+		const result : string = await super.postJSON(path, null);
+		const text = result;
+		return JSON.parse(text).toString();
 	}
 
 
@@ -2681,6 +2684,34 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		await super.postJSON(path, null);
 		return;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode getENMLehrerInitialKennwort für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/initialkennwort/{id : \d+}
+	 *
+	 * Abfrage es Initialkennwortes für den angegebenen Lehrer für das externe Notenmodul.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Das Initialkennwort.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: String
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte zum Lesen des Kennwortes.
+	 *   Code 404: Die ID des Lehrers ist in der DB nicht vorhanden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Das Initialkennwort.
+	 */
+	public async getENMLehrerInitialKennwort(schema : string, id : number) : Promise<string> {
+		const path = "/db/{schema}/enm/initialkennwort/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.postJSON(path, null);
+		const text = result;
+		return JSON.parse(text).toString();
 	}
 
 

@@ -32,6 +32,20 @@ public final class NotenmodulCredentialsControllerImpl implements NotenmodulCred
 
 
 	/**
+	 * Gibt für den angegebenen Lehrer das Initialkennwort zurück.
+	 *
+	 * @param idLehrer   die ID des Lehrers
+	 *
+	 * @return das Initialkennwort
+	 */
+	@Override
+	public Response getInitialkennwort(final long idLehrer) {
+		final String cred = service.getInitialkennwort(idLehrer);
+		return Responses.ok("\"" + cred + "\"");
+	}
+
+
+	/**
 	 * Erstellt für alle Lehrer initiale Credentials, sofern ein Lehrer nicht bereits welche besitzt.
 	 */
 	@Override
@@ -55,16 +69,14 @@ public final class NotenmodulCredentialsControllerImpl implements NotenmodulCred
 
 
 	/**
-	 * Setzt das Kennwort des Lehrers auf das übergebene Kennwort. Das Initialkennwort bleibt dabei
-	 * bestehen oder wird durch ein generiertes gesetzt, wenn der Lehrer vorher kein Initialkennwort hatte.
+	 * Generiert für einen Lehrers ein neues Initialkennwort.
 	 *
 	 * @param idLehrer   die ID des Lehrers
-	 * @param password   das neu zu setzende Kennwort
 	 */
 	@Override
-	public Response setPassword(final long idLehrer, final String password) {
-		service.setPassword(idLehrer, password);
-		return Responses.noContent();
+	public Response generateInitialPassword(final long idLehrer) {
+		final String cred = service.generateInitialPassword(idLehrer);
+		return Responses.ok("\"" + cred + "\"");
 	}
 
 

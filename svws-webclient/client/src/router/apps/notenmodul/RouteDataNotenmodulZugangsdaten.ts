@@ -65,13 +65,12 @@ export class RouteDataNotenmodulZugangsdaten extends RouteData<RouteStateNotenmo
 		return true;
 	};
 
-	public updatePassword = async (value: string | null, id: number): Promise<boolean> => {
-		if (value === null) {
-			await api.server.resetENMLehrerPasswordToInitial(api.schema, id);
-		} else {
-			await api.server.setENMLehrerPassword(value, api.schema, id);
-		}
-		return true;
+	public resetPassword = async (id: number): Promise<void> => {
+		await api.server.resetENMLehrerPasswordToInitial(api.schema, id);
+	};
+
+	public generateInitialPassword = async (id: number): Promise<string> => {
+		return await api.server.generateENMLehrerInitialPassword(api.schema, id);
 	};
 
 	public set2fa = async (value: number, id: number): Promise<boolean> => {

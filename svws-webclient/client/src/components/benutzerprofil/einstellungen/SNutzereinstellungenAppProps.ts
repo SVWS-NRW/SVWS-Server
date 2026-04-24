@@ -9,7 +9,8 @@ export interface NutzereinstellungenAppProps {
 	patchBenutzerEMailDaten: (data: Partial<BenutzerEMailDaten>) => Promise<void>;
 	patch: (data: Partial<BenutzerDaten>) => Promise<void>;
 	patchPasswort: (eins: string, zwei: string) => Promise<boolean>;
-	patchPasswortWenom: (eins: string, zwei: string) => Promise<boolean>;
 	resetPasswordWenom: () => Promise<boolean>;
+	wenomInitialkennwort: () => string;
+	getWenomInitialkennwort: () => Promise<void>;
 	aes: AES;
 }

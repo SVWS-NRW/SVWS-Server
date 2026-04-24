@@ -5,10 +5,12 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
 interface RouteStateBenutzerprofil extends RouteStateInterface {
 	benutzerEMailDaten: BenutzerEMailDaten;
+	wenomInitialkennwort: string;
 }
 
 const defaultState = <RouteStateBenutzerprofil> {
 	benutzerEMailDaten: new BenutzerEMailDaten(),
+	wenomInitialkennwort: "",
 };
 
 export class RouteDataBenutzerprofilNutzereinstellungen extends RouteData<RouteStateBenutzerprofil> {
@@ -25,6 +27,10 @@ export class RouteDataBenutzerprofilNutzereinstellungen extends RouteData<RouteS
 		return this._state.value.benutzerEMailDaten;
 	}
 
+	public get wenomInitialkennwort(): string {
+		return this._state.value.wenomInitialkennwort;
+	}
+
 	public patch = async (data: Partial<BenutzerDaten>) => {
 		console.log("TODO: Benutzerdaten patchen");
 		// api.server.patch
@@ -37,19 +43,6 @@ export class RouteDataBenutzerprofilNutzereinstellungen extends RouteData<RouteS
 		const password = eins.length > 0 ? eins : null;
 		try {
 			await api.server.setPassword(password, api.schema, api.benutzerdaten.id);
-			return true;
-		} catch {
-			return false;
-		}
-	};
-
-	public patchPasswortWenom = async (eins: string, zwei: string): Promise<boolean> => {
-		if ((eins !== zwei) || (api.benutzertyp !== BenutzerTyp.LEHRER)) {
-			return false;
-		}
-		const password = eins.length > 0 ? eins : null;
-		try {
-			await api.server.setENMLehrerPassword(password, api.schema, api.benutzerIDLehrer);
 			return true;
 		} catch {
 			return false;
@@ -76,4 +69,9 @@ export class RouteDataBenutzerprofilNutzereinstellungen extends RouteData<RouteS
 		const benutzerEMailDaten = await api.server.getBenutzerEmailDaten(api.schema);
 		this.setPatchedState({ benutzerEMailDaten });
 	}
+
+	public getWenomInitialkennwort = async () => {
+		const wenomInitialkennwort = await api.server.getENMLehrerInitialKennwort(api.schema, api.benutzerIDLehrer);
+		this.setPatchedState({ wenomInitialkennwort });
+	};
 }

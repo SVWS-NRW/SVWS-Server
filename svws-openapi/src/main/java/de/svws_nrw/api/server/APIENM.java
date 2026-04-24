@@ -594,6 +594,32 @@ public class APIENM {
 
 
 	/**
+	 * Abfrage es Initialkennwortes für den angegebenen Lehrer.
+	 *
+	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id         die ID des Lehrers
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Reponse
+	 */
+	@POST
+	@Path("/initialkennwort/{id : \\d+}")
+	@Operation(summary = "Abfrage es Initialkennwortes für den angegebenen Lehrer für das externe Notenmodul.",
+			description = "Abfrage es Initialkennwortes für den angegebenen Lehrer für das externe Notenmodul.")
+	@ApiResponse(responseCode = "200", description = "Das Initialkennwort.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte zum Lesen des Kennwortes.")
+	@ApiResponse(responseCode = "404", description = "Die ID des Lehrers ist in der DB nicht vorhanden.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response getENMLehrerInitialKennwort(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
+		return NotenmodulControllerFactory.withAdminAccessOrSelf(request, id)
+				.getNotenmodulCredentialsController()
+				.getInitialkennwort(id);
+	}
+
+
+	/**
 	 * Die OpenAPI-Methode zum Generieren von Initial-Kennwörtern für Lehrer für das externe Notenmodul, sofern diese noch keine haben.
 	 *
 	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
@@ -643,35 +669,31 @@ public class APIENM {
 
 
 	/**
-	 * Die OpenAPI-Methode zum Setzen eines Kennwortes für Lehrer für das externe Notenmodul.
-	 * Hat der Lehrer noch kein Initialkennwort, so wird dieses zusätzlich neu erzeugt, allerdings
-	 * das übergebene aktiviert.
+	 * Erzeugt ein neues Initial-Kennwort für den Lehrers für das externe Notenmodul.
+	 * Ist ein Initialkennwort gesetzt, so wird dieses ersetzt.
 	 *
 	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param id         die ID des Lehrers
-	 * @param is         der Input-Stream mit dem zu setzenden Kennwort
 	 * @param request    die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Reponse
 	 */
 	@POST
 	@Path("/credentials/set/{id : \\d+}")
-	@Operation(summary = "Setzt das Kennwort des Lehrers für das externe Notenmodul auf das übergebene Kennwort.",
+	@Operation(summary = "Erzeugt ein neues Initial-Kennwort für den Lehrers für das externe Notenmodul.",
 			description = "Setzt das Kennwort des Lehrers für das externe Notenmodul auf das übergebene Kennwort. "
-					+ "Ist noch kein Initialkennwort gesetzt, so wird ein neues erzeugt, allerdings das übergebene Kennwort gesetzt.")
-	@ApiResponse(responseCode = "204", description = "Das Kennwort wurde gesetzt.")
+					+ "Ist ein Initialkennwort gesetzt, so wird dieses ersetzt.")
+	@ApiResponse(responseCode = "200", description = "Das Kennwort wurde erzeugt.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class)))
 	@ApiResponse(responseCode = "400", description = "Das Kennwort ist leer oder entspricht nicht den Minimal-Anforderungen.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte zum Setzen des Kennwortes.")
 	@ApiResponse(responseCode = "404", description = "Die ID des Lehrers ist in der DB nicht vorhanden.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response setENMLehrerPassword(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@RequestBody(description = "Das Kennwort", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = String.class))) final InputStream is,
+	public Response generateENMLehrerInitialPassword(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		final String password = JSONMapper.toString(is);
 		return NotenmodulControllerFactory.withAdminAccessOrSelf(request, id)
 				.getNotenmodulCredentialsController()
-				.setPassword(id, password);
+				.generateInitialPassword(id);
 	}
 
 
