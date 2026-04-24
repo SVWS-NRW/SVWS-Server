@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSsv00SchuelerStammdatenVorname",
+    "historie" : [ {
+      "praefix" : "SSV00",
+      "altes_kuerzel" : "",
+      "zweig" : "Schueler-Stammdaten-Vorname",
+      "dtos" : "Schueler",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Individualdaten'",
+      "anzeigebereich_ui" : "Feld 'Rufname'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Rufname des Schülers: Kein Wert vorhanden.",
+      "erlaeuterung" : "",
+      "bedingung" : "SchuelerStammdaten.vorname = @",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+}  

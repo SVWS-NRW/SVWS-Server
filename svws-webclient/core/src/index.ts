@@ -409,6 +409,9 @@ export { ValidatorSsgSchuelerStammdatenGeschlecht } from './asd/validate/schuele
 export { ValidatorSsn00SchuelerStammdatenNachname } from './asd/validate/schueler/ValidatorSsn00SchuelerStammdatenNachname';
 export { ValidatorSsn10SchuelerStammdatenNachname } from './asd/validate/schueler/ValidatorSsn10SchuelerStammdatenNachname';
 export { ValidatorSsnSchuelerStammdatenNachname } from './asd/validate/schueler/ValidatorSsnSchuelerStammdatenNachname';
+export { ValidatorSsv00SchuelerStammdatenVorname } from './asd/validate/schueler/ValidatorSsv00SchuelerStammdatenVorname';
+export { ValidatorSsv10SchuelerStammdatenVorname } from './asd/validate/schueler/ValidatorSsv10SchuelerStammdatenVorname';
+export { ValidatorSsvSchuelerStammdatenVorname } from './asd/validate/schueler/ValidatorSsvSchuelerStammdatenVorname';
 export { ValidatorSss00SchuleStammdatenSchulform } from './asd/validate/schule/ValidatorSss00SchuleStammdatenSchulform';
 export { ValidatorSss01SchuleStammdatenSchulform } from './asd/validate/schule/ValidatorSss01SchuleStammdatenSchulform';
 export { ValidatorSssSchuleStammdatenSchulform } from './asd/validate/schule/ValidatorSssSchuleStammdatenSchulform';
