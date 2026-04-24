@@ -19,11 +19,9 @@ export async function ensureLogin(): Promise<void> {
 	if (isLoggedIn) {
 		return;
 	}
-	await Promise.all([
-		doLogin(apiGehring),
-		doLogin(apiGiesen),
-		doLogin(apiBerthold),
-	]);
+	await doLogin(apiGehring);
+	await doLogin(apiGiesen);
+	await doLogin(apiBerthold);
 	isLoggedIn = true;
 }
 
