@@ -203,6 +203,25 @@ export class KursblockungDynSchueler extends JavaObject {
 	}
 
 	/**
+	 * Liefert TRUE, falls der Kurs für den Schüler erlaubt ist und zudem die Schienen frei sind.
+	 *
+	 * @param kurs   Das  {@link KursblockungDynKurs}-Objekt.
+	 *
+	 * @return TRUE, falls der Kurs für den Schüler erlaubt ist und zudem die Schienen frei sind.
+	 */
+	gibIstKursFuerSchuelerWaehlbar(kurs: KursblockungDynKurs): boolean {
+		if (!kurs.gibIstErlaubtFuerSchueler(this)) {
+			return false;
+		}
+		for (const nrSchiene of kurs.gibSchienenLage()) {
+			if (this.schieneBelegt[nrSchiene]) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * Liefert die zum Fach zugehörige Fachart (= Fachwahl) des Schülers.
 	 *
 	 * @param idFach  Die Datenbank-ID des Faches.
@@ -332,43 +351,75 @@ export class KursblockungDynSchueler extends JavaObject {
 	}
 
 	/**
-	 * Verteilt alle Kurse des S., die über mehr als eine Schiene gehen.
+	 * Sucht für die angegebene Fachart einen wählbaren Kurs und ordnet ihn dem Schüler zu.
+	 * Dabei wird nur dann ein Kurs hinzugefügt, wenn für die Fachart noch kein Kurs belegt ist,
+	 * der Kurs für den Schüler erlaubt ist und alle zugehörigen Schienen noch frei sind.
+	 *
+	 * Die Kurs-Reihenfolge hängt von {@code kurseZufaellig} ab:
+	 * Ist der Wert {@code true}, werden die Kurse der Fachart in zufälliger Reihenfolge geprüft,
+	 * andernfalls in der vorgegebenen Reihenfolge.
+	 *
+	 * Wird ein wählbarer Kurs gefunden, so wird dieser direkt per
+	 * {@code aktionKursHinzufuegen(iFachart, kurs)} zugeordnet und die Suche beendet.
+	 *
+	 * @param iFachart         Der Index der Fachart.
+	 * @param kurseZufaellig   {@code true}, wenn die Kurse in zufälliger Reihenfolge geprüft werden sollen.
 	 */
-	aktionKurseVerteilenNurMultikurseZufaellig(): void {
-		const perm: Array<number> = KursblockungStatic.gibPermutation(this.rnd, this.fachartArr.length);
-		for (let pFachart: number = 0; pFachart < this.fachartArr.length; pFachart++) {
-			const iFachart: number = perm[pFachart];
-			if (this.fachartZuKurs[iFachart] !== null) {
-				continue;
-			}
-			const fachart: KursblockungDynFachart = this.fachartArr[iFachart];
-			if (!fachart.gibHatMultikurs()) {
-				continue;
-			}
-			const kurse: Array<KursblockungDynKurs> = fachart.gibKurse();
-			const perm2: Array<number> = KursblockungStatic.gibPermutation(this.rnd, kurse.length);
-			for (const i of perm2) {
-				const kurs: KursblockungDynKurs = kurse[i];
-				if (!kurs.gibIstErlaubtFuerSchueler(this)) {
-					continue;
-				}
-				let waehlbar: boolean = true;
-				for (const nr of kurs.gibSchienenLage()) {
-					if (this.schieneBelegt[nr]) {
-						waehlbar = false;
-						break;
-					}
-				}
-				if (waehlbar) {
-					this.aktionKursHinzufuegen(iFachart, kurs);
-					break;
-				}
+	private aktionKursDerFachartSuchenUndVerteilen(iFachart: number, kurseZufaellig: boolean): void {
+		const fachart: KursblockungDynFachart = this.fachartArr[iFachart];
+		const kurse: Array<KursblockungDynKurs> = fachart.gibKurse();
+		const kursReihenfolge: Array<number> = Array(kurse.length).fill(0);
+		for (let i: number = 0; i < kursReihenfolge.length; i++) {
+			kursReihenfolge[i] = i;
+		}
+		if (kurseZufaellig) {
+			KursblockungStatic.aktionPermutiere(this.rnd, kursReihenfolge);
+		}
+		for (const iKurs of kursReihenfolge) {
+			const kurs: KursblockungDynKurs = kurse[iKurs];
+			if (this.gibIstKursFuerSchuelerWaehlbar(kurs)) {
+				this.aktionKursHinzufuegen(iFachart, kurs);
+				return;
 			}
 		}
 	}
 
 	/**
-	 * Verteilt alle Kurse des S. von denen es (pro Fachart) nur einen gibt.
+	 * Geht die Facharten durch (zufällig) und geht dann pro Fachart alle Kurse durch (nicht zufällig).
+	 * Falls der Kurs wählbar ist, wird der Schüler hinzugefügt und es geht weiter mit der nächsten Fachart.
+	 */
+	aktionKurseVerteilenZufaellig(): void {
+		const permFachart: Array<number> = KursblockungStatic.gibPermutation(this.rnd, this.fachartArr.length);
+		for (let pFachart: number = 0; pFachart < this.fachartArr.length; pFachart++) {
+			const iFachart: number = permFachart[pFachart];
+			if (this.fachartZuKurs[iFachart] !== null) {
+				continue;
+			}
+			this.aktionKursDerFachartSuchenUndVerteilen(iFachart, false);
+		}
+	}
+
+	/**
+	 * Geht die Multikurs-Facharten durch (zufällig) und geht dann pro Fachart alle Kurse durch (zufällig).
+	 * Falls der Kurs wählbar ist, wird der Schüler hinzugefügt und es geht weiter mit der nächsten Fachart.
+	 */
+	aktionKurseVerteilenNurMultikurseZufaellig(): void {
+		const permFachart: Array<number> = KursblockungStatic.gibPermutation(this.rnd, this.fachartArr.length);
+		for (let pFachart: number = 0; pFachart < this.fachartArr.length; pFachart++) {
+			const iFachart: number = permFachart[pFachart];
+			if (this.fachartZuKurs[iFachart] !== null) {
+				continue;
+			}
+			const fachart: KursblockungDynFachart = this.fachartArr[iFachart];
+			if (fachart.gibHatMultikurs()) {
+				this.aktionKursDerFachartSuchenUndVerteilen(iFachart, true);
+			}
+		}
+	}
+
+	/**
+	 * Geht die Facharten durch (nicht zufällig) und überprüft, ob der Schüler nur einen erlaubten Kurs hat.
+	 * Falls der Kurs wählbar ist, wird der Schüler hinzugefügt und es geht weiter mit der nächsten Fachart.
 	 */
 	aktionKurseVerteilenNurFachartenMitEinemErlaubtenKurs(): void {
 		for (let iFachart: number = 0; iFachart < this.fachartArr.length; iFachart++) {
@@ -377,30 +428,14 @@ export class KursblockungDynSchueler extends JavaObject {
 			}
 			const fachart: KursblockungDynFachart = this.fachartArr[iFachart];
 			const kurse: Array<KursblockungDynKurs> = fachart.gibKurse();
-			let erlaubt: number = 0;
+			let kursMoeglichkeiten: number = 0;
 			for (const kurs of kurse) {
 				if (kurs.gibIstErlaubtFuerSchueler(this)) {
-					erlaubt++;
+					kursMoeglichkeiten++;
 				}
 			}
-			if (erlaubt !== 1) {
-				continue;
-			}
-			for (const kurs of kurse) {
-				if (!kurs.gibIstErlaubtFuerSchueler(this)) {
-					continue;
-				}
-				let waehlbar: boolean = true;
-				for (const nr of kurs.gibSchienenLage()) {
-					if (this.schieneBelegt[nr]) {
-						waehlbar = false;
-						break;
-					}
-				}
-				if (waehlbar) {
-					this.aktionKursHinzufuegen(iFachart, kurs);
-					break;
-				}
+			if (kursMoeglichkeiten === 1) {
+				this.aktionKursDerFachartSuchenUndVerteilen(iFachart, false);
 			}
 		}
 	}
@@ -539,40 +574,6 @@ export class KursblockungDynSchueler extends JavaObject {
 			kurslageHatSichVeraendert = true;
 		}
 		return kurslageHatSichVeraendert;
-	}
-
-	/**
-	 * Geht die Facharten durch (Facharten mit einer kleineren Kursanzahl zuerst) und geht dann pro Fachart alle Kurse
-	 * durch (Kurse mit kleinerer Schüleranzahl zuerst). Falls der Kurs wählbar ist, wird der Schüler hinzugefügt und es
-	 * geht weiter mit der nächsten Fachart. Ein Kurs ist wählbar, wenn nicht bereits ein Kurs zugeordnet wurde und die
-	 * Schienen in den der Kurs sind frei sind.
-	 */
-	aktionKurseVerteilenZufaellig(): void {
-		const perm: Array<number> = KursblockungStatic.gibPermutation(this.rnd, this.fachartArr.length);
-		for (let pFachart: number = 0; pFachart < this.fachartArr.length; pFachart++) {
-			const iFachart: number = perm[pFachart];
-			if (this.fachartZuKurs[iFachart] !== null) {
-				continue;
-			}
-			const fachart: KursblockungDynFachart = this.fachartArr[iFachart];
-			const kurse: Array<KursblockungDynKurs> = fachart.gibKurse();
-			for (const kurs of kurse) {
-				if (!kurs.gibIstErlaubtFuerSchueler(this)) {
-					continue;
-				}
-				let waehlbar: boolean = true;
-				for (const nr of kurs.gibSchienenLage()) {
-					if (this.schieneBelegt[nr]) {
-						waehlbar = false;
-						break;
-					}
-				}
-				if (waehlbar) {
-					this.aktionKursHinzufuegen(iFachart, kurs);
-					break;
-				}
-			}
-		}
 	}
 
 	/**

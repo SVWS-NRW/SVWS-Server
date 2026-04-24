@@ -184,9 +184,27 @@ public class KursblockungDynSchueler {
 		return false;
 	}
 
-	// ########################################
-	// ########## AKTIONEN / SETTER ###########
-	// ########################################
+
+	/**
+	 * Liefert TRUE, falls der Kurs für den Schüler erlaubt ist und zudem die Schienen frei sind.
+	 *
+	 * @param kurs   Das  {@link KursblockungDynKurs}-Objekt.
+	 *
+	 * @return TRUE, falls der Kurs für den Schüler erlaubt ist und zudem die Schienen frei sind.
+	 */
+	boolean gibIstKursFuerSchuelerWaehlbar(final @NotNull KursblockungDynKurs kurs) {
+		if (!kurs.gibIstErlaubtFuerSchueler(this)) {
+			return false;
+		}
+
+		for (final int nrSchiene : kurs.gibSchienenLage()) {
+			if (schieneBelegt[nrSchiene]) {
+				return false;
+			}
+		}
+
+		return true;
+	}
 
 	/**
 	 * Liefert die zum Fach zugehörige Fachart (= Fachwahl) des Schülers.
@@ -204,6 +222,10 @@ public class KursblockungDynSchueler {
 
 		throw new DeveloperNotificationException(representation + " hat kein Fach mit ID = " + idFach + "!");
 	}
+
+	// ########################################
+	// ########## AKTIONEN / SETTER ###########
+	// ########################################
 
 	/**
 	 * Setzt alle Facharten (=Fachwahlen) des Schülers.
@@ -326,56 +348,90 @@ public class KursblockungDynSchueler {
 	}
 
 	/**
-	 * Verteilt alle Kurse des S., die über mehr als eine Schiene gehen.
+	 * Sucht für die angegebene Fachart einen wählbaren Kurs und ordnet ihn dem Schüler zu.
+	 * Dabei wird nur dann ein Kurs hinzugefügt, wenn für die Fachart noch kein Kurs belegt ist,
+	 * der Kurs für den Schüler erlaubt ist und alle zugehörigen Schienen noch frei sind.
+	 *
+	 * Die Kurs-Reihenfolge hängt von {@code kurseZufaellig} ab:
+	 * Ist der Wert {@code true}, werden die Kurse der Fachart in zufälliger Reihenfolge geprüft,
+	 * andernfalls in der vorgegebenen Reihenfolge.
+	 *
+	 * Wird ein wählbarer Kurs gefunden, so wird dieser direkt per
+	 * {@code aktionKursHinzufuegen(iFachart, kurs)} zugeordnet und die Suche beendet.
+	 *
+	 * @param iFachart         Der Index der Fachart.
+	 * @param kurseZufaellig   {@code true}, wenn die Kurse in zufälliger Reihenfolge geprüft werden sollen.
 	 */
-	void aktionKurseVerteilenNurMultikurseZufaellig() {
-		final @NotNull int[] perm = KursblockungStatic.gibPermutation(rnd, fachartArr.length);
+	private void aktionKursDerFachartSuchenUndVerteilen(final int iFachart, final boolean kurseZufaellig) {
+		final @NotNull KursblockungDynFachart fachart = fachartArr[iFachart];
+		final @NotNull KursblockungDynKurs @NotNull [] kurse = fachart.gibKurse();
+
+		// Erzeuge die Zuordnung.
+		final @NotNull int[] kursReihenfolge = new int[kurse.length];
+		for (int i = 0; i < kursReihenfolge.length; i++) {
+			kursReihenfolge[i] = i;
+		}
+		if (kurseZufaellig) {
+			KursblockungStatic.aktionPermutiere(rnd, kursReihenfolge);
+		}
+
+		for (final int iKurs : kursReihenfolge) {
+			final @NotNull KursblockungDynKurs kurs = kurse[iKurs];
+
+			if (gibIstKursFuerSchuelerWaehlbar(kurs)) {
+				aktionKursHinzufuegen(iFachart, kurs);
+				return;
+			}
+		}
+	}
+
+
+	/**
+	 * Geht die Facharten durch (zufällig) und geht dann pro Fachart alle Kurse durch (nicht zufällig).
+	 * Falls der Kurs wählbar ist, wird der Schüler hinzugefügt und es geht weiter mit der nächsten Fachart.
+	 */
+	void aktionKurseVerteilenZufaellig() {
+		final @NotNull int[] permFachart = KursblockungStatic.gibPermutation(rnd, fachartArr.length);
 
 		for (int pFachart = 0; pFachart < fachartArr.length; pFachart++) {
-			final int iFachart = perm[pFachart];
+			final int iFachart = permFachart[pFachart];
+
+			// Bereits belegte Facharten ignorieren.
+			if (fachartZuKurs[iFachart] != null) {
+				continue;
+			}
+
+			// Einen guten Kurs der Fachart suchen und wenn möglich verteilen.
+			aktionKursDerFachartSuchenUndVerteilen(iFachart, false);
+		}
+	}
+
+	/**
+	 * Geht die Multikurs-Facharten durch (zufällig) und geht dann pro Fachart alle Kurse durch (zufällig).
+	 * Falls der Kurs wählbar ist, wird der Schüler hinzugefügt und es geht weiter mit der nächsten Fachart.
+	 */
+	void aktionKurseVerteilenNurMultikurseZufaellig() {
+		final @NotNull int[] permFachart = KursblockungStatic.gibPermutation(rnd, fachartArr.length);
+
+		for (int pFachart = 0; pFachart < fachartArr.length; pFachart++) {
+			final int iFachart = permFachart[pFachart];
 
 			// Bereits belegte Facharten überspringen.
 			if (fachartZuKurs[iFachart] != null) {
 				continue;
 			}
 
-			// Facharten ohne Multikurse überspringen.
+			// Wenn die Fachart Multikurse hat, einen zufälligen Kurs suchen und verteilen.
 			final @NotNull KursblockungDynFachart fachart = fachartArr[iFachart];
-			if (!fachart.gibHatMultikurs()) {
-				continue;
-			}
-
-			// Alle Kurse der Fachart durchgehen und probieren, ob wählbar.
-			final @NotNull KursblockungDynKurs @NotNull [] kurse = fachart.gibKurse();
-			final @NotNull int[] perm2 = KursblockungStatic.gibPermutation(rnd, kurse.length);
-			for (final int i : perm2) {
-				final @NotNull KursblockungDynKurs kurs = kurse[i];
-
-				// Überspringt nicht erlaubte Kurse.
-				if (!kurs.gibIstErlaubtFuerSchueler(this)) {
-					continue;
-				}
-
-				// Der Kurs ist wählbar, wenn jede Schiene des Kurses frei ist.
-				boolean waehlbar = true;
-				for (final int nr : kurs.gibSchienenLage()) {
-					if (schieneBelegt[nr]) {
-						waehlbar = false;
-						break;
-					}
-				}
-
-				// Falls wählbar, dann Kurs hinzufügen und zur nächsten Fachart gehen.
-				if (waehlbar) {
-					aktionKursHinzufuegen(iFachart, kurs);
-					break;
-				}
+			if (fachart.gibHatMultikurs()) {
+				aktionKursDerFachartSuchenUndVerteilen(iFachart, true); // Kursreihenfolge zufällig.
 			}
 		}
 	}
 
 	/**
-	 * Verteilt alle Kurse des S. von denen es (pro Fachart) nur einen gibt.
+	 * Geht die Facharten durch (nicht zufällig) und überprüft, ob der Schüler nur einen erlaubten Kurs hat.
+	 * Falls der Kurs wählbar ist, wird der Schüler hinzugefügt und es geht weiter mit der nächsten Fachart.
 	 */
 	void aktionKurseVerteilenNurFachartenMitEinemErlaubtenKurs() {
 		for (int iFachart = 0; iFachart < fachartArr.length; iFachart++) {
@@ -384,42 +440,19 @@ public class KursblockungDynSchueler {
 				continue;
 			}
 
-			// Hole Kurse der Fachart
+			// Zähle alle Kurse der Fachart, die der Schüler potentiell wählen kann.
 			final @NotNull KursblockungDynFachart fachart = fachartArr[iFachart];
 			final @NotNull KursblockungDynKurs @NotNull [] kurse = fachart.gibKurse();
-
-			// Facharten mit mehr als einen Kurs ignorieren.
-			int erlaubt = 0;
+			int kursMoeglichkeiten = 0;
 			for (final @NotNull KursblockungDynKurs kurs : kurse) {
 				if (kurs.gibIstErlaubtFuerSchueler(this)) {
-					erlaubt++;
+					kursMoeglichkeiten++;
 				}
 			}
-			if (erlaubt != 1) {
-				continue;
-			}
 
-			// Alle Kurse der Facharten durchgehen und probieren, ob wählbar. Es wird genau ein Kurs sein.
-			for (final @NotNull KursblockungDynKurs kurs : kurse) {
-				// Überspringt nicht erlaubte Kurse.
-				if (!kurs.gibIstErlaubtFuerSchueler(this)) {
-					continue;
-				}
-
-				// Der Kurs ist wählbar, wenn jede Schiene des Kurses frei ist.
-				boolean waehlbar = true;
-				for (final int nr : kurs.gibSchienenLage()) {
-					if (schieneBelegt[nr]) {
-						waehlbar = false;
-						break;
-					}
-				}
-
-				// Falls wählbar, dann Kurs hinzufügen und zur nächsten Fachart gehen.
-				if (waehlbar) {
-					aktionKursHinzufuegen(iFachart, kurs);
-					break;
-				}
+			// Versuche den (einen) Kurs zu verteilen.
+			if (kursMoeglichkeiten == 1) {
+				aktionKursDerFachartSuchenUndVerteilen(iFachart, false);
 			}
 		}
 	}
@@ -622,51 +655,7 @@ public class KursblockungDynSchueler {
 		return kurslageHatSichVeraendert;
 	}
 
-	/**
-	 * Geht die Facharten durch (Facharten mit einer kleineren Kursanzahl zuerst) und geht dann pro Fachart alle Kurse
-	 * durch (Kurse mit kleinerer Schüleranzahl zuerst). Falls der Kurs wählbar ist, wird der Schüler hinzugefügt und es
-	 * geht weiter mit der nächsten Fachart. Ein Kurs ist wählbar, wenn nicht bereits ein Kurs zugeordnet wurde und die
-	 * Schienen in den der Kurs sind frei sind.
-	 */
-	void aktionKurseVerteilenZufaellig() {
-		final @NotNull int[] perm = KursblockungStatic.gibPermutation(rnd, fachartArr.length);
 
-		for (int pFachart = 0; pFachart < fachartArr.length; pFachart++) {
-			final int iFachart = perm[pFachart];
-
-			// Bereits belegte Facharten ignorieren.
-			if (fachartZuKurs[iFachart] != null) {
-				continue;
-			}
-
-			// Alle Kurse der Facharten durchgehen und probieren, ob wählbar.
-			final @NotNull KursblockungDynFachart fachart = fachartArr[iFachart];
-			final @NotNull KursblockungDynKurs @NotNull [] kurse = fachart.gibKurse();
-			for (final @NotNull KursblockungDynKurs kurs : kurse) {
-				// Überspringt nicht erlaubte Kurse.
-				if (!kurs.gibIstErlaubtFuerSchueler(this)) {
-					continue;
-				}
-
-				// Der Kurs ist wählbar, wenn jede Schiene des Kurses frei ist.
-				boolean waehlbar = true;
-				for (final int nr : kurs.gibSchienenLage()) {
-					if (schieneBelegt[nr]) {
-						waehlbar = false;
-						break;
-					}
-				}
-
-				// Falls wählbar, dann Kurs hinzufügen und zur nächsten Fachart gehen.
-				if (waehlbar) {
-					aktionKursHinzufuegen(iFachart, kurs);
-					break;
-				}
-			}
-
-		}
-
-	}
 
 	// ########################################
 	// ########## PRIVATE METHODEN ############
