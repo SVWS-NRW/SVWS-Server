@@ -66,7 +66,7 @@ export class RouteLehrerPersonaldaten extends RouteNode<any, RouteLehrer> {
 			patchMinderleistung: routeLehrer.data.patchMinderleistung,
 			removeMinderleistung: routeLehrer.data.removeMinderleistung,
 			addAnrechnung: routeLehrer.data.addAnrechnung,
-			patchAnrechnung: routeLehrer.data.patchAnrechnung,
+			patchAnrechnungen: routeLehrer.data.patchAnrechnungen,
 			removeAnrechnung: routeLehrer.data.removeAnrechnung,
 			mapFaecher: () => routeLehrer.data.mapFaecher,
 			lehrerUnterrichtsfaecher: () => routeLehrer.data.lehrerUnterrichtsfaecher,

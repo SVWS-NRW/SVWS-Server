@@ -1,7 +1,6 @@
 package de.svws_nrw.controller.lehrer;
 
 import java.util.Collection;
-import java.util.Map;
 
 import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenCreateRequest;
 import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenPatchRequest;
@@ -31,25 +30,24 @@ public interface LehrerAnrechnungsstundenController {
 	Response getList(Collection<Long> ids);
 
 	/**
-	 * Führt auf dem Eintrag für allgemeine Anrechnungsstunden eines Lehrers mit der angegebenen ID
-	 * einen Patch aus und gibt das Ergebnis zurück.
+	 * Führt einen Patch für den Eintrag für allgemeine Anrechnungsstunden eine Lehrers aus.
+	 * Der Patch enthält die ID des Eintrages auf welchen er sich bezieht.
 	 *
-	 * @param id      die ID des Eintrages
 	 * @param patch   der Patch
 	 *
 	 * @return die Response
 	 */
-	Response patch(long id, LehrerAnrechnungsstundenPatchRequest patch);
+	Response patch(LehrerAnrechnungsstundenPatchRequest patch);
 
 	/**
-	 * Führt auf mehreren Einträgen für allgemeine Anrechnungsstunden eines Lehrers mit den angegebenen IDs
-	 * die zugeordneten Patches aus und gibt die Ergebnisse zurück.
+	 * Führt einen Patch für die Einträge für allgemeine Anrechnungsstunden von Lehrern aus.
+	 * Die Patches enthalten die IDs der Einträge auf welche sie sich beziehen.
 	 *
-	 * @param patches   eine Map mit der Zuordnung der Patches zu den IDs
+	 * @param patches   die Patches
 	 *
 	 * @return die Response
 	 */
-	Response patchMultiple(Map<Long, LehrerAnrechnungsstundenPatchRequest> patches);
+	Response patchMultiple(Collection<LehrerAnrechnungsstundenPatchRequest> patches);
 
 	/**
 	 * Erstellt einen neuen Eintrag für allgemeine Anrechnungsstunden eines Lehrers mithilfe des Patches

@@ -85,7 +85,7 @@
 		patchMinderleistung: (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number) => Promise<void>;
 		removeMinderleistung: (data: LehrerPersonalabschnittsdatenAnrechnungsstunden) => Promise<void>;
 		addAnrechnung: (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => Promise<void>;
-		patchAnrechnung: (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number) => Promise<void>;
+		patchAnrechnungen: (data: List<Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>>) => Promise<void>;
 		removeAnrechnung: (data: LehrerPersonalabschnittsdatenAnrechnungsstunden) => Promise<void>;
 	}>();
 
@@ -146,7 +146,7 @@
 			}
 			for (const data of abschnittsdaten.anrechnungen) {
 				const patchMethod = async (proxy: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => {
-					await props.patchAnrechnung(proxy, data.id);
+					await props.patchAnrechnungen(ArrayList.of({ ...proxy, id: data.id }));
 					return true;
 				};
 				const modelProxy = new LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy(() => data, patchMethod);

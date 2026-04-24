@@ -9871,6 +9871,38 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der PATCH-Methode patchLehrerPersonalabschnittsdatenAllgemeineAnrechnungen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/anrechnungen
+	 *
+	 * Passt die allgemeinen Anrechnungsstunden eines Lehrers an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personalabschnittsdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Patches wurden erfolgreich in die allgemeinen Anrechnungsstunden integriert.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<LehrerPersonalabschnittsdatenAnrechnungsstunden>
+	 *   Code 400: Die Patches dins fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten zu ändern.
+	 *   Code 404: Keine allgemeine Anrechnung mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Patches wurden erfolgreich in die allgemeinen Anrechnungsstunden integriert.
+	 */
+	public async patchLehrerPersonalabschnittsdatenAllgemeineAnrechnungen(data : List<Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, schema : string) : Promise<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> {
+		const path = "/db/{schema}/lehrer/personalabschnittsdaten/anrechnungen"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<LehrerPersonalabschnittsdatenAnrechnungsstunden>).map(d => LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(d)).join() + "]";
+		const result : string = await super.patchJSONWithResponse(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<LehrerPersonalabschnittsdatenAnrechnungsstunden>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getLehrerPersonalabschnittsdatenLehrerfunktionen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/lehrerfunktionen/{id : \d+}
 	 *
 	 * Liest die Lehrerfunktion zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.

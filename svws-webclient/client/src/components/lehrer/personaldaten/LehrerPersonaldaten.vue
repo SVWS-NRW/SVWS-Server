@@ -58,7 +58,7 @@
 			<svws-ui-input-wrapper>
 				<lehrer-personaldaten-anrechnungen :hat-update-kompetenz="!readonly" :personalabschnittsdaten-model-proxy="() => personalabschnittsdatenModelProxy"
 					:schuljahr :schulform :add-mehrleistung :patch-mehrleistung :remove-mehrleistung :add-minderleistung :patch-minderleistung :remove-minderleistung
-					:add-anrechnung :patch-anrechnung :remove-anrechnung />
+					:add-anrechnung :patch-anrechnungen :remove-anrechnung />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 	</div>

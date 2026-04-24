@@ -10,8 +10,6 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.AfterEach;
@@ -189,12 +187,13 @@ class LehrerAnrechnungsstundenServiceTest {
 			final long idAnrechnungsgrund = 1L;
 			final long idAbschnitt = 100L;
 			final var patch = new LehrerAnrechnungsstundenPatchRequest();
+			patch.id = idAnrechnungsgrund;
 			patch.anzahl = JsonNullable.of(3.5);
 
 			final var entity = new DTOLehrerAnrechnungsstunde(idAnrechnungsgrund, idAbschnitt);
 			entity.AnrechnungStd = 1.0;
 			entity.AnrechnungsgrundKrz = "310";
-			when(kontext.fetch(Set.of(idAnrechnungsgrund))).thenReturn(List.of(entity));
+			when(kontext.fetch(List.of(idAnrechnungsgrund))).thenReturn(List.of(entity));
 			when(kontext.getAnrechnungsstunden(idAnrechnungsgrund)).thenReturn(entity);
 
 			final var mapped = new LehrerPersonalabschnittsdatenAnrechnungsstunden();
@@ -202,7 +201,7 @@ class LehrerAnrechnungsstundenServiceTest {
 			when(kontext.getAbschnitt(idAbschnitt)).thenReturn(new DTOLehrerAbschnittsdaten(idAbschnitt, 10L, 200L));
 			when(kontext.getSchuljahresabschnitt(200L)).thenReturn(new DTOSchuljahresabschnitte(200L, 2024, 1));
 
-			final var result = service.patchMultiple(Map.of(idAnrechnungsgrund, patch));
+			final var result = service.patchMultiple(List.of(patch));
 
 			assertThat(result).hasSize(1);
 			assertThat(entity.AnrechnungStd).isEqualTo(3.5);
@@ -213,7 +212,7 @@ class LehrerAnrechnungsstundenServiceTest {
 		@Test
 		@DisplayName("patchMultiple: Gibt leere Liste zurück, wenn keine Patches übergeben werden")
 		void patchEmpty() {
-			final var result = service.patchMultiple(Map.of());
+			final var result = service.patchMultiple(List.of());
 			assertThat(result).isEmpty();
 			verifyNoInteractions(kontext);
 		}
@@ -221,47 +220,53 @@ class LehrerAnrechnungsstundenServiceTest {
 		@Test
 		@DisplayName("Wirft eine Exception (400 - BAD_REQUEST), wenn idGrund nicht existiert")
 		void patchIdGrundNotInKatalog() {
-		    final long id = 1L;
-		    final var patch = new LehrerAnrechnungsstundenPatchRequest();
-		    patch.idGrund = JsonNullable.of(999999L);
-		    final var patches = Map.of(id, patch);
+			final long id = 1L;
+			final var patch = new LehrerAnrechnungsstundenPatchRequest();
+			patch.id = id;
+			patch.idGrund = JsonNullable.of(999999L);
+			final var patches = List.of(patch);
 
-		    when(kontext.fetch(Set.of(id))).thenReturn(List.of(new DTOLehrerAnrechnungsstunde(id, 100L)));
-		    when(kontext.getAnrechnungsstunden(id)).thenReturn(new DTOLehrerAnrechnungsstunde(id, 100L));
+			when(kontext.fetch(List.of(id))).thenReturn(List.of(new DTOLehrerAnrechnungsstunde(id, 100L)));
+			when(kontext.getAnrechnungsstunden(id)).thenReturn(new DTOLehrerAnrechnungsstunde(id, 100L));
 
-		    assertThatThrownBy(() -> service.patchMultiple(patches))
-		        .isExactlyInstanceOf(ApiOperationException.class)
-		        .hasFieldOrPropertyWithValue("status", Status.BAD_REQUEST)
-		        .hasMessageContaining("nicht vorhanden");
+			assertThatThrownBy(() -> service.patchMultiple(patches))
+					.isExactlyInstanceOf(ApiOperationException.class)
+					.hasFieldOrPropertyWithValue("status", Status.BAD_REQUEST)
+					.hasMessageContaining("nicht vorhanden");
 		}
 
 		@Test
 		@DisplayName("Wirft eine Exception (400 - BAD_REQUEST), wenn idGrund in dem Schuljahr nicht gültig ist")
 		void patchIdGrundNotValidInYear() {
-		    final long id = 1L;
-		    final long idAbschnitt = 100L;
-		    final long idSchuljahresabschnitt = 200L;
-		    final int schuljahr = 2025;
-		    final var patch = new LehrerAnrechnungsstundenPatchRequest();
-		    patch.idGrund = JsonNullable.of(315000L);
-		    final var patches = Map.of(id, patch);
+			final long id = 1L;
+			final long idAbschnitt = 100L;
+			final long idSchuljahresabschnitt = 200L;
+			final int schuljahr = 2025;
+			final var patch = new LehrerAnrechnungsstundenPatchRequest();
+			patch.id = id;
+			patch.idGrund = JsonNullable.of(315000L);
+			final var patches = List.of(patch);
 
-		    when(kontext.fetch(Set.of(id))).thenReturn(List.of(new DTOLehrerAnrechnungsstunde(id, idAbschnitt)));
-		    when(kontext.getAnrechnungsstunden(id)).thenReturn(new DTOLehrerAnrechnungsstunde(id, idAbschnitt));
-		    when(kontext.getAbschnitt(idAbschnitt)).thenReturn(new DTOLehrerAbschnittsdaten(idAbschnitt, 10L, idSchuljahresabschnitt));
-		    when(kontext.getSchuljahresabschnitt(idSchuljahresabschnitt)).thenReturn(new DTOSchuljahresabschnitte(idSchuljahresabschnitt, schuljahr, 1));
+			when(kontext.fetch(List.of(id))).thenReturn(List.of(new DTOLehrerAnrechnungsstunde(id, idAbschnitt)));
+			when(kontext.getAnrechnungsstunden(id)).thenReturn(new DTOLehrerAnrechnungsstunde(id, idAbschnitt));
+			when(kontext.getAbschnitt(idAbschnitt)).thenReturn(new DTOLehrerAbschnittsdaten(idAbschnitt, 10L, idSchuljahresabschnitt));
+			when(kontext.getSchuljahresabschnitt(idSchuljahresabschnitt)).thenReturn(new DTOSchuljahresabschnitte(idSchuljahresabschnitt, schuljahr, 1));
 
-		    assertThatThrownBy(() -> service.patchMultiple(patches))
-		        .isExactlyInstanceOf(ApiOperationException.class)
-		        .hasMessageContaining("nicht gültig");
+			assertThatThrownBy(() -> service.patchMultiple(patches))
+					.isExactlyInstanceOf(ApiOperationException.class)
+					.hasMessageContaining("nicht gültig");
 		}
 
 		@Test
 		@DisplayName("Wirft eine Exception (400 - BAD_REQUEST), wenn eine ID nicht existiert")
 		void patchNotFound() {
-			final var patch = new LehrerAnrechnungsstundenPatchRequest();
-			when(kontext.fetch(Set.of(1L, 2L))).thenReturn(List.of(new DTOLehrerAnrechnungsstunde(1L, 100L)));
-			final var patches = Map.of(1L, patch, 2L, patch);
+			final var patch1 = new LehrerAnrechnungsstundenPatchRequest();
+			patch1.id = 1L;
+			final var patch2 = new LehrerAnrechnungsstundenPatchRequest();
+			patch2.id = 2L;
+
+			when(kontext.fetch(List.of(1L, 2L))).thenReturn(List.of(new DTOLehrerAnrechnungsstunde(1L, 100L)));
+			final var patches = List.of(patch1, patch2);
 
 			assertThatThrownBy(() -> service.patchMultiple(patches))
 					.isExactlyInstanceOf(ApiOperationException.class)
@@ -276,6 +281,7 @@ class LehrerAnrechnungsstundenServiceTest {
 			final int jahr = 2024;
 
 			final var patch = new LehrerAnrechnungsstundenPatchRequest();
+			patch.id = idAnrechnungsstunde;
 			final var grund = LehrerAnrechnungsgrund.data().getWertByKuerzel("310");
 			final long neueGrundId = grund.daten(jahr).id;
 			patch.idGrund = JsonNullable.of(neueGrundId);
@@ -284,7 +290,7 @@ class LehrerAnrechnungsstundenServiceTest {
 			entity.AnrechnungStd = 8.5;
 			entity.AnrechnungsgrundKrz = "OLD";
 
-			when(kontext.fetch(Set.of(idAnrechnungsstunde))).thenReturn(List.of(entity));
+			when(kontext.fetch(List.of(idAnrechnungsstunde))).thenReturn(List.of(entity));
 			when(kontext.getAnrechnungsstunden(idAnrechnungsstunde)).thenReturn(entity);
 
 			final var abschnitt = new DTOLehrerAbschnittsdaten(idAbschnitt, 10L, 200L);
@@ -292,7 +298,7 @@ class LehrerAnrechnungsstundenServiceTest {
 			when(kontext.getAbschnitt(idAbschnitt)).thenReturn(abschnitt);
 			when(kontext.getSchuljahresabschnitt(200L)).thenReturn(schuljahr);
 
-			service.patchMultiple(Map.of(idAnrechnungsstunde, patch));
+			service.patchMultiple(List.of(patch));
 
 			assertThat(entity.AnrechnungsgrundKrz).isEqualTo("310");
 			assertThat(entity.AnrechnungStd).isEqualTo(8.5);
@@ -305,17 +311,18 @@ class LehrerAnrechnungsstundenServiceTest {
 			final long idAbschnitt = 100L;
 			final long idSchuljahresabschnitt = 200L;
 			final var patch = new LehrerAnrechnungsstundenPatchRequest();
+			patch.id = idAnrechnungsstunde;
 
 			final var entity = new DTOLehrerAnrechnungsstunde(idAnrechnungsstunde, idAbschnitt);
 			entity.AnrechnungStd = 5.0;
 			entity.AnrechnungsgrundKrz = "310";
 
-			when(kontext.fetch(Set.of(idAnrechnungsstunde))).thenReturn(List.of(entity));
+			when(kontext.fetch(List.of(idAnrechnungsstunde))).thenReturn(List.of(entity));
 			when(kontext.getAnrechnungsstunden(idAnrechnungsstunde)).thenReturn(entity);
 			when(kontext.getAbschnitt(idAbschnitt)).thenReturn(new DTOLehrerAbschnittsdaten(idAbschnitt, 10L, idSchuljahresabschnitt));
 			when(kontext.getSchuljahresabschnitt(idSchuljahresabschnitt)).thenReturn(new DTOSchuljahresabschnitte(idSchuljahresabschnitt, 2024, 1));
 
-			final var result = service.patchMultiple(Map.of(idAnrechnungsstunde, patch));
+			final var result = service.patchMultiple(List.of(patch));
 
 			assertThat(result).hasSize(1);
 			assertThat(entity.AnrechnungStd).isEqualTo(5.0);

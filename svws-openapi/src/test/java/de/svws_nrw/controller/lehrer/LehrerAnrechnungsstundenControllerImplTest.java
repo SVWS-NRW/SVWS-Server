@@ -5,7 +5,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -68,10 +67,11 @@ class LehrerAnrechnungsstundenControllerImplTest {
 		@DisplayName("patch: Liefert 200 OK nach Einzel-Update")
 		void patch_returnsOk() {
 			final var patch = new LehrerAnrechnungsstundenPatchRequest();
+			patch.id = 1L;
 			final var daten = new LehrerPersonalabschnittsdatenAnrechnungsstunden();
-			when(service.patch(1L, patch)).thenReturn(daten);
+			when(service.patch(patch)).thenReturn(daten);
 
-			final Response response = controller.patch(1L, patch);
+			final Response response = controller.patch(patch);
 
 			assertThat(response.getStatus()).isEqualTo(Status.OK.getStatusCode());
 			assertThat(response.getEntity()).isSameAs(daten);
@@ -80,7 +80,9 @@ class LehrerAnrechnungsstundenControllerImplTest {
 		@Test
 		@DisplayName("patchMultiple: Liefert 200 OK nach Batch-Update")
 		void patchMultiple_returnsOk() {
-			final var patches = Map.of(1L, new LehrerAnrechnungsstundenPatchRequest());
+			final var patch = new LehrerAnrechnungsstundenPatchRequest();
+			patch.id = 1L;
+			final var patches = List.of(patch);
 			final List<LehrerPersonalabschnittsdatenAnrechnungsstunden> list = List.of(new LehrerPersonalabschnittsdatenAnrechnungsstunden());
 			when(service.patchMultiple(patches)).thenReturn(list);
 

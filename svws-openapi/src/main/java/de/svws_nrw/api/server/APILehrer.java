@@ -1,6 +1,7 @@
 package de.svws_nrw.api.server;
 
 import java.io.InputStream;
+import java.util.List;
 
 import org.jboss.resteasy.annotations.GZIP;
 
@@ -30,9 +31,9 @@ import de.svws_nrw.asd.data.lehrer.LehrerZugangsgrundKatalogEintrag;
 import de.svws_nrw.controller.lehrer.LehrerPersonaldatenControllerFactory;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.lehrer.LehrerEinwilligung;
-import de.svws_nrw.core.data.lehrer.LehrerUnterrichtsfach;
 import de.svws_nrw.core.data.lehrer.LehrerLernplattform;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
+import de.svws_nrw.core.data.lehrer.LehrerUnterrichtsfach;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;
@@ -1221,7 +1222,41 @@ public class APILehrer {
 			@Context final HttpServletRequest request) {
 		return LehrerPersonaldatenControllerFactory.withWriteAccess(request)
 				.getLehrerAnrechnungsstundenController()
-				.patch(id, patch);
+				.patch(patch);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen mehrerer allgemeinen Anrechnungsstunden in den Personalabschnittsdaten eines Lehrers.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param patches   die Patches
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/personalabschnittsdaten/anrechnungen")
+	@Operation(summary = "Passt die allgemeinen Anrechnungsstunden eines Lehrers an.",
+			description = "Passt die allgemeinen Anrechnungsstunden eines Lehrers an und speichert das Ergebnis in der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personalabschnittsdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Patches wurden erfolgreich in die allgemeinen Anrechnungsstunden integriert.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class))))
+	@ApiResponse(responseCode = "400", description = "Die Patches dins fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Keine allgemeine Anrechnung mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchLehrerPersonalabschnittsdatenAllgemeineAnrechnungen(@PathParam("schema") final String schema,
+			@Valid @RequestBody(description = "Der Patch für die allgemeine Anrechnung", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(
+									implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class)))) final List<LehrerAnrechnungsstundenPatchRequest> patches,
+			@Context final HttpServletRequest request) {
+		return LehrerPersonaldatenControllerFactory.withWriteAccess(request)
+				.getLehrerAnrechnungsstundenController()
+				.patchMultiple(patches);
 	}
 
 

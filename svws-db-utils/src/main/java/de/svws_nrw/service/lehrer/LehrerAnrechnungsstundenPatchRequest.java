@@ -12,6 +12,11 @@ import jakarta.validation.constraints.NotNull;
 @Schema(description = "Anrechnungsstunden bei Lehrerabschnittsdaten.")
 public class LehrerAnrechnungsstundenPatchRequest {
 
+	/** Die ID des zu patchenden Eintrages - muss gesetzt werden. */
+	@Schema(description = "Die ID des zu patchenden Eintrages - muss gesetzt werden.", example = "4711")
+	@NotNull(message = "Die ID des zu patchenden Eintrages muss gesetzt werden.")
+	public Long id;
+
 	/** Die ID des Anrechnungsgrundes - darf nicht null gesetzt werden. */
 	@Schema(description = "Die ID des Anrechnungsgrundes - darf nicht null gesetzt werden.", example = "4713")
 	@NotNull(message = "Das Feld 'idGrund' darf nicht null sein.")

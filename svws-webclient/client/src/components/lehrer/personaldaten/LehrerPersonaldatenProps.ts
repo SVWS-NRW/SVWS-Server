@@ -29,7 +29,7 @@ export interface LehrerPersonaldatenProps {
 	patchMinderleistung: (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number) => Promise<void>;
 	removeMinderleistung: (data: LehrerPersonalabschnittsdatenAnrechnungsstunden) => Promise<void>;
 	addAnrechnung: (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => Promise<void>;
-	patchAnrechnung: (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number) => Promise<void>;
+	patchAnrechnungen: (data: List<Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>>) => Promise<void>;
 	removeAnrechnung: (data: LehrerPersonalabschnittsdatenAnrechnungsstunden) => Promise<void>;
 	mapFaecher: () => Map<number, FachDaten>;
 	lehrerUnterrichtsfaecher: () => List<LehrerUnterrichtsfach>;

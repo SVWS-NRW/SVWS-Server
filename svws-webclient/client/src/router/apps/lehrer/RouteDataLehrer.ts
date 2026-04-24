@@ -273,8 +273,8 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		this.commit();
 	};
 
-	patchAnrechnung = async (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number) => {
-		await api.server.patchLehrerPersonalabschnittsdatenAllgemeineAnrechnung(data, api.schema, id);
+	patchAnrechnungen = async (data: List<Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>>) => {
+		await api.server.patchLehrerPersonalabschnittsdatenAllgemeineAnrechnungen(data, api.schema);
 		this.commit();
 	};
 

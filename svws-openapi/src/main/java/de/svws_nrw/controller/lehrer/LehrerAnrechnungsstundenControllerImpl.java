@@ -1,7 +1,6 @@
 package de.svws_nrw.controller.lehrer;
 
 import java.util.Collection;
-import java.util.Map;
 
 import de.svws_nrw.data.Responses;
 import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenCreateRequest;
@@ -40,13 +39,13 @@ public final class LehrerAnrechnungsstundenControllerImpl implements LehrerAnrec
 	}
 
 	@Override
-	public Response patch(final long id, final LehrerAnrechnungsstundenPatchRequest patch) {
-		final var daten = service.patch(id, patch);
+	public Response patch(final LehrerAnrechnungsstundenPatchRequest patch) {
+		final var daten = service.patch(patch);
 		return Responses.ok(daten);
 	}
 
 	@Override
-	public Response patchMultiple(final Map<Long, LehrerAnrechnungsstundenPatchRequest> patches) {
+	public Response patchMultiple(final Collection<LehrerAnrechnungsstundenPatchRequest> patches) {
 		final var daten = service.patchMultiple(patches);
 		return Responses.ok(daten);
 	}

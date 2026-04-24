@@ -5,7 +5,6 @@ import static de.svws_nrw.data.TransactionSupport.transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstunden;
@@ -93,47 +92,46 @@ public final class LehrerAnrechnungsstundenService {
 
 
 	/**
-	 * Führt einen Patch für das Core-DTO mit der angebenen ID aus
+	 * Führt einen Patch für das Core-DTO aus. Der Patch enthält die ID auf welche er sich bezieht
 	 *
-	 * @param id      die ID
 	 * @param patch   der Patch
 	 *
 	 * @return das gepatchte Core-DTO
 	 */
-	public LehrerPersonalabschnittsdatenAnrechnungsstunden patch(final long id, final LehrerAnrechnungsstundenPatchRequest patch) {
-		return patchMultiple(Map.of(id, patch)).getFirst();
+	public LehrerPersonalabschnittsdatenAnrechnungsstunden patch(final LehrerAnrechnungsstundenPatchRequest patch) {
+		return patchMultiple(List.of(patch)).getFirst();
 	}
 
 
 	/**
-	 * Führt mehrere Patches auf mehrere Core-DTOs aus.
+	 * Führt mehrere Patches auf mehrere Core-DTOs aus. Die Patches enthalten die IDs auf welche sie sich beziehen
 	 *
-	 * @param patches   eine Map mit den Patches, welche jeweils ihren IDs zugeordnet werden.
+	 * @param patches   die Patches
 	 *
 	 * @return die Liste mit den gepatchten Core-DTOs
 	 */
-	public List<LehrerPersonalabschnittsdatenAnrechnungsstunden> patchMultiple(final Map<Long, LehrerAnrechnungsstundenPatchRequest> patches) {
+	public List<LehrerPersonalabschnittsdatenAnrechnungsstunden> patchMultiple(final Collection<LehrerAnrechnungsstundenPatchRequest> patches) {
 		if (patches.isEmpty()) {
 			return new ArrayList<>();
 		}
 
 		return transactional(() -> {
 			// Bestimme die Entitäten aus der Datenbank
-			final List<DTOLehrerAnrechnungsstunde> entities = kontext.fetch(patches.keySet());
+			final List<Long> ids = patches.stream().map(p -> p.id).toList();
+			final List<DTOLehrerAnrechnungsstunde> entities = kontext.fetch(ids);
 			if (entities.size() != patches.size()) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Nicht alle angefragten Datensätze konnten gefunden werden.");
 			}
 
 			// Führe die Patches aus
-			for (final var entry : patches.entrySet()) {
-				final var patch = entry.getValue();
-				final var entity = kontext.getAnrechnungsstunden(entry.getKey());
+			for (final var patch : patches) {
+				final var entity = kontext.getAnrechnungsstunden(patch.id);
 				applyPatch(entity, patch);
 			}
 
 			// Persistiere das Ergebnis und gebe die Core-DTOs zurück
 			kontext.persist(entities);
-			return getList(patches.keySet());
+			return getList(ids);
 		});
 	}
 
