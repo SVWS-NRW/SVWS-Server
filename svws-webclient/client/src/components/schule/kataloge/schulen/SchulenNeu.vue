@@ -5,10 +5,10 @@
 				<div class="pb-4 flex flex-row gap-6 items-center">
 					<svws-ui-radio-option label=" Schule aus NRW erstellen "
 						v-model="isInternal"
-						:value="true" :disabled />
+						:value="true" :disabled="!hatKompetenzAdd" />
 					<svws-ui-radio-option label=" Externe Schule erstellen "
 						v-model="isInternal"
-						:value="false" :disabled />
+						:value="false" :disabled="!hatKompetenzAdd" />
 				</div>
 				<svws-ui-tooltip v-if="!isInternal" color="primary" :show-arrow="false" :indicator="false">
 					<template #content>
@@ -17,65 +17,75 @@
 					<ui-select label="Schulen außerhalb von NRW und Privatschulen" class="pb-4 w-full"
 						:manager="externeSchulenSelectManager"
 						v-model="selectedExterneSchulen"
-						:disabled />
+						:validation="() => model.getFehler('schulnummerStatistik')"
+						:disabled="!hatKompetenzAdd" required :removable="false" />
 				</svws-ui-tooltip>
 				<ui-select v-if="isInternal"
 					label="Schulen innerhalb NRW" class="pb-4 w-full"
 					:manager="schulenNRWSelectManager"
 					v-model="selectedSchule"
-					:disabled="isLoading || !hatKompetenzAdd" searchable />
+					:validation="() => model.getFehler('schulnummerStatistik')"
+					:disabled="isLoading || !hatKompetenzAdd" searchable required :removable="false" />
 				<div v-if="!schuleAlreadyCreated">
 					<svws-ui-content-card title="Schulangaben" />
 					<svws-ui-input-wrapper :grid="2">
 						<ui-select label="Schulform"
 							:manager="schulformenSelectManager"
-							v-model="selectedSchulformen"
-							:disabled />
+							v-model="model.selectedSchulform.value"
+							:disabled="!hatKompetenzAdd" />
 						<svws-ui-text-input placeholder="Statistik-Schulnummer"
-							:model-value="data.schulnummerStatistik"
-							:valid="() => fieldIsValid('schulnummerStatistik')" :disabled readonly required />
+							:model-value="model.proxy.schulnummerStatistik"
+							:disabled="!hatKompetenzAdd" readonly />
 						<svws-ui-text-input placeholder="Kürzel"
-							v-model="data.kuerzel"
-							:valid="() => fieldIsValid('kuerzel')" :max-len="10" :disabled />
+							v-model="model.proxy.kuerzel"
+							:validation="() => model.getFehler('kuerzel')"
+							:max-len="10" :disabled="!hatKompetenzAdd" />
 						<svws-ui-text-input placeholder="Schulname"
-							v-model="data.name"
-							:valid="() => fieldIsValid('name')" :min-len="1" :max-len="120" :disabled required />
+							v-model="model.proxy.name"
+							:validation="() => model.getFehler('name')"
+							:max-len="120" :disabled="!hatKompetenzAdd" required />
 						<svws-ui-text-input placeholder="Kurzbezeichnung"
-							v-model="data.kurzbezeichnung"
-							:valid="() => fieldIsValid('kurzbezeichnung')" :min-len="1" :max-len="40" :disabled required />
+							v-model="model.proxy.kurzbezeichnung"
+							:validation="() => model.getFehler('kurzbezeichnung')"
+							:max-len="40" :disabled="!hatKompetenzAdd" required />
 						<svws-ui-text-input placeholder="Schulleitung"
-							v-model="data.schulleiter"
-							:valid="() => fieldIsValid('schulleiter')" :max-len="40" :disabled />
+							v-model="model.proxy.schulleiter"
+							:validation="() => model.getFehler('schulleiter')"
+							:max-len="40" :disabled="!hatKompetenzAdd" />
 						<svws-ui-text-input placeholder="Straße"
-							v-model="strasse"
-							:valid="() => fieldIsValid('strassenname')" :max-len="55" :disabled />
+							v-model="model.adresse.value"
+							:validation="() => model.getFehler('strassenname')"
+							:max-len="55" :disabled="!hatKompetenzAdd" />
 						<svws-ui-text-input placeholder="PLZ"
-							v-model="data.plz"
-							:valid="() => fieldIsValid('plz')" :max-len="10" :disabled />
+							v-model="model.proxy.plz"
+							:validation="() => model.getFehler('plz')"
+							:max-len="10" :disabled="!hatKompetenzAdd" />
 						<svws-ui-text-input placeholder="Ort"
-							v-model="data.ort"
-							:valid="() => fieldIsValid('ort')" :max-len="50" :disabled />
+							v-model="model.proxy.ort"
+							:validation="() => model.getFehler('ort')"
+							:max-len="50" :disabled="!hatKompetenzAdd" />
 						<svws-ui-text-input placeholder="Telefon" type="tel"
-							v-model="data.telefon"
-							:valid="() => fieldIsValid('telefon')" :max-len="20" :disabled />
+							v-model="model.proxy.telefon"
+							:validation="() => model.getFehler('telefon')"
+							:max-len="20" :disabled="!hatKompetenzAdd" />
 						<svws-ui-text-input placeholder="Fax" type="tel"
-							v-model="data.fax"
-							:valid="() => fieldIsValid('fax')" :max-len="20" :disabled />
+							v-model="model.proxy.fax"
+							:validation="() => model.getFehler('fax')"
+							:max-len="20" :disabled="!hatKompetenzAdd" />
 						<svws-ui-text-input placeholder="E-Mail-Adresse" type="email"
-							v-model="data.email"
-							:valid="() => fieldIsValid('email')" :max-len="40" :disabled />
+							v-model="model.proxy.email"
+							:validation="() => model.getFehler('email')"
+							:max-len="40" :disabled="!hatKompetenzAdd" />
 					</svws-ui-input-wrapper>
 					<svws-ui-spacing :size="2" />
 					<svws-ui-content-card title="Ansicht & Sortierung">
 						<svws-ui-input-wrapper :grid="2">
 							<svws-ui-input-number placeholder="Sortierung"
-								v-model="data.sortierung"
-								:valid="() => fieldIsValid('sortierung')"
-								:min="0" :max="32000"
-								:disabled="schuleAlreadyCreated || !hatKompetenzAdd"
-								:removable="false" required />
+								v-model="model.proxy.sortierung"
+								:validation="() => model.getFehler('sortierung')"
+								:min="0" :max="32000" :disabled="schuleAlreadyCreated || !hatKompetenzAdd" :removable="false" required />
 							<svws-ui-spacing />
-							<svws-ui-checkbox v-model="data.istSichtbar" :disabled="schuleAlreadyCreated || !hatKompetenzAdd">
+							<svws-ui-checkbox v-model="model.proxy.istSichtbar" :disabled="schuleAlreadyCreated || !hatKompetenzAdd">
 								Sichtbar
 							</svws-ui-checkbox>
 						</svws-ui-input-wrapper>
@@ -90,7 +100,7 @@
 				<svws-ui-button type="secondary" @click="cancel">
 					Abbrechen
 				</svws-ui-button>
-				<svws-ui-button @click="addSchule" :disabled="!formIsValid || !hatKompetenzAdd">
+				<svws-ui-button @click="addSchule" :disabled="!isValid || !hatKompetenzAdd">
 					Speichern
 				</svws-ui-button>
 			</div>
@@ -100,33 +110,25 @@
 </template>
 
 <script setup lang="ts">
-
 	import { computed, ref, watch } from "vue";
-	import { JavaObject, SchulEintrag, Schulform, AdressenUtils, Herkunftsschulnummer, BenutzerKompetenz } from "@core";
-	import type { SchulenKatalogEintrag, HerkunftsschulnummerKatalogEintrag, SchulformKatalogEintrag } from "@core";
+	import { JavaObject, SchulEintrag, Schulform, Herkunftsschulnummer, BenutzerKompetenz } from "@core";
+	import type { HerkunftsschulnummerKatalogEintrag, SchulenKatalogEintrag } from "@core";
 	import type { SchulenNeuProps } from "./SchulenNeuProps";
-	import { emailIsValid, isUniqueInList, mandatoryInputIsValid, numberHasDecimals, numberIsValid, optionalInputIsValid, phoneNumberIsValid } from "~/util/validation/Validation";
 	import { CoreTypeSelectManager, SelectManager } from "@ui";
+	import { SchuleModelProxy } from "~/components/schule/kataloge/schulen/modelproxy/SchuleModelProxy";
 
 	const props = defineProps<SchulenNeuProps>();
-	const data = ref<SchulEintrag>(Object.assign(new SchulEintrag(), { sortierung: 32000, istSichtbar: true }));
+	const initialData = ref<SchulEintrag>(Object.assign(new SchulEintrag(), { sortierung: 32000, istSichtbar: true }));
+	const model = new SchuleModelProxy(() => initialData.value, () => props.manager().liste.list());
 	const isLoading = ref<boolean>(false);
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 	const isInternal = ref<boolean>(true);
 	const selectedSchulenKatalogEintrag = ref<SchulenKatalogEintrag>();
 	const schuljahr = computed<number>(() => props.manager().getSchuljahr());
-	const selectedSchulform = computed({
-		get: () => Schulform.data().getWertByID(data.value.idSchulform ?? -1),
-		set: (value: Schulform | null) => {
-			if (value === null) {
-				return;
-			}
-			const eintrag = Schulform.data().getEintragBySchuljahrUndWert(schuljahr.value, value);
-			if (eintrag !== null) {
-				data.value.idSchulform = eintrag.id;
-			}
-		},
+
+	const selectedExterneSchulen = computed<HerkunftsschulnummerKatalogEintrag | null>({
+		get: () => Herkunftsschulnummer.data().getEintragBySchuljahrUndSchluessel(props.schuljahr, model.proxy.schulnummerStatistik ?? ""),
+		set: (value) => model.proxy.schulnummerStatistik = value?.schluessel ?? null,
 	});
 
 	const externeSchulenSelectManager = new CoreTypeSelectManager({
@@ -151,11 +153,6 @@
 		selectionDisplayText: "text",
 	});
 
-	const selectedExterneSchulen = computed<HerkunftsschulnummerKatalogEintrag | null>({
-		get: () => Herkunftsschulnummer.data().getEintragBySchuljahrUndSchluessel(props.schuljahr, data.value.schulnummerStatistik ?? ""),
-		set: (value: HerkunftsschulnummerKatalogEintrag | null) => data.value.schulnummerStatistik = value?.schluessel ?? null,
-	});
-
 	const selectedSchule = computed<SchulenKatalogEintrag | null>({
 		get: () => selectedSchulenKatalogEintrag.value ?? null,
 		set: (value) => {
@@ -164,40 +161,26 @@
 		},
 	});
 
-	const selectedSchulformen = computed<SchulformKatalogEintrag | null>({
-		get: () => Schulform.data().getEintragByID(data.value.idSchulform ?? -1),
-		set: (value: SchulformKatalogEintrag | null) => data.value.idSchulform = value?.id ?? null,
-	});
-
-	const strasse = computed({
-		get: () => AdressenUtils.combineStrasse(data.value.strassenname, data.value.hausnummer, data.value.zusatzHausnummer),
-		set: (strasse: string | null) => {
-			const vals = AdressenUtils.splitStrasse(strasse);
-			data.value.strassenname = vals[0];
-			data.value.hausnummer = vals[1];
-			data.value.zusatzHausnummer = vals[2];
-		},
-	});
+	const isValid = computed<boolean>(() => model.getAlleFehler().isEmpty() && model.proxy.schulnummerStatistik !== null);
 
 	// befüllt das Formular mit den Werten der vorausgewählten Schule
 	function updateData(schule: SchulenKatalogEintrag | undefined | null) {
-		// Felder clearen
 		if (schule === undefined || schule === null) {
 			resetForm();
 			return;
 		}
-		selectedSchulenKatalogEintrag.value = schule;
-		// Felder füllen
-		data.value.kurzbezeichnung = schule.KurzBez;
-		data.value.schulnummerStatistik = schule.SchulNr;
-		data.value.name = (schule.ABez1 ?? "") + (schule.ABez2 ?? "") + (schule.ABez3 ?? "");
-		selectedSchulform.value = Schulform.data().getWertBySchluessel(schule.SF ?? "");
-		strasse.value = schule.Strasse;
-		data.value.plz = schule.PLZ;
-		data.value.ort = schule.Ort;
-		data.value.telefon = schule.Telefon;
-		data.value.fax = schule.Fax;
-		data.value.email = schule.Email;
+
+		model.proxy.kurzbezeichnung = schule.KurzBez;
+		model.proxy.schulnummerStatistik = schule.SchulNr;
+		model.proxy.name = (schule.ABez1 ?? "") + (schule.ABez2 ?? "") + (schule.ABez3 ?? "");
+		const schulformWert = Schulform.data().getWertBySchluessel(schule.SF ?? "");
+		model.proxy.idSchulform = schulformWert === null ? null : Schulform.data().getEintragBySchuljahrUndWert(schuljahr.value, schulformWert)?.id ?? null;
+		model.adresse.value = schule.Strasse;
+		model.proxy.plz = schule.PLZ;
+		model.proxy.ort = schule.Ort;
+		model.proxy.telefon = schule.Telefon;
+		model.proxy.fax = schule.Fax;
+		model.proxy.email = schule.Email;
 	}
 
 	// ---Bezeichnungen---
@@ -218,7 +201,7 @@
 
 		isLoading.value = true;
 		props.checkpoint.active = false;
-		const { id, referenziertInAnderenTabellen, ...partialData } = data.value;
+		const { id, referenziertInAnderenTabellen, ...partialData } = model.proxy;
 		await props.add(partialData);
 		isLoading.value = false;
 	}
@@ -235,7 +218,7 @@
 	);
 
 	function resetForm() {
-		data.value = Object.assign(new SchulEintrag(), { istSichtbar: true });
+		initialData.value = Object.assign(new SchulEintrag(), { sortierung: 32000, istSichtbar: true });
 		selectedSchulenKatalogEintrag.value = undefined;
 	}
 
@@ -257,7 +240,7 @@
 		return null;
 	}
 
-	watch(() => data.value, async () => {
+	watch(() => model.proxy, async () => {
 		if (isLoading.value) {
 			return;
 		}
@@ -265,91 +248,7 @@
 	}, { immediate: false, deep: true });
 
 	watch(() => isInternal.value, () => {
-		// intern / extern toggle setzt die Felder zurück
 		resetForm();
 	});
-
-	// ---validate---
-	const formIsValid = computed(() => {
-		return Object.keys(data.value)
-			.every((field: string) => fieldIsValid(field as keyof SchulEintrag));
-	});
-
-	const fieldIsValid = (field: keyof SchulEintrag | null): boolean => {
-		switch (field) {
-			case 'kuerzel':
-				return kuerzelIsValid(data.value.kuerzel);
-			case 'name':
-				return schulnameIsValid(data.value.name);
-			case 'kurzbezeichnung':
-				return kurzbezeichnungIsValid(data.value.kurzbezeichnung);
-			case 'schulleiter':
-				return schulleiterIsValid(data.value.schulleiter);
-			case 'schulnummerStatistik':
-				return schulnummerStatistikIsValid(data.value.schulnummerStatistik);
-			case 'strassenname':
-				return strasseIsValid();
-			case 'plz':
-				return plzIsValid(data.value.plz);
-			case 'ort':
-				return ortIsValid(data.value.ort);
-			case 'telefon':
-				return phoneNumberIsValid(data.value.telefon, 20);
-			case "fax":
-				return phoneNumberIsValid(data.value.fax, 20);
-			case "email":
-				return emailIsValid(data.value.email, 40);
-			case 'sortierung':
-				return sortierungIsValid(data.value.sortierung);
-			default:
-				return true;
-		}
-	};
-
-	function kuerzelIsValid(kuerzel: string | null): boolean {
-		return optionalInputIsValid(kuerzel, 10)
-			&& isUniqueInList(kuerzel, props.manager().liste.list(), "kuerzel", "id", data.value.id);
-	}
-
-	function schulnameIsValid(schulname: string | null): schulname is string {
-		return schulname !== null
-			&& mandatoryInputIsValid(schulname, 120)
-			&& isUniqueInList(schulname, props.manager().liste.list(), "name", "id", data.value.id);
-	}
-
-	function kurzbezeichnungIsValid(kurzbezeichnung: string | null): kurzbezeichnung is string {
-		return kurzbezeichnung !== null
-			&& mandatoryInputIsValid(kurzbezeichnung, 40)
-			&& isUniqueInList(kurzbezeichnung, props.manager().liste.list(), "kurzbezeichnung", "id", data.value.id);
-	}
-
-	function schulleiterIsValid(schulleiter: string | null): boolean {
-		return optionalInputIsValid(schulleiter, 40);
-	}
-
-	function schulnummerStatistikIsValid(schulnummer: string | null): schulnummer is string {
-		return (schulnummer !== null)
-			&& mandatoryInputIsValid(schulnummer, 6);
-	}
-
-	function strasseIsValid() {
-		return optionalInputIsValid(data.value.strassenname, 55) &&
-			optionalInputIsValid(data.value.hausnummer, 10) &&
-			optionalInputIsValid(data.value.zusatzHausnummer, 30);
-	}
-
-	function plzIsValid(plz: string | null): boolean {
-		return optionalInputIsValid(plz, 10);
-	}
-
-	function ortIsValid(plz: string | null): boolean {
-		return optionalInputIsValid(plz, 50);
-	}
-
-	function sortierungIsValid(sortierung: number | null): sortierung is number {
-		return sortierung !== null
-			&& !numberHasDecimals(sortierung)
-			&& numberIsValid(sortierung, true, 0, 32000);
-	}
 
 </script>
