@@ -1,11 +1,9 @@
-import { describe, expect, beforeEach, afterEach, test } from 'vitest';
+import { beforeEach, describe, expect, test } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { flushPromises, mount } from '@vue/test-utils';
 import SvwsUiModal from '../../../src/ui/modal/SvwsUiModal.vue';
 import { Dialog, DialogDescription, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
 import type { Size } from "../../../src/types";
-
-
 
 let wrapper: VueWrapper<any>;
 let idComponent: string;
@@ -39,16 +37,12 @@ beforeEach(async () => {
 	idTC_div = wrapper.vm.idTC_div;
 });
 
-afterEach(() => {
-	wrapper.unmount();
-	document.body.innerHTML = '';
-});
-
 test("Testen der Teleportierung", async () => {
 	/* Die Kommentare <!--teleport start--><!--teleport end--> zeigen an, dass der Dialog-Inhalt an
 	eine andere Stelle teleportiert wurde, was zu erwarten ist.
 	*/
 	await wrapper.vm.$nextTick();
+
 	expect(wrapper.html()).toContain('<!--teleport start-->');
 	expect(wrapper.html()).toContain('<!--teleport end-->');
 });
