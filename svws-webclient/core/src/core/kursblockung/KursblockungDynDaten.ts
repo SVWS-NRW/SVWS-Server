@@ -15,6 +15,7 @@ import { JavaString } from '../../java/lang/JavaString';
 import { Logger } from '../../core/logger/Logger';
 import { GostBlockungRegel } from '../../core/data/gost/GostBlockungRegel';
 import { GostKursart } from '../../core/types/gost/GostKursart';
+import { LogLevel } from '../../core/logger/LogLevel';
 import { GostKursblockungRegelTyp } from '../../core/types/kursblockung/GostKursblockungRegelTyp';
 import { Random } from '../../java/util/Random';
 import { GostBlockungsergebnisKursSchienenZuordnung } from '../../core/data/gost/GostBlockungsergebnisKursSchienenZuordnung';
@@ -298,171 +299,162 @@ export class KursblockungDynDaten extends JavaObject {
 		}
 	}
 
-	private static fehlerBeiReferenzenRegeltyp1(daten: Array<number>, setKursarten: HashSet<number>, schienenAnzahl: number): void {
+	private static ueberpruefeDatenLaenge(regelName: string, daten: Array<number>, expectedLength: number): void {
 		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue(JavaString.format("KURSART_SPERRE_SCHIENEN_VON_BIS daten.length=%d, statt 3!", length), length !== 3);
+		DeveloperNotificationException.ifTrue(JavaString.format("%s: daten.length=%d, statt %d!", regelName, length, expectedLength), length !== expectedLength);
+	}
+
+	private static fehlerBeiReferenzenRegeltyp1(daten: Array<number>, setKursarten: HashSet<number>, schienenAnzahl: number): void {
+		KursblockungDynDaten.ueberpruefeDatenLaenge("KURSART_SPERRE_SCHIENEN_VON_BIS", daten, 3);
 		const kursartID: number = daten[0];
 		const von: number = daten[1];
 		const bis: number = daten[2];
-		DeveloperNotificationException.ifSetNotContains(JavaString.format("KURSART_SPERRE_SCHIENEN_VON_BIS(%d, %d, %d) Kursart fehlt in 'setKursarten'.", kursartID, von, bis), setKursarten, kursartID);
-		DeveloperNotificationException.ifTrue(JavaString.format("KURSART_SPERRE_SCHIENEN_VON_BIS(%d,%d,%d) Parameter sind unlogisch!", kursartID, von, bis), !((von >= 1) && (von <= bis) && (bis <= schienenAnzahl)));
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("KURSART_SPERRE_SCHIENEN_VON_BIS(%d, %d, %d): Kursart nicht vorhanden!", kursartID, von, bis), setKursarten, kursartID);
+		DeveloperNotificationException.ifTrue(JavaString.format("KURSART_SPERRE_SCHIENEN_VON_BIS(%d, %d, %d): Parameter sind unlogisch!", kursartID, von, bis), !((von >= 1) && (von <= bis) && (bis <= schienenAnzahl)));
 	}
 
 	private static fehlerBeiReferenzenRegeltyp2(daten: Array<number>, setKurse: HashSet<number>, schienenAnzahl: number): void {
-		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue(JavaString.format("KURS_FIXIERE_IN_SCHIENE daten.length=%d, statt 2!", length), length !== 2);
+		KursblockungDynDaten.ueberpruefeDatenLaenge("KURS_FIXIERE_IN_SCHIENE", daten, 2);
 		const kursID: number = daten[0].valueOf();
 		const schiene: number = daten[1];
-		DeveloperNotificationException.ifSetNotContains(JavaString.format("KURS_FIXIERE_IN_SCHIENE(%d, %d): KursID fehlt in 'setKurse'.", kursID, schiene), setKurse, kursID);
-		DeveloperNotificationException.ifTrue(JavaString.format("KURS_FIXIERE_IN_SCHIENE(%d, %d) ist unlogisch!", kursID, schiene), !((schiene >= 1) && (schiene <= schienenAnzahl)));
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("KURS_FIXIERE_IN_SCHIENE(%d, %d): Kurs-ID nicht vorhanden!", kursID, schiene), setKurse, kursID);
+		DeveloperNotificationException.ifTrue(JavaString.format("KURS_FIXIERE_IN_SCHIENE(%d, %d): Parameter sind unlogisch!", kursID, schiene), !((schiene >= 1) && (schiene <= schienenAnzahl)));
 	}
 
 	private static fehlerBeiReferenzenRegeltyp3(daten: Array<number>, setKurse: HashSet<number>, schienenAnzahl: number): void {
-		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue(JavaString.format("KURS_SPERRE_IN_SCHIENE daten.length=%d, statt 2!", length), length !== 2);
+		KursblockungDynDaten.ueberpruefeDatenLaenge("KURS_SPERRE_IN_SCHIENE", daten, 2);
 		const kursID: number = daten[0].valueOf();
-		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
 		const schiene: number = daten[1];
-		DeveloperNotificationException.ifTrue(JavaString.format("KURS_SPERRE_IN_SCHIENE (%d, %d) ist unlogisch!", kursID, schiene), !((schiene >= 1) && (schiene <= schienenAnzahl)));
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("KURS_SPERRE_IN_SCHIENE(%d, %d): Kurs-ID nicht vorhanden!", kursID, schiene), setKurse, kursID);
+		DeveloperNotificationException.ifTrue(JavaString.format("KURS_SPERRE_IN_SCHIENE(%d, %d): Parameter sind unlogisch!", kursID, schiene), !((schiene >= 1) && (schiene <= schienenAnzahl)));
 	}
 
 	private static fehlerBeiReferenzenRegeltyp4(daten: Array<number>, setSchueler: HashSet<number>, setKurse: HashSet<number>): void {
-		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue(JavaString.format("SCHUELER_FIXIEREN_IN_KURS daten.length=%d, statt 2!", length), length !== 2);
+		KursblockungDynDaten.ueberpruefeDatenLaenge("SCHUELER_FIXIEREN_IN_KURS", daten, 2);
 		const schuelerID: number = daten[0].valueOf();
 		const kursID: number = daten[1].valueOf();
-		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_FIXIEREN_IN_KURS(%d, %d): Schüler-ID fehlt in 'setSchueler'.", schuelerID, kursID), setSchueler, schuelerID);
-		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_FIXIEREN_IN_KURS(%d, %d): Kurs-ID fehlt in 'setKurse'.", schuelerID, kursID), setKurse, kursID);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_FIXIEREN_IN_KURS(%d, %d): Schüler-ID nicht vorhanden!", schuelerID, kursID), setSchueler, schuelerID);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_FIXIEREN_IN_KURS(%d, %d): Kurs-ID nicht vorhanden!", schuelerID, kursID), setKurse, kursID);
 	}
 
 	private static fehlerBeiReferenzenRegeltyp5(daten: Array<number>, setSchueler: HashSet<number>, setKurse: HashSet<number>): void {
-		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue(JavaString.format("SCHUELER_VERBIETEN_IN_KURS daten.length=%d, statt 2!", length), length !== 2);
+		KursblockungDynDaten.ueberpruefeDatenLaenge("SCHUELER_VERBIETEN_IN_KURS", daten, 2);
 		const schuelerID: number = daten[0].valueOf();
-		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID);
 		const kursID: number = daten[1].valueOf();
-		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_VERBIETEN_IN_KURS(%d, %d): Schüler-ID nicht vorhanden!", schuelerID, kursID), setSchueler, schuelerID);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_VERBIETEN_IN_KURS(%d, %d): Kurs-ID nicht vorhanden!", schuelerID, kursID), setKurse, kursID);
 	}
 
 	private static fehlerBeiReferenzenRegeltyp6(daten: Array<number>, setKursarten: HashSet<number>, schienenAnzahl: number): void {
-		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue(JavaString.format("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS daten.length=%d, statt 3!", length), length !== 3);
+		KursblockungDynDaten.ueberpruefeDatenLaenge("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS", daten, 3);
 		const kursartID: number = daten[0];
-		DeveloperNotificationException.ifSetNotContains("setKursarten", setKursarten, kursartID);
 		const von: number = daten[1];
 		const bis: number = daten[2];
-		DeveloperNotificationException.ifTrue(JavaString.format("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS (%d, %d, %d) ist unlogisch!", kursartID, von, bis), !((von >= 1) && (von <= bis) && (bis <= schienenAnzahl)));
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(%d, %d, %d): Kursart nicht vorhanden!", kursartID, von, bis), setKursarten, kursartID);
+		DeveloperNotificationException.ifTrue(JavaString.format("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(%d, %d, %d): Parameter sind unlogisch!", kursartID, von, bis), !((von >= 1) && (von <= bis) && (bis <= schienenAnzahl)));
 	}
 
 	private static fehlerBeiReferenzenRegeltyp7(daten: Array<number>, setKurse: HashSet<number>): void {
-		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue(JavaString.format("KURS_VERBIETEN_MIT_KURS daten.length=%d, statt 2!", length), length !== 2);
+		KursblockungDynDaten.ueberpruefeDatenLaenge("KURS_VERBIETEN_MIT_KURS", daten, 2);
 		const kursID1: number = daten[0].valueOf();
-		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID1);
 		const kursID2: number = daten[1].valueOf();
-		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID2);
-		DeveloperNotificationException.ifTrue(JavaString.format("Die Regel 'KURS_VERBIETEN_MIT_KURS' wurde mit einem Kurs (%d) und sich selbst kombiniert!", kursID1), kursID1 === kursID2);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("KURS_VERBIETEN_MIT_KURS(%d, %d): Kurs-ID1 nicht vorhanden!", kursID1, kursID2), setKurse, kursID1);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("KURS_VERBIETEN_MIT_KURS(%d, %d): Kurs-ID2 nicht vorhanden!", kursID1, kursID2), setKurse, kursID2);
+		DeveloperNotificationException.ifTrue(JavaString.format("KURS_VERBIETEN_MIT_KURS(%d, %d): Wurde mit sich selbst kombiniert!", kursID1, kursID2), kursID1 === kursID2);
 	}
 
 	private static fehlerBeiReferenzenRegeltyp8(daten: Array<number>, setKurse: HashSet<number>): void {
-		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue(JavaString.format("KURS_ZUSAMMEN_MIT_KURS daten.length=%d, statt 2!", length), length !== 2);
+		KursblockungDynDaten.ueberpruefeDatenLaenge("KURS_ZUSAMMEN_MIT_KURS", daten, 2);
 		const kursID1: number = daten[0].valueOf();
-		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID1);
 		const kursID2: number = daten[1].valueOf();
-		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID2);
-		DeveloperNotificationException.ifTrue(JavaString.format("Die Regel 'KURS_ZUSAMMEN_MIT_KURS' wurde mit einem Kurs (%d) und sich selbst kombiniert!", kursID1), kursID1 === kursID2);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("KURS_ZUSAMMEN_MIT_KURS(%d, %d): Kurs-ID1 nicht vorhanden!", kursID1, kursID2), setKurse, kursID1);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("KURS_ZUSAMMEN_MIT_KURS(%d, %d): Kurs-ID2 nicht vorhanden!", kursID1, kursID2), setKurse, kursID2);
+		DeveloperNotificationException.ifTrue(JavaString.format("KURS_ZUSAMMEN_MIT_KURS(%d, %d): Wurde mit sich selbst kombiniert!", kursID1, kursID2), kursID1 === kursID2);
 	}
 
 	private static fehlerBeiReferenzenRegeltyp9(daten: Array<number>, setKurse: HashSet<number>): void {
-		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue(JavaString.format("KURS_MIT_DUMMY_SUS_AUFFUELLEN daten.length=%d, statt 2!", length), length !== 2);
+		KursblockungDynDaten.ueberpruefeDatenLaenge("KURS_MIT_DUMMY_SUS_AUFFUELLEN", daten, 2);
 		const kursID: number = daten[0].valueOf();
-		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
 		const dummySuS: number = daten[1];
-		DeveloperNotificationException.ifSmaller("dummySuS", dummySuS, 1);
-		DeveloperNotificationException.ifGreater("dummySuS", dummySuS, 99);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("KURS_MIT_DUMMY_SUS_AUFFUELLEN(%d, %d): Kurs-ID nicht vorhanden!", kursID, dummySuS), setKurse, kursID);
+		DeveloperNotificationException.ifSmaller(JavaString.format("KURS_MIT_DUMMY_SUS_AUFFUELLEN(%d, %d): Der Wert ist zu klein!", kursID, dummySuS), dummySuS, GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN_MIN);
+		DeveloperNotificationException.ifGreater(JavaString.format("KURS_MIT_DUMMY_SUS_AUFFUELLEN(%d, %d): Der Wert ist zu groß!", kursID, dummySuS), dummySuS, GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN_MAX);
 	}
 
 	private static fehlerBeiReferenzenRegeltyp10(daten: Array<number>): void {
-		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue(JavaString.format("LEHRKRAEFTE_BEACHTEN daten.length=%d, statt 0!", length), length !== 0);
+		KursblockungDynDaten.ueberpruefeDatenLaenge("LEHRKRAEFTE_BEACHTEN", daten, 0);
 	}
 
 	private static fehlerBeiReferenzenRegeltyp11(daten: Array<number>, setSchueler: HashSet<number>, setFaecher: HashSet<number>): void {
-		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue(JavaString.format("SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH daten.length=%d, statt 3!", length), length !== 3);
+		KursblockungDynDaten.ueberpruefeDatenLaenge("SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH", daten, 3);
 		const schuelerID1: number = daten[0].valueOf();
 		const schuelerID2: number = daten[1].valueOf();
 		const fachID: number = daten[2].valueOf();
-		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(%d, %d, %d): Schüler-ID1 fehlt in 'setSchueler'.", schuelerID1, schuelerID2, fachID), setSchueler, schuelerID1);
-		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(%d, %d, %d): Schüler-ID2 fehlt in 'setSchueler'.", schuelerID1, schuelerID2, fachID), setSchueler, schuelerID2);
-		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(%d, %d, %d): Fach-ID fehlt in 'setFaecher'.", schuelerID1, schuelerID2, fachID), setFaecher, fachID);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(%d, %d, %d): Schüler-ID1 nicht vorhanden!", schuelerID1, schuelerID2, fachID), setSchueler, schuelerID1);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(%d, %d, %d): Schüler-ID2 nicht vorhanden!", schuelerID1, schuelerID2, fachID), setSchueler, schuelerID2);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(%d, %d, %d): Fach-ID nicht vorhanden!", schuelerID1, schuelerID2, fachID), setFaecher, fachID);
+		DeveloperNotificationException.ifTrue(JavaString.format("SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(%d, %d, %d): Wurde mit sich selbst kombiniert!", schuelerID1, schuelerID2, fachID), schuelerID1 === schuelerID2);
 	}
 
 	private static fehlerBeiReferenzenRegeltyp12(daten: Array<number>, setSchueler: HashSet<number>, setFaecher: HashSet<number>): void {
-		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue(JavaString.format("SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH daten.length=%d, statt 3!", length), length !== 3);
+		KursblockungDynDaten.ueberpruefeDatenLaenge("SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH", daten, 3);
 		const schuelerID1: number = daten[0].valueOf();
 		const schuelerID2: number = daten[1].valueOf();
-		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID1);
-		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID2);
 		const fachID: number = daten[2].valueOf();
-		DeveloperNotificationException.ifSetNotContains("setFaecher", setFaecher, fachID);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH(%d, %d, %d): Schüler-ID1 nicht vorhanden!", schuelerID1, schuelerID2, fachID), setSchueler, schuelerID1);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH(%d, %d, %d): Schüler-ID2 nicht vorhanden!", schuelerID1, schuelerID2, fachID), setSchueler, schuelerID2);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH(%d, %d, %d): Fach-ID nicht vorhanden!", schuelerID1, schuelerID2, fachID), setFaecher, fachID);
+		DeveloperNotificationException.ifTrue(JavaString.format("SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH(%d, %d, %d): Wurde mit sich selbst kombiniert!", schuelerID1, schuelerID2, fachID), schuelerID1 === schuelerID2);
 	}
 
 	private static fehlerBeiReferenzenRegeltyp13(daten: Array<number>, setSchueler: HashSet<number>): void {
-		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue(JavaString.format("SCHUELER_ZUSAMMEN_MIT_SCHUELER daten.length=%d, statt 2!", length), length !== 2);
+		KursblockungDynDaten.ueberpruefeDatenLaenge("SCHUELER_ZUSAMMEN_MIT_SCHUELER", daten, 2);
 		const schuelerID1: number = daten[0].valueOf();
 		const schuelerID2: number = daten[1].valueOf();
-		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID1);
-		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID2);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_ZUSAMMEN_MIT_SCHUELER(%d, %d): Schüler-ID1 nicht vorhanden!", schuelerID1, schuelerID2), setSchueler, schuelerID1);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_ZUSAMMEN_MIT_SCHUELER(%d, %d): Schüler-ID2 nicht vorhanden!", schuelerID1, schuelerID2), setSchueler, schuelerID2);
+		DeveloperNotificationException.ifTrue(JavaString.format("SCHUELER_ZUSAMMEN_MIT_SCHUELER(%d, %d): Wurde mit sich selbst kombiniert!", schuelerID1, schuelerID2), schuelerID1 === schuelerID2);
 	}
 
 	private static fehlerBeiReferenzenRegeltyp14(daten: Array<number>, setSchueler: HashSet<number>): void {
-		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue(JavaString.format("SCHUELER_VERBIETEN_MIT_SCHUELER daten.length=%d, statt 2!", length), length !== 2);
+		KursblockungDynDaten.ueberpruefeDatenLaenge("SCHUELER_VERBIETEN_MIT_SCHUELER", daten, 2);
 		const schuelerID1: number = daten[0].valueOf();
 		const schuelerID2: number = daten[1].valueOf();
-		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID1);
-		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID2);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_VERBIETEN_MIT_SCHUELER(%d, %d): Schüler-ID1 nicht vorhanden!", schuelerID1, schuelerID2), setSchueler, schuelerID1);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_VERBIETEN_MIT_SCHUELER(%d, %d): Schüler-ID2 nicht vorhanden!", schuelerID1, schuelerID2), setSchueler, schuelerID2);
+		DeveloperNotificationException.ifTrue(JavaString.format("SCHUELER_VERBIETEN_MIT_SCHUELER(%d, %d): Wurde mit sich selbst kombiniert!", schuelerID1, schuelerID2), schuelerID1 === schuelerID2);
 	}
 
 	private static fehlerBeiReferenzenRegeltyp15(daten: Array<number>, setKurse: HashSet<number>): void {
-		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue(JavaString.format("KURS_MAXIMALE_SCHUELERANZAHL daten.length=%d, statt 2!", length), length !== 2);
+		KursblockungDynDaten.ueberpruefeDatenLaenge("KURS_MAXIMALE_SCHUELERANZAHL", daten, 2);
 		const kursID: number = daten[0].valueOf();
-		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
-		const anzahlSus: number = daten[1];
-		DeveloperNotificationException.ifSmaller("anzahlSus", anzahlSus, 0);
-		DeveloperNotificationException.ifGreater("anzahlSus", anzahlSus, 100);
+		const schuelerAnzahl: number = daten[1];
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("KURS_MAXIMALE_SCHUELERANZAHL(%d, %d): Kurs-ID nicht vorhanden!", kursID, schuelerAnzahl), setKurse, kursID);
+		DeveloperNotificationException.ifSmaller(JavaString.format("KURS_MAXIMALE_SCHUELERANZAHL(%d, %d): Schüleranzahl ist zu klein!", kursID, schuelerAnzahl), schuelerAnzahl, GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL_MIN);
+		DeveloperNotificationException.ifGreater(JavaString.format("KURS_MAXIMALE_SCHUELERANZAHL(%d, %d): Schüleranzahl ist zu groß!", kursID, schuelerAnzahl), schuelerAnzahl, GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL_MAX);
 	}
 
 	private static fehlerBeiReferenzenRegeltyp16(daten: Array<number>, setSchueler: HashSet<number>): void {
-		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue(JavaString.format("SCHUELER_IGNORIEREN daten.length=%d, statt 1!", length), length !== 1);
+		KursblockungDynDaten.ueberpruefeDatenLaenge("SCHUELER_IGNORIEREN", daten, 1);
 		const schuelerID: number = daten[0].valueOf();
-		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_IGNORIEREN(%d): Schüler-ID nicht vorhanden!", schuelerID), setSchueler, schuelerID);
 	}
 
 	private static fehlerBeiReferenzenRegeltyp17(daten: Array<number>, setKurse: HashSet<number>): void {
-		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue(JavaString.format("KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN daten.length=%d, statt 1!", length), length !== 1);
+		KursblockungDynDaten.ueberpruefeDatenLaenge("KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN", daten, 1);
 		const kursID: number = daten[0].valueOf();
-		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN(%d): Kurs-ID nicht vorhanden!", kursID), setKurse, kursID);
 	}
 
 	private static fehlerBeiReferenzenRegeltyp18(daten: Array<number>, setFaecher: HashSet<number>, setKursarten: HashSet<number>): void {
-		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue(JavaString.format("FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE daten.length=%d, statt 3!", length), length !== 3);
+		KursblockungDynDaten.ueberpruefeDatenLaenge("FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE", daten, 3);
 		const fachID: number = daten[0].valueOf();
-		DeveloperNotificationException.ifSetNotContains("setFaecher", setFaecher, fachID);
 		const kursartID: number = daten[1];
-		DeveloperNotificationException.ifSetNotContains("setKursarten", setKursarten, kursartID);
-		const fachArtProSchieneMaximal: number = daten[2];
-		DeveloperNotificationException.ifSmaller("fachArtProSchieneMaximal", fachArtProSchieneMaximal, 1);
-		DeveloperNotificationException.ifGreater("fachArtProSchieneMaximal", fachArtProSchieneMaximal, 9);
+		const maximum: number = daten[2];
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE(%d, %d, %d): Fach-ID nicht vorhanden!", fachID, kursartID, maximum), setFaecher, fachID);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE(%d, %d, %d): Kursart nicht vorhanden!", fachID, kursartID, maximum), setKursarten, kursartID);
+		DeveloperNotificationException.ifSmaller(JavaString.format("FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE(%d, %d, %d): Anzahl ist zu klein!", fachID, kursartID, maximum), maximum, GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE_MIN);
+		DeveloperNotificationException.ifGreater(JavaString.format("FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE(%d, %d, %d): Anzahl ist zu groß!", fachID, kursartID, maximum), maximum, GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE_MAX);
 	}
 
 	private fehlerBeiRegelGruppierung(pRegeln: List<GostBlockungRegel>): void {
@@ -1259,7 +1251,7 @@ export class KursblockungDynDaten extends JavaObject {
 	 */
 	aktionZustandLadenVon(b: KursblockungDynDaten): void {
 		if (this as unknown === b as unknown) {
-			console.log(JSON.stringify("Identisch!"));
+			this.log.logLn(LogLevel.WARNING, "KursblockungDynDaten.aktionZustandLadenVon(...) versucht sich selbst zu laden.");
 			return;
 		}
 		for (const schueler of this.schuelerMenge) {

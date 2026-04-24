@@ -25,6 +25,7 @@ import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostFachwahl;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.exceptions.UserNotificationException;
+import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
@@ -351,309 +352,342 @@ public class KursblockungDynDaten {
 	}
 
 
-	private static void fehlerBeiReferenzenRegeltyp1(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Integer> setKursarten,
-			final int schienenAnzahl) {
-
-		final int length = daten.length;
-		DeveloperNotificationException.ifTrue(
-				"KURSART_SPERRE_SCHIENEN_VON_BIS daten.length=%d, statt 3!".formatted(length),
-				length != 3
-		);
-
-		final int kursartID = daten[0].intValue();
-		final int von = daten[1].intValue(); // Schiene ist 1-indiziert!
-		final int bis = daten[2].intValue(); // Schiene ist 1-indiziert!
-
-		DeveloperNotificationException.ifSetNotContains(
-				"KURSART_SPERRE_SCHIENEN_VON_BIS(%d, %d, %d) Kursart fehlt in 'setKursarten'."
-						.formatted(kursartID, von, bis),
-				setKursarten, kursartID);
-
-		DeveloperNotificationException.ifTrue(
-				"KURSART_SPERRE_SCHIENEN_VON_BIS(%d,%d,%d) Parameter sind unlogisch!".formatted(kursartID, von, bis),
-				!((von >= 1) && (von <= bis) && (bis <= schienenAnzahl))
-		);
+	private static void ueberpruefeDatenLaenge(final @NotNull String regelName, final @NotNull Long @NotNull [] daten, final int expectedLength) {
+	    final int length = daten.length;
+	    DeveloperNotificationException.ifTrue(
+	        "%s: daten.length=%d, statt %d!".formatted(regelName, length, expectedLength),
+	        length != expectedLength
+	    );
 	}
 
+
+	private static void fehlerBeiReferenzenRegeltyp1(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Integer> setKursarten,
+	        final int schienenAnzahl) {
+
+	    ueberpruefeDatenLaenge("KURSART_SPERRE_SCHIENEN_VON_BIS", daten, 3);
+
+	    final int kursartID = daten[0].intValue();
+	    final int von = daten[1].intValue(); // Schiene ist 1-indiziert!
+	    final int bis = daten[2].intValue(); // Schiene ist 1-indiziert!
+
+	    DeveloperNotificationException.ifSetNotContains(
+	        "KURSART_SPERRE_SCHIENEN_VON_BIS(%d, %d, %d): Kursart nicht vorhanden!".formatted(kursartID, von, bis),
+	        setKursarten, kursartID);
+
+	    DeveloperNotificationException.ifTrue(
+	        "KURSART_SPERRE_SCHIENEN_VON_BIS(%d, %d, %d): Parameter sind unlogisch!".formatted(kursartID, von, bis),
+	        !((von >= 1) && (von <= bis) && (bis <= schienenAnzahl))
+	    );
+	}
 
 	private static void fehlerBeiReferenzenRegeltyp2(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse,
-			final int schienenAnzahl) {
+	        final int schienenAnzahl) {
 
-		final int length = daten.length;
-		DeveloperNotificationException.ifTrue(
-				"KURS_FIXIERE_IN_SCHIENE daten.length=%d, statt 2!"
-						.formatted(length),
-				length != 2);
+	    ueberpruefeDatenLaenge("KURS_FIXIERE_IN_SCHIENE", daten, 2);
 
-		final long kursID = daten[0];
-		final int schiene = daten[1].intValue(); // Schiene ist 1-indiziert!
+	    final long kursID = daten[0];
+	    final int schiene = daten[1].intValue(); // Schiene ist 1-indiziert!
 
-		DeveloperNotificationException.ifSetNotContains(
-				"KURS_FIXIERE_IN_SCHIENE(%d, %d): KursID fehlt in 'setKurse'."
-						.formatted(kursID, schiene),
-				setKurse, kursID);
+	    DeveloperNotificationException.ifSetNotContains(
+	        "KURS_FIXIERE_IN_SCHIENE(%d, %d): Kurs-ID nicht vorhanden!".formatted(kursID, schiene),
+	        setKurse, kursID);
 
-		DeveloperNotificationException.ifTrue(
-				"KURS_FIXIERE_IN_SCHIENE(%d, %d) ist unlogisch!"
-						.formatted(kursID, schiene),
-				!((schiene >= 1) && (schiene <= schienenAnzahl)));
+	    DeveloperNotificationException.ifTrue(
+	        "KURS_FIXIERE_IN_SCHIENE(%d, %d): Parameter sind unlogisch!".formatted(kursID, schiene),
+	        !((schiene >= 1) && (schiene <= schienenAnzahl)));
 	}
-
 
 	private static void fehlerBeiReferenzenRegeltyp3(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse,
-			final int schienenAnzahl) {
-		final int length = daten.length;
-		DeveloperNotificationException.ifTrue(
-				"KURS_SPERRE_IN_SCHIENE daten.length=%d, statt 2!".formatted(length),
-				length != 2);
+	        final int schienenAnzahl) {
 
-		final long kursID = daten[0];
-		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
+	    ueberpruefeDatenLaenge("KURS_SPERRE_IN_SCHIENE", daten, 2);
 
-		final int schiene = daten[1].intValue(); // Schiene ist 1-indiziert!
-		DeveloperNotificationException.ifTrue(
-				"KURS_SPERRE_IN_SCHIENE (%d, %d) ist unlogisch!".formatted(kursID, schiene),
-				!((schiene >= 1) && (schiene <= schienenAnzahl)));
+	    final long kursID = daten[0];
+	    final int schiene = daten[1].intValue(); // Schiene ist 1-indiziert!
+
+	    DeveloperNotificationException.ifSetNotContains(
+	        "KURS_SPERRE_IN_SCHIENE(%d, %d): Kurs-ID nicht vorhanden!".formatted(kursID, schiene),
+	        setKurse, kursID);
+
+	    DeveloperNotificationException.ifTrue(
+	        "KURS_SPERRE_IN_SCHIENE(%d, %d): Parameter sind unlogisch!".formatted(kursID, schiene),
+	        !((schiene >= 1) && (schiene <= schienenAnzahl)));
 	}
-
 
 	private static void fehlerBeiReferenzenRegeltyp4(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler,
-			final @NotNull HashSet<Long> setKurse) {
+	        final @NotNull HashSet<Long> setKurse) {
 
-		final int length = daten.length;
-		DeveloperNotificationException.ifTrue(
-				"SCHUELER_FIXIEREN_IN_KURS daten.length=%d, statt 2!"
-						.formatted(length),
-				length != 2);
+	    ueberpruefeDatenLaenge("SCHUELER_FIXIEREN_IN_KURS", daten, 2);
 
-		final long schuelerID = daten[0];
-		final long kursID = daten[1];
+	    final long schuelerID = daten[0];
+	    final long kursID = daten[1];
 
-		DeveloperNotificationException.ifSetNotContains(
-				"SCHUELER_FIXIEREN_IN_KURS(%d, %d): Schüler-ID fehlt in 'setSchueler'."
-						.formatted(schuelerID, kursID),
-				setSchueler, schuelerID);
-		DeveloperNotificationException.ifSetNotContains(
-				"SCHUELER_FIXIEREN_IN_KURS(%d, %d): Kurs-ID fehlt in 'setKurse'."
-						.formatted(schuelerID, kursID),
-				setKurse, kursID);
+	    DeveloperNotificationException.ifSetNotContains(
+	        "SCHUELER_FIXIEREN_IN_KURS(%d, %d): Schüler-ID nicht vorhanden!".formatted(schuelerID, kursID),
+	        setSchueler, schuelerID);
+
+	    DeveloperNotificationException.ifSetNotContains(
+	        "SCHUELER_FIXIEREN_IN_KURS(%d, %d): Kurs-ID nicht vorhanden!".formatted(schuelerID, kursID),
+	        setKurse, kursID);
 	}
-
 
 	private static void fehlerBeiReferenzenRegeltyp5(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler,
 	        final @NotNull HashSet<Long> setKurse) {
-	    final int length = daten.length;
-	    DeveloperNotificationException.ifTrue(
-	    		"SCHUELER_VERBIETEN_IN_KURS daten.length=%d, statt 2!".formatted(length),
-	    		length != 2);
+
+	    ueberpruefeDatenLaenge("SCHUELER_VERBIETEN_IN_KURS", daten, 2);
 
 	    final long schuelerID = daten[0];
-	    DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID);
-
 	    final long kursID = daten[1];
-	    DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
-	}
 
+	    DeveloperNotificationException.ifSetNotContains(
+	        "SCHUELER_VERBIETEN_IN_KURS(%d, %d): Schüler-ID nicht vorhanden!".formatted(schuelerID, kursID),
+	        setSchueler, schuelerID);
+
+	    DeveloperNotificationException.ifSetNotContains(
+	        "SCHUELER_VERBIETEN_IN_KURS(%d, %d): Kurs-ID nicht vorhanden!".formatted(schuelerID, kursID),
+	        setKurse, kursID);
+	}
 
 	private static void fehlerBeiReferenzenRegeltyp6(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Integer> setKursarten,
-			final int schienenAnzahl) {
-		final int length = daten.length;
-		DeveloperNotificationException.ifTrue(
-				"KURSART_ALLEIN_IN_SCHIENEN_VON_BIS daten.length=%d, statt 3!".formatted(length),
-				length != 3);
+	        final int schienenAnzahl) {
 
-		final int kursartID = daten[0].intValue();
-		DeveloperNotificationException.ifSetNotContains("setKursarten", setKursarten, kursartID);
+	    ueberpruefeDatenLaenge("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS", daten, 3);
 
-		final int von = daten[1].intValue(); // Schiene ist 1-indiziert!
-		final int bis = daten[2].intValue(); // Schiene ist 1-indiziert!
-		DeveloperNotificationException.ifTrue(
-				"KURSART_ALLEIN_IN_SCHIENEN_VON_BIS (%d, %d, %d) ist unlogisch!".formatted(kursartID, von, bis),
-				!((von >= 1) && (von <= bis) && (bis <= schienenAnzahl)));
+	    final int kursartID = daten[0].intValue();
+	    final int von = daten[1].intValue(); // Schiene ist 1-indiziert!
+	    final int bis = daten[2].intValue(); // Schiene ist 1-indiziert!
+
+	    DeveloperNotificationException.ifSetNotContains(
+	        "KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(%d, %d, %d): Kursart nicht vorhanden!".formatted(kursartID, von, bis),
+	        setKursarten, kursartID);
+
+	    DeveloperNotificationException.ifTrue(
+	        "KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(%d, %d, %d): Parameter sind unlogisch!".formatted(kursartID, von, bis),
+	        !((von >= 1) && (von <= bis) && (bis <= schienenAnzahl)));
 	}
-
 
 	private static void fehlerBeiReferenzenRegeltyp7(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse) {
-		final int length = daten.length;
-		DeveloperNotificationException.ifTrue(
-				"KURS_VERBIETEN_MIT_KURS daten.length=%d, statt 2!".formatted(length),
-				length != 2);
 
-		final long kursID1 = daten[0];
-		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID1);
+	    ueberpruefeDatenLaenge("KURS_VERBIETEN_MIT_KURS", daten, 2);
 
-		final long kursID2 = daten[1];
-		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID2);
+	    final long kursID1 = daten[0];
+	    final long kursID2 = daten[1];
 
-		DeveloperNotificationException.ifTrue(
-				"Die Regel 'KURS_VERBIETEN_MIT_KURS' wurde mit einem Kurs (%d) und sich selbst kombiniert!".formatted(kursID1),
-				kursID1 == kursID2);
+	    DeveloperNotificationException.ifSetNotContains(
+	        "KURS_VERBIETEN_MIT_KURS(%d, %d): Kurs-ID1 nicht vorhanden!".formatted(kursID1, kursID2),
+	        setKurse, kursID1);
+
+	    DeveloperNotificationException.ifSetNotContains(
+	        "KURS_VERBIETEN_MIT_KURS(%d, %d): Kurs-ID2 nicht vorhanden!".formatted(kursID1, kursID2),
+	        setKurse, kursID2);
+
+	    DeveloperNotificationException.ifTrue(
+	        "KURS_VERBIETEN_MIT_KURS(%d, %d): Wurde mit sich selbst kombiniert!".formatted(kursID1, kursID2),
+	        kursID1 == kursID2);
 	}
-
 
 	private static void fehlerBeiReferenzenRegeltyp8(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse) {
-		final int length = daten.length;
-		DeveloperNotificationException.ifTrue(
-				"KURS_ZUSAMMEN_MIT_KURS daten.length=%d, statt 2!".formatted(length),
-				length != 2);
 
-		final long kursID1 = daten[0];
-		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID1);
+	    ueberpruefeDatenLaenge("KURS_ZUSAMMEN_MIT_KURS", daten, 2);
 
-		final long kursID2 = daten[1];
-		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID2);
+	    final long kursID1 = daten[0];
+	    final long kursID2 = daten[1];
 
-		DeveloperNotificationException.ifTrue(
-				"Die Regel 'KURS_ZUSAMMEN_MIT_KURS' wurde mit einem Kurs (%d) und sich selbst kombiniert!".formatted(kursID1),
-				kursID1 == kursID2);
+	    DeveloperNotificationException.ifSetNotContains(
+	        "KURS_ZUSAMMEN_MIT_KURS(%d, %d): Kurs-ID1 nicht vorhanden!".formatted(kursID1, kursID2),
+	        setKurse, kursID1);
+
+	    DeveloperNotificationException.ifSetNotContains(
+	        "KURS_ZUSAMMEN_MIT_KURS(%d, %d): Kurs-ID2 nicht vorhanden!".formatted(kursID1, kursID2),
+	        setKurse, kursID2);
+
+	    DeveloperNotificationException.ifTrue(
+	        "KURS_ZUSAMMEN_MIT_KURS(%d, %d): Wurde mit sich selbst kombiniert!".formatted(kursID1, kursID2),
+	        kursID1 == kursID2);
 	}
-
 
 	private static void fehlerBeiReferenzenRegeltyp9(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse) {
-		final int length = daten.length;
-		DeveloperNotificationException.ifTrue(
-				"KURS_MIT_DUMMY_SUS_AUFFUELLEN daten.length=%d, statt 2!".formatted(length),
-				length != 2);
 
-		final long kursID = daten[0];
-		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
+	    ueberpruefeDatenLaenge("KURS_MIT_DUMMY_SUS_AUFFUELLEN", daten, 2);
 
-		final int dummySuS = daten[1].intValue();
-		DeveloperNotificationException.ifSmaller("dummySuS", dummySuS, 1);
-		DeveloperNotificationException.ifGreater("dummySuS", dummySuS, 99);
+	    final long kursID = daten[0];
+	    final int dummySuS = daten[1].intValue();
+
+	    DeveloperNotificationException.ifSetNotContains(
+	        "KURS_MIT_DUMMY_SUS_AUFFUELLEN(%d, %d): Kurs-ID nicht vorhanden!".formatted(kursID, dummySuS),
+	        setKurse, kursID);
+
+	    DeveloperNotificationException.ifSmaller(
+	        "KURS_MIT_DUMMY_SUS_AUFFUELLEN(%d, %d): Der Wert ist zu klein!".formatted(kursID, dummySuS),
+	        dummySuS, GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN_MIN);
+
+	    DeveloperNotificationException.ifGreater(
+	        "KURS_MIT_DUMMY_SUS_AUFFUELLEN(%d, %d): Der Wert ist zu groß!".formatted(kursID, dummySuS),
+	        dummySuS, GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN_MAX);
 	}
-
 
 	private static void fehlerBeiReferenzenRegeltyp10(final @NotNull Long @NotNull [] daten) {
-		final int length = daten.length;
-		DeveloperNotificationException.ifTrue(
-				"LEHRKRAEFTE_BEACHTEN daten.length=%d, statt 0!".formatted(length),
-				length != 0);
+	    ueberpruefeDatenLaenge("LEHRKRAEFTE_BEACHTEN", daten, 0);
 	}
-
 
 	private static void fehlerBeiReferenzenRegeltyp11(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler,
-			final @NotNull HashSet<Long> setFaecher) {
+	        final @NotNull HashSet<Long> setFaecher) {
 
-		final int length = daten.length;
-		DeveloperNotificationException.ifTrue(
-				"SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH daten.length=%d, statt 3!".formatted(length),
-				length != 3);
+	    ueberpruefeDatenLaenge("SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH", daten, 3);
 
-		final long schuelerID1 = daten[0];
-		final long schuelerID2 = daten[1];
-		final long fachID = daten[2];
-		DeveloperNotificationException.ifSetNotContains(
-				"SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(%d, %d, %d): Schüler-ID1 fehlt in 'setSchueler'."
-						.formatted(schuelerID1, schuelerID2, fachID),
-				setSchueler, schuelerID1);
-		DeveloperNotificationException.ifSetNotContains(
-				"SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(%d, %d, %d): Schüler-ID2 fehlt in 'setSchueler'."
-						.formatted(schuelerID1, schuelerID2, fachID),
-				setSchueler, schuelerID2);
-		DeveloperNotificationException.ifSetNotContains(
-				"SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(%d, %d, %d): Fach-ID fehlt in 'setFaecher'."
-						.formatted(schuelerID1, schuelerID2, fachID),
-				setFaecher, fachID);
+	    final long schuelerID1 = daten[0];
+	    final long schuelerID2 = daten[1];
+	    final long fachID = daten[2];
+
+	    DeveloperNotificationException.ifSetNotContains(
+	        "SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(%d, %d, %d): Schüler-ID1 nicht vorhanden!".formatted(schuelerID1, schuelerID2, fachID),
+	        setSchueler, schuelerID1);
+
+	    DeveloperNotificationException.ifSetNotContains(
+	        "SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(%d, %d, %d): Schüler-ID2 nicht vorhanden!".formatted(schuelerID1, schuelerID2, fachID),
+	        setSchueler, schuelerID2);
+
+	    DeveloperNotificationException.ifSetNotContains(
+	        "SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(%d, %d, %d): Fach-ID nicht vorhanden!".formatted(schuelerID1, schuelerID2, fachID),
+	        setFaecher, fachID);
+
+	    DeveloperNotificationException.ifTrue(
+	        "SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(%d, %d, %d): Wurde mit sich selbst kombiniert!".formatted(schuelerID1, schuelerID2, fachID),
+	        schuelerID1 == schuelerID2);
 	}
-
 
 	private static void fehlerBeiReferenzenRegeltyp12(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler,
-			final @NotNull HashSet<Long> setFaecher) {
-		final int length = daten.length;
-		DeveloperNotificationException.ifTrue(
-				"SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH daten.length=%d, statt 3!".formatted(length),
-				length != 3);
+	        final @NotNull HashSet<Long> setFaecher) {
 
-		final long schuelerID1 = daten[0];
-		final long schuelerID2 = daten[1];
-		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID1);
-		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID2);
+	    ueberpruefeDatenLaenge("SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH", daten, 3);
 
-		final long fachID = daten[2];
-		DeveloperNotificationException.ifSetNotContains("setFaecher", setFaecher, fachID);
+	    final long schuelerID1 = daten[0];
+	    final long schuelerID2 = daten[1];
+	    final long fachID = daten[2];
+
+	    DeveloperNotificationException.ifSetNotContains(
+	        "SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH(%d, %d, %d): Schüler-ID1 nicht vorhanden!".formatted(schuelerID1, schuelerID2, fachID),
+	        setSchueler, schuelerID1);
+
+	    DeveloperNotificationException.ifSetNotContains(
+	        "SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH(%d, %d, %d): Schüler-ID2 nicht vorhanden!".formatted(schuelerID1, schuelerID2, fachID),
+	        setSchueler, schuelerID2);
+
+	    DeveloperNotificationException.ifSetNotContains(
+	        "SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH(%d, %d, %d): Fach-ID nicht vorhanden!".formatted(schuelerID1, schuelerID2, fachID),
+	        setFaecher, fachID);
+
+	    DeveloperNotificationException.ifTrue(
+	        "SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH(%d, %d, %d): Wurde mit sich selbst kombiniert!".formatted(schuelerID1, schuelerID2, fachID),
+	        schuelerID1 == schuelerID2);
 	}
-
 
 	private static void fehlerBeiReferenzenRegeltyp13(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler) {
-		final int length = daten.length;
-		DeveloperNotificationException.ifTrue(
-				"SCHUELER_ZUSAMMEN_MIT_SCHUELER daten.length=%d, statt 2!".formatted(length),
-				length != 2);
 
-		final long schuelerID1 = daten[0];
-		final long schuelerID2 = daten[1];
-		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID1);
-		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID2);
+	    ueberpruefeDatenLaenge("SCHUELER_ZUSAMMEN_MIT_SCHUELER", daten, 2);
+
+	    final long schuelerID1 = daten[0];
+	    final long schuelerID2 = daten[1];
+
+	    DeveloperNotificationException.ifSetNotContains(
+	        "SCHUELER_ZUSAMMEN_MIT_SCHUELER(%d, %d): Schüler-ID1 nicht vorhanden!".formatted(schuelerID1, schuelerID2),
+	        setSchueler, schuelerID1);
+
+	    DeveloperNotificationException.ifSetNotContains(
+	        "SCHUELER_ZUSAMMEN_MIT_SCHUELER(%d, %d): Schüler-ID2 nicht vorhanden!".formatted(schuelerID1, schuelerID2),
+	        setSchueler, schuelerID2);
+
+	    DeveloperNotificationException.ifTrue(
+	        "SCHUELER_ZUSAMMEN_MIT_SCHUELER(%d, %d): Wurde mit sich selbst kombiniert!".formatted(schuelerID1, schuelerID2),
+	        schuelerID1 == schuelerID2);
 	}
-
 
 	private static void fehlerBeiReferenzenRegeltyp14(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler) {
-		final int length = daten.length;
-		DeveloperNotificationException.ifTrue(
-				"SCHUELER_VERBIETEN_MIT_SCHUELER daten.length=%d, statt 2!".formatted(length),
-				length != 2);
 
-		final long schuelerID1 = daten[0];
-		final long schuelerID2 = daten[1];
-		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID1);
-		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID2);
+	    ueberpruefeDatenLaenge("SCHUELER_VERBIETEN_MIT_SCHUELER", daten, 2);
+
+	    final long schuelerID1 = daten[0];
+	    final long schuelerID2 = daten[1];
+
+	    DeveloperNotificationException.ifSetNotContains(
+	        "SCHUELER_VERBIETEN_MIT_SCHUELER(%d, %d): Schüler-ID1 nicht vorhanden!".formatted(schuelerID1, schuelerID2),
+	        setSchueler, schuelerID1);
+
+	    DeveloperNotificationException.ifSetNotContains(
+	        "SCHUELER_VERBIETEN_MIT_SCHUELER(%d, %d): Schüler-ID2 nicht vorhanden!".formatted(schuelerID1, schuelerID2),
+	        setSchueler, schuelerID2);
+
+	    DeveloperNotificationException.ifTrue(
+	        "SCHUELER_VERBIETEN_MIT_SCHUELER(%d, %d): Wurde mit sich selbst kombiniert!".formatted(schuelerID1, schuelerID2),
+	        schuelerID1 == schuelerID2);
 	}
-
 
 	private static void fehlerBeiReferenzenRegeltyp15(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse) {
-		final int length = daten.length;
-		DeveloperNotificationException.ifTrue(
-				"KURS_MAXIMALE_SCHUELERANZAHL daten.length=%d, statt 2!".formatted(length),
-				length != 2);
 
-		final long kursID = daten[0];
-		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
+	    ueberpruefeDatenLaenge("KURS_MAXIMALE_SCHUELERANZAHL", daten, 2);
 
-		final int anzahlSus = daten[1].intValue();
-		DeveloperNotificationException.ifSmaller("anzahlSus", anzahlSus, 0);
-		DeveloperNotificationException.ifGreater("anzahlSus", anzahlSus, 100);
+	    final long kursID = daten[0];
+	    final int schuelerAnzahl = daten[1].intValue();
+
+	    DeveloperNotificationException.ifSetNotContains(
+	        "KURS_MAXIMALE_SCHUELERANZAHL(%d, %d): Kurs-ID nicht vorhanden!".formatted(kursID, schuelerAnzahl),
+	        setKurse, kursID);
+
+	    DeveloperNotificationException.ifSmaller(
+	        "KURS_MAXIMALE_SCHUELERANZAHL(%d, %d): Schüleranzahl ist zu klein!".formatted(kursID, schuelerAnzahl),
+	        schuelerAnzahl, GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL_MIN);
+
+	    DeveloperNotificationException.ifGreater(
+	        "KURS_MAXIMALE_SCHUELERANZAHL(%d, %d): Schüleranzahl ist zu groß!".formatted(kursID, schuelerAnzahl),
+	        schuelerAnzahl, GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL_MAX);
 	}
-
 
 	private static void fehlerBeiReferenzenRegeltyp16(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler) {
-		final int length = daten.length;
-		DeveloperNotificationException.ifTrue(
-				"SCHUELER_IGNORIEREN daten.length=%d, statt 1!".formatted(length),
-				length != 1);
 
-		final long schuelerID = daten[0];
-		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID);
+	    ueberpruefeDatenLaenge("SCHUELER_IGNORIEREN", daten, 1);
+
+	    final long schuelerID = daten[0];
+
+	    DeveloperNotificationException.ifSetNotContains(
+	        "SCHUELER_IGNORIEREN(%d): Schüler-ID nicht vorhanden!".formatted(schuelerID),
+	        setSchueler, schuelerID);
 	}
-
 
 	private static void fehlerBeiReferenzenRegeltyp17(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setKurse) {
-		final int length = daten.length;
-		DeveloperNotificationException.ifTrue(
-				"KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN daten.length=%d, statt 1!".formatted(length),
-				length != 1);
 
-		final long kursID = daten[0];
-		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
+	    ueberpruefeDatenLaenge("KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN", daten, 1);
+
+	    final long kursID = daten[0];
+
+	    DeveloperNotificationException.ifSetNotContains(
+	        "KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN(%d): Kurs-ID nicht vorhanden!".formatted(kursID),
+	        setKurse, kursID);
 	}
 
-
 	private static void fehlerBeiReferenzenRegeltyp18(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setFaecher,
-			final @NotNull HashSet<Integer> setKursarten) {
-		final int length = daten.length;
-		DeveloperNotificationException.ifTrue(
-				"FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE daten.length=%d, statt 3!".formatted(length),
-				length != 3);
+	        final @NotNull HashSet<Integer> setKursarten) {
 
-		final long fachID = daten[0];
-		DeveloperNotificationException.ifSetNotContains("setFaecher", setFaecher, fachID);
+	    ueberpruefeDatenLaenge("FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE", daten, 3);
 
-		final int kursartID = daten[1].intValue();
-		DeveloperNotificationException.ifSetNotContains("setKursarten", setKursarten, kursartID);
+	    final long fachID = daten[0];
+	    final int kursartID = daten[1].intValue();
+	    final int maximum = daten[2].intValue();
 
-		final int fachArtProSchieneMaximal = daten[2].intValue();
-		DeveloperNotificationException.ifSmaller("fachArtProSchieneMaximal", fachArtProSchieneMaximal, 1);
-		DeveloperNotificationException.ifGreater("fachArtProSchieneMaximal", fachArtProSchieneMaximal, 9);
+	    DeveloperNotificationException.ifSetNotContains(
+	        "FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE(%d, %d, %d): Fach-ID nicht vorhanden!".formatted(fachID, kursartID, maximum),
+	        setFaecher, fachID);
+
+	    DeveloperNotificationException.ifSetNotContains(
+	        "FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE(%d, %d, %d): Kursart nicht vorhanden!".formatted(fachID, kursartID, maximum),
+	        setKursarten, kursartID);
+
+	    DeveloperNotificationException.ifSmaller(
+	        "FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE(%d, %d, %d): Anzahl ist zu klein!".formatted(fachID, kursartID, maximum),
+	        maximum, GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE_MIN);
+
+	    DeveloperNotificationException.ifGreater(
+	        "FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE(%d, %d, %d): Anzahl ist zu groß!".formatted(fachID, kursartID, maximum),
+	        maximum, GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE_MAX);
 	}
 
 
@@ -1621,7 +1655,7 @@ public class KursblockungDynDaten {
 	 */
 	void aktionZustandLadenVon(final @NotNull KursblockungDynDaten b) {
 		if (this == b) {
-			System.out.println("Identisch!");
+			log.logLn(LogLevel.WARNING, "KursblockungDynDaten.aktionZustandLadenVon(...) versucht sich selbst zu laden.");
 			return;
 		}
 
