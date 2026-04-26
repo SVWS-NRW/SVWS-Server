@@ -224,16 +224,16 @@ export class KursblockungDynFachart extends JavaObject {
 	}
 
 	/**
-	 * Liefert TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c ist.
+	 * Liefert TRUE, falls der Schüler einen wählbaren Kurs in dieser Schiene hat.
 	 *
-	 * @param  pSchiene      Die Schiene, die angefragt wurde.
-	 * @param  s             Das {@link KursblockungDynSchueler}-Objekt.
+	 * @param  schiene    Die Schiene, die angefragt wurde.
+	 * @param  schueler   Das {@link KursblockungDynSchueler}-Objekt.
 	 *
-	 * @return TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c ist.
+	 * @return TRUE, falls der Schüler einen wählbaren Kurs in dieser Schiene hat.
 	 */
-	gibHatSchuelerKursInSchiene(pSchiene: number, s: KursblockungDynSchueler): boolean {
+	gibHatSchuelerPotentiellenKursInSchiene(schiene: number, schueler: KursblockungDynSchueler): boolean {
 		for (const kurs of this.kursArr) {
-			if (kurs.gibIstErlaubtFuerSchueler(s) && kurs.gibIstInSchiene(pSchiene)) {
+			if (kurs.gibIstErlaubtFuerSchueler(schueler) && kurs.gibIstInSchiene(schiene)) {
 				return true;
 			}
 		}
@@ -355,18 +355,18 @@ export class KursblockungDynFachart extends JavaObject {
 	/**
 	 * Lässt einen zufälligen Kurs dieser Fachart in die angegebene Schiene wandern.
 	 *
-	 * @param pSchiene  Die Schiene, in die einer Kurs der Fachart wandern soll.
+	 * @param schiene   Die Schiene, in die einer Kurs der Fachart wandern soll.
 	 */
-	aktionZufaelligerKursWandertNachSchiene(pSchiene: number): void {
+	aktionZufaelligerKursWandertNachSchiene(schiene: number): void {
 		const perm: Array<number> = KursblockungStatic.gibPermutation(this.rnd, this.kursArr.length);
 		for (const i of perm) {
 			const kurs: KursblockungDynKurs | null = this.kursArr[i];
-			if (kurs.gibIstSchieneFrei(pSchiene)) {
-				kurs.aktionSetzeInSchiene(pSchiene);
+			if (kurs.gibIstSchieneFrei(schiene)) {
+				kurs.aktionSetzeInSchiene(schiene);
 				return;
 			}
 		}
-		throw new DeveloperNotificationException("aktionZufaelligerKursWandertNachSchiene(" + pSchiene + ")")
+		throw new DeveloperNotificationException("aktionZufaelligerKursWandertNachSchiene(" + schiene + ")")
 	}
 
 	/**

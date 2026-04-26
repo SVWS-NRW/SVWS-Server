@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Random;
 
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
+import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
@@ -14,6 +15,7 @@ import jakarta.validation.constraints.NotNull;
  * @author Benjamin A. Bartsch
  */
 public class KursblockungDynSchueler {
+
 
 	/** Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. */
 	private final @NotNull Random rnd;
@@ -457,20 +459,14 @@ public class KursblockungDynSchueler {
 		}
 	}
 
-	/**
-	 * Verteilt alle Kurse die über genau 1 Schiene gehen mit Hilfe eines gewichteten Matching Algorithmus.
-	 * Kleinere Kurse werden in der Wahl bevorzugt.
-	 */
-	void aktionKurseVerteilenMitBipartiteMatchingGewichtetem() {
-		final long _INFINITY = 1000000;
 
-		// Matrix füllen.
+	private void aktionKurseVerteilenMitBipartiteMatchingGewichtetetInitialisierung(final long wertUngueltig) {
 		final @NotNull long @NotNull [][] data = matrix.getMatrix();
-		for (int r = 0; r < fachartArr.length; r++) {
 
-			// Zeile löschen.
+		for (int r = 0; r < fachartArr.length; r++) {
+			// Die Zeile muss gefüllt werden, bevor sie potentiell übersprungen wird.
 			for (int c = 0; c < schieneBelegt.length; c++) {
-				data[r][c] = _INFINITY;
+				data[r][c] = wertUngueltig;
 			}
 
 			// Überspringe, falls bereits zugeordnet oder die Fachart über mehrere Schienen geht.
@@ -478,183 +474,191 @@ public class KursblockungDynSchueler {
 				continue;
 			}
 
-
-			// Bewertung der Zeile
+			// Bewerte die Fachart r, falls die Schiene c nicht belegt ist.
 			for (int c = 0; c < schieneBelegt.length; c++) {
-				if (!schieneBelegt[c]) {
-					final KursblockungDynKurs kurs = fachartArr[r].gibKleinstenKursInSchieneFuerSchueler(c, this);
-					if (kurs != null) {
-						data[r][c] = kurs.gibGewichtetesMatchingBewertung();
-					}
+				if (schieneBelegt[c]) {
+					continue;
+				}
+				final KursblockungDynKurs kurs = fachartArr[r].gibKleinstenKursInSchieneFuerSchueler(c, this);
+				if (kurs != null) {
+					data[r][c] = kurs.gibGewichtetesMatchingBewertung();
 				}
 			}
 		}
-
-		// Berechnen
-		final @NotNull int[] r2c = matrix.gibMinimalesBipartitesMatchingGewichtet(true);
-
-		// Zuordnen
-		for (int r = 0; r < fachartArr.length; r++) {
-
-			// Überspringe, falls bereits zugeordnet oder die Fachart über mehrere Schienen geht.
-			if ((fachartZuKurs[r] != null) || fachartArr[r].gibHatMultikurs()) {
-				continue;
-			}
-
-			// Kein Matching-Partner gefunden?
-			final int c = r2c[r];
-			if (c < 0) {
-				continue;
-			}
-
-			// Matching ungültig?
-			if (data[r][c] == _INFINITY) {
-				continue;
-			}
-
-			// Zuordnen
-			final KursblockungDynKurs kursGefunden = fachartArr[r].gibKleinstenKursInSchieneFuerSchueler(c, this);
-			if (kursGefunden != null) {
-				aktionKursHinzufuegen(r, kursGefunden);
-			} else {
-				throw new DeveloperNotificationException("FEHLER: Kein Kurs in [" + r + "/" + c + "] gefunden!");
-			}
-		}
-
 	}
 
-	/**
-	 * Verteilt alle Kurse die über genau 1 Schiene gehen mit Hilfe eines Bipartiten-Matching-Algorithmus.
-	 */
-	void aktionKurseVerteilenMitBipartiteMatching() {
 
-		// Matrix füllen.
+	private void aktionKurseVerteilenMitBipartiteMatchingInitialisierung(final long wertUngueltig) {
 		final @NotNull long @NotNull [][] data = matrix.getMatrix();
+
 		for (int r = 0; r < fachartArr.length; r++) {
-
-			// Zeile löschen.
+			// Die Zeile muss gefüllt werden, bevor sie potentiell übersprungen wird.
 			for (int c = 0; c < schieneBelegt.length; c++) {
-				data[r][c] = 0;
-			}
-
-			// Kurs bereits zugeordnet ODER Multikurs? --> Zeile überspringen
-			if ((fachartZuKurs[r] != null) || fachartArr[r].gibHatMultikurs()) {
-				continue;
-			}
-
-			// Bewertung der Zeile
-			for (int c = 0; c < schieneBelegt.length; c++) {
-				if (!schieneBelegt[c]) {
-					final KursblockungDynKurs kurs = fachartArr[r].gibKleinstenKursInSchieneFuerSchueler(c, this);
-					if (kurs != null) {
-						data[r][c] = 1;
-					}
-				}
-			}
-		}
-
-		// Berechnen
-		final @NotNull int[] r2c = matrix.gibMaximalesBipartitesMatching(true);
-		for (int r = 0; r < fachartArr.length; r++) {
-
-			// Kurs bereits zugeordnet ODER Multikurs? --> Zeile überspringen
-			if ((fachartZuKurs[r] != null) || fachartArr[r].gibHatMultikurs()) {
-				continue;
-			}
-
-			// Keinen Matching-Partner gefunden?
-			final int c = r2c[r];
-			if (c == -1) {
-				continue;
-			}
-
-			// Zuordnen
-			final KursblockungDynKurs kursGefunden = fachartArr[r].gibKleinstenKursInSchieneFuerSchueler(c, this);
-			if (kursGefunden != null) {
-				aktionKursHinzufuegen(r, kursGefunden);
-			} else {
-				throw new DeveloperNotificationException("FEHLER: Kein Kurs in [" + r + "/" + c + "] gefunden!");
-			}
-		}
-
-	}
-
-	/**
-	 * Die (nicht Multi) Facharten des S. werden auf eine Schiene gematched. Falls dies nicht klappt, wird der Fachart
-	 * gesagt, dass einer ihrer Kurse die Schiene wechseln muss. Um welche Schiene es sich dabei handelt, wird durch den
-	 * Matching-Algorithmus berechnet. Der S. wird bei den Berechnungen nicht einem Kurs hinzugefügt.
-	 *
-	 * @return TRUE, falls sich die Lage der Kurse verändert hat.
-	 */
-	boolean aktionKurseVerteilenNachDeinemWunsch() {
-		final long _VAL_UNGUELTIG = 1000000;
-		final long _VAL_KURS_GEWAEHLT = 0;
-		final long _VAL_KURS_MUSS_WANDERN = 1;
-
-		// 1) Matrix füllen.
-		final @NotNull long @NotNull [][] data = matrix.getMatrix();
-		for (int r = 0; r < fachartArr.length; r++) {
-			final KursblockungDynFachart fachart = fachartArr[r];
-
-			// Zeile löschen.
-			for (int c = 0; c < schieneBelegt.length; c++) {
-				data[r][c] = _VAL_UNGUELTIG;
+				data[r][c] = wertUngueltig;
 			}
 
 			// Überspringe, falls bereits zugeordnet oder die Fachart über mehrere Schienen geht.
-			if ((fachartZuKurs[r] != null) || fachart.gibHatMultikurs()) {
+			if ((fachartZuKurs[r] != null) || fachartArr[r].gibHatMultikurs()) {
 				continue;
 			}
 
-			// Bewerte die Zeile, falls die Schiene c nicht belegt ist.
+			// Bewerte die Fachart r, falls die Schiene c nicht belegt ist.
 			for (int c = 0; c < schieneBelegt.length; c++) {
-				if (!schieneBelegt[c]) {
-					if (fachart.gibHatSchuelerKursInSchiene(c, this)) {
-						data[r][c] = _VAL_KURS_GEWAEHLT;
-					} else {
-						data[r][c] = fachart.gibHatSchuelerKursMitFreierSchiene(c, this) ? _VAL_KURS_MUSS_WANDERN : _VAL_UNGUELTIG;
-					}
+				if (schieneBelegt[c]) {
+					continue;
+				}
+				final KursblockungDynKurs kurs = fachartArr[r].gibKleinstenKursInSchieneFuerSchueler(c, this);
+				if (kurs != null) {
+					data[r][c] = 1; // Kante existiert.
 				}
 			}
 		}
+	}
 
-		// 2) Matching Berechnen
-		final @NotNull int[] r2c = matrix.gibMinimalesBipartitesMatchingGewichtet(true);
 
-		// 3) Zuordnen
+	private void aktionKurseVerteilenNachDeinemWunschInitialisierung(final long wertUngueltig, final long wertGewaehlt, final long wertWandern) {
+		final @NotNull long @NotNull [][] data = matrix.getMatrix();
+
+		for (int r = 0; r < fachartArr.length; r++) {
+			// Die Zeile muss gefüllt werden, bevor sie potentiell übersprungen wird.
+			for (int c = 0; c < schieneBelegt.length; c++) {
+				data[r][c] = wertUngueltig;
+			}
+
+			// Überspringe, falls bereits zugeordnet oder die Fachart über mehrere Schienen geht.
+			if ((fachartZuKurs[r] != null) || fachartArr[r].gibHatMultikurs()) {
+				continue;
+			}
+
+			// Bewerte die Fachart r, falls die Schiene c nicht belegt ist.
+			for (int c = 0; c < schieneBelegt.length; c++) {
+				if (schieneBelegt[c]) {
+					continue;
+				}
+				if (fachartArr[r].gibHatSchuelerPotentiellenKursInSchiene(c, this)) {
+					data[r][c] = wertGewaehlt;
+				} else if (fachartArr[r].gibHatSchuelerKursMitFreierSchiene(c, this)) {
+					data[r][c] = wertWandern;
+				}
+			}
+		}
+	}
+
+
+	private void aktionKurseVerteilenMitMatchingZuordnen(final long wertUngueltig, final @NotNull int[] r2c) {
+		final @NotNull long @NotNull [][] data = matrix.getMatrix();
+
+		for (int r = 0; r < fachartArr.length; r++) {
+			// Überspringe, falls bereits zugeordnet oder die Fachart über mehrere Schienen geht.
+			if ((fachartZuKurs[r] != null) || fachartArr[r].gibHatMultikurs()) {
+				continue;
+			}
+
+			// Gibt es einen  Matching-Partner und ist die Zuordnung zudem gültig?
+			final int c = r2c[r];
+			if ((c >= 0) && (data[r][c] != wertUngueltig)) {
+				final KursblockungDynKurs kursGefunden = fachartArr[r].gibKleinstenKursInSchieneFuerSchueler(c, this);
+				if (kursGefunden != null) {
+					aktionKursHinzufuegen(r, kursGefunden);
+				} else {
+					// Besser keine Exception werfen, damit der Worker-Thread der GUI weiter machen kann.
+					log.logLn(LogLevel.ERROR, "Fehler bei der Zuordnung im gewichteten Matching. Kein Kurs für Zelle (r=%d, c=%d) gefunden!"
+							.formatted(r, c));
+				}
+			}
+		}
+	}
+
+
+	private boolean aktionKurseVerteilenNachDeinemWunschZuordnen(final long wertWandern, final @NotNull int[] r2c) {
+		final @NotNull long @NotNull [][] data = matrix.getMatrix();
+
 		boolean kurslageHatSichVeraendert = false;
 		for (int r = 0; r < fachartArr.length; r++) {
-			final KursblockungDynFachart fachart = fachartArr[r];
-
 			// Überspringe, falls bereits zugeordnet oder die Fachart über mehrere Schienen geht.
-			if ((fachartZuKurs[r] != null) || fachart.gibHatMultikurs()) {
+			if ((fachartZuKurs[r] != null) || fachartArr[r].gibHatMultikurs()) {
 				continue;
 			}
 
-			// Keinen Matching-Partner gefunden?
+			// Gibt es einen Matching-Partner und soll ein Kurs verschoben werden?
 			final int c = r2c[r];
-			if (c < 0) {
-				continue;
+			if ((c >= 0) && (data[r][c] == wertWandern)) {
+				fachartArr[r].aktionZufaelligerKursWandertNachSchiene(c);
+				kurslageHatSichVeraendert = true;
 			}
 
-			// Alle Kurse der Fachart nicht wählbar, alle gesperrt?
-			if (data[r][c] == _VAL_UNGUELTIG) {
-				continue;
-			}
-
-			// S. wäre in diesem Kurs, aber S. trotzdem nicht hinzufügen, da dies nur eine Simulation ist.
-			if (data[r][c] == _VAL_KURS_GEWAEHLT) {
-				continue;
-			}
-
-			// VAL_KURS_MUSS_WANDERN
-			fachart.aktionZufaelligerKursWandertNachSchiene(c);
-			kurslageHatSichVeraendert = true;
 		}
 
 		return kurslageHatSichVeraendert;
 	}
 
+
+	/**
+	 * Verteilt alle Kurse mit Hilfe eines gewichteten Matching Algorithmus. Kleinere Kurse werden in der Wahl bevorzugt.
+	 * <br>Hinweis: Multikurse werden beim bipartiten Matching nie verteilt, da dies algorithmisch nicht geht.
+	 */
+	void aktionKurseVerteilenMitBipartiteMatchingGewichtetem() { // TODO Umbenennen nach dem MR von "KursblockungDynDaten".
+		// Wegen Berechnungen darf der Wert nicht in der Nähe von INTEGER.MAX_VALUE sein.
+		final long _MATRIX_UNGUELTIG = 1000000;
+
+		// Initialisieren
+		aktionKurseVerteilenMitBipartiteMatchingGewichtetetInitialisierung(_MATRIX_UNGUELTIG);
+
+		// Matching berechnen.
+		final @NotNull int[] r2c = matrix.gibMinimalesBipartitesMatchingGewichtet(true);
+
+		// Zuordnen
+		aktionKurseVerteilenMitMatchingZuordnen(_MATRIX_UNGUELTIG, r2c);
+	}
+
+
+	/**
+	 * Verteilt alle Kurse mit Hilfe eines bipartiten 0-1-Matching Algorithmus (ungewichtet). Kleinere Kurse werden in der Wahl bevorzugt.
+	 * <br>Hinweis: Multikurse werden beim bipartiten Matching nie verteilt, da dies algorithmisch nicht geht.
+	 */
+	void aktionKurseVerteilenMitBipartiteMatching() {
+		// Wert für eine fehlende Kante.
+		final long _MATRIX_KEINE_KANTE = 0;
+
+		// Matrix füllen.
+		aktionKurseVerteilenMitBipartiteMatchingInitialisierung(_MATRIX_KEINE_KANTE);
+
+		// Matching berechnen.
+		final @NotNull int[] r2c = matrix.gibMaximalesBipartitesMatching(true);
+
+		// Zuordnen
+		aktionKurseVerteilenMitMatchingZuordnen(_MATRIX_KEINE_KANTE, r2c);
+	}
+
+
+	/**
+	 * Alle Facharten (ohne Multikurse) des Schülers werden auf Schienen gematched.
+	 * Falls dies nicht klappt, wird der Fachart gesagt, dass einer ihrer Kurse die Schiene wechseln muss.
+	 * Um welche Schiene es sich dabei handelt, wird durch den Matching-Algorithmus berechnet.
+	 *
+	 * <br>Hinweis: Der Schüler wird bei den Berechnungen nicht einem Kurs hinzugefügt!
+	 *
+	 * @return TRUE, falls sich die Lage der Kurse verändert hat.
+	 */
+	boolean aktionKurseVerteilenNachDeinemWunsch() {
+		// Wert für eine ungültige Wahl.
+		final long _WERT_UNGUELTIG = 1000000;
+
+		// Wert für einen Kurs, den der Schüler wählen könnte.
+		final long _WERT_KURS_GEWAEHLT = 0;
+
+		// Wert für einen Kurs, den der Schüler wählen könnte, nachdem er gewandert ist.
+		final long _WERT_KURS_MUSS_WANDERN = 1;
+
+		// Matrix füllen.
+		aktionKurseVerteilenNachDeinemWunschInitialisierung(_WERT_UNGUELTIG, _WERT_KURS_GEWAEHLT, _WERT_KURS_MUSS_WANDERN);
+
+		// Matching berechnen.
+		final @NotNull int[] r2c = matrix.gibMinimalesBipartitesMatchingGewichtet(true);
+
+		// Zuordnen
+		return aktionKurseVerteilenNachDeinemWunschZuordnen(_WERT_KURS_MUSS_WANDERN, r2c);
+	}
 
 
 	// ########################################

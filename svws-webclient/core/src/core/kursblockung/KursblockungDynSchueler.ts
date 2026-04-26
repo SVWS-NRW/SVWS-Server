@@ -3,9 +3,11 @@ import { KursblockungDynFachart } from '../../core/kursblockung/KursblockungDynF
 import { KursblockungDynStatistik } from '../../core/kursblockung/KursblockungDynStatistik';
 import { KursblockungStatic } from '../../core/kursblockung/KursblockungStatic';
 import { KursblockungDynKurs, cast_de_svws_nrw_core_kursblockung_KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
+import { JavaString } from '../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 import { Logger } from '../../core/logger/Logger';
 import { System } from '../../java/lang/System';
+import { LogLevel } from '../../core/logger/LogLevel';
 import { Random } from '../../java/util/Random';
 import { KursblockungMatrix } from '../../core/kursblockung/KursblockungMatrix';
 import { Class } from '../../java/lang/Class';
@@ -440,140 +442,143 @@ export class KursblockungDynSchueler extends JavaObject {
 		}
 	}
 
+	private aktionKurseVerteilenMitBipartiteMatchingGewichtetetInitialisierung(wertUngueltig: number): void {
+		const data: Array<Array<number>> = this.matrix.getMatrix();
+		for (let r: number = 0; r < this.fachartArr.length; r++) {
+			for (let c: number = 0; c < this.schieneBelegt.length; c++) {
+				data[r][c] = wertUngueltig;
+			}
+			if ((this.fachartZuKurs[r] !== null) || this.fachartArr[r].gibHatMultikurs()) {
+				continue;
+			}
+			for (let c: number = 0; c < this.schieneBelegt.length; c++) {
+				if (this.schieneBelegt[c]) {
+					continue;
+				}
+				const kurs: KursblockungDynKurs | null = this.fachartArr[r].gibKleinstenKursInSchieneFuerSchueler(c, this);
+				if (kurs !== null) {
+					data[r][c] = kurs.gibGewichtetesMatchingBewertung();
+				}
+			}
+		}
+	}
+
+	private aktionKurseVerteilenMitBipartiteMatchingInitialisierung(wertUngueltig: number): void {
+		const data: Array<Array<number>> = this.matrix.getMatrix();
+		for (let r: number = 0; r < this.fachartArr.length; r++) {
+			for (let c: number = 0; c < this.schieneBelegt.length; c++) {
+				data[r][c] = wertUngueltig;
+			}
+			if ((this.fachartZuKurs[r] !== null) || this.fachartArr[r].gibHatMultikurs()) {
+				continue;
+			}
+			for (let c: number = 0; c < this.schieneBelegt.length; c++) {
+				if (this.schieneBelegt[c]) {
+					continue;
+				}
+				const kurs: KursblockungDynKurs | null = this.fachartArr[r].gibKleinstenKursInSchieneFuerSchueler(c, this);
+				if (kurs !== null) {
+					data[r][c] = 1;
+				}
+			}
+		}
+	}
+
+	private aktionKurseVerteilenNachDeinemWunschInitialisierung(wertUngueltig: number, wertGewaehlt: number, wertWandern: number): void {
+		const data: Array<Array<number>> = this.matrix.getMatrix();
+		for (let r: number = 0; r < this.fachartArr.length; r++) {
+			for (let c: number = 0; c < this.schieneBelegt.length; c++) {
+				data[r][c] = wertUngueltig;
+			}
+			if ((this.fachartZuKurs[r] !== null) || this.fachartArr[r].gibHatMultikurs()) {
+				continue;
+			}
+			for (let c: number = 0; c < this.schieneBelegt.length; c++) {
+				if (this.schieneBelegt[c]) {
+					continue;
+				}
+				if (this.fachartArr[r].gibHatSchuelerPotentiellenKursInSchiene(c, this)) {
+					data[r][c] = wertGewaehlt;
+				} else
+					if (this.fachartArr[r].gibHatSchuelerKursMitFreierSchiene(c, this)) {
+						data[r][c] = wertWandern;
+					}
+			}
+		}
+	}
+
+	private aktionKurseVerteilenMitMatchingZuordnen(wertUngueltig: number, r2c: Array<number>): void {
+		const data: Array<Array<number>> = this.matrix.getMatrix();
+		for (let r: number = 0; r < this.fachartArr.length; r++) {
+			if ((this.fachartZuKurs[r] !== null) || this.fachartArr[r].gibHatMultikurs()) {
+				continue;
+			}
+			const c: number = r2c[r];
+			if ((c >= 0) && (data[r][c] !== wertUngueltig)) {
+				const kursGefunden: KursblockungDynKurs | null = this.fachartArr[r].gibKleinstenKursInSchieneFuerSchueler(c, this);
+				if (kursGefunden !== null) {
+					this.aktionKursHinzufuegen(r, kursGefunden);
+				} else {
+					this.log.logLn(LogLevel.ERROR, JavaString.format("Fehler bei der Zuordnung im gewichteten Matching. Kein Kurs für Zelle (r=%d, c=%d) gefunden!", r, c));
+				}
+			}
+		}
+	}
+
+	private aktionKurseVerteilenNachDeinemWunschZuordnen(wertWandern: number, r2c: Array<number>): boolean {
+		const data: Array<Array<number>> = this.matrix.getMatrix();
+		let kurslageHatSichVeraendert: boolean = false;
+		for (let r: number = 0; r < this.fachartArr.length; r++) {
+			if ((this.fachartZuKurs[r] !== null) || this.fachartArr[r].gibHatMultikurs()) {
+				continue;
+			}
+			const c: number = r2c[r];
+			if ((c >= 0) && (data[r][c] === wertWandern)) {
+				this.fachartArr[r].aktionZufaelligerKursWandertNachSchiene(c);
+				kurslageHatSichVeraendert = true;
+			}
+		}
+		return kurslageHatSichVeraendert;
+	}
+
 	/**
-	 * Verteilt alle Kurse die über genau 1 Schiene gehen mit Hilfe eines gewichteten Matching Algorithmus.
-	 * Kleinere Kurse werden in der Wahl bevorzugt.
+	 * Verteilt alle Kurse mit Hilfe eines gewichteten Matching Algorithmus. Kleinere Kurse werden in der Wahl bevorzugt.
+	 * <br>Hinweis: Multikurse werden beim bipartiten Matching nie verteilt, da dies algorithmisch nicht geht.
 	 */
 	aktionKurseVerteilenMitBipartiteMatchingGewichtetem(): void {
-		const _INFINITY: number = 1000000;
-		const data: Array<Array<number>> = this.matrix.getMatrix();
-		for (let r: number = 0; r < this.fachartArr.length; r++) {
-			for (let c: number = 0; c < this.schieneBelegt.length; c++) {
-				data[r][c] = _INFINITY;
-			}
-			if ((this.fachartZuKurs[r] !== null) || this.fachartArr[r].gibHatMultikurs()) {
-				continue;
-			}
-			for (let c: number = 0; c < this.schieneBelegt.length; c++) {
-				if (!this.schieneBelegt[c]) {
-					const kurs: KursblockungDynKurs | null = this.fachartArr[r].gibKleinstenKursInSchieneFuerSchueler(c, this);
-					if (kurs !== null) {
-						data[r][c] = kurs.gibGewichtetesMatchingBewertung();
-					}
-				}
-			}
-		}
+		const _MATRIX_UNGUELTIG: number = 1000000;
+		this.aktionKurseVerteilenMitBipartiteMatchingGewichtetetInitialisierung(_MATRIX_UNGUELTIG);
 		const r2c: Array<number> = this.matrix.gibMinimalesBipartitesMatchingGewichtet(true);
-		for (let r: number = 0; r < this.fachartArr.length; r++) {
-			if ((this.fachartZuKurs[r] !== null) || this.fachartArr[r].gibHatMultikurs()) {
-				continue;
-			}
-			const c: number = r2c[r];
-			if (c < 0) {
-				continue;
-			}
-			if (data[r][c] === _INFINITY) {
-				continue;
-			}
-			const kursGefunden: KursblockungDynKurs | null = this.fachartArr[r].gibKleinstenKursInSchieneFuerSchueler(c, this);
-			if (kursGefunden !== null) {
-				this.aktionKursHinzufuegen(r, kursGefunden);
-			} else {
-				throw new DeveloperNotificationException("FEHLER: Kein Kurs in [" + r + "/" + c + "] gefunden!")
-			}
-		}
+		this.aktionKurseVerteilenMitMatchingZuordnen(_MATRIX_UNGUELTIG, r2c);
 	}
 
 	/**
-	 * Verteilt alle Kurse die über genau 1 Schiene gehen mit Hilfe eines Bipartiten-Matching-Algorithmus.
+	 * Verteilt alle Kurse mit Hilfe eines bipartiten 0-1-Matching Algorithmus (ungewichtet). Kleinere Kurse werden in der Wahl bevorzugt.
+	 * <br>Hinweis: Multikurse werden beim bipartiten Matching nie verteilt, da dies algorithmisch nicht geht.
 	 */
 	aktionKurseVerteilenMitBipartiteMatching(): void {
-		const data: Array<Array<number>> = this.matrix.getMatrix();
-		for (let r: number = 0; r < this.fachartArr.length; r++) {
-			for (let c: number = 0; c < this.schieneBelegt.length; c++) {
-				data[r][c] = 0;
-			}
-			if ((this.fachartZuKurs[r] !== null) || this.fachartArr[r].gibHatMultikurs()) {
-				continue;
-			}
-			for (let c: number = 0; c < this.schieneBelegt.length; c++) {
-				if (!this.schieneBelegt[c]) {
-					const kurs: KursblockungDynKurs | null = this.fachartArr[r].gibKleinstenKursInSchieneFuerSchueler(c, this);
-					if (kurs !== null) {
-						data[r][c] = 1;
-					}
-				}
-			}
-		}
+		const _MATRIX_KEINE_KANTE: number = 0;
+		this.aktionKurseVerteilenMitBipartiteMatchingInitialisierung(_MATRIX_KEINE_KANTE);
 		const r2c: Array<number> = this.matrix.gibMaximalesBipartitesMatching(true);
-		for (let r: number = 0; r < this.fachartArr.length; r++) {
-			if ((this.fachartZuKurs[r] !== null) || this.fachartArr[r].gibHatMultikurs()) {
-				continue;
-			}
-			const c: number = r2c[r];
-			if (c === -1) {
-				continue;
-			}
-			const kursGefunden: KursblockungDynKurs | null = this.fachartArr[r].gibKleinstenKursInSchieneFuerSchueler(c, this);
-			if (kursGefunden !== null) {
-				this.aktionKursHinzufuegen(r, kursGefunden);
-			} else {
-				throw new DeveloperNotificationException("FEHLER: Kein Kurs in [" + r + "/" + c + "] gefunden!")
-			}
-		}
+		this.aktionKurseVerteilenMitMatchingZuordnen(_MATRIX_KEINE_KANTE, r2c);
 	}
 
 	/**
-	 * Die (nicht Multi) Facharten des S. werden auf eine Schiene gematched. Falls dies nicht klappt, wird der Fachart
-	 * gesagt, dass einer ihrer Kurse die Schiene wechseln muss. Um welche Schiene es sich dabei handelt, wird durch den
-	 * Matching-Algorithmus berechnet. Der S. wird bei den Berechnungen nicht einem Kurs hinzugefügt.
+	 * Alle Facharten (ohne Multikurse) des Schülers werden auf Schienen gematched.
+	 * Falls dies nicht klappt, wird der Fachart gesagt, dass einer ihrer Kurse die Schiene wechseln muss.
+	 * Um welche Schiene es sich dabei handelt, wird durch den Matching-Algorithmus berechnet.
+	 *
+	 * <br>Hinweis: Der Schüler wird bei den Berechnungen nicht einem Kurs hinzugefügt!
 	 *
 	 * @return TRUE, falls sich die Lage der Kurse verändert hat.
 	 */
 	aktionKurseVerteilenNachDeinemWunsch(): boolean {
-		const _VAL_UNGUELTIG: number = 1000000;
-		const _VAL_KURS_GEWAEHLT: number = 0;
-		const _VAL_KURS_MUSS_WANDERN: number = 1;
-		const data: Array<Array<number>> = this.matrix.getMatrix();
-		for (let r: number = 0; r < this.fachartArr.length; r++) {
-			const fachart: KursblockungDynFachart | null = this.fachartArr[r];
-			for (let c: number = 0; c < this.schieneBelegt.length; c++) {
-				data[r][c] = _VAL_UNGUELTIG;
-			}
-			if ((this.fachartZuKurs[r] !== null) || fachart.gibHatMultikurs()) {
-				continue;
-			}
-			for (let c: number = 0; c < this.schieneBelegt.length; c++) {
-				if (!this.schieneBelegt[c]) {
-					if (fachart.gibHatSchuelerKursInSchiene(c, this)) {
-						data[r][c] = _VAL_KURS_GEWAEHLT;
-					} else {
-						data[r][c] = fachart.gibHatSchuelerKursMitFreierSchiene(c, this) ? _VAL_KURS_MUSS_WANDERN : _VAL_UNGUELTIG;
-					}
-				}
-			}
-		}
+		const _WERT_UNGUELTIG: number = 1000000;
+		const _WERT_KURS_GEWAEHLT: number = 0;
+		const _WERT_KURS_MUSS_WANDERN: number = 1;
+		this.aktionKurseVerteilenNachDeinemWunschInitialisierung(_WERT_UNGUELTIG, _WERT_KURS_GEWAEHLT, _WERT_KURS_MUSS_WANDERN);
 		const r2c: Array<number> = this.matrix.gibMinimalesBipartitesMatchingGewichtet(true);
-		let kurslageHatSichVeraendert: boolean = false;
-		for (let r: number = 0; r < this.fachartArr.length; r++) {
-			const fachart: KursblockungDynFachart | null = this.fachartArr[r];
-			if ((this.fachartZuKurs[r] !== null) || fachart.gibHatMultikurs()) {
-				continue;
-			}
-			const c: number = r2c[r];
-			if (c < 0) {
-				continue;
-			}
-			if (data[r][c] === _VAL_UNGUELTIG) {
-				continue;
-			}
-			if (data[r][c] === _VAL_KURS_GEWAEHLT) {
-				continue;
-			}
-			fachart.aktionZufaelligerKursWandertNachSchiene(c);
-			kurslageHatSichVeraendert = true;
-		}
-		return kurslageHatSichVeraendert;
+		return this.aktionKurseVerteilenNachDeinemWunschZuordnen(_WERT_KURS_MUSS_WANDERN, r2c);
 	}
 
 	/**

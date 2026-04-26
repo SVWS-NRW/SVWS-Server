@@ -130,8 +130,9 @@ public class KursblockungDynKurs {
 		}
 
 		// Der Schiene hinzufügen
-		for (final @NotNull KursblockungDynSchiene schiene : schienenLage)
+		for (final @NotNull KursblockungDynSchiene schiene : schienenLage) {
 			schiene.aktionKursHinzufuegen(this);
+		}
 	}
 
 	/**
@@ -142,8 +143,9 @@ public class KursblockungDynKurs {
 	@Override
 	public @NotNull String toString() {
 		String sSchienen = "";
-		for (int i = 0; i < schienenLage.length; i++)
+		for (int i = 0; i < schienenLage.length; i++) {
 			sSchienen = (i == 0 ? "" : ", ") + (schienenLage[i].gibNr() + 1);
+		}
 		return "Kurs (dbID=" + databaseID + ", iID=" + internalKursID + ", SuS = " + gibSchuelerAnzahl() + ", Schienen = " + sSchienen + ")";
 	}
 
@@ -194,8 +196,9 @@ public class KursblockungDynKurs {
 		final int length = schienenLage.length;
 
 		final @NotNull int[] lage = new int[length];
-		for (int i = 0; i < length; i++)
+		for (int i = 0; i < length; i++) {
 			lage[i] = schienenLage[i].gibNr();
+		}
 
 		return lage;
 	}
@@ -220,13 +223,17 @@ public class KursblockungDynKurs {
 	 * @param  pSchiene Die Schiene nach der gefragt wurde.
 	 * @return          TRUE, wenn die Schiene für den Kurs gesperrt wurde. */
 	boolean gibIstSchieneGesperrt(final int pSchiene) {
-		for (final @NotNull KursblockungDynSchiene s : schienenLage)
-			if (s.gibNr() == pSchiene)
+		for (final @NotNull KursblockungDynSchiene s : schienenLage) {
+			if (s.gibNr() == pSchiene) {
 				return false;
+			}
+		}
 
-		for (final @NotNull KursblockungDynSchiene s : schienenFrei)
-			if (s.gibNr() == pSchiene)
+		for (final @NotNull KursblockungDynSchiene s : schienenFrei) {
+			if (s.gibNr() == pSchiene) {
 				return false;
+			}
+		}
 
 		return true;
 	}
@@ -236,9 +243,11 @@ public class KursblockungDynKurs {
 	 * @param  pSchiene Die Schiene nach der gefragt wurde.
 	 * @return          TRUE, wenn die Schiene für den Kurs fixiert wurde. */
 	boolean gibIstSchieneFixiert(final int pSchiene) {
-		for (int iLage = 0; iLage < schienenLageFixiert; iLage++)
-			if (schienenLage[iLage].gibNr() == pSchiene)
+		for (int iLage = 0; iLage < schienenLageFixiert; iLage++) {
+			if (schienenLage[iLage].gibNr() == pSchiene) {
 				return true;
+			}
+		}
 
 		return false;
 	}
@@ -248,9 +257,11 @@ public class KursblockungDynKurs {
 	 * @param  pSchiene Die Schiene nach der gefragt wurde.
 	 * @return          TRUE, falls der Kurs gerade in Schiene pSchiene ist. */
 	boolean gibIstInSchiene(final int pSchiene) {
-		for (final @NotNull KursblockungDynSchiene schiene : schienenLage)
-			if (schiene.gibNr() == pSchiene)
+		for (final @NotNull KursblockungDynSchiene schiene : schienenLage) {
+			if (schiene.gibNr() == pSchiene) {
 				return true;
+			}
+		}
 
 		return false;
 	}
@@ -261,9 +272,11 @@ public class KursblockungDynKurs {
 	 * @param  schieneBis Das Ende des Intervalls (inklusive).
 	 * @return            TRUE, falls sich der Kurs in einer Schiene aus [schieneVon, schieneBis] befindet. */
 	boolean gibIstImSchienenIntervall(final int schieneVon, final int schieneBis) {
-		for (final @NotNull KursblockungDynSchiene schiene : schienenLage)
-			if ((schiene.gibNr() >= schieneVon) && (schiene.gibNr() <= schieneBis))
+		for (final @NotNull KursblockungDynSchiene schiene : schienenLage) {
+			if ((schiene.gibNr() >= schieneVon) && (schiene.gibNr() <= schieneBis)) {
 				return true;
+			}
+		}
 
 		return false;
 
@@ -274,9 +287,11 @@ public class KursblockungDynKurs {
 	 * @param  pSchiene Die Schiene, die angefragt wurde.
 	 * @return          TRUE, falls dieser Kurs in Schiene c wandern darf. */
 	boolean gibIstSchieneFrei(final int pSchiene) {
-		for (final @NotNull KursblockungDynSchiene schiene : schienenFrei)
-			if (schiene.gibNr() == pSchiene)
+		for (final @NotNull KursblockungDynSchiene schiene : schienenFrei) {
+			if (schiene.gibNr() == pSchiene) {
 				return true;
+			}
+		}
 
 		return false;
 	}
@@ -301,20 +316,24 @@ public class KursblockungDynKurs {
 	 */
 	boolean gibIstErlaubtFuerSchueler(final @NotNull KursblockungDynSchueler s) {
 		// Ist der Kurs generell für diesen Schüler gesperrt?
-		if (s.kursGesperrt[internalKursID])
+		if (s.kursGesperrt[internalKursID]) {
 			return false;
+		}
 
 		// Ist der Kurs momentan für diesen Schüler gesperrt, weil ein anderer Schüler im Kurs ist?
-		if (schuelerVerboten[s.internalSchuelerID] > 0)
+		if (schuelerVerboten[s.internalSchuelerID] > 0) {
 			return false;
+		}
 
 		// Ist der Schüler im Kurs fixiert? Dann ist die Obergrenze nicht relevant.
-		if (schuelerFixiert[s.internalSchuelerID])
+		if (schuelerFixiert[s.internalSchuelerID]) {
 			return true;
+		}
 
 		// Soll der Schüler ignoriert werden bei der Kursverteilung?
-		if (s.regel16schuelerIgnorieren)
+		if (s.regel16schuelerIgnorieren) {
 			return false;
+		}
 
 		// Ist noch Platz für nicht fixierte SuS?
 		return ((schuelerAnzahlMaximal - schuelerAnzahl - schuelerAnzahlDummy) > 0);
@@ -367,11 +386,13 @@ public class KursblockungDynKurs {
 		// Vorsicht: Ein Kopieren von schienenLage/schienenFrei funktioniert nicht, da es sich um Schienen-Objekte handelt!!!
 		aktionSchienenLageEntfernen();
 
-		for (int i = 0; i < schienenLage.length; i++)
+		for (int i = 0; i < schienenLage.length; i++) {
 			schienenLage[i] = schienenArr[b.schienenLage[i].gibNr()];
+		}
 
-		for (int i = 0; i < schienenFrei.length; i++)
+		for (int i = 0; i < schienenFrei.length; i++) {
 			schienenFrei[i] = schienenArr[b.schienenFrei[i].gibNr()];
+		}
 
 		aktionSchienenLageHinzufuegen();
 	}
@@ -387,8 +408,9 @@ public class KursblockungDynKurs {
 	/** Verteilt den Kurs auf die Schienen zufällig. */
 	void aktionZufaelligVerteilen() {
 		// Kurs kann nicht wandern? --> Abbruch
-		if (!gibHatFreiheitsgrade())
+		if (!gibHatFreiheitsgrade()) {
 			return;
+		}
 
 		// Sind SuS im Kurs? --> Fehler ('schuelerAnzDummy' sind aber erlaubt)
 		if (schuelerAnzahl > 0) {
@@ -416,8 +438,9 @@ public class KursblockungDynKurs {
 
 		for (int iLage = schienenLageFixiert; iLage < schienenLage.length; iLage++) {
 			final @NotNull KursblockungDynSchiene schieneL = schienenLage[iLage];
-			if (pSchienenWahl.contains(schieneL.gibNr()))
+			if (pSchienenWahl.contains(schieneL.gibNr())) {
 				continue;
+			}
 
 			// SchieneL muss raus.
 			for (int iFrei = 0; iFrei < schienenFrei.length; iFrei++) {
@@ -446,8 +469,9 @@ public class KursblockungDynKurs {
 		for (int iLage = schienenLageFixiert; iLage < schienenLage.length; iLage++) {
 			// Bereits in Schiene? --> Abbruch
 			final @NotNull KursblockungDynSchiene schieneL = schienenLage[iLage];
-			if (schieneL.gibNr() == pSchiene)
+			if (schieneL.gibNr() == pSchiene) {
 				return;
+			}
 
 			// Suche Tauschpartner-Schiene.
 			for (int iFrei = 0; iFrei < schienenFrei.length; iFrei++) {
@@ -475,21 +499,26 @@ public class KursblockungDynKurs {
 		fachart.aktionKursdifferenzEntfernen();
 
 		schuelerAnzahl++; // Darf erst hier passieren.
-		if (schuelerFixiert[schuelerNr]) // Ein fixierter Schüler erhöht die Obergrenze des Kurses!
+		if (schuelerFixiert[schuelerNr]) { // Ein fixierter Schüler erhöht die Obergrenze des Kurses!
 			schuelerAnzahlMaximal++;
+		}
 
 		fachart.aktionSchuelerWurdeHinzugefuegt(); // Sortiert das Kurs-Array der Fachart
 		fachart.aktionKursdifferenzHinzufuegen();
 
 		// Schüler-Verboten-mit-Schüler-Regel: Andere SuS sind nun in DIESEM Kurs verboten.
-		for (final int verbotenMitNr : fachart.gibVonSchuelerVerbotenMit(schuelerNr))
+		for (final int verbotenMitNr : fachart.gibVonSchuelerVerbotenMit(schuelerNr)) {
 			schuelerVerboten[verbotenMitNr]++;
+		}
 
 		// Schüler-Zusammen-mit-Schüler-Regel: Andere SuS sind nun in ANDEREN Kursen verboten.
-		for (final int zusammenMitNr : fachart.gibVonSchuelerZusammenMit(schuelerNr))
-			for (final @NotNull KursblockungDynKurs kursDerFachart : fachart.gibKurse())
-				if (kursDerFachart != this)
+		for (final int zusammenMitNr : fachart.gibVonSchuelerZusammenMit(schuelerNr)) {
+			for (final @NotNull KursblockungDynKurs kursDerFachart : fachart.gibKurse()) {
+				if (kursDerFachart != this) {
 					kursDerFachart.schuelerVerboten[zusammenMitNr]++;
+				}
+			}
+		}
 	}
 
 	/**
@@ -501,21 +530,26 @@ public class KursblockungDynKurs {
 		fachart.aktionKursdifferenzEntfernen();
 
 		schuelerAnzahl--; // Darf erst hier passieren.
-		if (schuelerFixiert[schuelerNr]) // Ein fixierter Schüler verringert die Obergrenze des Kurses!
+		if (schuelerFixiert[schuelerNr]) { // Ein fixierter Schüler verringert die Obergrenze des Kurses!
 			schuelerAnzahlMaximal--;
+		}
 
 		fachart.aktionSchuelerWurdeEntfernt(); // Sortiert das Kurs-Array der Fachart
 		fachart.aktionKursdifferenzHinzufuegen();
 
 		// Schüler-Verboten-mit-Schüler-Regel: Andere SuS sind nun in DIESEM Kurs wieder erlaubt.
-		for (final int verbotenMitNr : fachart.gibVonSchuelerVerbotenMit(schuelerNr))
+		for (final int verbotenMitNr : fachart.gibVonSchuelerVerbotenMit(schuelerNr)) {
 			schuelerVerboten[verbotenMitNr]--;
+		}
 
 		// Schüler-Zusammen-mit-Schüler-Regel: Andere SuS sind nun in ANDEREN Kursen wieder erlaubt.
-		for (final int zusammenMitNr : fachart.gibVonSchuelerZusammenMit(schuelerNr))
-			for (final @NotNull KursblockungDynKurs kursDerFachart : fachart.gibKurse())
-				if (kursDerFachart != this)
+		for (final int zusammenMitNr : fachart.gibVonSchuelerZusammenMit(schuelerNr)) {
+			for (final @NotNull KursblockungDynKurs kursDerFachart : fachart.gibKurse()) {
+				if (kursDerFachart != this) {
 					kursDerFachart.schuelerVerboten[zusammenMitNr]--;
+				}
+			}
+		}
 	}
 
 	/**
@@ -527,9 +561,11 @@ public class KursblockungDynKurs {
 		schuelerAnzahlMaximal = maxSuS;
 
 		// Verringere die Obergrenze um die Anzahl der fixierten SuS.
-		for (final boolean istFixiert : schuelerFixiert)
-			if (istFixiert)
+		for (final boolean istFixiert : schuelerFixiert) {
+			if (istFixiert) {
 				schuelerAnzahlMaximal--;
+			}
+		}
 	}
 
 	/**
@@ -561,9 +597,11 @@ public class KursblockungDynKurs {
 		logger.logLn(toString() + " --> " + schuelerAnzahl + " SuS.");
 		for (final KursblockungDynSchueler s : schuelerArr) {
 			final @NotNull KursblockungDynKurs[] kurse = s.gibKurswahlen();
-			for (final KursblockungDynKurs kurs : kurse)
-				if (kurs == this)
+			for (final KursblockungDynKurs kurs : kurse) {
+				if (kurs == this) {
 					logger.logLn("        " + s.gibDatenbankID());
+				}
+			}
 		}
 		logger.modifyIndent(-4);
 	}
@@ -573,13 +611,15 @@ public class KursblockungDynKurs {
 	// ########################################
 
 	private void aktionSchienenLageHinzufuegen() {
-		for (final @NotNull KursblockungDynSchiene schiene : schienenLage)
+		for (final @NotNull KursblockungDynSchiene schiene : schienenLage) {
 			schiene.aktionKursHinzufuegen(this);
+		}
 	}
 
 	private void aktionSchienenLageEntfernen() {
-		for (final @NotNull KursblockungDynSchiene schiene : schienenLage)
+		for (final @NotNull KursblockungDynSchiene schiene : schienenLage) {
 			schiene.aktionKursEntfernen(this);
+		}
 	}
 
 	/**
