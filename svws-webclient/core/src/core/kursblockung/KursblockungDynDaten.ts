@@ -17,8 +17,10 @@ import { GostBlockungRegel } from '../../core/data/gost/GostBlockungRegel';
 import { GostKursart } from '../../core/types/gost/GostKursart';
 import { LogLevel } from '../../core/logger/LogLevel';
 import { GostKursblockungRegelTyp } from '../../core/types/kursblockung/GostKursblockungRegelTyp';
+import { PairIteratorModus } from '../../core/adt/iterator/PairIteratorModus';
 import { Random } from '../../java/util/Random';
 import { GostBlockungsergebnisKursSchienenZuordnung } from '../../core/data/gost/GostBlockungsergebnisKursSchienenZuordnung';
+import { PairIterable } from '../../core/adt/iterator/PairIterable';
 import { GostBlockungsergebnisKursSchienenZuordnungUpdate } from '../../core/data/gost/GostBlockungsergebnisKursSchienenZuordnungUpdate';
 import type { List } from '../../java/util/List';
 import { HashSet } from '../../java/util/HashSet';
@@ -542,14 +544,11 @@ export class KursblockungDynDaten extends JavaObject {
 		const wahlenMatrixFachart: Array<Array<number>> = [...Array(nFacharten)].map(e => Array(nFacharten).fill(0));
 		const bewertungMatrixFachart: Array<Array<number>> = [...Array(nFacharten)].map(e => Array(nFacharten).fill(0));
 		for (const s of susArr) {
-			const fa: Array<KursblockungDynFachart> = s.gibFacharten();
-			for (let i1: number = 0; i1 < fa.length; i1++) {
-				const nr1: number = fa[i1].gibNr();
-				for (let i2: number = i1 + 1; i2 < fa.length; i2++) {
-					const nr2: number = fa[i2].gibNr();
-					wahlenMatrixFachart[nr1][nr2]++;
-					wahlenMatrixFachart[nr2][nr1]++;
-				}
+			for (const pair of new PairIterable(s.gibFacharten(), PairIteratorModus.LOWER_ONLY)) {
+				const nr1: number = pair.a.gibNr();
+				const nr2: number = pair.b.gibNr();
+				wahlenMatrixFachart[nr1][nr2]++;
+				wahlenMatrixFachart[nr2][nr1]++;
 			}
 		}
 		const cMALUS_KOLLISION: number = 10000;
@@ -596,6 +595,21 @@ export class KursblockungDynDaten extends JavaObject {
 		DeveloperNotificationException.ifGreater(JavaString.format("Der Kurs mit ID=%d und NR=%d belegt zu viele (%d) Schienen!", kurs.id, kursNr, kurs.anzahlSchienen), kurs.anzahlSchienen, this.schienenMenge.length);
 		const schieneLage: List<KursblockungDynSchiene> = new ArrayList<KursblockungDynSchiene>();
 		const schieneFrei: List<KursblockungDynSchiene> = ListUtils.getCopyAsArrayListPermuted(this.schienenMenge, this.rnd);
+		this.schritt08FehlerBeiKursErstellungErzeugeWendeRegel1und6An(schieneFrei, kurs, nSchienen);
+		this.schritt08FehlerBeiKursErstellungErzeugeWendeRegel3und2An(schieneLage, schieneFrei, kurs);
+		const anzahlFixierterSchienen: number = schieneLage.size();
+		DeveloperNotificationException.ifGreater(JavaString.format("Der Kurs mit ID=%d und NR=%d hat %d Schienen fixert, aber selbst belegt er %d Schienen!", kurs.id, kursNr, anzahlFixierterSchienen, kurs.anzahlSchienen), anzahlFixierterSchienen, kurs.anzahlSchienen);
+		while (schieneLage.size() < kurs.anzahlSchienen) {
+			UserNotificationException.ifTrue(input.toStringKurs(kurs.id) + " hat zu viele Schienen gesperrt, so dass seine Schienenanzahl nicht erfüllt werden kann!", schieneFrei.isEmpty());
+			schieneLage.add(schieneFrei.removeLast());
+		}
+		const schienenLageArray: Array<KursblockungDynSchiene> = schieneLage.toArray(Array(0).fill(null));
+		const schienenFreiArray: Array<KursblockungDynSchiene> = schieneFrei.toArray(Array(0).fill(null));
+		const dynFachart: KursblockungDynFachart = this.gibFachart(kurs.fach_id, kurs.kursart);
+		return new KursblockungDynKurs(this.rnd, schienenLageArray, anzahlFixierterSchienen, schienenFreiArray, kurs.id, dynFachart, this.log, kursNr, nSchueler);
+	}
+
+	private schritt08FehlerBeiKursErstellungErzeugeWendeRegel1und6An(schieneFrei: List<KursblockungDynSchiene>, kurs: GostBlockungKurs, nSchienen: number): void {
 		for (const regel1 of MapUtils.getOrCreateArrayList(this.regelMap, GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS)) {
 			if (kurs.kursart === regel1.parameter.get(0)) {
 				const von: number = regel1.parameter.get(1);
@@ -616,6 +630,9 @@ export class KursblockungDynDaten extends JavaObject {
 				}
 			}
 		}
+	}
+
+	private schritt08FehlerBeiKursErstellungErzeugeWendeRegel3und2An(schieneLage: List<KursblockungDynSchiene>, schieneFrei: List<KursblockungDynSchiene>, kurs: GostBlockungKurs): void {
 		for (const regel3 of MapUtils.getOrCreateArrayList(this.regelMap, GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE)) {
 			if (kurs.id === regel3.parameter.get(0)) {
 				const schiene: number = regel3.parameter.get(1);
@@ -629,26 +646,11 @@ export class KursblockungDynDaten extends JavaObject {
 				if (schieneLage.contains(dynSchiene)) {
 					continue;
 				}
-				UserNotificationException.ifTrue("Die Regel 'KURS_FIXIERE_IN_SCHIENE' will Kurs (id=" + kurs.id + ") in Schiene (" + schiene + ") fixieren, aber die Schiene wurde bereits gesperrt!", !schieneFrei.contains(dynSchiene));
+				UserNotificationException.ifTrue(JavaString.format("KURS_FIXIERE_IN_SCHIENE: Kurs (%d) soll in Schiene (%d) fixiert werden, aber die Schiene wurde bereits gesperrt!", kurs.id, schiene), !schieneFrei.contains(dynSchiene));
 				schieneFrei.remove(dynSchiene);
 				schieneLage.add(dynSchiene);
 			}
 		}
-		const anzahlFixierterSchienen: number = schieneLage.size();
-		DeveloperNotificationException.ifGreater("kurs.anzahlSchienen", anzahlFixierterSchienen, kurs.anzahlSchienen);
-		while (schieneLage.size() < kurs.anzahlSchienen) {
-			UserNotificationException.ifTrue(input.toStringKurs(kurs.id) + " hat zu viele Schienen gesperrt, so dass seine Schienenanzahl nicht erfüllt werden kann!", schieneFrei.isEmpty());
-			const indexLast: number = schieneFrei.size() - 1;
-			const s: KursblockungDynSchiene | null = schieneFrei.get(indexLast);
-			if (s !== null) {
-				schieneFrei.remove(s);
-				schieneLage.add(s);
-			}
-		}
-		const schienenLageArray: Array<KursblockungDynSchiene> = schieneLage.toArray(Array(0).fill(null));
-		const schienenFreiArray: Array<KursblockungDynSchiene> = schieneFrei.toArray(Array(0).fill(null));
-		const dynFachart: KursblockungDynFachart = this.gibFachart(kurs.fach_id, kurs.kursart);
-		return new KursblockungDynKurs(this.rnd, schienenLageArray, anzahlFixierterSchienen, schienenFreiArray, kurs.id, dynFachart, this.log, kursNr, nSchueler);
 	}
 
 	private fehlerBeiKursFreiErstellung(): void {
@@ -755,26 +757,18 @@ export class KursblockungDynDaten extends JavaObject {
 		if (regelnTyp10.isEmpty()) {
 			return;
 		}
-		DeveloperNotificationException.ifGreater("Liste of regelnTyp10", regelnTyp10.size(), 1);
-		const vKurseMitLehrkraft: ArrayList<GostBlockungKurs> = new ArrayList<GostBlockungKurs>();
+		const size: number = regelnTyp10.size();
+		DeveloperNotificationException.ifGreater(JavaString.format("LEHRKRAEFTE_BEACHTEN: Diese Regeln darf es maximal ein mal geben, sie gibt es aber %d mal!", size), size, 1);
+		const mapLehrkraftNachKurse: HashMap<number, List<KursblockungDynKurs>> = new HashMap<number, List<KursblockungDynKurs>>();
 		for (const gKurs of pInput.daten().kurse) {
-			if (!gKurs.lehrer.isEmpty()) {
-				vKurseMitLehrkraft.add(gKurs);
+			for (const gLehr of gKurs.lehrer) {
+				const dynKurs: KursblockungDynKurs = this.gibKurs(gKurs.id);
+				MapUtils.getOrCreateArrayList(mapLehrkraftNachKurse, gLehr.id).add(dynKurs);
 			}
 		}
-		for (const gKurs1 of vKurseMitLehrkraft) {
-			for (const gKurs2 of vKurseMitLehrkraft) {
-				if (gKurs1.id < gKurs2.id) {
-					for (const gLehr1 of gKurs1.lehrer) {
-						for (const gLehr2 of gKurs2.lehrer) {
-							if (gLehr1.id === gLehr2.id) {
-								const kurs1: KursblockungDynKurs = this.gibKurs(gKurs1.id);
-								const kurs2: KursblockungDynKurs = this.gibKurs(gKurs2.id);
-								this.statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
-							}
-						}
-					}
-				}
+		for (const kurseDerLehrkraft of mapLehrkraftNachKurse.values()) {
+			for (const pair of new PairIterable(kurseDerLehrkraft, PairIteratorModus.LOWER_ONLY)) {
+				this.statistik.regelHinzufuegenKursVerbieteMitKurs(pair.a, pair.b);
 			}
 		}
 	}

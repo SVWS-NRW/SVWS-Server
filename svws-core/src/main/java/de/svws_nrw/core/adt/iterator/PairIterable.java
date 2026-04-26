@@ -4,6 +4,7 @@ import de.svws_nrw.asd.adt.PairNN;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -34,6 +35,19 @@ public final class PairIterable<T> implements Iterable<@NotNull PairNN<T, T>> {
 			elemente.add(element);
 		}
 	}
+
+
+	/**
+	 * Erstellt ein neues Iterable über alle Paare des angegebenen Arrays im gewünschten Modus.
+	 *
+	 * @param source das Quell-Array
+	 * @param modus  der gewünschte Iterationsmodus
+	 */
+	public PairIterable(final @NotNull T @NotNull [] source, final @NotNull PairIteratorModus modus) {
+		this.modus = modus;
+		this.elemente = Arrays.asList(source);
+	}
+
 
 	/**
 	 * Liefert einen neuen Iterator über alle Paare.

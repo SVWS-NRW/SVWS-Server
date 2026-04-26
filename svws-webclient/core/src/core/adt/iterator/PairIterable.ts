@@ -1,12 +1,14 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { PairIterator } from '../../../core/adt/iterator/PairIterator';
-import { PairIteratorModus } from '../../../core/adt/iterator/PairIteratorModus';
+import { PairIterator, cast_de_svws_nrw_core_adt_iterator_PairIterator } from '../../../core/adt/iterator/PairIterator';
+import { PairIteratorModus, cast_de_svws_nrw_core_adt_iterator_PairIteratorModus } from '../../../core/adt/iterator/PairIteratorModus';
 import type { JavaIterable } from '../../../java/lang/JavaIterable';
+import { cast_java_lang_Iterable } from '../../../java/lang/JavaIterable';
 import { PairNN } from '../../../asd/adt/PairNN';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { JavaIterator } from '../../../java/util/JavaIterator';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
+import { Arrays } from '../../../java/util/Arrays';
 
 export class PairIterable<T> extends JavaObject implements JavaIterable<PairNN<T, T>> {
 
@@ -27,13 +29,35 @@ export class PairIterable<T> extends JavaObject implements JavaIterable<PairNN<T
 	 * @param source   die Quell-Collection (List, Set oder jedes Iterable)
 	 * @param modus    der gewünschte Iterationsmodus
 	 */
-	public constructor(source: JavaIterable<T>, modus: PairIteratorModus) {
+	public constructor(source: JavaIterable<T>, modus: PairIteratorModus);
+
+	/**
+	 * Erstellt ein neues Iterable über alle Paare des angegebenen Arrays im gewünschten Modus.
+	 *
+	 * @param source das Quell-Array
+	 * @param modus  der gewünschte Iterationsmodus
+	 */
+	public constructor(source: Array<T>, modus: PairIteratorModus);
+
+	/**
+	 * Implementation for method overloads of 'constructor'
+	 */
+	public constructor(__param0: Array<T> | JavaIterable<T>, __param1: PairIteratorModus) {
 		super();
-		this.modus = modus;
-		this.elemente = new ArrayList();
-		for (const element of source) {
-			this.elemente.add(element);
-		}
+		if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.lang.Iterable'))) || (__param0 === null)) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.svws_nrw.core.adt.iterator.PairIteratorModus'))))) {
+			const source: JavaIterable<T> = cast_java_lang_Iterable(__param0);
+			const modus: PairIteratorModus = cast_de_svws_nrw_core_adt_iterator_PairIteratorModus(__param1);
+			this.modus = modus;
+			this.elemente = new ArrayList();
+			for (const element of source) {
+				this.elemente.add(element);
+			}
+		} else if (((__param0 !== undefined) && Array.isArray(__param0)) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.svws_nrw.core.adt.iterator.PairIteratorModus'))))) {
+			const source: Array<T> = __param0 as unknown as Array<T>;
+			const modus: PairIteratorModus = cast_de_svws_nrw_core_adt_iterator_PairIteratorModus(__param1);
+			this.modus = modus;
+			this.elemente = Arrays.asList(...source);
+		} else throw new Error('invalid method overload');
 	}
 
 	/**
