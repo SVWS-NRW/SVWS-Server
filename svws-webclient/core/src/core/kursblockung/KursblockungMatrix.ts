@@ -126,72 +126,82 @@ export class KursblockungMatrix extends JavaObject {
 	 * interpretiert. Nichtquadratische Matrizen sind erlaubt. Das Ergebnis der Methode ist eine größtmögliche Zeilen-
 	 * zu Spaltenzuordnung. Der Algorithmus hat eine Laufzeit von O(n³).
 	 *
-	 * @param  nichtdeterministisch definiert, ob das Ergebnis zufällig sein soll, falls es mehrere optimale Lösungen
-	 *                              gibt.
-	 * @return                      die Zeilen- zu Spaltenzuordnung, negative Werte entsprechen einer Nichtzuordnung.
+	 * @param  nichtdeterministisch   definiert, ob das Ergebnis zufällig sein soll, falls es mehrere optimale Lösungen gibt.
+	 *
+	 * @return die Zeilen- zu Spaltenzuordnung, negative Werte entsprechen einer Nichtzuordnung.
 	 */
 	public gibMaximalesBipartitesMatching(nichtdeterministisch: boolean): Array<number> {
 		Arrays.fill(this.r2c, -1);
 		Arrays.fill(this.c2r, -1);
 		this.initialisierPermRundPermC(nichtdeterministisch);
 		for (let pseudoR: number = 0; pseudoR < this.rows; pseudoR++) {
-			const r: number = this.permR[pseudoR];
-			Arrays.fill(this.besuchtR, false);
-			Arrays.fill(this.vorgaengerCzuR, -1);
-			let queueFirst: number = 0;
-			let queueLast: number = 0;
-			this.queueR[queueLast] = r;
-			queueLast++;
-			this.besuchtR[r] = true;
-			while (queueFirst < queueLast) {
-				const vonR: number = this.queueR[queueFirst];
-				queueFirst++;
-				for (let pseudoC: number = 0; pseudoC < this.cols; pseudoC++) {
-					const ueberC: number = this.permC[pseudoC];
-					if ((this.matrix[vonR][ueberC] !== 0) && (this.r2c[vonR] !== ueberC)) {
-						const zuR: number = this.c2r[ueberC];
-						if (zuR === -1) {
-							this.vorgaengerCzuR[ueberC] = vonR;
-							let c2: number = ueberC;
-							while (c2 >= 0) {
-								const r2: number = this.vorgaengerCzuR[c2];
-								const saveC: number = this.r2c[r2];
-								this.c2r[c2] = r2;
-								this.r2c[r2] = c2;
-								c2 = saveC;
-							}
-							queueLast = queueFirst;
-							break;
-						}
-						if (!this.besuchtR[zuR]) {
-							this.besuchtR[zuR] = true;
-							this.queueR[queueLast] = zuR;
-							queueLast++;
-							this.vorgaengerCzuR[ueberC] = vonR;
-						}
-					}
-				}
-			}
+			this.findeUndWendeAugmentierendenPfadAn(this.permR[pseudoR]);
 		}
 		return this.r2c;
 	}
 
+	private findeUndWendeAugmentierendenPfadAn(startR: number): void {
+		Arrays.fill(this.besuchtR, false);
+		Arrays.fill(this.vorgaengerCzuR, -1);
+		let queueFirst: number = 0;
+		let queueLast: number = 0;
+		this.queueR[queueLast++] = startR;
+		this.besuchtR[startR] = true;
+		while (queueFirst < queueLast) {
+			const vonR: number = this.queueR[queueFirst++];
+			for (let pseudoC: number = 0; pseudoC < this.cols; pseudoC++) {
+				const ueberC: number = this.permC[pseudoC];
+				if (this.matrix[vonR][ueberC] === 0 || this.r2c[vonR] === ueberC) {
+					continue;
+				}
+				const zuR: number = this.c2r[ueberC];
+				if (zuR === -1) {
+					this.fuehreRingtauschDurch(ueberC, vonR);
+					return;
+				}
+				if (!this.besuchtR[zuR]) {
+					this.besuchtR[zuR] = true;
+					this.queueR[queueLast++] = zuR;
+					this.vorgaengerCzuR[ueberC] = vonR;
+				}
+			}
+		}
+	}
+
 	/**
-	 *Berechnet zur aktuellen Matrix ein minimales gewichtetes Matching. Die Methode geht davon aus, dass in der
+	 * Führt den eigentlichen Ringtausch durch (Augmentierung des Pfades),
+	 * sobald ein freier Spaltenknoten gefunden wurde.
+	 *
+	 * @param zielC   Der gefundene freie Spaltenknoten.
+	 * @param vonR    Der Zeilenknoten, über den der Spaltenknoten erreicht wurde.
+	 */
+	private fuehreRingtauschDurch(zielC: number, vonR: number): void {
+		this.vorgaengerCzuR[zielC] = vonR;
+		let c2: number = zielC;
+		while (c2 >= 0) {
+			const r2: number = this.vorgaengerCzuR[c2];
+			const saveC: number = this.r2c[r2];
+			this.c2r[c2] = r2;
+			this.r2c[r2] = c2;
+			c2 = saveC;
+		}
+	}
+
+	/**
+	 * Berechnet zur aktuellen Matrix ein minimales gewichtetes Matching. Die Methode geht davon aus, dass in der
 	 * Matrix ganzzahlige Werte vorkommen, d.h. es existiert eine Kante von jedem linken Knoten zu jedem rechten Knoten.
 	 * Negative Werte und nichtquadratische Matrizen sind erlaubt. Zur Berechnung eines maximalen Matching kann man
 	 * vorher alle Zellenwerte negieren. Das Ergebnis der Methode ist eine Zeilen- zu Spaltenzuordnung, deren Summe
 	 * minimal ist. Der Algorithmus verwendet mehrere Runden eines SSSP-Algorithmus (Dijkstra). Damit dies bei negativen
-	 * Werten funktioniert, werden die Kanten mit Hilfe von Knoten-Potentialen umgewichtet. Der Algorithmus hat eine
-	 * Laufzeit von O(n³).
+	 * Werten funktioniert, werden die Kanten mit Hilfe von Knoten-Potentialen umgewichtet.
+	 * <br>Der Algorithmus hat eine Laufzeit von O(n³).
 	 *
-	 * @see                         <a href= "https://en.wikipedia.org/wiki/Shortest_path_problem">Wikipedia -
-	 *                              Shortest_path_problem</a>
-	 * @see                         <a href= "https://en.wikipedia.org/wiki/Johnson%27s_algorithm">Wikipedia - Johnsons
-	 *                              Algorithm</a>
-	 * @param  nichtdeterministisch definiert, ob das Ergebnis zufällig sein soll, falls es mehrere optimale Lösungen
-	 *                              gibt.
-	 * @return                      die Zeilen- zu Spaltenzuordnung, negative Werte entsprechen einer Nichtzuordnung.
+	 * @see <a href= "https://en.wikipedia.org/wiki/Shortest_path_problem">Wikipedia - Shortest_path_problem</a>
+	 * @see <a href= "https://en.wikipedia.org/wiki/Johnson%27s_algorithm">Wikipedia - Johnsons Algorithm</a>
+	 *
+	 * @param nichtdeterministisch   definiert, ob das Ergebnis zufällig sein soll, falls es mehrere optimale Lösungen gibt.
+	 *
+	 * @return die Zeilen- zu Spaltenzuordnung, negative Werte entsprechen einer Nichtzuordnung.
 	 */
 	public gibMinimalesBipartitesMatchingGewichtet(nichtdeterministisch: boolean): Array<number> {
 		Arrays.fill(this.r2c, -1);
@@ -199,6 +209,20 @@ export class KursblockungMatrix extends JavaObject {
 		Arrays.fill(this.potentialR, 0);
 		Arrays.fill(this.potentialC, 0);
 		this.initialisierPermRundPermC(nichtdeterministisch);
+		this.passeInitialePotentialeAn();
+		let dijkstraRunden: number = Math.min(this.rows, this.cols);
+		dijkstraRunden -= this.berechneGreedyStartZuordnung();
+		for (let dijkstraRunde: number = 0; dijkstraRunde < dijkstraRunden; dijkstraRunde++) {
+			this.fuehreDijkstraRundeDurch();
+		}
+		return this.r2c;
+	}
+
+	/**
+	 * Passt die Initial-Potentiale der Zeilen und Spalten an,
+	 * um negative Kantengewichte für den ersten Dijkstra-Durchlauf zu vermeiden.
+	 */
+	private passeInitialePotentialeAn(): void {
 		if (this.rows <= this.cols) {
 			for (let r: number = 0; r < this.rows; r++) {
 				let min: number = (this.matrix[r][0] + this.potentialR[r]) - this.potentialC[0];
@@ -219,8 +243,17 @@ export class KursblockungMatrix extends JavaObject {
 				this.potentialC[c] += min;
 			}
 		}
-		let dijkstraRunden: number = Math.min(this.rows, this.cols);
+	}
+
+	/**
+	 * Ordnet jeder Zeile r einen Partner c zu, wenn in der Matrix der Wert 0 ist
+	 * und der c-Knoten nicht bereits zugeordnet wurde.
+	 *
+	 * @return Die Anzahl der erfolgreich zugewiesenen Paare.
+	 */
+	private berechneGreedyStartZuordnung(): number {
 		Arrays.fill(this.abgearbeitetC, false);
+		let erfolgreicheZuordnungen: number = 0;
 		for (let ir: number = 0; ir < this.rows; ir++) {
 			const r: number = this.permR[ir];
 			for (let ic: number = 0; ic < this.cols; ic++) {
@@ -231,78 +264,112 @@ export class KursblockungMatrix extends JavaObject {
 						this.r2c[r] = c;
 						this.c2r[c] = r;
 						this.abgearbeitetC[c] = true;
-						dijkstraRunden--;
+						erfolgreicheZuordnungen++;
 						break;
 					}
 				}
 			}
 		}
-		for (let dijkstraRunde: number = 0; dijkstraRunde < dijkstraRunden; dijkstraRunde++) {
-			for (let ic: number = 0; ic < this.cols; ic++) {
-				const c: number = this.permC[ic];
-				this.vorgaengerCzuR[c] = -1;
-				this.abgearbeitetC[c] = false;
-				this.distanzC[c] = JavaLong.MAX_VALUE;
-				for (let ir: number = 0; ir < this.rows; ir++) {
-					const r: number = this.permR[ir];
-					if (this.r2c[r] < 0) {
-						const kante: number = (this.matrix[r][c] + this.potentialR[r]) - this.potentialC[c];
-						if (kante < this.distanzC[c]) {
-							this.distanzC[c] = kante;
-							this.vorgaengerCzuR[c] = r;
-						}
-					}
-				}
-			}
-			let endknotenC: number = -1;
-			for (let dijkstraZyklus: number = 0; dijkstraZyklus < this.cols; dijkstraZyklus++) {
-				let fromC: number = 0;
-				for (let ic: number = 0; ic < this.cols; ic++) {
-					const c: number = this.permC[ic];
-					if ((!this.abgearbeitetC[c]) && ((this.abgearbeitetC[fromC]) || (this.distanzC[c] < this.distanzC[fromC]))) {
-						fromC = c;
-					}
-				}
-				this.abgearbeitetC[fromC] = true;
-				const overR: number = this.c2r[fromC];
-				if (overR >= 0) {
-					for (let ic: number = 0; ic < this.cols; ic++) {
-						const toC: number = this.permC[ic];
-						const kante: number = (this.matrix[overR][toC] + this.potentialR[overR]) - this.potentialC[toC];
-						const distance: number = this.distanzC[fromC] + kante;
-						if (distance < this.distanzC[toC]) {
-							this.distanzC[toC] = distance;
-							this.vorgaengerCzuR[toC] = overR;
-						}
-					}
-				} else {
-					if (endknotenC < 0) {
-						endknotenC = fromC;
-					}
-				}
-			}
-			let currentC: number = endknotenC;
-			while (currentC >= 0) {
-				const prevR: number = this.vorgaengerCzuR[currentC];
-				const prevC: number = this.r2c[prevR];
-				this.r2c[prevR] = currentC;
-				this.c2r[currentC] = prevR;
-				currentC = prevC;
-			}
-			for (let r: number = 0; r < this.rows; r++) {
-				const c: number = this.r2c[r];
-				if (c >= 0) {
-					const kante: number = (this.matrix[r][c] + this.potentialR[r]) - this.potentialC[c];
-					this.potentialR[r] += this.distanzC[c] - kante;
-					this.potentialC[c] += this.distanzC[c];
-				}
-			}
-		}
-		return this.r2c;
+		return erfolgreicheZuordnungen;
 	}
 
 	/**
-	 *Interne Methode zum Permutieren oder Initialisieren der Arrays {@link KursblockungMatrix#permR} und
+	 * Führt exakt eine Dijkstra-Runde aus: Initialisierung, Zyklen, Ringtausch und Neugewichtung.
+	 */
+	private fuehreDijkstraRundeDurch(): void {
+		this.initialisiereDijkstraRunde();
+		const endknotenC: number = this.berechneDijkstraZyklenUndFindeEndknoten();
+		let currentC: number = endknotenC;
+		while (currentC >= 0) {
+			const prevR: number = this.vorgaengerCzuR[currentC];
+			const prevC: number = this.r2c[prevR];
+			this.r2c[prevR] = currentC;
+			this.c2r[currentC] = prevR;
+			currentC = prevC;
+		}
+		for (let r: number = 0; r < this.rows; r++) {
+			const c: number = this.r2c[r];
+			if (c >= 0) {
+				const kante: number = (this.matrix[r][c] + this.potentialR[r]) - this.potentialC[c];
+				this.potentialR[r] += this.distanzC[c] - kante;
+				this.potentialC[c] += this.distanzC[c];
+			}
+		}
+	}
+
+	/**
+	 * Initialisiert die Dijkstra-Runde:
+	 * Alle c-Knoten werden initialisiert mit dem kürzesten Pfad zu einem (noch nicht zugeordneten) r-Knoten.
+	 */
+	private initialisiereDijkstraRunde(): void {
+		for (let ic: number = 0; ic < this.cols; ic++) {
+			const c: number = this.permC[ic];
+			this.vorgaengerCzuR[c] = -1;
+			this.abgearbeitetC[c] = false;
+			this.distanzC[c] = JavaLong.MAX_VALUE;
+			for (let ir: number = 0; ir < this.rows; ir++) {
+				const r: number = this.permR[ir];
+				if (this.r2c[r] < 0) {
+					const kante: number = (this.matrix[r][c] + this.potentialR[r]) - this.potentialC[c];
+					if (kante < this.distanzC[c]) {
+						this.distanzC[c] = kante;
+						this.vorgaengerCzuR[c] = r;
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Berechnet von allen (noch nicht zugeordneten) r-Knoten den kürzesten Pfad zu allen c-Knoten.
+	 *
+	 * @return der C-Knoten (Endknoten), bei dem der kürzeste Pfad erfolgreich endet
+	 */
+	private berechneDijkstraZyklenUndFindeEndknoten(): number {
+		let endknotenC: number = -1;
+		for (let dijkstraZyklus: number = 0; dijkstraZyklus < this.cols; dijkstraZyklus++) {
+			let fromC: number = 0;
+			for (let ic: number = 0; ic < this.cols; ic++) {
+				const c: number = this.permC[ic];
+				if ((!this.abgearbeitetC[c]) && ((this.abgearbeitetC[fromC]) || (this.distanzC[c] < this.distanzC[fromC]))) {
+					fromC = c;
+				}
+			}
+			this.abgearbeitetC[fromC] = true;
+			const overR: number = this.c2r[fromC];
+			if (overR >= 0) {
+				this.relaxiereDijkstraNachbarn(fromC, overR);
+			} else {
+				if (endknotenC < 0) {
+					endknotenC = fromC;
+				}
+			}
+		}
+		return endknotenC;
+	}
+
+	/**
+	 * Relaxiert die c-Knoten-Nachbarn eines Knotens im Dijkstra-Algorithmus ("fromC" ist kein Endknoten).
+	 * Untersucht alle Nachbarn von overR und aktualisiert ggf. deren minimale Distanz.
+	 *
+	 * @param fromC   Der Spalten-Knoten, von dem aus der Weg rückwärts verfolgt wurde.
+	 * @param overR   Der Zeilen-Knoten, der fromC zugeordnet ist und dessen Nachbarn relaxiert werden.
+	 */
+	private relaxiereDijkstraNachbarn(fromC: number, overR: number): void {
+		for (let ic: number = 0; ic < this.cols; ic++) {
+			const toC: number = this.permC[ic];
+			const kante: number = (this.matrix[overR][toC] + this.potentialR[overR]) - this.potentialC[toC];
+			const distance: number = this.distanzC[fromC] + kante;
+			if (distance < this.distanzC[toC]) {
+				this.distanzC[toC] = distance;
+				this.vorgaengerCzuR[toC] = overR;
+			}
+		}
+	}
+
+	/**
+	 * Interne Methode zum Permutieren oder Initialisieren der Arrays
+	 * {@link KursblockungMatrix#permR} und
 	 * {@link KursblockungMatrix#permC}.
 	 *
 	 * @param nichtdeterministisch falls {@code true} werden {@link KursblockungMatrix#permR} und
@@ -319,7 +386,7 @@ export class KursblockungMatrix extends JavaObject {
 	}
 
 	/**
-	 *Interne Methode zum Initialisieren eines Arrays so, dass das Array mit den Zahlen {@code 0,1,2...} gefüllt wird.
+	 * Interne Methode zum Initialisieren eines Arrays so, dass das Array mit den Zahlen {@code 0,1,2...} gefüllt wird.
 	 *
 	 * @param perm Das Array, welches mit den Zahlen {@code 0,1,2...} gefüllt wird.
 	 */
@@ -331,7 +398,7 @@ export class KursblockungMatrix extends JavaObject {
 	}
 
 	/**
-	 *Interne Methode zum zufälligen Permutieren eines Arrays.
+	 * Interne Methode zum zufälligen Permutieren eines Arrays.
 	 *
 	 * @param perm Das Array, dessen Inhalt zufällig permutiert wird.
 	 */
@@ -347,7 +414,7 @@ export class KursblockungMatrix extends JavaObject {
 	}
 
 	/**
-	 *Erlaubt Zugriff auf den Inhalt des Arrays.
+	 * Erlaubt Zugriff auf den Inhalt des Arrays.
 	 *
 	 * @return Die Array-Referenz.
 	 */

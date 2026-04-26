@@ -91,272 +91,338 @@ public class KursblockungMatrix {
 		initialisiere(permC);
 	}
 
+
 	/**
 	 * Berechnet zur aktuellen Matrix ein maximales bipartites Matching. Die Methode geht davon aus, dass in der Matrix
 	 * ausschließlich die Werte 0 und 1 vorkommen. Werte ungleich 0 werden andernfalls als 1 (eine Kante im Graphen)
 	 * interpretiert. Nichtquadratische Matrizen sind erlaubt. Das Ergebnis der Methode ist eine größtmögliche Zeilen-
 	 * zu Spaltenzuordnung. Der Algorithmus hat eine Laufzeit von O(n³).
 	 *
-	 * @param  nichtdeterministisch definiert, ob das Ergebnis zufällig sein soll, falls es mehrere optimale Lösungen
-	 *                              gibt.
-	 * @return                      die Zeilen- zu Spaltenzuordnung, negative Werte entsprechen einer Nichtzuordnung.
+	 * @param  nichtdeterministisch   definiert, ob das Ergebnis zufällig sein soll, falls es mehrere optimale Lösungen gibt.
+	 *
+	 * @return die Zeilen- zu Spaltenzuordnung, negative Werte entsprechen einer Nichtzuordnung.
 	 */
 	public @NotNull int[] gibMaximalesBipartitesMatching(final boolean nichtdeterministisch) {
-		// Aktuelle Spalten-Zeilen-Zuordnungen löschen
-		Arrays.fill(r2c, -1);
-		Arrays.fill(c2r, -1);
+	    Arrays.fill(r2c, -1);
+	    Arrays.fill(c2r, -1);
 
-		// Initialisiert 'permR' und 'permC'
-		initialisierPermRundPermC(nichtdeterministisch);
+	    initialisierPermRundPermC(nichtdeterministisch);
 
-		// Geht jede Zeile r durch und findet einen potentiellen Partner c, ggf. durch
-		// einen Ringtausch.
-		// Ein Ringtausch kann theoretisch sogar alle derzeitigen Zuordnungen verändern.
-		for (int pseudoR = 0; pseudoR < rows; pseudoR++) {
-			final int r = permR[pseudoR]; // ggf. zufällige r-Reihenfolge
-			// Initialisierung des Durchgangs
-			// Knoten r wird als besucht definiert und der Queue hinzugefügt
-			Arrays.fill(besuchtR, false); // Abgearbeitete R-Knoten
-			Arrays.fill(vorgaengerCzuR, -1); // Vorgänger bei der Breitensuche
-			int queueFirst = 0; // Index zum Entfernen
-			int queueLast = 0; // Index zum Hinzufügen
-			queueR[queueLast] = r;
-			queueLast++;
-			besuchtR[r] = true;
+	    for (int pseudoR = 0; pseudoR < rows; pseudoR++) {
+	        findeUndWendeAugmentierendenPfadAn(permR[pseudoR]);
+	    }
 
-			// Breitensuche vom Knoten der in der Queue ist.
-			while (queueFirst < queueLast) {
-				final int vonR = queueR[queueFirst];
-				queueFirst++;
-				for (int pseudoC = 0; pseudoC < cols; pseudoC++) {
-					final int ueberC = permC[pseudoC]; // ggf. zufällige c-Reihenfolge
-					if ((matrix[vonR][ueberC] != 0) && (r2c[vonR] != ueberC)) { // Es existiert eine Vorwärts-Kante.
-						final int zuR = c2r[ueberC];
-						if (zuR == -1) {
-							// Gefunden --> Ringtausch
-							vorgaengerCzuR[ueberC] = vonR;
-							int c2 = ueberC;
-							while (c2 >= 0) {
-								final int r2 = vorgaengerCzuR[c2];
-								final int saveC = r2c[r2];
-								c2r[c2] = r2;
-								r2c[r2] = c2;
-								c2 = saveC;
-							}
-							// Abbruch der Breitensuche
-							queueLast = queueFirst;
-							break;
-						}
-						// Ist der Weg zurück noch unbesucht?
-						if (!besuchtR[zuR]) {
-							besuchtR[zuR] = true;
-							queueR[queueLast] = zuR;
-							queueLast++;
-							vorgaengerCzuR[ueberC] = vonR;
-						}
-					}
-				}
-			}
-		}
-
-		return r2c;
+	    return r2c;
 	}
 
-	/** Berechnet zur aktuellen Matrix ein minimales gewichtetes Matching. Die Methode geht davon aus, dass in der
+
+	private void findeUndWendeAugmentierendenPfadAn(final int startR) {
+	    Arrays.fill(besuchtR, false);
+	    Arrays.fill(vorgaengerCzuR, -1);
+
+	    int queueFirst = 0;
+	    int queueLast = 0;
+	    queueR[queueLast++] = startR;
+	    besuchtR[startR] = true;
+
+	    while (queueFirst < queueLast) {
+	        final int vonR = queueR[queueFirst++];
+
+	        for (int pseudoC = 0; pseudoC < cols; pseudoC++) {
+	            final int ueberC = permC[pseudoC];
+
+	            // Guard-Clause: Keine Kante oder Kante bereits im aktuellen Matching
+	            if (matrix[vonR][ueberC] == 0 || r2c[vonR] == ueberC) {
+	                continue;
+	            }
+
+	            final int zuR = c2r[ueberC];
+
+	            // Freier Spaltenknoten gefunden -> Ringtausch durchführen
+	            if (zuR == -1) {
+	                fuehreRingtauschDurch(ueberC, vonR);
+	                return; // Breitensuche für diesen Startknoten erfolgreich beenden
+	            }
+
+	            // Ist der Weg zurück noch unbesucht?
+	            if (!besuchtR[zuR]) {
+	                besuchtR[zuR] = true;
+	                queueR[queueLast++] = zuR;
+	                vorgaengerCzuR[ueberC] = vonR;
+	            }
+	        }
+	    }
+	}
+
+
+	/**
+	 * Führt den eigentlichen Ringtausch durch (Augmentierung des Pfades),
+	 * sobald ein freier Spaltenknoten gefunden wurde.
+	 *
+	 * @param zielC   Der gefundene freie Spaltenknoten.
+	 * @param vonR    Der Zeilenknoten, über den der Spaltenknoten erreicht wurde.
+	 */
+	private void fuehreRingtauschDurch(final int zielC, final int vonR) {
+	    vorgaengerCzuR[zielC] = vonR;
+	    int c2 = zielC;
+
+	    while (c2 >= 0) {
+	        final int r2 = vorgaengerCzuR[c2];
+	        final int saveC = r2c[r2];
+	        c2r[c2] = r2;
+	        r2c[r2] = c2;
+	        c2 = saveC;
+	    }
+	}
+
+
+	/**
+	 * Berechnet zur aktuellen Matrix ein minimales gewichtetes Matching. Die Methode geht davon aus, dass in der
 	 * Matrix ganzzahlige Werte vorkommen, d.h. es existiert eine Kante von jedem linken Knoten zu jedem rechten Knoten.
 	 * Negative Werte und nichtquadratische Matrizen sind erlaubt. Zur Berechnung eines maximalen Matching kann man
 	 * vorher alle Zellenwerte negieren. Das Ergebnis der Methode ist eine Zeilen- zu Spaltenzuordnung, deren Summe
 	 * minimal ist. Der Algorithmus verwendet mehrere Runden eines SSSP-Algorithmus (Dijkstra). Damit dies bei negativen
-	 * Werten funktioniert, werden die Kanten mit Hilfe von Knoten-Potentialen umgewichtet. Der Algorithmus hat eine
-	 * Laufzeit von O(n³).
+	 * Werten funktioniert, werden die Kanten mit Hilfe von Knoten-Potentialen umgewichtet.
+	 * <br>Der Algorithmus hat eine Laufzeit von O(n³).
 	 *
-	 * @see                         <a href= "https://en.wikipedia.org/wiki/Shortest_path_problem">Wikipedia -
-	 *                              Shortest_path_problem</a>
-	 * @see                         <a href= "https://en.wikipedia.org/wiki/Johnson%27s_algorithm">Wikipedia - Johnsons
-	 *                              Algorithm</a>
-	 * @param  nichtdeterministisch definiert, ob das Ergebnis zufällig sein soll, falls es mehrere optimale Lösungen
-	 *                              gibt.
-	 * @return                      die Zeilen- zu Spaltenzuordnung, negative Werte entsprechen einer Nichtzuordnung. */
+	 * @see <a href= "https://en.wikipedia.org/wiki/Shortest_path_problem">Wikipedia - Shortest_path_problem</a>
+	 * @see <a href= "https://en.wikipedia.org/wiki/Johnson%27s_algorithm">Wikipedia - Johnsons Algorithm</a>
+	 *
+	 * @param nichtdeterministisch   definiert, ob das Ergebnis zufällig sein soll, falls es mehrere optimale Lösungen gibt.
+	 *
+	 * @return die Zeilen- zu Spaltenzuordnung, negative Werte entsprechen einer Nichtzuordnung.
+	 */
 	public @NotNull int[] gibMinimalesBipartitesMatchingGewichtet(final boolean nichtdeterministisch) {
-		// Aktuelle Spalten-Zeilen-Zuordnungen löschen.
-		Arrays.fill(r2c, -1);
-		Arrays.fill(c2r, -1);
+	    // Aktuelle Spalten-Zeilen-Zuordnungen löschen.
+	    Arrays.fill(r2c, -1);
+	    Arrays.fill(c2r, -1);
 
-		// Aktuelle Knoten-Potentiale löschen. Die Knoten-Potentiale sind nötig, um
-		// negative Matrix-Werte zu vermeiden.
-		// Nur so lässt sich der Dijkstra-Algorithmus anwenden.
-		Arrays.fill(potentialR, 0);
-		Arrays.fill(potentialC, 0);
+	    // Aktuelle Knoten-Potentiale löschen. Die Knoten-Potentiale sind nötig, um negative Matrix-Werte zu vermeiden.
+	    // Nur so lässt sich der Dijkstra-Algorithmus anwenden.
+	    Arrays.fill(potentialR, 0);
+	    Arrays.fill(potentialC, 0);
 
-		// Initialisiert 'permR' und 'permC'. Die Arrays sind dafür zuständig, dass die
-		// Matrix-Zeilen und
-		// Matrix-Spalten in zufälliger Reihenfolge durchgegangen werden. Gibt es
-		// mehrere kürzeste Pfade, so
-		// führt dies dazu, dass von allen möglichen Pfaden ein zufälliger gewählt wird.
-		initialisierPermRundPermC(nichtdeterministisch);
+	    // Initialisiert 'permR' und 'permC'. Die Arrays sind dafür zuständig, dass die Matrix-Zeilen und
+	    // Matrix-Spalten in zufälliger Reihenfolge durchgegangen werden. Gibt es mehrere kürzeste Pfade, so
+	    // führt dies dazu, dass von allen möglichen Pfaden ein zufälliger gewählt wird.
+	    initialisierPermRundPermC(nichtdeterministisch);
 
-		// Zeilen-Potentiale anpassen
-		if (rows <= cols) {
-			// Subtrahiere das Zeilen-Minimum von allen Zeilen
-			for (int r = 0; r < rows; r++) {
-				long min = (matrix[r][0] + potentialR[r]) - potentialC[0];
-				for (int c = 0; c < cols; c++) {
-					final long kante = (matrix[r][c] + potentialR[r]) - potentialC[c];
-					min = Math.min(min, kante);
-				}
-				potentialR[r] -= min;
-			}
-		}
+	    // Zeilen- und Spalten-Potentiale anpassen
+	    passeInitialePotentialeAn();
 
-		// Spalten-Potentiale anpassen
-		if (cols <= rows) {
-			// Subtrahiere das Spalten-Minimum von allen Spalten
-			for (int c = 0; c < cols; c++) {
-				long min = (matrix[0][c] + potentialR[0]) - potentialC[c];
-				for (int r = 0; r < rows; r++) {
-					final long kante = (matrix[r][c] + potentialR[r]) - potentialC[c];
-					min = Math.min(min, kante);
-				}
-				potentialC[c] += min;
-			}
-		}
+	    // Bei einer nichtquadratischen Matrix bestimmt die kleinere Dimension, wie
+	    // viele Zuordnungen es maximal geben kann.
+	    int dijkstraRunden = Math.min(rows, cols);
 
-		// Bei einer nichtquadratischen Matrix bestimmt die kleinere Dimension, wie
-		// viele Zuordnungen es maximal geben kann.
-		int dijkstraRunden = Math.min(rows, cols);
+	    // Starte mit einer Greedy-Zuordnung der Zeilen.
+	    // Durch jede erfolgreiche Greedy-Zuordnung verringern sich die nachfolgenden Dijkstra-Runden.
+	    dijkstraRunden -= berechneGreedyStartZuordnung();
 
-		// Starte mit einer Greedy-Zuordnung der Zeilen. Ordnet jeder Zeile r einen
-		// Partner c zu, wenn in der Matrix der Wert 0 ist
-		// und der c-Knoten nicht bereits zugeordnet wurde.
-		Arrays.fill(abgearbeitetC, false); // Speichert, ob der c-Knoten bereits zugeordnet wurde.
-		for (int ir = 0; ir < rows; ir++) {
-			final int r = permR[ir]; // zufällige R-Reihenfolge
-			for (int ic = 0; ic < cols; ic++) {
-				final int c = permC[ic]; // zufällige C-Reihenfolge
-				if (!abgearbeitetC[c]) {
-					final long kante = (matrix[r][c] + potentialR[r]) - potentialC[c];
-					if (kante == 0) {
-						r2c[r] = c;
-						c2r[c] = r;
-						abgearbeitetC[c] = true;
-						dijkstraRunden--; // Durch die Zuordnung verringern sich die nachfolgenden Runden
-						break; // nächste Zeile scannen
-					}
-				}
-			}
-		}
+	    // Pro Runde wird zunächst der kürzeste Pfad von allen r-Knoten zu allen c-Knoten berechnet.
+	    for (int dijkstraRunde = 0; dijkstraRunde < dijkstraRunden; dijkstraRunde++) {
+	        fuehreDijkstraRundeDurch();
+	    }
 
-		// Pro Runde wird zunächst der kürzeste Pfad von allen r-Knoten zu allen
-		// c-Knoten berechnet.
-		// Der (nicht zugeordnete) c-Knoten mit dem geringsten Pfad (Endknoten) gehört
-		// zur neuen Zuordnung.
-		// Von dort wird der Pfad rückwärts verfolgt und Zuordnungen werden ggf.
-		// getauscht. Dann werden die Potentiale
-		// aller zugeordneten Knoten so verändert, dass zugeordnete Kanten den Wert 0
-		// haben. Dies erlaubt in
-		// weiteren Runden dem Dijkstra-Algorithmus die Kanten rückwärts zu verfolgen -
-		// denn wäre dort ein positiver
-		// Wert, dann entspricht ein "rückwärts gehen" einem negativen Kantenwert, was
-		// bei Dijkstra verboten ist.
-		for (int dijkstraRunde = 0; dijkstraRunde < dijkstraRunden; dijkstraRunde++) {
-
-			// Dijkstra-Initialisierung:
-			// Alle c-Knoten werden initialisiert mit dem kürzestem Pfad zu einem (noch
-			// nicht zugeordneten) r-Knoten.
-			for (int ic = 0; ic < cols; ic++) {
-				final int c = permC[ic]; // zufällige C-Reihenfolge
-				vorgaengerCzuR[c] = -1;
-				abgearbeitetC[c] = false;
-				distanzC[c] = Long.MAX_VALUE;
-
-				for (int ir = 0; ir < rows; ir++) {
-					final int r = permR[ir]; // zufällige R-Reihenfolge
-					if (r2c[r] < 0) { // Nur freie r-Knoten beachten
-						final long kante = (matrix[r][c] + potentialR[r]) - potentialC[c];
-						if (kante < distanzC[c]) {
-							distanzC[c] = kante;
-							vorgaengerCzuR[c] = r;
-						}
-					}
-				}
-			} // ... Ende der Dijkstra-Initialisierung
-
-			// Dijkstra-Zyklen:
-			// Berechnet von allen (noch nicht zugeordneten) r-Knoten den kürzesten Pfad zu
-			// allen c-Knoten.
-			// Der erste (noch nicht zugeordnete) c-Knoten wird in 'endknoten' gespeichert.
-			int endknotenC = -1;
-			for (int dijkstraZyklus = 0; dijkstraZyklus < cols; dijkstraZyklus++) {
-				// Finde den C-Knoten mit der kleinsten Distanz. Ignoriere bereits abgearbeitete
-				// Knoten.
-				int fromC = 0;
-				for (int ic = 0; ic < cols; ic++) {
-					final int c = permC[ic]; // zufällige C-Reihenfolge
-					if ((!abgearbeitetC[c]) && ((abgearbeitetC[fromC]) || (distanzC[c] < distanzC[fromC]))) {
-						fromC = c;
-					}
-				}
-				abgearbeitetC[fromC] = true;
-
-				// Geht es weiter (rückwärts) von "fromC"?
-				final int overR = c2r[fromC];
-				if (overR >= 0) {
-					// "fromC" ist kein Endknoten --> relaxiere alle C-Nachbarn
-					for (int ic = 0; ic < cols; ic++) {
-						final int toC = permC[ic]; // zufällige C-Reihenfolge
-						// Man muss hier nicht auf Vorwärts-Kante testen, da nur "fromC" falsch herum
-						// ist und das Gewicht ist >= 0,
-						// so wird der Pfad nie kürzer.
-						final long kante = (matrix[overR][toC] + potentialR[overR]) - potentialC[toC];
-						final long distance = distanzC[fromC] + kante;
-						if (distance < distanzC[toC]) {
-							distanzC[toC] = distance;
-							vorgaengerCzuR[toC] = overR;
-						}
-					}
-				} else {
-					// "fromC" ist ein Endknoten (mit kürzestem Pfad)
-					if (endknotenC < 0) {
-						endknotenC = fromC;
-					}
-				}
-
-			} // ... Ende der Dijkstra-Zyklen
-
-			// Ringtausch - Anpassung der row-col-Zuordnungen nach einer Dijkstra-Runde
-			int currentC = endknotenC;
-			while (currentC >= 0) {
-				final int prevR = vorgaengerCzuR[currentC];
-				final int prevC = r2c[prevR];
-				r2c[prevR] = currentC;
-				c2r[currentC] = prevR;
-				currentC = prevC;
-			}
-
-			// Neugewichtung der Knoten (nur wenn eine Zuordnung beteiligt ist)
-			// Die Potentiale werden so angepasst, dass zugeordnete Kanten den Wert 0 haben.
-			// Damit ist gewährleistet,
-			// dass der Dijkstra-Algorithmus diese Kante rückwärts passieren kann, ohne das
-			// dies zu einem negativen Kantenwert führt.
-			for (int r = 0; r < rows; r++) {
-				final int c = r2c[r];
-				if (c >= 0) {
-					final long kante = (matrix[r][c] + potentialR[r]) - potentialC[c];
-					potentialR[r] += distanzC[c] - kante;
-					potentialC[c] += distanzC[c];
-				}
-			}
-
-		} // ... Ende der Runden
-
-		return r2c;
+	    return r2c;
 	}
 
-	/** Interne Methode zum Permutieren oder Initialisieren der Arrays {@link KursblockungMatrix#permR} und
+	/**
+	 * Passt die Initial-Potentiale der Zeilen und Spalten an,
+	 * um negative Kantengewichte für den ersten Dijkstra-Durchlauf zu vermeiden.
+	 */
+	private void passeInitialePotentialeAn() {
+
+	    // Zeilen-Potentiale anpassen
+	    if (rows <= cols) {
+	        // Subtrahiere das Zeilen-Minimum von allen Zeilen
+	        for (int r = 0; r < rows; r++) {
+	            long min = (matrix[r][0] + potentialR[r]) - potentialC[0];
+	            for (int c = 0; c < cols; c++) {
+	                final long kante = (matrix[r][c] + potentialR[r]) - potentialC[c];
+	                min = Math.min(min, kante);
+	            }
+	            potentialR[r] -= min;
+	        }
+	    }
+
+	    // Spalten-Potentiale anpassen
+	    if (cols <= rows) {
+	        // Subtrahiere das Spalten-Minimum von allen Spalten
+	        for (int c = 0; c < cols; c++) {
+	            long min = (matrix[0][c] + potentialR[0]) - potentialC[c];
+	            for (int r = 0; r < rows; r++) {
+	                final long kante = (matrix[r][c] + potentialR[r]) - potentialC[c];
+	                min = Math.min(min, kante);
+	            }
+	            potentialC[c] += min;
+	        }
+	    }
+	}
+
+
+	/**
+	 * Ordnet jeder Zeile r einen Partner c zu, wenn in der Matrix der Wert 0 ist
+	 * und der c-Knoten nicht bereits zugeordnet wurde.
+	 *
+	 * @return Die Anzahl der erfolgreich zugewiesenen Paare.
+	 */
+	private int berechneGreedyStartZuordnung() {
+	    Arrays.fill(abgearbeitetC, false); // Speichert, ob der c-Knoten bereits zugeordnet wurde.
+	    int erfolgreicheZuordnungen = 0;
+
+	    for (int ir = 0; ir < rows; ir++) {
+	        final int r = permR[ir]; // zufällige r-Knoten-Reihenfolge
+
+	        for (int ic = 0; ic < cols; ic++) {
+	            final int c = permC[ic]; // zufällige c-Knoten-Reihenfolge
+
+	            // Nur prüfen, wenn der Spaltenknoten noch frei ist.
+	            if (!abgearbeitetC[c]) {
+	                final long kante = (matrix[r][c] + potentialR[r]) - potentialC[c];
+
+	                if (kante == 0) {
+	                    r2c[r] = c;
+	                    c2r[c] = r;
+	                    abgearbeitetC[c] = true;
+	                    erfolgreicheZuordnungen++;
+	                    break; // Weiter mit der nächsten Zeile.
+	                }
+	            }
+
+	        }
+	    }
+
+	    return erfolgreicheZuordnungen;
+	}
+
+	/**
+	 * Führt exakt eine Dijkstra-Runde aus: Initialisierung, Zyklen, Ringtausch und Neugewichtung.
+	 */
+	private void fuehreDijkstraRundeDurch() {
+
+		// Initialisierung.
+	    initialisiereDijkstraRunde();
+
+		// Der Hauptalgorithmus, der den Dijkstra-Pfad findet.
+	    final int endknotenC = berechneDijkstraZyklenUndFindeEndknoten();
+
+	    // Ringtausch - Anpassung der row-col-Zuordnungen nach einer Dijkstra-Runde.
+	    int currentC = endknotenC;
+	    while (currentC >= 0) {
+	        final int prevR = vorgaengerCzuR[currentC];
+	        final int prevC = r2c[prevR];
+	        r2c[prevR] = currentC;
+	        c2r[currentC] = prevR;
+	        currentC = prevC;
+	    }
+
+	    // Neugewichtung der Knoten (nur wenn eine Zuordnung beteiligt ist). Die Potentiale werden so angepasst,
+	    // dass zugeordnete Kanten den Wert 0 haben. Damit ist gewährleistet, dass der Dijkstra-Algorithmus diese
+	    // Kante rückwärts passieren kann, ohne dass dies zu einem negativen Kantenwert führt.
+	    for (int r = 0; r < rows; r++) {
+	        final int c = r2c[r];
+	        if (c >= 0) {
+	            final long kante = (matrix[r][c] + potentialR[r]) - potentialC[c];
+	            potentialR[r] += distanzC[c] - kante;
+	            potentialC[c] += distanzC[c];
+	        }
+	    }
+
+	}
+
+	/**
+	 * Initialisiert die Dijkstra-Runde:
+	 * Alle c-Knoten werden initialisiert mit dem kürzesten Pfad zu einem (noch nicht zugeordneten) r-Knoten.
+	 */
+	private void initialisiereDijkstraRunde() {
+	    for (int ic = 0; ic < cols; ic++) {
+	        final int c = permC[ic]; // zufällige c-Knoten-Reihenfolge
+
+	        vorgaengerCzuR[c] = -1;
+	        abgearbeitetC[c] = false;
+	        distanzC[c] = Long.MAX_VALUE;
+
+	        for (int ir = 0; ir < rows; ir++) {
+	            final int r = permR[ir]; // zufällige R-Reihenfolge
+
+	            if (r2c[r] < 0) {
+	                final long kante = (matrix[r][c] + potentialR[r]) - potentialC[c];
+	                if (kante < distanzC[c]) {
+	                    distanzC[c] = kante;
+	                    vorgaengerCzuR[c] = r;
+	                }
+	            }
+	        }
+
+	    }
+	}
+
+	/**
+	 * Berechnet von allen (noch nicht zugeordneten) r-Knoten den kürzesten Pfad zu allen c-Knoten.
+	 *
+	 * @return der C-Knoten (Endknoten), bei dem der kürzeste Pfad erfolgreich endet
+	 */
+	private int berechneDijkstraZyklenUndFindeEndknoten() {
+	    int endknotenC = -1;
+
+	    for (int dijkstraZyklus = 0; dijkstraZyklus < cols; dijkstraZyklus++) {
+
+	        // Finde den c-Knoten mit der kleinsten Distanz. Ignoriere bereits abgearbeitete Knoten.
+	        int fromC = 0;
+	        for (int ic = 0; ic < cols; ic++) {
+	            final int c = permC[ic]; // zufällige C-Reihenfolge
+	            if ((!abgearbeitetC[c]) && ((abgearbeitetC[fromC]) || (distanzC[c] < distanzC[fromC]))) {
+	                fromC = c;
+	            }
+	        }
+	        abgearbeitetC[fromC] = true;
+
+	        // Geht es weiter (rückwärts) von "fromC"?
+	        final int overR = c2r[fromC];
+	        if (overR >= 0) {
+	            relaxiereDijkstraNachbarn(fromC, overR);
+	        } else {
+	            // "fromC" ist ein Endknoten (mit kürzestem Pfad)
+	            if (endknotenC < 0) {
+	                endknotenC = fromC;
+	            }
+	        }
+	    }
+
+	    return endknotenC;
+	}
+
+	/**
+	 * Relaxiert die c-Knoten-Nachbarn eines Knotens im Dijkstra-Algorithmus ("fromC" ist kein Endknoten).
+	 * Untersucht alle Nachbarn von overR und aktualisiert ggf. deren minimale Distanz.
+	 *
+	 * @param fromC   Der Spalten-Knoten, von dem aus der Weg rückwärts verfolgt wurde.
+	 * @param overR   Der Zeilen-Knoten, der fromC zugeordnet ist und dessen Nachbarn relaxiert werden.
+	 */
+	private void relaxiereDijkstraNachbarn(final int fromC, final int overR) {
+	    // "fromC" ist kein Endknoten --> relaxiere alle C-Nachbarn
+	    for (int ic = 0; ic < cols; ic++) {
+	        final int toC = permC[ic]; // zufällige C-Reihenfolge
+
+	        // Man muss hier nicht auf Vorwärts-Kante testen, da nur "fromC" falsch herum ist
+	        // und das Gewicht ist >= 0, so wird der Pfad nie kürzer.
+	        final long kante = (matrix[overR][toC] + potentialR[overR]) - potentialC[toC];
+	        final long distance = distanzC[fromC] + kante;
+	        if (distance < distanzC[toC]) {
+	            distanzC[toC] = distance;
+	            vorgaengerCzuR[toC] = overR;
+	        }
+	    }
+	}
+
+	/**
+	 * Interne Methode zum Permutieren oder Initialisieren der Arrays
+	 * {@link KursblockungMatrix#permR} und
 	 * {@link KursblockungMatrix#permC}.
 	 *
 	 * @param nichtdeterministisch falls {@code true} werden {@link KursblockungMatrix#permR} und
-	 *                             {@link KursblockungMatrix#permC} permutiert, sonst initialisiert. */
+	 *                             {@link KursblockungMatrix#permC} permutiert, sonst initialisiert.
+	 */
 	private void initialisierPermRundPermC(final boolean nichtdeterministisch) {
 		if (nichtdeterministisch) {
 			permutiere(permR);
@@ -367,9 +433,11 @@ public class KursblockungMatrix {
 		}
 	}
 
-	/** Interne Methode zum Initialisieren eines Arrays so, dass das Array mit den Zahlen {@code 0,1,2...} gefüllt wird.
+	/**
+	 * Interne Methode zum Initialisieren eines Arrays so, dass das Array mit den Zahlen {@code 0,1,2...} gefüllt wird.
 	 *
-	 * @param perm Das Array, welches mit den Zahlen {@code 0,1,2...} gefüllt wird. */
+	 * @param perm Das Array, welches mit den Zahlen {@code 0,1,2...} gefüllt wird.
+	 */
 	private static void initialisiere(final @NotNull int[] perm) {
 		final int laenge = perm.length;
 		for (int i = 0; i < laenge; i++) {
@@ -377,9 +445,11 @@ public class KursblockungMatrix {
 		}
 	}
 
-	/** Interne Methode zum zufälligen Permutieren eines Arrays.
+	/**
+	 * Interne Methode zum zufälligen Permutieren eines Arrays.
 	 *
-	 * @param perm Das Array, dessen Inhalt zufällig permutiert wird. */
+	 * @param perm Das Array, dessen Inhalt zufällig permutiert wird.
+	 */
 	private void permutiere(final @NotNull int[] perm) {
 		final int laenge = perm.length;
 		for (int i = 0; i < laenge; i++) {
@@ -392,9 +462,11 @@ public class KursblockungMatrix {
 		}
 	}
 
-	/** Erlaubt Zugriff auf den Inhalt des Arrays.
+	/**
+	 * Erlaubt Zugriff auf den Inhalt des Arrays.
 	 *
-	 * @return Die Array-Referenz. */
+	 * @return Die Array-Referenz.
+	 */
 	public @NotNull long @NotNull [][] getMatrix() {
 		return matrix;
 	}
