@@ -20,6 +20,9 @@ public final class StatistikService {
 	/** Der Service für den Zugriff auf die Klassen-Statistikdaten */
 	private final KlassenStatistikService klassenStatistikService;
 
+	/** Der Service für den Zugriff auf die Kurse-Statistikdaten */
+	private final KurseStatistikService kurseStatistikService;
+
 	/** Der Service für den Zugriff auf die Schueler-Statistikdaten */
 	private final SchuelerStatistikService schuelerStatistikService;
 
@@ -35,6 +38,9 @@ public final class StatistikService {
 	/** Der Service für den Zugriff auf die Statistikdaten zu den Religionen */
 	private final ReligionStatistikService religionStatistikService;
 
+	/** Der Service für den Zugriff auf die Statistikdaten zu den Fächern */
+	private final FachStatistikService fachStatistikService;
+
 
 	/**
 	 * Erstellt einen neuen Service.
@@ -42,28 +48,34 @@ public final class StatistikService {
 	 * @param schuleStatistikService               der Service für die Schuldaten für die Statistik
 	 * @param lehrerStatistikService               der Service für den Datenbank-Zugriff auf die Lehrer
 	 * @param klassenStatistikService              der Service für den Datenbank-Zugriff auf die Klassen
+	 * @param kurseStatistikService                der Service für den Datenbank-Zugriff auf die Kurse
 	 * @param schuelerStatistikService             der Service für den Zugriff auf die Schueler-Statistikdaten
 	 * @param jahrgaengeStatistikService           der Service für den Datenbank-Zugriff auf die Jahrgänge
 	 * @param orteStatistikService                 der Service für den Datenbank-Zugriff auf die Orte
 	 * @param foerderschwerpunktStatistikService   der Service für den Datenbank-Zugriff auf die Förderschwerpunkte
 	 * @param religionStatistikService             der Service für den Datenbank-Zugriff auf die Religionen
+	 * @param fachStatistikService                 der Service für den Datenbank-Zugriff auf die Fächer
 	 */
 	public StatistikService(final SchuleStatistikService schuleStatistikService,
 			final LehrerStatistikService lehrerStatistikService,
 			final KlassenStatistikService klassenStatistikService,
+			final KurseStatistikService kurseStatistikService,
 			final SchuelerStatistikService schuelerStatistikService,
 			final JahrgaengeStatistikService jahrgaengeStatistikService,
 			final OrteStatistikService orteStatistikService,
 			final FoerderschwerpunkteStatistikService foerderschwerpunktStatistikService,
-			final ReligionStatistikService religionStatistikService) {
+			final ReligionStatistikService religionStatistikService,
+			final FachStatistikService fachStatistikService) {
 		this.schuleStatistikService = schuleStatistikService;
 		this.lehrerStatistikService = lehrerStatistikService;
 		this.klassenStatistikService = klassenStatistikService;
+		this.kurseStatistikService = kurseStatistikService;
 		this.schuelerStatistikService = schuelerStatistikService;
 		this.jahrgaengeStatistikService = jahrgaengeStatistikService;
 		this.orteStatistikService = orteStatistikService;
 		this.foerderschwerpunktStatistikService = foerderschwerpunktStatistikService;
 		this.religionStatistikService = religionStatistikService;
+		this.fachStatistikService = fachStatistikService;
 	}
 
 
@@ -78,11 +90,13 @@ public final class StatistikService {
 			daten.schule = schuleStatistikService.get();
 			daten.lehrer = lehrerStatistikService.getList();
 			daten.klassen = klassenStatistikService.getList();
+			daten.kurse = kurseStatistikService.getList();
 			daten.schueler = schuelerStatistikService.getList();
 			daten.jahrgaenge = jahrgaengeStatistikService.getList();
 			daten.orte = orteStatistikService.getList();
 			daten.foederschwerpunkte = foerderschwerpunktStatistikService.getList();
 			daten.religionen = religionStatistikService.getList();
+			daten.faecher = fachStatistikService.getList();
 			return daten;
 		});
 	}

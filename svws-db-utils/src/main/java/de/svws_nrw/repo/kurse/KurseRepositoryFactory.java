@@ -1,6 +1,7 @@
 package de.svws_nrw.repo.kurse;
 
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
+import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
 import de.svws_nrw.repo.RepositoryFactory;
 
 /**
@@ -25,6 +26,15 @@ public final class KurseRepositoryFactory extends RepositoryFactory {
 	 */
 	public KurseRepository getKurseRepository() {
 		return getOrCreate(KurseRepository.class, () -> new KurseRepositoryImpl(conn));
+	}
+
+	/**
+	 * Erstellt ein neues Repository für {@link DTOKursLehrer}.
+	 *
+	 * @return das Repository-Objekt
+	 */
+	public KurslehrerRepository getKurslehrerRepository() {
+		return getOrCreate(KurslehrerRepository.class, () -> new KurslehrerRepositoryImpl(conn));
 	}
 
 }

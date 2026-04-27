@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.svws_nrw.repo.kataloge.KatalogeRepositoryFactory;
 import de.svws_nrw.repo.klassen.KlassenRepositoryFactory;
+import de.svws_nrw.repo.kurse.KurseRepositoryFactory;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
@@ -30,6 +31,9 @@ class StatistikServiceFactoryTest {
 
 	@Mock
 	private KlassenRepositoryFactory repoKlassenFactory;
+
+	@Mock
+	private KurseRepositoryFactory repoKurseFactory;
 
 	@Mock
 	private LehrerRepositoryFactory repoLehrerFactory;

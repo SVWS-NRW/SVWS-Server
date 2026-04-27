@@ -2,6 +2,7 @@ package de.svws_nrw.repo.schueler;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
@@ -44,6 +45,16 @@ public interface SchuelerLeistungsdatenRepository extends Repository<DTOSchueler
 	 * @return die Liste mit den Leistungsdaten
 	 */
 	List<DTOSchuelerLeistungsdaten> findListByLernabschnittAndFach(Collection<Long> idsLernabschnitte, Collection<Long> idsFaecher);
+
+	/**
+	 * Zu der übergebenen Menge von SchuelerLernabschnittsdaten-IDs werden alle Schülerleistungsdaten dieser Abschnitte als Liste
+	 * zugeordnet zu der ID des Lernabschnittes zurückgegeben.
+	 *
+	 * @param idsAbschnitte   die IDs der Schueler-Lernabschnittsdaten, für welche die Schülerleistungsdaten zurückgegeben werden sollen
+	 *
+	 * @return die Map mit der Zuordnung der Liste der Leistungsdaten zu den Lernabschnitts-IDs
+	 */
+	Map<Long, List<DTOSchuelerLeistungsdaten>> getMapListByLernabschnittsIds(Collection<Long> idsAbschnitte);
 
 	/**
 	 * Zu der übergebenen Menge von SchuelerLernabschnittsdaten-IDs werden alle Schülerleistungsdaten dieser Abschnitte in einer HashMap2D zurückgegeben,

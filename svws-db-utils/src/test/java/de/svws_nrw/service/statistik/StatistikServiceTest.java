@@ -40,6 +40,9 @@ class StatistikServiceTest {
 	private KlassenStatistikService serviceKlassen;
 
 	@Mock
+	private KurseStatistikService serviceKurse;
+
+	@Mock
 	private SchuelerStatistikService serviceSchueler;
 
 	@Mock
@@ -53,6 +56,9 @@ class StatistikServiceTest {
 
 	@Mock
 	private ReligionStatistikService serviceReligion;
+
+	@Mock
+	private FachStatistikService serviceFach;
 
 	@InjectMocks
 	private StatistikService statistikService;
@@ -89,11 +95,13 @@ class StatistikServiceTest {
 		// TODO Das Ergebnis sollte später auch inhaltlich geprüft werden und nicht nur über leere Listen...
 		when(serviceLehrer.getList()).thenReturn(new ArrayList<>());
 		when(serviceKlassen.getList()).thenReturn(new ArrayList<>());
+		when(serviceKurse.getList()).thenReturn(new ArrayList<>());
 		when(serviceSchueler.getList()).thenReturn(new ArrayList<>());
 		when(serviceJahrgaenge.getList()).thenReturn(new ArrayList<>());
 		when(serviceOrte.getList()).thenReturn(new ArrayList<>());
 		when(serviceFoerderschwerpunkt.getList()).thenReturn(new ArrayList<>());
 		when(serviceReligion.getList()).thenReturn(new ArrayList<>());
+		when(serviceFach.getList()).thenReturn(new ArrayList<>());
 
 		final StatistikGesamt result = statistikService.get();
 		assertNotNull(result, "Das Ergebnis-Objekt darf nicht null sein.");

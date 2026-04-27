@@ -3,6 +3,7 @@ package de.svws_nrw.controller.statistik;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.kataloge.KatalogeRepositoryFactory;
 import de.svws_nrw.repo.klassen.KlassenRepositoryFactory;
+import de.svws_nrw.repo.kurse.KurseRepositoryFactory;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
@@ -33,6 +34,7 @@ public final class StatistikControllerFactoryImpl implements StatistikController
 		this.serviceFactory = StatistikServiceFactory.getNewInstance(
 				KatalogeRepositoryFactory.getNewInstance(),
 				KlassenRepositoryFactory.getNewInstance(),
+				KurseRepositoryFactory.getNewInstance(),
 				lehrerRepositoryFactory,
 				SchuelerRepositoryFactory.getNewInstance(),
 				schuleRepositoryFactory,
