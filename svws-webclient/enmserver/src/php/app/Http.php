@@ -374,9 +374,15 @@ class Http {
 
     /**
      * Gibt einen FORBIDDEN (403) zurück und beendet das PHP-Skript.
+     *
+     * @param ?string msg   ein optionaler Parameter, um eine Nachricht als plain text zurückzugeben
      */
-    public static function exit403Forbidden(): never {
+    public static function exit403Forbidden(?string $msg = null): never {
         http_response_code(403);
+        if ($msg != null) {
+            header('Content-Type: text/plain; charset=utf-8');
+            echo $msg;
+        }
         exit;
     }
 

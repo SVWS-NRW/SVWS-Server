@@ -5,10 +5,14 @@
 		</template>
 		<template #main>
 			<Transition mode="out-in">
+				<!-- Zeige an, wenn der Browser veraltet ist -->
+				<div v-if="browserVeraltet" class="text-ui-danger font-medium"> Ihr Browser ist veraltet und kann für den WebNotenManager nicht verwendet werden. Bitte benutzen Sie einen modernen Browser. </div>
+
 				<!-- 1. Schritt: Anmeldung mit Benutzername und Kennwort als erstem Faktor -->
-				<div v-if="!auth.pendingPasswordChange && !auth.pending2FA">
+				<div v-else-if="!auth.pendingPasswordChange && !auth.pending2FA">
 					<div class="grid grow grid-cols-1 gap-3 justify-items-center py-0.5">
 						<svws-ui-text-input v-model.trim="inputHostname" type="text" url placeholder="Serveraddresse" @keyup.enter="connect" @focus="inputFocus = true" :debounce-ms="0" />
+						<div v-if="errorMessage && !serverFound" class="text-ui-danger font-medium"> {{ errorMessage }} </div>
 						<svws-ui-button type="secondary" @click="connect" :disabled="!(!serverFound || connecting || inputFocus )" :class="{'opacity-25 hover:opacity-100': serverFound && !inputFocus}">
 							<span v-if="!serverFound || connecting || inputFocus">Verbinden</span>
 							<span v-else>Verbunden</span>
@@ -21,6 +25,7 @@
 							<svws-ui-text-input v-model.trim="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" @methods="handleInputMethodsUsername" />
 							<svws-ui-text-input v-model.trim="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" />
 							<svws-ui-spacing />
+							<div v-if="errorMessage" class="text-ui-danger font-medium my-2"> {{ errorMessage }} </div>
 							<div class="flex gap-2">
 								<svws-ui-modal-hilfe> <s-login-hilfe /> </svws-ui-modal-hilfe>
 								<svws-ui-button @click="doLogin" type="primary" :disabled="authenticating || (username.length === 0) || (password.length === 0)">
@@ -44,15 +49,14 @@
 						</div>
 						<p class="text-sm mb-4"><span class="font-bold">Bestätigen:</span> Das neue Kennwort wird aktiviert und muss fortan verwendet werden.</p>
 						<p class="text-sm mb-4"><span class="font-bold">Abbrechen:</span> Das Initialkennwort bleibt vorerst gültig. Bei der nächsten Anmeldung wird ein neuer Vorschlag generiert</p>
+						<div v-if="errorMessage" class="text-ui-danger font-medium"> {{ errorMessage }} </div>
 					</div>
 					<span v-if="expirationSeconds > 0" class="text-sm font-normal font-mono opacity-50 my-2 w-full text-center">
 						Anmeldesitzung läuft in {{ formattedExpiration }} ab
 					</span>
 					<div class="flex flex-row gap-2 w-full mt-2">
 						<svws-ui-button @click="doCancelLogin" type="secondary" class="w-full"> Abbrechen </svws-ui-button>
-						<svws-ui-button @click="doConfirmPasswordChange()" type="primary" class="w-full">
-							Bestätigen
-						</svws-ui-button>
+						<svws-ui-button @click="doConfirmPasswordChange()" type="primary" class="w-full"> Bestätigen </svws-ui-button>
 					</div>
 				</svws-ui-input-wrapper>
 
@@ -74,7 +78,7 @@
 							<p class="font-bold">Geben Sie den Code ein:</p>
 							<svws-ui-text-input v-model="totpToken" placeholder="Code" :min-len="6" :max-len="6"
 								@keyup.enter="doVerifyTotp" @methods="handleInputMethodsTotpToken" />
-							<div v-if="errorMessage" class="text-ui-danger text-sm font-medium"> {{ errorMessage }} </div>
+							<div v-if="errorMessage" class="text-ui-danger font-medium"> {{ errorMessage }} </div>
 						</div>
 						<span v-if="expirationSeconds > 0" class="text-sm font-normal font-mono opacity-50 text-center w-full my-2">
 							Anmeldesitzung läuft in {{ formattedExpiration }} ab
@@ -88,12 +92,6 @@
 			</Transition>
 		</template>
 	</ui-login-layout>
-	<svws-ui-notifications v-if="error">
-		<svws-ui-notification type="error">
-			<template #header> {{ error.name }} </template>
-			{{ error.message }}
-		</svws-ui-notification>
-	</svws-ui-notifications>
 </template>
 
 <script setup lang="ts">
@@ -127,7 +125,7 @@
 	const username = ref("");
 	const password = ref("");
 	const totpToken = ref<string>("");
-	const error = ref<{ name: string; message: string; } | null>(null);
+	const browserVeraltet = ref<boolean>(false);
 	const errorMessage = ref<string | null>(null);
 
 	const connecting = ref(false);
@@ -191,10 +189,7 @@
 			// Versuche beim Laden der Komponente automatisch mit Default-Einstellungen eine Verbindung zu dem Server aufzubauen
 			await connect();
 		} catch {
-			error.value = {
-				name: "Achtung",
-				message: "Ihr Browser ist veraltet. Bitte aktualisieren Sie Ihren Browser auf eine aktuelle Version. Die weitere Nutzung wird zu Fehlern im ENM-Client führen.",
-			};
+			browserVeraltet.value = true;
 		}
 	});
 
@@ -206,16 +201,17 @@
 	async function connect() {
 		connecting.value = true;
 		inputFocus.value = false;
-		error.value = null;
+		errorMessage.value = null;
 		try {
 			await auth.connectTo(auth.hostname);
 			serverFound.value = true;
 			await initCoreTypes();
 			connection_failed.value = false;
 		} catch (e) {
+			serverFound.value = false;
 			connection_failed.value = true;
 			const message = e instanceof DeveloperNotificationException ? e.message : "Verbindung zum Server fehlgeschlagen. Bitte die Serveradresse prüfen und erneut versuchen.";
-			error.value = { name: "Serverfehler", message };
+			errorMessage.value = message;
 		} finally {
 			connecting.value = false;
 			await nextTick();
@@ -225,12 +221,12 @@
 
 	async function doLogin() {
 		inputFocus.value = false;
-		error.value = null;
+		errorMessage.value = null;
 		try {
 			authenticating.value = true;
-			const success = await auth.login(username.value, password.value);
+			const { success, message } = await auth.login(username.value, password.value);
 			if (!success) {
-				error.value = { name: "Eingabefehler", message: "Passwort oder Benutzername falsch." };
+				errorMessage.value = message ?? "unbekannter Grund";
 				return;
 			}
 			if (auth.authenticated && !auth.pending2FA && !auth.pendingPasswordChange) {
@@ -259,14 +255,15 @@
 
 
 	async function doConfirmPasswordChange(): Promise<void> {
-		const success = await auth.confirmPasswordChange();
+		errorMessage.value = null;
+		const { success, message } = await auth.confirmPasswordChange();
 		if (success) {
 			if (auth.authenticated && !auth.pending2FA) {
 				stopTimer();
 				await props.finishLogin();
 			}
 		} else {
-			error.value = { name: "Fehler", message: "Das Kennwort konnte nicht bestätigt werden." };
+			errorMessage.value = message ?? "Das Kennwort konnte nicht bestätigt werden.";
 		}
 	}
 
@@ -278,13 +275,13 @@
 			return;
 		}
 		errorMessage.value = null;
-		const success = await auth.verifyTotp(totpToken.value);
+		const { success, message } = await auth.verifyTotp(totpToken.value);
 		if (success) {
 			stopTimer();
 			await props.finishLogin();
 		} else {
 			// Bei einem Fehler wieder zur Eingabe zurückkehren
-			errorMessage.value = "Der eingegebene Code ist ungültig. Bitte versuchen Sie es erneut.";
+			errorMessage.value = message ?? "Der eingegebene Code ist ungültig. Bitte versuchen Sie es erneut.";
 			totpToken.value = "";
 			totpTokenInput.value?.focus();
 		}

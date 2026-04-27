@@ -3,6 +3,21 @@ import { DeveloperNotificationException } from '@core/core/exceptions/DeveloperN
 import type { ServerMode } from '@core/core/types/ServerMode';
 import { inject, type InjectionKey } from 'vue';
 
+/**
+ *	Rückgabetyp der Kommunikation mit der API
+ */
+export interface AuthResult {
+
+	/** Gibt an, ob die Kommunikation mit der API erfolgreich war oder nicht */
+	success: boolean;
+
+	/** Die Mitteilung, die möglicherweise von der API zurückgegeben wurde */
+	message?: string;
+}
+
+/**
+ *  Die Schnittstelle für den Zustand der Authentifizierung im Client
+ */
 export interface AuthState {
 
 	/** Gibt die Version der Anwendung zurück */
@@ -77,14 +92,14 @@ export interface AuthState {
 	 *
 	 * @returns eine Promise bezüglich des Login-Erfolgs
 	 */
-	login(username: string, password: string): Promise<boolean>;
+	login(username: string, password: string): Promise<AuthResult>;
 
 	/**
 	 * Bestätigt die Änderung des Kennwortes, sofern ein neue Kennwort vom Server bereitsteht.
 	 *
 	 * @returns eine Promise bezüglich des Erfolges beim Bestätigen des kennwortes
 	 */
-	confirmPasswordChange(): Promise<boolean>;
+	confirmPasswordChange(): Promise<AuthResult>;
 
 	/**
 	 * Prüft den übergebenen TOTP-Token, um den Login-Vorgang bei einer Zwei-Faktor-Authentifizierung abzuschließen.
@@ -93,7 +108,7 @@ export interface AuthState {
 	 *
 	 * @returns true im Erfolgsfall
 	 */
-	verifyTotp(code: string): Promise<boolean>;
+	verifyTotp(code: string): Promise<AuthResult>;
 
 	/**
 	 * Meldet den angemeldeten Benutzer bei der Api ab.

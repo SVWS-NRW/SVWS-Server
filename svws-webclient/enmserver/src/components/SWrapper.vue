@@ -91,7 +91,7 @@
 		} else if (reason instanceof UserNotificationException) {
 			name = "Hinweis:";
 		} else if (reason instanceof OpenApiError) {
-			name = "API-Fehler: Dieser Fehler wird durch eine fehlerhafte Kommunikation mit dem Server verursacht. In der Regel bedeutet das, dass die verschickten Daten nicht den Vorgaben entsprechen.";
+			name = "";
 			if (reason.response instanceof Response) {
 				const text = await reason.response.text();
 				try {
