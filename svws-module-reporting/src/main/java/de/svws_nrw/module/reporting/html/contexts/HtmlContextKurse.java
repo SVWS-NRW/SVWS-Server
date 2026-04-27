@@ -79,14 +79,14 @@ public final class HtmlContextKurse extends HtmlContext<ReportingKurs> implement
 		// Erzeuge Maps, damit auch später leicht auf die Kursdaten zugegriffen werden kann.
 		final Map<Long, ReportingKurs> mapKurse = new HashMap<>();
 		for (final Long idKurs : idsKurse) {
-			if (reportingRepository.mapKurse().containsKey(idKurs)) {
-				mapKurse.put(idKurs, reportingRepository.mapKurse().get(idKurs));
+			if (reportingRepository.repositoryLerngruppen().kurse().containsKey(idKurs)) {
+				mapKurse.put(idKurs, reportingRepository.repositoryLerngruppen().kurse().get(idKurs));
 			} else {
 				// Die ID des Kurses ist bekannt, aber er wurde noch nicht aus der DB geladen. Lade dessen Daten und lade dabei alle Kurse des Lernabschnitts.
 				final KursDaten kursDaten;
 				try {
 					kursDaten = DataKurse.getKursdaten(reportingRepository.conn(), idKurs);
-					mapKurse.put(idKurs, this.reportingRepository.schuljahresabschnitt(kursDaten.idSchuljahresabschnitt).kurs(idKurs));
+					mapKurse.put(idKurs, this.reportingRepository.repositorySchule().schuljahresabschnitt(kursDaten.idSchuljahresabschnitt).kurs(idKurs));
 				} catch (final ApiOperationException e) {
 					ReportingExceptionUtils.logException(
 							"FEHLER: Fehler bei der Ermittlung der Daten des Kurses %s.".formatted(idKurs), e, reportingRepository.logger(), LogLevel.ERROR,

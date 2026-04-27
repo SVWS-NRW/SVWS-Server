@@ -57,7 +57,7 @@ public class ReportingParameterTypisiert {
 	 * @return der ReportingSchuljahresabschnitt
 	 */
 	public ReportingSchuljahresabschnitt schuljahresabschnitt() {
-		return reportingRepository.schuljahresabschnitt(reportingParameter.idSchuljahresabschnitt);
+		return reportingRepository.repositorySchule().schuljahresabschnitt(reportingParameter.idSchuljahresabschnitt);
 	}
 
 	/**

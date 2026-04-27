@@ -74,7 +74,7 @@ public class ProxyReportingSchuelerLeistungsdaten extends ReportingSchuelerLeist
 
 		// Fach setzen, dafür und für weitere Daten wird der Schuljahresabschnitt des Lernabschnitts zu den Leistungsdaten benötigt.
 		final ReportingSchuljahresabschnitt schuljahresabschnitt =
-				this.reportingRepository.schuljahresabschnitt(reportingSchuelerLernabschnitt.idSchuljahresabschnitt());
+				this.reportingRepository.repositorySchule().schuljahresabschnitt(reportingSchuelerLernabschnitt.idSchuljahresabschnitt());
 		super.fach = schuljahresabschnitt.fach(schuelerLeistungsdaten.fachID);
 
 		// Es wird zwischen Klassen- und Kursunterricht unterschieden. In den Leistungsdaten können aber bei Kursunterrichten trotzdem vom Kurs abweichende Eintragungen vorgenommen werden.
@@ -83,7 +83,7 @@ public class ProxyReportingSchuelerLeistungsdaten extends ReportingSchuelerLeist
 		// Fachlehrkraft setzen. Dabei wird die eingetragene Fachlehrkraft immer genommen, auch wenn sie von einer evtl. Kursleitung abweicht.
 		if (schuelerLeistungsdaten.lehrerID != null) {
 			super.fachlehrer = new ProxyReportingLehrer(this.reportingRepository,
-					this.reportingRepository.mapLehrerStammdaten().get(schuelerLeistungsdaten.lehrerID));
+					this.reportingRepository.repositoryLehrer().stammdaten().get(schuelerLeistungsdaten.lehrerID));
 			super.wochenstundenLehrer.put(schuelerLeistungsdaten.lehrerID, (double) schuelerLeistungsdaten.wochenstunden);
 		} else {
 			super.fachlehrer = null;
@@ -91,7 +91,7 @@ public class ProxyReportingSchuelerLeistungsdaten extends ReportingSchuelerLeist
 		// Zusätzliche Lehrkräfte setzen
 		if (schuelerLeistungsdaten.zusatzkraftID != null) {
 			super.zusatzLehrer.add(new ProxyReportingLehrer(this.reportingRepository,
-					this.reportingRepository.mapLehrerStammdaten().get(schuelerLeistungsdaten.zusatzkraftID)));
+					this.reportingRepository.repositoryLehrer().stammdaten().get(schuelerLeistungsdaten.zusatzkraftID)));
 			super.wochenstundenLehrer.put(schuelerLeistungsdaten.zusatzkraftID, (double) schuelerLeistungsdaten.zusatzkraftWochenstunden);
 		} else {
 			super.zusatzLehrer = new ArrayList<>();

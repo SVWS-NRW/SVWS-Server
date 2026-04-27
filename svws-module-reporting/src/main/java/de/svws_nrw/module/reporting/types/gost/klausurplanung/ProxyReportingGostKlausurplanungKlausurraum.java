@@ -41,7 +41,7 @@ public class ProxyReportingGostKlausurplanungKlausurraum extends ReportingGostKl
 		this.reportingRepository = reportingRepository;
 
 		// Stundenplan zum Klausurtermin ermitteln. Ohne Stundenplan gibt es keine Raumdaten und kein Zeitraster für die Aufsichten.
-		final ReportingStundenplanungStundenplan stundenplan = this.reportingRepository.stundenplan(super.klausurtermin.datum());
+		final ReportingStundenplanungStundenplan stundenplan = this.reportingRepository.repositoryStundenplan().stundenplan(super.klausurtermin.datum());
 
 		if (stundenplan == null) {
 			return;

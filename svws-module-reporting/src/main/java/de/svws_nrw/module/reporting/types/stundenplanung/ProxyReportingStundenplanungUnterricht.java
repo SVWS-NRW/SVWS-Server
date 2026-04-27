@@ -52,8 +52,8 @@ public class ProxyReportingStundenplanungUnterricht extends ReportingStundenplan
 		}
 
 		super.lehrkraefte = unterricht.lehrer.stream()
-				.filter(l -> this.reportingRepository.mapLehrerStammdaten().get(l) != null)
-				.map(l -> (ReportingLehrer) new ProxyReportingLehrer(this.reportingRepository, this.reportingRepository.mapLehrerStammdaten().get(l)))
+				.filter(l -> this.reportingRepository.repositoryLehrer().stammdaten().get(l) != null)
+				.map(l -> (ReportingLehrer) new ProxyReportingLehrer(this.reportingRepository, this.reportingRepository.repositoryLehrer().stammdaten().get(l)))
 				.toList();
 
 		if ((this.stundenplan.raeume() != null) && !this.stundenplan.raeume().isEmpty()) {

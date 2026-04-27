@@ -15,7 +15,6 @@ import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
 import de.svws_nrw.core.data.schule.Telefonart;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.data.erzieher.DataErzieherarten;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.kataloge.DataKatalogEntlassgruende;
@@ -25,7 +24,6 @@ import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
 import de.svws_nrw.data.schule.DataReligionen;
 import de.svws_nrw.data.schule.DataSchulen;
 import de.svws_nrw.data.schule.DataTelefonarten;
-import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ProxyReportingErzieherArt;
@@ -38,8 +36,7 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class ReportingRepositoryKataloge {
 
-	private final DBEntityManager conn;
-	private final Logger logger;
+	private final ReportingRepository reportingRepository;
 
 	private Map<Long, KatalogEntlassgrund> katalogEntlassgruende;
 	private Map<Long, FoerderschwerpunktEintrag> katalogFoerderschwerpunkte;
@@ -49,22 +46,19 @@ public class ReportingRepositoryKataloge {
 	private Map<Long, SchulEintrag> katalogSchulen;
 	private Map<Long, SchulformKatalogEintrag> katalogSchulformen;
 	private Map<Long, Telefonart> katalogTelefonnummerArten;
-	private Map<Long, DTOFach> mapFachdaten;
+	private Map<Long, DTOFach> mapFaecher;
 	private Map<Long, JahrgangsDaten> mapJahrgaenge;
 	private Map<Long, ReportingErzieherArt> mapErzieherarten;
 
 	/**
 	 * Erstellt ein neues ReportingKatalogRepository und initialisiert Kataloge, Fächer und Jahrgänge.
 	 *
-	 * @param conn   Die Datenbankverbindung.
-	 * @param logger Der Logger.
+	 * @param reportingRepository Das zentrale Repository des Reporting-Moduls mit Zugriff auf die domänenspezifischen Repositories.
 	 *
 	 * @throws ApiOperationException Im Fehlerfall.
 	 */
-	public ReportingRepositoryKataloge(final DBEntityManager conn, final Logger logger)
-			throws ApiOperationException {
-		this.conn = conn;
-		this.logger = logger;
+	public ReportingRepositoryKataloge(final ReportingRepository reportingRepository) throws ApiOperationException {
+		this.reportingRepository = reportingRepository;
 
 		initKataloge();
 		initFachdaten();
@@ -73,44 +67,44 @@ public class ReportingRepositoryKataloge {
 
 	private void initKataloge() throws ApiOperationException {
 		try {
-			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle Katalogdaten.");
+			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Ermittle Katalogdaten.");
 
 			this.katalogEntlassgruende =
-					new DataKatalogEntlassgruende(this.conn).getAll().stream().collect(Collectors.toMap(e -> e.id, e -> e));
-			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Entlassgründe geladen.");
+					new DataKatalogEntlassgruende(this.reportingRepository.conn()).getAll().stream().collect(Collectors.toMap(e -> e.id, e -> e));
+			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Katalog Entlassgründe geladen.");
 
 			this.katalogFoerderschwerpunkte =
-					new DataKatalogSchuelerFoerderschwerpunkte(this.conn).getAll().stream().collect(Collectors.toMap(f -> f.id, f -> f));
-			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Förderschwerpunkte geladen.");
+					new DataKatalogSchuelerFoerderschwerpunkte(this.reportingRepository.conn()).getAll().stream().collect(Collectors.toMap(f -> f.id, f -> f));
+			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Katalog Förderschwerpunkte geladen.");
 
-			final DataOrte dataOrte = new DataOrte(this.conn);
+			final DataOrte dataOrte = new DataOrte(this.reportingRepository.conn());
 			this.katalogOrte = dataOrte.getAll().stream().collect(Collectors.toMap(o -> o.id, o -> o));
-			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Orte geladen.");
+			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Katalog Orte geladen.");
 
-			this.katalogOrtsteile = new DataOrtsteile(this.conn, dataOrte).getAll().stream().collect(Collectors.toMap(o -> o.id, o -> o));
-			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Ortsteile geladen.");
+			this.katalogOrtsteile = new DataOrtsteile(this.reportingRepository.conn(), dataOrte).getAll().stream().collect(Collectors.toMap(o -> o.id, o -> o));
+			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Katalog Ortsteile geladen.");
 
-			this.katalogReligionen = new DataReligionen(this.conn).getAll().stream().collect(Collectors.toMap(r -> r.id, r -> r));
-			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Religionen geladen.");
+			this.katalogReligionen = new DataReligionen(this.reportingRepository.conn()).getAll().stream().collect(Collectors.toMap(r -> r.id, r -> r));
+			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Katalog Religionen geladen.");
 
-			this.katalogSchulen = new DataSchulen(this.conn).getAll().stream().collect(Collectors.toMap(s -> s.id, s -> s));
-			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Schulen geladen.");
+			this.katalogSchulen = new DataSchulen(this.reportingRepository.conn()).getAll().stream().collect(Collectors.toMap(s -> s.id, s -> s));
+			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Katalog Schulen geladen.");
 
 			final ArrayList<SchulformKatalogEintrag> schulformen = new ArrayList<>();
 			for (final Schulform schulform : Schulform.values()) {
 				schulformen.addAll(schulform.historie());
 			}
 			this.katalogSchulformen = schulformen.stream().collect(Collectors.toMap(sfke -> sfke.id, sfke -> sfke));
-			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Schulformen geladen.");
+			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Katalog Schulformen geladen.");
 
-			this.katalogTelefonnummerArten = new DataTelefonarten(this.conn).getAll().stream().collect(Collectors.toMap(ta -> ta.id, ta -> ta));
-			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog TelefonnummerArten geladen.");
+			this.katalogTelefonnummerArten = new DataTelefonarten(this.reportingRepository.conn()).getAll().stream().collect(Collectors.toMap(ta -> ta.id, ta -> ta));
+			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Katalog TelefonnummerArten geladen.");
 
-			this.mapErzieherarten = new DataErzieherarten(this.conn).getAll().stream().collect(Collectors.toMap(a -> a.id,
+			this.mapErzieherarten = new DataErzieherarten(this.reportingRepository.conn()).getAll().stream().collect(Collectors.toMap(a -> a.id,
 					ProxyReportingErzieherArt::new));
-			this.logger.logLn(LogLevel.DEBUG, 8, "Liste der Erzieherarten geladen.");
+			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Liste der Erzieherarten geladen.");
 		} catch (final Exception e) {
-			this.logger.logLn(LogLevel.ERROR, 8, "FEHLER: Die Kataloge der Schule konnten nicht vollständig ermittelt werden.");
+			this.reportingRepository.logger().logLn(LogLevel.ERROR, 8, "FEHLER: Die Kataloge der Schule konnten nicht vollständig ermittelt werden.");
 			throw new ApiOperationException(Status.NOT_FOUND, e,
 					"FEHLER: Die Kataloge der Schule konnten nicht vollständig ermittelt werden.");
 		}
@@ -118,10 +112,10 @@ public class ReportingRepositoryKataloge {
 
 	private void initFachdaten() throws ApiOperationException {
 		try {
-			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle Fächer.");
-			this.mapFachdaten = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
+			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Ermittle Fächer.");
+			this.mapFaecher = this.reportingRepository.conn().queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 		} catch (final Exception e) {
-			this.logger.logLn(LogLevel.ERROR, 8, "FEHLER: Die Fächer konnten nicht ermittelt werden.");
+			this.reportingRepository.logger().logLn(LogLevel.ERROR, 8, "FEHLER: Die Fächer konnten nicht ermittelt werden.");
 			throw new ApiOperationException(Status.NOT_FOUND, e,
 					"FEHLER: Die Daten der Fächer konnten nicht ermittelt werden.");
 		}
@@ -129,10 +123,10 @@ public class ReportingRepositoryKataloge {
 
 	private void initJahrgaenge() throws ApiOperationException {
 		try {
-			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle die Jahrgangsdaten.");
-			this.mapJahrgaenge = new DataJahrgangsdaten(this.conn).getAll().stream().collect(Collectors.toMap(j -> j.id, j -> j));
+			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Ermittle die Jahrgangsdaten.");
+			this.mapJahrgaenge = new DataJahrgangsdaten(this.reportingRepository.conn()).getAll().stream().collect(Collectors.toMap(j -> j.id, j -> j));
 		} catch (final Exception e) {
-			this.logger.logLn(LogLevel.ERROR, 4, "FEHLER: Die Jahrgangsdaten konnten nicht ermittelt werden.");
+			this.reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die Jahrgangsdaten konnten nicht ermittelt werden.");
 			throw new ApiOperationException(Status.NOT_FOUND, e,
 					"FEHLER: Die Jahrgangsdaten. konnten nicht ermittelt werden.");
 		}
@@ -143,7 +137,7 @@ public class ReportingRepositoryKataloge {
 	 *
 	 * @return Map der Entlassgründe
 	 */
-	public Map<Long, KatalogEntlassgrund> katalogEntlassgruende() {
+	public Map<Long, KatalogEntlassgrund> entlassgruende() {
 		return katalogEntlassgruende;
 	}
 
@@ -152,7 +146,7 @@ public class ReportingRepositoryKataloge {
 	 *
 	 * @return Map der Förderschwerpunkt-Katalogeinträge
 	 */
-	public Map<Long, FoerderschwerpunktEintrag> katalogFoerderschwerpunkte() {
+	public Map<Long, FoerderschwerpunktEintrag> foerderschwerpunkte() {
 		return katalogFoerderschwerpunkte;
 	}
 
@@ -161,7 +155,7 @@ public class ReportingRepositoryKataloge {
 	 *
 	 * @return Map der Ort-Katalogeinträge
 	 */
-	public Map<Long, OrtKatalogEintrag> katalogOrte() {
+	public Map<Long, OrtKatalogEintrag> orte() {
 		return katalogOrte;
 	}
 
@@ -170,7 +164,7 @@ public class ReportingRepositoryKataloge {
 	 *
 	 * @return Map der Ortsteil-Katalogeinträge
 	 */
-	public Map<Long, OrtsteilKatalogEintrag> katalogOrtsteile() {
+	public Map<Long, OrtsteilKatalogEintrag> ortsteile() {
 		return katalogOrtsteile;
 	}
 
@@ -179,7 +173,7 @@ public class ReportingRepositoryKataloge {
 	 *
 	 * @return Map der Religions-Katalogeinträge
 	 */
-	public Map<Long, ReligionEintrag> katalogReligionen() {
+	public Map<Long, ReligionEintrag> religionen() {
 		return katalogReligionen;
 	}
 
@@ -188,7 +182,7 @@ public class ReportingRepositoryKataloge {
 	 *
 	 * @return Map der Schul-Katalogeinträge
 	 */
-	public Map<Long, SchulEintrag> katalogSchulen() {
+	public Map<Long, SchulEintrag> schulen() {
 		return katalogSchulen;
 	}
 
@@ -197,7 +191,7 @@ public class ReportingRepositoryKataloge {
 	 *
 	 * @return Map der Schulform-Katalogeinträge
 	 */
-	public Map<Long, SchulformKatalogEintrag> katalogSchulformen() {
+	public Map<Long, SchulformKatalogEintrag> schulformen() {
 		return katalogSchulformen;
 	}
 
@@ -206,7 +200,7 @@ public class ReportingRepositoryKataloge {
 	 *
 	 * @return Map der Telefonnummer-Arten
 	 */
-	public Map<Long, Telefonart> katalogTelefonnummerArten() {
+	public Map<Long, Telefonart> telefonnummerArten() {
 		return katalogTelefonnummerArten;
 	}
 
@@ -215,8 +209,8 @@ public class ReportingRepositoryKataloge {
 	 *
 	 * @return Map der Fächer-DTOs
 	 */
-	public Map<Long, DTOFach> mapFachdaten() {
-		return mapFachdaten;
+	public Map<Long, DTOFach> faecher() {
+		return mapFaecher;
 	}
 
 	/**
@@ -224,7 +218,7 @@ public class ReportingRepositoryKataloge {
 	 *
 	 * @return Map der Jahrgangsdaten
 	 */
-	public Map<Long, JahrgangsDaten> mapJahrgaenge() {
+	public Map<Long, JahrgangsDaten> jahrgaenge() {
 		return mapJahrgaenge;
 	}
 
@@ -233,7 +227,7 @@ public class ReportingRepositoryKataloge {
 	 *
 	 * @return Map der Erzieherarten
 	 */
-	public Map<Long, ReportingErzieherArt> mapErzieherarten() {
+	public Map<Long, ReportingErzieherArt> erzieherarten() {
 		return mapErzieherarten;
 	}
 }

@@ -86,7 +86,7 @@ public final class ReportingValidierung {
 			}
 		}
 
-		reportingRepository.mapSchuelerStammdaten().putAll(mapSchueler);
+		reportingRepository.repositorySchueler().stammdaten().putAll(mapSchueler);
 
 		// Prüfe Daten aus dem Bereich des Abiturs. Das gilt auch für die Laufbahnplanung, da dort Daten wie das Abiturjahr benötigt werden.
 		if (mitAbiturDaten) {
@@ -132,7 +132,7 @@ public final class ReportingValidierung {
 					"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt existieren.");
 		}
 
-		reportingRepository.mapGostSchuelerAbiturdaten().putAll(mapGostSchuelerAbiturdaten);
+		reportingRepository.repositoryGost().schuelerAbiturdaten().putAll(mapGostSchuelerAbiturdaten);
 	}
 
 	/**
@@ -163,7 +163,7 @@ public final class ReportingValidierung {
 				throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden Schüler-IDs übergeben, die nicht zur GOSt gehören.");
 			}
 		}
-		reportingRepository.mapGostBeratungsdaten().putAll(mapGostBeratungsdaten);
+		reportingRepository.repositoryGost().beratungsdaten().putAll(mapGostBeratungsdaten);
 
 		// Lade Abiturdaten für die Gost-Laufbahnplanung zwecks Prüfung.
 		final Map<Long, Abiturdaten> mapGostBeratungsdatenAbiturdaten;
@@ -183,7 +183,7 @@ public final class ReportingValidierung {
 						"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt-Laufbahnplanung existieren.");
 			}
 		}
-		reportingRepository.mapGostBeratungsdatenAbiturdaten().putAll(mapGostBeratungsdatenAbiturdaten);
+		reportingRepository.repositoryGost().beratungsdatenAbiturdaten().putAll(mapGostBeratungsdatenAbiturdaten);
 	}
 
 
@@ -273,7 +273,7 @@ public final class ReportingValidierung {
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Speicherung der Daten aus der Validierung der Kursdaten im Repository.");
 		mapKursdaten.values().stream()
 				.map(k -> (ReportingKurs) new ProxyReportingKurs(reportingRepository, k))
-				.forEach(k -> reportingRepository.mapKurse().putIfAbsent(k.id(), k));
+				.forEach(k -> reportingRepository.repositoryLerngruppen().kurse().putIfAbsent(k.id(), k));
 
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Ende der Validierung der Kursdaten.");
 	}
@@ -306,7 +306,7 @@ public final class ReportingValidierung {
 		}
 
 		// Prüfe die Lehrer-IDs anhand der Daten aus dem Repository.
-		if (idsNonNull.stream().anyMatch(id -> reportingRepository.mapLehrerStammdaten().get(id) == null)) {
+		if (idsNonNull.stream().anyMatch(id -> reportingRepository.repositoryLehrer().stammdaten().get(id) == null)) {
 			reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden ungültige Lehrer-IDs übergeben.");
 			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden ungültige Lehrer-IDs übergeben.");
 		}
@@ -493,7 +493,7 @@ public final class ReportingValidierung {
 		final Long idStundenplan = reportingRepository.reportingParameter().idHauptdatenObjekt();
 
 		// Prüfe nun, ob es zur angegebenen Stundenplan-ID einen Stundenplan gibt.
-		if ((idStundenplan == null) || (reportingRepository.stundenplan(idStundenplan) == null)) {
+		if ((idStundenplan == null) || (reportingRepository.repositoryStundenplan().stundenplan(idStundenplan) == null)) {
 			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "FEHLER: Mit der angegebenen Stundenplan-ID konnte kein Stundenplan ermittelt werden.");
 			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Mit der angegebenen Stundenplan-ID konnte kein Stundenplan ermittelt werden.");
 		}

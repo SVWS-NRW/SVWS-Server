@@ -333,15 +333,15 @@ public final class EmailFactory {
 	private List<ReportingPerson> ermittleEmpfaengerPersonen(final long id, final ReportingEMailEmpfaengerTyp typ) throws ApiOperationException {
 		return switch (typ) {
 			case SCHUELER -> {
-				final ReportingSchueler schueler = reportingRepository.schueler(id);
+				final ReportingSchueler schueler = reportingRepository.repositorySchueler().schueler(id);
 				yield (schueler == null) ? new ArrayList<>() : List.of(schueler);
 			}
 			case LEHRER -> {
-				final ReportingLehrer lehrer = reportingRepository.lehrer(id);
+				final ReportingLehrer lehrer = reportingRepository.repositoryLehrer().lehrer(id);
 				yield (lehrer == null) ? new ArrayList<>() : List.of(lehrer);
 			}
 			case KLASSENLEHRER -> {
-				final ReportingKlasse klasse = reportingRepository.klasse(id);
+				final ReportingKlasse klasse = reportingRepository.repositoryLerngruppen().klasse(id);
 				if (klasse == null) {
 					yield new ArrayList<>();
 				}
@@ -349,7 +349,7 @@ public final class EmailFactory {
 				yield new ArrayList<>(lehrer);
 			}
 			case KURSLEHRER -> {
-				final ReportingKurs kurs = reportingRepository.mapKurse().get(id);
+				final ReportingKurs kurs = reportingRepository.repositoryLerngruppen().kurse().get(id);
 				if (kurs == null) {
 					yield new ArrayList<>();
 				}
@@ -357,7 +357,7 @@ public final class EmailFactory {
 				yield new ArrayList<>(lehrer);
 			}
 			case GOSTKURSPLANUNG_KURSLEHRER -> {
-				final ReportingGostKursplanungKurs kurs = reportingRepository.mapGostKursplanungKurse().get(id);
+				final ReportingGostKursplanungKurs kurs = reportingRepository.repositoryGost().kursplanungKurse().get(id);
 				if (kurs == null) {
 					yield new ArrayList<>();
 				}

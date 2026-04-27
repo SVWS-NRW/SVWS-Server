@@ -43,7 +43,7 @@ public class ProxyReportingGostFachwahlstatistikHalbjahr extends ReportingGostFa
 
 		// Für die Daten des Faches wird mindestens der Abschnitt EF1 benötigt. Wenn dieser nicht existiert, dann kann die Statistik nicht existieren.
 		// Da in der GOSt konstante Fachbedingungen gelten müssen, kann hier die EF1 verwendet werden.
-		final ReportingSchuljahresabschnitt abschnittEF1 = reportingRepository.schuljahresabschnitt(gostStatistikFachwahl.abiturjahr - 4, 1);
+		final ReportingSchuljahresabschnitt abschnittEF1 = reportingRepository.repositorySchule().schuljahresabschnitt(gostStatistikFachwahl.abiturjahr - 4, 1);
 		super.fach = abschnittEF1.fach(gostStatistikFachwahl.id);
 	}
 

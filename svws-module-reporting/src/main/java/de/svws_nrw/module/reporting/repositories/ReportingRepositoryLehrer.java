@@ -10,14 +10,11 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
-import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
-import de.svws_nrw.module.reporting.sortierung.ReportingSortierungService;
 import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingLehrer;
 import de.svws_nrw.module.reporting.types.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
@@ -33,9 +30,6 @@ import jakarta.ws.rs.core.Response.Status;
 public class ReportingRepositoryLehrer {
 
 	private final ReportingRepository reportingRepository;
-	private final DBEntityManager conn;
-	private final Logger logger;
-	private final ReportingSortierungService sortierungService;
 
 	private Map<Long, LehrerStammdaten> mapLehrerStammdaten;
 	private final Map<Long, ReportingLehrer> mapLehrer = new HashMap<>();
@@ -44,30 +38,23 @@ public class ReportingRepositoryLehrer {
 	 * Erstellt ein neues ReportingLehrerRepository und initialisiert die Lehrerstammdaten.
 	 *
 	 * @param reportingRepository Das zentrale Repository des Reporting-Moduls mit Zugriff auf die domänenspezifischen Repositories.
-	 * @param conn                Die Datenbankverbindung.
-	 * @param logger              Der Logger.
-	 * @param sortierungService   Der Service für die Sortierung.
 	 *
 	 * @throws ApiOperationException Im Fehlerfall.
 	 */
-	public ReportingRepositoryLehrer(final ReportingRepository reportingRepository, final DBEntityManager conn, final Logger logger,
-			final ReportingSortierungService sortierungService) throws ApiOperationException {
+	public ReportingRepositoryLehrer(final ReportingRepository reportingRepository) throws ApiOperationException {
 		this.reportingRepository = reportingRepository;
-		this.conn = conn;
-		this.logger = logger;
-		this.sortierungService = sortierungService;
 
 		initLehrerStammdaten();
 	}
 
 	private void initLehrerStammdaten() throws ApiOperationException {
 		try {
-			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle die Lehrerstammdaten.");
-			this.mapLehrerStammdaten = new DataLehrerStammdaten(this.conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).getAll().stream()
+			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Ermittle die Lehrerstammdaten.");
+			this.mapLehrerStammdaten = new DataLehrerStammdaten(this.reportingRepository.conn(), new DataLernplattformen(this.reportingRepository.conn()), new DataEinwilligungsarten(this.reportingRepository.conn())).getAll().stream()
 					.collect(Collectors.toMap(l -> l.id, l -> l));
 		} catch (final Exception e) {
 			this.mapLehrerStammdaten = new HashMap<>();
-			this.logger.logLn(LogLevel.ERROR, 4, "FEHLER: Die Lehrerstammdaten konnten nicht ermittelt werden.");
+			this.reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die Lehrerstammdaten konnten nicht ermittelt werden.");
 			throw new ApiOperationException(Status.NOT_FOUND, e,
 					"FEHLER: Die Lehrerstammdaten konnten nicht ermittelt werden.");
 		}
@@ -87,13 +74,13 @@ public class ReportingRepositoryLehrer {
 
 		if (!mapLehrerStammdaten.containsKey(idLehrer)) {
 			try {
-				final LehrerStammdaten fehlendeLehrerstammdaten = new DataLehrerStammdaten(this.conn, new DataLernplattformen(conn),
-						new DataEinwilligungsarten(conn)).getById(idLehrer);
+				final LehrerStammdaten fehlendeLehrerstammdaten = new DataLehrerStammdaten(this.reportingRepository.conn(), new DataLernplattformen(this.reportingRepository.conn()),
+						new DataEinwilligungsarten(this.reportingRepository.conn())).getById(idLehrer);
 				mapLehrerStammdaten.put(fehlendeLehrerstammdaten.id, fehlendeLehrerstammdaten);
 			} catch (final ApiOperationException e) {
 				ReportingExceptionUtils.logException(
 						"FEHLER: Fehler bei der Ermittlung der fehlenden Lehrerstammdaten einer Lehrkraft aus der Datenbank im ReportingRepository.", e,
-						this.logger, LogLevel.ERROR, 0);
+						this.reportingRepository.logger(), LogLevel.ERROR, 0);
 				return null;
 			}
 		}
@@ -126,26 +113,26 @@ public class ReportingRepositoryLehrer {
 	 */
 	public List<ReportingLehrer> lehrer(final List<Long> idsLehrer, final boolean sortiereListe) {
 		final Optional<Comparator<ReportingLehrer>> optionalComparator = sortiereListe
-				? ComparatorFactory.buildOptionalComparator(this.sortierungService, this.logger, ReportingLehrer.class.getSimpleName(),
+				? ComparatorFactory.buildOptionalComparator(this.reportingRepository.sortierungService(), this.reportingRepository.logger(), ReportingLehrer.class.getSimpleName(),
 						SortierungRegistryReportingLehrer.sortierungRegistry())
 				: Optional.empty();
 
 		return ReportingListBuilder.erstelleReportingListe(idsLehrer, mapLehrerStammdaten, mapLehrer,
 				fehlendeIds -> {
 					try {
-						return new DataLehrerStammdaten(this.conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).getListByIDs(fehlendeIds);
+						return new DataLehrerStammdaten(this.reportingRepository.conn(), new DataLernplattformen(this.reportingRepository.conn()), new DataEinwilligungsarten(this.reportingRepository.conn())).getListByIDs(fehlendeIds);
 					} catch (final ApiOperationException e) {
 						ReportingExceptionUtils.logException(
 								"FEHLER: Fehler bei der Ermittlung der fehlenden Lehrerstammdaten einer Lehrerliste aus der Datenbank im "
 										+ "ReportingRepository.",
-								e, this.logger, LogLevel.ERROR, 0);
+								e, this.reportingRepository.logger(), LogLevel.ERROR, 0);
 						return new ArrayList<>();
 					}
 				},
 				key -> new ProxyReportingLehrer(this.reportingRepository, mapLehrerStammdaten.get(key)),
 				stammdaten -> stammdaten.id,
 				optionalComparator,
-				"Lehrer", this.logger);
+				"Lehrer", this.reportingRepository.logger());
 	}
 
 	/**
@@ -153,7 +140,7 @@ public class ReportingRepositoryLehrer {
 	 *
 	 * @return Map der Lehrerstammdaten
 	 */
-	public Map<Long, LehrerStammdaten> mapLehrerStammdaten() {
+	public Map<Long, LehrerStammdaten> stammdaten() {
 		return mapLehrerStammdaten;
 	}
 

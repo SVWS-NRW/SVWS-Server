@@ -94,7 +94,7 @@ public class ProxyReportingSchulkatalogEintragNRW extends ReportingSchulkatalogE
 		if (idSchulform == null) {
 			return null;
 		}
-		return reportingRepository.katalogSchulformen().get(idSchulform);
+		return reportingRepository.repositoryKataloge().schulformen().get(idSchulform);
 	}
 
 	// ##### Getter #####

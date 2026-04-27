@@ -75,7 +75,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 		super.gostHalbjahr = GostHalbjahr.fromID(datenManager.daten().gostHalbjahr);
 
 		// Füge die Schüler der Liste der Schüler dieses Blockungsergebnisses hinzu und lege eine interne Map an, um auf die Schüler im Folgenden direkt zugreifen zu können.
-		super.schueler().addAll(this.reportingRepository.schueler(datenManager.schuelerGetListe().stream().map(s -> s.id).toList()));
+		super.schueler().addAll(this.reportingRepository.repositorySchueler().schueler(datenManager.schuelerGetListe().stream().map(s -> s.id).toList()));
 		final HashMap<Long, ReportingSchueler> mapBlockungsergebnisSchuelermenge = new HashMap<>();
 		mapBlockungsergebnisSchuelermenge.putAll(super.schueler().stream().collect(Collectors.toMap(ReportingSchueler::id, s -> s)));
 
@@ -108,7 +108,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 					.stream()
 					.map(l -> (ReportingLehrer) new ProxyReportingLehrer(
 							reportingRepository,
-							reportingRepository.mapLehrerStammdaten().computeIfAbsent(l.id, ls -> ladeLehrerStammdaten(l.id))))
+							reportingRepository.repositoryLehrer().stammdaten().computeIfAbsent(l.id, ls -> ladeLehrerStammdaten(l.id))))
 					.toList();
 
 			// Den Kurs der Gost-Kurplanung erzeugen.
@@ -127,7 +127,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 					ergebnisManager.getOfKursAnzahlSchueler(kurs.id),
 					ergebnisManager.getOfKursAnzahlSchuelerSchriftlich(kurs.id),
 					datenManager.kursGetName(kurs.id),
-					this.reportingRepository.schuljahresabschnitt(schuljahr, (datenManager.daten().gostHalbjahr % 2) + 1)
+					this.reportingRepository.repositorySchule().schuljahresabschnitt(schuljahr, (datenManager.daten().gostHalbjahr % 2) + 1)
 							.fach(datenManager.kursGet(kurs.id).fach_id),
 					null,
 					GostHalbjahr.fromID(datenManager.daten().gostHalbjahr),
@@ -150,8 +150,8 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 			super.kurse().add(reportingGostKursplanungKurs);
 
 			// Aktualisiere die Map der Kursplanungskurse im Repository.
-			this.reportingRepository.mapGostKursplanungKurse().clear();
-			this.reportingRepository.mapGostKursplanungKurse().putAll(super.kurse().stream().collect(Collectors.toMap(ReportingGostKursplanungKurs::id,
+			this.reportingRepository.repositoryGost().kursplanungKurse().clear();
+			this.reportingRepository.repositoryGost().kursplanungKurse().putAll(super.kurse().stream().collect(Collectors.toMap(ReportingGostKursplanungKurs::id,
 					k -> k)));
 		}
 

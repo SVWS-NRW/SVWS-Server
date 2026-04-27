@@ -26,47 +26,47 @@ public class ProxyReportingSchule extends ReportingSchule {
 	 */
 	public ProxyReportingSchule(final ReportingRepository reportingRepository) {
 		super(new ArrayList<>(),
-				ersetzeNullBlankTrim(reportingRepository.schulstammdaten().email),
-				ersetzeNullBlankTrim(reportingRepository.schulstammdaten().fax),
-				ersetzeNullBlankTrim(reportingRepository.schulstammdaten().hausnummer),
-				ersetzeNullBlankTrim(reportingRepository.schulstammdaten().ort),
-				ersetzeNullBlankTrim(reportingRepository.schulstammdaten().plz),
-				reportingRepository.schulstammdaten().schulNr,
-				ersetzeNullBlankTrim(reportingRepository.schulstammdaten().strassenname),
-				ersetzeNullBlankTrim(reportingRepository.schulstammdaten().telefon),
-				ersetzeNullBlankTrim(reportingRepository.schulstammdaten().hausnummerZusatz),
+				ersetzeNullBlankTrim(reportingRepository.repositorySchule().stammdaten().email),
+				ersetzeNullBlankTrim(reportingRepository.repositorySchule().stammdaten().fax),
+				ersetzeNullBlankTrim(reportingRepository.repositorySchule().stammdaten().hausnummer),
+				ersetzeNullBlankTrim(reportingRepository.repositorySchule().stammdaten().ort),
+				ersetzeNullBlankTrim(reportingRepository.repositorySchule().stammdaten().plz),
+				reportingRepository.repositorySchule().stammdaten().schulNr,
+				ersetzeNullBlankTrim(reportingRepository.repositorySchule().stammdaten().strassenname),
+				ersetzeNullBlankTrim(reportingRepository.repositorySchule().stammdaten().telefon),
+				ersetzeNullBlankTrim(reportingRepository.repositorySchule().stammdaten().hausnummerZusatz),
 				null, // aktuellerSchuljahresabschnitt
-				reportingRepository.schulstammdaten().anzJGS_Jahr,
-				reportingRepository.schulstammdaten().schuleAbschnitte.anzahlAbschnitte,
+				reportingRepository.repositorySchule().stammdaten().anzJGS_Jahr,
+				reportingRepository.repositorySchule().stammdaten().schuleAbschnitte.anzahlAbschnitte,
 				null, // auswahlSchuljahresabschnitt
-				ersetzeNullBlankTrim(reportingRepository.schulstammdaten().schuleAbschnitte.abschnittBez),
-				reportingRepository.schulstammdaten().schuleAbschnitte.bezAbschnitte,
-				reportingRepository.schulstammdaten().dauerUnterrichtseinheit,
+				ersetzeNullBlankTrim(reportingRepository.repositorySchule().stammdaten().schuleAbschnitte.abschnittBez),
+				reportingRepository.repositorySchule().stammdaten().schuleAbschnitte.bezAbschnitte,
+				reportingRepository.repositorySchule().stammdaten().dauerUnterrichtseinheit,
 				new ArrayList<>(), // schuljahresabschnitte
 				null,
 				null, // schulleitung
 				null, // schullogo
 				null, // stvSchulleitung
-				ersetzeNullBlankTrim(reportingRepository.schulstammdaten().webAdresse));
+				ersetzeNullBlankTrim(reportingRepository.repositorySchule().stammdaten().webAdresse));
 
 
 		this.reportingRepository = reportingRepository;
 
-		super.bezeichnung.add(ersetzeNullBlankTrim(reportingRepository.schulstammdaten().bezeichnung1));
-		super.bezeichnung.add(ersetzeNullBlankTrim(reportingRepository.schulstammdaten().bezeichnung2));
-		super.bezeichnung.add(ersetzeNullBlankTrim(reportingRepository.schulstammdaten().bezeichnung3));
+		super.bezeichnung.add(ersetzeNullBlankTrim(reportingRepository.repositorySchule().stammdaten().bezeichnung1));
+		super.bezeichnung.add(ersetzeNullBlankTrim(reportingRepository.repositorySchule().stammdaten().bezeichnung2));
+		super.bezeichnung.add(ersetzeNullBlankTrim(reportingRepository.repositorySchule().stammdaten().bezeichnung3));
 		super.bezeichnung.removeIf(Objects::isNull);
 		super.bezeichnung.removeIf(String::isBlank);
 
 		super.schullogo = new DataSchuleStammdaten(this.reportingRepository.conn()).getSchullogoBase64();
 
-		super.schulform = this.reportingRepository.katalogSchulformen().values()
-				.stream().filter(sf -> ((Objects.equals(sf.kuerzel, reportingRepository.schulstammdaten().schulform)) && (sf.gueltigBis == null)))
+		super.schulform = this.reportingRepository.repositoryKataloge().schulformen().values()
+				.stream().filter(sf -> ((Objects.equals(sf.kuerzel, reportingRepository.repositorySchule().stammdaten().schulform)) && (sf.gueltigBis == null)))
 				.findFirst().orElse(null);
 
-		super.schuljahresabschnitte = this.reportingRepository.schuljahresabschnitte();
-		super.aktuellerSchuljahresabschnitt = this.reportingRepository.aktuellerSchuljahresabschnitt();
-		super.auswahlSchuljahresabschnitt = this.reportingRepository.auswahlSchuljahresabschnitt();
+		super.schuljahresabschnitte = this.reportingRepository.repositorySchule().schuljahresabschnitte();
+		super.aktuellerSchuljahresabschnitt = this.reportingRepository.repositorySchule().aktuellerSchuljahresabschnitt();
+		super.auswahlSchuljahresabschnitt = this.reportingRepository.repositorySchule().auswahlSchuljahresabschnitt();
 	}
 
 
@@ -90,7 +90,7 @@ public class ProxyReportingSchule extends ReportingSchule {
 	public ReportingLehrer schulleitung() {
 		if (super.schulleitung == null) {
 			super.schulleitung =
-					this.reportingRepository.lehrer(this.reportingRepository.mapLehrerStammdaten().keySet().stream().toList())
+					this.reportingRepository.repositoryLehrer().lehrer(this.reportingRepository.repositoryLehrer().stammdaten().keySet().stream().toList())
 							.stream().filter(ReportingLehrer::istSchulleitungAktuell).findFirst().orElse(null);
 		}
 		return super.schulleitung;
@@ -105,7 +105,7 @@ public class ProxyReportingSchule extends ReportingSchule {
 	public ReportingLehrer stvSchulleitung() {
 		if (super.stvSchulleitung == null) {
 			super.stvSchulleitung =
-					this.reportingRepository.lehrer(this.reportingRepository.mapLehrerStammdaten().keySet().stream().toList())
+					this.reportingRepository.repositoryLehrer().lehrer(this.reportingRepository.repositoryLehrer().stammdaten().keySet().stream().toList())
 							.stream().filter(ReportingLehrer::istStvSchulleitungAktuell).findFirst().orElse(null);
 		}
 		return super.stvSchulleitung;

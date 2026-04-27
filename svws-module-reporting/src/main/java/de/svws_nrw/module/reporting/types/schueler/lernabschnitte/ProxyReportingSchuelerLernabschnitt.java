@@ -106,15 +106,15 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 
 		this.reportingRepository = reportingRepository;
 
-		super.foerderschwerpunkt1 = this.reportingRepository.katalogFoerderschwerpunkte().get(schuelerLernabschnittsdaten.foerderschwerpunkt1ID);
-		super.foerderschwerpunkt2 = this.reportingRepository.katalogFoerderschwerpunkte().get(schuelerLernabschnittsdaten.foerderschwerpunkt2ID);
+		super.foerderschwerpunkt1 = this.reportingRepository.repositoryKataloge().foerderschwerpunkte().get(schuelerLernabschnittsdaten.foerderschwerpunkt1ID);
+		super.foerderschwerpunkt2 = this.reportingRepository.repositoryKataloge().foerderschwerpunkte().get(schuelerLernabschnittsdaten.foerderschwerpunkt2ID);
 
-		super.schuljahresabschnitt = this.reportingRepository.schuljahresabschnitt(super.idSchuljahresabschnitt());
+		super.schuljahresabschnitt = this.reportingRepository.repositorySchule().schuljahresabschnitt(super.idSchuljahresabschnitt());
 
-		super.schueler = this.reportingRepository.mapSchueler().get(schuelerLernabschnittsdaten.schuelerID);
+		super.schueler = this.reportingRepository.repositorySchueler().schueler().get(schuelerLernabschnittsdaten.schuelerID);
 
 		schuelerLernabschnittsdaten.leistungsdaten.forEach(
-				l -> this.reportingRepository.mapAlleLeistungsdaten().add(this.schueler().id(), this.id(), l.id, l));
+				l -> this.reportingRepository.repositorySchueler().leistungsdaten().add(this.schueler().id(), this.id(), l.id, l));
 	}
 
 
@@ -159,7 +159,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	@Override
 	public ReportingKlasse folgeklasse() {
 		if ((super.folgeklasse() == null) && (super.idFolgeklasse() != null) && (super.idFolgeklasse() >= 0)) {
-			if (!this.reportingRepository.mapKlassen().containsKey(super.idFolgeklasse())) {
+			if (!this.reportingRepository.repositoryLerngruppen().klassen().containsKey(super.idFolgeklasse())) {
 				// ID der Folgeklasse ist bekannt, aber sie wurde noch nicht aus der DB geladen. Lade deren Daten und lade dann alle Klassen des Lernabschnitts.
 				final KlassenDaten klassenDaten;
 				try {
@@ -171,10 +171,10 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 							e, reportingRepository.logger(), LogLevel.ERROR, 0);
 					return super.folgeklasse();
 				}
-				super.folgeklasse = this.reportingRepository.schuljahresabschnitt(klassenDaten.idSchuljahresabschnitt).klasse(super.idFolgeklasse());
+				super.folgeklasse = this.reportingRepository.repositorySchule().schuljahresabschnitt(klassenDaten.idSchuljahresabschnitt).klasse(super.idFolgeklasse());
 			} else {
 				// ID der Folgeklasse ist bekannt und die Klasse wurde in einem Lernabschnitt bereits erzeugt, hole sie aus Lernabschnitt.
-				super.folgeklasse = this.reportingRepository.mapKlassen().get(super.idFolgeklasse()).schuljahresabschnitt().klasse(super.idFolgeklasse());
+				super.folgeklasse = this.reportingRepository.repositoryLerngruppen().klassen().get(super.idFolgeklasse()).schuljahresabschnitt().klasse(super.idFolgeklasse());
 			}
 		}
 		return super.folgeklasse();
@@ -213,15 +213,15 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	 */
 	@Override
 	public List<ReportingSchuelerLeistungsdaten> leistungsdaten() {
-		if (!this.reportingRepository.mapAlleLeistungsdaten().containsKey1(this.schueler.id())) {
+		if (!this.reportingRepository.repositorySchueler().leistungsdaten().containsKey1(this.schueler.id())) {
 			final List<SchuelerLeistungsdaten> listLeistungsdaten = new ArrayList<>();
 			if (new DataSchuelerLeistungsdaten(this.reportingRepository.conn()).getByLernabschnitt(this.id, listLeistungsdaten)) {
 				listLeistungsdaten.forEach(
-						l -> this.reportingRepository.mapAlleLeistungsdaten().add(this.schueler().id(), this.id(), l.id, l));
+						l -> this.reportingRepository.repositorySchueler().leistungsdaten().add(this.schueler().id(), this.id(), l.id, l));
 			}
 		}
 		if (super.leistungsdaten().isEmpty()) {
-			super.setLeistungsdaten(this.reportingRepository.mapAlleLeistungsdaten()
+			super.setLeistungsdaten(this.reportingRepository.repositorySchueler().leistungsdaten()
 					.get12(this.schueler().id(), this.id()).stream()
 					.map(l -> (ReportingSchuelerLeistungsdaten) new ProxyReportingSchuelerLeistungsdaten(reportingRepository, this, l))
 					.toList());
@@ -242,7 +242,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 			super.sonderpaedagoge =
 					new ProxyReportingLehrer(
 							reportingRepository,
-							reportingRepository.mapLehrerStammdaten().computeIfAbsent(super.idSonderpaedagoge(), l -> {
+							reportingRepository.repositoryLehrer().stammdaten().computeIfAbsent(super.idSonderpaedagoge(), l -> {
 								try {
 									final DBEntityManager conn = reportingRepository.conn();
 									return new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn))
@@ -269,7 +269,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 			super.tutor =
 					new ProxyReportingLehrer(
 							reportingRepository,
-							reportingRepository.mapLehrerStammdaten().computeIfAbsent(super.idTutor(), l -> {
+							reportingRepository.repositoryLehrer().stammdaten().computeIfAbsent(super.idTutor(), l -> {
 								try {
 									final DBEntityManager conn = reportingRepository.conn();
 									return new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn))
@@ -293,7 +293,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	@Override
 	public List<ReportingSchuelerZuweisung> zuweisungen() {
 		if (super.zuweisungen == null) {
-			if (!this.reportingRepository.mapSchuelerZuweisungen().containsKey(this.id())) {
+			if (!this.reportingRepository.repositorySchueler().zuweisungen().containsKey(this.id())) {
 				final List<ReportingSchuelerZuweisung> reportingZuweisungen = new ArrayList<>();
 				try {
 					final List<DTOSchuelerZuweisung> dtos =
@@ -309,9 +309,9 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 									.formatted(this.id),
 							e, this.reportingRepository.logger(), LogLevel.INFO, 0);
 				}
-				this.reportingRepository.mapSchuelerZuweisungen().put(this.id(), reportingZuweisungen);
+				this.reportingRepository.repositorySchueler().zuweisungen().put(this.id(), reportingZuweisungen);
 			}
-			super.zuweisungen = this.reportingRepository.mapSchuelerZuweisungen().get(this.id());
+			super.zuweisungen = this.reportingRepository.repositorySchueler().zuweisungen().get(this.id());
 		}
 		return super.zuweisungen;
 	}

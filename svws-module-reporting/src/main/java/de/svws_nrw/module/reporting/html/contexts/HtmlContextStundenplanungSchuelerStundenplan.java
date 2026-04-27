@@ -44,7 +44,7 @@ public final class HtmlContextStundenplanungSchuelerStundenplan extends HtmlCont
 	private void erzeugeContext(final ReportingStundenplanungStundenplan stundenplan, final List<Long> idsAusgabe) {
 
 		final List<ReportingStundenplanungSchuelerStundenplan> stundenplaene = new ArrayList<>();
-		this.reportingRepository.schueler(idsAusgabe)
+		this.reportingRepository.repositorySchueler().schueler(idsAusgabe)
 				.forEach(schueler -> stundenplaene.add(new ReportingStundenplanungSchuelerStundenplan(schueler, stundenplan)));
 
 		setContextData(stundenplaene);

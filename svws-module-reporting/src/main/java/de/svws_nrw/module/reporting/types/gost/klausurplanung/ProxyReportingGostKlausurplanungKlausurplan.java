@@ -146,7 +146,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 		if (this.gostKlausurplanManager == null) {
 			return;
 		}
-		super.schueler().addAll(this.reportingRepository
+		super.schueler().addAll(this.reportingRepository.repositorySchueler()
 				.schueler(this.gostKlausurplanManager.schuelerklausurGetMengeAsList().stream().map(s -> s.idSchueler).distinct().toList()));
 	}
 

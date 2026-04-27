@@ -12,14 +12,12 @@ import de.svws_nrw.core.data.stundenplan.StundenplanPausenaufsicht;
 import de.svws_nrw.core.data.stundenplan.StundenplanUnterricht;
 import de.svws_nrw.core.data.stundenplan.StundenplanUnterrichtsverteilung;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
 import de.svws_nrw.data.stundenplan.DataStundenplan;
 import de.svws_nrw.data.stundenplan.DataStundenplanListe;
 import de.svws_nrw.data.stundenplan.DataStundenplanPausenaufsichten;
 import de.svws_nrw.data.stundenplan.DataStundenplanUnterricht;
 import de.svws_nrw.data.stundenplan.DataStundenplanUnterrichtsverteilung;
-import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.stundenplanung.ProxyReportingStundenplanungStundenplan;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungStundenplan;
@@ -32,8 +30,6 @@ import jakarta.ws.rs.core.Response.Status;
 public class ReportingRepositoryStundenplan {
 
 	private final ReportingRepository reportingRepository;
-	private final DBEntityManager conn;
-	private final Logger logger;
 
 	private List<StundenplanListeEintrag> stundenplandefinitionen;
 	private final Map<Long, StundenplanManager> mapStundenplanManager = new HashMap<>();
@@ -43,29 +39,24 @@ public class ReportingRepositoryStundenplan {
 	 * Erstellt ein neues ReportingStundenplanRepository und initialisiert die Stundenplandefinition.
 	 *
 	 * @param reportingRepository Das zentrale Repository des Reporting-Moduls mit Zugriff auf die domänenspezifischen Repositories.
-	 * @param conn                Die Datenbankverbindung.
-	 * @param logger              Der Logger.
 	 *
 	 * @throws ApiOperationException Im Fehlerfall.
 	 */
-	public ReportingRepositoryStundenplan(final ReportingRepository reportingRepository, final DBEntityManager conn, final Logger logger)
-			throws ApiOperationException {
+	public ReportingRepositoryStundenplan(final ReportingRepository reportingRepository) throws ApiOperationException {
 		this.reportingRepository = reportingRepository;
-		this.conn = conn;
-		this.logger = logger;
 
 		initStundenplanDefinitionen();
 	}
 
 	private void initStundenplanDefinitionen() throws ApiOperationException {
 		try {
-			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle alle Stundenplan-Definitionen der Schule.");
-			this.stundenplandefinitionen = new ArrayList<>(DataStundenplanListe.getStundenplaeneAktiv(this.conn, null));
+			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Ermittle alle Stundenplan-Definitionen der Schule.");
+			this.stundenplandefinitionen = new ArrayList<>(DataStundenplanListe.getStundenplaeneAktiv(this.reportingRepository.conn(), null));
 			if (!this.stundenplandefinitionen.isEmpty()) {
 				this.stundenplandefinitionen.sort(Comparator.comparing((StundenplanListeEintrag sle) -> sle.gueltigAb).reversed());
 			}
 		} catch (final Exception e) {
-			this.logger.logLn(LogLevel.ERROR, 8, "Die Daten der Stundenpläne konnten nicht ermittelt werden.");
+			this.reportingRepository.logger().logLn(LogLevel.ERROR, 8, "Die Daten der Stundenpläne konnten nicht ermittelt werden.");
 			throw new ApiOperationException(Status.NOT_FOUND, e,
 					"FEHLER: Die Daten der Stundenpläne konnten nicht ermittelt werden.");
 		}
@@ -117,7 +108,7 @@ public class ReportingRepositoryStundenplan {
 		}
 
 		try {
-			final StundenplanManager manager = stundenplanManager(idStundenplan);
+			final StundenplanManager manager = manager(idStundenplan);
 			if (manager != null) {
 				mapStundenplanManager.put(idStundenplan, manager);
 				mapStundenplaene.put(idStundenplan, new ProxyReportingStundenplanungStundenplan(this.reportingRepository, manager));
@@ -136,16 +127,16 @@ public class ReportingRepositoryStundenplan {
 	 *
 	 * @return Der StundenplanManager zur ID oder null, falls der Stundenplan nicht existiert.
 	 */
-	public StundenplanManager stundenplanManager(final long idStundenplan) {
+	public StundenplanManager manager(final long idStundenplan) {
 		mapStundenplanManager.computeIfAbsent(idStundenplan, key -> {
 			try {
-				final Stundenplan stundenplan = new DataStundenplan(conn).getById(key);
+				final Stundenplan stundenplan = new DataStundenplan(this.reportingRepository.conn()).getById(key);
 				if (stundenplan == null) {
 					return null;
 				}
-				final List<StundenplanUnterricht> unterrichte = DataStundenplanUnterricht.getUnterrichte(this.conn, key);
-				final List<StundenplanPausenaufsicht> aufsichten = DataStundenplanPausenaufsichten.getAufsichten(this.conn, key);
-				final StundenplanUnterrichtsverteilung unterrichtsverteilung = DataStundenplanUnterrichtsverteilung.getUnterrichtsverteilung(this.conn, key);
+				final List<StundenplanUnterricht> unterrichte = DataStundenplanUnterricht.getUnterrichte(this.reportingRepository.conn(), key);
+				final List<StundenplanPausenaufsicht> aufsichten = DataStundenplanPausenaufsichten.getAufsichten(this.reportingRepository.conn(), key);
+				final StundenplanUnterrichtsverteilung unterrichtsverteilung = DataStundenplanUnterrichtsverteilung.getUnterrichtsverteilung(this.reportingRepository.conn(), key);
 				return new StundenplanManager(stundenplan, unterrichte, aufsichten, unterrichtsverteilung);
 			} catch (final ApiOperationException e) {
 				return null;
@@ -160,7 +151,7 @@ public class ReportingRepositoryStundenplan {
 	 *
 	 * @return Liste aller Stundenplandefinitionen.
 	 */
-	public List<StundenplanListeEintrag> stundenplandefinitionen() {
+	public List<StundenplanListeEintrag> definitionen() {
 		return stundenplandefinitionen;
 	}
 
@@ -169,7 +160,7 @@ public class ReportingRepositoryStundenplan {
 	 *
 	 * @return Map der StundenplanManager.
 	 */
-	public Map<Long, StundenplanManager> mapStundenplanManager() {
+	public Map<Long, StundenplanManager> manager() {
 		return mapStundenplanManager;
 	}
 
@@ -178,7 +169,7 @@ public class ReportingRepositoryStundenplan {
 	 *
 	 * @return Map der Reporting-Stundenpläne.
 	 */
-	public Map<Long, ReportingStundenplanungStundenplan> mapStundenplaene() {
+	public Map<Long, ReportingStundenplanungStundenplan> stundenplaene() {
 		return mapStundenplaene;
 	}
 }

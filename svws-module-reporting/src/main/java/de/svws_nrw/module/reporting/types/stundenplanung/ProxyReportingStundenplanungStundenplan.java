@@ -42,7 +42,7 @@ public class ProxyReportingStundenplanungStundenplan extends ReportingStundenpla
 		super.beschreibung = ersetzeNullBlankTrim(stundenplanManager.getBezeichnungStundenplan());
 		super.gueltigAb = ersetzeNullBlankTrim(stundenplanManager.getGueltigAb());
 		super.gueltigBis = ersetzeNullBlankTrim(stundenplanManager.getGueltigBis());
-		super.schuljahresabschnitt = this.reportingRepository.schuljahresabschnitt(stundenplanManager.getIDSchuljahresabschnitt());
+		super.schuljahresabschnitt = this.reportingRepository.repositorySchule().schuljahresabschnitt(stundenplanManager.getIDSchuljahresabschnitt());
 		super.wochenperiodizitaet = (this.stundenplanManager.getWochenTypModell() == 0) ? 1 : this.stundenplanManager.getWochenTypModell();
 		for (int i = 1; i <= super.wochenperiodizitaet; i++) {
 			super.mapWochenbezeichnungen.put(i, stundenplanManager.stundenplanGetWochenTypAsStringKurz(i));

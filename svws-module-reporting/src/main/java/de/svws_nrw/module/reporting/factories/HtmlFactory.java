@@ -338,7 +338,7 @@ public class HtmlFactory {
 			case STUNDENPLANUNG_V_FACH_STUNDENPLAN -> {
 				final HtmlContextStundenplanungFachStundenplan htmlContextFachStundenplan =
 						new HtmlContextStundenplanungFachStundenplan(reportingRepository,
-								reportingRepository.stundenplan(reportingParameter.idHauptdatenObjekt()),
+								reportingRepository.repositoryStundenplan().stundenplan(reportingParameter.idHauptdatenObjekt()),
 								reportingParameter.idsHauptdaten());
 				mapHtmlContexts.put(CONTEXT_STUNDENPLANUNG_FAECHER, htmlContextFachStundenplan);
 			}
@@ -347,7 +347,7 @@ public class HtmlFactory {
 				ReportingValidierung.validiereDatenFuerKlassen(reportingRepository, reportingParameter.idsHauptdaten());
 				final HtmlContextStundenplanungKlassenStundenplan htmlContextKlassenStundenplan =
 						new HtmlContextStundenplanungKlassenStundenplan(reportingRepository,
-								reportingRepository.stundenplan(reportingParameter.idHauptdatenObjekt()),
+								reportingRepository.repositoryStundenplan().stundenplan(reportingParameter.idHauptdatenObjekt()),
 								reportingParameter.idsHauptdaten());
 				mapHtmlContexts.put(CONTEXT_STUNDENPLANUNG_KLASSEN, htmlContextKlassenStundenplan);
 			}
@@ -356,14 +356,14 @@ public class HtmlFactory {
 				ReportingValidierung.validiereDatenFuerLehrer(reportingRepository, reportingParameter.idsHauptdaten());
 				final HtmlContextStundenplanungLehrerStundenplan htmlContextLehrerStundenplan =
 						new HtmlContextStundenplanungLehrerStundenplan(reportingRepository,
-								reportingRepository.stundenplan(reportingParameter.idHauptdatenObjekt()),
+								reportingRepository.repositoryStundenplan().stundenplan(reportingParameter.idHauptdatenObjekt()),
 								reportingParameter.idsHauptdaten());
 				mapHtmlContexts.put(CONTEXT_STUNDENPLANUNG_LEHRER, htmlContextLehrerStundenplan);
 			}
 			case STUNDENPLANUNG_V_RAUM_STUNDENPLAN -> {
 				final HtmlContextStundenplanungRaumStundenplan htmlContextRaeumeStundenplan =
 						new HtmlContextStundenplanungRaumStundenplan(reportingRepository,
-								reportingRepository.stundenplan(reportingParameter.idHauptdatenObjekt()),
+								reportingRepository.repositoryStundenplan().stundenplan(reportingParameter.idHauptdatenObjekt()),
 								reportingParameter.idsHauptdaten());
 				mapHtmlContexts.put(CONTEXT_STUNDENPLANUNG_RAEUME, htmlContextRaeumeStundenplan);
 			}
@@ -372,7 +372,7 @@ public class HtmlFactory {
 				ReportingValidierung.validiereDatenFuerSchueler(reportingRepository, reportingParameter.idsHauptdaten(), false, false);
 				final HtmlContextStundenplanungSchuelerStundenplan htmlContextSchuelerStundenplan =
 						new HtmlContextStundenplanungSchuelerStundenplan(reportingRepository,
-								reportingRepository.stundenplan(reportingParameter.idHauptdatenObjekt()),
+								reportingRepository.repositoryStundenplan().stundenplan(reportingParameter.idHauptdatenObjekt()),
 								reportingParameter.idsHauptdaten());
 				mapHtmlContexts.put(CONTEXT_STUNDENPLANUNG_SCHUELER, htmlContextSchuelerStundenplan);
 			}

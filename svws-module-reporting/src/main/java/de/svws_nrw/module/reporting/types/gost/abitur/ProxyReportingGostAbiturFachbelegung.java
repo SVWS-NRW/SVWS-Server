@@ -58,7 +58,7 @@ public class ProxyReportingGostAbiturFachbelegung extends ReportingGostAbiturFac
 			super.block2Pruefer =
 					new ProxyReportingLehrer(
 							this.reportingRepository,
-							this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(abiturFachbelegung.block2Pruefer, l -> {
+							this.reportingRepository.repositoryLehrer().stammdaten().computeIfAbsent(abiturFachbelegung.block2Pruefer, l -> {
 								try {
 									final DBEntityManager conn = this.reportingRepository.conn();
 									return new DataLehrerStammdaten(conn, new DataLernplattformen(conn),
@@ -84,7 +84,7 @@ public class ProxyReportingGostAbiturFachbelegung extends ReportingGostAbiturFac
 
 		// Für die Daten des Faches wird mindestens der Abschnitt Q11 benötigt. Wenn dieser nicht existiert, dann kann die Belegung nicht existieren.
 		// Da in der Q-Phase konstante Fachbedingungen gelten müssen, kann hier die Q11 verwendet werden.
-		final ReportingSchuljahresabschnitt abschnittQ11 = this.reportingRepository.schuljahresabschnitt(schuljahrAbitur - 1, 1);
+		final ReportingSchuljahresabschnitt abschnittQ11 = this.reportingRepository.repositorySchule().schuljahresabschnitt(schuljahrAbitur - 1, 1);
 		if (abschnittQ11 != null) {
 			super.fach = abschnittQ11.fach(abiturFachbelegung.fachID);
 		}

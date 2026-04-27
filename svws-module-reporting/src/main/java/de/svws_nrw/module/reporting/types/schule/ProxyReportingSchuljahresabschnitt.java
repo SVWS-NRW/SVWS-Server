@@ -64,7 +64,7 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 	@Override
 	public ReportingSchuljahresabschnitt folgenderAbschnitt() {
 		if ((super.folgenderAbschnitt == null) && (super.idFolgenderAbschnitt != null)) {
-			super.folgenderAbschnitt = this.reportingRepository.schuljahresabschnitt(super.idFolgenderAbschnitt);
+			super.folgenderAbschnitt = this.reportingRepository.repositorySchule().schuljahresabschnitt(super.idFolgenderAbschnitt);
 		}
 		return super.folgenderAbschnitt;
 	}
@@ -77,7 +77,7 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 	@Override
 	public ReportingSchuljahresabschnitt vorherigerAbschnitt() {
 		if ((super.vorherigerAbschnitt == null) && (super.idVorherigerAbschnitt != null)) {
-			super.vorherigerAbschnitt = this.reportingRepository.schuljahresabschnitt(super.idVorherigerAbschnitt);
+			super.vorherigerAbschnitt = this.reportingRepository.repositorySchule().schuljahresabschnitt(super.idVorherigerAbschnitt);
 		}
 		return super.vorherigerAbschnitt;
 	}
@@ -92,7 +92,7 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 	public Map<Long, ReportingFach> mapFaecher() {
 		if ((super.mapFaecher == null) || super.mapFaecher.isEmpty()) {
 			super.mapFaecher = new HashMap<>();
-			this.reportingRepository.mapFaecher().forEach((idFach, fach) -> super.mapFaecher.put(idFach, new ProxyReportingFach(fach, this.schuljahr)));
+			this.reportingRepository.repositoryKataloge().faecher().forEach((idFach, fach) -> super.mapFaecher.put(idFach, new ProxyReportingFach(fach, this.schuljahr)));
 		}
 		return super.mapFaecher;
 	}
@@ -108,7 +108,7 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 			super.mapJahrgaenge = new HashMap<>();
 			// TODO: Wenn die Jahrgänge eine Gültigkeit erhalten, dann ist diese hier auch zu implementieren.
 			//  Aktuell werden alle Jahrgänge in alle Schuljahresabschnitte übernommen.
-			this.reportingRepository.mapJahrgaenge().forEach((idJahrgang, jahrgang) -> super.mapJahrgaenge.put(idJahrgang,
+			this.reportingRepository.repositoryKataloge().jahrgaenge().forEach((idJahrgang, jahrgang) -> super.mapJahrgaenge.put(idJahrgang,
 					new ProxyReportingJahrgang(this.reportingRepository, jahrgang, this)));
 		}
 		return super.mapJahrgaenge;
@@ -139,7 +139,7 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 			for (final KlassenDaten klasse : klassendaten) {
 				final ReportingKlasse reportingKlasse = new ProxyReportingKlasse(this.reportingRepository, klasse);
 				super.mapKlassen.put(reportingKlasse.id(), reportingKlasse);
-				this.reportingRepository.mapKlassen().put(reportingKlasse.id(), reportingKlasse);
+				this.reportingRepository.repositoryLerngruppen().klassen().put(reportingKlasse.id(), reportingKlasse);
 			}
 
 		}
@@ -171,7 +171,7 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 			for (final KursDaten kurs : kurseDaten) {
 				final ReportingKurs reportingKurs = new ProxyReportingKurs(this.reportingRepository, kurs);
 				super.mapKurse.put(reportingKurs.id(), reportingKurs);
-				this.reportingRepository.mapKurse().put(reportingKurs.id(), reportingKurs);
+				this.reportingRepository.repositoryLerngruppen().kurse().put(reportingKurs.id(), reportingKurs);
 			}
 		}
 		return super.mapKurse;

@@ -16,12 +16,9 @@ import de.svws_nrw.core.adt.map.ListMap3DLongKeys;
 import de.svws_nrw.core.adt.map.ListMap4DLongKeys;
 import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
-import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
-import de.svws_nrw.module.reporting.sortierung.ReportingSortierungService;
 import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
@@ -37,16 +34,13 @@ import de.svws_nrw.module.reporting.utils.ReportingListBuilder;
 public class ReportingRepositorySchueler {
 
 	private final ReportingRepository reportingRepository;
-	private final DBEntityManager conn;
-	private final Logger logger;
-	private final ReportingSortierungService sortierungService;
 
 	private final Map<Long, SchuelerStammdaten> mapSchuelerStammdaten = new HashMap<>();
 	private final Map<Long, List<ErzieherStammdaten>> mapErzieherStammdaten = new HashMap<>();
 	private final Map<Long, List<Sprachbelegung>> mapSchuelerSprachbelegungen = new HashMap<>();
 	private final Map<Long, SchuelerSchulbesuchsdaten> mapSchuelerSchulbesuchsdaten = new HashMap<>();
-	private final ListMap3DLongKeys<SchuelerLeistungsdaten> mapAlleLeistungsdaten = new ListMap3DLongKeys<>();
-	private final ListMap4DLongKeys<SchuelerLernabschnittsdaten> mapAlleLernabschnittsdaten = new ListMap4DLongKeys<>();
+	private final ListMap3DLongKeys<SchuelerLeistungsdaten> mapLeistungsdaten = new ListMap3DLongKeys<>();
+	private final ListMap4DLongKeys<SchuelerLernabschnittsdaten> mapLernabschnittsdaten = new ListMap4DLongKeys<>();
 
 	private final Map<Long, ReportingSchueler> mapSchueler = new HashMap<>();
 	private final Map<Long, List<ReportingSchuelerTelefonkontakt>> mapSchuelerTelefonkontakte = new HashMap<>();
@@ -56,16 +50,9 @@ public class ReportingRepositorySchueler {
 	 * Erstellt ein neues ReportingSchuelerRepository.
 	 *
 	 * @param reportingRepository Das zentrale Repository des Reporting-Moduls mit Zugriff auf die domänenspezifischen Repositories.
-	 * @param conn                Die Datenbankverbindung.
-	 * @param logger              Der Logger.
-	 * @param sortierungService   Der Service für die Sortierung.
 	 */
-	public ReportingRepositorySchueler(final ReportingRepository reportingRepository, final DBEntityManager conn, final Logger logger,
-			final ReportingSortierungService sortierungService) {
+	public ReportingRepositorySchueler(final ReportingRepository reportingRepository) {
 		this.reportingRepository = reportingRepository;
-		this.conn = conn;
-		this.logger = logger;
-		this.sortierungService = sortierungService;
 	}
 
 	/**
@@ -82,12 +69,12 @@ public class ReportingRepositorySchueler {
 
 		if (!mapSchuelerStammdaten.containsKey(idSchueler)) {
 			try {
-				final SchuelerStammdaten fehlendeSchulerstammdaten = new DataSchuelerStammdaten(this.conn).getById(idSchueler);
+				final SchuelerStammdaten fehlendeSchulerstammdaten = new DataSchuelerStammdaten(this.reportingRepository.conn()).getById(idSchueler);
 				mapSchuelerStammdaten.put(fehlendeSchulerstammdaten.id, fehlendeSchulerstammdaten);
 			} catch (final ApiOperationException e) {
 				ReportingExceptionUtils.logException(
 						"FEHLER: Fehler bei der Ermittlung der fehlenden Schülerstammdaten eines Schülers aus der Datenbank im ReportingRepository.",
-						e, this.logger, LogLevel.ERROR, 0);
+						e, this.reportingRepository.logger(), LogLevel.ERROR, 0);
 				return null;
 			}
 		}
@@ -120,26 +107,26 @@ public class ReportingRepositorySchueler {
 	 */
 	public List<ReportingSchueler> schueler(final List<Long> idsSchueler, final boolean sortiereListe) {
 		final Optional<Comparator<ReportingSchueler>> optionalComparator = sortiereListe
-				? ComparatorFactory.buildOptionalComparator(this.sortierungService, this.logger, ReportingSchueler.class.getSimpleName(),
+				? ComparatorFactory.buildOptionalComparator(this.reportingRepository.sortierungService(), this.reportingRepository.logger(), ReportingSchueler.class.getSimpleName(),
 						SortierungRegistryReportingSchueler.sortierungRegistry())
 				: Optional.empty();
 
 		return ReportingListBuilder.erstelleReportingListe(idsSchueler, mapSchuelerStammdaten, mapSchueler,
 				fehlendeIds -> {
 					try {
-						return new DataSchuelerStammdaten(this.conn).getListByIds(fehlendeIds);
+						return new DataSchuelerStammdaten(this.reportingRepository.conn()).getListByIds(fehlendeIds);
 					} catch (final ApiOperationException e) {
 						ReportingExceptionUtils.logException(
 								"FEHLER: Fehler bei der Ermittlung der fehlenden Schülerstammdaten einer Schülerliste aus der Datenbank im "
 										+ "ReportingRepository.",
-								e, this.logger, LogLevel.ERROR, 0);
+								e, this.reportingRepository.logger(), LogLevel.ERROR, 0);
 						return new ArrayList<>();
 					}
 				},
 				key -> new ProxyReportingSchueler(this.reportingRepository, mapSchuelerStammdaten.get(key)),
 				stammdaten -> stammdaten.id,
 				optionalComparator,
-				"Schüler", this.logger);
+				"Schüler", this.reportingRepository.logger());
 	}
 
 	/**
@@ -147,7 +134,7 @@ public class ReportingRepositorySchueler {
 	 *
 	 * @return Map der Schülerstammdaten.
 	 */
-	public Map<Long, SchuelerStammdaten> mapSchuelerStammdaten() {
+	public Map<Long, SchuelerStammdaten> stammdaten() {
 		return mapSchuelerStammdaten;
 	}
 
@@ -156,7 +143,7 @@ public class ReportingRepositorySchueler {
 	 *
 	 * @return Map der Erzieherstammdaten.
 	 */
-	public Map<Long, List<ErzieherStammdaten>> mapErzieherStammdaten() {
+	public Map<Long, List<ErzieherStammdaten>> erzieherStammdaten() {
 		return mapErzieherStammdaten;
 	}
 
@@ -165,7 +152,7 @@ public class ReportingRepositorySchueler {
 	 *
 	 * @return Map der Sprachbelegungen.
 	 */
-	public Map<Long, List<Sprachbelegung>> mapSchuelerSprachbelegungen() {
+	public Map<Long, List<Sprachbelegung>> sprachbelegungen() {
 		return mapSchuelerSprachbelegungen;
 	}
 
@@ -174,7 +161,7 @@ public class ReportingRepositorySchueler {
 	 *
 	 * @return Map der Schulbesuchsdaten.
 	 */
-	public Map<Long, SchuelerSchulbesuchsdaten> mapSchuelerSchulbesuchsdaten() {
+	public Map<Long, SchuelerSchulbesuchsdaten> schulbesuchsdaten() {
 		return mapSchuelerSchulbesuchsdaten;
 	}
 
@@ -183,8 +170,8 @@ public class ReportingRepositorySchueler {
 	 *
 	 * @return Map der Leistungsdaten.
 	 */
-	public ListMap3DLongKeys<SchuelerLeistungsdaten> mapAlleLeistungsdaten() {
-		return mapAlleLeistungsdaten;
+	public ListMap3DLongKeys<SchuelerLeistungsdaten> leistungsdaten() {
+		return mapLeistungsdaten;
 	}
 
 	/**
@@ -192,8 +179,8 @@ public class ReportingRepositorySchueler {
 	 *
 	 * @return Map der Lernabschnittsdaten.
 	 */
-	public ListMap4DLongKeys<SchuelerLernabschnittsdaten> mapAlleLernabschnittsdaten() {
-		return mapAlleLernabschnittsdaten;
+	public ListMap4DLongKeys<SchuelerLernabschnittsdaten> lernabschnittsdaten() {
+		return mapLernabschnittsdaten;
 	}
 
 	/**
@@ -201,7 +188,7 @@ public class ReportingRepositorySchueler {
 	 *
 	 * @return Map der ReportingSchueler-Objekte.
 	 */
-	public Map<Long, ReportingSchueler> mapSchueler() {
+	public Map<Long, ReportingSchueler> schueler() {
 		return mapSchueler;
 	}
 
@@ -210,7 +197,7 @@ public class ReportingRepositorySchueler {
 	 *
 	 * @return Map der Telefonkontakte.
 	 */
-	public Map<Long, List<ReportingSchuelerTelefonkontakt>> mapSchuelerTelefonkontakte() {
+	public Map<Long, List<ReportingSchuelerTelefonkontakt>> telefonkontakte() {
 		return mapSchuelerTelefonkontakte;
 	}
 
@@ -219,7 +206,7 @@ public class ReportingRepositorySchueler {
 	 *
 	 * @return Map der Zuweisungen.
 	 */
-	public Map<Long, List<ReportingSchuelerZuweisung>> mapSchuelerZuweisungen() {
+	public Map<Long, List<ReportingSchuelerZuweisung>> zuweisungen() {
 		return mapSchuelerZuweisungen;
 	}
 }

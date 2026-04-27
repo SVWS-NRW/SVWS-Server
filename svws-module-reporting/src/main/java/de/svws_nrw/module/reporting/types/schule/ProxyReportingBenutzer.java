@@ -61,8 +61,8 @@ public class ProxyReportingBenutzer extends ReportingBenutzer {
 		super.istAdmin = user.istAdmin();
 
 		// Prüfe, ob der angemeldete Benutzer Lehrer ist. Übernehme dann dessen Informationen. Andernfalls weitere Informationen aus der Datenbank laden.
-		if ((user.getIdLehrer() != null) && this.reportingRepository.mapLehrerStammdaten().containsKey(user.getIdLehrer())) {
-			super.lehrer = new ProxyReportingLehrer(this.reportingRepository, this.reportingRepository.mapLehrerStammdaten().get(user.getIdLehrer()));
+		if ((user.getIdLehrer() != null) && this.reportingRepository.repositoryLehrer().stammdaten().containsKey(user.getIdLehrer())) {
+			super.lehrer = new ProxyReportingLehrer(this.reportingRepository, this.reportingRepository.repositoryLehrer().stammdaten().get(user.getIdLehrer()));
 			super.anzeigename = super.lehrer.vornameNachname();
 		} else {
 			try {

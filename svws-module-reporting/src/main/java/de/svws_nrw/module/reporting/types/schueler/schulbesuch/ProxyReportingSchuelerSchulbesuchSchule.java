@@ -50,7 +50,7 @@ public class ProxyReportingSchuelerSchulbesuchSchule extends ReportingSchuelerSc
 			return null;
 		}
 
-		final var schulEintrag = reportingRepository.katalogSchulen().get(idSchule);
+		final var schulEintrag = reportingRepository.repositoryKataloge().schulen().get(idSchule);
 		if (schulEintrag == null) {
 			return null;
 		}

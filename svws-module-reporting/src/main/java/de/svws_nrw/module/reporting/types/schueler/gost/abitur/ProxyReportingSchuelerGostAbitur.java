@@ -57,7 +57,7 @@ public class ProxyReportingSchuelerGostAbitur extends ReportingSchuelerGostAbitu
 				abiturdaten.pruefungBestanden);
 		this.reportingRepository = reportingRepository;
 
-		super.abiturSchuljahresabschnitt = this.reportingRepository.schuljahresabschnitt(super.abiturSchuljahr, 2);
+		super.abiturSchuljahresabschnitt = this.reportingRepository.repositorySchule().schuljahresabschnitt(super.abiturSchuljahr, 2);
 		super.besondereLernleistungNote = Note.fromKuerzel(abiturdaten.besondereLernleistungNotenKuerzel);
 
 		super.fachbelegungen()

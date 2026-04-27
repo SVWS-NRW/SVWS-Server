@@ -69,7 +69,7 @@ public class ProxyReportingSchuelerSchulbesuch extends ReportingSchuelerSchulbes
 			return null;
 		}
 
-		final SchulEintrag schulEintrag = reportingRepository.katalogSchulen().get(idSchule);
+		final SchulEintrag schulEintrag = reportingRepository.repositoryKataloge().schulen().get(idSchule);
 		if (schulEintrag == null) {
 			return null;
 		}
@@ -82,7 +82,7 @@ public class ProxyReportingSchuelerSchulbesuch extends ReportingSchuelerSchulbes
 			return null;
 		}
 
-		return reportingRepository.katalogEntlassgruende().get(idEntlassgrund);
+		return reportingRepository.repositoryKataloge().entlassgruende().get(idEntlassgrund);
 	}
 
 	/**

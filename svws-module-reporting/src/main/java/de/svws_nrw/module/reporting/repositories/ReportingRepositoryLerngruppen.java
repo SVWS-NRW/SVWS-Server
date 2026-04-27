@@ -8,9 +8,7 @@ import java.util.Map;
 
 import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.data.klassen.DataKlassendaten;
-import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
@@ -22,9 +20,7 @@ import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
  */
 public class ReportingRepositoryLerngruppen {
 
-	private final ReportingRepositorySchule repositorySchule;
-	private final DBEntityManager conn;
-	private final Logger logger;
+	private final ReportingRepository reportingRepository;
 
 	private final Map<Long, ReportingKlasse> mapKlassen = new HashMap<>();
 	private final Map<Long, ReportingKurs> mapKurse = new HashMap<>();
@@ -32,14 +28,10 @@ public class ReportingRepositoryLerngruppen {
 	/**
 	 * Erstellt ein neues ReportingLerngruppenRepository.
 	 *
-	 * @param repositorySchule Das Domänen-Repository für Schuldaten und Schuljahresabschnitte.
-	 * @param conn             Die Datenbankverbindung.
-	 * @param logger           Der Logger.
+	 * @param reportingRepository Das zentrale Repository des Reporting-Moduls mit Zugriff auf die domänenspezifischen Repositories.
 	 */
-	public ReportingRepositoryLerngruppen(final ReportingRepositorySchule repositorySchule, final DBEntityManager conn, final Logger logger) {
-		this.repositorySchule = repositorySchule;
-		this.conn = conn;
-		this.logger = logger;
+	public ReportingRepositoryLerngruppen(final ReportingRepository reportingRepository) {
+		this.reportingRepository = reportingRepository;
 	}
 
 	/**
@@ -80,11 +72,11 @@ public class ReportingRepositoryLerngruppen {
 		if (!mapKlassen.containsKey(idKlasse)) {
 			final KlassenDaten klassenDaten;
 			try {
-				klassenDaten = new DataKlassendaten(this.conn).getById(idKlasse);
-				this.repositorySchule.schuljahresabschnitt(klassenDaten.idSchuljahresabschnitt).klasse(idKlasse);
+				klassenDaten = new DataKlassendaten(this.reportingRepository.conn()).getById(idKlasse);
+				this.reportingRepository.repositorySchule().schuljahresabschnitt(klassenDaten.idSchuljahresabschnitt).klasse(idKlasse);
 			} catch (final ApiOperationException e) {
 				ReportingExceptionUtils.logException(
-						"FEHLER: Fehler bei der Ermittlung der Daten für des Klassen %s.".formatted(idKlasse), e, this.logger,
+						"FEHLER: Fehler bei der Ermittlung der Daten für des Klassen %s.".formatted(idKlasse), e, this.reportingRepository.logger(),
 						LogLevel.ERROR, 0);
 			}
 		}
@@ -95,7 +87,7 @@ public class ReportingRepositoryLerngruppen {
 	 *
 	 * @return Map der Klassen
 	 */
-	public Map<Long, ReportingKlasse> mapKlassen() {
+	public Map<Long, ReportingKlasse> klassen() {
 		return mapKlassen;
 	}
 
@@ -104,7 +96,7 @@ public class ReportingRepositoryLerngruppen {
 	 *
 	 * @return Map der Kurse
 	 */
-	public Map<Long, ReportingKurs> mapKurse() {
+	public Map<Long, ReportingKurs> kurse() {
 		return mapKurse;
 	}
 }

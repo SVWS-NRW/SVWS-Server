@@ -68,7 +68,7 @@ public final class HtmlContextLehrer extends HtmlContext<ReportingLehrer> implem
 	 */
 	private void erzeugeContextFromIds(final List<Long> idsLehrer) {
 
-		setContextData(this.reportingRepository.lehrer(idsLehrer));
+		setContextData(this.reportingRepository.repositoryLehrer().lehrer(idsLehrer));
 		sortiereContextMitRegistry();
 
 		// Daten-Context für Thymeleaf erzeugen.

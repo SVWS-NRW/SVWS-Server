@@ -50,7 +50,7 @@ public class ProxyReportingGostAbiturFachbelegungHalbjahr extends ReportingGostA
 		if (abiturFachbelegungHalbjahr.lehrer != null) {
 			super.lehrer = new ProxyReportingLehrer(
 					this.reportingRepository,
-					this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(abiturFachbelegungHalbjahr.lehrer, l -> {
+					this.reportingRepository.repositoryLehrer().stammdaten().computeIfAbsent(abiturFachbelegungHalbjahr.lehrer, l -> {
 						try {
 							final DBEntityManager conn = this.reportingRepository.conn();
 							return new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn))

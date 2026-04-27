@@ -73,8 +73,8 @@ public class ProxyReportingLehrer extends ReportingLehrer {
 				ersetzeNullBlankTrim(lehrerStammdaten.titel),
 				ersetzeNullBlankTrim(lehrerStammdaten.vorname),
 				ersetzeNullBlankTrim(lehrerStammdaten.vorname),
-				(lehrerStammdaten.wohnortID != null) ? reportingRepository.katalogOrte().get(lehrerStammdaten.wohnortID) : null,
-				(lehrerStammdaten.ortsteilID != null) ? reportingRepository.katalogOrtsteile().get(lehrerStammdaten.ortsteilID) : null);
+				(lehrerStammdaten.wohnortID != null) ? reportingRepository.repositoryKataloge().orte().get(lehrerStammdaten.wohnortID) : null,
+				(lehrerStammdaten.ortsteilID != null) ? reportingRepository.repositoryKataloge().ortsteile().get(lehrerStammdaten.ortsteilID) : null);
 
 		this.reportingRepository = reportingRepository;
 		this.factoryUnterrichte = new ProxyReportingLehrerFactoryUnterricht(this.reportingRepository, this);
@@ -83,7 +83,7 @@ public class ProxyReportingLehrer extends ReportingLehrer {
 				.forEach(leitungsfunktion -> super.leitungsfunktionen.add(new ProxyReportingLehrerLeitungsfunktion(leitungsfunktion)));
 
 		// Füge Stammdaten des Lehrers für weitere Verwendung in der Map im Repository hinzu.
-		reportingRepository.mapLehrerStammdaten().putIfAbsent(super.id(), lehrerStammdaten);
+		reportingRepository.repositoryLehrer().stammdaten().putIfAbsent(super.id(), lehrerStammdaten);
 	}
 
 

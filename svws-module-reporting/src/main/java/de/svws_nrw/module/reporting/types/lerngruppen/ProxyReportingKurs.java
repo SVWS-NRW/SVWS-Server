@@ -58,7 +58,7 @@ public class ProxyReportingKurs extends ReportingKurs {
 		this.reportingRepository = reportingRepository;
 
 		// Schuljahresabschnitt zum Kurs ermitteln
-		super.schuljahresabschnitt = this.reportingRepository.schuljahresabschnitt(kursDaten.idSchuljahresabschnitt);
+		super.schuljahresabschnitt = this.reportingRepository.repositorySchule().schuljahresabschnitt(kursDaten.idSchuljahresabschnitt);
 
 		// Fach setzen
 		super.fach = super.schuljahresabschnitt.fach(kursDaten.idFach);
@@ -66,7 +66,7 @@ public class ProxyReportingKurs extends ReportingKurs {
 		// Jahrgänge setzen
 		if ((kursDaten.idJahrgaenge != null) && !kursDaten.idJahrgaenge.isEmpty()) {
 			for (final Long idJahrgang : kursDaten.idJahrgaenge) {
-				if (this.reportingRepository.mapJahrgaenge().containsKey(idJahrgang)) {
+				if (this.reportingRepository.repositoryKataloge().jahrgaenge().containsKey(idJahrgang)) {
 					super.jahrgaenge.add(super.schuljahresabschnitt.jahrgang(idJahrgang));
 				}
 			}
@@ -104,7 +104,7 @@ public class ProxyReportingKurs extends ReportingKurs {
 		}
 
 		// Erstelle jetzt alle Kurslehrer als Reporting-Lehrer.
-		super.lehrer = new ArrayList<>(this.reportingRepository.lehrer(mapKurslehrer.keySet().stream().toList(), false));
+		super.lehrer = new ArrayList<>(this.reportingRepository.repositoryLehrer().lehrer(mapKurslehrer.keySet().stream().toList(), false));
 	}
 
 
@@ -175,7 +175,7 @@ public class ProxyReportingKurs extends ReportingKurs {
 				}
 			}
 			if (!idsSchueler.isEmpty()) {
-				super.schueler = this.reportingRepository.schueler(idsSchueler);
+				super.schueler = this.reportingRepository.repositorySchueler().schueler(idsSchueler);
 			}
 		}
 		return super.schueler();

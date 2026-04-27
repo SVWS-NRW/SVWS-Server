@@ -15,20 +15,20 @@ import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplan
  */
 public class ReportingRepositoryGost {
 
-	private final Map<Integer, GostJahrgangsdaten> mapGostAbiturjahrgangDaten = new HashMap<>();
-	private final Map<Integer, GostFaecherManager> mapGostAbiturjahrgangFaecher = new HashMap<>();
-	private final Map<Long, GostLaufbahnplanungBeratungsdaten> mapGostBeratungsdaten = new HashMap<>();
-	private final Map<Long, Abiturdaten> mapGostBeratungsdatenAbiturdaten = new HashMap<>();
-	private final Map<Long, Abiturdaten> mapGostSchuelerAbiturdaten = new HashMap<>();
-	private final Map<Long, ReportingGostKursplanungKurs> mapGostKursplanungKurse = new HashMap<>();
+	private final Map<Integer, GostJahrgangsdaten> mapAbiturjahrgangDaten = new HashMap<>();
+	private final Map<Integer, GostFaecherManager> mapAbiturjahrgangFaecher = new HashMap<>();
+	private final Map<Long, GostLaufbahnplanungBeratungsdaten> mapBeratungsdaten = new HashMap<>();
+	private final Map<Long, Abiturdaten> mapBeratungsdatenAbiturdaten = new HashMap<>();
+	private final Map<Long, Abiturdaten> mapSchuelerAbiturdaten = new HashMap<>();
+	private final Map<Long, ReportingGostKursplanungKurs> mapKursplanungKurse = new HashMap<>();
 
 	/**
 	 * Gibt die Map der Jahrgangsdaten zu den Abiturjahrgängen zurück, indiziert nach dem Abiturjahrgang.
 	 *
 	 * @return Map der Daten zu den Abiturjahrgängen
 	 */
-	public Map<Integer, GostJahrgangsdaten> mapGostAbiturjahrgangDaten() {
-		return mapGostAbiturjahrgangDaten;
+	public Map<Integer, GostJahrgangsdaten> abiturjahrgangDaten() {
+		return mapAbiturjahrgangDaten;
 	}
 
 	/**
@@ -36,8 +36,8 @@ public class ReportingRepositoryGost {
 	 *
 	 * @return Map der Fächermanager zu den Abiturjahrgängen
 	 */
-	public Map<Integer, GostFaecherManager> mapGostAbiturjahrgangFaecher() {
-		return mapGostAbiturjahrgangFaecher;
+	public Map<Integer, GostFaecherManager> abiturjahrgangFaecher() {
+		return mapAbiturjahrgangFaecher;
 	}
 
 	/**
@@ -45,8 +45,8 @@ public class ReportingRepositoryGost {
 	 *
 	 * @return Map mit GOSt-Beratungsdaten der Schüler
 	 */
-	public Map<Long, GostLaufbahnplanungBeratungsdaten> mapGostBeratungsdaten() {
-		return mapGostBeratungsdaten;
+	public Map<Long, GostLaufbahnplanungBeratungsdaten> beratungsdaten() {
+		return mapBeratungsdaten;
 	}
 
 	/**
@@ -54,8 +54,8 @@ public class ReportingRepositoryGost {
 	 *
 	 * @return Map mit GOSt-Beratungsdaten-Abiturdaten
 	 */
-	public Map<Long, Abiturdaten> mapGostBeratungsdatenAbiturdaten() {
-		return mapGostBeratungsdatenAbiturdaten;
+	public Map<Long, Abiturdaten> beratungsdatenAbiturdaten() {
+		return mapBeratungsdatenAbiturdaten;
 	}
 
 	/**
@@ -63,8 +63,8 @@ public class ReportingRepositoryGost {
 	 *
 	 * @return Map mit GOSt-Abiturdaten der Schüler
 	 */
-	public Map<Long, Abiturdaten> mapGostSchuelerAbiturdaten() {
-		return mapGostSchuelerAbiturdaten;
+	public Map<Long, Abiturdaten> schuelerAbiturdaten() {
+		return mapSchuelerAbiturdaten;
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class ReportingRepositoryGost {
 	 *
 	 * @return Map der aktuell geladenen Kursplanung-Kurse
 	 */
-	public Map<Long, ReportingGostKursplanungKurs> mapGostKursplanungKurse() {
-		return mapGostKursplanungKurse;
+	public Map<Long, ReportingGostKursplanungKurs> kursplanungKurse() {
+		return mapKursplanungKurse;
 	}
 }

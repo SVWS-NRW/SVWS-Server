@@ -8,9 +8,7 @@ import java.util.Map;
 import de.svws_nrw.asd.data.schule.SchuleStammdaten;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
-import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.schule.ProxyReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
@@ -23,6 +21,7 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class ReportingRepositorySchule {
 
+	private final ReportingRepository reportingRepository;
 	private final SchuleStammdaten schulstammdaten;
 	private final Long idAktuellerSchuljahresabschnitt;
 	private final Long idAuswahlSchuljahresabschnitt;
@@ -31,24 +30,21 @@ public class ReportingRepositorySchule {
 	/**
 	 * Erstellt ein neues ReportingSchuleRepository und initialisiert Schulstammdaten und Schuljahresabschnitte.
 	 *
-	 * @param reportingRepository          Das zentrale Repository des Reporting-Moduls mit Zugriff auf die domänenspezifischen Repositories.
-	 * @param conn                         Die Datenbankverbindung.
-	 * @param logger                       Der Logger.
+	 * @param reportingRepository           Das zentrale Repository des Reporting-Moduls mit Zugriff auf die domänenspezifischen Repositories.
 	 * @param idAuswahlSchuljahresabschnitt Die ID des ausgewählten Schuljahresabschnitts.
 	 *
 	 * @throws ApiOperationException Im Fehlerfall.
 	 */
-	@SuppressWarnings("java:S107")
-	public ReportingRepositorySchule(final ReportingRepository reportingRepository, final DBEntityManager conn, final Logger logger,
-			final long idAuswahlSchuljahresabschnitt) throws ApiOperationException {
-		logger.logLn(LogLevel.DEBUG, 8, "Ermittle Stammdaten und Abschnitte der Schule.");
+	public ReportingRepositorySchule(final ReportingRepository reportingRepository, final long idAuswahlSchuljahresabschnitt) throws ApiOperationException {
+		this.reportingRepository = reportingRepository;
+		this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Ermittle Stammdaten und Abschnitte der Schule.");
 		try {
-			this.schulstammdaten = DataSchuleStammdaten.getStammdaten(conn);
+			this.schulstammdaten = DataSchuleStammdaten.getStammdaten(this.reportingRepository.conn());
 
-			final List<Schuljahresabschnitt> datenSchuljahresabschnitte = conn.getUser().schuleGetStammdaten().abschnitte;
+			final List<Schuljahresabschnitt> datenSchuljahresabschnitte = this.reportingRepository.conn().getUser().schuleGetStammdaten().abschnitte;
 			for (final Schuljahresabschnitt datenSchuljahresabschnitt : datenSchuljahresabschnitte) {
 				mapSchuljahresabschnitte.putIfAbsent(datenSchuljahresabschnitt.id,
-						new ProxyReportingSchuljahresabschnitt(reportingRepository, datenSchuljahresabschnitt));
+						new ProxyReportingSchuljahresabschnitt(this.reportingRepository, datenSchuljahresabschnitt));
 			}
 
 			this.idAktuellerSchuljahresabschnitt = this.schulstammdaten.idSchuljahresabschnitt;
@@ -56,7 +52,7 @@ public class ReportingRepositorySchule {
 		} catch (final Exception e) {
 			ReportingExceptionUtils.logException(
 					"FEHLER: Die Stamm- oder Abschnittsdaten der Schule konnten nicht ermittelt werden oder der Schuljahresabschnitt ist ungültig.",
-					e, logger, LogLevel.ERROR, 8);
+					e, this.reportingRepository.logger(), LogLevel.ERROR, 8);
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"FEHLER: Die Stamm- oder Abschnittsdaten der Schule konnten nicht ermittelt werden oder der übergebene Schuljahresabschnitt ist ungültig.");
 		}
@@ -67,7 +63,7 @@ public class ReportingRepositorySchule {
 	 *
 	 * @return Die Stammdaten der Schule.
 	 */
-	public SchuleStammdaten schulstammdaten() {
+	public SchuleStammdaten stammdaten() {
 		return schulstammdaten;
 	}
 

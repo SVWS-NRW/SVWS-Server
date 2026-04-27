@@ -42,7 +42,7 @@ public class ProxyReportingSchuelerSprachbelegung extends ReportingSchuelerSprac
 			super.referenzniveau = Sprachreferenzniveau.data().getWertBySchluessel(sprachbelegung.referenzniveau);
 		}
 		super.statistikfach =
-				new ProxyReportingStatistikFach(sprachbelegung.sprache, this.reportingRepository.aktuellerSchuljahresabschnitt().schuljahr(), false);
+				new ProxyReportingStatistikFach(sprachbelegung.sprache, this.reportingRepository.repositorySchule().aktuellerSchuljahresabschnitt().schuljahr(), false);
 	}
 
 

@@ -42,7 +42,7 @@ public class ProxyReportingStundenplanungUnterrichtsrasterstunde extends Reporti
 				new ArrayList<>());
 
 		this.reportingRepository = reportingRepository;
-		this.stundenplanManager = this.reportingRepository.stundenplanManager(stundenplan.id());
+		this.stundenplanManager = this.reportingRepository.repositoryStundenplan().manager(stundenplan.id());
 
 		if (stundenplanManager == null) {
 			return;

@@ -31,9 +31,9 @@ public class ProxyReportingSchuelerLeistungsdatenMatrix extends ReportingSchuele
 			final ReportingSchuljahresabschnitt schuljahresabschnitt) {
 
 		super(schueler, schuljahresabschnitt,
-				reportingRepository.getSortierungsAttribute(ReportingFach.class.getSimpleName(), true),
-				reportingRepository.getSortierungsAttribute(ReportingSchueler.class.getSimpleName(), true),
-				reportingRepository.getFilter(ReportingFach.class.getSimpleName(), null));
+				reportingRepository.sortierungService().getSortierungsAttribute(ReportingFach.class.getSimpleName(), true),
+				reportingRepository.sortierungService().getSortierungsAttribute(ReportingSchueler.class.getSimpleName(), true),
+				reportingRepository.filterService().getFilter(ReportingFach.class.getSimpleName(), null));
 
 		this.reportingRepository = reportingRepository;
 	}

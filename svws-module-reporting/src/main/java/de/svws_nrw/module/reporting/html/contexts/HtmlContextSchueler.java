@@ -69,7 +69,7 @@ public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> im
 	private void erzeugeContextFromIds(final List<Long> idsSchueler) {
 
 		// Rufe die Schülerdaten ab oder erzeuge sie, falls sie noch nicht existieren. Weise sie dann dem Context zu.
-		setContextData(this.reportingRepository.schueler(idsSchueler));
+		setContextData(this.reportingRepository.repositorySchueler().schueler(idsSchueler));
 		sortiereContextMitRegistry();
 
 		// Daten-Context für Thymeleaf erzeugen.
@@ -86,7 +86,7 @@ public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> im
 	 */
 	public ReportingSchuelerLeistungsdatenMatrix schuelerLeistungsdatenMatrix() {
 		return new ProxyReportingSchuelerLeistungsdatenMatrix(this.reportingRepository, this.getContextData(),
-				this.reportingRepository.auswahlSchuljahresabschnitt());
+				this.reportingRepository.repositorySchule().auswahlSchuljahresabschnitt());
 	}
 
 	/**

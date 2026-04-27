@@ -79,14 +79,14 @@ public final class HtmlContextKlassen extends HtmlContext<ReportingKlasse> imple
 		// Erzeuge Maps, damit auch später leicht auf die Klassendaten zugegriffen werden kann.
 		final Map<Long, ReportingKlasse> mapKlassen = new HashMap<>();
 		for (final Long idKlasse : idsKlassen) {
-			if (reportingRepository.mapKlassen().containsKey(idKlasse)) {
-				mapKlassen.put(idKlasse, reportingRepository.mapKlassen().get(idKlasse));
+			if (reportingRepository.repositoryLerngruppen().klassen().containsKey(idKlasse)) {
+				mapKlassen.put(idKlasse, reportingRepository.repositoryLerngruppen().klassen().get(idKlasse));
 			} else {
 				// Die ID der Klasse ist bekannt, aber sie wurde noch nicht aus der DB geladen. Lade dessen Daten und lade dabei alle Klassen des Lernabschnitts.
 				final KlassenDaten klassenDaten;
 				try {
 					klassenDaten = new DataKlassendaten(reportingRepository.conn()).getById(idKlasse);
-					mapKlassen.put(idKlasse, this.reportingRepository.schuljahresabschnitt(klassenDaten.idSchuljahresabschnitt).klasse(idKlasse));
+					mapKlassen.put(idKlasse, this.reportingRepository.repositorySchule().schuljahresabschnitt(klassenDaten.idSchuljahresabschnitt).klasse(idKlasse));
 				} catch (final ApiOperationException e) {
 					ReportingExceptionUtils.logException(
 							"FEHLER: Fehler bei der Ermittlung der Daten für des Klassen %s.".formatted(idKlasse), e, reportingRepository.logger(),

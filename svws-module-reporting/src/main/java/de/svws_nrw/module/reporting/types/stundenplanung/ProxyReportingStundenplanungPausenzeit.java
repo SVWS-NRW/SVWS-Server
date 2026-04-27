@@ -44,7 +44,7 @@ public class ProxyReportingStundenplanungPausenzeit extends ReportingStundenplan
 				null);
 
 		this.reportingRepository = reportingRepository;
-		this.stundenplanManager = this.reportingRepository.stundenplanManager(stundenplan.id());
+		this.stundenplanManager = this.reportingRepository.repositoryStundenplan().manager(stundenplan.id());
 
 		if (stundenplanManager == null) {
 			return;
@@ -73,7 +73,7 @@ public class ProxyReportingStundenplanungPausenzeit extends ReportingStundenplan
 						stundenplanManager.aufsichtsbereichGetByIdOrException(bereich.idAufsichtsbereich).beschreibung,
 						stundenplanManager.aufsichtsbereichGetByIdOrException(bereich.idAufsichtsbereich).kuerzel,
 						bereich.idAufsichtsbereich,
-						this.reportingRepository.lehrer(aufsicht.idLehrer),
+						this.reportingRepository.repositoryLehrer().lehrer(aufsicht.idLehrer),
 						bereich.wochentyp)
 				);
 			}

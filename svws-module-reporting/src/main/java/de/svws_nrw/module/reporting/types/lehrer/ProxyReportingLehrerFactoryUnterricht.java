@@ -131,7 +131,7 @@ public class ProxyReportingLehrerFactoryUnterricht {
 	 */
 	private List<?> erstelleUnterrichtAusLeistungsdaten(final String query, final boolean istKurs) {
 		final ListMap3DLongKeys<DTOSchuelerLeistungsdaten> dtoSchuelerLeistungsdaten =
-				querySchuelerLeistungsdatenToListMap(query, this.reportingRepository.auswahlSchuljahresabschnitt().id(), this.factoryLehrer.id());
+				querySchuelerLeistungsdatenToListMap(query, this.reportingRepository.repositorySchule().auswahlSchuljahresabschnitt().id(), this.factoryLehrer.id());
 
 		// Erzeuge neue Maps, die im Folgenden gefüllt werden.
 		final ListMap3DLongKeys<ReportingSchuelerLeistungsdaten> mapLerngruppeFachLehrerLeistungsdaten = new ListMap3DLongKeys<>();
@@ -140,7 +140,7 @@ public class ProxyReportingLehrerFactoryUnterricht {
 		final Map<Long, ReportingLehrer> mapLehrer = new HashMap<>();
 
 		// Erstelle eine Map der Schüler aus den Leistungsdaten
-		final Map<Long, ReportingSchueler> mapSchueler = this.reportingRepository.schueler(dtoSchuelerLeistungsdaten.keySet1().stream().toList()).stream()
+		final Map<Long, ReportingSchueler> mapSchueler = this.reportingRepository.repositorySchueler().schueler(dtoSchuelerLeistungsdaten.keySet1().stream().toList()).stream()
 				.collect(Collectors.toMap(ReportingSchueler::id, s -> s));
 
 		if (istKurs) {
@@ -256,7 +256,7 @@ public class ProxyReportingLehrerFactoryUnterricht {
 			final List<Long> fehlende = idsZusatzLehrer.stream().filter(id -> !mapLehrer.containsKey(id)).toList();
 
 			if (!fehlende.isEmpty()) {
-				this.reportingRepository.lehrer(fehlende).forEach(l -> mapLehrer.putIfAbsent(l.id(), l));
+				this.reportingRepository.repositoryLehrer().lehrer(fehlende).forEach(l -> mapLehrer.putIfAbsent(l.id(), l));
 			}
 		}
 
