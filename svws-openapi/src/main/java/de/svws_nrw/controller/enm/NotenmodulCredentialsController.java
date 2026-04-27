@@ -1,5 +1,7 @@
 package de.svws_nrw.controller.enm;
 
+import java.util.List;
+
 import jakarta.ws.rs.core.Response;
 
 /**
@@ -13,6 +15,15 @@ public interface NotenmodulCredentialsController {
 	 * @return die HTTP-Response
 	 */
 	Response getInitialkennwoerter();
+
+	/**
+	 * Gibt für die angegebenen Lehrer die Initialkennwörter zurück.
+	 *
+	 * @param idsLehrer   die Ids der Lehrer, deren Initialkennwörter bestimmt werden sollen
+	 *
+	 * @return die Liste der Initialkennwörter
+	 */
+	Response getInitialkennwoerter(List<Long> idsLehrer);
 
 	/**
 	 * Gibt für den angegebenen Lehrer das Initialkennwort zurück.

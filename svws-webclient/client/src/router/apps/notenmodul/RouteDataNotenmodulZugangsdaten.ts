@@ -1,8 +1,9 @@
-import { HashMap, type JavaMap } from "@core";
+import { HashMap, List, type JavaMap } from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 import { routeLehrer } from "../lehrer/RouteLehrer";
+import { EnmManager } from "@ui";
 
 
 interface RouteStateNotenmodulZugangsdaten extends RouteStateInterface {
@@ -29,17 +30,17 @@ export class RouteDataNotenmodulZugangsdaten extends RouteData<RouteStateNotenmo
 	/**
 	 * Initialisiert die Daten der Route. Wird beim Betreten der Ansicht ausgeführt.
 	 */
-	public async init() {
+	public async init(idsLehrer: List<number>) {
 		// ... lese die Liste mit den Initialkennwörtern der Lehrer aus den ENM-Daten ein ...
-		const mapInitialKennwoerter = await this.getEnmLehrerInitialKennwoerter();
+		const mapInitialKennwoerter = await this.getEnmLehrerInitialKennwoerter(idsLehrer);
 		// ... und aktualisiere den State
 		this.setPatchedState({ mapInitialKennwoerter });
 	}
 
-	private async getEnmLehrerInitialKennwoerter(): Promise<JavaMap<number, string>> {
+	private async getEnmLehrerInitialKennwoerter(idsLehrer: List<number>): Promise<JavaMap<number, string>> {
 		const mapInitialKennwoerter = new HashMap<number, string>();
 		try {
-			const daten = await api.server.getENMLehrerInitialKennwoerter(api.schema);
+			const daten = await api.server.getENMLehrerInitialKennwoerterByIds(idsLehrer, api.schema);
 			for (const eintrag of daten) {
 				if (eintrag.initialKennwort !== null) {
 					mapInitialKennwoerter.put(eintrag.id, eintrag.initialKennwort);

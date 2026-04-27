@@ -2688,6 +2688,34 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode getENMLehrerInitialKennwoerterByIds für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/initialkennwoerter
+	 *
+	 * Liefert eine Liste der Lehrer-IDs mit den zugehörigen Initialkennwörtern für die angegebenen Lehrer-IDS zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zur Administration der Notenmodul-Daten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Liste mit den Initialkennwörtern
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<ENMLehrerInitialKennwort>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Initialkennwörter des ENM zu verwalten.
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Liste mit den Initialkennwörtern
+	 */
+	public async getENMLehrerInitialKennwoerterByIds(data : List<number>, schema : string) : Promise<List<ENMLehrerInitialKennwort>> {
+		const path = "/db/{schema}/enm/initialkennwoerter"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<ENMLehrerInitialKennwort>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(ENMLehrerInitialKennwort.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode getENMLehrerInitialKennwort für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/initialkennwort/{id : \d+}
 	 *
 	 * Abfrage es Initialkennwortes für den angegebenen Lehrer für das externe Notenmodul.

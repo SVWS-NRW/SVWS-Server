@@ -1,5 +1,5 @@
-import type { ENMv2Klasse, ENMv2Leistung, ENMv2LeistungBemerkungen, ENMv2Lernabschnitt, ENMv2SchuelerAnkreuzkompetenz, ENMv2Teilleistung } from "@core";
-import { BenutzerKompetenz, BenutzerTyp, DeveloperNotificationException, ENMv2Daten, OpenApiError } from "@core";
+import type { ENMv2Klasse, ENMv2Leistung, ENMv2LeistungBemerkungen, ENMv2Lernabschnitt, ENMv2SchuelerAnkreuzkompetenz, ENMv2Teilleistung, List } from "@core";
+import { ArrayList, BenutzerKompetenz, BenutzerTyp, DeveloperNotificationException, ENMv2Daten, OpenApiError } from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeNotenmodulLeistungen } from "./RouteNotenmodulLeistungen";
@@ -105,6 +105,17 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 			throw new DeveloperNotificationException("Die ENM-Daten wurden nicht geladen.");
 		}
 		return this._state.value.manager;
+	}
+
+	public get idsLehrer(): List<number> {
+		const result = new ArrayList<number>();
+		if (this._state.value.manager === null) {
+			return result;
+		}
+		for (const lehrer of this._state.value.manager.daten.lehrer) {
+			result.add(lehrer.id);
+		}
+		return result;
 	}
 
 	public get hideAnkreuzkompetenzen(): boolean {
