@@ -585,25 +585,6 @@ export class KursblockungDynKurs extends JavaObject {
 		this.fachart.aktionKursdifferenzHinzufuegen();
 	}
 
-	/**
-	 * Debug Ausgabe. Nur für Testzwecke.
-	 *
-	 * @param schuelerArr Nötig, um den Kursen SuS zuzuordnen.
-	 */
-	debug(schuelerArr: Array<KursblockungDynSchueler>): void {
-		this.logger.modifyIndent(+4);
-		this.logger.logLn(this.toString() + " --> " + this.schuelerAnzahl + " SuS.");
-		for (const s of schuelerArr) {
-			const kurse: Array<KursblockungDynKurs | null> = s.gibKurswahlen();
-			for (const kurs of kurse) {
-				if (kurs as unknown === this as unknown) {
-					this.logger.logLn("        " + s.gibDatenbankID());
-				}
-			}
-		}
-		this.logger.modifyIndent(-4);
-	}
-
 	private aktionSchienenLageHinzufuegen(): void {
 		for (const schiene of this.schienenLage) {
 			schiene.aktionKursHinzufuegen(this);

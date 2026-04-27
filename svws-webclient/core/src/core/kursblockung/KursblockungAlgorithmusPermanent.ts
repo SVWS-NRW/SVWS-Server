@@ -32,7 +32,7 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 	/**
 	 * Jeder Algorithmus hat sein eigenes {@link KursblockungDynDaten}-Objekt. Das ist wichtig.
 	 */
-	private readonly algorithmenK: Array<KursblockungAlgorithmusPermanentK>;
+	private algorithmenK: Array<KursblockungAlgorithmusPermanentK>;
 
 	/**
 	 * Die Eingabe-Daten von der GUI.
@@ -69,7 +69,11 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 		this.zeitRest = KursblockungAlgorithmusPermanent.MILLIS_START;
 		this.currentIndex = 0;
 		this.topErgebnisse = new ArrayList();
-		this.algorithmenK = [new KursblockungAlgorithmusPermanentKMatching(this.rnd, this.log, this.input), new KursblockungAlgorithmusPermanentKSchuelervorschlag(this.rnd, this.log, this.input), new KursblockungAlgorithmusPermanentKSchuelervorschlagSingle(this.rnd, this.log, this.input), new KursblockungAlgorithmusPermanentKOptimiereBest(this.rnd, this.log, this.input, null), new KursblockungAlgorithmusPermanentKOptimiereBest(this.rnd, this.log, this.input, null)];
+		this.algorithmenK = this.erzeugeAlgorithmenNeu();
+	}
+
+	private erzeugeAlgorithmenNeu(): Array<KursblockungAlgorithmusPermanentK> {
+		return [new KursblockungAlgorithmusPermanentKMatching(this.rnd, this.log, this.input), new KursblockungAlgorithmusPermanentKSchuelervorschlag(this.rnd, this.log, this.input), new KursblockungAlgorithmusPermanentKSchuelervorschlagSingle(this.rnd, this.log, this.input), new KursblockungAlgorithmusPermanentKOptimiereBest(this.rnd, this.log, this.input, this.gibTopElementOrNull()), new KursblockungAlgorithmusPermanentKOptimiereBest(this.rnd, this.log, this.input, this.gibTopElementOrNull())];
 	}
 
 	/**
@@ -112,18 +116,13 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 				if (this.topErgebnisse.size() > KursblockungAlgorithmusPermanent.TOP_ERGEBNISSE) {
 					this.topErgebnisse.removeLast();
 				}
-			} else {
+			} else
 				if (this.topErgebnisse.size() < KursblockungAlgorithmusPermanent.TOP_ERGEBNISSE) {
 					this.topErgebnisse.addLast(this.algorithmenK[iK].dynDaten);
 					verbesserungen++;
 				}
-			}
 		}
-		this.algorithmenK[0] = new KursblockungAlgorithmusPermanentKMatching(this.rnd, this.log, this.input);
-		this.algorithmenK[1] = new KursblockungAlgorithmusPermanentKSchuelervorschlag(this.rnd, this.log, this.input);
-		this.algorithmenK[2] = new KursblockungAlgorithmusPermanentKSchuelervorschlagSingle(this.rnd, this.log, this.input);
-		this.algorithmenK[3] = new KursblockungAlgorithmusPermanentKOptimiereBest(this.rnd, this.log, this.input, this.gibTopElementOrNull());
-		this.algorithmenK[4] = new KursblockungAlgorithmusPermanentKOptimiereBest(this.rnd, this.log, this.input, this.gibTopElementOrNull());
+		this.algorithmenK = this.erzeugeAlgorithmenNeu();
 		this.zeitMax = (this.zeitMax * 1.5) as number;
 		this.zeitRest = this.zeitMax;
 		return verbesserungen;

@@ -406,17 +406,6 @@ public class KursblockungDynFachart {
 	}
 
 	/**
-	 * Debug Ausgabe. Nur für Testzwecke.
-	 *
-	 * @param schuelerArr  Das Array mit den Schülerdaten.
-	 */
-	void debug(final @NotNull KursblockungDynSchueler @NotNull [] schuelerArr) {
-		for (final @NotNull KursblockungDynKurs kurs : kursArr) {
-			kurs.debug(schuelerArr);
-		}
-	}
-
-	/**
 	 * Verbietet, dass zwei Schüler den selben Kurs der Fachart besuchen.
 	 *
 	 * @param internalID1  Die interne ID des 1. Schülers.
@@ -454,15 +443,26 @@ public class KursblockungDynFachart {
 		}
 	}
 
+
 	/**
-	 *  Debug-Ausgabe aller Kurse mit ihren SuS-Anzahlen.
+	 * Liefert einen StringBuilder mit der Ausgabe aller Kurse dieser Fachart.
+	 *
+	 * @return einen StringBuilder mit der Ausgabe aller Kurse dieser Fachart.
 	 */
-	public void printlnKurse() {
-		System.out.println("" + toString());
-		for (final @NotNull KursblockungDynKurs kurs : kursArr) {
-			System.out.println("    " + kurs.toString());
-		}
-		System.out.println();
+	public StringBuilder debugAusgabeKurse() {
+	    final StringBuilder sb = new StringBuilder();
+
+	    sb.append(toString()).append(System.lineSeparator());
+
+	    for (final @NotNull KursblockungDynKurs kurs : kursArr) {
+	        sb.append("    ").append(kurs.toString())
+	          .append(System.lineSeparator());
+	    }
+
+	    sb.append(System.lineSeparator());
+
+	    return sb;
 	}
+
 
 }

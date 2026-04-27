@@ -20,7 +20,6 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class KursblockungAlgorithmusPermanentKFachwahlmatrix extends KursblockungAlgorithmusPermanentK {
 
-
 	/**
 	 * Im Konstruktor wird ein zufälliger Anfangszustand erzeugt.
 	 *

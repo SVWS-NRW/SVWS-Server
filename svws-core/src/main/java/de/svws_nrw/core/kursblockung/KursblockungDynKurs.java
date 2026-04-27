@@ -587,25 +587,6 @@ public class KursblockungDynKurs {
 		fachart.aktionKursdifferenzHinzufuegen();
 	}
 
-	/**
-	 * Debug Ausgabe. Nur für Testzwecke.
-	 *
-	 * @param schuelerArr Nötig, um den Kursen SuS zuzuordnen.
-	 */
-	void debug(final @NotNull KursblockungDynSchueler @NotNull [] schuelerArr) {
-		logger.modifyIndent(+4);
-		logger.logLn(toString() + " --> " + schuelerAnzahl + " SuS.");
-		for (final KursblockungDynSchueler s : schuelerArr) {
-			final @NotNull KursblockungDynKurs[] kurse = s.gibKurswahlen();
-			for (final KursblockungDynKurs kurs : kurse) {
-				if (kurs == this) {
-					logger.logLn("        " + s.gibDatenbankID());
-				}
-			}
-		}
-		logger.modifyIndent(-4);
-	}
-
 	// ########################################
 	// ########### PRIVATE METHODEN ###########
 	// ########################################

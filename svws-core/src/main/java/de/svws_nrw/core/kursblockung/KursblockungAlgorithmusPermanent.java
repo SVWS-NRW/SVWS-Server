@@ -28,7 +28,7 @@ public final class KursblockungAlgorithmusPermanent {
 	private final @NotNull ArrayList<KursblockungDynDaten> topErgebnisse;
 
 	/** Jeder Algorithmus hat sein eigenes {@link KursblockungDynDaten}-Objekt. Das ist wichtig. */
-	private final @NotNull KursblockungAlgorithmusPermanentK @NotNull [] algorithmenK;
+	private @NotNull KursblockungAlgorithmusPermanentK @NotNull [] algorithmenK;
 
 	/** Die Eingabe-Daten von der GUI. */
 	private final @NotNull GostBlockungsdatenManager input;
@@ -58,16 +58,22 @@ public final class KursblockungAlgorithmusPermanent {
 		currentIndex = 0;
 		topErgebnisse = new ArrayList<>();
 
-		algorithmenK = new KursblockungAlgorithmusPermanentK @NotNull [] {
+		algorithmenK = erzeugeAlgorithmenNeu();
+	}
+
+
+	private @NotNull KursblockungAlgorithmusPermanentK @NotNull [] erzeugeAlgorithmenNeu() {
+		return new KursblockungAlgorithmusPermanentK @NotNull [] {
 				// Alle Algorithmen zur Verteilung von Kursen auf ihre Schienen ...
 				new KursblockungAlgorithmusPermanentKMatching(rnd, log, input),
 				new KursblockungAlgorithmusPermanentKSchuelervorschlag(rnd, log, input),
 				new KursblockungAlgorithmusPermanentKSchuelervorschlagSingle(rnd, log, input),
-				new KursblockungAlgorithmusPermanentKOptimiereBest(rnd, log, input, null),
-				new KursblockungAlgorithmusPermanentKOptimiereBest(rnd, log, input, null),
+				new KursblockungAlgorithmusPermanentKOptimiereBest(rnd, log, input, gibTopElementOrNull()),
+				new KursblockungAlgorithmusPermanentKOptimiereBest(rnd, log, input, gibTopElementOrNull()),
 				// ... Ende der K-Algorithmen.
 		};
 	}
+
 
 	/**
 	 * Liefert TRUE, falls die GUI die TOP-Liste aktualisieren soll.
@@ -116,25 +122,19 @@ public final class KursblockungAlgorithmusPermanent {
 			// Sonderfälle
 			if (eingefuegt) {
 				verbesserungen++;
-				// Prüfe, ob die Liste zu groß ist.
 				if (topErgebnisse.size() > TOP_ERGEBNISSE) {
+					// Es wurde eingefügt, aber die Liste ist nun zu groß.
 					topErgebnisse.removeLast();
 				}
-			} else {
-				// Prüfe, ob die Liste zu klein ist.
-				if (topErgebnisse.size() < TOP_ERGEBNISSE) {
-					topErgebnisse.addLast(algorithmenK[iK].dynDaten);
-					verbesserungen++;
-				}
+			} else if (topErgebnisse.size() < TOP_ERGEBNISSE) {
+				// Es wurde nicht eingefügt, aber die Liste ist zu klein.
+				topErgebnisse.addLast(algorithmenK[iK].dynDaten);
+				verbesserungen++;
 			}
 
 		}
 
-		algorithmenK[0] = new KursblockungAlgorithmusPermanentKMatching(rnd, log, input);
-		algorithmenK[1] = new KursblockungAlgorithmusPermanentKSchuelervorschlag(rnd, log, input);
-		algorithmenK[2] = new KursblockungAlgorithmusPermanentKSchuelervorschlagSingle(rnd, log, input);
-		algorithmenK[3] = new KursblockungAlgorithmusPermanentKOptimiereBest(rnd, log, input, gibTopElementOrNull());
-		algorithmenK[4] = new KursblockungAlgorithmusPermanentKOptimiereBest(rnd, log, input, gibTopElementOrNull());
+		algorithmenK = erzeugeAlgorithmenNeu();
 
 		// Die Berechnungszeit steigt exponentiell. Mehrere Tests ergaben, dass dies besser ist als linear.
 		zeitMax = (int) (zeitMax * 1.5);

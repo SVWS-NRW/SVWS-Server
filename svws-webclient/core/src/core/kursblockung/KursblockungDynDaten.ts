@@ -5,6 +5,7 @@ import { KursblockungDynFachart } from '../../core/kursblockung/KursblockungDynF
 import { GostBlockungsergebnisKursSchuelerZuordnung } from '../../core/data/gost/GostBlockungsergebnisKursSchuelerZuordnung';
 import type { JavaSet } from '../../java/util/JavaSet';
 import { KursblockungStatic } from '../../core/kursblockung/KursblockungStatic';
+import { StringBuilder } from '../../java/lang/StringBuilder';
 import { HashMap } from '../../java/util/HashMap';
 import { KursblockungDynSchiene } from '../../core/kursblockung/KursblockungDynSchiene';
 import { ArrayList } from '../../java/util/ArrayList';
@@ -1412,7 +1413,7 @@ export class KursblockungDynDaten extends JavaObject {
 			const schueler: KursblockungDynSchueler | null = this.schuelerMenge[i];
 			schueler.aktionKurseVerteilenNurMultikurseZufaellig();
 			schueler.aktionKurseVerteilenNurFachartenMitEinemErlaubtenKurs();
-			schueler.aktionKurseVerteilenMitBipartiteMatchingGewichtetem();
+			schueler.aktionKurseVerteilenMitBipartiteMatchingGewichtet();
 		}
 	}
 
@@ -1459,49 +1460,24 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	/**
-	 * Debug Ausgaben. Nur für Testzwecke.
+	 * Liefert einen StringBuilder mit einer Debug-Ausgabe der Schienen mit Kursen und optional Schülern und optional Facharten.
+	 *
+	 * @param mitSchuelern   true, wenn bei den Schienen zusätzlich die Schüler (pro Kurs) ausgegeben werden sollen.
+	 * @param mitFacharten   true, wenn zusätzlich am Ende alle Facharten mit den zugehörigen Kursen angehängt werden sollen.
+	 *
+	 * @return einen StringBuilder mit einer Debug-Ausgabe der Schienen mit Kursen und optional Schülern und optional Facharten.
 	 */
-	public debug(): void {
-		this.log.modifyIndent(+4);
-		this.log.logLn("########## Schienen ##########");
+	public erzeugeDebugAusgabe(mitSchuelern: boolean, mitFacharten: boolean): StringBuilder | null {
+		const sb: StringBuilder | null = new StringBuilder();
 		for (let i: number = 0; i < this.schienenMenge.length; i++) {
-			this.log.logLn("Schiene " + (i + 1));
-			this.schienenMenge[i].debug(false);
+			sb.append(this.schienenMenge[i].debugAusgabeKurseUndSchueler(mitSchuelern, this.schuelerMenge));
 		}
-		this.log.logLn("########## Facharten ##########");
-		for (const fa of this.fachartMenge) {
-			this.log.logLn("Fachart " + fa + " --> " + fa.gibKursdifferenz());
-			fa.debug(this.schuelerMenge);
+		if (mitFacharten) {
+			for (const fachart of this.fachartMenge) {
+				sb.append(fachart.debugAusgabeKurse());
+			}
 		}
-		this.log.modifyIndent(-4);
-		this.statistik.debug("");
-	}
-
-	/**
-	 * Debug Ausgaben (Schienen und Kurse)
-	 */
-	public printlnSchienenUndKurse(): void {
-		for (let i: number = 0; i < this.schienenMenge.length; i++) {
-			this.schienenMenge[i].printlnKurse();
-		}
-	}
-
-	/**
-	 * Debug-Ausgabe der Schienen mit ihre Kursen und ihren SuS.
-	 */
-	public printlnSchienenUndKurseUndSchueler(): void {
-		for (let i: number = 0; i < this.schienenMenge.length; i++) {
-			this.schienenMenge[i].printlnKurseUndSchueler(this.schuelerMenge);
-		}
-	}
-
-	/**
-	 * Debug-Ausgabe aller Facharten mit den zugehörigen Kursen.
-	 */
-	public printlnFacharten(): void {
-		for (const fachart of this.fachartMenge) {
-			fachart.printlnKurse();
-		}
+		return sb;
 	}
 
 	transpilerCanonicalName(): string {

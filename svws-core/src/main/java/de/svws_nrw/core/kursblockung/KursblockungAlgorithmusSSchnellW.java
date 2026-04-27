@@ -80,7 +80,7 @@ public final class KursblockungAlgorithmusSSchnellW extends KursblockungAlgorith
 		schueler.aktionKurseAlleEntfernen();
 		schueler.aktionKurseVerteilenNurFachartenMitEinemErlaubtenKurs();
 		schueler.aktionKurseVerteilenNurMultikurseZufaellig();
-		schueler.aktionKurseVerteilenMitBipartiteMatchingGewichtetem();
+		schueler.aktionKurseVerteilenMitBipartiteMatchingGewichtet();
 
 		// Schlechter? --> Kurszuordnung zurück.
 		final int cmp = dynDaten.gibStatistik().gibBewertungZustandS1NW2KD();

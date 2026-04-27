@@ -154,32 +154,43 @@ public class KursblockungDynSchiene {
 		log.modifyIndent(-4);
 	}
 
-	/**
-	 * Ausgabe der Kurse dieser Schiene (4 eingerückt).
-	 */
-	public void printlnKurse() {
-		System.out.println("Schiene " + (nr + 1));
-		for (final @NotNull KursblockungDynKurs k : kursMap.values()) {
-			System.out.println("    ID " + k.gibDatenbankID() + ", " + k.gibFachart());
-		}
-	}
 
 	/**
-	 * Ausgabe der Kurse (4 eingerückt) dieser Schiene zusammen mit den SuS (8 eingerückt) der Kurse.
+	 * Liefert einen StringBuild mit der Darstellung aller Kurse dieser Schiene (4 eingerückt) und optional der zugehörigen Schüler (8 eingerückt).
 	 *
-	 * @param schuelerMenge   Die Menge alle SuS.
+	 * @param mitSchuelern    Gibt an, ob die Schüler der Kurse (sowie die Fach-ID des Kurses) mit ausgegeben werden sollen.
+	 * @param schuelerMenge   Die Menge aller Schüler (wird nur ausgewertet, wenn mitSchuelern true ist).
+	 *
+	 * @return einen StringBuild mit der Darstellung aller Kurse dieser Schiene (4 eingerückt) und optional der zugehörigen Schüler (8 eingerückt).
 	 */
-	public void printlnKurseUndSchueler(final @NotNull KursblockungDynSchueler @NotNull [] schuelerMenge) {
-		System.out.println("Schiene " + (nr + 1));
+	public StringBuilder debugAusgabeKurseUndSchueler(final boolean mitSchuelern, final @NotNull KursblockungDynSchueler @NotNull [] schuelerMenge) {
+		final StringBuilder sb = new StringBuilder();
+
+		// Ausgabe der Schiene
+		sb.append("Schiene ").append(nr + 1).append(System.lineSeparator());
+
 		for (final @NotNull KursblockungDynKurs k : kursMap.values()) {
-			System.out.println("    ID " + k.gibDatenbankID() + ", " + k.gibFachart() + ", Fach-ID=" + k.gibFachID());
-			for (final @NotNull KursblockungDynSchueler s : schuelerMenge) {
-				if (s.gibIstInKurs(k)) {
-					System.out.println("        ID " + s.gibDatenbankID() + ", " + s.gibRepresentation());
+			// Ausgabe des Kurses dieser Schiene
+			sb.append("    ID=").append(k.gibDatenbankID())
+					.append(", Fachart=").append(k.gibFachart())
+					.append(", Fach-ID=").append(k.gibFachID())
+					.append(System.lineSeparator());
+
+			// Ausgabe Schüler des Kurses dieser Schiene (falls gewünscht)
+			if (mitSchuelern) {
+				for (final @NotNull KursblockungDynSchueler s : schuelerMenge) {
+					if (s.gibIstInKurs(k)) {
+						sb.append("        Schüler-ID=").append(s.gibDatenbankID())
+								.append(", ").append(s.gibRepresentation())
+								.append(System.lineSeparator());
+					}
 				}
 			}
 		}
+
+		return sb;
 	}
+
 
 	/**
 	 * Liefert true, falls in der Schiene nur Kurse der Kursart LK sind (oder keine Kurse).

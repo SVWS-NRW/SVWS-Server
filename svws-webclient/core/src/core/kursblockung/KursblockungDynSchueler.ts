@@ -545,7 +545,7 @@ export class KursblockungDynSchueler extends JavaObject {
 	 * Verteilt alle Kurse mit Hilfe eines gewichteten Matching Algorithmus. Kleinere Kurse werden in der Wahl bevorzugt.
 	 * <br>Hinweis: Multikurse werden beim bipartiten Matching nie verteilt, da dies algorithmisch nicht geht.
 	 */
-	aktionKurseVerteilenMitBipartiteMatchingGewichtetem(): void {
+	aktionKurseVerteilenMitBipartiteMatchingGewichtet(): void {
 		const _MATRIX_UNGUELTIG: number = 1000000;
 		this.aktionKurseVerteilenMitBipartiteMatchingGewichtetetInitialisierung(_MATRIX_UNGUELTIG);
 		const r2c: Array<number> = this.matrix.gibMinimalesBipartitesMatchingGewichtet(true);

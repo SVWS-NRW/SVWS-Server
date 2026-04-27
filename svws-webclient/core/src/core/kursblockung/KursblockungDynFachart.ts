@@ -2,10 +2,12 @@ import { JavaObject } from '../../java/lang/JavaObject';
 import { GostFach } from '../../core/data/gost/GostFach';
 import { KursblockungDynStatistik } from '../../core/kursblockung/KursblockungDynStatistik';
 import { KursblockungStatic } from '../../core/kursblockung/KursblockungStatic';
+import { StringBuilder } from '../../java/lang/StringBuilder';
 import { KursblockungDynSchiene } from '../../core/kursblockung/KursblockungDynSchiene';
 import { KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 import { GostKursart } from '../../core/types/gost/GostKursart';
+import { System } from '../../java/lang/System';
 import { Random } from '../../java/util/Random';
 import { ArrayUtils } from '../../core/utils/ArrayUtils';
 import { KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
@@ -394,17 +396,6 @@ export class KursblockungDynFachart extends JavaObject {
 	}
 
 	/**
-	 * Debug Ausgabe. Nur für Testzwecke.
-	 *
-	 * @param schuelerArr  Das Array mit den Schülerdaten.
-	 */
-	debug(schuelerArr: Array<KursblockungDynSchueler>): void {
-		for (const kurs of this.kursArr) {
-			kurs.debug(schuelerArr);
-		}
-	}
-
-	/**
 	 * Verbietet, dass zwei Schüler den selben Kurs der Fachart besuchen.
 	 *
 	 * @param internalID1  Die interne ID des 1. Schülers.
@@ -441,14 +432,18 @@ export class KursblockungDynFachart extends JavaObject {
 	}
 
 	/**
-	 *  Debug-Ausgabe aller Kurse mit ihren SuS-Anzahlen.
+	 * Liefert einen StringBuilder mit der Ausgabe aller Kurse dieser Fachart.
+	 *
+	 * @return einen StringBuilder mit der Ausgabe aller Kurse dieser Fachart.
 	 */
-	public printlnKurse(): void {
-		console.log(JSON.stringify("" + this.toString()));
+	public debugAusgabeKurse(): StringBuilder | null {
+		const sb: StringBuilder | null = new StringBuilder();
+		sb.append(this.toString()).append(System.lineSeparator());
 		for (const kurs of this.kursArr) {
-			console.log(JSON.stringify("    " + kurs.toString()));
+			sb.append("    ").append(kurs.toString()).append(System.lineSeparator());
 		}
-		console.log();
+		sb.append(System.lineSeparator());
+		return sb;
 	}
 
 	transpilerCanonicalName(): string {

@@ -1,11 +1,13 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import { KursblockungDynStatistik } from '../../core/kursblockung/KursblockungDynStatistik';
+import { StringBuilder } from '../../java/lang/StringBuilder';
 import { HashMap } from '../../java/util/HashMap';
 import { KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 import { Logger } from '../../core/logger/Logger';
 import { GostKursart } from '../../core/types/gost/GostKursart';
 import { LogLevel } from '../../core/logger/LogLevel';
+import { System } from '../../java/lang/System';
 import { KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
 import { Class } from '../../java/lang/Class';
 import { HashSet } from '../../java/util/HashSet';
@@ -148,30 +150,27 @@ export class KursblockungDynSchiene extends JavaObject {
 	}
 
 	/**
-	 * Ausgabe der Kurse dieser Schiene (4 eingerückt).
-	 */
-	public printlnKurse(): void {
-		console.log(JSON.stringify("Schiene " + (this.nr + 1)));
-		for (const k of this.kursMap.values()) {
-			console.log(JSON.stringify("    ID " + k.gibDatenbankID() + ", " + k.gibFachart()));
-		}
-	}
-
-	/**
-	 * Ausgabe der Kurse (4 eingerückt) dieser Schiene zusammen mit den SuS (8 eingerückt) der Kurse.
+	 * Liefert einen StringBuild mit der Darstellung aller Kurse dieser Schiene (4 eingerückt) und optional der zugehörigen Schüler (8 eingerückt).
 	 *
-	 * @param schuelerMenge   Die Menge alle SuS.
+	 * @param mitSchuelern    Gibt an, ob die Schüler der Kurse (sowie die Fach-ID des Kurses) mit ausgegeben werden sollen.
+	 * @param schuelerMenge   Die Menge aller Schüler (wird nur ausgewertet, wenn mitSchuelern true ist).
+	 *
+	 * @return einen StringBuild mit der Darstellung aller Kurse dieser Schiene (4 eingerückt) und optional der zugehörigen Schüler (8 eingerückt).
 	 */
-	public printlnKurseUndSchueler(schuelerMenge: Array<KursblockungDynSchueler>): void {
-		console.log(JSON.stringify("Schiene " + (this.nr + 1)));
+	public debugAusgabeKurseUndSchueler(mitSchuelern: boolean, schuelerMenge: Array<KursblockungDynSchueler>): StringBuilder | null {
+		const sb: StringBuilder | null = new StringBuilder();
+		sb.append("Schiene ").append(this.nr + 1).append(System.lineSeparator());
 		for (const k of this.kursMap.values()) {
-			console.log(JSON.stringify("    ID " + k.gibDatenbankID() + ", " + k.gibFachart() + ", Fach-ID=" + k.gibFachID()));
-			for (const s of schuelerMenge) {
-				if (s.gibIstInKurs(k)) {
-					console.log(JSON.stringify("        ID " + s.gibDatenbankID() + ", " + s.gibRepresentation()));
+			sb.append("    ID=").append(k.gibDatenbankID()).append(", Fachart=").append(k.gibFachart()).append(", Fach-ID=").append(k.gibFachID()).append(System.lineSeparator());
+			if (mitSchuelern) {
+				for (const s of schuelerMenge) {
+					if (s.gibIstInKurs(k)) {
+						sb.append("        Schüler-ID=").append(s.gibDatenbankID()).append(", ").append(s.gibRepresentation()).append(System.lineSeparator());
+					}
 				}
 			}
 		}
+		return sb;
 	}
 
 	/**

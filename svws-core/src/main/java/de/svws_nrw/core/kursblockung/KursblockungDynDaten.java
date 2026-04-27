@@ -1889,7 +1889,7 @@ public class KursblockungDynDaten {
 			final KursblockungDynSchueler schueler = schuelerMenge[i];
 			schueler.aktionKurseVerteilenNurMultikurseZufaellig();
 			schueler.aktionKurseVerteilenNurFachartenMitEinemErlaubtenKurs();
-			schueler.aktionKurseVerteilenMitBipartiteMatchingGewichtetem();
+			schueler.aktionKurseVerteilenMitBipartiteMatchingGewichtet();
 		}
 	}
 
@@ -1935,54 +1935,31 @@ public class KursblockungDynDaten {
 		}
 	}
 
-	/**
-	 * Debug Ausgaben. Nur für Testzwecke.
-	 */
-	public void debug() {
-		log.modifyIndent(+4);
-
-		log.logLn("########## Schienen ##########");
-		for (int i = 0; i < schienenMenge.length; i++) {
-			log.logLn("Schiene " + (i + 1));
-			schienenMenge[i].debug(false);
-		}
-
-		log.logLn("########## Facharten ##########");
-		for (final @NotNull KursblockungDynFachart fa : fachartMenge) {
-			log.logLn("Fachart " + fa + " --> " + fa.gibKursdifferenz());
-			fa.debug(schuelerMenge);
-		}
-
-		log.modifyIndent(-4);
-
-		statistik.debug("");
-	}
 
 	/**
-	 * Debug Ausgaben (Schienen und Kurse)
+	 * Liefert einen StringBuilder mit einer Debug-Ausgabe der Schienen mit Kursen und optional Schülern und optional Facharten.
+	 *
+	 * @param mitSchuelern   true, wenn bei den Schienen zusätzlich die Schüler (pro Kurs) ausgegeben werden sollen.
+	 * @param mitFacharten   true, wenn zusätzlich am Ende alle Facharten mit den zugehörigen Kursen angehängt werden sollen.
+	 *
+	 * @return einen StringBuilder mit einer Debug-Ausgabe der Schienen mit Kursen und optional Schülern und optional Facharten.
 	 */
-	public void printlnSchienenUndKurse() {
-		for (int i = 0; i < schienenMenge.length; i++) {
-			schienenMenge[i].printlnKurse();
-		}
-	}
+	public StringBuilder erzeugeDebugAusgabe(final boolean mitSchuelern, final boolean mitFacharten) {
+	    final StringBuilder sb = new StringBuilder();
 
-	/**
-	 * Debug-Ausgabe der Schienen mit ihre Kursen und ihren SuS.
-	 */
-	public void printlnSchienenUndKurseUndSchueler() {
-		for (int i = 0; i < schienenMenge.length; i++) {
-			schienenMenge[i].printlnKurseUndSchueler(schuelerMenge);
-		}
-	}
+	    // 1. Schienen, Kurse und ggf. Schüler anfügen
+	    for (int i = 0; i < schienenMenge.length; i++) {
+	        sb.append(schienenMenge[i].debugAusgabeKurseUndSchueler(mitSchuelern, schuelerMenge));
+	    }
 
-	/**
-	 * Debug-Ausgabe aller Facharten mit den zugehörigen Kursen.
-	 */
-	public void printlnFacharten() {
-		for (final @NotNull KursblockungDynFachart fachart : fachartMenge) {
-			fachart.printlnKurse();
-		}
+	    // 2. Optional die Facharten und ihre Kurse anfügen
+	    if (mitFacharten) {
+	        for (final @NotNull KursblockungDynFachart fachart : fachartMenge) {
+	            sb.append(fachart.debugAusgabeKurse());
+	        }
+	    }
+
+	    return sb;
 	}
 
 }

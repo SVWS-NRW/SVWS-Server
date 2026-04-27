@@ -597,7 +597,7 @@ public class KursblockungDynSchueler {
 	 * Verteilt alle Kurse mit Hilfe eines gewichteten Matching Algorithmus. Kleinere Kurse werden in der Wahl bevorzugt.
 	 * <br>Hinweis: Multikurse werden beim bipartiten Matching nie verteilt, da dies algorithmisch nicht geht.
 	 */
-	void aktionKurseVerteilenMitBipartiteMatchingGewichtetem() { // TODO Umbenennen nach dem MR von "KursblockungDynDaten".
+	void aktionKurseVerteilenMitBipartiteMatchingGewichtet() {
 		// Wegen Berechnungen darf der Wert nicht in der Nähe von INTEGER.MAX_VALUE sein.
 		final long _MATRIX_UNGUELTIG = 1000000;
 
