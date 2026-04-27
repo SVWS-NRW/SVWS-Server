@@ -36,11 +36,16 @@
 		"unplugin-auto-import": "^21.0.0",
 		"unplugin-vue-components": "^32.0.0",
 		"unplugin-vue-markdown": "^30.0.0",
-		"vite": "npm:rolldown-vite@latest",
+		"vite": "^8.0.0",
 		"vitest": "^4.0.1",
 		"vue-component-type-helpers": "^3.1.5",
 		"vue-tsc": "^3.1.5"
 	},
+	"overrides": {
+    "unplugin-vue-markdown": {
+      "vite": "$vite"
+    }
+  },
 	"peerDependencies": {
 		"vue": "^3.4.13"
 	},
