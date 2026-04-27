@@ -55,7 +55,7 @@
 								<span class="icon" :class="gridManager.hasHiddenColumn ? 'i-ri-layout-column-fill' : 'i-ri-layout-column-line'" />
 								<span class="icon i-ri-arrow-down-s-line" />
 								<template #content>
-									<ul class="min-w-[10rem] flex flex-col gap-0.5 pt-1">
+									<ul class="min-w-40 flex flex-col gap-0.5 pt-1">
 										<template v-for="hideable of gridManager.hideableColumns" :key="hideable.name">
 											<li>
 												<svws-ui-checkbox :model-value="gridManager.isColVisible(hideable.kuerzel)" @update:model-value="value => gridManager.setColVisibility(hideable.kuerzel, value)">

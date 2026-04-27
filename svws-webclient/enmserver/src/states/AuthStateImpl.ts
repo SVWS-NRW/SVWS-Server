@@ -1,5 +1,5 @@
 import { ref, shallowRef } from "vue";
-import type { AuthState } from "./AuthState";
+import type { AuthResult, AuthState } from "./AuthState";
 import { ApiEnmServer } from "~/ApiEnmServer";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
@@ -7,6 +7,7 @@ import { ServerMode } from "@core/core/types/ServerMode";
 import type { Schulform } from "@core/asd/types/schule/Schulform";
 import { version } from '../../version';
 import { githash } from "../../githash";
+import { OpenApiError } from "@core/api/OpenApiError";
 
 /**
  * Der Paylod from JWT-Token
@@ -261,7 +262,7 @@ class AuthStateImpl implements AuthState {
 	 *
 	 * @returns eine Promise bezüglich des Login-Erfolgs
 	 */
-	public async login(username: string, password: string): Promise<boolean> {
+	public async login(username: string, password: string): Promise<AuthResult> {
 		try {
 			if (this._url === undefined) {
 				throw new DeveloperNotificationException("Keine gültige URL für einen Login verfügbar.");
@@ -285,7 +286,7 @@ class AuthStateImpl implements AuthState {
 				const payload = this.getTokenPayload() as JWTPayload & { pwd: string };
 				this._generatedPassword.value = payload.pwd;
 				this._authenticated.value = false;
-				return true;
+				return { success: true };
 			}
 
 			// Wenn 2FA aktiv ist, dann muss dieser noch geprüft werden ...
@@ -293,20 +294,24 @@ class AuthStateImpl implements AuthState {
 				this._pending2FA.value = true;
 				this._totpSetup.value = result.setup;
 				this._authenticated.value = false;
-				return true;
+				return { success: true };
 			}
 
 			// ... und wenn nicht, dann kann der Login abgeschlossen werden
 			await this.finalizeLogin();
-			return true;
-		} catch {
+			return { success: true };
+		} catch (e) {
 			await this.logout();
-			return false;
+			if ((e instanceof OpenApiError) && (e.response?.status !== 401)) {
+				const message = await e.response?.text() ?? "Unbekannter Grund.";
+				return { success: false, message: `Anmeldung fehlgeschlagen: ${message}` };
+			}
+			return { success: false, message: "Benutzername oder Passwort falsch." };
 		}
 	}
 
 
-	public async confirmPasswordChange(): Promise<boolean> {
+	public async confirmPasswordChange(): Promise<AuthResult> {
 		try {
 			const result = await this.api.changePassword();
 			this._token.value = result.token;
@@ -319,15 +324,18 @@ class AuthStateImpl implements AuthState {
 				this._pending2FA.value = true;
 				this._totpSetup.value = result.setup;
 				this._authenticated.value = false;
-				return true;
+				return { success: true };
 			}
 
 			// ... und wenn nicht, dann kann der Login abgeschlossen werden
 			await this.finalizeLogin();
-			return true;
-		} catch {
+			return { success: true };
+		} catch (e) {
 			await this.logout();
-			return false;
+			if ((e instanceof OpenApiError) && (e.response?.status === 403)) {
+				return { success: false, message: `Passwortänderung fehlgeschlagen: Das Initialpasswort wurde bereits an anderer Stelle neu gesetzt.` };
+			}
+			return { success: false, message: "Passwortänderung fehlgeschlagen." };
 		}
 	}
 
@@ -339,14 +347,19 @@ class AuthStateImpl implements AuthState {
 	 *
 	 * @returns true im Erfolgsfall
 	 */
-	public async verifyTotp(code: string): Promise<boolean> {
+	public async verifyTotp(code: string): Promise<AuthResult> {
 		try {
 			const result = await this.api.loginTotp(code);
 			this._token.value = result.token;
 			await this.finalizeLogin();
-			return true;
-		} catch {
-			return false;
+			return { success: true };
+		} catch (e) {
+			await this.logout();
+			if ((e instanceof OpenApiError) && (e.response?.status !== 401)) {
+				const message = await e.response?.text() ?? "Unbekannter Grund.";
+				return { success: false, message: `Anmeldung fehlgeschlagen: ${message}` };
+			}
+			return { success: false, message: "Code fehlerhaft." };
 		}
 	}
 
