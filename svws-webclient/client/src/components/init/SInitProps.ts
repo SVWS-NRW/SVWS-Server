@@ -1,8 +1,8 @@
-import type { SchulenKatalogEintrag, List } from "@core";
+import type { SchulenKatalogEintrag, List, SimpleOperationResponse } from "@core";
 
 export interface InitProps {
 	listSchulkatalog: List<SchulenKatalogEintrag>;
 	initSchule: (schule: SchulenKatalogEintrag) => Promise<boolean>;
-	migrateDB: (data: FormData, restore: boolean, db: string | undefined) => Promise<boolean>;
-	importSQLite: (data: FormData) => Promise<boolean>;
+	migrateDB: (data: FormData, restore: boolean, db: string | undefined) => Promise<SimpleOperationResponse>;
+	importSQLite: (data: FormData) => Promise<SimpleOperationResponse>;
 }
