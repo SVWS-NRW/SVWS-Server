@@ -1,5 +1,6 @@
 package de.svws_nrw.api.server;
 
+import de.svws_nrw.controller.bk.BKGymControllerFactory;
 import de.svws_nrw.core.data.bk.abi.BKGymAbiturdaten;
 import de.svws_nrw.core.data.bk.abi.BKGymLeistungen;
 import de.svws_nrw.core.types.ServerMode;
@@ -54,11 +55,9 @@ public class APIBKGym {
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
 	public Response getBKGymSchuelerLeistungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(DataBKGymLeistungen.getLeistungsdaten(conn, id)).build(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN,
-				BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN);
+		return BKGymControllerFactory.withReadAccess(request)
+				.getBKGymController()
+				.getLeistungsdaten(id);
 	}
 
 
@@ -83,6 +82,9 @@ public class APIBKGym {
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag für einen Schüler mit Daten des beruflichen Gymnasiums für die angegebene ID gefunden")
 	public Response getBKGymSchuelerAbiturdatenAusLeistungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
+//		return BKGymControllerFactory.withReadAccess(request)
+//				.getBKGymController()
+//				.getAbiturdaten(id);
 		return DBBenutzerUtils.runWithTransaction(
 				conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(DataBKGymLeistungen.getAbiturdatenFromLeistungsdaten(conn, id))
 						.build(),

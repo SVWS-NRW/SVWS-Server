@@ -28,8 +28,9 @@ public final class LehrerPersonaldatenLehramtRepositoryImpl extends RepositoryIm
 
 	@Override
 	public Map<Long, List<DTOLehrerPersonaldatenLehramt>> getMapByLehrerID(final Collection<Long> idsLehrer) {
-		if ((idsLehrer == null) || (idsLehrer.isEmpty()))
+		if ((idsLehrer == null) || (idsLehrer.isEmpty())) {
 			return Collections.emptyMap();
+		}
 		final var list = conn.queryList(DTOLehrerPersonaldatenLehramt.QUERY_LIST_BY_LEHRER_ID, DTOLehrerPersonaldatenLehramt.class, idsLehrer);
 		final var map = list.stream().collect(Collectors.groupingBy(f -> f.Lehrer_ID));
 		for (final long idLehrer : idsLehrer) {

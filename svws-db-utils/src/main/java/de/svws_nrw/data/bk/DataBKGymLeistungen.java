@@ -34,7 +34,12 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.abitur.DTOSchuelerAbitur;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
+import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.schueler.SchuelerRepository;
+import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
+import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 import jakarta.persistence.TypedQuery;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.Response.Status;
@@ -178,16 +183,19 @@ public final class DataBKGymLeistungen {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static BKGymLeistungen getLeistungsdaten(final DBEntityManager conn, final long id) throws ApiOperationException {
+		final SchuleRepositoryFactory schuleRepositoryFactory = SchuleRepositoryFactory.getNewInstance();
+		final SchuelerRepositoryFactory schuelerRepositoryFactory = SchuelerRepositoryFactory.getNewInstance();
+		final SchuelerRepository schuelerRepository = schuelerRepositoryFactory.getSchuelerRepository();
+		final SchuljahresabschnitteRepository schuljahresabschnitteRepository = schuleRepositoryFactory.getSchuljahresabschnitteRepository();
+
 		// Prüfe die Schulform
 		final Schulform schulform = conn.getUser().schuleGetSchulform();
 		if ((schulform != Schulform.BK) && (schulform != Schulform.SB))
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die Schulform der Schule erlaubt kein berufliches Gymnasium.");
 
 		// Bestimme den Schüler und seinen aktuellen Schuljahresabschnitt
-		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
-		if (schueler == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
-		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(schueler.Schuljahresabschnitts_ID);
+		final DTOSchueler schueler = schuelerRepository.findById(id).orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Kein Schüler mit der ID %d gefunden.".formatted(id)));
+		final DTOSchuljahresabschnitte schuljahresabschnitt = schuljahresabschnitteRepository.getById(schueler.Schuljahresabschnitts_ID);
 
 		// Ermittle die Jahrgänge
 		final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
@@ -213,7 +221,7 @@ public final class DataBKGymLeistungen {
 		final DTOJahrgang dtoAktJahrgang = mapJahrgaenge.get(aktLernabschnitt.Jahrgang_ID);
 		final Jahrgaenge aktJahrgang =
 				((dtoAktJahrgang == null) || (dtoAktJahrgang.ASDJahrgang == null)) ? null : Jahrgaenge.data().getWertBySchluessel(dtoAktJahrgang.ASDJahrgang);
-		final Integer abiturjahr = getBkAbiturjahr(schulgliederung, schuljahresabschnitt.schuljahr, aktJahrgang); // TODO Spezialfall JAHRGANG_04 mit Wiederholung ggf. berücksichtigen
+		final Integer abiturjahr = getBkAbiturjahr(schulgliederung, schuljahresabschnitt.Jahr, aktJahrgang); // TODO Spezialfall JAHRGANG_04 mit Wiederholung ggf. berücksichtigen
 		if (abiturjahr == null)
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Für den Schüler mit der ID %d konnte das Abiturjahr nicht ermittelt werden.".formatted(schueler.ID));
@@ -234,8 +242,8 @@ public final class DataBKGymLeistungen {
 		// Ermittle nun die Leistungsdaten aus den Lernabschnitten
 		final BKGymLeistungen daten = new BKGymLeistungen();
 		daten.id = schueler.ID;
-		daten.aktuellesSchuljahr = schuljahresabschnitt.schuljahr;
-		daten.aktuellerJahrgang = (aktJahrgang == null) ? null : aktJahrgang.daten(schuljahresabschnitt.schuljahr).kuerzel;
+		daten.aktuellesSchuljahr = schuljahresabschnitt.Jahr;
+		daten.aktuellerJahrgang = (aktJahrgang == null) ? null : aktJahrgang.daten(schuljahresabschnitt.Jahr).kuerzel;
 		daten.sprachendaten = sprachendaten;
 		final String biliZweig = aktLernabschnitt.BilingualerZweig;
 		if ((biliZweig != null) && (!"".equals(biliZweig)))
@@ -253,7 +261,7 @@ public final class DataBKGymLeistungen {
 			if (jahrgang == null)
 				continue;
 			final GostHalbjahr halbjahr =
-					GostHalbjahr.fromBkJahrgangUndHalbjahr(jahrgang.daten(schuljahresabschnitt.schuljahr).kuerzel, abschnittLeistungsdaten.abschnitt);
+					GostHalbjahr.fromBkJahrgangUndHalbjahr(jahrgang.daten(schuljahresabschnitt.Jahr).kuerzel, abschnittLeistungsdaten.abschnitt);
 			if (halbjahr == null)
 				continue;
 			if (Boolean.TRUE.equals(lernabschnitt.SemesterWertung))

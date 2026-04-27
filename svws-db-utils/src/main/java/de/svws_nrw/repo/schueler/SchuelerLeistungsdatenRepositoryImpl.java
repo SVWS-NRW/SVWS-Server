@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.repo.RepositoryImpl;
@@ -49,5 +50,18 @@ public final class SchuelerLeistungsdatenRepositoryImpl extends RepositoryImpl<D
 		return conn.queryList("SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Abschnitt_ID IN ?1 AND e.Fach_ID IN ?2",
 				DTOSchuelerLeistungsdaten.class, idsLernabschnitte, idsFaecher);
 	}
+
+	@Override
+	public HashMap2D<Long, Long, DTOSchuelerLeistungsdaten> getMapByLernabschnittsIds(final Collection<Long> idsAbschnitte) {
+		final HashMap2D<Long, Long, DTOSchuelerLeistungsdaten> map = new HashMap2D<>();
+		if (idsAbschnitte.isEmpty()) {
+			return map;
+		}
+		final List<DTOSchuelerLeistungsdaten> list = conn.queryList(DTOSchuelerLeistungsdaten.QUERY_LIST_BY_ABSCHNITT_ID, DTOSchuelerLeistungsdaten.class, idsAbschnitte);
+		for (final DTOSchuelerLeistungsdaten daten : list) {
+			map.put(daten.Abschnitt_ID, daten.Fach_ID, daten);
+		}
+		return map;
+	};
 
 }

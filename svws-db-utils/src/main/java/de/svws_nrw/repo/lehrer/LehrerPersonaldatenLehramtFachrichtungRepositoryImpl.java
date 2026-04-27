@@ -28,8 +28,9 @@ public final class LehrerPersonaldatenLehramtFachrichtungRepositoryImpl extends 
 
 	@Override
 	public Map<Long, List<DTOLehrerPersonaldatenLehramtFachrichtung>> getMapByLehramt(final Collection<Long> idsLehraemter) {
-		if ((idsLehraemter == null) || (idsLehraemter.isEmpty()))
+		if ((idsLehraemter == null) || (idsLehraemter.isEmpty())) {
 			return Collections.emptyMap();
+		}
 		final var list = conn.queryList(DTOLehrerPersonaldatenLehramtFachrichtung.QUERY_LIST_BY_LEHRERAMT_ID,
 				DTOLehrerPersonaldatenLehramtFachrichtung.class, idsLehraemter);
 		final var map = list.stream().collect(Collectors.groupingBy(f -> f.Lehreramt_ID));

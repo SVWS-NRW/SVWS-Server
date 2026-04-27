@@ -39,8 +39,9 @@ public final class SchuelerRepositoryImpl extends RepositoryImpl<DTOSchueler> im
 
 	@Override
 	public List<DTOSchueler> getListByStatusAndSchuljahresabschnitt(final long idSchuljahresabschnitt, final Collection<Long> status) {
-		if (status.isEmpty())
+		if (status.isEmpty()) {
 			return Collections.emptyList();
+		}
 		return conn.queryList("SELECT e FROM DTOSchueler e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.idStatus IN ?2 AND e.Geloescht = ?3",
 				DTOSchueler.class, idSchuljahresabschnitt, status, false);
 	}

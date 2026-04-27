@@ -48,8 +48,9 @@ public abstract class RepositoryBaseImpl<T, P> implements RepositoryBase<T, P> {
 	@Override
 	public @NotNull T getFirst() throws RepositoryException {
 		final var result = conn.querySingle(entityClass);
-		if (result == null)
+		if (result == null) {
 			throw new RepositoryException("Es konnte keine Entität der Klasse " + entityClass + " bestimmt werden.");
+		}
 		return result;
 	}
 
@@ -88,8 +89,9 @@ public abstract class RepositoryBaseImpl<T, P> implements RepositoryBase<T, P> {
 	@Override
 	public @NotNull T getById(final P id) {
 		final var result = conn.queryByKey(entityClass, mapIdToParameter(id));
-		if (result == null)
+		if (result == null) {
 			throw new RepositoryException("Es konnte keine Entität der Klasse " + entityClass + " für die angegebene ID bestimmt werden.");
+		}
 		return result;
 	}
 
@@ -179,8 +181,9 @@ public abstract class RepositoryBaseImpl<T, P> implements RepositoryBase<T, P> {
 	 */
 	@Override
 	public T update(final T entity) throws RepositoryException {
-		if (conn.transactionPersist(entity))
+		if (conn.transactionPersist(entity)) {
 			return entity;
+		}
 		throw new RepositoryException("Fehler beim Aktualisieren der Entity vom Typ " + entityClass.getCanonicalName());
 	}
 
@@ -196,8 +199,9 @@ public abstract class RepositoryBaseImpl<T, P> implements RepositoryBase<T, P> {
 	 */
 	@Override
 	public <C extends Collection<T>> C update(final C entities) throws RepositoryException {
-		if (conn.transactionPersistAll(entities))
+		if (conn.transactionPersistAll(entities)) {
 			return entities;
+		}
 		throw new RepositoryException("Fehler beim Aktualisieren der Entitäten vom Typ " + entityClass.getCanonicalName());
 	}
 
@@ -212,8 +216,9 @@ public abstract class RepositoryBaseImpl<T, P> implements RepositoryBase<T, P> {
 	 */
 	@Override
 	public T delete(final T entity) throws RepositoryException {
-		if (conn.transactionRemove(entity))
+		if (conn.transactionRemove(entity)) {
 			return entity;
+		}
 		throw new RepositoryException("Fehler beim Löschen der Entity vom Typ " + entityClass.getCanonicalName());
 	}
 
@@ -227,8 +232,9 @@ public abstract class RepositoryBaseImpl<T, P> implements RepositoryBase<T, P> {
 	 */
 	@Override
 	public <C extends Collection<T>> C delete(final C entities) throws RepositoryException {
-		if (conn.transactionRemoveAll(entities))
+		if (conn.transactionRemoveAll(entities)) {
 			return entities;
+		}
 		throw new RepositoryException("Fehler beim Löschen der Entitäten vom Typ " + entityClass.getCanonicalName());
 	}
 

@@ -88,7 +88,18 @@ public final class DataSchuelerSprachpruefung extends DataManagerRevised<Long, D
 	}
 
 
-	private static @NotNull String mapZeugnisbezeichnung(final String zeugnisbezeichnung, final String sprache) {
+	/**
+	 * Bestimmt die Zeugnisbezeichnung für die Sprachprüfung. Hierbei wird zunächst geprüft, ob eine explizite Zeugnisbezeichnung in der Datenbank hinterlegt ist.
+	 * Falls ja, so wird diese zurückgegeben. Falls nein, so wird die Zeugnisbezeichnung anhand der Fachbezeichnung der Sprache bestimmt. Hierbei wird geprüft, ob es sich
+	 * um eine HKFS-Prüfung handelt. Falls ja, so wird nur der Teil der Fachbezeichnung nach dem Bindestrich als Zeugnisbezeichnung verwendet,
+	 * ansonsten die gesamte Fachbezeichnung.
+	 *
+	 * @param zeugnisbezeichnung   die explizite Zeugnisbezeichnung aus der Datenbank
+	 * @param sprache              das Sprachkürzel
+	 *
+	 * @return die ermittelte Zeugnisbezeichnung
+	 */
+	public static @NotNull String mapZeugnisbezeichnung(final String zeugnisbezeichnung, final String sprache) {
 		if (zeugnisbezeichnung != null)
 			return zeugnisbezeichnung;
 		final Fach fach = Fach.data().getWertByKuerzel(sprache);

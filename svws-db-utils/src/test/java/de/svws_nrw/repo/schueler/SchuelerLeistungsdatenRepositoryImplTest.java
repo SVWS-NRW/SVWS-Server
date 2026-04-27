@@ -18,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 
@@ -107,6 +108,32 @@ class SchuelerLeistungsdatenRepositoryImplTest {
 		final List<DTOSchuelerLeistungsdaten> result = repository.findListByLernabschnittAndFachlehrer(idsLernabschnitte, idsFachlehrer);
 
 		assertThat(result).containsExactly(d1);
+	}
+
+	@Test
+	@DisplayName("Test: getMapByLernabschnittsIds(ids) liefert eine 2D-Map (Abschnitt_ID, Fach_ID) -> DTOSchuelerLeistungsdaten.")
+	void testGetMapByLernabschnittsIds() {
+		// Fall: Keine IDs uebergeben -> leere Map ohne Datenbankzugriff
+		final HashMap2D<Long, Long, DTOSchuelerLeistungsdaten> emptyResult = repository.getMapByLernabschnittsIds(Collections.emptyList());
+		assertNotNull(emptyResult);
+		assertEquals(0, emptyResult.size());
+		verifyNoInteractions(conn);
+
+		// Fall: IDs vorhanden -> DTOs werden anhand (Abschnitt_ID, Fach_ID) in die 2D-Map übernommen
+		final Collection<Long> abschnittIds = List.of(1L, 2L);
+		final DTOSchuelerLeistungsdaten d1 = new DTOSchuelerLeistungsdaten(100L, 1L, 42L);
+		final DTOSchuelerLeistungsdaten d2 = new DTOSchuelerLeistungsdaten(101L, 2L, 43L);
+
+		when(conn.queryList(DTOSchuelerLeistungsdaten.QUERY_LIST_BY_ABSCHNITT_ID, DTOSchuelerLeistungsdaten.class, abschnittIds))
+				.thenReturn(List.of(d1, d2));
+
+		final HashMap2D<Long, Long, DTOSchuelerLeistungsdaten> result = repository.getMapByLernabschnittsIds(abschnittIds);
+
+		assertNotNull(result);
+		assertEquals(2, result.size());
+		assertEquals(d1, result.getOrException(1L, 42L));
+		assertEquals(d2, result.getOrException(2L, 43L));
+		verify(conn).queryList(DTOSchuelerLeistungsdaten.QUERY_LIST_BY_ABSCHNITT_ID, DTOSchuelerLeistungsdaten.class, abschnittIds);
 	}
 
 }

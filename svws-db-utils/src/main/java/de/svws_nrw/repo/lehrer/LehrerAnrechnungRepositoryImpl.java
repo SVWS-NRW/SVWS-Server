@@ -27,8 +27,9 @@ public final class LehrerAnrechnungRepositoryImpl extends RepositoryImpl<DTOLehr
 
 	@Override
 	public Map<Long, List<DTOLehrerAnrechnungsstunde>> getMapByAbschnitt(final Collection<Long> idsAbschnitte) {
-		if ((idsAbschnitte == null) || (idsAbschnitte.isEmpty()))
+		if ((idsAbschnitte == null) || (idsAbschnitte.isEmpty())) {
 			return Collections.emptyMap();
+		}
 		final var list = conn.queryList(DTOLehrerAnrechnungsstunde.QUERY_LIST_BY_ABSCHNITT_ID, DTOLehrerAnrechnungsstunde.class, idsAbschnitte);
 		final var map = list.stream().collect(Collectors.groupingBy(f -> f.Abschnitt_ID));
 		for (final long idAbschnitt : idsAbschnitte) {

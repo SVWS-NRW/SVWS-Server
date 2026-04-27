@@ -27,8 +27,9 @@ public final class LehrerMinderleistungRepositoryImpl extends RepositoryImpl<DTO
 
 	@Override
 	public Map<Long, List<DTOLehrerEntlastungsstunde>> getMapByAbschnitt(final Collection<Long> idsAbschnitte) {
-		if ((idsAbschnitte == null) || (idsAbschnitte.isEmpty()))
+		if ((idsAbschnitte == null) || (idsAbschnitte.isEmpty())) {
 			return Collections.emptyMap();
+		}
 		final var list = conn.queryList(DTOLehrerEntlastungsstunde.QUERY_LIST_BY_ABSCHNITT_ID, DTOLehrerEntlastungsstunde.class, idsAbschnitte);
 		final var map = list.stream().collect(Collectors.groupingBy(f -> f.Abschnitt_ID));
 		for (final long idAbschnitt : idsAbschnitte) {

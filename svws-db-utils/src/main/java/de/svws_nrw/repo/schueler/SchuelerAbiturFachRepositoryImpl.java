@@ -24,15 +24,17 @@ public final class SchuelerAbiturFachRepositoryImpl extends RepositoryImpl<DTOSc
 
 	@Override
 	public List<DTOSchuelerAbiturFach> getListBySchuelerIds(final Collection<Long> idsSchueler) {
-		if ((idsSchueler == null) || (idsSchueler.isEmpty()))
+		if ((idsSchueler == null) || (idsSchueler.isEmpty())) {
 			return Collections.emptyList();
+		}
 		return conn.queryList(DTOSchuelerAbiturFach.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerAbiturFach.class, idsSchueler);
 	}
 
 	@Override
 	public List<DTOSchuelerAbiturFach> getListBySchuelerIdsNurPruefungsfaecher(final Collection<Long> idsSchueler) {
-		if ((idsSchueler == null) || (idsSchueler.isEmpty()))
+		if ((idsSchueler == null) || (idsSchueler.isEmpty())) {
 			return Collections.emptyList();
+		}
 		return conn.queryList("SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Schueler_ID IN ?1 AND e.AbiturFach IS NOT NULL",
 				DTOSchuelerAbiturFach.class, idsSchueler);
 	}

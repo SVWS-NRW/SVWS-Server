@@ -6,6 +6,8 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerPSFachBemerkungen;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerTeilleistung;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerSprachenfolge;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerSprachpruefungen;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerZP10;
 import de.svws_nrw.db.dto.current.schild.schueler.abitur.DTOSchuelerAbitur;
 import de.svws_nrw.db.dto.current.schild.schueler.abitur.DTOSchuelerAbiturFach;
@@ -88,6 +90,26 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 */
 	public SchuelerLernabschnittRepository getSchuelerLernabschnittRepository() {
 		return getOrCreate(SchuelerLernabschnittRepository.class, () -> new SchuelerLernabschnittRepositoryImpl(conn));
+	}
+
+
+	/**
+	 * Erstellt ein neues Repository für {@link DTOSchuelerSprachenfolge}.
+	 *
+	 * @return das Repository-Objekt
+	 */
+	public SchuelerSprachenfolgeRepository getSchuelerSprachenfolgeRepository() {
+		return getOrCreate(SchuelerSprachenfolgeRepository.class, () -> new SchuelerSprachenfolgeRepositoryImpl(conn));
+	}
+
+
+	/**
+	 * Erstellt ein neues Repository für {@link DTOSchuelerSprachpruefungen}.
+	 *
+	 * @return das Repository-Objekt
+	 */
+	public SchuelerSprachpruefungenRepository getSchuelerSprachpruefungenRepository() {
+		return getOrCreate(SchuelerSprachpruefungenRepository.class, () -> new SchuelerSprachpruefungenRepositoryImpl(conn));
 	}
 
 

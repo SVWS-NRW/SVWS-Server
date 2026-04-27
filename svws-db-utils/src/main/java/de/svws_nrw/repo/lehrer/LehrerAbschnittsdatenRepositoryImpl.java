@@ -24,8 +24,9 @@ public final class LehrerAbschnittsdatenRepositoryImpl extends RepositoryImpl<DT
 
 	@Override
 	public List<DTOLehrerAbschnittsdaten> getListByLehrerIdsAndSchuljahresabschnitt(final Collection<Long> idsLehrer, final long idSchuljahresabschnitt) {
-		if ((idsLehrer == null) || (idsLehrer.isEmpty()) || (conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt) == null))
+		if ((idsLehrer == null) || (idsLehrer.isEmpty()) || (conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt) == null)) {
 			return Collections.emptyList();
+		}
 		return conn.queryList("SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Lehrer_ID IN ?1 AND e.Schuljahresabschnitts_ID = ?2",
 				DTOLehrerAbschnittsdaten.class, idsLehrer, idSchuljahresabschnitt);
 	}

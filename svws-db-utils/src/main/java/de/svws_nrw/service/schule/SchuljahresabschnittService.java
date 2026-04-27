@@ -24,7 +24,14 @@ public final class SchuljahresabschnittService {
 	}
 
 
-	private static Schuljahresabschnitt map(final DTOSchuljahresabschnitte dto) {
+	/**
+	 * Konvertiert die übergebenen DTO-Objekte in die API-Objekte.
+	 *
+	 * @param dto   das DTO-Objekt, welches konvertiert werden soll
+	 *
+	 * @return das API-Objekt, welches aus dem DTO-Objekt konvertiert wurde
+	 */
+	public static Schuljahresabschnitt toApi(final DTOSchuljahresabschnitte dto) {
 		final var daten = new Schuljahresabschnitt();
 		daten.id = dto.ID;
 		daten.schuljahr = dto.Jahr;
@@ -44,7 +51,7 @@ public final class SchuljahresabschnittService {
 	 */
 	public Schuljahresabschnitt getById(final Long id) {
 		final var dto = schuljahresabschnitteRepository.getById(id);
-		return map(dto);
+		return toApi(dto);
 	}
 
 	/**
@@ -53,7 +60,7 @@ public final class SchuljahresabschnittService {
 	 * @return die Liste mit den Schuljahresabschnitt-DB-DTOs
 	 */
 	public List<Schuljahresabschnitt> getList() {
-		return schuljahresabschnitteRepository.getAll().stream().map(s -> map(s)).toList();
+		return schuljahresabschnitteRepository.getAll().stream().map(s -> toApi(s)).toList();
 	}
 
 }

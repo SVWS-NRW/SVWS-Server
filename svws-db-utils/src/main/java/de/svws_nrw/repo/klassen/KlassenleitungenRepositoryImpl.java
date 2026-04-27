@@ -34,8 +34,9 @@ public final class KlassenleitungenRepositoryImpl extends RepositoryBaseImpl<DTO
 
 	@Override
 	public Map<Long, List<Long>> getMapKlassenleitungen(final Collection<Long> idsKlassen) {
-		if ((idsKlassen == null) || (idsKlassen.isEmpty()))
+		if ((idsKlassen == null) || (idsKlassen.isEmpty())) {
 			return Collections.emptyMap();
+		}
 
 		final var listLeitungen = conn.queryList(DTOKlassenLeitung.QUERY_LIST_BY_KLASSEN_ID, DTOKlassenLeitung.class, idsKlassen);
 		listLeitungen.sort(Comparator.comparingInt(kl -> kl.Reihenfolge));

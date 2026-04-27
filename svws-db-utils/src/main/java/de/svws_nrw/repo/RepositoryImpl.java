@@ -36,8 +36,9 @@ public abstract class RepositoryImpl<T> extends RepositoryBaseImpl<T, Long> impl
 	protected RepositoryImpl(final DBEntityManager conn, final Class<T> entityClass,
 			final ToLongFunction<T> getId, final ObjLongConsumer<T> setId) {
 		super(conn, entityClass);
-		if (setId == null)
+		if (setId == null) {
 			throw new IllegalArgumentException("Ein Consumer setId ist für ein Repository erforderlich.");
+		}
 		this.getId = getId;
 		this.setId = setId;
 	}
@@ -70,8 +71,9 @@ public abstract class RepositoryImpl<T> extends RepositoryBaseImpl<T, Long> impl
 	 */
 	@Override
 	public List<T> findListByIds(final Collection<Long> ids) {
-		if ((ids == null) || (ids.isEmpty()))
+		if ((ids == null) || (ids.isEmpty())) {
 			return Collections.emptyList();
+		}
 		return conn.queryByKeyList(entityClass, ids);
 	}
 

@@ -24,8 +24,9 @@ public final class SchuelerAbiturRepositoryImpl extends RepositoryImpl<DTOSchuel
 
 	@Override
 	public List<DTOSchuelerAbitur> getListBySchuelerIds(final Collection<Long> idsSchueler) {
-		if ((idsSchueler == null) || (idsSchueler.isEmpty()))
+		if ((idsSchueler == null) || (idsSchueler.isEmpty())) {
 			return Collections.emptyList();
+		}
 		return conn.queryList(DTOSchuelerAbitur.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerAbitur.class, idsSchueler);
 	}
 

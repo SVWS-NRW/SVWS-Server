@@ -30,12 +30,14 @@ public final class SchuelerLernabschnittRepositoryImpl extends RepositoryImpl<DT
 
 	@Override
 	public Map<Long, List<Long>> getMapKlassenSchueler(final Collection<Long> idsKlassen) {
-		if ((idsKlassen == null) || (idsKlassen.isEmpty()))
+		if ((idsKlassen == null) || (idsKlassen.isEmpty())) {
 			return Collections.emptyMap();
+		}
 		final var listAbschnitte = conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_LIST_BY_KLASSEN_ID, DTOSchuelerLernabschnittsdaten.class, idsKlassen);
 		final Map<Long, Set<Long>> mapSets = HashMap.newHashMap(idsKlassen.size());
-		for (final var la : listAbschnitte)
+		for (final var la : listAbschnitte) {
 			mapSets.computeIfAbsent(la.Klassen_ID, k -> new LinkedHashSet<>()).add(la.Schueler_ID);
+		}
 		final Map<Long, List<Long>> result = HashMap.newHashMap(mapSets.size());
 		for (final var entry : mapSets.entrySet()) {
 			result.put(entry.getKey(), new ArrayList<>(entry.getValue()));
@@ -46,8 +48,9 @@ public final class SchuelerLernabschnittRepositoryImpl extends RepositoryImpl<DT
 	@Override
 	public Map<Long, DTOSchuelerLernabschnittsdaten> getMapBySchuelerIDsAndSchuljahreabschnitt(final Collection<Long> idsSchueler,
 			final long idSchuljahresabschnitt) {
-		if ((idsSchueler == null) || (idsSchueler.isEmpty()))
+		if ((idsSchueler == null) || (idsSchueler.isEmpty())) {
 			return Collections.emptyMap();
+		}
 		final var listAbschnitte = conn.queryList(
 				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1 AND e.WechselNr = ?2 AND e.Schuljahresabschnitts_ID = ?3",
 				DTOSchuelerLernabschnittsdaten.class, idsSchueler, 0, idSchuljahresabschnitt);
@@ -58,12 +61,41 @@ public final class SchuelerLernabschnittRepositoryImpl extends RepositoryImpl<DT
 	@Override
 	public Map<Long, DTOSchuelerLernabschnittsdaten> getMapByLernabschnittIDAndSchuljahreabschnitt(final Collection<Long> idsSchueler,
 			final long idSchuljahresabschnitt) {
-		if ((idsSchueler == null) || (idsSchueler.isEmpty()))
+		if ((idsSchueler == null) || (idsSchueler.isEmpty())) {
 			return Collections.emptyMap();
+		}
 		final var listAbschnitte = conn.queryList(
 				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1 AND e.WechselNr = ?2 AND e.Schuljahresabschnitts_ID = ?3",
 				DTOSchuelerLernabschnittsdaten.class, idsSchueler, 0, idSchuljahresabschnitt);
 		return listAbschnitte.stream().collect(Collectors.toMap(a -> a.ID, a -> a));
+	}
+
+
+	@Override
+	public Map<Long, DTOSchuelerLernabschnittsdaten> getMapByLernabschnittID(final Collection<Long> idsSchueler) {
+		if ((idsSchueler == null) || (idsSchueler.isEmpty())) {
+			return Collections.emptyMap();
+		}
+		final var listAbschnitte = conn.queryList(
+				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1 AND e.WechselNr = ?2",
+				DTOSchuelerLernabschnittsdaten.class, idsSchueler, 0);
+		return listAbschnitte.stream().collect(Collectors.toMap(a -> a.ID, a -> a));
+	}
+
+
+	@Override
+	public Map<Long, List<Long>> getMapAllLernabschnittIDsBySchuelerIDs(final Collection<Long> idsSchueler) {
+		if ((idsSchueler == null) || (idsSchueler.isEmpty())) {
+			return Collections.emptyMap();
+		}
+		final var listAbschnitte = conn.queryList(
+				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1",
+				DTOSchuelerLernabschnittsdaten.class, idsSchueler);
+		final Map<Long, List<Long>> result = HashMap.newHashMap(idsSchueler.size());
+		for (final var la : listAbschnitte) {
+			result.computeIfAbsent(la.Schueler_ID, k -> new ArrayList<>()).add(la.ID);
+		}
+		return result;
 	}
 
 }
