@@ -272,19 +272,14 @@ class Config {
     /**
      * Prüft, ob ein Passwort die folgenden Kriterien erfüllt:
      * - min. 16 Zeichen
-     * - min. ein Großbuchstabe
-     * - min. ein Kleinbuchstabe
-     * - min. eine Zahl
      *
      * @param string $password Das zu prüfende Passwort
+     *
      * @return bool true, wenn das Passwort den Anforderungen entspricht, sonst false
      */
     public static function validatePassword(string $password): bool {
         // Prüft, ob die Länge des Passworts mindestens 16 Zeichen beträgt
-        //   und mindestens einen Großbuchstaben enthält,
-        //   und mindestens einen Kleinbuchstaben enthält
-        //   und mindestens eine Zahl enthält
-        return (strlen($password) >= 16) && preg_match('/[A-Z]/', $password) && preg_match('/[a-z]/', $password) && preg_match('/\d/', $password);
+        return strlen($password) >= 16;
     }
 
 }

@@ -39,6 +39,14 @@ class DBConnection {
      * @param string $msg   die Fehlermeldung
      */
     private function exit500(string $msg): never {
+        // Führe bei einer aktiven Transaktion ein Rollback aus, um offenen Transaktionen bei einem 500er-Fehler zu vermeiden
+        try {
+            if (isset($this->pdo) && $this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+        } catch (\PDOException $e) {
+            // Kein zusätzlicher Fehler bei einem fehlschlagenden Rollback
+        }
         Http::exit500("Database ($this->filename) - ".$msg);
     }
 
@@ -53,6 +61,7 @@ class DBConnection {
         try {
             $pdo = new PDO($dsn);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $pdo->exec("PRAGMA busy_timeout = 2000;"); // Warte bis zu 2 Sekunden, wenn die DB aus einem Grund gesperrt ist
         } catch (PDOException $e) {
             $this->exit500("Fehler beim Öffnen (".$e->getCode()."): ".$e->getMessage());
         }
@@ -65,7 +74,7 @@ class DBConnection {
      */
     public function beginTransaction(): void {
         try {
-            $this->pdo->beginTransaction();
+            $this->pdo->exec("BEGIN IMMEDIATE TRANSACTION");
         } catch (PDOException $e) {
             $this->exit500("Fehler beim Erstellen der Transaction (".$e->getCode()."): ".$e->getMessage());
         }
@@ -80,6 +89,19 @@ class DBConnection {
             $this->pdo->commit();
         } catch (PDOException $e) {
             $this->exit500("Fehler beim Commit der Transaction (".$e->getCode()."): ".$e->getMessage());
+        }
+    }
+
+    /**
+     * Führt ein Rollback für dei Transaktion aus, sofern eine gestartet wurde.
+     */
+    public function rollbackTransaction(): void {
+        try {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+        } catch (PDOException $e) {
+            // Kein exit500, um den ursprünglichen Fehler nicht zu verdecken
         }
     }
 
