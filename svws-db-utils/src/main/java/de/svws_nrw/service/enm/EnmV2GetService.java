@@ -384,7 +384,7 @@ public final class EnmV2GetService {
 			final ZulaessigeKursart kursart, final ENMv2Klasse enmKlasse, final ENMv2Schueler enmSchueler, final ENMv2Lerngruppe enmLerngruppe) {
 		final boolean istSchriftlich = pruefeKursSchriftlichkeit(leistung.Kurs_ID, kursart, enmKlasse.kuerzel, kontext.getHalbjahr());
 
-		final Integer abiFach = Optional.ofNullable(leistung.AbiFach).map(Integer::valueOf).filter(v -> (v >= 1) && (v <= 5)).orElse(null);
+		final Integer abiFach = Optional.ofNullable(leistung.AbiFach).filter(s -> s.matches("[1-5]")).map(Integer::valueOf).orElse(null);
 		final boolean istGemahnt = (leistung.Warnung != null) && leistung.Warnung;
 		final boolean istDifferenzierungkursErweitert = (ZulaessigeKursart.E == ZulaessigeKursart.data().getWertBySchluessel(leistung.Kursart));
 		final String mahndatum = leistung.Warndatum;
