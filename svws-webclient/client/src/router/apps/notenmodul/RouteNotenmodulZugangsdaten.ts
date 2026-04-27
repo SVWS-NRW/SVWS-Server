@@ -27,7 +27,7 @@ export class RouteNotenmodulZugangsdaten extends RouteNode<RouteDataNotenmodulZu
 		if (isEntering) {
 			await routeNotenmodul.data.ladeDaten();
 		}
-		await this.data.init();
+		await this.data.init(routeNotenmodul.data.idsLehrer);
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams, to: RouteNode<any, any>, to_params: RouteParams): Promise<void> {

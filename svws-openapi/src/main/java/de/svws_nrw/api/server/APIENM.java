@@ -1,6 +1,7 @@
 package de.svws_nrw.api.server;
 
 import java.io.InputStream;
+import java.util.List;
 
 import org.jboss.resteasy.annotations.GZIP;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
@@ -594,6 +595,33 @@ public class APIENM {
 
 
 	/**
+	 * Die OpenAPI-Methode für die Abfrage der Initialkennwörter für eine Menge an Lehrern
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param idsLehrer
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste mit den Initialkennwörtern
+	 */
+	@POST
+	@Path("/initialkennwoerter")
+	@Operation(summary = "Liefert eine Liste der Lehrer-IDs mit den zugehörigen Initialkennwörtern.",
+			description = "Liefert eine Liste der Lehrer-IDs mit den zugehörigen Initialkennwörtern für die angegebenen Lehrer-IDS zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zur Administration der Notenmodul-Daten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Liste mit den Initialkennwörtern",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ENMLehrerInitialKennwort.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Initialkennwörter des ENM zu verwalten.")
+	public Response getENMLehrerInitialKennwoerterByIds(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der Lehrer", required = true,
+			content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> idsLehrer,
+			@Context final HttpServletRequest request) {
+		return NotenmodulControllerFactory.withAdminAccess(request)
+				.getNotenmodulCredentialsController()
+				.getInitialkennwoerter(idsLehrer);
+	}
+
+
+	/**
 	 * Abfrage es Initialkennwortes für den angegebenen Lehrer.
 	 *
 	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
@@ -1077,8 +1105,9 @@ public class APIENM {
 	@ApiResponse(responseCode = "400", description = "Der Eintrag enthält Fehler, bspw. eine invalide URL.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addENMServerConnection(@PathParam("schema") final String schema,
-			@Valid @RequestBody(description = "Die Daten der zu erstellenden Verbindung.", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = ENMServerConnection.class))) final NotenmodulVerbindungenCreateRequest daten,
+			@Valid @RequestBody(description = "Die Daten der zu erstellenden Verbindung.", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = ENMServerConnection.class))) final NotenmodulVerbindungenCreateRequest daten,
 			@Context final HttpServletRequest request) {
 		return NotenmodulControllerFactory.withAdminAccess(request)
 				.getNotenmodulVerbindungenController()
@@ -1139,7 +1168,8 @@ public class APIENM {
 	@ApiResponse(responseCode = "404", description = "Die Verbindung zu einem Web-Notenmodul-Server mit der angegebenen ID ist nicht vorhanden")
 	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteENMServerConnection(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
+	public Response deleteENMServerConnection(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
 		return NotenmodulControllerFactory.withAdminAccess(request)
 				.getNotenmodulVerbindungenController()
 				.delete(id);
@@ -1188,7 +1218,8 @@ public class APIENM {
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ENMServerConnection.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Verbindung anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Verbindung zu einem Web-Notenmodul-Server mit der ID gefunden")
-	public Response getENMServerConnection(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
+	public Response getENMServerConnection(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
 		return NotenmodulControllerFactory.withAdminAccess(request)
 				.getNotenmodulVerbindungenController()
 				.get(id);

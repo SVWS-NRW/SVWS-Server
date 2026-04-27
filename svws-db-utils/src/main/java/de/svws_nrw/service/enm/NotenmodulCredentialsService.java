@@ -100,6 +100,33 @@ public class NotenmodulCredentialsService {
 
 
 	/**
+	 * Gibt für die angegebenen Lehrer die Initialkennwörter zurück.
+	 *
+	 * @param idsLehrer   die Ids der Lehrer, deren Initialkennwörter bestimmt werden sollen
+	 *
+	 * @return die Liste der Initialkennwörter
+	 */
+	public List<ENMLehrerInitialKennwort> getInitialkennwoerter(final List<Long> idsLehrer) {
+		return transactional(() -> {
+			// Erstelle zunächst Initialkennwörter, falls eine Lehrer noch keines hat
+			generateMissingCredentials();
+			// Bestimme die Menge der Lehrer-IDs und lese dann dafür die Initialkennwörter aus der Datenbank.
+			final List<ENMLehrerInitialKennwort> daten = new ArrayList<>();
+			if ((idsLehrer != null) && (!idsLehrer.isEmpty())) {
+				final List<DTONotenmodulCredentials> dtos = notenmodulCredentialsRepository.findListByIds(idsLehrer);
+				for (final DTONotenmodulCredentials dto : dtos) {
+					final ENMLehrerInitialKennwort cred = new ENMLehrerInitialKennwort();
+					cred.id = dto.idLehrer;
+					cred.initialKennwort = dto.initialkennwort;
+					daten.add(cred);
+				}
+			}
+			return daten;
+		});
+	}
+
+
+	/**
 	 * Gibt für den angegebenen Lehrer das Initialkennwort zurück.
 	 *
 	 * @param idLehrer   die ID des Lehrers

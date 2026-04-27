@@ -1,5 +1,7 @@
 package de.svws_nrw.controller.enm;
 
+import java.util.List;
+
 import de.svws_nrw.data.Responses;
 import de.svws_nrw.service.enm.NotenmodulCredentialsService;
 import jakarta.ws.rs.core.Response;
@@ -28,6 +30,19 @@ public final class NotenmodulCredentialsControllerImpl implements NotenmodulCred
 	@Override
 	public Response getInitialkennwoerter() {
 		return Responses.ok(service.getInitialkennwoerter());
+	}
+
+
+	/**
+	 * Gibt für die angegebenen Lehrer die Initialkennwörter zurück.
+	 *
+	 * @param idsLehrer   die Ids der Lehrer, deren Initialkennwörter bestimmt werden sollen
+	 *
+	 * @return die Liste der Initialkennwörter
+	 */
+	@Override
+	public Response getInitialkennwoerter(final List<Long> idsLehrer) {
+		return Responses.ok(service.getInitialkennwoerter(idsLehrer));
 	}
 
 
