@@ -381,37 +381,18 @@ class Database {
      */
     public function putConfig(bool $nurServer, string $key, string | null $value): void {
         $table = $nurServer ? "ServerConfig" : "ClientConfig";
-        // Prüfe, ob bereits ein Eintrag vorliegt
-        $stmt = $this->conn->prepareStatement("SELECT wert FROM $table WHERE schluessel = :schluessel");
-        $this->conn->bindStatementValue($stmt, ":schluessel", $key, PDO::PARAM_STR);
-        $this->conn->executeStatement($stmt);
-        $result = $stmt->fetchAll(PDO::FETCH_OBJ);
-        $hatEintrag = (count($result) > 0);
-        // Wenn der Wert null ist und kein Eintrag vorliegt, dann ist ein Einfügen nicht nötig
-        if (!$hatEintrag && ($value === null)) {
-            return;
-        }
-        // Wenn der Wert null ist und ein Eintrag vorliegt, dann muss dieser entfernt werden
-        if ($hatEintrag && ($value === null)) {
+        // Wenn der Wert null ist und ein Eintrag vorliegt, dann muss dieser ggf. entfernt werden
+        if ($value === null) {
             $stmt = $this->conn->prepareStatement("DELETE FROM $table WHERE schluessel = :schluessel");
             $this->conn->bindStatementValue($stmt, ":schluessel", $key, PDO::PARAM_STR);
             $this->conn->executeStatement($stmt);
             return;
         }
         // Schreibe den Eintrag
-        $this->conn->beginTransaction();
-        $stmt = null;
-        if ($hatEintrag) {
-            // UPDATE...
-            $stmt = $this->conn->prepareStatement("UPDATE $table SET wert=:wert WHERE schluessel = :schluessel");
-        } else {
-            // INSERT...
-            $stmt = $this->conn->prepareStatement("INSERT INTO $table(schluessel, wert) VALUES (:schluessel, :wert)");
-        }
+        $stmt = $this->conn->prepareStatement("REPLACE INTO $table(schluessel, wert) VALUES (:schluessel, :wert)");
         $this->conn->bindStatementValue($stmt, ":schluessel", $key, PDO::PARAM_STR);
         $this->conn->bindStatementValue($stmt, ":wert", $value, PDO::PARAM_STR);
         $this->conn->executeStatement($stmt);
-        $this->conn->commitTransaction();
     }
 
     /**
@@ -422,19 +403,8 @@ class Database {
      * @param string $value   der zu setzende Wert für den Schlüssel
      */
     public function putClientUserConfig(int $idLehrer, string $key, string | null $value): void {
-        // Prüfe, ob bereits ein Eintrag vorliegt
-        $stmt = $this->conn->prepareStatement("SELECT wert FROM ClientLehrerConfig WHERE idLehrer = :idLehrer AND schluessel = :schluessel");
-        $this->conn->bindStatementValue($stmt, ":idLehrer", $idLehrer, PDO::PARAM_INT);
-        $this->conn->bindStatementValue($stmt, ":schluessel", $key, PDO::PARAM_STR);
-        $this->conn->executeStatement($stmt);
-        $result = $stmt->fetchAll(PDO::FETCH_OBJ);
-        $hatEintrag = (count($result) > 0);
-        // Wenn der Wert null ist und kein Eintrag vorliegt, dann ist ein Einfügen nicht nötig
-        if (!$hatEintrag && ($value === null)) {
-            return;
-        }
-        // Wenn der Wert null ist und ein Eintrag vorliegt, dann muss dieser entfernt werden
-        if ($hatEintrag && ($value === null)) {
+        // Wenn der Wert null ist und ein Eintrag vorliegt, dann muss dieser ggf. entfernt werden
+        if ($value === null) {
             $stmt = $this->conn->prepareStatement("DELETE FROM ClientLehrerConfig WHERE idLehrer = :idLehrer AND schluessel = :schluessel");
             $this->conn->bindStatementValue($stmt, ":idLehrer", $idLehrer, PDO::PARAM_INT);
             $this->conn->bindStatementValue($stmt, ":schluessel", $key, PDO::PARAM_STR);
@@ -442,20 +412,11 @@ class Database {
             return;
         }
         // Schreibe den Eintrag
-        $this->conn->beginTransaction();
-        $stmt = null;
-        if ($hatEintrag) {
-            // UPDATE...
-            $stmt = $this->conn->prepareStatement("UPDATE ClientLehrerConfig SET wert=:wert WHERE idLehrer = :idLehrer AND schluessel = :schluessel");
-        } else {
-            // INSERT...
-            $stmt = $this->conn->prepareStatement("INSERT INTO ClientLehrerConfig(idLehrer, schluessel, wert) VALUES (:idLehrer, :schluessel, :wert)");
-        }
+        $stmt = $this->conn->prepareStatement("REPLACE INTO ClientLehrerConfig(idLehrer, schluessel, wert) VALUES (:idLehrer, :schluessel, :wert)");
         $this->conn->bindStatementValue($stmt, ":idLehrer", $idLehrer, PDO::PARAM_INT);
         $this->conn->bindStatementValue($stmt, ":schluessel", $key, PDO::PARAM_STR);
         $this->conn->bindStatementValue($stmt, ":wert", $value, PDO::PARAM_STR);
         $this->conn->executeStatement($stmt);
-        $this->conn->commitTransaction();
     }
 
     /**
@@ -615,13 +576,8 @@ class Database {
         $validFor = 600;
         $this->conn->beginTransaction();
 
-        // Alten Token löschen
-        $stmt = $this->conn->prepareStatement("DELETE FROM Lehrertoken WHERE idLehrer = :idLehrer");
-        $this->conn->bindStatementValue($stmt, ":idLehrer", $lehrerId, PDO::PARAM_INT);
-        $this->conn->executeStatement($stmt);
-
         // Neuen Token speichern
-        $stmt = $this->conn->prepareStatement("INSERT INTO Lehrertoken (idLehrer, token, tokenTimestamp, tokenValidForSecs) VALUES (:id, :token, :ts, :valid)");
+        $stmt = $this->conn->prepareStatement("REPLACE INTO Lehrertoken (idLehrer, token, tokenTimestamp, tokenValidForSecs) VALUES (:id, :token, :ts, :valid)");
         $this->conn->bindStatementValue($stmt, ":id", $lehrerId, PDO::PARAM_INT);
         $this->conn->bindStatementValue($stmt, ":token", $token, PDO::PARAM_STR);
         $this->conn->bindStatementValue($stmt, ":ts", $time, PDO::PARAM_INT);
