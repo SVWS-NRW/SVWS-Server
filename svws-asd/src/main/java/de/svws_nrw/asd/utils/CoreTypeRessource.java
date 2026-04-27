@@ -156,6 +156,9 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<T, U>> {
 
+	/** Gibt an, ob die Core-Types zuvor schon per initAll initialisiert wurden oder nicht. */
+	private static boolean _initialized = false;
+
 	/** eine Liste mit allen definierten Core-Type-Ressourcen */
 	private static final List<CoreTypeRessource<?, ?>> listResources = new ArrayList<>();
 
@@ -278,7 +281,11 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 	/**
 	 * Initialisiert alle Core-Type mit den Daten aus den angegeben Ressourcen
 	 */
-	public static void initAll() {
+	public static synchronized void initAll() {
+		// Wenn die Core-Types bereits zuvor initialisiert wurden, dann ist das nicht wiederholt nötig.
+		if (_initialized) {
+			return;
+		}
 		// Lade die Daten
 		addAll();
 		// Initialisieren die Core-Types
