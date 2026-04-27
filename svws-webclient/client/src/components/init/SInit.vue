@@ -2,7 +2,7 @@
 	<ui-login-layout size="lg" hide-header hide-hinweis>
 		<template #main>
 			<div class="w-full flex flex-col gap-2">
-				<div class="w-full pb-2 mb-4 text-headline-md text-left border-b-1">
+				<div class="w-full pb-2 mb-4 text-headline-md text-left border-b">
 					<span>Initialisierung der Datenbank</span>
 				</div>
 				<ui-card icon="i-ri-archive-line" title="Schulkatalog" subtitle="Daten werden über die Auswahl der Schulnummer ausgwählt"
@@ -12,9 +12,6 @@
 							<svws-ui-select v-model="schule" title="Schule auswählen" autocomplete
 								:items="listSchulkatalog" :item-text="i => i.KurzBez ? `${i.SchulNr}: ${i.KurzBez}` : `${i.SchulNr}: Schule ohne Name`"
 								:item-filter="filterSchulenKatalogEintraege" required :disabled="isLoading" />
-						</div>
-						<div v-if="status !== undefined" class="font-bold text-sm text-ui-danger mt-2">
-							{{ status === false ? "Fehler beim Initialisieren" : status === true ? "Initialisierung erfolgreich" : "" }}
 						</div>
 					</div>
 					<template #buttonFooterLeft>
@@ -49,9 +46,6 @@
 							<svws-ui-text-input v-model.trim="user" placeholder="Datenbank-Benutzer" />
 							<svws-ui-text-input v-model.trim="password" placeholder="Passwort Datenbankbenutzer" type="password" />
 						</div>
-						<div class="text-left font-bold text-sm -mb-5 mt-4">
-							{{ status === false ? "Fehler beim Upload" : status === true ? "Upload erfolgreich" : "" }}
-						</div>
 					</div>
 					<template #buttonFooterLeft>
 						<svws-ui-button :disabled="(db === 'mdb' && !file) || (user === 'root') || isLoading" title="Migration starten" @click="migrate" :is-loading class="mt-4">
@@ -66,9 +60,6 @@
 					<div class="flex flex-col gap-2 text-left">
 						<span class="font-bold text-button">Quell-Datenbank: SQLite-Datenbank (.sqlite) hochladen</span>
 						<input type="file" @change="onFileChanged" :disabled="isLoading" accept=".sqlite">
-						<div class="font-bold text-sm">
-							{{ status === false ? "Fehler beim Upload" : status === true ? "Upload erfolgreich" : "" }}
-						</div>
 					</div>
 					<template #buttonFooterLeft>
 						<svws-ui-button :disabled="!file || isLoading" title="Wiederherstellen" @click="restore" :is-loading class="mt-4">
@@ -88,7 +79,6 @@
 			</div>
 		</template>
 	</ui-login-layout>
-	<s-notifications />
 </template>
 
 <script setup lang="ts">
@@ -119,8 +109,9 @@
 		if (newAction === oldAction.value.name && !open) {
 			return;
 		}
+		file.value = null;
 		oldAction.value.name = currentAction.value;
-		oldAction.value.open = (currentAction.value === "") ? false : true;
+		oldAction.value.open = currentAction.value !== "";
 		if (open === true) {
 			currentAction.value = newAction;
 		} else {
@@ -149,7 +140,9 @@
 		isLoading.value = true;
 		const formData = new FormData();
 		formData.append("database", file.value);
-		status.value = await props.importSQLite(formData);
+		const res = await props.importSQLite(formData);
+		status.value = res.success;
+		logs.value = res.log;
 		isLoading.value = false;
 	}
 
@@ -190,7 +183,9 @@
 		formData.append('databasePassword', password.value);
 		formData.append('schema', schema.value);
 		formData.append('location', location.value);
-		status.value = await props.migrateDB(formData, currentAction.value === 'restore', db.value);
+		const res = await props.migrateDB(formData, currentAction.value === 'restore', db.value);
+		status.value = res.success;
+		logs.value = res.log;
 		isLoading.value = false;
 	}
 
@@ -203,54 +198,3 @@
 		isLoading.value = false;
 	}
 </script>
-
-<!-- <style lang="postcss">
-
-	@reference "../../../../ui/src/assets/styles/index.css"
-
-	.svws-ui-content-button {
-		@apply rounded-lg border-ui-neutral border p-4 text-balance flex gap-4 text-left;
-
-		&.svws-not-active {
-			@apply opacity-50 border-transparent order-1;
-
-			.svws-icon {
-				@apply opacity-25;
-			}
-		}
-
-		&.svws-active {
-			@apply border-transparent text-ui-brand bg-ui-brand/10 pointer-events-none;
-		}
-
-		&:not(.svws-active):hover,
-		&:not(.svws-active):focus-visible {
-			@apply outline-hidden bg-ui-75 opacity-100;
-
-			.svws-icon {
-				@apply opacity-100;
-			}
-		}
-
-		&:focus {
-			@apply outline-hidden;
-		}
-
-		&:not(.svws-active):focus-visible {
-			@apply ring-3 ring-ui-brand/50 ring-offset-1;
-		}
-
-		.svws-title {
-			@apply font-bold text-headline-md;
-		}
-
-		.svws-description {
-			@apply opacity-50 leading-tight;
-		}
-
-		.svws-icon {
-			@apply text-headline-xl w-16 text-center;
-		}
-	}
-
-</style> -->

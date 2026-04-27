@@ -3,7 +3,7 @@ import type { RouteLocationRaw, RouteParams } from "vue-router";
 
 import type { InitProps } from "~/components/init/SInitProps";
 import type { List, SchulenKatalogEintrag } from "@core";
-import { DatenbankVerbindungsdaten, ServerMode, ArrayList, BenutzerKompetenz, Schulform } from "@core";
+import { DatenbankVerbindungsdaten, ServerMode, ArrayList, BenutzerKompetenz, Schulform, SimpleOperationResponse, OpenApiError } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
@@ -24,71 +24,82 @@ export class RouteInit extends RouteNode<any, any> {
 		super.text = "Initialisierung";
 	}
 
+	private async createSimpleOperationResponse(e: unknown): Promise<SimpleOperationResponse> {
+		const res = new SimpleOperationResponse();
+		if (e instanceof OpenApiError) {
+			if (e.response instanceof Response) {
+				const text = await e.response.text();
+				try {
+					const res = JSON.parse(text);
+					return res satisfies SimpleOperationResponse;
+				} catch {
+					res.log.add("Fehler beim Importieren der Daten");
+				}
+			}
+			res.log.add(e.message);
+		}
+		return res;
+	}
+
 	initSchule = async (schule: SchulenKatalogEintrag): Promise<boolean> => {
 		try {
 			await api.server.initSchule(api.schema, Number(schule.SchulNr));
+			return true;
 		} catch (error) {
 			console.warn(`Das Initialiseren des Schemas mit der Schulnummer ${schule.SchulNr} ist fehlgeschlagen.`, error);
+			await this.logout();
 			return false;
 		}
-		return this.logout();
 	};
 
-	importSQLite = async (formData: FormData): Promise<boolean> => {
+	importSQLite = async (formData: FormData): Promise<SimpleOperationResponse> => {
 		try {
-			await api.server.importSQLite(formData, api.schema);
-		} catch (error) {
-			console.warn(`Das Initialiseren des Schemas mit einnem SQLite-Backup ist fehlgeschlagen.`);
-			return false;
+			return await api.server.importSQLite(formData, api.schema);
+		} catch (e) {
+			return this.createSimpleOperationResponse(e);
 		}
-		return this.logout();
 	};
 
-	migrateDB = async (formData: FormData, restore: boolean, db: string | undefined): Promise<boolean> => {
+	migrateDB = async (formData: FormData, restore: boolean, db: string | undefined): Promise<SimpleOperationResponse> => {
 		if (restore) {
 			return this.importSQLite(formData);
 		}
 		if (db === undefined) {
-			return false;
+			return new SimpleOperationResponse();
 		}
-		const schulnummer = Number.parseInt((formData.get('schulnummer') ?? '0') as string);
+		const schulnummer = Number.parseInt(formData.get('schulnummer') as string | null ?? "0");
 		const data = new DatenbankVerbindungsdaten();
-		data.location = formData.get('location') as string | null;
-		data.schema = formData.get('schema') as string | null;
-		data.username = formData.get('username') as string | null;
-		data.password = formData.get('password') as string | null;
+		data.location = formData.get('location') as string | null ?? "";
+		data.schema = formData.get('schema') as string | null ?? "";
+		data.username = formData.get('username') as string | null ?? "";
+		data.password = formData.get('password') as string | null ?? "";
 		try {
 			switch (db) {
 				case 'mariadb':
 					if (schulnummer > 0) {
-						await api.server.migrateMariaDBSchulnummer(data, api.schema, schulnummer);
+						return await api.server.migrateMariaDBSchulnummer(data, api.schema, schulnummer);
 					} else {
-						await api.server.migrateMariaDB(data, api.schema);
+						return await api.server.migrateMariaDB(data, api.schema);
 					}
-					break;
 				case 'mysql':
 					if (schulnummer > 0) {
-						await api.server.migrateMySqlSchulnummer(data, api.schema, schulnummer);
+						return await api.server.migrateMySqlSchulnummer(data, api.schema, schulnummer);
 					} else {
-						await api.server.migrateMySql(data, api.schema);
+						return await api.server.migrateMySql(data, api.schema);
 					}
-					break;
 				case 'mssql':
 					if (schulnummer > 0) {
-						await api.server.migrateMsSqlServerSchulnummer(data, api.schema, schulnummer);
+						return await api.server.migrateMsSqlServerSchulnummer(data, api.schema, schulnummer);
 					} else {
-						await api.server.migrateMsSqlServer(data, api.schema);
+						return await api.server.migrateMsSqlServer(data, api.schema);
 					}
-					break;
 				case 'mdb':
-					await api.server.migrateMDB(formData, api.schema);
-					break;
+				default:
+					return await api.server.migrateMDB(formData, api.schema);
 			}
-		} catch (error) {
-			console.warn(`Das Initialiseren des Schemas mit der Schild 2-Datenbank ist fehlgeschlagen.`);
-			return false;
+		} catch (e) {
+			return this.createSimpleOperationResponse(e);
 		}
-		return this.logout();
 	};
 
 	logout = async (): Promise<true> => {
