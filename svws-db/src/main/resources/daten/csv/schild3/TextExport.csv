@@ -25,6 +25,8 @@ ErzAdr;Anrede1;1. Person: Anrede;S;;;;;ALLE
 ErzAdr;Anrede1;1. Person: Briefanrede;S;"Herr;Frau";"Sehr geehrter Herr;Sehr geehrte Frau";;;ALLE
 ErzAdr;Anrede2;2. Person: Anrede;S;;;;;ALLE
 ErzAdr;Anrede2;2. Person: Briefanrede;S;"Herr;Frau";"Sehr geehrter Herr;Sehr geehrte Frau";;;ALLE
+ErzAdr;Erz1StaatKrz;1. Person: Staatsangehörigkeit;S;;;mtblStaat.bezeichnung;codeDEStatis=%;ALLE
+ErzAdr;Erz2StaatKrz;2. Person: Staatsangehörigkeit;S;;;mtblStaat.bezeichnung;codeDEStatis=%;ALLE
 ErzAdr;ErzAnschreiben;Erhält Anschreiben;B;;;;;ALLE
 ErzAdr;ErzEMail;1. Person: E-Mail;S;;;;;ALLE
 ErzAdr;ErzEMail2;2. Person: E-Mail;S;;;;;ALLE
