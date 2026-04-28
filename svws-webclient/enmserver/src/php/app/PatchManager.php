@@ -29,16 +29,6 @@ class PatchManager {
         $this->mapKlassenSperrkonfigurationen = Database::getConfigSperrungNoteneingabe($this->conn);
     }
 
-
-    /**
-     * Gibt das aktuelle Datum als formattierten String zurück.
-     *
-     * @return string   das aktuelle Datum als String
-     */
-    public static function now(): string {
-        return date('Y-m-d H:i:s.v', time());
-    }
-
     /**
      * Prüft, ob die beiden Strings sich unterscheiden. Dabei wird auch auf Null-Werte geprüft.
      *
@@ -137,7 +127,7 @@ class PatchManager {
         }
 
         // Prüfe die zeitliche Einschränkung für die Eingabe, sofern eine gesetzt wurde
-        $now = $this->now();
+        $now = TimeUtils::now();
         $this->pruefeEingabebeginn($config, $now);
         $this->pruefeEingabeende($config, $now);
     }
@@ -162,7 +152,7 @@ class PatchManager {
         // TODO prüfe auch die Information, ob nur Gesamtfehlstunden eingegeben werden sollen oder auf Basis von Lerngruppen
 
         // Prüfe die zeitliche Einschränkung für die Eingabe, sofern eine gesetzt wurde
-        $now = $this->now();
+        $now = TimeUtils::now();
         $this->pruefeEingabebeginn($config, $now);
         $this->pruefeEingabeende($config, $now);
     }
@@ -191,7 +181,7 @@ class PatchManager {
         }
 
         // Prüfe die zeitliche Einschränkung für die Eingabe, sofern eine gesetzt wurde
-        $now = $this->now();
+        $now = TimeUtils::now();
         $this->pruefeEingabebeginn($config, $now);
         $this->pruefeEingabeende($config, $now);
     }
@@ -358,12 +348,11 @@ class PatchManager {
      * @param object $patch        der Patch für die Daten
      */
     public static function patchENMLehrerPassword(DBConnection $conn, object $daten, object $patch): void {
-        $ts = PatchManager::now();
+        $ts = TimeUtils::now();
         if (property_exists($patch, 'passwordHash') && PatchManager::diffStringNullable($patch->passwordHash, $daten->passwordHash) && ($ts > $daten->tsPasswordHash)) {
-            $sql = "UPDATE Lehrer SET passwordHash=:passwordHash,tsPasswordHash=:tsPasswordHash,daten=:daten WHERE id=:id";
+            $sql = "UPDATE Lehrer SET passwordHash=:passwordHash,tsPasswordHash='$ts',daten=:daten WHERE id=:id";
             $stmt = $conn->prepareStatement($sql);
             $conn->bindStatementValue($stmt, ":passwordHash", $patch->passwordHash, PDO::PARAM_STR);
-            $conn->bindStatementValue($stmt, ":tsPasswordHash", $ts, PDO::PARAM_STR);
             $daten->passwordHash = $patch->passwordHash;
             $daten->tsPasswordHash = $ts;
             $conn->bindStatementValue($stmt, ":daten", json_encode($daten, JSON_UNESCAPED_SLASHES), PDO::PARAM_STR);
@@ -384,7 +373,7 @@ class PatchManager {
      */
     protected function dbPatchENMLeistung(object $daten, object $patch, array $mapNoten): void {
         $idKlasse = $this->enmManager->getKlassenIdByLeistungsdatenId($patch->id);
-        $ts = PatchManager::now();
+        $ts = TimeUtils::now();
         $update = "";
         if (property_exists($patch, 'note') && PatchManager::diffStringNullable($patch->note, $daten->note) && ($ts > $daten->tsNote)) {
             $this->pruefeSperrungSpalte($idKlasse, 'Note');
@@ -465,7 +454,7 @@ class PatchManager {
      */
     protected function dbPatchENMSchuelerLernabschnitt(object $daten, object $patch): void {
         $idKlasse = $this->enmManager->getKlassenIdByLernabschnittsId($patch->id);
-        $ts = PatchManager::now();
+        $ts = TimeUtils::now();
         $update = "";
         if (property_exists($patch, 'fehlstundenGesamt') && ($ts > $daten->lernabschnitt->tsFehlstundenGesamt)
                 && ($patch->fehlstundenGesamt !== $daten->lernabschnitt->fehlstundenGesamt)) {
@@ -515,7 +504,7 @@ class PatchManager {
      */
     protected function dbPatchENMSchuelerBemerkungen(int $idSchueler, object $daten, object $patch): void {
         $idKlasse = $this->enmManager->getKlassenIdBySchuelerId($idSchueler);
-        $ts = PatchManager::now();
+        $ts = TimeUtils::now();
         $update = "";
         if (property_exists($patch, 'ASV') && ($ts > $daten->bemerkungen->tsASV)
                 && PatchManager::diffStringNullable($daten->bemerkungen->ASV, $patch->ASV)) {
@@ -594,7 +583,7 @@ class PatchManager {
      */
     protected function dbPatchENMTeilleistung(object $daten, object $patch, array $mapNoten): void {
         $idKlasse = $this->enmManager->getKlassenIdByTeilleistungId($patch->id);
-        $ts = PatchManager::now();
+        $ts = TimeUtils::now();
         $update = "";
         if (property_exists($patch, 'artID') && ($patch->artID !== $daten->artID) && ($ts > $daten->tsArtID)) {
             Http::exit400BadRequest("Das Verändern der Teilleistungsart ist nicht erlaubt.");
@@ -645,7 +634,7 @@ class PatchManager {
      */
     protected function dbPatchENMSchuelerAnkreuzkompetenzen(object $daten, object $patch): void {
         $idKlasse = $this->enmManager->getKlassenIdByAnkreuzkompetenzId($patch->id);
-        $ts = PatchManager::now();
+        $ts = TimeUtils::now();
         $update = "";
         if (property_exists($patch, 'stufen') && PatchManager::diffArraySimple($patch->stufen, $daten->stufen) && ($ts > $daten->tsStufe)) {
             $this->pruefeSperrungSpalte($idKlasse, 'Note');

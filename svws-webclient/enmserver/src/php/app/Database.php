@@ -261,7 +261,7 @@ class Database {
      */
     public function createClientAccessToken(int $id): object | null {
         $token = Config::generateRandomSecret();
-        $time = time();
+        $time = TimeUtils::timestamp();
         $validFor = 3600; // eine Stunde (in Sekunden)
         if (!$this->conn->execUpdate("UPDATE OAuth SET token='$token', tokenTimestamp=$time, tokenValidForSecs=$validFor WHERE clientID = $id")) {
             return null;
@@ -572,7 +572,7 @@ class Database {
      */
     public function writeENMLehrerToken(int $lehrerId): string {
         $token = Config::generateRandomSecret();
-        $time = time();
+        $time = TimeUtils::timestamp();
         $validFor = 600;
         $this->conn->beginTransaction();
 
@@ -622,7 +622,7 @@ class Database {
             $tokenValidForSecs = $tokenObj->tokenValidForSecs; // Gültigkeitsdauer in Sekunden
             // Berechne, ob das Token noch gültig ist
             $tokenExpiryTime = $tokenTimestamp + $tokenValidForSecs; // Ablaufzeit des Tokens
-            $currentTime = time(); // Aktuelle Zeit
+            $currentTime = TimeUtils::timestamp(); // Die aktuelle Zeit in UTC
             if ($currentTime < $tokenExpiryTime) {
                 return true;
             }
@@ -658,7 +658,7 @@ class Database {
     public function istLoginGesperrt(string $ip, int $idLehrer): bool {
         // Prüfe zunächst die Login-Versuche eines Lehrers auf einer IP-Adresse (maximal 3 Versuche in 5 Minuten)
         $maxTries = 3; // maximal 3 Versuche
-        $limit = time() - 300; // pro 5 Minuten (300 Sekunden)
+        $limit = TimeUtils::timestamp() - 300; // pro 5 Minuten (300 Sekunden)
         $stmt = $this->conn->prepareStatement("SELECT COUNT(*) as versuche FROM LoginFehlversuche WHERE (ip = :ip AND idLehrer = :idLehrer) AND zeitpunkt > :limit");
         $this->conn->bindStatementValue($stmt, ":ip", $ip, PDO::PARAM_STR);
         $this->conn->bindStatementValue($stmt, ":idLehrer", $idLehrer, PDO::PARAM_INT);
@@ -671,7 +671,7 @@ class Database {
 
         // Prüfe, ob von einer IP-Adresse insgesamt zu viele Fehlversuche stammen
         $maxTries = 100; // maximal 100 Versuche
-        $limit = time() - 300; // pro 5 Minuten (300 Sekunden)
+        $limit = TimeUtils::timestamp() - 300; // pro 5 Minuten (300 Sekunden)
         $stmt = $this->conn->prepareStatement("SELECT COUNT(*) as versuche FROM LoginFehlversuche WHERE ip = :ip AND zeitpunkt > :limit");
         $this->conn->bindStatementValue($stmt, ":ip", $ip, PDO::PARAM_STR);
         $this->conn->bindStatementValue($stmt, ":limit", $limit, PDO::PARAM_INT);
@@ -692,15 +692,16 @@ class Database {
      * @param int $idLehrer   die ID des Lehrers
      */
     public function updateLoginFailures(string $ip, int $idLehrer): void {
+        $time = TimeUtils::timestamp();
         $stmt = $this->conn->prepareStatement("INSERT OR IGNORE INTO LoginFehlversuche(ip, idLehrer, zeitpunkt) VALUES (:ip, :id, :zeit)");
         $this->conn->bindStatementValue($stmt, ":ip", $ip, PDO::PARAM_STR);
         $this->conn->bindStatementValue($stmt, ":id", $idLehrer, PDO::PARAM_INT);
-        $this->conn->bindStatementValue($stmt, ":zeit", time(), PDO::PARAM_INT);
+        $this->conn->bindStatementValue($stmt, ":zeit", $time, PDO::PARAM_INT);
         $this->conn->executeStatement($stmt);
     
         // Räume die Tabelle mit den Fehlversuche immer wieder gelegentlich auf... (nicht immer, da dies nicht performant ist)
         if (rand(1, 100) === 1) {
-            $this->conn->execUpdate("DELETE FROM LoginFehlversuche WHERE zeitpunkt < " . (time() - 3600));
+            $this->conn->execUpdate("DELETE FROM LoginFehlversuche WHERE zeitpunkt < " . ($time - 3600));
         }
     }
 
@@ -724,13 +725,12 @@ class Database {
             Http::exit500("Fehler beim Zugriff auf die Lehrer-Daten");
         }
         $lehrer->istErstanmeldung = false;
-        $lehrer->tsIstErstanmeldung = date('Y-m-d H:i:s.v', time());
+        $lehrer->tsIstErstanmeldung = TimeUtils::now();
         $updatedLehrer = json_encode($lehrer, JSON_UNESCAPED_SLASHES);
         $this->conn->beginTransaction();
-        $stmt = $this->conn->prepareStatement("UPDATE Lehrer SET istErstanmeldung=:istErstanmeldung, tsIstErstanmeldung=:tsIstErstanmeldung, daten=:daten WHERE id=:id");
+        $stmt = $this->conn->prepareStatement("UPDATE Lehrer SET istErstanmeldung=:istErstanmeldung, tsIstErstanmeldung='$lehrer->tsIstErstanmeldung', daten=:daten WHERE id=:id");
         $this->conn->bindStatementValue($stmt, ":id", $idLehrer, PDO::PARAM_INT);
         $this->conn->bindStatementValue($stmt, ":istErstanmeldung", $lehrer->istErstanmeldung, PDO::PARAM_INT);
-        $this->conn->bindStatementValue($stmt, ":tsIstErstanmeldung", $lehrer->tsIstErstanmeldung, PDO::PARAM_STR);
         $this->conn->bindStatementValue($stmt, ":daten", $updatedLehrer, PDO::PARAM_STR);
         $this->conn->executeStatement($stmt);
         $this->conn->commitTransaction();
@@ -745,13 +745,12 @@ class Database {
         $hash = password_hash($newPassword, PASSWORD_DEFAULT);
         $lehrer->passwordHash = str_replace('$2y$', '$2a$', $hash);
         $lehrer->istInitialPassword = false;
-        $lehrer->tsPasswordHash = date('Y-m-d H:i:s.v');
+        $lehrer->tsPasswordHash = TimeUtils::now();
         $updatedLehrer = json_encode($lehrer, JSON_UNESCAPED_SLASHES);
         $this->conn->beginTransaction();
-        $stmt = $this->conn->prepareStatement("UPDATE Lehrer SET passwordHash=:passwordHash, tsPasswordHash=:tsPasswordHash, daten=:daten WHERE id=:id");
+        $stmt = $this->conn->prepareStatement("UPDATE Lehrer SET passwordHash=:passwordHash, tsPasswordHash='$lehrer->tsPasswordHash', daten=:daten WHERE id=:id");
         $this->conn->bindStatementValue($stmt, ":id", $idLehrer, PDO::PARAM_INT);
         $this->conn->bindStatementValue($stmt, ":passwordHash", $lehrer->passwordHash, PDO::PARAM_STR);
-        $this->conn->bindStatementValue($stmt, ":tsPasswordHash", $lehrer->tsPasswordHash, PDO::PARAM_STR);
         $this->conn->bindStatementValue($stmt, ":daten", $updatedLehrer, PDO::PARAM_STR);
         $this->conn->executeStatement($stmt);
         $this->conn->commitTransaction();

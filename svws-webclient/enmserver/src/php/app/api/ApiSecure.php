@@ -8,6 +8,7 @@ use wenom\ENMAuth;
 use wenom\Http;
 use wenom\ImportManager;
 use wenom\ENMDatenManager;
+use wenom\TimeUtils;
 
 /**
  * Diese Klasse verwaltet die Secure-Schnittstelle für die Kommunikation mit dem SVWS-Server
@@ -41,7 +42,6 @@ class ApiSecure {
             ],
             'export'       => ['GET'  => fn() => $this->export($db)],
             'import'       => ['POST' => fn() => $this->import($db)],
-            'sync'         => ['POST' => fn() => $this->sync($db)],
         ];
 
         // Prüfe, ob der Endpunkt vorhanden ist
@@ -63,7 +63,10 @@ class ApiSecure {
      * Prüft die Erreichbarkeit und die Gültigkeit des Access-Tokens.
      */
     private function check(): void {
-        Http::exit200OKJson("OK");
+        $result = [
+            "ts" => TimeUtils::now()
+        ];
+        Http::exit200OKJson(json_encode($result));
     }
 
     /**
@@ -146,23 +149,6 @@ class ApiSecure {
         $importManager->doImport();
 
         Http::exit200OKJson("OK");
-    }
-
-    /**
-     * Synchronisiert die Daten durch einen Import der Request-Daten und einen Export des neuen Standes
-     *
-     * @param Database db   die aktuelle Datenbank-Verbindung
-     */
-    private function sync(Database $db): void {
-        // Import
-        $contentImport = Http::getMultipartGzipFileContent("file");
-        $importManager = ImportManager::createFromJson($db->conn, $contentImport);
-        $importManager->doImport();
-
-        // Export
-        $enmDatenManager = ENMDatenManager::createFromDatabase($db);
-        $contentExport = $enmDatenManager->doExport();
-        Http::exit200OKGZip($contentExport);
     }
 
 }

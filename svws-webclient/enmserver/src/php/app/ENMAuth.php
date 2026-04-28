@@ -148,8 +148,8 @@ class ENMAuth {
         // Erstelle das Json-Web-Token mit einer Gültigkeit von 8 Stunden
         $payload = [
             'sub' => $idLehrer,
-            'exp' => time() + $expTime,
-            'iat' => time()
+            'exp' => TimeUtils::timestamp() + $expTime,
+            'iat' => TimeUtils::timestamp()
         ];
         $jwt = Http::createJsonWebToken($payload, $sessionKey);
         return json_encode([ 'token' => $jwt, 'id' => $idLehrer ]);
@@ -170,8 +170,8 @@ class ENMAuth {
         $payload = [
             'sub' => $idLehrer,
             'pwd' => Password::generate(),
-            'exp' => time() + $expTime,
-            'iat' => time()
+            'exp' => TimeUtils::timestamp() + $expTime,
+            'iat' => TimeUtils::timestamp()
         ];
         $jwt = Http::createJsonWebToken($payload, $sessionKey);
         return json_encode([ 'token' => $jwt, 'id' => $idLehrer ]);
@@ -190,7 +190,7 @@ class ENMAuth {
         }
 
         $payload = Http::verifyJsonWebToken($this->authToken, $this->config->getClientSessionKey());
-        if (($payload === null) || ($payload->exp < time())) {
+        if (($payload === null) || ($payload->exp < TimeUtils::timestamp())) {
             Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server", error="invalid_token", error_description="The access token has expired"');
         }
 
@@ -214,7 +214,7 @@ class ENMAuth {
         }
 
         $payload = Http::verifyJsonWebToken($this->authToken, $this->config->getClientTotpAuthSessionKey());
-        if (!$payload || ($payload->exp < time())) {
+        if (!$payload || ($payload->exp < TimeUtils::timestamp())) {
             Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server", error="invalid_token", error_description="The access token has expired"');
         }
 
@@ -243,7 +243,7 @@ class ENMAuth {
         }
 
         $payload = Http::verifyJsonWebToken($this->authToken, $this->config->getClientChangePasswordSessionKey());
-        if (!$payload || ($payload->exp < time())) {
+        if (!$payload || ($payload->exp < TimeUtils::timestamp())) {
             Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server", error="invalid_token", error_description="The password change token has expired"');
         }
 
@@ -308,7 +308,7 @@ class ENMAuth {
 
         // Bestimme das aktuelle Zeitfenster und den Toleranzbereich darum
         $sizeTimeslice = $this->config->getTotpTimeslice();
-        $currentTimeSlice = intdiv(time(), $sizeTimeslice);
+        $currentTimeSlice = intdiv(TimeUtils::timestamp(), $sizeTimeslice);
         $tolerance = $this->config->getTotpTolerance();
 
         // Prüfe das aktuelle Zeitfenster
@@ -339,7 +339,7 @@ class ENMAuth {
         if ($client == null) {
             Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server", error="invalid_token", error_description="The access token is not valid"');
         }
-        $elapsed = time() - $client->tokenTimestamp;
+        $elapsed = TimeUtils::timestamp() - $client->tokenTimestamp;
         if ($elapsed < 0) {
             Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server", error="invalid_token", error_description="The access token has an invalid timestamp"');
         }
