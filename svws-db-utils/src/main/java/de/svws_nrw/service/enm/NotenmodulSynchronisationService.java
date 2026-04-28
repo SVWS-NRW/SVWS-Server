@@ -5,7 +5,16 @@ import static de.svws_nrw.data.TransactionSupport.transactional;
 import java.io.InputStream;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.function.Consumer;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import de.svws_nrw.base.compression.CompressionException;
 import de.svws_nrw.core.data.SimpleOperationResponse;
@@ -24,6 +33,9 @@ import jakarta.ws.rs.core.Response.Status;
  * Service für die Synchronisation von ENM-Daten mit externen Servern.
  */
 public final class NotenmodulSynchronisationService {
+
+	private static final DateTimeFormatter germanFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss").withLocale(Locale.GERMANY);
+
 
 	private final NotenmodulVerbindungenRepository repository;
 	private final EnmV2GetService enmGetService;
@@ -100,6 +112,10 @@ public final class NotenmodulSynchronisationService {
 	private void downloadENMDaten(final HttpENMServerConnection client, final Logger logger) throws ApiOperationException {
 		logger.logLn("Sende die Anfrage zum Herunderladen der ENM-Daten von dem ENM-Server...");
 		final HttpResponse<byte[]> httpResponse = client.get("/api/secure/export", BodyHandlers.ofByteArray());
+		if (httpResponse.statusCode() == Status.NOT_FOUND.getStatusCode()) {
+			logger.logLn("Auf dem ENM-Server wurden keine Daten gefunden...");
+			return;
+		}
 		if (httpResponse.statusCode() != Status.OK.getStatusCode()) {
 			throw new ApiOperationException(Status.BAD_GATEWAY, httpResponse.body());
 		}
@@ -157,8 +173,8 @@ public final class NotenmodulSynchronisationService {
 	public SimpleOperationResponse synchronize(final long idVerbindung) {
 		return executeWithLog("Synchronisation", logger -> {
 			final HttpENMServerConnection client = new HttpENMServerConnection(repository, logger, idVerbindung, true, false);
-			uploadENMDaten(client, logger);
 			downloadENMDaten(client, logger);
+			uploadENMDaten(client, logger);
 		});
 	}
 
@@ -255,6 +271,39 @@ public final class NotenmodulSynchronisationService {
 			}
 			if (response.statusCode() != Status.OK.getStatusCode()) {
 				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
+			}
+
+			try {
+				// Einlesen der Zeit vom externen Server
+				final String body = response.body();
+				final JsonNode rootNode = JSONMapper.mapper.readTree(body);
+				final JsonNode tsNode = rootNode.get("ts");
+				if (tsNode == null) {
+					logger.logLn("Fehler beim Auslesen des Zeitstempels vom externen Server.");
+					throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
+				}
+				final LocalDateTime dateTime = JSONMapper.convertToLocalDateTime(tsNode.asText(), false);
+				final ZonedDateTime externTime = dateTime.atZone(ZoneId.of("Europe/Berlin"));
+				logger.logLn("Uhrzeit auf dem externen Server: " + externTime.format(germanFormatter));
+
+				// Bestimme die lokale Server-Zeit
+				final ZonedDateTime serverTime = ZonedDateTime.now(ZoneId.of("Europe/Berlin"));
+				logger.logLn("Uhrzeit auf dem SVWS-Server: " + serverTime.format(germanFormatter));
+
+				// Vergleiche die beiden Zeiten miteinander
+				final Duration duration = Duration.between(externTime, serverTime);
+				final long diff = Math.abs(duration.getSeconds());
+				if (diff > 300) {
+					logger.logLn(
+							"Die Uhrzeiten des externen Serves und des SVWS-Server weichen zu stark voneinander ab, so dass eine Synchronisation nicht ausreichend stabil möglich ist: "
+									+ serverTime.format(germanFormatter));
+					throw new ApiOperationException(Status.CONFLICT,
+							"Der Zeitstempel weicht mit %d Sekunden zu stark vom Server ab (max. 300s erlaubt).".formatted(diff));
+				}
+
+			} catch (final JsonProcessingException e) {
+				logger.logLn("Fehler beim Auslesen des Zeitstempels vom externen Server.");
+				throw new ApiOperationException(Status.BAD_GATEWAY, e, response.body());
 			}
 		}));
 	}

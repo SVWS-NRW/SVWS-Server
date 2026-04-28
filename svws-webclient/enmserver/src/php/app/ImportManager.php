@@ -36,7 +36,7 @@ class ImportManager {
      * @param DBConnection $conn     die Datenbank-Verbindung
      */
     private function __construct(DBConnection $conn) {
-        $this->ts = time();
+        $this->ts = TimeUtils::timestamp();
         $this->conn = $conn;
     }
 
