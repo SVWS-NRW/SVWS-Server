@@ -75,7 +75,7 @@
     </inspection_tool>
     <inspection_tool class="MissortedModifiers" enabled="true" level="Cleanup" enabled_by_default="true" editorAttributes="Cleanup">
       <option name="m_requireAnnotationsFirst" value="true" />
-      <option name="typeUseWithType" value="true" />
+	  <option name="typeUseWithType" value="false"/>
     </inspection_tool>
     <inspection_tool class="NegatedConditionalExpression" enabled="false" level="TEXT ATTRIBUTES" enabled_by_default="false" editorAttributes="WARNING_ATTRIBUTES" />
     <inspection_tool class="NegatedEqualityExpression" enabled="false" level="TEXT ATTRIBUTES" enabled_by_default="false" editorAttributes="WARNING_ATTRIBUTES" />
