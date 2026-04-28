@@ -23,7 +23,6 @@ class TestValidatorSsn10SchuelerStammdatenNachname {
             '   '        , false
             ' \t '       , false
             'Mustermann' , true
-            null         , true
             """;
 
 	/** Stammdaten der Schule */

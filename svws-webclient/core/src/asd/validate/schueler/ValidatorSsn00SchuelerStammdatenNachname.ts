@@ -19,7 +19,7 @@ export class ValidatorSsn00SchuelerStammdatenNachname extends Validator {
 	public constructor(nachname: Supplier<string | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._nachname = nachname;
-		this._validatoren.add(new ValidatorSsn10SchuelerStammdatenNachname(nachname, kontext));
+		this._validatoren.add(new ValidatorSsn10SchuelerStammdatenNachname(this.getNotNullSupplier(nachname), kontext));
 	}
 
 	protected pruefe(): boolean {

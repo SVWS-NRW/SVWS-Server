@@ -24,7 +24,7 @@ public final class ValidatorSsn00SchuelerStammdatenNachname extends Validator {
 	public ValidatorSsn00SchuelerStammdatenNachname(@NotNull final Supplier<@AllowNull String> nachname, @NotNull final ValidatorKontext kontext) {
 		super(kontext);
 		this._nachname = nachname;
-		_validatoren.add(new ValidatorSsn10SchuelerStammdatenNachname(nachname, kontext));
+		_validatoren.add(new ValidatorSsn10SchuelerStammdatenNachname(getNotNullSupplier(nachname), kontext));
 
 	}
 

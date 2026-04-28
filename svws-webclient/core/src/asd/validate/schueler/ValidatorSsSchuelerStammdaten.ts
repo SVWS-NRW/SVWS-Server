@@ -1,5 +1,6 @@
 import { ValidatorSsgSchuelerStammdatenGeschlecht } from '../../../asd/validate/schueler/ValidatorSsgSchuelerStammdatenGeschlecht';
 import type { Supplier } from '../../../java/util/function/Supplier';
+import { ValidatorSsdSchuelerStammdatenGeburtsdatum } from '../../../asd/validate/schueler/ValidatorSsdSchuelerStammdatenGeburtsdatum';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
@@ -10,12 +11,14 @@ export class ValidatorSsSchuelerStammdaten extends Validator {
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param geschlecht  das geschlecht des Schuelers
-	 * @param kontext     der Kontext des Validators
+	 * @param geschlecht    das geschlecht des Schuelers
+	 * @param geburtsdatum  das geburtsdatum des Schuelers
+	 * @param kontext       der Kontext des Validators
 	 */
-	public constructor(geschlecht: Supplier<number | null>, kontext: ValidatorKontext) {
+	public constructor(geschlecht: Supplier<number | null>, geburtsdatum: Supplier<string | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._validatoren.add(new ValidatorSsgSchuelerStammdatenGeschlecht(geschlecht, kontext));
+		this._validatoren.add(new ValidatorSsdSchuelerStammdatenGeburtsdatum(geburtsdatum, kontext));
 	}
 
 	protected pruefe(): boolean {

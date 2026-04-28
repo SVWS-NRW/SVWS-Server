@@ -6,7 +6,7 @@ import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorSsn10SchuelerStammdatenNachname extends Validator {
 
-	private readonly _nachname: Supplier<string | null>;
+	private readonly _nachname: Supplier<string>;
 
 
 	/**
@@ -15,15 +15,13 @@ export class ValidatorSsn10SchuelerStammdatenNachname extends Validator {
 	 * @param nachname der Supplier für den Nachnamen
 	 * @param kontext  der Validierungskontext
 	 */
-	public constructor(nachname: Supplier<string | null>, kontext: ValidatorKontext) {
+	public constructor(nachname: Supplier<string>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._nachname = nachname;
 	}
 
 	protected pruefe(): boolean {
 		const nachname: string | null = this._nachname.get();
-		if (nachname === null)
-			return true;
 		if (!JavaString.isEmpty(nachname) && JavaString.isEmpty(nachname.trim())) {
 			this.addFehler(0, "Nachname des Schülers: Der Nachname darf nicht nur aus Leerzeichen bestehen.");
 			return false;

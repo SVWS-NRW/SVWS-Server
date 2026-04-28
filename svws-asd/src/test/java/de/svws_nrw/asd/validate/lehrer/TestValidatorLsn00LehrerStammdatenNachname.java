@@ -31,6 +31,7 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 class TestValidatorLsn00LehrerStammdatenNachname {
 
 	private static final String TESTDATEN_NACHNAME = """
+			null        , false
 			''          , false
 			'Müller'    , true
 		""";
@@ -59,7 +60,7 @@ class TestValidatorLsn00LehrerStammdatenNachname {
 	 */
 	@DisplayName("Tests für ValidatorLsn00LehrerStammdatenNachname")
 	@ParameterizedTest
-	@CsvSource(textBlock = TESTDATEN_NACHNAME)
+	@CsvSource(textBlock = TESTDATEN_NACHNAME, nullValues = { "null" })
 	void testValidatorLsn00LehrerStammdatenNachname(final String nachname, final boolean result) {
 
 		// Erzeuge den Kontext für die Validierung

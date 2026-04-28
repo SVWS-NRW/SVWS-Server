@@ -8,6 +8,7 @@ import de.svws_nrw.asd.data.statistik.LehrerStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.SchuelerStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.StatistikGesamt;
 import de.svws_nrw.asd.validate.gesamt.ValidatorGlGesamtLehrerdaten;
+import de.svws_nrw.asd.validate.gesamt.ValidatorGsGesamtSchuelerdaten;
 import de.svws_nrw.asd.validate.lehrer.ValidatorLpLehrerPersonaldaten;
 import de.svws_nrw.asd.validate.lehrer.ValidatorLsLehrerStammdaten;
 import de.svws_nrw.asd.validate.schueler.ValidatorSsSchuelerStammdaten;
@@ -38,6 +39,8 @@ public final class ValidatorGesamt extends Validator {
 		validatoren.add(new ValidatorSssSchuleStammdatenSchulform(() -> daten.get().schule.schulform, kontext));
 
 		validatoren.add(new ValidatorGlGesamtLehrerdaten(() -> daten.get().lehrer, kontext));
+
+		validatoren.add(new ValidatorGsGesamtSchuelerdaten(() -> daten.get().schueler, kontext));
 	}
 
 	@Override
@@ -73,6 +76,7 @@ public final class ValidatorGesamt extends Validator {
 		for (final SchuelerStatistikGesamt schueler : gesamt.schueler) {
 			_validatoren.add(new ValidatorSsSchuelerStammdaten(
 					() -> schueler.geschlecht,
+					() -> schueler.geburtsdatum,
 					this.kontext()));
 		}
 		return true;

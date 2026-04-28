@@ -2,6 +2,7 @@ import { ValidatorSsSchuelerStammdaten } from '../../asd/validate/schueler/Valid
 import { ArrayList } from '../../java/util/ArrayList';
 import { ValidatorLpLehrerPersonaldaten } from '../../asd/validate/lehrer/ValidatorLpLehrerPersonaldaten';
 import { ValidatorGlGesamtLehrerdaten } from '../../asd/validate/gesamt/ValidatorGlGesamtLehrerdaten';
+import { ValidatorGsGesamtSchuelerdaten } from '../../asd/validate/gesamt/ValidatorGsGesamtSchuelerdaten';
 import { ValidatorSssSchuleStammdatenSchulform } from '../../asd/validate/schule/ValidatorSssSchuleStammdatenSchulform';
 import type { List } from '../../java/util/List';
 import type { Supplier } from '../../java/util/function/Supplier';
@@ -35,6 +36,7 @@ export class ValidatorGesamt extends Validator {
 		this.daten = daten;
 		this.validatoren.add(new ValidatorSssSchuleStammdatenSchulform({ get: () => daten.get().schule.schulform }, kontext));
 		this.validatoren.add(new ValidatorGlGesamtLehrerdaten({ get: () => daten.get().lehrer }, kontext));
+		this.validatoren.add(new ValidatorGsGesamtSchuelerdaten({ get: () => daten.get().schueler }, kontext));
 	}
 
 	protected pruefe(): boolean {
@@ -46,7 +48,7 @@ export class ValidatorGesamt extends Validator {
 			this._validatoren.add(new ValidatorLpLehrerPersonaldaten({ get: () => lehrer.id }, { get: () => gesamt.schule.idSchuljahresabschnitt }, { get: () => lehrer.idRechtsverhaeltnis }, { get: () => lehrer.pflichtstundensoll }, { get: () => lehrer.anrechnungen }, { get: () => lehrer.idEinsatzstatus }, { get: () => lehrer.idBeschaeftigungsart }, { get: () => lehrer.geburtsdatum }, { get: () => lehrer.lehraemter }, { get: () => lehrer.mehrleistung }, { get: () => lehrer.minderleistung }, this.kontext()));
 		}
 		for (const schueler of gesamt.schueler) {
-			this._validatoren.add(new ValidatorSsSchuelerStammdaten({ get: () => schueler.geschlecht }, this.kontext()));
+			this._validatoren.add(new ValidatorSsSchuelerStammdaten({ get: () => schueler.geschlecht }, { get: () => schueler.geburtsdatum }, this.kontext()));
 		}
 		return true;
 	}
