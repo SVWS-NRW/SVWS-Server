@@ -380,7 +380,13 @@ export class NotenmodulConfigManagerSperrungen {
 		const now = null;
 		config.tsEingabeAb = now;
 		config.tsEingabeBis = now;
-		config.spalten.addAll(this._mapDefaultConfigKlasseSpalte.values());
+		for (const defaultSpalte of this._mapDefaultConfigKlasseSpalte.values()) {
+			const neueSpalte = new ENMConfigKlasseSpalte();
+			neueSpalte.idTeilleistung = defaultSpalte.idTeilleistung;
+			neueSpalte.name = defaultSpalte.name;
+			neueSpalte.gesperrt = defaultSpalte.gesperrt;
+			config.spalten.add(neueSpalte);
+		}
 		return config;
 	}
 	/**
@@ -1128,7 +1134,7 @@ export class NotenmodulConfigManagerSperrungen {
 			let newState = row.tsEingabeAb;
 			for (const klasse of klassen) {
 				const rowKlasse = this._mapConfigKlassen.get(klasse.id);
-				if ((rowKlasse === null) || (rowKlasse.tsEingabeAb !== row.tsEingabeAb)) {
+				if (rowKlasse?.tsEingabeAb !== row.tsEingabeAb) {
 					newState = null;
 					break;
 				}
@@ -1138,7 +1144,7 @@ export class NotenmodulConfigManagerSperrungen {
 			let newState = row.tsEingabeBis;
 			for (const klasse of klassen) {
 				const rowKlasse = this._mapConfigKlassen.get(klasse.id);
-				if ((rowKlasse === null) || (rowKlasse.tsEingabeBis !== row.tsEingabeBis)) {
+				if (rowKlasse?.tsEingabeBis !== row.tsEingabeBis) {
 					newState = null;
 					break;
 				}
