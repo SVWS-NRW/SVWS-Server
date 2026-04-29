@@ -63,7 +63,6 @@ public final class MerkmalService {
 		return TransactionSupport.transactional(() -> {
 			this.validateCreate(dto);
 			final var merkmal = this.mapper.toDomain(dto);
-			merkmal.id = this.repository.getNextID();
 			final var created = this.repository.create(merkmal);
 			return this.mapper.toApi(created);
 		});

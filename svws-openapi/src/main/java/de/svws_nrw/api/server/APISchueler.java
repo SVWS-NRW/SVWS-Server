@@ -1,16 +1,21 @@
 package de.svws_nrw.api.server;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import de.svws_nrw.asd.data.schueler.SchuelerBetrieb;
 import de.svws_nrw.asd.data.schueler.SchuelerNeu;
+import de.svws_nrw.controller.schueler.schulbesuch.BisherigeSchuleControllerFactory;
 import de.svws_nrw.core.data.schule.Fahrschuelerart;
 import de.svws_nrw.data.kataloge.DataFahrschuelerarten;
 
 import java.io.InputStream;
+import java.util.List;
 
 import de.svws_nrw.data.schueler.DataSchuelerNeu;
 import de.svws_nrw.data.schueler.betriebe.DataSchuelerBetriebe;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
+import de.svws_nrw.service.schueler.schulbesuch.BisherigeSchuleCreateRequest;
+import de.svws_nrw.service.schueler.schulbesuch.BisherigeSchulePatchRequest;
 import org.jboss.resteasy.annotations.GZIP;
 
 import de.svws_nrw.asd.data.schueler.SchuelerLeistungsdaten;
@@ -51,7 +56,6 @@ import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsliste;
 import de.svws_nrw.data.schueler.DataSchuelerLernplattformen;
 import de.svws_nrw.data.schueler.DataSchuelerMerkmale;
-import de.svws_nrw.data.schueler.DataSchuelerSchulbesuchSchule;
 import de.svws_nrw.data.schueler.DataSchuelerSchulbesuchsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerSprachbelegung;
 import de.svws_nrw.data.schueler.DataSchuelerSprachpruefung;
@@ -357,56 +361,32 @@ public class APISchueler {
 				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_LOESCHEN);
 	}
 
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage der bisherigen Schulen eines Schülers.
-	 *
-	 * @param schema     das Datenbankschema, auf das die Abfrage ausgeführt werden soll
-	 * @param id         die Datenbank-ID zur Identifikation eines Schulbesuchs
-	 * @param request    die Informationen zur HTTP-Anfrage
-	 *
-	 * @return das SchuelerMerkmal
-	 */
-	@GET
-	@Path("/bisherigeSchule/{id : \\d+}")
-	@Operation(summary = "Liefert die zur ID zugehörigen bisher besuchte Schule",
-			description = "Gibt die bisher besuchte Schule zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die bisher besuchte Schule", content = @Content(mediaType = "application/json",
-			schema = @Schema(implementation = SchuelerSchulbesuchSchule.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine bisher besuchte Schule mit der angegebenen ID gefunden.")
-	public Response getBisherigeSchule(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSchulbesuchSchule(conn).getByIdAsResponse(id),
-				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
-	}
-
-
 	/**
 	 * Die OpenAPI-Methode für das Hinzufügen der bisher besuchten Schule eines Schülers
 	 *
 	 * @param schema     das Datenbankschema
-	 * @param idSchueler   die ID des Schülers bei dem das Merkmal hinzugefügt werden soll
-	 * @param is         der Input-Stream mit den Daten einer bisher besuchten Schule
+	 * @param input      {@link SchuelerSchulbesuchSchule}
 	 * @param request    die Information zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Anwort mit einer neuen bisher besuchen Schule
 	 */
 	@POST
-	@Path("/{idSchueler : \\d+}/bisherigeSchule")
+	@Path("/bisherigeSchule")
 	@Operation(summary = "Erstellt eine neue bisherige Schule und gibt das zugehörige Objekt zurück.",
 			description = "Erstellt eine bisherige Schule, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
 	@ApiResponse(responseCode = "201", description = "Die bisher besuchte Schule wurde erfolgreich hinzugefügt.",
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerSchulbesuchSchule.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um bisherige Schulen hinzuzufügen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response addBisherigeSchule(@PathParam("schema") final String schema, @PathParam("idSchueler") final long idSchueler,
+	public Response addBisherigeSchule(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten der zu erstellenden Schule ohne die ID, da diese automatisch generiert wird.", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							schema = @Schema(implementation = SchuelerSchulbesuchSchule.class))) final InputStream is,
+							schema = @Schema(implementation = SchuelerSchulbesuchSchule.class))) final BisherigeSchuleCreateRequest input,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSchulbesuchSchule(conn, idSchueler).addAsResponse(is),
-				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+		return BisherigeSchuleControllerFactory
+				.withWriteAccess(request)
+				.getBisherigeSchulenController()
+				.create(input);
 	}
 
 	/**
@@ -414,7 +394,7 @@ public class APISchueler {
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param id        die Datenbank-ID zur Identifikation der bisher besuchten Schule
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param patch     das partielle Update als {@link JsonNode}
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -432,10 +412,12 @@ public class APISchueler {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchBisherigeSchule(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch für die bisher besuchte Schule", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = SchuelerSchulbesuchSchule.class))) final InputStream is,
+					schema = @Schema(implementation = SchuelerSchulbesuchSchule.class))) final BisherigeSchulePatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSchulbesuchSchule(conn).patchAsResponse(id, is),
-				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+		return BisherigeSchuleControllerFactory
+				.withWriteAccess(request)
+				.getBisherigeSchulenController()
+				.patch(id, patch);
 	}
 
 	/**
@@ -452,7 +434,7 @@ public class APISchueler {
 	@Operation(summary = "Entfernt bisher besuchte Schulen.",
 			description = "Entfernt bisher besuchte Schulen, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine bisher besuchte Schule wurde erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerSchulbesuchSchule.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um bisher besuchte Schulen zu entfernen.")
 	@ApiResponse(responseCode = "404", description = "Die bisher besuchten Schulen sind nicht vorhanden")
 	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
@@ -460,11 +442,12 @@ public class APISchueler {
 	public Response deleteBisherigeSchulen(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die IDs der zu löschenden bisher besuchten Schulen", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream ids,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataSchuelerSchulbesuchSchule(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(ids)),
-				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+		return BisherigeSchuleControllerFactory
+				.withDeleteAccess(request)
+				.getBisherigeSchulenController()
+				.delete(ids);
 	}
 
 	/**

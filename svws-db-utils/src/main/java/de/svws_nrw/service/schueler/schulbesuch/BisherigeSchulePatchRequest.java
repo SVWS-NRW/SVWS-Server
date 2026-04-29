@@ -1,60 +1,58 @@
-package de.svws_nrw.asd.data.schueler;
+package de.svws_nrw.service.schueler.schulbesuch;
 
-import de.svws_nrw.transpiler.TranspilerDTO;
+import de.svws_nrw.validation.constraints.ValidDateFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import org.openapitools.jackson.nullable.JsonNullable;
 
-/**
- * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt die Schulbesuchsdaten zu einer bisher besuchten Schule.
- */
-@XmlRootElement
-@Schema(description = "Ein Eintrag in der Liste der bisher besuchten Schulen.")
-@TranspilerDTO
-public class SchuelerSchulbesuchSchule {
-
-	/** Die ID der Informationen zum vorigen Schulbesuch in der Datenbank. */
-	@Schema(description = "die ID der Informationen zum vorigen Schulbesuch in der Datenbank", example = "226984", accessMode = Schema.AccessMode.READ_ONLY)
-	public long id;
+public class BisherigeSchulePatchRequest {
 
 	/** Die ID des Schülers. */
 	@Schema(description = "Die ID des Schülers.", example = "178947")
-	public Long idSchueler;
+	@NotNull
+	public JsonNullable<Long> idSchueler = JsonNullable.undefined();
 
 	/** Die ID der Schule. */
 	@Schema(description = "Die ID der Schule", example = "178947")
-	public Long idSchule;
+	@NotNull
+	public JsonNullable<Long> idSchule = JsonNullable.undefined();
 
 	/** Der Schlüssel des Bildungsganges/Schulgliederung an der Schule. */
 	@Schema(description = "Der Schlüssel des Bildungsganges/Schulgliederung an der Schule", example = "***")
-	public String schluesselSchulgliederung;
+	@Size(max = 5)
+	public JsonNullable<String> schluesselSchulgliederung = JsonNullable.undefined();
 
 	/** Die ID des Grundes für die Entlassung von der Schule. */
 	@Schema(description = "die ID des Grundes für die Entlassung von der Schule", example = "2")
-	public Long idEntlassgrund;
+	public JsonNullable<Long> idEntlassgrund = JsonNullable.undefined();
 
 	/** Die ID des Abschlusses, welcher an der Schule erworben wurde. */
 	@Schema(description = "die ID des Abschlusses, welcher an der Schule erworben wurde", example = "OA")
-	public String idAbschlussart;
+	public JsonNullable<String> idAbschlussart = JsonNullable.undefined();
 
 	/** Die ID der Organisationsform der Schule (z.B. für Halbtagsunterricht). */
 	@Schema(description = "die ID der Organisationsform der Schule (z.B. für Halbtagsunterricht)", example = "1")
-	public String idOrganisationsform;
+	public JsonNullable<String> idOrganisationsform = JsonNullable.undefined();
 
 	/** Das Datum, ab dem die Schule besucht wurde. */
 	@Schema(description = "das Datum, ab dem die Schule besucht wurde", example = "1907-12-01")
-	public String datumVon;
+	@ValidDateFormat
+	public JsonNullable<String> datumVon = JsonNullable.undefined();
 
 	/** Das Datum, bis wann die Schule besucht wurde. */
 	@Schema(description = "das Datum, bis wann die Schule besucht wurde", example = "1908-12-01")
-	public String datumBis;
+	@ValidDateFormat
+	public JsonNullable<String> datumBis = JsonNullable.undefined();
 
 	/** Der Jahrgang, ab dem die Schule besucht wurde. */
 	@Schema(description = "der Jahrgang, ab dem die Schule besucht wurde", example = "07")
-	public String jahrgangVon;
+	@Size(max = 2)
+	public JsonNullable<String> jahrgangVon = JsonNullable.undefined();
 
 	/** Der Jahrgang, bis zu dem die Schule besucht wurde. */
 	@Schema(description = "der Jahrgang, bis zu dem die Schule besucht wurde", example = "07")
-	public String jahrgangBis;
+	@Size(max = 2)
+	public JsonNullable<String> jahrgangBis = JsonNullable.undefined();
 
 }

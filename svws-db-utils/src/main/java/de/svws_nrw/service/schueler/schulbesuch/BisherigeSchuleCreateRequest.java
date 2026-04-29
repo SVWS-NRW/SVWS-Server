@@ -1,32 +1,25 @@
-package de.svws_nrw.asd.data.schueler;
+package de.svws_nrw.service.schueler.schulbesuch;
 
-import de.svws_nrw.transpiler.TranspilerDTO;
+import de.svws_nrw.validation.constraints.ValidDateFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-/**
- * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt die Schulbesuchsdaten zu einer bisher besuchten Schule.
- */
-@XmlRootElement
-@Schema(description = "Ein Eintrag in der Liste der bisher besuchten Schulen.")
-@TranspilerDTO
-public class SchuelerSchulbesuchSchule {
-
-	/** Die ID der Informationen zum vorigen Schulbesuch in der Datenbank. */
-	@Schema(description = "die ID der Informationen zum vorigen Schulbesuch in der Datenbank", example = "226984", accessMode = Schema.AccessMode.READ_ONLY)
-	public long id;
+public class BisherigeSchuleCreateRequest {
 
 	/** Die ID des Schülers. */
 	@Schema(description = "Die ID des Schülers.", example = "178947")
+	@NotNull
 	public Long idSchueler;
 
 	/** Die ID der Schule. */
 	@Schema(description = "Die ID der Schule", example = "178947")
+	@NotNull
 	public Long idSchule;
 
 	/** Der Schlüssel des Bildungsganges/Schulgliederung an der Schule. */
 	@Schema(description = "Der Schlüssel des Bildungsganges/Schulgliederung an der Schule", example = "***")
+	@Size(max = 5)
 	public String schluesselSchulgliederung;
 
 	/** Die ID des Grundes für die Entlassung von der Schule. */
@@ -43,18 +36,22 @@ public class SchuelerSchulbesuchSchule {
 
 	/** Das Datum, ab dem die Schule besucht wurde. */
 	@Schema(description = "das Datum, ab dem die Schule besucht wurde", example = "1907-12-01")
+	@ValidDateFormat
 	public String datumVon;
 
 	/** Das Datum, bis wann die Schule besucht wurde. */
 	@Schema(description = "das Datum, bis wann die Schule besucht wurde", example = "1908-12-01")
+	@ValidDateFormat
 	public String datumBis;
 
 	/** Der Jahrgang, ab dem die Schule besucht wurde. */
 	@Schema(description = "der Jahrgang, ab dem die Schule besucht wurde", example = "07")
+	@Size(max = 2)
 	public String jahrgangVon;
 
 	/** Der Jahrgang, bis zu dem die Schule besucht wurde. */
 	@Schema(description = "der Jahrgang, bis zu dem die Schule besucht wurde", example = "07")
+	@Size(max = 2)
 	public String jahrgangBis;
 
 }

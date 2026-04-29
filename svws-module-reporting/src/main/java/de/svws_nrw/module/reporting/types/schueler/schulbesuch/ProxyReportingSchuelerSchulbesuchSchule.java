@@ -27,13 +27,13 @@ public class ProxyReportingSchuelerSchulbesuchSchule extends ReportingSchuelerSc
 		super(
 				ersetzeNullBlankTrim(schulbesuch.datumVon),
 				ersetzeNullBlankTrim(schulbesuch.datumBis),
-				schulbesuch.abschlussartID,
-				schulbesuch.entlassgrundID,
-				schulbesuch.organisationsFormID,
+				schulbesuch.idAbschlussart,
+				schulbesuch.idEntlassgrund,
+				schulbesuch.idOrganisationsform,
 				ersetzeNullBlankTrim(schulbesuch.jahrgangVon),
 				ersetzeNullBlankTrim(schulbesuch.jahrgangBis),
 				createSchulkatalogEintrag(reportingRepository, schulbesuch.idSchule),
-				ersetzeNullBlankTrim(schulbesuch.schulgliederung)
+				ersetzeNullBlankTrim(schulbesuch.schluesselSchulgliederung)
 		);
 		this.reportingRepository = reportingRepository;
 	}

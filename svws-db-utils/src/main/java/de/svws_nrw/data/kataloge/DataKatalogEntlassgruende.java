@@ -48,8 +48,16 @@ public final class DataKatalogEntlassgruende extends DataManagerRevised<Long, DT
 		return dto.ID;
 	}
 
-	@Override
-	public KatalogEntlassgrund getById(final Long id) throws ApiOperationException {
+
+	/**
+	 * Gibt die Entlassgrund-Entität zur Id zurück
+	 *
+	 * @param id Die Id des Entlassgrundes
+	 *
+	 * @return {@link DTOEntlassarten}-Eintrag
+	 * @throws ApiOperationException wenn die Entlassart nicht gefunden wurde.
+	 */
+	public DTOEntlassarten getEntityById(final Long id) throws ApiOperationException {
 		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für den Entlassgrund darf nicht null sein.");
 		}
@@ -58,15 +66,47 @@ public final class DataKatalogEntlassgruende extends DataManagerRevised<Long, DT
 		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Entlassgrund mit der ID %d gefunden.".formatted(id));
 		}
+		return dto;
+	}
 
-		return map(dto);
+	@Override
+	public KatalogEntlassgrund getById(final Long id) throws ApiOperationException {
+		return map(this.getEntityById(id));
+	}
+
+	/**
+	 * Gibt die Entlassgrund-Entität zur Bezeichnung zurück
+	 *
+	 * @param bezeichnungEntlassgrund Die Bezeichnung des Entlassgrundes
+	 *
+	 * @return {@link DTOEntlassarten}-Eintrag
+	 * @throws ApiOperationException wenn keine Bezeichnung übergeben wurde oder diese keinem Entlassgrund eindeutig zugeordnet werden kann.
+	 */
+	public DTOEntlassarten getEntityByBezeichnung(final String bezeichnungEntlassgrund) {
+		if (bezeichnungEntlassgrund == null) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Keine Bezeichnung für den Entlassgrund übergeben");
+		}
+		final var result = this.conn.queryList(DTOEntlassarten.QUERY_BY_BEZEICHNUNG, DTOEntlassarten.class, bezeichnungEntlassgrund);
+		if (result.size() != 1) {
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Die Bezeichnung %s kann nicht eindeutig einer Entlassart zugeordnert werden".formatted(bezeichnungEntlassgrund));
+		}
+		return result.getFirst();
+	}
+
+	/**
+	 * Gibt alle Entlassgrunde-Entitäten zurück
+	 *
+	 * @return sortierte Liste aller {@link DTOEntlassarten}-Einträge
+	 */
+	public List<DTOEntlassarten> getAllEntities() {
+		return this.conn.queryAll(DTOEntlassarten.class);
 	}
 
 	@Override
 	public List<KatalogEntlassgrund> getAll() {
-		final List<DTOEntlassarten> entlassgruende = this.conn.queryAll(DTOEntlassarten.class);
+		final List<DTOEntlassarten> entlassgruende = this.getAllEntities();
 		final Set<Long> idsOfReferencedEntlassgruende = this.getIdsOfReferencedEntlassgruende(entlassgruende);
-
 		return entlassgruende
 				.stream()
 				.map(this::map)

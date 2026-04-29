@@ -185,10 +185,10 @@
 					<span>{{ rowData.jahrgangBis }}</span>
 				</template>
 				<template #cell(schulgliederung)="{ rowData }">
-					<span>{{ textSchulgliederung(rowData.schulgliederung) }}</span>
+					<span>{{ textSchulgliederung(rowData.schluesselSchulgliederung) }}</span>
 				</template>
 				<template #cell(entlassart)="{ rowData }">
-					<span>{{ manager().entlassgruendeById.get(rowData.entlassgrundID ?? -1)?.bezeichnung ?? '-' }}</span>
+					<span>{{ manager().entlassgruendeById.get(rowData.idEntlassgrund ?? -1)?.bezeichnung ?? '-' }}</span>
 				</template>
 				<template #actions v-if="hatKompetenzUpdate">
 					<svws-ui-button @click="deleteAuswahlBisherigeSchulen" type="trash" :disabled="(auswahlBisherigeSchulen.length === 0) || !hatKompetenzUpdate" />
@@ -383,7 +383,7 @@
 
 	watch(newEntryBisherigeSchuleDatumBis, () => {
 		if (currentMode.value === Mode.ADD) {
-			newEntryBisherigeSchule.value.schulgliederung = schulgliederungenBisherigeSchule.value[0]?.schluessel ?? null;
+			newEntryBisherigeSchule.value.schluesselSchulgliederung = schulgliederungenBisherigeSchule.value[0]?.schluessel ?? null;
 		}
 	});
 
@@ -470,13 +470,13 @@
 		schulformen: schulformSelectedSchuleNEwEntryBisherigeSchule, selectionDisplayText: "text", optionDisplayText: "text" });
 
 	const schulgliederungBisherigeSchule = computed({
-		get: () => newEntryBisherigeSchule.value.schulgliederung === "" ? schulgliederungenBisherigeSchule.value[0] : findGliederung(),
-		set: (v: SchulgliederungKatalogEintrag) => newEntryBisherigeSchule.value.schulgliederung = v.schluessel,
+		get: () => newEntryBisherigeSchule.value.schluesselSchulgliederung === "" ? schulgliederungenBisherigeSchule.value[0] : findGliederung(),
+		set: (v: SchulgliederungKatalogEintrag) => newEntryBisherigeSchule.value.schluesselSchulgliederung = v.schluessel,
 	});
 
 	function findGliederung() {
 		for (const g of schulgliederungenBisherigeSchule.value) {
-			if (g.schluessel === newEntryBisherigeSchule.value.schulgliederung) {
+			if (g.schluessel === newEntryBisherigeSchule.value.schluesselSchulgliederung) {
 				return g;
 			}
 		}
@@ -499,8 +499,9 @@
 		if (type === Mode.ADD) {
 			await props.addSchuelerSchulbesuchSchule(partialDataWithoutId);
 		}
+		const { idSchueler, ...patchPartial } = partialDataWithoutId;
 		if (type === Mode.PATCH) {
-			await props.patchSchuelerSchulbesuchSchule(newEntryBisherigeSchule.value.id, partialDataWithoutId);
+			await props.patchSchuelerSchulbesuchSchule(newEntryBisherigeSchule.value.id, patchPartial);
 		}
 		enterDefaultMode();
 	}
@@ -513,7 +514,7 @@
 		newEntryBisherigeSchule.value.idSchule = schule.idSchule;
 		newEntryBisherigeSchule.value.datumVon = schule.datumVon;
 		newEntryBisherigeSchule.value.datumBis = schule.datumBis;
-		newEntryBisherigeSchule.value.schulgliederung = schule.schulgliederung;
+		newEntryBisherigeSchule.value.schluesselSchulgliederung = schule.schluesselSchulgliederung;
 		newEntryBisherigeSchule.value.jahrgangVon = schule.jahrgangVon;
 		newEntryBisherigeSchule.value.jahrgangBis = schule.jahrgangBis;
 		openModalBisherigeSchule();

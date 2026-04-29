@@ -29,38 +29,86 @@ import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerAbgaenge")
-@JsonPropertyOrder({"ID", "Schueler_ID", "BemerkungIntern", "AbgangsSchulform", "AbgangsBeschreibung", "OrganisationsformKrz", "AbgangsSchule", "AbgangsSchuleAnschr", "AbgangsSchulNr", "LSJahrgang", "LSEntlassArt", "LSSchulformSIM", "LSSchulEntlassDatum", "LSVersetzung", "LSSGL", "LSFachklKennung", "LSFachklSIM", "FuerSIMExport", "LSBeginnDatum", "LSBeginnJahrgang"})
+@JsonPropertyOrder({"id", "idSchueler", "schulnummer", "schluesselSchulgliederung", "bezeichnungEntlassgrund", "idAbschlussart", "idOrganisationsform", "datumVon", "datumBis", "jahrgangVon", "jahrgangBis", "AbgangsSchulform", "AbgangsBeschreibung", "AbgangsSchule", "AbgangsSchuleAnschr", "LSSchulformSIM", "LSVersetzung", "LSFachklKennung", "LSFachklSIM", "FuerSIMExport"})
 public final class DTOSchuelerAbgaenge {
 
 	/** Die Datenbankabfrage für alle DTOs */
 	public static final String QUERY_ALL = "SELECT e FROM DTOSchuelerAbgaenge e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.id = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.id IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.id IS NOT NULL";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
-	public static final String QUERY_BY_ID = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes id */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.id = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
-	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes id */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.id IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Schueler_ID */
-	public static final String QUERY_BY_SCHUELER_ID = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.Schueler_ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idSchueler */
+	public static final String QUERY_BY_IDSCHUELER = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.idSchueler = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schueler_ID */
-	public static final String QUERY_LIST_BY_SCHUELER_ID = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.Schueler_ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idSchueler */
+	public static final String QUERY_LIST_BY_IDSCHUELER = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.idSchueler IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes BemerkungIntern */
-	public static final String QUERY_BY_BEMERKUNGINTERN = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.BemerkungIntern = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes schulnummer */
+	public static final String QUERY_BY_SCHULNUMMER = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.schulnummer = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BemerkungIntern */
-	public static final String QUERY_LIST_BY_BEMERKUNGINTERN = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.BemerkungIntern IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes schulnummer */
+	public static final String QUERY_LIST_BY_SCHULNUMMER = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.schulnummer IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes schluesselSchulgliederung */
+	public static final String QUERY_BY_SCHLUESSELSCHULGLIEDERUNG = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.schluesselSchulgliederung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes schluesselSchulgliederung */
+	public static final String QUERY_LIST_BY_SCHLUESSELSCHULGLIEDERUNG = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.schluesselSchulgliederung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes bezeichnungEntlassgrund */
+	public static final String QUERY_BY_BEZEICHNUNGENTLASSGRUND = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.bezeichnungEntlassgrund = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes bezeichnungEntlassgrund */
+	public static final String QUERY_LIST_BY_BEZEICHNUNGENTLASSGRUND = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.bezeichnungEntlassgrund IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idAbschlussart */
+	public static final String QUERY_BY_IDABSCHLUSSART = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.idAbschlussart = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idAbschlussart */
+	public static final String QUERY_LIST_BY_IDABSCHLUSSART = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.idAbschlussart IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idOrganisationsform */
+	public static final String QUERY_BY_IDORGANISATIONSFORM = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.idOrganisationsform = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idOrganisationsform */
+	public static final String QUERY_LIST_BY_IDORGANISATIONSFORM = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.idOrganisationsform IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes datumVon */
+	public static final String QUERY_BY_DATUMVON = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.datumVon = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes datumVon */
+	public static final String QUERY_LIST_BY_DATUMVON = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.datumVon IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes datumBis */
+	public static final String QUERY_BY_DATUMBIS = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.datumBis = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes datumBis */
+	public static final String QUERY_LIST_BY_DATUMBIS = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.datumBis IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes jahrgangVon */
+	public static final String QUERY_BY_JAHRGANGVON = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.jahrgangVon = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes jahrgangVon */
+	public static final String QUERY_LIST_BY_JAHRGANGVON = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.jahrgangVon IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes jahrgangBis */
+	public static final String QUERY_BY_JAHRGANGBIS = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.jahrgangBis = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes jahrgangBis */
+	public static final String QUERY_LIST_BY_JAHRGANGBIS = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.jahrgangBis IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes AbgangsSchulform */
 	public static final String QUERY_BY_ABGANGSSCHULFORM = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.AbgangsSchulform = ?1";
@@ -74,12 +122,6 @@ public final class DTOSchuelerAbgaenge {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AbgangsBeschreibung */
 	public static final String QUERY_LIST_BY_ABGANGSBESCHREIBUNG = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.AbgangsBeschreibung IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes OrganisationsformKrz */
-	public static final String QUERY_BY_ORGANISATIONSFORMKRZ = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.OrganisationsformKrz = ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes OrganisationsformKrz */
-	public static final String QUERY_LIST_BY_ORGANISATIONSFORMKRZ = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.OrganisationsformKrz IN ?1";
-
 	/** Die Datenbankabfrage für DTOs anhand des Attributes AbgangsSchule */
 	public static final String QUERY_BY_ABGANGSSCHULE = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.AbgangsSchule = ?1";
 
@@ -92,47 +134,17 @@ public final class DTOSchuelerAbgaenge {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AbgangsSchuleAnschr */
 	public static final String QUERY_LIST_BY_ABGANGSSCHULEANSCHR = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.AbgangsSchuleAnschr IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes AbgangsSchulNr */
-	public static final String QUERY_BY_ABGANGSSCHULNR = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.AbgangsSchulNr = ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AbgangsSchulNr */
-	public static final String QUERY_LIST_BY_ABGANGSSCHULNR = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.AbgangsSchulNr IN ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand des Attributes LSJahrgang */
-	public static final String QUERY_BY_LSJAHRGANG = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.LSJahrgang = ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LSJahrgang */
-	public static final String QUERY_LIST_BY_LSJAHRGANG = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.LSJahrgang IN ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand des Attributes LSEntlassArt */
-	public static final String QUERY_BY_LSENTLASSART = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.LSEntlassArt = ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LSEntlassArt */
-	public static final String QUERY_LIST_BY_LSENTLASSART = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.LSEntlassArt IN ?1";
-
 	/** Die Datenbankabfrage für DTOs anhand des Attributes LSSchulformSIM */
 	public static final String QUERY_BY_LSSCHULFORMSIM = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.LSSchulformSIM = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LSSchulformSIM */
 	public static final String QUERY_LIST_BY_LSSCHULFORMSIM = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.LSSchulformSIM IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes LSSchulEntlassDatum */
-	public static final String QUERY_BY_LSSCHULENTLASSDATUM = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.LSSchulEntlassDatum = ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LSSchulEntlassDatum */
-	public static final String QUERY_LIST_BY_LSSCHULENTLASSDATUM = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.LSSchulEntlassDatum IN ?1";
-
 	/** Die Datenbankabfrage für DTOs anhand des Attributes LSVersetzung */
 	public static final String QUERY_BY_LSVERSETZUNG = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.LSVersetzung = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LSVersetzung */
 	public static final String QUERY_LIST_BY_LSVERSETZUNG = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.LSVersetzung IN ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand des Attributes LSSGL */
-	public static final String QUERY_BY_LSSGL = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.LSSGL = ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LSSGL */
-	public static final String QUERY_LIST_BY_LSSGL = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.LSSGL IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes LSFachklKennung */
 	public static final String QUERY_BY_LSFACHKLKENNUNG = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.LSFachklKennung = ?1";
@@ -152,33 +164,67 @@ public final class DTOSchuelerAbgaenge {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FuerSIMExport */
 	public static final String QUERY_LIST_BY_FUERSIMEXPORT = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.FuerSIMExport IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes LSBeginnDatum */
-	public static final String QUERY_BY_LSBEGINNDATUM = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.LSBeginnDatum = ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LSBeginnDatum */
-	public static final String QUERY_LIST_BY_LSBEGINNDATUM = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.LSBeginnDatum IN ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand des Attributes LSBeginnJahrgang */
-	public static final String QUERY_BY_LSBEGINNJAHRGANG = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.LSBeginnJahrgang = ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LSBeginnJahrgang */
-	public static final String QUERY_LIST_BY_LSBEGINNJAHRGANG = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.LSBeginnJahrgang IN ?1";
-
 	/** ID der abgebenden Schule in der Liste */
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public long ID;
+	public long id;
 
 	/** SchülerID zur abgebenden Schule */
 	@Column(name = "Schueler_ID")
 	@JsonProperty
-	public long Schueler_ID;
+	public long idSchueler;
+
+	/** Schulnummer zur abgebenden Schule */
+	@Column(name = "AbgangsSchulNr")
+	@JsonProperty
+	public String schulnummer;
+
+	/** SGL zur abgebenden Schule */
+	@Column(name = "LSSGL")
+	@JsonProperty
+	public String schluesselSchulgliederung;
 
 	/** interne Bemerkung zur abgebenden Schule */
 	@Column(name = "BemerkungIntern")
 	@JsonProperty
-	public String BemerkungIntern;
+	public String bezeichnungEntlassgrund;
+
+	/** Entlassart zur abgebenden Schule */
+	@Column(name = "LSEntlassArt")
+	@JsonProperty
+	public String idAbschlussart;
+
+	/** Organisationform zur abgebenden Schule */
+	@Column(name = "OrganisationsformKrz")
+	@JsonProperty
+	public String idOrganisationsform;
+
+	/** Aufnahmedatum zur abgebenden Schule */
+	@Column(name = "LSBeginnDatum")
+	@JsonProperty
+	@Convert(converter = DatumConverter.class)
+	@JsonSerialize(using = DatumConverterSerializer.class)
+	@JsonDeserialize(using = DatumConverterDeserializer.class)
+	public String datumVon;
+
+	/** Entlassdtaum zur abgebenden Schule */
+	@Column(name = "LSSchulEntlassDatum")
+	@JsonProperty
+	@Convert(converter = DatumConverter.class)
+	@JsonSerialize(using = DatumConverterSerializer.class)
+	@JsonDeserialize(using = DatumConverterDeserializer.class)
+	public String datumBis;
+
+	/** Aufnahmejahrgang zur abgebenden Schule */
+	@Column(name = "LSBeginnJahrgang")
+	@JsonProperty
+	public String jahrgangVon;
+
+	/** Abgangsjahrgang zur abgebenden Schule */
+	@Column(name = "LSJahrgang")
+	@JsonProperty
+	public String jahrgangBis;
 
 	/** FSchulform zur abgebenden Schule */
 	@Column(name = "AbgangsSchulform")
@@ -190,11 +236,6 @@ public final class DTOSchuelerAbgaenge {
 	@JsonProperty
 	public String AbgangsBeschreibung;
 
-	/** Organisationform zur abgebenden Schule */
-	@Column(name = "OrganisationsformKrz")
-	@JsonProperty
-	public String OrganisationsformKrz;
-
 	/** Bezeichnung  zur abgebenden Schule */
 	@Column(name = "AbgangsSchule")
 	@JsonProperty
@@ -205,43 +246,15 @@ public final class DTOSchuelerAbgaenge {
 	@JsonProperty
 	public String AbgangsSchuleAnschr;
 
-	/** Schulnummer zur abgebenden Schule */
-	@Column(name = "AbgangsSchulNr")
-	@JsonProperty
-	public String AbgangsSchulNr;
-
-	/** Abgangsjahrgang zur abgebenden Schule */
-	@Column(name = "LSJahrgang")
-	@JsonProperty
-	public String LSJahrgang;
-
-	/** Entlassart zur abgebenden Schule */
-	@Column(name = "LSEntlassArt")
-	@JsonProperty
-	public String LSEntlassArt;
-
 	/** Statistikkürzel Schulform zur abgebenden Schule */
 	@Column(name = "LSSchulformSIM")
 	@JsonProperty
 	public String LSSchulformSIM;
 
-	/** Entlassdtaum zur abgebenden Schule */
-	@Column(name = "LSSchulEntlassDatum")
-	@JsonProperty
-	@Convert(converter = DatumConverter.class)
-	@JsonSerialize(using = DatumConverterSerializer.class)
-	@JsonDeserialize(using = DatumConverterDeserializer.class)
-	public String LSSchulEntlassDatum;
-
 	/** Versetzungsvermerk zur abgebenden Schule */
 	@Column(name = "LSVersetzung")
 	@JsonProperty
 	public String LSVersetzung;
-
-	/** SGL zur abgebenden Schule */
-	@Column(name = "LSSGL")
-	@JsonProperty
-	public String LSSGL;
 
 	/** Fachklassenkennung zur abgebenden Schule BK */
 	@Column(name = "LSFachklKennung")
@@ -261,19 +274,6 @@ public final class DTOSchuelerAbgaenge {
 	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean FuerSIMExport;
 
-	/** Aufnahmedatum zur abgebenden Schule */
-	@Column(name = "LSBeginnDatum")
-	@JsonProperty
-	@Convert(converter = DatumConverter.class)
-	@JsonSerialize(using = DatumConverterSerializer.class)
-	@JsonDeserialize(using = DatumConverterDeserializer.class)
-	public String LSBeginnDatum;
-
-	/** Aufnahmejahrgang zur abgebenden Schule */
-	@Column(name = "LSBeginnJahrgang")
-	@JsonProperty
-	public String LSBeginnJahrgang;
-
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOSchuelerAbgaenge ohne eine Initialisierung der Attribute.
 	 */
@@ -283,12 +283,12 @@ public final class DTOSchuelerAbgaenge {
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOSchuelerAbgaenge ohne eine Initialisierung der Attribute.
-	 * @param ID   der Wert für das Attribut ID
-	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
+	 * @param id   der Wert für das Attribut id
+	 * @param idSchueler   der Wert für das Attribut idSchueler
 	 */
-	public DTOSchuelerAbgaenge(final long ID, final long Schueler_ID) {
-		this.ID = ID;
-		this.Schueler_ID = Schueler_ID;
+	public DTOSchuelerAbgaenge(final long id, final long idSchueler) {
+		this.id = id;
+		this.idSchueler = idSchueler;
 	}
 
 
@@ -304,14 +304,14 @@ public final class DTOSchuelerAbgaenge {
 			return false;
 		}
 		DTOSchuelerAbgaenge other = (DTOSchuelerAbgaenge) obj;
-		return ID == other.ID;
+		return id == other.id;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Long.hashCode(ID);
+		result = prime * result + Long.hashCode(id);
 		return result;
 	}
 
@@ -323,7 +323,7 @@ public final class DTOSchuelerAbgaenge {
 	 */
 	@Override
 	public String toString() {
-		return "DTOSchuelerAbgaenge(ID=" + this.ID + ", Schueler_ID=" + this.Schueler_ID + ", BemerkungIntern=" + this.BemerkungIntern + ", AbgangsSchulform=" + this.AbgangsSchulform + ", AbgangsBeschreibung=" + this.AbgangsBeschreibung + ", OrganisationsformKrz=" + this.OrganisationsformKrz + ", AbgangsSchule=" + this.AbgangsSchule + ", AbgangsSchuleAnschr=" + this.AbgangsSchuleAnschr + ", AbgangsSchulNr=" + this.AbgangsSchulNr + ", LSJahrgang=" + this.LSJahrgang + ", LSEntlassArt=" + this.LSEntlassArt + ", LSSchulformSIM=" + this.LSSchulformSIM + ", LSSchulEntlassDatum=" + this.LSSchulEntlassDatum + ", LSVersetzung=" + this.LSVersetzung + ", LSSGL=" + this.LSSGL + ", LSFachklKennung=" + this.LSFachklKennung + ", LSFachklSIM=" + this.LSFachklSIM + ", FuerSIMExport=" + this.FuerSIMExport + ", LSBeginnDatum=" + this.LSBeginnDatum + ", LSBeginnJahrgang=" + this.LSBeginnJahrgang + ")";
+		return "DTOSchuelerAbgaenge(id=" + this.id + ", idSchueler=" + this.idSchueler + ", schulnummer=" + this.schulnummer + ", schluesselSchulgliederung=" + this.schluesselSchulgliederung + ", bezeichnungEntlassgrund=" + this.bezeichnungEntlassgrund + ", idAbschlussart=" + this.idAbschlussart + ", idOrganisationsform=" + this.idOrganisationsform + ", datumVon=" + this.datumVon + ", datumBis=" + this.datumBis + ", jahrgangVon=" + this.jahrgangVon + ", jahrgangBis=" + this.jahrgangBis + ", AbgangsSchulform=" + this.AbgangsSchulform + ", AbgangsBeschreibung=" + this.AbgangsBeschreibung + ", AbgangsSchule=" + this.AbgangsSchule + ", AbgangsSchuleAnschr=" + this.AbgangsSchuleAnschr + ", LSSchulformSIM=" + this.LSSchulformSIM + ", LSVersetzung=" + this.LSVersetzung + ", LSFachklKennung=" + this.LSFachklKennung + ", LSFachklSIM=" + this.LSFachklSIM + ", FuerSIMExport=" + this.FuerSIMExport + ")";
 	}
 
 }

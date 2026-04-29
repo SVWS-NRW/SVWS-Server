@@ -9,6 +9,11 @@ export class SchuelerSchulbesuchSchule extends JavaObject {
 	public id: number = 0;
 
 	/**
+	 * Die ID des Schülers.
+	 */
+	public idSchueler: number | null = null;
+
+	/**
 	 * Die ID der Schule.
 	 */
 	public idSchule: number | null = null;
@@ -16,22 +21,22 @@ export class SchuelerSchulbesuchSchule extends JavaObject {
 	/**
 	 * Der Schlüssel des Bildungsganges/Schulgliederung an der Schule.
 	 */
-	public schulgliederung: string | null = null;
+	public schluesselSchulgliederung: string | null = null;
 
 	/**
 	 * Die ID des Grundes für die Entlassung von der Schule.
 	 */
-	public entlassgrundID: number | null = null;
+	public idEntlassgrund: number | null = null;
 
 	/**
 	 * Die ID des Abschlusses, welcher an der Schule erworben wurde.
 	 */
-	public abschlussartID: string | null = null;
+	public idAbschlussart: string | null = null;
 
 	/**
 	 * Die ID der Organisationsform der Schule (z.B. für Halbtagsunterricht).
 	 */
-	public organisationsFormID: string | null = null;
+	public idOrganisationsform: string | null = null;
 
 	/**
 	 * Das Datum, ab dem die Schule besucht wurde.
@@ -54,9 +59,6 @@ export class SchuelerSchulbesuchSchule extends JavaObject {
 	public jahrgangBis: string | null = null;
 
 
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
 	public constructor() {
 		super();
 	}
@@ -77,11 +79,12 @@ export class SchuelerSchulbesuchSchule extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
+		result.idSchueler = (obj.idSchueler === undefined) ? null : obj.idSchueler === null ? null : obj.idSchueler;
 		result.idSchule = (obj.idSchule === undefined) ? null : obj.idSchule === null ? null : obj.idSchule;
-		result.schulgliederung = (obj.schulgliederung === undefined) ? null : obj.schulgliederung === null ? null : obj.schulgliederung;
-		result.entlassgrundID = (obj.entlassgrundID === undefined) ? null : obj.entlassgrundID === null ? null : obj.entlassgrundID;
-		result.abschlussartID = (obj.abschlussartID === undefined) ? null : obj.abschlussartID === null ? null : obj.abschlussartID;
-		result.organisationsFormID = (obj.organisationsFormID === undefined) ? null : obj.organisationsFormID === null ? null : obj.organisationsFormID;
+		result.schluesselSchulgliederung = (obj.schluesselSchulgliederung === undefined) ? null : obj.schluesselSchulgliederung === null ? null : obj.schluesselSchulgliederung;
+		result.idEntlassgrund = (obj.idEntlassgrund === undefined) ? null : obj.idEntlassgrund === null ? null : obj.idEntlassgrund;
+		result.idAbschlussart = (obj.idAbschlussart === undefined) ? null : obj.idAbschlussart === null ? null : obj.idAbschlussart;
+		result.idOrganisationsform = (obj.idOrganisationsform === undefined) ? null : obj.idOrganisationsform === null ? null : obj.idOrganisationsform;
 		result.datumVon = (obj.datumVon === undefined) ? null : obj.datumVon === null ? null : obj.datumVon;
 		result.datumBis = (obj.datumBis === undefined) ? null : obj.datumBis === null ? null : obj.datumBis;
 		result.jahrgangVon = (obj.jahrgangVon === undefined) ? null : obj.jahrgangVon === null ? null : obj.jahrgangVon;
@@ -92,11 +95,12 @@ export class SchuelerSchulbesuchSchule extends JavaObject {
 	public static transpilerToJSON(obj: SchuelerSchulbesuchSchule): string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idSchueler" : ' + ((obj.idSchueler === null) ? 'null' : obj.idSchueler.toString()) + ',';
 		result += '"idSchule" : ' + ((obj.idSchule === null) ? 'null' : obj.idSchule.toString()) + ',';
-		result += '"schulgliederung" : ' + ((obj.schulgliederung === null) ? 'null' : JSON.stringify(obj.schulgliederung)) + ',';
-		result += '"entlassgrundID" : ' + ((obj.entlassgrundID === null) ? 'null' : obj.entlassgrundID.toString()) + ',';
-		result += '"abschlussartID" : ' + ((obj.abschlussartID === null) ? 'null' : JSON.stringify(obj.abschlussartID)) + ',';
-		result += '"organisationsFormID" : ' + ((obj.organisationsFormID === null) ? 'null' : JSON.stringify(obj.organisationsFormID)) + ',';
+		result += '"schluesselSchulgliederung" : ' + ((obj.schluesselSchulgliederung === null) ? 'null' : JSON.stringify(obj.schluesselSchulgliederung)) + ',';
+		result += '"idEntlassgrund" : ' + ((obj.idEntlassgrund === null) ? 'null' : obj.idEntlassgrund.toString()) + ',';
+		result += '"idAbschlussart" : ' + ((obj.idAbschlussart === null) ? 'null' : JSON.stringify(obj.idAbschlussart)) + ',';
+		result += '"idOrganisationsform" : ' + ((obj.idOrganisationsform === null) ? 'null' : JSON.stringify(obj.idOrganisationsform)) + ',';
 		result += '"datumVon" : ' + ((obj.datumVon === null) ? 'null' : JSON.stringify(obj.datumVon)) + ',';
 		result += '"datumBis" : ' + ((obj.datumBis === null) ? 'null' : JSON.stringify(obj.datumBis)) + ',';
 		result += '"jahrgangVon" : ' + ((obj.jahrgangVon === null) ? 'null' : JSON.stringify(obj.jahrgangVon)) + ',';
@@ -111,20 +115,23 @@ export class SchuelerSchulbesuchSchule extends JavaObject {
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
+		if (obj.idSchueler !== undefined) {
+			result += '"idSchueler" : ' + ((obj.idSchueler === null) ? 'null' : obj.idSchueler.toString()) + ',';
+		}
 		if (obj.idSchule !== undefined) {
 			result += '"idSchule" : ' + ((obj.idSchule === null) ? 'null' : obj.idSchule.toString()) + ',';
 		}
-		if (obj.schulgliederung !== undefined) {
-			result += '"schulgliederung" : ' + ((obj.schulgliederung === null) ? 'null' : JSON.stringify(obj.schulgliederung)) + ',';
+		if (obj.schluesselSchulgliederung !== undefined) {
+			result += '"schluesselSchulgliederung" : ' + ((obj.schluesselSchulgliederung === null) ? 'null' : JSON.stringify(obj.schluesselSchulgliederung)) + ',';
 		}
-		if (obj.entlassgrundID !== undefined) {
-			result += '"entlassgrundID" : ' + ((obj.entlassgrundID === null) ? 'null' : obj.entlassgrundID.toString()) + ',';
+		if (obj.idEntlassgrund !== undefined) {
+			result += '"idEntlassgrund" : ' + ((obj.idEntlassgrund === null) ? 'null' : obj.idEntlassgrund.toString()) + ',';
 		}
-		if (obj.abschlussartID !== undefined) {
-			result += '"abschlussartID" : ' + ((obj.abschlussartID === null) ? 'null' : JSON.stringify(obj.abschlussartID)) + ',';
+		if (obj.idAbschlussart !== undefined) {
+			result += '"idAbschlussart" : ' + ((obj.idAbschlussart === null) ? 'null' : JSON.stringify(obj.idAbschlussart)) + ',';
 		}
-		if (obj.organisationsFormID !== undefined) {
-			result += '"organisationsFormID" : ' + ((obj.organisationsFormID === null) ? 'null' : JSON.stringify(obj.organisationsFormID)) + ',';
+		if (obj.idOrganisationsform !== undefined) {
+			result += '"idOrganisationsform" : ' + ((obj.idOrganisationsform === null) ? 'null' : JSON.stringify(obj.idOrganisationsform)) + ',';
 		}
 		if (obj.datumVon !== undefined) {
 			result += '"datumVon" : ' + ((obj.datumVon === null) ? 'null' : JSON.stringify(obj.datumVon)) + ',';

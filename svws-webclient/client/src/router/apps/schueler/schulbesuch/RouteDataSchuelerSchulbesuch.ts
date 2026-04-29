@@ -40,7 +40,8 @@ export class RouteDataSchuelerSchulbesuch extends RouteData<RouteStateDataSchuel
 	};
 
 	addSchuelerSchulbesuchSchule = async (data: Partial<SchuelerSchulbesuchSchule>): Promise<void> => {
-		const result = await api.server.addBisherigeSchule(data, api.schema, this.auswahl.id);
+		data.idSchueler = this.auswahl.id;
+		const result = await api.server.addBisherigeSchule(data, api.schema);
 		this.schuelerSchulbesuchManager.addSchuelerSchulbesuchSchule(result);
 		this.commit();
 	};

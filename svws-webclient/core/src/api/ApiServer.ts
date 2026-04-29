@@ -12502,35 +12502,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode addBisherigeSchule für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{idSchueler : \d+}/bisherigeSchule
-	 *
-	 * Erstellt eine bisherige Schule, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 201: Die bisher besuchte Schule wurde erfolgreich hinzugefügt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SchuelerSchulbesuchSchule
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um bisherige Schulen hinzuzufügen.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {Partial<SchuelerSchulbesuchSchule>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} idSchueler - der Pfad-Parameter idSchueler
-	 *
-	 * @returns Die bisher besuchte Schule wurde erfolgreich hinzugefügt.
-	 */
-	public async addBisherigeSchule(data : Partial<SchuelerSchulbesuchSchule>, schema : string, idSchueler : number) : Promise<SchuelerSchulbesuchSchule> {
-		const path = "/db/{schema}/schueler/{idSchueler : \\d+}/bisherigeSchule"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{idSchueler\s*(:[^{}]+({[^{}]+})*)?}/g, idSchueler.toString());
-		const body : string = SchuelerSchulbesuchSchule.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
-		const text = result;
-		return SchuelerSchulbesuchSchule.transpilerFromJSON(text);
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getSchuelerEinwilligungen für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{idSchueler : \d+}/einwilligungen
 	 *
 	 * Liest die Einwilligungen des Schülers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
@@ -12780,27 +12751,27 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getBisherigeSchule für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/bisherigeSchule/{id : \d+}
+	 * Implementierung der POST-Methode addBisherigeSchule für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/bisherigeSchule
 	 *
-	 * Gibt die bisher besuchte Schule zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 * Erstellt eine bisherige Schule, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die bisher besuchte Schule
+	 *   Code 201: Die bisher besuchte Schule wurde erfolgreich hinzugefügt.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: SchuelerSchulbesuchSchule
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.
-	 *   Code 404: Keine bisher besuchte Schule mit der angegebenen ID gefunden.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um bisherige Schulen hinzuzufügen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
+	 * @param {Partial<SchuelerSchulbesuchSchule>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
 	 *
-	 * @returns Die bisher besuchte Schule
+	 * @returns Die bisher besuchte Schule wurde erfolgreich hinzugefügt.
 	 */
-	public async getBisherigeSchule(schema : string, id : number) : Promise<SchuelerSchulbesuchSchule> {
-		const path = "/db/{schema}/schueler/bisherigeSchule/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+	public async addBisherigeSchule(data : Partial<SchuelerSchulbesuchSchule>, schema : string) : Promise<SchuelerSchulbesuchSchule> {
+		const path = "/db/{schema}/schueler/bisherigeSchule"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = SchuelerSchulbesuchSchule.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return SchuelerSchulbesuchSchule.transpilerFromJSON(text);
 	}
@@ -12840,7 +12811,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine bisher besuchte Schule wurde erfolgreich entfernt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<SchuelerSchulbesuchSchule>
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um bisher besuchte Schulen zu entfernen.
 	 *   Code 404: Die bisher besuchten Schulen sind nicht vorhanden
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft
@@ -12851,14 +12822,14 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine bisher besuchte Schule wurde erfolgreich entfernt.
 	 */
-	public async deleteBisherigeSchulen(data : List<number>, schema : string) : Promise<List<SchuelerSchulbesuchSchule>> {
+	public async deleteBisherigeSchulen(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schueler/bisherigeSchule/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<SchuelerSchulbesuchSchule>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerSchulbesuchSchule.transpilerFromJSON(text)); });
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
 		return ret;
 	}
 

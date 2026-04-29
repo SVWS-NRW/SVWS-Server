@@ -1,5 +1,5 @@
 configurations {
-	implementation.extendsFrom(crypto, database, jackson, jetty, resteasy, swagger, pdf)
+	implementation.extendsFrom(crypto, database, jackson, jetty, resteasy, swagger, pdf, mapstructApi)
 	api
 }
 

@@ -18,6 +18,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOMerkmale;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.DbConnectionProvider;
 import jakarta.ws.rs.core.Response;
 import java.io.InputStream;
 import java.util.Collections;
@@ -25,7 +26,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 import org.assertj.core.api.ThrowableAssert;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,6 +37,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -56,6 +60,19 @@ class DataSchuelerSchulbesuchsdatenTest {
 
 	@Mock
 	private DBEntityManager conn;
+
+	private MockedStatic<DbConnectionProvider> dbConnectionProviderMock;
+
+	@BeforeEach
+	void setUp() {
+		dbConnectionProviderMock = mockStatic(DbConnectionProvider.class);
+		dbConnectionProviderMock.when(DbConnectionProvider::getConnection).thenReturn(conn);
+	}
+
+	@AfterEach
+	void tearDown() {
+		dbConnectionProviderMock.close();
+	}
 
 	@InjectMocks
 	private DataSchuelerSchulbesuchsdaten schulbesuchsdaten;

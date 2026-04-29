@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import de.svws_nrw.asd.data.CoreTypeException;
 import de.svws_nrw.asd.data.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.EinschulungsartKatalogEintrag;
+import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchSchule;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
 import de.svws_nrw.asd.data.schueler.UebergangsempfehlungKatalogEintrag;
 import de.svws_nrw.asd.data.schule.KindergartenbesuchKatalogEintrag;
@@ -28,12 +29,14 @@ import de.svws_nrw.db.dto.current.schild.grundschule.DTOKindergarten;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOEntlassarten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
-import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerAbgaenge;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerMerkmale;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOMerkmale;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.mapper.schueler.schulbesuch.BisherigeSchuleMapper;
+import de.svws_nrw.repo.schueler.schulbesuch.BisherigeSchuleRepositoryFactory;
+import de.svws_nrw.service.schueler.schulbesuch.BisherigeSchuleServiceFactory;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -115,12 +118,10 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 	@Override
 	protected SchuelerSchulbesuchsdaten map(final DTOSchueler dtoSchueler) throws ApiOperationException {
 		final List<DTOSchuelerMerkmale> schuelerMerkmale = conn.queryList(DTOSchuelerMerkmale.QUERY_BY_SCHUELER_ID, DTOSchuelerMerkmale.class, dtoSchueler.ID);
-		final List<DTOSchuelerAbgaenge> schuelerAbgaenge = conn.queryList(DTOSchuelerAbgaenge.QUERY_BY_SCHUELER_ID, DTOSchuelerAbgaenge.class, dtoSchueler.ID);
-		return mapInternal(dtoSchueler, schuelerMerkmale, schuelerAbgaenge);
+		return mapInternal(dtoSchueler, schuelerMerkmale);
 	}
 
-	private SchuelerSchulbesuchsdaten mapInternal(final DTOSchueler dtoSchueler, final @NotNull List<DTOSchuelerMerkmale> schuelerMerkmale,
-			final @NotNull List<DTOSchuelerAbgaenge> schuelerAbgaenge) throws ApiOperationException {
+	private SchuelerSchulbesuchsdaten mapInternal(final DTOSchueler dtoSchueler, final @NotNull List<DTOSchuelerMerkmale> schuelerMerkmale) {
 
 		final SchuelerSchulbesuchsdaten daten = new SchuelerSchulbesuchsdaten();
 		// Basisdaten
@@ -166,9 +167,20 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		daten.merkmale = DataSchuelerMerkmale.mapMultiple(schuelerMerkmale, merkmaleByKurztext);
 
 		// Informationen zu allen bisher besuchten Schulen
-		daten.alleSchulen = DataSchuelerSchulbesuchSchule.mapMultiple(schuelerAbgaenge, entlassartenByBezeichnung, schulenBySchulnummer);
+		daten.alleSchulen = this.getBisherigeSchulen(dtoSchueler.ID);
 
 		return daten;
+	}
+
+	private List<SchuelerSchulbesuchSchule> getBisherigeSchulen(final Long idSchueler) {
+		// Uebergangsloesung -> Die gesamte Klasse wird durch MVC Pattern ersetzt
+		final var repo = BisherigeSchuleRepositoryFactory.getNewInstance();
+		final var mapper = BisherigeSchuleMapper.INSTANCE;
+
+		return BisherigeSchuleServiceFactory
+				.getNewInstance(repo, mapper)
+				.getBisherigeSchulenService()
+				.getAllByIdSchueler(idSchueler);
 	}
 
 	private Long mapUebergangsempfehlung(final String uebergangsempfehlungJg5) {

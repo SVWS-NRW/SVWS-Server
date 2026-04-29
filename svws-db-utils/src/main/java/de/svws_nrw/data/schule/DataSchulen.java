@@ -58,7 +58,7 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 	}
 
 	private List<SchulEintrag> getSchulenFiltered(final Predicate<DTOSchuleNRW> filter) {
-		final List<DTOSchuleNRW> schulen = this.conn.queryAll(DTOSchuleNRW.class);
+		final List<DTOSchuleNRW> schulen = this.getAllEntities();
 		final Set<Long> idsOfReferencedSchulen = this.getIdsOfReferencedSchulen(schulen);
 		return schulen
 				.stream()
@@ -69,8 +69,43 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 				.toList();
 	}
 
-	@Override
-	public SchulEintrag getById(final Long id) throws ApiOperationException {
+	/**
+	 * Gibt alle Schulen-Entitäten zurück
+	 *
+	 * @return sortierte Liste aller {@link DTOSchuleNRW}-Einträge
+	 */
+	public List<DTOSchuleNRW> getAllEntities() {
+		return this.conn.queryAll(DTOSchuleNRW.class);
+	}
+
+	/**
+	 * Gibt die Schule-Entität zur Schulnummer zurück
+	 *
+	 * @param schulnummer Die Id der Schule
+	 *
+	 * @return {@link DTOSchuleNRW}-Eintrag
+	 * @throws ApiOperationException wenn keine Schulnummer übergeben wurde oder diese keiner Schule eindeutig zugeordnet werden kann.
+	 */
+	public DTOSchuleNRW getEntityBySchulnummer(final String schulnummer) {
+		if (schulnummer == null) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Keine Schulnummer für die Schule übergeben.");
+		}
+		final var result = this.conn.queryList(DTOSchuleNRW.QUERY_BY_SCHULNR, DTOSchuleNRW.class, schulnummer);
+		if (result.size() != 1) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Schulnummer %s kann nicht eindeutig einer Schule zugeordnert werden".formatted(schulnummer));
+		}
+		return result.getFirst();
+	}
+
+	/**
+	 * Gibt die Schule-Entität zur Id zurück
+	 *
+	 * @param id Die Id der Schule
+	 *
+	 * @return {@link DTOSchuleNRW}-Eintrag
+	 * @throws ApiOperationException wenn die Schule nicht gefunden wurde.
+	 */
+	public DTOSchuleNRW getEntityById(final Long id) {
 		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Keine ID für die Schule übergeben.");
 		}
@@ -78,7 +113,12 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 		if (dtoSchuleNRW == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Eintrag im Katalog der Schulen mit der ID %d gefunden.".formatted(id));
 		}
-		return map(dtoSchuleNRW);
+		return dtoSchuleNRW;
+	}
+
+	@Override
+	public SchulEintrag getById(final Long id) throws ApiOperationException {
+		return map(this.getEntityById(id));
 	}
 
 	@Override

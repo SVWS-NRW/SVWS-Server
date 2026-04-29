@@ -92,7 +92,6 @@ class MerkmalServiceTest {
 
 		when(repository.bezeichnungIsAlreadyUsedCreate(anyString())).thenReturn(false);
 		when(repository.kuerzelIsAlreadyUsedCreate(anyString())).thenReturn(false);
-		when(repository.getNextID()).thenReturn(1L);
 		when(mapper.toDomain(any())).thenReturn(entity);
 		when(mapper.toApi(nullable(DTOMerkmale.class))).thenReturn(apiMerkmal);
 
