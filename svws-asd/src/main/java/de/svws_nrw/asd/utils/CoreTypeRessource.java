@@ -292,6 +292,7 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 		for (final var res : listResources) {
 			res.init();
 		}
+		_initialized = true;
 	}
 
 

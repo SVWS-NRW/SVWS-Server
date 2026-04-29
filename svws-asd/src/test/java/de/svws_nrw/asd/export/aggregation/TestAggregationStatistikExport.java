@@ -3,7 +3,6 @@ package de.svws_nrw.asd.export.aggregation;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +19,6 @@ import de.svws_nrw.asd.utils.json.JsonReader;
  *
  */
 @DisplayName("Teste die Aggregation der Gesamt-Statistikdaten einer Schule in das Format StatistikExport")
-@Disabled
 class TestAggregationStatistikExport {
 
 	/** Statistikdaten der Schule */
