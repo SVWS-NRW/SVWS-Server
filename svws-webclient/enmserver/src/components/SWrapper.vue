@@ -51,7 +51,7 @@
 	const errors = ref<Map<number, CapturedError>>(new Map());
 
 	function copyString(error: CapturedError) {
-		const json = JSON.stringify({ env: { version: version, "Commit": githash }, error }, null, 2);
+		const json = JSON.stringify({ env: { client: 'WeNoM', version: version, commit: githash }, error }, null, 2);
 		return "```json\n" + json + "\n```";
 	}
 

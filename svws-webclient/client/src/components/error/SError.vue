@@ -69,8 +69,7 @@
 
 	import { computed, ref } from "vue";
 	import type { ErrorProps } from "./SErrorProps";
-	import { SimpleOperationResponse } from "@core";
-	import { DeveloperNotificationException, OpenApiError, UserNotificationException } from "@core";
+	import { DeveloperNotificationException, OpenApiError, UserNotificationException, SimpleOperationResponse } from "@core";
 
 	type CapturedError = {
 		id: number;
@@ -107,13 +106,13 @@
 		}
 		try {
 			return SimpleOperationResponse.transpilerFromJSON(errorText.value);
-		} catch (e) {
+		} catch {
 			return null;
 		}
 	});
 
 	function goBack() {
-		window.history.back();
+		globalThis.history.back();
 	}
 
 	async function createCapturedError(): Promise<CapturedError> {
@@ -130,17 +129,17 @@
 
 	async function copyToClipboard() {
 		const capturedError = await createCapturedError();
-		const json = JSON.stringify({ env: { mode: props.api.mode.text, version: props.api.version, commit: props.api.githash, kompetenzen: props.benutzerKompetenzen.values().toArray().toString(), userAgent: window.navigator.userAgent }, capturedError }, null, 2);
+		const json = JSON.stringify({ env: { client: 'WebClient Route-Error', mode: props.api.mode.text, version: props.api.version, commit: props.api.githash, kompetenzen: props.benutzerKompetenzen.values().toArray().toString(), userAgent: globalThis.navigator.userAgent }, capturedError }, null, 2);
 		try {
 			await navigator.clipboard.writeText("```json\n" + json + "\n```");
-		} catch (e) {
+		} catch {
 			copied.value = false;
 		}
 		copied.value = true;
 	}
 
 	function reloadClient() {
-		window.location.href = window.location.origin;
+		globalThis.location.href = globalThis.location.origin;
 	}
 
 </script>
