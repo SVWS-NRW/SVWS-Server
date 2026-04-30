@@ -80,7 +80,7 @@ class DataManagerRevisedTest {
 	}
 
 	@BeforeEach
-	public void setUpBeforeEach() {
+	void setUpBeforeEach() {
 		klassenDaten = new KlassenDaten();
 		klassenDaten.id = 1L;
 		klassenDaten.kuerzel = "55a";
@@ -98,18 +98,6 @@ class DataManagerRevisedTest {
 		});
 
 		assertThat(result).isInstanceOf(NullPointerException.class).hasMessage("DBEntityManager darf nicht null sein.");
-	}
-
-	@Test
-	void constructor_ClassDTOKlassen() {
-		final DataManagerRevised<Long, DTOKlassen, KlassenDaten> result = new DataManagerRevised<>(mock(DBEntityManager.class)) {
-			@Override
-			protected KlassenDaten map(final DTOKlassen dtoKlassen) {
-				return null;
-			}
-		};
-
-		assertThat(result).isNotNull().hasFieldOrPropertyWithValue("classDatabaseDTO", DTOKlassen.class);
 	}
 
 	@Test
@@ -529,15 +517,20 @@ class DataManagerRevisedTest {
 	}
 
 	@Test
-	void getClassDatabaseDTO() {
-		final Class<DTOKlassen> result = cut.getClassDatabaseDTO();
-		assertThat(result).isAssignableFrom(DTOKlassen.class);
+	void getClassDatabaseDTO_checkCorrectSuperclassEntityGenerics() {
+		cut.getDatabaseDTOByID(1L);
+		verify(conn, times(1)).queryByKey(DTOKlassen.class, 1L);
 	}
 
 	@Test
-	void getClassID() {
-		final Class<Long> result = cut.getClassID();
-		assertThat(result).isAssignableFrom(Long.class);
+	void getClassID_checkCorrectSuperclassIDGeneric() {
+		cut = spy(cut);
+
+		final Map<String, Object> initAttributes = Collections.emptyMap();
+
+		cut.getNextID(1L, initAttributes);
+		verify(cut, times(1)).createNextLongID(1L);
+		verify(cut, times(0)).getID(initAttributes);
 	}
 
 	@Test

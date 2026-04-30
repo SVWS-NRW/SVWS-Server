@@ -44,7 +44,7 @@ public final class DataUvSchueler extends DataManagerRevised<LongPair, DTOUvPlan
 
 	@Override
 	public DTOUvPlanungsabschnittSchueler getDatabaseDTOByID(final LongPair id) {
-		return conn.queryByKey(classDatabaseDTO, id.a, id.b);
+		return conn.queryByKey(DTOUvPlanungsabschnittSchueler.class, id.a, id.b);
 	}
 
 	@Override

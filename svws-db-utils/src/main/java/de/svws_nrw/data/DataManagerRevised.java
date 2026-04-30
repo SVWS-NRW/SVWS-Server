@@ -3,6 +3,7 @@ package de.svws_nrw.data;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -39,9 +40,6 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 
-	/** Die Klasse des zugehörigen Datenbank-DTOs */
-	protected final Class<DatabaseDTO> classDatabaseDTO;
-
 	/** Die Datenbank-Verbindung zum Aggregieren der Informationen aus der DB und zum Schreiben der Informationen bzw. Teilinformationen */
 	protected final DBEntityManager conn;
 
@@ -54,7 +52,6 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	/** Ein Set von Attributen, wo das Mapping beim Hinzufügen in einem zweiten Schritt passiert, nachdem das Datenbank-DTO ein erstes Mal persistiert wurde. */
 	private final Set<String> attributesDelayedOnCreation = new HashSet<>();
 
-
 	/**
 	 * Erstellt einen neuen Datenmanager mit der angegebenen Verbindung
 	 *
@@ -62,31 +59,6 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 */
 	protected DataManagerRevised(final DBEntityManager conn) {
 		this.conn = Objects.requireNonNull(conn, "DBEntityManager darf nicht null sein.");
-		this.classDatabaseDTO = getClassDatabaseDTO();
-	}
-
-
-	/**
-	 * Methode liefert die Class des Generics für das Datenbank-DTO.
-	 *
-	 * @return Class des Datenbank-DTO
-	 */
-	@SuppressWarnings("unchecked")
-	Class<DatabaseDTO> getClassDatabaseDTO() {
-		final ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
-		return ((Class<DatabaseDTO>) type.getActualTypeArguments()[1]);
-	}
-
-
-	/**
-	 * Methode liefert die Class des Generics für die ID.
-	 *
-	 * @return Class der ID
-	 */
-	@SuppressWarnings("unchecked")
-	Class<ID> getClassID() {
-		final ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
-		return ((Class<ID>) type.getActualTypeArguments()[0]);
 	}
 
 
@@ -145,7 +117,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	/**
 	 * Erstellt und initialisiert ein neues Datenbank-DTO.
 	 *
-	 * @param newID      	   die neue ID für das DTO
+	 * @param newID           die neue ID für das DTO
 	 * @param initAttributes   die Attribute zur Initialisierung
 	 *
 	 * @return das neue DTO
@@ -155,7 +127,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	protected DatabaseDTO newDTO(final ID newID, final Map<String, Object> initAttributes) throws ApiOperationException {
 		try {
 			// Erstelle ein neues DTO für die DB und wende Initialisierung und das Mapping der Attribute an
-			final Constructor<DatabaseDTO> constructor = classDatabaseDTO.getDeclaredConstructor();
+			final Constructor<DatabaseDTO> constructor = getClassDatabaseDTO().getDeclaredConstructor();
 			constructor.setAccessible(true);
 			final DatabaseDTO dto = constructor.newInstance();
 			initDTO(dto, newID, initAttributes);
@@ -316,7 +288,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @return das Database-DTO
 	 */
 	public DatabaseDTO getDatabaseDTOByID(final ID id) {
-		return conn.queryByKey(classDatabaseDTO, id);
+		return conn.queryByKey(getClassDatabaseDTO(), id);
 	}
 
 
@@ -394,7 +366,6 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 */
 	public Response patchAsResponse(final ID id, final InputStream is) throws ApiOperationException {
 		patch(id, JSONMapper.toMap(is));
-		// TODO ggf. Anpassung, so dass Status.OK mit den veränderten Daten zurückgegeben wird
 		return Response.status(Status.NO_CONTENT).build();
 	}
 
@@ -428,7 +399,6 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	public Response patchSingleAsResponse(final InputStream is) throws ApiOperationException {
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		patch(getID(map), map);
-		// TODO ggf. Anpassung, so dass Status.OK mit den veränderten Daten zurückgegeben wird
 		return Response.status(Status.NO_CONTENT).build();
 	}
 
@@ -448,7 +418,6 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 		for (final Map<String, Object> map : JSONMapper.toMultipleMaps(is)) {
 			patch(getID(map), map);
 		}
-		// TODO ggf. Anpassung, so dass Status.OK mit den veränderten Daten zurückgegeben wird
 		return Response.status(Status.NO_CONTENT).build();
 	}
 
@@ -624,7 +593,6 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	/**
 	 * Entfernt die Datenbank-DTOs mit den angegebenen IDs und gibt eine Liste mit
 	 * SimpleOperationResponse-Objekten zu dem Erfolg der Lösch-Operationen zurück.
-	 *
 	 * Hinweis: Zur Nutzung dieser Methode muss die ID der DTOs vom Typ Long sein
 	 *
 	 * @param ids        die IDs
@@ -679,8 +647,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @return die Database-DTOs
 	 */
 	public List<DatabaseDTO> getDatabaseDTOsByIds(final List<ID> ids) {
-		final List<DatabaseDTO> dbDTOs = conn.queryByKeyList(classDatabaseDTO, ids);
-		return dbDTOs;
+		return conn.queryByKeyList(getClassDatabaseDTO(), ids);
 	}
 
 
@@ -1010,7 +977,29 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @return die neue default ID
 	 */
 	protected Long createNextLongID(final Long lastID) {
-		return (lastID == null) ? conn.transactionGetNextID(classDatabaseDTO) : (lastID + 1L);
+		return (lastID == null) ? conn.transactionGetNextID(getClassDatabaseDTO()) : (lastID + 1L);
+	}
+
+
+	@SuppressWarnings("unchecked")
+	private Class<DatabaseDTO> getClassDatabaseDTO() {
+		return (Class<DatabaseDTO>) resolveAndValidateTypeArguments()[1];
+	}
+
+
+	@SuppressWarnings("unchecked")
+	private Class<ID> getClassID() {
+		return (Class<ID>) resolveAndValidateTypeArguments()[0];
+	}
+
+
+	private Type[] resolveAndValidateTypeArguments() {
+		final ParameterizedType superclassType = (ParameterizedType) getClass().getGenericSuperclass();
+		final Type[] typeArgs = superclassType.getActualTypeArguments();
+		if (typeArgs.length != 3) {
+			throw new IllegalStateException("Es wurden nicht alle Superclass Generics definiert.");
+		}
+		return typeArgs;
 	}
 
 }
