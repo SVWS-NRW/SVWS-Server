@@ -59,7 +59,17 @@ class DBConnection {
      */
     private function connectTo(string $dsn): PDO {
         try {
-            $pdo = new PDO($dsn);
+            $className = '\Pdo\Sqlite';
+            if (class_exists($className)) {
+                $pdo = new $className($dsn);
+                $attrName = $className.'::ATTR_TRANSACTION_MODE';
+                $modeName = $className.'::TRANSACTION_MODE_IMMEDIATE';
+                if (defined($attrName) && defined($modeName)) {
+                    $pdo->setAttribute(constant($attrName), constant($modeName));
+                }
+            } else {
+                $pdo = new PDO($dsn);
+            }
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $pdo->exec("PRAGMA busy_timeout = 2000;"); // Warte bis zu 2 Sekunden, wenn die DB aus einem Grund gesperrt ist
         } catch (PDOException $e) {
@@ -74,7 +84,7 @@ class DBConnection {
      */
     public function beginTransaction(): void {
         try {
-            $this->pdo->exec("BEGIN IMMEDIATE TRANSACTION");
+            $this->pdo->beginTransaction();
         } catch (PDOException $e) {
             $this->exit500("Fehler beim Erstellen der Transaction (".$e->getCode()."): ".$e->getMessage());
         }
