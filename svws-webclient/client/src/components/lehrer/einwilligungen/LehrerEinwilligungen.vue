@@ -3,48 +3,50 @@
 		<svws-ui-modal-hilfe> <hilfe-lehrer-einwilligungen /> </svws-ui-modal-hilfe>
 	</Teleport>
 	<div class="page page-grid-cards">
-		<svws-ui-content-card v-if="hasAbgefragteEinwilligungen" title="Abgefragt" class="col-span-full">
-			<div class="space-y-2">
-				<div v-for="einwilligung of einwilligungen()" :key="einwilligung.idEinwilligungsart">
-					<template v-if="einwilligung.istAbgefragt || einwilligung.istZugestimmt">
-						<ui-card icon="i-ri-message-line" :title="getBezeichnungEinwilligungsart(einwilligung.idEinwilligungsart)" :info="getEinwilligungsstatus(einwilligung)">
-							<div class="w-1/5">
-								<p class="text-headline-md mb-1"> Status </p>
-							</div>
-							<svws-ui-checkbox class="w-2/5" :model-value="einwilligung.istAbgefragt" type="checkbox" title="Abgefragt"
-								@update:model-value="istAbgefragt => patch({ istAbgefragt }, einwilligung.idEinwilligungsart)" :readonly>
-								Abgefragt
-							</svws-ui-checkbox>
-							<svws-ui-checkbox class="w-2/5" :model-value="einwilligung.istZugestimmt" type="checkbox" title="Zugestimmt"
-								@update:model-value="istZugestimmt => patch({ istZugestimmt }, einwilligung.idEinwilligungsart)" :readonly>
-								Zugestimmt
-							</svws-ui-checkbox>
-						</ui-card>
-					</template>
+		<svws-ui-input-wrapper :grid="1">
+			<svws-ui-content-card v-if="hasAbgefragteEinwilligungen" title="Abgefragt" class="col-span-full">
+				<div class="space-y-2">
+					<div v-for="einwilligung of einwilligungen()" :key="einwilligung.idEinwilligungsart">
+						<template v-if="einwilligung.istAbgefragt || einwilligung.istZugestimmt">
+							<ui-card icon="i-ri-message-line" :title="getBezeichnungEinwilligungsart(einwilligung.idEinwilligungsart)" :info="getEinwilligungsstatus(einwilligung)">
+								<div class="w-1/5">
+									<p class="text-headline-md mb-1"> Status </p>
+								</div>
+								<svws-ui-checkbox class="w-2/5" :model-value="einwilligung.istAbgefragt" type="checkbox" title="Abgefragt"
+									@update:model-value="istAbgefragt => patch({ istAbgefragt }, einwilligung.idEinwilligungsart)" :readonly>
+									Abgefragt
+								</svws-ui-checkbox>
+								<svws-ui-checkbox class="w-2/5" :model-value="einwilligung.istZugestimmt" type="checkbox" title="Zugestimmt"
+									@update:model-value="istZugestimmt => patch({ istZugestimmt }, einwilligung.idEinwilligungsart)" :readonly>
+									Zugestimmt
+								</svws-ui-checkbox>
+							</ui-card>
+						</template>
+					</div>
 				</div>
-			</div>
-		</svws-ui-content-card>
-		<svws-ui-content-card v-if="hasNichtAbgefragteEinwilligungen" title="Nicht abgefragt" class="col-span-full">
-			<div class="space-y-2">
-				<div v-for="einwilligung of einwilligungen()" :key="einwilligung.idEinwilligungsart">
-					<template v-if="!einwilligung.istAbgefragt && !einwilligung.istZugestimmt">
-						<ui-card icon="i-ri-message-line" :title="getBezeichnungEinwilligungsart(einwilligung.idEinwilligungsart)">
-							<div class="w-1/5">
-								<p class="text-headline-md mb-1"> Status </p>
-							</div>
-							<svws-ui-checkbox class="w-2/5" :model-value="einwilligung.istAbgefragt" type="checkbox" title="Abgefragt"
-								@update:model-value="istAbgefragt => patch({ istAbgefragt }, einwilligung.idEinwilligungsart)" :readonly>
-								Abgefragt
-							</svws-ui-checkbox>
-							<svws-ui-checkbox class="w-2/5" :model-value="einwilligung.istZugestimmt" type="checkbox" title="Zugestimmt"
-								@update:model-value="istZugestimmt => updateEinwilligungStatus(einwilligung, istZugestimmt)" :readonly>
-								Zugestimmt
-							</svws-ui-checkbox>
-						</ui-card>
-					</template>
+			</svws-ui-content-card>
+			<svws-ui-content-card v-if="hasNichtAbgefragteEinwilligungen" title="Nicht abgefragt" class="col-span-full">
+				<div class="space-y-2">
+					<div v-for="einwilligung of einwilligungen()" :key="einwilligung.idEinwilligungsart">
+						<template v-if="!einwilligung.istAbgefragt && !einwilligung.istZugestimmt">
+							<ui-card icon="i-ri-message-line" :title="getBezeichnungEinwilligungsart(einwilligung.idEinwilligungsart)">
+								<div class="w-1/5">
+									<p class="text-headline-md mb-1"> Status </p>
+								</div>
+								<svws-ui-checkbox class="w-2/5" :model-value="einwilligung.istAbgefragt" type="checkbox" title="Abgefragt"
+									@update:model-value="istAbgefragt => patch({ istAbgefragt }, einwilligung.idEinwilligungsart)" :readonly>
+									Abgefragt
+								</svws-ui-checkbox>
+								<svws-ui-checkbox class="w-2/5" :model-value="einwilligung.istZugestimmt" type="checkbox" title="Zugestimmt"
+									@update:model-value="istZugestimmt => updateEinwilligungStatus(einwilligung, istZugestimmt)" :readonly>
+									Zugestimmt
+								</svws-ui-checkbox>
+							</ui-card>
+						</template>
+					</div>
 				</div>
-			</div>
-		</svws-ui-content-card>
+			</svws-ui-content-card>
+		</svws-ui-input-wrapper>
 	</div>
 </template>
 
