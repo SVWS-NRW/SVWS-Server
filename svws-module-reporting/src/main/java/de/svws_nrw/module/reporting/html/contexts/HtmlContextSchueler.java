@@ -1,6 +1,5 @@
 package de.svws_nrw.module.reporting.html.contexts;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
@@ -17,10 +16,6 @@ import java.util.List;
  */
 public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> implements HtmlContextAufteilbar<HtmlContextSchueler> {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
-	@JsonIgnore
-	private final ReportingRepository reportingRepository;
-
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Schülern.
 	 *
@@ -29,7 +24,6 @@ public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> im
 	 */
 	public HtmlContextSchueler(final ReportingRepository reportingRepository, final List<ReportingSchueler> reportingSchueler) {
 		super(reportingRepository);
-		this.reportingRepository = reportingRepository;
 		erzeugeContextFromSchueler(reportingSchueler);
 	}
 
@@ -40,7 +34,6 @@ public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> im
 	 */
 	public HtmlContextSchueler(final ReportingRepository reportingRepository) {
 		super(reportingRepository);
-		this.reportingRepository = reportingRepository;
 		erzeugeContextFromIds(this.reportingRepository.reportingParameter().idsHauptdaten());
 	}
 

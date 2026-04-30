@@ -127,7 +127,7 @@ public class ProxyReportingLehrer extends ReportingLehrer {
 	@Override
 	public List<ReportingKlassenunterricht> klassenunterrichtAlsFachlehrer() {
 		if (!istInitKlassenunterrichtAlsFachlehrer) {
-			super.klassenunterrichtAlsFachlehrer = this.factoryUnterrichte.erstelleKlassenunterrichtAlsFachlehrer();
+			super.klassenunterrichtAlsFachlehrer = this.factoryUnterrichte.klassenunterrichtAlsFachlehrer();
 			istInitKlassenunterrichtAlsFachlehrer = true;
 		}
 		return super.klassenunterrichtAlsFachlehrer;
@@ -141,7 +141,7 @@ public class ProxyReportingLehrer extends ReportingLehrer {
 	@Override
 	public List<ReportingKlassenunterricht> klassenunterrichtAlsZusatzlehrer() {
 		if (!istInitKlassenunterrichtAlsZusatzlehrer) {
-			super.klassenunterrichtAlsZusatzlehrer = factoryUnterrichte.erstelleKlassenunterrichtAlsZusatzlehrer();
+			super.klassenunterrichtAlsZusatzlehrer = factoryUnterrichte.klassenunterrichtAlsZusatzlehrer();
 			istInitKlassenunterrichtAlsZusatzlehrer = true;
 		}
 		return super.klassenunterrichtAlsZusatzlehrer;
@@ -155,7 +155,7 @@ public class ProxyReportingLehrer extends ReportingLehrer {
 	@Override
 	public List<ReportingKursunterricht> kursunterrichtAlsFachlehrer() {
 		if (!istInitKursunterrichtAlsFachlehrer) {
-			super.kursunterrichtAlsFachlehrer = factoryUnterrichte.erstelleKursunterrichtAlsFachlehrer();
+			super.kursunterrichtAlsFachlehrer = factoryUnterrichte.kursunterrichtAlsFachlehrer();
 			istInitKursunterrichtAlsFachlehrer = true;
 		}
 		return super.kursunterrichtAlsFachlehrer;
@@ -169,7 +169,7 @@ public class ProxyReportingLehrer extends ReportingLehrer {
 	@Override
 	public List<ReportingKursunterricht> kursunterrichtAlsZusatzlehrer() {
 		if (!istInitKursunterrichtAlsZusatzlehrer) {
-			super.kursunterrichtAlsZusatzlehrer = factoryUnterrichte.erstellekursunterrichtAlsZusatzlehrer();
+			super.kursunterrichtAlsZusatzlehrer = factoryUnterrichte.kursunterrichtAlsZusatzlehrer();
 			istInitKursunterrichtAlsZusatzlehrer = true;
 		}
 		return super.kursunterrichtAlsZusatzlehrer;

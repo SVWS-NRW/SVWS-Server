@@ -5,22 +5,14 @@ import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
 import de.svws_nrw.core.data.gost.GostFachwahl;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
-import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
 import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
-import de.svws_nrw.data.gost.DataGostAbiturjahrgangFachwahlen;
-import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
-import de.svws_nrw.data.schule.DataEinwilligungsarten;
-import de.svws_nrw.data.schule.DataLernplattformen;
-import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.filterung.ReportingFilterDataType;
 import de.svws_nrw.module.reporting.types.gost.fachwahlstatistik.ProxyReportingGostFachwahlstatistikHalbjahr;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
-import de.svws_nrw.module.reporting.types.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.gost.kursplanung.ProxyReportingSchuelerGostKursplanungKursbelegung;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
@@ -106,9 +98,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 			// Liste der Kurslehrer erzeugen.
 			final List<ReportingLehrer> kursLehrer = datenManager.kursGetLehrkraefteSortiert(kurs.id)
 					.stream()
-					.map(l -> (ReportingLehrer) new ProxyReportingLehrer(
-							reportingRepository,
-							reportingRepository.repositoryLehrer().stammdaten().computeIfAbsent(l.id, ls -> ladeLehrerStammdaten(l.id))))
+					.map(l -> reportingRepository.repositoryLehrer().lehrer(l.id))
 					.toList();
 
 			// Den Kurs der Gost-Kurplanung erzeugen.
@@ -151,8 +141,9 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 
 			// Aktualisiere die Map der Kursplanungskurse im Repository.
 			this.reportingRepository.repositoryGost().kursplanungKurse().clear();
-			this.reportingRepository.repositoryGost().kursplanungKurse().putAll(super.kurse().stream().collect(Collectors.toMap(ReportingGostKursplanungKurs::id,
-					k -> k)));
+			this.reportingRepository.repositoryGost().kursplanungKurse()
+					.putAll(super.kurse().stream().collect(Collectors.toMap(ReportingGostKursplanungKurs::id,
+							k -> k)));
 		}
 
 		// Erstelle eine Liste von Schienen aus dem Blockungsergebnis und initialisiere damit die Liste der Super-Klasse.
@@ -161,19 +152,6 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 				.filter(s -> !ergebnisManager.getOfSchieneKursmengeSortiert(s.id).isEmpty())
 				.toList()
 				.forEach(s -> super.schienen().add(mapBlockungsergebnisSchienenmenge.get(s.id)));
-	}
-
-	private LehrerStammdaten ladeLehrerStammdaten(final long lehrerId) {
-		try {
-			final DBEntityManager conn = reportingRepository.conn();
-			return new DataLehrerStammdaten(conn, new DataLernplattformen(conn),
-					new DataEinwilligungsarten(conn)).getById(lehrerId);
-		} catch (final ApiOperationException e) {
-			ReportingExceptionUtils.logException(
-					"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
-					reportingRepository.logger(), LogLevel.INFO, 0);
-			return new LehrerStammdaten();
-		}
 	}
 
 	private void ergaenzeKursbelegung(final long idKursschueler, final long kursId, final ReportingGostKursplanungKurs reportingGostKursplanungKurs,
@@ -217,23 +195,15 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 	public Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik() {
 		if ((super.fachwahlstatistik() == null) || super.fachwahlstatistik().isEmpty()) {
 			final Map<Long, ReportingGostKursplanungFachwahlstatistik> mapFachwahlStatistik = new HashMap<>();
-			final DataGostAbiturjahrgangFachwahlen gostAbiturjahrgangFachwahlen =
-					new DataGostAbiturjahrgangFachwahlen(reportingRepository.conn(), super.abiturjahr());
-			try {
-				final List<GostStatistikFachwahl> gostFachwahlenStatistik = gostAbiturjahrgangFachwahlen.getFachwahlen();
-				if (!gostFachwahlenStatistik.isEmpty()) {
-					mapFachwahlStatistik.putAll(
-							gostFachwahlenStatistik.stream().collect(
-									Collectors.toMap(
-											f -> f.id,
-											f -> (ReportingGostKursplanungFachwahlstatistik) new ProxyReportingGostKursplanungFachwahlstatistik(
-													new ProxyReportingGostFachwahlstatistikHalbjahr(this.reportingRepository, this.gostHalbjahr(), f),
-													this.ergebnisManager))));
-				}
-			} catch (final ApiOperationException e) {
-				ReportingExceptionUtils.logException(
-						"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der GOSt-Fachwahlstatistik.", e,
-						reportingRepository.logger(), LogLevel.INFO, 0);
+			final List<GostStatistikFachwahl> gostFachwahlenStatistik = this.reportingRepository.repositoryGost().fachwahlen(super.abiturjahr());
+			if (!gostFachwahlenStatistik.isEmpty()) {
+				mapFachwahlStatistik.putAll(
+						gostFachwahlenStatistik.stream().collect(
+								Collectors.toMap(
+										f -> f.id,
+										f -> (ReportingGostKursplanungFachwahlstatistik) new ProxyReportingGostKursplanungFachwahlstatistik(
+												new ProxyReportingGostFachwahlstatistikHalbjahr(this.reportingRepository, this.gostHalbjahr(), f),
+												this.ergebnisManager))));
 			}
 			super.fachwahlstatistik = mapFachwahlStatistik;
 		}

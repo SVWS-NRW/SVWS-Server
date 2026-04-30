@@ -38,16 +38,16 @@ public class ProxyReportingStundenplanungUnterricht extends ReportingStundenplan
 		this.stundenplan = stundenplan;
 
 		if (this.stundenplan.schuljahresabschnitt() != null) {
-			super.fach = this.stundenplan.schuljahresabschnitt().mapFaecher().get(unterricht.idFach);
+			super.fach = this.stundenplan.schuljahresabschnitt().fach(unterricht.idFach);
 			if (unterricht.idKurs != null) {
-				super.kurs = this.stundenplan.schuljahresabschnitt().mapKurse().get(unterricht.idKurs);
+				super.kurs = this.stundenplan.schuljahresabschnitt().kurs(unterricht.idKurs);
 				if (super.kurs() != null) {
 					super.klassen = super.kurs().klassen();
 				}
 			} else {
 				super.kurs = null;
 				super.klassen =
-						unterricht.klassen.stream().map(k -> this.stundenplan.schuljahresabschnitt().mapKlassen().get(k)).filter(Objects::nonNull).toList();
+						unterricht.klassen.stream().map(k -> this.stundenplan.schuljahresabschnitt().klasse(k)).filter(Objects::nonNull).toList();
 			}
 		}
 

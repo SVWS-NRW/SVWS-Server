@@ -26,10 +26,6 @@ import jakarta.ws.rs.core.Response;
 public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext<Object>
 		implements HtmlContextAufteilbar<HtmlContextGostKlausurplanungKlausurplan> {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
-	@JsonIgnore
-	private final ReportingRepository reportingRepository;
-
 	/** Klausurplan dieses Contexts. */
 	@JsonIgnore
 	private ReportingGostKlausurplanungKlausurplan gostKlausurplan;
@@ -54,7 +50,6 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext<
 	public HtmlContextGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository, final List<Long> idsFilter,
 			final ReportingFilterDataType idsFilterDataType) throws ApiOperationException {
 		super(reportingRepository);
-		this.reportingRepository = reportingRepository;
 		this.idsFilter = idsFilter;
 		this.idsFilterDataType = idsFilterDataType;
 		erzeugeContext();
@@ -72,7 +67,6 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext<
 	public HtmlContextGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository, final ReportingGostKlausurplanungKlausurplan gostKlausurplan,
 			final List<Long> idsFilter, final ReportingFilterDataType idsFilterDataType) {
 		super(reportingRepository);
-		this.reportingRepository = reportingRepository;
 		this.idsFilter = idsFilter;
 		this.idsFilterDataType = idsFilterDataType;
 		erzeugeContextFromKlausurplan(gostKlausurplan);

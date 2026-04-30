@@ -6,11 +6,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
-import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.data.gost.DataGostAbiturjahrgangFachwahlen;
-import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
-import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 
 /**
  * Proxy-Klasse im Rahmen des Reportings für Daten vom Typ GostFachwahlstatistikenAbiturjahrgang und erweitert die Klasse
@@ -33,23 +29,16 @@ public class ProxyReportingGostFachwahlstatistikenAbiturjahrgang extends Reporti
 
 		this.reportingRepository = reportingRepository;
 
-		try {
-			// Hole die Fachwahlstatistiken mithilfe der zugehörigen Data-Klasse
-			final DataGostAbiturjahrgangFachwahlen gostAbiturjahrgangFachwahlen =
-					new DataGostAbiturjahrgangFachwahlen(reportingRepository.conn(), super.abiturjahr());
-			final List<GostStatistikFachwahl> gostFachwahlStatistiken = gostAbiturjahrgangFachwahlen.getFachwahlen().stream().filter(Objects::nonNull).toList();
+		// Hole die Fachwahlstatistiken über das GOSt-Repository
+		final List<GostStatistikFachwahl> gostFachwahlStatistiken =
+				this.reportingRepository.repositoryGost().fachwahlen(super.abiturjahr()).stream().filter(Objects::nonNull).toList();
 
-			// Erstelle die Reporting-Fachwahlstatistiken
-			final List<ReportingGostFachwahlstatistik> reportingGostFachwahlstatistiken = new ArrayList<>();
-			for (final GostStatistikFachwahl gostFachwahlStatistik : gostFachwahlStatistiken) {
-				reportingGostFachwahlstatistiken.add(new ProxyReportingGostFachwahlstatistik(this.reportingRepository, gostFachwahlStatistik));
-			}
-			setFachwahlstatistiken(reportingGostFachwahlstatistiken);
-		} catch (final ApiOperationException e) {
-			ReportingExceptionUtils.logException(
-					"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der GOSt-Fachwahlstatistik.", e,
-					reportingRepository.logger(), LogLevel.INFO, 0);
+		// Erstelle die Reporting-Fachwahlstatistiken
+		final List<ReportingGostFachwahlstatistik> reportingGostFachwahlstatistiken = new ArrayList<>();
+		for (final GostStatistikFachwahl gostFachwahlStatistik : gostFachwahlStatistiken) {
+			reportingGostFachwahlstatistiken.add(new ProxyReportingGostFachwahlstatistik(this.reportingRepository, gostFachwahlStatistik));
 		}
+		setFachwahlstatistiken(reportingGostFachwahlstatistiken);
 	}
 
 

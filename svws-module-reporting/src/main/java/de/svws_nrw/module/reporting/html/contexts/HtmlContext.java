@@ -1,5 +1,6 @@
 package de.svws_nrw.module.reporting.html.contexts;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.reporting.ReportingSortierungDefinition;
 import de.svws_nrw.core.data.reporting.ReportingSortierungDefinitionGruppe;
 import de.svws_nrw.core.logger.LogLevel;
@@ -45,7 +46,8 @@ public abstract class HtmlContext<T> {
 	private List<T> contextData = new ArrayList<>();
 
 	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
-	private final ReportingRepository reportingRepository;
+	@JsonIgnore
+	protected final ReportingRepository reportingRepository;
 
 	/** Legt fest, ob die Standardsortierung verwendet des entsprechenden Types werden soll. */
 	private boolean verwendeStandardsortierung = true;

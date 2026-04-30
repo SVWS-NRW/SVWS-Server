@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.asd.data.schueler.Sprachbelegung;
@@ -13,21 +12,13 @@ import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
-import de.svws_nrw.core.data.schueler.SchuelerTelefon;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
-import de.svws_nrw.data.erzieher.DataErzieherStammdaten;
-import de.svws_nrw.data.gost.DataGostAbiturdaten;
-import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
-import de.svws_nrw.data.schueler.DataSchuelerSchulbesuchsdaten;
-import de.svws_nrw.data.schueler.DataSchuelerSprachbelegung;
-import de.svws_nrw.data.schueler.DataSchuelerTelefon;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ProxyReportingErzieher;
 import de.svws_nrw.module.reporting.types.schueler.schulbesuch.ProxyReportingSchuelerSchulbesuch;
-import de.svws_nrw.module.reporting.types.schueler.telefon.ProxyReportingSchuelerTelefonkontakt;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieher;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieherArtGruppe;
 import de.svws_nrw.module.reporting.types.schueler.schulbesuch.ReportingSchuelerSchulbesuch;
@@ -122,9 +113,11 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 		this.reportingRepository = reportingRepository;
 
-		super.religion = (schuelerStammdaten.religionID != null) ? this.reportingRepository.repositoryKataloge().religionen().get(schuelerStammdaten.religionID) : null;
+		super.religion =
+				(schuelerStammdaten.religionID != null) ? this.reportingRepository.repositoryKataloge().religionen().get(schuelerStammdaten.religionID) : null;
 		super.wohnort = (schuelerStammdaten.wohnortID != null) ? this.reportingRepository.repositoryKataloge().orte().get(schuelerStammdaten.wohnortID) : null;
-		super.wohnortsteil = (schuelerStammdaten.ortsteilID != null) ? this.reportingRepository.repositoryKataloge().ortsteile().get(schuelerStammdaten.ortsteilID) : null;
+		super.wohnortsteil =
+				(schuelerStammdaten.ortsteilID != null) ? this.reportingRepository.repositoryKataloge().ortsteile().get(schuelerStammdaten.ortsteilID) : null;
 
 		// Füge Stammdaten des Schülers für weitere Verwendung in der Map im Repository hinzu.
 		this.reportingRepository.repositorySchueler().stammdaten().put(super.id(), schuelerStammdaten);
@@ -241,8 +234,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				this.reportingRepository.repositorySchueler().erzieherStammdaten(),
 				ids -> {
 					try {
-						final List<ErzieherStammdaten> stammdaten = new DataErzieherStammdaten(this.reportingRepository.conn()).getListBySchuelerIds(ids);
-						return stammdaten.stream().collect(Collectors.groupingBy(e -> e.idSchueler));
+						return this.reportingRepository.repositorySchueler().erzieherStammdaten(ids);
 					} catch (final ApiOperationException e) {
 						throw new ReportingDataLoadException(e);
 					}
@@ -303,7 +295,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 					this.reportingRepository.repositoryGost().schuelerAbiturdaten(),
 					ids -> {
 						try {
-							return new DataGostAbiturdaten(this.reportingRepository.conn(), null).getMapAbiturdatenFromIDs(ids);
+							return this.reportingRepository.repositoryGost().schuelerAbiturdaten(ids);
 						} catch (final ApiOperationException e) {
 							throw new ReportingDataLoadException(e);
 						}
@@ -370,7 +362,8 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 					.toList());
 
 			final List<SchuelerLernabschnittsdaten> aktuelleAbschnitte =
-					this.reportingRepository.repositorySchueler().lernabschnittsdaten().get123(super.id, this.reportingRepository.repositorySchule().aktuellerSchuljahresabschnitt().id(), 0);
+					this.reportingRepository.repositorySchueler().lernabschnittsdaten().get123(super.id,
+							this.reportingRepository.repositorySchule().aktuellerSchuljahresabschnitt().id(), 0);
 			if (!aktuelleAbschnitte.isEmpty()) {
 				super.aktuellerLernabschnitt = new ProxyReportingSchuelerLernabschnitt(this.reportingRepository, aktuelleAbschnitte.getFirst());
 			} else {
@@ -378,7 +371,8 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			}
 
 			final List<SchuelerLernabschnittsdaten> auswahlAbschnitte =
-					this.reportingRepository.repositorySchueler().lernabschnittsdaten().get123(super.id, this.reportingRepository.repositorySchule().auswahlSchuljahresabschnitt().id(), 0);
+					this.reportingRepository.repositorySchueler().lernabschnittsdaten().get123(super.id,
+							this.reportingRepository.repositorySchule().auswahlSchuljahresabschnitt().id(), 0);
 			if (!auswahlAbschnitte.isEmpty()) {
 				super.auswahlLernabschnitt = new ProxyReportingSchuelerLernabschnitt(this.reportingRepository, auswahlAbschnitte.getFirst());
 			} else {
@@ -400,8 +394,8 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 		if (!idsSchuelerOhneLernabschnitte.isEmpty()) {
 			final List<SchuelerLernabschnittsdaten> schuelerGesamteLernabschnittsdaten = new ArrayList<>();
 			try {
-				schuelerGesamteLernabschnittsdaten.addAll(new DataSchuelerLernabschnittsdaten(this.reportingRepository().conn())
-						.getListFromSchuelerIDs(idsSchuelerOhneLernabschnitte, false, false));
+				schuelerGesamteLernabschnittsdaten.addAll(
+						this.reportingRepository.repositorySchueler().lernabschnittsdaten(idsSchuelerOhneLernabschnitte));
 			} catch (final ApiOperationException e) {
 				ReportingExceptionUtils.logException(
 						"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Lernabschnitte eines Schülers.", e,
@@ -431,9 +425,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 					this.reportingRepository.repositorySchueler().schulbesuchsdaten(),
 					ids -> {
 						try {
-							return new DataSchuelerSchulbesuchsdaten(this.reportingRepository.conn())
-									.getListByIds(ids).stream()
-									.collect(Collectors.toMap(sb -> sb.id, sb -> sb));
+							return this.reportingRepository.repositorySchueler().schulbesuchsdaten(ids);
 						} catch (final ApiOperationException e) {
 							throw new ReportingDataLoadException(e);
 						}
@@ -458,7 +450,13 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	public List<ReportingSchuelerSprachbelegung> sprachbelegungen() {
 		ladeListeInRepositoryMap(
 				this.reportingRepository.repositorySchueler().sprachbelegungen(),
-				ids -> DataSchuelerSprachbelegung.getMapBySchuelerIDs(this.reportingRepository.conn(), ids),
+				ids -> {
+					try {
+						return this.reportingRepository.repositorySchueler().sprachbelegungen(ids);
+					} catch (final ApiOperationException e) {
+						throw new ReportingDataLoadException(e);
+					}
+				},
 				"Sprachbelegungen");
 
 		// Übertrage Daten aus dem Repository
@@ -486,19 +484,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				this.reportingRepository.repositorySchueler().telefonkontakte(),
 				ids -> {
 					try {
-						final List<SchuelerTelefon> schuelerTelefone =
-								new DataSchuelerTelefon(this.reportingRepository.conn()).getListFromSchuelerIDs(ids);
-						return schuelerTelefone.stream()
-								.collect(Collectors.groupingBy(
-										dto -> dto.idSchueler,
-										Collectors.collectingAndThen(
-												Collectors.mapping(
-														t -> (ReportingSchuelerTelefonkontakt) new ProxyReportingSchuelerTelefonkontakt(
-																this.reportingRepository, t),
-														Collectors.toList()),
-												list -> list.stream()
-														.sorted(Comparator.comparing(ReportingSchuelerTelefonkontakt::sortierung))
-														.toList())));
+						return this.reportingRepository.repositorySchueler().telefonkontakte(ids);
 					} catch (final Exception e) {
 						throw new ReportingDataLoadException(e);
 					}

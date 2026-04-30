@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.module.reporting.types.gost.fachwahlstatistik.ProxyReportingGostFachwahlstatistikenAbiturjahrgang;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
@@ -20,10 +19,6 @@ import org.thymeleaf.context.Context;
  */
 public final class HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken extends HtmlContext<Object> {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
-	@JsonIgnore
-	private final ReportingRepository reportingRepository;
-
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
 	 *
@@ -31,7 +26,6 @@ public final class HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistik
 	 */
 	public HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken(final ReportingRepository reportingRepository) {
 		super(reportingRepository);
-		this.reportingRepository = reportingRepository;
 		erzeugeContext();
 	}
 

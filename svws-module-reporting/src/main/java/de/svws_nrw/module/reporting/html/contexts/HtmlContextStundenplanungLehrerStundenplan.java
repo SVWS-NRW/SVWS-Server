@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungLehrerStundenplan;
@@ -19,11 +18,6 @@ import org.thymeleaf.context.Context;
 public final class HtmlContextStundenplanungLehrerStundenplan extends HtmlContext<ReportingStundenplanungLehrerStundenplan>
 		implements HtmlContextAufteilbar<HtmlContextStundenplanungLehrerStundenplan> {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
-	@JsonIgnore
-	private final ReportingRepository reportingRepository;
-
-
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
 	 *
@@ -34,7 +28,6 @@ public final class HtmlContextStundenplanungLehrerStundenplan extends HtmlContex
 	public HtmlContextStundenplanungLehrerStundenplan(final ReportingRepository reportingRepository, final ReportingStundenplanungStundenplan stundenplan,
 			final List<Long> idsAusgabe) {
 		super(reportingRepository);
-		this.reportingRepository = reportingRepository;
 		erzeugeContext(stundenplan, idsAusgabe);
 	}
 

@@ -2,17 +2,8 @@ package de.svws_nrw.module.reporting.types.gost.abitur;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
-import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
-import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.asd.types.Note;
-import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
-import de.svws_nrw.data.schule.DataEinwilligungsarten;
-import de.svws_nrw.data.schule.DataLernplattformen;
-import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
-import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
-import de.svws_nrw.module.reporting.types.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 
 /**
@@ -55,21 +46,7 @@ public class ProxyReportingGostAbiturFachbelegung extends ReportingGostAbiturFac
 		super.block2MuendlichePruefungNote = Note.fromKuerzel(abiturFachbelegung.block2MuendlichePruefungNotenKuerzel);
 
 		if (abiturFachbelegung.block2Pruefer != null) {
-			super.block2Pruefer =
-					new ProxyReportingLehrer(
-							this.reportingRepository,
-							this.reportingRepository.repositoryLehrer().stammdaten().computeIfAbsent(abiturFachbelegung.block2Pruefer, l -> {
-								try {
-									final DBEntityManager conn = this.reportingRepository.conn();
-									return new DataLehrerStammdaten(conn, new DataLernplattformen(conn),
-											new DataEinwilligungsarten(conn)).getById(abiturFachbelegung.block2Pruefer);
-								} catch (final ApiOperationException e) {
-									ReportingExceptionUtils.logException(
-											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
-											reportingRepository.logger(), LogLevel.INFO, 0);
-									return new LehrerStammdaten();
-								}
-							}));
+			super.block2Pruefer = this.reportingRepository.repositoryLehrer().lehrer(abiturFachbelegung.block2Pruefer);
 		}
 
 		final ReportingGostAbiturFachbelegungHalbjahr[] belegungenHJ = new ReportingGostAbiturFachbelegungHalbjahr[6];

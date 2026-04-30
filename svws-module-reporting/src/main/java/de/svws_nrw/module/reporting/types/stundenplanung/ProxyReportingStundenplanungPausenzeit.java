@@ -61,7 +61,7 @@ public class ProxyReportingStundenplanungPausenzeit extends ReportingStundenplan
 		}
 
 		// Klassen der Pausenzeit ergänzen.
-		pausenzeit.klassen.forEach(k -> super.klassen().add(stundenplan.schuljahresabschnitt().mapKlassen().get(k)));
+		pausenzeit.klassen.forEach(k -> super.klassen().add(stundenplan.schuljahresabschnitt().klasse(k)));
 
 		// Pausenaufsichten erzeugen.
 		final List<ReportingStundenplanungPausenaufsicht> reportingAufsichten = new ArrayList<>();

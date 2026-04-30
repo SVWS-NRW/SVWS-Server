@@ -3,7 +3,6 @@ package de.svws_nrw.module.reporting.html.contexts;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import org.thymeleaf.context.Context;
@@ -14,11 +13,6 @@ import org.thymeleaf.context.Context;
  */
 public final class HtmlContextLehrer extends HtmlContext<ReportingLehrer> implements HtmlContextAufteilbar<HtmlContextLehrer> {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
-	@JsonIgnore
-	private final ReportingRepository reportingRepository;
-
-
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Lehrern.
 	 *
@@ -27,7 +21,6 @@ public final class HtmlContextLehrer extends HtmlContext<ReportingLehrer> implem
 	 */
 	public HtmlContextLehrer(final ReportingRepository reportingRepository, final List<ReportingLehrer> reportingLehrer) {
 		super(reportingRepository);
-		this.reportingRepository = reportingRepository;
 		erzeugeContextFromLehrer(reportingLehrer);
 	}
 
@@ -38,7 +31,6 @@ public final class HtmlContextLehrer extends HtmlContext<ReportingLehrer> implem
 	 */
 	public HtmlContextLehrer(final ReportingRepository reportingRepository) {
 		super(reportingRepository);
-		this.reportingRepository = reportingRepository;
 		erzeugeContextFromIds(this.reportingRepository.reportingParameter().idsHauptdaten());
 	}
 

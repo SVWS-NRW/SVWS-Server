@@ -1,19 +1,10 @@
 package de.svws_nrw.module.reporting.html.contexts;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import de.svws_nrw.asd.data.klassen.KlassenDaten;
-import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.data.klassen.DataKlassendaten;
-import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
-import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import org.thymeleaf.context.Context;
 
 
@@ -21,11 +12,6 @@ import org.thymeleaf.context.Context;
  * Ein Thymeleaf-Html-Daten-Context zum Bereich "Klassen", um Thymeleaf-html-Templates mit Daten zu füllen.
  */
 public final class HtmlContextKlassen extends HtmlContext<ReportingKlasse> implements HtmlContextAufteilbar<HtmlContextKlassen> {
-
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
-	@JsonIgnore
-	private final ReportingRepository reportingRepository;
-
 
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Klassen.
@@ -35,7 +21,6 @@ public final class HtmlContextKlassen extends HtmlContext<ReportingKlasse> imple
 	 */
 	public HtmlContextKlassen(final ReportingRepository reportingRepository, final List<ReportingKlasse> reportingKlassen) {
 		super(reportingRepository);
-		this.reportingRepository = reportingRepository;
 		erzeugeContextFromKlassen(reportingKlassen);
 	}
 
@@ -46,7 +31,6 @@ public final class HtmlContextKlassen extends HtmlContext<ReportingKlasse> imple
 	 */
 	public HtmlContextKlassen(final ReportingRepository reportingRepository) {
 		super(reportingRepository);
-		this.reportingRepository = reportingRepository;
 		erzeugeContextFromIds(this.reportingRepository.reportingParameter().idsHauptdaten());
 	}
 
@@ -76,27 +60,7 @@ public final class HtmlContextKlassen extends HtmlContext<ReportingKlasse> imple
 	 */
 	private void erzeugeContextFromIds(final List<Long> idsKlassen) {
 
-		// Erzeuge Maps, damit auch später leicht auf die Klassendaten zugegriffen werden kann.
-		final Map<Long, ReportingKlasse> mapKlassen = new HashMap<>();
-		for (final Long idKlasse : idsKlassen) {
-			if (reportingRepository.repositoryLerngruppen().klassen().containsKey(idKlasse)) {
-				mapKlassen.put(idKlasse, reportingRepository.repositoryLerngruppen().klassen().get(idKlasse));
-			} else {
-				// Die ID der Klasse ist bekannt, aber sie wurde noch nicht aus der DB geladen. Lade dessen Daten und lade dabei alle Klassen des Lernabschnitts.
-				final KlassenDaten klassenDaten;
-				try {
-					klassenDaten = new DataKlassendaten(reportingRepository.conn()).getById(idKlasse);
-					mapKlassen.put(idKlasse, this.reportingRepository.repositorySchule().schuljahresabschnitt(klassenDaten.idSchuljahresabschnitt).klasse(idKlasse));
-				} catch (final ApiOperationException e) {
-					ReportingExceptionUtils.logException(
-							"FEHLER: Fehler bei der Ermittlung der Daten für des Klassen %s.".formatted(idKlasse), e, reportingRepository.logger(),
-							LogLevel.ERROR,
-							0);
-				}
-			}
-		}
-
-		setContextData(mapKlassen.values().stream().toList());
+		setContextData(reportingRepository.repositoryLerngruppen().klassen(idsKlassen, false));
 		sortiereContextMitRegistry();
 
 		// Daten-Context für Thymeleaf erzeugen.

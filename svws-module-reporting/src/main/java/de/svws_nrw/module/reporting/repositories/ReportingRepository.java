@@ -116,7 +116,7 @@ public class ReportingRepository {
 		this.logger.logLn(LogLevel.DEBUG, 8, "Lerngruppen-Repository erfolgreich erzeugt.");
 		this.repositoryStundenplan = new ReportingRepositoryStundenplan(this);
 		this.logger.logLn(LogLevel.DEBUG, 8, "Stundenplan-Repository erfolgreich erzeugt.");
-		this.repositoryGost = new ReportingRepositoryGost();
+		this.repositoryGost = new ReportingRepositoryGost(this);
 		this.logger.logLn(LogLevel.DEBUG, 8, "GOST-Repository erfolgreich erzeugt.");
 
 		this.logger.logLn(LogLevel.DEBUG, 4, "<<< Ende der Erzeugung des Reporting-Repository");

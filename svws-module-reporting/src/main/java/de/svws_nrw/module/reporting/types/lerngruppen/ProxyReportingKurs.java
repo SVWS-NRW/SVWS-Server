@@ -5,20 +5,13 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.asd.data.kurse.KursDaten;
-import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.data.kurse.DataKurse;
-import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
-import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerLeistungsdatenMatrix;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdatenMatrix;
-import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 
 /**
  * Proxy-Klasse im Rahmen des Reportings für Daten vom Typ Kurs und erweitert die Klasse {@link ReportingKurs}.
@@ -83,11 +76,7 @@ public class ProxyReportingKurs extends ReportingKurs {
 
 	private void initKurslehrer(final KursDaten kursDaten) {
 		// Bestimme zunächst, ob es mehr als einen Lehrer für den Kurs gibt, und speichere sie dann ggf. in einer Map mit ihren Wochenstunden.
-		final List<DTOKursLehrer> dtoKursLehrer = this.reportingRepository.conn().queryList(DTOKursLehrer.QUERY_BY_KURS_ID, DTOKursLehrer.class, super.id);
-		Map<Long, Double> mapZusatzKurslehrer = new LinkedHashMap<>();
-		if (!dtoKursLehrer.isEmpty()) {
-			mapZusatzKurslehrer = dtoKursLehrer.stream().filter(Objects::nonNull).collect(Collectors.toMap(k -> k.Lehrer_ID, k -> k.Anteil));
-		}
+		final Map<Long, Double> mapZusatzKurslehrer = new LinkedHashMap<>(this.reportingRepository.repositoryLerngruppen().kurslehrerWochenstunden(super.id));
 
 		// Wenn es einen Kursleiter gibt, prüfe, ob auch er bei den Zusatzkräften ist, und addiere hier seine beiden Wochenstunden.
 		final Map<Long, Double> mapKurslehrer = new LinkedHashMap<>();
@@ -159,19 +148,13 @@ public class ProxyReportingKurs extends ReportingKurs {
 	@Override
 	public List<ReportingSchueler> schueler() {
 		if (super.schueler.isEmpty()) {
-			final KursDaten kursDaten;
 			if (super.idsSchueler().isEmpty()) {
-				try {
-					kursDaten = DataKurse.getKursdaten(reportingRepository.conn(), super.id());
-					if ((kursDaten.schueler != null) && !kursDaten.schueler.isEmpty()) {
-						idsSchueler.addAll(kursDaten.schueler.stream().map(s -> s.id).toList());
-					}
-				} catch (final ApiOperationException e) {
-					ReportingExceptionUtils.logException(
-							"FEHLER: Fehler bei der Ermittlung der Daten des Kurses %s in %s."
-									.formatted(super.kuerzel, super.schuljahresabschnitt.textSchuljahresabschnittKurz()),
-							e, reportingRepository.logger(), LogLevel.ERROR, 0);
+				final KursDaten kursDaten = this.reportingRepository.repositoryLerngruppen().kurs(super.id());
+				if (kursDaten == null) {
 					return super.schueler();
+				}
+				if ((kursDaten.schueler != null) && !kursDaten.schueler.isEmpty()) {
+					idsSchueler.addAll(kursDaten.schueler.stream().map(s -> s.id).toList());
 				}
 			}
 			if (!idsSchueler.isEmpty()) {

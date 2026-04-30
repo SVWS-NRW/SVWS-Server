@@ -28,6 +28,7 @@ import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ProxyReportingErzieherArt;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieherArt;
+import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -220,6 +221,34 @@ public class ReportingRepositoryKataloge {
 	 */
 	public Map<Long, JahrgangsDaten> jahrgaenge() {
 		return mapJahrgaenge;
+	}
+
+	/**
+	 * Gibt die Jahrgangsdaten zur übergebenen ID zurück. Fehlt der Eintrag im Cache, wird er aus der Datenbank nachgeladen.
+	 * Schlägt das Nachladen fehl, wird {@code null} zurückgegeben und im Cache als Negativ-Eintrag vermerkt.
+	 *
+	 * @param idJahrgang Die ID des Jahrgangs.
+	 *
+	 * @return Die Jahrgangsdaten oder {@code null}, falls der Jahrgang nicht ermittelt werden konnte.
+	 */
+	public JahrgangsDaten jahrgang(final long idJahrgang) {
+		if (idJahrgang < 0) {
+			return null;
+		}
+		if (mapJahrgaenge.containsKey(idJahrgang)) {
+			return mapJahrgaenge.get(idJahrgang);
+		}
+		try {
+			final JahrgangsDaten jahrgangsDaten = new DataJahrgangsdaten(this.reportingRepository.conn()).getById(idJahrgang);
+			mapJahrgaenge.put(idJahrgang, jahrgangsDaten);
+			return jahrgangsDaten;
+		} catch (final ApiOperationException e) {
+			ReportingExceptionUtils.logException(
+					"FEHLER: Fehler bei der Ermittlung der Jahrgangsdaten zur ID %d aus der Datenbank im ReportingRepository.".formatted(idJahrgang),
+					e, this.reportingRepository.logger(), LogLevel.ERROR, 0);
+			mapJahrgaenge.put(idJahrgang, null);
+			return null;
+		}
 	}
 
 	/**

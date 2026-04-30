@@ -3,16 +3,30 @@ package de.svws_nrw.module.reporting.repositories;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.klassen.KlassenDaten;
+import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.klassen.DataKlassendaten;
+import de.svws_nrw.data.kurse.DataKurse;
+import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
+import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
+import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingKlasse;
+import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingKurs;
+import de.svws_nrw.module.reporting.types.lerngruppen.ProxyReportingKlasse;
+import de.svws_nrw.module.reporting.types.lerngruppen.ProxyReportingKurs;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
+import de.svws_nrw.module.reporting.utils.ReportingListBuilder;
 
 /**
  * Domänen-Repository für Klassen und Kurse.
@@ -23,7 +37,12 @@ public class ReportingRepositoryLerngruppen {
 	private final ReportingRepository reportingRepository;
 
 	private final Map<Long, ReportingKlasse> mapKlassen = new HashMap<>();
+	private final Map<Long, KlassenDaten> mapKlassenStammdaten = new HashMap<>();
 	private final Map<Long, ReportingKurs> mapKurse = new HashMap<>();
+	private final Map<Long, Map<Long, Double>> mapKurslehrerWochenstunden = new HashMap<>();
+	private final Map<Long, List<KlassenDaten>> mapKlassenDatenBySchuljahresabschnitt = new HashMap<>();
+	private final Map<Long, List<KursDaten>> mapKursDatenBySchuljahresabschnitt = new HashMap<>();
+	private final Map<Long, KursDaten> mapKursDaten = new HashMap<>();
 
 	/**
 	 * Erstellt ein neues ReportingLerngruppenRepository.
@@ -34,53 +53,8 @@ public class ReportingRepositoryLerngruppen {
 		this.reportingRepository = reportingRepository;
 	}
 
-	/**
-	 * Gibt das ReportingKlasse-Objekt zur übergebenen ID zurück. Fehlt der Eintrag im Cache, wird er aus der Datenbank nachgeladen.
-	 *
-	 * @param idKlasse Die eindeutige ID der Klasse.
-	 *
-	 * @return Das ReportingKlasse-Objekt oder null, falls die Klasse nicht existiert.
-	 */
-	public ReportingKlasse klasse(final long idKlasse) {
-		if (idKlasse < 0) {
-			return null;
-		}
-		ergaenzeKlasseInMapKlassen(idKlasse);
-		return mapKlassen.get(idKlasse);
-	}
 
-	/**
-	 * Gibt eine nach Kürzel sortierte Liste von ReportingKlasse-Objekten zu den übergebenen IDs zurück.
-	 *
-	 * @param idsKlassen Liste der Klassen-IDs.
-	 *
-	 * @return Sortierte Liste von ReportingKlasse-Objekten.
-	 */
-	public List<ReportingKlasse> klassen(final List<Long> idsKlassen) {
-		final List<ReportingKlasse> resultKlassen = new ArrayList<>();
-		for (final Long idKlasse : idsKlassen) {
-			if ((idKlasse == null) || (idKlasse < 0)) {
-				continue;
-			}
-			ergaenzeKlasseInMapKlassen(idKlasse);
-			resultKlassen.add(mapKlassen.get(idKlasse));
-		}
-		return resultKlassen.stream().sorted(Comparator.comparing(ReportingKlasse::kuerzel)).toList();
-	}
-
-	private void ergaenzeKlasseInMapKlassen(final long idKlasse) {
-		if (!mapKlassen.containsKey(idKlasse)) {
-			final KlassenDaten klassenDaten;
-			try {
-				klassenDaten = new DataKlassendaten(this.reportingRepository.conn()).getById(idKlasse);
-				this.reportingRepository.repositorySchule().schuljahresabschnitt(klassenDaten.idSchuljahresabschnitt).klasse(idKlasse);
-			} catch (final ApiOperationException e) {
-				ReportingExceptionUtils.logException(
-						"FEHLER: Fehler bei der Ermittlung der Daten für des Klassen %s.".formatted(idKlasse), e, this.reportingRepository.logger(),
-						LogLevel.ERROR, 0);
-			}
-		}
-	}
+	// ##### Klassen #####
 
 	/**
 	 * Gibt die Map der bereits erzeugten ReportingKlasse-Objekte zurück, indiziert nach Klassen-ID.
@@ -92,11 +66,233 @@ public class ReportingRepositoryLerngruppen {
 	}
 
 	/**
+	 * Gibt das ReportingKlasse-Objekt zur übergebenen ID zurück. Fehlt der Eintrag im Cache, wird er aus der Datenbank nachgeladen.
+	 * Die Methode delegiert an {@link #klassen(List, boolean)}, damit auch die Map der Klassenstammdaten konsistent gefüllt wird.
+	 *
+	 * @param idKlasse Die eindeutige ID der Klasse.
+	 *
+	 * @return Das ReportingKlasse-Objekt oder null, falls die Klasse nicht existiert.
+	 */
+	public ReportingKlasse klasse(final long idKlasse) {
+		if (idKlasse < 0) {
+			return null;
+		}
+		if (mapKlassen.containsKey(idKlasse)) {
+			return mapKlassen.get(idKlasse);
+		}
+		final List<ReportingKlasse> result = klassen(List.of(idKlasse), false);
+		return result.isEmpty() ? null : result.get(0);
+	}
+
+	/**
+	 * Gibt eine nach Standardsortierung sortierte Liste von ReportingKlasse-Objekten zu den übergebenen IDs zurück.
+	 *
+	 * @param idsKlassen Liste der Klassen-IDs.
+	 *
+	 * @return Sortierte Liste von ReportingKlasse-Objekten.
+	 */
+	public List<ReportingKlasse> klassen(final List<Long> idsKlassen) {
+		return klassen(idsKlassen, true);
+	}
+
+	/**
+	 * Gibt eine Liste von ReportingKlasse-Objekten zu den übergebenen IDs zurück, optional sortiert.
+	 * Fehlende Klassenstammdaten werden im Bulk aus der Datenbank nachgeladen.
+	 *
+	 * @param idsKlassen    Liste der Klassen-IDs.
+	 * @param sortiereListe Gibt an, ob die definierte Sortierung angewendet werden soll.
+	 *
+	 * @return Liste von ReportingKlasse-Objekten.
+	 */
+	public List<ReportingKlasse> klassen(final List<Long> idsKlassen, final boolean sortiereListe) {
+		final Optional<Comparator<ReportingKlasse>> optionalComparator = sortiereListe
+				? ComparatorFactory.buildOptionalComparator(this.reportingRepository.sortierungService(), this.reportingRepository.logger(),
+						ReportingKlasse.class.getSimpleName(), SortierungRegistryReportingKlasse.sortierungRegistry())
+				: Optional.empty();
+
+		return ReportingListBuilder.erstelleReportingListe(idsKlassen, mapKlassenStammdaten, mapKlassen,
+				fehlendeIds -> {
+					try {
+						final DataKlassendaten dataKlassendaten = new DataKlassendaten(this.reportingRepository.conn());
+						final List<DTOKlassen> dtos = dataKlassendaten.getDTOsByIds(fehlendeIds);
+						// Sollte der Fall eintreten, dass die IDs der Klassen aus unterschiedlichen Schuljahresabschnitten stammen,
+						// so werden die Klassen in Abschnittsgruppen getrennt abgefragt.
+						final Map<Long, List<Long>> idsByAbschnitt = dtos.stream()
+								.collect(Collectors.groupingBy(dto -> dto.Schuljahresabschnitts_ID,
+										Collectors.mapping(dto -> dto.ID, Collectors.toList())));
+						final List<KlassenDaten> result = new ArrayList<>();
+						for (final Map.Entry<Long, List<Long>> entry : idsByAbschnitt.entrySet()) {
+							result.addAll(dataKlassendaten.getListByIdsOhneSchueler(entry.getValue(), entry.getKey()));
+						}
+						return result;
+					} catch (final ApiOperationException e) {
+						ReportingExceptionUtils.logException(
+								"FEHLER: Fehler bei der Ermittlung der fehlenden Klassenstammdaten einer Klassenliste aus der Datenbank im ReportingRepository.",
+								e, this.reportingRepository.logger(), LogLevel.ERROR, 0);
+						return new ArrayList<>();
+					}
+				},
+				key -> {
+					final KlassenDaten daten = mapKlassenStammdaten.get(key);
+					/* Der Aufruf 'klasse' über den Schuljahresabschnitt ruft durch Überladung folgende Methode auf:
+					 * @see de.svws_nrw.module.reporting.types.schule.ProxyReportingSchuljahresabschnitt.mapKlassen.
+					 * Damit werden alle Klassen des Schuljahresabschnitts aus dem Cache oder aus der Datenbank geladen und nicht jede Klasse einzeln.
+					 */
+					this.reportingRepository.repositorySchule().schuljahresabschnitt(daten.idSchuljahresabschnitt).klasse(key);
+					return new ProxyReportingKlasse(this.reportingRepository, daten);
+				},
+				stammdaten -> stammdaten.id,
+				optionalComparator,
+				"Klassen", this.reportingRepository.logger());
+	}
+
+	/**
+	 * Gibt die Klassendaten zum übergebenen Schuljahresabschnitt zurück. Die Daten werden bei erstem Zugriff aus der Datenbank geladen
+	 * und im Cache gehalten.
+	 *
+	 * @param idSchuljahresabschnitt Die ID des Schuljahresabschnitts.
+	 *
+	 * @return Liste der Klassendaten des Schuljahresabschnitts. Leere Liste, falls keine Daten ermittelt werden konnten.
+	 */
+	public List<KlassenDaten> klassenBySchuljahresabschnitt(final long idSchuljahresabschnitt) {
+		return mapKlassenDatenBySchuljahresabschnitt.computeIfAbsent(idSchuljahresabschnitt, id -> {
+			try {
+				return new DataKlassendaten(this.reportingRepository.conn()).getListBySchuljahresabschnittID(id, true);
+			} catch (final Exception e) {
+				ReportingExceptionUtils.logException(
+						"FEHLER: Fehler bei der Erstellung der Klassenliste für den Schuljahresabschnitt %d.".formatted(id), e,
+						this.reportingRepository.logger(), LogLevel.ERROR, 0);
+				return new ArrayList<>();
+			}
+		});
+	}
+
+
+	// ##### Kurse #####
+
+	/**
 	 * Gibt die Map der bereits erzeugten ReportingKurs-Objekte zurück, indiziert nach Kurs-ID.
 	 *
 	 * @return Map der Kurse
 	 */
 	public Map<Long, ReportingKurs> kurse() {
 		return mapKurse;
+	}
+
+	/**
+	 * Gibt die Kursdaten zum übergebenen Kurs zurück. Die Daten werden bei erstem Zugriff aus der Datenbank geladen und im Cache gehalten.
+	 *
+	 * @param idKurs Die ID des Kurses.
+	 *
+	 * @return Die Kursdaten oder null, falls die Daten nicht ermittelt werden konnten.
+	 */
+	public KursDaten kurs(final long idKurs) {
+		if (mapKursDaten.containsKey(idKurs)) {
+			return mapKursDaten.get(idKurs);
+		}
+		try {
+			final KursDaten kursDaten = DataKurse.getKursdaten(this.reportingRepository.conn(), idKurs);
+			mapKursDaten.put(idKurs, kursDaten);
+			return kursDaten;
+		} catch (final ApiOperationException e) {
+			ReportingExceptionUtils.logException(
+					"FEHLER: Fehler bei der Ermittlung der Daten des Kurses %d.".formatted(idKurs), e,
+					this.reportingRepository.logger(), LogLevel.ERROR, 0);
+			mapKursDaten.put(idKurs, null);
+			return null;
+		}
+	}
+
+	/**
+	 * Gibt eine nach Standardsortierung sortierte Liste von ReportingKurs-Objekten zu den übergebenen IDs zurück.
+	 *
+	 * @param idsKurse Liste der Kurs-IDs.
+	 *
+	 * @return Sortierte Liste von ReportingKurs-Objekten.
+	 */
+	public List<ReportingKurs> kurse(final List<Long> idsKurse) {
+		return kurse(idsKurse, true);
+	}
+
+	/**
+	 * Gibt eine Liste von ReportingKurs-Objekten zu den übergebenen IDs zurück, optional sortiert.
+	 * Fehlende Kursstammdaten werden im Bulk aus der Datenbank nachgeladen.
+	 *
+	 * @param idsKurse      Liste der Kurs-IDs.
+	 * @param sortiereListe Gibt an, ob die definierte Sortierung angewendet werden soll.
+	 *
+	 * @return Liste von ReportingKurs-Objekten.
+	 */
+	public List<ReportingKurs> kurse(final List<Long> idsKurse, final boolean sortiereListe) {
+		final Optional<Comparator<ReportingKurs>> optionalComparator = sortiereListe
+				? ComparatorFactory.buildOptionalComparator(this.reportingRepository.sortierungService(), this.reportingRepository.logger(),
+						ReportingKurs.class.getSimpleName(), SortierungRegistryReportingKurs.sortierungRegistry())
+				: Optional.empty();
+
+		return ReportingListBuilder.erstelleReportingListe(idsKurse, mapKursDaten, mapKurse,
+				fehlendeIds -> {
+					try {
+						return new DataKurse(this.reportingRepository.conn()).getListByIDs(fehlendeIds, false);
+					} catch (final ApiOperationException e) {
+						ReportingExceptionUtils.logException(
+								"FEHLER: Fehler bei der Ermittlung der fehlenden Kursstammdaten einer Kursliste aus der Datenbank im ReportingRepository.",
+								e, this.reportingRepository.logger(), LogLevel.ERROR, 0);
+						return new ArrayList<>();
+					}
+				},
+				key -> {
+					final KursDaten daten = mapKursDaten.get(key);
+					/* Der Aufruf 'kurs' über den Schuljahresabschnitt ruft durch Überladung folgende Methode auf:
+					 * @see de.svws_nrw.module.reporting.types.schule.ProxyReportingSchuljahresabschnitt.mapKurse.
+					 * Damit werden alle Kurse des Schuljahresabschnitts aus dem Cache oder aus der Datenbank geladen und nicht jeder Kurs einzeln.
+					 */
+					this.reportingRepository.repositorySchule().schuljahresabschnitt(daten.idSchuljahresabschnitt).kurs(key);
+					return new ProxyReportingKurs(this.reportingRepository, daten);
+				},
+				stammdaten -> stammdaten.id,
+				optionalComparator,
+				"Kurse", this.reportingRepository.logger());
+	}
+
+	/**
+	 * Gibt die Kursdaten zum übergebenen Schuljahresabschnitt zurück. Die Daten werden bei erstem Zugriff aus der Datenbank geladen
+	 * und im Cache gehalten.
+	 *
+	 * @param idSchuljahresabschnitt Die ID des Schuljahresabschnitts.
+	 *
+	 * @return Liste der Kursdaten des Schuljahresabschnitts. Leere Liste, falls keine Daten ermittelt werden konnten.
+	 */
+	public List<KursDaten> kurseBySchuljahresabschnitt(final long idSchuljahresabschnitt) {
+		return mapKursDatenBySchuljahresabschnitt.computeIfAbsent(idSchuljahresabschnitt, id -> {
+			try {
+				return new DataKurse(this.reportingRepository.conn()).getListBySchuljahresabschnittID(id, true);
+			} catch (final Exception e) {
+				ReportingExceptionUtils.logException(
+						"FEHLER: Fehler bei der Erstellung der Liste der Kurse für den Schuljahresabschnitt %d.".formatted(id), e,
+						this.reportingRepository.logger(), LogLevel.ERROR, 0);
+				return new ArrayList<>();
+			}
+		});
+	}
+
+	/**
+	 * Gibt die Zuordnung der zusätzlichen Kurslehrer mit ihren Wochenstundenanteilen zum übergebenen Kurs zurück.
+	 * Die Daten werden aus den {@link DTOKursLehrer}-Einträgen ermittelt und im Cache gehalten.
+	 *
+	 * @param idKurs Die ID des Kurses.
+	 *
+	 * @return Map Lehrer-ID → Wochenstundenanteil. Leere Map, falls keine zusätzlichen Kurslehrer existieren.
+	 */
+	public Map<Long, Double> kurslehrerWochenstunden(final long idKurs) {
+		return mapKurslehrerWochenstunden.computeIfAbsent(idKurs, id -> {
+			final List<DTOKursLehrer> dtoKursLehrer =
+					this.reportingRepository.conn().queryList(DTOKursLehrer.QUERY_BY_KURS_ID, DTOKursLehrer.class, id);
+			if (dtoKursLehrer.isEmpty()) {
+				return new LinkedHashMap<>();
+			}
+			return dtoKursLehrer.stream()
+					.filter(Objects::nonNull)
+					.collect(Collectors.toMap(k -> k.Lehrer_ID, k -> k.Anteil, (a, b) -> a, LinkedHashMap::new));
+		});
 	}
 }

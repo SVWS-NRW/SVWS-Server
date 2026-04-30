@@ -54,7 +54,7 @@ public class ProxyReportingBenutzer extends ReportingBenutzer {
 				null);
 
 		this.reportingRepository = reportingRepository;
-		final Benutzer user = this.reportingRepository.conn().getUser();
+		final Benutzer user = this.reportingRepository.repositorySchule().benutzer();
 
 		super.benutzername = user.getUsername();
 		super.id = user.getId();
@@ -65,13 +65,9 @@ public class ProxyReportingBenutzer extends ReportingBenutzer {
 			super.lehrer = new ProxyReportingLehrer(this.reportingRepository, this.reportingRepository.repositoryLehrer().stammdaten().get(user.getIdLehrer()));
 			super.anzeigename = super.lehrer.vornameNachname();
 		} else {
-			try {
-				final DTOViewBenutzerdetails dtoBenutzer = this.reportingRepository.conn().queryByKey(DTOViewBenutzerdetails.class, super.id);
-				if (dtoBenutzer != null) {
-					super.anzeigename = dtoBenutzer.AnzeigeName;
-				}
-			} catch (@SuppressWarnings("unused") final Exception ignore) {
-				// Bei einem Fehler im Datenbankzugriff fehlt nur der Anzeigename. Daher kann der Fehler ignoriert werden.
+			final DTOViewBenutzerdetails dtoBenutzer = this.reportingRepository.repositorySchule().benutzerdetails(super.id);
+			if (dtoBenutzer != null) {
+				super.anzeigename = dtoBenutzer.AnzeigeName;
 			}
 		}
 	}

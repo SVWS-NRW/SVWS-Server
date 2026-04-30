@@ -12,7 +12,6 @@ import java.util.stream.Stream;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.adt.LongArrayKey;
 import de.svws_nrw.core.adt.map.ListMap3DLongKeys;
-import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
@@ -25,7 +24,6 @@ import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKursunterricht;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdaten;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
-import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 
 /**
  * Factory-Klasse zur Erstellung von Unterrichtsstrukturen (Klassen- und Kursunterricht) aus Leistungsdaten für das Reporting.
@@ -51,20 +49,19 @@ public class ProxyReportingLehrerFactoryUnterricht {
 		this.factoryLehrer = factoryLehrer;
 	}
 
+
+	// ##### Öffentliche Erzeugung von Unterrichtsdaten #####
+
 	/**
 	 * Diese Methode erzeugt Klassenunterrichtsdaten für den Lehrer als Fachlehrer.
 	 *
 	 * @return Die Liste der Klassenunterrichte als Fachlehrer.
 	 */
-	public List<ReportingKlassenunterricht> erstelleKlassenunterrichtAlsFachlehrer() {
-		final String query = "SELECT ld, a.Schueler_ID FROM DTOSchuelerLeistungsdaten ld, DTOSchuelerLernabschnittsdaten a "
-				+ "WHERE ld.Abschnitt_ID = a.ID "
-				+ "AND a.Schuljahresabschnitts_ID = ?1 "
-				+ "AND a.WechselNr = 0 "
-				+ "AND ld.Fachlehrer_ID = ?2 "
-				+ "AND ld.Kurs_ID IS NULL";
+	public List<ReportingKlassenunterricht> klassenunterrichtAlsFachlehrer() {
+		final List<Object[]> results = this.reportingRepository.repositoryLehrer().leistungsdatenAlsFachlehrerKlassenunterricht(
+				this.reportingRepository.repositorySchule().auswahlSchuljahresabschnitt().id(), this.factoryLehrer.id());
 		@SuppressWarnings("unchecked") final List<ReportingKlassenunterricht> result =
-				(List<ReportingKlassenunterricht>) erstelleUnterrichtAusLeistungsdaten(query, false);
+				(List<ReportingKlassenunterricht>) erstelleUnterrichtAusLeistungsdaten(results, false);
 		return result;
 	}
 
@@ -73,15 +70,11 @@ public class ProxyReportingLehrerFactoryUnterricht {
 	 *
 	 * @return Die Liste der Klassenunterrichte als Zusatzlehrer.
 	 */
-	public List<ReportingKlassenunterricht> erstelleKlassenunterrichtAlsZusatzlehrer() {
-		final String query = "SELECT ld, a.Schueler_ID FROM DTOSchuelerLeistungsdaten ld, DTOSchuelerLernabschnittsdaten a "
-				+ "WHERE ld.Abschnitt_ID = a.ID "
-				+ "AND a.Schuljahresabschnitts_ID = ?1 "
-				+ "AND a.WechselNr = 0 "
-				+ "AND ld.Zusatzkraft_ID = ?2 "
-				+ "AND ld.Kurs_ID IS NULL";
+	public List<ReportingKlassenunterricht> klassenunterrichtAlsZusatzlehrer() {
+		final List<Object[]> results = this.reportingRepository.repositoryLehrer().leistungsdatenAlsZusatzlehrerKlassenunterricht(
+				this.reportingRepository.repositorySchule().auswahlSchuljahresabschnitt().id(), this.factoryLehrer.id());
 		@SuppressWarnings("unchecked") final List<ReportingKlassenunterricht> result =
-				(List<ReportingKlassenunterricht>) erstelleUnterrichtAusLeistungsdaten(query, false);
+				(List<ReportingKlassenunterricht>) erstelleUnterrichtAusLeistungsdaten(results, false);
 		return result;
 	}
 
@@ -90,15 +83,11 @@ public class ProxyReportingLehrerFactoryUnterricht {
 	 *
 	 * @return Die Liste der Kursunterrichte als Fachlehrer.
 	 */
-	public List<ReportingKursunterricht> erstelleKursunterrichtAlsFachlehrer() {
-		final String query = "SELECT ld, a.Schueler_ID FROM DTOSchuelerLeistungsdaten ld, DTOSchuelerLernabschnittsdaten a "
-				+ "WHERE ld.Abschnitt_ID = a.ID "
-				+ "AND a.Schuljahresabschnitts_ID = ?1 "
-				+ "AND a.WechselNr = 0 "
-				+ "AND ld.Kurs_ID IS NOT NULL "
-				+ "AND ld.Fachlehrer_ID = ?2";
+	public List<ReportingKursunterricht> kursunterrichtAlsFachlehrer() {
+		final List<Object[]> results = this.reportingRepository.repositoryLehrer().leistungsdatenAlsFachlehrerKursunterricht(
+				this.reportingRepository.repositorySchule().auswahlSchuljahresabschnitt().id(), this.factoryLehrer.id());
 		@SuppressWarnings("unchecked") final List<ReportingKursunterricht> result =
-				(List<ReportingKursunterricht>) erstelleUnterrichtAusLeistungsdaten(query, true);
+				(List<ReportingKursunterricht>) erstelleUnterrichtAusLeistungsdaten(results, true);
 		return result;
 	}
 
@@ -107,31 +96,27 @@ public class ProxyReportingLehrerFactoryUnterricht {
 	 *
 	 * @return Die Liste der Kursunterrichte als Zusatzlehrer.
 	 */
-	public List<ReportingKursunterricht> erstellekursunterrichtAlsZusatzlehrer() {
-		final String query = "SELECT ld, a.Schueler_ID FROM DTOSchuelerLeistungsdaten ld, DTOSchuelerLernabschnittsdaten a "
-				+ "WHERE ld.Abschnitt_ID = a.ID "
-				+ "AND a.Schuljahresabschnitts_ID = ?1 "
-				+ "AND a.WechselNr = 0 "
-				+ "AND ld.Kurs_ID IN (SELECT k.ID FROM DTOKurs k, DTOKursLehrer kl WHERE k.ID = kl.Kurs_ID AND k.Schuljahresabschnitts_ID = ?1 AND kl.Lehrer_ID = ?2) "
-				+ "AND ld.Fachlehrer_ID = ?2";
+	public List<ReportingKursunterricht> kursunterrichtAlsZusatzlehrer() {
+		final List<Object[]> results = this.reportingRepository.repositoryLehrer().leistungsdatenAlsZusatzlehrerKursunterricht(
+				this.reportingRepository.repositorySchule().auswahlSchuljahresabschnitt().id(), this.factoryLehrer.id());
 		@SuppressWarnings("unchecked") final List<ReportingKursunterricht> result =
-				(List<ReportingKursunterricht>) erstelleUnterrichtAusLeistungsdaten(query, true);
+				(List<ReportingKursunterricht>) erstelleUnterrichtAusLeistungsdaten(results, true);
 		return result;
 	}
 
 
+	// ##### Aufbereitung der Leistungsdaten #####
+
 	/**
-	 * Diese Methode erzeugt Unterrichtsdaten aus einer Query mit generischer Verarbeitung.
+	 * Diese Methode erzeugt Unterrichtsdaten aus einer Liste von Leistungsdaten-Ergebnissen mit generischer Verarbeitung.
 	 *
-	 * @param query         Die Abfrage, die auf die Tabelle der Schülerleistungsdaten und angewendet wird und die Leistungsdaten und die Schüler-ID zurückgeben
-	 *                      muss, also eine JOIN-Abfrage der From "SELECT ld, a.Schueler_ID ...". Hieraus werden die Unterrichte ermittelt.
+	 * @param results       Die Liste von Object[]-Arrays mit Leistungsdaten und Schüler-ID, aus denen die Unterrichte ermittelt werden.
 	 * @param istKurs       True für Kursunterricht, False für Klassenunterricht.
 	 *
 	 * @return Die Liste der Unterrichte (ReportingKlassenunterricht oder ReportingKursunterricht).
 	 */
-	private List<?> erstelleUnterrichtAusLeistungsdaten(final String query, final boolean istKurs) {
-		final ListMap3DLongKeys<DTOSchuelerLeistungsdaten> dtoSchuelerLeistungsdaten =
-				querySchuelerLeistungsdatenToListMap(query, this.reportingRepository.repositorySchule().auswahlSchuljahresabschnitt().id(), this.factoryLehrer.id());
+	private List<?> erstelleUnterrichtAusLeistungsdaten(final List<Object[]> results, final boolean istKurs) {
+		final ListMap3DLongKeys<DTOSchuelerLeistungsdaten> dtoSchuelerLeistungsdaten = leistungsdatenErgebnisToListMap(results);
 
 		// Erzeuge neue Maps, die im Folgenden gefüllt werden.
 		final ListMap3DLongKeys<ReportingSchuelerLeistungsdaten> mapLerngruppeFachLehrerLeistungsdaten = new ListMap3DLongKeys<>();
@@ -140,8 +125,9 @@ public class ProxyReportingLehrerFactoryUnterricht {
 		final Map<Long, ReportingLehrer> mapLehrer = new HashMap<>();
 
 		// Erstelle eine Map der Schüler aus den Leistungsdaten
-		final Map<Long, ReportingSchueler> mapSchueler = this.reportingRepository.repositorySchueler().schueler(dtoSchuelerLeistungsdaten.keySet1().stream().toList()).stream()
-				.collect(Collectors.toMap(ReportingSchueler::id, s -> s));
+		final Map<Long, ReportingSchueler> mapSchueler =
+				this.reportingRepository.repositorySchueler().schueler(dtoSchuelerLeistungsdaten.keySet1().stream().toList()).stream()
+						.collect(Collectors.toMap(ReportingSchueler::id, s -> s));
 
 		if (istKurs) {
 			final Map<Long, ReportingKurs> mapKurse = new HashMap<>();
@@ -156,50 +142,35 @@ public class ProxyReportingLehrerFactoryUnterricht {
 		}
 	}
 
-
 	/**
-	 * Führt eine Abfrage auf die Schülerleistungsdaten durch und sammelt dabei direkt die zugehörigen Schüler-IDs (per JOIN). Dann wird daraus
-	 * eine 3-dimensionale Zuordnung in Form von ListMap3DLongKeys, die die zugeordneten Leistungsdaten enthält, erstellt.
+	 * Wandelt eine Liste von Object[]-Ergebnissen aus einer Leistungsdatenabfrage in eine 3-dimensionale Map (ListMap3DLongKeys)
+	 * mit Schüler-ID, Abschnitts-ID und Leistungsdaten-ID als Schlüssel um.
 	 *
-	 * @param query         Die Abfrage, die auf die Tabelle der Schülerleistungsdaten und angewendet wird und die Leistungsdaten und die Schüler-ID zurückgeben
-	 *                      muss, also eine JOIN-Abfrage der From "SELECT ld, a.Schueler_ID ...". Hieraus werden die Unterrichte ermittelt.
-	 * @param params        Ein Array von Parametern, die in der Abfrage verwendet werden.
+	 * @param results Die Liste der Ergebnisse, wobei jedes Object[] aus den Leistungsdaten ({@link DTOSchuelerLeistungsdaten}) und der Schüler-ID besteht.
 	 *
-	 * @return Eine 3-dimensionale Map (ListMap3DLongKeys) mit Schüler-IDs, Abschnitts-IDs, Leistungsdaten-IDs und Leistungsdaten, falls die Abfrage
-	 * erfolgreich ist. Bei Fehlern wird eine leere Liste zurückgegeben.
+	 * @return Eine 3-dimensionale Map (ListMap3DLongKeys) mit Schüler-IDs, Abschnitts-IDs, Leistungsdaten-IDs und Leistungsdaten.
 	 */
-	private ListMap3DLongKeys<DTOSchuelerLeistungsdaten> querySchuelerLeistungsdatenToListMap(final String query, final Object... params) {
-		try {
-			// Die Abfrage muss Object[]-Arrays liefern, da die Abfrage zwei Werte selektiert (DTOLeistungsdaten + SchuelerID als Long)
-			final List<Object[]> results = this.reportingRepository.conn().queryList(query, Object[].class, params);
+	private static ListMap3DLongKeys<DTOSchuelerLeistungsdaten> leistungsdatenErgebnisToListMap(final List<Object[]> results) {
+		final ListMap3DLongKeys<DTOSchuelerLeistungsdaten> listmapLeistungsdaten = new ListMap3DLongKeys<>();
 
-			final ListMap3DLongKeys<DTOSchuelerLeistungsdaten> listmapLeistungsdaten = new ListMap3DLongKeys<>();
-
-			if (results.isEmpty()) {
-				return listmapLeistungsdaten;
-			}
-
-			// Iterieren über die Ergebnisse und Befüllen der Map
-			for (final Object[] row : results) {
-				// Erstes Objekt sind die Leistungsdaten
-				final DTOSchuelerLeistungsdaten ld = (DTOSchuelerLeistungsdaten) row[0];
-				// Zweites Objekt ist die Schüler-ID zu den Leistungsdaten
-				final Long schuelerId = (Long) row[1];
-
-				if ((schuelerId != null) && (ld != null)) {
-					listmapLeistungsdaten.add(schuelerId, ld.Abschnitt_ID, ld.ID, ld);
-				}
-			}
-
+		if ((results == null) || results.isEmpty()) {
 			return listmapLeistungsdaten;
-		} catch (final Exception e) {
-			ReportingExceptionUtils.logException(
-					("FEHLER: Fehler bei der Ermittlung von Unterrichtsdaten aus den Schülerleistungsdaten für Lehrer %s.").formatted(factoryLehrer.kuerzel()),
-					e, reportingRepository.logger(), LogLevel.ERROR, 0);
-			return new ListMap3DLongKeys<>();
 		}
+
+		for (final Object[] row : results) {
+			final DTOSchuelerLeistungsdaten ld = (DTOSchuelerLeistungsdaten) row[0];
+			final Long schuelerId = (Long) row[1];
+
+			if ((schuelerId != null) && (ld != null)) {
+				listmapLeistungsdaten.add(schuelerId, ld.Abschnitt_ID, ld.ID, ld);
+			}
+		}
+
+		return listmapLeistungsdaten;
 	}
 
+
+	// ##### Klassenunterricht: Gruppierung und Erzeugung #####
 
 	/**
 	 * Gruppiert Leistungsdaten nach Klasse, Fach und Lehrer und erstellt Maps für diese Entitäten.
@@ -221,7 +192,8 @@ public class ProxyReportingLehrerFactoryUnterricht {
 			final ReportingSchueler schueler = mapSchueler.get(key.getKeyAt(0));
 			final ReportingSchuelerLernabschnitt lernabschnitt = (schueler == null) ? null : schueler.lernabschnittById(key.getKeyAt(1));
 			final ReportingKlasse klasse = (lernabschnitt == null) ? null : lernabschnitt.klasse();
-			final ReportingSchuelerLeistungsdaten reportingSchuelerLeistungsdaten = (lernabschnitt == null) ? null : lernabschnitt.leistungsdatenZurId(key.getKeyAt(2));
+			final ReportingSchuelerLeistungsdaten reportingSchuelerLeistungsdaten =
+					(lernabschnitt == null) ? null : lernabschnitt.leistungsdatenZurId(key.getKeyAt(2));
 			final ReportingFach fach = (reportingSchuelerLeistungsdaten == null) ? null : reportingSchuelerLeistungsdaten.fach();
 			final ReportingLehrer fachlehrer = (reportingSchuelerLeistungsdaten == null) ? null : reportingSchuelerLeistungsdaten.fachlehrer();
 
@@ -235,6 +207,129 @@ public class ProxyReportingLehrerFactoryUnterricht {
 		}
 	}
 
+	/**
+	 * Erstellt ReportingKlassenunterrichte aus den gruppierten Leistungsdaten.
+	 *
+	 * @param mapKlasseFachLehrerLeistungsdaten Die 3D-Map mit gruppierten Leistungsdaten nach Klasse, Fach und Lehrer.
+	 * @param mapSchueler                       Die Map der Schüler
+	 * @param mapIdLeistungsdatenIdSchueler     Die Map, die zu den IDs der Leistungsdaten die Schüler-ID liefert.
+	 * @param mapKlasse                         Die Map der Klassen
+	 * @param mapFach                           Die Map der Fächer
+	 * @param mapLehrer                         Die Map der Lehrer
+	 *
+	 * @return Eine Liste der erstellten ReportingKlassenunterrichte
+	 */
+	private List<ReportingKlassenunterricht> erstelleKlassenunterricht(
+			final ListMap3DLongKeys<ReportingSchuelerLeistungsdaten> mapKlasseFachLehrerLeistungsdaten,
+			final Map<Long, ReportingSchueler> mapSchueler, final Map<Long, Long> mapIdLeistungsdatenIdSchueler, final Map<Long, ReportingKlasse> mapKlasse,
+			final Map<Long, ReportingFach> mapFach, final Map<Long, ReportingLehrer> mapLehrer) {
+
+		final List<ReportingKlassenunterricht> result = new ArrayList<>();
+
+		for (final LongArrayKey key123 : mapKlasseFachLehrerLeistungsdaten.keySet123()) {
+			final long idKlasse = key123.getKeyAt(0);
+			final long idFach = key123.getKeyAt(1);
+			final long idLehrer = key123.getKeyAt(2);
+
+			final ReportingKlasse klasse = mapKlasse.get(idKlasse);
+			final ReportingFach fach = mapFach.get(idFach);
+			final List<ReportingSchuelerLeistungsdaten> leistungsdaten = mapKlasseFachLehrerLeistungsdaten.get123(idKlasse, idFach, idLehrer);
+			final List<ReportingSchueler> schueler = leistungsdaten.stream()
+					.map(ReportingSchuelerLeistungsdaten::id)
+					.map(mapIdLeistungsdatenIdSchueler::get)
+					.map(mapSchueler::get)
+					.filter(Objects::nonNull)
+					.toList();
+
+			final List<Long> idsZusatzLehrer = getIdsZusatzlehrer(leistungsdaten, mapLehrer);
+			final ReportingLehrer bewertenderLehrer = mapLehrer.get(idLehrer);
+			final List<ReportingLehrer> lehrer = erstelleLehrerliste(idLehrer, idsZusatzLehrer, mapLehrer);
+			final int wochenstundenSchueler = getMaximalWochenstundenSchueler(leistungsdaten);
+			final Map<Long, Double> wochenstundenProLehrer = getWochenstundenProLehrer(idLehrer, wochenstundenSchueler, idsZusatzLehrer, leistungsdaten);
+			final Map<Long, ReportingSchuelerLeistungsdaten> mapSchuelerLeistungsdaten = new HashMap<>();
+			mapSchuelerLeistungsdaten.putAll(leistungsdaten.stream().collect(Collectors.toMap(ld -> mapIdLeistungsdatenIdSchueler.get(ld.id()), ld -> ld)));
+
+			result.add(new ProxyReportingKlassenunterricht(this.reportingRepository, klasse, fach, bewertenderLehrer, lehrer, wochenstundenProLehrer, schueler,
+					wochenstundenSchueler,
+					mapSchuelerLeistungsdaten));
+		}
+
+		return result;
+	}
+
+
+	// ##### Kursunterricht: Gruppierung und Erzeugung #####
+
+	/**
+	 * Gruppiert Leistungsdaten nach Kurs, Fach und Lehrer und erstellt Maps für diese Entitäten.
+	 *
+	 * @param dtoSchuelerLeistungsdaten     Die zu verarbeitenden Leistungsdaten (3D-Map: SchülerID, AbschnittID, LeistungsdatenID)
+	 * @param mapSchueler                   Die Map der verfügbaren Schüler
+	 * @param mapIdLeistungsdatenIdSchueler Die Map, die zu den IDs der Leistungsdaten die Schüler-ID liefert.
+	 * @param mapKursFachLehrerLeistungsdaten         Die zu befüllende 3D-Map für die Gruppierung
+	 * @param mapKurse                      Die zu befüllende Map der Kurse
+	 * @param mapFach                       Die zu befüllende Map der Fächer
+	 * @param mapLehrer                     Die zu befüllende Map der Lehrer
+	 */
+	private void gruppiereLeistungsdatenNachKursFachLehrer(final ListMap3DLongKeys<DTOSchuelerLeistungsdaten> dtoSchuelerLeistungsdaten,
+			final Map<Long, ReportingSchueler> mapSchueler, final Map<Long, Long> mapIdLeistungsdatenIdSchueler,
+			final ListMap3DLongKeys<ReportingSchuelerLeistungsdaten> mapKursFachLehrerLeistungsdaten,
+			final Map<Long, ReportingKurs> mapKurse, final Map<Long, ReportingFach> mapFach, final Map<Long, ReportingLehrer> mapLehrer) {
+
+		for (final LongArrayKey key : dtoSchuelerLeistungsdaten.keySet123()) {
+			final ReportingSchueler schueler = mapSchueler.get(key.getKeyAt(0));
+			final ReportingSchuelerLernabschnitt lernabschnitt = (schueler == null) ? null : schueler.lernabschnittById(key.getKeyAt(1));
+			final ReportingSchuelerLeistungsdaten reportingSchuelerLeistungsdaten =
+					(lernabschnitt == null) ? null : lernabschnitt.leistungsdatenZurId(key.getKeyAt(2));
+			final ReportingKurs kurs = (reportingSchuelerLeistungsdaten == null) ? null : reportingSchuelerLeistungsdaten.kurs();
+			final ReportingFach fach = (reportingSchuelerLeistungsdaten == null) ? null : reportingSchuelerLeistungsdaten.fach();
+			final ReportingLehrer fachlehrer = (reportingSchuelerLeistungsdaten == null) ? null : reportingSchuelerLeistungsdaten.fachlehrer();
+
+			if ((schueler != null) && (lernabschnitt != null) && (kurs != null) && (fach != null) && (fachlehrer != null)) {
+				mapIdLeistungsdatenIdSchueler.putIfAbsent(reportingSchuelerLeistungsdaten.id(), schueler.id());
+				mapKursFachLehrerLeistungsdaten.add(kurs.id(), fach.id(), fachlehrer.id(), reportingSchuelerLeistungsdaten);
+				mapKurse.putIfAbsent(kurs.id(), kurs);
+				mapFach.putIfAbsent(fach.id(), fach);
+				mapLehrer.putIfAbsent(fachlehrer.id(), fachlehrer);
+			}
+		}
+	}
+
+	/**
+	 * Erstellt ReportingKursunterrichte aus den gruppierten Leistungsdaten.
+	 *
+	 * @param mapKursFachLehrerLeistungsdaten Die 3D-Map mit gruppierten Leistungsdaten nach Kurs, Fach und Lehrer.
+	 * @param mapKurse                        Die Map der Kurse
+	 * @param mapLehrer                       Die Map der Lehrer
+	 * @param mapIdLeistungsdatenIdSchueler   Eine Map, die die ID des Schüler zur ID des Leistungsdateneintrags liefert.
+	 *
+	 * @return Eine Liste der erstellten ReportingKursunterrichte
+	 */
+	private List<ReportingKursunterricht> erstelleKursunterricht(final ListMap3DLongKeys<ReportingSchuelerLeistungsdaten> mapKursFachLehrerLeistungsdaten,
+			final Map<Long, ReportingKurs> mapKurse, final Map<Long, ReportingLehrer> mapLehrer, final Map<Long, Long> mapIdLeistungsdatenIdSchueler) {
+
+		final List<ReportingKursunterricht> result = new ArrayList<>();
+
+		for (final LongArrayKey key123 : mapKursFachLehrerLeistungsdaten.keySet123()) {
+			final long idKurs = key123.getKeyAt(0);
+			final long idLehrer = key123.getKeyAt(2);
+
+			final ReportingKurs kurs = mapKurse.get(idKurs);
+			final ReportingLehrer bewertenderLehrer = mapLehrer.get(idLehrer);
+			final Map<Long, ReportingSchuelerLeistungsdaten> mapSchuelerLeistungsdaten = new HashMap<>();
+			final List<ReportingSchuelerLeistungsdaten> leistungsdaten = mapKursFachLehrerLeistungsdaten.get123(idKurs, key123.getKeyAt(1), idLehrer);
+			mapSchuelerLeistungsdaten.putAll(leistungsdaten.stream().collect(Collectors.toMap(ld -> mapIdLeistungsdatenIdSchueler.get(ld.id()), ld -> ld)));
+
+			if ((kurs != null) && (bewertenderLehrer != null)) {
+				result.add(new ProxyReportingKursunterricht(this.reportingRepository, kurs, bewertenderLehrer, mapSchuelerLeistungsdaten));
+			}
+		}
+
+		return result;
+	}
+
+
+	// ##### Hilfsmethoden für Lehrkräfte und Wochenstunden #####
 
 	/**
 	 * Ermittelt alle Zusatzlehrer aus einer Liste von Leistungsdaten.
@@ -331,124 +426,6 @@ public class ProxyReportingLehrerFactoryUnterricht {
 		}
 
 		return wochenstundenProLehrer;
-	}
-
-	/**
-	 * Erstellt ReportingKlassenunterrichte aus den gruppierten Leistungsdaten.
-	 *
-	 * @param mapKlasseFachLehrerLeistungsdaten Die 3D-Map mit gruppierten Leistungsdaten nach Klasse, Fach und Lehrer.
-	 * @param mapSchueler                       Die Map der Schüler
-	 * @param mapIdLeistungsdatenIdSchueler     Die Map, die zu den IDs der Leistungsdaten die Schüler-ID liefert.
-	 * @param mapKlasse                         Die Map der Klassen
-	 * @param mapFach                           Die Map der Fächer
-	 * @param mapLehrer                         Die Map der Lehrer
-	 *
-	 * @return Eine Liste der erstellten ReportingKlassenunterrichte
-	 */
-	private List<ReportingKlassenunterricht> erstelleKlassenunterricht(
-			final ListMap3DLongKeys<ReportingSchuelerLeistungsdaten> mapKlasseFachLehrerLeistungsdaten,
-			final Map<Long, ReportingSchueler> mapSchueler, final Map<Long, Long> mapIdLeistungsdatenIdSchueler, final Map<Long, ReportingKlasse> mapKlasse,
-			final Map<Long, ReportingFach> mapFach, final Map<Long, ReportingLehrer> mapLehrer) {
-
-		final List<ReportingKlassenunterricht> result = new ArrayList<>();
-
-		for (final LongArrayKey key123 : mapKlasseFachLehrerLeistungsdaten.keySet123()) {
-			final long idKlasse = key123.getKeyAt(0);
-			final long idFach = key123.getKeyAt(1);
-			final long idLehrer = key123.getKeyAt(2);
-
-			final ReportingKlasse klasse = mapKlasse.get(idKlasse);
-			final ReportingFach fach = mapFach.get(idFach);
-			final List<ReportingSchuelerLeistungsdaten> leistungsdaten = mapKlasseFachLehrerLeistungsdaten.get123(idKlasse, idFach, idLehrer);
-			final List<ReportingSchueler> schueler = leistungsdaten.stream()
-					.map(ReportingSchuelerLeistungsdaten::id)
-					.map(mapIdLeistungsdatenIdSchueler::get)
-					.map(mapSchueler::get)
-					.filter(Objects::nonNull)
-					.toList();
-
-			final List<Long> idsZusatzLehrer = getIdsZusatzlehrer(leistungsdaten, mapLehrer);
-			final ReportingLehrer bewertenderLehrer = mapLehrer.get(idLehrer);
-			final List<ReportingLehrer> lehrer = erstelleLehrerliste(idLehrer, idsZusatzLehrer, mapLehrer);
-			final int wochenstundenSchueler = getMaximalWochenstundenSchueler(leistungsdaten);
-			final Map<Long, Double> wochenstundenProLehrer = getWochenstundenProLehrer(idLehrer, wochenstundenSchueler, idsZusatzLehrer, leistungsdaten);
-			final Map<Long, ReportingSchuelerLeistungsdaten> mapSchuelerLeistungsdaten = new HashMap<>();
-			mapSchuelerLeistungsdaten.putAll(leistungsdaten.stream().collect(Collectors.toMap(ld -> mapIdLeistungsdatenIdSchueler.get(ld.id()), ld -> ld)));
-
-			result.add(new ProxyReportingKlassenunterricht(this.reportingRepository, klasse, fach, bewertenderLehrer, lehrer, wochenstundenProLehrer, schueler,
-					wochenstundenSchueler,
-					mapSchuelerLeistungsdaten));
-		}
-
-		return result;
-	}
-
-
-	/**
-	 * Gruppiert Leistungsdaten nach Kurs, Fach und Lehrer und erstellt Maps für diese Entitäten.
-	 *
-	 * @param dtoSchuelerLeistungsdaten     Die zu verarbeitenden Leistungsdaten (3D-Map: SchülerID, AbschnittID, LeistungsdatenID)
-	 * @param mapSchueler                   Die Map der verfügbaren Schüler
-	 * @param mapIdLeistungsdatenIdSchueler Die Map, die zu den IDs der Leistungsdaten die Schüler-ID liefert.
-	 * @param mapKursFachLehrerLeistungsdaten         Die zu befüllende 3D-Map für die Gruppierung
-	 * @param mapKurse                      Die zu befüllende Map der Kurse
-	 * @param mapFach                       Die zu befüllende Map der Fächer
-	 * @param mapLehrer                     Die zu befüllende Map der Lehrer
-	 */
-	private void gruppiereLeistungsdatenNachKursFachLehrer(final ListMap3DLongKeys<DTOSchuelerLeistungsdaten> dtoSchuelerLeistungsdaten,
-			final Map<Long, ReportingSchueler> mapSchueler, final Map<Long, Long> mapIdLeistungsdatenIdSchueler,
-			final ListMap3DLongKeys<ReportingSchuelerLeistungsdaten> mapKursFachLehrerLeistungsdaten,
-			final Map<Long, ReportingKurs> mapKurse, final Map<Long, ReportingFach> mapFach, final Map<Long, ReportingLehrer> mapLehrer) {
-
-		for (final LongArrayKey key : dtoSchuelerLeistungsdaten.keySet123()) {
-			final ReportingSchueler schueler = mapSchueler.get(key.getKeyAt(0));
-			final ReportingSchuelerLernabschnitt lernabschnitt = (schueler == null) ? null : schueler.lernabschnittById(key.getKeyAt(1));
-			final ReportingSchuelerLeistungsdaten reportingSchuelerLeistungsdaten = (lernabschnitt == null) ? null : lernabschnitt.leistungsdatenZurId(key.getKeyAt(2));
-			final ReportingKurs kurs = (reportingSchuelerLeistungsdaten == null) ? null : reportingSchuelerLeistungsdaten.kurs();
-			final ReportingFach fach = (reportingSchuelerLeistungsdaten == null) ? null : reportingSchuelerLeistungsdaten.fach();
-			final ReportingLehrer fachlehrer = (reportingSchuelerLeistungsdaten == null) ? null : reportingSchuelerLeistungsdaten.fachlehrer();
-
-			if ((schueler != null) && (lernabschnitt != null) && (kurs != null) && (fach != null) && (fachlehrer != null)) {
-				mapIdLeistungsdatenIdSchueler.putIfAbsent(reportingSchuelerLeistungsdaten.id(), schueler.id());
-				mapKursFachLehrerLeistungsdaten.add(kurs.id(), fach.id(), fachlehrer.id(), reportingSchuelerLeistungsdaten);
-				mapKurse.putIfAbsent(kurs.id(), kurs);
-				mapFach.putIfAbsent(fach.id(), fach);
-				mapLehrer.putIfAbsent(fachlehrer.id(), fachlehrer);
-			}
-		}
-	}
-
-	/**
-	 * Erstellt ReportingKursunterrichte aus den gruppierten Leistungsdaten.
-	 *
-	 * @param mapKursFachLehrerLeistungsdaten Die 3D-Map mit gruppierten Leistungsdaten nach Kurs, Fach und Lehrer.
-	 * @param mapKurse                        Die Map der Kurse
-	 * @param mapLehrer                       Die Map der Lehrer
-	 * @param mapIdLeistungsdatenIdSchueler   Eine Map, die die ID des Schüler zur ID des Leistungsdateneintrags liefert.
-	 *
-	 * @return Eine Liste der erstellten ReportingKursunterrichte
-	 */
-	private List<ReportingKursunterricht> erstelleKursunterricht(final ListMap3DLongKeys<ReportingSchuelerLeistungsdaten> mapKursFachLehrerLeistungsdaten,
-			final Map<Long, ReportingKurs> mapKurse, final Map<Long, ReportingLehrer> mapLehrer, final Map<Long, Long> mapIdLeistungsdatenIdSchueler) {
-
-		final List<ReportingKursunterricht> result = new ArrayList<>();
-
-		for (final LongArrayKey key123 : mapKursFachLehrerLeistungsdaten.keySet123()) {
-			final long idKurs = key123.getKeyAt(0);
-			final long idLehrer = key123.getKeyAt(2);
-
-			final ReportingKurs kurs = mapKurse.get(idKurs);
-			final ReportingLehrer bewertenderLehrer = mapLehrer.get(idLehrer);
-			final Map<Long, ReportingSchuelerLeistungsdaten> mapSchuelerLeistungsdaten = new HashMap<>();
-			final List<ReportingSchuelerLeistungsdaten> leistungsdaten = mapKursFachLehrerLeistungsdaten.get123(idKurs, key123.getKeyAt(1), idLehrer);
-			mapSchuelerLeistungsdaten.putAll(leistungsdaten.stream().collect(Collectors.toMap(ld -> mapIdLeistungsdatenIdSchueler.get(ld.id()), ld -> ld)));
-
-			if ((kurs != null) && (bewertenderLehrer != null)) {
-				result.add(new ProxyReportingKursunterricht(this.reportingRepository, kurs, bewertenderLehrer, mapSchuelerLeistungsdaten));
-			}
-		}
-
-		return result;
 	}
 
 }

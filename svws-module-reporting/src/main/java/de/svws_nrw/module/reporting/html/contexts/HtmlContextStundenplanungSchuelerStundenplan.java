@@ -3,7 +3,6 @@ package de.svws_nrw.module.reporting.html.contexts;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungSchuelerStundenplan;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungStundenplan;
@@ -16,11 +15,6 @@ import org.thymeleaf.context.Context;
 public final class HtmlContextStundenplanungSchuelerStundenplan extends HtmlContext<ReportingStundenplanungSchuelerStundenplan>
 		implements HtmlContextAufteilbar<HtmlContextStundenplanungSchuelerStundenplan> {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
-	@JsonIgnore
-	private final ReportingRepository reportingRepository;
-
-
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
 	 *
@@ -31,7 +25,6 @@ public final class HtmlContextStundenplanungSchuelerStundenplan extends HtmlCont
 	public HtmlContextStundenplanungSchuelerStundenplan(final ReportingRepository reportingRepository, final ReportingStundenplanungStundenplan stundenplan,
 			final List<Long> idsAusgabe) {
 		super(reportingRepository);
-		this.reportingRepository = reportingRepository;
 		erzeugeContext(stundenplan, idsAusgabe);
 	}
 

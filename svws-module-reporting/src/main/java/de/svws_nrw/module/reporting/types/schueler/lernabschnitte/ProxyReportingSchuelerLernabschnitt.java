@@ -5,22 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import de.svws_nrw.asd.data.klassen.KlassenDaten;
-import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
-import de.svws_nrw.asd.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittsdaten;
-import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.data.klassen.DataKlassendaten;
-import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
-
-import de.svws_nrw.data.schueler.DataSchuelerLeistungsdaten;
-import de.svws_nrw.data.schule.DataEinwilligungsarten;
-import de.svws_nrw.data.schule.DataLernplattformen;
-import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOSchuelerZuweisung;
-import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
-import de.svws_nrw.module.reporting.types.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
@@ -159,23 +144,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	@Override
 	public ReportingKlasse folgeklasse() {
 		if ((super.folgeklasse() == null) && (super.idFolgeklasse() != null) && (super.idFolgeklasse() >= 0)) {
-			if (!this.reportingRepository.repositoryLerngruppen().klassen().containsKey(super.idFolgeklasse())) {
-				// ID der Folgeklasse ist bekannt, aber sie wurde noch nicht aus der DB geladen. Lade deren Daten und lade dann alle Klassen des Lernabschnitts.
-				final KlassenDaten klassenDaten;
-				try {
-					klassenDaten = new DataKlassendaten(reportingRepository.conn()).getByIdOhneSchueler(super.idFolgeklasse());
-				} catch (final ApiOperationException e) {
-					ReportingExceptionUtils.logException(
-							"FEHLER: Fehler bei der Ermittlung der Daten für die Folgeklasse des Schülers %s in %s."
-									.formatted(super.schueler().id(), super.schuljahresabschnitt.textSchuljahresabschnittKurz()),
-							e, reportingRepository.logger(), LogLevel.ERROR, 0);
-					return super.folgeklasse();
-				}
-				super.folgeklasse = this.reportingRepository.repositorySchule().schuljahresabschnitt(klassenDaten.idSchuljahresabschnitt).klasse(super.idFolgeklasse());
-			} else {
-				// ID der Folgeklasse ist bekannt und die Klasse wurde in einem Lernabschnitt bereits erzeugt, hole sie aus Lernabschnitt.
-				super.folgeklasse = this.reportingRepository.repositoryLerngruppen().klassen().get(super.idFolgeklasse()).schuljahresabschnitt().klasse(super.idFolgeklasse());
-			}
+			super.folgeklasse = this.reportingRepository.repositoryLerngruppen().klasse(super.idFolgeklasse());
 		}
 		return super.folgeklasse();
 	}
@@ -214,11 +183,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	@Override
 	public List<ReportingSchuelerLeistungsdaten> leistungsdaten() {
 		if (!this.reportingRepository.repositorySchueler().leistungsdaten().containsKey1(this.schueler.id())) {
-			final List<SchuelerLeistungsdaten> listLeistungsdaten = new ArrayList<>();
-			if (new DataSchuelerLeistungsdaten(this.reportingRepository.conn()).getByLernabschnitt(this.id, listLeistungsdaten)) {
-				listLeistungsdaten.forEach(
-						l -> this.reportingRepository.repositorySchueler().leistungsdaten().add(this.schueler().id(), this.id(), l.id, l));
-			}
+			this.reportingRepository.repositorySchueler().leistungsdatenZuLernabschnitt(this.schueler().id(), this.id());
 		}
 		if (super.leistungsdaten().isEmpty()) {
 			super.setLeistungsdaten(this.reportingRepository.repositorySchueler().leistungsdaten()
@@ -239,21 +204,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	@Override
 	public ReportingLehrer sonderpaedagoge() {
 		if ((super.sonderpaedagoge() == null) && (super.idSonderpaedagoge() != null) && (super.idSonderpaedagoge() >= 0)) {
-			super.sonderpaedagoge =
-					new ProxyReportingLehrer(
-							reportingRepository,
-							reportingRepository.repositoryLehrer().stammdaten().computeIfAbsent(super.idSonderpaedagoge(), l -> {
-								try {
-									final DBEntityManager conn = reportingRepository.conn();
-									return new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn))
-											.getById(super.idSonderpaedagoge());
-								} catch (final ApiOperationException e) {
-									ReportingExceptionUtils.logException(
-											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
-											reportingRepository.logger(), LogLevel.INFO, 0);
-									return new LehrerStammdaten();
-								}
-							}));
+			super.sonderpaedagoge = this.reportingRepository.repositoryLehrer().lehrer(super.idSonderpaedagoge());
 		}
 		return super.sonderpaedagoge();
 	}
@@ -266,21 +217,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	@Override
 	public ReportingLehrer tutor() {
 		if ((super.tutor() == null) && (super.idTutor() >= 0)) {
-			super.tutor =
-					new ProxyReportingLehrer(
-							reportingRepository,
-							reportingRepository.repositoryLehrer().stammdaten().computeIfAbsent(super.idTutor(), l -> {
-								try {
-									final DBEntityManager conn = reportingRepository.conn();
-									return new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn))
-											.getById(super.idTutor());
-								} catch (final ApiOperationException e) {
-									ReportingExceptionUtils.logException(
-											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
-											reportingRepository.logger(), LogLevel.INFO, 0);
-									return new LehrerStammdaten();
-								}
-							}));
+			super.tutor = this.reportingRepository.repositoryLehrer().lehrer(super.idTutor());
 		}
 		return super.tutor();
 	}
@@ -293,25 +230,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	@Override
 	public List<ReportingSchuelerZuweisung> zuweisungen() {
 		if (super.zuweisungen == null) {
-			if (!this.reportingRepository.repositorySchueler().zuweisungen().containsKey(this.id())) {
-				final List<ReportingSchuelerZuweisung> reportingZuweisungen = new ArrayList<>();
-				try {
-					final List<DTOSchuelerZuweisung> dtos =
-							this.reportingRepository.conn().queryList(DTOSchuelerZuweisung.QUERY_BY_ABSCHNITT_ID, DTOSchuelerZuweisung.class, this.id);
-					if (dtos != null) {
-						for (final DTOSchuelerZuweisung dto : dtos) {
-							reportingZuweisungen.add(new ProxyReportingSchuelerZuweisung(this.reportingRepository, dto, this));
-						}
-					}
-				} catch (final Exception e) {
-					ReportingExceptionUtils.logException(
-							"INFO: Fehler bei der Ermittlung der Zuweisungen für Lernabschnitt %d aus der Datenbank. Gebe leere Liste zurück."
-									.formatted(this.id),
-							e, this.reportingRepository.logger(), LogLevel.INFO, 0);
-				}
-				this.reportingRepository.repositorySchueler().zuweisungen().put(this.id(), reportingZuweisungen);
-			}
-			super.zuweisungen = this.reportingRepository.repositorySchueler().zuweisungen().get(this.id());
+			super.zuweisungen = this.reportingRepository.repositorySchueler().zuweisungen(this.id(), this);
 		}
 		return super.zuweisungen;
 	}

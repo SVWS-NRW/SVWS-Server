@@ -25,10 +25,6 @@ import org.thymeleaf.context.Context;
 public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlContext<Object>
 		implements HtmlContextAufteilbar<HtmlContextGostKursplanungBlockungsergebnis> {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
-	@JsonIgnore
-	private final ReportingRepository reportingRepository;
-
 	/** Das Reporting-Objekt zum Blockungsergebnis. */
 	@JsonIgnore
 	private ReportingGostKursplanungBlockungsergebnis reportingGostKursplanungBlockungsergebnis = null;
@@ -61,7 +57,6 @@ public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlConte
 	public HtmlContextGostKursplanungBlockungsergebnis(final ReportingRepository reportingRepository, final List<Long> idsFilter,
 			final ReportingFilterDataType idsFilterDataType) throws ApiOperationException {
 		super(reportingRepository);
-		this.reportingRepository = reportingRepository;
 		this.idsFilter = idsFilter;
 		this.idsFilterDataType = idsFilterDataType;
 		erzeugeContext();
@@ -83,7 +78,6 @@ public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlConte
 			final GostBlockungsdatenManager datenManager, final List<Long> idsFilter, final ReportingFilterDataType idsFilterDataType)
 			throws ApiOperationException {
 		super(reportingRepository);
-		this.reportingRepository = reportingRepository;
 		this.blockungsergebnis = blockungsergebnis;
 		this.datenManager = datenManager;
 		this.idsFilter = idsFilter;

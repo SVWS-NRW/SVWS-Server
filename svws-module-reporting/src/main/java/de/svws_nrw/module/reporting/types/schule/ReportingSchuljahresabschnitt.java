@@ -38,16 +38,16 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 	protected ReportingSchuljahresabschnitt vorherigerAbschnitt;
 
 	/** Die Map der Fächer des Schuljahresabschnitts */
-	protected Map<Long, ReportingFach> mapFaecher;
+	protected Map<Long, ReportingFach> faecher;
 
 	/** Die Map der Jahrgänge des Schuljahresabschnitts */
-	protected Map<Long, ReportingJahrgang> mapJahrgaenge;
+	protected Map<Long, ReportingJahrgang> jahrgaenge;
 
 	/** Die Map der Klassen des Schuljahresabschnitts */
-	protected Map<Long, ReportingKlasse> mapKlassen;
+	protected Map<Long, ReportingKlasse> klassen;
 
 	/** Die Map der Kurse des Schuljahresabschnitts */
-	protected Map<Long, ReportingKurs> mapKurse;
+	protected Map<Long, ReportingKurs> kurse;
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
@@ -76,10 +76,10 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 		this.idVorherigerAbschnitt = idVorherigerAbschnitt;
 		this.folgenderAbschnitt = folgenderAbschnitt;
 		this.vorherigerAbschnitt = vorherigerAbschnitt;
-		this.mapFaecher = faecher;
-		this.mapJahrgaenge = jahrgaenge;
-		this.mapKlassen = klassen;
-		this.mapKurse = kurse;
+		this.faecher = faecher;
+		this.jahrgaenge = jahrgaenge;
+		this.klassen = klassen;
+		this.kurse = kurse;
 	}
 
 
@@ -110,7 +110,7 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 	 * @return 		Das Fach zur ID oder null, wenn das Fach nicht vorhanden ist.
 	 */
 	public ReportingFach fach(final long id) {
-		return mapFaecher().get(id);
+		return faecher().get(id);
 	}
 
 	/**
@@ -141,7 +141,27 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 	 * @return 		Der Jahrgang zur ID oder null, wenn der Jahrgang nicht vorhanden ist.
 	 */
 	public ReportingJahrgang jahrgang(final long id) {
-		return mapJahrgaenge().get(id);
+		return jahrgaenge().get(id);
+	}
+
+	/**
+	 * Gibt die Jahrgänge zu den IDs aus der Liste der Jahrgänge des Schuljahresabschnitts zurück
+	 *
+	 * @param ids	Die IDs der Jahrgänge
+	 *
+	 * @return 		Die Jahrgänge zu den IDs oder eine leere Liste, wenn kein Jahrgang vorhanden ist.
+	 */
+	public List<ReportingJahrgang> jahrgaenge(final List<Long> ids) {
+		final List<ReportingJahrgang> result = new ArrayList<>();
+		if (ids == null) {
+			return result;
+		}
+		final List<Long> idsNonNull = ids.stream().filter(Objects::nonNull).distinct().toList();
+		if (idsNonNull.isEmpty()) {
+			return result;
+		}
+		idsNonNull.forEach(idJahrgang -> result.add(jahrgang(idJahrgang)));
+		return result;
 	}
 
 	/**
@@ -152,16 +172,27 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 	 * @return 		Die Klasse zur ID oder null, wenn die Klasse nicht vorhanden ist.
 	 */
 	public ReportingKlasse klasse(final long id) {
-		return mapKlassen().get(id);
+		return klassen().get(id);
 	}
 
 	/**
-	 * Die Klassen des Schuljahresabschnitts
+	 * Gibt die Klassen zu den IDs aus der Liste der Klassen des Schuljahresabschnitts zurück
 	 *
-	 * @return Inhalt des Feldes klassen
+	 * @param ids	Die IDs der Klassen
+	 *
+	 * @return 		Die Klassen zu den IDs oder eine leere Liste, wenn keine Klasse vorhanden ist.
 	 */
-	public List<ReportingKlasse> klassen() {
-		return mapKlassen.values().stream().toList();
+	public List<ReportingKlasse> klassen(final List<Long> ids) {
+		final List<ReportingKlasse> result = new ArrayList<>();
+		if (ids == null) {
+			return result;
+		}
+		final List<Long> idsNonNull = ids.stream().filter(Objects::nonNull).distinct().toList();
+		if (idsNonNull.isEmpty()) {
+			return result;
+		}
+		idsNonNull.forEach(idKlasse -> result.add(klasse(idKlasse)));
+		return result;
 	}
 
 	/**
@@ -172,34 +203,27 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 	 * @return 		Der Kurs zur ID oder null, wenn der Kurs nicht vorhanden ist.
 	 */
 	public ReportingKurs kurs(final long id) {
-		return mapKurse().get(id);
+		return kurse().get(id);
 	}
 
 	/**
-	 * Die Fächer des Schuljahresabschnitts
+	 * Gibt die Kurse zu den IDs aus der Liste der Kurse des Schuljahresabschnitts zurück
 	 *
-	 * @return Inhalt des Feldes faecher
-	 */
-	public List<ReportingFach> faecher() {
-		return mapFaecher.values().stream().toList();
-	}
-
-	/**
-	 * Die Jahrgänge des Schuljahresabschnitts
+	 * @param ids	Die IDs der Kurse
 	 *
-	 * @return Inhalt des Feldes jahrgaenge
+	 * @return 		Die Kurse zu den IDs oder eine leere Liste, wenn kein Kurs vorhanden ist.
 	 */
-	public List<ReportingJahrgang> jahrgaenge() {
-		return mapJahrgaenge.values().stream().toList();
-	}
-
-	/**
-	 * Die Kurse des Schuljahresabschnitts
-	 *
-	 * @return Inhalt des Feldes kurse
-	 */
-	public List<ReportingKurs> kurse() {
-		return mapKurse.values().stream().toList();
+	public List<ReportingKurs> kurse(final List<Long> ids) {
+		final List<ReportingKurs> result = new ArrayList<>();
+		if (ids == null) {
+			return result;
+		}
+		final List<Long> idsNonNull = ids.stream().filter(Objects::nonNull).distinct().toList();
+		if (idsNonNull.isEmpty()) {
+			return result;
+		}
+		idsNonNull.forEach(idKurs -> result.add(kurs(idKurs)));
+		return result;
 	}
 
 
@@ -271,36 +295,36 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 	/**
 	 * Die Map der Fächer des Schuljahresabschnitts
 	 *
-	 * @return Inhalt des Feldes mapFaecher
+	 * @return Inhalt des Feldes faecher
 	 */
-	public Map<Long, ReportingFach> mapFaecher() {
-		return mapFaecher;
+	public Map<Long, ReportingFach> faecher() {
+		return faecher;
 	}
 
 	/**
 	 * Die Map der Jahrgänge des Schuljahresabschnitts
 	 *
-	 * @return Inhalt des Feldes mapJahrgaenge
+	 * @return Inhalt des Feldes jahrgaenge
 	 */
-	public Map<Long, ReportingJahrgang> mapJahrgaenge() {
-		return mapJahrgaenge;
+	public Map<Long, ReportingJahrgang> jahrgaenge() {
+		return jahrgaenge;
 	}
 
 	/**
 	 * Die Map der Klassen des Schuljahresabschnitts
 	 *
-	 * @return Inhalt des Feldes mapKlassen
+	 * @return Inhalt des Feldes klassen
 	 */
-	public Map<Long, ReportingKlasse> mapKlassen() {
-		return mapKlassen;
+	public Map<Long, ReportingKlasse> klassen() {
+		return klassen;
 	}
 
 	/**
 	 * Die Map der Kurse des Schuljahresabschnitts
 	 *
-	 * @return Inhalt des Feldes mapKurse
+	 * @return Inhalt des Feldes kurse
 	 */
-	public Map<Long, ReportingKurs> mapKurse() {
-		return mapKurse;
+	public Map<Long, ReportingKurs> kurse() {
+		return kurse;
 	}
 }

@@ -1,6 +1,5 @@
 package de.svws_nrw.module.reporting.types.schule;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,9 +9,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
-import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.data.klassen.DataKlassendaten;
-import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.module.reporting.types.fach.ProxyReportingFach;
 import de.svws_nrw.module.reporting.types.jahrgang.ProxyReportingJahrgang;
 import de.svws_nrw.module.reporting.types.lerngruppen.ProxyReportingKlasse;
@@ -22,7 +18,6 @@ import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
-import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 
 /**
  * Proxy-Klasse im Rahmen des Reportings für Daten vom Typ Schuljahresabschnitt und erweitert die Klasse {@link ReportingSchuljahresabschnitt}.
@@ -89,12 +84,13 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 	 * @return Map der Fächer, die in diesem Schuljahresabschnitt gültig sind.
 	 */
 	@Override
-	public Map<Long, ReportingFach> mapFaecher() {
-		if ((super.mapFaecher == null) || super.mapFaecher.isEmpty()) {
-			super.mapFaecher = new HashMap<>();
-			this.reportingRepository.repositoryKataloge().faecher().forEach((idFach, fach) -> super.mapFaecher.put(idFach, new ProxyReportingFach(fach, this.schuljahr)));
+	public Map<Long, ReportingFach> faecher() {
+		if ((super.faecher == null) || super.faecher.isEmpty()) {
+			super.faecher = new HashMap<>();
+			this.reportingRepository.repositoryKataloge().faecher()
+					.forEach((idFach, fach) -> super.faecher.put(idFach, new ProxyReportingFach(fach, this.schuljahr)));
 		}
-		return super.mapFaecher;
+		return super.faecher;
 	}
 
 	/**
@@ -103,15 +99,13 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 	 * @return Map der Jahrgänge, die in diesem Schuljahresabschnitt gültig sind.
 	 */
 	@Override
-	public Map<Long, ReportingJahrgang> mapJahrgaenge() {
-		if ((super.mapJahrgaenge == null) || super.mapJahrgaenge.isEmpty()) {
-			super.mapJahrgaenge = new HashMap<>();
-			// TODO: Wenn die Jahrgänge eine Gültigkeit erhalten, dann ist diese hier auch zu implementieren.
-			//  Aktuell werden alle Jahrgänge in alle Schuljahresabschnitte übernommen.
-			this.reportingRepository.repositoryKataloge().jahrgaenge().forEach((idJahrgang, jahrgang) -> super.mapJahrgaenge.put(idJahrgang,
+	public Map<Long, ReportingJahrgang> jahrgaenge() {
+		if ((super.jahrgaenge == null) || super.jahrgaenge.isEmpty()) {
+			super.jahrgaenge = new HashMap<>();
+			this.reportingRepository.repositoryKataloge().jahrgaenge().forEach((idJahrgang, jahrgang) -> super.jahrgaenge.put(idJahrgang,
 					new ProxyReportingJahrgang(this.reportingRepository, jahrgang, this)));
 		}
-		return super.mapJahrgaenge;
+		return super.jahrgaenge;
 	}
 
 	/**
@@ -120,30 +114,22 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 	 * @return Map der Klassen, die in diesem Schuljahresabschnitt gültig sind.
 	 */
 	@Override
-	public Map<Long, ReportingKlasse> mapKlassen() {
-		if ((super.mapKlassen == null) || super.mapKlassen.isEmpty()) {
-			super.mapKlassen = new HashMap<>();
-			List<KlassenDaten> klassendaten = new ArrayList<>();
-			try {
-				this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Ermittle die Klassendaten.");
-				klassendaten = new DataKlassendaten(this.reportingRepository.conn()).getListBySchuljahresabschnittID(this.id(), true);
-			} catch (final Exception e) {
-				ReportingExceptionUtils.logException(
-						"FEHLER: Fehler bei der Erstellung der Klassenliste für den Schuljahresabschnitt %s.".formatted(this.textSchuljahresabschnittKurz()), e,
-						reportingRepository.logger(), LogLevel.ERROR, 0);
-			}
+	public Map<Long, ReportingKlasse> klassen() {
+		if ((super.klassen == null) || super.klassen.isEmpty()) {
+			super.klassen = new HashMap<>();
+			final List<KlassenDaten> klassendaten = this.reportingRepository.repositoryLerngruppen().klassenBySchuljahresabschnitt(this.id());
 			if (klassendaten.isEmpty()) {
-				return super.mapKlassen;
+				return super.klassen;
 			}
 
 			for (final KlassenDaten klasse : klassendaten) {
 				final ReportingKlasse reportingKlasse = new ProxyReportingKlasse(this.reportingRepository, klasse);
-				super.mapKlassen.put(reportingKlasse.id(), reportingKlasse);
+				super.klassen.put(reportingKlasse.id(), reportingKlasse);
 				this.reportingRepository.repositoryLerngruppen().klassen().put(reportingKlasse.id(), reportingKlasse);
 			}
 
 		}
-		return super.mapKlassen;
+		return super.klassen;
 	}
 
 	/**
@@ -152,28 +138,20 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 	 * @return Map der Kurse, die in diesem Schuljahresabschnitt gültig sind.
 	 */
 	@Override
-	public Map<Long, ReportingKurs> mapKurse() {
-		if ((super.mapKurse == null) || super.mapKurse.isEmpty()) {
-			super.mapKurse = new HashMap<>();
-			List<KursDaten> kurseDaten = new ArrayList<>();
-			try {
-				this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Ermittle die Kursdaten.");
-				kurseDaten = new DataKurse(this.reportingRepository.conn()).getListBySchuljahresabschnittID(this.id(), true);
-			} catch (final Exception e) {
-				ReportingExceptionUtils.logException(
-						"FEHLER: Fehler bei der Erstellung der Liste der Kurse für den Schuljahresabschnitt %s.".formatted(this.textSchuljahresabschnittKurz()),
-						e, reportingRepository.logger(), LogLevel.ERROR, 0);
-			}
+	public Map<Long, ReportingKurs> kurse() {
+		if ((super.kurse == null) || super.kurse.isEmpty()) {
+			super.kurse = new HashMap<>();
+			final List<KursDaten> kurseDaten = this.reportingRepository.repositoryLerngruppen().kurseBySchuljahresabschnitt(this.id());
 			if (kurseDaten.isEmpty()) {
-				return super.mapKurse;
+				return super.kurse;
 			}
 
 			for (final KursDaten kurs : kurseDaten) {
 				final ReportingKurs reportingKurs = new ProxyReportingKurs(this.reportingRepository, kurs);
-				super.mapKurse.put(reportingKurs.id(), reportingKurs);
+				super.kurse.put(reportingKurs.id(), reportingKurs);
 				this.reportingRepository.repositoryLerngruppen().kurse().put(reportingKurs.id(), reportingKurs);
 			}
 		}
-		return super.mapKurse;
+		return super.kurse;
 	}
 }

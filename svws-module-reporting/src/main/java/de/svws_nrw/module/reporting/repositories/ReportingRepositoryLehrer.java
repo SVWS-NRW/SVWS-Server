@@ -13,6 +13,7 @@ import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
 import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingLehrer;
@@ -28,6 +29,39 @@ import jakarta.ws.rs.core.Response.Status;
  * können bei Bedarf für einzelne fehlende Lehrkräfte nachgeladen werden.
  */
 public class ReportingRepositoryLehrer {
+
+	private static final String QUERY_LEISTUNGSDATEN_FACHLEHRER_KLASSENUNTERRICHT =
+			"SELECT ld, a.Schueler_ID FROM DTOSchuelerLeistungsdaten ld, DTOSchuelerLernabschnittsdaten a "
+					+ "WHERE ld.Abschnitt_ID = a.ID "
+					+ "AND a.Schuljahresabschnitts_ID = ?1 "
+					+ "AND a.WechselNr = 0 "
+					+ "AND ld.Fachlehrer_ID = ?2 "
+					+ "AND ld.Kurs_ID IS NULL";
+
+	private static final String QUERY_LEISTUNGSDATEN_ZUSATZLEHRER_KLASSENUNTERRICHT =
+			"SELECT ld, a.Schueler_ID FROM DTOSchuelerLeistungsdaten ld, DTOSchuelerLernabschnittsdaten a "
+					+ "WHERE ld.Abschnitt_ID = a.ID "
+					+ "AND a.Schuljahresabschnitts_ID = ?1 "
+					+ "AND a.WechselNr = 0 "
+					+ "AND ld.Zusatzkraft_ID = ?2 "
+					+ "AND ld.Kurs_ID IS NULL";
+
+	private static final String QUERY_LEISTUNGSDATEN_FACHLEHRER_KURSUNTERRICHT =
+			"SELECT ld, a.Schueler_ID FROM DTOSchuelerLeistungsdaten ld, DTOSchuelerLernabschnittsdaten a "
+					+ "WHERE ld.Abschnitt_ID = a.ID "
+					+ "AND a.Schuljahresabschnitts_ID = ?1 "
+					+ "AND a.WechselNr = 0 "
+					+ "AND ld.Kurs_ID IS NOT NULL "
+					+ "AND ld.Fachlehrer_ID = ?2";
+
+	private static final String QUERY_LEISTUNGSDATEN_ZUSATZLEHRER_KURSUNTERRICHT =
+			"SELECT ld, a.Schueler_ID FROM DTOSchuelerLeistungsdaten ld, DTOSchuelerLernabschnittsdaten a "
+					+ "WHERE ld.Abschnitt_ID = a.ID "
+					+ "AND a.Schuljahresabschnitts_ID = ?1 "
+					+ "AND a.WechselNr = 0 "
+					+ "AND ld.Kurs_ID IN (SELECT k.ID FROM DTOKurs k, DTOKursLehrer kl WHERE k.ID = kl.Kurs_ID "
+					+ "AND k.Schuljahresabschnitts_ID = ?1 AND kl.Lehrer_ID = ?2) "
+					+ "AND ld.Fachlehrer_ID = ?2";
 
 	private final ReportingRepository reportingRepository;
 
@@ -50,7 +84,8 @@ public class ReportingRepositoryLehrer {
 	private void initLehrerStammdaten() throws ApiOperationException {
 		try {
 			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Ermittle die Lehrerstammdaten.");
-			this.mapLehrerStammdaten = new DataLehrerStammdaten(this.reportingRepository.conn(), new DataLernplattformen(this.reportingRepository.conn()), new DataEinwilligungsarten(this.reportingRepository.conn())).getAll().stream()
+			this.mapLehrerStammdaten = new DataLehrerStammdaten(this.reportingRepository.conn(), new DataLernplattformen(this.reportingRepository.conn()),
+					new DataEinwilligungsarten(this.reportingRepository.conn())).getAll().stream()
 					.collect(Collectors.toMap(l -> l.id, l -> l));
 		} catch (final Exception e) {
 			this.mapLehrerStammdaten = new HashMap<>();
@@ -60,12 +95,17 @@ public class ReportingRepositoryLehrer {
 		}
 	}
 
+
+	// ##### Lehrer (Reporting-Objekte und Stammdaten) #####
+
 	/**
 	 * Gibt das ReportingLehrer-Objekt zur übergebenen ID zurück. Fehlt der Eintrag im Cache, wird er aus der Datenbank nachgeladen.
+	 * Schlägt das Nachladen fehl, wird ein nicht-gecachter Fallback-Lehrer mit leeren Stammdaten zurückgegeben, damit
+	 * Reports keine NPE auslösen, sondern Leerstrings rendern.
 	 *
 	 * @param idLehrer Die ID des Lehrers.
 	 *
-	 * @return Das ReportingLehrer-Objekt oder null, falls die Lehrkraft nicht existiert.
+	 * @return Das ReportingLehrer-Objekt, ein Fallback-Objekt mit leeren Stammdaten bei DB-Fehler, oder {@code null} bei ungültiger ID.
 	 */
 	public ReportingLehrer lehrer(final long idLehrer) {
 		if (idLehrer < 0) {
@@ -74,22 +114,22 @@ public class ReportingRepositoryLehrer {
 
 		if (!mapLehrerStammdaten.containsKey(idLehrer)) {
 			try {
-				final LehrerStammdaten fehlendeLehrerstammdaten = new DataLehrerStammdaten(this.reportingRepository.conn(), new DataLernplattformen(this.reportingRepository.conn()),
-						new DataEinwilligungsarten(this.reportingRepository.conn())).getById(idLehrer);
+				final LehrerStammdaten fehlendeLehrerstammdaten =
+						new DataLehrerStammdaten(this.reportingRepository.conn(), new DataLernplattformen(this.reportingRepository.conn()),
+								new DataEinwilligungsarten(this.reportingRepository.conn())).getById(idLehrer);
 				mapLehrerStammdaten.put(fehlendeLehrerstammdaten.id, fehlendeLehrerstammdaten);
 			} catch (final ApiOperationException e) {
 				ReportingExceptionUtils.logException(
-						"FEHLER: Fehler bei der Ermittlung der fehlenden Lehrerstammdaten einer Lehrkraft aus der Datenbank im ReportingRepository.", e,
-						this.reportingRepository.logger(), LogLevel.ERROR, 0);
-				return null;
+						"INFO: Fehler bei der Ermittlung der fehlenden Lehrerstammdaten einer Lehrkraft aus der Datenbank im ReportingRepository. "
+								+ "Es wird ein Fallback-Lehrer mit leeren Stammdaten zurückgegeben.",
+						e, this.reportingRepository.logger(), LogLevel.INFO, 0);
+				final LehrerStammdaten fallback = new LehrerStammdaten();
+				fallback.id = idLehrer;
+				return new ProxyReportingLehrer(this.reportingRepository, fallback);
 			}
 		}
 
-		if (mapLehrerStammdaten.containsKey(idLehrer)) {
-			return mapLehrer.computeIfAbsent(idLehrer, key -> new ProxyReportingLehrer(this.reportingRepository, mapLehrerStammdaten.get(key)));
-		} else {
-			return null;
-		}
+		return mapLehrer.computeIfAbsent(idLehrer, key -> new ProxyReportingLehrer(this.reportingRepository, mapLehrerStammdaten.get(key)));
 	}
 
 	/**
@@ -113,14 +153,16 @@ public class ReportingRepositoryLehrer {
 	 */
 	public List<ReportingLehrer> lehrer(final List<Long> idsLehrer, final boolean sortiereListe) {
 		final Optional<Comparator<ReportingLehrer>> optionalComparator = sortiereListe
-				? ComparatorFactory.buildOptionalComparator(this.reportingRepository.sortierungService(), this.reportingRepository.logger(), ReportingLehrer.class.getSimpleName(),
+				? ComparatorFactory.buildOptionalComparator(this.reportingRepository.sortierungService(), this.reportingRepository.logger(),
+						ReportingLehrer.class.getSimpleName(),
 						SortierungRegistryReportingLehrer.sortierungRegistry())
 				: Optional.empty();
 
 		return ReportingListBuilder.erstelleReportingListe(idsLehrer, mapLehrerStammdaten, mapLehrer,
 				fehlendeIds -> {
 					try {
-						return new DataLehrerStammdaten(this.reportingRepository.conn(), new DataLernplattformen(this.reportingRepository.conn()), new DataEinwilligungsarten(this.reportingRepository.conn())).getListByIDs(fehlendeIds);
+						return new DataLehrerStammdaten(this.reportingRepository.conn(), new DataLernplattformen(this.reportingRepository.conn()),
+								new DataEinwilligungsarten(this.reportingRepository.conn())).getListByIDs(fehlendeIds);
 					} catch (final ApiOperationException e) {
 						ReportingExceptionUtils.logException(
 								"FEHLER: Fehler bei der Ermittlung der fehlenden Lehrerstammdaten einer Lehrerliste aus der Datenbank im "
@@ -136,6 +178,15 @@ public class ReportingRepositoryLehrer {
 	}
 
 	/**
+	 * Gibt die Map der bereits erzeugten ReportingLehrer-Objekte zurück, indiziert nach Lehrer-ID.
+	 *
+	 * @return Map der ReportingLehrer-Objekte
+	 */
+	public Map<Long, ReportingLehrer> mapLehrer() {
+		return mapLehrer;
+	}
+
+	/**
 	 * Gibt die Map der Lehrerstammdaten zurück, indiziert nach der ID des Lehrers.
 	 *
 	 * @return Map der Lehrerstammdaten
@@ -144,12 +195,70 @@ public class ReportingRepositoryLehrer {
 		return mapLehrerStammdaten;
 	}
 
+
+	// ##### Leistungsdaten zu Klassen- und Kursunterricht #####
+
 	/**
-	 * Gibt die Map der bereits erzeugten ReportingLehrer-Objekte zurück, indiziert nach Lehrer-ID.
+	 * Gibt die Leistungsdaten zurück, in denen der übergebene Lehrer als Fachlehrer für Klassenunterricht (ohne Kurs-Zuordnung)
+	 * im übergebenen Schuljahresabschnitt eingetragen ist.
 	 *
-	 * @return Map der ReportingLehrer-Objekte
+	 * @param idSchuljahresabschnitt Die ID des Schuljahresabschnitts.
+	 * @param idLehrer               Die ID des Lehrers.
+	 *
+	 * @return Liste der Leistungsdaten als {@link Object} {@code []} mit {@link DTOSchuelerLeistungsdaten} und Schüler-ID.
 	 */
-	public Map<Long, ReportingLehrer> mapLehrer() {
-		return mapLehrer;
+	public List<Object[]> leistungsdatenAlsFachlehrerKlassenunterricht(final long idSchuljahresabschnitt, final long idLehrer) {
+		return queryLeistungsdaten(QUERY_LEISTUNGSDATEN_FACHLEHRER_KLASSENUNTERRICHT, idSchuljahresabschnitt, idLehrer);
+	}
+
+	/**
+	 * Gibt die Leistungsdaten zurück, in denen der übergebene Lehrer als Zusatzlehrer für Klassenunterricht (ohne Kurs-Zuordnung)
+	 * im übergebenen Schuljahresabschnitt eingetragen ist.
+	 *
+	 * @param idSchuljahresabschnitt Die ID des Schuljahresabschnitts.
+	 * @param idLehrer               Die ID des Lehrers.
+	 *
+	 * @return Liste der Leistungsdaten als {@link Object} {@code []} mit {@link DTOSchuelerLeistungsdaten} und Schüler-ID.
+	 */
+	public List<Object[]> leistungsdatenAlsZusatzlehrerKlassenunterricht(final long idSchuljahresabschnitt, final long idLehrer) {
+		return queryLeistungsdaten(QUERY_LEISTUNGSDATEN_ZUSATZLEHRER_KLASSENUNTERRICHT, idSchuljahresabschnitt, idLehrer);
+	}
+
+	/**
+	 * Gibt die Leistungsdaten zurück, in denen der übergebene Lehrer als Fachlehrer für Kursunterricht
+	 * im übergebenen Schuljahresabschnitt eingetragen ist.
+	 *
+	 * @param idSchuljahresabschnitt Die ID des Schuljahresabschnitts.
+	 * @param idLehrer               Die ID des Lehrers.
+	 *
+	 * @return Liste der Leistungsdaten als {@link Object} {@code []} mit {@link DTOSchuelerLeistungsdaten} und Schüler-ID.
+	 */
+	public List<Object[]> leistungsdatenAlsFachlehrerKursunterricht(final long idSchuljahresabschnitt, final long idLehrer) {
+		return queryLeistungsdaten(QUERY_LEISTUNGSDATEN_FACHLEHRER_KURSUNTERRICHT, idSchuljahresabschnitt, idLehrer);
+	}
+
+	/**
+	 * Gibt die Leistungsdaten zurück, in denen der übergebene Lehrer als Zusatzlehrer eines Kurses geführt wird,
+	 * für die er gleichzeitig als Fachlehrer eingetragen ist, im übergebenen Schuljahresabschnitt.
+	 *
+	 * @param idSchuljahresabschnitt Die ID des Schuljahresabschnitts.
+	 * @param idLehrer               Die ID des Lehrers.
+	 *
+	 * @return Liste der Leistungsdaten als {@link Object} {@code []} mit {@link DTOSchuelerLeistungsdaten} und Schüler-ID.
+	 */
+	public List<Object[]> leistungsdatenAlsZusatzlehrerKursunterricht(final long idSchuljahresabschnitt, final long idLehrer) {
+		return queryLeistungsdaten(QUERY_LEISTUNGSDATEN_ZUSATZLEHRER_KURSUNTERRICHT, idSchuljahresabschnitt, idLehrer);
+	}
+
+	private List<Object[]> queryLeistungsdaten(final String query, final long idSchuljahresabschnitt, final long idLehrer) {
+		try {
+			return this.reportingRepository.conn().queryList(query, Object[].class, idSchuljahresabschnitt, idLehrer);
+		} catch (final Exception e) {
+			ReportingExceptionUtils.logException(
+					"FEHLER: Fehler bei der Ermittlung von Leistungsdaten für Lehrer-ID %d im Schuljahresabschnitt %d.".formatted(idLehrer,
+							idSchuljahresabschnitt),
+					e, this.reportingRepository.logger(), LogLevel.ERROR, 0);
+			return new ArrayList<>();
+		}
 	}
 }

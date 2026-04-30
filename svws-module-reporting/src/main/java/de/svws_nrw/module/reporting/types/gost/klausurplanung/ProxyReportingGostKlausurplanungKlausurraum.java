@@ -66,8 +66,6 @@ public class ProxyReportingGostKlausurplanungKlausurraum extends ReportingGostKl
 
 		if (!stunden.isEmpty()) {
 			stunden.sort(Comparator.comparing(ReportingStundenplanungUnterrichtsrasterstunde::stundeImUnterrichtsraster));
-			// TODO: Wenn die Aufsichten im Client vorhanden sind und die Datenstrukturen stehen, dann ProxyReportingGostKlausurplanungKlausuraufsicht
-			//  anlegen. Zudem müssen dann auch die fehlenden Daten (hier null) ergänzt werden.
 			super.aufsichten.addAll(stunden.stream().map(z -> (new ReportingGostKlausurplanungKlausuraufsicht(null, null, null, null, z))).toList());
 		}
 	}

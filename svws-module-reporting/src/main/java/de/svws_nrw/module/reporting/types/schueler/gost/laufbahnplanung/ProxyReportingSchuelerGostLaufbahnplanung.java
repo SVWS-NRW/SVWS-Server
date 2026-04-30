@@ -22,7 +22,6 @@ import de.svws_nrw.core.data.gost.GostBeratungslehrer;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
-import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.asd.data.schueler.Sprachbelegung;
 import de.svws_nrw.asd.data.schueler.Sprachpruefung;
 import de.svws_nrw.core.logger.LogLevel;
@@ -31,21 +30,11 @@ import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
-import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
-import de.svws_nrw.data.gost.DBUtilsGostLaufbahn;
-import de.svws_nrw.data.gost.DataGostJahrgangFachkombinationen;
-import de.svws_nrw.data.gost.DataGostJahrgangsdaten;
-import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
-import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
-import de.svws_nrw.data.schule.DataEinwilligungsarten;
-import de.svws_nrw.data.schule.DataLernplattformen;
-import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import jakarta.validation.constraints.NotNull;
 import de.svws_nrw.module.reporting.types.gost.laufbahnplanung.ProxyReportingGostLaufbahnplanungErgebnismeldung;
 import de.svws_nrw.module.reporting.types.gost.laufbahnplanung.ProxyReportingGostLaufbahnplanungFachwahl;
-import de.svws_nrw.module.reporting.types.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.gost.laufbahnplanung.ReportingGostLaufbahnplanungErgebnismeldung;
 import de.svws_nrw.module.reporting.types.gost.laufbahnplanung.ReportingGostLaufbahnplanungErgebnismeldungKategorie;
@@ -129,7 +118,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 					}
 				}
 				this.reportingRepository.repositoryGost().beratungsdatenAbiturdaten().putAll(
-						new HashMap<>(DBUtilsGostLaufbahn.getMapFromIDs(this.reportingRepository.conn(), idsFehlendeSchueler)));
+						new HashMap<>(this.reportingRepository.repositoryGost().beratungsdatenAbiturdaten(idsFehlendeSchueler)));
 			}
 			return this.reportingRepository.repositoryGost().beratungsdatenAbiturdaten().get(idSchueler);
 		} catch (final ApiOperationException e) {
@@ -143,16 +132,12 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	private boolean ladeJahrgangsdatenUndFaecher(final int abiturjahr) {
 		try {
 			if (!this.reportingRepository.repositoryGost().abiturjahrgangDaten().containsKey(abiturjahr)) {
-				final GostJahrgangsdaten tempGostJahrgangsdaten =
-						DataGostJahrgangsdaten.getJahrgangsdaten(this.reportingRepository.conn(), abiturjahr);
-				this.reportingRepository.repositoryGost().abiturjahrgangDaten().put(abiturjahr, tempGostJahrgangsdaten);
+				this.reportingRepository.repositoryGost().abiturjahrgangDaten().put(abiturjahr,
+						this.reportingRepository.repositoryGost().jahrgangsdaten(abiturjahr));
 			}
 			if (!this.reportingRepository.repositoryGost().abiturjahrgangFaecher().containsKey(abiturjahr)) {
-				final GostFaecherManager tempGostFaecherManager =
-						DBUtilsFaecherGost.getFaecherManager(auswahlSchuljahr, this.reportingRepository.conn(), abiturjahr);
-				tempGostFaecherManager.addFachkombinationenAll(DataGostJahrgangFachkombinationen.getFachkombinationen(this.reportingRepository.conn(),
-						abiturjahr));
-				this.reportingRepository.repositoryGost().abiturjahrgangFaecher().put(abiturjahr, tempGostFaecherManager);
+				this.reportingRepository.repositoryGost().abiturjahrgangFaecher().put(abiturjahr,
+						this.reportingRepository.repositoryGost().faecherManager(abiturjahr));
 			}
 			return true;
 		} catch (final ApiOperationException e) {
@@ -172,7 +157,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 					}
 				}
 				this.reportingRepository.repositoryGost().beratungsdaten().putAll(
-						new HashMap<>(new DataGostSchuelerLaufbahnplanungBeratungsdaten(this.reportingRepository.conn()).getMapFromIDs(idsFehlendeSchueler)));
+						new HashMap<>(this.reportingRepository.repositoryGost().beratungsdaten(idsFehlendeSchueler)));
 				if (!this.reportingRepository.repositoryGost().beratungsdaten().containsKey(idSchueler)) {
 					throw new ApiOperationException(Response.Status.NOT_FOUND);
 				}
@@ -273,17 +258,21 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	 */
 	private void eintragBeratungGostHalbjahreErzeugen() {
 		final GostHalbjahr aktuellesGostHalbjahrAbiturjahrgang = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr,
-				this.reportingRepository.repositorySchule().aktuellerSchuljahresabschnitt().schuljahr(), this.reportingRepository.repositorySchule().aktuellerSchuljahresabschnitt().abschnitt());
+				this.reportingRepository.repositorySchule().aktuellerSchuljahresabschnitt().schuljahr(),
+				this.reportingRepository.repositorySchule().aktuellerSchuljahresabschnitt().abschnitt());
 		final GostHalbjahr auswahlGostHalbjahrAbiturjahrgang = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr,
-				this.reportingRepository.repositorySchule().auswahlSchuljahresabschnitt().schuljahr(), this.reportingRepository.repositorySchule().auswahlSchuljahresabschnitt().abschnitt());
+				this.reportingRepository.repositorySchule().auswahlSchuljahresabschnitt().schuljahr(),
+				this.reportingRepository.repositorySchule().auswahlSchuljahresabschnitt().abschnitt());
 
 		super.aktuellesGOStHalbjahr = bestimmeAktuellesHalbjahr(aktuellesGostHalbjahrAbiturjahrgang);
 		super.folgeAktuellesGOStHalbjahr =
-				bestimmeFolgeHalbjahr(aktuellesGostHalbjahrAbiturjahrgang, this.reportingRepository.repositorySchule().aktuellerSchuljahresabschnitt().schuljahr(), abiturjahr);
+				bestimmeFolgeHalbjahr(aktuellesGostHalbjahrAbiturjahrgang,
+						this.reportingRepository.repositorySchule().aktuellerSchuljahresabschnitt().schuljahr(), abiturjahr);
 
 		super.auswahlGOStHalbjahr = bestimmeAktuellesHalbjahr(auswahlGostHalbjahrAbiturjahrgang);
 		super.folgeAuswahlGOStHalbjahr =
-				bestimmeFolgeHalbjahr(auswahlGostHalbjahrAbiturjahrgang, this.reportingRepository.repositorySchule().auswahlSchuljahresabschnitt().schuljahr(), abiturjahr);
+				bestimmeFolgeHalbjahr(auswahlGostHalbjahrAbiturjahrgang, this.reportingRepository.repositorySchule().auswahlSchuljahresabschnitt().schuljahr(),
+						abiturjahr);
 	}
 
 	/**
@@ -324,39 +313,13 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	private void eintragBeratungslehrkraefteErzeugen(final GostLaufbahnplanungBeratungsdaten gostBeratungsdaten, final GostJahrgangsdaten gostJahrgangsdaten) {
 		// Letzte Beratungslehrkraft bestimmen aus den GOSt-Daten des Schülers
 		if (gostBeratungsdaten.beratungslehrerID != null) {
-			super.letzteBeratungLehrkraft = new ProxyReportingLehrer(
-					this.reportingRepository,
-					this.reportingRepository.repositoryLehrer().stammdaten().computeIfAbsent(gostBeratungsdaten.beratungslehrerID, l -> {
-						try {
-							final DBEntityManager conn = this.reportingRepository.conn();
-							return new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn))
-									.getById(gostBeratungsdaten.beratungslehrerID);
-						} catch (final ApiOperationException e) {
-							ReportingExceptionUtils.logException(
-									"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
-									reportingRepository.logger(), LogLevel.INFO, 0);
-							return new LehrerStammdaten();
-						}
-					}));
+			super.letzteBeratungLehrkraft = this.reportingRepository.repositoryLehrer().lehrer(gostBeratungsdaten.beratungslehrerID);
 		}
 		// Beratungslehrkräfte der Stufe bestimmen aus den GOSt-Daten der Jahrgangsstufe
 		final List<GostBeratungslehrer> beratungslehrer = gostJahrgangsdaten.beratungslehrer;
 		if (!beratungslehrer.isEmpty()) {
 			for (final GostBeratungslehrer lehrkraft : beratungslehrer) {
-				super.beratungslehrkraefte().add(new ProxyReportingLehrer(
-						this.reportingRepository,
-						this.reportingRepository.repositoryLehrer().stammdaten().computeIfAbsent(lehrkraft.id, l -> {
-							try {
-								final DBEntityManager conn = this.reportingRepository.conn();
-								return new DataLehrerStammdaten(conn, new DataLernplattformen(conn),
-										new DataEinwilligungsarten(conn)).getById(lehrkraft.id);
-							} catch (final ApiOperationException e) {
-								ReportingExceptionUtils.logException(
-										"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
-										reportingRepository.logger(), LogLevel.INFO, 0);
-								return new LehrerStammdaten();
-							}
-						})));
+				super.beratungslehrkraefte().add(this.reportingRepository.repositoryLehrer().lehrer(lehrkraft.id));
 			}
 			super.beratungslehrkraefte().sort(Comparator.comparing(ReportingLehrer::nachname).thenComparing(ReportingLehrer::vorname));
 		}

@@ -20,10 +20,6 @@ import org.thymeleaf.context.Context;
  */
 public final class HtmlContextBasisdaten extends HtmlContext<Object> {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
-	@JsonIgnore
-	private final ReportingRepository reportingRepository;
-
 	/** In der Map werden zum Vorlage-Parameter die jeweiligen Werte gespeichert. */
 	@JsonIgnore
 	private final Map<String, Object> reportvorlageParameterWerte = new HashMap<>();
@@ -38,7 +34,6 @@ public final class HtmlContextBasisdaten extends HtmlContext<Object> {
 	 */
 	public HtmlContextBasisdaten(final ReportingRepository reportingRepository) throws ApiOperationException {
 		super(reportingRepository);
-		this.reportingRepository = reportingRepository;
 		erzeugeContext();
 	}
 
@@ -83,11 +78,7 @@ public final class HtmlContextBasisdaten extends HtmlContext<Object> {
 			throws ApiOperationException {
 		try {
 			return switch (ReportingReportvorlageParameterTyp.getByID(reportingReportVorlageParameter.typ)) {
-				case BOOLEAN -> new ReportingVorlageParameterTypisiert<Boolean>(reportingReportVorlageParameter);
-				case INTEGER -> new ReportingVorlageParameterTypisiert<Integer>(reportingReportVorlageParameter);
-				case LONG -> new ReportingVorlageParameterTypisiert<Long>(reportingReportVorlageParameter);
-				case DECIMAL -> new ReportingVorlageParameterTypisiert<Double>(reportingReportVorlageParameter);
-				case STRING -> new ReportingVorlageParameterTypisiert<String>(reportingReportVorlageParameter);
+				case BOOLEAN, INTEGER, LONG, DECIMAL, STRING -> new ReportingVorlageParameterTypisiert<>(reportingReportVorlageParameter);
 				default -> throw new ApiOperationException(Response.Status.BAD_REQUEST,
 						"Ungültiger Typ für den Reporting-Vorlage-Parameter " + reportingReportVorlageParameter.name + " übergeben.");
 			};

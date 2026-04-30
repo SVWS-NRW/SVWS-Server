@@ -5,7 +5,6 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 
@@ -58,7 +57,7 @@ public class ProxyReportingSchule extends ReportingSchule {
 		super.bezeichnung.removeIf(Objects::isNull);
 		super.bezeichnung.removeIf(String::isBlank);
 
-		super.schullogo = new DataSchuleStammdaten(this.reportingRepository.conn()).getSchullogoBase64();
+		super.schullogo = this.reportingRepository.repositorySchule().schullogoBase64();
 
 		super.schulform = this.reportingRepository.repositoryKataloge().schulformen().values()
 				.stream().filter(sf -> ((Objects.equals(sf.kuerzel, reportingRepository.repositorySchule().stammdaten().schulform)) && (sf.gueltigBis == null)))
