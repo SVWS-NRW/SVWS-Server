@@ -22141,26 +22141,25 @@ export class ApiServer extends BaseApi {
 	 * Entfernt einen Wiedervorlage-Eintrag. Dabei wird geprüft, ob der Benutzer auf den Eintrag zugreifen darf.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Wiedervorlage-Eintrag wurde erfolgreich entfernt.
+	 *   Code 200: Die Lösch-Operation wurde ausgeführt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: WiedervorlageEintrag
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 400: Die übergebenen Daten sind fehlerhaft
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um dem Wiedervorlage-Eintrag zu löschen.
-	 *   Code 404: Kein Wiedervorlage-Eintrag mit der angegebenen ID gefunden.
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 *
-	 * @returns Der Wiedervorlage-Eintrag wurde erfolgreich entfernt.
+	 * @returns Die Lösch-Operation wurde ausgeführt.
 	 */
-	public async deleteWiedervorlageEintrag(schema : string, id : number) : Promise<WiedervorlageEintrag> {
+	public async deleteWiedervorlageEintrag(schema : string, id : number) : Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/wiedervorlage/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
-		return WiedervorlageEintrag.transpilerFromJSON(text);
+		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
 
 
@@ -22197,27 +22196,26 @@ export class ApiServer extends BaseApi {
 	 * Entfernt mehrere Wiedervorlage-Einträge. Dabei wird geprüft, ob der Benutzer auf die Einträge zugreifen darf.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Wiedervorlage-Einträge wurden erfolgreich entfernt.
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<WiedervorlageEintrag>
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 400: Die übergebenen Daten sind fehlerhaft
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Wiedervorlage-Einträge zu entfernen.
-	 *   Code 404: Wiedervorlage-Eintrag nicht vorhanden
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Die Wiedervorlage-Einträge wurden erfolgreich entfernt.
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteWiedervorlageEintraege(data : List<number>, schema : string) : Promise<List<WiedervorlageEintrag>> {
+	public async deleteWiedervorlageEintraege(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/wiedervorlage/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<WiedervorlageEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(WiedervorlageEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -22244,6 +22242,29 @@ export class ApiServer extends BaseApi {
 		const ret = new ArrayList<WiedervorlageEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(WiedervorlageEintrag.transpilerFromJSON(text)); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getAnzahlOffeneWiedervorlagen für den Zugriff auf die URL https://{hostname}/db/{schema}/wiedervorlage/liste/anzahl
+	 *
+	 * Gibt die Anzahl offener Wiedervorlagen des heutigen Tages des angemeldeteten Benutzers zurück. Dabei werden auch die Einträge berücksichtigt, wo der angemeldete Benutzer in einer zugeordeten Benutzergruppe des Wiedervorlage-Eintrags enthalten ist.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Anzahl offener Wiedervorlagen des heutigen Tages.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Long
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Anzahl offener Wiedervorlagen des heutigen Tages.
+	 */
+	public async getAnzahlOffeneWiedervorlagen(schema : string) : Promise<number> {
+		const path = "/db/{schema}/wiedervorlage/liste/anzahl"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return parseFloat(JSON.parse(text));
 	}
 
 

@@ -19,6 +19,7 @@ public class Tabelle_Wiedervorlage extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte ID */
 	public final SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
 			.setNotNull()
+			.setJavaName("id")
 			.setJavaComment("ID des Eintrags für die Wiedervorlage");
 
 	/** Die Definition der Tabellenspalte PersonTyp */
@@ -29,20 +30,24 @@ public class Tabelle_Wiedervorlage extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Lehrer_ID */
 	public final SchemaTabelleSpalte col_Lehrer_ID = add("Lehrer_ID", SchemaDatentypen.BIGINT, false)
+			.setJavaName("idLehrer")
 			.setJavaComment("Die Lehrer-ID des Benutzers, falls PersonTyp sich auf einen Lehrer bezieht");
 
 	/** Die Definition der Tabellenspalte Schueler_ID */
 	public final SchemaTabelleSpalte col_Schueler_ID = add("Schueler_ID", SchemaDatentypen.BIGINT, false)
+			.setJavaName("idSchueler")
 			.setJavaComment("Die Schüler-ID des Benutzers, falls PersonTyp sich auf einen Lehrer bezieht");
 
 	/** Die Definition der Tabellenspalte Erzieher_ID */
 	public final SchemaTabelleSpalte col_Erzieher_ID = add("Erzieher_ID", SchemaDatentypen.BIGINT, false)
+			.setJavaName("idErzieher")
 			.setJavaComment("Die Erzieher-ID des Benutzers, falls PersonTyp sich auf einen Lehrer bezieht");
 
 	/** Die Definition der Tabellenspalte Bemerkung */
 	public final SchemaTabelleSpalte col_Bemerkung = add("Bemerkung", SchemaDatentypen.TEXT, false)
 			.setNotNull()
 			.setDefault("")
+			.setJavaName("bemerkung")
 			.setJavaComment("Die Bemerkung des Eintrags für die Wiedervorlage");
 
 	/** Die Definition der Tabellenspalte tsAngelegt */
@@ -59,14 +64,17 @@ public class Tabelle_Wiedervorlage extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Benutzer_ID */
 	public final SchemaTabelleSpalte col_Benutzer_ID = add("Benutzer_ID", SchemaDatentypen.BIGINT, false)
+			.setJavaName("idBenutzer")
 			.setJavaComment("Die ID des Benutzers, welcher den Eintrag zur Wiedervorlage angelegt hat und dem er auch angezeigt wird.");
 
 	/** Die Definition der Tabellenspalte Benutzer_ID_Erledigt */
 	public final SchemaTabelleSpalte col_Benutzer_ID_Erledigt = add("Benutzer_ID_Erledigt", SchemaDatentypen.BIGINT, false)
+			.setJavaName("idBenutzerErledigt")
 			.setJavaComment("Die ID des Benutzers, welcher den Eintrag erledigt hat");
 
 	/** Die Definition der Tabellenspalte Benutzergruppe_ID */
 	public final SchemaTabelleSpalte col_Benutzergruppe_ID = add("Benutzergruppe_ID", SchemaDatentypen.BIGINT, false)
+			.setJavaName("idBenutzergruppe")
 			.setJavaComment("Die ID der Benutzergruppe, welcher der Eintrag für die Wiedervorlage zur Bearbeitung angezeigt werden soll oder null.");
 
 	/** Die Definition der Tabellenspalte AutomatischErledigt */
@@ -74,6 +82,7 @@ public class Tabelle_Wiedervorlage extends SchemaTabelle {
 			.setDefault("0")
 			.setNotNull()
 			.setConverter(Boolean01Converter.class)
+			.setJavaName("automatischErledigt")
 			.setJavaComment(
 					"Gibt an, dass der Eintrag automatisch als erledigt markiert werden soll, wenn er einem Benutzer nach dem Wiedervorlage-Zeitpunkt angezeigt wurde.");
 

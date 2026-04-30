@@ -1,4 +1,4 @@
-package de.svws_nrw.data.kataloge.teilleistungsarten;
+package de.svws_nrw.service.katalog.teilleistungsart;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;

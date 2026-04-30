@@ -134,10 +134,12 @@ public class ApiOperationException extends RuntimeException {
 	 */
 	public Response getResponse() {
 		ResponseBuilder builder = Response.status(this.status);
-		if (this.mimeType != null)
+		if (this.mimeType != null) {
 			builder = builder.type(this.mimeType);
-		if (this.body != null)
+		}
+		if (this.body != null) {
 			builder = builder.entity(this.body);
+		}
 		return builder.build();
 	}
 

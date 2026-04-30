@@ -1,4 +1,4 @@
-package de.svws_nrw.data.kataloge.teilleistungsarten;
+package de.svws_nrw.service.katalog.teilleistungsart;
 
 import java.util.List;
 import java.util.Set;

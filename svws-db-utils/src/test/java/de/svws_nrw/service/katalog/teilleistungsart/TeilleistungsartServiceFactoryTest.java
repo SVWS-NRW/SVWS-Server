@@ -1,4 +1,4 @@
-package de.svws_nrw.data.kataloge.teilleistungsarten;
+package de.svws_nrw.service.katalog.teilleistungsart;
 
 import de.svws_nrw.repo.kataloge.KatalogeRepositoryFactory;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ class TeilleistungsartServiceFactoryTest {
 	@Mock
 	private KatalogeRepositoryFactory teilleistungsartRepository;
 	@InjectMocks
-	private TeilLeistungsartServiceFactory teilLeistungsartServiceFactory;
+	private TeilleistungsartServiceFactory teilLeistungsartServiceFactory;
 
 	@Test
 	void testFactory() {

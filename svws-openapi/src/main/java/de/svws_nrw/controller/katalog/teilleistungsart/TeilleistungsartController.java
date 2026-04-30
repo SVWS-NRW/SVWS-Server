@@ -1,4 +1,4 @@
-package de.svws_nrw.data.kataloge.teilleistungsarten;
+package de.svws_nrw.controller.katalog.teilleistungsart;
 
 import java.util.List;
 
@@ -6,10 +6,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.kataloge.Teilleistungsart;
 import de.svws_nrw.data.Responses;
+import de.svws_nrw.service.katalog.teilleistungsart.TeilleistungsartCreateRequest;
+import de.svws_nrw.service.katalog.teilleistungsart.TeilleistungsartPatchRequest;
+import de.svws_nrw.service.katalog.teilleistungsart.TeilleistungsartService;
 import de.svws_nrw.validation.BeanValidator;
 import jakarta.ws.rs.core.Response;
 
-public final class TeilLeistungsartController {
+public final class TeilleistungsartController {
 
 	private final TeilleistungsartService teilLeistungsartenService;
 
@@ -18,7 +21,7 @@ public final class TeilLeistungsartController {
 	 *
 	 * @param teilLeistungsartenService {@link TeilleistungsartService}
 	 */
-	public TeilLeistungsartController(final TeilleistungsartService teilLeistungsartenService) {
+	public TeilleistungsartController(final TeilleistungsartService teilLeistungsartenService) {
 		this.teilLeistungsartenService = teilLeistungsartenService;
 	}
 

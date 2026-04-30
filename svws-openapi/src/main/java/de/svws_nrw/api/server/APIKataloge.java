@@ -26,9 +26,9 @@ import de.svws_nrw.data.kataloge.DataOrte;
 import de.svws_nrw.data.kataloge.DataOrtsteile;
 import de.svws_nrw.data.kataloge.DataSchuelerSchwerpunkte;
 import de.svws_nrw.data.kataloge.DataStrassen;
-import de.svws_nrw.data.kataloge.teilleistungsarten.TeilLeistungsartControllerFactory;
-import de.svws_nrw.data.kataloge.teilleistungsarten.TeilleistungsartCreateRequest;
-import de.svws_nrw.data.kataloge.teilleistungsarten.TeilleistungsartPatchRequest;
+import de.svws_nrw.controller.katalog.teilleistungsart.TeilleistungsartControllerFactory;
+import de.svws_nrw.service.katalog.teilleistungsart.TeilleistungsartCreateRequest;
+import de.svws_nrw.service.katalog.teilleistungsart.TeilleistungsartPatchRequest;
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
 import de.svws_nrw.data.schule.DataBeschaeftigungsarten;
 import de.svws_nrw.data.schule.DataKindergaerten;
@@ -1113,7 +1113,7 @@ public class APIKataloge {
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Teilleistungsart.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer besitzt nicht die benötigte Berechtigung.")
 	public Response getTeilleistungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return TeilLeistungsartControllerFactory.withReadAccess(request)
+		return TeilleistungsartControllerFactory.withReadAccess(request)
 				.getTeilLeistungsartenController()
 				.getAll();
 	}
@@ -1140,7 +1140,7 @@ public class APIKataloge {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(implementation = Teilleistungsart.class))) final TeilleistungsartCreateRequest input,
 			@Context final HttpServletRequest request) {
-		return TeilLeistungsartControllerFactory.withWriteAccess(request)
+		return TeilleistungsartControllerFactory.withWriteAccess(request)
 				.getTeilLeistungsartenController()
 				.create(input);
 	}
@@ -1168,7 +1168,7 @@ public class APIKataloge {
 							schema = @Schema(
 									implementation = Teilleistungsart.class))) final TeilleistungsartPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return TeilLeistungsartControllerFactory.withWriteAccess(request)
+		return TeilleistungsartControllerFactory.withWriteAccess(request)
 				.getTeilLeistungsartenController()
 				.patch(id, patch);
 	}
@@ -1196,7 +1196,7 @@ public class APIKataloge {
 			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return TeilLeistungsartControllerFactory.withDeleteAccess(request)
+		return TeilleistungsartControllerFactory.withDeleteAccess(request)
 				.getTeilLeistungsartenController()
 				.delete(ids);
 	}

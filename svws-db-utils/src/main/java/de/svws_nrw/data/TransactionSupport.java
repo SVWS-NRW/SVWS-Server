@@ -26,8 +26,9 @@ public final class TransactionSupport {
 		final DBEntityManager conn = DbConnectionProvider.getConnection();
 
 		// Prüfe, ob eine Transaktion schon offen ist, dann wird der Task direkt aufgerufen
-		if (conn.hasActiveTransaction())
+		if (conn.hasActiveTransaction()) {
 			return task.get();
+		}
 
 		// Starte eine Transaktion und führe den Task in dieser Transaktion aus
 		Throwable taskException = null; // Speichert eine Exception zwischen, um im finally entscheiden zu können, ob noch auf eine aktive Transaktion geprüft wird

@@ -1,10 +1,13 @@
-package de.svws_nrw.data.kataloge.teilleistungsarten;
+package de.svws_nrw.controller.katalog.teilleistungsart;
 
 import java.util.List;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.kataloge.Teilleistungsart;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.katalog.teilleistungsart.TeilleistungsartCreateRequest;
+import de.svws_nrw.service.katalog.teilleistungsart.TeilleistungsartPatchRequest;
+import de.svws_nrw.service.katalog.teilleistungsart.TeilleistungsartService;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +30,7 @@ class TeilleistungsartControllerTest {
 	@Mock
 	private TeilleistungsartService teilleistungsartService;
 	@InjectMocks
-	private TeilLeistungsartController teilLeistungsartController;
+	private TeilleistungsartController teilLeistungsartController;
 
 	@Test
 	@DisplayName("getAll | Erfolg")

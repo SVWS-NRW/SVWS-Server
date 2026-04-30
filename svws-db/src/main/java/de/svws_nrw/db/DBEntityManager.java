@@ -666,31 +666,34 @@ public final class DBEntityManager implements AutoCloseable {
 
 
 	/**
-	 * Führt eine JPQL-Lösch-Anfrage durch. Die zugehörige Transaktion wird durch diese
-	 * Methode gehandhabt.
+	 * Führt eine JPQL-Lösch-Anfrage mit positionalen Parametern durch.
+	 * Die zugehörige Transaktion wird durch diese Methode gehandhabt.
 	 *
 	 * @param query   die JPQL-Anfrage
-	 *
+	 * @param params  positionale Parameter (ab Position 1)
 	 * @return die Anzahl der gelöschten Entities oder Integer.MIN_VALUE im Fehlerfall
 	 */
-	public int executeDelete(final String query) {
-		return executeUpdate(query);
+	public int executeDelete(final String query, final Object... params) {
+		return executeUpdate(query, params);
 	}
 
-
 	/**
-	 * Führt eine JPQL-Aktualisierungs-Anfrage durch. Die zugehörige Transaktion wird durch diese
-	 * Methode gehandhabt.
+	 * Führt eine JPQL-Update/Delete-Anfrage mit positionalen Parametern durch.
+	 * Die zugehörige Transaktion wird durch diese Methode gehandhabt.
 	 *
 	 * @param query   die JPQL-Anfrage
-	 *
-	 * @return die Anzahl der aktualisierten Entities oder Integer.MIN_VALUE im Fehlerfall
+	 * @param params  positionale Parameter (ab Position 1)
+	 * @return die Anzahl der betroffenen Entities oder Integer.MIN_VALUE im Fehlerfall
 	 */
-	public int executeUpdate(final String query) {
+	public int executeUpdate(final String query, final Object... params) {
 		try {
 			this.lock();
 			this.transactionBegin();
-			final int count = em.createQuery(query).executeUpdate();
+			final var q = em.createQuery(query);
+			for (int i = 0; i < params.length; i++) {
+				q.setParameter(i + 1, params[i]);
+			}
+			final int count = q.executeUpdate();
 			if (this.transactionCommit()) {
 				return count;
 			}

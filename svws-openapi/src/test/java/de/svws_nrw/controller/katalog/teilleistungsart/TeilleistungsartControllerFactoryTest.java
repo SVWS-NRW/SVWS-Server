@@ -1,4 +1,4 @@
-package de.svws_nrw.data.kataloge.teilleistungsarten;
+package de.svws_nrw.controller.katalog.teilleistungsart;
 
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
@@ -31,7 +31,7 @@ class TeilleistungsartControllerFactoryTest {
 			repoSupportMock.when(DbConnectionProvider::getConnection).thenReturn(mock(DBEntityManager.class));
 
 			final BenutzerKompetenz kompetenz = BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN;
-			final var factory = TeilLeistungsartControllerFactory.withDeleteAccess(request);
+			final var factory = TeilleistungsartControllerFactory.withDeleteAccess(request);
 
 			dbUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(eq(request), any(ServerMode.class), eq(kompetenz)), times(1));
 			assertNotNull(factory);
@@ -51,7 +51,7 @@ class TeilleistungsartControllerFactoryTest {
 			repoSupportMock.when(DbConnectionProvider::getConnection).thenReturn(mock(DBEntityManager.class));
 
 			final BenutzerKompetenz kompetenz = BenutzerKompetenz.KEINE;
-			final var factory = TeilLeistungsartControllerFactory.withReadAccess(request);
+			final var factory = TeilleistungsartControllerFactory.withReadAccess(request);
 
 			dbUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(eq(request), any(ServerMode.class), eq(kompetenz)), times(1));
 			assertNotNull(factory);
@@ -71,7 +71,7 @@ class TeilleistungsartControllerFactoryTest {
 			repoSupportMock.when(DbConnectionProvider::getConnection).thenReturn(mock(DBEntityManager.class));
 
 			final BenutzerKompetenz kompetenz = BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN;
-			final var factory = TeilLeistungsartControllerFactory.withWriteAccess(request);
+			final var factory = TeilleistungsartControllerFactory.withWriteAccess(request);
 
 			dbUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(eq(request), any(ServerMode.class), eq(kompetenz)), times(1));
 			assertNotNull(factory);

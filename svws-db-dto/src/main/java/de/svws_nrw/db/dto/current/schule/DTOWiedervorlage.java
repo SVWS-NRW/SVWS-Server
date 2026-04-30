@@ -31,26 +31,26 @@ import de.svws_nrw.csv.converter.current.PersonTypNullableConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Wiedervorlage")
-@JsonPropertyOrder({"ID", "personTyp", "Lehrer_ID", "Schueler_ID", "Erzieher_ID", "Bemerkung", "tsAngelegt", "tsWiedervorlage", "tsErledigt", "Benutzer_ID", "Benutzer_ID_Erledigt", "Benutzergruppe_ID", "AutomatischErledigt"})
+@JsonPropertyOrder({"id", "personTyp", "idLehrer", "idSchueler", "idErzieher", "bemerkung", "tsAngelegt", "tsWiedervorlage", "tsErledigt", "idBenutzer", "idBenutzerErledigt", "idBenutzergruppe", "automatischErledigt"})
 public final class DTOWiedervorlage {
 
 	/** Die Datenbankabfrage für alle DTOs */
 	public static final String QUERY_ALL = "SELECT e FROM DTOWiedervorlage e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM DTOWiedervorlage e WHERE e.ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM DTOWiedervorlage e WHERE e.id = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM DTOWiedervorlage e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOWiedervorlage e WHERE e.id IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOWiedervorlage e WHERE e.ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOWiedervorlage e WHERE e.id IS NOT NULL";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
-	public static final String QUERY_BY_ID = "SELECT e FROM DTOWiedervorlage e WHERE e.ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes id */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOWiedervorlage e WHERE e.id = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
-	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOWiedervorlage e WHERE e.ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes id */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOWiedervorlage e WHERE e.id IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes personTyp */
 	public static final String QUERY_BY_PERSONTYP = "SELECT e FROM DTOWiedervorlage e WHERE e.personTyp = ?1";
@@ -58,29 +58,29 @@ public final class DTOWiedervorlage {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes personTyp */
 	public static final String QUERY_LIST_BY_PERSONTYP = "SELECT e FROM DTOWiedervorlage e WHERE e.personTyp IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Lehrer_ID */
-	public static final String QUERY_BY_LEHRER_ID = "SELECT e FROM DTOWiedervorlage e WHERE e.Lehrer_ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idLehrer */
+	public static final String QUERY_BY_IDLEHRER = "SELECT e FROM DTOWiedervorlage e WHERE e.idLehrer = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lehrer_ID */
-	public static final String QUERY_LIST_BY_LEHRER_ID = "SELECT e FROM DTOWiedervorlage e WHERE e.Lehrer_ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idLehrer */
+	public static final String QUERY_LIST_BY_IDLEHRER = "SELECT e FROM DTOWiedervorlage e WHERE e.idLehrer IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Schueler_ID */
-	public static final String QUERY_BY_SCHUELER_ID = "SELECT e FROM DTOWiedervorlage e WHERE e.Schueler_ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idSchueler */
+	public static final String QUERY_BY_IDSCHUELER = "SELECT e FROM DTOWiedervorlage e WHERE e.idSchueler = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schueler_ID */
-	public static final String QUERY_LIST_BY_SCHUELER_ID = "SELECT e FROM DTOWiedervorlage e WHERE e.Schueler_ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idSchueler */
+	public static final String QUERY_LIST_BY_IDSCHUELER = "SELECT e FROM DTOWiedervorlage e WHERE e.idSchueler IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Erzieher_ID */
-	public static final String QUERY_BY_ERZIEHER_ID = "SELECT e FROM DTOWiedervorlage e WHERE e.Erzieher_ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idErzieher */
+	public static final String QUERY_BY_IDERZIEHER = "SELECT e FROM DTOWiedervorlage e WHERE e.idErzieher = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Erzieher_ID */
-	public static final String QUERY_LIST_BY_ERZIEHER_ID = "SELECT e FROM DTOWiedervorlage e WHERE e.Erzieher_ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idErzieher */
+	public static final String QUERY_LIST_BY_IDERZIEHER = "SELECT e FROM DTOWiedervorlage e WHERE e.idErzieher IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Bemerkung */
-	public static final String QUERY_BY_BEMERKUNG = "SELECT e FROM DTOWiedervorlage e WHERE e.Bemerkung = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes bemerkung */
+	public static final String QUERY_BY_BEMERKUNG = "SELECT e FROM DTOWiedervorlage e WHERE e.bemerkung = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bemerkung */
-	public static final String QUERY_LIST_BY_BEMERKUNG = "SELECT e FROM DTOWiedervorlage e WHERE e.Bemerkung IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes bemerkung */
+	public static final String QUERY_LIST_BY_BEMERKUNG = "SELECT e FROM DTOWiedervorlage e WHERE e.bemerkung IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes tsAngelegt */
 	public static final String QUERY_BY_TSANGELEGT = "SELECT e FROM DTOWiedervorlage e WHERE e.tsAngelegt = ?1";
@@ -100,35 +100,35 @@ public final class DTOWiedervorlage {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsErledigt */
 	public static final String QUERY_LIST_BY_TSERLEDIGT = "SELECT e FROM DTOWiedervorlage e WHERE e.tsErledigt IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Benutzer_ID */
-	public static final String QUERY_BY_BENUTZER_ID = "SELECT e FROM DTOWiedervorlage e WHERE e.Benutzer_ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idBenutzer */
+	public static final String QUERY_BY_IDBENUTZER = "SELECT e FROM DTOWiedervorlage e WHERE e.idBenutzer = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Benutzer_ID */
-	public static final String QUERY_LIST_BY_BENUTZER_ID = "SELECT e FROM DTOWiedervorlage e WHERE e.Benutzer_ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idBenutzer */
+	public static final String QUERY_LIST_BY_IDBENUTZER = "SELECT e FROM DTOWiedervorlage e WHERE e.idBenutzer IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Benutzer_ID_Erledigt */
-	public static final String QUERY_BY_BENUTZER_ID_ERLEDIGT = "SELECT e FROM DTOWiedervorlage e WHERE e.Benutzer_ID_Erledigt = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idBenutzerErledigt */
+	public static final String QUERY_BY_IDBENUTZERERLEDIGT = "SELECT e FROM DTOWiedervorlage e WHERE e.idBenutzerErledigt = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Benutzer_ID_Erledigt */
-	public static final String QUERY_LIST_BY_BENUTZER_ID_ERLEDIGT = "SELECT e FROM DTOWiedervorlage e WHERE e.Benutzer_ID_Erledigt IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idBenutzerErledigt */
+	public static final String QUERY_LIST_BY_IDBENUTZERERLEDIGT = "SELECT e FROM DTOWiedervorlage e WHERE e.idBenutzerErledigt IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Benutzergruppe_ID */
-	public static final String QUERY_BY_BENUTZERGRUPPE_ID = "SELECT e FROM DTOWiedervorlage e WHERE e.Benutzergruppe_ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idBenutzergruppe */
+	public static final String QUERY_BY_IDBENUTZERGRUPPE = "SELECT e FROM DTOWiedervorlage e WHERE e.idBenutzergruppe = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Benutzergruppe_ID */
-	public static final String QUERY_LIST_BY_BENUTZERGRUPPE_ID = "SELECT e FROM DTOWiedervorlage e WHERE e.Benutzergruppe_ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idBenutzergruppe */
+	public static final String QUERY_LIST_BY_IDBENUTZERGRUPPE = "SELECT e FROM DTOWiedervorlage e WHERE e.idBenutzergruppe IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes AutomatischErledigt */
-	public static final String QUERY_BY_AUTOMATISCHERLEDIGT = "SELECT e FROM DTOWiedervorlage e WHERE e.AutomatischErledigt = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes automatischErledigt */
+	public static final String QUERY_BY_AUTOMATISCHERLEDIGT = "SELECT e FROM DTOWiedervorlage e WHERE e.automatischErledigt = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AutomatischErledigt */
-	public static final String QUERY_LIST_BY_AUTOMATISCHERLEDIGT = "SELECT e FROM DTOWiedervorlage e WHERE e.AutomatischErledigt IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes automatischErledigt */
+	public static final String QUERY_LIST_BY_AUTOMATISCHERLEDIGT = "SELECT e FROM DTOWiedervorlage e WHERE e.automatischErledigt IN ?1";
 
 	/** ID des Eintrags für die Wiedervorlage */
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public long ID;
+	public long id;
 
 	/** Der Typ der Person, welche der Wiedevorlage zugeordnet ist (S=Schueler L=Lehrer E=Erzieher) */
 	@Column(name = "PersonTyp")
@@ -141,22 +141,22 @@ public final class DTOWiedervorlage {
 	/** Die Lehrer-ID des Benutzers, falls PersonTyp sich auf einen Lehrer bezieht */
 	@Column(name = "Lehrer_ID")
 	@JsonProperty
-	public Long Lehrer_ID;
+	public Long idLehrer;
 
 	/** Die Schüler-ID des Benutzers, falls PersonTyp sich auf einen Lehrer bezieht */
 	@Column(name = "Schueler_ID")
 	@JsonProperty
-	public Long Schueler_ID;
+	public Long idSchueler;
 
 	/** Die Erzieher-ID des Benutzers, falls PersonTyp sich auf einen Lehrer bezieht */
 	@Column(name = "Erzieher_ID")
 	@JsonProperty
-	public Long Erzieher_ID;
+	public Long idErzieher;
 
 	/** Die Bemerkung des Eintrags für die Wiedervorlage */
 	@Column(name = "Bemerkung")
 	@JsonProperty
-	public String Bemerkung;
+	public String bemerkung;
 
 	/** Der Zeitpunkt, wann der Eintrag für die Wiedervorlage angelegt wurde */
 	@Column(name = "tsAngelegt")
@@ -176,17 +176,17 @@ public final class DTOWiedervorlage {
 	/** Die ID des Benutzers, welcher den Eintrag zur Wiedervorlage angelegt hat und dem er auch angezeigt wird. */
 	@Column(name = "Benutzer_ID")
 	@JsonProperty
-	public Long Benutzer_ID;
+	public Long idBenutzer;
 
 	/** Die ID des Benutzers, welcher den Eintrag erledigt hat */
 	@Column(name = "Benutzer_ID_Erledigt")
 	@JsonProperty
-	public Long Benutzer_ID_Erledigt;
+	public Long idBenutzerErledigt;
 
 	/** Die ID der Benutzergruppe, welcher der Eintrag für die Wiedervorlage zur Bearbeitung angezeigt werden soll oder null. */
 	@Column(name = "Benutzergruppe_ID")
 	@JsonProperty
-	public Long Benutzergruppe_ID;
+	public Long idBenutzergruppe;
 
 	/** Gibt an, dass der Eintrag automatisch als erledigt markiert werden soll, wenn er einem Benutzer nach dem Wiedervorlage-Zeitpunkt angezeigt wurde. */
 	@Column(name = "AutomatischErledigt")
@@ -194,7 +194,7 @@ public final class DTOWiedervorlage {
 	@Convert(converter = Boolean01Converter.class)
 	@JsonSerialize(using = Boolean01ConverterSerializer.class)
 	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
-	public Boolean AutomatischErledigt;
+	public Boolean automatischErledigt;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOWiedervorlage ohne eine Initialisierung der Attribute.
@@ -205,17 +205,17 @@ public final class DTOWiedervorlage {
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOWiedervorlage ohne eine Initialisierung der Attribute.
-	 * @param ID   der Wert für das Attribut ID
-	 * @param Bemerkung   der Wert für das Attribut Bemerkung
-	 * @param AutomatischErledigt   der Wert für das Attribut AutomatischErledigt
+	 * @param id   der Wert für das Attribut id
+	 * @param bemerkung   der Wert für das Attribut bemerkung
+	 * @param automatischErledigt   der Wert für das Attribut automatischErledigt
 	 */
-	public DTOWiedervorlage(final long ID, final String Bemerkung, final Boolean AutomatischErledigt) {
-		this.ID = ID;
-		if (Bemerkung == null) {
-			throw new NullPointerException("Bemerkung must not be null");
+	public DTOWiedervorlage(final long id, final String bemerkung, final Boolean automatischErledigt) {
+		this.id = id;
+		if (bemerkung == null) {
+			throw new NullPointerException("bemerkung must not be null");
 		}
-		this.Bemerkung = Bemerkung;
-		this.AutomatischErledigt = AutomatischErledigt;
+		this.bemerkung = bemerkung;
+		this.automatischErledigt = automatischErledigt;
 	}
 
 
@@ -231,14 +231,14 @@ public final class DTOWiedervorlage {
 			return false;
 		}
 		DTOWiedervorlage other = (DTOWiedervorlage) obj;
-		return ID == other.ID;
+		return id == other.id;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Long.hashCode(ID);
+		result = prime * result + Long.hashCode(id);
 		return result;
 	}
 
@@ -250,7 +250,7 @@ public final class DTOWiedervorlage {
 	 */
 	@Override
 	public String toString() {
-		return "DTOWiedervorlage(ID=" + this.ID + ", personTyp=" + this.personTyp + ", Lehrer_ID=" + this.Lehrer_ID + ", Schueler_ID=" + this.Schueler_ID + ", Erzieher_ID=" + this.Erzieher_ID + ", Bemerkung=" + this.Bemerkung + ", tsAngelegt=" + this.tsAngelegt + ", tsWiedervorlage=" + this.tsWiedervorlage + ", tsErledigt=" + this.tsErledigt + ", Benutzer_ID=" + this.Benutzer_ID + ", Benutzer_ID_Erledigt=" + this.Benutzer_ID_Erledigt + ", Benutzergruppe_ID=" + this.Benutzergruppe_ID + ", AutomatischErledigt=" + this.AutomatischErledigt + ")";
+		return "DTOWiedervorlage(id=" + this.id + ", personTyp=" + this.personTyp + ", idLehrer=" + this.idLehrer + ", idSchueler=" + this.idSchueler + ", idErzieher=" + this.idErzieher + ", bemerkung=" + this.bemerkung + ", tsAngelegt=" + this.tsAngelegt + ", tsWiedervorlage=" + this.tsWiedervorlage + ", tsErledigt=" + this.tsErledigt + ", idBenutzer=" + this.idBenutzer + ", idBenutzerErledigt=" + this.idBenutzerErledigt + ", idBenutzergruppe=" + this.idBenutzergruppe + ", automatischErledigt=" + this.automatischErledigt + ")";
 	}
 
 }

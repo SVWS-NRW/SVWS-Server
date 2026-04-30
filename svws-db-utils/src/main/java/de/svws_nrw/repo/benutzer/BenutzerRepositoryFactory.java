@@ -1,0 +1,46 @@
+package de.svws_nrw.repo.benutzer;
+
+import de.svws_nrw.repo.RepositoryFactory;
+
+/**
+ * Factory für alle Repositories der Benutzer-Domäne.
+ */
+public final class BenutzerRepositoryFactory extends RepositoryFactory {
+
+	/**
+	 * Erzeugt eine neue Instanz der Repository-Factory.
+	 *
+	 * @return neu erzeugte Repository-Factory
+	 */
+	public static BenutzerRepositoryFactory getNewInstance() {
+		return new BenutzerRepositoryFactory();
+	}
+
+	/**
+	 * Erzeugt ein neues {@link BenutzerRepository}.
+	 *
+	 * @return {@link BenutzerRepository}
+	 */
+	public BenutzerRepository getBenutzerRepository() {
+		return getOrCreate(BenutzerRepository.class, () -> new BenutzerRepositoryImpl(conn));
+	}
+
+	/**
+	 * Erzeugt ein neues {@link BenutzergruppeRepository}.
+	 *
+	 * @return {@link BenutzergruppeRepository}
+	 */
+	public BenutzergruppeRepository getBenutzergruppeRepository() {
+		return getOrCreate(BenutzergruppeRepository.class, () -> new BenutzergruppeRepositoryImpl(conn));
+	}
+
+	/**
+	 * Erzeugt ein neues {@link BenutzergruppenMitgliedRepository}.
+	 *
+	 * @return {@link BenutzergruppenMitgliedRepository}
+	 */
+	public BenutzergruppenMitgliedRepository getBenutzergruppenMitgliedRepository() {
+		return getOrCreate(BenutzergruppenMitgliedRepository.class, () -> new BenutzergruppenMitgliedRepositoryImpl(conn));
+	}
+
+}

@@ -1,13 +1,12 @@
 package de.svws_nrw.api.server;
 
-import java.io.InputStream;
+import java.util.Set;
 
+import de.svws_nrw.controller.wiedervorlage.WiedervorlageControllerFactory;
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.WiedervorlageEintrag;
-import de.svws_nrw.core.types.ServerMode;
-import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.data.JSONMapper;
-import de.svws_nrw.data.benutzer.DBBenutzerUtils;
-import de.svws_nrw.data.schule.DataWiedervorlage;
+import de.svws_nrw.service.wiedervorlage.WiedervorlageCreateRequest;
+import de.svws_nrw.service.wiedervorlage.WiedervorlagePatchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -63,11 +62,33 @@ public class APIWiedervorlage {
 	@ApiResponse(responseCode = "200", description = "Eine Liste mit den Einträgen der Wiedervorlage.",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = WiedervorlageEintrag.class))))
 	public Response getWiedervorlageListe(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataWiedervorlage(conn).getListAsResponse(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
+		return WiedervorlageControllerFactory.withReadAccess(request)
+				.getWiedervorlageController()
+				.getAll();
 	}
 
+	/**
+	 * Die OpenAPI-Methode für die Overview Abfrage der Anzahl offener Wiedervorlagen des heutigen Tages,
+	 * welche diese Anfrage gestellt hat.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return Anzahl offener Wiedervorlagen des heutigen Tages
+	 */
+	@GET
+	@Path("/liste/anzahl")
+	@Operation(summary = "Gibt die Anzahl offener Wiedervorlagen des heutigen Tages des angemeldeteten Benutzers zurück.",
+			description = "Gibt die Anzahl offener Wiedervorlagen des heutigen Tages des angemeldeteten Benutzers zurück. "
+					+ "Dabei werden auch die Einträge berücksichtigt, wo der angemeldete Benutzer in einer zugeordeten Benutzergruppe "
+					+ "des Wiedervorlage-Eintrags enthalten ist.")
+	@ApiResponse(responseCode = "200", description = "Anzahl offener Wiedervorlagen des heutigen Tages.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class)))
+	public Response getAnzahlOffeneWiedervorlagen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return WiedervorlageControllerFactory.withReadAccess(request)
+				.getWiedervorlageController()
+				.getAnzahlOffeneWiedervorlagen();
+	}
 
 	/**
 	 * Die OpenAPI-Methode für die Abfrage eines Wiedervorlage-Eintrags.
@@ -89,18 +110,17 @@ public class APIWiedervorlage {
 	@ApiResponse(responseCode = "404", description = "Kein WiedervorlageEintrag mit der angegebenen ID gefunden")
 	public Response getWiedervorlageEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataWiedervorlage(conn).getByIdAsResponse(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
+		return WiedervorlageControllerFactory.withReadAccess(request)
+				.getWiedervorlageController()
+				.get(id);
 	}
-
 
 	/**
 	 * Die OpenAPI-Methode für das Patchen eines Wiedervorlage-Eintrags.
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param id        die ID des Wiedervorlage-Eintrags
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param input     der Request Body
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -119,19 +139,18 @@ public class APIWiedervorlage {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchWiedervorlageEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch für die Wiedervorlage", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = WiedervorlageEintrag.class))) final InputStream is,
+					schema = @Schema(implementation = WiedervorlageEintrag.class))) final WiedervorlagePatchRequest input,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataWiedervorlage(conn).patchAsResponse(id, is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
+		return WiedervorlageControllerFactory.withWriteAccess(request)
+				.getWiedervorlageController()
+				.patch(id, input);
 	}
-
 
 	/**
 	 * Erzeugt einen Wiedervorlage-Eintrag.
 	 *
 	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param is        der Input-Stream mit den Daten des Wiedervorlage-Eintrags
+	 * @param input     der Request body
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die Response im Erfolgsfall mit dem neuen Wiedervorlage-Eintrag
@@ -145,13 +164,13 @@ public class APIWiedervorlage {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Wiedervorlage-Eintrag anzulegen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addWiedervorlageEintrag(@PathParam("schema") final String schema, @RequestBody(description = "Der Wiedervorlage-Eintrag", required = true,
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = WiedervorlageEintrag.class))) final InputStream is,
+			content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = WiedervorlageEintrag.class))) final WiedervorlageCreateRequest input,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataWiedervorlage(conn).addAsResponse(is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
+		return WiedervorlageControllerFactory.withWriteAccess(request)
+				.getWiedervorlageController()
+				.create(input);
 	}
-
 
 	/**
 	 * Die OpenAPI-Methode für das Entfernen eines Wiedervorlage-Eintrags.
@@ -167,25 +186,23 @@ public class APIWiedervorlage {
 	@Operation(summary = "Entfernt einen Wiedervorlage-Eintrag.",
 			description = "Entfernt einen Wiedervorlage-Eintrag. "
 					+ "Dabei wird geprüft, ob der Benutzer auf den Eintrag zugreifen darf.")
-	@ApiResponse(responseCode = "200", description = "Der Wiedervorlage-Eintrag wurde erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = WiedervorlageEintrag.class)))
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operation wurde ausgeführt.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "400", description = "Die übergebenen Daten sind fehlerhaft")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um dem Wiedervorlage-Eintrag zu löschen.")
-	@ApiResponse(responseCode = "404", description = "Kein Wiedervorlage-Eintrag mit der angegebenen ID gefunden.")
-	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteWiedervorlageEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataWiedervorlage(conn).deleteAsResponse(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
+		return WiedervorlageControllerFactory.withDeleteAccess(request)
+				.getWiedervorlageController()
+				.delete(id);
 	}
-
 
 	/**
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Wiedervorlage-Einträge.
 	 *
 	 * @param schema       das Datenbankschema
-	 * @param is           die IDs der Wiedervorlage-Einträge
+	 * @param ids           die IDs der Wiedervorlage-Einträge
 	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status und ggf. den gelöschten Wiedervorlage-Einträgen
@@ -195,22 +212,20 @@ public class APIWiedervorlage {
 	@Operation(summary = "Entfernt mehrere Wiedervorlage-Einträge.",
 			description = "Entfernt mehrere Wiedervorlage-Einträge. "
 					+ "Dabei wird geprüft, ob der Benutzer auf die Einträge zugreifen darf.")
-	@ApiResponse(responseCode = "200", description = "Die Wiedervorlage-Einträge wurden erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = WiedervorlageEintrag.class))))
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "400", description = "Die übergebenen Daten sind fehlerhaft")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Wiedervorlage-Einträge zu entfernen.")
-	@ApiResponse(responseCode = "404", description = "Wiedervorlage-Eintrag nicht vorhanden")
-	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteWiedervorlageEintraege(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die IDs der zu löschenden Wiedervorlage-Einträge", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final Set<Long> ids,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataWiedervorlage(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
+		return WiedervorlageControllerFactory.withWriteAccess(request)
+				.getWiedervorlageController()
+				.delete(ids);
 	}
-
 
 	/**
 	 * Markiert einen Wiedervorlage-Eintrag als erledigt.
@@ -232,9 +247,8 @@ public class APIWiedervorlage {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response setWiedervorlageEintragErledigt(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataWiedervorlage(conn).postErledigt(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
+		return WiedervorlageControllerFactory.withWriteAccess(request)
+				.getWiedervorlageController()
+				.markiereAlsErledigt(id);
 	}
-
 }

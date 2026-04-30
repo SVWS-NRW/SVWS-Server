@@ -95,8 +95,9 @@ public final class ValidationUtils {
 	}
 
 	private static String formatMessage(final String message, final String attrName) {
-		if ((attrName == null) || (attrName.isBlank()))
+		if ((attrName == null) || (attrName.isBlank())) {
 			return message;
+		}
 		return "Attribut %s: %s".formatted(attrName, message);
 	}
 }

@@ -1,19 +1,20 @@
-package de.svws_nrw.data.kataloge.teilleistungsarten;
+package de.svws_nrw.controller.katalog.teilleistungsart;
 
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.repo.kataloge.KatalogeRepositoryFactory;
+import de.svws_nrw.service.katalog.teilleistungsart.TeilleistungsartServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
- * Factory für {@link TeilLeistungsartController}
+ * Factory für {@link TeilleistungsartController}
  */
-public final class TeilLeistungsartControllerFactory {
+public final class TeilleistungsartControllerFactory {
 
-	private final TeilLeistungsartServiceFactory teilLeistungsartServiceFactory;
+	private final TeilleistungsartServiceFactory teilLeistungsartServiceFactory;
 
-	private TeilLeistungsartControllerFactory(final TeilLeistungsartServiceFactory teilLeistungsartServiceFactory) {
+	private TeilleistungsartControllerFactory(final TeilleistungsartServiceFactory teilLeistungsartServiceFactory) {
 		this.teilLeistungsartServiceFactory = teilLeistungsartServiceFactory;
 
 	}
@@ -27,14 +28,14 @@ public final class TeilLeistungsartControllerFactory {
 	 *
 	 * @return neu erzeugte Controller Factory
 	 */
-	private static TeilLeistungsartControllerFactory getNewInstance(final HttpServletRequest request,
+	private static TeilleistungsartControllerFactory getNewInstance(final HttpServletRequest request,
 			final BenutzerKompetenz kompetenz) {
 
 		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, kompetenz);
 		final var katalogeRepositoryFactory = KatalogeRepositoryFactory.getNewInstance();
-		final var serviceFactory = TeilLeistungsartServiceFactory.getNewInstance(katalogeRepositoryFactory);
+		final var serviceFactory = TeilleistungsartServiceFactory.getNewInstance(katalogeRepositoryFactory);
 
-		return new TeilLeistungsartControllerFactory(serviceFactory);
+		return new TeilleistungsartControllerFactory(serviceFactory);
 	}
 
 	/**
@@ -43,7 +44,7 @@ public final class TeilLeistungsartControllerFactory {
 	 * @param request der {@link HttpServletRequest}
 	 * @return neu erzeugte Controller Factory
 	 */
-	public static TeilLeistungsartControllerFactory withReadAccess(final HttpServletRequest request) {
+	public static TeilleistungsartControllerFactory withReadAccess(final HttpServletRequest request) {
 		return getNewInstance(request, BenutzerKompetenz.KEINE);
 	}
 
@@ -53,7 +54,7 @@ public final class TeilLeistungsartControllerFactory {
 	 * @param request der {@link HttpServletRequest}
 	 * @return neu erzeugte Controller Factory
 	 */
-	public static TeilLeistungsartControllerFactory withWriteAccess(final HttpServletRequest request) {
+	public static TeilleistungsartControllerFactory withWriteAccess(final HttpServletRequest request) {
 		return getNewInstance(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
@@ -63,16 +64,16 @@ public final class TeilLeistungsartControllerFactory {
 	 * @param request der {@link HttpServletRequest}
 	 * @return neu erzeugte Controller Factory
 	 */
-	public static TeilLeistungsartControllerFactory withDeleteAccess(final HttpServletRequest request) {
+	public static TeilleistungsartControllerFactory withDeleteAccess(final HttpServletRequest request) {
 		return getNewInstance(request, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
 	/**
 	 * Erstellt einen neuen TeilLeistungsartenController.
 	 *
-	 * @return {@link TeilLeistungsartController} - neu erzeugter Controller
+	 * @return {@link TeilleistungsartController} - neu erzeugter Controller
 	 */
-	public TeilLeistungsartController getTeilLeistungsartenController() {
-		return new TeilLeistungsartController(teilLeistungsartServiceFactory.getTeilLeistungsartenService());
+	public TeilleistungsartController getTeilLeistungsartenController() {
+		return new TeilleistungsartController(teilLeistungsartServiceFactory.getTeilLeistungsartenService());
 	}
 }
