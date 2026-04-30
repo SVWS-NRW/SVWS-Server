@@ -9,7 +9,7 @@
 	</svws-ui-notification>
 	<svws-ui-notifications v-if="errors.size > 0">
 		<div v-if="errors.size > 1" class="bg-ui-100">
-			<svws-ui-button @click="errors.clear()" type="transparent" class="pointer-events-auto ml-auto rounded-lg bg-contr0 border-ui-25 fixed right-6 left-0 top-5 z-50 w-[29rem] max-w-[75vw] justify-center">Alle {{ errors.size }} Meldungen schließen</svws-ui-button>
+			<svws-ui-button @click="errors.clear()" type="transparent" class="pointer-events-auto ml-auto rounded-lg bg-contr0 border-ui-25 fixed right-6 left-0 top-5 z-50 w-116 max-w-[75vw] justify-center">Alle {{ errors.size }} Meldungen schließen</svws-ui-button>
 			<div class="min-h-[1.85rem]" />
 		</div>
 		<template v-for="error of [...errors.values()].reverse().slice(0, 20)" :key="error.id">
@@ -51,7 +51,7 @@
 	const errors = ref<Map<number, CapturedError>>(new Map());
 
 	function copyString(error: CapturedError) {
-		const json = JSON.stringify({ env: { version: version, "Commit": githash }, error }, null, 2);
+		const json = JSON.stringify({ env: { client: 'Laufbahnplanung', version: version, commit: githash }, error }, null, 2);
 		return "```json\n" + json + "\n```";
 	}
 
@@ -66,10 +66,10 @@
 	}
 
 	// Dieser Listener gilt nur für Promises
-	window.addEventListener("unhandledrejection", errorHandler);
+	globalThis.addEventListener("unhandledrejection", errorHandler);
 
 	// Dieser Listener fängt alle anderen Fehler ab
-	window.addEventListener("error", errorHandler);
+	globalThis.addEventListener("error", errorHandler);
 
 	onErrorCaptured((reason) => {
 		if (reason.name === 'resetAllErrors') {
@@ -83,7 +83,7 @@
 	async function createCapturedError(reason: Error) {
 		console.warn(reason);
 		counter.value++;
-		let name = `Fehler ${reason.name !== 'Error' ? ': ' + reason.name : ''}`;
+		let name = `Fehler ${reason.name === 'Error' ? '' : ': ' + reason.name}`;
 		let message = reason.message;
 		let log = null;
 		if (reason instanceof DeveloperNotificationException) {
@@ -120,9 +120,9 @@
 
 	const browser = () => {
 		try {
-			const dc = new DecompressionStream("gzip");
+			new DecompressionStream("gzip");
 			return true;
-		} catch (e) {
+		} catch {
 			return false;
 		}
 	};

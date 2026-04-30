@@ -122,7 +122,7 @@
 
 	async function copyToClipboard() {
 		const capturedError = await createCapturedError();
-		const json = JSON.stringify({ env: { mode: auth.mode.text, version: auth.version, commit: auth.githash, userAgent: globalThis.navigator.userAgent }, capturedError }, null, 2);
+		const json = JSON.stringify({ env: { client: 'WeNoM Route-Error', mode: auth.mode.text, version: auth.version, commit: auth.githash, userAgent: globalThis.navigator.userAgent }, capturedError }, null, 2);
 		try {
 			await navigator.clipboard.writeText("```json\n" + json + "\n```");
 		} catch {

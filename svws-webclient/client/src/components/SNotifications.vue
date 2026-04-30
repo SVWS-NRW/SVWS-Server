@@ -41,7 +41,7 @@
 	const errors = ref<Map<number, CapturedError>>(new Map());
 
 	function copyString(error: CapturedError) {
-		const json = JSON.stringify({ env: { mode: api.mode.text, version: api.version, commit: api.githash, userAgent: globalThis.navigator.userAgent }, error }, null, 2);
+		const json = JSON.stringify({ env: { client: 'WebClient', mode: api.mode.text, version: api.version, commit: api.githash, userAgent: globalThis.navigator.userAgent }, error }, null, 2);
 		return "```json\n" + json + "\n```";
 	}
 
