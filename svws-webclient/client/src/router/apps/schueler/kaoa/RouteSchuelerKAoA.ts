@@ -29,8 +29,9 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 			const auswahl = routeSchueler.data.manager.auswahl();
 			const schuljahr = routeSchueler.data.manager.getSchuljahr();
 			if (!routeSchueler.data.manager.hasDaten()
-				|| (auswahl.status === SchuelerStatus.EXTERN.daten(schuljahr)?.id)
-				|| (auswahl.status === SchuelerStatus.EHEMALIGE.daten(schuljahr)?.id)) {
+					|| (auswahl.status === SchuelerStatus.EXTERN.daten(schuljahr)?.id)
+					|| (auswahl.status === SchuelerStatus.EHEMALIGE.daten(schuljahr)?.id)
+					|| !this.isJahrgangEligible(auswahl.jahrgang)) {
 				return routeSchueler.getRouteDefaultChild({ id });
 			}
 			return false;
@@ -48,6 +49,15 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
+	}
+
+	private isJahrgangEligible(jahrgang: string): boolean {
+		const jahrgangNumber = Number.parseInt(jahrgang, 10);
+		if (!Number.isNaN(jahrgangNumber)) {
+			return jahrgangNumber >= 8;
+		}
+
+		return true;
 	}
 
 	public getProps(_: RouteLocationNormalized): SchuelerKAoAProps {
