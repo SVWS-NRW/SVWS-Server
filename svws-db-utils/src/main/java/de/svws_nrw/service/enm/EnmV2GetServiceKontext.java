@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -634,7 +635,7 @@ public final class EnmV2GetServiceKontext {
 
 		// Bestimme die ZP10-Daten
 		final List<DTOSchuelerZP10> listZP10 = schuelerZP10Repository.getListBySchuelerIds(mapSchueler.keySet());
-		this.mapZP10 = listZP10.stream().filter(e -> e.Schuljahresabschnitts_ID == idSchuljahresabschnitt)
+		this.mapZP10 = listZP10.stream().filter(e -> Objects.equals(e.Schuljahresabschnitts_ID, idSchuljahresabschnitt))
 				.collect(Collectors.groupingBy(e -> e.Schueler_ID));
 		this.mapZP10Timestamps = schuelerZP10TimestampsRepository.findMapByIds(listZP10.stream().map(e -> e.ID).toList());
 
