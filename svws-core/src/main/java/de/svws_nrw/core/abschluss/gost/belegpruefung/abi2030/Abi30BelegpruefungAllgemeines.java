@@ -7,6 +7,7 @@ import de.svws_nrw.core.abschluss.gost.GostBelegpruefung;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.abschluss.gost.GostBelegungsfehler;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
+import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
@@ -73,13 +74,18 @@ public final class Abi30BelegpruefungAllgemeines extends GostBelegpruefung {
 		}
 
 		// Prüfe, ob alle Fächer nicht-Abiturfächern in Q2.2 mündlich belegt sind. Das 4. Abiturfach wird gesondert geprüft
+		// und Projektkurse ignoriert, da sie grundsätzlich als schriftlich gekennzeichnet werden
 		for (final AbiturFachbelegung fachbelegung : alleFachbelegungen) {
 			final GostAbiturFach abiturFach = GostAbiturFach.fromID(fachbelegung.abiturFach);
 			if (abiturFach != null) {
 				continue;
 			}
+			final GostFach fach = manager.getFach(fachbelegung);
+			if ((fach != null) && ("PX".equals(fach.kuerzel))) {
+				continue;
+			}
 			if (manager.pruefeBelegungMitSchriftlichkeitEinzeln(fachbelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q22)) {
-				addFehler(GostBelegungsfehler.ABI_16);
+				addFehler(GostBelegungsfehler.ABI_16_2);
 				break;
 			}
 		}

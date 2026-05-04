@@ -2287,15 +2287,18 @@ public class AbiturdatenManager {
 			if (!pruefeBelegungMitKursart(belegung, kursart, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
 				return null;
 			}
-			// Prüfe die Belegung des Referenzfaches und dessen Schriftlichkeit
-			final AbiturFachbelegung referenzfach = getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
-			if (!pruefeBelegungMitKursart(referenzfach, GostKursart.GK, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
-				return null;
+			// Prüfe die Belegungen der Referenzfächer und deren Schriftlichkeit
+			final AbiturFachbelegung referenzfach1 = getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
+			if ((referenzfach1 != null) && pruefeBelegungMitKursart(referenzfach1, GostKursart.GK, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12)
+					&& pruefeBelegungMitSchriftlichkeit(referenzfach1, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
+				return kursart;
 			}
-			if (!pruefeBelegungMitSchriftlichkeit(referenzfach, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
-				return null;
+			final AbiturFachbelegung referenzfach2 = getFachbelegungByKuerzel(fach.projektKursLeitfach2Kuerzel);
+			if ((referenzfach2 != null) && pruefeBelegungMitKursart(referenzfach2, GostKursart.GK, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12)
+					&& pruefeBelegungMitSchriftlichkeit(referenzfach2, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
+				return kursart;
 			}
-			return kursart;
+			return null;
 		}
 		// GK ?
 		if (!fach.istMoeglichAbiGK) {

@@ -1,8 +1,10 @@
 import { GostFach } from '../../../../../core/data/gost/GostFach';
 import { Abi30BelegpruefungProjektkurse, cast_de_svws_nrw_core_abschluss_gost_belegpruefung_abi2030_Abi30BelegpruefungProjektkurse } from '../../../../../core/abschluss/gost/belegpruefung/abi2030/Abi30BelegpruefungProjektkurse';
+import type { JavaSet } from '../../../../../java/util/JavaSet';
 import { GostAbiturFach } from '../../../../../core/types/gost/GostAbiturFach';
 import { AbiturFachbelegung } from '../../../../../core/data/gost/AbiturFachbelegung';
 import { GostBelegpruefungsArt } from '../../../../../core/abschluss/gost/GostBelegpruefungsArt';
+import { ArrayList } from '../../../../../java/util/ArrayList';
 import { ArrayMap } from '../../../../../core/adt/map/ArrayMap';
 import { GostBelegpruefung } from '../../../../../core/abschluss/gost/GostBelegpruefung';
 import { AbiturdatenManager } from '../../../../../core/abschluss/gost/AbiturdatenManager';
@@ -279,21 +281,47 @@ export class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 			if (fach === null) {
 				return;
 			}
-			const leitfach: AbiturFachbelegung | null = this.manager.getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
-			if (leitfach === null) {
+			const leitfaecher: List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
+			const leitfach1: AbiturFachbelegung | null = this.manager.getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
+			if (leitfach1 !== null) {
+				leitfaecher.add(leitfach1);
+			}
+			const leitfach2: AbiturFachbelegung | null = this.manager.getFachbelegungByKuerzel(fach.projektKursLeitfach2Kuerzel);
+			if (leitfach2 !== null) {
+				leitfaecher.add(leitfach2);
+			}
+			if (!leitfaecher.isEmpty()) {
+				this.pruefeProjektkursLeitfaecherAB5(leitfaecher);
+			}
+		}
+	}
+
+	/**
+	 * Prüfung der Leitfächer-Belegungen bei einer Wahl eines Projektkurses als 5. Abiturfach
+	 *
+	 * @param leitfaecher   die Belegegungen zu den Leitfächern
+	 */
+	private pruefeProjektkursLeitfaecherAB5(leitfaecher: List<AbiturFachbelegung>): void {
+		const fehler: JavaSet<GostBelegungsfehler> = new HashSet<GostBelegungsfehler>();
+		for (const leitfach of leitfaecher) {
+			const istDurchgaengig: boolean = this.manager.pruefeBelegung(leitfach, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12);
+			const istSchriftlichQ1: boolean = this.manager.pruefeBelegungMitSchriftlichkeit(leitfach, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12);
+			const istAbifach: boolean = (GostAbiturFach.fromID(leitfach.abiturFach) !== null);
+			if (istDurchgaengig && istSchriftlichQ1 && !istAbifach) {
 				return;
 			}
-			if (!this.manager.pruefeBelegung(leitfach, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
-				this.addFehler(GostBelegungsfehler.ABI_26_2);
-				return;
-			}
-			if (!this.manager.pruefeBelegungMitSchriftlichkeit(leitfach, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
-				this.addFehler(GostBelegungsfehler.ABI_27_2);
-				return;
-			}
-			if (GostAbiturFach.fromID(leitfach.abiturFach) !== null) {
-				this.addFehler(GostBelegungsfehler.ABI_28_2);
-			}
+			if (!istDurchgaengig) {
+				fehler.add(GostBelegungsfehler.ABI_26_2);
+			} else
+				if (!istSchriftlichQ1) {
+					fehler.add(GostBelegungsfehler.ABI_27_2);
+				} else
+					if (istAbifach) {
+						fehler.add(GostBelegungsfehler.ABI_28_2);
+					}
+		}
+		for (const f of fehler) {
+			this.addFehler(f);
 		}
 	}
 

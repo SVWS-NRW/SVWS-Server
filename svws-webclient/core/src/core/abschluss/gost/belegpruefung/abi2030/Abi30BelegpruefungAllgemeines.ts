@@ -1,4 +1,6 @@
+import { JavaObject } from '../../../../../java/lang/JavaObject';
 import { GostFachbereich } from '../../../../../core/types/gost/GostFachbereich';
+import { GostFach } from '../../../../../core/data/gost/GostFach';
 import { GostAbiturFach } from '../../../../../core/types/gost/GostAbiturFach';
 import { AbiturFachbelegung } from '../../../../../core/data/gost/AbiturFachbelegung';
 import { GostBelegpruefungsArt } from '../../../../../core/abschluss/gost/GostBelegpruefungsArt';
@@ -48,8 +50,12 @@ export class Abi30BelegpruefungAllgemeines extends GostBelegpruefung {
 			if (abiturFach !== null) {
 				continue;
 			}
+			const fach: GostFach | null = this.manager.getFach(fachbelegung);
+			if ((fach !== null) && (JavaObject.equalsTranspiler("PX", (fach.kuerzel)))) {
+				continue;
+			}
 			if (this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(fachbelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q22)) {
-				this.addFehler(GostBelegungsfehler.ABI_16);
+				this.addFehler(GostBelegungsfehler.ABI_16_2);
 				break;
 			}
 		}

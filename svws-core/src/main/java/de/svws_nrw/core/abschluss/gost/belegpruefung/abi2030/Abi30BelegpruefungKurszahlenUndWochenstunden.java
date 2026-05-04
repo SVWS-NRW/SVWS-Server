@@ -296,7 +296,6 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 	protected void pruefeEF1() {
 		// Führe die Belegprüfung für die EF1 durch
 		pruefeGrundkurseEF1();
-		pruefeWochenstundenEF1();
 	}
 
 
@@ -315,22 +314,6 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 		}
 	}
 
-	/**
-	 * EF1-Prüfung Punkt 22:
-	 * Prüfe, ob die Summe der Kursstunden in der EF.1 größer oder gleich 32 und kleiner oder gleich 36 ist.
-	 */
-	private void pruefeWochenstundenEF1() {
-		if (wochenstunden == null) {
-			throw new NullPointerException();
-		}
-		final Integer stunden = wochenstunden.get(GostHalbjahr.EF1);
-		if ((stunden == null) || (stunden < 32) || (stunden > 36)) {
-			addFehler(GostBelegungsfehler.ANZ_11_INFO);
-		}
-	}
-
-
-
 
 	@Override
 	protected void pruefeGesamt() {
@@ -339,10 +322,8 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 		pruefeGrundkurseQ();
 		pruefeLeistungskurse();
 		pruefeVertiefungskurseEF();
-		pruefeWochenstunden();
 		pruefeVertiefungskurseQ();
 		pruefeAnrechenbareKurse();
-		pruefeKursstundenSummen();
 	}
 
 
@@ -359,23 +340,6 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 		final Integer kurszahlGK_EF2 = kurszahlenGrundkurse.get(GostHalbjahr.EF2);
 		if ((kurszahlGK_EF1 == null) || (kurszahlGK_EF1 < 10) || (kurszahlGK_EF2 == null) || (kurszahlGK_EF2 < 10)) {
 			addFehler(GostBelegungsfehler.ANZ_10);
-		}
-	}
-
-
-	/**
-	 * Gesamtprüfung Punkt 59:
-	 * Prüfe, ob in jedem Halbjahr die Summe der Kursstunden größer oder gleich 32 und kleiner oder gleich 36 ist.
-	 */
-	private void pruefeWochenstunden() {
-		if (wochenstunden == null) {
-			throw new NullPointerException();
-		}
-		for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
-			final Integer stunden = wochenstunden.get(halbjahr);
-			if ((stunden == null) || (stunden < 32) || (stunden > 36)) {
-				addFehler(GostBelegungsfehler.ANZ_11_INFO);
-			}
 		}
 	}
 
@@ -463,32 +427,6 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 			addFehler(GostBelegungsfehler.ANZ_12_2);
 		}
 	}
-
-
-	/**
-	 * Gesamtprüfung Punkte 80-82:
-	 * Prüfe, ob die Summe der durchschnittlichen Kursstunden der 3 Jahre größer oder gleich 100 bzw. 102 ist
-	 * und ob die durchschnittliche Summe der Kursstunden in der Einführungsphase und der Qualifikationsphase
-	 * größer oder gleich 34 ist.
-	 */
-	private void pruefeKursstundenSummen() {
-		if ((wochenstundenEinfuehrungsphase / 2.0) < 34.0) {
-			addFehler(GostBelegungsfehler.WST_20);
-		}
-		if ((wochenstundenQualifikationsphase / 4.0) < 34.0) {
-			addFehler(GostBelegungsfehler.WST_21);
-		}
-		final double summeKursstundenDurchschnitte = (wochenstundenEinfuehrungsphase / 2.0) + ((wochenstundenQualifikationsphase / 4.0) * 2.0);
-		if (summeKursstundenDurchschnitte < 102) {
-			if (summeKursstundenDurchschnitte < 100) {
-				addFehler(GostBelegungsfehler.STD_10);
-			} else {
-				addFehler(GostBelegungsfehler.STD_11_INFO);
-			}
-		}
-	}
-
-
 
 
 	/**

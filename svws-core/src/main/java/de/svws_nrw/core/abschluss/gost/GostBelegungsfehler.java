@@ -62,6 +62,11 @@ public enum GostBelegungsfehler {
 			"Fächer, die keine Abiturfächer sind, müssen in Q2.2 mündlich belegt werden.",
 			null),
 
+	/** BelegungsfehlerArt ABI_16 */
+	ABI_16_2("ABI_16_2", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"Fächer, die keine Abiturfächer oder Projektkursfächer sind, müssen in Q2.2 mündlich belegt werden.",
+			null),
+
 	/** BelegungsfehlerArt ABI_17 */
 	ABI_17("ABI_17", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
 			"Das 3. Abiturfach muss von Q1.1 bis Q2.2 schriftlich belegt sein.",

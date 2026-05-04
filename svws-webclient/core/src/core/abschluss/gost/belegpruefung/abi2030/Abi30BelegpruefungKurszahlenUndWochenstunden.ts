@@ -276,7 +276,6 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 
 	protected pruefeEF1(): void {
 		this.pruefeGrundkurseEF1();
-		this.pruefeWochenstundenEF1();
 	}
 
 	/**
@@ -294,29 +293,13 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 		}
 	}
 
-	/**
-	 * EF1-Prüfung Punkt 22:
-	 * Prüfe, ob die Summe der Kursstunden in der EF.1 größer oder gleich 32 und kleiner oder gleich 36 ist.
-	 */
-	private pruefeWochenstundenEF1(): void {
-		if (this.wochenstunden === null) {
-			throw new NullPointerException()
-		}
-		const stunden: number | null = this.wochenstunden.get(GostHalbjahr.EF1);
-		if ((stunden === null) || (stunden < 32) || (stunden > 36)) {
-			this.addFehler(GostBelegungsfehler.ANZ_11_INFO);
-		}
-	}
-
 	protected pruefeGesamt(): void {
 		this.pruefeGrundkurseEF();
 		this.pruefeGrundkurseQ();
 		this.pruefeLeistungskurse();
 		this.pruefeVertiefungskurseEF();
-		this.pruefeWochenstunden();
 		this.pruefeVertiefungskurseQ();
 		this.pruefeAnrechenbareKurse();
-		this.pruefeKursstundenSummen();
 	}
 
 	/**
@@ -332,22 +315,6 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 		const kurszahlGK_EF2: number | null = this.kurszahlenGrundkurse.get(GostHalbjahr.EF2);
 		if ((kurszahlGK_EF1 === null) || (kurszahlGK_EF1 < 10) || (kurszahlGK_EF2 === null) || (kurszahlGK_EF2 < 10)) {
 			this.addFehler(GostBelegungsfehler.ANZ_10);
-		}
-	}
-
-	/**
-	 * Gesamtprüfung Punkt 59:
-	 * Prüfe, ob in jedem Halbjahr die Summe der Kursstunden größer oder gleich 32 und kleiner oder gleich 36 ist.
-	 */
-	private pruefeWochenstunden(): void {
-		if (this.wochenstunden === null) {
-			throw new NullPointerException()
-		}
-		for (const halbjahr of GostHalbjahr.values()) {
-			const stunden: number | null = this.wochenstunden.get(halbjahr);
-			if ((stunden === null) || (stunden < 32) || (stunden > 36)) {
-				this.addFehler(GostBelegungsfehler.ANZ_11_INFO);
-			}
 		}
 	}
 
@@ -428,29 +395,6 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 	private pruefeAnrechenbareKurse(): void {
 		if (this.blockIAnzahlAnrechenbar < 36) {
 			this.addFehler(GostBelegungsfehler.ANZ_12_2);
-		}
-	}
-
-	/**
-	 * Gesamtprüfung Punkte 80-82:
-	 * Prüfe, ob die Summe der durchschnittlichen Kursstunden der 3 Jahre größer oder gleich 100 bzw. 102 ist
-	 * und ob die durchschnittliche Summe der Kursstunden in der Einführungsphase und der Qualifikationsphase
-	 * größer oder gleich 34 ist.
-	 */
-	private pruefeKursstundenSummen(): void {
-		if ((this.wochenstundenEinfuehrungsphase / 2.0) < 34.0) {
-			this.addFehler(GostBelegungsfehler.WST_20);
-		}
-		if ((this.wochenstundenQualifikationsphase / 4.0) < 34.0) {
-			this.addFehler(GostBelegungsfehler.WST_21);
-		}
-		const summeKursstundenDurchschnitte: number = (this.wochenstundenEinfuehrungsphase / 2.0) + ((this.wochenstundenQualifikationsphase / 4.0) * 2.0);
-		if (summeKursstundenDurchschnitte < 102) {
-			if (summeKursstundenDurchschnitte < 100) {
-				this.addFehler(GostBelegungsfehler.STD_10);
-			} else {
-				this.addFehler(GostBelegungsfehler.STD_11_INFO);
-			}
 		}
 	}
 

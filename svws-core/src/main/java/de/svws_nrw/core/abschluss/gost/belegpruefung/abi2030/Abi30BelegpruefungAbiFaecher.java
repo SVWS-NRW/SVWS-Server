@@ -1,7 +1,9 @@
 package de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefung;
@@ -313,24 +315,56 @@ public final class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 			if (fach == null) {
 				return;
 			}
-			final AbiturFachbelegung leitfach = manager.getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
-			if (leitfach == null) {
-				return;
+			final @NotNull List<AbiturFachbelegung> leitfaecher = new ArrayList<>();
+			final AbiturFachbelegung leitfach1 = manager.getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
+			if (leitfach1 != null) {
+				leitfaecher.add(leitfach1);
 			}
+			final AbiturFachbelegung leitfach2 = manager.getFachbelegungByKuerzel(fach.projektKursLeitfach2Kuerzel);
+			if (leitfach2 != null) {
+				leitfaecher.add(leitfach2);
+			}
+			if (!leitfaecher.isEmpty()) {
+				pruefeProjektkursLeitfaecherAB5(leitfaecher);
+			}
+		}
+	}
+
+
+	/**
+	 * Prüfung der Leitfächer-Belegungen bei einer Wahl eines Projektkurses als 5. Abiturfach
+	 *
+	 * @param leitfaecher   die Belegegungen zu den Leitfächern
+	 */
+	private void pruefeProjektkursLeitfaecherAB5(final @NotNull List<AbiturFachbelegung> leitfaecher) {
+		final @NotNull Set<GostBelegungsfehler> fehler = new HashSet<>();
+		for (final AbiturFachbelegung leitfach : leitfaecher) {
 			// Prüfe die durchgängige Belegung des Referenzfaches in EF und Q1
-			if (!manager.pruefeBelegung(leitfach, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
-				addFehler(GostBelegungsfehler.ABI_26_2);
-				return;
-			}
+			final boolean istDurchgaengig = manager.pruefeBelegung(leitfach, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12);
+
 			// Prüfe die schriftliche Belegung des Referenzfaches in Q1
-			if (!manager.pruefeBelegungMitSchriftlichkeit(leitfach, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
-				addFehler(GostBelegungsfehler.ABI_27_2);
+			final boolean istSchriftlichQ1 = manager.pruefeBelegungMitSchriftlichkeit(leitfach, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12);
+
+			// Prüfe, ob das Leitfach als Abiturfach gewählt wurde. Das ist nicht zulässig.
+			final boolean istAbifach = (GostAbiturFach.fromID(leitfach.abiturFach) != null);
+
+			// Wenn kein Fehler aufgetreten ist, dann wurde ein passendes Leitfach gefunden und eine Wahl als AB5 ist möglich
+			if (istDurchgaengig && istSchriftlichQ1 && !istAbifach) {
 				return;
 			}
-			// Prüfe, ob das Leitfach als Abiturfach gewählt wurde. Das ist nicht zulässig.
-			if (GostAbiturFach.fromID(leitfach.abiturFach) != null) {
-				addFehler(GostBelegungsfehler.ABI_28_2);
+
+			// Ansonsten ergänze den ersten relevanten Fehler...
+			if (!istDurchgaengig) {
+				fehler.add(GostBelegungsfehler.ABI_26_2);
+			} else if (!istSchriftlichQ1) {
+				fehler.add(GostBelegungsfehler.ABI_27_2);
+			} else if (istAbifach) {
+				fehler.add(GostBelegungsfehler.ABI_28_2);
 			}
+		}
+		// Gebe Fehler nur zurück, wenn nicht eines der Leitfächer als Grundlage für AB5 dienen kann
+		for (final @NotNull GostBelegungsfehler f : fehler) {
+			addFehler(f);
 		}
 	}
 
