@@ -1,6 +1,7 @@
 <template>
 	<Teleport to=".svws-ui-header--actions" defer>
-		<wiedervorlage-modal type="schueler" mode="create"
+		<wiedervorlage-modal v-if="!readonly"
+			type="schueler" mode="create"
 			:person-id="schuelerListeManager().daten().id"
 			:person-name="`${schuelerListeManager().daten().vorname} ${schuelerListeManager().daten().nachname}`">
 			<template #default="{openModal}">
@@ -275,8 +276,9 @@
 	const telefonnummernEntry = ref<SchuelerTelefon>(new SchuelerTelefon());
 
 	const schuljahr = computed<number>(() => props.schuelerListeManager().schuelerGetSchuljahrOrException());
-	const hatKompetenzAnsehen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN));
 	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
+	const hatKompetenzAnsehen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN));
+	const hatKompetenzDrucken = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN) || props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)));
 	const saveTelefonnummernDisabled = computed<boolean>(() =>
 		(selectedTelefonArt.value === null)
 		|| (props.mapTelefonArten.size === 0)
@@ -286,7 +288,6 @@
 		get: () => props.mapTelefonArten.get(telefonnummernEntry.value.idTelefonArt) ?? null,
 		set: (selected: Telefonart | null) => telefonnummernEntry.value.idTelefonArt = (selected === null) ? -1 : selected.id,
 	});
-	const hatKompetenzDrucken = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN) || props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)));
 	const istSchulformBerufskolleg = computed(() => [Schulform.BK, Schulform.SB, Schulform.WB].includes(props.schulform));
 	const istOrtsteilDisabled = computed(() => (selectedOrt.value === null) && (selectedOrtsteil.value === null));
 	const orte = computed(() => props.orteById.values());

@@ -58,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ref, toRaw, watch } from 'vue';
+	import { computed, ref, watch } from 'vue';
 	import type { BenutzergruppeListeEintrag, List, WiedervorlageEintrag } from "@core";
 	import { ArrayList } from "@core";
 	import { api } from "~/router/Api";
@@ -97,7 +97,7 @@
 	});
 
 	const icon = computed(() => {
-		if (props.type === "schueler") {
+		if (props.type === "schueler" || props.type === "erzieher") {
 			return "i-ri-group-line";
 		}
 		if (props.type === "lehrkraft") {
@@ -150,12 +150,10 @@
 	}
 
 	async function submit() {
-		const data = toRaw(modelProxy.proxy);
-
 		const submitData: Partial<WiedervorlageEintrag> = {
-			...data,
-			tsWiedervorlage: data.tsWiedervorlage === null ? null : (formatDateToDateTime(data.tsWiedervorlage) ?? null),
-			idBenutzergruppe: data.idBenutzergruppe?.id ?? null,
+			...modelProxy.proxy,
+			tsWiedervorlage: modelProxy.proxy.tsWiedervorlage === null ? null : (formatDateToDateTime(modelProxy.proxy.tsWiedervorlage) ?? null),
+			idBenutzergruppe: modelProxy.proxy.idBenutzergruppe?.id ?? null,
 		};
 
 		if (props.mode === "create") {
