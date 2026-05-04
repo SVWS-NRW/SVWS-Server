@@ -26,38 +26,38 @@ import de.svws_nrw.csv.converter.migration.MigrationDatumConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerMerkmale")
-@JsonPropertyOrder({"ID", "Schueler_ID", "Kurztext", "SchulnrEigner", "DatumVon", "DatumBis"})
+@JsonPropertyOrder({"id", "idSchueler", "kuerzelMerkmal", "SchulnrEigner", "datumVon", "datumBis"})
 public final class MigrationDTOSchuelerMerkmale {
 
 	/** Die Datenbankabfrage für alle DTOs */
 	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOSchuelerMerkmale e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.id = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.id IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.id IS NOT NULL";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
-	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes id */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.id = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
-	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes id */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.id IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Schueler_ID */
-	public static final String QUERY_BY_SCHUELER_ID = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.Schueler_ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idSchueler */
+	public static final String QUERY_BY_IDSCHUELER = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.idSchueler = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schueler_ID */
-	public static final String QUERY_LIST_BY_SCHUELER_ID = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.Schueler_ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idSchueler */
+	public static final String QUERY_LIST_BY_IDSCHUELER = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.idSchueler IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Kurztext */
-	public static final String QUERY_BY_KURZTEXT = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.Kurztext = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes kuerzelMerkmal */
+	public static final String QUERY_BY_KUERZELMERKMAL = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.kuerzelMerkmal = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kurztext */
-	public static final String QUERY_LIST_BY_KURZTEXT = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.Kurztext IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes kuerzelMerkmal */
+	public static final String QUERY_LIST_BY_KUERZELMERKMAL = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.kuerzelMerkmal IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
 	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.SchulnrEigner = ?1";
@@ -65,33 +65,33 @@ public final class MigrationDTOSchuelerMerkmale {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
 	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.SchulnrEigner IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes DatumVon */
-	public static final String QUERY_BY_DATUMVON = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.DatumVon = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes datumVon */
+	public static final String QUERY_BY_DATUMVON = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.datumVon = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DatumVon */
-	public static final String QUERY_LIST_BY_DATUMVON = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.DatumVon IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes datumVon */
+	public static final String QUERY_LIST_BY_DATUMVON = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.datumVon IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes DatumBis */
-	public static final String QUERY_BY_DATUMBIS = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.DatumBis = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes datumBis */
+	public static final String QUERY_BY_DATUMBIS = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.datumBis = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DatumBis */
-	public static final String QUERY_LIST_BY_DATUMBIS = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.DatumBis IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes datumBis */
+	public static final String QUERY_LIST_BY_DATUMBIS = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.datumBis IN ?1";
 
 	/** ID des Eintrag bei besondere Merkmale zum Schüler */
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public Long id;
 
 	/** Schüler-ID des Eintrag bei besondere Merkmale zum Schüler */
 	@Column(name = "Schueler_ID")
 	@JsonProperty
-	public Long Schueler_ID;
+	public Long idSchueler;
 
-	/** Kurztext des Merkmals des Eintrag bei besondere Merkmale zum Schüler */
+	/** Das Kürzel des Merkmals des Eintrag bei besondere Merkmale zum Schüler */
 	@Column(name = "Kurztext")
 	@JsonProperty
-	public String Kurztext;
+	public String kuerzelMerkmal;
 
 	/** Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden */
 	@Column(name = "SchulnrEigner")
@@ -104,7 +104,7 @@ public final class MigrationDTOSchuelerMerkmale {
 	@Convert(converter = MigrationDatumConverter.class)
 	@JsonSerialize(using = MigrationDatumConverterSerializer.class)
 	@JsonDeserialize(using = MigrationDatumConverterDeserializer.class)
-	public String DatumVon;
+	public String datumVon;
 
 	/** Datum Ende des Eintrag bei besondere Merkmale zum Schüler */
 	@Column(name = "DatumBis")
@@ -112,7 +112,7 @@ public final class MigrationDTOSchuelerMerkmale {
 	@Convert(converter = MigrationDatumConverter.class)
 	@JsonSerialize(using = MigrationDatumConverterSerializer.class)
 	@JsonDeserialize(using = MigrationDatumConverterDeserializer.class)
-	public String DatumBis;
+	public String datumBis;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse MigrationDTOSchuelerMerkmale ohne eine Initialisierung der Attribute.
@@ -123,18 +123,18 @@ public final class MigrationDTOSchuelerMerkmale {
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse MigrationDTOSchuelerMerkmale ohne eine Initialisierung der Attribute.
-	 * @param ID   der Wert für das Attribut ID
-	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
+	 * @param id   der Wert für das Attribut id
+	 * @param idSchueler   der Wert für das Attribut idSchueler
 	 */
-	public MigrationDTOSchuelerMerkmale(final Long ID, final Long Schueler_ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
+	public MigrationDTOSchuelerMerkmale(final Long id, final Long idSchueler) {
+		if (id == null) {
+			throw new NullPointerException("id must not be null");
 		}
-		this.ID = ID;
-		if (Schueler_ID == null) {
-			throw new NullPointerException("Schueler_ID must not be null");
+		this.id = id;
+		if (idSchueler == null) {
+			throw new NullPointerException("idSchueler must not be null");
 		}
-		this.Schueler_ID = Schueler_ID;
+		this.idSchueler = idSchueler;
 	}
 
 
@@ -150,11 +150,11 @@ public final class MigrationDTOSchuelerMerkmale {
 			return false;
 		}
 		MigrationDTOSchuelerMerkmale other = (MigrationDTOSchuelerMerkmale) obj;
-		if (ID == null) {
-			if (other.ID != null) {
+		if (id == null) {
+			if (other.id != null) {
 				return false;
 			}
-		} else if (!ID.equals(other.ID)) {
+		} else if (!id.equals(other.id)) {
 			return false;
 		}
 		return true;
@@ -164,7 +164,7 @@ public final class MigrationDTOSchuelerMerkmale {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -176,7 +176,7 @@ public final class MigrationDTOSchuelerMerkmale {
 	 */
 	@Override
 	public String toString() {
-		return "MigrationDTOSchuelerMerkmale(ID=" + this.ID + ", Schueler_ID=" + this.Schueler_ID + ", Kurztext=" + this.Kurztext + ", SchulnrEigner=" + this.SchulnrEigner + ", DatumVon=" + this.DatumVon + ", DatumBis=" + this.DatumBis + ")";
+		return "MigrationDTOSchuelerMerkmale(id=" + this.id + ", idSchueler=" + this.idSchueler + ", kuerzelMerkmal=" + this.kuerzelMerkmal + ", SchulnrEigner=" + this.SchulnrEigner + ", datumVon=" + this.datumVon + ", datumBis=" + this.datumBis + ")";
 	}
 
 }

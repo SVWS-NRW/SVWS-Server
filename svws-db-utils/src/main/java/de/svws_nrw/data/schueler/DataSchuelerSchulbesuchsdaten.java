@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import de.svws_nrw.asd.data.CoreTypeException;
 import de.svws_nrw.asd.data.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.EinschulungsartKatalogEintrag;
+import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchMerkmal;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchSchule;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
 import de.svws_nrw.asd.data.schueler.UebergangsempfehlungKatalogEintrag;
@@ -29,15 +30,16 @@ import de.svws_nrw.db.dto.current.schild.grundschule.DTOKindergarten;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOEntlassarten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
-import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerMerkmale;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
-import de.svws_nrw.db.dto.current.schild.schule.DTOMerkmale;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.schueler.schulbesuch.BisherigeSchuleMapper;
+import de.svws_nrw.mapper.schueler.schulbesuch.SchuelerMerkmalMapper;
 import de.svws_nrw.repo.schueler.schulbesuch.BisherigeSchuleRepositoryFactory;
+import de.svws_nrw.repo.schueler.schulbesuch.SchuelerMerkmaleRepositoryFactory;
+import de.svws_nrw.repo.schule.merkmale.MerkmalRepositoryFactory;
 import de.svws_nrw.service.schueler.schulbesuch.BisherigeSchuleServiceFactory;
-import jakarta.validation.constraints.NotNull;
+import de.svws_nrw.service.schueler.schulbesuch.SchuelerMerkmalServiceFactory;
 import jakarta.ws.rs.core.Response.Status;
 
 
@@ -50,12 +52,8 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 	/** Ein Cache für den schnellen Zugriff auf den Katalog der Entlassarten. */
 	private final Map<String, DTOEntlassarten> entlassartenByBezeichnung;
 
-	/** Ein Cache für den schnellen Zugriff auf den Katalog der Merkmale */
-	private final Map<String, DTOMerkmale> merkmaleByKurztext;
-
 	/** Ein Cache für den schnellen Zugriff auf den Katalog der Schulen */
 	private final Map<String, DTOSchuleNRW> schulenBySchulnummer;
-
 
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link SchuelerSchulbesuchsdaten}.
@@ -66,7 +64,6 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		super(conn);
 		setAttributesNotPatchable("id");
 		this.entlassartenByBezeichnung = conn.queryAll(DTOEntlassarten.class).stream().collect(Collectors.toMap(e -> e.Bezeichnung, e -> e));
-		this.merkmaleByKurztext = conn.queryAll(DTOMerkmale.class).stream().collect(Collectors.toMap(m -> m.kuerzel, m -> m));
 		this.schulenBySchulnummer = conn.queryAll(DTOSchuleNRW.class).stream().collect(Collectors.toMap(s -> s.SchulNr, s -> s));
 	}
 
@@ -116,12 +113,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 	}
 
 	@Override
-	protected SchuelerSchulbesuchsdaten map(final DTOSchueler dtoSchueler) throws ApiOperationException {
-		final List<DTOSchuelerMerkmale> schuelerMerkmale = conn.queryList(DTOSchuelerMerkmale.QUERY_BY_SCHUELER_ID, DTOSchuelerMerkmale.class, dtoSchueler.ID);
-		return mapInternal(dtoSchueler, schuelerMerkmale);
-	}
-
-	private SchuelerSchulbesuchsdaten mapInternal(final DTOSchueler dtoSchueler, final @NotNull List<DTOSchuelerMerkmale> schuelerMerkmale) {
+	protected SchuelerSchulbesuchsdaten map(final DTOSchueler dtoSchueler) {
 
 		final SchuelerSchulbesuchsdaten daten = new SchuelerSchulbesuchsdaten();
 		// Basisdaten
@@ -164,7 +156,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		daten.teilnahmeSprachfoerderkurs = (dtoSchueler.TeilnahmeSprachfoerderkurs != null) && dtoSchueler.TeilnahmeSprachfoerderkurs;
 
 		// Informationen zu besonderen Merkmalen für die Statistik
-		daten.merkmale = DataSchuelerMerkmale.mapMultiple(schuelerMerkmale, merkmaleByKurztext);
+		daten.merkmale = this.getSchuelerMerkmale(dtoSchueler.ID);
 
 		// Informationen zu allen bisher besuchten Schulen
 		daten.alleSchulen = this.getBisherigeSchulen(dtoSchueler.ID);
@@ -172,8 +164,20 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		return daten;
 	}
 
+	private List<SchuelerSchulbesuchMerkmal> getSchuelerMerkmale(final Long idSchueler) {
+		// Uebergangsloesung -> Die gesamte Klasse wird durch Service ersetzt
+		final var repo = SchuelerMerkmaleRepositoryFactory.getNewInstance();
+		final var merkmalRepo = MerkmalRepositoryFactory.getNewInstance();
+		final var mapper = SchuelerMerkmalMapper.INSTANCE;
+
+		return SchuelerMerkmalServiceFactory
+				.getNewInstance(repo, merkmalRepo, mapper)
+				.getSchuelerMerkmalService()
+				.getAllByIdSchueler(idSchueler);
+	}
+
 	private List<SchuelerSchulbesuchSchule> getBisherigeSchulen(final Long idSchueler) {
-		// Uebergangsloesung -> Die gesamte Klasse wird durch MVC Pattern ersetzt
+		// Uebergangsloesung -> Die gesamte Klasse wird durch Service ersetzt
 		final var repo = BisherigeSchuleRepositoryFactory.getNewInstance();
 		final var mapper = BisherigeSchuleMapper.INSTANCE;
 
@@ -182,6 +186,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 				.getBisherigeSchulenService()
 				.getAllByIdSchueler(idSchueler);
 	}
+
 
 	private Long mapUebergangsempfehlung(final String uebergangsempfehlungJg5) {
 		try {

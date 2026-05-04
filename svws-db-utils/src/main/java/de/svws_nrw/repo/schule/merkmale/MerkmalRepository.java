@@ -1,6 +1,9 @@
 package de.svws_nrw.repo.schule.merkmale;
 
+import java.util.Optional;
+
 import de.svws_nrw.db.dto.current.schild.schule.DTOMerkmale;
+import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.Repository;
 
 public interface MerkmalRepository extends Repository<DTOMerkmale> {
@@ -52,4 +55,13 @@ public interface MerkmalRepository extends Repository<DTOMerkmale> {
 	 */
 	boolean bezeichnungIsAlreadyUsedPatch(String bezeichnung, long id);
 
+	/**
+	 * Gibt die Merkmal-entität zum Kürzel zurück
+	 *
+	 * @param kuerzel das Kürzel des Merkmals
+	 *
+	 * @return {@link DTOMerkmale}-Eintrag
+	 * @throws ApiOperationException wenn kein Kürzel übergeben wurde oder dieses keinem Merkmal eindeutig zugeordnert werden kann
+	 */
+	Optional<DTOMerkmale> getByKuerzel(String kuerzel);
 }

@@ -13487,7 +13487,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Ein SchuelerMerkmal wurde erfolgreich entfernt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<SchuelerSchulbesuchMerkmal>
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um SchuelerMerkmale zu entfernen.
 	 *   Code 404: Die SchuelerMerkmale sind nicht vorhanden
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft
@@ -13498,14 +13498,14 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Ein SchuelerMerkmal wurde erfolgreich entfernt.
 	 */
-	public async deleteSchuelerMerkmale(data : List<number>, schema : string) : Promise<List<SchuelerSchulbesuchMerkmal>> {
+	public async deleteSchuelerMerkmale(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schueler/merkmal/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<SchuelerSchulbesuchMerkmal>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerSchulbesuchMerkmal.transpilerFromJSON(text)); });
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
 		return ret;
 	}
 

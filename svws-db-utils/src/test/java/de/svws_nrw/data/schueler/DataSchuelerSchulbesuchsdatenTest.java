@@ -16,7 +16,6 @@ import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOEntlassarten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
-import de.svws_nrw.db.dto.current.schild.schule.DTOMerkmale;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.DbConnectionProvider;
 import jakarta.ws.rs.core.Response;
@@ -148,7 +147,6 @@ class DataSchuelerSchulbesuchsdatenTest {
 	@DisplayName("map | idVorherigeSchule | Erfolg")
 	void mapTest_idVorherigeSchule_Erfolg() throws ApiOperationException {
 		when(this.conn.queryAll(DTOEntlassarten.class)).thenReturn(Collections.emptyList());
-		when(this.conn.queryAll(DTOMerkmale.class)).thenReturn(Collections.emptyList());
 		when(this.conn.queryAll(DTOSchuleNRW.class)).thenReturn(List.of(new DTOSchuleNRW(3L, "123")));
 		final var data = new DataSchuelerSchulbesuchsdaten(this.conn);
 		final var dto = new DTOSchueler(1L, "2", false);
@@ -163,7 +161,6 @@ class DataSchuelerSchulbesuchsdatenTest {
 	@DisplayName("map | idVorherigeSchule | Erfolg")
 	void mapTest_idVorherigeSchule_Null() throws ApiOperationException {
 		when(this.conn.queryAll(DTOEntlassarten.class)).thenReturn(Collections.emptyList());
-		when(this.conn.queryAll(DTOMerkmale.class)).thenReturn(Collections.emptyList());
 		when(this.conn.queryAll(DTOSchuleNRW.class)).thenReturn(Collections.emptyList());
 		final var data = new DataSchuelerSchulbesuchsdaten(this.conn);
 		final var dto = new DTOSchueler(1L, "2", false);
@@ -230,7 +227,6 @@ class DataSchuelerSchulbesuchsdatenTest {
 	@DisplayName("map | idAufnehmendeSchule | Erfolg")
 	void mapTest_idAufnehmendeSchule_Erfolg() throws ApiOperationException {
 		when(this.conn.queryAll(DTOEntlassarten.class)).thenReturn(Collections.emptyList());
-		when(this.conn.queryAll(DTOMerkmale.class)).thenReturn(Collections.emptyList());
 		when(this.conn.queryAll(DTOSchuleNRW.class)).thenReturn(List.of(new DTOSchuleNRW(3L, "123")));
 		final var data = new DataSchuelerSchulbesuchsdaten(this.conn);
 		final var dto = new DTOSchueler(1L, "2", false);
@@ -246,7 +242,6 @@ class DataSchuelerSchulbesuchsdatenTest {
 	@DisplayName("map | idAufnehmendeSchule | null")
 	void mapTest_idAufnehmendeSchule_Null() throws ApiOperationException {
 		when(this.conn.queryAll(DTOEntlassarten.class)).thenReturn(Collections.emptyList());
-		when(this.conn.queryAll(DTOMerkmale.class)).thenReturn(Collections.emptyList());
 		when(this.conn.queryAll(DTOSchuleNRW.class)).thenReturn(Collections.emptyList());
 		final var data = new DataSchuelerSchulbesuchsdaten(this.conn);
 		final var dto = new DTOSchueler(1L, "2", false);

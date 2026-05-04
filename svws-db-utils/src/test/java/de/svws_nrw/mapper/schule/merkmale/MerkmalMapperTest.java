@@ -47,7 +47,7 @@ class MerkmalMapperTest {
 
 	@Test
 	@DisplayName("applyPatch | Aktualisiert alle Felder mit definierten Werten")
-	void applyPatch_updatesAllDefinedFields() {
+	void patch_updatesAllDefinedFields() {
 		final var dto = new MerkmalPatchRequest();
 		dto.kuerzel = JsonNullable.of("NEU");
 		dto.bezeichnung = JsonNullable.of("Neue Bezeichnung");
@@ -60,7 +60,7 @@ class MerkmalMapperTest {
 		entity.istSchulmerkmal = true;
 		entity.istSchuelermerkmal = false;
 
-		mapper.applyPatch(dto, entity);
+		mapper.patch(dto, entity);
 
 		assertThat(entity)
 				.extracting("kuerzel", "bezeichnung", "istSchulmerkmal", "istSchuelermerkmal")
@@ -69,7 +69,7 @@ class MerkmalMapperTest {
 
 	@Test
 	@DisplayName("applyPatch | Lässt undefined Felder unverändert")
-	void applyPatch_keepsUndefinedFieldsUnchanged() {
+	void patch_keepsUndefinedFieldsUnchanged() {
 		final var dto = new MerkmalPatchRequest();
 		dto.kuerzel = JsonNullable.undefined();
 		dto.bezeichnung = JsonNullable.undefined();
@@ -82,7 +82,7 @@ class MerkmalMapperTest {
 		entity.istSchulmerkmal = true;
 		entity.istSchuelermerkmal = false;
 
-		mapper.applyPatch(dto, entity);
+		mapper.patch(dto, entity);
 
 		assertThat(entity)
 				.extracting("kuerzel", "bezeichnung", "istSchulmerkmal", "istSchuelermerkmal")
@@ -91,7 +91,7 @@ class MerkmalMapperTest {
 
 	@Test
 	@DisplayName("applyPatch | Setzt null-Werte korrekt")
-	void applyPatch_setsNullValues() {
+	void patch_setsNullValues() {
 		final var dto = new MerkmalPatchRequest();
 		dto.kuerzel = JsonNullable.of(null);
 		dto.bezeichnung = JsonNullable.of(null);
@@ -100,7 +100,7 @@ class MerkmalMapperTest {
 		entity.kuerzel = "ALT";
 		entity.bezeichnung = "Alte Bezeichnung";
 
-		mapper.applyPatch(dto, entity);
+		mapper.patch(dto, entity);
 
 		assertThat(entity)
 				.extracting("kuerzel", "bezeichnung")

@@ -26,66 +26,66 @@ import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerMerkmale")
-@JsonPropertyOrder({"ID", "Schueler_ID", "Kurztext", "DatumVon", "DatumBis"})
+@JsonPropertyOrder({"id", "idSchueler", "kuerzelMerkmal", "datumVon", "datumBis"})
 public final class DTOSchuelerMerkmale {
 
 	/** Die Datenbankabfrage für alle DTOs */
 	public static final String QUERY_ALL = "SELECT e FROM DTOSchuelerMerkmale e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.id = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.id IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.id IS NOT NULL";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
-	public static final String QUERY_BY_ID = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes id */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.id = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
-	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes id */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.id IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Schueler_ID */
-	public static final String QUERY_BY_SCHUELER_ID = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.Schueler_ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idSchueler */
+	public static final String QUERY_BY_IDSCHUELER = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.idSchueler = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schueler_ID */
-	public static final String QUERY_LIST_BY_SCHUELER_ID = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.Schueler_ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idSchueler */
+	public static final String QUERY_LIST_BY_IDSCHUELER = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.idSchueler IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Kurztext */
-	public static final String QUERY_BY_KURZTEXT = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.Kurztext = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes kuerzelMerkmal */
+	public static final String QUERY_BY_KUERZELMERKMAL = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.kuerzelMerkmal = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kurztext */
-	public static final String QUERY_LIST_BY_KURZTEXT = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.Kurztext IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes kuerzelMerkmal */
+	public static final String QUERY_LIST_BY_KUERZELMERKMAL = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.kuerzelMerkmal IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes DatumVon */
-	public static final String QUERY_BY_DATUMVON = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.DatumVon = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes datumVon */
+	public static final String QUERY_BY_DATUMVON = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.datumVon = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DatumVon */
-	public static final String QUERY_LIST_BY_DATUMVON = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.DatumVon IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes datumVon */
+	public static final String QUERY_LIST_BY_DATUMVON = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.datumVon IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes DatumBis */
-	public static final String QUERY_BY_DATUMBIS = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.DatumBis = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes datumBis */
+	public static final String QUERY_BY_DATUMBIS = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.datumBis = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DatumBis */
-	public static final String QUERY_LIST_BY_DATUMBIS = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.DatumBis IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes datumBis */
+	public static final String QUERY_LIST_BY_DATUMBIS = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.datumBis IN ?1";
 
 	/** ID des Eintrag bei besondere Merkmale zum Schüler */
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public long ID;
+	public long id;
 
 	/** Schüler-ID des Eintrag bei besondere Merkmale zum Schüler */
 	@Column(name = "Schueler_ID")
 	@JsonProperty
-	public long Schueler_ID;
+	public long idSchueler;
 
-	/** Kurztext des Merkmals des Eintrag bei besondere Merkmale zum Schüler */
+	/** Das Kürzel des Merkmals des Eintrag bei besondere Merkmale zum Schüler */
 	@Column(name = "Kurztext")
 	@JsonProperty
-	public String Kurztext;
+	public String kuerzelMerkmal;
 
 	/** Datum Beginn des Eintrag bei besondere Merkmale zum Schüler */
 	@Column(name = "DatumVon")
@@ -93,7 +93,7 @@ public final class DTOSchuelerMerkmale {
 	@Convert(converter = DatumConverter.class)
 	@JsonSerialize(using = DatumConverterSerializer.class)
 	@JsonDeserialize(using = DatumConverterDeserializer.class)
-	public String DatumVon;
+	public String datumVon;
 
 	/** Datum Ende des Eintrag bei besondere Merkmale zum Schüler */
 	@Column(name = "DatumBis")
@@ -101,7 +101,7 @@ public final class DTOSchuelerMerkmale {
 	@Convert(converter = DatumConverter.class)
 	@JsonSerialize(using = DatumConverterSerializer.class)
 	@JsonDeserialize(using = DatumConverterDeserializer.class)
-	public String DatumBis;
+	public String datumBis;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOSchuelerMerkmale ohne eine Initialisierung der Attribute.
@@ -112,12 +112,12 @@ public final class DTOSchuelerMerkmale {
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOSchuelerMerkmale ohne eine Initialisierung der Attribute.
-	 * @param ID   der Wert für das Attribut ID
-	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
+	 * @param id   der Wert für das Attribut id
+	 * @param idSchueler   der Wert für das Attribut idSchueler
 	 */
-	public DTOSchuelerMerkmale(final long ID, final long Schueler_ID) {
-		this.ID = ID;
-		this.Schueler_ID = Schueler_ID;
+	public DTOSchuelerMerkmale(final long id, final long idSchueler) {
+		this.id = id;
+		this.idSchueler = idSchueler;
 	}
 
 
@@ -133,14 +133,14 @@ public final class DTOSchuelerMerkmale {
 			return false;
 		}
 		DTOSchuelerMerkmale other = (DTOSchuelerMerkmale) obj;
-		return ID == other.ID;
+		return id == other.id;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Long.hashCode(ID);
+		result = prime * result + Long.hashCode(id);
 		return result;
 	}
 
@@ -152,7 +152,7 @@ public final class DTOSchuelerMerkmale {
 	 */
 	@Override
 	public String toString() {
-		return "DTOSchuelerMerkmale(ID=" + this.ID + ", Schueler_ID=" + this.Schueler_ID + ", Kurztext=" + this.Kurztext + ", DatumVon=" + this.DatumVon + ", DatumBis=" + this.DatumBis + ")";
+		return "DTOSchuelerMerkmale(id=" + this.id + ", idSchueler=" + this.idSchueler + ", kuerzelMerkmal=" + this.kuerzelMerkmal + ", datumVon=" + this.datumVon + ", datumBis=" + this.datumBis + ")";
 	}
 
 }

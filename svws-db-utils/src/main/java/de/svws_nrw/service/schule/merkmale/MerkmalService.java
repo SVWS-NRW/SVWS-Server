@@ -85,7 +85,7 @@ public final class MerkmalService {
 				() -> {
 					final var entity = repository.getById(id);
 					validatePatch(entity, dto, id);
-					mapper.applyPatch(dto, entity);
+					mapper.patch(dto, entity);
 					return this.mapper.toApi(entity);
 				}
 		);

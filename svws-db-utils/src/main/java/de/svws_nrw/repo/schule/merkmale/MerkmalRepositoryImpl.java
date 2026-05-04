@@ -1,5 +1,7 @@
 package de.svws_nrw.repo.schule.merkmale;
 
+import java.util.Optional;
+
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOMerkmale;
 import de.svws_nrw.repo.RepositoryImpl;
@@ -39,5 +41,13 @@ public final class MerkmalRepositoryImpl extends RepositoryImpl<DTOMerkmale> imp
 		return conn.existsBy(query, DTOMerkmale.class, bezeichnung, id);
 	}
 
+	@Override
+	public Optional<DTOMerkmale> getByKuerzel(final String kuerzel) {
+		if (kuerzel == null) {
+			return Optional.empty();
+		}
+		final var result = conn.queryList(DTOMerkmale.QUERY_BY_KUERZEL, DTOMerkmale.class, kuerzel);
+		return (result.size() == 1) ? Optional.of(result.getFirst()) : Optional.empty();
+	}
 }
 

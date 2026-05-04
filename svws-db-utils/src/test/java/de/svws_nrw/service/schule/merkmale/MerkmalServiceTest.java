@@ -197,7 +197,7 @@ class MerkmalServiceTest {
 				.isEqualTo(apiMerkmal);
 
 		verify(repository, times(1)).getById(id);
-		verify(mapper, times(1)).applyPatch(dto, entity);
+		verify(mapper, times(1)).patch(dto, entity);
 	}
 
 	@Test

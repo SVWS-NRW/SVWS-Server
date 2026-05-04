@@ -17,17 +17,20 @@ public class Tabelle_SchuelerMerkmale extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public final SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
+			.setJavaName("id")
 			.setNotNull()
 			.setJavaComment("ID des Eintrag bei besondere Merkmale zum Schüler");
 
 	/** Die Definition der Tabellenspalte Schueler_ID */
 	public final SchemaTabelleSpalte col_Schueler_ID = add("Schueler_ID", SchemaDatentypen.BIGINT, false)
+			.setJavaName("idSchueler")
 			.setNotNull()
 			.setJavaComment("Schüler-ID des Eintrag bei besondere Merkmale zum Schüler");
 
 	/** Die Definition der Tabellenspalte Kurztext */
 	public final SchemaTabelleSpalte col_Kurztext = add("Kurztext", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
-			.setJavaComment("Kurztext des Merkmals des Eintrag bei besondere Merkmale zum Schüler");
+			.setJavaName("kuerzelMerkmal")
+			.setJavaComment("Das Kürzel des Merkmals des Eintrag bei besondere Merkmale zum Schüler");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */
 	public final SchemaTabelleSpalte col_SchulnrEigner = add("SchulnrEigner", SchemaDatentypen.INT, false)
@@ -37,11 +40,13 @@ public class Tabelle_SchuelerMerkmale extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte DatumVon */
 	public final SchemaTabelleSpalte col_DatumVon = add("DatumVon", SchemaDatentypen.DATE, false)
+			.setJavaName("datumVon")
 			.setConverter(DatumConverter.class)
 			.setJavaComment("Datum Beginn des Eintrag bei besondere Merkmale zum Schüler");
 
 	/** Die Definition der Tabellenspalte DatumBis */
 	public final SchemaTabelleSpalte col_DatumBis = add("DatumBis", SchemaDatentypen.DATE, false)
+			.setJavaName("datumBis")
 			.setConverter(DatumConverter.class)
 			.setJavaComment("Datum Ende des Eintrag bei besondere Merkmale zum Schüler");
 

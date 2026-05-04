@@ -1,0 +1,72 @@
+package de.svws_nrw.controller.schueler.schulbesuch;
+
+import de.svws_nrw.core.types.ServerMode;
+import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.data.benutzer.DBBenutzerUtils;
+import de.svws_nrw.mapper.schueler.schulbesuch.SchuelerMerkmalMapper;
+import de.svws_nrw.repo.schueler.schulbesuch.SchuelerMerkmaleRepositoryFactory;
+import de.svws_nrw.repo.schule.merkmale.MerkmalRepositoryFactory;
+import de.svws_nrw.service.schueler.schulbesuch.SchuelerMerkmalServiceFactory;
+import jakarta.servlet.http.HttpServletRequest;
+
+public class SchuelerMerkmalControllerFactory {
+
+	private final SchuelerMerkmalServiceFactory factory;
+
+
+	/**
+	 * Erstellt eine neue SchuelerMerkmalControllerFactory mit der angegebenen Service-Factory.
+	 *
+	 * @param factory die Factory zur Erstellung von SchuelerMerkmalService-Instanzen
+	 */
+	public SchuelerMerkmalControllerFactory(final SchuelerMerkmalServiceFactory factory) {
+		this.factory = factory;
+	}
+
+	private static SchuelerMerkmalControllerFactory getNewInstance(final HttpServletRequest request) {
+		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+		final var repoFactory = SchuelerMerkmaleRepositoryFactory.getNewInstance();
+		final var merkmalRepoFactory = MerkmalRepositoryFactory.getNewInstance();
+		final var mapper = SchuelerMerkmalMapper.INSTANCE;
+		final var serviceFactory = SchuelerMerkmalServiceFactory.getNewInstance(repoFactory, merkmalRepoFactory, mapper);
+
+		return new SchuelerMerkmalControllerFactory(serviceFactory);
+	}
+
+	/**
+	 * Erstellt eine Factory-Instanz mit Schreibberechtigung.
+	 * <p>
+	 * Erfordert die Kompetenz {@link BenutzerKompetenz#SCHUELER_INDIVIDUALDATEN_AENDERN}.
+	 * </p>
+	 *
+	 * @param request die HTTP-Anfrage zur Initialisierung der Datenbankverbindung
+	 * @return eine SchuelerMerkmalControllerFactory-Instanz mit Schreibberechtigung
+	 */
+	public static SchuelerMerkmalControllerFactory withWriteAccess(final HttpServletRequest request) {
+		return getNewInstance(request);
+	}
+
+	/**
+	 * Erstellt eine Factory-Instanz mit Löschberechtigung.
+	 * <p>
+	 * Erfordert die Kompetenz {@link BenutzerKompetenz#SCHUELER_INDIVIDUALDATEN_AENDERN}.
+	 * </p>
+	 *
+	 * @param request die HTTP-Anfrage zur Initialisierung der Datenbankverbindung
+	 * @return eine SchuelerMerkmalControllerFactory-Instanz mit Löschberechtigung
+	 */
+	public static SchuelerMerkmalControllerFactory withDeleteAccess(final HttpServletRequest request) {
+		return getNewInstance(request);
+	}
+
+
+	/**
+	 * Erstellt eine neue SchuelerMerkmalController-Instanz.
+	 *
+	 * @return ein neuer SchuelerMerkmalController mit dem konfigurierten SchuelerMerkmalService
+	 */
+	public SchuelerMerkmalController getBisherigeSchulenController() {
+		return new SchuelerMerkmalController(factory.getSchuelerMerkmalService());
+	}
+
+}

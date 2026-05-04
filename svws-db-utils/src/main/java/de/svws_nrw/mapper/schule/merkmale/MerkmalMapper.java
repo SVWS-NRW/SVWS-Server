@@ -2,13 +2,17 @@ package de.svws_nrw.mapper.schule.merkmale;
 
 import de.svws_nrw.core.data.schule.Merkmal;
 import de.svws_nrw.db.dto.current.schild.schule.DTOMerkmale;
+import de.svws_nrw.mapper.JsonNullableMapper;
 import de.svws_nrw.service.schule.merkmale.MerkmalCreateRequest;
 import de.svws_nrw.service.schule.merkmale.MerkmalPatchRequest;
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(uses = JsonNullableMapper.class)
 public interface MerkmalMapper {
 
 	/** Instanz des Mappers */
@@ -40,10 +44,7 @@ public interface MerkmalMapper {
 	 * @param dto    das {@link MerkmalPatchRequest} mit den zu ändernden Feldern
 	 * @param entity das zu aktualisierende {@link DTOMerkmale} Entity
 	 */
-	default void applyPatch(final MerkmalPatchRequest dto, final DTOMerkmale entity) {
-		dto.bezeichnung.ifPresent(bezeichnung -> entity.bezeichnung = bezeichnung);
-		dto.kuerzel.ifPresent(kuerzel -> entity.kuerzel = kuerzel);
-		dto.istSchuelermerkmal.ifPresent(istSchuelermerkmal -> entity.istSchuelermerkmal = istSchuelermerkmal);
-		dto.istSchulmerkmal.ifPresent(istSchulmerkmal -> entity.istSchulmerkmal = istSchulmerkmal);
-	}
+	@Mapping(target = "id", ignore = true)
+	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+	void patch(MerkmalPatchRequest dto, @MappingTarget DTOMerkmale entity);
 }

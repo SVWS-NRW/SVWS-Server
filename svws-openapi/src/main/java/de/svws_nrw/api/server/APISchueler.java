@@ -1,36 +1,27 @@
 package de.svws_nrw.api.server;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import de.svws_nrw.asd.data.schueler.SchuelerBetrieb;
-import de.svws_nrw.asd.data.schueler.SchuelerNeu;
-import de.svws_nrw.controller.schueler.schulbesuch.BisherigeSchuleControllerFactory;
-import de.svws_nrw.core.data.schule.Fahrschuelerart;
-import de.svws_nrw.data.kataloge.DataFahrschuelerarten;
-
 import java.io.InputStream;
 import java.util.List;
 
-import de.svws_nrw.data.schueler.DataSchuelerNeu;
-import de.svws_nrw.data.schueler.betriebe.DataSchuelerBetriebe;
-import de.svws_nrw.data.schule.DataEinwilligungsarten;
-import de.svws_nrw.data.schule.DataLernplattformen;
-import de.svws_nrw.service.schueler.schulbesuch.BisherigeSchuleCreateRequest;
-import de.svws_nrw.service.schueler.schulbesuch.BisherigeSchulePatchRequest;
-import org.jboss.resteasy.annotations.GZIP;
-
+import de.svws_nrw.asd.data.schueler.HerkunftsartenKatalogEintrag;
+import de.svws_nrw.asd.data.schueler.SchuelerBetrieb;
+import de.svws_nrw.asd.data.schueler.SchuelerFoerderempfehlung;
 import de.svws_nrw.asd.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittBemerkungen;
 import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittsdaten;
+import de.svws_nrw.asd.data.schueler.SchuelerNeu;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchMerkmal;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchSchule;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
-import de.svws_nrw.asd.data.schueler.SchuelerFoerderempfehlung;
 import de.svws_nrw.asd.data.schueler.Sprachbelegung;
 import de.svws_nrw.asd.data.schueler.Sprachpruefung;
 import de.svws_nrw.asd.data.schueler.UebergangsempfehlungKatalogEintrag;
+import de.svws_nrw.controller.schueler.schulbesuch.BisherigeSchuleControllerFactory;
+import de.svws_nrw.controller.schueler.schulbesuch.SchuelerMerkmalControllerFactory;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
+import de.svws_nrw.core.data.schueler.SchuelerEinwilligung;
 import de.svws_nrw.core.data.schueler.SchuelerKAoADaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittListeEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerLernplattform;
@@ -38,24 +29,25 @@ import de.svws_nrw.core.data.schueler.SchuelerListe;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerTelefon;
 import de.svws_nrw.core.data.schueler.SchuelerVermerke;
-import de.svws_nrw.core.data.schueler.SchuelerEinwilligung;
+import de.svws_nrw.core.data.schule.Fahrschuelerart;
 import de.svws_nrw.core.data.schule.HerkunftKatalogEintrag;
-import de.svws_nrw.asd.data.schueler.HerkunftsartenKatalogEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.erzieher.DataErzieherStammdaten;
+import de.svws_nrw.data.kataloge.DataFahrschuelerarten;
 import de.svws_nrw.data.schueler.DataKatalogHerkuenfte;
 import de.svws_nrw.data.schueler.DataKatalogHerkunftsarten;
 import de.svws_nrw.data.schueler.DataKatalogUebergangsempfehlung;
 import de.svws_nrw.data.schueler.DataSchuelerEinwilligungen;
+import de.svws_nrw.data.schueler.DataSchuelerFoerderempfehlung;
 import de.svws_nrw.data.schueler.DataSchuelerKAoADaten;
 import de.svws_nrw.data.schueler.DataSchuelerLeistungsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsliste;
 import de.svws_nrw.data.schueler.DataSchuelerLernplattformen;
-import de.svws_nrw.data.schueler.DataSchuelerMerkmale;
+import de.svws_nrw.data.schueler.DataSchuelerNeu;
 import de.svws_nrw.data.schueler.DataSchuelerSchulbesuchsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerSprachbelegung;
 import de.svws_nrw.data.schueler.DataSchuelerSprachpruefung;
@@ -63,7 +55,13 @@ import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerTelefon;
 import de.svws_nrw.data.schueler.DataSchuelerVermerke;
 import de.svws_nrw.data.schueler.DataSchuelerliste;
-import de.svws_nrw.data.schueler.DataSchuelerFoerderempfehlung;
+import de.svws_nrw.data.schueler.betriebe.DataSchuelerBetriebe;
+import de.svws_nrw.data.schule.DataEinwilligungsarten;
+import de.svws_nrw.data.schule.DataLernplattformen;
+import de.svws_nrw.service.schueler.schulbesuch.BisherigeSchuleCreateRequest;
+import de.svws_nrw.service.schueler.schulbesuch.BisherigeSchulePatchRequest;
+import de.svws_nrw.service.schueler.schulbesuch.SchuelerMerkmalCreateRequest;
+import de.svws_nrw.service.schueler.schulbesuch.SchuelerMerkmalPatchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -85,6 +83,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+import org.jboss.resteasy.annotations.GZIP;
 
 
 /**
@@ -394,7 +393,7 @@ public class APISchueler {
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param id        die Datenbank-ID zur Identifikation der bisher besuchten Schule
-	 * @param patch     das partielle Update als {@link JsonNode}
+	 * @param patch     das partielle Update als {@link BisherigeSchulePatchRequest}
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -454,7 +453,7 @@ public class APISchueler {
 	 * Die OpenAPI-Methode für das Hinzufügen von SchuelerMerkmalen.
 	 *
 	 * @param schema       das Datenbankschema
-	 * @param is           der Input-Stream mit den Daten des SchuelerMerkmals
+	 * @param input        {@link SchuelerSchulbesuchMerkmal}
 	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem neuen SchuelerMerkmal
@@ -470,10 +469,12 @@ public class APISchueler {
 	public Response addSchuelerMerkmal(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten des zu erstellenden SchuelerMerkmal ohne ID, die automatisch generiert wird", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							schema = @Schema(implementation = SchuelerSchulbesuchMerkmal.class))) final InputStream is,
+							schema = @Schema(implementation = SchuelerSchulbesuchMerkmal.class))) final SchuelerMerkmalCreateRequest input,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerMerkmale(conn).addAsResponse(is),
-				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+		return SchuelerMerkmalControllerFactory
+				.withWriteAccess(request)
+				.getBisherigeSchulenController()
+				.create(input);
 	}
 
 	/**
@@ -481,7 +482,7 @@ public class APISchueler {
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param id        die Datenbank-ID zur Identifikation des Schülermerkmals
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param patch     das partielle Update als {@link SchuelerMerkmalPatchRequest}
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -499,10 +500,12 @@ public class APISchueler {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchSchuelerMerkmal(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch für das SchuelerMerkmal", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = SchuelerSchulbesuchMerkmal.class))) final InputStream is,
+					schema = @Schema(implementation = SchuelerSchulbesuchMerkmal.class))) final SchuelerMerkmalPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerMerkmale(conn).patchAsResponse(id, is),
-				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+		return SchuelerMerkmalControllerFactory
+				.withWriteAccess(request)
+				.getBisherigeSchulenController()
+				.patch(id, patch);
 	}
 
 	/**
@@ -519,17 +522,19 @@ public class APISchueler {
 	@Operation(summary = "Entfernt SchuelerMerkmale.",
 			description = "Entfernt SchuelerMerkmale, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
 	@ApiResponse(responseCode = "200", description = "Ein SchuelerMerkmal wurde erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerSchulbesuchMerkmal.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um SchuelerMerkmale zu entfernen.")
 	@ApiResponse(responseCode = "404", description = "Die SchuelerMerkmale sind nicht vorhanden")
 	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteSchuelerMerkmale(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Merkmale",
 					required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream ids,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerMerkmale(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(ids)),
-				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+		return SchuelerMerkmalControllerFactory
+				.withWriteAccess(request)
+				.getBisherigeSchulenController()
+				.delete(ids);
 	}
 
 
