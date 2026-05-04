@@ -43,8 +43,9 @@ public final class ApiTranspilerTypeScriptPlugin extends TranspilerLanguagePlugi
 	 */
 	public ApiTranspilerTypeScriptPlugin(final Transpiler transpiler, final String outputDir) {
 		super(transpiler);
-		if (outputDir == null)
+		if (outputDir == null) {
 			throw new TranspilerException("Transpiler Error: An output directory for the transpiler language plugin is required.");
+		}
 		this.outputDir = outputDir;
 	}
 
@@ -71,8 +72,9 @@ public final class ApiTranspilerTypeScriptPlugin extends TranspilerLanguagePlugi
 		final HashMap<String, ArrayList<ApiMethod>> apis = new HashMap<>();
 		for (final ClassTree classTree : allClasses) {
 			// Beachte nur Klassen. Enums und ähnliches können ignoriert werden
-			if (classTree.getKind() != Tree.Kind.CLASS)
+			if (classTree.getKind() != Tree.Kind.CLASS) {
 				continue;
+			}
 
 			// Ermittle die Annotationen der Klasse
 			final ApiClassAnnotations classAnnotations = new ApiClassAnnotations(transpiler, classTree);
@@ -81,12 +83,14 @@ public final class ApiTranspilerTypeScriptPlugin extends TranspilerLanguagePlugi
 			final List<? extends Tree> members = classTree.getMembers();
 			for (final Tree member : members) {
 				// Es müssen nur Methoden beachtet werden.
-				if (!((member instanceof final MethodTree method) && (!"<init>".equals(method.getName().toString()))))
+				if (!((member instanceof final MethodTree method) && (!"<init>".equals(method.getName().toString())))) {
 					continue;
+				}
 				// Analsiere die Methode und speichere das Ergebnis der Analyse in der Klasse ApiMethod
 				final ApiMethod apiMethod = ApiMethod.getMethod(transpiler, classAnnotations, classTree, method);
-				if (apiMethod == null)
+				if (apiMethod == null) {
 					continue;
+				}
 				System.out.println("    -> " + classTree.getSimpleName().toString() + "." + apiMethod.name);
 				// Füge die API-Methode zu der entsprechenden API hinzu
 				ArrayList<ApiMethod> apiMethods = apis.get(apiMethod.api);
@@ -152,9 +156,10 @@ public final class ApiTranspilerTypeScriptPlugin extends TranspilerLanguagePlugi
 				for (final Map.Entry<String, String> importEntry : apiMethod.getImportsRequired().entrySet()) {
 					final String value = imports.get(importEntry.getKey());
 					if (value != null) {
-						if (!value.equals(importEntry.getValue()))
+						if (!value.equals(importEntry.getValue())) {
 							throw new TranspilerException("Transpiler Error: Transpiler cannot handle classes in the API with the same name in"
 									+ " different packages.");
+						}
 						continue;
 					}
 					imports.put(importEntry.getKey(), importEntry.getValue());
@@ -168,20 +173,22 @@ public final class ApiTranspilerTypeScriptPlugin extends TranspilerLanguagePlugi
 			});
 			String fileImports = "import { BaseApi, type ApiFile } from '../api/BaseApi';" + System.lineSeparator();
 			for (final Map.Entry<String, String> imp : allImports) {
-				if (imp.getKey().equals("String"))
+				if (imp.getKey().equals("String")) {
 					continue;
+				}
 				final String className = TranspilerTypeScriptPlugin.getImportName(imp.getKey(), imp.getValue());
 				final String packageName = TranspilerTypeScriptPlugin.getImportPackageName(imp.getKey(), imp.getValue());
 				final String importCast = "cast_" + packageName.replace('.', '_') + "_" + imp.getKey().replace('.', '_');
 				final String importPath = "../" + packageName.replace(strIgnoreJavaPackagePrefix + ".", "").replace('.', '/') + "/";
 				final boolean hasClass = fileData.contains(className);
 				final boolean hasCast = fileData.contains(importCast);
-				if (hasClass && hasCast)
+				if (hasClass && hasCast) {
 					fileImports += "import { " + className + ", " + importCast + " } from '" + importPath + className + "';" + System.lineSeparator();
-				else if (hasClass)
+				} else if (hasClass) {
 					fileImports += "import { " + className + " } from '" + importPath + className + "';" + System.lineSeparator();
-				else if (hasCast)
+				} else if (hasCast) {
 					fileImports += "import { " + importCast + " } from '" + importPath + className + "';" + System.lineSeparator();
+				}
 			}
 			fileImports += System.lineSeparator();
 

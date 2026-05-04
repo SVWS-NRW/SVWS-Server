@@ -24,6 +24,9 @@ public enum ApiMimeType {
 	/** Plain Text*/
 	TEXT_PLAIN("MediaType.TEXT_PLAIN", "text/plain"),
 
+	/** Html Text */
+	TEXT_HTML("MediaType.TEXT_HTML", "text/html"),
+
 	/** JSON */
 	APPLICATION_JSON("MediaType.APPLICATION_JSON", "application/json"),
 
@@ -62,8 +65,9 @@ public enum ApiMimeType {
 	 */
 	public static ApiMimeType get(final String str) {
 		for (final ApiMimeType t : ApiMimeType.values()) {
-			if (t.mediaType.equals(str) || t.mimetype.equals(str))
+			if (t.mediaType.equals(str) || t.mimetype.equals(str)) {
 				return t;
+			}
 		}
 		throw new TranspilerException("Transpiler Error: Unsupported mime type.");
 	}
@@ -103,8 +107,9 @@ public enum ApiMimeType {
 
 	private static List<ApiMimeType> getListFromAnnotationTree(final AnnotationTree annotationTree) {
 		final List<ApiMimeType> result = new ArrayList<>();
-		if (annotationTree == null)
+		if (annotationTree == null) {
 			return result;
+		}
 		final Map<String, ExpressionTree> args = Transpiler.getArguments(annotationTree);
 		return getListFromExpressionTree(args.get("value"));
 	}
@@ -115,8 +120,9 @@ public enum ApiMimeType {
 		return switch (value.getKind()) {
 			case NEW_ARRAY -> {
 				if (value instanceof final NewArrayTree nat) {
-					for (final ExpressionTree et : nat.getInitializers())
+					for (final ExpressionTree et : nat.getInitializers()) {
 						result.addAll(getListFromExpressionTree(et));
+					}
 					yield result;
 				}
 				throw new TranspilerException("Transpiler Exception: Unerwarteter interner Transpiler-Fehler.");

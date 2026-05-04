@@ -72,10 +72,12 @@ public final class ApiMethod {
 		name = method.getName().toString();
 		String tmpPathClass = classAnnotations.path;
 		final String tmpPathMethod = ApiMethod.getPath(transpiler, method);
-		if (tmpPathMethod == null)
+		if (tmpPathMethod == null) {
 			throw new TranspilerException("Null not expected here");
-		if ((!tmpPathClass.endsWith("/")) && (!tmpPathMethod.startsWith("/")))
+		}
+		if ((!tmpPathClass.endsWith("/")) && (!tmpPathMethod.startsWith("/"))) {
 			tmpPathClass += "/";
+		}
 		path = tmpPathClass + tmpPathMethod;
 		httpMethod = ApiHttpMethod.get(transpiler, method);
 		docSummary = ApiMethod.getDocSummary(transpiler, classTree, method);
@@ -88,25 +90,29 @@ public final class ApiMethod {
 			final ApiResponse response = new ApiResponse(transpiler, annotationMethodApiResponse);
 			responses.add(response);
 			final int responseCode = response.responseCode;
-			if ((responseCode >= 200) && (responseCode < 300))
+			if ((responseCode >= 200) && (responseCode < 300)) {
 				tmp200 = response;
+			}
 		}
 		responses.sort((a, b) -> Integer.compare(a.responseCode, b.responseCode));
-		if (tmp200 == null)
+		if (tmp200 == null) {
 			throw new TranspilerException("Transpiler Error: Missing http response code annotation for method " + name + " of class "
 					+ classTree.getSimpleName().toString());
+		}
 		returnResponse = tmp200;
 		final List<ApiMimeType> tmpProduces = ApiMimeType.fromMethodTree(transpiler, method, "jakarta.ws.rs.Produces");
-		if (tmpProduces.isEmpty()) // nehme den Standard der Java-API-Klasse
+		if (tmpProduces.isEmpty()) { // nehme den Standard der Java-API-Klasse
 			this.produces = classAnnotations.produces;
-		else
+		} else {
 			this.produces = tmpProduces;
+		}
 		this.producesFirst = this.produces.getFirst();
 		final List<ApiMimeType> tmpConsumes = ApiMimeType.fromMethodTree(transpiler, method, "jakarta.ws.rs.Consumes");
-		if (tmpConsumes.isEmpty()) // nehme den Standard der Java-API-Klasse
+		if (tmpConsumes.isEmpty()) { // nehme den Standard der Java-API-Klasse
 			this.consumes = classAnnotations.consumes;
-		else
+		} else {
 			this.consumes = tmpConsumes;
+		}
 		this.consumesFirst = this.consumes.getFirst();
 
 		this.requestBody = new ApiRequestBody(transpiler, method);
@@ -127,51 +133,59 @@ public final class ApiMethod {
 			final MethodTree method) {
 		// Only methods with a Path annotation are api methods
 		final String path = ApiMethod.getPath(transpiler, method);
-		if (path == null)
+		if (path == null) {
 			return null;
+		}
 		return new ApiMethod(transpiler, classAnnotations, classTree, method);
 	}
 
 	private static String getPath(final Transpiler transpiler, final MethodTree methodTree) {
 		final AnnotationTree annotationPath = transpiler.getAnnotation("jakarta.ws.rs.Path", methodTree);
-		if (annotationPath == null)
+		if (annotationPath == null) {
 			return null;
+		}
 		final Map<String, ExpressionTree> args = Transpiler.getArguments(annotationPath);
 		final ExpressionTree value = args.get("value");
-		if ((value.getKind() == Kind.STRING_LITERAL) && (value instanceof final LiteralTree literal) && (literal.getValue() instanceof final String path))
+		if ((value.getKind() == Kind.STRING_LITERAL) && (value instanceof final LiteralTree literal) && (literal.getValue() instanceof final String path)) {
 			return path;
+		}
 		throw new TranspilerException(strExceptionUnhandledPathAnnotation);
 	}
 
 	private static String getDocSummary(final Transpiler transpiler, final ClassTree classTree, final MethodTree method) {
 		final AnnotationTree annotationMethodOperation = transpiler.getAnnotation("io.swagger.v3.oas.annotations.Operation", method);
-		if (annotationMethodOperation == null)
+		if (annotationMethodOperation == null) {
 			throw new TranspilerException("Transpiler Exception: Missing Operation annotation on method %s in class %s."
 					.formatted(method.getName(), classTree.getSimpleName()));
+		}
 		final Map<String, ExpressionTree> args = Transpiler.getArguments(annotationMethodOperation);
 		final ExpressionTree value = args.get("summary");
 		if (value == null) {
 			throw new TranspilerException("Transpiler Exception: Missing summary value for @Operation annotation on method %s in class %s."
 					.formatted(method.getName(), classTree.getSimpleName()));
 		}
-		if ((value.getKind() == Kind.STRING_LITERAL) && (value instanceof final LiteralTree literal) && (literal.getValue() instanceof final String summary))
+		if ((value.getKind() == Kind.STRING_LITERAL) && (value instanceof final LiteralTree literal) && (literal.getValue() instanceof final String summary)) {
 			return summary;
+		}
 		throw new TranspilerException(strExceptionUnhandledPathAnnotation);
 	}
 
 	private static String getDocDescription(final Transpiler transpiler, final ClassTree classTree, final MethodTree method) {
 		final AnnotationTree annotationMethodOperation = transpiler.getAnnotation("io.swagger.v3.oas.annotations.Operation", method);
-		if (annotationMethodOperation == null)
+		if (annotationMethodOperation == null) {
 			throw new TranspilerException("Transpiler Exception: Missing Operation annotation on method %s in class %s."
 					.formatted(method.getName(), classTree.getSimpleName()));
+		}
 		final Map<String, ExpressionTree> args = Transpiler.getArguments(annotationMethodOperation);
 		final ExpressionTree value = args.get("description");
-		if (value == null)
+		if (value == null) {
 			throw new TranspilerException("Transpiler Exception: Missing description value for @Operation annotation on method %s in class %s."
 					.formatted(method.getName(), classTree.getSimpleName()));
+		}
 		if ((value.getKind() == Kind.STRING_LITERAL) && (value instanceof final LiteralTree literal)
-				&& (literal.getValue() instanceof final String description))
+				&& (literal.getValue() instanceof final String description)) {
 			return description;
+		}
 		throw new TranspilerException(strExceptionUnhandledPathAnnotation);
 	}
 
@@ -189,9 +203,10 @@ public final class ApiMethod {
 				for (final Map.Entry<String, String> entry : response.content.importsRequired.entrySet()) {
 					final String value = imports.get(entry.getKey());
 					if (value != null) {
-						if (!value.equals(entry.getValue()))
+						if (!value.equals(entry.getValue())) {
 							throw new TranspilerException("Transpiler Error: Transpiler cannot handle classes in the API with the same name in"
 									+ " different packages.");
+						}
 						continue;
 					}
 					imports.put(entry.getKey(), entry.getValue());
@@ -203,9 +218,10 @@ public final class ApiMethod {
 			for (final Map.Entry<String, String> entry : requestBody.content.importsRequired.entrySet()) {
 				final String value = imports.get(entry.getKey());
 				if (value != null) {
-					if (!value.equals(entry.getValue()))
+					if (!value.equals(entry.getValue())) {
 						throw new TranspilerException("Transpiler Error: Transpiler cannot handle classes in the API with the same name in"
 								+ " different packages.");
+					}
 					continue;
 				}
 				imports.put(entry.getKey(), entry.getValue());
@@ -284,8 +300,9 @@ public final class ApiMethod {
 				case "Boolean" -> "boolean";
 				default -> datatype;
 			};
-			if (!returnResponse.content.isNotNull)
+			if (!returnResponse.content.isNotNull) {
 				datatype += " | null";
+			}
 			return "Promise<" + datatype + ">";
 		}
 		return "Promise<void>";
@@ -298,8 +315,9 @@ public final class ApiMethod {
 	 * @return der Typ des Request-Body
 	 */
 	public String getRequestBodyType() {
-		if ((!requestBody.exists) || (requestBody.content == null))
+		if ((!requestBody.exists) || (requestBody.content == null)) {
 			return null;
+		}
 		final boolean isPartial = (httpMethod == ApiHttpMethod.PATCH) || ((httpMethod == ApiHttpMethod.POST) && (returnResponse.responseCode == 201));
 		return getTSType(requestBody.content, isPartial);
 	}
@@ -314,8 +332,9 @@ public final class ApiMethod {
 				case "Boolean" -> "boolean";
 				default -> datatype;
 			};
-			if (isPartial)
+			if (isPartial) {
 				datatype = "Partial<" + datatype + ">";
+			}
 			return "List<" + datatype + ">";
 		}
 		datatype = switch (datatype) {
@@ -324,15 +343,17 @@ public final class ApiMethod {
 			case "Boolean" -> "boolean | null";
 			default -> datatype;
 		};
-		if (isPartial)
+		if (isPartial) {
 			datatype = "Partial<" + datatype + ">";
+		}
 		return datatype;
 	}
 
 
 	private static String getTSArrayElementType(final ApiContent content) {
-		if (!content.isArrayType)
+		if (!content.isArrayType) {
 			throw new TranspilerException("Transpiler Error: getTSArrayElementType invoked on non-array content.");
+		}
 		return switch (content.arrayElementType) {
 			case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "number";
 			case "Character", "String" -> "string";
@@ -359,10 +380,11 @@ public final class ApiMethod {
 			notFirstParam = true;
 		}
 		for (final Map.Entry<String, String> pathParam : this.pathParams.params) {
-			if (notFirstParam)
+			if (notFirstParam) {
 				sb.append(", ");
-			else
+			} else {
 				notFirstParam = true;
+			}
 			sb.append(pathParam.getKey() + " : " + pathParam.getValue());
 		}
 		sb.append(") : " + this.getReturnType());
@@ -372,8 +394,9 @@ public final class ApiMethod {
 
 	private void transpileRequestBody(final StringBuilder sb) {
 		// Prüfe, ob überhaupt ein Request-Body vorliegt
-		if (!requestBody.exists || (requestBody.content == null))
+		if (!requestBody.exists || (requestBody.content == null)) {
 			return;
+		}
 		// Prüfe, ob der Request-Body in JSON umgewandelt werden muss
 		if (requestBody.content.mimetype == ApiMimeType.APPLICATION_JSON) {
 			if (requestBody.content.isArrayType) {
@@ -461,6 +484,10 @@ public final class ApiMethod {
 		if ((producesType == ApiMimeType.APPLICATION_JSON) && (this.consumesFirst == ApiMimeType.APPLICATION_JSON)) {
 			sb.append("\t\tconst result : string = await super.postJSON(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
 			transpileCodeForJsonResult(sb);
+			return;
+		} else if ((producesType == ApiMimeType.TEXT_HTML) && (this.consumesFirst == ApiMimeType.APPLICATION_JSON)) {
+			sb.append("\t\tconst result : string = await super.postTextBased(path, 'text/html', 'text/html', " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
+			sb.append("\t\treturn result;" + System.lineSeparator());
 			return;
 		} else if ((producesType == ApiMimeType.PDF) && (this.consumesFirst == ApiMimeType.APPLICATION_JSON)) {
 			sb.append("\t\tconst result : ApiFile = await super.postJSONtoPDF(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
@@ -570,8 +597,9 @@ public final class ApiMethod {
 				throw new TranspilerException("Transpiler Error: POST which produces " + producesType + " and consumes " + this.consumesFirst
 						+ " not yet implemented in the transpiler.");
 			}
-		} else
+		} else {
 			throw new TranspilerException("Transpiler Error: DELETE which consumes " + this.consumesFirst + " not yet implemented in the transpiler.");
+		}
 	}
 
 
@@ -587,11 +615,13 @@ public final class ApiMethod {
 			for (int i = 0; i < this.pathParams.params.size(); i++) {
 				final Map.Entry<String, String> pathParam = this.pathParams.params.get(i);
 				String replaceParam = pathParam.getKey();
-				if ("number".equals(pathParam.getValue()))
+				if ("number".equals(pathParam.getValue())) {
 					replaceParam += ".toString()";
+				}
 				sb.append("\t\t\t.replace(/{" + pathParam.getKey() + "\\s*(:[^{}]+({[^{}]+})*)?}/g, " + replaceParam + ")");
-				if (i == (this.pathParams.params.size() - 1))
+				if (i == (this.pathParams.params.size() - 1)) {
 					sb.append(";");
+				}
 				sb.append(System.lineSeparator());
 			}
 		}
@@ -631,13 +661,15 @@ public final class ApiMethod {
 	public boolean isTranspilable() {
 		if (requestBody.exists && (requestBody.content != null) && (requestBody.content.mimetype == ApiMimeType.APPLICATION_JSON)) {
 			final String datatype = (requestBody.content.isArrayType) ? requestBody.content.arrayElementType : requestBody.content.datatype;
-			if ("Object".equals(datatype))
+			if ("Object".equals(datatype)) {
 				return false;
+			}
 		}
 		if ((returnResponse.content != null) && (returnResponse.content.mimetype == ApiMimeType.APPLICATION_JSON)) {
 			final String datatype = (returnResponse.content.isArrayType) ? returnResponse.content.arrayElementType : returnResponse.content.datatype;
-			if ("Object".equals(datatype))
+			if ("Object".equals(datatype)) {
 				return false;
+			}
 		}
 		return true;
 	}
