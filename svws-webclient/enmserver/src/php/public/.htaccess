@@ -31,9 +31,9 @@
 	RewriteRule .* - [E=HTTP_AUTHORIZATION:%1]
 
 	RewriteCond %{REQUEST_URI} ^/(api|oauth) [NC]
-	RewriteRule ^ api.php [L,QSA]
+	RewriteRule ^ wenom.php [L,QSA]
 	
-	RewriteCond %{REQUEST_URI} !^/api.php
+	RewriteCond %{REQUEST_URI} !^/wenom.php
 	RewriteRule ^ index.html [L]
 
 </IfModule>
