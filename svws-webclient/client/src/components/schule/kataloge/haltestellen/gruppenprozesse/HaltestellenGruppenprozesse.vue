@@ -5,7 +5,7 @@
 		</div>
 		<div class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Haltestellen werden gelöscht">
-				<div>
+				<div v-if="isPreConditionSectionVisible">
 					<span v-if="selectedAllowedToDelete">Alle ausgewählten Haltestellen sind bereit zum Löschen.</span>
 					<template v-else v-for="message in deleteCheckErrors" :key="message">
 						<span class="text-ui-danger whitespace-pre-line"> {{ message }} <br> </span>
@@ -65,6 +65,7 @@
 	const selectedAllowedToDelete = computed<boolean>(() => props.deleteCheck().success);
 	const deleteCheckErrors = computed<Iterable<string>>(() => props.deleteCheck().logs);
 	const warningModalIsShown = ref<boolean>(false);
+	const isPreConditionSectionVisible = computed<boolean>(() => (props.manager().liste.auswahlExists() || (status.value === undefined)));
 
 	function openWarningModal() {
 		warningModalIsShown.value = true;

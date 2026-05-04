@@ -67,10 +67,6 @@ export class RouteDataLeitungsfunktionen extends RouteDataAuswahl<Leitungsfunkti
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Leitungsfunktionen vor.');
 		}
 
-		if (!this.manager.liste.auswahlExists()) {
-			errorLog.add('Es wurde keine Leitungsfunktion zum Löschen ausgewählt.');
-		}
-
 		if (!this.manager.idsReferencedLeitungsfunktionen.isEmpty()) {
 			errorLog.add(this.getErrorMessageForReferencedLeitungsfunktionen());
 		}

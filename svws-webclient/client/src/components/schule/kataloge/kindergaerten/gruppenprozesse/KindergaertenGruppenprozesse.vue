@@ -5,7 +5,7 @@
 		</div>
 		<div class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Kindergärten werden gelöscht">
-				<div>
+				<div v-if="props.manager().liste.auswahlExists() || status === undefined">
 					<span v-if="selectedAllowedToDelete">Alle ausgewählten Kindergärten sind bereit zum Löschen.</span>
 					<template v-else v-for="message in deleteCheckErrors" :key="message">
 						<span class="text-ui-danger whitespace-pre-line"> {{ message }} <br> </span>

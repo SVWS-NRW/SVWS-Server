@@ -68,10 +68,6 @@ export class RouteDataVermerkarten extends RouteDataAuswahl<VermerkartenListeMan
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Vermerkarten vor.');
 		}
 
-		if (!this.manager.liste.auswahlExists()) {
-			errorLog.add('Es wurde keine Vermerkart zum Löschen ausgewählt.');
-		}
-
 		if (!this.manager.idsReferencedEinwilligungsarten.isEmpty()) {
 			errorLog.add(this.getErrorMessageForReferencedVermerkarten());
 		}

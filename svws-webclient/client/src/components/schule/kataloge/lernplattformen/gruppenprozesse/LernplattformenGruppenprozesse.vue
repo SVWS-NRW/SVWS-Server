@@ -5,7 +5,7 @@
 		</div>
 		<div class="flex flex-col">
 			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Lernplattformen werden gelöscht." icon="i-ri-delete-bin-line">
-				<div>
+				<div v-if="isPreConditionSectionVisible">
 					<span v-if="preConditionCheck.success">Alle ausgewählten Lernplattformen sind bereit zum Löschen.</span>
 					<template v-else v-for="message in preConditionCheck.logs" :key="message">
 						<span class="text-ui-danger whitespace-pre-line"> {{ message }} <br> </span>
@@ -66,6 +66,7 @@
 	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 	const hatIrgendwelcheKompetenzen = computed<boolean>(() => hatKompetenzLoeschen.value);
 	const preConditionCheck = computed(() => props.deleteCheck());
+	const isPreConditionSectionVisible = computed<boolean>(() => (props.manager().liste.auswahlExists() || (status.value === undefined)));
 
 	function toggleWarningModal() {
 		warningModalIsShown.value = !warningModalIsShown.value;

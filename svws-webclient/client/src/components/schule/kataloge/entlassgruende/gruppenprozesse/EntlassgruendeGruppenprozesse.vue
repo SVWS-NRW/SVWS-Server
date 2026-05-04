@@ -5,7 +5,7 @@
 		</div>
 		<div class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Entlassgründe werden gelöscht" icon="i-ri-delete-bin-line">
-				<div>
+				<div v-if="isPreConditionSectionVisible">
 					<span v-if="preConditionCheck.success">Alle ausgewählten Entlassgründe sind bereit zum Löschen.</span>
 					<template v-else v-for="message in preConditionCheck.logs" :key="message">
 						<span class="text-ui-danger whitespace-pre-line"> {{ message }} <br> </span>
@@ -37,7 +37,7 @@
 
 	import type { EntlassgruendeGruppenprozesseProps } from "~/components/schule/kataloge/entlassgruende/gruppenprozesse/EntlassgruendeGruppenprozesseProps";
 	import type { List } from "@core";
-	import { BenutzerKompetenz, ServerMode } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import { computed, ref } from "vue";
 
 	const props = defineProps<EntlassgruendeGruppenprozesseProps>();
@@ -48,6 +48,7 @@
 	const hatIrgendwelcheKompetenzen = computed<boolean>(() => hatKompetenzLoeschen.value);
 	const preConditionCheck = computed<{ success: boolean, logs: Iterable<string> }>(() => props.deleteCheck());
 	const allEntriesDeletable = computed<boolean>(() => props.manager().getIdsReferencedEntlassgruende().isEmpty());
+	const isPreConditionSectionVisible = computed<boolean>(() => (props.manager().liste.auswahlExists() || (status.value === undefined)));
 
 	async function deleteSelectedEntlassgruende() {
 		isLoading.value = true;

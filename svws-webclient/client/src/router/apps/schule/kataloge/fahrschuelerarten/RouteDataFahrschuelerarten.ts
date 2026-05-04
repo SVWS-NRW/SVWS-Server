@@ -65,10 +65,6 @@ export class RouteDataFahrschuelerarten extends RouteDataAuswahl<Fahrschuelerart
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Fahrschülerarten vor.');
 		}
 
-		if (!this.manager.liste.auswahlExists()) {
-			errorLog.add('Es wurde kein Fahrschülerarten zum Löschen ausgewählt.');
-		}
-
 		if (!this.manager.idsReferencedFahrschuelerarten.isEmpty()) {
 			errorLog.add(this.getErrorMessageForReferencedFahrschuelerarten());
 		}

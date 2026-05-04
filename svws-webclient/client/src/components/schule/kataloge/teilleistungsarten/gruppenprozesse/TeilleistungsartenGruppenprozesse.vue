@@ -8,7 +8,7 @@
 				icon="i-ri-delete-bin-line"
 				title="Löschen"
 				subtitle="Ausgewählte Teilleistungsarten werden gelöscht.">
-				<div>
+				<div v-if="isPreConditionSectionVisible">
 					<span v-if="selectedAllowedToDelete">Alle ausgewählten Teilleistungsarten sind bereit zum Löschen.</span>
 					<template v-else>
 						<template v-for="message in deleteCheckErrors" :key="message">
@@ -55,6 +55,7 @@
 	const hatKeineErforderlicheKompetenz = computed(() => !hatKompetenzLoeschen.value);
 	const selectedAllowedToDelete = computed<boolean>(() => props.deleteCheck().success);
 	const deleteCheckErrors = computed<Iterable<string>>(() => props.deleteCheck().logs);
+	const isPreConditionSectionVisible = computed<boolean>(() => (props.manager().liste.auswahlExists() || (status.value === undefined)));
 
 	async function deleteSelectedTeilleistungsarten() {
 		isLoading.value = true;

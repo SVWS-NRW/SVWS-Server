@@ -64,10 +64,6 @@ export class RouteDataSchulen extends RouteDataAuswahl<SchulenListeManager, Rout
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Schulen vor.');
 		}
 
-		if (!this.manager.liste.auswahlExists()) {
-			errorLog.add('Es wurde keine Schule zum Löschen ausgewählt.');
-		}
-
 		if (!this.manager.idsReferencedSchulen.isEmpty()) {
 			errorLog.add(this.getErrorMessageForReferencedSchulen());
 		}

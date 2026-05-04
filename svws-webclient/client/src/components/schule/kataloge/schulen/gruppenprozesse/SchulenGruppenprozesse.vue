@@ -5,7 +5,7 @@
 		</div>
 		<div class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Schulen werden gelöscht." icon="i-ri-delete-bin-line">
-				<div>
+				<div v-if="isPreConditionSectionVisible">
 					<span v-if="selectedAllowedToDelete">Alle ausgewählten Schulen sind bereit zum Löschen.</span>
 					<template v-else v-for="message in deleteCheckErrors" :key="message">
 						<span class="text-ui-danger whitespace-pre-line"> {{ message }} <br> </span>
@@ -48,7 +48,7 @@
 	const status = ref<boolean | undefined>();
 	const deleteCheckErrors = computed<List<string>>(() => props.deleteCheck()[1]);
 	const selectedAllowedToDelete = computed<boolean>(() => props.deleteCheck()[0]);
-
+	const isPreConditionSectionVisible = computed<boolean>(() => (props.manager().liste.auswahlExists() || (status.value === undefined)));
 
 	async function deleteSelectedSchulen() {
 		isLoading.value = true;

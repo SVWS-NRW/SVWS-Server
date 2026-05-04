@@ -119,10 +119,6 @@ export class RouteDataAnkreuzkompetenzen extends RouteDataAuswahl<Ankreuzkompete
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Ankreuzkompetenzen vor.');
 		}
 
-		if (!this.manager.liste.auswahlExists()) {
-			errorLog.add('Es wurde keine Ankreuzkompetenz zum Löschen ausgewählt.');
-		}
-
 		if (!this.manager.idsReferencedAnkreuzkompetenzen.isEmpty()) {
 			errorLog.add(this.getErrorMessageForReferencedAnkreuzkompetenzen());
 		}

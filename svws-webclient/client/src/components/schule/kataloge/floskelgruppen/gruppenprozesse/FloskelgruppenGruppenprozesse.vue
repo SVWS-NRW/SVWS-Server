@@ -5,7 +5,7 @@
 		</div>
 		<div class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Floskelgruppen werden gelöscht">
-				<div>
+				<div v-if="isPreConditionSectionVisible">
 					<span v-if="selectedAllowedToDelete">Alle ausgewählten Floskelgruppen sind bereit zum Löschen.</span>
 					<template v-else v-for="message in deleteCheckErrors" :key="message">
 						<span class="text-ui-danger whitespace-pre-line"> {{ message }} <br> </span>
@@ -49,7 +49,7 @@
 	const status = ref<boolean | undefined>();
 	const deleteCheckErrors = computed<List<string>>(() => props.deleteCheck()[1]);
 	const selectedAllowedToDelete = computed<boolean>(() => props.deleteCheck()[0]);
-
+	const isPreConditionSectionVisible = computed<boolean>(() => (props.manager().liste.auswahlExists() || (status.value === undefined)));
 
 	async function deleteFloskelgruppen() {
 		isLoading.value = true;

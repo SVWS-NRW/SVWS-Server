@@ -74,10 +74,6 @@ export class RouteDataOrtsteile extends RouteDataAuswahl<OrtsteileListeManager, 
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Ortsteilen vor.');
 		}
 
-		if (!this.manager.liste.auswahlExists()) {
-			errorLog.add('Es wurde kein Ortsteil zum Löschen ausgewählt.');
-		}
-
 		const idsOfReferencedOrtsteile = this.manager.idsOfReferencedOrtsteile;
 		if (!idsOfReferencedOrtsteile.isEmpty()) {
 			errorLog.add(this.getErrorMessageForReferencedOrtsteile(idsOfReferencedOrtsteile));

@@ -62,13 +62,12 @@ export class RouteDataErzieherarten extends RouteDataAuswahl<ErzieherartListeMan
 		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Erzieherarten vor.');
 		}
-		if (!this.manager.liste.auswahlExists()) {
-			errorLog.add('Es wurde keine Erzieherart zum Löschen ausgewählt.');
-		}
+
 		const idsOfReferencedErzieherarten = this.manager.idsReferencedErzieherarten;
 		if (!idsOfReferencedErzieherarten.isEmpty()) {
 			errorLog.add(this.getErrorMessageForReferencedErzieherarten(idsOfReferencedErzieherarten));
 		}
+
 		return { success: errorLog.isEmpty(), logs: errorLog };
 	};
 

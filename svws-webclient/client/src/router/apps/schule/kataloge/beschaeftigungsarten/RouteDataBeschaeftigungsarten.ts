@@ -65,10 +65,6 @@ export class RouteDataBeschaeftigungsarten extends RouteDataAuswahl<Beschaeftigu
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Beschäftigungsarten vor.');
 		}
 
-		if (!this.manager.liste.auswahlExists()) {
-			errorLog.add('Es wurde kein Beschäftigungsart zum Löschen ausgewählt.');
-		}
-
 		if (!this.manager.idsReferencedBeschaeftigungsarten.isEmpty()) {
 			errorLog.add(this.getErrorMessageForReferencedBeschaeftigungsarten());
 		}

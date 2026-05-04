@@ -63,12 +63,11 @@ export class RouteDataKonfessionen extends RouteDataAuswahl<KonfessionenListeMan
 		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Konfessionen vor.');
 		}
-		if (!this.manager.liste.auswahlExists()) {
-			errorLog.add('Es wurde keine Konfession zum Löschen ausgewählt.');
-		}
+
 		if (!this.manager.idsReferencedKonfessionen.isEmpty()) {
 			errorLog.add(this.getErrorMessageForReferencedKonfessionen());
 		}
+
 		return { success: errorLog.isEmpty(), logs: errorLog };
 	};
 

@@ -5,7 +5,7 @@
 		</div>
 		<div class="flex flex-col gap-4">
 			<ui-card icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Konfessionen werden gelöscht." v-if="hatKompetenzLoeschen">
-				<div>
+				<div v-if="isPreConditionSectionVisible">
 					<span v-if="selectedAllowedToDelete">Alle ausgewählten Konfessionen sind bereit zum Löschen.</span>
 					<template v-else v-for="message in deleteCheckErrors" :key="message">
 						<span class="text-ui-danger whitespace-pre-line"> {{ message }} <br> </span>
@@ -69,6 +69,7 @@
 	const selectedAllowedToDelete = computed<boolean>(() => props.deleteCheck().success);
 	const deleteCheckErrors = computed<Iterable<string>>(() => props.deleteCheck().logs);
 	const hatReferenzen = computed<boolean>(() => !props.manager().idsReferencedKonfessionen.isEmpty());
+	const isPreConditionSectionVisible = computed<boolean>(() => (props.manager().liste.auswahlExists() || (status.value === undefined)));
 
 	function openWarningModal() {
 		warningModalIsShown.value = true;

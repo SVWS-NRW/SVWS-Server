@@ -8,13 +8,12 @@
 				icon="i-ri-delete-bin-line"
 				title="Löschen"
 				subtitle="Ausgewählte Schwerpunkte werden gelöscht.">
-				<div>
+				<div v-if="isPreConditionSectionVisible">
 					<span v-if="selectedAllowedToDelete">Alle ausgewählten Schwerpunkte sind bereit zum Löschen.</span>
 					<template v-else>
 						<template v-for="message in deleteCheckErrors" :key="message">
 							<span class="text-ui-danger whitespace-pre-line"> {{ message }} <br> </span>
 						</template>
-						Schwerpunkte
 					</template>
 				</div>
 				<template #buttonFooterLeft>
@@ -56,6 +55,7 @@
 	const hatKeineErforderlicheKompetenz = computed(() => !hatKompetenzLoeschen.value);
 	const selectedAllowedToDelete = computed<boolean>(() => props.deleteCheck().success);
 	const deleteCheckErrors = computed<Iterable<string>>(() => props.deleteCheck().logs);
+	const isPreConditionSectionVisible = computed<boolean>(() => (props.manager().liste.auswahlExists() || (status.value === undefined)));
 
 	async function deleteSelectedSchwerpunkte() {
 		isLoading.value = true;

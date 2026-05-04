@@ -65,10 +65,6 @@ export class RouteDataEntlassgruende extends RouteDataAuswahl<EntlassgruendeList
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Entlassgründen vor.');
 		}
 
-		if (!this.manager.liste.auswahlExists()) {
-			errorLog.add('Es wurde kein Entlassgrund zum Löschen ausgewählt.');
-		}
-
 		if (!this.manager.getIdsReferencedEntlassgruende().isEmpty()) {
 			errorLog.add(this.getErrorMessageForReferencedEntlassgründe());
 		}

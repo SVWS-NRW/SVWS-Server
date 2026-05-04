@@ -65,10 +65,6 @@ export class RouteDataFoerderschwerpunkte extends RouteDataAuswahl<Foerderschwer
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Förderschwerpunkten vor.');
 		}
 
-		if (!this.manager.liste.auswahlExists()) {
-			errorLog.add('Es wurde kein Förderschwerpunkt zum Löschen ausgewählt.');
-		}
-
 		if (!this.manager.getIdsReferencedFoerderschwerpunkte().isEmpty()) {
 			errorLog.add(this.getErrorMessageForReferencedFoerderschwerpunkte());
 		}

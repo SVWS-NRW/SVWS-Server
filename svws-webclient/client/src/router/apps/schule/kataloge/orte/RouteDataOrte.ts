@@ -66,10 +66,6 @@ export class RouteDataOrte extends RouteDataAuswahl<OrteListeManager, RouteState
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Orten vor.');
 		}
 
-		if (!this.manager.liste.auswahlExists()) {
-			errorLog.add('Es wurde kein Ort zum Löschen ausgewählt.');
-		}
-
 		const idsOfReferencedOrte = this.manager.idsReferencedOrte;
 		if (!idsOfReferencedOrte.isEmpty()) {
 			errorLog.add(this.getErrorMessageForReferencedOrte(idsOfReferencedOrte));

@@ -2,13 +2,15 @@
 	<div class="page page-grid-cards">
 		<div class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Abteilungen werden gelöscht">
-				<div class="w-full">
+				<div v-if="isPreConditionSectionVisible" class="w-full">
 					<svws-ui-checkbox v-model="deleteAbteilungenInFolgeAbschnitt">
 						Zusätzlich im Folgeabschnitt ({{ getTextFolgeAbschnitt() }}) löschen.
 					</svws-ui-checkbox>
 				</div>
 				<template #buttonFooterLeft>
-					<svws-ui-button title="Löschen" @click="entferneAbteilungen" :is-loading class="mt-4">
+					<svws-ui-button	title="Löschen" class="mt-4"
+						@click="deleteSelectedAbteilungen"
+						:disabled="!props.manager().liste.auswahlExists()" :is-loading>
 						<svws-ui-spinner v-if="isLoading" spinning />
 						<span v-else class="icon i-ri-play-line" />
 						Löschen
@@ -37,12 +39,13 @@
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
 	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const isPreConditionSectionVisible = computed<boolean>(() => (props.manager().liste.auswahlExists() || (status.value === undefined)));
 	const deleteAbteilungenInFolgeAbschnitt = computed({
 		get: () => props.manager().deleteAbteilungenInFolgeAbschnitt,
 		set: (value: boolean) => props.manager().deleteAbteilungenInFolgeAbschnitt = value,
 	});
 
-	async function entferneAbteilungen() {
+	async function deleteSelectedAbteilungen() {
 		isLoading.value = true;
 		const [delStatus, logMessages] = await props.delete();
 		logs.value = logMessages;

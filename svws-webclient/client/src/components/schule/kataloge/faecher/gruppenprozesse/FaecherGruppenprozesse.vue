@@ -15,10 +15,8 @@
 						:create-report="getPDF" :id-abschnitt="manager().getSchuljahresabschnittAuswahl()?.id" />
 				</div>
 			</ui-card>
-			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Fächer werden gelöscht" icon="i-ri-delete-bin-line"
-				:is-open="currentAction === 'delete'"
-				@update:is-open="isOpen => setCurrentAction('delete', isOpen)">
-				<div>
+			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Fächer werden gelöscht" icon="i-ri-delete-bin-line">
+				<div v-if="isPreConditionSectionVisible">
 					<span v-if="selectedAllowedToDelete">Alle ausgewählten Fächer sind bereit zum Löschen.</span>
 					<template v-else v-for="message in deleteCheckErrors" :key="message">
 						<span class="text-ui-danger whitespace-pre-line"> {{ message }} <br> </span>
@@ -85,6 +83,7 @@
 	const hatkeineErforderlicheKompetenz = computed<boolean>(() => !hatKompetenzLoeschen.value || !hatKompetenzDrucken.value || !hatKompetenzUpdate.value);
 	const deleteCheckErrors = computed<List<string>>(() => props.deleteCheck()[1]);
 	const selectedAllowedToDelete = computed<boolean>(() => props.deleteCheck()[0]);
+	const isPreConditionSectionVisible = computed<boolean>(() => (props.manager().liste.auswahlExists() || (status.value === undefined)));
 
 	// --- delete ---
 

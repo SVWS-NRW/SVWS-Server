@@ -5,7 +5,7 @@
 		</div>
 		<div class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Förderschwerpunkte werden gelöscht" icon="i-ri-delete-bin-line">
-				<div>
+				<div v-if="isPreConditionSectionVisible">
 					<span v-if="preConditionCheck.success">Alle ausgewählten Förderschwerpunkte sind bereit zum Löschen.</span>
 					<template v-else v-for="message in preConditionCheck.logs" :key="message">
 						<span class="text-ui-danger whitespace-pre-line"> {{ message }} <br> </span>
@@ -47,6 +47,7 @@
 	const hatIrgendwelcheKompetenzen = computed<boolean>(() => hatKompetenzLoeschen.value);
 	const preConditionCheck = computed<{ success: boolean, logs: Iterable<string> }>(() => props.deleteCheck());
 	const allEntriesDeletable = computed<boolean>(() => props.manager().getIdsReferencedFoerderschwerpunkte().isEmpty());
+	const isPreConditionSectionVisible = computed<boolean>(() => (props.manager().liste.auswahlExists() || (status.value === undefined)));
 
 	async function deleteSelectedFoerderschwerpunkte(): Promise<void> {
 		isLoading.value = true;

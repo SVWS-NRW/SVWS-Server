@@ -65,10 +65,6 @@ export class RouteDataFloskelgruppen extends RouteDataAuswahl<FloskelgruppenList
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Floskelgruppen vor.');
 		}
 
-		if (!this.manager.liste.auswahlExists()) {
-			errorLog.add('Es wurde keine Floskelgruppe zum Löschen ausgewählt.');
-		}
-
 		if (!this.manager.idsOfReferencedFloskelgruppen.isEmpty()) {
 			errorLog.add(this.getErrorMessageForReferencedFloskelgruppen());
 		}

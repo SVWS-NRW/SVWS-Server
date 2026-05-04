@@ -67,10 +67,6 @@ export class RouteDataJahrgaenge extends RouteDataAuswahl<JahrgaengeListeManager
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Jahrgängen vor.');
 		}
 
-		if (!this.manager.liste.auswahlExists()) {
-			errorLog.add('Es wurde kein Jahrgang zum Löschen ausgewählt.');
-		}
-
 		if (!this.manager.getIdsReferencedJahrgaenge().isEmpty()) {
 			errorLog.add(this.getErrorMessageForReferencedJahrgaenge());
 		}

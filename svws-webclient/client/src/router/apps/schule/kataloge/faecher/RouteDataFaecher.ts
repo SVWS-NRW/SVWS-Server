@@ -66,10 +66,6 @@ export class RouteDataFaecher extends RouteDataAuswahl<FaecherListeManager, Rout
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Fächern vor.');
 		}
 
-		if (!this.manager.liste.auswahlExists()) {
-			errorLog.add('Es wurde kein Fach zum Löschen ausgewählt.');
-		}
-
 		const idsOfReferencedFaecher = this.manager.idsReferencedFaecher;
 		if (!idsOfReferencedFaecher.isEmpty()) {
 			errorLog.add(this.getErrorMessageForReferencedFaecher(idsOfReferencedFaecher));

@@ -5,7 +5,7 @@
 		</div>
 		<div v-if="true" class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Betriebsarten werden gelöscht.">
-				<div>
+				<div v-if="isPreConditionSectionVisible">
 					<span v-if="selectedAreNotReferenced">Alle ausgewählten Betriebsarten sind bereit zum Löschen.</span>
 					<template v-else v-for="message in deleteCheckErrors" :key="message">
 						<span class="text-ui-danger whitespace-pre-line"> {{ message }} <br> </span>
@@ -44,7 +44,7 @@
 	const hatKeineErforderlicheKompetenz = computed(() => !hatKompetenzLoeschen.value);
 	const deleteCheckErrors = computed<List<string>>(() => props.deleteCheck()[1]);
 	const selectedAreNotReferenced = computed<boolean>(() => props.deleteCheck()[0]);
-
+	const isPreConditionSectionVisible = computed<boolean>(() => (props.manager().liste.auswahlExists() || (status.value === undefined)));
 
 	async function deleteSelectedBetriebsarten() {
 		isLoading.value = true;
