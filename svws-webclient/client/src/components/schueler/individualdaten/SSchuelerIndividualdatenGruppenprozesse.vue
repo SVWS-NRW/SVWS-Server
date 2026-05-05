@@ -87,7 +87,7 @@
 							:nullable="false" class="self-center">
 							<svws-ui-checkbox :disabled="!hatKompetenzUpdate" v-model="hatMasernimpfnachweis"
 								:indeterminate="!pendingStateManager().isAttributePending('hatMasernimpfnachweis')">
-								Masern Impfnachweis
+								Masern-Schutznachweis
 							</svws-ui-checkbox>
 						</ui-gruppenprozesse-wrapper>
 						<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="erhaeltSchuelerBAFOEG"

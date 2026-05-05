@@ -104,7 +104,7 @@
 					</svws-ui-checkbox>
 					<svws-ui-checkbox :readonly :model-value="schuelerListeManager().daten().hatMasernimpfnachweis"
 						@update:model-value="hatMasernimpfnachweis => patch({ hatMasernimpfnachweis })">
-						Masern Impfnachweis
+						Masern-Schutznachweis
 					</svws-ui-checkbox>
 					<svws-ui-checkbox :readonly :model-value="schuelerListeManager().daten().erhaeltSchuelerBAFOEG"
 						@update:model-value="erhaeltSchuelerBAFOEG => patch({ erhaeltSchuelerBAFOEG })">
