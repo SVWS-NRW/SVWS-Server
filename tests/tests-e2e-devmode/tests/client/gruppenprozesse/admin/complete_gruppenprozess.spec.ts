@@ -334,7 +334,7 @@ test('Jedes Feld erzeugt bei einer Änderung einen korrekten Pending State Toolt
 	await page.locator('#tooltip-istSchulpflichtErfuellt').hover();
 	expect(await getContentOfActiveTooltip(page)).toBe("Aktuell: Ja (2)  Nachher: Nein (2)");
 
-	await page.getByRole('checkbox', { name: 'Masern Impfnachweis' }).check();
+	await page.getByRole('checkbox', { name: 'Masern-Schutznachweis' }).check();
 	await page.locator('#tooltip-hatMasernimpfnachweis').hover();
 	expect(await getContentOfActiveTooltip(page)).toBe("Aktuell: Nein (2)  Nachher: Ja (2)");
 
