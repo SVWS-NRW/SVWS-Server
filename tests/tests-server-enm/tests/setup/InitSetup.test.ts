@@ -1,12 +1,9 @@
 import { describe, expect, test } from "vitest";
-import { enmURL } from "../../../utils/APIUtils";
 import { ApiEnmServerTest } from "../../utils/ApiEnmServerTest";
-
-const targetUrlENMServer: string = enmURL;
 
 describe("Init Setup Methode", () => {
 
-	const apiService = new ApiEnmServerTest(targetUrlENMServer, '', '');
+	const apiService = new ApiEnmServerTest('', '');
 
 	test("POST setup > 405", async () => {
 		const response = await apiService.testEmptyPost(`/api/setup`);

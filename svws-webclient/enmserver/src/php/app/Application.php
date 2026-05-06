@@ -26,9 +26,6 @@ class Application {
      * Erstellt und initialisiert den Web-Notenmanager
      */
     public function __construct() {
-        // Überprüfung auf CORS-Header
-        Http::checkCORS();
-
         // Lade die Konfiguration der Anwendung
         $this->config = new Config();
 

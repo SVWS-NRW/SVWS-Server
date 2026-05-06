@@ -1,38 +1,56 @@
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import Vue from "@vitejs/plugin-vue";
 import Components from "unplugin-vue-components/vite";
 import Markdown from 'unplugin-vue-markdown/vite';
 import { resolve } from "node:path";
 import tailwindcss from '@tailwindcss/vite';
+import basicSsl from '@vitejs/plugin-basic-ssl';
 
-export default defineConfig({
-	server: {
-		port: 3003,
-		cors: false,
-	},
-	base: "./", // relateiven Base-Pfad setzen, damit man den Client auch in Unterverzeichnissen hosten kann
-	plugins: [
-		Vue({ include: [/\.vue$/, /\.md$/] }),
-		tailwindcss(),
-		Markdown({}),
-		Components({
-			globs: ["src/**/*.{vue,md}", "src/**/*Props.ts", "../ui/src/**/*.{vue,md}", "../ui/src/**/*Props.ts", '!../ui/src/**/*.story.*'],
-			types: [],
-		}),
-	],
-	resolve: {
-		alias: {
-			// Importe können durch ein vorangestelltes `~` absolut gefunden werden
-			"~": resolve(__dirname, "src"),
-			"@ui": resolve(__dirname, '../ui/src/'),
-			"@core": resolve(__dirname, '../core/src/'),
-			"@json": resolve(__dirname, "../../svws-asd/src/main/resources/de/svws_nrw/asd/types"),
-			"@images": resolve(__dirname, "images"),
-			"@icons": resolve(__dirname, "../../node_modules/remixicon/icons"),
+export default defineConfig(({ mode }) => {
+	const env = loadEnv(mode, process.cwd());
+	const phpApiUrl = env.VITE_PHP_API_URL;
+	const isProxyEnabled = (typeof phpApiUrl === 'string') && (phpApiUrl.trim() !== "");
+
+	return {
+		server: {
+			port: 3003,
+			https: {},
+			cors: false,
+			...(isProxyEnabled ? {
+				proxy: {
+					'^/(api|oauth)': {
+						target: phpApiUrl,
+						changeOrigin: true,
+						secure: false,
+					},
+				},
+			} : {}),
 		},
-	},
-	build: {
-		outDir: "build/output/public",
-		emptyOutDir: true,
-	},
+		base: "./", // relateiven Base-Pfad setzen, damit man den Client auch in Unterverzeichnissen hosten kann
+		plugins: [
+			Vue({ include: [/\.vue$/, /\.md$/] }),
+			basicSsl(),
+			tailwindcss(),
+			Markdown({}),
+			Components({
+				globs: ["src/**/*.{vue,md}", "src/**/*Props.ts", "../ui/src/**/*.{vue,md}", "../ui/src/**/*Props.ts", '!../ui/src/**/*.story.*'],
+				types: [],
+			}),
+		],
+		resolve: {
+			alias: {
+				// Importe können durch ein vorangestelltes `~` absolut gefunden werden
+				"~": resolve(__dirname, "src"),
+				"@ui": resolve(__dirname, '../ui/src/'),
+				"@core": resolve(__dirname, '../core/src/'),
+				"@json": resolve(__dirname, "../../svws-asd/src/main/resources/de/svws_nrw/asd/types"),
+				"@images": resolve(__dirname, "images"),
+				"@icons": resolve(__dirname, "../../node_modules/remixicon/icons"),
+			},
+		},
+		build: {
+			outDir: "build/output/public",
+			emptyOutDir: true,
+		},
+	};
 });

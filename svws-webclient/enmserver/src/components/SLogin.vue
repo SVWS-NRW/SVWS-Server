@@ -10,18 +10,8 @@
 
 				<!-- 1. Schritt: Anmeldung mit Benutzername und Kennwort als erstem Faktor -->
 				<div v-else-if="!auth.pendingPasswordChange && !auth.pending2FA">
-					<div class="grid grow grid-cols-1 gap-3 justify-items-center py-0.5">
-						<svws-ui-text-input v-model.trim="inputHostname" type="text" url placeholder="Serveraddresse" @keyup.enter="connect" @focus="inputFocus = true" :debounce-ms="0" />
-						<div v-if="errorMessage && !serverFound" class="text-ui-danger font-medium"> {{ errorMessage }} </div>
-						<svws-ui-button type="secondary" @click="connect" :disabled="!(!serverFound || connecting || inputFocus )" :class="{'opacity-25 hover:opacity-100': serverFound && !inputFocus}">
-							<span v-if="!serverFound || connecting || inputFocus">Verbinden</span>
-							<span v-else>Verbunden</span>
-							<svws-ui-spinner :spinning="connecting" />
-							<span class="icon i-ri-check-line" v-if="!connecting && serverFound && !inputFocus" />
-						</svws-ui-button>
-					</div>
 					<Transition>
-						<svws-ui-input-wrapper v-if="serverFound && !connecting" class="mt-1" center>
+						<svws-ui-input-wrapper v-if="!connecting" class="mt-1" center>
 							<svws-ui-text-input v-model.trim="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" @methods="handleInputMethodsUsername" />
 							<svws-ui-text-input v-model.trim="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" />
 							<svws-ui-spacing />
@@ -96,21 +86,14 @@
 
 <script setup lang="ts">
 
-	import { computed, nextTick, onMounted, ref, shallowRef, watch } from "vue";
+	import { computed, nextTick, onMounted, ref, watch } from "vue";
 	import type { LoginProps } from "./SLoginProps";
 	import { JsonCoreTypeReaderStatic } from "../../../core/src/asd/utils/JsonCoreTypeReaderStatic";
 	import SvwsUiTextInput from "@ui/ui/controls/SvwsUiTextInput.vue";
-	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 	import { useAuthState } from "~/states/AuthState";
 
 	const props = defineProps<LoginProps>();
 	const auth = useAuthState();
-
-	const connection_failed = ref(false);
-	const inputHostname = computed<string>({
-		get: () => auth.hostname,
-		set: (value) => auth.setHostname(value),
-	});
 
 	// Greife auf Methoden der Textinputs zurück, um dieses automatisch Fokussieren zu können
 	const totpTokenInput = ref<{ focus: () => void } | undefined>(undefined);
@@ -130,8 +113,6 @@
 
 	const connecting = ref(false);
 	const authenticating = ref(false);
-	const inputFocus = ref(false);
-	const serverFound = shallowRef<boolean>(false);
 
 	const isTokenValid = computed(() => totpToken.value.length === 6);
 	const otpauthUrl = computed<string | null>(() => {
@@ -186,11 +167,15 @@
 		try {
 			const set = new Set();
 			set.difference(new Set());
-			// Versuche beim Laden der Komponente automatisch mit Default-Einstellungen eine Verbindung zu dem Server aufzubauen
-			await connect();
 		} catch {
 			browserVeraltet.value = true;
+			return;
 		}
+
+		await initCoreTypes();
+
+		await nextTick();
+		usernameInput.value?.focus();
 	});
 
 	async function initCoreTypes() {
@@ -198,29 +183,7 @@
 		reader.readAll();
 	}
 
-	async function connect() {
-		connecting.value = true;
-		inputFocus.value = false;
-		errorMessage.value = null;
-		try {
-			await auth.connectTo(auth.hostname);
-			serverFound.value = true;
-			await initCoreTypes();
-			connection_failed.value = false;
-		} catch (e) {
-			serverFound.value = false;
-			connection_failed.value = true;
-			const message = e instanceof DeveloperNotificationException ? e.message : "Verbindung zum Server fehlgeschlagen. Bitte die Serveradresse prüfen und erneut versuchen.";
-			errorMessage.value = message;
-		} finally {
-			connecting.value = false;
-			await nextTick();
-			usernameInput.value?.focus();
-		}
-	}
-
 	async function doLogin() {
-		inputFocus.value = false;
 		errorMessage.value = null;
 		try {
 			authenticating.value = true;

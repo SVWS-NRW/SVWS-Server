@@ -20,9 +20,6 @@ export class BaseApi {
 		this._onUnauthorized = handler;
 	}
 
-	/** Die URL des Servers. Alle Pfadangaben sind relativ zu dieser URL. */
-	protected url: string;
-
 	/** Der Anmeldename beim Server */
 	protected username: string;
 
@@ -38,12 +35,10 @@ export class BaseApi {
 	/**
 	 * Erstellt eine neue API mit der übergebenen Konfiguration.
 	 *
-	 * @param {string} url - die URL des Servers: Alle Pfadangaben sind relativ zu dieser URL
 	 * @param {string} username - der Benutzername für den API-Zugriff
 	 * @param {string} password - das Kennwort des Benutzers für den API-Zugriff
 	 */
-	public constructor(url: string, username: string, password: string) {
-		this.url = url;
+	public constructor(username: string, password: string) {
 		this.username = username;
 		this.setBasicAuth(password);
 	}
@@ -71,7 +66,7 @@ export class BaseApi {
 
 
 	protected getURL(path: string): string {
-		return this.url + path;
+		return path.startsWith('/') ? path.substring(1) : path;
 	}
 
 

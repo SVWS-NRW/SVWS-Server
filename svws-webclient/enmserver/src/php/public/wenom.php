@@ -9,9 +9,6 @@ use wenom\api\ApiOAuth2;
 use wenom\api\ApiSecure;
 use wenom\api\ApiClient;
 
-// CORS-Check vorab
-Http::checkCORS();
-
 // Zerlegen der Adresse aus dem Request, so das die genutzt API daraus ermittelt werden kann
 $path = ltrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 $parts = explode('/', $path);

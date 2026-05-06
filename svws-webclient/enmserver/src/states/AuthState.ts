@@ -32,9 +32,6 @@ export interface AuthState {
 	/** Gibt die Schulform der Schule zurück. */
 	get schulform(): Schulform;
 
-	/** Gibt den Hostnamen zurück, mit welchem die Server-Verbindung aufgebaut wurde */
-	get hostname(): string;
-
 	/**
 	 * Gibt die verbleibende Zeit in Sekunden für die Gültigkeit des Tokens zurück.
 	 * Existiert kein Token so wird 0 zurückgegeben.
@@ -49,13 +46,6 @@ export interface AuthState {
 	 * @returns der Ablaufzeitpunkt als Date oder null
 	 */
 	get expiresAt(): Date | null;
-
-	/**
-	 * Setzt den Hostnamen, der für die Verbindung verwendet wird.
-	 *
-	 * @param hostname    der Hostname
-	 */
-	setHostname(hostname: string): void;
 
 	/** Gibt den Status zurück, ob aktuell ein Benutzer authentifiziert ist */
 	get authenticated(): boolean;
@@ -75,13 +65,6 @@ export interface AuthState {
 	/** Liefert im Falle einer Erstanmeldung die Setup-Daten für den QR-Code bei TOTP */
 	get totpSetup(): { secret: string, issuer: string, account: string } | null;
 
-
-	/**
-	 * Versucht eine Verbindung zu einem Server bei der angegebenen Adresse herzustellen.
-	 *
-	 * @param adresse   die Adresse bestehend aus Hostnamen und ggf. Port des SVWS-Servers
-	 */
-	connectTo(adresse: string): Promise<void>;
 
 	/**
 	 * Startet den Login-Vorgang mit dem angebenen Benutzernamen und Kennwort. Im Rahmen einer
