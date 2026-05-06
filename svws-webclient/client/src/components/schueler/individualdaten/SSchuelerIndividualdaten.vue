@@ -231,21 +231,21 @@
 				<svws-ui-select title="Geburtsland" v-model="geburtsland" :items="Nationalitaeten.values()"
 					:item-text="i => `${i.historie().getLast().bezeichnung} (${i.historie().getLast().iso3})`"
 					:item-sort="nationalitaetenKatalogEintragSort" :item-filter="nationalitaetenKatalogEintragFilter"
-					:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && readonly" autocomplete statistics />
+					:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && readonly" autocomplete statistics removable />
 				<svws-ui-select title="Verkehrssprache" v-model="verkehrssprache" autocomplete :items="Verkehrssprache.values()"
 					:item-text="i => `${i.historie().getLast().text} (${i.historie().getLast().iso3})`" :item-sort="verkehrsspracheKatalogEintragSort"
 					:item-filter="verkehrsspracheKatalogEintragFilter" :disabled="!hatMigrationshintergrund"
-					:readonly="hatMigrationshintergrund && readonly" class="col-span-full" statistics />
+					:readonly="hatMigrationshintergrund && readonly" class="col-span-full" statistics removable />
 				<svws-ui-select title="Geburtsland Mutter" v-model="geburtslandMutter" :items="Nationalitaeten.values()"
 					:item-text="i => `${i.historie().getLast().bezeichnung} (${i.historie().getLast().iso3})`"
 					:item-sort="nationalitaetenKatalogEintragSort"
 					:item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund"
-					:readonly="hatMigrationshintergrund && readonly" autocomplete statistics />
+					:readonly="hatMigrationshintergrund && readonly" autocomplete statistics removable />
 				<svws-ui-select title="Geburtsland Vater" v-model="geburtslandVater" :items="Nationalitaeten.values()"
 					:item-text="i => `${i.historie().getLast().bezeichnung} (${i.historie().getLast().iso3})`"
 					:item-sort="nationalitaetenKatalogEintragSort"
 					:item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund"
-					:readonly="hatMigrationshintergrund && readonly" autocomplete statistics />
+					:readonly="hatMigrationshintergrund && readonly" autocomplete statistics removable />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 	</div>
@@ -448,24 +448,24 @@
 	const max = new Date().getFullYear() + 1;
 	const min = max - 100;
 
-	const geburtsland = computed<Nationalitaeten>({
-		get: () => Nationalitaeten.getByISO3(props.schuelerListeManager().daten().geburtsland) ?? Nationalitaeten.getDEU(),
-		set: (value) => void props.patch({ geburtsland: value.historie().getLast().iso3 }),
+	const geburtsland = computed<Nationalitaeten | null>({
+		get: () => Nationalitaeten.getByISO3(props.schuelerListeManager().daten().geburtsland),
+		set: (value) => void props.patch({ geburtsland: value?.historie().getLast().iso3 ?? null }),
 	});
 
-	const geburtslandMutter = computed<Nationalitaeten>({
-		get: () => Nationalitaeten.getByISO3(props.schuelerListeManager().daten().geburtslandMutter) ?? Nationalitaeten.getDEU(),
-		set: (value) => void props.patch({ geburtslandMutter: value.historie().getLast().iso3 }),
+	const geburtslandMutter = computed<Nationalitaeten | null>({
+		get: () => Nationalitaeten.getByISO3(props.schuelerListeManager().daten().geburtslandMutter),
+		set: (value) => void props.patch({ geburtslandMutter: value?.historie().getLast().iso3 ?? null }),
 	});
 
-	const geburtslandVater = computed<Nationalitaeten>({
-		get: () => Nationalitaeten.getByISO3(props.schuelerListeManager().daten().geburtslandVater) ?? Nationalitaeten.getDEU(),
-		set: (value) => void props.patch({ geburtslandVater: value.historie().getLast().iso3 }),
+	const geburtslandVater = computed<Nationalitaeten | null>({
+		get: () => Nationalitaeten.getByISO3(props.schuelerListeManager().daten().geburtslandVater),
+		set: (value) => void props.patch({ geburtslandVater: value?.historie().getLast().iso3 ?? null }),
 	});
 
-	const verkehrssprache = computed<Verkehrssprache>({
-		get: () => Verkehrssprache.getByIsoKuerzel(props.schuelerListeManager().daten().verkehrspracheFamilie) ?? Verkehrssprache.data().getWertBySchluesselOrException("de"),
-		set: (value) => void props.patch({ verkehrspracheFamilie: value.historie().getLast().iso3 }),
+	const verkehrssprache = computed<Verkehrssprache | null>({
+		get: () => Verkehrssprache.getByIsoKuerzel(props.schuelerListeManager().daten().verkehrspracheFamilie),
+		set: (value) => void props.patch({ verkehrspracheFamilie: value?.historie().getLast().iso3 ?? null }),
 	});
 
 	const inputStammschule = computed<SchulEintrag | undefined>({
