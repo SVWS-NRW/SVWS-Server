@@ -49,12 +49,6 @@ class AuthStateImpl implements AuthState {
 	// Bei einer Erstanmeldung die Informationen für den QR-Code für TOTP und ansonsten null
 	private readonly _totpSetup = shallowRef<{ secret: string, issuer: string, account: string } | null>(null);
 
-	// Der Hostname (evtl. mit Port) des Servers, bei dem der Login stattfindet
-	private readonly _hostname = ref<string>(AuthStateImpl.getInitialHostname());
-
-	// Die URL mit welcher der Server verbunden ist
-	private _url: string | undefined = undefined;
-
 	// Der Benutzername für den Login
 	private _username = "";
 
@@ -67,15 +61,6 @@ class AuthStateImpl implements AuthState {
 	// Die Schulform, für welche der Server Daten hat
 	private readonly _schulform = shallowRef<Schulform | null>(null);
 
-
-	private static getInitialHostname(): string {
-		const host = globalThis.location.hostname;
-		const storedPort = localStorage.getItem("ENM-Server Port");
-		if (storedPort !== null) {
-			return `${host}:${storedPort}`;
-		}
-		return (globalThis.location.port.length > 0) ? `${host}:${globalThis.location.port}` : host;
-	}
 
 	/** Gibt die Version der Anwendung zurück */
 	public get version(): string {
@@ -113,20 +98,6 @@ class AuthStateImpl implements AuthState {
 			throw new UserNotificationException("Die Schulform des Servers konnte nicht bestimmt werden.");
 		}
 		return this._schulform.value;
-	}
-
-	/** Gibt den Hostnamen zurück, mit welchem die Server-Verbindung aufgebaut wurde */
-	public get hostname(): string {
-		return this._hostname.value;
-	}
-
-	/**
-	 * Setzt den Hostnamen, der für die Verbindung verwendet wird.
-	 *
-	 * @param hostname    der Hostname
-	 */
-	public setHostname(hostname: string): void {
-		this._hostname.value = hostname;
 	}
 
 	/** Gibt den Status zurück, ob aktuell ein Benutzer authentifiziert ist */
@@ -218,42 +189,6 @@ class AuthStateImpl implements AuthState {
 	}
 
 	/**
-	 * Versucht eine Verbindung zu einem Server bei der angegebenen Adresse herzustellen.
-	 *
-	 * @param adresse   die Adresse bestehend aus Hostnamen und ggf. Port des SVWS-Servers
-	 */
-	public async connectTo(adresse: string): Promise<void> {
-		const url = new URL('https://' + adresse);
-		const candidates = new Set([url.host, url.hostname]);
-		const storedPort = localStorage.getItem("ENM-Server Port");
-		if (storedPort !== null) {
-			candidates.add(`${url.hostname}:${storedPort}`);
-		}
-
-		for (const host of candidates) {
-			try {
-				const targetUrl = `https://${host}`;
-				console.log(`Verbinde zum ENM-Server unter https://${host}...`);
-				const testApi = new ApiEnmServer(targetUrl, "", "");
-				await testApi.isAlive();
-
-				this._url = targetUrl;
-				this._hostname.value = host;
-				const tmpURL = new URL(targetUrl);
-				if (tmpURL.port.length > 0) {
-					localStorage.setItem("ENM-Server Port", tmpURL.port);
-				} else {
-					localStorage.removeItem("ENM-Server Port");
-				}
-				return;
-			} catch {
-				console.log(`Verbindung zum ENM-Server unter https://${host} fehlgeschlagen`);
-			}
-		}
-		throw new UserNotificationException('Es konnte keine Verbindung hergestellt werden.');
-	}
-
-	/**
 	 * Authentifiziert den Benutzer mit dem angebenen Benutzernamen und Kennwort bei dem
 	 * angebenen Schema.
 	 *
@@ -264,11 +199,8 @@ class AuthStateImpl implements AuthState {
 	 */
 	public async login(username: string, password: string): Promise<AuthResult> {
 		try {
-			if (this._url === undefined) {
-				throw new DeveloperNotificationException("Keine gültige URL für einen Login verfügbar.");
-			}
 			this._username = username;
-			this._api = new ApiEnmServer(this._url, this._username, password);
+			this._api = new ApiEnmServer(this._username, password);
 			this._api.onUnauthorized = async () => {
 				if (!this.authenticated) {
 					return false;

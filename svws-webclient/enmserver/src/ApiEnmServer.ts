@@ -24,12 +24,11 @@ export class ApiEnmServer extends BaseApi {
 	/**
 	 * Erstellt eine neue API mit der übergebenen Konfiguration.
 	 *
-	 * @param {string} url - die URL des Servers: Alle Pfadangaben sind relativ zu dieser URL
 	 * @param {string} username - der Benutzername für den API-Zugriff
 	 * @param {string} password - das Kennwort des Benutzers für den API-Zugriff
 	 */
-	public constructor(url: string, username: string, password: string) {
-		super(url, username, password);
+	public constructor(username: string, password: string) {
+		super(username, password);
 	}
 
 	/**

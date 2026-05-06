@@ -1,9 +1,14 @@
 import { OpenApiError } from "@core/api/OpenApiError";
 import type { ENMv2Schueler } from "@core/core/data/enm/v2/ENMv2Schueler";
 import { ApiEnmServer, type ApiLoginData } from "@enm/ApiEnmServer";
+import { enmURL } from "../../utils/APIUtils";
 import { assert, expect } from "vitest";
 
 export class ApiEnmServerTest extends ApiEnmServer {
+
+	protected getURL(path: string): string {
+		return enmURL + (path.startsWith('/') ? path : path + "/");
+	}
 
 	get testUser() {
 		return this.username;

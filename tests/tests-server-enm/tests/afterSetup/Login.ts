@@ -1,10 +1,9 @@
-import { enmURL } from "../../../utils/APIUtils";
 import { ApiEnmServerTest } from "../../utils/ApiEnmServerTest";
 
-export const apiEmpty = new ApiEnmServerTest(enmURL, '', '');
-export const apiGehring = new ApiEnmServerTest(enmURL, 'M.Gehring@lmail.de', 'uTdNE7EUIb');
-export const apiGiesen = new ApiEnmServerTest(enmURL, 'T.Giesen@lmail.de', 'UD73Js0Uro');
-export const apiBerthold = new ApiEnmServerTest(enmURL, 'D.Berthold@lmail.de', 'uXkpaRLY');
+export const apiEmpty = new ApiEnmServerTest('', '');
+export const apiGehring = new ApiEnmServerTest('M.Gehring@lmail.de', 'uTdNE7EUIb');
+export const apiGiesen = new ApiEnmServerTest('T.Giesen@lmail.de', 'UD73Js0Uro');
+export const apiBerthold = new ApiEnmServerTest('D.Berthold@lmail.de', 'uXkpaRLY');
 
 let isLoggedIn = false;
 

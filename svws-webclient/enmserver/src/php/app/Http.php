@@ -243,38 +243,6 @@ class Http {
 
 
     /**
-     * In manchen Systemen steht getallheaders() nicht zur Verfügung. Daher wird hier ein Workaround
-     * für die Kompatibilität für den CGI-Mode eingebaut. Dabei werden die HTTP-Header aus der SERVER-Variable
-     * extrahiert
-     */
-    private static function getAllRequestHeaders() : array {
-        if (function_exists('getallheaders')) {
-            return getallheaders();
-        }
-        $headers = [];
-        foreach ($_SERVER as $name => $value) {
-            if (substr($name, 0, 5) == 'HTTP_') {
-                $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
-            }
-        }
-        return $headers;
-    }
-
-    /**
-     * Prüft on die HTTP-Methode von Typ OPTIONS
-     */
-    public static function checkCORS() {
-        if (strcasecmp($_SERVER['REQUEST_METHOD'] ?? "", "OPTIONS") === 0) {
-            $headers = self::getAllRequestHeaders();
-            $cors_sec_fetch_mode = $headers['Sec-Fetch-Mode'] ?? null;
-            if ($cors_sec_fetch_mode && strcasecmp($cors_sec_fetch_mode, "cors") === 0) {
-                http_response_code(204);
-                exit;
-            }
-        }
-    }
-
-    /**
      * Gibt einen NO_CONTENT (204) zurück und beendet das PHP-Skript.
      */
     public static function exit204NoContent(?string $header = null): never {
