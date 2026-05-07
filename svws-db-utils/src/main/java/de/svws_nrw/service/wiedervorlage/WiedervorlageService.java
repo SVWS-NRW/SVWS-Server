@@ -17,6 +17,9 @@ import de.svws_nrw.mapper.WiedervorlageMapper;
 import de.svws_nrw.repo.benutzer.BenutzerRepository;
 import de.svws_nrw.repo.benutzer.BenutzergruppeRepository;
 import de.svws_nrw.repo.benutzer.BenutzergruppenMitgliedRepository;
+import de.svws_nrw.repo.erzieher.ErzieherRepository;
+import de.svws_nrw.repo.lehrer.LehrerRepository;
+import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.repo.wiedervorlage.WiedervorlageRepository;
 import jakarta.persistence.PersistenceException;
 import jakarta.ws.rs.core.Response.Status;
@@ -36,28 +39,40 @@ public final class WiedervorlageService {
 	private final BenutzergruppenMitgliedRepository benutzergruppenMitgliedRepository;
 	private final BenutzergruppeRepository benutzergruppeRepository;
 	private final BenutzerRepository benutzerRepository;
+	private final LehrerRepository lehrerRepository;
+	private final SchuelerRepository schuelerRepository;
+	private final ErzieherRepository erzieherRepository;
 
 	private final WiedervorlageMapper wiedervorlageMapper;
 
 	/**
 	 * Erstellt einen neuen WiedervorlageService mit allen benötigten Repositories.
 	 *
-	 * @param wiedervorlageRepository   Repository für Wiedervorlage-Entitäten
+	 * @param wiedervorlageRepository Repository für Wiedervorlage-Entitäten
 	 * @param benutzergruppenMitgliedRepository Repository für Benutzergruppen
-	 * @param benutzergruppeRepository  Repository für Benutzergruppen
-	 * @param benutzerRepository        "Repo" für User Zugriff
-	 * @param wiedervorlageMapper       Mapper Wiedervorlage
+	 * @param benutzergruppeRepository Repository für Benutzergruppen
+	 * @param benutzerRepository Repository für Benutzer Zugriff
+	 * @param lehrerRepository Repository für Lehrer Zugriff
+	 * @param schuelerRepository Repository für Schüler Zugriff
+	 * @param erzieherRepository Repository für Erzieher Zugriff
+	 * @param wiedervorlageMapper Mapper für Wiedervorlage
 	 */
-	public WiedervorlageService(
-			final WiedervorlageRepository wiedervorlageRepository,
+	@SuppressWarnings("java:S107")
+	public WiedervorlageService(final WiedervorlageRepository wiedervorlageRepository,
 			final BenutzergruppenMitgliedRepository benutzergruppenMitgliedRepository,
 			final BenutzergruppeRepository benutzergruppeRepository,
 			final BenutzerRepository benutzerRepository,
+			final LehrerRepository lehrerRepository,
+			final SchuelerRepository schuelerRepository,
+			final ErzieherRepository erzieherRepository,
 			final WiedervorlageMapper wiedervorlageMapper) {
 		this.wiedervorlageRepository = wiedervorlageRepository;
 		this.benutzergruppenMitgliedRepository = benutzergruppenMitgliedRepository;
 		this.benutzergruppeRepository = benutzergruppeRepository;
 		this.benutzerRepository = benutzerRepository;
+		this.lehrerRepository = lehrerRepository;
+		this.schuelerRepository = schuelerRepository;
+		this.erzieherRepository = erzieherRepository;
 		this.wiedervorlageMapper = wiedervorlageMapper;
 	}
 
@@ -70,9 +85,9 @@ public final class WiedervorlageService {
 	 */
 	public WiedervorlageEintrag get(final long id) {
 		final long idBenutzer = benutzerRepository.getAktuellerBenutzerId();
-		final DTOWiedervorlage entity = getPersistedByUser(id, idBenutzer);
+		final DTOWiedervorlage entity = getPersistedEntityByUser(id, idBenutzer);
 
-		return wiedervorlageMapper.toApi(entity);
+		return toApi(entity);
 	}
 
 	/**
@@ -85,8 +100,36 @@ public final class WiedervorlageService {
 
 		return wiedervorlageRepository.findAllByBenutzerId(idBenutzer)
 				.stream()
-				.map(wiedervorlageMapper::toApi)
+				.map(this::toApi)
 				.toList();
+	}
+
+	private WiedervorlageEintrag toApi(final DTOWiedervorlage entity) {
+		final Long idPerson;
+		final String namePerson;
+		switch (entity.personTyp) {
+			case LEHRER -> {
+				idPerson = entity.idLehrer;
+				namePerson = getNameLehrerById(entity.idLehrer);
+			}
+			case SCHUELER -> {
+				idPerson = entity.idSchueler;
+				namePerson = getNameSchuelerById(entity.idSchueler);
+			}
+			case ERZIEHER -> {
+				idPerson = entity.idErzieher;
+				namePerson = getNameErzieherById(entity.idErzieher);
+			}
+			case null -> {
+				idPerson = null;
+				namePerson = null;
+			}
+		}
+
+		final String nameBenutzerAngelegt = getNameBenutzerById(entity.idBenutzer);
+		final String nameBenutzerErledigt = getNameBenutzerById(entity.idBenutzerErledigt);
+
+		return wiedervorlageMapper.toApi(entity, idPerson, namePerson, nameBenutzerAngelegt, nameBenutzerErledigt);
 	}
 
 	/**
@@ -103,7 +146,7 @@ public final class WiedervorlageService {
 
 			final DTOWiedervorlage entity = wiedervorlageMapper.createDomain(request, idBenutzer);
 			saveThrowing(entity);
-			return wiedervorlageMapper.toApi(entity);
+			return toApi(entity);
 		});
 	}
 
@@ -118,13 +161,13 @@ public final class WiedervorlageService {
 	public WiedervorlageEintrag patch(final WiedervorlagePatchRequest request, final long id) {
 		return TransactionSupport.transactional(() -> {
 			final long idBenutzer = benutzerRepository.getAktuellerBenutzerId();
-			final DTOWiedervorlage persisted = getPersistedByUser(id, idBenutzer);
+			final DTOWiedervorlage persisted = getPersistedEntityByUser(id, idBenutzer);
 
 			wiedervorlageMapper.patch(request, persisted);
 
 			validateBenutzerGruppe(persisted.idBenutzergruppe, persisted.idBenutzer, idBenutzer);
 
-			return wiedervorlageMapper.toApi(persisted);
+			return toApi(persisted);
 		});
 	}
 
@@ -202,12 +245,12 @@ public final class WiedervorlageService {
 	public WiedervorlageEintrag markiereAlsErledigt(final long id) {
 		return TransactionSupport.transactional(() -> {
 			final long idUser = benutzerRepository.getAktuellerBenutzerId();
-			final DTOWiedervorlage wiedervorlage = getPersistedByUser(id, idUser);
+			final DTOWiedervorlage wiedervorlage = getPersistedEntityByUser(id, idUser);
 
 			wiedervorlage.idBenutzerErledigt = idUser;
 			wiedervorlage.tsErledigt = JSONMapper.tsFormatter.format(ZonedDateTime.now(ZoneId.of("Europe/Berlin")));
 
-			return wiedervorlageMapper.toApi(wiedervorlage);
+			return toApi(wiedervorlage);
 		});
 	}
 
@@ -218,7 +261,6 @@ public final class WiedervorlageService {
 	 */
 	public long getAnzahlOffeneWiedervorlagen() {
 		final var idBenutzer = benutzerRepository.getAktuellerBenutzerId();
-
 		return wiedervorlageRepository.getAnzahlOffeneWiedervorlagen(idBenutzer);
 	}
 
@@ -259,9 +301,41 @@ public final class WiedervorlageService {
 		}
 	}
 
-	private DTOWiedervorlage getPersistedByUser(final long idWiedervorlage, final long idUser) {
+	private DTOWiedervorlage getPersistedEntityByUser(final long idWiedervorlage, final long idUser) {
 		return wiedervorlageRepository.findByIdAndBenutzerId(idWiedervorlage, idUser)
 				.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND,
 						WIEDERVORLAGE_NOT_FOUND_MESSAGE.formatted(idWiedervorlage)));
+	}
+
+	private String getNameErzieherById(final Long idErzieher) {
+		final var erzieher = erzieherRepository.findById(idErzieher)
+				.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, String.format("Es wurde kein Erzieher zur ID %d gefunden.", idErzieher)));
+		return getFullName(erzieher.Vorname1, erzieher.Name1);
+	}
+
+	private String getNameSchuelerById(final Long idSchueler) {
+		final var schueler = schuelerRepository.findById(idSchueler)
+				.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, String.format("Es wurde kein Schueler zur ID %d gefunden.", idSchueler)));
+		return getFullName(schueler.Vorname, schueler.Nachname);
+	}
+
+	private String getNameLehrerById(final Long idLehrer) {
+		final var lehrer = lehrerRepository.findById(idLehrer)
+				.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, String.format("Es wurde keine Lehrkraft zur ID %d gefunden.", idLehrer)));
+		return getFullName(lehrer.Vorname, lehrer.Nachname);
+	}
+
+	private String getNameBenutzerById(final Long idBenutzer) {
+		if (idBenutzer == null) {
+			return null;
+		}
+
+		return benutzerRepository.findById(idBenutzer)
+				.map(b -> b.AnzeigeName)
+				.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, String.format("Es wurde kein Benutzer zur ID %d gefunden.", idBenutzer)));
+	}
+
+	private static String getFullName(final String firstName, final String lastName) {
+		return String.format("%s %s", firstName, lastName);
 	}
 }

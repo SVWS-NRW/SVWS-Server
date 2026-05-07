@@ -16,8 +16,8 @@ import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.Named;
 import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.factory.Mappers;
 
 /**
  * MapStruct-Mapper fuer Wiedervorlage: erstellt Domain-DTOs, mappt DB-DTOs in API-DTOs
@@ -25,6 +25,9 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
  */
 @Mapper(uses = JsonNullableMapper.class)
 public interface WiedervorlageMapper {
+
+	/** Instanz des Mappers */
+	WiedervorlageMapper INSTANCE = Mappers.getMapper(WiedervorlageMapper.class);
 
 	/**
 	 * Erstellt ein neues {@link DTOWiedervorlage} aus einem Create-Request.
@@ -69,30 +72,21 @@ public interface WiedervorlageMapper {
 	/**
 	 * Mappt ein {@link DTOWiedervorlage} in einen API-DTO {@link WiedervorlageEintrag}.
 	 *
-	 * @param entity DTOWiedervorlage
+	 * @param entity {@link DTOWiedervorlage}
+	 * @param idPerson ID der Person
+	 * @param namePerson Name der Person
+	 * @param nameBenutzerAngelegt Name der Person die den Eintrag angelegt hat
+	 * @param nameBenutzerErledigt Name der Person die den Eintrag erledigt hat
 	 *
 	 * @return WiedervorlageEintrag
 	 */
-	@Mapping(target = "typPerson", source = "personTyp.id")
-	@Mapping(target = "idPerson", source = "entity", qualifiedByName = "mapPersonenId")
-	WiedervorlageEintrag toApi(DTOWiedervorlage entity);
 
-	/**
-	 * Ermittelt die Personen-ID passend zum {@code personTyp} aus dem DB-DTO.
-	 *
-	 * @param entity DB-DTO mit gesetztem {@code personTyp}
-	 *
-	 * @return Personen-ID (Lehrer/Schueler/Erzieher) oder {@code null}
-	 */
-	@Named("mapPersonenId")
-	default Long mapPersonenId(final DTOWiedervorlage entity) {
-		return switch (entity.personTyp) {
-			case null -> null;
-			case LEHRER -> entity.idLehrer;
-			case SCHUELER -> entity.idSchueler;
-			case ERZIEHER -> entity.idErzieher;
-		};
-	}
+	@Mapping(target = "typPerson", source = "entity.personTyp.id")
+	@Mapping(target = "idPerson", source = "idPerson")
+	@Mapping(target = "namePerson", source = "namePerson")
+	@Mapping(target = "nameBenutzerErledigt", source = "nameBenutzerErledigt")
+	@Mapping(target = "nameBenutzerAngelegt", source = "nameBenutzerAngelegt")
+	WiedervorlageEintrag toApi(DTOWiedervorlage entity, Long idPerson, String namePerson, String nameBenutzerAngelegt, String nameBenutzerErledigt);
 
 	/**
 	 * Wendet einen Patch-Request auf ein bestehendes {@link DTOWiedervorlage} an.

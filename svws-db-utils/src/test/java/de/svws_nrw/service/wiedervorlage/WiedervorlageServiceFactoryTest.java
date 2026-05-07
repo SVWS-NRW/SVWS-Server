@@ -1,6 +1,9 @@
 package de.svws_nrw.service.wiedervorlage;
 
 import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
+import de.svws_nrw.repo.erzieher.ErzieherRepositoryFactory;
+import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
+import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.wiedervorlage.WiedervorlageRepositoryFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +20,12 @@ class WiedervorlageServiceFactoryTest {
 	private WiedervorlageRepositoryFactory wiedervorlageRepositoryFactory;
 	@Mock
 	private BenutzerRepositoryFactory benutzerRepositoryFactory;
+	@Mock
+	private LehrerRepositoryFactory lehrerRepositoryFactory;
+	@Mock
+	private SchuelerRepositoryFactory schuelerRepositoryFactory;
+	@Mock
+	private ErzieherRepositoryFactory erzieherRepositoryFactory;
 
 	private WiedervorlageServiceFactory cut;
 
@@ -24,7 +33,10 @@ class WiedervorlageServiceFactoryTest {
 	void setUp() {
 		cut = WiedervorlageServiceFactory.getNewInstance(
 				wiedervorlageRepositoryFactory,
-				benutzerRepositoryFactory
+				benutzerRepositoryFactory,
+				lehrerRepositoryFactory,
+				schuelerRepositoryFactory,
+				erzieherRepositoryFactory
 		);
 	}
 

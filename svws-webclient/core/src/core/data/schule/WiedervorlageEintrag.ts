@@ -14,6 +14,11 @@ export class WiedervorlageEintrag extends JavaObject {
 	public idBenutzer: number = -1;
 
 	/**
+	 * Der Name des Benutzers, der die Wiedervorlage angelegt hat.
+	 */
+	public nameBenutzerAngelegt: string | null = null;
+
+	/**
 	 * Die ID der Benutzergruppe, welcher der Eintrag zugeordnet ist, oder null, falls keine Zuordnung vorliegt.
 	 */
 	public idBenutzergruppe: number | null = null;
@@ -27,6 +32,11 @@ export class WiedervorlageEintrag extends JavaObject {
 	 * Die ID der Person in Abhängigkeit des Person-Typs, auf den sich die Wiedervorlage bezieht (ggf. Lehrer-ID, Schüler-ID oder Erzieher-ID)
 	 */
 	public idPerson: number | null = null;
+
+	/**
+	 * Der vollständige Name der Person, auf die sich die Wiedervorlage bezieht.
+	 */
+	public namePerson: string | null = null;
 
 	/**
 	 * Die Bemerkung der Wiedervorlage, die bem Benutzer angezeigt wird.
@@ -54,14 +64,16 @@ export class WiedervorlageEintrag extends JavaObject {
 	public idBenutzerErledigt: number | null = null;
 
 	/**
+	 * Der Name des Benutzers, der die Wiedervorlage erledigt hat.
+	 */
+	public nameBenutzerErledigt: string | null = null;
+
+	/**
 	 * Gibt an, ob der Eintrag automatisch als erledigt markiert werden soll, wenn er einem Benutzer nach dem Wiedervorlage-Zeitpunkt angezeigt wurde.
 	 */
 	public automatischErledigt: boolean = false;
 
 
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
 	public constructor() {
 		super();
 	}
@@ -85,9 +97,11 @@ export class WiedervorlageEintrag extends JavaObject {
 		if (obj.idBenutzer === undefined)
 			throw new Error('invalid json format, missing attribute idBenutzer');
 		result.idBenutzer = obj.idBenutzer;
+		result.nameBenutzerAngelegt = (obj.nameBenutzerAngelegt === undefined) ? null : obj.nameBenutzerAngelegt === null ? null : obj.nameBenutzerAngelegt;
 		result.idBenutzergruppe = (obj.idBenutzergruppe === undefined) ? null : obj.idBenutzergruppe === null ? null : obj.idBenutzergruppe;
 		result.typPerson = (obj.typPerson === undefined) ? null : obj.typPerson === null ? null : obj.typPerson;
 		result.idPerson = (obj.idPerson === undefined) ? null : obj.idPerson === null ? null : obj.idPerson;
+		result.namePerson = (obj.namePerson === undefined) ? null : obj.namePerson === null ? null : obj.namePerson;
 		if (obj.bemerkung === undefined)
 			throw new Error('invalid json format, missing attribute bemerkung');
 		result.bemerkung = obj.bemerkung;
@@ -95,6 +109,7 @@ export class WiedervorlageEintrag extends JavaObject {
 		result.tsWiedervorlage = (obj.tsWiedervorlage === undefined) ? null : obj.tsWiedervorlage === null ? null : obj.tsWiedervorlage;
 		result.tsErledigt = (obj.tsErledigt === undefined) ? null : obj.tsErledigt === null ? null : obj.tsErledigt;
 		result.idBenutzerErledigt = (obj.idBenutzerErledigt === undefined) ? null : obj.idBenutzerErledigt === null ? null : obj.idBenutzerErledigt;
+		result.nameBenutzerErledigt = (obj.nameBenutzerErledigt === undefined) ? null : obj.nameBenutzerErledigt === null ? null : obj.nameBenutzerErledigt;
 		if (obj.automatischErledigt === undefined)
 			throw new Error('invalid json format, missing attribute automatischErledigt');
 		result.automatischErledigt = obj.automatischErledigt;
@@ -105,14 +120,17 @@ export class WiedervorlageEintrag extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"idBenutzer" : ' + obj.idBenutzer.toString() + ',';
+		result += '"nameBenutzerAngelegt" : ' + ((obj.nameBenutzerAngelegt === null) ? 'null' : JSON.stringify(obj.nameBenutzerAngelegt)) + ',';
 		result += '"idBenutzergruppe" : ' + ((obj.idBenutzergruppe === null) ? 'null' : obj.idBenutzergruppe.toString()) + ',';
 		result += '"typPerson" : ' + ((obj.typPerson === null) ? 'null' : obj.typPerson.toString()) + ',';
 		result += '"idPerson" : ' + ((obj.idPerson === null) ? 'null' : obj.idPerson.toString()) + ',';
+		result += '"namePerson" : ' + ((obj.namePerson === null) ? 'null' : JSON.stringify(obj.namePerson)) + ',';
 		result += '"bemerkung" : ' + JSON.stringify(obj.bemerkung) + ',';
 		result += '"tsAngelegt" : ' + ((obj.tsAngelegt === null) ? 'null' : JSON.stringify(obj.tsAngelegt)) + ',';
 		result += '"tsWiedervorlage" : ' + ((obj.tsWiedervorlage === null) ? 'null' : JSON.stringify(obj.tsWiedervorlage)) + ',';
 		result += '"tsErledigt" : ' + ((obj.tsErledigt === null) ? 'null' : JSON.stringify(obj.tsErledigt)) + ',';
 		result += '"idBenutzerErledigt" : ' + ((obj.idBenutzerErledigt === null) ? 'null' : obj.idBenutzerErledigt.toString()) + ',';
+		result += '"nameBenutzerErledigt" : ' + ((obj.nameBenutzerErledigt === null) ? 'null' : JSON.stringify(obj.nameBenutzerErledigt)) + ',';
 		result += '"automatischErledigt" : ' + obj.automatischErledigt.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -127,6 +145,9 @@ export class WiedervorlageEintrag extends JavaObject {
 		if (obj.idBenutzer !== undefined) {
 			result += '"idBenutzer" : ' + obj.idBenutzer.toString() + ',';
 		}
+		if (obj.nameBenutzerAngelegt !== undefined) {
+			result += '"nameBenutzerAngelegt" : ' + ((obj.nameBenutzerAngelegt === null) ? 'null' : JSON.stringify(obj.nameBenutzerAngelegt)) + ',';
+		}
 		if (obj.idBenutzergruppe !== undefined) {
 			result += '"idBenutzergruppe" : ' + ((obj.idBenutzergruppe === null) ? 'null' : obj.idBenutzergruppe.toString()) + ',';
 		}
@@ -135,6 +156,9 @@ export class WiedervorlageEintrag extends JavaObject {
 		}
 		if (obj.idPerson !== undefined) {
 			result += '"idPerson" : ' + ((obj.idPerson === null) ? 'null' : obj.idPerson.toString()) + ',';
+		}
+		if (obj.namePerson !== undefined) {
+			result += '"namePerson" : ' + ((obj.namePerson === null) ? 'null' : JSON.stringify(obj.namePerson)) + ',';
 		}
 		if (obj.bemerkung !== undefined) {
 			result += '"bemerkung" : ' + JSON.stringify(obj.bemerkung) + ',';
@@ -150,6 +174,9 @@ export class WiedervorlageEintrag extends JavaObject {
 		}
 		if (obj.idBenutzerErledigt !== undefined) {
 			result += '"idBenutzerErledigt" : ' + ((obj.idBenutzerErledigt === null) ? 'null' : obj.idBenutzerErledigt.toString()) + ',';
+		}
+		if (obj.nameBenutzerErledigt !== undefined) {
+			result += '"nameBenutzerErledigt" : ' + ((obj.nameBenutzerErledigt === null) ? 'null' : JSON.stringify(obj.nameBenutzerErledigt)) + ',';
 		}
 		if (obj.automatischErledigt !== undefined) {
 			result += '"automatischErledigt" : ' + obj.automatischErledigt.toString() + ',';

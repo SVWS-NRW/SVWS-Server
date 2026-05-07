@@ -3,9 +3,12 @@ package de.svws_nrw.controller.wiedervorlage;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
-import de.svws_nrw.service.wiedervorlage.WiedervorlageServiceFactory;
 import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
+import de.svws_nrw.repo.erzieher.ErzieherRepositoryFactory;
+import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
+import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.wiedervorlage.WiedervorlageRepositoryFactory;
+import de.svws_nrw.service.wiedervorlage.WiedervorlageServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
@@ -31,7 +34,11 @@ public final class WiedervorlageControllerFactory {
 		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, benutzerKompetenz);
 		final var wiedervorlageRepositoryFactory = WiedervorlageRepositoryFactory.getNewInstance();
 		final var benutzerRepositoryFactory = BenutzerRepositoryFactory.getNewInstance();
-		final var serviceFactory = WiedervorlageServiceFactory.getNewInstance(wiedervorlageRepositoryFactory, benutzerRepositoryFactory);
+		final var lehrerRepositoryFactory = LehrerRepositoryFactory.getNewInstance();
+		final var schuelerRepositoryFactory = SchuelerRepositoryFactory.getNewInstance();
+		final var erzieherRepositoryFactory = ErzieherRepositoryFactory.getNewInstance();
+		final var serviceFactory = WiedervorlageServiceFactory.getNewInstance(wiedervorlageRepositoryFactory, benutzerRepositoryFactory,
+				lehrerRepositoryFactory, schuelerRepositoryFactory, erzieherRepositoryFactory);
 		return new WiedervorlageControllerFactory(serviceFactory);
 	}
 

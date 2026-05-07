@@ -7,13 +7,20 @@ import java.util.function.Supplier;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.data.TransactionSupport;
+import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzerAllgemein;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppe;
+import de.svws_nrw.db.dto.current.schild.erzieher.DTOSchuelerErzieherAdresse;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schule.DTOWiedervorlage;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.WiedervorlageMapper;
 import de.svws_nrw.repo.benutzer.BenutzerRepository;
 import de.svws_nrw.repo.benutzer.BenutzergruppeRepository;
 import de.svws_nrw.repo.benutzer.BenutzergruppenMitgliedRepository;
+import de.svws_nrw.repo.erzieher.ErzieherRepository;
+import de.svws_nrw.repo.lehrer.LehrerRepository;
+import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.repo.wiedervorlage.WiedervorlageRepository;
 import jakarta.persistence.PersistenceException;
 import jakarta.ws.rs.core.Response.Status;
@@ -27,11 +34,14 @@ import org.mapstruct.factory.Mappers;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.openapitools.jackson.nullable.JsonNullable;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class WiedervorlageServiceTest {
@@ -44,6 +54,12 @@ class WiedervorlageServiceTest {
 	private BenutzergruppenMitgliedRepository benutzergruppenMitgliedRepository;
 	@Mock
 	private BenutzerRepository benutzerRepository;
+	@Mock
+	private LehrerRepository lehrerRepository;
+	@Mock
+	private SchuelerRepository schuelerRepository;
+	@Mock
+	private ErzieherRepository erzieherRepository;
 
 	private final WiedervorlageMapper wiedervorlageMapper = Mappers.getMapper(WiedervorlageMapper.class);
 
@@ -58,9 +74,12 @@ class WiedervorlageServiceTest {
 				benutzergruppenMitgliedRepository,
 				benutzergruppeRepository,
 				benutzerRepository,
+				lehrerRepository,
+				schuelerRepository,
+				erzieherRepository,
 				wiedervorlageMapper
 		);
-		transactionSupportMock = Mockito.mockStatic(TransactionSupport.class);
+		transactionSupportMock = mockStatic(TransactionSupport.class);
 		transactionSupportMock.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<Object>>any()))
 				.thenAnswer(inv -> inv.getArgument(0, Supplier.class).get());
 		transactionSupportMock.when(() -> TransactionSupport.transactional(ArgumentMatchers.any(Runnable.class)))
@@ -77,13 +96,22 @@ class WiedervorlageServiceTest {
 
 
 	@Test
-	@DisplayName("get | Eintrag wird zurueckgegeben wenn Benutzer Eigentuemer ist")
-	void getSuccess() throws ApiOperationException {
-		final var dto = buildEntity(1L, 42L, null);
-		final long benutzerId = 42L;
+	@DisplayName("get | Erledigter Eintrag wird zurueckgegeben wenn Benutzer Eigentuemer ist")
+	void getSuccessWiedervorlageErledigt() {
+		final long idBenutzerAngelegt = 42L;
+		final String nameBenutzerAngelegt = "Person Angelegt";
+		final DTOBenutzerAllgemein benutzerAngelegt = buildBenutzerAllgemein(idBenutzerAngelegt, nameBenutzerAngelegt);
 
-		Mockito.when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(benutzerId);
-		Mockito.when(wiedervorlageRepository.findByIdAndBenutzerId(1L, benutzerId)).thenReturn(Optional.of(dto));
+		final long idBenutzerErledigt = 43L;
+		final String nameBenutzerErledigt = "Person Erledigt";
+		final DTOBenutzerAllgemein benutzerErledigt = buildBenutzerAllgemein(idBenutzerErledigt, nameBenutzerErledigt);
+
+		final var dto = buildEntity(1L, idBenutzerAngelegt, 43L, null);
+
+		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(idBenutzerAngelegt);
+		when(benutzerRepository.findById(idBenutzerAngelegt)).thenReturn(Optional.of(benutzerAngelegt));
+		when(benutzerRepository.findById(idBenutzerErledigt)).thenReturn(Optional.of(benutzerErledigt));
+		when(wiedervorlageRepository.findByIdAndBenutzerId(1L, idBenutzerAngelegt)).thenReturn(Optional.of(dto));
 
 		final var result = cut.get(1L);
 
@@ -93,7 +121,29 @@ class WiedervorlageServiceTest {
 				.hasFieldOrPropertyWithValue("bemerkung", dto.bemerkung)
 				.hasFieldOrPropertyWithValue("automatischErledigt", dto.automatischErledigt)
 				.hasFieldOrPropertyWithValue("idBenutzergruppe", dto.idBenutzergruppe)
-				.hasFieldOrPropertyWithValue("tsWiedervorlage", dto.tsWiedervorlage);
+				.hasFieldOrPropertyWithValue("tsWiedervorlage", dto.tsWiedervorlage)
+				.hasFieldOrPropertyWithValue("nameBenutzerAngelegt", nameBenutzerAngelegt)
+				.hasFieldOrPropertyWithValue("nameBenutzerErledigt", nameBenutzerErledigt);
+	}
+
+	@Test
+	@DisplayName("get | Offener Eintrag wird zurueckgegeben wenn Benutzer Eigentuemer ist")
+	void getSuccessWiedervorlageOffen() {
+		final long idBenutzerAngelegt = 42L;
+		final String nameBenutzerAngelegt = "Person Angelegt";
+		final DTOBenutzerAllgemein benutzerAngelegt = buildBenutzerAllgemein(idBenutzerAngelegt, nameBenutzerAngelegt);
+
+
+		final var dto = buildEntity(1L, idBenutzerAngelegt, null, null);
+
+		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(idBenutzerAngelegt);
+		when(benutzerRepository.findById(idBenutzerAngelegt)).thenReturn(Optional.of(benutzerAngelegt));
+		when(wiedervorlageRepository.findByIdAndBenutzerId(1L, idBenutzerAngelegt)).thenReturn(Optional.of(dto));
+
+		final var result = cut.get(1L);
+
+		assertThat(result)
+				.hasFieldOrPropertyWithValue("nameBenutzerErledigt", null);
 	}
 
 	@Test
@@ -101,8 +151,8 @@ class WiedervorlageServiceTest {
 	void getNotFound() {
 		final long benutzerId = 42L;
 
-		Mockito.when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(benutzerId);
-		Mockito.when(wiedervorlageRepository.findByIdAndBenutzerId(99L, benutzerId)).thenReturn(Optional.empty());
+		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(benutzerId);
+		when(wiedervorlageRepository.findByIdAndBenutzerId(99L, benutzerId)).thenReturn(Optional.empty());
 
 		Assertions.assertThatThrownBy(() -> cut.get(99L))
 				.isInstanceOf(ApiOperationException.class)
@@ -112,12 +162,13 @@ class WiedervorlageServiceTest {
 
 	@Test
 	@DisplayName("getAll | gibt deduplizierte Liste aller zugaenglichen Eintraege zurueck")
-	void getAllSuccess() throws ApiOperationException {
-		final var firstEntity = buildEntity(1L, 42L, null);
-		final var secondEntity = buildEntity(2L, 42L, 5L);
+	void getAllSuccess() {
+		final var firstEntity = buildEntity(1L, 42L, null, null);
+		final var secondEntity = buildEntity(2L, 42L, null, 5L);
 
-		Mockito.when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(42L);
-		Mockito.when(wiedervorlageRepository.findAllByBenutzerId(42L)).thenReturn(List.of(firstEntity, secondEntity));
+		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(42L);
+		when(benutzerRepository.findById(42L)).thenReturn(Optional.of(buildBenutzerAllgemein(42L, "Benutzername")));
+		when(wiedervorlageRepository.findAllByBenutzerId(42L)).thenReturn(List.of(firstEntity, secondEntity));
 
 		final var result = cut.getAll();
 
@@ -133,14 +184,15 @@ class WiedervorlageServiceTest {
 
 	@Test
 	@DisplayName("create | CreateRequest wird korrekt auf Entity und Response gemappt")
-	void createSuccess() throws ApiOperationException {
+	void createSuccess() {
 		final var request = buildCreateRequest();
 
-		Mockito.when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(42L);
+		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(42L);
+		when(benutzerRepository.findById(42L)).thenReturn(Optional.of(buildBenutzerAllgemein(42L, "Benutzername")));
 
 		final var result = cut.create(request);
 
-		Mockito.verify(wiedervorlageRepository).flush();
+		verify(wiedervorlageRepository).flush();
 		assertThat(result)
 				.hasFieldOrPropertyWithValue("bemerkung", request.bemerkung)
 				.hasFieldOrPropertyWithValue("automatischErledigt", request.automatischErledigt)
@@ -151,23 +203,89 @@ class WiedervorlageServiceTest {
 	}
 
 	@Test
-	@DisplayName("create | Lehrer Success")
-	void createSuccessLehrer() throws ApiOperationException {
+	@DisplayName("create | Typ Lehrer Success")
+	void createTypLehrerSuccess() {
 		final int typPerson = 1;
 		final long idPerson = 2L;
 		final var request = buildCreateRequest(typPerson, idPerson);
 
-		Mockito.when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(42L);
+		final var lehrer = new DTOLehrer(2L, "ABC", "Mustermann");
+		lehrer.Vorname = "Max";
+
+		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(42L);
+		when(benutzerRepository.findById(42L)).thenReturn(Optional.of(buildBenutzerAllgemein(42L, "Benutzername")));
+		when(lehrerRepository.findById(2L)).thenReturn(Optional.of(lehrer));
 
 		final var result = cut.create(request);
 
-		Mockito.verify(wiedervorlageRepository).flush();
+		verify(wiedervorlageRepository).flush();
 		assertThat(result)
 				.hasFieldOrPropertyWithValue("bemerkung", request.bemerkung)
 				.hasFieldOrPropertyWithValue("automatischErledigt", request.automatischErledigt)
 				.hasFieldOrPropertyWithValue("idBenutzer", 42L)
 				.hasFieldOrPropertyWithValue("idBenutzergruppe", null)
 				.hasFieldOrPropertyWithValue("typPerson", typPerson)
+				.hasFieldOrPropertyWithValue("namePerson", "Max Mustermann")
+				.hasFieldOrPropertyWithValue("idPerson", idPerson)
+				.hasFieldOrPropertyWithValue("tsWiedervorlage", request.tsWiedervorlage)
+				.satisfies(r -> assertThat(r.tsAngelegt).isNotNull());
+	}
+
+	@Test
+	@DisplayName("create | Typ Schueler Success")
+	void createTypSchuelerSuccess() {
+		final int typPerson = 2;
+		final long idPerson = 2L;
+		final var request = buildCreateRequest(typPerson, idPerson);
+
+		final var schueler = new DTOSchueler(2L, "ABC", false);
+		schueler.Vorname = "Max";
+		schueler.Nachname = "Mustermann";
+
+		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(42L);
+		when(benutzerRepository.findById(42L)).thenReturn(Optional.of(buildBenutzerAllgemein(42L, "Benutzername")));
+		when(schuelerRepository.findById(2L)).thenReturn(Optional.of(schueler));
+
+		final var result = cut.create(request);
+
+		verify(wiedervorlageRepository).flush();
+		assertThat(result)
+				.hasFieldOrPropertyWithValue("bemerkung", request.bemerkung)
+				.hasFieldOrPropertyWithValue("automatischErledigt", request.automatischErledigt)
+				.hasFieldOrPropertyWithValue("idBenutzer", 42L)
+				.hasFieldOrPropertyWithValue("idBenutzergruppe", null)
+				.hasFieldOrPropertyWithValue("typPerson", typPerson)
+				.hasFieldOrPropertyWithValue("namePerson", "Max Mustermann")
+				.hasFieldOrPropertyWithValue("idPerson", idPerson)
+				.hasFieldOrPropertyWithValue("tsWiedervorlage", request.tsWiedervorlage)
+				.satisfies(r -> assertThat(r.tsAngelegt).isNotNull());
+	}
+
+	@Test
+	@DisplayName("create | Typ Erzieher Success")
+	void createTypErzieherSuccess() {
+		final int typPerson = 3;
+		final long idPerson = 2L;
+		final var request = buildCreateRequest(typPerson, idPerson);
+
+		final var erzieher = new DTOSchuelerErzieherAdresse(2L, 3L);
+		erzieher.Vorname1 = "Max";
+		erzieher.Name1 = "Mustermann";
+
+		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(42L);
+		when(benutzerRepository.findById(42L)).thenReturn(Optional.of(buildBenutzerAllgemein(42L, "Benutzername")));
+		when(erzieherRepository.findById(2L)).thenReturn(Optional.of(erzieher));
+
+		final var result = cut.create(request);
+
+		verify(wiedervorlageRepository).flush();
+		assertThat(result)
+				.hasFieldOrPropertyWithValue("bemerkung", request.bemerkung)
+				.hasFieldOrPropertyWithValue("automatischErledigt", request.automatischErledigt)
+				.hasFieldOrPropertyWithValue("idBenutzer", 42L)
+				.hasFieldOrPropertyWithValue("idBenutzergruppe", null)
+				.hasFieldOrPropertyWithValue("typPerson", typPerson)
+				.hasFieldOrPropertyWithValue("namePerson", "Max Mustermann")
 				.hasFieldOrPropertyWithValue("idPerson", idPerson)
 				.hasFieldOrPropertyWithValue("tsWiedervorlage", request.tsWiedervorlage)
 				.satisfies(r -> assertThat(r.tsAngelegt).isNotNull());
@@ -179,7 +297,7 @@ class WiedervorlageServiceTest {
 		final var request = buildCreateRequest();
 		request.idBenutzergruppe = 99L;
 
-		Mockito.when(benutzergruppeRepository.findById(99L)).thenReturn(Optional.empty());
+		when(benutzergruppeRepository.findById(99L)).thenReturn(Optional.empty());
 
 		Assertions.assertThatThrownBy(() -> cut.create(request))
 				.isInstanceOf(ApiOperationException.class)
@@ -192,8 +310,8 @@ class WiedervorlageServiceTest {
 	void createConflictPersistenceException() {
 		final var request = buildCreateRequest();
 
-		Mockito.when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(42L);
-		Mockito.doThrow(PersistenceException.class)
+		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(42L);
+		doThrow(PersistenceException.class)
 				.when(wiedervorlageRepository).create(ArgumentMatchers.any(DTOWiedervorlage.class));
 
 		Assertions.assertThatThrownBy(() -> cut.create(request))
@@ -204,14 +322,15 @@ class WiedervorlageServiceTest {
 
 	@Test
 	@DisplayName("patch | PatchRequest wird korrekt auf Entity und Response gemappt")
-	void patchSuccess() throws ApiOperationException {
+	void patchSuccess() {
 		final long idBenutzer = 42L;
-		final var dto = buildEntity(1L, idBenutzer, 2L);
+		final var dto = buildEntity(1L, idBenutzer, null, 2L);
 		final var request = buildPatchRequest();
 
-		Mockito.when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
-		Mockito.when(wiedervorlageRepository.findByIdAndBenutzerId(1L, idBenutzer)).thenReturn(Optional.of(dto));
-		Mockito.when(benutzergruppeRepository.findById(2L)).thenReturn(Optional.of(new DTOBenutzergruppe(2L, "x", true)));
+		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
+		when(benutzerRepository.findById(42L)).thenReturn(Optional.of(buildBenutzerAllgemein(42L, "Benutzername")));
+		when(wiedervorlageRepository.findByIdAndBenutzerId(1L, idBenutzer)).thenReturn(Optional.of(dto));
+		when(benutzergruppeRepository.findById(2L)).thenReturn(Optional.of(new DTOBenutzergruppe(2L, "x", true)));
 
 		final var result = cut.patch(request, 1L);
 
@@ -224,15 +343,15 @@ class WiedervorlageServiceTest {
 
 	@Test
 	@DisplayName("patch | FORBIDDEN bei GruppenID not in Eigene Gruppen IDs")
-	void patchFehlendeBerechtigung() throws ApiOperationException {
+	void patchFehlendeBerechtigung() {
 		final long idBenutzer = 42L;
-		final var dto = buildEntity(1L, idBenutzer, 2L);
+		final var dto = buildEntity(1L, idBenutzer, null, 2L);
 		final var request = buildPatchRequest();
 
-		Mockito.when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(43L);
-		Mockito.when(wiedervorlageRepository.findByIdAndBenutzerId(1L, 43L)).thenReturn(Optional.of(dto));
-		Mockito.when(benutzergruppeRepository.findById(2L)).thenReturn(Optional.of(new DTOBenutzergruppe(2L, "x", true)));
-		Mockito.when(benutzergruppenMitgliedRepository.hasGroupRights(43L, 2L)).thenReturn(false);
+		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(43L);
+		when(wiedervorlageRepository.findByIdAndBenutzerId(1L, 43L)).thenReturn(Optional.of(dto));
+		when(benutzergruppeRepository.findById(2L)).thenReturn(Optional.of(new DTOBenutzergruppe(2L, "x", true)));
+		when(benutzergruppenMitgliedRepository.hasGroupRights(43L, 2L)).thenReturn(false);
 
 		Assertions.assertThatThrownBy(() -> cut.patch(request, 1L))
 				.isInstanceOf(ApiOperationException.class)
@@ -242,12 +361,13 @@ class WiedervorlageServiceTest {
 
 	@Test
 	@DisplayName("patch | Nicht-present Felder werden nicht ueberschrieben")
-	void patchIgnoriertNichtPresenteFelder() throws ApiOperationException {
+	void patchIgnoriertNichtPresenteFelder() {
 		final long idBenutzer = 42L;
-		final var dto = buildEntity(1L, 42L, null);
+		final var dto = buildEntity(1L, 42L, null, null);
 
-		Mockito.when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
-		Mockito.when(wiedervorlageRepository.findByIdAndBenutzerId(1L, idBenutzer)).thenReturn(Optional.of(dto));
+		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
+		when(benutzerRepository.findById(42L)).thenReturn(Optional.of(buildBenutzerAllgemein(42L, "Benutzername")));
+		when(wiedervorlageRepository.findByIdAndBenutzerId(1L, idBenutzer)).thenReturn(Optional.of(dto));
 
 		final var result = cut.patch(new WiedervorlagePatchRequest(), 1L);
 
@@ -263,8 +383,8 @@ class WiedervorlageServiceTest {
 		final long idBenutzer = 42L;
 		final var request = new WiedervorlagePatchRequest();
 
-		Mockito.when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
-		Mockito.when(wiedervorlageRepository.findByIdAndBenutzerId(99L, idBenutzer)).thenReturn(Optional.empty());
+		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
+		when(wiedervorlageRepository.findByIdAndBenutzerId(99L, idBenutzer)).thenReturn(Optional.empty());
 
 		Assertions.assertThatThrownBy(() -> cut.patch(request, 99L))
 				.isInstanceOf(ApiOperationException.class)
@@ -274,11 +394,11 @@ class WiedervorlageServiceTest {
 
 	@Test
 	@DisplayName("delete | Eintrag wird geloescht und gemappte Response zurueckgegeben")
-	void deleteSuccess() throws ApiOperationException {
+	void deleteSuccess() {
 		final long idBenutzer = 42L;
 		final long idWiederVorlage = 1L;
 
-		Mockito.when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
+		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
 
 		final var result = cut.delete(idWiederVorlage);
 
@@ -288,14 +408,14 @@ class WiedervorlageServiceTest {
 
 	@Test
 	@DisplayName("delete | Mehrere Eintraege werden per ID-Set geloescht")
-	void deleteByIdsSuccess() throws ApiOperationException {
+	void deleteByIdsSuccess() {
 		final long successId = 1L;
 		final long notFoundId = 2L;
 		final var ids = Set.of(successId, notFoundId);
 		final var idBenutzer = 1L;
 
-		Mockito.when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
-		Mockito.when(wiedervorlageRepository.findAllByIdsAndBenutzerId(ids, idBenutzer)).thenReturn(List.of(buildEntity(successId, idBenutzer, null)));
+		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
+		when(wiedervorlageRepository.findAllByIdsAndBenutzerId(ids, idBenutzer)).thenReturn(List.of(buildEntity(successId, idBenutzer, null, null)));
 
 		final var logs = cut.delete(ids);
 
@@ -314,12 +434,13 @@ class WiedervorlageServiceTest {
 
 	@Test
 	@DisplayName("markiereAlsErledigt | tsErledigt und idBenutzerErledigt werden gesetzt")
-	void markiereAlsErledigtSuccess() throws ApiOperationException {
+	void markiereAlsErledigtSuccess() {
 		final long idBenutzer = 42L;
-		final var dto = buildEntity(1L, idBenutzer, null);
+		final var dto = buildEntity(1L, idBenutzer, null, null);
 
-		Mockito.when(wiedervorlageRepository.findByIdAndBenutzerId(1L, idBenutzer)).thenReturn(Optional.of(dto));
-		Mockito.when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
+		when(wiedervorlageRepository.findByIdAndBenutzerId(1L, idBenutzer)).thenReturn(Optional.of(dto));
+		when(benutzerRepository.findById(42L)).thenReturn(Optional.of(buildBenutzerAllgemein(42L, "Benutzername")));
+		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
 
 		final var result = cut.markiereAlsErledigt(1L);
 
@@ -338,23 +459,32 @@ class WiedervorlageServiceTest {
 	@Test
 	@DisplayName("markiereAlsErledigt | NOT_FOUND wenn kein Eintrag mit der ID existiert")
 	void markiereAlsErledigtNotFound() {
-
 		Assertions.assertThatThrownBy(() -> cut.markiereAlsErledigt(99L))
 				.isInstanceOf(ApiOperationException.class)
 				.extracting("status")
 				.isEqualTo(Status.NOT_FOUND);
 	}
 
+	@Test
+	@DisplayName("getAnzahlOffeneWiedervorlagen | 3 offene Wiedervorlagen | Success")
+	void getAnzahlOffeneWiedervorlagenSuccess() {
+		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(1L);
+		when(wiedervorlageRepository.getAnzahlOffeneWiedervorlagen(1L)).thenReturn(3L);
 
-	private static DTOWiedervorlage buildEntity(final long id, final long benutzerId, final Long gruppeId) {
+		final long result = cut.getAnzahlOffeneWiedervorlagen();
+
+		assertThat(result).isEqualTo(3L);
+	}
+
+	private static DTOWiedervorlage buildEntity(final long id, final long idBenutzer, final Long idBenutzerErledigt, final Long idGruppe) {
 		final var dto = new DTOWiedervorlage(id, "Testbemerkung", false);
-		dto.idBenutzer = benutzerId;
-		dto.idBenutzergruppe = gruppeId;
+		dto.idBenutzer = idBenutzer;
+		dto.idBenutzergruppe = idGruppe;
 		dto.bemerkung = "Testbemerkung";
 		dto.automatischErledigt = false;
 		dto.tsWiedervorlage = "2026-04-14 08:00:00";
 		dto.tsAngelegt = "2026-01-01 00:00:00";
-		dto.idBenutzerErledigt = null;
+		dto.idBenutzerErledigt = idBenutzerErledigt;
 		dto.tsErledigt = null;
 		return dto;
 	}
@@ -381,5 +511,12 @@ class WiedervorlageServiceTest {
 		request.tsWiedervorlage = JsonNullable.of("2026-06-01 09:00:00");
 		request.idBenutzergruppe = JsonNullable.of(2L);
 		return request;
+	}
+
+	private DTOBenutzerAllgemein buildBenutzerAllgemein(final long benutzerId, final String anzeigeName) {
+		final DTOBenutzerAllgemein benutzer = new DTOBenutzerAllgemein(benutzerId);
+		benutzer.AnzeigeName = anzeigeName;
+
+		return benutzer;
 	}
 }
