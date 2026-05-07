@@ -1,29 +1,29 @@
 package de.svws_nrw.module.reporting.html.dialects;
 
+import java.util.Set;
+
 import org.thymeleaf.context.IExpressionContext;
 import org.thymeleaf.expression.IExpressionObjectFactory;
 
-import java.util.Set;
-
 /**
- * Klasse für eine Expression in Thymeleaf zur Ergänzung von Konvertierungsfunktionen.
+ * Klasse für eine Expression in Thymeleaf zur Ergänzung von Funktionen zur inline-Darstellung von HTML- und CSS-Elementen.
  */
-public class ConvertExpressionFactory implements IExpressionObjectFactory {
+public class InlineExpressionFactory implements IExpressionObjectFactory {
 
 	/**
 	 * Name der Expression
 	 */
-	private static final String EXPRESSION_NAME = "convert";
+	private static final String EXPRESSION_NAME = "inline";
 
 	/**
-	 * Liste, die alle Expression-Namen dieser Klasse enthält
+	 * Eine Liste, die alle Expression-Namen dieser Klasse enthält
 	 */
 	private static final Set<String> ALL_EXPRESSION_NAMES = Set.of(EXPRESSION_NAME);
 
 	/**
-	 * Erstellt eine neue ConvertExpressionFactory
+	 * Erstellt eine neue InlineExpressionFactory
 	 */
-	public ConvertExpressionFactory() {
+	public InlineExpressionFactory() {
 		// Standardkonstruktor
 	}
 
@@ -48,7 +48,7 @@ public class ConvertExpressionFactory implements IExpressionObjectFactory {
 	@Override
 	public Object buildObject(final IExpressionContext context, final String expressionObjectName) {
 		if (EXPRESSION_NAME.equals(expressionObjectName)) {
-			return new ConvertExpressionHelper();
+			return new InlineExpressionHelper();
 		}
 		return null;
 	}

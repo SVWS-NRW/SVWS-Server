@@ -16,4 +16,8 @@ export class RouteDataSchuleReporting extends RouteData<RouteStateInterface> {
 		return await api.server.pdfReport(param, api.schema);
 	};
 
+	createHtmlPreview = async (param: ReportingParameter): Promise<string> => {
+		return await api.server.htmlReport(param, api.schema);
+	};
+
 }

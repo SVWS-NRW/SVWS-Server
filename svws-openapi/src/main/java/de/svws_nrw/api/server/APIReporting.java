@@ -41,6 +41,41 @@ public class APIReporting {
 	}
 
 	/**
+	 * Die OpenAPI-Methode für die Erstellung eines Reports im HTML-Format zur Anzeige im Browser.
+	 *
+	 * @param schema das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param reportingParameter Objekt mit den Daten und Einstellungen für den zu erstellenden Report.
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return Der Report als HTML-Dokument mit den angeforderten Daten
+	 */
+	@POST
+	@Produces(MediaType.TEXT_HTML)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/html")
+	@Operation(summary = "Erstellt einen Report als HTML-Dokument für eine direkte Anzeige im Browser.",
+			description = "Erstellt den angeforderten Report gemäß den Reporting-Parametern als HTML-Dokument. "
+					+ "Das HTML ist selbsttragend (CSS inline) und kann unmittelbar angezeigt werden. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Reports besitzt. "
+					+ "Weitergehende Berechtigungen werden im Vorfeld der Reporterstellung überprüft.")
+	@ApiResponse(responseCode = "200", description = "Der Report wurde erfolgreich als HTML erzeugt.",
+			content = @Content(mediaType = MediaType.TEXT_HTML, schema = @Schema(implementation = String.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den geforderten Report zu erstellen.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag zu den übergebenen Daten gefunden.")
+	@ApiResponse(responseCode = "500", description = "Es ist ein unbekannter Fehler aufgetreten.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SimpleOperationResponse.class)))
+	public Response htmlReport(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten und Einstellungen, mit denen der Report erstellt werden soll.", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = ReportingParameter.class))) final ReportingParameter reportingParameter,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new ReportingFactory(conn, reportingParameter, ReportingAusgabeformat.HTML).createReportResponse(),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN,
+				BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN);
+	}
+
+	/**
 	 * Die OpenAPI-Methode für die Erstellung eines Reports im geforderten Format. Je nach übergebenen Parametern wird eine
 	 * einzige Report-Datei oder eine ZIP-Datei mit einzelnen Dateien zurückgegeben.
 	 *
@@ -52,6 +87,7 @@ public class APIReporting {
 	 */
 	@POST
 	@Produces("application/pdf")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/ausgabe")
 	@Operation(summary = "Erstellt einen Report als PDF-Datei gemäß den übergebenen Daten.",
 			description = "Erstellt den angeforderten Report gemäß den in den Reporting-Parametern angegebenen Daten und Einstellungen und bietet ihn als PDF-Datei zum Download an. "
@@ -84,7 +120,8 @@ public class APIReporting {
 	 * @return Informationen zum Versand der E-Mails.
 	 */
 	@POST
-	@Produces({ "application/json" })
+	@Produces("application/json")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/email")
 	@Operation(summary = "Erstellt einen Report als PDF-Datei gemäß den übergebenen Daten und versendet ihn per E-Mail.",
 			description = "Erstellt den angeforderten Report gemäß den in den Reporting-Parametern angegebenen Daten und Einstellungen und versendet ihn als PDF-Datei per E-Mail. "

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}">
+    <!--/* @thymesVar id="#convert" type="de.svws_nrw.module.reporting.html.dialects.ConvertExpressionHelper" */-->
 	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
 		title='Schüler-Kurse-Schienen-Zuordnung',
 		htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
@@ -47,8 +48,8 @@
 						</colgroup>
 						<tr th:each="Schiene : ${GostBlockungsergebnis.schienen()}">
 							<th class="bo-grey" th:style="${Schiene.hatKollisionen() ? 'background-color: red;' : 'background-color: white;'}">
-								<p class="m-t-0 f-bold" th:style="${'font-size: ' + schriftgroesse + ';'}" th:text="${Schiene.bezeichnung()}">Schiene 1</p>
-								<p class="m-t-0" style="font-size: 6pt;" th:utext="${Schiene.kurse().size() + (Schiene.kurse().size() == 1 ? ' Kurs' : ' Kurse' ) + '<br/>' + Schiene.anzahlSchueler() + ' S.' + (zeigeExtDummy ? ' (' + Schiene.anzahlExterne() + ',' + Schiene.anzahlDummy() + ')' : '')}">5 Kurse<br/>98 S. (2,5)</p>
+								<p class="m-t-0 f-bold ta-l" th:style="${'font-size: ' + schriftgroesse + ';'}" th:text="${Schiene.bezeichnung()}">Schiene 1</p>
+								<p class="m-t-0 ta-l" style="font-size: 6pt;" th:utext="${Schiene.kurse().size() + (Schiene.kurse().size() == 1 ? ' Kurs' : ' Kurse' ) + '<br/>' + Schiene.anzahlSchueler() + ' S.' + (zeigeExtDummy ? ' (' + Schiene.anzahlExterne() + ',' + Schiene.anzahlDummy() + ')' : '')}">5 Kurse<br/>98 S. (2,5)</p>
 							</th>
 							<td class="bo-grey" th:each="Kurs : ${Schiene.kurse()}"
 								th:style="${(Kurs.fach().statistikfach().htmlFarbeRGB() == null || Kurs.fach().statistikfach().htmlFarbeRGB().isEmpty()) ? '' : ' background-color: ' + Kurs.fach().statistikfach().htmlFarbeRGB() + ';'}">
@@ -103,8 +104,8 @@
 						</colgroup>
 						<tr th:each="Schiene : ${GostBlockungsergebnis.schienen()}">
 							<th class="bo-grey" th:style="${#lists.contains(Schiene.idsSchuelerMitKollisionen(), schueler.id()) ? 'background-color: red;' : 'background-color: white;'}">
-								<p class="f-bold" th:style="${'font-size: ' + schriftgroesse + ';'}" th:text="${Schiene.bezeichnung()}">Schiene 1</p>
-								<p class="m-t-0" style="font-size: 6pt;" th:utext="${Schiene.kurse().size() + (Schiene.kurse().size() == 1 ? ' Kurs' : ' Kurse' ) + '<br/>' + Schiene.anzahlSchueler() + ' S.' + (zeigeExtDummy ? ' (' + Schiene.anzahlExterne()+ ',' + Schiene.anzahlDummy() + ')' : '')}">5 Kurse<br/>98 S. (2,5)</p>
+								<p class="f-bold ta-l" th:style="${'font-size: ' + schriftgroesse + ';'}" th:text="${Schiene.bezeichnung()}">Schiene 1</p>
+								<p class="m-t-0 ta-l" style="font-size: 6pt;" th:utext="${Schiene.kurse().size() + (Schiene.kurse().size() == 1 ? ' Kurs' : ' Kurse' ) + '<br/>' + Schiene.anzahlSchueler() + ' S.' + (zeigeExtDummy ? ' (' + Schiene.anzahlExterne()+ ',' + Schiene.anzahlDummy() + ')' : '')}">5 Kurse<br/>98 S. (2,5)</p>
 							</th>
 							<td class="bo-grey" th:each="Kurs : ${Schiene.kurse()}"
 								th:with="istBelegt = ${!(schueler.getGostKursplanungKursbelegungById(Kurs.id) == null)}, istGueltig = ${istBelegt && schueler.getGostKursplanungKursbelegungById(Kurs.id).hatGueltigeFachwahl()}"

@@ -26,7 +26,7 @@ public final class ReportingReportvorlageKonfigurationStundenplanung {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static @NotNull ReportingParameter getStundenplanungVFachStundenplan() {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), List.of(
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()), List.of(
 				ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
 						"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 2,
 						List.of(
@@ -44,7 +44,8 @@ public final class ReportingReportvorlageKonfigurationStundenplanung {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static @NotNull ReportingParameter getStundenplanungVKlassenStundenplan() {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()),
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(
+				List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()),
 				List.of(
 						ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
 								"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true,
@@ -72,7 +73,8 @@ public final class ReportingReportvorlageKonfigurationStundenplanung {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static @NotNull ReportingParameter getStundenplanungVLehrerStundenplan() {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()),
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(
+				List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()),
 				List.of(
 						ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
 								"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true,
@@ -101,7 +103,7 @@ public final class ReportingReportvorlageKonfigurationStundenplanung {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static @NotNull ReportingParameter getStundenplanungVLehrerStundenplanKombiniert() {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), List.of(
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()), List.of(
 				ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
 						"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 2,
 						Arrays.asList(
@@ -124,7 +126,7 @@ public final class ReportingReportvorlageKonfigurationStundenplanung {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static @NotNull ReportingParameter getStundenplanungVRaumStundenplan() {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), List.of(
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()), List.of(
 				ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
 						"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 2,
 						List.of(
@@ -142,7 +144,8 @@ public final class ReportingReportvorlageKonfigurationStundenplanung {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static @NotNull ReportingParameter getStundenplanungVSchuelerStundenplan() {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()),
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(
+				List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()),
 				List.of(
 						ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
 								"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true,

@@ -3,8 +3,7 @@
 	margin: 18mm 18mm 12mm 10mm;
 
 	/* Boxen im Seitenrand. Für die Einträge in den Seitenköpfen und -füßen wird pro Bereich im body der
-	   html-Datei ein div definiert, die als Running Header bzw. Footer in den @page-Boxen eingefügt werden sollen.
-	############################################################################################################### */
+	   html-Datei ein div definiert, die als Running Header bzw. Footer in den @page-Boxen eingefügt werden sollen. */
 	@top-left {
 		content: element(pageTopLeft);
 		padding-top: 1mm;
@@ -42,8 +41,7 @@
 	margin: 18mm 10mm 12mm 18mm;
 
 	/* Boxen im Seitenrand. Für die Einträge in den Seitenköpfen und -füßen wird pro Bereich im body der
-	   html-Datei ein div definiert, die als Running Header bzw. Footer in den @page-Boxen eingefügt werden sollen.
-	############################################################################################################### */
+	   html-Datei ein div definiert, die als Running Header bzw. Footer in den @page-Boxen eingefügt werden sollen. */
 	@top-left {
 		content: element(pageTopLeft);
 		padding-top: 1mm;
@@ -77,8 +75,7 @@
 }
 
 /* Für die Einträge in den Seitenköpfen und -füßen wird pro Bereich im body der html-Datei ein div definiert,
-   die als Running Header bzw. Footer in den @page-Boxen eingefügt werden sollen.
-############################################################################################################### */
+   die als Running Header bzw. Footer in den @page-Boxen eingefügt werden sollen. */
 .pageTopLeft {
 	position: running(pageTopLeft);
 	text-align: left;
@@ -131,8 +128,7 @@
 }
 
 
-/* Seitenumbrüche: Wenn Style angewendet wird, wird beim Druck ein Seitenumbruch eingefügt, evtl. mit Ausnahme.
-############################################################################################################### */
+/* Seitenumbrüche: Wenn Style angewendet wird, wird beim Druck ein Seitenumbruch eingefügt, evtl. mit Ausnahme. */
 .start-new-page {
 	page-break-after: right;
 }
@@ -141,8 +137,7 @@
 }
 
 
-/* Um evtl. Zähler im div einzufügen, ergänze einen span, an den die Zähler angehängt werden.
-############################################################################################################### */
+/* Um evtl. Zähler im div einzufügen, ergänze einen span, an den die Zähler angehängt werden. */
 span.page-num-print {
 	padding: 0;
 	margin: 0;
@@ -156,4 +151,60 @@ span.page-nums-print {
 }
 span.page-nums-print:after {
 	content: counter(page) " von " counter(pages);
+}
+
+
+/* OpenHtmlToPDF ignoriert @media screen, daher wirken diese Regeln nur im Browser. Dient zur Simulation einer Seitenvorschau im Browser.
+   Für die Duplex-Vorschau wird ein gemittelter Seitenrand verwendet (linke/rechte Margins ausgeglichen). */
+@media screen {
+	html {
+		background: #c8c8c8;
+		padding: 12mm;
+		box-sizing: border-box;
+		min-width: 100%;
+		min-height: 100%;
+	}
+	body {
+		width: 210mm;
+		min-height: 297mm;
+		margin: 0 auto;
+		padding: 9mm 14mm 12mm 14mm;
+		background: #ffffff;
+		box-shadow: 0 0 6px rgba(0, 0, 0, 0.35);
+		box-sizing: border-box;
+		overflow: visible;
+	}
+	.pageTopLeft, .pageTopRight, .pageLeftMiddle,
+	.pageBottomLeft, .pageBottomCenter, .pageBottomRight,
+	span.page-num-print, span.page-nums-print {
+		display: none;
+	}
+	.start-new-page {
+		margin-top: 26mm;
+		position: relative;
+	}
+	/* Die Lücke, die den Seitenumbruch als durchscheinenden Hintergrund darstellt */
+	.start-new-page::before {
+		content: "";
+		position: absolute;
+		top: -14mm; /* Lücke direkt oberhalb des body padding-top der nächsten Seite */
+		left: -19mm; /* Über den Seitenrand hinausziehen, um den Body-Schatten zu überdecken */
+		right: -19mm;
+		height: 5mm;
+		background-color: #c8c8c8;
+		background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 0px, transparent 3px, transparent calc(100% - 3px), rgba(0, 0, 0, 0.15) 100%);
+		background-size: 210mm 100%; /* Beschränkt den Schatten-Verlauf exakt auf die Breite der A4-Seite (210mm) und zentriert ihn */
+		background-position: center;
+		background-repeat: no-repeat;
+		z-index: 10;
+	}
+	.start-new-page::after {
+		content: none;
+	}
+	.start-new-page:first-child {
+		margin-top: 0;
+	}
+	.start-new-page:first-child::before {
+		content: none;
+	}
 }

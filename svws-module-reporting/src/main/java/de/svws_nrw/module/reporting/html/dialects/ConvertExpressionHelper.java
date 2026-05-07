@@ -23,10 +23,10 @@ import java.util.Date;
 public class ConvertExpressionHelper {
 
 	/**
-	 * Erstellt einen neuen SVWSDateExpressionHelper
+	 * Erstellt einen neuen ConvertExpressionHelper
 	 */
 	public ConvertExpressionHelper() {
-		// leerer Konstruktor, um diesen mit einem JavaDoc-Kommentar versehen zu können.
+		// Standardkonstruktor
 	}
 
 	/**

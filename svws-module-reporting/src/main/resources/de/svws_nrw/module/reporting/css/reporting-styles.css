@@ -281,6 +281,19 @@ Definitionen für Spacing, Padding, Margin
 	padding-right: 4mm;
 }
 
+.p-t-6 {
+	padding-top: 6mm;
+}
+.p-b-6 {
+	padding-bottom: 6mm;
+}
+.p-l-6 {
+	padding-left: 6mm;
+}
+.p-r-6 {
+	padding-right: 6mm;
+}
+
 .p-tb-0 {
 	padding-top: 0;
 	padding-bottom: 0;
@@ -569,6 +582,9 @@ tr {
 	page-break-before: auto;
 }
 
+th {
+	font-weight: normal;
+}
 
 th.head-small-grey {
 	font-size: 0.8em;

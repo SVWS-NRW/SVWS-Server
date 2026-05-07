@@ -25,7 +25,7 @@ public final class ReportingReportvorlageKonfigurationLehrer {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static @NotNull ReportingParameter getLehrerVListeSchuelerLeistungsdaten() {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), List.of(
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()), List.of(
 				ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
 						"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 2,
 						Arrays.asList(
@@ -52,7 +52,8 @@ public final class ReportingReportvorlageKonfigurationLehrer {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static @NotNull ReportingParameter getLehrerVStammdatenliste() {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), new ArrayList<>(),
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()),
+				new ArrayList<>(),
 				new ReportingEMailDaten(),
 				new ArrayList<>(), new ArrayList<>(), true, true);
 	}

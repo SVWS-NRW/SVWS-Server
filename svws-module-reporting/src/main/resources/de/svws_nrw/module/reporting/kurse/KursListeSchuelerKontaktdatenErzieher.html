@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}, duplex = ${Parameter.duplexdruck},
 					   querformat = ${(VorlageParameter.get('mitErzieher') || VorlageParameter.get('mitErzieherAnschrift') || VorlageParameter.get('mitErzieherEmailPrivat')) && (VorlageParameter.get('mitSchuelerTelefonPrivat') || VorlageParameter.get('mitSchuelerEmailSchule') || VorlageParameter.get('mitSchuelerEmailPrivat') || VorlageParameter.get('mitSpalteSchuelerTelefonKontakte'))}">
+    <!--/* @thymesVar id="#convert" type="de.svws_nrw.module.reporting.html.dialects.ConvertExpressionHelper" */-->
 	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
 		title='Kursliste mit Kontaktdaten und Erziehern der Schülerinnen und Schüler',
 		htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},

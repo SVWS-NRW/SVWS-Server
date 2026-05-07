@@ -25,7 +25,7 @@ public final class ReportingReportvorlageKonfigurationGost {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static @NotNull ReportingParameter getGostKlausurplanungVKlausurtermineMitKursen() {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), List.of(
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()), List.of(
 				ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
 						"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 1,
 						Arrays.asList(
@@ -48,7 +48,8 @@ public final class ReportingReportvorlageKonfigurationGost {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static @NotNull ReportingParameter getGostKlausurplanungVSchuelerMitKlausuren() {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), new ArrayList<>(),
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()),
+				new ArrayList<>(),
 				new ReportingEMailDaten(),
 				new ArrayList<>(), new ArrayList<>(), true, true);
 	}
@@ -59,7 +60,8 @@ public final class ReportingReportvorlageKonfigurationGost {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static @NotNull ReportingParameter getGostKursplanungVKursMitKursschuelern() {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()),
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(
+				List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()),
 				new ArrayList<>(),
 				ReportingReportvorlageUtils.erzeugeEmailParameter(
 						ReportingEMailEmpfaengerTyp.GOSTKURSPLANUNG_KURSLEHRER,
@@ -75,7 +77,8 @@ public final class ReportingReportvorlageKonfigurationGost {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static @NotNull ReportingParameter getGostKursplanungVKurseMitStatistikwerten() {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), new ArrayList<>(),
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()),
+				new ArrayList<>(),
 				new ReportingEMailDaten(),
 				new ArrayList<>(), new ArrayList<>(), false, true);
 	}
@@ -86,7 +89,8 @@ public final class ReportingReportvorlageKonfigurationGost {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static @NotNull ReportingParameter getGostKursplanungVSchuelerMitKursen() {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), new ArrayList<>(),
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()),
+				new ArrayList<>(),
 				new ReportingEMailDaten(),
 				new ArrayList<>(), new ArrayList<>(), false, true);
 	}
@@ -97,7 +101,8 @@ public final class ReportingReportvorlageKonfigurationGost {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static @NotNull ReportingParameter getGostKursplanungVSchuelerMitSchienenKursen() {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), new ArrayList<>(),
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()),
+				new ArrayList<>(),
 				new ReportingEMailDaten(),
 				new ArrayList<>(), new ArrayList<>(), false, true);
 	}
@@ -108,7 +113,8 @@ public final class ReportingReportvorlageKonfigurationGost {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static @NotNull ReportingParameter getGostLaufbahnplanungAbiturjahrgangVFachwahlstatistiken() {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), new ArrayList<>(),
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()),
+				new ArrayList<>(),
 				new ReportingEMailDaten(),
 				new ArrayList<>(), new ArrayList<>(), false, true);
 	}

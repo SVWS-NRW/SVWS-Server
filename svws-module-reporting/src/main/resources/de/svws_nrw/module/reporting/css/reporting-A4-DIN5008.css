@@ -108,8 +108,7 @@
 }
 
 
-/* Seitenumbrüche: Wenn Style angewendet wird, wird beim Druck ein Seitenumbruch eingefügt, evtl. mit Ausnahme.
-############################################################################################################### */
+/* Seitenumbrüche: Wenn Style angewendet wird, wird beim Druck ein Seitenumbruch eingefügt, evtl. mit Ausnahme. */
 .start-new-page {
 	page-break-before: always;
 }
@@ -118,8 +117,7 @@
 }
 
 
-/* Um evtl. Zähler im div einzufügen, ergänze einen span, an den die Zähler angehängt werden.
-############################################################################################################### */
+/* Um evtl. Zähler im div einzufügen, ergänze einen span, an den die Zähler angehängt werden. */
 span.page-num-print {
 	padding: 0;
 	margin: 0;
@@ -136,8 +134,7 @@ span.page-nums-print:after {
 }
 
 
-/* Elemente für Schreiben nach DIN5008
-############################################################################################################### */
+/* Elemente für Schreiben nach DIN5008 */
 .briefkopfbereich {
 	/* Umfasst den gesamten Briefkopf, z. B. für ein Bild als Ersatz */
 	position: absolute;
@@ -170,6 +167,13 @@ span.page-nums-print:after {
 	left: 15mm;
 	width: 73mm;
 	height: 7mm;
+}
+
+.ruecksendeinformationentext {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	margin: 1px;
 }
 
 .versandinformationen {
@@ -236,4 +240,64 @@ span.page-nums-print:after {
 	width: 8mm;
 	border-width: 0.5px;
 	border-color: #404040;
+}
+
+.din5008-seitenrahmen {
+	/* DIN5008-Briefe nutzen position: absolute. Ohne explizite Höhe würde die div u. U. auf 0 kollabieren und mehrere Briefe würden sich überlagern. */
+	min-height: 265mm;
+}
+
+
+/* OpenHtmlToPDF ignoriert @media screen, daher wirken diese Regeln nur im Browser. Dient zur Simulation einer Seitenvorschau im Browser. */
+@media screen {
+	html {
+		background: #c8c8c8;
+		padding: 12mm;
+		box-sizing: border-box;
+		min-width: 100%;
+		min-height: 100%;
+	}
+	body {
+		width: 210mm;
+		min-height: 297mm;
+		margin: 0 auto;
+		padding: 5mm 10mm 20mm 10mm;
+		background: #ffffff;
+		box-shadow: 0 0 6px rgba(0, 0, 0, 0.35);
+		box-sizing: border-box;
+		overflow: visible;
+	}
+	.pageTopLeft, .pageTopRight, .pageLeftMiddle,
+	.pageBottomLeft, .pageBottomCenter, .pageBottomRight,
+	span.page-num-print, span.page-nums-print {
+		display: none;
+	}
+	.start-new-page {
+		margin-top: 30mm;
+		position: relative;
+	}
+	/* Die Lücke, die den Seitenumbruch als durchscheinenden Hintergrund darstellt */
+	.start-new-page::before {
+		content: "";
+		position: absolute;
+		top: -10mm; /* Lücke direkt oberhalb des body padding-top der nächsten Seite */
+		left: -15mm; /* Über den Seitenrand hinausziehen, um den Body-Schatten zu überdecken */
+		right: -15mm;
+		height: 5mm;
+		background-color: #c8c8c8;
+		background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 0px, transparent 3px, transparent calc(100% - 3px), rgba(0, 0, 0, 0.15) 100%);
+		background-size: 210mm 100%; /* Beschränkt den Schatten-Verlauf exakt auf die Breite der A4-Seite (210mm) und zentriert ihn */
+		background-position: center;
+		background-repeat: no-repeat;
+		z-index: 10;
+	}
+	.start-new-page::after {
+		content: none;
+	}
+	.start-new-page:first-child {
+		margin-top: 0;
+	}
+	.start-new-page:first-child::before {
+		content: none;
+	}
 }

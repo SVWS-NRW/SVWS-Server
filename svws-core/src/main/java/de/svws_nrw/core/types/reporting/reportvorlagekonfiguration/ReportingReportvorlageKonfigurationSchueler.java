@@ -27,25 +27,24 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static @NotNull ReportingParameter getSchuelerVGostAbiturApoAnlage12A4() {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), List.of(
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()), List.of(
 				ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Unterschriftenoptionen", "", true, 1, Arrays.asList(
-						ReportingReportvorlageUtils.erzeugeVorlageParameter("mitPersoenlichenUnterschriften", "mit persönlichen Unterschriften",
+						ReportingReportvorlageUtils.erzeugeVorlageParameter("mitPersoenlichenUnterschriften",
+								"mit persönlichen Unterschriften gemäß Datenbestand",
 								ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-						ReportingReportvorlageUtils.erzeugeVorlageParameter("mitZweiterBeratungslehrerUnterschrift", "mit Unterschrift 2. Beratungslehrer",
-								ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+						ReportingReportvorlageUtils.erzeugeVorlageParameter("mitZweiterBeratungslehrerUnterschrift",
+								"mit Unterschrift 2. Beratungslehrkraft statt Schulträger",
+								ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.INPUT, 1),
 						ReportingReportvorlageUtils.erzeugeVorlageParameter("textZAAVorsitzUnterschrift", "Unterschrift ZAA-Vorsitz",
-								ReportingReportvorlageParameterTyp.STRING, "",
-								true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+								ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 1),
 						ReportingReportvorlageUtils.erzeugeVorlageParameter("textZAAVorsitzUnterschriftBezeichnung", "Bezeichnung ZAA-Vorsitz",
 								ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 1),
 						ReportingReportvorlageUtils.erzeugeVorlageParameter("textSchulleitungUnterschrift", "Unterschrift Schulleitung",
-								ReportingReportvorlageParameterTyp.STRING, "",
-								true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+								ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 1),
 						ReportingReportvorlageUtils.erzeugeVorlageParameter("textSchulleitungUnterschriftBezeichnung", "Bezeichnung Schulleitung",
 								ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 1),
 						ReportingReportvorlageUtils.erzeugeVorlageParameter("textSchultraegerUnterschrift", "Unterschrift Schulträger",
-								ReportingReportvorlageParameterTyp.STRING, "",
-								true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+								ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 1),
 						ReportingReportvorlageUtils.erzeugeVorlageParameter("textSchultraegerUnterschriftBezeichnung", "Bezeichnung Schulträger",
 								ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 1),
 						ReportingReportvorlageUtils.erzeugeVorlageParameter("textBeratungslehrerUnterschrift", "Unterschrift Beratungslehrer",
@@ -63,25 +62,24 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static @NotNull ReportingParameter getSchuelerVGostAbiturApoAnlage12A3() {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), List.of(
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()), List.of(
 				ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Unterschriftenoptionen", "", true, 1, Arrays.asList(
-						ReportingReportvorlageUtils.erzeugeVorlageParameter("mitPersoenlichenUnterschriften", "mit persönlichen Unterschriften",
+						ReportingReportvorlageUtils.erzeugeVorlageParameter("mitPersoenlichenUnterschriften",
+								"mit persönlichen Unterschriften gemäß Datenbestand",
 								ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-						ReportingReportvorlageUtils.erzeugeVorlageParameter("mitZweiterBeratungslehrerUnterschrift", "mit Unterschrift 2. Beratungslehrer",
+						ReportingReportvorlageUtils.erzeugeVorlageParameter("mitZweiterBeratungslehrerUnterschrift",
+								"mit Unterschrift 2. Beratungslehrkraft statt Schulträger",
 								ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
 						ReportingReportvorlageUtils.erzeugeVorlageParameter("textZAAVorsitzUnterschrift", "Unterschrift ZAA-Vorsitz",
-								ReportingReportvorlageParameterTyp.STRING, "",
-								true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+								ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 1),
 						ReportingReportvorlageUtils.erzeugeVorlageParameter("textZAAVorsitzUnterschriftBezeichnung", "Bezeichnung ZAA-Vorsitz",
 								ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 1),
 						ReportingReportvorlageUtils.erzeugeVorlageParameter("textSchulleitungUnterschrift", "Unterschrift Schulleitung",
-								ReportingReportvorlageParameterTyp.STRING, "",
-								true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+								ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 1),
 						ReportingReportvorlageUtils.erzeugeVorlageParameter("textSchulleitungUnterschriftBezeichnung", "Bezeichnung Schulleitung",
 								ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 1),
 						ReportingReportvorlageUtils.erzeugeVorlageParameter("textSchultraegerUnterschrift", "Unterschrift Schulträger",
-								ReportingReportvorlageParameterTyp.STRING, "",
-								true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+								ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 1),
 						ReportingReportvorlageUtils.erzeugeVorlageParameter("textSchultraegerUnterschriftBezeichnung", "Bezeichnung Schulträger",
 								ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 1),
 						ReportingReportvorlageUtils.erzeugeVorlageParameter("textBeratungslehrerUnterschrift", "Unterschrift Beratungslehrer",
@@ -99,7 +97,7 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static @NotNull ReportingParameter getSchuelerVGostLaufbahnplanungErgebnisuebersicht() {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), List.of(
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()), List.of(
 				ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
 						"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 1,
 						Arrays.asList(
@@ -120,7 +118,8 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static @NotNull ReportingParameter getSchuelerVGostLaufbahnplanungWahlbogen() {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()),
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(
+				List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()),
 				List.of(ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
 						"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 1,
 						List.of(
@@ -142,7 +141,7 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static @NotNull ReportingParameter getSchuelerVSchulbescheinigung() {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), List.of(
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()), List.of(
 				ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
 						"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 3,
 						Arrays.asList(
@@ -163,7 +162,9 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 										true, ReportingUIKomponentenTyp.CHECKBOX, 1),
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("keineUnterschrift", "ohne Unterschrift",
 										ReportingReportvorlageParameterTyp.BOOLEAN,
-										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
+										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+								ReportingReportvorlageUtils.erzeugeVorlageParameter("versandinformationen", "Versandinformationen",
+										ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 3)
 						))),
 				new ReportingEMailDaten(),
 				new ArrayList<>(), new ArrayList<>(), true, true);
@@ -175,7 +176,7 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static @NotNull ReportingParameter getSchuelerVListeKontaktdatenerzieher() {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), List.of(
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()), List.of(
 				ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
 						"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 3,
 						Arrays.asList(

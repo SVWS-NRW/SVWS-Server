@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}">
+<!--/* @thymesVar id="#convert" type="de.svws_nrw.module.reporting.html.dialects.ConvertExpressionHelper" */-->
 	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
 		title='Schüler mit Klausuren',
 		htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},

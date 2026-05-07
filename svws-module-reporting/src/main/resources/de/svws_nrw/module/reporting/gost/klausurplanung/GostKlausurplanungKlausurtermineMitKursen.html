@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}">
+    <!--/* @thymesVar id="#convert" type="de.svws_nrw.module.reporting.html.dialects.ConvertExpressionHelper" */-->
 	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
 		title='Klausurtermine mit Kursen',
 		htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
@@ -40,7 +41,7 @@
 						</colgroup>
 						<thead>
 							<tr th:if="${iterationVarTermin.first}">
-								<th colspan="7" class="p-t-25of100 bo-b-grey"><h3 th:text="${#convert.toWochentagDE(datum)} + ', ' + ${#convert.toDateDE(datum)}">Montag, 15.03.2024</h3></th>
+								<th colspan="7" class="p-t-25of100 bo-b-grey ta-l"><h3 th:text="${#convert.toWochentagDE(datum)} + ', ' + ${#convert.toDateDE(datum)}">Montag, 15.03.2024</h3></th>
 								<th colspan="2" class="p-t-25of100 bo-b-grey ta-r"><h3 th:text="${'KW' + #convert.toKalenderwocheDE(datum)}">KW23</h3></th>
 							</tr>
 							<tr>

@@ -11440,6 +11440,35 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode htmlReport für den Zugriff auf die URL https://{hostname}/db/{schema}/reporting/html
+	 *
+	 * Erstellt den angeforderten Report gemäß den Reporting-Parametern als HTML-Dokument. Das HTML ist selbsttragend (CSS inline) und kann unmittelbar angezeigt werden. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Reports besitzt. Weitergehende Berechtigungen werden im Vorfeld der Reporterstellung überprüft.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Report wurde erfolgreich als HTML erzeugt.
+	 *     - Mime-Type: text/html
+	 *     - Rückgabe-Typ: String
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den geforderten Report zu erstellen.
+	 *   Code 404: Kein Eintrag zu den übergebenen Daten gefunden.
+	 *   Code 500: Es ist ein unbekannter Fehler aufgetreten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {ReportingParameter} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Report wurde erfolgreich als HTML erzeugt.
+	 */
+	public async htmlReport(data : ReportingParameter, schema : string) : Promise<string> {
+		const path = "/db/{schema}/reporting/html"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = ReportingParameter.transpilerToJSON(data);
+		const result : string = await super.postTextBased(path, 'application/json', 'text/html', body);
+		return result;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getKatalogSchild3AbiturInfos für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/abiturinfos
 	 *
 	 * Die Liste der Einträge aus dem Schild-Katalog AbiturInfos. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.

@@ -131,12 +131,11 @@ public final class ResourceUtils {
 
 
 	/**
-	 * Liest den UTF8-kodierten Text aus der angegebenen Datei ein und gibt
-	 * diesen als String zurück.
+	 * Liest den UTF8-kodierten Text aus der angegebenen Datei ein und gibt diesen als String zurück.
 	 *
-	 * @param filename   der Dateiname
+	 * @param filename der Pfad und Dateiname
 	 *
-	 * @return der Text der Datei als String oder null im Fehlerfall
+	 * @return         der Text der Datei als String oder null im Fehlerfall
 	 */
 	public static String text(final String filename) {
 		try {
@@ -146,6 +145,18 @@ public final class ResourceUtils {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	/**
+	 * Liest den UTF8-kodierten Text aus der angegebenen Datei ein und gibt diesen als String zurück.
+	 *
+	 * @param filename der Pfad und Dateiname
+	 *
+	 * @return         der Text der Datei als String oder ein leerer String im Fehlerfall
+	 */
+	public static String textOrEmpty(final String filename) {
+		final String content = ResourceUtils.text(filename);
+		return (content == null) ? "" : content;
 	}
 
 

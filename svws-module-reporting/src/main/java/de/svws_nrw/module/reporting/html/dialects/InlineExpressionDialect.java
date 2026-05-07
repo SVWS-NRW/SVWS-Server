@@ -5,15 +5,15 @@ import org.thymeleaf.dialect.IExpressionObjectDialect;
 import org.thymeleaf.expression.IExpressionObjectFactory;
 
 /**
- * Ein Dialect des SVWS-Servers für Thymeleaf um Konvertierungsmethoden zur Verfügung zu stellen.
+ * Ein Dialect des SVWS-Servers für Thymeleaf, um HTML- und CSS-Elemente inline in eine HTML-Datei zu überführen.
  */
-public class ConvertExpressionDialect extends AbstractDialect implements IExpressionObjectDialect {
+public class InlineExpressionDialect extends AbstractDialect implements IExpressionObjectDialect {
 
 	/**
 	 * Ein Dialect für Thymeleaf, um Konvertierungsoptionen zu implementieren.
 	 */
-	public ConvertExpressionDialect() {
-		super("convert");
+	public InlineExpressionDialect() {
+		super("inline");
 	}
 
 	/**
@@ -23,7 +23,7 @@ public class ConvertExpressionDialect extends AbstractDialect implements IExpres
 	 */
 	@Override
 	public IExpressionObjectFactory getExpressionObjectFactory() {
-		return new ConvertExpressionFactory();
+		return new InlineExpressionFactory();
 	}
 
 }

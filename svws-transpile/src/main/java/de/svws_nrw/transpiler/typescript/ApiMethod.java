@@ -486,7 +486,7 @@ public final class ApiMethod {
 			transpileCodeForJsonResult(sb);
 			return;
 		} else if ((producesType == ApiMimeType.TEXT_HTML) && (this.consumesFirst == ApiMimeType.APPLICATION_JSON)) {
-			sb.append("\t\tconst result : string = await super.postTextBased(path, 'text/html', 'text/html', " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
+			sb.append("\t\tconst result : string = await super.postTextBased(path, 'application/json', 'text/html', " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
 			sb.append("\t\treturn result;" + System.lineSeparator());
 			return;
 		} else if ((producesType == ApiMimeType.PDF) && (this.consumesFirst == ApiMimeType.APPLICATION_JSON)) {

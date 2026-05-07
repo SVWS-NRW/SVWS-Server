@@ -186,7 +186,8 @@ public final class ReportingFactory {
 
 	/**
 	 * Validiert die Parameter der übergebenen Parametergruppe und überprüft, ob sie mit den übergebenen Werten übereinstimmen.
-	 * Hierbei wird beim E-Mail-Versand aus Datenschutzgründen die Einzelausgabe der Daten automatisch aktiviert.
+	 * Hierbei wird für die HTML-Ausgabe die Einzelausgabe deaktiviert, während beim E-Mail-Versand aus Datenschutzgründen die Einzelausgabe der Daten
+	 * automatisch aktiviert wird.
 	 *
 	 * @param reportingParameter                    das Reporting-Parameter-Objekt
 	 * @param reportingReportvorlageParameterGruppe die Parametergruppe
@@ -198,6 +199,11 @@ public final class ReportingFactory {
 		for (final ReportingReportvorlageParameter p : reportingReportvorlageParameterGruppe.reportvorlageParameter) {
 			if ((p == null) || (p.name == null) || p.name.isBlank()) {
 				continue;
+			}
+			// Die HTML-Ausgabe erfolgt im Browser und kann daher keine Einzeldateien anzeigen. Es darf daher keine Einzelausgabe angefordert werden.
+			// Stelle dies hier sicher.
+			if ((reportingParameter.ausgabeformat == ReportingAusgabeformat.HTML.getId()) && p.name.equalsIgnoreCase("einzelausgabeDaten")) {
+				p.wert = "false";
 			}
 			// Um Datenschutz zu gewährleisten, wird beim E-Mail-Versand nur die Einzelausgabe von Daten unterstützt (ein einzelnes PDF pro Datenelement).
 			// Stelle dies hier sicher.

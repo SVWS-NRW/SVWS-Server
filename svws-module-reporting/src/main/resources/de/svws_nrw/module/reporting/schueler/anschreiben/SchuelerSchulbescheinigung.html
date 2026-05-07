@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}">
+    <!--/* @thymesVar id="#convert" type="de.svws_nrw.module.reporting.html.dialects.ConvertExpressionHelper" */-->
 	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
 		title='Schulbescheinigung',
 		htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
@@ -12,15 +13,13 @@
 				   mitSchullogo = ${VorlageParameter.get('mitSchullogo')},
 				   keineAnschrift = ${VorlageParameter.get('keineAnschrift')},
 				   keinInfoblock = ${VorlageParameter.get('keinInfoblock')},
-				   keineUnterschrift = ${VorlageParameter.get('keineUnterschrift')}">
+				   keineUnterschrift = ${VorlageParameter.get('keineUnterschrift')},
+				   versandinformationen = ${VorlageParameter.get('versandinformationen')}">
 
 		<th:block th:each="schueler,iterationVarSchueler : ${Schueler}"
 				  th:with="anzahlEmpfaenger = ${fuerErzieher ? schueler.erzieherArtGruppen().size() : 1 }">
 
 			<th:block th:if="${anzahlEmpfaenger >= 1}" th:each="empfaenger,iterationVarEmpfaenger : ${#numbers.sequence(1, anzahlEmpfaenger)}">
-				<!-- WICHTIG: Element, das den Seitenumbruch steuert und im normalen Fluss der Seite eingebunden ist. -->
-				<table class="start-new-page"><tr><th style="height: 0"></th></tr></table>
-
 				<!--Beginn: Definition des linken Seitenbereiches mit Faltmarken. Diese werden per CSS in den @page-Boxen positioniert-->
 				<th:block th:if="${istDruckausgabe}">
 					<div class="pageLeftMiddle">
@@ -31,13 +30,12 @@
 				</th:block>
 				<!--Ende: Definition des linken Seitenbereiches -->
 
-				<!-- WICHTIG: Absolut-positionierte Elemente müssen von einem relativen Element umschlossen sein, damit sie auf mehreren Seiten gedruckt werden! -->
-				<div style="position: relative;" th:with="svgLogo = ${!Schule.schullogo().isBlank() && Schule.schullogo().startsWith('PD94')}">
+				<!-- WICHTIG: Absolut-positionierte Elemente müssen von einem relativen Element mit einer Höhe größer 0 umschlossen sein, damit sie auf mehreren Seiten gedruckt werden! -->
+				<div class="din5008-seitenrahmen start-new-page" style="position: relative;">
 
 					<!-- Briefkopfbereich -->
 					<div th:if="${mitBildBriefkopf}" class="briefkopfbereich">
 						<!-- Hier kann eine Grafik (35mm hoch und 190mm breit) als Ersatz für den gesamten Briefkopf eingebunden werden. -->
-						<!-- ToDo: Ein Feld muss dafür in der DB geschaffen werden. -->
 					</div>
 
 					<!-- Schulbezeichnung und Anschrift -->
@@ -51,13 +49,13 @@
 					</div>
 
 					<!-- Rücksendeinformationen -->
-					<div th:if="${!keineAnschrift}"  class="ruecksendeinformationen bo-b-grey">
-						<p class="f-very-tiny ta-lb" th:text="${Schule.ruecksendeinformation()}">Adresse der Schule als Rücksendeinformation</p>
+					<div th:if="${!keineAnschrift}" class="ruecksendeinformationen bo-b-grey">
+						<p class="f-very-tiny ta-lb ruecksendeinformationentext" th:text="${Schule.ruecksendeinformation()}">Adresse der Schule als Rücksendeinformation</p>
 					</div>
 
 					<!-- Versandinformationen -->
-					<div th:if="${!keineAnschrift}"  class="versandinformationen">
-						<!-- ToDo: Hier müsste man noch einen Parameter und ein Menü zum Setzen der Informationen einführen. -->
+					<div th:if="${!keineAnschrift}" class="versandinformationen">
+						<p class="f-tiny f-bold ta-lb" th:text="${versandinformationen}">Einschreiben</p>
 					</div>
 
 					<!-- Anschrift -->
@@ -74,29 +72,29 @@
 								<col style="width: 75%;"/>
 							</colgroup>
 							<tr>
-								<th>Kontakt:</th>
-								<th></th>
-								<th th:text="${Benutzer.hatLehrkraftdaten() ? Benutzer.lehrer().anredeNachname() : Benutzer.anzeigename()}">Herr Mustermann-Schuster</th>
+								<th class="ta-l">Kontakt:</th>
+								<th class="ta-l"></th>
+								<th class="ta-l" th:text="${Benutzer.hatLehrkraftdaten() ? Benutzer.lehrer().anredeNachname() : Benutzer.anzeigename()}">Herr Mustermann-Schuster</th>
 							</tr>
 							<tr>
-								<td>Telefon:</td>
-								<td></td>
-								<td th:text="${Schule.telefon()}">01234 567 899-0</td>
+								<td class="ta-l">Telefon:</td>
+								<td class="ta-l"></td>
+								<td class="ta-l" th:text="${Schule.telefon()}">01234 567 899-0</td>
 							</tr>
 							<tr>
-								<td>Telefax:</td>
-								<td></td>
-								<td th:text="${Schule.fax()}">01234 567 899-99</td>
+								<td class="ta-l">Telefax:</td>
+								<td class="ta-l"></td>
+								<td class="ta-l" th:text="${Schule.fax()}">01234 567 899-99</td>
 							</tr>
 							<tr>
-								<td>Webseite:</td>
-								<td></td>
-								<td th:text="${Schule.webAdresse()}">https://www.die-beste-schule-in-nrw.de</td>
+								<td class="ta-l">Webseite:</td>
+								<td class="ta-l"></td>
+								<td class="ta-l" th:text="${Schule.webAdresse()}">https://www.die-beste-schule-in-nrw.de</td>
 							</tr>
 							<tr>
-								<td>E-Mail:</td>
-								<td></td>
-								<td th:text="${Benutzer.hatLehrkraftdaten() ? Benutzer.lehrer().emailSchule() : Schule.email()}">sekretariat@schule-email.de</td>
+								<td class="ta-l">E-Mail:</td>
+								<td class="ta-l"></td>
+								<td class="ta-l" th:text="${Benutzer.hatLehrkraftdaten() ? Benutzer.lehrer().emailSchule() : Schule.email()}">sekretariat@schule-email.de</td>
 							</tr>
 						</table>
 					</div>

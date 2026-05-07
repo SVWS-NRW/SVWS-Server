@@ -1,17 +1,11 @@
 package de.svws_nrw.module.reporting.factories;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import de.svws_nrw.base.ResourceUtils;
 import de.svws_nrw.core.logger.LogLevel;
@@ -396,9 +390,9 @@ public class HtmlFactory {
 
 
 	/**
-	 * Erstellt eine Response in Form einer einzelnen HTML-Datei oder eine einzelne ZIP-Datei, die mehrere generierte HTML-Dateien enthält.
+	 * Erstellt eine Response in Form einer einzelnen HTML-Datei, die für die Anzeige in einem Browser verwendet werden kann.
 	 *
-	 * @return Im Falle eines Success enthält die HTTP-Response das HTML-Dokument oder die ZIP-Datei.
+	 * @return Im Falle eines Success enthält die HTTP-Response das HTML-Dokument.
 	 *
 	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
@@ -410,17 +404,14 @@ public class HtmlFactory {
 				final ReportBuilderHtml firstHtmlBuilder = htmlBuilders.getFirst();
 				if (htmlBuilders.size() == 1) {
 					final String html = firstHtmlBuilder.generate();
-					final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(firstHtmlBuilder.getDateinameMitEndung(), StandardCharsets.UTF_8);
 					reportingRepository.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung.");
-					return Response.ok(html, firstHtmlBuilder.getContentType()).header("Content-Disposition", "attachment; " + encodedFilename).build();
+					return Response.ok(html, "text/html; charset=UTF-8").header("Cache-Control", "no-store").build();
 				} else {
-					final byte[] data = createZIP(htmlBuilders);
-					final String encodedFilename =
-							"filename*=UTF-8''" + URLEncoder.encode(firstHtmlBuilder.getStatischerDateiname() + ".zip", StandardCharsets.UTF_8);
-					reportingRepository.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung.");
-					return Response.ok(data, "application/zip").header("Content-Disposition", "attachment; " + encodedFilename).build();
+					reportingRepository.logger().logLn(LogLevel.ERROR, 0,
+							"### Fehler bei der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung. Es wurde mehr als ein Builder übergeben.");
+					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+							"### Fehler bei der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung. Es wurde mehr als ein Builder übergeben.");
 				}
-
 			}
 			reportingRepository.logger().logLn(LogLevel.ERROR, 0,
 					"### Fehler bei der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung. Es sind keine HTML-Inhalte generiert worden.");
@@ -568,67 +559,6 @@ public class HtmlFactory {
 	 * @return Die geladene Vorlage oder ein leerer String bei einem Fehler.
 	 */
 	private static String ladeDateinamensvorlageAusDatei(final String pfadNameTemplate) {
-		final String vollPfad = ReportingReportvorlage.getRootPfad() + pfadNameTemplate;
-		try {
-			final String content = ResourceUtils.text(vollPfad);
-			if (content == null) {
-				return "";
-			}
-			return content;
-		} catch (final Exception e) {
-			return "";
-		}
+		return ResourceUtils.textOrEmpty(ReportingReportvorlage.getRootPfad() + pfadNameTemplate);
 	}
-
-
-	/**
-	 * Erstellt eine ZIP-Datei, die alle HTML-Dateien aus der übergebenen Liste enthält.
-	 *
-	 * @param htmlBuilders                Eine Liste mit den ReportBuilderHtml-Instanzen, die die HTML-Inhalte erzeugen.
-	 *
-	 * @return Gibt das ZIP in Form eines ByteArrays zurück.
-	 *
-	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
-	 */
-	private byte[] createZIP(final List<ReportBuilderHtml> htmlBuilders) throws ApiOperationException {
-		final byte[] zipData;
-		try {
-			try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
-				try (ZipOutputStream zos = new ZipOutputStream(byteArrayOutputStream)) {
-					for (final ReportBuilderHtml htmlBuilder : htmlBuilders) {
-						addHtmlToZip(htmlBuilder, zos);
-					}
-					byteArrayOutputStream.flush();
-				}
-				zipData = byteArrayOutputStream.toByteArray();
-			}
-		} catch (final IOException e) {
-			reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die erzeugten HTML-Inhalte konnten nicht als ZIP-Datei zusammengestellt werden.");
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
-					"FEHLER: Die erzeugten HTML-Inhalte konnten nicht als ZIP-Datei zusammengestellt werden.");
-		}
-		return zipData;
-	}
-
-	/**
-	 * Fügt eine HTML-Datei in den angegebenen ZipOutputStream ein. Dabei wird der Name und Inhalt der Datei aus dem übergebenen ReportBuilderHtml-Objekt gelesen.
-	 *
-	 * @param htmlBuilder Das Objekt, das die HTML-Daten und den Dateinamen bereitstellt
-	 * @param zos Der ZipOutputStream, in den die HTML-Datei eingefügt wird
-	 *
-	 * @throws ApiOperationException Wird geworfen, wenn ein Fehler beim Generieren der HTML-Datei vorliegt oder ein Laufzeitfehler auftritt
-	 */
-	private void addHtmlToZip(final ReportBuilderHtml htmlBuilder, final ZipOutputStream zos) throws ApiOperationException {
-		try {
-			zos.putNextEntry(new ZipEntry(htmlBuilder.getDateinameMitEndung()));
-			zos.write(htmlBuilder.getByteArray());
-			zos.closeEntry();
-		} catch (final Exception e) {
-			reportingRepository.logger().logLn(LogLevel.ERROR, 4,
-					"FEHLER: HTML-Datei '" + htmlBuilder.getDateiname() + "' konnte mit folgender Fehlermeldung nicht generiert werden: " + e.getMessage());
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
-					"## FEHLER: HTML-Datei '" + htmlBuilder.getDateiname() + "' konnte mit folgender Fehlermeldung nicht generiert werden: " + e.getMessage());
-		}
-	}
-
 }
