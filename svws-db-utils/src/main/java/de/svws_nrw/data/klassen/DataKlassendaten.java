@@ -296,11 +296,16 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 			throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Anlegen des Default-Wertes für die Schulgliederung.");
 		}
 		dtoKlassen.ASDSchulformNr = schulgliederungEintrag.kuerzel;
-		final KlassenartKatalogEintrag klassenartEintrag = Klassenart.getDefault(schulform).daten(schuljahresabschnitt.schuljahr);
-		if (klassenartEintrag == null) {
-			throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Anlegen des Default-Wertes für die Klassenart.");
+		final Klassenart klassenart = Klassenart.getDefault(schulform);
+		if (klassenart == null) {
+			dtoKlassen.Klassenart = null;
+		} else {
+			final KlassenartKatalogEintrag klassenartEintrag = Klassenart.getDefault(schulform).daten(schuljahresabschnitt.schuljahr);
+			if (klassenartEintrag == null) {
+				throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Anlegen des Default-Wertes für die Klassenart.");
+			}
+			dtoKlassen.Klassenart = klassenartEintrag.kuerzel;
 		}
-		dtoKlassen.Klassenart = klassenartEintrag.kuerzel;
 	}
 
 	@Override
@@ -668,17 +673,21 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 
 	private void mapIdKlassenart(final DTOKlassen dto, final Object value) throws ApiOperationException {
 		final Long idKlassenart = JSONMapper.convertToLong(value, true);
-		final Klassenart klassenart = Klassenart.data().getWertByIDOrNull(idKlassenart);
-		if (klassenart == null) {
-			throw new ApiOperationException(Status.BAD_REQUEST, "Es konnte keine Klassenart für die ID %d gefunden werden.".formatted(idKlassenart));
+		if (idKlassenart == null) {
+			dto.Klassenart = null;
+		} else {
+			final Klassenart klassenart = Klassenart.data().getWertByIDOrNull(idKlassenart);
+			if (klassenart == null) {
+				throw new ApiOperationException(Status.BAD_REQUEST, "Es konnte keine Klassenart für die ID %d gefunden werden.".formatted(idKlassenart));
+			}
+			final int schuljahr = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dto.Schuljahresabschnitts_ID).schuljahr;
+			final KlassenartKatalogEintrag eintrag = klassenart.daten(schuljahr);
+			if (eintrag == null) {
+				throw new ApiOperationException(Status.BAD_REQUEST,
+						"Die Klassenart mit der ID %d ist für das Schuljahr %d ungültig.".formatted(idKlassenart, schuljahr));
+			}
+			dto.Klassenart = eintrag.kuerzel;
 		}
-		final int schuljahr = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dto.Schuljahresabschnitts_ID).schuljahr;
-		final KlassenartKatalogEintrag eintrag = klassenart.daten(schuljahr);
-		if (eintrag == null) {
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Die Klassenart mit der ID %d ist für das Schuljahr %d ungültig.".formatted(idKlassenart, schuljahr));
-		}
-		dto.Klassenart = eintrag.kuerzel;
 	}
 
 	private void mapIdSchulgliederung(final DTOKlassen dto, final Object value) throws ApiOperationException {

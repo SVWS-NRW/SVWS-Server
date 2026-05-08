@@ -163,10 +163,10 @@ public enum Klassenart implements CoreType<KlassenartKatalogEintrag, Klassenart>
 	 *
 	 * @return die Default-Klassenart
 	 */
-	public static @NotNull Klassenart getDefault(final @NotNull Schulform schulform) {
+	public static Klassenart getDefault(final @NotNull Schulform schulform) {
 		return switch (schulform) {
-			case FW, HI, WF, G, GE, GM, GY, H, PS, R, S, KS, SG, SK, SR, V -> Klassenart.RK;
-			case WB, BK, SB -> Klassenart.UNDEFINIERT;
+			case FW, HI, WF, G, GE, GM, GY, H, PS, R, S, KS, SG, SK, SR, V, WB -> Klassenart.RK;
+			case BK, SB -> null;
 			default -> Klassenart.RK;
 		};
 	}

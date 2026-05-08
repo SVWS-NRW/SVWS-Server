@@ -36,7 +36,7 @@
 
 					<svws-ui-select title="Schulgliederung" v-model="modelProxy.schulgliederung.value" :disabled="!hatKompetenzUpdate" :items="modelProxy.schulgliederungen.value" :item-text="getSelectText" />
 					<svws-ui-text-input placeholder="Prüfungsordnung" :model-value="modelProxy.proxy.pruefungsordnung ?? '—'" @commit="modelProxy.patch" disabled />
-					<svws-ui-select v-if="schulform.istAllgemeinbildend()" title="Klassenart" v-model="modelProxy.klassenart.value" :disabled="!hatKompetenzUpdate" :items="modelProxy.klassenarten.value" :item-text="getSelectText" />
+					<svws-ui-select v-if="schulform.istAllgemeinbildend() || schulform.istWeiterbildung()" title="Klassenart" v-model="modelProxy.klassenart.value" :disabled="!hatKompetenzUpdate" :items="modelProxy.klassenarten.value" :item-text="getSelectText" />
 					<svws-ui-select v-if="schulform.istAllgemeinbildend()" title="Organisationsform" v-model="modelProxy.organisationsformAllgemeinbildend.value" :disabled="!hatKompetenzUpdate" :items="modelProxy.organisationsformenAllgemeinbildend.value" :item-text="getSelectText" />
 					<svws-ui-select v-if="schulform.istBerufsbildend()" title="Organisationsform" v-model="modelProxy.organisationsformBerufsbildend.value" :disabled="!hatKompetenzUpdate" :items="modelProxy.organisationsformenBerufsbildend.value" :item-text="getSelectText" />
 					<svws-ui-select v-if="schulform.istWeiterbildung()" title="Organisationsform" v-model="modelProxy.organisationsformWeiterbildend.value" :disabled="!hatKompetenzUpdate" :items="modelProxy.organisationsformenWeiterbildend.value" :item-text="getSelectText" />

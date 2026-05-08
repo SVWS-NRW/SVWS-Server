@@ -195,51 +195,51 @@ export class Klassenart extends JavaEnum<Klassenart> implements CoreType<Klassen
 	 *
 	 * @return die Default-Klassenart
 	 */
-	public static getDefault(schulform: Schulform): Klassenart {
-		let _sevar_2034606939 : any;
-		const _seexpr_2034606939 = (schulform);
-		if (_seexpr_2034606939 === Schulform.FW) {
-			_sevar_2034606939 = Klassenart.RK;
-		} else if (_seexpr_2034606939 === Schulform.HI) {
-			_sevar_2034606939 = Klassenart.RK;
-		} else if (_seexpr_2034606939 === Schulform.WF) {
-			_sevar_2034606939 = Klassenart.RK;
-		} else if (_seexpr_2034606939 === Schulform.G) {
-			_sevar_2034606939 = Klassenart.RK;
-		} else if (_seexpr_2034606939 === Schulform.GE) {
-			_sevar_2034606939 = Klassenart.RK;
-		} else if (_seexpr_2034606939 === Schulform.GM) {
-			_sevar_2034606939 = Klassenart.RK;
-		} else if (_seexpr_2034606939 === Schulform.GY) {
-			_sevar_2034606939 = Klassenart.RK;
-		} else if (_seexpr_2034606939 === Schulform.H) {
-			_sevar_2034606939 = Klassenart.RK;
-		} else if (_seexpr_2034606939 === Schulform.PS) {
-			_sevar_2034606939 = Klassenart.RK;
-		} else if (_seexpr_2034606939 === Schulform.R) {
-			_sevar_2034606939 = Klassenart.RK;
-		} else if (_seexpr_2034606939 === Schulform.S) {
-			_sevar_2034606939 = Klassenart.RK;
-		} else if (_seexpr_2034606939 === Schulform.KS) {
-			_sevar_2034606939 = Klassenart.RK;
-		} else if (_seexpr_2034606939 === Schulform.SG) {
-			_sevar_2034606939 = Klassenart.RK;
-		} else if (_seexpr_2034606939 === Schulform.SK) {
-			_sevar_2034606939 = Klassenart.RK;
-		} else if (_seexpr_2034606939 === Schulform.SR) {
-			_sevar_2034606939 = Klassenart.RK;
-		} else if (_seexpr_2034606939 === Schulform.V) {
-			_sevar_2034606939 = Klassenart.RK;
-		} else if (_seexpr_2034606939 === Schulform.WB) {
-			_sevar_2034606939 = Klassenart.UNDEFINIERT;
-		} else if (_seexpr_2034606939 === Schulform.BK) {
-			_sevar_2034606939 = Klassenart.UNDEFINIERT;
-		} else if (_seexpr_2034606939 === Schulform.SB) {
-			_sevar_2034606939 = Klassenart.UNDEFINIERT;
+	public static getDefault(schulform: Schulform): Klassenart | null {
+		let _sevar_1941679985 : any;
+		const _seexpr_1941679985 = (schulform);
+		if (_seexpr_1941679985 === Schulform.FW) {
+			_sevar_1941679985 = Klassenart.RK;
+		} else if (_seexpr_1941679985 === Schulform.HI) {
+			_sevar_1941679985 = Klassenart.RK;
+		} else if (_seexpr_1941679985 === Schulform.WF) {
+			_sevar_1941679985 = Klassenart.RK;
+		} else if (_seexpr_1941679985 === Schulform.G) {
+			_sevar_1941679985 = Klassenart.RK;
+		} else if (_seexpr_1941679985 === Schulform.GE) {
+			_sevar_1941679985 = Klassenart.RK;
+		} else if (_seexpr_1941679985 === Schulform.GM) {
+			_sevar_1941679985 = Klassenart.RK;
+		} else if (_seexpr_1941679985 === Schulform.GY) {
+			_sevar_1941679985 = Klassenart.RK;
+		} else if (_seexpr_1941679985 === Schulform.H) {
+			_sevar_1941679985 = Klassenart.RK;
+		} else if (_seexpr_1941679985 === Schulform.PS) {
+			_sevar_1941679985 = Klassenart.RK;
+		} else if (_seexpr_1941679985 === Schulform.R) {
+			_sevar_1941679985 = Klassenart.RK;
+		} else if (_seexpr_1941679985 === Schulform.S) {
+			_sevar_1941679985 = Klassenart.RK;
+		} else if (_seexpr_1941679985 === Schulform.KS) {
+			_sevar_1941679985 = Klassenart.RK;
+		} else if (_seexpr_1941679985 === Schulform.SG) {
+			_sevar_1941679985 = Klassenart.RK;
+		} else if (_seexpr_1941679985 === Schulform.SK) {
+			_sevar_1941679985 = Klassenart.RK;
+		} else if (_seexpr_1941679985 === Schulform.SR) {
+			_sevar_1941679985 = Klassenart.RK;
+		} else if (_seexpr_1941679985 === Schulform.V) {
+			_sevar_1941679985 = Klassenart.RK;
+		} else if (_seexpr_1941679985 === Schulform.WB) {
+			_sevar_1941679985 = Klassenart.RK;
+		} else if (_seexpr_1941679985 === Schulform.BK) {
+			_sevar_1941679985 = null;
+		} else if (_seexpr_1941679985 === Schulform.SB) {
+			_sevar_1941679985 = null;
 		} else {
-			_sevar_2034606939 = Klassenart.RK;
+			_sevar_1941679985 = Klassenart.RK;
 		}
-		return _sevar_2034606939;
+		return _sevar_1941679985;
 	}
 
 	/**

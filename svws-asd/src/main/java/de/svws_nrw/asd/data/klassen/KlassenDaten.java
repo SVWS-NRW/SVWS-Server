@@ -99,7 +99,7 @@ public class KlassenDaten {
 
 	/** Die ID für Klassenart */
 	@Schema(description = "die ID für Klassenart", example = "4711")
-	public long idKlassenart = -1;
+	public Long idKlassenart = null;
 
 	/** Gibt an, ob die Noteneingabe gesperrt ist */
 	@Schema(description = "gibt an, ob die Noteneingabe gesperrt ist", example = "false")
