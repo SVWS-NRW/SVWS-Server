@@ -59,7 +59,7 @@ public final class Abi30BelegpruefungLiterarischKuenstlerisch extends GostBelegp
 	protected void pruefeEF1() {
 		// EF1-Prüfung Punkt 3: Prüfe, ob ein Kurs in Kunst oder Musik in EF.1 belegt wurde
 		if (manager.zaehleBelegungInHalbjahren(kunst_musik, GostHalbjahr.EF1) == 0) {
-			addFehler(GostBelegungsfehler.KU_MU_10);
+			addFehler(GostBelegungsfehler.GOST30_KU_MU_10);
 		}
 	}
 
@@ -82,13 +82,13 @@ public final class Abi30BelegpruefungLiterarischKuenstlerisch extends GostBelegp
 						|| manager.pruefeBelegung(fach, GostHalbjahr.Q21, GostHalbjahr.Q22));
 				hatKuMuErsatz = hatKuMuErsatz || tmpHatKuMuErsatz;
 				if ((!tmpHatKuMuErsatz) || (manager.zaehleBelegung(fach) != 2)) {
-					addFehler(GostBelegungsfehler.LI_IV_10);
+					addFehler(GostBelegungsfehler.GOST30_LI_IV_10);
 				}
 			}
 
 			// Prüfe, ob mehrere Ersatzfächer gewählt wurden. Dies ist nicht zulässig.
 			if (kunst_musik_ersatz.size() > 1) {
-				addFehler(GostBelegungsfehler.LI_IV_11);
+				addFehler(GostBelegungsfehler.GOST30_LI_IV_11);
 			}
 		}
 
@@ -96,7 +96,7 @@ public final class Abi30BelegpruefungLiterarischKuenstlerisch extends GostBelegp
 		final boolean hatKuMuBisQ12 = manager.pruefeBelegungExistiert(kunst_musik, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12);
 		final boolean hatKuMuBisEF2 = manager.pruefeBelegungExistiert(kunst_musik, GostHalbjahr.EF1, GostHalbjahr.EF2);
 		if ((!hatKuMuBisEF2) || ((!hatKuMuBisQ12) && (!hatKuMuErsatz))) {
-			addFehler(GostBelegungsfehler.KU_MU_10);
+			addFehler(GostBelegungsfehler.GOST30_KU_MU_10);
 		}
 	}
 

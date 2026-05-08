@@ -99,19 +99,19 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 	private void pruefeGesellschaftswissenschaftenEF1() {
 		// Wurde eine durchgehend belegbare Gesellschaftswissenschaft in EF.1 belegt?
 		if (!manager.pruefeBelegungDurchgehendBelegbarExistiert(gesellschaftswissenschaften, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1)) {
-			addFehler(GostBelegungsfehler.GW_10);
+			addFehler(GostBelegungsfehler.GOST30_GW_10);
 		}
 		// Wurde eine Gesellschaftswissenschaft in EF.1 schriftlich belegt?
 		if (!manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(gesellschaftswissenschaften, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) {
-			addFehler(GostBelegungsfehler.GW_11);
+			addFehler(GostBelegungsfehler.GOST30_GW_11);
 		}
 		// Wurde Geschichte in EF.1 belegt? Wenn nicht, so müssen in der Qualifikationsphase zwei Zusatzkurse belegt werden.
 		if (manager.zaehleBelegungInHalbjahren(geschichte, GostHalbjahr.EF1) <= 0) {
-			addFehler(GostBelegungsfehler.GE_1_INFO);
+			addFehler(GostBelegungsfehler.GOST30_GE_1_INFO);
 		}
 		// Wurde Sozialwissenschaften in EF.1 belegt? Wenn nicht, so müssen in der Qualifikationsphase zwei Zusatzkurse belegt werden.
 		if (manager.zaehleBelegungInHalbjahren(sozialwissenschaften, GostHalbjahr.EF1) <= 0) {
-			addFehler(GostBelegungsfehler.SW_1_INFO);
+			addFehler(GostBelegungsfehler.GOST30_SW_1_INFO);
 		}
 	}
 
@@ -134,7 +134,7 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 						&& (!manager.pruefeBelegungDurchgehendBelegbarExistiert(sonstige_gesellschaftswissenschaften, GostSchriftlichkeit.BELIEBIG,
 								GostHalbjahr.EF1)))) {
 			// Philosophie wurde nicht belegt oder keine zusätzliche Gesellschaftswissenschaft, welche durchgängig belegbar ist
-			addFehler(GostBelegungsfehler.RE_10);
+			addFehler(GostBelegungsfehler.GOST30_RE_10);
 		}
 	}
 
@@ -164,7 +164,7 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 	private void pruefeSchriftlichkeitEF() {
 		if ((!manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(gesellschaftswissenschaften, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
 				|| (!manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(gesellschaftswissenschaften, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF2))) {
-			addFehler(GostBelegungsfehler.GW_11);
+			addFehler(GostBelegungsfehler.GOST30_GW_11);
 		}
 	}
 
@@ -177,7 +177,7 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 	private void pruefeDurchgaengigeBelegung() {
 		if (!manager.pruefeBelegungExistiert(gesellschaftswissenschaften, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12,
 				GostHalbjahr.Q21, GostHalbjahr.Q22)) {
-			addFehler(GostBelegungsfehler.GW_10);
+			addFehler(GostBelegungsfehler.GOST30_GW_10);
 		}
 	}
 
@@ -200,7 +200,7 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 				&& manager.pruefeBelegungMitSchriftlichkeit(philosophie, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21)) {
 			return;
 		}
-		addFehler(GostBelegungsfehler.GW_12);
+		addFehler(GostBelegungsfehler.GOST30_GW_12);
 	}
 
 
@@ -224,7 +224,7 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 
 		// Prüfe, ob mehr als eine Belegung des Zusatzkurses vorliegt (z.B. durch eine Zweitbelegung in einer bilingualen Variante des Faches)
 		if (fachbelegungenZK.size() > 1) {
-			addFehler(GostBelegungsfehler.ZK_13);
+			addFehler(GostBelegungsfehler.GOST30_ZK_13);
 		}
 
 		// Prüfe die gefilterten Belegungen
@@ -236,16 +236,16 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 			throw new NullPointerException();
 		}
 		if (GostFachUtils.istBilingual(fach)) {
-			addFehler(GostBelegungsfehler.ZK_13);
+			addFehler(GostBelegungsfehler.GOST30_ZK_13);
 		}
 
 		// Prüfe, ob der Zusatzkurs in dem Fach angeboten wird.
 		final Fach zFach = Fach.getBySchluesselOrDefault(fach.kuerzel);
 		if ((zFach == Fach.GE) && (!manager.istErlaubtZusatzkursGE())) {
-			addFehler(GostBelegungsfehler.ZK_14);
+			addFehler(GostBelegungsfehler.GOST30_ZK_14);
 		}
 		if ((zFach == Fach.SW) && (!manager.istErlaubtZusatzkursSW())) {
-			addFehler(GostBelegungsfehler.ZK_15);
+			addFehler(GostBelegungsfehler.GOST30_ZK_15);
 		}
 
 		// Bestimme die Halbjahre des Zusatzkurses
@@ -260,26 +260,26 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 			}
 			if ((belegungQ11 && (manager.zaehleBelegungInHalbjahren(fachbelegungenZK, GostHalbjahr.Q21, GostHalbjahr.Q22) > 0))
 					|| (belegungQ12 && (manager.zaehleBelegungInHalbjahren(fachbelegungenZK, GostHalbjahr.Q22) > 0))) {
-				addFehler(GostBelegungsfehler.ZK_18);
+				addFehler(GostBelegungsfehler.GOST30_ZK_18);
 			// Prüfe, ob mehr als zwei Zusatzkurse belegt wurden oder die Belegung in nicht aufeinander folgenden Halbjahren ist
 			}
 		} else if (halbjahre.size() > 1) {
-			addFehler(GostBelegungsfehler.ZK_12);
+			addFehler(GostBelegungsfehler.GOST30_ZK_12);
 		}
 		// Prüfe, ob bei den Halbjahren des Zusatzkurses im Halbjahr davor eine Belegung vorliegt - beim ersten Halbjahr darf dies nicht der Fall sein!
 		if (!halbjahre.isEmpty()) {
 			final GostHalbjahr prevHalbjahr = halbjahre.get(0).previous();
 			if ((prevHalbjahr != null) && (manager.pruefeBelegung(fachbelegung, prevHalbjahr))) {
-				addFehler(GostBelegungsfehler.ZK_10);
+				addFehler(GostBelegungsfehler.GOST30_ZK_10);
 			}
 		}
 		// Prüfe, ob der Beginn des Zusatzkurse der Einstellung bei dem Jahrgang entspricht
 		if (!halbjahre.isEmpty()) {
 			if ((zFach == Fach.GE) && (manager.getBeginnZusatzkursGE() != halbjahre.get(0))) {
-				addFehler(GostBelegungsfehler.ZK_16);
+				addFehler(GostBelegungsfehler.GOST30_ZK_16);
 			}
 			if ((zFach == Fach.SW) && (manager.getBeginnZusatzkursSW() != halbjahre.get(0))) {
-				addFehler(GostBelegungsfehler.ZK_17);
+				addFehler(GostBelegungsfehler.GOST30_ZK_17);
 			}
 		}
 	}
@@ -292,7 +292,7 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 	private void pruefeBelegungGeschichte() {
 		// Prüfe, ob überhaupt eine Belegung für Geschichte existiert
 		if ((geschichte == null) || (geschichte.isEmpty())) {
-			addFehler(GostBelegungsfehler.GE_10);
+			addFehler(GostBelegungsfehler.GOST30_GE_10);
 			return;
 		}
 
@@ -311,7 +311,7 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 		}
 
 		// Keine ausreichende Belegung von Geschichte gefunden -> Belegungsfehler
-		addFehler(GostBelegungsfehler.GE_10);
+		addFehler(GostBelegungsfehler.GOST30_GE_10);
 	}
 
 
@@ -322,7 +322,7 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 	private void pruefeBelegungSozialwissenschaften() {
 		// Prüfe, ob überhaupt eine Belegung für Sozialwissenschaften existiert
 		if ((sozialwissenschaften == null) || (sozialwissenschaften.isEmpty())) {
-			addFehler(GostBelegungsfehler.SW_10);
+			addFehler(GostBelegungsfehler.GOST30_SW_10);
 			return;
 		}
 
@@ -341,7 +341,7 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 		}
 
 		// Keine ausreichende Belegung von Sozialwissenschaften gefunden -> Belegungsfehler
-		addFehler(GostBelegungsfehler.SW_10);
+		addFehler(GostBelegungsfehler.GOST30_SW_10);
 	}
 
 
@@ -363,7 +363,7 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 			// welche in der Qualifikationsphase durchgängig belegt werden kann?
 			if ((!manager.pruefeBelegung(philosophie, halbjahr))
 					|| (manager.pruefeDurchgaengigkeit(philosophie) && (manager.zaehleBelegungInHalbjahren(gesellschaftswissenschaften, halbjahr) <= 1))) {
-				addFehler(GostBelegungsfehler.RE_10);
+				addFehler(GostBelegungsfehler.GOST30_RE_10);
 				break;
 			}
 		}
@@ -384,7 +384,7 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 
 			// Wurde auch Philosophie in dem Halbjahr nicht belegt?
 			if (!manager.pruefeBelegung(philosophie, halbjahr)) {
-				addFehler(GostBelegungsfehler.RE_10);
+				addFehler(GostBelegungsfehler.GOST30_RE_10);
 				return;
 			}
 
@@ -421,7 +421,7 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 			}
 
 			// Es wurde kein Ersatz für Religion gefunden!
-			addFehler(GostBelegungsfehler.RE_10);
+			addFehler(GostBelegungsfehler.GOST30_RE_10);
 			break;
 		}
 	}
@@ -459,11 +459,11 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 			// Philosophie wurde nicht weiterbelegt!
 			// Wurde Philosophie überhaupt als Ersatz für Religion gewählt? -> Wenn nicht, dann liegt eine Lücke in der Belegung von Philosophie vor
 			if (manager.pruefeBelegungExistiertEinzeln(religion, halbjahr)) {
-				addFehler(GostBelegungsfehler.E1BEL_10);
+				addFehler(GostBelegungsfehler.GOST30_E1BEL_10);
 			}
 			// Wurde Religion im vorigen Halbjahr belegt? -> Wenn nicht, dann liegt ebenfalls eine Lücke bei der Belegung von Philosophie vor (bzw. bei Religion)
 			if (!manager.pruefeBelegungExistiertEinzeln(religion, prevHalbjahr)) {
-				addFehler(GostBelegungsfehler.E1BEL_10);
+				addFehler(GostBelegungsfehler.GOST30_E1BEL_10);
 			}
 		}
 	}

@@ -133,7 +133,7 @@ export class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 		const lk1: AbiturFachbelegung | null = (this.mapAbiturFachbelegungen === null) ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.LK1);
 		const lk1fach: GostFach | null = this.manager.getFach(lk1);
 		if ((lk1 === null) || (lk1fach === null) || !((GostFachbereich.DEUTSCH.hat(lk1fach)) || (GostFachbereich.FREMDSPRACHE.hat(lk1fach) && !lk1.istFSNeu) || (GostFachbereich.MATHEMATIK.hat(lk1fach)) || (GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH.hat(lk1fach)))) {
-			this.addFehler(GostBelegungsfehler.LK1_11);
+			this.addFehler(GostBelegungsfehler.GOST30_LK1_11);
 		}
 	}
 
@@ -146,23 +146,23 @@ export class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 	 */
 	private pruefeAnzahlUndAufgabenfelderAbiFaecher(): void {
 		if ((this.anzahlAbiFaecher !== 5) || (!this.hatAufgabenfeldI) || (!this.hatAufgabenfeldII) || (!this.hatAufgabenfeldIII)) {
-			this.addFehler(GostBelegungsfehler.LK1_13_2);
+			this.addFehler(GostBelegungsfehler.GOST30_LK1_13);
 		}
 		if (this.anzahlDeutschMatheFremdsprache < 2) {
-			this.addFehler(GostBelegungsfehler.ABI_10_2);
+			this.addFehler(GostBelegungsfehler.GOST30_ABI_10);
 		}
 		if ((this.anzahlDeutschMatheFremdsprache < 3) && (this.anzahlFremdsprachen > 1)) {
-			this.addFehler(GostBelegungsfehler.ABI_19_2);
+			this.addFehler(GostBelegungsfehler.GOST30_ABI_19);
 		}
 		if (this.anzahlSportReligion > 1) {
-			this.addFehler(GostBelegungsfehler.ABI_11);
+			this.addFehler(GostBelegungsfehler.GOST30_ABI_11);
 		}
 		const lk1: AbiturFachbelegung | null = (this.mapAbiturFachbelegungen === null) ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.LK1);
 		const lk1fach: GostFach | null = this.manager.getFach(lk1);
 		const ab3: AbiturFachbelegung | null = (this.mapAbiturFachbelegungen === null) ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.AB3);
 		const ab3fach: GostFach | null = this.manager.getFach(ab3);
 		if (((lk1fach !== null) && (GostFachbereich.SPORT.hatKuerzel(lk1fach.kuerzel))) || ((ab3fach !== null) && (GostFachbereich.SPORT.hatKuerzel(ab3fach.kuerzel)))) {
-			this.addFehler(GostBelegungsfehler.ABI_15_2);
+			this.addFehler(GostBelegungsfehler.GOST30_ABI_15);
 		}
 	}
 
@@ -184,23 +184,23 @@ export class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 			}
 			switch (abiturFach) {
 				case GostAbiturFach.LK1: {
-					this.addFehler(GostBelegungsfehler.ABI_21);
+					this.addFehler(GostBelegungsfehler.GOST30_ABI_21);
 					break;
 				}
 				case GostAbiturFach.LK2: {
-					this.addFehler(GostBelegungsfehler.ABI_22);
+					this.addFehler(GostBelegungsfehler.GOST30_ABI_22);
 					break;
 				}
 				case GostAbiturFach.AB3: {
-					this.addFehler(GostBelegungsfehler.ABI_23);
+					this.addFehler(GostBelegungsfehler.GOST30_ABI_23);
 					break;
 				}
 				case GostAbiturFach.AB4: {
-					this.addFehler(GostBelegungsfehler.ABI_24);
+					this.addFehler(GostBelegungsfehler.GOST30_ABI_24);
 					break;
 				}
 				case GostAbiturFach.AB5: {
-					this.addFehler(GostBelegungsfehler.ABI_25);
+					this.addFehler(GostBelegungsfehler.GOST30_ABI_25);
 					break;
 				}
 			}
@@ -237,19 +237,19 @@ export class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 		const ab3: AbiturFachbelegung | null = (this.mapAbiturFachbelegungen === null) ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.AB3);
 		if (ab3 !== null) {
 			if (!this.pruefeSchriftlichkeitVorQ22(ab3)) {
-				this.addFehler(GostBelegungsfehler.ABI_17);
+				this.addFehler(GostBelegungsfehler.GOST30_ABI_17);
 			}
 			if (!this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(ab3, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q22)) {
-				this.addFehler(GostBelegungsfehler.ABI_12);
+				this.addFehler(GostBelegungsfehler.GOST30_ABI_12);
 			}
 		}
 		const ab4: AbiturFachbelegung | null = (this.mapAbiturFachbelegungen === null) ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.AB4);
 		if (ab4 !== null) {
 			if (!this.pruefeSchriftlichkeitVorQ22(ab4)) {
-				this.addFehler(GostBelegungsfehler.ABI_18);
+				this.addFehler(GostBelegungsfehler.GOST30_ABI_18);
 			}
 			if (!this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(ab4, GostSchriftlichkeit.MUENDLICH, GostHalbjahr.Q22)) {
-				this.addFehler(GostBelegungsfehler.ABI_13);
+				this.addFehler(GostBelegungsfehler.GOST30_ABI_13);
 			}
 		}
 	}
@@ -265,10 +265,10 @@ export class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 		}
 		if (this.manager.pruefeBelegungMitKursart(ab5, GostKursart.GK, GostHalbjahr.Q22)) {
 			if (!this.pruefeSchriftlichkeitVorQ22(ab5)) {
-				this.addFehler(GostBelegungsfehler.ABI_29_2);
+				this.addFehler(GostBelegungsfehler.GOST30_ABI_29);
 			}
 			if (!this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(ab5, GostSchriftlichkeit.MUENDLICH, GostHalbjahr.Q22)) {
-				this.addFehler(GostBelegungsfehler.ABI_30_2);
+				this.addFehler(GostBelegungsfehler.GOST30_ABI_30);
 			}
 			return;
 		}
@@ -311,13 +311,13 @@ export class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 				return;
 			}
 			if (!istDurchgaengig) {
-				fehler.add(GostBelegungsfehler.ABI_26_2);
+				fehler.add(GostBelegungsfehler.GOST30_ABI_26);
 			} else
 				if (!istSchriftlichQ1) {
-					fehler.add(GostBelegungsfehler.ABI_27_2);
+					fehler.add(GostBelegungsfehler.GOST30_ABI_27);
 				} else
 					if (istAbifach) {
-						fehler.add(GostBelegungsfehler.ABI_28_2);
+						fehler.add(GostBelegungsfehler.GOST30_ABI_28);
 					}
 		}
 		for (const f of fehler) {

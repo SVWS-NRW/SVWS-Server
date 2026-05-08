@@ -86,16 +86,16 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 	 */
 	private pruefeGesellschaftswissenschaftenEF1(): void {
 		if (!this.manager.pruefeBelegungDurchgehendBelegbarExistiert(this.gesellschaftswissenschaften, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1)) {
-			this.addFehler(GostBelegungsfehler.GW_10);
+			this.addFehler(GostBelegungsfehler.GOST30_GW_10);
 		}
 		if (!this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(this.gesellschaftswissenschaften, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) {
-			this.addFehler(GostBelegungsfehler.GW_11);
+			this.addFehler(GostBelegungsfehler.GOST30_GW_11);
 		}
 		if (this.manager.zaehleBelegungInHalbjahren(this.geschichte, GostHalbjahr.EF1) <= 0) {
-			this.addFehler(GostBelegungsfehler.GE_1_INFO);
+			this.addFehler(GostBelegungsfehler.GOST30_GE_1_INFO);
 		}
 		if (this.manager.zaehleBelegungInHalbjahren(this.sozialwissenschaften, GostHalbjahr.EF1) <= 0) {
-			this.addFehler(GostBelegungsfehler.SW_1_INFO);
+			this.addFehler(GostBelegungsfehler.GOST30_SW_1_INFO);
 		}
 	}
 
@@ -109,7 +109,7 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 			return;
 		}
 		if ((!this.manager.pruefeBelegung(this.philosophie, GostHalbjahr.EF1)) || ((!this.manager.pruefeBelegungDurchgehendBelegbarExistiert(this.geschichte, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1)) && (!this.manager.pruefeBelegungDurchgehendBelegbarExistiert(this.sozialwissenschaften, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1)) && (!this.manager.pruefeBelegungDurchgehendBelegbarExistiert(this.sonstige_gesellschaftswissenschaften, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1)))) {
-			this.addFehler(GostBelegungsfehler.RE_10);
+			this.addFehler(GostBelegungsfehler.GOST30_RE_10);
 		}
 	}
 
@@ -132,7 +132,7 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 	 */
 	private pruefeSchriftlichkeitEF(): void {
 		if ((!this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(this.gesellschaftswissenschaften, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) || (!this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(this.gesellschaftswissenschaften, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF2))) {
-			this.addFehler(GostBelegungsfehler.GW_11);
+			this.addFehler(GostBelegungsfehler.GOST30_GW_11);
 		}
 	}
 
@@ -143,7 +143,7 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 	 */
 	private pruefeDurchgaengigeBelegung(): void {
 		if (!this.manager.pruefeBelegungExistiert(this.gesellschaftswissenschaften, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
-			this.addFehler(GostBelegungsfehler.GW_10);
+			this.addFehler(GostBelegungsfehler.GOST30_GW_10);
 		}
 	}
 
@@ -163,7 +163,7 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 		if (this.manager.pruefeBelegung(this.philosophie, ...GostHalbjahr.getQualifikationsphase()) && this.manager.pruefeBelegungMitSchriftlichkeit(this.philosophie, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21)) {
 			return;
 		}
-		this.addFehler(GostBelegungsfehler.GW_12);
+		this.addFehler(GostBelegungsfehler.GOST30_GW_12);
 	}
 
 	/**
@@ -182,7 +182,7 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 			return;
 		}
 		if (fachbelegungenZK.size() > 1) {
-			this.addFehler(GostBelegungsfehler.ZK_13);
+			this.addFehler(GostBelegungsfehler.GOST30_ZK_13);
 		}
 		const fachbelegung: AbiturFachbelegung | null = fachbelegungenZK.get(0);
 		const fach: GostFach | null = this.manager.getFach(fachbelegung);
@@ -190,14 +190,14 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 			throw new NullPointerException()
 		}
 		if (GostFachUtils.istBilingual(fach)) {
-			this.addFehler(GostBelegungsfehler.ZK_13);
+			this.addFehler(GostBelegungsfehler.GOST30_ZK_13);
 		}
 		const zFach: Fach | null = Fach.getBySchluesselOrDefault(fach.kuerzel);
 		if ((zFach as unknown === Fach.GE as unknown) && (!this.manager.istErlaubtZusatzkursGE())) {
-			this.addFehler(GostBelegungsfehler.ZK_14);
+			this.addFehler(GostBelegungsfehler.GOST30_ZK_14);
 		}
 		if ((zFach as unknown === Fach.SW as unknown) && (!this.manager.istErlaubtZusatzkursSW())) {
-			this.addFehler(GostBelegungsfehler.ZK_15);
+			this.addFehler(GostBelegungsfehler.GOST30_ZK_15);
 		}
 		const halbjahre: List<GostHalbjahr> = this.manager.getHalbjahreKursart(fachbelegung, GostKursart.ZK);
 		if (halbjahre.size() === 2) {
@@ -208,24 +208,24 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 				this.zusatzkursFachbelegungen.add(fachbelegung);
 			}
 			if ((belegungQ11 && (this.manager.zaehleBelegungInHalbjahren(fachbelegungenZK, GostHalbjahr.Q21, GostHalbjahr.Q22) > 0)) || (belegungQ12 && (this.manager.zaehleBelegungInHalbjahren(fachbelegungenZK, GostHalbjahr.Q22) > 0))) {
-				this.addFehler(GostBelegungsfehler.ZK_18);
+				this.addFehler(GostBelegungsfehler.GOST30_ZK_18);
 			}
 		} else
 			if (halbjahre.size() > 1) {
-				this.addFehler(GostBelegungsfehler.ZK_12);
+				this.addFehler(GostBelegungsfehler.GOST30_ZK_12);
 			}
 		if (!halbjahre.isEmpty()) {
 			const prevHalbjahr: GostHalbjahr | null = halbjahre.get(0).previous();
 			if ((prevHalbjahr !== null) && (this.manager.pruefeBelegung(fachbelegung, prevHalbjahr))) {
-				this.addFehler(GostBelegungsfehler.ZK_10);
+				this.addFehler(GostBelegungsfehler.GOST30_ZK_10);
 			}
 		}
 		if (!halbjahre.isEmpty()) {
 			if ((zFach as unknown === Fach.GE as unknown) && (this.manager.getBeginnZusatzkursGE() as unknown !== halbjahre.get(0) as unknown)) {
-				this.addFehler(GostBelegungsfehler.ZK_16);
+				this.addFehler(GostBelegungsfehler.GOST30_ZK_16);
 			}
 			if ((zFach as unknown === Fach.SW as unknown) && (this.manager.getBeginnZusatzkursSW() as unknown !== halbjahre.get(0) as unknown)) {
-				this.addFehler(GostBelegungsfehler.ZK_17);
+				this.addFehler(GostBelegungsfehler.GOST30_ZK_17);
 			}
 		}
 	}
@@ -236,7 +236,7 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 	 */
 	private pruefeBelegungGeschichte(): void {
 		if ((this.geschichte === null) || (this.geschichte.isEmpty())) {
-			this.addFehler(GostBelegungsfehler.GE_10);
+			this.addFehler(GostBelegungsfehler.GOST30_GE_10);
 			return;
 		}
 		if (this.manager.pruefeBelegungExistiert(this.geschichte, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
@@ -249,7 +249,7 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 				}
 			}
 		}
-		this.addFehler(GostBelegungsfehler.GE_10);
+		this.addFehler(GostBelegungsfehler.GOST30_GE_10);
 	}
 
 	/**
@@ -258,7 +258,7 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 	 */
 	private pruefeBelegungSozialwissenschaften(): void {
 		if ((this.sozialwissenschaften === null) || (this.sozialwissenschaften.isEmpty())) {
-			this.addFehler(GostBelegungsfehler.SW_10);
+			this.addFehler(GostBelegungsfehler.GOST30_SW_10);
 			return;
 		}
 		if (this.manager.pruefeBelegungExistiert(this.sozialwissenschaften, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
@@ -271,7 +271,7 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 				}
 			}
 		}
-		this.addFehler(GostBelegungsfehler.SW_10);
+		this.addFehler(GostBelegungsfehler.GOST30_SW_10);
 	}
 
 	/**
@@ -285,7 +285,7 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 				continue;
 			}
 			if ((!this.manager.pruefeBelegung(this.philosophie, halbjahr)) || (this.manager.pruefeDurchgaengigkeit(this.philosophie) && (this.manager.zaehleBelegungInHalbjahren(this.gesellschaftswissenschaften, halbjahr) <= 1))) {
-				this.addFehler(GostBelegungsfehler.RE_10);
+				this.addFehler(GostBelegungsfehler.GOST30_RE_10);
 				break;
 			}
 		}
@@ -302,7 +302,7 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 				continue;
 			}
 			if (!this.manager.pruefeBelegung(this.philosophie, halbjahr)) {
-				this.addFehler(GostBelegungsfehler.RE_10);
+				this.addFehler(GostBelegungsfehler.GOST30_RE_10);
 				return;
 			}
 			if (this.manager.pruefeDurchgaengigkeit(this.philosophie) && (this.manager.zaehleDurchgaengigeBelegungen(this.gesellschaftswissenschaften) > 1)) {
@@ -317,7 +317,7 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 			if ((halbjahr as unknown === GostHalbjahr.Q11 as unknown) && (this.manager.pruefeBelegungExistiertEinzeln(this.geschichte, GostHalbjahr.Q11) || this.manager.pruefeBelegungExistiertEinzeln(this.sozialwissenschaften, GostHalbjahr.Q11))) {
 				continue;
 			}
-			this.addFehler(GostBelegungsfehler.RE_10);
+			this.addFehler(GostBelegungsfehler.GOST30_RE_10);
 			break;
 		}
 	}
@@ -347,10 +347,10 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 				continue;
 			}
 			if (this.manager.pruefeBelegungExistiertEinzeln(this.religion, halbjahr)) {
-				this.addFehler(GostBelegungsfehler.E1BEL_10);
+				this.addFehler(GostBelegungsfehler.GOST30_E1BEL_10);
 			}
 			if (!this.manager.pruefeBelegungExistiertEinzeln(this.religion, prevHalbjahr)) {
-				this.addFehler(GostBelegungsfehler.E1BEL_10);
+				this.addFehler(GostBelegungsfehler.GOST30_E1BEL_10);
 			}
 		}
 	}

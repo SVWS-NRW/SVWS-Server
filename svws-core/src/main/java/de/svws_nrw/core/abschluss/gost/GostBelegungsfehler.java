@@ -22,14 +22,540 @@ import jakarta.validation.constraints.NotNull;
  */
 public enum GostBelegungsfehler {
 
+	// ------------------------------------ Experimenteller Code - Neue APO-Gost ab Abi 2030
+
+	/** BelegungsfehlerArt ABI_10: Unter den fünf Abiturfächern müssen zwei der Fächer Deutsch, Mathematik oder Fremdsprache sein. */
+	GOST30_ABI_10("ABI_10", GostBelegungsfehlerArt.BELEGUNG,
+			"Unter den fünf Abiturfächern müssen zwei der Fächer Deutsch, Mathematik oder Fremdsprache sein.",
+			null),
+
+	/** BelegungsfehlerArt ABI_11 */
+	GOST30_ABI_11("ABI_11", GostBelegungsfehlerArt.BELEGUNG,
+			"Religionslehre und Sport dürfen nicht gleichzeitig Abiturfächer sein.",
+			null),
+
+	/** BelegungsfehlerArt ABI_12 */
+	GOST30_ABI_12("ABI_12", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"In Q2.2 muss das 3. Abiturfach schriftlich belegt sein.",
+			null),
+
+	/** BelegungsfehlerArt 	ABI_13 */
+	GOST30_ABI_13("ABI_13", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"In Q2.2 muss das 4. Abiturfach mündlich belegt sein.",
+			null),
+
+	/** BelegungsfehlerArt ABI_15 */
+	GOST30_ABI_15("ABI_15", GostBelegungsfehlerArt.BELEGUNG,
+			"Sport kann nur als 2., 4. oder 5. Abiturfach gewählt werden.",
+			null),
+
+	/** BelegungsfehlerArt ABI_16 */
+	GOST30_ABI_16("ABI_16", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"Fächer, die keine Abiturfächer oder Projektkursfächer sind, müssen in Q2.2 mündlich belegt werden.",
+			null),
+
+	/** BelegungsfehlerArt ABI_17 */
+	GOST30_ABI_17("ABI_17", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"Das 3. Abiturfach muss von Q1.1 bis Q2.2 schriftlich belegt sein.",
+			null),
+
+	/** BelegungsfehlerArt  */
+	GOST30_ABI_18("ABI_18", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"Das 4. Abiturfach muss von Q1.1 bis Q2.1 schriftlich belegt sein.",
+			null),
+
+	/** BelegungsfehlerArt ABI_19 */
+	GOST30_ABI_19("ABI_19", GostBelegungsfehlerArt.BELEGUNG,
+			"Unter den fünf Abiturfächern müssen zwei der Fächer Deutsch, Mathematik oder Fremdsprache sein. Dies kann nicht durch zwei Fremdsprachen erfüllt werden.",
+			null),
+
+	/** BelegungsfehlerArt ABI_21: Es kann nur ein Fach 1. Abiturfach sein. */
+	GOST30_ABI_21("ABI_21", GostBelegungsfehlerArt.BELEGUNG,
+			"Es kann nur ein Fach 1. Abiturfach sein.",
+			null),
+
+	/** BelegungsfehlerArt ABI_22: Es kann nur ein Fach 2. Abiturfach sein. */
+	GOST30_ABI_22("ABI_22", GostBelegungsfehlerArt.BELEGUNG,
+			"Es kann nur ein Fach 2. Abiturfach sein.",
+			null),
+
+	/** BelegungsfehlerArt ABI_23: Es kann nur ein Fach 3. Abiturfach sein. */
+	GOST30_ABI_23("ABI_23", GostBelegungsfehlerArt.BELEGUNG,
+			"Es kann nur ein Fach 3. Abiturfach sein.",
+			null),
+
+	/** BelegungsfehlerArt ABI_24: Es kann nur ein Fach 4. Abiturfach sein. */
+	GOST30_ABI_24("ABI_24", GostBelegungsfehlerArt.BELEGUNG,
+			"Es kann nur ein Fach 4. Abiturfach sein.",
+			null),
+
+	/** BelegungsfehlerArt ABI_25: Es kann nur ein Fach 5. Abiturfach sein. */
+	GOST30_ABI_25("ABI_25", GostBelegungsfehlerArt.BELEGUNG,
+			"Es kann nur ein Fach 5. Abiturfach sein.",
+			null),
+
+	/** BelegungsfehlerArt ABI_26 */
+	GOST30_ABI_26("ABI_26", GostBelegungsfehlerArt.BELEGUNG,
+			"Ein Projektkurs kann nur als 5. Abiturfach gewählt werden, wenn sein Referenzfach in der EF und Q1 belegt wurde.",
+			null),
+
+	/** BelegungsfehlerArt ABI_27 */
+	GOST30_ABI_27("ABI_27", GostBelegungsfehlerArt.BELEGUNG,
+			"Ein Projektkurs kann nur als 5. Abiturfach gewählt werden, wenn sein Referenzfach in der Q1 schriftlich belegt wurde.",
+			null),
+
+	/** BelegungsfehlerArt ABI_28 */
+	GOST30_ABI_28("ABI_28", GostBelegungsfehlerArt.BELEGUNG,
+			"Ein Projektkurs kann nur als 5. Abiturfach gewählt werden, wenn sein Referenzfach nicht als Abiturfach gewählt wurde.",
+			null),
+
+	/** BelegungsfehlerArt ABI_29 */
+	GOST30_ABI_29("ABI_29", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"Das 5. Abiturfach muss als Grundkurs von Q1.1 bis Q2.1 schriftlich belegt sein.",
+			null),
+
+	/** BelegungsfehlerArt ABI_30 */
+	GOST30_ABI_30("ABI_30", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"In Q2.2 muss das 5. Abiturfach mündlich belegt sein.",
+			null),
+
+
+	/** BelegungsfehlerArt ABI_18: In der Einführungsphase müssen in jedem Halbjahr mindestens 10 Fächer belegt werden. Vertiefungskurse werden bei der Zählung nicht berücksichtigt.
+	 *  <br>In EF.1 müssen mindestens 10 Kurse belegt werden. Bei der Kurszählung werden Vertiefungskurse nicht mitgezählt. */
+	GOST30_ANZ_10("ANZ_10", GostBelegungsfehlerArt.BELEGUNG,
+			"In der Einführungsphase müssen in jedem Halbjahr mindestens 10 Fächer belegt werden. Vertiefungskurse werden bei der Zählung nicht berücksichtigt.",
+			"In EF.1 müssen mindestens 10 Kurse belegt werden. Bei der Kurszählung werden Vertiefungskurse nicht mitgezählt."),
+
+	/** BelegungsfehlerArt ANZ_12 */
+	GOST30_ANZ_12("ANZ_12", GostBelegungsfehlerArt.BELEGUNG,
+			"In der Qualifikationsphase müssen mindestens 36 in die Gesamtqualifikation einbringbare Kurse belegt werden. Vertiefungskurse werden bei der Zählung nicht berücksichtigt.",
+			null),
+
+	/** BelegungsfehlerArt ANZ_13 */
+	GOST30_ANZ_13("ANZ_13", GostBelegungsfehlerArt.BELEGUNG,
+			"In der Qualifikationsphase sind genau 40 Kurse zu belegen.",
+			null),
+
+	/** BelegungsfehlerArt ANZ_20_INFO */
+	GOST30_ANZ_20_INFO("ANZ_20_INFO", GostBelegungsfehlerArt.HINWEIS,
+			"In der Qualifikationsphase sind nur maximal zwei Kurse in einem Ersatzfach des literarisch-künstlerischen Fachbereichs anrechenbar.",
+			null),
+
+	/** BelegungsfehlerArt ANZ_21_INFO */
+	GOST30_ANZ_21_INFO("ANZ_21_INFO", GostBelegungsfehlerArt.HINWEIS,
+			"Bei der Wahl eines Musik-Leistungskurse sind vokal- und instrumentalpraktische Kurse nicht in der Qualifikationsphase nicht anrechenbar.",
+			null),
+
+	/** BelegungsfehlerArt ANZ_22_INFO */
+	GOST30_ANZ_22_INFO("ANZ_22_INFO", GostBelegungsfehlerArt.HINWEIS,
+			"Bei der Wahl eines Musik-Grundkurses als Abiturfach sind maximal 6 Kurse Musik-Kurse (Musik, vokal- oder instrumentalpraktischer Grundkurs) in der Qualifikationsphase anrechenbar.",
+			null),
+
+	/** BelegungsfehlerArt ANZ_23_INFO */
+	GOST30_ANZ_23_INFO("ANZ_23_INFO", GostBelegungsfehlerArt.HINWEIS,
+			"In der Qualifikationsphase sind, wenn Musik nicht als Abiturfach gewählt wird, maximal 5 Kurse Musik-Kurse (Musik, vokal- oder instrumentalpraktischer Grundkurs) anrechenbar.",
+			null),
+
+	/** BelegungsfehlerArt BIL_4_INFO */
+	GOST30_BIL_4_INFO("BIL_4_INFO", GostBelegungsfehlerArt.HINWEIS,
+			"Programmfehler: Dieser Hinweis ist für eine Gesamtbelegprüfung der Sek II nicht vorgesehen!",
+			"Soll ein bilinguales Sachfach zum Sprachenschwerpunkt beitragen, so muss es schriftlich belegt werden."),
+
+	/** BelegungsfehlerArt BIL_10 */
+	GOST30_BIL_10("BIL_10", GostBelegungsfehlerArt.BELEGUNG,
+			"Im bilingualen Bildungsgang muss die bilinguale Fremdsprache in EF.1 und EF.2 schriftlich und in Q1.1 bis Q2.2 als Leistungskurs belegt werden.",
+			"Im bilingualen Bildungsgang muss die bilinguale Fremdsprache schriftlich belegt werden."),
+
+	/** BelegungsfehlerArt BIL_11_INFO */
+	GOST30_BIL_11_INFO("BIL_11_INFO", GostBelegungsfehlerArt.HINWEIS,
+			"Im bilingualen Bildungsgang werden in EF.1 und EF.2 in der Regel zwei bilinguale Sachfächer belegt.",
+			"Im bilingualen Bildungsgang sollten zwei bilinguale Sachfächer belegt werden."),
+
+	/** BelegungsfehlerArt BIL_12 */
+	GOST30_BIL_12("BIL_12", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"Im bilingualen Bildungsgang muss ein bilinguales Sachfach durchgehend von Q1.1 bis Q2.1 schriftlich belegt werden.",
+			null),
+
+	/** BelegungsfehlerArt BIL_13 */
+	GOST30_BIL_13("BIL_13", GostBelegungsfehlerArt.BELEGUNG,
+			"Ein bilinguales Sachfach muss unter den Abiturfächern sein.",
+			null),
+
+	/** BelegungsfehlerArt BIL_14 */
+	GOST30_BIL_14("BIL_14", GostBelegungsfehlerArt.BELEGUNG,
+			"Es können nur bilinguale Sachfächer belegt werden, deren Sprache in der Sekundarstufe erlernt wurde.",
+			"Es können nur bilinguale Sachfächer belegt werden, deren Sprache in der Sekundarstufe erlernt wurde."),
+
+	/** BelegungsfehlerArt BIL_15 */
+	GOST30_BIL_15("BIL_15", GostBelegungsfehlerArt.BELEGUNG,
+			"Im bilingualen Bildungsgang muss in EF.1 und EF.2 mindestens ein bilinguales Sachfach belegt werden.",
+			"Im bilingualen Bildungsgang muss mindestens ein bilinguales Sachfach belegt werden."),
+
+	/** BelegungsfehlerArt D_10 */
+	GOST30_D_10("D_10", GostBelegungsfehlerArt.BELEGUNG,
+			"Deutsch muss von EF.1 bis Q2.2 belegt werden.",
+			"Deutsch muss in EF.1 schriftlich belegt werden."),
+
+	/** BelegungsfehlerArt D_11 */
+	GOST30_D_11("D_11", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"Deutsch muss von EF.1 bis wenigstens Q2.1 schriftlich belegt werden.",
+			"Deutsch muss in EF.1 schriftlich belegt werden."),
+
+	/** BelegungsfehlerArt E1BEL_10 */
+	GOST30_E1BEL_10("E1BEL_10", GostBelegungsfehlerArt.BELEGUNG,
+			"Bis auf Literatur, Zusatzkurse, Vertiefungskurse und Projektkurse können keine Fächer hinzugewählt werden, die nicht schon ab EF.1 belegt wurden.",
+			null),
+
+	/** BelegungsfehlerArt FS_10 */
+	GOST30_FS_10("FS_10", GostBelegungsfehlerArt.BELEGUNG,
+			"Mindestens eine Fremdsprache muss von EF.1 bis Q2.2 durchgehend belegt werden. Handelt es sich hierbei um eine neu einsetzende Fremdsprache, so muss zusätzlich mindestens eine aus der SI fortgeführte Fremdsprache von EF.1 bis EF.2 belegt werden.",
+			"Da die gewählte Fremdsprache in der Oberstufe nicht durchgehend angeboten wird, muss entweder zusätzliche eine neu einsetzende Fremdsprache, oder eine andere in der Sekundarstufe I begonnene Fremdsprache belegt werden."),
+
+	/** BelegungsfehlerArt FS_11 */
+	GOST30_FS_11("FS_11", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"Mindestens eine durchgehend belegte Fremdsprache muss von EF.1 bis Q2.1 schriftlich belegt sein.",
+			"Mindestens eine Fremdsprache muss in EF.1 schriftlich belegt werden. Die zu wählende Fremdsprache muss durchgehend angeboten werden."),
+
+	/** BelegungsfehlerArt FS_12 */
+	GOST30_FS_12("FS_12", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"In EF.1 und EF.2 müssen alle gewählten Fremdsprachenfächer schriftlich belegt werden.",
+			"In EF.1 müssen alle belegten Fremdsprachen schriftlich belegt werden."),
+
+	/** BelegungsfehlerArt FS_13 */
+	GOST30_FS_13("FS_13", GostBelegungsfehlerArt.BELEGUNG,
+			"Bei unvollendeter 2. Fremdsprache, muss die in der Sekundarstufe 1 begonnene 2. Fremdsprache in EF schriftlich oder eine neu einsetzende Fremdsprache durchgehend schriftlich belegt werden.",
+			"Wurde die 2. Fremdsprache erst ab Klasse 8 erlernt, muss die in der Sekundarstufe 1 begonnene 2. Fremdsprache oder eine neu einsetzende Fremdsprache schriftlich in EF.1 belegt werden."),
+
+	/** BelegungsfehlerArt FS_14 */
+	GOST30_FS_14("FS_14", GostBelegungsfehlerArt.BELEGUNG,
+			"Bei fehlender 2. Fremdsprache muss eine neu einsetzende Fremdsprache durchgehend schriftlich belegt werden.",
+			"Wurde bisher keine 2. Fremdsprache erlernt, muss eine neu einsetzende Fremdsprache in EF.1 schriftlich belegt werden."),
+
+	/** BelegungsfehlerArt FS_15 */
+	GOST30_FS_15("FS_15", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"Kurse in neu einsetzenden Fremdsprachen müssen schriftlich belegt werden.",
+			null),
+
+	/** BelegungsfehlerArt FS_16 */
+	GOST30_FS_16("FS_16", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"Mindestens eine fortgeführte Fremdsprache muss in EF.1 und EF.2 schriftlich belegt werden.",
+			"Mindestens eine in der Sekundarstufe I begonnene Fremdsprache muss in EF.1 schriftlich belegt werden."),
+
+	/** BelegungsfehlerArt FS_17 */
+	GOST30_FS_17("FS_17", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"Neu einsetzende Fremdsprachen dürfen nicht als Leistungskurs belegt werden.",
+			null),
+
+	/** BelegungsfehlerArt FS_18 */
+	GOST30_FS_18("FS_18", GostBelegungsfehlerArt.BELEGUNG,
+			"Mindestens eine Fremdsprache muss von EF.1 bis Q2.2 belegt werden.",
+			"Mindestens eine in der Sekundarstufe I begonnene Fremdsprache muss in EF.1 schriftlich belegt werden."),
+
+	/** BelegungsfehlerArt FS_19_INFO */
+	GOST30_FS_19_INFO("FS_19_INFO", GostBelegungsfehlerArt.HINWEIS,
+			"Eine erfolgreiche Feststellungsprüfung in der Muttersprache am Ende der Sekundarstufe I und am Ende von EF.2 ist notwendig, um die Fremdsprachenbedingungen zu erfüllen.",
+			"Eine erfolgreiche Feststellungsprüfung in der Muttersprache am Ende der Sekundarstufe I und am Ende von EF.2 ist notwendig, um die Fremdsprachenbedingungen zu erfüllen."),
+
+	/** BelegungsfehlerArt FS_20 */
+	GOST30_FS_20("FS_20", GostBelegungsfehlerArt.BELEGUNG,
+			"Eine neu einsetzende Fremdsprache kann nur gewählt werden, wenn diese nicht zuvor in der Sekundarstaufe I belegt wurde. Die Sprachenfolge ist fehlerhaft.",
+			"Eine neu einsetzende Fremdsprache kann nur gewählt werden, wenn diese nicht zuvor in der Sekundarstaufe I belegt wurde. Die Sprachenfolge ist fehlerhaft."),
+
+	/** BelegungsfehlerArt FS_21 */
+	GOST30_FS_21("FS_21", GostBelegungsfehlerArt.BELEGUNG,
+			"Eine fortgeführte Fremdsprache wurde in der Sprachenfolge als neu einsetzend eingetragen. Die Sprachenfolge ist fehlerhaft.",
+			"Eine fortgeführte Fremdsprache wurde in der Sprachenfolge als neu einsetzend eingetragen. Die Sprachenfolge ist fehlerhaft."),
+
+	/** BelegungsfehlerArt FS_22_INFO */
+	GOST30_FS_22_INFO("FS_22_INFO", GostBelegungsfehlerArt.HINWEIS,
+			"Englisch wurde nicht in der Sprachenfolge eingetragen. Bitte Prüfen Sie die Sprachenfolge auf Korrektheit.",
+			"Englisch wurde nicht in der Sprachenfolge eingetragen. Bitte Prüfen Sie die Sprachenfolge auf Korrektheit."),
+
+	/** BelegungsfehlerArt FS_23 */
+	GOST30_FS_23("FS_23", GostBelegungsfehlerArt.BELEGUNG,
+			"Es wird das Fach einer fortgeführten Fremdsprache belegt, zu dem es keine entsprechende Eintragung einer Belegung oder Sprachprüfung in der Sekundarstufe I gibt. Bitte die Sprachenfolge und Sprachprüfungen prüfen.",
+			"Es wird das Fach einer fortgeführten Fremdsprache belegt, zu dem es keine entsprechende Eintragung einer Belegung oder Sprachprüfung in der Sekundarstufe I gibt. Bitte die Sprachenfolge und Sprachprüfungen prüfen."),
+
+	/** BelegungsfehlerArt FS_24 */
+	GOST30_FS_24("FS_24", GostBelegungsfehlerArt.BELEGUNG,
+			"Ist die Bedingungen für die Belegung einer zweiten Fremdsprache in der Sekundarstufe I noch nicht erfüllt worden, so müssen in der Einführungsphase zwei Fremdsprachen belegt werden.",
+			"Ist die Bedingungen für die Belegung einer zweiten Fremdsprache in der Sekundarstufe I noch nicht erfüllt worden, so müssen in der Einführungsphase zwei Fremdsprachen belegt werden."),
+
+	/** BelegungsfehlerArt FS_25 */
+	GOST30_FS_25("FS_25", GostBelegungsfehlerArt.BELEGUNG,
+			"Es wurde keine fortführbare Fremdsprache in der Sprachbelegung gefunden. Bitte prüfen Sie die Sprachenfolge.",
+			"Es wurde keine fortführbare Fremdsprache in der Sprachbelegung gefunden. Bitte prüfen Sie die Sprachenfolge."),
+
+	/** BelegungsfehlerArt  */
+	GOST30_GE_1_INFO("GE_1_INFO", GostBelegungsfehlerArt.HINWEIS,
+			"Programmfehler: Dieser Hinweis ist für eine Gesamtbelegprüfung der Sek II nicht vorgesehen!",
+			"Wird Geschichte nicht in EF.1 belegt, so muss Geschichte in der Qualifikationsphase als Zusatzkurs gewählt werden."),
+
+	/** BelegungsfehlerArt GE_1_INFO */
+	GOST30_GE_10("GE_10", GostBelegungsfehlerArt.BELEGUNG,
+			"Geschichte muss von EF.1 bis wenigstens Q1.2 oder als Zusatzkurs belegt werden.",
+			null),
+
+	/** BelegungsfehlerArt GKS_10 */
+	GOST30_GKS_10("GKS_10", GostBelegungsfehlerArt.BELEGUNG,
+			"In der Qualifikationsphase sind pro Halbjahr mindestens 7 Fächer in Grundkursen zu wählen.",
+			null),
+
+	/** BelegungsfehlerArt GW_10 */
+	GOST30_GW_10("GW_10", GostBelegungsfehlerArt.BELEGUNG,
+			"Mindestens eine Gesellschaftswissenschaft muss von Q1.1 bis Q2.2 durchgehend belegt werden.",
+			"Mindestens eine Gesellschaftswissenschaft muss in EF.1 belegt werden und durchgängig belegbar sein."),
+
+	/** BelegungsfehlerArt GW_11 */
+	GOST30_GW_11("GW_11", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"In EF.1 und EF.2 muss mindestens eine Gesellschaftswissenschaft schriftlich belegt sein.",
+			"Mindestens eine Gesellschaftswissenschaft muss in EF.1 schriftlich belegt werden."),
+
+	/** BelegungsfehlerArt GW_12 */
+	GOST30_GW_12("GW_12", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"Mindestens eine Gesellschaftswissenschaft oder Religionslehre muss von Q1.1 bis wenigstens Q2.1 schriftlich belegt werden.",
+			null),
+
+	/** BelegungsfehlerArt IGF_10 */
+	GOST30_IGF_10("IGF_10", GostBelegungsfehlerArt.BELEGUNG,
+			"Inhaltsgleiche Fächer und Projektkurse dürfen in jedem Halbjahr nur einmal belegt werden.",
+			"Inhaltsgleiche Fächer dürfen nur einmal belegt werden."),
+
+	/** BelegungsfehlerArt KU_MU_10 */
+	GOST30_KU_MU_10("KU_MU_10", GostBelegungsfehlerArt.BELEGUNG,
+			"Mindestens eines der Fächer Kunst oder Musik muss von EF.1 bis wenigstens Q1.2 durchgehend belegt werden. In der Qualifikationsphase kann auch alternativ Literatur mit zwei Kursen belegt werden.",
+			"Mindestens eines der Fächer Kunst oder Musik muss in EF.1 belegt werden"),
+
+	/** BelegungsfehlerArt L_10_INFO */
+	GOST30_L_10_INFO("L_10_INFO", GostBelegungsfehlerArt.HINWEIS,
+			"Um das Latinum zu erlangen muss Latein in EF.1 und EF.2 belegt werden.",
+			"Um das Latinum zu erlangen muss Latein in EF.1 schriftlich fortgeführt werden."),
+
+	/** BelegungsfehlerArt L_11_INFO */
+	GOST30_L_11_INFO("L_11_INFO", GostBelegungsfehlerArt.HINWEIS,
+			"Um das Latinum zu erlangen muss Latein mindestens bis Q1.2, je nach Stundenvolumen sogar bis Q2.2 belegt werden.",
+			null),
+
+	/** BelegungsfehlerArt LI_IV_10 */
+	GOST30_LI_IV_10("LI_IV_10", GostBelegungsfehlerArt.BELEGUNG,
+			"Die Fächer Literatur, instrumentalpraktischer bzw. vokalpraktischer Grundkurs dürfen maximal in zwei aufeinanderfolgenden Halbjahren in der Qualifikationsphase belegt werden.",
+			null),
+
+	/** BelegungsfehlerArt LI_IV_11 */
+	GOST30_LI_IV_11("LI_IV_11", GostBelegungsfehlerArt.BELEGUNG,
+			"Es darf nur eins der Fächer Literatur, IP oder VP belegt werden. (Schulen mit genehmigtem musisch-künstlerischem Schwerpunkt müssen betroffene Schüler in SchILD-NRW manuell zulassen).",
+			null),
+
+	/** BelegungsfehlerArt LK_10 */
+	GOST30_LK_10("LK_10", GostBelegungsfehlerArt.BELEGUNG,
+			"In der Qualifikationsphase müssen zwei Fächer durchgehend in Leistungskursen belegt werden.",
+			null),
+
+	/** BelegungsfehlerArt LK_11 */
+	GOST30_LK_11("LK_11", GostBelegungsfehlerArt.BELEGUNG,
+			"Es dürfen nicht mehr als zwei Fächer als Leistungskurse belegt werden.",
+			null),
+
+	/** BelegungsfehlerArt LK1_11 */
+	GOST30_LK1_11("LK1_11", GostBelegungsfehlerArt.BELEGUNG,
+			"Das erste Leistungskursfach muss eine fortgeführte Fremdsprache, Mathematik, eine klassische Naturwissenschaft oder Deutsch sein.",
+			null),
+
+	/** BelegungsfehlerArt LK1_13 */
+	GOST30_LK1_13("LK1_13", GostBelegungsfehlerArt.BELEGUNG,
+			"Die Abiturfächer müssen alle drei Aufgabenfelder abdecken. Insgesamt sind fünf Abiturfächer zu belegen.",
+			null),
+
+	/** BelegungsfehlerArt M_10 */
+	GOST30_M_10("M_10", GostBelegungsfehlerArt.BELEGUNG,
+			"Mathematik muss von EF.1 bis Q2.2 belegt werden.",
+			"Mathematik muss in EF.1 schriftlich belegt werden."),
+
+	/** BelegungsfehlerArt M_11 */
+	GOST30_M_11("M_11", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"Mathematik muss von EF.1 bis wenigstens Q2.1 schriftlich belegt werden.",
+			"Mathematik muss in EF.1 schriftlich belegt werden."),
+
+	/** BelegungsfehlerArt NW_10 */
+	GOST30_NW_10("NW_10", GostBelegungsfehlerArt.BELEGUNG,
+			"Mindestens eine klassische Naturwissenschaft (Physik, Biologie, Chemie) muss durchgehend von Q1.1 bis Q2.2 belegt werden.",
+			"Mindestens eines der Fächer Physik, Chemie oder Biologie muss in EF.1 belegt werden und durchgängig belegbar sein."),
+
+	/** BelegungsfehlerArt NW_11 */
+	GOST30_NW_11("NW_11", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"In EF.1 und EF.2 muss mindestens eine klassische Naturwissenschaft (Physik, Biologie, Chemie) schriftlich belegt sein.",
+			"Mindestens eines der Fächer Physik, Chemie oder Biologie muss in EF.1 schriftlich belegt werden."),
+
+	/** BelegungsfehlerArt NW_FS_10 */
+	GOST30_NW_FS_10("NW_FS_10", GostBelegungsfehlerArt.BELEGUNG,
+			"Von EF.1 bis Q2.2 müssen entweder zwei Naturwissenschaften oder zwei Fremdsprachen durchgehend gewählt werden. Hierbei sind eine Naturwissenschaft oder zwei Fremdsprachen schriftlich zu belegen. Zu den Fremdsprachen zählen auch in einer weiteren Fremdsprache unterrichtete Sachfächer.",
+			"In EF.1 müssen entweder zwei Naturwissenschaften oder zwei Fremdsprachen belegt werden. Hierbei sind eine Naturwissenschaft oder zwei Fremdsprachen schriftlich zu belegen. Zu den Fremdsprachen zählen auch in einer weiteren Fremdsprache unterrichtete Sachfächer."),
+
+	/** BelegungsfehlerArt NW_FS_12_INFO */
+	GOST30_NW_FS_12_INFO("NW_FS_12_INFO", GostBelegungsfehlerArt.HINWEIS,
+			"Da von EF.1 bis Q2.2 weniger als zwei naturwissenschaftliche Fächer durchgehend belegt wurden, oder kein naturwissenschaftliches Fach schriftlich belegt wurde, liegt ausschließlich ein Sprachenschwerpunkt vor.",
+			"Da in EF.1 weniger als zwei Naturwissenschaften belegt, oder keine schriftlich belegt wurden, müssen zwei Fremdsprachen bis Q2.2 durchgehend schriftlich belegt werden."),
+
+	/** BelegungsfehlerArt NW_FS_13_INFO */
+	GOST30_NW_FS_13_INFO("NW_FS_13_INFO", GostBelegungsfehlerArt.HINWEIS,
+			"Da von EF.1 bis Q2.2 weniger als zwei Fremdsprachen schriftlich belegt wurden, liegt ausschließlich ein naturwissenschaftlicher Schwerpunkt vor.",
+			"Da in EF.1 weniger als zwei Fremdsprachen schriftlich belegt wurden, müssen zwei Naturwissenschaften bis Q2.2 belegt, davon mindestens eine schriftlich belegt werden."),
+
+	/** BelegungsfehlerArt PF_10 */
+	GOST30_PF_10("PF_10", GostBelegungsfehlerArt.BELEGUNG,
+			"In der Einführungsphase können keine Projektkurse belegt werden.",
+			"In EF.1 können keine Projektkurse belegt werden."),
+
+	/** BelegungsfehlerArt PF_14 */
+	GOST30_PF_14("PF_14", GostBelegungsfehlerArt.BELEGUNG,
+			"In der Qualifikationsphase kann maximal ein Projektkurs in zwei aufeinanderfolgenden Halbjahren belegt werden.",
+			null),
+
+	/** BelegungsfehlerArt PF_15 */
+	GOST30_PF_15("PF_15", GostBelegungsfehlerArt.BELEGUNG,
+			"Es existiert kein Projektkurs, der als besondere Lernleistung eingebracht werden kann.",
+			null),
+
+	/** BelegungsfehlerArt PF_16_INFO */
+	GOST30_PF_16_INFO("PF_16_INFO", GostBelegungsfehlerArt.HINWEIS,
+			"Wird der Projektkurs als besondere Lernleistung in das Abitur eingebracht, so zählt er nicht mehr zu den einbringungsfähigen Kursen in Block I.",
+			null),
+
+	/** BelegungsfehlerArt PF_19 */
+	GOST30_PF_19("PF_19", GostBelegungsfehlerArt.BELEGUNG,
+			"Ein Projektkurs kann als Referenzfach kein anderes Projektkursfach, ein Vertiefungskursfach oder ein Ersatzfach aus dem literarisch künstlerischen Bereich haben.",
+			null),
+
+	/** BelegungsfehlerArt PF_20 */
+	GOST30_PF_20("PF_20", GostBelegungsfehlerArt.BELEGUNG,
+			"Ein Projektkurses muss in den beiden Halbjahren der Q2 gewählt werden.",
+			null),
+
+	/** BelegungsfehlerArt PF_21 */
+	GOST30_PF_21("PF_21", GostBelegungsfehlerArt.BELEGUNG,
+			"Es muss genau ein Projektkurses gewählt werden.",
+			null),
+
+	/** BelegungsfehlerArt PF_22 */
+	GOST30_PF_22("PF_22", GostBelegungsfehlerArt.BELEGUNG,
+			"Ein Projektkurs muss ein Referenzfächer haben.",
+			null),
+
+	/** BelegungsfehlerArt PF_23 */
+	GOST30_PF_23("PF_23", GostBelegungsfehlerArt.BELEGUNG,
+			"Ein Projektkurs kann nur belegt werden, wenn eines seiner Referenzfächer in der EF und Q1 gewählt wurde.",
+			null),
+
+	/** BelegungsfehlerArt PF_24 */
+	GOST30_PF_24("PF_24", GostBelegungsfehlerArt.BELEGUNG,
+			"Ein Projektkurs kann nur belegt werden, wenn sein Referenzfach in der Q1 schriftlich gewählt wurde.",
+			null),
+
+	/** BelegungsfehlerArt PF_25 */
+	GOST30_PF_25("PF_25", GostBelegungsfehlerArt.BELEGUNG,
+			"Ein Projektkurs kann nur belegt werden, wenn sein Referenzfach ein gültiges Fach in der gymnasialen Oberstufe ist.",
+			null),
+
+	/** BelegungsfehlerArt RE_10 */
+	GOST30_RE_10("RE_10", GostBelegungsfehlerArt.BELEGUNG,
+			"Religionslehre muss wenigstens von EF.1-Q1.2 durchgehend belegt werden. Als Ersatz kann Philosophie dienen, sofern Philosophie nicht die einzige von EF.1 bis Q2.2 durchgehend belegte Gesellschaftswissenschaft ist. In diesem Fall muss ein weiteres Fach der Gesellschaftswissenschaften als Religionsersatz dienen.",
+			"Ein Religionskurs muss in EF.1 belegt werden. Als Ersatz kann Philosophie belegt werden, sofern eine weitere Gesellschaftswissenschaft bis zum Abitur belegt wird."),
+
+	/** BelegungsfehlerArt SP_10 */
+	GOST30_SP_10("SP_10", GostBelegungsfehlerArt.BELEGUNG,
+			"Sport muss von EF.1 bis Q2.2 belegt werden.",
+			"Sport muss in EF.1 belegt werden."),
+
+	/** BelegungsfehlerArt SW_1_INFO */
+	GOST30_SW_1_INFO("SW_1_INFO", GostBelegungsfehlerArt.HINWEIS,
+			"Programmfehler: Dieser Hinweis ist für eine Gesamtbelegprüfung der Sek II nicht vorgesehen!",
+			"Wird Sozialwissenschaften nicht in EF.1 belegt, so muss Sozialwissenschaften in der Qualifikationsphase als Zusatzkurs gewählt werden."),
+
+	/** BelegungsfehlerArt SW_10 */
+	GOST30_SW_10("SW_10", GostBelegungsfehlerArt.BELEGUNG,
+			"Sozialwissenschaften muss von EF.1 bis wenigstens Q1.2 oder als Zusatzkurs belegt werden.",
+			null),
+
+	/** BelegungsfehlerArt VF_11 */
+	GOST30_VF_11("VF_11", GostBelegungsfehlerArt.BELEGUNG,
+			"In der Qualifikationsphase können maximal vier Vertiefungskurse belegt werden.",
+			null),
+
+	/** BelegungsfehlerArt ZK_10 */
+	GOST30_ZK_10("ZK_10", GostBelegungsfehlerArt.BELEGUNG,
+			"Ein Zusatzkurs in Geschichte oder Sozialwissenschaften kann nur angewählt werden, wenn das Fach im vorangegangenen Halbjahr nicht belegt wurde.",
+			null),
+
+	/** BelegungsfehlerArt ZK_12 */
+	GOST30_ZK_12("ZK_12", GostBelegungsfehlerArt.BELEGUNG,
+			"Zusatzkurse dürfen maximal in zwei aufeinanderfolgenden Halbjahren belegt werden.",
+			null),
+
+	/** BelegungsfehlerArt ZK_13 */
+	GOST30_ZK_13("ZK_13", GostBelegungsfehlerArt.BELEGUNG,
+			"Zusatzkurse dürfen nur einmal pro Fach belegt werden und können nicht in einem bilingualen Fach gewählt werden.",
+			null),
+
+	/** BelegungsfehlerArt ZK_14 */
+	GOST30_ZK_14("ZK_14", GostBelegungsfehlerArt.SCHULSPEZIFISCH,
+			"Zusatzkurse in Geschichte werden in diesem Jahrgang nicht angeboten.",
+			null),
+
+	/** BelegungsfehlerArt ZK_15 */
+	GOST30_ZK_15("ZK_15", GostBelegungsfehlerArt.SCHULSPEZIFISCH,
+			"Zusatzkurse in Sozialwissenschaften werden in diesem Jahrgang nicht angeboten.",
+			null),
+
+	/** BelegungsfehlerArt ZK_16 */
+	GOST30_ZK_16("ZK_16", GostBelegungsfehlerArt.SCHULSPEZIFISCH,
+			"Der Beginn des Zusatzkurses in Geschichte entspricht nicht der Einstellung in diesem Jahrgang.",
+			null),
+
+	/** BelegungsfehlerArt ZK_17 */
+	GOST30_ZK_17("ZK_17", GostBelegungsfehlerArt.SCHULSPEZIFISCH,
+			"Der Beginn des Zusatzkurses in Sozialwissenschaften entspricht nicht der Einstellung in diesem Jahrgang.",
+			null),
+
+	/** BelegungsfehlerArt ZK_18 */
+	GOST30_ZK_18("ZK_18", GostBelegungsfehlerArt.BELEGUNG,
+			"Im Anschluss an zwei Zusatzkursbelegungen darf das Fach nicht weiter belegt werden.",
+			null),
+
+	/** BelegungsfehlerArt KOMBI_1 */
+	GOST30_KOMBI_1("KOMBI_1", GostBelegungsfehlerArt.SCHULSPEZIFISCH,
+			"Es wurde eine in diesem Jahrgang nicht erlaubte Fächerkombination gewählt.",
+			"Es wurde eine in diesem Jahrgang nicht erlaubte Fächerkombination gewählt."),
+
+	/** BelegungsfehlerArt KOMBI_2 */
+	GOST30_KOMBI_2("KOMBI_2", GostBelegungsfehlerArt.SCHULSPEZIFISCH,
+			"Es wurde eine in diesem Jahrgang geforderte Fächerkombination nicht erfüllt.",
+			"Es wurde eine in diesem Jahrgang geforderte Fächerkombination nicht erfüllt."),
+
+	/** BelegungsfehlerArt WAEHLBARKEIT_0 */
+	GOST30_WAEHLBARKEIT_0("WAEHLBARKEIT_0", GostBelegungsfehlerArt.SCHULSPEZIFISCH,
+			"Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht als Fach der gymnsialen Oberstufe vorhanden ist.",
+			"Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht als Fach der gymnsialen Oberstufe vorhanden ist."),
+
+	/** BelegungsfehlerArt WAEHLBARKEIT_1 */
+	GOST30_WAEHLBARKEIT_1("WAEHLBARKEIT_1", GostBelegungsfehlerArt.SCHULSPEZIFISCH,
+			"Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht wählbar ist.",
+			"Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht wählbar ist."),
+
+	/** BelegungsfehlerArt WAEHLBARKEIT_2 */
+	GOST30_WAEHLBARKEIT_2("WAEHLBARKEIT_2", GostBelegungsfehlerArt.SCHULSPEZIFISCH,
+			"Es wurde ein Fach als Grundkurs im Abitur gewählt, welches in diesem Jahrgang nicht als Grundkurs im Abitur wählbar ist.",
+			"Es wurde ein Fach als Grundkurs im Abitur gewählt, welches in diesem Jahrgang nicht als Grundkurs im Abitur wählbar ist."),
+
+	/** BelegungsfehlerArt WAEHLBARKEIT_3 */
+	GOST30_WAEHLBARKEIT_3("WAEHLBARKEIT_3", GostBelegungsfehlerArt.SCHULSPEZIFISCH,
+			"Es wurde ein Fach als Leistungskurs im Abitur gewählt, welches in diesem Jahrgang nicht als Leistungskurs im Abitur wählbar ist.",
+			"Es wurde ein Fach als Leistungskurs im Abitur gewählt, welches in diesem Jahrgang nicht als Leistungskurs im Abitur wählbar ist."),
+
+	// ------------------------------------ APO-Gost bis Abi 2029
+
 	/** BelegungsfehlerArt ABI_10: Unter den vier Abiturfächern müssen zwei der Fächer Deutsch, Mathematik oder Fremdsprache sein. */
 	ABI_10("ABI_10", GostBelegungsfehlerArt.BELEGUNG,
 			"Unter den vier Abiturfächern müssen zwei der Fächer Deutsch, Mathematik oder Fremdsprache sein.",
-			null),
-
-	/** Experimenteller Code - BelegungsfehlerArt ABI_10_2: Unter den fünf Abiturfächern müssen zwei der Fächer Deutsch, Mathematik oder Fremdsprache sein. */
-	ABI_10_2("ABI_10_2", GostBelegungsfehlerArt.BELEGUNG,
-			"Unter den fünf Abiturfächern müssen zwei der Fächer Deutsch, Mathematik oder Fremdsprache sein.",
 			null),
 
 	/** BelegungsfehlerArt ABI_11 */
@@ -52,19 +578,9 @@ public enum GostBelegungsfehler {
 			"Sport kann nur als 2. oder als 4. Abiturfach gewählt werden.",
 			null),
 
-	/** Experimenteller Code - BelegungsfehlerArt ABI_15_2 */
-	ABI_15_2("ABI_15_2", GostBelegungsfehlerArt.BELEGUNG,
-			"Sport kann nur als 2., 4. oder 5. Abiturfach gewählt werden.",
-			null),
-
 	/** BelegungsfehlerArt ABI_16 */
 	ABI_16("ABI_16", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
 			"Fächer, die keine Abiturfächer sind, müssen in Q2.2 mündlich belegt werden.",
-			null),
-
-	/** BelegungsfehlerArt ABI_16 */
-	ABI_16_2("ABI_16_2", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
-			"Fächer, die keine Abiturfächer oder Projektkursfächer sind, müssen in Q2.2 mündlich belegt werden.",
 			null),
 
 	/** BelegungsfehlerArt ABI_17 */
@@ -80,11 +596,6 @@ public enum GostBelegungsfehler {
 	/** BelegungsfehlerArt ABI_19: Unter den vier Abiturfächern müssen zwei der Fächer Deutsch, Mathematik oder Fremdsprache sein. Dies kann nicht durch zwei Fremdsprachen erfüllt werden. */
 	ABI_19("ABI_19", GostBelegungsfehlerArt.BELEGUNG,
 			"Unter den vier Abiturfächern müssen zwei der Fächer Deutsch, Mathematik oder Fremdsprache sein. Dies kann nicht durch zwei Fremdsprachen erfüllt werden.",
-			null),
-
-	/** Experimenteller Code - BelegungsfehlerArt ABI_19_2 */
-	ABI_19_2("ABI_19_2", GostBelegungsfehlerArt.BELEGUNG,
-			"Unter den fünf Abiturfächern müssen zwei der Fächer Deutsch, Mathematik oder Fremdsprache sein. Dies kann nicht durch zwei Fremdsprachen erfüllt werden.",
 			null),
 
 	/** BelegungsfehlerArt ABI_21: Es kann nur ein Fach 1. Abiturfach sein. */
@@ -107,37 +618,6 @@ public enum GostBelegungsfehler {
 			"Es kann nur ein Fach 4. Abiturfach sein.",
 			null),
 
-	/** Experimenteller Code - BelegungsfehlerArt ABI_25: Es kann nur ein Fach 5. Abiturfach sein. */
-	ABI_25("ABI_25", GostBelegungsfehlerArt.BELEGUNG,
-			"Es kann nur ein Fach 5. Abiturfach sein.",
-			null),
-
-	/** Experimenteller Code - BelegungsfehlerArt ABI_26_2 */
-	ABI_26_2("ABI_26_2", GostBelegungsfehlerArt.BELEGUNG,
-			"Ein Projektkurs kann nur als 5. Abiturfach gewählt werden, wenn sein Referenzfach in der EF und Q1 belegt wurde.",
-			null),
-
-	/** Experimenteller Code - BelegungsfehlerArt ABI_27_2 */
-	ABI_27_2("ABI_27_2", GostBelegungsfehlerArt.BELEGUNG,
-			"Ein Projektkurs kann nur als 5. Abiturfach gewählt werden, wenn sein Referenzfach in der Q1 schriftlich belegt wurde.",
-			null),
-
-	/** Experimenteller Code - BelegungsfehlerArt ABI_28_2 */
-	ABI_28_2("ABI_28_2", GostBelegungsfehlerArt.BELEGUNG,
-			"Ein Projektkurs kann nur als 5. Abiturfach gewählt werden, wenn sein Referenzfach nicht als Abiturfach gewählt wurde.",
-			null),
-
-	/** Experimenteller Code - BelegungsfehlerArt ABI_29_2 */
-	ABI_29_2("ABI_29_2", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
-			"Das 5. Abiturfach muss als Grundkurs von Q1.1 bis Q2.1 schriftlich belegt sein.",
-			null),
-
-	/** Experimenteller Code - BelegungsfehlerArt ABI_30_2 */
-	ABI_30_2("ABI_30_2", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
-			"In Q2.2 muss das 5. Abiturfach mündlich belegt sein.",
-			null),
-
-
 	/** BelegungsfehlerArt ABI_18: In der Einführungsphase müssen in jedem Halbjahr mindestens 10 Fächer belegt werden. Vertiefungskurse werden bei der Zählung nicht berücksichtigt.
 	 *  <br>In EF.1 müssen mindestens 10 Kurse belegt werden. Bei der Kurszählung werden Vertiefungskurse nicht mitgezählt. */
 	ANZ_10("ANZ_10", GostBelegungsfehlerArt.BELEGUNG,
@@ -152,11 +632,6 @@ public enum GostBelegungsfehler {
 	/** BelegungsfehlerArt ANZ_12 */
 	ANZ_12("ANZ_12", GostBelegungsfehlerArt.BELEGUNG,
 			"In der Qualifikationsphase müssen mindestens 38 anrechenbare Kurse belegt werden.",
-			null),
-
-	/** Experimenteller Code - BelegungsfehlerArt ANZ_12_2 */
-	ANZ_12_2("ANZ_12_2", GostBelegungsfehlerArt.BELEGUNG,
-			"In der Qualifikationsphase müssen mindestens 36 anrechenbare Kurse belegt werden.",
 			null),
 
 	/** BelegungsfehlerArt ANZ_13 */
@@ -232,11 +707,6 @@ public enum GostBelegungsfehler {
 	/** BelegungsfehlerArt E1BEL_10 */
 	E1BEL_10("E1BEL_10", GostBelegungsfehlerArt.BELEGUNG,
 			"Bis auf Literatur, vokal- und instrumentalpraktische Kurse, Zusatzkurse, Vertiefungsfächer und Projektkurse können keine Fächer hinzugewählt werden, die nicht schon ab EF.1 belegt wurden.",
-			null),
-
-	/** Experimenteller Code - BelegungsfehlerArt E1BEL_10_2 */
-	E1BEL_10_2("E1BEL_10_2", GostBelegungsfehlerArt.BELEGUNG,
-			"Bis auf Literatur, Zusatzkurse, Vertiefungsfächer und Projektkurse können keine Fächer hinzugewählt werden, die nicht schon ab EF.1 belegt wurden.",
 			null),
 
 	/** BelegungsfehlerArt FS_10 */
@@ -419,11 +889,6 @@ public enum GostBelegungsfehler {
 			"Die Abiturfächer müssen alle drei Aufgabenfelder abdecken. Insgesamt sind vier Abiturfächer zu belegen.",
 			null),
 
-	/** Experimenteller Code - BelegungsfehlerArt LK1_13_2 */
-	LK1_13_2("LK1_13_2", GostBelegungsfehlerArt.BELEGUNG,
-			"Die Abiturfächer müssen alle drei Aufgabenfelder abdecken. Insgesamt sind fünf Abiturfächer zu belegen.",
-			null),
-
 	/** BelegungsfehlerArt M_10 */
 	M_10("M_10", GostBelegungsfehlerArt.BELEGUNG,
 			"Mathematik muss von EF.1 bis Q2.2 belegt werden.",
@@ -441,7 +906,7 @@ public enum GostBelegungsfehler {
 
 	/** BelegungsfehlerArt NW_11 */
 	NW_11("NW_11", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
-			"In EF.1 und EF.2 muss mindestens eine klassische Naturwissenschaft schriftlich belegt sein.",
+			"In EF.1 und EF.2 muss mindestens eine klassische Naturwissenschaft (Physik, Biologie, Chemie) schriftlich belegt sein.",
 			"Mindestens eines der Fächer Physik, Chemie oder Biologie muss in EF.1 schriftlich belegt werden."),
 
 	/** BelegungsfehlerArt NW_FS_10 */
@@ -504,11 +969,6 @@ public enum GostBelegungsfehler {
 			"Ein Projektkurs soll nur im Ausnahmefall abgewählt werden. Bei einem abgewählten Projektkurs werden lediglich die Wochenstunden auf die Laufbahn angerechnet.",
 			null),
 
-	/** Experimenteller Code - BelegungsfehlerArt PF_17_2 */
-	PF_17_2("PF_17_2", GostBelegungsfehlerArt.HINWEIS,
-			"Ein Projektkurs muss immer in zwei aufeinander folgenden Halbjahren gewählt werden.",
-			null),
-
 	/** BelegungsfehlerArt PF_18 */
 	PF_18("PF_18", GostBelegungsfehlerArt.BELEGUNG,
 			"Ein Projektkurs kann nicht in der Q2.2 beginnen.",
@@ -519,44 +979,14 @@ public enum GostBelegungsfehler {
 			"Ein Projektkurs kann als Leitfach kein anderes Projektkursfach, ein Vertiefungskursfach oder ein Ersatzfach aus dem literarisch künstlerischen Bereich haben.",
 			null),
 
-	/** BelegungsfehlerArt PF_19 */
-	PF_19_2("PF_19_2", GostBelegungsfehlerArt.BELEGUNG,
-			"Ein Projektkurs kann als Referenzfach kein anderes Projektkursfach, ein Vertiefungskursfach oder ein Ersatzfach aus dem literarisch künstlerischen Bereich haben.",
-			null),
-
-	/** Experimenteller Code - BelegungsfehlerArt PF_20_2 */
-	PF_20_2("PF_20_2", GostBelegungsfehlerArt.BELEGUNG,
-			"Ein Projektkurses muss in den beiden Halbjahren der Q2 gewählt werden.",
-			null),
-
-	/** Experimenteller Code - BelegungsfehlerArt PF_21_2 */
-	PF_21_2("PF_21_2", GostBelegungsfehlerArt.BELEGUNG,
-			"Es muss genau ein Projektkurses gewählt werden.",
-			null),
-
-	/** Experimenteller Code - BelegungsfehlerArt PF_22_2 */
-	PF_22_2("PF_22_2", GostBelegungsfehlerArt.BELEGUNG,
-			"Ein Projektkurs muss ein Referenzfächer haben.",
-			null),
-
-	/** Experimenteller Code - BelegungsfehlerArt PF_23_2 */
-	PF_23_2("PF_23_2", GostBelegungsfehlerArt.BELEGUNG,
-			"Ein Projektkurs kann nur belegt werden, wenn eines seiner Referenzfächer in der EF und Q1 gewählt wurde.",
-			null),
-
-	/** Experimenteller Code - BelegungsfehlerArt PF_24_2 */
-	PF_24_2("PF_24_2", GostBelegungsfehlerArt.BELEGUNG,
-			"Ein Projektkurs kann nur belegt werden, wenn sein Referenzfach in der Q1 schriftlich gewählt wurde.",
-			null),
-
 	/** BelegungsfehlerArt PF_25 */
-	PF_25("PF_25_2", GostBelegungsfehlerArt.BELEGUNG,
-			"Ein Projektkurs kann nur belegt werden, wenn sein Referenzfach ein gültiges Fach in der gymnasialen Oberstufe ist.",
+	PF_25("PF_25", GostBelegungsfehlerArt.BELEGUNG,
+			"Ein Projektkurs kann nur belegt werden, wenn sein Leitfach ein gültiges Fach in der gymnasialen Oberstufe ist.",
 			null),
 
 	/** BelegungsfehlerArt RE_10 */
 	RE_10("RE_10", GostBelegungsfehlerArt.BELEGUNG,
-			"Religionslehre muss wenigstens von EF.1-Q1.2 durchgehend belegt werden. Als Ersatz kann Philosophie dienen, sofern Philosophie nicht die einzige von EF.1 bis Q2.2 durchgehend belegte Gesellschaftswissenschaft ist. In diesen Fällen muss ein weiteres Fach der Gesellschaftswissenschaften als Religionsersatz dienen.",
+			"Religionslehre muss wenigstens von EF.1-Q1.2 durchgehend belegt werden. Als Ersatz kann Philosophie dienen, sofern Philosophie nicht die einzige von EF.1 bis Q2.2 durchgehend belegte Gesellschaftswissenschaft ist. In diesem Fall muss ein weiteres Fach der Gesellschaftswissenschaften als Religionsersatz dienen.",
 			"Ein Religionskurs muss in EF.1 belegt werden. Als Ersatz kann Philosophie belegt werden, sofern eine weitere Gesellschaftswissenschaft bis zum Abitur belegt wird."),
 
 	/** BelegungsfehlerArt RE_11 */
@@ -597,11 +1027,6 @@ public enum GostBelegungsfehler {
 	/** BelegungsfehlerArt VF_11 */
 	VF_11("VF_11", GostBelegungsfehlerArt.BELEGUNG,
 			"In der Qualifikationsphase können maximal zwei Vertiefungskurse belegt werden.",
-			null),
-
-	/** BelegungsfehlerArt VF_11_2 */
-	VF_11_2("VF_11_2", GostBelegungsfehlerArt.BELEGUNG,
-			"In der Qualifikationsphase können maximal vier Vertiefungskurse belegt werden.",
 			null),
 
 	/** BelegungsfehlerArt WST_10 */

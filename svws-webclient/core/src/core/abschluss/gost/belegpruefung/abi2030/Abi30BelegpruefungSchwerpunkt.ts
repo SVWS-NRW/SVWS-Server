@@ -32,14 +32,14 @@ export class Abi30BelegpruefungSchwerpunkt extends GostBelegpruefung {
 			return;
 		}
 		if (pruefungSprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) {
-			this.addFehler(GostBelegungsfehler.NW_FS_12_INFO);
+			this.addFehler(GostBelegungsfehler.GOST30_NW_FS_12_INFO);
 			return;
 		}
 		if ((pruefungNawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefungNawi.getAnzahlDurchgehendSchritflichBelegt() >= 1)) {
-			this.addFehler(GostBelegungsfehler.NW_FS_13_INFO);
+			this.addFehler(GostBelegungsfehler.GOST30_NW_FS_13_INFO);
 			return;
 		}
-		this.addFehler(GostBelegungsfehler.NW_FS_10);
+		this.addFehler(GostBelegungsfehler.GOST30_NW_FS_10);
 	}
 
 	protected pruefeGesamt(): void {
@@ -49,14 +49,14 @@ export class Abi30BelegpruefungSchwerpunkt extends GostBelegpruefung {
 			return;
 		}
 		if (pruefungSprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) {
-			this.addFehler(GostBelegungsfehler.NW_FS_12_INFO);
+			this.addFehler(GostBelegungsfehler.GOST30_NW_FS_12_INFO);
 			return;
 		}
 		if ((pruefungNawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefungNawi.getAnzahlDurchgehendSchritflichBelegt() >= 1)) {
-			this.addFehler(GostBelegungsfehler.NW_FS_13_INFO);
+			this.addFehler(GostBelegungsfehler.GOST30_NW_FS_13_INFO);
 			return;
 		}
-		this.addFehler(GostBelegungsfehler.NW_FS_10);
+		this.addFehler(GostBelegungsfehler.GOST30_NW_FS_10);
 	}
 
 	transpilerCanonicalName(): string {

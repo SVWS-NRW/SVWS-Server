@@ -51,11 +51,11 @@ export class Abi30BelegpruefungFachkombinationen extends GostBelegpruefung {
 			}
 			if ((kombi.kursart1 === null) || (GostKursart.fromKuerzel(belegung1Halbjahr.kursartKuerzel) as unknown === GostKursart.fromKuerzel(kombi.kursart1) as unknown)) {
 				if ((kombi.typ === GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue()) && Abi30BelegpruefungFachkombinationen.pruefeHatBelegungFach2InHalbjahr(kombi, belegung2, halbjahr)) {
-					this.addFehler(GostBelegungsfehler.KOMBI_1);
+					this.addFehler(GostBelegungsfehler.GOST30_KOMBI_1);
 					return;
 				} else
 					if ((kombi.typ === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue()) && !Abi30BelegpruefungFachkombinationen.pruefeHatBelegungFach2InHalbjahr(kombi, belegung2, halbjahr)) {
-						this.addFehler(GostBelegungsfehler.KOMBI_2);
+						this.addFehler(GostBelegungsfehler.GOST30_KOMBI_2);
 						return;
 					}
 			}

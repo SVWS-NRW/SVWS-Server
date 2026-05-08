@@ -78,11 +78,11 @@ public final class Abi30BelegpruefungFachkombinationen extends GostBelegpruefung
 			if ((kombi.kursart1 == null) || (GostKursart.fromKuerzel(belegung1Halbjahr.kursartKuerzel) == GostKursart.fromKuerzel(kombi.kursart1))) {
 				// Die Fachkombinations-Regel wurde durch dir Fachbelegung des ersten Faches aktiviert - Prüfe nun auf eine Regelverletzung
 				if ((kombi.typ == GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue()) && pruefeHatBelegungFach2InHalbjahr(kombi, belegung2, halbjahr)) {
-					addFehler(GostBelegungsfehler.KOMBI_1);
+					addFehler(GostBelegungsfehler.GOST30_KOMBI_1);
 					return;
 				} else if ((kombi.typ == GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue())
 						&& !pruefeHatBelegungFach2InHalbjahr(kombi, belegung2, halbjahr)) {
-					addFehler(GostBelegungsfehler.KOMBI_2);
+					addFehler(GostBelegungsfehler.GOST30_KOMBI_2);
 					return;
 				}
 			}

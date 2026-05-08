@@ -51,13 +51,13 @@ public final class Abi30BelegpruefungDeutsch extends GostBelegpruefung {
 	protected void pruefeEF1() {
 		// Prüfe, ob Deutsch überhaupt in EF.1 belegt wurde
 		if ((_deutsch == null) || !manager.pruefeBelegungMitSchriftlichkeitEinzeln(_deutsch, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1)) {
-			addFehler(GostBelegungsfehler.D_10);
+			addFehler(GostBelegungsfehler.GOST30_D_10);
 			return;
 		}
 
 		// EF1-Prüfung Punkt 2: Prüfe, ob Deutsch in der EF1 schriftlich belegt wurde
 		if (!manager.pruefeBelegungMitSchriftlichkeitEinzeln(_deutsch, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) {
-			addFehler(GostBelegungsfehler.D_11);
+			addFehler(GostBelegungsfehler.GOST30_D_11);
 		}
 	}
 
@@ -65,19 +65,19 @@ public final class Abi30BelegpruefungDeutsch extends GostBelegpruefung {
 	protected void pruefeGesamt() {
 		// Prüfe, ob Deutsch überhaupt belegt wurde
 		if (_deutsch == null) {
-			addFehler(GostBelegungsfehler.D_10);
+			addFehler(GostBelegungsfehler.GOST30_D_10);
 			return;
 		}
 
 		// Gesamtprüfung Punkt 2: Prüfe, ob Deutsch von EF.1 bis Q2.2 belegt wurde
 		if (!manager.pruefeBelegung(_deutsch, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
-			addFehler(GostBelegungsfehler.D_10);
+			addFehler(GostBelegungsfehler.GOST30_D_10);
 		}
 
 		// Gesamtprüfung Punkt 25: Prüfe, ob Deutsch von EF.1 bis Q2.1 schriftlich belegt wurde
 		if (!manager.pruefeBelegungMitSchriftlichkeit(_deutsch, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11,
 				GostHalbjahr.Q12, GostHalbjahr.Q21)) {
-			addFehler(GostBelegungsfehler.D_11);
+			addFehler(GostBelegungsfehler.GOST30_D_11);
 		}
 	}
 

@@ -31,7 +31,7 @@ export class Abi30BelegpruefungLatinum extends GostBelegpruefung {
 
 	protected pruefeEF1(): void {
 		if (SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerEndeSekI(this.manager.getSprachendaten(), "L") && (!this.manager.pruefeBelegung(this.latein, GostHalbjahr.EF1))) {
-			this.addFehler(GostBelegungsfehler.L_10_INFO);
+			this.addFehler(GostBelegungsfehler.GOST30_L_10_INFO);
 		}
 	}
 
@@ -39,11 +39,11 @@ export class Abi30BelegpruefungLatinum extends GostBelegpruefung {
 		if (SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerEndeSekI(this.manager.getSprachendaten(), "L")) {
 			if (SprachendatenUtils.hatSprachbelegungMitMin4JahrenDauerEndeSekI(this.manager.getSprachendaten(), "L")) {
 				if (!this.manager.pruefeBelegung(this.latein, GostHalbjahr.EF1, GostHalbjahr.EF2)) {
-					this.addFehler(GostBelegungsfehler.L_10_INFO);
+					this.addFehler(GostBelegungsfehler.GOST30_L_10_INFO);
 				}
 			} else {
 				if (!this.manager.pruefeBelegung(this.latein, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
-					this.addFehler(GostBelegungsfehler.L_11_INFO);
+					this.addFehler(GostBelegungsfehler.GOST30_L_11_INFO);
 				}
 			}
 		}

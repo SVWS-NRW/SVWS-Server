@@ -176,17 +176,17 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 							istAnrechenbar = !istMusikErsatzfach;
 							istAnrechenbarHalbjahr = !istMusikErsatzfach;
 							if (!istAnrechenbar && (pruefungs_art == GostBelegpruefungsArt.GESAMT)) {
-								addFehler(GostBelegungsfehler.ANZ_21_INFO);
+								addFehler(GostBelegungsfehler.GOST30_ANZ_21_INFO);
 							}
 						} else if (blockIHatMusikGKAbitur) {
 							istAnrechenbar = (blockIAnzahlMusik <= 6);
 							if (!istAnrechenbar && (pruefungs_art == GostBelegpruefungsArt.GESAMT)) {
-								addFehler(GostBelegungsfehler.ANZ_22_INFO);
+								addFehler(GostBelegungsfehler.GOST30_ANZ_22_INFO);
 							}
 						} else {
 							istAnrechenbar = (blockIAnzahlMusik <= 5);
 							if (!istAnrechenbar && (pruefungs_art == GostBelegpruefungsArt.GESAMT)) {
-								addFehler(GostBelegungsfehler.ANZ_23_INFO);
+								addFehler(GostBelegungsfehler.GOST30_ANZ_23_INFO);
 							}
 						}
 					}
@@ -194,7 +194,7 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 						blockIAnzahlErsatzfach++;
 						final boolean istAnrechenbarErsatzfach = (blockIAnzahlErsatzfach <= 2);
 						if (!istAnrechenbarErsatzfach && (pruefungs_art == GostBelegpruefungsArt.GESAMT)) {
-							addFehler(GostBelegungsfehler.ANZ_20_INFO);
+							addFehler(GostBelegungsfehler.GOST30_ANZ_20_INFO);
 						}
 						istAnrechenbar = istAnrechenbar && istAnrechenbarErsatzfach;
 					}
@@ -310,7 +310,7 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 		}
 		final Integer kurszahlGK = kurszahlenGrundkurse.get(GostHalbjahr.EF1);
 		if ((kurszahlGK == null) || (kurszahlGK < 10)) {
-			addFehler(GostBelegungsfehler.ANZ_10);
+			addFehler(GostBelegungsfehler.GOST30_ANZ_10);
 		}
 	}
 
@@ -321,9 +321,9 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 		pruefeGrundkurseEF();
 		pruefeGrundkurseQ();
 		pruefeLeistungskurse();
-		pruefeVertiefungskurseEF();
 		pruefeVertiefungskurseQ();
 		pruefeAnrechenbareKurse();
+		pruefeKursanzahl();
 	}
 
 
@@ -339,7 +339,7 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 		final Integer kurszahlGK_EF1 = kurszahlenGrundkurse.get(GostHalbjahr.EF1);
 		final Integer kurszahlGK_EF2 = kurszahlenGrundkurse.get(GostHalbjahr.EF2);
 		if ((kurszahlGK_EF1 == null) || (kurszahlGK_EF1 < 10) || (kurszahlGK_EF2 == null) || (kurszahlGK_EF2 < 10)) {
-			addFehler(GostBelegungsfehler.ANZ_10);
+			addFehler(GostBelegungsfehler.GOST30_ANZ_10);
 		}
 	}
 
@@ -357,7 +357,7 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 		for (final GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
 			final Integer kurszahlGK = kurszahlenGrundkurse.get(halbjahr);
 			if ((kurszahlGK == null) || (kurszahlGK < 7)) {
-				addFehler(GostBelegungsfehler.GKS_10);
+				addFehler(GostBelegungsfehler.GOST30_GKS_10);
 			}
 		}
 	}
@@ -369,7 +369,7 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 	 */
 	private void pruefeLeistungskurse() {
 		if (anzahlLKFaecher != 2) {
-			addFehler(GostBelegungsfehler.LK_10);
+			addFehler(GostBelegungsfehler.GOST30_LK_10);
 		}
 		if (kurszahlenLeistungskurse == null) {
 			throw new NullPointerException();
@@ -378,29 +378,14 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 			final Integer kurszahlLK = kurszahlenLeistungskurse.get(halbjahr);
 			if (kurszahlLK != null) {
 				if (kurszahlLK < 2) {
-					addFehler(GostBelegungsfehler.LK_10);
+					addFehler(GostBelegungsfehler.GOST30_LK_10);
 				} else if (kurszahlLK > 2) {
-					addFehler(GostBelegungsfehler.LK_11);
+					addFehler(GostBelegungsfehler.GOST30_LK_11);
 				}
 			}
 		}
 	}
 
-
-
-	/**
-	 * Gesamtprüfung Punkt 62:
-	 * Ist die Summe aller belegten Vertiefungskurse in der EF kleiner gleich 4?
-	 */
-	private void pruefeVertiefungskurseEF() {
-		if (kurszahlenEinfuehrungsphase == null) {
-			throw new NullPointerException();
-		}
-		final Integer kurszahlEF_VTF = kurszahlenEinfuehrungsphase.get(GostKursart.VTF);
-		if ((kurszahlEF_VTF != null) && (kurszahlEF_VTF > 4)) {
-			addFehler(GostBelegungsfehler.VF_10);
-		}
-	}
 
 
 	/**
@@ -413,7 +398,7 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 		}
 		final Integer kurszahlQ_VTF = kurszahlenQualifikationsphase.get(GostKursart.VTF);
 		if ((kurszahlQ_VTF != null) && (kurszahlQ_VTF > 4)) {
-			addFehler(GostBelegungsfehler.VF_11_2);
+			addFehler(GostBelegungsfehler.GOST30_VF_11);
 		}
 	}
 
@@ -424,7 +409,17 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 	 */
 	private void pruefeAnrechenbareKurse() {
 		if (blockIAnzahlAnrechenbar < 36) {
-			addFehler(GostBelegungsfehler.ANZ_12_2);
+			addFehler(GostBelegungsfehler.GOST30_ANZ_12);
+		}
+	}
+
+
+	/**
+	 * Ist die Anzahl der belegten Kurse für Block I des Abiturs (Qualifikationsphase) gleich 40?
+	 */
+	private void pruefeKursanzahl() {
+		if (blockIAnzahlGrundkurse + blockIAnzahlLeistungskurse != 40) {
+			addFehler(GostBelegungsfehler.GOST30_ANZ_13);
 		}
 	}
 

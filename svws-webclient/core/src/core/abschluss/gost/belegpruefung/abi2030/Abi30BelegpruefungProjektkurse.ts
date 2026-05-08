@@ -70,7 +70,7 @@ export class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 			this.pruefeBelegungLeitfaecher();
 		}
 		if (this.manager.istProjektKursBesondereLernleistung()) {
-			this.addFehler((this.projektkurs !== null) ? GostBelegungsfehler.PF_16_INFO : GostBelegungsfehler.PF_15);
+			this.addFehler((this.projektkurs !== null) ? GostBelegungsfehler.GOST30_PF_16_INFO : GostBelegungsfehler.GOST30_PF_15);
 		}
 	}
 
@@ -85,7 +85,7 @@ export class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 				}
 				const halbjahr: GostHalbjahr | null = GostHalbjahr.fromKuerzel(belegungHalbjahr.halbjahrKuerzel);
 				if ((halbjahr as unknown === GostHalbjahr.EF1 as unknown) || (halbjahr as unknown === GostHalbjahr.EF2 as unknown)) {
-					this.addFehler(GostBelegungsfehler.PF_10);
+					this.addFehler(GostBelegungsfehler.GOST30_PF_10);
 				}
 			}
 		}
@@ -96,11 +96,11 @@ export class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 	 */
 	private pruefeBelegung(): void {
 		if (this.projektkursBelegung.isEmpty()) {
-			this.addFehler(GostBelegungsfehler.PF_21_2);
+			this.addFehler(GostBelegungsfehler.GOST30_PF_21);
 			return;
 		}
 		if (this.projektkursBelegung.size() > 1) {
-			this.addFehler(GostBelegungsfehler.PF_14);
+			this.addFehler(GostBelegungsfehler.GOST30_PF_14);
 			return;
 		}
 		const fachbelegung: AbiturFachbelegung | null = this.projektkursBelegung.get(0);
@@ -108,11 +108,11 @@ export class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 			return;
 		}
 		if ((fachbelegung.belegungen[GostHalbjahr.Q11.id] !== null) || (fachbelegung.belegungen[GostHalbjahr.Q12.id] !== null)) {
-			this.addFehler(GostBelegungsfehler.PF_20_2);
+			this.addFehler(GostBelegungsfehler.GOST30_PF_20);
 			return;
 		}
 		if ((fachbelegung.belegungen[GostHalbjahr.Q21.id] === null) || (fachbelegung.belegungen[GostHalbjahr.Q22.id] === null)) {
-			this.addFehler(GostBelegungsfehler.PF_20_2);
+			this.addFehler(GostBelegungsfehler.GOST30_PF_20);
 			return;
 		}
 		this.projektkurs = fachbelegung;
@@ -134,7 +134,7 @@ export class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 		const leitfach1: AbiturFachbelegung | null = this.manager.getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
 		const leitfach2: AbiturFachbelegung | null = this.manager.getFachbelegungByKuerzel(fach.projektKursLeitfach2Kuerzel);
 		if ((leitfach1 === null) && (leitfach2 === null)) {
-			this.addFehler(GostBelegungsfehler.PF_22_2);
+			this.addFehler(GostBelegungsfehler.GOST30_PF_22);
 			return;
 		}
 		let hatReferenzfach1Belegung: boolean = false;
@@ -142,12 +142,12 @@ export class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 		if (leitfach1 !== null) {
 			const lf: GostFach | null = this.manager.getFach(leitfach1);
 			if (lf === null) {
-				this.addFehler(GostBelegungsfehler.PF_25);
+				this.addFehler(GostBelegungsfehler.GOST30_PF_25);
 				return;
 			}
 			const zf: Fach | null = Fach.getBySchluesselOrDefault(lf.kuerzel);
 			if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf as unknown === Fach.PX as unknown) || (zf as unknown === Fach.VX as unknown))) {
-				this.addFehler(GostBelegungsfehler.PF_19);
+				this.addFehler(GostBelegungsfehler.GOST30_PF_19);
 			}
 			hatReferenzfach1Belegung = this.manager.pruefeBelegung(leitfach1, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12);
 			hatReferenzfach1BelegungSchriftlich = this.manager.pruefeBelegungMitSchriftlichkeit(leitfach1, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12);
@@ -157,22 +157,22 @@ export class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 		if (leitfach2 !== null) {
 			const lf: GostFach | null = this.manager.getFach(leitfach2);
 			if (lf === null) {
-				this.addFehler(GostBelegungsfehler.PF_25);
+				this.addFehler(GostBelegungsfehler.GOST30_PF_25);
 				return;
 			}
 			const zf: Fach | null = Fach.getBySchluesselOrDefault(lf.kuerzel);
 			if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf as unknown === Fach.PX as unknown) || (zf as unknown === Fach.VX as unknown))) {
-				this.addFehler(GostBelegungsfehler.PF_19);
+				this.addFehler(GostBelegungsfehler.GOST30_PF_19);
 			}
 			hatReferenzfach2Belegung = this.manager.pruefeBelegung(leitfach2, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12);
 			hatReferenzfach2BelegungSchriftlich = this.manager.pruefeBelegungMitSchriftlichkeit(leitfach2, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12);
 		}
 		if (!hatReferenzfach1Belegung && !hatReferenzfach2Belegung) {
-			this.addFehler(GostBelegungsfehler.PF_23_2);
+			this.addFehler(GostBelegungsfehler.GOST30_PF_23);
 			return;
 		}
 		if ((!hatReferenzfach1Belegung || !hatReferenzfach1BelegungSchriftlich) && (!hatReferenzfach2Belegung || !hatReferenzfach2BelegungSchriftlich)) {
-			this.addFehler(GostBelegungsfehler.PF_24_2);
+			this.addFehler(GostBelegungsfehler.GOST30_PF_24);
 		}
 	}
 

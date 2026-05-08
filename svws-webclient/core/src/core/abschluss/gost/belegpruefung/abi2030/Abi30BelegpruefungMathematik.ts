@@ -32,24 +32,24 @@ export class Abi30BelegpruefungMathematik extends GostBelegpruefung {
 
 	protected pruefeEF1(): void {
 		if ((this._mathematik === null) || !this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(this._mathematik, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1)) {
-			this.addFehler(GostBelegungsfehler.M_10);
+			this.addFehler(GostBelegungsfehler.GOST30_M_10);
 			return;
 		}
 		if (!this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(this._mathematik, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) {
-			this.addFehler(GostBelegungsfehler.M_11);
+			this.addFehler(GostBelegungsfehler.GOST30_M_11);
 		}
 	}
 
 	protected pruefeGesamt(): void {
 		if (this._mathematik === null) {
-			this.addFehler(GostBelegungsfehler.M_10);
+			this.addFehler(GostBelegungsfehler.GOST30_M_10);
 			return;
 		}
 		if (!this.manager.pruefeBelegung(this._mathematik, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
-			this.addFehler(GostBelegungsfehler.M_10);
+			this.addFehler(GostBelegungsfehler.GOST30_M_10);
 		}
 		if (!this.manager.pruefeBelegungMitSchriftlichkeit(this._mathematik, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21)) {
-			this.addFehler(GostBelegungsfehler.M_11);
+			this.addFehler(GostBelegungsfehler.GOST30_M_11);
 		}
 	}
 

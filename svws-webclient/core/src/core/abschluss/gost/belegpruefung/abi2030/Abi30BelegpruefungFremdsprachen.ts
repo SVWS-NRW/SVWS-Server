@@ -79,13 +79,13 @@ export class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 	 */
 	private pruefeEF1Sprachenfolge(): void {
 		if (this.manager.hatFortgefuehrteFremdspracheInSprachendaten(this._fremdsprachenNeu)) {
-			this.addFehler(GostBelegungsfehler.FS_20);
+			this.addFehler(GostBelegungsfehler.GOST30_FS_20);
 		}
 		if (this.manager.hatNeuEinsetzendeFremdspracheInSprachendaten(this._fremdsprachenFortgefuehrt)) {
-			this.addFehler(GostBelegungsfehler.FS_21);
+			this.addFehler(GostBelegungsfehler.GOST30_FS_21);
 		}
 		if (!SprachendatenUtils.hatSprachbelegung(this.manager.getSprachendaten(), "E")) {
-			this.addFehler(GostBelegungsfehler.FS_22_INFO);
+			this.addFehler(GostBelegungsfehler.GOST30_FS_22_INFO);
 		}
 	}
 
@@ -126,15 +126,15 @@ export class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 							}
 				} else {
 					gefundenFortgefuehrteFremdsprachenbelegungOhneSprachenfolge = true;
-					this.addFehler(GostBelegungsfehler.FS_23);
+					this.addFehler(GostBelegungsfehler.GOST30_FS_23);
 				}
 			}
 		}
 		if ((anzahlFortgefuehrteFremdsprachenDurchgehendBelegbarFehlerMuendlich + anzahlFortgefuehrteFremdsprachenEFBelegbarFehlerMuendlich) > 0) {
-			this.addFehler(GostBelegungsfehler.FS_12);
+			this.addFehler(GostBelegungsfehler.GOST30_FS_12);
 		}
 		if ((anzahlFortgefuehrteFremdsprachen > 0) && (anzahlFortgefuehrteFremdsprachen === (anzahlFortgefuehrteFremdsprachenDurchgehendBelegbarFehlerMuendlich + anzahlFortgefuehrteFremdsprachenEFBelegbarFehlerMuendlich))) {
-			this.addFehler(GostBelegungsfehler.FS_16);
+			this.addFehler(GostBelegungsfehler.GOST30_FS_16);
 		}
 		if (anzahlFortgefuehrteFremdsprachenDurchgehendBelegbar > 0) {
 			return;
@@ -157,40 +157,40 @@ export class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 							anzahlNeueinsetzendeFremdsprachenDurchgehendBelegbarFehlerMuendlich += 1;
 						}
 				} else {
-					this.addFehler(GostBelegungsfehler.FS_20);
+					this.addFehler(GostBelegungsfehler.GOST30_FS_20);
 					gefundenFortgefuehrteFremdspracheAlsNeueinsetzende = true;
 				}
 			}
 		}
 		if (anzahlNeueinsetzendeFremdsprachenDurchgehendBelegbarFehlerMuendlich > 0) {
-			this.addFehler(GostBelegungsfehler.FS_12);
+			this.addFehler(GostBelegungsfehler.GOST30_FS_12);
 		}
 		if ((gefundenFremdsprachenbelegung && !(gefundenFortgefuehrteFremdsprachenbelegungOhneSprachenfolge || gefundenFortgefuehrteFremdspracheAlsNeueinsetzende)) && ((anzahlFortgefuehrteFremdsprachenDurchgehendBelegbar + anzahlNeueinsetzendeFremdsprachenDurchgehendBelegbar) === 0)) {
-			this.addFehler(GostBelegungsfehler.FS_11);
+			this.addFehler(GostBelegungsfehler.GOST30_FS_11);
 		}
 		if (anzahlFortgefuehrteFremdsprachenEFBelegbar > 0) {
 			if (anzahlNeueinsetzendeFremdsprachenDurchgehendBelegbar === 0) {
-				this.addFehler(GostBelegungsfehler.FS_10);
+				this.addFehler(GostBelegungsfehler.GOST30_FS_10);
 			}
 			return;
 		}
 		if (anzahlNeueinsetzendeFremdsprachenDurchgehendBelegbar === 0) {
-			this.addFehler(GostBelegungsfehler.FS_18);
+			this.addFehler(GostBelegungsfehler.GOST30_FS_18);
 			return;
 		}
 		if (((anzahlFortgefuehrteFremdsprachenDurchgehendBelegbar + anzahlFortgefuehrteFremdsprachenEFBelegbar) === 0) && (anzahlNeueinsetzendeFremdsprachenDurchgehendBelegbar > 0)) {
 			if (anzahlNeueinsetzendeFremdsprachenDurchgehendBelegbarFehlerMuendlich > 0) {
-				this.addFehler(GostBelegungsfehler.FS_18);
+				this.addFehler(GostBelegungsfehler.GOST30_FS_18);
 			}
 			if (SprachendatenUtils.hatSprachfeststellungspruefungAufEFNiveau(this.manager.getSprachendaten())) {
-				this.addFehler(GostBelegungsfehler.FS_19_INFO);
+				this.addFehler(GostBelegungsfehler.GOST30_FS_19_INFO);
 			} else {
 				if (anzahlFortfuehrbareFremdsprachen === 0) {
-					this.addFehler(GostBelegungsfehler.FS_25);
+					this.addFehler(GostBelegungsfehler.GOST30_FS_25);
 				} else {
-					this.addFehler(GostBelegungsfehler.FS_18);
+					this.addFehler(GostBelegungsfehler.GOST30_FS_18);
 					if (!SprachendatenUtils.hatZweiSprachenAb5Bis7MitMin4JahrenDauerEndeSekI(this.manager.getSprachendaten())) {
-						this.addFehler(GostBelegungsfehler.FS_24);
+						this.addFehler(GostBelegungsfehler.GOST30_FS_24);
 					}
 				}
 			}
@@ -212,13 +212,13 @@ export class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 			if (SprachendatenUtils.hatEineSpracheAb8MitMin2JahrenDauerEndeSekI(this.manager.getSprachendaten())) {
 				const zweiteFremdsprache: AbiturFachbelegung | null = this.manager.getSprachbelegung(SprachendatenUtils.getEineSpracheAb8MitMin2JahrenDauerEndeSekI(this.manager.getSprachendaten()));
 				if (!this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(zweiteFremdsprache, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) {
-					this.addFehler(GostBelegungsfehler.FS_13);
+					this.addFehler(GostBelegungsfehler.GOST30_FS_13);
 				}
 				return;
 			}
 		}
 		if (!this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(this._fremdsprachenNeu, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) {
-			this.addFehler(GostBelegungsfehler.FS_14);
+			this.addFehler(GostBelegungsfehler.GOST30_FS_14);
 		}
 	}
 
@@ -231,7 +231,7 @@ export class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 		}
 		for (const fachbelegung of this._fremdsprachen) {
 			if (this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(fachbelegung, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1) && !this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(fachbelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) {
-				this.addFehler(GostBelegungsfehler.FS_12);
+				this.addFehler(GostBelegungsfehler.GOST30_FS_12);
 				break;
 			}
 		}
@@ -282,14 +282,14 @@ export class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 			}
 			const biliSprache: string | null = fach.biliSprache;
 			if (!SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerEndeSekI(this.manager.getSprachendaten(), biliSprache)) {
-				this.addFehler(GostBelegungsfehler.BIL_14);
+				this.addFehler(GostBelegungsfehler.GOST30_BIL_14);
 				continue;
 			}
 			const fremdsprache: AbiturFachbelegung | null = this.manager.getSprachbelegung(biliSprache);
 			if (this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(fremdsprache, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1) || this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(biliSachfach, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) {
 				continue;
 			}
-			this.addFehler(GostBelegungsfehler.BIL_4_INFO);
+			this.addFehler(GostBelegungsfehler.GOST30_BIL_4_INFO);
 		}
 	}
 
@@ -303,14 +303,14 @@ export class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 		}
 		const biliSprache: AbiturFachbelegung | null = this.manager.getSprachbelegung(biligualeSprache);
 		if (!this.manager.pruefeBelegungDurchgehendBelegbar(biliSprache, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) {
-			this.addFehler(GostBelegungsfehler.BIL_10);
+			this.addFehler(GostBelegungsfehler.GOST30_BIL_10);
 		}
 		if ((this._biliSachfaecher === null) || (this._biliSachfaecher.isEmpty())) {
-			this.addFehler(GostBelegungsfehler.BIL_15);
+			this.addFehler(GostBelegungsfehler.GOST30_BIL_15);
 			return;
 		}
 		if (this._biliSachfaecher.size() < 2) {
-			this.addFehler(GostBelegungsfehler.BIL_11_INFO);
+			this.addFehler(GostBelegungsfehler.GOST30_BIL_11_INFO);
 		}
 	}
 
@@ -330,13 +330,13 @@ export class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 	 */
 	private pruefeGesamtSprachenfolge(): void {
 		if (this.manager.hatFortgefuehrteFremdspracheInSprachendaten(this._fremdsprachenNeu)) {
-			this.addFehler(GostBelegungsfehler.FS_20);
+			this.addFehler(GostBelegungsfehler.GOST30_FS_20);
 		}
 		if (this.manager.hatNeuEinsetzendeFremdspracheInSprachendaten(this._fremdsprachenFortgefuehrt)) {
-			this.addFehler(GostBelegungsfehler.FS_21);
+			this.addFehler(GostBelegungsfehler.GOST30_FS_21);
 		}
 		if (!SprachendatenUtils.hatSprachbelegung(this.manager.getSprachendaten(), "E")) {
-			this.addFehler(GostBelegungsfehler.FS_22_INFO);
+			this.addFehler(GostBelegungsfehler.GOST30_FS_22_INFO);
 		}
 	}
 
@@ -369,15 +369,15 @@ export class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 						}
 					}
 				} else {
-					this.addFehler(GostBelegungsfehler.FS_23);
+					this.addFehler(GostBelegungsfehler.GOST30_FS_23);
 				}
 			}
 		}
 		if (anzahlFortgefuehrteFremdsprachenBelegtFehlerMuendlichEF > 0) {
-			this.addFehler(GostBelegungsfehler.FS_12);
+			this.addFehler(GostBelegungsfehler.GOST30_FS_12);
 		}
 		if ((anzahlFortgefuehrteFremdsprachenDurchgehendBelegt > 0) && (anzahlFortgefuehrteFremdsprachenDurchgehendBelegt === anzahlFortgefuehrteFremdsprachenDurchgehendBelegtFehlerMuendlichEF)) {
-			this.addFehler(GostBelegungsfehler.FS_16);
+			this.addFehler(GostBelegungsfehler.GOST30_FS_16);
 		}
 		if (anzahlFortgefuehrteFremdsprachenDurchgehendBelegt > 0) {
 			return;
@@ -398,33 +398,33 @@ export class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 						anzahlNeueinsetzendeFremdsprachenBelegtFehlerMuendlichEF += 1;
 					}
 				} else {
-					this.addFehler(GostBelegungsfehler.FS_20);
+					this.addFehler(GostBelegungsfehler.GOST30_FS_20);
 				}
 			}
 		}
 		if (anzahlNeueinsetzendeFremdsprachenBelegtFehlerMuendlichEF > 0) {
-			this.addFehler(GostBelegungsfehler.FS_12);
+			this.addFehler(GostBelegungsfehler.GOST30_FS_12);
 		}
 		if (anzahlNeueinsetzendeFremdsprachenDurchgehendBelegt > 0) {
 			if (SprachendatenUtils.hatSprachfeststellungspruefungAufEFNiveau(this.manager.getSprachendaten())) {
-				this.addFehler(GostBelegungsfehler.FS_19_INFO);
+				this.addFehler(GostBelegungsfehler.GOST30_FS_19_INFO);
 				return;
 			}
 			if (anzahlFortgefuehrteFremdsprachenEFBelegt === 0) {
-				this.addFehler(GostBelegungsfehler.FS_10);
+				this.addFehler(GostBelegungsfehler.GOST30_FS_10);
 				if (anzahlFortfuehrbareFremdsprachen === 0) {
-					this.addFehler(GostBelegungsfehler.FS_25);
+					this.addFehler(GostBelegungsfehler.GOST30_FS_25);
 				} else {
 					if (!SprachendatenUtils.hatZweiSprachenAb5Bis7MitMin4JahrenDauerEndeSekI(this.manager.getSprachendaten())) {
-						this.addFehler(GostBelegungsfehler.FS_24);
+						this.addFehler(GostBelegungsfehler.GOST30_FS_24);
 					}
 				}
 			}
 		} else {
 			if (SprachendatenUtils.hatSprachfeststellungspruefungAufEFNiveau(this.manager.getSprachendaten())) {
-				this.addFehler(GostBelegungsfehler.FS_18);
+				this.addFehler(GostBelegungsfehler.GOST30_FS_18);
 			} else {
-				this.addFehler(GostBelegungsfehler.FS_10);
+				this.addFehler(GostBelegungsfehler.GOST30_FS_10);
 			}
 		}
 	}
@@ -444,13 +444,13 @@ export class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 			if (SprachendatenUtils.hatEineSpracheAb8MitMin2JahrenDauerEndeSekI(this.manager.getSprachendaten())) {
 				const zweiteFremdsprache: AbiturFachbelegung | null = this.manager.getSprachbelegung(SprachendatenUtils.getEineSpracheAb8MitMin2JahrenDauerEndeSekI(this.manager.getSprachendaten()));
 				if (!this.manager.pruefeBelegungMitSchriftlichkeit(zweiteFremdsprache, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2)) {
-					this.addFehler(GostBelegungsfehler.FS_13);
+					this.addFehler(GostBelegungsfehler.GOST30_FS_13);
 				}
 				return;
 			}
 		}
 		if (!this.manager.pruefeBelegungExistiert(this._fremdsprachenNeu, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
-			this.addFehler(GostBelegungsfehler.FS_14);
+			this.addFehler(GostBelegungsfehler.GOST30_FS_14);
 		}
 	}
 
@@ -459,19 +459,19 @@ export class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 	 */
 	private pruefeGesamtSchriftlichkeit(): void {
 		if (this.manager.pruefeBelegungExistiertHatMindestensEinmalSchriftlichkeit(this._fremdsprachenNeu, GostSchriftlichkeit.MUENDLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21)) {
-			this.addFehler(GostBelegungsfehler.FS_15);
+			this.addFehler(GostBelegungsfehler.GOST30_FS_15);
 		}
 		if (this.manager.pruefeBelegungExistiertHatMindestensEinmalKursart(this._fremdsprachenNeu, GostKursart.LK, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
-			this.addFehler(GostBelegungsfehler.FS_17);
+			this.addFehler(GostBelegungsfehler.GOST30_FS_17);
 		}
 		if (this.manager.pruefeBelegungExistiertErfuelltNichtFallsBelegt(this._fremdsprachenFortgefuehrt, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2)) {
-			this.addFehler(GostBelegungsfehler.FS_12);
+			this.addFehler(GostBelegungsfehler.GOST30_FS_12);
 		}
 		if (this.manager.pruefeBelegungDurchgehendBelegtExistiert(this._fremdsprachenFortgefuehrt, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21)) {
 			return;
 		}
 		if (!this.manager.pruefeBelegungDurchgehendBelegtExistiert(this._fremdsprachenNeu, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21)) {
-			this.addFehler(GostBelegungsfehler.FS_11);
+			this.addFehler(GostBelegungsfehler.GOST30_FS_11);
 			return;
 		}
 		if (SprachendatenUtils.hatSprachfeststellungspruefungAufEFNiveau(this.manager.getSprachendaten()) && this.manager.pruefeBelegungExistiertMitSchriftlichkeit(this._fremdsprachenFortgefuehrt, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2)) {
@@ -481,7 +481,7 @@ export class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 			return;
 		}
 		if (!this.manager.pruefeBelegungExistiertMitSchriftlichkeit(this._fremdsprachenFortgefuehrt, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2)) {
-			this.addFehler(GostBelegungsfehler.FS_16);
+			this.addFehler(GostBelegungsfehler.GOST30_FS_16);
 		}
 	}
 
@@ -528,7 +528,7 @@ export class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 		for (const biliSachfach of this._biliSachfaecher) {
 			const biliFach: GostFach | null = this.manager.getFach(biliSachfach);
 			if ((biliFach === null) || (!SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerEndeSekI(this.manager.getSprachendaten(), biliFach.biliSprache))) {
-				this.addFehler(GostBelegungsfehler.BIL_14);
+				this.addFehler(GostBelegungsfehler.GOST30_BIL_14);
 			}
 		}
 	}
@@ -544,15 +544,15 @@ export class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 		}
 		const biliSprache: AbiturFachbelegung | null = this.manager.getSprachbelegung(biligualeSprache);
 		if ((!this.manager.pruefeBelegungMitSchriftlichkeit(biliSprache, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2) || (!this.manager.pruefeBelegungMitKursart(biliSprache, GostKursart.LK, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)))) {
-			this.addFehler(GostBelegungsfehler.BIL_10);
+			this.addFehler(GostBelegungsfehler.GOST30_BIL_10);
 		}
 		const biliSachfaecherEF: List<AbiturFachbelegung> | null = this.manager.filterBelegungen(this._biliSachfaecher, GostHalbjahr.EF1, GostHalbjahr.EF2);
 		if (biliSachfaecherEF.isEmpty()) {
-			this.addFehler(GostBelegungsfehler.BIL_15);
+			this.addFehler(GostBelegungsfehler.GOST30_BIL_15);
 			return;
 		}
 		if (biliSachfaecherEF.size() < 2) {
-			this.addFehler(GostBelegungsfehler.BIL_11_INFO);
+			this.addFehler(GostBelegungsfehler.GOST30_BIL_11_INFO);
 		}
 		let hatBiliSachfaecherDurchgehendSchriftlich: boolean = false;
 		if (this._biliSachfaecher !== null) {
@@ -564,10 +564,10 @@ export class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 			}
 		}
 		if (!hatBiliSachfaecherDurchgehendSchriftlich) {
-			this.addFehler(GostBelegungsfehler.BIL_12);
+			this.addFehler(GostBelegungsfehler.GOST30_BIL_12);
 		}
 		if (!this.manager.pruefeExistiertAbiFach(this._biliSachfaecher, GostAbiturFach.AB3, GostAbiturFach.AB4)) {
-			this.addFehler(GostBelegungsfehler.BIL_13);
+			this.addFehler(GostBelegungsfehler.GOST30_BIL_13);
 		}
 	}
 

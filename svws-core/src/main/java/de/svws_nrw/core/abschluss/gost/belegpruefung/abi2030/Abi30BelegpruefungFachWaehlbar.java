@@ -61,7 +61,7 @@ public final class Abi30BelegpruefungFachWaehlbar extends GostBelegpruefung {
 			default -> false;
 		};
 		if (!istwaehlbar) {
-			addFehler(GostBelegungsfehler.WAEHLBARKEIT_1);
+			addFehler(GostBelegungsfehler.GOST30_WAEHLBARKEIT_1);
 		}
 	}
 
@@ -83,11 +83,11 @@ public final class Abi30BelegpruefungFachWaehlbar extends GostBelegpruefung {
 		}
 		// Prüfe auf LK
 		if ((!fach.istMoeglichAbiLK) && ((fachbelegung.abiturFach == 1) || (fachbelegung.abiturFach == 2) || (hatLKFachbelegung(fachbelegung)))) {
-			addFehler(GostBelegungsfehler.WAEHLBARKEIT_3);
+			addFehler(GostBelegungsfehler.GOST30_WAEHLBARKEIT_3);
 		}
 		// Prüfe auf GK
 		if ((!fach.istMoeglichAbiGK) && ((fachbelegung.abiturFach == 3) || (fachbelegung.abiturFach == 4) || (fachbelegung.abiturFach == 5))) {
-			addFehler(GostBelegungsfehler.WAEHLBARKEIT_2);
+			addFehler(GostBelegungsfehler.GOST30_WAEHLBARKEIT_2);
 		}
 	}
 
@@ -97,7 +97,7 @@ public final class Abi30BelegpruefungFachWaehlbar extends GostBelegpruefung {
 		for (final @NotNull AbiturFachbelegung fachbelegung : manager.getFachbelegungen()) {
 			final GostFach fach = manager.faecher().get(fachbelegung.fachID);
 			if (fach == null) {
-				addFehler(GostBelegungsfehler.WAEHLBARKEIT_0);
+				addFehler(GostBelegungsfehler.GOST30_WAEHLBARKEIT_0);
 				continue;
 			}
 			pruefeFachbelegungHalbjahr(fach, fachbelegung, GostHalbjahr.EF1);
@@ -109,7 +109,7 @@ public final class Abi30BelegpruefungFachWaehlbar extends GostBelegpruefung {
 		for (final @NotNull AbiturFachbelegung fachbelegung : manager.getFachbelegungen()) {
 			final GostFach fach = manager.faecher().get(fachbelegung.fachID);
 			if (fach == null) {
-				addFehler(GostBelegungsfehler.WAEHLBARKEIT_0);
+				addFehler(GostBelegungsfehler.GOST30_WAEHLBARKEIT_0);
 				continue;
 			}
 			for (final @NotNull GostHalbjahr halbjahr : GostHalbjahr.values()) {

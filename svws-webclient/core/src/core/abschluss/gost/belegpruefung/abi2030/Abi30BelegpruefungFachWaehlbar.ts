@@ -50,7 +50,7 @@ export class Abi30BelegpruefungFachWaehlbar extends GostBelegpruefung {
 		}
 		;
 		if (!istwaehlbar) {
-			this.addFehler(GostBelegungsfehler.WAEHLBARKEIT_1);
+			this.addFehler(GostBelegungsfehler.GOST30_WAEHLBARKEIT_1);
 		}
 	}
 
@@ -69,10 +69,10 @@ export class Abi30BelegpruefungFachWaehlbar extends GostBelegpruefung {
 			return;
 		}
 		if ((!fach.istMoeglichAbiLK) && ((fachbelegung.abiturFach === 1) || (fachbelegung.abiturFach === 2) || (Abi30BelegpruefungFachWaehlbar.hatLKFachbelegung(fachbelegung)))) {
-			this.addFehler(GostBelegungsfehler.WAEHLBARKEIT_3);
+			this.addFehler(GostBelegungsfehler.GOST30_WAEHLBARKEIT_3);
 		}
 		if ((!fach.istMoeglichAbiGK) && ((fachbelegung.abiturFach === 3) || (fachbelegung.abiturFach === 4) || (fachbelegung.abiturFach === 5))) {
-			this.addFehler(GostBelegungsfehler.WAEHLBARKEIT_2);
+			this.addFehler(GostBelegungsfehler.GOST30_WAEHLBARKEIT_2);
 		}
 	}
 
@@ -80,7 +80,7 @@ export class Abi30BelegpruefungFachWaehlbar extends GostBelegpruefung {
 		for (const fachbelegung of this.manager.getFachbelegungen()) {
 			const fach: GostFach | null = this.manager.faecher().get(fachbelegung.fachID);
 			if (fach === null) {
-				this.addFehler(GostBelegungsfehler.WAEHLBARKEIT_0);
+				this.addFehler(GostBelegungsfehler.GOST30_WAEHLBARKEIT_0);
 				continue;
 			}
 			this.pruefeFachbelegungHalbjahr(fach, fachbelegung, GostHalbjahr.EF1);
@@ -91,7 +91,7 @@ export class Abi30BelegpruefungFachWaehlbar extends GostBelegpruefung {
 		for (const fachbelegung of this.manager.getFachbelegungen()) {
 			const fach: GostFach | null = this.manager.faecher().get(fachbelegung.fachID);
 			if (fach === null) {
-				this.addFehler(GostBelegungsfehler.WAEHLBARKEIT_0);
+				this.addFehler(GostBelegungsfehler.GOST30_WAEHLBARKEIT_0);
 				continue;
 			}
 			for (const halbjahr of GostHalbjahr.values()) {

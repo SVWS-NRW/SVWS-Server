@@ -96,7 +96,7 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 
 		// ist der Kurs eine besondere Lernleistung?
 		if (manager.istProjektKursBesondereLernleistung()) {
-			addFehler((projektkurs != null) ? GostBelegungsfehler.PF_16_INFO : GostBelegungsfehler.PF_15);
+			addFehler((projektkurs != null) ? GostBelegungsfehler.GOST30_PF_16_INFO : GostBelegungsfehler.GOST30_PF_15);
 		}
 	}
 
@@ -114,7 +114,7 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 				}
 				final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(belegungHalbjahr.halbjahrKuerzel);
 				if ((halbjahr == GostHalbjahr.EF1) || (halbjahr == GostHalbjahr.EF2)) {
-					addFehler(GostBelegungsfehler.PF_10);
+					addFehler(GostBelegungsfehler.GOST30_PF_10);
 				}
 			}
 		}
@@ -126,12 +126,12 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 	 */
 	private void pruefeBelegung() {
 		if (projektkursBelegung.isEmpty()) {
-			addFehler(GostBelegungsfehler.PF_21_2);
+			addFehler(GostBelegungsfehler.GOST30_PF_21);
 			return;
 		}
 
 		if (projektkursBelegung.size() > 1) {
-			addFehler(GostBelegungsfehler.PF_14);
+			addFehler(GostBelegungsfehler.GOST30_PF_14);
 			return;
 		}
 
@@ -142,13 +142,13 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 
 		// Prüfe auf fehlerhafte Belegungen in den Halbjahren der Q1
 		if ((fachbelegung.belegungen[GostHalbjahr.Q11.id] != null) || (fachbelegung.belegungen[GostHalbjahr.Q12.id] != null)) {
-			addFehler(GostBelegungsfehler.PF_20_2);
+			addFehler(GostBelegungsfehler.GOST30_PF_20);
 			return;
 		}
 
 		// Prüfe auf Belegungen in beiden Halbjahren der Q2
 		if ((fachbelegung.belegungen[GostHalbjahr.Q21.id] == null) || (fachbelegung.belegungen[GostHalbjahr.Q22.id] == null)) {
-			addFehler(GostBelegungsfehler.PF_20_2);
+			addFehler(GostBelegungsfehler.GOST30_PF_20);
 			return;
 		}
 
@@ -173,7 +173,7 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 		final AbiturFachbelegung leitfach1 = manager.getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
 		final AbiturFachbelegung leitfach2 = manager.getFachbelegungByKuerzel(fach.projektKursLeitfach2Kuerzel);
 		if ((leitfach1 == null) && (leitfach2 == null)) {
-			addFehler(GostBelegungsfehler.PF_22_2);
+			addFehler(GostBelegungsfehler.GOST30_PF_22);
 			return;
 		}
 
@@ -184,12 +184,12 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 			// Prüfe, ob die Fachdefinition des Leitfaches zulässig ist (eigentlich keine individuelle Belegprüfung)
 			final GostFach lf = manager.getFach(leitfach1);
 			if (lf == null) {
-				addFehler(GostBelegungsfehler.PF_25);
+				addFehler(GostBelegungsfehler.GOST30_PF_25);
 				return;
 			}
 			final Fach zf = Fach.getBySchluesselOrDefault(lf.kuerzel);
 			if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf == Fach.PX) || (zf == Fach.VX))) {
-				addFehler(GostBelegungsfehler.PF_19);
+				addFehler(GostBelegungsfehler.GOST30_PF_19);
 			}
 
 			// Prüfe die Belegung des Referenzfaches in EF und Q1 und die Schriftlichkeit in der Q1
@@ -204,12 +204,12 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 			// Prüfe, ob die Fachdefinition des Leitfaches zulässig ist (eigentlich keine individuelle Belegprüfung)
 			final GostFach lf = manager.getFach(leitfach2);
 			if (lf == null) {
-				addFehler(GostBelegungsfehler.PF_25);
+				addFehler(GostBelegungsfehler.GOST30_PF_25);
 				return;
 			}
 			final Fach zf = Fach.getBySchluesselOrDefault(lf.kuerzel);
 			if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf == Fach.PX) || (zf == Fach.VX))) {
-				addFehler(GostBelegungsfehler.PF_19);
+				addFehler(GostBelegungsfehler.GOST30_PF_19);
 			}
 
 			// Prüfe die Belegung des Referenzfaches in EF und Q1 und die Schriftlichkeit in der Q1
@@ -219,13 +219,13 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 
 		// Prüfe, ob einer der beiden Referenzfächer belegt wurde
 		if (!hatReferenzfach1Belegung && !hatReferenzfach2Belegung) {
-			addFehler(GostBelegungsfehler.PF_23_2);
+			addFehler(GostBelegungsfehler.GOST30_PF_23);
 			return;
 		}
 
 		if ((!hatReferenzfach1Belegung || !hatReferenzfach1BelegungSchriftlich)
 				&& (!hatReferenzfach2Belegung || !hatReferenzfach2BelegungSchriftlich)) {
-			addFehler(GostBelegungsfehler.PF_24_2);
+			addFehler(GostBelegungsfehler.GOST30_PF_24);
 		}
 	}
 

@@ -60,18 +60,18 @@ public final class Abi30BelegpruefungSchwerpunkt extends GostBelegpruefung {
 
 		// Prüfe, ob ein sprachlicher Schwerpunkt vorliegt
 		if (pruefungSprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) {
-			addFehler(GostBelegungsfehler.NW_FS_12_INFO);
+			addFehler(GostBelegungsfehler.GOST30_NW_FS_12_INFO);
 			return;
 		}
 
 		// Prüfe, ob ein naturwissenschaftlicher Schwerpunkt vorliegt
 		if ((pruefungNawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefungNawi.getAnzahlDurchgehendSchritflichBelegt() >= 1)) {
-			addFehler(GostBelegungsfehler.NW_FS_13_INFO);
+			addFehler(GostBelegungsfehler.GOST30_NW_FS_13_INFO);
 			return;
 		}
 
 		// Es wurden zu wenig Fremdsprachen und Naturwissenschaften belegt -> Belegungsfehler
-		addFehler(GostBelegungsfehler.NW_FS_10);
+		addFehler(GostBelegungsfehler.GOST30_NW_FS_10);
 	}
 
 
@@ -91,18 +91,18 @@ public final class Abi30BelegpruefungSchwerpunkt extends GostBelegpruefung {
 
 		// Prüfe, ob ein sprachlicher Schwerpunkt vorliegt
 		if (pruefungSprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) {
-			addFehler(GostBelegungsfehler.NW_FS_12_INFO);
+			addFehler(GostBelegungsfehler.GOST30_NW_FS_12_INFO);
 			return;
 		}
 
 		// Prüfe, ob ein naturwissenschaftlicher Schwerpunkt vorliegt
 		if ((pruefungNawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefungNawi.getAnzahlDurchgehendSchritflichBelegt() >= 1)) {
-			addFehler(GostBelegungsfehler.NW_FS_13_INFO);
+			addFehler(GostBelegungsfehler.GOST30_NW_FS_13_INFO);
 			return;
 		}
 
 		// Es wurden zu wenig Fremdsprachen und Naturwissenschaften belegt -> Belegungsfehler
-		addFehler(GostBelegungsfehler.NW_FS_10);
+		addFehler(GostBelegungsfehler.GOST30_NW_FS_10);
 	}
 
 }

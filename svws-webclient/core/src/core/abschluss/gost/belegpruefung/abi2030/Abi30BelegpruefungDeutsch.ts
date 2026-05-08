@@ -32,24 +32,24 @@ export class Abi30BelegpruefungDeutsch extends GostBelegpruefung {
 
 	protected pruefeEF1(): void {
 		if ((this._deutsch === null) || !this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(this._deutsch, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1)) {
-			this.addFehler(GostBelegungsfehler.D_10);
+			this.addFehler(GostBelegungsfehler.GOST30_D_10);
 			return;
 		}
 		if (!this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(this._deutsch, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) {
-			this.addFehler(GostBelegungsfehler.D_11);
+			this.addFehler(GostBelegungsfehler.GOST30_D_11);
 		}
 	}
 
 	protected pruefeGesamt(): void {
 		if (this._deutsch === null) {
-			this.addFehler(GostBelegungsfehler.D_10);
+			this.addFehler(GostBelegungsfehler.GOST30_D_10);
 			return;
 		}
 		if (!this.manager.pruefeBelegung(this._deutsch, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
-			this.addFehler(GostBelegungsfehler.D_10);
+			this.addFehler(GostBelegungsfehler.GOST30_D_10);
 		}
 		if (!this.manager.pruefeBelegungMitSchriftlichkeit(this._deutsch, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21)) {
-			this.addFehler(GostBelegungsfehler.D_11);
+			this.addFehler(GostBelegungsfehler.GOST30_D_11);
 		}
 	}
 

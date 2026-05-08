@@ -158,7 +158,7 @@ public final class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 				|| (GostFachbereich.FREMDSPRACHE.hat(lk1fach) && !lk1.istFSNeu)
 				|| (GostFachbereich.MATHEMATIK.hat(lk1fach))
 				|| (GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH.hat(lk1fach)))) {
-			addFehler(GostBelegungsfehler.LK1_11);
+			addFehler(GostBelegungsfehler.GOST30_LK1_11);
 		}
 	}
 
@@ -172,23 +172,23 @@ public final class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 	 */
 	private void pruefeAnzahlUndAufgabenfelderAbiFaecher() {
 		if ((anzahlAbiFaecher != 5) || (!hatAufgabenfeldI) || (!hatAufgabenfeldII) || (!hatAufgabenfeldIII)) {
-			addFehler(GostBelegungsfehler.LK1_13_2);
+			addFehler(GostBelegungsfehler.GOST30_LK1_13);
 		}
 		if (anzahlDeutschMatheFremdsprache < 2) {
-			addFehler(GostBelegungsfehler.ABI_10_2);
+			addFehler(GostBelegungsfehler.GOST30_ABI_10);
 		}
 		if ((anzahlDeutschMatheFremdsprache < 3) && (anzahlFremdsprachen > 1)) {
-			addFehler(GostBelegungsfehler.ABI_19_2);
+			addFehler(GostBelegungsfehler.GOST30_ABI_19);
 		}
 		if (anzahlSportReligion > 1) {
-			addFehler(GostBelegungsfehler.ABI_11);
+			addFehler(GostBelegungsfehler.GOST30_ABI_11);
 		}
 		final AbiturFachbelegung lk1 = (mapAbiturFachbelegungen == null) ? null : mapAbiturFachbelegungen.get(GostAbiturFach.LK1);
 		final GostFach lk1fach = manager.getFach(lk1);
 		final AbiturFachbelegung ab3 = (mapAbiturFachbelegungen == null) ? null : mapAbiturFachbelegungen.get(GostAbiturFach.AB3);
 		final GostFach ab3fach = manager.getFach(ab3);
 		if (((lk1fach != null) && (GostFachbereich.SPORT.hatKuerzel(lk1fach.kuerzel))) || ((ab3fach != null) && (GostFachbereich.SPORT.hatKuerzel(ab3fach.kuerzel)))) {
-			addFehler(GostBelegungsfehler.ABI_15_2);
+			addFehler(GostBelegungsfehler.GOST30_ABI_15);
 		}
 	}
 
@@ -211,19 +211,19 @@ public final class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 			}
 			switch (abiturFach) {
 				case LK1:
-					addFehler(GostBelegungsfehler.ABI_21);
+					addFehler(GostBelegungsfehler.GOST30_ABI_21);
 					break;
 				case LK2:
-					addFehler(GostBelegungsfehler.ABI_22);
+					addFehler(GostBelegungsfehler.GOST30_ABI_22);
 					break;
 				case AB3:
-					addFehler(GostBelegungsfehler.ABI_23);
+					addFehler(GostBelegungsfehler.GOST30_ABI_23);
 					break;
 				case AB4:
-					addFehler(GostBelegungsfehler.ABI_24);
+					addFehler(GostBelegungsfehler.GOST30_ABI_24);
 					break;
 				case AB5:
-					addFehler(GostBelegungsfehler.ABI_25);
+					addFehler(GostBelegungsfehler.GOST30_ABI_25);
 					break;
 			}
 		}
@@ -269,19 +269,19 @@ public final class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 		final AbiturFachbelegung ab3 = (mapAbiturFachbelegungen == null) ? null : mapAbiturFachbelegungen.get(GostAbiturFach.AB3);
 		if (ab3 != null) {
 			if (!pruefeSchriftlichkeitVorQ22(ab3)) {
-				addFehler(GostBelegungsfehler.ABI_17);
+				addFehler(GostBelegungsfehler.GOST30_ABI_17);
 			}
 			if (!manager.pruefeBelegungMitSchriftlichkeitEinzeln(ab3, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q22)) {
-				addFehler(GostBelegungsfehler.ABI_12);
+				addFehler(GostBelegungsfehler.GOST30_ABI_12);
 			}
 		}
 		final AbiturFachbelegung ab4 = (mapAbiturFachbelegungen == null) ? null : mapAbiturFachbelegungen.get(GostAbiturFach.AB4);
 		if (ab4 != null) {
 			if (!pruefeSchriftlichkeitVorQ22(ab4)) {
-				addFehler(GostBelegungsfehler.ABI_18);
+				addFehler(GostBelegungsfehler.GOST30_ABI_18);
 			}
 			if (!manager.pruefeBelegungMitSchriftlichkeitEinzeln(ab4, GostSchriftlichkeit.MUENDLICH, GostHalbjahr.Q22)) {
-				addFehler(GostBelegungsfehler.ABI_13);
+				addFehler(GostBelegungsfehler.GOST30_ABI_13);
 			}
 		}
 	}
@@ -298,10 +298,10 @@ public final class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 		// Prüfe, ob es sich um eine durchgängige Grundkursbelegung handelt
 		if (manager.pruefeBelegungMitKursart(ab5, GostKursart.GK, GostHalbjahr.Q22)) {
 			if (!pruefeSchriftlichkeitVorQ22(ab5)) {
-				addFehler(GostBelegungsfehler.ABI_29_2);
+				addFehler(GostBelegungsfehler.GOST30_ABI_29);
 			}
 			if (!manager.pruefeBelegungMitSchriftlichkeitEinzeln(ab5, GostSchriftlichkeit.MUENDLICH, GostHalbjahr.Q22)) {
-				addFehler(GostBelegungsfehler.ABI_30_2);
+				addFehler(GostBelegungsfehler.GOST30_ABI_30);
 			}
 			return;
 		}
@@ -355,11 +355,11 @@ public final class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 
 			// Ansonsten ergänze den ersten relevanten Fehler...
 			if (!istDurchgaengig) {
-				fehler.add(GostBelegungsfehler.ABI_26_2);
+				fehler.add(GostBelegungsfehler.GOST30_ABI_26);
 			} else if (!istSchriftlichQ1) {
-				fehler.add(GostBelegungsfehler.ABI_27_2);
+				fehler.add(GostBelegungsfehler.GOST30_ABI_27);
 			} else if (istAbifach) {
-				fehler.add(GostBelegungsfehler.ABI_28_2);
+				fehler.add(GostBelegungsfehler.GOST30_ABI_28);
 			}
 		}
 		// Gebe Fehler nur zurück, wenn nicht eines der Leitfächer als Grundlage für AB5 dienen kann

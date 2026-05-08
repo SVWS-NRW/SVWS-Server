@@ -31,10 +31,10 @@ export class Abi30BelegpruefungAllgemeines extends GostBelegpruefung {
 
 	protected pruefeEF1(): void {
 		if (this.manager.zaehleBelegungInHalbjahren(this.manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION), GostHalbjahr.EF1) > 1) {
-			this.addFehler(GostBelegungsfehler.IGF_10);
+			this.addFehler(GostBelegungsfehler.GOST30_IGF_10);
 		}
 		if (this.manager.hatDoppelteFachbelegungInHalbjahr(GostHalbjahr.EF1)) {
-			this.addFehler(GostBelegungsfehler.IGF_10);
+			this.addFehler(GostBelegungsfehler.GOST30_IGF_10);
 		}
 	}
 
@@ -42,7 +42,7 @@ export class Abi30BelegpruefungAllgemeines extends GostBelegpruefung {
 		const alleFachbelegungen: List<AbiturFachbelegung> = this.manager.getRelevanteFachbelegungen();
 		for (const fachbelegung of alleFachbelegungen) {
 			if (!this.manager.istBelegtSeitEF(fachbelegung)) {
-				this.addFehler(GostBelegungsfehler.E1BEL_10_2);
+				this.addFehler(GostBelegungsfehler.GOST30_E1BEL_10);
 			}
 		}
 		for (const fachbelegung of alleFachbelegungen) {
@@ -55,17 +55,17 @@ export class Abi30BelegpruefungAllgemeines extends GostBelegpruefung {
 				continue;
 			}
 			if (this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(fachbelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q22)) {
-				this.addFehler(GostBelegungsfehler.ABI_16_2);
+				this.addFehler(GostBelegungsfehler.GOST30_ABI_16);
 				break;
 			}
 		}
 		for (const halbjahr of GostHalbjahr.values()) {
 			if (this.manager.zaehleBelegungInHalbjahren(this.manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION), halbjahr) > 1) {
-				this.addFehler(GostBelegungsfehler.IGF_10);
+				this.addFehler(GostBelegungsfehler.GOST30_IGF_10);
 			}
 		}
 		if (this.manager.hatDoppelteFachbelegung(GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
-			this.addFehler(GostBelegungsfehler.IGF_10);
+			this.addFehler(GostBelegungsfehler.GOST30_IGF_10);
 		}
 	}
 

@@ -66,11 +66,11 @@ public final class Abi30BelegpruefungNaturwissenschaften extends GostBelegpruefu
 	protected void pruefeEF1() {
 		// Wurde eine durchgehend belegbare klassische Naturwissenschaft in EF.1 belegt?
 		if (!manager.pruefeBelegungDurchgehendBelegbarExistiert(_naturwissenschaftenKlassisch, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1)) {
-			addFehler(GostBelegungsfehler.NW_10);
+			addFehler(GostBelegungsfehler.GOST30_NW_10);
 		}
 		// Wurde eine klassische Naturwissenschaft in EF.1 schriftlich belegt?
 		if (!manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(_naturwissenschaftenKlassisch, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) {
-			addFehler(GostBelegungsfehler.NW_11);
+			addFehler(GostBelegungsfehler.GOST30_NW_11);
 		}
 
 		// Zähle die durchgehend belegbaren Belegungen
@@ -89,14 +89,14 @@ public final class Abi30BelegpruefungNaturwissenschaften extends GostBelegpruefu
 		// Wurde eine klassische Naturwissenschaft durchgehend belegt?
 		if (!manager.pruefeBelegungExistiert(_naturwissenschaftenKlassisch, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12,
 				GostHalbjahr.Q21, GostHalbjahr.Q22)) {
-			addFehler(GostBelegungsfehler.NW_10);
+			addFehler(GostBelegungsfehler.GOST30_NW_10);
 		}
 
 		// Prüfe, ob in beiden Halbjahren der EF mindestens eine klassische Naturwissenschaft schriftlich belegt wurde.
 		if ((!manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(_naturwissenschaftenKlassisch, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
 				|| (!manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(_naturwissenschaftenKlassisch, GostSchriftlichkeit.SCHRIFTLICH,
 						GostHalbjahr.EF2))) {
-			addFehler(GostBelegungsfehler.NW_11);
+			addFehler(GostBelegungsfehler.GOST30_NW_11);
 		}
 
 		// Zähle die durchgehend belegten Fachbelegungen

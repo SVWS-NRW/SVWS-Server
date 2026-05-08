@@ -33,13 +33,13 @@ export class Abi30BelegpruefungSport extends GostBelegpruefung {
 
 	protected pruefeEF1(): void {
 		if ((this._sport === null) || (!this.manager.pruefeBelegungExistiertEinzeln(this._sport, GostHalbjahr.EF1))) {
-			this.addFehler(GostBelegungsfehler.SP_10);
+			this.addFehler(GostBelegungsfehler.GOST30_SP_10);
 		}
 	}
 
 	protected pruefeGesamt(): void {
 		if ((this._sport === null) || (!this.manager.pruefeBelegungExistiert(this._sport, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))) {
-			this.addFehler(GostBelegungsfehler.SP_10);
+			this.addFehler(GostBelegungsfehler.GOST30_SP_10);
 		}
 	}
 

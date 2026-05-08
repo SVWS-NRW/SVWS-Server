@@ -52,12 +52,12 @@ public final class Abi30BelegpruefungAllgemeines extends GostBelegpruefung {
 	protected void pruefeEF1() {
 		// Prüfe, ob mehrere Religionsfächer belegt wurden.
 		if (manager.zaehleBelegungInHalbjahren(manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION), GostHalbjahr.EF1) > 1) {
-			addFehler(GostBelegungsfehler.IGF_10);
+			addFehler(GostBelegungsfehler.GOST30_IGF_10);
 		}
 
 		// Prüfe anhand des Statistikkürzels, ob inhaltsgleiche Fächer in der EF.1 mehrfach belegt wurden.
 		if (manager.hatDoppelteFachbelegungInHalbjahr(GostHalbjahr.EF1)) {
-			addFehler(GostBelegungsfehler.IGF_10);
+			addFehler(GostBelegungsfehler.GOST30_IGF_10);
 		}
 	}
 
@@ -69,7 +69,7 @@ public final class Abi30BelegpruefungAllgemeines extends GostBelegpruefung {
 		// Prüfe, ob die Fächer seit EF.1 bis zur Abwahl durchgängig belegt wurden - ignoriere Ausnahmen nach Kursart (Zusatz-, Vertiefungs- und Projektkurse) sowie Literatur, instrumental- und vokalpraktische Kurse sowie Religion und Philosophie
 		for (final AbiturFachbelegung fachbelegung : alleFachbelegungen) {
 			if (!manager.istBelegtSeitEF(fachbelegung)) {
-				addFehler(GostBelegungsfehler.E1BEL_10_2);
+				addFehler(GostBelegungsfehler.GOST30_E1BEL_10);
 			}
 		}
 
@@ -85,7 +85,7 @@ public final class Abi30BelegpruefungAllgemeines extends GostBelegpruefung {
 				continue;
 			}
 			if (manager.pruefeBelegungMitSchriftlichkeitEinzeln(fachbelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q22)) {
-				addFehler(GostBelegungsfehler.ABI_16_2);
+				addFehler(GostBelegungsfehler.GOST30_ABI_16);
 				break;
 			}
 		}
@@ -93,13 +93,13 @@ public final class Abi30BelegpruefungAllgemeines extends GostBelegpruefung {
 		// Prüfe, ob in einem Halbjahr mehrere Religionsfächer belegt wurden.
 		for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
 			if (manager.zaehleBelegungInHalbjahren(manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION), halbjahr) > 1) {
-				addFehler(GostBelegungsfehler.IGF_10);
+				addFehler(GostBelegungsfehler.GOST30_IGF_10);
 			}
 		}
 
 		// Prüfe, ob in einem Halbjahr zwei Fächer (außer Vertiefungsfächer) mit dem gleichen Statistik-Kürzel belegt wurden.
 		if (manager.hatDoppelteFachbelegung(GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
-			addFehler(GostBelegungsfehler.IGF_10);
+			addFehler(GostBelegungsfehler.GOST30_IGF_10);
 		}
 	}
 
