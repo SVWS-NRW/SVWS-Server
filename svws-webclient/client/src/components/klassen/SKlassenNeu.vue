@@ -25,7 +25,7 @@
 
 					<svws-ui-select title="Schulgliederung" v-model="modelProxy.schulgliederung.value" :items="modelProxy.schulgliederungen.value" :item-text="getSelectText" />
 					<svws-ui-text-input placeholder="Prüfungsordnung" v-model="modelProxy.proxy.pruefungsordnung" disabled />
-					<svws-ui-select v-if="schulform.istAllgemeinbildend()" title="Klassenart" v-model="modelProxy.klassenart.value" :items="modelProxy.klassenarten.value" :item-text="getSelectText" />
+					<svws-ui-select v-if="schulform.istAllgemeinbildend() || schulform.istWeiterbildung()" title="Klassenart" v-model="modelProxy.klassenart.value" :items="modelProxy.klassenarten.value" :item-text="getSelectText" />
 					<svws-ui-select v-if="schulform.istAllgemeinbildend()" title="Organisationsform" v-model="modelProxy.organisationsformAllgemeinbildend.value" :items="modelProxy.organisationsformenAllgemeinbildend.value" :item-text="getSelectText" />
 					<svws-ui-select v-if="schulform.istBerufsbildend()" title="Organisationsform" v-model="modelProxy.organisationsformBerufsbildend.value" :items="modelProxy.organisationsformenBerufsbildend.value" :item-text="getSelectText" />
 					<svws-ui-select v-if="schulform.istWeiterbildung()" title="Organisationsform" v-model="modelProxy.organisationsformWeiterbildend.value" :items="modelProxy.organisationsformenWeiterbildend.value" :item-text="getSelectText" />
@@ -100,7 +100,7 @@
 		daten.parallelitaet = null;
 		daten.idSchulgliederung = idSchulgliederung;
 		if (props.schulform.istAllgemeinbildend()) {
-			daten.idKlassenart = (Klassenart.getDefault(props.schulform).daten(props.manager().getSchuljahr())?.id) ?? (Klassenart.UNDEFINIERT.daten(props.manager().getSchuljahr())?.id ?? -1);
+			daten.idKlassenart = Klassenart.getDefault(props.schulform)?.daten(props.manager().getSchuljahr())?.id ?? null;
 			daten.idAllgemeinbildendOrganisationsform = AllgemeinbildendOrganisationsformen.GANZTAG.daten(props.manager().getSchuljahr())?.id ?? null;
 		} else if (props.schulform.istBerufsbildend()) {
 			daten.idBerufsbildendOrganisationsform = BerufskollegOrganisationsformen.VOLLZEIT.daten(props.manager().getSchuljahr())?.id ?? null;

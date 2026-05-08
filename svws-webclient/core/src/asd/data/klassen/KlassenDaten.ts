@@ -104,7 +104,7 @@ export class KlassenDaten extends JavaObject {
 	/**
 	 * Die ID für Klassenart
 	 */
-	public idKlassenart: number = -1;
+	public idKlassenart: number | null = null;
 
 	/**
 	 * Gibt an, ob die Noteneingabe gesperrt ist
@@ -183,9 +183,7 @@ export class KlassenDaten extends JavaObject {
 		if (obj.idSchulgliederung === undefined)
 			throw new Error('invalid json format, missing attribute idSchulgliederung');
 		result.idSchulgliederung = obj.idSchulgliederung;
-		if (obj.idKlassenart === undefined)
-			throw new Error('invalid json format, missing attribute idKlassenart');
-		result.idKlassenart = obj.idKlassenart;
+		result.idKlassenart = (obj.idKlassenart === undefined) ? null : obj.idKlassenart === null ? null : obj.idKlassenart;
 		if (obj.noteneingabeGesperrt === undefined)
 			throw new Error('invalid json format, missing attribute noteneingabeGesperrt');
 		result.noteneingabeGesperrt = obj.noteneingabeGesperrt;
@@ -234,7 +232,7 @@ export class KlassenDaten extends JavaObject {
 		result += '"idWeiterbildungOrganisationsform" : ' + ((obj.idWeiterbildungOrganisationsform === null) ? 'null' : obj.idWeiterbildungOrganisationsform.toString()) + ',';
 		result += '"pruefungsordnung" : ' + ((obj.pruefungsordnung === null) ? 'null' : JSON.stringify(obj.pruefungsordnung)) + ',';
 		result += '"idSchulgliederung" : ' + obj.idSchulgliederung.toString() + ',';
-		result += '"idKlassenart" : ' + obj.idKlassenart.toString() + ',';
+		result += '"idKlassenart" : ' + ((obj.idKlassenart === null) ? 'null' : obj.idKlassenart.toString()) + ',';
 		result += '"noteneingabeGesperrt" : ' + obj.noteneingabeGesperrt.toString() + ',';
 		result += '"verwendungAnkreuzkompetenzen" : ' + obj.verwendungAnkreuzkompetenzen.toString() + ',';
 		result += '"idFachklasse" : ' + ((obj.idFachklasse === null) ? 'null' : obj.idFachklasse.toString()) + ',';
@@ -318,7 +316,7 @@ export class KlassenDaten extends JavaObject {
 			result += '"idSchulgliederung" : ' + obj.idSchulgliederung.toString() + ',';
 		}
 		if (obj.idKlassenart !== undefined) {
-			result += '"idKlassenart" : ' + obj.idKlassenart.toString() + ',';
+			result += '"idKlassenart" : ' + ((obj.idKlassenart === null) ? 'null' : obj.idKlassenart.toString()) + ',';
 		}
 		if (obj.noteneingabeGesperrt !== undefined) {
 			result += '"noteneingabeGesperrt" : ' + obj.noteneingabeGesperrt.toString() + ',';
