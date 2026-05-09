@@ -41,15 +41,18 @@ export class SatSolverSimple1 extends SatSolver {
 			if (this.conflict()) {
 				while (true) {
 					i--;
-					if (i < 1)
+					if (i < 1) {
 						return SatOutput.createUNSATISFIABLE();
-					if (this._solution[i] !== -i)
+					}
+					if (this._solution[i] !== -i) {
 						break;
+					}
 					this._solution[i] = 0;
 				}
 			}
-			if (i >= this._solution.length)
+			if (i >= this._solution.length) {
 				return SatOutput.createSATISFIABLE(this._solution);
+			}
 			if (this._solution[i] === 0) {
 				this._solution[i] = i;
 			} else {
@@ -61,9 +64,11 @@ export class SatSolverSimple1 extends SatSolver {
 	}
 
 	private conflict(): boolean {
-		for (const clause of this._clauses)
-			if (this.isEmpty(clause))
+		for (const clause of this._clauses) {
+			if (this.isEmpty(clause)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -71,8 +76,9 @@ export class SatSolverSimple1 extends SatSolver {
 		for (const literal of clause) {
 			const abs: number = Math.abs(literal);
 			const assignment: number = this._solution[abs];
-			if ((assignment === literal) || (assignment === 0))
+			if ((assignment === literal) || (assignment === 0)) {
 				return false;
+			}
 		}
 		return true;
 	}

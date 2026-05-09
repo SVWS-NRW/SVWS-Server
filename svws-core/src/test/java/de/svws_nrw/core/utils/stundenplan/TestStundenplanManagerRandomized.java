@@ -67,8 +67,9 @@ class TestStundenplanManagerRandomized {
 	@DisplayName("testAllRandomized")
 	@Test
 	void testAllRandomized() {
-		for (int runden = 1; runden <= 1024; runden *= 2)
+		for (int runden = 1; runden <= 1024; runden *= 2) {
 			testeMehrereRunden(runden);
+		}
 
 	}
 
@@ -113,8 +114,9 @@ class TestStundenplanManagerRandomized {
 		final @NotNull StundenplanManager m1 = new StundenplanManager(komplett);
 		final @NotNull StundenplanManagerDummy m2 = new StundenplanManagerDummy();
 
-		for (int i = 0; i < runden; i++)
+		for (int i = 0; i < runden; i++) {
 			testeJedeMethode(rnd, m1, m2);
+		}
 	}
 
 	private static void testeJedeMethode(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
@@ -203,10 +205,11 @@ class TestStundenplanManagerRandomized {
 			fach2 = null;
 		}
 
-		if ((fach1 != null) && (fach2 != null))
+		if ((fach1 != null) && (fach2 != null)) {
 			assertEquals(true, fach1.id == fach2.id);
-		else
+		} else {
 			assertEquals(true, (fach1 == null) && (fach2 == null));
+		}
 	}
 
 	private static void testFachGetMengeAsList(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
@@ -288,10 +291,11 @@ class TestStundenplanManagerRandomized {
 			raum2 = null;
 		}
 
-		if ((raum1 != null) && (raum2 != null))
+		if ((raum1 != null) && (raum2 != null)) {
 			assertEquals(true, raum1.id == raum2.id);
-		else
+		} else {
 			assertEquals(true, (raum1 == null) && (raum2 == null));
+		}
 	}
 
 	private static void testRaumGetMengeAsList(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
@@ -475,10 +479,11 @@ class TestStundenplanManagerRandomized {
 			schueler2 = null;
 		}
 
-		if ((schueler1 != null) && (schueler2 != null))
+		if ((schueler1 != null) && (schueler2 != null)) {
 			assertEquals(true, schueler1.id == schueler2.id);
-		else
+		} else {
 			assertEquals(true, (schueler1 == null) && (schueler2 == null));
+		}
 	}
 
 	private static void testSchuelerGetMengeAsList(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
@@ -560,10 +565,11 @@ class TestStundenplanManagerRandomized {
 			jahrgang2 = null;
 		}
 
-		if ((jahrgang1 != null) && (jahrgang2 != null))
+		if ((jahrgang1 != null) && (jahrgang2 != null)) {
 			assertEquals(true, jahrgang1.id == jahrgang2.id);
-		else
+		} else {
 			assertEquals(true, (jahrgang1 == null) && (jahrgang2 == null));
+		}
 	}
 
 	private static void testJahrgangPatchAttributes(final @NotNull Random rnd, final @NotNull StundenplanManager m1,
@@ -666,10 +672,11 @@ class TestStundenplanManagerRandomized {
 			aufsichtsbereich2 = null;
 		}
 
-		if ((aufsichtsbereich1 != null) && (aufsichtsbereich2 != null))
+		if ((aufsichtsbereich1 != null) && (aufsichtsbereich2 != null)) {
 			assertEquals(true, aufsichtsbereich1.id == aufsichtsbereich2.id);
-		else
+		} else {
 			assertEquals(true, (aufsichtsbereich1 == null) && (aufsichtsbereich2 == null));
+		}
 	}
 
 	private static void testAufsichtsbereichPatchAttributes(final @NotNull Random rnd, final @NotNull StundenplanManager m1,
@@ -878,10 +885,11 @@ class TestStundenplanManagerRandomized {
 			lehrer2 = null;
 		}
 
-		if ((lehrer1 != null) && (lehrer2 != null))
+		if ((lehrer1 != null) && (lehrer2 != null)) {
 			assertEquals(true, lehrer1.id == lehrer2.id);
-		else
+		} else {
 			assertEquals(true, (lehrer1 == null) && (lehrer2 == null));
+		}
 	}
 
 	private static void testLehrerPatchAttributes(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {

@@ -80,13 +80,14 @@ class TestDequeRandom {
 	@Test
 	@DisplayName("Testet grundlegende Funktionen der {@link LinkedCollection}.")
 	void testeAlles() {
-		for (int i = 0; i < _ROUNDS; i++)
+		for (int i = 0; i < _ROUNDS; i++) {
 			switch (_random.nextInt(3)) {
 				case 0 -> testeAllesAdd();
 				case 1 -> testeAllesRemove();
 				case 2 -> testeAllesMisc();
 				default -> throw new IllegalArgumentException("Unexpected value");
 			}
+		}
 	}
 
 	private void testeAllesAdd() {
@@ -152,23 +153,27 @@ class TestDequeRandom {
 	}
 
 	private void testHashCode() {
-		if (d1.hashCode() != d2.hashCode())
+		if (d1.hashCode() != d2.hashCode()) {
 			fail("d1.hashCode() != d2.hashCode() --> " + d1.hashCode() + " != " + d2.hashCode());
+		}
 	}
 
 	private void testToString() {
-		if (!d1.toString().equals(d2.toString()))
+		if (!d1.toString().equals(d2.toString())) {
 			fail("!d1.toString().equals(d2.toString())");
+		}
 	}
 
 	private void testRemoveToElement() {
-		if (d1.size() != d2.size())
+		if (d1.size() != d2.size()) {
 			fail("d1.size() != d2.size() --> " + d1.size() + " != " + d2.size());
+		}
 		if (d1.size() != 0) {
 			final Integer i1 = d1.remove();
 			final Integer i2 = d2.remove();
-			if (i1 != i2)
+			if (i1 != i2) {
 				fail("d1.remove() != d2.remove() --> " + i1 + "!=" + i2);
+			}
 		} else {
 			try {
 				d1.remove();
@@ -197,16 +202,18 @@ class TestDequeRandom {
 
 		Integer old = null;
 		for (final Integer value : temp1) {
-			if ((old != null) && (old.compareTo(value) > 0))
+			if ((old != null) && (old.compareTo(value) > 0)) {
 				fail("old.compareTo(value) > 0 --> LinkedCollection IST NICHT SORTIERT");
+			}
 			old = value;
 		}
 
 	}
 
 	private void testSpecialIndex() {
-		if (d1.isEmpty())
+		if (d1.isEmpty()) {
 			return;
+		}
 
 		final LinkedCollection<Integer> temp1 = new LinkedCollection<>((LinkedCollection<Integer>) d1);
 		final int index = _random.nextInt(d1.size());
@@ -214,8 +221,9 @@ class TestDequeRandom {
 		temp1.set(index, value2);
 		final Integer value3 = temp1.get(index);
 
-		if (value2 != value3)
+		if (value2 != value3) {
 			fail("value2 != value3 --> " + value2 + " != " + value3);
+		}
 	}
 
 	private void testRetainAllSelfOrNull() {
@@ -227,13 +235,15 @@ class TestDequeRandom {
 		if (_random.nextBoolean()) {
 			final boolean b1 = d1.retainAll(d1);
 			final boolean b2 = d2.retainAll(d2);
-			if (b1 != b2)
+			if (b1 != b2) {
 				fail("d1.retainAll(d1) != d2.retainAll(d2) --> " + b1 + " != " + b2);
+			}
 		} else {
 			final boolean b1 = d1.retainAll(null);
 			final boolean b2 = d2.retainAll(new LinkedList<>());
-			if (b1 != b2)
+			if (b1 != b2) {
 				fail("d1.retainAll(null) != d2.retainAll(null) --> " + b1 + " != " + b2);
+			}
 		}
 
 		testEquality();
@@ -248,30 +258,34 @@ class TestDequeRandom {
 		final boolean b1 = d1.removeAll(d1);
 		final boolean b2 = d2.removeAll(d2);
 
-		if (b1 != b2)
+		if (b1 != b2) {
 			fail("d1.removeAll(d1) != d2.removeAll(d2) --> " + b1 + " != " + b2);
+		}
 
 		testEquality();
 	}
 
 	private void testEquals() {
-		if (!d1.equals(d2))
+		if (!d1.equals(d2)) {
 			fail("!d1.equals(d2)");
 		// Das klappt nicht, weil d2=LinkedList testet, ob d1 vom Typ List ist.
 		// if (d2.equals(d1) == false)
 		// fail("d2.equals(d1) == false");
+		}
 	}
 
 	private void testRetainAll() {
 		final LinkedList<Integer> temp = new LinkedList<>();
-		for (int i = 0; i < (d1.size() / 4); i++)
+		for (int i = 0; i < (d1.size() / 4); i++) {
 			temp.addLast(_random.nextInt(_MAX_VALUE));
+		}
 
 		final boolean b1 = d1.retainAll(temp);
 		final boolean b2 = d2.retainAll(temp);
 
-		if (b1 != b2)
+		if (b1 != b2) {
 			fail("d1.retainAll(temp) != d2.retainAll(temp) --> " + b1 + " != " + b2);
+		}
 
 		testEquality();
 	}
@@ -282,8 +296,9 @@ class TestDequeRandom {
 		final boolean b1 = d1.removeAll(temp);
 		final boolean b2 = d2.removeAll(temp);
 
-		if (b1 != b2)
+		if (b1 != b2) {
 			fail("d1.removeAll(temp) != d2.removeAll(temp) --> " + b1 + " != " + b2);
+		}
 
 		testEquality();
 	}
@@ -294,15 +309,18 @@ class TestDequeRandom {
 		final boolean b1 = d1.containsAll(temp);
 		final boolean b2 = d2.containsAll(temp);
 
-		if (b1 != b2)
+		if (b1 != b2) {
 			fail("d1.containsAll(temp) != d2.containsAll(temp) --> " + b1 + " != " + b2);
+		}
 	}
 
 	private LinkedList<Integer> getListWithSomeElementsInCommon() {
 		final LinkedList<Integer> temp = new LinkedList<>();
-		for (final Integer value : d1)
-			if (_random.nextBoolean())
+		for (final Integer value : d1) {
+			if (_random.nextBoolean()) {
 				temp.addLast(value);
+			}
+		}
 		final Integer value = _random.nextInt(_MAX_VALUE);
 		temp.addLast(value);
 		return temp;
@@ -312,25 +330,30 @@ class TestDequeRandom {
 		final Integer[] o1 = d1.toArray(new Integer[0]);
 		final Integer[] o2 = d2.toArray(new Integer[0]);
 
-		if (o1.length != o2.length)
+		if (o1.length != o2.length) {
 			fail("d1.toArray().length != d2.toArray().length --> " + o1.length + " != " + o2.length);
+		}
 
-		for (int i = 0; i < o1.length; i++)
-			if (!o1[i].equals(o2[i]))
+		for (int i = 0; i < o1.length; i++) {
+			if (!o1[i].equals(o2[i])) {
 				fail("!o1[i].equals(o2[i]) --> " + o1[i] + " != " + o2[i]);
+			}
+		}
 
 		final Iterator<Integer> i1 = d1.iterator();
 		for (final int element : o1) {
 			final Integer value = i1.next();
-			if (element != value)
+			if (element != value) {
 				fail("!o1[i].equals(value) --> " + element + " != " + value);
+			}
 		}
 
 		final Iterator<Integer> i2 = d2.iterator();
 		for (final int element : o2) {
 			final Integer value = i2.next();
-			if (element != value)
+			if (element != value) {
 				fail("!o2[i].equals(value) --> " + element + " != " + value);
+			}
 		}
 
 	}
@@ -339,33 +362,39 @@ class TestDequeRandom {
 		final Object[] o1 = d1.toArray();
 		final Object[] o2 = d2.toArray();
 
-		if (o1.length != o2.length)
+		if (o1.length != o2.length) {
 			fail("d1.toArray().length != d2.toArray().length --> " + o1.length + " != " + o2.length);
+		}
 
-		for (int i = 0; i < o1.length; i++)
-			if (!o1[i].equals(o2[i]))
+		for (int i = 0; i < o1.length; i++) {
+			if (!o1[i].equals(o2[i])) {
 				fail("!o1[i].equals(o2[i]) --> " + o1[i] + " != " + o2[i]);
+			}
+		}
 
 		final Iterator<Integer> i1 = d1.iterator();
 		for (final Object element : o1) {
 			final Integer value = i1.next();
-			if (!element.equals(value))
+			if (!element.equals(value)) {
 				fail("!o1[i].equals(value) --> " + element + " != " + value);
+			}
 		}
 
 		final Iterator<Integer> i2 = d2.iterator();
 		for (final Object element : o2) {
 			final Integer value = i2.next();
-			if (!element.equals(value))
+			if (!element.equals(value)) {
 				fail("!o2[i].equals(value) --> " + element + " != " + value);
+			}
 		}
 	}
 
 	private void testIsEmpty() {
 		final boolean b1 = d1.isEmpty();
 		final boolean b2 = d2.isEmpty();
-		if (b1 != b2)
+		if (b1 != b2) {
 			fail("d1.isEmpty() != d2.isEmpty() --> " + b1 + "!=" + b2);
+		}
 	}
 
 	private void testClear() {
@@ -380,12 +409,14 @@ class TestDequeRandom {
 		final Iterator<Integer> i2 = d2.descendingIterator();
 
 		while (i1.hasNext() || i2.hasNext()) {
-			if (i1.hasNext() != i2.hasNext())
+			if (i1.hasNext() != i2.hasNext()) {
 				testPrintLists(true);
+			}
 			final int v1 = i1.next();
 			final int v2 = i2.next();
-			if (v1 != v2)
+			if (v1 != v2) {
 				testPrintLists(true);
+			}
 		}
 
 	}
@@ -394,26 +425,30 @@ class TestDequeRandom {
 		final Integer obj = _random.nextInt(_MAX_VALUE);
 		final boolean b1 = d1.contains(obj);
 		final boolean b2 = d2.contains(obj);
-		if (b1 != b2)
+		if (b1 != b2) {
 			fail("d1.contains(temp1) != d2.contains(temp2) --> " + b1 + "!=" + b2);
+		}
 	}
 
 	private void testRemoveObject() {
 		final Integer obj = _random.nextInt(_MAX_VALUE);
 		final boolean b1 = d1.remove(obj);
 		final boolean b2 = d2.remove(obj);
-		if (b1 != b2)
+		if (b1 != b2) {
 			fail("d1.remove(temp1) != d2.remove(temp2) --> " + b1 + "!=" + b2);
+		}
 	}
 
 	private void testPop() {
-		if (d1.size() != d2.size())
+		if (d1.size() != d2.size()) {
 			fail("d1.size() != d2.size() --> " + d1.size() + " != " + d2.size());
+		}
 		if (d1.size() != 0) {
 			final Integer i1 = d1.pop();
 			final Integer i2 = d2.pop();
-			if (i1 != i2)
+			if (i1 != i2) {
 				fail("d1.pop() != d2.pop() --> " + i1 + "!=" + i2);
+			}
 		} else {
 			try {
 				d1.pop();
@@ -454,8 +489,9 @@ class TestDequeRandom {
 		final boolean b1 = d1.addAll(temp1);
 		final boolean b2 = d2.addAll(temp2);
 
-		if (b1 != b2)
+		if (b1 != b2) {
 			fail("d1.addAll(temp1) != d2.addAll(temp2) --> " + b1 + "!=" + b2);
+		}
 
 		testEquality();
 	}
@@ -463,18 +499,21 @@ class TestDequeRandom {
 	private void testPeek() {
 		final Integer i1 = d1.peek();
 		final Integer i2 = d2.peek();
-		if (i1 != i2)
+		if (i1 != i2) {
 			fail("d1.peek() != d2.peek() --> " + i1 + "!=" + i2);
+		}
 	}
 
 	private void testElement() {
-		if (d1.size() != d2.size())
+		if (d1.size() != d2.size()) {
 			fail("d1.size() != d2.size() --> " + d1.size() + " != " + d2.size());
+		}
 		if (d1.size() != 0) {
 			final Integer i1 = d1.element();
 			final Integer i2 = d1.element();
-			if (i1 != i2)
+			if (i1 != i2) {
 				fail("d1.element() != d2.element() --> " + i1 + "!=" + i2);
+			}
 		} else {
 			try {
 				d1.element();
@@ -494,24 +533,27 @@ class TestDequeRandom {
 	private void testPoll() {
 		final Integer i1 = d1.poll();
 		final Integer i2 = d2.poll();
-		if (i1 != i2)
+		if (i1 != i2) {
 			fail("d1.poll() != d2.poll() --> " + i1 + "!=" + i2);
+		}
 	}
 
 	private void testRemoveToBoolean() {
 		final Integer obj = _random.nextInt(_MAX_VALUE);
 		final boolean b1 = d1.remove(obj);
 		final boolean b2 = d2.remove(obj);
-		if (b1 != b2)
+		if (b1 != b2) {
 			fail("d1.remove(" + obj + ") != d2.remove(" + obj + ") --> " + b1 + "!=" + b2);
+		}
 	}
 
 	private void testOffer() {
 		final Integer obj = _random.nextInt(_MAX_VALUE);
 		final boolean b1 = d1.offer(obj);
 		final boolean b2 = d2.offer(obj);
-		if (b1 != b2)
+		if (b1 != b2) {
 			fail("d1.offer(" + obj + ") != d2.offer(" + obj + ") --> " + b1 + "!=" + b2);
+		}
 
 	}
 
@@ -519,8 +561,9 @@ class TestDequeRandom {
 		final Integer obj = _random.nextInt(_MAX_VALUE);
 		final boolean b1 = d1.add(obj);
 		final boolean b2 = d2.add(obj);
-		if (b1 != b2)
+		if (b1 != b2) {
 			fail("d1.add(" + obj + ") != d2.add(" + obj + ") --> " + b1 + "!=" + b2);
+		}
 
 	}
 
@@ -528,35 +571,41 @@ class TestDequeRandom {
 		final Integer obj = _random.nextInt(_MAX_VALUE);
 		final boolean b1 = d1.removeFirstOccurrence(obj);
 		final boolean b2 = d2.removeFirstOccurrence(obj);
-		if (b1 != b2)
+		if (b1 != b2) {
 			fail("d1.removeFirstOccurrence(" + obj + ") != d2.removeFirstOccurrence(" + obj + ") --> " + b1 + "!="
 					+ b2);
+		}
 	}
 
 	private void testRemoveLastOccurrence() {
 		final Integer obj = _random.nextInt(_MAX_VALUE);
 		final boolean b1 = d1.removeLastOccurrence(obj);
 		final boolean b2 = d2.removeLastOccurrence(obj);
-		if (b1 != b2)
+		if (b1 != b2) {
 			fail("d1.removeLastOccurrence(" + obj + ") != d2.removeLastOccurrence(" + obj + ") --> " + b1 + "!=" + b2);
+		}
 	}
 
 	private void testPeekFirst() {
-		if (d1.peekFirst() != d2.peekFirst())
+		if (d1.peekFirst() != d2.peekFirst()) {
 			fail("d1.peekFirst() != d2.peekFirst() --> " + d1.peekFirst() + "!=" + d2.peekFirst());
+		}
 	}
 
 	private void testPeekLast() {
-		if (d1.peekLast() != d2.peekLast())
+		if (d1.peekLast() != d2.peekLast()) {
 			fail("d1.peekLast() != d2.peekLast() --> " + d1.peekLast() + "!=" + d2.peekLast());
+		}
 	}
 
 	private void testGetFirst() {
-		if (d1.size() != d2.size())
+		if (d1.size() != d2.size()) {
 			fail("d1.size() != d2.size() --> " + d1.size() + " != " + d2.size());
+		}
 		if (d1.size() != 0) {
-			if (d1.getFirst() != d2.getFirst())
+			if (d1.getFirst() != d2.getFirst()) {
 				fail("d1.getFirst() != d2.getFirst() --> " + d1.getFirst() + "!=" + d2.getFirst());
+			}
 		} else {
 			try {
 				d1.getFirst();
@@ -574,11 +623,13 @@ class TestDequeRandom {
 	}
 
 	private void testGetLast() {
-		if (d1.size() != d2.size())
+		if (d1.size() != d2.size()) {
 			fail("d1.size() != d2.size() --> " + d1.size() + " != " + d2.size());
+		}
 		if (d1.size() != 0) {
-			if (d1.getLast() != d2.getLast())
+			if (d1.getLast() != d2.getLast()) {
 				fail("d1.getLast() != d2.getLast() --> " + d1.getLast() + "!=" + d2.getLast());
+			}
 		} else {
 			try {
 				d1.getLast();
@@ -596,39 +647,49 @@ class TestDequeRandom {
 	}
 
 	private void testPollFirst() {
-		if (d1.size() != d2.size())
+		if (d1.size() != d2.size()) {
 			fail("d1.size() != d2.size() --> " + d1.size() + " != " + d2.size());
+		}
 		if (d1.size() != 0) {
-			if (d1.pollFirst() != d2.pollFirst())
+			if (d1.pollFirst() != d2.pollFirst()) {
 				fail("d1.pollFirst() != d2.pollFirst()");
+			}
 		} else {
-			if (d1.pollFirst() != null)
+			if (d1.pollFirst() != null) {
 				fail("d1.pollFirst() != null");
-			if (d2.pollFirst() != null)
+			}
+			if (d2.pollFirst() != null) {
 				fail("d2.pollFirst() != null");
+			}
 		}
 	}
 
 	private void testPollLast() {
-		if (d1.size() != d2.size())
+		if (d1.size() != d2.size()) {
 			fail("d1.size() != d2.size() --> " + d1.size() + " != " + d2.size());
+		}
 		if (d1.size() != 0) {
-			if (d1.pollLast() != d2.pollLast())
+			if (d1.pollLast() != d2.pollLast()) {
 				fail("d1.pollLast() != d2.pollLast()");
+			}
 		} else {
-			if (d1.pollFirst() != null)
+			if (d1.pollFirst() != null) {
 				fail("d1.pollLast() != null");
-			if (d2.pollFirst() != null)
+			}
+			if (d2.pollFirst() != null) {
 				fail("d2.pollLast() != null");
+			}
 		}
 	}
 
 	private void testRemoveFirst() {
-		if (d1.size() != d2.size())
+		if (d1.size() != d2.size()) {
 			fail("d1.size() != d2.size() --> " + d1.size() + " != " + d2.size());
+		}
 		if (d1.size() != 0) {
-			if (d1.removeFirst() != d2.removeFirst())
+			if (d1.removeFirst() != d2.removeFirst()) {
 				fail("d1.removeFirst() != d2.removeFirst()");
+			}
 		} else {
 			try {
 				d1.removeFirst();
@@ -646,11 +707,13 @@ class TestDequeRandom {
 	}
 
 	private void testRemoveLast() {
-		if (d1.size() != d2.size())
+		if (d1.size() != d2.size()) {
 			fail("d1.size() != d2.size() --> " + d1.size() + " != " + d2.size());
+		}
 		if (d1.size() != 0) {
-			if (d1.removeLast() != d2.removeLast())
+			if (d1.removeLast() != d2.removeLast()) {
 				fail("d1.removeLast() != d2.removeLast()");
+			}
 		} else {
 			try {
 				d1.removeLast();
@@ -668,16 +731,18 @@ class TestDequeRandom {
 	}
 
 	private void testSize() {
-		if (d1.size() != d2.size())
+		if (d1.size() != d2.size()) {
 			fail("d1.size() != d2.size() --> " + d1.size() + " != " + d2.size());
+		}
 	}
 
 	private void testOfferFirst() {
 		final int num = _random.nextInt(_MAX_VALUE);
 		final boolean b1 = d1.offerFirst(num);
 		final boolean b2 = d2.offerFirst(num);
-		if (b1 != b2)
+		if (b1 != b2) {
 			fail("d1.offerFirst(num) != d2.offerFirst(num) --> " + b1 + "!=" + b2);
+		}
 		testEquality();
 	}
 
@@ -685,8 +750,9 @@ class TestDequeRandom {
 		final int num = _random.nextInt(_MAX_VALUE);
 		final boolean b1 = d1.offerLast(num);
 		final boolean b2 = d2.offerLast(num);
-		if (b1 != b2)
+		if (b1 != b2) {
 			fail("d1.offerLast(num) != d2.offerLast(num) --> " + b1 + "!=" + b2);
+		}
 		testEquality();
 	}
 
@@ -709,20 +775,23 @@ class TestDequeRandom {
 		final Iterator<Integer> i2 = d2.iterator();
 
 		while (i1.hasNext() || i2.hasNext()) {
-			if (i1.hasNext() != i2.hasNext())
+			if (i1.hasNext() != i2.hasNext()) {
 				testPrintLists(true);
+			}
 			final int v1 = i1.next();
 			final int v2 = i2.next();
-			if (v1 != v2)
+			if (v1 != v2) {
 				testPrintLists(true);
+			}
 		}
 	}
 
 	private void testPrintLists(final boolean fail) {
 		System.out.println("d1 = " + d1);
 		System.out.println("d2 = " + d2);
-		if (fail)
+		if (fail) {
 			fail("Beide Collections sind nicht identisch!");
+		}
 	}
 
 }

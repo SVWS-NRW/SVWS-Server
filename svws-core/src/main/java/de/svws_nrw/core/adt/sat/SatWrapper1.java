@@ -31,8 +31,9 @@ public final class SatWrapper1 implements Function<SatInput, SatOutput> {
 		// create "map1to2"
 		final int nVars = in1.getVarCount();
 		final @NotNull int[] map1to2 = new int[nVars + 1];
-		for (int i = 1; i <= nVars; i++)
+		for (int i = 1; i <= nVars; i++) {
 			map1to2[i] = i;
+		}
 		for (int i1 = 1; i1 <= nVars; i1++) {
 			final int i2 = rnd.nextInt(nVars) + 1;
 			final int save1 = map1to2[i1];

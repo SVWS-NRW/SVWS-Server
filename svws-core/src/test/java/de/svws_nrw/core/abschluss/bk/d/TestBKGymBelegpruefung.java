@@ -75,8 +75,9 @@ class TestBKGymBelegpruefung {
 		final Map<String, BKGymFach[]> tempTestJahrgaengeFaecher =
 				ResourceUtils.json2Classes("de.svws_nrw.core.abschluss.bk.d", "Jahrgang_", "_Faecher", BKGymFach[].class);
 		assert (tempTestJahrgaengeFaecher != null) && (tempTestJahrgaengeFaecher.size() != 0) : "Fehler beim Laden der Gost-Fächer der Testjahrgänge!";
-		for (final Map.Entry<String, BKGymFach[]> entry : tempTestJahrgaengeFaecher.entrySet())
+		for (final Map.Entry<String, BKGymFach[]> entry : tempTestJahrgaengeFaecher.entrySet()) {
 			testJahrgaengeFaecher.put(entry.getKey(), Arrays.asList(entry.getValue()));
+		}
 		System.out.println("  FERTIG!");
 
 		System.out.println("- Lade die Abiturdaten aus den JSON-Resourcen und ordne sie den Jahrgängen zu...");
@@ -85,8 +86,9 @@ class TestBKGymBelegpruefung {
 		assert (tempTestAbiturdaten != null) && (tempTestAbiturdaten.size() != 0) : "Fehler beim Laden der Abiturdaten!";
 		for (final Map.Entry<String, BKGymAbiturdaten> entry : tempTestAbiturdaten.entrySet()) {
 			final String[] ids = entry.getKey().split("_");
-			if (ids.length != 2)
+			if (ids.length != 2) {
 				fail("Fehler beim Laden der Abiturdaten - ungültiger Dateiname: Jahrgang_" + entry.getKey() + "_Abiturdaten");
+			}
 			HashMap<String, BKGymAbiturdaten> mapSchuelerJahrgang = testAbiturdaten.get(ids[0]);
 			if (mapSchuelerJahrgang == null) {
 				mapSchuelerJahrgang = new HashMap<>();
@@ -99,14 +101,16 @@ class TestBKGymBelegpruefung {
 		System.out.println("- Lade die Belegprüfungsergebnisse aus den JSON-Resourcen und ordne sie den Jahrgängen zu...");
 		final Map<String, BKGymBelegpruefungErgebnis> tempTestBelegpruefungsergebnisse =
 				ResourceUtils.json2Classes("de.svws_nrw.core.abschluss.bk.d", "Jahrgang_", "_Belegpruefungsergebnis", BKGymBelegpruefungErgebnis.class);
-		if ((tempTestBelegpruefungsergebnisse == null) || (tempTestBelegpruefungsergebnisse.size() == 0))
+		if ((tempTestBelegpruefungsergebnisse == null) || (tempTestBelegpruefungsergebnisse.size() == 0)) {
 			return;
+		}
 		assert (tempTestBelegpruefungsergebnisse != null) && (tempTestBelegpruefungsergebnisse.size() != 0)
 				: "Fehler beim Laden der Belegprüfungsergebnisse!";
 		for (final Map.Entry<String, BKGymBelegpruefungErgebnis> entry : tempTestBelegpruefungsergebnisse.entrySet()) {
 			final String[] ids = entry.getKey().split("_");
-			if (ids.length != 2)
+			if (ids.length != 2) {
 				fail("Fehler beim Laden der Belegprüfungsergebnisse - ungültiger Dateiname: Jahrgang_" + entry.getKey() + "_Belegpruefungsergebnis");
+			}
 			HashMap<String, BKGymBelegpruefungErgebnis> mapSchuelerJahrgang = testBelegpruefungsergebnisse.get(ids[0]);
 			if (mapSchuelerJahrgang == null) {
 				mapSchuelerJahrgang = new HashMap<>();
@@ -116,7 +120,6 @@ class TestBKGymBelegpruefung {
 		}
 		System.out.println("  FERTIG!");
 	}
-
 
 
 	/**
@@ -183,10 +186,11 @@ class TestBKGymBelegpruefung {
 								final List<String> ergebnisFehler = ergebnis.fehlercodes.stream().map(error -> error.beschreibung).toList();
 								final String zuwenig = testfallFehler.stream().filter(error -> !ergebnisFehler.contains(error)).collect(Collectors.joining(", "));
 								final String zuviele = ergebnisFehler.stream().filter(error -> !testfallFehler.contains(error)).collect(Collectors.joining(", "));
-								if ((!"".equals(zuwenig)) || (!"".equals(zuviele)))
+								if ((!"".equals(zuwenig)) || (!"".equals(zuviele))) {
 									fail("Fehler: Die Fehlercodes der Belegprüfung stimmen nicht mit dem Testfall überein: " + System.lineSeparator()
 											+ "  - zuviel gefundene Fehler: " + (("".equals(zuviele)) ? "---" : zuviele) + System.lineSeparator()
 											+ "  - zu wenig gefunden Fehler:" + (("".equals(zuwenig)) ? "---" : zuwenig));
+								}
 								System.out.println("  Test erfolgreich beendet.");
 							}
 						}));

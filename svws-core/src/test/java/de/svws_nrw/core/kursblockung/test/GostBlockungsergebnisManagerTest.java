@@ -69,8 +69,9 @@ class GostBlockungsergebnisManagerTest {
 
 			@Override
 			public void accept(final LogData t) {
-				if (t.getLevel().compareTo(LogLevel.APP) != 0)
+				if (t.getLevel().compareTo(LogLevel.APP) != 0) {
 					fail(t.getText());
+				}
 			}
 		});
 
@@ -96,8 +97,9 @@ class GostBlockungsergebnisManagerTest {
 		log.addConsumer(new Consumer<LogData>() {
 			@Override
 			public void accept(final LogData t) {
-				if (t.getLevel().compareTo(LogLevel.APP) != 0)
+				if (t.getLevel().compareTo(LogLevel.APP) != 0) {
 					fail(t.getText());
+				}
 			}
 		});
 
@@ -121,11 +123,13 @@ class GostBlockungsergebnisManagerTest {
 			HashSet<Long> setK = mapFaKu.get(fachartID);
 			if (setK == null) {
 				setK = new HashSet<>();
-				if (mapFaKu.put(fachartID, setK) != null)
+				if (mapFaKu.put(fachartID, setK) != null) {
 					fail("Doppelte Fachart-ID!");
+				}
 			}
-			if (!setK.add(gKurs.id))
+			if (!setK.add(gKurs.id)) {
 				fail("Fachart " + fachartID + " hat den Kurs bereits " + gKurs.id);
+			}
 
 			// mapKuSchiene
 			mapKuSchiene.put(gKurs.id, new HashSet<>());
@@ -140,8 +144,9 @@ class GostBlockungsergebnisManagerTest {
 				mapScFaKu.put(gFachwahl.schuelerID, mapFW);
 			}
 			final long fachartID = GostKursart.getFachartIDByFachwahl(gFachwahl);
-			if (mapFW.put(fachartID, null) != null)
+			if (mapFW.put(fachartID, null) != null) {
 				fail("Schüler-ID " + gFachwahl.schuelerID + ", Fachart-ID " + fachartID + " doppelt!");
+			}
 		}
 
 		final Random lRandom = new Random(RANDOM_SEED);
@@ -222,57 +227,72 @@ class GostBlockungsergebnisManagerTest {
 			final GostBlockungsergebnisManager out) {
 		// 1a) ergebnis.bewertung.anzahlKurseNichtZugeordnet;
 		int sum1a = 0;
-		for (final long fachartID : mapFaKu.keySet())
+		for (final long fachartID : mapFaKu.keySet()) {
 			for (final long kursID : mapFaKu.get(fachartID)) {
 				final int schienenIst = out.getOfKursAnzahlSchienenIst(kursID);
 				final int schienenSoll = out.getOfKursAnzahlSchienenSoll(kursID);
 				sum1a += Math.abs(schienenIst - schienenSoll);
 			}
+		}
 		final int out1a = out.getErgebnis().bewertung.anzahlKurseNichtZugeordnet;
-		if (sum1a != out1a)
+		if (sum1a != out1a) {
 			fail("sum1a != out1a (" + sum1a + " != " + out1a + ")");
+		}
 
 		// 1b) ergebnis.bewertung.regelVerletzungen.size();
 
 		// 2a) ergebnis.bewertung.anzahlSchuelerNichtZugeordnet;
 		int sum2a = 0;
-		for (final long schuelerID : mapScFaKu.keySet())
-			for (final long fachartID : mapScFaKu.get(schuelerID).keySet())
-				if (mapScFaKu.get(schuelerID).get(fachartID) == null)
+		for (final long schuelerID : mapScFaKu.keySet()) {
+			for (final long fachartID : mapScFaKu.get(schuelerID).keySet()) {
+				if (mapScFaKu.get(schuelerID).get(fachartID) == null) {
 					sum2a++;
+				}
+			}
+		}
 		final int out2a = out.getErgebnis().bewertung.anzahlSchuelerNichtZugeordnet;
-		if (sum2a != out2a)
+		if (sum2a != out2a) {
 			fail("sum2a != out2a (" + sum2a + " != " + out2a + ")");
+		}
 
 		// 2b) ergebnis.bewertung.anzahlSchuelerKollisionen;
 		int sum2b = 0;
-		for (final long schuelerID : mapScFaKu.keySet())
+		for (final long schuelerID : mapScFaKu.keySet()) {
 			for (final GostBlockungsergebnisSchiene schiene : out.getMengeAllerSchienen()) {
 				int summeSchiene = 0;
-				for (final long fachartID : mapScFaKu.get(schuelerID).keySet())
+				for (final long fachartID : mapScFaKu.get(schuelerID).keySet()) {
 					if (mapScFaKu.get(schuelerID).get(fachartID) != null) {
 						final long kursID = mapScFaKu.get(schuelerID).get(fachartID);
-						if (out.getOfKursOfSchieneIstZugeordnet(kursID, schiene.id))
+						if (out.getOfKursOfSchieneIstZugeordnet(kursID, schiene.id)) {
 							summeSchiene++;
+						}
 					}
-				if (summeSchiene > 1)
+				}
+				if (summeSchiene > 1) {
 					sum2b += summeSchiene - 1;
+				}
 			}
+		}
 		final int out2b = out.getErgebnis().bewertung.anzahlSchuelerKollisionen;
-		if (sum2b != out2b)
+		if (sum2b != out2b) {
 			fail("sum2b != out2b (" + sum2b + " != " + out2b + ")");
+		}
 
 		// 3a+3b) _ergebnis.bewertung.kursdifferenzMax;
 		final HashMap<Long, Integer> mapKC = new HashMap<>();
-		for (final long fachartID : mapFaKu.keySet())
-			for (final long kursID : mapFaKu.get(fachartID))
+		for (final long fachartID : mapFaKu.keySet()) {
+			for (final long kursID : mapFaKu.get(fachartID)) {
 				mapKC.put(kursID, 0);
-		for (final long schuelerID : mapScFaKu.keySet())
-			for (final long fachartID : mapScFaKu.get(schuelerID).keySet())
+			}
+		}
+		for (final long schuelerID : mapScFaKu.keySet()) {
+			for (final long fachartID : mapScFaKu.get(schuelerID).keySet()) {
 				if (mapScFaKu.get(schuelerID).get(fachartID) != null) {
 					final long kursID = mapScFaKu.get(schuelerID).get(fachartID);
 					mapKC.put(kursID, mapKC.get(kursID) + 1);
 				}
+			}
+		}
 
 		final int[] kursDiffHisto = new int[mapScFaKu.size() + 1];
 		int maxKD = 0;
@@ -290,29 +310,36 @@ class GostBlockungsergebnisManagerTest {
 			kursDiffHisto[kd]++;
 		}
 		final int outKD = out.getErgebnis().bewertung.kursdifferenzMax;
-		if (maxKD != outKD)
+		if (maxKD != outKD) {
 			fail("maxKD (" + maxKD + ") != outKD (" + outKD + ")");
+		}
 		for (int i = 0; i < kursDiffHisto.length; i++) {
 			final int histo = kursDiffHisto[i];
 			final int outHisto = out.getErgebnis().bewertung.kursdifferenzHistogramm[i];
-			if (histo != outHisto)
+			if (histo != outHisto) {
 				fail("histo != outHisto (" + histo + " != " + outHisto + ")");
+			}
 		}
 
 		// 4) anzahlKurseMitGleicherFachartProSchiene;
 		int sum4 = 0;
-		for (final long fachartID : mapFaKu.keySet())
+		for (final long fachartID : mapFaKu.keySet()) {
 			for (final GostBlockungsergebnisSchiene schiene : out.getMengeAllerSchienen()) {
 				int summeSchiene = 0;
-				for (final long kursID : mapFaKu.get(fachartID))
-					if (out.getOfKursOfSchieneIstZugeordnet(kursID, schiene.id))
+				for (final long kursID : mapFaKu.get(fachartID)) {
+					if (out.getOfKursOfSchieneIstZugeordnet(kursID, schiene.id)) {
 						summeSchiene++;
-				if (summeSchiene > 1)
+					}
+				}
+				if (summeSchiene > 1) {
 					sum4 += summeSchiene - 1;
+				}
 			}
+		}
 		final int sum4out = out.getErgebnis().bewertung.anzahlKurseMitGleicherFachartProSchiene;
-		if (sum4 != sum4out)
+		if (sum4 != sum4out) {
 			fail("sum4 != sum4out (" + sum4 + " != " + sum4out + ")");
+		}
 	}
 
 	private static Long getRandom(final Set<Long> keySet, final Random rnd) {

@@ -132,8 +132,9 @@ export class SatInput extends JavaObject {
 	 */
 	public create_vars1D(n: number): Array<number> {
 		const temp: Array<number> = Array(n).fill(0);
-		for (let i: number = 0; i < temp.length; i++)
+		for (let i: number = 0; i < temp.length; i++) {
 			temp[i] = this.create_var();
+		}
 		return temp;
 	}
 
@@ -148,8 +149,9 @@ export class SatInput extends JavaObject {
 	 */
 	public create_vars2D(rows: number, cols: number): Array<Array<number>> {
 		const temp: Array<Array<number>> = [...Array(rows)].map(e => Array(cols).fill(0));
-		for (let r: number = 0; r < rows; r++)
+		for (let r: number = 0; r < rows; r++) {
 			temp[r] = this.create_vars1D(cols);
+		}
 		return temp;
 	}
 
@@ -194,8 +196,9 @@ export class SatInput extends JavaObject {
 	 * @return Die Ergebnisvariable ist eine OR-Verknüpfung aller Variablen der Liste.
 	 */
 	public create_var_at_most_one_tree(pList: LinkedCollection<number>): number {
-		if (pList.isEmpty())
+		if (pList.isEmpty()) {
 			return this.getVarFALSE();
+		}
 		const list: LinkedCollection<number> = new LinkedCollection<number>(pList);
 		while (list.size() >= 2) {
 			const a: number = list.removeFirst().valueOf();
@@ -332,8 +335,9 @@ export class SatInput extends JavaObject {
 			const pArray: Array<number> = __param0 as unknown as Array<number>;
 			const pAmount: number = __param1 as number;
 			const list: LinkedCollection<number> = new LinkedCollection<number>();
-			for (const x of pArray)
+			for (const x of pArray) {
 				list.addLast(x);
+			}
 			this.add_clause_exactly(list, pAmount);
 		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.adt.collection.LinkedCollection'))) || (__param0 === null)) && ((__param1 !== undefined) && typeof __param1 === "number")) {
 			const pList: LinkedCollection<number> = cast_de_svws_nrw_core_adt_collection_LinkedCollection(__param0);
@@ -342,13 +346,15 @@ export class SatInput extends JavaObject {
 			const size: number = list.size();
 			DeveloperNotificationException.ifTrue("add_clause_exactly: " + pAmount + " > " + size, pAmount > size);
 			if (pAmount === 0) {
-				for (const x of list)
+				for (const x of list) {
 					this.add_clause_1(-x);
+				}
 				return;
 			}
 			if (pAmount === size) {
-				for (const x of list)
+				for (const x of list) {
 					this.add_clause_1(+x);
+				}
 				return;
 			}
 			if (pAmount === 1) {
@@ -368,8 +374,9 @@ export class SatInput extends JavaObject {
 	 */
 	public add_clause_exactly_in_row(pData: Array<Array<number>>, pRow: number, pAmount: number): void {
 		const pList: LinkedCollection<number> = new LinkedCollection<number>();
-		for (let c: number = 0; c < pData[pRow].length; c++)
+		for (let c: number = 0; c < pData[pRow].length; c++) {
 			pList.add(pData[pRow][c]);
+		}
 		this.add_clause_exactly(pList, pAmount);
 	}
 
@@ -382,8 +389,9 @@ export class SatInput extends JavaObject {
 	 */
 	public add_clause_exactly_in_column(pData: Array<Array<number>>, pCol: number, pAmount: number): void {
 		const pList: LinkedCollection<number> = new LinkedCollection<number>();
-		for (const element of pData)
+		for (const element of pData) {
 			pList.add(element[pCol]);
+		}
 		this.add_clause_exactly(pList, pAmount);
 	}
 
@@ -431,31 +439,38 @@ export class SatInput extends JavaObject {
 
 	private _bitonic_fill_FALSE_until_power_two(list: LinkedCollection<number>): void {
 		let size: number = 1;
-		while (size < list.size())
+		while (size < list.size()) {
 			size *= 2;
-		while (list.size() < size)
+		}
+		while (list.size() < size) {
 			list.addLast(this.getVarFALSE());
+		}
 	}
 
 	private _bitonic_sort_power_two(list: LinkedCollection<number>): void {
 		for (let window: number = 2; window <= list.size(); window *= 2) {
 			this._bitonic_sort_spiral(list, window);
-			for (let difference: number = Math.trunc(window / 2); difference >= 2; difference /= 2)
+			for (let difference: number = Math.trunc(window / 2); difference >= 2; difference /= 2) {
 				this._bitonic_sort_difference(list, difference);
+			}
 		}
 	}
 
 	private _bitonic_sort_spiral(list: LinkedCollection<number>, size: number): void {
-		for (let i: number = 0; i < list.size(); i += size)
-			for (let i1: number = i, i2: number = (i + size) - 1; i1 < i2; i1++, i2--)
+		for (let i: number = 0; i < list.size(); i += size) {
+			for (let i1: number = i, i2: number = (i + size) - 1; i1 < i2; i1++, i2--) {
 				this._bitonic_comparator(list, i1, i2);
+			}
+		}
 	}
 
 	private _bitonic_sort_difference(list: LinkedCollection<number>, size: number): void {
 		const half: number = Math.trunc(size / 2);
-		for (let i: number = 0; i < list.size(); i += size)
-			for (let j: number = 0; j < half; j++)
+		for (let i: number = 0; i < list.size(); i += size) {
+			for (let j: number = 0; j < half; j++) {
 				this._bitonic_comparator(list, i + j, i + j + half);
+			}
+		}
 	}
 
 	private _bitonic_comparator(result: LinkedCollection<number>, i1: number, i2: number): void {
@@ -480,11 +495,13 @@ export class SatInput extends JavaObject {
 				const abs: number = Math.abs(literal);
 				const assignment: number = solution[abs];
 				DeveloperNotificationException.ifTrue("x_" + abs + " == 0", assignment === 0);
-				if (assignment === literal)
+				if (assignment === literal) {
 					countTRUE++;
+				}
 			}
-			if (countTRUE === 0)
+			if (countTRUE === 0) {
 				return false;
+			}
 		}
 		return true;
 	}

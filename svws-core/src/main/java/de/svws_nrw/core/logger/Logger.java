@@ -37,7 +37,7 @@ public class Logger {
 	 *
 	 * @return die globale Logger-Instanz
 	 */
-	public static Logger global() {
+	public static @NotNull Logger global() {
 		if (_instance == null) {
 			_instance = new Logger();
 			_instance.addConsumer(new LogConsumerConsole(true, true));
@@ -136,8 +136,9 @@ public class Logger {
 	 * @param data   die Log-Informationen
 	 */
 	private void log(final @NotNull LogData data) {
-		for (final @NotNull Consumer<LogData> c : consumer)
+		for (final @NotNull Consumer<LogData> c : consumer) {
 			c.accept(data);
+		}
 	}
 
 

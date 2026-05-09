@@ -134,8 +134,9 @@ public final class SatInput {
 	 */
 	public @NotNull int[] create_vars1D(final int n) {
 		final @NotNull int @NotNull [] temp = new int[n];
-		for (int i = 0; i < temp.length; i++)
+		for (int i = 0; i < temp.length; i++) {
 			temp[i] = create_var();
+		}
 		return temp;
 	}
 
@@ -150,8 +151,9 @@ public final class SatInput {
 	 */
 	public @NotNull int @NotNull [][] create_vars2D(final int rows, final int cols) {
 		final @NotNull int @NotNull [] @NotNull [] temp = new int[rows][cols];
-		for (int r = 0; r < rows; r++)
+		for (int r = 0; r < rows; r++) {
 			temp[r] = create_vars1D(cols);
+		}
 		return temp;
 	}
 
@@ -198,8 +200,9 @@ public final class SatInput {
 	 */
 	public int create_var_at_most_one_tree(final @NotNull LinkedCollection<Integer> pList) {
 		// Sonderfall: Wenn die Liste leer ist, dann ist die OR-Verknüpfung die Konstante FALSE.
-		if (pList.isEmpty())
+		if (pList.isEmpty()) {
 			return getVarFALSE();
+		}
 
 		// Liste kopieren
 		final @NotNull LinkedCollection<Integer> list = new LinkedCollection<>(pList);
@@ -332,8 +335,9 @@ public final class SatInput {
 	public void add_clause_exactly(final @NotNull int[] pArray, final int pAmount) {
 		// Array --> Liste
 		final @NotNull LinkedCollection<Integer> list = new LinkedCollection<>();
-		for (final int x : pArray)
+		for (final int x : pArray) {
 			list.addLast(x);
+		}
 		add_clause_exactly(list, pAmount);
 	}
 
@@ -354,15 +358,17 @@ public final class SatInput {
 
 		// Spezialfall: Genau 0 --> Alles FALSE
 		if (pAmount == 0) {
-			for (final int x : list)
+			for (final int x : list) {
 				add_clause_1(-x);
+			}
 			return;
 		}
 
 		// Spezialfall: Genau N --> Alles TRUE
 		if (pAmount == size) {
-			for (final int x : list)
+			for (final int x : list) {
 				add_clause_1(+x);
+			}
 			return;
 		}
 
@@ -385,8 +391,9 @@ public final class SatInput {
 	 */
 	public void add_clause_exactly_in_row(final @NotNull int @NotNull [] @NotNull [] pData, final int pRow, final int pAmount) {
 		final @NotNull LinkedCollection<Integer> pList = new LinkedCollection<>();
-		for (int c = 0; c < pData[pRow].length; c++)
+		for (int c = 0; c < pData[pRow].length; c++) {
 			pList.add(pData[pRow][c]);
+		}
 		add_clause_exactly(pList, pAmount);
 	}
 
@@ -399,8 +406,9 @@ public final class SatInput {
 	 */
 	public void add_clause_exactly_in_column(final @NotNull int @NotNull [] @NotNull [] pData, final int pCol, final int pAmount) {
 		final @NotNull LinkedCollection<Integer> pList = new LinkedCollection<>();
-		for (final @NotNull int[] element : pData)
+		for (final @NotNull int[] element : pData) {
 			pList.add(element[pCol]);
+		}
 		add_clause_exactly(pList, pAmount);
 	}
 
@@ -459,32 +467,39 @@ public final class SatInput {
 
 	private void _bitonic_fill_FALSE_until_power_two(final @NotNull LinkedCollection<Integer> list) {
 		int size = 1;
-		while (size < list.size())
+		while (size < list.size()) {
 			size *= 2;
+		}
 
-		while (list.size() < size)
+		while (list.size() < size) {
 			list.addLast(getVarFALSE());
+		}
 	}
 
 	private void _bitonic_sort_power_two(final @NotNull LinkedCollection<Integer> list) {
 		for (int window = 2; window <= list.size(); window *= 2) {
 			_bitonic_sort_spiral(list, window);
-			for (int difference = window / 2; difference >= 2; difference /= 2)
+			for (int difference = window / 2; difference >= 2; difference /= 2) {
 				_bitonic_sort_difference(list, difference);
+			}
 		}
 	}
 
 	private void _bitonic_sort_spiral(final @NotNull LinkedCollection<Integer> list, final int size) {
-		for (int i = 0; i < list.size(); i += size)
-			for (int i1 = i, i2 = (i + size) - 1; i1 < i2; i1++, i2--)
+		for (int i = 0; i < list.size(); i += size) {
+			for (int i1 = i, i2 = (i + size) - 1; i1 < i2; i1++, i2--) {
 				_bitonic_comparator(list, i1, i2);
+			}
+		}
 	}
 
 	private void _bitonic_sort_difference(final @NotNull LinkedCollection<Integer> list, final int size) {
 		final int half = size / 2;
-		for (int i = 0; i < list.size(); i += size)
-			for (int j = 0; j < half; j++)
+		for (int i = 0; i < list.size(); i += size) {
+			for (int j = 0; j < half; j++) {
 				_bitonic_comparator(list, i + j, i + j + half);
+			}
+		}
 	}
 
 	private void _bitonic_comparator(final @NotNull LinkedCollection<Integer> result, final int i1, final int i2) {
@@ -515,12 +530,14 @@ public final class SatInput {
 				final int abs = Math.abs(literal);
 				final int assignment = solution[abs];
 				DeveloperNotificationException.ifTrue("x_" + abs + " == 0", assignment == 0);
-				if (assignment == literal)
+				if (assignment == literal) {
 					countTRUE++;
+				}
 			}
 
-			if (countTRUE == 0)
+			if (countTRUE == 0) {
 				return false;
+			}
 		}
 
 		return true;

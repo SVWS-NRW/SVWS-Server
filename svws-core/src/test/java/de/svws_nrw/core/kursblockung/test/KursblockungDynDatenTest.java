@@ -52,8 +52,9 @@ class KursblockungDynDatenTest {
 		log.addConsumer(new Consumer<LogData>() {
 			@Override
 			public void accept(final LogData t) {
-				if (t.getLevel().compareTo(LogLevel.APP) != 0)
+				if (t.getLevel().compareTo(LogLevel.APP) != 0) {
 					fail(t.getText());
+				}
 				System.out.println(t.getText());
 			}
 		});
@@ -63,8 +64,9 @@ class KursblockungDynDatenTest {
 
 		// Kurs42-Daten --> GostBlockungsdatenManager
 		final GostBlockungsdatenManager manager = k42Converter.gibKursblockungInput();
-		if (r1 != null)
+		if (r1 != null) {
 			manager.regelAdd(r1);
+		}
 
 		// GostBlockungsdatenManager --> KursblockungDynDaten
 		final Random random = new Random(seed);
@@ -80,8 +82,9 @@ class KursblockungDynDatenTest {
 		log.addConsumer(new Consumer<LogData>() {
 			@Override
 			public void accept(final LogData t) {
-				if (t.getLevel().compareTo(LogLevel.APP) != 0)
+				if (t.getLevel().compareTo(LogLevel.APP) != 0) {
 					fail(t.getText());
+				}
 				System.out.println(t.getText());
 			}
 		});
@@ -91,8 +94,9 @@ class KursblockungDynDatenTest {
 
 		// Kurs42-Daten --> GostBlockungsdatenManager
 		final GostBlockungsdatenManager manager = k42Converter.gibKursblockungInput();
-		if (r1 != null)
+		if (r1 != null) {
 			manager.regelAdd(r1);
+		}
 
 		// Fixiere Lehrkraft in der selben Schiene
 		/*
@@ -294,12 +298,14 @@ class KursblockungDynDatenTest {
 		final KursblockungDynDaten dd1 = ladeDaten001(1, regel1);
 
 		// Schienen 1 bis  5 darf nur LKs haben.
-		for (int schienenNr = 1; schienenNr <= 5; schienenNr++)
+		for (int schienenNr = 1; schienenNr <= 5; schienenNr++) {
 			assertTrue(dd1.gibHatSchieneNurLK(schienenNr));
+		}
 
 		// Schienen 5 bis 14 darf keine LKs sein.
-		for (int schienenNr = 6; schienenNr <= 14; schienenNr++)
+		for (int schienenNr = 6; schienenNr <= 14; schienenNr++) {
 			assertTrue(dd1.gibHatSchieneKeineLK(schienenNr));
+		}
 
 		assertKeineNegativeBewertung(dd1);
 	}

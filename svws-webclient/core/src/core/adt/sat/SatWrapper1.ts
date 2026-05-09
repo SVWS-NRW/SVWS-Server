@@ -25,8 +25,9 @@ export class SatWrapper1 extends JavaObject implements JavaFunction<SatInput, Sa
 	public apply(in1: SatInput): SatOutput {
 		const nVars: number = in1.getVarCount();
 		const map1to2: Array<number> = Array(nVars + 1).fill(0);
-		for (let i: number = 1; i <= nVars; i++)
+		for (let i: number = 1; i <= nVars; i++) {
 			map1to2[i] = i;
+		}
 		for (let i1: number = 1; i1 <= nVars; i1++) {
 			const i2: number = this.rnd.nextInt(nVars) + 1;
 			const save1: number = map1to2[i1];

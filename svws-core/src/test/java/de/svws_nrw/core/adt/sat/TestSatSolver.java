@@ -64,10 +64,12 @@ class TestSatSolver {
 			// create "in"
 			final SatInput in = new SatInput();
 			final int[][] matrix = in.create_vars2D(n, n);
-			for (int i = 0; i < n; i++)
+			for (int i = 0; i < n; i++) {
 				in.add_clause_exactly_in_column(matrix, i, 1);
-			for (int i = 0; i < n; i++)
+			}
+			for (int i = 0; i < n; i++) {
 				in.add_clause_exactly_in_row(matrix, i, 1);
+			}
 
 			// create "out"
 			final SatOutput out = solver.apply(in);

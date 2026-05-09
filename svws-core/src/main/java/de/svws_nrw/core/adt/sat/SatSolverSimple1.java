@@ -48,19 +48,22 @@ public final class SatSolverSimple1 extends SatSolver {
 				while (true) {
 					// previous
 					i--;
-					if (i < 1) // unsolvable?
+					if (i < 1) { // unsolvable?
 						return SatOutput.createUNSATISFIABLE();
+					}
 					// stop backtrack
-					if (_solution[i] != -i)
+					if (_solution[i] != -i) {
 						break;
+					}
 					// continue backtrack
 					_solution[i] = 0;
 				}
 			}
 
 			// solved?
-			if (i >= _solution.length)
+			if (i >= _solution.length) {
 				return SatOutput.createSATISFIABLE(_solution);
+			}
 
 			// forward
 			if (_solution[i] == 0) {
@@ -80,9 +83,11 @@ public final class SatSolverSimple1 extends SatSolver {
 	}
 
 	private boolean conflict() {
-		for (final @NotNull Integer[] clause : _clauses)
-			if (isEmpty(clause))
+		for (final @NotNull Integer[] clause : _clauses) {
+			if (isEmpty(clause)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -90,8 +95,9 @@ public final class SatSolverSimple1 extends SatSolver {
 		for (final int literal : clause) {
 			final int abs = Math.abs(literal);
 			final int assignment = _solution[abs];
-			if ((assignment == literal) || (assignment == 0))
+			if ((assignment == literal) || (assignment == 0)) {
 				return false;
+			}
 		}
 		return true;
 	}

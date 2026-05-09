@@ -95,12 +95,14 @@ public class StupasSchulmanagerFormatReader {
 
 	private void check(final StundenplanManager m, final List<StupasSchulmanagerFormatLine> lines) {
 		for (final StupasSchulmanagerFormatLine line : lines) {
-			if (line.Stunde >= 12)
+			if (line.Stunde >= 12) {
 				throw new DeveloperNotificationException("Die CSV Datei hat Pausenaufsichten!. Bitte vorher entfernen: " + lineToString(line));
+			}
 
 			final StundenplanFach fach = getCreateFach(line, m);
-			if (fach == null)
+			if (fach == null) {
 				throw new DeveloperNotificationException("Die CSV Datei hat undefinierte Fächer!. Bitte vorher entfernen: " + lineToString(line));
+			}
 		}
 	}
 
@@ -109,12 +111,14 @@ public class StupasSchulmanagerFormatReader {
 
 		// Nach (ID, Wochentag, Stunde) gruppieren.
 		final HashMap3D<Integer, Integer, Integer, List<StupasSchulmanagerFormatLine>> map3dIdWochentagStundeNachListLine = new HashMap3D<>();
-		for (final StupasSchulmanagerFormatLine line : list)
+		for (final StupasSchulmanagerFormatLine line : list) {
 			Map3DUtils.getOrCreateArrayList(map3dIdWochentagStundeNachListLine, line.KursId, line.Wochentag, line.Stunde).add(line);
+		}
 
 		// Nach (ID, Wochentag, Stunde) konvertieren.
-		for (final List<StupasSchulmanagerFormatLine> gruppe : map3dIdWochentagStundeNachListLine.getNonNullValuesAsList())
+		for (final List<StupasSchulmanagerFormatLine> gruppe : map3dIdWochentagStundeNachListLine.getNonNullValuesAsList()) {
 			convertWochentypenWochentagStunde(list2, gruppe);
+		}
 
 		return list2;
 	}
@@ -149,12 +153,14 @@ public class StupasSchulmanagerFormatReader {
 	private void importiere(final StundenplanManager m, final List<StupasSchulmanagerFormatLine> list) {
 		// Daten nach der Lerngruppen-ID (Kurs-ID) gruppieren.
 		final HashMap<Integer, List<StupasSchulmanagerFormatLine>> mapIdNachListLine = new HashMap<>();
-		for (final StupasSchulmanagerFormatLine line : list)
+		for (final StupasSchulmanagerFormatLine line : list) {
 			MapUtils.getOrCreateArrayList(mapIdNachListLine, line.KursId).add(line);
+		}
 
 		// Rekursiv importieren.
-		for (final Integer key : mapIdNachListLine.keySet())
+		for (final Integer key : mapIdNachListLine.keySet()) {
 			importiereKlassenOderKursunterricht(m, mapIdNachListLine.get(key));
+		}
 	}
 
 	//	Id;KursId;Art;Lehrerkuerzel;Fach;Kurs;Raum;Wochentag;Stunde;Bezeichnung;Woche;Klassen;Kopplung
@@ -171,8 +177,9 @@ public class StupasSchulmanagerFormatReader {
 		final StundenplanFach fach = getCreateFach(firstLine, m);
 		final StundenplanRaum raum = getCreateRaum(firstLine, m);
 
-		if ((lehrer == null) && (klassen.size() == 0)) // Mindestens Lehrkraft ODER Klasse
+		if ((lehrer == null) && (klassen.size() == 0)) { // Mindestens Lehrkraft ODER Klasse
 			throw new DeveloperNotificationException("Format Fehler - Keine Lehrkraft und keine Klasse in der Definition.");
+		}
 
 		// Überschreiben, falls Kurs-Unterricht.
 		Long idKurs = null;
@@ -185,11 +192,13 @@ public class StupasSchulmanagerFormatReader {
 			klassenunterricht.idFach = fach.id;
 			klassenunterricht.bezeichnung = "";
 			klassenunterricht.wochenstunden = wochenstunden;
-			if (schiene != null)
+			if (schiene != null) {
 				klassenunterricht.schienen.add(schiene.id);
+			}
 			klassenunterricht.schueler = new ArrayList<>(); // TODO Einen Schüler pro Klasse simulieren.
-			if (lehrer != null)
+			if (lehrer != null) {
 				klassenunterricht.lehrer.add(lehrer.id);
+			}
 			m.klassenunterrichtAdd(klassenunterricht);
 		} else {
 			// Kursunterricht
@@ -216,14 +225,18 @@ public class StupasSchulmanagerFormatReader {
 			u.wochentyp = line.Woche;
 			u.idKurs = idKurs;
 			u.idFach = fach.id;
-			if (lehrer != null)
+			if (lehrer != null) {
 				u.lehrer.add(lehrer.id);
-			if (raum != null)
+			}
+			if (raum != null) {
 				u.raeume.add(raum.id);
-			if (schiene != null)
+			}
+			if (schiene != null) {
 				u.schienen.add(schiene.id);
-			for (final StundenplanKlasse klasse : klassen)
+			}
+			for (final StundenplanKlasse klasse : klassen) {
 				u.klassen.add(klasse.id);
+			}
 			unterricht_by_id.put(u.id, u);
 			m.unterrichtAdd(u);
 		}
@@ -231,8 +244,9 @@ public class StupasSchulmanagerFormatReader {
 
 	private static int getWochenTypModell(final List<StupasSchulmanagerFormatLine> csvData) {
 		int max = 1;
-		for (final StupasSchulmanagerFormatLine line : csvData)
+		for (final StupasSchulmanagerFormatLine line : csvData) {
 			max = Math.max(max, line.Woche);
+		}
 		return (max == 1) ? 0 : max;
 	}
 
@@ -240,11 +254,13 @@ public class StupasSchulmanagerFormatReader {
 		int summe = 0;
 		final int faktor = (komplett.daten.wochenTypModell == 0) ? 1 : komplett.daten.wochenTypModell;
 
-		for (final StupasSchulmanagerFormatLine line : list)
+		for (final StupasSchulmanagerFormatLine line : list) {
 			summe += (line.Woche == 0) ? faktor : 1;
+		}
 
-		if ((summe % faktor) != 0)
+		if ((summe % faktor) != 0) {
 			throw new DeveloperNotificationException("Die CSV Datei hat keine glatten Wochenstunden: " + linesToString(list));
+		}
 
 		return summe / faktor;
 	}
@@ -258,8 +274,9 @@ public class StupasSchulmanagerFormatReader {
 	}
 
 	private StundenplanSchiene getCreateSchiene(final StupasSchulmanagerFormatLine line, final StundenplanManager m) {
-		if (line.Kopplung == null)
+		if (line.Kopplung == null) {
 			return null;
+		}
 
 		if (!schiene_by_kuerzel.containsKey(line.Kopplung)) {
 			final StundenplanSchiene schiene = new StundenplanSchiene();
@@ -282,12 +299,15 @@ public class StupasSchulmanagerFormatReader {
 			zeitraster.wochentag = line.Wochentag;
 			zeitraster.unterrichtstunde = line.Stunde;
 			zeitraster.stundenbeginn = (8 * 60) + ((line.Stunde - 1) * 45);
-			if (line.Stunde >= 3)
+			if (line.Stunde >= 3) {
 				zeitraster.stundenbeginn += 25;
-			if (line.Stunde >= 5)
+			}
+			if (line.Stunde >= 5) {
 				zeitraster.stundenbeginn += 25;
-			if (line.Stunde >= 7)
+			}
+			if (line.Stunde >= 7) {
 				zeitraster.stundenbeginn += 20;
+			}
 			zeitraster.stundenende = zeitraster.stundenbeginn + 45;
 			zeiraster_by_wochentag_and_stunde.put(line.Wochentag, line.Stunde, zeitraster);
 			m.zeitrasterAdd(zeitraster);
@@ -297,8 +317,9 @@ public class StupasSchulmanagerFormatReader {
 	}
 
 	private StundenplanLehrer getCreateLehrer(final StupasSchulmanagerFormatLine line, final StundenplanManager m) {
-		if (line.Lehrerkuerzel == null)
+		if (line.Lehrerkuerzel == null) {
 			return null;
+		}
 
 		if (!lehrer_by_kuerzel.containsKey(line.Lehrerkuerzel)) {
 			final StundenplanLehrer lehrkraft = new StundenplanLehrer();
@@ -314,8 +335,9 @@ public class StupasSchulmanagerFormatReader {
 	}
 
 	private StundenplanFach getCreateFach(final StupasSchulmanagerFormatLine line, final StundenplanManager m) {
-		if (line.Fach == null)
+		if (line.Fach == null) {
 			return null;
+		}
 
 		if (!fach_by_kuerzel.containsKey(line.Fach)) {
 			final StundenplanFach fach = new StundenplanFach();
@@ -329,8 +351,9 @@ public class StupasSchulmanagerFormatReader {
 	}
 
 	private StundenplanRaum getCreateRaum(final StupasSchulmanagerFormatLine line, final StundenplanManager m) {
-		if (line.Raum == null)
+		if (line.Raum == null) {
 			return null;
+		}
 
 		if (!raum_by_kuerzel.containsKey(line.Raum)) {
 			final StundenplanRaum raum = new StundenplanRaum();
@@ -347,8 +370,9 @@ public class StupasSchulmanagerFormatReader {
 	private List<StundenplanKlasse> getCreateKlassen(final StupasSchulmanagerFormatLine line, final StundenplanManager m) {
 		final List<StundenplanKlasse> list = new ArrayList<>();
 
-		if (line.Klassen == null)
+		if (line.Klassen == null) {
 			return list;
+		}
 
 		for (final String klasseKuerzel : line.Klassen.split(",")) {
 			if (!klasse_by_kuerzel.containsKey(klasseKuerzel)) {
@@ -359,8 +383,9 @@ public class StupasSchulmanagerFormatReader {
 
 				// Potentieller Jahrgang der Klasse
 				final StundenplanJahrgang jahrgang = getCreateJahrgang(klasseKuerzel, m);
-				if (jahrgang != null)
+				if (jahrgang != null) {
 					klasse.jahrgaenge.add(jahrgang.id);
+				}
 
 				m.klasseAdd(klasse);
 			}
@@ -372,22 +397,26 @@ public class StupasSchulmanagerFormatReader {
 	}
 
 	private StundenplanJahrgang getCreateJahrgangOfLine(final StupasSchulmanagerFormatLine line, final StundenplanManager m) {
-		if (line.Klassen == null)
+		if (line.Klassen == null) {
 			return null;
+		}
 
 		final String[] split = line.Klassen.split(",");
 		final StundenplanJahrgang jahrgang = getCreateJahrgang(split[0], m);
 
-		for (int i = 1; i < split.length; i++)
-			if (jahrgang != getCreateJahrgang(split[i], m))
+		for (int i = 1; i < split.length; i++) {
+			if (jahrgang != getCreateJahrgang(split[i], m)) {
 				throw new DeveloperNotificationException("Mehrere Jahrgänge: " + lineToString(line));
+			}
+		}
 
 		return jahrgang;
 	}
 
 	private StundenplanJahrgang getCreateJahrgang(final String klassenKuerzel, final StundenplanManager m) {
-		if (klassenKuerzel.length() <= 1)
+		if (klassenKuerzel.length() <= 1) {
 			return null;
+		}
 
 		String jahrgangKuerzel = null;
 
@@ -405,8 +434,9 @@ public class StupasSchulmanagerFormatReader {
 			}
 		}
 
-		if (jahrgangKuerzel == null)
+		if (jahrgangKuerzel == null) {
 			return null;
+		}
 
 		if (!jahrgang_by_kuerzel.containsKey(jahrgangKuerzel)) {
 			final StundenplanJahrgang jahrgang = new StundenplanJahrgang();

@@ -34,15 +34,17 @@ class TestStundenplanblockung {
 	@Test
 	void testManagerRandom() {
 		final Random lRandom = new Random(_SEED);
-		for (int i = 0; i < _ANZAHL_MANAGER_TESTS; i++)
+		for (int i = 0; i < _ANZAHL_MANAGER_TESTS; i++) {
 			subTestManagerZufaellig(lRandom);
+		}
 	}
 
 	private static void subTestManagerZufaellig(final Random pRandom) {
 		final StundenplanblockungManager manager = new StundenplanblockungManager();
 
-		for (int i = 0; i < _ANZAHL_MANAGER_SUB_TESTS; i++)
+		for (int i = 0; i < _ANZAHL_MANAGER_SUB_TESTS; i++) {
 			subTestManagerSubZufaellig(manager, pRandom);
+		}
 
 		manager.miscCheckConsistencyOrException();
 	}
@@ -61,12 +63,14 @@ class TestStundenplanblockung {
 		final long lehrkraftID = pRandom.nextLong(_MAX_LEHRKRAEFTE);
 		if (pMan.getLehrkraefte().exists(lehrkraftID)) {
 			pMan.getLehrkraefte().removeOrException(lehrkraftID);
-			if (pMan.getLehrkraefte().exists(lehrkraftID))
+			if (pMan.getLehrkraefte().exists(lehrkraftID)) {
 				fail("Lehrkraft sollte nicht mehr existieren!");
+			}
 		} else {
 			pMan.getLehrkraefte().addOrException(lehrkraftID, "");
-			if (!pMan.getLehrkraefte().exists(lehrkraftID))
+			if (!pMan.getLehrkraefte().exists(lehrkraftID)) {
 				fail("Lehrkraft sollte nun existieren!");
+			}
 		}
 		// getRandomOrException --> setKuerzel
 		if (pMan.getLehrkraefte().size() > 0) {
@@ -80,12 +84,14 @@ class TestStundenplanblockung {
 		final long klasseID = pRandom.nextLong(_MAX_KLASSEN);
 		if (pMan.getKlassen().exists(klasseID)) {
 			pMan.getKlassen().removeOrException(klasseID);
-			if (pMan.getKlassen().exists(klasseID))
+			if (pMan.getKlassen().exists(klasseID)) {
 				fail("Klasse sollte nicht mehr existieren!");
+			}
 		} else {
 			pMan.getKlassen().addOrException(klasseID, "");
-			if (!pMan.getKlassen().exists(klasseID))
+			if (!pMan.getKlassen().exists(klasseID)) {
 				fail("Klasse sollte nun existieren!");
+			}
 		}
 		// getRandomOrException --> setKuerzel
 		if (pMan.getKlassen().size() > 0) {
@@ -99,12 +105,14 @@ class TestStundenplanblockung {
 		final long fachID = pRandom.nextLong(_MAX_FAECHER);
 		if (pMan.getFaecher().exists(fachID)) {
 			pMan.getFaecher().removeOrException(fachID);
-			if (pMan.getFaecher().exists(fachID))
+			if (pMan.getFaecher().exists(fachID)) {
 				fail("Fach sollte nicht mehr existieren!");
+			}
 		} else {
 			pMan.getFaecher().addOrException(fachID, "");
-			if (!pMan.getFaecher().exists(fachID))
+			if (!pMan.getFaecher().exists(fachID)) {
 				fail("Fach sollte nun existieren!");
+			}
 		}
 	}
 
@@ -114,12 +122,14 @@ class TestStundenplanblockung {
 				final long raumID = pRandom.nextLong(_MAX_RAEUME);
 				if (pMan.getRaeume().exists(raumID)) {
 					pMan.getRaeume().removeOrException(raumID);
-					if (pMan.getRaeume().exists(raumID))
+					if (pMan.getRaeume().exists(raumID)) {
 						fail("Raum sollte nicht mehr existieren!");
+					}
 				} else {
 					pMan.getRaeume().addOrException(raumID, "");
-					if (!pMan.getRaeume().exists(raumID))
+					if (!pMan.getRaeume().exists(raumID)) {
 						fail("Raum sollte nun existieren!");
+					}
 				}
 			}
 			case 1 -> {
@@ -140,12 +150,14 @@ class TestStundenplanblockung {
 				final long kopplungID = pRandom.nextLong(_MAX_KOPPLUNGEN);
 				if (pMan.getKopplungen().exists(kopplungID)) {
 					pMan.getKopplungen().removeOrException(kopplungID);
-					if (pMan.getKopplungen().exists(kopplungID))
+					if (pMan.getKopplungen().exists(kopplungID)) {
 						fail("Kopplung sollte nicht mehr existieren!");
+					}
 				} else {
 					pMan.getKopplungen().addOrException(kopplungID, "");
-					if (!pMan.getKopplungen().exists(kopplungID))
+					if (!pMan.getKopplungen().exists(kopplungID)) {
 						fail("Kopplung sollte nun existieren!");
+					}
 				}
 			}
 			case 1 -> {
@@ -165,12 +177,14 @@ class TestStundenplanblockung {
 		final long lerngruppeID = pRandom.nextLong(_MAX_LERNGRUPPEN);
 		if (pMan.getLerngruppen().exists(lerngruppeID)) {
 			pMan.getLerngruppen().removeOrException(lerngruppeID);
-			if (pMan.getLerngruppen().exists(lerngruppeID))
+			if (pMan.getLerngruppen().exists(lerngruppeID)) {
 				fail("Kopplung sollte nicht mehr existieren!");
+			}
 		} else {
 			pMan.getLerngruppen().createOrException(lerngruppeID);
-			if (!pMan.getLerngruppen().exists(lerngruppeID))
+			if (!pMan.getLerngruppen().exists(lerngruppeID)) {
 				fail("Kopplung sollte nun existieren!");
+			}
 		}
 		// size
 		if (pMan.getLerngruppen().size() > 0) {
@@ -178,18 +192,20 @@ class TestStundenplanblockung {
 			// hasLehrkraft, removeLehrkraftOrException, addLehrkraftOrException
 			if (pMan.getLehrkraefte().size() > 0) {
 				final StundenplanblockungManagerLehrkraft le = pMan.getLehrkraefte().getRandomOrException(pRandom);
-				if (gr.hasLehrkraft(le))
+				if (gr.hasLehrkraft(le)) {
 					gr.removeLehrkraftOrException(le);
-				else
+				} else {
 					gr.addLehrkraftOrException(le);
+				}
 			}
 			// hasKlasse, removeKlasseOrException, addKlasseOrException
 			if (pMan.getKlassen().size() > 0) {
 				final StundenplanblockungManagerKlasse kl = pMan.getKlassen().getRandomOrException(pRandom);
-				if (gr.hasKlasse(kl))
+				if (gr.hasKlasse(kl)) {
 					gr.removeKlasseOrException(kl);
-				else
+				} else {
 					gr.addKlasseOrException(kl);
+				}
 			}
 		}
 

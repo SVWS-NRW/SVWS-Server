@@ -75,20 +75,25 @@ class TestLinkedCollection {
 	@BeforeEach
 	void setUp() {
 		coll = new LinkedCollection<>();
-		for (final Integer value : data)
+		for (final Integer value : data) {
 			coll.add(value);
+		}
 		coll2 = new LinkedCollection<>();
-		for (final Integer value : data2)
+		for (final Integer value : data2) {
 			coll2.add(value);
+		}
 		v2 = new ArrayList<>();
-		for (final Integer value : data2)
+		for (final Integer value : data2) {
 			v2.add(value);
+		}
 		v3 = new ArrayList<>();
-		for (final Integer value : data3)
+		for (final Integer value : data3) {
 			v3.add(value);
+		}
 		v4 = new ArrayList<>();
-		for (final Integer value : data4)
+		for (final Integer value : data4) {
 			v4.add(value);
+		}
 		empty = new LinkedCollection<>();
 	}
 

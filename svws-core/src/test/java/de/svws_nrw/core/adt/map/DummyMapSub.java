@@ -65,29 +65,35 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	@Override
 	public int hashCode() { // code adapted TreeMap
 		int h = 0;
-		for (final Entry<Integer, Integer> entry : entrySet())
+		for (final Entry<Integer, Integer> entry : entrySet()) {
 			h += entry.hashCode();
+		}
 		return h;
 	}
 
 	@Override
 	public boolean equals(final @NotNull Object o) {
-		if (o == this)
+		if (o == this) {
 			return true;
+		}
 
-		if (!(o instanceof Map<?, ?>))
+		if (!(o instanceof Map<?, ?>)) {
 			return false;
+		}
 
 		final Map<?, ?> mapO = (Map<?, ?>) o;
 
-		if (mapO.size() != size())
+		if (mapO.size() != size()) {
 			return false;
+		}
 
 		// Da SIZE identisch ist, reicht es die KEYS in dieser Map
 		// mit dem Mapping in mapO zu überprüfen.
-		for (final @NotNull Entry<@NotNull Integer, @NotNull Integer> e : entrySet())
-			if (!e.getValue().equals(mapO.get(e.getKey())))
+		for (final @NotNull Entry<@NotNull Integer, @NotNull Integer> e : entrySet()) {
+			if (!e.getValue().equals(mapO.get(e.getKey()))) {
 				return false;
+			}
+		}
 
 		return true;
 	}
@@ -481,8 +487,9 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	ArrayList<@NotNull Integer> bcGetArrayListOfKeys() {
 		final ArrayList<Integer> list = new ArrayList<>();
 		final @NotNull Iterator<@NotNull Integer> iter = navigableKeySet().iterator();
-		while (iter.hasNext())
+		while (iter.hasNext()) {
 			list.add(iter.next());
+		}
 		return list;
 	}
 
@@ -496,8 +503,9 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	ArrayList<@NotNull Integer> bcGetArrayListOfValues() {
 		final @NotNull ArrayList<@NotNull Integer> list = new ArrayList<>();
 		final @NotNull Iterator<@NotNull Integer> iter = values().iterator();
-		while (iter.hasNext())
+		while (iter.hasNext()) {
 			list.add(iter.next());
+		}
 		return list;
 	}
 
@@ -511,8 +519,9 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 	ArrayList<@NotNull Entry<@NotNull Integer, @NotNull Integer>> bcGetArrayListOfEntries() {
 		final @NotNull ArrayList<@NotNull Entry<@NotNull Integer, @NotNull Integer>> list = new ArrayList<>();
 		final @NotNull Iterator<@NotNull Entry<@NotNull Integer, @NotNull Integer>> iter = entrySet().iterator();
-		while (iter.hasNext())
+		while (iter.hasNext()) {
 			list.add(iter.next());
+		}
 		// for (Entry<Integer, Integer> e : entrySet())
 		// list.add(e);
 		return list;
@@ -653,11 +662,13 @@ public final class DummyMapSub implements NavigableMap<Integer, Integer> {
 		// System.out.println("IV = " + _iv);
 		// System.out.println("--> " + from + ", " + fromInc + ", " + to + ", " + toInc);
 
-		if (_iv.isOutOfRange(from, fromInc))
+		if (_iv.isOutOfRange(from, fromInc)) {
 			throw new IllegalArgumentException("FROM-KEY " + from + "/" + fromInc + " nicht in " + _iv + ".");
+		}
 
-		if (_iv.isOutOfRange(to, toInc))
+		if (_iv.isOutOfRange(to, toInc)) {
 			throw new IllegalArgumentException("TO-KEY " + to + "/" + toInc + " nicht in " + _iv + ".");
+		}
 
 		return new DummyMapSub(_par, new DummyMapIntervall(from, fromInc, to, toInc), asc);
 	}
