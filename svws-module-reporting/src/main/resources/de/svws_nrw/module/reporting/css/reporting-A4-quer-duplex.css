@@ -2,8 +2,8 @@
 	size: A4 landscape;
 	margin: 18mm 10mm 12mm;
 
-	/* Boxen im Seitenrand. Für die Einträge in den Seitenköpfen und -füßen wird pro Bereich im body der
-	   html-Datei ein div definiert, die als Running Header bzw. Footer in den @page-Boxen eingefügt werden sollen. */
+	/* Boxen im Seitenrand. Die Inhalte werden über `position: running(...)` aus dem Body in diese Bereiche
+	   verschoben (siehe reporting-styles.css). */
 	@top-left {
 		content: element(pageTopLeft);
 		padding-top: 1mm;
@@ -36,60 +36,9 @@
 	}
 }
 
-/* Für die Einträge in den Seitenköpfen und -füßen wird pro Bereich im body der html-Datei ein div definiert,
-   die als Running Header bzw. Footer in den @page-Boxen eingefügt werden sollen. */
-.pageTopLeft {
-	position: running(pageTopLeft);
-	text-align: left;
-	padding: 0;
-	margin: 0;
-	font-weight: normal;
-	font-size: 7pt;
-	color: grey;
-}
 
-.pageTopRight {
-	position: running(pageTopRight);
-	text-align: right;
-	padding: 0;
-	margin: 0;
-	font-weight: normal;
-	font-size: 7pt;
-	color: grey;
-}
-
-.pageBottomLeft {
-	position: running(pageBottomLeft);
-	text-align: left;
-	padding: 0;
-	margin: 0;
-	font-weight: normal;
-	font-size: 7pt;
-	color: grey;
-}
-
-.pageBottomCenter {
-	position: running(pageBottomCenter);
-	text-align: center;
-	padding: 0;
-	margin: 0;
-	font-weight: normal;
-	font-size: 7pt;
-	color: grey;
-}
-
-.pageBottomRight {
-	position: running(pageBottomRight);
-	text-align: right;
-	padding: 0;
-	margin: 0;
-	font-weight: normal;
-	font-size: 7pt;
-	color: grey;
-}
-
-
-/* Seitenumbrüche: Wenn Style angewendet wird, wird beim Druck ein Seitenumbruch eingefügt, evtl. mit Ausnahme. */
+/* Seitenumbrüche: Wenn die Klasse angewendet wird, wird beim Druck ein Seitenumbruch eingefügt; bei Duplex
+   wird zudem erzwungen, dass die nächste Seite eine rechte (ungerade) Seite ist. */
 .start-new-page {
 	page-break-after: right;
 }
@@ -98,74 +47,20 @@
 }
 
 
-/* Um evtl. Zähler im div einzufügen, ergänze einen span, an den die Zähler angehängt werden.
-############################################################################################################### */
-span.page-num-print {
-	padding: 0;
-	margin: 0;
-}
-span.page-num-print:after {
-	content: counter(page);
-}
-span.page-nums-print {
-	padding: 0;
-	margin: 0;
-}
-span.page-nums-print:after {
-	content: counter(page) " von " counter(pages);
-}
-
-
-/* OpenHtmlToPDF ignoriert @media screen, daher wirken diese Regeln nur im Browser. Dient zur Simulation einer Seitenvorschau im Browser. */
+/* Format-spezifische Werte für die Browser-Vorschau. Gemeinsame Basis steht in reporting-styles.css. */
 @media screen {
-	html {
-		background: #c8c8c8;
-		padding: 12mm;
-		box-sizing: border-box;
-		min-width: 100%;
-		min-height: 100%;
-	}
 	body {
 		width: 297mm;
 		min-height: 210mm;
-		margin: 0 auto;
 		padding: 9mm 10mm 12mm 10mm;
-		background: #ffffff;
-		box-shadow: 0 0 6px rgba(0, 0, 0, 0.35);
-		box-sizing: border-box;
-		overflow: visible;
-	}
-	.pageTopLeft, .pageTopRight, .pageLeftMiddle,
-	.pageBottomLeft, .pageBottomCenter, .pageBottomRight,
-	span.page-num-print, span.page-nums-print {
-		display: none;
 	}
 	.start-new-page {
 		margin-top: 26mm;
-		position: relative;
 	}
-	/* Die Lücke, die den Seitenumbruch als durchscheinenden Hintergrund darstellt */
 	.start-new-page::before {
-		content: "";
-		position: absolute;
-		top: -14mm; /* Lücke direkt oberhalb des body padding-top der nächsten Seite */
-		left: -15mm; /* Über den Seitenrand hinausziehen, um den Body-Schatten zu überdecken */
+		top: -14mm;
+		left: -15mm;
 		right: -15mm;
-		height: 5mm;
-		background-color: #c8c8c8;
-		background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 0px, transparent 3px, transparent calc(100% - 3px), rgba(0, 0, 0, 0.15) 100%);
-		background-size: 297mm 100%; /* Beschränkt den Schatten-Verlauf exakt auf die Breite der A4-Seite (297mm) und zentriert ihn */
-		background-position: center;
-		background-repeat: no-repeat;
-		z-index: 10;
-	}
-	.start-new-page::after {
-		content: none;
-	}
-	.start-new-page:first-child {
-		margin-top: 0;
-	}
-	.start-new-page:first-child::before {
-		content: none;
+		background-size: 297mm 100%;
 	}
 }

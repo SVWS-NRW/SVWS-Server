@@ -50,7 +50,6 @@ body {
 	font-size: 9pt;
 	margin: 0;
 	padding: 0;
-	overflow: scroll;
 }
 
 
@@ -123,51 +122,53 @@ sup {
 	font-size: 0.64em;
 }
 
-.ta-l {
+.ta-l, .ta-lt, .ta-lm, .ta-lb {
 	text-align: left;
 }
-.ta-c {
+.ta-c, .ta-ct, .ta-cm, .ta-cb {
 	text-align: center;
 }
-.ta-r {
+.ta-r, .ta-rt, .ta-rm, .ta-rb {
 	text-align: right;
 }
-.ta-lt {
-	text-align: left;
+.ta-lt, .ta-ct, .ta-rt {
 	vertical-align: top;
 }
-.ta-ct {
-	text-align: center;
-	vertical-align: top;
-}
-.ta-rt {
-	text-align: right;
-	vertical-align: top;
-}
-.ta-lm {
-	text-align: left;
+.ta-lm, .ta-cm, .ta-rm {
 	vertical-align: middle;
 }
-.ta-cm {
-	text-align: center;
-	vertical-align: middle;
-}
-.ta-rm {
-	text-align: right;
-	vertical-align: middle;
-}
-.ta-lb {
-	text-align: left;
+.ta-lb, .ta-cb, .ta-rb {
 	vertical-align: bottom;
 }
-.ta-cb {
-	text-align: center;
-	vertical-align: bottom;
+
+
+/*
+##########################################################################################################################
+Definitionen für Running Header und Footer
+Die divs mit diesen Klassen werden über `position: running(...)` aus dem normalen Fluss in die entsprechende
+@page-Margin-Box (siehe Format-CSS) verschoben und dort beim Druck wiederholt eingeblendet.
+##########################################################################################################################
+*/
+.pageTopLeft, .pageTopRight, .pageLeftMiddle,
+.pageBottomLeft, .pageBottomCenter, .pageBottomRight {
+	padding: 0;
+	margin: 0;
+	font-weight: normal;
+	font-size: 7pt;
+	color: #808080;
 }
-.ta-rb {
-	text-align: right;
-	vertical-align: bottom;
-}
+.pageTopLeft      { position: running(pageTopLeft);      text-align: left; }
+.pageTopRight     { position: running(pageTopRight);     text-align: right; }
+.pageLeftMiddle   { position: running(pageLeftMiddle);   text-align: left; }
+.pageBottomLeft   { position: running(pageBottomLeft);   text-align: left; }
+.pageBottomCenter { position: running(pageBottomCenter); text-align: center; }
+.pageBottomRight  { position: running(pageBottomRight);  text-align: right; }
+
+/* Zähler-Spans für die Seitennummerierung innerhalb der Running Header/Footer.
+   `counter(page)` wirkt nur in paginierten Medien (PDF); im Browser sind die Spans über
+   den @media-screen-Block unten ohnehin per `display: none` ausgeblendet. */
+span.page-num-print:after  { content: counter(page); }
+span.page-nums-print:after { content: counter(page) " von " counter(pages); }
 
 
 /*
@@ -586,7 +587,7 @@ th {
 	font-weight: normal;
 }
 
-th.head-small-grey {
+th.head-small-grey, td.head-small-grey {
 	font-size: 0.8em;
 	font-weight: normal;
 	color: white;
@@ -597,18 +598,7 @@ th.head-small-grey {
 	border-bottom: 0.5px solid #757575;
 }
 
-td.head-small-grey {
-	font-size: 0.8em;
-	font-weight: normal;
-	color: white;
-	background-color: #757575;
-	padding-left: 1mm;
-	padding-right: 1mm;
-	border-top: 0.5px solid #757575;
-	border-bottom: 0.5px solid #757575;
-}
-
-th.head-black-lines {
+th.head-black-lines, td.head-black-lines {
 	color: black;
 	padding-left: 1mm;
 	padding-right: 1mm;
@@ -616,21 +606,7 @@ th.head-black-lines {
 	border-bottom: 1px solid #000000;
 }
 
-td.head-black-lines {
-	color: black;
-	padding-left: 1mm;
-	padding-right: 1mm;
-	border-top: 1px solid #000000;
-	border-bottom: 1px solid #000000;
-}
-
-th.head-black-lines-small-all {
-	padding-left: 1mm;
-	padding-right: 1mm;
-	border: 0.5px solid #000000;
-}
-
-td.head-black-lines-small-all {
+th.head-black-lines-small-all, td.head-black-lines-small-all {
 	padding-left: 1mm;
 	padding-right: 1mm;
 	border: 0.5px solid #000000;
@@ -649,6 +625,9 @@ td.cell-small-grey {
 Definitionen für Border and Background
 ##########################################################################################################################
 */
+/* Hinweis: Diese Klassen sind bewusst seitenweise zusammenstellbar (z. B. class="bo-b-grey bo-l-grey").
+   Deshalb werden hier konsequent seitenspezifische Shorthands (border-top/-right/-bottom/-left) bzw.
+   das vier-seitige `border`-Shorthand verwendet, damit unterschiedliche Klassen nicht miteinander kollidieren. */
 .bo-grey {
 	border: 0.5px solid #808080;
 }
@@ -769,4 +748,60 @@ div.fill-05 {
 	height: 100%;
 	box-sizing: border-box;
 	min-height: 0.5mm;
+}
+
+
+/*
+##########################################################################################################################
+@media screen: Simulation der Druckvorschau im Browser. OpenHtmlToPDF ignoriert @media screen vollständig.
+
+Hier stehen nur die formatübergreifenden Regeln. Format-spezifische Werte (body-Breite/Padding, .start-new-page
+margin-top sowie die background-size, top, left, right der Seitenumbruch-Lücke) werden in den jeweiligen
+Format-CSS-Dateien (reporting-A4-hoch.css, reporting-A4-quer.css, …) gesetzt.
+##########################################################################################################################
+*/
+@media screen {
+	html {
+		background: #c8c8c8;
+		padding: 12mm;
+		box-sizing: border-box;
+		min-width: 100%;
+		min-height: 100%;
+	}
+	body {
+		margin: 0 auto;
+		background: #ffffff;
+		box-shadow: 0 0 6px rgba(0, 0, 0, 0.35);
+		box-sizing: border-box;
+		overflow: visible;
+	}
+	.pageTopLeft, .pageTopRight, .pageLeftMiddle,
+	.pageBottomLeft, .pageBottomCenter, .pageBottomRight,
+	span.page-num-print, span.page-nums-print {
+		display: none;
+	}
+	.start-new-page {
+		position: relative;
+	}
+	/* Die Lücke, die den Seitenumbruch als durchscheinenden Hintergrund darstellt.
+	   background-size + top/left/right werden pro Format überschrieben. */
+	.start-new-page::before {
+		content: "";
+		position: absolute;
+		height: 5mm;
+		background-color: #c8c8c8;
+		background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 0px, transparent 3px, transparent calc(100% - 3px), rgba(0, 0, 0, 0.15) 100%);
+		background-position: center;
+		background-repeat: no-repeat;
+		z-index: 10;
+	}
+	.start-new-page::after {
+		content: none;
+	}
+	.start-new-page:first-child {
+		margin-top: 0;
+	}
+	.start-new-page:first-child::before {
+		content: none;
+	}
 }

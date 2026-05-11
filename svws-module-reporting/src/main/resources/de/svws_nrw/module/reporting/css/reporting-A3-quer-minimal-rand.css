@@ -4,7 +4,7 @@
 }
 
 
-/* Seitenumbrüche: Wenn Style angewendet wird, wird beim Druck ein Seitenumbruch eingefügt, evtl. mit Ausnahme. */
+/* Seitenumbrüche: Wenn die Klasse angewendet wird, wird beim Druck ein Seitenumbruch eingefügt, evtl. mit Ausnahme. */
 .start-new-page {
 	page-break-before: always;
 }
@@ -13,71 +13,20 @@
 }
 
 
-/* Um evtl. Zähler im div einzufügen, ergänze einen span, an den die Zähler angehängt werden. */
-span.page-num-print {
-	padding: 0;
-	margin: 0;
-}
-span.page-num-print:after {
-	content: counter(page);
-}
-span.page-nums-print {
-	padding: 0;
-	margin: 0;
-}
-span.page-nums-print:after {
-	content: counter(page) " von " counter(pages);
-}
-
-
-/* OpenHtmlToPDF ignoriert @media screen, daher wirken diese Regeln nur im Browser. Dient zur Simulation einer Seitenvorschau im Browser. */
+/* Format-spezifische Werte für die Browser-Vorschau. Gemeinsame Basis steht in reporting-styles.css. */
 @media screen {
-	html {
-		background: #c8c8c8;
-		padding: 12mm;
-		box-sizing: border-box;
-		min-width: 100%;
-		min-height: 100%;
-	}
 	body {
 		width: 420mm;
 		min-height: 297mm;
-		margin: 0 auto;
 		padding: 5mm;
-		background: #ffffff;
-		box-shadow: 0 0 6px rgba(0, 0, 0, 0.35);
-		box-sizing: border-box;
-		overflow: visible;
-	}
-	span.page-num-print, span.page-nums-print {
-		display: none;
 	}
 	.start-new-page {
 		margin-top: 15mm;
-		position: relative;
 	}
-	/* Die Lücke, die den Seitenumbruch als durchscheinenden Hintergrund darstellt */
 	.start-new-page::before {
-		content: "";
-		position: absolute;
-		top: -10mm; /* Lücke direkt oberhalb des body padding-top der nächsten Seite */
-		left: -10mm; /* Über den Seitenrand hinausziehen, um den Body-Schatten zu überdecken */
+		top: -10mm;
+		left: -10mm;
 		right: -10mm;
-		height: 5mm;
-		background-color: #c8c8c8;
-		background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 0px, transparent 3px, transparent calc(100% - 3px), rgba(0, 0, 0, 0.15) 100%);
-		background-size: 420mm 100%; /* Beschränkt den Schatten-Verlauf exakt auf die Breite der A3-Seite (420mm) und zentriert ihn */
-		background-position: center;
-		background-repeat: no-repeat;
-		z-index: 10;
-	}
-	.start-new-page::after {
-		content: none;
-	}
-	.start-new-page:first-child {
-		margin-top: 0;
-	}
-	.start-new-page:first-child::before {
-		content: none;
+		background-size: 420mm 100%;
 	}
 }
