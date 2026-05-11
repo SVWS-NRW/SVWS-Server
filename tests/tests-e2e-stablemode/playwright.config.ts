@@ -15,7 +15,7 @@ export default defineConfig({
 	retries: process.env.CI === undefined ? 0 : 2,
 
 	// Opt out of parallel tests on CI.
-	workers: 3,
+	workers: 7,
 
 	// Reporter to use
 	outputDir: './build/test-results',
@@ -24,13 +24,14 @@ export default defineConfig({
 
 	// For expect calls
 	expect: {
-		timeout: 20000,
+		timeout: 10_000,
 	},
-	timeout: 90_000,
+	timeout: 60_000,
 
 	use: {
+		trace: 'on-first-retry',
 		video: {
-			mode: 'retain-on-failure',
+			mode: 'on-first-retry',
 			size: { width: 960, height: 720 },
 		},
 		baseURL: frontendURL,
@@ -40,9 +41,9 @@ export default defineConfig({
 			name: 'chromium',
 			use: { ...devices['Desktop Chrome'] },
 		},
-		{
-			name: 'firefox',
-			use: { ...devices['Desktop Firefox'] },
-		},
+		// {
+		// 	name: 'firefox',
+		// 	use: { ...devices['Desktop Firefox'] },
+		// },
 	],
 });

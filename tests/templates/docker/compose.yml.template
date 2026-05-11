@@ -10,6 +10,8 @@ services:
       MYSQL_DATABASE: #GRADLE_PLACEHOLDER_DEFAULT_SCHEMA
       MYSQL_USER: svwsadmin
       MYSQL_PASSWORD: svwsadmin
+    tmpfs:
+      - /var/lib/mysql:rw,size=1g
     healthcheck:
       test: mariadb -h127.0.0.1 -uroot -proot #GRADLE_PLACEHOLDER_DEFAULT_SCHEMA -e 'SELECT 1'
       interval: 5s
