@@ -99,7 +99,6 @@
 							<span class="icon i-ri-arrow-up-down-line svws-sorting-desc" :class="{'svws-active': ((internalSortByAndOrder.key === column.name) || (sortByMulti?.has(column.name))) && ((internalSortByAndOrder.order === false) || (sortByMulti?.get(column.name) === false))}" />
 						</span>
 					</div>
-					<div v-if="rowActions.length > 0" class="svws-ui-td svws-align-center" role="columnheader" aria-label="Row-Actions" />
 				</div>
 			</slot>
 		</div>
@@ -114,7 +113,7 @@
 				</div>
 				<template v-for="(row, index) in sortedRows">
 					<slot name="rowCustom" :row="row.source">
-						<div class="svws-ui-tr" @focusin="highlightedRow = index" @focusout="highlightedRow = -1" @mouseenter="highlightedRow = index" @mouseleave="highlightedRow = -1" :style="getGridTemplateColumns" role="row" :key="`table-row_${row}_${index}`" @click.exact="toggleRowClick(row)" :ref="el => itemRefs.set(index, el)"
+						<div class="svws-ui-tr group" @focusin="highlightedRow = index" @focusout="highlightedRow = -1" @mouseenter="highlightedRow = index" @mouseleave="highlightedRow = -1" :style="getGridTemplateColumns" role="row" :key="`table-row_${row}_${index}`" @click.exact="toggleRowClick(row)" :ref="el => itemRefs.set(index, el)"
 							:class="{ 'svws-selected': isRowSelected(row), 'svws-clicked': isRowClicked(row), 'listFocusField': isRowClicked(row) || (multiSelectFocusEnabled && isRowSelected(row)) }" tabindex="0" @keydown.enter="toggleRowClick(row)"
 							@keydown.down.prevent="switchElement($event, itemRefs, index, false)" @keydown.up.prevent="switchElement($event, itemRefs, index, true)" :data="row.source" :draggable="rowDraggable(row.source)" v-on="rowDragListeners(row.source)">
 							<slot name="row" :row="row.source">
@@ -147,16 +146,6 @@
 									</div>
 								</slot>
 							</slot>
-							<div v-if="rowActions.length > 0" class="svws-ui-td svws-table-action-column flex items-center justify-end">
-								<div :class="[{'opacity-0': (highlightedRow !== index) && (clickedItemIndex !== index)}, 'flex items-center h-full gap-1 pr-[0.2rem]']">
-									<div v-for="rowAction in rowActions" :key="rowAction.label" class="flex items-center">
-										<svws-ui-button v-if="rowAction.trash" type="trash" @click="rowAction.action(row.source)" :disabled="rowAction.disabled" />
-										<svws-ui-button v-else type="icon" @click="rowAction.action(row.source)" :disabled="rowAction.disabled">
-											<span :class="[rowAction.iconClass, 'icon']" :aria-label="rowAction.label" :title="rowAction.label" />
-										</svws-ui-button>
-									</div>
-								</div>
-							</div>
 						</div>
 					</slot>
 				</template>
@@ -176,7 +165,7 @@
 						<template v-else-if="someNotAllRowsSelected && modelValue">{{ modelValue.length - selectedItemsNotListed.length }}/<span class="text-ui-secondary">{{ sortedRows.length - unselectable.size }}</span> ausgewählt<template v-if="selectedItemsNotListed.length > 0"><svws-ui-button class="m-0.5" type="transparent" size="small" title="Weitere ausgewählte Einträge, die nicht angezeigt werden. Klicken entfernt aus der Liste." @click="unselectAllNotListedRows"><span class="icon-sm i-ri-close-line" />{{ selectedItemsNotListed.length }} Weitere</svws-ui-button><svws-ui-button type="transparent" size="small" title="Alle ausgwählten Einträge. Klicken, um alle aus der Auswahl zu entfernen." @click="unselectAllRows"><span class="icon-sm i-ri-close-line" />{{ modelValue.length - unselectable.size }} insgesamt</svws-ui-button></template></template>
 						<template v-else><span class="text-ui-secondary">{{ (sortedRows.length - unselectable.size) === 1 ? '1 Eintrag': `${sortedRows.length - unselectable.size} Einträge` }}</span><template v-if="selectedItemsNotListed.length > 0">, <svws-ui-button class="m-0.5" type="transparent" size="small" @click="unselectAllNotListedRows"><span class="icon-sm i-ri-close-line" />{{ selectedItemsNotListed.length }} Ausgewählte nicht angezeigt</svws-ui-button></template></template>
 					</div>
-					<div v-if="$slots.actions" class="svws-table-action-column grow justify-end svws-ui-td gap-0!" role="cell">
+					<div v-if="$slots.actions" class="svws-table-action-column grow justify-end svws-ui-td" role="cell">
 						<slot name="actions" />
 					</div>
 				</div>
@@ -188,7 +177,8 @@
 <script lang="ts" setup generic="DataTableItem extends Record<string, any>">
 
 	import { computed, toRef, toRaw, ref, watch, nextTick, onMounted } from "vue";
-	import type { DataTableColumn, DataTableRowAction, InputType, SortByAndOrder } from "../../types";
+	import type { DataTableColumn, InputType, SortByAndOrder } from "../../types";
+	import type { TableActions } from "../controls/tablegrid/UiTableActions.vue";
 
 	type DataTableColumnSource = DataTableColumn | string;
 
@@ -232,7 +222,6 @@
 	const props = withDefaults(
 		defineProps<{
 			columns?: DataTableColumnSource[];
-			rowActions?: DataTableRowAction<DataTableItem>[];
 			hiddenColumns?: Set<string>;
 			items?: Iterable<DataTableItem> | DataTableItem[];
 			modelValue?: DataTableItem[];
@@ -270,7 +259,6 @@
 		}>(),
 		{
 			columns: () => [],
-			rowActions: () => [],
 			hiddenColumns: () => new Set<string>(),
 			items: () => [],
 			modelValue: undefined,
@@ -390,14 +378,7 @@
 
 	const gridTemplateColumnsComputed = computed(() => gridTemplateColumns.value.length > 0 ? gridTemplateColumns.value : 'repeat(auto-fit, minmax(0, 1fr))');
 
-	const getRowActionTemplateColumn = computed(() => {
-		if (props.rowActions.length === 0) {
-			return "";
-		}
-		const actionButtonWidth = 2.1;
-		return (props.rowActions.length * actionButtonWidth) + "rem";
-	});
-	const getGridTemplateColumns = computed(() => `grid-template-columns: ${props.selectable ? '2rem' : ''} ${gridTemplateColumnsComputed.value} ${getRowActionTemplateColumn.value}`);
+	const getGridTemplateColumns = computed(() => `grid-template-columns: ${props.selectable ? '2rem' : ''} ${gridTemplateColumnsComputed.value}`);
 
 	const rowsComputed = computed<DataTableRow[]>(() => [...props.items].map((source, index) =>
 		({ selectable: !props.unselectable.has(toRaw(source)), initialIndex: index, source: toRaw(source), cells:

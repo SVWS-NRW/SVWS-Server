@@ -23,18 +23,5 @@ export type DataTableColumn = {
 	toggleInvisible?: boolean;
 	statistic?: boolean;
 };
-export type DataTableRowAction<T> =
-		{
-			trash: true;
-			label: string;
-			action: (item: T) => void;
-			disabled?: boolean; }
-		| {
-			trash?: false;
-			label: string;
-			action: (item: T) => void;
-			disabled?: boolean;
-			iconClass: string;
-		};
 
 export type SortByAndOrder = { key: string | null; order: boolean | null; };

@@ -40,13 +40,11 @@
 						<template #cell(email)="{value}">
 							<span class="line-clamp-1 break-all">{{ value }}</span>
 						</template>
+						<template #cell(rowActions)="{ rowData }">
+							<ui-table-actions :actions="rowActions" :items="rowData" />
+						</template>
 						<template #actions v-if="state.showBulk">
-							<div v-for="rowAction in rowActions" :key="rowAction.label" class="flex items-center">
-								<svws-ui-button v-if="rowAction.trash" type="trash" @click="console.log(`Bulk Action ${rowAction.label}`)" :disabled="rowAction.disabled" />
-								<svws-ui-button v-else type="icon" @click="console.log(`Bulk Action ${rowAction.label}`)" :disabled="rowAction.disabled">
-									<span :class="[rowAction.iconClass, 'icon']" :aria-label="rowAction.label" :title="rowAction.label" />
-								</svws-ui-button>
-							</div>
+							<ui-table-actions :actions="bulkActions" :items="[]" always-visible />
 						</template>
 					</svws-ui-table>
 				</svws-ui-content-card>
@@ -99,7 +97,8 @@
 <script setup lang="ts">
 
 	import { ref, reactive, computed } from "vue";
-	import type { DataTableColumn, DataTableRowAction, SortByAndOrder } from "../../types";
+	import type { DataTableColumn, SortByAndOrder } from "../../types";
+	import type { TableActions } from "../controls/tablegrid/UiTableActions.vue";
 
 	const itemRefs = ref(new Map());
 	const hiddenColumns = ref<Set<string>>(new Set<string>());
@@ -135,20 +134,11 @@
 		showBulk: false,
 	});
 
-	const cols = ref<DataTableColumn[]>([
-		{ key: "name", label: "Name", sortable: true, span: 1, toggleInvisible: true },
-		{ key: "fach", label: "Fach", span: 0.5, toggle: true },
-		{ key: "email", label: "E-Mail", toggle: true },
-		{ key: "customIcon", label: "Icon", tooltip: "Icon statt Text", sortable: true, span: 0.25 },
-		{ key: "test", label: "Column", sortable: true },
-		{ key: "itemID", label: "ID", tooltip: "Identifikation", fixedWidth: 4, align: "right", toggle: true },
-	]);
-
-	const rowActions = computed<DataTableRowAction<DataType>[]>(() => {
-		const actions: DataTableRowAction<DataType>[] = [];
+	const rowActions = computed<TableActions<DataType>[]>(() => {
+		const actions: TableActions<DataType>[] = [];
 
 		if (state.add) {
-			actions.push({ label: "Hinzufügen", iconClass: "i-ri-add-line", action: (item: DataType) => alert(`Hinzufügen: ${item.name}`), disabled: true });
+			actions.push({ label: "Hinzufügen", iconClasses: "i-ri-add-line", action: (item: DataType) => alert(`Hinzufügen: ${item.name}`), disabled: true });
 		}
 
 		if (state.delete) {
@@ -156,15 +146,50 @@
 		}
 
 		if (state.accept) {
-			actions.push({ label: "Bestätigen", iconClass: "i-ri-check-line", action: (item: DataType) => alert(`Bestätigen: ${item.name}`) });
+			actions.push({ label: "Bestätigen", iconClasses: "i-ri-check-line", action: (item: DataType) => alert(`Bestätigen: ${item.name}`) });
 		}
 
 		if (state.details) {
-			actions.push({ label: "Details", iconClass: "i-ri-eye-line", action: (item: DataType) => alert(`Default: ${item.name}`) });
+			actions.push({ label: "Details", iconClasses: "i-ri-eye-line", action: (item: DataType) => alert(`Default: ${item.name}`) });
 		}
 
 		return actions;
 	});
+
+	const bulkActions = computed<TableActions<DataType[]>[]>(() => {
+		const actions: TableActions<DataType[]>[] = [];
+
+		if (state.add) {
+			actions.push({ label: "Hinzufügen", iconClasses: "i-ri-add-line", action: () => alert(`Hinzufügen: Bulk`), disabled: true });
+		}
+
+		if (state.delete) {
+			actions.push({ label: "Löschen", action: () => alert(`Löschen: Bulk`), trash: true });
+		}
+
+		if (state.accept) {
+			actions.push({ label: "Bestätigen", iconClasses: "i-ri-check-line", action: () => alert(`Bestätigen: Bulk`) });
+		}
+
+		if (state.details) {
+			actions.push({ label: "Details", iconClasses: "i-ri-eye-line", action: () => alert(`Default: Bulk`) });
+		}
+
+		return actions;
+	});
+
+	const cols = computed((): DataTableColumn[] => [
+		{ key: "name", label: "Name", sortable: true, span: 1, toggleInvisible: true },
+		{ key: "name", label: "Name", sortable: true, span: 1, toggleInvisible: true },
+		{ key: "fach", label: "Fach", span: 0.5, toggle: true },
+		{ key: "email", label: "E-Mail", toggle: true },
+		{ key: "customIcon", label: "Icon", tooltip: "Icon statt Text", sortable: true, span: 0.25 },
+		{ key: "test", label: "Column", sortable: true },
+		{ key: "itemID", label: "ID", tooltip: "Identifikation", fixedWidth: 4, align: "right", toggle: true },
+		...(rowActions.value.length > 0
+			? [{ key: "rowActions", label: "", tooltip: "Aktionen", fixedWidth: (rowActions.value.length * 2.3), align: "right" }] as DataTableColumn[]
+			: []),
+	]);
 
 	type DataType = { id: number, name: string, email: string, customIcon: string, test: string, itemID: string, fach: string };
 	const data = ref<DataType[]>([

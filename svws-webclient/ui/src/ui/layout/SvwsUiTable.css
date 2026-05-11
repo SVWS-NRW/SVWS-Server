@@ -35,10 +35,6 @@
 	.svws-table-offset &:not(.svws-has-background) {
 		.svws-ui-td:last-child {
 			@apply pr-3;
-
-			&.svws-table-action-column {
-				@apply pr-0;
-			}
 		}
 	}
 
