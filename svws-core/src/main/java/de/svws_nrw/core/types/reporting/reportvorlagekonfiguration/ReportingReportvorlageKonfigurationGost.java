@@ -8,8 +8,10 @@ import de.svws_nrw.core.data.reporting.ReportingEMailDaten;
 import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.core.types.reporting.ReportingAusgabeformat;
 import de.svws_nrw.core.types.reporting.ReportingEMailEmpfaengerTyp;
+import de.svws_nrw.core.types.reporting.ReportingFilterVerknuepfung;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlageParameterTyp;
 import de.svws_nrw.core.types.reporting.ReportingUIKomponentenTyp;
+import de.svws_nrw.core.utils.reporting.ReportingFilterDefinitionFactory;
 import de.svws_nrw.core.utils.reporting.ReportingReportvorlageUtils;
 import jakarta.validation.constraints.NotNull;
 
@@ -39,7 +41,14 @@ public final class ReportingReportvorlageKonfigurationGost {
 										ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
 						))),
 				new ReportingEMailDaten(),
-				new ArrayList<>(), new ArrayList<>(), false, true);
+				new ArrayList<>(),
+				List.of(ReportingReportvorlageUtils.erzeugeFilterDefinitionGruppe("Quartalsfilter", "ReportingGostKlausurplanungKlausurtermin", true, true, ReportingFilterVerknuepfung.OR,
+						ReportingFilterDefinitionFactory.definitionen(
+								ReportingFilterDefinitionFactory.definition("1. Quartal", "ReportingGostKlausurplanungKlausurtermin",
+										ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("quartal", "1"))),
+								ReportingFilterDefinitionFactory.definition("2. Quartal", "ReportingGostKlausurplanungKlausurtermin",
+										ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("quartal", "2"))))
+				)), false, true);
 	}
 
 	/**
@@ -51,7 +60,14 @@ public final class ReportingReportvorlageKonfigurationGost {
 		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()),
 				new ArrayList<>(),
 				new ReportingEMailDaten(),
-				new ArrayList<>(), new ArrayList<>(), true, true);
+				new ArrayList<>(),
+				List.of(ReportingReportvorlageUtils.erzeugeFilterDefinitionGruppe("Quartalsfilter", "ReportingGostKlausurplanungKlausurtermin", true, true, ReportingFilterVerknuepfung.OR,
+						ReportingFilterDefinitionFactory.definitionen(
+								ReportingFilterDefinitionFactory.definition("1. Quartal", "ReportingGostKlausurplanungKlausurtermin",
+										ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("quartal", "1"))),
+								ReportingFilterDefinitionFactory.definition("2. Quartal", "ReportingGostKlausurplanungKlausurtermin",
+										ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("quartal", "2"))))
+				)), true, true);
 	}
 
 	/**

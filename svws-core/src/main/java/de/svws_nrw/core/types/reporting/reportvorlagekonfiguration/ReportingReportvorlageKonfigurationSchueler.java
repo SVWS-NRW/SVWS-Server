@@ -34,7 +34,7 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 								ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
 						ReportingReportvorlageUtils.erzeugeVorlageParameter("mitZweiterBeratungslehrerUnterschrift",
 								"mit Unterschrift 2. Beratungslehrkraft statt Schulträger",
-								ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.INPUT, 1),
+								ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
 						ReportingReportvorlageUtils.erzeugeVorlageParameter("textZAAVorsitzUnterschrift", "Unterschrift ZAA-Vorsitz",
 								ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 1),
 						ReportingReportvorlageUtils.erzeugeVorlageParameter("textZAAVorsitzUnterschriftBezeichnung", "Bezeichnung ZAA-Vorsitz",

@@ -1,8 +1,6 @@
 package de.svws_nrw.module.reporting.html.contexts;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.function.Predicate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
@@ -11,153 +9,91 @@ import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
 import de.svws_nrw.data.gost.DataGostBlockungsdaten;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.module.reporting.filterung.ReportingFilterDataType;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ProxyReportingGostKursplanungBlockungsergebnis;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungBlockungsergebnis;
+import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungKurs;
+import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import jakarta.ws.rs.core.Response;
 import org.thymeleaf.context.Context;
 
 
 /**
- * Ein Thymeleaf-Html-Daten-Context zum Bereich "GostKursplanung", um Thymeleaf-html-Templates mit Daten zu füllen.
+ * Abstrakte Basisklasse für Thymeleaf-html-Daten-Contexts zum Bereich "GostKursplanung". Sie bündelt den Aufbau
+ * des Blockungsergebnisses und die Übergabe an Thymeleaf. Die Aufteilung in Einzel-Contexts erfolgt in den konkreten Subklassen
+ * {@link HtmlContextGostKursplanungBlockungsergebnisSchueler} und {@link HtmlContextGostKursplanungBlockungsergebnisKurse},
+ * die jeweils das Interface {@link HtmlContextAufteilbar} implementieren.
  */
-public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlContext<Object>
-		implements HtmlContextAufteilbar<HtmlContextGostKursplanungBlockungsergebnis> {
+public abstract class HtmlContextGostKursplanungBlockungsergebnis extends HtmlContext<Object> {
 
 	/** Das Reporting-Objekt zum Blockungsergebnis. */
 	@JsonIgnore
-	private ReportingGostKursplanungBlockungsergebnis reportingGostKursplanungBlockungsergebnis = null;
-
-	/** Blockungsergebnis dieses Contexts. */
-	@JsonIgnore
-	private GostBlockungsergebnis blockungsergebnis = null;
-
-	/** Datenmanager dieses Contexts. */
-	@JsonIgnore
-	private GostBlockungsdatenManager datenManager = null;
-
-	/** Eine Liste von IDs, die die Ausgabe auf diese IDs beschränkt. Auf welchen Datentyp sich diese IDs beziehen, definiert der Wert der Eigenschaft
-	 * idsFilterDataType. Ist die Liste leer, dann erfolgt keine Filterung. */
-	private List<Long> idsFilter;
-
-	/** Der Typ von Daten, auf den sich die Filterung der IDs bezieht. */
-	private final ReportingFilterDataType idsFilterDataType;
+	protected ReportingGostKursplanungBlockungsergebnis blockungsergebnis;
 
 	/**
-	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
+	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten. Das Blockungsergebnis wird vollständig aus dem
+	 * Repository und den Reporting-Parametern aufgebaut; die Filterung der Schüler und Kurse erfolgt über den FilterService
+	 * anhand der konfigurierten Filterdefinitionen.
 	 *
 	 * @param reportingRepository	Repository mit Parametern, Logger und Daten zum Reporting.
-	 * @param idsFilter             Eine Liste von IDs, die die Ausgabe auf diese IDs beschränkt. Auf welchen Datentyp sich diese IDs beziehen, definiert der
-	 *                              Wert der Eigenschaft idsFilterDataType.
-	 * @param idsFilterDataType     Der Typ von Daten, auf den sich die Filterung der IDs bezieht.
 	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
-	public HtmlContextGostKursplanungBlockungsergebnis(final ReportingRepository reportingRepository, final List<Long> idsFilter,
-			final ReportingFilterDataType idsFilterDataType) throws ApiOperationException {
+	protected HtmlContextGostKursplanungBlockungsergebnis(final ReportingRepository reportingRepository) throws ApiOperationException {
 		super(reportingRepository);
-		this.idsFilter = idsFilter;
-		this.idsFilterDataType = idsFilterDataType;
 		erzeugeContext();
 	}
 
 	/**
-	 * Konstruktor zur Erstellung eines HtmlContext für die Kursplanung eines Blockungsergebnisses in der gymnasialen Oberstufe.
+	 * Initialisiert einen neuen HtmlContext für einen Einzel-Sub-Context, der ein bereits vorhandenes Blockungsergebnis-Objekt
+	 * wiederverwendet und die Sicht über Schüler- und Kurs-Prädikate auf einzelne Entitäten einschränkt. Wird ausschließlich
+	 * von Subklassen für die Erzeugung der Einzel-Contexts verwendet.
 	 *
-	 * @param reportingRepository   Das Reporting-Repository, welches Parameter, Logger und Daten für das Reporting bereitstellt.
-	 * @param blockungsergebnis     Das Blockungsergebnis der Kursplanung, für das der HtmlContext erstellt wird.
-	 * @param datenManager          Der Datenmanager, der Hilfsfunktionen und grundlegende Daten für die Blockung bereitstellt.
-	 * @param idsFilter             Eine Liste von IDs, die die Ausgabe auf diese IDs beschränkt. Auf welchen Datentyp sich diese IDs beziehen, definiert der
-	 *                              Wert der Eigenschaft idsFilterDataType.
-	 * @param idsFilterDataType     Der Typ von Daten, auf den sich die Filterung der IDs bezieht.
-	 *
-	 * @throws ApiOperationException Wird ausgelöst, wenn ein Fehler während der Erstellung des Kontextes auftritt.
+	 * @param reportingRepository	Repository mit Parametern, Logger und Daten zum Reporting.
+	 * @param quelle				Ein bereits aufgebautes Blockungsergebnis, das als Datenquelle wiederverwendet wird.
+	 * @param filterSchueler		Ein Prädikat, das bestimmt, welche Schüler in der Ausgabe enthalten sind.
+	 * @param filterKurse			Ein Prädikat, das bestimmt, welche Kurse in der Ausgabe enthalten sind.
 	 */
-	public HtmlContextGostKursplanungBlockungsergebnis(final ReportingRepository reportingRepository, final GostBlockungsergebnis blockungsergebnis,
-			final GostBlockungsdatenManager datenManager, final List<Long> idsFilter, final ReportingFilterDataType idsFilterDataType)
-			throws ApiOperationException {
+	protected HtmlContextGostKursplanungBlockungsergebnis(final ReportingRepository reportingRepository,
+			final ReportingGostKursplanungBlockungsergebnis quelle,
+			final Predicate<ReportingSchueler> filterSchueler, final Predicate<ReportingGostKursplanungKurs> filterKurse) {
 		super(reportingRepository);
-		this.blockungsergebnis = blockungsergebnis;
-		this.datenManager = datenManager;
-		this.idsFilter = idsFilter;
-		this.idsFilterDataType = idsFilterDataType;
-		erzeugeContext();
+		this.blockungsergebnis = new ProxyReportingGostKursplanungBlockungsergebnis(reportingRepository, quelle,
+				filterSchueler, filterKurse, quelle.istSchuelerFilterAktiv(), quelle.istKurseFilterAktiv());
+
+		final Context context = new Context();
+		context.setVariable("GostBlockungsergebnis", this.blockungsergebnis);
+		super.setContext(context);
 	}
 
+
 	/**
-	 * Erzeugt den Context zum Füllen eines HTML-Templates.
+	 * Erzeugt den Context zur GOSt-Kursplanung.
 	 *
-	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException   	im Fehlerfall
 	 */
 	private void erzeugeContext() throws ApiOperationException {
 
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Erzeuge Context zu einem GostKursplanungBlockungsergebnis.");
 
-		this.idsFilter = (this.idsFilter == null) ? new ArrayList<>() : this.idsFilter.stream().filter(Objects::nonNull).toList();
-
-		if ((blockungsergebnis == null) || (this.datenManager == null)) {
-			try {
-				final long idBlockungsergebnis = this.reportingRepository.reportingParameter().idHauptdatenObjekt();
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Die ID der Blockungsergebnisses wurde ermittelt: " + idBlockungsergebnis);
-				this.blockungsergebnis = DataGostBlockungsergebnisse.getErgebnisFromID(this.reportingRepository.conn(), idBlockungsergebnis);
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Das Blockungsergebnis wurde ermittelt.");
-				this.datenManager = DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(this.reportingRepository.conn(), blockungsergebnis.blockungID);
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Der Datenmanager zum Blockungsergebnis wurde ermittelt.");
-			} catch (final ApiOperationException e) {
-				throw new ApiOperationException(Response.Status.NOT_FOUND, e,
-						"FEHLER: Das Blockungsergebnis und der zugehörige Datenmanager konnten nicht ermittelt werden. " + e.getMessage());
-			}
-		}
-
-		reportingGostKursplanungBlockungsergebnis = new ProxyReportingGostKursplanungBlockungsergebnis(this.reportingRepository, this.blockungsergebnis,
-				datenManager, this.idsFilter, this.idsFilterDataType);
-
-		// Daten-Context für Thymeleaf erzeugen.
-		final Context context = new Context();
-		context.setVariable("GostBlockungsergebnis", reportingGostKursplanungBlockungsergebnis);
-
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Erzeugung des Context zum GostKursplanungBlockungsergebnis abgeschlossen.");
-
-		super.setContext(context);
-	}
-
-	/**
-	 * Erstellt eine Liste von HTML-Kontexten für die Kursplanung eines Blockungsergebnisses in der gymnasialen Oberstufe. Dabei wird für jede übermittelte
-	 * ID ein separater Kontext erzeugt, der die relevanten Daten enthält.
-	 *
-	 * @return Eine Liste von HtmlContextGostKursplanungBlockungsergebnis-Objekten, wobei jedes Objekt einen separaten Kontext für die angegebene ID
-	 * darstellt. Wird keine ID übermittelt oder sind Daten unvollständig, wird eine leere Liste zurückgegeben.
-	 */
-	@Override
-	public List<HtmlContextGostKursplanungBlockungsergebnis> getEinzelContexts() {
-		final List<HtmlContextGostKursplanungBlockungsergebnis> result = new ArrayList<>();
-
-		if ((this.blockungsergebnis == null) || (this.datenManager == null)) {
-			return result;
-		}
-
 		try {
-			for (final Long idFilter : this.reportingGostKursplanungBlockungsergebnis.idsGefiltert()) {
-				final HtmlContextGostKursplanungBlockungsergebnis htmlContextGostKursplanungBlockungsergebnis =
-						new HtmlContextGostKursplanungBlockungsergebnis(this.reportingRepository, this.blockungsergebnis, this.datenManager,
-								List.of(idFilter), this.idsFilterDataType);
-				result.add(htmlContextGostKursplanungBlockungsergebnis);
-			}
-		} catch (final ApiOperationException ignore) {
-			// Da die Einzelausgabe nur bei schon bestehenden Datenmanagern erstellt werden kann, kann diese Exception hier ignoriert werden.
+			final long idBlockungsergebnis = this.reportingRepository.reportingParameter().idHauptdatenObjekt();
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Die ID der Blockungsergebnisses wurde ermittelt: " + idBlockungsergebnis);
+			final GostBlockungsergebnis ergebnis = DataGostBlockungsergebnisse.getErgebnisFromID(this.reportingRepository.conn(), idBlockungsergebnis);
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Das Blockungsergebnis wurde ermittelt.");
+			final GostBlockungsdatenManager datenManager =
+					DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(this.reportingRepository.conn(), ergebnis.blockungID);
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Der Datenmanager zum Blockungsergebnis wurde ermittelt.");
+
+			this.blockungsergebnis = new ProxyReportingGostKursplanungBlockungsergebnis(this.reportingRepository, ergebnis, datenManager);
+
+			// Daten-Context für Thymeleaf erzeugen.
+			final Context context = new Context();
+			context.setVariable("GostBlockungsergebnis", this.blockungsergebnis);
+			super.setContext(context);
+		} catch (final ApiOperationException e) {
+			throw new ApiOperationException(Response.Status.NOT_FOUND, e,
+					"FEHLER: Das Blockungsergebnis und der zugehörige Datenmanager konnten nicht ermittelt werden. " + e.getMessage());
 		}
-
-		return result;
-	}
-
-	/**
-	 * Gibt eine Liste von IDs für die Ausgabe von Daten zurück. Falls keine IDs definiert sind, wird eine leere Liste zurückgegeben.
-	 *
-	 * @return Eine Liste von Long-Werten, die die IDs der Daten darstellen, oder eine leere Liste, wenn keine Daten-IDs vorhanden sind.
-	 */
-	@Override
-	public List<Long> getIds() {
-		return this.reportingGostKursplanungBlockungsergebnis.idsGefiltert();
 	}
 }

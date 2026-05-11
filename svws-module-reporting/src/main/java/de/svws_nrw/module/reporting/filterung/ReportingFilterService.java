@@ -79,6 +79,26 @@ public class ReportingFilterService {
 	}
 
 	/**
+	 * Prüft, ob für den angegebenen Reporting-Typ eine Filterdefinition mit mindestens einem Filterkriterium in den
+	 * Reporting-Parametern vorliegt. Damit kann unterschieden werden, ob eine Ausgabe gefiltert oder unverändert erfolgen soll.
+	 *
+	 * @param typ Der Name des Typs (z. B. "ReportingSchueler"), welcher bspw. über class.getSimpleName() ermittelt werden kann.
+	 *
+	 * @return {@code true}, wenn für den Typ mindestens eine Filterdefinition mit mindestens einem Kriterium vorhanden ist, sonst {@code false}.
+	 */
+	public boolean hatFilter(final String typ) {
+		if ((this.reportingParameterTypisiert == null) || (this.reportingParameterTypisiert.filterDefinitionenGruppen() == null)
+				|| this.reportingParameterTypisiert.filterDefinitionenGruppen().isEmpty()) {
+			return false;
+		}
+		final ReportingFilterDefinitionGruppe gruppe = this.reportingParameterTypisiert.filterDefinitionenGruppen().stream()
+				.filter(g -> (g != null) && Objects.equals(typ, g.typ))
+				.findFirst()
+				.orElse(null);
+		return (gruppe != null) && (gruppe.filterDefinitionen != null) && !gruppe.filterDefinitionen.isEmpty();
+	}
+
+	/**
 	 * Eine Hilfsmethode, um die FilterRegistry eines Typs automatisch zu laden. Nutzt Reflection, um die statische Methode
 	 * 'filterRegistry()' der Klasse 'de.svws_nrw.module.reporting.filterung.FilterRegistry<Typ>' aufzurufen.
 	 *

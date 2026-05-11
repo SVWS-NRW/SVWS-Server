@@ -8,7 +8,7 @@
 		<title></title>
 	</head>
 
-	<body th:with="KursplanungKurse = ${GostBlockungsergebnis.kurseGefiltert()}">
+	<body th:with="KursplanungKurse = ${GostBlockungsergebnis.kurse()}">
 		<div class="reset-page-counter start-new-page" th:each="Kurs,iterationVarKurs : ${KursplanungKurse}">
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->

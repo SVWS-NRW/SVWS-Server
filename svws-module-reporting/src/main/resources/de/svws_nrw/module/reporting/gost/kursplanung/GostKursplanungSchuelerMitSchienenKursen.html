@@ -8,9 +8,9 @@
 		<title></title>
 	</head>
 
-	<body th:with="KursplanungSchueler = ${GostBlockungsergebnis.schuelerGefiltert()}">
-		<div th:switch="${Parameter.idsHauptdaten.size()}">
-			<div th:case="0">
+	<body th:with="KursplanungSchueler = ${GostBlockungsergebnis.schueler()}">
+		<div th:switch="${GostBlockungsergebnis.istSchuelerFilterAktiv()}">
+			<div th:case="false">
 				<div th:with="zeigeExtDummy = ${(GostBlockungsergebnis.anzahlExterne() > 0 || GostBlockungsergebnis.anzahlDummy() > 0)}"
 					 th:each="i,iterationVarSchueler : ${#numbers.sequence(0, 0)}">
 
@@ -65,7 +65,7 @@
 					</table>
 				</div>
 			</div>
-			<div th:case="*">
+			<div th:case="true">
 				<div class="reset-page-counter start-new-page"
 					th:with="zeigeExtDummy = ${(GostBlockungsergebnis.anzahlExterne() > 0 || GostBlockungsergebnis.anzahlDummy() > 0)}"
 					th:each="schueler,iterationVarSchueler : ${KursplanungSchueler}">

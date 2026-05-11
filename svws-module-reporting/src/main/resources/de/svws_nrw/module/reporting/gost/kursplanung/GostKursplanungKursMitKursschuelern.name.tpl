@@ -1,4 +1,4 @@
-[# th:with="gefilterteKurse = ${GostBlockungsergebnis.kurseGefiltert()}, anzahlGefilterteKurse = ${#lists.size(gefilterteKurse)}"]
+[# th:with="gefilterteKurse = ${GostBlockungsergebnis.kurse()}, anzahlGefilterteKurse = ${#lists.size(gefilterteKurse)}"]
     [# th:if="${anzahlGefilterteKurse == 0}"]
         GOSt-Blockung-Kurs-Schueler
     [/]

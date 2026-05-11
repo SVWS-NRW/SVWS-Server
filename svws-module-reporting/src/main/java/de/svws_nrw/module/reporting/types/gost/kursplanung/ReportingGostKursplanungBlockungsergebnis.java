@@ -1,15 +1,13 @@
 package de.svws_nrw.module.reporting.types.gost.kursplanung;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
-import de.svws_nrw.module.reporting.filterung.ReportingFilterDataType;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.function.Predicate;
 
 /**
  * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKursplanungBlockungsergebnis.</p>
@@ -43,18 +41,17 @@ public class ReportingGostKursplanungBlockungsergebnis extends ReportingBaseType
 	/** Map mit den Fachwahlstatistiken des GOSt-Halbjahres des Blockungsergebnisses zur Fach-ID */
 	protected Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik;
 
-	/** Eine Liste von IDs, die die Ausgabe auf diese IDs beschränkt. Auf welchen Datentyp sich diese IDs beziehen, definiert der Wert der Eigenschaft
-	 * idsFilterDataType. Ist die Liste leer, dann erfolgt keine Filterung. */
-	private List<Long> idsFilter;
+	/** Ein Prädikat, das bestimmt, welche Schüler in der Ausgabe der Hauptliste enthalten sind. */
+	protected final Predicate<ReportingSchueler> filterSchueler;
 
-	/** Der Typ von Daten, auf den sich die Filterung der IDs bezieht. */
-	private final ReportingFilterDataType idsFilterDataType;
+	/** Ein Prädikat, das bestimmt, welche Kurse in der Ausgabe enthalten sind. */
+	protected final Predicate<ReportingGostKursplanungKurs> filterKurse;
 
-	/** Eine Liste, die die gefilterten Schüler zwischenspeichert, wenn ein wiederholter Zugriff erfolgt. */
-	private List<ReportingSchueler> gefilterteSchueler;
+	/** Gibt an, ob ein Filter auf die Hauptliste der Schüler angewendet wird. */
+	protected final boolean istSchuelerFilterAktiv;
 
-	/** Eine Liste, die die gefilterten Kurse zwischenspeichert, wenn ein wiederholter Zugriff erfolgt. */
-	private List<ReportingGostKursplanungKurs> gefilterteKurse;
+	/** Gibt an, ob ein Filter auf die Liste der Kurse angewendet wird. */
+	protected final boolean istKurseFilterAktiv;
 
 	/** Das Halbjahr der gymnasialen Oberstufe des Blockungsergebnisses */
 	protected GostHalbjahr gostHalbjahr;
@@ -75,28 +72,31 @@ public class ReportingGostKursplanungBlockungsergebnis extends ReportingBaseType
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
 	 *
-	 * @param abiturjahr Das Kalenderjahr, in dem die Abiturprüfung des Blockungsergebnisses stattfindet
-	 * @param anzahlDummy Anzahl der Dummy-Schüler im Ergebnis
-	 * @param anzahlExterne Anzahl der externen Schüler im Ergebnis
+	 * @param abiturjahr               Das Kalenderjahr, in dem die Abiturprüfung des Blockungsergebnisses stattfindet
+	 * @param anzahlDummy              Anzahl der Dummy-Schüler im Ergebnis
+	 * @param anzahlExterne            Anzahl der externen Schüler im Ergebnis
 	 * @param anzahlMaxKurseProSchiene Maximale Anzahl an Kursen pro Schiene über alle Schienen
-	 * @param anzahlSchienen Anzahl der Schienen
-	 * @param anzahlSchueler Anzahl der Schüler im Ergebnis
-	 * @param bezeichnung Bezeichnung des Blockungsergebnisses
-	 * @param fachwahlstatistik Map mit den Fachwahlstatistiken des GOSt-Halbjahres des Blockungsergebnisses zur Fach-ID
-	 * @param gostHalbjahr Das Halbjahr der gymnasialen Oberstufe des Blockungsergebnisses
-	 * @param id ID des Blockungsergebnisses
-	 * @param kurse Eine Liste vom Typ Kurs, die alle Kurse des Blockungsergebnisses beinhaltet.
-	 * @param schienen Eine Liste vom Typ Schiene, die alle Schienen des Blockungsergebnisses beinhaltet.
-	 * @param schueler Eine Liste vom Typ Schüler, die alle Schüler des Blockungsergebnisses beinhaltet.
-	 * @param idsFilter Eine Liste von IDs, die die Ausgabe auf diese IDs beschränkt. Auf welchen Datentyp sich diese IDs beziehen, definiert der Wert der Eigenschaft idsFilterDataType.
-	 * @param idsFilterDataType Der Typ von Daten, auf den sich die Filterung der IDs bezieht.
+	 * @param anzahlSchienen           Anzahl der Schienen
+	 * @param anzahlSchueler           Anzahl der Schüler im Ergebnis
+	 * @param bezeichnung              Bezeichnung des Blockungsergebnisses
+	 * @param fachwahlstatistik        Map mit den Fachwahlstatistiken des GOSt-Halbjahres des Blockungsergebnisses zur Fach-ID
+	 * @param gostHalbjahr             Das Halbjahr der gymnasialen Oberstufe des Blockungsergebnisses
+	 * @param id                       ID des Blockungsergebnisses
+	 * @param kurse                    Eine Liste vom Typ Kurs, die alle Kurse des Blockungsergebnisses beinhaltet.
+	 * @param schienen                 Eine Liste vom Typ Schiene, die alle Schienen des Blockungsergebnisses beinhaltet.
+	 * @param schueler                 Eine Liste vom Typ Schüler, die alle Schüler des Blockungsergebnisses beinhaltet.
+	 * @param filterSchueler           Ein Prädikat, das bestimmt, welche Schüler in der Ausgabe der Hauptliste enthalten sind.
+	 * @param filterKurse              Ein Prädikat, das bestimmt, welche Kurse in der Ausgabe enthalten sind.
+	 * @param istSchuelerFilterAktiv   Gibt an, ob ein Filter auf die Hauptliste der Schüler angewendet wird.
+	 * @param istKurseFilterAktiv      Gibt an, ob ein Filter auf die Liste der Kurse angewendet wird.
 	 */
 	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingGostKursplanungBlockungsergebnis(final int abiturjahr, final int anzahlDummy, final int anzahlExterne, final int anzahlMaxKurseProSchiene,
 			final int anzahlSchienen, final int anzahlSchueler, final String bezeichnung,
 			final Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik, final GostHalbjahr gostHalbjahr, final long id,
 			final List<ReportingGostKursplanungKurs> kurse, final List<ReportingGostKursplanungSchiene> schienen, final List<ReportingSchueler> schueler,
-			final List<Long> idsFilter, final ReportingFilterDataType idsFilterDataType) {
+			final Predicate<ReportingSchueler> filterSchueler, final Predicate<ReportingGostKursplanungKurs> filterKurse,
+			final boolean istSchuelerFilterAktiv, final boolean istKurseFilterAktiv) {
 		this.abiturjahr = abiturjahr;
 		this.anzahlDummy = anzahlDummy;
 		this.anzahlExterne = anzahlExterne;
@@ -107,127 +107,39 @@ public class ReportingGostKursplanungBlockungsergebnis extends ReportingBaseType
 		this.fachwahlstatistik = fachwahlstatistik;
 		this.gostHalbjahr = gostHalbjahr;
 		this.id = id;
-		this.kurse = kurse;
-		this.schienen = schienen;
-		this.schueler = schueler;
+		this.kurse = (kurse != null) ? kurse : new ArrayList<>();
+		this.schienen = (schienen != null) ? schienen : new ArrayList<>();
+		this.schueler = (schueler != null) ? schueler : new ArrayList<>();
 
-		this.idsFilter = (idsFilter == null) ? new ArrayList<>() : idsFilter.stream().filter(Objects::nonNull).distinct().toList();
-		this.idsFilterDataType = idsFilterDataType;
-		filterDaten();
+		this.filterSchueler = (filterSchueler == null) ? s -> true : filterSchueler;
+		this.filterKurse = (filterKurse == null) ? k -> true : filterKurse;
+		this.istSchuelerFilterAktiv = istSchuelerFilterAktiv;
+		this.istKurseFilterAktiv = istKurseFilterAktiv;
 	}
 
 
 	// ##### Berechnete Methoden #####
 
 	/**
-	 * Filtert die Daten entsprechend dem Typ der IDs (Schüler oder Kurse), die in der Eigenschaft idsFilterDataType angegeben sind,
-	 * und beschränkt die Ergebnisse auf die IDs in der Liste idsFilter. Falls die Filterliste leer ist, wird keine Filterung vorgenommen,
-	 * und alle entsprechenden Daten werden zurückgegeben.
-	 * Die gefilterten Ergebnisse werden in den entsprechenden Eigenschaften gefilterteSchueler und gefilterteKurse gespeichert.
+	 * Gibt den Kurs zur übergebenen ID zurück, sofern er nicht durch den Filter ausgeschlossen ist.
+	 *
+	 * @param  id 	Die ID des Kurses
+	 *
+	 * @return 		Der Kurs zur ID oder null, wenn nicht vorhanden bzw. herausgefiltert.
 	 */
-	private void filterDaten() {
-		switch (this.idsFilterDataType) {
-			case SCHUELER -> {
-				if (this.idsFilter.isEmpty()) {
-					// Wenn die Liste der zu filterenden IDs leer ist, wird keine Filterung vorgenommen, also alle Schüler verwendet.
-					this.gefilterteSchueler = new ArrayList<>(this.schueler);
-				} else if (!this.schueler.isEmpty()) {
-					// Filtere die Schüler heraus, die gewünscht werden.
-					gefilterteSchueler = this.schueler.stream().filter(s -> idsFilter.contains(s.id())).toList();
-					// Bereinige anschließend unter Umständen die Liste der Filter-IDs.
-					this.idsFilter = gefilterteSchueler.stream().map(ReportingSchueler::id).toList();
-				}
-				gefilterteKurse = new ArrayList<>(this.kurse);
-			}
-			case KURSE -> {
-				gefilterteSchueler = new ArrayList<>(this.schueler);
-				if (this.idsFilter.isEmpty()) {
-					// Wenn die Liste der zu filterenden IDs leer ist, wird keine Filterung vorgenommen, also alle Kurse verwendet.
-					this.gefilterteKurse = new ArrayList<>(this.kurse);
-				} else if (!this.kurse.isEmpty()) {
-					// Filtere die Kurse heraus, die gewünscht werden.
-					gefilterteKurse = this.kurse.stream().filter(k -> idsFilter.contains(k.id())).toList();
-					// Bereinige anschließend unter Umständen die Liste der Filter-IDs.
-					this.idsFilter = gefilterteKurse.stream().map(ReportingGostKursplanungKurs::id).toList();
-				}
-			}
-			case null, default -> {
-				gefilterteSchueler = new ArrayList<>(this.schueler);
-				gefilterteKurse = new ArrayList<>(this.kurse);
-			}
-		}
+	public ReportingGostKursplanungKurs kurs(final long id) {
+		return (id < 0) ? null : this.kurse.stream().filter(filterKurse).filter(k -> id == k.id()).findFirst().orElse(null);
 	}
 
 	/**
-	 * Gibt eine gefilterte Liste der Kurse zurück. Die Filterung basiert auf den Angaben
-	 * der IDs und des Datentyps, die in den Eigenschaften der Klasse gespeichert sind.
-	 * Vor der Rückgabe wird eine Filterung der Daten durchgeführt.
+	 * Gibt den Schüler zur übergebenen ID zurück, sofern er nicht durch den Filter ausgeschlossen ist.
 	 *
-	 * @return Eine Liste vom Typ ReportingGostKursplanungKurs mit den gefilterten Kursen.
-	 */
-	@JsonIgnore
-	public List<ReportingGostKursplanungKurs> kurseGefiltert() {
-		filterDaten();
-		return this.gefilterteKurse;
-	}
-
-	/**
-	 * Gibt eine gefilterte Liste der Schüler zurück. Die Filterung basiert auf den Angaben
-	 * der IDs und des Datentyps, die in den Eigenschaften der Klasse gespeichert sind.
-	 * Vor der Rückgabe wird eine Filterung der Daten durchgeführt.
+	 * @param  id 	Die ID des Schülers
 	 *
-	 * @return Eine Liste vom Typ ReportingSchueler mit den gefilterten Schülern.
+	 * @return 		Der Schüler zur ID oder null, wenn nicht vorhanden bzw. herausgefiltert.
 	 */
-	@JsonIgnore
-	public List<ReportingSchueler> schuelerGefiltert() {
-		filterDaten();
-		return this.gefilterteSchueler;
-	}
-
-	/**
-	 * Gibt eine gefilterte Liste von IDs basierend auf dem aktuellen Filter-Datentyp zurück.
-	 * Der Filter kann auf Schüler, Kurse oder keinen spezifischen Datentyp angewendet werden.
-	 *
-	 * @return Eine Liste von Long-Werten, die die gefilterten IDs enthalten. Ist kein spezifischer
-	 *         Datentyp festgelegt oder sind keine passenden Einträge vorhanden, wird eine leere Liste zurückgegeben.
-	 */
-	@JsonIgnore
-	public List<Long> idsGefiltert() {
-		switch (this.idsFilterDataType) {
-			case SCHUELER -> {
-				return schuelerGefiltert().stream().map(ReportingSchueler::id).toList();
-			}
-			case KURSE -> {
-				return kurseGefiltert().stream().map(ReportingGostKursplanungKurs::id).toList();
-			}
-			case null, default -> {
-				return new ArrayList<>();
-			}
-		}
-	}
-
-	/**
-	 * Gibt eine gefilterte Liste von Daten zurück, basierend auf dem Typ, der in der
-	 * Eigenschaft idsFilterDataType gespeichert ist. Aktuell werden folgende Typen unterstützt:
-	 * - SCHUELER: Rückgabe einer Liste gefilterter Schüler
-	 * - KURSE: Rückgabe einer Liste gefilterter Kurse
-	 * - Standardwert oder null: Rückgabe einer leeren Liste
-	 *
-	 * @return Eine Liste von Objekten des jeweiligen Typs, die den Filterkriterien entsprechen.
-	 */
-	@JsonIgnore
-	public List<ReportingBaseType> datenGefiltert() {
-		switch (this.idsFilterDataType) {
-			case SCHUELER -> {
-				return new ArrayList<>(schuelerGefiltert());
-			}
-			case KURSE -> {
-				return new ArrayList<>(kurseGefiltert());
-			}
-			case null, default -> {
-				return new ArrayList<>();
-			}
-		}
+	public ReportingSchueler schueler(final long id) {
+		return (id < 0) ? null : this.schueler.stream().filter(filterSchueler).filter(s -> id == s.id()).findFirst().orElse(null);
 	}
 
 
@@ -324,30 +236,31 @@ public class ReportingGostKursplanungBlockungsergebnis extends ReportingBaseType
 	}
 
 	/**
-	 * Die IDs, die zur Filterung verwendet werden. Auf welchen Datentyp sich diese IDs beziehen, definiert der Wert der Eigenschaft idsFilterDataType.
+	 * Gibt an, ob ein Filter auf die Hauptliste der Schüler angewendet wird.
 	 *
-	 * @return Inhalt des Feldes idsFilter
+	 * @return {@code true}, wenn ein Schüler-Filter konfiguriert ist, sonst {@code false}.
 	 */
-	public List<Long> idsFilter() {
-		return idsFilter;
+	public boolean istSchuelerFilterAktiv() {
+		return istSchuelerFilterAktiv;
 	}
 
 	/**
-	 * Der Datentyp der Filterung.
+	 * Gibt an, ob ein Filter auf die Liste der Kurse angewendet wird.
 	 *
-	 * @return Inhalt des Feldes idsFilterDataType
+	 * @return {@code true}, wenn ein Kurs-Filter konfiguriert ist, sonst {@code false}.
 	 */
-	public ReportingFilterDataType idsFilterDataType() {
-		return idsFilterDataType;
+	public boolean istKurseFilterAktiv() {
+		return istKurseFilterAktiv;
 	}
 
 	/**
-	 * Eine Liste vom Typ Kurs, die alle Kurse des Blockungsergebnisses beinhaltet.
+	 * Eine Liste vom Typ Kurs, die alle Kurse des Blockungsergebnisses beinhaltet. Es werden nur Kurse zurückgegeben,
+	 * die das konfigurierte Filter-Prädikat erfüllen.
 	 *
-	 * @return Inhalt des Feldes kurse
+	 * @return Liste der Kurse
 	 */
 	public List<ReportingGostKursplanungKurs> kurse() {
-		return kurse;
+		return this.kurse.stream().filter(filterKurse).toList();
 	}
 
 	/**
@@ -360,12 +273,13 @@ public class ReportingGostKursplanungBlockungsergebnis extends ReportingBaseType
 	}
 
 	/**
-	 * Eine Liste vom Typ Schüler, die alle Schüler des Blockungsergebnisses beinhaltet.
+	 * Eine Liste vom Typ Schüler, die alle Schüler des Blockungsergebnisses beinhaltet. Es werden nur Schüler
+	 * zurückgegeben, die das konfigurierte Filter-Prädikat erfüllen.
 	 *
-	 * @return Inhalt des Feldes schienen
+	 * @return Liste der Schüler
 	 */
 	public List<ReportingSchueler> schueler() {
-		return schueler;
+		return this.schueler.stream().filter(filterSchueler).toList();
 	}
 
 }

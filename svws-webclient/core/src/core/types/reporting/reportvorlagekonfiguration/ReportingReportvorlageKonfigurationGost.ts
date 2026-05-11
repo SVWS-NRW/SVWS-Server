@@ -1,15 +1,17 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
-import { ReportingEMailEmpfaengerTyp } from '../../../../core/types/reporting/ReportingEMailEmpfaengerTyp';
+import { ReportingFilterDefinitionFactory } from '../../../../core/utils/reporting/ReportingFilterDefinitionFactory';
+import { ReportingFilterVerknuepfung } from '../../../../core/types/reporting/ReportingFilterVerknuepfung';
 import { ReportingReportvorlageParameterTyp } from '../../../../core/types/reporting/ReportingReportvorlageParameterTyp';
 import { ReportingEMailDaten } from '../../../../core/data/reporting/ReportingEMailDaten';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import { ReportingReportvorlageUtils } from '../../../../core/utils/reporting/ReportingReportvorlageUtils';
-import type { List } from '../../../../java/util/List';
 import { ReportingUIKomponentenTyp } from '../../../../core/types/reporting/ReportingUIKomponentenTyp';
+import { ReportingParameter } from '../../../../core/data/reporting/ReportingParameter';
+import { ReportingEMailEmpfaengerTyp } from '../../../../core/types/reporting/ReportingEMailEmpfaengerTyp';
+import type { List } from '../../../../java/util/List';
 import { Class } from '../../../../java/lang/Class';
 import { Arrays } from '../../../../java/util/Arrays';
 import { ReportingAusgabeformat } from '../../../../core/types/reporting/ReportingAusgabeformat';
-import { ReportingParameter } from '../../../../core/data/reporting/ReportingParameter';
 
 export class ReportingReportvorlageKonfigurationGost extends JavaObject {
 
@@ -24,7 +26,7 @@ export class ReportingReportvorlageKonfigurationGost extends JavaObject {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static getGostKlausurplanungVKlausurtermineMitKursen(): ReportingParameter {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()), ArrayList.of(ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 1, Arrays.asList(ReportingReportvorlageUtils.erzeugeVorlageParameter("mitKursklausuren", "mit Kursklausuren", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlageUtils.erzeugeVorlageParameter("mitNachschreibern", "mit Nachschreibern", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlageUtils.erzeugeVorlageParameter("mitKlausurschreiberNamen", "mit Namen der Klausurschreiber", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)))), new ReportingEMailDaten(), new ArrayList(), new ArrayList(), false, true);
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()), ArrayList.of(ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 1, Arrays.asList(ReportingReportvorlageUtils.erzeugeVorlageParameter("mitKursklausuren", "mit Kursklausuren", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlageUtils.erzeugeVorlageParameter("mitNachschreibern", "mit Nachschreibern", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlageUtils.erzeugeVorlageParameter("mitKlausurschreiberNamen", "mit Namen der Klausurschreiber", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)))), new ReportingEMailDaten(), new ArrayList(), ArrayList.of(ReportingReportvorlageUtils.erzeugeFilterDefinitionGruppe("Quartalsfilter", "ReportingGostKlausurplanungKlausurtermin", true, true, ReportingFilterVerknuepfung.OR, ReportingFilterDefinitionFactory.definitionen(ReportingFilterDefinitionFactory.definition("1. Quartal", "ReportingGostKlausurplanungKlausurtermin", ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("quartal", "1"))), ReportingFilterDefinitionFactory.definition("2. Quartal", "ReportingGostKlausurplanungKlausurtermin", ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("quartal", "2")))))), false, true);
 	}
 
 	/**
@@ -33,7 +35,7 @@ export class ReportingReportvorlageKonfigurationGost extends JavaObject {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static getGostKlausurplanungVSchuelerMitKlausuren(): ReportingParameter {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()), new ArrayList(), new ReportingEMailDaten(), new ArrayList(), new ArrayList(), true, true);
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()), new ArrayList(), new ReportingEMailDaten(), new ArrayList(), ArrayList.of(ReportingReportvorlageUtils.erzeugeFilterDefinitionGruppe("Quartalsfilter", "ReportingGostKlausurplanungKlausurtermin", true, true, ReportingFilterVerknuepfung.OR, ReportingFilterDefinitionFactory.definitionen(ReportingFilterDefinitionFactory.definition("1. Quartal", "ReportingGostKlausurplanungKlausurtermin", ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("quartal", "1"))), ReportingFilterDefinitionFactory.definition("2. Quartal", "ReportingGostKlausurplanungKlausurtermin", ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("quartal", "2")))))), true, true);
 	}
 
 	/**

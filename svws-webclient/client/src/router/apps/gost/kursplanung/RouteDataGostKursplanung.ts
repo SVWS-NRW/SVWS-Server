@@ -7,7 +7,7 @@ import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungLis
 import { GostBlockungsdaten, GostBlockungsergebnis, ArrayList, DeveloperNotificationException,
 	GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr,
 	HashSet, ReportingReportvorlage,
-	ReportingAusgabeformat } from "@core";
+	ReportingAusgabeformat, ReportingFilterDefinitionGruppeFactory } from "@core";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -805,51 +805,40 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			throw new DeveloperNotificationException("Die Ausgabe kann nur erfolgen, wenn ein Ergebnis ausgewählt ist.");
 		}
 		let reportingParameter: ReportingParameter;
-		const list = new ArrayList<number>();
 		switch (title) {
 			case "Schülerliste markierte Kurse":
-				list.addAll(this.kursAuswahl);
 				reportingParameter = ReportingReportvorlage.GOST_KURSPLANUNG_V_KURS_MIT_KURSSCHUELERN.getReportingParameter();
 				reportingParameter.idHauptdatenObjekt = this.ergebnismanager.getErgebnis().id;
-				reportingParameter.idsHauptdaten.addAll(list);
+				reportingParameter.filterDefinitionenGruppen.add(ReportingFilterDefinitionGruppeFactory.gruppeAusIds("Kursauswahl", "ReportingGostKursplanungKurs", false, this.getListeKursauswahl()));
 				break;
 			case "Kurse mit Statistikwerten":
-				list.addAll(this.kursAuswahl);
 				reportingParameter = ReportingReportvorlage.GOST_KURSPLANUNG_V_KURSE_MIT_STATISTIKWERTEN.getReportingParameter();
 				reportingParameter.idHauptdatenObjekt = this.ergebnismanager.getErgebnis().id;
-				reportingParameter.idsHauptdaten = list;
+				reportingParameter.filterDefinitionenGruppen.add(ReportingFilterDefinitionGruppeFactory.gruppeAusIds("Kursauswahl", "ReportingGostKursplanungKurs", false, this.getListeKursauswahl()));
 				break;
 			case "Kurse-Schienen-Zuordnung":
 				reportingParameter = ReportingReportvorlage.GOST_KURSPLANUNG_V_SCHUELER_MIT_SCHIENEN_KURSEN.getReportingParameter();
 				reportingParameter.idHauptdatenObjekt = this.ergebnismanager.getErgebnis().id;
 				break;
 			case "Kurse-Schienen-Zuordnung markierter Schüler":
-				list.add(this.auswahlSchueler.id);
 				reportingParameter = ReportingReportvorlage.GOST_KURSPLANUNG_V_SCHUELER_MIT_SCHIENEN_KURSEN.getReportingParameter();
 				reportingParameter.idHauptdatenObjekt = this.ergebnismanager.getErgebnis().id;
-				reportingParameter.idsHauptdaten = list;
+				reportingParameter.filterDefinitionenGruppen.add(ReportingFilterDefinitionGruppeFactory.gruppeAusIds("Schülerauswahl", "ReportingSchueler", false, this.idsAsList([this.auswahlSchueler.id])));
 				break;
 			case "Kurse-Schienen-Zuordnung gefilterte Schüler":
-				for (const schueler of this.schuelerFilter.filtered.value) {
-					list.add(schueler.id);
-				}
 				reportingParameter = ReportingReportvorlage.GOST_KURSPLANUNG_V_SCHUELER_MIT_SCHIENEN_KURSEN.getReportingParameter();
 				reportingParameter.idHauptdatenObjekt = this.ergebnismanager.getErgebnis().id;
-				reportingParameter.idsHauptdaten = list;
+				reportingParameter.filterDefinitionenGruppen.add(ReportingFilterDefinitionGruppeFactory.gruppeAusIds("Schülerauswahl", "ReportingSchueler", false, this.idsAsList(this.schuelerFilter.filtered.value.map(s => s.id))));
 				break;
 			case "Kursbelegung markierter Schüler":
-				list.add(this.auswahlSchueler.id);
 				reportingParameter = ReportingReportvorlage.GOST_KURSPLANUNG_V_SCHUELER_MIT_KURSEN.getReportingParameter();
 				reportingParameter.idHauptdatenObjekt = this.ergebnismanager.getErgebnis().id;
-				reportingParameter.idsHauptdaten = list;
+				reportingParameter.filterDefinitionenGruppen.add(ReportingFilterDefinitionGruppeFactory.gruppeAusIds("Schülerauswahl", "ReportingSchueler", false, this.idsAsList([this.auswahlSchueler.id])));
 				break;
 			case "Kursbelegung gefilterte Schüler":
-				for (const schueler of this.schuelerFilter.filtered.value) {
-					list.add(schueler.id);
-				}
 				reportingParameter = ReportingReportvorlage.GOST_KURSPLANUNG_V_SCHUELER_MIT_KURSEN.getReportingParameter();
 				reportingParameter.idHauptdatenObjekt = this.ergebnismanager.getErgebnis().id;
-				reportingParameter.idsHauptdaten = list;
+				reportingParameter.filterDefinitionenGruppen.add(ReportingFilterDefinitionGruppeFactory.gruppeAusIds("Schülerauswahl", "ReportingSchueler", false, this.idsAsList(this.schuelerFilter.filtered.value.map(s => s.id))));
 				break;
 			default:
 				throw new DeveloperNotificationException(`Es konnte keine Ausgabe für die gewählte Option gefunden werden. Bitte melden Sie diesen Fehler. Die nicht vorhandene Option lautet '${title}'`);
@@ -863,13 +852,20 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		if (!this.hatErgebnis) {
 			throw new DeveloperNotificationException("Die Ausgabe kann nur erfolgen, wenn ein Ergebnis ausgewählt ist.");
 		}
-		const list = new ArrayList(this.kursAuswahl);
 		reportingParameter.idHauptdatenObjekt = this.ergebnismanager.getErgebnis().id;
-		reportingParameter.idsHauptdaten = list;
+		reportingParameter.filterDefinitionenGruppen.add(ReportingFilterDefinitionGruppeFactory.gruppeAusIds("Kursauswahl", "ReportingGostKursplanungKurs", false, this.getListeKursauswahl()));
 		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
 		reportingParameter.ausgabeformat = ReportingAusgabeformat.EMAIL.getId();
 		return await api.server.emailReport(reportingParameter, api.schema);
 	});
+
+	private idsAsList(ids: Iterable<number>): List<number> {
+		const result = new ArrayList<number>();
+		for (const id of ids) {
+			result.add(id);
+		}
+		return result;
+	}
 
 	gotoErgebnis = async (value: GostBlockungsergebnis | number | undefined) => {
 		let id;

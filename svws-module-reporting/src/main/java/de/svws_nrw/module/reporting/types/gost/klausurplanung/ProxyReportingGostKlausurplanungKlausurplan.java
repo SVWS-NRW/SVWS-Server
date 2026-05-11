@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -15,7 +16,6 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
-import de.svws_nrw.module.reporting.filterung.ReportingFilterDataType;
 import de.svws_nrw.module.reporting.sortierung.ReportingSortierungService;
 import de.svws_nrw.module.reporting.types.lerngruppen.ProxyReportingKurs;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
@@ -41,7 +41,8 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 
 
 	/**
-	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostKlausurplanungKlausurplan}.
+	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostKlausurplanungKlausurplan}. Die Filter-Prädikate für
+	 * Schüler, Kurse und Klausurtermine werden über den FilterService aus den Reporting-Parametern abgeleitet.
 	 *
 	 * @param reportingRepository	Repository für das Reporting.
 	 * @param klausurtermine		Eine Liste, die alle Termine des Klausurplanes beinhaltet.
@@ -49,39 +50,63 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 	 * @param kursklausuren 		Eine Liste, die alle Kursklausuren des Klausurplanes beinhaltet.
 	 * @param schueler 				Eine Liste, die alle Schüler des Klausurplanes beinhaltet.
 	 * @param schuelerklausuren 	Eine Liste, die alle Schülerklausuren des Klausurplanes beinhaltet.
-	 * @param idsFilter             Eine Liste von IDs, die die Ausgabe auf diese IDs beschränkt. Auf welchen Datentyp sich diese IDs beziehen, definiert der
-	 *                              Wert der Eigenschaft idsFilterDataType.
-	 * @param idsFilterDataType     Der Typ von Daten, auf den sich die Filterung der IDs bezieht.
 	 */
 	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ProxyReportingGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository,
 			final List<ReportingGostKlausurplanungKlausurtermin> klausurtermine, final List<ReportingKurs> kurse,
 			final List<ReportingGostKlausurplanungKursklausur> kursklausuren, final List<ReportingSchueler> schueler,
-			final List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren, final List<Long> idsFilter,
-			final ReportingFilterDataType idsFilterDataType) {
-		super(klausurtermine, kurse, kursklausuren, schueler, schuelerklausuren, idsFilter, idsFilterDataType);
+			final List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren) {
+		super(klausurtermine, kurse, kursklausuren, schueler, schuelerklausuren,
+				setFilterSchueler(reportingRepository), setFilterKurse(reportingRepository), setFilterKlausurtermin(reportingRepository));
 		this.reportingRepository = reportingRepository;
 		this.gostKlausurplanManager = null;
 	}
 
 
 	/**
-	 * Erstellt ein neues Reporting-Objekt anhand des GostKlausurplanManagers.
+	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostKlausurplanungKlausurplan} mit explizit übergebenen
+	 * Schüler-, Kurs- und Klausurtermin-Prädikaten. Wird verwendet, um Sub-Kontexte (z. B. für Einzelausgaben) auf einen
+	 * einzelnen Schüler, Kurs oder Klausurtermin einzuschränken.
+	 *
+	 * @param reportingRepository	Repository für das Reporting.
+	 * @param klausurtermine		Eine Liste, die alle Termine des Klausurplanes beinhaltet.
+	 * @param kurse 				Eine Liste, die alle Kurse des Klausurplanes beinhaltet.
+	 * @param kursklausuren 		Eine Liste, die alle Kursklausuren des Klausurplanes beinhaltet.
+	 * @param schueler 				Eine Liste, die alle Schüler des Klausurplanes beinhaltet.
+	 * @param schuelerklausuren 	Eine Liste, die alle Schülerklausuren des Klausurplanes beinhaltet.
+	 * @param filterSchueler		Ein Prädikat, das bestimmt, welche Schüler in der Ausgabe enthalten sind.
+	 * @param filterKurse			Ein Prädikat, das bestimmt, welche Kurse in der Ausgabe enthalten sind.
+	 * @param filterKlausurtermine	Ein Prädikat, das bestimmt, welche Klausurtermine in der Ausgabe enthalten sind.
+	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
+	public ProxyReportingGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository,
+			final List<ReportingGostKlausurplanungKlausurtermin> klausurtermine, final List<ReportingKurs> kurse,
+			final List<ReportingGostKlausurplanungKursklausur> kursklausuren, final List<ReportingSchueler> schueler,
+			final List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren,
+			final Predicate<ReportingSchueler> filterSchueler, final Predicate<ReportingKurs> filterKurse,
+			final Predicate<ReportingGostKlausurplanungKlausurtermin> filterKlausurtermine) {
+		super(klausurtermine, kurse, kursklausuren, schueler, schuelerklausuren,
+				filterSchueler, filterKurse, filterKlausurtermine);
+		this.reportingRepository = reportingRepository;
+		this.gostKlausurplanManager = null;
+	}
+
+
+	/**
+	 * Erstellt ein neues Reporting-Objekt anhand des GostKlausurplanManagers. Die Filter-Prädikate werden über den
+	 * FilterService aus den Reporting-Parametern abgeleitet.
 	 *
 	 * @param reportingRepository		Repository für das Reporting.
 	 * @param gostKlausurplanManager 	Der Manager der Klausuren zu diesem Klausurplan
-	 * @param idsFilter             Eine Liste von IDs, die die Ausgabe auf diese IDs beschränkt. Auf welchen Datentyp sich diese IDs beziehen, definiert der
-	 *                              Wert der Eigenschaft idsFilterDataType.
-	 * @param idsFilterDataType     Der Typ von Daten, auf den sich die Filterung der IDs bezieht.
 	 */
-	public ProxyReportingGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository, final GostKlausurplanManager gostKlausurplanManager,
-			final List<Long> idsFilter, final ReportingFilterDataType idsFilterDataType) {
-		super(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), idsFilter, idsFilterDataType);
+	public ProxyReportingGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository, final GostKlausurplanManager gostKlausurplanManager) {
+		super(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
+				setFilterSchueler(reportingRepository), setFilterKurse(reportingRepository), setFilterKlausurtermin(reportingRepository));
 
 		this.reportingRepository = reportingRepository;
 		this.gostKlausurplanManager = gostKlausurplanManager;
 
-		if (this.gostKlausurplanManager == null) {
+		if ((this.reportingRepository == null) || (this.gostKlausurplanManager == null)) {
 			return;
 		}
 
@@ -100,16 +125,19 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 				.toList());
 
 		// 4. Kursklausuren erstellen.
+		// HINWEIS: Kursklausuren, deren Kurs durch den Filter ausgeschlossen ist, werden übersprungen.
 		// HINWEIS: Kursklausuren und Klausurtermine erhalten ihre Schülerklausuren erst bei der Erzeugung der Schülerklausuren.
 		// HINWEIS: Die Klausurräume werden in einem folgenden Schritt zentral zugewiesen.
-		super.kursklausuren.addAll(this.gostKlausurplanManager.kursklausurGetMengeAsList().stream()
-				.map(k -> (ReportingGostKlausurplanungKursklausur) new ProxyReportingGostKlausurplanungKursklausur(
-						k,
-						this.gostKlausurplanManager.vorgabeByKursklausur(k),
-						(this.gostKlausurplanManager.terminOrNullByKursklausur(k) == null) ? null
-								: klausurtermin(this.gostKlausurplanManager.terminOrNullByKursklausur(k).id),
-						kurs(this.gostKlausurplanManager.kursdatenByKursklausur(k).id)))
-				.toList());
+		for (final var k : this.gostKlausurplanManager.kursklausurGetMengeAsList()) {
+			final ReportingKurs kurs = kurs(this.gostKlausurplanManager.kursdatenByKursklausur(k).id);
+			if (kurs == null) {
+				continue;
+			}
+			final GostKlausurtermin terminOrNull = this.gostKlausurplanManager.terminOrNullByKursklausur(k);
+			final ReportingGostKlausurplanungKlausurtermin termin = (terminOrNull == null) ? null : klausurtermin(terminOrNull.id);
+			super.kursklausuren.add(new ProxyReportingGostKlausurplanungKursklausur(
+					k, this.gostKlausurplanManager.vorgabeByKursklausur(k), termin, kurs));
+		}
 
 		// 5. Klausurräume mit Aufsichten (sofern schon zugeteilt) erstellen.
 		initKlausurraeume();
@@ -120,8 +148,8 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 		// 7. Sortiere alle Schülerklausuren, sowohl in der Gesamtliste als auch bei den Kursklausuren.
 
 		// Prüfe, ob Service und Logger abrufbar sind. Andernfalls würden Standardsortierungen verwendet werden.
-		final ReportingSortierungService sortierungService = (this.reportingRepository != null) ? this.reportingRepository.sortierungService() : null;
-		final Logger logger = (this.reportingRepository != null) ? this.reportingRepository.logger() : null;
+		final ReportingSortierungService sortierungService = this.reportingRepository.sortierungService();
+		final Logger logger = this.reportingRepository.logger();
 
 		final Optional<Comparator<ReportingGostKlausurplanungSchuelerklausur>> optionalComparator =
 				ComparatorFactory.buildOptionalComparator(
@@ -139,6 +167,24 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 		super.schuelerklausuren.forEach(sk -> sk.schueler().gostKlausurplanungSchuelerklausuren().add(sk));
 	}
 
+	private static Predicate<ReportingSchueler> setFilterSchueler(final ReportingRepository reportingRepository) {
+		return (reportingRepository == null)
+				? s -> true
+				: reportingRepository.filterService().getFilter(ReportingSchueler.class.getSimpleName(), null);
+	}
+
+	private static Predicate<ReportingKurs> setFilterKurse(final ReportingRepository reportingRepository) {
+		return (reportingRepository == null)
+				? k -> true
+				: reportingRepository.filterService().getFilter(ReportingKurs.class.getSimpleName(), null);
+	}
+
+	private static Predicate<ReportingGostKlausurplanungKlausurtermin> setFilterKlausurtermin(final ReportingRepository reportingRepository) {
+		return (reportingRepository == null)
+				? p -> true
+				: reportingRepository.filterService().getFilter(ReportingGostKlausurplanungKlausurtermin.class.getSimpleName(), null);
+	}
+
 	/**
 	 * Initialisiert die Schüler für die später zu erstellenden Schülerklausuren.
 	 */
@@ -146,7 +192,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 		if (this.gostKlausurplanManager == null) {
 			return;
 		}
-		super.schueler().addAll(this.reportingRepository.repositorySchueler()
+		super.schueler.addAll(this.reportingRepository.repositorySchueler()
 				.schueler(this.gostKlausurplanManager.schuelerklausurGetMengeAsList().stream().map(s -> s.idSchueler).distinct().toList()));
 	}
 
@@ -209,17 +255,33 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 			final Map<Long, ReportingGostKlausurplanungKlausurtermin> mapKlausurtermine,
 			final Map<Long, ReportingGostKlausurplanungKursklausur> mapKursklausuren) {
 
-		// 1. Den Klausurtermin für den Schülerklausurtermin ermitteln.
+		// 1. Wenn der Schüler oder die zugehörige Kursklausur durch den Filter ausgeschlossen ist, breche ab.
+		final ReportingSchueler reportingSchueler = schueler(sk.idSchueler);
+		if (reportingSchueler == null) {
+			return;
+		}
+		final ReportingGostKlausurplanungKursklausur kursklausur =
+				mapKursklausuren.get(gostKlausurplanManager.kursklausurBySchuelerklausur(sk).id);
+		if (kursklausur == null) {
+			return;
+		}
+
+		// 2. Den Klausurtermin für den Schülerklausurtermin ermitteln.
 		final ReportingGostKlausurplanungKlausurtermin klausurtermin;
 
 		// Der Termin mit FolgeNr 0 und TerminID null ist der Termin der Kursklausur.
 		if ((skTermin.folgeNr == 0) && (skTermin.idTermin == null)) {
-			klausurtermin = mapKursklausuren.get(gostKlausurplanManager.kursklausurBySchuelerklausur(sk).id).klausurtermin();
+			klausurtermin = kursklausur.klausurtermin();
 		} else {
 			klausurtermin = (skTermin.idTermin != null) ? mapKlausurtermine.get(skTermin.idTermin) : null;
 		}
 
-		// 2. Den Klausurraum mit den Stunden zum Schülerklausurtermin ermitteln.
+		// Wenn der Termin (z. B. durch Filterung) nicht existiert, breche ab.
+		if (klausurtermin == null) {
+			return;
+		}
+
+		// 3. Den Klausurraum mit den Stunden zum Schülerklausurtermin ermitteln.
 		ReportingGostKlausurplanungKlausurraum klausurraum = null;
 
 		final GostKlausurraum gostKlausurraum = gostKlausurplanManager.raumGetBySchuelerklausurtermin(skTermin);
@@ -231,9 +293,9 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 			}
 		}
 
-		// 3. Schülerklausur erzeugen und der Gesamtliste der Schülerklausuren hinzufügen.
+		// 4. Schülerklausur erzeugen und der Gesamtliste der Schülerklausuren hinzufügen.
 		super.schuelerklausuren.add(new ProxyReportingGostKlausurplanungSchuelerklausur(sk, skTermin, klausurraum, klausurtermin,
-				mapKursklausuren.get(gostKlausurplanManager.kursklausurBySchuelerklausur(sk).id), schueler(sk.idSchueler)));
+				kursklausur, reportingSchueler));
 	}
 
 

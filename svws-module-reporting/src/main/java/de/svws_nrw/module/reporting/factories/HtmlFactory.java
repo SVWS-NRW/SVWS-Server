@@ -13,11 +13,14 @@ import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.builders.ReportBuilderHtml;
 import de.svws_nrw.module.reporting.builders.ReportBuilderContextHtml;
-import de.svws_nrw.module.reporting.filterung.ReportingFilterDataType;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContext;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextGostKlausurplanungKlausurplan;
+import de.svws_nrw.module.reporting.html.contexts.HtmlContextGostKlausurplanungKlausurplanSchueler;
+import de.svws_nrw.module.reporting.html.contexts.HtmlContextGostKlausurplanungKlausurplanTermine;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextGostKursplanungBlockungsergebnis;
+import de.svws_nrw.module.reporting.html.contexts.HtmlContextGostKursplanungBlockungsergebnisKurse;
+import de.svws_nrw.module.reporting.html.contexts.HtmlContextGostKursplanungBlockungsergebnisSchueler;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextKlassen;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextKurse;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextLehrer;
@@ -287,14 +290,15 @@ public class HtmlFactory {
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
 				"Erzeuge Datenkontext Gost-Kursplanung-Blockungsergebnis für die HTML-Generierung mit ID %s für Template %s."
 						.formatted(reportingParameter.idHauptdatenObjekt(), reportingReportvorlage.name()));
-		final List<Long> idsFilter = this.reportingRepository.reportingParameter().idsHauptdaten();
-		final ReportingFilterDataType idsFilterDataType = switch (reportingReportvorlage) {
-			case GOST_KURSPLANUNG_V_KURS_MIT_KURSSCHUELERN -> ReportingFilterDataType.KURSE;
-			case GOST_KURSPLANUNG_V_SCHUELER_MIT_KURSEN, GOST_KURSPLANUNG_V_SCHUELER_MIT_SCHIENEN_KURSEN -> ReportingFilterDataType.SCHUELER;
-			default -> ReportingFilterDataType.UNDEFINED;
+		final HtmlContextGostKursplanungBlockungsergebnis htmlContextGostBlockung = switch (reportingReportvorlage) {
+			case GOST_KURSPLANUNG_V_KURS_MIT_KURSSCHUELERN, GOST_KURSPLANUNG_V_KURSE_MIT_STATISTIKWERTEN ->
+				new HtmlContextGostKursplanungBlockungsergebnisKurse(reportingRepository);
+			case GOST_KURSPLANUNG_V_SCHUELER_MIT_KURSEN, GOST_KURSPLANUNG_V_SCHUELER_MIT_SCHIENEN_KURSEN ->
+				new HtmlContextGostKursplanungBlockungsergebnisSchueler(reportingRepository);
+			default -> throw new ApiOperationException(Response.Status.NOT_FOUND,
+					"FEHLER: Für die Reportvorlage %s ist im Datenkontext GOSt-Kursplanung kein HTML-Context implementiert.".formatted(
+							reportingReportvorlage.name()));
 		};
-		final HtmlContextGostKursplanungBlockungsergebnis htmlContextGostBlockung =
-				new HtmlContextGostKursplanungBlockungsergebnis(reportingRepository, idsFilter, idsFilterDataType);
 		mapHtmlContexts.put(CONTEXT_GOST_BLOCKUNGSERGEBNIS, htmlContextGostBlockung);
 	}
 
@@ -308,13 +312,13 @@ public class HtmlFactory {
 		ReportingValidierung.validiereDatenFuerGostKlausurplanungKlausurplan(reportingRepository);
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
 				"Erzeuge Datenkontext Gost-Klausurplanung für die HTML-Generierung mit Template %s.".formatted(reportingReportvorlage.name()));
-		final List<Long> idsFilter = this.reportingRepository.reportingParameter().idsDetaildaten();
-		final ReportingFilterDataType idsFilterDataType = switch (reportingReportvorlage) {
-			case GOST_KLAUSURPLANUNG_V_SCHUELER_MIT_KLAUSUREN -> ReportingFilterDataType.SCHUELER;
-			default -> ReportingFilterDataType.UNDEFINED;
+		final HtmlContextGostKlausurplanungKlausurplan htmlContextGostKlausurplan = switch (reportingReportvorlage) {
+			case GOST_KLAUSURPLANUNG_V_SCHUELER_MIT_KLAUSUREN -> new HtmlContextGostKlausurplanungKlausurplanSchueler(reportingRepository);
+			case GOST_KLAUSURPLANUNG_V_KLAUSURTERMINE_MIT_KURSEN -> new HtmlContextGostKlausurplanungKlausurplanTermine(reportingRepository);
+			default -> throw new ApiOperationException(Response.Status.NOT_FOUND,
+					"FEHLER: Für die Reportvorlage %s ist im Datenkontext GOSt-Klausurplanung kein HTML-Context implementiert.".formatted(
+							reportingReportvorlage.name()));
 		};
-		final HtmlContextGostKlausurplanungKlausurplan htmlContextGostKlausurplan = new HtmlContextGostKlausurplanungKlausurplan(reportingRepository,
-				idsFilter, idsFilterDataType);
 		mapHtmlContexts.put(CONTEXT_GOST_KLAUSURPLAN, htmlContextGostKlausurplan);
 	}
 

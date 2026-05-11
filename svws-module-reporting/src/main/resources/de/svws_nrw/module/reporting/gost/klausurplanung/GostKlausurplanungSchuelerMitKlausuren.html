@@ -8,7 +8,7 @@
 		<title></title>
 	</head>
 
-	<body th:with="Klausurschueler = ${GostKlausurplan.schuelerGefiltert()}">
+	<body th:with="Klausurschueler = ${GostKlausurplan.schueler()}">
 		<div class="reset-page-counter start-new-page" th:each="schueler,iterationVarSchueler : ${Klausurschueler}">
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->

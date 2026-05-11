@@ -1018,6 +1018,7 @@ export { KursUtils } from './core/utils/kurse/KursUtils';
 export { LehrerUtils } from './core/utils/lehrer/LehrerUtils';
 export { RaumUtils } from './core/utils/raum/RaumUtils';
 export { ReportingFilterDefinitionFactory } from './core/utils/reporting/ReportingFilterDefinitionFactory';
+export { ReportingFilterDefinitionGruppeFactory } from './core/utils/reporting/ReportingFilterDefinitionGruppeFactory';
 export { ReportingReportvorlageUtils } from './core/utils/reporting/ReportingReportvorlageUtils';
 export { ReportingSortierungDefinitionFactory } from './core/utils/reporting/ReportingSortierungDefinitionFactory';
 export { SchuelerUtils } from './core/utils/schueler/SchuelerUtils';
