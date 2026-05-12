@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.asd.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.module.reporting.types.lehrer.ProxyReportingLehrer;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
 
@@ -23,19 +23,19 @@ public class ProxyReportingSchuelerLeistungsdaten extends ReportingSchuelerLeist
 	@JsonIgnore
 	private final Collator colGerman = Collator.getInstance(Locale.GERMAN);
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingSchuelerLeistungsdaten}.
 	 *
-	 * @param reportingRepository Repository für das Reporting.
+	 * @param reportingContext Repository für das Reporting.
 	 * @param reportingSchuelerLernabschnitt Der Lernabschnitt, dem die Leistungsdaten zugeordneten werden sollen. Dieser muss mit dem Lernabschnitt aus den
 	 * übergebenen Leistungsdaten übereinstellen, andernfalls ergibt sich Fehler.
 	 * @param schuelerLeistungsdaten Stammdaten-Objekt aus der DB.
 	 */
-	public ProxyReportingSchuelerLeistungsdaten(final ReportingRepository reportingRepository,
+	public ProxyReportingSchuelerLeistungsdaten(final ReportingContext reportingContext,
 			final ReportingSchuelerLernabschnitt reportingSchuelerLernabschnitt, final SchuelerLeistungsdaten schuelerLeistungsdaten) {
 		super(schuelerLeistungsdaten.abifach,
 				schuelerLeistungsdaten.aufZeugnis,
@@ -63,7 +63,7 @@ public class ProxyReportingSchuelerLeistungsdaten extends ReportingSchuelerLeist
 				schuelerLeistungsdaten.wochenstunden,
 				new ArrayList<>());
 
-		this.reportingRepository = reportingRepository;
+		this.reportingContext = reportingContext;
 
 		// Lernabschnitt und damit den Schuljahresabschnitt ermitteln, um die an den Abschnitt gebundenen Daten wie Fächer zu gelangen.
 		if ((reportingSchuelerLernabschnitt == null) || (this.lernabschnitt().id() != schuelerLeistungsdaten.lernabschnittID)) {
@@ -74,7 +74,7 @@ public class ProxyReportingSchuelerLeistungsdaten extends ReportingSchuelerLeist
 
 		// Fach setzen, dafür und für weitere Daten wird der Schuljahresabschnitt des Lernabschnitts zu den Leistungsdaten benötigt.
 		final ReportingSchuljahresabschnitt schuljahresabschnitt =
-				this.reportingRepository.repositorySchule().schuljahresabschnitt(reportingSchuelerLernabschnitt.idSchuljahresabschnitt());
+				this.reportingContext.repositorySchule().schuljahresabschnitt(reportingSchuelerLernabschnitt.idSchuljahresabschnitt());
 		super.fach = schuljahresabschnitt.fach(schuelerLeistungsdaten.fachID);
 
 		// Es wird zwischen Klassen- und Kursunterricht unterschieden. In den Leistungsdaten können aber bei Kursunterrichten trotzdem vom Kurs abweichende Eintragungen vorgenommen werden.
@@ -82,16 +82,16 @@ public class ProxyReportingSchuelerLeistungsdaten extends ReportingSchuelerLeist
 
 		// Fachlehrkraft setzen. Dabei wird die eingetragene Fachlehrkraft immer genommen, auch wenn sie von einer evtl. Kursleitung abweicht.
 		if (schuelerLeistungsdaten.lehrerID != null) {
-			super.fachlehrer = new ProxyReportingLehrer(this.reportingRepository,
-					this.reportingRepository.repositoryLehrer().stammdaten().get(schuelerLeistungsdaten.lehrerID));
+			super.fachlehrer = new ProxyReportingLehrer(this.reportingContext,
+					this.reportingContext.repositoryLehrer().stammdaten().get(schuelerLeistungsdaten.lehrerID));
 			super.wochenstundenLehrer.put(schuelerLeistungsdaten.lehrerID, (double) schuelerLeistungsdaten.wochenstunden);
 		} else {
 			super.fachlehrer = null;
 		}
 		// Zusätzliche Lehrkräfte setzen
 		if (schuelerLeistungsdaten.zusatzkraftID != null) {
-			super.zusatzLehrer.add(new ProxyReportingLehrer(this.reportingRepository,
-					this.reportingRepository.repositoryLehrer().stammdaten().get(schuelerLeistungsdaten.zusatzkraftID)));
+			super.zusatzLehrer.add(new ProxyReportingLehrer(this.reportingContext,
+					this.reportingContext.repositoryLehrer().stammdaten().get(schuelerLeistungsdaten.zusatzkraftID)));
 			super.wochenstundenLehrer.put(schuelerLeistungsdaten.zusatzkraftID, (double) schuelerLeistungsdaten.zusatzkraftWochenstunden);
 		} else {
 			super.zusatzLehrer = new ArrayList<>();
@@ -137,8 +137,8 @@ public class ProxyReportingSchuelerLeistungsdaten extends ReportingSchuelerLeist
 	 *
 	 * @return Repository für das Reporting
 	 */
-	public ReportingRepository reportingRepository() {
-		return reportingRepository;
+	public ReportingContext reportingContext() {
+		return reportingContext;
 	}
 
 }

@@ -8,7 +8,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanUnterricht;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.types.Wochentag;
 import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 
 
 /**
@@ -16,9 +16,9 @@ import de.svws_nrw.module.reporting.repositories.ReportingRepository;
  */
 public class ProxyReportingStundenplanungUnterrichtsrasterstunde extends ReportingStundenplanungUnterrichtsrasterstunde {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 	/** Der Stundenplan-Manager, zu dem dieses Zeitraster-Element gehört. */
 	@JsonIgnore
@@ -27,11 +27,11 @@ public class ProxyReportingStundenplanungUnterrichtsrasterstunde extends Reporti
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingStundenplanungUnterrichtsrasterstunde}.
 	 *
-	 * @param reportingRepository Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung.
+	 * @param reportingContext Context mit Parametern, Logger und Daten-Cache zur Report-Generierung.
 	 * @param zeitraster		  Die Zeitrasterstunde aus dem Stundenplan.
 	 * @param stundenplan         Der Stundenplan, zudem diese Zeitrasterstunde gehört.
 	 */
-	public ProxyReportingStundenplanungUnterrichtsrasterstunde(final ReportingRepository reportingRepository,
+	public ProxyReportingStundenplanungUnterrichtsrasterstunde(final ReportingContext reportingContext,
 			final StundenplanZeitraster zeitraster, final ReportingStundenplanungStundenplan stundenplan) {
 		super(zeitraster.id,
 				stundenplan,
@@ -41,8 +41,8 @@ public class ProxyReportingStundenplanungUnterrichtsrasterstunde extends Reporti
 				null,
 				new ArrayList<>());
 
-		this.reportingRepository = reportingRepository;
-		this.stundenplanManager = this.reportingRepository.repositoryStundenplan().manager(stundenplan.id());
+		this.reportingContext = reportingContext;
+		this.stundenplanManager = this.reportingContext.repositoryStundenplan().manager(stundenplan.id());
 
 		if (stundenplanManager == null) {
 			return;
@@ -86,8 +86,8 @@ public class ProxyReportingStundenplanungUnterrichtsrasterstunde extends Reporti
 	 *
 	 * @return Repository für das Reporting
 	 */
-	public ReportingRepository reportingRepository() {
-		return reportingRepository;
+	public ReportingContext reportingContext() {
+		return reportingContext;
 	}
 
 
@@ -115,7 +115,7 @@ public class ProxyReportingStundenplanungUnterrichtsrasterstunde extends Reporti
 			final List<ReportingStundenplanungUnterricht> result =
 					new ArrayList<>(managerUnterricht.stream()
 							.filter(u -> super.unterricht(u.id) == null)
-							.map(u -> (ReportingStundenplanungUnterricht) new ProxyReportingStundenplanungUnterricht(this.reportingRepository,
+							.map(u -> (ReportingStundenplanungUnterricht) new ProxyReportingStundenplanungUnterricht(this.reportingContext,
 									this.stundenplan, u))
 							.toList());
 			super.addUnterrichte(result);
@@ -146,7 +146,7 @@ public class ProxyReportingStundenplanungUnterrichtsrasterstunde extends Reporti
 			final List<ReportingStundenplanungUnterricht> result =
 					new ArrayList<>(managerUnterricht.stream()
 							.filter(u -> super.unterricht(u.id) == null)
-							.map(u -> (ReportingStundenplanungUnterricht) new ProxyReportingStundenplanungUnterricht(this.reportingRepository,
+							.map(u -> (ReportingStundenplanungUnterricht) new ProxyReportingStundenplanungUnterricht(this.reportingContext,
 									this.stundenplan, u))
 							.toList());
 			super.addUnterrichte(result);
@@ -195,7 +195,7 @@ public class ProxyReportingStundenplanungUnterrichtsrasterstunde extends Reporti
 								this.stundeImUnterrichtsraster, wochentyp, inklusiveWochentyp0);
 				result.addAll(new ArrayList<>(managerUnterricht.stream()
 						.filter(u -> super.unterricht(u.id) == null)
-						.map(u -> (ReportingStundenplanungUnterricht) new ProxyReportingStundenplanungUnterricht(this.reportingRepository,
+						.map(u -> (ReportingStundenplanungUnterricht) new ProxyReportingStundenplanungUnterricht(this.reportingContext,
 								this.stundenplan, u))
 						.toList()));
 			}
@@ -228,7 +228,7 @@ public class ProxyReportingStundenplanungUnterrichtsrasterstunde extends Reporti
 			final List<ReportingStundenplanungUnterricht> result =
 					new ArrayList<>(managerUnterricht.stream()
 							.filter(u -> super.unterricht(u.id) == null)
-							.map(u -> (ReportingStundenplanungUnterricht) new ProxyReportingStundenplanungUnterricht(this.reportingRepository,
+							.map(u -> (ReportingStundenplanungUnterricht) new ProxyReportingStundenplanungUnterricht(this.reportingContext,
 									this.stundenplan, u))
 							.toList());
 			super.addUnterrichte(result);
@@ -260,7 +260,7 @@ public class ProxyReportingStundenplanungUnterrichtsrasterstunde extends Reporti
 			final List<ReportingStundenplanungUnterricht> result =
 					new ArrayList<>(managerUnterricht.stream()
 							.filter(u -> super.unterricht(u.id) == null)
-							.map(u -> (ReportingStundenplanungUnterricht) new ProxyReportingStundenplanungUnterricht(this.reportingRepository,
+							.map(u -> (ReportingStundenplanungUnterricht) new ProxyReportingStundenplanungUnterricht(this.reportingContext,
 									this.stundenplan, u))
 							.toList());
 			super.addUnterrichte(result);

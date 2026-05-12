@@ -23,7 +23,7 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class ReportingRepositorySchule {
 
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 	private final SchuleStammdaten schulstammdaten;
 	private final String schullogoBase64;
 	private final Long idAktuellerSchuljahresabschnitt;
@@ -34,23 +34,23 @@ public class ReportingRepositorySchule {
 	/**
 	 * Erstellt ein neues ReportingSchuleRepository und initialisiert Schulstammdaten und Schuljahresabschnitte.
 	 *
-	 * @param reportingRepository           Das zentrale Repository des Reporting-Moduls mit Zugriff auf die domänenspezifischen Repositories.
+	 * @param reportingContext           Der zentrale Reporting-Context mit Zugriff auf die domänenspezifischen Repositories.
 	 * @param idAuswahlSchuljahresabschnitt Die ID des ausgewählten Schuljahresabschnitts.
 	 *
 	 * @throws ApiOperationException Im Fehlerfall.
 	 */
-	public ReportingRepositorySchule(final ReportingRepository reportingRepository, final long idAuswahlSchuljahresabschnitt) throws ApiOperationException {
-		this.reportingRepository = reportingRepository;
-		this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Ermittle Stammdaten und Abschnitte der Schule.");
+	public ReportingRepositorySchule(final ReportingContext reportingContext, final long idAuswahlSchuljahresabschnitt) throws ApiOperationException {
+		this.reportingContext = reportingContext;
+		this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Ermittle Stammdaten und Abschnitte der Schule.");
 		try {
-			final DataSchuleStammdaten dataSchuleStammdaten = new DataSchuleStammdaten(this.reportingRepository.conn());
-			this.schulstammdaten = DataSchuleStammdaten.getStammdaten(this.reportingRepository.conn());
+			final DataSchuleStammdaten dataSchuleStammdaten = new DataSchuleStammdaten(this.reportingContext.conn());
+			this.schulstammdaten = DataSchuleStammdaten.getStammdaten(this.reportingContext.conn());
 			this.schullogoBase64 = dataSchuleStammdaten.getSchullogoBase64();
 
-			final List<Schuljahresabschnitt> datenSchuljahresabschnitte = this.reportingRepository.conn().getUser().schuleGetStammdaten().abschnitte;
+			final List<Schuljahresabschnitt> datenSchuljahresabschnitte = this.reportingContext.conn().getUser().schuleGetStammdaten().abschnitte;
 			for (final Schuljahresabschnitt datenSchuljahresabschnitt : datenSchuljahresabschnitte) {
 				mapSchuljahresabschnitte.putIfAbsent(datenSchuljahresabschnitt.id,
-						new ProxyReportingSchuljahresabschnitt(this.reportingRepository, datenSchuljahresabschnitt));
+						new ProxyReportingSchuljahresabschnitt(this.reportingContext, datenSchuljahresabschnitt));
 			}
 
 			this.idAktuellerSchuljahresabschnitt = this.schulstammdaten.idSchuljahresabschnitt;
@@ -58,7 +58,7 @@ public class ReportingRepositorySchule {
 		} catch (final Exception e) {
 			ReportingExceptionUtils.logException(
 					"FEHLER: Die Stamm- oder Abschnittsdaten der Schule konnten nicht ermittelt werden oder der Schuljahresabschnitt ist ungültig.",
-					e, this.reportingRepository.logger(), LogLevel.ERROR, 8);
+					e, this.reportingContext.logger(), LogLevel.ERROR, 8);
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"FEHLER: Die Stamm- oder Abschnittsdaten der Schule konnten nicht ermittelt werden oder der übergebene Schuljahresabschnitt ist ungültig.");
 		}
@@ -164,7 +164,7 @@ public class ReportingRepositorySchule {
 	 * @return Der angemeldete Benutzer.
 	 */
 	public Benutzer benutzer() {
-		return this.reportingRepository.conn().getUser();
+		return this.reportingContext.conn().getUser();
 	}
 
 	/**
@@ -180,7 +180,7 @@ public class ReportingRepositorySchule {
 			return mapBenutzerdetails.get(idBenutzer);
 		}
 		try {
-			final DTOViewBenutzerdetails dtoBenutzer = this.reportingRepository.conn().queryByKey(DTOViewBenutzerdetails.class, idBenutzer);
+			final DTOViewBenutzerdetails dtoBenutzer = this.reportingContext.conn().queryByKey(DTOViewBenutzerdetails.class, idBenutzer);
 			mapBenutzerdetails.put(idBenutzer, dtoBenutzer);
 			return dtoBenutzer;
 		} catch (@SuppressWarnings("unused") final Exception ignore) {

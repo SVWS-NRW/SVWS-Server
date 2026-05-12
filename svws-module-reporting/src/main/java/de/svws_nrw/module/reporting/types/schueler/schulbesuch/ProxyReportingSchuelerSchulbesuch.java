@@ -10,7 +10,7 @@ import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchSchule;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
 import de.svws_nrw.core.data.kataloge.KatalogEntlassgrund;
 import de.svws_nrw.core.data.kataloge.SchulEintrag;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.schule.ProxyReportingSchulkatalogEintragNRW;
 
 /**
@@ -20,31 +20,31 @@ import de.svws_nrw.module.reporting.types.schule.ProxyReportingSchulkatalogEintr
  */
 public class ProxyReportingSchuelerSchulbesuch extends ReportingSchuelerSchulbesuch {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 	/**
 	 * Erstellt eine neue Proxy-Instanz aus einem SchuelerSchulbesuchsdaten-Objekt.
 	 *
-	 * @param reportingRepository Repository für das Reporting.
+	 * @param reportingContext Repository für das Reporting.
 	 * @param schulbesuchsdaten Das SchuelerSchulbesuchsdaten-Objekt, aus dem die Proxy-Instanz erstellt wird
 	 */
-	public ProxyReportingSchuelerSchulbesuch(final ReportingRepository reportingRepository, final SchuelerSchulbesuchsdaten schulbesuchsdaten) {
+	public ProxyReportingSchuelerSchulbesuch(final ReportingContext reportingContext, final SchuelerSchulbesuchsdaten schulbesuchsdaten) {
 		super(
-				createReportingSchulkatalogEintragNRW(reportingRepository, schulbesuchsdaten.idVorherigeSchule),
+				createReportingSchulkatalogEintragNRW(reportingContext, schulbesuchsdaten.idVorherigeSchule),
 				ersetzeNullBlankTrim(schulbesuchsdaten.vorigeAllgHerkunft),
 				ersetzeNullBlankTrim(schulbesuchsdaten.vorigeEntlassdatum),
 				ersetzeNullBlankTrim(schulbesuchsdaten.vorigeEntlassjahrgang),
 				ersetzeNullBlankTrim(schulbesuchsdaten.vorigeArtLetzteVersetzung),
 				ersetzeNullBlankTrim(schulbesuchsdaten.vorigeBemerkung),
-				createEndlassgrund(reportingRepository, schulbesuchsdaten.vorigeEntlassgrundID),
+				createEndlassgrund(reportingContext, schulbesuchsdaten.vorigeEntlassgrundID),
 				schulbesuchsdaten.vorigeAbschlussartID,
 				ersetzeNullBlankTrim(schulbesuchsdaten.entlassungDatum),
 				schulbesuchsdaten.idEntlassjahrgang,
-				createEndlassgrund(reportingRepository, schulbesuchsdaten.entlassungGrundID),
+				createEndlassgrund(reportingContext, schulbesuchsdaten.entlassungGrundID),
 				schulbesuchsdaten.entlassungAbschlussartID,
-				createReportingSchulkatalogEintragNRW(reportingRepository, schulbesuchsdaten.idAufnehmendeSchule),
+				createReportingSchulkatalogEintragNRW(reportingContext, schulbesuchsdaten.idAufnehmendeSchule),
 				ersetzeNullBlankTrim(schulbesuchsdaten.aufnehmendWechseldatum),
 				schulbesuchsdaten.aufnehmendBestaetigt,
 				schulbesuchsdaten.grundschuleEinschulungsjahr,
@@ -58,48 +58,48 @@ public class ProxyReportingSchuelerSchulbesuch extends ReportingSchuelerSchulbes
 				schulbesuchsdaten.idKindergarten,
 				schulbesuchsdaten.verpflichtungSprachfoerderkurs,
 				schulbesuchsdaten.teilnahmeSprachfoerderkurs,
-				convertAlleSchulen(reportingRepository, schulbesuchsdaten.alleSchulen)
+				convertAlleSchulen(reportingContext, schulbesuchsdaten.alleSchulen)
 		);
-		this.reportingRepository = reportingRepository;
+		this.reportingContext = reportingContext;
 	}
 
-	private static ProxyReportingSchulkatalogEintragNRW createReportingSchulkatalogEintragNRW(final ReportingRepository reportingRepository,
+	private static ProxyReportingSchulkatalogEintragNRW createReportingSchulkatalogEintragNRW(final ReportingContext reportingContext,
 			final Long idSchule) {
 		if (idSchule == null) {
 			return null;
 		}
 
-		final SchulEintrag schulEintrag = reportingRepository.repositoryKataloge().schulen().get(idSchule);
+		final SchulEintrag schulEintrag = reportingContext.repositoryKataloge().schulen().get(idSchule);
 		if (schulEintrag == null) {
 			return null;
 		}
 
-		return new ProxyReportingSchulkatalogEintragNRW(reportingRepository, schulEintrag);
+		return new ProxyReportingSchulkatalogEintragNRW(reportingContext, schulEintrag);
 	}
 
-	private static KatalogEntlassgrund createEndlassgrund(final ReportingRepository reportingRepository, final Long idEntlassgrund) {
+	private static KatalogEntlassgrund createEndlassgrund(final ReportingContext reportingContext, final Long idEntlassgrund) {
 		if (idEntlassgrund == null) {
 			return null;
 		}
 
-		return reportingRepository.repositoryKataloge().entlassgruende().get(idEntlassgrund);
+		return reportingContext.repositoryKataloge().entlassgruende().get(idEntlassgrund);
 	}
 
 	/**
 	 * Konvertiert die Liste der SchuelerSchulbesuchSchule-Objekte in ReportingSchuelerSchulbesuchSchule-Objekte.
 	 *
-	 * @param reportingRepository Repository für das Reporting.
+	 * @param reportingContext Repository für das Reporting.
 	 * @param alleSchulen Die Liste der SchuelerSchulbesuchSchule-Objekte
 	 * @return Eine Liste von ReportingSchuelerSchulbesuchSchule-Objekten
 	 */
-	private static List<ReportingSchuelerSchulbesuchSchule> convertAlleSchulen(final ReportingRepository reportingRepository,
+	private static List<ReportingSchuelerSchulbesuchSchule> convertAlleSchulen(final ReportingContext reportingContext,
 			final List<SchuelerSchulbesuchSchule> alleSchulen) {
 		if ((alleSchulen == null) || alleSchulen.isEmpty()) {
 			return new ArrayList<>();
 		}
 
 		return alleSchulen.stream()
-				.map(schule -> new ProxyReportingSchuelerSchulbesuchSchule(reportingRepository, schule)).collect(Collectors.toList());
+				.map(schule -> new ProxyReportingSchuelerSchulbesuchSchule(reportingContext, schule)).collect(Collectors.toList());
 	}
 
 	// ##### Getter #####
@@ -109,7 +109,7 @@ public class ProxyReportingSchuelerSchulbesuch extends ReportingSchuelerSchulbes
 	 *
 	 * @return Repository für das Reporting
 	 */
-	public ReportingRepository reportingRepository() {
-		return reportingRepository;
+	public ReportingContext reportingContext() {
+		return reportingContext;
 	}
 }

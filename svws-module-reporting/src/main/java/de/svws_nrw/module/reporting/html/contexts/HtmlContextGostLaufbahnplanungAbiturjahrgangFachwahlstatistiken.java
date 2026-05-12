@@ -7,7 +7,7 @@ import java.util.Objects;
 
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.module.reporting.types.gost.fachwahlstatistik.ProxyReportingGostFachwahlstatistikenAbiturjahrgang;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.gost.fachwahlstatistik.ReportingGostFachwahlstatistik;
 import de.svws_nrw.module.reporting.types.gost.fachwahlstatistik.ReportingGostFachwahlstatistikenAbiturjahrgang;
 import de.svws_nrw.module.reporting.types.gost.fachwahlstatistik.ReportingGostFachwahlstatistikHalbjahr;
@@ -22,10 +22,10 @@ public final class HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistik
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
 	 *
-	 * @param reportingRepository    Repository mit Parametern, Logger und Daten zum Reporting.
+	 * @param reportingContext    Context mit Parametern, Logger und Daten zum Reporting.
 	 */
-	public HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken(final ReportingRepository reportingRepository) {
-		super(reportingRepository);
+	public HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken(final ReportingContext reportingContext) {
+		super(reportingContext);
 		erzeugeContext();
 	}
 
@@ -37,12 +37,12 @@ public final class HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistik
 		// In den idsHauptdaten der Reporting-Parameter werden das Abiturjahr und evtl. GostHalbjahres-IDs (0 = EF.1 bis 5 = Q2.2) übergeben.
 		// In den idsDetails der Reporting-Parameter liegen die Ids der Fächer.
 		// Hier werden die Daten NICHT validiert. Die Daten aus den Parametern müssen vorab validiert worden sein (ReportingValidierung).
-		final int abiturjahr = reportingRepository.reportingParameter().idsHauptdaten().stream().filter(Objects::nonNull).toList().getFirst().intValue();
-		final List<Long> idsFaecher = reportingRepository.reportingParameter().idsDetaildaten().stream().filter(Objects::nonNull).toList();
+		final int abiturjahr = reportingContext.reportingParameter().idsHauptdaten().stream().filter(Objects::nonNull).toList().getFirst().intValue();
+		final List<Long> idsFaecher = reportingContext.reportingParameter().idsDetaildaten().stream().filter(Objects::nonNull).toList();
 		final List<Integer> idsGostHalbjahre = new ArrayList<>();
 
-		for (int i = 1; i < reportingRepository.reportingParameter().idsHauptdaten().size(); i = i + 1) {
-			idsGostHalbjahre.add(reportingRepository.reportingParameter().idsHauptdaten().get(i).intValue());
+		for (int i = 1; i < reportingContext.reportingParameter().idsHauptdaten().size(); i = i + 1) {
+			idsGostHalbjahre.add(reportingContext.reportingParameter().idsHauptdaten().get(i).intValue());
 		}
 		// Sind keine GostHalbjahre angegeben, so erfolgt die Ausgabe aller Halbjahre. Ergänze sie daher in der Liste
 		if (idsGostHalbjahre.isEmpty()) {
@@ -51,7 +51,7 @@ public final class HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistik
 
 		// Objekt mit allen Fachwahlstatistiken als Basis für die Inhalte des Contexts erzeugen.
 		final ReportingGostFachwahlstatistikenAbiturjahrgang proxyReportingGostFachwahlstatistikenAbiturjahrgang =
-				new ProxyReportingGostFachwahlstatistikenAbiturjahrgang(this.reportingRepository, abiturjahr);
+				new ProxyReportingGostFachwahlstatistikenAbiturjahrgang(this.reportingContext, abiturjahr);
 
 		// Objekte mit verschiedenen Fachwahlstatistiken für den Context erzeugen.
 		final List<ReportingGostFachwahlstatistik> fachwahlstatistiken =

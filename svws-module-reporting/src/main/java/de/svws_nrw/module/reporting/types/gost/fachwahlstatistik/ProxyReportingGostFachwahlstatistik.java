@@ -6,7 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
 /**
@@ -17,29 +17,29 @@ public class ProxyReportingGostFachwahlstatistik extends ReportingGostFachwahlst
 
 	/** Repository für das Reporting. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostFachwahlstatistik}.
 	 *
-	 * @param reportingRepository Repository für das Reporting
+	 * @param reportingContext Repository für das Reporting
 	 * @param gostStatistikFachwahl Wahlstatistik für ein Fach der GOSt über alle Halbjahre.
 	 */
-	public ProxyReportingGostFachwahlstatistik(final ReportingRepository reportingRepository, final GostStatistikFachwahl gostStatistikFachwahl) {
+	public ProxyReportingGostFachwahlstatistik(final ReportingContext reportingContext, final GostStatistikFachwahl gostStatistikFachwahl) {
 		super(gostStatistikFachwahl.abiturjahr,
 				null,
 				new ArrayList<>());
 
-		this.reportingRepository = reportingRepository;
+		this.reportingContext = reportingContext;
 
 		// Für die Daten des Faches wird mindestens der Abschnitt EF1 benötigt. Wenn dieser nicht existiert, dann kann die Statistik nicht existieren.
 		// Da in der GOSt konstante Fachbedingungen gelten müssen, kann hier die EF1 verwendet werden.
-		final ReportingSchuljahresabschnitt abschnittEF1 = reportingRepository.repositorySchule().schuljahresabschnitt(gostStatistikFachwahl.abiturjahr - 4, 1);
+		final ReportingSchuljahresabschnitt abschnittEF1 = reportingContext.repositorySchule().schuljahresabschnitt(gostStatistikFachwahl.abiturjahr - 4, 1);
 		super.fach = abschnittEF1.fach(gostStatistikFachwahl.id);
 
 		final List<ReportingGostFachwahlstatistikHalbjahr> reportingGostFachwahlstatistiken = new ArrayList<>();
 		for (final GostHalbjahr gostHalbjahr : GostHalbjahr.values()) {
-			reportingGostFachwahlstatistiken.add(new ProxyReportingGostFachwahlstatistikHalbjahr(this.reportingRepository, gostHalbjahr,
+			reportingGostFachwahlstatistiken.add(new ProxyReportingGostFachwahlstatistikHalbjahr(this.reportingContext, gostHalbjahr,
 					gostStatistikFachwahl));
 		}
 		super.setFachwahlstatistikHalbjahre(reportingGostFachwahlstatistiken);
@@ -53,7 +53,7 @@ public class ProxyReportingGostFachwahlstatistik extends ReportingGostFachwahlst
 	 * @return Repository für das Reporting
 	 */
 	@JsonIgnore
-	public ReportingRepository reportingRepository() {
-		return reportingRepository;
+	public ReportingContext reportingContext() {
+		return reportingContext;
 	}
 }

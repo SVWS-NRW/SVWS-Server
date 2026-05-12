@@ -40,10 +40,10 @@ Des Weiteren gilt:
 * Die Proxy-Types überschreiben einzelne Getter der Super-Klasse (beispielsweise bei Feldern, die mit null initialisiert wurden)
   und laden dort dann aus der Datenbank die Daten bei Bedarf nach (lazy-loading), um den Umfang der Datenstrukturen gering zu
   halten.
-* Die Proxy-Types können zudem auf das Reporting-Repository zugreifen. Dieses enthält neben den Stammdaten der Schule einige Maps,
-  in der zur jeweiligen ID bereits ausgelesene Stammdaten anderer Objekte wie Kataloge, Lehrer, Schüler usw. gespeichert werden.
-  So sollen Datenbankzugriffe minimiert werden. Werden in der Proxy-Klasse Daten nachgeladen, so werden sie dabei auch in der
-  Regel in der entsprechenden Map des Repository ergänzt.
+* Die Proxy-Types können zudem auf den Reporting-Context zugreifen. Über dessen domänenspezifische Repositories werden neben den
+  Stammdaten der Schule auch Maps bereitgestellt, in denen zur jeweiligen ID bereits ausgelesene Stammdaten anderer Objekte wie
+  Kataloge, Lehrer, Schüler usw. gespeichert sind. So sollen Datenbankzugriffe minimiert werden. Werden in der Proxy-Klasse Daten
+  nachgeladen, so werden sie dabei auch in der Regel in der entsprechenden Map des zuständigen Repositorys ergänzt.
 
 
 ## Ablauf der Reporterstellung

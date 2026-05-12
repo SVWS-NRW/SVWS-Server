@@ -3,7 +3,7 @@ package de.svws_nrw.module.reporting.types.lerngruppen;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.sortierung.ReportingSortierungService;
 import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingSchueler;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
@@ -22,14 +22,14 @@ import java.util.Map;
  */
 public class ProxyReportingKlassenunterricht extends ReportingKlassenunterricht {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 	/**
 	 * Erstellt einen Proxy-Klassenunterricht aus einer Klasse und Fachinformationen.
 	 *
-	 * @param reportingRepository Das Repository für das Reporting.
+	 * @param reportingContext Das Repository für das Reporting.
 	 * @param klasse Die Klasse, in der der Unterricht stattfindet
 	 * @param fach Das unterrichtete Fach
 	 * @param bewertenderLehrer Der Lehrer, der diesen Unterricht bewertet.
@@ -40,12 +40,12 @@ public class ProxyReportingKlassenunterricht extends ReportingKlassenunterricht 
 	 * @param mapSchuelerLeistungsdaten Eine Map, die die Leistungsdaten zu diesem Unterricht zur ID des Schülers speichert
 	 */
 	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
-	public ProxyReportingKlassenunterricht(final ReportingRepository reportingRepository, final @NotNull ReportingKlasse klasse,
+	public ProxyReportingKlassenunterricht(final ReportingContext reportingContext, final @NotNull ReportingKlasse klasse,
 			final @NotNull ReportingFach fach, final ReportingLehrer bewertenderLehrer, final List<ReportingLehrer> fachlehrer,
 			final Map<Long, Double> wochenstundenFachlehrer, final List<ReportingSchueler> schueler, final int wochenstundenSchueler,
 			final Map<Long, ReportingSchuelerLeistungsdaten> mapSchuelerLeistungsdaten) {
 		super(klasse, fach, bewertenderLehrer, fachlehrer, wochenstundenFachlehrer, schueler, wochenstundenSchueler, mapSchuelerLeistungsdaten);
-		this.reportingRepository = reportingRepository;
+		this.reportingContext = reportingContext;
 	}
 
 	/**
@@ -53,13 +53,13 @@ public class ProxyReportingKlassenunterricht extends ReportingKlassenunterricht 
 	 *
 	 * @return Repository für das Reporting
 	 */
-	public ReportingRepository reportingRepository() {
-		return reportingRepository;
+	public ReportingContext reportingContext() {
+		return reportingContext;
 	}
 
 	/**
 	 * Gibt die Schüler der Lerngruppe zurück.
-	 * Die Liste wird anhand der im Reporting-Repository konfigurierten Sortierung sortiert.
+	 * Die Liste wird anhand der im Reporting-Context konfigurierten Sortierung sortiert.
 	 *
 	 * @return Die Liste der Schüler der Lerngruppe.
 	 */
@@ -68,8 +68,8 @@ public class ProxyReportingKlassenunterricht extends ReportingKlassenunterricht 
 		final List<ReportingSchueler> schueler = super.schueler();
 
 		// Prüfe, ob Service und Logger abrufbar sind. Andernfalls würden Standardsortierungen verwendet werden.
-		final ReportingSortierungService sortierungService = (this.reportingRepository != null) ? this.reportingRepository.sortierungService() : null;
-		final Logger logger = (this.reportingRepository != null) ? this.reportingRepository.logger() : null;
+		final ReportingSortierungService sortierungService = (this.reportingContext != null) ? this.reportingContext.sortierungService() : null;
+		final Logger logger = (this.reportingContext != null) ? this.reportingContext.logger() : null;
 
 		final Comparator<ReportingSchueler> comparator =
 				ComparatorFactory.buildOptionalComparator(

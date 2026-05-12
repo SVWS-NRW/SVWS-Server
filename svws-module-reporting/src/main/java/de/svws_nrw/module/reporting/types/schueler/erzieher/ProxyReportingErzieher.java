@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 
@@ -13,19 +13,19 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
  */
 public class ProxyReportingErzieher extends ReportingErzieher {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingErzieher}.
 	 *
-	 * @param reportingRepository Repository für das Reporting.
+	 * @param reportingContext Repository für das Reporting.
 	 * @param erzieherStammdaten Stammdaten-Objekt aus der DB.
 	 * @param reportingSchueler	Der Schüler, dem dieser Erzieher zugeordnet ist.
 	 */
-	public ProxyReportingErzieher(final ReportingRepository reportingRepository, final ErzieherStammdaten erzieherStammdaten,
+	public ProxyReportingErzieher(final ReportingContext reportingContext, final ErzieherStammdaten erzieherStammdaten,
 			final ReportingSchueler reportingSchueler) {
 		super(ersetzeNullBlankTrim(erzieherStammdaten.anrede),
 				null,
@@ -51,12 +51,12 @@ public class ProxyReportingErzieher extends ReportingErzieher {
 				ersetzeNullBlankTrim(erzieherStammdaten.titel),
 				ersetzeNullBlankTrim(erzieherStammdaten.vorname),
 				ersetzeNullBlankTrim(erzieherStammdaten.vorname),
-				(erzieherStammdaten.wohnortID != null) ? reportingRepository.repositoryKataloge().orte().get(erzieherStammdaten.wohnortID) : null,
-				(erzieherStammdaten.ortsteilID != null) ? reportingRepository.repositoryKataloge().ortsteile().get(erzieherStammdaten.ortsteilID) : null);
+				(erzieherStammdaten.wohnortID != null) ? reportingContext.repositoryKataloge().orte().get(erzieherStammdaten.wohnortID) : null,
+				(erzieherStammdaten.ortsteilID != null) ? reportingContext.repositoryKataloge().ortsteile().get(erzieherStammdaten.ortsteilID) : null);
 
-		this.reportingRepository = reportingRepository;
+		this.reportingContext = reportingContext;
 		if (erzieherStammdaten.idErzieherArt != null) {
-			super.art = this.reportingRepository.repositoryKataloge().erzieherarten().get(erzieherStammdaten.idErzieherArt);
+			super.art = this.reportingContext.repositoryKataloge().erzieherarten().get(erzieherStammdaten.idErzieherArt);
 		}
 	}
 
@@ -88,7 +88,7 @@ public class ProxyReportingErzieher extends ReportingErzieher {
 	 *
 	 * @return Repository für das Reporting
 	 */
-	public ReportingRepository reportingRepository() {
-		return reportingRepository;
+	public ReportingContext reportingContext() {
+		return reportingContext;
 	}
 }

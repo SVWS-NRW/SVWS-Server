@@ -1,6 +1,6 @@
 package de.svws_nrw.module.reporting.html.contexts;
 
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerLeistungsdatenMatrix;
@@ -19,22 +19,22 @@ public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> im
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Schülern.
 	 *
-	 * @param reportingRepository 	Repository mit Parametern, Logger und Daten zum Reporting.
+	 * @param reportingContext 	Context mit Parametern, Logger und Daten zum Reporting.
 	 * @param reportingSchueler		Liste der Schüler, die berücksichtigt werden sollen.
 	 */
-	public HtmlContextSchueler(final ReportingRepository reportingRepository, final List<ReportingSchueler> reportingSchueler) {
-		super(reportingRepository);
+	public HtmlContextSchueler(final ReportingContext reportingContext, final List<ReportingSchueler> reportingSchueler) {
+		super(reportingContext);
 		erzeugeContextFromSchueler(reportingSchueler);
 	}
 
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Schüler-IDs.
 	 *
-	 * @param reportingRepository   Repository mit Parametern, Logger und Daten zum Reporting.
+	 * @param reportingContext   Context mit Parametern, Logger und Daten zum Reporting.
 	 */
-	public HtmlContextSchueler(final ReportingRepository reportingRepository) {
-		super(reportingRepository);
-		erzeugeContextFromIds(this.reportingRepository.reportingParameter().idsHauptdaten());
+	public HtmlContextSchueler(final ReportingContext reportingContext) {
+		super(reportingContext);
+		erzeugeContextFromIds(this.reportingContext.reportingParameter().idsHauptdaten());
 	}
 
 	/**
@@ -62,7 +62,7 @@ public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> im
 	private void erzeugeContextFromIds(final List<Long> idsSchueler) {
 
 		// Rufe die Schülerdaten ab oder erzeuge sie, falls sie noch nicht existieren. Weise sie dann dem Context zu.
-		setContextData(this.reportingRepository.repositorySchueler().schueler(idsSchueler));
+		setContextData(this.reportingContext.repositorySchueler().schueler(idsSchueler));
 		sortiereContextMitRegistry();
 
 		// Daten-Context für Thymeleaf erzeugen.
@@ -78,8 +78,8 @@ public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> im
 	 * @return Die Leistungsdaten-Matrix für die Schüler dieses Contexts.
 	 */
 	public ReportingSchuelerLeistungsdatenMatrix schuelerLeistungsdatenMatrix() {
-		return new ProxyReportingSchuelerLeistungsdatenMatrix(this.reportingRepository, this.getContextData(),
-				this.reportingRepository.repositorySchule().auswahlSchuljahresabschnitt());
+		return new ProxyReportingSchuelerLeistungsdatenMatrix(this.reportingContext, this.getContextData(),
+				this.reportingContext.repositorySchule().auswahlSchuljahresabschnitt());
 	}
 
 	/**
@@ -95,7 +95,7 @@ public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> im
 		for (final ReportingSchueler reportingSchueler : getContextData()) {
 			final List<ReportingSchueler> einSchueler = new ArrayList<>();
 			einSchueler.add(reportingSchueler);
-			resultContexts.add(new HtmlContextSchueler(this.reportingRepository, einSchueler));
+			resultContexts.add(new HtmlContextSchueler(this.reportingContext, einSchueler));
 		}
 
 		return resultContexts;

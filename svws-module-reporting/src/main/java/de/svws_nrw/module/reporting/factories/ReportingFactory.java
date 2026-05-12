@@ -18,7 +18,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.builders.ReportBuilderHtml;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -37,10 +37,10 @@ public final class ReportingFactory {
 	/** Einstellungen und Daten zum Steuern der Report-Generierung. */
 	private final ReportingParameter reportingParameter;
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
-	private final ReportingRepository reportingRepository;
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	private final ReportingContext reportingContext;
 
-	/** Logger, der den Ablauf protokolliert und Fehlerdaten sammelt. Dieser wird in das Reporting-Repository übergeben, um auch während der Generierung der Ausgabe Fehler festzuhalten und auszugeben. */
+	/** Logger, der den Ablauf protokolliert und Fehlerdaten sammelt. Dieser wird in den Reporting-Context übergeben, um auch während der Generierung der Ausgabe Fehler festzuhalten und auszugeben. */
 	private final Logger logger = new Logger();
 
 	/** Die Liste, die Einträge aus dem Logger sammelt. */
@@ -136,8 +136,8 @@ public final class ReportingFactory {
 			this.logger.logLn(LogLevel.DEBUG, 4, "Validiere Vorlage-Parameter.");
 			validiereVorlageParameter(reportingParameter);
 
-			this.logger.logLn(LogLevel.DEBUG, 4, "Erzeugung des Reporting-Repository");
-			this.reportingRepository = new ReportingRepository(this.conn, this.reportingParameter, this.logger, this.log);
+			this.logger.logLn(LogLevel.DEBUG, 4, "Erzeugung des Reporting-Context");
+			this.reportingContext = new ReportingContext(this.conn, this.reportingParameter, this.logger, this.log);
 
 			this.logger.logLn(LogLevel.DEBUG, 0, "<<< Ende des Initialisierens der Reporting-Factory und des Validierens übergebener Daten.");
 		} catch (final Exception e) {
@@ -293,7 +293,7 @@ public final class ReportingFactory {
 				}
 				case ReportingAusgabeformat.HTML -> {
 					this.logger.logLn(LogLevel.DEBUG, 4, "HTML als Ausgabeformat für die Report-Generierung gewählt.");
-					final HtmlFactory htmlFactory = new HtmlFactory(reportingRepository);
+					final HtmlFactory htmlFactory = new HtmlFactory(reportingContext);
 					// Erzeuge im try-Block eine temporäre Response, die bei einem Fehler automatisch geschlossen wird (SonarCube-Angabe)
 					try (Response autocloseResponse = htmlFactory.createHtmlResponse()) {
 						if (!log.getText(LogLevel.ERROR).isEmpty()) {
@@ -308,10 +308,10 @@ public final class ReportingFactory {
 				}
 				case ReportingAusgabeformat.PDF -> {
 					this.logger.logLn(LogLevel.DEBUG, 4, "PDF als Ausgabeformat für die Report-Generierung gewählt.");
-					final HtmlFactory htmlFactory = new HtmlFactory(reportingRepository);
+					final HtmlFactory htmlFactory = new HtmlFactory(reportingContext);
 					final List<ReportBuilderHtml> htmlBuilders = htmlFactory.createHtmlBuilders();
 					this.logger.logLn(LogLevel.DEBUG, 4, "HTML-Builder wurden erzeugt.");
-					final PdfFactory pdfFactory = new PdfFactory(htmlBuilders, reportingRepository);
+					final PdfFactory pdfFactory = new PdfFactory(htmlBuilders, reportingContext);
 					// Erzeuge im try-Block eine temporäre Response, die bei einem Fehler automatisch geschlossen wird (SonarCube-Angabe)
 					try (Response autocloseResponse = pdfFactory.createPdfResponse()) {
 						if (!log.getText(LogLevel.ERROR).isEmpty()) {
@@ -326,11 +326,11 @@ public final class ReportingFactory {
 				}
 				case ReportingAusgabeformat.EMAIL -> {
 					this.logger.logLn(LogLevel.DEBUG, 4, "EMAIL als Ausgabeformat für die Report-Generierung gewählt.");
-					final HtmlFactory htmlFactory = new HtmlFactory(reportingRepository);
+					final HtmlFactory htmlFactory = new HtmlFactory(reportingContext);
 					final List<ReportBuilderHtml> htmlBuilders = htmlFactory.createHtmlBuilders();
 					this.logger.logLn(LogLevel.DEBUG, 4, "HTML-Builder wurden erzeugt.");
-					final PdfFactory pdfFactory = new PdfFactory(htmlBuilders, reportingRepository);
-					final EmailFactory emailFactory = new EmailFactory(reportingRepository);
+					final PdfFactory pdfFactory = new PdfFactory(htmlBuilders, reportingContext);
+					final EmailFactory emailFactory = new EmailFactory(reportingContext);
 					// Erzeuge im try-Block eine temporäre Response, die bei einem Fehler automatisch geschlossen wird (SonarQube-Angabe)
 					try (Response autocloseResponse = emailFactory.sendEmails(pdfFactory)) {
 						if (!log.getText(LogLevel.ERROR).isEmpty()) {

@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.adt.LongArrayKey;
 import de.svws_nrw.core.adt.map.ListMap3DLongKeys;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.lerngruppen.ProxyReportingKlassenunterricht;
 import de.svws_nrw.module.reporting.types.lerngruppen.ProxyReportingKursunterricht;
@@ -31,9 +31,9 @@ import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchue
  */
 public class ProxyReportingLehrerFactoryUnterricht {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 	/** Der Lehrer, dessen Unterricht von dieser Factory erzeugt werden soll. */
 	private final ProxyReportingLehrer factoryLehrer;
@@ -41,11 +41,11 @@ public class ProxyReportingLehrerFactoryUnterricht {
 	/**
 	 * Erstellt eine neue Factory Instanz.
 	 *
-	 * @param reportingRepository Das Repository mit Zugriff auf Datenbank und Caches.
+	 * @param reportingContext Das Repository mit Zugriff auf Datenbank und Caches.
 	 * @param factoryLehrer              Der Lehrer, dessen Unterricht von dieser Factory erzeugt werden soll.
 	 */
-	public ProxyReportingLehrerFactoryUnterricht(final ReportingRepository reportingRepository, final ProxyReportingLehrer factoryLehrer) {
-		this.reportingRepository = reportingRepository;
+	public ProxyReportingLehrerFactoryUnterricht(final ReportingContext reportingContext, final ProxyReportingLehrer factoryLehrer) {
+		this.reportingContext = reportingContext;
 		this.factoryLehrer = factoryLehrer;
 	}
 
@@ -58,8 +58,8 @@ public class ProxyReportingLehrerFactoryUnterricht {
 	 * @return Die Liste der Klassenunterrichte als Fachlehrer.
 	 */
 	public List<ReportingKlassenunterricht> klassenunterrichtAlsFachlehrer() {
-		final List<Object[]> results = this.reportingRepository.repositoryLehrer().leistungsdatenAlsFachlehrerKlassenunterricht(
-				this.reportingRepository.repositorySchule().auswahlSchuljahresabschnitt().id(), this.factoryLehrer.id());
+		final List<Object[]> results = this.reportingContext.repositoryLehrer().leistungsdatenAlsFachlehrerKlassenunterricht(
+				this.reportingContext.repositorySchule().auswahlSchuljahresabschnitt().id(), this.factoryLehrer.id());
 		@SuppressWarnings("unchecked") final List<ReportingKlassenunterricht> result =
 				(List<ReportingKlassenunterricht>) erstelleUnterrichtAusLeistungsdaten(results, false);
 		return result;
@@ -71,8 +71,8 @@ public class ProxyReportingLehrerFactoryUnterricht {
 	 * @return Die Liste der Klassenunterrichte als Zusatzlehrer.
 	 */
 	public List<ReportingKlassenunterricht> klassenunterrichtAlsZusatzlehrer() {
-		final List<Object[]> results = this.reportingRepository.repositoryLehrer().leistungsdatenAlsZusatzlehrerKlassenunterricht(
-				this.reportingRepository.repositorySchule().auswahlSchuljahresabschnitt().id(), this.factoryLehrer.id());
+		final List<Object[]> results = this.reportingContext.repositoryLehrer().leistungsdatenAlsZusatzlehrerKlassenunterricht(
+				this.reportingContext.repositorySchule().auswahlSchuljahresabschnitt().id(), this.factoryLehrer.id());
 		@SuppressWarnings("unchecked") final List<ReportingKlassenunterricht> result =
 				(List<ReportingKlassenunterricht>) erstelleUnterrichtAusLeistungsdaten(results, false);
 		return result;
@@ -84,8 +84,8 @@ public class ProxyReportingLehrerFactoryUnterricht {
 	 * @return Die Liste der Kursunterrichte als Fachlehrer.
 	 */
 	public List<ReportingKursunterricht> kursunterrichtAlsFachlehrer() {
-		final List<Object[]> results = this.reportingRepository.repositoryLehrer().leistungsdatenAlsFachlehrerKursunterricht(
-				this.reportingRepository.repositorySchule().auswahlSchuljahresabschnitt().id(), this.factoryLehrer.id());
+		final List<Object[]> results = this.reportingContext.repositoryLehrer().leistungsdatenAlsFachlehrerKursunterricht(
+				this.reportingContext.repositorySchule().auswahlSchuljahresabschnitt().id(), this.factoryLehrer.id());
 		@SuppressWarnings("unchecked") final List<ReportingKursunterricht> result =
 				(List<ReportingKursunterricht>) erstelleUnterrichtAusLeistungsdaten(results, true);
 		return result;
@@ -97,8 +97,8 @@ public class ProxyReportingLehrerFactoryUnterricht {
 	 * @return Die Liste der Kursunterrichte als Zusatzlehrer.
 	 */
 	public List<ReportingKursunterricht> kursunterrichtAlsZusatzlehrer() {
-		final List<Object[]> results = this.reportingRepository.repositoryLehrer().leistungsdatenAlsZusatzlehrerKursunterricht(
-				this.reportingRepository.repositorySchule().auswahlSchuljahresabschnitt().id(), this.factoryLehrer.id());
+		final List<Object[]> results = this.reportingContext.repositoryLehrer().leistungsdatenAlsZusatzlehrerKursunterricht(
+				this.reportingContext.repositorySchule().auswahlSchuljahresabschnitt().id(), this.factoryLehrer.id());
 		@SuppressWarnings("unchecked") final List<ReportingKursunterricht> result =
 				(List<ReportingKursunterricht>) erstelleUnterrichtAusLeistungsdaten(results, true);
 		return result;
@@ -126,7 +126,7 @@ public class ProxyReportingLehrerFactoryUnterricht {
 
 		// Erstelle eine Map der Schüler aus den Leistungsdaten
 		final Map<Long, ReportingSchueler> mapSchueler =
-				this.reportingRepository.repositorySchueler().schueler(dtoSchuelerLeistungsdaten.keySet1().stream().toList()).stream()
+				this.reportingContext.repositorySchueler().schueler(dtoSchuelerLeistungsdaten.keySet1().stream().toList()).stream()
 						.collect(Collectors.toMap(ReportingSchueler::id, s -> s));
 
 		if (istKurs) {
@@ -249,7 +249,7 @@ public class ProxyReportingLehrerFactoryUnterricht {
 			final Map<Long, ReportingSchuelerLeistungsdaten> mapSchuelerLeistungsdaten = new HashMap<>();
 			mapSchuelerLeistungsdaten.putAll(leistungsdaten.stream().collect(Collectors.toMap(ld -> mapIdLeistungsdatenIdSchueler.get(ld.id()), ld -> ld)));
 
-			result.add(new ProxyReportingKlassenunterricht(this.reportingRepository, klasse, fach, bewertenderLehrer, lehrer, wochenstundenProLehrer, schueler,
+			result.add(new ProxyReportingKlassenunterricht(this.reportingContext, klasse, fach, bewertenderLehrer, lehrer, wochenstundenProLehrer, schueler,
 					wochenstundenSchueler,
 					mapSchuelerLeistungsdaten));
 		}
@@ -321,7 +321,7 @@ public class ProxyReportingLehrerFactoryUnterricht {
 			mapSchuelerLeistungsdaten.putAll(leistungsdaten.stream().collect(Collectors.toMap(ld -> mapIdLeistungsdatenIdSchueler.get(ld.id()), ld -> ld)));
 
 			if ((kurs != null) && (bewertenderLehrer != null)) {
-				result.add(new ProxyReportingKursunterricht(this.reportingRepository, kurs, bewertenderLehrer, mapSchuelerLeistungsdaten));
+				result.add(new ProxyReportingKursunterricht(this.reportingContext, kurs, bewertenderLehrer, mapSchuelerLeistungsdaten));
 			}
 		}
 
@@ -351,7 +351,7 @@ public class ProxyReportingLehrerFactoryUnterricht {
 			final List<Long> fehlende = idsZusatzLehrer.stream().filter(id -> !mapLehrer.containsKey(id)).toList();
 
 			if (!fehlende.isEmpty()) {
-				this.reportingRepository.repositoryLehrer().lehrer(fehlende).forEach(l -> mapLehrer.putIfAbsent(l.id(), l));
+				this.reportingContext.repositoryLehrer().lehrer(fehlende).forEach(l -> mapLehrer.putIfAbsent(l.id(), l));
 			}
 		}
 

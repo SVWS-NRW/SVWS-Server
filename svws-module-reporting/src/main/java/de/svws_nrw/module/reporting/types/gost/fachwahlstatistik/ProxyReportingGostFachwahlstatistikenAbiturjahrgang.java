@@ -6,7 +6,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 
 /**
  * Proxy-Klasse im Rahmen des Reportings für Daten vom Typ GostFachwahlstatistikenAbiturjahrgang und erweitert die Klasse
@@ -16,27 +16,27 @@ public class ProxyReportingGostFachwahlstatistikenAbiturjahrgang extends Reporti
 
 	/** Repository für das Reporting. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostFachwahlstatistikenAbiturjahrgang}.
 	 *
-	 * @param reportingRepository Repository für das Reporting
+	 * @param reportingContext Repository für das Reporting
 	 * @param abiturjahr Das Abiturjahr des Jahrgangs, dessen Fachwahlstatistiken enthalten sind.
 	 */
-	public ProxyReportingGostFachwahlstatistikenAbiturjahrgang(final ReportingRepository reportingRepository, final int abiturjahr) {
+	public ProxyReportingGostFachwahlstatistikenAbiturjahrgang(final ReportingContext reportingContext, final int abiturjahr) {
 		super(abiturjahr, new ArrayList<>());
 
-		this.reportingRepository = reportingRepository;
+		this.reportingContext = reportingContext;
 
 		// Hole die Fachwahlstatistiken über das GOSt-Repository
 		final List<GostStatistikFachwahl> gostFachwahlStatistiken =
-				this.reportingRepository.repositoryGost().fachwahlen(super.abiturjahr()).stream().filter(Objects::nonNull).toList();
+				this.reportingContext.repositoryGost().fachwahlen(super.abiturjahr()).stream().filter(Objects::nonNull).toList();
 
 		// Erstelle die Reporting-Fachwahlstatistiken
 		final List<ReportingGostFachwahlstatistik> reportingGostFachwahlstatistiken = new ArrayList<>();
 		for (final GostStatistikFachwahl gostFachwahlStatistik : gostFachwahlStatistiken) {
-			reportingGostFachwahlstatistiken.add(new ProxyReportingGostFachwahlstatistik(this.reportingRepository, gostFachwahlStatistik));
+			reportingGostFachwahlstatistiken.add(new ProxyReportingGostFachwahlstatistik(this.reportingContext, gostFachwahlStatistik));
 		}
 		setFachwahlstatistiken(reportingGostFachwahlstatistiken);
 	}
@@ -49,7 +49,7 @@ public class ProxyReportingGostFachwahlstatistikenAbiturjahrgang extends Reporti
 	 * @return Repository für das Reporting
 	 */
 	@JsonIgnore
-	public ReportingRepository reportingRepository() {
-		return reportingRepository;
+	public ReportingContext reportingContext() {
+		return reportingContext;
 	}
 }

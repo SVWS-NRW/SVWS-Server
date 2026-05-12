@@ -10,7 +10,7 @@ import de.svws_nrw.data.gost.DataGostBlockungsdaten;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ProxyReportingGostKursplanungBlockungsergebnis;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungBlockungsergebnis;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungKurs;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
@@ -35,12 +35,12 @@ public abstract class HtmlContextGostKursplanungBlockungsergebnis extends HtmlCo
 	 * Repository und den Reporting-Parametern aufgebaut; die Filterung der Schüler und Kurse erfolgt über den FilterService
 	 * anhand der konfigurierten Filterdefinitionen.
 	 *
-	 * @param reportingRepository	Repository mit Parametern, Logger und Daten zum Reporting.
+	 * @param reportingContext	Context mit Parametern, Logger und Daten zum Reporting.
 	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
-	protected HtmlContextGostKursplanungBlockungsergebnis(final ReportingRepository reportingRepository) throws ApiOperationException {
-		super(reportingRepository);
+	protected HtmlContextGostKursplanungBlockungsergebnis(final ReportingContext reportingContext) throws ApiOperationException {
+		super(reportingContext);
 		erzeugeContext();
 	}
 
@@ -49,16 +49,16 @@ public abstract class HtmlContextGostKursplanungBlockungsergebnis extends HtmlCo
 	 * wiederverwendet und die Sicht über Schüler- und Kurs-Prädikate auf einzelne Entitäten einschränkt. Wird ausschließlich
 	 * von Subklassen für die Erzeugung der Einzel-Contexts verwendet.
 	 *
-	 * @param reportingRepository	Repository mit Parametern, Logger und Daten zum Reporting.
+	 * @param reportingContext	Context mit Parametern, Logger und Daten zum Reporting.
 	 * @param quelle				Ein bereits aufgebautes Blockungsergebnis, das als Datenquelle wiederverwendet wird.
 	 * @param filterSchueler		Ein Prädikat, das bestimmt, welche Schüler in der Ausgabe enthalten sind.
 	 * @param filterKurse			Ein Prädikat, das bestimmt, welche Kurse in der Ausgabe enthalten sind.
 	 */
-	protected HtmlContextGostKursplanungBlockungsergebnis(final ReportingRepository reportingRepository,
+	protected HtmlContextGostKursplanungBlockungsergebnis(final ReportingContext reportingContext,
 			final ReportingGostKursplanungBlockungsergebnis quelle,
 			final Predicate<ReportingSchueler> filterSchueler, final Predicate<ReportingGostKursplanungKurs> filterKurse) {
-		super(reportingRepository);
-		this.blockungsergebnis = new ProxyReportingGostKursplanungBlockungsergebnis(reportingRepository, quelle,
+		super(reportingContext);
+		this.blockungsergebnis = new ProxyReportingGostKursplanungBlockungsergebnis(reportingContext, quelle,
 				filterSchueler, filterKurse, quelle.istSchuelerFilterAktiv(), quelle.istKurseFilterAktiv());
 
 		final Context context = new Context();
@@ -74,18 +74,18 @@ public abstract class HtmlContextGostKursplanungBlockungsergebnis extends HtmlCo
 	 */
 	private void erzeugeContext() throws ApiOperationException {
 
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Erzeuge Context zu einem GostKursplanungBlockungsergebnis.");
+		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Erzeuge Context zu einem GostKursplanungBlockungsergebnis.");
 
 		try {
-			final long idBlockungsergebnis = this.reportingRepository.reportingParameter().idHauptdatenObjekt();
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Die ID der Blockungsergebnisses wurde ermittelt: " + idBlockungsergebnis);
-			final GostBlockungsergebnis ergebnis = DataGostBlockungsergebnisse.getErgebnisFromID(this.reportingRepository.conn(), idBlockungsergebnis);
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Das Blockungsergebnis wurde ermittelt.");
+			final long idBlockungsergebnis = this.reportingContext.reportingParameter().idHauptdatenObjekt();
+			reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Die ID der Blockungsergebnisses wurde ermittelt: " + idBlockungsergebnis);
+			final GostBlockungsergebnis ergebnis = DataGostBlockungsergebnisse.getErgebnisFromID(this.reportingContext.conn(), idBlockungsergebnis);
+			reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Das Blockungsergebnis wurde ermittelt.");
 			final GostBlockungsdatenManager datenManager =
-					DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(this.reportingRepository.conn(), ergebnis.blockungID);
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Der Datenmanager zum Blockungsergebnis wurde ermittelt.");
+					DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(this.reportingContext.conn(), ergebnis.blockungID);
+			reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Der Datenmanager zum Blockungsergebnis wurde ermittelt.");
 
-			this.blockungsergebnis = new ProxyReportingGostKursplanungBlockungsergebnis(this.reportingRepository, ergebnis, datenManager);
+			this.blockungsergebnis = new ProxyReportingGostKursplanungBlockungsergebnis(this.reportingContext, ergebnis, datenManager);
 
 			// Daten-Context für Thymeleaf erzeugen.
 			final Context context = new Context();

@@ -2,31 +2,31 @@ package de.svws_nrw.module.reporting.types.schueler.lernabschnitte;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOSchuelerZuweisung;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 
 /**
  * Proxy-Klasse im Rahmen des Reportings für Daten vom Typ Zuweisung und erweitert die Klasse {@link ReportingSchuelerZuweisung}.
  */
 public class ProxyReportingSchuelerZuweisung extends ReportingSchuelerZuweisung {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingSchuelerZuweisung}.
 	 *
-	 * @param reportingRepository Repository für das Reporting.
+	 * @param reportingContext Repository für das Reporting.
 	 * @param dto                 Das DTO mit den Datenbank-Daten.
 	 * @param lernabschnitt       Der Lernabschnitt des Schülers, dem diese Zuweisung zugeordnet ist.
 	 */
-	public ProxyReportingSchuelerZuweisung(final ReportingRepository reportingRepository, final DTOSchuelerZuweisung dto,
+	public ProxyReportingSchuelerZuweisung(final ReportingContext reportingContext, final DTOSchuelerZuweisung dto,
 			final ReportingSchuelerLernabschnitt lernabschnitt) {
 		super(lernabschnitt.schuljahresabschnitt().fach(dto.Fach_ID),
 				ersetzeNullBlankTrim(dto.Kursart),
 				lernabschnitt);
 
-		this.reportingRepository = reportingRepository;
+		this.reportingContext = reportingContext;
 	}
 
 
@@ -35,7 +35,7 @@ public class ProxyReportingSchuelerZuweisung extends ReportingSchuelerZuweisung 
 	 *
 	 * @return Repository für das Reporting
 	 */
-	public ReportingRepository reportingRepository() {
-		return reportingRepository;
+	public ReportingContext reportingContext() {
+		return reportingContext;
 	}
 }

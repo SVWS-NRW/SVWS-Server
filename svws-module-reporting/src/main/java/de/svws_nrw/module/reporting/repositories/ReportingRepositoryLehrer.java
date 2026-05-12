@@ -63,7 +63,7 @@ public class ReportingRepositoryLehrer {
 					+ "AND k.Schuljahresabschnitts_ID = ?1 AND kl.Lehrer_ID = ?2) "
 					+ "AND ld.Fachlehrer_ID = ?2";
 
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 	private Map<Long, LehrerStammdaten> mapLehrerStammdaten;
 	private final Map<Long, ReportingLehrer> mapLehrer = new HashMap<>();
@@ -71,25 +71,25 @@ public class ReportingRepositoryLehrer {
 	/**
 	 * Erstellt ein neues ReportingLehrerRepository und initialisiert die Lehrerstammdaten.
 	 *
-	 * @param reportingRepository Das zentrale Repository des Reporting-Moduls mit Zugriff auf die domänenspezifischen Repositories.
+	 * @param reportingContext Der zentrale Reporting-Context mit Zugriff auf die domänenspezifischen Repositories.
 	 *
 	 * @throws ApiOperationException Im Fehlerfall.
 	 */
-	public ReportingRepositoryLehrer(final ReportingRepository reportingRepository) throws ApiOperationException {
-		this.reportingRepository = reportingRepository;
+	public ReportingRepositoryLehrer(final ReportingContext reportingContext) throws ApiOperationException {
+		this.reportingContext = reportingContext;
 
 		initLehrerStammdaten();
 	}
 
 	private void initLehrerStammdaten() throws ApiOperationException {
 		try {
-			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Ermittle die Lehrerstammdaten.");
-			this.mapLehrerStammdaten = new DataLehrerStammdaten(this.reportingRepository.conn(), new DataLernplattformen(this.reportingRepository.conn()),
-					new DataEinwilligungsarten(this.reportingRepository.conn())).getAll().stream()
+			this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Ermittle die Lehrerstammdaten.");
+			this.mapLehrerStammdaten = new DataLehrerStammdaten(this.reportingContext.conn(), new DataLernplattformen(this.reportingContext.conn()),
+					new DataEinwilligungsarten(this.reportingContext.conn())).getAll().stream()
 					.collect(Collectors.toMap(l -> l.id, l -> l));
 		} catch (final Exception e) {
 			this.mapLehrerStammdaten = new HashMap<>();
-			this.reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die Lehrerstammdaten konnten nicht ermittelt werden.");
+			this.reportingContext.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die Lehrerstammdaten konnten nicht ermittelt werden.");
 			throw new ApiOperationException(Status.NOT_FOUND, e,
 					"FEHLER: Die Lehrerstammdaten konnten nicht ermittelt werden.");
 		}
@@ -115,21 +115,21 @@ public class ReportingRepositoryLehrer {
 		if (!mapLehrerStammdaten.containsKey(idLehrer)) {
 			try {
 				final LehrerStammdaten fehlendeLehrerstammdaten =
-						new DataLehrerStammdaten(this.reportingRepository.conn(), new DataLernplattformen(this.reportingRepository.conn()),
-								new DataEinwilligungsarten(this.reportingRepository.conn())).getById(idLehrer);
+						new DataLehrerStammdaten(this.reportingContext.conn(), new DataLernplattformen(this.reportingContext.conn()),
+								new DataEinwilligungsarten(this.reportingContext.conn())).getById(idLehrer);
 				mapLehrerStammdaten.put(fehlendeLehrerstammdaten.id, fehlendeLehrerstammdaten);
 			} catch (final ApiOperationException e) {
 				ReportingExceptionUtils.logException(
-						"INFO: Fehler bei der Ermittlung der fehlenden Lehrerstammdaten einer Lehrkraft aus der Datenbank im ReportingRepository. "
+						"INFO: Fehler bei der Ermittlung der fehlenden Lehrerstammdaten einer Lehrkraft aus der Datenbank im ReportingContext. "
 								+ "Es wird ein Fallback-Lehrer mit leeren Stammdaten zurückgegeben.",
-						e, this.reportingRepository.logger(), LogLevel.INFO, 0);
+						e, this.reportingContext.logger(), LogLevel.INFO, 0);
 				final LehrerStammdaten fallback = new LehrerStammdaten();
 				fallback.id = idLehrer;
-				return new ProxyReportingLehrer(this.reportingRepository, fallback);
+				return new ProxyReportingLehrer(this.reportingContext, fallback);
 			}
 		}
 
-		return mapLehrer.computeIfAbsent(idLehrer, key -> new ProxyReportingLehrer(this.reportingRepository, mapLehrerStammdaten.get(key)));
+		return mapLehrer.computeIfAbsent(idLehrer, key -> new ProxyReportingLehrer(this.reportingContext, mapLehrerStammdaten.get(key)));
 	}
 
 	/**
@@ -153,7 +153,7 @@ public class ReportingRepositoryLehrer {
 	 */
 	public List<ReportingLehrer> lehrer(final List<Long> idsLehrer, final boolean sortiereListe) {
 		final Optional<Comparator<ReportingLehrer>> optionalComparator = sortiereListe
-				? ComparatorFactory.buildOptionalComparator(this.reportingRepository.sortierungService(), this.reportingRepository.logger(),
+				? ComparatorFactory.buildOptionalComparator(this.reportingContext.sortierungService(), this.reportingContext.logger(),
 						ReportingLehrer.class.getSimpleName(),
 						SortierungRegistryReportingLehrer.sortierungRegistry())
 				: Optional.empty();
@@ -161,20 +161,20 @@ public class ReportingRepositoryLehrer {
 		return ReportingListBuilder.erstelleReportingListe(idsLehrer, mapLehrerStammdaten, mapLehrer,
 				fehlendeIds -> {
 					try {
-						return new DataLehrerStammdaten(this.reportingRepository.conn(), new DataLernplattformen(this.reportingRepository.conn()),
-								new DataEinwilligungsarten(this.reportingRepository.conn())).getListByIDs(fehlendeIds);
+						return new DataLehrerStammdaten(this.reportingContext.conn(), new DataLernplattformen(this.reportingContext.conn()),
+								new DataEinwilligungsarten(this.reportingContext.conn())).getListByIDs(fehlendeIds);
 					} catch (final ApiOperationException e) {
 						ReportingExceptionUtils.logException(
 								"FEHLER: Fehler bei der Ermittlung der fehlenden Lehrerstammdaten einer Lehrerliste aus der Datenbank im "
-										+ "ReportingRepository.",
-								e, this.reportingRepository.logger(), LogLevel.ERROR, 0);
+										+ "ReportingContext.",
+								e, this.reportingContext.logger(), LogLevel.ERROR, 0);
 						return new ArrayList<>();
 					}
 				},
-				key -> new ProxyReportingLehrer(this.reportingRepository, mapLehrerStammdaten.get(key)),
+				key -> new ProxyReportingLehrer(this.reportingContext, mapLehrerStammdaten.get(key)),
 				stammdaten -> stammdaten.id,
 				optionalComparator,
-				"Lehrer", this.reportingRepository.logger());
+				"Lehrer", this.reportingContext.logger());
 	}
 
 	/**
@@ -252,12 +252,12 @@ public class ReportingRepositoryLehrer {
 
 	private List<Object[]> queryLeistungsdaten(final String query, final long idSchuljahresabschnitt, final long idLehrer) {
 		try {
-			return this.reportingRepository.conn().queryList(query, Object[].class, idSchuljahresabschnitt, idLehrer);
+			return this.reportingContext.conn().queryList(query, Object[].class, idSchuljahresabschnitt, idLehrer);
 		} catch (final Exception e) {
 			ReportingExceptionUtils.logException(
 					"FEHLER: Fehler bei der Ermittlung von Leistungsdaten für Lehrer-ID %d im Schuljahresabschnitt %d.".formatted(idLehrer,
 							idSchuljahresabschnitt),
-					e, this.reportingRepository.logger(), LogLevel.ERROR, 0);
+					e, this.reportingContext.logger(), LogLevel.ERROR, 0);
 			return new ArrayList<>();
 		}
 	}

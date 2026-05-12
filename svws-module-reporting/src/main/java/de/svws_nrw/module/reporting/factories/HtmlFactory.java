@@ -33,7 +33,7 @@ import de.svws_nrw.module.reporting.html.contexts.HtmlContextStundenplanungRaumS
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextStundenplanungSchuelerStundenplan;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextAufteilbar;
 import de.svws_nrw.module.reporting.parameter.ReportingParameterTypisiert;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.validierung.ReportingValidierung;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -86,8 +86,8 @@ public class HtmlFactory {
 	/** Konstante für die Bezeichnung des SchuelerStundenplaene-Kontextes in der Map der HTML-Kontexte. */
 	private static final String CONTEXT_STUNDENPLANUNG_SCHUELER = "SchuelerStundenplaene";
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
-	private final ReportingRepository reportingRepository;
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	private final ReportingContext reportingContext;
 
 	/** Einstellungen und Daten zum Steuern der Report-Generierung. */
 	private final ReportingParameterTypisiert reportingParameter;
@@ -102,39 +102,39 @@ public class HtmlFactory {
 	/**
 	 * Erzeugt eine neue HTML-Factory, um eine HTML-Datei aus einem HTML-Template zu erzeugen.
 	 *
-	 * @param reportingRepository        Repository für das Reporting, welches verschiedene Daten aus der Datenbank zwischenspeichert.
+	 * @param reportingContext        Repository für das Reporting, welches verschiedene Daten aus der Datenbank zwischenspeichert.
 	 *
 	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
-	protected HtmlFactory(final ReportingRepository reportingRepository)
+	protected HtmlFactory(final ReportingContext reportingContext)
 			throws ApiOperationException {
 
-		this.reportingRepository = reportingRepository;
-		this.reportingParameter = this.reportingRepository.reportingParameter();
+		this.reportingContext = reportingContext;
+		this.reportingParameter = this.reportingContext.reportingParameter();
 
-		this.reportingRepository.logger().logLn(LogLevel.DEBUG, 0,
+		this.reportingContext.logger().logLn(LogLevel.DEBUG, 0,
 				">>> Beginn der Initialisierung der HTML-Factory und der Validierung der übergebenen Daten.");
 
 		// Validiere die Angaben zur HTML-Vorlage.
 		this.reportingReportvorlage = this.reportingParameter.reportVorlage();
 		if (this.reportingReportvorlage == null) {
-			this.reportingRepository.logger()
+			this.reportingContext.logger()
 					.logLn(LogLevel.ERROR, 4, "FEHLER: Die Template-Definitionen für die HTML-Factory sind inkonsistent.");
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Die Template-Definitionen für die HTML-Factory sind inkonsistent.");
 		}
 
 		// Prüfe, ob die Rechte des Benutzers zu den in der TemplateDefinition hinterlegten Rechten passen.
-		this.reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+		this.reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 				"Prüfe die Berechtigungen des Benutzers für den Zugriff auf die für die Ausgabe notwendigen Daten.");
-		if (!this.reportingRepository.conn().getUser().pruefeKompetenz(new HashSet<>(reportingReportvorlage.getBenutzerKompetenzen()))) {
-			this.reportingRepository.logger()
+		if (!this.reportingContext.conn().getUser().pruefeKompetenz(new HashSet<>(reportingReportvorlage.getBenutzerKompetenzen()))) {
+			this.reportingContext.logger()
 					.logLn(LogLevel.ERROR, 4,
 							"FEHLER: Der Benutzer hat nicht die erforderlichen Rechte, um auf die Daten für die Erstellung der Ausgabe zu zugreifen.");
 			throw new ApiOperationException(Status.FORBIDDEN,
 					"FEHLER: Der Benutzer hat nicht die erforderlichen Rechte, um auf die Daten für die Erstellung der Ausgabe zu zugreifen.");
 		}
 
-		this.reportingRepository.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Initialisierung der HTML-Factory und der Validierung der übergebenen Daten.");
+		this.reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Initialisierung der HTML-Factory und der Validierung der übergebenen Daten.");
 
 		getContexts();
 	}
@@ -147,10 +147,10 @@ public class HtmlFactory {
 	 */
 	private void getContexts() throws ApiOperationException {
 
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Erzeugung der Datenkontexte für die HTML-Generierung.");
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Erzeuge Datenkontext Schule für die HTML-Generierung.");
+		reportingContext.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Erzeugung der Datenkontexte für die HTML-Generierung.");
+		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Erzeuge Datenkontext Schule für die HTML-Generierung.");
 
-		final HtmlContextBasisdaten htmlContextBasisdaten = new HtmlContextBasisdaten(reportingRepository);
+		final HtmlContextBasisdaten htmlContextBasisdaten = new HtmlContextBasisdaten(reportingContext);
 		mapHtmlContexts.put(CONTEXT_BASISDATEN, htmlContextBasisdaten);
 
 		// Betrachte die HTML-Template-Definition und erzeuge damit die korrekten Contexts der Hauptdaten
@@ -191,7 +191,7 @@ public class HtmlFactory {
 				break;
 		}
 
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der Datenkontexte für die HTML-Generierung.");
+		reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der Datenkontexte für die HTML-Generierung.");
 	}
 
 	/**
@@ -200,7 +200,7 @@ public class HtmlFactory {
 	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public void initContextSchueler() throws ApiOperationException {
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Schüler für die HTML-Generierung.");
+		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Schüler für die HTML-Generierung.");
 
 		final boolean istGostLaufbahnplanung =
 				((reportingReportvorlage == ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN)
@@ -209,11 +209,11 @@ public class HtmlFactory {
 				((reportingReportvorlage == ReportingReportvorlage.SCHUELER_V_GOST_ABITUR_APO_ANLAGE_12_A3)
 						|| (reportingReportvorlage == ReportingReportvorlage.SCHUELER_V_GOST_ABITUR_APO_ANLAGE_12_A4));
 
-		ReportingValidierung.validiereDatenFuerSchueler(reportingRepository, reportingParameter.idsHauptdaten(), istGostLaufbahnplanung, istGostAbitur);
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+		ReportingValidierung.validiereDatenFuerSchueler(reportingContext, reportingParameter.idsHauptdaten(), istGostLaufbahnplanung, istGostAbitur);
+		reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 				("Erzeuge Datenkontext Schüler für die HTML-Generierung - %d IDs von Schülern wurden übergeben für Template %s.")
 						.formatted(reportingParameter.idsHauptdaten().size(), reportingReportvorlage.name()));
-		final HtmlContextSchueler htmlContextSchueler = new HtmlContextSchueler(reportingRepository);
+		final HtmlContextSchueler htmlContextSchueler = new HtmlContextSchueler(reportingContext);
 		mapHtmlContexts.put(CONTEXT_SCHUELER, htmlContextSchueler);
 	}
 
@@ -223,12 +223,12 @@ public class HtmlFactory {
 	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public void initContextKlassen() throws ApiOperationException {
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Klassen für die HTML-Generierung.");
-		ReportingValidierung.validiereDatenFuerKlassen(reportingRepository, reportingParameter.idsHauptdaten());
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Klassen für die HTML-Generierung.");
+		ReportingValidierung.validiereDatenFuerKlassen(reportingContext, reportingParameter.idsHauptdaten());
+		reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 				("Erzeuge Datenkontext Klassen für die HTML-Generierung - %d IDs von Klassen wurden übergeben für Template %s.")
 						.formatted(reportingParameter.idsHauptdaten().size(), reportingReportvorlage.name()));
-		final HtmlContextKlassen htmlContextKlassen = new HtmlContextKlassen(reportingRepository);
+		final HtmlContextKlassen htmlContextKlassen = new HtmlContextKlassen(reportingContext);
 		mapHtmlContexts.put(CONTEXT_KLASSEN, htmlContextKlassen);
 	}
 
@@ -238,12 +238,12 @@ public class HtmlFactory {
 	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public void initContextKurse() throws ApiOperationException {
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Kurse für die HTML-Generierung.");
-		ReportingValidierung.validiereDatenFuerKurse(reportingRepository, reportingParameter.idsHauptdaten());
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Kurse für die HTML-Generierung.");
+		ReportingValidierung.validiereDatenFuerKurse(reportingContext, reportingParameter.idsHauptdaten());
+		reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 				("Erzeuge Datenkontext Kurse für die HTML-Generierung - %d IDs von Kursen wurden übergeben für Template %s.")
 						.formatted(reportingParameter.idsHauptdaten().size(), reportingReportvorlage.name()));
-		final HtmlContextKurse htmlContextKurse = new HtmlContextKurse(reportingRepository);
+		final HtmlContextKurse htmlContextKurse = new HtmlContextKurse(reportingContext);
 		mapHtmlContexts.put(CONTEXT_KURSE, htmlContextKurse);
 	}
 
@@ -253,12 +253,12 @@ public class HtmlFactory {
 	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public void initContextLehrer() throws ApiOperationException {
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Lehrer für die HTML-Generierung.");
-		ReportingValidierung.validiereDatenFuerLehrer(reportingRepository, reportingParameter.idsHauptdaten());
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Lehrer für die HTML-Generierung.");
+		ReportingValidierung.validiereDatenFuerLehrer(reportingContext, reportingParameter.idsHauptdaten());
+		reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 				("Erzeuge Datenkontext Lehrer für die HTML-Generierung - %d IDs von Lehrern wurden übergeben für Template %s.")
 						.formatted(reportingParameter.idsHauptdaten().size(), reportingReportvorlage.name()));
-		final HtmlContextLehrer htmlContextLehrer = new HtmlContextLehrer(reportingRepository);
+		final HtmlContextLehrer htmlContextLehrer = new HtmlContextLehrer(reportingContext);
 		mapHtmlContexts.put(CONTEXT_LEHRER, htmlContextLehrer);
 	}
 
@@ -268,14 +268,14 @@ public class HtmlFactory {
 	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public void initContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken() throws ApiOperationException {
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für einen Gost-Laufbahnplan eines Abiturjahrgangs und dessen "
+		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für einen Gost-Laufbahnplan eines Abiturjahrgangs und dessen "
 				+ "Fachwahlstatistiken für die HTML-Generierung.");
-		ReportingValidierung.validiereDatenFuerGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken(reportingRepository);
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+		ReportingValidierung.validiereDatenFuerGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken(reportingContext);
+		reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 				"Erzeuge Datenkontext Gost-Laufbahnplan-Abiturjahrgang-Fachwahlstatistiken für die HTML-Generierung mit Template %s."
 						.formatted(reportingReportvorlage.name()));
 		final HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken htmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken =
-				new HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken(reportingRepository);
+				new HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken(reportingContext);
 		mapHtmlContexts.put(CONTEXT_GOST_LAUFBAHNPLANUNG_FACHWAHLSTATISTIKEN, htmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken);
 	}
 
@@ -285,16 +285,16 @@ public class HtmlFactory {
 	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public void initContextGostKursplanung() throws ApiOperationException {
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für ein Gost-Blockungsergebnis für die HTML-Generierung.");
-		ReportingValidierung.validiereDatenFuerGostKursplanungBlockungsergebnis(reportingRepository);
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für ein Gost-Blockungsergebnis für die HTML-Generierung.");
+		ReportingValidierung.validiereDatenFuerGostKursplanungBlockungsergebnis(reportingContext);
+		reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 				"Erzeuge Datenkontext Gost-Kursplanung-Blockungsergebnis für die HTML-Generierung mit ID %s für Template %s."
 						.formatted(reportingParameter.idHauptdatenObjekt(), reportingReportvorlage.name()));
 		final HtmlContextGostKursplanungBlockungsergebnis htmlContextGostBlockung = switch (reportingReportvorlage) {
 			case GOST_KURSPLANUNG_V_KURS_MIT_KURSSCHUELERN, GOST_KURSPLANUNG_V_KURSE_MIT_STATISTIKWERTEN ->
-				new HtmlContextGostKursplanungBlockungsergebnisKurse(reportingRepository);
+				new HtmlContextGostKursplanungBlockungsergebnisKurse(reportingContext);
 			case GOST_KURSPLANUNG_V_SCHUELER_MIT_KURSEN, GOST_KURSPLANUNG_V_SCHUELER_MIT_SCHIENEN_KURSEN ->
-				new HtmlContextGostKursplanungBlockungsergebnisSchueler(reportingRepository);
+				new HtmlContextGostKursplanungBlockungsergebnisSchueler(reportingContext);
 			default -> throw new ApiOperationException(Response.Status.NOT_FOUND,
 					"FEHLER: Für die Reportvorlage %s ist im Datenkontext GOSt-Kursplanung kein HTML-Context implementiert.".formatted(
 							reportingReportvorlage.name()));
@@ -308,13 +308,13 @@ public class HtmlFactory {
 	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public void initContextGostKlausurplanung() throws ApiOperationException {
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für einen Gost-Klausurplan für die HTML-Generierung.");
-		ReportingValidierung.validiereDatenFuerGostKlausurplanungKlausurplan(reportingRepository);
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für einen Gost-Klausurplan für die HTML-Generierung.");
+		ReportingValidierung.validiereDatenFuerGostKlausurplanungKlausurplan(reportingContext);
+		reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 				"Erzeuge Datenkontext Gost-Klausurplanung für die HTML-Generierung mit Template %s.".formatted(reportingReportvorlage.name()));
 		final HtmlContextGostKlausurplanungKlausurplan htmlContextGostKlausurplan = switch (reportingReportvorlage) {
-			case GOST_KLAUSURPLANUNG_V_SCHUELER_MIT_KLAUSUREN -> new HtmlContextGostKlausurplanungKlausurplanSchueler(reportingRepository);
-			case GOST_KLAUSURPLANUNG_V_KLAUSURTERMINE_MIT_KURSEN -> new HtmlContextGostKlausurplanungKlausurplanTermine(reportingRepository);
+			case GOST_KLAUSURPLANUNG_V_SCHUELER_MIT_KLAUSUREN -> new HtmlContextGostKlausurplanungKlausurplanSchueler(reportingContext);
+			case GOST_KLAUSURPLANUNG_V_KLAUSURTERMINE_MIT_KURSEN -> new HtmlContextGostKlausurplanungKlausurplanTermine(reportingContext);
 			default -> throw new ApiOperationException(Response.Status.NOT_FOUND,
 					"FEHLER: Für die Reportvorlage %s ist im Datenkontext GOSt-Klausurplanung kein HTML-Context implementiert.".formatted(
 							reportingReportvorlage.name()));
@@ -328,49 +328,49 @@ public class HtmlFactory {
 	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public void initContextStundenplanung() throws ApiOperationException {
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für einen Stundenplan für die HTML-Generierung.");
-		ReportingValidierung.validiereDatenFuerStundenplanung(reportingRepository);
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für einen Stundenplan für die HTML-Generierung.");
+		ReportingValidierung.validiereDatenFuerStundenplanung(reportingContext);
+		reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 				"Erzeuge Datenkontext Stundenplan für die HTML-Generierung mit Template %s.".formatted(reportingReportvorlage.name()));
 		switch (reportingReportvorlage) {
 			case STUNDENPLANUNG_V_FACH_STUNDENPLAN -> {
 				final HtmlContextStundenplanungFachStundenplan htmlContextFachStundenplan =
-						new HtmlContextStundenplanungFachStundenplan(reportingRepository,
-								reportingRepository.repositoryStundenplan().stundenplan(reportingParameter.idHauptdatenObjekt()),
+						new HtmlContextStundenplanungFachStundenplan(reportingContext,
+								reportingContext.repositoryStundenplan().stundenplan(reportingParameter.idHauptdatenObjekt()),
 								reportingParameter.idsHauptdaten());
 				mapHtmlContexts.put(CONTEXT_STUNDENPLANUNG_FAECHER, htmlContextFachStundenplan);
 			}
 			case STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN -> {
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten der Klassen für einen Stundenplan für die HTML-Generierung.");
-				ReportingValidierung.validiereDatenFuerKlassen(reportingRepository, reportingParameter.idsHauptdaten());
+				reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten der Klassen für einen Stundenplan für die HTML-Generierung.");
+				ReportingValidierung.validiereDatenFuerKlassen(reportingContext, reportingParameter.idsHauptdaten());
 				final HtmlContextStundenplanungKlassenStundenplan htmlContextKlassenStundenplan =
-						new HtmlContextStundenplanungKlassenStundenplan(reportingRepository,
-								reportingRepository.repositoryStundenplan().stundenplan(reportingParameter.idHauptdatenObjekt()),
+						new HtmlContextStundenplanungKlassenStundenplan(reportingContext,
+								reportingContext.repositoryStundenplan().stundenplan(reportingParameter.idHauptdatenObjekt()),
 								reportingParameter.idsHauptdaten());
 				mapHtmlContexts.put(CONTEXT_STUNDENPLANUNG_KLASSEN, htmlContextKlassenStundenplan);
 			}
 			case STUNDENPLANUNG_V_LEHRER_STUNDENPLAN, STUNDENPLANUNG_V_LEHRER_STUNDENPLAN_KOMBINIERT -> {
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten der Lehrkräfte für einen Stundenplan für die HTML-Generierung.");
-				ReportingValidierung.validiereDatenFuerLehrer(reportingRepository, reportingParameter.idsHauptdaten());
+				reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten der Lehrkräfte für einen Stundenplan für die HTML-Generierung.");
+				ReportingValidierung.validiereDatenFuerLehrer(reportingContext, reportingParameter.idsHauptdaten());
 				final HtmlContextStundenplanungLehrerStundenplan htmlContextLehrerStundenplan =
-						new HtmlContextStundenplanungLehrerStundenplan(reportingRepository,
-								reportingRepository.repositoryStundenplan().stundenplan(reportingParameter.idHauptdatenObjekt()),
+						new HtmlContextStundenplanungLehrerStundenplan(reportingContext,
+								reportingContext.repositoryStundenplan().stundenplan(reportingParameter.idHauptdatenObjekt()),
 								reportingParameter.idsHauptdaten());
 				mapHtmlContexts.put(CONTEXT_STUNDENPLANUNG_LEHRER, htmlContextLehrerStundenplan);
 			}
 			case STUNDENPLANUNG_V_RAUM_STUNDENPLAN -> {
 				final HtmlContextStundenplanungRaumStundenplan htmlContextRaeumeStundenplan =
-						new HtmlContextStundenplanungRaumStundenplan(reportingRepository,
-								reportingRepository.repositoryStundenplan().stundenplan(reportingParameter.idHauptdatenObjekt()),
+						new HtmlContextStundenplanungRaumStundenplan(reportingContext,
+								reportingContext.repositoryStundenplan().stundenplan(reportingParameter.idHauptdatenObjekt()),
 								reportingParameter.idsHauptdaten());
 				mapHtmlContexts.put(CONTEXT_STUNDENPLANUNG_RAEUME, htmlContextRaeumeStundenplan);
 			}
 			case STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN -> {
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten der Schüler für einen Stundenplan für die HTML-Generierung.");
-				ReportingValidierung.validiereDatenFuerSchueler(reportingRepository, reportingParameter.idsHauptdaten(), false, false);
+				reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten der Schüler für einen Stundenplan für die HTML-Generierung.");
+				ReportingValidierung.validiereDatenFuerSchueler(reportingContext, reportingParameter.idsHauptdaten(), false, false);
 				final HtmlContextStundenplanungSchuelerStundenplan htmlContextSchuelerStundenplan =
-						new HtmlContextStundenplanungSchuelerStundenplan(reportingRepository,
-								reportingRepository.repositoryStundenplan().stundenplan(reportingParameter.idHauptdatenObjekt()),
+						new HtmlContextStundenplanungSchuelerStundenplan(reportingContext,
+								reportingContext.repositoryStundenplan().stundenplan(reportingParameter.idHauptdatenObjekt()),
 								reportingParameter.idsHauptdaten());
 				mapHtmlContexts.put(CONTEXT_STUNDENPLANUNG_SCHUELER, htmlContextSchuelerStundenplan);
 			}
@@ -402,27 +402,27 @@ public class HtmlFactory {
 	 */
 	protected Response createHtmlResponse() throws ApiOperationException {
 		try {
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung.");
+			reportingContext.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung.");
 			final List<ReportBuilderHtml> htmlBuilders = getHtmlBuilders();
 			if (!htmlBuilders.isEmpty()) {
 				final ReportBuilderHtml firstHtmlBuilder = htmlBuilders.getFirst();
 				if (htmlBuilders.size() == 1) {
 					final String html = firstHtmlBuilder.generate();
-					reportingRepository.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung.");
+					reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung.");
 					return Response.ok(html, "text/html; charset=UTF-8").header("Cache-Control", "no-store").build();
 				} else {
-					reportingRepository.logger().logLn(LogLevel.ERROR, 0,
+					reportingContext.logger().logLn(LogLevel.ERROR, 0,
 							"### Fehler bei der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung. Es wurde mehr als ein Builder übergeben.");
 					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
 							"### Fehler bei der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung. Es wurde mehr als ein Builder übergeben.");
 				}
 			}
-			reportingRepository.logger().logLn(LogLevel.ERROR, 0,
+			reportingContext.logger().logLn(LogLevel.ERROR, 0,
 					"### Fehler bei der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung. Es sind keine HTML-Inhalte generiert worden.");
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
 					"### Fehler bei der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung. Es sind keine HTML-Inhalte generiert worden.");
 		} catch (final Exception e) {
-			reportingRepository.logger().logLn(LogLevel.ERROR, 0, "### Fehler bei der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung.");
+			reportingContext.logger().logLn(LogLevel.ERROR, 0, "### Fehler bei der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung.");
 			throw e;
 		}
 	}
@@ -437,12 +437,12 @@ public class HtmlFactory {
 	 */
 	private List<ReportBuilderHtml> getHtmlBuilders() throws ApiOperationException {
 
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Erzeugung der HTML-Builder.");
+		reportingContext.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Erzeugung der HTML-Builder.");
 
 		// Lade den Inhalt des HTML-Codes aus dem Template.
 		final String htmlTemplateCode = ResourceUtils.text(reportingReportvorlage.getRootPfadHtmlTemplate());
 		if (htmlTemplateCode == null) {
-			reportingRepository.logger().logLn(LogLevel.ERROR, 4, "### FEHLER: Die HTML-Template-Datei für die HTML-Erzeugung konnte nicht eingelesen werden.");
+			reportingContext.logger().logLn(LogLevel.ERROR, 4, "### FEHLER: Die HTML-Template-Datei für die HTML-Erzeugung konnte nicht eingelesen werden.");
 			throw new ApiOperationException(Status.NOT_FOUND, "### FEHLER: Die HTML-Template-Datei für die HTML-Erzeugung konnte nicht eingelesen werden.");
 		}
 
@@ -453,7 +453,7 @@ public class HtmlFactory {
 		} else {
 			htmlBuilders.add(getReportBuilderHtml(htmlTemplateCode));
 		}
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der HTML-Builder.");
+		reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der HTML-Builder.");
 		return htmlBuilders;
 	}
 
@@ -470,7 +470,7 @@ public class HtmlFactory {
 		final HtmlContext<?> baseContext = mapHtmlContexts.get(contextBezeichnung);
 
 		if (baseContext instanceof final HtmlContextAufteilbar<?> aufteilbarerContext) {
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+			reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 					"Erzeuge einzelne Kontexte für " + contextBezeichnung + " für Template " + reportingReportvorlage.name());
 
 			final List<? extends HtmlContext<?>> einzelContexts = aufteilbarerContext.getEinzelContexts();
@@ -552,7 +552,7 @@ public class HtmlFactory {
 						.withDateinamensvorlage(ladeDateinamensvorlageAusDatei(reportingReportvorlage.getPfadDateinamensvorlage()))
 						.withStatischerDateiname(reportingReportvorlage.getDateiname())
 						.withRootPfad(ReportingReportvorlage.getRootPfad())
-						.withLogger(reportingRepository.logger());
+						.withLogger(reportingContext.logger());
 		return new ReportBuilderHtml(reportBuilderContext);
 	}
 

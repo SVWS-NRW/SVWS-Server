@@ -3,7 +3,7 @@ package de.svws_nrw.module.reporting.types.schueler.schulbesuch;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchSchule;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.schule.ProxyReportingSchulkatalogEintragNRW;
 
 /**
@@ -13,17 +13,17 @@ import de.svws_nrw.module.reporting.types.schule.ProxyReportingSchulkatalogEintr
  */
 public class ProxyReportingSchuelerSchulbesuchSchule extends ReportingSchuelerSchulbesuchSchule {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 	/**
 	 * Erstellt eine neue Proxy-Instanz aus einem SchuelerSchulbesuchSchule-Objekt.
 	 *
-	 * @param reportingRepository Repository für das Reporting.
+	 * @param reportingContext Repository für das Reporting.
 	 * @param schulbesuch Das SchuelerSchulbesuchSchule-Objekt, aus dem die Proxy-Instanz erstellt wird
 	 */
-	public ProxyReportingSchuelerSchulbesuchSchule(final ReportingRepository reportingRepository, final SchuelerSchulbesuchSchule schulbesuch) {
+	public ProxyReportingSchuelerSchulbesuchSchule(final ReportingContext reportingContext, final SchuelerSchulbesuchSchule schulbesuch) {
 		super(
 				ersetzeNullBlankTrim(schulbesuch.datumVon),
 				ersetzeNullBlankTrim(schulbesuch.datumBis),
@@ -32,30 +32,30 @@ public class ProxyReportingSchuelerSchulbesuchSchule extends ReportingSchuelerSc
 				schulbesuch.idOrganisationsform,
 				ersetzeNullBlankTrim(schulbesuch.jahrgangVon),
 				ersetzeNullBlankTrim(schulbesuch.jahrgangBis),
-				createSchulkatalogEintrag(reportingRepository, schulbesuch.idSchule),
+				createSchulkatalogEintrag(reportingContext, schulbesuch.idSchule),
 				ersetzeNullBlankTrim(schulbesuch.schluesselSchulgliederung)
 		);
-		this.reportingRepository = reportingRepository;
+		this.reportingContext = reportingContext;
 	}
 
 	/**
 	 * Erstellt einen ProxyReportingSchulkatalogEintragNRW aus der Schul-ID.
 	 *
-	 * @param reportingRepository Repository für das Reporting
+	 * @param reportingContext Repository für das Reporting
 	 * @param idSchule Die ID der Schule
 	 * @return Ein ProxyReportingSchulkatalogEintragNRW-Objekt oder null, wenn die Schule nicht gefunden wurde
 	 */
-	private static ProxyReportingSchulkatalogEintragNRW createSchulkatalogEintrag(final ReportingRepository reportingRepository, final Long idSchule) {
+	private static ProxyReportingSchulkatalogEintragNRW createSchulkatalogEintrag(final ReportingContext reportingContext, final Long idSchule) {
 		if (idSchule == null) {
 			return null;
 		}
 
-		final var schulEintrag = reportingRepository.repositoryKataloge().schulen().get(idSchule);
+		final var schulEintrag = reportingContext.repositoryKataloge().schulen().get(idSchule);
 		if (schulEintrag == null) {
 			return null;
 		}
 
-		return new ProxyReportingSchulkatalogEintragNRW(reportingRepository, schulEintrag);
+		return new ProxyReportingSchulkatalogEintragNRW(reportingContext, schulEintrag);
 	}
 
 	// ##### Getter #####
@@ -65,7 +65,7 @@ public class ProxyReportingSchuelerSchulbesuchSchule extends ReportingSchuelerSc
 	 *
 	 * @return Repository für das Reporting
 	 */
-	public ReportingRepository reportingRepository() {
-		return reportingRepository;
+	public ReportingContext reportingContext() {
+		return reportingContext;
 	}
 }

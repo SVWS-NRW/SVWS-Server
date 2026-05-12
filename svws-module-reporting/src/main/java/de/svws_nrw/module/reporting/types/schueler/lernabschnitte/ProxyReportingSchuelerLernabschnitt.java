@@ -6,7 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittsdaten;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
@@ -16,18 +16,18 @@ import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
  */
 public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernabschnitt {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingSchuelerLernabschnitt}.
 	 *
-	 * @param reportingRepository Repository für das Reporting.
+	 * @param reportingContext Repository für das Reporting.
 	 * @param schuelerLernabschnittsdaten Stammdaten-Objekt aus der DB.
 	 */
-	public ProxyReportingSchuelerLernabschnitt(final ReportingRepository reportingRepository, final SchuelerLernabschnittsdaten schuelerLernabschnittsdaten) {
+	public ProxyReportingSchuelerLernabschnitt(final ReportingContext reportingContext, final SchuelerLernabschnittsdaten schuelerLernabschnittsdaten) {
 		super(ersetzeNullBlankTrim(schuelerLernabschnittsdaten.abschluss),
 				schuelerLernabschnittsdaten.abschlussart,
 				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.abschlussBerufsbildend),
@@ -89,17 +89,17 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.bemerkungen.zeugnisAllgemein),
 				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.bemerkungen.zeugnisLELS));
 
-		this.reportingRepository = reportingRepository;
+		this.reportingContext = reportingContext;
 
-		super.foerderschwerpunkt1 = this.reportingRepository.repositoryKataloge().foerderschwerpunkte().get(schuelerLernabschnittsdaten.foerderschwerpunkt1ID);
-		super.foerderschwerpunkt2 = this.reportingRepository.repositoryKataloge().foerderschwerpunkte().get(schuelerLernabschnittsdaten.foerderschwerpunkt2ID);
+		super.foerderschwerpunkt1 = this.reportingContext.repositoryKataloge().foerderschwerpunkte().get(schuelerLernabschnittsdaten.foerderschwerpunkt1ID);
+		super.foerderschwerpunkt2 = this.reportingContext.repositoryKataloge().foerderschwerpunkte().get(schuelerLernabschnittsdaten.foerderschwerpunkt2ID);
 
-		super.schuljahresabschnitt = this.reportingRepository.repositorySchule().schuljahresabschnitt(super.idSchuljahresabschnitt());
+		super.schuljahresabschnitt = this.reportingContext.repositorySchule().schuljahresabschnitt(super.idSchuljahresabschnitt());
 
-		super.schueler = this.reportingRepository.repositorySchueler().schueler().get(schuelerLernabschnittsdaten.schuelerID);
+		super.schueler = this.reportingContext.repositorySchueler().schueler().get(schuelerLernabschnittsdaten.schuelerID);
 
 		schuelerLernabschnittsdaten.leistungsdaten.forEach(
-				l -> this.reportingRepository.repositorySchueler().leistungsdaten().add(this.schueler().id(), this.id(), l.id, l));
+				l -> this.reportingContext.repositorySchueler().leistungsdaten().add(this.schueler().id(), this.id(), l.id, l));
 	}
 
 
@@ -131,8 +131,8 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	 *
 	 * @return Repository für das Reporting
 	 */
-	public ReportingRepository reportingRepository() {
-		return reportingRepository;
+	public ReportingContext reportingContext() {
+		return reportingContext;
 	}
 
 
@@ -144,7 +144,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	@Override
 	public ReportingKlasse folgeklasse() {
 		if ((super.folgeklasse() == null) && (super.idFolgeklasse() != null) && (super.idFolgeklasse() >= 0)) {
-			super.folgeklasse = this.reportingRepository.repositoryLerngruppen().klasse(super.idFolgeklasse());
+			super.folgeklasse = this.reportingContext.repositoryLerngruppen().klasse(super.idFolgeklasse());
 		}
 		return super.folgeklasse();
 	}
@@ -182,13 +182,13 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	 */
 	@Override
 	public List<ReportingSchuelerLeistungsdaten> leistungsdaten() {
-		if (!this.reportingRepository.repositorySchueler().leistungsdaten().containsKey1(this.schueler.id())) {
-			this.reportingRepository.repositorySchueler().leistungsdatenZuLernabschnitt(this.schueler().id(), this.id());
+		if (!this.reportingContext.repositorySchueler().leistungsdaten().containsKey1(this.schueler.id())) {
+			this.reportingContext.repositorySchueler().leistungsdatenZuLernabschnitt(this.schueler().id(), this.id());
 		}
 		if (super.leistungsdaten().isEmpty()) {
-			super.setLeistungsdaten(this.reportingRepository.repositorySchueler().leistungsdaten()
+			super.setLeistungsdaten(this.reportingContext.repositorySchueler().leistungsdaten()
 					.get12(this.schueler().id(), this.id()).stream()
-					.map(l -> (ReportingSchuelerLeistungsdaten) new ProxyReportingSchuelerLeistungsdaten(reportingRepository, this, l))
+					.map(l -> (ReportingSchuelerLeistungsdaten) new ProxyReportingSchuelerLeistungsdaten(reportingContext, this, l))
 					.toList());
 		}
 		return super.leistungsdaten();
@@ -204,7 +204,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	@Override
 	public ReportingLehrer sonderpaedagoge() {
 		if ((super.sonderpaedagoge() == null) && (super.idSonderpaedagoge() != null) && (super.idSonderpaedagoge() >= 0)) {
-			super.sonderpaedagoge = this.reportingRepository.repositoryLehrer().lehrer(super.idSonderpaedagoge());
+			super.sonderpaedagoge = this.reportingContext.repositoryLehrer().lehrer(super.idSonderpaedagoge());
 		}
 		return super.sonderpaedagoge();
 	}
@@ -217,7 +217,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	@Override
 	public ReportingLehrer tutor() {
 		if ((super.tutor() == null) && (super.idTutor() >= 0)) {
-			super.tutor = this.reportingRepository.repositoryLehrer().lehrer(super.idTutor());
+			super.tutor = this.reportingContext.repositoryLehrer().lehrer(super.idTutor());
 		}
 		return super.tutor();
 	}
@@ -230,7 +230,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	@Override
 	public List<ReportingSchuelerZuweisung> zuweisungen() {
 		if (super.zuweisungen == null) {
-			super.zuweisungen = this.reportingRepository.repositorySchueler().zuweisungen(this.id(), this);
+			super.zuweisungen = this.reportingContext.repositorySchueler().zuweisungen(this.id(), this);
 		}
 		return super.zuweisungen;
 	}

@@ -5,7 +5,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.builders.ReportBuilderContextPdf;
 import de.svws_nrw.module.reporting.builders.ReportBuilderHtml;
 import de.svws_nrw.module.reporting.builders.ReportBuilderPdf;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -29,8 +29,8 @@ import java.util.zip.ZipOutputStream;
  */
 public class PdfFactory {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
-	private final ReportingRepository reportingRepository;
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	private final ReportingContext reportingContext;
 
 	/** Map mit den Dateinamen und HTML-Dateiinhalten, die in PDF-Dateien gewandelt werden sollen. */
 	private final List<ReportBuilderHtml> htmlBuilders;
@@ -40,25 +40,25 @@ public class PdfFactory {
 	 * Erzeugt eine neue PdfFactory, um eine Pdf-Datei aus den übergebenen HTML-Inhalten zu erzeugen.
 	 *
 	 * @param htmlBuilders 				Eine Map mit den Dateinamen und HTML-Dateiinhalten.
-	 * @param reportingRepository		Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung.
+	 * @param reportingContext		Context mit Parametern, Logger und Daten-Cache zur Report-Generierung.
 	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
-	protected PdfFactory(final List<ReportBuilderHtml> htmlBuilders, final ReportingRepository reportingRepository)
+	protected PdfFactory(final List<ReportBuilderHtml> htmlBuilders, final ReportingContext reportingContext)
 			throws ApiOperationException {
 
-		this.reportingRepository = reportingRepository;
+		this.reportingContext = reportingContext;
 
-		this.reportingRepository.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Initialisierung der PDF-Factory und der Validierung der übergebenen Daten.");
+		this.reportingContext.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Initialisierung der PDF-Factory und der Validierung der übergebenen Daten.");
 
 		// Validiere die HTML-Builder
 		if ((htmlBuilders == null) || htmlBuilders.isEmpty()) {
-			this.reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die Html-Dateiinhalte für die PDF-Erzeugung sind nicht vorhanden.");
+			this.reportingContext.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die Html-Dateiinhalte für die PDF-Erzeugung sind nicht vorhanden.");
 			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Die Html-Dateiinhalte für die PDF-Erzeugung sind nicht vorhanden.");
 		}
 		this.htmlBuilders = htmlBuilders;
 
-		this.reportingRepository.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Initialisierung der PDF-Factory und der Validierung der übergebenen Daten.");
+		this.reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Initialisierung der PDF-Factory und der Validierung der übergebenen Daten.");
 	}
 
 
@@ -72,29 +72,29 @@ public class PdfFactory {
 	protected Response createPdfResponse() throws ApiOperationException {
 
 		try {
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung.");
+			reportingContext.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung.");
 			final List<ReportBuilderPdf> pdfBuilders = getPdfBuilders();
 			if (!pdfBuilders.isEmpty()) {
 				final ReportBuilderPdf firstPdfBuilder = pdfBuilders.getFirst();
 				if (pdfBuilders.size() == 1) {
 					final byte[] data = firstPdfBuilder.generate();
 					final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(firstPdfBuilder.getDateinameMitEndung(), StandardCharsets.UTF_8);
-					reportingRepository.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung.");
+					reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung.");
 					return Response.ok(data, firstPdfBuilder.getContentType()).header("Content-Disposition", "attachment; " + encodedFilename).build();
 				} else {
 					final byte[] data = createZIP(pdfBuilders);
 					final String encodedFilename =
 							"filename*=UTF-8''" + URLEncoder.encode(firstPdfBuilder.getStatischerDateiname() + ".zip", StandardCharsets.UTF_8);
-					reportingRepository.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung.");
+					reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung.");
 					return Response.ok(data, "application/zip").header("Content-Disposition", "attachment; " + encodedFilename).build();
 				}
 			}
-			reportingRepository.logger().logLn(LogLevel.ERROR, 0,
+			reportingContext.logger().logLn(LogLevel.ERROR, 0,
 					"### Fehler bei der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung. Es sind keine PDF-Inhalte generiert worden.");
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
 					"### Fehler bei der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung. Es sind keine PDF-Inhalte generiert worden.");
 		} catch (final Exception e) {
-			reportingRepository.logger().logLn(LogLevel.ERROR, 0, "### Fehler bei der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung.");
+			reportingContext.logger().logLn(LogLevel.ERROR, 0, "### Fehler bei der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung.");
 			throw e;
 		}
 	}
@@ -109,14 +109,14 @@ public class PdfFactory {
 	 */
 	public List<ReportBuilderPdf> getPdfBuilders() throws ApiOperationException {
 
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Erzeugung der PDF-Builder.");
+		reportingContext.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Erzeugung der PDF-Builder.");
 		final List<ReportBuilderPdf> pdfBuilders = new ArrayList<>();
 
 		for (final ReportBuilderHtml htmlBuilder : this.htmlBuilders) {
 			pdfBuilders.add(getReportBuilderPdf(htmlBuilder));
 		}
 
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der PDF-Builder.");
+		reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der PDF-Builder.");
 		return pdfBuilders;
 	}
 
@@ -174,7 +174,7 @@ public class PdfFactory {
 						.withDateiname(reportBuilderHtml.getDateiname())
 						.withStatischerDateiname(reportBuilderHtml.getStatischerDateiname())
 						.withRootPfad(reportBuilderHtml.getRootPfad())
-						.withLogger(reportingRepository.logger());
+						.withLogger(reportingContext.logger());
 		return new ReportBuilderPdf(reportBuilderContext);
 	}
 
@@ -201,7 +201,7 @@ public class PdfFactory {
 				zipData = byteArrayOutputStream.toByteArray();
 			}
 		} catch (final IOException e) {
-			reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die erzeugten PDF-Inhalte konnten nicht als ZIP-Datei zusammengestellt werden.");
+			reportingContext.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die erzeugten PDF-Inhalte konnten nicht als ZIP-Datei zusammengestellt werden.");
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
 					"FEHLER: Die erzeugten PDF-Inhalte konnten nicht als ZIP-Datei zusammengestellt werden.");
 		}
@@ -222,7 +222,7 @@ public class PdfFactory {
 			zos.write(pdfBuilder.generate());
 			zos.closeEntry();
 		} catch (final Exception e) {
-			reportingRepository.logger().logLn(LogLevel.ERROR, 4,
+			reportingContext.logger().logLn(LogLevel.ERROR, 4,
 					"### FEHLER: PDF-Datei '" + pdfBuilder.getDateiname() + "' konnte mit folgender Fehlermeldung nicht generiert werden: " + e.getMessage());
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
 					"### FEHLER: PDF-Datei '" + pdfBuilder.getDateiname() + "' konnte mit folgender Fehlermeldung nicht generiert werden: " + e.getMessage());

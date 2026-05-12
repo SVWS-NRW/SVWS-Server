@@ -3,7 +3,7 @@ package de.svws_nrw.module.reporting.html.contexts;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungSchuelerStundenplan;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungStundenplan;
 import org.thymeleaf.context.Context;
@@ -18,13 +18,13 @@ public final class HtmlContextStundenplanungSchuelerStundenplan extends HtmlCont
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
 	 *
-	 * @param reportingRepository	Repository mit Parametern, Logger und Daten zum Reporting.
+	 * @param reportingContext	Context mit Parametern, Logger und Daten zum Reporting.
 	 * @param stundenplan           Der Stundenplan, mit dem die Stundenpläne zu den IDs der Ausgabe erstellt werden sollen.
 	 * @param idsAusgabe 		    Eine Liste von Schüler-IDs, für die die Ausgabe erzeugt werden soll.
 	 */
-	public HtmlContextStundenplanungSchuelerStundenplan(final ReportingRepository reportingRepository, final ReportingStundenplanungStundenplan stundenplan,
+	public HtmlContextStundenplanungSchuelerStundenplan(final ReportingContext reportingContext, final ReportingStundenplanungStundenplan stundenplan,
 			final List<Long> idsAusgabe) {
-		super(reportingRepository);
+		super(reportingContext);
 		erzeugeContext(stundenplan, idsAusgabe);
 	}
 
@@ -37,7 +37,7 @@ public final class HtmlContextStundenplanungSchuelerStundenplan extends HtmlCont
 	private void erzeugeContext(final ReportingStundenplanungStundenplan stundenplan, final List<Long> idsAusgabe) {
 
 		final List<ReportingStundenplanungSchuelerStundenplan> stundenplaene = new ArrayList<>();
-		this.reportingRepository.repositorySchueler().schueler(idsAusgabe)
+		this.reportingContext.repositorySchueler().schueler(idsAusgabe)
 				.forEach(schueler -> stundenplaene.add(new ReportingStundenplanungSchuelerStundenplan(schueler, stundenplan)));
 
 		setContextData(stundenplaene);
@@ -62,7 +62,7 @@ public final class HtmlContextStundenplanungSchuelerStundenplan extends HtmlCont
 		for (final ReportingStundenplanungSchuelerStundenplan stundenplan : getContextData()) {
 			final List<Long> eineId = new ArrayList<>();
 			eineId.add(stundenplan.schueler().id());
-			resultContexts.add(new HtmlContextStundenplanungSchuelerStundenplan(this.reportingRepository, stundenplan.stundenplan(), eineId));
+			resultContexts.add(new HtmlContextStundenplanungSchuelerStundenplan(this.reportingContext, stundenplan.stundenplan(), eineId));
 		}
 
 		return resultContexts;

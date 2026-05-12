@@ -8,7 +8,7 @@ import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
 import de.svws_nrw.module.reporting.sortierung.ReportingSortierungService;
 import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingSchueler;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
@@ -21,20 +21,20 @@ import java.util.Optional;
  */
 public class ProxyReportingJahrgang extends ReportingJahrgang {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingJahrgang}.
 	 *
-	 * @param reportingRepository Repository für das Reporting.
+	 * @param reportingContext Repository für das Reporting.
 	 * @param jahrgangsDaten Stammdaten-Objekt aus der DB.
 	 * @param schuljahresabschnitt Der Schuljahresabschnitt zu diesem Jahrgang.
 	 */
-	public ProxyReportingJahrgang(final ReportingRepository reportingRepository, final JahrgangsDaten jahrgangsDaten,
+	public ProxyReportingJahrgang(final ReportingContext reportingContext, final JahrgangsDaten jahrgangsDaten,
 			final ReportingSchuljahresabschnitt schuljahresabschnitt) {
 		super(jahrgangsDaten.anzahlRestabschnitte,
 				ersetzeNullBlankTrim(jahrgangsDaten.bezeichnung),
@@ -54,7 +54,7 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 				jahrgangsDaten.sortierung);
 
 		this.jahrgang = (jahrgangsDaten.kuerzelStatistik == null) ? null : Jahrgaenge.data().getWertBySchluessel(jahrgangsDaten.kuerzelStatistik);
-		this.reportingRepository = reportingRepository;
+		this.reportingContext = reportingContext;
 	}
 
 
@@ -86,8 +86,8 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 	 *
 	 * @return Repository für das Reporting
 	 */
-	public ReportingRepository reportingRepository() {
-		return reportingRepository;
+	public ReportingContext reportingContext() {
+		return reportingContext;
 	}
 
 	/**
@@ -98,7 +98,7 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 	@Override
 	public ReportingJahrgang folgejahrgang() {
 		if ((super.folgejahrgang() == null) && (super.idFolgejahrgang() != null) && (super.idFolgejahrgang() >= 0)) {
-			if (!this.reportingRepository.repositoryKataloge().jahrgaenge().containsKey(super.idFolgejahrgang())) {
+			if (!this.reportingContext.repositoryKataloge().jahrgaenge().containsKey(super.idFolgejahrgang())) {
 				return super.folgejahrgang();
 			}
 			// Die ID des FolgeJahrgangs ist bekannt und der Jahrgang wurde in einem Lernabschnitt bereits erzeugt, daher holt man ihn aus dem Lernabschnitt.
@@ -135,8 +135,8 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 	public List<ReportingSchueler> schueler() {
 		if (super.schueler().isEmpty()) {
 			// Prüfe, ob Service und Logger abrufbar sind. Andernfalls würden Standardsortierungen verwendet werden.
-			final ReportingSortierungService sortierungService = (this.reportingRepository != null) ? this.reportingRepository.sortierungService() : null;
-			final Logger logger = (this.reportingRepository != null) ? this.reportingRepository.logger() : null;
+			final ReportingSortierungService sortierungService = (this.reportingContext != null) ? this.reportingContext.sortierungService() : null;
+			final Logger logger = (this.reportingContext != null) ? this.reportingContext.logger() : null;
 
 			final Optional<Comparator<ReportingSchueler>> optionalComparator =
 					ComparatorFactory.buildOptionalComparator(

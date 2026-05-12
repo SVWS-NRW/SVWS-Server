@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungBlockungsergebnis;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungKurs;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
@@ -22,12 +22,12 @@ public final class HtmlContextGostKursplanungBlockungsergebnisSchueler extends H
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
 	 *
-	 * @param reportingRepository	Repository mit Parametern, Logger und Daten zum Reporting.
+	 * @param reportingContext	Context mit Parametern, Logger und Daten zum Reporting.
 	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
-	public HtmlContextGostKursplanungBlockungsergebnisSchueler(final ReportingRepository reportingRepository) throws ApiOperationException {
-		super(reportingRepository);
+	public HtmlContextGostKursplanungBlockungsergebnisSchueler(final ReportingContext reportingContext) throws ApiOperationException {
+		super(reportingContext);
 	}
 
 	/**
@@ -35,15 +35,15 @@ public final class HtmlContextGostKursplanungBlockungsergebnisSchueler extends H
 	 * Blockungsergebnis aus dem aufrufenden Context wiederverwendet. Wird ausschließlich intern von {@link #getEinzelContexts()}
 	 * für die Einzelausgabe pro Schüler verwendet.
 	 *
-	 * @param reportingRepository	Repository mit Parametern, Logger und Daten zum Reporting.
+	 * @param reportingContext	Context mit Parametern, Logger und Daten zum Reporting.
 	 * @param quelle				Das bereits aufgebaute Blockungsergebnis, das als Datenquelle wiederverwendet wird.
 	 * @param filterSchueler		Ein Prädikat, das den einen Schüler der Einzelausgabe selektiert.
 	 * @param filterKurse			Ein Prädikat, das bestimmt, welche Kurse in der Ausgabe enthalten sind.
 	 */
-	private HtmlContextGostKursplanungBlockungsergebnisSchueler(final ReportingRepository reportingRepository,
+	private HtmlContextGostKursplanungBlockungsergebnisSchueler(final ReportingContext reportingContext,
 			final ReportingGostKursplanungBlockungsergebnis quelle,
 			final Predicate<ReportingSchueler> filterSchueler, final Predicate<ReportingGostKursplanungKurs> filterKurse) {
-		super(reportingRepository, quelle, filterSchueler, filterKurse);
+		super(reportingContext, quelle, filterSchueler, filterKurse);
 	}
 
 
@@ -60,7 +60,7 @@ public final class HtmlContextGostKursplanungBlockungsergebnisSchueler extends H
 			final long id = s.id();
 			final Predicate<ReportingSchueler> einzelFilterSchueler = sch -> sch.id() == id;
 			result.add(new HtmlContextGostKursplanungBlockungsergebnisSchueler(
-					this.reportingRepository, this.blockungsergebnis, einzelFilterSchueler, k -> true));
+					this.reportingContext, this.blockungsergebnis, einzelFilterSchueler, k -> true));
 		}
 		return result;
 	}

@@ -18,7 +18,7 @@ import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausuren;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ProxyReportingGostKlausurplanungKlausurplan;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurplan;
 import jakarta.ws.rs.core.Response;
 
@@ -41,12 +41,12 @@ public abstract class HtmlContextGostKlausurplanungKlausurplan extends HtmlConte
 	 * Repository und den Reporting-Parametern aufgebaut; die Filterung der Schüler, Kurse und Klausurtermine erfolgt
 	 * über den FilterService anhand der konfigurierten Filterdefinitionen.
 	 *
-	 * @param reportingRepository	Repository mit Parametern, Logger und Daten zum Reporting.
+	 * @param reportingContext	Context mit Parametern, Logger und Daten zum Reporting.
 	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
-	protected HtmlContextGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository) throws ApiOperationException {
-		super(reportingRepository);
+	protected HtmlContextGostKlausurplanungKlausurplan(final ReportingContext reportingContext) throws ApiOperationException {
+		super(reportingContext);
 		erzeugeContext();
 	}
 
@@ -55,18 +55,18 @@ public abstract class HtmlContextGostKlausurplanungKlausurplan extends HtmlConte
 	 * wiederverwendet und die Sicht über Schüler-, Kurs- und Klausurtermin-Prädikate auf einzelne Entitäten einschränkt.
 	 * Wird ausschließlich von Subklassen für die Erzeugung der Einzel-Contexts verwendet.
 	 *
-	 * @param reportingRepository	Repository mit Parametern, Logger und Daten zum Reporting.
+	 * @param reportingContext	Context mit Parametern, Logger und Daten zum Reporting.
 	 * @param gostKlausurplan		Ein bereits aufgebauter GOSt-Klausurplan, der als Datenquelle wiederverwendet wird.
 	 * @param filterSchueler		Ein Prädikat, das bestimmt, welche Schüler in der Ausgabe enthalten sind.
 	 * @param filterKurse			Ein Prädikat, das bestimmt, welche Kurse in der Ausgabe enthalten sind.
 	 * @param filterKlausurtermine	Ein Prädikat, das bestimmt, welche Klausurtermine in der Ausgabe enthalten sind.
 	 */
-	protected HtmlContextGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository,
+	protected HtmlContextGostKlausurplanungKlausurplan(final ReportingContext reportingContext,
 			final ReportingGostKlausurplanungKlausurplan gostKlausurplan,
 			final Predicate<ReportingSchueler> filterSchueler, final Predicate<ReportingKurs> filterKurse,
 			final Predicate<ReportingGostKlausurplanungKlausurtermin> filterKlausurtermine) {
-		super(reportingRepository);
-		this.gostKlausurplan = new ProxyReportingGostKlausurplanungKlausurplan(reportingRepository, gostKlausurplan.klausurtermine(), gostKlausurplan.kurse(),
+		super(reportingContext);
+		this.gostKlausurplan = new ProxyReportingGostKlausurplanungKlausurplan(reportingContext, gostKlausurplan.klausurtermine(), gostKlausurplan.kurse(),
 				gostKlausurplan.kursklausuren(), gostKlausurplan.schueler(), gostKlausurplan.schuelerklausuren(),
 				filterSchueler, filterKurse, filterKlausurtermine);
 
@@ -85,7 +85,7 @@ public abstract class HtmlContextGostKlausurplanungKlausurplan extends HtmlConte
 
 		// In den idsHauptdaten der Reporting-Parameter werden im Wechsel das Abiturjahr und das GostHalbjahr (0 = EF.1 bis 5 = Q2.2) übergeben.
 		// Hier werden die Daten NICHT validiert. Die Daten aus den Parametern müssen vorab validiert worden sein (ReportingValidierung).
-		final List<Long> parameterDaten = reportingRepository.reportingParameter().idsHauptdaten().stream().filter(Objects::nonNull).toList();
+		final List<Long> parameterDaten = reportingContext.reportingParameter().idsHauptdaten().stream().filter(Objects::nonNull).toList();
 		final List<GostKlausurenCollectionHjData> selection = new ArrayList<>();
 
 		if (!parameterDaten.isEmpty()) {
@@ -96,22 +96,22 @@ public abstract class HtmlContextGostKlausurplanungKlausurplan extends HtmlConte
 		} else {
 			// Es wurden keine Stufen übergeben. Erzeuge die Ausgabe für alle Stufen gemäß Schuljahresabschnitt im Client.
 			// EF:
-			selection.add(new GostKlausurenCollectionHjData(reportingRepository.repositorySchule().auswahlSchuljahresabschnitt().schuljahr() + 3,
-					reportingRepository.repositorySchule().auswahlSchuljahresabschnitt().abschnitt() - 1));
+			selection.add(new GostKlausurenCollectionHjData(reportingContext.repositorySchule().auswahlSchuljahresabschnitt().schuljahr() + 3,
+					reportingContext.repositorySchule().auswahlSchuljahresabschnitt().abschnitt() - 1));
 			// Q1:
-			selection.add(new GostKlausurenCollectionHjData(reportingRepository.repositorySchule().auswahlSchuljahresabschnitt().schuljahr() + 2,
-					reportingRepository.repositorySchule().auswahlSchuljahresabschnitt().abschnitt() + 1));
+			selection.add(new GostKlausurenCollectionHjData(reportingContext.repositorySchule().auswahlSchuljahresabschnitt().schuljahr() + 2,
+					reportingContext.repositorySchule().auswahlSchuljahresabschnitt().abschnitt() + 1));
 			// Q2:
-			selection.add(new GostKlausurenCollectionHjData(reportingRepository.repositorySchule().auswahlSchuljahresabschnitt().schuljahr() + 1,
-					reportingRepository.repositorySchule().auswahlSchuljahresabschnitt().abschnitt() + 3));
+			selection.add(new GostKlausurenCollectionHjData(reportingContext.repositorySchule().auswahlSchuljahresabschnitt().schuljahr() + 1,
+					reportingContext.repositorySchule().auswahlSchuljahresabschnitt().abschnitt() + 3));
 		}
 
 		try {
-			final GostKlausurenCollectionAllData allData = DataGostKlausuren.getAllData(this.reportingRepository.conn(), selection);
+			final GostKlausurenCollectionAllData allData = DataGostKlausuren.getAllData(this.reportingContext.conn(), selection);
 			final GostKlausurplanManager gostKlausurManager =
 					new GostKlausurplanManager(allData);
 
-			this.gostKlausurplan = new ProxyReportingGostKlausurplanungKlausurplan(this.reportingRepository, gostKlausurManager);
+			this.gostKlausurplan = new ProxyReportingGostKlausurplanungKlausurplan(this.reportingContext, gostKlausurManager);
 
 			// Daten-Context für Thymeleaf erzeugen.
 			final Context context = new Context();

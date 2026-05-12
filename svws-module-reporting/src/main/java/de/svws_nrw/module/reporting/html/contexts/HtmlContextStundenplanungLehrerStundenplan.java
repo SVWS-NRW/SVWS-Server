@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungLehrerStundenplan;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungStundenplan;
@@ -21,13 +21,13 @@ public final class HtmlContextStundenplanungLehrerStundenplan extends HtmlContex
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
 	 *
-	 * @param reportingRepository	Repository mit Parametern, Logger und Daten zum Reporting.
+	 * @param reportingContext	Context mit Parametern, Logger und Daten zum Reporting.
 	 * @param stundenplan           Der Stundenplan, mit dem die Stundenpläne zu den IDs der Ausgabe erstellt werden sollen.
 	 * @param idsAusgabe 		    Eine Liste von Lehrer-IDs, für die die Ausgabe erzeugt werden soll.
 	 */
-	public HtmlContextStundenplanungLehrerStundenplan(final ReportingRepository reportingRepository, final ReportingStundenplanungStundenplan stundenplan,
+	public HtmlContextStundenplanungLehrerStundenplan(final ReportingContext reportingContext, final ReportingStundenplanungStundenplan stundenplan,
 			final List<Long> idsAusgabe) {
-		super(reportingRepository);
+		super(reportingContext);
 		erzeugeContext(stundenplan, idsAusgabe);
 	}
 
@@ -40,7 +40,7 @@ public final class HtmlContextStundenplanungLehrerStundenplan extends HtmlContex
 	private void erzeugeContext(final ReportingStundenplanungStundenplan stundenplan, final List<Long> idsAusgabe) {
 
 		final List<ReportingStundenplanungLehrerStundenplan> stundenplaene = new ArrayList<>();
-		this.reportingRepository.repositoryLehrer().lehrer(idsAusgabe)
+		this.reportingContext.repositoryLehrer().lehrer(idsAusgabe)
 				.forEach(lehrer -> stundenplaene.add(new ReportingStundenplanungLehrerStundenplan(lehrer, stundenplan)));
 
 		final List<ReportingLehrer> listeLehrkraefte = new ArrayList<>();
@@ -74,7 +74,7 @@ public final class HtmlContextStundenplanungLehrerStundenplan extends HtmlContex
 		for (final ReportingStundenplanungLehrerStundenplan stundenplan : getContextData()) {
 			final List<Long> eineId = new ArrayList<>();
 			eineId.add(stundenplan.lehrer().id());
-			resultContexts.add(new HtmlContextStundenplanungLehrerStundenplan(this.reportingRepository, stundenplan.stundenplan(), eineId));
+			resultContexts.add(new HtmlContextStundenplanungLehrerStundenplan(this.reportingContext, stundenplan.stundenplan(), eineId));
 		}
 
 		return resultContexts;

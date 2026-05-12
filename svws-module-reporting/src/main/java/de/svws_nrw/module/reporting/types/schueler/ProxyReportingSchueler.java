@@ -29,7 +29,7 @@ import de.svws_nrw.module.reporting.types.schueler.gost.abitur.ProxyReportingSch
 import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.ProxyReportingSchuelerGostLaufbahnplanung;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerLernabschnitt;
 import de.svws_nrw.module.reporting.types.schueler.sprachen.ProxyReportingSchuelerSprachbelegung;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.schueler.gost.abitur.ReportingSchuelerGostAbitur;
 import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.ReportingSchuelerGostLaufbahnplanung;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
@@ -40,18 +40,18 @@ import de.svws_nrw.module.reporting.types.schueler.sprachen.ReportingSchuelerSpr
  */
 public class ProxyReportingSchueler extends ReportingSchueler {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingSchueler}.
 	 *
-	 * @param reportingRepository Repository für das Reporting.
+	 * @param reportingContext Repository für das Reporting.
 	 * @param schuelerStammdaten Stammdaten-Objekt aus der DB.
 	 */
-	public ProxyReportingSchueler(final ReportingRepository reportingRepository, final SchuelerStammdaten schuelerStammdaten) {
+	public ProxyReportingSchueler(final ReportingContext reportingContext, final SchuelerStammdaten schuelerStammdaten) {
 		super(null,
 				ersetzeNullBlankTrim(schuelerStammdaten.anmeldedatum),
 				"",
@@ -111,16 +111,16 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				null,
 				schuelerStammdaten.zuzugsjahr);
 
-		this.reportingRepository = reportingRepository;
+		this.reportingContext = reportingContext;
 
 		super.religion =
-				(schuelerStammdaten.religionID != null) ? this.reportingRepository.repositoryKataloge().religionen().get(schuelerStammdaten.religionID) : null;
-		super.wohnort = (schuelerStammdaten.wohnortID != null) ? this.reportingRepository.repositoryKataloge().orte().get(schuelerStammdaten.wohnortID) : null;
+				(schuelerStammdaten.religionID != null) ? this.reportingContext.repositoryKataloge().religionen().get(schuelerStammdaten.religionID) : null;
+		super.wohnort = (schuelerStammdaten.wohnortID != null) ? this.reportingContext.repositoryKataloge().orte().get(schuelerStammdaten.wohnortID) : null;
 		super.wohnortsteil =
-				(schuelerStammdaten.ortsteilID != null) ? this.reportingRepository.repositoryKataloge().ortsteile().get(schuelerStammdaten.ortsteilID) : null;
+				(schuelerStammdaten.ortsteilID != null) ? this.reportingContext.repositoryKataloge().ortsteile().get(schuelerStammdaten.ortsteilID) : null;
 
 		// Füge Stammdaten des Schülers für weitere Verwendung in der Map im Repository hinzu.
-		this.reportingRepository.repositorySchueler().stammdaten().put(super.id(), schuelerStammdaten);
+		this.reportingContext.repositorySchueler().stammdaten().put(super.id(), schuelerStammdaten);
 	}
 
 
@@ -173,8 +173,8 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	 *
 	 * @return Repository für das Reporting
 	 */
-	public ReportingRepository reportingRepository() {
-		return reportingRepository;
+	public ReportingContext reportingContext() {
+		return reportingContext;
 	}
 
 
@@ -231,10 +231,10 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	 */
 	private void getErzieher() {
 		ladeListeInRepositoryMap(
-				this.reportingRepository.repositorySchueler().erzieherStammdaten(),
+				this.reportingContext.repositorySchueler().erzieherStammdaten(),
 				ids -> {
 					try {
-						return this.reportingRepository.repositorySchueler().erzieherStammdaten(ids);
+						return this.reportingContext.repositorySchueler().erzieherStammdaten(ids);
 					} catch (final ApiOperationException e) {
 						throw new ReportingDataLoadException(e);
 					}
@@ -243,10 +243,10 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 		// Übertrage Daten aus dem Repository
 		if (super.erzieher.isEmpty()) {
-			final List<ErzieherStammdaten> thisErzieherStammdaten = this.reportingRepository.repositorySchueler().erzieherStammdaten().get(this.id());
+			final List<ErzieherStammdaten> thisErzieherStammdaten = this.reportingContext.repositorySchueler().erzieherStammdaten().get(this.id());
 
 			if ((thisErzieherStammdaten != null) && !thisErzieherStammdaten.isEmpty()) {
-				super.erzieher.addAll(thisErzieherStammdaten.stream().map(e -> new ProxyReportingErzieher(this.reportingRepository, e, this)).toList());
+				super.erzieher.addAll(thisErzieherStammdaten.stream().map(e -> new ProxyReportingErzieher(this.reportingContext, e, this)).toList());
 				erzieherGruppieren();
 			}
 		}
@@ -292,10 +292,10 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	public ReportingSchuelerGostAbitur gostAbitur() {
 		if (super.gostAbitur == null) {
 			ladeObjektInRepositoryMap(
-					this.reportingRepository.repositoryGost().schuelerAbiturdaten(),
+					this.reportingContext.repositoryGost().schuelerAbiturdaten(),
 					ids -> {
 						try {
-							return this.reportingRepository.repositoryGost().schuelerAbiturdaten(ids);
+							return this.reportingContext.repositoryGost().schuelerAbiturdaten(ids);
 						} catch (final ApiOperationException e) {
 							throw new ReportingDataLoadException(e);
 						}
@@ -303,12 +303,12 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 					"GOSt-Abiturdaten");
 
 			// Übertrage Daten aus dem Repository
-			final Abiturdaten repoDaten = this.reportingRepository.repositoryGost().schuelerAbiturdaten().get(this.id());
+			final Abiturdaten repoDaten = this.reportingContext.repositoryGost().schuelerAbiturdaten().get(this.id());
 			if (repoDaten == null) {
 				return null;
 			}
 
-			super.gostAbitur = new ProxyReportingSchuelerGostAbitur(this.reportingRepository, repoDaten);
+			super.gostAbitur = new ProxyReportingSchuelerGostAbitur(this.reportingContext, repoDaten);
 		}
 		return super.gostAbitur;
 	}
@@ -321,7 +321,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	@Override
 	public ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung() {
 		if (super.gostLaufbahnplanung() == null) {
-			super.gostLaufbahnplanung = new ProxyReportingSchuelerGostLaufbahnplanung(this.reportingRepository, this);
+			super.gostLaufbahnplanung = new ProxyReportingSchuelerGostLaufbahnplanung(this.reportingContext, this);
 		}
 		return super.gostLaufbahnplanung;
 	}
@@ -334,7 +334,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	@Override
 	public List<ReportingSchuelerLernabschnitt> lernabschnitte() {
 		if (super.lernabschnitte() == null) {
-			if (!this.reportingRepository.repositorySchueler().lernabschnittsdaten().containsKey1(this.id())) {
+			if (!this.reportingContext.repositorySchueler().lernabschnittsdaten().containsKey1(this.id())) {
 				// Wenn keine Lernabschnitte zum Schüler aus der DB gefunden wurden, müssen diese nachträglich geladen worden sein oder der Schüler hat keine
 				// Lernabschnitte. Prüfe auf Differenzen und lade nach.
 				getLernabschnitte();
@@ -342,7 +342,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 			// Die Lernabschnitte aller Schüler der Stammdatenabschnitte liegen nun vor. Filtere alle Lernabschnitte des Schülers heraus.
 			final List<SchuelerLernabschnittsdaten> schuelerLernabschnittsdaten =
-					new ArrayList<>(this.reportingRepository.repositorySchueler().lernabschnittsdaten().get1(this.id()));
+					new ArrayList<>(this.reportingContext.repositorySchueler().lernabschnittsdaten().get1(this.id()));
 
 			// Wenn, wie bei einer Neuaufnahme, keine Lernabschnitte vorhanden sind, so wird die leere Liste zurückgegeben.
 			if (schuelerLernabschnittsdaten.isEmpty()) {
@@ -354,7 +354,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 			// Sortiere die Lernabschnitte dieses Schülers und fülle damit seine Liste von Lernabschnitten.
 			super.setLernabschnitte(schuelerLernabschnittsdaten.stream()
-					.map(a -> (ReportingSchuelerLernabschnitt) new ProxyReportingSchuelerLernabschnitt(this.reportingRepository, a))
+					.map(a -> (ReportingSchuelerLernabschnitt) new ProxyReportingSchuelerLernabschnitt(this.reportingContext, a))
 					.sorted(Comparator
 							.comparing((final ReportingSchuelerLernabschnitt a) -> a.schuljahresabschnitt().schuljahr())
 							.thenComparing((final ReportingSchuelerLernabschnitt a) -> a.schuljahresabschnitt().abschnitt())
@@ -362,19 +362,19 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 					.toList());
 
 			final List<SchuelerLernabschnittsdaten> aktuelleAbschnitte =
-					this.reportingRepository.repositorySchueler().lernabschnittsdaten().get123(super.id,
-							this.reportingRepository.repositorySchule().aktuellerSchuljahresabschnitt().id(), 0);
+					this.reportingContext.repositorySchueler().lernabschnittsdaten().get123(super.id,
+							this.reportingContext.repositorySchule().aktuellerSchuljahresabschnitt().id(), 0);
 			if (!aktuelleAbschnitte.isEmpty()) {
-				super.aktuellerLernabschnitt = new ProxyReportingSchuelerLernabschnitt(this.reportingRepository, aktuelleAbschnitte.getFirst());
+				super.aktuellerLernabschnitt = new ProxyReportingSchuelerLernabschnitt(this.reportingContext, aktuelleAbschnitte.getFirst());
 			} else {
 				super.aktuellerLernabschnitt = null;
 			}
 
 			final List<SchuelerLernabschnittsdaten> auswahlAbschnitte =
-					this.reportingRepository.repositorySchueler().lernabschnittsdaten().get123(super.id,
-							this.reportingRepository.repositorySchule().auswahlSchuljahresabschnitt().id(), 0);
+					this.reportingContext.repositorySchueler().lernabschnittsdaten().get123(super.id,
+							this.reportingContext.repositorySchule().auswahlSchuljahresabschnitt().id(), 0);
 			if (!auswahlAbschnitte.isEmpty()) {
-				super.auswahlLernabschnitt = new ProxyReportingSchuelerLernabschnitt(this.reportingRepository, auswahlAbschnitte.getFirst());
+				super.auswahlLernabschnitt = new ProxyReportingSchuelerLernabschnitt(this.reportingContext, auswahlAbschnitte.getFirst());
 			} else {
 				super.auswahlLernabschnitt = null;
 			}
@@ -383,10 +383,10 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	}
 
 	private void getLernabschnitte() {
-		final List<Long> idsSchuelerOhneLernabschnitte = new ArrayList<>(this.reportingRepository.repositorySchueler().schueler().size());
+		final List<Long> idsSchuelerOhneLernabschnitte = new ArrayList<>(this.reportingContext.repositorySchueler().schueler().size());
 
-		for (final long key : this.reportingRepository.repositorySchueler().schueler().keySet()) {
-			if (!this.reportingRepository.repositorySchueler().lernabschnittsdaten().containsKey1(key)) {
+		for (final long key : this.reportingContext.repositorySchueler().schueler().keySet()) {
+			if (!this.reportingContext.repositorySchueler().lernabschnittsdaten().containsKey1(key)) {
 				idsSchuelerOhneLernabschnitte.add(key);
 			}
 		}
@@ -395,19 +395,19 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			final List<SchuelerLernabschnittsdaten> schuelerGesamteLernabschnittsdaten = new ArrayList<>();
 			try {
 				schuelerGesamteLernabschnittsdaten.addAll(
-						this.reportingRepository.repositorySchueler().lernabschnittsdaten(idsSchuelerOhneLernabschnitte));
+						this.reportingContext.repositorySchueler().lernabschnittsdaten(idsSchuelerOhneLernabschnitte));
 			} catch (final ApiOperationException e) {
 				ReportingExceptionUtils.logException(
 						"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Lernabschnitte eines Schülers.", e,
-						reportingRepository.logger(), LogLevel.INFO, 0);
+						reportingContext.logger(), LogLevel.INFO, 0);
 			}
 			// Lege die Lernabschnittsdaten in den entsprechenden Maps des Repositories ab.
 			if (!schuelerGesamteLernabschnittsdaten.isEmpty()) {
 				for (final SchuelerLernabschnittsdaten la : schuelerGesamteLernabschnittsdaten) {
-					this.reportingRepository.repositorySchueler().lernabschnittsdaten().add(la.schuelerID, la.schuljahresabschnitt, la.wechselNr, la.id, la);
+					this.reportingContext.repositorySchueler().lernabschnittsdaten().add(la.schuelerID, la.schuljahresabschnitt, la.wechselNr, la.id, la);
 				}
 			} else {
-				this.reportingRepository.repositorySchueler().lernabschnittsdaten().addEmpty(super.id, -1, -1, -1);
+				this.reportingContext.repositorySchueler().lernabschnittsdaten().addEmpty(super.id, -1, -1, -1);
 			}
 		}
 	}
@@ -422,19 +422,19 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	public ReportingSchuelerSchulbesuch schulbesuch() {
 		if (super.schulbesuch == null) {
 			ladeObjektInRepositoryMap(
-					this.reportingRepository.repositorySchueler().schulbesuchsdaten(),
+					this.reportingContext.repositorySchueler().schulbesuchsdaten(),
 					ids -> {
 						try {
-							return this.reportingRepository.repositorySchueler().schulbesuchsdaten(ids);
+							return this.reportingContext.repositorySchueler().schulbesuchsdaten(ids);
 						} catch (final ApiOperationException e) {
 							throw new ReportingDataLoadException(e);
 						}
 					},
 					"Schulbesuchsdaten");
 
-			if (this.reportingRepository.repositorySchueler().schulbesuchsdaten().containsKey(this.id())) {
-				super.schulbesuch = new ProxyReportingSchuelerSchulbesuch(reportingRepository,
-						this.reportingRepository.repositorySchueler().schulbesuchsdaten().get(this.id()));
+			if (this.reportingContext.repositorySchueler().schulbesuchsdaten().containsKey(this.id())) {
+				super.schulbesuch = new ProxyReportingSchuelerSchulbesuch(reportingContext,
+						this.reportingContext.repositorySchueler().schulbesuchsdaten().get(this.id()));
 			}
 		}
 		return super.schulbesuch;
@@ -449,10 +449,10 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	@Override
 	public List<ReportingSchuelerSprachbelegung> sprachbelegungen() {
 		ladeListeInRepositoryMap(
-				this.reportingRepository.repositorySchueler().sprachbelegungen(),
+				this.reportingContext.repositorySchueler().sprachbelegungen(),
 				ids -> {
 					try {
-						return this.reportingRepository.repositorySchueler().sprachbelegungen(ids);
+						return this.reportingContext.repositorySchueler().sprachbelegungen(ids);
 					} catch (final ApiOperationException e) {
 						throw new ReportingDataLoadException(e);
 					}
@@ -461,10 +461,10 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 		// Übertrage Daten aus dem Repository
 		if (super.sprachbelegungen.isEmpty()) {
-			final List<Sprachbelegung> repoDaten = this.reportingRepository.repositorySchueler().sprachbelegungen().get(this.id());
+			final List<Sprachbelegung> repoDaten = this.reportingContext.repositorySchueler().sprachbelegungen().get(this.id());
 			if ((repoDaten != null) && !repoDaten.isEmpty()) {
 				super.sprachbelegungen.addAll(repoDaten.stream()
-						.map(sb -> ((ReportingSchuelerSprachbelegung) new ProxyReportingSchuelerSprachbelegung(reportingRepository, sb)))
+						.map(sb -> ((ReportingSchuelerSprachbelegung) new ProxyReportingSchuelerSprachbelegung(reportingContext, sb)))
 						.sorted(Comparator.comparing(ReportingSchuelerSprachbelegung::belegungVonJahrgang, Comparator.nullsLast(String::compareTo))
 								.thenComparing(ReportingSchuelerSprachbelegung::reihenfolge, Comparator.nullsLast(Integer::compareTo)))
 						.toList());
@@ -481,10 +481,10 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	@Override
 	public List<ReportingSchuelerTelefonkontakt> telefonKontakte() {
 		ladeListeInRepositoryMap(
-				this.reportingRepository.repositorySchueler().telefonkontakte(),
+				this.reportingContext.repositorySchueler().telefonkontakte(),
 				ids -> {
 					try {
-						return this.reportingRepository.repositorySchueler().telefonkontakte(ids);
+						return this.reportingContext.repositorySchueler().telefonkontakte(ids);
 					} catch (final Exception e) {
 						throw new ReportingDataLoadException(e);
 					}
@@ -493,7 +493,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 		// Sync local
 		if (super.telefonKontakte.isEmpty()) {
-			final List<ReportingSchuelerTelefonkontakt> repoDaten = this.reportingRepository.repositorySchueler().telefonkontakte().get(this.id());
+			final List<ReportingSchuelerTelefonkontakt> repoDaten = this.reportingContext.repositorySchueler().telefonkontakte().get(this.id());
 			if ((repoDaten != null) && !repoDaten.isEmpty()) {
 				super.telefonKontakte.addAll(repoDaten);
 			}
@@ -522,7 +522,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			return;
 		}
 
-		final List<Long> fehlendeIds = this.reportingRepository.repositorySchueler().schueler().keySet().stream()
+		final List<Long> fehlendeIds = this.reportingContext.repositorySchueler().schueler().keySet().stream()
 				.filter(id -> !repositoryMap.containsKey(id))
 				.toList();
 
@@ -542,7 +542,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			// Gesammeltes Laden fehlgeschlagen – Fallback: einzelnes Laden für aktuellen Schüler
 			ReportingExceptionUtils.logException(
 					"INFO: Fehler beim gesammelten Laden von " + datenbezeichnung + ". Versuche einzelnes Laden für Schüler ID " + this.id(),
-					e, reportingRepository.logger(), LogLevel.INFO, 0);
+					e, reportingContext.logger(), LogLevel.INFO, 0);
 			try {
 				final Map<Long, List<T>> singleResult = funktionGesammeltesLaden.apply(List.of(this.id()));
 				final List<T> daten = singleResult.get(this.id());
@@ -550,7 +550,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			} catch (final Exception exSingle) {
 				ReportingExceptionUtils.logException(
 						"INFO: Fehler beim einzelnen Laden von " + datenbezeichnung + " für Schüler ID " + this.id() + ". Setze leere Liste.",
-						exSingle, reportingRepository.logger(), LogLevel.INFO, 0);
+						exSingle, reportingContext.logger(), LogLevel.INFO, 0);
 				repositoryMap.put(this.id(), new ArrayList<>());
 			}
 		}
@@ -574,7 +574,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			return;
 		}
 
-		final List<Long> fehlendeIds = this.reportingRepository.repositorySchueler().schueler().keySet().stream()
+		final List<Long> fehlendeIds = this.reportingContext.repositorySchueler().schueler().keySet().stream()
 				.filter(id -> !repositoryMap.containsKey(id))
 				.toList();
 
@@ -588,14 +588,14 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 		} catch (final Exception e) {
 			ReportingExceptionUtils.logException(
 					"INFO: Fehler beim gesammelten Laden von " + datenbezeichnung + ". Versuche einzelnes Laden für Schüler ID " + this.id(),
-					e, reportingRepository.logger(), LogLevel.INFO, 0);
+					e, reportingContext.logger(), LogLevel.INFO, 0);
 			try {
 				final Map<Long, T> singleResult = funktionGesammeltesLaden.apply(List.of(this.id()));
 				repositoryMap.putAll(singleResult);
 			} catch (final Exception exSingle) {
 				ReportingExceptionUtils.logException(
 						"INFO: Fehler beim einzelnen Laden von " + datenbezeichnung + " für Schüler ID " + this.id() + ".",
-						exSingle, reportingRepository.logger(), LogLevel.INFO, 0);
+						exSingle, reportingContext.logger(), LogLevel.INFO, 0);
 				repositoryMap.put(this.id(), null);
 			}
 		}

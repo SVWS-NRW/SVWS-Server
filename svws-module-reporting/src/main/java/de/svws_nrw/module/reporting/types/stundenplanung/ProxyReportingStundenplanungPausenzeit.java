@@ -9,7 +9,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanPausenaufsichtBereich;
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenzeit;
 import de.svws_nrw.core.types.Wochentag;
 import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 
 
 /**
@@ -17,9 +17,9 @@ import de.svws_nrw.module.reporting.repositories.ReportingRepository;
  */
 public class ProxyReportingStundenplanungPausenzeit extends ReportingStundenplanungPausenzeit {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 	/** Der Stundenplan-Manager, zu dem dieses Zeitraster-Element gehört. */
 	@JsonIgnore
@@ -28,11 +28,11 @@ public class ProxyReportingStundenplanungPausenzeit extends ReportingStundenplan
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingStundenplanungPausenzeit}.
 	 *
-	 * @param reportingRepository Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung.
+	 * @param reportingContext Context mit Parametern, Logger und Daten-Cache zur Report-Generierung.
 	 * @param pausenzeit		  Die Pausenzeit aus dem Stundenplan.
 	 * @param stundenplan         Der Stundenplan, zudem diese Pausenzeit gehört.
 	 */
-	public ProxyReportingStundenplanungPausenzeit(final ReportingRepository reportingRepository,
+	public ProxyReportingStundenplanungPausenzeit(final ReportingContext reportingContext,
 			final StundenplanPausenzeit pausenzeit, final ReportingStundenplanungStundenplan stundenplan) {
 		super(pausenzeit.id,
 				stundenplan,
@@ -43,8 +43,8 @@ public class ProxyReportingStundenplanungPausenzeit extends ReportingStundenplan
 				new ArrayList<>(),
 				null);
 
-		this.reportingRepository = reportingRepository;
-		this.stundenplanManager = this.reportingRepository.repositoryStundenplan().manager(stundenplan.id());
+		this.reportingContext = reportingContext;
+		this.stundenplanManager = this.reportingContext.repositoryStundenplan().manager(stundenplan.id());
 
 		if (stundenplanManager == null) {
 			return;
@@ -73,7 +73,7 @@ public class ProxyReportingStundenplanungPausenzeit extends ReportingStundenplan
 						stundenplanManager.aufsichtsbereichGetByIdOrException(bereich.idAufsichtsbereich).beschreibung,
 						stundenplanManager.aufsichtsbereichGetByIdOrException(bereich.idAufsichtsbereich).kuerzel,
 						bereich.idAufsichtsbereich,
-						this.reportingRepository.repositoryLehrer().lehrer(aufsicht.idLehrer),
+						this.reportingContext.repositoryLehrer().lehrer(aufsicht.idLehrer),
 						bereich.wochentyp)
 				);
 			}
@@ -109,8 +109,8 @@ public class ProxyReportingStundenplanungPausenzeit extends ReportingStundenplan
 	 *
 	 * @return Repository für das Reporting
 	 */
-	public ReportingRepository reportingRepository() {
-		return reportingRepository;
+	public ReportingContext reportingContext() {
+		return reportingContext;
 	}
 
 }

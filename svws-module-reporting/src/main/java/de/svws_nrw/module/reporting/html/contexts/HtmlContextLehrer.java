@@ -3,7 +3,7 @@ package de.svws_nrw.module.reporting.html.contexts;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import org.thymeleaf.context.Context;
 
@@ -16,22 +16,22 @@ public final class HtmlContextLehrer extends HtmlContext<ReportingLehrer> implem
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Lehrern.
 	 *
-	 * @param reportingRepository 	Repository mit Parametern, Logger und Daten zum Reporting.
+	 * @param reportingContext 	Context mit Parametern, Logger und Daten zum Reporting.
 	 * @param reportingLehrer		Liste der Lehrer, die berücksichtigt werden sollen.
 	 */
-	public HtmlContextLehrer(final ReportingRepository reportingRepository, final List<ReportingLehrer> reportingLehrer) {
-		super(reportingRepository);
+	public HtmlContextLehrer(final ReportingContext reportingContext, final List<ReportingLehrer> reportingLehrer) {
+		super(reportingContext);
 		erzeugeContextFromLehrer(reportingLehrer);
 	}
 
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Lehrer-IDs.
 	 *
-	 * @param reportingRepository   Repository mit Parametern, Logger und Daten zum Reporting.
+	 * @param reportingContext   Context mit Parametern, Logger und Daten zum Reporting.
 	 */
-	public HtmlContextLehrer(final ReportingRepository reportingRepository) {
-		super(reportingRepository);
-		erzeugeContextFromIds(this.reportingRepository.reportingParameter().idsHauptdaten());
+	public HtmlContextLehrer(final ReportingContext reportingContext) {
+		super(reportingContext);
+		erzeugeContextFromIds(this.reportingContext.reportingParameter().idsHauptdaten());
 	}
 
 
@@ -60,7 +60,7 @@ public final class HtmlContextLehrer extends HtmlContext<ReportingLehrer> implem
 	 */
 	private void erzeugeContextFromIds(final List<Long> idsLehrer) {
 
-		setContextData(this.reportingRepository.repositoryLehrer().lehrer(idsLehrer));
+		setContextData(this.reportingContext.repositoryLehrer().lehrer(idsLehrer));
 		sortiereContextMitRegistry();
 
 		// Daten-Context für Thymeleaf erzeugen.
@@ -82,7 +82,7 @@ public final class HtmlContextLehrer extends HtmlContext<ReportingLehrer> implem
 		for (final ReportingLehrer reportingLehrer : getContextData()) {
 			final List<ReportingLehrer> einLehrer = new ArrayList<>();
 			einLehrer.add(reportingLehrer);
-			resultContexts.add(new HtmlContextLehrer(this.reportingRepository, einLehrer));
+			resultContexts.add(new HtmlContextLehrer(this.reportingContext, einLehrer));
 		}
 
 		return resultContexts;

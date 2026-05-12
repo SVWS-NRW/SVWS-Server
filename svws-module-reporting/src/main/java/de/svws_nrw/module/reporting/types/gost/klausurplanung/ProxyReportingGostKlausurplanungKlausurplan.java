@@ -18,7 +18,7 @@ import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.module.reporting.sortierung.ReportingSortierungService;
 import de.svws_nrw.module.reporting.types.lerngruppen.ProxyReportingKurs;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
 import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingGostKlausurplanungSchuelerklausur;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
@@ -33,7 +33,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 
 	/** Repository für das Reporting. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 	/** Klausurmanager des GOSt-Klausurplans. */
 	@JsonIgnore
@@ -44,7 +44,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostKlausurplanungKlausurplan}. Die Filter-Prädikate für
 	 * Schüler, Kurse und Klausurtermine werden über den FilterService aus den Reporting-Parametern abgeleitet.
 	 *
-	 * @param reportingRepository	Repository für das Reporting.
+	 * @param reportingContext	Repository für das Reporting.
 	 * @param klausurtermine		Eine Liste, die alle Termine des Klausurplanes beinhaltet.
 	 * @param kurse 				Eine Liste, die alle Kurse des Klausurplanes beinhaltet.
 	 * @param kursklausuren 		Eine Liste, die alle Kursklausuren des Klausurplanes beinhaltet.
@@ -52,13 +52,13 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 	 * @param schuelerklausuren 	Eine Liste, die alle Schülerklausuren des Klausurplanes beinhaltet.
 	 */
 	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
-	public ProxyReportingGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository,
+	public ProxyReportingGostKlausurplanungKlausurplan(final ReportingContext reportingContext,
 			final List<ReportingGostKlausurplanungKlausurtermin> klausurtermine, final List<ReportingKurs> kurse,
 			final List<ReportingGostKlausurplanungKursklausur> kursklausuren, final List<ReportingSchueler> schueler,
 			final List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren) {
 		super(klausurtermine, kurse, kursklausuren, schueler, schuelerklausuren,
-				setFilterSchueler(reportingRepository), setFilterKurse(reportingRepository), setFilterKlausurtermin(reportingRepository));
-		this.reportingRepository = reportingRepository;
+				setFilterSchueler(reportingContext), setFilterKurse(reportingContext), setFilterKlausurtermin(reportingContext));
+		this.reportingContext = reportingContext;
 		this.gostKlausurplanManager = null;
 	}
 
@@ -68,7 +68,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 	 * Schüler-, Kurs- und Klausurtermin-Prädikaten. Wird verwendet, um Sub-Kontexte (z. B. für Einzelausgaben) auf einen
 	 * einzelnen Schüler, Kurs oder Klausurtermin einzuschränken.
 	 *
-	 * @param reportingRepository	Repository für das Reporting.
+	 * @param reportingContext	Repository für das Reporting.
 	 * @param klausurtermine		Eine Liste, die alle Termine des Klausurplanes beinhaltet.
 	 * @param kurse 				Eine Liste, die alle Kurse des Klausurplanes beinhaltet.
 	 * @param kursklausuren 		Eine Liste, die alle Kursklausuren des Klausurplanes beinhaltet.
@@ -79,7 +79,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 	 * @param filterKlausurtermine	Ein Prädikat, das bestimmt, welche Klausurtermine in der Ausgabe enthalten sind.
 	 */
 	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
-	public ProxyReportingGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository,
+	public ProxyReportingGostKlausurplanungKlausurplan(final ReportingContext reportingContext,
 			final List<ReportingGostKlausurplanungKlausurtermin> klausurtermine, final List<ReportingKurs> kurse,
 			final List<ReportingGostKlausurplanungKursklausur> kursklausuren, final List<ReportingSchueler> schueler,
 			final List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren,
@@ -87,7 +87,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 			final Predicate<ReportingGostKlausurplanungKlausurtermin> filterKlausurtermine) {
 		super(klausurtermine, kurse, kursklausuren, schueler, schuelerklausuren,
 				filterSchueler, filterKurse, filterKlausurtermine);
-		this.reportingRepository = reportingRepository;
+		this.reportingContext = reportingContext;
 		this.gostKlausurplanManager = null;
 	}
 
@@ -96,17 +96,17 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 	 * Erstellt ein neues Reporting-Objekt anhand des GostKlausurplanManagers. Die Filter-Prädikate werden über den
 	 * FilterService aus den Reporting-Parametern abgeleitet.
 	 *
-	 * @param reportingRepository		Repository für das Reporting.
+	 * @param reportingContext		Repository für das Reporting.
 	 * @param gostKlausurplanManager 	Der Manager der Klausuren zu diesem Klausurplan
 	 */
-	public ProxyReportingGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository, final GostKlausurplanManager gostKlausurplanManager) {
+	public ProxyReportingGostKlausurplanungKlausurplan(final ReportingContext reportingContext, final GostKlausurplanManager gostKlausurplanManager) {
 		super(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
-				setFilterSchueler(reportingRepository), setFilterKurse(reportingRepository), setFilterKlausurtermin(reportingRepository));
+				setFilterSchueler(reportingContext), setFilterKurse(reportingContext), setFilterKlausurtermin(reportingContext));
 
-		this.reportingRepository = reportingRepository;
+		this.reportingContext = reportingContext;
 		this.gostKlausurplanManager = gostKlausurplanManager;
 
-		if ((this.reportingRepository == null) || (this.gostKlausurplanManager == null)) {
+		if ((this.reportingContext == null) || (this.gostKlausurplanManager == null)) {
 			return;
 		}
 
@@ -115,7 +115,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 
 		// 2. Kurs-Objekte anhand der Kursklausuren erzeugen.
 		super.kurse.addAll(this.gostKlausurplanManager.getKursManager().kurse().stream()
-				.map(k -> new ProxyReportingKurs(this.reportingRepository, k))
+				.map(k -> new ProxyReportingKurs(this.reportingContext, k))
 				.toList());
 
 		// 3. Klausurtermine erstellen.
@@ -148,8 +148,8 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 		// 7. Sortiere alle Schülerklausuren, sowohl in der Gesamtliste als auch bei den Kursklausuren.
 
 		// Prüfe, ob Service und Logger abrufbar sind. Andernfalls würden Standardsortierungen verwendet werden.
-		final ReportingSortierungService sortierungService = this.reportingRepository.sortierungService();
-		final Logger logger = this.reportingRepository.logger();
+		final ReportingSortierungService sortierungService = this.reportingContext.sortierungService();
+		final Logger logger = this.reportingContext.logger();
 
 		final Optional<Comparator<ReportingGostKlausurplanungSchuelerklausur>> optionalComparator =
 				ComparatorFactory.buildOptionalComparator(
@@ -167,22 +167,22 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 		super.schuelerklausuren.forEach(sk -> sk.schueler().gostKlausurplanungSchuelerklausuren().add(sk));
 	}
 
-	private static Predicate<ReportingSchueler> setFilterSchueler(final ReportingRepository reportingRepository) {
-		return (reportingRepository == null)
+	private static Predicate<ReportingSchueler> setFilterSchueler(final ReportingContext reportingContext) {
+		return (reportingContext == null)
 				? s -> true
-				: reportingRepository.filterService().getFilter(ReportingSchueler.class.getSimpleName(), null);
+				: reportingContext.filterService().getFilter(ReportingSchueler.class.getSimpleName(), null);
 	}
 
-	private static Predicate<ReportingKurs> setFilterKurse(final ReportingRepository reportingRepository) {
-		return (reportingRepository == null)
+	private static Predicate<ReportingKurs> setFilterKurse(final ReportingContext reportingContext) {
+		return (reportingContext == null)
 				? k -> true
-				: reportingRepository.filterService().getFilter(ReportingKurs.class.getSimpleName(), null);
+				: reportingContext.filterService().getFilter(ReportingKurs.class.getSimpleName(), null);
 	}
 
-	private static Predicate<ReportingGostKlausurplanungKlausurtermin> setFilterKlausurtermin(final ReportingRepository reportingRepository) {
-		return (reportingRepository == null)
+	private static Predicate<ReportingGostKlausurplanungKlausurtermin> setFilterKlausurtermin(final ReportingContext reportingContext) {
+		return (reportingContext == null)
 				? p -> true
-				: reportingRepository.filterService().getFilter(ReportingGostKlausurplanungKlausurtermin.class.getSimpleName(), null);
+				: reportingContext.filterService().getFilter(ReportingGostKlausurplanungKlausurtermin.class.getSimpleName(), null);
 	}
 
 	/**
@@ -192,7 +192,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 		if (this.gostKlausurplanManager == null) {
 			return;
 		}
-		super.schueler.addAll(this.reportingRepository.repositorySchueler()
+		super.schueler.addAll(this.reportingContext.repositorySchueler()
 				.schueler(this.gostKlausurplanManager.schuelerklausurGetMengeAsList().stream().map(s -> s.idSchueler).distinct().toList()));
 	}
 
@@ -212,7 +212,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 				// Durchlaufe alle Räume, ermittle dabei die Klausurstunden und erzeuge damit die Klausurräume.
 				for (final GostKlausurraum terminraum : this.gostKlausurplanManager.raumGetMengeByTermin(gostKlausurtermin)) {
 					termin.klausurraeume().add(
-							new ProxyReportingGostKlausurplanungKlausurraum(this.reportingRepository, termin, terminraum,
+							new ProxyReportingGostKlausurplanungKlausurraum(this.reportingContext, termin, terminraum,
 									this.gostKlausurplanManager.raumstundeGetMengeByRaum(terminraum)));
 				}
 			}
@@ -289,7 +289,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 			final List<GostKlausurraumstunde> gostKlausurraumstundenSchueler = gostKlausurplanManager.raumstundeGetMengeByRaum(gostKlausurraum);
 			if (!gostKlausurraumstundenSchueler.isEmpty()) {
 				klausurraum = new ProxyReportingGostKlausurplanungKlausurraum(
-						this.reportingRepository, klausurtermin, gostKlausurraum, gostKlausurraumstundenSchueler);
+						this.reportingContext, klausurtermin, gostKlausurraum, gostKlausurraumstundenSchueler);
 			}
 		}
 
@@ -305,8 +305,8 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 	 * @return Repository für das Reporting
 	 */
 	@JsonIgnore
-	public ReportingRepository reportingRepository() {
-		return reportingRepository;
+	public ReportingContext reportingContext() {
+		return reportingContext;
 	}
 
 }

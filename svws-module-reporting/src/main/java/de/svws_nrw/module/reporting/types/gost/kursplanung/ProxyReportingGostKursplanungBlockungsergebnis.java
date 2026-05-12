@@ -13,7 +13,7 @@ import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 import de.svws_nrw.module.reporting.types.gost.fachwahlstatistik.ProxyReportingGostFachwahlstatistikHalbjahr;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.module.reporting.types.schueler.gost.kursplanung.ProxyReportingSchuelerGostKursplanungKursbelegung;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
@@ -32,7 +32,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 
 	/** Repository für das Reporting. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 	/** Ergebnismanager des Blockungsergebnisses. */
 	@JsonIgnore
@@ -42,16 +42,16 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostKursplanungBlockungsergebnis}. Die Filter-Prädikate für
 	 * Schüler und Kurse werden über den FilterService aus den Reporting-Parametern abgeleitet.
 	 *
-	 * @param reportingRepository	Repository für das Reporting.
+	 * @param reportingContext	Repository für das Reporting.
 	 * @param blockungsergebnis 	Das GOSt-Blockungsergebnis, welches für das Reporting genutzt werden soll.
 	 * @param datenManager 			Der zum Blockungsergebnis gehörige Datenmanager der Blockung.
 	 */
-	public ProxyReportingGostKursplanungBlockungsergebnis(final ReportingRepository reportingRepository, final GostBlockungsergebnis blockungsergebnis,
+	public ProxyReportingGostKursplanungBlockungsergebnis(final ReportingContext reportingContext, final GostBlockungsergebnis blockungsergebnis,
 			final GostBlockungsdatenManager datenManager) {
 		super(0, 0, 0, 0, 0, 0, "", null, null, blockungsergebnis.id, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
-				setFilterSchueler(reportingRepository), setFilterKurse(reportingRepository), istSchuelerFilterAktiv(reportingRepository),
-				istKurseFilterAktiv(reportingRepository));
-		this.reportingRepository = reportingRepository;
+				setFilterSchueler(reportingContext), setFilterKurse(reportingContext), istSchuelerFilterAktiv(reportingContext),
+				istKurseFilterAktiv(reportingContext));
+		this.reportingContext = reportingContext;
 
 		// Initialisiere den Blockungsergebnis-Manager.
 		ergebnisManager = new GostBlockungsergebnisManager(datenManager, blockungsergebnis);
@@ -67,7 +67,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 		super.gostHalbjahr = GostHalbjahr.fromID(datenManager.daten().gostHalbjahr);
 
 		// Füge die Schüler der Liste der Schüler dieses Blockungsergebnisses hinzu und lege eine interne Map an, um auf die Schüler im Folgenden direkt zugreifen zu können.
-		super.schueler.addAll(this.reportingRepository.repositorySchueler().schueler(datenManager.schuelerGetListe().stream().map(s -> s.id).toList()));
+		super.schueler.addAll(this.reportingContext.repositorySchueler().schueler(datenManager.schuelerGetListe().stream().map(s -> s.id).toList()));
 		final HashMap<Long, ReportingSchueler> mapBlockungsergebnisSchuelermenge = new HashMap<>();
 		mapBlockungsergebnisSchuelermenge.putAll(super.schueler.stream().collect(Collectors.toMap(ReportingSchueler::id, s -> s)));
 
@@ -98,7 +98,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 			// Liste der Kurslehrer erzeugen.
 			final List<ReportingLehrer> kursLehrer = datenManager.kursGetLehrkraefteSortiert(kurs.id)
 					.stream()
-					.map(l -> reportingRepository.repositoryLehrer().lehrer(l.id))
+					.map(l -> reportingContext.repositoryLehrer().lehrer(l.id))
 					.toList();
 
 			// Den Kurs der Gost-Kurplanung erzeugen.
@@ -117,7 +117,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 					ergebnisManager.getOfKursAnzahlSchueler(kurs.id),
 					ergebnisManager.getOfKursAnzahlSchuelerSchriftlich(kurs.id),
 					datenManager.kursGetName(kurs.id),
-					this.reportingRepository.repositorySchule().schuljahresabschnitt(schuljahr, (datenManager.daten().gostHalbjahr % 2) + 1)
+					this.reportingContext.repositorySchule().schuljahresabschnitt(schuljahr, (datenManager.daten().gostHalbjahr % 2) + 1)
 							.fach(datenManager.kursGet(kurs.id).fach_id),
 					null,
 					GostHalbjahr.fromID(datenManager.daten().gostHalbjahr),
@@ -140,8 +140,8 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 			super.kurse.add(reportingGostKursplanungKurs);
 
 			// Aktualisiere die Map der Kursplanungskurse im Repository.
-			this.reportingRepository.repositoryGost().kursplanungKurse().clear();
-			this.reportingRepository.repositoryGost().kursplanungKurse()
+			this.reportingContext.repositoryGost().kursplanungKurse().clear();
+			this.reportingContext.repositoryGost().kursplanungKurse()
 					.putAll(super.kurse.stream().collect(Collectors.toMap(ReportingGostKursplanungKurs::id,
 							k -> k)));
 		}
@@ -161,14 +161,14 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 	 * einzelnen Schüler oder Kurs einzuschränken. Die zugrunde liegenden Listen werden aus einem bereits aufgebauten
 	 * Reporting-Objekt übernommen.
 	 *
-	 * @param reportingRepository    Repository für das Reporting.
+	 * @param reportingContext    Repository für das Reporting.
 	 * @param quelle                 Ein bereits aufgebautes Reporting-Objekt, dessen Listen wiederverwendet werden.
 	 * @param filterSchueler         Ein Prädikat, das bestimmt, welche Schüler in der Ausgabe der Hauptliste enthalten sind.
 	 * @param filterKurse            Ein Prädikat, das bestimmt, welche Kurse in der Ausgabe enthalten sind.
 	 * @param istSchuelerFilterAktiv Gibt an, ob auf der Hauptliste der Schüler ein Filter angewendet wird.
 	 * @param istKurseFilterAktiv    Gibt an, ob auf der Liste der Kurse ein Filter angewendet wird.
 	 */
-	public ProxyReportingGostKursplanungBlockungsergebnis(final ReportingRepository reportingRepository,
+	public ProxyReportingGostKursplanungBlockungsergebnis(final ReportingContext reportingContext,
 			final ReportingGostKursplanungBlockungsergebnis quelle,
 			final Predicate<ReportingSchueler> filterSchueler, final Predicate<ReportingGostKursplanungKurs> filterKurse,
 			final boolean istSchuelerFilterAktiv, final boolean istKurseFilterAktiv) {
@@ -177,31 +177,31 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 				quelle.gostHalbjahr(), quelle.id(),
 				new ArrayList<>(quelle.kurse), new ArrayList<>(quelle.schienen()), new ArrayList<>(quelle.schueler),
 				filterSchueler, filterKurse, istSchuelerFilterAktiv, istKurseFilterAktiv);
-		this.reportingRepository = reportingRepository;
+		this.reportingContext = reportingContext;
 		this.ergebnisManager = null;
 	}
 
 
-	private static Predicate<ReportingSchueler> setFilterSchueler(final ReportingRepository reportingRepository) {
-		return (reportingRepository == null)
+	private static Predicate<ReportingSchueler> setFilterSchueler(final ReportingContext reportingContext) {
+		return (reportingContext == null)
 				? s -> true
-				: reportingRepository.filterService().getFilter(ReportingSchueler.class.getSimpleName(), null);
+				: reportingContext.filterService().getFilter(ReportingSchueler.class.getSimpleName(), null);
 	}
 
-	private static Predicate<ReportingGostKursplanungKurs> setFilterKurse(final ReportingRepository reportingRepository) {
-		return (reportingRepository == null)
+	private static Predicate<ReportingGostKursplanungKurs> setFilterKurse(final ReportingContext reportingContext) {
+		return (reportingContext == null)
 				? k -> true
-				: reportingRepository.filterService().getFilter(ReportingGostKursplanungKurs.class.getSimpleName(), null);
+				: reportingContext.filterService().getFilter(ReportingGostKursplanungKurs.class.getSimpleName(), null);
 	}
 
-	private static boolean istSchuelerFilterAktiv(final ReportingRepository reportingRepository) {
-		return (reportingRepository != null)
-				&& reportingRepository.filterService().hatFilter(ReportingSchueler.class.getSimpleName());
+	private static boolean istSchuelerFilterAktiv(final ReportingContext reportingContext) {
+		return (reportingContext != null)
+				&& reportingContext.filterService().hatFilter(ReportingSchueler.class.getSimpleName());
 	}
 
-	private static boolean istKurseFilterAktiv(final ReportingRepository reportingRepository) {
-		return (reportingRepository != null)
-				&& reportingRepository.filterService().hatFilter(ReportingGostKursplanungKurs.class.getSimpleName());
+	private static boolean istKurseFilterAktiv(final ReportingContext reportingContext) {
+		return (reportingContext != null)
+				&& reportingContext.filterService().hatFilter(ReportingGostKursplanungKurs.class.getSimpleName());
 	}
 
 
@@ -218,7 +218,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 		} catch (final Exception e) {
 			ReportingExceptionUtils.logException(
 					"INFO: Fehler mit definiertem Rückgabewert abgefangen aufgrund fehlender Fachwahl eines Schülers bei dessen Kursplanungskursbelegung.",
-					e, reportingRepository.logger(), LogLevel.INFO, 0);
+					e, reportingContext.logger(), LogLevel.INFO, 0);
 		}
 		mapBlockungsergebnisSchuelermenge.get(idKursschueler).gostKursplanungKursbelegungen()
 				.add(new ProxyReportingSchuelerGostKursplanungKursbelegung(fachwahlAbiturfach, fachwahlGueltig, fachwahlSchriftlich,
@@ -232,8 +232,8 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 	 * @return Repository für das Reporting
 	 */
 	@JsonIgnore
-	public ReportingRepository reportingRepository() {
-		return reportingRepository;
+	public ReportingContext reportingContext() {
+		return reportingContext;
 	}
 
 
@@ -246,14 +246,14 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 	public Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik() {
 		if ((super.fachwahlstatistik() == null) || super.fachwahlstatistik().isEmpty()) {
 			final Map<Long, ReportingGostKursplanungFachwahlstatistik> mapFachwahlStatistik = new HashMap<>();
-			final List<GostStatistikFachwahl> gostFachwahlenStatistik = this.reportingRepository.repositoryGost().fachwahlen(super.abiturjahr());
+			final List<GostStatistikFachwahl> gostFachwahlenStatistik = this.reportingContext.repositoryGost().fachwahlen(super.abiturjahr());
 			if (!gostFachwahlenStatistik.isEmpty()) {
 				mapFachwahlStatistik.putAll(
 						gostFachwahlenStatistik.stream().collect(
 								Collectors.toMap(
 										f -> f.id,
 										f -> (ReportingGostKursplanungFachwahlstatistik) new ProxyReportingGostKursplanungFachwahlstatistik(
-												new ProxyReportingGostFachwahlstatistikHalbjahr(this.reportingRepository, this.gostHalbjahr(), f),
+												new ProxyReportingGostFachwahlstatistikHalbjahr(this.reportingContext, this.gostHalbjahr(), f),
 												this.ergebnisManager))));
 			}
 			super.fachwahlstatistik = mapFachwahlStatistik;

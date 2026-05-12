@@ -3,7 +3,7 @@ package de.svws_nrw.module.reporting.html.contexts;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 import org.thymeleaf.context.Context;
 
@@ -16,22 +16,22 @@ public final class HtmlContextKlassen extends HtmlContext<ReportingKlasse> imple
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Klassen.
 	 *
-	 * @param reportingRepository 	Repository mit Parametern, Logger und Daten zum Reporting.
+	 * @param reportingContext 	Context mit Parametern, Logger und Daten zum Reporting.
 	 * @param reportingKlassen		Liste der Klassen, die berücksichtigt werden sollen.
 	 */
-	public HtmlContextKlassen(final ReportingRepository reportingRepository, final List<ReportingKlasse> reportingKlassen) {
-		super(reportingRepository);
+	public HtmlContextKlassen(final ReportingContext reportingContext, final List<ReportingKlasse> reportingKlassen) {
+		super(reportingContext);
 		erzeugeContextFromKlassen(reportingKlassen);
 	}
 
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Klassen-IDs.
 	 *
-	 * @param reportingRepository   Repository mit Parametern, Logger und Daten zum Reporting.
+	 * @param reportingContext   Context mit Parametern, Logger und Daten zum Reporting.
 	 */
-	public HtmlContextKlassen(final ReportingRepository reportingRepository) {
-		super(reportingRepository);
-		erzeugeContextFromIds(this.reportingRepository.reportingParameter().idsHauptdaten());
+	public HtmlContextKlassen(final ReportingContext reportingContext) {
+		super(reportingContext);
+		erzeugeContextFromIds(this.reportingContext.reportingParameter().idsHauptdaten());
 	}
 
 
@@ -60,7 +60,7 @@ public final class HtmlContextKlassen extends HtmlContext<ReportingKlasse> imple
 	 */
 	private void erzeugeContextFromIds(final List<Long> idsKlassen) {
 
-		setContextData(reportingRepository.repositoryLerngruppen().klassen(idsKlassen, false));
+		setContextData(reportingContext.repositoryLerngruppen().klassen(idsKlassen, false));
 		sortiereContextMitRegistry();
 
 		// Daten-Context für Thymeleaf erzeugen.
@@ -83,7 +83,7 @@ public final class HtmlContextKlassen extends HtmlContext<ReportingKlasse> imple
 		for (final ReportingKlasse reportingKlasse : getContextData()) {
 			final List<ReportingKlasse> eineKlasse = new ArrayList<>();
 			eineKlasse.add(reportingKlasse);
-			resultContexts.add(new HtmlContextKlassen(this.reportingRepository, eineKlasse));
+			resultContexts.add(new HtmlContextKlassen(this.reportingContext, eineKlasse));
 		}
 
 		return resultContexts;

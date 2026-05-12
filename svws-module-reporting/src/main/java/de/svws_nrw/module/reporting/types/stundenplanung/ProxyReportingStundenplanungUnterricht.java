@@ -6,7 +6,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.stundenplan.StundenplanUnterricht;
 import de.svws_nrw.module.reporting.types.lehrer.ProxyReportingLehrer;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 
 
@@ -15,9 +15,9 @@ import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
  */
 public class ProxyReportingStundenplanungUnterricht extends ReportingStundenplanungUnterricht {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 	/** Der Stundenplan, zu dem dieser Unterricht gehört. */
 	@JsonIgnore
@@ -26,15 +26,15 @@ public class ProxyReportingStundenplanungUnterricht extends ReportingStundenplan
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingStundenplanungUnterricht}.
 	 *
-	 * @param reportingRepository  Repository für das Reporting.
+	 * @param reportingContext  Repository für das Reporting.
 	 * @param stundenplan	 	   Der Stundenplan, zu dieser der Unterricht gehört.
 	 * @param unterricht		   Der Unterricht aus dem Stundenplan.
 	 */
-	public ProxyReportingStundenplanungUnterricht(final ReportingRepository reportingRepository, final ReportingStundenplanungStundenplan stundenplan,
+	public ProxyReportingStundenplanungUnterricht(final ReportingContext reportingContext, final ReportingStundenplanungStundenplan stundenplan,
 			final StundenplanUnterricht unterricht) {
 		super(unterricht.id, null, new ArrayList<>(), null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), -1, null);
 
-		this.reportingRepository = reportingRepository;
+		this.reportingContext = reportingContext;
 		this.stundenplan = stundenplan;
 
 		if (this.stundenplan.schuljahresabschnitt() != null) {
@@ -52,8 +52,8 @@ public class ProxyReportingStundenplanungUnterricht extends ReportingStundenplan
 		}
 
 		super.lehrkraefte = unterricht.lehrer.stream()
-				.filter(l -> this.reportingRepository.repositoryLehrer().stammdaten().get(l) != null)
-				.map(l -> (ReportingLehrer) new ProxyReportingLehrer(this.reportingRepository, this.reportingRepository.repositoryLehrer().stammdaten().get(l)))
+				.filter(l -> this.reportingContext.repositoryLehrer().stammdaten().get(l) != null)
+				.map(l -> (ReportingLehrer) new ProxyReportingLehrer(this.reportingContext, this.reportingContext.repositoryLehrer().stammdaten().get(l)))
 				.toList();
 
 		if ((this.stundenplan.raeume() != null) && !this.stundenplan.raeume().isEmpty()) {
@@ -95,8 +95,8 @@ public class ProxyReportingStundenplanungUnterricht extends ReportingStundenplan
 	 *
 	 * @return Repository für das Reporting
 	 */
-	public ReportingRepository reportingRepository() {
-		return reportingRepository;
+	public ReportingContext reportingContext() {
+		return reportingContext;
 	}
 
 }

@@ -5,7 +5,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 
 /**
@@ -13,59 +13,59 @@ import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
  */
 public class ProxyReportingSchule extends ReportingSchule {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingSchule}.
 	 *
-	 * @param reportingRepository Repository für das Reporting.
+	 * @param reportingContext Repository für das Reporting.
 	 */
-	public ProxyReportingSchule(final ReportingRepository reportingRepository) {
+	public ProxyReportingSchule(final ReportingContext reportingContext) {
 		super(new ArrayList<>(),
-				ersetzeNullBlankTrim(reportingRepository.repositorySchule().stammdaten().email),
-				ersetzeNullBlankTrim(reportingRepository.repositorySchule().stammdaten().fax),
-				ersetzeNullBlankTrim(reportingRepository.repositorySchule().stammdaten().hausnummer),
-				ersetzeNullBlankTrim(reportingRepository.repositorySchule().stammdaten().ort),
-				ersetzeNullBlankTrim(reportingRepository.repositorySchule().stammdaten().plz),
-				reportingRepository.repositorySchule().stammdaten().schulNr,
-				ersetzeNullBlankTrim(reportingRepository.repositorySchule().stammdaten().strassenname),
-				ersetzeNullBlankTrim(reportingRepository.repositorySchule().stammdaten().telefon),
-				ersetzeNullBlankTrim(reportingRepository.repositorySchule().stammdaten().hausnummerZusatz),
+				ersetzeNullBlankTrim(reportingContext.repositorySchule().stammdaten().email),
+				ersetzeNullBlankTrim(reportingContext.repositorySchule().stammdaten().fax),
+				ersetzeNullBlankTrim(reportingContext.repositorySchule().stammdaten().hausnummer),
+				ersetzeNullBlankTrim(reportingContext.repositorySchule().stammdaten().ort),
+				ersetzeNullBlankTrim(reportingContext.repositorySchule().stammdaten().plz),
+				reportingContext.repositorySchule().stammdaten().schulNr,
+				ersetzeNullBlankTrim(reportingContext.repositorySchule().stammdaten().strassenname),
+				ersetzeNullBlankTrim(reportingContext.repositorySchule().stammdaten().telefon),
+				ersetzeNullBlankTrim(reportingContext.repositorySchule().stammdaten().hausnummerZusatz),
 				null, // aktuellerSchuljahresabschnitt
-				reportingRepository.repositorySchule().stammdaten().anzJGS_Jahr,
-				reportingRepository.repositorySchule().stammdaten().schuleAbschnitte.anzahlAbschnitte,
+				reportingContext.repositorySchule().stammdaten().anzJGS_Jahr,
+				reportingContext.repositorySchule().stammdaten().schuleAbschnitte.anzahlAbschnitte,
 				null, // auswahlSchuljahresabschnitt
-				ersetzeNullBlankTrim(reportingRepository.repositorySchule().stammdaten().schuleAbschnitte.abschnittBez),
-				reportingRepository.repositorySchule().stammdaten().schuleAbschnitte.bezAbschnitte,
-				reportingRepository.repositorySchule().stammdaten().dauerUnterrichtseinheit,
+				ersetzeNullBlankTrim(reportingContext.repositorySchule().stammdaten().schuleAbschnitte.abschnittBez),
+				reportingContext.repositorySchule().stammdaten().schuleAbschnitte.bezAbschnitte,
+				reportingContext.repositorySchule().stammdaten().dauerUnterrichtseinheit,
 				new ArrayList<>(), // schuljahresabschnitte
 				null,
 				null, // schulleitung
 				null, // schullogo
 				null, // stvSchulleitung
-				ersetzeNullBlankTrim(reportingRepository.repositorySchule().stammdaten().webAdresse));
+				ersetzeNullBlankTrim(reportingContext.repositorySchule().stammdaten().webAdresse));
 
 
-		this.reportingRepository = reportingRepository;
+		this.reportingContext = reportingContext;
 
-		super.bezeichnung.add(ersetzeNullBlankTrim(reportingRepository.repositorySchule().stammdaten().bezeichnung1));
-		super.bezeichnung.add(ersetzeNullBlankTrim(reportingRepository.repositorySchule().stammdaten().bezeichnung2));
-		super.bezeichnung.add(ersetzeNullBlankTrim(reportingRepository.repositorySchule().stammdaten().bezeichnung3));
+		super.bezeichnung.add(ersetzeNullBlankTrim(reportingContext.repositorySchule().stammdaten().bezeichnung1));
+		super.bezeichnung.add(ersetzeNullBlankTrim(reportingContext.repositorySchule().stammdaten().bezeichnung2));
+		super.bezeichnung.add(ersetzeNullBlankTrim(reportingContext.repositorySchule().stammdaten().bezeichnung3));
 		super.bezeichnung.removeIf(Objects::isNull);
 		super.bezeichnung.removeIf(String::isBlank);
 
-		super.schullogo = this.reportingRepository.repositorySchule().schullogoBase64();
+		super.schullogo = this.reportingContext.repositorySchule().schullogoBase64();
 
-		super.schulform = this.reportingRepository.repositoryKataloge().schulformen().values()
-				.stream().filter(sf -> ((Objects.equals(sf.kuerzel, reportingRepository.repositorySchule().stammdaten().schulform)) && (sf.gueltigBis == null)))
+		super.schulform = this.reportingContext.repositoryKataloge().schulformen().values()
+				.stream().filter(sf -> ((Objects.equals(sf.kuerzel, reportingContext.repositorySchule().stammdaten().schulform)) && (sf.gueltigBis == null)))
 				.findFirst().orElse(null);
 
-		super.schuljahresabschnitte = this.reportingRepository.repositorySchule().schuljahresabschnitte();
-		super.aktuellerSchuljahresabschnitt = this.reportingRepository.repositorySchule().aktuellerSchuljahresabschnitt();
-		super.auswahlSchuljahresabschnitt = this.reportingRepository.repositorySchule().auswahlSchuljahresabschnitt();
+		super.schuljahresabschnitte = this.reportingContext.repositorySchule().schuljahresabschnitte();
+		super.aktuellerSchuljahresabschnitt = this.reportingContext.repositorySchule().aktuellerSchuljahresabschnitt();
+		super.auswahlSchuljahresabschnitt = this.reportingContext.repositorySchule().auswahlSchuljahresabschnitt();
 	}
 
 
@@ -76,8 +76,8 @@ public class ProxyReportingSchule extends ReportingSchule {
 	 *
 	 * @return Repository für das Reporting
 	 */
-	public ReportingRepository reportingRepository() {
-		return reportingRepository;
+	public ReportingContext reportingContext() {
+		return reportingContext;
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class ProxyReportingSchule extends ReportingSchule {
 	public ReportingLehrer schulleitung() {
 		if (super.schulleitung == null) {
 			super.schulleitung =
-					this.reportingRepository.repositoryLehrer().lehrer(this.reportingRepository.repositoryLehrer().stammdaten().keySet().stream().toList())
+					this.reportingContext.repositoryLehrer().lehrer(this.reportingContext.repositoryLehrer().stammdaten().keySet().stream().toList())
 							.stream().filter(ReportingLehrer::istSchulleitungAktuell).findFirst().orElse(null);
 		}
 		return super.schulleitung;
@@ -104,7 +104,7 @@ public class ProxyReportingSchule extends ReportingSchule {
 	public ReportingLehrer stvSchulleitung() {
 		if (super.stvSchulleitung == null) {
 			super.stvSchulleitung =
-					this.reportingRepository.repositoryLehrer().lehrer(this.reportingRepository.repositoryLehrer().stammdaten().keySet().stream().toList())
+					this.reportingContext.repositoryLehrer().lehrer(this.reportingContext.repositoryLehrer().stammdaten().keySet().stream().toList())
 							.stream().filter(ReportingLehrer::istStvSchulleitungAktuell).findFirst().orElse(null);
 		}
 		return super.stvSchulleitung;

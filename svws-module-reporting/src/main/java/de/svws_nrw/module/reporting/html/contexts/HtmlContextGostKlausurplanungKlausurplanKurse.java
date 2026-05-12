@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurplan;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurtermin;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
@@ -22,19 +22,19 @@ public final class HtmlContextGostKlausurplanungKlausurplanKurse extends HtmlCon
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
 	 *
-	 * @param reportingRepository	Repository mit Parametern, Logger und Daten zum Reporting.
+	 * @param reportingContext	Context mit Parametern, Logger und Daten zum Reporting.
 	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
-	public HtmlContextGostKlausurplanungKlausurplanKurse(final ReportingRepository reportingRepository) throws ApiOperationException {
-		super(reportingRepository);
+	public HtmlContextGostKlausurplanungKlausurplanKurse(final ReportingContext reportingContext) throws ApiOperationException {
+		super(reportingContext);
 	}
 
-	private HtmlContextGostKlausurplanungKlausurplanKurse(final ReportingRepository reportingRepository,
+	private HtmlContextGostKlausurplanungKlausurplanKurse(final ReportingContext reportingContext,
 			final ReportingGostKlausurplanungKlausurplan gostKlausurplan,
 			final Predicate<ReportingSchueler> filterSchueler, final Predicate<ReportingKurs> filterKurse,
 			final Predicate<ReportingGostKlausurplanungKlausurtermin> filterKlausurtermine) {
-		super(reportingRepository, gostKlausurplan, filterSchueler, filterKurse, filterKlausurtermine);
+		super(reportingContext, gostKlausurplan, filterSchueler, filterKurse, filterKlausurtermine);
 	}
 
 
@@ -50,7 +50,7 @@ public final class HtmlContextGostKlausurplanungKlausurplanKurse extends HtmlCon
 			final long id = k.id();
 			final Predicate<ReportingKurs> einzelFilterKurs = kurs -> kurs.id() == id;
 			result.add(new HtmlContextGostKlausurplanungKlausurplanKurse(
-					this.reportingRepository, this.gostKlausurplan, s -> true, einzelFilterKurs, kt -> true));
+					this.reportingContext, this.gostKlausurplan, s -> true, einzelFilterKurs, kt -> true));
 		}
 		return result;
 	}

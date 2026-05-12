@@ -1,6 +1,6 @@
 package de.svws_nrw.module.reporting.filterung;
 
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 
 /**
@@ -15,7 +15,7 @@ public final class FilterRegistryReportingFach {
 
 	/**
 	 * Stellt die {@link FilterRegistry} für die Klasse {@link ReportingFach} öffentlich zur Verfügung.
-	 * Diese Methode wird vom {@link ReportingRepository} via Reflection aufgerufen.
+	 * Diese Methode wird vom {@link ReportingContext} via Reflection aufgerufen.
 	 *
 	 * @return Die konfigurierte Instanz von {@link FilterRegistry} für {@link ReportingFach}.
 	 */

@@ -13,7 +13,7 @@ import de.svws_nrw.module.reporting.types.fach.ProxyReportingFach;
 import de.svws_nrw.module.reporting.types.jahrgang.ProxyReportingJahrgang;
 import de.svws_nrw.module.reporting.types.lerngruppen.ProxyReportingKlasse;
 import de.svws_nrw.module.reporting.types.lerngruppen.ProxyReportingKurs;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
@@ -24,17 +24,17 @@ import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
  */
 public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabschnitt {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingSchuljahresabschnitt}.
 	 *
-	 * @param reportingRepository 	Repository für das Reporting.
+	 * @param reportingContext 	Repository für das Reporting.
 	 * @param schuljahresabschnitt	Stammdaten-Objekt aus der DB.
 	 */
-	public ProxyReportingSchuljahresabschnitt(final ReportingRepository reportingRepository, final Schuljahresabschnitt schuljahresabschnitt) {
+	public ProxyReportingSchuljahresabschnitt(final ReportingContext reportingContext, final Schuljahresabschnitt schuljahresabschnitt) {
 		super(schuljahresabschnitt.id,
 				schuljahresabschnitt.schuljahr,
 				schuljahresabschnitt.abschnitt,
@@ -47,7 +47,7 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 				new HashMap<>(),
 				new HashMap<>());
 
-		this.reportingRepository = reportingRepository;
+		this.reportingContext = reportingContext;
 	}
 
 
@@ -59,7 +59,7 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 	@Override
 	public ReportingSchuljahresabschnitt folgenderAbschnitt() {
 		if ((super.folgenderAbschnitt == null) && (super.idFolgenderAbschnitt != null)) {
-			super.folgenderAbschnitt = this.reportingRepository.repositorySchule().schuljahresabschnitt(super.idFolgenderAbschnitt);
+			super.folgenderAbschnitt = this.reportingContext.repositorySchule().schuljahresabschnitt(super.idFolgenderAbschnitt);
 		}
 		return super.folgenderAbschnitt;
 	}
@@ -72,7 +72,7 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 	@Override
 	public ReportingSchuljahresabschnitt vorherigerAbschnitt() {
 		if ((super.vorherigerAbschnitt == null) && (super.idVorherigerAbschnitt != null)) {
-			super.vorherigerAbschnitt = this.reportingRepository.repositorySchule().schuljahresabschnitt(super.idVorherigerAbschnitt);
+			super.vorherigerAbschnitt = this.reportingContext.repositorySchule().schuljahresabschnitt(super.idVorherigerAbschnitt);
 		}
 		return super.vorherigerAbschnitt;
 	}
@@ -87,7 +87,7 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 	public Map<Long, ReportingFach> faecher() {
 		if ((super.faecher == null) || super.faecher.isEmpty()) {
 			super.faecher = new HashMap<>();
-			this.reportingRepository.repositoryKataloge().faecher()
+			this.reportingContext.repositoryKataloge().faecher()
 					.forEach((idFach, fach) -> super.faecher.put(idFach, new ProxyReportingFach(fach, this.schuljahr)));
 		}
 		return super.faecher;
@@ -102,8 +102,8 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 	public Map<Long, ReportingJahrgang> jahrgaenge() {
 		if ((super.jahrgaenge == null) || super.jahrgaenge.isEmpty()) {
 			super.jahrgaenge = new HashMap<>();
-			this.reportingRepository.repositoryKataloge().jahrgaenge().forEach((idJahrgang, jahrgang) -> super.jahrgaenge.put(idJahrgang,
-					new ProxyReportingJahrgang(this.reportingRepository, jahrgang, this)));
+			this.reportingContext.repositoryKataloge().jahrgaenge().forEach((idJahrgang, jahrgang) -> super.jahrgaenge.put(idJahrgang,
+					new ProxyReportingJahrgang(this.reportingContext, jahrgang, this)));
 		}
 		return super.jahrgaenge;
 	}
@@ -117,15 +117,15 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 	public Map<Long, ReportingKlasse> klassen() {
 		if ((super.klassen == null) || super.klassen.isEmpty()) {
 			super.klassen = new HashMap<>();
-			final List<KlassenDaten> klassendaten = this.reportingRepository.repositoryLerngruppen().klassenBySchuljahresabschnitt(this.id());
+			final List<KlassenDaten> klassendaten = this.reportingContext.repositoryLerngruppen().klassenBySchuljahresabschnitt(this.id());
 			if (klassendaten.isEmpty()) {
 				return super.klassen;
 			}
 
 			for (final KlassenDaten klasse : klassendaten) {
-				final ReportingKlasse reportingKlasse = new ProxyReportingKlasse(this.reportingRepository, klasse);
+				final ReportingKlasse reportingKlasse = new ProxyReportingKlasse(this.reportingContext, klasse);
 				super.klassen.put(reportingKlasse.id(), reportingKlasse);
-				this.reportingRepository.repositoryLerngruppen().klassen().put(reportingKlasse.id(), reportingKlasse);
+				this.reportingContext.repositoryLerngruppen().klassen().put(reportingKlasse.id(), reportingKlasse);
 			}
 
 		}
@@ -141,15 +141,15 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 	public Map<Long, ReportingKurs> kurse() {
 		if ((super.kurse == null) || super.kurse.isEmpty()) {
 			super.kurse = new HashMap<>();
-			final List<KursDaten> kurseDaten = this.reportingRepository.repositoryLerngruppen().kurseBySchuljahresabschnitt(this.id());
+			final List<KursDaten> kurseDaten = this.reportingContext.repositoryLerngruppen().kurseBySchuljahresabschnitt(this.id());
 			if (kurseDaten.isEmpty()) {
 				return super.kurse;
 			}
 
 			for (final KursDaten kurs : kurseDaten) {
-				final ReportingKurs reportingKurs = new ProxyReportingKurs(this.reportingRepository, kurs);
+				final ReportingKurs reportingKurs = new ProxyReportingKurs(this.reportingContext, kurs);
 				super.kurse.put(reportingKurs.id(), reportingKurs);
-				this.reportingRepository.repositoryLerngruppen().kurse().put(reportingKurs.id(), reportingKurs);
+				this.reportingContext.repositoryLerngruppen().kurse().put(reportingKurs.id(), reportingKurs);
 			}
 		}
 		return super.kurse;

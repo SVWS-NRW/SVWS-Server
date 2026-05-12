@@ -22,7 +22,7 @@ import de.svws_nrw.data.email.DataEmailJobs;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.builders.ReportBuilderPdf;
 import de.svws_nrw.module.reporting.parameter.ReportingParameterTypisiert;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungKurs;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
@@ -48,16 +48,16 @@ public final class EmailFactory {
 	 */
 	private static final Set<String> BLOCKED_EMAIL_DOMAINS = Set.of("smail.de", "lmail.de");
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
-	private final ReportingRepository reportingRepository;
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	private final ReportingContext reportingContext;
 
 	/**
 	 * Erstelle eine neue Instanz von EmailFactory.
 	 *
-	 * @param reportingRepository das Repository für Reporting-Daten
+	 * @param reportingContext das Repository für Reporting-Daten
 	 */
-	public EmailFactory(final ReportingRepository reportingRepository) {
-		this.reportingRepository = reportingRepository;
+	public EmailFactory(final ReportingContext reportingContext) {
+		this.reportingContext = reportingContext;
 	}
 
 	/**
@@ -73,32 +73,32 @@ public final class EmailFactory {
 	 */
 	public Response sendEmails(final PdfFactory pdfFactory) throws ApiOperationException {
 		try {
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginne den Job für den asynchronen E-Mail-Versand zu starten.");
+			reportingContext.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginne den Job für den asynchronen E-Mail-Versand zu starten.");
 
 			final ReportingParameterTypisiert parameter = pruefeParameter();
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Parameter wurden geprüft und erfolgreich ermittelt.");
+			reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Parameter wurden geprüft und erfolgreich ermittelt.");
 
 			final String subject = buildEMailBetreff(parameter);
 			final String body = buildEMailHTMLBody(parameter);
 
-			final @NotNull EmailJobManagerContext context = DataEmailJobs.getDefaultJobManagerContext(reportingRepository.conn());
+			final @NotNull EmailJobManagerContext context = DataEmailJobs.getDefaultJobManagerContext(reportingContext.conn());
 			// E-Mail-Context Einstellungen abseits der Standardwerte setzen: Keine E-Mails ohne Anhang versenden.
 			context.withFilterMailsWithoutAttachments(true);
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "EmailJobManagerContext mit SMTP Sitzung erstellt.");
+			reportingContext.logger().logLn(LogLevel.DEBUG, 4, "EmailJobManagerContext mit SMTP Sitzung erstellt.");
 
 			final String absenderEmail = ermittleAbsenderEmail();
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Absender-E-Mail-Adresse ermittelt.");
+			reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Absender-E-Mail-Adresse ermittelt.");
 
 			final ReportingEMailEmpfaengerTyp empfaengerTyp = ermittleEmpfaengerTyp();
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Empfänger-Typ der E-Mail ermittelt.");
+			reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Empfänger-Typ der E-Mail ermittelt.");
 
 			final Map<Long, List<ReportBuilderPdf>> mapGruppiertePdfs = pdfFactory.getPdfBuildersById();
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "PDF-Builder in gruppierter Form erhalten.");
+			reportingContext.logger().logLn(LogLevel.DEBUG, 4, "PDF-Builder in gruppierter Form erhalten.");
 
 			final List<String> listUebersprungen = new ArrayList<>();
 			final List<EmailJobRecipient> mapEmpfaengerEmailAnhaenge =
 					sammleEmpfaengerUndAnhaenge(parameter, empfaengerTyp, mapGruppiertePdfs, listUebersprungen);
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Empfänger und ihre Anhänge wurden zusammengestellt.");
+			reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Empfänger und ihre Anhänge wurden zusammengestellt.");
 
 			final var manager = EmailJobManagerFactory.getInstance().getManager(context);
 			final @NotNull EmailJob job = new EmailJob(absenderEmail)
@@ -112,11 +112,11 @@ public final class EmailFactory {
 			simple.id = jobId;
 			simple.success = true;
 			simple.log.add("Ein E-Mail-Versand-Job wurde gestartet mit Job-ID %d".formatted(jobId));
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 0, "<<< Job für den asynchronen E-Mail-Versand wurde gestartet. Job-ID: %d".formatted(jobId));
+			reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< Job für den asynchronen E-Mail-Versand wurde gestartet. Job-ID: %d".formatted(jobId));
 
 			return Response.status(Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(simple).build();
 		} catch (final Exception e) {
-			reportingRepository.logger().logLn(LogLevel.ERROR, 4, "### FEHLER: Der E-Mail-Versand konnte nicht als Job gestartet werden.");
+			reportingContext.logger().logLn(LogLevel.ERROR, 4, "### FEHLER: Der E-Mail-Versand konnte nicht als Job gestartet werden.");
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "### FEHLER: Fehler beim Starten des E-Mail-Jobs.");
 		}
 	}
@@ -131,15 +131,15 @@ public final class EmailFactory {
 	 * @throws ApiOperationException Fehler werfen, falls die benötigten Parameter oder E-Mail-Daten nicht vorhanden sind, unvollständig oder ungültig sind.
 	 */
 	private ReportingParameterTypisiert pruefeParameter() throws ApiOperationException {
-		if ((this.reportingRepository.reportingParameter() == null) || (this.reportingRepository.reportingParameter().eMailDaten() == null)) {
-			reportingRepository.logger().logLn(LogLevel.ERROR, 4,
+		if ((this.reportingContext.reportingParameter() == null) || (this.reportingContext.reportingParameter().eMailDaten() == null)) {
+			reportingContext.logger().logLn(LogLevel.ERROR, 4,
 					"### FEHLER: Der E-Mail-Versand wurde abgebrochen, da die notwendigen Parameter und E-Mail-Daten nicht übergeben wurden.");
 			throw new ApiOperationException(Status.BAD_REQUEST, null, null, MediaType.APPLICATION_JSON);
 		}
-		final ReportingParameterTypisiert parameter = this.reportingRepository.reportingParameter();
+		final ReportingParameterTypisiert parameter = this.reportingContext.reportingParameter();
 		if ((parameter.eMailDaten().betreff == null) || parameter.eMailDaten().betreff.isBlank()
 				|| (parameter.eMailDaten().text == null) || parameter.eMailDaten().text.isBlank()) {
-			reportingRepository.logger().logLn(LogLevel.ERROR, 4,
+			reportingContext.logger().logLn(LogLevel.ERROR, 4,
 					"### FEHLER: Der E-Mail-Versand wurde abgebrochen, da kein Betreff oder Text für die E-Mail angegeben wurde.");
 			throw new ApiOperationException(Status.BAD_REQUEST, null, null, MediaType.APPLICATION_JSON);
 		}
@@ -160,7 +160,7 @@ public final class EmailFactory {
 		final BenutzerEMailDaten benutzerEMailDaten;
 		// E-Mail-Daten des aktuellen Benutzers ermitteln. Tritt dabei ein Fehler auf, so wird eine leere Adresse zurückgegeben.
 		try {
-			benutzerEMailDaten = new DataBenutzerEMailDaten(reportingRepository.conn()).getById(reportingRepository.conn().getUser().getId());
+			benutzerEMailDaten = new DataBenutzerEMailDaten(reportingContext.conn()).getById(reportingContext.conn().getUser().getId());
 			if ((benutzerEMailDaten != null) && (benutzerEMailDaten.address != null) && !benutzerEMailDaten.address.isBlank()) {
 				emailAdresse = benutzerEMailDaten.address.trim();
 			}
@@ -170,7 +170,7 @@ public final class EmailFactory {
 		emailAdresse = validatedEmailOrEmpty(emailAdresse);
 
 		if (emailAdresse.isBlank()) {
-			reportingRepository.logger().logLn(LogLevel.ERROR, 4,
+			reportingContext.logger().logLn(LogLevel.ERROR, 4,
 					"### FEHLER: Der E-Mail-Versand wurde abgebrochen, da für den aktuellen Benutzer keine gültige E-Mail-Adresse ermittelt werden konnte. Bitte überprüfen Sie die E-Mail-Einstellungen des Benutzers.");
 			throw new ApiOperationException(Status.BAD_REQUEST, null, null, MediaType.APPLICATION_JSON);
 		}
@@ -186,14 +186,14 @@ public final class EmailFactory {
 	 * @throws ApiOperationException Wenn kein gültiger Empfängertyp definiert ist, wird ein Fehler geworfen.
 	 */
 	private ReportingEMailEmpfaengerTyp ermittleEmpfaengerTyp() throws ApiOperationException {
-		final ReportingParameterTypisiert parameter = this.reportingRepository.reportingParameter();
+		final ReportingParameterTypisiert parameter = this.reportingContext.reportingParameter();
 		if ((parameter != null) && (parameter.eMailDaten() != null)
 				&& (ReportingEMailEmpfaengerTyp.getByID(parameter.eMailDaten().empfaengerTyp) != ReportingEMailEmpfaengerTyp.UNDEFINED)) {
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+			reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 					"Der E-Mail-Empfänger-Typ wurde ermittelt: %s".formatted(ReportingEMailEmpfaengerTyp.getByID(parameter.eMailDaten().empfaengerTyp).name()));
 			return ReportingEMailEmpfaengerTyp.getByID(parameter.eMailDaten().empfaengerTyp);
 		}
-		reportingRepository.logger().logLn(LogLevel.ERROR, 4, "### FEHLER: Es wurde kein gültiger Empfängertyp festgelegt");
+		reportingContext.logger().logLn(LogLevel.ERROR, 4, "### FEHLER: Es wurde kein gültiger Empfängertyp festgelegt");
 		throw new ApiOperationException(Status.BAD_REQUEST, "### FEHLER: Es wurde kein gültiger Empfängertyp festgelegt.");
 	}
 
@@ -266,7 +266,7 @@ public final class EmailFactory {
 			try {
 				attachments.add(new EmailJobAttachment(pdfBuilder.getDateinameMitEndung(), pdfBuilder.generate(), "application/pdf"));
 			} catch (final Exception e) {
-				reportingRepository.logger().logLn(LogLevel.ERROR, 4,
+				reportingContext.logger().logLn(LogLevel.ERROR, 4,
 						"### FEHLER: PDF-Datei '%s' für ID %d konnte nicht generiert werden: %s".formatted(pdfBuilder.getDateiname(), id, e.getMessage()));
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
 						"### FEHLER: PDF-Datei '%s' für ID %d konnte nicht generiert werden: %s".formatted(pdfBuilder.getDateiname(), id, e.getMessage()));
@@ -323,7 +323,7 @@ public final class EmailFactory {
 
 	/**
 	 * Ermittelt eine Liste von Empfänger-Personen basierend auf der angegebenen ID und dem spezifizierten Typ.
-	 * Die Methode verarbeitet verschiedene Modi und gibt die entsprechenden Daten aus dem Reporting-Repository zurück.
+	 * Die Methode verarbeitet verschiedene Modi und gibt die entsprechenden Daten aus dem Reporting-Context zurück.
 	 *
 	 * @param id    Die ID, anhand der die zu ermittelnden Personen identifiziert werden
 	 * @param typ   Der Typ, der den Typ der zu ermittelnden Empfänger vorgibt.
@@ -333,15 +333,15 @@ public final class EmailFactory {
 	private List<ReportingPerson> ermittleEmpfaengerPersonen(final long id, final ReportingEMailEmpfaengerTyp typ) throws ApiOperationException {
 		return switch (typ) {
 			case SCHUELER -> {
-				final ReportingSchueler schueler = reportingRepository.repositorySchueler().schueler(id);
+				final ReportingSchueler schueler = reportingContext.repositorySchueler().schueler(id);
 				yield (schueler == null) ? new ArrayList<>() : List.of(schueler);
 			}
 			case LEHRER -> {
-				final ReportingLehrer lehrer = reportingRepository.repositoryLehrer().lehrer(id);
+				final ReportingLehrer lehrer = reportingContext.repositoryLehrer().lehrer(id);
 				yield (lehrer == null) ? new ArrayList<>() : List.of(lehrer);
 			}
 			case KLASSENLEHRER -> {
-				final ReportingKlasse klasse = reportingRepository.repositoryLerngruppen().klasse(id);
+				final ReportingKlasse klasse = reportingContext.repositoryLerngruppen().klasse(id);
 				if (klasse == null) {
 					yield new ArrayList<>();
 				}
@@ -349,7 +349,7 @@ public final class EmailFactory {
 				yield new ArrayList<>(lehrer);
 			}
 			case KURSLEHRER -> {
-				final ReportingKurs kurs = reportingRepository.repositoryLerngruppen().kurse().get(id);
+				final ReportingKurs kurs = reportingContext.repositoryLerngruppen().kurse().get(id);
 				if (kurs == null) {
 					yield new ArrayList<>();
 				}
@@ -357,7 +357,7 @@ public final class EmailFactory {
 				yield new ArrayList<>(lehrer);
 			}
 			case GOSTKURSPLANUNG_KURSLEHRER -> {
-				final ReportingGostKursplanungKurs kurs = reportingRepository.repositoryGost().kursplanungKurse().get(id);
+				final ReportingGostKursplanungKurs kurs = reportingContext.repositoryGost().kursplanungKurse().get(id);
 				if (kurs == null) {
 					yield new ArrayList<>();
 				}
@@ -365,7 +365,7 @@ public final class EmailFactory {
 				yield new ArrayList<>(lehrer);
 			}
 			default -> {
-				reportingRepository.logger().logLn(LogLevel.ERROR, 4,
+				reportingContext.logger().logLn(LogLevel.ERROR, 4,
 						"### FEHLER: Es wurde kein gültiger Empfängertyp festgelegt. Der Versand der E-Mails wurde abgebrochen.");
 				throw new ApiOperationException(Status.NOT_FOUND, null, null, MediaType.APPLICATION_JSON);
 			}
@@ -382,12 +382,12 @@ public final class EmailFactory {
 	 */
 	public Response cancelEmailJob(final long idJob) {
 		final var manager =
-				EmailJobManagerFactory.getInstance().getManagerByUser(reportingRepository.conn().getDBSchema(), reportingRepository.conn().getUser().getId());
+				EmailJobManagerFactory.getInstance().getManagerByUser(reportingContext.conn().getDBSchema(), reportingContext.conn().getUser().getId());
 		if (manager == null) {
 			final SimpleOperationResponse notFound = new SimpleOperationResponse();
 			notFound.success = false;
-			notFound.log.add("E-Mail-Job-Manager nicht gefunden für: %d (%s)".formatted(reportingRepository.conn().getUser().getId(),
-					reportingRepository.conn().getDBSchema()));
+			notFound.log.add("E-Mail-Job-Manager nicht gefunden für: %d (%s)".formatted(reportingContext.conn().getUser().getId(),
+					reportingContext.conn().getDBSchema()));
 			return Response.status(Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(notFound).build();
 		}
 		final EmailJob job = manager.getJob(idJob);
@@ -496,7 +496,7 @@ public final class EmailFactory {
 				&& (!parameter.eMailDaten().betreff.isBlank())) {
 			return parameter.eMailDaten().betreff;
 		}
-		reportingRepository.logger().logLn(LogLevel.ERROR, 4,
+		reportingContext.logger().logLn(LogLevel.ERROR, 4,
 				"### FEHLER: Der E-Mail-Versand wurde abgebrochen, da kein Betreff für die E-Mail angegeben wurde.");
 		throw new ApiOperationException(Status.BAD_REQUEST, null, null, MediaType.APPLICATION_JSON);
 	}
@@ -542,7 +542,7 @@ public final class EmailFactory {
 
 			return html.toString();
 		}
-		reportingRepository.logger().logLn(LogLevel.ERROR, 4,
+		reportingContext.logger().logLn(LogLevel.ERROR, 4,
 				"### FEHLER: Der E-Mail-Versand wurde abgebrochen, da kein Text für die E-Mail angegeben wurde.");
 		throw new ApiOperationException(Status.BAD_REQUEST, null, null, MediaType.APPLICATION_JSON);
 	}

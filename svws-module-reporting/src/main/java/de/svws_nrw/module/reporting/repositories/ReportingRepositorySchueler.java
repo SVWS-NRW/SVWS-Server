@@ -45,7 +45,7 @@ import de.svws_nrw.service.schueler.schulbesuch.SchulbesuchServiceFactory;
  */
 public class ReportingRepositorySchueler {
 
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 	private final Map<Long, SchuelerStammdaten> mapSchuelerStammdaten = new HashMap<>();
 	private final Map<Long, List<ErzieherStammdaten>> mapErzieherStammdaten = new HashMap<>();
@@ -61,10 +61,10 @@ public class ReportingRepositorySchueler {
 	/**
 	 * Erstellt ein neues ReportingSchuelerRepository.
 	 *
-	 * @param reportingRepository Das zentrale Repository des Reporting-Moduls mit Zugriff auf die domänenspezifischen Repositories.
+	 * @param reportingContext Der zentrale Reporting-Context mit Zugriff auf die domänenspezifischen Repositories.
 	 */
-	public ReportingRepositorySchueler(final ReportingRepository reportingRepository) {
-		this.reportingRepository = reportingRepository;
+	public ReportingRepositorySchueler(final ReportingContext reportingContext) {
+		this.reportingContext = reportingContext;
 	}
 
 
@@ -84,18 +84,18 @@ public class ReportingRepositorySchueler {
 
 		if (!mapSchuelerStammdaten.containsKey(idSchueler)) {
 			try {
-				final SchuelerStammdaten fehlendeSchulerstammdaten = new DataSchuelerStammdaten(this.reportingRepository.conn()).getById(idSchueler);
+				final SchuelerStammdaten fehlendeSchulerstammdaten = new DataSchuelerStammdaten(this.reportingContext.conn()).getById(idSchueler);
 				mapSchuelerStammdaten.put(fehlendeSchulerstammdaten.id, fehlendeSchulerstammdaten);
 			} catch (final ApiOperationException e) {
 				ReportingExceptionUtils.logException(
-						"FEHLER: Fehler bei der Ermittlung der fehlenden Schülerstammdaten eines Schülers aus der Datenbank im ReportingRepository.",
-						e, this.reportingRepository.logger(), LogLevel.ERROR, 0);
+						"FEHLER: Fehler bei der Ermittlung der fehlenden Schülerstammdaten eines Schülers aus der Datenbank im ReportingContext.",
+						e, this.reportingContext.logger(), LogLevel.ERROR, 0);
 				return null;
 			}
 		}
 
 		if (mapSchuelerStammdaten.containsKey(idSchueler)) {
-			return mapSchueler.computeIfAbsent(idSchueler, key -> new ProxyReportingSchueler(this.reportingRepository, mapSchuelerStammdaten.get(key)));
+			return mapSchueler.computeIfAbsent(idSchueler, key -> new ProxyReportingSchueler(this.reportingContext, mapSchuelerStammdaten.get(key)));
 		} else {
 			return null;
 		}
@@ -122,7 +122,7 @@ public class ReportingRepositorySchueler {
 	 */
 	public List<ReportingSchueler> schueler(final List<Long> idsSchueler, final boolean sortiereListe) {
 		final Optional<Comparator<ReportingSchueler>> optionalComparator = sortiereListe
-				? ComparatorFactory.buildOptionalComparator(this.reportingRepository.sortierungService(), this.reportingRepository.logger(),
+				? ComparatorFactory.buildOptionalComparator(this.reportingContext.sortierungService(), this.reportingContext.logger(),
 						ReportingSchueler.class.getSimpleName(),
 						SortierungRegistryReportingSchueler.sortierungRegistry())
 				: Optional.empty();
@@ -130,19 +130,19 @@ public class ReportingRepositorySchueler {
 		return ReportingListBuilder.erstelleReportingListe(idsSchueler, mapSchuelerStammdaten, mapSchueler,
 				fehlendeIds -> {
 					try {
-						return new DataSchuelerStammdaten(this.reportingRepository.conn()).getListByIds(fehlendeIds);
+						return new DataSchuelerStammdaten(this.reportingContext.conn()).getListByIds(fehlendeIds);
 					} catch (final ApiOperationException e) {
 						ReportingExceptionUtils.logException(
 								"FEHLER: Fehler bei der Ermittlung der fehlenden Schülerstammdaten einer Schülerliste aus der Datenbank im "
-										+ "ReportingRepository.",
-								e, this.reportingRepository.logger(), LogLevel.ERROR, 0);
+										+ "ReportingContext.",
+								e, this.reportingContext.logger(), LogLevel.ERROR, 0);
 						return new ArrayList<>();
 					}
 				},
-				key -> new ProxyReportingSchueler(this.reportingRepository, mapSchuelerStammdaten.get(key)),
+				key -> new ProxyReportingSchueler(this.reportingContext, mapSchuelerStammdaten.get(key)),
 				stammdaten -> stammdaten.id,
 				optionalComparator,
-				"Schüler", this.reportingRepository.logger());
+				"Schüler", this.reportingContext.logger());
 	}
 
 	/**
@@ -185,7 +185,7 @@ public class ReportingRepositorySchueler {
 	 * @throws ApiOperationException Im Fehlerfall.
 	 */
 	public Map<Long, List<ErzieherStammdaten>> erzieherStammdaten(final List<Long> idsSchueler) throws ApiOperationException {
-		return new DataErzieherStammdaten(this.reportingRepository.conn()).getListBySchuelerIds(idsSchueler).stream()
+		return new DataErzieherStammdaten(this.reportingContext.conn()).getListBySchuelerIds(idsSchueler).stream()
 				.collect(Collectors.groupingBy(e -> e.idSchueler));
 	}
 
@@ -211,7 +211,7 @@ public class ReportingRepositorySchueler {
 	 * @throws ApiOperationException Im Fehlerfall.
 	 */
 	public Map<Long, List<Sprachbelegung>> sprachbelegungen(final List<Long> idsSchueler) throws ApiOperationException {
-		return DataSchuelerSprachbelegung.getMapBySchuelerIDs(this.reportingRepository.conn(), idsSchueler);
+		return DataSchuelerSprachbelegung.getMapBySchuelerIDs(this.reportingContext.conn(), idsSchueler);
 	}
 
 
@@ -265,7 +265,7 @@ public class ReportingRepositorySchueler {
 	 * @throws ApiOperationException Im Fehlerfall.
 	 */
 	public List<SchuelerLernabschnittsdaten> lernabschnittsdaten(final List<Long> idsSchueler) throws ApiOperationException {
-		return new DataSchuelerLernabschnittsdaten(this.reportingRepository.conn()).getListFromSchuelerIDs(idsSchueler, false, false);
+		return new DataSchuelerLernabschnittsdaten(this.reportingContext.conn()).getListFromSchuelerIDs(idsSchueler, false, false);
 	}
 
 	/**
@@ -288,15 +288,15 @@ public class ReportingRepositorySchueler {
 	public boolean leistungsdatenZuLernabschnitt(final long idSchueler, final long idLernabschnitt) {
 		final List<SchuelerLeistungsdaten> listLeistungsdaten = new ArrayList<>();
 		try {
-			if (new DataSchuelerLeistungsdaten(this.reportingRepository.conn()).getByLernabschnitt(idLernabschnitt, listLeistungsdaten)) {
+			if (new DataSchuelerLeistungsdaten(this.reportingContext.conn()).getByLernabschnitt(idLernabschnitt, listLeistungsdaten)) {
 				listLeistungsdaten.forEach(l -> mapLeistungsdaten.add(idSchueler, idLernabschnitt, l.id, l));
 				return true;
 			}
 		} catch (final Exception e) {
 			ReportingExceptionUtils.logException(
-					"FEHLER: Fehler bei der Ermittlung der Leistungsdaten zum Lernabschnitt %d aus der Datenbank im ReportingRepository."
+					"FEHLER: Fehler bei der Ermittlung der Leistungsdaten zum Lernabschnitt %d aus der Datenbank im ReportingContext."
 							.formatted(idLernabschnitt),
-					e, this.reportingRepository.logger(), LogLevel.ERROR, 0);
+					e, this.reportingContext.logger(), LogLevel.ERROR, 0);
 		}
 		return false;
 	}
@@ -324,13 +324,13 @@ public class ReportingRepositorySchueler {
 	 * @throws ApiOperationException Im Fehlerfall.
 	 */
 	public Map<Long, List<ReportingSchuelerTelefonkontakt>> telefonkontakte(final List<Long> idsSchueler) throws ApiOperationException {
-		final List<SchuelerTelefon> schuelerTelefone = new DataSchuelerTelefon(this.reportingRepository.conn()).getListFromSchuelerIDs(idsSchueler);
+		final List<SchuelerTelefon> schuelerTelefone = new DataSchuelerTelefon(this.reportingContext.conn()).getListFromSchuelerIDs(idsSchueler);
 		return schuelerTelefone.stream()
 				.collect(Collectors.groupingBy(
 						dto -> dto.idSchueler,
 						Collectors.collectingAndThen(
 								Collectors.mapping(
-										t -> (ReportingSchuelerTelefonkontakt) new ProxyReportingSchuelerTelefonkontakt(this.reportingRepository, t),
+										t -> (ReportingSchuelerTelefonkontakt) new ProxyReportingSchuelerTelefonkontakt(this.reportingContext, t),
 										Collectors.toList()),
 								list -> list.stream()
 										.sorted(Comparator.comparing(ReportingSchuelerTelefonkontakt::sortierung))
@@ -365,17 +365,17 @@ public class ReportingRepositorySchueler {
 		final List<ReportingSchuelerZuweisung> reportingZuweisungen = new ArrayList<>();
 		try {
 			final List<DTOSchuelerZuweisung> dtos =
-					this.reportingRepository.conn().queryList(DTOSchuelerZuweisung.QUERY_BY_ABSCHNITT_ID, DTOSchuelerZuweisung.class, idLernabschnitt);
+					this.reportingContext.conn().queryList(DTOSchuelerZuweisung.QUERY_BY_ABSCHNITT_ID, DTOSchuelerZuweisung.class, idLernabschnitt);
 			if (dtos != null) {
 				for (final DTOSchuelerZuweisung dto : dtos) {
-					reportingZuweisungen.add(new ProxyReportingSchuelerZuweisung(this.reportingRepository, dto, lernabschnitt));
+					reportingZuweisungen.add(new ProxyReportingSchuelerZuweisung(this.reportingContext, dto, lernabschnitt));
 				}
 			}
 		} catch (final Exception e) {
 			ReportingExceptionUtils.logException(
 					"INFO: Fehler bei der Ermittlung der Zuweisungen für Lernabschnitt %d aus der Datenbank. Gebe leere Liste zurück."
 							.formatted(idLernabschnitt),
-					e, this.reportingRepository.logger(), LogLevel.INFO, 0);
+					e, this.reportingContext.logger(), LogLevel.INFO, 0);
 		}
 		mapSchuelerZuweisungen.put(idLernabschnitt, reportingZuweisungen);
 		return reportingZuweisungen;

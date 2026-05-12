@@ -4,24 +4,24 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
 import de.svws_nrw.module.reporting.types.lehrer.ProxyReportingLehrer;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 
 /**
  * Proxy-Klasse im Rahmen des Reportings für Daten vom Typ Lehrer und erweitert die Klasse {@link ReportingBenutzer}.
  */
 public class ProxyReportingBenutzer extends ReportingBenutzer {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingBenutzer}.
 	 *
-	 * @param reportingRepository Repository für das Reporting.
+	 * @param reportingContext Repository für das Reporting.
 	 */
-	public ProxyReportingBenutzer(final ReportingRepository reportingRepository) {
+	public ProxyReportingBenutzer(final ReportingContext reportingContext) {
 		super("",
 				"",
 				"",
@@ -53,19 +53,19 @@ public class ProxyReportingBenutzer extends ReportingBenutzer {
 				null,
 				null);
 
-		this.reportingRepository = reportingRepository;
-		final Benutzer user = this.reportingRepository.repositorySchule().benutzer();
+		this.reportingContext = reportingContext;
+		final Benutzer user = this.reportingContext.repositorySchule().benutzer();
 
 		super.benutzername = user.getUsername();
 		super.id = user.getId();
 		super.istAdmin = user.istAdmin();
 
 		// Prüfe, ob der angemeldete Benutzer Lehrer ist. Übernehme dann dessen Informationen. Andernfalls weitere Informationen aus der Datenbank laden.
-		if ((user.getIdLehrer() != null) && this.reportingRepository.repositoryLehrer().stammdaten().containsKey(user.getIdLehrer())) {
-			super.lehrer = new ProxyReportingLehrer(this.reportingRepository, this.reportingRepository.repositoryLehrer().stammdaten().get(user.getIdLehrer()));
+		if ((user.getIdLehrer() != null) && this.reportingContext.repositoryLehrer().stammdaten().containsKey(user.getIdLehrer())) {
+			super.lehrer = new ProxyReportingLehrer(this.reportingContext, this.reportingContext.repositoryLehrer().stammdaten().get(user.getIdLehrer()));
 			super.anzeigename = super.lehrer.vornameNachname();
 		} else {
-			final DTOViewBenutzerdetails dtoBenutzer = this.reportingRepository.repositorySchule().benutzerdetails(super.id);
+			final DTOViewBenutzerdetails dtoBenutzer = this.reportingContext.repositorySchule().benutzerdetails(super.id);
 			if (dtoBenutzer != null) {
 				super.anzeigename = dtoBenutzer.AnzeigeName;
 			}
@@ -100,7 +100,7 @@ public class ProxyReportingBenutzer extends ReportingBenutzer {
 	 *
 	 * @return Repository für das Reporting
 	 */
-	public ReportingRepository reportingRepository() {
-		return reportingRepository;
+	public ReportingContext reportingContext() {
+		return reportingContext;
 	}
 }

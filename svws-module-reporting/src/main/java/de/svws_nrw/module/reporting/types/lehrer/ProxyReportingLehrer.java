@@ -8,7 +8,7 @@ import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.core.types.PersonalTyp;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlassenunterricht;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKursunterricht;
 
@@ -18,9 +18,9 @@ import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKursunterricht;
  */
 public class ProxyReportingLehrer extends ReportingLehrer {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 	// Die Factory des Lehrers, die bei Bedarf seine Klassen und Kursunterrichte erzeugen kann.
 	@JsonIgnore
@@ -41,10 +41,10 @@ public class ProxyReportingLehrer extends ReportingLehrer {
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingLehrer}.
 	 *
-	 * @param reportingRepository Repository für das Reporting.
+	 * @param reportingContext Repository für das Reporting.
 	 * @param lehrerStammdaten Stammdaten-Objekt aus der DB.
 	 */
-	public ProxyReportingLehrer(final ReportingRepository reportingRepository, final LehrerStammdaten lehrerStammdaten) {
+	public ProxyReportingLehrer(final ReportingContext reportingContext, final LehrerStammdaten lehrerStammdaten) {
 		super(ersetzeNullBlankTrim(lehrerStammdaten.amtsbezeichnung),
 				ersetzeNullBlankTrim(lehrerStammdaten.anrede),
 				ersetzeNullBlankTrim(lehrerStammdaten.emailPrivat),
@@ -73,17 +73,17 @@ public class ProxyReportingLehrer extends ReportingLehrer {
 				ersetzeNullBlankTrim(lehrerStammdaten.titel),
 				ersetzeNullBlankTrim(lehrerStammdaten.vorname),
 				ersetzeNullBlankTrim(lehrerStammdaten.vorname),
-				(lehrerStammdaten.wohnortID != null) ? reportingRepository.repositoryKataloge().orte().get(lehrerStammdaten.wohnortID) : null,
-				(lehrerStammdaten.ortsteilID != null) ? reportingRepository.repositoryKataloge().ortsteile().get(lehrerStammdaten.ortsteilID) : null);
+				(lehrerStammdaten.wohnortID != null) ? reportingContext.repositoryKataloge().orte().get(lehrerStammdaten.wohnortID) : null,
+				(lehrerStammdaten.ortsteilID != null) ? reportingContext.repositoryKataloge().ortsteile().get(lehrerStammdaten.ortsteilID) : null);
 
-		this.reportingRepository = reportingRepository;
-		this.factoryUnterrichte = new ProxyReportingLehrerFactoryUnterricht(this.reportingRepository, this);
+		this.reportingContext = reportingContext;
+		this.factoryUnterrichte = new ProxyReportingLehrerFactoryUnterricht(this.reportingContext, this);
 
 		lehrerStammdaten.leitungsfunktionen
 				.forEach(leitungsfunktion -> super.leitungsfunktionen.add(new ProxyReportingLehrerLeitungsfunktion(leitungsfunktion)));
 
 		// Füge Stammdaten des Lehrers für weitere Verwendung in der Map im Repository hinzu.
-		reportingRepository.repositoryLehrer().stammdaten().putIfAbsent(super.id(), lehrerStammdaten);
+		reportingContext.repositoryLehrer().stammdaten().putIfAbsent(super.id(), lehrerStammdaten);
 	}
 
 
@@ -114,8 +114,8 @@ public class ProxyReportingLehrer extends ReportingLehrer {
 	 *
 	 * @return Repository für das Reporting
 	 */
-	public ReportingRepository reportingRepository() {
-		return reportingRepository;
+	public ReportingContext reportingContext() {
+		return reportingContext;
 	}
 
 

@@ -27,7 +27,7 @@ import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
  */
 public class ReportingRepositoryGost {
 
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 	private final Map<Integer, GostJahrgangsdaten> mapAbiturjahrgangDaten = new HashMap<>();
 	private final Map<Integer, GostFaecherManager> mapAbiturjahrgangFaecher = new HashMap<>();
@@ -40,10 +40,10 @@ public class ReportingRepositoryGost {
 	/**
 	 * Erstellt ein neues ReportingRepositoryGost.
 	 *
-	 * @param reportingRepository Das zentrale Repository des Reporting-Moduls mit Zugriff auf die domänenspezifischen Repositories.
+	 * @param reportingContext Der zentrale Reporting-Context mit Zugriff auf die domänenspezifischen Repositories.
 	 */
-	public ReportingRepositoryGost(final ReportingRepository reportingRepository) {
-		this.reportingRepository = reportingRepository;
+	public ReportingRepositoryGost(final ReportingContext reportingContext) {
+		this.reportingContext = reportingContext;
 	}
 
 
@@ -77,7 +77,7 @@ public class ReportingRepositoryGost {
 	 * @throws ApiOperationException Im Fehlerfall.
 	 */
 	public GostJahrgangsdaten jahrgangsdaten(final int abiturjahr) throws ApiOperationException {
-		return DataGostJahrgangsdaten.getJahrgangsdaten(this.reportingRepository.conn(), abiturjahr);
+		return DataGostJahrgangsdaten.getJahrgangsdaten(this.reportingContext.conn(), abiturjahr);
 	}
 
 	/**
@@ -90,11 +90,11 @@ public class ReportingRepositoryGost {
 	 * @throws ApiOperationException Im Fehlerfall.
 	 */
 	public GostFaecherManager faecherManager(final int abiturjahr) throws ApiOperationException {
-		final int auswahlSchuljahr = this.reportingRepository.repositorySchule().auswahlSchuljahresabschnitt().schuljahr();
+		final int auswahlSchuljahr = this.reportingContext.repositorySchule().auswahlSchuljahresabschnitt().schuljahr();
 		final GostFaecherManager faecherManager =
-				DBUtilsFaecherGost.getFaecherManager(auswahlSchuljahr, this.reportingRepository.conn(), abiturjahr);
+				DBUtilsFaecherGost.getFaecherManager(auswahlSchuljahr, this.reportingContext.conn(), abiturjahr);
 		faecherManager.addFachkombinationenAll(
-				DataGostJahrgangFachkombinationen.getFachkombinationen(this.reportingRepository.conn(), abiturjahr));
+				DataGostJahrgangFachkombinationen.getFachkombinationen(this.reportingContext.conn(), abiturjahr));
 		return faecherManager;
 	}
 
@@ -120,7 +120,7 @@ public class ReportingRepositoryGost {
 	 * @throws ApiOperationException Im Fehlerfall.
 	 */
 	public Map<Long, GostLaufbahnplanungBeratungsdaten> beratungsdaten(final List<Long> idsSchueler) throws ApiOperationException {
-		return new DataGostSchuelerLaufbahnplanungBeratungsdaten(this.reportingRepository.conn()).getMapFromIDs(idsSchueler);
+		return new DataGostSchuelerLaufbahnplanungBeratungsdaten(this.reportingContext.conn()).getMapFromIDs(idsSchueler);
 	}
 
 	/**
@@ -142,7 +142,7 @@ public class ReportingRepositoryGost {
 	 * @throws ApiOperationException Im Fehlerfall.
 	 */
 	public Map<Long, Abiturdaten> beratungsdatenAbiturdaten(final List<Long> idsSchueler) throws ApiOperationException {
-		return DBUtilsGostLaufbahn.getMapFromIDs(this.reportingRepository.conn(), idsSchueler);
+		return DBUtilsGostLaufbahn.getMapFromIDs(this.reportingContext.conn(), idsSchueler);
 	}
 
 
@@ -169,7 +169,7 @@ public class ReportingRepositoryGost {
 	 * @throws ApiOperationException Im Fehlerfall.
 	 */
 	public Map<Long, Abiturdaten> schuelerAbiturdaten(final List<Long> idsSchueler) throws ApiOperationException {
-		return new DataGostAbiturdaten(this.reportingRepository.conn(), null).getMapAbiturdatenFromIDs(idsSchueler);
+		return new DataGostAbiturdaten(this.reportingContext.conn(), null).getMapAbiturdatenFromIDs(idsSchueler);
 	}
 
 
@@ -198,11 +198,11 @@ public class ReportingRepositoryGost {
 	public List<GostStatistikFachwahl> fachwahlen(final int abiturjahr) {
 		return mapFachwahlen.computeIfAbsent(abiturjahr, jahr -> {
 			try {
-				return new DataGostAbiturjahrgangFachwahlen(this.reportingRepository.conn(), jahr).getFachwahlen();
+				return new DataGostAbiturjahrgangFachwahlen(this.reportingContext.conn(), jahr).getFachwahlen();
 			} catch (final ApiOperationException e) {
 				ReportingExceptionUtils.logException(
 						"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der GOSt-Fachwahlstatistik.", e,
-						this.reportingRepository.logger(), LogLevel.INFO, 0);
+						this.reportingContext.logger(), LogLevel.INFO, 0);
 				return List.of();
 			}
 		});

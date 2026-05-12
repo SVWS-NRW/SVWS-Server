@@ -7,7 +7,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungStundenplan;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungUnterrichtsrasterstunde;
 
@@ -19,17 +19,17 @@ public class ProxyReportingGostKlausurplanungKlausurraum extends ReportingGostKl
 
 	/** Repository für das Reporting. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostKlausurplanungKlausurraum}.
 	 *
-	 * @param reportingRepository		Repository für das Reporting.
+	 * @param reportingContext		Repository für das Reporting.
 	 * @param klausurtermin 			Der Klausurtermin, dem dieser Klausurraum zugeordnet ist.
 	 * @param gostKlausurraum 			Der Klausurraum mit Informationen zum Termin und dem Stundeplanraum
 	 * @param gostKlausurraumstunden	Die Raumstunde mit Informationen zum Klausurraum und der Unterrichtsstunde aus dem Zeitraster.
 	 */
-	public ProxyReportingGostKlausurplanungKlausurraum(final ReportingRepository reportingRepository,
+	public ProxyReportingGostKlausurplanungKlausurraum(final ReportingContext reportingContext,
 			final ReportingGostKlausurplanungKlausurtermin klausurtermin, final GostKlausurraum gostKlausurraum,
 			final List<GostKlausurraumstunde> gostKlausurraumstunden) {
 		super(new ArrayList<>(),
@@ -38,10 +38,10 @@ public class ProxyReportingGostKlausurplanungKlausurraum extends ReportingGostKl
 				klausurtermin,
 				null);
 
-		this.reportingRepository = reportingRepository;
+		this.reportingContext = reportingContext;
 
 		// Stundenplan zum Klausurtermin ermitteln. Ohne Stundenplan gibt es keine Raumdaten und kein Zeitraster für die Aufsichten.
-		final ReportingStundenplanungStundenplan stundenplan = this.reportingRepository.repositoryStundenplan().stundenplan(super.klausurtermin.datum());
+		final ReportingStundenplanungStundenplan stundenplan = this.reportingContext.repositoryStundenplan().stundenplan(super.klausurtermin.datum());
 
 		if (stundenplan == null) {
 			return;

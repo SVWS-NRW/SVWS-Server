@@ -29,7 +29,7 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class ReportingRepositoryStundenplan {
 
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 	private List<StundenplanListeEintrag> stundenplandefinitionen;
 	private final Map<Long, StundenplanManager> mapStundenplanManager = new HashMap<>();
@@ -38,25 +38,25 @@ public class ReportingRepositoryStundenplan {
 	/**
 	 * Erstellt ein neues ReportingStundenplanRepository und initialisiert die Stundenplandefinition.
 	 *
-	 * @param reportingRepository Das zentrale Repository des Reporting-Moduls mit Zugriff auf die domänenspezifischen Repositories.
+	 * @param reportingContext Der zentrale Reporting-Context mit Zugriff auf die domänenspezifischen Repositories.
 	 *
 	 * @throws ApiOperationException Im Fehlerfall.
 	 */
-	public ReportingRepositoryStundenplan(final ReportingRepository reportingRepository) throws ApiOperationException {
-		this.reportingRepository = reportingRepository;
+	public ReportingRepositoryStundenplan(final ReportingContext reportingContext) throws ApiOperationException {
+		this.reportingContext = reportingContext;
 
 		initStundenplanDefinitionen();
 	}
 
 	private void initStundenplanDefinitionen() throws ApiOperationException {
 		try {
-			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Ermittle alle Stundenplan-Definitionen der Schule.");
-			this.stundenplandefinitionen = new ArrayList<>(DataStundenplanListe.getStundenplaeneAktiv(this.reportingRepository.conn(), null));
+			this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Ermittle alle Stundenplan-Definitionen der Schule.");
+			this.stundenplandefinitionen = new ArrayList<>(DataStundenplanListe.getStundenplaeneAktiv(this.reportingContext.conn(), null));
 			if (!this.stundenplandefinitionen.isEmpty()) {
 				this.stundenplandefinitionen.sort(Comparator.comparing((StundenplanListeEintrag sle) -> sle.gueltigAb).reversed());
 			}
 		} catch (final Exception e) {
-			this.reportingRepository.logger().logLn(LogLevel.ERROR, 8, "Die Daten der Stundenpläne konnten nicht ermittelt werden.");
+			this.reportingContext.logger().logLn(LogLevel.ERROR, 8, "Die Daten der Stundenpläne konnten nicht ermittelt werden.");
 			throw new ApiOperationException(Status.NOT_FOUND, e,
 					"FEHLER: Die Daten der Stundenpläne konnten nicht ermittelt werden.");
 		}
@@ -103,7 +103,7 @@ public class ReportingRepositoryStundenplan {
 
 		if (mapStundenplanManager.containsKey(idStundenplan)) {
 			mapStundenplaene.computeIfAbsent(idStundenplan,
-					key -> new ProxyReportingStundenplanungStundenplan(this.reportingRepository, mapStundenplanManager.get(key)));
+					key -> new ProxyReportingStundenplanungStundenplan(this.reportingContext, mapStundenplanManager.get(key)));
 			return mapStundenplaene.get(idStundenplan);
 		}
 
@@ -111,7 +111,7 @@ public class ReportingRepositoryStundenplan {
 			final StundenplanManager manager = manager(idStundenplan);
 			if (manager != null) {
 				mapStundenplanManager.put(idStundenplan, manager);
-				mapStundenplaene.put(idStundenplan, new ProxyReportingStundenplanungStundenplan(this.reportingRepository, manager));
+				mapStundenplaene.put(idStundenplan, new ProxyReportingStundenplanungStundenplan(this.reportingContext, manager));
 				return mapStundenplaene.get(idStundenplan);
 			}
 		} catch (@SuppressWarnings("unused") final Exception ignore) {
@@ -130,13 +130,13 @@ public class ReportingRepositoryStundenplan {
 	public StundenplanManager manager(final long idStundenplan) {
 		mapStundenplanManager.computeIfAbsent(idStundenplan, key -> {
 			try {
-				final Stundenplan stundenplan = new DataStundenplan(this.reportingRepository.conn()).getById(key);
+				final Stundenplan stundenplan = new DataStundenplan(this.reportingContext.conn()).getById(key);
 				if (stundenplan == null) {
 					return null;
 				}
-				final List<StundenplanUnterricht> unterrichte = DataStundenplanUnterricht.getUnterrichte(this.reportingRepository.conn(), key);
-				final List<StundenplanPausenaufsicht> aufsichten = DataStundenplanPausenaufsichten.getAufsichten(this.reportingRepository.conn(), key);
-				final StundenplanUnterrichtsverteilung unterrichtsverteilung = DataStundenplanUnterrichtsverteilung.getUnterrichtsverteilung(this.reportingRepository.conn(), key);
+				final List<StundenplanUnterricht> unterrichte = DataStundenplanUnterricht.getUnterrichte(this.reportingContext.conn(), key);
+				final List<StundenplanPausenaufsicht> aufsichten = DataStundenplanPausenaufsichten.getAufsichten(this.reportingContext.conn(), key);
+				final StundenplanUnterrichtsverteilung unterrichtsverteilung = DataStundenplanUnterrichtsverteilung.getUnterrichtsverteilung(this.reportingContext.conn(), key);
 				return new StundenplanManager(stundenplan, unterrichte, aufsichten, unterrichtsverteilung);
 			} catch (final ApiOperationException e) {
 				return null;

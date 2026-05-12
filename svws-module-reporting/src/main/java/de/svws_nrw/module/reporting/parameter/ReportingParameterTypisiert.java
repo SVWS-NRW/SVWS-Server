@@ -12,7 +12,7 @@ import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameter;
 import de.svws_nrw.core.data.reporting.ReportingSortierungDefinitionGruppe;
 import de.svws_nrw.core.types.reporting.ReportingAusgabeformat;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
 /**
@@ -22,7 +22,7 @@ import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 public class ReportingParameterTypisiert {
 
 	/** Das Repository für den Zugriff auf weitere Datenobjekte */
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 	/** Das gekapselte ReportingParameter-Objekt */
 	private final ReportingParameter reportingParameter;
@@ -37,11 +37,11 @@ public class ReportingParameterTypisiert {
 	/**
 	 * Erstellt ein neues Objekt der Klasse ReportingParameterTypisiert.
 	 *
-	 * @param reportingRepository  das Repository für den Datenzugriff
+	 * @param reportingContext  das Repository für den Datenzugriff
 	 * @param reportingParameter   das ReportingParameter-Objekt
 	 */
-	public ReportingParameterTypisiert(final ReportingRepository reportingRepository, final ReportingParameter reportingParameter) {
-		this.reportingRepository = reportingRepository;
+	public ReportingParameterTypisiert(final ReportingContext reportingContext, final ReportingParameter reportingParameter) {
+		this.reportingContext = reportingContext;
 		this.reportingParameter = reportingParameter;
 		this.reportingParameter.reportvorlageParameterGruppen
 				.forEach(g -> g.reportvorlageParameter
@@ -57,7 +57,7 @@ public class ReportingParameterTypisiert {
 	 * @return der ReportingSchuljahresabschnitt
 	 */
 	public ReportingSchuljahresabschnitt schuljahresabschnitt() {
-		return reportingRepository.repositorySchule().schuljahresabschnitt(reportingParameter.idSchuljahresabschnitt);
+		return reportingContext.repositorySchule().schuljahresabschnitt(reportingParameter.idSchuljahresabschnitt);
 	}
 
 	/**

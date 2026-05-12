@@ -37,7 +37,7 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class ReportingRepositoryKataloge {
 
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 	private Map<Long, KatalogEntlassgrund> katalogEntlassgruende;
 	private Map<Long, FoerderschwerpunktEintrag> katalogFoerderschwerpunkte;
@@ -54,12 +54,12 @@ public class ReportingRepositoryKataloge {
 	/**
 	 * Erstellt ein neues ReportingKatalogRepository und initialisiert Kataloge, Fächer und Jahrgänge.
 	 *
-	 * @param reportingRepository Das zentrale Repository des Reporting-Moduls mit Zugriff auf die domänenspezifischen Repositories.
+	 * @param reportingContext Der zentrale Reporting-Context mit Zugriff auf die domänenspezifischen Repositories.
 	 *
 	 * @throws ApiOperationException Im Fehlerfall.
 	 */
-	public ReportingRepositoryKataloge(final ReportingRepository reportingRepository) throws ApiOperationException {
-		this.reportingRepository = reportingRepository;
+	public ReportingRepositoryKataloge(final ReportingContext reportingContext) throws ApiOperationException {
+		this.reportingContext = reportingContext;
 
 		initKataloge();
 		initFachdaten();
@@ -68,44 +68,44 @@ public class ReportingRepositoryKataloge {
 
 	private void initKataloge() throws ApiOperationException {
 		try {
-			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Ermittle Katalogdaten.");
+			this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Ermittle Katalogdaten.");
 
 			this.katalogEntlassgruende =
-					new DataKatalogEntlassgruende(this.reportingRepository.conn()).getAll().stream().collect(Collectors.toMap(e -> e.id, e -> e));
-			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Katalog Entlassgründe geladen.");
+					new DataKatalogEntlassgruende(this.reportingContext.conn()).getAll().stream().collect(Collectors.toMap(e -> e.id, e -> e));
+			this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Katalog Entlassgründe geladen.");
 
 			this.katalogFoerderschwerpunkte =
-					new DataKatalogSchuelerFoerderschwerpunkte(this.reportingRepository.conn()).getAll().stream().collect(Collectors.toMap(f -> f.id, f -> f));
-			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Katalog Förderschwerpunkte geladen.");
+					new DataKatalogSchuelerFoerderschwerpunkte(this.reportingContext.conn()).getAll().stream().collect(Collectors.toMap(f -> f.id, f -> f));
+			this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Katalog Förderschwerpunkte geladen.");
 
-			final DataOrte dataOrte = new DataOrte(this.reportingRepository.conn());
+			final DataOrte dataOrte = new DataOrte(this.reportingContext.conn());
 			this.katalogOrte = dataOrte.getAll().stream().collect(Collectors.toMap(o -> o.id, o -> o));
-			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Katalog Orte geladen.");
+			this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Katalog Orte geladen.");
 
-			this.katalogOrtsteile = new DataOrtsteile(this.reportingRepository.conn(), dataOrte).getAll().stream().collect(Collectors.toMap(o -> o.id, o -> o));
-			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Katalog Ortsteile geladen.");
+			this.katalogOrtsteile = new DataOrtsteile(this.reportingContext.conn(), dataOrte).getAll().stream().collect(Collectors.toMap(o -> o.id, o -> o));
+			this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Katalog Ortsteile geladen.");
 
-			this.katalogReligionen = new DataReligionen(this.reportingRepository.conn()).getAll().stream().collect(Collectors.toMap(r -> r.id, r -> r));
-			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Katalog Religionen geladen.");
+			this.katalogReligionen = new DataReligionen(this.reportingContext.conn()).getAll().stream().collect(Collectors.toMap(r -> r.id, r -> r));
+			this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Katalog Religionen geladen.");
 
-			this.katalogSchulen = new DataSchulen(this.reportingRepository.conn()).getAll().stream().collect(Collectors.toMap(s -> s.id, s -> s));
-			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Katalog Schulen geladen.");
+			this.katalogSchulen = new DataSchulen(this.reportingContext.conn()).getAll().stream().collect(Collectors.toMap(s -> s.id, s -> s));
+			this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Katalog Schulen geladen.");
 
 			final ArrayList<SchulformKatalogEintrag> schulformen = new ArrayList<>();
 			for (final Schulform schulform : Schulform.values()) {
 				schulformen.addAll(schulform.historie());
 			}
 			this.katalogSchulformen = schulformen.stream().collect(Collectors.toMap(sfke -> sfke.id, sfke -> sfke));
-			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Katalog Schulformen geladen.");
+			this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Katalog Schulformen geladen.");
 
-			this.katalogTelefonnummerArten = new DataTelefonarten(this.reportingRepository.conn()).getAll().stream().collect(Collectors.toMap(ta -> ta.id, ta -> ta));
-			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Katalog TelefonnummerArten geladen.");
+			this.katalogTelefonnummerArten = new DataTelefonarten(this.reportingContext.conn()).getAll().stream().collect(Collectors.toMap(ta -> ta.id, ta -> ta));
+			this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Katalog TelefonnummerArten geladen.");
 
-			this.mapErzieherarten = new DataErzieherarten(this.reportingRepository.conn()).getAll().stream().collect(Collectors.toMap(a -> a.id,
+			this.mapErzieherarten = new DataErzieherarten(this.reportingContext.conn()).getAll().stream().collect(Collectors.toMap(a -> a.id,
 					ProxyReportingErzieherArt::new));
-			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Liste der Erzieherarten geladen.");
+			this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Liste der Erzieherarten geladen.");
 		} catch (final Exception e) {
-			this.reportingRepository.logger().logLn(LogLevel.ERROR, 8, "FEHLER: Die Kataloge der Schule konnten nicht vollständig ermittelt werden.");
+			this.reportingContext.logger().logLn(LogLevel.ERROR, 8, "FEHLER: Die Kataloge der Schule konnten nicht vollständig ermittelt werden.");
 			throw new ApiOperationException(Status.NOT_FOUND, e,
 					"FEHLER: Die Kataloge der Schule konnten nicht vollständig ermittelt werden.");
 		}
@@ -113,10 +113,10 @@ public class ReportingRepositoryKataloge {
 
 	private void initFachdaten() throws ApiOperationException {
 		try {
-			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Ermittle Fächer.");
-			this.mapFaecher = this.reportingRepository.conn().queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
+			this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Ermittle Fächer.");
+			this.mapFaecher = this.reportingContext.conn().queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 		} catch (final Exception e) {
-			this.reportingRepository.logger().logLn(LogLevel.ERROR, 8, "FEHLER: Die Fächer konnten nicht ermittelt werden.");
+			this.reportingContext.logger().logLn(LogLevel.ERROR, 8, "FEHLER: Die Fächer konnten nicht ermittelt werden.");
 			throw new ApiOperationException(Status.NOT_FOUND, e,
 					"FEHLER: Die Daten der Fächer konnten nicht ermittelt werden.");
 		}
@@ -124,10 +124,10 @@ public class ReportingRepositoryKataloge {
 
 	private void initJahrgaenge() throws ApiOperationException {
 		try {
-			this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Ermittle die Jahrgangsdaten.");
-			this.mapJahrgaenge = new DataJahrgangsdaten(this.reportingRepository.conn()).getAll().stream().collect(Collectors.toMap(j -> j.id, j -> j));
+			this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Ermittle die Jahrgangsdaten.");
+			this.mapJahrgaenge = new DataJahrgangsdaten(this.reportingContext.conn()).getAll().stream().collect(Collectors.toMap(j -> j.id, j -> j));
 		} catch (final Exception e) {
-			this.reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die Jahrgangsdaten konnten nicht ermittelt werden.");
+			this.reportingContext.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die Jahrgangsdaten konnten nicht ermittelt werden.");
 			throw new ApiOperationException(Status.NOT_FOUND, e,
 					"FEHLER: Die Jahrgangsdaten. konnten nicht ermittelt werden.");
 		}
@@ -239,13 +239,13 @@ public class ReportingRepositoryKataloge {
 			return mapJahrgaenge.get(idJahrgang);
 		}
 		try {
-			final JahrgangsDaten jahrgangsDaten = new DataJahrgangsdaten(this.reportingRepository.conn()).getById(idJahrgang);
+			final JahrgangsDaten jahrgangsDaten = new DataJahrgangsdaten(this.reportingContext.conn()).getById(idJahrgang);
 			mapJahrgaenge.put(idJahrgang, jahrgangsDaten);
 			return jahrgangsDaten;
 		} catch (final ApiOperationException e) {
 			ReportingExceptionUtils.logException(
-					"FEHLER: Fehler bei der Ermittlung der Jahrgangsdaten zur ID %d aus der Datenbank im ReportingRepository.".formatted(idJahrgang),
-					e, this.reportingRepository.logger(), LogLevel.ERROR, 0);
+					"FEHLER: Fehler bei der Ermittlung der Jahrgangsdaten zur ID %d aus der Datenbank im ReportingContext.".formatted(idJahrgang),
+					e, this.reportingContext.logger(), LogLevel.ERROR, 0);
 			mapJahrgaenge.put(idJahrgang, null);
 			return null;
 		}

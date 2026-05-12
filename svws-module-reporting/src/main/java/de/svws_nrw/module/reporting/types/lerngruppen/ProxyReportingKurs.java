@@ -8,7 +8,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.asd.data.kurse.KursDaten;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerLeistungsdatenMatrix;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdatenMatrix;
@@ -18,18 +18,18 @@ import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchue
  */
 public class ProxyReportingKurs extends ReportingKurs {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingKurs}.
 	 *
-	 * @param reportingRepository Repository für das Reporting.
+	 * @param reportingContext Repository für das Reporting.
 	 * @param kursDaten Stammdaten-Objekt aus der DB.
 	 */
-	public ProxyReportingKurs(final ReportingRepository reportingRepository, final KursDaten kursDaten) {
+	public ProxyReportingKurs(final ReportingContext reportingContext, final KursDaten kursDaten) {
 		super(kursDaten.id,
 				null,
 				ersetzeNullBlankTrim(kursDaten.kuerzel),
@@ -48,10 +48,10 @@ public class ProxyReportingKurs extends ReportingKurs {
 				new ArrayList<>(),
 				kursDaten.schulnummer);
 
-		this.reportingRepository = reportingRepository;
+		this.reportingContext = reportingContext;
 
 		// Schuljahresabschnitt zum Kurs ermitteln
-		super.schuljahresabschnitt = this.reportingRepository.repositorySchule().schuljahresabschnitt(kursDaten.idSchuljahresabschnitt);
+		super.schuljahresabschnitt = this.reportingContext.repositorySchule().schuljahresabschnitt(kursDaten.idSchuljahresabschnitt);
 
 		// Fach setzen
 		super.fach = super.schuljahresabschnitt.fach(kursDaten.idFach);
@@ -59,7 +59,7 @@ public class ProxyReportingKurs extends ReportingKurs {
 		// Jahrgänge setzen
 		if ((kursDaten.idJahrgaenge != null) && !kursDaten.idJahrgaenge.isEmpty()) {
 			for (final Long idJahrgang : kursDaten.idJahrgaenge) {
-				if (this.reportingRepository.repositoryKataloge().jahrgaenge().containsKey(idJahrgang)) {
+				if (this.reportingContext.repositoryKataloge().jahrgaenge().containsKey(idJahrgang)) {
 					super.jahrgaenge.add(super.schuljahresabschnitt.jahrgang(idJahrgang));
 				}
 			}
@@ -76,7 +76,7 @@ public class ProxyReportingKurs extends ReportingKurs {
 
 	private void initKurslehrer(final KursDaten kursDaten) {
 		// Bestimme zunächst, ob es mehr als einen Lehrer für den Kurs gibt, und speichere sie dann ggf. in einer Map mit ihren Wochenstunden.
-		final Map<Long, Double> mapZusatzKurslehrer = new LinkedHashMap<>(this.reportingRepository.repositoryLerngruppen().kurslehrerWochenstunden(super.id));
+		final Map<Long, Double> mapZusatzKurslehrer = new LinkedHashMap<>(this.reportingContext.repositoryLerngruppen().kurslehrerWochenstunden(super.id));
 
 		// Wenn es einen Kursleiter gibt, prüfe, ob auch er bei den Zusatzkräften ist, und addiere hier seine beiden Wochenstunden.
 		final Map<Long, Double> mapKurslehrer = new LinkedHashMap<>();
@@ -93,7 +93,7 @@ public class ProxyReportingKurs extends ReportingKurs {
 		}
 
 		// Erstelle jetzt alle Kurslehrer als Reporting-Lehrer.
-		super.lehrer = new ArrayList<>(this.reportingRepository.repositoryLehrer().lehrer(mapKurslehrer.keySet().stream().toList(), false));
+		super.lehrer = new ArrayList<>(this.reportingContext.repositoryLehrer().lehrer(mapKurslehrer.keySet().stream().toList(), false));
 	}
 
 
@@ -125,8 +125,8 @@ public class ProxyReportingKurs extends ReportingKurs {
 	 *
 	 * @return Repository für das Reporting
 	 */
-	public ReportingRepository reportingRepository() {
-		return reportingRepository;
+	public ReportingContext reportingContext() {
+		return reportingContext;
 	}
 
 
@@ -137,7 +137,7 @@ public class ProxyReportingKurs extends ReportingKurs {
 	 */
 	@Override
 	public ReportingSchuelerLeistungsdatenMatrix schuelerLeistungsdatenMatrix() {
-		return new ProxyReportingSchuelerLeistungsdatenMatrix(this.reportingRepository, this.schueler(), this.schuljahresabschnitt());
+		return new ProxyReportingSchuelerLeistungsdatenMatrix(this.reportingContext, this.schueler(), this.schuljahresabschnitt());
 	}
 
 	/**
@@ -149,7 +149,7 @@ public class ProxyReportingKurs extends ReportingKurs {
 	public List<ReportingSchueler> schueler() {
 		if (super.schueler.isEmpty()) {
 			if (super.idsSchueler().isEmpty()) {
-				final KursDaten kursDaten = this.reportingRepository.repositoryLerngruppen().kurs(super.id());
+				final KursDaten kursDaten = this.reportingContext.repositoryLerngruppen().kurs(super.id());
 				if (kursDaten == null) {
 					return super.schueler();
 				}
@@ -158,7 +158,7 @@ public class ProxyReportingKurs extends ReportingKurs {
 				}
 			}
 			if (!idsSchueler.isEmpty()) {
-				super.schueler = this.reportingRepository.repositorySchueler().schueler(idsSchueler);
+				super.schueler = this.reportingContext.repositorySchueler().schueler(idsSchueler);
 			}
 		}
 		return super.schueler();

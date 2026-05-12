@@ -1,7 +1,7 @@
 package de.svws_nrw.module.reporting.types.schueler.lernabschnitte;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
@@ -11,31 +11,31 @@ import java.util.List;
 /**
  * Proxy-Klasse für die Schüler-Leistungsdaten-Matrix im Rahmen des Reportings.
  * Diese Klasse erweitert {@link ReportingSchuelerLeistungsdatenMatrix} und nutzt das
- * {@link ReportingRepository}, um Sortierdefinitionen und Filter automatisch anzuwenden.
+ * {@link ReportingContext}, um Sortierdefinitionen und Filter automatisch anzuwenden.
  */
 public class ProxyReportingSchuelerLeistungsdatenMatrix extends ReportingSchuelerLeistungsdatenMatrix {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 	/**
 	 * Erstellt eine neue Proxy-Matrix. Die Sortierung für Schüler und Fächer wird automatisch
 	 * aus den im Repository hinterlegten Reporting-Parametern ermittelt.
 	 *
-	 * @param reportingRepository  Das Repository für den Zugriff auf Parameter und Stammdaten.
+	 * @param reportingContext  Das Repository für den Zugriff auf Parameter und Stammdaten.
 	 * @param schueler             Die Liste der Schüler.
 	 * @param schuljahresabschnitt Der Schuljahresabschnitt, für den die Daten ermittelt werden sollen.
 	 */
-	public ProxyReportingSchuelerLeistungsdatenMatrix(final ReportingRepository reportingRepository, final List<ReportingSchueler> schueler,
+	public ProxyReportingSchuelerLeistungsdatenMatrix(final ReportingContext reportingContext, final List<ReportingSchueler> schueler,
 			final ReportingSchuljahresabschnitt schuljahresabschnitt) {
 
 		super(schueler, schuljahresabschnitt,
-				reportingRepository.sortierungService().getSortierungsAttribute(ReportingFach.class.getSimpleName(), true),
-				reportingRepository.sortierungService().getSortierungsAttribute(ReportingSchueler.class.getSimpleName(), true),
-				reportingRepository.filterService().getFilter(ReportingFach.class.getSimpleName(), null));
+				reportingContext.sortierungService().getSortierungsAttribute(ReportingFach.class.getSimpleName(), true),
+				reportingContext.sortierungService().getSortierungsAttribute(ReportingSchueler.class.getSimpleName(), true),
+				reportingContext.filterService().getFilter(ReportingFach.class.getSimpleName(), null));
 
-		this.reportingRepository = reportingRepository;
+		this.reportingContext = reportingContext;
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class ProxyReportingSchuelerLeistungsdatenMatrix extends ReportingSchuele
 	 *
 	 * @return Repository für das Reporting
 	 */
-	public ReportingRepository reportingRepository() {
-		return reportingRepository;
+	public ReportingContext reportingContext() {
+		return reportingContext;
 	}
 }

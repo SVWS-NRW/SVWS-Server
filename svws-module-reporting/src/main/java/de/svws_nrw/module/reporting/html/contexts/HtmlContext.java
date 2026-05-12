@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.reporting.ReportingSortierungDefinition;
 import de.svws_nrw.core.data.reporting.ReportingSortierungDefinitionGruppe;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingKlasse;
 import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingKurs;
 import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingLehrer;
@@ -45,9 +45,9 @@ public abstract class HtmlContext<T> {
 	/** Generische Liste der Context-Daten. */
 	private List<T> contextData = new ArrayList<>();
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
-	protected final ReportingRepository reportingRepository;
+	protected final ReportingContext reportingContext;
 
 	/** Legt fest, ob die Standardsortierung verwendet des entsprechenden Types werden soll. */
 	private boolean verwendeStandardsortierung = true;
@@ -57,12 +57,12 @@ public abstract class HtmlContext<T> {
 
 
 	/**
-	 * Konstruktor für die Klasse HtmlContext, die das Repository und das Flag zur Hauptdatenquelle initialisiert.
+	 * Konstruktor für die Klasse HtmlContext, die den Context und das Flag zur Hauptdatenquelle initialisiert.
 	 *
-	 * @param reportingRepository Das Reporting-Repository, welches verwendet wird, um die Daten zu verwalten.
+	 * @param reportingContext Der Reporting-Context, der verwendet wird, um die Daten zu verwalten.
 	 */
-	protected HtmlContext(final ReportingRepository reportingRepository) {
-		this.reportingRepository = reportingRepository;
+	protected HtmlContext(final ReportingContext reportingContext) {
+		this.reportingContext = reportingContext;
 	}
 
 
@@ -282,12 +282,12 @@ public abstract class HtmlContext<T> {
 		this.verwendeStandardsortierung = true;
 		this.sortierungAttribute = new ArrayList<>();
 
-		if ((typ == null) || typ.isBlank() || (this.reportingRepository == null) || (this.reportingRepository.reportingParameter() == null)) {
+		if ((typ == null) || typ.isBlank() || (this.reportingContext == null) || (this.reportingContext.reportingParameter() == null)) {
 			return;
 		}
 
 		// Finde die Sortierungsgruppe für den angefragten Typ
-		final List<ReportingSortierungDefinitionGruppe> gruppen = this.reportingRepository.reportingParameter().sortierungDefinitionenGruppen();
+		final List<ReportingSortierungDefinitionGruppe> gruppen = this.reportingContext.reportingParameter().sortierungDefinitionenGruppen();
 		final ReportingSortierungDefinitionGruppe gruppe = (gruppen == null) ? null : gruppen.stream()
 				.filter(Objects::nonNull)
 				.filter(g -> Objects.equals(typ, g.typ))
@@ -341,7 +341,7 @@ public abstract class HtmlContext<T> {
 					("INFO: Es konnte kein Comparator für %s erstellt werden. Zudem wurden folgende Attribute zur Sortierung "
 							+ "übergeben, die nicht in der Registry definiert wurden: %s.")
 							.formatted(typeName, String.join(", ", validierungsfehler)),
-					reportingRepository.logger(), LogLevel.INFO, 0
+					reportingContext.logger(), LogLevel.INFO, 0
 			);
 			return listOriginal;
 		}
@@ -352,7 +352,7 @@ public abstract class HtmlContext<T> {
 			ReportingExceptionUtils.logInfo(
 					"INFO: Es wurden folgende Attribute zur Sortierung übergeben, die nicht in der Registry definiert wurden: "
 							+ String.join(", ", validierungsfehler),
-					reportingRepository.logger(), LogLevel.INFO, 4);
+					reportingContext.logger(), LogLevel.INFO, 4);
 		}
 
 		return listNonNull;

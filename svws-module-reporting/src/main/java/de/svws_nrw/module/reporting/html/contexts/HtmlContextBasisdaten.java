@@ -10,7 +10,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.parameter.ReportingVorlageParameterTypisiert;
 import de.svws_nrw.module.reporting.types.schule.ProxyReportingBenutzer;
 import de.svws_nrw.module.reporting.types.schule.ProxyReportingSchule;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import jakarta.ws.rs.core.Response;
 import org.thymeleaf.context.Context;
 
@@ -28,12 +28,12 @@ public final class HtmlContextBasisdaten extends HtmlContext<Object> {
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
 	 *
-	 * @param reportingRepository	Repository mit Parametern, Logger und Daten zum Reporting.
+	 * @param reportingContext	Context mit Parametern, Logger und Daten zum Reporting.
 	 *
 	 * @throws ApiOperationException Im Falle eines Fehlers beim Erzeugen des Contexts.
 	 */
-	public HtmlContextBasisdaten(final ReportingRepository reportingRepository) throws ApiOperationException {
-		super(reportingRepository);
+	public HtmlContextBasisdaten(final ReportingContext reportingContext) throws ApiOperationException {
+		super(reportingContext);
 		erzeugeContext();
 	}
 
@@ -45,13 +45,13 @@ public final class HtmlContextBasisdaten extends HtmlContext<Object> {
 	private void erzeugeContext() throws ApiOperationException {
 		final Context context = new Context();
 
-		context.setVariable("Schule", new ProxyReportingSchule(this.reportingRepository));
-		context.setVariable("Benutzer", new ProxyReportingBenutzer(this.reportingRepository));
-		context.setVariable("Parameter", this.reportingRepository.reportingParameter());
+		context.setVariable("Schule", new ProxyReportingSchule(this.reportingContext));
+		context.setVariable("Benutzer", new ProxyReportingBenutzer(this.reportingContext));
+		context.setVariable("Parameter", this.reportingContext.reportingParameter());
 
 		// Baue die HashMap mit den übergebenen Vorlage-Parameter-Namen und ihren Werten auf, damit diese in den Templates direkt genutzt werden können.
-		if ((this.reportingRepository.reportingParameter() != null) && (this.reportingRepository.reportingParameter().reportvorlageParameter() != null)) {
-			for (final ReportingReportvorlageParameter reportingReportVorlageParameter : this.reportingRepository.reportingParameter()
+		if ((this.reportingContext.reportingParameter() != null) && (this.reportingContext.reportingParameter().reportvorlageParameter() != null)) {
+			for (final ReportingReportvorlageParameter reportingReportVorlageParameter : this.reportingContext.reportingParameter()
 					.reportvorlageParameter()) {
 				final ReportingVorlageParameterTypisiert<?> typisiert = erstelleTypisiertenParameter(reportingReportVorlageParameter);
 				this.reportvorlageParameterWerte.put(typisiert.getName(), typisiert.getWert());

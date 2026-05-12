@@ -5,7 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.SchulEintrag;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 
 /**
  * Proxy-Klasse für die Darstellung eines Schulkatalog-Eintrags in NRW für das Reporting.
@@ -14,18 +14,18 @@ import de.svws_nrw.module.reporting.repositories.ReportingRepository;
  */
 public class ProxyReportingSchulkatalogEintragNRW extends ReportingSchulkatalogEintragNRW {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 
 	/**
 	 * Erstellt eine neue Proxy-Instanz aus einem SchulEintrag-Objekt.
 	 *
-	 * @param reportingRepository Repository für das Reporting.
+	 * @param reportingContext Repository für das Reporting.
 	 * @param schulEintrag Das SchulEintrag-Objekt, aus dem die Proxy-Instanz erstellt wird
 	 */
-	public ProxyReportingSchulkatalogEintragNRW(final ReportingRepository reportingRepository, final SchulEintrag schulEintrag) {
+	public ProxyReportingSchulkatalogEintragNRW(final ReportingContext reportingContext, final SchulEintrag schulEintrag) {
 		super(
 				createBezeichnungListe(schulEintrag.name),
 				schulEintrag.email,
@@ -41,11 +41,11 @@ public class ProxyReportingSchulkatalogEintragNRW extends ReportingSchulkatalogE
 				schulEintrag.istSichtbar,
 				schulEintrag.kuerzel,
 				schulEintrag.kurzbezeichnung,
-				getSchulform(reportingRepository, schulEintrag.idSchulform),
+				getSchulform(reportingContext, schulEintrag.idSchulform),
 				schulEintrag.schulleiter,
 				schulEintrag.sortierung
 		);
-		this.reportingRepository = reportingRepository;
+		this.reportingContext = reportingContext;
 	}
 
 	/**
@@ -86,15 +86,15 @@ public class ProxyReportingSchulkatalogEintragNRW extends ReportingSchulkatalogE
 	/**
 	 * Ermittelt die Schulform anhand der ID aus dem Repository.
 	 *
-	 * @param reportingRepository Das Repository mit den Katalogdaten
+	 * @param reportingContext Das Repository mit den Katalogdaten
 	 * @param idSchulform        Die ID der Schulform
 	 * @return Die ermittelte Schulform oder null
 	 */
-	private static SchulformKatalogEintrag getSchulform(final ReportingRepository reportingRepository, final Long idSchulform) {
+	private static SchulformKatalogEintrag getSchulform(final ReportingContext reportingContext, final Long idSchulform) {
 		if (idSchulform == null) {
 			return null;
 		}
-		return reportingRepository.repositoryKataloge().schulformen().get(idSchulform);
+		return reportingContext.repositoryKataloge().schulformen().get(idSchulform);
 	}
 
 	// ##### Getter #####
@@ -104,7 +104,7 @@ public class ProxyReportingSchulkatalogEintragNRW extends ReportingSchulkatalogE
 	 *
 	 * @return Repository für das Reporting
 	 */
-	public ReportingRepository reportingRepository() {
-		return reportingRepository;
+	public ReportingContext reportingContext() {
+		return reportingContext;
 	}
 }

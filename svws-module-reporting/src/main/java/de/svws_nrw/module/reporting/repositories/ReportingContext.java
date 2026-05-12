@@ -12,9 +12,10 @@ import de.svws_nrw.module.reporting.sortierung.ReportingSortierungService;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Zentrales Repository des Reporting-Moduls, welches aber nur an domänenspezifische Repositories delegiert.
+ * Zentraler Kontext-Container des Reporting-Moduls, der Infrastruktur (Datenbankverbindung, Logger, Services) bereitstellt
+ * und Zugriff auf die domänenspezifischen Sub-Repositories gewährt.
  */
-public class ReportingRepository {
+public class ReportingContext {
 
 	/** Die Verbindung zur Datenbank. */
 	private final DBEntityManager conn;
@@ -45,7 +46,7 @@ public class ReportingRepository {
 
 
 	/**
-	 * Erstellt das Repository für häufig genutzte Daten aus der Schuldatenbank, um Zugriffe darauf zu minimieren. Ebenso werden einzelne
+	 * Erstellt den Kontext für häufig genutzte Daten aus der Schuldatenbank, um Zugriffe darauf zu minimieren. Ebenso werden einzelne
 	 * Reporting-Objekte hier zwischengespeichert.
 	 *
 	 * @param conn						Die Verbindung zur Datenbank.
@@ -58,9 +59,9 @@ public class ReportingRepository {
 	@SuppressWarnings("java:S3366") // Die Warnung "'this' should not be exposed from constructors" kann aus folgendem Grund hier unterdrückt werden.
 	// Die Weitergabe von 'this innerhalb des Konstruktors birgt normalerweise die Gefahr, dass die Sub-Klassen eine Referenz auf ein noch nicht vollständig
 	// initialisiertes Objekt erhalten. Dennoch ist der Ansatz hier gewünscht und sicher, da in diesem synchronen Setup-Prozess die Sub-Repositories während
-	// ihrer Erstellung keine Methoden aus diesem Repository aufrufen, sondern die Referenz lediglich in einem final-Feld abspeichern. Dies vermeidet
-	// zustandsbehaftete (und damit fehleranfällige) init()-Methoden und ermöglicht komplett unveränderliche Repository-Objekte.
-	public ReportingRepository(final DBEntityManager conn, final ReportingParameter reportingParameter, final Logger logger, final LogConsumerList log)
+	// ihrer Erstellung keine Methoden aus diesem Kontext aufrufen, sondern die Referenz lediglich in einem final-Feld abspeichern. Dies vermeidet
+	// zustandsbehaftete (und damit fehleranfällige) init()-Methoden und ermöglicht komplett unveränderliche Kontext-Objekte.
+	public ReportingContext(final DBEntityManager conn, final ReportingParameter reportingParameter, final Logger logger, final LogConsumerList log)
 			throws ApiOperationException {
 
 		// Initialisiere den Logger und das Log, sofern noch nicht erfolgt.
@@ -77,21 +78,21 @@ public class ReportingRepository {
 			this.log = log;
 		}
 
-		this.logger.logLn(LogLevel.DEBUG, 4, ">>> Beginn der Erzeugung des Reporting-Repository");
+		this.logger.logLn(LogLevel.DEBUG, 4, ">>> Beginn der Erzeugung des Reporting-Context");
 
 		// Validiere Datenbankverbindung
 		if (conn == null) {
-			this.logger.logLn(LogLevel.ERROR, 8, "FEHLER: Es wurde keine Verbindung zur Datenbank für die Initialisierung des Reporting-Repository übergeben.");
+			this.logger.logLn(LogLevel.ERROR, 8, "FEHLER: Es wurde keine Verbindung zur Datenbank für die Initialisierung des Reporting-Context übergeben.");
 			throw new ApiOperationException(Status.NOT_FOUND,
-					"Es wurde keine Verbindung zur Datenbank für die Initialisierung des Reporting-Repository übergeben.");
+					"Es wurde keine Verbindung zur Datenbank für die Initialisierung des Reporting-Context übergeben.");
 		}
 		this.conn = conn;
 
 		// Validiere Reporting-Parameter
 		if (reportingParameter == null) {
-			this.logger.logLn(LogLevel.ERROR, 8, "FEHLER: Es wurden keine Daten Ausgabe im Report für die Initialisierung des Reporting-Repository übergeben.");
+			this.logger.logLn(LogLevel.ERROR, 8, "FEHLER: Es wurden keine Daten Ausgabe im Report für die Initialisierung des Reporting-Context übergeben.");
 			throw new ApiOperationException(Status.NOT_FOUND,
-					"FEHLER: Es wurden keine Daten Ausgabe im Report für die Initialisierung des Reporting-Repository übergeben.");
+					"FEHLER: Es wurden keine Daten Ausgabe im Report für die Initialisierung des Reporting-Context übergeben.");
 		}
 		this.reportingParameterTypisiert = new ReportingParameterTypisiert(this, reportingParameter);
 
@@ -119,7 +120,7 @@ public class ReportingRepository {
 		this.repositoryGost = new ReportingRepositoryGost(this);
 		this.logger.logLn(LogLevel.DEBUG, 8, "GOST-Repository erfolgreich erzeugt.");
 
-		this.logger.logLn(LogLevel.DEBUG, 4, "<<< Ende der Erzeugung des Reporting-Repository");
+		this.logger.logLn(LogLevel.DEBUG, 4, "<<< Ende der Erzeugung des Reporting-Context");
 	}
 
 

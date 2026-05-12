@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 
 
 /**
@@ -13,9 +13,9 @@ import de.svws_nrw.module.reporting.repositories.ReportingRepository;
  */
 public class ProxyReportingStundenplanungStundenplan extends ReportingStundenplanungStundenplan {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 	/** Der Manager für den Stundenplan. */
 	@JsonIgnore
@@ -25,13 +25,13 @@ public class ProxyReportingStundenplanungStundenplan extends ReportingStundenpla
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingStundenplanungStundenplan}.
 	 *
-	 * @param reportingRepository 	Repository für das Reporting.
+	 * @param reportingContext 	Repository für das Reporting.
 	 * @param stundenplanManager	Der Manager für den Stundenplan.
 	 */
-	public ProxyReportingStundenplanungStundenplan(final ReportingRepository reportingRepository, final StundenplanManager stundenplanManager) {
+	public ProxyReportingStundenplanungStundenplan(final ReportingContext reportingContext, final StundenplanManager stundenplanManager) {
 		super("", "", "", -1, new ArrayList<>(), new ArrayList<>(), null, 0, new HashMap<>(), new ArrayList<>());
 
-		this.reportingRepository = reportingRepository;
+		this.reportingContext = reportingContext;
 		this.stundenplanManager = stundenplanManager;
 
 		if (this.stundenplanManager == null) {
@@ -42,7 +42,7 @@ public class ProxyReportingStundenplanungStundenplan extends ReportingStundenpla
 		super.beschreibung = ersetzeNullBlankTrim(stundenplanManager.getBezeichnungStundenplan());
 		super.gueltigAb = ersetzeNullBlankTrim(stundenplanManager.getGueltigAb());
 		super.gueltigBis = ersetzeNullBlankTrim(stundenplanManager.getGueltigBis());
-		super.schuljahresabschnitt = this.reportingRepository.repositorySchule().schuljahresabschnitt(stundenplanManager.getIDSchuljahresabschnitt());
+		super.schuljahresabschnitt = this.reportingContext.repositorySchule().schuljahresabschnitt(stundenplanManager.getIDSchuljahresabschnitt());
 		super.wochenperiodizitaet = (this.stundenplanManager.getWochenTypModell() == 0) ? 1 : this.stundenplanManager.getWochenTypModell();
 		for (int i = 1; i <= super.wochenperiodizitaet; i++) {
 			super.mapWochenbezeichnungen.put(i, stundenplanManager.stundenplanGetWochenTypAsStringKurz(i));
@@ -55,10 +55,10 @@ public class ProxyReportingStundenplanungStundenplan extends ReportingStundenpla
 		super.setRasterUnterrichteUndPausen(
 				this.stundenplanManager.getListZeitraster().stream()
 						.map(z -> (ReportingStundenplanungUnterrichtsrasterstunde) new ProxyReportingStundenplanungUnterrichtsrasterstunde(
-								this.reportingRepository, z, this))
+								this.reportingContext, z, this))
 						.toList(),
 				this.stundenplanManager.pausenzeitGetMengeAsList().stream()
-						.map(pz -> (ReportingStundenplanungPausenzeit) new ProxyReportingStundenplanungPausenzeit(this.reportingRepository, pz, this))
+						.map(pz -> (ReportingStundenplanungPausenzeit) new ProxyReportingStundenplanungPausenzeit(this.reportingContext, pz, this))
 						.toList());
 	}
 
@@ -90,7 +90,7 @@ public class ProxyReportingStundenplanungStundenplan extends ReportingStundenpla
 	 *
 	 * @return Repository für das Reporting
 	 */
-	public ReportingRepository reportingRepository() {
-		return reportingRepository;
+	public ReportingContext reportingContext() {
+		return reportingContext;
 	}
 }

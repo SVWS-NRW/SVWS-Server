@@ -93,7 +93,7 @@ public final class ReportingListBuilder {
 			return true;
 		} catch (final Exception e) {
 			ReportingExceptionUtils.logException(
-					"FEHLER: Fehler bei der Ermittlung der fehlenden %sstammdaten einer %sliste aus der Datenbank im ReportingRepository."
+					"FEHLER: Fehler bei der Ermittlung der fehlenden %sstammdaten einer %sliste aus der Datenbank im ReportingContext."
 							.formatted(datentyp, datentyp),
 					e, logger, LogLevel.ERROR, 0);
 			return false;

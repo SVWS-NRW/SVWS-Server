@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.module.reporting.types.gost.abitur.ProxyReportingGostAbiturFachbelegung;
-import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.gost.abitur.ReportingGostAbiturFachbelegung;
 
 import java.util.ArrayList;
@@ -14,18 +14,18 @@ import java.util.ArrayList;
  */
 public class ProxyReportingSchuelerGostAbitur extends ReportingSchuelerGostAbitur {
 
-	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
-	private final ReportingRepository reportingRepository;
+	private final ReportingContext reportingContext;
 
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingSchuelerGostAbitur}.
 	 *
-	 * @param reportingRepository Repository für das Reporting.
+	 * @param reportingContext Repository für das Reporting.
 	 * @param abiturdaten Daten-Objekt der Fachbelegungen aus der Datenbank
 	 */
-	public ProxyReportingSchuelerGostAbitur(final ReportingRepository reportingRepository, final Abiturdaten abiturdaten) {
+	public ProxyReportingSchuelerGostAbitur(final ReportingContext reportingContext, final Abiturdaten abiturdaten) {
 		super(abiturdaten.abiturjahr,
 				abiturdaten.schuljahrAbitur,
 				null,
@@ -55,14 +55,14 @@ public class ProxyReportingSchuelerGostAbitur extends ReportingSchuelerGostAbitu
 				ersetzeNullBlankTrim(abiturdaten.note),
 				ersetzeNullBlankTrim(abiturdaten.projektKursThema),
 				abiturdaten.pruefungBestanden);
-		this.reportingRepository = reportingRepository;
+		this.reportingContext = reportingContext;
 
-		super.abiturSchuljahresabschnitt = this.reportingRepository.repositorySchule().schuljahresabschnitt(super.abiturSchuljahr, 2);
+		super.abiturSchuljahresabschnitt = this.reportingContext.repositorySchule().schuljahresabschnitt(super.abiturSchuljahr, 2);
 		super.besondereLernleistungNote = Note.fromKuerzel(abiturdaten.besondereLernleistungNotenKuerzel);
 
 		super.fachbelegungen()
 				.addAll(abiturdaten.fachbelegungen.stream()
-						.map(f -> new ProxyReportingGostAbiturFachbelegung(this.reportingRepository, abiturdaten.schuljahrAbitur, f)).toList());
+						.map(f -> new ProxyReportingGostAbiturFachbelegung(this.reportingContext, abiturdaten.schuljahrAbitur, f)).toList());
 
 		this.fachbelegungen().sort(ReportingGostAbiturFachbelegung::compareToGost);
 	}
@@ -73,7 +73,7 @@ public class ProxyReportingSchuelerGostAbitur extends ReportingSchuelerGostAbitu
 	 *
 	 * @return Repository für das Reporting
 	 */
-	public ReportingRepository reportingRepository() {
-		return reportingRepository;
+	public ReportingContext reportingContext() {
+		return reportingContext;
 	}
 }
