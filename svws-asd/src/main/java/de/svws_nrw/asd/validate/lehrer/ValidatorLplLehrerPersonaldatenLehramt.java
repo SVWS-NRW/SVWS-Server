@@ -30,10 +30,12 @@ public final class ValidatorLplLehrerPersonaldatenLehramt extends Validator {
 			final @NotNull Supplier<@AllowNull DateManager> geburtsdatum,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		_validatoren.add(new ValidatorLp00LehrerPersonaldatenLehramt(lehraemter, lehrerId, kontext));
+		_validatoren.add(new ValidatorLpl00LehrerPersonaldatenLehramt(lehraemter, lehrerId, kontext));
 		_validatoren.add(new ValidatorLpl01LehrerPersonaldatenLehramt(lehraemter, lehrerId, kontext));
 		_validatoren.add(new ValidatorLpl10LehrerPersonaldatenLehramt(lehraemter, kontext));
 		_validatoren.add(new ValidatorLpl11LehrerPersonaldatenLehramt(lehraemter, geburtsdatum, kontext));
+
+		_validatoren.add(new ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung(lehraemter, kontext));
 
 		_validatoren.add(new ValidatorLplk10LehrerPersonaldatenLehramtKombination(lehraemter, kontext));
 		_validatoren.add(new ValidatorLplk11LehrerPersonaldatenLehramtKombination(lehraemter, kontext));

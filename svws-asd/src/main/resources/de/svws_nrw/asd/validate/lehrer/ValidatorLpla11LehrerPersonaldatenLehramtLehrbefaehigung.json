@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLpla11LehrerPersonaldatenLehramtLehrbefaehigung",
+    "historie" : [ {
+      "praefix" : "LPLA11",
+      "altes_kuerzel" : "",
+      "zweig" : "Lehrer-Personaldaten-Lehramt-Lehrbefaehigung",
+      "dtos" : "LehrerPersonaldaten, LehrerLehramtEintrag ",
+      "ausfuehrungsbereich_ui" : "Reiter 'Personaldaten'",
+      "anzeigebereich_ui" : "Lehrämter (bei der betroffenen Lehrbefähigungs-Zeile) ",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["LPLA02"],
+      "muss": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Für die Lehrämter 'Alltagshelfer/-in', 'Handwerksmeister/-in' und 'Heilpädagoge/-in' ist nur die Lehrbefähigung 'Betreuung' zulässig.",
+      "erlaeuterung" : "",
+      "bedingung" : "LehrerPersonaldaten.lehraemter[].bezeichner = 'ID_63', 'ID_64', 'ID_65' ∧ LehrerLehramtEintrag.lehrbefaehigungen[].bezeichner ≠ 'BE'",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }

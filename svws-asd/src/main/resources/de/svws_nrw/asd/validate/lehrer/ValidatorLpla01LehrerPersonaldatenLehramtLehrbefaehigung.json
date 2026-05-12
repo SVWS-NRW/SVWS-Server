@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLpla01LehrerPersonaldatenLehramtLehrbefaehigung",
+    "historie" : [ {
+      "praefix" : "LPLA01",
+      "altes_kuerzel" : "",
+      "zweig" : "Lehrer-Personaldaten-Lehramt-Lehrbefaehigung",
+      "dtos" : "LehrerPersonaldaten, LehrerLehramtEintrag ",
+      "ausfuehrungsbereich_ui" : "Reiter 'Personaldaten'",
+      "anzeigebereich_ui" : "Lehrämter (bei der betroffenen Lehrbefähigungs-Zeile) ",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["LPLA00"],
+      "muss": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Das Feld 'Lehrbefaehigung' muss zulässig sein. ",
+      "erlaeuterung" : "",
+      "bedingung" : " LehrerLehramtEintrag.lehrbefaehigungen[].bezeichner ≠ einem Eintrag in LehrerLehrbefaehigung.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
