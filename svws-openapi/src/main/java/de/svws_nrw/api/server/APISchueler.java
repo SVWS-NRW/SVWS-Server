@@ -19,6 +19,7 @@ import de.svws_nrw.asd.data.schueler.Sprachpruefung;
 import de.svws_nrw.asd.data.schueler.UebergangsempfehlungKatalogEintrag;
 import de.svws_nrw.controller.schueler.schulbesuch.BisherigeSchuleControllerFactory;
 import de.svws_nrw.controller.schueler.schulbesuch.SchuelerMerkmalControllerFactory;
+import de.svws_nrw.controller.schueler.schulbesuch.SchulbesuchControllerFactory;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
 import de.svws_nrw.core.data.schueler.SchuelerEinwilligung;
@@ -48,7 +49,6 @@ import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsliste;
 import de.svws_nrw.data.schueler.DataSchuelerLernplattformen;
 import de.svws_nrw.data.schueler.DataSchuelerNeu;
-import de.svws_nrw.data.schueler.DataSchuelerSchulbesuchsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerSprachbelegung;
 import de.svws_nrw.data.schueler.DataSchuelerSprachpruefung;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
@@ -62,6 +62,7 @@ import de.svws_nrw.service.schueler.schulbesuch.BisherigeSchuleCreateRequest;
 import de.svws_nrw.service.schueler.schulbesuch.BisherigeSchulePatchRequest;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerMerkmalCreateRequest;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerMerkmalPatchRequest;
+import de.svws_nrw.service.schueler.schulbesuch.SchulbesuchPatchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -266,9 +267,10 @@ public class APISchueler {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(implementation = SchuelerNeu.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
+		final var schulbesuchService = SchulbesuchControllerFactory.withWriteAccess(request).getSchulbesuchController().getSchulbesuchService();
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataSchuelerNeu(new DataSchuelerStammdaten(conn), new DataSchuelerLernabschnittsdaten(conn),
-						new DataSchuelerSchulbesuchsdaten(conn), new DataSchuelerEinwilligungen(conn), new DataSchuelerLernplattformen(conn),
+				conn -> new DataSchuelerNeu(new DataSchuelerStammdaten(conn), new DataSchuelerLernabschnittsdaten(conn), schulbesuchService,
+						new DataSchuelerEinwilligungen(conn), new DataSchuelerLernplattformen(conn),
 						new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).add(is),
 				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
@@ -384,7 +386,7 @@ public class APISchueler {
 			@Context final HttpServletRequest request) {
 		return BisherigeSchuleControllerFactory
 				.withWriteAccess(request)
-				.getBisherigeSchulenController()
+				.getBisherigeSchuleController()
 				.create(input);
 	}
 
@@ -415,7 +417,7 @@ public class APISchueler {
 			@Context final HttpServletRequest request) {
 		return BisherigeSchuleControllerFactory
 				.withWriteAccess(request)
-				.getBisherigeSchulenController()
+				.getBisherigeSchuleController()
 				.patch(id, patch);
 	}
 
@@ -445,7 +447,7 @@ public class APISchueler {
 			@Context final HttpServletRequest request) {
 		return BisherigeSchuleControllerFactory
 				.withDeleteAccess(request)
-				.getBisherigeSchulenController()
+				.getBisherigeSchuleController()
 				.delete(ids);
 	}
 
@@ -542,7 +544,7 @@ public class APISchueler {
 	 * Die OpenAPI-Methode für die Abfrage der Schulbesuchsdaten eines Schülers.
 	 *
 	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id        die Datenbank-ID zur Identifikation des Schülers
+	 * @param idSchueler        die Datenbank-ID zur Identifikation des Schülers
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die Schulbesuchsdaten des Schülers
@@ -556,11 +558,12 @@ public class APISchueler {
 			schema = @Schema(implementation = SchuelerSchulbesuchsdaten.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden.")
-	public Response getSchuelerSchulbesuch(@PathParam("schema") final String schema, @PathParam("id") final long id,
+	public Response getSchuelerSchulbesuch(@PathParam("schema") final String schema, @PathParam("id") final long idSchueler,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSchulbesuchsdaten(conn).getByIdAsResponse(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
+		return SchulbesuchControllerFactory
+				.withReadAccess(request)
+				.getSchulbesuchController()
+				.getByIdSchueler(idSchueler);
 	}
 
 
@@ -568,15 +571,15 @@ public class APISchueler {
 	 * Die OpenAPI-Methode für das Patchen der Stammdaten eines Schülers.
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
-	 * @param id        die Datenbank-ID zur Identifikation des Schülers
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param idSchulbesuch die Datenbank-ID zur Identifikation der Schulbesuch Entität
+	 * @param patch     der Request Body
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
 	 */
 	@PATCH
 	@Path("/{id : \\d+}/schulbesuch")
-	@Operation(summary = "Liefert zu der ID des Schülers die zugehörigen Schulbesuchsdatendaten.",
+	@Operation(summary = "Liefert zu der ID des Schülers die zugehörigen Schulbesuchsdaten.",
 			description = "Passt die Schüler-Schulbesuchsdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerdaten besitzt.")
 	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Schüler-Schulbesuchsdaten integriert.")
@@ -586,15 +589,15 @@ public class APISchueler {
 	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
 			+ " (z.B. eine negative ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response patchSchuelerSchulbesuch(@PathParam("schema") final String schema, @PathParam("id") final long id,
+	public Response patchSchuelerSchulbesuch(@PathParam("schema") final String schema, @PathParam("id") final long idSchulbesuch,
 			@RequestBody(description = "Der Patch für die Schulbesuchsdaten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = SchuelerSchulbesuchsdaten.class))) final InputStream is,
+					schema = @Schema(implementation = SchuelerSchulbesuchsdaten.class))) final SchulbesuchPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSchulbesuchsdaten(conn).patchAsResponse(id, is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+		return SchulbesuchControllerFactory
+				.withWriteAccess(request)
+				.getSchulbesuchController()
+				.patch(idSchulbesuch, patch);
 	}
-
 
 
 	/**

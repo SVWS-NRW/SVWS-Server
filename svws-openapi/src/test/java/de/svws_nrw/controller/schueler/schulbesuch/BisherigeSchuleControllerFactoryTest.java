@@ -104,19 +104,19 @@ class BisherigeSchuleControllerFactoryTest {
 
 	@Test
 	@DisplayName("getBisherigeSchulenController | Erfolg")
-	void getBisherigeSchulenController_success() {
+	void getBisherigeSchuleController_success() {
 		final var bisherigeSchulenService = mock(BisherigeSchuleService.class);
 		final var factory = new BisherigeSchuleControllerFactory(serviceFactory);
 
-		when(serviceFactory.getBisherigeSchulenService()).thenReturn(bisherigeSchulenService);
+		when(serviceFactory.getBisherigeSchuleService()).thenReturn(bisherigeSchulenService);
 
-		final var controller = factory.getBisherigeSchulenController();
+		final var controller = factory.getBisherigeSchuleController();
 
 		assertThat(controller)
 				.isNotNull()
 				.isInstanceOf(BisherigeSchuleController.class);
 
-		verify(serviceFactory, times(1)).getBisherigeSchulenService();
+		verify(serviceFactory, times(1)).getBisherigeSchuleService();
 	}
 
 	@Test

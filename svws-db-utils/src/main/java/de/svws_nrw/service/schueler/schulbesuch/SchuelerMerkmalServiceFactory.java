@@ -10,14 +10,7 @@ public final class SchuelerMerkmalServiceFactory {
 	private final MerkmalRepositoryFactory merkmalRepoFactory;
 	private final SchuelerMerkmalMapper mapper;
 
-	/**
-	 * Erstellt eine neue {@code SchuelerMerkmaleRepositoryFactory}.
-	 *
-	 * @param repoFactory 			das Repository-Factory für {@link SchuelerMerkmaleRepositoryFactory}-Instanzen
-	 * @param merkmalRepoFactory 	das Repository-Factory für {@link MerkmalRepositoryFactory}-Instanzen
-	 * @param mapper      			der Mapper zur Konvertierung zwischen Entity und API-Modell
-	 */
-	public SchuelerMerkmalServiceFactory(
+	private SchuelerMerkmalServiceFactory(
 			final SchuelerMerkmaleRepositoryFactory repoFactory,
 			final MerkmalRepositoryFactory merkmalRepoFactory,
 			final SchuelerMerkmalMapper mapper) {

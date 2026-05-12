@@ -11,7 +11,10 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.schueler.schulbesuch.SchulbesuchPatchRequest;
+import de.svws_nrw.service.schueler.schulbesuch.SchulbesuchService;
 import jakarta.ws.rs.core.Response;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 /** DataManager zum Erstellen eines Schülers. */
 public final class DataSchuelerNeu {
@@ -19,7 +22,7 @@ public final class DataSchuelerNeu {
 	private static final String ID_SCHULJAHRESABSCHNITT = "idSchuljahresabschnitt";
 	private final DataSchuelerStammdaten dataSchuelerStammdaten;
 	private final DataSchuelerLernabschnittsdaten dataSchuelerLernabschnittsdaten;
-	private final DataSchuelerSchulbesuchsdaten dataSchuelerSchulbesuchsdaten;
+	private final SchulbesuchService schulbesuchService;
 	private final DataSchuelerEinwilligungen dataSchuelerEinwilligungen;
 	private final DataSchuelerLernplattformen dataSchuelerLernplattformen;
 	private final DataLernplattformen dataLernplattformen;
@@ -30,7 +33,7 @@ public final class DataSchuelerNeu {
 	 *
 	 * @param dataSchuelerStammdaten			DataSchuelerStammdaten
 	 * @param dataSchuelerLernabschnittsdaten	DataSchuelerLernabschnittsdaten
-	 * @param dataSchuelerSchulbesuchsdaten		DataSchuelerSchulbesuchsdaten
+	 * @param schulbesuchService				SchulbesuchService
 	 * @param dataSchuelerEinwilligungen		DataSchuelerEinwilligungen
 	 * @param dataSchuelerLernplattformen		DataSchuelerLernplattformen
 	 * @param dataLernplattformen				DataLernplattformen
@@ -39,14 +42,14 @@ public final class DataSchuelerNeu {
 	public DataSchuelerNeu(
 			final DataSchuelerStammdaten dataSchuelerStammdaten,
 			final DataSchuelerLernabschnittsdaten dataSchuelerLernabschnittsdaten,
-			final DataSchuelerSchulbesuchsdaten dataSchuelerSchulbesuchsdaten,
+			final SchulbesuchService schulbesuchService,
 			final DataSchuelerEinwilligungen dataSchuelerEinwilligungen,
 			final DataSchuelerLernplattformen dataSchuelerLernplattformen,
 			final DataLernplattformen dataLernplattformen,
 			final DataEinwilligungsarten dataEinwilligungsarten) {
 		this.dataSchuelerStammdaten = dataSchuelerStammdaten;
 		this.dataSchuelerLernabschnittsdaten = dataSchuelerLernabschnittsdaten;
-		this.dataSchuelerSchulbesuchsdaten = dataSchuelerSchulbesuchsdaten;
+		this.schulbesuchService = schulbesuchService;
 		this.dataSchuelerEinwilligungen = dataSchuelerEinwilligungen;
 		this.dataSchuelerLernplattformen = dataSchuelerLernplattformen;
 		this.dataLernplattformen = dataLernplattformen;
@@ -102,12 +105,13 @@ public final class DataSchuelerNeu {
 	}
 
 	private void patchSchulbesuch(final Map<String, Object> initAttributes, final long idSchueler) {
-		final Map<String, Object> schulbesuchAttributes = new HashMap<>();
-		putIfPresent(schulbesuchAttributes, "grundschuleEinschulungsartID", initAttributes.get("idGrundschuleEinschulungsart"));
-		if (schulbesuchAttributes.isEmpty()) {
+		final var idGrundschuleEinschulungsart = JSONMapper.convertToLong(initAttributes.get("idGrundschuleEinschulungsart"), true);
+		if (idGrundschuleEinschulungsart == null) {
 			return;
 		}
-		this.dataSchuelerSchulbesuchsdaten.patch(idSchueler, schulbesuchAttributes);
+		final var dto = new SchulbesuchPatchRequest();
+		dto.grundschuleEinschulungsartID = JsonNullable.of(idGrundschuleEinschulungsart);
+		this.schulbesuchService.patch(idSchueler, dto);
 	}
 
 	private void addLernplattformen(final long idSchueler) {

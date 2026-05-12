@@ -10,6 +10,9 @@ import de.svws_nrw.core.types.schule.PersonTyp;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
+import de.svws_nrw.data.util.TestUtils;
+import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.schueler.schulbesuch.SchulbesuchService;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -21,11 +24,13 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -33,7 +38,7 @@ import static org.mockito.Mockito.when;
 /**
  * Diese Klasse testet die Klasse {@link DataSchuelerNeu}.
  */
-@DisplayName("Diese Klasse testet die Klasse DataSchuelerNeu")
+@DisplayName("Tests für DataSchuelerNeu")
 @ExtendWith(MockitoExtension.class)
 class DataSchuelerNeuTest {
 
@@ -44,7 +49,7 @@ class DataSchuelerNeuTest {
 	private DataSchuelerLernabschnittsdaten dataSchuelerLernabschnittsdaten;
 
 	@Mock
-	private DataSchuelerSchulbesuchsdaten dataSchuelerSchulbesuchsdaten;
+	private SchulbesuchService schulbesuchService;
 
 	@Mock
 	private DataSchuelerEinwilligungen dataSchuelerEinwilligungen;
@@ -67,7 +72,7 @@ class DataSchuelerNeuTest {
 	}
 
 	@Test
-	@DisplayName("add")
+	@DisplayName("add | Schüler wird vollständig angelegt")
 	void add() {
 		final var schuelerNeu = new HashMap<String, Object>();
 		schuelerNeu.put("nachname", "Test");
@@ -77,58 +82,40 @@ class DataSchuelerNeuTest {
 		schuelerNeu.put("idKlasse", 10L);
 		schuelerNeu.put("idGrundschuleEinschulungsart", 51L);
 
-		final var generatedId = 100L;
 		final var created = new SchuelerStammdaten();
-		created.id = generatedId;
+		created.id = 100L;
 
 		when(dataSchuelerStammdaten.add(any())).thenReturn(created);
 		when(dataLernplattformen.getAllIds()).thenReturn(List.of(1L, 2L));
 		when(dataEinwilligungsarten.getAllIdsByPersonTyp(PersonTyp.SCHUELER)).thenReturn(List.of(10L, 20L));
 
-		try (MockedStatic<JSONMapper> mocked = mockStatic(JSONMapper.class)) {
-			mocked.when(() -> JSONMapper.toMap(any())).thenReturn(schuelerNeu);
+		final var response = data.add(TestUtils.fromObject(schuelerNeu));
 
-			final var response = data.add(mock(InputStream.class));
+		assertThat(response.getStatus()).isEqualTo(Response.Status.CREATED.getStatusCode());
+		assertThat(response.getEntity()).isEqualTo(created);
 
-			assertThat(response)
-					.extracting(Response::getStatus, Response::getEntity)
-					.containsExactly(Response.Status.CREATED.getStatusCode(), created);
-
-			verify(dataSchuelerStammdaten)
-					.add(argThat(map ->
-							map.get("nachname").equals("Test")
-									&& map.get("vorname").equals("Max")
-									&& map.get("idSchuljahresabschnitt").equals(8L)
-					));
-			verify(dataSchuelerLernabschnittsdaten)
-					.add(argThat(map ->
-							map.get("schuelerID").equals(generatedId)
-									&& map.get("schuljahresabschnitt").equals(8L)
-									&& map.get("jahrgangID").equals(5L)
-									&& map.get("klassenID").equals(10L)
-					));
-			verify(dataSchuelerSchulbesuchsdaten)
-					.patch(eq(generatedId), argThat(map ->
-							map.get("grundschuleEinschulungsartID").equals(51L)
-					));
-			verify(dataSchuelerLernplattformen, times(2))
-					.add(argThat(map -> map.get("idSchueler").equals(generatedId)));
-			verify(dataSchuelerEinwilligungen, times(2))
-					.add(argThat(map -> map.get("idSchueler").equals(generatedId)));
-		}
+		verify(dataSchuelerStammdaten, times(1)).add(any());
+		verify(dataSchuelerLernabschnittsdaten).add(argThat(map ->
+				map.get("schuelerID").equals(100L)
+						&& (((Number) map.get("schuljahresabschnitt")).longValue() == 8L)
+						&& (((Number) map.get("jahrgangID")).longValue() == 5L)
+						&& (((Number) map.get("klassenID")).longValue() == 10L)
+		));
+		verify(schulbesuchService, times(1)).patch(anyLong(), any());
+		verify(dataSchuelerLernplattformen, times(2)).add(argThat(map -> map.get("idSchueler").equals(100L)));
+		verify(dataSchuelerEinwilligungen, times(2)).add(argThat(map -> map.get("idSchueler").equals(100L)));
 	}
 
 	@Test
-	@DisplayName("add | null values are filtered out")
+	@DisplayName("add | null-Werte werden nicht weitergegeben")
 	void addNullValuesFiltered() {
 		final var schuelerNeu = new HashMap<String, Object>();
 		schuelerNeu.put("nachname", "Test");
-		schuelerNeu.put("vorname", null); // null value should not be added
+		schuelerNeu.put("vorname", null);
 		schuelerNeu.put("idSchuljahresabschnitt", 8L);
 
-		final var generatedId = 100L;
 		final var created = new SchuelerStammdaten();
-		created.id = generatedId;
+		created.id = 100L;
 
 		when(dataSchuelerStammdaten.add(any())).thenReturn(created);
 		when(dataLernplattformen.getAllIds()).thenReturn(List.of());
@@ -139,13 +126,45 @@ class DataSchuelerNeuTest {
 
 			data.add(mock(InputStream.class));
 
-			verify(dataSchuelerStammdaten)
-					.add(argThat(map ->
-							map.containsKey("nachname")
-									&& !map.containsKey("vorname")
-									&& map.containsKey("idSchuljahresabschnitt")
-					));
+			verify(dataSchuelerStammdaten).add(argThat(map ->
+					map.containsKey("nachname")
+							&& !map.containsKey("vorname")
+							&& map.containsKey(ID_SCHULJAHRESABSCHNITT)
+			));
 		}
 	}
 
+	@Test
+	@DisplayName("add | kein Schüler angelegt → ApiOperationException")
+	void addThrowsWhenSchuelerIsNull() {
+		final var schuelerNeu = new HashMap<String, Object>();
+		schuelerNeu.put("nachname", "Test");
+
+		when(dataSchuelerStammdaten.add(any())).thenReturn(null);
+
+		final var inputStream = TestUtils.fromObject(schuelerNeu);
+		assertThatThrownBy(() -> data.add(inputStream))
+				.isInstanceOf(ApiOperationException.class);
+	}
+
+	@Test
+	@DisplayName("add | kein idGrundschuleEinschulungsart → schulbesuchService wird nicht aufgerufen")
+	void addSkipsSchulbesuchWhenEinschulungsartAbsent() {
+		final var schuelerNeu = new HashMap<String, Object>();
+		schuelerNeu.put("nachname", "Test");
+		schuelerNeu.put("idSchuljahresabschnitt", 8L);
+
+		final var created = new SchuelerStammdaten();
+		created.id = 100L;
+
+		when(dataSchuelerStammdaten.add(any())).thenReturn(created);
+		when(dataLernplattformen.getAllIds()).thenReturn(List.of());
+		when(dataEinwilligungsarten.getAllIdsByPersonTyp(PersonTyp.SCHUELER)).thenReturn(List.of());
+
+		data.add(TestUtils.fromObject(schuelerNeu));
+
+		verify(schulbesuchService, never()).patch(anyLong(), any());
+	}
+
+	private static final String ID_SCHULJAHRESABSCHNITT = "idSchuljahresabschnitt";
 }

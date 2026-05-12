@@ -19,7 +19,7 @@ public class BisherigeSchuleRepositoryFactory extends RepositoryFactory {
 	 *
 	 * @return das Repository-Objekt
 	 */
-	public BisherigeSchuleRepository getBisherigeSchulenRepository() {
+	public BisherigeSchuleRepository getBisherigeSchuleRepository() {
 		return this.getOrCreate(BisherigeSchuleRepository.class, () -> new BisherigeSchuleRepositoryImpl(this.conn));
 	}
 

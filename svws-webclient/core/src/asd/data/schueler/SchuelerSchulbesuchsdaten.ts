@@ -105,7 +105,7 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 	/**
 	 * Die ID der Übergangsempfehlung der Grundschule in die Sekundarstufe I
 	 */
-	public idKuerzelGrundschuleUebergangsempfehlung: number | null = null;
+	public idGrundschuleUebergangsempfehlung: number | null = null;
 
 	/**
 	 * Das Jahr des Wechsels in die Sekundarstufe I.
@@ -153,9 +153,6 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 	public alleSchulen: List<SchuelerSchulbesuchSchule> = new ArrayList<SchuelerSchulbesuchSchule>();
 
 
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
 	public constructor() {
 		super();
 	}
@@ -194,7 +191,7 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		result.grundschuleEinschulungsjahr = (obj.grundschuleEinschulungsjahr === undefined) ? null : obj.grundschuleEinschulungsjahr === null ? null : obj.grundschuleEinschulungsjahr;
 		result.grundschuleEinschulungsartID = (obj.grundschuleEinschulungsartID === undefined) ? null : obj.grundschuleEinschulungsartID === null ? null : obj.grundschuleEinschulungsartID;
 		result.idGrundschuleJahreEingangsphase = (obj.idGrundschuleJahreEingangsphase === undefined) ? null : obj.idGrundschuleJahreEingangsphase === null ? null : obj.idGrundschuleJahreEingangsphase;
-		result.idKuerzelGrundschuleUebergangsempfehlung = (obj.idKuerzelGrundschuleUebergangsempfehlung === undefined) ? null : obj.idKuerzelGrundschuleUebergangsempfehlung === null ? null : obj.idKuerzelGrundschuleUebergangsempfehlung;
+		result.idGrundschuleUebergangsempfehlung = (obj.idGrundschuleUebergangsempfehlung === undefined) ? null : obj.idGrundschuleUebergangsempfehlung === null ? null : obj.idGrundschuleUebergangsempfehlung;
 		result.sekIWechsel = (obj.sekIWechsel === undefined) ? null : obj.sekIWechsel === null ? null : obj.sekIWechsel;
 		result.sekIErsteSchulform = (obj.sekIErsteSchulform === undefined) ? null : obj.sekIErsteSchulform === null ? null : obj.sekIErsteSchulform;
 		result.sekIIWechsel = (obj.sekIIWechsel === undefined) ? null : obj.sekIIWechsel === null ? null : obj.sekIIWechsel;
@@ -240,7 +237,7 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		result += '"grundschuleEinschulungsjahr" : ' + ((obj.grundschuleEinschulungsjahr === null) ? 'null' : obj.grundschuleEinschulungsjahr.toString()) + ',';
 		result += '"grundschuleEinschulungsartID" : ' + ((obj.grundschuleEinschulungsartID === null) ? 'null' : obj.grundschuleEinschulungsartID.toString()) + ',';
 		result += '"idGrundschuleJahreEingangsphase" : ' + ((obj.idGrundschuleJahreEingangsphase === null) ? 'null' : obj.idGrundschuleJahreEingangsphase.toString()) + ',';
-		result += '"idKuerzelGrundschuleUebergangsempfehlung" : ' + ((obj.idKuerzelGrundschuleUebergangsempfehlung === null) ? 'null' : obj.idKuerzelGrundschuleUebergangsempfehlung.toString()) + ',';
+		result += '"idGrundschuleUebergangsempfehlung" : ' + ((obj.idGrundschuleUebergangsempfehlung === null) ? 'null' : obj.idGrundschuleUebergangsempfehlung.toString()) + ',';
 		result += '"sekIWechsel" : ' + ((obj.sekIWechsel === null) ? 'null' : obj.sekIWechsel.toString()) + ',';
 		result += '"sekIErsteSchulform" : ' + ((obj.sekIErsteSchulform === null) ? 'null' : JSON.stringify(obj.sekIErsteSchulform)) + ',';
 		result += '"sekIIWechsel" : ' + ((obj.sekIIWechsel === null) ? 'null' : obj.sekIIWechsel.toString()) + ',';
@@ -328,8 +325,8 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		if (obj.idGrundschuleJahreEingangsphase !== undefined) {
 			result += '"idGrundschuleJahreEingangsphase" : ' + ((obj.idGrundschuleJahreEingangsphase === null) ? 'null' : obj.idGrundschuleJahreEingangsphase.toString()) + ',';
 		}
-		if (obj.idKuerzelGrundschuleUebergangsempfehlung !== undefined) {
-			result += '"idKuerzelGrundschuleUebergangsempfehlung" : ' + ((obj.idKuerzelGrundschuleUebergangsempfehlung === null) ? 'null' : obj.idKuerzelGrundschuleUebergangsempfehlung.toString()) + ',';
+		if (obj.idGrundschuleUebergangsempfehlung !== undefined) {
+			result += '"idGrundschuleUebergangsempfehlung" : ' + ((obj.idGrundschuleUebergangsempfehlung === null) ? 'null' : obj.idGrundschuleUebergangsempfehlung.toString()) + ',';
 		}
 		if (obj.sekIWechsel !== undefined) {
 			result += '"sekIWechsel" : ' + ((obj.sekIWechsel === null) ? 'null' : obj.sekIWechsel.toString()) + ',';

@@ -21,17 +21,6 @@ public final class MerkmalControllerFactory {
 		this.merkmalServiceFactory = merkmalServiceFactory;
 	}
 
-	/**
-	 * Erstellt eine neue Factory-Instanz mit der angegebenen Benutzerkompetenz.
-	 * <p>
-	 * Initialisiert die Datenbankverbindung und konfiguriert alle erforderlichen
-	 * Abhängigkeiten (Repository, Mapper, Service).
-	 * </p>
-	 *
-	 * @param requst die HTTP-Anfrage zur Initialisierung der Datenbankverbindung
-	 * @param benutzerKompetenz die erforderliche Benutzerkompetenz für die Operation
-	 * @return eine neue MerkmalControllerFactory-Instanz
-	 */
 	private static MerkmalControllerFactory getNewInstance(final HttpServletRequest requst, final BenutzerKompetenz benutzerKompetenz) {
 		DBBenutzerUtils.getDBConnection(requst, ServerMode.STABLE, benutzerKompetenz);
 		final var merkmalRepositoryFactory = MerkmalRepositoryFactory.getNewInstance();

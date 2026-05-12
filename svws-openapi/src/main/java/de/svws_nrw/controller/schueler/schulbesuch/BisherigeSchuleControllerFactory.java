@@ -61,8 +61,8 @@ public class BisherigeSchuleControllerFactory {
 	 *
 	 * @return ein neuer BisherigeSchulenController mit dem konfigurierten BisherigeSchulenService
 	 */
-	public BisherigeSchuleController getBisherigeSchulenController() {
-		return new BisherigeSchuleController(serviceFactory.getBisherigeSchulenService());
+	public BisherigeSchuleController getBisherigeSchuleController() {
+		return new BisherigeSchuleController(serviceFactory.getBisherigeSchuleService());
 	}
 
 

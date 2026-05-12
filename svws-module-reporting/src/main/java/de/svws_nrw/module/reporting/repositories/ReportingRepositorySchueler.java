@@ -21,7 +21,6 @@ import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.erzieher.DataErzieherStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerLeistungsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
-import de.svws_nrw.data.schueler.DataSchuelerSchulbesuchsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerSprachbelegung;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerTelefon;
@@ -38,6 +37,7 @@ import de.svws_nrw.module.reporting.types.schueler.telefon.ProxyReportingSchuele
 import de.svws_nrw.module.reporting.types.schueler.telefon.ReportingSchuelerTelefonkontakt;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.module.reporting.utils.ReportingListBuilder;
+import de.svws_nrw.service.schueler.schulbesuch.SchulbesuchServiceFactory;
 
 /**
  * Domänen-Repository für Schülerdaten (Stammdaten, Lernabschnitte, Leistungsdaten und Reporting-Objekte).
@@ -236,10 +236,13 @@ public class ReportingRepositorySchueler {
 	 * @throws ApiOperationException Im Fehlerfall.
 	 */
 	public Map<Long, SchuelerSchulbesuchsdaten> schulbesuchsdaten(final List<Long> idsSchueler) throws ApiOperationException {
-		return new DataSchuelerSchulbesuchsdaten(this.reportingRepository.conn()).getListByIds(idsSchueler).stream()
+		return SchulbesuchServiceFactory
+				.getNewInstance()
+				.getSchulbesuchService()
+				.getByIds(idsSchueler)
+				.stream()
 				.collect(Collectors.toMap(sb -> sb.id, sb -> sb));
 	}
-
 
 	// ##### Lernabschnitts- und Leistungsdaten #####
 

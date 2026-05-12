@@ -12,13 +12,7 @@ public final class BisherigeSchuleServiceFactory {
 	private final BisherigeSchuleRepositoryFactory repoFactory;
 	private final BisherigeSchuleMapper mapper;
 
-	/**
-	 * Erstellt eine neue {@code BisherigeSchulenServiceFactory}.
-	 *
-	 * @param repoFactory das Repository-Factory für {@link BisherigeSchuleRepository}-Instanzen
-	 * @param mapper      der Mapper zur Konvertierung zwischen Entity und API-Modell
-	 */
-	public BisherigeSchuleServiceFactory(final BisherigeSchuleRepositoryFactory repoFactory, final BisherigeSchuleMapper mapper) {
+	private BisherigeSchuleServiceFactory(final BisherigeSchuleRepositoryFactory repoFactory, final BisherigeSchuleMapper mapper) {
 		this.repoFactory = repoFactory;
 		this.mapper = mapper;
 	}
@@ -42,10 +36,10 @@ public final class BisherigeSchuleServiceFactory {
 	 *
 	 * @return ein neuer {@code BisherigeSchulenService} mit allen erforderlichen Abhängigkeiten
 	 */
-	public BisherigeSchuleService getBisherigeSchulenService() {
+	public BisherigeSchuleService getBisherigeSchuleService() {
 		final var dataSchulen = new DataSchulen(DbConnectionProvider.getConnection());
 		final var dataEntlassgruende = new DataKatalogEntlassgruende(DbConnectionProvider.getConnection());
-		return new BisherigeSchuleService(repoFactory.getBisherigeSchulenRepository(), mapper, dataSchulen, dataEntlassgruende);
+		return new BisherigeSchuleService(repoFactory.getBisherigeSchuleRepository(), mapper, dataSchulen, dataEntlassgruende);
 	}
 
 }

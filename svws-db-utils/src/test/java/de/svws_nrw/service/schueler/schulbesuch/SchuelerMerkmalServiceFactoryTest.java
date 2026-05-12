@@ -41,16 +41,6 @@ class SchuelerMerkmalServiceFactoryTest {
 	}
 
 	@Test
-	@DisplayName("Konstruktor | Erfolg")
-	void constructor_success() {
-		final var factory = new SchuelerMerkmalServiceFactory(repoFactory, merkmalRepoFactory, mapper);
-
-		assertThat(factory)
-				.isNotNull()
-				.isInstanceOf(SchuelerMerkmalServiceFactory.class);
-	}
-
-	@Test
 	@DisplayName("getSchuelerMerkmalService | Erfolg")
 	void getSchuelerMerkmalService_success() {
 		final var schuelerMerkmaleRepository = mock(SchuelerMerkmalRepository.class);

@@ -55,10 +55,10 @@ class BisherigeSchuleRepositoryFactoryTest {
 
 	@Test
 	@DisplayName("getBisherigeSchulenRepository | Erfolg")
-	void getBisherigeSchulenRepository_success() {
+	void getBisherigeSchuleRepository_success() {
 		final var factory = BisherigeSchuleRepositoryFactory.getNewInstance();
 
-		final var repository = factory.getBisherigeSchulenRepository();
+		final var repository = factory.getBisherigeSchuleRepository();
 
 		assertThat(repository)
 				.isNotNull()
@@ -68,23 +68,23 @@ class BisherigeSchuleRepositoryFactoryTest {
 
 	@Test
 	@DisplayName("getBisherigeSchulenRepository | Mehrfache Aufrufe geben gleiche Instanz zurück")
-	void getBisherigeSchulenRepository_cachesInstance() {
+	void getBisherigeSchuleRepository_cachesInstance() {
 		final var factory = BisherigeSchuleRepositoryFactory.getNewInstance();
 
-		final var repository1 = factory.getBisherigeSchulenRepository();
-		final var repository2 = factory.getBisherigeSchulenRepository();
+		final var repository1 = factory.getBisherigeSchuleRepository();
+		final var repository2 = factory.getBisherigeSchuleRepository();
 
 		assertThat(repository1).isSameAs(repository2);
 	}
 
 	@Test
 	@DisplayName("getBisherigeSchulenRepository | Verschiedene Factories erstellen verschiedene Repositories")
-	void getBisherigeSchulenRepository_differentFactoriesCreateDifferentRepositories() {
+	void getBisherigeSchuleRepository_differentFactoriesCreateDifferentRepositories() {
 		final var factory1 = BisherigeSchuleRepositoryFactory.getNewInstance();
 		final var factory2 = BisherigeSchuleRepositoryFactory.getNewInstance();
 
-		final var repository1 = factory1.getBisherigeSchulenRepository();
-		final var repository2 = factory2.getBisherigeSchulenRepository();
+		final var repository1 = factory1.getBisherigeSchuleRepository();
+		final var repository2 = factory2.getBisherigeSchuleRepository();
 
 		assertThat(repository1).isNotSameAs(repository2);
 	}

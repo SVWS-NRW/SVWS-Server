@@ -56,54 +56,44 @@ class BisherigeSchuleServiceFactoryTest {
 	}
 
 	@Test
-	@DisplayName("Konstruktor | Erfolg")
-	void constructor_success() {
-		final var factory = new BisherigeSchuleServiceFactory(repoFactory, mapper);
-
-		assertThat(factory)
-				.isNotNull()
-				.isInstanceOf(BisherigeSchuleServiceFactory.class);
-	}
-
-	@Test
 	@DisplayName("getBisherigeSchulenService | Erfolg")
-	void getBisherigeSchulenService_success() {
+	void getBisherigeSchuleService_success() {
 		final var conn = mock(de.svws_nrw.db.DBEntityManager.class);
 		final var repository = mock(BisherigeSchuleRepository.class);
 		final var factory = BisherigeSchuleServiceFactory.getNewInstance(repoFactory, mapper);
 
 		dbConnectionProviderMock.when(DbConnectionProvider::getConnection).thenReturn(conn);
-		when(repoFactory.getBisherigeSchulenRepository()).thenReturn(repository);
+		when(repoFactory.getBisherigeSchuleRepository()).thenReturn(repository);
 
 		try (MockedConstruction<DataSchulen> ignored = mockConstruction(DataSchulen.class);
 				MockedConstruction<DataKatalogEntlassgruende> ignored1 = mockConstruction(DataKatalogEntlassgruende.class)) {
 
-			final var service = factory.getBisherigeSchulenService();
+			final var service = factory.getBisherigeSchuleService();
 
 			assertThat(service)
 					.isNotNull()
 					.isInstanceOf(BisherigeSchuleService.class);
 
-			verify(repoFactory, times(1)).getBisherigeSchulenRepository();
+			verify(repoFactory, times(1)).getBisherigeSchuleRepository();
 			dbConnectionProviderMock.verify(DbConnectionProvider::getConnection, times(2));
 		}
 	}
 
 	@Test
 	@DisplayName("getBisherigeSchulenService | Mehrfache Aufrufe erstellen neue Instanzen")
-	void getBisherigeSchulenService_multipleCallsCreateNewInstances() {
+	void getBisherigeSchuleService_multipleCallsCreateNewInstances() {
 		final var conn = mock(de.svws_nrw.db.DBEntityManager.class);
 		final var repository = mock(BisherigeSchuleRepository.class);
 		final var factory = BisherigeSchuleServiceFactory.getNewInstance(repoFactory, mapper);
 
 		dbConnectionProviderMock.when(DbConnectionProvider::getConnection).thenReturn(conn);
-		when(repoFactory.getBisherigeSchulenRepository()).thenReturn(repository);
+		when(repoFactory.getBisherigeSchuleRepository()).thenReturn(repository);
 
 		try (MockedConstruction<DataSchulen> ignored = mockConstruction(DataSchulen.class);
 				MockedConstruction<DataKatalogEntlassgruende> ignored1 = mockConstruction(DataKatalogEntlassgruende.class)) {
 
-			final var service1 = factory.getBisherigeSchulenService();
-			final var service2 = factory.getBisherigeSchulenService();
+			final var service1 = factory.getBisherigeSchuleService();
+			final var service2 = factory.getBisherigeSchuleService();
 
 			assertThat(service1)
 					.isNotNull()
@@ -111,7 +101,7 @@ class BisherigeSchuleServiceFactoryTest {
 
 			assertThat(service2).isNotNull();
 
-			verify(repoFactory, times(2)).getBisherigeSchulenRepository();
+			verify(repoFactory, times(2)).getBisherigeSchuleRepository();
 			dbConnectionProviderMock.verify(DbConnectionProvider::getConnection, times(4));
 		}
 	}

@@ -50,7 +50,7 @@ public class ProxyReportingSchuelerSchulbesuch extends ReportingSchuelerSchulbes
 				schulbesuchsdaten.grundschuleEinschulungsjahr,
 				schulbesuchsdaten.grundschuleEinschulungsartID,
 				schulbesuchsdaten.idGrundschuleJahreEingangsphase,
-				schulbesuchsdaten.idKuerzelGrundschuleUebergangsempfehlung,
+				schulbesuchsdaten.idGrundschuleUebergangsempfehlung,
 				schulbesuchsdaten.sekIWechsel,
 				ersetzeNullBlankTrim(schulbesuchsdaten.sekIErsteSchulform),
 				schulbesuchsdaten.sekIIWechsel,
