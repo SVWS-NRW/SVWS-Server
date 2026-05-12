@@ -8,7 +8,7 @@ export class ValidatorLppp10LehrerPersonaldatenPersonalabschnittsdatenPflichtstu
 	/**
 	 * Das Pflichtstundensoll
 	 */
-	private readonly pflichtstundensoll: Supplier<number | null>;
+	private readonly pflichtstundensoll: Supplier<number>;
 
 
 	/**
@@ -17,7 +17,7 @@ export class ValidatorLppp10LehrerPersonaldatenPersonalabschnittsdatenPflichtstu
 	 * @param pflichtstundensoll    das Pflichtstundensoll
 	 * @param kontext   			der Kontext des Validators
 	 */
-	public constructor(pflichtstundensoll: Supplier<number | null>, kontext: ValidatorKontext) {
+	public constructor(pflichtstundensoll: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
 		this.pflichtstundensoll = pflichtstundensoll;
 	}

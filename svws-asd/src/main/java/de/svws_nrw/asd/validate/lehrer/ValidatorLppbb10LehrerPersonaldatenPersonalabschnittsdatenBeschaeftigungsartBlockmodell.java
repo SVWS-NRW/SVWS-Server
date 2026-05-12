@@ -26,8 +26,8 @@ public final class ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBes
 
 	/** Die Lehrer-Personalabschnittsdaten, die geprüft werden. */
 	private final @NotNull Supplier<@AllowNull Double> pflichtstundensoll;
-	private final @NotNull Supplier<@AllowNull Long> idBeschaeftigungsart;
-	private final @NotNull Supplier<@AllowNull Long> idEinsatzstatus;
+	private final @NotNull Supplier<@AllowNull LehrerBeschaeftigungsart> beschaeftigungsart;
+	private final @NotNull Supplier<@AllowNull LehrerEinsatzstatus> einsatzstatus;
 	private final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> mehrleistungen;
 	private final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> minderleistungen;
 
@@ -35,8 +35,8 @@ public final class ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBes
 	 * Erstellt einen neuen Validator.
 	 *
 	 * @param pflichtstundensoll     der Pflichtstundensoll
-	 * @param idBeschaeftigungsart   die Beschäftigungsart
-	 * @param idEinsatzstatus        der Einsatz-Status
+	 * @param beschaeftigungsart   die Beschäftigungsart
+	 * @param einsatzstatus        der Einsatz-Status
 	 * @param mehrleistungen         die Liste mit den Einträgen zu Mehrleistungen
 	 * @param minderleistungen       die Liste mit den Einträgen zu Minderleistungen
 	 *
@@ -44,15 +44,15 @@ public final class ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBes
 	 */
 	public ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(
 			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
-			final @NotNull Supplier<@AllowNull Long> idBeschaeftigungsart,
-			final @NotNull Supplier<@AllowNull Long> idEinsatzstatus,
+			final @NotNull Supplier<@AllowNull LehrerBeschaeftigungsart> beschaeftigungsart,
+			final @NotNull Supplier<@AllowNull LehrerEinsatzstatus> einsatzstatus,
 			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> mehrleistungen,
 			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> minderleistungen,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.pflichtstundensoll = pflichtstundensoll;
-		this.idBeschaeftigungsart = idBeschaeftigungsart;
-		this.idEinsatzstatus = idEinsatzstatus;
+		this.beschaeftigungsart = beschaeftigungsart;
+		this.einsatzstatus = einsatzstatus;
 		this.mehrleistungen = mehrleistungen;
 		this.minderleistungen = minderleistungen;
 	}
@@ -68,11 +68,11 @@ public final class ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBes
 	 * @return {@code true}, wenn ein Eintrag mit {@code idGrund} enthalten ist; sonst {@code false}
 	 */
 	private static boolean hatGrund(final List<LehrerPersonalabschnittsdatenAnrechnungsstunden> liste, final long idGrund) {
-		if ((liste == null) || liste.isEmpty()) {
+		if (liste == null || liste.isEmpty()) {
 			return false;
 		}
 		for (final LehrerPersonalabschnittsdatenAnrechnungsstunden lpa : liste) {
-			if ((lpa != null) && (lpa.idGrund == idGrund)) {
+			if (lpa != null && lpa.idGrund == idGrund) {
 				return true;
 			}
 		}
@@ -99,13 +99,13 @@ public final class ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBes
 			return true;
 		}
 
-		final Long ba = idBeschaeftigungsart.get();
-		if ((ba == null) || (LehrerBeschaeftigungsart.data().getWertByID(ba) != LehrerBeschaeftigungsart.TS)) {
+		final LehrerBeschaeftigungsart ba = beschaeftigungsart.get();
+		if (ba == null) {
 			return true;
 		}
 
-		final Long es = idEinsatzstatus.get();
-		if ((es != null) && (LehrerEinsatzstatus.data().getWertByID(es) != LehrerEinsatzstatus.A)) {
+		final LehrerEinsatzstatus es = einsatzstatus.get();
+		if (es != null && es != LehrerEinsatzstatus.A) {
 			return true;
 		}
 
@@ -119,7 +119,7 @@ public final class ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBes
 				"\"Bei einer Lehrkraft mit 'Beschäftigungsart' = TS (Teilzeitbeschäftigung im Blockmodell) muss entweder der Mehrleistungsgrund '100' Ansparphase, Phase mit erhöhter Arbeitszeit \"Teilzeitbeschäftigung im Blockmodell\" (§ 65 LBG) (vormals Sabbatjahr) oder der Minderleistungsgrund '290' (Ermäßigungs-/Freistellungsphase 'Teilzeitbeschäftigung im Blockmodell') eingetragen sein.\"))";
 
 		if (!hatMehrMinderGrund) {
-			this.addFehler(1, fehlertext);
+			addFehler(1, fehlertext);
 			return false;
 		}
 

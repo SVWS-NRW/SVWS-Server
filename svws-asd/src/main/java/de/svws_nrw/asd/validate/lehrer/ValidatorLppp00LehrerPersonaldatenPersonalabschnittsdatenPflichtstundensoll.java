@@ -22,33 +22,33 @@ public final class ValidatorLppp00LehrerPersonaldatenPersonalabschnittsdatenPfli
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param pflichtstundensoll     das Pflichtstundensoll
-	 * @param idEinsatzstatus        der Einsatzstatus
-	 * @param idBeschaeftigungsart   die Beschäftigungsart
+	 * @param einsatzstatus        der Einsatzstatus
+	 * @param beschaeftigungsart   die Beschäftigungsart
 	 * @param kontext                der Kontext des Validators
 	 */
 	public ValidatorLppp00LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(
 			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
-			final @NotNull Supplier<@AllowNull Long> idEinsatzstatus,
-			final @NotNull Supplier<@AllowNull Long> idBeschaeftigungsart,
+			final @NotNull Supplier<@AllowNull LehrerEinsatzstatus> einsatzstatus,
+			final @NotNull Supplier<@AllowNull LehrerBeschaeftigungsart> beschaeftigungsart,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this._pflichtstundensoll = pflichtstundensoll;
-		final @NotNull Supplier<@AllowNull LehrerEinsatzstatus> einsatzstatus = () -> LehrerEinsatzstatus.data().getWertByIDOrNull(idEinsatzstatus.get());
-		final @NotNull Supplier<@AllowNull LehrerBeschaeftigungsart> beschaeftigungsart =
-				() -> LehrerBeschaeftigungsart.data().getWertByIDOrNull(idBeschaeftigungsart.get());
-		_validatoren.add(new ValidatorLppp10LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, kontext));
-		_validatoren.add(new ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, einsatzstatus, kontext));
-		_validatoren.add(new ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, einsatzstatus, beschaeftigungsart,
-				kontext));
+		_pflichtstundensoll = pflichtstundensoll;
+		final @NotNull Supplier<@NotNull Double> pflichtstundensollNotNull = getNotNullSupplierDouble(pflichtstundensoll);
+		_validatoren.add(new ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensollNotNull, einsatzstatus, kontext));
+		_validatoren
+				.add(new ValidatorLppp10LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensollNotNull, kontext));
+		_validatoren.add(
+				new ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensollNotNull, einsatzstatus, beschaeftigungsart,
+						kontext));
 	}
 
 
 	@Override
 	protected boolean pruefe() {
-		final Double pflichtstundensoll = this._pflichtstundensoll.get();
+		final Double pflichtstundensoll = _pflichtstundensoll.get();
 
 		if (pflichtstundensoll == null) {
-			this.addFehler(0, "Kein Wert im Feld 'pflichtstundensoll'.");
+			addFehler(0, "Kein Wert im Feld 'pflichtstundensoll'.");
 			return false;
 		}
 

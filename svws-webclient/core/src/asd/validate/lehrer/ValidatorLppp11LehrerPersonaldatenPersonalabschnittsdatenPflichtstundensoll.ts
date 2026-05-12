@@ -13,7 +13,7 @@ export class ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstu
 	/**
 	 * Das Pflichtstundensoll
 	 */
-	private readonly _pflichtstundensoll: Supplier<number | null>;
+	private readonly _pflichtstundensoll: Supplier<number>;
 
 	/**
 	 * Der Einsatzstatus
@@ -38,7 +38,7 @@ export class ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstu
 	 * @param beschaeftigungsart   die Beschäftigungsart
 	 * @param kontext                der Kontext des Validators
 	 */
-	public constructor(pflichtstundensoll: Supplier<number | null>, einsatzstatus: Supplier<LehrerEinsatzstatus | null>, beschaeftigungsart: Supplier<LehrerBeschaeftigungsart | null>, kontext: ValidatorKontext) {
+	public constructor(pflichtstundensoll: Supplier<number>, einsatzstatus: Supplier<LehrerEinsatzstatus | null>, beschaeftigungsart: Supplier<LehrerBeschaeftigungsart | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._pflichtstundensoll = pflichtstundensoll;
 		this._einsatzstatus = einsatzstatus;
@@ -49,7 +49,7 @@ export class ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstu
 		const pflichtstundensoll: number | null = this._pflichtstundensoll.get();
 		const einsatzstatus: LehrerEinsatzstatus | null = this._einsatzstatus.get();
 		const beschaeftigungsart: LehrerBeschaeftigungsart | null = this._beschaeftigungsart.get();
-		if ((pflichtstundensoll === 0.0) && (!JavaObject.equalsTranspiler(LehrerEinsatzstatus.A, (einsatzstatus))) && ((beschaeftigungsart === null) || !ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll.setBeschaeftigungsart.contains(beschaeftigungsart))) {
+		if (pflichtstundensoll === 0.0 && !JavaObject.equalsTranspiler(LehrerEinsatzstatus.A, (einsatzstatus)) && (beschaeftigungsart === null || !ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll.setBeschaeftigungsart.contains(beschaeftigungsart))) {
 			this.addFehler(3, ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll.FEHLERTEXT);
 			return false;
 		}

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstunden;
+import de.svws_nrw.asd.types.lehrer.LehrerBeschaeftigungsart;
+import de.svws_nrw.asd.types.lehrer.LehrerEinsatzstatus;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 import de.svws_nrw.transpiler.annotations.AllowNull;
@@ -32,8 +34,11 @@ public final class ValidatorLppbbLehrerPersonaldatenPersonalabschnittsdatenBesch
 			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> minderleistungen,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
+		final @NotNull Supplier<@AllowNull LehrerEinsatzstatus> einsatzstatus = () -> LehrerEinsatzstatus.data().getWertByIDOrNull(idEinsatzstatus.get());
+		final @NotNull Supplier<@AllowNull LehrerBeschaeftigungsart> beschaeftigungsart =
+				() -> LehrerBeschaeftigungsart.data().getWertByIDOrNull(idBeschaeftigungsart.get());
 		_validatoren.add(new ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(pflichtstundensoll,
-				idBeschaeftigungsart, idEinsatzstatus, mehrleistungen, minderleistungen, kontext));
+				beschaeftigungsart, einsatzstatus, mehrleistungen, minderleistungen, kontext));
 
 	}
 

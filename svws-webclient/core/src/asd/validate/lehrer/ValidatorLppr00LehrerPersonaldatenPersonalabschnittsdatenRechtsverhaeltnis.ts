@@ -21,14 +21,14 @@ export class ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
-	 * @param idRechtsverhaeltnis      das Rechtsverhältnis
+	 * @param idRechtsverhaeltnis      die ID des Rechtsverhältnis
 	 * @param geburtsdatum             das Geburtsdatum des Lehrers
 	 * @param kontext                  der Kontext des Validators
 	 */
 	public constructor(idSchuljahresabschnitt: Supplier<number>, idRechtsverhaeltnis: Supplier<number | null>, geburtsdatum: Supplier<DateManager>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idRechtsverhaeltnis = idRechtsverhaeltnis;
-		const rechtsverhaeltnisNotNull: Supplier<number> = this.getNotNullSupplierLong(idRechtsverhaeltnis);
+		const rechtsverhaeltnisNotNull: Supplier<LehrerRechtsverhaeltnis> = { get: () => LehrerRechtsverhaeltnis.data().getWertByID(this.getNotNullSupplierLong(idRechtsverhaeltnis).get()) };
 		this._validatoren.add(new ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
 		this._validatoren.add(new ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
 		this._validatoren.add(new ValidatorLppr03LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
@@ -37,7 +37,7 @@ export class ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 
 	protected pruefe(): boolean {
 		const idRechtsverhaeltnis: number | null = this._idRechtsverhaeltnis.get();
-		const rv: LehrerRechtsverhaeltnis | null = (idRechtsverhaeltnis === null) ? null : LehrerRechtsverhaeltnis.data().getWertByID(idRechtsverhaeltnis);
+		const rv: LehrerRechtsverhaeltnis | null = (idRechtsverhaeltnis === null) ? null : LehrerRechtsverhaeltnis.data().getWertByIDOrNull(idRechtsverhaeltnis);
 		if (rv === null) {
 			this.addFehler(0, "Kein gültiger Wert im Feld 'rechtsverhaeltnis'.");
 			return false;

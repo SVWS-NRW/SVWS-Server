@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart extends Validator {
 
 	/** Die Beschäftigungsart */
-	private final @NotNull Supplier<@AllowNull LehrerBeschaeftigungsart> _beschaeftigungsart;
+	private final @NotNull Supplier<@NotNull LehrerBeschaeftigungsart> _beschaeftigungsart;
 
 	/** Der Einsatzstatus */
 	private final @NotNull Supplier<@AllowNull LehrerEinsatzstatus> _einsatzstatus;
@@ -33,35 +33,29 @@ public final class ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBesc
 	 * @param kontext   				der Kontext des Validators
 	 */
 	public ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(
-			final @NotNull Supplier<@AllowNull LehrerBeschaeftigungsart> beschaeftigungsart,
+			final @NotNull Supplier<@NotNull LehrerBeschaeftigungsart> beschaeftigungsart,
 			final @NotNull Supplier<@AllowNull LehrerEinsatzstatus> einsatzstatus,
 			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this._beschaeftigungsart = beschaeftigungsart;
-		this._einsatzstatus = einsatzstatus;
-		this._pflichtstundensoll = pflichtstundensoll;
+		_beschaeftigungsart = beschaeftigungsart;
+		_einsatzstatus = einsatzstatus;
+		_pflichtstundensoll = pflichtstundensoll;
 	}
 
 
 	@Override
 	protected boolean pruefe() {
-		final LehrerBeschaeftigungsart beschaeftigungsart = this._beschaeftigungsart.get();
-		final LehrerEinsatzstatus einsatzstatus = this._einsatzstatus.get();
-
-		// LPPB3 ex BW15
-		final Double pflichtstundensoll = this._pflichtstundensoll.get();
-
-		if (pflichtstundensoll == null) { //Wenn der Pflichtstundensoll nicht gesetzt ist, kann diese Prüfung nicht durchgeführt werden.
-			return true;
-		}
+		final LehrerBeschaeftigungsart beschaeftigungsart = _beschaeftigungsart.get();
+		final LehrerEinsatzstatus einsatzstatus = _einsatzstatus.get();
+		final Double pflichtstundensoll = _pflichtstundensoll.get();
 		final String fehlertext3 = "Laut Ihren Angaben handelt es sich um eine voll abgeordnete Lehrkraft mit Gestellungsvertrag. Es ist zu erwarten, "
 				+ "dass eine Lehrkraft mit Gestellungsvertrag Unterricht an Ihrer Schule erteilt. Bitte überprüfen Sie Ihre Angaben.";
 
-		if ((LehrerBeschaeftigungsart.G == beschaeftigungsart)
-				&& (LehrerEinsatzstatus.A == einsatzstatus)
+		if (LehrerBeschaeftigungsart.G == beschaeftigungsart
+				&& LehrerEinsatzstatus.A == einsatzstatus
 				&& pflichtstundensoll == 0) {
-			this.addFehler(3, fehlertext3);
+			addFehler(3, fehlertext3);
 			return false;
 		}
 

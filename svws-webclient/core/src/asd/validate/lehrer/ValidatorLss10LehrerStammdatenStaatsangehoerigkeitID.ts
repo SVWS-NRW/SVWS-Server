@@ -9,7 +9,7 @@ export class ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID extends Valida
 	/**
 	 * Die Lehrer-Stammdaten
 	 */
-	private readonly daten: Supplier<string>;
+	private readonly _staatsangehoerigkeitID: Supplier<string>;
 
 	private static readonly FEHLERTEXT: string = "Der eingetragene Wert für das Feld 'Staatsangehörigkeit' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.";
 
@@ -17,17 +17,17 @@ export class ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID extends Valida
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten              die StaatsangehoerigkeitID des Lehrers
+	 * @param staatsangehoerigkeitID              die StaatsangehoerigkeitID des Lehrers
 	 * @param kontext            der Kontext des Validators
 	 */
-	public constructor(daten: Supplier<string>, kontext: ValidatorKontext) {
+	public constructor(staatsangehoerigkeitID: Supplier<string>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.daten = daten;
+		this._staatsangehoerigkeitID = staatsangehoerigkeitID;
 	}
 
 	protected pruefe(): boolean {
 		const schuljahr: number = this.kontext().getSchuljahr();
-		const staatsangehoerigkeitID: Nationalitaeten | null = Nationalitaeten.getByDESTATIS(this.daten.get());
+		const staatsangehoerigkeitID: Nationalitaeten | null = Nationalitaeten.getByDESTATIS(this._staatsangehoerigkeitID.get());
 		if (staatsangehoerigkeitID === null) {
 			return true;
 		}

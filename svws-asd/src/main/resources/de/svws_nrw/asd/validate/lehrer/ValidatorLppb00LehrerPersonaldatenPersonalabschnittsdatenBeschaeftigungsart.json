@@ -1,0 +1,23 @@
+{
+  "version" : 1,
+  "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart",
+  "historie" : [ {
+    "praefix" : "LPPB00",
+    "altes_kuerzel" : "",
+    "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Beschaeftigungsart",
+    "dtos" : "LehrerPersonalabschnittsdaten",
+    "ausfuehrungsbereich_ui" : "Reiter Personaldaten",
+    "anzeigebereich_ui" : "Beschäftigungsdaten, Beschaeftigungsart",
+    "svws" : true,
+    "zebras" : true,
+    "vorbedingung" : [ ],
+    "muss" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],
+    "kann" : [ ],
+    "hinweis" : [ ],
+    "text" : "Kein Wert im Feld 'beschaeftigungsart'",
+    "erlaeuterung" : "",
+    "bedingung" : "LehrerPersonalabschnittsdaten.beschaeftigungsart = @",
+    "gueltigVon" : null,
+    "gueltigBis" : null
+  } ]
+}

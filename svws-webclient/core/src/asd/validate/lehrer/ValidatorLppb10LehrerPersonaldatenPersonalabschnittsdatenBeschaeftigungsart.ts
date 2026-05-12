@@ -12,7 +12,7 @@ export class ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 	/**
 	 * Die Beschäftigungsart
 	 */
-	private readonly _beschaeftigungsart: Supplier<LehrerBeschaeftigungsart | null>;
+	private readonly _beschaeftigungsart: Supplier<LehrerBeschaeftigungsart>;
 
 	/**
 	 * Der Einsatzstatus
@@ -31,7 +31,7 @@ export class ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 	 * @param einsatzstatus        der Einsatzstatus
 	 * @param kontext                der Kontext des Validators
 	 */
-	public constructor(beschaeftigungsart: Supplier<LehrerBeschaeftigungsart | null>, einsatzstatus: Supplier<LehrerEinsatzstatus | null>, kontext: ValidatorKontext) {
+	public constructor(beschaeftigungsart: Supplier<LehrerBeschaeftigungsart>, einsatzstatus: Supplier<LehrerEinsatzstatus | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._beschaeftigungsart = beschaeftigungsart;
 		this._einsatzstatus = einsatzstatus;
@@ -40,7 +40,7 @@ export class ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 	protected pruefe(): boolean {
 		const beschaeftigungsart: LehrerBeschaeftigungsart | null = this._beschaeftigungsart.get();
 		const einsatzstatus: LehrerEinsatzstatus | null = this._einsatzstatus.get();
-		if ((einsatzstatus === null) || ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart.setEinsatzstatus2.contains(einsatzstatus) && (LehrerBeschaeftigungsart.X as unknown === beschaeftigungsart as unknown)) {
+		if ((einsatzstatus === null || ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart.setEinsatzstatus2.contains(einsatzstatus)) && LehrerBeschaeftigungsart.X as unknown === beschaeftigungsart as unknown) {
 			this.addFehler(2, ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart.FEHLERTEXT);
 			return false;
 		}

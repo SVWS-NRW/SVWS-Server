@@ -15,26 +15,26 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID extends Validator {
 
 	/** Die Lehrer-Stammdaten */
-	private final @NotNull Supplier<String> daten;
+	private final @NotNull Supplier<String> _staatsangehoerigkeitID;
 	private static final @NotNull String FEHLERTEXT = "Der eingetragene Wert für das Feld 'Staatsangehörigkeit' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.";
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten              die StaatsangehoerigkeitID des Lehrers
+	 * @param staatsangehoerigkeitID              die StaatsangehoerigkeitID des Lehrers
 	 * @param kontext            der Kontext des Validators
 	 */
-	public ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID(final @NotNull Supplier<String> daten,
+	public ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID(final @NotNull Supplier<String> staatsangehoerigkeitID,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this.daten = daten;
+		this._staatsangehoerigkeitID = staatsangehoerigkeitID;
 	}
 
 	@Override
 	protected boolean pruefe() {
 		final int schuljahr = kontext().getSchuljahr();
 
-		final Nationalitaeten staatsangehoerigkeitID = Nationalitaeten.getByDESTATIS(daten.get());
+		final Nationalitaeten staatsangehoerigkeitID = Nationalitaeten.getByDESTATIS(_staatsangehoerigkeitID.get());
 
 		if (staatsangehoerigkeitID == null) {
 			return true;

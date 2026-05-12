@@ -2,8 +2,8 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { DateManager } from '../../../asd/validate/DateManager';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
-import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { LehrerRechtsverhaeltnis } from '../../../asd/types/lehrer/LehrerRechtsverhaeltnis';
+import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
 import { Validator } from '../../../asd/validate/Validator';
 
@@ -22,21 +22,21 @@ export class ValidatorLppr04LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 	/**
 	 * Das Rechtsverhältnis
 	 */
-	private readonly _idRechtsverhaeltnis: Supplier<number>;
+	private readonly _rechtsverhaeltnis: Supplier<LehrerRechtsverhaeltnis>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
-	 * @param idRechtsverhaeltnis      das Rechtsverhältnis
+	 * @param rechtsverhaeltnisNotNull      das Rechtsverhältnis
 	 * @param geburtsdatum             das Geburtsdatum des Lehrers
 	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(idSchuljahresabschnitt: Supplier<number>, idRechtsverhaeltnis: Supplier<number>, geburtsdatum: Supplier<DateManager>, kontext: ValidatorKontext) {
+	public constructor(idSchuljahresabschnitt: Supplier<number>, rechtsverhaeltnisNotNull: Supplier<LehrerRechtsverhaeltnis>, geburtsdatum: Supplier<DateManager>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
-		this._idRechtsverhaeltnis = idRechtsverhaeltnis;
+		this._rechtsverhaeltnis = rechtsverhaeltnisNotNull;
 		this._geburtsdatum = geburtsdatum;
 	}
 
@@ -46,7 +46,7 @@ export class ValidatorLppr04LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 			return false;
 		}
 		const schuljahr: number = schuljahresabschnitt.schuljahr;
-		const rv: LehrerRechtsverhaeltnis | null = LehrerRechtsverhaeltnis.data().getWertByID(this._idRechtsverhaeltnis.get());
+		const rv: LehrerRechtsverhaeltnis | null = this._rechtsverhaeltnis.get();
 		if (!JavaObject.equalsTranspiler(rv, (LehrerRechtsverhaeltnis.L)) && !JavaObject.equalsTranspiler(rv, (LehrerRechtsverhaeltnis.P)) && !JavaObject.equalsTranspiler(rv, (LehrerRechtsverhaeltnis.W))) {
 			const minJahr: number = schuljahr - 80;
 			const maxJahr: number = schuljahr - 18;

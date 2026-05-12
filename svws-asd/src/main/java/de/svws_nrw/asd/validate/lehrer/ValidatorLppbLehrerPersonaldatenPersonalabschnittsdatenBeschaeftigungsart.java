@@ -24,18 +24,16 @@ public final class ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBescha
 	 * @param kontext   			der Kontext des Validators
 	 */
 	public ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(
-			final @NotNull Supplier<Long> idBeschaeftigungsart,
-			final @NotNull Supplier<Long> idEinsatzstatus,
+			final @NotNull Supplier<@AllowNull Long> idBeschaeftigungsart,
+			final @NotNull Supplier<@AllowNull Long> idEinsatzstatus,
 			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		final @NotNull Supplier<@AllowNull LehrerEinsatzstatus> einsatzstatus = () -> LehrerEinsatzstatus.data().getWertByIDOrNull(idEinsatzstatus.get());
 		final @NotNull Supplier<@AllowNull LehrerBeschaeftigungsart> beschaeftigungsart =
 				() -> LehrerBeschaeftigungsart.data().getWertByIDOrNull(idBeschaeftigungsart.get());
-		_validatoren.add(new ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(beschaeftigungsart, einsatzstatus, kontext));
-		_validatoren.add(new ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(beschaeftigungsart, einsatzstatus, pflichtstundensoll,
+		_validatoren.add(new ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(beschaeftigungsart, pflichtstundensoll, einsatzstatus,
 				kontext));
-
 	}
 
 

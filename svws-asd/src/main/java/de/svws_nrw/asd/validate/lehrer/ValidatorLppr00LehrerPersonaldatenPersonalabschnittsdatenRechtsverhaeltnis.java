@@ -22,7 +22,7 @@ public final class ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRech
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
-	 * @param idRechtsverhaeltnis      das Rechtsverhältnis
+	 * @param idRechtsverhaeltnis      die ID des Rechtsverhältnis
 	 * @param geburtsdatum             das Geburtsdatum des Lehrers
 	 * @param kontext                  der Kontext des Validators
 	 */
@@ -32,23 +32,28 @@ public final class ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRech
 			final @NotNull Supplier<DateManager> geburtsdatum,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this._idRechtsverhaeltnis = idRechtsverhaeltnis;
-		final @NotNull Supplier<Long> rechtsverhaeltnisNotNull = this.getNotNullSupplierLong(idRechtsverhaeltnis);
-		_validatoren.add(new ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
-		_validatoren.add(new ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
-		_validatoren.add(new ValidatorLppr03LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
-		_validatoren.add(new ValidatorLppr04LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
+		_idRechtsverhaeltnis = idRechtsverhaeltnis;
+		final @NotNull Supplier<LehrerRechtsverhaeltnis> rechtsverhaeltnisNotNull =
+				() -> LehrerRechtsverhaeltnis.data().getWertByID(getNotNullSupplierLong(idRechtsverhaeltnis).get());
+		_validatoren.add(new ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnisNotNull,
+				geburtsdatum, kontext));
+		_validatoren.add(new ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnisNotNull,
+				geburtsdatum, kontext));
+		_validatoren.add(new ValidatorLppr03LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnisNotNull,
+				geburtsdatum, kontext));
+		_validatoren.add(new ValidatorLppr04LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnisNotNull,
+				geburtsdatum, kontext));
 
 	}
 
 	@Override
 	protected boolean pruefe() {
 		// Bestimme das Rechtsverhältnis. Ist dieses nicht angegeben, so wird im Folgenden von einem sonstigen Rechtsverhältnis ausgegangen
-		final Long idRechtsverhaeltnis = this._idRechtsverhaeltnis.get();
-		final LehrerRechtsverhaeltnis rv = (idRechtsverhaeltnis == null) ? null : LehrerRechtsverhaeltnis.data().getWertByID(idRechtsverhaeltnis);
+		final Long idRechtsverhaeltnis = _idRechtsverhaeltnis.get();
+		final LehrerRechtsverhaeltnis rv = (idRechtsverhaeltnis == null) ? null : LehrerRechtsverhaeltnis.data().getWertByIDOrNull(idRechtsverhaeltnis);
 
 		if (rv == null) {
-			this.addFehler(0, "Kein gültiger Wert im Feld 'rechtsverhaeltnis'.");
+			addFehler(0, "Kein gültiger Wert im Feld 'rechtsverhaeltnis'.");
 			return false;
 		}
 

@@ -38,11 +38,11 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 class TestValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart {
 
 	private static final String TESTDATEN_LPPB10 = """
-		'X', 'DEFAULT'  , true
-		'tr', 'A' , true
-		'tr', 'DEFAULT' , true
-		'X', 'A'  , false
-		'X', 'B'  , false
+		'X' , 'DEFAULT', true
+		'tr', 'A'      , true
+		'tr', 'DEFAULT', true
+		'X' , 'A'      , false
+		'X' , 'B'      , false
 		""";
 
 	/** Stammdaten der Schule */

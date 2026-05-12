@@ -17,7 +17,7 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart extends Validator {
 
 	/** Die Beschäftigungsart */
-	private final @NotNull Supplier<@AllowNull LehrerBeschaeftigungsart> _beschaeftigungsart;
+	private final @NotNull Supplier<@NotNull LehrerBeschaeftigungsart> _beschaeftigungsart;
 
 	/** Der Einsatzstatus */
 	private final @NotNull Supplier<@AllowNull LehrerEinsatzstatus> _einsatzstatus;
@@ -35,24 +35,23 @@ public final class ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBesc
 	 * @param kontext                der Kontext des Validators
 	 */
 	public ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(
-			final @NotNull Supplier<@AllowNull LehrerBeschaeftigungsart> beschaeftigungsart,
+			final @NotNull Supplier<@NotNull LehrerBeschaeftigungsart> beschaeftigungsart,
 			final @NotNull Supplier<@AllowNull LehrerEinsatzstatus> einsatzstatus,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this._beschaeftigungsart = beschaeftigungsart;
-		this._einsatzstatus = einsatzstatus;
+		_beschaeftigungsart = beschaeftigungsart;
+		_einsatzstatus = einsatzstatus;
 	}
 
 
 	@Override
 	protected boolean pruefe() {
-		final LehrerBeschaeftigungsart beschaeftigungsart = this._beschaeftigungsart.get();
-		final LehrerEinsatzstatus einsatzstatus = this._einsatzstatus.get();
+		final LehrerBeschaeftigungsart beschaeftigungsart = _beschaeftigungsart.get();
+		final LehrerEinsatzstatus einsatzstatus = _einsatzstatus.get();
 
-		// LPPB2 ex BI7
-		if ((einsatzstatus == null) || setEinsatzstatus2.contains(einsatzstatus)
-				&& (LehrerBeschaeftigungsart.X == beschaeftigungsart)) {
-			this.addFehler(2, FEHLERTEXT);
+		if ((einsatzstatus == null || setEinsatzstatus2.contains(einsatzstatus))
+				&& LehrerBeschaeftigungsart.X == beschaeftigungsart) {
+			addFehler(2, FEHLERTEXT);
 			return false;
 		}
 

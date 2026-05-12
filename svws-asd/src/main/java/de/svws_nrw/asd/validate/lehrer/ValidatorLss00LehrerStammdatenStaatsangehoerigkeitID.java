@@ -2,6 +2,7 @@ package de.svws_nrw.asd.validate.lehrer;
 
 import java.util.function.Supplier;
 
+import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 import de.svws_nrw.transpiler.annotations.AllowNull;
@@ -14,27 +15,28 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorLss00LehrerStammdatenStaatsangehoerigkeitID extends Validator {
 
 	/** Der Lehrer-Nachname */
-	private final @NotNull Supplier<@AllowNull String> daten;
+	private final @NotNull Supplier<@AllowNull String> _staatsangehoerigkeitID;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten                 die StaatsangehörigkeitID des Lehrers
-	 * @param idRechtsverhaeltnis   das Rechtsverhältnis des Lehrers
-	 * @param kontext               der Kontext des Validators
+	 * @param staatsangehoerigkeitID   die StaatsangehörigkeitID des Lehrers
+	 * @param rechtsverhaeltnis      das Rechtsverhältnis des Lehrers
+	 * @param kontext                  der Kontext des Validators
 	 */
-	public ValidatorLss00LehrerStammdatenStaatsangehoerigkeitID(final @NotNull Supplier<@AllowNull String> daten,
-			final @NotNull Supplier<@AllowNull Long> idRechtsverhaeltnis, final @NotNull ValidatorKontext kontext) {
+	public ValidatorLss00LehrerStammdatenStaatsangehoerigkeitID(final @NotNull Supplier<@AllowNull String> staatsangehoerigkeitID,
+			final @NotNull Supplier<@AllowNull LehrerRechtsverhaeltnis> rechtsverhaeltnis, final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this.daten = daten;
-		_validatoren.add(new ValidatorLss01LehrerStammdatenStaatsangehoerigkeitID(getNotNullSupplier(daten), getNotNullSupplierLong(idRechtsverhaeltnis), kontext));
+		_staatsangehoerigkeitID = staatsangehoerigkeitID;
+		_validatoren.add(new ValidatorLss01LehrerStammdatenStaatsangehoerigkeitID(getNotNullSupplier(staatsangehoerigkeitID),
+				rechtsverhaeltnis, kontext));
 	}
 
 	@Override
 	protected boolean pruefe() {
-		final String staatsangehoerigkeitID = daten.get();
+		final String staatsangehoerigkeitID = _staatsangehoerigkeitID.get();
 
-		if (staatsangehoerigkeitID == null || staatsangehoerigkeitID.isEmpty()) {
+		if ((staatsangehoerigkeitID == null) || staatsangehoerigkeitID.isEmpty()) {
 			addFehler(0, "Das Feld 'Staatsangehörigkeit' muss besetzt sein.");
 			return false;
 		}

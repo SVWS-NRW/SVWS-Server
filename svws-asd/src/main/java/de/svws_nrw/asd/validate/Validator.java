@@ -23,19 +23,19 @@ public abstract class Validator extends BasicValidator {
 	 */
 	protected Validator(final @NotNull ValidatorKontext kontext) {
 		super(ValidatorFehlerart.UNGENUTZT);
-		this._kontext = kontext;
-		this._defaultValidatorFehlerart = this.getValidatorFehlerart();
+		_kontext = kontext;
+		_defaultValidatorFehlerart = getValidatorFehlerart();
 	}
 
 
 	/**
-	 * Wandelt einen Supplier für Strings in einen Supplier für Strings zurück, welcher keine null-Werte liefert,
-	 * sondern nur leere Strings.
+	 * Wandelt einen Supplier für Object in einen Supplier für Object zurück, welcher keine null-Werte liefert,
+	 * sondern eine {@link NullPointerException} wirft.
 	 *
-	 * @param supplier   der Supplier, welcher auch null-Werte für Strings liefern kann
+	 * @param supplier   der Supplier, welcher auch null-Werte für Objekte liefern kann
 	 * @param <T>        der Datentyp, der vom Supplier geliefert wird
 	 *
-	 * @return ein Supplier, welcher keine Null-Werte liefert.
+	 * @return ein Supplier, welcher keine Null-Werte liefert, sondern ggf. eine NullPointerException wirft.
 	 */
 	@SuppressWarnings("static-method")
 	protected final <T> @NotNull Supplier<T> getNotNullObjectSupplier(final @NotNull Supplier<@AllowNull T> supplier) {
@@ -61,7 +61,7 @@ public abstract class Validator extends BasicValidator {
 	protected final @NotNull Supplier<String> getNotNullSupplier(final @NotNull Supplier<@AllowNull String> supplier) {
 		return () -> {
 			final String value = supplier.get();
-			return (value == null) ? "" : value;
+			return value == null ? "" : value;
 		};
 	}
 
@@ -78,7 +78,7 @@ public abstract class Validator extends BasicValidator {
 	protected final @NotNull Supplier<Integer> getNotNullSupplierInteger(final @NotNull Supplier<@AllowNull Integer> supplier) {
 		return () -> {
 			final Integer value = supplier.get();
-			return (value == null) ? -1 : value;
+			return value == null ? -1 : value;
 		};
 	}
 
@@ -95,7 +95,23 @@ public abstract class Validator extends BasicValidator {
 	protected final @NotNull Supplier<Long> getNotNullSupplierLong(final @NotNull Supplier<@AllowNull Long> supplier) {
 		return () -> {
 			final Long value = supplier.get();
-			return (value == null) ? -1L : value;
+			return value == null ? -1L : value;
+		};
+	}
+
+	/**
+	 * Wandelt einen Supplier für Double in einen Supplier für Double um, welcher keine null-Werte liefert,
+	 * sondern -1 falls der Double-Wert null ist.
+	 *
+	 * @param supplier   der Supplier, welcher auch null-Werte für Double liefern kann
+	 *
+	 * @return ein Supplier, welcher keine Null-Werte liefert.
+	 */
+	@SuppressWarnings("static-method")
+	protected final @NotNull Supplier<Double> getNotNullSupplierDouble(final @NotNull Supplier<@AllowNull Double> supplier) {
+		return () -> {
+			final Double value = supplier.get();
+			return value == null ? -1 : value;
 		};
 	}
 

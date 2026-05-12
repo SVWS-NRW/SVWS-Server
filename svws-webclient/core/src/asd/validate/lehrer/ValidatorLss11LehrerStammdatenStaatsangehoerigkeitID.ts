@@ -11,9 +11,9 @@ export class ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID extends Valida
 	/**
 	 * Die Lehrer-Stammdaten
 	 */
-	private readonly _daten: Supplier<string>;
+	private readonly _staatsangehoerigkeitID: Supplier<string>;
 
-	private readonly _idRechtsverhaeltnis: Supplier<number>;
+	private readonly _rechtsverhaeltnis: Supplier<LehrerRechtsverhaeltnis | null>;
 
 	private static readonly setRechtsverhaeltnis: JavaSet<LehrerRechtsverhaeltnis> = java_util_Set_of(LehrerRechtsverhaeltnis.L, LehrerRechtsverhaeltnis.N, LehrerRechtsverhaeltnis.P, LehrerRechtsverhaeltnis.W);
 
@@ -25,18 +25,21 @@ export class ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID extends Valida
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten                 die StaatsangehoerigkeitID des Lehrers
-	 * @param idRechtsverhaeltnis   das Rechtsverhältnis des Lehrers
-	 * @param kontext               der Kontext des Validators
+	 * @param staatsangehoerigkeitID   die StaatsangehoerigkeitID des Lehrers
+	 * @param rechtsverhaeltnis        das Rechtsverhältnis des Lehrers
+	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(daten: Supplier<string>, idRechtsverhaeltnis: Supplier<number>, kontext: ValidatorKontext) {
+	public constructor(staatsangehoerigkeitID: Supplier<string>, rechtsverhaeltnis: Supplier<LehrerRechtsverhaeltnis | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._daten = daten;
-		this._idRechtsverhaeltnis = idRechtsverhaeltnis;
+		this._staatsangehoerigkeitID = staatsangehoerigkeitID;
+		this._rechtsverhaeltnis = rechtsverhaeltnis;
 	}
 
 	protected pruefe(): boolean {
-		if (ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID.setRechtsverhaeltnis.contains(LehrerRechtsverhaeltnis.data().getWertByID(this._idRechtsverhaeltnis.get())) && !ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID.setStaatsangehoerigkeit.contains(this._daten.get())) {
+		if (this._rechtsverhaeltnis.get() === null) {
+			return true;
+		}
+		if (ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID.setRechtsverhaeltnis.contains(this._rechtsverhaeltnis.get()) && !ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID.setStaatsangehoerigkeit.contains(this._staatsangehoerigkeitID.get())) {
 			this.addFehler(0, ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID.FEHLERTEXT);
 			return false;
 		}

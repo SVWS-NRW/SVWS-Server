@@ -14,9 +14,9 @@ export class ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeft
 	 */
 	private readonly pflichtstundensoll: Supplier<number | null>;
 
-	private readonly idBeschaeftigungsart: Supplier<number | null>;
+	private readonly beschaeftigungsart: Supplier<LehrerBeschaeftigungsart | null>;
 
-	private readonly idEinsatzstatus: Supplier<number | null>;
+	private readonly einsatzstatus: Supplier<LehrerEinsatzstatus | null>;
 
 	private readonly mehrleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>;
 
@@ -27,18 +27,18 @@ export class ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeft
 	 * Erstellt einen neuen Validator.
 	 *
 	 * @param pflichtstundensoll     der Pflichtstundensoll
-	 * @param idBeschaeftigungsart   die Beschäftigungsart
-	 * @param idEinsatzstatus        der Einsatz-Status
+	 * @param beschaeftigungsart   die Beschäftigungsart
+	 * @param einsatzstatus        der Einsatz-Status
 	 * @param mehrleistungen         die Liste mit den Einträgen zu Mehrleistungen
 	 * @param minderleistungen       die Liste mit den Einträgen zu Minderleistungen
 	 *
 	 * @param kontext  der Kontext der Validierung
 	 */
-	public constructor(pflichtstundensoll: Supplier<number | null>, idBeschaeftigungsart: Supplier<number | null>, idEinsatzstatus: Supplier<number | null>, mehrleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, minderleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, kontext: ValidatorKontext) {
+	public constructor(pflichtstundensoll: Supplier<number | null>, beschaeftigungsart: Supplier<LehrerBeschaeftigungsart | null>, einsatzstatus: Supplier<LehrerEinsatzstatus | null>, mehrleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, minderleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, kontext: ValidatorKontext) {
 		super(kontext);
 		this.pflichtstundensoll = pflichtstundensoll;
-		this.idBeschaeftigungsart = idBeschaeftigungsart;
-		this.idEinsatzstatus = idEinsatzstatus;
+		this.beschaeftigungsart = beschaeftigungsart;
+		this.einsatzstatus = einsatzstatus;
 		this.mehrleistungen = mehrleistungen;
 		this.minderleistungen = minderleistungen;
 	}
@@ -52,11 +52,11 @@ export class ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeft
 	 * @return {@code true}, wenn ein Eintrag mit {@code idGrund} enthalten ist; sonst {@code false}
 	 */
 	private static hatGrund(liste: List<LehrerPersonalabschnittsdatenAnrechnungsstunden> | null, idGrund: number): boolean {
-		if ((liste === null) || liste.isEmpty()) {
+		if (liste === null || liste.isEmpty()) {
 			return false;
 		}
 		for (const lpa of liste) {
-			if ((lpa !== null) && (lpa.idGrund === idGrund)) {
+			if (lpa !== null && lpa.idGrund === idGrund) {
 				return true;
 			}
 		}
@@ -81,12 +81,12 @@ export class ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeft
 		if (pss === null || pss <= 0.0) {
 			return true;
 		}
-		const ba: number | null = this.idBeschaeftigungsart.get();
-		if ((ba === null) || (LehrerBeschaeftigungsart.data().getWertByID(ba) as unknown !== LehrerBeschaeftigungsart.TS as unknown)) {
+		const ba: LehrerBeschaeftigungsart | null = this.beschaeftigungsart.get();
+		if (ba === null) {
 			return true;
 		}
-		const es: number | null = this.idEinsatzstatus.get();
-		if ((es !== null) && (LehrerEinsatzstatus.data().getWertByID(es) as unknown !== LehrerEinsatzstatus.A as unknown)) {
+		const es: LehrerEinsatzstatus | null = this.einsatzstatus.get();
+		if (es !== null && es as unknown !== LehrerEinsatzstatus.A as unknown) {
 			return true;
 		}
 		const hatMehr100: boolean = ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell.hatGrund(this.mehrleistungen.get(), 100);

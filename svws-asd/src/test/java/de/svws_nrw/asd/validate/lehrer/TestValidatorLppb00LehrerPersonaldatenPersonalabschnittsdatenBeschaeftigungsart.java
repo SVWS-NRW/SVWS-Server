@@ -8,7 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import de.svws_nrw.asd.data.statistik.StatistikGesamt;
-import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
+import de.svws_nrw.asd.types.lehrer.LehrerBeschaeftigungsart;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.asd.utils.json.JsonReader;
@@ -17,25 +17,20 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 /**
  * <p> Testklasse für die Validatoren
  * <ul>
- *   <li> {@link ValidatorLss11LehrerStammdatenStaasangehoerigkeitID}
+ *   <li> {@link ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart}
  * </ul>
  * </p>
-
  *
  * Die Testdaten sind fehlerfrei und werden mit Jackson in die entsprechende statische Datenstruktur eingelesen.
  *
  * Für jeden Testfall ist eine Methode vorgesehen, in der mittels setzeTestdaten(...) die zugehörigen Testfälle erzeugt werden.
- *
- * CoreType: LehrerStammdaten
  */
-@DisplayName("Tests ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID")
-class TestValidatorLss11LehrerStammdatenStaatsangehoerigkeitID {
+@DisplayName("Tests ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart")
+class TestValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart {
 
-	private static final String TESTDATEN_STAATSANGEOERIGKEITID = """
-			'DEU', 'L', true
-			'DEU', 'U', true
-			'XXX', 'U', true
-			'XXX', 'L', false
+	private static final String TESTDATEN_PFLICHTSTUNDENSOLL = """
+			null        , false
+			'V'         , true
 		""";
 
 	/** Stammdaten der Schule */
@@ -53,26 +48,23 @@ class TestValidatorLss11LehrerStammdatenStaatsangehoerigkeitID {
 	}
 
 	/**
-	 * Test von ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID
+	 * Test von ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart
 	 *
-	 * CoreType: LehrerStammdaten
-	 *
-	 * @param staatsangehoerigkeitID   die staatsangehoerigkeitID, welche bei den eingelesenen Testdaten ersetzt wird
-	 * @param rechtsverhaeltnis      das Rechtsverhältnis, welches bei den eingelesenen Testdaten ersetzt wird
-	 * @param result                   gibt an, welches Ergebnis bei den Testdaten erwartet wird
+	 * @param beschaeftigungsart  die Beschaeftigungsart
+	 * @param result     gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
-	@DisplayName("Tests für ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID")
+	@DisplayName("Tests für ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart")
 	@ParameterizedTest
-	@CsvSource(textBlock = TESTDATEN_STAATSANGEOERIGKEITID, nullValues = { "null" })
-	void testValidatorLss11LehrerStammdatenStaatsangehoerigkeitID(final String staatsangehoerigkeitID, final LehrerRechtsverhaeltnis rechtsverhaeltnis,
+	@CsvSource(textBlock = TESTDATEN_PFLICHTSTUNDENSOLL, nullValues = { "null" })
+	void testValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(final String beschaeftigungsart,
 			final boolean result) {
-
 		// Erzeuge den Kontext für die Validierung
 		final ValidatorKontext kontext =
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
-		final ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID validator =
-				new ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID(() -> staatsangehoerigkeitID, () -> rechtsverhaeltnis, kontext);
+		final ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart validator =
+				new ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(
+						() -> LehrerBeschaeftigungsart.data().getWertByBezeichnerOrNull(beschaeftigungsart), null, null, kontext);
 		assertEquals(result, validator.pruefe());
 	}
 

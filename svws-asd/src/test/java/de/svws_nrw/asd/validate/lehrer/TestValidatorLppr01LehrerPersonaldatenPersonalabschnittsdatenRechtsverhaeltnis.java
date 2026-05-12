@@ -63,18 +63,20 @@ class TestValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhael
 	@Test
 	void testValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum_GeburtsdatumZuJung() {
 		// Erzeuge den Kontext für die Validierung
-		final ValidatorKontext kontext = new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
-				testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
+		final ValidatorKontext kontext =
+				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
+						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 
 		try {
 			final @NotNull DateManager geburtsdatum = DateManager.from("2025-01-01");
-			final Long idRechtsverhaeltnis = LehrerRechtsverhaeltnis.L.historie().getLast().id;
+			final LehrerRechtsverhaeltnis rechtsverhaeltnis = LehrerRechtsverhaeltnis.L;
 			final Long idSchuljahresabschnitt = kontext.getSchuljahresabschnitt().id;
-			final ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis validator = new ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
-					() -> idSchuljahresabschnitt,
-					() -> idRechtsverhaeltnis,
-					() -> geburtsdatum,
-					kontext);
+			final ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis validator =
+					new ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
+							() -> idSchuljahresabschnitt,
+							() -> rechtsverhaeltnis,
+							() -> geburtsdatum,
+							kontext);
 			assertEquals(false, validator.pruefe());
 		} catch (@SuppressWarnings("unused") final InvalidDateException e) {
 			assertEquals(true, false); // darf hier nicht hin
@@ -83,5 +85,5 @@ class TestValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhael
 		}
 
 
-		}
 	}
+}

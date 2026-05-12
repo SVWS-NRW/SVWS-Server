@@ -10,7 +10,7 @@ export class ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 	/**
 	 * Die Beschäftigungsart
 	 */
-	private readonly _beschaeftigungsart: Supplier<LehrerBeschaeftigungsart | null>;
+	private readonly _beschaeftigungsart: Supplier<LehrerBeschaeftigungsart>;
 
 	/**
 	 * Der Einsatzstatus
@@ -31,7 +31,7 @@ export class ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 	 * @param pflichtstundensoll     	das Pflichtstundensoll
 	 * @param kontext   				der Kontext des Validators
 	 */
-	public constructor(beschaeftigungsart: Supplier<LehrerBeschaeftigungsart | null>, einsatzstatus: Supplier<LehrerEinsatzstatus | null>, pflichtstundensoll: Supplier<number | null>, kontext: ValidatorKontext) {
+	public constructor(beschaeftigungsart: Supplier<LehrerBeschaeftigungsart>, einsatzstatus: Supplier<LehrerEinsatzstatus | null>, pflichtstundensoll: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._beschaeftigungsart = beschaeftigungsart;
 		this._einsatzstatus = einsatzstatus;
@@ -42,11 +42,8 @@ export class ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 		const beschaeftigungsart: LehrerBeschaeftigungsart | null = this._beschaeftigungsart.get();
 		const einsatzstatus: LehrerEinsatzstatus | null = this._einsatzstatus.get();
 		const pflichtstundensoll: number | null = this._pflichtstundensoll.get();
-		if (pflichtstundensoll === null) {
-			return true;
-		}
 		const fehlertext3: string | null = "Laut Ihren Angaben handelt es sich um eine voll abgeordnete Lehrkraft mit Gestellungsvertrag. Es ist zu erwarten, dass eine Lehrkraft mit Gestellungsvertrag Unterricht an Ihrer Schule erteilt. Bitte überprüfen Sie Ihre Angaben.";
-		if ((LehrerBeschaeftigungsart.G as unknown === beschaeftigungsart as unknown) && (LehrerEinsatzstatus.A as unknown === einsatzstatus as unknown) && pflichtstundensoll === 0) {
+		if (LehrerBeschaeftigungsart.G as unknown === beschaeftigungsart as unknown && LehrerEinsatzstatus.A as unknown === einsatzstatus as unknown && pflichtstundensoll === 0) {
 			this.addFehler(3, fehlertext3);
 			return false;
 		}

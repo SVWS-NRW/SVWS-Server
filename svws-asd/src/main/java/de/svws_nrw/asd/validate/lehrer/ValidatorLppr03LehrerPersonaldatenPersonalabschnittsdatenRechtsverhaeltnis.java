@@ -22,47 +22,44 @@ public final class ValidatorLppr03LehrerPersonaldatenPersonalabschnittsdatenRech
 	private final @NotNull Supplier<Long> _idSchuljahresabschnitt;
 
 	/** Das Rechtsverhältnis */
-	private final @NotNull Supplier<Long> _idRechtsverhaeltnis;
+	private final @NotNull Supplier<LehrerRechtsverhaeltnis> _rechtsverhaeltnis;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
-	 * @param idRechtsverhaeltnis      das Rechtsverhältnis
+	 * @param rechtsverhaeltnisNotNull      das Rechtsverhältnis
 	 * @param geburtsdatum             das Geburtsdatum des Lehrers
 	 * @param kontext                  der Kontext des Validators
 	 */
 	public ValidatorLppr03LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
 			final @NotNull Supplier<Long> idSchuljahresabschnitt,
-			final @NotNull Supplier<Long> idRechtsverhaeltnis,
+			final @NotNull Supplier<LehrerRechtsverhaeltnis> rechtsverhaeltnisNotNull,
 			final @NotNull Supplier<DateManager> geburtsdatum,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
-		this._idRechtsverhaeltnis = idRechtsverhaeltnis;
-		this._geburtsdatum = geburtsdatum;
+		_idSchuljahresabschnitt = idSchuljahresabschnitt;
+		_rechtsverhaeltnis = rechtsverhaeltnisNotNull;
+		_geburtsdatum = geburtsdatum;
 	}
 
 	@Override
 	protected boolean pruefe() {
 		// Bestimme das Schuljahr über den Schuljahresabschnitt. Treten dabei Fehler auf, so ist dieser durch einen übergeordneten Validator zu prüfen.
-		final Schuljahresabschnitt schuljahresabschnitt = kontext().getSchuljahresabschnittByID(this._idSchuljahresabschnitt.get());
+		final Schuljahresabschnitt schuljahresabschnitt = kontext().getSchuljahresabschnittByID(_idSchuljahresabschnitt.get());
 		if (schuljahresabschnitt == null) {
 			return false;
 		}
 		final int schuljahr = schuljahresabschnitt.schuljahr;
 
-		// Bestimme das Rechtsverhältnis. Ist dieses nicht angegeben, so wird im Folgenden von einem sonstigen Rechtsverhältnis ausgegangen
-		final LehrerRechtsverhaeltnis rv = LehrerRechtsverhaeltnis.data().getWertByID(this._idRechtsverhaeltnis.get());
-
 		// Prüfe das Geburtsdatum bzw. das Alter bei den folgenden Rechtsverhältnissen...
-		if (rv.equals(LehrerRechtsverhaeltnis.W)) {
+		if (_rechtsverhaeltnis.get().equals(LehrerRechtsverhaeltnis.W)) {
 			// Beamtet auf Widerruf
 			final int minJahr = schuljahr - 50; // das erste akzeptierte Geburtsjahr: vor 50 Jahren
 			final int maxJahr = schuljahr - 18; // das letzte akzeptierte Geburtsjahr: vor 18 Jahren
 
 			if (!_geburtsdatum.get().istInJahren(minJahr, maxJahr)) {
-				this.addFehler(3, "Der Wert für das Geburtsjahr sollte bei Lehramtsanwärtern/-innen (Rechtsverhältnis = W)"
+				addFehler(3, "Der Wert für das Geburtsjahr sollte bei Lehramtsanwärtern/-innen (Rechtsverhältnis = W)"
 						+ " zwischen " + minJahr + " und " + maxJahr + " liegen. Bitte prüfen!");
 			}
 			return false;
