@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
@@ -21,12 +20,11 @@ import de.svws_nrw.module.reporting.types.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.module.reporting.utils.ReportingListBuilder;
-import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Domänen-Repository für Lehrkräfte (Stammdaten und Reporting-Objekte).
- * Die Lehrerstammdaten werden bei der Initialisierung aus der Datenbank geladen und
- * können bei Bedarf für einzelne fehlende Lehrkräfte nachgeladen werden.
+ * Die Lehrerstammdaten werden erst bei Bedarf aus der Datenbank geladen: per einzelner ID über {@link #lehrer(long)},
+ * per Liste über {@link #lehrer(List)} mit Bulk-Nachladen oder als Vollbestand beim ersten Zugriff auf {@link #stammdaten()}.
  */
 public class ReportingRepositoryLehrer {
 
@@ -65,34 +63,19 @@ public class ReportingRepositoryLehrer {
 
 	private final ReportingContext reportingContext;
 
-	private Map<Long, LehrerStammdaten> mapLehrerStammdaten;
+	private final Map<Long, LehrerStammdaten> mapLehrerStammdaten = new HashMap<>();
 	private final Map<Long, ReportingLehrer> mapLehrer = new HashMap<>();
 
+	/** Markiert, ob die Stammdaten aller Lehrkräfte bereits einmal vollständig aus der Datenbank geladen wurden. */
+	private boolean alleLehrerStammdatenGeladen = false;
+
 	/**
-	 * Erstellt ein neues ReportingLehrerRepository und initialisiert die Lehrerstammdaten.
+	 * Erstellt ein neues ReportingLehrerRepository. Die Stammdaten werden erst bei Bedarf geladen.
 	 *
 	 * @param reportingContext Der zentrale Reporting-Context mit Zugriff auf die domänenspezifischen Repositories.
-	 *
-	 * @throws ApiOperationException Im Fehlerfall.
 	 */
-	public ReportingRepositoryLehrer(final ReportingContext reportingContext) throws ApiOperationException {
+	public ReportingRepositoryLehrer(final ReportingContext reportingContext) {
 		this.reportingContext = reportingContext;
-
-		initLehrerStammdaten();
-	}
-
-	private void initLehrerStammdaten() throws ApiOperationException {
-		try {
-			this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Ermittle die Lehrerstammdaten.");
-			this.mapLehrerStammdaten = new DataLehrerStammdaten(this.reportingContext.conn(), new DataLernplattformen(this.reportingContext.conn()),
-					new DataEinwilligungsarten(this.reportingContext.conn())).getAll().stream()
-					.collect(Collectors.toMap(l -> l.id, l -> l));
-		} catch (final Exception e) {
-			this.mapLehrerStammdaten = new HashMap<>();
-			this.reportingContext.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die Lehrerstammdaten konnten nicht ermittelt werden.");
-			throw new ApiOperationException(Status.NOT_FOUND, e,
-					"FEHLER: Die Lehrerstammdaten konnten nicht ermittelt werden.");
-		}
 	}
 
 
@@ -188,11 +171,34 @@ public class ReportingRepositoryLehrer {
 
 	/**
 	 * Gibt die Map der Lehrerstammdaten zurück, indiziert nach der ID des Lehrers.
+	 * Beim ersten Aufruf werden die Stammdaten aller Lehrkräfte aus der Datenbank geladen, damit der Vollbestand
+	 * für aggregierte Auswertungen verfügbar ist. Bereits per Einzel-/Bulk-Zugriff geladene Einträge bleiben erhalten.
 	 *
 	 * @return Map der Lehrerstammdaten
 	 */
 	public Map<Long, LehrerStammdaten> stammdaten() {
+		ladeAlleLehrerStammdaten();
 		return mapLehrerStammdaten;
+	}
+
+	private void ladeAlleLehrerStammdaten() {
+		if (alleLehrerStammdatenGeladen) {
+			return;
+		}
+		try {
+			this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade alle Lehrerstammdaten.");
+			final List<LehrerStammdaten> alle = new DataLehrerStammdaten(this.reportingContext.conn(),
+					new DataLernplattformen(this.reportingContext.conn()),
+					new DataEinwilligungsarten(this.reportingContext.conn())).getAll();
+			for (final LehrerStammdaten ls : alle) {
+				mapLehrerStammdaten.putIfAbsent(ls.id, ls);
+			}
+			alleLehrerStammdatenGeladen = true;
+		} catch (final Exception e) {
+			final String meldung = "FEHLER: Die Lehrerstammdaten konnten nicht ermittelt werden.";
+			ReportingExceptionUtils.logException(meldung, e, this.reportingContext.logger(), LogLevel.ERROR, 0);
+			throw new IllegalStateException(meldung, e);
+		}
 	}
 
 
