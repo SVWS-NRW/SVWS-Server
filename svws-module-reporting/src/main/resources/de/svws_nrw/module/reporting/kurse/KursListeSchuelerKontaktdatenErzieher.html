@@ -10,8 +10,11 @@
 	</head>
 
 	<body th:with="schuljahr = ${Schule.auswahlSchuljahresabschnitt().schuljahr()},
-				   mitSchuelerKlasse = ${VorlageParameter.get('mitSchuelerKlasse')},
-				   nurSchuelerRufname = ${VorlageParameter.get('nurSchuelerRufname')},
+				   ueberschrift = ${(VorlageParameter.get('ueberschrift') == null) ? '' : ('' + VorlageParameter.get('ueberschrift'))},
+				   bemerkung = ${(VorlageParameter.get('bemerkung') == null) ? '' : ('' + VorlageParameter.get('bemerkung'))},
+				   mitFoto = ${VorlageParameter.get('mitFoto')},
+	               mitSchuelerKlasse = ${VorlageParameter.get('mitSchuelerKlasse')},
+				   mitSchuelerAlleVornamen = ${VorlageParameter.get('mitSchuelerAlleVornamen')},
 	               mitSchuelerGeschlecht = ${VorlageParameter.get('mitSchuelerGeschlecht')},
 	               mitSchuelerGebDat = ${VorlageParameter.get('mitSchuelerGebDat')},
 	               mitSchuelerStaat = ${VorlageParameter.get('mitSchuelerStaat')},
@@ -30,7 +33,9 @@
 	               fallNurBasisdaten = ${!mitSchuelerAnschrift && !mitSchuelerTelefonPrivat && !mitSchuelerEMail && !mitSpalteSchuelerKontaktdaten && !mitSpalteSchuelerTelefonKontakte && !mitSpalteErzieher },
 	               fallNurAnschriftUndTelefonOderEmail = ${mitSchuelerAnschrift && !mitSpalteSchuelerTelefonKontakte && !mitSpalteErzieher && !(mitSchuelerTelefonPrivat && mitSchuelerEMail) && (mitSchuelerTelefonPrivat || mitSchuelerEMail)}">
 
-	<div class="reset-page-counter start-new-page" th:each="kurs,iterationVarKurs : ${Kurse}">
+	<div class="reset-page-counter start-new-page" th:each="kurs,iterationVarKurs : ${Kurse}"
+		th:with="anzeigeUeberschrift = ${#strings.isEmpty(ueberschrift.trim()) ? ('Kursliste ' + kurs.kuerzel()) : #strings.replace(ueberschrift, '<Kürzel>', kurs.kuerzel())},
+		         anzeigeUeberschriftFinal = ${#strings.length(anzeigeUeberschrift) > 45 ? #strings.substring(anzeigeUeberschrift, 0, 45) : anzeigeUeberschrift}">
 		<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 		<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
 		<th:block th:replace="~{fragments/reportPageHeaderFooter :: pageHeaderFooter(
@@ -42,7 +47,8 @@
 			<table class="fixed-100 mp-0">
 				<colgroup>
 					<col style="width: 7mm;" />     <!-- Lfd Nr -->
-					<col style="width: 56mm;" />    <!-- Schüler: Name, Angaben, Anschrift -->
+					<col th:if="${mitFoto}" style="width: 12mm;" />  <!-- Schüler: Foto -->
+					<col th:style="${'width: ' + (mitFoto ? '44mm' : '56mm') + ';'}" />    <!-- Schüler: Name, Angaben, Anschrift -->
 					<col style="width: 12mm;" />     <!-- Schüler: Individuelle Kursart -->
 					<col style="width: 53mm;" />    <!-- Schüler: E-Mail und Telefon -->
 					<col style="width: 53mm;" />    <!-- Telefonkontakte -->
@@ -50,10 +56,10 @@
 				</colgroup>
 				<thead>
 					<tr>
-						<th colspan="6">
+						<th th:colspan="${mitFoto ? 7 : 6}">
 							<table class="fixed-100 mp-0">
 								<tr>
-									<th class="ta-lb bo-b-grey" style="width: 35%; font-size: 13pt; font-weight: bold;" th:text="${'Kursliste ' + kurs.kuerzel()}">
+									<th class="ta-lb bo-b-grey" style="width: 35%; font-size: 13pt; font-weight: bold;" th:text="${anzeigeUeberschriftFinal}">
 										Kursliste GE-GK-2
 									</th>
 									<th class="ta-rb bo-b-grey" style="width: 65%; font-size: 9pt;" th:text="${((!kurs.auflistungJahrgaenge().isEmpty()) ? ((kurs.jahrgaenge().size() == 1) ? ('Jahrgangsstufe: ' + kurs.auflistungJahrgaenge() + ' - ') : ('Jahrgangsstufen: ' + kurs.auflistungJahrgaenge() + ' - ')) : '')  + ((kurs.kurslehrer().size == 1) ? 'Lehrkraft: ' : 'Lehrkräfte: ') + kurs.auflistungKurslehrerkuerzel()}">
@@ -66,15 +72,20 @@
 										Klassen: EFA,EFB - Belegung: GKM: 12, GKS: 10"
 									</td>
 								</tr>
+								<tr th:if="${!#strings.isEmpty(bemerkung.trim())}">
+									<td colspan="2" class="ta-l" style="font-size: 9pt; font-weight: normal" th:text="${bemerkung}">Bemerkung</td>
+								</tr>
 								<tr>
 									<td colspan="2" class="ta-lb" style="height: 2mm"></td>
 								</tr>
 							</table>
 						</th>
 					</tr>
+
 					<tr>
 						<!-- ###### Die Spaltenüberschriften dienen nur der groben Orientierung. Da die Spalten dynamische genutzt werden, um eine möglich geringe Zeilenhöhe zu haben, wird die Beschriftung entsprechend erstellt. -->
 						<td class="head-small-grey"></td>
+						<td class="head-small-grey ta-c" th:if="${mitFoto}">Foto</td>
 						<td class="head-small-grey">Name, ggf. weitere Angaben</td>
 						<td class="head-small-grey ta-c">Bel.</td>
 						<th:block th:if="${fallNurAnschriftUndTelefonOderEmail}">
@@ -95,6 +106,16 @@
 					<tr th:each="schueler,iterationVarSchueler : ${kurs.schueler()}" th:classappend="${iterationVarSchueler.even} ? 'bg-lightgrey'">
 						<!-- Spalte für laufende Nummer -->
 						<td class="p-tb-05 p-lr-1 bo-b-grey" th:text="${iterationVarSchueler.count + '. '}">1.</td>
+						<td class="p-tb-05 p-lr-1 bo-b-grey ta-c foto-zelle" th:if="${mitFoto}">
+							<div class="foto-container foto-container-klein">
+								<img th:if="${schueler.fotoHtmlSource() != null and !schueler.fotoHtmlSource().isEmpty()}"
+									 th:src="${schueler.fotoHtmlSource()}"
+									 th:alt="${'Foto von ' + schueler.vorname() + ' ' + schueler.nachname()}"
+									 class="foto-bild" />
+								<div th:unless="${schueler.fotoHtmlSource() != null and !schueler.fotoHtmlSource().isEmpty()}"
+									 class="foto-placeholder foto-placeholder-klein"></div>
+							</div>
+						</td>
 
 						<!-- ###### Es werden nun die drei (Hochformat) bzw. vier Datenspalten (Querformat) gefüllt. ###### -->
 						<!-- ### SONDERFALL: Anschrift und nur Telefon ODER E-Mail. Daher zweispaltige Angabe für Schüler und Anschrift und letzte Spalte Telefon oder E-Mail. ### -->
@@ -103,7 +124,7 @@
 								<table class="fixed-100 mp-0">
 									<thead th:if="${false}"><!-- Header nur für SonarCube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
 									<tr>
-										<td class="mp-0" th:text="${nurSchuelerRufname ? schueler.nachnameVorname() : schueler.nachnameVornamen()}">
+										<td class="mp-0" th:text="${mitSchuelerAlleVornamen ? schueler.nachnameVornamen() : schueler.nachnameVorname()}">
 											Mustermann, Maximilian Moritz
 										</td>
 										<td th:if="mitSchuelerKlasse" class="mp-0 ta-rt" style="width: 7mm" th:text="${mitSchuelerKlasse ? schueler.auswahlLernabschnitt().klasse().kuerzel() : ''}">
@@ -150,7 +171,7 @@
 									<table class="fixed-100 mp-0">
 										<thead th:if="${false}"><!-- Header nur für SonarCube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
 										<tr>
-											<td class="mp-0" th:text="${nurSchuelerRufname ? schueler.nachnameVorname() : schueler.nachnameVornamen()}">
+											<td class="mp-0" th:text="${mitSchuelerAlleVornamen ? schueler.nachnameVornamen() : schueler.nachnameVorname()}">
 												Mustermann, Maximilian Moritz
 											</td>
 											<td th:if="mitSchuelerKlasse" class="mp-0 ta-rt" style="width: 7mm" th:text="${mitSchuelerKlasse ? schueler.auswahlLernabschnitt().klasse().kuerzel() : ''}">
@@ -196,7 +217,7 @@
 									<table class="fixed-100 mp-0">
 										<thead th:if="${false}"><!-- Header nur für SonarCube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
 										<tr>
-											<td class="mp-0" th:text="${nurSchuelerRufname ? schueler.nachnameVorname() : schueler.nachnameVornamen()}">
+											<td class="mp-0" th:text="${mitSchuelerAlleVornamen ? schueler.nachnameVornamen() : schueler.nachnameVorname()}">
 												Mustermann, Maximilian Moritz
 											</td>
 											<td th:if="mitSchuelerKlasse" class="mp-0 ta-rt" style="width: 7mm" th:text="${mitSchuelerKlasse ? schueler.auswahlLernabschnitt().klasse().kuerzel() : ''}">

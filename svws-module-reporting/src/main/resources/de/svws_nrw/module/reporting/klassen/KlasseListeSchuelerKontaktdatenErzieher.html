@@ -10,7 +10,10 @@
 	</head>
 
 	<body th:with="schuljahr = ${Schule.auswahlSchuljahresabschnitt().schuljahr()},
-	               nurSchuelerRufname = ${VorlageParameter.get('nurSchuelerRufname')},
+	               ueberschrift = ${(VorlageParameter.get('ueberschrift') == null) ? '' : ('' + VorlageParameter.get('ueberschrift'))},
+	               bemerkung = ${(VorlageParameter.get('bemerkung') == null) ? '' : ('' + VorlageParameter.get('bemerkung'))},
+	               mitFoto = ${VorlageParameter.get('mitFoto')},
+	               mitSchuelerAlleVornamen = ${VorlageParameter.get('mitSchuelerAlleVornamen')},
 	               mitSchuelerGeschlecht = ${VorlageParameter.get('mitSchuelerGeschlecht')},
 	               mitSchuelerGebDat = ${VorlageParameter.get('mitSchuelerGebDat')},
 	               mitSchuelerStaat = ${VorlageParameter.get('mitSchuelerStaat')},
@@ -29,7 +32,9 @@
 	               fallNurBasisdaten = ${!mitSchuelerAnschrift && !mitSpalteSchuelerKontaktdaten && !mitSpalteSchuelerTelefonKontakte && !mitSpalteErzieher },
 	               fallNurAnschriftUndTelefonOderEmail = ${mitSchuelerAnschrift && !mitSpalteSchuelerTelefonKontakte && !mitSpalteErzieher && !(mitSchuelerTelefonPrivat && mitSchuelerEMail) && (mitSchuelerTelefonPrivat || mitSchuelerEMail)}">
 
-		<div class="reset-page-counter start-new-page" th:each="klasse,iterationVarKlasse : ${Klassen}">
+		<div class="reset-page-counter start-new-page" th:each="klasse,iterationVarKlasse : ${Klassen}"
+		     th:with="anzeigeUeberschrift = ${#strings.isEmpty(ueberschrift.trim()) ? ('Klassenliste ' + klasse.kuerzel()) : #strings.replace(ueberschrift, '<Kürzel>', klasse.kuerzel())},
+					  anzeigeUeberschriftFinal = ${#strings.length(anzeigeUeberschrift) > 45 ? #strings.substring(anzeigeUeberschrift, 0, 45) : anzeigeUeberschrift}">
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
 			<th:block th:replace="~{fragments/reportPageHeaderFooter :: pageHeaderFooter(
@@ -41,32 +46,42 @@
 			<table class="fixed-100 mp-0">
 				<colgroup>
 					<col style="width: 7mm;" />     <!-- Lfd Nr -->
-					<col style="width: 58mm;" />    <!-- Schüler: Name, Angaben, Anschrift -->
+					<col th:if="${mitFoto}" style="width: 12mm;" />  <!-- Schüler: Foto -->
+					<col th:style="${'width: ' + (mitFoto ? '46mm' : '58mm') + ';'}" />    <!-- Schüler: Name, Angaben, Anschrift -->
 					<col style="width: 58mm;" />    <!-- Schüler: E-Mail und Telefon -->
  					<col style="width: 58mm;" />    <!-- Telefonkontakte -->
 					<col />          				<!-- Füllt auf 100% der Breite auf. Ist leer im Hochformat oder nimmt Erzieher, Anschrift, E-Mail auf. -->
 				</colgroup>
 				<thead>
 					<tr>
-						<th colspan="5">
+						<th th:colspan="${mitFoto ? 6 : 5}">
 							<table class="fixed-100 mp-0">
 								<tr>
-									<th class="ta-lb" style="width: 35%; font-size: 13pt; font-weight: bold;" th:text="${'Klassenliste ' + klasse.kuerzel()}">
+									<th class="ta-lb bo-b-grey" style="width: 35%; font-size: 13pt; font-weight: bold;" th:text="${anzeigeUeberschriftFinal}">
 										Klassenliste 06C
 									</th>
-									<th class="f-bold ta-rb" style="width: 65%;" th:text="${((klasse.jahrgang() != null) ? ('Jahrgang ' + klasse.jahrgang().kuerzel() + ' - ') : '') + klasse.schueler().size() + ' Personen ' + klasse.statistikGeschlechter() + ' - Leitung: ' + klasse.auflistungKlassenlehrerkuerzel()}">
+									<th class="ta-rb bo-b-grey" style="width: 65%; font-size: 9pt" th:text="${'Leitung: ' + klasse.auflistungKlassenlehrerkuerzel()}">
 										Jahrgang 06 - 30 Personen - Leitung: ABC,DEF}"
 									</th>
 								</tr>
 								<tr>
-									<td colspan="2" class="ta-lb bo-t-grey" style="height: 2mm"></td>
+									<td class="ta-lt" style="width: 35%; font-size: 9pt;" th:text="${klasse.schueler().size() + ' Personen ' + klasse.statistikGeschlechter()}">22 Personen (12/10/0)</td>
+									<td class="ta-rt" style="width: 65%; font-size: 9pt;" th:text="${(klasse.jahrgang() != null) ? ('Jahrgangsstufe: ' + klasse.jahrgang().kuerzel()) : ''}">Jahrgangsstufe: EF}"></td>
+								</tr>
+								<tr th:if="${!#strings.isEmpty(bemerkung.trim())}">
+									<td colspan="2" class="ta-l" style="font-size: 9pt; font-weight: normal" th:text="${bemerkung}">Bemerkung</td>
+								</tr>
+								<tr>
+									<td colspan="2" class="ta-lb" style="height: 2mm"></td>
 								</tr>
 							</table>
 						</th>
 					</tr>
+
 					<tr>
 						<!-- ###### Die Spaltenüberschriften dienen nur der groben Orientierung. Da die Spalten dynamische genutzt werden, um eine möglich geringe Zeilenhöhe zu haben, wird die Beschriftung entsprechend erstellt. -->
 						<td class="head-small-grey"></td>
+						<td class="head-small-grey ta-c" th:if="${mitFoto}">Foto</td>
 						<td class="head-small-grey">Name, ggf. weitere Angaben</td>
 						<th:block th:if="${fallNurAnschriftUndTelefonOderEmail}">
 							<!-- Wenn neben der Anschrift des Schüler nur dessen Telefon ODER E-Mail gewünscht ist, dann setze Name und Anschrift zweispaltig und damit Telefon oder E-Mail in dei letzte Spalte. -->
@@ -86,6 +101,16 @@
 					<tr th:each="schueler,iterationVarSchueler : ${klasse.schueler()}" th:classappend="${iterationVarSchueler.even} ? 'bg-lightgrey'">
 						<!-- Spalte für laufende Nummer -->
 						<td class="p-tb-05 p-lr-1 bo-b-grey" th:text="${iterationVarSchueler.count + '. '}">1.</td>
+						<td class="p-tb-05 p-lr-1 bo-b-grey ta-c foto-zelle" th:if="${mitFoto}">
+							<div class="foto-container foto-container-klein">
+								<img th:if="${schueler.fotoHtmlSource() != null and !schueler.fotoHtmlSource().isEmpty()}"
+									 th:src="${schueler.fotoHtmlSource()}"
+									 th:alt="${'Foto von ' + schueler.vorname() + ' ' + schueler.nachname()}"
+									 class="foto-bild" />
+								<div th:unless="${schueler.fotoHtmlSource() != null and !schueler.fotoHtmlSource().isEmpty()}"
+									 class="foto-placeholder foto-placeholder-klein"></div>
+							</div>
+						</td>
 
 						<!-- ###### Es werden nun die drei (Hochformat) bzw. vier Datenspalten (Querformat) gefüllt. ###### -->
 						<!-- ### SONDERFALL: Anschrift und nur Telefon ODER E-Mail. Daher zweispaltige Angabe für Schüler und Anschrift und letzte Spalte Telefon oder E-Mail. ### -->
@@ -94,7 +119,7 @@
 								<table class="fixed-100 mp-0">
 									<thead th:if="${false}"><!-- Header nur für SonarCube, keine Ausgabe --><tr><th scope="col">Col1</th></tr></thead>
 									<tr>
-										<td class="mp-0" th:text="${nurSchuelerRufname ? schueler.nachnameVorname() : schueler.nachnameVornamen()}">
+										<td class="mp-0" th:text="${mitSchuelerAlleVornamen ? schueler.nachnameVornamen() : schueler.nachnameVorname()}">
 											Mustermann, Maximilian Moritz
 										</td>
 									</tr>
@@ -138,7 +163,7 @@
 									<table class="fixed-100 mp-0">
 										<thead th:if="${false}"><!-- Header nur für SonarCube, keine Ausgabe --><tr><th scope="col">Col1</th></tr></thead>
 										<tr>
-											<td class="mp-0" th:text="${nurSchuelerRufname ? schueler.nachnameVorname() : schueler.nachnameVornamen()}">
+											<td class="mp-0" th:text="${mitSchuelerAlleVornamen ? schueler.nachnameVornamen() : schueler.nachnameVorname()}">
 												Mustermann, Maximilian Moritz
 											</td>
 										</tr>
@@ -180,7 +205,7 @@
 									<table class="fixed-100 mp-0">
 										<thead th:if="${false}"><!-- Header nur für SonarCube, keine Ausgabe --><tr><th scope="col">Col1</th></tr></thead>
 										<tr>
-											<td class="mp-0" th:text="${nurSchuelerRufname ? schueler.nachnameVorname() : schueler.nachnameVornamen()}">
+											<td class="mp-0" th:text="${mitSchuelerAlleVornamen ? schueler.nachnameVornamen() : schueler.nachnameVorname()}">
 												Mustermann, Maximilian Moritz
 											</td>
 										</tr>

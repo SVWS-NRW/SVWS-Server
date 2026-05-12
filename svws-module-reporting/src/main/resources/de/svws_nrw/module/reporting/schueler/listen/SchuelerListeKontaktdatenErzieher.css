@@ -4,3 +4,39 @@ td {
 	vertical-align: top;
 	font-size: 0.9em;
 }
+
+/* Foto-Zelle: kein Innenabstand, Inhalt oben ausgerichtet */
+td.foto-zelle {
+	padding: 0;
+	vertical-align: top;
+}
+
+/* Foto-Container: beschneidet überstehende Bildbereiche und zentriert die Box */
+.foto-container {
+	overflow: hidden;
+	margin: 3px auto;
+}
+
+/* Kleine Foto-Variante für die Kontaktlisten */
+.foto-container-klein {
+	width: 10mm;
+	height: 12mm;
+}
+
+/* Foto-Bild: füllt die Breite des Containers, Höhe skaliert proportional */
+.foto-bild {
+	width: 100%;
+	display: block;
+}
+
+/* Platzhalter-Farbe für fehlende Fotos */
+.foto-placeholder {
+	background-color: #d3d3d3;
+}
+
+/* Platzhalter in der kleinen Foto-Variante */
+.foto-placeholder-klein {
+	width: 10mm;
+	height: 12mm;
+}
+
