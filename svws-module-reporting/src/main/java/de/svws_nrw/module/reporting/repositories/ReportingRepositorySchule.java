@@ -7,10 +7,10 @@ import java.util.Map;
 
 import de.svws_nrw.asd.data.schule.SchuleStammdaten;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.base.email.EmailJobManagerContext;
 import de.svws_nrw.core.logger.LogLevel;
+import de.svws_nrw.data.email.DataEmailJobs;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
-import de.svws_nrw.db.Benutzer;
-import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.schule.ProxyReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
@@ -29,7 +29,7 @@ public class ReportingRepositorySchule {
 	private final Long idAktuellerSchuljahresabschnitt;
 	private final Long idAuswahlSchuljahresabschnitt;
 	private final Map<Long, ReportingSchuljahresabschnitt> mapSchuljahresabschnitte = new HashMap<>();
-	private final Map<Long, DTOViewBenutzerdetails> mapBenutzerdetails = new HashMap<>();
+	private EmailJobManagerContext defaultEmailJobManagerContext;
 
 	/**
 	 * Erstellt ein neues ReportingSchuleRepository und initialisiert Schulstammdaten und Schuljahresabschnitte.
@@ -156,36 +156,23 @@ public class ReportingRepositorySchule {
 	}
 
 
-	// ##### Benutzer #####
+	// ##### Schul-/Schema-weite E-Mail-Konfiguration #####
 
 	/**
-	 * Gibt den aktuell angemeldeten Benutzer der Datenbankverbindung zurück.
+	 * Gibt den schemaweit gültigen Default-{@link EmailJobManagerContext} der Schule zurück (SMTP-Konfiguration etc.).
+	 * Die Daten werden beim ersten Aufruf aus der Datenbank geladen und für die Lebensdauer des Reporting-Contexts
+	 * zwischengespeichert.
 	 *
-	 * @return Der angemeldete Benutzer.
+	 * @return Der Default-Kontext für den E-Mail-Job-Manager.
+	 *
+	 * @throws ApiOperationException Falls die Default-Konfiguration nicht ermittelt werden kann.
 	 */
-	public Benutzer benutzer() {
-		return this.reportingContext.conn().getUser();
+	public EmailJobManagerContext defaultEmailJobManagerContext() throws ApiOperationException {
+		if (defaultEmailJobManagerContext == null) {
+			defaultEmailJobManagerContext = DataEmailJobs.getDefaultJobManagerContext(this.reportingContext.conn());
+		}
+		return defaultEmailJobManagerContext;
 	}
 
-	/**
-	 * Gibt die Anzeige-Details zum übergebenen Benutzer zurück. Die Daten werden bei erstem Zugriff aus der Datenbank geladen
-	 * und im Cache gehalten.
-	 *
-	 * @param idBenutzer Die ID des Benutzers.
-	 *
-	 * @return Die Anzeige-Details des Benutzers oder null, falls keine Daten ermittelt werden konnten.
-	 */
-	public DTOViewBenutzerdetails benutzerdetails(final long idBenutzer) {
-		if (mapBenutzerdetails.containsKey(idBenutzer)) {
-			return mapBenutzerdetails.get(idBenutzer);
-		}
-		try {
-			final DTOViewBenutzerdetails dtoBenutzer = this.reportingContext.conn().queryByKey(DTOViewBenutzerdetails.class, idBenutzer);
-			mapBenutzerdetails.put(idBenutzer, dtoBenutzer);
-			return dtoBenutzer;
-		} catch (@SuppressWarnings("unused") final Exception ignore) {
-			mapBenutzerdetails.put(idBenutzer, null);
-			return null;
-		}
-	}
+
 }

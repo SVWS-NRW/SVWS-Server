@@ -9,16 +9,14 @@ import java.util.Set;
 
 import de.svws_nrw.base.email.EmailJob;
 import de.svws_nrw.base.email.EmailJobAttachment;
+import de.svws_nrw.base.email.EmailJobManager;
 import de.svws_nrw.base.email.EmailJobManagerContext;
 import de.svws_nrw.base.email.EmailJobManagerFactory;
 import de.svws_nrw.base.email.EmailJobRecipient;
 import de.svws_nrw.base.email.EmailJobStatus;
 import de.svws_nrw.core.data.SimpleOperationResponse;
-import de.svws_nrw.core.data.benutzer.BenutzerEMailDaten;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.types.reporting.ReportingEMailEmpfaengerTyp;
-import de.svws_nrw.data.benutzer.DataBenutzerEMailDaten;
-import de.svws_nrw.data.email.DataEmailJobs;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.builders.ReportBuilderPdf;
 import de.svws_nrw.module.reporting.parameter.ReportingParameterTypisiert;
@@ -81,7 +79,7 @@ public final class EmailFactory {
 			final String subject = buildEMailBetreff(parameter);
 			final String body = buildEMailHTMLBody(parameter);
 
-			final @NotNull EmailJobManagerContext context = DataEmailJobs.getDefaultJobManagerContext(reportingContext.conn());
+			final @NotNull EmailJobManagerContext context = reportingContext.repositorySchule().defaultEmailJobManagerContext();
 			// E-Mail-Context Einstellungen abseits der Standardwerte setzen: Keine E-Mails ohne Anhang versenden.
 			context.withFilterMailsWithoutAttachments(true);
 			reportingContext.logger().logLn(LogLevel.DEBUG, 4, "EmailJobManagerContext mit SMTP Sitzung erstellt.");
@@ -156,22 +154,11 @@ public final class EmailFactory {
 	 * @throws ApiOperationException Falls keine gültige E-Mail-Adresse gefunden wird oder ein Fehler beim Abrufen der Benutzerdaten auftritt.
 	 */
 	private String ermittleAbsenderEmail() throws ApiOperationException {
-		String emailAdresse = "";
-		final BenutzerEMailDaten benutzerEMailDaten;
-		// E-Mail-Daten des aktuellen Benutzers ermitteln. Tritt dabei ein Fehler auf, so wird eine leere Adresse zurückgegeben.
-		try {
-			benutzerEMailDaten = new DataBenutzerEMailDaten(reportingContext.conn()).getById(reportingContext.conn().getUser().getId());
-			if ((benutzerEMailDaten != null) && (benutzerEMailDaten.address != null) && !benutzerEMailDaten.address.isBlank()) {
-				emailAdresse = benutzerEMailDaten.address.trim();
-			}
-		} catch (@SuppressWarnings("unused") final Exception ignore) {
-			emailAdresse = "";
-		}
-		emailAdresse = validatedEmailOrEmpty(emailAdresse);
+		final String emailAdresse = validatedEmailOrEmpty(reportingContext.benutzer().emailSmtpAdresse());
 
 		if (emailAdresse.isBlank()) {
-			reportingContext.logger().logLn(LogLevel.ERROR, 4,
-					"### FEHLER: Der E-Mail-Versand wurde abgebrochen, da für den aktuellen Benutzer keine gültige E-Mail-Adresse ermittelt werden konnte. Bitte überprüfen Sie die E-Mail-Einstellungen des Benutzers.");
+			reportingContext.logger().logLn(LogLevel.ERROR, 4, "### FEHLER: Der E-Mail-Versand wurde abgebrochen, da für den aktuellen Benutzer keine gültige"
+					+ " E-Mail-Adresse ermittelt werden konnte. Bitte überprüfen Sie die E-Mail-Einstellungen des Benutzers.");
 			throw new ApiOperationException(Status.BAD_REQUEST, null, null, MediaType.APPLICATION_JSON);
 		}
 		return emailAdresse;
@@ -381,13 +368,11 @@ public final class EmailFactory {
 	 * @return Response mit Ergebnis der Abbruch-Anforderung
 	 */
 	public Response cancelEmailJob(final long idJob) {
-		final var manager =
-				EmailJobManagerFactory.getInstance().getManagerByUser(reportingContext.conn().getDBSchema(), reportingContext.conn().getUser().getId());
+		final EmailJobManager manager = reportingContext.benutzer().emailJobManager();
 		if (manager == null) {
 			final SimpleOperationResponse notFound = new SimpleOperationResponse();
 			notFound.success = false;
-			notFound.log.add("E-Mail-Job-Manager nicht gefunden für: %d (%s)".formatted(reportingContext.conn().getUser().getId(),
-					reportingContext.conn().getDBSchema()));
+			notFound.log.add("E-Mail-Job-Manager nicht gefunden für: %d (%s)".formatted(reportingContext.benutzer().id(), reportingContext.schemaName()));
 			return Response.status(Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(notFound).build();
 		}
 		final EmailJob job = manager.getJob(idJob);

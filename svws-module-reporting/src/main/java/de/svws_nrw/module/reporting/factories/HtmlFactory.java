@@ -2,7 +2,6 @@ package de.svws_nrw.module.reporting.factories;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -126,7 +125,7 @@ public class HtmlFactory {
 		// Prüfe, ob die Rechte des Benutzers zu den in der TemplateDefinition hinterlegten Rechten passen.
 		this.reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 				"Prüfe die Berechtigungen des Benutzers für den Zugriff auf die für die Ausgabe notwendigen Daten.");
-		if (!this.reportingContext.conn().getUser().pruefeKompetenz(new HashSet<>(reportingReportvorlage.getBenutzerKompetenzen()))) {
+		if (!this.reportingContext.benutzer().pruefeKompetenz(reportingReportvorlage.getBenutzerKompetenzen())) {
 			this.reportingContext.logger()
 					.logLn(LogLevel.ERROR, 4,
 							"FEHLER: Der Benutzer hat nicht die erforderlichen Rechte, um auf die Daten für die Erstellung der Ausgabe zu zugreifen.");

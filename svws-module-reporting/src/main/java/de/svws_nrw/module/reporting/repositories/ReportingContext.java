@@ -1,14 +1,20 @@
 package de.svws_nrw.module.reporting.repositories;
 
+import de.svws_nrw.base.email.EmailJobManager;
+import de.svws_nrw.base.email.EmailJobManagerFactory;
+import de.svws_nrw.core.data.benutzer.BenutzerEMailDaten;
 import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.data.benutzer.DataBenutzerEMailDaten;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.filterung.ReportingFilterService;
 import de.svws_nrw.module.reporting.parameter.ReportingParameterTypisiert;
 import de.svws_nrw.module.reporting.sortierung.ReportingSortierungService;
+import de.svws_nrw.module.reporting.types.schule.ProxyReportingBenutzer;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -34,6 +40,10 @@ public class ReportingContext {
 
 	/** Service für die Erstellung von Filtern. */
 	private final ReportingFilterService filterService;
+
+	/** Objekt zum aktuell angemeldeten Benutzer. */
+	private final ProxyReportingBenutzer benutzer;
+
 
 	// Domänen-Repositories
 	private final ReportingRepositorySchule repositorySchule;
@@ -120,7 +130,42 @@ public class ReportingContext {
 		this.repositoryGost = new ReportingRepositoryGost(this);
 		this.logger.logLn(LogLevel.DEBUG, 8, "GOST-Repository erfolgreich erzeugt.");
 
+		// Erzeuge das Benutzer-Objekt für den aktuell angemeldeten Benutzer.
+		this.benutzer = initBenutzer();
+
 		this.logger.logLn(LogLevel.DEBUG, 4, "<<< Ende der Erzeugung des Reporting-Context");
+	}
+
+
+	/**
+	 * Initialisiert das Benutzer-Objekt für den aktuell angemeldeten Benutzer.
+	 *
+	 * @return Das Benutzer-Objekt für den aktuell angemeldeten Benutzer.
+	 */
+	private ProxyReportingBenutzer initBenutzer() {
+		this.logger.logLn(LogLevel.DEBUG, 8,
+				"Ermittle die Informationen für den aktuell angemeldeten Benutzer (ID %d).".formatted(conn.getUser().getId()));
+		DTOViewBenutzerdetails benutzerdetails;
+		try {
+			benutzerdetails = conn.queryByKey(DTOViewBenutzerdetails.class, conn.getUser().getId());
+		} catch (@SuppressWarnings("unused") final Exception ignore) {
+			benutzerdetails = null;
+		}
+		BenutzerEMailDaten benutzerEMailDaten;
+		try {
+			benutzerEMailDaten = new DataBenutzerEMailDaten(conn).getById(conn.getUser().getId());
+		} catch (@SuppressWarnings("unused") final Exception ignore) {
+			benutzerEMailDaten = null;
+		}
+
+		final EmailJobManager emailJobManagerBenutzer =
+				EmailJobManagerFactory.getInstance().getManagerByUser(conn.getDBSchema(), conn.getUser().getId());
+
+		this.logger.logLn(LogLevel.DEBUG, 8, "Ermittelte Informationen: Benutzerdetails %s, E-Mail-Daten %s, E-Mail-Manager %s."
+				.formatted((benutzerdetails != null) ? "ja" : "nein", (benutzerEMailDaten != null) ? "ja" : "nein",
+						(emailJobManagerBenutzer != null) ? "ja" : "nein"));
+
+		return new ProxyReportingBenutzer(this, this.conn.getUser(), benutzerdetails, benutzerEMailDaten, emailJobManagerBenutzer);
 	}
 
 
@@ -178,6 +223,27 @@ public class ReportingContext {
 	 */
 	public ReportingFilterService filterService() {
 		return filterService;
+	}
+
+
+	// ##### Identität des Requests #####
+
+	/**
+	 * Gibt den aktuell angemeldeten Benutzer der Datenbankverbindung zurück.
+	 *
+	 * @return Der angemeldete Benutzer.
+	 */
+	public ProxyReportingBenutzer benutzer() {
+		return benutzer;
+	}
+
+	/**
+	 * Gibt den Namen des Datenbank-Schemas der aktuellen Verbindung zurück.
+	 *
+	 * @return Der Name des Datenbank-Schemas.
+	 */
+	public String schemaName() {
+		return conn.getDBSchema();
 	}
 
 

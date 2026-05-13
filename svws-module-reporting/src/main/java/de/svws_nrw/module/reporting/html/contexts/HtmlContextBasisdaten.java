@@ -8,7 +8,6 @@ import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameter;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlageParameterTyp;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.parameter.ReportingVorlageParameterTypisiert;
-import de.svws_nrw.module.reporting.types.schule.ProxyReportingBenutzer;
 import de.svws_nrw.module.reporting.types.schule.ProxyReportingSchule;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import jakarta.ws.rs.core.Response;
@@ -46,7 +45,7 @@ public final class HtmlContextBasisdaten extends HtmlContext<Object> {
 		final Context context = new Context();
 
 		context.setVariable("Schule", new ProxyReportingSchule(this.reportingContext));
-		context.setVariable("Benutzer", new ProxyReportingBenutzer(this.reportingContext));
+		context.setVariable("Benutzer", this.reportingContext.benutzer());
 		context.setVariable("Parameter", this.reportingContext.reportingParameter());
 
 		// Baue die HashMap mit den übergebenen Vorlage-Parameter-Namen und ihren Werten auf, damit diese in den Templates direkt genutzt werden können.
