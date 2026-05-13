@@ -55,7 +55,7 @@ export class SchuelerStatistikGesamt extends JavaObject {
 	/**
 	 * Die Anrechnungszeit in Monaten für den Beginn des Bildungsganges des Berufskolleg (z.B. 0,6,12,18).
 	 */
-	public bkAvzo: number | null = null;
+	public bkAzvo: number | null = null;
 
 	/**
 	 * Gibt an, ob ein Migrationshintergrund bei dems Schülerdatensatz vorhanden ist.
@@ -188,7 +188,7 @@ export class SchuelerStatistikGesamt extends JavaObject {
 		result.status = obj.status;
 		result.religionabmeldung = (obj.religionabmeldung === undefined) ? null : obj.religionabmeldung === null ? null : obj.religionabmeldung;
 		result.religionanmeldung = (obj.religionanmeldung === undefined) ? null : obj.religionanmeldung === null ? null : obj.religionanmeldung;
-		result.bkAvzo = (obj.bkAvzo === undefined) ? null : obj.bkAvzo === null ? null : obj.bkAvzo;
+		result.bkAzvo = (obj.bkAzvo === undefined) ? null : obj.bkAzvo === null ? null : obj.bkAzvo;
 		if (obj.hatMigrationshintergrund === undefined)
 			throw new Error('invalid json format, missing attribute hatMigrationshintergrund');
 		result.hatMigrationshintergrund = obj.hatMigrationshintergrund;
@@ -230,7 +230,7 @@ export class SchuelerStatistikGesamt extends JavaObject {
 		result += '"status" : ' + obj.status.toString() + ',';
 		result += '"religionabmeldung" : ' + ((obj.religionabmeldung === null) ? 'null' : JSON.stringify(obj.religionabmeldung)) + ',';
 		result += '"religionanmeldung" : ' + ((obj.religionanmeldung === null) ? 'null' : JSON.stringify(obj.religionanmeldung)) + ',';
-		result += '"bkAvzo" : ' + ((obj.bkAvzo === null) ? 'null' : obj.bkAvzo.toString()) + ',';
+		result += '"bkAzvo" : ' + ((obj.bkAzvo === null) ? 'null' : obj.bkAzvo.toString()) + ',';
 		result += '"hatMigrationshintergrund" : ' + obj.hatMigrationshintergrund.toString() + ',';
 		result += '"zuzugsjahr" : ' + ((obj.zuzugsjahr === null) ? 'null' : obj.zuzugsjahr.toString()) + ',';
 		result += '"geburtsland" : ' + ((obj.geburtsland === null) ? 'null' : JSON.stringify(obj.geburtsland)) + ',';
@@ -291,8 +291,8 @@ export class SchuelerStatistikGesamt extends JavaObject {
 		if (obj.religionanmeldung !== undefined) {
 			result += '"religionanmeldung" : ' + ((obj.religionanmeldung === null) ? 'null' : JSON.stringify(obj.religionanmeldung)) + ',';
 		}
-		if (obj.bkAvzo !== undefined) {
-			result += '"bkAvzo" : ' + ((obj.bkAvzo === null) ? 'null' : obj.bkAvzo.toString()) + ',';
+		if (obj.bkAzvo !== undefined) {
+			result += '"bkAzvo" : ' + ((obj.bkAzvo === null) ? 'null' : obj.bkAzvo.toString()) + ',';
 		}
 		if (obj.hatMigrationshintergrund !== undefined) {
 			result += '"hatMigrationshintergrund" : ' + obj.hatMigrationshintergrund.toString() + ',';
