@@ -40,6 +40,7 @@ import { AbiturKursMarkierung } from '../../../core/data/gost/AbiturKursMarkieru
 import { Abi30BelegpruefungFachkombinationen } from '../../../core/abschluss/gost/belegpruefung/abi2030/Abi30BelegpruefungFachkombinationen';
 import { Note } from '../../../asd/types/Note';
 import { Class } from '../../../java/lang/Class';
+import { Arrays } from '../../../java/util/Arrays';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { FachWaehlbar } from '../../../core/abschluss/gost/belegpruefung/FachWaehlbar';
@@ -1724,6 +1725,30 @@ export class AbiturdatenManager extends JavaObject {
 				continue;
 			}
 			result.addAll(fachbelegungen);
+		}
+		return result;
+	}
+
+	/**
+	 * Liefert alle Prüfungsordnungs-relevanten Fachbelegungen der Abiturdaten, welche den angegebenen
+	 * Statistik-Fächern zuzuordnen sind.
+	 * Wird kein Fach angegeben, so werden alle Fachbelegungen der Abiturdaten zurückgegeben.
+	 *
+	 * @param faecher   die Statistik-Fächer
+	 *
+	 * @return die Liste der Fachbelegungen
+	 */
+	public getRelevanteFachbelegungenByFach(...faecher: Array<Fach>): List<AbiturFachbelegung> {
+		if ((faecher === null) || (faecher.length === 0)) {
+			return this.abidaten.fachbelegungen;
+		}
+		const listFaecher: List<Fach> = Arrays.asList(...faecher);
+		const result: ArrayList<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
+		for (const fachbelegung of this.abidaten.fachbelegungen) {
+			const fach: GostFach | null = this.getFach(fachbelegung);
+			if ((fach !== null) && listFaecher.contains(Fach.getBySchluesselOrDefault(fach.kuerzel))) {
+				result.add(fachbelegung);
+			}
 		}
 		return result;
 	}

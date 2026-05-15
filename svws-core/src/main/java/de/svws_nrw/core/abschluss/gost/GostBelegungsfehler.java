@@ -29,11 +29,6 @@ public enum GostBelegungsfehler {
 			"Unter den fünf Abiturfächern müssen zwei der Fächer Deutsch, Mathematik oder Fremdsprache sein.",
 			null),
 
-	/** BelegungsfehlerArt ABI_11 */
-	GOST30_ABI_11("ABI_11", GostBelegungsfehlerArt.BELEGUNG,
-			"Religionslehre und Sport dürfen nicht gleichzeitig Abiturfächer sein.",
-			null),
-
 	/** BelegungsfehlerArt ABI_12 */
 	GOST30_ABI_12("ABI_12", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
 			"In Q2.2 muss das 3. Abiturfach schriftlich belegt sein.",
@@ -100,13 +95,13 @@ public enum GostBelegungsfehler {
 			null),
 
 	/** BelegungsfehlerArt ABI_27 */
-	GOST30_ABI_27("ABI_27", GostBelegungsfehlerArt.BELEGUNG,
+	GOST30_ABI_27("ABI_27", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
 			"Ein Projektkurs kann nur als 5. Abiturfach gewählt werden, wenn sein Referenzfach in der Q1 schriftlich belegt wurde.",
 			null),
 
 	/** BelegungsfehlerArt ABI_28 */
 	GOST30_ABI_28("ABI_28", GostBelegungsfehlerArt.BELEGUNG,
-			"Ein Projektkurs kann nur als 5. Abiturfach gewählt werden, wenn sein Referenzfach nicht als Abiturfach gewählt wurde.",
+			"Ein Projektkurs kann nur als 5. Abiturfach gewählt werden, wenn sein Referenzfach nicht bereits als Abiturfach gewählt wurde.",
 			null),
 
 	/** BelegungsfehlerArt ABI_29 */
@@ -194,7 +189,7 @@ public enum GostBelegungsfehler {
 	/** BelegungsfehlerArt D_10 */
 	GOST30_D_10("D_10", GostBelegungsfehlerArt.BELEGUNG,
 			"Deutsch muss von EF.1 bis Q2.2 belegt werden.",
-			"Deutsch muss in EF.1 schriftlich belegt werden."),
+			"Deutsch muss in EF.1 belegt werden."),
 
 	/** BelegungsfehlerArt D_11 */
 	GOST30_D_11("D_11", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
@@ -214,17 +209,17 @@ public enum GostBelegungsfehler {
 	/** BelegungsfehlerArt FS_11 */
 	GOST30_FS_11("FS_11", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
 			"Mindestens eine durchgehend belegte Fremdsprache muss von EF.1 bis Q2.1 schriftlich belegt sein.",
-			"Mindestens eine Fremdsprache muss in EF.1 schriftlich belegt werden. Die zu wählende Fremdsprache muss durchgehend angeboten werden."),
+			"Mindestens eine Fremdsprache, welche durchgehend angeboten wird, muss in EF.1 schriftlich belegt werden."),
 
 	/** BelegungsfehlerArt FS_12 */
 	GOST30_FS_12("FS_12", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
-			"In EF.1 und EF.2 müssen alle gewählten Fremdsprachenfächer schriftlich belegt werden.",
+			"In EF.1 und EF.2 müssen alle gewählten Fremdsprachen schriftlich belegt werden.",
 			"In EF.1 müssen alle belegten Fremdsprachen schriftlich belegt werden."),
 
 	/** BelegungsfehlerArt FS_13 */
 	GOST30_FS_13("FS_13", GostBelegungsfehlerArt.BELEGUNG,
-			"Bei unvollendeter 2. Fremdsprache, muss die in der Sekundarstufe 1 begonnene 2. Fremdsprache in EF schriftlich oder eine neu einsetzende Fremdsprache durchgehend schriftlich belegt werden.",
-			"Wurde die 2. Fremdsprache erst ab Klasse 8 erlernt, muss die in der Sekundarstufe 1 begonnene 2. Fremdsprache oder eine neu einsetzende Fremdsprache schriftlich in EF.1 belegt werden."),
+			"Wurde die 2. Fremdsprache in der Sekundarstufe 1 erst nach der Jahrgangsstufe 7 begonnen, so muss diese in EF schriftlich oder eine neu einsetzende Fremdsprache durchgehend schriftlich belegt werden.",
+			"Wurde die 2. Fremdsprache in der Sekundarstufe 1 erst nach der Jahrgangsstufe 7 begonnen, so muss diese oder eine neu einsetzende Fremdsprache schriftlich in EF.1 belegt werden."),
 
 	/** BelegungsfehlerArt FS_14 */
 	GOST30_FS_14("FS_14", GostBelegungsfehlerArt.BELEGUNG,
@@ -278,8 +273,8 @@ public enum GostBelegungsfehler {
 
 	/** BelegungsfehlerArt FS_24 */
 	GOST30_FS_24("FS_24", GostBelegungsfehlerArt.BELEGUNG,
-			"Ist die Bedingungen für die Belegung einer zweiten Fremdsprache in der Sekundarstufe I noch nicht erfüllt worden, so müssen in der Einführungsphase zwei Fremdsprachen belegt werden.",
-			"Ist die Bedingungen für die Belegung einer zweiten Fremdsprache in der Sekundarstufe I noch nicht erfüllt worden, so müssen in der Einführungsphase zwei Fremdsprachen belegt werden."),
+			"Ist die Bedingung für die Belegung einer zweiten Fremdsprache in der Sekundarstufe I noch nicht erfüllt worden, so müssen in der Einführungsphase zwei Fremdsprachen belegt werden.",
+			"Ist die Bedingung für die Belegung einer zweiten Fremdsprache in der Sekundarstufe I noch nicht erfüllt worden, so müssen in der Einführungsphase zwei Fremdsprachen belegt werden."),
 
 	/** BelegungsfehlerArt FS_25 */
 	GOST30_FS_25("FS_25", GostBelegungsfehlerArt.BELEGUNG,
@@ -333,17 +328,7 @@ public enum GostBelegungsfehler {
 
 	/** BelegungsfehlerArt L_11_INFO */
 	GOST30_L_11_INFO("L_11_INFO", GostBelegungsfehlerArt.HINWEIS,
-			"Um das Latinum zu erlangen muss Latein mindestens bis Q1.2, je nach Stundenvolumen sogar bis Q2.2 belegt werden.",
-			null),
-
-	/** BelegungsfehlerArt LI_IV_10 */
-	GOST30_LI_IV_10("LI_IV_10", GostBelegungsfehlerArt.BELEGUNG,
-			"Die Fächer Literatur, instrumentalpraktischer bzw. vokalpraktischer Grundkurs dürfen maximal in zwei aufeinanderfolgenden Halbjahren in der Qualifikationsphase belegt werden.",
-			null),
-
-	/** BelegungsfehlerArt LI_IV_11 */
-	GOST30_LI_IV_11("LI_IV_11", GostBelegungsfehlerArt.BELEGUNG,
-			"Es darf nur eins der Fächer Literatur, IP oder VP belegt werden. (Schulen mit genehmigtem musisch-künstlerischem Schwerpunkt müssen betroffene Schüler in SchILD-NRW manuell zulassen).",
+			"Um das Latinum zu erlangen muss Latein mindestens bis Q1.2, bei G8 je nach Stundenvolumen sogar bis Q2.2 belegt werden.",
 			null),
 
 	/** BelegungsfehlerArt LK_10 */
@@ -358,18 +343,23 @@ public enum GostBelegungsfehler {
 
 	/** BelegungsfehlerArt LK1_11 */
 	GOST30_LK1_11("LK1_11", GostBelegungsfehlerArt.BELEGUNG,
-			"Das erste Leistungskursfach muss eine fortgeführte Fremdsprache, Mathematik, eine klassische Naturwissenschaft oder Deutsch sein.",
+			"Das erste Leistungskursfach muss eine fortgeführte Fremdsprache, Mathematik, eine Naturwissenschaft (BI, CH, PH) oder Deutsch sein.",
+			null),
+
+	/** BelegungsfehlerArt LK1_12 */
+	GOST30_LK1_12("LK1_12", GostBelegungsfehlerArt.BELEGUNG,
+			"Die Abiturfächer müssen alle drei Aufgabenfelder abdecken.",
 			null),
 
 	/** BelegungsfehlerArt LK1_13 */
 	GOST30_LK1_13("LK1_13", GostBelegungsfehlerArt.BELEGUNG,
-			"Die Abiturfächer müssen alle drei Aufgabenfelder abdecken. Insgesamt sind fünf Abiturfächer zu belegen.",
+			"Es sind insgesamt fünf Abiturfächer zu belegen.",
 			null),
 
 	/** BelegungsfehlerArt M_10 */
 	GOST30_M_10("M_10", GostBelegungsfehlerArt.BELEGUNG,
 			"Mathematik muss von EF.1 bis Q2.2 belegt werden.",
-			"Mathematik muss in EF.1 schriftlich belegt werden."),
+			"Mathematik muss in EF.1 belegt werden."),
 
 	/** BelegungsfehlerArt M_11 */
 	GOST30_M_11("M_11", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
@@ -378,28 +368,28 @@ public enum GostBelegungsfehler {
 
 	/** BelegungsfehlerArt NW_10 */
 	GOST30_NW_10("NW_10", GostBelegungsfehlerArt.BELEGUNG,
-			"Mindestens eine klassische Naturwissenschaft (Physik, Biologie, Chemie) muss durchgehend von Q1.1 bis Q2.2 belegt werden.",
-			"Mindestens eines der Fächer Physik, Chemie oder Biologie muss in EF.1 belegt werden und durchgängig belegbar sein."),
+			"Mindestens eine Naturwissenschaft (Physik, Biologie, Chemie) muss durchgehend von Q1.1 bis Q2.2 belegt werden.",
+			"Mindestens eine Naturwissenschaft (Physik, Biologie, Chemie) muss in EF.1 belegt werden und durchgängig belegbar sein."),
 
 	/** BelegungsfehlerArt NW_11 */
 	GOST30_NW_11("NW_11", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
-			"In EF.1 und EF.2 muss mindestens eine klassische Naturwissenschaft (Physik, Biologie, Chemie) schriftlich belegt sein.",
-			"Mindestens eines der Fächer Physik, Chemie oder Biologie muss in EF.1 schriftlich belegt werden."),
+			"In EF.1 und EF.2 muss mindestens eine Naturwissenschaft (Physik, Biologie, Chemie) schriftlich belegt sein.",
+			"Mindestens eine Naturwissenschaft (Physik, Biologie, Chemie) muss in EF.1 schriftlich belegt werden."),
 
 	/** BelegungsfehlerArt NW_FS_10 */
 	GOST30_NW_FS_10("NW_FS_10", GostBelegungsfehlerArt.BELEGUNG,
-			"Von EF.1 bis Q2.2 müssen entweder zwei Naturwissenschaften oder zwei Fremdsprachen durchgehend gewählt werden. Hierbei sind eine Naturwissenschaft oder zwei Fremdsprachen schriftlich zu belegen. Zu den Fremdsprachen zählen auch in einer weiteren Fremdsprache unterrichtete Sachfächer.",
-			"In EF.1 müssen entweder zwei Naturwissenschaften oder zwei Fremdsprachen belegt werden. Hierbei sind eine Naturwissenschaft oder zwei Fremdsprachen schriftlich zu belegen. Zu den Fremdsprachen zählen auch in einer weiteren Fremdsprache unterrichtete Sachfächer."),
+			"Von EF.1 bis Q2.2 müssen entweder zwei naturwissenschaftlich-technische Fächer (mind. eines schriftlich) oder zwei Fremdsprachen (beide schriftlich) belegt werden. Zu den Fremdsprachen zählen auch in einer weiteren Fremdsprache unterrichtete Sachfächer.",
+			"In EF.1 müssen entweder zwei naturwissenschaftlich-technische Fächer (mind. eines schriftlich) oder zwei Fremdsprachen (beide schriftlich) belegt werden. Zu den Fremdsprachen zählen auch in einer weiteren Fremdsprache unterrichtete Sachfächer."),
 
 	/** BelegungsfehlerArt NW_FS_12_INFO */
 	GOST30_NW_FS_12_INFO("NW_FS_12_INFO", GostBelegungsfehlerArt.HINWEIS,
-			"Da von EF.1 bis Q2.2 weniger als zwei naturwissenschaftliche Fächer durchgehend belegt wurden, oder kein naturwissenschaftliches Fach schriftlich belegt wurde, liegt ausschließlich ein Sprachenschwerpunkt vor.",
-			"Da in EF.1 weniger als zwei Naturwissenschaften belegt, oder keine schriftlich belegt wurden, müssen zwei Fremdsprachen bis Q2.2 durchgehend schriftlich belegt werden."),
+			"Da von EF.1 bis Q2.2 weniger als zwei naturwissenschaftlich-technische Fächer durchgehend belegt wurden, oder kein naturwissenschaftlich-technisches Fach schriftlich belegt wurde, liegt ausschließlich ein Sprachenschwerpunkt vor.",
+			"Da in EF.1 weniger als zwei naturwissenschaftlich-technische Fächer belegt, oder keine schriftlich belegt wurden, müssen zwei Fremdsprachen bis Q2.2 durchgehend schriftlich belegt werden."),
 
 	/** BelegungsfehlerArt NW_FS_13_INFO */
 	GOST30_NW_FS_13_INFO("NW_FS_13_INFO", GostBelegungsfehlerArt.HINWEIS,
-			"Da von EF.1 bis Q2.2 weniger als zwei Fremdsprachen schriftlich belegt wurden, liegt ausschließlich ein naturwissenschaftlicher Schwerpunkt vor.",
-			"Da in EF.1 weniger als zwei Fremdsprachen schriftlich belegt wurden, müssen zwei Naturwissenschaften bis Q2.2 belegt, davon mindestens eine schriftlich belegt werden."),
+			"Da von EF.1 bis Q2.2 weniger als zwei Fremdsprachen schriftlich belegt wurden, liegt ausschließlich ein naturwissenschaftlich-technischer Schwerpunkt vor.",
+			"Da in EF.1 weniger als zwei Fremdsprachen schriftlich belegt wurden, müssen zwei naturwissenschaftlich-technische Fächer bis Q2.2 belegt, davon mindestens eine durchgehend schriftlich belegt werden."),
 
 	/** BelegungsfehlerArt PF_10 */
 	GOST30_PF_10("PF_10", GostBelegungsfehlerArt.BELEGUNG,

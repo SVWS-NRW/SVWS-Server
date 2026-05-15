@@ -12,12 +12,12 @@ import { GostBelegungsfehler } from '../../../../../core/abschluss/gost/GostBele
 export class Abi30BelegpruefungNaturwissenschaften extends GostBelegpruefung {
 
 	/**
-	 * Die Belegungen für alle Fächer der Naturwissenschaften.
+	 * Die Belegungen für alle Fächer der naturwissenschaftlich-technischen Fächer.
 	 */
 	private _naturwissenschaften: List<AbiturFachbelegung> | null = null;
 
 	/**
-	 * Die Belegungen für alle Fächer der klassischen Naturwissenschaften.
+	 * Die Belegungen für alle Fächer der klassischen Naturwissenschaften (BI,CH,PH).
 	 */
 	private _naturwissenschaftenKlassisch: List<AbiturFachbelegung> | null = null;
 
@@ -33,7 +33,7 @@ export class Abi30BelegpruefungNaturwissenschaften extends GostBelegpruefung {
 
 
 	/**
-	 * Erstellt eine neue Belegprüfung für das Fach Mathematik.
+	 * Erstellt eine neue Belegprüfung für die Naturwissenschaften.
 	 *
 	 * @param manager        der Daten-Manager für die Abiturdaten
 	 * @param pruefungsArt   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)

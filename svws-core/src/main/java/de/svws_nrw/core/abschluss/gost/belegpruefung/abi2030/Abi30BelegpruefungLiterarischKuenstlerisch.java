@@ -34,7 +34,7 @@ public final class Abi30BelegpruefungLiterarischKuenstlerisch extends GostBelegp
 	private List<AbiturFachbelegung> kunst_musik;
 
 	/** Die Belegungen für die Ersatzfächer aus dem literarisch-künstlerischen Bereich. */
-	private List<AbiturFachbelegung> kunst_musik_ersatz;
+	private List<AbiturFachbelegung> literatur;
 
 
 	/**
@@ -51,7 +51,7 @@ public final class Abi30BelegpruefungLiterarischKuenstlerisch extends GostBelegp
 	@Override
 	protected void init() {
 		kunst_musik = manager.getRelevanteFachbelegungen(GostFachbereich.KUNST_MUSIK);
-		kunst_musik_ersatz = manager.getRelevanteFachbelegungen(GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ);
+		literatur = manager.getRelevanteFachbelegungen(GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ);
 	}
 
 
@@ -67,35 +67,25 @@ public final class Abi30BelegpruefungLiterarischKuenstlerisch extends GostBelegp
 	/**
 	 * Gesamtprüfung Punkte 26-28:
 	 * Prüfe, ob ein Kurs in Kunst oder Musik mindestens von EF.1 bis Q1.2 belegt wurde
-	 *   oder ob ein Ersatzfach (Literatur, vokal- oder instrumentalpraktischer Grundkurs) in der
-	 *           Qualifikationsphase gültig belegt wurde
+	 *   oder ob das Ersatzfach Literatur in der Qualifikationsphase gültig belegt wurde
 	 */
 	@Override
 	protected void pruefeGesamt() {
-		// Prüfe, ob ein Ersatzfach für Kunst oder Musik belegt wurde
-		//    und ob dieses Ersatzfach in genau zwei aufeinander folgenden Halbjahren der Qualifikationsphase belegt wurde
-		boolean hatKuMuErsatz = false;
-		if (kunst_musik_ersatz != null) {
-			for (final AbiturFachbelegung fach : kunst_musik_ersatz) {
-				final boolean tmpHatKuMuErsatz = (manager.pruefeBelegung(fach, GostHalbjahr.Q11, GostHalbjahr.Q12)
+		// Prüfe, ob ein Ersatzfach Literatur für Kunst oder Musik belegt wurde
+		//    und ob dieses Ersatzfach Literatur in genau zwei aufeinander folgenden Halbjahren der Qualifikationsphase belegt wurde
+		boolean hatLi = false;
+		if (literatur != null) {
+			for (final AbiturFachbelegung fach : literatur) {
+				hatLi = hatLi || (manager.pruefeBelegung(fach, GostHalbjahr.Q11, GostHalbjahr.Q12)
 						|| manager.pruefeBelegung(fach, GostHalbjahr.Q12, GostHalbjahr.Q21)
 						|| manager.pruefeBelegung(fach, GostHalbjahr.Q21, GostHalbjahr.Q22));
-				hatKuMuErsatz = hatKuMuErsatz || tmpHatKuMuErsatz;
-				if ((!tmpHatKuMuErsatz) || (manager.zaehleBelegung(fach) != 2)) {
-					addFehler(GostBelegungsfehler.GOST30_LI_IV_10);
-				}
-			}
-
-			// Prüfe, ob mehrere Ersatzfächer gewählt wurden. Dies ist nicht zulässig.
-			if (kunst_musik_ersatz.size() > 1) {
-				addFehler(GostBelegungsfehler.GOST30_LI_IV_11);
 			}
 		}
 
-		// Prüfe, ob Kunst oder Musik bis Ende Q1.2 belegt wurde oder zumindest bis Ende EF.2, dann aber in Kombination mit der Wahl eines Ersatzfaches
+		// Prüfe, ob Kunst oder Musik bis Ende Q1.2 belegt wurde oder zumindest bis Ende EF.2, dann aber in Kombination mit der Wahl des Ersatzfaches Literatur
 		final boolean hatKuMuBisQ12 = manager.pruefeBelegungExistiert(kunst_musik, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12);
 		final boolean hatKuMuBisEF2 = manager.pruefeBelegungExistiert(kunst_musik, GostHalbjahr.EF1, GostHalbjahr.EF2);
-		if ((!hatKuMuBisEF2) || ((!hatKuMuBisQ12) && (!hatKuMuErsatz))) {
+		if ((!hatKuMuBisEF2) || ((!hatKuMuBisQ12) && (!hatLi))) {
 			addFehler(GostBelegungsfehler.GOST30_KU_MU_10);
 		}
 	}

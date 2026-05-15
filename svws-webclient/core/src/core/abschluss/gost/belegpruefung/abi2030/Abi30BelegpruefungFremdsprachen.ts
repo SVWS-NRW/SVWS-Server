@@ -46,7 +46,7 @@ export class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 
 
 	/**
-	 * Erstellt eine neue Belegprüfung für dir Fremdsprachen.
+	 * Erstellt eine neue Belegprüfung für die Fremdsprachen.
 	 *
 	 * @param manager         der Daten-Manager für die Abiturdaten
 	 * @param pruefungsArt   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)

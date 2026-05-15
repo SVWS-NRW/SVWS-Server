@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefung;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
@@ -48,9 +49,6 @@ public final class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 	/**  Die Anzahl der Fremdsprachen. */
 	private int anzahlFremdsprachen;
 
-	/** Die Anzahl der Abiturfächer im Bereich Sport und Religion (darf maximal 1 sein). */
-	private int anzahlSportReligion;
-
 	/** Gibt an, ob das AufgabenFeld I abgedeckt ist. */
 	private boolean hatAufgabenfeldI;
 
@@ -80,7 +78,6 @@ public final class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 		anzahlAbiFaecher = 0;
 		anzahlDeutschMatheFremdsprache = 0;
 		anzahlFremdsprachen = 0;
-		anzahlSportReligion = 0;
 		hatAufgabenfeldI = false;
 		hatAufgabenfeldII = false;
 		hatAufgabenfeldIII = false;
@@ -119,11 +116,6 @@ public final class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 			// Zähle die Anzahl der Fremdsprachen
 			if (GostFachbereich.FREMDSPRACHE.hat(fach)) {
 				anzahlFremdsprachen++;
-			}
-
-			// Zähle Fächer im Bereich Sport und Religion
-			if (GostFachbereich.SPORT.hat(fach) || GostFachbereich.RELIGION.hat(fach)) {
-				anzahlSportReligion++;
 			}
 		}
 	}
@@ -171,7 +163,10 @@ public final class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 	 *    und ob Sport nicht als erstes oder drittes Abiturfach gewählt wurde
 	 */
 	private void pruefeAnzahlUndAufgabenfelderAbiFaecher() {
-		if ((anzahlAbiFaecher != 5) || (!hatAufgabenfeldI) || (!hatAufgabenfeldII) || (!hatAufgabenfeldIII)) {
+		if ((!hatAufgabenfeldI) || (!hatAufgabenfeldII) || (!hatAufgabenfeldIII)) {
+			addFehler(GostBelegungsfehler.GOST30_LK1_12);
+		}
+		if (anzahlAbiFaecher != 5) {
 			addFehler(GostBelegungsfehler.GOST30_LK1_13);
 		}
 		if (anzahlDeutschMatheFremdsprache < 2) {
@@ -180,14 +175,12 @@ public final class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 		if ((anzahlDeutschMatheFremdsprache < 3) && (anzahlFremdsprachen > 1)) {
 			addFehler(GostBelegungsfehler.GOST30_ABI_19);
 		}
-		if (anzahlSportReligion > 1) {
-			addFehler(GostBelegungsfehler.GOST30_ABI_11);
-		}
 		final AbiturFachbelegung lk1 = (mapAbiturFachbelegungen == null) ? null : mapAbiturFachbelegungen.get(GostAbiturFach.LK1);
 		final GostFach lk1fach = manager.getFach(lk1);
 		final AbiturFachbelegung ab3 = (mapAbiturFachbelegungen == null) ? null : mapAbiturFachbelegungen.get(GostAbiturFach.AB3);
 		final GostFach ab3fach = manager.getFach(ab3);
-		if (((lk1fach != null) && (GostFachbereich.SPORT.hatKuerzel(lk1fach.kuerzel))) || ((ab3fach != null) && (GostFachbereich.SPORT.hatKuerzel(ab3fach.kuerzel)))) {
+		if (((lk1fach != null) && (GostFachbereich.SPORT.hatKuerzel(lk1fach.kuerzel)))
+				|| ((ab3fach != null) && (GostFachbereich.SPORT.hatKuerzel(ab3fach.kuerzel)))) {
 			addFehler(GostBelegungsfehler.GOST30_ABI_15);
 		}
 	}
@@ -247,8 +240,9 @@ public final class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 				return true;
 			}
 			// Fall Kurs-Wechsel bei einem Religionskurs: Prüfe, ob in einer anderen Konfession ein Kurs belegt wurde
-			if (GostFachbereich.RELIGION.hat(fach)) {
-				belegungen = manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION);
+			if (GostFachbereich.RELIGION.hat(fach)
+					&& ((Fach.getBySchluesselOrDefault(fach.kuerzel) == Fach.KR) || (Fach.getBySchluesselOrDefault(fach.kuerzel) == Fach.ER))) {
+				belegungen = manager.getRelevanteFachbelegungenByFach(Fach.KR, Fach.ER);
 				if ((manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11))
 						&& (manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12))
 						&& (manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21))) {
@@ -325,30 +319,31 @@ public final class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 				leitfaecher.add(leitfach2);
 			}
 			if (!leitfaecher.isEmpty()) {
-				pruefeProjektkursLeitfaecherAB5(leitfaecher);
+				pruefeProjektkursReferenzfaecherAB5(leitfaecher);
 			}
 		}
 	}
 
 
 	/**
-	 * Prüfung der Leitfächer-Belegungen bei einer Wahl eines Projektkurses als 5. Abiturfach
+	 * Prüfung der Referenzfach-Belegungen bei einer Wahl eines Projektkurses als 5. Abiturfach
 	 *
-	 * @param leitfaecher   die Belegegungen zu den Leitfächern
+	 * @param referenzfaecher   die Belegegungen zu den Referenzfächern
 	 */
-	private void pruefeProjektkursLeitfaecherAB5(final @NotNull List<AbiturFachbelegung> leitfaecher) {
+	private void pruefeProjektkursReferenzfaecherAB5(final @NotNull List<AbiturFachbelegung> referenzfaecher) {
 		final @NotNull Set<GostBelegungsfehler> fehler = new HashSet<>();
-		for (final AbiturFachbelegung leitfach : leitfaecher) {
+		for (final AbiturFachbelegung referenzfach : referenzfaecher) {
 			// Prüfe die durchgängige Belegung des Referenzfaches in EF und Q1
-			final boolean istDurchgaengig = manager.pruefeBelegung(leitfach, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12);
+			final boolean istDurchgaengig = manager.pruefeBelegung(referenzfach, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12);
 
 			// Prüfe die schriftliche Belegung des Referenzfaches in Q1
-			final boolean istSchriftlichQ1 = manager.pruefeBelegungMitSchriftlichkeit(leitfach, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12);
+			final boolean istSchriftlichQ1 =
+					manager.pruefeBelegungMitSchriftlichkeit(referenzfach, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12);
 
-			// Prüfe, ob das Leitfach als Abiturfach gewählt wurde. Das ist nicht zulässig.
-			final boolean istAbifach = (GostAbiturFach.fromID(leitfach.abiturFach) != null);
+			// Prüfe, ob das Referenzfach als Abiturfach gewählt wurde. Das ist nicht zulässig.
+			final boolean istAbifach = (GostAbiturFach.fromID(referenzfach.abiturFach) != null);
 
-			// Wenn kein Fehler aufgetreten ist, dann wurde ein passendes Leitfach gefunden und eine Wahl als AB5 ist möglich
+			// Wenn kein Fehler aufgetreten ist, dann wurde ein passendes Referenzfach gefunden und eine Wahl als AB5 ist möglich
 			if (istDurchgaengig && istSchriftlichQ1 && !istAbifach) {
 				return;
 			}

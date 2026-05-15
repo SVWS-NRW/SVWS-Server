@@ -18,7 +18,7 @@ export class Abi30BelegpruefungLiterarischKuenstlerisch extends GostBelegpruefun
 	/**
 	 * Die Belegungen für die Ersatzfächer aus dem literarisch-künstlerischen Bereich.
 	 */
-	private kunst_musik_ersatz: List<AbiturFachbelegung> | null = null;
+	private literatur: List<AbiturFachbelegung> | null = null;
 
 
 	/**
@@ -33,7 +33,7 @@ export class Abi30BelegpruefungLiterarischKuenstlerisch extends GostBelegpruefun
 
 	protected init(): void {
 		this.kunst_musik = this.manager.getRelevanteFachbelegungen(GostFachbereich.KUNST_MUSIK);
-		this.kunst_musik_ersatz = this.manager.getRelevanteFachbelegungen(GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ);
+		this.literatur = this.manager.getRelevanteFachbelegungen(GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ);
 	}
 
 	protected pruefeEF1(): void {
@@ -45,26 +45,18 @@ export class Abi30BelegpruefungLiterarischKuenstlerisch extends GostBelegpruefun
 	/**
 	 * Gesamtprüfung Punkte 26-28:
 	 * Prüfe, ob ein Kurs in Kunst oder Musik mindestens von EF.1 bis Q1.2 belegt wurde
-	 *   oder ob ein Ersatzfach (Literatur, vokal- oder instrumentalpraktischer Grundkurs) in der
-	 *           Qualifikationsphase gültig belegt wurde
+	 *   oder ob das Ersatzfach Literatur in der Qualifikationsphase gültig belegt wurde
 	 */
 	protected pruefeGesamt(): void {
-		let hatKuMuErsatz: boolean = false;
-		if (this.kunst_musik_ersatz !== null) {
-			for (const fach of this.kunst_musik_ersatz) {
-				const tmpHatKuMuErsatz: boolean = (this.manager.pruefeBelegung(fach, GostHalbjahr.Q11, GostHalbjahr.Q12) || this.manager.pruefeBelegung(fach, GostHalbjahr.Q12, GostHalbjahr.Q21) || this.manager.pruefeBelegung(fach, GostHalbjahr.Q21, GostHalbjahr.Q22));
-				hatKuMuErsatz = hatKuMuErsatz || tmpHatKuMuErsatz;
-				if ((!tmpHatKuMuErsatz) || (this.manager.zaehleBelegung(fach) !== 2)) {
-					this.addFehler(GostBelegungsfehler.GOST30_LI_IV_10);
-				}
-			}
-			if (this.kunst_musik_ersatz.size() > 1) {
-				this.addFehler(GostBelegungsfehler.GOST30_LI_IV_11);
+		let hatLi: boolean = false;
+		if (this.literatur !== null) {
+			for (const fach of this.literatur) {
+				hatLi = hatLi || (this.manager.pruefeBelegung(fach, GostHalbjahr.Q11, GostHalbjahr.Q12) || this.manager.pruefeBelegung(fach, GostHalbjahr.Q12, GostHalbjahr.Q21) || this.manager.pruefeBelegung(fach, GostHalbjahr.Q21, GostHalbjahr.Q22));
 			}
 		}
 		const hatKuMuBisQ12: boolean = this.manager.pruefeBelegungExistiert(this.kunst_musik, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12);
 		const hatKuMuBisEF2: boolean = this.manager.pruefeBelegungExistiert(this.kunst_musik, GostHalbjahr.EF1, GostHalbjahr.EF2);
-		if ((!hatKuMuBisEF2) || ((!hatKuMuBisQ12) && (!hatKuMuErsatz))) {
+		if ((!hatKuMuBisEF2) || ((!hatKuMuBisQ12) && (!hatLi))) {
 			this.addFehler(GostBelegungsfehler.GOST30_KU_MU_10);
 		}
 	}

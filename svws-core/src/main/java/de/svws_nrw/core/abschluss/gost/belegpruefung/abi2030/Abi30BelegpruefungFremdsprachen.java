@@ -53,7 +53,7 @@ public final class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 
 
 	/**
-	 * Erstellt eine neue Belegprüfung für dir Fremdsprachen.
+	 * Erstellt eine neue Belegprüfung für die Fremdsprachen.
 	 *
 	 * @param manager         der Daten-Manager für die Abiturdaten
 	 * @param pruefungsArt   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
@@ -701,14 +701,14 @@ public final class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 			return;
 		}
 
-		// Prüfe, ob eine Muttersprachenprüfung stattgefunden hat und eine fortgeführte Fremdsprache in der EF schriftlich belegt wurde
+		// Prüfe, ob eine Sprachfeststellungsprüfung stattgefunden hat und eine fortgeführte Fremdsprache in der EF schriftlich belegt wurde
 		if (SprachendatenUtils.hatSprachfeststellungspruefungAufEFNiveau(manager.getSprachendaten())
 				&& manager.pruefeBelegungExistiertMitSchriftlichkeit(_fremdsprachenFortgefuehrt, GostSchriftlichkeit.SCHRIFTLICH,
 						GostHalbjahr.EF1, GostHalbjahr.EF2)) {
 			return;
 		}
 
-		// Prüfe, ob eine Muttersprachenprüfung stattgefunden hat und eine neu einsetzende Fremdsprache durchgängig belegt wurde
+		// Prüfe, ob eine Sprachfeststellungsprüfung stattgefunden hat und eine neu einsetzende Fremdsprache durchgängig belegt wurde
 		if (SprachendatenUtils.hatSprachfeststellungspruefungAufEFNiveau(manager.getSprachendaten())
 				&& manager.pruefeBelegungDurchgehendBelegtExistiert(_fremdsprachenNeu, GostSchriftlichkeit.SCHRIFTLICH,
 						GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21)) {

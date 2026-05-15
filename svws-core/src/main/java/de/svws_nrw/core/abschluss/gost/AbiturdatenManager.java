@@ -1,6 +1,7 @@
 package de.svws_nrw.core.abschluss.gost;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1821,6 +1822,31 @@ public class AbiturdatenManager {
 				continue;
 			}
 			result.addAll(fachbelegungen);
+		}
+		return result;
+	}
+
+
+	/**
+	 * Liefert alle Prüfungsordnungs-relevanten Fachbelegungen der Abiturdaten, welche den angegebenen
+	 * Statistik-Fächern zuzuordnen sind.
+	 * Wird kein Fach angegeben, so werden alle Fachbelegungen der Abiturdaten zurückgegeben.
+	 *
+	 * @param faecher   die Statistik-Fächer
+	 *
+	 * @return die Liste der Fachbelegungen
+	 */
+	public @NotNull List<AbiturFachbelegung> getRelevanteFachbelegungenByFach(final Fach... faecher) {
+		if ((faecher == null) || (faecher.length == 0)) {
+			return abidaten.fachbelegungen;
+		}
+		final @NotNull List<Fach> listFaecher = Arrays.asList(faecher);
+		final @NotNull ArrayList<AbiturFachbelegung> result = new ArrayList<>();
+		for (final @NotNull AbiturFachbelegung fachbelegung : abidaten.fachbelegungen) {
+			final GostFach fach = getFach(fachbelegung);
+			if ((fach != null) && listFaecher.contains(Fach.getBySchluesselOrDefault(fach.kuerzel))) {
+				result.add(fachbelegung);
+			}
 		}
 		return result;
 	}

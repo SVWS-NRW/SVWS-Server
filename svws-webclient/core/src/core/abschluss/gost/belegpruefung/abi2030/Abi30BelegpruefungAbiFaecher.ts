@@ -1,4 +1,5 @@
 import { GostFach } from '../../../../../core/data/gost/GostFach';
+import { Fach } from '../../../../../asd/types/fach/Fach';
 import { Abi30BelegpruefungProjektkurse, cast_de_svws_nrw_core_abschluss_gost_belegpruefung_abi2030_Abi30BelegpruefungProjektkurse } from '../../../../../core/abschluss/gost/belegpruefung/abi2030/Abi30BelegpruefungProjektkurse';
 import type { JavaSet } from '../../../../../java/util/JavaSet';
 import { GostAbiturFach } from '../../../../../core/types/gost/GostAbiturFach';
@@ -40,11 +41,6 @@ export class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 	private anzahlFremdsprachen: number = 0;
 
 	/**
-	 * Die Anzahl der Abiturfächer im Bereich Sport und Religion (darf maximal 1 sein).
-	 */
-	private anzahlSportReligion: number = 0;
-
-	/**
 	 * Gibt an, ob das AufgabenFeld I abgedeckt ist.
 	 */
 	private hatAufgabenfeldI: boolean = false;
@@ -76,7 +72,6 @@ export class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 		this.anzahlAbiFaecher = 0;
 		this.anzahlDeutschMatheFremdsprache = 0;
 		this.anzahlFremdsprachen = 0;
-		this.anzahlSportReligion = 0;
 		this.hatAufgabenfeldI = false;
 		this.hatAufgabenfeldII = false;
 		this.hatAufgabenfeldIII = false;
@@ -106,9 +101,6 @@ export class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 			}
 			if (GostFachbereich.FREMDSPRACHE.hat(fach)) {
 				this.anzahlFremdsprachen++;
-			}
-			if (GostFachbereich.SPORT.hat(fach) || GostFachbereich.RELIGION.hat(fach)) {
-				this.anzahlSportReligion++;
 			}
 		}
 	}
@@ -145,7 +137,10 @@ export class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 	 *    und ob Sport nicht als erstes oder drittes Abiturfach gewählt wurde
 	 */
 	private pruefeAnzahlUndAufgabenfelderAbiFaecher(): void {
-		if ((this.anzahlAbiFaecher !== 5) || (!this.hatAufgabenfeldI) || (!this.hatAufgabenfeldII) || (!this.hatAufgabenfeldIII)) {
+		if ((!this.hatAufgabenfeldI) || (!this.hatAufgabenfeldII) || (!this.hatAufgabenfeldIII)) {
+			this.addFehler(GostBelegungsfehler.GOST30_LK1_12);
+		}
+		if (this.anzahlAbiFaecher !== 5) {
 			this.addFehler(GostBelegungsfehler.GOST30_LK1_13);
 		}
 		if (this.anzahlDeutschMatheFremdsprache < 2) {
@@ -153,9 +148,6 @@ export class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 		}
 		if ((this.anzahlDeutschMatheFremdsprache < 3) && (this.anzahlFremdsprachen > 1)) {
 			this.addFehler(GostBelegungsfehler.GOST30_ABI_19);
-		}
-		if (this.anzahlSportReligion > 1) {
-			this.addFehler(GostBelegungsfehler.GOST30_ABI_11);
 		}
 		const lk1: AbiturFachbelegung | null = (this.mapAbiturFachbelegungen === null) ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.LK1);
 		const lk1fach: GostFach | null = this.manager.getFach(lk1);
@@ -218,8 +210,8 @@ export class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 			if ((this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11)) && (this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12)) && (this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21))) {
 				return true;
 			}
-			if (GostFachbereich.RELIGION.hat(fach)) {
-				belegungen = this.manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION);
+			if (GostFachbereich.RELIGION.hat(fach) && ((Fach.getBySchluesselOrDefault(fach.kuerzel) as unknown === Fach.KR as unknown) || (Fach.getBySchluesselOrDefault(fach.kuerzel) as unknown === Fach.ER as unknown))) {
+				belegungen = this.manager.getRelevanteFachbelegungenByFach(Fach.KR, Fach.ER);
 				if ((this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11)) && (this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12)) && (this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21))) {
 					return true;
 				}
@@ -291,22 +283,22 @@ export class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 				leitfaecher.add(leitfach2);
 			}
 			if (!leitfaecher.isEmpty()) {
-				this.pruefeProjektkursLeitfaecherAB5(leitfaecher);
+				this.pruefeProjektkursReferenzfaecherAB5(leitfaecher);
 			}
 		}
 	}
 
 	/**
-	 * Prüfung der Leitfächer-Belegungen bei einer Wahl eines Projektkurses als 5. Abiturfach
+	 * Prüfung der Referenzfach-Belegungen bei einer Wahl eines Projektkurses als 5. Abiturfach
 	 *
-	 * @param leitfaecher   die Belegegungen zu den Leitfächern
+	 * @param referenzfaecher   die Belegegungen zu den Referenzfächern
 	 */
-	private pruefeProjektkursLeitfaecherAB5(leitfaecher: List<AbiturFachbelegung>): void {
+	private pruefeProjektkursReferenzfaecherAB5(referenzfaecher: List<AbiturFachbelegung>): void {
 		const fehler: JavaSet<GostBelegungsfehler> = new HashSet<GostBelegungsfehler>();
-		for (const leitfach of leitfaecher) {
-			const istDurchgaengig: boolean = this.manager.pruefeBelegung(leitfach, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12);
-			const istSchriftlichQ1: boolean = this.manager.pruefeBelegungMitSchriftlichkeit(leitfach, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12);
-			const istAbifach: boolean = (GostAbiturFach.fromID(leitfach.abiturFach) !== null);
+		for (const referenzfach of referenzfaecher) {
+			const istDurchgaengig: boolean = this.manager.pruefeBelegung(referenzfach, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12);
+			const istSchriftlichQ1: boolean = this.manager.pruefeBelegungMitSchriftlichkeit(referenzfach, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12);
+			const istAbifach: boolean = (GostAbiturFach.fromID(referenzfach.abiturFach) !== null);
 			if (istDurchgaengig && istSchriftlichQ1 && !istAbifach) {
 				return;
 			}

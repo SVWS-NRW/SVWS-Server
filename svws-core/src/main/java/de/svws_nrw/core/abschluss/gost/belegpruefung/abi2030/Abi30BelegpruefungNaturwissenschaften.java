@@ -29,10 +29,10 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class Abi30BelegpruefungNaturwissenschaften extends GostBelegpruefung {
 
-	/** Die Belegungen für alle Fächer der Naturwissenschaften. */
+	/** Die Belegungen für alle Fächer der naturwissenschaftlich-technischen Fächer. */
 	private List<AbiturFachbelegung> _naturwissenschaften;
 
-	/** Die Belegungen für alle Fächer der klassischen Naturwissenschaften. */
+	/** Die Belegungen für alle Fächer der klassischen Naturwissenschaften (BI,CH,PH). */
 	private List<AbiturFachbelegung> _naturwissenschaftenKlassisch;
 
 	/** Die Anzahl der durchgehenden bzw. potentiell durchgehenden Belegungen - mündlich und schriftlich (für die Schwerpunktberechnung). */
@@ -43,7 +43,7 @@ public final class Abi30BelegpruefungNaturwissenschaften extends GostBelegpruefu
 
 
 	/**
-	 * Erstellt eine neue Belegprüfung für das Fach Mathematik.
+	 * Erstellt eine neue Belegprüfung für die Naturwissenschaften.
 	 *
 	 * @param manager        der Daten-Manager für die Abiturdaten
 	 * @param pruefungsArt   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)

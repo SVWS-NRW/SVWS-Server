@@ -183,7 +183,7 @@ export class LaufbahnplanungUiManager {
 	 */
 	public getTooltipAnrechenbareKurse(): string {
 		if (this.isAbi30ff.value) {
-			return 'Die Anzahl der anrechenbaren Kurse. Vertiefungskurse werden mitgezählt.';
+			return 'Die Anzahl der Kurse. Vertiefungskurse werden in der Qualifikationsphase mitgezählt. Zu beachten ist, dass Vertiefungskurse in der Qualifikationsphase nicht in die Gesamtqualifikation eingebracht werden können.';
 		}
 		return 'Die Anzahl der anrechenbaren Kurse. Vertiefungskurse werden z.B. nicht mitgezählt.';
 	}
