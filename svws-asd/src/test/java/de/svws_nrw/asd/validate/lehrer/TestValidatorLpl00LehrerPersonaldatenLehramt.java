@@ -61,7 +61,7 @@ class TestValidatorLpl00LehrerPersonaldatenLehramt {
 	@DisplayName("Tests für ValidatorLpl00LehrerPersonaldatenLehramt")
 	@ParameterizedTest
 	@CsvSource(textBlock = TESTDATEN_LEHRAMT_MEHRMALS)
-	void testValidatorLplLehrerPersonaldatenLehramt(final long id, final long idLehrer, final long idKatalogLehramt, final String schulform, final boolean result) {
+	void testValidatorLpl00LehrerPersonaldatenLehramt(final long id, final long idLehrer, final long idKatalogLehramt, final String schulform, final boolean result) {
 
 		// Testdaten setzen
 		LehrerPersonaldaten lehrerPersonaldaten = new LehrerPersonaldaten();

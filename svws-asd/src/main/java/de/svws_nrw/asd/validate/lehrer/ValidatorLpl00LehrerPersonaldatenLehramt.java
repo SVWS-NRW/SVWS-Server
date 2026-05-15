@@ -39,14 +39,14 @@ public final class ValidatorLpl00LehrerPersonaldatenLehramt extends Validator {
 
 	@Override
 	protected boolean pruefe() {
-		// Fehlerkürzel: Lpl00 Zu jeder Lehrkraft muss mindestens ein Lehramt vorliegen.
+		// Fehlerkürzel: LP00 Zu jeder Lehrkraft muss mindestens ein Lehramt vorliegen.
 		final @NotNull Schulform schulform = kontext().getSchulform();
 		final boolean istFW = Schulform.FW.equals(schulform);
 		final int anzahlLehraemter = this.lehraemter.get().size();
 
 		// Alle Schulformen außer FW: MINDESTENS ein Lehramt erforderlich
 		if (!istFW && anzahlLehraemter == 0) {
-			this.addFehler(0, "Zu jeder Lehrkraft muss mindest ein Lehramt vorliegen. Lehrer ID: " + this.lehrerId.get());
+			this.addFehler(0, "Zu jeder Lehrkraft muss mindestens ein Lehramt vorliegen. Lehrer ID: " + this.lehrerId.get());
 			return false;
 		}
 

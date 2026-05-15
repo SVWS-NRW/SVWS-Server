@@ -38,7 +38,7 @@ export class ValidatorLpl00LehrerPersonaldatenLehramt extends Validator {
 		const istFW: boolean = JavaObject.equalsTranspiler(Schulform.FW, (schulform));
 		const anzahlLehraemter: number = this.lehraemter.get().size();
 		if (!istFW && anzahlLehraemter === 0) {
-			this.addFehler(0, "Zu jeder Lehrkraft muss mindest ein Lehramt vorliegen. Lehrer ID: " + this.lehrerId.get());
+			this.addFehler(0, "Zu jeder Lehrkraft muss mindestens ein Lehramt vorliegen. Lehrer ID: " + this.lehrerId.get());
 			return false;
 		}
 		return true;
