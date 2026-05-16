@@ -31,9 +31,6 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class ReportingFactory {
 
-	/** Die Verbindung zur Datenbank. */
-	private final DBEntityManager conn;
-
 	/** Einstellungen und Daten zum Steuern der Report-Generierung. */
 	private final ReportingParameter reportingParameter;
 
@@ -73,7 +70,6 @@ public final class ReportingFactory {
 				throw new ApiOperationException(Status.NOT_FOUND,
 						"### FEHLER: Es wurde keine Verbindung zur Datenbank für die Initialisierung der Reporting-Factory übergeben.");
 			}
-			this.conn = conn;
 
 			// Validiere Reporting-Parameter
 			this.logger.logLn(LogLevel.DEBUG, 4, "Validiere Reporting-Parameter.");
@@ -137,7 +133,7 @@ public final class ReportingFactory {
 			validiereVorlageParameter(reportingParameter);
 
 			this.logger.logLn(LogLevel.DEBUG, 4, "Erzeugung des Reporting-Context");
-			this.reportingContext = new ReportingContext(this.conn, this.reportingParameter, this.logger, this.log);
+			this.reportingContext = new ReportingContext(conn, this.reportingParameter, this.logger, this.log);
 
 			this.logger.logLn(LogLevel.DEBUG, 0, "<<< Ende des Initialisierens der Reporting-Factory und des Validierens übergebener Daten.");
 		} catch (final Exception e) {

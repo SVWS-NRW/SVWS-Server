@@ -15,7 +15,6 @@ import de.svws_nrw.module.reporting.filterung.ReportingFilterService;
 import de.svws_nrw.module.reporting.parameter.ReportingParameterTypisiert;
 import de.svws_nrw.module.reporting.sortierung.ReportingSortierungService;
 import de.svws_nrw.module.reporting.types.schule.ProxyReportingBenutzer;
-import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Zentraler Kontext-Container des Reporting-Moduls, der Infrastruktur (Datenbankverbindung, Logger, Services) bereitstellt
@@ -90,23 +89,9 @@ public class ReportingContext {
 
 		this.logger.logLn(LogLevel.DEBUG, 4, ">>> Beginn der Erzeugung des Reporting-Context");
 
-		// Validiere Datenbankverbindung
-		if (conn == null) {
-			this.logger.logLn(LogLevel.ERROR, 8, "FEHLER: Es wurde keine Verbindung zur Datenbank für die Initialisierung des Reporting-Context übergeben.");
-			throw new ApiOperationException(Status.NOT_FOUND,
-					"Es wurde keine Verbindung zur Datenbank für die Initialisierung des Reporting-Context übergeben.");
-		}
+		// Die Validierung von conn und reportingParameter erfolgt in der ReportingFactory.
 		this.conn = conn;
-
-		// Validiere Reporting-Parameter
-		if (reportingParameter == null) {
-			this.logger.logLn(LogLevel.ERROR, 8, "FEHLER: Es wurden keine Daten Ausgabe im Report für die Initialisierung des Reporting-Context übergeben.");
-			throw new ApiOperationException(Status.NOT_FOUND,
-					"FEHLER: Es wurden keine Daten Ausgabe im Report für die Initialisierung des Reporting-Context übergeben.");
-		}
 		this.reportingParameterTypisiert = new ReportingParameterTypisiert(this, reportingParameter);
-
-		this.logger.logLn(LogLevel.DEBUG, 8, "Validierung der Datenbankverbindung und der Reporting-Parameter erfolgreich abgeschlossen.");
 
 		// Erzeuge die Services für Sortierung und Filterung und die Domänen-Repositories.
 		this.sortierungService = new ReportingSortierungService(this.reportingParameterTypisiert, this.logger);
@@ -173,10 +158,12 @@ public class ReportingContext {
 
 	/**
 	 * Gibt die Datenbankverbindung zurück.
+	 * Sie ist bewusst package-private: Außerhalb des {@code repositories}-Pakets darf die Verbindung
+	 * nicht direkt verwendet werden; Datenzugriffe gehören in die Domänen-Repositories.
 	 *
 	 * @return Die Datenbankverbindung.
 	 */
-	public DBEntityManager conn() {
+	DBEntityManager conn() {
 		return conn;
 	}
 

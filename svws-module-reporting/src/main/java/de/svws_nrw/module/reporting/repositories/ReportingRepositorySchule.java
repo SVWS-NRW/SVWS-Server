@@ -10,6 +10,7 @@ import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.base.email.EmailJobManagerContext;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.email.DataEmailJobs;
+import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.schule.ProxyReportingSchuljahresabschnitt;
@@ -30,6 +31,9 @@ public class ReportingRepositorySchule {
 	private final Long idAuswahlSchuljahresabschnitt;
 	private final Map<Long, ReportingSchuljahresabschnitt> mapSchuljahresabschnitte = new HashMap<>();
 	private EmailJobManagerContext defaultEmailJobManagerContext;
+
+	/** Zwischenspeichert das Ergebnis der GOSt-Schul-Vorbedingung: {@code null} = noch nicht geprüft, {@code true}/{@code false} = geprüft. */
+	private Boolean istSchuleMitGost = null;
 
 	/**
 	 * Erstellt ein neues ReportingSchuleRepository und initialisiert Schulstammdaten und Schuljahresabschnitte.
@@ -155,6 +159,22 @@ public class ReportingRepositorySchule {
 		return mapSchuljahresabschnitte;
 	}
 
+	/**
+	 * Gibt an, ob die Schule eine gymnasiale Oberstufe (GOSt) besitzt.
+	 *
+	 * @return true, wenn die Schule über eine gymnasiale Oberstufe verfügt; false, wenn nicht.
+	 */
+	public boolean istSchuleMitGost() {
+		if (istSchuleMitGost == null) {
+			try {
+				DBUtilsGost.pruefeSchuleMitGOSt(this.reportingContext.conn());
+				istSchuleMitGost = Boolean.TRUE;
+			} catch (final ApiOperationException aoe) {
+				istSchuleMitGost = Boolean.FALSE;
+			}
+		}
+		return istSchuleMitGost;
+	}
 
 	// ##### Schul-/Schema-weite E-Mail-Konfiguration #####
 

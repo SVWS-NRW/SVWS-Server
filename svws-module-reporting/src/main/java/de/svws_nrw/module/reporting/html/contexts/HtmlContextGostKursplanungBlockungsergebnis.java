@@ -6,8 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
-import de.svws_nrw.data.gost.DataGostBlockungsdaten;
-import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ProxyReportingGostKursplanungBlockungsergebnis;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
@@ -79,10 +77,9 @@ public abstract class HtmlContextGostKursplanungBlockungsergebnis extends HtmlCo
 		try {
 			final long idBlockungsergebnis = this.reportingContext.reportingParameter().idHauptdatenObjekt();
 			reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Die ID der Blockungsergebnisses wurde ermittelt: " + idBlockungsergebnis);
-			final GostBlockungsergebnis ergebnis = DataGostBlockungsergebnisse.getErgebnisFromID(this.reportingContext.conn(), idBlockungsergebnis);
+			final GostBlockungsergebnis ergebnis = this.reportingContext.repositoryGost().blockungsergebnis(idBlockungsergebnis);
 			reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Das Blockungsergebnis wurde ermittelt.");
-			final GostBlockungsdatenManager datenManager =
-					DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(this.reportingContext.conn(), ergebnis.blockungID);
+			final GostBlockungsdatenManager datenManager = this.reportingContext.repositoryGost().blockungsdatenManager(ergebnis.blockungID);
 			reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Der Datenmanager zum Blockungsergebnis wurde ermittelt.");
 
 			this.blockungsergebnis = new ProxyReportingGostKursplanungBlockungsergebnis(this.reportingContext, ergebnis, datenManager);

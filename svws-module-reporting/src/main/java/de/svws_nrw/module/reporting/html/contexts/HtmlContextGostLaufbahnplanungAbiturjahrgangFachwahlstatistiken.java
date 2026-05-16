@@ -36,7 +36,7 @@ public final class HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistik
 
 		// In den idsHauptdaten der Reporting-Parameter werden das Abiturjahr und evtl. GostHalbjahres-IDs (0 = EF.1 bis 5 = Q2.2) übergeben.
 		// In den idsDetails der Reporting-Parameter liegen die Ids der Fächer.
-		// Hier werden die Daten NICHT validiert. Die Daten aus den Parametern müssen vorab validiert worden sein (ReportingValidierung).
+		// Hier werden die Daten NICHT validiert. Die Daten aus den Parametern müssen vorab validiert worden sein (HtmlFactory).
 		final int abiturjahr = reportingContext.reportingParameter().idsHauptdaten().stream().filter(Objects::nonNull).toList().getFirst().intValue();
 		final List<Long> idsFaecher = reportingContext.reportingParameter().idsDetaildaten().stream().filter(Objects::nonNull).toList();
 		final List<Integer> idsGostHalbjahre = new ArrayList<>();

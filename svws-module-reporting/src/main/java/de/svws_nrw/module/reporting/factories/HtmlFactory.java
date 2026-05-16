@@ -1,13 +1,18 @@
 package de.svws_nrw.module.reporting.factories;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.function.ToLongFunction;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.base.ResourceUtils;
 import de.svws_nrw.core.logger.LogLevel;
+import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.builders.ReportBuilderHtml;
@@ -33,7 +38,11 @@ import de.svws_nrw.module.reporting.html.contexts.HtmlContextStundenplanungSchue
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextAufteilbar;
 import de.svws_nrw.module.reporting.parameter.ReportingParameterTypisiert;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
-import de.svws_nrw.module.reporting.validierung.ReportingValidierung;
+import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
+import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
+import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungStundenplan;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -84,6 +93,8 @@ public class HtmlFactory {
 
 	/** Konstante für die Bezeichnung des SchuelerStundenplaene-Kontextes in der Map der HTML-Kontexte. */
 	private static final String CONTEXT_STUNDENPLANUNG_SCHUELER = "SchuelerStundenplaene";
+
+	private static final String SCHUELER_IDS = "Schüler-IDs";
 
 	/** Context mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	private final ReportingContext reportingContext;
@@ -201,6 +212,10 @@ public class HtmlFactory {
 	public void initContextSchueler() throws ApiOperationException {
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Schüler für die HTML-Generierung.");
 
+		final List<Long> idsSchueler = reportingParameter.idsHauptdaten();
+		validiereIds(idsSchueler, reportingContext.repositorySchueler().schueler(idsSchueler, false), ReportingSchueler::id,
+				SCHUELER_IDS, "FEHLER: Es wurden ungültige Schüler-IDs übergeben.");
+
 		final boolean istGostLaufbahnplanung =
 				((reportingReportvorlage == ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN)
 						|| (reportingReportvorlage == ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT));
@@ -208,10 +223,24 @@ public class HtmlFactory {
 				((reportingReportvorlage == ReportingReportvorlage.SCHUELER_V_GOST_ABITUR_APO_ANLAGE_12_A3)
 						|| (reportingReportvorlage == ReportingReportvorlage.SCHUELER_V_GOST_ABITUR_APO_ANLAGE_12_A4));
 
-		ReportingValidierung.validiereDatenFuerSchueler(reportingContext, reportingParameter.idsHauptdaten(), istGostLaufbahnplanung, istGostAbitur);
+		if (istGostLaufbahnplanung || istGostAbitur) {
+			validiereSchuleMitGost();
+		}
+		if (istGostLaufbahnplanung) {
+			validiereIds(idsSchueler, reportingContext.repositoryGost().beratungsdaten(idsSchueler),
+					SCHUELER_IDS, "FEHLER: Es wurden Schüler-IDs übergeben, die nicht zur GOSt gehören.");
+			validiereIds(idsSchueler, reportingContext.repositoryGost().beratungsdatenAbiturdaten(idsSchueler),
+					SCHUELER_IDS, "FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt-Laufbahnplanung existieren.");
+		}
+		if (istGostAbitur) {
+			validiereIds(idsSchueler, reportingContext.repositoryGost().schuelerAbiturdaten(idsSchueler),
+					SCHUELER_IDS,
+					"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt existieren.");
+		}
+
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 				("Erzeuge Datenkontext Schüler für die HTML-Generierung - %d IDs von Schülern wurden übergeben für Template %s.")
-						.formatted(reportingParameter.idsHauptdaten().size(), reportingReportvorlage.name()));
+						.formatted(idsSchueler.size(), reportingReportvorlage.name()));
 		final HtmlContextSchueler htmlContextSchueler = new HtmlContextSchueler(reportingContext);
 		mapHtmlContexts.put(CONTEXT_SCHUELER, htmlContextSchueler);
 	}
@@ -223,10 +252,12 @@ public class HtmlFactory {
 	 */
 	public void initContextKlassen() throws ApiOperationException {
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Klassen für die HTML-Generierung.");
-		ReportingValidierung.validiereDatenFuerKlassen(reportingContext, reportingParameter.idsHauptdaten());
+		final List<Long> idsKlassen = reportingParameter.idsHauptdaten();
+		validiereIds(idsKlassen, reportingContext.repositoryLerngruppen().klassen(idsKlassen, false), ReportingKlasse::id,
+				"Klassen-IDs", "FEHLER: Es wurden ungültige Klassen-IDs übergeben.");
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 				("Erzeuge Datenkontext Klassen für die HTML-Generierung - %d IDs von Klassen wurden übergeben für Template %s.")
-						.formatted(reportingParameter.idsHauptdaten().size(), reportingReportvorlage.name()));
+						.formatted(idsKlassen.size(), reportingReportvorlage.name()));
 		final HtmlContextKlassen htmlContextKlassen = new HtmlContextKlassen(reportingContext);
 		mapHtmlContexts.put(CONTEXT_KLASSEN, htmlContextKlassen);
 	}
@@ -238,10 +269,12 @@ public class HtmlFactory {
 	 */
 	public void initContextKurse() throws ApiOperationException {
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Kurse für die HTML-Generierung.");
-		ReportingValidierung.validiereDatenFuerKurse(reportingContext, reportingParameter.idsHauptdaten());
+		final List<Long> idsKurse = reportingParameter.idsHauptdaten();
+		validiereIds(idsKurse, reportingContext.repositoryLerngruppen().kurse(idsKurse, false), ReportingKurs::id,
+				"Kurs-IDs", "FEHLER: Es wurden ungültige Kurs-IDs übergeben.");
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 				("Erzeuge Datenkontext Kurse für die HTML-Generierung - %d IDs von Kursen wurden übergeben für Template %s.")
-						.formatted(reportingParameter.idsHauptdaten().size(), reportingReportvorlage.name()));
+						.formatted(idsKurse.size(), reportingReportvorlage.name()));
 		final HtmlContextKurse htmlContextKurse = new HtmlContextKurse(reportingContext);
 		mapHtmlContexts.put(CONTEXT_KURSE, htmlContextKurse);
 	}
@@ -253,10 +286,12 @@ public class HtmlFactory {
 	 */
 	public void initContextLehrer() throws ApiOperationException {
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Lehrer für die HTML-Generierung.");
-		ReportingValidierung.validiereDatenFuerLehrer(reportingContext, reportingParameter.idsHauptdaten());
+		final List<Long> idsLehrer = reportingParameter.idsHauptdaten();
+		validiereIds(idsLehrer, reportingContext.repositoryLehrer().lehrer(idsLehrer, false), ReportingLehrer::id,
+				"Lehrer-IDs", "FEHLER: Es wurden ungültige Lehrer-IDs übergeben.");
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 				("Erzeuge Datenkontext Lehrer für die HTML-Generierung - %d IDs von Lehrern wurden übergeben für Template %s.")
-						.formatted(reportingParameter.idsHauptdaten().size(), reportingReportvorlage.name()));
+						.formatted(idsLehrer.size(), reportingReportvorlage.name()));
 		final HtmlContextLehrer htmlContextLehrer = new HtmlContextLehrer(reportingContext);
 		mapHtmlContexts.put(CONTEXT_LEHRER, htmlContextLehrer);
 	}
@@ -267,9 +302,10 @@ public class HtmlFactory {
 	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public void initContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken() throws ApiOperationException {
-		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für einen Gost-Laufbahnplan eines Abiturjahrgangs und dessen "
-				+ "Fachwahlstatistiken für die HTML-Generierung.");
-		ReportingValidierung.validiereDatenFuerGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken(reportingContext);
+		reportingContext.logger().logLn(LogLevel.DEBUG, 4,
+				"Validiere die Daten für einen Gost-Laufbahnplan eines Abiturjahrgangs und dessen Fachwahlstatistiken für die HTML-Generierung.");
+		validiereSchuleMitGost();
+		validiereParameterFuerAbiturjahrgangUndHalbjahre(false);
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 				"Erzeuge Datenkontext Gost-Laufbahnplan-Abiturjahrgang-Fachwahlstatistiken für die HTML-Generierung mit Template %s."
 						.formatted(reportingReportvorlage.name()));
@@ -285,7 +321,12 @@ public class HtmlFactory {
 	 */
 	public void initContextGostKursplanung() throws ApiOperationException {
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für ein Gost-Blockungsergebnis für die HTML-Generierung.");
-		ReportingValidierung.validiereDatenFuerGostKursplanungBlockungsergebnis(reportingContext);
+		validiereSchuleMitGost();
+		if (reportingParameter.idHauptdatenObjekt() < 0) {
+			reportingContext.logger().logLn(LogLevel.DEBUG, 4, "FEHLER: Es wurde keine ID für ein Blockungsergebnis übergeben.");
+			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurde keine ID für ein Blockungsergebnis übergeben.");
+		}
+		reportingContext.repositoryGost().pruefeBlockungsergebnis(reportingParameter.idHauptdatenObjekt());
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 				"Erzeuge Datenkontext Gost-Kursplanung-Blockungsergebnis für die HTML-Generierung mit ID %s für Template %s."
 						.formatted(reportingParameter.idHauptdatenObjekt(), reportingReportvorlage.name()));
@@ -308,7 +349,10 @@ public class HtmlFactory {
 	 */
 	public void initContextGostKlausurplanung() throws ApiOperationException {
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für einen Gost-Klausurplan für die HTML-Generierung.");
-		ReportingValidierung.validiereDatenFuerGostKlausurplanungKlausurplan(reportingContext);
+		validiereSchuleMitGost();
+		if (!reportingParameter.idsHauptdaten().isEmpty()) {
+			validiereParameterFuerAbiturjahrgangUndHalbjahre(true);
+		}
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 				"Erzeuge Datenkontext Gost-Klausurplanung für die HTML-Generierung mit Template %s.".formatted(reportingReportvorlage.name()));
 		final HtmlContextGostKlausurplanungKlausurplan htmlContextGostKlausurplan = switch (reportingReportvorlage) {
@@ -328,49 +372,50 @@ public class HtmlFactory {
 	 */
 	public void initContextStundenplanung() throws ApiOperationException {
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für einen Stundenplan für die HTML-Generierung.");
-		ReportingValidierung.validiereDatenFuerStundenplanung(reportingContext);
+		final ReportingStundenplanungStundenplan stundenplan = reportingContext.repositoryStundenplan().stundenplan(reportingParameter.idHauptdatenObjekt());
+		if (stundenplan == null) {
+			this.reportingContext.logger().logLn(LogLevel.ERROR, 4,
+					"FEHLER: Mit der angegebenen Stundenplan-ID konnte kein Stundenplan ermittelt werden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Mit der angegebenen Stundenplan-ID konnte kein Stundenplan ermittelt werden.");
+		}
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 				"Erzeuge Datenkontext Stundenplan für die HTML-Generierung mit Template %s.".formatted(reportingReportvorlage.name()));
 		switch (reportingReportvorlage) {
 			case STUNDENPLANUNG_V_FACH_STUNDENPLAN -> {
 				final HtmlContextStundenplanungFachStundenplan htmlContextFachStundenplan =
-						new HtmlContextStundenplanungFachStundenplan(reportingContext,
-								reportingContext.repositoryStundenplan().stundenplan(reportingParameter.idHauptdatenObjekt()),
-								reportingParameter.idsHauptdaten());
+						new HtmlContextStundenplanungFachStundenplan(reportingContext, stundenplan, reportingParameter.idsHauptdaten());
 				mapHtmlContexts.put(CONTEXT_STUNDENPLANUNG_FAECHER, htmlContextFachStundenplan);
 			}
 			case STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN -> {
 				reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten der Klassen für einen Stundenplan für die HTML-Generierung.");
-				ReportingValidierung.validiereDatenFuerKlassen(reportingContext, reportingParameter.idsHauptdaten());
+				validiereIds(reportingParameter.idsHauptdaten(),
+						reportingContext.repositoryLerngruppen().klassen(reportingParameter.idsHauptdaten(), false), ReportingKlasse::id,
+						"Klassen-IDs", "FEHLER: Es wurden ungültige Klassen-IDs übergeben.");
 				final HtmlContextStundenplanungKlassenStundenplan htmlContextKlassenStundenplan =
-						new HtmlContextStundenplanungKlassenStundenplan(reportingContext,
-								reportingContext.repositoryStundenplan().stundenplan(reportingParameter.idHauptdatenObjekt()),
-								reportingParameter.idsHauptdaten());
+						new HtmlContextStundenplanungKlassenStundenplan(reportingContext, stundenplan, reportingParameter.idsHauptdaten());
 				mapHtmlContexts.put(CONTEXT_STUNDENPLANUNG_KLASSEN, htmlContextKlassenStundenplan);
 			}
 			case STUNDENPLANUNG_V_LEHRER_STUNDENPLAN, STUNDENPLANUNG_V_LEHRER_STUNDENPLAN_KOMBINIERT -> {
 				reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten der Lehrkräfte für einen Stundenplan für die HTML-Generierung.");
-				ReportingValidierung.validiereDatenFuerLehrer(reportingContext, reportingParameter.idsHauptdaten());
+				validiereIds(reportingParameter.idsHauptdaten(),
+						reportingContext.repositoryLehrer().lehrer(reportingParameter.idsHauptdaten(), false), ReportingLehrer::id,
+						"Lehrer-IDs", "FEHLER: Es wurden ungültige Lehrer-IDs übergeben.");
 				final HtmlContextStundenplanungLehrerStundenplan htmlContextLehrerStundenplan =
-						new HtmlContextStundenplanungLehrerStundenplan(reportingContext,
-								reportingContext.repositoryStundenplan().stundenplan(reportingParameter.idHauptdatenObjekt()),
-								reportingParameter.idsHauptdaten());
+						new HtmlContextStundenplanungLehrerStundenplan(reportingContext, stundenplan, reportingParameter.idsHauptdaten());
 				mapHtmlContexts.put(CONTEXT_STUNDENPLANUNG_LEHRER, htmlContextLehrerStundenplan);
 			}
 			case STUNDENPLANUNG_V_RAUM_STUNDENPLAN -> {
 				final HtmlContextStundenplanungRaumStundenplan htmlContextRaeumeStundenplan =
-						new HtmlContextStundenplanungRaumStundenplan(reportingContext,
-								reportingContext.repositoryStundenplan().stundenplan(reportingParameter.idHauptdatenObjekt()),
-								reportingParameter.idsHauptdaten());
+						new HtmlContextStundenplanungRaumStundenplan(reportingContext, stundenplan, reportingParameter.idsHauptdaten());
 				mapHtmlContexts.put(CONTEXT_STUNDENPLANUNG_RAEUME, htmlContextRaeumeStundenplan);
 			}
 			case STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN -> {
 				reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten der Schüler für einen Stundenplan für die HTML-Generierung.");
-				ReportingValidierung.validiereDatenFuerSchueler(reportingContext, reportingParameter.idsHauptdaten(), false, false);
+				validiereIds(reportingParameter.idsHauptdaten(),
+						reportingContext.repositorySchueler().schueler(reportingParameter.idsHauptdaten(), false), ReportingSchueler::id,
+						SCHUELER_IDS, "FEHLER: Es wurden ungültige Schüler-IDs übergeben.");
 				final HtmlContextStundenplanungSchuelerStundenplan htmlContextSchuelerStundenplan =
-						new HtmlContextStundenplanungSchuelerStundenplan(reportingContext,
-								reportingContext.repositoryStundenplan().stundenplan(reportingParameter.idHauptdatenObjekt()),
-								reportingParameter.idsHauptdaten());
+						new HtmlContextStundenplanungSchuelerStundenplan(reportingContext, stundenplan, reportingParameter.idsHauptdaten());
 				mapHtmlContexts.put(CONTEXT_STUNDENPLANUNG_SCHUELER, htmlContextSchuelerStundenplan);
 			}
 			default -> {
@@ -563,5 +608,178 @@ public class HtmlFactory {
 	 */
 	private static String ladeDateinamensvorlageAusDatei(final String pfadNameTemplate) {
 		return ResourceUtils.textOrEmpty(ReportingReportvorlage.getRootPfad() + pfadNameTemplate);
+	}
+
+	/**
+	 * Bereinigt die übergebene Liste von IDs (null-Einträge und Duplikate entfernen) und prüft anschließend, dass die bereinigte Liste nicht leer ist
+	 * und zu jeder enthaltenen ID ein passendes Objekt in {@code geladeneObjekte} existiert.
+	 * Die IDs der geladenen Objekte werden mittels des übergebenen {@code idExtractor} bestimmt.
+	 * Im Fehlerfall wird die zugehörige Meldung geloggt und eine {@link ApiOperationException} mit Status {@link Status#NOT_FOUND} geworfen.
+	 *
+	 * @param <T>                         Typ der geladenen Objekte.
+	 * @param idsUebergeben               Liste der übergebenen IDs (kann null-Einträge und Duplikate enthalten).
+	 * @param geladeneObjekte             Die zu den IDs geladenen Objekte.
+	 * @param idExtractor                 Funktion zur Bestimmung der ID eines geladenen Objekts.
+	 * @param fehlermeldungIdTyp          Fehlermeldung, falls die bereinigte ID-Liste leer ist.
+	 * @param fehlermeldungUnvollstaendig Fehlermeldung, falls eine bereinigte ID nicht in {@code geladeneObjekte} enthalten ist.
+	 *
+	 * @throws ApiOperationException Falls die bereinigte Liste leer oder unvollständig ist.
+	 */
+	private <T> void validiereIds(final List<Long> idsUebergeben, final Collection<T> geladeneObjekte, final ToLongFunction<T> idExtractor,
+			final String fehlermeldungIdTyp, final String fehlermeldungUnvollstaendig) throws ApiOperationException {
+		final Set<Long> idsVorhanden = geladeneObjekte.stream().mapToLong(idExtractor).boxed().collect(Collectors.toSet());
+		validiereIds(idsUebergeben, idsVorhanden, fehlermeldungIdTyp, fehlermeldungUnvollstaendig);
+	}
+
+	/**
+	 * Wie {@link #validiereIds(List, Collection, ToLongFunction, String, String)}, jedoch für Map-basierte Lade-Ergebnisse: eine ID gilt als
+	 * vorhanden, wenn der zugehörige Map-Eintrag einen Wert ungleich {@code null} besitzt.
+	 *
+	 * @param <V>                         Typ der Map-Werte.
+	 * @param idsUebergeben               Liste der übergebenen IDs (kann null-Einträge und Duplikate enthalten).
+	 * @param geladeneObjekte             Map mit ID als Schlüssel und dem geladenen Objekt als Wert (Wert {@code null} bedeutet "nicht vorhanden").
+	 * @param fehlermeldungIdTyp          Fehlermeldung, falls die bereinigte ID-Liste leer ist.
+	 * @param fehlermeldungUnvollstaendig Fehlermeldung, falls für eine bereinigte ID kein Eintrag mit Wert ungleich {@code null} existiert.
+	 *
+	 * @throws ApiOperationException Falls die bereinigte Liste leer oder unvollständig ist.
+	 */
+	private <V> void validiereIds(final List<Long> idsUebergeben, final Map<Long, V> geladeneObjekte,
+			final String fehlermeldungIdTyp, final String fehlermeldungUnvollstaendig) throws ApiOperationException {
+		final Set<Long> idsVorhanden = geladeneObjekte.entrySet().stream()
+				.filter(e -> e.getValue() != null).map(Map.Entry::getKey).collect(Collectors.toSet());
+		validiereIds(idsUebergeben, idsVorhanden, fehlermeldungIdTyp, fehlermeldungUnvollstaendig);
+	}
+
+	/**
+	 * Bereinigt die übergebene Roh-Liste von IDs (null-Einträge und Duplikate entfernen) und prüft anschließend, dass die bereinigte Liste nicht leer ist
+	 * und jede enthaltene ID in {@code idsVorhanden} existiert. Im Fehlerfall wird die zugehörige Meldung geloggt und eine
+	 * {@link ApiOperationException} mit Status {@link Status#NOT_FOUND} geworfen.
+	 *
+	 * @param idsUebergeben               Liste der übergebenen IDs (kann null-Einträge und Duplikate enthalten).
+	 * @param idsVorhanden                Menge der tatsächlich vorhandenen IDs.
+	 * @param fehlermeldungIdTyp          Fehlermeldung, falls die bereinigte ID-Liste leer ist.
+	 * @param fehlermeldungUnvollstaendig Fehlermeldung, falls eine bereinigte ID nicht in {@code idsVorhanden} enthalten ist.
+	 *
+	 * @throws ApiOperationException Falls die bereinigte Liste leer oder unvollständig ist.
+	 */
+	private void validiereIds(final List<Long> idsUebergeben, final Set<Long> idsVorhanden,
+			final String fehlermeldungIdTyp, final String fehlermeldungUnvollstaendig) throws ApiOperationException {
+		final List<Long> idsBereinigt = idsUebergeben.stream().filter(Objects::nonNull).distinct().toList();
+		if (idsBereinigt.isEmpty()) {
+			reportingContext.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden keine %s übergeben.".formatted(fehlermeldungIdTyp));
+			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden keine %s übergeben.".formatted(fehlermeldungIdTyp));
+		}
+		for (final Long id : idsBereinigt) {
+			if (!idsVorhanden.contains(id)) {
+				reportingContext.logger().logLn(LogLevel.ERROR, 4, fehlermeldungUnvollstaendig);
+				throw new ApiOperationException(Status.NOT_FOUND, fehlermeldungUnvollstaendig);
+			}
+		}
+	}
+
+	/**
+	 * Prüft, ob die Schule eine gymnasiale Oberstufe (GOSt) besitzt, wenn dies für Datenquellen relevant ist.
+	 *
+	 * @throws ApiOperationException Falls die Schule keine gymnasiale Oberstufe besitzt.
+	 */
+	private void validiereSchuleMitGost() throws ApiOperationException {
+		if (!reportingContext.repositorySchule().istSchuleMitGost()) {
+			reportingContext.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die Schule besitzt keine gymnasiale Oberstufe (GOSt).");
+			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Die Schule besitzt keine gymnasiale Oberstufe (GOSt).");
+		}
+	}
+
+	/**
+	 * Validiert die Parameter für Gost-Daten.
+	 *
+	 * @param paarweise Gibt an, ob die Daten paarweise (Abiturjahrgang, GOSt-Halbjahr, Abiturjahrgang, GOSt-Halbjahr, ...) vorliegen müssen.
+	 *                  Ist der Wert false, wird ein einzelner Abiturjahrgang gefolgt von beliebigen Halbjahren erwartet.
+	 *
+	 * @throws ApiOperationException Falls die Parameter ungültig sind.
+	 */
+	private void validiereParameterFuerAbiturjahrgangUndHalbjahre(final boolean paarweise) throws ApiOperationException {
+		final List<Long> parameterDaten = reportingParameter.idsHauptdaten();
+		if (parameterDaten.isEmpty()) {
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"FEHLER: Die Parameter für Abiturjahrgang und GOSt-Halbjahr wurden nicht übergeben.");
+		}
+		try {
+			final List<Integer> vorhandeneAbiturjahrgaenge = reportingContext.repositoryGost().abiturjahrgaenge();
+
+			if (paarweise) {
+				validiereParameterPaarweise(parameterDaten, vorhandeneAbiturjahrgaenge);
+			} else {
+				validiereParameterEinzeln(parameterDaten, vorhandeneAbiturjahrgaenge);
+			}
+		} catch (final ApiOperationException aoe) {
+			throw aoe;
+		} catch (final Exception e) {
+			throw new ApiOperationException(Status.BAD_REQUEST, e,
+					"FEHLER: Die Parameter für Abiturjahrgang und GOSt-Halbjahr konnten nicht gelesen werden oder sind außerhalb des Wertebereichs.");
+		}
+	}
+
+	/**
+	 * Validiert ein einzelnes Abiturjahr.
+	 *
+	 * @param abiturjahr                 das zu prüfende Abiturjahr
+	 * @param vorhandeneAbiturjahrgaenge Liste der vorhandenen Abiturjahrgänge
+	 * @param errorMessage               die Fehlermeldung, die im Fehlerfall geworfen wird
+	 *
+	 * @throws ApiOperationException Falls das Abiturjahr ungültig ist.
+	 */
+	private void validiereAbiturjahr(final int abiturjahr, final List<Integer> vorhandeneAbiturjahrgaenge, final String errorMessage)
+			throws ApiOperationException {
+		if ((abiturjahr < 1900) || !vorhandeneAbiturjahrgaenge.contains(abiturjahr)) {
+			throw new ApiOperationException(Status.BAD_REQUEST, errorMessage);
+		}
+	}
+
+	/**
+	 * Validiert ein einzelnes GOSt-Halbjahr.
+	 *
+	 * @param halbjahrId die ID des Halbjahres
+	 *
+	 * @throws ApiOperationException Falls das GOSt-Halbjahr ungültig ist.
+	 */
+	private void validiereHalbjahr(final int halbjahrId) throws ApiOperationException {
+		if (GostHalbjahr.fromID(halbjahrId) == null) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "FEHLER: Ein GOSt-Halbjahr liegt außerhalb des Wertebereichs.");
+		}
+	}
+
+	/**
+	 * Validiert die Parameter für Gost-Daten paarweise (Abiturjahrgang, GOSt-Halbjahr, ...).
+	 *
+	 * @param parameterDaten             Liste der Parameter
+	 * @param vorhandeneAbiturjahrgaenge Liste der vorhandenen Abiturjahrgänge
+	 *
+	 * @throws ApiOperationException Falls die Parameter ungültig sind.
+	 */
+	private void validiereParameterPaarweise(final List<Long> parameterDaten, final List<Integer> vorhandeneAbiturjahrgaenge) throws ApiOperationException {
+		if ((parameterDaten.size() % 2) != 0) {
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"FEHLER: Die Anzahl der Parameter für Abiturjahrgang und Gost-Halbjahr ist falsch.");
+		}
+		for (int i = 0; i < parameterDaten.size(); i += 2) {
+			validiereAbiturjahr(Math.toIntExact(parameterDaten.get(i)), vorhandeneAbiturjahrgaenge,
+					"FEHLER: Ein Abiturjahr liegt außerhalb des Wertebereichs.");
+			validiereHalbjahr(Math.toIntExact(parameterDaten.get(i + 1)));
+		}
+	}
+
+	/**
+	 * Validiert die Parameter für Gost-Daten einzeln (ein Abiturjahrgang gefolgt von beliebigen Halbjahren).
+	 *
+	 * @param parameterDaten             Liste der Parameter
+	 * @param vorhandeneAbiturjahrgaenge Liste der vorhandenen Abiturjahrgänge
+	 *
+	 * @throws ApiOperationException Falls die Parameter ungültig sind.
+	 */
+	private void validiereParameterEinzeln(final List<Long> parameterDaten, final List<Integer> vorhandeneAbiturjahrgaenge) throws ApiOperationException {
+		validiereAbiturjahr(Math.toIntExact(parameterDaten.getFirst()), vorhandeneAbiturjahrgaenge, "FEHLER: Das Abiturjahr ist ungültig.");
+		for (int i = 1; i < parameterDaten.size(); i++) {
+			validiereHalbjahr(Math.toIntExact(parameterDaten.get(i)));
+		}
 	}
 }

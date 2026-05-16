@@ -26,7 +26,6 @@ import de.svws_nrw.module.reporting.types.lerngruppen.ProxyReportingKurs;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
-import de.svws_nrw.module.reporting.utils.ReportingListBuilder;
 
 /**
  * Domänen-Repository für Klassen und Kurse.
@@ -110,27 +109,20 @@ public class ReportingRepositoryLerngruppen {
 						ReportingKlasse.class.getSimpleName(), SortierungRegistryReportingKlasse.sortierungRegistry())
 				: Optional.empty();
 
-		return ReportingListBuilder.erstelleReportingListe(idsKlassen, mapKlassenStammdaten, mapKlassen,
+		return ReportingRepositoryUtils.erstelleReportingListe(idsKlassen, mapKlassenStammdaten, mapKlassen,
 				fehlendeIds -> {
-					try {
-						final DataKlassendaten dataKlassendaten = new DataKlassendaten(this.reportingContext.conn());
-						final List<DTOKlassen> dtos = dataKlassendaten.getDTOsByIds(fehlendeIds);
-						// Sollte der Fall eintreten, dass die IDs der Klassen aus unterschiedlichen Schuljahresabschnitten stammen,
-						// so werden die Klassen in Abschnittsgruppen getrennt abgefragt.
-						final Map<Long, List<Long>> idsByAbschnitt = dtos.stream()
-								.collect(Collectors.groupingBy(dto -> dto.Schuljahresabschnitts_ID,
-										Collectors.mapping(dto -> dto.ID, Collectors.toList())));
-						final List<KlassenDaten> result = new ArrayList<>();
-						for (final Map.Entry<Long, List<Long>> entry : idsByAbschnitt.entrySet()) {
-							result.addAll(dataKlassendaten.getListByIdsOhneSchueler(entry.getValue(), entry.getKey()));
-						}
-						return result;
-					} catch (final ApiOperationException e) {
-						ReportingExceptionUtils.logException(
-								"FEHLER: Fehler bei der Ermittlung der fehlenden Klassenstammdaten einer Klassenliste aus der Datenbank im ReportingContext.",
-								e, this.reportingContext.logger(), LogLevel.ERROR, 0);
-						return new ArrayList<>();
+					final DataKlassendaten dataKlassendaten = new DataKlassendaten(this.reportingContext.conn());
+					final List<DTOKlassen> dtos = dataKlassendaten.getDTOsByIds(fehlendeIds);
+					// Sollte der Fall eintreten, dass die IDs der Klassen aus unterschiedlichen Schuljahresabschnitten stammen,
+					// so werden die Klassen in Abschnittsgruppen getrennt abgefragt.
+					final Map<Long, List<Long>> idsByAbschnitt = dtos.stream()
+							.collect(Collectors.groupingBy(dto -> dto.Schuljahresabschnitts_ID,
+									Collectors.mapping(dto -> dto.ID, Collectors.toList())));
+					final List<KlassenDaten> result = new ArrayList<>();
+					for (final Map.Entry<Long, List<Long>> entry : idsByAbschnitt.entrySet()) {
+						result.addAll(dataKlassendaten.getListByIdsOhneSchueler(entry.getValue(), entry.getKey()));
 					}
+					return result;
 				},
 				key -> {
 					final KlassenDaten daten = mapKlassenStammdaten.get(key);
@@ -229,17 +221,8 @@ public class ReportingRepositoryLerngruppen {
 						ReportingKurs.class.getSimpleName(), SortierungRegistryReportingKurs.sortierungRegistry())
 				: Optional.empty();
 
-		return ReportingListBuilder.erstelleReportingListe(idsKurse, mapKursDaten, mapKurse,
-				fehlendeIds -> {
-					try {
-						return new DataKurse(this.reportingContext.conn()).getListByIDs(fehlendeIds, false);
-					} catch (final ApiOperationException e) {
-						ReportingExceptionUtils.logException(
-								"FEHLER: Fehler bei der Ermittlung der fehlenden Kursstammdaten einer Kursliste aus der Datenbank im ReportingContext.",
-								e, this.reportingContext.logger(), LogLevel.ERROR, 0);
-						return new ArrayList<>();
-					}
-				},
+		return ReportingRepositoryUtils.erstelleReportingListe(idsKurse, mapKursDaten, mapKurse,
+				fehlendeIds -> new DataKurse(this.reportingContext.conn()).getListByIDs(fehlendeIds, false),
 				key -> {
 					final KursDaten daten = mapKursDaten.get(key);
 					/* Der Aufruf 'kurs' über den Schuljahresabschnitt ruft durch Überladung folgende Methode auf:

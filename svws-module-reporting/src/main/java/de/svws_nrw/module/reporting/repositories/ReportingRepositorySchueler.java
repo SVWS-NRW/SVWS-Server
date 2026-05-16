@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.schueler.SchuelerLeistungsdaten;
@@ -36,7 +37,6 @@ import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchue
 import de.svws_nrw.module.reporting.types.schueler.telefon.ProxyReportingSchuelerTelefonkontakt;
 import de.svws_nrw.module.reporting.types.schueler.telefon.ReportingSchuelerTelefonkontakt;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
-import de.svws_nrw.module.reporting.utils.ReportingListBuilder;
 import de.svws_nrw.service.schueler.schulbesuch.SchulbesuchServiceFactory;
 
 /**
@@ -72,33 +72,19 @@ public class ReportingRepositorySchueler {
 
 	/**
 	 * Gibt das ReportingSchueler-Objekt zur übergebenen ID zurück. Fehlt der Eintrag im Cache, wird er aus der Datenbank nachgeladen.
+	 * Die Methode delegiert an {@link #schueler(List, boolean)}, damit auch die Map der Schülerstammdaten konsistent gefüllt wird.
 	 *
 	 * @param idSchueler Die ID des Schülers.
 	 *
 	 * @return Das ReportingSchueler-Objekt oder null, falls der Schüler nicht existiert.
 	 */
 	public ReportingSchueler schueler(final long idSchueler) {
-		if (idSchueler < 0) {
-			return null;
+		final ReportingSchueler reportingSchueler = mapSchueler.get(idSchueler);
+		if (reportingSchueler != null) {
+			return reportingSchueler;
 		}
-
-		if (!mapSchuelerStammdaten.containsKey(idSchueler)) {
-			try {
-				final SchuelerStammdaten fehlendeSchulerstammdaten = new DataSchuelerStammdaten(this.reportingContext.conn()).getById(idSchueler);
-				mapSchuelerStammdaten.put(fehlendeSchulerstammdaten.id, fehlendeSchulerstammdaten);
-			} catch (final ApiOperationException e) {
-				ReportingExceptionUtils.logException(
-						"FEHLER: Fehler bei der Ermittlung der fehlenden Schülerstammdaten eines Schülers aus der Datenbank im ReportingContext.",
-						e, this.reportingContext.logger(), LogLevel.ERROR, 0);
-				return null;
-			}
-		}
-
-		if (mapSchuelerStammdaten.containsKey(idSchueler)) {
-			return mapSchueler.computeIfAbsent(idSchueler, key -> new ProxyReportingSchueler(this.reportingContext, mapSchuelerStammdaten.get(key)));
-		} else {
-			return null;
-		}
+		final List<ReportingSchueler> result = schueler(List.of(idSchueler), false);
+		return result.isEmpty() ? null : result.getFirst();
 	}
 
 	/**
@@ -127,18 +113,8 @@ public class ReportingRepositorySchueler {
 						SortierungRegistryReportingSchueler.sortierungRegistry())
 				: Optional.empty();
 
-		return ReportingListBuilder.erstelleReportingListe(idsSchueler, mapSchuelerStammdaten, mapSchueler,
-				fehlendeIds -> {
-					try {
-						return new DataSchuelerStammdaten(this.reportingContext.conn()).getListByIds(fehlendeIds);
-					} catch (final ApiOperationException e) {
-						ReportingExceptionUtils.logException(
-								"FEHLER: Fehler bei der Ermittlung der fehlenden Schülerstammdaten einer Schülerliste aus der Datenbank im "
-										+ "ReportingContext.",
-								e, this.reportingContext.logger(), LogLevel.ERROR, 0);
-						return new ArrayList<>();
-					}
-				},
+		return ReportingRepositoryUtils.erstelleReportingListe(idsSchueler, mapSchuelerStammdaten, mapSchueler,
+				fehlendeIds -> new DataSchuelerStammdaten(this.reportingContext.conn()).getListByIds(fehlendeIds),
 				key -> new ProxyReportingSchueler(this.reportingContext, mapSchuelerStammdaten.get(key)),
 				stammdaten -> stammdaten.id,
 				optionalComparator,
@@ -167,24 +143,24 @@ public class ReportingRepositorySchueler {
 	// ##### Erzieherstammdaten #####
 
 	/**
-	 * Gibt die Map der Erzieherstammdaten zurück, indiziert nach Schüler-ID.
+	 * Liefert die Erzieherstammdaten zum übergebenen Schüler. Beim ersten Zugriff werden die Daten für alle bekannten Schüler
+	 * gesammelt nachgeladen und im Cache abgelegt.
 	 *
-	 * @return Map der Erzieherstammdaten.
+	 * @param idSchueler Die ID des Schülers.
+	 *
+	 * @return Liste der Erzieherstammdaten; leere Liste, falls keine vorhanden sind oder das Laden fehlgeschlagen ist.
 	 */
-	public Map<Long, List<ErzieherStammdaten>> erzieherStammdaten() {
-		return mapErzieherStammdaten;
+	public List<ErzieherStammdaten> erzieherStammdaten(final long idSchueler) {
+		ReportingRepositoryUtils.ladeFehlendeListenInRepositoryMap(
+				mapSchuelerStammdaten.keySet(),
+				mapErzieherStammdaten,
+				this::ladeErzieherStammdaten,
+				"Erzieherstammdaten",
+				this.reportingContext.logger());
+		return mapErzieherStammdaten.getOrDefault(idSchueler, List.of());
 	}
 
-	/**
-	 * Lädt die Erzieherstammdaten zu den übergebenen Schüler-IDs aus der Datenbank und gruppiert sie nach Schüler-ID.
-	 *
-	 * @param idsSchueler Die IDs der Schüler, deren Erzieherstammdaten geladen werden sollen.
-	 *
-	 * @return Map mit Schüler-ID als Schlüssel und Liste der zugehörigen Erzieherstammdaten als Wert.
-	 *
-	 * @throws ApiOperationException Im Fehlerfall.
-	 */
-	public Map<Long, List<ErzieherStammdaten>> erzieherStammdaten(final List<Long> idsSchueler) throws ApiOperationException {
+	private Map<Long, List<ErzieherStammdaten>> ladeErzieherStammdaten(final List<Long> idsSchueler) {
 		return new DataErzieherStammdaten(this.reportingContext.conn()).getListBySchuelerIds(idsSchueler).stream()
 				.collect(Collectors.groupingBy(e -> e.idSchueler));
 	}
@@ -193,24 +169,24 @@ public class ReportingRepositorySchueler {
 	// ##### Sprachbelegungen #####
 
 	/**
-	 * Gibt die Map der Sprachbelegungen der Schüler zurück, indiziert nach Schüler-ID.
+	 * Liefert die Sprachbelegungen zum übergebenen Schüler. Beim ersten Zugriff werden die Daten für alle bekannten Schüler
+	 * gesammelt nachgeladen und im Cache abgelegt.
 	 *
-	 * @return Map der Sprachbelegungen.
+	 * @param idSchueler Die ID des Schülers.
+	 *
+	 * @return Liste der Sprachbelegungen; leere Liste, falls keine vorhanden sind oder das Laden fehlgeschlagen ist.
 	 */
-	public Map<Long, List<Sprachbelegung>> sprachbelegungen() {
-		return mapSchuelerSprachbelegungen;
+	public List<Sprachbelegung> sprachbelegungen(final long idSchueler) {
+		ReportingRepositoryUtils.ladeFehlendeListenInRepositoryMap(
+				mapSchuelerStammdaten.keySet(),
+				mapSchuelerSprachbelegungen,
+				this::ladeSprachbelegungen,
+				"Sprachbelegungen",
+				this.reportingContext.logger());
+		return mapSchuelerSprachbelegungen.getOrDefault(idSchueler, List.of());
 	}
 
-	/**
-	 * Lädt die Sprachbelegungen zu den übergebenen Schüler-IDs aus der Datenbank.
-	 *
-	 * @param idsSchueler Die IDs der Schüler, deren Sprachbelegungen geladen werden sollen.
-	 *
-	 * @return Map mit Schüler-ID als Schlüssel und Liste der zugehörigen Sprachbelegungen als Wert.
-	 *
-	 * @throws ApiOperationException Im Fehlerfall.
-	 */
-	public Map<Long, List<Sprachbelegung>> sprachbelegungen(final List<Long> idsSchueler) throws ApiOperationException {
+	private Map<Long, List<Sprachbelegung>> ladeSprachbelegungen(final List<Long> idsSchueler) {
 		return DataSchuelerSprachbelegung.getMapBySchuelerIDs(this.reportingContext.conn(), idsSchueler);
 	}
 
@@ -218,24 +194,24 @@ public class ReportingRepositorySchueler {
 	// ##### Schulbesuchsdaten #####
 
 	/**
-	 * Gibt die Map der Schulbesuchsdaten der Schüler zurück, indiziert nach Schüler-ID.
+	 * Liefert die Schulbesuchsdaten zum übergebenen Schüler. Beim ersten Zugriff werden die Daten für alle bekannten Schüler
+	 * gesammelt nachgeladen und im Cache abgelegt.
 	 *
-	 * @return Map der Schulbesuchsdaten.
+	 * @param idSchueler Die ID des Schülers.
+	 *
+	 * @return Die Schulbesuchsdaten oder {@code null}, falls keine vorhanden sind oder das Laden fehlgeschlagen ist.
 	 */
-	public Map<Long, SchuelerSchulbesuchsdaten> schulbesuchsdaten() {
-		return mapSchuelerSchulbesuchsdaten;
+	public SchuelerSchulbesuchsdaten schulbesuchsdaten(final long idSchueler) {
+		ReportingRepositoryUtils.ladeFehlendeWerteInRepositoryMap(
+				mapSchuelerStammdaten.keySet(),
+				mapSchuelerSchulbesuchsdaten,
+				this::ladeSchulbesuchsdaten,
+				"Schulbesuchsdaten",
+				this.reportingContext.logger());
+		return mapSchuelerSchulbesuchsdaten.get(idSchueler);
 	}
 
-	/**
-	 * Lädt die Schulbesuchsdaten zu den übergebenen Schüler-IDs aus der Datenbank und liefert sie als Map indiziert nach Schüler-ID.
-	 *
-	 * @param idsSchueler Die IDs der Schüler, deren Schulbesuchsdaten geladen werden sollen.
-	 *
-	 * @return Map mit Schüler-ID als Schlüssel und den zugehörigen Schulbesuchsdaten als Wert.
-	 *
-	 * @throws ApiOperationException Im Fehlerfall.
-	 */
-	public Map<Long, SchuelerSchulbesuchsdaten> schulbesuchsdaten(final List<Long> idsSchueler) throws ApiOperationException {
+	private Map<Long, SchuelerSchulbesuchsdaten> ladeSchulbesuchsdaten(final List<Long> idsSchueler) {
 		return SchulbesuchServiceFactory
 				.getNewInstance()
 				.getSchulbesuchService()
@@ -256,15 +232,45 @@ public class ReportingRepositorySchueler {
 	}
 
 	/**
-	 * Lädt die Lernabschnittsdaten zu den übergebenen Schüler-IDs aus der Datenbank.
+	 * Liefert die Lernabschnittsdaten zum übergebenen Schüler. Beim ersten Zugriff werden die Daten für alle bekannten Schüler
+	 * gesammelt nachgeladen und im Cache abgelegt. Schüler-IDs, für die keine Lernabschnitte zurückgegeben wurden, werden
+	 * negativ markiert, damit ein erneuter Bulk-Load vermieden wird.
 	 *
-	 * @param idsSchueler Die IDs der Schüler, deren Lernabschnittsdaten geladen werden sollen.
+	 * @param idSchueler Die ID des Schülers.
 	 *
-	 * @return Liste der Lernabschnittsdaten der Schüler.
-	 *
-	 * @throws ApiOperationException Im Fehlerfall.
+	 * @return Liste der Lernabschnittsdaten; leere Liste, falls keine vorhanden sind oder das Laden fehlgeschlagen ist.
 	 */
-	public List<SchuelerLernabschnittsdaten> lernabschnittsdaten(final List<Long> idsSchueler) throws ApiOperationException {
+	public List<SchuelerLernabschnittsdaten> lernabschnitte(final long idSchueler) {
+		if (mapLernabschnittsdaten.containsKey1(idSchueler)) {
+			return mapLernabschnittsdaten.get1(idSchueler);
+		}
+
+		final List<Long> fehlendeIds = mapSchuelerStammdaten.keySet().stream()
+				.filter(id -> !mapLernabschnittsdaten.containsKey1(id))
+				.toList();
+		final List<Long> zuLadendeIds = fehlendeIds.contains(idSchueler) ? fehlendeIds : List.of(idSchueler);
+
+		try {
+			final List<SchuelerLernabschnittsdaten> geladen = ladeLernabschnitte(zuLadendeIds);
+			for (final SchuelerLernabschnittsdaten la : geladen) {
+				mapLernabschnittsdaten.add(la.schuelerID, la.schuljahresabschnitt, la.wechselNr, la.id, la);
+			}
+
+			final Set<Long> idsMitTreffer = geladen.stream().map(la -> la.schuelerID).collect(Collectors.toSet());
+			for (final Long id : zuLadendeIds) {
+				if (!idsMitTreffer.contains(id)) {
+					mapLernabschnittsdaten.addEmpty(id, -1, -1, -1);
+				}
+			}
+		} catch (final ApiOperationException e) {
+			ReportingExceptionUtils.logException(
+					"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Lernabschnitte des Schülers %d.".formatted(idSchueler),
+					e, this.reportingContext.logger(), LogLevel.INFO, 0);
+		}
+		return mapLernabschnittsdaten.get1(idSchueler);
+	}
+
+	private List<SchuelerLernabschnittsdaten> ladeLernabschnitte(final List<Long> idsSchueler) throws ApiOperationException {
 		return new DataSchuelerLernabschnittsdaten(this.reportingContext.conn()).getListFromSchuelerIDs(idsSchueler, false, false);
 	}
 
@@ -280,17 +286,14 @@ public class ReportingRepositorySchueler {
 	/**
 	 * Lädt die Leistungsdaten zum übergebenen Lernabschnitt aus der Datenbank und trägt sie in die zentrale Map der Leistungsdaten ein.
 	 *
-	 * @param idSchueler      Die ID des Schülers, zu dem die Leistungsdaten gehören.
+	 * @param idSchueler Die ID des Schülers, zu dem die Leistungsdaten gehören.
 	 * @param idLernabschnitt Die ID des Lernabschnitts, dessen Leistungsdaten geladen werden sollen.
-	 *
-	 * @return true, falls die Leistungsdaten geladen und eingetragen wurden, sonst false.
 	 */
-	public boolean leistungsdatenZuLernabschnitt(final long idSchueler, final long idLernabschnitt) {
+	public void leistungsdatenZuLernabschnitt(final long idSchueler, final long idLernabschnitt) {
 		final List<SchuelerLeistungsdaten> listLeistungsdaten = new ArrayList<>();
 		try {
 			if (new DataSchuelerLeistungsdaten(this.reportingContext.conn()).getByLernabschnitt(idLernabschnitt, listLeistungsdaten)) {
 				listLeistungsdaten.forEach(l -> mapLeistungsdaten.add(idSchueler, idLernabschnitt, l.id, l));
-				return true;
 			}
 		} catch (final Exception e) {
 			ReportingExceptionUtils.logException(
@@ -298,32 +301,30 @@ public class ReportingRepositorySchueler {
 							.formatted(idLernabschnitt),
 					e, this.reportingContext.logger(), LogLevel.ERROR, 0);
 		}
-		return false;
 	}
 
 
 	// ##### Telefonkontakte #####
 
 	/**
-	 * Gibt die Map der Telefonkontakte der Schüler zurück, indiziert nach Schüler-ID.
+	 * Liefert die Telefonkontakte zum übergebenen Schüler. Beim ersten Zugriff werden die Daten für alle bekannten Schüler
+	 * gesammelt nachgeladen und im Cache abgelegt.
 	 *
-	 * @return Map der Telefonkontakte.
+	 * @param idSchueler Die ID des Schülers.
+	 *
+	 * @return Sortierte Liste der Telefonkontakte; leere Liste, falls keine vorhanden sind oder das Laden fehlgeschlagen ist.
 	 */
-	public Map<Long, List<ReportingSchuelerTelefonkontakt>> telefonkontakte() {
-		return mapSchuelerTelefonkontakte;
+	public List<ReportingSchuelerTelefonkontakt> telefonkontakte(final long idSchueler) {
+		ReportingRepositoryUtils.ladeFehlendeListenInRepositoryMap(
+				mapSchuelerStammdaten.keySet(),
+				mapSchuelerTelefonkontakte,
+				this::ladeTelefonkontakte,
+				"Telefonkontakte",
+				this.reportingContext.logger());
+		return mapSchuelerTelefonkontakte.getOrDefault(idSchueler, List.of());
 	}
 
-	/**
-	 * Lädt die Telefonkontakte zu den übergebenen Schüler-IDs aus der Datenbank, erzeugt die zugehörigen Reporting-Objekte und
-	 * gruppiert sie sortiert nach Schüler-ID.
-	 *
-	 * @param idsSchueler Die IDs der Schüler, deren Telefonkontakte geladen werden sollen.
-	 *
-	 * @return Map mit Schüler-ID als Schlüssel und sortierter Liste der zugehörigen Telefonkontakte als Wert.
-	 *
-	 * @throws ApiOperationException Im Fehlerfall.
-	 */
-	public Map<Long, List<ReportingSchuelerTelefonkontakt>> telefonkontakte(final List<Long> idsSchueler) throws ApiOperationException {
+	private Map<Long, List<ReportingSchuelerTelefonkontakt>> ladeTelefonkontakte(final List<Long> idsSchueler) {
 		final List<SchuelerTelefon> schuelerTelefone = new DataSchuelerTelefon(this.reportingContext.conn()).getListFromSchuelerIDs(idsSchueler);
 		return schuelerTelefone.stream()
 				.collect(Collectors.groupingBy(
@@ -332,9 +333,10 @@ public class ReportingRepositorySchueler {
 								Collectors.mapping(
 										t -> (ReportingSchuelerTelefonkontakt) new ProxyReportingSchuelerTelefonkontakt(this.reportingContext, t),
 										Collectors.toList()),
-								list -> list.stream()
-										.sorted(Comparator.comparing(ReportingSchuelerTelefonkontakt::sortierung))
-										.toList())));
+								list -> {
+									list.sort(Comparator.comparing(ReportingSchuelerTelefonkontakt::sortierung));
+									return list;
+								})));
 	}
 
 

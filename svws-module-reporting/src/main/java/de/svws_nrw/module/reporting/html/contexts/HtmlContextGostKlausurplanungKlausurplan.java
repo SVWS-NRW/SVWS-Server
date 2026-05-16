@@ -15,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionHjData;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
-import de.svws_nrw.data.gost.klausurplan.DataGostKlausuren;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ProxyReportingGostKlausurplanungKlausurplan;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
@@ -84,7 +83,7 @@ public abstract class HtmlContextGostKlausurplanungKlausurplan extends HtmlConte
 	private void erzeugeContext() throws ApiOperationException {
 
 		// In den idsHauptdaten der Reporting-Parameter werden im Wechsel das Abiturjahr und das GostHalbjahr (0 = EF.1 bis 5 = Q2.2) übergeben.
-		// Hier werden die Daten NICHT validiert. Die Daten aus den Parametern müssen vorab validiert worden sein (ReportingValidierung).
+		// Hier werden die Daten NICHT validiert. Die Daten aus den Parametern müssen vorab validiert worden sein (HtmlFactory).
 		final List<Long> parameterDaten = reportingContext.reportingParameter().idsHauptdaten().stream().filter(Objects::nonNull).toList();
 		final List<GostKlausurenCollectionHjData> selection = new ArrayList<>();
 
@@ -107,7 +106,7 @@ public abstract class HtmlContextGostKlausurplanungKlausurplan extends HtmlConte
 		}
 
 		try {
-			final GostKlausurenCollectionAllData allData = DataGostKlausuren.getAllData(this.reportingContext.conn(), selection);
+			final GostKlausurenCollectionAllData allData = this.reportingContext.repositoryGost().klausurplanDaten(selection);
 			final GostKlausurplanManager gostKlausurManager =
 					new GostKlausurplanManager(allData);
 

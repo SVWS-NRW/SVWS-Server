@@ -3,28 +3,23 @@ package de.svws_nrw.module.reporting.types.schueler;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.asd.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittsdaten;
+import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
-import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
-import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ProxyReportingErzieher;
 import de.svws_nrw.module.reporting.types.schueler.schulbesuch.ProxyReportingSchuelerSchulbesuch;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieher;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieherArtGruppe;
 import de.svws_nrw.module.reporting.types.schueler.schulbesuch.ReportingSchuelerSchulbesuch;
 import de.svws_nrw.module.reporting.types.schueler.telefon.ReportingSchuelerTelefonkontakt;
-import de.svws_nrw.module.reporting.utils.ReportingDataLoadException;
-import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.module.reporting.types.schueler.gost.abitur.ProxyReportingSchuelerGostAbitur;
 import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.ProxyReportingSchuelerGostLaufbahnplanung;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerLernabschnitt;
@@ -230,25 +225,13 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	 * Eine Hilfsfunktion, die die Erzieher-Daten ggf. nachlädt und die Erzieher ggf. gruppiert.
 	 */
 	private void getErzieher() {
-		ladeListeInRepositoryMap(
-				this.reportingContext.repositorySchueler().erzieherStammdaten(),
-				ids -> {
-					try {
-						return this.reportingContext.repositorySchueler().erzieherStammdaten(ids);
-					} catch (final ApiOperationException e) {
-						throw new ReportingDataLoadException(e);
-					}
-				},
-				"Erziehern");
-
-		// Übertrage Daten aus dem Repository
-		if (super.erzieher.isEmpty()) {
-			final List<ErzieherStammdaten> thisErzieherStammdaten = this.reportingContext.repositorySchueler().erzieherStammdaten().get(this.id());
-
-			if ((thisErzieherStammdaten != null) && !thisErzieherStammdaten.isEmpty()) {
-				super.erzieher.addAll(thisErzieherStammdaten.stream().map(e -> new ProxyReportingErzieher(this.reportingContext, e, this)).toList());
-				erzieherGruppieren();
-			}
+		if (!super.erzieher.isEmpty()) {
+			return;
+		}
+		final List<ErzieherStammdaten> listeErzieherStammdaten = this.reportingContext.repositorySchueler().erzieherStammdaten(this.id());
+		if (!listeErzieherStammdaten.isEmpty()) {
+			super.erzieher.addAll(listeErzieherStammdaten.stream().map(e -> new ProxyReportingErzieher(this.reportingContext, e, this)).toList());
+			erzieherGruppieren();
 		}
 	}
 
@@ -291,24 +274,11 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	@Override
 	public ReportingSchuelerGostAbitur gostAbitur() {
 		if (super.gostAbitur == null) {
-			ladeObjektInRepositoryMap(
-					this.reportingContext.repositoryGost().schuelerAbiturdaten(),
-					ids -> {
-						try {
-							return this.reportingContext.repositoryGost().schuelerAbiturdaten(ids);
-						} catch (final ApiOperationException e) {
-							throw new ReportingDataLoadException(e);
-						}
-					},
-					"GOSt-Abiturdaten");
-
-			// Übertrage Daten aus dem Repository
-			final Abiturdaten repoDaten = this.reportingContext.repositoryGost().schuelerAbiturdaten().get(this.id());
-			if (repoDaten == null) {
+			final Abiturdaten abiturdaten = this.reportingContext.repositoryGost().schuelerAbiturdaten(this.id());
+			if (abiturdaten == null) {
 				return null;
 			}
-
-			super.gostAbitur = new ProxyReportingSchuelerGostAbitur(this.reportingContext, repoDaten);
+			super.gostAbitur = new ProxyReportingSchuelerGostAbitur(this.reportingContext, abiturdaten);
 		}
 		return super.gostAbitur;
 	}
@@ -334,15 +304,8 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	@Override
 	public List<ReportingSchuelerLernabschnitt> lernabschnitte() {
 		if (super.lernabschnitte() == null) {
-			if (!this.reportingContext.repositorySchueler().lernabschnittsdaten().containsKey1(this.id())) {
-				// Wenn keine Lernabschnitte zum Schüler aus der DB gefunden wurden, müssen diese nachträglich geladen worden sein oder der Schüler hat keine
-				// Lernabschnitte. Prüfe auf Differenzen und lade nach.
-				getLernabschnitte();
-			}
-
-			// Die Lernabschnitte aller Schüler der Stammdatenabschnitte liegen nun vor. Filtere alle Lernabschnitte des Schülers heraus.
 			final List<SchuelerLernabschnittsdaten> schuelerLernabschnittsdaten =
-					new ArrayList<>(this.reportingContext.repositorySchueler().lernabschnittsdaten().get1(this.id()));
+					this.reportingContext.repositorySchueler().lernabschnitte(this.id());
 
 			// Wenn, wie bei einer Neuaufnahme, keine Lernabschnitte vorhanden sind, so wird die leere Liste zurückgegeben.
 			if (schuelerLernabschnittsdaten.isEmpty()) {
@@ -382,36 +345,6 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 		return super.lernabschnitte();
 	}
 
-	private void getLernabschnitte() {
-		final List<Long> idsSchuelerOhneLernabschnitte = new ArrayList<>(this.reportingContext.repositorySchueler().schueler().size());
-
-		for (final long key : this.reportingContext.repositorySchueler().schueler().keySet()) {
-			if (!this.reportingContext.repositorySchueler().lernabschnittsdaten().containsKey1(key)) {
-				idsSchuelerOhneLernabschnitte.add(key);
-			}
-		}
-
-		if (!idsSchuelerOhneLernabschnitte.isEmpty()) {
-			final List<SchuelerLernabschnittsdaten> schuelerGesamteLernabschnittsdaten = new ArrayList<>();
-			try {
-				schuelerGesamteLernabschnittsdaten.addAll(
-						this.reportingContext.repositorySchueler().lernabschnittsdaten(idsSchuelerOhneLernabschnitte));
-			} catch (final ApiOperationException e) {
-				ReportingExceptionUtils.logException(
-						"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Lernabschnitte eines Schülers.", e,
-						reportingContext.logger(), LogLevel.INFO, 0);
-			}
-			// Lege die Lernabschnittsdaten in den entsprechenden Maps des Repositories ab.
-			if (!schuelerGesamteLernabschnittsdaten.isEmpty()) {
-				for (final SchuelerLernabschnittsdaten la : schuelerGesamteLernabschnittsdaten) {
-					this.reportingContext.repositorySchueler().lernabschnittsdaten().add(la.schuelerID, la.schuljahresabschnitt, la.wechselNr, la.id, la);
-				}
-			} else {
-				this.reportingContext.repositorySchueler().lernabschnittsdaten().addEmpty(super.id, -1, -1, -1);
-			}
-		}
-	}
-
 
 	/**
 	 * Stellt die Daten des bisherigen und zukünftigen Schulbesuches des Schülers zur Verfügung.
@@ -421,20 +354,9 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	@Override
 	public ReportingSchuelerSchulbesuch schulbesuch() {
 		if (super.schulbesuch == null) {
-			ladeObjektInRepositoryMap(
-					this.reportingContext.repositorySchueler().schulbesuchsdaten(),
-					ids -> {
-						try {
-							return this.reportingContext.repositorySchueler().schulbesuchsdaten(ids);
-						} catch (final ApiOperationException e) {
-							throw new ReportingDataLoadException(e);
-						}
-					},
-					"Schulbesuchsdaten");
-
-			if (this.reportingContext.repositorySchueler().schulbesuchsdaten().containsKey(this.id())) {
-				super.schulbesuch = new ProxyReportingSchuelerSchulbesuch(reportingContext,
-						this.reportingContext.repositorySchueler().schulbesuchsdaten().get(this.id()));
+			final SchuelerSchulbesuchsdaten schulbesuchsdaten = this.reportingContext.repositorySchueler().schulbesuchsdaten(this.id());
+			if (schulbesuchsdaten != null) {
+				super.schulbesuch = new ProxyReportingSchuelerSchulbesuch(reportingContext, schulbesuchsdaten);
 			}
 		}
 		return super.schulbesuch;
@@ -448,22 +370,10 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	 */
 	@Override
 	public List<ReportingSchuelerSprachbelegung> sprachbelegungen() {
-		ladeListeInRepositoryMap(
-				this.reportingContext.repositorySchueler().sprachbelegungen(),
-				ids -> {
-					try {
-						return this.reportingContext.repositorySchueler().sprachbelegungen(ids);
-					} catch (final ApiOperationException e) {
-						throw new ReportingDataLoadException(e);
-					}
-				},
-				"Sprachbelegungen");
-
-		// Übertrage Daten aus dem Repository
 		if (super.sprachbelegungen.isEmpty()) {
-			final List<Sprachbelegung> repoDaten = this.reportingContext.repositorySchueler().sprachbelegungen().get(this.id());
-			if ((repoDaten != null) && !repoDaten.isEmpty()) {
-				super.sprachbelegungen.addAll(repoDaten.stream()
+			final List<Sprachbelegung> listeSprachbelegungen = this.reportingContext.repositorySchueler().sprachbelegungen(this.id());
+			if (!listeSprachbelegungen.isEmpty()) {
+				super.sprachbelegungen.addAll(listeSprachbelegungen.stream()
 						.map(sb -> ((ReportingSchuelerSprachbelegung) new ProxyReportingSchuelerSprachbelegung(reportingContext, sb)))
 						.sorted(Comparator.comparing(ReportingSchuelerSprachbelegung::belegungVonJahrgang, Comparator.nullsLast(String::compareTo))
 								.thenComparing(ReportingSchuelerSprachbelegung::reihenfolge, Comparator.nullsLast(Integer::compareTo)))
@@ -480,124 +390,14 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	 */
 	@Override
 	public List<ReportingSchuelerTelefonkontakt> telefonKontakte() {
-		ladeListeInRepositoryMap(
-				this.reportingContext.repositorySchueler().telefonkontakte(),
-				ids -> {
-					try {
-						return this.reportingContext.repositorySchueler().telefonkontakte(ids);
-					} catch (final Exception e) {
-						throw new ReportingDataLoadException(e);
-					}
-				},
-				"Telefonkontakten");
-
-		// Sync local
 		if (super.telefonKontakte.isEmpty()) {
-			final List<ReportingSchuelerTelefonkontakt> repoDaten = this.reportingContext.repositorySchueler().telefonkontakte().get(this.id());
-			if ((repoDaten != null) && !repoDaten.isEmpty()) {
-				super.telefonKontakte.addAll(repoDaten);
+			final List<ReportingSchuelerTelefonkontakt> telefonkontakte = this.reportingContext.repositorySchueler().telefonkontakte(this.id());
+			if (!telefonkontakte.isEmpty()) {
+				super.telefonKontakte.addAll(telefonkontakte);
 			}
 		}
 		return super.telefonKontakte;
 	}
 
 
-	// ##### Generische Hilfsmethode für Lazy-Loading mit Bulk-Load und Single-Fallback #####
-
-	/**
-	 * Generische Methode zum Laden von Listen mit Daten in eine Map des Repositories als gesammeltes Laden mit Fallback.
-	 * Prüft, ob für den aktuellen Schüler bereits Daten im Repository vorhanden sind.
-	 * Falls nicht, werden die IDs aller Schüler ermittelt, deren Daten noch nicht im Repository sind, und gesammelt nachgeladen.
-	 * Schlägt dies fehl, wird nur für den aktuellen Schüler versucht, die Daten zu laden.
-	 * In jedem Fall wird sichergestellt, dass nach dem Aufruf ein Eintrag in der Map existiert (ggf. eine leere Liste).
-	 *
-	 * @param <T>                      Der Typ der Daten in der Map.
-	 * @param repositoryMap            Die Map aus dem Repository (Key: Schüler-ID, Value: Liste der Daten).
-	 * @param funktionGesammeltesLaden Die Funktion, die eine Liste von Schüler-IDs entgegennimmt und eine Map mit Ergebnissen zurückgibt.
-	 * @param datenbezeichnung         Eine Bezeichnung der Daten für Log-Meldungen (z. B. "Erzieher", "Sprachbelegungen").
-	 */
-	private <T> void ladeListeInRepositoryMap(final Map<Long, List<T>> repositoryMap, final Function<List<Long>, Map<Long, List<T>>> funktionGesammeltesLaden,
-			final String datenbezeichnung) {
-		if (repositoryMap.containsKey(this.id())) {
-			return;
-		}
-
-		final List<Long> fehlendeIds = this.reportingContext.repositorySchueler().schueler().keySet().stream()
-				.filter(id -> !repositoryMap.containsKey(id))
-				.toList();
-
-		if (fehlendeIds.isEmpty()) {
-			repositoryMap.putIfAbsent(this.id(), new ArrayList<>());
-			return;
-		}
-
-		try {
-			final Map<Long, List<T>> geladeneDaten = funktionGesammeltesLaden.apply(fehlendeIds);
-			repositoryMap.putAll(geladeneDaten);
-			// Leere Listen für alle angefragten IDs ohne Treffer
-			for (final Long id : fehlendeIds) {
-				repositoryMap.putIfAbsent(id, new ArrayList<>());
-			}
-		} catch (final Exception e) {
-			// Gesammeltes Laden fehlgeschlagen – Fallback: einzelnes Laden für aktuellen Schüler
-			ReportingExceptionUtils.logException(
-					"INFO: Fehler beim gesammelten Laden von " + datenbezeichnung + ". Versuche einzelnes Laden für Schüler ID " + this.id(),
-					e, reportingContext.logger(), LogLevel.INFO, 0);
-			try {
-				final Map<Long, List<T>> singleResult = funktionGesammeltesLaden.apply(List.of(this.id()));
-				final List<T> daten = singleResult.get(this.id());
-				repositoryMap.put(this.id(), (daten != null) ? daten : new ArrayList<>());
-			} catch (final Exception exSingle) {
-				ReportingExceptionUtils.logException(
-						"INFO: Fehler beim einzelnen Laden von " + datenbezeichnung + " für Schüler ID " + this.id() + ". Setze leere Liste.",
-						exSingle, reportingContext.logger(), LogLevel.INFO, 0);
-				repositoryMap.put(this.id(), new ArrayList<>());
-			}
-		}
-	}
-
-	/**
-	 * Generische Methode zum Laden von Einzelobjekten in eine Map des Repositories als gesammeltes Laden mit Fallback.
-	 * Prüft, ob für den aktuellen Schüler bereits Daten im Repository vorhanden sind.
-	 * Falls nicht, werden die IDs aller Schüler ermittelt, deren Daten noch nicht im Repository sind, und gesammelt nachgeladen.
-	 * Schlägt dies fehl, wird nur für den aktuellen Schüler versucht, die Daten zu laden.
-	 * In jedem Fall wird sichergestellt, dass nach dem Aufruf ein Eintrag in der Map existiert.
-	 *
-	 * @param <T>                      Der Typ der Daten in der Map.
-	 * @param repositoryMap            Die Map aus dem Repository (Key: Schüler-ID, Value: Einzelobjekt).
-	 * @param funktionGesammeltesLaden Die Funktion, die eine Liste von Schüler-IDs entgegennimmt und eine Map mit Ergebnissen zurückgibt.
-	 * @param datenbezeichnung         Eine Bezeichnung der Daten für Log-Meldungen (z. B. "Schulbesuchsdaten").
-	 */
-	private <T> void ladeObjektInRepositoryMap(final Map<Long, T> repositoryMap, final Function<List<Long>, Map<Long, T>> funktionGesammeltesLaden,
-			final String datenbezeichnung) {
-		if (repositoryMap.containsKey(this.id())) {
-			return;
-		}
-
-		final List<Long> fehlendeIds = this.reportingContext.repositorySchueler().schueler().keySet().stream()
-				.filter(id -> !repositoryMap.containsKey(id))
-				.toList();
-
-		if (fehlendeIds.isEmpty()) {
-			return;
-		}
-
-		try {
-			final Map<Long, T> geladeneDaten = funktionGesammeltesLaden.apply(fehlendeIds);
-			repositoryMap.putAll(geladeneDaten);
-		} catch (final Exception e) {
-			ReportingExceptionUtils.logException(
-					"INFO: Fehler beim gesammelten Laden von " + datenbezeichnung + ". Versuche einzelnes Laden für Schüler ID " + this.id(),
-					e, reportingContext.logger(), LogLevel.INFO, 0);
-			try {
-				final Map<Long, T> singleResult = funktionGesammeltesLaden.apply(List.of(this.id()));
-				repositoryMap.putAll(singleResult);
-			} catch (final Exception exSingle) {
-				ReportingExceptionUtils.logException(
-						"INFO: Fehler beim einzelnen Laden von " + datenbezeichnung + " für Schüler ID " + this.id() + ".",
-						exSingle, reportingContext.logger(), LogLevel.INFO, 0);
-				repositoryMap.put(this.id(), null);
-			}
-		}
-	}
 }

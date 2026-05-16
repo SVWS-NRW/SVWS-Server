@@ -13,13 +13,11 @@ import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
-import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
 import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingLehrer;
 import de.svws_nrw.module.reporting.types.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
-import de.svws_nrw.module.reporting.utils.ReportingListBuilder;
 
 /**
  * Domänen-Repository für Lehrkräfte (Stammdaten und Reporting-Objekte).
@@ -83,36 +81,25 @@ public class ReportingRepositoryLehrer {
 
 	/**
 	 * Gibt das ReportingLehrer-Objekt zur übergebenen ID zurück. Fehlt der Eintrag im Cache, wird er aus der Datenbank nachgeladen.
-	 * Schlägt das Nachladen fehl, wird ein nicht-gecachter Fallback-Lehrer mit leeren Stammdaten zurückgegeben, damit
-	 * Reports keine NPE auslösen, sondern Leerstrings rendern.
+	 * Die Methode delegiert an {@link #lehrer(List, boolean)}, damit auch die Map der Lehrerstammdaten konsistent gefüllt wird.
+	 * Schlägt das Nachladen fehl oder existiert die Lehrkraft nicht, wird ein nicht-gecachter Fallback-Lehrer mit leeren
+	 * Stammdaten zurückgegeben, damit Reports keine NPE auslösen, sondern Leerstrings rendern.
 	 *
 	 * @param idLehrer Die ID des Lehrers.
 	 *
-	 * @return Das ReportingLehrer-Objekt, ein Fallback-Objekt mit leeren Stammdaten bei DB-Fehler, oder {@code null} bei ungültiger ID.
+	 * @return Das ReportingLehrer-Objekt, ein Fallback-Objekt mit leeren Stammdaten bei DB-Fehler oder fehlendem Eintrag.
 	 */
 	public ReportingLehrer lehrer(final long idLehrer) {
-		if (idLehrer < 0) {
-			return null;
+		if (mapLehrer.containsKey(idLehrer)) {
+			return mapLehrer.get(idLehrer);
 		}
-
-		if (!mapLehrerStammdaten.containsKey(idLehrer)) {
-			try {
-				final LehrerStammdaten fehlendeLehrerstammdaten =
-						new DataLehrerStammdaten(this.reportingContext.conn(), new DataLernplattformen(this.reportingContext.conn()),
-								new DataEinwilligungsarten(this.reportingContext.conn())).getById(idLehrer);
-				mapLehrerStammdaten.put(fehlendeLehrerstammdaten.id, fehlendeLehrerstammdaten);
-			} catch (final ApiOperationException e) {
-				ReportingExceptionUtils.logException(
-						"INFO: Fehler bei der Ermittlung der fehlenden Lehrerstammdaten einer Lehrkraft aus der Datenbank im ReportingContext. "
-								+ "Es wird ein Fallback-Lehrer mit leeren Stammdaten zurückgegeben.",
-						e, this.reportingContext.logger(), LogLevel.INFO, 0);
-				final LehrerStammdaten fallback = new LehrerStammdaten();
-				fallback.id = idLehrer;
-				return new ProxyReportingLehrer(this.reportingContext, fallback);
-			}
+		final List<ReportingLehrer> result = lehrer(List.of(idLehrer), false);
+		if (!result.isEmpty()) {
+			return result.getFirst();
 		}
-
-		return mapLehrer.computeIfAbsent(idLehrer, key -> new ProxyReportingLehrer(this.reportingContext, mapLehrerStammdaten.get(key)));
+		final LehrerStammdaten fallback = new LehrerStammdaten();
+		fallback.id = idLehrer;
+		return new ProxyReportingLehrer(this.reportingContext, fallback);
 	}
 
 	/**
@@ -141,19 +128,9 @@ public class ReportingRepositoryLehrer {
 						SortierungRegistryReportingLehrer.sortierungRegistry())
 				: Optional.empty();
 
-		return ReportingListBuilder.erstelleReportingListe(idsLehrer, mapLehrerStammdaten, mapLehrer,
-				fehlendeIds -> {
-					try {
-						return new DataLehrerStammdaten(this.reportingContext.conn(), new DataLernplattformen(this.reportingContext.conn()),
-								new DataEinwilligungsarten(this.reportingContext.conn())).getListByIDs(fehlendeIds);
-					} catch (final ApiOperationException e) {
-						ReportingExceptionUtils.logException(
-								"FEHLER: Fehler bei der Ermittlung der fehlenden Lehrerstammdaten einer Lehrerliste aus der Datenbank im "
-										+ "ReportingContext.",
-								e, this.reportingContext.logger(), LogLevel.ERROR, 0);
-						return new ArrayList<>();
-					}
-				},
+		return ReportingRepositoryUtils.erstelleReportingListe(idsLehrer, mapLehrerStammdaten, mapLehrer,
+				fehlendeIds -> new DataLehrerStammdaten(this.reportingContext.conn(), new DataLernplattformen(this.reportingContext.conn()),
+						new DataEinwilligungsarten(this.reportingContext.conn())).getListByIDs(fehlendeIds),
 				key -> new ProxyReportingLehrer(this.reportingContext, mapLehrerStammdaten.get(key)),
 				stammdaten -> stammdaten.id,
 				optionalComparator,
