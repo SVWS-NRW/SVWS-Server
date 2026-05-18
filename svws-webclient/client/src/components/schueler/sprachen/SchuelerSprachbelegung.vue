@@ -55,7 +55,7 @@
 					</td>
 					<td>
 						<svws-ui-select v-if="!readonly" title="Bis Jahrgang" headless removable v-model="row.belegungBisJahrgang.value"
-							:items="sprachJahrgaengeBis(row.proxy).value" :item-text="jahrgangText" />
+							:items="sprachJahrgaengeBis(row.belegungVonJahrgang.value)" :item-text="jahrgangText" />
 						<div v-else> {{ row.belegungBisJahrgang.value }} </div>
 					</td>
 					<td class="ui-divider">
@@ -226,17 +226,16 @@
 		return jahrgaenge;
 	});
 
-	const sprachJahrgaengeBis = (sprachbelegung: Sprachbelegung) => computed(() => {
-		const jahrgangVon = (sprachbelegung.belegungVonJahrgang === null) ? null : Jahrgaenge.data().getWertByKuerzel(sprachbelegung.belegungVonJahrgang);
+	function sprachJahrgaengeBis(jahrgangVon: Jahrgaenge | null) {
 		const jahrgaenge_list = sprachJahrgaenge.value;
 		const jahrgaenge = [];
 		for (const jahrgang of jahrgaenge_list) {
-			if ((jahrgangVon !== null) && (jahrgang.ordinal() > jahrgangVon.ordinal())) {
+			if ((jahrgangVon !== null) && (jahrgang.ordinal() >= jahrgangVon.ordinal())) {
 				jahrgaenge.push(jahrgang);
 			}
 		}
 		return jahrgaenge;
-	});
+	}
 
 	function getTextBySprache(kuerzel: string) {
 		const fachEintrag = Fach.getMapFremdsprachenKuerzelAtomar(schuljahr.value).get(kuerzel)?.daten(schuljahr.value) ?? null;

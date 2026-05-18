@@ -37,7 +37,7 @@ export class SchuelerSprachbelegungModelProxy extends ModelProxy<Sprachbelegung>
 				return;
 			}
 			const jahrgang = value.daten(this._manager().schuelerGetSchuljahrOrException());
-			this.proxy.belegungBisJahrgang = jahrgang?.kuerzel ?? null;
+			this.proxy.belegungVonJahrgang = jahrgang?.kuerzel ?? null;
 		},
 	});
 
