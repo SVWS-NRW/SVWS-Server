@@ -63,6 +63,7 @@ import de.svws_nrw.service.schueler.schulbesuch.BisherigeSchulePatchRequest;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerMerkmalCreateRequest;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerMerkmalPatchRequest;
 import de.svws_nrw.service.schueler.schulbesuch.SchulbesuchPatchRequest;
+import de.svws_nrw.service.schueler.schulbesuch.SchulbesuchServiceFactory;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -267,11 +268,13 @@ public class APISchueler {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(implementation = SchuelerNeu.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		final var schulbesuchService = SchulbesuchControllerFactory.withWriteAccess(request).getSchulbesuchController().getSchulbesuchService();
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataSchuelerNeu(new DataSchuelerStammdaten(conn), new DataSchuelerLernabschnittsdaten(conn), schulbesuchService,
-						new DataSchuelerEinwilligungen(conn), new DataSchuelerLernplattformen(conn),
-						new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).add(is),
+				conn -> {
+					final var schulbesuchService = SchulbesuchServiceFactory.getNewInstance().getSchulbesuchService();
+					return new DataSchuelerNeu(new DataSchuelerStammdaten(conn), new DataSchuelerLernabschnittsdaten(conn), schulbesuchService,
+							new DataSchuelerEinwilligungen(conn), new DataSchuelerLernplattformen(conn),
+							new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).add(is);
+				},
 				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
 
