@@ -60,6 +60,7 @@ public interface BisherigeSchuleMapper {
 	 * @param toPatch                die zu aktualisierende Entity
 	 */
 	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "idSchueler", ignore = true)
 	@Mapping(target = "schulnummer", ignore = true)
 	@Mapping(target = "bezeichnungEntlassgrund", ignore = true)
 	@Mapping(target = "AbgangsSchulform", ignore = true)

@@ -8,17 +8,17 @@ import { routeError } from "~/router/error/RouteError";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteDataSchuelerSchulbesuch } from "~/router/apps/schueler/schulbesuch/RouteDataSchuelerSchulbesuch";
 
-import type { SchuelerSchulbesuchProps } from "~/components/schueler/schulbesuch/SSchuelerSchulbesuchProps";
+import type { SchuelerSchulbesuchProps } from "~/components/schueler/schulbesuch/SchuelerSchulbesuchProps";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { routeSchulen } from "~/router/apps/schule/kataloge/schulen/RouteSchulen";
 
-const SSchuelerSchulbesuch = () => import("~/components/schueler/schulbesuch/SSchuelerSchulbesuch.vue");
+const SchuelerSchulbesuch = () => import("~/components/schueler/schulbesuch/SchuelerSchulbesuch.vue");
 
 export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbesuch, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN], "schueler.schulbesuch", "schulbesuch", SSchuelerSchulbesuch, new RouteDataSchuelerSchulbesuch());
+		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN], "schueler.schulbesuch", "schulbesuch", SchuelerSchulbesuch, new RouteDataSchuelerSchulbesuch());
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schulbesuch";
@@ -28,7 +28,7 @@ export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbe
 		try {
 			const { id } = RouteNode.getIntParams(to_params, ["id"]);
 			if (id !== undefined) {
-				await this.data.ladeDaten(routeSchueler.data.manager.liste.get(id));
+				await this.data.ladeDaten();
 			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);
@@ -41,18 +41,19 @@ export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbe
 
 	public getProps(to: RouteLocationNormalized): SchuelerSchulbesuchProps {
 		return {
-			manager: () => this.data.schuelerSchulbesuchManager,
+			manager: () => this.data.manager,
 			schulform: api.schulform,
 			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			autofocus: routeSchueler.data.autofocus,
+			patch: routeSchuelerSchulbesuch.data.patch,
 			goToSchule: this.goToSchule,
-			addSchuelerSchulbesuchSchule: this.data.addSchuelerSchulbesuchSchule,
-			patchSchuelerSchulbesuchSchule: this.data.patchSchuelerSchulbesuchSchule,
-			deleteSchuelerSchulbesuchSchulen: this.data.deleteSchuelerSchulbesuchSchulen,
-			addSchuelerSchulbesuchMerkmal: this.data.addSchuelerSchulbesuchMerkmal,
-			patchSchuelerSchulbesuchMerkmal: this.data.patchSchuelerSchulbesuchMerkmal,
-			deleteSchuelerSchulbesuchMerkmale: this.data.deleteSchuelerSchulbesuchMerkmale,
+			addBisherigeSchule: this.data.addBisherigeSchule,
+			patchBisherigeSchule: this.data.patchBisherigeSchule,
+			deleteBisherigeSchulen: this.data.deleteBisherigeSchulen,
+			addMerkmal: this.data.addMerkmal,
+			patchMerkmal: this.data.patchMerkmal,
+			deleteMerkmale: this.data.deleteMerkmale,
 		};
 	}
 }

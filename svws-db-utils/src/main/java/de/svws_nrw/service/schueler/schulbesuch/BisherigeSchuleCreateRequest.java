@@ -1,10 +1,13 @@
 package de.svws_nrw.service.schueler.schulbesuch;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import de.svws_nrw.validation.constraints.ValidDateFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class BisherigeSchuleCreateRequest {
 
 	/** Die ID des Schülers. */

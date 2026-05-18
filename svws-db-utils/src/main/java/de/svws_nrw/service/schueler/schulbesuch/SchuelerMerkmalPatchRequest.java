@@ -1,9 +1,11 @@
 package de.svws_nrw.service.schueler.schulbesuch;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import de.svws_nrw.validation.constraints.ValidDateFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.openapitools.jackson.nullable.JsonNullable;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SchuelerMerkmalPatchRequest {
 
 

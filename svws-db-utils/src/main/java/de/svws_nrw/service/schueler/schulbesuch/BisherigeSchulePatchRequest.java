@@ -1,17 +1,14 @@
 package de.svws_nrw.service.schueler.schulbesuch;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import de.svws_nrw.validation.constraints.ValidDateFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.openapitools.jackson.nullable.JsonNullable;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class BisherigeSchulePatchRequest {
-
-	/** Die ID des Schülers. */
-	@Schema(description = "Die ID des Schülers.", example = "178947")
-	@NotNull
-	public JsonNullable<Long> idSchueler = JsonNullable.undefined();
 
 	/** Die ID der Schule. */
 	@Schema(description = "Die ID der Schule", example = "178947")

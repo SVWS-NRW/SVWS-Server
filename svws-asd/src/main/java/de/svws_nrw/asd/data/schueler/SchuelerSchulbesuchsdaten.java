@@ -91,8 +91,7 @@ public class SchuelerSchulbesuchsdaten {
 
 	/** Gibt an, ob die aufnehmende Schule den Wechsel bestätigt hat. */
 	@Schema(description = "gibt an, ob die aufnehmende Schule den Wechsel bestätigt hat", example = "true")
-	public Boolean aufnehmendBestaetigt;
-
+	public boolean aufnehmendBestaetigt;
 
 	// **** Informationen zu der besuchten Grundschule
 

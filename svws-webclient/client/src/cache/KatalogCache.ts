@@ -1,6 +1,6 @@
 import type { Abteilung, Beschaeftigungsart, Betrieb, Betriebsart, EinschulungsartKatalogEintrag, Einwilligungsart, Erzieherart, FachDaten, Fahrschuelerart,
-	Floskel, Floskelgruppe, FoerderschwerpunktEintrag, Haltestelle, JahrgangsDaten, KatalogEntlassgrund, Kindergarten, Lernplattform, List, OrtKatalogEintrag,
-	OrtsteilKatalogEintrag, ReligionEintrag, SchulEintrag, Telefonart, VermerkartEintrag } from "@core";
+	Floskel, Floskelgruppe, FoerderschwerpunktEintrag, Haltestelle, JahrgangsDaten, KatalogEntlassgrund, Kindergarten, Lernplattform, List, Merkmal,
+	OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchulEintrag, Telefonart, VermerkartEintrag } from "@core";
 import { Katalog } from "~/cache/Katalog";
 import { api } from "~/router/Api";
 
@@ -30,6 +30,7 @@ export class KatalogCache {
 	private _jahrgaengeById: Map<number, JahrgangsDaten> = new Map();
 	private _kindergaertenById: Map<number, Kindergarten> = new Map();
 	private _lernplattformenById: Map<number, Lernplattform> = new Map();
+	private _merkmaleById: Map<number, Merkmal> = new Map();
 	private _ortsteileById: Map<number, OrtsteilKatalogEintrag> = new Map();
 	private _orteById: Map<number, OrtKatalogEintrag> = new Map();
 	private _religionenById: Map<number, ReligionEintrag> = new Map();
@@ -155,6 +156,11 @@ export class KatalogCache {
 		this._katalogCacheUpdater.set(Katalog.VERMERKARTEN, async () => {
 			const result = await api.server.getVermerkarten(api.schema);
 			return { vermerkartenById: this.convertToMap(result) };
+		});
+
+		this._katalogCacheUpdater.set(Katalog.MERKMALE, async () => {
+			const result = await api.server.getMerkmale(api.schema);
+			return { merkmaleById: this.convertToMap(result) };
 		});
 	}
 
@@ -357,5 +363,13 @@ export class KatalogCache {
 
 	set vermerkartenById(value: Map<number, VermerkartEintrag>) {
 		this._vermerkartenById = value;
+	}
+
+	get merkmaleById(): Map<number, Merkmal> {
+		return this._merkmaleById;
+	}
+
+	set merkmaleById(value: Map<number, Merkmal>) {
+		this._merkmaleById = value;
 	}
 }

@@ -100,7 +100,7 @@ public final class BisherigeSchuleService {
 		return TransactionSupport.transactional(() -> {
 			final var bisherigeSchule = this.validateCreate(dto);
 			final var created = this.repository.create(bisherigeSchule);
-			return this.mapper.toApi(created, dto.idSchule, dto.idEntlassgrund);
+			return this.mapper.toApi(created, dto.idEntlassgrund, dto.idSchule);
 		});
 	}
 
@@ -127,8 +127,8 @@ public final class BisherigeSchuleService {
 			mapper.patch(dto, entity);
 			return this.mapper.toApi(
 					entity,
-					dto.idSchule.orElseGet(()  -> this.dataSchulen.getEntityBySchulnummer(entity.schulnummer).ID),
-					dto.idEntlassgrund.orElseGet(() -> this.dataKatalogEntlassgruende.getEntityByBezeichnung(entity.bezeichnungEntlassgrund).ID)
+					dto.idEntlassgrund.orElseGet(() -> this.dataKatalogEntlassgruende.getEntityByBezeichnung(entity.bezeichnungEntlassgrund).ID),
+					dto.idSchule.orElseGet(()  -> this.dataSchulen.getEntityBySchulnummer(entity.schulnummer).ID)
 					);
 		});
 	}

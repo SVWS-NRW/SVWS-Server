@@ -189,3 +189,4 @@ export { SchwerpunkteListeManager } from './ui/manager/kataloge/SchwerpunkteList
 export { SchuelerSchnelleingabeManager } from './ui/manager/schueler/SchuelerSchnelleingabeManager';
 export { SchuelerNeuManager } from './ui/manager/schueler/SchuelerNeuManager';
 export { AnkreuzkompetenzenListeManager } from './ui/manager/kataloge/AnkreuzkompetenzenListeManager';
+export { SchuelerSchulbesuchManager } from './ui/manager/schueler/SchuelerSchulbesuchManager';

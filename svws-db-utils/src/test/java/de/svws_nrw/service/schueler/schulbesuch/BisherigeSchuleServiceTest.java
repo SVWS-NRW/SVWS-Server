@@ -179,8 +179,7 @@ class BisherigeSchuleServiceTest {
 		when(dataSchulen.getEntityById(schule.ID)).thenReturn(schule);
 		when(mapper.toDomain(dto, entlassgrund.Bezeichnung, schule.SchulNr)).thenReturn(entity);
 		when(repository.create(entity)).thenReturn(entity);
-		// idSchule zuerst, dann idEntlassgrund
-		when(mapper.toApi(entity, schule.ID, entlassgrund.ID)).thenReturn(apiModel);
+		when(mapper.toApi(entity, entlassgrund.ID, schule.ID)).thenReturn(apiModel);
 
 		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
 				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
@@ -209,8 +208,7 @@ class BisherigeSchuleServiceTest {
 		when(dataSchulen.getEntityById(schule.ID)).thenReturn(schule);
 		when(mapper.toDomain(dto, null, schule.SchulNr)).thenReturn(entity);
 		when(repository.create(entity)).thenReturn(entity);
-		// idSchule zuerst, idEntlassgrund null
-		when(mapper.toApi(entity, schule.ID, null)).thenReturn(apiModel);
+		when(mapper.toApi(entity, null, schule.ID)).thenReturn(apiModel);
 
 		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
 				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
@@ -315,8 +313,7 @@ class BisherigeSchuleServiceTest {
 		when(dataSchulen.getEntityById(schule.ID)).thenReturn(schule);
 		when(mapper.toDomain(dto, null, schule.SchulNr)).thenReturn(entity);
 		when(repository.create(entity)).thenReturn(entity);
-		// idSchule zuerst, idEntlassgrund null
-		when(mapper.toApi(entity, schule.ID, null)).thenReturn(apiModel);
+		when(mapper.toApi(entity, null, schule.ID)).thenReturn(apiModel);
 
 		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
 				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
@@ -347,8 +344,7 @@ class BisherigeSchuleServiceTest {
 		when(repository.getById(id)).thenReturn(entity);
 		when(dataSchulen.getEntityById(schule.ID)).thenReturn(schule);
 		when(dataKatalogEntlassgruende.getEntityById(entlassgrund.ID)).thenReturn(entlassgrund);
-		// idSchule zuerst, dann idEntlassgrund
-		when(mapper.toApi(entity, schule.ID, entlassgrund.ID)).thenReturn(apiModel);
+		when(mapper.toApi(entity, entlassgrund.ID, schule.ID)).thenReturn(apiModel);
 
 		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
 				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
@@ -381,8 +377,7 @@ class BisherigeSchuleServiceTest {
 		when(repository.getById(id)).thenReturn(entity);
 		when(dataSchulen.getEntityBySchulnummer(schule.SchulNr)).thenReturn(schule);
 		when(dataKatalogEntlassgruende.getEntityByBezeichnung(entlassgrund.Bezeichnung)).thenReturn(entlassgrund);
-		// idSchule zuerst, dann idEntlassgrund
-		when(mapper.toApi(entity, schule.ID, entlassgrund.ID)).thenReturn(apiModel);
+		when(mapper.toApi(entity, entlassgrund.ID, schule.ID)).thenReturn(apiModel);
 
 		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
 				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
