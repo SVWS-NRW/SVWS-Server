@@ -805,6 +805,7 @@ export { HerkunftKatalogEintrag } from './core/data/schule/HerkunftKatalogEintra
 export { Kindergarten } from './core/data/schule/Kindergarten';
 export { Leitungsfunktion } from './core/data/schule/Leitungsfunktion';
 export { Lernplattform } from './core/data/schule/Lernplattform';
+export { Logo } from './core/data/schule/Logo';
 export { Merkmal } from './core/data/schule/Merkmal';
 export { PruefungsordnungKatalogEintrag } from './core/data/schule/PruefungsordnungKatalogEintrag';
 export { Raum } from './core/data/schule/Raum';

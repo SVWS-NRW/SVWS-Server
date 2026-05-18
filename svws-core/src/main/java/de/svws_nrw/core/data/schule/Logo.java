@@ -1,0 +1,60 @@
+package de.svws_nrw.core.data.schule;
+
+import de.svws_nrw.transpiler.TranspilerDTO;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
+
+/**
+ * Die Klasse beschreibt das Core-DTO für die Logoverwaltung.
+ */
+@XmlRootElement
+@Schema(description = "ein Eintrag in der Logoverwaltung.")
+@TranspilerDTO
+public class Logo {
+
+	/** Die ID des Eintrags. */
+	@Schema(description = "die ID des Eintrags", example = "4711", accessMode = Schema.AccessMode.READ_ONLY)
+	public long id = -1;
+
+	/** Die Kennung des Logos. */
+	@Schema(description = "die Kennung des Logos", example = "DIN5008_BRIEFKOPF")
+	public @NotNull String kennung = "";
+
+	/** Die Bezeichnung des Logos. */
+	@Schema(description = "die Bezeichnung des Logos", example = "DIN5008-Briefkopf")
+	public @NotNull String bezeichnung = "";
+
+	/** Die Beschreibung des Logos. */
+	@Schema(description = "die Beschreibung des Logos", example = "Vollständiger Briefkopf für Anschreiben nach DIN5008")
+	public @NotNull String beschreibung = "";
+
+	/** Das Logo als Bild im Base64-Format. */
+	@Schema(description = "das Logo als Bild im Base64-Format")
+	public @NotNull String logoBase64 = "";
+
+	/** Der MimeType des Logos. */
+	@Schema(description = "der MimeType des Logos", example = "image/png")
+	public @NotNull String mimeType = "";
+
+	/** Die Breite des Logos in Pixel. */
+	@Schema(description = "die Breite des Logos in Pixel", example = "450")
+	public Integer breitePX;
+
+	/** Die Höhe des Logos in Pixel. */
+	@Schema(description = "die Höhe des Logos in Pixel", example = "450")
+	public Integer hoehePX;
+
+	/** Die Breite des Logos in Millimetern. */
+	@Schema(description = "die Breite des Logos in Millimetern", example = "190")
+	public Integer breiteMM;
+
+	/** Die Höhe des Logos in Millimetern. */
+	@Schema(description = "die Höhe des Logos in Millimetern", example = "45")
+	public Integer hoeheMM;
+
+	/** Datum, wann das Logo hinzugefügt wurde. */
+	@Schema(description = "Datum, wann das Logo hinzugefügt wurde", example = "2026-04-10")
+	public @NotNull String hinzugefuegtAm = "";
+
+}

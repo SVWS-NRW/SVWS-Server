@@ -1,70 +1,68 @@
 package de.svws_nrw.api.server;
 
-import de.svws_nrw.core.data.erzieher.Erzieherart;
-import de.svws_nrw.core.data.schule.Betrieb;
-import de.svws_nrw.core.data.schule.BetriebeAnsprechpartner;
-import de.svws_nrw.core.data.schule.Betriebsart;
-import de.svws_nrw.core.data.schule.Floskel;
-import de.svws_nrw.core.data.schule.Floskelgruppe;
-import de.svws_nrw.core.data.schule.Leitungsfunktion;
-import de.svws_nrw.core.data.schule.Lernplattform;
-import de.svws_nrw.core.data.schule.Teilstandort;
-import de.svws_nrw.core.data.schule.Telefonart;
-import de.svws_nrw.data.erzieher.DataErzieherarten;
-import de.svws_nrw.data.schule.DataBetriebe;
-import de.svws_nrw.data.schule.DataBetriebAnsprechpartner;
-import de.svws_nrw.data.schule.DataBetriebsarten;
-import de.svws_nrw.data.schule.DataFloskelJahrgangZuordnung;
-import de.svws_nrw.data.schule.DataFloskelgruppen;
-import de.svws_nrw.data.schule.DataFloskeln;
-import de.svws_nrw.data.schule.DataLeitungsfunktionen;
-import de.svws_nrw.data.schule.DataLernplattformen;
-import de.svws_nrw.data.schule.DataTeilstandorte;
-import de.svws_nrw.data.schule.DataTelefonarten;
 import java.io.InputStream;
 
+import de.svws_nrw.asd.data.NoteKatalogEintrag;
+import de.svws_nrw.asd.data.schueler.EinschulungsartKatalogEintrag;
+import de.svws_nrw.asd.data.schueler.SchuelerStatusKatalogEintrag;
+import de.svws_nrw.asd.data.schule.BerufskollegAnlageKatalogEintrag;
+import de.svws_nrw.asd.data.schule.BerufskollegBerufsebeneKatalogEintrag;
+import de.svws_nrw.asd.data.schule.FoerderschwerpunktKatalogEintrag;
+import de.svws_nrw.asd.data.schule.KindergartenbesuchKatalogEintrag;
+import de.svws_nrw.asd.data.schule.NationalitaetenKatalogEintrag;
+import de.svws_nrw.asd.data.schule.OrganisationsformKatalogEintrag;
+import de.svws_nrw.asd.data.schule.SchulabschlussAllgemeinbildendKatalogEintrag;
+import de.svws_nrw.asd.data.schule.SchulabschlussBerufsbildendKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchuleStammdaten;
+import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
+import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.data.schule.Schulleitung;
 import de.svws_nrw.asd.data.schule.VerkehrsspracheKatalogEintrag;
 import de.svws_nrw.core.data.SimpleOperationResponse;
+import de.svws_nrw.core.data.erzieher.Erzieherart;
 import de.svws_nrw.core.data.kataloge.SchulEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerVermerkartZusammenfassung;
 import de.svws_nrw.core.data.schule.AbgangsartKatalog;
 import de.svws_nrw.core.data.schule.AllgemeineMerkmaleKatalogEintrag;
 import de.svws_nrw.core.data.schule.Aufsichtsbereich;
-import de.svws_nrw.asd.data.schule.BerufskollegAnlageKatalogEintrag;
-import de.svws_nrw.asd.data.schule.BerufskollegBerufsebeneKatalogEintrag;
 import de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalog;
+import de.svws_nrw.core.data.schule.Betrieb;
+import de.svws_nrw.core.data.schule.BetriebeAnsprechpartner;
+import de.svws_nrw.core.data.schule.Betriebsart;
 import de.svws_nrw.core.data.schule.Einwilligungsart;
-import de.svws_nrw.asd.data.schule.FoerderschwerpunktKatalogEintrag;
-import de.svws_nrw.asd.data.schule.KindergartenbesuchKatalogEintrag;
-import de.svws_nrw.asd.data.schule.NationalitaetenKatalogEintrag;
-import de.svws_nrw.asd.data.NoteKatalogEintrag;
-import de.svws_nrw.asd.data.schule.OrganisationsformKatalogEintrag;
+import de.svws_nrw.core.data.schule.Floskel;
+import de.svws_nrw.core.data.schule.Floskelgruppe;
+import de.svws_nrw.core.data.schule.Leitungsfunktion;
+import de.svws_nrw.core.data.schule.Lernplattform;
+import de.svws_nrw.core.data.schule.Logo;
 import de.svws_nrw.core.data.schule.PruefungsordnungKatalogEintrag;
 import de.svws_nrw.core.data.schule.Raum;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
-import de.svws_nrw.core.data.schule.VermerkartEintrag;
-import de.svws_nrw.asd.data.schueler.EinschulungsartKatalogEintrag;
-import de.svws_nrw.asd.data.schueler.SchuelerStatusKatalogEintrag;
-import de.svws_nrw.asd.data.schule.SchulabschlussAllgemeinbildendKatalogEintrag;
-import de.svws_nrw.asd.data.schule.SchulabschlussBerufsbildendKatalogEintrag;
 import de.svws_nrw.core.data.schule.SchulenKatalogEintrag;
-import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
-import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
 import de.svws_nrw.core.data.schule.SchultraegerKatalogEintrag;
+import de.svws_nrw.core.data.schule.Teilstandort;
+import de.svws_nrw.core.data.schule.Telefonart;
+import de.svws_nrw.core.data.schule.VermerkartEintrag;
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenzeit;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
+import de.svws_nrw.data.erzieher.DataErzieherarten;
 import de.svws_nrw.data.kataloge.DataKatalogAufsichtsbereiche;
 import de.svws_nrw.data.kataloge.DataKatalogPausenzeiten;
 import de.svws_nrw.data.kataloge.DataKatalogRaeume;
 import de.svws_nrw.data.kataloge.DataKatalogZeitraster;
 import de.svws_nrw.data.schueler.DataSchuelerVermerkartenZusammenfassung;
+import de.svws_nrw.data.schule.DataBetriebAnsprechpartner;
+import de.svws_nrw.data.schule.DataBetriebe;
+import de.svws_nrw.data.schule.DataBetriebsarten;
+import de.svws_nrw.data.schule.DataEinwilligungsarten;
+import de.svws_nrw.data.schule.DataFloskelJahrgangZuordnung;
+import de.svws_nrw.data.schule.DataFloskelgruppen;
+import de.svws_nrw.data.schule.DataFloskeln;
 import de.svws_nrw.data.schule.DataKatalogAbgangsartenAllgemeinbildend;
 import de.svws_nrw.data.schule.DataKatalogAbgangsartenBerufsbildend;
 import de.svws_nrw.data.schule.DataKatalogAllgemeineMerkmale;
@@ -72,7 +70,6 @@ import de.svws_nrw.data.schule.DataKatalogBerufskollegAnlagen;
 import de.svws_nrw.data.schule.DataKatalogBerufskollegBerufsebenen;
 import de.svws_nrw.data.schule.DataKatalogBerufskollegFachklassen;
 import de.svws_nrw.data.schule.DataKatalogEinschulungsarten;
-import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataKatalogFoerderschwerpunkte;
 import de.svws_nrw.data.schule.DataKatalogKindergartenbesuch;
 import de.svws_nrw.data.schule.DataKatalogNationalitaeten;
@@ -86,12 +83,17 @@ import de.svws_nrw.data.schule.DataKatalogSchulformen;
 import de.svws_nrw.data.schule.DataKatalogSchulgliederungen;
 import de.svws_nrw.data.schule.DataKatalogSchultraeger;
 import de.svws_nrw.data.schule.DataKatalogVerkehrssprachen;
+import de.svws_nrw.data.schule.DataLeitungsfunktionen;
+import de.svws_nrw.data.schule.DataLernplattformen;
+import de.svws_nrw.data.schule.DataLogoverwaltung;
 import de.svws_nrw.data.schule.DataReligionen;
-import de.svws_nrw.data.schule.DataVermerkarten;
 import de.svws_nrw.data.schule.DataSchuelerStatus;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.data.schule.DataSchulen;
 import de.svws_nrw.data.schule.DataSchulleitung;
+import de.svws_nrw.data.schule.DataTeilstandorte;
+import de.svws_nrw.data.schule.DataTelefonarten;
+import de.svws_nrw.data.schule.DataVermerkarten;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -3542,4 +3544,134 @@ public class APISchule {
 				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Logos für die Logoverwaltung.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste der Logos
+	 */
+	@GET
+	@Path("/logoverwaltung/logos")
+	@Operation(summary = "Gibt eine Übersicht aller Logos für die Logoverwaltung zurück.",
+			description = "Erstellt eine Liste aller vorhanden Logos. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von den Logos besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Logo.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Logo-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Logo-Einträge gefunden")
+	public Response getLogos(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLogoverwaltung(conn).getAllAsResponse(),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode zum Hinzufügen eines Logos.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Anfrage ausgeführt werden soll
+	 * @param is        der JSON-Body mit den zu setzenden Feldern
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das neu hinzugefügte Logo
+	 */
+	@POST
+	@Path("/logoverwaltung/logos")
+	@Operation(summary = "Fügt ein neues Logos inklusive der zugehörigen Daten hinzu.",
+			description = "Fügt ein neues Logo inklusive Base64-kodiertem Bild sowie der zugehörigen Daten hinzu."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schuldaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Das neu hinzugefügte Logo",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Logo.class)))
+	@ApiResponse(responseCode = "400", description = "Die Anfrage enthält ungültige oder fehlende Daten.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schuldaten zu ändern.")
+	public Response addLogo(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die initialen Daten des Logos", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Logo.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLogoverwaltung(conn).addAsResponse(is),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode zum Aktualisieren des Base64-Bildes und der zugehörigen Daten eines Logos.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Anfrage ausgeführt werden soll
+	 * @param id        die ID des zu aktualisierenden Logos
+	 * @param is        der JSON-Body mit den zu aktualisierenden Feldern (logoBase64, mimeType, hinzugefuegtAm)
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das aktualisierte Logo
+	 */
+	@PATCH
+	@Path("/logoverwaltung/logos/{id : \\d+}")
+	@Operation(summary = "Aktualisiert das Bild und die zugehörigen Daten eines Logos.",
+			description = "Aktualisiert das Base64-kodierte Bild sowie die zugehörigen Daten des Logos mit der angegebenen ID. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schuldaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Das aktualisierte Logo",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Logo.class)))
+	@ApiResponse(responseCode = "400", description = "Die Anfrage enthält ungültige oder fehlende Daten.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schuldaten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Logo mit der angegebenen ID gefunden.")
+	public Response patchLogo(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Die zu aktualisierenden Felder des Logos", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Logo.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLogoverwaltung(conn).patchAsResponse(id, is),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode zum Löschen eines hochgeladenen Logos.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Anfrage ausgeführt werden soll
+	 * @param id        die ID des Logos, welches gelöscht werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operation
+	 */
+	@DELETE
+	@Path("/logoverwaltung/logos/{id : \\d+}")
+	@Operation(summary = "Löscht ein hochgeladenes Logo.",
+			description = "Löscht das Logo mit der angegebenen ID. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schuldaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Löschoperation wurde ausgeführt",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schuldaten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Logo mit der angegebenen ID gefunden.")
+	public Response deleteLogo(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLogoverwaltung(conn).deleteAsResponse(id),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Teilstandorte.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param is        der InputStream, mit der Liste der zu löschenden ids
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/logoverwaltung/logos")
+	@Operation(summary = "Entfernt mehrere Logos.", description = "Entfernt mehrere Logos, insofern die notwendigen Berechtigungen vorhanden sind.")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Logos zu entfernen.")
+	@ApiResponse(responseCode = "404", description = "Logos nicht vorhanden")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteLogos(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der zu löschenden Logos",
+					required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataLogoverwaltung(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+	}
 }

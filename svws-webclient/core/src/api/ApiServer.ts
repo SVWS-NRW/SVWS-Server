@@ -147,6 +147,7 @@ import { LehrerZugangsgrundKatalogEintrag } from '../asd/data/lehrer/LehrerZugan
 import { Leitungsfunktion } from '../core/data/schule/Leitungsfunktion';
 import { Lernplattform } from '../core/data/schule/Lernplattform';
 import { List } from '../java/util/List';
+import { Logo } from '../core/data/schule/Logo';
 import { LongAndStringLists } from '../core/data/LongAndStringLists';
 import { LongPair } from '../core/data/uv/LongPair';
 import { Merkmal } from '../core/data/schule/Merkmal';
@@ -16461,6 +16462,147 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = JSON.stringify(data);
 		return super.putJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getLogos für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/logoverwaltung/logos
+	 *
+	 * Erstellt eine Liste aller vorhanden Logos. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von den Logos besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste von Katalog-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Logo>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Logo-Einträge anzusehen.
+	 *   Code 404: Keine Logo-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste von Katalog-Einträgen
+	 */
+	public async getLogos(schema : string) : Promise<List<Logo>> {
+		const path = "/db/{schema}/schule/logoverwaltung/logos"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Logo>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Logo.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addLogo für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/logoverwaltung/logos
+	 *
+	 * Fügt ein neues Logo inklusive Base64-kodiertem Bild sowie der zugehörigen Daten hinzu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schuldaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Das neu hinzugefügte Logo
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Logo
+	 *   Code 400: Die Anfrage enthält ungültige oder fehlende Daten.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schuldaten zu ändern.
+	 *
+	 * @param {Logo} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Das neu hinzugefügte Logo
+	 */
+	public async addLogo(data : Logo, schema : string) : Promise<Logo> {
+		const path = "/db/{schema}/schule/logoverwaltung/logos"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = Logo.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return Logo.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteLogos für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/logoverwaltung/logos
+	 *
+	 * Entfernt mehrere Logos, insofern die notwendigen Berechtigungen vorhanden sind.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Logos zu entfernen.
+	 *   Code 404: Logos nicht vorhanden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
+	 */
+	public async deleteLogos(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/schule/logoverwaltung/logos"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchLogo für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/logoverwaltung/logos/{id : \d+}
+	 *
+	 * Aktualisiert das Base64-kodierte Bild sowie die zugehörigen Daten des Logos mit der angegebenen ID. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schuldaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Das aktualisierte Logo
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Logo
+	 *   Code 400: Die Anfrage enthält ungültige oder fehlende Daten.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schuldaten zu ändern.
+	 *   Code 404: Kein Logo mit der angegebenen ID gefunden.
+	 *
+	 * @param {Partial<Logo>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Das aktualisierte Logo
+	 */
+	public async patchLogo(data : Partial<Logo>, schema : string, id : number) : Promise<Logo> {
+		const path = "/db/{schema}/schule/logoverwaltung/logos/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = Logo.transpilerToJSONPatch(data);
+		const result : string = await super.patchJSONWithResponse(path, body);
+		const text = result;
+		return Logo.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteLogo für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/logoverwaltung/logos/{id : \d+}
+	 *
+	 * Löscht das Logo mit der angegebenen ID. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schuldaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Löschoperation wurde ausgeführt
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schuldaten zu ändern.
+	 *   Code 404: Kein Logo mit der angegebenen ID gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Löschoperation wurde ausgeführt
+	 */
+	public async deleteLogo(schema : string, id : number) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/schule/logoverwaltung/logos/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
 
 
