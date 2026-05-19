@@ -9908,7 +9908,7 @@ export class ApiServer extends BaseApi {
 	 *   Code 200: Die Patches wurden erfolgreich in die allgemeinen Anrechnungsstunden integriert.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<LehrerPersonalabschnittsdatenAnrechnungsstunden>
-	 *   Code 400: Die Patches dins fehlerhaft aufgebaut.
+	 *   Code 400: Die Patches sind fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten zu ändern.
 	 *   Code 404: Keine allgemeine Anrechnung mit der angegebenen ID gefunden
 	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
@@ -10075,7 +10075,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Mehrleistung wurde erfolgreich entfernt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: LehrerPersonalabschnittsdatenAnrechnungsstunden
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Mehrleistung zu löschen.
 	 *   Code 404: Keine Mehrleistung mit der angegebenen ID gefunden
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft
@@ -10086,13 +10086,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Mehrleistung wurde erfolgreich entfernt.
 	 */
-	public async deleteLehrerPersonalabschnittsdatenMehrleistung(schema : string, id : number) : Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
+	public async deleteLehrerPersonalabschnittsdatenMehrleistung(schema : string, id : number) : Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/mehrleistung/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
-		return LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text);
+		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
 
 
@@ -10146,6 +10146,38 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchLehrerPersonalabschnittsdatenMehrleistungen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/mehrleistungen
+	 *
+	 * Passt die Mehrleistungen eines Lehrers an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personalabschnittsdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Patches wurden erfolgreich in die allgemeinen Anrechnungsstunden integriert.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<LehrerPersonalabschnittsdatenAnrechnungsstunden>
+	 *   Code 400: Die Patches sind fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten zu ändern.
+	 *   Code 404: Keine Mehrleistung mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Patches wurden erfolgreich in die allgemeinen Anrechnungsstunden integriert.
+	 */
+	public async patchLehrerPersonalabschnittsdatenMehrleistungen(data : List<Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, schema : string) : Promise<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> {
+		const path = "/db/{schema}/lehrer/personalabschnittsdaten/mehrleistungen"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<LehrerPersonalabschnittsdatenAnrechnungsstunden>).map(d => LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(d)).join() + "]";
+		const result : string = await super.patchJSONWithResponse(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<LehrerPersonalabschnittsdatenAnrechnungsstunden>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

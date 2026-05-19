@@ -1657,22 +1657,22 @@ public final class DBMigrationManager {
 				logger.logLn(LogLevel.ERROR, strFehlerKeinLehrer.formatted(daten.Lehrer_ID));
 				entities.remove(i);
 			} else if ((daten.Jahr == null) || (daten.Abschnitt == null)) {
-				logger.logLn(LogLevel.ERROR, strFehlerLernabschnittUngueltigNull.formatted("LehrerMehrleistung", daten.ID));
+				logger.logLn(LogLevel.ERROR, strFehlerLernabschnittUngueltigNull.formatted("LehrerMehrleistung", daten.id));
 				entities.remove(i);
 			} else if (!lehrerAbschnitte.contains("" + daten.Lehrer_ID + "." + daten.Jahr + "." + daten.Abschnitt)) {
-				logger.logLn(LogLevel.ERROR, strFehlerLernabschnittUngueltig.formatted("LehrerMehrleistung", daten.ID));
+				logger.logLn(LogLevel.ERROR, strFehlerLernabschnittUngueltig.formatted("LehrerMehrleistung", daten.id));
 				entities.remove(i);
 			} else {
 				// Entferne ggf. Duplikate in Bezug auf die Mehrleistungsgründe bei den gleichen Lehrerabschnittsdaten
-				final String key = "" + daten.Lehrer_ID + "." + daten.Jahr + "." + daten.Abschnitt + "." + daten.MehrleistungsgrundKrz;
+				final String key = "" + daten.Lehrer_ID + "." + daten.Jahr + "." + daten.Abschnitt + "." + daten.idGrund;
 				final MigrationDTOLehrerMehrleistung other = map.get(key);
 				if (other == null) {
 					map.put(key, daten);
 				} else {
-					other.MehrleistungStd += daten.MehrleistungStd;
+					other.anzahl += daten.anzahl;
 					logger.logLn(LogLevel.ERROR,
 							"Entferne ungültigen Datensatz (ID %d): Ein Mehrleistungsgrund darf nur einmal in den Abschnittsdaten vorkommen. Addiere die Mehrleistungsstunden auf den vorigen Eintrag mit der ID %d."
-									.formatted(daten.ID, other.ID));
+									.formatted(daten.id, other.id));
 					entities.remove(i);
 				}
 			}
@@ -1680,7 +1680,7 @@ public final class DBMigrationManager {
 		// Füge eine ID als Primärschlüssel hinzu.
 		for (int i = 0; i < entities.size(); i++) {
 			final MigrationDTOLehrerMehrleistung daten = entities.get(i);
-			daten.ID = (long) (i + 1);
+			daten.id = (long) (i + 1);
 		}
 		return true;
 	}

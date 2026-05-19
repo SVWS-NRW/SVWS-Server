@@ -19,6 +19,6 @@ public interface LehrerMehrleistungRepository extends Repository<DTOLehrerMehrle
 	 *
 	 * @return die Zuordnung
 	 */
-	Map<Long, List<DTOLehrerMehrleistung>> getMapByAbschnitt(Collection<Long> idsAbschnitte);
+	Map<Long, List<DTOLehrerMehrleistung>> getMapByIdsLehrerAbschnittsdaten(Collection<Long> idsAbschnitte);
 
 }

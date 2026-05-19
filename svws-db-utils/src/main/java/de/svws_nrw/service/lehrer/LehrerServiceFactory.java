@@ -1,5 +1,6 @@
 package de.svws_nrw.service.lehrer;
 
+import de.svws_nrw.mapper.lehrer.LehrerMehrleistungMapper;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
 
@@ -39,6 +40,17 @@ public final class LehrerServiceFactory {
 	public static LehrerServiceFactory getNewInstance(final LehrerRepositoryFactory lehrerRepositoryFactory,
 			final SchuleRepositoryFactory schuleRepositoryFactory) {
 		return new LehrerServiceFactory(lehrerRepositoryFactory, schuleRepositoryFactory);
+	}
+
+	/**
+	 * Erzeugt eine neue Instanz der Service-Factory für die vorübergehende Verwendung in Data-Klasse
+	 *
+	 * @return die neue Factory-Instanz
+	 */
+	public static LehrerServiceFactory getNewInstance() {
+		return new LehrerServiceFactory(
+				LehrerRepositoryFactory.getNewInstance(),
+				SchuleRepositoryFactory.getNewInstance());
 	}
 
 
@@ -93,7 +105,7 @@ public final class LehrerServiceFactory {
 	}
 
 	/**
-	 * Erstellt einen neuen Service für den Zugriff auf Eiträge zu den Anrechnungsstunden bei Lehrern.
+	 * Erstellt einen neuen Service für den Zugriff auf Einträge zu den Anrechnungsstunden bei Lehrern.
 	 *
 	 * @return der Service für die Fachrichtungen von Lehrern.
 	 */
@@ -104,4 +116,16 @@ public final class LehrerServiceFactory {
 				lehrerRepositoryFactory.getLehrerAnrechnungRepository()));
 	}
 
+	/**
+	 * Erstellt einen neuen Service für den Zugriff auf Einträge zu den Mehrleistungen bei Lehrern.
+	 *
+	 * @return der Service für die Mehrleistungen von Lehrern.
+	 */
+	public LehrerMehrleistungService getLehrerMehrleistungService() {
+		return new LehrerMehrleistungService(LehrerMehrleistungServiceKontext.of(
+				schuleRepositoryFactory.getSchuljahresabschnitteRepository(),
+				lehrerRepositoryFactory.getLehrerAbschnittsdatenRepository(),
+				lehrerRepositoryFactory.getLehrerMehrleistungRepository()),
+				LehrerMehrleistungMapper.INSTANCE);
+	}
 }

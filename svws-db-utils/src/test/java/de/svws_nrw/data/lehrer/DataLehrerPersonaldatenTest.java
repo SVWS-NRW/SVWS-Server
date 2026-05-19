@@ -15,9 +15,14 @@ import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenService;
+import de.svws_nrw.service.lehrer.LehrerMehrleistungService;
+import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import jakarta.ws.rs.core.Response;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +31,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,12 +56,36 @@ class DataLehrerPersonaldatenTest {
 	@Mock
 	private DBEntityManager conn;
 
+	@Mock
+	private LehrerAnrechnungsstundenService anrechnungsService;
+
+	@Mock
+	private LehrerMehrleistungService mehrleistungService;
+
+	@Mock
+	private LehrerServiceFactory serviceFactory;
+
 	@InjectMocks
 	private DataLehrerPersonaldaten data;
+
+	private MockedStatic<LehrerServiceFactory> mockedFactory;
 
 	@BeforeAll
 	static void setUpAll() {
 		ASDCoreTypeUtils.initAll();
+	}
+
+	@BeforeEach
+	void setUp() {
+		mockedFactory = Mockito.mockStatic(LehrerServiceFactory.class);
+		mockedFactory.when(LehrerServiceFactory::getNewInstance).thenReturn(serviceFactory);
+		lenient().when(serviceFactory.getLehrerAnrechnungsstundenService()).thenReturn(anrechnungsService);
+		lenient().when(serviceFactory.getLehrerMehrleistungService()).thenReturn(mehrleistungService);
+	}
+
+	@AfterEach
+	void tearDown() {
+		mockedFactory.close();
 	}
 
 

@@ -136,7 +136,7 @@ class LehrerPersonalabschnittsdatenAnrechnungsstundenServiceTest {
 
 		// Eine Mehrleistungsstunden mit gültigen Kürzel für den Grund
 		final DTOLehrerMehrleistung dto1 = new DTOLehrerMehrleistung(500L, lehrerAbschnitt1Id, "160");
-		dto1.MehrleistungStd = 2.0;
+		dto1.anzahl = 2.0;
 
 		// Eine Mehrleistungsstunden mit fehlerhaftem Kürzel für den Grund
 		final DTOLehrerMehrleistung dto2 = new DTOLehrerMehrleistung(500L, lehrerAbschnitt1Id, "FALSCH");
@@ -145,7 +145,7 @@ class LehrerPersonalabschnittsdatenAnrechnungsstundenServiceTest {
 		final long lehrerAbschnitt2Id = 101L;
 		final DTOLehrerAbschnittsdaten lehrerAbschnitt2 = new DTOLehrerAbschnittsdaten(lehrerAbschnitt2Id, lehrerId, idSchuljahresabschnitt);
 
-		when(repoMehrleistung.getMapByAbschnitt(anyCollection())).thenReturn(
+		when(repoMehrleistung.getMapByIdsLehrerAbschnittsdaten(anyCollection())).thenReturn(
 				Map.of(lehrerAbschnitt1Id, List.of(dto1, dto2), lehrerAbschnitt2Id, Collections.emptyList()));
 
 		final Map<Long, List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> result =
@@ -176,7 +176,7 @@ class LehrerPersonalabschnittsdatenAnrechnungsstundenServiceTest {
 		assertEquals(0.0, eintrag2.anzahl, "Ein Wert von null muss auf 0.0 umgewandelt werden.");
 
 		verify(repoAbschnitte, atLeastOnce()).getById(idSchuljahresabschnitt);
-		verify(repoMehrleistung).getMapByAbschnitt(anyCollection());
+		verify(repoMehrleistung).getMapByIdsLehrerAbschnittsdaten(anyCollection());
 	}
 
 

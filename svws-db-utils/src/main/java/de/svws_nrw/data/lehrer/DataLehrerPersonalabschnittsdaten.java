@@ -20,11 +20,9 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.repo.lehrer.LehrerAbschnittsdatenRepositoryImpl;
-import de.svws_nrw.repo.lehrer.LehrerAnrechnungRepositoryImpl;
-import de.svws_nrw.repo.schule.SchuljahresabschnitteRepositoryImpl;
 import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenService;
-import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenServiceKontext;
+import de.svws_nrw.service.lehrer.LehrerMehrleistungService;
+import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -33,8 +31,9 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class DataLehrerPersonalabschnittsdaten extends DataManagerRevised<Long, DTOLehrerAbschnittsdaten, LehrerPersonalabschnittsdaten> {
 
-	/** Nutzung eines neuen Services in einer alten Data-Klasse bis zur Umstellung dieser Klasse auf Services */
+	/** Nutzung neuer Services in einer alten Data-Klasse bis zur Umstellung dieser Klasse auf Services */
 	private final LehrerAnrechnungsstundenService anrechnungsService;
+	private final LehrerMehrleistungService mehrleistungService;
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für das Core-DTO {@link LehrerPersonalabschnittsdaten}.
@@ -46,25 +45,11 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManagerRevised<
 		setAttributesNotPatchable("id", "idLehrer", "idSchuljahresabschnitt");
 		setAttributesRequiredOnCreation("idLehrer", "idSchuljahresabschnitt");
 
-		// Nutzung eines neuen Services in einer alten Data-Klasse bis zur Umstellung dieser Klasse auf Services
-		this.anrechnungsService = getAnrechnungsService(conn);
+		// Nutzung neuer Services in einer alten Data-Klasse bis zur Umstellung dieser Klasse auf Services
+		final LehrerServiceFactory factory = LehrerServiceFactory.getNewInstance();
+		this.anrechnungsService = factory.getLehrerAnrechnungsstundenService();
+		this.mehrleistungService = factory.getLehrerMehrleistungService();
 	}
-
-	/**
-	 * Nutzung eines neuen Services in einer alten Data-Klasse bis zur Umstellung dieser Klasse auf Services.
-	 * Die Repository-Factory kann hier leider aus Kompatibilitätsgünden nicht genutzt werden.
-	 *
-	 * @param conn   die Datenbank-Verbindung
-	 *
-	 * @return   der Service
-	 */
-	public static LehrerAnrechnungsstundenService getAnrechnungsService(final DBEntityManager conn) {
-		return new LehrerAnrechnungsstundenService(LehrerAnrechnungsstundenServiceKontext.of(
-				new SchuljahresabschnitteRepositoryImpl(conn),
-				new LehrerAbschnittsdatenRepositoryImpl(conn),
-				new LehrerAnrechnungRepositoryImpl(conn)));
-	}
-
 
 	@Override
 	protected void initDTO(final DTOLehrerAbschnittsdaten dto, final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
@@ -83,7 +68,7 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManagerRevised<
 		}
 		final LehrerPersonalabschnittsdaten daten = map(dto);
 		daten.anrechnungen.addAll(anrechnungsService.getListByLehrerabschnittsdatenId(id));
-		daten.mehrleistung.addAll(DataLehrerPersonalabschnittsdatenMehrleistungen.getByLehrerabschnittsdatenId(conn, id));
+		daten.mehrleistung.addAll(mehrleistungService.getListByLehrerabschnittsdatenId(id));
 		daten.minderleistung.addAll(DataLehrerPersonalabschnittsdatenMinderleistungen.getByLehrerabschnittsdatenId(conn, id));
 		daten.funktionen.addAll(DataLehrerPersonalabschnittsdatenLehrerfunktionen.getByLehrerabschnittsdatenId(conn, id));
 		return daten;
@@ -165,13 +150,17 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManagerRevised<
 		if (abschnittsdaten == null) {
 			return result;
 		}
+
+		final LehrerServiceFactory factory = LehrerServiceFactory.getNewInstance();
+		final LehrerMehrleistungService mehrleistungService = factory.getLehrerMehrleistungService();
+		final LehrerAnrechnungsstundenService anrechnungsstundenService = factory.getLehrerAnrechnungsstundenService();
 		// Konvertiere sie und füge sie zur Liste hinzu
 		for (final DTOLehrerAbschnittsdaten l : abschnittsdaten) {
 			final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(l.Schuljahresabschnitts_ID);
 			LehrerPersonalabschnittsdaten daten;
 			daten = mapInternal(l, abschnitt.schuljahr);
-			daten.anrechnungen.addAll(getAnrechnungsService(conn).getListByLehrerabschnittsdatenId(l.ID));
-			daten.mehrleistung.addAll(DataLehrerPersonalabschnittsdatenMehrleistungen.getByLehrerabschnittsdatenId(conn, l.ID));
+			daten.anrechnungen.addAll(anrechnungsstundenService.getListByLehrerabschnittsdatenId(l.ID));
+			daten.mehrleistung.addAll(mehrleistungService.getListByLehrerabschnittsdatenId(l.ID));
 			daten.minderleistung.addAll(DataLehrerPersonalabschnittsdatenMinderleistungen.getByLehrerabschnittsdatenId(conn, l.ID));
 			daten.funktionen.addAll(DataLehrerPersonalabschnittsdatenLehrerfunktionen.getByLehrerabschnittsdatenId(conn, l.ID));
 			result.add(daten);

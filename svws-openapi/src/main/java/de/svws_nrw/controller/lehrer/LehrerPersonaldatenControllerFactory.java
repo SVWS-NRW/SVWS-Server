@@ -7,6 +7,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
 import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenService;
+import de.svws_nrw.service.lehrer.LehrerMehrleistungService;
 import de.svws_nrw.service.lehrer.LehrerUnterrichtsfachService;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
@@ -90,4 +91,15 @@ public final class LehrerPersonaldatenControllerFactory {
 		return new LehrerAnrechnungsstundenControllerImpl(getService);
 	}
 
+	/**
+	 * Erstellt einen Controller für die Lehrer-Mehrleistungen
+	 *
+	 * @return der Controller
+	 *
+	 * @throws ApiOperationException wenn ein Fehler bei der Überprüfung der Berechtigung auftritt
+	 */
+	public LehrerMehrleistungController getLehrerMehrleistungController() throws ApiOperationException {
+		final LehrerMehrleistungService getService = serviceFactory.getLehrerMehrleistungService();
+		return new LehrerMehrleistungControllerImpl(getService);
+	}
 }

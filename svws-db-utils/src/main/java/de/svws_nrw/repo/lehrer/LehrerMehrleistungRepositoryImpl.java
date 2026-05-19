@@ -22,16 +22,22 @@ public final class LehrerMehrleistungRepositoryImpl extends RepositoryImpl<DTOLe
 	 * @param conn   die aktuelle Datenbank-Verbindung
 	 */
 	public LehrerMehrleistungRepositoryImpl(final DBEntityManager conn) {
-		super(conn, DTOLehrerMehrleistung.class, o -> o.ID, (o, id) -> o.ID = id);
+		super(conn, DTOLehrerMehrleistung.class, o -> o.id, (o, id) -> o.id = id);
 	}
 
-	@Override
-	public Map<Long, List<DTOLehrerMehrleistung>> getMapByAbschnitt(final Collection<Long> idsAbschnitte) {
+	/**
+	 * Bestimmt die Zuordnung der Mehrleistungen zu den Lehrer-Abschnitten mit den übergebenen IDs.
+	 *
+	 * @param idsAbschnitte   die IDs der Lehrer-Abschnitte
+	 *
+	 * @return die Zuordnung
+	 */
+	public Map<Long, List<DTOLehrerMehrleistung>> getMapByIdsLehrerAbschnittsdaten(final Collection<Long> idsAbschnitte) {
 		if ((idsAbschnitte == null) || (idsAbschnitte.isEmpty())) {
 			return Collections.emptyMap();
 		}
-		final var list = conn.queryList(DTOLehrerMehrleistung.QUERY_LIST_BY_ABSCHNITT_ID, DTOLehrerMehrleistung.class, idsAbschnitte);
-		final var map = list.stream().collect(Collectors.groupingBy(f -> f.Abschnitt_ID));
+		final var list = conn.queryList(DTOLehrerMehrleistung.QUERY_LIST_BY_IDABSCHNITTSDATEN, DTOLehrerMehrleistung.class, idsAbschnitte);
+		final var map = list.stream().collect(Collectors.groupingBy(f -> f.idAbschnittsdaten));
 		for (final long idAbschnitt : idsAbschnitte) {
 			map.computeIfAbsent(idAbschnitt, id -> new ArrayList<>());
 		}

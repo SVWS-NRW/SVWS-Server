@@ -17,6 +17,7 @@ public class Tabelle_LehrerMehrleistung extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public final SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
+			.setJavaName("id")
 			.setNotNull()
 			.setJavaComment("ID für den Eintrag für die Mehrarbeitsstunden eines Lehrers");
 
@@ -28,16 +29,19 @@ public class Tabelle_LehrerMehrleistung extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Abschnitt_ID */
 	public final SchemaTabelleSpalte col_Abschnitt_ID = add("Abschnitt_ID", SchemaDatentypen.BIGINT, false)
+			.setJavaName("idAbschnittsdaten")
 			.setNotNull()
 			.setJavaComment("ID der Lehrerabschnittsdaten");
 
 	/** Die Definition der Tabellenspalte MehrleistungsgrundKrz */
 	public final SchemaTabelleSpalte col_MehrleistungsgrundKrz = add("MehrleistungsgrundKrz", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
+			.setJavaName("idGrund")
 			.setNotNull()
 			.setJavaComment("Mehrarbeitsstunden Kürzel");
 
 	/** Die Definition der Tabellenspalte MehrleistungStd */
 	public final SchemaTabelleSpalte col_MehrleistungStd = add("MehrleistungStd", SchemaDatentypen.FLOAT, false)
+			.setJavaName("anzahl")
 			.setJavaComment("Anzahl Mehrarbeitsstunden");
 
 	/** Die Definition der Tabellenspalte Jahr */

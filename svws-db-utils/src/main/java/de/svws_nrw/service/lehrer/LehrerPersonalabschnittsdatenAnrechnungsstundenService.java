@@ -66,15 +66,15 @@ public final class LehrerPersonalabschnittsdatenAnrechnungsstundenService {
 		final DTOSchuljahresabschnitte abschnitt = repoSchuljahresabschnitte.getById(dtoAbschnitt.Schuljahresabschnitts_ID);
 
 		final LehrerPersonalabschnittsdatenAnrechnungsstunden daten = new LehrerPersonalabschnittsdatenAnrechnungsstunden();
-		daten.id = dto.ID;
-		daten.idAbschnittsdaten = dto.Abschnitt_ID;
+		daten.id = dto.id;
+		daten.idAbschnittsdaten = dto.idAbschnittsdaten;
 
 		// Ermittle die Art des Grundes. Ist dieser nicht gültig für das Halbjahr, so wird keine Fehlermeldung ausgegeben, sondern der Grund auf null gesetzt.
-		final LehrerMehrleistungsarten art = LehrerMehrleistungsarten.data().getWertByKuerzel(dto.MehrleistungsgrundKrz);
+		final LehrerMehrleistungsarten art = LehrerMehrleistungsarten.data().getWertByKuerzel(dto.idGrund);
 		final LehrerMehrleistungsartKatalogEintrag artEintrag = (art == null) ? null : art.daten(abschnitt.Jahr);
 		daten.idGrund = (artEintrag == null) ? null : artEintrag.id;
 
-		daten.anzahl = (dto.MehrleistungStd == null) ? 0.0 : dto.MehrleistungStd;
+		daten.anzahl = (dto.anzahl == null) ? 0.0 : dto.anzahl;
 		return daten;
 	}
 
@@ -122,7 +122,7 @@ public final class LehrerPersonalabschnittsdatenAnrechnungsstundenService {
 	public @NotNull Map<Long, List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> getMapMehrleistungen(
 			final Collection<DTOLehrerAbschnittsdaten> abschnitte) {
 		final var idsAbschnitte = abschnitte.stream().map(a -> a.ID).toList();
-		final var mapMehrleistungen = lehrerMehrleistungenRepository.getMapByAbschnitt(idsAbschnitte);
+		final var mapMehrleistungen = lehrerMehrleistungenRepository.getMapByIdsLehrerAbschnittsdaten(idsAbschnitte);
 		return abschnitte.stream().collect(Collectors.toMap(a -> a.ID,
 				a -> mapMehrleistungen.getOrDefault(a.ID, Collections.emptyList()).stream().map(b -> mapMehrleistung(a, b)).toList()));
 	}
