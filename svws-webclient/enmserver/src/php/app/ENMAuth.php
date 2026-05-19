@@ -70,6 +70,32 @@ class ENMAuth {
         }
     }
 
+
+    /**
+     * Erzeugt eine zufällige UUID (Version 4).
+     *
+     * @return string die UUID
+     */
+    private static function erzeugeUUID(): string {
+        $data = random_bytes(16);
+        $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+        $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+    }
+
+
+    /**
+     * Gibt den Hash-Wert des übergebenen Cookies zurück. Es wird der SHA-256-Algorithmus verwendet
+     *
+     * @param string $cookie   der Cookie-Wert
+     *
+     * @return string der Hash des Cookie-Wertes
+     */
+    public static function getCookieHash(string $cookie): string {
+        return hash('sha256', $cookie);
+    }
+
+
     /**
      * Prüfe den Authorization-Header, ob dieser eine Basic-Authentifizierung mit dem übergebenen Benutzernamen und
      * dem übergebenen Benutzer-Kennwort hat.
@@ -77,8 +103,9 @@ class ENMAuth {
      *
      * @param string $username   der Benutzername
      * @param string $password   das Kennwort
+     *
      * @return void
-         */
+     */
     public function pruefeBasicAuth(string $username, string $password): void {
         if ((strcmp($this->authMethod, "Basic") != 0)
             || (strcasecmp($this->authUser, $username) != 0)
@@ -131,6 +158,11 @@ class ENMAuth {
 
         // Bei einem Erfolg hingegen können vergangene Fehlversuche gelöscht werden
         $this->db->clearLoginFailures($ip, $idLehrer);
+
+        // Und die Token-Version muss bei dem Lehrer aktualisiert werden, um anderen Anmeldungen damit ungültig zu machen
+        // und für den weiteren Prozess garantiert eine neue Token-Version bereitzustellen
+        $this->db->checkAndIncrementLehrerCurrentTokenVersion($lehrer->id, null);
+
         return $lehrer;
     }
 
@@ -139,42 +171,95 @@ class ENMAuth {
      * Erstellt ein aktuelles JWT für eine Session für einen Lehrer.
      *
      * @param string $sessionKey   der Session-Key für das Signieren des JWT
-     * @param string $idLehrer     die ID des Lehrers
-     * @param string $expTime      die Zeit in Sekunden für die Gültigkeit des JWT
+     * @param int $idLehrer        die ID des Lehrers
+     * @param int $expTime         die Zeit in Sekunden für die Gültigkeit des JWT
+     * @param bool $addPassword    gibt an, ob ein generiertes Kennwort zum Payload des Tokens hinzugefügt werden soll oder nicht
      *
      * @return string | false   das JSON mit dem JWT
      */
-    public static function createJsonWebToken(string $sessionKey, int $idLehrer, int $expTime): string | false {
-        // Erstelle das Json-Web-Token mit einer Gültigkeit von 8 Stunden
+    public function createJsonWebToken(string $sessionKey, int $idLehrer, int $expTime, bool $addPassword = false): string | false {
+        // Bestimme die aktuelle Token-Version für den Lehrer - die wurde ggf. bei der Prüfung beim Refresh oder bei der Anmeldung bereits hochgezählt
+        $tokenVersion = $this->db->getENMLehrerCurrentTokenVersion($idLehrer);
+
+        // Erstelle die Payload für das JWT-Token
+        $time = TimeUtils::timestamp();
         $payload = [
             'sub' => $idLehrer,
-            'exp' => TimeUtils::timestamp() + $expTime,
-            'iat' => TimeUtils::timestamp()
+            'v' => $tokenVersion,
+            'jti' => ENMAuth::erzeugeUUID(),
+            'exp' => $time + $expTime,
+            'iat' => $time
         ];
+
+        // Füge ein generiertes Kennwort hinzu, falls dieses in das JWT integriert werden soll (für das Neusetzen des Kennwortes nötig)
+        if ($addPassword) {
+            $payload['pwd'] = Password::generate();
+        }
+
+        // Füge den Hash für den Hardened Cookie hinzu, sofern diese Option aktiviert ist
+        if ($this->config->getUseHardenedCookies()) {
+            $cookieValue = bin2hex(random_bytes(32));
+            $payload['fpt'] = ENMAuth::getCookieHash($cookieValue);
+            // Setze den Cookie für die Antwort, so dass dieser im Browser mit dem Klarext vorliegt - Für den späteren Vergleich mit dem Hash im JWT-Payload
+            Http::setHardenedCookie($this->config->getHardenedCookieName(), $cookieValue, $time + $expTime, Http::isTrustedConnection($this->config->getTrustedProxies()));
+        }
+
+        // Füge den Hash der Client-IP für das Pinning hinzu, sofern diese Option aktiviert ist
+        if ($this->config->getUseIpPinning()) {
+            $ip = Http::getClientIp($this->config->getTrustedProxies());
+            $payload['ip'] = $this->config->getIpPinningHash($ip);
+        }
+
         $jwt = Http::createJsonWebToken($payload, $sessionKey);
         return json_encode([ 'token' => $jwt, 'id' => $idLehrer ]);
     }
 
 
     /**
-     * Erstellt ein aktuelles JWT für eine Session für einen Lehrer, welche zum Ersetzen eines Kennwortes bestimmt ist.
+     * Führt erweiterte Sicherheitsprüfungen bei dem JWT-Token aus. Dies sind:
+     * - Prüft - falls aktiviert - den Hardened Cookie, welcher beim Browser im Client hinterlegt und dafür sorgt, dass eine Anfrage nur von diesem Browser kommen kann
+     * - Prüft - falls aktiviert - die IP-Adresse des Clients, so dass nur Anfragen von diesem Client kommen können
+     * - Prüfe, die Token-Version, welche dafür sorgt, dass immer nur ein Access-Token für einen Lehrer Gültigkeit hat und ggf. zweite Verbindungen automatisch abgebaut werden
      *
-     * @param string $sessionKey   der Session-Key für das Signieren des JWT
-     * @param string $idLehrer     die ID des Lehrers
-     * @param string $expTime      die Zeit in Sekunden für die Gültigkeit des JWT
-     *
-     * @return string | false   das JSON mit dem JWT
+     * @param object $tokenPayload       der Payload des JWT-Tokens
+     * @param object $lehrer             die Informationen zum Lehrer
+     * @param bool $updateTokenVersion   gibt an, ob die Token-Version erhöht werden und eine Anfrage für ein Token-Refresh vorliegt
+     * @param bool $checkRefreshWindow   gibt an, ob das Refresh Windows geprüft werden soll oder die Token-Version aunabhängig davon erhöht werden soll
      */
-    public static function createJsonWebTokenWithPassword(string $sessionKey, int $idLehrer, int $expTime): string | false {
-        // Erstelle das Json-Web-Token mit einer Gültigkeit von 8 Stunden
-        $payload = [
-            'sub' => $idLehrer,
-            'pwd' => Password::generate(),
-            'exp' => TimeUtils::timestamp() + $expTime,
-            'iat' => TimeUtils::timestamp()
-        ];
-        $jwt = Http::createJsonWebToken($payload, $sessionKey);
-        return json_encode([ 'token' => $jwt, 'id' => $idLehrer ]);
+    private function pruefeSessionSicherheitsmerkmale(object $tokenPayload, object $lehrer, bool $updateTokenVersion, bool $checkRefreshWindow = false): void {
+        // Prüfe den Hardened Cookie / Fingerprint, sofern dieses Sicherheitsfeature aktiviert wurde
+        if ($this->config->getUseHardenedCookies()) {
+            $cookie = Http::getCookie($this->config->getHardenedCookieName(), $this->config->getTrustedProxies()) ?? '';
+            if (empty($cookie) || (ENMAuth::getCookieHash($cookie) !== $tokenPayload->fpt)) {
+                Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server", error="invalid_token", error_description="Invalid fingerprint"');
+            }
+        }
+
+        // Prüfe die IP-Adresse, sofern IP-Pinning aktiviert wurde
+        if ($this->config->getUseIpPinning()) {
+            $ip = Http::getClientIp($this->config->getTrustedProxies());
+            $ipHash = $this->config->getIpPinningHash($ip);
+            if (!isset($tokenPayload->ip) || ($tokenPayload->ip !== $ipHash)) {
+                Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server", error="invalid_token", error_description="IP address mismatch"');
+            }
+        }
+
+        // Prüfe bei einem Refresh des Access-Tokens, ob die Anfrage innerhalb des definierten Refresh-Windows erfolgt (z.B. 30 Sek vor Ablauf)
+        if ($updateTokenVersion && $checkRefreshWindow) {
+            $remainingTime = $tokenPayload->exp - TimeUtils::timestamp();
+            if ($remainingTime > (int)$this->config->getLifetimeAccessTokenRefreshWindow()) {
+                Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server", error="invalid_token", error_description="Token Refresh rejected"');
+            }
+        }
+
+        // Prüfe die Token-Version. Wenn ein Refresh des Access-Tokens erfolgen soll, dann erhöhe sie auch, wenn die Prüfung erfolgreich war
+        $expectedTokenVersion = (int)$tokenPayload->v;
+        $tokenVersion = $updateTokenVersion
+            ? $this->db->checkAndIncrementLehrerCurrentTokenVersion($lehrer->id, $expectedTokenVersion)
+            : $this->db->checkLehrerCurrentTokenVersion($lehrer->id, $expectedTokenVersion);
+        if ($tokenVersion === false) {
+            Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server", error="invalid_token", error_description="Token version mismatch"');
+        }
     }
 
 
@@ -182,9 +267,12 @@ class ENMAuth {
      * Prüft das Json-Web-Token und gibt bei erfolgreicher Authentifizierung das Lehrer-Objekt des
      * angemeldeten Benutzers zurück.
      *
+     * @param bool $updateTokenVersion   gibt ab, ob das Refresh-Windows am Ende der Tokengültigkeit geprüft werden soll und die Token-Version erhöht werden soll
+     * @param bool $checkRefreshWindow   gibt an, ob das Refresh Windows geprüft werden soll oder die Token-Version aunabhängig davon erhöht werden soll
+     *
      * @return object   das Lehrer-Objekt des angemeldeten Benutzer
      */
-    public function pruefeLehrerSession(): object {
+    public function pruefeLehrerSession(bool $updateTokenVersion = false, bool $checkRefreshWindow = false): object {
         if (strcasecmp(($this->authMethod ?? ''), "Bearer") !== 0) {
             Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server"');
         }
@@ -194,12 +282,25 @@ class ENMAuth {
             Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server", error="invalid_token", error_description="The access token has expired"');
         }
 
-        // Schneller ID-Lookup statt teurem Passwort-Hash-Vergleich
         $lehrer = $this->db->getENMLehrerByID((int) $payload->sub);
         if (!$lehrer) {
             Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server"');
         }
+
+        $this->pruefeSessionSicherheitsmerkmale($payload, $lehrer, $updateTokenVersion, $checkRefreshWindow);
         return $lehrer;
+    }
+
+
+    /**
+     * Prüft das Json-Web-Token und gibt bei erfolgreicher Authentifizierung das Lehrer-Objekt des
+     * angemeldeten Benutzers zurück. Es wird auch geprüft, ob auch das Refresh-Windows am Ende der Tokengültigkeit
+     * aktuell aktiv ist. Ist diese der Fall, so wird die Token-Version erhöht.
+     *
+     * @return object   das Lehrer-Objekt des angemeldeten Benutzer
+     */
+    public function pruefeLehrerSessionForAccessTokenRefresh() {
+        return $this->pruefeLehrerSession(true, true);
     }
 
     /**
@@ -227,6 +328,7 @@ class ENMAuth {
             Http::exit429TooManyRequests("Zu viele Fehlversuche. Bitte warten Sie einige Minuten.");
         }
 
+        $this->pruefeSessionSicherheitsmerkmale($payload, $lehrer, true);
         return $lehrer;
     }
 
@@ -256,6 +358,8 @@ class ENMAuth {
         if (!$lehrer->istInitialPassword) {
             Http::exit403Forbidden();
         }
+
+        $this->pruefeSessionSicherheitsmerkmale($payload, $lehrer, true);
 
         $this->newPassword = $payload->pwd;
         return $lehrer;

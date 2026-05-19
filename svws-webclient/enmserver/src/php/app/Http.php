@@ -96,6 +96,109 @@ class Http {
 
 
     /**
+     * Ermittelt die Client-IP. Dabei wird die Verwendung von Proxies verücksichtigt, die
+     * als trusted proxies an diese Methode übergeben werden.
+     *
+     * @param array $trustedProxies   die Liste der IP-Adressen von vertrauenswürdigen Proxies
+     *
+     * @return string die ermittelte Client-IP-Adresse
+     */
+    public static function getClientIP(array $trustedProxies): string {
+        // Bestimme zunächst die angegebene IP-Adresse - dies kann auch die IP-Adresse eines Proxies sein
+        $remoteAddr = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+        $clientIP = $remoteAddr;
+
+        // Wenn die angegebene IP-Adresse die eines vertrauenswürdigen Proxies ist, dann lies die Information zum Forward aus, um die echte IP zu bestimmen
+        if (in_array($remoteAddr, $trustedProxies)) {
+            $forwardedFor = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? '';
+            if (!empty($forwardedFor)) {
+                // X-Forwarded-For ist ggf. eine komma-separierte Liste von IP-Adressen ("Client, Proxy1, Proxy2") mit der Client-IP als erstem Eintrag
+                $ips = explode(',', $forwardedFor);
+                $clientIP = trim($ips[0]);
+            }
+        }
+        return $clientIP;
+    }
+
+
+    /**
+     * Bestimmt den Wert eines Cookies. Wird der Wert nicht sofort gefunden, so wird dieser unter
+     * Berücksichtigung von Trusted Proxies gesucht.
+     *
+     * @param string $name            der Name des Cookies
+     * @param array $trustedProxies   die Liste der vertrauenswürdigen Proxies
+     *
+     * @return string | null der Wert oder null, falls kein Wert für den Cookie bestimmt werden konnte
+     */
+    public static function getCookie(string $name, array $trustedProxies): ?string {
+        // Prüfe zunächst, ob der Cookie-Header befüllt wurde
+        if (isset($_COOKIE[$name])) {
+            return $_COOKIE[$name];
+        }
+
+        // Wenn nicht dann prüfe zur Vermeidung von potentiellen Angriffen, ob ein Trusted Proxy verwendet wurde
+        $remoteAddr = $_SERVER['REMOTE_ADDR'] ?? '';
+        if (in_array($remoteAddr, $trustedProxies)) {
+            // Prüfe Apache/Nginx-spezifische Header, wenn wir dem Proxy vertrauen
+            $headers = function_exists('getallheaders') ? getallheaders() : [];
+            $cookieHeader = $headers['Cookie'] ?? $_SERVER['HTTP_COOKIE'] ?? '';
+
+            // Wenn ein Header gefunden wurde, dann extrahiere den Cookie-Wert
+            if (!empty($cookieHeader) && preg_match('/' . preg_quote($name, '/') . '=(?<value>[^;]+)/', $cookieHeader, $matches)) {
+                return urldecode($matches['value']);
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * Setzt ein Hardened Cookie, welches als Fingerprint für den Client-Browser dient.
+     *
+     * @param string $name       der Name des Cookies
+     * @param string $value      der Zufallswert (Nonce) im Klartext (nicht als Hash!)
+     * @param int $timeExpires   der Zeitstempel in Sekunden seit dem 1.1.1970 (UTC), wann das Token abläuft - soll dem des JWT entsprechen
+     * @param bool $isSecure     gibt an, ob die Verbindung über HTTPS läuft
+     */
+    public static function setHardenedCookie(string $name, string $value, int $timeExpires, bool $isSecure): void {
+        setcookie($name, $value, [
+            'expires'  => $timeExpires,
+            'path'     => '/',         // bei einem __Host- Präfix muss dies '/' sein
+            'domain'   => '',          // bei einem __Host- Präfix muss dies leer bleiben
+            'secure'   => $isSecure,   // gibt an, ob das Cookie nur über HTTPS gesendet wird
+            'httponly' => true,        // gibt an, dass das Cookie nicht für JavaScript sichtbar ist (Schutz vor XSS)
+            'samesite' => 'Strict'     // zum Schutz vor Cross-Site-Request-Forgery (CSRF)
+        ]);
+    }
+
+
+    /**
+     * Prüft, ob die Verbindung sicher ist (HTTPS). Bei Trusted Proxies wird die Verbindung
+     * auch als sicher akzeptiert, wenn HTTP_X_FORWARDED_PROTO auf https gesetzt ist.
+     *
+     * @param array $trustedProxies   die Liste der vertrauenswürdigen Proxies
+     *
+     * @return bool true, wenn die Verbindung als sicher angesehen wird
+     */
+    public static function isTrustedConnection(array $trustedProxies): bool {
+        // Prüfe, ob die direkte Verbindung HTTPS unterstützt
+        if (!empty($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] !== 'off')) {
+            return true;
+        }
+
+        // Prüfe, ob die Verbindung ab einem Trusted Proxy über https erfolgt
+        $remoteAddr = $_SERVER['REMOTE_ADDR'] ?? '';
+        if (in_array($remoteAddr, $trustedProxies)) {
+            $forwardedProto = $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '';
+            if (strcasecmp($forwardedProto, 'https') === 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    /**
      * Liest den Body des HTTP-Requests ein. Tritt dabei ein Fehler auf, so wird
      * eine HTTP-Response 400 generiert.
      *
@@ -131,7 +234,7 @@ class Http {
     /**
      * Gibt für den übergebenen Fehler eines Multipart-Uploads einen Fehlertext zurück.
      *
-     * @param mixed   der Fehler
+     * @param mixed $err  der Fehler
      *
      * @return string der Fehlertext
      */
@@ -257,7 +360,7 @@ class Http {
     /**
      * Gibt einen OK (200) für JSON-Daten ggf. mit Daten für ein echo zurück und beendet das PHP-Skript.
      *
-     * @param ?string data   die Daten, welche ggf. noch ausgegeben werden
+     * @param ?string $data   die Daten, welche ggf. noch ausgegeben werden
      */
     public static function exit200OKJson(?string $data = null): never {
         header('Content-Type: application/json; charset=utf-8');
@@ -271,7 +374,7 @@ class Http {
     /**
      * Gibt einen OK (200) für GZip-Daten aus und beendet das PHP-Skript.
      *
-     * @param string data   die Daten, welche als GZip in der Nachricht zurückzugeben werden
+     * @param string $data   die Daten, welche als GZip in der Nachricht zurückzugeben werden
      */
     public static function exit200OKGZipJson(string $data): never {
         header('Content-Encoding: gzip');
@@ -285,7 +388,7 @@ class Http {
     /**
      * Gibt einen OK (200) für GZip-Daten aus und beendet das PHP-Skript.
      *
-     * @param string data   die Daten, welche als GZip in der Nachricht zurückzugeben werden
+     * @param string $data   die Daten, welche als GZip in der Nachricht zurückzugeben werden
      */
     public static function exit200OKGZip(string $data): never {
         header('Content-Type: application/gzip;');
@@ -297,7 +400,7 @@ class Http {
     /**
      * Gibt ein Accepted (202) für JSON-Daten ggf. mit Daten für ein echo zurück und beendet das PHP-Skript.
      *
-     * @param ?string data   die Daten, welche ggf. noch ausgegeben werden
+     * @param ?string $data   die Daten, welche ggf. noch ausgegeben werden
      */
     public static function exit202AcceptedJson(?string $data = null): never {
         header('Content-Type: application/json; charset=utf-8');
@@ -311,7 +414,7 @@ class Http {
     /**
      * Gibt einen BAD_REQUEST (400) zurück und beendet das PHP-Skript.
      *
-     * @param ?string msg   ein optionaler Parameter, um eine Nachricht als plain text zurückzugeben
+     * @param ?string $msg   ein optionaler Parameter, um eine Nachricht als plain text zurückzugeben
      */
     public static function exit400BadRequest(?string $msg = null): never {
         http_response_code(400);
@@ -340,10 +443,32 @@ class Http {
         Http::exit401Unauthorized('WWW-Authenticate: Basic realm="ENM-Server", charset="UTF-8"');
     }
 
+
+   /**
+     * Gibt einen UNAUTHORIZED (401) Fehler mit einer standardisierten JSON-Fehlermeldung (z.B. SESSION_INVALIDATED)
+     * zurück und beendet das Skript.
+     *
+     * @param string $error         der Fehlercode
+     * @param string | null $msg    eine optionale Fehlertext
+     */
+    public static function exit401UnauthorizedJson(string $error, ?string $msg = null): never {
+        http_response_code(401);
+        header('Content-Type: application/json; charset=utf-8');
+
+        $response = ['error' => $error];
+        if ($msg !== null) {
+            $response['message'] = $msg;
+        }
+        
+        echo json_encode($response, JSON_UNESCAPED_SLASHES);
+        exit;
+    }
+
+
     /**
      * Gibt einen FORBIDDEN (403) zurück und beendet das PHP-Skript.
      *
-     * @param ?string msg   ein optionaler Parameter, um eine Nachricht als plain text zurückzugeben
+     * @param ?string $msg   ein optionaler Parameter, um eine Nachricht als plain text zurückzugeben
      */
     public static function exit403Forbidden(?string $msg = null): never {
         http_response_code(403);
@@ -365,7 +490,7 @@ class Http {
     /**
      * Gibt einen NOT_FOUND (404) zurück und beendet das PHP-Skript.
      *
-     * @param string msg   ein optionaler Parameter, um eine Nachricht als plain text zurückzugeben
+     * @param string $msg   ein optionaler Parameter, um eine Nachricht als plain text zurückzugeben
      */
     public static function exit404NotFound(?string $msg = null): never {
         http_response_code(404);
@@ -379,7 +504,7 @@ class Http {
     /**
      * Gibt einen TOO MANY REQUESTS (429) zurück und beendet das PHP-Skript.
      *
-     * @param string msg   ein optionaler Parameter, um eine Nachricht als plain text zurückzugeben
+     * @param string $msg   ein optionaler Parameter, um eine Nachricht als plain text zurückzugeben
      */
     public static function exit429TooManyRequests(?string $msg = null): never {
         http_response_code(429);

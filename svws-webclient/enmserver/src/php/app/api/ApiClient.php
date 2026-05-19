@@ -8,6 +8,7 @@ use wenom\ENMAuth;
 use wenom\Http;
 use wenom\PatchManager;
 use wenom\ENMDatenManager;
+use wenom\TimeUtils;
 
 /**
  * Diese Klasse verwaltet die Client-Schnittstelle des WeNoM-Servers.
@@ -111,7 +112,7 @@ class ApiClient {
                 'POST' => [
                     'init' => fn() => $this->createAppContext(),
                     'auth' => fn($config, $db, $auth) => $auth->pruefeLehrerBasicAuth(),
-                    'call' => fn($config, $db, $auth, $lehrer) => $this->login($config, $lehrer)
+                    'call' => fn($config, $db, $auth, $lehrer) => $this->login($config, $auth, $lehrer)
                 ]
             ],
             'login_totp' => [
@@ -121,11 +122,25 @@ class ApiClient {
                     'call' => fn($config, $db, $auth, $lehrer) => $this->loginTotp($config, $db, $auth, $lehrer)
                 ]
             ],
+            'logout' => [
+                'POST' => [
+                    'init' => fn() => $this->createAppContext(),
+                    'auth' => fn($config, $db, $auth) => $auth->pruefeLehrerSession(true),
+                    'call' => fn($config, $db, $auth, $lehrer) => $this->logout($config)
+                ]
+            ],
             'mode' => [
                 'GET' => [
                     'init' => fn() => $this->createAppContext(),
                     'auth' => fn($config, $db, $auth) => true,
                     'call' => fn($config, $db, $auth) => $this->getMode($config)
+                ]
+            ],
+            'refresh_token' => [
+                'POST' => [
+                    'init' => fn() => $this->createAppContext(),
+                    'auth' => fn($config, $db, $auth) => $auth->pruefeLehrerSessionForAccessTokenRefresh(),
+                    'call' => fn($config, $db, $auth, $lehrer) => $this->refreshToken($config, $auth, $lehrer)
                 ]
             ],
             'reset_password' => [
@@ -224,16 +239,16 @@ class ApiClient {
      * @param Config $config   die WeNoM-Server-Konfiguration
      * @param object $lehrer   das authentifizierte Lehrer-Objekt
      */
-    private function continueLogin(Config $config, object $lehrer): void {
+    private function continueLogin(Config $config, ENMAuth $auth, object $lehrer): void {
         // Fall 0: 2FA deaktiviert (für den Lehrer)
         if ($lehrer->art2FA === 0) {
-            $jwt = ENMAuth::createJsonWebToken($config->getClientSessionKey(), $lehrer->id, $config->getLifetimeAccessToken());
+            $jwt = $auth->createJsonWebToken($config->getClientSessionKey(), $lehrer->id, $config->getLifetimeAccessToken());
             Http::exit200OKJson($jwt);
         }
         // Fall 1: 2FA mit TOTP wird verwendet
         if ($lehrer->art2FA === 1) {
             $lifetimeAccessToken = $lehrer->istErstanmeldung ? $config->getLifetimeTotpAccessTokenInitial() : $config->getLifetimeTotpAccessToken();
-            $jwt = ENMAuth::createJsonWebToken($config->getClientTotpAuthSessionKey(), $lehrer->id, $lifetimeAccessToken);
+            $jwt = $auth->createJsonWebToken($config->getClientTotpAuthSessionKey(), $lehrer->id, $lifetimeAccessToken);
             if ($lehrer->istErstanmeldung) {
                 $token = json_decode($jwt);
                 $response = [
@@ -260,16 +275,16 @@ class ApiClient {
      * @param Config $config   die WeNoM-Server-Konfiguration
      * @param object $lehrer   das authentifizierte Lehrer-Objekt
      */
-    private function login(Config $config, object $lehrer): void {
+    private function login(Config $config, ENMAuth $auth, object $lehrer): void {
         if ($lehrer->istInitialPassword) {
-            $jwt = ENMAuth::createJsonWebTokenWithPassword($config->getClientChangePasswordSessionKey(), $lehrer->id, $config->getLifetimeChangePasswordToken());
+            $jwt = $auth->createJsonWebToken($config->getClientChangePasswordSessionKey(), $lehrer->id, $config->getLifetimeChangePasswordToken(), true);
             $token = json_decode($jwt);
             Http::exit202AcceptedJson(json_encode([
                 'token' => $token,
                 'changePassword' => true
             ]));
         }
-        $this->continueLogin($config, $lehrer);
+        $this->continueLogin($config, $auth, $lehrer);
     }
 
 
@@ -286,7 +301,7 @@ class ApiClient {
             Http::exit400BadRequest("Kein neues Passwort im Token gefunden.");
         }
         $auth->updatePassword($lehrer, $newPassword);
-        $this->continueLogin($config, $lehrer);
+        $this->continueLogin($config, $auth, $lehrer);
     }
 
 
@@ -316,15 +331,31 @@ class ApiClient {
         $success = $auth->pruefeLehrerTotpToken($lehrer->totpSecret, $code);
         if ($success) {
             $db->clearLoginFailures($auth->getRemoteAddr(), $lehrer->id);
-            if ($lehrer -> istErstanmeldung) {
+            if ($lehrer->istErstanmeldung) {
                 $db->setLehrerErstanmeldungAbgeschlossen($lehrer->id);
             }
-            $jwt = ENMAuth::createJsonWebToken($config->getClientSessionKey(), $lehrer->id, $config->getLifetimeAccessToken());
+            $jwt = $auth->createJsonWebToken($config->getClientSessionKey(), $lehrer->id, $config->getLifetimeAccessToken());
             Http::exit200OKJson($jwt);
         } else {
             $db->updateLoginFailures($auth->getRemoteAddr(), $lehrer->id);
             Http::exit403Forbidden();
         }
+    }
+
+
+    /**
+     * Loggt den Lehrer aus. Die Token-Version wurde bei korrektem JWT-Token bereits erhöht. Hier werden
+     * dann die Cookies gelöscht.
+     *
+     * @param Config $config   die Konfiguration
+     */
+    private function logout(Config $config): void {
+        // Entferne den Hardened Cookie beim Client, dadurch, das der Ablauf in die Vergangenheit gesetzt wird
+        if ($config->getUseHardenedCookies()) {
+            Http::setHardenedCookie($config->getHardenedCookieName(), '', time() - 3600, Http::isTrustedConnection($config->getTrustedProxies()));
+        }
+
+        Http::exit204NoContent();
     }
 
 
@@ -395,6 +426,22 @@ class ApiClient {
 
 
     /**
+     * Führt ein Refresh des Access Tokens aus und gib den neuen Access-Token in der Response zurück.
+     *
+     * @param Config $config   die Konfiguration
+     * @param ENMAuth $auth    die Klasse für Authentifizierung
+     * @param object $lehrer   die Daten zum Lehrer
+     */
+    private function refreshToken(Config $config, ENMAuth $auth, object $lehrer): void {
+        $jwt = $auth->createJsonWebToken($config->getClientSessionKey(), $lehrer->id, $config->getLifetimeAccessToken());
+        if ($jwt === false) {
+            Http::exit500("Fehler beim Generieren des neuen Access-Tokens.");
+        }
+        Http::exit200OKJson($jwt);
+    }
+
+
+    /**
      * Setzt das Passwort eines Lehrers mithilfe eines Tokens zurück.
      *
      * @param Database $db die Datenbank-Verbindung
@@ -441,7 +488,7 @@ class ApiClient {
         $lehrerPatch = (object)[
             'id' => $lehrerId,
             'passwordHash' => $passwordHash,
-            'tsPasswordHash' => PatchManager::now(),
+            'tsPasswordHash' => TimeUtils::now(),
         ];
 
         // Daten in die Datenbank zurückschreiben

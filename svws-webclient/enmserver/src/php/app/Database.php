@@ -17,7 +17,7 @@ class Database {
     public $conn;
 
     // Die Revision des Datenbank-Schema. Muss bei jeder strukturellen Änderung um eins erhöht werden.
-    public const SCHEMA_REVISION = 2;
+    public const SCHEMA_REVISION = 3;
 
     /**
      * Definiert das Soll-Schema: Tabelle => Spalten-Definitionen
@@ -142,6 +142,7 @@ class Database {
             'totpSecret' => 'TEXT',
             'istErstanmeldung' => 'INTEGER DEFAULT 1',
             'tsIstErstanmeldung' => 'TEXT',
+            'tokenVersion' => 'INTEGER NOT NULL DEFAULT 1',
             'PRIMARY KEY(id, ts)'
         ],
         'Lehrertoken' => [
@@ -561,6 +562,89 @@ class Database {
             }
         }
         return $result;
+    }
+
+
+    /**
+     * Fragt die aktuell verwendete Token-Version für den Lehrer mit der übergebenen ID ab.
+     *
+     * @param int $lehrerId   Die ID des Lehrers
+     *
+     * @return int die Token-Version oder -1 im Fehlerfall
+     */
+    public function getENMLehrerCurrentTokenVersion(int $lehrerId): int {
+        try {
+            $stmt = $this->conn->prepareStatement("SELECT tokenVersion FROM Lehrer WHERE id = :idLehrer");
+            $this->conn->bindStatementValue($stmt, ":idLehrer", $lehrerId, PDO::PARAM_INT);
+            $this->conn->executeStatement($stmt);
+            $result = $stmt->fetchColumn();
+            return ($result !== false) ? (int)$result : -1;
+        } catch (PDOException $e) {
+            return -1;
+        }
+    }
+
+
+    /**
+     * Prüfe die aktuelle Token-Version auf Übereinstimmung mit der erwarteten Version (Funktionsparameter)
+     * und gibt die Version zurück.
+     *
+     * @param int $lehrerId       die ID des Lehrers
+     * @param int $tokenVersion   die zu prüfende Token-Version
+     *
+     * @return int | false   die Token-Version oder false im Fehlerfall
+     */
+    public function checkLehrerCurrentTokenVersion(int $lehrerId, int $tokenVersion): int | false {
+        try {
+            $curTokenVersion = $this->getENMLehrerCurrentTokenVersion($lehrerId);
+            if ($curTokenVersion !== $tokenVersion) {
+                $this->conn->rollbackTransaction();
+                return false;
+            }
+            return $curTokenVersion;
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+
+    /**
+     * Erhöht die Token-Version für den Lehrer um eins, sofern der übergebene Wert mit dem Datenbank-Wert übereinstimmt
+     * und gibt die neue Version zurück.
+     *
+     * @param int $lehrerId       die ID des Lehrers
+     * @param int $tokenVersion   die zu prüfende Token-Version oder null, falls die Prüfung ausgelassen werden soll
+     *
+     * @return int | false   die neue Token-Version oder false im Fehlerfall
+     */
+    public function checkAndIncrementLehrerCurrentTokenVersion(int $lehrerId, int | null $tokenVersion): int | false {
+        try {
+            $this->conn->beginTransaction();
+
+            // Prüfe die aktuelle Token-Version auf Übereinstimmung mit der erwarteten Version (Funktionsparameter)
+            $curTokenVersion = ($tokenVersion === null)
+                ? $this->getENMLehrerCurrentTokenVersion($lehrerId)
+                : $this->checkLehrerCurrentTokenVersion($lehrerId, $tokenVersion);
+
+            // Prüfe, ob die Token-Version bestimmt werden konnte. Wenn nicht, dann brich die Transaktion ab.
+            if ($curTokenVersion === false) {
+                $this->conn->rollbackTransaction();
+                return false;
+            }
+
+            // Erhöhe die Token-Version in der Datenbank, so dass in der Folge darauf zugegriffen werden kann
+            $newTokenVersion = $curTokenVersion + 1;
+            $stmt = $this->conn->prepareStatement("UPDATE Lehrer SET tokenVersion = :tokenVersion WHERE id = :idLehrer");
+            $this->conn->bindStatementValue($stmt, ":tokenVersion", $newTokenVersion, PDO::PARAM_INT);
+            $this->conn->bindStatementValue($stmt, ":idLehrer", $lehrerId, PDO::PARAM_INT);
+            $this->conn->executeStatement($stmt);
+            
+            $this->conn->commitTransaction();
+            return $newTokenVersion;
+        } catch (PDOException $e) {
+            $this->conn->rollbackTransaction();
+            return false;
+        }
     }
 
 
