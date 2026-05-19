@@ -21,15 +21,25 @@ public class Tabelle_EigeneSchule_Fachklassen extends SchemaTabelle {
 			.setJavaComment("BKIndex aus der Statkue bildet mit FKS und AP eine eindeutige Kombination IT.NRW");
 
 	/** Die Definition der Tabellenspalte FKS */
-	public final SchemaTabelleSpalte col_FKS = add("FKS", SchemaDatentypen.VARCHAR, false).setDatenlaenge(3)
+	public final SchemaTabelleSpalte col_FKS = add("FKS", SchemaDatentypen.VARCHAR, false)
+			.setDatenlaenge(3)
 			.setJavaComment("Fachklassenschlüssel bildet mit BKIndex und AP eine eindeutige Kombination IT.NRW");
 
 	/** Die Definition der Tabellenspalte AP */
-	public final SchemaTabelleSpalte col_AP = add("AP", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
+	public final SchemaTabelleSpalte col_AP = add("AP", SchemaDatentypen.VARCHAR, false)
+			.setDatenlaenge(2)
 			.setJavaComment("Laufende Nummer zum FKS bildet mit FKS und BKIndex eine eindeutige Kombination IT.NRW");
 
+	/** Die Definition der Tabellenspalte Kuerzel */
+	public final SchemaTabelleSpalte col_Kuerzel = add("Kuerzel", SchemaDatentypen.VARCHAR, false)
+			.setRevision(SchemaRevisionen.REV_64)
+			.setJavaName("kuerzel")
+			.setDatenlaenge(100)
+			.setJavaComment("Kürzel der Fachklasse");
+
 	/** Die Definition der Tabellenspalte Bezeichnung */
-	public final SchemaTabelleSpalte col_Bezeichnung = add("Bezeichnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(100)
+	public final SchemaTabelleSpalte col_Bezeichnung = add("Bezeichnung", SchemaDatentypen.VARCHAR, false)
+			.setDatenlaenge(100)
 			.setJavaComment("Bezeichnung der Fachklasse Text");
 
 	/** Die Definition der Tabellenspalte Sortierung */
@@ -38,35 +48,42 @@ public class Tabelle_EigeneSchule_Fachklassen extends SchemaTabelle {
 			.setJavaComment("Sortiernummer der Fachklasse");
 
 	/** Die Definition der Tabellenspalte Sichtbar */
-	public final SchemaTabelleSpalte col_Sichtbar = add("Sichtbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
+	public final SchemaTabelleSpalte col_Sichtbar = add("Sichtbar", SchemaDatentypen.VARCHAR, false)
+			.setDatenlaenge(1)
 			.setDefault("+")
 			.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 			.setJavaComment("steuert die Sichtbarkeit der Fachklasse");
 
 	/** Die Definition der Tabellenspalte Aenderbar */
-	public final SchemaTabelleSpalte col_Aenderbar = add("Aenderbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
+	public final SchemaTabelleSpalte col_Aenderbar = add("Aenderbar", SchemaDatentypen.VARCHAR, false)
+			.setDatenlaenge(1)
 			.setDefault("+")
 			.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 			.setJavaComment("Gibt an ob die Fachklasse änderbar ist");
 
 	/** Die Definition der Tabellenspalte Kennung */
-	public final SchemaTabelleSpalte col_Kennung = add("Kennung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
+	public final SchemaTabelleSpalte col_Kennung = add("Kennung", SchemaDatentypen.VARCHAR, false)
+			.setDatenlaenge(10)
 			.setJavaComment("Kennung der Fachklasse");
 
 	/** Die Definition der Tabellenspalte FKS_AP_SIM */
-	public final SchemaTabelleSpalte col_FKS_AP_SIM = add("FKS_AP_SIM", SchemaDatentypen.VARCHAR, false).setDatenlaenge(5)
+	public final SchemaTabelleSpalte col_FKS_AP_SIM = add("FKS_AP_SIM", SchemaDatentypen.VARCHAR, false)
+			.setDatenlaenge(5)
 			.setJavaComment("Kombination aus FKS und AP mit Minuszeichen");
 
 	/** Die Definition der Tabellenspalte BKIndexTyp */
-	public final SchemaTabelleSpalte col_BKIndexTyp = add("BKIndexTyp", SchemaDatentypen.VARCHAR, false).setDatenlaenge(3)
+	public final SchemaTabelleSpalte col_BKIndexTyp = add("BKIndexTyp", SchemaDatentypen.VARCHAR, false)
+			.setDatenlaenge(3)
 			.setJavaComment("Typ des BKIndex IT.NW");
 
 	/** Die Definition der Tabellenspalte Beschreibung_W */
-	public final SchemaTabelleSpalte col_Beschreibung_W = add("Beschreibung_W", SchemaDatentypen.VARCHAR, false).setDatenlaenge(100)
+	public final SchemaTabelleSpalte col_Beschreibung_W = add("Beschreibung_W", SchemaDatentypen.VARCHAR, false)
+			.setDatenlaenge(100)
 			.setJavaComment("Weiblicher Beschreibungstext für die Fachklassenbezeichnung");
 
 	/** Die Definition der Tabellenspalte Status */
-	public final SchemaTabelleSpalte col_Status = add("Status", SchemaDatentypen.VARCHAR, false).setDatenlaenge(20)
+	public final SchemaTabelleSpalte col_Status = add("Status", SchemaDatentypen.VARCHAR, false)
+			.setDatenlaenge(20)
 			.setJavaComment("Status der Fachklasse kann auslaufend sein");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */
@@ -84,15 +101,18 @@ public class Tabelle_EigeneSchule_Fachklassen extends SchemaTabelle {
 			.setJavaComment("DQR-Niveau der Fachklasse Deutscher Qualitätsrahmen");
 
 	/** Die Definition der Tabellenspalte Ebene1Klartext */
-	public final SchemaTabelleSpalte col_Ebene1Klartext = add("Ebene1Klartext", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
+	public final SchemaTabelleSpalte col_Ebene1Klartext = add("Ebene1Klartext", SchemaDatentypen.VARCHAR, false)
+			.setDatenlaenge(255)
 			.setJavaComment("Berufsebene 1");
 
 	/** Die Definition der Tabellenspalte Ebene2Klartext */
-	public final SchemaTabelleSpalte col_Ebene2Klartext = add("Ebene2Klartext", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
+	public final SchemaTabelleSpalte col_Ebene2Klartext = add("Ebene2Klartext", SchemaDatentypen.VARCHAR, false)
+			.setDatenlaenge(255)
 			.setJavaComment("Berufsebene 2");
 
 	/** Die Definition der Tabellenspalte Ebene3Klartext */
-	public final SchemaTabelleSpalte col_Ebene3Klartext = add("Ebene3Klartext", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
+	public final SchemaTabelleSpalte col_Ebene3Klartext = add("Ebene3Klartext", SchemaDatentypen.VARCHAR, false)
+			.setDatenlaenge(255)
 			.setJavaComment("Berufsebene 3");
 
 

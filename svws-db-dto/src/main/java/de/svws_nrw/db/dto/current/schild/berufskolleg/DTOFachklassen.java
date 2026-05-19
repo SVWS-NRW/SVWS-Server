@@ -26,7 +26,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Fachklassen")
-@JsonPropertyOrder({"ID", "BKIndex", "FKS", "AP", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar", "Kennung", "FKS_AP_SIM", "BKIndexTyp", "Beschreibung_W", "Status", "Lernfelder", "DQR_Niveau", "Ebene1Klartext", "Ebene2Klartext", "Ebene3Klartext"})
+@JsonPropertyOrder({"ID", "BKIndex", "FKS", "AP", "kuerzel", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar", "Kennung", "FKS_AP_SIM", "BKIndexTyp", "Beschreibung_W", "Status", "Lernfelder", "DQR_Niveau", "Ebene1Klartext", "Ebene2Klartext", "Ebene3Klartext"})
 public final class DTOFachklassen {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -64,6 +64,12 @@ public final class DTOFachklassen {
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AP */
 	public static final String QUERY_LIST_BY_AP = "SELECT e FROM DTOFachklassen e WHERE e.AP IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes kuerzel */
+	public static final String QUERY_BY_KUERZEL = "SELECT e FROM DTOFachklassen e WHERE e.kuerzel = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes kuerzel */
+	public static final String QUERY_LIST_BY_KUERZEL = "SELECT e FROM DTOFachklassen e WHERE e.kuerzel IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
 	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOFachklassen e WHERE e.Bezeichnung = ?1";
@@ -169,6 +175,11 @@ public final class DTOFachklassen {
 	@Column(name = "AP")
 	@JsonProperty
 	public String AP;
+
+	/** Kürzel der Fachklasse */
+	@Column(name = "Kuerzel")
+	@JsonProperty
+	public String kuerzel;
 
 	/** Bezeichnung der Fachklasse Text */
 	@Column(name = "Bezeichnung")
@@ -293,7 +304,7 @@ public final class DTOFachklassen {
 	 */
 	@Override
 	public String toString() {
-		return "DTOFachklassen(ID=" + this.ID + ", BKIndex=" + this.BKIndex + ", FKS=" + this.FKS + ", AP=" + this.AP + ", Bezeichnung=" + this.Bezeichnung + ", Sortierung=" + this.Sortierung + ", Sichtbar=" + this.Sichtbar + ", Aenderbar=" + this.Aenderbar + ", Kennung=" + this.Kennung + ", FKS_AP_SIM=" + this.FKS_AP_SIM + ", BKIndexTyp=" + this.BKIndexTyp + ", Beschreibung_W=" + this.Beschreibung_W + ", Status=" + this.Status + ", Lernfelder=" + this.Lernfelder + ", DQR_Niveau=" + this.DQR_Niveau + ", Ebene1Klartext=" + this.Ebene1Klartext + ", Ebene2Klartext=" + this.Ebene2Klartext + ", Ebene3Klartext=" + this.Ebene3Klartext + ")";
+		return "DTOFachklassen(ID=" + this.ID + ", BKIndex=" + this.BKIndex + ", FKS=" + this.FKS + ", AP=" + this.AP + ", kuerzel=" + this.kuerzel + ", Bezeichnung=" + this.Bezeichnung + ", Sortierung=" + this.Sortierung + ", Sichtbar=" + this.Sichtbar + ", Aenderbar=" + this.Aenderbar + ", Kennung=" + this.Kennung + ", FKS_AP_SIM=" + this.FKS_AP_SIM + ", BKIndexTyp=" + this.BKIndexTyp + ", Beschreibung_W=" + this.Beschreibung_W + ", Status=" + this.Status + ", Lernfelder=" + this.Lernfelder + ", DQR_Niveau=" + this.DQR_Niveau + ", Ebene1Klartext=" + this.Ebene1Klartext + ", Ebene2Klartext=" + this.Ebene2Klartext + ", Ebene3Klartext=" + this.Ebene3Klartext + ")";
 	}
 
 }
