@@ -21,8 +21,6 @@ export class RouteKursDaten extends RouteNode<any, RouteKurse> {
 
 	public getProps(to: RouteLocationNormalized): KursDatenProps {
 		return {
-			schulform: api.schulform,
-			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			patch: routeKurse.data.patch,
 			manager: () => routeKurse.data.manager,

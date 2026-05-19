@@ -50,7 +50,7 @@
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Statusdaten" v-if="hatKompetenzAnsehen">
-			<template #actions v-if="schulform === Schulform.BK || schulform === Schulform.SB">
+			<template #actions v-if="schuleState.schulform === Schulform.BK || schuleState.schulform === Schulform.SB">
 				<svws-ui-checkbox :readonly
 					:model-value="schuelerListeManager().daten().istDuplikat"
 					@update:model-value="istDuplikat => patch({istDuplikat})">
@@ -65,14 +65,14 @@
 					title="Stammschule" v-model="inputStammschule" :items="mapSchulen.values()"
 					:item-text="i => i.kuerzel ?? i.schulnummerStatistik ?? i.kurzbezeichnung ?? i.name" removable />
 				<div v-else />
-				<template v-if="props.serverMode === ServerMode.DEV">
+				<template v-if="serverState.hasDev">
 					<svws-ui-text-input placeholder="Schülerausweis-Nummer"
 						:model-value="schuelerListeManager().daten().idSchuelerausweis"
 						@change="value => patch({ idSchuelerausweis : value })"
 						:readonly />
 					<div v-if="!istSchulformBerufskolleg" />
 				</template>
-				<div v-if="props.serverMode !== ServerMode.DEV" />
+				<div v-if="serverState.hasDev" />
 				<svws-ui-text-input v-if="istSchulformBerufskolleg" placeholder="Beruf"
 					:model-value="schuelerListeManager().daten().beruf"
 					@change="patchBeruf"
@@ -158,7 +158,7 @@
 					@change="religionanmeldung => patch({religionanmeldung})" type="date" statistics />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
-		<svws-ui-content-card title="Weitere Telefonnummern" v-if="serverMode === ServerMode.DEV">
+		<svws-ui-content-card v-if="serverState.hasDev" title="Weitere Telefonnummern">
 			<svws-ui-table class="max-h-72!"
 				v-model="selectedTelefonnummern"
 				:items="getListSchuelerTelefoneintraege()"
@@ -256,20 +256,18 @@
 	import { computed, ref } from "vue";
 	import type { SchuelerIndividualdatenProps } from "./SSchuelerIndividualdatenProps";
 	import type { OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchulEintrag, Telefonart, Haltestelle, Fahrschuelerart } from "@core";
-	import {
-		SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, AdressenUtils, Verkehrssprache, BenutzerKompetenz, DateUtils, SchuelerTelefon, ServerMode,
-		ArrayList, ReportingReportvorlage, JavaString,
-	} from "@core";
-	import {
-		verkehrsspracheKatalogEintragFilter, verkehrsspracheKatalogEintragSort, nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort,
-		staatsangehoerigkeitKatalogEintragSort, staatsangehoerigkeitKatalogEintragFilter, orte_sort, ortsteilSort,
-	} from "~/utils/helfer";
+	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, AdressenUtils, Verkehrssprache, BenutzerKompetenz, DateUtils, SchuelerTelefon,
+		ArrayList, ReportingReportvorlage, JavaString } from "@core";
+	import { verkehrsspracheKatalogEintragFilter, verkehrsspracheKatalogEintragSort, nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort,
+		staatsangehoerigkeitKatalogEintragSort, staatsangehoerigkeitKatalogEintragFilter, orte_sort, ortsteilSort } from "~/utils/helfer";
 	import type { DataTableColumn } from "@ui";
-	import { SelectManager } from "@ui";
+	import { SelectManager, useSchuleState, useServerState } from "@ui";
 	import { mandatoryInputIsValid, optionalInputIsValid, phoneNumberIsValid } from "~/util/validation/Validation";
 	import WiedervorlageModal from "~/components/wiedervorlage/WiedervorlageModal.vue";
 
 	const props = defineProps<SchuelerIndividualdatenProps>();
+	const serverState = useServerState();
+	const schuleState = useSchuleState();
 
 	const selectedTelefonnummern = ref<SchuelerTelefon[]>([]);
 	const clickedTelefonnummer = ref<SchuelerTelefon | null>(null);
@@ -288,7 +286,7 @@
 		get: () => props.mapTelefonArten.get(telefonnummernEntry.value.idTelefonArt) ?? null,
 		set: (selected: Telefonart | null) => telefonnummernEntry.value.idTelefonArt = (selected === null) ? -1 : selected.id,
 	});
-	const istSchulformBerufskolleg = computed(() => [Schulform.BK, Schulform.SB, Schulform.WB].includes(props.schulform));
+	const istSchulformBerufskolleg = computed(() => [Schulform.BK, Schulform.SB, Schulform.WB].includes(schuleState.schulform));
 	const istOrtsteilDisabled = computed(() => (selectedOrt.value === null) && (selectedOrtsteil.value === null));
 	const orte = computed(() => props.orteById.values());
 	const ortsteile = computed(() => {

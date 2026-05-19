@@ -72,7 +72,7 @@
 		<!-- Wechsel zu aufnehmender Schule !-->
 		<svws-ui-content-card title="Wechsel zu aufnehmender Schule">
 			<template #actions>
-				<svws-ui-checkbox title="Wechsel bevorstehend" v-if="ServerMode.DEV.checkServerMode(serverMode)"
+				<svws-ui-checkbox title="Wechsel bevorstehend" v-if="serverState.hasDev"
 					v-model="wechselBevorstehend"
 					:indeterminate="manager().daten.aufnehmendBestaetigt === null"
 					disabled :readonly>
@@ -101,7 +101,7 @@
 					:model-value="manager().daten.aufnehmendWechseldatum"
 					readonly />
 				<ui-select label="Wechselgrund"
-					v-if="ServerMode.DEV.checkServerMode(serverMode)"
+					v-if="serverState.hasDev"
 					:manager="schulwechselGrundSelectManager"
 					:disabled="!wechselBevorstehend" :readonly />
 			</svws-ui-input-wrapper>
@@ -195,14 +195,16 @@
 <script setup lang="ts">
 
 	import type { JahrgangsDaten, KatalogEntlassgrund, Kindergarten, SchulEintrag } from "@core";
-	import { BenutzerKompetenz, Einschulungsart, Jahrgaenge, Kindergartenbesuch, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform,
-		ServerMode, Uebergangsempfehlung } from "@core";
+	import { BenutzerKompetenz, Einschulungsart, Jahrgaenge, Kindergartenbesuch, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, Uebergangsempfehlung } from "@core";
 	import type { SchuelerSchulbesuchProps } from './SchuelerSchulbesuchProps';
-	import { CoreTypeSelectManager, SelectManager } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useSchuleState, useServerState } from "@ui";
 	import { computed, ref } from "vue";
 	import { SchuelerSchulbesuchModelProxy } from "~/components/schueler/schulbesuch/modelProxy/SchuelerSchulbesuchModelProxy";
 
 	const props = defineProps<SchuelerSchulbesuchProps>();
+	const schuleState = useSchuleState();
+	const serverState = useServerState();
+
 	const updateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const readonly = computed(() => !updateKompetenz.value);
 	const model = new SchuelerSchulbesuchModelProxy(
@@ -212,7 +214,7 @@
 	);
 	const schuljahr = computed(() => props.manager().schuljahr);
 	const schuleHatPrimarstufe = computed(
-		() => [Schulform.G, Schulform.FW, Schulform.WF, Schulform.GM, Schulform.KS, Schulform.S, Schulform.GE, Schulform.V].includes(props.schulform));
+		() => [Schulform.G, Schulform.FW, Schulform.WF, Schulform.GM, Schulform.KS, Schulform.S, Schulform.GE, Schulform.V].includes(schuleState.schulform));
 	const wechselBevorstehend = ref<boolean>(false);
 
 	const vorherigeSchuleManager = new SelectManager<SchulEintrag>({

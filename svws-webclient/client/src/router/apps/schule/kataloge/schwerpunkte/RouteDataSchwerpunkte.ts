@@ -8,6 +8,8 @@ import { routeSchwerpunkteGruppenprozesse } from "./RouteSchwerpunkteGruppenproz
 import { routeSchwerpunkteNeu } from "./RouteSchwerpunkteNeu";
 import { routeSchwerpunkteDaten } from "./RouteSchwerpunkteDaten";
 import { api } from "~/router/Api";
+import { abschnittState } from "~/states/AbschnittStateImpl";
+import { schuleState } from "~/states/SchuleStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
@@ -28,8 +30,8 @@ export class RouteDataSchwerpunkte extends RouteDataAuswahl<SchwerpunkteListeMan
 
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateAuswahlInterface<SchwerpunkteListeManager>>> {
 		const schwerpunkte = await api.server.getSchuelerSchwerpunkte(api.schema);
-		const manager = new SchwerpunkteListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
-			api.schulform, schwerpunkte);
+		const manager = new SchwerpunkteListeManager(idSchuljahresabschnitt, schuleState.abschnitt.id, abschnittState.alle,
+			schuleState.schulform, schwerpunkte);
 		return { manager };
 	}
 

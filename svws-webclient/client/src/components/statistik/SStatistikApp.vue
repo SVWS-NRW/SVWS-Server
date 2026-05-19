@@ -294,54 +294,56 @@
 <script setup lang="ts">
 
 	import { computed, ref, shallowRef } from "vue";
-	import { type TabData, type DataTableColumn, TabManager, useRegionSwitch } from "@ui";
+	import { type TabData, type DataTableColumn, TabManager, useRegionSwitch, useSchuleState } from "@ui";
 	import type { StatistikAppProps } from "./SStatistikAppProps";
 
 	const props = defineProps<StatistikAppProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+	const schuleState = useSchuleState();
+
 
 	const schulname = computed(() => {
-		const name = props.schule.bezeichnung1;
+		const name = schuleState.stammdaten.bezeichnung1;
 		return (name.length > 0) ? name : "Schule";
 	});
 
 	const schulNr = computed(() => {
-		const nr = props.schule.schulNr;
+		const nr = schuleState.stammdaten.schulNr;
 		return nr.toString();
 	});
 
 	const schulform = computed(() => {
-		const form = props.schule.schulform;
+		const form = schuleState.stammdaten.schulform;
 		return form;
 	});
 
 	const adresse = computed(() => {
-		const strassenname = props.schule.strassenname;
-		const hausnummer = props.schule.hausnummer;
-		const hausnummerZusatz = props.schule.hausnummerZusatz;
-		const plz = props.schule.plz;
-		const ort = props.schule.ort;
+		const strassenname = schuleState.stammdaten.strassenname;
+		const hausnummer = schuleState.stammdaten.hausnummer;
+		const hausnummerZusatz = schuleState.stammdaten.hausnummerZusatz;
+		const plz = schuleState.stammdaten.plz;
+		const ort = schuleState.stammdaten.ort;
 
 		return `${strassenname} ${hausnummer}${hausnummerZusatz !== null ? " " + hausnummerZusatz : ""}\n${plz} ${ort}`;
 	});
 
 	const telefon = computed(() => {
-		const telefon = props.schule.telefon;
+		const telefon = schuleState.stammdaten.telefon;
 		return telefon;
 	});
 
 	const fax = computed(() => {
-		const fax = props.schule.fax;
+		const fax = schuleState.stammdaten.fax;
 		return fax;
 	});
 
 	const email = computed(() => {
-		const email = props.schule.email;
+		const email = schuleState.stammdaten.email;
 		return email;
 	});
 
 	const webAdresse = computed(() => {
-		const webAdresse = props.schule.webAdresse;
+		const webAdresse = schuleState.stammdaten.webAdresse;
 		return webAdresse;
 	});
 

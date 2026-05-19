@@ -1,10 +1,8 @@
-import type { ApiFile, BenutzerKompetenz, GostBelegpruefungsArt, GostBelegpruefungsErgebnisse, GostJahrgangsdaten, List, ReportingParameter, Schulform, ServerMode, SimpleOperationResponse } from "@core";
+import type { ApiFile, BenutzerKompetenz, GostBelegpruefungsArt, GostBelegpruefungsErgebnisse, GostJahrgangsdaten, List, ReportingParameter, SimpleOperationResponse } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface GostLaufbahnfehlerProps {
-	schulform: Schulform;
-	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	benutzerKompetenzenAbiturjahrgaenge: Set<number>;
 	listBelegpruefungsErgebnisse: () => List<GostBelegpruefungsErgebnisse>;

@@ -25,8 +25,6 @@ export class RouteStundenplanKlasse extends RouteNode<any, RouteStundenplan> {
 
 	public getProps(to: RouteLocationNormalized): StundenplanKlasseProps {
 		return {
-			schulform: api.schulform,
-			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			stundenplanManager: () => routeStundenplan.data.manager.daten(),
 			patchUnterrichte: routeStundenplan.data.patchUnterrichte,

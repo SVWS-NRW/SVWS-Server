@@ -21,8 +21,6 @@ export class RouteFloskelgruppenDaten extends RouteNode<any, RouteFloskelgruppen
 	public getProps(to: RouteLocationNormalized): FloskelgruppenDatenProps {
 		return {
 			manager: () => routeFloskelgruppen.data.manager,
-			schuljahr: api.abschnitt.schuljahr,
-			schulform: api.schulform,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			patch: routeFloskelgruppen.data.patch,
 		};

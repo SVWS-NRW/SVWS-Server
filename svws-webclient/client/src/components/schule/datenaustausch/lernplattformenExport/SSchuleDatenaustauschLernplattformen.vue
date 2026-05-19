@@ -27,11 +27,12 @@
 
 	import { computed, ref } from "vue";
 	import type { SchuleDatenaustauschLernplattformenProps } from "~/components/schule/datenaustausch/lernplattformenExport/SSchuleDatenaustauschLernplattformenProps";
-	import type { Lernplattform, Schuljahresabschnitt } from "@core";
+	import type { Lernplattform } from "@core";
 	import { BenutzerKompetenz } from "@core";
-	import { SelectManager } from "@ui";
+	import { SelectManager, useAbschnittState } from "@ui";
 
 	const props = defineProps<SchuleDatenaustauschLernplattformenProps>();
+	const abschnittState = useAbschnittState();
 
 	const loading = ref<boolean>(false);
 	const lernplattform = ref<Lernplattform | undefined>(undefined);
@@ -46,12 +47,8 @@
 
 	const hatKompetenzExport = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.IMPORT_EXPORT_LERNPLATTFORM));
 	const exportDisabled = computed<boolean>(() => (lernplattform.value === undefined) || !hatKompetenzExport.value || loading.value);
-	const abschnitt = computed<Schuljahresabschnitt | null>(() => props.abschnitteById.get(props.idSelectedAbschnitt) ?? null);
 	function textSchuljahresabschnitt() {
-		if (abschnitt.value === null) {
-			return '';
-		}
-		return `${abschnitt.value.schuljahr}.${abschnitt.value.abschnitt}`;
+		return `${abschnittState.auswahl.schuljahr}.${abschnittState.auswahl.abschnitt}`;
 	}
 
 	async function startExport() {

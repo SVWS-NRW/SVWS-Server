@@ -34,13 +34,11 @@ export class RouteSchuleAdressdaten extends RouteNode<any, RouteSchuleStammdaten
 
 	public getProps(to: RouteLocationNormalized): SchuleAdressdatenProps {
 		return {
-			schule: () => api.schuleStammdaten,
 			patch: routeSchuleAdressdaten.data.patch,
 			getListTeilstandorte: () => routeSchuleAdressdaten.data.getListTeilstandorte,
 			addTeilstandorteintrag: routeSchuleAdressdaten.data.addTeilstandorteintrag,
 			patchTeilstandorteintrag: routeSchuleAdressdaten.data.patchTeilstandorteintrag,
 			deleteTeilstandorteintraege: routeSchuleAdressdaten.data.deleteTeilstandorteintraege,
-			serverMode: api.mode,
 			benutzerIstAdmin: api.benutzerIstAdmin,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 		};

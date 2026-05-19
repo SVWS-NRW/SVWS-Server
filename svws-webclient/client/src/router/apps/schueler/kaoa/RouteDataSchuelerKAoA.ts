@@ -6,6 +6,7 @@ import { DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";
 import { SchuelerKAoAManager } from "@ui";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 interface RouteStateSchuelerKAoA extends RouteStateInterface {
 	auswahl: SchuelerListeEintrag | undefined;
@@ -33,9 +34,9 @@ export class RouteDataSchuelerKAoA extends RouteData<RouteStateSchuelerKAoA> {
 			try {
 				const kAoADaten: List<SchuelerKAoADaten> = await api.server.getKAoAdaten(api.schema, auswahl.id);
 				const lernabschnitte: List<SchuelerLernabschnittListeEintrag> = await api.server.getSchuelerLernabschnittsliste(api.schema, auswahl.id);
-				const manager = new SchuelerKAoAManager(kAoADaten, api.schuleStammdaten.abschnitte, lernabschnitte);
+				const manager = new SchuelerKAoAManager(kAoADaten, abschnittState.alle, lernabschnitte);
 				this.setPatchedState({ auswahl, manager });
-			} catch (error) {
+			} catch {
 				throw new DeveloperNotificationException("Die KAoA-Daten konnten nicht eingeholt werden, sind für diesen Schüler KAoA-Daten möglich?");
 			}
 		}

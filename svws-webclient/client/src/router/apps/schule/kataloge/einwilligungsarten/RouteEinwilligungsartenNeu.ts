@@ -24,8 +24,6 @@ export class RouteEinwilligungsartenNeu extends RouteNode<any, RouteEinwilligung
 	public getProps(to: RouteLocationNormalized): EinwilligungsartenNeuProps {
 		return {
 			manager: () => routeEinwilligungsarten.data.manager,
-			schulform: api.schulform,
-			schuljahr: api.abschnitt.schuljahr,
 			add: routeEinwilligungsarten.data.add,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			gotoDefaultView: routeEinwilligungsarten.data.gotoDefaultView,

@@ -38,18 +38,21 @@
 	import type { DataTableColumn } from "@ui";
 	import type { Abteilung } from "@core";
 	import { BenutzerKompetenz } from "@core";
-	import { useRegionSwitch, ViewType } from "@ui";
+	import { useAbschnittState, useRegionSwitch, useSchuleState, ViewType } from "@ui";
 	import { computed } from "vue";
 
-	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 	const props = defineProps<AbteilungenAuswahlProps>();
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+	const abschnittState = useAbschnittState();
+	const schuleState = useSchuleState();
+
 	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 	const isHinzufuegenView = computed<boolean>(() => props.activeViewType === ViewType.HINZUFUEGEN);
 	const isGruppenprozesseOrHinzufuegenView = computed<boolean>(() => (props.activeViewType === ViewType.GRUPPENPROZESSE) || isHinzufuegenView.value);
 	const noFilteredEntries = computed<boolean>(() => props.manager().filtered().size() === 0);
 	const isHinzufuegenDisabled = computed(() => isHinzufuegenView.value
-		|| ((props.schuljahresabschnittsauswahl().aktuell.id !== props.schuljahresabschnittsauswahl().schule.id)
-			&& (props.schuljahresabschnittsauswahl().aktuell.id !== props.schuljahresabschnittsauswahl().schule.idFolgeAbschnitt)));
+		|| ((abschnittState.auswahl.id !== schuleState.abschnitt.id)
+			&& (abschnittState.auswahl.id !== schuleState.abschnitt.idFolgeAbschnitt)));
 	const searchTerm = computed<string>({
 		get: () => props.manager().searchTerm,
 		set: (v: string) => {
@@ -100,7 +103,7 @@
 	}
 
 	function getTextFolgeAbschnitt() {
-		const aktAbschnitt = props.schuljahresabschnittsauswahl().aktuell;
+		const aktAbschnitt = abschnittState.auswahl;
 		return aktAbschnitt.schuljahr > 0 ? `${aktAbschnitt.schuljahr}/${(aktAbschnitt.schuljahr + 1) % 100}.${aktAbschnitt.abschnitt}` : "Abschnitt";
 	}
 </script>

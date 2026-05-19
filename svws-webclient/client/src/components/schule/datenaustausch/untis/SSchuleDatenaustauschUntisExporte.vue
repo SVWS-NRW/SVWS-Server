@@ -97,8 +97,11 @@
 	import { computed, onMounted, ref, shallowRef, watch } from 'vue';
 	import type { SchuleDatenaustauschUntisExporteProps } from './SSchuleDatenaustauschUntisExporteProps';
 	import { GostHalbjahr, Schulform } from '@core';
+	import { useSchuleState, useAbschnittState } from '@ui';
 
 	const props = defineProps<SchuleDatenaustauschUntisExporteProps>();
+	const schuleState = useSchuleState();
+	const abschnittState = useAbschnittState();
 
 	type GPU = {
 		title: string,
@@ -211,19 +214,19 @@
 
 	onMounted(() => onSelect(aktuell.value));
 
-	watch(() => props.schuljahresabschnitt, () => onSelect(aktuell.value));
+	watch(() => abschnittState.auswahl, () => onSelect(aktuell.value));
 
 	function isVisible(gpu: GPU) {
 		if (gpu === blockungGPUs) {
-			return Schulform.getListMitGymOb(props.schuljahresabschnitt().schuljahr).contains(props.schulform);
+			return Schulform.getListMitGymOb(abschnittState.auswahl.schuljahr).contains(schuleState.schulform);
 		}
 		return true;
 	}
 
 	async function updateAbiturjahrgaenge(gpu: GPU) {
 		if (gpu === blockungGPUs) {
-			const schuljahr = props.schuljahresabschnitt().schuljahr;
-			const abschnitt = props.schuljahresabschnitt().abschnitt;
+			const schuljahr = abschnittState.auswahl.schuljahr;
+			const abschnitt = abschnittState.auswahl.abschnitt;
 			const abijahrgaenge = [schuljahr + 1, schuljahr + 2, schuljahr + 3];
 			const blockungslisten = await props.ladeBlockungslisten(abijahrgaenge);
 			const infos = new Array<AbijahrgangsBlockungsinfos>();

@@ -1,6 +1,6 @@
 <template>
 	<Teleport to=".svws-ui-header--actions" defer>
-		<stundenplan-drucken-modal :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN" :server-mode v-slot="{ openModal }" :map-stundenplaene :get-p-d-f :api-status>
+		<stundenplan-drucken-modal :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN" v-slot="{ openModal }" :map-stundenplaene :get-p-d-f :api-status>
 			<svws-ui-button @click="openModal" type="secondary"><span class="icon i-ri-printer-line" /> Stundenplan drucken</svws-ui-button>
 		</stundenplan-drucken-modal>
 		<svws-ui-modal-hilfe> <hilfe-schueler-stundenplan /> </svws-ui-modal-hilfe>

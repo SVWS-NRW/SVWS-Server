@@ -72,18 +72,18 @@
 	import { SchuelerBetriebeModelProxy } from "~/components/schueler/betriebe/modelproxy/SchuelerBetriebeModelProxy";
 	import { computed, shallowRef } from 'vue';
 	import type { SchuelerBetriebeManager } from "@ui";
-	import { SelectManager } from "@ui";
+	import { SelectManager, useSchuleState } from "@ui";
 
 	const props = defineProps<{
 		add: (data: Partial<SchuelerBetrieb>) => Promise<SchuelerBetrieb>,
 		manager: () => SchuelerBetriebeManager;
 		createModalIsOpen: boolean;
-		schulform: Schulform;
 	}>();
+	const schuleState = useSchuleState();
 
 	const istBK = computed(() => {
 		const erlaubteSchulformen = [Schulform.BK, Schulform.SB, Schulform.WB];
-		return erlaubteSchulformen.includes(props.schulform);
+		return erlaubteSchulformen.includes(schuleState.schulform);
 	});
 	const emit = defineEmits<(e: 'closeModal') => void>();
 	const idSchueler = computed(() => props.manager().idSchueler);

@@ -5,9 +5,9 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
-import { routeApp } from "../../../RouteApp";
 import { routeSchulen } from "~/router/apps/schule/kataloge/schulen/RouteSchulen";
 import { api } from "~/router/Api";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 const SchulenNeu = () => import("~/components/schule/kataloge/schulen/SchulenNeu.vue");
 
@@ -23,7 +23,7 @@ export class RouteSchulenNeu extends RouteNode<any, RouteSchulen> {
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): SchulenNeuProps {
@@ -34,8 +34,6 @@ export class RouteSchulenNeu extends RouteNode<any, RouteSchulen> {
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 			benutzerKompetenzen: api.benutzerKompetenzen,
-			schuljahr: routeApp.data.aktAbschnitt.value.schuljahr,
-			schulform: api.schulform,
 		};
 	}
 }

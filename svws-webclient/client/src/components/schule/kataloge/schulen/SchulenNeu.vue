@@ -114,10 +114,12 @@
 	import { JavaObject, SchulEintrag, Schulform, Herkunftsschulnummer, BenutzerKompetenz } from "@core";
 	import type { HerkunftsschulnummerKatalogEintrag, SchulenKatalogEintrag } from "@core";
 	import type { SchulenNeuProps } from "./SchulenNeuProps";
-	import { CoreTypeSelectManager, SelectManager } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useAbschnittState, useSchuleState } from "@ui";
 	import { SchuleModelProxy } from "~/components/schule/kataloge/schulen/modelproxy/SchuleModelProxy";
 
 	const props = defineProps<SchulenNeuProps>();
+	const abschnittState = useAbschnittState();
+	const schuleState = useSchuleState();
 	const initialData = ref<SchulEintrag>(Object.assign(new SchulEintrag(), { sortierung: 32000, istSichtbar: true }));
 	const model = new SchuleModelProxy(() => initialData.value, () => props.manager().liste.list());
 	const isLoading = ref<boolean>(false);
@@ -127,14 +129,14 @@
 	const schuljahr = computed<number>(() => props.manager().getSchuljahr());
 
 	const selectedExterneSchulen = computed<HerkunftsschulnummerKatalogEintrag | null>({
-		get: () => Herkunftsschulnummer.data().getEintragBySchuljahrUndSchluessel(props.schuljahr, model.proxy.schulnummerStatistik ?? ""),
+		get: () => Herkunftsschulnummer.data().getEintragBySchuljahrUndSchluessel(abschnittState.auswahl.schuljahr, model.proxy.schulnummerStatistik ?? ""),
 		set: (value) => model.proxy.schulnummerStatistik = value?.schluessel ?? null,
 	});
 
 	const externeSchulenSelectManager = new CoreTypeSelectManager({
 		clazz: Herkunftsschulnummer.class,
-		schuljahr: props.schuljahr,
-		schulformen: props.schulform,
+		schuljahr: abschnittState.auswahl.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});
@@ -147,8 +149,8 @@
 
 	const schulformenSelectManager = new CoreTypeSelectManager({
 		clazz: Schulform.class,
-		schuljahr: props.schuljahr,
-		schulformen: props.schulform,
+		schuljahr: abschnittState.auswahl.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});

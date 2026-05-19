@@ -7,7 +7,6 @@ import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { routeKurse, type RouteKurse } from "./RouteKurse";
 import type { KurseGruppenprozesseProps } from "~/components/kurse/gruppenprozesse/SKurseGruppenprozesseProps";
-import { routeKlassen } from "~/router/apps/klassen/RouteKlassen";
 
 const SKurseGruppenprozesse = () => import("~/components/kurse/gruppenprozesse/SKurseGruppenprozesse.vue");
 
@@ -27,13 +26,10 @@ export class RouteKurseGruppenprozesse extends RouteNode<any, RouteKurse> {
 
 	public getProps(to: RouteLocationNormalized): KurseGruppenprozesseProps {
 		return {
-			serverMode: api.mode,
 			apiStatus: api.status,
 			getPDF: routeKurse.data.getPDF,
 			sendEMail: routeKurse.data.sendEMail,
-			schulform: api.schulform,
 			benutzerKompetenzen: api.benutzerKompetenzen,
-			schulgliederungen: api.schulgliederungen,
 			manager: () => routeKurse.data.manager,
 			deleteKurse: routeKurse.data.delete,
 		};

@@ -17,7 +17,7 @@
 		</div>
 
 		<div v-for="schueler in schuelerInPruefung" :key="schueler.id" class="flex flex-col w-full h-min-fit">
-			<schueler-abitur-pruefungsuebersicht-tabelle :server-mode :schule :schueler :manager="() => managerMap().get(schueler.id)!" :update-abiturpruefungsdaten />
+			<schueler-abitur-pruefungsuebersicht-tabelle :schueler :manager="() => managerMap().get(schueler.id)!" :update-abiturpruefungsdaten />
 		</div>
 	</div>
 </template>
@@ -25,8 +25,8 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import { ArrayList, type SchuelerListeEintrag } from "@core";
-	import type { List } from "@core";
+	import { ArrayList } from "@core";
+	import type { List, SchuelerListeEintrag } from "@core";
 	import type { GostAbiturPruefungsuebersichtProps } from "./GostAbiturPruefungsuebersichtProps";
 
 	const props = defineProps<GostAbiturPruefungsuebersichtProps>();

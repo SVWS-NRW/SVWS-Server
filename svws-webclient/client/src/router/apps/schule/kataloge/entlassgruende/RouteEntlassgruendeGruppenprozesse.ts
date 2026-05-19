@@ -5,8 +5,8 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { api } from "~/router/Api";
-import { routeApp } from "~/router/apps/RouteApp";
 import { routeEntlassgruende } from "~/router/apps/schule/kataloge/entlassgruende/RouteEntlassgruende";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 const EntlassgruendeGruppenprozesse = () => import("~/components/schule/kataloge/entlassgruende/gruppenprozesse/EntlassgruendeGruppenprozesse.vue");
 
@@ -22,12 +22,11 @@ export class RouteEntlassgruendeGruppenprozesse extends RouteNode<any, RouteEntl
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): EntlassgruendeGruppenprozesseProps {
 		return {
-			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			delete: routeEntlassgruende.data.delete,
 			deleteCheck: routeEntlassgruende.data.deleteCheck,

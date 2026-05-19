@@ -71,11 +71,13 @@
 	import { Geschlecht, Nationalitaeten, PersonalTyp, AdressenUtils, DateUtils, JavaString, LehrerLeitungsfunktion, BenutzerKompetenz } from "@core";
 	import { staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort, orte_filter, orte_sort, ortsteilSort } from "~/utils/helfer";
 	import { LehrerIndividualdatenModelProxy } from "./LehrerIndividualdatenModelProxy";
+	import { useSchuleState } from "@ui";
 
 	const props = defineProps<LehrerIndividualdatenProps>();
+	const schuleState = useSchuleState();
 
 	const dataNotPatched = () => props.lehrerListeManager().daten();
-	const modelProxy = new LehrerIndividualdatenModelProxy(dataNotPatched, () => props.validatorKontext(), props.patch);
+	const modelProxy = new LehrerIndividualdatenModelProxy(dataNotPatched, () => schuleState.validatorKontext, props.patch);
 
 	const schuljahr = computed<number>(() => props.lehrerListeManager().getSchuljahr());
 

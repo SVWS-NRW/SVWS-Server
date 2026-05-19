@@ -2,7 +2,7 @@
 	<div class="h-full flex flex-col">
 		<div class="secondary-menu--headline">
 			<h1 class="select-none">Schüler</h1>
-			<div><abschnitt-auswahl :daten="schuljahresabschnittsauswahl" /></div>
+			<div><abschnitt-auswahl /></div>
 		</div>
 		<div class="secondary-menu--header">
 			<slot name="header" />
@@ -18,7 +18,7 @@
 				</template>
 				<template #filterAdvanced>
 					<svws-ui-multi-select v-if="manager().istSchuljahresabschnittAktuell()" v-model="filterStatus" title="Status"
-						:items="manager().schuelerstatus.list()" :item-text="status => status.daten(schuljahr)?.text ?? '—'" class="col-span-full" />
+						:items="manager().schuelerstatus.list()" :item-text="status => status.daten(abschnittState.auswahl.schuljahr)?.text ?? '—'" class="col-span-full" />
 					<div v-else class="col-span-full flex flex-wrap gap-x-5">
 						<svws-ui-checkbox type="toggle" v-model="filterNurMitLernabschitt">nur mit Lernabschnitt</svws-ui-checkbox>
 					</div>
@@ -33,7 +33,7 @@
 				<template #cell(idKlasse)="{ rowData, value }">
 					{{ value === null ? "–" : (manager().klasseGetOrNull(value)?.kuerzel) ?? "–" }}
 					<svws-ui-tooltip v-if="!manager().schuelerIstImSchuljahresabschnitt(rowData.id)" autosize>
-						<span v-if="schuljahresabschnittsauswahl().aktuell === schuljahresabschnittsauswahl().schule"
+						<span v-if="abschnittState.auswahl.id === schuleState.abschnitt.id"
 							class="icon icon-ui-danger i-ri-alert-line" />
 						<span v-else class="icon icon-ui-brand i-ri-information-line" />
 						<template #content>
@@ -53,7 +53,7 @@
 							Zur Schnelleingabeansicht wechseln
 						</template>
 					</svws-ui-tooltip>
-					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode) && hatKompetenzAendern">
+					<svws-ui-tooltip v-if="serverState.hasDev && hatKompetenzAendern" position="bottom">
 						<svws-ui-button :disabled="((activeViewType === ViewType.HINZUFUEGEN) || (activeViewType === ViewType.NEU))" type="icon" @click="startCreationMode"
 							:has-focus="rowsFiltered.length === 0">
 							<span class="icon i-ri-add-line" />
@@ -93,10 +93,13 @@
 	import type { JahrgangsDaten, KlassenDaten, KursDaten, SchuelerListeEintrag, Schulgliederung } from "@core";
 	import { BenutzerKompetenz, SchuelerStatus, ServerMode } from "@core";
 	import type { SortByAndOrder } from "@ui";
-	import { useRegionSwitch, ViewType } from "@ui";
+	import { useAbschnittState, useRegionSwitch, useSchuleState, useServerState, ViewType } from "@ui";
 	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
 
 	const props = defineProps<SchuelerAuswahlProps>();
+	const serverState = useServerState();
+	const abschnittState = useAbschnittState();
+	const schuleState = useSchuleState();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
@@ -114,9 +117,9 @@
 
 	const showModalGruppenaktionen = ref<boolean>(false);
 
-	const schuljahr = computed<number>(() => props.schuljahresabschnittsauswahl().aktuell.schuljahr);
-
-	const showSchnelleingabe = computed(() => ServerMode.DEV.checkServerMode(props.serverMode) && props.manager().hasDaten() && (props.manager().auswahl().status === SchuelerStatus.NEUAUFNAHME.daten(schuljahr.value)?.id) && hatKompetenzAendern.value);
+	const showSchnelleingabe = computed(() => serverState.hasDev && props.manager().hasDaten()
+		&& (props.manager().auswahl().status === SchuelerStatus.NEUAUFNAHME.daten(abschnittState.auswahl.schuljahr)?.id)
+		&& hatKompetenzAendern.value);
 
 	const search = ref<string>("");
 
@@ -308,7 +311,7 @@
 	}
 
 	function textSchulgliederung(schulgliederung: Schulgliederung): string {
-		return schulgliederung.daten(schuljahr.value)?.kuerzel ?? '—';
+		return schulgliederung.daten(abschnittState.auswahl.schuljahr)?.kuerzel ?? '—';
 	}
 
 	const selectedItems = shallowRef<SchuelerListeEintrag[]>([]);

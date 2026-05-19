@@ -24,11 +24,9 @@ export class RouteFaecherDaten extends RouteNode<any, RouteFaecher> {
 
 	public getProps(to: RouteLocationNormalized): FaecherDatenProps {
 		return {
-			schuljahr: api.abschnitt.schuljahr,
 			patch: routeFaecher.data.patch,
 			manager: () => routeFaecher.data.manager,
 			benutzerKompetenzen: api.benutzerKompetenzen,
-			schulform: api.schulform,
 		};
 	}
 

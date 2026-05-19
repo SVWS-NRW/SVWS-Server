@@ -42,8 +42,6 @@ export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbe
 	public getProps(to: RouteLocationNormalized): SchuelerSchulbesuchProps {
 		return {
 			manager: () => this.data.manager,
-			schulform: api.schulform,
-			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			autofocus: routeSchueler.data.autofocus,
 			patch: routeSchuelerSchulbesuch.data.patch,

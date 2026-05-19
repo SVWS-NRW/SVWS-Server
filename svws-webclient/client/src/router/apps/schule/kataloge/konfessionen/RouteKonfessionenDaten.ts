@@ -31,7 +31,6 @@ export class RouteKonfessionenDaten extends RouteNode<any, RouteKonfessionen> {
 			manager: () => routeKonfessionen.data.manager,
 			patch: routeKonfessionen.data.patch,
 			benutzerKompetenzen: api.benutzerKompetenzen,
-			schulform: api.schulform,
 		};
 	}
 

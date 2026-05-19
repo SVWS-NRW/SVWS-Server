@@ -7,6 +7,8 @@ import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/Rout
 import type { RouteParamsRawGeneric } from "vue-router";
 import { routeKonfessionenGruppenprozesse } from "~/router/apps/schule/kataloge/konfessionen/RouteKonfessionenGruppenprozesse";
 import { routeKonfessionenNeu } from "~/router/apps/schule/kataloge/konfessionen/RouteKonfessionenNeu";
+import { abschnittState } from "~/states/AbschnittStateImpl";
+import { schuleState } from "~/states/SchuleStateImpl";
 
 type RouteStateKonfessionen = RouteStateAuswahlInterface<KonfessionenListeManager>;
 
@@ -29,8 +31,8 @@ export class RouteDataKonfessionen extends RouteDataAuswahl<KonfessionenListeMan
 
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateKonfessionen>> {
 		const konfessionen = await api.server.getReligionen(api.schema);
-		const manager = new KonfessionenListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
-			api.schulform, konfessionen);
+		const manager = new KonfessionenListeManager(idSchuljahresabschnitt, schuleState.abschnitt.id, abschnittState.alle,
+			schuleState.schulform, konfessionen);
 		return { manager };
 	}
 

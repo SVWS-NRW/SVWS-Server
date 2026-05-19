@@ -21,8 +21,6 @@ export class RouteFloskelnDaten extends RouteNode<any, RouteFloskeln> {
 	public getProps(to: RouteLocationNormalized): FloskelnDatenProps {
 		return {
 			manager: () => routeFloskeln.data.manager,
-			schuljahr: api.abschnitt.schuljahr,
-			schulform: api.schulform,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			patch: routeFloskeln.data.patch,
 		};

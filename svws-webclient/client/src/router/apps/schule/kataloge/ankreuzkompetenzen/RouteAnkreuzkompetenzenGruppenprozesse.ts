@@ -2,11 +2,11 @@ import { RouteNode } from "~/router/RouteNode";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { ViewType } from "@ui";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { routeApp } from "~/router/apps/RouteApp";
 import { api } from "~/router/Api";
 import type { RouteAnkreuzkompetenzen } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteAnkreuzkompetenzen";
 import { routeAnkreuzkompetenzen } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteAnkreuzkompetenzen";
 import type { AnkreuzkompetenzenGruppenprozesseProps } from "~/components/schule/kataloge/ankreuzkompetenzen/gruppenprozesse/AnkreuzkompetenzenGruppenprozesseProps";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 const AnkreuzkompetenzenGruppenprozesse = () => import(
 	"~/components/schule/kataloge/ankreuzkompetenzen/gruppenprozesse/AnkreuzkompetenzenGruppenprozesse.vue");
@@ -21,12 +21,11 @@ class RouteAnkreuzkompetenzenGruppenprozesse extends RouteNode<any, RouteAnkreuz
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): AnkreuzkompetenzenGruppenprozesseProps {
 		return {
-			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeAnkreuzkompetenzen.data.manager,
 			delete: routeAnkreuzkompetenzen.data.delete,

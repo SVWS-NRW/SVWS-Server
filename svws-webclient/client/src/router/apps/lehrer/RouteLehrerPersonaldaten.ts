@@ -7,7 +7,6 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeLehrer, type RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
 
 import type { LehrerPersonaldatenProps } from "~/components/lehrer/personaldaten/LehrerPersonaldatenProps";
-import { routeApp } from "../RouteApp";
 import { routeError } from "~/router/error/RouteError";
 import { api } from "~/router/Api";
 
@@ -42,9 +41,6 @@ export class RouteLehrerPersonaldaten extends RouteNode<any, RouteLehrer> {
 
 	public getProps(_: RouteLocationNormalized): LehrerPersonaldatenProps {
 		return {
-			validatorKontext: () => api.validatorKontext,
-			schulform: api.schulform,
-			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			lehrerListeManager: () => routeLehrer.data.manager,
 			mapSchulen: () => routeLehrer.data.mapSchulen,
@@ -73,7 +69,6 @@ export class RouteLehrerPersonaldaten extends RouteNode<any, RouteLehrer> {
 			addLehrerUnterrichtsfach: routeLehrer.data.addLehrerUnterrichtsfach,
 			patchLehrerUnterrichtsfach: routeLehrer.data.patchLehrerUnterrichtsfach,
 			removeLehrerUnterrichtsfach: routeLehrer.data.removeLehrerUnterrichtsfach,
-			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 		};
 	}
 

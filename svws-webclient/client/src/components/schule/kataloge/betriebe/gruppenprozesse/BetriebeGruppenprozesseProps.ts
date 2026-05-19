@@ -1,8 +1,7 @@
-import type { BenutzerKompetenz, List, ServerMode } from "@core";
-import type { BetriebeListeManager } from "../../../../../../../ui/src/ui/manager/kataloge/BetriebeListeManager";
+import type { BenutzerKompetenz, List } from "@core";
+import type { BetriebeListeManager } from "@ui";
 
 export interface BetriebeGruppenprozesseProps {
-	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	manager: () => BetriebeListeManager;
 	deleteCheck: () => { success: boolean, logs: Iterable<string> };

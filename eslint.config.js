@@ -113,7 +113,6 @@ export default defineConfig(
 			"@stylistic/brace-style": ["error", "1tbs"],
 
 			"require-await": "off",
-			"no-unused-vars": "off",
 			"no-dupe-class-members": "off",
 
 			"eqeqeq": "error",
@@ -122,7 +121,15 @@ export default defineConfig(
 			// TypeScript-spezifische Regeln
 			// "@typescript-eslint/no-this-alias": "off",
 			"@typescript-eslint/require-await": "off",
-			"@typescript-eslint/no-unused-vars": "off",
+			"no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": "off", /**[ "error",
+        {
+          args: 'none',
+          caughtErrors: 'all',
+          enableAutofixRemoval: { imports: true },
+          varsIgnorePattern: '^(?:_|props)$',
+        },
+      ],*/
 			"@typescript-eslint/no-explicit-any": "off",
 			"@typescript-eslint/no-empty-function": "off",
 			"@typescript-eslint/no-inferrable-types": "off",

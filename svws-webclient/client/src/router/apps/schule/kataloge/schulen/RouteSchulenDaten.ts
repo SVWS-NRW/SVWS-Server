@@ -19,11 +19,9 @@ export class RouteSchulenDaten extends RouteNode<any, RouteSchulen> {
 
 	public getProps(to: RouteLocationNormalized): SchulenDatenProps {
 		return {
-			schuljahr: api.abschnitt.schuljahr,
 			manager: () => routeSchulen.data.manager,
 			patch: routeSchulen.data.patch,
 			benutzerKompetenzen: api.benutzerKompetenzen,
-			schulform: api.schulform,
 		};
 	}
 

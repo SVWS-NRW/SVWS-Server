@@ -4,10 +4,9 @@ import { RouteNode } from "./RouteNode";
 import type { RouteTabProps } from "./RouteTabNode";
 import { RouteTabNode } from "./RouteTabNode";
 import type { RouteComponent, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-import type { AbschnittAuswahlDaten, AuswahlManager } from "@ui";
+import type { AuswahlManager } from "@ui";
 import { ViewType } from "@ui";
 import { api } from "./Api";
-import { routeApp } from "./apps/RouteApp";
 import { routeError } from "./error/RouteError";
 import { ConfigElement } from "../../../ui/src/utils/Config";
 import type { PendingStateManagerRegistry } from "~/router/PendingStateManagerRegistry";
@@ -17,10 +16,8 @@ import type { PendingStateManagerRegistry } from "~/router/PendingStateManagerRe
  * die dieser Route zugeordnet ist, übergeben werden.
  */
 export interface RouteAuswahlListProps<TAuswahlManager extends AuswahlManager<any, any, any>> {
-	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
 	manager: () => TAuswahlManager;
 	setFilter: () => Promise<void>;
-	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	activeViewType: ViewType;
 	gotoDefaultView: (id?: number | null) => Promise<void>;
@@ -81,10 +78,8 @@ export abstract class RouteAuswahlNode<TAuswahlManager extends AuswahlManager<nu
 		super(schulformen, kompetenzen, name, path, component, data);
 		this._idParam = idParam;
 		super.setView("liste", componentList, (_route) => this._getAuswahlListProps({
-			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(true),
 			manager: () => this.data.manager,
 			setFilter: this.data.setFilter,
-			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			activeViewType: this.data.activeViewType,
 			gotoDefaultView: this.data.gotoDefaultView,

@@ -1,6 +1,5 @@
 import type { Config } from "../../../utils/Config";
 import type { ApiFile } from "../../../../../core/src/api/BaseApi";
-import type { Schulform } from "../../../../../core/src/asd/types/schule/Schulform";
 import type { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
 import type { GostBelegpruefungErgebnis } from "../../../../../core/src/core/abschluss/gost/GostBelegpruefungErgebnis";
 import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
@@ -11,12 +10,9 @@ import type { LehrerListeEintrag } from "../../../../../core/src/core/data/lehre
 import type { SchuelerListeEintrag } from "../../../../../core/src/core/data/schueler/SchuelerListeEintrag";
 import type { BenutzerKompetenz } from "../../../../../core/src/core/types/benutzer/BenutzerKompetenz";
 import type { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
-import type { ServerMode } from "../../../../../core/src/core/types/ServerMode";
 import type { ArrayList } from "../../../../../core/src/java/util/ArrayList";
 
 export interface SchuelerLaufbahnplanungProps {
-	schulform: Schulform;
-	serverMode: ServerMode;
 	benutzerKompetenzen?: Set<BenutzerKompetenz>,
 	benutzerKompetenzenAbiturjahrgaenge?: Set<number>;
 	config: () => Config;

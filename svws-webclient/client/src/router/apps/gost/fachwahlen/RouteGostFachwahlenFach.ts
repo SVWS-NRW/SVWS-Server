@@ -10,9 +10,9 @@ import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
 import { routeGostFachwahlen } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlen";
 
 import { ref } from "vue";
-import { routeApp } from "../../RouteApp";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeError } from "~/router/error/RouteError";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 
 const SGostFachwahlenFach = () => import("~/components/gost/fachwahlen/SGostFachwahlenFach.vue");
@@ -42,7 +42,7 @@ export class RouteGostFachwahlenFach extends RouteNode<any, RouteGost> {
 		try {
 			const { abiturjahr } = params ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: null };
 			if ((abiturjahr === null) || (abiturjahr === -1)) {
-				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr } };
+				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, abiturjahr } };
 			}
 			return false;
 		} catch (e) {

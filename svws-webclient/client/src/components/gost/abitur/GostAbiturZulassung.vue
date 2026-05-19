@@ -25,7 +25,7 @@
 
 					<!-- Übersicht über die Fachbelegungen in der Q-Phase / Block I -->
 					<div class="h-fit w-fit">
-						<schueler-abitur-zulassung-tabelle :server-mode :schule :manager="() => managerLaufbahnplanungMap().get(schueler.id)!" :update-abiturpruefungsdaten="null" />
+						<schueler-abitur-zulassung-tabelle :manager="() => managerLaufbahnplanungMap().get(schueler.id)!" :update-abiturpruefungsdaten="null" />
 					</div>
 
 					<div class="w-64" v-if="managerLaufbahnplanungMap().get(schueler.id)?.istBewertetQualifikationsPhase() ?? false">
@@ -40,7 +40,7 @@
 					<div><span class="icon i-ri-information-line icon-ui-danger" />Es liegen bereits Daten zum Abitur vor.</div>
 
 					<!-- Übersicht über die Fachbelegungen in der Q-Phase / Block I -->
-					<schueler-abitur-zulassung-tabelle :server-mode :schule :manager="() => managerAbiturMap().get(schueler.id)!" :update-abiturpruefungsdaten />
+					<schueler-abitur-zulassung-tabelle :manager="() => managerAbiturMap().get(schueler.id)!" :update-abiturpruefungsdaten />
 				</template>
 			</template>
 			<template v-else>

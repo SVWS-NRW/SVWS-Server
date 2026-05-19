@@ -1,9 +1,7 @@
-import { computed } from "vue";
-
 import type { AES } from "~/utils/crypto/aes";
 import type { Config } from "../../../ui/src/utils/Config";
-import type { List, DBSchemaListeEintrag, ApiServer, ApiExternal, LehrerListeEintrag, SchuelerListeEintrag, KlassenDaten, KursDaten, JahrgangsDaten, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz, ServerMode, ValidatorKontext } from "@core";
-import { Schulform, Schulgliederung, BenutzerTyp, DeveloperNotificationException } from "@core";
+import type { List, DBSchemaListeEintrag, ApiServer, ApiExternal, LehrerListeEintrag, SchuelerListeEintrag, KlassenDaten, KursDaten, JahrgangsDaten, BenutzerDaten, BenutzerKompetenz } from "@core";
+import { BenutzerTyp, DeveloperNotificationException } from "@core";
 
 import { ApiConnection } from "~/router/ApiConnection";
 import type { ApiPendingData } from "~/components/ApiStatus";
@@ -24,11 +22,6 @@ class Api {
 
 	/** Die aktuelle Verbindung zum SVWS-Server */
 	private readonly conn: ApiConnection = new ApiConnection();
-
-	/** Gibt den Modus zurück, in welchem der Server betrieben wird. */
-	get mode(): ServerMode {
-		return this.conn.mode;
-	}
 
 	/** Gibt das Objekt für alle Aufrufe der Server-Schnittstelle des SVWS-Server zurück. */
 	get server(): ApiServer {
@@ -117,15 +110,6 @@ class Api {
 	 */
 	login = async (schema: string, username: string, password: string): Promise<void> => {
 		return await this.conn.login(schema, username, password);
-	};
-
-	/**
-	 * Initialialisiert die Daten, die beim Login geladen )erden sollen
-	 *
-	 * @returns {Promise<boolean>} true beim erfolgreichen Laden der Daten und ansonsten false
-	 */
-	init = async (): Promise<boolean> => {
-		return await this.conn.init();
 	};
 
 	/**
@@ -265,122 +249,6 @@ class Api {
 	public get nonPersistentConfig(): Config {
 		return this.conn.nonPersistentConfig;
 	}
-
-	/// --- Informationen zu der Schule, bei der der Benutzer eingeloggt ist
-
-	/**
-	 * Gibt die Stammdaten der Schule zurück, sofern bereits ein Login stattgefunden hat.
-	 *
-	 * @returns die Stammdaten
-	 */
-	public get schuleStammdaten(): SchuleStammdaten {
-		return this.conn.schuleStammdaten;
-	}
-
-	/**
-	 * Gibt den Validator-Kontext für die Validierung von Statistik-relevanten Daten zurück.
-	 *
-	 * @returns der Validator-Kontext
-	 */
-	public get validatorKontext(): ValidatorKontext {
-		return this.conn.validatorKontext;
-	}
-
-	/**
-	 * Gibt die Schulform der Schule zurück, wo der Benutzer angemeldet ist.
-	 *
-	 * @returns die Schulform
-	 */
-	public get schulform(): Schulform {
-		const schulform = Schulform.data().getWertByKuerzel(this.conn.schuleStammdaten.schulform);
-		if (schulform === null) {
-			throw new DeveloperNotificationException("In den Schul-Stammdaten ist eine ungültige Schulform eingetragen.");
-		}
-		return schulform;
-	}
-
-	/**
-	 * Gibt die zulässigen Schulgliederungen für die Schule zurück, wo der
-	 * Benutzer angemeldet ist.
-	 *
-	 * @returns eine Liste mit den Schulgliederungen
-	 */
-	public get schulgliederungen(): List<Schulgliederung> {
-		return Schulgliederung.getBySchuljahrAndSchulform(this.abschnitt.schuljahr, this.schulform);
-	}
-
-	/**
-	 * Liefert ein Map für alle in der Schule angelegten Schuljahresabschnitte
-	 *
-	 * @return eine Map mit den Schuljahresabschnitten
-	 */
-	public mapAbschnitte = computed<Map<number, Schuljahresabschnitt>>(() => {
-		const mapAbschnitte = new Map<number, Schuljahresabschnitt>();
-		for (const a of this.schuleStammdaten.abschnitte) {
-			mapAbschnitte.set(a.id, a);
-		}
-		return mapAbschnitte;
-	});
-
-	/**
-	 * Gibt den aktuellen Schuljahresabschnitt zurück.
-	 *
-	 * @returns der aktuelle Schuljahresabschnitt
-	 */
-	public get abschnitt(): Schuljahresabschnitt {
-		const abschnitt = this.mapAbschnitte.value.get(this.schuleStammdaten.idSchuljahresabschnitt);
-		if (abschnitt === undefined) {
-			throw new DeveloperNotificationException("Der aktuelle Schuljahresabschnitt der Schule existiert nicht in der Liste der Schuljahresabschnitte.");
-		}
-		return abschnitt;
-	}
-
-	/** Gibt an, ob die aktuell ausgewählte Schule einen Quartalsmodus anwendet */
-	public hatQuartalsModus(): boolean {
-		return (this.schuleStammdaten.schuleAbschnitte.anzahlAbschnitte === 4);
-	}
-
-	/**
-	 * Bestimmt den Schuljahresabschnitt anhand des übergebenen Schuljahres und dem Abschnitt.
-	 *
-	 * @param schuljahr das Schuljahr
-	 * @param abschnitt der Abschnitt (Anzahl der Abschnitt in einem Jahrgang beachten!)
-	 *
-	 * @returns der Schuljahresabschnitt
-	 */
-	public getAbschnittBySchuljahrUndAbschnitt(schuljahr: number, abschnitt: number): Schuljahresabschnitt | undefined {
-		let result: Schuljahresabschnitt | undefined = undefined;
-		for (const a of this.schuleStammdaten.abschnitte) {
-			if ((a.schuljahr === schuljahr) && (a.abschnitt === abschnitt)) {
-				result = a;
-				break;
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * Bestimmt den Schuljahresabschnitt anhand des übergebenen Schuljahres, dem Halbjahr und ggf. dem Quartal,
-	 * falls die Schule im Quartalsmodus betrieben wird.
-	 *
-	 * @param schuljahr das Schuljahr
-	 * @param halbjahr  das Halbjahr (1 oder 2)
-	 * @param quartal   das Quartal (1 oder 2), default 1
-	 *
-	 * @returns der Schuljahresabschnitt
-	 */
-	public getAbschnittBySchuljahrUndHalbjahr(schuljahr: number, halbjahr: number, quartal: number = 1): Schuljahresabschnitt | undefined {
-		const abschnitt = this.hatQuartalsModus() ? ((halbjahr - 1) * 2) + quartal : halbjahr;
-		return this.getAbschnittBySchuljahrUndAbschnitt(schuljahr, abschnitt);
-	}
-
-
-	/**
-	 * Informiert die Api, dass ihre Daten, z.B. die Stammdaten der Schule im Client angepasst wurden
-	 */
-	updatedApiData = () => {
-		this.conn.updatedApiData();
-	};
 
 	/// --- Methoden für den einfachen Api-Zugriff
 

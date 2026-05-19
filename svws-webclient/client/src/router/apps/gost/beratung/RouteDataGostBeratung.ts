@@ -5,6 +5,7 @@ import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeGostKursplanung } from "../kursplanung/RouteGostKursplanung";
 import { RouteManager } from "~/router/RouteManager";
+import { serverState } from "~/states/ServerStateImpl";
 
 
 interface RouteStateDataGostBeratung extends RouteStateInterface {
@@ -92,16 +93,16 @@ export class RouteDataGostBeratung extends RouteData<RouteStateDataGostBeratung>
 		}
 		const art = this.gostBelegpruefungsArt;
 		if (art === 'ef1') {
-			return new AbiturdatenManager(api.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.EF1);
+			return new AbiturdatenManager(serverState.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.EF1);
 		}
 		if (art === 'gesamt') {
-			return new AbiturdatenManager(api.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
+			return new AbiturdatenManager(serverState.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
 		}
-		const abiturdatenManager = new AbiturdatenManager(api.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
+		const abiturdatenManager = new AbiturdatenManager(serverState.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
 		if (abiturdatenManager.pruefeBelegungExistiert(abiturdatenManager.getFachbelegungen(), GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
 			return abiturdatenManager;
 		}
-		return new AbiturdatenManager(api.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.EF1);
+		return new AbiturdatenManager(serverState.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.EF1);
 	};
 
 	setGostBelegpruefungErgebnis = async () => {

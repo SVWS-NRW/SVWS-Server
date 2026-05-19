@@ -58,8 +58,6 @@ export class RouteGostAbiturNoteneingabe extends RouteNode<any, RouteGostAbitur>
 
 	public getProps(to: RouteLocationNormalized): GostAbiturNoteneingabeProps {
 		return {
-			serverMode: api.mode,
-			schule: api.schuleStammdaten,
 			schuelerListe: routeGostAbitur.data.schuelerListe,
 			mapLehrer: routeGostAbitur.data.mapLehrer,
 			mapKurse: routeGostAbitur.data.mapKurse,

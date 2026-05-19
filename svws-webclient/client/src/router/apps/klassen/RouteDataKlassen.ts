@@ -10,11 +10,12 @@ import { routeKlasseGruppenprozesse } from "./RouteKlassenGruppenprozesse";
 import type { RouteNode } from "~/router/RouteNode";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeKlassenNeu } from "~/router/apps/klassen/RouteKlassenNeu";
-import { routeApp } from "~/router/apps/RouteApp";
 import { ViewType, KlassenListeManager } from "@ui";
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
+import { abschnittState } from "~/states/AbschnittStateImpl";
+import { schuleState } from "~/states/SchuleStateImpl";
 
 interface RouteStateKlassen extends RouteStateAuswahlInterface<KlassenListeManager> {
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
@@ -61,8 +62,8 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 	}
 
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateKlassen>> {
-		const schuljahresabschnitt = api.mapAbschnitte.value.get(idSchuljahresabschnitt);
-		if (schuljahresabschnitt === undefined) {
+		const schuljahresabschnitt = abschnittState.getOrNull(idSchuljahresabschnitt);
+		if (schuljahresabschnitt === null) {
 			throw new DeveloperNotificationException('Es ist kein gültiger Schuljahresabschnitt ausgewählt');
 		}
 		// Lade die Kataloge und erstelle den Manager
@@ -76,8 +77,8 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 		const listSchueler = await api.server.getSchuelerFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const listLehrer = await api.server.getLehrerFuerAbschnitt(api.schema, idSchuljahresabschnitt);
-		const manager = new KlassenListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
-			api.schulform, listKlassen, listSchueler, listJahrgaenge, listLehrer);
+		const manager = new KlassenListeManager(idSchuljahresabschnitt, schuleState.abschnitt.id, abschnittState.alle,
+			schuleState.schulform, listKlassen, listSchueler, listJahrgaenge, listLehrer);
 		if (this._state.value.manager === undefined) {
 			manager.setFilterAuswahlPermitted(true);
 		} else {
@@ -194,7 +195,7 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 	};
 
 	add = async (partialKlasse: Partial<KlassenDaten>): Promise<void> => {
-		const neueKlasse = await api.server.addKlasse({ ...partialKlasse, idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }, api.schema);
+		const neueKlasse = await api.server.addKlasse({ ...partialKlasse, idSchuljahresabschnitt: abschnittState.auswahl.id }, api.schema);
 		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
 		await this.gotoDefaultView(neueKlasse.id);
 	};

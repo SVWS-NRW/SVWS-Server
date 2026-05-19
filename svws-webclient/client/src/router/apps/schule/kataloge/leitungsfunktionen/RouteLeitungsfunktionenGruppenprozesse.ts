@@ -4,9 +4,9 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { api } from "~/router/Api";
-import { routeApp } from "~/router/apps/RouteApp";
 import { routeLeitungsfunktionen } from "~/router/apps/schule/kataloge/leitungsfunktionen/RouteLeitungsfunktionen";
 import type { LeitungsfunktionenGruppenprozesseProps } from "~/components/schule/kataloge/leitungsfunktionen/gruppenprozesse/LeitungsfunktionenGruppenprozesseProps";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 const LeitungsfunktionenGruppenprozesse = () => import("~/components/schule/kataloge/leitungsfunktionen/gruppenprozesse/LeitungsfunktionenGruppenprozesse.vue");
 
@@ -22,12 +22,11 @@ export class RouteLeitungsfunktionenGruppenprozesse extends RouteNode<any, Route
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): LeitungsfunktionenGruppenprozesseProps {
 		return {
-			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			delete: routeLeitungsfunktionen.data.delete,
 			deleteCheck: routeLeitungsfunktionen.data.deleteCheck,

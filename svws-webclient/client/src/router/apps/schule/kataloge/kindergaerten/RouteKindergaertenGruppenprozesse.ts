@@ -5,8 +5,8 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { api } from "~/router/Api";
-import { routeApp } from "~/router/apps/RouteApp";
 import { routeKindergaerten } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaerten";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 const KindergaertenGruppenprozesse = () => import("~/components/schule/kataloge/kindergaerten/gruppenprozesse/KindergaertenGruppenprozesse.vue");
 
@@ -22,13 +22,11 @@ export class RouteKindergaertenGruppenprozesse extends RouteNode<any, RouteKinde
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): KindergaertenGruppenprozesseProps {
 		return {
-			serverMode: api.mode,
-			schulform: api.schulform,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			delete: routeKindergaerten.data.delete,
 			deleteCheck: routeKindergaerten.data.deleteCheck,

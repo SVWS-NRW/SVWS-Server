@@ -23,8 +23,6 @@ class RouteAnkreuzkompetenzenDaten extends RouteNode<any, RouteAnkreuzkompetenze
 			manager: () => routeAnkreuzkompetenzen.data.manager,
 			addJahrgaengezuordnungen: routeAnkreuzkompetenzen.data.addJahrgaengezuordnungen,
 			deleteJahrgaengezuordnungen: routeAnkreuzkompetenzen.data.deleteJahrgaengezuordnungen,
-			schuljahr: api.abschnitt.schuljahr,
-			schulform: api.schulform,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}

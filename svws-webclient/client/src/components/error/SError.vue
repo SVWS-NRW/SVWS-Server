@@ -70,6 +70,7 @@
 	import { computed, ref } from "vue";
 	import type { ErrorProps } from "./SErrorProps";
 	import { DeveloperNotificationException, OpenApiError, UserNotificationException, SimpleOperationResponse } from "@core";
+	import { useServerState } from "@ui";
 
 	type CapturedError = {
 		id: number;
@@ -80,6 +81,8 @@
 	};
 
 	const props = defineProps<ErrorProps>();
+	const serverState = useServerState();
+
 	const copied = ref<boolean | null>(null);
 
 	const errorDescription = computed(() => {
@@ -129,7 +132,7 @@
 
 	async function copyToClipboard() {
 		const capturedError = await createCapturedError();
-		const json = JSON.stringify({ env: { client: 'WebClient Route-Error', mode: props.api.mode.text, version: props.api.version, commit: props.api.githash, kompetenzen: props.benutzerKompetenzen.values().toArray().toString(), userAgent: globalThis.navigator.userAgent }, capturedError }, null, 2);
+		const json = JSON.stringify({ env: { client: 'WebClient Route-Error', mode: serverState.mode.text, version: props.api.version, commit: props.api.githash, kompetenzen: props.benutzerKompetenzen.values().toArray().toString(), userAgent: globalThis.navigator.userAgent }, capturedError }, null, 2);
 		try {
 			await navigator.clipboard.writeText("```json\n" + json + "\n```");
 		} catch {

@@ -23,8 +23,6 @@ export class RouteStundenplanDaten extends RouteNode<any, RouteStundenplan> {
 
 	public getProps(to: RouteLocationNormalized): StundenplanDatenProps {
 		return {
-			schulform: api.schulform,
-			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeStundenplan.data.manager,
 			patch: routeStundenplan.data.patch,

@@ -26,7 +26,6 @@ export class RouteSchuelerLernabschnittZeugnisdruck extends RouteNode<any, Route
 
 	public getProps(to: RouteLocationNormalized): SchuelerLernabschnittZeugnisdruckProps {
 		return {
-			schule: api.schuleStammdaten,
 			manager: () => routeSchuelerLernabschnitte.data.manager,
 			patch: routeSchuelerLernabschnitte.data.patchLernabschnitt,
 			patchBemerkungen: routeSchuelerLernabschnitte.data.patchBemerkungen,

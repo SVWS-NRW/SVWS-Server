@@ -6,7 +6,6 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeGostAbitur, type RouteGostAbitur } from "~/router/apps/gost/abitur/RouteGostAbitur";
 
 import type { GostAbiturZulassungProps } from "~/components/gost/abitur/GostAbiturZulassungProps";
-import { api } from "~/router/Api";
 import { schulformenGymOb } from "~/router/RouteHelper";
 
 const GostAbiturZulassung = () => import("~/components/gost/abitur/GostAbiturZulassung.vue");
@@ -31,8 +30,6 @@ export class RouteGostAbiturZulassung extends RouteNode<any, RouteGostAbitur> {
 
 	public getProps(to: RouteLocationNormalized): GostAbiturZulassungProps {
 		return {
-			serverMode: api.mode,
-			schule: api.schuleStammdaten,
 			schuelerListe: routeGostAbitur.data.schuelerListe,
 			managerLaufbahnplanungMap: () => routeGostAbitur.data.managerLaufbahnplanungMap,
 			ergebnisBelegpruefungMap: () => routeGostAbitur.data.ergebnisBelegpruefungMap,

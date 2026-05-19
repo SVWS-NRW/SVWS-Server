@@ -10,13 +10,14 @@ import { RouteManager } from "~/router/RouteManager";
 
 import { routeGostKlausurplanungKalender } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKalender";
 import { routeGostKlausurplanungVorgaben } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungVorgaben";
-import { routeApp } from "../../RouteApp";
 import { routeGostKlausurplanungRaumzeit } from "./RouteGostKlausurplanungRaumzeit";
 import type { DownloadPDFTypen } from "~/components/gost/klausurplanung/DownloadPDFTypen";
 import { routeGostKlausurplanungSchienen } from "./RouteGostKlausurplanungSchienen";
 import { routeGostKlausurplanungNachschreiber } from "./RouteGostKlausurplanungNachschreiber";
 import type { RouteParams } from "vue-router";
 import { routeStundenplan } from "../../stundenplan/RouteStundenplan";
+import { abschnittState } from "~/states/AbschnittStateImpl";
+import { schuleState } from "~/states/SchuleStateImpl";
 
 interface RouteStateGostKlausurplanung extends RouteStateInterface {
 	// Daten nur abhängig von dem Abiturjahrgang
@@ -155,7 +156,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 				const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgang(api.schema, -1);
 				this.manager.vorgabeAddAll(listKlausurvorgaben);
 				const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, -1);
-				const faecherManager = new GostFaecherManager(api.abschnitt.schuljahr, listFaecher);
+				const faecherManager = new GostFaecherManager(schuleState.abschnitt.schuljahr, listFaecher);
 				this.manager.setFaecherManager(-1, faecherManager);
 			}
 			if (this._state.value.abiturjahr === -1) {
@@ -163,8 +164,8 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 				return true;
 			}
 			const schuljahr = halbjahr.getSchuljahrFromAbiturjahr(this._state.value.abiturjahr);
-			const abschnitt: Schuljahresabschnitt | undefined = api.getAbschnittBySchuljahrUndHalbjahr(schuljahr, halbjahr.halbjahr);
-			if (abschnitt === undefined) {
+			const abschnitt = abschnittState.getBySchuljahrUndHalbjahr(schuljahr, halbjahr.halbjahr);
+			if (abschnitt === null) {
 				this.setPatchedState(result);
 				return true;
 			}
@@ -596,7 +597,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 
 		reportvorlage.setReportingParameterVorlageparameter(reportingParameter, "einzelausgabeDaten", (title.indexOf("einzeln") > 0).toString());
 
-		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
+		reportingParameter.idSchuljahresabschnitt = abschnittState.auswahl.id;
 		reportingParameter.idsHauptdaten = new ArrayList<number>();
 
 		if (title.indexOf(" alle ") <= 0) {

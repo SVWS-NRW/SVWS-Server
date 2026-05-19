@@ -1,9 +1,7 @@
-import type { Schulform, List, ServerMode, BenutzerKompetenz } from "@core";
+import type { List, BenutzerKompetenz } from "@core";
 import type { EinwilligungsartenListeManager } from "@ui";
 
 export interface EinwilligungsartenGruppenprozesseProps {
-	serverMode: ServerMode;
-	schulform: Schulform;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	manager: () => EinwilligungsartenListeManager;
 	deleteCheck: () => { success: boolean, logs: Iterable<string> };

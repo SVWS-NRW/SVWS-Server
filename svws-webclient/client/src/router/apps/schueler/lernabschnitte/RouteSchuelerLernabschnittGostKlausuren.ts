@@ -55,7 +55,6 @@ export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<any, Rout
 
 	public getProps(to: RouteLocationNormalized): SchuelerLernabschnittGostKlausurenProps {
 		return {
-			schule: api.schuleStammdaten,
 			manager: () => routeSchuelerLernabschnitte.data.manager,
 			kMan: () => routeSchuelerLernabschnitte.data.klausurManager,
 			hatKlausurManager: () => routeSchuelerLernabschnitte.data.hatKlausurManager,

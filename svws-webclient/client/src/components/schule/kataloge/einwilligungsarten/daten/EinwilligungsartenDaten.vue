@@ -47,12 +47,14 @@
 	import type { EinwilligungsschluesselKatalogEintrag, List } from "@core";
 	import { ArrayList, BenutzerKompetenz, Einwilligungsschluessel, PersonTyp } from "@core";
 	import { computed, watch } from "vue";
-	import { CoreTypeSelectManager } from "@ui";
+	import { CoreTypeSelectManager, useSchuleState } from "@ui";
 	import { EinwilligungsartModelProxy } from "~/components/schule/kataloge/einwilligungsarten/modelproxy/EinwilligungsartModelProxy";
 
 	const props = defineProps<EinwilligungsartenDatenProps>();
+	const schuleState = useSchuleState();
+
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-	const model = new EinwilligungsartModelProxy(() => props.manager().daten(), props.manager, props.schuljahr, props.patch);
+	const model = new EinwilligungsartModelProxy(() => props.manager().daten(), props.manager, schuleState.abschnitt.schuljahr, props.patch);
 	const readonly = computed(() => !hatKompetenzUpdate.value);
 
 	const einwilligungsschluesselFilter = {
@@ -82,8 +84,8 @@
 	const einwilligungsschluesselManager = new CoreTypeSelectManager({
 		filters: [einwilligungsschluesselFilter],
 		clazz: Einwilligungsschluessel.class,
-		schuljahr: props.schuljahr,
-		schulformen: props.schulform,
+		schuljahr: schuleState.abschnitt.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});

@@ -20,9 +20,6 @@ export class RouteKlassenDaten extends RouteNode<any, RouteKlassen> {
 
 	public getProps(to: RouteLocationNormalized): KlassenDatenProps {
 		return {
-			schulform: api.schulform,
-			schulgliederungen: api.schulgliederungen,
-			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			patch: routeKlassen.data.patch,
 			manager: () => routeKlassen.data.manager,

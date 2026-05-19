@@ -5,21 +5,21 @@
 				<svws-ui-content-card title="Stammdaten">
 					<svws-ui-input-wrapper :grid="2">
 						<svws-ui-text-input placeholder="Bezeichnung 1" class="contentFocusField"
-							:model-value="schule().bezeichnung1"
+							:model-value="schuleState.stammdaten.bezeichnung1"
 							@change="bezeichnung1 => bezeichnung1 && patch({ bezeichnung1 })"
 							:readonly="!hatKompetenzUpdate" />
 						<svws-ui-text-input placeholder="Schulnummer"
-							:model-value="schule().schulNr.toString()"
+							:model-value="schuleState.stammdaten.schulNr.toString()"
 							readonly statistics />
 						<svws-ui-text-input placeholder="Bezeichnung 2"
-							:model-value="schule().bezeichnung2"
+							:model-value="schuleState.stammdaten.bezeichnung2"
 							@change="bezeichnung2 => patch({ bezeichnung2 })"
 							:readonly="!hatKompetenzUpdate" />
 						<svws-ui-text-input placeholder="Schulform"
 							:model-value="textSchulform"
 							readonly />
 						<svws-ui-text-input placeholder="Bezeichnung 3"
-							:model-value="schule().bezeichnung3"
+							:model-value="schuleState.stammdaten.bezeichnung3"
 							@change="bezeichnung3 => patch({ bezeichnung3 })"
 							:readonly="!hatKompetenzUpdate" />
 						<svws-ui-spacing />
@@ -33,35 +33,35 @@
 							@change="patchStrasse"
 							:readonly="!hatKompetenzUpdate" />
 						<svws-ui-text-input placeholder="PLZ"
-							:model-value="schule().plz"
+							:model-value="schuleState.stammdaten.plz"
 							@change="patchPlz"
 							:valid="v => optionalInputIsValid(v, 10)"
 							:readonly="!hatKompetenzUpdate" :max-len="10" />
 						<svws-ui-text-input placeholder="Ort"
-							:model-value="schule().ort"
+							:model-value="schuleState.stammdaten.ort"
 							@change="patchOrt"
 							:valid="o => optionalInputIsValid(o, 50)"
 							:readonly="!hatKompetenzUpdate" :max-len="50" />
 						<svws-ui-text-input placeholder="Telefon" type="tel"
-							:model-value="schule().telefon"
+							:model-value="schuleState.stammdaten.telefon"
 							@change="telefon => patch({ telefon })"
 							:readonly="!hatKompetenzUpdate" :max-len="20" />
 						<svws-ui-text-input placeholder="Fax"
-							:model-value="schule().fax"
+							:model-value="schuleState.stammdaten.fax"
 							@change="fax => patch({ fax })" type="tel"
 							:readonly="!hatKompetenzUpdate" :max-len="20" />
 						<svws-ui-text-input placeholder="Homepage"
-							:model-value="schule().webAdresse"
+							:model-value="schuleState.stammdaten.webAdresse"
 							@change="webAdresse => patch({ webAdresse })"
 							verify-email :readonly="!hatKompetenzUpdate" />
 						<svws-ui-text-input placeholder="E-Mail-Adresse" type="email"
-							:model-value="schule().email"
+							:model-value="schuleState.stammdaten.email"
 							@change="email => patch({ email })"
 							verify-email :readonly="!hatKompetenzUpdate" />
 					</svws-ui-input-wrapper>
 				</svws-ui-content-card>
 				<svws-ui-spacing :size="2" />
-				<svws-ui-content-card title="Teilstandorte" v-if="serverMode === ServerMode.DEV">
+				<svws-ui-content-card v-if="serverState.hasDev" title="Teilstandorte">
 					<svws-ui-table class="max-h-72!"
 						v-model="selectedTeilstandorte"
 						:items="getListTeilstandorte()"
@@ -154,14 +154,17 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import { AdressenUtils, ArrayList, BenutzerKompetenz, JavaString, Schulform, ServerMode, Teilstandort } from "@core";
+	import { AdressenUtils, ArrayList, BenutzerKompetenz, JavaString, Teilstandort } from "@core";
 	import type { SchuleAdressdatenProps } from "~/components/schule/stammdaten/adressdaten/SchuleAdressdatenProps";
 	import { optionalInputIsValid } from "~/util/validation/Validation";
 	import type { DataTableColumn } from "@ui";
-	import { SelectManager } from "@ui";
+	import { SelectManager, useSchuleState, useServerState } from "@ui";
 	import { TeilstandortModelProxy } from "~/components/schule/stammdaten/adressdaten/modelproxy/TeilstandortModelProxy";
 
 	const props = defineProps<SchuleAdressdatenProps>();
+	const serverState = useServerState();
+	const schuleState = useSchuleState();
+
 	const selectedTeilstandorte = ref<Teilstandort[]>([]);
 	const clickedTeilstandort = ref<Teilstandort | null>(null);
 	const teilstandortEntry = ref<Teilstandort>(new Teilstandort());
@@ -171,7 +174,7 @@
 
 	const model = new TeilstandortModelProxy(() => teilstandortEntry.value, props.getListTeilstandorte);
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
-	const strasse = computed(() => AdressenUtils.combineStrasse(props.schule().strassenname ?? "", props.schule().hausnummer ?? "", props.schule().hausnummerZusatz ?? ""));
+	const strasse = computed(() => AdressenUtils.combineStrasse(schuleState.stammdaten.strassenname ?? "", schuleState.stammdaten.hausnummer ?? "", schuleState.stammdaten.hausnummerZusatz ?? ""));
 	const adrMerkmaleSelectedEntries = computed<Set<string>>(() =>
 		new Set<string>(selectedTeilstandorte.value.map(e => e.adrMerkmal).filter(m => m !== null))
 	);
@@ -305,16 +308,7 @@
 	};
 
 	const textSchulform = computed<string>(() => {
-		let schuljahr = -1;
-		const id = props.schule().idSchuljahresabschnitt;
-		for (const abschnitt of props.schule().abschnitte) {
-			if (abschnitt.id === id) {
-				schuljahr = abschnitt.schuljahr;
-				break;
-			}
-		}
-		const schulform = Schulform.data().getWertByKuerzel(props.schule().schulform);
-		return schulform?.daten(schuljahr)?.text ?? "—";
+		return schuleState.schulform.daten(schuleState.abschnitt.schuljahr)?.text ?? "—";
 	});
 
 	function patchOrt(ort: string | null) {

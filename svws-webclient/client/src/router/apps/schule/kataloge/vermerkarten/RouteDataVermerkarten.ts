@@ -8,6 +8,8 @@ import { routeVermerkartenDaten } from "./RouteVermerkartenDaten";
 import { ViewType, VermerkartenListeManager } from "@ui";
 import { routeVermerkartenGruppenprozesse } from "./RouteVermerkartenGruppenprozesse";
 import { routeVermerkartenNeu } from "./RouteVermerkartenNeu";
+import { abschnittState } from "~/states/AbschnittStateImpl";
+import { schuleState } from "~/states/SchuleStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
@@ -29,7 +31,7 @@ export class RouteDataVermerkarten extends RouteDataAuswahl<VermerkartenListeMan
 
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<VermerkartenListeManager>>> {
 		const vermerkarten = await api.server.getVermerkarten(api.schema);
-		const manager = new VermerkartenListeManager(api.abschnitt.id, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte, api.schulform, vermerkarten, new ArrayList());
+		const manager = new VermerkartenListeManager(schuleState.abschnitt.id, schuleState.abschnitt.id, abschnittState.alle, schuleState.schulform, vermerkarten, new ArrayList());
 		return { manager };
 	}
 

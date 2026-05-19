@@ -5,7 +5,6 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import type { RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
-import { routeApp } from "~/router/apps/RouteApp";
 import { api } from "~/router/Api";
 import type { SchuelerSchnelleingabeProps } from "~/components/schueler/neuanlage/SchuelerSchnelleingabeProps.js";
 import { ViewType } from "@ui";
@@ -33,11 +32,7 @@ export class RouteSchuelerSchnelleingabe extends RouteNode<RouteDataSchuelerSchn
 			manager: () => this.data.manager,
 			gotoDefaultView: routeSchueler.data.gotoDefaultView,
 			gotoSchuelerNeuView: routeSchueler.data.gotoHinzufuegenView,
-			selectedSchuljahresabschnitt: routeApp.data.aktAbschnitt.value,
-			serverMode: api.mode,
-			schulform: api.schulform,
 			benutzerKompetenzen: api.benutzerKompetenzen,
-
 			patchSchueler: routeSchuelerSchnelleingabe.data.patchSchueler,
 			getErzieher: () => routeSchuelerSchnelleingabe.data.getErzieher,
 			addErzieher: routeSchuelerSchnelleingabe.data.addErzieher,

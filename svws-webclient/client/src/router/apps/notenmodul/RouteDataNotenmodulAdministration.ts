@@ -11,6 +11,8 @@ import { routeNotenmodul } from "./RouteNotenmodul";
 import { NotenmodulConfigManagerSperrungen, type NotenmodulConfigManagerSperrungenGruppierung } from "./NotenmodulConfigManagerSperrungen";
 import { NotenmodulConfigManagerSichtbareSpalten } from "./NotenmodulConfigManagerSichtbareSpalten";
 import { EnmSperrManager } from "../../../../../ui/src/components/enm/EnmSperrManager";
+import { abschnittState } from "~/states/AbschnittStateImpl";
+import { schuleState } from "~/states/SchuleStateImpl";
 
 
 interface RouteStateNotenmodulAdministration extends RouteStateAuswahlInterface<WenomAuswahlListeManager> {
@@ -91,8 +93,8 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 
 	protected async createManager(): Promise<Partial<RouteStateNotenmodulAdministration>> {
 		const list = await api.server.getENMServerConnections(api.schema);
-		const manager = new WenomAuswahlListeManager(api.schuleStammdaten.idSchuljahresabschnitt,
-			api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte, api.schulform, list);
+		const manager = new WenomAuswahlListeManager(schuleState.abschnitt.id,
+			schuleState.abschnitt.id, abschnittState.alle, schuleState.schulform, list);
 		return { manager };
 	}
 

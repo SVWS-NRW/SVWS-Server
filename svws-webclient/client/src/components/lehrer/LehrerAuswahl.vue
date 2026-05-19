@@ -3,7 +3,7 @@
 		<div class="secondary-menu--headline">
 			<h1>Lehrkräfte</h1>
 			<div>
-				<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
+				<abschnitt-auswahl />
 			</div>
 		</div>
 		<div class="secondary-menu--header" />
@@ -25,7 +25,7 @@
 					</div>
 				</template>
 				<template #actions>
-					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode) && hatKompetenzAendern">
+					<svws-ui-tooltip v-if="serverState.hasDev && hatKompetenzAendern" position="bottom">
 						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="props.gotoHinzufuegenView(true)"
 							:has-focus="rowsFiltered.length === 0">
 							<span class="icon i-ri-add-line" />
@@ -44,12 +44,14 @@
 
 	import { computed, ref } from "vue";
 	import type { SortByAndOrder } from "@ui";
-	import { useRegionSwitch, ViewType } from "@ui";
+	import { useRegionSwitch, useServerState, ViewType } from "@ui";
 	import type { PersonalTyp, LehrerListeEintrag } from "@core";
-	import { ServerMode, BenutzerKompetenz } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import type { LehrerAuswahlProps } from "./LehrerAuswahlProps";
 
 	const props = defineProps<LehrerAuswahlProps>();
+	const serverState = useServerState();
+
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRERDATEN_AENDERN));

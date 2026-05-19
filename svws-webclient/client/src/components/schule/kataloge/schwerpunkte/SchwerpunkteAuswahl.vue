@@ -16,7 +16,7 @@
 					<svws-ui-checkbox type="toggle" v-model="showOnlyVisible">Nur Sichtbare</svws-ui-checkbox>
 				</template>
 				<template #actions v-if="!readonly">
-					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode)">
+					<svws-ui-tooltip v-if="serverState.hasDev" position="bottom">
 						<svws-ui-button type="icon"
 							@click="gotoHinzufuegenView(true)"
 							:has-focus="noFilteredItems"
@@ -34,8 +34,8 @@
 </template>
 
 <script setup lang="ts">
-	import { type SchuelerSchwerpunkt as Schwerpunkt, ServerMode } from "@core";
-	import { type DataTableColumn, useRegionSwitch } from "@ui";
+	import { type SchuelerSchwerpunkt } from "@core";
+	import { type DataTableColumn, useRegionSwitch, useServerState } from "@ui";
 
 	import type { SchwerpunkteAuswahlProps } from "./SchwerpunkteAuswahlProps";
 	import { useKatalogAuswahl } from "~/composables/useKatalogAuswahl";
@@ -45,6 +45,7 @@
 	];
 
 	const props = defineProps<SchwerpunkteAuswahlProps>();
+	const serverState = useServerState();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 	const {
@@ -56,5 +57,5 @@
 		searchTerm,
 		showOnlyVisible,
 		noFilteredItems,
-	} = useKatalogAuswahl<Schwerpunkt>(props);
+	} = useKatalogAuswahl<SchuelerSchwerpunkt>(props);
 </script>

@@ -5,7 +5,6 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 
 import type { RouteApp } from "~/router/apps/RouteApp";
-import { routeApp } from "~/router/apps/RouteApp";
 
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 import { RouteDataSchuleReporting } from "./RouteDataSchuleReporting";
@@ -27,7 +26,6 @@ export class RouteSchuleReporting extends RouteNode<RouteDataSchuleReporting, Ro
 		return {
 			createReport: this.data.createReport,
 			createHtmlPreview: this.data.createHtmlPreview,
-			schuljahresabschnitt: () => routeApp.data.aktAbschnitt.value,
 		};
 	}
 }

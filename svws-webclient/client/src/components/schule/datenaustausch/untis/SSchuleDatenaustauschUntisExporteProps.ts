@@ -1,8 +1,6 @@
-import type { GostBlockungListeneintrag, List, Schulform, Schuljahresabschnitt } from "@core";
+import type { GostBlockungListeneintrag, List } from "@core";
 
 export interface SchuleDatenaustauschUntisExporteProps {
-	schulform: Schulform;
-	schuljahresabschnitt: () => Schuljahresabschnitt;
 	exportUntisKlassenGPU003: () => Promise<string[]>;
 	exportUntisLehrerGPU004: () => Promise<string[]>;
 	exportUntisFaecherGPU006: () => Promise<string[]>;

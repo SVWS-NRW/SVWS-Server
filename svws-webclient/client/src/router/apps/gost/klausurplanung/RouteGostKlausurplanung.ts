@@ -5,7 +5,6 @@ import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, Server
 import { RouteManager } from "~/router/RouteManager";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { RouteNode } from "~/router/RouteNode";
-import { routeApp } from "~/router/apps/RouteApp";
 import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
 
 import { routeGostKlausurplanungVorgaben } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungVorgaben";
@@ -26,6 +25,7 @@ import type { GostKlausurplanungProps } from "~/components/gost/klausurplanung/S
 import { routeGostKlausurplanungProbleme } from "./RouteGostKlausurplanungProbleme";
 import type { TabData } from "@ui";
 import { CONFIG_KEY_GOST_KLAUSURPLAN_VORGABENTOIGNORE } from "~/components/gost/klausurplanung/SGostKlausurplanungVorgabenIgnoreManager";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 
 const SGostKlausurplanung = () => import("~/components/gost/klausurplanung/SGostKlausurplanung.vue");
@@ -126,9 +126,9 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			// Aktualisiere das Halbjahr
 			let halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
 			if (abiturjahrwechsel || (halbjahr === null)) {
-				let hj = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, routeApp.data.aktAbschnitt.value.schuljahr, routeApp.data.aktAbschnitt.value.abschnitt);
+				let hj = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, abschnittState.auswahl.schuljahr, abschnittState.auswahl.abschnitt);
 				// In zwei Fällen existiert Halbjahr, z.B. weil der Abiturjahrgang abgeschlossen ist oder noch in der Sek I ist.
-				hj ??= (abiturjahr < routeApp.data.aktAbschnitt.value.schuljahr + routeApp.data.aktAbschnitt.value.abschnitt) ? GostHalbjahr.Q22 : GostHalbjahr.EF1;
+				hj ??= (abiturjahr < abschnittState.auswahl.schuljahr + abschnittState.auswahl.abschnitt) ? GostHalbjahr.Q22 : GostHalbjahr.EF1;
 				halbjahr = hj;
 			}
 			const changedHalbjahr: boolean = await this.data.setHalbjahr(halbjahr, abiturjahrwechsel);

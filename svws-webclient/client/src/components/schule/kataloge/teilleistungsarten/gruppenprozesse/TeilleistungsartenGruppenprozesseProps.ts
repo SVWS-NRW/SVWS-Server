@@ -1,8 +1,7 @@
-import type { BenutzerKompetenz, List, ServerMode } from "@core";
+import type { BenutzerKompetenz, List } from "@core";
 import type { TeilleistungsartenListeManager } from "../manager/TeilleistungsartenListeManager";
 
 export interface TeilleistungsartenGruppenprozesseProps {
-	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	manager: () => TeilleistungsartenListeManager;
 	deleteCheck: () => { success: boolean, logs: Iterable<string> };

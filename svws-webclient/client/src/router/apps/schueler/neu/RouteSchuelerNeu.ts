@@ -33,7 +33,6 @@ export class RouteSchuelerNeu extends RouteNode<RouteDataSchuelerNeu, RouteSchue
 			manager: () => this.data.manager,
 			gotoDefaultView: routeSchueler.data.gotoDefaultView,
 			add: routeSchueler.data.add,
-			schulform: api.schulform,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),

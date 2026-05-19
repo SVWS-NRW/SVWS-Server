@@ -4,19 +4,16 @@
 			<schueler-betriebe-table :manager
 				:delete-entries
 				@create="openModal()"
-				:schulform
 				@update:selected-betrieb="(v) => selectedBetrieb = v ?? null" />
 			<schueler-betriebe-create-form :manager
 				:create-modal-is-open
 				:add
-				:schulform
 				@close-modal="closeModal()" />
 			<schueler-betriebe-patch-form v-if="(selectedBetrieb !== null) && !createModalIsOpen"
 				:manager
 				:selected-betrieb
 				:patch
 				:go-to-betrieb
-				:schulform
 				:benutzer-kompetenzen />
 		</svws-ui-content-card>
 	</div>

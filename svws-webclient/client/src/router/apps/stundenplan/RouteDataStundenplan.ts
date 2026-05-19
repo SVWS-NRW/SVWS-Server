@@ -13,9 +13,10 @@ import { routeStundenplanGruppenprozesse } from "./RouteStundenplanGruppenprozes
 
 import { routeKatalogAufsichtsbereiche } from "./kataloge/RouteKatalogAufsichtsbereiche";
 import { routeKatalogRaeume } from "./kataloge/RouteKatalogRaeume";
-import { routeApp } from "../RouteApp";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
+import { abschnittState } from "~/states/AbschnittStateImpl";
+import { schuleState } from "~/states/SchuleStateImpl";
 
 interface RouteStateStundenplan extends RouteStateAuswahlInterface<StundenplanListeManager> {
 	stundenplanUnterrichtListeManager: StundenplanUnterrichtListeManager | undefined;
@@ -48,14 +49,14 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 	}
 
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateStundenplan>> {
-		const schuljahresabschnitt = api.mapAbschnitte.value.get(idSchuljahresabschnitt);
-		if (schuljahresabschnitt === undefined) {
+		const schuljahresabschnitt = abschnittState.getOrNull(idSchuljahresabschnitt);
+		if (schuljahresabschnitt === null) {
 			throw new DeveloperNotificationException('Es ist kein gültiger Schuljahresabschnitt ausgewählt');
 		}
 		// Lade die Kataloge und erstelle den Manager
 		const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, idSchuljahresabschnitt);
-		const manager = new StundenplanListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
-			api.schulform, listStundenplaene, true);
+		const manager = new StundenplanListeManager(idSchuljahresabschnitt, abschnittState.auswahl.id, abschnittState.alle,
+			schuleState.schulform, listStundenplaene, true);
 		const auswahl = (listStundenplaene.size() > 0) ? listStundenplaene.get(0) : manager.getStundenplanVorlage();
 		const katalogDaten = await this.ladeVorlagenInternal();
 		const state = <Partial<RouteStateStundenplan>>{ manager, ...katalogDaten };
@@ -88,7 +89,7 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 		const unterrichtsverteilung = await api.server.getStundenplanUnterrichtsverteilung(api.schema, auswahl.id);
 		const stundenplanManager = new StundenplanManager(daten, unterrichtsdaten, pausenaufsichten, unterrichtsverteilung);
 		stundenplanManager.stundenplanKonfigSet(this.settingsDefaults);
-		const stundenplanUnterrichtListeManager = new StundenplanUnterrichtListeManager(api.schulform, stundenplanManager, api.schuleStammdaten.abschnitte, daten.idSchuljahresabschnitt);
+		const stundenplanUnterrichtListeManager = new StundenplanUnterrichtListeManager(schuleState.schulform, stundenplanManager, abschnittState.alle, daten.idSchuljahresabschnitt);
 		if (this._state.value.stundenplanUnterrichtListeManager !== undefined) {
 			stundenplanUnterrichtListeManager.useFilter(this._state.value.stundenplanUnterrichtListeManager);
 		}
@@ -206,19 +207,19 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 	};
 
 	add = async (partial: Partial<Stundenplan>): Promise<void> => {
-		const neu = await api.server.addStundenplan({ ...partial, idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }, api.schema);
+		const neu = await api.server.addStundenplan({ ...partial, idSchuljahresabschnitt: abschnittState.auswahl.id }, api.schema);
 		await this.loadAfterAdd(neu.id);
 	};
 
 	getStundenplanListeEintragVorgaengerabschnitt = async () => {
-		if ((routeApp.data.aktAbschnitt.value.abschnitt < 2) || (routeApp.data.aktAbschnitt.value.idVorigerAbschnitt === null)) {
+		if ((abschnittState.auswahl.abschnitt < 2) || (abschnittState.auswahl.idVorigerAbschnitt === null)) {
 			return new ArrayList<StundenplanListeEintrag>();
 		}
-		return new ArrayList<StundenplanListeEintrag>(await api.server.getStundenplanlisteFuerAbschnitt(api.schema, routeApp.data.aktAbschnitt.value.idVorigerAbschnitt));
+		return new ArrayList<StundenplanListeEintrag>(await api.server.getStundenplanlisteFuerAbschnitt(api.schema, abschnittState.auswahl.idVorigerAbschnitt));
 	};
 
 	addAsCopy = async (partial: Partial<Stundenplan>, idFromStundenplan: number): Promise<SimpleOperationResponse> => {
-		return await api.server.addStundenplanAsCopy({ ...partial, idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }, api.schema, idFromStundenplan);
+		return await api.server.addStundenplanAsCopy({ ...partial, idSchuljahresabschnitt: abschnittState.auswahl.id }, api.schema, idFromStundenplan);
 	};
 
 	loadAfterAdd = async (idNeu: number): Promise<void> => {

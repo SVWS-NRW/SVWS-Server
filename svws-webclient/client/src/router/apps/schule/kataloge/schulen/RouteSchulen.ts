@@ -10,7 +10,6 @@ import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import { routeSchulenNeu } from "~/router/apps/schule/kataloge/schulen/RouteSchulenNeu";
 import { routeSchulenGruppenprozesse } from "~/router/apps/schule/kataloge/schulen/RouteSchulenGruppenprozesse";
-import { routeApp } from "~/router/apps/RouteApp";
 
 const SchulenAuswahl = () => import("~/components/schule/kataloge/schulen/SchulenAuswahl.vue");
 const SchulenApp = () => import("~/components/schule/kataloge/schulen/SchulenApp.vue");
@@ -31,7 +30,6 @@ export class RouteSchulen extends RouteAuswahlNode<SchulenListeManager, RouteDat
 		super.updateIfTarget = this.doUpdateIfTarget;
 		super.getAuswahlListProps = (props) => (<SchulenAuswahlProps> {
 			...props,
-			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
 		});
 	}
 

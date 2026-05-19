@@ -36,18 +36,18 @@
 
 					<svws-ui-select title="Schulgliederung" v-model="modelProxy.schulgliederung.value" :disabled="!hatKompetenzUpdate" :items="modelProxy.schulgliederungen.value" :item-text="getSelectText" />
 					<svws-ui-text-input placeholder="Prüfungsordnung" :model-value="modelProxy.proxy.pruefungsordnung ?? '—'" @commit="modelProxy.patch" disabled />
-					<svws-ui-select v-if="schulform.istAllgemeinbildend() || schulform.istWeiterbildung()" title="Klassenart" v-model="modelProxy.klassenart.value" :disabled="!hatKompetenzUpdate" :items="modelProxy.klassenarten.value" :item-text="getSelectText" />
-					<svws-ui-select v-if="schulform.istAllgemeinbildend()" title="Organisationsform" v-model="modelProxy.organisationsformAllgemeinbildend.value" :disabled="!hatKompetenzUpdate" :items="modelProxy.organisationsformenAllgemeinbildend.value" :item-text="getSelectText" />
-					<svws-ui-select v-if="schulform.istBerufsbildend()" title="Organisationsform" v-model="modelProxy.organisationsformBerufsbildend.value" :disabled="!hatKompetenzUpdate" :items="modelProxy.organisationsformenBerufsbildend.value" :item-text="getSelectText" />
-					<svws-ui-select v-if="schulform.istWeiterbildung()" title="Organisationsform" v-model="modelProxy.organisationsformWeiterbildend.value" :disabled="!hatKompetenzUpdate" :items="modelProxy.organisationsformenWeiterbildend.value" :item-text="getSelectText" />
+					<svws-ui-select v-if="schuleState.schulform.istAllgemeinbildend() || schuleState.schulform.istWeiterbildung()" title="Klassenart" v-model="modelProxy.klassenart.value" :disabled="!hatKompetenzUpdate" :items="modelProxy.klassenarten.value" :item-text="getSelectText" />
+					<svws-ui-select v-if="schuleState.schulform.istAllgemeinbildend()" title="Organisationsform" v-model="modelProxy.organisationsformAllgemeinbildend.value" :disabled="!hatKompetenzUpdate" :items="modelProxy.organisationsformenAllgemeinbildend.value" :item-text="getSelectText" />
+					<svws-ui-select v-if="schuleState.schulform.istBerufsbildend()" title="Organisationsform" v-model="modelProxy.organisationsformBerufsbildend.value" :disabled="!hatKompetenzUpdate" :items="modelProxy.organisationsformenBerufsbildend.value" :item-text="getSelectText" />
+					<svws-ui-select v-if="schuleState.schulform.istWeiterbildung()" title="Organisationsform" v-model="modelProxy.organisationsformWeiterbildend.value" :disabled="!hatKompetenzUpdate" :items="modelProxy.organisationsformenWeiterbildend.value" :item-text="getSelectText" />
 				</svws-ui-input-wrapper>
 
 				<svws-ui-spacing :size="2" />
 
 				<svws-ui-input-wrapper :grid="1">
 					<svws-ui-checkbox v-model="modelProxy.proxy.noteneingabeGesperrt" :disabled="!hatKompetenzUpdate"> Noteneingabe gesperrt </svws-ui-checkbox>
-					<svws-ui-checkbox v-if="schulform === Schulform.G" :disabled="!hatKompetenzUpdate" v-model="modelProxy.proxy.verwendungAnkreuzkompetenzen">In dieser Klasse werden Ankreuzkompetenzen verwendet </svws-ui-checkbox>
-					<svws-ui-checkbox v-if="schulform === Schulform.WB" :disabled="!hatKompetenzUpdate" v-model="modelProxy.proxy.beginnSommersemester"> Beginn im Sommersemester </svws-ui-checkbox>
+					<svws-ui-checkbox v-if="schuleState.schulform === Schulform.G" :disabled="!hatKompetenzUpdate" v-model="modelProxy.proxy.verwendungAnkreuzkompetenzen">In dieser Klasse werden Ankreuzkompetenzen verwendet </svws-ui-checkbox>
+					<svws-ui-checkbox v-if="schuleState.schulform === Schulform.WB" :disabled="!hatKompetenzUpdate" v-model="modelProxy.proxy.beginnSommersemester"> Beginn im Sommersemester </svws-ui-checkbox>
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-content-card title="Klassenleitung">
@@ -112,13 +112,14 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import type { DataTableColumn } from "@ui";
+	import { useSchuleState, type DataTableColumn } from "@ui";
 	import type { KlassenDatenProps } from "./SKlassenDatenProps";
 	import type { LehrerListeEintrag, KlassenDaten, Klassenart, Schulgliederung, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen, JahrgangsDaten } from "@core";
 	import { SchuelerStatus, Schulform, BenutzerKompetenz, Jahrgaenge } from "@core";
 	import { KlassenDatenModelProxy } from "../KlassenDatenModelProxy";
 
 	const props = defineProps<KlassenDatenProps>();
+	const schuleState = useSchuleState();
 
 	const listAndereKlassen = computed(() => {
 		const arr = [];
@@ -207,7 +208,7 @@
 	]);
 
 	function istSemesterBetrieb(): boolean {
-		if (props.schulform === Schulform.WB) {
+		if (schuleState.schulform === Schulform.WB) {
 			return true;
 		}
 		const jgdaten = modelProxy.jahrgang.value;

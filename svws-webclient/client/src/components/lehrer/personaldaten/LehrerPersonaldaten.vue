@@ -42,12 +42,12 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Lehrämter">
 			<svws-ui-input-wrapper>
-				<lehrer-personaldaten-lehraemter :personaldaten-model-proxy="() => personaldatenModelProxy" :hat-update-kompetenz="!readonly" :schuljahr
+				<lehrer-personaldaten-lehraemter :personaldaten-model-proxy="() => personaldatenModelProxy" :hat-update-kompetenz="!readonly"
 					:lehrer-liste-manager :patch-lehramt :add-lehramt :remove-lehraemter :patch-lehrbefaehigung :add-lehrbefaehigung :remove-lehrbefaehigungen
 					:patch-fachrichtung :add-fachrichtung :remove-fachrichtungen />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
-		<svws-ui-content-card title="Unterrichtsfächer" v-if="ServerMode.DEV.checkServerMode(props.serverMode)">
+		<svws-ui-content-card v-if="serverState.hasDev" title="Unterrichtsfächer">
 			<svws-ui-input-wrapper>
 				<lehrer-personaldaten-unterrichtsfaecher :hat-update-kompetenz="!readonly"
 					:lehrer-unterrichtsfaecher :map-faecher :id-lehrer="() => personaldatenModelProxy.proxy.id"
@@ -57,7 +57,7 @@
 		<svws-ui-content-card title="Mehr- und Minderleistung, Anrechnungsstunden">
 			<svws-ui-input-wrapper>
 				<lehrer-personaldaten-anrechnungen :hat-update-kompetenz="!readonly" :personalabschnittsdaten-model-proxy="() => personalabschnittsdatenModelProxy"
-					:schuljahr :schulform :add-mehrleistung :patch-mehrleistung :remove-mehrleistung :add-minderleistung :patch-minderleistung :remove-minderleistung
+					:add-mehrleistung :patch-mehrleistung :remove-mehrleistung :add-minderleistung :patch-minderleistung :remove-minderleistung
 					:add-anrechnung :patch-anrechnungen :remove-anrechnung />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
@@ -69,25 +69,29 @@
 	import { computed } from "vue";
 	import type { LehrerPersonaldatenProps } from './LehrerPersonaldatenProps';
 	import type { JavaSet, LehrerPersonalabschnittsdaten } from "@core";
-	import { LehrerZugangsgrund, LehrerAbgangsgrund, BenutzerKompetenz, HashSet, LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerRechtsverhaeltnis, ServerMode } from "@core";
-	import { CoreTypeSelectManager, SelectManager } from "@ui";
+	import { LehrerZugangsgrund, LehrerAbgangsgrund, BenutzerKompetenz, HashSet, LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerRechtsverhaeltnis } from "@core";
+	import { CoreTypeSelectManager, SelectManager, useAbschnittState, useSchuleState, useServerState } from "@ui";
 	import { LehrerPersonalabschnittsdatenModelProxy } from "./LehrerPersonalabschnittsdatenModelProxy";
 	import { LehrerPersonaldatenModelProxy } from "./LehrerPersonaldatenModelProxy";
 
 	const props = defineProps<LehrerPersonaldatenProps>();
-	const schuljahr = computed<number>(() => props.aktAbschnitt.schuljahr);
+	const serverState = useServerState();
+
+	const schuleState = useSchuleState();
+	const abschnittState = useAbschnittState();
+
 	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN));
-	const eigeneSchulnummer = computed<string>(() => `${props.validatorKontext().getSchulnummer()}`);
+	const eigeneSchulnummer = computed<string>(() => `${schuleState.validatorKontext.getSchulnummer()}`);
 
 	async function patchMethodLehrerPersonalabschnittsdaten(data: Partial<LehrerPersonalabschnittsdaten>): Promise<boolean> {
-		const id = props.lehrerListeManager().getAbschnittBySchuljahresabschnittsId(props.aktAbschnitt.id)?.id ?? null;
+		const id = props.lehrerListeManager().getAbschnittBySchuljahresabschnittsId(abschnittState.auswahl.id)?.id ?? null;
 		if (id !== null) {
 			await props.patchAbschnittsdaten(data, id);
 		}
 		return true;
 	}
-	const personalabschnittsdatenModelProxy = new LehrerPersonalabschnittsdatenModelProxy(() => props.lehrerListeManager().getAbschnittBySchuljahresabschnittsId(props.aktAbschnitt.id), () => props.validatorKontext(), () => props.lehrerListeManager(), patchMethodLehrerPersonalabschnittsdaten);
-	const personaldatenModelProxy = new LehrerPersonaldatenModelProxy(() => props.lehrerListeManager().personalDaten(), () => props.validatorKontext(), () => props.lehrerListeManager(), props.patch);
+	const personalabschnittsdatenModelProxy = new LehrerPersonalabschnittsdatenModelProxy(() => props.lehrerListeManager().getAbschnittBySchuljahresabschnittsId(abschnittState.auswahl.id), () => schuleState.validatorKontext, () => props.lehrerListeManager(), patchMethodLehrerPersonalabschnittsdaten);
+	const personaldatenModelProxy = new LehrerPersonaldatenModelProxy(() => props.lehrerListeManager().personalDaten(), () => schuleState.validatorKontext, () => props.lehrerListeManager(), props.patch);
 
 	const moeglicheStammschulnummern = computed<JavaSet<string>>(() => {
 		// Füge zunächst alle Schulnummern mit eingetragenen Kürzeln im Schul-Katalog hinzu
@@ -100,7 +104,7 @@
 		// Ergänze die eigene Schule, sofern diese nicht bereits im Katalog enthalten ist
 		result.add(eigeneSchulnummer.value);
 		// Ergänze ggf. noch den Eintrag aus der Datenbank
-		const daten = props.lehrerListeManager().getAbschnittBySchuljahresabschnittsId(props.aktAbschnitt.id);
+		const daten = props.lehrerListeManager().getAbschnittBySchuljahresabschnittsId(abschnittState.auswahl.id);
 		if ((daten === null) || (daten.stammschulnummer === null)) {
 			return result;
 		}
@@ -110,40 +114,40 @@
 
 	const zugangsgrundManager = new CoreTypeSelectManager({
 		clazz: LehrerZugangsgrund.class,
-		schuljahr: schuljahr,
-		schulformen: props.schulform,
+		schuljahr: abschnittState.auswahl.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});
 
 	const abgangsgrundManager = new CoreTypeSelectManager({
 		clazz: LehrerAbgangsgrund.class,
-		schuljahr: schuljahr,
-		schulformen: props.schulform,
+		schuljahr: abschnittState.auswahl.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});
 
 	const rechtsverhaeltnisSelectManager = new CoreTypeSelectManager({
 		clazz: LehrerRechtsverhaeltnis.class,
-		schuljahr: schuljahr,
-		schulformen: props.schulform,
+		schuljahr: abschnittState.auswahl.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});
 
 	const beschaeftigungsartSelectManager = new CoreTypeSelectManager({
 		clazz: LehrerBeschaeftigungsart.class,
-		schuljahr: schuljahr,
-		schulformen: props.schulform,
+		schuljahr: abschnittState.auswahl.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});
 
 	const einsatzstatusSelectManager = new CoreTypeSelectManager({
 		clazz: LehrerEinsatzstatus.class,
-		schuljahr: schuljahr,
-		schulformen: props.schulform,
+		schuljahr: abschnittState.auswahl.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});

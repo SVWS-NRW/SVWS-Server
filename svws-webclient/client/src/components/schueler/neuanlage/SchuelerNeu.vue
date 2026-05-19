@@ -87,18 +87,19 @@
 	import type { Schuljahresabschnitt } from "@core";
 	import { BenutzerKompetenz, Geschlecht, SchuelerNeu, SchuelerStatus, Schulform } from "@core";
 	import { computed, ref, watch } from "vue";
-	import { SelectManager } from "@ui";
+	import { SelectManager, useSchuleState } from "@ui";
 	import { SchuelerNeuModelProxy } from "~/components/schueler/neuanlage/modelproxy/SchuelerNeuModelProxy";
 
 	const props = defineProps<SchuelerNeuProps>();
+	const schuleState = useSchuleState();
 
 	const manager = () => props.manager();
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const isLoading = ref<boolean>(false);
-	const schulenMitBKoderSK = computed(() => (props.schulform === Schulform.BK) || (props.schulform === Schulform.SK));
+	const schulenMitBKoderSK = computed(() => (schuleState.schulform === Schulform.BK) || (schuleState.schulform === Schulform.SK));
 	const schulenMitPrimaerstufe = computed(() => {
 		const erlaubteSchulformen = [Schulform.G, Schulform.FW, Schulform.WF, Schulform.GM, Schulform.KS, Schulform.S, Schulform.GE, Schulform.V];
-		return erlaubteSchulformen.includes(props.schulform);
+		return erlaubteSchulformen.includes(schuleState.schulform);
 	});
 	const schuljahr = manager().aktuellerAbschnitt.schuljahr;
 	const statusNeuaufnahme = SchuelerStatus.NEUAUFNAHME.daten(schuljahr);

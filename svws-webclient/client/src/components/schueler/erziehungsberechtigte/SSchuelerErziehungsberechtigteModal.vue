@@ -81,7 +81,7 @@
 	import { AdressenUtils, JavaString, Nationalitaeten } from "@core";
 	import type { OrtKatalogEintrag, OrtsteilKatalogEintrag, ErzieherStammdaten, Erzieherart, NationalitaetenKatalogEintrag } from "@core";
 	import { computed } from "vue";
-	import { CoreTypeSelectManager, SelectManager } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useAbschnittState } from "@ui";
 
 	const props = defineProps<{
 		ersterErz: ErzieherStammdaten;
@@ -92,8 +92,8 @@
 		istErsterErzGespeichert: boolean;
 		orteById: Map<number, OrtKatalogEintrag>;
 		ortsteileById: Map<number, OrtsteilKatalogEintrag>;
-		schuljahr: number;
 	}>();
+	const abschnittState = useAbschnittState();
 
 	const emit = defineEmits<{
 		(e: 'erster-erz' | 'zweiter-erz', v: ErzieherStammdaten): void;
@@ -109,12 +109,12 @@
 		set: (erzieherart) => props.ersterErz.idErzieherArt = (erzieherart !== null) ? erzieherart.id : 0,
 	});
 
-	const staatsangehoerigkeitManager = new CoreTypeSelectManager({ clazz: Nationalitaeten.class, schuljahr: props.schuljahr, optionDisplayText: "text", selectionDisplayText: "text" });
+	const staatsangehoerigkeitManager = new CoreTypeSelectManager({ clazz: Nationalitaeten.class, schuljahr: abschnittState.auswahl.schuljahr, optionDisplayText: "text", selectionDisplayText: "text" });
 
 	const ersteErzStaatsangehoerigkeit = computed<NationalitaetenKatalogEintrag | null>({
 		get: (): NationalitaetenKatalogEintrag | null => {
 			const iso3 = props.ersterErz.staatsangehoerigkeitID ?? null;
-			return Nationalitaeten.getByISO3(iso3)?.daten(props.schuljahr) ?? null;
+			return Nationalitaeten.getByISO3(iso3)?.daten(abschnittState.auswahl.schuljahr) ?? null;
 		},
 		set: (value) => {
 			props.ersterErz.staatsangehoerigkeitID = value?.iso3 ?? null;
@@ -124,7 +124,7 @@
 	const zweiteErzStaatsangehoerigkeit = computed<NationalitaetenKatalogEintrag | null>({
 		get: (): NationalitaetenKatalogEintrag | null => {
 			const iso3 = props.zweiterErz.staatsangehoerigkeitID ?? null;
-			return Nationalitaeten.getByISO3(iso3)?.daten(props.schuljahr) ?? null;
+			return Nationalitaeten.getByISO3(iso3)?.daten(abschnittState.auswahl.schuljahr) ?? null;
 		},
 		set: (value) => {
 			props.zweiterErz.staatsangehoerigkeitID = value?.iso3 ?? null;

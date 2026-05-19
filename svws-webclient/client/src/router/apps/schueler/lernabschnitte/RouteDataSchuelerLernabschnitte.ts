@@ -6,12 +6,13 @@ import { ArrayList, DeveloperNotificationException, GostHalbjahr, GostKlausurpla
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
-import { routeApp } from "~/router/apps/RouteApp";
 import { routeSchuelerLernabschnittLeistungen } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittLeistungen";
 import { routeSchueler } from "../RouteSchueler";
 import { routeSchuelerLernabschnittGostKlausuren } from "./RouteSchuelerLernabschnittGostKlausuren";
 import { RouteNode } from "~/router/RouteNode";
 import { SchuelerLernabschnittManager } from "~/components/schueler/lernabschnitte/SchuelerLernabschnittManager";
+import { abschnittState } from "~/states/AbschnittStateImpl";
+import { schuleState } from "~/states/SchuleStateImpl";
 
 
 interface RouteStateDataSchuelerLernabschnitte extends RouteStateInterface {
@@ -101,7 +102,7 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 		}
 		// Wenn kein passender Lernabschnitt gefunden wurde, dann prüfe, ob ein Lernabschnitt für das aktuelle Halbjahr vorhanden ist.
 		if (found === undefined) {
-			const idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
+			const idSchuljahresabschnitt = abschnittState.auswahl.id;
 			for (const current of curState.listAbschnitte) {
 				if ((current.schuljahresabschnitt === idSchuljahresabschnitt) && (current.wechselNr === 0)) {
 					found = current;
@@ -132,12 +133,11 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 			]);
 		}
 		const schueler = routeSchueler.data.manager.auswahl();
-		const mapSchuljahresabschnitte = api.mapAbschnitte.value;
-		const schuljahresabschnitt = mapSchuljahresabschnitte.get(daten.schuljahresabschnitt);
-		if (schuljahresabschnitt === undefined) {
+		const schuljahresabschnitt = abschnittState.getOrNull(daten.schuljahresabschnitt);
+		if (schuljahresabschnitt === null) {
 			throw new DeveloperNotificationException("Der Schülerlernabschnitt hat keinen gültigen Schuljahresabschnitt zugeordnet. Dies darf nicht vorkommen.");
 		}
-		const manager = new SchuelerLernabschnittManager(api.schulform, schueler, daten, schuljahresabschnitt, curState.listFaecher, curState.listFoerderschwerpunkte, curState.listJahrgaenge, listKlassen, listKurse, listLehrer);
+		const manager = new SchuelerLernabschnittManager(schuleState.schulform, schueler, daten, schuljahresabschnitt, curState.listFaecher, curState.listFoerderschwerpunkte, curState.listJahrgaenge, listKlassen, listKurse, listLehrer);
 		let klausurManager = undefined;
 		const abiturjahrgang = routeSchueler.data.manager.auswahl().abiturjahrgang;
 		if (routeSchuelerLernabschnittGostKlausuren.hatEineKompetenz() && abiturjahrgang !== null) {

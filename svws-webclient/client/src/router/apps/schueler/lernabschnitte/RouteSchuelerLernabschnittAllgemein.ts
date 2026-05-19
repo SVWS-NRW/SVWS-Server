@@ -27,10 +27,8 @@ export class RouteSchuelerLernabschnittAllgemein extends RouteNode<any, RouteSch
 
 	public getProps(to: RouteLocationNormalized): SchuelerLernabschnittAllgemeinProps {
 		return {
-			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			benutzerKompetenzenKlassen: api.benutzerKompetenzenKlassen,
-			schule: api.schuleStammdaten,
 			schuelerListeManager: () => routeSchueler.data.manager,
 			manager: () => routeSchuelerLernabschnitte.data.manager,
 			patch: routeSchuelerLernabschnitte.data.patchLernabschnitt,

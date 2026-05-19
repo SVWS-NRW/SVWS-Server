@@ -2,7 +2,7 @@
 	<div class="h-full flex flex-col">
 		<div class="secondary-menu--headline">
 			<h1>Kurse</h1>
-			<div><abschnitt-auswahl :daten="schuljahresabschnittsauswahl" /></div>
+			<div><abschnitt-auswahl /></div>
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
@@ -24,7 +24,7 @@
 				<template #cell(lehrer)="{ value }"> {{ getLehrerKuerzel(value) }} </template>
 				<template #cell(idJahrgaenge)="{ value }"> {{ getJahrgangsKuerzel(value) }} </template>
 				<template #cell(schueler)="{ value }">{{ value.size() }}</template>
-				<template #actions v-if="ServerMode.DEV.checkServerMode(serverMode) && hatKompetenzAendern">
+				<template #actions v-if="serverState.hasDev && hatKompetenzAendern">
 					<svws-ui-tooltip position="bottom">
 						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="props.gotoHinzufuegenView(true)" :has-focus="rowsFiltered.length === 0">
 							<span class="icon i-ri-add-line" />
@@ -43,15 +43,15 @@
 
 	import { ref, computed } from "vue";
 	import type { KurseAuswahlProps } from "./SKurseAuswahlProps";
-	import { useRegionSwitch, ViewType, type DataTableColumn, type SortByAndOrder } from "@ui";
+	import { useAbschnittState, useServerState, useRegionSwitch, ViewType, type DataTableColumn, type SortByAndOrder } from "@ui";
 	import type { FachDaten, JahrgangsDaten, KursDaten, LehrerListeEintrag, List, SchuelerListeEintrag, Schulgliederung } from "@core";
-	import { ServerMode, BenutzerKompetenz } from "@core";
+	import { BenutzerKompetenz } from "@core";
 
 	const props = defineProps<KurseAuswahlProps>();
+	const serverState = useServerState();
+	const abschnittState = useAbschnittState();
+
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
-
-	const schuljahr = computed<number>(() => props.schuljahresabschnittsauswahl().aktuell.schuljahr);
-
 	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
 
 	const columns: DataTableColumn[] = [
@@ -119,7 +119,7 @@
 	};
 
 	function text_schulgliederung(schulgliederung: Schulgliederung): string {
-		return schulgliederung.daten(schuljahr.value)?.kuerzel ?? '—';
+		return schulgliederung.daten(abschnittState.auswahl.schuljahr)?.kuerzel ?? '—';
 	}
 
 	const filterNurSichtbar = computed<boolean>({

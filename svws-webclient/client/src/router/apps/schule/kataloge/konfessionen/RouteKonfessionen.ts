@@ -9,7 +9,6 @@ import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import { routeKonfessionenGruppenprozesse } from "~/router/apps/schule/kataloge/konfessionen/RouteKonfessionenGruppenprozesse";
 import { routeKonfessionenNeu } from "~/router/apps/schule/kataloge/konfessionen/RouteKonfessionenNeu";
-import { routeApp } from "~/router/apps/RouteApp";
 import type { KonfessionenAuswahlProps } from "~/components/schule/kataloge/konfessionen/KonfessionenAuswahlPops";
 
 const KonfessionenAuswahl = () => import("~/components/schule/kataloge/konfessionen/KonfessionenAuswahl.vue");
@@ -32,7 +31,6 @@ export class RouteKonfessionen extends RouteAuswahlNode<KonfessionenListeManager
 		super.updateIfTarget = this.doUpdateIfTarget;
 		super.getAuswahlListProps = (props) => (<KonfessionenAuswahlProps> {
 			...props,
-			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
 		});
 	}
 

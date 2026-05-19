@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import type { DownloadPDFTypen } from "~/components/gost/kursplanung/DownloadPDFTypen";
 import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten,
-	GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List, Schuljahresabschnitt, GostBlockungRegelUpdate,
+	GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List, GostBlockungRegelUpdate,
 	GostBlockungsergebnisKursSchuelerZuordnungUpdate, Schueler, ReportingParameter } from "@core";
 import { GostBlockungsdaten, GostBlockungsergebnis, ArrayList, DeveloperNotificationException,
 	GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr,
@@ -14,7 +14,7 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKursplanung";
 import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/RouteGostKursplanungSchueler";
 import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
-import { routeApp } from "../../RouteApp";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 type BlockungstabelleStates = 'nichts' | 'alles' | 'schienen';
 
@@ -239,8 +239,8 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			auswahlBlockung ??= listBlockungen.get(0);
 		}
 		const schuljahr = halbjahr.getSchuljahrFromAbiturjahr(this._state.value.abiturjahr);
-		const abschnitt: Schuljahresabschnitt | undefined = api.getAbschnittBySchuljahrUndHalbjahr(schuljahr, halbjahr.halbjahr);
-		const existiertSchuljahresabschnitt = (abschnitt !== undefined);
+		const abschnitt = abschnittState.getBySchuljahrUndHalbjahr(schuljahr, halbjahr.halbjahr);
+		const existiertSchuljahresabschnitt = (abschnitt !== null);
 		api.status.stop();
 		this.setPatchedState({
 			halbjahr,
@@ -843,7 +843,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			default:
 				throw new DeveloperNotificationException(`Es konnte keine Ausgabe für die gewählte Option gefunden werden. Bitte melden Sie diesen Fehler. Die nicht vorhandene Option lautet '${title}'`);
 		}
-		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
+		reportingParameter.idSchuljahresabschnitt = abschnittState.auswahl.id;
 		reportingParameter.ausgabeformat = ReportingAusgabeformat.PDF.getId();
 		return await api.server.pdfReport(reportingParameter, api.schema);
 	});
@@ -854,7 +854,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		}
 		reportingParameter.idHauptdatenObjekt = this.ergebnismanager.getErgebnis().id;
 		reportingParameter.filterDefinitionenGruppen.add(ReportingFilterDefinitionGruppeFactory.gruppeAusIds("Kursauswahl", "ReportingGostKursplanungKurs", false, this.getListeKursauswahl()));
-		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
+		reportingParameter.idSchuljahresabschnitt = abschnittState.auswahl.id;
 		reportingParameter.ausgabeformat = ReportingAusgabeformat.EMAIL.getId();
 		return await api.server.emailReport(reportingParameter, api.schema);
 	});

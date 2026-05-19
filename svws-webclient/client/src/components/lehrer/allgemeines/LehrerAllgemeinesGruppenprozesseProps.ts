@@ -1,10 +1,9 @@
-import type { List, BenutzerKompetenz, ApiFile, ReportingParameter, StundenplanListeEintrag, SimpleOperationResponse, ServerMode } from "@core";
+import type { List, BenutzerKompetenz, ApiFile, ReportingParameter, StundenplanListeEintrag, SimpleOperationResponse } from "@core";
 import type { LehrerListeManager } from "@ui";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface LehrerAllgemeinesGruppenprozesseProps {
 	apiStatus: ApiStatus;
-	serverMode: ServerMode;
 	getPDF: (parameter: ReportingParameter) => Promise<ApiFile>;
 	sendEMail: (parameter: ReportingParameter) => Promise<SimpleOperationResponse>;
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;

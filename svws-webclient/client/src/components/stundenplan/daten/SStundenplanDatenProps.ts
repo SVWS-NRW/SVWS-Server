@@ -1,10 +1,8 @@
-import type { BenutzerKompetenz, JahrgangsDaten, List, Raum, Schulform, ServerMode, Stundenplan, StundenplanAufsichtsbereich, StundenplanKonfiguration, StundenplanPausenzeit, StundenplanRaum } from "@core";
+import type { BenutzerKompetenz, JahrgangsDaten, List, Raum, Stundenplan, StundenplanAufsichtsbereich, StundenplanKonfiguration, StundenplanPausenzeit, StundenplanRaum } from "@core";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 import type { StundenplanListeManager } from "@ui";
 
 export interface StundenplanDatenProps {
-	schulform: Schulform;
-	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	manager: () => StundenplanListeManager;
 	patch: (daten: Partial<Stundenplan>) => Promise<boolean>;

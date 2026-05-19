@@ -1,9 +1,10 @@
+import type { RouteApp } from "~/router/apps/RouteApp";
 import { AppMenuGroup } from "@ui";
 import { BenutzerKompetenz, type BenutzerKompetenzGruppe, type List, Schulform, ServerMode } from "@core";
-import { api } from "~/router/Api";
-import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
 import { routeBenutzerprofilNutzereinstellungen } from "~/router/apps/benutzerprofil/nutzereinstellungen/RouteBenutzerprofilNutzereinstellungen";
+import { schuleState } from "~/states/SchuleStateImpl";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 export class RouteBenutzerprofil extends RouteNode<any, RouteApp> {
 
@@ -24,8 +25,8 @@ export class RouteBenutzerprofil extends RouteNode<any, RouteApp> {
 	}
 
 	public benutzerKompetenzen = (gruppe: BenutzerKompetenzGruppe): List<BenutzerKompetenz> => {
-		const schuljahr = routeApp.data.aktAbschnitt.value.schuljahr;
-		const schulformEintrag = api.schulform.daten(schuljahr);
+		const schuljahr = abschnittState.auswahl.schuljahr;
+		const schulformEintrag = schuleState.schulform.daten(schuljahr);
 		const schulform = Schulform.data().getWertByID(schulformEintrag?.id ?? -1);
 		return BenutzerKompetenz.getKompetenzenMitSchulform(schuljahr, gruppe, schulform);
 	};

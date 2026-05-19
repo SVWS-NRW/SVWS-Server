@@ -1,8 +1,6 @@
-import type { AbiturdatenManager, AbiturFachbelegung, GostBelegpruefungErgebnis, JavaMap, List, SchuelerListeEintrag, SchuleStammdaten, ServerMode } from "@core";
+import type { AbiturdatenManager, AbiturFachbelegung, GostBelegpruefungErgebnis, JavaMap, List, SchuelerListeEintrag } from "@core";
 
 export interface GostAbiturZulassungProps {
-	serverMode: ServerMode;
-	schule: SchuleStammdaten;
 	schuelerListe: List<SchuelerListeEintrag>;
 	managerLaufbahnplanungMap: () => JavaMap<number, AbiturdatenManager>;
 	ergebnisBelegpruefungMap: () => JavaMap<number, GostBelegpruefungErgebnis>;

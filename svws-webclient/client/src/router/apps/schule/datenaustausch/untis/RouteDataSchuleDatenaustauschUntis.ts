@@ -1,10 +1,9 @@
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import type { GostBlockungListeneintrag, List } from "@core";
-import { GostHalbjahr, LongAndStringLists } from "@core";
-import { OpenApiError, SimpleOperationResponse } from "@core";
-import { routeApp } from "~/router/apps/RouteApp";
+import { OpenApiError, SimpleOperationResponse, GostHalbjahr, LongAndStringLists } from "@core";
 import { routeSchuleDatenaustauschUntisImporte } from "./RouteSchuleDatenaustauschUntisImporte";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 
 type RouteStateDatenaustauschUntis = RouteStateInterface;
@@ -47,7 +46,7 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 
 	exportUntisKlassenGPU003 = async (): Promise<string[]> => {
 		try {
-			const apifile = await api.server.exportUntisKlassenGPU003(api.schema, routeApp.data.aktAbschnitt.value.id);
+			const apifile = await api.server.exportUntisKlassenGPU003(api.schema, abschnittState.auswahl.id);
 			return [await apifile.data.text()];
 		} catch (e) {
 			if ((e instanceof OpenApiError) && (e.response instanceof Response) && (e.response.status === 404)) {
@@ -59,7 +58,7 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 
 	exportUntisLehrerGPU004 = async (): Promise<string[]> => {
 		try {
-			const apifile = await api.server.exportUntisLehrerGPU004(api.schema, routeApp.data.aktAbschnitt.value.id);
+			const apifile = await api.server.exportUntisLehrerGPU004(api.schema, abschnittState.auswahl.id);
 			return [await apifile.data.text()];
 		} catch (e) {
 			if ((e instanceof OpenApiError) && (e.response instanceof Response) && (e.response.status === 404)) {
@@ -70,13 +69,13 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 	};
 
 	exportUntisFaecherGPU006 = async (): Promise<string[]> => {
-		const apifile = await api.server.exportUntisFaecherGPU006(api.schema, routeApp.data.aktAbschnitt.value.id);
+		const apifile = await api.server.exportUntisFaecherGPU006(api.schema, abschnittState.auswahl.id);
 		return [await apifile.data.text()];
 	};
 
 	exportUntisSchuelerGPU010 = async (sidvariante: number): Promise<string []> => {
 		try {
-			const apifile = await api.server.exportUntisSchuelerGPU010(api.schema, routeApp.data.aktAbschnitt.value.id, sidvariante);
+			const apifile = await api.server.exportUntisSchuelerGPU010(api.schema, abschnittState.auswahl.id, sidvariante);
 			return [await apifile.data.text()];
 		} catch (e) {
 			if ((e instanceof OpenApiError) && (e.response instanceof Response) && (e.response.status === 404)) {
@@ -87,25 +86,25 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 	};
 
 	exportUntisFachwahlenGPU015 = async (sidvariante: number, gpu002: string): Promise<string[]> => {
-		const apifile = await api.server.exportUntisFachwahlenGPU015(gpu002, api.schema, routeApp.data.aktAbschnitt.value.id, sidvariante);
+		const apifile = await api.server.exportUntisFachwahlenGPU015(gpu002, api.schema, abschnittState.auswahl.id, sidvariante);
 		return [await apifile.data.text()];
 	};
 
 	exportUntisKlausurenGPU017 = async (sidvariante: number, gpu002: string): Promise<string[]> => {
-		const apifile = await api.server.exportUntisKlausurenGPU017(gpu002, api.schema, routeApp.data.aktAbschnitt.value.id, sidvariante);
+		const apifile = await api.server.exportUntisKlausurenGPU017(gpu002, api.schema, abschnittState.auswahl.id, sidvariante);
 		return [await apifile.data.text()];
 	};
 
 	exportUntisSchienenGPU019 = async (gpu002: string): Promise<string[]> => {
-		const apifile = await api.server.exportUntisSchienenGPU019(gpu002, api.schema, routeApp.data.aktAbschnitt.value.id);
+		const apifile = await api.server.exportUntisSchienenGPU019(gpu002, api.schema, abschnittState.auswahl.id);
 		return [await apifile.data.text()];
 	};
 
 	ladeBlockungslisten = async (abijahrgaenge: number[]): Promise<Array<List<GostBlockungListeneintrag>>> => {
 		// Bestimme zunächst die Blockungslisten für die übergebenen Abiturjahrgänge
 		const all = [];
-		const schuljahr = routeApp.data.aktAbschnitt.value.schuljahr;
-		const abschnitt = routeApp.data.aktAbschnitt.value.abschnitt;
+		const schuljahr = abschnittState.auswahl.schuljahr;
+		const abschnitt = abschnittState.auswahl.abschnitt;
 		for (const abiturjahr of abijahrgaenge) {
 			const idHalbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, schuljahr, abschnitt)?.id ?? null;
 			if (idHalbjahr !== null) {
@@ -122,7 +121,7 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 		for (const idBlockungsergegbnis of blockungsergebnisse) {
 			data.numbers.add(idBlockungsergegbnis);
 		}
-		return [... await api.server.exportUntisBlockungGPU002GPU015GPU019(data, api.schema, routeApp.data.aktAbschnitt.value.id, sidvariante)];
+		return [... await api.server.exportUntisBlockungGPU002GPU015GPU019(data, api.schema, abschnittState.auswahl.id, sidvariante)];
 	};
 
 }

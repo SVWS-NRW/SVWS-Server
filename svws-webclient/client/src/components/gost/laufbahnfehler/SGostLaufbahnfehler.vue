@@ -113,12 +113,14 @@
 
 	import { computed, ref, shallowRef } from 'vue';
 	import type { GostLaufbahnfehlerProps } from "./SGostLaufbahnfehlerProps";
-	import { useRegionSwitch, type DataTableColumn, type SortByAndOrder } from '@ui';
+	import { useAbschnittState, useRegionSwitch, useServerState, type DataTableColumn, type SortByAndOrder } from '@ui';
 	import type { List, GostBelegpruefungErgebnisFehler } from '@core';
 	import { ArrayList, GostBelegpruefungsArt, GostBelegungsfehlerArt, SchuelerStatus, GostBelegpruefungsErgebnisse, BenutzerKompetenz, ReportingAusgabeformat, ReportingReportvorlage, ServerMode } from '@core';
-	import { routeApp } from "~/router/apps/RouteApp";
 
 	const props = defineProps<GostLaufbahnfehlerProps>();
+	const serverState = useServerState();
+
+	const abschnittState = useAbschnittState();
 	const logs = ref<List<string | null> | undefined>();
 	const statusAction = ref<boolean | undefined>();
 
@@ -266,7 +268,7 @@
 			{ text: `Laufbahnwahlbogen (gesamt, nur Belegung)`, action: () => downloadPDF("Laufbahnwahlbogen", true, false, false, false) },
 			{ text: `Laufbahnwahlbogen (einzeln, nur Belegung)`, action: () => downloadPDF("Laufbahnwahlbogen", true, false, false, true) },
 		];
-		if (ServerMode.DEV.checkServerMode(props.serverMode)) {
+		if (ServerMode.DEV.checkServerMode(serverState.mode)) {
 			actions.push({ text: `E-Mail mit Laufbahnwahlbogen`, action: () => sendPdfByMail(false) },
 				{ text: `E-Mail mit Laufbahnwahlbogen (nur Belegung)`, action: () => sendPdfByMail(true) });
 		}
@@ -305,7 +307,7 @@
 		}
 
 		reportingParameter.idsHauptdaten = list;
-		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
+		reportingParameter.idSchuljahresabschnitt = abschnittState.auswahl.id;
 
 		const { data, name } = await props.getPdfLaufbahnplanung(reportingParameter);
 		const link = document.createElement("a");
@@ -330,7 +332,7 @@
 		}
 
 		const reportingParameter = ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getReportingParameter();
-		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
+		reportingParameter.idSchuljahresabschnitt = abschnittState.auswahl.id;
 		reportingParameter.ausgabeformat = ReportingAusgabeformat.EMAIL.getId();
 		for (const gruppe of reportingParameter.reportvorlageParameterGruppen) {
 			for (const vp of gruppe.reportvorlageParameter) {

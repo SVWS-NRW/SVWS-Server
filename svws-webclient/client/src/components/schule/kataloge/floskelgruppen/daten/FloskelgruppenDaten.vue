@@ -26,19 +26,21 @@
 
 	import { BenutzerKompetenz, Floskelgruppenart } from "@core";
 	import { computed } from "vue";
-	import { CoreTypeSelectManager } from "@ui";
+	import { CoreTypeSelectManager, useSchuleState } from "@ui";
 	import type { FloskelgruppenDatenProps } from "./FloskelgruppenDatenProps";
 	import { FloskelgruppeModelProxy } from "~/components/schule/kataloge/floskelgruppen/modelproxy/FloskelgruppeModelProxy";
 
 	const props = defineProps<FloskelgruppenDatenProps>();
+	const schuleState = useSchuleState();
+
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-	const model = new FloskelgruppeModelProxy(() => props.manager().daten(), () => props.manager().liste.list(), props.schuljahr, props.patch);
+	const model = new FloskelgruppeModelProxy(() => props.manager().daten(), () => props.manager().liste.list(), schuleState.abschnitt.schuljahr, props.patch);
 	const readonly = computed<boolean>(() => !hatKompetenzUpdate.value);
 
 	const floskelgruppenartManager = new CoreTypeSelectManager({
 		clazz: Floskelgruppenart.class,
-		schuljahr: props.schuljahr,
-		schulformen: props.schulform,
+		schuljahr: schuleState.abschnitt.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});

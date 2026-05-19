@@ -25,8 +25,6 @@ export class RouteFoerderschwerpunkteNeu extends RouteNode<any, RouteFoerderschw
 		return {
 			manager: () => routeFoerderschwerpunkte.data.manager,
 			add: routeFoerderschwerpunkte.data.addFoerderschwerpunkt,
-			schulform: api.schulform,
-			schuljahr: api.abschnitt.schuljahr,
 			goToDefaultView: routeFoerderschwerpunkte.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			benutzerKompetenzen: api.benutzerKompetenzen,

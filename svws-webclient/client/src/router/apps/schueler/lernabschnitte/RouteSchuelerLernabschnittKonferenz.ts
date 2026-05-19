@@ -26,7 +26,6 @@ export class RouteSchuelerLernabschnittKonferenz extends RouteNode<any, RouteSch
 
 	public getProps(to: RouteLocationNormalized): SchuelerLernabschnittKonferenzProps {
 		return {
-			schule: api.schuleStammdaten,
 			manager: () => routeSchuelerLernabschnitte.data.manager,
 			patch: routeSchuelerLernabschnitte.data.patchLernabschnitt,
 			patchBemerkungen: routeSchuelerLernabschnitte.data.patchBemerkungen,

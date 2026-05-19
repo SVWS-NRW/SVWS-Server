@@ -132,10 +132,10 @@
 <script setup lang="ts">
 
 
-	import type { NationalitaetenKatalogEintrag, SchuelerLernabschnittsdaten, OrtsteilKatalogEintrag, SchuelerStammdaten, VerkehrsspracheKatalogEintrag, ServerMode } from "@core";
+	import type { NationalitaetenKatalogEintrag, SchuelerLernabschnittsdaten, OrtsteilKatalogEintrag, SchuelerStammdaten, VerkehrsspracheKatalogEintrag } from "@core";
 	import { AdressenUtils, DateUtils, Geschlecht, Nationalitaeten, Verkehrssprache } from "@core";
 	import { computed } from "vue";
-	import { CoreTypeSelectManager, SelectManager } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useAbschnittState } from "@ui";
 	import type { SchuelerSchnelleingabeManager } from "@ui";
 	import { orte_sort, ortsteilSort } from "~/utils/helfer";
 	import { emailIsValid, mandatoryInputIsValid, numberIsValid, optionalInputIsValid, phoneNumberIsValid } from "~/util/validation/Validation";
@@ -145,9 +145,8 @@
 		patchSchueler: (patchObject: Partial<SchuelerStammdaten>, id: number) => Promise<void>;
 		patchLernabschnittsdaten: (data: Partial<SchuelerLernabschnittsdaten>, idEintrag: number) => Promise<void>;
 		readonly: boolean;
-		serverMode: ServerMode;
-		schuljahr: number;
 	}>();
+	const abschnittState = useAbschnittState();
 
 	const manager = () => props.manager();
 	const religionen = computed(() => props.manager().religionenById.values());
@@ -192,7 +191,7 @@
 	});
 
 	const staatsangehoerigkeit = computed<NationalitaetenKatalogEintrag | null>({
-		get: () => Nationalitaeten.getByISO3(props.manager().stammdaten.staatsangehoerigkeitID)?.daten(props.schuljahr) ?? null,
+		get: () => Nationalitaeten.getByISO3(props.manager().stammdaten.staatsangehoerigkeitID)?.daten(abschnittState.auswahl.schuljahr) ?? null,
 		set: (value) => {
 			props.manager().stammdaten.staatsangehoerigkeitID = value?.iso3 ?? null;
 			void props.patchSchueler({ staatsangehoerigkeitID: value?.iso3 ?? null }, manager().stammdaten.id);
@@ -200,7 +199,7 @@
 	});
 
 	const staatsangehoerigkeit2 = computed<NationalitaetenKatalogEintrag | null>({
-		get: () => Nationalitaeten.getByISO3(props.manager().stammdaten.staatsangehoerigkeit2ID)?.daten(props.schuljahr) ?? null,
+		get: () => Nationalitaeten.getByISO3(props.manager().stammdaten.staatsangehoerigkeit2ID)?.daten(abschnittState.auswahl.schuljahr) ?? null,
 		set: (value) => {
 			props.manager().stammdaten.staatsangehoerigkeit2ID = value?.iso3 ?? null;
 			void props.patchSchueler({ staatsangehoerigkeit2ID: value?.iso3 ?? null }, manager().stammdaten.id);
@@ -229,7 +228,7 @@
 	});
 
 	const geburtsland = computed<NationalitaetenKatalogEintrag | null>({
-		get: () => Nationalitaeten.getByISO3(manager().stammdaten.geburtsland)?.daten(props.schuljahr) ?? null,
+		get: () => Nationalitaeten.getByISO3(manager().stammdaten.geburtsland)?.daten(abschnittState.auswahl.schuljahr) ?? null,
 		set: (value) => {
 			manager().stammdaten.geburtsland = value?.iso3 ?? null;
 			void props.patchSchueler({ geburtsland: value?.iso3 }, manager().stammdaten.id);
@@ -237,7 +236,7 @@
 	});
 
 	const geburtslandMutter = computed<NationalitaetenKatalogEintrag | null>({
-		get: () => Nationalitaeten.getByISO3(props.manager().stammdaten.geburtslandMutter)?.daten(props.schuljahr) ?? null,
+		get: () => Nationalitaeten.getByISO3(props.manager().stammdaten.geburtslandMutter)?.daten(abschnittState.auswahl.schuljahr) ?? null,
 		set: (value) => {
 			props.manager().stammdaten.geburtslandMutter = value?.iso3 ?? null;
 			void props.patchSchueler({ geburtslandMutter: value?.iso3 }, manager().stammdaten.id);
@@ -245,7 +244,7 @@
 	});
 
 	const geburtslandVater = computed<NationalitaetenKatalogEintrag | null>({
-		get: () => Nationalitaeten.getByISO3(props.manager().stammdaten.geburtslandVater)?.daten(props.schuljahr) ?? null,
+		get: () => Nationalitaeten.getByISO3(props.manager().stammdaten.geburtslandVater)?.daten(abschnittState.auswahl.schuljahr) ?? null,
 		set: (value) => {
 			props.manager().stammdaten.geburtslandVater = value?.iso3 ?? null;
 			void props.patchSchueler({ geburtslandVater: value?.iso3 }, manager().stammdaten.id);
@@ -253,7 +252,7 @@
 	});
 
 	const verkehrssprache = computed<VerkehrsspracheKatalogEintrag | null>({
-		get: () => Verkehrssprache.getByIsoKuerzel(props.manager().stammdaten.verkehrspracheFamilie)?.daten(props.schuljahr) ?? null,
+		get: () => Verkehrssprache.getByIsoKuerzel(props.manager().stammdaten.verkehrspracheFamilie)?.daten(abschnittState.auswahl.schuljahr) ?? null,
 		set: (value) => {
 			props.manager().stammdaten.verkehrspracheFamilie = value?.iso3 ?? null;
 			void props.patchSchueler({ verkehrspracheFamilie: value?.iso3 }, manager().stammdaten.id);
@@ -314,7 +313,7 @@
 
 	const staatsangehoerigkeitenManager = new CoreTypeSelectManager({
 		clazz: Nationalitaeten.class,
-		schuljahr: props.schuljahr,
+		schuljahr: abschnittState.auswahl.schuljahr,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});
@@ -327,14 +326,14 @@
 
 	const geburtslandManager = new CoreTypeSelectManager({
 		clazz: Nationalitaeten.class,
-		schuljahr: props.schuljahr,
+		schuljahr: abschnittState.auswahl.schuljahr,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});
 
 	const verkehrsspracheManager = new CoreTypeSelectManager({
 		clazz: Verkehrssprache.class,
-		schuljahr: props.schuljahr,
+		schuljahr: abschnittState.auswahl.schuljahr,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});

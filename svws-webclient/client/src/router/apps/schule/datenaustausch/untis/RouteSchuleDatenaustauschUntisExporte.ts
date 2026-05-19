@@ -6,8 +6,6 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeSchuleDatenaustauschUntis, type RouteSchuleDatenaustauschUntis } from "~/router/apps/schule/datenaustausch/untis/RouteSchuleDatenaustauschUntis";
 
 import type { SchuleDatenaustauschUntisExporteProps } from "~/components/schule/datenaustausch/untis/SSchuleDatenaustauschUntisExporteProps";
-import { routeApp } from "~/router/apps/RouteApp";
-import { api } from "~/router/Api";
 
 const SSchuleDatenaustauschUntisExporte = () => import("~/components/schule/datenaustausch/untis/SSchuleDatenaustauschUntisExporte.vue");
 
@@ -25,8 +23,6 @@ export class RouteSchuleDatenaustauschUntisExporte extends RouteNode<any, RouteS
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschUntisExporteProps {
 		return {
-			schulform: api.schulform,
-			schuljahresabschnitt: () => routeApp.data.aktAbschnitt.value,
 			exportUntisKlassenGPU003: routeSchuleDatenaustauschUntis.data.exportUntisKlassenGPU003,
 			exportUntisLehrerGPU004: routeSchuleDatenaustauschUntis.data.exportUntisLehrerGPU004,
 			exportUntisFaecherGPU006: routeSchuleDatenaustauschUntis.data.exportUntisFaecherGPU006,
@@ -42,4 +38,3 @@ export class RouteSchuleDatenaustauschUntisExporte extends RouteNode<any, RouteS
 }
 
 export const routeSchuleDatenaustauschUntisExporte = new RouteSchuleDatenaustauschUntisExporte();
-

@@ -73,7 +73,7 @@
 	import type { SchuelerBetrieb } from "@core";
 	import { AdressenUtils, Schulform, BenutzerKompetenz } from "@core";
 	import type { SchuelerBetriebeManager } from "@ui";
-	import { SelectManager } from "@ui";
+	import { SelectManager, useSchuleState } from "@ui";
 	import { computed } from "vue";
 	import { SchuelerBetriebeModelProxy } from "~/components/schueler/betriebe/modelproxy/SchuelerBetriebeModelProxy";
 
@@ -82,13 +82,13 @@
 		manager: () => SchuelerBetriebeManager;
 		patch: (id: number, data: Partial<SchuelerBetrieb>) => Promise<boolean>;
 		goToBetrieb: (idBetrieb: number) => Promise<void>;
-		schulform: Schulform;
 		benutzerKompetenzen: Set<BenutzerKompetenz>;
 	}>();
+	const schuleState = useSchuleState();
 
 	const istBK = computed(() => {
 		const erlaubteSchulformen = [Schulform.BK, Schulform.SB, Schulform.WB];
-		return erlaubteSchulformen.includes(props.schulform);
+		return erlaubteSchulformen.includes(schuleState.schulform);
 	});
 	const hatKatalogeAnsehenKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN));
 	const lehrer = computed(() => props.manager().lehrerById.values());

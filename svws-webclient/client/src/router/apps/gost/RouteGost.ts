@@ -7,7 +7,6 @@ import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 
 import type { RouteApp } from "~/router/apps/RouteApp";
-import { routeApp } from "~/router/apps/RouteApp";
 import { routeGostFachwahlen } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlen";
 import { routeGostFaecher } from "~/router/apps/gost/faecher/RouteGostFaecher";
 import { routeGostBeratung } from "~/router/apps/gost/beratung/RouteGostBeratung";
@@ -24,10 +23,10 @@ import type { GostAuswahlProps } from "~/components/gost/SGostAuswahlProps";
 import { ConfigElement } from "../../../../../ui/src/utils/Config";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeError } from "~/router/error/RouteError";
-import { ViewType } from "@ui";
 import { routeGostAbiturjahrNeu } from "./RouteGostAbiturjahrNeu";
 import { routeGostGruppenprozesse } from "./RouteGostGruppenprozesse";
-import { AppMenuGroup } from "@ui";
+import { AppMenuGroup, ViewType } from "@ui";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 const SGostAuswahl = () => import("~/components/gost/SGostAuswahl.vue");
 const SGostApp = () => import("~/components/gost/SGostApp.vue");
@@ -72,11 +71,11 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
 		try {
-			if (isEntering || (this.data.idSchuljahresabschnitt !== routeApp.data.aktAbschnitt.value.id)) {
+			if (isEntering || (this.data.idSchuljahresabschnitt !== abschnittState.auswahl.id)) {
 				if (isEntering && (to === this) && (this.data.oldView !== undefined)) {
 					return this.data.oldView.getRoute(to_params);
 				}
-				await this.data.setSchuljahresabschnitt(routeApp.data.aktAbschnitt.value.id);
+				await this.data.setSchuljahresabschnitt(abschnittState.auswahl.id);
 			}
 			if (to === this) {
 				return this.getRouteDefaultChild();
@@ -105,7 +104,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 			}
 			const redirect: RouteNode<any, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
 			if (redirect.hidden({ abiturjahr: abiturjahr.toString() }) !== false) {
-				return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr } };
+				return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, abiturjahr } };
 			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);
@@ -123,14 +122,11 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 
 	public getAuswahlProps(to: RouteLocationNormalized): GostAuswahlProps {
 		return {
-			schulform: api.schulform,
-			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			auswahl: this.data.auswahl,
 			jahrgangsdaten: () => this.data.auswahl === undefined ? undefined : this.data.jahrgangsdaten,
 			mapAbiturjahrgaenge: () => this.data.mapAbiturjahrgaenge,
 			mapJahrgaengeOhneAbiJahrgang: () => this.data.mapJahrgaengeOhneAbiJahrgang,
-			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(true),
 			apiStatus: api.status,
 			addAbiturjahrgang: this.data.addAbiturjahrgang,
 			gotoAbiturjahrgang: this.data.gotoAbiturjahrgang,
@@ -146,7 +142,6 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 
 	public getProps(to: RouteLocationNormalized): GostAppProps {
 		return {
-			schuljahresabschnitt: () => routeApp.data.aktAbschnitt.value,
 			auswahl: this.data.auswahl,
 			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab, this.getType()),
 			creationModeEnabled: this.data.creationModeEnabled,

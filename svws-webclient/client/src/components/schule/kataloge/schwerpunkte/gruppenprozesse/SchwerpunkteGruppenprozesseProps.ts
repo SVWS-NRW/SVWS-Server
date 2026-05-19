@@ -1,9 +1,8 @@
-import type { BenutzerKompetenz, List, ServerMode } from "@core";
+import type { BenutzerKompetenz, List } from "@core";
 import type { SchwerpunkteListeManager } from "@ui";
 
 
 export interface SchwerpunkteGruppenprozesseProps {
-	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	manager: () => SchwerpunkteListeManager;
 	deleteCheck: () => { success: boolean, logs: Iterable<string> };

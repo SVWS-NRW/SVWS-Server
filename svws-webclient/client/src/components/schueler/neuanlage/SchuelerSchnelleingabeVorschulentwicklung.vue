@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 
-	import { CoreTypeSelectManager, SelectManager } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useAbschnittState } from "@ui";
 	import type { SchuelerSchnelleingabeManager } from "@ui";
 	import { computed, ref } from "vue";
 	import type { Kindergarten, KindergartenbesuchKatalogEintrag, SchuelerSchulbesuchsdaten } from "@core";
@@ -33,8 +33,8 @@
 	const props = defineProps<{
 		manager: () => SchuelerSchnelleingabeManager;
 		patchSchulbesuchsdaten: (data: Partial<SchuelerSchulbesuchsdaten>, idSchueler: number) => Promise<void>;
-		schuljahr: number;
 	}>();
+	const abschnittState = useAbschnittState();
 
 	const manager = () => props.manager();
 	const schulbesuch = ref(manager().schulbesuchsdaten);
@@ -67,7 +67,7 @@
 
 	const dauerManager = new CoreTypeSelectManager({
 		clazz: Kindergartenbesuch.class,
-		schuljahr: props.schuljahr,
+		schuljahr: abschnittState.auswahl.schuljahr,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});

@@ -12,7 +12,8 @@ import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import { routeKurseGruppenprozesse } from "./RouteKurseGruppenprozesse";
 import { routeKurseNeu } from "./RouteKurseNeu";
-import { routeApp } from "../RouteApp";
+import { abschnittState } from "~/states/AbschnittStateImpl";
+import { schuleState } from "~/states/SchuleStateImpl";
 
 type RouteStateKurse = RouteStateAuswahlInterface<KursListeManager>;
 
@@ -45,8 +46,8 @@ export class RouteDataKurse extends RouteDataAuswahl<KursListeManager, RouteStat
 	};
 
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateKurse>> {
-		const schuljahresabschnitt = api.mapAbschnitte.value.get(idSchuljahresabschnitt);
-		if (schuljahresabschnitt === undefined) {
+		const schuljahresabschnitt = abschnittState.getOrNull(idSchuljahresabschnitt);
+		if (schuljahresabschnitt === null) {
 			throw new DeveloperNotificationException('Es ist kein gültiger Schuljahresabschnitt ausgewählt');
 		}
 		// Lade die Kataloge und erstelle den Manager
@@ -55,8 +56,8 @@ export class RouteDataKurse extends RouteDataAuswahl<KursListeManager, RouteStat
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const listLehrer = await api.server.getLehrerFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const listFaecher = await api.server.getFaecher(api.schema);
-		const manager = new KursListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
-			api.schulform, listKurse, listSchueler, listJahrgaenge, listLehrer, listFaecher);
+		const manager = new KursListeManager(idSchuljahresabschnitt, schuleState.abschnitt.id, abschnittState.alle,
+			schuleState.schulform, listKurse, listSchueler, listJahrgaenge, listLehrer, listFaecher);
 		if (this._state.value.manager === undefined) {
 			manager.setFilterAuswahlPermitted(true);
 			manager.setFilterNurSichtbar(this.filterNurSichtbar);
@@ -89,7 +90,7 @@ export class RouteDataKurse extends RouteDataAuswahl<KursListeManager, RouteStat
 	};
 
 	add = async (partialKurs: Partial<KursDaten>): Promise<void> => {
-		const neuerKurs = await api.server.addKurs({ ...partialKurs, idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }, api.schema);
+		const neuerKurs = await api.server.addKurs({ ...partialKurs, idSchuljahresabschnitt: abschnittState.auswahl.id }, api.schema);
 		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
 		await this.gotoDefaultView(neuerKurs.id);
 	};

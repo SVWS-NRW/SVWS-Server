@@ -31,13 +31,13 @@
 		<template #default="{ row: { proxy, data } }">
 			<template v-if="(proxy instanceof LehrerLehramtEintrag) && (data instanceof LehrerLehramtEintrag)">
 				<td class="w-full text-left col-span-2">
-					{{ getLehramt(proxy).daten(schuljahr)?.text ?? '—' }}
+					{{ getLehramt(proxy).daten(abschnittState.auswahl.schuljahr)?.text ?? '—' }}
 				</td>
 				<td class="w-full">
 					<svws-ui-select title="Anerkennungsgrund Lehramt" v-if="hatUpdateKompetenz" :model-value="getLehramtAnerkennung(proxy)"
-						@update:model-value="anerkennung => patchLehramt(proxy, { idAnerkennungsgrund: anerkennung?.daten(schuljahr)?.id ?? null })"
-						:items="LehrerLehramtAnerkennung.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'" headless />
-					<div v-else class="text-left"> {{ getLehramtAnerkennung(proxy)?.daten(schuljahr)?.text ?? '—' }} </div>
+						@update:model-value="anerkennung => patchLehramt(proxy, { idAnerkennungsgrund: anerkennung?.daten(abschnittState.auswahl.schuljahr)?.id ?? null })"
+						:items="LehrerLehramtAnerkennung.values()" :item-text="i => i.daten(abschnittState.auswahl.schuljahr)?.text ?? '—'" headless />
+					<div v-else class="text-left"> {{ getLehramtAnerkennung(proxy)?.daten(abschnittState.auswahl.schuljahr)?.text ?? '—' }} </div>
 				</td>
 				<td class="text-left">
 					<div v-if="hatUpdateKompetenz" class="inline-flex gap-1">
@@ -60,9 +60,9 @@
 				</td>
 				<td class="w-full">
 					<svws-ui-select title="Anerkennungsgrund Lehrbefähigung" v-if="hatUpdateKompetenz" :model-value="getLehrbefaehigungAnerkennung(proxy)"
-						@update:model-value="anerkennung => patchLehrbefaehigung(proxy, { idAnerkennungsgrund: anerkennung?.daten(schuljahr)?.id ?? null })"
-						:items="LehrerLehrbefaehigungAnerkennung.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'" headless />
-					<div v-else class="text-left"> {{ getLehrbefaehigungAnerkennung(proxy)?.daten(schuljahr)?.text ?? '—' }} </div>
+						@update:model-value="anerkennung => patchLehrbefaehigung(proxy, { idAnerkennungsgrund: anerkennung?.daten(abschnittState.auswahl.schuljahr)?.id ?? null })"
+						:items="LehrerLehrbefaehigungAnerkennung.values()" :item-text="i => i.daten(abschnittState.auswahl.schuljahr)?.text ?? '—'" headless />
+					<div v-else class="text-left"> {{ getLehrbefaehigungAnerkennung(proxy)?.daten(abschnittState.auswahl.schuljahr)?.text ?? '—' }} </div>
 				</td>
 				<td class="text-left">
 					<div v-if="hatUpdateKompetenz" class="inline-flex gap-4">
@@ -73,13 +73,13 @@
 			<template v-else-if="(proxy instanceof LehrerFachrichtungEintrag) && (data instanceof LehrerFachrichtungEintrag)">
 				<td />
 				<td class="w-full text-left">
-					<span>Fachrichtung:</span> {{ getFachrichtung(proxy).daten(schuljahr)?.text ?? '—' }}
+					<span>Fachrichtung:</span> {{ getFachrichtung(proxy).daten(abschnittState.auswahl.schuljahr)?.text ?? '—' }}
 				</td>
 				<td class="w-full">
 					<svws-ui-select title="Anerkennungsgrund Fachrichtung" v-if="hatUpdateKompetenz" :model-value="getFachrichtungAnerkennung(proxy)"
-						@update:model-value="anerkennung => patchFachrichtung(proxy, { idAnerkennungsgrund: anerkennung?.daten(schuljahr)?.id ?? null })"
-						:items="LehrerFachrichtungAnerkennung.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'" headless />
-					<div v-else class="text-left"> {{ getFachrichtungAnerkennung(proxy)?.daten(schuljahr)?.text ?? '—' }} </div>
+						@update:model-value="anerkennung => patchFachrichtung(proxy, { idAnerkennungsgrund: anerkennung?.daten(abschnittState.auswahl.schuljahr)?.id ?? null })"
+						:items="LehrerFachrichtungAnerkennung.values()" :item-text="i => i.daten(abschnittState.auswahl.schuljahr)?.text ?? '—'" headless />
+					<div v-else class="text-left"> {{ getFachrichtungAnerkennung(proxy)?.daten(abschnittState.auswahl.schuljahr)?.text ?? '—' }} </div>
 				</td>
 				<td class="text-left">
 					<div v-if="hatUpdateKompetenz" class="inline-flex gap-4">
@@ -140,7 +140,7 @@
 	import { Arrays, ArrayList, HashSet, LehrerLehramt, LehrerLehrbefaehigung, LehrerFachrichtung, LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag,
 		LehrerFachrichtungEintrag, LehrerLehramtAnerkennung, LehrerLehrbefaehigungAnerkennung, LehrerFachrichtungAnerkennung } from "@core";
 	import type { LehrerListeManager } from "@ui";
-	import { CoreTypeSelectManager, GridManager } from "@ui";
+	import { CoreTypeSelectManager, GridManager, useAbschnittState } from "@ui";
 	import { LehrerLehramtEintragModelProxy } from "./LehrerLehramtEintragModelProxy";
 	import type { LehrerPersonaldatenModelProxy } from "./LehrerPersonaldatenModelProxy";
 	import { LehrerLehrbefaehigungEintragModelProxy } from "./LehrerLehrbefaehigungEintragModelProxy";
@@ -148,7 +148,6 @@
 
 	const props = defineProps<{
 		hatUpdateKompetenz: boolean;
-		schuljahr: number;
 		personaldatenModelProxy: () => LehrerPersonaldatenModelProxy,
 		lehrerListeManager: () => LehrerListeManager;
 		patchLehramt: (eintrag: LehrerLehramtEintrag, patch: Partial<LehrerLehramtEintrag>) => Promise<void>;
@@ -161,11 +160,12 @@
 		addFachrichtung: (eintrag: Partial<LehrerFachrichtungEintrag>) => Promise<void>;
 		removeFachrichtungen: (eintraege: List<LehrerFachrichtungEintrag>) => Promise<void>;
 	}>();
+	const abschnittState = useAbschnittState();
 
 	const showLehramtHinzufuegen = ref<boolean>(false);
 	const auswahlLehramtNeu = shallowRef<LehrerLehramtKatalogEintrag | null>(null);
 	const lehraemterSelectManager = computed(() => new CoreTypeSelectManager({
-		clazz: LehrerLehramt.class, schuljahr: props.schuljahr, schulformen: props.lehrerListeManager().schulform(),
+		clazz: LehrerLehramt.class, schuljahr: abschnittState.auswahl.schuljahr, schulformen: props.lehrerListeManager().schulform(),
 		filters: [{ key: 'vorhandene', apply: filterLehraemter }],
 		selectionDisplayText: 'text', optionDisplayText: 'kuerzelText',
 	}));
@@ -208,13 +208,13 @@
 	const auswahlFachrichtungenNeu = shallowRef<Array<LehrerFachrichtungKatalogEintrag>>([]);
 
 	const lehrbefaehigungenSelectManager = computed(() => new CoreTypeSelectManager({
-		clazz: LehrerLehrbefaehigung.class, schuljahr: props.schuljahr, schulformen: props.lehrerListeManager().schulform(),
+		clazz: LehrerLehrbefaehigung.class, schuljahr: abschnittState.auswahl.schuljahr, schulformen: props.lehrerListeManager().schulform(),
 		filters: [{ key: 'vorhandene', apply: filterLehrbefaehigungen }],
 		selectionDisplayText: 'text', optionDisplayText: 'kuerzelText',
 	}));
 
 	const fachrichtungenSelectManager = computed(() => new CoreTypeSelectManager({
-		clazz: LehrerFachrichtung.class, schuljahr: props.schuljahr, schulformen: props.lehrerListeManager().schulform(),
+		clazz: LehrerFachrichtung.class, schuljahr: abschnittState.auswahl.schuljahr, schulformen: props.lehrerListeManager().schulform(),
 		filters: [{ key: 'vorhandene', apply: filterFachrichtungen }],
 		selectionDisplayText: 'text', optionDisplayText: 'kuerzelText',
 	}));

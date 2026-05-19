@@ -7,6 +7,8 @@ import { routeOrteGruppenprozesse } from "~/router/apps/schule/kataloge/orte/Rou
 import { routeOrteNeu } from "~/router/apps/schule/kataloge/orte/RouteOrteNeu";
 import { routeOrteDaten } from "~/router/apps/schule/kataloge/orte/RouteOrteDaten";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
+import { abschnittState } from "~/states/AbschnittStateImpl";
+import { schuleState } from "~/states/SchuleStateImpl";
 
 
 const defaultState = {
@@ -30,8 +32,8 @@ export class RouteDataOrte extends RouteDataAuswahl<OrteListeManager, RouteState
 
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<OrteListeManager>>> {
 		const orte = await api.server.getOrte(api.schema);
-		const manager = new OrteListeManager(api.abschnitt.id, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
-			api.schulform, orte);
+		const manager = new OrteListeManager(schuleState.abschnitt.id, schuleState.abschnitt.id, abschnittState.alle,
+			schuleState.schulform, orte);
 		return { manager };
 	}
 

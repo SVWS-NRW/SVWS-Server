@@ -27,6 +27,7 @@
 	import type { SimpleOperationResponse } from '@core';
 	import { DeveloperNotificationException, OpenApiError, UserNotificationException } from '@core';
 	import { api } from '~/router/Api';
+	import { useServerState } from "@ui";
 
 	/** Fehlerbehandlung */
 	type CapturedError = {
@@ -37,11 +38,13 @@
 		log: SimpleOperationResponse | null;
 	};
 
+	const serverState = useServerState();
+
 	const counter = ref(0);
 	const errors = ref<Map<number, CapturedError>>(new Map());
 
 	function copyString(error: CapturedError) {
-		const json = JSON.stringify({ env: { client: 'WebClient', mode: api.mode.text, version: api.version, commit: api.githash, userAgent: globalThis.navigator.userAgent }, error }, null, 2);
+		const json = JSON.stringify({ env: { client: 'WebClient', mode: serverState.mode.text, version: api.version, commit: api.githash, userAgent: globalThis.navigator.userAgent }, error }, null, 2);
 		return "```json\n" + json + "\n```";
 	}
 

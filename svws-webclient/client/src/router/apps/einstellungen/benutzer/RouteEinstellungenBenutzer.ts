@@ -5,7 +5,7 @@ import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMod
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 
-import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
+import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeEinstellungen } from "~/router/apps/einstellungen/RouteEinstellungen";
 import { routeEinstellungenBenutzerDaten } from "~/router/apps/einstellungen/benutzer/RouteEinstellungenBenutzerDaten";
 import { RouteDataEinstellungenBenutzer } from "~/router/apps/einstellungen/benutzer/RouteDataEinstellungenBenutzer";
@@ -72,7 +72,6 @@ export class RouteEinstellungenBenutzer extends RouteNode<RouteDataEinstellungen
 
 	public getAuswahlProps(to: RouteLocationNormalized): BenutzerAuswahlProps {
 		return {
-			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
 			auswahl: () => this.data.auswahl,
 			mapBenutzer: this.data.mapBenutzer,
 			gotoBenutzer: this.data.gotoBenutzer,

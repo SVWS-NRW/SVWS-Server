@@ -1,7 +1,5 @@
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import { routeApp } from "~/router/apps/RouteApp";
-import { api } from "~/router/Api";
 import type { RouteLocationNormalized } from "vue-router";
 import type { RouteSchuleDatenaustauschSchulwechsel } from "~/router/apps/schule/datenaustausch/schulwechsel/RouteSchuleDatenaustauschSchulwechsel";
 import type { SSchuleDatenaustauschSchulwechselZugaengeProps } from "~/components/schule/datenaustausch/schulwechsel/SSchuleDatenaustauschSchulwechselZugaengeProps";
@@ -22,8 +20,6 @@ export class RouteSchuleDatenaustauschSchulwechselZugaenge extends RouteNode<any
 	public getProps(to: RouteLocationNormalized): SSchuleDatenaustauschSchulwechselZugaengeProps {
 		return {
 			serverMode: ServerMode.DEV,
-			schulform: api.schulform,
-			schuljahresabschnitt: () => routeApp.data.aktAbschnitt.value,
 		};
 	}
 }

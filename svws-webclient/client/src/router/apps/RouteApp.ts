@@ -65,9 +65,10 @@ import { routeEmailServer } from "~/router/apps/einstellungen/emailserver/RouteE
 import { routeSchwerpunkte } from "~/router/apps/schule/kataloge/schwerpunkte/RouteSchwerpunkte";
 import { routeAnkreuzkompetenzen } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteAnkreuzkompetenzen";
 import { routeTeilleistungsarten } from "~/router/apps/schule/kataloge/teilleistungsarten/RouteTeilleistungsarten";
-
-import SApp from "~/components/SApp.vue";
 import { routeNotenmodulAnkreuzkompetenzen } from "./notenmodul/RouteNotenmodulAnkreuzkompetenzen";
+import { abschnittState } from "~/states/AbschnittStateImpl";
+import { serverState } from "~/states/ServerStateImpl";
+import SApp from "~/components/SApp.vue";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {
@@ -86,7 +87,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	public get menuEinstellungen(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._menuEinstellungen) {
-			if (api.authenticated && (!node.mode.checkServerMode(api.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
+			if (api.authenticated && (!node.mode.checkServerMode(serverState.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
 				continue;
 			}
 			result.push(node);
@@ -103,7 +104,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	public get menuBenutzerprofil(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._menuBenutzerprofil) {
-			if (api.authenticated && (!node.mode.checkServerMode(api.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
+			if (api.authenticated && (!node.mode.checkServerMode(serverState.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
 				continue;
 			}
 			result.push(node);
@@ -120,7 +121,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	public get menuSchule(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._menuSchule) {
-			if (api.authenticated && (!node.mode.checkServerMode(api.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
+			if (api.authenticated && (!node.mode.checkServerMode(serverState.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
 				continue;
 			}
 			result.push(node);
@@ -137,7 +138,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	public get menuNotenmodul(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._menuNotenmodul) {
-			if (api.authenticated && (!node.mode.checkServerMode(api.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
+			if (api.authenticated && (!node.mode.checkServerMode(serverState.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
 				continue;
 			}
 			result.push(node);
@@ -241,10 +242,10 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			const { idSchuljahresabschnitt } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt"]);
 			// Prüfe, ob der Schuljahresabschnitt gültig gesetzt ist
 			if (idSchuljahresabschnitt === undefined) {
-				return this.getRouteDefaultChild({ idSchuljahresabschnitt: this.data.aktAbschnitt.value.id });
+				return this.getRouteDefaultChild({ idSchuljahresabschnitt: abschnittState.auswahl.id });
 			}
 			// Prüfe, ob der Schuljahresabschnitt gesetzt werden soll
-			await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
+			await abschnittState.setAuswahl(idSchuljahresabschnitt);
 			// Prüfe, ob die View aktualisiert werden muss
 			let cur: RouteNode<any, any> = to;
 			while (cur.parent !== this) {
@@ -264,7 +265,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	public addRouteParamsFromState(): RouteParamsRawGeneric {
 		const schema = encodeURIComponent(api.schema);
-		const idSchuljahresabschnitt = this.data.idSchuljahresabschnitt;
+		const idSchuljahresabschnitt = abschnittState.auswahl.id;
 		return { schema, idSchuljahresabschnitt };
 	}
 
@@ -273,9 +274,6 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			logout: routeLogin.logout,
 			username: api.username,
 			schemaname: api.schema,
-			schulform: api.schulform,
-			servermode: api.mode,
-			schuleStammdaten: api.schuleStammdaten,
 			// Props für die Navigation
 			menu: this.getMenuManager(),
 			benutzerprofilApp: { name: routeBenutzerprofil.name, text: routeBenutzerprofil.text, hide: true },
@@ -284,7 +282,6 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			tabManagerBenutzerprofil: this.getTabManagerBenutzerprofil,
 			tabManagerEinstellungen: this.getTabManagerEinstellungen,
 			tabManagerNotenmodul: this.getTabManagerNotenmodul,
-			schuljahresabschnittsauswahl: () => this.data.getSchuljahresabschnittsauswahl(true),
 		};
 	}
 

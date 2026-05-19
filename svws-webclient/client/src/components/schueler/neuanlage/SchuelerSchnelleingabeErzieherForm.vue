@@ -66,7 +66,7 @@
 	import type { SchuelerSchnelleingabeManager } from "@ui";
 	import type { NationalitaetenKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
 	import { AdressenUtils, Nationalitaeten, ErzieherStammdaten } from "@core";
-	import { CoreTypeSelectManager, SelectManager } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useAbschnittState } from "@ui";
 	import { erzieherArtSort, orte_sort, ortsteilSort } from "~/utils/helfer";
 	import { computed } from "vue";
 	import { optionalInputIsValid } from "~/util/validation/Validation";
@@ -76,8 +76,8 @@
 		data: ErzieherStammdaten | undefined;
 		patchErzieher: (data: Partial<ErzieherStammdaten>, idEintrag: number) => Promise<void>;
 		readonly: boolean;
-		schuljahr: number;
 	}>();
+	const abschnittState = useAbschnittState();
 
 	const manager = () => props.manager();
 	const data = computed<ErzieherStammdaten>(() => props.data ?? new ErzieherStammdaten());
@@ -125,7 +125,7 @@
 	});
 
 	const ersterErzStaatsangehoerigkeit = computed<NationalitaetenKatalogEintrag | null>({
-		get: () => Nationalitaeten.getByISO3(data.value.staatsangehoerigkeitID ?? null)?.daten(props.schuljahr) ?? null,
+		get: () => Nationalitaeten.getByISO3(data.value.staatsangehoerigkeitID ?? null)?.daten(abschnittState.auswahl.schuljahr) ?? null,
 		set: (value: NationalitaetenKatalogEintrag | null) => {
 			const iso3 = value?.iso3 ?? null;
 			data.value.staatsangehoerigkeitID = iso3;
@@ -135,7 +135,7 @@
 
 	const staatsangehoerigkeitenManager = new CoreTypeSelectManager({
 		clazz: Nationalitaeten.class,
-		schuljahr: props.schuljahr,
+		schuljahr: abschnittState.auswahl.schuljahr,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});

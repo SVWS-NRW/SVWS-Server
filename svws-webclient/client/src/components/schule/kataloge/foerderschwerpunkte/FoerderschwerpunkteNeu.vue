@@ -52,29 +52,31 @@
 	import { computed, ref, watch } from "vue";
 	import type { FoerderschwerpunkteNeuProps } from "~/components/schule/kataloge/foerderschwerpunkte/FoerderschwerpunkteNeuProps";
 	import { BenutzerKompetenz, Foerderschwerpunkt, FoerderschwerpunktEintrag } from "@core";
-	import { CoreTypeSelectManager } from "@ui";
+	import { CoreTypeSelectManager, useSchuleState } from "@ui";
 	import { FoerderschwerpunkteModelProxy } from "~/components/schule/kataloge/foerderschwerpunkte/modelproxy/FoerderschwerpunkteModelProxy";
 
 	const props = defineProps<FoerderschwerpunkteNeuProps>();
+	const schuleState = useSchuleState();
+
 	const isLoading = ref<boolean>(false);
 	const initialData = ref<FoerderschwerpunktEintrag>(Object.assign(new FoerderschwerpunktEintrag(), { istSichtbar: true, sortierung: 32000 }));
-	const model = new FoerderschwerpunkteModelProxy(() => initialData.value, () => props.manager(), props.schuljahr);
+	const model = new FoerderschwerpunkteModelProxy(() => initialData.value, () => props.manager(), schuleState.abschnitt.schuljahr);
 	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 
 	const foerderschwerpunktKuerzelManager = new CoreTypeSelectManager({
 		clazz: Foerderschwerpunkt.class,
-		schuljahr: props.schuljahr,
-		schulformen: props.schulform,
+		schuljahr: schuleState.abschnitt.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "kuerzel",
 		selectionDisplayText: "kuerzel",
 	});
 
 	const foerderschwerpunktTextManager = new CoreTypeSelectManager({
 		clazz: Foerderschwerpunkt.class,
-		schuljahr: props.schuljahr,
-		schulformen: props.schulform,
+		schuljahr: schuleState.abschnitt.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});

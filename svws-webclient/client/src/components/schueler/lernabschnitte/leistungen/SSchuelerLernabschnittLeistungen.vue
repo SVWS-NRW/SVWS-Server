@@ -126,8 +126,10 @@
 	import type { SchuelerLernabschnittLeistungenProps } from "./SSchuelerLernabschnittLeistungenProps";
 	import type { SchuelerLeistungsdaten, List, KursDaten, FachDaten, LehrerListeEintrag } from "@core";
 	import { Note, ZulaessigeKursart, ArrayList, Fach, BenutzerKompetenz, BenutzerTyp, Jahrgaenge } from "@core";
+	import { useSchuleState } from "@ui";
 
 	const props = defineProps<SchuelerLernabschnittLeistungenProps>();
+	const schuleState = useSchuleState();
 
 	const istGymOb = computed<boolean>(() => Jahrgaenge.data().getWertBySchluessel(props.schuelerListeManager().auswahl().jahrgang)?.istGymOb() ?? false);
 
@@ -167,7 +169,7 @@
 			return false;
 		}
 		// Wenn der Lernabschnitt nicht der aktuelle der Schule ist oder in der Zukunft liegt, dann hat er keine allgemeine Update-Kompetenz
-		const schuleSchuljahresabschnitt = props.schuleSchuljahresabschnitt();
+		const schuleSchuljahresabschnitt = schuleState.abschnitt;
 		const leistungSchuljahresabschnitt = props.manager().schuljahresabschnittGet();
 		return (schuleSchuljahresabschnitt.schuljahr < leistungSchuljahresabschnitt.schuljahr)
 			|| ((schuleSchuljahresabschnitt.schuljahr === leistungSchuljahresabschnitt.schuljahr)
@@ -189,7 +191,7 @@
 			return true;
 		}
 		// Prüfe, ob es sich um das aktuelle Schuljahr handelt. Wenn nicht, so hat ein Fachlehrer keine besonderen Kompetenzen
-		if (props.schule.idSchuljahresabschnitt !== props.manager().lernabschnittGet().schuljahresabschnitt) {
+		if (schuleState.abschnitt.id !== props.manager().lernabschnittGet().schuljahresabschnitt) {
 			return false;
 		}
 		// Prüfe, ob der aktuelle Benutzer der Fachlehrer mit der übergebenen ID ist

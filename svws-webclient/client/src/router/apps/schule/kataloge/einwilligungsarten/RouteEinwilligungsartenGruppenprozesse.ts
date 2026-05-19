@@ -2,11 +2,11 @@ import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
-import { routeApp } from "../../../RouteApp";
 import { ViewType } from "@ui";
 import type { RouteEinwilligungsarten } from "~/router/apps/schule/kataloge/einwilligungsarten/RouteEinwilligungsarten";
 import { routeEinwilligungsarten } from "~/router/apps/schule/kataloge/einwilligungsarten/RouteEinwilligungsarten";
 import type { EinwilligungsartenGruppenprozesseProps } from "~/components/schule/kataloge/einwilligungsarten/gruppenprozesse/EinwilligungsartenGruppenprozesseProps";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 const EinwilligungsartenGruppenprozesse = () => import("~/components/schule/kataloge/einwilligungsarten/gruppenprozesse/EinwilligungsartenGruppenprozesse.vue");
 
@@ -22,13 +22,11 @@ export class RouteEinwilligungsartenGruppenprozesse extends RouteNode<any, Route
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): EinwilligungsartenGruppenprozesseProps {
 		return {
-			serverMode: api.mode,
-			schulform: api.schulform,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			delete: routeEinwilligungsarten.data.delete,
 			deleteCheck: routeEinwilligungsarten.data.deleteCheck,

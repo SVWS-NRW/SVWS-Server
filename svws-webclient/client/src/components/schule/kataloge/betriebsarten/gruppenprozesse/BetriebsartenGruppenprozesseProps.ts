@@ -1,8 +1,7 @@
-import type { BenutzerKompetenz, List, ServerMode } from "@core";
+import type { BenutzerKompetenz, List } from "@core";
 import type { BetriebsartenListeManager } from "@ui";
 
 export interface BetriebsartenGruppenprozesseProps {
-	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	manager: () => BetriebsartenListeManager;
 	delete: () => Promise<[boolean, List<string | null>]>;

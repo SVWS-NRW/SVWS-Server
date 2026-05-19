@@ -8,6 +8,8 @@ import { api } from "~/router/Api";
 import { routeBeschaeftigungsartenDaten } from "~/router/apps/schule/kataloge/beschaeftigungsarten/RouteBeschaeftigungsartenDaten";
 import { routeBeschaeftigungsartenGruppenprozesse } from "~/router/apps/schule/kataloge/beschaeftigungsarten/RouteBeschaeftigungsartenGruppenprozesse";
 import { routeBeschaeftigungsartenNeu } from "~/router/apps/schule/kataloge/beschaeftigungsarten/RouteBeschaeftigungsartenNeu";
+import { schuleState } from "~/states/SchuleStateImpl";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
@@ -25,8 +27,8 @@ export class RouteDataBeschaeftigungsarten extends RouteDataAuswahl<Beschaeftigu
 
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<BeschaeftigungsartenListeManager>>> {
 		const beschaeftigungsarten = await api.server.getBeschaeftigungsarten(api.schema);
-		const manager = new BeschaeftigungsartenListeManager(api.abschnitt.id, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
-			api.schulform, beschaeftigungsarten);
+		const manager = new BeschaeftigungsartenListeManager(schuleState.abschnitt.id, schuleState.abschnitt.id, abschnittState.alle,
+			schuleState.schulform, beschaeftigungsarten);
 		return { manager };
 	}
 

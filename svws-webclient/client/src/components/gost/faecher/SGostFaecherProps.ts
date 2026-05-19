@@ -1,8 +1,6 @@
-import type { GostFaecherManager, GostFach, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, GostJahrgangsdaten, BenutzerDaten, BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import type { GostFaecherManager, GostFach, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, GostJahrgangsdaten, BenutzerKompetenz } from "@core";
 
 export interface GostFaecherProps {
-	schulform: Schulform;
-	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	benutzerKompetenzenAbiturjahrgaenge: Set<number>;
 	faecherManager: () => GostFaecherManager;

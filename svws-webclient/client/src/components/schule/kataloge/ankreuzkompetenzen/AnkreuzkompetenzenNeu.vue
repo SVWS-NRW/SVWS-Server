@@ -77,12 +77,14 @@
 	import type { JahrgangsDaten, List } from "@core";
 	import { Ankreuzkompetenz, Schulgliederung, BenutzerKompetenz, Arrays } from "@core";
 	import type { DataTableColumn } from "@ui";
-	import { CoreTypeSelectManager, SelectManager } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useSchuleState } from "@ui";
 	import { AnkreuzkompetenzenModelProxy } from "~/components/schule/kataloge/ankreuzkompetenzen/modelproxy/AnkreuzkompetenzenModelProxy";
 
 	const props = defineProps<AnkreuzkompetenzenNeuProps>();
+	const schuleState = useSchuleState();
+
 	const data = ref<Ankreuzkompetenz>(Object.assign(new Ankreuzkompetenz(), { istSichtbar: true, sortierung: 32000 }));
-	const model = new AnkreuzkompetenzenModelProxy(() => data.value, () => props.manager().liste.list(), () => props.manager().faecherById, props.schuljahr);
+	const model = new AnkreuzkompetenzenModelProxy(() => data.value, () => props.manager().liste.list(), () => props.manager().faecherById, schuleState.abschnitt.schuljahr);
 	const isLoading = ref<boolean>(false);
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
@@ -102,8 +104,8 @@
 
 	const schulgliederungSelectManager = new CoreTypeSelectManager({
 		clazz: Schulgliederung.class,
-		schuljahr: props.schuljahr,
-		schulformen: props.schulform,
+		schuljahr: schuleState.abschnitt.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});

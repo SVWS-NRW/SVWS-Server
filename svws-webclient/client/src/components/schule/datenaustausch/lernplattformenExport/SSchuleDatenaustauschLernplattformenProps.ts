@@ -1,10 +1,8 @@
-import type { BenutzerKompetenz, Lernplattform, List, Schuljahresabschnitt } from "@core";
+import type { BenutzerKompetenz, Lernplattform, List } from "@core";
 
 export interface SchuleDatenaustauschLernplattformenProps {
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	lernplattformen: List<Lernplattform>,
 	export: (lernplattform: Lernplattform, datenformat: string) => Promise<Blob | null>,
-	abschnitteById: Map<number, Schuljahresabschnitt>,
-	idSelectedAbschnitt: number,
 }
 

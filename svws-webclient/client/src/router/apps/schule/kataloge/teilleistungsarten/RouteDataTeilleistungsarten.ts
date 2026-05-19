@@ -9,6 +9,8 @@ import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import { routeTeilleistungsartenGruppenprozesse } from "./RouteTeilleistungsartenGruppenprozesse";
 import { routeTeilleistungsartenNeu } from "./RouteTeilleistungsartenNeu";
 import { routeTeilleistungsartenDaten } from "./RouteTeilleistungsartenDaten";
+import { abschnittState } from "~/states/AbschnittStateImpl";
+import { schuleState } from "~/states/SchuleStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
@@ -29,8 +31,8 @@ export class RouteDataTeilleistungsarten extends RouteDataAuswahl<Teilleistungsa
 
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateAuswahlInterface<TeilleistungsartenListeManager>>> {
 		const teilleistungsarten = await api.server.getTeilleistungsarten(api.schema);
-		const manager = new TeilleistungsartenListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
-			api.schulform, teilleistungsarten);
+		const manager = new TeilleistungsartenListeManager(idSchuljahresabschnitt, schuleState.abschnitt.id, abschnittState.alle,
+			schuleState.schulform, teilleistungsarten);
 		return { manager };
 	}
 

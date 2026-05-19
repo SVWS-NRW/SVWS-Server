@@ -3,10 +3,10 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { api } from "~/router/Api";
-import { routeApp } from "~/router/apps/RouteApp";
 import type { RouteFloskelgruppen } from "~/router/apps/schule/kataloge/floskelgruppen/RouteFloskelgruppen";
 import { routeFloskelgruppen } from "~/router/apps/schule/kataloge/floskelgruppen/RouteFloskelgruppen";
 import type { FloskelgruppenGruppenprozesseProps } from "~/components/schule/kataloge/floskelgruppen/gruppenprozesse/FloskelgruppenGruppenprozesseProps";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 const FloskelgruppenGruppenprozesse = () => import(
 	"~/components/schule/kataloge/floskelgruppen/gruppenprozesse/FloskelgruppenGruppenprozesse.vue");
@@ -23,13 +23,11 @@ export class RouteFloskelgruppenGruppenprozesse extends RouteNode<any, RouteFlos
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): FloskelgruppenGruppenprozesseProps {
 		return {
-			serverMode: api.mode,
-			schulform: api.schulform,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			delete: routeFloskelgruppen.data.delete,
 			deleteCheck: routeFloskelgruppen.data.deleteCheck,

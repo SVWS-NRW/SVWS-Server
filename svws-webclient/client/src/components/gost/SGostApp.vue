@@ -18,7 +18,7 @@
 						</template>
 						<template v-else>
 							<h2 class="svws-headline"> Abiturjahrgang {{ auswahl.abiturjahr }} </h2>
-							<span class="svws-subline"> Jahrgang {{ auswahl.jahrgang }}, {{ schuljahresabschnitt().abschnitt }}.Halbjahr </span>
+							<span class="svws-subline"> Jahrgang {{ auswahl.jahrgang }}, {{ abschnittState.auswahl.abschnitt }}. Halbjahr </span>
 						</template>
 					</template>
 				</div>
@@ -38,9 +38,10 @@
 
 	import { computed } from "vue";
 	import type { GostAppProps } from "./SGostAppProps";
-	import { useRegionSwitch } from "@ui";
+	import { useAbschnittState, useRegionSwitch } from "@ui";
 
 	const props = defineProps<GostAppProps>();
+	const abschnittState = useAbschnittState();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 

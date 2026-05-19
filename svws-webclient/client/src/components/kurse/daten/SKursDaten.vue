@@ -32,7 +32,7 @@
 						@change="v => patch({ wochenstundenLehrer: ((v !== null) && (v >= 0)) ? v : data().wochenstundenLehrer })" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
-			<svws-ui-content-card title="zusätzliche Lehrkräfte" v-if="serverMode === ServerMode.DEV">
+			<svws-ui-content-card v-if="serverState.hasDev" title="zusätzliche Lehrkräfte">
 				<svws-ui-table clickable @update:clicked="v => patchLehrer(v)" :columns="columnsKursLehrer" :items="weitereLehrer" :readonly
 					v-model="auswahlKursLehrer" :selectable="hatKompetenzUpdate">
 					<template #cell(kuerzel)="{ rowData: s }">
@@ -97,12 +97,14 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { DataTableColumn } from "@ui";
+	import { useServerState, type DataTableColumn } from "@ui";
 	import type { KursDatenProps } from "./SKursDatenProps";
 	import type { JahrgangsDaten, LehrerListeEintrag, List } from "@core";
 	import { SchuelerStatus, ZulaessigeKursart, KursFortschreibungsart, ArrayList, BenutzerKompetenz, ServerMode, FachDaten, KursLehrer } from "@core";
 
 	const props = defineProps<KursDatenProps>();
+	const serverState = useServerState();
+
 	const readonly = computed(() => !hatKompetenzUpdate.value);
 
 	const schuljahr = computed<number>(() => props.manager().getSchuljahr());

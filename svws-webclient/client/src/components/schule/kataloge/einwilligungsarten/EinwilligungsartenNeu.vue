@@ -52,17 +52,18 @@
 	import type { EinwilligungsartenNeuProps } from "~/components/schule/kataloge/einwilligungsarten/EinwilligungsartenNeuProps";
 	import { computed, ref, watch } from "vue";
 	import type { EinwilligungsschluesselKatalogEintrag, List } from "@core";
-	import { BenutzerKompetenz } from "@core";
-	import { ArrayList, Einwilligungsart, Einwilligungsschluessel, PersonTyp } from "@core";
-	import { CoreTypeSelectManager, SelectManager } from "@ui";
+	import { BenutzerKompetenz, ArrayList, Einwilligungsart, Einwilligungsschluessel, PersonTyp } from "@core";
+	import { CoreTypeSelectManager, SelectManager, useSchuleState } from "@ui";
 	import { EinwilligungsartModelProxy } from "~/components/schule/kataloge/einwilligungsarten/modelproxy/EinwilligungsartModelProxy";
 
 	const props = defineProps<EinwilligungsartenNeuProps>();
+	const schuleState = useSchuleState();
+
 	const isLoading = ref<boolean>(false);
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 	const initialData = ref<Einwilligungsart>(Object.assign(new Einwilligungsart(), { istSichtbar: true, idPersonTyp: PersonTyp.SCHUELER.id }));
-	const model = new EinwilligungsartModelProxy(() => initialData.value, props.manager, props.schuljahr);
+	const model = new EinwilligungsartModelProxy(() => initialData.value, props.manager, schuleState.abschnitt.schuljahr);
 	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
 
 	const einwilligungsschluesselFilter = {
@@ -91,8 +92,8 @@
 	const einwilligungsschluesselCoreTypeManager = new CoreTypeSelectManager({
 		filters: [einwilligungsschluesselFilter],
 		clazz: Einwilligungsschluessel.class,
-		schuljahr: props.schuljahr,
-		schulformen: props.schulform,
+		schuljahr: schuleState.abschnitt.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});

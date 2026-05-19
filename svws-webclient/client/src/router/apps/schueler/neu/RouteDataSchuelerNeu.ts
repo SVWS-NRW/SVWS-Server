@@ -7,6 +7,7 @@ import { routeApp } from "~/router/apps/RouteApp";
 import { RouteManager } from "~/router/RouteManager";
 import { routeSchuelerSchnelleingabe } from "~/router/apps/schueler/neu/RouteSchuelerSchnelleingabe";
 import { SchuelerNeuManager } from "@ui";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 
 interface RouteStateDataSchuelerNeu extends RouteStateInterface {
@@ -34,20 +35,18 @@ export class RouteDataSchuelerNeu extends RouteData<RouteStateDataSchuelerNeu> {
 		const klassenFuerAbschnitt = await this.getKlassenBySchuljahresabschnitt();
 		const jahrgaengeById = routeApp.cache.kataloge.jahrgaengeById;
 		const religionenById = routeApp.cache.kataloge.religionenById;
-		const schuljahresabschnitte = api.schuleStammdaten.abschnitte;
-		const aktuellerAbschnitt = routeApp.data.aktAbschnitt.value;
 
-		return new SchuelerNeuManager(kindergaertenById, einschulungsartenById, jahrgaengeById, religionenById, schuljahresabschnitte, klassenFuerAbschnitt,
-			aktuellerAbschnitt);
+		return new SchuelerNeuManager(kindergaertenById, einschulungsartenById, jahrgaengeById, religionenById, abschnittState.alle, klassenFuerAbschnitt,
+			abschnittState.auswahl);
 	}
 
 	private async getKlassenBySchuljahresabschnitt(): Promise<Map<number, List<KlassenListeEintrag>>> {
 		const klassenByIdAbschnitt = new Map();
-		const idAktuellerAbschnitt = routeApp.data.aktAbschnitt.value.id;
+		const idAktuellerAbschnitt = abschnittState.auswahl.id;
 		const klassenAktuellerAbschnitt = await api.server.getListKlassenListeEintragBySchuljahresabschnitt(api.schema, idAktuellerAbschnitt);
 		klassenByIdAbschnitt.set(idAktuellerAbschnitt, klassenAktuellerAbschnitt);
 
-		const idFolgeabschnitt = routeApp.data.aktAbschnitt.value.idFolgeAbschnitt;
+		const idFolgeabschnitt = abschnittState.auswahl.idFolgeAbschnitt;
 		if (idFolgeabschnitt !== null) {
 			const klassenFolgeAbschnitt = await api.server.getListKlassenListeEintragBySchuljahresabschnitt(api.schema, idFolgeabschnitt);
 			klassenByIdAbschnitt.set(idFolgeabschnitt, klassenFolgeAbschnitt);

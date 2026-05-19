@@ -7,6 +7,8 @@ import { api } from "~/router/Api";
 import { routeKindergaertenGruppenprozesse } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaertenGruppenprozesse";
 import { routeKindergaertenNeu } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaertenNeu";
 import { routeKindergaertenDaten } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaertenDaten";
+import { abschnittState } from "~/states/AbschnittStateImpl";
+import { schuleState } from "~/states/SchuleStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
@@ -24,8 +26,8 @@ export class RouteDataKindergaerten extends RouteDataAuswahl<KindergaertenListeM
 
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<KindergaertenListeManager>>> {
 		const kindergaerten = await api.server.getKindergaerten(api.schema);
-		const manager = new KindergaertenListeManager(api.abschnitt.id, api.schuleStammdaten.idSchuljahresabschnitt,
-			api.schuleStammdaten.abschnitte, api.schulform, kindergaerten);
+		const manager = new KindergaertenListeManager(schuleState.abschnitt.id, schuleState.abschnitt.id,
+			abschnittState.alle, schuleState.schulform, kindergaerten);
 		return { manager };
 	}
 

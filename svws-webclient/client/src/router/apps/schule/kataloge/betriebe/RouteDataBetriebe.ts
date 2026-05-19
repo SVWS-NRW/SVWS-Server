@@ -7,6 +7,8 @@ import { routeBetriebeGruppenprozesse } from "~/router/apps/schule/kataloge/betr
 import { routeBetriebeNeu } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebeNeu";
 import { routeBetriebeDaten } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebeDaten";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
+import { abschnittState } from "~/states/AbschnittStateImpl";
+import { schuleState } from "~/states/SchuleStateImpl";
 
 
 const defaultState = {
@@ -35,8 +37,8 @@ export class RouteDataBetriebe extends RouteDataAuswahl<BetriebeListeManager, Ro
 			api.server.getOrte(api.schema),
 		]);
 
-		const manager = new BetriebeListeManager(api.abschnitt.id, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
-			api.schulform, betriebe, betriebsarten, orte);
+		const manager = new BetriebeListeManager(schuleState.abschnitt.id, schuleState.abschnitt.id, abschnittState.alle,
+			schuleState.schulform, betriebe, betriebsarten, orte);
 		return { manager };
 	}
 

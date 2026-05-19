@@ -4,7 +4,6 @@ import { DeveloperNotificationException, GostAbiturjahrUtils, Schulgliederung, G
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { routeApp } from "~/router/apps/RouteApp";
 import { routeGost } from "~/router/apps/gost/RouteGost";
 
 import { routeGostBeratung } from "~/router/apps/gost/beratung/RouteGostBeratung";
@@ -12,6 +11,8 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeGostAbiturjahrNeu } from "./RouteGostAbiturjahrNeu";
 import { routeGostGruppenprozesse } from "./RouteGostGruppenprozesse";
 import type { TabData } from "@ui";
+import { abschnittState } from "~/states/AbschnittStateImpl";
+import { schuleState } from "~/states/SchuleStateImpl";
 
 interface RouteStateGost extends RouteStateInterface {
 	idSchuljahresabschnitt: number,
@@ -119,13 +120,12 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 
 	private async ladeJahrgaenge(idSchuljahresabschnitt: number): Promise<Map<number, JahrgangsDaten>> {
 		// Lade die Liste der Jahrgänge, für welche Abiturjahrgänge ggf. angelegt werden können.
-		let schuljahresabschnitt = api.mapAbschnitte.value.get(idSchuljahresabschnitt);
-		schuljahresabschnitt ??= api.abschnitt;
+		const schuljahresabschnitt = abschnittState.getOrNull(idSchuljahresabschnitt) ?? schuleState.abschnitt;
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const mapJahrgaenge = new Map<number, JahrgangsDaten>();
 		for (const j of listJahrgaenge) {
 			const jg: Jahrgaenge | null = (j.kuerzelStatistik === null) ? null : Jahrgaenge.data().getWertByKuerzel(j.kuerzelStatistik);
-			if (jg?.hatSchulform(schuljahresabschnitt.schuljahr, api.schulform) ?? false) {
+			if (jg?.hatSchulform(schuljahresabschnitt.schuljahr, schuleState.schulform) ?? false) {
 				mapJahrgaenge.set(j.id, j);
 			}
 		}
@@ -314,7 +314,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 			throw new DeveloperNotificationException("Dem Jahrgang mit der ID " + idJahrgang + " ist eine unbekannte Schulgliederung " + jahrgang.kuerzelSchulgliederung + " zugeordnet.");
 		}
 		const abiturjahr = (jahrgang.kuerzelStatistik === null) ? null
-			: GostAbiturjahrUtils.getGostAbiturjahr(api.schulform, schulgliederung, routeApp.data.aktAbschnitt.value.schuljahr, jahrgang.kuerzelStatistik);
+			: GostAbiturjahrUtils.getGostAbiturjahr(schuleState.schulform, schulgliederung, abschnittState.auswahl.schuljahr, jahrgang.kuerzelStatistik);
 		return abiturjahr ?? null;
 	}
 

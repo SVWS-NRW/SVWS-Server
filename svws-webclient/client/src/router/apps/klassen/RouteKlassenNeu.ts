@@ -4,7 +4,6 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeKlassen, type RouteKlassen } from "~/router/apps/klassen/RouteKlassen";
-import { api } from "~/router/Api";
 import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
 import type { KlassenNeuProps } from "~/components/klassen/SKlassenNeuProps";
@@ -29,7 +28,6 @@ export class RouteKlassenNeu extends RouteNode<any, RouteKlassen> {
 	public getProps(to: RouteLocationNormalized): KlassenNeuProps {
 		return {
 			manager: () => routeKlassen.data.manager,
-			schulform: api.schulform,
 			mapKlassenVorigerAbschnitt: () => routeKlassen.data.mapKlassenVorigerAbschnitt,
 			mapKlassenFolgenderAbschnitt: () => routeKlassen.data.mapKlassenFolgenderAbschnitt,
 			add: routeKlassen.data.add,

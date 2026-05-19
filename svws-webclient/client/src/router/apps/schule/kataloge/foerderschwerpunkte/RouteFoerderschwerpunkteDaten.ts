@@ -23,8 +23,6 @@ export class RouteFoerderschwerpunkteDaten extends RouteNode<any, RouteFoerdersc
 			manager: () => routeFoerderschwerpunkte.data.manager,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			patch: routeFoerderschwerpunkte.data.patch,
-			schulform: api.schulform,
-			schuljahr: api.abschnitt.schuljahr,
 		};
 	}
 }

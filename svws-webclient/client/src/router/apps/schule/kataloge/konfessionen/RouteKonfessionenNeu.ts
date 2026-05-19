@@ -5,9 +5,9 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
-import { routeApp } from "../../../RouteApp";
 import { routeKonfessionen } from "~/router/apps/schule/kataloge/konfessionen/RouteKonfessionen";
 import { api } from "~/router/Api";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 const KonfessionenNeu = () => import("~/components/schule/kataloge/konfessionen/KonfessionenNeu.vue");
 
@@ -23,7 +23,7 @@ export class RouteKonfessionenNeu extends RouteNode<any, RouteKonfessionen> {
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): KonfessionenNeuProps {
@@ -34,7 +34,6 @@ export class RouteKonfessionenNeu extends RouteNode<any, RouteKonfessionen> {
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 			benutzerKompetenzen: api.benutzerKompetenzen,
-			schulform: api.schulform,
 		};
 	}
 }

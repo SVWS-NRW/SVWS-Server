@@ -1,7 +1,5 @@
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
-import { api } from "~/router/Api";
-
 import type { SchuleStammdatenProps } from "~/components/schule/stammdaten/SchuleStammdatenProps";
 
 import type { RouteSchule } from "../RouteSchule";
@@ -29,7 +27,6 @@ export class RouteSchuleStammdaten extends RouteTabNode<RouteDataSchuleStammdate
 		super.text = "Stammdaten der Schule";
 		super.getProps = (props) => (<SchuleStammdatenProps>{
 			...props,
-			schule: () => api.schuleStammdaten,
 		});
 		super.children = [
 			routeSchuleAdressdaten,

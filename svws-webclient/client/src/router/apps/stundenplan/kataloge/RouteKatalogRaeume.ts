@@ -4,8 +4,6 @@ import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMod
 
 import { RouteNode } from "~/router/RouteNode";
 
-import { routeApp } from "~/router/apps/RouteApp";
-
 import type { RaeumeProps } from "~/components/stundenplan/kataloge/raeume/SRaeumeProps";
 import type { RaeumeAuswahlProps } from "~/components/stundenplan/kataloge/raeume/SRaeumeAuswahlProps";
 import { routeError } from "~/router/error/RouteError";
@@ -60,7 +58,6 @@ export class RouteKatalogRaeume extends RouteNode<RouteDataKatalogRaeume, RouteS
 	public getAuswahlProps(to: RouteLocationNormalized): RaeumeAuswahlProps {
 		return {
 			raumListeManager: () => this.data.raumListeManager,
-			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
 			gotoEintrag: this.data.gotoEintrag,
 			addEintrag: this.data.addEintrag,
 			deleteEintraege: this.data.deleteEintraege,

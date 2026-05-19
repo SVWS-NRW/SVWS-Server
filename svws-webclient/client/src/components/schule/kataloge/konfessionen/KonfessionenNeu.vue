@@ -54,30 +54,31 @@
 	import type { KonfessionenNeuProps } from "./KonfessionenNeuProps";
 	import { computed, ref, watch } from "vue";
 	import { BenutzerKompetenz, Religion, ReligionEintrag } from "@core";
-	import { CoreTypeSelectManager } from "@ui";
+	import { CoreTypeSelectManager, useSchuleState } from "@ui";
 	import { KonfessionModelProxy } from "~/components/schule/kataloge/konfessionen/modelproxy/KonfessionModelProxy";
 
 	const props = defineProps<KonfessionenNeuProps>();
+	const schuleState = useSchuleState();
+
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-	const schuljahr = computed(() => props.manager().getSchuljahr());
 	const isLoading = ref<boolean>(false);
 	const initialData = ref<ReligionEintrag>(Object.assign(new ReligionEintrag(), { istSichtbar: true, sortierung: 32000 }));
-	const model = new KonfessionModelProxy(() => initialData.value, () => props.manager().liste.list(), schuljahr.value);
+	const model = new KonfessionModelProxy(() => initialData.value, () => props.manager().liste.list(), schuleState.abschnitt.schuljahr);
 
 	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
 
 	const konfessionKuerzelSelectManager = new CoreTypeSelectManager({
 		clazz: Religion.class,
-		schuljahr: schuljahr.value,
-		schulformen: props.schulform,
+		schuljahr: schuleState.abschnitt.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "kuerzel",
 		selectionDisplayText: "kuerzel",
 	});
 
 	const konfessionTextSelectManager = new CoreTypeSelectManager({
 		clazz: Religion.class,
-		schuljahr: schuljahr.value,
-		schulformen: props.schulform,
+		schuljahr: schuleState.abschnitt.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});

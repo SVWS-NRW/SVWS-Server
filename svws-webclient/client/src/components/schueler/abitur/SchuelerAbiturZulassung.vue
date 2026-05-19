@@ -40,7 +40,7 @@
 
 			<!-- Übersicht über die Fachbelegungen in der Q-Phase / Block I -->
 			<div class="min-w-fit">
-				<schueler-abitur-zulassung-tabelle :server-mode :schule :manager="managerLaufbahnplanung" :update-abiturpruefungsdaten="null" />
+				<schueler-abitur-zulassung-tabelle :manager="managerLaufbahnplanung" :update-abiturpruefungsdaten="null" />
 			</div>
 			<div class="flex flex-col" v-if="!managerLaufbahnplanung().getErgebnisMarkierpruefung().erfolgreich">
 				<div class="font-bold">Hinweise:</div>
@@ -57,7 +57,7 @@
 			<!-- Übersicht über die Fachbelegungen in der Q-Phase / Block I aus dem Abiturbereich -->
 			<div class="flex flex-row gap-4">
 				<div class="min-w-fit">
-					<schueler-abitur-zulassung-tabelle :server-mode :schule :manager="() => managerAbitur()!" :update-abiturpruefungsdaten />
+					<schueler-abitur-zulassung-tabelle :manager="() => managerAbitur()!" :update-abiturpruefungsdaten />
 				</div>
 				<div class="flex flex-col gap-4">
 					<div v-if="!managerAbitur()!.getErgebnisMarkierpruefung().erfolgreich">
@@ -67,7 +67,7 @@
 						</template>
 					</div>
 
-					<div v-if="serverMode === ServerMode.DEV" class="bg-ui-warning">
+					<div v-if="serverState.hasDev" class="bg-ui-warning">
 						<div class="flex flex-col gap-4 bg-ui m-1 p-2">
 							<div class="text-lg font-bold">Entwickler-Ansicht (dev-Mode): Vergleich mit den Leistungsdaten</div>
 
@@ -78,7 +78,7 @@
 							<!-- Übersicht über die Fachbelegungen in der Q-Phase / Block I -->
 							<div class="flex flex-row">
 								<div class="min-w-fit">
-									<schueler-abitur-zulassung-tabelle :server-mode :schule :manager="managerLaufbahnplanung" :update-abiturpruefungsdaten="null" />
+									<schueler-abitur-zulassung-tabelle :manager="managerLaufbahnplanung" :update-abiturpruefungsdaten="null" />
 								</div>
 								<div class="flex flex-col" v-if="!managerLaufbahnplanung().getErgebnisMarkierpruefung().erfolgreich">
 									<div class="font-bold">Hinweise:</div>
@@ -99,11 +99,13 @@
 
 	import { computed } from 'vue';
 	import type { GostBelegpruefungErgebnisFehler, List } from "@core";
-	import { ArrayList, GostAbiturMarkierungsalgorithmusErgebnis, GostBelegungsfehlerArt, GostHalbjahr, ServerMode } from "@core";
+	import { ArrayList, GostAbiturMarkierungsalgorithmusErgebnis, GostBelegungsfehlerArt, GostHalbjahr } from "@core";
 
 	import type { SchuelerAbiturZulassungProps } from "./SchuelerAbiturZulassungProps";
+	import { useServerState } from '@ui';
 
 	const props = defineProps<SchuelerAbiturZulassungProps>();
+	const serverState = useServerState();
 
 	const belegungsfehler = computed<List<GostBelegpruefungErgebnisFehler>>(() => {
 		const res = new ArrayList<GostBelegpruefungErgebnisFehler>();

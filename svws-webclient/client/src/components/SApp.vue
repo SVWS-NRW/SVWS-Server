@@ -27,7 +27,7 @@
 				</template>
 				<template #version>
 					<div class="flex gap-1">
-						<div class="mt-1">{{ version }}<span v-if="version.includes('SNAPSHOT')">&nbsp;{{ servermode.name() }}-Mode&nbsp;<a :href="`https://github.com/SVWS-NRW/SVWS-Server/commit/${githash}`">{{ githash.substring(0, 8) }}</a></span></div>
+						<div class="mt-1">{{ version }}<span v-if="version.includes('SNAPSHOT')">&nbsp;{{ serverState.mode.name() }}-Mode&nbsp;<a :href="`https://github.com/SVWS-NRW/SVWS-Server/commit/${githash}`">{{ githash.substring(0, 8) }}</a></span></div>
 						<svws-ui-button type="transparent" @click="copyToClipboard">
 							<span class="icon i-ri-file-copy-line" v-if="copied === null" />
 							<span class="icon i-ri-error-warning-fill" v-else-if="copied === false" />
@@ -62,7 +62,7 @@
 				<div class="h-full flex flex-col">
 					<div class="secondary-menu--headline">
 						<h1> {{ menu.mainEntry.text }} </h1>
-						<div><abschnitt-auswahl :daten="schuljahresabschnittsauswahl" /></div>
+						<div><abschnitt-auswahl /></div>
 					</div>
 					<div class="secondary-menu--header" />
 					<div class="secondary-menu--content">
@@ -115,12 +115,15 @@
 
 	import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 	import type { TabManager, TabData } from "@ui";
-	import { useRegionSwitch } from "@ui";
+	import { useRegionSwitch, useServerState, useSchuleState } from "@ui";
 	import type { AppProps } from './SAppProps';
 	import { githash } from '../../githash';
 	import { version } from '../../version';
 
 	const props = defineProps<AppProps>();
+	const serverState = useServerState();
+
+	const schuleState = useSchuleState();
 
 	const { focusHelpVisible, focusSwitchingEnabled, enable, disable } = useRegionSwitch();
 	const appLayout = ref();
@@ -150,7 +153,7 @@
 	});
 
 	const schulname = computed<string>(() => {
-		const name = props.schuleStammdaten.bezeichnung1;
+		const name = schuleState.stammdaten.bezeichnung1;
 		return (name.length > 0) ? name : "Fehlende Bezeichnung für die Schule";
 	});
 

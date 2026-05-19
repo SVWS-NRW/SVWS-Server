@@ -6,7 +6,6 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeSchuelerAbitur, type RouteSchuelerAbitur } from "~/router/apps/schueler/abitur/RouteSchuelerAbitur";
 
 import type { SchuelerAbiturZulassungProps } from "~/components/schueler/abitur/SchuelerAbiturZulassungProps";
-import { api } from "~/router/Api";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeSchueler } from "../RouteSchueler";
 
@@ -32,8 +31,6 @@ export class RouteSchuelerAbiturZulassung extends RouteNode<any, RouteSchuelerAb
 
 	public getProps(to: RouteLocationNormalized): SchuelerAbiturZulassungProps {
 		return {
-			serverMode: api.mode,
-			schule: api.schuleStammdaten,
 			schueler: routeSchueler.data.manager.auswahl(),
 			managerLaufbahnplanung: () => routeSchuelerAbitur.data.managerLaufbahnplanung,
 			ergebnisBelegpruefung: () => routeSchuelerAbitur.data.ergebnisBelegpruefung,

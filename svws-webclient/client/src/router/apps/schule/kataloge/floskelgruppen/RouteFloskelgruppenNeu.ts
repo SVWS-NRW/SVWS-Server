@@ -25,8 +25,6 @@ export class RouteFloskelgruppenNeu extends RouteNode<any, RouteFloskelgruppen> 
 		return {
 			manager: () => routeFloskelgruppen.data.manager,
 			add: routeFloskelgruppen.data.add,
-			schuljahr: api.abschnitt.schuljahr,
-			schulform: api.schulform,
 			goToDefaultView: routeFloskelgruppen.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			benutzerKompetenzen: api.benutzerKompetenzen,

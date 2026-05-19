@@ -22,9 +22,6 @@ export class RouteLehrerIndividualdaten extends RouteNode<any, RouteLehrer> {
 
 	public getProps(to: RouteLocationNormalized): LehrerIndividualdatenProps {
 		return {
-			validatorKontext: () => api.validatorKontext,
-			schulform: api.schulform,
-			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			patch: routeLehrer.data.patch,
 			lehrerListeManager: () => routeLehrer.data.manager,

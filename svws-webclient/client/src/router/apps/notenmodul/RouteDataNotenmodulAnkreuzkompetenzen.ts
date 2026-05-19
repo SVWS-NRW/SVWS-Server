@@ -8,6 +8,8 @@ import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
 import { routeNotenmodulLeistungenData } from "./RouteNotenmodulLeistungenData";
+import { abschnittState } from "~/states/AbschnittStateImpl";
+import { schuleState } from "~/states/SchuleStateImpl";
 
 
 interface RouteStateNotenmodulAnkreuzkompetenzen extends RouteStateAuswahlInterface<EnmLerngruppenAuswahlListeManager> {
@@ -34,8 +36,8 @@ export class RouteDataNotenmodulAnkreuzkompetenzen extends RouteDataAuswahl<EnmL
 	}
 
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateNotenmodulAnkreuzkompetenzen>> {
-		const manager = new EnmLerngruppenAuswahlListeManager(routeNotenmodul.data.manager, api.schuleStammdaten.idSchuljahresabschnitt,
-			api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte, api.schulform);
+		const manager = new EnmLerngruppenAuswahlListeManager(routeNotenmodul.data.manager, schuleState.abschnitt.id,
+			schuleState.abschnitt.id, abschnittState.alle, schuleState.schulform);
 		return { manager };
 	}
 

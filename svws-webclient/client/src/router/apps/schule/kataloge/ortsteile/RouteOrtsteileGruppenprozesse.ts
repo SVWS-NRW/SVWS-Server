@@ -3,11 +3,11 @@ import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
-import { routeApp } from "../../../RouteApp";
 import { ViewType } from "@ui";
 import type { RouteOrtsteile } from "~/router/apps/schule/kataloge/ortsteile/RouteOrtsteile";
 import { routeOrtsteile } from "~/router/apps/schule/kataloge/ortsteile/RouteOrtsteile";
 import type { OrtsteileGruppenprozesseProps } from "~/components/schule/kataloge/ortsteile/gruppenprozesse/OrtsteileGruppenprozesseProps";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 const OrtsteileGruppenprozesse = () => import("~/components/schule/kataloge/ortsteile/gruppenprozesse/OrtsteileGruppenprozesse.vue");
 
@@ -23,12 +23,11 @@ export class RouteOrtsteileGruppenprozesse extends RouteNode<any, RouteOrtsteile
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
 	}
 
 	public getProps(_: RouteLocationNormalized): OrtsteileGruppenprozesseProps {
 		return {
-			serverMode: api.mode,
 			manager: () => routeOrtsteile.data.manager,
 			delete: routeOrtsteile.data.delete,
 			deleteCheck: routeOrtsteile.data.deleteCheck,

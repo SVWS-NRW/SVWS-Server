@@ -2,11 +2,11 @@ import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { ViewType } from "@ui";
 import { RouteNode } from "~/router/RouteNode";
-import { routeApp } from "~/router/apps/RouteApp";
 import { api } from "~/router/Api";
 import type { TeilleistungsartenGruppenprozesseProps } from
 	"~/components/schule/kataloge/teilleistungsarten/gruppenprozesse/TeilleistungsartenGruppenprozesseProps";
 import { routeTeilleistungsarten, type RouteTeilleistungsarten } from "./RouteTeilleistungsarten";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 const TeilleistungsartenGruppenprozesse = () => import(
 	"~/components/schule/kataloge/teilleistungsarten/gruppenprozesse/TeilleistungsartenGruppenprozesse.vue");
@@ -25,12 +25,11 @@ class RouteTeilleistungsartenGruppenprozesse extends RouteNode<any, RouteTeillei
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): TeilleistungsartenGruppenprozesseProps {
 		return {
-			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeTeilleistungsarten.data.manager,
 			delete: routeTeilleistungsarten.data.delete,

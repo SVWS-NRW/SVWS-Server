@@ -98,11 +98,11 @@
 				<td v-if="hatSpaltenZeitraum" class="col-span-4" />
 				<td class="flex flex-row justify-end">
 					<svws-ui-button @click="remove" type="trash" :disabled="auswahl.length === 0" />
-					<svws-ui-button v-if="serverMode === ServerMode.DEV" :disabled="auswahl.length === 0"
+					<svws-ui-button v-if="serverState.hasDev" :disabled="auswahl.length === 0"
 						@click="suchen" type="icon" size="small" title="Noch nicht implementiert: Diese Sprache in den Leistungsdaten suchen und Beginn und Ende aktualisieren">
 						<span class="icon i-ri-search-line" />
 					</svws-ui-button>
-					<svws-ui-button v-if="serverMode === ServerMode.DEV" :disabled="auswahl.length === 0"
+					<svws-ui-button v-if="serverState.hasDev" :disabled="auswahl.length === 0"
 						@click="ermitteln" type="icon" size="small" title="Noch nicht implementiert: Das GER/Latinum anhand aller Daten ermitteln">
 						<span class="icon i-ri-calculator-line" />
 					</svws-ui-button>
@@ -120,8 +120,8 @@
 	import { computed, ref, shallowRef, watch } from 'vue';
 	import type { ComponentExposed } from 'vue-component-type-helpers';
 	import type { List, Sprachbelegung } from '@core';
-	import { ArrayList, Fach, Jahrgaenge, Schulform, Schulgliederung, ServerMode, Sprachreferenzniveau } from '@core';
-	import { GridManager, type SchuelerListeManager, type SvwsUiSelect } from '@ui';
+	import { ArrayList, Fach, Jahrgaenge, Schulform, Schulgliederung, Sprachreferenzniveau } from '@core';
+	import { GridManager, useSchuleState, useServerState, type SchuelerListeManager, type SvwsUiSelect } from '@ui';
 	import { SchuelerSprachbelegungModelProxy } from './SchuelerSprachbelegungModelProxy';
 
 	const props = defineProps<{
@@ -130,18 +130,18 @@
 		addSprachbelegung: (data: Partial<Sprachbelegung>) => Promise<Sprachbelegung | null>;
 		removeSprachbelegung: (data: Sprachbelegung) => Promise<Sprachbelegung>;
 		schuelerListeManager: () => SchuelerListeManager;
-		schulform: Schulform;
-		serverMode: ServerMode;
 		readonly: boolean;
 	}>();
+	const serverState = useServerState();
+	const schuleState = useSchuleState();
 
 	const schuljahr = computed<number>(() => props.schuelerListeManager().schuelerGetSchuljahrOrException());
 	const auswahl = ref(new Array<Sprachbelegung>());
 	const selectSprachen = ref<ComponentExposed<typeof SvwsUiSelect<string[]>>>();
 	const schulgliederung = computed<Schulgliederung | null>(() => Schulgliederung.data().getWertByKuerzel(props.schuelerListeManager().auswahl().schulgliederung));
-	const hatSpalteNachweis = computed<boolean>(() => props.schulform === Schulform.WB);
+	const hatSpalteNachweis = computed<boolean>(() => schuleState.schulform === Schulform.WB);
 	const hatSpaltenZeitraum = computed(() => {
-		const istBKoderSB = [Schulform.BK, Schulform.SB].includes(props.schulform);
+		const istBKoderSB = [Schulform.BK, Schulform.SB].includes(schuleState.schulform);
 		const istSpezielleGliederung = (schulgliederung.value !== null) && [Schulgliederung.D01, Schulgliederung.D02].includes(schulgliederung.value);
 		return !(istBKoderSB && !istSpezielleGliederung);
 	});

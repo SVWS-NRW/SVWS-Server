@@ -40,7 +40,6 @@ export class RouteBenutzerprofilNutzereinstellungen extends RouteNode<RouteDataB
 		return {
 			benutzer: () => this.data.benutzer,
 			benutzertyp: api.benutzertyp,
-			mode: api.mode,
 			patch: this.data.patch,
 			benutzerEMailDaten: () => this.data.benutzerEMailDaten,
 			patchBenutzerEMailDaten: this.data.patchBenutzerEMailDaten,

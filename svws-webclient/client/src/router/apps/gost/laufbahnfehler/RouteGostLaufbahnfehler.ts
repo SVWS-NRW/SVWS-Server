@@ -10,9 +10,9 @@ import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
 import { RouteDataGostLaufbahnfehler } from "~/router/apps/gost/laufbahnfehler/RouteDataGostLaufbahnfehler";
 
 import { ConfigElement } from "../../../../../../ui/src/utils/Config";
-import { routeApp } from "../../RouteApp";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeError } from "~/router/error/RouteError";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 const SGostLaufbahnfehler = () => import("~/components/gost/laufbahnfehler/SGostLaufbahnfehler.vue");
 
@@ -41,7 +41,7 @@ export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehl
 		try {
 			const { abiturjahr } = params ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: null };
 			if ((abiturjahr === null) || (abiturjahr === -1)) {
-				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr } };
+				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, abiturjahr } };
 			}
 			return false;
 		} catch (e) {
@@ -58,7 +58,7 @@ export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehl
 				const { abiturjahr } = RouteNode.getIntParams(to_params, ["abiturjahr"]);
 				if (abiturjahr === undefined || abiturjahr === -1) {
 					const [alternativ] = this.parent.data.mapAbiturjahrgaenge.values();
-					return { name: this.parent.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: alternativ.abiturjahr } };
+					return { name: this.parent.defaultChild!.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, abiturjahr: alternativ.abiturjahr } };
 				}
 			}
 			return true;
@@ -84,8 +84,6 @@ export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehl
 
 	public getProps(to: RouteLocationNormalized): GostLaufbahnfehlerProps {
 		return {
-			schulform: api.schulform,
-			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			benutzerKompetenzenAbiturjahrgaenge: api.benutzerKompetenzenAbiturjahrgaenge,
 			listBelegpruefungsErgebnisse: () => this.data.listBelegpruefungsErgebnisse,

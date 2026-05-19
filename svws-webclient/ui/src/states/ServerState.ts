@@ -1,0 +1,47 @@
+import { inject, type InjectionKey } from "vue";
+import { DeveloperNotificationException } from "../../../core/src/core/exceptions/DeveloperNotificationException";
+import type { ServerMode } from "../../../core/src/core/types/ServerMode";
+
+/**
+ * Die Schnittstelle für den Zustand der Schuljahresabschnitte und des aktuell ausgewählten Abschnitts
+ */
+export interface ServerState {
+
+	/**
+	 * Gibt den ServerMode des Servers zurück, sofern bereits ein Login stattgefunden hat.
+	 *
+	 * @returns der ServerMode
+	 */
+	get mode(): ServerMode;
+
+	/**
+	 * Prüft, ob der ServerMode DEV zulässt
+	 *
+	 * @returns true, wenn DEV erlaubt ist
+	 */
+	get hasDev(): boolean
+
+	/**
+	 * Prüft, ob der ServerMode DEV zulässt
+	 *
+	 * @returns true, wenn DEV erlaubt ist
+	 */
+	get hasAlpha(): boolean
+
+	/**
+	 * Prüft, ob der ServerMode DEV zulässt
+	 *
+	 * @returns true, wenn DEV erlaubt ist
+	 */
+	get hasBeta(): boolean
+}
+
+export const ServerStateKey: InjectionKey<ServerState> = Symbol('ServerState');
+
+export function useServerState(): ServerState {
+	const state = inject(ServerStateKey);
+	if (state === undefined) {
+		throw new DeveloperNotificationException("Es wurden keine Informationen des ServerState über provide in der main.ts eingebunden");
+	}
+	return state;
+}

@@ -130,9 +130,10 @@
 	import type { GostKursplanungProps } from "./SGostKursplanungProps";
 	import type { DownloadPDFTypen } from "./DownloadPDFTypen";
 	import { BenutzerKompetenz, GostHalbjahr, HashSet, ReportingReportvorlage, ServerMode, SetUtils } from "@core";
-	import { useRegionSwitch } from "@ui";
+	import { useRegionSwitch, useServerState } from "@ui";
 
 	const props = defineProps<GostKursplanungProps>();
+	const serverState = useServerState();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
@@ -171,7 +172,7 @@
 	const dropdownList = computed(() => {
 		const actions = [{ text: "Schülerliste markierte Kurse", action: () => downloadPDF("Schülerliste markierte Kurse"), default: true }];
 
-		if (ServerMode.DEV.checkServerMode(props.serverMode)) {
+		if (ServerMode.DEV.checkServerMode(serverState.mode)) {
 			actions.push({ text: "E-Mail mit Schülerliste markierte Kurse", action: () => sendPdfByMail(), default: false });
 		}
 

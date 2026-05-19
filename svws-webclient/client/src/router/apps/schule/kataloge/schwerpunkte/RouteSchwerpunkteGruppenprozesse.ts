@@ -3,9 +3,9 @@ import { routeSchwerpunkte, type RouteSchwerpunkte } from "./RouteSchwerpunkte";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { ViewType } from "@ui";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { routeApp } from "~/router/apps/RouteApp";
 import type { SchwerpunkteGruppenprozesseProps } from "~/components/schule/kataloge/schwerpunkte/gruppenprozesse/SchwerpunkteGruppenprozesseProps";
 import { api } from "~/router/Api";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 const SchwerpunkteGruppenprozesse = () => import(
 	"~/components/schule/kataloge/schwerpunkte/gruppenprozesse/SchwerpunkteGruppenprozesse.vue");
@@ -20,12 +20,11 @@ class RouteSchwerpunkteGruppenprozesse extends RouteNode<any, RouteSchwerpunkte>
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): SchwerpunkteGruppenprozesseProps {
 		return {
-			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeSchwerpunkte.data.manager,
 			delete: routeSchwerpunkte.data.delete,

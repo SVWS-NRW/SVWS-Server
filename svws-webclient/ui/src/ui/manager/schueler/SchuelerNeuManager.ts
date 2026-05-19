@@ -15,7 +15,7 @@ export class SchuelerNeuManager {
 	private readonly _klassenByIdAbschnitt: Map<number, List<KlassenListeEintrag>>;
 	private readonly _jahrgaengeById: Map<number, JahrgangsDaten>;
 	private readonly _religionenById: Map<number, ReligionEintrag>;
-	private readonly _schuljahresabschnitte: List<Schuljahresabschnitt>;
+	private readonly _schuljahresabschnitte: Iterable<Schuljahresabschnitt>;
 	private readonly _aktuellerAbschnitt: Schuljahresabschnitt;
 	private readonly _schuljahresabschnitteFilteredById: Map<number, Schuljahresabschnitt>;
 
@@ -35,7 +35,7 @@ export class SchuelerNeuManager {
 		einschulungsartenById: Map<number, EinschulungsartKatalogEintrag>,
 		jahrgaengeById: Map<number, JahrgangsDaten>,
 		religionenById: Map<number, ReligionEintrag>,
-		schuljahresabschnitte: List<Schuljahresabschnitt>,
+		schuljahresabschnitte: Iterable<Schuljahresabschnitt>,
 		klassenByIdAbschnitt: Map<number, List<KlassenListeEintrag>>,
 		aktuellerAbschnitt: Schuljahresabschnitt
 	) {
@@ -88,10 +88,6 @@ export class SchuelerNeuManager {
 
 	get aktuellerAbschnitt(): Schuljahresabschnitt {
 		return this._aktuellerAbschnitt;
-	}
-
-	get schuljahresabschnitte(): List<Schuljahresabschnitt> {
-		return this._schuljahresabschnitte;
 	}
 
 	get schuljahresabschnitteFilteredById(): Map<number, Schuljahresabschnitt> {

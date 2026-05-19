@@ -153,16 +153,16 @@
 
 	import { computed } from "vue";
 	import { AbiturdatenManager, ArrayList, Fach, Fachgruppe, Jahrgaenge } from "@core";
-	import type { GostFach, GostFaecherManager, List, ServerMode } from "@core";
-	import { GridManager } from "@ui";
+	import type { GostFach, GostFaecherManager, List } from "@core";
+	import { GridManager, useServerState } from "@ui";
 
 	const props = defineProps<{
-		serverMode: ServerMode;
 		faecherManager: () => GostFaecherManager;
 		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<void>;
 		abiturjahr: number;
 		hatUpdateKompetenz: boolean;
 	}>();
+	const serverState = useServerState();
 
 	const schuljahr = computed<number>(() => props.faecherManager().getSchuljahr());
 
@@ -178,7 +178,7 @@
 
 	const textPJKLeitfaecher = computed<string>(() => {
 		// experimenteller Code
-		if (AbiturdatenManager.nutzeExperimentellenCode(props.serverMode, props.abiturjahr)) {
+		if (AbiturdatenManager.nutzeExperimentellenCode(serverState.mode, props.abiturjahr)) {
 			return "Referenzfächer";
 		}
 		return "Leitfächer";
@@ -214,7 +214,7 @@
 	function istMoeglichQ1(fach: GostFach): boolean {
 		const fg = Fach.getBySchluesselOrDefault(fach.kuerzel).getFachgruppe(schuljahr.value);
 		// experimenteller Code
-		if (AbiturdatenManager.nutzeExperimentellenCode(props.serverMode, props.abiturjahr)) {
+		if (AbiturdatenManager.nutzeExperimentellenCode(serverState.mode, props.abiturjahr)) {
 			return (fg !== Fachgruppe.FG_PX);
 		}
 		return true;
@@ -223,7 +223,7 @@
 	function istMoeglichAbiGK(fach: GostFach): boolean {
 		const fg = Fach.getBySchluesselOrDefault(fach.kuerzel).getFachgruppe(schuljahr.value);
 		// experimenteller Code
-		if (AbiturdatenManager.nutzeExperimentellenCode(props.serverMode, props.abiturjahr)) {
+		if (AbiturdatenManager.nutzeExperimentellenCode(serverState.mode, props.abiturjahr)) {
 			return (fg !== Fachgruppe.FG_ME) && (fg !== Fachgruppe.FG_VX);
 		}
 		return (fg !== Fachgruppe.FG_ME) && (fg !== Fachgruppe.FG_VX) && (fg !== Fachgruppe.FG_PX);
@@ -282,7 +282,7 @@
 
 	function hatWahlProjektkursStunden(fach: GostFach): boolean {
 		// experimenteller Code
-		if (AbiturdatenManager.nutzeExperimentellenCode(props.serverMode, props.abiturjahr)) {
+		if (AbiturdatenManager.nutzeExperimentellenCode(serverState.mode, props.abiturjahr)) {
 			return false;
 		}
 		return istPJK(fach);

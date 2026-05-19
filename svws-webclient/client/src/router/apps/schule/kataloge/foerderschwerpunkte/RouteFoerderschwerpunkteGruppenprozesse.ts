@@ -6,8 +6,8 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { api } from "~/router/Api";
-import { routeApp } from "~/router/apps/RouteApp";
 import { routeFoerderschwerpunkte } from "~/router/apps/schule/kataloge/foerderschwerpunkte/RouteFoerderschwerpunkte";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 const FoerderschwerpunkteGruppenprozesse = () => import(
 	"~/components/schule/kataloge/foerderschwerpunkte/gruppenprozesse/FoerderschwerpunkteGruppenprozesse.vue");
@@ -24,13 +24,11 @@ export class RouteFoerderschwerpunkteGruppenprozesse extends RouteNode<any, Rout
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): FoerderschwerpunkteGruppenprozesseProps {
 		return {
-			serverMode: api.mode,
-			schulform: api.schulform,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			delete: routeFoerderschwerpunkte.data.delete,
 			deleteCheck: routeFoerderschwerpunkte.data.deleteCheck,

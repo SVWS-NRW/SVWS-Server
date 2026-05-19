@@ -11,6 +11,7 @@ import { type SchuelerIndividualdatenGruppenprozesseProps } from "~/components/s
 import { RouteManager } from "~/router/RouteManager";
 import { RouteDataSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteDataSchuelerIndividualdaten";
 import { routeError } from "~/router/error/RouteError";
+import { serverState } from "~/states/ServerStateImpl";
 
 const SSchuelerIndividualdatenGruppenprozesse = () => import("~/components/schueler/individualdaten/SSchuelerIndividualdatenGruppenprozesse.vue");
 
@@ -28,7 +29,7 @@ export class RouteSchuelerIndividualdatenGruppenprozesse extends RouteNode<Route
 
 	protected checkHidden(params?: RouteParams) {
 		try {
-			if (api.mode === ServerMode.DEV) {
+			if (serverState.hasDev) {
 				return false;
 			}
 			// if (!api.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN))
@@ -51,8 +52,6 @@ export class RouteSchuelerIndividualdatenGruppenprozesse extends RouteNode<Route
 
 	public getProps(_: RouteLocationNormalized): SchuelerIndividualdatenGruppenprozesseProps {
 		return {
-			schulform: api.schulform,
-			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			schuelerListeManager: () => routeSchueler.data.manager,
 			pendingStateManager: () => this.data.pendingStateManager,
@@ -73,4 +72,3 @@ export class RouteSchuelerIndividualdatenGruppenprozesse extends RouteNode<Route
 }
 
 export const routeSchuelerIndividualdatenGruppenprozesse = new RouteSchuelerIndividualdatenGruppenprozesse();
-

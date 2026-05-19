@@ -1,8 +1,7 @@
-import type { SchuleStammdaten, GostKlausurplanManager, GostSchuelerklausurTermin, GostSchuelerklausur } from "@core";
+import type { GostKlausurplanManager, GostSchuelerklausurTermin, GostSchuelerklausur } from "@core";
 import type { SchuelerLernabschnittManager } from "../SchuelerLernabschnittManager";
 
 export interface SchuelerLernabschnittGostKlausurenProps {
-	schule: SchuleStammdaten;
 	manager: () => SchuelerLernabschnittManager;
 	kMan: () => GostKlausurplanManager;
 	hatKlausurManager: () => boolean;

@@ -50,32 +50,33 @@
 	import { computed } from "vue";
 	import type { KonfessionenDatenProps } from "./KonfessionenDatenProps";
 	import { BenutzerKompetenz, Religion } from "@core";
-	import { CoreTypeSelectManager } from "@ui";
+	import { CoreTypeSelectManager, useSchuleState } from "@ui";
 	import { KonfessionModelProxy } from "~/components/schule/kataloge/konfessionen/modelproxy/KonfessionModelProxy";
 
 	const props = defineProps<KonfessionenDatenProps>();
+	const schuleState = useSchuleState();
+
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-	const schuljahr = computed(() => props.manager().getSchuljahr());
 
 	const model = new KonfessionModelProxy(
 		() => props.manager().daten(),
 		() => props.manager().liste.list(),
-		schuljahr.value,
+		schuleState.abschnitt.schuljahr,
 		props.patch
 	);
 
 	const konfessionKuerzelSelectManager = new CoreTypeSelectManager({
 		clazz: Religion.class,
-		schuljahr: schuljahr.value,
-		schulformen: props.schulform,
+		schuljahr: schuleState.abschnitt.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "kuerzel",
 		selectionDisplayText: "kuerzel",
 	});
 
 	const konfessionTextSelectManager = new CoreTypeSelectManager({
 		clazz: Religion.class,
-		schuljahr: schuljahr.value,
-		schulformen: props.schulform,
+		schuljahr: schuleState.abschnitt.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});

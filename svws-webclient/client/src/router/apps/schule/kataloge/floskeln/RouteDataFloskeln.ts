@@ -8,6 +8,8 @@ import { api } from "~/router/Api";
 import { routeFloskelnDaten } from "~/router/apps/schule/kataloge/floskeln/RouteFloskelnDaten";
 import { routeFloskelnGruppenprozesse } from "~/router/apps/schule/kataloge/floskeln/RouteFloskelnGruppenprozesse";
 import { routeFloskelnNeu } from "~/router/apps/schule/kataloge/floskeln/RouteFloskelnNeu";
+import { schuleState } from "~/states/SchuleStateImpl";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
@@ -30,12 +32,8 @@ export class RouteDataFloskeln extends RouteDataAuswahl<FloskelnListeManager, Ro
 		const jahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const faecher = await api.server.getFaecher(api.schema);
 
-		const manager = new FloskelnListeManager(
-			api.abschnitt.id,
-			api.schuleStammdaten.idSchuljahresabschnitt,
-			api.schuleStammdaten.abschnitte,
-			jahrgaenge,
-			api.schulform, floskeln, floskelgruppen, faecher);
+		const manager = new FloskelnListeManager(schuleState.abschnitt.id, schuleState.abschnitt.id, abschnittState.alle, jahrgaenge,
+			schuleState.schulform, floskeln, floskelgruppen, faecher);
 		return { manager };
 	}
 

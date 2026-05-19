@@ -8,6 +8,8 @@ import { routeBetriebsartenGruppenprozesse } from "./RouteBetriebsartenGruppenpr
 import { routeBetriebsartenNeu } from "./RouteBetriebsartenNeu";
 import { routeBetriebsartenDaten } from "./RouteBetriebsartenDaten";
 import { api } from "~/router/Api";
+import { abschnittState } from "~/states/AbschnittStateImpl";
+import { schuleState } from "~/states/SchuleStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
@@ -28,8 +30,8 @@ export class RouteDataBetriebsarten extends RouteDataAuswahl<BetriebsartenListeM
 
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateAuswahlInterface<BetriebsartenListeManager>>> {
 		const betriebsarten = await api.server.getBetriebsarten(api.schema);
-		const manager = new BetriebsartenListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
-			api.schulform, betriebsarten);
+		const manager = new BetriebsartenListeManager(idSchuljahresabschnitt, schuleState.abschnitt.id, abschnittState.alle,
+			schuleState.schulform, betriebsarten);
 		return { manager };
 	}
 

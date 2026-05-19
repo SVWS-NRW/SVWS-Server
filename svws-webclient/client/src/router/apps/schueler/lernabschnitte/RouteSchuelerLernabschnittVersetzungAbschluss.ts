@@ -26,7 +26,6 @@ export class RouteSchuelerLernabschnittVersetzungAbschluss extends RouteNode<any
 
 	public getProps(to: RouteLocationNormalized): SchuelerLernabschnittVersetzungAbschlussProps {
 		return {
-			schule: api.schuleStammdaten,
 			manager: () => routeSchuelerLernabschnitte.data.manager,
 			patch: routeSchuelerLernabschnitte.data.patchLernabschnitt,
 			patchBemerkungen: routeSchuelerLernabschnitte.data.patchBemerkungen,

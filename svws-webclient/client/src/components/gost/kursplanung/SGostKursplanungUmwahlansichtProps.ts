@@ -1,9 +1,7 @@
-import type { BenutzerKompetenz, GostBlockungRegelUpdate, GostBlockungsdatenManager, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungsergebnisManager, Schueler, Schulform, ServerMode } from "@core";
+import type { BenutzerKompetenz, GostBlockungRegelUpdate, GostBlockungsdatenManager, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungsergebnisManager, Schueler } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface GostKursplanungUmwahlansichtProps {
-	schulform: Schulform;
-	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	benutzerKompetenzenAbiturjahrgaenge: Set<number>;
 	hatBlockung: boolean,

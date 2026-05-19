@@ -1,7 +1,6 @@
-import type { LehrerListeEintrag, List, Schulform, StundenplanKonfiguration, StundenplanManager, StundenplanPausenzeit, StundenplanZeitraster, Wochentag } from "@core";
+import type { LehrerListeEintrag, List, StundenplanKonfiguration, StundenplanManager, StundenplanPausenzeit, StundenplanZeitraster, Wochentag } from "@core";
 
 export interface StundenplanZeitrasterPausenzeitProps {
-	schulform: Schulform;
 	stundenplanManager: () => StundenplanManager;
 	patchPausenzeit: (daten: Partial<StundenplanPausenzeit>, id: number) => Promise<void>;
 	removePausenzeiten: (pausenzeiten: Iterable<StundenplanPausenzeit>) => Promise<void>;

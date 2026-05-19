@@ -1,9 +1,4 @@
-import { LeitungsfunktionenListeManager } from "@ui";
-import type { Leitungsfunktion, List } from "@core";
-import type { SimpleOperationResponse } from "@core";
-import { BenutzerKompetenz } from "@core";
-import { ArrayList } from "@core";
-import { ViewType } from "@ui";
+
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import { api } from "~/router/Api";
@@ -11,6 +6,11 @@ import type { RouteParamsRawGeneric } from "vue-router";
 import { routeLeitungsfunktionenDaten } from "~/router/apps/schule/kataloge/leitungsfunktionen/RouteLeitungsfunktionenDaten";
 import { routeLeitungsfunktionenGruppenprozesse } from "~/router/apps/schule/kataloge/leitungsfunktionen/RouteLeitungsfunktionenGruppenprozesse";
 import { routeLeitungsfunktionenNeu } from "~/router/apps/schule/kataloge/leitungsfunktionen/RouteLeitungsfunktionenNeu";
+import { abschnittState } from "~/states/AbschnittStateImpl";
+import { schuleState } from "~/states/SchuleStateImpl";
+import type { Leitungsfunktion, List, SimpleOperationResponse } from "@core";
+import { ArrayList, BenutzerKompetenz } from "@core";
+import { LeitungsfunktionenListeManager, ViewType } from "@ui";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
@@ -27,8 +27,8 @@ export class RouteDataLeitungsfunktionen extends RouteDataAuswahl<Leitungsfunkti
 
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<LeitungsfunktionenListeManager>>> {
 		const leitungsfunktionen = await api.server.getLeitungsfunktionen(api.schema);
-		const manager = new LeitungsfunktionenListeManager(api.abschnitt.id, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
-			api.schulform, leitungsfunktionen);
+		const manager = new LeitungsfunktionenListeManager(schuleState.abschnitt.id, schuleState.abschnitt.id, abschnittState.alle,
+			schuleState.schulform, leitungsfunktionen);
 		return { manager };
 	}
 

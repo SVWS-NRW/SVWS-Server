@@ -11,6 +11,8 @@ import { routeInit } from "~/router/init/RouteInit";
 import SLogin from "~/components/SLogin.vue";
 import type { LoginProps } from "~/components/SLoginProps";
 import type { RouteParams, RouteLocationRaw } from "vue-router";
+import { schuleState } from "~/states/SchuleStateImpl";
+import { serverState } from "~/states/ServerStateImpl";
 
 export class RouteLogin extends RouteNode<any, any> {
 
@@ -39,7 +41,8 @@ export class RouteLogin extends RouteNode<any, any> {
 	public login = async (schema: string, username: string, password: string): Promise<void> => {
 		await api.login(schema, username, password);
 		if (api.authenticated) {
-			if (await api.init()) {
+			try {
+				await Promise.all([schuleState.init(), serverState.init()]);
 				// Überprüfe das Schema, falls ein redirect nach dem Login geplant ist
 				if (this.routepath !== "/") {
 					if (!this.routepath.startsWith("/" + encodeURIComponent(schema))) {
@@ -48,9 +51,10 @@ export class RouteLogin extends RouteNode<any, any> {
 				}
 				await RouteManager.doRoute(this.routepath);
 				return;
-			}
-			if (api.benutzerIstAdmin) {
-				await RouteManager.doRoute(routeInit.name);
+			} catch {
+				if (api.benutzerIstAdmin) {
+					await RouteManager.doRoute(routeInit.name);
+				}
 			}
 		}
 	};

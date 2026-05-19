@@ -50,21 +50,21 @@
 		SchuelerLernabschnittsdaten } from "@core";
 	import { SchuelerStatus, Schulform } from "@core";
 	import { computed } from "vue";
-	import { CoreTypeSelectManager, SelectManager } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useAbschnittState, useSchuleState } from "@ui";
 
 	const props = defineProps<{
 		manager: () => SchuelerSchnelleingabeManager;
 		patchSchueler: (patchObject: Partial<SchuelerStammdaten>, id: number) => Promise<void>;
 		patchSchulbesuchsdaten: (data: Partial<SchuelerSchulbesuchsdaten>, idSchueler: number) => Promise<void>;
 		patchLernabschnittsdaten: (data: Partial<SchuelerLernabschnittsdaten>, idEintrag: number) => Promise<void>;
-		schulform: Schulform;
 		readonly: boolean;
 		schulenMitPrimaerstufe: boolean;
-		schuljahr: number;
 	}>();
+	const abschnittState = useAbschnittState();
+	const schuleState = useSchuleState();
 
 	const manager = () => props.manager();
-	const schulenMitBKoderSK = computed(() => (props.schulform === Schulform.BK) || (props.schulform === Schulform.SK));
+	const schulenMitBKoderSK = computed(() => (schuleState.schulform === Schulform.BK) || (schuleState.schulform === Schulform.SK));
 	const jahrgaenge = computed(() => Array.from(props.manager().jahrgaengeById.values()));
 	const schuljahresabschnitte = computed(() => Array.from(props.manager().schuljahresabschnitte));
 	const einschulungsarten = computed(() => props.manager().einschulungsartenById.values());
@@ -75,7 +75,7 @@
 	});
 
 	const status = computed<SchuelerStatusKatalogEintrag | null>({
-		get: () => SchuelerStatus.data().getWertByKuerzel('' + props.manager().stammdaten.status)?.daten(props.schuljahr) ?? null,
+		get: () => SchuelerStatus.data().getWertByKuerzel('' + props.manager().stammdaten.status)?.daten(abschnittState.auswahl.schuljahr) ?? null,
 		set: (value: SchuelerStatusKatalogEintrag | null) => {
 			props.manager().stammdaten.status = value?.id ?? -1;
 			void props.patchSchueler({ status: value?.id }, manager().stammdaten.id);
@@ -111,8 +111,8 @@
 
 	const statusManager = new CoreTypeSelectManager({
 		clazz: SchuelerStatus.class,
-		schuljahr: props.schuljahr,
-		schulformen: props.schulform,
+		schuljahr: abschnittState.auswahl.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text" });
 

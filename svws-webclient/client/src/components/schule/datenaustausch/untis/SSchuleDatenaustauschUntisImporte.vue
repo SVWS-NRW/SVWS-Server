@@ -191,8 +191,10 @@
 	import type { SchuleDatenaustauschUntisImporteProps } from './SSchuleDatenaustauschUntisImporteProps';
 	import { StundenplanListeEintragMinimal, type Schuljahresabschnitt, type SimpleOperationResponse } from '@core';
 	import { UntisGPP002Csv, UntisGPU001Csv, UntisGPU002Csv, UntisGPU014Csv } from './UntisGPU';
+	import { useAbschnittState } from '@ui';
 
 	const props = defineProps<SchuleDatenaustauschUntisImporteProps>();
+	const abschnittState = useAbschnittState();
 
 	type GPU = 'rauemeGPU005' | 'stundenplanGPU001' | 'stundenplanGPU001002' | 'stundenplanGPP002GPU014';
 	const aktuell = shallowRef<GPU>('stundenplanGPU001');
@@ -222,7 +224,7 @@
 	}
 
 	function initStundenplanParameter() {
-		gueltigAb.value = getGueltigAb(props.schuljahresabschnitt());
+		gueltigAb.value = getGueltigAb(abschnittState.auswahl);
 		bezeichnung.value = `Import ${new Date().toLocaleDateString('de', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Europe/Berlin', hour: 'numeric', minute: 'numeric' })}`;
 		tmpGPU001.value = null;
 		tmpGPU002.value = null;
@@ -301,8 +303,8 @@
 		loading.value = true;
 		const entry = new StundenplanListeEintragMinimal();
 		entry.bezeichnung = bezeichnung.value;
-		entry.idSchuljahresabschnitt = props.schuljahresabschnitt().id;
-		entry.gueltigAb = gueltigAb.value ?? getGueltigAb(props.schuljahresabschnitt());
+		entry.idSchuljahresabschnitt = abschnittState.auswahl.id;
+		entry.gueltigAb = gueltigAb.value ?? getGueltigAb(abschnittState.auswahl);
 		const formData = new FormData();
 		formData.append('entry', StundenplanListeEintragMinimal.transpilerToJSON(entry));
 		formData.append("data", resultGPU001.value.asString);
@@ -345,8 +347,8 @@
 		loading.value = true;
 		const entry = new StundenplanListeEintragMinimal();
 		entry.bezeichnung = bezeichnung.value;
-		entry.idSchuljahresabschnitt = props.schuljahresabschnitt().id;
-		entry.gueltigAb = gueltigAb.value ?? getGueltigAb(props.schuljahresabschnitt());
+		entry.idSchuljahresabschnitt = abschnittState.auswahl.id;
+		entry.gueltigAb = gueltigAb.value ?? getGueltigAb(abschnittState.auswahl);
 		const formData = new FormData();
 		formData.append('entry', StundenplanListeEintragMinimal.transpilerToJSON(entry));
 		formData.append("data", file);

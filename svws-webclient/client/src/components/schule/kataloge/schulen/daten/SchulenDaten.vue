@@ -85,18 +85,20 @@
 	import type { SchulenDatenProps } from "./SchulenDatenProps";
 	import { computed } from "vue";
 	import { BenutzerKompetenz, Schulform } from "@core";
-	import { CoreTypeSelectManager } from "@ui";
+	import { CoreTypeSelectManager, useSchuleState } from "@ui";
 	import { SchuleModelProxy } from "~/components/schule/kataloge/schulen/modelproxy/SchuleModelProxy";
 
 	const props = defineProps<SchulenDatenProps>();
+	const schuleState = useSchuleState();
+
 	const model = new SchuleModelProxy(() => props.manager().daten(), () => props.manager().liste.list(), props.patch);
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const readonly = computed(() => !hatKompetenzUpdate.value);
 
 	const schulformSelectManager = new CoreTypeSelectManager({
 		clazz: Schulform.class,
-		schuljahr: props.schuljahr,
-		schulformen: props.schulform,
+		schuljahr: schuleState.abschnitt.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});

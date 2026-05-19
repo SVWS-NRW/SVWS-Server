@@ -5,8 +5,8 @@ import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
 import { routeFaecher, type RouteFaecher } from "./RouteFaecher";
-import { routeApp } from "../../../RouteApp";
 import { api } from "~/router/Api";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 const FaecherNeu = () => import("~/components/schule/kataloge/faecher/FaecherNeu.vue");
 
@@ -22,7 +22,7 @@ export class RouteFaecherNeu extends RouteNode<any, RouteFaecher> {
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): FaecherNeuProps {
@@ -33,8 +33,6 @@ export class RouteFaecherNeu extends RouteNode<any, RouteFaecher> {
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 			benutzerKompetenzen: api.benutzerKompetenzen,
-			schuljahr: api.abschnitt.schuljahr,
-			schulform: api.schulform,
 		};
 	}
 }

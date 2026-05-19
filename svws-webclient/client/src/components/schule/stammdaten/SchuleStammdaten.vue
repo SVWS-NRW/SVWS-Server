@@ -5,12 +5,12 @@
 				<div class="svws-ui-header--title">
 					<div class="svws-headline-wrapper">
 						<h2 class="svws-headline">
-							<span>{{ schule().bezeichnung1 }}</span>
+							<span>{{ schuleState.stammdaten.bezeichnung1 }}</span>
 							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-								Schulnummer: {{ schule().schulNr }}
+								Schulnummer: {{ schuleState.stammdaten.schulNr }}
 							</svws-ui-badge>
 						</h2>
-						<span class="svws-subline">{{ `${schule().bezeichnung2 ?? ''} ${schule().bezeichnung3 ?? ''}` }}</span>
+						<span class="svws-subline">{{ `${schuleState.stammdaten.bezeichnung2 ?? ''} ${schuleState.stammdaten.bezeichnung3 ?? ''}` }}</span>
 					</div>
 				</div>
 				<div class="svws-ui-header--actions">
@@ -26,11 +26,12 @@
 
 <script setup lang="ts">
 
-	import { useRegionSwitch } from "@ui";
+	import { useRegionSwitch, useSchuleState } from "@ui";
 	import type { SchuleStammdatenProps } from "~/components/schule/stammdaten/SchuleStammdatenProps";
 
 	defineProps<SchuleStammdatenProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+	const schuleState = useSchuleState();
 
 
 </script>

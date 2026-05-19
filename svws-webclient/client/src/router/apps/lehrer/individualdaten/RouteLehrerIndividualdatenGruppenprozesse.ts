@@ -30,9 +30,6 @@ export class RouteLehrerIndividualdatenGruppenprozesse extends RouteNode<any, Ro
 	public getProps(_: RouteLocationNormalized): LehrerIndividualdatenGruppenprozesseProps {
 		return {
 			lehrerListeManager: () => routeLehrer.data.manager,
-			validatorKontext: () => api.validatorKontext,
-			schulform: api.schulform,
-			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			orteById: routeApp.cache.kataloge.orteById,
 			ortsteileById: routeApp.cache.kataloge.ortsteileById,

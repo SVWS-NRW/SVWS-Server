@@ -1,9 +1,7 @@
-import type { BenutzerKompetenz, Schulform, ServerMode, SchuelerSchulbesuchSchule, List, SchuelerSchulbesuchMerkmal, SchuelerSchulbesuchsdaten } from "@core";
+import type { BenutzerKompetenz, SchuelerSchulbesuchSchule, List, SchuelerSchulbesuchMerkmal, SchuelerSchulbesuchsdaten } from "@core";
 import type { SchuelerSchulbesuchManager } from "@ui";
 
 export interface SchuelerSchulbesuchProps {
-	schulform: Schulform;
-	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	manager: () => SchuelerSchulbesuchManager;
 	goToSchule: (idSchule: number) => Promise<void>;

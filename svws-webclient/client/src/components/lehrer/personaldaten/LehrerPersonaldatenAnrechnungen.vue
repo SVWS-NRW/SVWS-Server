@@ -66,8 +66,8 @@
 
 	import type { ComponentPublicInstance } from "vue";
 	import { computed, ref, shallowRef } from "vue";
-	import { GridManager, CoreTypeSelectManager } from "@ui";
-	import type { LehrerPersonalabschnittsdatenAnrechnungsstunden, Schulform, List, JavaSet, LehrerAnrechnungsgrundKatalogEintrag,
+	import { GridManager, CoreTypeSelectManager, useSchuleState, useAbschnittState } from "@ui";
+	import type { LehrerPersonalabschnittsdatenAnrechnungsstunden, List, JavaSet, LehrerAnrechnungsgrundKatalogEintrag,
 		LehrerMehrleistungsartKatalogEintrag, LehrerMinderleistungsartKatalogEintrag, Comparator } from "@core";
 	import { LehrerMehrleistungsarten, LehrerMinderleistungsarten, LehrerAnrechnungsgrund, ArrayList, HashSet } from "@core";
 	import { LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy } from "./LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy";
@@ -75,8 +75,6 @@
 
 	const props = defineProps<{
 		hatUpdateKompetenz: boolean;
-		schuljahr: number,
-		schulform: Schulform;
 		personalabschnittsdatenModelProxy: () => LehrerPersonalabschnittsdatenModelProxy,
 		addMehrleistung: (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => Promise<void>;
 		patchMehrleistung: (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number) => Promise<void>;
@@ -88,6 +86,8 @@
 		patchAnrechnungen: (data: List<Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>>) => Promise<void>;
 		removeAnrechnung: (data: LehrerPersonalabschnittsdatenAnrechnungsstunden) => Promise<void>;
 	}>();
+	const schuleState = useSchuleState();
+	const abschnittState = useAbschnittState();
 
 	type Eintrag = { typ: 'mehrleistung' | 'minderleistung' | 'anrechnung', data: LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy };
 
@@ -214,19 +214,19 @@
 	const auswahlAnrechnungenNeu = shallowRef<Array<LehrerAnrechnungsgrundKatalogEintrag>>([]);
 
 	const mehrleistungenSelectManager = computed(() => new CoreTypeSelectManager({
-		clazz: LehrerMehrleistungsarten.class, schuljahr: props.schuljahr, schulformen: props.schulform,
+		clazz: LehrerMehrleistungsarten.class, schuljahr: abschnittState.auswahl.schuljahr, schulformen: schuleState.schulform,
 		filters: [{ key: 'vorhandene', apply: filterMehrleistungen }],
 		selectionDisplayText: 'text', optionDisplayText: 'kuerzelText',
 	}));
 
 	const minderleistungenSelectManager = computed(() => new CoreTypeSelectManager({
-		clazz: LehrerMinderleistungsarten.class, schuljahr: props.schuljahr, schulformen: props.schulform,
+		clazz: LehrerMinderleistungsarten.class, schuljahr: abschnittState.auswahl.schuljahr, schulformen: schuleState.schulform,
 		filters: [{ key: 'vorhandene', apply: filterMinderleistungen }],
 		selectionDisplayText: 'text', optionDisplayText: 'kuerzelText',
 	}));
 
 	const anrechnungenSelectManager = computed(() => new CoreTypeSelectManager({
-		clazz: LehrerAnrechnungsgrund.class, schuljahr: props.schuljahr, schulformen: props.schulform,
+		clazz: LehrerAnrechnungsgrund.class, schuljahr: abschnittState.auswahl.schuljahr, schulformen: schuleState.schulform,
 		filters: [{ key: 'vorhandene', apply: filterAnrechnungen }],
 		selectionDisplayText: 'text', optionDisplayText: 'kuerzelText',
 	}));

@@ -80,12 +80,14 @@
 	import type { JahrgaengeNeuProps } from "./JahrgaengeNeuProps";
 	import { computed, ref, watch } from "vue";
 	import { BenutzerKompetenz, Bildungsstufe, Jahrgaenge, JahrgangsDaten, Schulgliederung } from "@core";
-	import { CoreTypeSelectManager, SelectManager } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useAbschnittState, useSchuleState } from "@ui";
 	import { JahrgangModelProxy } from "~/components/schule/kataloge/jahrgaenge/modelproxy/JahrgangModelProxy";
 
 	const props = defineProps<JahrgaengeNeuProps>();
+	const schuleState = useSchuleState();
+	const abschnittState = useAbschnittState();
 	const initialData = ref<JahrgangsDaten>(Object.assign(new JahrgangsDaten(), { istSichtbar: true, sortierung: 32000, anzahlRestabschnitte: 0 }));
-	const model = new JahrgangModelProxy(() => initialData.value, () => props.manager().liste.list(), props.schuljahr);
+	const model = new JahrgangModelProxy(() => initialData.value, () => props.manager().liste.list(), abschnittState.auswahl.schuljahr);
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 	const isLoading = ref<boolean>(false);
@@ -98,40 +100,40 @@
 
 	const schulgliederungTextSelectManager = new CoreTypeSelectManager({
 		clazz: Schulgliederung.class,
-		schuljahr: props.schuljahr,
-		schulformen: props.schulform,
+		schuljahr: abschnittState.auswahl.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});
 
 	const schulgliederungKuerzelSelectManager = new CoreTypeSelectManager({
 		clazz: Schulgliederung.class,
-		schuljahr: props.schuljahr,
-		schulformen: props.schulform,
+		schuljahr: abschnittState.auswahl.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "kuerzel",
 		selectionDisplayText: "kuerzel",
 	});
 
 	const jahrgangTextSelectManager = new CoreTypeSelectManager({
 		clazz: Jahrgaenge.class,
-		schuljahr: props.schuljahr,
-		schulformen: props.schulform,
+		schuljahr: abschnittState.auswahl.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});
 
 	const jahrgangKuerzelSelectManager = new CoreTypeSelectManager({
 		clazz: Jahrgaenge.class,
-		schuljahr: props.schuljahr,
-		schulformen: props.schulform,
+		schuljahr: abschnittState.auswahl.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "kuerzel",
 		selectionDisplayText: "kuerzel",
 	});
 
 	const bildungsstufeSelectManager = new CoreTypeSelectManager({
 		clazz: Bildungsstufe.class,
-		schuljahr: props.schuljahr,
-		schulformen: props.schulform,
+		schuljahr: abschnittState.auswahl.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});

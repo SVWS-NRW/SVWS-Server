@@ -69,15 +69,15 @@
 
 	import { ref, computed } from 'vue';
 	import { formatToLocalDate } from "~/utils/date";
-	import type { DataTableColumn, SchuelerBetriebeManager } from "@ui";
+	import { useSchuleState, type DataTableColumn, type SchuelerBetriebeManager } from "@ui";
 	import type { List, SchuelerBetrieb } from "@core";
 	import { Schulform, ArrayList } from "@core";
 
 	const props = defineProps<{
 		manager: () => SchuelerBetriebeManager;
 		deleteEntries: (idsSchuelerBetriebe: List<number>) => Promise<boolean>;
-		schulform: Schulform
 	}>();
+	const schuleState = useSchuleState();
 
 	const emit = defineEmits<{
 		(e: 'create'): void;
@@ -86,7 +86,7 @@
 
 	const istBK = computed(() => {
 		const erlaubteSchulformen = [Schulform.BK, Schulform.SB, Schulform.WB];
-		return erlaubteSchulformen.includes(props.schulform);
+		return erlaubteSchulformen.includes(schuleState.schulform);
 	});
 	const entries = computed(() => props.manager().schuelerBetriebeById.values());
 	const selectedEntries = ref<SchuelerBetrieb[]>([]);

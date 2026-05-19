@@ -3,14 +3,14 @@
 		<div v-if="hatkeineErforderlicheKompetenz">
 			Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
 		</div>
-		<div class="flex flex-col gap-4" v-if="ServerMode.DEV.checkServerMode(serverMode)">
+		<div v-if="serverState.hasDev" class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzDrucken && (stundenplaeneById.size > 0)" icon="i-ri-printer-line" title="Stundenplan drucken" subtitle="Drucke die Stundenpläne der ausgewählten Klassen."
 				:is-open="currentAction === 'print'" @update:is-open="isOpen => setCurrentAction('print', isOpen)">
 				<div class="flex flex-col">
 					<div>
 						<ui-select v-model="stundenplanModel" :manager="stundenplanSelectManager" label="Stundenplan" />
 					</div>
-					<report-parameters :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN" :server-mode
+					<report-parameters :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN"
 						:id-hauptdaten-objekt="stundenplanModel?.id ?? -1" :ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]"
 						:create-report="getPDF" :id-abschnitt="manager().getSchuljahresabschnittAuswahl()?.id" />
 				</div>
@@ -70,15 +70,17 @@
 	import { computed, ref } from "vue";
 	import type { FaecherGruppenprozesseProps } from "./FaecherGruppenprozesseProps";
 	import type { List, StundenplanListeEintrag } from "@core";
-	import { ServerMode, BenutzerKompetenz, DateUtils, ReportingReportvorlage, ArrayList } from "@core";
-	import { SelectManager } from "@ui";
+	import { BenutzerKompetenz, DateUtils, ReportingReportvorlage, ArrayList } from "@core";
+	import { SelectManager, useSchuleState, useServerState } from "@ui";
 
 	const props = defineProps<FaecherGruppenprozesseProps>();
+	const serverState = useServerState();
+	const schuleState = useSchuleState();
 
 	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 	const hatKompetenzDrucken = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN));
 	const hatKompetenzUpdate = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-	const hatGymnasialeOberstufe = computed(() => props.manager().schulform().daten(props.schuljahr)?.hatGymOb ?? false);
+	const hatGymnasialeOberstufe = computed(() => props.manager().schulform().daten(schuleState.abschnitt.schuljahr)?.hatGymOb ?? false);
 	const stundenplaeneById = computed(() => props.manager().stundenplaeneById);
 	const hatkeineErforderlicheKompetenz = computed<boolean>(() => !hatKompetenzLoeschen.value || !hatKompetenzDrucken.value || !hatKompetenzUpdate.value);
 	const deleteCheckErrors = computed<List<string>>(() => props.deleteCheck()[1]);

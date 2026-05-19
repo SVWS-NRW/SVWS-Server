@@ -1,10 +1,7 @@
-import type { LehrerListeEintrag, Schulform, KlassenDaten, Schueler, List, Schulgliederung, ServerMode, BenutzerKompetenz } from "@core";
+import type { LehrerListeEintrag, KlassenDaten, Schueler, BenutzerKompetenz } from "@core";
 import type { KlassenListeManager } from "@ui";
 
 export interface KlassenDatenProps {
-	schulform: Schulform;
-	schulgliederungen: List<Schulgliederung>;
-	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	patch: (data: Partial<KlassenDaten>) => Promise<boolean>;
 	manager: () => KlassenListeManager;

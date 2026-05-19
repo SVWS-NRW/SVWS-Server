@@ -1,10 +1,10 @@
 import { Schulform } from "@core";
 import type { SchulEintrag, SchulformKatalogEintrag } from "@core";
-import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { PendingStateManagerSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/PendingStateManagerSchuelerIndividualdaten";
 import { routeApp } from "~/router/apps/RouteApp";
+import { schuleState } from "~/states/SchuleStateImpl";
 
 
 interface RouteStateDataSchuelerIndividualdaten extends RouteStateInterface {
@@ -42,7 +42,7 @@ export class RouteDataSchuelerIndividualdaten extends RouteData<RouteStateDataSc
 			}
 			const sfEintrag: SchulformKatalogEintrag | null = schule.idSchulform === null ? null : Schulform.data().getEintragByID(schule.idSchulform);
 			const sf: Schulform | null = sfEintrag === null ? null : Schulform.data().getWertBySchluessel(sfEintrag.schluessel);
-			if (sf === api.schulform) {
+			if (sf === schuleState.schulform) {
 				mapSchulen.set(schule.schulnummerStatistik, schule);
 			}
 		}

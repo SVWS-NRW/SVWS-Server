@@ -20,11 +20,11 @@ import { routeGostFachwahlenZusatzkurse } from "~/router/apps/gost/fachwahlen/Ro
 import type { GostFachwahlenProps } from "~/components/gost/fachwahlen/SGostFachwahlenProps";
 import { RouteManager } from "~/router/RouteManager";
 import { routeSchuelerLaufbahnplanung } from "../../schueler/laufbahnplanung/RouteSchuelerLaufbahnplanung";
-import { routeApp } from "../../RouteApp";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeError } from "~/router/error/RouteError";
 import { routeGostFachwahlenZKFach } from "./RouteGostFachwahlenZKFach";
 import { routeGostFachwahlenLKFach } from "./RouteGostFachwahlenLKFach";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 
 const SGostFachwahlen = () => import("~/components/gost/fachwahlen/SGostFachwahlen.vue");
@@ -65,7 +65,7 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 		try {
 			const { abiturjahr } = params !== undefined ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: undefined };
 			if ((abiturjahr === undefined) || (abiturjahr === -1)) {
-				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr } };
+				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, abiturjahr } };
 			}
 			return false;
 		} catch (e) {
@@ -78,7 +78,7 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 			const { abiturjahr } = RouteNode.getIntParams(to_params, ["abiturjahr"]);
 			if (abiturjahr === undefined || abiturjahr === -1) {
 				const [jahrgang] = routeGost.data.mapAbiturjahrgaenge.values();
-				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: jahrgang.abiturjahr } };
+				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, abiturjahr: jahrgang.abiturjahr } };
 			}
 			await this.data.setEintrag(abiturjahr);
 			if (to.name === this.name) {

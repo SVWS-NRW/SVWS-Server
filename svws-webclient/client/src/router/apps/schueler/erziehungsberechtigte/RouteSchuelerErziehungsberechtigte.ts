@@ -46,7 +46,6 @@ export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchue
 			orteById: routeApp.cache.kataloge.orteById,
 			ortsteileById: routeApp.cache.kataloge.ortsteileById,
 			benutzerKompetenzen: api.benutzerKompetenzen,
-			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 		};
 	}
 

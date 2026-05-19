@@ -70,9 +70,9 @@
 		</div>
 		<ui-card icon="i-ri-add-line" title="Alle Zeitraster erstellen" :is-open="actionZeitraster" @update:is-open="(isOpen) => actionZeitraster = isOpen">
 			<stundenplan-zeitraster-einstellungen :manager :set-settings-defaults>
-				<svws-ui-button type="secondary" @click="addBlock" :title="`Alle Zeitraster Montag - Freitag, 1.-${Schulform.G === schulform ? '6':'9'}. Stunde erstellen`">
+				<svws-ui-button type="secondary" @click="addBlock" :title="`Alle Zeitraster Montag - Freitag, 1.-${Schulform.G === schuleState.schulform ? '6' : '9' }. Stunde erstellen`">
 					<span class="icon i-ri-calendar-event-line" />
-					<span class="icon i-ri-add-line -ml-1" />Mo-Fr / 1.-{{ Schulform.G === schulform ? '6':'9' }}. erstellen
+					<span class="icon i-ri-add-line -ml-1" />Mo-Fr / 1.-{{ Schulform.G === schuleState.schulform ? '6' : '9' }}. erstellen
 				</svws-ui-button>
 			</stundenplan-zeitraster-einstellungen>
 		</ui-card>
@@ -101,8 +101,11 @@
 	import type { StundenplanPausenzeit } from "../../../../core/src/core/data/stundenplan/StundenplanPausenzeit";
 	import { Wochentag } from "../../../../core/src/core/types/Wochentag";
 	import { Schulform } from "../../../../core/src/asd/types/schule/Schulform";
+	import { useSchuleState } from "../../states/SchuleState";
 
 	const props = defineProps<StundenplanAnsichtPlanungProps>();
+	const schuleState = useSchuleState();
+
 	const showZeitachse = true;
 	const actionZeitraster = ref<boolean>(false);
 
@@ -199,7 +202,7 @@
 	}
 
 	async function addBlock() {
-		const letzteStunde = Schulform.G === props.schulform ? 6 : 9;
+		const letzteStunde = Schulform.G === schuleState.schulform ? 6 : 9;
 		const list = props.manager().zeitrasterGetDummyListe(1, 5, 1, letzteStunde);
 		await props.addZeitraster(list);
 	}

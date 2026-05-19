@@ -45,8 +45,6 @@ export class RouteGostBeratung extends RouteNode<RouteDataGostBeratung, RouteGos
 
 	public getProps(to: RouteLocationNormalized): GostBeratungProps {
 		return {
-			schulform: api.schulform,
-			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			benutzerdaten: api.benutzerdaten,
 			config: () => api.config,

@@ -10,7 +10,6 @@ export type StundenplanAnsichtPlanungProps = {
 	addZeitraster: (zeitraster: Iterable<StundenplanZeitraster>) => Promise<void>;
 	removeZeitraster: (zeitraster: Iterable<StundenplanZeitraster>) => Promise<void>;
 	importZeitraster: undefined | (() => Promise<void>);
-	schulform?: Schulform;
 	setSelection: (value: Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined) => void;
 	selected: Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined;
 	setSettingsDefaults?: (value: StundenplanKonfiguration) => Promise<void>;

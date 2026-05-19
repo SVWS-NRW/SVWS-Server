@@ -8,7 +8,6 @@ import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, Server
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 
-import { routeApp } from "~/router/apps/RouteApp";
 import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
 import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/RouteGostKursplanungSchueler";
 
@@ -17,6 +16,7 @@ import { RouteDataGostKursplanung } from "~/router/apps/gost/kursplanung/RouteDa
 import { ConfigElement } from "../../../../../../ui/src/utils/Config";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeError } from "~/router/error/RouteError";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 const SGostKursplanung = () => import("~/components/gost/kursplanung/SGostKursplanung.vue");
 const SGostKursplanungAuswahl = () => import("~/components/gost/kursplanung/SGostKursplanungAuswahl.vue");
@@ -54,7 +54,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		try {
 			const { abiturjahr } = params ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: null };
 			if ((abiturjahr === null) || (abiturjahr === -1)) {
-				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr } };
+				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, abiturjahr } };
 			}
 			return false;
 		} catch (e) {
@@ -96,9 +96,9 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			const halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
 			// Prüfe das Halbjahr und setzte dieses ggf.
 			if ((abiturjahrwechsel) || (halbjahr === null)) {
-				let hj = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, routeApp.data.aktAbschnitt.value.schuljahr, routeApp.data.aktAbschnitt.value.abschnitt);
+				let hj = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, abschnittState.auswahl.schuljahr, abschnittState.auswahl.abschnitt);
 				// In zwei Fällen existiert kein Halbjahr, z.B. weil der Abiturjahrgang abgeschlossen ist oder noch in der Sek I ist.
-				hj ??= (abiturjahr < routeApp.data.aktAbschnitt.value.schuljahr + routeApp.data.aktAbschnitt.value.abschnitt) ? GostHalbjahr.Q22 : GostHalbjahr.EF1;
+				hj ??= (abiturjahr < abschnittState.auswahl.schuljahr + abschnittState.auswahl.abschnitt) ? GostHalbjahr.Q22 : GostHalbjahr.EF1;
 				return this.getRouteHalbjahr(abiturjahr, hj.id);
 			}
 			const changedHalbjahr: boolean = await this.data.setHalbjahr(halbjahr);
@@ -229,8 +229,6 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 
 	public getAuswahlProps(to: RouteLocationNormalized): GostKursplanungAuswahlProps {
 		return {
-			schulform: api.schulform,
-			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			benutzerKompetenzenAbiturjahrgaenge: api.benutzerKompetenzenAbiturjahrgaenge,
 			// Für die Halbjahresauswahl
@@ -256,8 +254,6 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			auswahlErgebnis: this.data.hatErgebnis ? this.data.auswahlErgebnis : undefined,
 			restoreBlockung: this.data.restoreBlockung,
 			revertBlockung: this.data.revertBlockung,
-			aktAbschnitt: api.abschnitt,
-			mode: api.mode,
 			ausfuehrlicheDarstellungKursdifferenz: () => this.data.ausfuehrlicheDarstellungKursdifferenz,
 			setAusfuehrlicheDarstellungKursdifferenz: this.data.setAusfuehrlicheDarstellungKursdifferenz,
 			mapCoreTypeData: () => api.mapCoreTypeData,
@@ -266,8 +262,6 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 
 	public getProps(to: RouteLocationNormalized): GostKursplanungProps {
 		return {
-			schulform: api.schulform,
-			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			benutzerKompetenzenAbiturjahrgaenge: api.benutzerKompetenzenAbiturjahrgaenge,
 			jahrgangsdaten: () => this.data.jahrgangsdaten,

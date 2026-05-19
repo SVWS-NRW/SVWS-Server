@@ -1,4 +1,4 @@
-import type { BenutzerKompetenz, SchuelerStammdaten, Schulform, Schuljahresabschnitt, ServerMode, ErzieherStammdaten, List,
+import type { BenutzerKompetenz, SchuelerStammdaten, ErzieherStammdaten, List,
 	SchuelerLernabschnittsdaten, SchuelerSchulbesuchsdaten, SchuelerTelefon, SchuelerVermerke } from "@core";
 import type { SchuelerSchnelleingabeManager } from "@ui";
 
@@ -6,11 +6,7 @@ export interface SchuelerSchnelleingabeProps {
 	manager: () => SchuelerSchnelleingabeManager;
 	gotoDefaultView: (idEintrag?: number | null) => Promise<void>;
 	gotoSchuelerNeuView: (navigate: boolean) => Promise<void>;
-	selectedSchuljahresabschnitt: Schuljahresabschnitt;
-	serverMode: ServerMode;
-	schulform: Schulform,
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
-
 	patchSchueler: (data: Partial<SchuelerStammdaten>, id: number) => Promise<void>;
 	getErzieher: () => List<ErzieherStammdaten>;
 	addErzieher: (data: Partial<ErzieherStammdaten>, idEintrag: number, pos: number) => Promise<ErzieherStammdaten>;

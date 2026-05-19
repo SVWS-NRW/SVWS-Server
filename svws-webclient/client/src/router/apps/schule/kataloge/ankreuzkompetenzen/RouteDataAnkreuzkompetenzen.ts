@@ -8,6 +8,8 @@ import { api } from "~/router/Api";
 import { routeAnkreuzkompetenzenDaten } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteAnkreuzkompetenzenDaten";
 import { routeAnkreuzkompetenzenGruppenprozesse } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteAnkreuzkompetenzenGruppenprozesse";
 import { routeAnkreuzkompetenzenNeu } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteAnkreuzkompetenzenNeu";
+import { abschnittState } from "~/states/AbschnittStateImpl";
+import { schuleState } from "~/states/SchuleStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
@@ -35,9 +37,9 @@ export class RouteDataAnkreuzkompetenzen extends RouteDataAuswahl<Ankreuzkompete
 
 		const manager = new AnkreuzkompetenzenListeManager(
 			idSchuljahresabschnitt,
-			api.schuleStammdaten.idSchuljahresabschnitt,
-			api.schuleStammdaten.abschnitte,
-			api.schulform,
+			schuleState.abschnitt.id,
+			abschnittState.alle,
+			schuleState.schulform,
 			ankreuzkompetenzen,
 			faecher,
 			jahrgaenge);

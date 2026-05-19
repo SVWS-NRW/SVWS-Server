@@ -109,7 +109,6 @@
 				:ist-erster-erz-gespeichert
 				:orte-by-id
 				:ortsteile-by-id
-				:schuljahr
 				@close-modal="closeModal"
 				@send-request="sendRequest"
 				@save-and-show-second="saveAndShowSecondForm"
@@ -121,17 +120,16 @@
 <script setup lang="ts">
 	import { computed, ref, watch } from "vue";
 	import type { DataTableColumn } from "@ui";
-	import { CoreTypeSelectManager, SelectManager } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useAbschnittState } from "@ui";
 	import type { SchuelerErziehungsberechtigteProps } from "./SSchuelerErziehungsberechtigteProps";
 	import type { NationalitaetenKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
 	import { AdressenUtils, Nationalitaeten, ErzieherStammdaten, JavaString, ArrayList, BenutzerKompetenz } from "@core";
 	import { orte_sort, erzieherArtSort, ortsteilSort } from "~/utils/helfer";
 
 	const props = defineProps<SchuelerErziehungsberechtigteProps>();
+	const abschnittState = useAbschnittState();
 
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
-
-	const schuljahr = computed<number>(() => props.aktAbschnitt.schuljahr);
 
 	const readonly = computed(() => !hatKompetenzUpdate.value);
 
@@ -194,7 +192,7 @@
 	const ersterErzStaatsangehoerigkeit = computed<NationalitaetenKatalogEintrag | null>({
 		get: (): NationalitaetenKatalogEintrag | null => {
 			const iso3 = erzieher.value?.staatsangehoerigkeitID ?? null;
-			return Nationalitaeten.getByISO3(iso3)?.daten(schuljahr.value) ?? null;
+			return Nationalitaeten.getByISO3(iso3)?.daten(abschnittState.auswahl.schuljahr) ?? null;
 		},
 		set: (value) => {
 			if (erzieher.value === undefined) {
@@ -206,12 +204,12 @@
 		},
 	});
 
-	const staatsangehoerigkeitenManager = new CoreTypeSelectManager({ clazz: Nationalitaeten.class, schuljahr: schuljahr, optionDisplayText: "text", selectionDisplayText: "text" });
+	const staatsangehoerigkeitenManager = new CoreTypeSelectManager({ clazz: Nationalitaeten.class, schuljahr: abschnittState.auswahl.schuljahr, optionDisplayText: "text", selectionDisplayText: "text" });
 
 	const zweiteErzStaatsangehoerigkeit = computed<NationalitaetenKatalogEintrag | null>({
 		get: (): NationalitaetenKatalogEintrag | null => {
 			const iso3 = zweiterErz.value.staatsangehoerigkeitID ?? null;
-			return Nationalitaeten.getByISO3(iso3)?.daten(schuljahr.value) ?? null;
+			return Nationalitaeten.getByISO3(iso3)?.daten(abschnittState.auswahl.schuljahr) ?? null;
 		},
 		set: (value) => {
 			if (erzieher.value === undefined) {

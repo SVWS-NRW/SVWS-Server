@@ -1,10 +1,9 @@
-import type { Schulform, KursDaten, BenutzerKompetenz } from "@core";
+import type { KursDaten, BenutzerKompetenz } from "@core";
 import type { Checkpoint, KursListeManager } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface KurseNeuProps {
 	manager: () => KursListeManager;
-	schulform: Schulform;
 	add: (patchObject: Partial<KursDaten>) => Promise<void>;
 	gotoDefaultView: (eintragId?: number | null) => Promise<void>;
 	checkpoint: Checkpoint;

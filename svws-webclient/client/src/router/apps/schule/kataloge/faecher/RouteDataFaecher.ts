@@ -9,6 +9,8 @@ import { routeFaecherNeu } from "./RouteFaecherNeu";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
 import { ViewType, FaecherListeManager } from "@ui";
+import { abschnittState } from "~/states/AbschnittStateImpl";
+import { schuleState } from "~/states/SchuleStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
@@ -37,8 +39,8 @@ export class RouteDataFaecher extends RouteDataAuswahl<FaecherListeManager, Rout
 			api.server.getFaecher(api.schema),
 			api.server.getStundenplanlisteFuerAbschnitt(api.schema, idSchuljahresabschnitt),
 		]);
-		const manager = new FaecherListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
-			api.schulform, faecher, stundenplaene);
+		const manager = new FaecherListeManager(idSchuljahresabschnitt, schuleState.abschnitt.id, abschnittState.alle,
+			schuleState.schulform, faecher, stundenplaene);
 		return { manager };
 	}
 

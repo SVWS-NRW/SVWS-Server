@@ -3,8 +3,8 @@ import { type StundenplanKalenderwochenzuordnung, type StundenplanListeEintrag, 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
-import { routeApp } from "~/router/apps/RouteApp";
 import { routeSchuelerStundenplan } from "./RouteSchuelerStundenplan";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 
 interface RouteStateSchuelerDataStundenplan extends RouteStateInterface {
@@ -84,7 +84,7 @@ export class RouteDataSchuelerStundenplan extends RouteData<RouteStateSchuelerDa
 	};
 
 	public async ladeListe(idSchueler: number): Promise<boolean> {
-		const idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
+		const idSchuljahresabschnitt = abschnittState.auswahl.id;
 		if (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt) {
 			return false;
 		}

@@ -3,6 +3,7 @@ import { Abiturdaten, AbiturdatenManager, DeveloperNotificationException, GostBe
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeSchuelerAbiturZulassung } from "~/router/apps/schueler/abitur/RouteSchuelerAbiturZulassung";
+import { serverState } from "~/states/ServerStateImpl";
 
 interface RouteStateDataSchuelerAbitur extends RouteStateInterface {
 	// Daten, die in Abhängigkeit des ausgewählten Schülers geladen werden
@@ -87,7 +88,7 @@ export class RouteDataSchuelerAbitur extends RouteData<RouteStateDataSchuelerAbi
 			managerAbitur: null, view: this._state.value.view };
 		try {
 			const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, schueler.id);
-			newState.managerLaufbahnplanung = new AbiturdatenManager(api.mode, abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
+			newState.managerLaufbahnplanung = new AbiturdatenManager(serverState.mode, abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
 			newState.ergebnisBelegpruefung = newState.managerLaufbahnplanung.getBelegpruefungErgebnis();
 			newState.managerLaufbahnplanung.applyErgebnisMarkierungsalgorithmus();
 		} catch {
@@ -96,7 +97,7 @@ export class RouteDataSchuelerAbitur extends RouteData<RouteStateDataSchuelerAbi
 		try {
 			// TODO hole Abiturdaten für das spezielle Abiturjahr
 			const abiturdaten = await api.server.getGostSchuelerAbiturdaten(api.schema, schueler.id);
-			newState.managerAbitur = new AbiturdatenManager(api.mode, abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
+			newState.managerAbitur = new AbiturdatenManager(serverState.mode, abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
 		} catch {
 			// do nothing
 		}
@@ -110,7 +111,7 @@ export class RouteDataSchuelerAbitur extends RouteData<RouteStateDataSchuelerAbi
 		// ... und lade diese dann vom Server
 		const newState = <RouteStateDataSchuelerAbitur>{ };
 		const abiturdaten = await api.server.getGostSchuelerAbiturdaten(api.schema, idSchueler);
-		newState.managerAbitur = new AbiturdatenManager(api.mode, abiturdaten, this.managerLaufbahnplanung.jahrgangsdaten(),
+		newState.managerAbitur = new AbiturdatenManager(serverState.mode, abiturdaten, this.managerLaufbahnplanung.jahrgangsdaten(),
 			this.managerLaufbahnplanung.faecher(), GostBelegpruefungsArt.GESAMT);
 		this.setPatchedState(newState);
 	};
@@ -134,7 +135,7 @@ export class RouteDataSchuelerAbitur extends RouteData<RouteStateDataSchuelerAbi
 			throw new DeveloperNotificationException("Die FachID ist in den Abiturdaten nicht als Belegung vorhanden.");
 		}
 		// Berechnen des Prüfungsergebnisses und Senden an den Server
-		AbiturdatenManager.berechnePruefungsergebnis(api.mode, clone, berechnePflichtpruefungenNeu);
+		AbiturdatenManager.berechnePruefungsergebnis(serverState.mode, clone, berechnePflichtpruefungenNeu);
 		await api.server.patchGostSchuelerAbiturdaten(clone, api.schema, clone.schuelerID);
 		// Patchen der Originaldaten und dortige Berechnung des Prüfungsergebnisses nach erfolgreichem Senden an den Server
 		for (const tmpBelegung of orig.fachbelegungen) {
@@ -144,7 +145,7 @@ export class RouteDataSchuelerAbitur extends RouteData<RouteStateDataSchuelerAbi
 			}
 		}
 		manager().pruefeZulassung();
-		AbiturdatenManager.berechnePruefungsergebnis(api.mode, orig, berechnePflichtpruefungenNeu);
+		AbiturdatenManager.berechnePruefungsergebnis(serverState.mode, orig, berechnePflichtpruefungenNeu);
 		this.commit();
 	};
 

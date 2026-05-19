@@ -2,7 +2,7 @@
 	<div class="h-full flex flex-col">
 		<div class="secondary-menu--headline">
 			<h1>Klassen</h1>
-			<div><abschnitt-auswahl :daten="schuljahresabschnittsauswahl" /></div>
+			<div><abschnitt-auswahl /></div>
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
@@ -57,12 +57,11 @@
 	import type { KlassenAuswahlProps } from "./SKlassenAuswahlProps";
 	import type { JahrgangsDaten, KlassenDaten, LehrerListeEintrag, Schulgliederung } from "@core";
 	import { BenutzerKompetenz } from "@core";
-	import { useRegionSwitch, ViewType } from "@ui";
+	import { useAbschnittState, useRegionSwitch, ViewType } from "@ui";
 
 	const props = defineProps<KlassenAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
-
-	const schuljahr = computed<number>(() => props.schuljahresabschnittsauswahl().aktuell.schuljahr);
+	const abschnittState = useAbschnittState();
 
 	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
 
@@ -87,7 +86,7 @@
 	}
 
 	function textSchulgliederung(schulgliederung: Schulgliederung): string {
-		return schulgliederung.daten(schuljahr.value)?.kuerzel ?? '—';
+		return schulgliederung.daten(abschnittState.auswahl.schuljahr)?.kuerzel ?? '—';
 	}
 
 	const filterSchulgliederung = computed<Schulgliederung[]>({

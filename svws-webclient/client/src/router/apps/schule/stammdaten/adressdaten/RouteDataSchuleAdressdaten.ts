@@ -3,6 +3,7 @@ import { RouteData } from "~/router/RouteData";
 import type { List, SchuleStammdaten, Teilstandort } from "@core";
 import { ArrayList } from "@core";
 import { api } from "~/router/Api";
+import { schuleState } from "~/states/SchuleStateImpl";
 
 interface RouteStateSchuleAdressdaten extends RouteStateInterface {
 	listTeilstandorte: List<Teilstandort>;
@@ -25,10 +26,7 @@ export class RouteDataSchuleAdressdaten extends RouteData<RouteStateSchuleAdress
 	}
 
 	patch = async (data: Partial<SchuleStammdaten>) => {
-		const stammdaten = api.schuleStammdaten;
-		await api.server.patchSchuleStammdaten(data, api.schema);
-		Object.assign(stammdaten, data);
-		api.updatedApiData();
+		await schuleState.patchStammdaten(data);
 		this.commit();
 	};
 

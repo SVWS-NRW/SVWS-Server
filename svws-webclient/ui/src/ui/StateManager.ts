@@ -1,4 +1,4 @@
-import { shallowRef, type ShallowRef } from "vue";
+import { shallowRef, triggerRef, type ShallowRef } from "vue";
 
 
 /**
@@ -64,7 +64,7 @@ export abstract class StateManager<State extends Record<string, any>> {
 	 * triggern.
 	 */
 	protected commit(): void {
-		this._state.value = { ... this._state.value };
+		triggerRef(this._state);
 	}
 
 
@@ -74,6 +74,15 @@ export abstract class StateManager<State extends Record<string, any>> {
 	 */
 	public reset(): void {
 		this.setDefaultState();
+	}
+
+	/**
+	 * Gibt den internen State zurück
+	 *
+	 * @returns der interne State
+	 */
+	protected get state(): State {
+		return this._state.value;
 	}
 
 }

@@ -1,11 +1,8 @@
 <template>
 	<div class="page page-flex-col min-w-196 max-w-354">
-		<schueler-sprachbelegung :sprachbelegungen :patch-sprachbelegung :add-sprachbelegung :remove-sprachbelegung
-			:schueler-liste-manager :schulform :server-mode :readonly />
-		<schueler-sprachpruefung-herkunftssprachlich :sprachpruefungen :patch-sprachpruefung :add-sprachpruefung :remove-sprachpruefung
-			:schueler-liste-manager :schulform :server-mode :readonly />
-		<schueler-sprachpruefung-feststellungspruefung :sprachpruefungen :patch-sprachpruefung :add-sprachpruefung :remove-sprachpruefung
-			:schueler-liste-manager :schulform :server-mode :readonly />
+		<schueler-sprachbelegung :sprachbelegungen :patch-sprachbelegung :add-sprachbelegung :remove-sprachbelegung :schueler-liste-manager :readonly />
+		<schueler-sprachpruefung-herkunftssprachlich :sprachpruefungen :patch-sprachpruefung :add-sprachpruefung :remove-sprachpruefung :schueler-liste-manager :readonly />
+		<schueler-sprachpruefung-feststellungspruefung :sprachpruefungen :patch-sprachpruefung :add-sprachpruefung :remove-sprachpruefung :schueler-liste-manager :readonly />
 	</div>
 </template>
 

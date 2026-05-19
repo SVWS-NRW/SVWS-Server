@@ -1,7 +1,6 @@
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import type { RouteApp } from "~/router/apps/RouteApp";
-import { routeApp } from "~/router/apps/RouteApp";
 import { RouteDataSchuleDatenaustauschLernplattformen } from "./RouteDataSchuleDatenaustauschLernplattformen";
 import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
 import { RouteNode } from "~/router/RouteNode";
@@ -32,8 +31,6 @@ export class RouteSchuleDatenaustauschLernplattformen extends RouteNode<RouteDat
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			lernplattformen: this.data.lernplattformen,
 			export: this.data.export,
-			abschnitteById: api.mapAbschnitte.value,
-			idSelectedAbschnitt: routeApp.data.idSchuljahresabschnitt,
 		};
 	}
 }

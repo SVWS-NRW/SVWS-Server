@@ -1,7 +1,7 @@
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { type Lernplattform, type List, ArrayList, LernplattformV1Export } from "@core";
 import { api } from "~/router/Api";
-import { routeApp } from "~/router/apps/RouteApp";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 
 interface RouteStateDatenaustauschLernplattformen extends RouteStateInterface {
@@ -24,10 +24,10 @@ export class RouteDataSchuleDatenaustauschLernplattformen extends RouteData<Rout
 
 	export = async (lernplattform: Lernplattform, datenformat: string): Promise<Blob | null> => {
 		if (datenformat === 'JSON') {
-			const lernplattformenExport = await api.external.getLernplattformenExport(api.schema, lernplattform.id, routeApp.data.idSchuljahresabschnitt);
+			const lernplattformenExport = await api.external.getLernplattformenExport(api.schema, lernplattform.id, abschnittState.auswahl.id);
 			return new Blob([LernplattformV1Export.transpilerToJSON(lernplattformenExport)], { type: "application/json" });
 		} else if (datenformat === 'GZIP') {
-			return (await api.external.getLernplattformenExportAsGzip(api.schema, lernplattform.id, routeApp.data.idSchuljahresabschnitt)).data;
+			return (await api.external.getLernplattformenExportAsGzip(api.schema, lernplattform.id, abschnittState.auswahl.id)).data;
 		}
 		return null;
 	};

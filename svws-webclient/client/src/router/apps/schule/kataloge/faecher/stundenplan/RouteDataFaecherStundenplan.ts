@@ -3,8 +3,8 @@ import { StundenplanManager, DeveloperNotificationException, ArrayList } from "@
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
-import { routeApp } from "~/router/apps/RouteApp";
 import { routeFaecherStundenplan } from "./RouteFaecherStundenplan";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 
 interface RouteStateFachDataStundenplan extends RouteStateInterface {
@@ -88,7 +88,7 @@ export class RouteDataFaecherStundenplan extends RouteData<RouteStateFachDataStu
 	};
 
 	public async ladeListe(): Promise<boolean> {
-		const idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
+		const idSchuljahresabschnitt = abschnittState.auswahl.id;
 		if (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt) {
 			return false;
 		}

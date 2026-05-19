@@ -4,9 +4,9 @@ import type { VermerkartenGruppenprozesseProps } from "~/components/schule/katal
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
-import { routeApp } from "../../../RouteApp";
 import { ViewType } from "@ui";
 import { routeVermerkarten } from "./RouteVermerkarten";
+import { abschnittState } from "~/states/AbschnittStateImpl";
 
 const VermerkartenGruppenprozesse = () => import("~/components/schule/kataloge/vermerkarten/gruppenprozesse/VermerkartenGruppenprozesse.vue");
 
@@ -22,12 +22,11 @@ export class RouteVermerkartenGruppenprozesse extends RouteNode<any, RouteVermer
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): VermerkartenGruppenprozesseProps {
 		return {
-			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeVermerkarten.data.manager,
 			delete: routeVermerkarten.data.delete,

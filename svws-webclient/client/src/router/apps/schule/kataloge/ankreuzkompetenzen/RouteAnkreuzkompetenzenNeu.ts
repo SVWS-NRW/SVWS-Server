@@ -26,8 +26,6 @@ export class RouteAnkreuzkompetenzenNeu extends RouteNode<any, RouteAnkreuzkompe
 			manager: () => routeAnkreuzkompetenzen.data.manager,
 			addAnkreuzkompetenz: routeAnkreuzkompetenzen.data.addAnkreuzkompetenz,
 			addJahrgaengezuordnungen: routeAnkreuzkompetenzen.data.addJahrgaengezuordnungen,
-			schuljahr: api.abschnitt.schuljahr,
-			schulform: api.schulform,
 			gotoDefaultView: routeAnkreuzkompetenzen.data.gotoDefaultView,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			checkpoint: this.checkpoint,

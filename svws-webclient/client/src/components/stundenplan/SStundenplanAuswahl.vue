@@ -2,7 +2,7 @@
 	<div class="h-full flex flex-col">
 		<div class="secondary-menu--headline">
 			<h1 class="select-none">Stundenplan</h1>
-			<div><abschnitt-auswahl :daten="schuljahresabschnittsauswahl" /></div>
+			<div><abschnitt-auswahl /></div>
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">

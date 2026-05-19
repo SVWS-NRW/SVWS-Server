@@ -1,8 +1,6 @@
-import type { AbiturdatenManager, AbiturFachbelegung, JavaMap, KursDaten, LehrerListeEintrag, List, SchuelerListeEintrag, SchuleStammdaten, ServerMode } from "@core";
+import type { AbiturdatenManager, AbiturFachbelegung, JavaMap, KursDaten, LehrerListeEintrag, List, SchuelerListeEintrag } from "@core";
 
 export interface GostAbiturNoteneingabeProps {
-	serverMode: ServerMode;
-	schule: SchuleStammdaten;
 	schuelerListe: List<SchuelerListeEintrag>;
 	mapLehrer: JavaMap<number, LehrerListeEintrag>;
 	mapKurse: JavaMap<number, KursDaten>;

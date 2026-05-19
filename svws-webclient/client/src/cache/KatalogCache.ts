@@ -3,6 +3,7 @@ import type { Abteilung, Beschaeftigungsart, Betrieb, Betriebsart, Einschulungsa
 	OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchulEintrag, Telefonart, VermerkartEintrag } from "@core";
 import { Katalog } from "~/cache/Katalog";
 import { api } from "~/router/Api";
+import { schuleState } from "~/states/SchuleStateImpl";
 
 
 export class KatalogCache {
@@ -44,7 +45,7 @@ export class KatalogCache {
 
 	private initializeCacheUpdater() {
 		this._katalogCacheUpdater.set(Katalog.ABTEILUNGEN, async () => {
-			const result = await api.server.getAbteilungenByIdJahresAbschnitt(api.schema, api.schuleStammdaten.idSchuljahresabschnitt);
+			const result = await api.server.getAbteilungenByIdJahresAbschnitt(api.schema, schuleState.abschnitt.id);
 			return { abteilungenById: this.convertToMap(result) };
 		});
 

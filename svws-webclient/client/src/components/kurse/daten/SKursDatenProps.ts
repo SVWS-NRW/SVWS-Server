@@ -1,9 +1,7 @@
-import type { KursDaten, Schueler, Schulform, ServerMode, BenutzerKompetenz, KursLehrer, List } from "@core";
+import type { KursDaten, Schueler, BenutzerKompetenz, KursLehrer, List } from "@core";
 import type { KursListeManager } from "@ui";
 
 export interface KursDatenProps {
-	schulform: Schulform;
-	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	patch: (data: Partial<KursDaten>) => Promise<boolean>;
 	manager: () => KursListeManager;

@@ -25,10 +25,10 @@
 
 					<svws-ui-select title="Schulgliederung" v-model="modelProxy.schulgliederung.value" :items="modelProxy.schulgliederungen.value" :item-text="getSelectText" />
 					<svws-ui-text-input placeholder="Prüfungsordnung" v-model="modelProxy.proxy.pruefungsordnung" disabled />
-					<svws-ui-select v-if="schulform.istAllgemeinbildend() || schulform.istWeiterbildung()" title="Klassenart" v-model="modelProxy.klassenart.value" :items="modelProxy.klassenarten.value" :item-text="getSelectText" />
-					<svws-ui-select v-if="schulform.istAllgemeinbildend()" title="Organisationsform" v-model="modelProxy.organisationsformAllgemeinbildend.value" :items="modelProxy.organisationsformenAllgemeinbildend.value" :item-text="getSelectText" />
-					<svws-ui-select v-if="schulform.istBerufsbildend()" title="Organisationsform" v-model="modelProxy.organisationsformBerufsbildend.value" :items="modelProxy.organisationsformenBerufsbildend.value" :item-text="getSelectText" />
-					<svws-ui-select v-if="schulform.istWeiterbildung()" title="Organisationsform" v-model="modelProxy.organisationsformWeiterbildend.value" :items="modelProxy.organisationsformenWeiterbildend.value" :item-text="getSelectText" />
+					<svws-ui-select v-if="schuleState.schulform.istAllgemeinbildend() || schuleState.schulform.istWeiterbildung()" title="Klassenart" v-model="modelProxy.klassenart.value" :items="modelProxy.klassenarten.value" :item-text="getSelectText" />
+					<svws-ui-select v-if="schuleState.schulform.istAllgemeinbildend()" title="Organisationsform" v-model="modelProxy.organisationsformAllgemeinbildend.value" :items="modelProxy.organisationsformenAllgemeinbildend.value" :item-text="getSelectText" />
+					<svws-ui-select v-if="schuleState.schulform.istBerufsbildend()" title="Organisationsform" v-model="modelProxy.organisationsformBerufsbildend.value" :items="modelProxy.organisationsformenBerufsbildend.value" :item-text="getSelectText" />
+					<svws-ui-select v-if="schuleState.schulform.istWeiterbildung()" title="Organisationsform" v-model="modelProxy.organisationsformWeiterbildend.value" :items="modelProxy.organisationsformenWeiterbildend.value" :item-text="getSelectText" />
 				</svws-ui-input-wrapper>
 
 				<div class="mt-7 flex flex-row gap-4 justify-end">
@@ -49,8 +49,10 @@
 	import type { KlassenNeuProps } from "~/components/klassen/SKlassenNeuProps";
 	import { KlassenDaten, AllgemeinbildendOrganisationsformen, Klassenart, Schulgliederung, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen, type JahrgangsDaten } from "@core";
 	import { KlassenDatenModelProxy } from "./KlassenDatenModelProxy";
+	import { useSchuleState } from "@ui";
 
 	const props = defineProps<KlassenNeuProps>();
+	const schuleState = useSchuleState();
 
 	const dataNotPatched = shallowRef(new KlassenDaten());
 
@@ -89,9 +91,9 @@
 	 * @param daten   die zu initialisierenden Daten
 	 */
 	function initWithDefaults(daten: KlassenDaten) {
-		const schulgliederungDefault = Schulgliederung.getDefault(props.schulform);
+		const schulgliederungDefault = Schulgliederung.getDefault(schuleState.schulform);
 		const schulgliederung = (schulgliederungDefault === null)
-			? Schulgliederung.getBySchuljahrAndSchulform(props.manager().getSchuljahr(), props.schulform).getFirst()
+			? Schulgliederung.getBySchuljahrAndSchulform(props.manager().getSchuljahr(), schuleState.schulform).getFirst()
 			: schulgliederungDefault;
 		const idSchulgliederung = schulgliederung.daten(props.manager().getSchuljahr())?.id ?? -1;
 		daten.kuerzel = "";
@@ -99,12 +101,12 @@
 		daten.idJahrgang = null;
 		daten.parallelitaet = null;
 		daten.idSchulgliederung = idSchulgliederung;
-		if (props.schulform.istAllgemeinbildend()) {
-			daten.idKlassenart = Klassenart.getDefault(props.schulform)?.daten(props.manager().getSchuljahr())?.id ?? null;
+		if (schuleState.schulform.istAllgemeinbildend()) {
+			daten.idKlassenart = Klassenart.getDefault(schuleState.schulform)?.daten(props.manager().getSchuljahr())?.id ?? null;
 			daten.idAllgemeinbildendOrganisationsform = AllgemeinbildendOrganisationsformen.GANZTAG.daten(props.manager().getSchuljahr())?.id ?? null;
-		} else if (props.schulform.istBerufsbildend()) {
+		} else if (schuleState.schulform.istBerufsbildend()) {
 			daten.idBerufsbildendOrganisationsform = BerufskollegOrganisationsformen.VOLLZEIT.daten(props.manager().getSchuljahr())?.id ?? null;
-		} else if (props.schulform.istWeiterbildung()) {
+		} else if (schuleState.schulform.istWeiterbildung()) {
 			daten.idWeiterbildungOrganisationsform = WeiterbildungskollegOrganisationsformen.VOLLZEIT.daten(props.manager().getSchuljahr())?.id ?? null;
 		}
 	}

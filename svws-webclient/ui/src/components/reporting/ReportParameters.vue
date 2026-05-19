@@ -1,6 +1,6 @@
 <template>
 	<div class="w-full flex flex-row gap-8 items-start">
-		<div class="flex flex-col gap-4 shrink-0" :class="(ServerMode.DEV.equals(serverMode ?? null) && (createHtmlPreview !== undefined)) ? 'w-2/5' : 'w-full'">
+		<div class="flex flex-col gap-4 shrink-0" :class="(serverState.hasDev && (createHtmlPreview !== undefined)) ? 'w-2/5' : 'w-full'">
 			<div v-if="reportvorlage === undefined">
 				<ui-select :manager="reportvorlageSelectManager" v-model="localReportvorlage" />
 			</div>
@@ -87,7 +87,7 @@
 							<span v-else class="icon i-ri-printer-line" />
 							Drucken
 						</svws-ui-button>
-						<svws-ui-button v-if="ServerMode.DEV.equals(serverMode ?? null) && (createHtmlPreview !== undefined)"
+						<svws-ui-button v-if="serverState.hasDev && (createHtmlPreview !== undefined)"
 							@click="openHtmlPreview" :is-loading class="mt-4">
 							<svws-ui-spinner v-if="isLoading" spinning />
 							<span v-else class="icon i-ri-eye-line" />
@@ -97,7 +97,7 @@
 				</template>
 
 				<!-- E-Mail-Eingabefelder -->
-				<template v-if="(parameter.ausgabeformatOptionen.contains(ReportingAusgabeformat.EMAIL.getId())) && ServerMode.DEV.equals(serverMode ?? null) && (parameter.eMailDaten !== null)">
+				<template v-if="(parameter.ausgabeformatOptionen.contains(ReportingAusgabeformat.EMAIL.getId())) && serverState.hasDev && (parameter.eMailDaten !== null)">
 					<div class="border-2 border-ui-25 rounded-md p-2 my-2">
 						<div class="flex flex-col mb-2">
 							<div class="font-bold">E-Mail-Versand</div>
@@ -123,7 +123,7 @@
 			</div>
 		</div>
 		<!-- HTML-Vorschau (rechte Spalte, nur in DEV mit verfügbarer Vorschau-API) -->
-		<div v-if="ServerMode.DEV.equals(serverMode ?? null) && (createHtmlPreview !== undefined)" class="w-3/5 sticky top-2 h-[calc(100vh-16rem)] flex flex-col">
+		<div v-if="serverState.hasDev && (createHtmlPreview !== undefined)" class="w-3/5 sticky top-2 h-[calc(100vh-16rem)] flex flex-col">
 			<div class="relative flex-1 min-h-0 overflow-hidden rounded-md border-2 border-ui-25 bg-white shadow-sm flex items-center justify-center">
 				<iframe v-if="previewHtml !== ''" :srcdoc="previewHtml" class="absolute inset-0 w-full h-full border-0 bg-white" title="Reporting-Vorschau" />
 				<div v-else class="text-black italic text-center p-8">
@@ -159,6 +159,7 @@
 	import { ReportingSortierungDefinition } from "../../../../core/src/core/data/reporting/ReportingSortierungDefinition";
 	import { ReportingFilterDefinition } from "../../../../core/src/core/data/reporting/ReportingFilterDefinition";
 	import { ListUtils } from "../../../../core/src";
+	import { useServerState } from "../../states/ServerState";
 
 	const props = defineProps<{
 		reportvorlage?: ReportingReportvorlage;
@@ -169,9 +170,9 @@
 		createReport: (parameter: ReportingParameter) => Promise<ApiFile>;
 		createHtmlPreview?: (parameter: ReportingParameter) => Promise<string>;
 		sendEMail?: (parameter: ReportingParameter) => Promise<SimpleOperationResponse>;
-		serverMode: ServerMode;
 		ausgabeformat?: number;
 	}>();
+	const serverState = useServerState();
 
 	const isLoading = ref<boolean>(false);
 	const previewHtml = ref<string>('');

@@ -3,10 +3,8 @@ import type { ZeitrasterAuswahlProps } from "~/components/stundenplan/kataloge/z
 import type { LehrerListeEintrag } from "@core";
 import { ArrayList, BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import { routeApp } from "../../RouteApp";
 import { RouteDataKatalogZeitraster } from "./RouteDataKatalogZeitraster";
 import type { StundenplanZeitrasterPausenzeitProps } from "~/components/stundenplan/zeitrasterPausenzeit/SStundenplanZeitrasterPausenzeitProps";
-import { api } from "~/router/Api";
 import { RouteStundenplan, routeStundenplan } from "../RouteStundenplan";
 
 const SZeitrasterAuswahl = () => import("~/components/stundenplan/kataloge/zeitraster/SZeitrasterAuswahl.vue");
@@ -33,13 +31,11 @@ export class RouteKatalogZeitraster extends RouteNode<any, RouteStundenplan> {
 
 	public getAuswahlProps(to: RouteLocationNormalized): ZeitrasterAuswahlProps {
 		return {
-			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
 		};
 	}
 
 	public getProps(to: RouteLocationNormalized): StundenplanZeitrasterPausenzeitProps {
 		return {
-			schulform: api.schulform,
 			stundenplanManager: () => this.data.stundenplanManager,
 			listLehrer: new ArrayList<LehrerListeEintrag>(),
 			patchPausenzeit: async () => {}, // this.data.patchPausenzeit,

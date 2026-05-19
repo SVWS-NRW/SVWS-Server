@@ -79,10 +79,11 @@
 
 	import { computed, ref, shallowRef, watch } from 'vue';
 	import type { ComponentExposed } from 'vue-component-type-helpers';
-	import type { List, ServerMode, Sprachpruefung } from '@core';
+	import type { List, Sprachpruefung } from '@core';
 	import { ArrayList, Fach, Jahrgaenge, Schulform, Schulgliederung, Sprachpruefungniveau, Sprachreferenzniveau, Note } from '@core';
 	import { GridManager, type SchuelerListeManager, type SvwsUiSelect } from '@ui';
 	import { SchuelerSprachpruefungModelProxy } from './SchuelerSprachpruefungModelProxy';
+	import { schuleState } from '~/states/SchuleStateImpl';
 
 	const props = defineProps<{
 		sprachpruefungen: () => List<Sprachpruefung>;
@@ -90,8 +91,6 @@
 		addSprachpruefung: (data: Partial<Sprachpruefung>) => Promise<Sprachpruefung | null>;
 		removeSprachpruefung: (data: Sprachpruefung) => Promise<Sprachpruefung>;
 		schuelerListeManager: () => SchuelerListeManager;
-		schulform: Schulform;
-		serverMode: ServerMode;
 		readonly: boolean;
 	}>();
 
@@ -100,7 +99,7 @@
 	const selectSprachpruefung = ref<ComponentExposed<typeof SvwsUiSelect<string[]>>>();
 	const schulgliederung = computed<Schulgliederung | null>(() => Schulgliederung.data().getWertByKuerzel(props.schuelerListeManager().auswahl().schulgliederung));
 	const hatSpaltenJahrgang = computed(() => {
-		const istBKoderSB = [Schulform.BK, Schulform.SB].includes(props.schulform);
+		const istBKoderSB = [Schulform.BK, Schulform.SB].includes(schuleState.schulform);
 		const istSpezielleGliederung = (schulgliederung.value !== null) && [Schulgliederung.D01, Schulgliederung.D02].includes(schulgliederung.value);
 		return !(istBKoderSB && !istSpezielleGliederung);
 	});

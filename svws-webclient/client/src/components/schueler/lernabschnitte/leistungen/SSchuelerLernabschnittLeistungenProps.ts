@@ -1,15 +1,11 @@
-import type { BenutzerDaten, BenutzerKompetenz, List, SchuelerLeistungsdaten, SchuelerLernabschnittsdaten, SchuleStammdaten, Schulform, Schuljahresabschnitt, ServerMode } from "@core";
+import type { BenutzerDaten, BenutzerKompetenz, List, SchuelerLeistungsdaten, SchuelerLernabschnittsdaten } from "@core";
 import type { SchuelerListeManager } from "@ui";
 import type { SchuelerLernabschnittManager } from "../SchuelerLernabschnittManager";
 
 export interface SchuelerLernabschnittLeistungenProps {
-	serverMode: ServerMode;
 	benutzerdaten: BenutzerDaten;
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	benutzerKompetenzenKlassen: Set<number>;
-	schule: SchuleStammdaten;
-	schulform: Schulform;
-	schuleSchuljahresabschnitt: () => Schuljahresabschnitt;
 	schuelerListeManager: () => SchuelerListeManager;
 	manager: () => SchuelerLernabschnittManager;
 	patch: (data: Partial<SchuelerLernabschnittsdaten>) => Promise<void>;

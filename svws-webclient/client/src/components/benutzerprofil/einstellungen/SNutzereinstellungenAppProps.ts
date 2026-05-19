@@ -1,8 +1,7 @@
-import type { BenutzerDaten, BenutzerEMailDaten, BenutzerTyp, ServerMode } from "@core";
+import type { BenutzerDaten, BenutzerEMailDaten, BenutzerTyp } from "@core";
 import type { AES } from "~/utils/crypto/aes";
 
 export interface NutzereinstellungenAppProps {
-	mode: ServerMode;
 	benutzer: () => BenutzerDaten;
 	benutzertyp: BenutzerTyp;
 	benutzerEMailDaten: () => BenutzerEMailDaten;

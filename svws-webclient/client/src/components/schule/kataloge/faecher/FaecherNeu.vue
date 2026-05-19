@@ -125,42 +125,44 @@
 	import { computed, ref, watch } from "vue";
 	import { BenutzerKompetenz, BilingualeSprache, Fach, FachDaten, JavaInteger, Schulform } from "@core";
 	import type { FaecherNeuProps } from "./FaecherNeuProps";
-	import { CoreTypeSelectManager, SelectManager } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useSchuleState } from "@ui";
 	import { FachModelProxy } from "~/components/schule/kataloge/faecher/modelproxy/FachModelProxy";
 
 	const props = defineProps<FaecherNeuProps>();
+	const schuleState = useSchuleState();
+
 	const initialData = ref<FachDaten>(Object.assign(new FachDaten(), { sortierung: 32000, istSichtbar: true }));
-	const model = new FachModelProxy(() => initialData.value, () => props.manager().liste.list(), props.schuljahr);
+	const model = new FachModelProxy(() => initialData.value, () => props.manager().liste.list(), schuleState.abschnitt.schuljahr);
 	const isLoading = ref<boolean>(false);
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const disabled = computed(() => !hatKompetenzAdd.value);
 	const istGrundschule = computed(() => props.manager().schulform() === Schulform.G);
 	const istBerufskolleg = computed(() => props.manager().schulform() === Schulform.BK || props.manager().schulform() === Schulform.SB);
-	const hatGymnasialeOberstufe = computed(() => props.manager().schulform().daten(props.schuljahr)?.hatGymOb ?? false);
-	const fachgruppe = computed(() => Fach.getBySchluesselOrDefault(model.proxy.kuerzelStatistik).getFachgruppe(props.schuljahr)?.daten(props.schuljahr)?.text ?? '—');
+	const hatGymnasialeOberstufe = computed(() => props.manager().schulform().daten(schuleState.abschnitt.schuljahr)?.hatGymOb ?? false);
+	const fachgruppe = computed(() => Fach.getBySchluesselOrDefault(model.proxy.kuerzelStatistik).getFachgruppe(schuleState.abschnitt.schuljahr)?.daten(schuleState.abschnitt.schuljahr)?.text ?? '—');
 
 	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
 
 	const fachKuerzelSelectManager = new CoreTypeSelectManager({
 		clazz: Fach.class,
-		schuljahr: props.schuljahr,
-		schulformen: props.schulform,
+		schuljahr: schuleState.abschnitt.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: v => v.schluessel,
 		selectionDisplayText: v => v.schluessel,
 	});
 
 	const fachTextSelectManager = new CoreTypeSelectManager({
 		clazz: Fach.class,
-		schuljahr: props.schuljahr,
-		schulformen: props.schulform,
+		schuljahr: schuleState.abschnitt.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});
 
 	const sachfachspracheManager = new CoreTypeSelectManager({
 		clazz: BilingualeSprache.class,
-		schuljahr: props.schuljahr,
-		schulformen: props.schulform,
+		schuljahr: schuleState.abschnitt.schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});

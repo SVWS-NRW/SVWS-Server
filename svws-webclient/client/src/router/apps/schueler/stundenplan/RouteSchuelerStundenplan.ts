@@ -73,7 +73,6 @@ export class RouteSchuelerStundenplan extends RouteNode<RouteDataSchuelerStunden
 	public getProps(to: RouteLocationNormalized): SchuelerStundenplanProps {
 		return {
 			apiStatus: api.status,
-			serverMode: api.mode,
 			getPDF: this.data.getPDF,
 			id: routeSchueler.data.manager.daten().id,
 			ignoreEmpty: this.data.ganzerStundenplan,

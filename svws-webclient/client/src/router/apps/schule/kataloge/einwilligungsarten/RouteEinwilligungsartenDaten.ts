@@ -22,8 +22,6 @@ export class RouteEinwilligungsartenDaten extends RouteNode<any, RouteEinwilligu
 			patch: routeEinwilligungsarten.data.patch,
 			manager: () => routeEinwilligungsarten.data.manager,
 			benutzerKompetenzen: api.benutzerKompetenzen,
-			schulform: api.schulform,
-			schuljahr: api.abschnitt.schuljahr,
 		};
 	}
 

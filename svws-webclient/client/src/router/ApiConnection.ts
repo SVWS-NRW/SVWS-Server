@@ -1,11 +1,11 @@
 import { ref, shallowRef } from "vue";
-
-import type { BenutzerDaten, DBSchemaListeEintrag, List, SchuleStammdaten } from "@core";
-import { ValidatorKontext, ApiSchema, ApiServer, ApiExternal, BenutzerKompetenz, ServerMode, DeveloperNotificationException, UserNotificationException, OpenApiError, Schulform } from "@core";
-
+import type { BenutzerDaten, DBSchemaListeEintrag, List } from "@core";
+import { ApiSchema, ApiServer, ApiExternal, BenutzerKompetenz, ServerMode, DeveloperNotificationException, UserNotificationException, OpenApiError } from "@core";
 import { Config } from "../../../ui/src/utils/Config";
 import { AES } from "~/utils/crypto/aes";
 import { AESAlgo } from "~/utils/crypto/aesAlgo";
+import { schuleState } from "~/states/SchuleStateImpl";
+import { serverState } from "~/states/ServerStateImpl";
 
 export class ApiConnection {
 
@@ -59,12 +59,6 @@ export class ApiConnection {
 
 	// Die aktuelle temporäre, nicht in der DB festgehaltene Konfiguration der Schule
 	protected _nonPersistentConfig = ref<Config>(new Config(async (_, __) => {}, async (_, __) => { }));
-
-	// Die Stammdaten der Schule, sofern ein Login stattgefunden hat
-	protected _stammdaten = shallowRef<{ stammdaten: SchuleStammdaten | undefined, kontext: ValidatorKontext | undefined }>({ stammdaten: undefined, kontext: undefined });
-
-	// Der Modus, in welchem der Server betrieben wird
-	protected _serverMode = shallowRef<ServerMode>(ServerMode.STABLE);
 
 	// Die Map mit den CoreTypeDaten
 	protected _mapCoreTypeData = ref<Map<string, any> | undefined>(undefined);
@@ -169,11 +163,6 @@ export class ApiConnection {
 		return this._nonPersistentConfig.value as Config;
 	}
 
-	// Gibt den Modus zurück, in welchem der Server betrieben wird.
-	get mode(): ServerMode {
-		return this._serverMode.value;
-	}
-
 	// Gibt ein Promise zurück mit einem AES-Schlüssel
 	get aes(): AES {
 		const aes = this._aes.value;
@@ -216,29 +205,6 @@ export class ApiConnection {
 		await this.api.setClientConfigGlobalKey(value, this.schema, 'SVWS-Client', key);
 	};
 
-	/**
-	 * Gibt die Stammdaten der Schule zurück, sofern bereits ein Login stattgefunden hat.
-	 *
-	 * @returns die Stammdaten
-	 */
-	get schuleStammdaten(): SchuleStammdaten {
-		if (this._stammdaten.value.stammdaten === undefined) {
-			throw new DeveloperNotificationException("Der Benutzer muss angemeldet sein und die Stammdaten der Schule müssen erfolgreich geladen sein.");
-		}
-		return this._stammdaten.value.stammdaten;
-	}
-
-	/**
-	 * Gibt den Validator-Kontext für die Validierung von Statistik-relevanten Daten zurück.
-	 *
-	 * @returns der Validator-Kontext
-	 */
-	get validatorKontext(): ValidatorKontext {
-		if (this._stammdaten.value.kontext === undefined) {
-			throw new DeveloperNotificationException("Der Benutzer muss angemeldet sein und der Validator-Kontext muss erfolgreich erstellt sein.");
-		}
-		return this._stammdaten.value.kontext;
-	}
 
 	/**
 	 * Stellt eine Verbindung zu dem angebenen Hostnamen her.
@@ -401,28 +367,6 @@ export class ApiConnection {
 	}
 
 	/**
-	 * Initialialisiert die Daten, die beim Login geladen werden sollen
-	 *
-	 * @returns {Promise<boolean>} true beim erfolgreichen Laden der Daten und ansonsten false
-	 */
-	init = async (): Promise<boolean> => {
-		try {
-			if ((this._api !== undefined) && (this._schema !== undefined)) {
-				const stammdaten = await this._api.getSchuleStammdaten(this._schema);
-				const schulform = Schulform.data().getWertByKuerzelOrException(stammdaten.schulform);
-				const kontext = new ValidatorKontext(stammdaten.schulNr, schulform, stammdaten.abschnitte,
-					stammdaten.idSchuljahresabschnitt, false);
-				this._stammdaten.value = { stammdaten, kontext };
-			}
-			return true;
-		} catch {
-			this._stammdaten.value = { stammdaten: undefined, kontext: undefined };
-		}
-		return false;
-	};
-
-
-	/**
 	 * Liest die Client-Konfiguration vom Server und erstellt das zugehörige
 	 * TypeScript-Objekt.
 	 *
@@ -477,7 +421,6 @@ export class ApiConnection {
 			this._kompetenzen.value = this.getKompetenzen(this._benutzerdaten.value);
 			this._kompetenzenKlasse.value = this.getKompetenzenKlasse(this._benutzerdaten.value);
 			this._kompetenzenAbiturjahrgaenge.value = this.getKompetenzenAbiturjahrgaenge(this._benutzerdaten.value);
-			this._serverMode.value = ServerMode.getByText(await this._api.getServerModus());
 			await this.initConfig();
 		} catch (error) {
 			// Wenn Status 404, dann ist das Schema noch nicht initialisiert
@@ -499,8 +442,8 @@ export class ApiConnection {
 			this.config.mapUser = new Map();
 			this.nonPersistentConfig.mapGlobal = new Map();
 			this.nonPersistentConfig.mapUser = new Map();
-			this._stammdaten.value = { stammdaten: undefined, kontext: undefined };
-			this._serverMode.value = ServerMode.STABLE;
+			schuleState.reset();
+			serverState.reset();
 			this._aes.value = undefined;
 		}
 	};
@@ -511,7 +454,8 @@ export class ApiConnection {
 	 */
 	logout = async (): Promise<void> => {
 		this._authenticated.value = false;
-		this._stammdaten.value = { stammdaten: undefined, kontext: undefined };
+		schuleState.reset();
+		serverState.reset();
 		this._benutzerdaten.value = undefined;
 		this._istAdmin.value = undefined;
 		this._kompetenzen.value = undefined;
@@ -527,13 +471,6 @@ export class ApiConnection {
 		this.config.mapUser = new Map();
 		this.nonPersistentConfig.mapGlobal = new Map();
 		this.nonPersistentConfig.mapUser = new Map();
-	};
-
-	/**
-	 * Informiert die Api-Verbindung, dass ihre Daten, z.B. die Stammdaten der Schule angepasst wurden
-	 */
-	updatedApiData = () => {
-		this._stammdaten.value = { ... this._stammdaten.value };
 	};
 
 }

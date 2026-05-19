@@ -5,8 +5,6 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 
-import { routeApp } from "~/router/apps/RouteApp";
-
 import type { PausenzeitenAuswahlProps } from "~/components/stundenplan/kataloge/pausenzeiten/SPausenzeitenAuswahlProps";
 import type { PausenzeitenProps } from "~/components/stundenplan/kataloge/pausenzeiten/SPausenzeitenProps";
 import { RouteDataKatalogPausenzeiten } from "./RouteDataKatalogPausenzeiten";
@@ -60,7 +58,6 @@ export class RouteKatalogPausenzeiten extends RouteNode<RouteDataKatalogPausenze
 	public getAuswahlProps(to: RouteLocationNormalized): PausenzeitenAuswahlProps {
 		return {
 			auswahl: this.data.auswahl,
-			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
 			gotoEintrag: this.data.gotoEintrag,
 			addPausenzeiten: this.data.addPausenzeiten,
 			deleteEintraege: this.data.deleteEintraege,

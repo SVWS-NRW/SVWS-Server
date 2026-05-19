@@ -53,8 +53,7 @@
 			:manager
 			:data
 			:patch-erzieher
-			:readonly
-			:schuljahr />
+			:readonly />
 		<!-- Modal zum Hinzufügen eines zweiten Erziehungsberechtigten (Position 2) über den "+"-Button -->
 		<svws-ui-modal :show="patchPosModalErzIsShown" @update:show="closeModal">
 			<template #modalTitle>Einen zweiten Erziehungsberechtigten hinzufügen</template>
@@ -100,7 +99,6 @@
 			:ist-erster-erz-gespeichert
 			:orte-by-id="manager().orteById"
 			:ortsteile-by-id="manager().ortsteileById"
-			:schuljahr
 			@close-modal="closeModal"
 			@send-request="sendRequest"
 			@save-and-show-second="saveAndShowSecondForm"
@@ -112,7 +110,7 @@
 	import type { List, NationalitaetenKatalogEintrag } from "@core";
 	import { AdressenUtils, ArrayList, ErzieherStammdaten, Nationalitaeten } from "@core";
 	import type { DataTableColumn, SchuelerSchnelleingabeManager } from "@ui";
-	import { CoreTypeSelectManager } from "@ui";
+	import { CoreTypeSelectManager, useAbschnittState } from "@ui";
 	import { computed, ref, watch } from "vue";
 	import { mandatoryInputIsValid } from "~/util/validation/Validation";
 	import SchuelerSchnelleingabeErzieherForm from "~/components/schueler/neuanlage/SchuelerSchnelleingabeErzieherForm.vue";
@@ -124,10 +122,10 @@
 		patchErzieher: (data: Partial<ErzieherStammdaten>, idEintrag: number) => Promise<void>;
 		patchErzieherAnPosition: (data: Partial<ErzieherStammdaten>, idEintrag: number, idSchueler: number, pos: number) => Promise<void>;
 		deleteErzieher: (idsEintraege: List<number>) => Promise<void>;
-		schuljahr: number;
 		readonly: boolean;
 		updateKompetenz: boolean;
 	}>();
+	const abschnittState = useAbschnittState();
 
 	const manager = () => props.manager();
 	const data = ref<ErzieherStammdaten | undefined>();
@@ -150,7 +148,7 @@
 	});
 
 	const zweiteErzStaatsangehoerigkeit = computed<NationalitaetenKatalogEintrag | null>({
-		get: () => Nationalitaeten.getByISO3(zweiterErz.value.staatsangehoerigkeitID ?? null)?.daten(props.schuljahr) ?? null,
+		get: () => Nationalitaeten.getByISO3(zweiterErz.value.staatsangehoerigkeitID ?? null)?.daten(abschnittState.auswahl.schuljahr) ?? null,
 		set: (value: NationalitaetenKatalogEintrag | null) => {
 			zweiterErz.value.staatsangehoerigkeitID = value?.iso3 ?? null;
 		},
@@ -158,7 +156,7 @@
 
 	const staatsangehoerigkeitenManager = new CoreTypeSelectManager({
 		clazz: Nationalitaeten.class,
-		schuljahr: props.schuljahr,
+		schuljahr: abschnittState.auswahl.schuljahr,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});

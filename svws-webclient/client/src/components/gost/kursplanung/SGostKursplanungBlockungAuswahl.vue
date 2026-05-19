@@ -88,7 +88,7 @@
 
 	import { computed, ref } from 'vue';
 	import type { ApiStatus } from '~/components/ApiStatus';
-	import type { ServerMode, GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnis, GostHalbjahr, List, GostBlockungsergebnisManager } from "@core";
+	import type { GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnis, GostHalbjahr, List, GostBlockungsergebnisManager } from "@core";
 	import { ArrayList, BlockungsUtils } from "@core";
 	import { useRegionSwitch } from '@ui';
 
@@ -112,7 +112,6 @@
 		auswahlErgebnis: GostBlockungsergebnis | undefined;
 		restoreBlockung: () => Promise<void>;
 		istBlockungPersistiert: boolean;
-		mode: ServerMode;
 		ausfuehrlicheDarstellungKursdifferenz: () => boolean;
 		setAusfuehrlicheDarstellungKursdifferenz: (value: boolean) => void;
 		hatUpdateKompetenz: boolean;
