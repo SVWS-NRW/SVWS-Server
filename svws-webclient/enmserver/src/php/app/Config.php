@@ -34,8 +34,11 @@ class Config {
     // Gibt an, ob die Anwendung im Debug-Modus betrieben wird oder nicht
     protected bool $debugMode = false;
 
-    // Die Lebensdauer für ein Access-Token einer Client-Verbindung (Default: 8 h)
-    protected int $lifetimeAccessToken = 8 * 3600;
+    // Die Lebensdauer für ein Access-Token einer Client-Verbindung (Default: 5 min)
+    protected int $lifetimeAccessToken = 300;
+
+    // Das Zeitfenster, in welchem ein Access-Token vor Ablauf gültig ist, um ein Refresh zu triggern (Default: 30 sec)
+    protected int $lifetimeAccessTokenRefreshWindow = 30;
 
     // Die Lebensdauer für ein Access-Token einer Client-Verbindung für die TOTP-Abfrage (Default: 2 min)
     protected int $lifetimeTotpAccessToken = 120;
@@ -51,6 +54,18 @@ class Config {
 
     // Die Toleranz in Zeitfenstern bei der TOTP-Token-Prüfung (Default: 1)
     protected int $totpTolerance = 1;
+
+    // Gibt an, ob eine Anmeldung an die IP-Adresse des Clients gebunden werden soll. (Default: false)
+    protected bool $useIpPinning = false;
+
+    // Gibt an, ob aus Seicherheitsgründen Hardened Cookies eingesetzt werden sollen. (Default: false)
+    protected bool $useHardenedCookies = false;
+
+    // Der Name, welcher für die Hardened Cookies verwendet wird, wichtig ist hier das Präfix "__Host-"
+    protected string $hardenedCookieName = '__Host-WeNoM-Fingerprint';
+
+    // Im Fall von useIpPinning die Liste von IP-Adressen (als Strings), denen bei der Ermittlung der Client-IP (z.B. über X-Forwarded-For) vertraut wird.
+    protected array $trustedProxies = [];
 
 
     /**
@@ -212,6 +227,16 @@ class Config {
 
 
     /**
+     * Gibt das Zeitfenster vor Ablauf des Tokens zurück, in welchen ein Token-Refresh erlaubt ist.
+     *
+     * @return int das Zeitfenster in Sekunden
+     */
+    public function getLifetimeAccessTokenRefreshWindow(): int {
+        return $this->lifetimeAccessTokenRefreshWindow;
+    }
+
+
+    /**
      * Gibt die Lebendsdauer für ein Access-Token für den Login-Vorgangs für einen bereits mit dem Kennwort angemeldeten
      * Benutzers zurück. (Für den Fall, dass keine Erstanmeldung vorgenommen wird)
      *
@@ -258,6 +283,65 @@ class Config {
      */
     public function getTotpTolerance(): int {
         return $this->totpTolerance;
+    }
+
+    /**
+     * Gibt zurück, ob IP-Pinning aktiviert ist.
+     *
+     * @return bool true, wenn aktiviert, ansonsten false
+     */
+    public function getUseIpPinning(): bool {
+        return $this->useIpPinning;
+    }
+
+
+    /**
+     * Erzeugt einen neuen Salt für das IP-Pinning, welcher vom Client-Secret abgeleitetet ist. Dies sorgt dafür,
+     * dass der verwendete Salt hier Client-spezifisch ist und nicht im Code vorhanden ist.
+     *
+     * @return string der Salt für das IP-Pinning
+     */
+    public function getIpPinningSalt(): string {
+        return hash_hmac('sha256', 'IP-Pinning-Salt-fuer-WeNoM', $this->getClientSecret());
+    }
+
+    /**
+     * Erzeugt einen für die übergebene IP-Adresse den Hash, welcher für das IP-Pinning verwendet wird.
+     * Als Salt wird ein vom Client-Secret abgeleiteter Wert verwendet, wodurch dieser Client-spezifisch ist.
+     *
+     * @param string $ip   die IP-Adresse
+     *
+     * @return string der Hash der IP-Adresse für das IP-Pinning
+     */
+    public function getIpPinningHash(string $ip): string {
+        return hash_hmac('sha256', $ip, $this->getIpPinningSalt());
+    }
+
+    /**
+     * Gibt den Namen zurück, der für Hardened Cookies verwendet wird.
+     *
+     * @return string der Name
+     */
+    public function getHardenedCookieName(): string {
+        return $this->hardenedCookieName;
+    }
+
+    /**
+     * Gibt zurück, ob Hardened Cookies aktiviert sind.
+     *
+     * @return bool true, wenn aktiviert, ansonsten false
+     */
+    public function getUseHardenedCookies(): bool {
+        return $this->useHardenedCookies;
+    }
+
+    /**
+     * Gibt für den Fall, dass IP-Pinning genutzt wird, die Liste der vertrauenswürdigen Proxies zurück.
+     *
+     * @return array ein Array mit den IP-Adressen der vertrauenswürdigen Proxies
+     */
+    public function getTrustedProxies(): array {
+        return $this->trustedProxies;
     }
 
     /**

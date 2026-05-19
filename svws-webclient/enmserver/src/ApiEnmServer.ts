@@ -8,6 +8,7 @@ import { ENMv2Teilleistung } from "@core/core/data/enm/v2/ENMv2Teilleistung";
 import { ServerMode } from "@core/core/types/ServerMode";
 import { BaseApi } from "./BaseApi";
 import { ENMv2Daten } from "@core/core/data/enm/v2/ENMv2Daten";
+import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
 
 export interface ApiLoginData {
 	idLehrer: number;
@@ -88,6 +89,37 @@ export class ApiEnmServer extends BaseApi {
 
 		this.setBearerToken(jwt.token);
 		return { idLehrer: jwt.id, token: jwt.token };
+	}
+
+
+	/**
+	 * Aktualisiert das aktuell gesetzte Access-Token über die URL https://{hostname}/api/refresh_token
+	 *
+	 * @returns die ID des angemeldeten Lehrers und das neue JWT
+	 */
+	public async refreshToken(): Promise<{ idLehrer: number, token: string }> {
+		const body = '';
+		const response = await super.postTextBased("/api/refresh_token", 'application/json', 'application/json', body);
+		if (response.status !== 200) {
+			throw new UserNotificationException("Fehler beim aktualisieren des Access-Tokens. Sie werden automatisch abgemeldet.");
+		}
+
+		const jwt = JSON.parse(response.data);
+
+		this.setBearerToken(jwt.token);
+		return { idLehrer: jwt.id, token: jwt.token };
+	}
+
+
+	/**
+	 * Ruft die Logout-Methode beim Server über die URL https://{hostname}/api/logout auf, so das dieser das Access-verwirft.
+	 */
+	public async logout(): Promise<void> {
+		const body = '';
+		const response = await super.postTextBased("/api/logout", 'application/json', 'application/json', body);
+		if (response.status !== 204) {
+			throw new UserNotificationException("Fehler beim aktualisieren des Access-Tokens. Sie werden automatisch abgemeldet.");
+		}
 	}
 
 

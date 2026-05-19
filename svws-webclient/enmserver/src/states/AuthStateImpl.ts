@@ -61,6 +61,9 @@ class AuthStateImpl implements AuthState {
 	// Die Schulform, für welche der Server Daten hat
 	private readonly _schulform = shallowRef<Schulform | null>(null);
 
+	// ein Timeout für Refreshes
+	private _timerID: ReturnType<typeof setTimeout> | null = null;
+
 
 	/** Gibt die Version der Anwendung zurück */
 	public get version(): string {
@@ -210,7 +213,7 @@ class AuthStateImpl implements AuthState {
 				return true;
 			};
 			const result = await this._api.login();
-			this._token.value = result.token;
+			await this.receivedAccessToken(result.token);
 
 			// Wenn die Änderung eines Initial-Kennwortes gefordert wird ...
 			if (result.isChangePassword) {
@@ -246,7 +249,7 @@ class AuthStateImpl implements AuthState {
 	public async confirmPasswordChange(): Promise<AuthResult> {
 		try {
 			const result = await this.api.changePassword();
-			this._token.value = result.token;
+			await this.receivedAccessToken(result.token);
 
 			this._pendingPasswordChange.value = false;
 			this._generatedPassword.value = null;
@@ -282,7 +285,8 @@ class AuthStateImpl implements AuthState {
 	public async verifyTotp(code: string): Promise<AuthResult> {
 		try {
 			const result = await this.api.loginTotp(code);
-			this._token.value = result.token;
+			await this.receivedAccessToken(result.token);
+
 			await this.finalizeLogin();
 			return { success: true };
 		} catch (e) {
@@ -312,6 +316,8 @@ class AuthStateImpl implements AuthState {
 	 * Meldet den angemeldeten Benutzer bei der Api ab.
 	 */
 	public async logout(): Promise<void> {
+		this.stopTimer();
+		await this.api.logout();
 		this._authenticated.value = false;
 		this._pending2FA.value = false;
 		this._pendingPasswordChange.value = false;
@@ -323,6 +329,34 @@ class AuthStateImpl implements AuthState {
 		this._schulform.value = null;
 	}
 
+	private async receivedAccessToken(token: string) {
+		this._token.value = token;
+		const seconds = this.expirationSeconds - 14;
+		if (seconds > 0) {
+			this.startTimer(seconds);
+		} else {
+			this.stopTimer();
+		}
+	}
+
+	private async doRefreshToken(): Promise<void> {
+		const result = await this.api.refreshToken();
+		await this.receivedAccessToken(result.token);
+	}
+
+	private startTimer(seconds: number): void {
+		this.stopTimer();
+		this._timerID = setTimeout(() => {
+			void this.doRefreshToken();
+		}, seconds * 1_000);
+	}
+
+	private stopTimer(): void {
+		if (this._timerID !== null) {
+			clearTimeout(this._timerID);
+			this._timerID = null;
+		}
+	}
 }
 
 export const authState = new AuthStateImpl();
