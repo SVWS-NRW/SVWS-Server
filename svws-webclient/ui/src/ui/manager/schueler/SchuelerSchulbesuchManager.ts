@@ -1,4 +1,4 @@
-import type { JahrgangsDaten, KatalogEntlassgrund, Kindergarten, List, Merkmal, SchuelerSchulbesuchMerkmal, SchuelerSchulbesuchSchule,
+import type { JahrgangsDaten, KatalogEntlassgrund, Kindergarten, Merkmal, SchuelerSchulbesuchMerkmal, SchuelerSchulbesuchSchule,
 	SchuelerSchulbesuchsdaten, SchulEintrag, Schuljahresabschnitt } from '../../../../../core/src/';
 
 export interface SchulbesuchLookups {
@@ -28,7 +28,6 @@ export class SchuelerSchulbesuchManager {
 		schulbesuchsdaten: SchuelerSchulbesuchsdaten,
 		idSchueler: number,
 		idSchuljahresabschnitt: number,
-		schuljahresabschnitte: List<Schuljahresabschnitt>,
 		lookups: SchulbesuchLookups) {
 		this._daten = schulbesuchsdaten;
 		this._idSchueler = idSchueler;
@@ -80,7 +79,7 @@ export class SchuelerSchulbesuchManager {
 	// --- Bisherige Schulen ---
 
 	public addBisherigeSchule(s: SchuelerSchulbesuchSchule) {
-		this.daten.alleSchulen.add(s);
+		this.daten.bisherBesuchteSchulen.add(s);
 	}
 
 	public patchBisherigeSchuleById(id: number, data: Partial<SchuelerSchulbesuchSchule>) {
@@ -92,15 +91,15 @@ export class SchuelerSchulbesuchManager {
 	}
 
 	public deleteBisherigeSchuleById(id: number) {
-		for (let i = 0; i < this.daten.alleSchulen.size(); i++) {
-			if (this.daten.alleSchulen.get(i).id === id) {
-				this.daten.alleSchulen.removeElementAt(i);
+		for (let i = 0; i < this.daten.bisherBesuchteSchulen.size(); i++) {
+			if (this.daten.bisherBesuchteSchulen.get(i).id === id) {
+				this.daten.bisherBesuchteSchulen.removeElementAt(i);
 			}
 		}
 	}
 
 	private getBisherigeSchuleById(id: number): SchuelerSchulbesuchSchule | undefined {
-		for (const schule of this.daten.alleSchulen) {
+		for (const schule of this.daten.bisherBesuchteSchulen) {
 			if (schule.id === id) {
 				return schule;
 			}

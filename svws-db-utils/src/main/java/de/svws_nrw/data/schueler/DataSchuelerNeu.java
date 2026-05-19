@@ -110,7 +110,7 @@ public final class DataSchuelerNeu {
 			return;
 		}
 		final var dto = new SchulbesuchPatchRequest();
-		dto.grundschuleEinschulungsartID = JsonNullable.of(idGrundschuleEinschulungsart);
+		dto.idEinschulungsartGrundschule = JsonNullable.of(idGrundschuleEinschulungsart);
 		this.schulbesuchService.patch(idSchueler, dto);
 	}
 

@@ -216,12 +216,12 @@ class SchulbesuchServiceTest {
 	void patch_validate_valuesNotPresent() {
 		final var patchRequest = new SchulbesuchPatchRequest();
 		patchRequest.idVorherigeSchule = JsonNullable.undefined();
-		patchRequest.vorigeEntlassgrundID = JsonNullable.undefined();
-		patchRequest.entlassungGrundID = JsonNullable.undefined();
+		patchRequest.idEntlassgrundVorherigeSchule = JsonNullable.undefined();
+		patchRequest.idEntlassgrundDieseSchule = JsonNullable.undefined();
 		patchRequest.idAufnehmendeSchule = JsonNullable.undefined();
-		patchRequest.grundschuleEinschulungsartID = JsonNullable.undefined();
-		patchRequest.idGrundschuleJahreEingangsphase = JsonNullable.undefined();
-		patchRequest.idGrundschuleUebergangsempfehlung = JsonNullable.undefined();
+		patchRequest.idEinschulungsartGrundschule = JsonNullable.undefined();
+		patchRequest.idEingangsphaseGrundschule = JsonNullable.undefined();
+		patchRequest.idUebergangsempfehlungGrundschule = JsonNullable.undefined();
 		patchRequest.idDauerKindergartenbesuch = JsonNullable.undefined();
 		final var someValue = "someValue";
 		schueler.LSSchulNr = someValue;
@@ -291,7 +291,7 @@ class SchulbesuchServiceTest {
 	@DisplayName("patch - patchLSEntlassgrund")
 	void patchLSEntlassgrund() {
 		final var patchRequest = new SchulbesuchPatchRequest();
-		patchRequest.vorigeEntlassgrundID = JsonNullable.of(1L);
+		patchRequest.idEntlassgrundVorherigeSchule = JsonNullable.of(1L);
 		schueler.LSEntlassgrund = "beforePatch";
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 		when(dataKatalogEntlassgruende.getEntityById(1L)).thenReturn(entlassart);
@@ -306,7 +306,7 @@ class SchulbesuchServiceTest {
 	@DisplayName("patch - patchLSEntlassgrund - null")
 	void patchLSEntlassgrund_null() {
 		final var patchRequest = new SchulbesuchPatchRequest();
-		patchRequest.vorigeEntlassgrundID = JsonNullable.of(null);
+		patchRequest.idEntlassgrundVorherigeSchule = JsonNullable.of(null);
 		schueler.LSEntlassgrund = "beforePatch";
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 
@@ -324,7 +324,7 @@ class SchulbesuchServiceTest {
 	@DisplayName("patch - patchEntlassgrund")
 	void patchEntlassgrund() {
 		final var patchRequest = new SchulbesuchPatchRequest();
-		patchRequest.entlassungGrundID = JsonNullable.of(1L);
+		patchRequest.idEntlassgrundDieseSchule = JsonNullable.of(1L);
 		schueler.Entlassgrund = "beforePatch";
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 		when(dataKatalogEntlassgruende.getEntityById(1L)).thenReturn(entlassart);
@@ -339,7 +339,7 @@ class SchulbesuchServiceTest {
 	@DisplayName("patch - patchEntlassgrund - null")
 	void patchEntlassgrund_null() {
 		final var patchRequest = new SchulbesuchPatchRequest();
-		patchRequest.entlassungGrundID = JsonNullable.of(null);
+		patchRequest.idEntlassgrundDieseSchule = JsonNullable.of(null);
 		schueler.Entlassgrund = "beforePatch";
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 
@@ -391,7 +391,7 @@ class SchulbesuchServiceTest {
 	void patchEinschulungsart() {
 		final var patchRequest = new SchulbesuchPatchRequest();
 		final var eintrag = Einschulungsart.data().getWerte().getFirst().historie().getFirst();
-		patchRequest.grundschuleEinschulungsartID = JsonNullable.of(eintrag.id);
+		patchRequest.idEinschulungsartGrundschule = JsonNullable.of(eintrag.id);
 		schueler.EinschulungsartASD = "beforePatch";
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 
@@ -405,7 +405,7 @@ class SchulbesuchServiceTest {
 	@DisplayName("patch - patchEinschulungsart - null")
 	void patchEinschulungsart_null() {
 		final var patchRequest = new SchulbesuchPatchRequest();
-		patchRequest.grundschuleEinschulungsartID = JsonNullable.of(null);
+		patchRequest.idEinschulungsartGrundschule = JsonNullable.of(null);
 		schueler.EinschulungsartASD = "beforePatch";
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 
@@ -419,7 +419,7 @@ class SchulbesuchServiceTest {
 	@DisplayName("patch - patchEinschulungsart - invalid id")
 	void patchEinschulungsart_invalidId() {
 		final var patchRequest = new SchulbesuchPatchRequest();
-		patchRequest.grundschuleEinschulungsartID = JsonNullable.of(-1L);
+		patchRequest.idEinschulungsartGrundschule = JsonNullable.of(-1L);
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 
 		assertThatException()
@@ -438,7 +438,7 @@ class SchulbesuchServiceTest {
 	void patchEPJahre() {
 		final var patchRequest = new SchulbesuchPatchRequest();
 		final var eintrag = PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWerte().getFirst().historie().getFirst();
-		patchRequest.idGrundschuleJahreEingangsphase = JsonNullable.of(eintrag.id);
+		patchRequest.idEingangsphaseGrundschule = JsonNullable.of(eintrag.id);
 		schueler.EPJahre = 99;
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 
@@ -452,7 +452,7 @@ class SchulbesuchServiceTest {
 	@DisplayName("patch - patchEPJahre - null")
 	void patchEPJahre_null() {
 		final var patchRequest = new SchulbesuchPatchRequest();
-		patchRequest.idGrundschuleJahreEingangsphase = JsonNullable.of(null);
+		patchRequest.idEingangsphaseGrundschule = JsonNullable.of(null);
 		schueler.EPJahre = 99;
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 
@@ -466,7 +466,7 @@ class SchulbesuchServiceTest {
 	@DisplayName("patch - patchEPJahre - invalid id")
 	void patchEPJahre_invalidId() {
 		final var patchRequest = new SchulbesuchPatchRequest();
-		patchRequest.idGrundschuleJahreEingangsphase = JsonNullable.of(-1L);
+		patchRequest.idEingangsphaseGrundschule = JsonNullable.of(-1L);
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 
 		assertThatException()
@@ -485,7 +485,7 @@ class SchulbesuchServiceTest {
 	void patchUebergangsempfehlung() {
 		final var patchRequest = new SchulbesuchPatchRequest();
 		final var eintrag = Uebergangsempfehlung.data().getWerte().getFirst().historie().getFirst();
-		patchRequest.idGrundschuleUebergangsempfehlung = JsonNullable.of(eintrag.id);
+		patchRequest.idUebergangsempfehlungGrundschule = JsonNullable.of(eintrag.id);
 		schueler.Uebergangsempfehlung_JG5 = "beforePatch";
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 
@@ -499,7 +499,7 @@ class SchulbesuchServiceTest {
 	@DisplayName("patch - patchUebergangsempfehlung - null")
 	void patchUebergangsempfehlung_null() {
 		final var patchRequest = new SchulbesuchPatchRequest();
-		patchRequest.idGrundschuleUebergangsempfehlung = JsonNullable.of(null);
+		patchRequest.idUebergangsempfehlungGrundschule = JsonNullable.of(null);
 		schueler.Uebergangsempfehlung_JG5 = "beforePatch";
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 
@@ -513,7 +513,7 @@ class SchulbesuchServiceTest {
 	@DisplayName("patch - patchUebergangsempfehlung - invalid id")
 	void patchUebergangsempfehlung_invalidId() {
 		final var patchRequest = new SchulbesuchPatchRequest();
-		patchRequest.idGrundschuleUebergangsempfehlung = JsonNullable.of(-1L);
+		patchRequest.idUebergangsempfehlungGrundschule = JsonNullable.of(-1L);
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 
 		assertThatException()

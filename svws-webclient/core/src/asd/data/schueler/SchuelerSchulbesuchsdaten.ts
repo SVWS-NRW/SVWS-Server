@@ -8,119 +8,119 @@ import { Class } from '../../../java/lang/Class';
 export class SchuelerSchulbesuchsdaten extends JavaObject {
 
 	/**
-	 * Die ID des Schülerdatensatzes.
+	 * Die ID des Schulbesuchdatensatzes.
 	 */
 	public id: number = 0;
 
 	/**
-	 * Die ID der vorher besuchten Schule.
+	 * Die ID der zuvor besuchten Schule.
 	 */
 	public idVorherigeSchule: number | null = null;
 
 	/**
-	 * Die allgemeine Herkunftsart des Schüler in Bezug auf die Schulform der zuvor besuchten Schule.
+	 * Die Schulform der zuvor besuchten Schule.
 	 */
-	public vorigeAllgHerkunft: string | null = null;
+	public schulformVorherigeSchule: string | null = null;
 
 	/**
 	 * Das Entlassdatum an der zuvor besuchten Schule.
 	 */
-	public vorigeEntlassdatum: string | null = null;
+	public entlassdatumVorherigeSchule: string | null = null;
 
 	/**
-	 * Der Entlassjahrgang an der zuvor besuchten Schule.
+	 * Das Kürzel des Entlassjahrgangs an der zuvor besuchten Schule.
 	 */
-	public vorigeEntlassjahrgang: string | null = null;
+	public kuerzelEntlassjahrgangVorherigeSchule: string | null = null;
 
 	/**
-	 * Die ID der Art der letzten Versetzung an der zuvor besuchten Schule.
+	 * Die ID der Herkunftsart der Versetzung an der zuvor besuchten Schule.
 	 */
-	public vorigeArtLetzteVersetzung: string | null = null;
+	public idHerkunftsartVersetzungVorherigeSchule: string | null = null;
 
 	/**
-	 * Bemerkungen zu der zuvor besuchten Schule.
+	 * Bemerkungen zur zuvor besuchten Schule.
 	 */
-	public vorigeBemerkung: string | null = null;
+	public bemerkungVorherigeSchule: string | null = null;
 
 	/**
-	 * Die ID des Grundes für die Entlassung von der zuvor besuchten Schule.
+	 * Die ID des Entlassgrundes der zuvor besuchten Schule.
 	 */
-	public vorigeEntlassgrundID: number | null = null;
+	public idEntlassgrundVorherigeSchule: number | null = null;
 
 	/**
-	 * Die ID des Abschlusses, welcher an der zuvor besuchten Schule erworben wurde.
+	 * Die ID der Abschlussart, der an der zuvor besuchten Schule erworben wurde.
 	 */
-	public vorigeAbschlussartID: string | null = null;
+	public idAbschlussartVorherigeSchule: string | null = null;
 
 	/**
 	 * Das Entlassdatum von dieser Schule.
 	 */
-	public entlassungDatum: string | null = null;
+	public entlassdatumDieseSchule: string | null = null;
 
 	/**
 	 * Die Id des Jahrgangs bei der Entlassung von dieser Schule.
 	 */
-	public idEntlassjahrgang: number | null = null;
+	public idEntlassjahrgangDieseSchule: number | null = null;
 
 	/**
-	 * Die ID des Grundes für die Entlassung von dieser Schule.
+	 * Die ID des Entlassgrundes von dieser Schule.
 	 */
-	public entlassungGrundID: number | null = null;
+	public idEntlassgrundDieseSchule: number | null = null;
 
 	/**
-	 * Die ID des Abschlusses, welcher an dieser Schule erworben wurde.
+	 * Die ID der Abschlussart, welcher an dieser Schule erworben wurde.
 	 */
-	public entlassungAbschlussartID: string | null = null;
+	public idAbschlussartDieseSchule: string | null = null;
 
 	/**
-	 * Die ID der aufnehmenden Schule nach einer Entlassung.
+	 * Die ID der aufnehmenden Schule.
 	 */
 	public idAufnehmendeSchule: number | null = null;
 
 	/**
 	 * Das Datum beim Wechsel zu einer aufnehmenden Schule.
 	 */
-	public aufnehmendWechseldatum: string | null = null;
+	public wechseldatumAufnehmendeSchule: string | null = null;
 
 	/**
 	 * Gibt an, ob die aufnehmende Schule den Wechsel bestätigt hat.
 	 */
-	public aufnehmendBestaetigt: boolean = false;
+	public wechselBestaetigtAufnehmendeSchule: boolean = false;
 
 	/**
 	 * Das Jahr der Einschulung in die Grundschule.
 	 */
-	public grundschuleEinschulungsjahr: number | null = null;
+	public einschulungsjahrGrundschule: number | null = null;
 
 	/**
 	 * Die ID der Einschulungsart in die Grundschule.
 	 */
-	public grundschuleEinschulungsartID: number | null = null;
+	public idEinschulungsartGrundschule: number | null = null;
 
 	/**
 	 * Die ID der Schuleingangsphase der Grundschule.
 	 */
-	public idGrundschuleJahreEingangsphase: number | null = null;
+	public idEingangsphaseGrundschule: number | null = null;
 
 	/**
-	 * Die ID der Übergangsempfehlung der Grundschule in die Sekundarstufe I
+	 * Die ID der Übergangsempfehlung der Grundschule in die Sekundarstufe I.
 	 */
-	public idGrundschuleUebergangsempfehlung: number | null = null;
+	public idUebergangsempfehlungGrundschule: number | null = null;
 
 	/**
 	 * Das Jahr des Wechsels in die Sekundarstufe I.
 	 */
-	public sekIWechsel: number | null = null;
+	public wechseljahrSekI: number | null = null;
 
 	/**
 	 * Das Kürzel der ersten Schulform in der Sekundarstufe I
 	 */
-	public sekIErsteSchulform: string | null = null;
+	public kuerzelErsteSchulformSek1: string | null = null;
 
 	/**
 	 * Das Jahr des Wechsels in die Sekundarstufe II.
 	 */
-	public sekIIWechsel: number | null = null;
+	public wechseljahrSekII: number | null = null;
 
 	/**
 	 * Die ID der Dauer des Kindergartenbesuchs eines Schülers.
@@ -150,7 +150,7 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 	/**
 	 * Die Informationen zu allen bisher besuchten Schulen.
 	 */
-	public alleSchulen: List<SchuelerSchulbesuchSchule> = new ArrayList<SchuelerSchulbesuchSchule>();
+	public bisherBesuchteSchulen: List<SchuelerSchulbesuchSchule> = new ArrayList<SchuelerSchulbesuchSchule>();
 
 
 	public constructor() {
@@ -174,29 +174,29 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.idVorherigeSchule = (obj.idVorherigeSchule === undefined) ? null : obj.idVorherigeSchule === null ? null : obj.idVorherigeSchule;
-		result.vorigeAllgHerkunft = (obj.vorigeAllgHerkunft === undefined) ? null : obj.vorigeAllgHerkunft === null ? null : obj.vorigeAllgHerkunft;
-		result.vorigeEntlassdatum = (obj.vorigeEntlassdatum === undefined) ? null : obj.vorigeEntlassdatum === null ? null : obj.vorigeEntlassdatum;
-		result.vorigeEntlassjahrgang = (obj.vorigeEntlassjahrgang === undefined) ? null : obj.vorigeEntlassjahrgang === null ? null : obj.vorigeEntlassjahrgang;
-		result.vorigeArtLetzteVersetzung = (obj.vorigeArtLetzteVersetzung === undefined) ? null : obj.vorigeArtLetzteVersetzung === null ? null : obj.vorigeArtLetzteVersetzung;
-		result.vorigeBemerkung = (obj.vorigeBemerkung === undefined) ? null : obj.vorigeBemerkung === null ? null : obj.vorigeBemerkung;
-		result.vorigeEntlassgrundID = (obj.vorigeEntlassgrundID === undefined) ? null : obj.vorigeEntlassgrundID === null ? null : obj.vorigeEntlassgrundID;
-		result.vorigeAbschlussartID = (obj.vorigeAbschlussartID === undefined) ? null : obj.vorigeAbschlussartID === null ? null : obj.vorigeAbschlussartID;
-		result.entlassungDatum = (obj.entlassungDatum === undefined) ? null : obj.entlassungDatum === null ? null : obj.entlassungDatum;
-		result.idEntlassjahrgang = (obj.idEntlassjahrgang === undefined) ? null : obj.idEntlassjahrgang === null ? null : obj.idEntlassjahrgang;
-		result.entlassungGrundID = (obj.entlassungGrundID === undefined) ? null : obj.entlassungGrundID === null ? null : obj.entlassungGrundID;
-		result.entlassungAbschlussartID = (obj.entlassungAbschlussartID === undefined) ? null : obj.entlassungAbschlussartID === null ? null : obj.entlassungAbschlussartID;
+		result.schulformVorherigeSchule = (obj.schulformVorherigeSchule === undefined) ? null : obj.schulformVorherigeSchule === null ? null : obj.schulformVorherigeSchule;
+		result.entlassdatumVorherigeSchule = (obj.entlassdatumVorherigeSchule === undefined) ? null : obj.entlassdatumVorherigeSchule === null ? null : obj.entlassdatumVorherigeSchule;
+		result.kuerzelEntlassjahrgangVorherigeSchule = (obj.kuerzelEntlassjahrgangVorherigeSchule === undefined) ? null : obj.kuerzelEntlassjahrgangVorherigeSchule === null ? null : obj.kuerzelEntlassjahrgangVorherigeSchule;
+		result.idHerkunftsartVersetzungVorherigeSchule = (obj.idHerkunftsartVersetzungVorherigeSchule === undefined) ? null : obj.idHerkunftsartVersetzungVorherigeSchule === null ? null : obj.idHerkunftsartVersetzungVorherigeSchule;
+		result.bemerkungVorherigeSchule = (obj.bemerkungVorherigeSchule === undefined) ? null : obj.bemerkungVorherigeSchule === null ? null : obj.bemerkungVorherigeSchule;
+		result.idEntlassgrundVorherigeSchule = (obj.idEntlassgrundVorherigeSchule === undefined) ? null : obj.idEntlassgrundVorherigeSchule === null ? null : obj.idEntlassgrundVorherigeSchule;
+		result.idAbschlussartVorherigeSchule = (obj.idAbschlussartVorherigeSchule === undefined) ? null : obj.idAbschlussartVorherigeSchule === null ? null : obj.idAbschlussartVorherigeSchule;
+		result.entlassdatumDieseSchule = (obj.entlassdatumDieseSchule === undefined) ? null : obj.entlassdatumDieseSchule === null ? null : obj.entlassdatumDieseSchule;
+		result.idEntlassjahrgangDieseSchule = (obj.idEntlassjahrgangDieseSchule === undefined) ? null : obj.idEntlassjahrgangDieseSchule === null ? null : obj.idEntlassjahrgangDieseSchule;
+		result.idEntlassgrundDieseSchule = (obj.idEntlassgrundDieseSchule === undefined) ? null : obj.idEntlassgrundDieseSchule === null ? null : obj.idEntlassgrundDieseSchule;
+		result.idAbschlussartDieseSchule = (obj.idAbschlussartDieseSchule === undefined) ? null : obj.idAbschlussartDieseSchule === null ? null : obj.idAbschlussartDieseSchule;
 		result.idAufnehmendeSchule = (obj.idAufnehmendeSchule === undefined) ? null : obj.idAufnehmendeSchule === null ? null : obj.idAufnehmendeSchule;
-		result.aufnehmendWechseldatum = (obj.aufnehmendWechseldatum === undefined) ? null : obj.aufnehmendWechseldatum === null ? null : obj.aufnehmendWechseldatum;
-		if (obj.aufnehmendBestaetigt === undefined)
-			throw new Error('invalid json format, missing attribute aufnehmendBestaetigt');
-		result.aufnehmendBestaetigt = obj.aufnehmendBestaetigt;
-		result.grundschuleEinschulungsjahr = (obj.grundschuleEinschulungsjahr === undefined) ? null : obj.grundschuleEinschulungsjahr === null ? null : obj.grundschuleEinschulungsjahr;
-		result.grundschuleEinschulungsartID = (obj.grundschuleEinschulungsartID === undefined) ? null : obj.grundschuleEinschulungsartID === null ? null : obj.grundschuleEinschulungsartID;
-		result.idGrundschuleJahreEingangsphase = (obj.idGrundschuleJahreEingangsphase === undefined) ? null : obj.idGrundschuleJahreEingangsphase === null ? null : obj.idGrundschuleJahreEingangsphase;
-		result.idGrundschuleUebergangsempfehlung = (obj.idGrundschuleUebergangsempfehlung === undefined) ? null : obj.idGrundschuleUebergangsempfehlung === null ? null : obj.idGrundschuleUebergangsempfehlung;
-		result.sekIWechsel = (obj.sekIWechsel === undefined) ? null : obj.sekIWechsel === null ? null : obj.sekIWechsel;
-		result.sekIErsteSchulform = (obj.sekIErsteSchulform === undefined) ? null : obj.sekIErsteSchulform === null ? null : obj.sekIErsteSchulform;
-		result.sekIIWechsel = (obj.sekIIWechsel === undefined) ? null : obj.sekIIWechsel === null ? null : obj.sekIIWechsel;
+		result.wechseldatumAufnehmendeSchule = (obj.wechseldatumAufnehmendeSchule === undefined) ? null : obj.wechseldatumAufnehmendeSchule === null ? null : obj.wechseldatumAufnehmendeSchule;
+		if (obj.wechselBestaetigtAufnehmendeSchule === undefined)
+			throw new Error('invalid json format, missing attribute wechselBestaetigtAufnehmendeSchule');
+		result.wechselBestaetigtAufnehmendeSchule = obj.wechselBestaetigtAufnehmendeSchule;
+		result.einschulungsjahrGrundschule = (obj.einschulungsjahrGrundschule === undefined) ? null : obj.einschulungsjahrGrundschule === null ? null : obj.einschulungsjahrGrundschule;
+		result.idEinschulungsartGrundschule = (obj.idEinschulungsartGrundschule === undefined) ? null : obj.idEinschulungsartGrundschule === null ? null : obj.idEinschulungsartGrundschule;
+		result.idEingangsphaseGrundschule = (obj.idEingangsphaseGrundschule === undefined) ? null : obj.idEingangsphaseGrundschule === null ? null : obj.idEingangsphaseGrundschule;
+		result.idUebergangsempfehlungGrundschule = (obj.idUebergangsempfehlungGrundschule === undefined) ? null : obj.idUebergangsempfehlungGrundschule === null ? null : obj.idUebergangsempfehlungGrundschule;
+		result.wechseljahrSekI = (obj.wechseljahrSekI === undefined) ? null : obj.wechseljahrSekI === null ? null : obj.wechseljahrSekI;
+		result.kuerzelErsteSchulformSek1 = (obj.kuerzelErsteSchulformSek1 === undefined) ? null : obj.kuerzelErsteSchulformSek1 === null ? null : obj.kuerzelErsteSchulformSek1;
+		result.wechseljahrSekII = (obj.wechseljahrSekII === undefined) ? null : obj.wechseljahrSekII === null ? null : obj.wechseljahrSekII;
 		result.idDauerKindergartenbesuch = (obj.idDauerKindergartenbesuch === undefined) ? null : obj.idDauerKindergartenbesuch === null ? null : obj.idDauerKindergartenbesuch;
 		result.idKindergarten = (obj.idKindergarten === undefined) ? null : obj.idKindergarten === null ? null : obj.idKindergarten;
 		if (obj.verpflichtungSprachfoerderkurs === undefined)
@@ -210,9 +210,9 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 				result.merkmale.add(SchuelerSchulbesuchMerkmal.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (obj.alleSchulen !== undefined) {
-			for (const elem of obj.alleSchulen) {
-				result.alleSchulen.add(SchuelerSchulbesuchSchule.transpilerFromJSON(JSON.stringify(elem)));
+		if (obj.bisherBesuchteSchulen !== undefined) {
+			for (const elem of obj.bisherBesuchteSchulen) {
+				result.bisherBesuchteSchulen.add(SchuelerSchulbesuchSchule.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -222,27 +222,27 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"idVorherigeSchule" : ' + ((obj.idVorherigeSchule === null) ? 'null' : obj.idVorherigeSchule.toString()) + ',';
-		result += '"vorigeAllgHerkunft" : ' + ((obj.vorigeAllgHerkunft === null) ? 'null' : JSON.stringify(obj.vorigeAllgHerkunft)) + ',';
-		result += '"vorigeEntlassdatum" : ' + ((obj.vorigeEntlassdatum === null) ? 'null' : JSON.stringify(obj.vorigeEntlassdatum)) + ',';
-		result += '"vorigeEntlassjahrgang" : ' + ((obj.vorigeEntlassjahrgang === null) ? 'null' : JSON.stringify(obj.vorigeEntlassjahrgang)) + ',';
-		result += '"vorigeArtLetzteVersetzung" : ' + ((obj.vorigeArtLetzteVersetzung === null) ? 'null' : JSON.stringify(obj.vorigeArtLetzteVersetzung)) + ',';
-		result += '"vorigeBemerkung" : ' + ((obj.vorigeBemerkung === null) ? 'null' : JSON.stringify(obj.vorigeBemerkung)) + ',';
-		result += '"vorigeEntlassgrundID" : ' + ((obj.vorigeEntlassgrundID === null) ? 'null' : obj.vorigeEntlassgrundID.toString()) + ',';
-		result += '"vorigeAbschlussartID" : ' + ((obj.vorigeAbschlussartID === null) ? 'null' : JSON.stringify(obj.vorigeAbschlussartID)) + ',';
-		result += '"entlassungDatum" : ' + ((obj.entlassungDatum === null) ? 'null' : JSON.stringify(obj.entlassungDatum)) + ',';
-		result += '"idEntlassjahrgang" : ' + ((obj.idEntlassjahrgang === null) ? 'null' : obj.idEntlassjahrgang.toString()) + ',';
-		result += '"entlassungGrundID" : ' + ((obj.entlassungGrundID === null) ? 'null' : obj.entlassungGrundID.toString()) + ',';
-		result += '"entlassungAbschlussartID" : ' + ((obj.entlassungAbschlussartID === null) ? 'null' : JSON.stringify(obj.entlassungAbschlussartID)) + ',';
+		result += '"schulformVorherigeSchule" : ' + ((obj.schulformVorherigeSchule === null) ? 'null' : JSON.stringify(obj.schulformVorherigeSchule)) + ',';
+		result += '"entlassdatumVorherigeSchule" : ' + ((obj.entlassdatumVorherigeSchule === null) ? 'null' : JSON.stringify(obj.entlassdatumVorherigeSchule)) + ',';
+		result += '"kuerzelEntlassjahrgangVorherigeSchule" : ' + ((obj.kuerzelEntlassjahrgangVorherigeSchule === null) ? 'null' : JSON.stringify(obj.kuerzelEntlassjahrgangVorherigeSchule)) + ',';
+		result += '"idHerkunftsartVersetzungVorherigeSchule" : ' + ((obj.idHerkunftsartVersetzungVorherigeSchule === null) ? 'null' : JSON.stringify(obj.idHerkunftsartVersetzungVorherigeSchule)) + ',';
+		result += '"bemerkungVorherigeSchule" : ' + ((obj.bemerkungVorherigeSchule === null) ? 'null' : JSON.stringify(obj.bemerkungVorherigeSchule)) + ',';
+		result += '"idEntlassgrundVorherigeSchule" : ' + ((obj.idEntlassgrundVorherigeSchule === null) ? 'null' : obj.idEntlassgrundVorherigeSchule.toString()) + ',';
+		result += '"idAbschlussartVorherigeSchule" : ' + ((obj.idAbschlussartVorherigeSchule === null) ? 'null' : JSON.stringify(obj.idAbschlussartVorherigeSchule)) + ',';
+		result += '"entlassdatumDieseSchule" : ' + ((obj.entlassdatumDieseSchule === null) ? 'null' : JSON.stringify(obj.entlassdatumDieseSchule)) + ',';
+		result += '"idEntlassjahrgangDieseSchule" : ' + ((obj.idEntlassjahrgangDieseSchule === null) ? 'null' : obj.idEntlassjahrgangDieseSchule.toString()) + ',';
+		result += '"idEntlassgrundDieseSchule" : ' + ((obj.idEntlassgrundDieseSchule === null) ? 'null' : obj.idEntlassgrundDieseSchule.toString()) + ',';
+		result += '"idAbschlussartDieseSchule" : ' + ((obj.idAbschlussartDieseSchule === null) ? 'null' : JSON.stringify(obj.idAbschlussartDieseSchule)) + ',';
 		result += '"idAufnehmendeSchule" : ' + ((obj.idAufnehmendeSchule === null) ? 'null' : obj.idAufnehmendeSchule.toString()) + ',';
-		result += '"aufnehmendWechseldatum" : ' + ((obj.aufnehmendWechseldatum === null) ? 'null' : JSON.stringify(obj.aufnehmendWechseldatum)) + ',';
-		result += '"aufnehmendBestaetigt" : ' + obj.aufnehmendBestaetigt.toString() + ',';
-		result += '"grundschuleEinschulungsjahr" : ' + ((obj.grundschuleEinschulungsjahr === null) ? 'null' : obj.grundschuleEinschulungsjahr.toString()) + ',';
-		result += '"grundschuleEinschulungsartID" : ' + ((obj.grundschuleEinschulungsartID === null) ? 'null' : obj.grundschuleEinschulungsartID.toString()) + ',';
-		result += '"idGrundschuleJahreEingangsphase" : ' + ((obj.idGrundschuleJahreEingangsphase === null) ? 'null' : obj.idGrundschuleJahreEingangsphase.toString()) + ',';
-		result += '"idGrundschuleUebergangsempfehlung" : ' + ((obj.idGrundschuleUebergangsempfehlung === null) ? 'null' : obj.idGrundschuleUebergangsempfehlung.toString()) + ',';
-		result += '"sekIWechsel" : ' + ((obj.sekIWechsel === null) ? 'null' : obj.sekIWechsel.toString()) + ',';
-		result += '"sekIErsteSchulform" : ' + ((obj.sekIErsteSchulform === null) ? 'null' : JSON.stringify(obj.sekIErsteSchulform)) + ',';
-		result += '"sekIIWechsel" : ' + ((obj.sekIIWechsel === null) ? 'null' : obj.sekIIWechsel.toString()) + ',';
+		result += '"wechseldatumAufnehmendeSchule" : ' + ((obj.wechseldatumAufnehmendeSchule === null) ? 'null' : JSON.stringify(obj.wechseldatumAufnehmendeSchule)) + ',';
+		result += '"wechselBestaetigtAufnehmendeSchule" : ' + obj.wechselBestaetigtAufnehmendeSchule.toString() + ',';
+		result += '"einschulungsjahrGrundschule" : ' + ((obj.einschulungsjahrGrundschule === null) ? 'null' : obj.einschulungsjahrGrundschule.toString()) + ',';
+		result += '"idEinschulungsartGrundschule" : ' + ((obj.idEinschulungsartGrundschule === null) ? 'null' : obj.idEinschulungsartGrundschule.toString()) + ',';
+		result += '"idEingangsphaseGrundschule" : ' + ((obj.idEingangsphaseGrundschule === null) ? 'null' : obj.idEingangsphaseGrundschule.toString()) + ',';
+		result += '"idUebergangsempfehlungGrundschule" : ' + ((obj.idUebergangsempfehlungGrundschule === null) ? 'null' : obj.idUebergangsempfehlungGrundschule.toString()) + ',';
+		result += '"wechseljahrSekI" : ' + ((obj.wechseljahrSekI === null) ? 'null' : obj.wechseljahrSekI.toString()) + ',';
+		result += '"kuerzelErsteSchulformSek1" : ' + ((obj.kuerzelErsteSchulformSek1 === null) ? 'null' : JSON.stringify(obj.kuerzelErsteSchulformSek1)) + ',';
+		result += '"wechseljahrSekII" : ' + ((obj.wechseljahrSekII === null) ? 'null' : obj.wechseljahrSekII.toString()) + ',';
 		result += '"idDauerKindergartenbesuch" : ' + ((obj.idDauerKindergartenbesuch === null) ? 'null' : obj.idDauerKindergartenbesuch.toString()) + ',';
 		result += '"idKindergarten" : ' + ((obj.idKindergarten === null) ? 'null' : obj.idKindergarten.toString()) + ',';
 		result += '"verpflichtungSprachfoerderkurs" : ' + obj.verpflichtungSprachfoerderkurs.toString() + ',';
@@ -255,11 +255,11 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 				result += ',';
 		}
 		result += ' ]' + ',';
-		result += '"alleSchulen" : [ ';
-		for (let i = 0; i < obj.alleSchulen.size(); i++) {
-			const elem = obj.alleSchulen.get(i);
+		result += '"bisherBesuchteSchulen" : [ ';
+		for (let i = 0; i < obj.bisherBesuchteSchulen.size(); i++) {
+			const elem = obj.bisherBesuchteSchulen.get(i);
 			result += SchuelerSchulbesuchSchule.transpilerToJSON(elem);
-			if (i < obj.alleSchulen.size() - 1)
+			if (i < obj.bisherBesuchteSchulen.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
@@ -276,68 +276,68 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		if (obj.idVorherigeSchule !== undefined) {
 			result += '"idVorherigeSchule" : ' + ((obj.idVorherigeSchule === null) ? 'null' : obj.idVorherigeSchule.toString()) + ',';
 		}
-		if (obj.vorigeAllgHerkunft !== undefined) {
-			result += '"vorigeAllgHerkunft" : ' + ((obj.vorigeAllgHerkunft === null) ? 'null' : JSON.stringify(obj.vorigeAllgHerkunft)) + ',';
+		if (obj.schulformVorherigeSchule !== undefined) {
+			result += '"schulformVorherigeSchule" : ' + ((obj.schulformVorherigeSchule === null) ? 'null' : JSON.stringify(obj.schulformVorherigeSchule)) + ',';
 		}
-		if (obj.vorigeEntlassdatum !== undefined) {
-			result += '"vorigeEntlassdatum" : ' + ((obj.vorigeEntlassdatum === null) ? 'null' : JSON.stringify(obj.vorigeEntlassdatum)) + ',';
+		if (obj.entlassdatumVorherigeSchule !== undefined) {
+			result += '"entlassdatumVorherigeSchule" : ' + ((obj.entlassdatumVorherigeSchule === null) ? 'null' : JSON.stringify(obj.entlassdatumVorherigeSchule)) + ',';
 		}
-		if (obj.vorigeEntlassjahrgang !== undefined) {
-			result += '"vorigeEntlassjahrgang" : ' + ((obj.vorigeEntlassjahrgang === null) ? 'null' : JSON.stringify(obj.vorigeEntlassjahrgang)) + ',';
+		if (obj.kuerzelEntlassjahrgangVorherigeSchule !== undefined) {
+			result += '"kuerzelEntlassjahrgangVorherigeSchule" : ' + ((obj.kuerzelEntlassjahrgangVorherigeSchule === null) ? 'null' : JSON.stringify(obj.kuerzelEntlassjahrgangVorherigeSchule)) + ',';
 		}
-		if (obj.vorigeArtLetzteVersetzung !== undefined) {
-			result += '"vorigeArtLetzteVersetzung" : ' + ((obj.vorigeArtLetzteVersetzung === null) ? 'null' : JSON.stringify(obj.vorigeArtLetzteVersetzung)) + ',';
+		if (obj.idHerkunftsartVersetzungVorherigeSchule !== undefined) {
+			result += '"idHerkunftsartVersetzungVorherigeSchule" : ' + ((obj.idHerkunftsartVersetzungVorherigeSchule === null) ? 'null' : JSON.stringify(obj.idHerkunftsartVersetzungVorherigeSchule)) + ',';
 		}
-		if (obj.vorigeBemerkung !== undefined) {
-			result += '"vorigeBemerkung" : ' + ((obj.vorigeBemerkung === null) ? 'null' : JSON.stringify(obj.vorigeBemerkung)) + ',';
+		if (obj.bemerkungVorherigeSchule !== undefined) {
+			result += '"bemerkungVorherigeSchule" : ' + ((obj.bemerkungVorherigeSchule === null) ? 'null' : JSON.stringify(obj.bemerkungVorherigeSchule)) + ',';
 		}
-		if (obj.vorigeEntlassgrundID !== undefined) {
-			result += '"vorigeEntlassgrundID" : ' + ((obj.vorigeEntlassgrundID === null) ? 'null' : obj.vorigeEntlassgrundID.toString()) + ',';
+		if (obj.idEntlassgrundVorherigeSchule !== undefined) {
+			result += '"idEntlassgrundVorherigeSchule" : ' + ((obj.idEntlassgrundVorherigeSchule === null) ? 'null' : obj.idEntlassgrundVorherigeSchule.toString()) + ',';
 		}
-		if (obj.vorigeAbschlussartID !== undefined) {
-			result += '"vorigeAbschlussartID" : ' + ((obj.vorigeAbschlussartID === null) ? 'null' : JSON.stringify(obj.vorigeAbschlussartID)) + ',';
+		if (obj.idAbschlussartVorherigeSchule !== undefined) {
+			result += '"idAbschlussartVorherigeSchule" : ' + ((obj.idAbschlussartVorherigeSchule === null) ? 'null' : JSON.stringify(obj.idAbschlussartVorherigeSchule)) + ',';
 		}
-		if (obj.entlassungDatum !== undefined) {
-			result += '"entlassungDatum" : ' + ((obj.entlassungDatum === null) ? 'null' : JSON.stringify(obj.entlassungDatum)) + ',';
+		if (obj.entlassdatumDieseSchule !== undefined) {
+			result += '"entlassdatumDieseSchule" : ' + ((obj.entlassdatumDieseSchule === null) ? 'null' : JSON.stringify(obj.entlassdatumDieseSchule)) + ',';
 		}
-		if (obj.idEntlassjahrgang !== undefined) {
-			result += '"idEntlassjahrgang" : ' + ((obj.idEntlassjahrgang === null) ? 'null' : obj.idEntlassjahrgang.toString()) + ',';
+		if (obj.idEntlassjahrgangDieseSchule !== undefined) {
+			result += '"idEntlassjahrgangDieseSchule" : ' + ((obj.idEntlassjahrgangDieseSchule === null) ? 'null' : obj.idEntlassjahrgangDieseSchule.toString()) + ',';
 		}
-		if (obj.entlassungGrundID !== undefined) {
-			result += '"entlassungGrundID" : ' + ((obj.entlassungGrundID === null) ? 'null' : obj.entlassungGrundID.toString()) + ',';
+		if (obj.idEntlassgrundDieseSchule !== undefined) {
+			result += '"idEntlassgrundDieseSchule" : ' + ((obj.idEntlassgrundDieseSchule === null) ? 'null' : obj.idEntlassgrundDieseSchule.toString()) + ',';
 		}
-		if (obj.entlassungAbschlussartID !== undefined) {
-			result += '"entlassungAbschlussartID" : ' + ((obj.entlassungAbschlussartID === null) ? 'null' : JSON.stringify(obj.entlassungAbschlussartID)) + ',';
+		if (obj.idAbschlussartDieseSchule !== undefined) {
+			result += '"idAbschlussartDieseSchule" : ' + ((obj.idAbschlussartDieseSchule === null) ? 'null' : JSON.stringify(obj.idAbschlussartDieseSchule)) + ',';
 		}
 		if (obj.idAufnehmendeSchule !== undefined) {
 			result += '"idAufnehmendeSchule" : ' + ((obj.idAufnehmendeSchule === null) ? 'null' : obj.idAufnehmendeSchule.toString()) + ',';
 		}
-		if (obj.aufnehmendWechseldatum !== undefined) {
-			result += '"aufnehmendWechseldatum" : ' + ((obj.aufnehmendWechseldatum === null) ? 'null' : JSON.stringify(obj.aufnehmendWechseldatum)) + ',';
+		if (obj.wechseldatumAufnehmendeSchule !== undefined) {
+			result += '"wechseldatumAufnehmendeSchule" : ' + ((obj.wechseldatumAufnehmendeSchule === null) ? 'null' : JSON.stringify(obj.wechseldatumAufnehmendeSchule)) + ',';
 		}
-		if (obj.aufnehmendBestaetigt !== undefined) {
-			result += '"aufnehmendBestaetigt" : ' + obj.aufnehmendBestaetigt.toString() + ',';
+		if (obj.wechselBestaetigtAufnehmendeSchule !== undefined) {
+			result += '"wechselBestaetigtAufnehmendeSchule" : ' + obj.wechselBestaetigtAufnehmendeSchule.toString() + ',';
 		}
-		if (obj.grundschuleEinschulungsjahr !== undefined) {
-			result += '"grundschuleEinschulungsjahr" : ' + ((obj.grundschuleEinschulungsjahr === null) ? 'null' : obj.grundschuleEinschulungsjahr.toString()) + ',';
+		if (obj.einschulungsjahrGrundschule !== undefined) {
+			result += '"einschulungsjahrGrundschule" : ' + ((obj.einschulungsjahrGrundschule === null) ? 'null' : obj.einschulungsjahrGrundschule.toString()) + ',';
 		}
-		if (obj.grundschuleEinschulungsartID !== undefined) {
-			result += '"grundschuleEinschulungsartID" : ' + ((obj.grundschuleEinschulungsartID === null) ? 'null' : obj.grundschuleEinschulungsartID.toString()) + ',';
+		if (obj.idEinschulungsartGrundschule !== undefined) {
+			result += '"idEinschulungsartGrundschule" : ' + ((obj.idEinschulungsartGrundschule === null) ? 'null' : obj.idEinschulungsartGrundschule.toString()) + ',';
 		}
-		if (obj.idGrundschuleJahreEingangsphase !== undefined) {
-			result += '"idGrundschuleJahreEingangsphase" : ' + ((obj.idGrundschuleJahreEingangsphase === null) ? 'null' : obj.idGrundschuleJahreEingangsphase.toString()) + ',';
+		if (obj.idEingangsphaseGrundschule !== undefined) {
+			result += '"idEingangsphaseGrundschule" : ' + ((obj.idEingangsphaseGrundschule === null) ? 'null' : obj.idEingangsphaseGrundschule.toString()) + ',';
 		}
-		if (obj.idGrundschuleUebergangsempfehlung !== undefined) {
-			result += '"idGrundschuleUebergangsempfehlung" : ' + ((obj.idGrundschuleUebergangsempfehlung === null) ? 'null' : obj.idGrundschuleUebergangsempfehlung.toString()) + ',';
+		if (obj.idUebergangsempfehlungGrundschule !== undefined) {
+			result += '"idUebergangsempfehlungGrundschule" : ' + ((obj.idUebergangsempfehlungGrundschule === null) ? 'null' : obj.idUebergangsempfehlungGrundschule.toString()) + ',';
 		}
-		if (obj.sekIWechsel !== undefined) {
-			result += '"sekIWechsel" : ' + ((obj.sekIWechsel === null) ? 'null' : obj.sekIWechsel.toString()) + ',';
+		if (obj.wechseljahrSekI !== undefined) {
+			result += '"wechseljahrSekI" : ' + ((obj.wechseljahrSekI === null) ? 'null' : obj.wechseljahrSekI.toString()) + ',';
 		}
-		if (obj.sekIErsteSchulform !== undefined) {
-			result += '"sekIErsteSchulform" : ' + ((obj.sekIErsteSchulform === null) ? 'null' : JSON.stringify(obj.sekIErsteSchulform)) + ',';
+		if (obj.kuerzelErsteSchulformSek1 !== undefined) {
+			result += '"kuerzelErsteSchulformSek1" : ' + ((obj.kuerzelErsteSchulformSek1 === null) ? 'null' : JSON.stringify(obj.kuerzelErsteSchulformSek1)) + ',';
 		}
-		if (obj.sekIIWechsel !== undefined) {
-			result += '"sekIIWechsel" : ' + ((obj.sekIIWechsel === null) ? 'null' : obj.sekIIWechsel.toString()) + ',';
+		if (obj.wechseljahrSekII !== undefined) {
+			result += '"wechseljahrSekII" : ' + ((obj.wechseljahrSekII === null) ? 'null' : obj.wechseljahrSekII.toString()) + ',';
 		}
 		if (obj.idDauerKindergartenbesuch !== undefined) {
 			result += '"idDauerKindergartenbesuch" : ' + ((obj.idDauerKindergartenbesuch === null) ? 'null' : obj.idDauerKindergartenbesuch.toString()) + ',';
@@ -361,12 +361,12 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (obj.alleSchulen !== undefined) {
-			result += '"alleSchulen" : [ ';
-			for (let i = 0; i < obj.alleSchulen.size(); i++) {
-				const elem = obj.alleSchulen.get(i);
+		if (obj.bisherBesuchteSchulen !== undefined) {
+			result += '"bisherBesuchteSchulen" : [ ';
+			for (let i = 0; i < obj.bisherBesuchteSchulen.size(); i++) {
+				const elem = obj.bisherBesuchteSchulen.get(i);
 				result += SchuelerSchulbesuchSchule.transpilerToJSON(elem);
-				if (i < obj.alleSchulen.size() - 1)
+				if (i < obj.bisherBesuchteSchulen.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';

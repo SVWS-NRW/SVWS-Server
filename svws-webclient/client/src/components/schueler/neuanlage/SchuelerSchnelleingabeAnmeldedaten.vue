@@ -102,10 +102,10 @@
 	});
 
 	const einschulungsart = computed({
-		get: () => props.manager().einschulungsartenById.get(props.manager().schulbesuchsdaten.grundschuleEinschulungsartID ?? -1) ?? null,
+		get: () => props.manager().einschulungsartenById.get(props.manager().schulbesuchsdaten.idEinschulungsartGrundschule ?? -1) ?? null,
 		set: (value: EinschulungsartKatalogEintrag) => {
-			props.manager().schulbesuchsdaten.grundschuleEinschulungsartID = value.id;
-			void props.patchSchulbesuchsdaten({ grundschuleEinschulungsartID: value.id }, manager().stammdaten.id);
+			props.manager().schulbesuchsdaten.idEinschulungsartGrundschule = value.id;
+			void props.patchSchulbesuchsdaten({ idEinschulungsartGrundschule: value.id }, manager().stammdaten.id);
 		},
 	});
 

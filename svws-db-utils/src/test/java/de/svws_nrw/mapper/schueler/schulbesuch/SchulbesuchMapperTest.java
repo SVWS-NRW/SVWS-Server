@@ -63,12 +63,12 @@ class SchulbesuchMapperTest {
 
 			final var result = mapper.toApi(entity, emptyContext());
 
-			assertThat(result.vorigeAllgHerkunft).isEqualTo("GY");
-			assertThat(result.vorigeEntlassdatum).isEqualTo("2020-06-30");
-			assertThat(result.vorigeEntlassjahrgang).isEqualTo("10");
-			assertThat(result.vorigeArtLetzteVersetzung).isEqualTo("V");
-			assertThat(result.vorigeBemerkung).isEqualTo("Guter Schüler");
-			assertThat(result.vorigeAbschlussartID).isEqualTo("OA");
+			assertThat(result.schulformVorherigeSchule).isEqualTo("GY");
+			assertThat(result.entlassdatumVorherigeSchule).isEqualTo("2020-06-30");
+			assertThat(result.kuerzelEntlassjahrgangVorherigeSchule).isEqualTo("10");
+			assertThat(result.idHerkunftsartVersetzungVorherigeSchule).isEqualTo("V");
+			assertThat(result.bemerkungVorherigeSchule).isEqualTo("Guter Schüler");
+			assertThat(result.idAbschlussartVorherigeSchule).isEqualTo("OA");
 		}
 
 		@Test
@@ -80,8 +80,8 @@ class SchulbesuchMapperTest {
 
 			final var result = mapper.toApi(entity, emptyContext());
 
-			assertThat(result.entlassungDatum).isEqualTo("2023-07-01");
-			assertThat(result.idEntlassjahrgang).isEqualTo(5L);
+			assertThat(result.entlassdatumDieseSchule).isEqualTo("2023-07-01");
+			assertThat(result.idEntlassjahrgangDieseSchule).isEqualTo(5L);
 		}
 
 		@Test
@@ -93,8 +93,8 @@ class SchulbesuchMapperTest {
 
 			final var result = mapper.toApi(entity, emptyContext());
 
-			assertThat(result.aufnehmendWechseldatum).isEqualTo("2023-08-01");
-			assertThat(result.aufnehmendBestaetigt).isTrue();
+			assertThat(result.wechseldatumAufnehmendeSchule).isEqualTo("2023-08-01");
+			assertThat(result.wechselBestaetigtAufnehmendeSchule).isTrue();
 		}
 
 		@Test
@@ -109,10 +109,10 @@ class SchulbesuchMapperTest {
 
 			final var result = mapper.toApi(entity, emptyContext());
 
-			assertThat(result.grundschuleEinschulungsjahr).isEqualTo(2005);
-			assertThat(result.sekIWechsel).isEqualTo(2011);
-			assertThat(result.sekIErsteSchulform).isEqualTo("GY");
-			assertThat(result.sekIIWechsel).isEqualTo(2014);
+			assertThat(result.einschulungsjahrGrundschule).isEqualTo(2005);
+			assertThat(result.wechseljahrSekI).isEqualTo(2011);
+			assertThat(result.kuerzelErsteSchulformSek1).isEqualTo("GY");
+			assertThat(result.wechseljahrSekII).isEqualTo(2014);
 			assertThat(result.idKindergarten).isEqualTo(7L);
 		}
 
@@ -140,7 +140,7 @@ class SchulbesuchMapperTest {
 			final var result = mapper.toApi(entity, ctx);
 
 			assertThat(result.merkmale).containsExactly(merkmal);
-			assertThat(result.alleSchulen).containsExactly(schule);
+			assertThat(result.bisherBesuchteSchulen).containsExactly(schule);
 		}
 
 		// --- Lookup-Mappings: Schule ---
@@ -205,7 +205,7 @@ class SchulbesuchMapperTest {
 
 			final var result = mapper.toApi(entity, ctx);
 
-			assertThat(result.vorigeEntlassgrundID).isEqualTo(3L);
+			assertThat(result.idEntlassgrundVorherigeSchule).isEqualTo(3L);
 		}
 
 		@Test
@@ -218,7 +218,7 @@ class SchulbesuchMapperTest {
 
 			final var result = mapper.toApi(entity, ctx);
 
-			assertThat(result.entlassungGrundID).isEqualTo(5L);
+			assertThat(result.idEntlassgrundDieseSchule).isEqualTo(5L);
 		}
 
 		@Test
@@ -229,7 +229,7 @@ class SchulbesuchMapperTest {
 
 			final var result = mapper.toApi(entity, emptyContext());
 
-			assertThat(result.vorigeEntlassgrundID).isNull();
+			assertThat(result.idEntlassgrundVorherigeSchule).isNull();
 		}
 
 		// --- Katalog-Lookups: Null-Pfade (Schlüssel unbekannt) ---
@@ -242,7 +242,7 @@ class SchulbesuchMapperTest {
 
 			final var result = mapper.toApi(entity, emptyContext());
 
-			assertThat(result.grundschuleEinschulungsartID).isNull();
+			assertThat(result.idEinschulungsartGrundschule).isNull();
 		}
 
 		@Test
@@ -253,7 +253,7 @@ class SchulbesuchMapperTest {
 
 			final var result = mapper.toApi(entity, emptyContext());
 
-			assertThat(result.grundschuleEinschulungsartID).isNull();
+			assertThat(result.idEinschulungsartGrundschule).isNull();
 		}
 
 		@Test
@@ -264,7 +264,7 @@ class SchulbesuchMapperTest {
 
 			final var result = mapper.toApi(entity, emptyContext());
 
-			assertThat(result.idGrundschuleJahreEingangsphase).isNull();
+			assertThat(result.idEingangsphaseGrundschule).isNull();
 		}
 
 		@Test
@@ -275,7 +275,7 @@ class SchulbesuchMapperTest {
 
 			final var result = mapper.toApi(entity, emptyContext());
 
-			assertThat(result.idGrundschuleJahreEingangsphase).isNull();
+			assertThat(result.idEingangsphaseGrundschule).isNull();
 		}
 
 		@Test
@@ -286,7 +286,7 @@ class SchulbesuchMapperTest {
 
 			final var result = mapper.toApi(entity, emptyContext());
 
-			assertThat(result.idGrundschuleUebergangsempfehlung).isNull();
+			assertThat(result.idUebergangsempfehlungGrundschule).isNull();
 		}
 
 		@Test
@@ -310,15 +310,15 @@ class SchulbesuchMapperTest {
 
 			assertThat(result)
 					.satisfies(r -> {
-						assertThat(r.vorigeEntlassdatum).isNull();
-						assertThat(r.vorigeEntlassjahrgang).isNull();
+						assertThat(r.entlassdatumVorherigeSchule).isNull();
+						assertThat(r.kuerzelEntlassjahrgangVorherigeSchule).isNull();
 						assertThat(r.idVorherigeSchule).isNull();
-						assertThat(r.vorigeEntlassgrundID).isNull();
-						assertThat(r.entlassungGrundID).isNull();
+						assertThat(r.idEntlassgrundVorherigeSchule).isNull();
+						assertThat(r.idEntlassgrundDieseSchule).isNull();
 						assertThat(r.idAufnehmendeSchule).isNull();
-						assertThat(r.grundschuleEinschulungsartID).isNull();
-						assertThat(r.idGrundschuleJahreEingangsphase).isNull();
-						assertThat(r.idGrundschuleUebergangsempfehlung).isNull();
+						assertThat(r.idEinschulungsartGrundschule).isNull();
+						assertThat(r.idEingangsphaseGrundschule).isNull();
+						assertThat(r.idUebergangsempfehlungGrundschule).isNull();
 						assertThat(r.idDauerKindergartenbesuch).isNull();
 					});
 		}
@@ -336,19 +336,19 @@ class SchulbesuchMapperTest {
 		@DisplayName("Aktualisiert alle definierten Felder")
 		void patch_aktualisiertAlleDefiniertenFelder() {
 			final var request = new SchulbesuchPatchRequest();
-			request.vorigeEntlassdatum = JsonNullable.of("2021-07-01");
-			request.vorigeEntlassjahrgang = JsonNullable.of("10");
-			request.vorigeArtLetzteVersetzung = JsonNullable.of("V");
-			request.vorigeBemerkung = JsonNullable.of("Bemerkung");
-			request.vorigeAbschlussartID = JsonNullable.of("OA");
-			request.entlassungDatum = JsonNullable.of("2022-08-01");
-			request.idEntlassjahrgang = JsonNullable.of(3L);
-			request.aufnehmendWechseldatum = JsonNullable.of("2022-09-01");
-			request.aufnehmendBestaetigt = JsonNullable.of(true);
-			request.grundschuleEinschulungsjahr = JsonNullable.of(2005);
-			request.sekIWechsel = JsonNullable.of(2011);
-			request.sekIErsteSchulform = JsonNullable.of("GY");
-			request.sekIIWechsel = JsonNullable.of(2014);
+			request.entlassdatumVorherigeSchule = JsonNullable.of("2021-07-01");
+			request.kuerzelEntlassjahrgangVorherigeSchule = JsonNullable.of("10");
+			request.idHerkunftsartVersetzungVorherigeSchule = JsonNullable.of("V");
+			request.bemerkungVorherigeSchule = JsonNullable.of("Bemerkung");
+			request.idAbschlussartVorherigeSchule = JsonNullable.of("OA");
+			request.entlassdatumDieseSchule = JsonNullable.of("2022-08-01");
+			request.idEntlassjahrgangDieseSchule = JsonNullable.of(3L);
+			request.wechseldatumAufnehmendeSchule = JsonNullable.of("2022-09-01");
+			request.wechselBestaetigtAufnehmendeSchule = JsonNullable.of(true);
+			request.einschulungsjahrGrundschule = JsonNullable.of(2005);
+			request.wechseljahrSekI = JsonNullable.of(2011);
+			request.kuerzelErsteSchulformSek1 = JsonNullable.of("GY");
+			request.wechseljahrSekII = JsonNullable.of(2014);
 			request.idKindergarten = JsonNullable.of(7L);
 			request.verpflichtungSprachfoerderkurs = JsonNullable.of(true);
 			request.teilnahmeSprachfoerderkurs = JsonNullable.of(false);
@@ -402,9 +402,9 @@ class SchulbesuchMapperTest {
 		@DisplayName("Setzt Felder auf null wenn JsonNullable.of(null)")
 		void patch_setztNullWerte() {
 			final var request = new SchulbesuchPatchRequest();
-			request.vorigeEntlassdatum = JsonNullable.of(null);
-			request.vorigeEntlassjahrgang = JsonNullable.of(null);
-			request.vorigeBemerkung = JsonNullable.of(null);
+			request.entlassdatumVorherigeSchule = JsonNullable.of(null);
+			request.kuerzelEntlassjahrgangVorherigeSchule = JsonNullable.of(null);
+			request.bemerkungVorherigeSchule = JsonNullable.of(null);
 
 			final var entity = createEntity(1L);
 			entity.LSSchulEntlassDatum = "2020-06-30";
@@ -424,7 +424,7 @@ class SchulbesuchMapperTest {
 		@DisplayName("Mischt definierte und undefined Felder korrekt")
 		void patch_mischtDefinierteUndUndefinierteFelder() {
 			final var request = new SchulbesuchPatchRequest();
-			request.vorigeEntlassdatum = JsonNullable.of("2025-01-01");
+			request.entlassdatumVorherigeSchule = JsonNullable.of("2025-01-01");
 			// vorigeEntlassjahrgang bleibt undefined
 			final var entity = createEntity(1L);
 			entity.LSSchulEntlassDatum = "2000-01-01";

@@ -13,38 +13,39 @@
 					v-model="model.vorherigeSchule.value"
 					searchable :readonly />
 				<svws-ui-button type="transparent"
-					@click="goToSchule(manager().daten.idVorherigeSchule ?? -1)">
+					@click="goToSchule(manager().daten.idVorherigeSchule ?? -1)"
+					:disabled="manager().daten.idVorherigeSchule === null">
 					<span class="icon i-ri-link" />Zur Schule
 				</svws-ui-button>
 				<svws-ui-text-input placeholder="allgemeine Herkunft"
-					:model-value="model.vorherigeAllgHerkunft.value"
+					:model-value="model.schulformVorherigeSchule.value"
 					statistics readonly />
 				<svws-ui-text-input placeholder="Statistik-Schulnummer"
 					:model-value="model.schulnummerStatistik.value"
 					statistics readonly />
 				<svws-ui-text-input placeholder="Entlassen am" type="date"
-					v-model="model.proxy.vorigeEntlassdatum"
+					v-model="model.proxy.entlassdatumVorherigeSchule"
 					statistics :readonly />
 				<ui-select label="Entlassjahrgang"
 					:manager="vorherigeEntlassjahrgaengeManager"
-					v-model="model.vorigeEntlassjahrgang.value"
+					v-model="model.kuerzelEntlassjahrgangVorherigeSchule.value"
 					searchable statistics
 					:disabled="model.vorherigeSchule.value === undefined" :readonly />
 				<svws-ui-text-input placeholder="Bemerkung" span="full"
-					v-model="model.proxy.vorigeBemerkung"
-					:validation="() => model.getFehler('vorigeBemerkung')"
+					v-model="model.proxy.bemerkungVorherigeSchule"
+					:validation="() => model.getFehler('bemerkungVorherigeSchule')"
 					@commit="model.patch"
 					:max-len="255" :readonly />
 				<ui-select label="Entlassgrund"
 					:manager="vorherigerEntlassgrundManager"
-					v-model="model.vorigeEntlassgrundID.value"
+					v-model="model.idEntlassgrundVorherigeSchule.value"
 					searchable :readonly />
 				<svws-ui-text-input placeholder="höchster Abschluss, der von der anderen Schule mitgebracht wurde"
-					v-model="model.proxy.vorigeAbschlussartID"
+					v-model="model.proxy.idAbschlussartVorherigeSchule"
 					disabled statistics :readonly />
 				<!-- TODO: durch Ui-Select ersetzen: siehe Issue#3495-->
 				<svws-ui-text-input placeholder="Versetzung" span="full"
-					:model-value="model.vorigeArtLetzteVersetzung.value?.text ?? ''"
+					:model-value="model.idHerkunftsartVersetzungVorherigeSchule.value?.text ?? ''"
 					readonly statistics />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
@@ -53,18 +54,18 @@
 		<svws-ui-content-card title="Entlassung von eigener Schule">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Entlassen am" type="date" class="contentFocusField"
-					v-model="model.proxy.entlassungDatum"
+					v-model="model.proxy.entlassdatumDieseSchule"
 					statistics :readonly />
 				<ui-select label="Entlassjahrgang"
 					:manager="jahrgaengeManager"
-					v-model="model.idEntlassjahrgang.value"
+					v-model="model.idEntlassjahrgangDieseSchule.value"
 					searchable :readonly />
 				<ui-select label="Entlassgrund"
 					:manager="entlassgrundManager"
-					v-model="model.entlassungGrundID.value"
+					v-model="model.idEntlassgrundDieseSchule.value"
 					searchable :readonly />
 				<svws-ui-text-input placeholder="Art des Abschlusses" span="full"
-					v-model="model.proxy.entlassungAbschlussartID"
+					v-model="model.proxy.idAbschlussartDieseSchule"
 					disabled statistics :readonly />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
@@ -74,14 +75,14 @@
 			<template #actions>
 				<svws-ui-checkbox title="Wechsel bevorstehend" v-if="serverState.hasDev"
 					v-model="wechselBevorstehend"
-					:indeterminate="manager().daten.aufnehmendBestaetigt === null"
+					:indeterminate="manager().daten.wechselBestaetigtAufnehmendeSchule === null"
 					disabled :readonly>
 					<!-- Disabled, solange keine Backend-Funktionalität für den Schulwechsel implementiert ist. -->
 					Wechsel bevorstehend
 				</svws-ui-checkbox>
 				<svws-ui-checkbox title="Aufnahme bestätigt"
-					v-model="model.proxy.aufnehmendBestaetigt"
-					:indeterminate="manager().daten.aufnehmendBestaetigt === null"
+					v-model="model.proxy.wechselBestaetigtAufnehmendeSchule"
+					:indeterminate="manager().daten.wechselBestaetigtAufnehmendeSchule === null"
 					focus-class-content :readonly>
 					Aufnahme bestätigt
 				</svws-ui-checkbox>
@@ -98,7 +99,7 @@
 					<span class="icon i-ri-link" />Zur Schule
 				</svws-ui-button>
 				<svws-ui-text-input placeholder="Wechseldatum" type="date"
-					:model-value="manager().daten.aufnehmendWechseldatum"
+					:model-value="manager().daten.wechseldatumAufnehmendeSchule"
 					readonly />
 				<ui-select label="Wechselgrund"
 					v-if="serverState.hasDev"
@@ -136,22 +137,22 @@
 		<svws-ui-content-card title="Grundschulbesuch">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-input-number placeholder="Einschulung" class="contentFocusField"
-					v-model="model.proxy.grundschuleEinschulungsjahr"
-					:validation="() => model.getFehler('grundschuleEinschulungsjahr')"
+					v-model="model.proxy.einschulungsjahrGrundschule"
+					:validation="() => model.getFehler('einschulungsjahrGrundschule')"
 					@commit="model.patch"
 					:min="1900" :max="2100"
 					statistics :readonly />
 				<ui-select label="Einschulungsart"
 					:manager="einschulungsartenManager"
-					v-model="model.grundschuleEinschulungsartID.value"
+					v-model="model.idEinschulungsartGrundschule.value"
 					searchable :readonly />
 				<ui-select label="EP-Jahre"
 					:manager="grundschuleJahreEingangsphaseManager"
-					v-model="model.idGrundschuleJahreEingangsphase.value"
+					v-model="model.idEingangsphaseGrundschule.value"
 					searchable :readonly />
 				<ui-select label="Übergangsempfehlung Jg. 5"
 					:manager="grundschuleUebergangsempfehlungManager"
-					v-model="model.idGrundschuleUebergangsempfehlung.value"
+					v-model="model.idUebergangsempfehlungGrundschule.value"
 					searchable :readonly />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
@@ -160,18 +161,18 @@
 		<svws-ui-content-card title="Sekundarstufe I">
 			<svws-ui-input-wrapper>
 				<svws-ui-input-number placeholder="Jahr Wechsel Sek I" class="contentFocusField"
-					v-model="model.proxy.sekIWechsel"
-					:validation="() => model.getFehler('sekIWechsel')"
+					v-model="model.proxy.wechseljahrSekI"
+					:validation="() => model.getFehler('wechseljahrSekI')"
 					@commit="model.patch"
 					:min="1900" :max="2100"
 					statistics :readonly />
 				<ui-select label="Erste Schulform Sek I"
 					:manager="sekIErsteSchulformManager"
-					v-model="model.sekIErsteSchulform.value"
+					v-model="model.kuerzelErsteSchulformSek1.value"
 					searchable :readonly />
 				<svws-ui-input-number placeholder="Jahr Wechsel Sek II"
-					v-model="model.proxy.sekIIWechsel"
-					:validation="() => model.getFehler('sekIIWechsel')"
+					v-model="model.proxy.wechseljahrSekII"
+					:validation="() => model.getFehler('wechseljahrSekII')"
 					@commit="model.patch"
 					:min="1900" :max="2100"
 					statistics :readonly />
@@ -184,7 +185,7 @@
 			:delete-merkmale
 			:update-kompetenz />
 		<schueler-schulbesuch-bisherige-schulen :manager
-			:get-bisherige-schulen="() => props.manager().daten.alleSchulen"
+			:get-bisherige-schulen="() => props.manager().daten.bisherBesuchteSchulen"
 			:add-bisherige-schule
 			:patch-bisherige-schule
 			:delete-bisherige-schulen

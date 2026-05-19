@@ -18,113 +18,97 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class SchuelerSchulbesuchsdaten {
 
-
-	/** Die ID des Schülerdatensatzes. */
-	@Schema(description = "die ID des Schülerdatensatzes", example = "4711", accessMode = Schema.AccessMode.READ_ONLY)
+	/** Die ID des Schulbesuchdatensatzes. */
+	@Schema(description = "die ID des Schulbesuchdatensatzes", example = "4711", accessMode = Schema.AccessMode.READ_ONLY)
 	public long id;
 
-
-	// **** Informationen zu der Schule, die vor der Aufnahme besucht wurde
-
-	/** Die ID der vorher besuchten Schule. */
-	@Schema(description = "die ID der vorher besuchten Schule", example = "12")
+	/** Die ID der zuvor besuchten Schule. */
+	@Schema(description = "die ID der zuvor besuchten Schule", example = "12")
 	public Long idVorherigeSchule;
 
-	/** Die allgemeine Herkunftsart des Schüler in Bezug auf die Schulform der zuvor besuchten Schule. */
-	@Schema(description = "die allgemeine Herkunftsart des Schüler in Bezug auf die schulform der zuvor besuchten Schule",
-			example = "Grundschule (auch Primarstufe der Volkschule)")
-	public String vorigeAllgHerkunft;
+	/** Die Schulform der zuvor besuchten Schule. */
+	@Schema(description = "Die Schulform der zuvor besuchten Schule.", example = "Grundschule")
+	public String schulformVorherigeSchule;
 
 	/** Das Entlassdatum an der zuvor besuchten Schule. */
-	@Schema(description = "das Entlassdatum an der zuvor besuchten Schule", example = "1901-03-11")
-	public String vorigeEntlassdatum;
+	@Schema(description = "Das Entlassdatum an der zuvor besuchten Schule", example = "1901-03-11")
+	public String entlassdatumVorherigeSchule;
 
-	/** Der Entlassjahrgang an der zuvor besuchten Schule. */
-	@Schema(description = "der Entlassjahrgang an der zuvor besuchten Schule", example = "03")
-	public String vorigeEntlassjahrgang;
+	/** Das Kürzel des Entlassjahrgangs an der zuvor besuchten Schule. */
+	@Schema(description = "Das Kürzel des Entlassjahrgangs an der zuvor besuchten Schule.", example = "03")
+	public String kuerzelEntlassjahrgangVorherigeSchule;
 
-	/** Die ID der Art der letzten Versetzung an der zuvor besuchten Schule. */
-	@Schema(description = "die Art der letzten Versetzung an der zuvor besuchten Schule", example = "11")
-	public String vorigeArtLetzteVersetzung;
+	/** Die ID der Herkunftsart der Versetzung an der zuvor besuchten Schule. */
+	@Schema(description = "Die ID der Herkunftsart der Versetzung an der zuvor besuchten Schule.", example = "11")
+	public String idHerkunftsartVersetzungVorherigeSchule;
 
-	/** Bemerkungen zu der zuvor besuchten Schule. */
-	@Schema(description = "Bemerkungen zu der zuvor besuchten Schule", example = "diverse")
-	public String vorigeBemerkung;
+	/** Bemerkungen zur zuvor besuchten Schule. */
+	@Schema(description = "Bemerkungen zur zuvor besuchten Schule", example = "diverse")
+	public String bemerkungVorherigeSchule;
 
-	/** Die ID des Grundes für die Entlassung von der zuvor besuchten Schule. */
-	@Schema(description = "die ID des Grundes für die Entlassung von der zuvor besuchten Schule", example = "2")
-	public Long vorigeEntlassgrundID;
+	/** Die ID des Entlassgrundes der zuvor besuchten Schule. */
+	@Schema(description = "Die ID des Entlassgrundes der zuvor besuchten Schule. ", example = "2")
+	public Long idEntlassgrundVorherigeSchule;
 
-	/** Die ID des Abschlusses, welcher an der zuvor besuchten Schule erworben wurde. */
-	@Schema(description = "die ID des Abschlusses, welcher an der zuvor besuchten Schule erworben wurde", example = "OA")
-	public String vorigeAbschlussartID;
-
-
-	// **** Informationen zu der Entlassung von der eigenen Schule
+	/** Die ID der Abschlussart, der an der zuvor besuchten Schule erworben wurde. */
+	@Schema(description = "Die ID der Abschlussart, der an der zuvor besuchten Schule erworben wurde.", example = "OA")
+	public String idAbschlussartVorherigeSchule;
 
 	/** Das Entlassdatum von dieser Schule. */
-	@Schema(description = "das Entlassdatum von dieser Schule", example = "1902-03-11")
-	public String entlassungDatum;
+	@Schema(description = "Das Entlassdatum von dieser Schule.", example = "1902-03-11")
+	public String entlassdatumDieseSchule;
 
 	/** Die Id des Jahrgangs bei der Entlassung von dieser Schule. */
 	@Schema(description = "Die Id des Jahrgangs bei der Entlassung von dieser Schule.", example = "3")
-	public Long idEntlassjahrgang;
+	public Long idEntlassjahrgangDieseSchule;
 
-	/** Die ID des Grundes für die Entlassung von dieser Schule. */
-	@Schema(description = "die ID des Grundes für die Entlassung von dieser Schule", example = "1")
-	public Long entlassungGrundID;
+	/** Die ID des Entlassgrundes von dieser Schule. */
+	@Schema(description = "Die ID des Entlassgrundes von dieser Schule.", example = "1")
+	public Long idEntlassgrundDieseSchule;
 
-	/** Die ID des Abschlusses, welcher an dieser Schule erworben wurde. */
-	@Schema(description = "die ID des Abschlusses, welcher an dieser Schule erworben wurde", example = "OA")
-	public String entlassungAbschlussartID;
+	/** Die ID der Abschlussart, welcher an dieser Schule erworben wurde. */
+	@Schema(description = "Die ID der Abschlussart, welcher an dieser Schule erworben wurde.", example = "OA")
+	public String idAbschlussartDieseSchule;
 
-
-	// **** Informationen zu der aufnehmenden Schule nach einem Wechsel zu einer anderen Schule
-
-	/** Die ID der aufnehmenden Schule nach einer Entlassung. */
-	@Schema(description = "die ID der aufnehmenden Schule nach einer Entlassung", example = "12")
+	/** Die ID der aufnehmenden Schule. */
+	@Schema(description = "die ID der aufnehmenden Schule.", example = "12")
 	public Long idAufnehmendeSchule;
 
 	/** Das Datum beim Wechsel zu einer aufnehmenden Schule. */
-	@Schema(description = "das Datum beim Wechsel zu einer aufnehmenden Schule", example = "2020-01-01")
-	public String aufnehmendWechseldatum;
+	@Schema(description = "das Datum beim Wechsel zu einer aufnehmenden Schule.", example = "2020-01-01")
+	public String wechseldatumAufnehmendeSchule;
 
 	/** Gibt an, ob die aufnehmende Schule den Wechsel bestätigt hat. */
-	@Schema(description = "gibt an, ob die aufnehmende Schule den Wechsel bestätigt hat", example = "true")
-	public boolean aufnehmendBestaetigt;
-
-	// **** Informationen zu der besuchten Grundschule
+	@Schema(description = "Gibt an, ob die aufnehmende Schule den Wechsel bestätigt hat.", example = "true")
+	public boolean wechselBestaetigtAufnehmendeSchule;
 
 	/** Das Jahr der Einschulung in die Grundschule. */
-	@Schema(description = "das Jahr der Einschulung in die Grundschule", example = "2005")
-	public Integer grundschuleEinschulungsjahr;
+	@Schema(description = "Das Jahr der Einschulung in die Grundschule.", example = "2005")
+	public Integer einschulungsjahrGrundschule;
 
 	/** Die ID der Einschulungsart in die Grundschule. */
-	@Schema(description = "die ID der Einschulungsart in die Grundschule", example = "51")
-	public Long grundschuleEinschulungsartID;
+	@Schema(description = "die ID der Einschulungsart in die Grundschule.", example = "51")
+	public Long idEinschulungsartGrundschule;
 
 	/** Die ID der Schuleingangsphase der Grundschule. */
-	@Schema(description = "die ID der Schuleingangsphase der Grundschule", example = "2")
-	public Long idGrundschuleJahreEingangsphase;
+	@Schema(description = "die ID der Schuleingangsphase der Grundschule.", example = "2")
+	public Long idEingangsphaseGrundschule;
 
-	/** Die ID der Übergangsempfehlung der Grundschule in die Sekundarstufe I */
-	@Schema(description = "die ID der Übergangsempfehlung der Grundschule in die Sekundarstufe I", example = "1")
-	public Long idGrundschuleUebergangsempfehlung;
-
-
-	// **** Informationen zu dem Besuch der Sekundarstufe I
+	/** Die ID der Übergangsempfehlung der Grundschule in die Sekundarstufe I. */
+	@Schema(description = "Die ID der Übergangsempfehlung der Grundschule in die Sekundarstufe I.", example = "1")
+	public Long idUebergangsempfehlungGrundschule;
 
 	/** Das Jahr des Wechsels in die Sekundarstufe I. */
-	@Schema(description = "das Jahr des Wechsels in die Sekundarstufe I", example = "2009")
-	public Integer sekIWechsel;
+	@Schema(description = "das Jahr des Wechsels in die Sekundarstufe I.", example = "2009")
+	public Integer wechseljahrSekI;
 
 	/** Das Kürzel der ersten Schulform in der Sekundarstufe I */
-	@Schema(description = "das Kürzel der ersten Schulform in der Sekundarstufe I", example = "GY")
-	public String sekIErsteSchulform;
+	@Schema(description = "das Kürzel der ersten Schulform in der Sekundarstufe I.", example = "GY")
+	public String kuerzelErsteSchulformSek1;
 
 	/** Das Jahr des Wechsels in die Sekundarstufe II. */
-	@Schema(description = "das Jahr des Wechsels in die Sekundarstufe II", example = "2017")
-	public Integer sekIIWechsel;
+	@Schema(description = "das Jahr des Wechsels in die Sekundarstufe II.", example = "2017")
+	public Integer wechseljahrSekII;
 
 	/** Die ID der Dauer des Kindergartenbesuchs eines Schülers. */
 	@Schema(description = "Die ID der Dauer des Kindergartenbesuchs eines Schülers", example = "1")
@@ -142,21 +126,14 @@ public class SchuelerSchulbesuchsdaten {
 	@Schema(description = "gibt an, ob der Schüler an einem Sprachförderkurs teilgenommen hat", example = "false")
 	public boolean teilnahmeSprachfoerderkurs;
 
-
-	// **** Informationen zu besonderen Merkmalen für die Statistik
-
 	/** Die Informationen zu den besonderen Merkmalen für die Statistik. */
 	@ArraySchema(schema = @Schema(implementation = SchuelerSchulbesuchMerkmal.class,
 			description = "Ein Array mit den Informationen zu den besonderen Merkmalen für die Statistik."))
 	public @NotNull List<SchuelerSchulbesuchMerkmal> merkmale = new ArrayList<>();
 
-
-	// **** Informationen zu allen bisher besuchten Schulen (Array)
-
 	/** Die Informationen zu allen bisher besuchten Schulen. */
 	@ArraySchema(schema = @Schema(implementation = SchuelerSchulbesuchSchule.class,
 			description = "Ein Array mit den Informationen zu allen bisher besuchten Schulen."))
-	public @NotNull List<SchuelerSchulbesuchSchule> alleSchulen = new ArrayList<>();
-
+	public @NotNull List<SchuelerSchulbesuchSchule> bisherBesuchteSchulen = new ArrayList<>();
 
 }

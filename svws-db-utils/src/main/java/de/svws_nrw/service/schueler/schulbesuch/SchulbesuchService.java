@@ -114,12 +114,12 @@ public final class SchulbesuchService {
 
 	private void validateAndResolvePatch(final DTOSchueler entity, final SchulbesuchPatchRequest patchRequest) {
 		patchRequest.idVorherigeSchule.ifPresent(id -> patchLSSchulNr(entity, id));
-		patchRequest.vorigeEntlassgrundID.ifPresent(id -> patchLSEntlassgrund(entity, id));
-		patchRequest.entlassungGrundID.ifPresent(id -> patchEntlassgrund(entity, id));
+		patchRequest.idEntlassgrundVorherigeSchule.ifPresent(id -> patchLSEntlassgrund(entity, id));
+		patchRequest.idEntlassgrundDieseSchule.ifPresent(id -> patchEntlassgrund(entity, id));
 		patchRequest.idAufnehmendeSchule.ifPresent(id -> patchSchulwechselNr(entity, id));
-		patchRequest.grundschuleEinschulungsartID.ifPresent(id -> patchEinschulungsart(entity, id));
-		patchRequest.idGrundschuleJahreEingangsphase.ifPresent(id -> patchEPJahre(entity, id));
-		patchRequest.idGrundschuleUebergangsempfehlung.ifPresent(id -> patchUebergangsempfehlung(entity, id));
+		patchRequest.idEinschulungsartGrundschule.ifPresent(id -> patchEinschulungsart(entity, id));
+		patchRequest.idEingangsphaseGrundschule.ifPresent(id -> patchEPJahre(entity, id));
+		patchRequest.idUebergangsempfehlungGrundschule.ifPresent(id -> patchUebergangsempfehlung(entity, id));
 		patchRequest.idDauerKindergartenbesuch.ifPresent(id -> patchKindergartenbesuch(entity, id));
 
 	}
