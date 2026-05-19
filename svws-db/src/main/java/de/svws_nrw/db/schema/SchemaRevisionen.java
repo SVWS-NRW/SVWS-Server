@@ -319,21 +319,24 @@ public enum SchemaRevisionen {
 	REV_62(62, "2026-04-17"),
 
 	/** Korrektur eines Triggers in TimestampsNotenmodulCredentials */
-	REV_63(63, "2026-04-17");
+	REV_63(63, "2026-04-17"),
+
+	/** Erweiterung Tabelle EigeneSchule_Fachklassen um Feld Kuerzel */
+	REV_64(64, "2026-05-19");
 
 	/**
 	 * Gibt die größte Revisionsnummer an, die in dieser Enumeration definiert wurde und
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_63;
+	public static final SchemaRevisionen maxRevision = REV_64;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_63;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_64;
 
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
