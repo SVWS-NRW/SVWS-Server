@@ -36,6 +36,7 @@ public interface SchulbesuchMapper {
 	 * @return die befüllten {@link SchuelerSchulbesuchsdaten}
 	 */
 	@Mapping(source = "entity.ID",                        		target = "id")
+	@Mapping(source = "entity.Entlassart",   					target = "schluesselHoechsterSchulabschluss")
 	@Mapping(source = "entity.LSSchulform",              		target = "schulformVorherigeSchule")
 	@Mapping(source = "entity.LSSchulEntlassDatum",				target = "entlassdatumVorherigeSchule")
 	@Mapping(source = "entity.LSJahrgang",                		target = "kuerzelEntlassjahrgangVorherigeSchule")

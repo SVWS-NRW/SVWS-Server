@@ -22,6 +22,10 @@ public class SchuelerSchulbesuchsdaten {
 	@Schema(description = "die ID des Schulbesuchdatensatzes", example = "4711", accessMode = Schema.AccessMode.READ_ONLY)
 	public long id;
 
+	/** Der Schlüssel des höchsten Schulabschlusses. */
+	@Schema(description = "Der Schlüssel des höchsten Schulabschlusses.", example = "K")
+	public String schluesselHoechsterSchulabschluss;
+
 	/** Die ID der zuvor besuchten Schule. */
 	@Schema(description = "die ID der zuvor besuchten Schule", example = "12")
 	public Long idVorherigeSchule;

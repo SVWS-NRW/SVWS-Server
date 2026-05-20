@@ -8,6 +8,11 @@ import org.openapitools.jackson.nullable.JsonNullable;
 
 public class SchulbesuchPatchRequest {
 
+	/** Der Schlüssel des höchsten Schulabschlusses. */
+	@Schema(description = "Der Schlüssel des höchsten Schulabschlusses.", example = "2")
+	@Size(max = 2)
+	public JsonNullable<String> schluesselHoechsterSchulabschluss = JsonNullable.undefined();
+
 	/** Die ID der zuvor besuchten Schule. */
 	@Schema(description = "Die ID der zuvor besuchten Schule.", example = "12")
 	public JsonNullable<Long> idVorherigeSchule = JsonNullable.undefined();

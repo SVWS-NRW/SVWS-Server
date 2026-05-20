@@ -13,6 +13,11 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 	public id: number = 0;
 
 	/**
+	 * Der Schlüssel des höchsten Schulabschlusses.
+	 */
+	public schluesselHoechsterSchulabschluss: string | null = null;
+
+	/**
 	 * Die ID der zuvor besuchten Schule.
 	 */
 	public idVorherigeSchule: number | null = null;
@@ -173,6 +178,7 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
+		result.schluesselHoechsterSchulabschluss = (obj.schluesselHoechsterSchulabschluss === undefined) ? null : obj.schluesselHoechsterSchulabschluss === null ? null : obj.schluesselHoechsterSchulabschluss;
 		result.idVorherigeSchule = (obj.idVorherigeSchule === undefined) ? null : obj.idVorherigeSchule === null ? null : obj.idVorherigeSchule;
 		result.schulformVorherigeSchule = (obj.schulformVorherigeSchule === undefined) ? null : obj.schulformVorherigeSchule === null ? null : obj.schulformVorherigeSchule;
 		result.entlassdatumVorherigeSchule = (obj.entlassdatumVorherigeSchule === undefined) ? null : obj.entlassdatumVorherigeSchule === null ? null : obj.entlassdatumVorherigeSchule;
@@ -221,6 +227,7 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 	public static transpilerToJSON(obj: SchuelerSchulbesuchsdaten): string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"schluesselHoechsterSchulabschluss" : ' + ((obj.schluesselHoechsterSchulabschluss === null) ? 'null' : JSON.stringify(obj.schluesselHoechsterSchulabschluss)) + ',';
 		result += '"idVorherigeSchule" : ' + ((obj.idVorherigeSchule === null) ? 'null' : obj.idVorherigeSchule.toString()) + ',';
 		result += '"schulformVorherigeSchule" : ' + ((obj.schulformVorherigeSchule === null) ? 'null' : JSON.stringify(obj.schulformVorherigeSchule)) + ',';
 		result += '"entlassdatumVorherigeSchule" : ' + ((obj.entlassdatumVorherigeSchule === null) ? 'null' : JSON.stringify(obj.entlassdatumVorherigeSchule)) + ',';
@@ -272,6 +279,9 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		let result = '{';
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
+		}
+		if (obj.schluesselHoechsterSchulabschluss !== undefined) {
+			result += '"schluesselHoechsterSchulabschluss" : ' + ((obj.schluesselHoechsterSchulabschluss === null) ? 'null' : JSON.stringify(obj.schluesselHoechsterSchulabschluss)) + ',';
 		}
 		if (obj.idVorherigeSchule !== undefined) {
 			result += '"idVorherigeSchule" : ' + ((obj.idVorherigeSchule === null) ? 'null' : obj.idVorherigeSchule.toString()) + ',';

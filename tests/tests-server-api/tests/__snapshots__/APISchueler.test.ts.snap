@@ -27925,6 +27925,7 @@ SchuelerSchulbesuchsdaten {
     "removeFirst": [Function],
     "removeLast": [Function],
   },
+  "schluesselHoechsterSchulabschluss": null,
   "schulformVorherigeSchule": "G",
   "teilnahmeSprachfoerderkurs": false,
   "verpflichtungSprachfoerderkurs": false,

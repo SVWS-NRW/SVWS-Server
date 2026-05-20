@@ -11,6 +11,8 @@ import de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre;
 import de.svws_nrw.asd.types.schueler.Einschulungsart;
 import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
 import de.svws_nrw.asd.types.schule.Kindergartenbesuch;
+import de.svws_nrw.asd.types.schule.SchulabschlussAllgemeinbildend;
+import de.svws_nrw.asd.types.schule.SchulabschlussBerufsbildend;
 import de.svws_nrw.data.TransactionSupport;
 import de.svws_nrw.data.kataloge.DataKatalogEntlassgruende;
 import de.svws_nrw.data.schule.DataSchulen;
@@ -121,7 +123,22 @@ public final class SchulbesuchService {
 		patchRequest.idEingangsphaseGrundschule.ifPresent(id -> patchEPJahre(entity, id));
 		patchRequest.idUebergangsempfehlungGrundschule.ifPresent(id -> patchUebergangsempfehlung(entity, id));
 		patchRequest.idDauerKindergartenbesuch.ifPresent(id -> patchKindergartenbesuch(entity, id));
+		patchRequest.schluesselHoechsterSchulabschluss.ifPresent(schluessel -> patchHoechsterSchulabschluss(entity, schluessel));
+	}
 
+	private void patchHoechsterSchulabschluss(final DTOSchueler entity, final String schluessel) {
+		if (schluessel == null) {
+			entity.Entlassart = null;
+			return;
+		}
+		final var abschlussAllgemeinbildend = SchulabschlussAllgemeinbildend.data().getWertBySchluessel(schluessel);
+		final var abschlussBerufsbildend = SchulabschlussBerufsbildend.data().getWertBySchluessel(schluessel);
+		if ((abschlussAllgemeinbildend == null) && (abschlussBerufsbildend == null)) {
+			throw new ApiOperationException(
+					Status.BAD_REQUEST,
+					"Keine Schulabschluss mit dem Schlüssel %s gefunden.".formatted(schluessel));
+		}
+		entity.Entlassart = schluessel;
 	}
 
 	private void patchLSSchulNr(final DTOSchueler entity, final Long id) {

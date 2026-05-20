@@ -12,6 +12,7 @@ import de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre;
 import de.svws_nrw.asd.types.schueler.Einschulungsart;
 import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
 import de.svws_nrw.asd.types.schule.Kindergartenbesuch;
+import de.svws_nrw.asd.types.schule.SchulabschlussAllgemeinbildend;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.data.TransactionSupport;
 import de.svws_nrw.data.kataloge.DataKatalogEntlassgruende;
@@ -32,6 +33,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -93,7 +95,7 @@ class SchulbesuchServiceTest {
 		schule = new DTOSchuleNRW(1L, "123");
 		entlassart = new DTOEntlassarten(1L, "entlassart");
 		apiModel = mock(SchuelerSchulbesuchsdaten.class);
-		transactionSupport.when(() -> TransactionSupport.transactional(any(Supplier.class)))
+		transactionSupport.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<Object>>any()))
 				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 	}
 
@@ -249,6 +251,54 @@ class SchulbesuchServiceTest {
 					assertThat(s.DauerKindergartenbesuch).isEqualTo(someValue);
 				});
 	}
+
+	// -------------------------------------------------------------------------
+	// patch - Entlassart (schluesselHoechsterSchulabschluss)
+	// -------------------------------------------------------------------------
+
+	@Test
+	@DisplayName("patch - höchster Schulabschluss")
+	void patchEntlassart() {
+		final var patchRequest = new SchulbesuchPatchRequest();
+		final var schluessel = SchulabschlussAllgemeinbildend.ABITUR.historie().getLast().schluessel;
+		patchRequest.schluesselHoechsterSchulabschluss = JsonNullable.of(schluessel);
+		schueler.Entlassart = "--";
+		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
+
+		schulbesuchService.patch(idSchueler, patchRequest);
+
+		verify(schulbesuchMapper).patch(any(), schuelerCaptor.capture());
+		assertThat(schuelerCaptor.getValue().Entlassart).isEqualTo(schluessel);
+	}
+
+	@Test
+	@DisplayName("patch - höchster Schulabschluss - null")
+	void patchEntlassart_null() {
+		final var patchRequest = new SchulbesuchPatchRequest();
+		patchRequest.schluesselHoechsterSchulabschluss = JsonNullable.of(null);
+		schueler.Entlassart = "--";
+		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
+
+		schulbesuchService.patch(idSchueler, patchRequest);
+
+		verify(schulbesuchMapper).patch(any(), schuelerCaptor.capture());
+		assertThat(schuelerCaptor.getValue().LSSchulNr).isNull();
+	}
+
+	@Test
+	@DisplayName("patch - höchster Schulabschluss - wrong schluessel")
+	void patchEntlassart_wrongSchluessel() {
+		final var patchRequest = new SchulbesuchPatchRequest();
+		patchRequest.schluesselHoechsterSchulabschluss = JsonNullable.of("--");
+		schueler.Entlassart = "before patch";
+		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
+
+		assertThatException()
+				.isThrownBy(() -> schulbesuchService.patch(idSchueler, patchRequest))
+				.isInstanceOf(ApiOperationException.class)
+				.hasFieldOrPropertyWithValue("status", Status.BAD_REQUEST);
+	}
+
 
 	// -------------------------------------------------------------------------
 	// patch - LSSchulNr (idVorherigeSchule)
