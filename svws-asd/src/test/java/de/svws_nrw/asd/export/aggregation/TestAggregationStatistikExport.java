@@ -3,7 +3,6 @@ package de.svws_nrw.asd.export.aggregation;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -19,15 +18,21 @@ import de.svws_nrw.asd.utils.json.JsonReader;
  * Die Testdaten sind fehlerfrei und werden mit Jackson in die entsprechende statische Datenstruktur eingelesen.
  *
  */
-@Disabled
 @DisplayName("Teste die Aggregation der Gesamt-Statistikdaten einer Schule in das Format StatistikExport")
 class TestAggregationStatistikExport {
 
 	/** Statistikdaten der Schule */
-	static final StatistikGesamt testdaten_001 =
-			JsonReader.fromResource("de/svws_nrw/asd/export/aggregation/StatistikGesamt_GY.json", StatistikGesamt.class);
+//	static final StatistikGesamt testdaten_001 =
+//			JsonReader.fromResource("de/svws_nrw/asd/export/aggregation/StatistikGesamt_BK.json", StatistikGesamt.class);
+
+//	static final StatistikGesamt testdaten_001 =
+//			JsonReader.fromResource("de/svws_nrw/asd/export/aggregation/StatistikGesamt_GY.json", StatistikGesamt.class);
+
 //	static final StatistikGesamt testdaten_001 =
 //			JsonReader.fromResource("de/svws_nrw/asd/export/aggregation/StatistikGesamt_S.json", StatistikGesamt.class);
+
+	static final StatistikGesamt testdaten_001 =
+			JsonReader.fromResource("de/svws_nrw/asd/export/aggregation/StatistikGesamt_G.json", StatistikGesamt.class);
 
 
 	/**
