@@ -214,7 +214,7 @@ public class APIPrivilegedConfig {
 	@ApiResponse(responseCode = "204", description = "Der Import des privaten Schlüssels und des Zertifikats war erfolgreich.")
 	@ApiResponse(responseCode = "400", description = "Es ist ein Fehler beim Import aufgetreten.")
 	@ApiResponse(responseCode = "403", description = "Der Benutzer hat keine Berechtigung, um die TLS-Zertifikatsinformationen zu setzen.")
-	public Response setConfigPrivateKeyCertificateBase64(@PathParam("alias") final String alias, @RequestBody(description = "Die LuPO-Datei", required = true,
+	public Response setConfigPrivateKeyCertificateBase64(@PathParam("alias") final String alias, @RequestBody(description = "Das Zertifikat und der private Schlüssel, jeweils im Base64-Format", required = true,
 			content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final PrivateKeyCertificateMultipartBody multipart,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithoutTransaction(conn -> {
