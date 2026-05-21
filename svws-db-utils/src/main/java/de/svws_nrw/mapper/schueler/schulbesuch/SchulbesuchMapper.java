@@ -37,6 +37,7 @@ public interface SchulbesuchMapper {
 	 */
 	@Mapping(source = "entity.ID",                        		target = "id")
 	@Mapping(source = "entity.Entlassart",   					target = "schluesselHoechsterSchulabschluss")
+	@Mapping(source = "entity.HatBerufsausbildung",   			target = "berufsabschlussVorhanden")
 	@Mapping(source = "entity.LSSchulform",              		target = "schulformVorherigeSchule")
 	@Mapping(source = "entity.LSSchulEntlassDatum",				target = "entlassdatumVorherigeSchule")
 	@Mapping(source = "entity.LSJahrgang",                		target = "kuerzelEntlassjahrgangVorherigeSchule")
@@ -181,6 +182,7 @@ public interface SchulbesuchMapper {
 	 * @param input                  der Patch-Request mit den zu ändernden Feldern
 	 * @param toPatch                die zu aktualisierende Entity
 	 */
+	@Mapping(source = "berufsabschlussVorhanden",			 		target = "HatBerufsausbildung")
 	@Mapping(source = "entlassdatumVorherigeSchule", 				target = "LSSchulEntlassDatum")
 	@Mapping(source = "kuerzelEntlassjahrgangVorherigeSchule", 		target = "LSJahrgang")
 	@Mapping(source = "idHerkunftsartVersetzungVorherigeSchule", 	target = "LSVersetzung")

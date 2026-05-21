@@ -5,13 +5,18 @@
 		</svws-ui-modal-hilfe>
 	</Teleport>
 	<div class="page page-grid-cards">
-		<!-- Vorhandene Abschlüse !-->
+		<!-- Vorhandene Abschlüsse !-->
 		<svws-ui-content-card title="Vorhandene Abschlüsse">
 			<svws-ui-input-wrapper :grid="2">
 				<ui-select label="Höchster allgemeinbildender Abschluss"
 					:manager="hoechsterAbschlussManager"
 					v-model="model.hoechsterSchulabschluss.value"
 					searchable :readonly />
+				<svws-ui-checkbox title="Berufsabschluss vorhanden" v-if="schuleIstBK"
+					v-model="model.proxy.berufsabschlussVorhanden"
+					:readonly>
+					Berufsabschluss vorhanden
+				</svws-ui-checkbox>
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<div />
@@ -227,6 +232,8 @@
 	const schuljahr = computed(() => props.manager().schuljahr);
 	const schuleHatPrimarstufe = computed(
 		() => [Schulform.G, Schulform.FW, Schulform.WF, Schulform.GM, Schulform.KS, Schulform.S, Schulform.GE, Schulform.V].includes(schuleState.schulform));
+	const schuleIstBK = computed(
+		() => [Schulform.SB, Schulform.BK, Schulform.WB].includes(schuleState.schulform));
 	const wechselBevorstehend = ref<boolean>(false);
 
 

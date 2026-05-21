@@ -18,6 +18,11 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 	public schluesselHoechsterSchulabschluss: string | null = null;
 
 	/**
+	 * Gibt an, ob ein Berufsabschluss vorhanden ist.
+	 */
+	public berufsabschlussVorhanden: boolean = false;
+
+	/**
 	 * Die ID der zuvor besuchten Schule.
 	 */
 	public idVorherigeSchule: number | null = null;
@@ -179,6 +184,9 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.schluesselHoechsterSchulabschluss = (obj.schluesselHoechsterSchulabschluss === undefined) ? null : obj.schluesselHoechsterSchulabschluss === null ? null : obj.schluesselHoechsterSchulabschluss;
+		if (obj.berufsabschlussVorhanden === undefined)
+			throw new Error('invalid json format, missing attribute berufsabschlussVorhanden');
+		result.berufsabschlussVorhanden = obj.berufsabschlussVorhanden;
 		result.idVorherigeSchule = (obj.idVorherigeSchule === undefined) ? null : obj.idVorherigeSchule === null ? null : obj.idVorherigeSchule;
 		result.schulformVorherigeSchule = (obj.schulformVorherigeSchule === undefined) ? null : obj.schulformVorherigeSchule === null ? null : obj.schulformVorherigeSchule;
 		result.entlassdatumVorherigeSchule = (obj.entlassdatumVorherigeSchule === undefined) ? null : obj.entlassdatumVorherigeSchule === null ? null : obj.entlassdatumVorherigeSchule;
@@ -228,6 +236,7 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"schluesselHoechsterSchulabschluss" : ' + ((obj.schluesselHoechsterSchulabschluss === null) ? 'null' : JSON.stringify(obj.schluesselHoechsterSchulabschluss)) + ',';
+		result += '"berufsabschlussVorhanden" : ' + obj.berufsabschlussVorhanden.toString() + ',';
 		result += '"idVorherigeSchule" : ' + ((obj.idVorherigeSchule === null) ? 'null' : obj.idVorherigeSchule.toString()) + ',';
 		result += '"schulformVorherigeSchule" : ' + ((obj.schulformVorherigeSchule === null) ? 'null' : JSON.stringify(obj.schulformVorherigeSchule)) + ',';
 		result += '"entlassdatumVorherigeSchule" : ' + ((obj.entlassdatumVorherigeSchule === null) ? 'null' : JSON.stringify(obj.entlassdatumVorherigeSchule)) + ',';
@@ -282,6 +291,9 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		}
 		if (obj.schluesselHoechsterSchulabschluss !== undefined) {
 			result += '"schluesselHoechsterSchulabschluss" : ' + ((obj.schluesselHoechsterSchulabschluss === null) ? 'null' : JSON.stringify(obj.schluesselHoechsterSchulabschluss)) + ',';
+		}
+		if (obj.berufsabschlussVorhanden !== undefined) {
+			result += '"berufsabschlussVorhanden" : ' + obj.berufsabschlussVorhanden.toString() + ',';
 		}
 		if (obj.idVorherigeSchule !== undefined) {
 			result += '"idVorherigeSchule" : ' + ((obj.idVorherigeSchule === null) ? 'null' : obj.idVorherigeSchule.toString()) + ',';

@@ -13,6 +13,10 @@ public class SchulbesuchPatchRequest {
 	@Size(max = 2)
 	public JsonNullable<String> schluesselHoechsterSchulabschluss = JsonNullable.undefined();
 
+	/** Gibt an, ob ein Berufsabschluss vorhanden ist. */
+	@Schema(description = "Gibt an, ob ein Berufsabschluss vorhanden ist.", example = "false")
+	public JsonNullable<Boolean> berufsabschlussVorhanden = JsonNullable.undefined();
+
 	/** Die ID der zuvor besuchten Schule. */
 	@Schema(description = "Die ID der zuvor besuchten Schule.", example = "12")
 	public JsonNullable<Long> idVorherigeSchule = JsonNullable.undefined();

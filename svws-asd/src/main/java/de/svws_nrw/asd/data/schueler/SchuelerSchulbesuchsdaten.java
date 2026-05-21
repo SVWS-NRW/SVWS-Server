@@ -26,6 +26,10 @@ public class SchuelerSchulbesuchsdaten {
 	@Schema(description = "Der Schlüssel des höchsten Schulabschlusses.", example = "K")
 	public String schluesselHoechsterSchulabschluss;
 
+	/** Gibt an, ob ein Berufsabschluss vorhanden ist. */
+	@Schema(description = "Gibt an, ob ein Berufsabschluss vorhanden ist.", example = "false")
+	public boolean berufsabschlussVorhanden;
+
 	/** Die ID der zuvor besuchten Schule. */
 	@Schema(description = "die ID der zuvor besuchten Schule", example = "12")
 	public Long idVorherigeSchule;
