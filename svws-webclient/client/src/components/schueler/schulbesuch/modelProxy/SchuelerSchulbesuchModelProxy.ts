@@ -1,9 +1,10 @@
 import type { SchuelerSchulbesuchManager } from "@ui";
 import { ModelProxy, ValidatorNumberRange, ValidatorStringLength } from "@ui";
 import type { EinschulungsartKatalogEintrag, HerkunftsartenKatalogEintrag, JahrgaengeKatalogEintrag, JahrgangsDaten, KatalogEntlassgrund, Kindergarten,
-	KindergartenbesuchKatalogEintrag, PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag, SchuelerSchulbesuchsdaten, SchulEintrag, SchulformKatalogEintrag,
-	UebergangsempfehlungKatalogEintrag } from "@core";
-import { Einschulungsart, Herkunftsarten, Jahrgaenge, Kindergartenbesuch, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, Uebergangsempfehlung } from "@core";
+	KindergartenbesuchKatalogEintrag, PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag, SchuelerSchulbesuchsdaten,
+	SchulabschlussAllgemeinbildendKatalogEintrag, SchulEintrag, SchulformKatalogEintrag, UebergangsempfehlungKatalogEintrag } from "@core";
+import { Einschulungsart, Herkunftsarten, Jahrgaenge, Kindergartenbesuch, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, Uebergangsempfehlung,
+	SchulabschlussAllgemeinbildend } from "@core";
 import { computed } from "vue";
 
 export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuchsdaten> {
@@ -18,7 +19,7 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 			["idVorherigeSchule", "entlassdatumVorherigeSchule", "kuerzelEntlassjahrgangVorherigeSchule", "idEntlassgrundVorherigeSchule", "idAbschlussartVorherigeSchule", "idHerkunftsartVersetzungVorherigeSchule",
 				"entlassdatumDieseSchule", "idEntlassjahrgangDieseSchule", "idEntlassgrundDieseSchule", "idAbschlussartDieseSchule", "idKindergarten", "idDauerKindergartenbesuch",
 				"verpflichtungSprachfoerderkurs", "teilnahmeSprachfoerderkurs", "wechselBestaetigtAufnehmendeSchule", "idAufnehmendeSchule", "wechseldatumAufnehmendeSchule",
-				"idEinschulungsartGrundschule", "idEingangsphaseGrundschule", "idUebergangsempfehlungGrundschule", "kuerzelErsteSchulformSek1"];
+				"idEinschulungsartGrundschule", "idEingangsphaseGrundschule", "idUebergangsempfehlungGrundschule", "kuerzelErsteSchulformSek1", "schluesselHoechsterSchulabschluss"];
 		super({ data, patch, listOfAutopatchProps, checkValidBeforePatch: true });
 		this.manager = manager;
 		this.addValidatoren();
@@ -43,6 +44,12 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 		() => Schulform.data().getEintragByID(this.vorherigeSchule.value?.idSchulform ?? -1)?.text ?? null);
 
 	schulnummerStatistik = computed<string | null>(() => this.vorherigeSchule.value?.schulnummerStatistik ?? null);
+
+
+	hoechsterSchulabschluss = computed<SchulabschlussAllgemeinbildendKatalogEintrag | null>({
+		get: () => SchulabschlussAllgemeinbildend.data().getEintragBySchuljahrUndSchluessel(this.manager().schuljahr, this.proxy.schluesselHoechsterSchulabschluss ?? '') ?? null,
+		set: (v: SchulabschlussAllgemeinbildendKatalogEintrag | null) => this.proxy.schluesselHoechsterSchulabschluss = v?.schluessel ?? null,
+	});
 
 	kuerzelEntlassjahrgangVorherigeSchule = computed<JahrgaengeKatalogEintrag | null>({
 		get: () => Jahrgaenge.data().getWertByKuerzel(this.proxy.kuerzelEntlassjahrgangVorherigeSchule ?? '')?.daten(this.manager().schuljahr) ?? null,

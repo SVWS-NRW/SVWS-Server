@@ -12,7 +12,6 @@ import de.svws_nrw.asd.types.schueler.Einschulungsart;
 import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
 import de.svws_nrw.asd.types.schule.Kindergartenbesuch;
 import de.svws_nrw.asd.types.schule.SchulabschlussAllgemeinbildend;
-import de.svws_nrw.asd.types.schule.SchulabschlussBerufsbildend;
 import de.svws_nrw.data.TransactionSupport;
 import de.svws_nrw.data.kataloge.DataKatalogEntlassgruende;
 import de.svws_nrw.data.schule.DataSchulen;
@@ -132,8 +131,7 @@ public final class SchulbesuchService {
 			return;
 		}
 		final var abschlussAllgemeinbildend = SchulabschlussAllgemeinbildend.data().getWertBySchluessel(schluessel);
-		final var abschlussBerufsbildend = SchulabschlussBerufsbildend.data().getWertBySchluessel(schluessel);
-		if ((abschlussAllgemeinbildend == null) && (abschlussBerufsbildend == null)) {
+		if (abschlussAllgemeinbildend == null) {
 			throw new ApiOperationException(
 					Status.BAD_REQUEST,
 					"Keine Schulabschluss mit dem Schlüssel %s gefunden.".formatted(schluessel));

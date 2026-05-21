@@ -5,6 +5,16 @@
 		</svws-ui-modal-hilfe>
 	</Teleport>
 	<div class="page page-grid-cards">
+		<!-- Vorhandene Abschlüse !-->
+		<svws-ui-content-card title="Vorhandene Abschlüsse">
+			<svws-ui-input-wrapper :grid="2">
+				<ui-select label="Höchster allgemeinbildender Abschluss"
+					:manager="hoechsterAbschlussManager"
+					v-model="model.hoechsterSchulabschluss.value"
+					searchable :readonly />
+			</svws-ui-input-wrapper>
+		</svws-ui-content-card>
+		<div />
 		<!-- Vor der Aufnahme besucht !-->
 		<svws-ui-content-card title="Vor der Aufnahme besucht">
 			<svws-ui-input-wrapper :grid="2">
@@ -196,7 +206,8 @@
 <script setup lang="ts">
 
 	import type { JahrgangsDaten, KatalogEntlassgrund, Kindergarten, SchulEintrag } from "@core";
-	import { BenutzerKompetenz, Einschulungsart, Jahrgaenge, Kindergartenbesuch, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, Uebergangsempfehlung } from "@core";
+	import { BenutzerKompetenz, Einschulungsart, Jahrgaenge, Kindergartenbesuch, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, Uebergangsempfehlung,
+		SchulabschlussAllgemeinbildend } from "@core";
 	import type { SchuelerSchulbesuchProps } from './SchuelerSchulbesuchProps';
 	import { CoreTypeSelectManager, SelectManager, useSchuleState, useServerState } from "@ui";
 	import { computed, ref } from "vue";
@@ -217,6 +228,14 @@
 	const schuleHatPrimarstufe = computed(
 		() => [Schulform.G, Schulform.FW, Schulform.WF, Schulform.GM, Schulform.KS, Schulform.S, Schulform.GE, Schulform.V].includes(schuleState.schulform));
 	const wechselBevorstehend = ref<boolean>(false);
+
+
+	const hoechsterAbschlussManager = new CoreTypeSelectManager({
+		clazz: SchulabschlussAllgemeinbildend.class,
+		schuljahr: schuljahr,
+		optionDisplayText: "text",
+		selectionDisplayText: "text",
+	});
 
 	const vorherigeSchuleManager = new SelectManager<SchulEintrag>({
 		options: computed(() => props.manager().schulenById.values()),
