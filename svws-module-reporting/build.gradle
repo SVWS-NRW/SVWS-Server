@@ -11,6 +11,7 @@ dependencies {
 	implementation project(':svws-db')
 	implementation project(':svws-db-dto')
 	implementation project(':svws-db-utils')
+	implementation project(':svws-module-xschule')
 }
 
 def fontDir = layout.projectDirectory.dir("src/main/resources/de/svws_nrw/module/reporting/fonts")

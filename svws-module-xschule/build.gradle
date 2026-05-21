@@ -23,11 +23,11 @@ def prefixBindingFile = layout.projectDirectory.file('src/main/resources/xschule
 tasks.register('generateSourcesXSchule', JavaExec) {
 	group = 'build'
 	description = 'Generiert Java-Klassen für den XSchule-Kontext aus XSD-Datei mithilfe von JAXB'
-	inputs.files(schemaFileXSchule, prefixBindingFile)
+	inputs.dir(layout.projectDirectory.dir('src/main/resources/xschule'))
 	outputs.dir(jaxbOutputDir)
 	classpath = configurations.codeGen
 	mainClass = 'com.sun.tools.xjc.XJCFacade'
-	systemProperties = ['javax.xml.accessExternalDTD': 'all'] // Zugriff auf externe DTDs erlauben
+	systemProperties = ['javax.xml.accessExternalDTD': 'file'] // Zugriff auf externe DTDs erlauben
 
 	doFirst {
 		args = [
@@ -48,16 +48,14 @@ sourceSets {
 	}
 }
 
-def filteredJavaTree = fileTree(jaxbOutputDir) {
-	exclude '**/*.java'
-}
+def notGenerated = { !it.path.contains(jaxbOutputDir.get().asFile.path) }
 
 tasks.named('checkstyleMain').configure {
-	source = filteredJavaTree
+	source = sourceSets.main.allJava.filter(notGenerated)
 }
 
 tasks.named('javadoc').configure {
-	source = filteredJavaTree
+	source = sourceSets.main.allJava.filter(notGenerated)
 }
 
 compileJava.dependsOn(generateSourcesXSchule)
