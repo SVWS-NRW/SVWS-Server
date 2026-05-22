@@ -95,6 +95,11 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	private readonly _mapSchuljahrToWerte: JavaMap<number, List<U>> = new HashMap<number, List<U>>();
 
 	/**
+	 * Eine Map mit der Zuordnung der Liste der Werte zu einer Schulform
+	 */
+	private readonly _mapSchulformToWerte: JavaMap<Schulform, List<U>> = new HashMap<Schulform, List<U>>();
+
+	/**
 	 * Eine geschachtelte Map mit der Zuordnung eines Historien-Eintrags zu einem Schuljahr und einem Core-Type-Wert
 	 */
 	private readonly _mapWertAndSchuljahrToEintrag: HashMap<number, HashMap<U, T>> = new HashMap<number, HashMap<U, T>>();
@@ -646,11 +651,11 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	}
 
 	/**
-	 * Gibt alle Schulformen dieser Aufzählung zurück, welche in dem angegebenen Schuljahr gültig sind.
+	 * Gibt alle Werte dieser Aufzählung zurück, welche in dem angegebenen Schuljahr gültig sind.
 	 *
 	 * @param schuljahr   das Schuljahr
 	 *
-	 * @return eine {@link List} mit alle Schulformen
+	 * @return eine {@link List} mit allen Werten
 	 */
 	public getWerteBySchuljahr(schuljahr: number): List<U> {
 		let result: List<U> | null = this._mapSchuljahrToWerte.get(schuljahr);
@@ -662,6 +667,31 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 				}
 			}
 			this._mapSchuljahrToWerte.put(schuljahr, result);
+		}
+		return new ArrayList<U>(result);
+	}
+
+	/**
+	 * Gibt alle Werte dieser Aufzählung zurück, welche bei der angegebenen Schulform gültig sind.
+	 *
+	 * @param schulform   die Schulform
+	 *
+	 * @return eine {@link List} mit allen Werten
+	 */
+	public getWerteBySchulform(schulform: Schulform): List<U> {
+		let result: List<U> | null = this._mapSchulformToWerte.get(schulform);
+		if (result === null) {
+			result = new ArrayList();
+			for (const wert of this._listWerte) {
+				for (const eintrag of this.getHistorieByWert(wert)) {
+					const schulformen: JavaSet<Schulform> | null = this._mapSchulformenByID.get(eintrag.id);
+					if ((schulformen !== null) && ((schulformen.contains(schulform)) || schulformen.isEmpty())) {
+						result.add(wert);
+						break;
+					}
+				}
+			}
+			this._mapSchulformToWerte.put(schulform, result);
 		}
 		return new ArrayList<U>(result);
 	}

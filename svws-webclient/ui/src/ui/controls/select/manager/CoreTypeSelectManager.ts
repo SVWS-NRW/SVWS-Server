@@ -52,7 +52,7 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 
 	/**
 	 * Das Schuljahr, auf deren Basis der Eintrag ermittelt wird.
-	 * Bei null werden keine Optionen im Select angezeigt.
+	 * Bei null wird der aktuellste Historieneintrag geladen.
 	 */
 	protected _schuljahr = shallowRef<number | null>(null);
 
@@ -325,35 +325,87 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 	 * Ist kein Manager oder Schuljahr gegeben, werden die Optionen auf eine leere Liste gesetzt.
 	 */
 	private updateOptions() {
-		if ((this.manager === null) || (this.schuljahr === null)) {
-			this.unfilteredOptions = new ArrayList<T>();
+		if (this.manager === null) {
+			this.unfilteredOptions = new ArrayList();
 			return;
 		}
 
-		let werte: List<U>;
-		if (this.schulformen === null) {
-			werte = this.manager.getWerteBySchuljahr(this.schuljahr);
-		} else if (this.schulformen instanceof Schulform) {
-			werte = this.manager.getListBySchuljahrAndSchulform(this.schuljahr, this.schulformen);
-		} else {
-			const result = new ArrayList<U>();
-			for (const schulform of this.schulformen) {
-				const list = this.manager.getListBySchuljahrAndSchulform(this.schuljahr, schulform);
-				for (const item of list) {
-					if (!result.contains(item)) {
-						result.add(item);
-					}
-				}
-			}
-			werte = result;
-		}
-
-		const eintraege = new ArrayList<T>();
-		for (const coreType of werte) {
-			eintraege.add(this.manager.getEintragBySchuljahrUndWert(this.schuljahr, coreType));
-		}
-
-		this.unfilteredOptions = eintraege;
+		this.unfilteredOptions = this.getEintraege(this.manager);
 	}
 
+	/**
+	 * Gibt alle gültigen Einträge basierend auf dem angegebenen Schuljahr und den Schulformen zurück.
+	 *
+	 * @param manager   der CoreTypeDataManager
+	 *
+	 * @returns Liste der gültigen Einträge
+	 */
+	private getEintraege(manager: CoreTypeDataManager<T, U>): List<T> {
+		const werte = (this.schulformen === null)
+			? manager.getWerte()
+			: this.getWerteBySchulformen(manager, this.schulformen);
+
+		if (this.schuljahr === null) {
+			return this.getAktuellsteEintraege(manager, werte);
+		}
+		return this.getEintraegeBySchuljahr(manager, werte, this.schuljahr);
+	}
+
+	/**
+	 * Gibt die aktuellsten Einträge aller übergebenen Werte zurück.
+	 *
+	 * @param manager   der CoreTypeDataManager
+	 * @param werte     die liste der Werte
+	 *
+	 * @returns Liste der aktuellsten Einträge
+	 */
+	private getAktuellsteEintraege(manager: CoreTypeDataManager<T, U>, werte: List<U>): List<T> {
+		const eintraege = new ArrayList<T>();
+		for (const wert of werte) {
+			eintraege.add(manager.getHistorieByWert(wert).getLast());
+		}
+		return eintraege;
+	}
+
+	/**
+	 * Gibt die Einträge aller übergebenen Werte basierend auf dem Schuljahr zurück.
+	 *
+	 * @param manager     der CoreTypeDataManager
+	 * @param werte       die liste der Werte
+	 * @param schuljahr   das Schuljahr
+	 *
+	 * @returns Liste der aktuellsten Einträge
+	 */
+	private getEintraegeBySchuljahr(manager: CoreTypeDataManager<T, U>, werte: List<U>, schuljahr: number): List<T> {
+		const eintraege = new ArrayList<T>();
+		for (const wert of werte) {
+			const eintrag = manager.getEintragBySchuljahrUndWert(schuljahr, wert);
+			if (eintrag !== null) {
+				eintraege.add(eintrag);
+			}
+		}
+		return eintraege;
+	}
+
+
+	/**
+	 * Gibt alle Werte der gegebenen Schulformen zurück.
+	 *
+	 * @param manager	    der CoreTypeDataManager
+	 * @param schulformen   die Schulformen
+	 * @private
+	 */
+	private getWerteBySchulformen(manager: CoreTypeDataManager<T, U>, schulformen: Iterable<Schulform> | Schulform): List<U> {
+		const schulformenList = (schulformen instanceof Schulform) ? [schulformen] : schulformen;
+		const werte = new ArrayList<U>();
+		for (const schulform of schulformenList) {
+			const list = manager.getWerteBySchulform(schulform);
+			for (const item of list) {
+				if (!werte.contains(item)) {
+					werte.add(item);
+				}
+			}
+		}
+		return werte;
+	}
 }

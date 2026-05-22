@@ -62,7 +62,7 @@
 			"idStatistik": "4",
 			"historie": [
 				{
-					"id": 3004,
+					"id": 3000,
 					"kuerzel": "KK",
 					"text": "K - Ein sehr langer Eintrag mit insgesamt 52 Zeichen",
 					"schluessel": "AB",
@@ -72,6 +72,18 @@
 						{ "schulform": "V", "gliederung": null }
 					],
 					"gueltigVon": null,
+					"gueltigBis": 2010
+				}, {
+					"id": 3001,
+					"kuerzel": "KK",
+					"text": "K - Aktuellster Eintrag",
+					"schluessel": "AB",
+					"zulaessig": [
+						{ "schulform": "H", "gliederung": null },
+						{ "schulform": "SK", "gliederung": "H" },
+						{ "schulform": "V", "gliederung": null }
+					],
+					"gueltigVon": 2011,
 					"gueltigBis": null
 				}
 			]

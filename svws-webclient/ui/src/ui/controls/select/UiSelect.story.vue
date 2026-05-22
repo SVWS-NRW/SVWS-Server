@@ -261,7 +261,7 @@
 	const stringSelectManager = new SelectManager({ options: fruitItems });
 
 	const coreTypeSelectManager = new CoreTypeSelectManager({
-		clazz: LehrerRechtsverhaeltnis.class, schuljahr: 2018, schulformen: Schulform.GY,
+		clazz: LehrerRechtsverhaeltnis.class,
 		selectionDisplayText: 'text', optionDisplayText: 'kuerzelText',
 	});
 
@@ -303,7 +303,7 @@
 	const filters = ref([new FachSelectFilter("fachgruppe1", filter1), new FachSelectFilter("fachgruppe2", filter2)]);
 
 	const fachSelectManager = new CoreTypeSelectManager({
-		clazz: Fach.class, schuljahr: 2020, schulformen: Schulform.GY, optionDisplayText: 'kuerzelText',
+		clazz: Fach.class, schulformen: Schulform.GY, optionDisplayText: 'kuerzelText',
 		selectionDisplayText: 'text', filters: filters,
 	});
 
