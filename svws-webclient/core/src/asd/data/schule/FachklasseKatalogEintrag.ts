@@ -19,7 +19,7 @@ export class FachklasseKatalogEintrag extends CoreTypeData {
 	public bkIndex: number = -1;
 
 	/**
-	 * Index zur Ermittlung der Schulgliederung für Fachklassen des Berufskollegs. Referenziert auf {@link SchulgliederungKatalogEintrag}.
+	 * ID des DQRNiveaus im CoreType DQRNiveau.
 	 */
 	public dqrNiveau: number = -1;
 
