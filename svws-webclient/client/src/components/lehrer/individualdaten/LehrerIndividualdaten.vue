@@ -14,47 +14,119 @@
 
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
+			<template #actions>
+				<svws-ui-checkbox :readonly v-model="modelProxy.proxy.istSichtbar" focus-class-content>
+					Ist sichtbar
+				</svws-ui-checkbox>
+				<svws-ui-checkbox :readonly v-model="modelProxy.proxy.istRelevantFuerStatistik" statistics>
+					Ist relevant für Statistik
+				</svws-ui-checkbox>
+			</template>
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-input-wrapper>
-					<svws-ui-checkbox :readonly v-model="modelProxy.proxy.istSichtbar" focus-class-content>
-						Ist sichtbar
-					</svws-ui-checkbox>
-					<svws-ui-checkbox :readonly v-model="modelProxy.proxy.istRelevantFuerStatistik" statistics>
-						Ist relevant für Statistik
-					</svws-ui-checkbox>
-				</svws-ui-input-wrapper>
-				<svws-ui-text-input placeholder="Kürzel" :readonly v-model="modelProxy.proxy.kuerzel" @commit="modelProxy.patch" statistics required focus />
-				<svws-ui-select title="Personal-Typ" :readonly v-model="inputPersonalTyp" :items="PersonalTyp.values()"
-					:item-text="i => i.bezeichnung" required />
-				<svws-ui-text-input placeholder="Nachname" :readonly v-model="modelProxy.proxy.nachname" @commit="modelProxy.patch" required statistics
-					:validation="() => modelProxy.getFehler('nachname')" />
-				<svws-ui-text-input placeholder="Rufname" :readonly v-model="modelProxy.proxy.vorname" @commit="modelProxy.patch" required statistics
-					:validation="() => modelProxy.getFehler('vorname')" />
+				<svws-ui-text-input placeholder="Kürzel"
+					v-model="modelProxy.proxy.kuerzel"
+					@commit="modelProxy.patch"
+					:validation="() => modelProxy.getFehler('kuerzel')"
+					:max-len="10"
+					:readonly statistics required focus />
+				<ui-select label="Personal-Typ"
+					v-model="modelProxy.selectedPersonalTyp.value"
+					:manager="personaltypManger"
+					:validation="() => modelProxy.getFehler('personalTyp')"
+					:readonly required searchable :removable="false" />
+				<svws-ui-text-input placeholder="Nachname"
+					v-model="modelProxy.proxy.nachname"
+					@commit="modelProxy.patch"
+					:validation="() => modelProxy.getFehler('nachname')"
+					:max-len="120"
+					:readonly required statistics />
+				<svws-ui-text-input placeholder="Rufname"
+					v-model="modelProxy.proxy.vorname"
+					@commit="modelProxy.patch"
+					:validation="() => modelProxy.getFehler('vorname')"
+					:max-len="80"
+					:readonly required statistics />
 				<svws-ui-spacing />
-				<svws-ui-select title="Geschlecht" :readonly v-model="inputGeschlecht" :items="Geschlecht.values()" :item-text="i=>i.text"
-					required />
-				<svws-ui-text-input placeholder="Geburtsdatum" :readonly v-model="modelProxy.proxy.geburtsdatum" @commit="modelProxy.patch" type="date" required statistics
-					:validation="() => modelProxy.getFehler('geburtsdatum')" />
-				<svws-ui-select title="Staatsangehörigkeit" :readonly v-model="inputStaatsangehoerigkeit" :items="Nationalitaeten.values()"
-					:item-text="i => i.historie().getLast().staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
-					:item-filter="staatsangehoerigkeitKatalogEintragFilter" required autocomplete statistics />
+				<ui-select label="Geschlecht"
+					v-model="modelProxy.selectedGeschlecht.value"
+					:manager="geschlechtManager"
+					:validation="() => modelProxy.getFehler('geschlecht')"
+					:readonly required searchable :removable="false" />
+				<svws-ui-text-input placeholder="Geburtsdatum"
+					v-model="modelProxy.proxy.geburtsdatum"
+					type="date"
+					@commit="modelProxy.patch"
+					:validation="() => modelProxy.getFehler('geburtsdatum')"
+					:readonly required statistics />
+				<ui-select label="Staatsangehörigkeit"
+					v-model="modelProxy.selectedStaatsangehoerigkeit.value"
+					:manager="staatsangehoerigkeitManager"
+					:validation="() => modelProxy.getFehler('staatsangehoerigkeitID')"
+					:readonly required searchable statistics :removable="false" />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Akademischer Grad" :readonly v-model="modelProxy.proxy.titel" @commit="modelProxy.patch" />
-				<svws-ui-text-input placeholder="Amtsbezeichnung" :readonly v-model="modelProxy.proxy.amtsbezeichnung" @commit="modelProxy.patch" />
+				<svws-ui-text-input placeholder="Akademischer Grad"
+					v-model="modelProxy.proxy.titel"
+					@commit="modelProxy.patch"
+					:validation="() => modelProxy.getFehler('titel')"
+					:max-len="20"
+					:readonly />
+				<svws-ui-text-input placeholder="Amtsbezeichnung"
+					v-model="modelProxy.proxy.amtsbezeichnung"
+					@commit="modelProxy.patch"
+					:validation="() => modelProxy.getFehler('amtsbezeichnung')"
+					:max-len="15"
+					:readonly />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Wohnort und Kontaktdaten">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input class="contentFocusField" placeholder="Straße" :readonly v-model="inputStrasse" @commit="modelProxy.patch" span="full" />
-				<svws-ui-select v-model="wohnortID" title="Wohnort" :readonly :items="orteById" :item-filter="orte_filter" :item-sort="orte_sort"
-					:item-text="i => `${i.plz ?? '—'} ${i.ortsname ?? '—'}`" autocomplete />
-				<svws-ui-select v-model="ortsteilID" title="Ortsteil" :readonly :items="ortsteile" :item-sort="ortsteilSort"
-					:item-text="i => i.ortsteil ?? '—'" removable />
+				<svws-ui-text-input placeholder="Straße"
+					v-model="modelProxy.adresse.value"
+					@commit="modelProxy.patch"
+					:validation="() => modelProxy.getFehler('strassenname')"
+					:max-len="55"
+					span="full"
+					class="contentFocusField"
+					:readonly />
+				<ui-select label="Wohnort"
+					v-model="modelProxy.selectedWohnort.value"
+					:manager="wohnortManager"
+					:validation="() => modelProxy.getFehler('wohnortID')"
+					:readonly searchable />
+				<ui-select label="Ortsteil"
+					v-model="modelProxy.selectedOrtsteil.value"
+					:manager="ortsteilManager"
+					:validation="() => modelProxy.getFehler('ortsteilID')"
+					:readonly searchable />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Telefon" :readonly v-model="modelProxy.proxy.telefon" @commit="modelProxy.patch" type="tel" :max-len="20" />
-				<svws-ui-text-input placeholder="Mobil oder Fax" :readonly v-model="modelProxy.proxy.telefonMobil" @commit="modelProxy.patch" type="tel" :max-len="20" />
-				<svws-ui-text-input placeholder="Private E-Mail-Adresse" :readonly v-model="modelProxy.proxy.emailPrivat" @commit="modelProxy.patch" type="email" verify-email />
-				<svws-ui-text-input placeholder="Schulische E-Mail-Adresse" :readonly v-model="modelProxy.proxy.emailDienstlich" @commit="modelProxy.patch" type="email" verify-email />
+				<svws-ui-text-input placeholder="Telefon"
+					type="tel"
+					v-model="modelProxy.proxy.telefon"
+					@commit="modelProxy.patch"
+					:validation="() => modelProxy.getFehler('telefon')"
+					:max-len="20"
+					:readonly />
+				<svws-ui-text-input placeholder="Mobil oder Fax"
+					type="tel"
+					v-model="modelProxy.proxy.telefonMobil"
+					@commit="modelProxy.patch"
+					:validation="() => modelProxy.getFehler('telefonMobil')"
+					:max-len="20"
+					:readonly />
+				<svws-ui-text-input placeholder="Private E-Mail-Adresse"
+					type="email"
+					v-model="modelProxy.proxy.emailPrivat"
+					@commit="modelProxy.patch"
+					:validation="() => modelProxy.getFehler('emailPrivat')"
+					:max-len="100"
+					:readonly />
+				<svws-ui-text-input placeholder="Schulische E-Mail-Adresse"
+					type="email"
+					v-model="modelProxy.proxy.emailDienstlich"
+					@commit="modelProxy.patch"
+					:validation="() => modelProxy.getFehler('emailDienstlich')"
+					:max-len="100"
+					:readonly />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Leitungsfunktionen">
@@ -76,59 +148,79 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
+	import type { NationalitaetenKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
+	import { BenutzerKompetenz, DateUtils, Geschlecht, JavaString, LehrerLeitungsfunktion, Nationalitaeten, PersonalTyp } from "@core";
+	import { CoreTypeSelectManager, SelectManager, useSchuleState } from "@ui";
 	import type { LehrerIndividualdatenProps } from "./LehrerIndividualdatenProps";
-	import type { OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
-	import { Geschlecht, Nationalitaeten, PersonalTyp, AdressenUtils, DateUtils, JavaString, LehrerLeitungsfunktion, BenutzerKompetenz } from "@core";
-	import { staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort, orte_filter, orte_sort, ortsteilSort } from "~/utils/helfer";
-	import { LehrerIndividualdatenModelProxy } from "./LehrerIndividualdatenModelProxy";
-	import { useSchuleState } from "@ui";
+	import { LehrerIndividualdatenModelProxy } from "./modelproxy/LehrerIndividualdatenModelProxy";
 	import WiedervorlageModal from "~/components/wiedervorlage/WiedervorlageModal.vue";
 
 	const props = defineProps<LehrerIndividualdatenProps>();
 	const schuleState = useSchuleState();
 
+	const manager = () => props.lehrerListeManager();
 	const dataNotPatched = () => props.lehrerListeManager().daten();
-	const modelProxy = new LehrerIndividualdatenModelProxy(dataNotPatched, () => schuleState.validatorKontext, props.patch);
+	const modelProxy = new LehrerIndividualdatenModelProxy(dataNotPatched, () => schuleState.validatorKontext, manager, props.orteById, props.ortsteileById, props.patch);
 
 	const schuljahr = computed<number>(() => props.lehrerListeManager().getSchuljahr());
 
 	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRERDATEN_AENDERN));
 
-	const inputGeschlecht = computed<Geschlecht>({
-		get: () => Geschlecht.fromValue(modelProxy.proxy.geschlecht) ?? Geschlecht.X,
-		set: (value) => modelProxy.proxy.geschlecht = value.id,
+	const colsLeitungsfunktionen = [
+		{ key: 'idLeitungsfunktion', label: 'Funktion', span: 2 },
+		{ key: 'beginn', label: 'Von', span: 1 },
+		{ key: 'ende', label: 'Bis', span: 1 },
+	];
+
+
+	/**
+	 * Selects
+	 */
+	const personaltypManger = new SelectManager({
+		options: PersonalTyp.values(),
+		optionDisplayText: typ => typ.bezeichnung,
+		selectionDisplayText: typ => typ.bezeichnung,
 	});
 
-	const inputPersonalTyp = computed<PersonalTyp>({
-		get: () => PersonalTyp.fromKuerzel(modelProxy.proxy.personalTyp) ?? PersonalTyp.SONSTIGE,
-		set: (value) => modelProxy.proxy.personalTyp = value.kuerzel,
+	const geschlechtManager = new SelectManager({
+		options: Geschlecht.values(),
+		optionDisplayText: geschlecht => geschlecht.text,
+		selectionDisplayText: geschlecht => geschlecht.text,
 	});
 
-	const inputStaatsangehoerigkeit = computed<Nationalitaeten>({
-		get: () => Nationalitaeten.getByISO3(modelProxy.proxy.staatsangehoerigkeitID) ?? Nationalitaeten.getDEU(),
-		set: (value) => modelProxy.proxy.staatsangehoerigkeitID = value.historie().getLast().iso3,
+	const staatsangehoerigkeitManager = new CoreTypeSelectManager({
+		clazz: Nationalitaeten.class,
+		optionDisplayText: nationalitaet => nationalitaet.staatsangehoerigkeit,
+		selectionDisplayText: nationalitaet => nationalitaet.staatsangehoerigkeit,
+		sort: staatsangehoerigkeitSort,
 	});
 
-	const inputStrasse = computed<string | null>({
-		get: () => AdressenUtils.combineStrasse(modelProxy.proxy.strassenname ?? "", modelProxy.proxy.hausnummer ?? "", modelProxy.proxy.hausnummerZusatz ?? ""),
-		set: (value) => {
-			const vals = AdressenUtils.splitStrasse(value);
-			modelProxy.proxy.strassenname = vals[0];
-			modelProxy.proxy.hausnummer = vals[1];
-			modelProxy.proxy.hausnummerZusatz = vals[2];
-		},
-	});
+	function staatsangehoerigkeitSort(a: NationalitaetenKatalogEintrag, b: NationalitaetenKatalogEintrag): number {
+		const va = a.staatsangehoerigkeit;
+		const vb = b.staatsangehoerigkeit;
+		if ((va.length > 0) && (vb.length > 0)) {
+			return va.localeCompare(vb);
+		} else if ((va.length > 0) && (vb.length === 0)) {
+			return -1;
+		} else if ((va.length === 0) && (vb.length > 0)) {
+			return 1;
+		}
+		return 0;
+	}
 
-	const wohnortID = computed<OrtKatalogEintrag | null>({
-		get: () => {
-			const idWohnort = modelProxy.proxy.wohnortID;
-			return (idWohnort === null) ? null : props.orteById.get(idWohnort) ?? null;
-		},
-		set: (val) => modelProxy.proxy.wohnortID = val?.id ?? null,
+
+	const orte = computed(() => props.orteById.values());
+	const wohnortManager = new SelectManager({
+		options: orte,
+		optionDisplayText: ort => `${ort.plz ?? '—'} ${ort.ortsname ?? '—'}`,
+		selectionDisplayText: ort => `${ort.plz ?? '—'} ${ort.ortsname ?? '—'}`,
 	});
 
 	const ortsteile = computed<Array<OrtsteilKatalogEintrag>>(() => {
 		const result: Array<OrtsteilKatalogEintrag> = [];
+		if (modelProxy.proxy.wohnortID === null) {
+			return result;
+		}
 		for (const ortsteil of props.ortsteileById.values()) {
 			if (ortsteil.ort_id === modelProxy.proxy.wohnortID) {
 				result.push(ortsteil);
@@ -136,19 +228,22 @@
 		}
 		return result;
 	});
-
-	const ortsteilID = computed<OrtsteilKatalogEintrag | null>({
-		get: () => {
-			const idOrtsteil = modelProxy.proxy.ortsteilID;
-			return idOrtsteil === null ? null : props.ortsteileById.get(idOrtsteil) ?? null;
-		},
-		set: (val) => modelProxy.proxy.ortsteilID = val?.id ?? null,
+	const ortsteilManager = new SelectManager({
+		options: ortsteile,
+		optionDisplayText: ortsteil => ortsteil.ortsteil ?? '—',
+		selectionDisplayText: ortsteil => ortsteil.ortsteil ?? '—',
+		sort: ortsteilSort,
 	});
 
-	const colsLeitungsfunktionen = [
-		{ key: 'idLeitungsfunktion', label: 'Funktion', span: 2 },
-		{ key: 'beginn', label: 'Von', span: 1 },
-		{ key: 'ende', label: 'Bis', span: 1 },
-	];
+	function ortsteilSort(a: OrtsteilKatalogEintrag, b: OrtsteilKatalogEintrag): number {
+		if ((a.ortsteil !== null) && (b.ortsteil !== null)) {
+			return a.ortsteil.localeCompare(b.ortsteil);
+		} else if ((a.ortsteil !== null) && (b.ortsteil === null)) {
+			return -1;
+		} else if ((a.ortsteil === null) && (b.ortsteil !== null)) {
+			return 1;
+		}
+		return 0;
+	}
 
 </script>

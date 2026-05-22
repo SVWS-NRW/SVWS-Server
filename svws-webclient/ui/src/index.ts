@@ -148,6 +148,7 @@ export { ValidatorStringMatchesPattern } from "./validation/common/ValidatorStri
 export { StringPattern } from "./validation/common/ValidatorStringMatchesPattern";
 export { ValidatorStringLength } from "./validation/common/ValidatorStringLength";
 export { ValidatorInputRequired } from "./validation/common/ValidatorInputRequired";
+export { ValidatorStrasse } from "./validation/common/ValidatorStrasse";
 export { ValidatorStringIsUniqueInList } from "./validation/common/ValidatorStringIsUniqueInList";
 export { ValidatorNumberLengthDecPlaces } from "./validation/common/ValidatorNumberLengthDecPlaces";
 export { ValidatorDateRange } from "./validation/common/ValidatorDateRange";
