@@ -12,7 +12,7 @@
 			<ui-select label="Erzieherart"
 				v-model="erzieherart"
 				:manager="erzieherartenManager"
-				:removable="false" searchable />
+				:removable="false" />
 			<svws-ui-text-input placeholder="Anrede"
 				:model-value="data.anrede"
 				@change="patchAnrede"
@@ -51,7 +51,7 @@
 			<ui-select label="Ortsteil"
 				v-model="ortsteil"
 				:manager="ortsteilManager"
-				:readonly="(!data.wohnortID || readonly)" searchable />
+				:readonly="(!data.wohnortID || readonly)" />
 			<svws-ui-spacing />
 			<svws-ui-textarea-input placeholder="Bemerkungen" span="full"
 				:model-value="data?.bemerkungen" autoresize

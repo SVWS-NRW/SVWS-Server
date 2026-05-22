@@ -225,7 +225,7 @@
 	import type { ValidatorFehler } from "../../../../../core/src/asd/validate/ValidatorFehler";
 
 	const state = reactive({
-		searchable: false,
+		searchable: true,
 		disabled: false,
 		statistics: false,
 		removable: true,
@@ -402,7 +402,8 @@
 		return `<ui-select
 		label="..."
 		:manager="..."
-		${state.searchable ? 'searchable' : ''}
+		${state.searchable ? '' : ':searchable="false"'}
+		${state.removable ? '' : ':removable="false"'}
 		${state.disabled ? 'disabled' : ''}
 		${state.statistics ? 'statistics' : ''}
 		${state.required ? 'required' : ''}

@@ -4,7 +4,7 @@
 			<ui-select label="Status"
 				v-model="status"
 				:manager="statusManager"
-				:removable="false" searchable />
+				:removable="false" />
 			<svws-ui-text-input placeholder="Schuljahresabschnitt"
 				:model-value="schuljahresabschnitt"
 				readonly required />

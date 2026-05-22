@@ -17,22 +17,22 @@
 						v-model="model.selectedFach.value"
 						:manager="fachKuerzelSelectManager"
 						:validation="() => model.getFehler('kuerzelStatistik')"
-						required :removable="false" statistics :disabled searchable />
+						required :removable="false" statistics :disabled />
 					<ui-select label="Fach ASD-Text"
 						v-model="model.selectedFach.value"
 						:manager="fachTextSelectManager"
-						required :removable="false" statistics :disabled searchable />
+						required :removable="false" statistics :disabled />
 					<ui-select label="Bilinguale Sachfachsprache"
 						v-model="model.selectedSachfachsprache.value"
 						:manager="sachfachspracheManager"
-						statistics :disabled="!hatKompetenzAdd" searchable />
+						statistics :disabled="!hatKompetenzAdd" />
 					<svws-ui-text-input placeholder="Fachgruppe"
 						:model-value="fachgruppe"
 						readonly />
 					<ui-select label="Aufgabenfeld" v-if="istBerufskolleg"
 						v-model="model.selectedAufgabenfeld.value"
 						:manager="aufgabenfeldManager"
-						:disabled="!hatKompetenzAdd" searchable />
+						:disabled="!hatKompetenzAdd" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />

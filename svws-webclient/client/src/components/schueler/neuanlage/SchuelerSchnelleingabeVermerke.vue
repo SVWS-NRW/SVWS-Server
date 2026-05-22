@@ -27,7 +27,7 @@
 				<ui-select label="Vermerkart"
 					v-model="selectedVermerkart"
 					:manager="vermerkartenManager"
-					:removable="false" searchable />
+					:removable="false" />
 				<svws-ui-textarea-input placeholder="Bemerkung" class="col-span-full"
 					v-model="vermerk.bemerkung"
 					:autoresize="true" />

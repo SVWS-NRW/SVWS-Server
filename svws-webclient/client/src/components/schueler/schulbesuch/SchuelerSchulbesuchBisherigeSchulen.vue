@@ -49,7 +49,7 @@
 					<ui-select label="Schule" class="col-span-full"
 						v-model="model.schule.value"
 						:manager="schulenManager"
-						:removable="false" searchable />
+						:removable="false" />
 					<svws-ui-text-input span="full" placeholder="Adresse"
 						:model-value="model.adresseSchule.value"
 						readonly />
@@ -69,15 +69,15 @@
 					<ui-select label="Jahrgang von"
 						v-model="model.jahrgangVon.value"
 						:manager="jahrgangVonManager"
-						:disabled="!model.schule.value || !model.proxy.datumVon" searchable />
+						:disabled="!model.schule.value || !model.proxy.datumVon" />
 					<ui-select label="Jahrgang bis"
 						v-model="model.jahrgangBis.value"
 						:manager="jahrgangBisManager"
-						:disabled="!model.schule.value || !model.proxy.datumBis" searchable />
+						:disabled="!model.schule.value || !model.proxy.datumBis" />
 					<ui-select label="Schulgliederung" class="col-span-full"
 						v-model="model.schulgliederung.value"
 						:manager="schulgliederungenManager"
-						:disabled="(!model.proxy.datumBis || !model.schule.value)" searchable />
+						:disabled="(!model.proxy.datumBis || !model.schule.value)" />
 				</svws-ui-input-wrapper>
 				<div class="mt-7 flex flex-row gap-4 justify-end">
 					<svws-ui-button type="secondary"

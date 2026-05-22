@@ -9,13 +9,13 @@
 					v-model="model.schuljahresabschnitt.value"
 					:manager="schuljahresabschnittManager"
 					:validation="() => model.getFehler('idSchuljahresabschnitt')"
-					required searchable />
+					required />
 				<ui-select label="Jahrgang"
 					v-model="model.jahrgang.value"
 					:manager="jahrgangManager"
 					:validation="() => model.getFehler('idJahrgang')"
 					:disabled="(model.proxy.idSchuljahresabschnitt <= 0)"
-					required searchable />
+					required />
 				<ui-select label="Klasse"
 					v-model="model.klasse.value"
 					:manager="klassenManager"
@@ -29,7 +29,7 @@
 				<ui-select label="Einschulungsart" v-if="schulenMitPrimaerstufe"
 					v-model="model.einschulungsart.value"
 					:manager="einschulungsartManager"
-					:removable="true" searchable />
+					:removable="true" />
 				<svws-ui-text-input placeholder="Beginn Bildungsgang" type="date" v-if="schulenMitBKoderSK"
 					v-model="model.proxy.beginnBildungsgang"
 					:min-date="model.proxy.aufnahmedatum || today" />
@@ -61,12 +61,12 @@
 					v-model="model.geschlecht.value"
 					:manager="geschlechtManager"
 					:validation="() => model.getFehler('geschlecht')"
-					:removable="false" required searchable />
+					:removable="false" required />
 				<ui-select label="Religion"
 					v-model="model.religion.value"
 					:manager="religionManager"
 					:validation="() => model.getFehler('idReligion')"
-					:removable="false" required searchable />
+					:removable="false" required />
 			</svws-ui-input-wrapper>
 			<div class="mt-7 flex flex-row gap-4 justify-end">
 				<svws-ui-button type="secondary" @click="cancel">

@@ -38,8 +38,8 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 			expect(props.manager).toBeInstanceOf(SelectManager);
 		});
 
-		test("props.searchable entspricht false", () => {
-			expect(props.searchable).toBe(false);
+		test("props.searchable entspricht true", () => {
+			expect(props.searchable).toBe(true);
 		});
 
 		test("props.deepSearchAttributes ist ein leeres Array", () => {

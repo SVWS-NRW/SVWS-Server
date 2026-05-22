@@ -5,19 +5,19 @@
 		<template #modalContent>
 			<svws-ui-input-wrapper :grid="2" class="text-left">
 				<ui-select label="Erzieherart" v-model="selectedErzieherart" :manager="erzieherartenManager" :removable="false" class="col-span-full"
-					:readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" searchable />
+					:readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Anrede" v-model="ersterErz.anrede" type="text" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" />
 				<svws-ui-text-input placeholder="Titel" v-model="ersterErz.titel" type="text" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" />
 				<svws-ui-text-input placeholder="Rufname" v-model="ersterErz.vorname" type="text" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" required />
 				<svws-ui-text-input placeholder="Nachname" v-model="ersterErz.nachname" type="text" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" required />
 				<svws-ui-text-input placeholder="E-Mail Adresse" v-model="ersterErz.eMail" type="email" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" verify-email />
-				<ui-select label="Staatsangehörigkeit" v-model="ersteErzStaatsangehoerigkeit" :manager="staatsangehoerigkeitManager" searchable />
+				<ui-select label="Staatsangehörigkeit" v-model="ersteErzStaatsangehoerigkeit" :manager="staatsangehoerigkeitManager" />
 
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Straße und Hausnummer" v-model="adresse" type="text" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" />
-				<ui-select label="Wohnort" v-model="wohnort" :manager="wohnortManager" :disabled="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" searchable />
-				<ui-select label="Ortsteil" v-model="ortsteil" :manager="ortsteilManager" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert) || (!ersterErz.wohnortID)" searchable />
+				<ui-select label="Wohnort" v-model="wohnort" :manager="wohnortManager" :disabled="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" />
+				<ui-select label="Ortsteil" v-model="ortsteil" :manager="ortsteilManager" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert) || (!ersterErz.wohnortID)" />
 				<svws-ui-spacing />
 				<svws-ui-tooltip class="col-span-full">
 					<svws-ui-text-input v-model="ersterErz.bemerkungen" type="text" placeholder="Bemerkungen" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" />
@@ -39,7 +39,7 @@
 					<svws-ui-text-input placeholder="Rufname" v-model="zweiterErz.vorname" type="text" required :readonly="!hatKompetenzUpdate" />
 					<svws-ui-text-input placeholder="Nachname" v-model="zweiterErz.nachname" type="text" required :readonly="!hatKompetenzUpdate" />
 					<svws-ui-text-input placeholder="E-Mail Adresse" v-model="zweiterErz.eMail" type="email" verify-email :readonly="!hatKompetenzUpdate" />
-					<ui-select label="Staatsangehörigkeit" v-model="zweiteErzStaatsangehoerigkeit" :manager="staatsangehoerigkeitManager" searchable />
+					<ui-select label="Staatsangehörigkeit" v-model="zweiteErzStaatsangehoerigkeit" :manager="staatsangehoerigkeitManager" />
 				</svws-ui-input-wrapper>
 			</div>
 			<svws-ui-notification type="warning" v-if="erzieherartenById.size === 0">

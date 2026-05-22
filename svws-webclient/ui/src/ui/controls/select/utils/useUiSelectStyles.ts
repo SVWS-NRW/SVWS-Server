@@ -94,24 +94,32 @@ export function useUiSelectStyles<T>(
 			// Aria Attribute werden am Input gesetzt
 			return {};
 		}
+		const labelIdPrefix = (state.value.multi) ? 'uiSelectMultiLabel_' : 'uiSelectLabel_';
+		const dropdownIdPrefix = (state.value.multi) ? 'uiSelectMultiDropdown_' : 'uiSelectDropdown_';
+		const optionIdPrefix = (state.value.multi) ? 'uiSelectMultiOption_' : 'uiSelectOption_';
 		return {
-			'aria-labelledby': `uiSelectLabel_${state.value.instanceId}`,
-			'aria-controls': isEditable ? `uiSelectDropdown_${state.value.instanceId}` : undefined,
+			'aria-labelledby': `${labelIdPrefix}${state.value.instanceId}`,
+			'aria-controls': isEditable ? `${dropdownIdPrefix}${state.value.instanceId}` : undefined,
 			'aria-autocomplete': isEditable ? 'none' as const : undefined,
 			'aria-expanded': isEditable ? dropdown.dropdownIsOpen.value : undefined,
 			'aria-disabled': state.value.disabled ? true : undefined,
 			'aria-activedescendant': (isEditable && dropdown.hasHighlightedOption()) ?
-				`uiSelectOption_${dropdown.highlightedIndex.value}_${state.value.instanceId}` : undefined,
+				`${optionIdPrefix}${dropdown.highlightedIndex.value}_${state.value.instanceId}` : undefined,
 		};
 	});
 
-	const searchInputAriaAttrs = computed(() => ({
-		'aria-labelledby': `uiSelectLabel_${state.value.instanceId}`,
-		'aria-controls': `uiSelectDropdown_${state.value.instanceId}`,
-		'aria-autocomplete': 'none' as const,
-		'aria-expanded': dropdown.dropdownIsOpen.value,
-		'aria-activedescendant': (dropdown.hasHighlightedOption()) ? `uiSelectOption_${dropdown.highlightedIndex.value}_${state.value.instanceId}` : undefined,
-	}));
+	const searchInputAriaAttrs = computed(() => {
+		const labelIdPrefix = (state.value.multi) ? 'uiSelectMultiLabel_' : 'uiSelectLabel_';
+		const dropdownIdPrefix = (state.value.multi) ? 'uiSelectMultiDropdown_' : 'uiSelectDropdown_';
+		const optionIdPrefix = (state.value.multi) ? 'uiSelectMultiOption_' : 'uiSelectOption_';
+		return {
+			'aria-labelledby': `${labelIdPrefix}${state.value.instanceId}`,
+			'aria-controls': `${dropdownIdPrefix}${state.value.instanceId}`,
+			'aria-autocomplete': 'none' as const,
+			'aria-expanded': dropdown.dropdownIsOpen.value,
+			'aria-activedescendant': (dropdown.hasHighlightedOption()) ? `${optionIdPrefix}${dropdown.highlightedIndex.value}_${state.value.instanceId}` : undefined,
+		};
+	});
 
 	const comboboxTabindex = computed((): number =>
 		(state.value.searchable || state.value.disabled || state.value.readonly) ? -1 : 0

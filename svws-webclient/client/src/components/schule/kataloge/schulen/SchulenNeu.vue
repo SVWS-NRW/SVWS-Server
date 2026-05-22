@@ -25,7 +25,7 @@
 					:manager="schulenNRWSelectManager"
 					v-model="selectedSchule"
 					:validation="() => model.getFehler('schulnummerStatistik')"
-					:disabled="isLoading || !hatKompetenzAdd" searchable required :removable="false" />
+					:disabled="isLoading || !hatKompetenzAdd" required :removable="false" />
 				<div v-if="!schuleAlreadyCreated">
 					<svws-ui-content-card title="Schulangaben" />
 					<svws-ui-input-wrapper :grid="2">

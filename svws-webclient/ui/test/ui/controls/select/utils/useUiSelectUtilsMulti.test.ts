@@ -400,7 +400,7 @@ describe("UiSelectMulti Utils", () => {
 
 	describe("Fokusfunktionen", () => {
 		test("Beim Öffnen des Dropdowns wird die Combobox fokussiert (searchable = false)", async () => {
-			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager }, attachTo: document.body });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: false }, attachTo: document.body });
 			const { combobox } = getElements(wrapper);
 
 			// Dropdown öffnen
@@ -748,12 +748,12 @@ describe("UiSelectMulti Utils", () => {
 
 		describe("Combobox Styling und Attribute", () => {
 			test("Aria Attribute bei editierbarem Select und searchable = false sind richtig gesetzt.", async () => {
-				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: false } });
 
 				const { combobox, vm } = getElements(wrapper);
 
-				expect(combobox.attributes("aria-labelledby")).toBe(`uiSelectLabel_${vm.state.instanceId}`);
-				expect(combobox.attributes("aria-controls")).toBe(`uiSelectDropdown_${vm.state.instanceId}`);
+				expect(combobox.attributes("aria-labelledby")).toBe(`uiSelectMultiLabel_${vm.state.instanceId}`);
+				expect(combobox.attributes("aria-controls")).toBe(`uiSelectMultiDropdown_${vm.state.instanceId}`);
 				expect(combobox.attributes("aria-autocomplete")).toBe("none");
 				expect(combobox.attributes("aria-expanded")).toBe("false");
 				// Dropdown öffnen
@@ -763,18 +763,18 @@ describe("UiSelectMulti Utils", () => {
 				expect(combobox.attributes("aria-activedescendant")).toBeUndefined();
 				// Erste Option hervorheben
 				await combobox.trigger('keydown', { key: 'ArrowDown' });
-				expect(combobox.attributes("aria-activedescendant")).toBe(`uiSelectOption_0_${vm.state.instanceId}`);
+				expect(combobox.attributes("aria-activedescendant")).toBe(`uiSelectMultiOption_0_${vm.state.instanceId}`);
 			});
 
 			test.each([
 				["readonly", { readonly: true }],
 				["disabled", { disabled: true }],
 			])("Aria Attribute bei %s = true und searchable = false sind richtig gesetzt.", (_, props) => {
-				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, ...props } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: false, ...props } });
 
 				const { combobox, vm } = getElements(wrapper);
 
-				expect(combobox.attributes("aria-labelledby")).toBe(`uiSelectLabel_${vm.state.instanceId}`);
+				expect(combobox.attributes("aria-labelledby")).toBe(`uiSelectMultiLabel_${vm.state.instanceId}`);
 				expect(combobox.attributes("aria-controls")).toBeUndefined();
 				expect(combobox.attributes("aria-autocomplete")).toBeUndefined();
 				expect(combobox.attributes("aria-expanded")).toBeUndefined();
@@ -783,73 +783,23 @@ describe("UiSelectMulti Utils", () => {
 				expect(combobox.attributes("aria-activedescendant")).toBeUndefined();
 			});
 
-			test("Bei searchable = true und editierbarem Select werden keine Attribute gesetzt", async () => {
+			test("Bei searchable = true werden keine Aria Attribute an die Combobox gesetzt", async () => {
 				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
 
 				const { combobox, vm } = getElements(wrapper);
 
-				expect(combobox.attributes("aria-labelledby")).toBe(`uiSelectLabel_${vm.state.instanceId}`);
-				expect(combobox.attributes("aria-controls")).toBe(`uiSelectDropdown_${vm.state.instanceId}`);
-				expect(combobox.attributes("aria-autocomplete")).toBe("none");
-				expect(combobox.attributes("aria-expanded")).toBe("false");
+				expect(combobox.attributes("aria-labelledby")).toBeUndefined();
+				expect(combobox.attributes("aria-controls")).toBeUndefined();
+				expect(combobox.attributes("aria-autocomplete")).toBeUndefined();
+				expect(combobox.attributes("aria-expanded")).toBeUndefined();
 				// Dropdown öffnen
 				await combobox.trigger("click");
-				expect(combobox.attributes("aria-expanded")).toBe("true");
+				expect(combobox.attributes("aria-expanded")).toBeUndefined();
 				expect(combobox.attributes("aria-disabled")).toBeUndefined();
 				expect(combobox.attributes("aria-activedescendant")).toBeUndefined();
 				// Erste Option hervorheben
 				await combobox.trigger('keydown', { key: 'ArrowDown' });
-				expect(combobox.attributes("aria-activedescendant")).toBe(`uiSelectOption_0_${vm.state.instanceId}`);
-			});
-
-			test.each([
-				["readonly", { readonly: true }],
-				["disabled", { disabled: true }],
-			])("Bei searchable = true und nicht editierbarem Select werden keine Attribute gesetzt", (_, props) => {
-				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: true, ...props } });
-
-				const { combobox, vm } = getElements(wrapper);
-
-				expect(combobox.attributes("aria-labelledby")).toBe(`uiSelectLabel_${vm.state.instanceId}`);
-				expect(combobox.attributes("aria-controls")).toBeUndefined();
-				expect(combobox.attributes("aria-autocomplete")).toBeUndefined();
-				expect(combobox.attributes("aria-expanded")).toBeUndefined();
-			});
-
-			test.each([
-				["readonly", { readonly: true }],
-				["disabled", { disabled: true }],
-			])("Aria Attribute bei %s = true und searchable = false sind richtig gesetzt.", (_, props) => {
-				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, ...props } });
-
-				const { combobox, vm } = getElements(wrapper);
-
-				expect(combobox.attributes("aria-labelledby")).toBe(`uiSelectLabel_${vm.state.instanceId}`);
-				expect(combobox.attributes("aria-controls")).toBeUndefined();
-				expect(combobox.attributes("aria-autocomplete")).toBeUndefined();
-				expect(combobox.attributes("aria-expanded")).toBeUndefined();
-				const disabledValue = (wrapper.props().disabled === true) ? "true" : undefined;
-				expect(combobox.attributes("aria-disabled")).toBe(disabledValue);
 				expect(combobox.attributes("aria-activedescendant")).toBeUndefined();
-			});
-
-			test("Bei searchable = true werden keine Attribute gesetzt", async () => {
-				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
-
-				const { combobox, vm } = getElements(wrapper);
-
-				expect(combobox.attributes("aria-labelledby")).toBe(`uiSelectLabel_${vm.state.instanceId}`);
-				expect(combobox.attributes("aria-controls")).toBe(`uiSelectDropdown_${vm.state.instanceId}`);
-				expect(combobox.attributes("aria-autocomplete")).toBe("none");
-				expect(combobox.attributes("aria-expanded")).toBe("false");
-				// Dropdown öffnen
-				await combobox.trigger("click");
-				expect(combobox.attributes("aria-expanded")).toBe("true");
-				expect(combobox.attributes("aria-disabled")).toBeUndefined();
-				expect(combobox.attributes("aria-activedescendant")).toBeUndefined();
-				// Erste Option hervorheben
-				await combobox.trigger('keydown', { key: 'ArrowDown' });
-				expect(combobox.attributes("aria-activedescendant")).toBe(`uiSelectOption_0_${vm.state.instanceId}`);
 			});
 
 			test.each([
@@ -956,8 +906,8 @@ describe("UiSelectMulti Utils", () => {
 
 				const { combobox, input, vm } = getElements(wrapper);
 
-				expect(input.attributes("aria-labelledby")).toBe(`uiSelectLabel_${vm.state.instanceId}`);
-				expect(input.attributes("aria-controls")).toBe(`uiSelectDropdown_${vm.state.instanceId}`);
+				expect(input.attributes("aria-labelledby")).toBe(`uiSelectMultiLabel_${vm.state.instanceId}`);
+				expect(input.attributes("aria-controls")).toBe(`uiSelectMultiDropdown_${vm.state.instanceId}`);
 				expect(input.attributes("aria-autocomplete")).toBe("none");
 				expect(input.attributes("aria-expanded")).toBe("false");
 				// Dropdown öffnen
@@ -966,7 +916,26 @@ describe("UiSelectMulti Utils", () => {
 				expect(input.attributes("aria-activedescendant")).toBeUndefined();
 				// Erste Option hervorheben
 				await combobox.trigger('keydown', { key: 'ArrowDown' });
-				expect(input.attributes("aria-activedescendant")).toBe(`uiSelectOption_0_${vm.state.instanceId}`);
+				expect(input.attributes("aria-activedescendant")).toBe(`uiSelectMultiOption_0_${vm.state.instanceId}`);
+			});
+
+			test.each([
+				["readonly", { readonly: true }],
+				["disabled", { disabled: true }],
+			])("Bei %s = true und searchable = true wird kein Input erzeugt.", (_, props) => {
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, ...props } });
+
+				const { input, vm } = getElements(wrapper);
+
+				expect(input.exists()).toBeFalsy();
+			});
+
+			test("Bei searchable = false wird kein Input erzeugt.", async () => {
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: false } });
+
+				const { input, vm } = getElements(wrapper);
+
+				expect(input.exists()).toBeFalsy();
 			});
 
 			test("Tabindex ist 0, wenn searchable = true und disabled = readonly = false", () => {
@@ -1069,8 +1038,8 @@ describe("UiSelectMulti Utils", () => {
 				["absolute", "top-1/2", "font-normal"].forEach(cssClass => expect(label.classes()).toContain(cssClass));
 			});
 
-			test("Label wird in der Combobox dargestellt, wenn searchable = false nichts ist selektiert", () => {
-				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, headless: false } });
+			test("Label wird in der Combobox dargestellt, wenn searchable = false und nichts ist selektiert", () => {
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, headless: false, searchable: false } });
 
 				const { label } = getElements(wrapper);
 
@@ -1331,7 +1300,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("Home (searchable = false): Die erste Option wird hervorgehoben", async () => {
-				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: false } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				await combobox.trigger('keydown', { key: 'Home' });
@@ -1356,7 +1325,7 @@ describe("UiSelectMulti Utils", () => {
 			});
 
 			test("End (searchable = false): Die letzte Option wird hervorgehoben", async () => {
-				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: false } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				await combobox.trigger('keydown', { key: 'End' });
@@ -1474,8 +1443,8 @@ describe("UiSelectMulti Utils", () => {
 			test.each([
 				["Enter", "Enter"],
 				["Space", " "],
-			])("%s ohne hervorgehobener Option: Dropdown schließt sich", async (_, key) => {
-				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
+			])("%s ohne hervorgehobener Option: Dropdown schließt sich (searchable = false)", async (_, key) => {
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: false } });
 				const { combobox, dropdown } = getElements(wrapper);
 
 				await combobox.trigger('click');
@@ -1489,8 +1458,8 @@ describe("UiSelectMulti Utils", () => {
 			test.each([
 				["Enter (mit hervorgehobene Option)", "Enter"],
 				["Space (mit hervorgehobene Option)", " "],
-			])("%s: Option wird selektiert", async (_, key) => {
-				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
+			])("%s: Option wird selektiert (searchable = false)", async (_, key) => {
+				const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, searchable: false } });
 				const { combobox } = getElements(wrapper);
 
 				await combobox.trigger('click');

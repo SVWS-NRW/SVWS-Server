@@ -125,7 +125,7 @@
 	const props = withDefaults(defineProps<UiSelectMultiProps<T>>(), {
 		label: '',
 		manager: () => new SelectManager<T>(),
-		searchable: false,
+		searchable: true,
 		deepSearchAttributes: () => [],
 		required: false,
 		readonly: false,

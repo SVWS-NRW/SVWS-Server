@@ -5,10 +5,10 @@
 				<ui-select label="Betreuende Lehrkraft"
 					v-model="model.betreuendeLehrkraft.value"
 					:deep-search-attributes="['kuerzel']"
-					:manager="lehrerManager" searchable />
+					:manager="lehrerManager" />
 				<ui-select label="Ansprechpartner im Betrieb"
 					v-model="model.ansprechpartner.value"
-					:manager="ansprechpartnerManager" searchable />
+					:manager="ansprechpartnerManager" />
 				<svws-ui-text-input placeholder="Betreuer/Ausbilder"
 					v-model="model.proxy.nameAusbilder"
 					@commit="model.patch"

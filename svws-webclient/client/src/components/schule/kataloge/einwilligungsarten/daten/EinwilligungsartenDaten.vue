@@ -11,7 +11,7 @@
 					<ui-select label="Einwilligungsschlüssel" class="col-span-full"
 						v-model="model.einwilligungsschluessel.value"
 						:manager="einwilligungsschluesselManager"
-						:readonly searchable />
+						:readonly />
 					<svws-ui-textarea-input placeholder="Beschreibung" span="full"
 						v-model="model.proxy.beschreibung"
 						@change="patchBeschreibung" />

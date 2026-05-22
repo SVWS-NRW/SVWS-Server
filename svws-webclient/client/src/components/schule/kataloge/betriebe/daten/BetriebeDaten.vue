@@ -17,7 +17,7 @@
 					<ui-select label="Betriebsart"
 						v-model="model.betriebsart.value"
 						:manager="betriebsartenManager"
-						:readonly searchable />
+						:readonly />
 					<svws-ui-text-input placeholder="Branche"
 						v-model="model.proxy.branche"
 						:validation="() => model.getFehler('branche')"
@@ -67,7 +67,7 @@
 					<ui-select label="Wohnort"
 						v-model="model.wohnort.value"
 						:manager="wohnortManager"
-						:readonly searchable />
+						:readonly />
 					<svws-ui-text-input placeholder="Telefon" type="tel"
 						v-model="model.proxy.telefon1"
 						:validation="() => model.getFehler('telefon1')"

@@ -32,7 +32,7 @@
 						<ui-color-mode />
 						<div class="w-60"><SvwsUiButton type="transparent" @click="gridView = (gridView === 'single') ? 'grid':'single'">{{ gridView === 'single' ? 'Single':'Grid' }} aktiviert</SvwsUiButton></div>
 						<div class="w-60">
-							<ui-select label="Hintergrundfarbe" v-model="color" :manager="colorSelectManager" searchable headless />
+							<ui-select label="Hintergrundfarbe" v-model="color" :manager="colorSelectManager" headless />
 						</div>
 					</div>
 					<div class="pr-8 size-full flex gap-4 relative overflow-hidden">

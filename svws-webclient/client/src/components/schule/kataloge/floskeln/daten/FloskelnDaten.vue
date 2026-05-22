@@ -17,7 +17,7 @@
 						<ui-select label="Floskelgruppe"
 							v-model="model.selectedFloskelgruppe.value"
 							:manager="floskelgruppenManager"
-							:removable="false" searchable required :readonly="!hatKompetenzUpdate" />
+							:removable="false" required :readonly="!hatKompetenzUpdate" />
 						<ui-select v-if="model.hatFloskelgruppeArtFach.value" label="Fach"
 							v-model="model.selectedFach.value"
 							:manager="faecherManager"
@@ -26,7 +26,7 @@
 						<ui-select label="Jahrgang"
 							v-model="model.selectedJahrgang.value"
 							:manager="jahrgaengeManager"
-							:readonly="!hatKompetenzUpdate" searchable removable />
+							:readonly="!hatKompetenzUpdate" removable />
 						<ui-select label="Niveau"
 							v-model="model.selectedNiveau.value"
 							:manager="niveauManager"

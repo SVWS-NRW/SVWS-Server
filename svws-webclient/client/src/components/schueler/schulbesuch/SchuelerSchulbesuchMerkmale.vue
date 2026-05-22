@@ -32,7 +32,7 @@
 				<ui-select label="Merkmal" class="pb-4"
 					v-model="model.merkmal.value"
 					:manager="merkmalManager"
-					:removable="false" searchable statistics />
+					:removable="false" statistics />
 				<svws-ui-input-wrapper :grid="2" style="text-align: left">
 					<svws-ui-text-input placeholder="Von" type="date"
 						v-model="model.proxy.datumVon"

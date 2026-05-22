@@ -57,7 +57,7 @@
 				</template>
 				<!-- Felder zum Patchen der Erzieherdaten -->
 				<svws-ui-input-wrapper :grid="4">
-					<ui-select label="Erzieherart" v-model="erzieherart" :manager="erzieherartenManager" :removable="false" :readonly searchable />
+					<ui-select label="Erzieherart" v-model="erzieherart" :manager="erzieherartenManager" :removable="false" :readonly />
 					<svws-ui-text-input placeholder="Anrede" :model-value="erzieher?.anrede" @change="anrede=>(erzieher !== undefined) &&
 						patchErzieher({ anrede }, erzieher.id)" type="text" :readonly />
 					<svws-ui-text-input placeholder="Titel" :model-value="erzieher?.titel" @change="titel=>(erzieher !== undefined) &&
@@ -70,10 +70,10 @@
 					<svws-ui-text-input placeholder="E-Mail Adresse" :model-value="erzieher?.eMail" @change="eMail=>(erzieher !== undefined) &&
 						patchErzieher({ eMail }, erzieher.id)" type="email" verify-email :readonly />
 					<svws-ui-spacing />
-					<ui-select label="Staatsangehörigkeit" v-model="ersterErzStaatsangehoerigkeit" :manager="staatsangehoerigkeitenManager" :readonly searchable />
+					<ui-select label="Staatsangehörigkeit" v-model="ersterErzStaatsangehoerigkeit" :manager="staatsangehoerigkeitenManager" :readonly />
 					<svws-ui-text-input placeholder="Straße und Hausnummer" :model-value="strasse(erzieher)" @change="patchStrasse" type="text" :readonly />
-					<ui-select label="Wohnort" v-model="erzWohnort" :manager="wohnortManager" :readonly searchable />
-					<ui-select label="Ortsteil" v-model="erzOrtsteil" :manager="erzOrtsteilManager" :readonly="!erzieher.wohnortID" searchable />
+					<ui-select label="Wohnort" v-model="erzWohnort" :manager="wohnortManager" :readonly />
+					<ui-select label="Ortsteil" v-model="erzOrtsteil" :manager="erzOrtsteilManager" :readonly="!erzieher.wohnortID" />
 					<svws-ui-spacing />
 					<svws-ui-textarea-input placeholder="Bemerkungen" :model-value="erzieher?.bemerkungen" span="full" autoresize
 						@change="bemerkungen => (erzieher !== undefined) && patchErzieher({ bemerkungen: bemerkungen === null ? '' : bemerkungen }, erzieher.id)"
@@ -90,7 +90,7 @@
 						<svws-ui-text-input placeholder="Rufname" v-model="zweiterErz.vorname" type="text" required :readonly />
 						<svws-ui-text-input placeholder="Nachname" v-model="zweiterErz.nachname" type="text" required :readonly />
 						<svws-ui-text-input placeholder="E-Mail Adresse" v-model="zweiterErz.eMail" type="email" verify-email :readonly />
-						<ui-select label="Staatsangehörigkeit" v-model="zweiteErzStaatsangehoerigkeit" :manager="staatsangehoerigkeitenManager" :readonly searchable />
+						<ui-select label="Staatsangehörigkeit" v-model="zweiteErzStaatsangehoerigkeit" :manager="staatsangehoerigkeitenManager" :readonly />
 					</svws-ui-input-wrapper>
 					<div v-if="hatKompetenzUpdate" class="mt-7 flex flex-row gap-4 justify-end">
 						<svws-ui-button type="secondary" @click="showPatchPosModal = false">Abbrechen</svws-ui-button>

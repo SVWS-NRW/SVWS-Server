@@ -16,7 +16,7 @@
 					v-model="model.selectedFloskelgruppenart.value"
 					:validation="() => model.getFehler('idFloskelgruppenart')"
 					:manager="floskelgruppenartManager"
-					:removable="false" searchable required :readonly />
+					:removable="false" required :readonly />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 	</div>

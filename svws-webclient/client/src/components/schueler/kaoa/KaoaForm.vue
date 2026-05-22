@@ -4,37 +4,37 @@
 			<ui-select label="Schuljahresabschnitt" class="mt-2"
 				v-model="selectedSchuljahresabschnitt"
 				:manager="schuljahresabschnittManager"
-				:readonly searchable :removable="false" />
+				:readonly :removable="false" />
 			<ui-select v-if="data.idSchuljahresabschnitt !== -1"
 				class="pl-8" label="Kategorie"
 				v-model="selectedKategorie"
 				:manager="kategorieManager"
-				:readonly searchable />
+				:readonly />
 			<ui-select v-if="data.idKategorie !== -1"
 				class="pl-16" label="Merkmal"
 				v-model="selectedMerkmal"
 				:manager="merkmalManager"
-				:readonly searchable />
+				:readonly />
 			<ui-select v-if="data.idMerkmal !== -1"
 				class="pl-24" label="Zusatzmerkmal"
 				v-model="selectedZusatzmerkmal"
 				:manager="zusatzmerkmalManager"
-				:readonly searchable />
+				:readonly />
 			<ui-select v-if="showEbene4"
 				class="pl-32" label="KAoAEbene4"
 				v-model="selectedEbene4"
 				:manager="ebene4Manager"
-				:readonly searchable />
+				:readonly />
 			<ui-select v-if="showAnschlussoption"
 				class="pl-32" label="KAoAAnschlussoption"
 				v-model="selectedAnschlussoption"
 				:manager="anschlussoptionManager"
-				:readonly searchable />
+				:readonly />
 			<ui-select v-if="showBerufsfeld"
 				class="pl-32" label="KAoABerufsfeld"
 				v-model="selectedBerufsfeld"
 				:manager="berufsfeldmanager"
-				:readonly searchable />
+				:readonly />
 			<div class="pl-32">
 				<svws-ui-text-input v-if="showFreitext"
 					placeholder="Bemerkung"

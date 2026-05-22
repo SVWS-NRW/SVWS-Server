@@ -36,7 +36,7 @@
 						:manager="jahrgangTextSelectManager"
 						v-model="model.statistikJahrgang.value"
 						:validation="() => model.getFehler('kuerzelStatistik')"
-						statistics searchable required :removable="false" />
+						statistics required :removable="false" />
 					<svws-ui-input-number placeholder="Anzahl der Restabschnitte"
 						v-model="model.proxy.anzahlRestabschnitte"
 						:validation="() => model.getFehler('anzahlRestabschnitte')"

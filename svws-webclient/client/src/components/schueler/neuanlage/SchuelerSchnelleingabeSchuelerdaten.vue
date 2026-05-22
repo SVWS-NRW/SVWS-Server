@@ -73,7 +73,7 @@
 			<ui-select label="Konfession"
 				v-model="religion"
 				:manager="religionManager"
-				:removable="false" searchable :readonly />
+				:removable="false" :readonly />
 			<svws-ui-text-input placeholder="Abmeldung vom Religionsunterricht"
 				:model-value="manager().stammdaten.religionabmeldung"
 				@change="patchReligionAbmeldung"
@@ -90,34 +90,34 @@
 			<ui-select label="Geburtsland"
 				v-model="geburtsland"
 				:manager="geburtslandManager"
-				:disabled="(!manager().stammdaten.hatMigrationshintergrund || readonly)" :removable="false" searchable />
+				:disabled="(!manager().stammdaten.hatMigrationshintergrund || readonly)" :removable="false" />
 			<svws-ui-spacing />
 			<ui-select label="Geburtsland Mutter"
 				v-model="geburtslandMutter"
 				:manager="geburtslandManager"
-				:disabled="(!manager().stammdaten.hatMigrationshintergrund || readonly)" :removable="false" searchable />
+				:disabled="(!manager().stammdaten.hatMigrationshintergrund || readonly)" :removable="false" />
 			<ui-select label="Geburtsland Vater"
 				v-model="geburtslandVater"
 				:manager="geburtslandManager"
-				:disabled="(!manager().stammdaten.hatMigrationshintergrund || readonly)" :removable="false" searchable />
+				:disabled="(!manager().stammdaten.hatMigrationshintergrund || readonly)" :removable="false" />
 			<ui-select label="Verkehrssprache"
 				v-model="verkehrssprache"
 				:manager="verkehrsspracheManager"
-				:disabled="(!manager().stammdaten.hatMigrationshintergrund || readonly)" :removable="false" searchable />
+				:disabled="(!manager().stammdaten.hatMigrationshintergrund || readonly)" :removable="false" />
 			<svws-ui-spacing />
 			<ui-select label="Fahrschüler"
 				v-model="fahrschuelerart"
 				:manager="fahrschuelerartManager"
-				:removable="false" searchable :readonly />
+				:removable="false" :readonly />
 			<ui-select label="Haltestelle"
 				v-model="haltestelle"
 				:manager="haltestellenManager"
-				:removable="false" searchable :readonly />
+				:removable="false" :readonly />
 			<svws-ui-spacing />
 			<ui-select label="Ext. ID-Nr."
 				v-model="externeSchulNr"
 				:manager="externeIDNrManager"
-				:removable="false" searchable :readonly />
+				:removable="false" :readonly />
 			<svws-ui-text-input placeholder="Schülerausweis-Nummer"
 				:model-value="manager().stammdaten.idSchuelerausweis"
 				@change="patchIdSchuelerausweis"

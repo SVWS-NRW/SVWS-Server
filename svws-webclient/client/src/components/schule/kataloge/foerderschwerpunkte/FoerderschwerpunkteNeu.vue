@@ -7,7 +7,7 @@
 						v-model="model.foerderschwerpunkt.value"
 						:validation="() => model.getFehler('kuerzelStatistik')"
 						:manager="foerderschwerpunktKuerzelManager"
-						statistics searchable required :removable="false" />
+						statistics required :removable="false" />
 					<ui-select label="Förderschwerpunkt ASD-Text"
 						v-model="model.foerderschwerpunkt.value"
 						:validation="() => model.getFehler('kuerzelStatistik')"

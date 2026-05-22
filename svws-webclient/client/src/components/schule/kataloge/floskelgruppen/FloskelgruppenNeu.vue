@@ -14,7 +14,7 @@
 					v-model="model.selectedFloskelgruppenart.value"
 					:validation="() => model.getFehler('idFloskelgruppenart')"
 					:manager="floskelgruppenartManager"
-					:removable="false" searchable required />
+					:removable="false" required />
 			</svws-ui-input-wrapper>
 			<div class="mt-7 flex flex-row gap-4 justify-end">
 				<svws-ui-button type="secondary" @click="cancel">

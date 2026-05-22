@@ -38,7 +38,7 @@
 					<ui-select label="Telefonart"
 						v-model="telefonart"
 						:manager="telefonartenManager"
-						:removable="false" searchable />
+						:removable="false" />
 					<svws-ui-text-input placeholder="Telefonnummer" type="text"
 						v-model="data.telefonnummer"
 						:max-len="20" />

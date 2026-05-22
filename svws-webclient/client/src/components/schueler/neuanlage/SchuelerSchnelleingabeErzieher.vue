@@ -75,7 +75,7 @@
 					<ui-select label="Staatsangehörigkeit"
 						v-model="zweiteErzStaatsangehoerigkeit"
 						:manager="staatsangehoerigkeitenManager"
-						:removable="false" searchable />
+						:removable="false" />
 				</svws-ui-input-wrapper>
 				<div class="mt-7 flex flex-row gap-4 justify-end">
 					<svws-ui-button type="secondary"

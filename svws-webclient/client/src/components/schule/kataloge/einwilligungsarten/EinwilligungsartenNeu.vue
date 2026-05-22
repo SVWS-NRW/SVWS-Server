@@ -16,7 +16,7 @@
 					<ui-select label="Personenart" class="col-span-full"
 						v-model="model.personTyp.value"
 						:manager="personTypManager"
-						:removable="false" searchable />
+						:removable="false" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />

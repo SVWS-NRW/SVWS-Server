@@ -57,7 +57,7 @@
 	<svws-ui-modal v-model:show="showHinzufuegen" size="small" class="hidden">
 		<template #modalTitle> Unterrichtsfach hinzufügen </template>
 		<template #modalContent>
-			<ui-select label="Fach" v-model="auswahlFachNeu" :manager="fachSelectManager" searchable required :removable="false" />
+			<ui-select label="Fach" v-model="auswahlFachNeu" :manager="fachSelectManager" required :removable="false" />
 			<div class="mt-4 text-left">
 				<span class="text-headline-sm mb-2 block">wird unterrichtet in</span>
 				<div class="flex gap-4">

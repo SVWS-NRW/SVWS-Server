@@ -17,8 +17,8 @@
 					v-model="personaldatenModelProxy.proxy.zugangsdatum" @commit="personaldatenModelProxy.patch" :readonly />
 				<svws-ui-text-input placeholder="Abgangsdatum" type="date"
 					v-model="personaldatenModelProxy.proxy.abgangsdatum" @commit="personaldatenModelProxy.patch" :readonly />
-				<ui-select label="Zugangsgrund" v-model="personaldatenModelProxy.zugangsgrund.value" :manager="zugangsgrundManager" :readonly searchable />
-				<ui-select label="Abgangsgrund" v-model="personaldatenModelProxy.abgangsgrund.value" :manager="abgangsgrundManager" :readonly searchable />
+				<ui-select label="Zugangsgrund" v-model="personaldatenModelProxy.zugangsgrund.value" :manager="zugangsgrundManager" :readonly />
+				<ui-select label="Abgangsgrund" v-model="personaldatenModelProxy.abgangsgrund.value" :manager="abgangsgrundManager" :readonly />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Beschäftigungsdaten">

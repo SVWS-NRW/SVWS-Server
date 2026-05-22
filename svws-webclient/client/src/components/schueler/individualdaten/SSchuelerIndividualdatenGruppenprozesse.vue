@@ -150,7 +150,7 @@
 					</ui-gruppenprozesse-wrapper>
 					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="geburtsland" :nullable="hatMigrationshintergrund">
 						<ui-select v-model="geburtsland" label="Geburtsland" :manager="geburtslandSelectManager" :disabled="!hatMigrationshintergrund"
-							:readonly="hatMigrationshintergrund && !hatKompetenzUpdate" :removable="false" searchable statistics />
+							:readonly="hatMigrationshintergrund && !hatKompetenzUpdate" :removable="false" statistics />
 					</ui-gruppenprozesse-wrapper>
 					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="verkehrspracheFamilie"
 						:nullable="hatMigrationshintergrund">

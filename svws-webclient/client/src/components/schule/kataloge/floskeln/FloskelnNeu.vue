@@ -15,16 +15,16 @@
 						<ui-select label="Floskelgruppe"
 							v-model="model.selectedFloskelgruppe.value"
 							:manager="floskelgruppenManager"
-							:disabled :removable="false" searchable required />
+							:disabled :removable="false" required />
 						<ui-select v-if="model.hatFloskelgruppeArtFach.value" label="Fach"
 							v-model="model.selectedFach.value"
 							:manager="faecherManager"
-							:disabled searchable />
+							:disabled />
 						<div v-else />
 						<ui-select label="Jahrgang"
 							v-model="model.selectedJahrgang.value"
 							:manager="jahrgaengeManager"
-							:disabled searchable removable />
+							:disabled removable />
 						<ui-select label="Niveau"
 							v-model="model.selectedNiveau.value"
 							:disabled :manager="niveauManager" />
