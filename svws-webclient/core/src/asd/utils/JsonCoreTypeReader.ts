@@ -137,6 +137,8 @@ import { Reformpaedagogik } from "../types/schule/Reformpaedagogik";
 import { CoreTypeData } from "../data/CoreTypeData";
 import { DQRNiveauKatalogEintrag } from "../data/schule/DQRNiveauKatalogEintrag";
 import { DQRNiveau } from "../types/schule/DQRNiveau";
+import { FachklasseKatalogEintrag } from "../data/schule/FachklasseKatalogEintrag";
+import { Fachklasse } from "../types/schule/Fachklasse";
 
 /**
  * Die Klasse dient dem Einlesen der Daten für Core-Types und der Fehlerart-Kontexte von Validatoren.
@@ -218,6 +220,7 @@ export class JsonCoreTypeReader {
 		{ key: "Herkunftsschulnummer", entry: HerkunftsschulnummerKatalogEintrag, type: Herkunftsschulnummer, simple: true },
 		{ key: "Reformpaedagogik", entry: ReformpaedagogikKatalogEintrag, type: Reformpaedagogik, simple: true },
 		{ key: "DQRNiveau", entry: DQRNiveauKatalogEintrag, type: DQRNiveau, simple: true },
+		{ key: "Fachklasse", entry: FachklasseKatalogEintrag, type: Fachklasse, simple: true },
 	];
 
 	/**

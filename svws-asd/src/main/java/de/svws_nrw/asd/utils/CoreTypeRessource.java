@@ -58,6 +58,7 @@ import de.svws_nrw.asd.data.schule.BildungsgangTypKatalogEintrag;
 import de.svws_nrw.asd.data.schule.BildungsstufeKatalogEintrag;
 import de.svws_nrw.asd.data.schule.DQRNiveauKatalogEintrag;
 import de.svws_nrw.asd.data.schule.EinwilligungsschluesselKatalogEintrag;
+import de.svws_nrw.asd.data.schule.FachklasseKatalogEintrag;
 import de.svws_nrw.asd.data.schule.FloskelgruppenartKatalogEintrag;
 import de.svws_nrw.asd.data.schule.FoerderschwerpunktKatalogEintrag;
 import de.svws_nrw.asd.data.schule.FormOffenerGanztagKatalogEintrag;
@@ -127,6 +128,7 @@ import de.svws_nrw.asd.types.schule.BerufskollegOrganisationsformen;
 import de.svws_nrw.asd.types.schule.Bildungsstufe;
 import de.svws_nrw.asd.types.schule.DQRNiveau;
 import de.svws_nrw.asd.types.schule.Einwilligungsschluessel;
+import de.svws_nrw.asd.types.schule.Fachklasse;
 import de.svws_nrw.asd.types.schule.Floskelgruppenart;
 import de.svws_nrw.asd.types.schule.Foerderschwerpunkt;
 import de.svws_nrw.asd.types.schule.FormOffenerGanztag;
@@ -550,6 +552,8 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 				"de/svws_nrw/asd/types/schule/Reformpaedagogik.json");
 		addSimple(DQRNiveau.class, DQRNiveauKatalogEintrag.class,
 				"de/svws_nrw/asd/types/schule/DQRNiveau.json");
+		addSimple(Fachklasse.class, FachklasseKatalogEintrag.class,
+				"de/svws_nrw/asd/types/schule/Fachklasse.json");
 
 	}
 

@@ -17,10 +17,14 @@ import jakarta.ws.rs.core.Response.Status;
 /**
  * Diese Klasse dient dem Zugriff auf die einzelnen Json-Ressourcen der Core-Types
  */
-public class ResourceCoreTypeJson {
+public final class ResourceCoreTypeJson {
+
+	 private ResourceCoreTypeJson() {
+	   /* This utility class should not be instantiated */
+	 }
 
 	/** Eine Map mit der Zuordnung der einzelnen Namen von Core-Types zu deren Pfaden in den Json-Ressourcen */
-	private static Map<String, String> mapNameToResourceFile = Map.ofEntries(
+	private static final Map<String, String> MAP_NAME_TO_RESOURCE_FILE = Map.<String, String>ofEntries(
 			Map.entry("Schulform", "de/svws_nrw/asd/types/schule/Schulform.json"),
 			Map.entry("BerufskollegAnlage", "de/svws_nrw/asd/types/schule/BerufskollegAnlage.json"),
 			Map.entry("AllgemeinbildendOrganisationsformen", "de/svws_nrw/asd/types/schule/AllgemeinbildendOrganisationsformen.json"),
@@ -89,7 +93,8 @@ public class ResourceCoreTypeJson {
 			Map.entry("BerufskollegBerufsebene3", "de/svws_nrw/asd/types/schule/BerufskollegBerufsebene3.json"),
 			Map.entry("Herkunftsschulnummer", "de/svws_nrw/asd/types/schule/Herkunftsschulnummer.json"),
 			Map.entry("Reformpaedagogik", "de/svws_nrw/asd/types/schule/Reformpaedagogik.json"),
-			Map.entry("DQRNiveau", "de/svws_nrw/asd/types/schule/DQRNiveau.json")
+			Map.entry("DQRNiveau", "de/svws_nrw/asd/types/schule/DQRNiveau.json"),
+			Map.entry("Fachklasse", "de/svws_nrw/asd/types/schule/Fachklasse.json")
 	);
 
 
@@ -105,17 +110,13 @@ public class ResourceCoreTypeJson {
 			return new JsonValidatorFehlerartKontextData().getAsJsonNode();
 		}
 
-		final String path = mapNameToResourceFile.get(name);
-		if (path == null) {
+		final String pathToResource = MAP_NAME_TO_RESOURCE_FILE.get(name);
+		if (pathToResource == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Der Core-Type %s ist unbekannt.".formatted(name));
 		}
 
 		try {
-			final String json = JsonReader.fromResource(path);
-			if (json == null) {
-				throw new ApiOperationException(Status.NOT_FOUND, "JSON-Datei für %s nicht gefunden.".formatted(name));
-			}
-			return JsonReader.mapper.readTree(json);
+			return JsonReader.mapper.readTree(JsonReader.fromResource(pathToResource));
 		} catch (final IOException e) {
 			Logger.global().logLn("Fehler beim Einlesen der Core-Type-JSON-Kataloge: " + e.getMessage());
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Einlesen von " + name);
@@ -149,7 +150,7 @@ public class ResourceCoreTypeJson {
 	 */
 	public static @NotNull String getAllInOne() throws ApiOperationException {
 		final ObjectNode nodeResult = JsonReader.mapper.createObjectNode();
-		for (final String name : mapNameToResourceFile.keySet()) {
+		for (final String name : MAP_NAME_TO_RESOURCE_FILE.keySet()) {
 			nodeResult.set(name, getJsonNode(name));
 		}
 		try {

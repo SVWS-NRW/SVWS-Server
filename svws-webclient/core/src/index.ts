@@ -194,6 +194,7 @@ export { BildungsgangTypKatalogEintrag } from './asd/data/schule/BildungsgangTyp
 export { BildungsstufeKatalogEintrag } from './asd/data/schule/BildungsstufeKatalogEintrag';
 export { DQRNiveauKatalogEintrag } from './asd/data/schule/DQRNiveauKatalogEintrag';
 export { EinwilligungsschluesselKatalogEintrag } from './asd/data/schule/EinwilligungsschluesselKatalogEintrag';
+export { FachklasseKatalogEintrag } from './asd/data/schule/FachklasseKatalogEintrag';
 export { FloskelgruppenartKatalogEintrag } from './asd/data/schule/FloskelgruppenartKatalogEintrag';
 export { FoerderschwerpunktKatalogEintrag } from './asd/data/schule/FoerderschwerpunktKatalogEintrag';
 export { FormOffenerGanztagKatalogEintrag } from './asd/data/schule/FormOffenerGanztagKatalogEintrag';
@@ -286,6 +287,7 @@ export { BerufskollegOrganisationsformen } from './asd/types/schule/Berufskolleg
 export { Bildungsstufe } from './asd/types/schule/Bildungsstufe';
 export { DQRNiveau } from './asd/types/schule/DQRNiveau';
 export { Einwilligungsschluessel } from './asd/types/schule/Einwilligungsschluessel';
+export { Fachklasse } from './asd/types/schule/Fachklasse';
 export { Floskelgruppenart } from './asd/types/schule/Floskelgruppenart';
 export { Foerderschwerpunkt } from './asd/types/schule/Foerderschwerpunkt';
 export { FormOffenerGanztag } from './asd/types/schule/FormOffenerGanztag';

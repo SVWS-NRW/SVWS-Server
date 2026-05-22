@@ -17,6 +17,11 @@ dependencies {
 	docGenerator fileTree(dir: "$projectDir/src/main/java/de/svws_nrw/asd/validate", includes: ['**/*.java' ], excludes: ['**/DateManager.java'],  )
 }
 
+tasks.withType(Test).configureEach {
+	// Max. Memory pro Gradle Worker auf 1GB erhöht, damit die Tests weiterhin durchlaufen, trotz der zunehmenden CoreType Json Files.
+	maxHeapSize = "1g"
+}
+
 task cleanTranspiled(type: Delete) {
 	group = "build"
 	delete fileTree(dir: "$buildDir/ts"), fileTree(dir: "$buildDir/tmp/transpiler/ts", includes: ["**/*.class"])
