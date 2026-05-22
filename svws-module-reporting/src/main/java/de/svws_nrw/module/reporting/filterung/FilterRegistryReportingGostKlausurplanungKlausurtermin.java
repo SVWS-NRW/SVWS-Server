@@ -33,12 +33,12 @@ public final class FilterRegistryReportingGostKlausurplanungKlausurtermin {
 		final FilterRegistry<ReportingGostKlausurplanungKlausurtermin> reg = new FilterRegistry<>();
 
 		// Grundlegende Attribute
-		reg.registriereAttribut("gostHalbjahr", ReportingGostKlausurplanungKlausurtermin::gostHalbjahr);
-		reg.registriereAttribut("quartal", ReportingGostKlausurplanungKlausurtermin::quartal);
-		reg.registriereAttribut("istHaupttermin", ReportingGostKlausurplanungKlausurtermin::istHaupttermin);
-		reg.registriereAttribut("datum", ReportingGostKlausurplanungKlausurtermin::datum);
-		reg.registriereAttribut("bezeichnung", ReportingGostKlausurplanungKlausurtermin::bezeichnung);
-		reg.registriereAttribut("nachschreiberZugelassen", ReportingGostKlausurplanungKlausurtermin::nachschreiberZugelassen);
+		reg.registriereAttribut(ReportingGostKlausurplanungKlausurtermin::gostHalbjahr);
+		reg.registriereAttribut(ReportingGostKlausurplanungKlausurtermin::quartal);
+		reg.registriereAttribut(ReportingGostKlausurplanungKlausurtermin::istHaupttermin);
+		reg.registriereAttribut(ReportingGostKlausurplanungKlausurtermin::datum);
+		reg.registriereAttribut(ReportingGostKlausurplanungKlausurtermin::bezeichnung);
+		reg.registriereAttribut(ReportingGostKlausurplanungKlausurtermin::nachschreiberZugelassen);
 
 		return reg;
 	}

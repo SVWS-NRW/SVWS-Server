@@ -1,6 +1,7 @@
 package de.svws_nrw.module.reporting.sortierung;
 
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungSchuelerklausur;
+import de.svws_nrw.module.reporting.utils.ReportingTypesUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -43,13 +44,11 @@ public final class SortierungRegistryReportingGostKlausurplanungSchuelerklausur 
 	 * @return Eine Liste von Attributnamen in der Reihenfolge der Standardsortierung.
 	 */
 	public static List<String> standardsortierung() {
-		final SortierungRegistry<ReportingGostKlausurplanungSchuelerklausur> reg = new SortierungRegistry<>();
-
 		final ArrayList<String> standard = new ArrayList<>();
 		SortierungRegistryReportingSchueler.standardsortierung()
-				.forEach(attribut -> standard.add(reg.methodeToString(ReportingGostKlausurplanungSchuelerklausur::schueler) + "." + attribut));
+				.forEach(attribut -> standard.add(ReportingTypesUtils.methodeToString(ReportingGostKlausurplanungSchuelerklausur::schueler) + "." + attribut));
 		SortierungRegistryReportingGostKlausurplanungKlausurtermin.standardsortierung()
-				.forEach(attribut -> standard.add(reg.methodeToString(ReportingGostKlausurplanungSchuelerklausur::klausurtermin) + "." + attribut));
+				.forEach(attribut -> standard.add(ReportingTypesUtils.methodeToString(ReportingGostKlausurplanungSchuelerklausur::klausurtermin) + "." + attribut));
 		return standard;
 	}
 
@@ -67,27 +66,22 @@ public final class SortierungRegistryReportingGostKlausurplanungSchuelerklausur 
 		final SortierungRegistry<ReportingGostKlausurplanungSchuelerklausur> reg = new SortierungRegistry<>();
 
 		// Eigene Attribute der Schülerklausur
-		reg.registiereString(reg.methodeToString(ReportingGostKlausurplanungSchuelerklausur::bemerkung),
-				ReportingGostKlausurplanungSchuelerklausur::bemerkung);
-		reg.registiereComparable(reg.methodeToString(ReportingGostKlausurplanungSchuelerklausur::id),
-				ReportingGostKlausurplanungSchuelerklausur::id);
-		reg.registiereComparable(reg.methodeToString(ReportingGostKlausurplanungSchuelerklausur::idSchuelerklausurtermin),
-				ReportingGostKlausurplanungSchuelerklausur::idSchuelerklausurtermin);
-		reg.registiereComparable(reg.methodeToString(ReportingGostKlausurplanungSchuelerklausur::nummerTerminfolge),
-				ReportingGostKlausurplanungSchuelerklausur::nummerTerminfolge);
-		reg.registiereString(reg.methodeToString(ReportingGostKlausurplanungSchuelerklausur::startuhrzeit),
-				ReportingGostKlausurplanungSchuelerklausur::startuhrzeit);
+		reg.registiereString(ReportingGostKlausurplanungSchuelerklausur::bemerkung);
+		reg.registiereComparable(ReportingGostKlausurplanungSchuelerklausur::id);
+		reg.registiereComparable(ReportingGostKlausurplanungSchuelerklausur::idSchuelerklausurtermin);
+		reg.registiereComparable(ReportingGostKlausurplanungSchuelerklausur::nummerTerminfolge);
+		reg.registiereString(ReportingGostKlausurplanungSchuelerklausur::startuhrzeit);
 
 		// Importiere Schülersortierungen unter Prefix "schueler"
 		reg.importiereRegistryEintraege(
-				reg.methodeToString(ReportingGostKlausurplanungSchuelerklausur::schueler) + ".",
+				ReportingTypesUtils.methodeToString(ReportingGostKlausurplanungSchuelerklausur::schueler) + ".",
 				SortierungRegistryReportingSchueler.sortierungRegistry(),
 				FunktionBuilder.start(ReportingGostKlausurplanungSchuelerklausur::schueler).toFunction()
 		);
 
 		// Importiere Klausurterminsortierungen unter Prefix "klausurtermin"
 		reg.importiereRegistryEintraege(
-				reg.methodeToString(ReportingGostKlausurplanungSchuelerklausur::klausurtermin) + ".",
+				ReportingTypesUtils.methodeToString(ReportingGostKlausurplanungSchuelerklausur::klausurtermin) + ".",
 				SortierungRegistryReportingGostKlausurplanungKlausurtermin.sortierungRegistry(),
 				FunktionBuilder.start(ReportingGostKlausurplanungSchuelerklausur::klausurtermin).toFunction()
 		);

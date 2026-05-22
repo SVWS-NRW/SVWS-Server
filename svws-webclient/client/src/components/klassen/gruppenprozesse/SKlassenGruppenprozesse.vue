@@ -4,28 +4,35 @@
 			Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
 		</div>
 		<div v-else class="flex flex-col gap-4">
-			<ui-card v-if="hatKompetenzDruckenSchuelerIndividualdaten" icon="i-ri-printer-line" title="Klassenliste drucken oder versenden" subtitle="Eine Liste mit den Daten der Schülerinnen und Schüler der ausgewählten Klassen drucken oder versenden."
+			<ui-card v-if="hatKompetenzDruckenSchuelerIndividualdaten" icon="i-ri-printer-line" :title="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getUiTitel()" :subtitle="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getUiBeschreibung()"
 				:is-open="currentAction === 'druckKlasseListeSchuelerKontaktdatenErzieher'" @update:is-open="isOpen => setCurrentAction('druckKlasseListeSchuelerKontaktdatenErzieher', isOpen)">
 				<report-parameters :reportvorlage="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER"
 					:ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :send-e-mail
 					:id-abschnitt="manager().getSchuljahresabschnittAuswahl()?.id" />
 			</ui-card>
 
-			<ui-card v-if="hatKompetenzDruckenSchuelerIndividualdaten" icon="i-ri-printer-line" title="Fotoübersicht der Klassen drucken oder versenden" subtitle="Eine Liste mit den Fotos der Schülerinnen und Schüler der ausgewählten Klassen drucken oder versenden."
+			<ui-card v-if="hatKompetenzDruckenSchuelerIndividualdaten" icon="i-ri-printer-line" :title="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_FOTOS_NAMEN.getUiTitel()" :subtitle="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_FOTOS_NAMEN.getUiBeschreibung()"
 				:is-open="currentAction === 'druckKlasseListeSchuelerFotos'" @update:is-open="isOpen => setCurrentAction('druckKlasseListeSchuelerFotos', isOpen)">
 				<report-parameters :reportvorlage="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_FOTOS_NAMEN"
 					:ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :send-e-mail
 					:id-abschnitt="manager().getSchuljahresabschnittAuswahl()?.id" />
 			</ui-card>
 
-			<ui-card v-if="hatKompetenzDruckenSchuelerLeistungsdaten" icon="i-ri-printer-line" title="Leistungsübersicht drucken" subtitle="Eine Liste mit den Leistungsdaten der Schülerinnen und Schüler der ausgewählten Klassen drucken"
+			<ui-card v-if="hatKompetenzDruckenSchuelerLeistungsdaten" icon="i-ri-printer-line" :title="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN.getUiTitel()" :subtitle="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN.getUiBeschreibung()"
 				:is-open="currentAction === 'druckKlasseListeSchuelerLeistungsdaten'" @update:is-open="isOpen => setCurrentAction('druckKlasseListeSchuelerLeistungsdaten', isOpen)">
 				<report-parameters :reportvorlage="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN"
 					:ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :send-e-mail
 					:id-abschnitt="manager().getSchuljahresabschnittAuswahl()?.id" />
 			</ui-card>
 
-			<ui-card v-if="hatKompetenzDruckenStundenplan && (mapStundenplaene.size > 0)" icon="i-ri-printer-line" title="Stundenplan drucken oder versenden" subtitle="Die Stundenpläne der ausgewählten Klassen drucken oder versenden."
+			<ui-card v-if="hatKompetenzDruckenSchuelerLeistungsdaten" icon="i-ri-printer-line" :title="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN_DETAILLIERT.getUiTitel()" :subtitle="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN_DETAILLIERT.getUiBeschreibung()"
+				:is-open="currentAction === 'druckKlasseListeSchuelerLeistungsdatenDetailliert'" @update:is-open="isOpen => setCurrentAction('druckKlasseListeSchuelerLeistungsdatenDetailliert', isOpen)">
+				<report-parameters :reportvorlage="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN_DETAILLIERT" :server-mode
+					:ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :send-e-mail
+					:id-abschnitt="manager().getSchuljahresabschnittAuswahl()?.id" />
+			</ui-card>
+
+			<ui-card v-if="hatKompetenzDruckenStundenplan && (mapStundenplaene.size > 0)" icon="i-ri-printer-line" :title="ReportingReportvorlage.STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN.getUiTitel()" :subtitle="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN_DETAILLIERT.getUiBeschreibung()"
 				:is-open="currentAction === 'druckKlasseStundenplan'" @update:is-open="isOpen => setCurrentAction('druckKlasseStundenplan', isOpen)">
 				<div class="flex flex-col">
 					<div>
@@ -69,11 +76,13 @@
 	import type { KlassenGruppenprozesseProps } from "./SKlassenGruppenprozesseProps";
 	import type { StundenplanListeEintrag, List } from "@core";
 	import { ArrayList, BenutzerKompetenz, DateUtils, ReportingReportvorlage } from "@core";
-	import { SelectManager } from "@ui";
+	import { SelectManager, useServerState } from "@ui";
 
-	type Action = 'druckKlasseListeSchuelerKontaktdatenErzieher' | 'druckKlasseListeSchuelerFotos' | 'druckKlasseListeSchuelerLeistungsdaten' | 'druckKlasseStundenplan' | 'delete' | '';
+	type Action = 'druckKlasseListeSchuelerKontaktdatenErzieher' | 'druckKlasseListeSchuelerFotos' | 'druckKlasseListeSchuelerLeistungsdaten' | 'druckKlasseListeSchuelerLeistungsdatenDetailliert' | 'druckKlasseStundenplan' | 'delete' | '';
 
 	const props = defineProps<KlassenGruppenprozesseProps>();
+
+	const serverMode = useServerState().mode;
 
 	const hatKompetenzDrucken = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN) || props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)));
 	const hatKompetenzDruckenStundenplan = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN) && hatKompetenzDrucken.value));

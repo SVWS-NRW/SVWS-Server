@@ -3,6 +3,7 @@ package de.svws_nrw.module.reporting.sortierung;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
+import de.svws_nrw.module.reporting.utils.ReportingTypesUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -53,11 +54,10 @@ public final class SortierungRegistryReportingKlasse {
 	 * @return Eine Liste von Attributnamen in der Reihenfolge der Standardsortierung.
 	 */
 	public static List<String> standardsortierung() {
-		final SortierungRegistry<ReportingKlasse> reg = new SortierungRegistry<>();
 		final ArrayList<String> standardSort = new ArrayList<>();
-		standardSort.add(reg.methodeToString(ReportingKlasse::sortierung));
-		standardSort.add(reg.methodeToString(ReportingKlasse::kuerzel));
-		standardSort.add(reg.methodeToString(ReportingKlasse::id));
+		standardSort.add(ReportingTypesUtils.methodeToString(ReportingKlasse::sortierung));
+		standardSort.add(ReportingTypesUtils.methodeToString(ReportingKlasse::kuerzel));
+		standardSort.add(ReportingTypesUtils.methodeToString(ReportingKlasse::id));
 		return standardSort;
 	}
 
@@ -79,43 +79,43 @@ public final class SortierungRegistryReportingKlasse {
 		final SortierungRegistry<ReportingKlasse> reg = new SortierungRegistry<>();
 
 		// Grundlegende Attribute
-		reg.registiereComparable(reg.methodeToString(ReportingKlasse::id), ReportingKlasse::id);
-		reg.registiereComparable(reg.methodeToString(ReportingKlasse::sortierung), ReportingKlasse::sortierung);
-		reg.registiereString(reg.methodeToString(ReportingKlasse::kuerzel), ReportingKlasse::kuerzel);
-		reg.registiereString(reg.methodeToString(ReportingKlasse::beschreibung), ReportingKlasse::beschreibung);
-		reg.registiereString(reg.methodeToString(ReportingKlasse::parallelitaet), ReportingKlasse::parallelitaet);
-		reg.registiereString(reg.methodeToString(ReportingKlasse::auflistungKlassenlehrerkuerzel), ReportingKlasse::auflistungKlassenlehrerkuerzel);
-		reg.registiereString(reg.methodeToString(ReportingKlasse::teilstandort), ReportingKlasse::teilstandort);
+		reg.registiereComparable(ReportingKlasse::id);
+		reg.registiereComparable(ReportingKlasse::sortierung);
+		reg.registiereString(ReportingKlasse::kuerzel);
+		reg.registiereString(ReportingKlasse::beschreibung);
+		reg.registiereString(ReportingKlasse::parallelitaet);
+		reg.registiereString(ReportingKlasse::auflistungKlassenlehrerkuerzel);
+		reg.registiereString(ReportingKlasse::teilstandort);
 
 		// IDs und Kennungen (als Comparable)
-		reg.registiereComparable(reg.methodeToString(ReportingKlasse::idKlassenart), ReportingKlasse::idKlassenart);
-		reg.registiereComparable(reg.methodeToString(ReportingKlasse::idSchulgliederung), ReportingKlasse::idSchulgliederung);
-		reg.registiereComparable(reg.methodeToString(ReportingKlasse::idJahrgang), ReportingKlasse::idJahrgang);
-		reg.registiereComparable(reg.methodeToString(ReportingKlasse::idFachklasse), ReportingKlasse::idFachklasse);
-		reg.registiereComparable(reg.methodeToString(ReportingKlasse::idFolgeklasse), ReportingKlasse::idFolgeklasse);
-		reg.registiereComparable(reg.methodeToString(ReportingKlasse::idVorgaengerklasse), ReportingKlasse::idVorgaengerklasse);
-		reg.registiereString(reg.methodeToString(ReportingKlasse::kuerzelFolgeklasse), ReportingKlasse::kuerzelFolgeklasse);
-		reg.registiereString(reg.methodeToString(ReportingKlasse::kuerzelVorgaengerklasse), ReportingKlasse::kuerzelVorgaengerklasse);
+		reg.registiereComparable(ReportingKlasse::idKlassenart);
+		reg.registiereComparable(ReportingKlasse::idSchulgliederung);
+		reg.registiereComparable(ReportingKlasse::idJahrgang);
+		reg.registiereComparable(ReportingKlasse::idFachklasse);
+		reg.registiereComparable(ReportingKlasse::idFolgeklasse);
+		reg.registiereComparable(ReportingKlasse::idVorgaengerklasse);
+		reg.registiereString(ReportingKlasse::kuerzelFolgeklasse);
+		reg.registiereString(ReportingKlasse::kuerzelVorgaengerklasse);
 
 		// Verschachtelte Attribute
-		reg.registiereString(reg.methodeToString(ReportingKlasse::jahrgang) + "." + reg.methodeToString(ReportingJahrgang::kuerzel),
+		reg.registiereString(ReportingTypesUtils.methodeToString(ReportingKlasse::jahrgang) + "." + ReportingTypesUtils.methodeToString(ReportingJahrgang::kuerzel),
 				FunktionBuilder.start(ReportingKlasse::jahrgang)
 						.then(ReportingJahrgang::kuerzel)
 						.toFunction());
-		reg.registiereString(reg.methodeToString(ReportingKlasse::jahrgang) + "." + reg.methodeToString(ReportingJahrgang::kuerzel),
+		reg.registiereString(ReportingTypesUtils.methodeToString(ReportingKlasse::jahrgang) + "." + ReportingTypesUtils.methodeToString(ReportingJahrgang::kuerzel),
 				FunktionBuilder.start(ReportingKlasse::jahrgang)
 						.then(ReportingJahrgang::kuerzel)
 						.toFunction());
 
 		reg.registiereString(
-				reg.methodeToString(ReportingKlasse::schuljahresabschnitt) + "."
-						+ reg.methodeToString(ReportingSchuljahresabschnitt::textSchuljahresabschnittKurz),
+				ReportingTypesUtils.methodeToString(ReportingKlasse::schuljahresabschnitt) + "."
+						+ ReportingTypesUtils.methodeToString(ReportingSchuljahresabschnitt::textSchuljahresabschnittKurz),
 				FunktionBuilder.start(ReportingKlasse::schuljahresabschnitt)
 						.then(ReportingSchuljahresabschnitt::textSchuljahresabschnittKurz)
 						.toFunction());
 		reg.registiereString(
-				reg.methodeToString(ReportingKlasse::schuljahresabschnitt) + "."
-						+ reg.methodeToString(ReportingSchuljahresabschnitt::textSchuljahresabschnittLang),
+				ReportingTypesUtils.methodeToString(ReportingKlasse::schuljahresabschnitt) + "."
+						+ ReportingTypesUtils.methodeToString(ReportingSchuljahresabschnitt::textSchuljahresabschnittLang),
 				FunktionBuilder.start(ReportingKlasse::schuljahresabschnitt)
 						.then(ReportingSchuljahresabschnitt::textSchuljahresabschnittLang)
 						.toFunction());

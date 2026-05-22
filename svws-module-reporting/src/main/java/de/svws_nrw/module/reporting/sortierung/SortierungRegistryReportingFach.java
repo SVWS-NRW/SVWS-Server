@@ -3,6 +3,7 @@ package de.svws_nrw.module.reporting.sortierung;
 import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
+import de.svws_nrw.module.reporting.utils.ReportingTypesUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -47,11 +48,10 @@ public final class SortierungRegistryReportingFach {
 	 * @return Eine Liste von Attributnamen in der Reihenfolge der Standardsortierung.
 	 */
 	public static List<String> standardsortierung() {
-		final SortierungRegistry<ReportingFach> reg = new SortierungRegistry<>();
 		final ArrayList<String> standardSort = new ArrayList<>();
-		standardSort.add(reg.methodeToString(ReportingFach::sortierung));
-		standardSort.add(reg.methodeToString(ReportingFach::kuerzel));
-		standardSort.add(reg.methodeToString(ReportingFach::id));
+		standardSort.add(ReportingTypesUtils.methodeToString(ReportingFach::sortierung));
+		standardSort.add(ReportingTypesUtils.methodeToString(ReportingFach::kuerzel));
+		standardSort.add(ReportingTypesUtils.methodeToString(ReportingFach::id));
 		return standardSort;
 	}
 
@@ -61,11 +61,10 @@ public final class SortierungRegistryReportingFach {
 	 * @return Eine Liste von Attributnamen in der Reihenfolge der GOSt-Standardsortierung.
 	 */
 	public static List<String> standardsortierungGost() {
-		final SortierungRegistry<ReportingFach> reg = new SortierungRegistry<>();
 		final ArrayList<String> standardSort = new ArrayList<>();
 		standardSort.add("gostSortierung");
-		standardSort.add(reg.methodeToString(ReportingFach::sortierung));
-		standardSort.add(reg.methodeToString(ReportingFach::id));
+		standardSort.add(ReportingTypesUtils.methodeToString(ReportingFach::sortierung));
+		standardSort.add(ReportingTypesUtils.methodeToString(ReportingFach::id));
 		return standardSort;
 	}
 
@@ -87,21 +86,21 @@ public final class SortierungRegistryReportingFach {
 		final SortierungRegistry<ReportingFach> reg = new SortierungRegistry<>();
 
 		// Grundlegende Attribute
-		reg.registiereComparable(reg.methodeToString(ReportingFach::id), ReportingFach::id);
-		reg.registiereString(reg.methodeToString(ReportingFach::kuerzel), ReportingFach::kuerzel);
-		reg.registiereString(reg.methodeToString(ReportingFach::bezeichnung), ReportingFach::bezeichnung);
-		reg.registiereString(reg.methodeToString(ReportingFach::bezeichnungZeugnis), ReportingFach::bezeichnungZeugnis);
-		reg.registiereString(reg.methodeToString(ReportingFach::bezeichnungUeberweisungszeugnis), ReportingFach::bezeichnungUeberweisungszeugnis);
-		reg.registiereComparable(reg.methodeToString(ReportingFach::sortierung), ReportingFach::sortierung);
+		reg.registiereComparable(ReportingFach::id);
+		reg.registiereString(ReportingFach::kuerzel);
+		reg.registiereString(ReportingFach::bezeichnung);
+		reg.registiereString(ReportingFach::bezeichnungZeugnis);
+		reg.registiereString(ReportingFach::bezeichnungUeberweisungszeugnis);
+		reg.registiereComparable(ReportingFach::sortierung);
 
 		// Fachspezifische Attribute
-		reg.registiereString(reg.methodeToString(ReportingFach::aufgabenfeld), ReportingFach::aufgabenfeld);
-		reg.registiereString(reg.methodeToString(ReportingFach::bilingualeSprache), ReportingFach::bilingualeSprache);
-		reg.registiereComparable(reg.methodeToString(ReportingFach::aufZeugnis), ReportingFach::aufZeugnis);
-		reg.registiereComparable(reg.methodeToString(ReportingFach::fachgruppe), ReportingFach::fachgruppe);
-		reg.registiereComparable(reg.methodeToString(ReportingFach::istPruefungsordnungsRelevant), ReportingFach::istPruefungsordnungsRelevant);
-		reg.registiereComparable(reg.methodeToString(ReportingFach::istGostFach), ReportingFach::istGostFach);
-		reg.registiereComparable(reg.methodeToString(ReportingFach::istSichtbar), ReportingFach::istSichtbar);
+		reg.registiereString(ReportingFach::aufgabenfeld);
+		reg.registiereString(ReportingFach::bilingualeSprache);
+		reg.registiereComparable(ReportingFach::aufZeugnis);
+		reg.registiereComparable(ReportingFach::fachgruppe);
+		reg.registiereComparable(ReportingFach::istPruefungsordnungsRelevant);
+		reg.registiereComparable(ReportingFach::istGostFach);
+		reg.registiereComparable(ReportingFach::istSichtbar);
 
 		// Spezielle Sortierung für die gymnasiale Oberstufe.
 		reg.registiereComparable("gostSortierung", fach -> {

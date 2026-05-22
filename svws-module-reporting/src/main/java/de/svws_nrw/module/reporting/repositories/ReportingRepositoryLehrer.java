@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
@@ -122,18 +121,16 @@ public class ReportingRepositoryLehrer {
 	 * @return Liste von ReportingLehrer-Objekten.
 	 */
 	public List<ReportingLehrer> lehrer(final List<Long> idsLehrer, final boolean sortiereListe) {
-		final Optional<Comparator<ReportingLehrer>> optionalComparator = sortiereListe
-				? ComparatorFactory.buildOptionalComparator(this.reportingContext.sortierungService(), this.reportingContext.logger(),
-						ReportingLehrer.class.getSimpleName(),
-						SortierungRegistryReportingLehrer.sortierungRegistry())
-				: Optional.empty();
+		final Comparator<ReportingLehrer> comparator = ComparatorFactory.buildComparator(this.reportingContext.sortierungService(),
+				this.reportingContext.logger(), ReportingLehrer.class.getSimpleName(),
+				SortierungRegistryReportingLehrer.sortierungRegistry(), sortiereListe);
 
 		return ReportingRepositoryUtils.erstelleReportingListe(idsLehrer, mapLehrerStammdaten, mapLehrer,
 				fehlendeIds -> new DataLehrerStammdaten(this.reportingContext.conn(), new DataLernplattformen(this.reportingContext.conn()),
 						new DataEinwilligungsarten(this.reportingContext.conn())).getListByIDs(fehlendeIds),
 				key -> new ProxyReportingLehrer(this.reportingContext, mapLehrerStammdaten.get(key)),
 				stammdaten -> stammdaten.id,
-				optionalComparator,
+				comparator,
 				"Lehrer", this.reportingContext.logger());
 	}
 

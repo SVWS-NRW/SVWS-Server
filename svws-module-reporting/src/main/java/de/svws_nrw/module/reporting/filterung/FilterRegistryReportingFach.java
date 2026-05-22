@@ -2,6 +2,7 @@ package de.svws_nrw.module.reporting.filterung;
 
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
+import de.svws_nrw.module.reporting.utils.ReportingTypesUtils;
 
 /**
  * Registry zur Definition erlaubter Filterattribute für {@link ReportingFach}
@@ -33,26 +34,26 @@ public final class FilterRegistryReportingFach {
 		final FilterRegistry<ReportingFach> reg = new FilterRegistry<>();
 
 		// Grundlegende Attribute
-		reg.registriereAttribut("id", ReportingFach::id);
-		reg.registriereAttribut("kuerzel", ReportingFach::kuerzel);
-		reg.registriereAttribut("bezeichnung", ReportingFach::bezeichnung);
-		reg.registriereAttribut("bezeichnungZeugnis", ReportingFach::bezeichnungZeugnis);
-		reg.registriereAttribut("bezeichnungUeberweisungszeugnis", ReportingFach::bezeichnungUeberweisungszeugnis);
-		reg.registriereAttribut("sortierung", ReportingFach::sortierung);
+		reg.registriereAttribut(ReportingFach::id);
+		reg.registriereAttribut(ReportingFach::kuerzel);
+		reg.registriereAttribut(ReportingFach::bezeichnung);
+		reg.registriereAttribut(ReportingFach::bezeichnungZeugnis);
+		reg.registriereAttribut(ReportingFach::bezeichnungUeberweisungszeugnis);
+		reg.registriereAttribut(ReportingFach::sortierung);
 
 		// Fachspezifische Attribute
-		reg.registriereAttribut("aufgabenfeld", ReportingFach::aufgabenfeld);
-		reg.registriereAttribut("bilingualeSprache", ReportingFach::bilingualeSprache);
-		reg.registriereAttribut("aufZeugnis", ReportingFach::aufZeugnis);
-		reg.registriereAttribut("fachgruppe", f -> (f.fachgruppe() == null) ? null : f.fachgruppe().name());
-		reg.registriereAttribut("istPruefungsordnungsRelevant", ReportingFach::istPruefungsordnungsRelevant);
-		reg.registriereAttribut("istGostFach", ReportingFach::istGostFach);
-		reg.registriereAttribut("istSichtbar", ReportingFach::istSichtbar);
-		reg.registriereAttribut("istFremdsprache", ReportingFach::istFremdsprache);
-		reg.registriereAttribut("istFremdSpracheNeuEinsetzend", ReportingFach::istFremdSpracheNeuEinsetzend);
-		reg.registriereAttribut("istNachpruefungErlaubt", ReportingFach::istNachpruefungErlaubt);
-		reg.registriereAttribut("istSchriftlichBA", ReportingFach::istSchriftlichBA);
-		reg.registriereAttribut("istSchriftlichZK", ReportingFach::istSchriftlichZK);
+		reg.registriereAttribut(ReportingFach::aufgabenfeld);
+		reg.registriereAttribut(ReportingFach::bilingualeSprache);
+		reg.registriereAttribut(ReportingFach::aufZeugnis);
+		reg.registriereAttribut(ReportingTypesUtils.methodeToString(ReportingFach::fachgruppe), f -> (f.fachgruppe() == null) ? null : f.fachgruppe().name());
+		reg.registriereAttribut(ReportingFach::istPruefungsordnungsRelevant);
+		reg.registriereAttribut(ReportingFach::istGostFach);
+		reg.registriereAttribut(ReportingFach::istSichtbar);
+		reg.registriereAttribut(ReportingFach::istFremdsprache);
+		reg.registriereAttribut(ReportingFach::istFremdSpracheNeuEinsetzend);
+		reg.registriereAttribut(ReportingFach::istNachpruefungErlaubt);
+		reg.registriereAttribut(ReportingFach::istSchriftlichBA);
+		reg.registriereAttribut(ReportingFach::istSchriftlichZK);
 
 		// Attribut für das Statistik-Fach (ASD-Kürzel)
 		reg.registriereAttribut("statistikKuerzel", f -> (f.statistikfach() == null) ? null : f.statistikfach().kuerzelASD());

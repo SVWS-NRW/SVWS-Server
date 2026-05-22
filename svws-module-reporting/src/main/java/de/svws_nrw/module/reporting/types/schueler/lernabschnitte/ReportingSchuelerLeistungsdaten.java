@@ -1,6 +1,7 @@
 package de.svws_nrw.module.reporting.types.schueler.lernabschnitte;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -186,6 +187,23 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 
 
 	// ##### Berechnete Methoden #####
+
+	/**
+	 * Gibt die Ankreuzkompetenzen des Schülers für dieses Fach aus dem zugehörigen Lernabschnitt zurück,
+	 * sortiert nach der Sortierung der Ankreuzkompetenz.
+	 *
+	 * @return Liste der Ankreuzkompetenzen für dieses Fach.
+	 */
+	public List<ReportingSchuelerAnkreuzkompetenz> ankreuzkompetenzen() {
+		if ((this.fach() == null) || (this.lernabschnitt() == null) || (this.lernabschnitt().ankreuzkompetenzen() == null)) {
+			return new ArrayList<>();
+		}
+		return this.lernabschnitt().ankreuzkompetenzen().stream()
+				.filter(a -> (a.ankreuzkompetenz() != null) && (a.ankreuzkompetenz().fach() != null) && (a.ankreuzkompetenz().fach().id() == this.fach().id()))
+				.sorted(Comparator.comparingInt(a -> a.ankreuzkompetenz().sortierung()))
+				.toList();
+	}
+
 	/**
 	 * Gibt eine Liste aller Lehrkräfte des Faches aus, wobei die erste die Fachlehrkraft ist.
 	 *

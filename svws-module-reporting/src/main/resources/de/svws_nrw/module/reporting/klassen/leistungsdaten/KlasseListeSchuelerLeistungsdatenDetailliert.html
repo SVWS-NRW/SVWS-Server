@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org"
+	  th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}, duplex = ${Parameter.duplexdruck}">
+    <!--/* @thymesVar id="#convert" type="de.svws_nrw.module.reporting.html.dialects.ConvertExpressionHelper" */-->
+	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
+			title='Klassenliste mit Leistungsdaten - detailliert',
+			htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
+			namePageCSS='reporting-A4-hoch' + (${duplex} ? '-duplex' : '') + '.css')}">
+		<title></title>
+	</head>
+
+	<body th:with="schuljahr = ${Schule.auswahlSchuljahresabschnitt().schuljahr()},
+				   abschnitt = ${Schule.auswahlSchuljahresabschnitt()},
+				   mitPunktenStattNoten = ${VorlageParameter.get('mitPunktenStattNoten')},
+				   mitIndividuellerKursart = ${VorlageParameter.get('mitIndividuellerKursart')},
+				   mitGesamtfehlstunden = ${VorlageParameter.get('mitGesamtfehlstunden')},
+				   mitFachbezogenenFehlstunden = ${VorlageParameter.get('mitFachbezogenenFehlstunden')},
+				   mitFachbezogenenBemerkungen = ${VorlageParameter.get('mitFachbezogenenBemerkungen')},
+				   mitAnkreuzkompetenzen = ${VorlageParameter.get('mitAnkreuzkompetenzen')},
+				   mitFoerderschwerpunkt = ${VorlageParameter.get('mitFoerderschwerpunkt')},
+				   mitLernentwicklung = ${VorlageParameter.get('mitLernentwicklung')},
+				   mitASVBemerkung = ${VorlageParameter.get('mitASVBemerkung')},
+				   mitAUEBemerkung = ${VorlageParameter.get('mitAUEBemerkung')},
+				   mitZeugnisbemerkung = ${VorlageParameter.get('mitZeugnisbemerkung')},
+				   mitVersetzungAbschluss = ${VorlageParameter.get('mitVersetzungAbschluss')},
+				   mitVersetzungsentscheidung = ${VorlageParameter.get('mitVersetzungsentscheidung')},
+				   mitUebergangsempfehlung = ${VorlageParameter.get('mitUebergangsempfehlung')},
+				   mitSeitenumbruch = ${VorlageParameter.get('mitSeitenumbruch')}">
+
+	<th:block th:each="klasse,iterKlasse : ${Klassen}">
+
+		<div th:each="schueler,itSchueler : ${klasse.schueler()}"
+			 th:class="${mitSeitenumbruch ? 'reset-page-counter start-new-page' : (itSchueler.first ? 'reset-page-counter' : '')}"
+			 th:style="${(!mitSeitenumbruch && !itSchueler.first) ? 'margin-top: 2cm;' : ''}"
+			 th:with="lernabschnitt = ${schueler.auswahlLernabschnitt()},
+					  defizitpunktzahl = ${schueler.istSchuelerInSek2OderWB(lernabschnitt.schuljahresabschnitt()) ? '04' : '03'}">
+
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+			<th:block th:replace="~{fragments/reportPageHeaderFooter :: pageHeaderFooter(
+					headerRight='Leistungsübersicht (detailliert)<br/>Klasse: ' + ${klasse.kuerzel()} +
+						'<br/>Klassenleitung: ' + (${(klasse.auflistungKlassenlehrerkuerzel() != '') ? klasse.auflistungKlassenlehrerkuerzel() : '---'}),
+				    footerCenter='Epochaler Unterricht wird durch Halbkreise gekennzeichnet.')}">
+			</th:block>
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+			<!-- Umschlag-Tabelle pro Schüler: Der Name liegt im thead und wird so auf Folgeseiten wiederholt. -->
+			<table class="fixed-100 mp-0">
+				<thead>
+					<tr>
+						<th scope="row" class="ta-lb f-bold" style="font-size: 13pt;"
+							th:text="${itSchueler.count + '. ' + schueler.nachnameVorname()}">1. Mustermann, Max</th>
+						<th scope="row" class="ta-rb"
+							th:text="${'Klasse ' + klasse.kuerzel() + ' - Schuljahr ' + Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittLang()}">Klasse 10a - Schuljahr</th>
+					</tr>
+					<tr><th scope="col" colspan="2" class="bo-t-grey" style="height: 2mm"></th></tr>
+				</thead>
+				<tbody>
+				<tr style="page-break-inside: auto;"><td colspan="2" style="page-break-inside: auto;">
+
+			<!-- Ergänzende Schülerinformationen: eine Zeile mit drei Spalten (Fehlstunden | Versetzung/Abschluss | Förderschwerpunkt) -->
+			<table class="fixed-100 mp-0">
+				<colgroup>
+					<col style="width: 50%;" />
+					<col style="width: 50%;" />
+				</colgroup>
+				<thead th:if="${false}"><!-- Header nur für SonarCube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th><th scope="col">Col3</th></tr></thead>
+				<tr>
+					<td class="ta-lt f-tiny"
+						th:text="${(mitGesamtfehlstunden && lernabschnitt != null)
+							? ('Fehlstunden gesamt | davon unentschuldigt: ' + lernabschnitt.fehlstundenGesamt() + ' | ' + lernabschnitt.fehlstundenUnentschuldigt())
+							: ''}">Fehlstunden gesamt | davon unentschuldigt: 34 | 5
+					</td>
+					<td class="ta-rt f-tiny"
+						th:text="${(mitVersetzungAbschluss && lernabschnitt != null)
+							? ((!lernabschnitt.versetzungsvermerkKuerzel().isEmpty() ? 'Versetzung: ' + lernabschnitt.versetzungsvermerkKuerzel() : 'Versetzung: -----')
+								+ ' | ' + (lernabschnitt.istAbschlussPrognose() ? 'Progn.: ' : 'Abschl.: ')
+								+ (!lernabschnitt.abschluss().isEmpty() ? lernabschnitt.abschluss() : '-----')
+								+ (lernabschnitt.istWiederholung() ? ' | (Wdh.)' : ''))
+							: ''}">Versetzung: V | Abschl.: MSA
+					</td>
+				</tr>
+				<tr>
+					<td class="ta-lt f-tiny"
+					    th:text="${(mitFoerderschwerpunkt && lernabschnitt != null && (lernabschnitt.foerderschwerpunkt1() != null || lernabschnitt.foerderschwerpunkt2() != null))
+					        ? 'Förderschwerpunkt: '
+								+ ((lernabschnitt.foerderschwerpunkt1() != null) ? lernabschnitt.foerderschwerpunkt1().kuerzel : '')
+								+ ((lernabschnitt.foerderschwerpunkt1() != null && lernabschnitt.foerderschwerpunkt2() != null) ? '/' : '')
+								+ ((lernabschnitt.foerderschwerpunkt2() != null) ? lernabschnitt.foerderschwerpunkt2().kuerzel : '')
+					        : ''}">Förderschwerpunkt
+					</td>
+					<td class="ta-rt f-tiny"
+					    th:text="${(mitUebergangsempfehlung && lernabschnitt != null)
+					        ? ('Übergangsempfehlung: ' + schueler.schulbesuch().uebergangsempfehlungKuerzel())
+					        : ''}">Übergangsempfehlung: R/GY
+					</td>
+				</tr>
+			</table>
+
+			<!-- Tabelle: Pro Fach eine Zeile mit den Leistungsdaten -->
+			<table class="fixed-100 mp-0 m-t-2">
+				<colgroup>
+					<col style="width: 14mm;" /> <!-- Fach -->
+					<col style="width: 14mm;" /> <!-- Fachlehrer -->
+					<col style="width: 18mm;" /> <!-- Kursart -->
+					<col style="width: 18mm;" /> <!-- Quartalsnote -->
+					<col style="width: 18mm;" /> <!-- Note/Punkte -->
+					<col style="width: 18mm;" /> <!-- Mahnung -->
+					<col style="width: 14mm;" /> <!-- FS -->
+					<col style="width: 14mm;" /> <!-- FSU -->
+					<col /> <!-- Auffüllen -->
+				</colgroup>
+				<thead th:if="${lernabschnitt != null && lernabschnitt.leistungsdaten() != null && !lernabschnitt.leistungsdaten().isEmpty()}">
+					<tr>
+						<th scope="col" class="head-small-grey ta-lm p-tb-05 p-lr-1">Fach</th>
+						<th scope="col" class="head-small-grey ta-lm p-tb-05 p-lr-1">Lehrkraft</th>
+						<th scope="col" class="head-small-grey ta-lm p-tb-05 p-lr-1">Kursart</th>
+						<th scope="col" class="head-small-grey ta-cm p-tb-05 p-lr-1">Quartal</th>
+						<th scope="col" class="head-small-grey ta-cm p-tb-05 p-lr-1"
+							th:text="${mitPunktenStattNoten ? 'Punkte' : 'Note'}">Note</th>
+						<th scope="col" class="head-small-grey ta-cm p-tb-05 p-lr-1">Mahnung</th>
+						<th scope="col" class="head-small-grey ta-rm p-tb-05 p-lr-1">FS</th>
+						<th scope="col" class="head-small-grey ta-rm p-tb-05 p-lr-1">FSU</th>
+						<th scope="col" class="head-small-grey p-tb-05 p-lr-1"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<th:block th:each="leistung,itLeistung : ${lernabschnitt.leistungsdaten()}"
+							  th:with="note = ${!mitPunktenStattNoten ? leistung.noteKuerzel() : leistung.notePunkte},
+									   quartalsnote = ${!mitPunktenStattNoten ? leistung.noteQuartalKuerzel() : leistung.noteQuartalPunkte},
+									   keineNoteVorhanden = ${#strings.isEmpty(note)},
+									   istGemahnt = ${leistung.istGemahnt()},
+									   istDefizit = ${leistung.note() != null && (defizitpunktzahl >= leistung.notePunkte())},
+									   istUngenuegend = ${leistung.notePunkte() == '00'},
+									   noteFarbeText = ${istUngenuegend ? 'c-white' : (istDefizit  ? 'c-red' : '')},
+									   noteFarbeHintergrund = ${keineNoteVorhanden ? 'bg-yellow' : (istUngenuegend ? 'bg-darkred' : '')}">
+						<!-- Fach-Zeile -->
+						<tr th:classappend="${itLeistung.even} ? 'bg-lightgrey'">
+							<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-bold"
+								th:text="${(leistung.fach() != null) ? leistung.fach().kuerzel() : ''}">D</td>
+							<td class="ta-lt bo-t-grey p-tb-05 p-lr-1"
+								th:utext="${(leistung.fachlehrer() != null) ? leistung.fachlehrer().kuerzel() : '&nbsp;'}">ABC</td>
+							<td class="ta-lt bo-t-grey p-tb-05 p-lr-1"
+								th:utext="${(mitIndividuellerKursart && leistung.kursart() != null && !leistung.kursart().isEmpty()) ? leistung.kursart() : '&nbsp;'}">GKM</td>
+							<td class="ta-ct bo-t-grey p-tb-05 p-lr-1"
+								th:utext="${!#strings.isEmpty(quartalsnote) ? quartalsnote : '&nbsp;'}">3</td>
+							<td class="ta-ct bo-t-grey p-tb-05 p-lr-1">
+								<span class="mp-0" th:text="${leistung.istEpochal() ? '\u25D0' : ''}"></span>
+								<span class="mp-0" th:classappend="${noteFarbeHintergrund + ' ' + noteFarbeText}"
+									  th:utext="${!#strings.isEmpty(note) ? note : '&nbsp;'}">2</span>
+								<span class="mp-0" th:text="${leistung.istEpochal() ? '\u25D0' : ''}"></span>
+							</td>
+							<td class="ta-ct bo-t-grey p-tb-05 p-lr-1">
+								<span class="f-bold" th:text="${istGemahnt ? 'M' : ' '}"></span>
+							</td>
+							<td class="ta-rt bo-t-grey p-tb-05 p-lr-1"
+								th:text="${mitFachbezogenenFehlstunden ? leistung.fehlstundenGesamt() : ''}">0</td>
+							<td class="ta-rt bo-t-grey p-tb-05 p-lr-1"
+								th:classappend="${(mitFachbezogenenFehlstunden && (leistung.fehlstundenGesamt() < leistung.fehlstundenUnentschuldigt())) ? 'bg-lightorange' : ''}"
+								th:text="${mitFachbezogenenFehlstunden ? leistung.fehlstundenUnentschuldigt() : ''}">0</td>
+							<td class="bo-t-grey p-tb-05 p-lr-1"></td>
+						</tr>
+
+						<!-- Fachbezogene Lernentwicklung (LELS) -->
+						<tr th:if="${mitFachbezogenenBemerkungen && leistung.textFachbezogeneLernentwicklung() != null && !leistung.textFachbezogeneLernentwicklung().isEmpty()}"
+							th:classappend="${itLeistung.even} ? 'bg-lightgrey'">
+							<td class="ta-lt p-tb-05 p-lr-1 f-tiny f-ital f-bold"></td>
+							<td th:colspan="8" class="p-tb-05 p-lr-1 f-tiny ta-lt"
+								th:text="${leistung.textFachbezogeneLernentwicklung()}">Fachbezogene Bemerkung</td>
+						</tr>
+
+						<!-- Ankreuzkompetenzen zum Fach -->
+						<tr th:if="${mitAnkreuzkompetenzen && leistung.ankreuzkompetenzen() != null && !leistung.ankreuzkompetenzen().isEmpty()}"
+							th:classappend="${itLeistung.even} ? 'bg-lightgrey'">
+							<td class="ta-lt p-tb-05 p-lr-1 f-ital f-bold"></td>
+							<td th:colspan="8" class="p-tb-05 p-lr-1 ta-lt">
+								<table class="fixed-100 mp-0">
+									<thead th:if="${false}"><tr><th scope="col">Col1</th><th scope="col">Col2</th><th scope="col">Col3</th><th scope="col">Col4</th><th scope="col">Col5</th><th scope="col">Col6</th></tr></thead>
+									<tr th:each="ak : ${leistung.ankreuzkompetenzen()}">
+										<td class="ta-lt" th:text="${ak.ankreuzkompetenz().floskelText()}">Kompetenz</td>
+										<td class="ta-ct" style="width: 5mm; vertical-align: top;"><img th:src="${#convert.toCheckboxSVG(ak.stufe1(), 12)}" width="12" height="12" style="vertical-align: top;" alt="[]" /></td>
+										<td class="ta-ct" style="width: 5mm; vertical-align: top;"><img th:src="${#convert.toCheckboxSVG(ak.stufe2(), 12)}" width="12" height="12" style="vertical-align: top;" alt="[]" /></td>
+										<td class="ta-ct" style="width: 5mm; vertical-align: top;"><img th:src="${#convert.toCheckboxSVG(ak.stufe3(), 12)}" width="12" height="12" style="vertical-align: top;" alt="[]" /></td>
+										<td class="ta-ct" style="width: 5mm; vertical-align: top;"><img th:src="${#convert.toCheckboxSVG(ak.stufe4(), 12)}" width="12" height="12" style="vertical-align: top;" alt="[]" /></td>
+										<td class="ta-ct" style="width: 5mm; vertical-align: top;"><img th:if="${ak.stufe5() != null}" th:src="${#convert.toCheckboxSVG(ak.stufe5(), 12)}" width="12" height="12" style="vertical-align: top;" alt="[]" /></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</th:block>
+
+					<!-- Ankreuzkompetenzen zu Fächern ohne Leistungsdaten -->
+					<tr th:if="${mitAnkreuzkompetenzen && lernabschnitt != null && lernabschnitt.ankreuzkompetenzenFaecherOhneLeistungsdaten() != null && !lernabschnitt.ankreuzkompetenzenFaecherOhneLeistungsdaten().isEmpty()}">
+						<th scope="col" class="head-small-grey ta-lm p-tb-05 p-lr-1">Fach</th>
+						<th scope="col" colspan="8" class="head-small-grey ta-lm p-tb-05 p-lr-1">Kompetenzen zum Fach ohne Leistungsdaten</th>
+					</tr>
+					<th:block th:if="${mitAnkreuzkompetenzen && lernabschnitt != null && lernabschnitt.ankreuzkompetenzenFaecherOhneLeistungsdaten() != null}"
+							  th:each="entryFach,itFach : ${lernabschnitt.ankreuzkompetenzenFaecherOhneLeistungsdaten()}"
+							  th:with="fach = ${entryFach.key}, akListe = ${entryFach.value}">
+						<tr th:classappend="${itFach.even} ? 'bg-lightgrey'">
+							<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-bold" style="vertical-align: top;"
+								th:text="${fach.kuerzel()}">D</td>
+							<td th:colspan="8" class="bo-t-grey p-tb-05 p-lr-1 ta-lt">
+								<table class="fixed-100 mp-0">
+									<thead th:if="${false}"><tr><th scope="col">Col1</th><th scope="col">Col2</th><th scope="col">Col3</th><th scope="col">Col4</th><th scope="col">Col5</th><th scope="col">Col6</th></tr></thead>
+									<tr th:each="ak : ${akListe}">
+										<td class="ta-lt" th:text="${ak.ankreuzkompetenz().floskelText()}">Kompetenz</td>
+										<td class="ta-ct" style="width: 5mm; vertical-align: top;"><img th:src="${#convert.toCheckboxSVG(ak.stufe1(), 12)}" width="12" height="12" style="vertical-align: top;" alt="[]" /></td>
+										<td class="ta-ct" style="width: 5mm; vertical-align: top;"><img th:src="${#convert.toCheckboxSVG(ak.stufe2(), 12)}" width="12" height="12" style="vertical-align: top;" alt="[]" /></td>
+										<td class="ta-ct" style="width: 5mm; vertical-align: top;"><img th:src="${#convert.toCheckboxSVG(ak.stufe3(), 12)}" width="12" height="12" style="vertical-align: top;" alt="[]" /></td>
+										<td class="ta-ct" style="width: 5mm; vertical-align: top;"><img th:src="${#convert.toCheckboxSVG(ak.stufe4(), 12)}" width="12" height="12" style="vertical-align: top;" alt="[]" /></td>
+										<td class="ta-ct" style="width: 5mm; vertical-align: top;"><img th:if="${ak.stufe5() != null}" th:src="${#convert.toCheckboxSVG(ak.stufe5(), 12)}" width="12" height="12" style="vertical-align: top;" alt="[]" /></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</th:block>
+				</tbody>
+			</table>
+
+			<!-- Allgemeine Abschnitte unterhalb der Fachliste -->
+			<table class="fixed-100 mp-0 m-t-4">
+				<colgroup>
+					<col style="width: 45mm;" />
+					<col />
+				</colgroup>
+				<thead th:if="${false}"><!-- Header nur für SonarCube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+				<tbody>
+					<!-- LELS allgemein, in der Regel an Grundschulen -->
+					<tr th:if="${mitLernentwicklung && lernabschnitt != null && !lernabschnitt.zeugnisLELSText().isEmpty()}">
+						<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-tiny f-bold">Lernentwicklung:</td>
+						<td class="bo-t-grey p-tb-05 p-lr-1 f-tiny ta-lt" th:text="${lernabschnitt.zeugnisLELSText()}">Lernentwicklung</td>
+					</tr>
+
+					<!-- ASV -->
+					<tr th:if="${mitASVBemerkung && lernabschnitt != null && !lernabschnitt.zeugnisASVText().isEmpty()}">
+						<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-tiny f-bold">Arbeits- und Sozialverh.:</td>
+						<td class="bo-t-grey p-tb-05 p-lr-1 f-tiny ta-lt" th:text="${lernabschnitt.zeugnisASVText()}">ASV</td>
+					</tr>
+
+					<!-- Ankreuzkompetenzen zum ASV -->
+					<tr th:if="${mitAnkreuzkompetenzen && lernabschnitt != null && !lernabschnitt.ankreuzkompetenzenASV().isEmpty()}">
+						<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-bold">Arbeits- und Sozialverh.</td>
+						<td class="bo-t-grey p-tb-05 p-lr-1 ta-lt">
+							<table class="fixed-100 mp-0">
+								<thead th:if="${false}"><!-- Header nur für SonarCube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th><th scope="col">Col3</th><th scope="col">Col4</th><th scope="col">Col5</th><th scope="col">Col6</th></tr></thead>
+								<tr th:each="ak : ${lernabschnitt.ankreuzkompetenzenASV()}">
+									<td class="ta-lt" th:text="${ak.ankreuzkompetenz().floskelText()}">Kompetenz</td>
+									<td class="ta-ct" style="width: 5mm; vertical-align: top;"><img th:src="${#convert.toCheckboxSVG(ak.stufe1(), 12)}" width="12" height="12" style="vertical-align: top;" alt="[]" /></td>
+									<td class="ta-ct" style="width: 5mm; vertical-align: top;"><img th:src="${#convert.toCheckboxSVG(ak.stufe2(), 12)}" width="12" height="12" style="vertical-align: top;" alt="[]" /></td>
+									<td class="ta-ct" style="width: 5mm; vertical-align: top;"><img th:src="${#convert.toCheckboxSVG(ak.stufe3(), 12)}" width="12" height="12" style="vertical-align: top;" alt="[]" /></td>
+									<td class="ta-ct" style="width: 5mm; vertical-align: top;"><img th:src="${#convert.toCheckboxSVG(ak.stufe4(), 12)}" width="12" height="12" style="vertical-align: top;" alt="[]" /></td>
+									<td class="ta-ct" style="width: 5mm; vertical-align: top;"><img th:if="${ak.stufe5() != null}" th:src="${#convert.toCheckboxSVG(ak.stufe5(), 12)}" width="12" height="12" style="vertical-align: top;" alt="[]" /></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<!-- Förderschwerpunkt -->
+					<tr th:if="${mitFoerderschwerpunkt && lernabschnitt != null && !lernabschnitt.foerderschwerpunktText().isEmpty()}">
+						<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-tiny f-bold">Bem. Förderschwerpunkt:</td>
+						<td class="bo-t-grey p-tb-05 p-lr-1 f-tiny ta-lt" th:text="${lernabschnitt.foerderschwerpunktText()}">Förderschwerpunkt</td>
+					</tr>
+
+					<!-- AUE -->
+					<tr th:if="${mitAUEBemerkung && lernabschnitt != null && !lernabschnitt.zeugnisAUEText().isEmpty()}">
+						<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-tiny f-bold">Außerunt. Engagement:</td>
+						<td class="bo-t-grey p-tb-05 p-lr-1 f-tiny ta-lt" th:text="${lernabschnitt.zeugnisAUEText()}">AUE</td>
+					</tr>
+
+					<!-- Zeugnisbemerkung -->
+					<tr th:if="${mitZeugnisbemerkung && lernabschnitt != null && !lernabschnitt.zeugnisBemerkungText().isEmpty()}">
+						<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-tiny f-bold">Zeugnisbemerkungen:</td>
+						<td class="bo-t-grey p-tb-05 p-lr-1 f-tiny ta-lt" th:text="${lernabschnitt.zeugnisBemerkungText()}">Bemerkung</td>
+					</tr>
+
+					<!-- Versetzungsentscheidung -->
+					<tr th:if="${mitVersetzungsentscheidung && lernabschnitt != null && !lernabschnitt.versetzungsentscheidungText().isEmpty()}">
+						<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-tiny f-bold">Versetzungsentscheidung:</td>
+						<td class="bo-t-grey p-tb-05 p-lr-1 f-tiny ta-lt" th:text="${lernabschnitt.versetzungsentscheidungText()}">Versetzungsentscheidung</td>
+					</tr>
+
+					<!-- Schulformempfehlung -->
+					<tr th:if="${mitUebergangsempfehlung && lernabschnitt != null && !lernabschnitt.uebergangsempfehlungText().isEmpty()}">
+						<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-tiny f-bold">Übergangsempfehlung:</td>
+						<td class="bo-t-grey p-tb-05 p-lr-1 f-tiny ta-lt" th:text="${lernabschnitt.uebergangsempfehlungText()}">Übergangsempfehlung</td>
+					</tr>
+				</tbody>
+			</table>
+
+				</td></tr>
+				</tbody>
+			</table>
+			<!-- Ende Umschlag-Tabelle pro Schüler -->
+
+		</div>
+	</th:block>
+	</body>
+</html>

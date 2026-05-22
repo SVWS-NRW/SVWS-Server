@@ -2,6 +2,7 @@ package de.svws_nrw.module.reporting.sortierung;
 
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurtermin;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungSchuelerklausur;
+import de.svws_nrw.module.reporting.utils.ReportingTypesUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -44,12 +45,11 @@ public final class SortierungRegistryReportingGostKlausurplanungKlausurtermin {
 	 * @return Eine Liste von Attributnamen in der Reihenfolge der Standardsortierung.
 	 */
 	public static List<String> standardsortierung() {
-		final SortierungRegistry<ReportingGostKlausurplanungKlausurtermin> reg = new SortierungRegistry<>();
 		final ArrayList<String> standard = new ArrayList<>();
-		standard.add(reg.methodeToString(ReportingGostKlausurplanungKlausurtermin::datum));
-		standard.add(reg.methodeToString(ReportingGostKlausurplanungKlausurtermin::startuhrzeit));
-		standard.add(reg.methodeToString(ReportingGostKlausurplanungKlausurtermin::bezeichnung));
-		standard.add(reg.methodeToString(ReportingGostKlausurplanungKlausurtermin::id));
+		standard.add(ReportingTypesUtils.methodeToString(ReportingGostKlausurplanungKlausurtermin::datum));
+		standard.add(ReportingTypesUtils.methodeToString(ReportingGostKlausurplanungKlausurtermin::startuhrzeit));
+		standard.add(ReportingTypesUtils.methodeToString(ReportingGostKlausurplanungKlausurtermin::bezeichnung));
+		standard.add(ReportingTypesUtils.methodeToString(ReportingGostKlausurplanungKlausurtermin::id));
 		return standard;
 	}
 
@@ -67,28 +67,18 @@ public final class SortierungRegistryReportingGostKlausurplanungKlausurtermin {
 		final SortierungRegistry<ReportingGostKlausurplanungKlausurtermin> reg = new SortierungRegistry<>();
 
 		// Grundlegende Attribute des Klausurtermins
-		reg.registiereString(reg.methodeToString(ReportingGostKlausurplanungKlausurtermin::bemerkung),
-				ReportingGostKlausurplanungKlausurtermin::bemerkung);
-		reg.registiereString(reg.methodeToString(ReportingGostKlausurplanungKlausurtermin::bezeichnung),
-				ReportingGostKlausurplanungKlausurtermin::bezeichnung);
-		reg.registiereString(reg.methodeToString(ReportingGostKlausurplanungKlausurtermin::datum),
-				ReportingGostKlausurplanungKlausurtermin::datum);
-		reg.registiereComparable(reg.methodeToString(ReportingGostKlausurplanungKlausurtermin::gostHalbjahr),
-				ReportingGostKlausurplanungKlausurtermin::gostHalbjahr);
-		reg.registiereComparable(reg.methodeToString(ReportingGostKlausurplanungKlausurtermin::id),
-				ReportingGostKlausurplanungKlausurtermin::id);
-		reg.registiereComparable(reg.methodeToString(ReportingGostKlausurplanungKlausurtermin::istHaupttermin),
-				ReportingGostKlausurplanungKlausurtermin::istHaupttermin);
-		reg.registiereComparable(reg.methodeToString(ReportingGostKlausurplanungKlausurtermin::nachschreiberZugelassen),
-				ReportingGostKlausurplanungKlausurtermin::nachschreiberZugelassen);
-		reg.registiereComparable(reg.methodeToString(ReportingGostKlausurplanungKlausurtermin::quartal),
-				ReportingGostKlausurplanungKlausurtermin::quartal);
-		reg.registiereString(reg.methodeToString(ReportingGostKlausurplanungKlausurtermin::startuhrzeit),
-				ReportingGostKlausurplanungKlausurtermin::startuhrzeit);
+		reg.registiereString(ReportingGostKlausurplanungKlausurtermin::bemerkung);
+		reg.registiereString(ReportingGostKlausurplanungKlausurtermin::bezeichnung);
+		reg.registiereString(ReportingGostKlausurplanungKlausurtermin::datum);
+		reg.registiereComparable(ReportingGostKlausurplanungKlausurtermin::gostHalbjahr);
+		reg.registiereComparable(ReportingGostKlausurplanungKlausurtermin::id);
+		reg.registiereComparable(ReportingGostKlausurplanungKlausurtermin::istHaupttermin);
+		reg.registiereComparable(ReportingGostKlausurplanungKlausurtermin::nachschreiberZugelassen);
+		reg.registiereComparable(ReportingGostKlausurplanungKlausurtermin::quartal);
+		reg.registiereString(ReportingGostKlausurplanungKlausurtermin::startuhrzeit);
 
 		// Nützliche aggregierte Darstellung der Räume und Stunden
-		reg.registiereString(reg.methodeToString(ReportingGostKlausurplanungKlausurtermin::raeumeUndStunden),
-				ReportingGostKlausurplanungKlausurtermin::raeumeUndStunden);
+		reg.registiereString(ReportingGostKlausurplanungKlausurtermin::raeumeUndStunden);
 
 		return reg;
 	}

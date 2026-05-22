@@ -2,7 +2,6 @@ package de.svws_nrw.module.reporting.types.schueler.lernabschnitte;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
-import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
@@ -20,8 +19,9 @@ public class ProxyReportingSchuelerLeistungsdatenMatrix extends ReportingSchuele
 	private final ReportingContext reportingContext;
 
 	/**
-	 * Erstellt eine neue Proxy-Matrix. Die Sortierung für Schüler und Fächer wird automatisch
-	 * aus den im Repository hinterlegten Reporting-Parametern ermittelt.
+	 * Erstellt eine neue Proxy-Matrix. Die Sortierung für Schüler und Leistungsdaten sowie der Filter
+	 * der Leistungsdaten werden automatisch aus den im Repository hinterlegten Reporting-Parametern
+	 * ermittelt. Die Spaltenreihenfolge der Fächer ergibt sich aus der Sortierung der Leistungsdaten.
 	 *
 	 * @param reportingContext  Das Repository für den Zugriff auf Parameter und Stammdaten.
 	 * @param schueler             Die Liste der Schüler.
@@ -31,9 +31,9 @@ public class ProxyReportingSchuelerLeistungsdatenMatrix extends ReportingSchuele
 			final ReportingSchuljahresabschnitt schuljahresabschnitt) {
 
 		super(schueler, schuljahresabschnitt,
-				reportingContext.sortierungService().getSortierungsAttribute(ReportingFach.class.getSimpleName(), true),
+				reportingContext.sortierungService().getSortierungsAttribute(ReportingSchuelerLeistungsdaten.class.getSimpleName(), true),
 				reportingContext.sortierungService().getSortierungsAttribute(ReportingSchueler.class.getSimpleName(), true),
-				reportingContext.filterService().getFilter(ReportingFach.class.getSimpleName(), null));
+				reportingContext.filterService().getFilter(ReportingSchuelerLeistungsdaten.class.getSimpleName(), null));
 
 		this.reportingContext = reportingContext;
 	}

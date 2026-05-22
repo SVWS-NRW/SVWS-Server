@@ -9,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.module.reporting.types.ankreuzkompetenz.ProxyReportingAnkreuzkompetenz;
+import de.svws_nrw.module.reporting.types.ankreuzkompetenz.ReportingAnkreuzkompetenz;
 import de.svws_nrw.module.reporting.types.fach.ProxyReportingFach;
 import de.svws_nrw.module.reporting.types.jahrgang.ProxyReportingJahrgang;
 import de.svws_nrw.module.reporting.types.lerngruppen.ProxyReportingKlasse;
@@ -42,6 +44,7 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 				schuljahresabschnitt.idVorigerAbschnitt,
 				null,
 				null,
+				new HashMap<>(),
 				new HashMap<>(),
 				new HashMap<>(),
 				new HashMap<>(),
@@ -153,5 +156,24 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 			}
 		}
 		return super.kurse;
+	}
+
+	/**
+	 * Gibt die Map der Ankreuzkompetenzen dieses Schuljahresabschnitts zurück.
+	 *
+	 * @return Map der Ankreuzkompetenzen, die in diesem Schuljahresabschnitt gültig sind.
+	 */
+	@Override
+	public Map<Long, ReportingAnkreuzkompetenz> ankreuzkompetenzen() {
+		if ((super.ankreuzkompetenzen == null) || super.ankreuzkompetenzen.isEmpty()) {
+			super.ankreuzkompetenzen = new HashMap<>();
+			this.reportingContext.repositoryKataloge().ankreuzkompetenzen()
+					.forEach((idAnkreuzkompetenz, ankreuzkompetenz) -> {
+						if ((ankreuzkompetenz.abschnitt == 0) || (ankreuzkompetenz.abschnitt == super.abschnitt)) {
+							super.ankreuzkompetenzen.put(idAnkreuzkompetenz, new ProxyReportingAnkreuzkompetenz(ankreuzkompetenz, this));
+						}
+					});
+		}
+		return super.ankreuzkompetenzen;
 	}
 }

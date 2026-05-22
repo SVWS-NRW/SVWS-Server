@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -151,17 +150,12 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 		final ReportingSortierungService sortierungService = this.reportingContext.sortierungService();
 		final Logger logger = this.reportingContext.logger();
 
-		final Optional<Comparator<ReportingGostKlausurplanungSchuelerklausur>> optionalComparator =
-				ComparatorFactory.buildOptionalComparator(
-						sortierungService,
-						logger,
-						ReportingGostKlausurplanungSchuelerklausur.class.getSimpleName(),
-						SortierungRegistryReportingGostKlausurplanungSchuelerklausur.sortierungRegistry());
+		final Comparator<ReportingGostKlausurplanungSchuelerklausur> comparator =
+				ComparatorFactory.buildComparator(sortierungService, logger, ReportingGostKlausurplanungSchuelerklausur.class.getSimpleName(),
+						SortierungRegistryReportingGostKlausurplanungSchuelerklausur.sortierungRegistry(), true);
 
-		if (optionalComparator.isPresent()) {
-			super.schuelerklausuren.sort(optionalComparator.get());
-			super.kursklausuren.forEach(kk -> kk.schuelerklausuren().sort(optionalComparator.get()));
-		}
+		super.schuelerklausuren.sort(comparator);
+		super.kursklausuren.forEach(kk -> kk.schuelerklausuren().sort(comparator));
 
 		// 8. Ergänze die Schülerklausuren in der Liste der Klausuren des Schülers.
 		super.schuelerklausuren.forEach(sk -> sk.schueler().gostKlausurplanungSchuelerklausuren().add(sk));

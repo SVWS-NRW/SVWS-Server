@@ -4,6 +4,7 @@ import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittNachpruefungsdaten;
 import de.svws_nrw.core.adt.map.ListMap3DLongKeys;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
+import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
@@ -12,7 +13,12 @@ import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Lernabschnitt.
@@ -27,6 +33,9 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 
 	/** Der erreichte berufsbezogene Abschluss am Berufskolleg */
 	protected String abschlussBerufsbildend;
+
+	/** Die Belegungen der Ankreuzkompetenzen des Schülers in diesem Lernabschnitt. */
+	protected List<ReportingSchuelerAnkreuzkompetenz> ankreuzkompetenzen;
 
 	/** Die Sprache des bilingualen Zweigs, falls der Schüler im bilingualen Zweig unterrichtet wird */
 	protected String bilingualerZweig;
@@ -118,7 +127,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	/** Gibt an, ob der berechnete Abschluss eine Prognose ist oder nicht (siehe Katalog) */
 	protected boolean istAbschlussPrognose;
 
-	/** Gibt für das Berufskolleg an, ob der fachpraktische Anteil in den Anlagen B08, B09 und B10 ausreichend sind für Versetzung */
+	/** Gibt für das Berufskolleg an, ob der fachpraktische Anteil in den Anlagen B08, B09 und B10 ausreichend ist für Versetzung */
 	protected boolean istFachpraktischerAnteilAusreichend;
 
 	/** Gibt an, ob es sich um einen gewerteten Abschnitt handelt oder nicht */
@@ -133,7 +142,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	/** Das Kürzel der Klassenart in Bezug auf den Schüler (z.B. Regelklasse - siehe Core-Type) */
 	protected String klassenart;
 
-	/** Die Informationen den Nachprüfungen in diesem Lernabschnitt oder null, falls keine vorhanden sind. */
+	/** Die Informationen zu den Nachprüfungen in diesem Lernabschnitt oder null, falls keine vorhanden sind. */
 	protected SchuelerLernabschnittNachpruefungsdaten nachpruefungen;
 
 	/** Die Durchschnittsnote in diesem Lernabschnitt - wird ggf. von einem Prüfungsalgorithmus gesetzt und kann dann ausgelesen werden */
@@ -148,10 +157,10 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	/** Das Kürzel der Organisationsform der Schule in Bezug auf den Schüler (z.B. Ganztag - siehe Core-Type) */
 	protected String organisationsform;
 
-	/** Die Prüfungsordnung, die in dem Lernabschnitt bei dem Schüler anzuwenden ist. */
+	/** Die Prüfungsordnung, die beim Schüler in diesem Lernabschnitt anzuwenden ist. */
 	protected String pruefungsOrdnung;
 
-	/** Der Schüler, zu dem dieser Lernabschnittsdaten gehören. */
+	/** Der Schüler, zu dem diese Lernabschnittsdaten gehören. */
 	protected ReportingSchueler schueler;
 
 	/** Das Kürzel der Schulgliederung bzw. des Bildungsgangs des Schülers. */
@@ -212,6 +221,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @param abschluss Der erreichte allgemeinbildende Abschluss
 	 * @param abschlussart Die Art des Abschlusses (siehe Katalog)
 	 * @param abschlussBerufsbildend Der erreichte berufsbezogene Abschluss am Berufskolleg
+	 * @param ankreuzkompetenzen Die Liste der Ankreuzkompetenzen für den Lernabschnitt.
 	 * @param bilingualerZweig Die Sprache des bilingualen Zweigs, falls der Schüler im bilingualen Zweig unterrichtet wird
 	 * @param datumAnfang Das Datum, wann der Lernabschnitt beginnt
 	 * @param datumEnde Das Datum, wann der Lernabschnitt endet
@@ -242,18 +252,18 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @param idSonderpaedagoge Die ID eines Sonderpädagogen, der den Schüler betreut und auch im Notenmodul hat
 	 * @param idTutor Die ID des Tutors des Schülers in der Datenbank.
 	 * @param istAbschlussPrognose Gibt an, ob der berechnete Abschluss eine Prognose ist oder nicht (siehe Katalog)
-	 * @param istFachpraktischerAnteilAusreichend Gibt für das Berufskolleg an, ob der fachpraktische Anteil in den Anlagen B08, B09 und B10 ausreichend sind für Versetzung
+	 * @param istFachpraktischerAnteilAusreichend Gibt für das Berufskolleg an, ob der fachpraktische Anteil in den Anlagen B08, B09 und B10 ausreichend ist für Versetzung
 	 * @param istGewertet Gibt an, ob es sich um einen gewerteten Abschnitt handelt oder nicht
 	 * @param istWiederholung Gibt an, ob es sich bei dem Abschnitt um einen wiederholten Abschnitt handelt oder nicht
 	 * @param klasse Die Klasse des Schülers aus diesem Lernabschnitt
 	 * @param klassenart Das Kürzel der Klassenart in Bezug auf den Schüler (z.B. Regelklasse - siehe Core-Type)
 	 * @param leistungsdaten Die Leistungsdaten des Schülers in diesem Lernabschnitt.
-	 * @param nachpruefungen Die Informationen den Nachprüfungen in diesem Lernabschnitt oder null, falls keine vorhanden sind.
+	 * @param nachpruefungen Die Informationen zu den Nachprüfungen in diesem Lernabschnitt oder null, falls keine vorhanden sind.
 	 * @param noteDurchschnitt Die Durchschnittsnote in diesem Lernabschnitt - wird ggf. von einem Prüfungsalgorithmus gesetzt und kann dann ausgelesen werden
 	 * @param noteLernbereichGSbzwAL Die Lernbereichsnote Gesellschaftswissenschaft oder Arbeitslehre für den Hauptschulabschluss nach Klassen 10
 	 * @param noteLernbereichNW Die Lernbereichsnote Naturwissenschaft für den Hauptschulabschluss nach Klassen 10
 	 * @param organisationsform Das Kürzel der Organisationsform der Schule in Bezug auf den Schüler (z.B. Ganztag - siehe Core-Type)
-	 * @param pruefungsOrdnung Die Prüfungsordnung, die in dem Lernabschnitt bei dem Schüler anzuwenden ist.
+	 * @param pruefungsOrdnung Die Prüfungsordnung, die beim Schüler in diesem Lernabschnitt anzuwenden ist.
 	 * @param schueler Der Schüler, zu dem diese Lernabschnittsdaten gehören.
 	 * @param schulgliederung Das Kürzel der Schulgliederung bzw. des Bildungsgangs des Schülers.
 	 * @param schuljahresabschnitt Der Schuljahresabschnitt, zu welchem diese Lernabschnittsdaten gehören.
@@ -269,9 +279,11 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @param zeugnisAUEText Der Text für Zeugnisbemerkungen zum Außerunterrichtlichen Engagement
 	 * @param zeugnisBemerkungText Der Text für allgemeine Zeugnisbemerkungen.
 	 * @param zeugnisLELSText Der Text für Zeugnisbemerkungen zur Lernentwicklung in Grundschulen.
+	 * @param zuweisungen Die Liste der Zuweisungen für den Lernabschnitt.
 	 */
 	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingSchuelerLernabschnitt(final String abschluss, final Integer abschlussart, final String abschlussBerufsbildend,
+			final List<ReportingSchuelerAnkreuzkompetenz> ankreuzkompetenzen,
 			final String bilingualerZweig, final String datumAnfang, final String datumEnde, final String datumKonferenz,
 			final String datumZeugnis, final int fehlstundenGesamt, final Integer fehlstundenGrenzwert, final int fehlstundenUnentschuldigt,
 			final FoerderschwerpunktEintrag foerderschwerpunkt1, final FoerderschwerpunktEintrag foerderschwerpunkt2, final String foerderschwerpunktText,
@@ -286,10 +298,12 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 			final String schulgliederung, final ReportingSchuljahresabschnitt schuljahresabschnitt, final ReportingLehrer sonderpaedagoge,
 			final String textErgebnisPruefungsalgorithmus, final ReportingLehrer tutor, final String uebergangsempfehlungText,
 			final String versetzungsentscheidungText, final String versetzungsvermerkKuerzel, final int wechselNr, final String zeugnisart,
-			final String zeugnisASVText, final String zeugnisAUEText, final String zeugnisBemerkungText, final String zeugnisLELSText) {
+			final String zeugnisASVText, final String zeugnisAUEText, final String zeugnisBemerkungText, final String zeugnisLELSText,
+			final List<ReportingSchuelerZuweisung> zuweisungen) {
 		this.abschluss = abschluss;
 		this.abschlussart = abschlussart;
 		this.abschlussBerufsbildend = abschlussBerufsbildend;
+		this.ankreuzkompetenzen = ankreuzkompetenzen;
 		this.bilingualerZweig = bilingualerZweig;
 		this.datumAnfang = datumAnfang;
 		this.datumEnde = datumEnde;
@@ -347,6 +361,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 		this.zeugnisAUEText = zeugnisAUEText;
 		this.zeugnisBemerkungText = zeugnisBemerkungText;
 		this.zeugnisLELSText = zeugnisLELSText;
+		this.zuweisungen = zuweisungen;
 	}
 
 
@@ -426,6 +441,60 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 */
 	public String abschlussBerufsbildend() {
 		return abschlussBerufsbildend;
+	}
+
+	/**
+	 * Die Belegungen der Ankreuzkompetenzen des Schülers in diesem Lernabschnitt.
+	 *
+	 * @return Inhalt des Feldes ankreuzkompetenzen
+	 */
+	public List<ReportingSchuelerAnkreuzkompetenz> ankreuzkompetenzen() {
+		return ankreuzkompetenzen;
+	}
+
+	/**
+	 * Gibt die Ankreuzkompetenzen des Schülers zum Arbeits- und Sozialverhalten (ASV) aus diesem Lernabschnitt zurück,
+	 * sortiert nach der Sortierung der Ankreuzkompetenz.
+	 *
+	 * @return Liste der Ankreuzkompetenzen zum ASV.
+	 */
+	public List<ReportingSchuelerAnkreuzkompetenz> ankreuzkompetenzenASV() {
+		if (this.ankreuzkompetenzen() == null) {
+			return new ArrayList<>();
+		}
+		return this.ankreuzkompetenzen().stream()
+				.filter(a -> (a.ankreuzkompetenz() != null) && a.ankreuzkompetenz().istASV())
+				.sorted(Comparator.comparingInt(a -> a.ankreuzkompetenz().sortierung()))
+				.toList();
+	}
+
+	/**
+	 * Gibt eine Map zurück, die zu jedem Fach, das nicht in den Leistungsdaten des Lernabschnitts enthalten ist,
+	 * für das aber Ankreuzkompetenzen belegt sind, die zugehörigen Belegungen liefert. Die Map ist nach der Sortierung
+	 * des Faches geordnet, die Belegungen pro Fach nach der Sortierung der Ankreuzkompetenz.
+	 *
+	 * @return Map mit Fach als Schlüssel und Liste der Ankreuzkompetenz-Belegungen als Wert.
+	 */
+	public Map<ReportingFach, List<ReportingSchuelerAnkreuzkompetenz>> ankreuzkompetenzenFaecherOhneLeistungsdaten() {
+		if (this.ankreuzkompetenzen() == null) {
+			return new LinkedHashMap<>();
+		}
+		final Set<Long> idsFaecherMitLeistungen = (this.leistungsdaten() == null) ? new HashSet<>()
+				: this.leistungsdaten().stream()
+						.filter(l -> l.fach() != null)
+						.map(l -> l.fach().id())
+						.collect(Collectors.toSet());
+		return this.ankreuzkompetenzen().stream()
+				.filter(a -> (a.ankreuzkompetenz() != null)
+						&& (a.ankreuzkompetenz().fach() != null)
+						&& !idsFaecherMitLeistungen.contains(a.ankreuzkompetenz().fach().id()))
+				.sorted(Comparator
+						.comparingInt((ReportingSchuelerAnkreuzkompetenz a) -> a.ankreuzkompetenz().fachSortierung())
+						.thenComparingInt(a -> a.ankreuzkompetenz().sortierung()))
+				.collect(Collectors.groupingBy(
+						a -> a.ankreuzkompetenz().fach(),
+						LinkedHashMap::new,
+						Collectors.toList()));
 	}
 
 	/**
@@ -699,7 +768,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	}
 
 	/**
-	 * Gibt für das Berufskolleg an, ob der fachpraktische Anteil in den Anlagen B08, B09 und B10 ausreichend sind für Versetzung
+	 * Gibt für das Berufskolleg an, ob der fachpraktische Anteil in den Anlagen B08, B09 und B10 ausreichend ist für Versetzung
 	 *
 	 * @return Inhalt des Feldes istFachpraktischerAnteilAusreichend
 	 */
@@ -784,7 +853,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 			return new ArrayList<>();
 		}
 
-		// Klassenunterrichte haben keine Kurs-ID, also hat Key3den Wert -1.
+		// Klassenunterrichte haben keine Kurs-ID, also hat Key3 den Wert -1.
 		return listMapLeistungsdaten.get3(-1);
 	}
 
@@ -820,7 +889,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 			return null;
 		}
 
-		// Klassenunterrichte haben keine Kurs-ID, also hat Key3den Wert -1.
+		// Klassenunterrichte haben keine Kurs-ID, also hat Key3 den Wert -1.
 		final List<ReportingSchuelerLeistungsdaten> leistungsdatenZumFachUndLehrer =
 				listMapLeistungsdaten.get23(idFach, -1).stream().filter(l -> (l.fachlehrer().id() == idLehrer)).toList();
 
@@ -942,7 +1011,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	}
 
 	/**
-	 * Der Schüler, zu dem dieser Lernabschnittsdaten gehören.
+	 * Der Schüler, zu dem diese Lernabschnittsdaten gehören.
 	 *
 	 * @return Inhalt des Feldes schueler
 	 */
@@ -1096,15 +1165,6 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	public void setLeistungsdaten(final List<ReportingSchuelerLeistungsdaten> leistungsdaten) {
 		this.leistungsdaten = new ArrayList<>();
 		this.listMapLeistungsdaten = new ListMap3DLongKeys<>();
-		addLeistungsdaten(leistungsdaten);
-	}
-
-	/**
-	 * Fügt Leistungsdaten zu diesem Lernabschnitt hinzu und aktualisiert die Leistungsdaten-Map.
-	 *
-	 * @param leistungsdaten Die hinzuzufügenden Leistungsdaten.
-	 */
-	public void addLeistungsdaten(final List<ReportingSchuelerLeistungsdaten> leistungsdaten) {
 		if (leistungsdaten != null) {
 			for (final ReportingSchuelerLeistungsdaten leistungsdatenElement : leistungsdaten) {
 				if (leistungsdatenElement != null) {
@@ -1116,5 +1176,4 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 			}
 		}
 	}
-
 }

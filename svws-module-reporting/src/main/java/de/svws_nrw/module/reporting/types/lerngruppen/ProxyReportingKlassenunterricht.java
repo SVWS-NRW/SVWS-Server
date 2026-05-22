@@ -72,15 +72,9 @@ public class ProxyReportingKlassenunterricht extends ReportingKlassenunterricht 
 		final Logger logger = (this.reportingContext != null) ? this.reportingContext.logger() : null;
 
 		final Comparator<ReportingSchueler> comparator =
-				ComparatorFactory.buildOptionalComparator(
-						sortierungService,
-						logger,
-						ReportingSchueler.class.getSimpleName(),
-						SortierungRegistryReportingSchueler.sortierungRegistry()).orElse(null);
-		if (comparator != null) {
-			return schueler.stream().sorted(comparator).toList();
-		}
-		return schueler;
+				ComparatorFactory.buildComparator(sortierungService, logger, ReportingSchueler.class.getSimpleName(),
+						SortierungRegistryReportingSchueler.sortierungRegistry(), true);
+		return schueler.stream().sorted(comparator).toList();
 	}
 
 	// ##### Hash und Equals Methoden #####

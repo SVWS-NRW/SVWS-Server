@@ -7,7 +7,6 @@ import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 public final class ComparatorFactory {
 
@@ -15,34 +14,33 @@ public final class ComparatorFactory {
 	}
 
 	/**
-	 * Erstellt einen optionalen Comparator basierend auf einer Sortierungsdefinition aus
-	 * einem ReportingSortierungService. Falls keine gültige Sortierungsdefinition gefunden wird
-	 * oder die benötigten Parameter fehlen, wird ein leeres {@link Optional} zurückgegeben.
+	 * Erstellt einen Comparator basierend auf einer Sortierungsdefinition aus einem {@link ReportingSortierungService}.
+	 * Wird {@code erzeugeComparatorZuSortierung = false} übergeben, keine gültige Sortierungsdefinition gefunden oder fehlen die
+	 * benötigten Parameter, so wird ein Identitäts-Comparator {@code (a, b) -> 0} zurückgegeben, der die Reihenfolge
+	 * der Elemente unverändert lässt.
 	 *
 	 * @param <T> Der Typ der Objekte, die vom Comparator verarbeitet werden sollen.
-	 * @param sortierungService Der Service, der die Sortierungsattribute ermittelt.
-	 * @param logger Der Logger für Info- und Fehlermeldungen.
-	 * @param typName Der Typname, der verwendet wird, um eine entsprechende Sortierungsdefinition zu suchen.
-	 * @param sortierungRegistry Die Registry, die die möglichen Sortierungsregeln bereitstellt.
+	 * @param sortierungService             Der Service, der die Sortierungsattribute ermittelt.
+	 * @param logger                        Der Logger für Info- und Fehlermeldungen.
+	 * @param typName                       Der Typname, der verwendet wird, um eine entsprechende Sortierungsdefinition zu suchen.
+	 * @param sortierungRegistry            Die Registry, die die möglichen Sortierungsregeln bereitstellt.
+	 * @param erzeugeComparatorZuSortierung Gibt an, ob die definierte Sortierung angewendet werden soll. Bei {@code false} wird direkt der Identitäts-Comparator zurückgegeben.
 	 *
-	 * @return Ein Optional, das einen Comparator enthält, falls eine passende Definition gefunden wurde und
-	 *         erfolgreich verarbeitet werden konnte; sonst ein leeres Optional.
+	 * @return Ein Comparator, der niemals {@code null} ist. Liegt keine Sortierungsdefinition vor oder ist
+	 *         {@code erzeugeComparatorZuSortierung = false}, so lässt der erzeugte Comparator die Reihenfolge der Elemente unverändert.
 	 */
-	public static <T> Optional<Comparator<T>> buildOptionalComparator(
-			final ReportingSortierungService sortierungService,
-			final Logger logger,
-			final String typName,
-			final SortierungRegistry<T> sortierungRegistry) {
+	public static <T> Comparator<T> buildComparator(final ReportingSortierungService sortierungService, final Logger logger, final String typName,
+			final SortierungRegistry<T> sortierungRegistry, final boolean erzeugeComparatorZuSortierung) {
 
-		if (sortierungService == null) {
-			return Optional.empty();
+		if (!erzeugeComparatorZuSortierung || (sortierungService == null)) {
+			return Comparators.verketten(List.of());
 		}
 
 		// Prüfe, ob eine Definition für die Sortierung des angegebenen Typs vorhanden ist.
 		final List<String> attribute = sortierungService.getSortierungsAttribute(typName, true);
 
 		if (attribute.isEmpty()) {
-			return Optional.empty();
+			return Comparators.verketten(List.of());
 		}
 
 		final List<String> validierungsfehler = new ArrayList<>();
@@ -55,6 +53,6 @@ public final class ComparatorFactory {
 					logger, LogLevel.INFO, 4);
 		}
 
-		return Optional.of(comparator);
+		return comparator;
 	}
 }

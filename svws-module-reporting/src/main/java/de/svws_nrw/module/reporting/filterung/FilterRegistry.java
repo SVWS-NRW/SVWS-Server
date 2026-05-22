@@ -5,11 +5,16 @@ import de.svws_nrw.core.data.reporting.ReportingFilterEintrag;
 import de.svws_nrw.core.data.reporting.ReportingFilterKriterium;
 import de.svws_nrw.core.types.reporting.ReportingFilterOperation;
 import de.svws_nrw.core.types.reporting.ReportingFilterVerknuepfung;
+import de.svws_nrw.module.reporting.utils.ReportingTypesUtils;
+import de.svws_nrw.module.reporting.utils.ReportingTypesUtils.SerializableFunction;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -35,6 +40,81 @@ public class FilterRegistry<T> {
 	public FilterRegistry<T> registriereAttribut(final String attributName, final Function<T, ?> extractor) {
 		attributExtractors.put(attributName.trim().toLowerCase(Locale.ROOT), extractor);
 		return this;
+	}
+
+	/**
+	 * Registriert ein Attribut. Der Attributname wird über {@link ReportingTypesUtils#methodeToString} aus der übergebenen
+	 * Methodenreferenz abgeleitet (z. B. liefert {@code ReportingFach::kuerzel} den Namen {@code "kuerzel"}). Verwende diese
+	 * Überladung für direkte Methodenreferenzen; für zusammengesetzte oder verschachtelte Attributpfade nutze die Überladung
+	 * mit explizitem Namen.
+	 *
+	 * @param extractor Eine serialisierbare Methodenreferenz, die den Wert aus einem Objekt extrahiert und gleichzeitig
+	 *                  den Attributnamen liefert.
+	 *
+	 * @return Die aktuelle Instanz der {@code FilterRegistry}, um method chaining zu ermöglichen.
+	 */
+	public FilterRegistry<T> registriereAttribut(final SerializableFunction<T, ?> extractor) {
+		return registriereAttribut(ReportingTypesUtils.methodeToString(extractor), extractor);
+	}
+
+	/**
+	 * Gibt die Menge der registrierten Attributnamen in normalisierter Form (lower-case, getrimmt) zurück.
+	 *
+	 * @return Ein unveränderliches Set der registrierten Attributnamen.
+	 */
+	public Set<String> unterstuetzteAttribute() {
+		return Collections.unmodifiableSet(attributExtractors.keySet());
+	}
+
+	/**
+	 * Liefert den Extraktor für ein registriertes Attribut als {@link Optional}. Der Name wird vor der Suche normalisiert.
+	 *
+	 * @param attributName Der Name des Attributs.
+	 *
+	 * @return Ein {@link Optional} mit der Extraktorfunktion oder leer, falls das Attribut nicht registriert ist.
+	 */
+	public Optional<Function<T, ?>> extraktorAsOptional(final String attributName) {
+		if (attributName == null) {
+			return Optional.empty();
+		}
+		return Optional.ofNullable(attributExtractors.get(attributName.trim().toLowerCase(Locale.ROOT)));
+	}
+
+	/**
+	 * Importiert Einträge aus einer Quell-Registry in die aktuelle Registry, indem die Attribute mit dem angegebenen Präfix
+	 * ergänzt werden. So können bspw. alle Fach-Filter in Registries, die ein Fach-Objekt enthalten, mit dem Präfix "fach"
+	 * importiert werden.
+	 *
+	 * @param <P>                          Der Typ der Objekte in der Quell-Registry.
+	 * @param prefix                       Das Präfix, das den Attributnamen der Quell-Registry vorangestellt wird.
+	 * @param quellregistry                Die Quell-Registry, deren Einträge importiert werden sollen. Ist sie null, wird der Import abgebrochen.
+	 * @param quellwertermittlungsfunktion Eine Funktion, die zu einem Objekt der Ziel-Registry das zugeordnete Objekt der Quell-Registry liefert.
+	 */
+	public <P> void importiereRegistryEintraege(final String prefix, final FilterRegistry<P> quellregistry,
+			final Function<T, P> quellwertermittlungsfunktion) {
+		if (quellregistry == null) {
+			return;
+		}
+
+		for (final String quellattribut : quellregistry.unterstuetzteAttribute()) {
+			final Optional<Function<P, ?>> optionalExtraktor = quellregistry.extraktorAsOptional(quellattribut);
+			if (optionalExtraktor.isEmpty()) {
+				continue;
+			}
+			final Function<P, ?> extraktor = optionalExtraktor.get();
+			final String vollstaendigerAttributname = ergaenzePrefix(prefix, quellattribut);
+			this.registriereAttribut(vollstaendigerAttributname, t -> {
+				final P quellwert = quellwertermittlungsfunktion.apply(t);
+				return (quellwert == null) ? null : extraktor.apply(quellwert);
+			});
+		}
+	}
+
+	private static String ergaenzePrefix(final String prefix, final String name) {
+		if ((prefix == null) || prefix.isBlank()) {
+			return name;
+		}
+		return prefix + name;
 	}
 
 	/**

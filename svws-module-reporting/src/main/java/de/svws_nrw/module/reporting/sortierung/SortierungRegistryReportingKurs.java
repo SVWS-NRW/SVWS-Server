@@ -4,6 +4,7 @@ import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
+import de.svws_nrw.module.reporting.utils.ReportingTypesUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -55,12 +56,11 @@ public final class SortierungRegistryReportingKurs {
 	 * @return Eine Liste von Attributnamen in der Reihenfolge der Standardsortierung.
 	 */
 	public static List<String> standardsortierung() {
-		final SortierungRegistry<ReportingKurs> reg = new SortierungRegistry<>();
 		final ArrayList<String> standardSort = new ArrayList<>();
-		standardSort.add(reg.methodeToString(ReportingKurs::fach) + "." + reg.methodeToString(ReportingFach::sortierung));
-		standardSort.add(reg.methodeToString(ReportingKurs::kursartAllg));
-		standardSort.add(reg.methodeToString(ReportingKurs::kuerzel));
-		standardSort.add(reg.methodeToString(ReportingKurs::id));
+		standardSort.add(ReportingTypesUtils.methodeToString(ReportingKurs::fach) + "." + ReportingTypesUtils.methodeToString(ReportingFach::sortierung));
+		standardSort.add(ReportingTypesUtils.methodeToString(ReportingKurs::kursartAllg));
+		standardSort.add(ReportingTypesUtils.methodeToString(ReportingKurs::kuerzel));
+		standardSort.add(ReportingTypesUtils.methodeToString(ReportingKurs::id));
 		return standardSort;
 	}
 
@@ -82,50 +82,50 @@ public final class SortierungRegistryReportingKurs {
 		final SortierungRegistry<ReportingKurs> reg = new SortierungRegistry<>();
 
 		// Grundlegende Attribute
-		reg.registiereComparable(reg.methodeToString(ReportingKurs::id), ReportingKurs::id);
-		reg.registiereString(reg.methodeToString(ReportingKurs::kuerzel), ReportingKurs::kuerzel);
-		reg.registiereString(reg.methodeToString(ReportingKurs::bezeichnungZeugnis), ReportingKurs::bezeichnungZeugnis);
-		reg.registiereString(reg.methodeToString(ReportingKurs::kursartAllg), ReportingKurs::kursartAllg);
-		reg.registiereComparable(reg.methodeToString(ReportingKurs::sortierung), ReportingKurs::sortierung);
-		reg.registiereComparable(reg.methodeToString(ReportingKurs::istEpochalunterricht), ReportingKurs::istEpochalunterricht);
-		reg.registiereComparable(reg.methodeToString(ReportingKurs::istSichtbar), ReportingKurs::istSichtbar);
-		reg.registiereComparable(reg.methodeToString(ReportingKurs::wochenstunden), ReportingKurs::wochenstunden);
-		reg.registiereComparable(reg.methodeToString(ReportingKurs::schulnummer), ReportingKurs::schulnummer);
+		reg.registiereComparable(ReportingKurs::id);
+		reg.registiereString(ReportingKurs::kuerzel);
+		reg.registiereString(ReportingKurs::bezeichnungZeugnis);
+		reg.registiereString(ReportingKurs::kursartAllg);
+		reg.registiereComparable(ReportingKurs::sortierung);
+		reg.registiereComparable(ReportingKurs::istEpochalunterricht);
+		reg.registiereComparable(ReportingKurs::istSichtbar);
+		reg.registiereComparable(ReportingKurs::wochenstunden);
+		reg.registiereComparable(ReportingKurs::schulnummer);
 
 		// Verschachtelte Attribute: Fach, Kursleitung, Schuljahresabschnitt
-		reg.registiereString(reg.methodeToString(ReportingKurs::fach) + "." + reg.methodeToString(ReportingFach::bezeichnung),
+		reg.registiereString(ReportingTypesUtils.methodeToString(ReportingKurs::fach) + "." + ReportingTypesUtils.methodeToString(ReportingFach::bezeichnung),
 				FunktionBuilder.start(ReportingKurs::fach)
 						.then(ReportingFach::bezeichnung)
 						.toFunction());
-		reg.registiereString(reg.methodeToString(ReportingKurs::fach) + "." + reg.methodeToString(ReportingFach::kuerzel),
+		reg.registiereString(ReportingTypesUtils.methodeToString(ReportingKurs::fach) + "." + ReportingTypesUtils.methodeToString(ReportingFach::kuerzel),
 				FunktionBuilder.start(ReportingKurs::fach)
 						.then(ReportingFach::kuerzel)
 						.toFunction());
-		reg.registiereComparable(reg.methodeToString(ReportingKurs::fach) + "." + reg.methodeToString(ReportingFach::sortierung),
+		reg.registiereComparable(ReportingTypesUtils.methodeToString(ReportingKurs::fach) + "." + ReportingTypesUtils.methodeToString(ReportingFach::sortierung),
 				FunktionBuilder.start(ReportingKurs::fach)
 						.then(ReportingFach::sortierung)
 						.toFunction());
-		reg.registiereString(reg.methodeToString(ReportingKurs::kursleitung) + "." + reg.methodeToString(ReportingLehrer::nachname),
+		reg.registiereString(ReportingTypesUtils.methodeToString(ReportingKurs::kursleitung) + "." + ReportingTypesUtils.methodeToString(ReportingLehrer::nachname),
 				FunktionBuilder.start(ReportingKurs::kursleitung)
 						.then(ReportingLehrer::nachname)
 						.toFunction());
-		reg.registiereString(reg.methodeToString(ReportingKurs::kursleitung) + "." + reg.methodeToString(ReportingLehrer::vorname),
+		reg.registiereString(ReportingTypesUtils.methodeToString(ReportingKurs::kursleitung) + "." + ReportingTypesUtils.methodeToString(ReportingLehrer::vorname),
 				FunktionBuilder.start(ReportingKurs::kursleitung)
 						.then(ReportingLehrer::vorname)
 						.toFunction());
-		reg.registiereString(reg.methodeToString(ReportingKurs::kursleitung) + "." + reg.methodeToString(ReportingLehrer::kuerzel),
+		reg.registiereString(ReportingTypesUtils.methodeToString(ReportingKurs::kursleitung) + "." + ReportingTypesUtils.methodeToString(ReportingLehrer::kuerzel),
 				FunktionBuilder.start(ReportingKurs::kursleitung)
 						.then(ReportingLehrer::kuerzel)
 						.toFunction());
 		reg.registiereString(
-				reg.methodeToString(ReportingKurs::schuljahresabschnitt) + "."
-						+ reg.methodeToString(ReportingSchuljahresabschnitt::textSchuljahresabschnittKurz),
+				ReportingTypesUtils.methodeToString(ReportingKurs::schuljahresabschnitt) + "."
+						+ ReportingTypesUtils.methodeToString(ReportingSchuljahresabschnitt::textSchuljahresabschnittKurz),
 				FunktionBuilder.start(ReportingKurs::schuljahresabschnitt)
 						.then(ReportingSchuljahresabschnitt::textSchuljahresabschnittKurz)
 						.toFunction());
 		reg.registiereString(
-				reg.methodeToString(ReportingKurs::schuljahresabschnitt) + "."
-						+ reg.methodeToString(ReportingSchuljahresabschnitt::textSchuljahresabschnittLang),
+				ReportingTypesUtils.methodeToString(ReportingKurs::schuljahresabschnitt) + "."
+						+ ReportingTypesUtils.methodeToString(ReportingSchuljahresabschnitt::textSchuljahresabschnittLang),
 				FunktionBuilder.start(ReportingKurs::schuljahresabschnitt)
 						.then(ReportingSchuljahresabschnitt::textSchuljahresabschnittLang)
 						.toFunction());

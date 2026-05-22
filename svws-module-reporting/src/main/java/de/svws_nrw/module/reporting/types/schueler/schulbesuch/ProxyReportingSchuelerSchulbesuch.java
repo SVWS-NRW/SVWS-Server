@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchSchule;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
+import de.svws_nrw.asd.data.schueler.UebergangsempfehlungKatalogEintrag;
+import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
 import de.svws_nrw.core.data.kataloge.KatalogEntlassgrund;
 import de.svws_nrw.core.data.kataloge.SchulEintrag;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
@@ -50,7 +52,8 @@ public class ProxyReportingSchuelerSchulbesuch extends ReportingSchuelerSchulbes
 				schulbesuchsdaten.einschulungsjahrGrundschule,
 				schulbesuchsdaten.idEinschulungsartGrundschule,
 				schulbesuchsdaten.idEingangsphaseGrundschule,
-				schulbesuchsdaten.idUebergangsempfehlungGrundschule,
+				uebergangsempfehlungKuerzel(schulbesuchsdaten.idUebergangsempfehlungGrundschule),
+				uebergangsempfehlungText(schulbesuchsdaten.idUebergangsempfehlungGrundschule),
 				schulbesuchsdaten.wechseljahrSekI,
 				ersetzeNullBlankTrim(schulbesuchsdaten.kuerzelErsteSchulformSek1),
 				schulbesuchsdaten.wechseljahrSekII,
@@ -83,6 +86,22 @@ public class ProxyReportingSchuelerSchulbesuch extends ReportingSchuelerSchulbes
 		}
 
 		return reportingContext.repositoryKataloge().entlassgruende().get(idEntlassgrund);
+	}
+
+	private static String uebergangsempfehlungKuerzel(final Long idUebergangsempfehlung) {
+		if (idUebergangsempfehlung == null) {
+			return "---";
+		}
+		final UebergangsempfehlungKatalogEintrag eintrag = Uebergangsempfehlung.data().getEintragByID(idUebergangsempfehlung);
+		return (eintrag == null) ? "---" : eintrag.kuerzel;
+	}
+
+	private static String uebergangsempfehlungText(final Long idUebergangsempfehlung) {
+		if (idUebergangsempfehlung == null) {
+			return "-----";
+		}
+		final UebergangsempfehlungKatalogEintrag eintrag = Uebergangsempfehlung.data().getEintragByID(idUebergangsempfehlung);
+		return (eintrag == null) ? "-----" : eintrag.text;
 	}
 
 	/**

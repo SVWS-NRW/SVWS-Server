@@ -1,14 +1,16 @@
 package de.svws_nrw.module.reporting.types.schueler.lernabschnitte;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
 import de.svws_nrw.core.adt.map.ListMap2DLongKeys;
-import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingFach;
 import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingSchueler;
+import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingSchuelerLeistungsdaten;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
@@ -28,8 +30,8 @@ public class ReportingSchuelerLeistungsdatenMatrix {
 	/** Die Liste aller vorkommenden Fächer in der Gruppe (Spaltenüberschriften). */
 	private final List<ReportingFach> spaltenFaecher;
 
-	/** Interne Map aller in der Matrix vorkommenden Fächer zur Vorbereitung der Spaltensortierung. */
-	private final Map<Long, ReportingFach> mapAlleFaecher = new HashMap<>();
+	/** Interne Map aller in der Matrix vorkommenden Fächer in der Reihenfolge der Spalten. */
+	private final Map<Long, ReportingFach> mapAlleFaecher = new LinkedHashMap<>();
 
 	/** Interne Matrix: Schüler-ID (Key1) und Fach-ID (Key2) auf Leistungsdaten. */
 	private final ListMap2DLongKeys<ReportingSchuelerLeistungsdaten> matrix = new ListMap2DLongKeys<>();
@@ -37,26 +39,30 @@ public class ReportingSchuelerLeistungsdatenMatrix {
 
 	/**
 	 * Erstellt eine neue Matrix für eine Liste von Schülern. Es werden nur Schüler berücksichtigt, die im angegebenen Schuljahresabschnitt einen Lernabschnitt besitzen.
-	 * Die Fächer und Schüler werden nach den übergebenen Sortierungsattributen sortiert. Ist ein Sortierungsattribut null oder leer, wird die Standardsortierung verwendet.
+	 * Die Schüler werden nach den übergebenen Sortierungsattributen sortiert. Die Spalten (Fächer) werden über die Sortierung der Leistungsdaten
+	 * abgeleitet: Jedes Fach wird in der Reihenfolge seines ersten Auftretens im sortierten Leistungsdatenstrom als Spalte aufgenommen.
+	 * Ist ein Sortierungsattribut null oder leer, wird die Standardsortierung verwendet.
 	 *
-	 * @param schueler                     Die Liste der potenziellen Schüler.
-	 * @param schuljahresabschnitt         Der Schuljahresabschnitt, für den die Daten ermittelt werden sollen.
-	 * @param sortierungsAttributeFaecher  Eine Liste von Attributnamen für die Sortierung der Spalten mit den Fächern.
-	 *                                     Vordefinierte Listen finden sich unter {@link SortierungRegistryReportingFach#standardsortierung}
-	 *                                     oder {@link SortierungRegistryReportingFach#standardsortierungGost}.
-	 *                                     Ist die Liste leer oder null, wird die Standardsortierung verwendet.
-	 * @param sortierungsAttributeSchueler Eine Liste von Attributnamen für die Sortierung der Zeilen mit den Schülern.
-	 *                                     Eine vordefinierte Liste findet sich unter {@link SortierungRegistryReportingSchueler#standardsortierung}.
-	 *                                     Ist die Liste leer oder null, wird die Standardsortierung verwendet.
-	 * @param filterFaecher                Ein Prädikat zum Filtern der Fächer.
+	 * @param schueler                            Die Liste der potenziellen Schüler.
+	 * @param schuljahresabschnitt                Der Schuljahresabschnitt, für den die Daten ermittelt werden sollen.
+	 * @param sortierungsAttributeLeistungsdaten  Eine Liste von Attributnamen für die Sortierung der Leistungsdaten, aus der die Spaltenreihenfolge der Fächer
+	 *                                            abgeleitet wird. Eine vordefinierte Liste findet sich unter
+	 *                                            {@link SortierungRegistryReportingSchuelerLeistungsdaten#standardsortierung}.
+	 *                                            Ist die Liste leer oder null, wird die Standardsortierung verwendet.
+	 * @param sortierungsAttributeSchueler        Eine Liste von Attributnamen für die Sortierung der Zeilen mit den Schülern.
+	 *                                            Eine vordefinierte Liste findet sich unter {@link SortierungRegistryReportingSchueler#standardsortierung}.
+	 *                                            Ist die Liste leer oder null, wird die Standardsortierung verwendet.
+	 * @param filterLeistungsdaten                Ein Prädikat zum Filtern der Leistungsdaten. Nur Leistungsdaten, die den Filter passieren, werden in die Matrix
+	 *                                            aufgenommen; die Spaltenmenge ergibt sich aus deren Fächern.
 	 */
 	public ReportingSchuelerLeistungsdatenMatrix(final List<ReportingSchueler> schueler, final ReportingSchuljahresabschnitt schuljahresabschnitt,
-			final List<String> sortierungsAttributeFaecher, final List<String> sortierungsAttributeSchueler, final Predicate<ReportingFach> filterFaecher) {
+			final List<String> sortierungsAttributeLeistungsdaten, final List<String> sortierungsAttributeSchueler,
+			final Predicate<ReportingSchuelerLeistungsdaten> filterLeistungsdaten) {
 
 		// Prüfe die Listen mit den übergebenen Sortierungsattributen. Sind diese null oder empty, wähle die Standardsortierung aus der entsprechenden Registry.
-		List<String> sortFaecher = sortierungsAttributeFaecher;
-		if ((sortFaecher == null) || sortFaecher.isEmpty()) {
-			sortFaecher = SortierungRegistryReportingFach.standardsortierung();
+		List<String> sortLeistungsdaten = sortierungsAttributeLeistungsdaten;
+		if ((sortLeistungsdaten == null) || sortLeistungsdaten.isEmpty()) {
+			sortLeistungsdaten = SortierungRegistryReportingSchuelerLeistungsdaten.standardsortierung();
 		}
 		List<String> sortSchueler = sortierungsAttributeSchueler;
 		if ((sortSchueler == null) || sortSchueler.isEmpty()) {
@@ -64,28 +70,37 @@ public class ReportingSchuelerLeistungsdatenMatrix {
 		}
 
 		// Filter vorbereiten
-		final Predicate<ReportingFach> effektiverFilter = (filterFaecher == null) ? f -> true : filterFaecher;
+		final Predicate<ReportingSchuelerLeistungsdaten> effektiverFilter = (filterLeistungsdaten == null) ? l -> true : filterLeistungsdaten;
 
-		// Matrix befüllen und dabei die Menge aller vorkommenden Fächer sammeln
-		initialisiereMatrix(schueler, schuljahresabschnitt, effektiverFilter);
+		// Matrix befüllen und alle gefilterten Leistungsdaten sammeln, um daraus die Spaltenreihenfolge abzuleiten.
+		final List<ReportingSchuelerLeistungsdaten> alleLeistungsdaten = new ArrayList<>();
+		initialisiereMatrix(schueler, schuljahresabschnitt, effektiverFilter, alleLeistungsdaten);
 
 		// Schüler sortieren
 		this.schueler.sort(SortierungRegistryReportingSchueler.buildComparator(sortSchueler, new ArrayList<>()));
 
-		// Spaltenüberschriften (Fächer) sortieren
-		this.spaltenFaecher =
-				this.mapAlleFaecher.values().stream().sorted(SortierungRegistryReportingFach.buildComparator(sortFaecher, new ArrayList<>())).toList();
+		// Spaltenreihenfolge aus der Sortierung der Leistungsdaten ableiten (First-Encounter im sortierten Strom).
+		final Comparator<ReportingSchuelerLeistungsdaten> comparatorLeistungsdaten =
+				SortierungRegistryReportingSchuelerLeistungsdaten.buildComparator(sortLeistungsdaten, new ArrayList<>());
+		alleLeistungsdaten.sort(comparatorLeistungsdaten);
+		for (final ReportingSchuelerLeistungsdaten daten : alleLeistungsdaten) {
+			this.mapAlleFaecher.putIfAbsent(daten.fach().id(), daten.fach());
+		}
+		this.spaltenFaecher = new ArrayList<>(this.mapAlleFaecher.values());
 	}
 
 	/**
 	 * Durchläuft die Schülerliste, ermittelt die passenden Lernabschnitte und stößt die Verarbeitung der Leistungsdaten zur Matrix an.
 	 *
-	 * @param schuelerListe        Die Liste der Schüler.
-	 * @param schuljahresabschnitt Der betrachtete Schuljahresabschnitt.
-	 * @param filterFaecher        Das Filterkriterium für die Fächer.
+	 * @param schuelerListe          Die Liste der Schüler.
+	 * @param schuljahresabschnitt   Der betrachtete Schuljahresabschnitt.
+	 * @param filterLeistungsdaten   Das Filterkriterium für die Leistungsdaten.
+	 * @param alleLeistungsdaten     Sammler-Liste, in die alle die Matrix befüllenden Leistungsdaten zur späteren Sortierung aufgenommen werden.
 	 */
 	private void initialisiereMatrix(final List<ReportingSchueler> schuelerListe,
-			final ReportingSchuljahresabschnitt schuljahresabschnitt, final Predicate<ReportingFach> filterFaecher) {
+			final ReportingSchuljahresabschnitt schuljahresabschnitt,
+			final Predicate<ReportingSchuelerLeistungsdaten> filterLeistungsdaten,
+			final List<ReportingSchuelerLeistungsdaten> alleLeistungsdaten) {
 		if ((schuelerListe == null) || (schuljahresabschnitt == null)) {
 			return;
 		}
@@ -98,31 +113,33 @@ public class ReportingSchuelerLeistungsdatenMatrix {
 
 			this.schueler.add(s);
 			this.mapSchuelerLernabschnitte.put(s.id(), la);
-			verarbeiteLeistungsdaten(s.id(), la.leistungsdaten(), filterFaecher);
+			verarbeiteLeistungsdaten(s.id(), la.leistungsdaten(), filterLeistungsdaten, alleLeistungsdaten);
 		}
 	}
 
 	/**
-	 * Verarbeitet die Leistungsdaten eines Schülers, wendet Filter an und befüllt die Matrix-Datenstruktur.
+	 * Verarbeitet die Leistungsdaten eines Schülers, wendet den Filter an und befüllt die Matrix-Datenstruktur.
 	 *
-	 * @param schuelerId     Die ID des Schülers.
-	 * @param leistungsdaten Die Liste der Leistungsdaten aus dem Lernabschnitt.
-	 * @param filterFaecher  Der anzuwendende Fachfilter.
+	 * @param schuelerId             Die ID des Schülers.
+	 * @param leistungsdaten         Die Liste der Leistungsdaten aus dem Lernabschnitt.
+	 * @param filterLeistungsdaten   Der anzuwendende Filter für die Leistungsdaten.
+	 * @param alleLeistungsdaten     Sammler-Liste, die alle die Matrix befüllenden Leistungsdaten zur späteren Sortierung aufnimmt.
 	 */
 	private void verarbeiteLeistungsdaten(final long schuelerId, final List<ReportingSchuelerLeistungsdaten> leistungsdaten,
-			final Predicate<ReportingFach> filterFaecher) {
+			final Predicate<ReportingSchuelerLeistungsdaten> filterLeistungsdaten,
+			final List<ReportingSchuelerLeistungsdaten> alleLeistungsdaten) {
 		if (leistungsdaten == null) {
 			return;
 		}
 
 		for (final ReportingSchuelerLeistungsdaten daten : leistungsdaten) {
 			final ReportingFach fach = daten.fach();
-			if ((fach == null) || !filterFaecher.test(fach)) {
+			if ((fach == null) || !filterLeistungsdaten.test(daten)) {
 				continue;
 			}
 
 			this.matrix.add(schuelerId, fach.id(), daten);
-			this.mapAlleFaecher.putIfAbsent(fach.id(), fach);
+			alleLeistungsdaten.add(daten);
 		}
 	}
 

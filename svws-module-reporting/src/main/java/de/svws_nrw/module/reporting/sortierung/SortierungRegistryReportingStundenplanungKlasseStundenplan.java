@@ -3,6 +3,7 @@ package de.svws_nrw.module.reporting.sortierung;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungKlasseStundenplan;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungStundenplan;
+import de.svws_nrw.module.reporting.utils.ReportingTypesUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -46,10 +47,9 @@ public final class SortierungRegistryReportingStundenplanungKlasseStundenplan {
 	 * @return Eine Liste von Attributnamen in der Reihenfolge der Standardsortierung.
 	 */
 	public static List<String> standardsortierung() {
-		final SortierungRegistry<ReportingStundenplanungKlasseStundenplan> reg = new SortierungRegistry<>();
 		final ArrayList<String> standard = new ArrayList<>();
 		SortierungRegistryReportingKlasse.standardsortierung()
-				.forEach(attribut -> standard.add(reg.methodeToString(ReportingStundenplanungKlasseStundenplan::klasse) + "." + attribut));
+				.forEach(attribut -> standard.add(ReportingTypesUtils.methodeToString(ReportingStundenplanungKlasseStundenplan::klasse) + "." + attribut));
 		return standard;
 	}
 
@@ -67,53 +67,53 @@ public final class SortierungRegistryReportingStundenplanungKlasseStundenplan {
 
 		// Sortierattribute für den eingebetteten Stundenplan
 		reg.registiereComparable(
-				reg.methodeToString(ReportingStundenplanungKlasseStundenplan::stundenplan) + "." + reg.methodeToString(ReportingStundenplanungStundenplan::id),
+				ReportingTypesUtils.methodeToString(ReportingStundenplanungKlasseStundenplan::stundenplan) + "." + ReportingTypesUtils.methodeToString(ReportingStundenplanungStundenplan::id),
 				FunktionBuilder.start(ReportingStundenplanungKlasseStundenplan::stundenplan)
 						.then(ReportingStundenplanungStundenplan::id)
 						.toFunction());
 		reg.registiereString(
-				reg.methodeToString(ReportingStundenplanungKlasseStundenplan::stundenplan) + "."
-						+ reg.methodeToString(ReportingStundenplanungStundenplan::beschreibung),
+				ReportingTypesUtils.methodeToString(ReportingStundenplanungKlasseStundenplan::stundenplan) + "."
+						+ ReportingTypesUtils.methodeToString(ReportingStundenplanungStundenplan::beschreibung),
 				FunktionBuilder.start(ReportingStundenplanungKlasseStundenplan::stundenplan)
 						.then(ReportingStundenplanungStundenplan::beschreibung)
 						.toFunction());
 		reg.registiereString(
-				reg.methodeToString(ReportingStundenplanungKlasseStundenplan::stundenplan) + "."
-						+ reg.methodeToString(ReportingStundenplanungStundenplan::gueltigAb),
+				ReportingTypesUtils.methodeToString(ReportingStundenplanungKlasseStundenplan::stundenplan) + "."
+						+ ReportingTypesUtils.methodeToString(ReportingStundenplanungStundenplan::gueltigAb),
 				FunktionBuilder.start(ReportingStundenplanungKlasseStundenplan::stundenplan)
 						.then(ReportingStundenplanungStundenplan::gueltigAb)
 						.toFunction());
 		reg.registiereString(
-				reg.methodeToString(ReportingStundenplanungKlasseStundenplan::stundenplan) + "."
-						+ reg.methodeToString(ReportingStundenplanungStundenplan::gueltigBis),
+				ReportingTypesUtils.methodeToString(ReportingStundenplanungKlasseStundenplan::stundenplan) + "."
+						+ ReportingTypesUtils.methodeToString(ReportingStundenplanungStundenplan::gueltigBis),
 				FunktionBuilder.start(ReportingStundenplanungKlasseStundenplan::stundenplan)
 						.then(ReportingStundenplanungStundenplan::gueltigBis)
 						.toFunction());
 		reg.registiereComparable(
-				reg.methodeToString(ReportingStundenplanungKlasseStundenplan::stundenplan) + "."
-						+ reg.methodeToString(ReportingStundenplanungStundenplan::wochenperiodizitaet),
+				ReportingTypesUtils.methodeToString(ReportingStundenplanungKlasseStundenplan::stundenplan) + "."
+						+ ReportingTypesUtils.methodeToString(ReportingStundenplanungStundenplan::wochenperiodizitaet),
 				FunktionBuilder.start(ReportingStundenplanungKlasseStundenplan::stundenplan)
 						.then(ReportingStundenplanungStundenplan::wochenperiodizitaet)
 						.toFunction());
 		reg.registiereString(
-				reg.methodeToString(ReportingStundenplanungKlasseStundenplan::stundenplan) + "."
-						+ reg.methodeToString(ReportingStundenplanungStundenplan::schuljahresabschnitt) + "."
-						+ reg.methodeToString(ReportingSchuljahresabschnitt::textSchuljahresabschnittKurz),
+				ReportingTypesUtils.methodeToString(ReportingStundenplanungKlasseStundenplan::stundenplan) + "."
+						+ ReportingTypesUtils.methodeToString(ReportingStundenplanungStundenplan::schuljahresabschnitt) + "."
+						+ ReportingTypesUtils.methodeToString(ReportingSchuljahresabschnitt::textSchuljahresabschnittKurz),
 				FunktionBuilder.start(ReportingStundenplanungKlasseStundenplan::stundenplan)
 						.then(ReportingStundenplanungStundenplan::schuljahresabschnitt)
 						.then(ReportingSchuljahresabschnitt::textSchuljahresabschnittKurz)
 						.toFunction());
 		reg.registiereString(
-				reg.methodeToString(ReportingStundenplanungKlasseStundenplan::stundenplan) + "."
-						+ reg.methodeToString(ReportingStundenplanungStundenplan::schuljahresabschnitt) + "."
-						+ reg.methodeToString(ReportingSchuljahresabschnitt::textSchuljahresabschnittLang),
+				ReportingTypesUtils.methodeToString(ReportingStundenplanungKlasseStundenplan::stundenplan) + "."
+						+ ReportingTypesUtils.methodeToString(ReportingStundenplanungStundenplan::schuljahresabschnitt) + "."
+						+ ReportingTypesUtils.methodeToString(ReportingSchuljahresabschnitt::textSchuljahresabschnittLang),
 				FunktionBuilder.start(ReportingStundenplanungKlasseStundenplan::stundenplan)
 						.then(ReportingStundenplanungStundenplan::schuljahresabschnitt)
 						.then(ReportingSchuljahresabschnitt::textSchuljahresabschnittLang)
 						.toFunction());
 
 		// Importiere alle Klasse-Attribute unter dem Prefix "klasse"
-		reg.importiereRegistryEintraege(reg.methodeToString(ReportingStundenplanungKlasseStundenplan::klasse) + ".",
+		reg.importiereRegistryEintraege(ReportingTypesUtils.methodeToString(ReportingStundenplanungKlasseStundenplan::klasse) + ".",
 				SortierungRegistryReportingKlasse.sortierungRegistry(), ReportingStundenplanungKlasseStundenplan::klasse);
 
 		return reg;

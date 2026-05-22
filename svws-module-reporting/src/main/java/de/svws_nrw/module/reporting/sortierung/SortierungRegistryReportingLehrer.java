@@ -1,6 +1,7 @@
 package de.svws_nrw.module.reporting.sortierung;
 
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
+import de.svws_nrw.module.reporting.utils.ReportingTypesUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -53,13 +54,12 @@ public final class SortierungRegistryReportingLehrer {
 	 * @return Eine Liste von Attributnamen in der Reihenfolge der Standardsortierung.
 	 */
 	public static List<String> standardsortierung() {
-		final SortierungRegistry<ReportingLehrer> reg = new SortierungRegistry<>();
 		final ArrayList<String> standardSort = new ArrayList<>();
-		standardSort.add(reg.methodeToString(ReportingLehrer::nachname));
-		standardSort.add(reg.methodeToString(ReportingLehrer::vorname));
-		standardSort.add(reg.methodeToString(ReportingLehrer::vornamen));
-		standardSort.add(reg.methodeToString(ReportingLehrer::geburtsdatum));
-		standardSort.add(reg.methodeToString(ReportingLehrer::id));
+		standardSort.add(ReportingTypesUtils.methodeToString(ReportingLehrer::nachname));
+		standardSort.add(ReportingTypesUtils.methodeToString(ReportingLehrer::vorname));
+		standardSort.add(ReportingTypesUtils.methodeToString(ReportingLehrer::vornamen));
+		standardSort.add(ReportingTypesUtils.methodeToString(ReportingLehrer::geburtsdatum));
+		standardSort.add(ReportingTypesUtils.methodeToString(ReportingLehrer::id));
 		return standardSort;
 	}
 
@@ -81,30 +81,30 @@ public final class SortierungRegistryReportingLehrer {
 		final SortierungRegistry<ReportingLehrer> reg = new SortierungRegistry<>();
 
 		// Personenattribute (von ReportingPerson geerbt)
-		reg.registiereString(reg.methodeToString(ReportingLehrer::nachname), ReportingLehrer::nachname);
-		reg.registiereString(reg.methodeToString(ReportingLehrer::vorname), ReportingLehrer::vorname);
-		reg.registiereString(reg.methodeToString(ReportingLehrer::vornamen), ReportingLehrer::vornamen);
-		reg.registiereString(reg.methodeToString(ReportingLehrer::anrede), ReportingLehrer::anrede);
-		reg.registiereString(reg.methodeToString(ReportingLehrer::titel), ReportingLehrer::titel);
-		reg.registiereString(reg.methodeToString(ReportingLehrer::geburtsdatum), ReportingLehrer::geburtsdatum);
-		reg.registiereString(reg.methodeToString(ReportingLehrer::geburtsname), ReportingLehrer::geburtsname);
-		reg.registiereString(reg.methodeToString(ReportingLehrer::geburtsort), ReportingLehrer::geburtsort);
-		reg.registiereComparable(reg.methodeToString(ReportingLehrer::geschlecht), ReportingLehrer::geschlecht);
-		reg.registiereString(reg.methodeToString(ReportingLehrer::emailPrivat), ReportingLehrer::emailPrivat);
-		reg.registiereString(reg.methodeToString(ReportingLehrer::emailSchule), ReportingLehrer::emailSchule);
-		reg.registiereString(reg.methodeToString(ReportingLehrer::telefonPrivat), ReportingLehrer::telefonPrivat);
-		reg.registiereString(reg.methodeToString(ReportingLehrer::telefonPrivatMobil), ReportingLehrer::telefonPrivatMobil);
-		reg.registiereString(reg.methodeToString(ReportingLehrer::strassenname), ReportingLehrer::strassenname);
-		reg.registiereString(reg.methodeToString(ReportingLehrer::hausnummer), ReportingLehrer::hausnummer);
-		reg.registiereString(reg.methodeToString(ReportingLehrer::hausnummerZusatz), ReportingLehrer::hausnummerZusatz);
-		reg.registiereString(reg.methodeToString(ReportingLehrer::wohnortname), ReportingLehrer::wohnortname);
-		reg.registiereString(reg.methodeToString(ReportingLehrer::wohnortsteilname), ReportingLehrer::wohnortsteilname);
+		reg.registiereString(ReportingLehrer::nachname);
+		reg.registiereString(ReportingLehrer::vorname);
+		reg.registiereString(ReportingLehrer::vornamen);
+		reg.registiereString(ReportingLehrer::anrede);
+		reg.registiereString(ReportingLehrer::titel);
+		reg.registiereString(ReportingLehrer::geburtsdatum);
+		reg.registiereString(ReportingLehrer::geburtsname);
+		reg.registiereString(ReportingLehrer::geburtsort);
+		reg.registiereComparable(ReportingLehrer::geschlecht);
+		reg.registiereString(ReportingLehrer::emailPrivat);
+		reg.registiereString(ReportingLehrer::emailSchule);
+		reg.registiereString(ReportingLehrer::telefonPrivat);
+		reg.registiereString(ReportingLehrer::telefonPrivatMobil);
+		reg.registiereString(ReportingLehrer::strassenname);
+		reg.registiereString(ReportingLehrer::hausnummer);
+		reg.registiereString(ReportingLehrer::hausnummerZusatz);
+		reg.registiereString(ReportingLehrer::wohnortname);
+		reg.registiereString(ReportingLehrer::wohnortsteilname);
 
 		// Lehrerspezifische Attribute
-		reg.registiereComparable(reg.methodeToString(ReportingLehrer::id), ReportingLehrer::id);
-		reg.registiereString(reg.methodeToString(ReportingLehrer::kuerzel), ReportingLehrer::kuerzel);
-		reg.registiereString(reg.methodeToString(ReportingLehrer::amtsbezeichnung), ReportingLehrer::amtsbezeichnung);
-		reg.registiereComparable(reg.methodeToString(ReportingLehrer::personalTyp), ReportingLehrer::personalTyp);
+		reg.registiereComparable(ReportingLehrer::id);
+		reg.registiereString(ReportingLehrer::kuerzel);
+		reg.registiereString(ReportingLehrer::amtsbezeichnung);
+		reg.registiereComparable(ReportingLehrer::personalTyp);
 
 		return reg;
 	}

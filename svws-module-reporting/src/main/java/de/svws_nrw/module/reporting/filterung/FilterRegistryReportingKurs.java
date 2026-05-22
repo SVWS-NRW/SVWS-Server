@@ -33,17 +33,17 @@ public final class FilterRegistryReportingKurs {
 		final FilterRegistry<ReportingKurs> reg = new FilterRegistry<>();
 
 		// Grundlegende Attribute
-		reg.registriereAttribut("id", ReportingKurs::id);
-		reg.registriereAttribut("kuerzel", ReportingKurs::kuerzel);
-		reg.registriereAttribut("bezeichnungZeugnis", ReportingKurs::bezeichnungZeugnis);
-		reg.registriereAttribut("sortierung", ReportingKurs::sortierung);
+		reg.registriereAttribut(ReportingKurs::id);
+		reg.registriereAttribut(ReportingKurs::kuerzel);
+		reg.registriereAttribut(ReportingKurs::bezeichnungZeugnis);
+		reg.registriereAttribut(ReportingKurs::sortierung);
 
 		// Kursspezifische Attribute
-		reg.registriereAttribut("kursartAllg", ReportingKurs::kursartAllg);
-		reg.registriereAttribut("istSichtbar", ReportingKurs::istSichtbar);
-		reg.registriereAttribut("istEpochalunterricht", ReportingKurs::istEpochalunterricht);
-		reg.registriereAttribut("schulnummer", ReportingKurs::schulnummer);
-		reg.registriereAttribut("wochenstunden", ReportingKurs::wochenstunden);
+		reg.registriereAttribut(ReportingKurs::kursartAllg);
+		reg.registriereAttribut(ReportingKurs::istSichtbar);
+		reg.registriereAttribut(ReportingKurs::istEpochalunterricht);
+		reg.registriereAttribut(ReportingKurs::schulnummer);
+		reg.registriereAttribut(ReportingKurs::wochenstunden);
 
 		// Attribute des zugeordneten Faches
 		reg.registriereAttribut("fachId", k -> (k.fach() == null) ? null : k.fach().id());

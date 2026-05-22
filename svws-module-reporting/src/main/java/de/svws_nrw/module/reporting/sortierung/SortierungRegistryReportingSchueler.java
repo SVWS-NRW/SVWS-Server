@@ -3,6 +3,7 @@ package de.svws_nrw.module.reporting.sortierung;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
+import de.svws_nrw.module.reporting.utils.ReportingTypesUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -49,13 +50,12 @@ public final class SortierungRegistryReportingSchueler {
 	 * @return Eine Liste von Attributnamen in der Reihenfolge der Standardsortierung.
 	 */
 	public static List<String> standardsortierung() {
-		final SortierungRegistry<ReportingSchueler> reg = new SortierungRegistry<>();
 		final ArrayList<String> standard = new ArrayList<>();
-		standard.add(reg.methodeToString(ReportingSchueler::nachname));
-		standard.add(reg.methodeToString(ReportingSchueler::vorname));
-		standard.add(reg.methodeToString(ReportingSchueler::vornamen));
-		standard.add(reg.methodeToString(ReportingSchueler::geburtsdatum));
-		standard.add(reg.methodeToString(ReportingSchueler::id));
+		standard.add(ReportingTypesUtils.methodeToString(ReportingSchueler::nachname));
+		standard.add(ReportingTypesUtils.methodeToString(ReportingSchueler::vorname));
+		standard.add(ReportingTypesUtils.methodeToString(ReportingSchueler::vornamen));
+		standard.add(ReportingTypesUtils.methodeToString(ReportingSchueler::geburtsdatum));
+		standard.add(ReportingTypesUtils.methodeToString(ReportingSchueler::id));
 		return standard;
 	}
 
@@ -81,55 +81,55 @@ public final class SortierungRegistryReportingSchueler {
 		final SortierungRegistry<ReportingSchueler> reg = new SortierungRegistry<>();
 
 		// Registrierung grundlegender Personenattribute (aus ReportingPerson)
-		reg.registiereString(reg.methodeToString(ReportingSchueler::nachname), ReportingSchueler::nachname);
-		reg.registiereString(reg.methodeToString(ReportingSchueler::vorname), ReportingSchueler::vorname);
-		reg.registiereString(reg.methodeToString(ReportingSchueler::vornamen), ReportingSchueler::vornamen);
-		reg.registiereString(reg.methodeToString(ReportingSchueler::anrede), ReportingSchueler::anrede);
-		reg.registiereString(reg.methodeToString(ReportingSchueler::titel), ReportingSchueler::titel);
-		reg.registiereString(reg.methodeToString(ReportingSchueler::geburtsdatum), ReportingSchueler::geburtsdatum);
-		reg.registiereString(reg.methodeToString(ReportingSchueler::geburtsname), ReportingSchueler::geburtsname);
-		reg.registiereString(reg.methodeToString(ReportingSchueler::geburtsort), ReportingSchueler::geburtsort);
-		reg.registiereComparable(reg.methodeToString(ReportingSchueler::geschlecht), ReportingSchueler::geschlecht);
-		reg.registiereString(reg.methodeToString(ReportingSchueler::emailPrivat), ReportingSchueler::emailPrivat);
-		reg.registiereString(reg.methodeToString(ReportingSchueler::emailSchule), ReportingSchueler::emailSchule);
-		reg.registiereString(reg.methodeToString(ReportingSchueler::telefonPrivat), ReportingSchueler::telefonPrivat);
-		reg.registiereString(reg.methodeToString(ReportingSchueler::telefonPrivatMobil), ReportingSchueler::telefonPrivatMobil);
-		reg.registiereString(reg.methodeToString(ReportingSchueler::strassenname), ReportingSchueler::strassenname);
-		reg.registiereString(reg.methodeToString(ReportingSchueler::hausnummer), ReportingSchueler::hausnummer);
-		reg.registiereString(reg.methodeToString(ReportingSchueler::hausnummerZusatz), ReportingSchueler::hausnummerZusatz);
-		reg.registiereString(reg.methodeToString(ReportingSchueler::wohnortname), ReportingSchueler::wohnortname);
-		reg.registiereString(reg.methodeToString(ReportingSchueler::wohnortsteilname), ReportingSchueler::wohnortsteilname);
+		reg.registiereString(ReportingSchueler::nachname);
+		reg.registiereString(ReportingSchueler::vorname);
+		reg.registiereString(ReportingSchueler::vornamen);
+		reg.registiereString(ReportingSchueler::anrede);
+		reg.registiereString(ReportingSchueler::titel);
+		reg.registiereString(ReportingSchueler::geburtsdatum);
+		reg.registiereString(ReportingSchueler::geburtsname);
+		reg.registiereString(ReportingSchueler::geburtsort);
+		reg.registiereComparable(ReportingSchueler::geschlecht);
+		reg.registiereString(ReportingSchueler::emailPrivat);
+		reg.registiereString(ReportingSchueler::emailSchule);
+		reg.registiereString(ReportingSchueler::telefonPrivat);
+		reg.registiereString(ReportingSchueler::telefonPrivatMobil);
+		reg.registiereString(ReportingSchueler::strassenname);
+		reg.registiereString(ReportingSchueler::hausnummer);
+		reg.registiereString(ReportingSchueler::hausnummerZusatz);
+		reg.registiereString(ReportingSchueler::wohnortname);
+		reg.registiereString(ReportingSchueler::wohnortsteilname);
 
 		// Registrierung schul-/schülerspezifischer Attribute (aus ReportingSchueler)
-		reg.registiereComparable(reg.methodeToString(ReportingSchueler::id), ReportingSchueler::id);
-		reg.registiereComparable(reg.methodeToString(ReportingSchueler::status), ReportingSchueler::status);
-		reg.registiereComparable(reg.methodeToString(ReportingSchueler::haltestelleID), ReportingSchueler::haltestelleID);
-		reg.registiereComparable(reg.methodeToString(ReportingSchueler::fahrschuelerArtID), ReportingSchueler::fahrschuelerArtID);
-		reg.registiereComparable(reg.methodeToString(ReportingSchueler::zuzugsjahr), ReportingSchueler::zuzugsjahr);
-		reg.registiereString(reg.methodeToString(ReportingSchueler::religionanmeldung), ReportingSchueler::religionanmeldung);
-		reg.registiereString(reg.methodeToString(ReportingSchueler::religionabmeldung), ReportingSchueler::religionabmeldung);
-		reg.registiereString(reg.methodeToString(ReportingSchueler::verkehrspracheFamilie), ReportingSchueler::verkehrspracheFamilie);
-		reg.registiereComparable(reg.methodeToString(ReportingSchueler::erhaeltSchuelerBAFOEG), ReportingSchueler::erhaeltSchuelerBAFOEG);
-		reg.registiereComparable(reg.methodeToString(ReportingSchueler::erhaeltMeisterBAFOEG), ReportingSchueler::erhaeltMeisterBAFOEG);
-		reg.registiereComparable(reg.methodeToString(ReportingSchueler::hatMigrationshintergrund), ReportingSchueler::hatMigrationshintergrund);
-		reg.registiereComparable(reg.methodeToString(ReportingSchueler::hatMasernimpfnachweis), ReportingSchueler::hatMasernimpfnachweis);
-		reg.registiereComparable(reg.methodeToString(ReportingSchueler::istDuplikat), ReportingSchueler::istDuplikat);
-		reg.registiereComparable(reg.methodeToString(ReportingSchueler::keineAuskunftAnDritte), ReportingSchueler::keineAuskunftAnDritte);
-		reg.registiereComparable(reg.methodeToString(ReportingSchueler::istVolljaehrig), ReportingSchueler::istVolljaehrig);
-		reg.registiereComparable(reg.methodeToString(ReportingSchueler::istSchulpflichtErfuellt), ReportingSchueler::istSchulpflichtErfuellt);
-		reg.registiereComparable(reg.methodeToString(ReportingSchueler::istBerufsschulpflichtErfuellt), ReportingSchueler::istBerufsschulpflichtErfuellt);
+		reg.registiereComparable(ReportingSchueler::id);
+		reg.registiereComparable(ReportingSchueler::status);
+		reg.registiereComparable(ReportingSchueler::haltestelleID);
+		reg.registiereComparable(ReportingSchueler::fahrschuelerArtID);
+		reg.registiereComparable(ReportingSchueler::zuzugsjahr);
+		reg.registiereString(ReportingSchueler::religionanmeldung);
+		reg.registiereString(ReportingSchueler::religionabmeldung);
+		reg.registiereString(ReportingSchueler::verkehrspracheFamilie);
+		reg.registiereComparable(ReportingSchueler::erhaeltSchuelerBAFOEG);
+		reg.registiereComparable(ReportingSchueler::erhaeltMeisterBAFOEG);
+		reg.registiereComparable(ReportingSchueler::hatMigrationshintergrund);
+		reg.registiereComparable(ReportingSchueler::hatMasernimpfnachweis);
+		reg.registiereComparable(ReportingSchueler::istDuplikat);
+		reg.registiereComparable(ReportingSchueler::keineAuskunftAnDritte);
+		reg.registiereComparable(ReportingSchueler::istVolljaehrig);
+		reg.registiereComparable(ReportingSchueler::istSchulpflichtErfuellt);
+		reg.registiereComparable(ReportingSchueler::istBerufsschulpflichtErfuellt);
 
 
 		// Importiere alle Klasse-Attribute unter dem Prefix "auswahlLernabschnitt.klasse"
 		reg.importiereRegistryEintraege(
-				reg.methodeToString(ReportingSchueler::auswahlLernabschnitt) + "." + reg.methodeToString(ReportingSchuelerLernabschnitt::klasse) + ".",
+				ReportingTypesUtils.methodeToString(ReportingSchueler::auswahlLernabschnitt) + "." + ReportingTypesUtils.methodeToString(ReportingSchuelerLernabschnitt::klasse) + ".",
 				SortierungRegistryReportingKlasse.sortierungRegistry(),
 				FunktionBuilder.start(ReportingSchueler::auswahlLernabschnitt).then(ReportingSchuelerLernabschnitt::klasse).toFunction());
 
 		// Verschachtelte Attribute über den ausgewählten Lernabschnitt
 		reg.registiereString(
-				reg.methodeToString(ReportingSchueler::auswahlLernabschnitt) + "." + reg.methodeToString(ReportingSchuelerLernabschnitt::jahrgang) + "."
-						+ reg.methodeToString(ReportingJahrgang::kuerzel),
+				ReportingTypesUtils.methodeToString(ReportingSchueler::auswahlLernabschnitt) + "." + ReportingTypesUtils.methodeToString(ReportingSchuelerLernabschnitt::jahrgang) + "."
+						+ ReportingTypesUtils.methodeToString(ReportingJahrgang::kuerzel),
 				FunktionBuilder.start(ReportingSchueler::auswahlLernabschnitt)
 						.then(ReportingSchuelerLernabschnitt::jahrgang)
 						.then(ReportingJahrgang::kuerzel)

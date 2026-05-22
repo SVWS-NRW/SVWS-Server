@@ -14,7 +14,6 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Proxy-Klasse im Rahmen des Reportings für Daten vom Typ Jahrgang und erweitert die Klasse {@link ReportingJahrgang}.
@@ -138,15 +137,10 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 			final ReportingSortierungService sortierungService = (this.reportingContext != null) ? this.reportingContext.sortierungService() : null;
 			final Logger logger = (this.reportingContext != null) ? this.reportingContext.logger() : null;
 
-			final Optional<Comparator<ReportingSchueler>> optionalComparator =
-					ComparatorFactory.buildOptionalComparator(
-							sortierungService,
-							logger,
-							ReportingSchueler.class.getSimpleName(),
-							SortierungRegistryReportingSchueler.sortierungRegistry());
-			super.schueler = optionalComparator.map(
-					reportingSchuelerComparator -> klassen().stream().flatMap(k -> k.schueler().stream()).sorted(reportingSchuelerComparator).toList())
-					.orElseGet(() -> klassen().stream().flatMap(k -> k.schueler().stream()).toList());
+			final Comparator<ReportingSchueler> comparator =
+					ComparatorFactory.buildComparator(sortierungService, logger, ReportingSchueler.class.getSimpleName(),
+							SortierungRegistryReportingSchueler.sortierungRegistry(), true);
+			super.schueler = klassen().stream().flatMap(k -> k.schueler().stream()).sorted(comparator).toList();
 		}
 		return super.schueler();
 	}

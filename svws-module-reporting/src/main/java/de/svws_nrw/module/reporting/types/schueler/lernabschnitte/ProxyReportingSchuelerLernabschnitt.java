@@ -1,12 +1,18 @@
 package de.svws_nrw.module.reporting.types.schueler.lernabschnitte;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittsdaten;
+import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
+import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
+import de.svws_nrw.module.reporting.sortierung.ReportingSortierungService;
+import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingSchuelerLeistungsdaten;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
@@ -31,6 +37,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 		super(ersetzeNullBlankTrim(schuelerLernabschnittsdaten.abschluss),
 				schuelerLernabschnittsdaten.abschlussart,
 				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.abschlussBerufsbildend),
+				null,
 				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.bilingualerZweig),
 				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.datumAnfang),
 				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.datumEnde),
@@ -87,7 +94,8 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.bemerkungen.zeugnisASV),
 				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.bemerkungen.zeugnisAUE),
 				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.bemerkungen.zeugnisAllgemein),
-				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.bemerkungen.zeugnisLELS));
+				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.bemerkungen.zeugnisLELS),
+				null);
 
 		this.reportingContext = reportingContext;
 
@@ -137,6 +145,20 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 
 
 	/**
+	 * Stellt die Belegungen der Ankreuzkompetenzen zur Verfügung, die in diesem Lernabschnitt dem Schüler zugeordnet sind.
+	 * Beim ersten Zugriff wird ein Bulk-Load über alle Lernabschnitte des zugehörigen Schuljahresabschnitts ausgelöst.
+	 *
+	 * @return Die Belegungen der Ankreuzkompetenzen des Lernabschnitts.
+	 */
+	@Override
+	public List<ReportingSchuelerAnkreuzkompetenz> ankreuzkompetenzen() {
+		if (super.ankreuzkompetenzen == null) {
+			super.ankreuzkompetenzen = this.reportingContext.repositorySchueler().schuelerLernabschnittAnkreuzkompetenzen(this);
+		}
+		return super.ankreuzkompetenzen;
+	}
+
+	/**
 	 * Stellt die Daten der Folgeklasse des Schülers zur Verfügung, dem dieser Lernabschnitt gehört.
 	 *
 	 * @return Daten der Folgeklasse
@@ -177,19 +199,25 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 
 	/**
 	 * Stellt die Leistungsdaten zur Verfügung, die in diesem Lernabschnitt dem Schüler zugeordnet sind.
+	 * Beim ersten Zugriff wird ein Bulk-Load über alle Lernabschnitte des zugehörigen Schuljahresabschnitts ausgelöst.
 	 *
 	 * @return Die Leistungsdaten des Lernabschnitts.
 	 */
 	@Override
 	public List<ReportingSchuelerLeistungsdaten> leistungsdaten() {
-		if (!this.reportingContext.repositorySchueler().leistungsdaten().containsKey1(this.schueler.id())) {
-			this.reportingContext.repositorySchueler().leistungsdatenZuLernabschnitt(this.schueler().id(), this.id());
-		}
 		if (super.leistungsdaten().isEmpty()) {
-			super.setLeistungsdaten(this.reportingContext.repositorySchueler().leistungsdaten()
-					.get12(this.schueler().id(), this.id()).stream()
-					.map(l -> (ReportingSchuelerLeistungsdaten) new ProxyReportingSchuelerLeistungsdaten(reportingContext, this, l))
-					.toList());
+			final ReportingSortierungService sortierungService = this.reportingContext.sortierungService();
+			final Logger logger = this.reportingContext.logger();
+
+			final Comparator<ReportingSchuelerLeistungsdaten> comparator =
+					ComparatorFactory.buildComparator(sortierungService, logger, ReportingSchuelerLeistungsdaten.class.getSimpleName(),
+							SortierungRegistryReportingSchuelerLeistungsdaten.sortierungRegistry(), true);
+
+			final Predicate<ReportingSchuelerLeistungsdaten> filter =
+					this.reportingContext.filterService().getFilter(ReportingSchuelerLeistungsdaten.class.getSimpleName(), null);
+
+			final var leistungsdaten = this.reportingContext.repositorySchueler().leistungsdatenZuLernabschnitt(this);
+			super.setLeistungsdaten(leistungsdaten.stream().filter(filter).sorted(comparator).toList());
 		}
 		return super.leistungsdaten();
 	}
@@ -234,5 +262,4 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 		}
 		return super.zuweisungen;
 	}
-
 }

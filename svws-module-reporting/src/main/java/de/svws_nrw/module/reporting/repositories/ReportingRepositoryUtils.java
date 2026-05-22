@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.LongFunction;
 import java.util.function.ToLongFunction;
@@ -36,7 +35,7 @@ final class ReportingRepositoryUtils {
 	 * @param stammdatenLoader Funktion zum Laden fehlender Stammdaten aus der DB (liefert eine Liste)
 	 * @param reportingObjektErsteller Funktion zum Erstellen eines Reporting-Objekts aus Stammdaten
 	 * @param idExtractor Funktion zum Extrahieren der ID aus einem Stammdaten-Objekt
-	 * @param comparatorOptional Optional: Comparator für die Sortierung
+	 * @param comparator Comparator für die Sortierung (niemals {@code null}; ein Identitäts-Comparator lässt die Reihenfolge unverändert)
 	 * @param datentyp Bezeichnung des Datentyps für Fehlermeldungen (z. B. "Lehrer", "Schüler")
 	 * @param logger Der Logger für Fehlermeldungen
 	 *
@@ -45,7 +44,7 @@ final class ReportingRepositoryUtils {
 	@SuppressWarnings("java:S107")
 	public static <S, R> List<R> erstelleReportingListe(final List<Long> ids, final Map<Long, S> mapStammdaten, final Map<Long, R> mapReportingObjekte,
 			final Function<List<Long>, List<S>> stammdatenLoader, final LongFunction<R> reportingObjektErsteller, final ToLongFunction<S> idExtractor,
-			final Optional<Comparator<R>> comparatorOptional, final String datentyp, final Logger logger) {
+			final Comparator<R> comparator, final String datentyp, final Logger logger) {
 
 		if ((ids == null) || ids.isEmpty()) {
 			return new ArrayList<>();
@@ -71,9 +70,7 @@ final class ReportingRepositoryUtils {
 
 		final List<R> result = erzeugeReportingObjekte(idsNonNull, mapStammdaten, mapReportingObjekte, reportingObjektErsteller);
 
-		return comparatorOptional
-				.map(comparator -> result.stream().sorted(comparator).toList())
-				.orElse(result);
+		return result.stream().sorted(comparator).toList();
 	}
 
 	/**

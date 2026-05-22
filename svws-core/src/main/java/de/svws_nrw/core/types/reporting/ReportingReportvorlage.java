@@ -158,6 +158,17 @@ public enum ReportingReportvorlage {
 			ReportingReportvorlageKonfigurationKlassen.getKlassenVListeSchuelerLeistungsdaten()
 	),
 
+	/** Report-Vorlage: Klasse - Liste - Schüler - Leistungsdaten - Detailliert */
+	KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN_DETAILLIERT("Klasse-Liste-Schueler-Leistungsdaten-Detailliert",
+			"Leistungsübersicht klassenweise (detailliert)",
+			"Eine detaillierte Übersicht der Leistungsdaten der Schülerinnen und Schüler der Klassen erzeugen.",
+			ReportingReportvorlageDatenContext.KLASSEN,
+			"klassen/leistungsdaten/KlasseListeSchuelerLeistungsdatenDetailliert.html",
+			"Klassen-Liste-Schueler-Leistungsdaten-Detailliert",
+			List.of(BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN),
+			ReportingReportvorlageKonfigurationKlassen.getKlassenVListeSchuelerLeistungsdatenDetailliert()
+	),
+
 	/** Report-Vorlage: Kurs - Liste - Schüler - Kontaktdaten - Erzieher */
 	KURSE_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER("Kurs-Liste-Schueler-Kontaktdaten-Erzieher",
 			"Kursliste mit Kontaktdaten",

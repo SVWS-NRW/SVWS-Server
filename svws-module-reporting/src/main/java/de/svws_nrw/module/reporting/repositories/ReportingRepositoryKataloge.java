@@ -12,6 +12,7 @@ import de.svws_nrw.core.data.kataloge.KatalogEntlassgrund;
 import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.SchulEintrag;
+import de.svws_nrw.core.data.schule.Ankreuzkompetenz;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
 import de.svws_nrw.core.data.schule.Telefonart;
@@ -22,6 +23,8 @@ import de.svws_nrw.data.kataloge.DataKatalogEntlassgruende;
 import de.svws_nrw.data.kataloge.DataOrte;
 import de.svws_nrw.data.kataloge.DataOrtsteile;
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
+import de.svws_nrw.data.schule.DataAnkreuzkompetenzJahrgangszuordnungen;
+import de.svws_nrw.data.schule.DataAnkreuzkompetenzen;
 import de.svws_nrw.data.schule.DataReligionen;
 import de.svws_nrw.data.schule.DataSchulen;
 import de.svws_nrw.data.schule.DataTelefonarten;
@@ -51,6 +54,7 @@ public class ReportingRepositoryKataloge {
 	private Map<Long, DTOFach> mapFaecher;
 	private Map<Long, JahrgangsDaten> mapJahrgaenge;
 	private Map<Long, ReportingErzieherArt> mapErzieherarten;
+	private Map<Long, Ankreuzkompetenz> mapAnkreuzkompetenzen;
 
 	/**
 	 * Erstellt ein neues ReportingKatalogRepository. Die Katalogdaten werden erst beim ersten Zugriff geladen.
@@ -282,6 +286,27 @@ public class ReportingRepositoryKataloge {
 			}
 		}
 		return mapErzieherarten;
+	}
+
+	/**
+	 * Gibt die Map der Ankreuzkompetenzen zurück, indiziert nach ID. Wird beim ersten Zugriff aus der Datenbank geladen.
+	 * Die in den Ankreuzkompetenzen enthaltenen Jahrgangszuordnungen werden ebenfalls mitgeladen.
+	 *
+	 * @return Map der Ankreuzkompetenzen
+	 */
+	public Map<Long, Ankreuzkompetenz> ankreuzkompetenzen() {
+		if (mapAnkreuzkompetenzen == null) {
+			try {
+				this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade Ankreuzkompetenzen.");
+				final DataAnkreuzkompetenzJahrgangszuordnungen dataJahrgangszuordnungen =
+						new DataAnkreuzkompetenzJahrgangszuordnungen(this.reportingContext.conn());
+				mapAnkreuzkompetenzen = new DataAnkreuzkompetenzen(this.reportingContext.conn(), dataJahrgangszuordnungen).getList().stream()
+						.collect(Collectors.toMap(a -> a.id, a -> a));
+			} catch (final Exception e) {
+				throw fehlerKatalogdatenLaden("Ankreuzkompetenzen", e);
+			}
+		}
+		return mapAnkreuzkompetenzen;
 	}
 
 	/**

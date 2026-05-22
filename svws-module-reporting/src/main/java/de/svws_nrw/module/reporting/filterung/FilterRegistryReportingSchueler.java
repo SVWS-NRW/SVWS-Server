@@ -2,6 +2,7 @@ package de.svws_nrw.module.reporting.filterung;
 
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
+import de.svws_nrw.module.reporting.utils.ReportingTypesUtils;
 
 /**
  * Registry zur Definition erlaubter Filterattribute für {@link ReportingSchueler}
@@ -33,19 +34,21 @@ public final class FilterRegistryReportingSchueler {
 		final FilterRegistry<ReportingSchueler> reg = new FilterRegistry<>();
 
 		// Grundlegende Attribute
-		reg.registriereAttribut("id", ReportingSchueler::id);
-		reg.registriereAttribut("nachname", ReportingSchueler::nachname);
-		reg.registriereAttribut("vorname", ReportingSchueler::vorname);
-		reg.registriereAttribut("geschlecht", s -> (s.geschlecht() == null) ? null : s.geschlecht().name());
+		reg.registriereAttribut(ReportingSchueler::id);
+		reg.registriereAttribut(ReportingSchueler::nachname);
+		reg.registriereAttribut(ReportingSchueler::vorname);
+		reg.registriereAttribut(ReportingTypesUtils.methodeToString(ReportingSchueler::geschlecht),
+				s -> (s.geschlecht() == null) ? null : s.geschlecht().name());
 
 		// Status-/Eigenschaftsattribute
-		reg.registriereAttribut("status", s -> (s.status() == null) ? null : s.status().name());
-		reg.registriereAttribut("istVolljaehrig", ReportingSchueler::istVolljaehrig);
-		reg.registriereAttribut("istDuplikat", ReportingSchueler::istDuplikat);
-		reg.registriereAttribut("hatMigrationshintergrund", ReportingSchueler::hatMigrationshintergrund);
-		reg.registriereAttribut("externeSchulNr", ReportingSchueler::externeSchulNr);
-		reg.registriereAttribut("anmeldedatum", ReportingSchueler::anmeldedatum);
-		reg.registriereAttribut("aufnahmedatum", ReportingSchueler::aufnahmedatum);
+		reg.registriereAttribut(ReportingTypesUtils.methodeToString(ReportingSchueler::status),
+				s -> (s.status() == null) ? null : s.status().name());
+		reg.registriereAttribut(ReportingSchueler::istVolljaehrig);
+		reg.registriereAttribut(ReportingSchueler::istDuplikat);
+		reg.registriereAttribut(ReportingSchueler::hatMigrationshintergrund);
+		reg.registriereAttribut(ReportingSchueler::externeSchulNr);
+		reg.registriereAttribut(ReportingSchueler::anmeldedatum);
+		reg.registriereAttribut(ReportingSchueler::aufnahmedatum);
 
 		return reg;
 	}

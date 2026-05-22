@@ -2,6 +2,7 @@ package de.svws_nrw.module.reporting.filterung;
 
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungKurs;
+import de.svws_nrw.module.reporting.utils.ReportingTypesUtils;
 
 /**
  * Registry zur Definition erlaubter Filterattribute für {@link ReportingGostKursplanungKurs}
@@ -33,19 +34,21 @@ public final class FilterRegistryReportingGostKursplanungKurs {
 		final FilterRegistry<ReportingGostKursplanungKurs> reg = new FilterRegistry<>();
 
 		// Grundlegende Attribute
-		reg.registriereAttribut("id", ReportingGostKursplanungKurs::id);
-		reg.registriereAttribut("bezeichnung", ReportingGostKursplanungKurs::bezeichnung);
-		reg.registriereAttribut("gostHalbjahr", k -> (k.gostHalbjahr() == null) ? null : k.gostHalbjahr().name());
-		reg.registriereAttribut("gostKursart", k -> (k.gostKursart() == null) ? null : k.gostKursart().name());
+		reg.registriereAttribut(ReportingGostKursplanungKurs::id);
+		reg.registriereAttribut(ReportingGostKursplanungKurs::bezeichnung);
+		reg.registriereAttribut(ReportingTypesUtils.methodeToString(ReportingGostKursplanungKurs::gostHalbjahr),
+				k -> (k.gostHalbjahr() == null) ? null : k.gostHalbjahr().name());
+		reg.registriereAttribut(ReportingTypesUtils.methodeToString(ReportingGostKursplanungKurs::gostKursart),
+				k -> (k.gostKursart() == null) ? null : k.gostKursart().name());
 
 		// Anzahlen
-		reg.registriereAttribut("anzahlSchueler", ReportingGostKursplanungKurs::anzahlSchueler);
-		reg.registriereAttribut("anzahlSchuelerSchriftlich", ReportingGostKursplanungKurs::anzahlSchuelerSchriftlich);
-		reg.registriereAttribut("anzahlAB12", ReportingGostKursplanungKurs::anzahlAB12);
-		reg.registriereAttribut("anzahlAB3", ReportingGostKursplanungKurs::anzahlAB3);
-		reg.registriereAttribut("anzahlAB4", ReportingGostKursplanungKurs::anzahlAB4);
-		reg.registriereAttribut("anzahlDummy", ReportingGostKursplanungKurs::anzahlDummy);
-		reg.registriereAttribut("anzahlExterne", ReportingGostKursplanungKurs::anzahlExterne);
+		reg.registriereAttribut(ReportingGostKursplanungKurs::anzahlSchueler);
+		reg.registriereAttribut(ReportingGostKursplanungKurs::anzahlSchuelerSchriftlich);
+		reg.registriereAttribut(ReportingGostKursplanungKurs::anzahlAB12);
+		reg.registriereAttribut(ReportingGostKursplanungKurs::anzahlAB3);
+		reg.registriereAttribut(ReportingGostKursplanungKurs::anzahlAB4);
+		reg.registriereAttribut(ReportingGostKursplanungKurs::anzahlDummy);
+		reg.registriereAttribut(ReportingGostKursplanungKurs::anzahlExterne);
 
 		// Attribute des zugeordneten Faches
 		reg.registriereAttribut("fachId", k -> (k.fach() == null) ? null : k.fach().id());

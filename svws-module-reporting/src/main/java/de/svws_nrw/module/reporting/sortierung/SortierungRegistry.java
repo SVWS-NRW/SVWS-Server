@@ -1,8 +1,5 @@
 package de.svws_nrw.module.reporting.sortierung;
 
-import java.io.Serializable;
-import java.lang.invoke.SerializedLambda;
-import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -12,6 +9,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+
+import de.svws_nrw.module.reporting.utils.ReportingTypesUtils;
+import de.svws_nrw.module.reporting.utils.ReportingTypesUtils.SerializableFunction;
 
 /**
  * Verwaltung erlaubter Attribute bzw. Attributspfade und Bereitstellung passender Comparatoren (inkl. Sortierrichtung)
@@ -78,6 +78,21 @@ public final class SortierungRegistry<T> {
 	}
 
 	/**
+	 * Registriert ein Attribut, das als String behandelt werden soll, in der Registry. Der Attributname wird über
+	 * {@link ReportingTypesUtils#methodeToString} aus der übergebenen Methodenreferenz abgeleitet (z. B. liefert
+	 * {@code ReportingSchueler::nachname} den Namen {@code "nachname"}). Verwende diese Überladung für direkte
+	 * Methodenreferenzen; für zusammengesetzte oder verschachtelte Attributpfade (z. B. {@code "klasse.kuerzel"})
+	 * nutze die Überladung mit explizitem Namen.
+	 *
+	 * @param wertermittlungsfunktion Eine serialisierbare Methodenreferenz, die den String-Wert aus einem Objekt extrahiert
+	 *                                und gleichzeitig den Attributnamen liefert.
+	 * @return Die aktuelle Instanz der {@code SortierungRegistry}, um method chaining zu ermöglichen.
+	 */
+	public SortierungRegistry<T> registiereString(final SerializableFunction<T, String> wertermittlungsfunktion) {
+		return registiereString(ReportingTypesUtils.methodeToString(wertermittlungsfunktion), wertermittlungsfunktion);
+	}
+
+	/**
 	 * Registriert ein Attribut, das als {@link Comparable} behandelt werden soll, in der Registry.
 	 * Der gegebene Name wird normalisiert, und eine Funktion wird gespeichert, die den
 	 * vergleichbaren Wert aus einem Objekt extrahiert.
@@ -91,6 +106,21 @@ public final class SortierungRegistry<T> {
 			final Function<T, ? extends Comparable<?>> wertermittlungsfunktion) {
 		map.put(normalisieren(attributName), new Attributeintrag<>(wertermittlungsfunktion, ValueType.COMPARABLE));
 		return this;
+	}
+
+	/**
+	 * Registriert ein Attribut, das als {@link Comparable} behandelt werden soll, in der Registry. Der Attributname wird über
+	 * {@link ReportingTypesUtils#methodeToString} aus der übergebenen Methodenreferenz abgeleitet. Verwende diese Überladung
+	 * für direkte Methodenreferenzen; für zusammengesetzte oder verschachtelte Attributpfade nutze die Überladung mit
+	 * explizitem Namen.
+	 *
+	 * @param <C> Der konkrete Comparable-Typ des Werts.
+	 * @param wertermittlungsfunktion Eine serialisierbare Methodenreferenz, die den vergleichbaren Wert aus einem Objekt extrahiert
+	 *                                und gleichzeitig den Attributnamen liefert.
+	 * @return Die aktuelle Instanz der {@code SortierungRegistry}, um method chaining zu ermöglichen.
+	 */
+	public <C extends Comparable<?>> SortierungRegistry<T> registiereComparable(final SerializableFunction<T, C> wertermittlungsfunktion) {
+		return registiereComparable(ReportingTypesUtils.methodeToString(wertermittlungsfunktion), wertermittlungsfunktion);
 	}
 
 	/**
@@ -219,47 +249,5 @@ public final class SortierungRegistry<T> {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static <P> Function<P, Comparable> asComparableFunction(final Function<P, ?> f) {
 		return (Function) f;
-	}
-
-
-	/**
-	 * Functional Interface für serialisierbare Methodenreferenzen, damit der Methodenname über eine SerializedLambda ermittelt werden kann.
-	 * Beispiel: methodenreferenzToString(ReportingKlasse::sortierung) liefert "sortierung"
-	 *
-	 * @param <E> Typ des Eingabeparameters der Funktion
-	 * @param <R> Rückgabetyp der Funktion
-	 */
-	@FunctionalInterface
-	public interface SerializableFunction<E, R> extends Function<E, R>, Serializable {
-	}
-
-	/**
-	 * Hilfsmethode zur Ermittelung der Methodennamen als String einer übergebenen Methodenreferenz. Wird für die Attributnamen bei der Sortierung verwendet.
-	 *
-	 * @param methodenreferenz eine Methodenreferenz, z. B. ReportingKlasse::sortierung
-	 * @param <E> Typ des Eingabeparameters der Funktion
-	 * @param <R> Rückgabetyp der Funktion
-	 *
-	 * @return der Name der implementierenden Methode (z. B. "sortierung"). Bei einem Fehler wird ein leerer String zurückgegeben.
-	 */
-	@SuppressWarnings("java:S3011") // Betrifft Aufruf von writeReplace zur Extraktion des Methodennamens, siehe dazu Kommentierung im Code unten.
-	public <E, R> String methodeToString(final SerializableFunction<E, R> methodenreferenz) {
-		try {
-			final Method writeReplace = methodenreferenz.getClass().getDeclaredMethod("writeReplace");
-			// Anmerkung zum Aufruf von writeReplace und der suppressed warning S3011:
-			// writeReplace ist eine vom Compiler synthetisch erzeugte, package-private Methode der Lambda-Klasse.
-			// Sie ist nicht Teil der öffentlichen API und daher ohne setAccessible(true) nicht aufrufbar.
-			// Es gibt keine alternative, reflection-freie API in Java SE, um über eine serialisierbare
-			// Methodenreferenz zur Laufzeit an das SerializedLambda-Objekt und damit an den Methodennamen zu gelangen.
-			// Der Zugriff ist auf diese einzelne klar definierte Methode beschränkt und birgt kein Sicherheitsrisiko.
-			writeReplace.setAccessible(true);
-			final Object serializedForm = writeReplace.invoke(methodenreferenz);
-			if (serializedForm instanceof final SerializedLambda lambda) {
-				return lambda.getImplMethodName();
-			}
-			return "";
-		} catch (final ReflectiveOperationException e) {
-			return "";
-		}
 	}
 }

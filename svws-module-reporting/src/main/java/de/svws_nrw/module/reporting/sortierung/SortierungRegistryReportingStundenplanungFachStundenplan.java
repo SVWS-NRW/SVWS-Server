@@ -4,6 +4,7 @@ import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungFachStundenplan;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungStundenplan;
+import de.svws_nrw.module.reporting.utils.ReportingTypesUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -47,11 +48,10 @@ public final class SortierungRegistryReportingStundenplanungFachStundenplan {
 	 * @return Eine Liste von Attributnamen in der Reihenfolge der Standardsortierung.
 	 */
 	public static List<String> standardsortierung() {
-		final SortierungRegistry<ReportingStundenplanungFachStundenplan> reg = new SortierungRegistry<>();
 		final ArrayList<String> standard = new ArrayList<>();
-		standard.add(reg.methodeToString(ReportingStundenplanungFachStundenplan::fach) + "." + reg.methodeToString(ReportingFach::sortierung));
-		standard.add(reg.methodeToString(ReportingStundenplanungFachStundenplan::fach) + "." + reg.methodeToString(ReportingFach::kuerzel));
-		standard.add(reg.methodeToString(ReportingStundenplanungFachStundenplan::fach) + "." + reg.methodeToString(ReportingFach::id));
+		standard.add(ReportingTypesUtils.methodeToString(ReportingStundenplanungFachStundenplan::fach) + "." + ReportingTypesUtils.methodeToString(ReportingFach::sortierung));
+		standard.add(ReportingTypesUtils.methodeToString(ReportingStundenplanungFachStundenplan::fach) + "." + ReportingTypesUtils.methodeToString(ReportingFach::kuerzel));
+		standard.add(ReportingTypesUtils.methodeToString(ReportingStundenplanungFachStundenplan::fach) + "." + ReportingTypesUtils.methodeToString(ReportingFach::id));
 		return standard;
 	}
 
@@ -69,65 +69,65 @@ public final class SortierungRegistryReportingStundenplanungFachStundenplan {
 
 		// Sortierattribute für den eingebetteten Stundenplan
 		reg.registiereComparable(
-				reg.methodeToString(ReportingStundenplanungFachStundenplan::stundenplan) + "." + reg.methodeToString(ReportingStundenplanungStundenplan::id),
+				ReportingTypesUtils.methodeToString(ReportingStundenplanungFachStundenplan::stundenplan) + "." + ReportingTypesUtils.methodeToString(ReportingStundenplanungStundenplan::id),
 				FunktionBuilder.start(ReportingStundenplanungFachStundenplan::stundenplan)
 						.then(ReportingStundenplanungStundenplan::id)
 						.toFunction());
 		reg.registiereString(
-				reg.methodeToString(ReportingStundenplanungFachStundenplan::stundenplan) + "."
-						+ reg.methodeToString(ReportingStundenplanungStundenplan::beschreibung),
+				ReportingTypesUtils.methodeToString(ReportingStundenplanungFachStundenplan::stundenplan) + "."
+						+ ReportingTypesUtils.methodeToString(ReportingStundenplanungStundenplan::beschreibung),
 				FunktionBuilder.start(ReportingStundenplanungFachStundenplan::stundenplan)
 						.then(ReportingStundenplanungStundenplan::beschreibung)
 						.toFunction());
 		reg.registiereString(
-				reg.methodeToString(ReportingStundenplanungFachStundenplan::stundenplan) + "."
-						+ reg.methodeToString(ReportingStundenplanungStundenplan::gueltigAb),
+				ReportingTypesUtils.methodeToString(ReportingStundenplanungFachStundenplan::stundenplan) + "."
+						+ ReportingTypesUtils.methodeToString(ReportingStundenplanungStundenplan::gueltigAb),
 				FunktionBuilder.start(ReportingStundenplanungFachStundenplan::stundenplan)
 						.then(ReportingStundenplanungStundenplan::gueltigAb)
 						.toFunction());
 		reg.registiereString(
-				reg.methodeToString(ReportingStundenplanungFachStundenplan::stundenplan) + "."
-						+ reg.methodeToString(ReportingStundenplanungStundenplan::gueltigBis),
+				ReportingTypesUtils.methodeToString(ReportingStundenplanungFachStundenplan::stundenplan) + "."
+						+ ReportingTypesUtils.methodeToString(ReportingStundenplanungStundenplan::gueltigBis),
 				FunktionBuilder.start(ReportingStundenplanungFachStundenplan::stundenplan)
 						.then(ReportingStundenplanungStundenplan::gueltigBis)
 						.toFunction());
 		reg.registiereComparable(
-				reg.methodeToString(ReportingStundenplanungFachStundenplan::stundenplan) + "."
-						+ reg.methodeToString(ReportingStundenplanungStundenplan::wochenperiodizitaet),
+				ReportingTypesUtils.methodeToString(ReportingStundenplanungFachStundenplan::stundenplan) + "."
+						+ ReportingTypesUtils.methodeToString(ReportingStundenplanungStundenplan::wochenperiodizitaet),
 				FunktionBuilder.start(ReportingStundenplanungFachStundenplan::stundenplan)
 						.then(ReportingStundenplanungStundenplan::wochenperiodizitaet)
 						.toFunction());
 		reg.registiereString(
-				reg.methodeToString(ReportingStundenplanungFachStundenplan::stundenplan) + "."
-						+ reg.methodeToString(ReportingStundenplanungStundenplan::schuljahresabschnitt) + "."
-						+ reg.methodeToString(ReportingSchuljahresabschnitt::textSchuljahresabschnittKurz),
+				ReportingTypesUtils.methodeToString(ReportingStundenplanungFachStundenplan::stundenplan) + "."
+						+ ReportingTypesUtils.methodeToString(ReportingStundenplanungStundenplan::schuljahresabschnitt) + "."
+						+ ReportingTypesUtils.methodeToString(ReportingSchuljahresabschnitt::textSchuljahresabschnittKurz),
 				FunktionBuilder.start(ReportingStundenplanungFachStundenplan::stundenplan)
 						.then(ReportingStundenplanungStundenplan::schuljahresabschnitt)
 						.then(ReportingSchuljahresabschnitt::textSchuljahresabschnittKurz)
 						.toFunction());
 		reg.registiereString(
-				reg.methodeToString(ReportingStundenplanungFachStundenplan::stundenplan) + "."
-						+ reg.methodeToString(ReportingStundenplanungStundenplan::schuljahresabschnitt) + "."
-						+ reg.methodeToString(ReportingSchuljahresabschnitt::textSchuljahresabschnittLang),
+				ReportingTypesUtils.methodeToString(ReportingStundenplanungFachStundenplan::stundenplan) + "."
+						+ ReportingTypesUtils.methodeToString(ReportingStundenplanungStundenplan::schuljahresabschnitt) + "."
+						+ ReportingTypesUtils.methodeToString(ReportingSchuljahresabschnitt::textSchuljahresabschnittLang),
 				FunktionBuilder.start(ReportingStundenplanungFachStundenplan::stundenplan)
 						.then(ReportingStundenplanungStundenplan::schuljahresabschnitt)
 						.then(ReportingSchuljahresabschnitt::textSchuljahresabschnittLang)
 						.toFunction());
 
 		// Sortierattribute für das eingebettete Fach
-		reg.registiereComparable(reg.methodeToString(ReportingStundenplanungFachStundenplan::fach) + "." + reg.methodeToString(ReportingFach::id),
+		reg.registiereComparable(ReportingTypesUtils.methodeToString(ReportingStundenplanungFachStundenplan::fach) + "." + ReportingTypesUtils.methodeToString(ReportingFach::id),
 				FunktionBuilder.start(ReportingStundenplanungFachStundenplan::fach)
 						.then(ReportingFach::id)
 						.toFunction());
-		reg.registiereComparable(reg.methodeToString(ReportingStundenplanungFachStundenplan::fach) + "." + reg.methodeToString(ReportingFach::sortierung),
+		reg.registiereComparable(ReportingTypesUtils.methodeToString(ReportingStundenplanungFachStundenplan::fach) + "." + ReportingTypesUtils.methodeToString(ReportingFach::sortierung),
 				FunktionBuilder.start(ReportingStundenplanungFachStundenplan::fach)
 						.then(ReportingFach::sortierung)
 						.toFunction());
-		reg.registiereString(reg.methodeToString(ReportingStundenplanungFachStundenplan::fach) + "." + reg.methodeToString(ReportingFach::kuerzel),
+		reg.registiereString(ReportingTypesUtils.methodeToString(ReportingStundenplanungFachStundenplan::fach) + "." + ReportingTypesUtils.methodeToString(ReportingFach::kuerzel),
 				FunktionBuilder.start(ReportingStundenplanungFachStundenplan::fach)
 						.then(ReportingFach::kuerzel)
 						.toFunction());
-		reg.registiereString(reg.methodeToString(ReportingStundenplanungFachStundenplan::fach) + "." + reg.methodeToString(ReportingFach::bezeichnung),
+		reg.registiereString(ReportingTypesUtils.methodeToString(ReportingStundenplanungFachStundenplan::fach) + "." + ReportingTypesUtils.methodeToString(ReportingFach::bezeichnung),
 				FunktionBuilder.start(ReportingStundenplanungFachStundenplan::fach)
 						.then(ReportingFach::bezeichnung)
 						.toFunction());

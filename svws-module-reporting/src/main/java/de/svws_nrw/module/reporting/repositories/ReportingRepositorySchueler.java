@@ -3,9 +3,9 @@ package de.svws_nrw.module.reporting.repositories;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,12 +26,18 @@ import de.svws_nrw.data.schueler.DataSchuelerSprachbelegung;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerTelefon;
 import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOSchuelerZuweisung;
+import de.svws_nrw.db.dto.current.schild.grundschule.DTOSchuelerAnkreuzfloskeln;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerLeistungsdaten;
+import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdaten;
+import de.svws_nrw.repo.schueler.SchuelerAnkreuzkompetenzenRepositoryImpl;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
 import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
+import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerAnkreuzkompetenz;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerZuweisung;
+import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerAnkreuzkompetenz;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerZuweisung;
 import de.svws_nrw.module.reporting.types.schueler.telefon.ProxyReportingSchuelerTelefonkontakt;
@@ -57,6 +63,9 @@ public class ReportingRepositorySchueler {
 	private final Map<Long, ReportingSchueler> mapSchueler = new HashMap<>();
 	private final Map<Long, List<ReportingSchuelerTelefonkontakt>> mapSchuelerTelefonkontakte = new HashMap<>();
 	private final Map<Long, List<ReportingSchuelerZuweisung>> mapSchuelerZuweisungen = new HashMap<>();
+	private final Map<Long, List<DTOSchuelerAnkreuzfloskeln>> mapSchuelerAnkreuzkompetenzen = new HashMap<>();
+	private final Set<Long> idsLernabschnitteZuLadenLeistungsdaten = new HashSet<>();
+	private final Set<Long> idsLernabschnitteZuLadenAnkreuzkompetenzen = new HashSet<>();
 
 	/**
 	 * Erstellt ein neues ReportingSchuelerRepository.
@@ -107,17 +116,15 @@ public class ReportingRepositorySchueler {
 	 * @return Liste von ReportingSchueler-Objekten.
 	 */
 	public List<ReportingSchueler> schueler(final List<Long> idsSchueler, final boolean sortiereListe) {
-		final Optional<Comparator<ReportingSchueler>> optionalComparator = sortiereListe
-				? ComparatorFactory.buildOptionalComparator(this.reportingContext.sortierungService(), this.reportingContext.logger(),
-						ReportingSchueler.class.getSimpleName(),
-						SortierungRegistryReportingSchueler.sortierungRegistry())
-				: Optional.empty();
+		final Comparator<ReportingSchueler> comparator = ComparatorFactory.buildComparator(this.reportingContext.sortierungService(),
+				this.reportingContext.logger(), ReportingSchueler.class.getSimpleName(),
+				SortierungRegistryReportingSchueler.sortierungRegistry(), sortiereListe);
 
 		return ReportingRepositoryUtils.erstelleReportingListe(idsSchueler, mapSchuelerStammdaten, mapSchueler,
 				fehlendeIds -> new DataSchuelerStammdaten(this.reportingContext.conn()).getListByIds(fehlendeIds),
 				key -> new ProxyReportingSchueler(this.reportingContext, mapSchuelerStammdaten.get(key)),
 				stammdaten -> stammdaten.id,
-				optionalComparator,
+				comparator,
 				"Schüler", this.reportingContext.logger());
 	}
 
@@ -220,7 +227,7 @@ public class ReportingRepositorySchueler {
 				.collect(Collectors.toMap(sb -> sb.id, sb -> sb));
 	}
 
-	// ##### Lernabschnitts- und Leistungsdaten #####
+	// ##### Lernabschnitts- und Leistungsdaten, Ankreuzkompetenzen #####
 
 	/**
 	 * Gibt die vierdimensionale Map aller Lernabschnittsdaten der Schüler zurück.
@@ -245,20 +252,24 @@ public class ReportingRepositorySchueler {
 			return mapLernabschnittsdaten.get1(idSchueler);
 		}
 
-		final List<Long> fehlendeIds = mapSchuelerStammdaten.keySet().stream()
+		final List<Long> idsSchuelerFehlend = mapSchuelerStammdaten.keySet().stream()
 				.filter(id -> !mapLernabschnittsdaten.containsKey1(id))
 				.toList();
-		final List<Long> zuLadendeIds = fehlendeIds.contains(idSchueler) ? fehlendeIds : List.of(idSchueler);
+		final List<Long> idsSchuelerZuLaden = idsSchuelerFehlend.contains(idSchueler) ? idsSchuelerFehlend : List.of(idSchueler);
 
 		try {
-			final List<SchuelerLernabschnittsdaten> geladen = ladeLernabschnitte(zuLadendeIds);
-			for (final SchuelerLernabschnittsdaten la : geladen) {
+			final List<SchuelerLernabschnittsdaten> schuelerLernabschnittsdaten = ladeLernabschnitte(idsSchuelerZuLaden);
+			for (final SchuelerLernabschnittsdaten la : schuelerLernabschnittsdaten) {
 				mapLernabschnittsdaten.add(la.schuelerID, la.schuljahresabschnitt, la.wechselNr, la.id, la);
+				// Speichere die IDs der geladenen Lernabschnitte für das Nachladen der Leistungsdaten und Ankreuzkompetenzen.
+				idsLernabschnitteZuLadenLeistungsdaten.add(la.id);
+				idsLernabschnitteZuLadenAnkreuzkompetenzen.add(la.id);
 			}
 
-			final Set<Long> idsMitTreffer = geladen.stream().map(la -> la.schuelerID).collect(Collectors.toSet());
-			for (final Long id : zuLadendeIds) {
-				if (!idsMitTreffer.contains(id)) {
+			final Set<Long> idsSchuelerMitLernabschnittsdaten = schuelerLernabschnittsdaten.stream().map(la -> la.schuelerID).collect(Collectors.toSet());
+			// Schüler ohne Lernabschnitte werden auch in der Lernabschnitt-Map hinterlegt, damit die Abfragen für diese Schüler nicht immer wieder neu gestartet werden müssen.
+			for (final Long id : idsSchuelerZuLaden) {
+				if (!idsSchuelerMitLernabschnittsdaten.contains(id)) {
 					mapLernabschnittsdaten.addEmpty(id, -1, -1, -1);
 				}
 			}
@@ -284,21 +295,89 @@ public class ReportingRepositorySchueler {
 	}
 
 	/**
-	 * Lädt die Leistungsdaten zum übergebenen Lernabschnitt aus der Datenbank und trägt sie in die zentrale Map der Leistungsdaten ein.
+	 * Liefert die Leistungsdaten für den übergebenen Lernabschnitt eines Schülers als Liste von Reporting-Objekten.
+	 * Beim ersten Zugriff auf einen Schuljahresabschnitt werden in einer einzigen Abfrage alle Leistungsdaten für sämtliche
+	 * bereits bekannten Lernabschnitte dieses Schuljahresabschnitts nachgeladen und im Cache abgelegt.
 	 *
-	 * @param idSchueler Die ID des Schülers, zu dem die Leistungsdaten gehören.
-	 * @param idLernabschnitt Die ID des Lernabschnitts, dessen Leistungsdaten geladen werden sollen.
+	 * @param reportingSchuelerLernabschnitt Der Lernabschnitt, dessen Leistungsdaten geliefert werden sollen.
+	 *
+	 * @return Liste der Leistungsdaten des Lernabschnitts. Leere Liste, falls keine vorhanden sind.
 	 */
-	public void leistungsdatenZuLernabschnitt(final long idSchueler, final long idLernabschnitt) {
-		final List<SchuelerLeistungsdaten> listLeistungsdaten = new ArrayList<>();
+	public List<ReportingSchuelerLeistungsdaten> leistungsdatenZuLernabschnitt(final ReportingSchuelerLernabschnitt reportingSchuelerLernabschnitt) {
+		leistungsdatenZuSchuljahresabschnitt(reportingSchuelerLernabschnitt.idSchuljahresabschnitt());
+		return mapLeistungsdaten.get12(reportingSchuelerLernabschnitt.idSchueler(), reportingSchuelerLernabschnitt.id()).stream()
+				.map(sld -> (ReportingSchuelerLeistungsdaten) new ProxyReportingSchuelerLeistungsdaten(this.reportingContext, reportingSchuelerLernabschnitt,
+						sld))
+				.toList();
+	}
+
+	/**
+	 * Stellt sicher, dass die Leistungsdaten der Schüler für alle bekannten Lernabschnitte des angegebenen Schuljahresabschnitts geladen sind.
+	 * Beim ersten Aufruf für einen Schuljahresabschnitt werden in einer einzigen Abfrage alle Leistungsdaten für sämtliche im Cache vorhandenen
+	 * Lernabschnitte dieses Schuljahresabschnitts nachgeladen und in der 3D-Map nach Schüler-, Lernabschnitts- und Leistungsdaten-ID im Cache abgelegt.
+	 *
+	 * @param idSchuljahresabschnitt Die ID des Schuljahresabschnitts, für den die Leistungsdaten geladen werden sollen.
+	 */
+	private void leistungsdatenZuSchuljahresabschnitt(final long idSchuljahresabschnitt) {
+		final List<Long> idsLernabschnitte = getLernabschnitteZuLaden(idsLernabschnitteZuLadenLeistungsdaten, idSchuljahresabschnitt);
+		if (idsLernabschnitte.isEmpty()) {
+			return;
+		}
 		try {
-			if (new DataSchuelerLeistungsdaten(this.reportingContext.conn()).getByLernabschnitt(idLernabschnitt, listLeistungsdaten)) {
-				listLeistungsdaten.forEach(l -> mapLeistungsdaten.add(idSchueler, idLernabschnitt, l.id, l));
+			final DataSchuelerLeistungsdaten dataSchuelerLeistungsdaten = new DataSchuelerLeistungsdaten(this.reportingContext.conn());
+			final List<SchuelerLeistungsdaten> schuelerLeistungsdaten = dataSchuelerLeistungsdaten.getByLernabschnitten(idsLernabschnitte);
+			for (final SchuelerLeistungsdaten sld : schuelerLeistungsdaten) {
+				final SchuelerLernabschnittsdaten lernabschnitt = mapLernabschnittsdaten.getSingle4OrNull(sld.lernabschnittID);
+				if ((lernabschnitt != null) && !mapLeistungsdaten.containsKey123(lernabschnitt.schuelerID, lernabschnitt.id, sld.id)) {
+					mapLeistungsdaten.add(lernabschnitt.schuelerID, lernabschnitt.id, sld.id, sld);
+				}
 			}
 		} catch (final Exception e) {
 			ReportingExceptionUtils.logException(
-					"FEHLER: Fehler bei der Ermittlung der Leistungsdaten zum Lernabschnitt %d aus der Datenbank im ReportingContext."
-							.formatted(idLernabschnitt),
+					"FEHLER: Fehler bei der Ermittlung der Schüler-Leistungsdaten zum Schuljahresabschnitt %d aus der Datenbank im ReportingContext."
+							.formatted(idSchuljahresabschnitt),
+					e, this.reportingContext.logger(), LogLevel.ERROR, 0);
+		}
+	}
+
+	/**
+	 * Liefert die Belegungen der Ankreuzkompetenzen für den übergebenen Lernabschnitt eines Schülers als Liste von Reporting-Objekten.
+	 * Beim ersten Zugriff auf einen Schuljahresabschnitt werden in einer einzigen Abfrage alle Belegungen für sämtliche
+	 * bereits bekannten Lernabschnitte dieses Schuljahresabschnitts nachgeladen und im Cache abgelegt.
+	 *
+	 * @param lernabschnitt Der Lernabschnitt, dessen Belegungen der Ankreuzkompetenzen geliefert werden sollen.
+	 *
+	 * @return Liste der Belegungen der Ankreuzkompetenzen des Lernabschnitts. Leere Liste, falls keine vorhanden sind.
+	 */
+	public List<ReportingSchuelerAnkreuzkompetenz> schuelerLernabschnittAnkreuzkompetenzen(final ReportingSchuelerLernabschnitt lernabschnitt) {
+		schuelerAnkreuzkompetenzenZuSchuljahresabschnitt(lernabschnitt.idSchuljahresabschnitt());
+		return mapSchuelerAnkreuzkompetenzen.getOrDefault(lernabschnitt.id(), new ArrayList<>()).stream()
+				.map(dto -> (ReportingSchuelerAnkreuzkompetenz) new ProxyReportingSchuelerAnkreuzkompetenz(dto, lernabschnitt))
+				.toList();
+	}
+
+	/**
+	 * Stellt sicher, dass die Ankreuzkompetenzen der Schüler für alle bekannten Lernabschnitte des angegebenen Schuljahresabschnitts geladen sind.
+	 * Beim ersten Aufruf für einen Schuljahresabschnitt werden in einer einzigen Abfrage alle Belegungen für sämtliche im Cache vorhandenen
+	 * Lernabschnitte dieses Schuljahresabschnitts nachgeladen und nach Lernabschnitts-ID indiziert im Cache abgelegt.
+	 *
+	 * @param idSchuljahresabschnitt Die ID des Schuljahresabschnitts, für den die Belegungen geladen werden sollen.
+	 */
+	private void schuelerAnkreuzkompetenzenZuSchuljahresabschnitt(final long idSchuljahresabschnitt) {
+		final List<Long> idsLernabschnitte = getLernabschnitteZuLaden(idsLernabschnitteZuLadenAnkreuzkompetenzen, idSchuljahresabschnitt);
+		if (idsLernabschnitte.isEmpty()) {
+			return;
+		}
+		try {
+			final List<DTOSchuelerAnkreuzfloskeln> dtos =
+					new SchuelerAnkreuzkompetenzenRepositoryImpl(this.reportingContext.conn()).findListByLernabschnitt(idsLernabschnitte);
+			for (final DTOSchuelerAnkreuzfloskeln dto : dtos) {
+				mapSchuelerAnkreuzkompetenzen.computeIfAbsent(dto.Abschnitt_ID, k -> new ArrayList<>()).add(dto);
+			}
+		} catch (final Exception e) {
+			ReportingExceptionUtils.logException(
+					"FEHLER: Fehler bei der Ermittlung der Schüler-Ankreuzkompetenzen zum Schuljahresabschnitt %d aus der Datenbank im ReportingContext."
+							.formatted(idSchuljahresabschnitt),
 					e, this.reportingContext.logger(), LogLevel.ERROR, 0);
 		}
 	}
@@ -381,5 +460,36 @@ public class ReportingRepositorySchueler {
 		}
 		mapSchuelerZuweisungen.put(idLernabschnitt, reportingZuweisungen);
 		return reportingZuweisungen;
+	}
+
+
+	// ##### Hilfsmethoden #####
+
+	/**
+	 * Ermittelt die Lernabschnitt-IDs, für die noch Daten (wie Leistungsdaten oder Ankreuzkompetenzen) nachgeladen werden müssen.
+	 * Dabei werden nur diejenigen Lernabschnitte berücksichtigt, die zum übergebenen Schuljahresabschnitt gehören.
+	 * Die zurückgegebenen IDs werden aus dem übergebenen Set entfernt, sodass sie bei zukünftigen Aufrufen nicht erneut geladen werden.
+	 *
+	 * @param idsLernabschnitteZuLaden Das Set, welches die IDs der Lernabschnitte enthält, für die noch Daten fehlen.
+	 * @param idSchuljahresabschnitt   Die ID des Schuljahresabschnitts, für den Daten nachgeladen werden sollen.
+	 *
+	 * @return Eine Liste mit Lernabschnitt-IDs, für die im angegebenen Schuljahresabschnitt Daten nachgeladen werden müssen.
+	 */
+	private List<Long> getLernabschnitteZuLaden(final Set<Long> idsLernabschnitteZuLaden, final long idSchuljahresabschnitt) {
+		// Alle Lernabschnitte des Schuljahresabschnitts aus dem Cache holen
+		final List<Long> idsLernabschnitteImCache = mapLernabschnittsdaten.get2(idSchuljahresabschnitt).stream()
+				.map(la -> la.id)
+				.distinct()
+				.toList();
+
+		// Herausfiltern, welche dieser Lernabschnitte noch im Set der zu ladenden stehen
+		final List<Long> idsLernabschnitteZuLadenImCache = idsLernabschnitteImCache.stream()
+				.filter(idsLernabschnitteZuLaden::contains)
+				.toList();
+
+		// Die IDs, die wir jetzt laden, aus dem Set entfernen (konsumieren)
+		idsLernabschnitteZuLadenImCache.forEach(idsLernabschnitteZuLaden::remove);
+
+		return idsLernabschnitteZuLadenImCache;
 	}
 }

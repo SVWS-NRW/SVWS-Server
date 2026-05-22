@@ -7,7 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.klassen.KlassenDaten;
@@ -104,10 +103,9 @@ public class ReportingRepositoryLerngruppen {
 	 * @return Liste von ReportingKlasse-Objekten.
 	 */
 	public List<ReportingKlasse> klassen(final List<Long> idsKlassen, final boolean sortiereListe) {
-		final Optional<Comparator<ReportingKlasse>> optionalComparator = sortiereListe
-				? ComparatorFactory.buildOptionalComparator(this.reportingContext.sortierungService(), this.reportingContext.logger(),
-						ReportingKlasse.class.getSimpleName(), SortierungRegistryReportingKlasse.sortierungRegistry())
-				: Optional.empty();
+		final Comparator<ReportingKlasse> comparator = ComparatorFactory.buildComparator(this.reportingContext.sortierungService(),
+				this.reportingContext.logger(), ReportingKlasse.class.getSimpleName(),
+				SortierungRegistryReportingKlasse.sortierungRegistry(), sortiereListe);
 
 		return ReportingRepositoryUtils.erstelleReportingListe(idsKlassen, mapKlassenStammdaten, mapKlassen,
 				fehlendeIds -> {
@@ -134,7 +132,7 @@ public class ReportingRepositoryLerngruppen {
 					return new ProxyReportingKlasse(this.reportingContext, daten);
 				},
 				stammdaten -> stammdaten.id,
-				optionalComparator,
+				comparator,
 				"Klassen", this.reportingContext.logger());
 	}
 
@@ -216,10 +214,9 @@ public class ReportingRepositoryLerngruppen {
 	 * @return Liste von ReportingKurs-Objekten.
 	 */
 	public List<ReportingKurs> kurse(final List<Long> idsKurse, final boolean sortiereListe) {
-		final Optional<Comparator<ReportingKurs>> optionalComparator = sortiereListe
-				? ComparatorFactory.buildOptionalComparator(this.reportingContext.sortierungService(), this.reportingContext.logger(),
-						ReportingKurs.class.getSimpleName(), SortierungRegistryReportingKurs.sortierungRegistry())
-				: Optional.empty();
+		final Comparator<ReportingKurs> comparator = ComparatorFactory.buildComparator(this.reportingContext.sortierungService(),
+				this.reportingContext.logger(), ReportingKurs.class.getSimpleName(),
+				SortierungRegistryReportingKurs.sortierungRegistry(), sortiereListe);
 
 		return ReportingRepositoryUtils.erstelleReportingListe(idsKurse, mapKursDaten, mapKurse,
 				fehlendeIds -> new DataKurse(this.reportingContext.conn()).getListByIDs(fehlendeIds, false),
@@ -233,7 +230,7 @@ public class ReportingRepositoryLerngruppen {
 					return new ProxyReportingKurs(this.reportingContext, daten);
 				},
 				stammdaten -> stammdaten.id,
-				optionalComparator,
+				comparator,
 				"Kurse", this.reportingContext.logger());
 	}
 

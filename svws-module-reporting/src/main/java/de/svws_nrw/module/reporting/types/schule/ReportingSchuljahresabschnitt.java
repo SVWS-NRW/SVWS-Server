@@ -1,11 +1,13 @@
 package de.svws_nrw.module.reporting.types.schule;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
+import de.svws_nrw.module.reporting.types.ankreuzkompetenz.ReportingAnkreuzkompetenz;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
@@ -49,6 +51,9 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 	/** Die Map der Kurse des Schuljahresabschnitts */
 	protected Map<Long, ReportingKurs> kurse;
 
+	/** Die Map der Ankreuzkompetenzen des Schuljahresabschnitts */
+	protected Map<Long, ReportingAnkreuzkompetenz> ankreuzkompetenzen;
+
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
 	 *
@@ -63,12 +68,13 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 	 * @param jahrgaenge			Die Jahrgänge des Schuljahresabschnitts
 	 * @param klassen				Die Klassen des Schuljahresabschnitts
 	 * @param kurse					Die Kurse des Schuljahresabschnitts
+	 * @param ankreuzkompetenzen	Die Ankreuzkompetenzen des Schuljahresabschnitts
 	 */
 	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingSchuljahresabschnitt(final long id, final int schuljahr, final int abschnitt, final Long idFolgenderAbschnitt,
 			final Long idVorherigerAbschnitt, final ReportingSchuljahresabschnitt folgenderAbschnitt, final ReportingSchuljahresabschnitt vorherigerAbschnitt,
 			final Map<Long, ReportingFach> faecher, final Map<Long, ReportingJahrgang> jahrgaenge, final Map<Long, ReportingKlasse> klassen,
-			final Map<Long, ReportingKurs> kurse) {
+			final Map<Long, ReportingKurs> kurse, final Map<Long, ReportingAnkreuzkompetenz> ankreuzkompetenzen) {
 		this.id = id;
 		this.schuljahr = schuljahr;
 		this.abschnitt = abschnitt;
@@ -80,6 +86,7 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 		this.jahrgaenge = jahrgaenge;
 		this.klassen = klassen;
 		this.kurse = kurse;
+		this.ankreuzkompetenzen = ankreuzkompetenzen;
 	}
 
 
@@ -224,6 +231,95 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 		}
 		idsNonNull.forEach(idKurs -> result.add(kurs(idKurs)));
 		return result;
+	}
+
+	/**
+	 * Die Map der Ankreuzkompetenzen des Schuljahresabschnitts
+	 *
+	 * @return Inhalt des Feldes ankreuzkompetenzen
+	 */
+	public Map<Long, ReportingAnkreuzkompetenz> ankreuzkompetenzen() {
+		return ankreuzkompetenzen;
+	}
+
+	/**
+	 * Gibt die Ankreuzkompetenz zur ID aus der Liste der Ankreuzkompetenzen des Schuljahresabschnitts zurück
+	 *
+	 * @param id	Die ID der Ankreuzkompetenz
+	 *
+	 * @return 		Die Ankreuzkompetenz zur ID oder null, wenn die Ankreuzkompetenz nicht vorhanden ist.
+	 */
+	public ReportingAnkreuzkompetenz ankreuzkompetenz(final long id) {
+		return ankreuzkompetenzen().get(id);
+	}
+
+	/**
+	 * Gibt die Ankreuzkompetenzen zu den IDs aus der Liste der Ankreuzkompetenzen des Schuljahresabschnitts zurück
+	 *
+	 * @param ids	Die IDs der Ankreuzkompetenzen
+	 *
+	 * @return 		Die Ankreuzkompetenzen zu den IDs oder eine leere Liste, wenn keine Ankreuzkompetenz vorhanden ist.
+	 */
+	public List<ReportingAnkreuzkompetenz> ankreuzkompetenzen(final List<Long> ids) {
+		final List<ReportingAnkreuzkompetenz> result = new ArrayList<>();
+		if (ids == null) {
+			return result;
+		}
+		final List<Long> idsNonNull = ids.stream().filter(Objects::nonNull).distinct().toList();
+		if (idsNonNull.isEmpty()) {
+			return result;
+		}
+		idsNonNull.forEach(idAnkreuzkompetenz -> result.add(ankreuzkompetenz(idAnkreuzkompetenz)));
+		return result;
+	}
+
+	/**
+	 * Gibt die sichtbaren Ankreuzkompetenzen des Schuljahresabschnitts zurück, sortiert nach Sortierung.
+	 * Es werden nur Ankreuzkompetenzen geliefert, deren Abschnitt 0 (beide Halbjahre) ist oder dem Abschnitt
+	 * dieses Schuljahresabschnitts entspricht.
+	 *
+	 * @param nurAktive 	Falls true, werden ausschließlich aktive Ankreuzkompetenzen zurückgegeben.
+	 *
+	 * @return 				Die gefilterte und sortierte Liste der Ankreuzkompetenzen.
+	 */
+	public List<ReportingAnkreuzkompetenz> ankreuzkompetenzenImAbschnitt(final boolean nurAktive) {
+		return ankreuzkompetenzen().values().stream()
+				.filter(a -> (a.abschnitt() == 0) || (a.abschnitt() == this.abschnitt))
+				.filter(ReportingAnkreuzkompetenz::istSichtbar)
+				.filter(a -> !nurAktive || a.istAktiv())
+				.sorted(Comparator.comparingInt(ReportingAnkreuzkompetenz::sortierung))
+				.toList();
+	}
+
+	/**
+	 * Gibt die sichtbaren Ankreuzkompetenzen des Schuljahresabschnitts zum angegebenen Fach zurück, sortiert nach Sortierung.
+	 * Es werden nur Ankreuzkompetenzen geliefert, deren Abschnitt 0 (beide Halbjahre) ist oder dem Abschnitt
+	 * dieses Schuljahresabschnitts entspricht.
+	 *
+	 * @param idFach 		Die ID des Faches, auf das gefiltert wird.
+	 * @param nurAktive 	Falls true, werden ausschließlich aktive Ankreuzkompetenzen zurückgegeben.
+	 *
+	 * @return 				Die gefilterte und sortierte Liste der Ankreuzkompetenzen.
+	 */
+	public List<ReportingAnkreuzkompetenz> ankreuzkompetenzenImAbschnittFuerFach(final long idFach, final boolean nurAktive) {
+		return ankreuzkompetenzenImAbschnitt(nurAktive).stream()
+				.filter(a -> (a.fach() != null) && (a.fach().id() == idFach))
+				.toList();
+	}
+
+	/**
+	 * Gibt die sichtbaren Ankreuzkompetenzen des Schuljahresabschnitts zurück, die dem Arbeits- und Sozialverhalten
+	 * zugeordnet sind, sortiert nach Sortierung. Es werden nur Ankreuzkompetenzen geliefert, deren Abschnitt 0
+	 * (beide Halbjahre) ist oder dem Abschnitt dieses Schuljahresabschnitts entspricht.
+	 *
+	 * @param nurAktive 	Falls true, werden ausschließlich aktive Ankreuzkompetenzen zurückgegeben.
+	 *
+	 * @return 				Die gefilterte und sortierte Liste der Ankreuzkompetenzen.
+	 */
+	public List<ReportingAnkreuzkompetenz> ankreuzkompetenzenImAbschnittFuerASV(final boolean nurAktive) {
+		return ankreuzkompetenzenImAbschnitt(nurAktive).stream()
+				.filter(ReportingAnkreuzkompetenz::istASV)
+				.toList();
 	}
 
 
