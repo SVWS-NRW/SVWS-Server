@@ -138,6 +138,7 @@ public final class SchuelerStatistikService {
 		daten.geburtsdatum = dtoSchueler.Geburtsdatum;
 		daten.wohnortID = dtoSchueler.Ort_ID;
 		daten.staatsangehoerigkeitID = (dtoSchueler.StaatKrz == null) ? null : dtoSchueler.StaatKrz.historie().getLast().iso3;
+		daten.staatsangehoerigkeit2ID = (dtoSchueler.StaatKrz2 == null) ? null : dtoSchueler.StaatKrz2.historie().getLast().iso3;
 		daten.religionID = dtoSchueler.Religion_ID;
 		daten.status = dtoSchueler.idStatus;
 		daten.religionabmeldung = dtoSchueler.Religionsabmeldung;

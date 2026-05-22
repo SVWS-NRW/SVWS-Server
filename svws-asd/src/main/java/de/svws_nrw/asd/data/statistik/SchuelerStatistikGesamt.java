@@ -38,6 +38,10 @@ public class SchuelerStatistikGesamt {
 	@Schema(description = "die ID der Staatsangehörigkeit", example = "000")
 	public String staatsangehoerigkeitID;
 
+	/** Die ID einer zweiten Staatsangehörigkeit des Schülerdatensatzes. */
+	@Schema(description = "ggf. die ID einer zweiten Staatsangehörigkeit", example = "121")
+	public String staatsangehoerigkeit2ID;
+
 	/** Die ID der Religion des Schülerdatensatzes. */
 	@Schema(description = "ggf. die ID der Religion", example = "4711")
 	public Long religionID;

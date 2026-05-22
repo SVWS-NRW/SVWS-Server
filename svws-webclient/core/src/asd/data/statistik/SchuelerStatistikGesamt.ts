@@ -33,6 +33,11 @@ export class SchuelerStatistikGesamt extends JavaObject {
 	public staatsangehoerigkeitID: string | null = null;
 
 	/**
+	 * Die ID einer zweiten Staatsangehörigkeit des Schülerdatensatzes.
+	 */
+	public staatsangehoerigkeit2ID: string | null = null;
+
+	/**
 	 * Die ID der Religion des Schülerdatensatzes.
 	 */
 	public religionID: number | null = null;
@@ -182,6 +187,7 @@ export class SchuelerStatistikGesamt extends JavaObject {
 		result.geburtsdatum = (obj.geburtsdatum === undefined) ? null : obj.geburtsdatum === null ? null : obj.geburtsdatum;
 		result.wohnortID = (obj.wohnortID === undefined) ? null : obj.wohnortID === null ? null : obj.wohnortID;
 		result.staatsangehoerigkeitID = (obj.staatsangehoerigkeitID === undefined) ? null : obj.staatsangehoerigkeitID === null ? null : obj.staatsangehoerigkeitID;
+		result.staatsangehoerigkeit2ID = (obj.staatsangehoerigkeit2ID === undefined) ? null : obj.staatsangehoerigkeit2ID === null ? null : obj.staatsangehoerigkeit2ID;
 		result.religionID = (obj.religionID === undefined) ? null : obj.religionID === null ? null : obj.religionID;
 		if (obj.status === undefined)
 			throw new Error('invalid json format, missing attribute status');
@@ -226,6 +232,7 @@ export class SchuelerStatistikGesamt extends JavaObject {
 		result += '"geburtsdatum" : ' + ((obj.geburtsdatum === null) ? 'null' : JSON.stringify(obj.geburtsdatum)) + ',';
 		result += '"wohnortID" : ' + ((obj.wohnortID === null) ? 'null' : obj.wohnortID.toString()) + ',';
 		result += '"staatsangehoerigkeitID" : ' + ((obj.staatsangehoerigkeitID === null) ? 'null' : JSON.stringify(obj.staatsangehoerigkeitID)) + ',';
+		result += '"staatsangehoerigkeit2ID" : ' + ((obj.staatsangehoerigkeit2ID === null) ? 'null' : JSON.stringify(obj.staatsangehoerigkeit2ID)) + ',';
 		result += '"religionID" : ' + ((obj.religionID === null) ? 'null' : obj.religionID.toString()) + ',';
 		result += '"status" : ' + obj.status.toString() + ',';
 		result += '"religionabmeldung" : ' + ((obj.religionabmeldung === null) ? 'null' : JSON.stringify(obj.religionabmeldung)) + ',';
@@ -278,6 +285,9 @@ export class SchuelerStatistikGesamt extends JavaObject {
 		}
 		if (obj.staatsangehoerigkeitID !== undefined) {
 			result += '"staatsangehoerigkeitID" : ' + ((obj.staatsangehoerigkeitID === null) ? 'null' : JSON.stringify(obj.staatsangehoerigkeitID)) + ',';
+		}
+		if (obj.staatsangehoerigkeit2ID !== undefined) {
+			result += '"staatsangehoerigkeit2ID" : ' + ((obj.staatsangehoerigkeit2ID === null) ? 'null' : JSON.stringify(obj.staatsangehoerigkeit2ID)) + ',';
 		}
 		if (obj.religionID !== undefined) {
 			result += '"religionID" : ' + ((obj.religionID === null) ? 'null' : obj.religionID.toString()) + ',';
