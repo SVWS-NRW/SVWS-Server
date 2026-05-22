@@ -57,7 +57,7 @@ test('Admins können entsprechende Bereiche im DEV Mode einsehen', async ({ page
 
 	await expect(page.getByRole('button', { name: 'Schulbesuch' })).toBeVisible();
 	await page.getByRole('button', { name: 'Schulbesuch' }).click();
-	await expect(page.getByText('Vor der Aufnahme besucht')).toBeVisible();
+	await expect(page.getByText('Im Schuljahr vor der Aufname')).toBeVisible();
 	await page.waitForTimeout(300);
 
 

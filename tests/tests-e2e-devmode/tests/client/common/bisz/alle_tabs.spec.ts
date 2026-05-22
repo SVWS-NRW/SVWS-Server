@@ -55,7 +55,7 @@ test('Nicht privilegierte Nutzer können nur entsprechende Bereiche im DEV Mode 
 
 	await expect(page.getByRole('button', { name: 'Schulbesuch' })).toBeVisible();
 	await page.getByRole('button', { name: 'Schulbesuch' }).click();
-	await expect(page.getByText('Vor der Aufnahme besucht')).toBeVisible();
+	await expect(page.getByText('Im Schuljahr vor der Aufname')).toBeVisible();
 	await page.waitForTimeout(300);
 
 
