@@ -1,7 +1,17 @@
 <template>
 	<Teleport to=".svws-ui-header--actions" defer>
+		<wiedervorlage-modal type="lehrkraft" mode="create"
+			:person-id="lehrerListeManager().daten().id"
+			:person-name="`${lehrerListeManager().daten().vorname} ${lehrerListeManager().daten().nachname}`">
+			<template #default="{openModal}">
+				<svws-ui-button @click="openModal" type="secondary">
+					<span class="icon i-ri-alarm-line" aria-hidden="true" /> Wiedervorlage anlegen
+				</svws-ui-button>
+			</template>
+		</wiedervorlage-modal>
 		<svws-ui-modal-hilfe> <hilfe-lehrer-individualdaten /> </svws-ui-modal-hilfe>
 	</Teleport>
+
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
@@ -72,6 +82,7 @@
 	import { staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort, orte_filter, orte_sort, ortsteilSort } from "~/utils/helfer";
 	import { LehrerIndividualdatenModelProxy } from "./LehrerIndividualdatenModelProxy";
 	import { useSchuleState } from "@ui";
+	import WiedervorlageModal from "~/components/wiedervorlage/WiedervorlageModal.vue";
 
 	const props = defineProps<LehrerIndividualdatenProps>();
 	const schuleState = useSchuleState();

@@ -1,7 +1,6 @@
 <template>
 	<Teleport to=".svws-ui-header--actions" defer>
-		<wiedervorlage-modal v-if="!readonly"
-			type="schueler" mode="create"
+		<wiedervorlage-modal type="schueler" mode="create"
 			:person-id="schuelerListeManager().daten().id"
 			:person-name="`${schuelerListeManager().daten().vorname} ${schuelerListeManager().daten().nachname}`">
 			<template #default="{openModal}">
