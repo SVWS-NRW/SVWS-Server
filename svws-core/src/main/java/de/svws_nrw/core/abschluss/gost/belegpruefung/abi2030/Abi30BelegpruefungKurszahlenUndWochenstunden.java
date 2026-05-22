@@ -55,6 +55,9 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 	/** Die Gesamtzahl der Grundkurse der Qualifikationsphase (auch Zusatzkurse und ggf. Projektkurse, die zu keiner besonderen Lernleistung zählen). */
 	private int blockIAnzahlGrundkurse;
 
+	/** Die Gesamtzahl der Vertiefungskurse in der Qualifikationsphase. */
+	private int blockIAnzahlVertiefungskurse;
+
 	/** Die Anzahl der belegten LK-Fächer (sollten 2 sein). */
 	private int anzahlLKFaecher;
 
@@ -96,6 +99,7 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 		kurszahlenEinfuehrungsphase = new ArrayMap<>(GostKursart.values());
 		kurszahlenQualifikationsphase = new ArrayMap<>(GostKursart.values());
 		blockIAnzahlGrundkurse = 0;
+		blockIAnzahlVertiefungskurse = 0;
 		anzahlLKFaecher = 0;
 		blockIAnzahlLeistungskurse = 0;
 		blockIAnzahlAnrechenbar = 0;
@@ -243,6 +247,7 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 					final Integer kurszahlAnrechenbar = kurszahlenAnrechenbar.get(halbjahr);
 					kurszahlenAnrechenbar.put(halbjahr, (kurszahlAnrechenbar == null) ? 1 : (kurszahlAnrechenbar + 1));
 					blockIAnzahlAnrechenbar++;
+					blockIAnzahlVertiefungskurse++;
 				}
 
 				// Zähle die Wochenstunden
@@ -418,8 +423,11 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 	 * Ist die Anzahl der belegten Kurse für Block I des Abiturs (Qualifikationsphase) gleich 40?
 	 */
 	private void pruefeKursanzahl() {
-		if (blockIAnzahlGrundkurse + blockIAnzahlLeistungskurse != 40) {
+		if (blockIAnzahlVertiefungskurse + blockIAnzahlGrundkurse + blockIAnzahlLeistungskurse != 40) {
 			addFehler(GostBelegungsfehler.GOST30_ANZ_13);
+		}
+		if (blockIAnzahlVertiefungskurse > 0) {
+			addFehler(GostBelegungsfehler.GOST30_ANZ_24_INFO);
 		}
 	}
 
@@ -540,6 +548,16 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 			return 0;
 		}
 		return kurszahl;
+	}
+
+
+	/**
+	 * Gibt die Anzahl der Vertiefungskurse für Block I zurück.
+	 *
+	 * @return die Anzahl der Vertiefungskurse
+	 */
+	public int getBlockIAnzahlVertiefungskurse() {
+		return blockIAnzahlVertiefungskurse;
 	}
 
 

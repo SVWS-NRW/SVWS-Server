@@ -70,7 +70,7 @@
 		<template #dataFooter>
 			<div role="row" class="svws-ui-tr">
 				<div role="rowheader" class="svws-ui-td font-bold svws-align-right col-span-5 svws-divider gap-1">
-					<span>Anrechenbare Kurse</span>
+					<span>Kurse</span>
 					<svws-ui-tooltip>
 						<span class="icon i-ri-question-line -m-0.5 mx-0.5" />
 						<template #content>

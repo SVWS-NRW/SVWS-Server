@@ -54,6 +54,11 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 	private blockIAnzahlGrundkurse: number = 0;
 
 	/**
+	 * Die Gesamtzahl der Vertiefungskurse in der Qualifikationsphase.
+	 */
+	private blockIAnzahlVertiefungskurse: number = 0;
+
+	/**
 	 * Die Anzahl der belegten LK-Fächer (sollten 2 sein).
 	 */
 	private anzahlLKFaecher: number = 0;
@@ -103,6 +108,7 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 		this.kurszahlenEinfuehrungsphase = new ArrayMap(GostKursart.values());
 		this.kurszahlenQualifikationsphase = new ArrayMap(GostKursart.values());
 		this.blockIAnzahlGrundkurse = 0;
+		this.blockIAnzahlVertiefungskurse = 0;
 		this.anzahlLKFaecher = 0;
 		this.blockIAnzahlLeistungskurse = 0;
 		this.blockIAnzahlAnrechenbar = 0;
@@ -224,6 +230,7 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 					const kurszahlAnrechenbar: number | null = this.kurszahlenAnrechenbar.get(halbjahr);
 					this.kurszahlenAnrechenbar.put(halbjahr, (kurszahlAnrechenbar === null) ? 1 : (kurszahlAnrechenbar + 1));
 					this.blockIAnzahlAnrechenbar++;
+					this.blockIAnzahlVertiefungskurse++;
 				}
 				let stunden: number = 0;
 				switch (kursart.kuerzel) {
@@ -388,8 +395,11 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 	 * Ist die Anzahl der belegten Kurse für Block I des Abiturs (Qualifikationsphase) gleich 40?
 	 */
 	private pruefeKursanzahl(): void {
-		if (this.blockIAnzahlGrundkurse + this.blockIAnzahlLeistungskurse !== 40) {
+		if (this.blockIAnzahlVertiefungskurse + this.blockIAnzahlGrundkurse + this.blockIAnzahlLeistungskurse !== 40) {
 			this.addFehler(GostBelegungsfehler.GOST30_ANZ_13);
+		}
+		if (this.blockIAnzahlVertiefungskurse > 0) {
+			this.addFehler(GostBelegungsfehler.GOST30_ANZ_24_INFO);
 		}
 	}
 
@@ -504,6 +514,15 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 			return 0;
 		}
 		return kurszahl;
+	}
+
+	/**
+	 * Gibt die Anzahl der Vertiefungskurse für Block I zurück.
+	 *
+	 * @return die Anzahl der Vertiefungskurse
+	 */
+	public getBlockIAnzahlVertiefungskurse(): number {
+		return this.blockIAnzahlVertiefungskurse;
 	}
 
 	/**

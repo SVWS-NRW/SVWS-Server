@@ -151,6 +151,11 @@ public enum GostBelegungsfehler {
 			"In der Qualifikationsphase sind, wenn Musik nicht als Abiturfach gewählt wird, maximal 5 Kurse Musik-Kurse (Musik, vokal- oder instrumentalpraktischer Grundkurs) anrechenbar.",
 			null),
 
+	/** BelegungsfehlerArt ANZ_24_INFO */
+	GOST30_ANZ_24_INFO("ANZ_24_INFO", GostBelegungsfehlerArt.HINWEIS,
+			"In der Qualifikationsphase gewählte Vertiefungskurse zählen zu den 40 zu belegenden Kursen, können aber nicht in die Gesamtqualifikation eingebracht werden.",
+			null),
+
 	/** BelegungsfehlerArt BIL_4_INFO */
 	GOST30_BIL_4_INFO("BIL_4_INFO", GostBelegungsfehlerArt.HINWEIS,
 			"Programmfehler: Dieser Hinweis ist für eine Gesamtbelegprüfung der Sek II nicht vorgesehen!",
