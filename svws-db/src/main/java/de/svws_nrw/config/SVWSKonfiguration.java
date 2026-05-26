@@ -7,23 +7,26 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.security.KeyPair;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-
-import java.util.ArrayList;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 import de.svws_nrw.base.crypto.KeyStoreUtils;
+import de.svws_nrw.base.crypto.RSA;
+import de.svws_nrw.core.data.TLSCertificateInfo;
 import de.svws_nrw.core.data.db.DBSchemaListeEintrag;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
@@ -966,6 +969,15 @@ public final class SVWSKonfiguration {
 	}
 
 
+	/**
+	 * Gibt die Datei für den Keystore an, der für die TLS-Verbindung des Servers genutzt wird.
+	 *
+	 * @return die Datei mit dem Keystore
+	 */
+	public String getTLSKeystoreFile() {
+		return this.getTLSKeystorePath() + "/keystore";
+	}
+
 
 	/** Ein Default-Kennwort, welches für den keystore genutzt wird, falls in der Konfigurationsdatei keines angegeben ist. */
 	public static final String default_tls_keystore_password = "svwskeystore";
@@ -990,7 +1002,7 @@ public final class SVWSKonfiguration {
 	 */
 	public static KeyStore getKeystore() throws KeyStoreException {
 		final SVWSKonfiguration config = SVWSKonfiguration.get();
-		return KeyStoreUtils.getKeystore(config.getTLSKeystorePath() + "/keystore", config.getTLSKeystorePassword());
+		return KeyStoreUtils.getKeystore(config.getTLSKeystoreFile(), config.getTLSKeystorePassword());
 	}
 
 
@@ -1085,12 +1097,36 @@ public final class SVWSKonfiguration {
 		try {
 			final SVWSKonfiguration config = SVWSKonfiguration.get();
 			final KeyStore ks = getKeystore();
-			KeyStoreUtils.addPrivateKeyCertificateBase64(ks, config.getTLSKeystorePath() + "/keystore", config.getTLSKeystorePassword(), alias, key, cert);
+			KeyStoreUtils.addPrivateKeyCertificateBase64(ks, config.getTLSKeystoreFile(), config.getTLSKeystorePassword(), alias, key, cert);
 			config.setTLSKeyAlias(alias);
 			SVWSKonfiguration.write();
 		} catch (final KeyStoreException kse) {
 			throw new SVWSKonfigurationException(
 					"Der private Schlüssel und das Zertifikat konnten nicht zum Java-Key-Store des SVWS-Servers hinzugefügt werden.", kse);
+		}
+	}
+
+
+	/**
+	 * Erstellt einen neuen privaten Schlüssel und ein dazugehöriges selbst-signiertes Zertifikat im keystore des SVWS-Servers unter dem angegebenen Alias.
+	 *
+	 * @param alias      der Alias
+	 * @param certinfo   das Informationen zum Erstellen des Zertifikats
+	 *
+	 * @throws SVWSKonfigurationException im Fehlerfall
+	 */
+	public static void createPrivateKeyCertificate(final String alias, final TLSCertificateInfo certinfo) throws SVWSKonfigurationException {
+		try {
+			final KeyPair keypair = RSA.createKey();
+			final X509Certificate cert = RSA.createSelfSignedCert(keypair, certinfo.dn, certinfo.sans);
+			final SVWSKonfiguration config = SVWSKonfiguration.get();
+			final KeyStore ks = getKeystore();
+			KeyStoreUtils.addPrivateKeyCertificate(ks, config.getTLSKeystoreFile(), config.getTLSKeystorePassword(), alias, keypair.getPrivate(), cert);
+			config.setTLSKeyAlias(alias);
+			SVWSKonfiguration.write();
+		} catch (final Exception e) {
+			throw new SVWSKonfigurationException(
+					"Der private Schlüssel und das Zertifikat konnten nicht erstellt und zum Java-Key-Store des SVWS-Servers hinzugefügt werden.", e);
 		}
 	}
 

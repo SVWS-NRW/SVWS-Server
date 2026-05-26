@@ -1,5 +1,6 @@
 package de.svws_nrw.base.crypto;
 
+import java.math.BigInteger;
 import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyPair;
@@ -7,12 +8,32 @@ import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
+import java.util.List;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
+
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x509.Extension;
+import org.bouncycastle.asn1.x509.GeneralName;
+import org.bouncycastle.asn1.x509.GeneralNames;
+import org.bouncycastle.cert.CertIOException;
+import org.bouncycastle.cert.X509v3CertificateBuilder;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
+import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
+import org.bouncycastle.operator.ContentSigner;
+import org.bouncycastle.operator.OperatorCreationException;
+import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
+
 
 /**
  * Diese Klasse stellt Methoden zum Erzeugen von RSA-Schlüsselpaaren
@@ -182,6 +203,55 @@ public class RSA {
 			throw new RSAException("Fehler beim Erstellen eines zufälligen RSA-Schlüssels.", e);
 		}
 	}
+
+
+	/**
+	 * Erstellt mit dem übergebenen Schlüsselpaar signiertes X509-Zertifikat. Dabei wird SHA256WithRSA verwendet
+	 *
+	 * @param keypair   das Schlüsselpaar zum Signieren
+	 * @param dn        der Disthinguished Name (DN)
+	 * @param sans      die Subject Alternative Name (SAN)-Einträge
+	 *
+	 * @return das Zertifikat
+	 *
+	 * @throws RSAException   wenn ein Fehler beim Signieren auftritt
+	 */
+	public static X509Certificate createSelfSignedCert(final KeyPair keypair, final String dn, final List<String> sans) throws RSAException {
+		if ((keypair == null) || (dn == null) || (sans == null)) {
+			throw new RSAException("Fehler beim Erzeugen des Zertifikats, da einige benötigte Angaben fehlen.");
+		}
+		try {
+			// Bereite die Metadaten für das Zertifikat vor
+			final X500Name issuer = new X500Name(dn);
+			final BigInteger serial = new BigInteger(64, new SecureRandom());
+			final Date notBefore = new Date();
+			final Date notAfter = Date.from(Instant.now().plus(365, java.time.temporal.ChronoUnit.DAYS));
+			final X509v3CertificateBuilder certBuilder = new JcaX509v3CertificateBuilder(issuer, serial, notBefore, notAfter, issuer, keypair.getPublic());
+
+			// Ergänze die Subject Alternative Names (SAN)
+			if (!dn.isEmpty()) {
+				final List<GeneralName> gnList = new ArrayList<>();
+				for (final String san : sans) {
+					if (san.toUpperCase().startsWith("IP:")) {
+						gnList.add(new GeneralName(GeneralName.iPAddress, san.substring(3).trim()));
+					} else if (san.toUpperCase().startsWith("DNS:")) {
+						gnList.add(new GeneralName(GeneralName.dNSName, san.substring(4).trim()));
+					} else {
+						// Fallback: Falls kein Präfix da ist, als DNS behandeln
+						gnList.add(new GeneralName(GeneralName.dNSName, san.trim()));
+					}
+				}
+				certBuilder.addExtension(Extension.subjectAlternativeName, false, new GeneralNames(gnList.toArray(new GeneralName[0])));
+			}
+
+			// Signiere das Zertifikat mit SHA256
+			final ContentSigner signer = new JcaContentSignerBuilder("SHA256WithRSA").build(keypair.getPrivate());
+			return new JcaX509CertificateConverter().getCertificate(certBuilder.build(signer));
+		} catch (CertificateException | OperatorCreationException | CertIOException e) {
+			throw new RSAException("Fehler beim Erzeugen des Zertifikats", e);
+		}
+	}
+
 
 
 	/**

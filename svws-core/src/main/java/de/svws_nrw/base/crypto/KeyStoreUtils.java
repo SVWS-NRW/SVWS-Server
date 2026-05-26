@@ -245,6 +245,48 @@ public final class KeyStoreUtils {
 
 
 	/**
+	 * Fügt den privaten Schlüssel und das Zertifikat im Keystore unter dem angegebenen Alias hinzu.
+	 * Sind unter dem Alias schon Schlüssel und/oder Zertifikat vorhanden, so werden sie ersetzt.
+	 * Anschließend wird der Keystore unter dem angegebenen Pfad gesichert.
+	 *
+	 * @param keystore   der Keystore
+	 * @param location   der Pfad zu dem Keystore
+	 * @param password   das Kennwort für den Zugriff auf den Keystore
+	 * @param alias      der Alias
+	 * @param privateKey der private Schlüssel
+	 * @param cert       das Zertifikat
+	 *
+	 * @throws KeyStoreException die Exception tritt auf, wenn der Schlüssel und das Zertifikat nicht zum Keystore hinzugefügt werden können
+	 */
+	public static void addPrivateKeyCertificate(final KeyStore keystore, final String location, final String password, final String alias, final PrivateKey privateKey, final X509Certificate cert) throws KeyStoreException {
+		if ((alias == null) || alias.isBlank()) {
+			throw new KeyStoreException("Für das Hinzufügen muss ein Alias angegeben werden.");
+		}
+		if (privateKey == null) {
+			throw new KeyStoreException("Für das Hinzufügen muss ein privater Schlüssel angegeben werden.");
+		}
+		if (cert == null) {
+			throw new KeyStoreException("Für das Hinzufügen muss ein Zertifikat angegeben werden.");
+		}
+
+		try {
+			// Erstelle die Zertifikatskette (hier bestehend aus dem selbst-signierten Zertifikat)
+			final Certificate[] chain = new Certificate[] { cert };
+
+			// Setze den Key-Eintrag im Keystore geschützt mit dem Keystore-Passwort
+			keystore.setKeyEntry(alias, privateKey, password.toCharArray(), chain);
+
+			// Schreibe den aktualisierten Keystore zurück in das Dateisystem
+			try (FileOutputStream fos = new FileOutputStream(location)) {
+				keystore.store(fos, password.toCharArray());
+			}
+		} catch (NoSuchAlgorithmException | CertificateException | IOException | KeyStoreException e) {
+			throw new KeyStoreException("Fehler beim Hinzufügen des privaten Schlüssels und Zertifikats zum Keystore.", e);
+		}
+	}
+
+
+	/**
 	 * Fügt das angegebene Zertifikat zu dem Keystore unter dem angegebenen Alias hinzu.
 	 *
 	 * @param keystore   der Keystore

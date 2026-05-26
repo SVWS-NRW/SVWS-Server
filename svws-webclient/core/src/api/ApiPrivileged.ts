@@ -10,6 +10,7 @@ import { SchuleInfo } from '../core/data/schule/SchuleInfo';
 import { SchulenKatalogEintrag } from '../core/data/schule/SchulenKatalogEintrag';
 import { SchuleStammdaten } from '../asd/data/schule/SchuleStammdaten';
 import { SimpleOperationResponse } from '../core/data/SimpleOperationResponse';
+import { TLSCertificateInfo } from '../core/data/TLSCertificateInfo';
 
 export class ApiPrivileged extends BaseApi {
 
@@ -80,6 +81,28 @@ export class ApiPrivileged extends BaseApi {
 		const path = "/api/privileged/config/privatekey_cert_base64/{alias}"
 			.replace(/{alias\s*(:[^{}]+({[^{}]+})*)?}/g, alias);
 		await super.postMultipart(path, data);
+		return;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode createConfigPrivateKeySelfSignedCertificate für den Zugriff auf die URL https://{hostname}/api/privileged/config/privatekey_cert_base64/{alias}/create
+	 *
+	 * Erstellt einen neuen Private-Key und ein dazugehöriges selbst-signiertes Zertifikat für die TLS-Konfiguration.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Das Erzeugen des privaten Schlüssels und des Zertifikats war erfolgreich.
+	 *   Code 400: Es ist ein Fehler beim Erzeugen aufgetreten.
+	 *   Code 403: Der Benutzer hat keine Berechtigung, um die TLS-Zertifikatsinformationen zu setzen.
+	 *
+	 * @param {TLSCertificateInfo} data - der Request-Body für die HTTP-Methode
+	 * @param {string} alias - der Pfad-Parameter alias
+	 */
+	public async createConfigPrivateKeySelfSignedCertificate(data : TLSCertificateInfo, alias : string) : Promise<void> {
+		const path = "/api/privileged/config/privatekey_cert_base64/{alias}/create"
+			.replace(/{alias\s*(:[^{}]+({[^{}]+})*)?}/g, alias);
+		const body : string = TLSCertificateInfo.transpilerToJSON(data);
+		await super.postJSON(path, body);
 		return;
 	}
 

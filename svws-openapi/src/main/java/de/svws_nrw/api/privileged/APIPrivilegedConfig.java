@@ -3,6 +3,7 @@ package de.svws_nrw.api.privileged;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import de.svws_nrw.config.SVWSKonfiguration;
+import de.svws_nrw.core.data.TLSCertificateInfo;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
@@ -219,6 +220,35 @@ public class APIPrivilegedConfig {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithoutTransaction(conn -> {
 			SVWSKonfiguration.setPrivateKeyCertificateBase64(alias, multipart.key, multipart.certificate);
+			return Response.status(Status.NO_CONTENT).build();
+		}, request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
+
+
+	/**
+	 * Erstellt einen neuen Private-Key und ein dazugehöriges selbst-signiertes Zertifikat für die TLS-Konfiguration
+	 * des SVWS-Server.
+	 *
+	 * @param alias      der Keystore-Alias unter welcher der Schlüssel und das Zertifikat abgelegt werden
+	 * @param certinfo   die Informationen für das Zertifikat, der Distinguished Name (DN) und die SAN-Einträge
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Rückmeldung, ob die Operation erfolgreich war
+	 */
+	@POST
+	@Path("/config/privatekey_cert_base64/{alias}/create")
+	@Operation(summary = "Erstellt einen neuen Private-Key und ein dazugehöriges selbst-signiertes Zertifikat für die TLS-Konfiguration.",
+			description = "Erstellt einen neuen Private-Key und ein dazugehöriges selbst-signiertes Zertifikat für die TLS-Konfiguration.")
+	@ApiResponse(responseCode = "204", description = "Das Erzeugen des privaten Schlüssels und des Zertifikats war erfolgreich.")
+	@ApiResponse(responseCode = "400", description = "Es ist ein Fehler beim Erzeugen aufgetreten.")
+	@ApiResponse(responseCode = "403", description = "Der Benutzer hat keine Berechtigung, um die TLS-Zertifikatsinformationen zu setzen.")
+	public Response createConfigPrivateKeySelfSignedCertificate(@PathParam("alias") final String alias,
+			@RequestBody(description = "Der Distinguished Name (DN) und die SAN-Einträge für das Zertifikat", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(
+							implementation = TLSCertificateInfo.class))) final TLSCertificateInfo certinfo,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithoutTransaction(conn -> {
+			SVWSKonfiguration.createPrivateKeyCertificate(alias, certinfo);
 			return Response.status(Status.NO_CONTENT).build();
 		}, request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
