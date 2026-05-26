@@ -317,7 +317,9 @@ class AuthStateImpl implements AuthState {
 	 */
 	public async logout(): Promise<void> {
 		this.stopTimer();
-		await this.api.logout();
+		if (this._authenticated.value) {
+			await this.api.logout();
+		}
 		this._authenticated.value = false;
 		this._pending2FA.value = false;
 		this._pendingPasswordChange.value = false;
