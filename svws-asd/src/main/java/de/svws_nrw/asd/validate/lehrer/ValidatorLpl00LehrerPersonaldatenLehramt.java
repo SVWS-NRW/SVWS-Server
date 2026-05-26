@@ -5,8 +5,10 @@ import java.util.function.Supplier;
 
 import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
 import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.validate.DateManager;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -26,15 +28,18 @@ public final class ValidatorLpl00LehrerPersonaldatenLehramt extends Validator {
 	 *
 	 * @param lehraemter   			die Lehrämter, die geprüft werden sollen
 	 * @param lehrerId   			die LehrerId
+	 * @param geburtsdatum
 	 * @param kontext               der Kontext des Validators
 	 */
 	public ValidatorLpl00LehrerPersonaldatenLehramt(
 			final @NotNull Supplier<List<LehrerLehramtEintrag>> lehraemter,
 			final @NotNull Supplier<Long> lehrerId,
-			final @NotNull ValidatorKontext kontext) {
+			@NotNull final Supplier<@AllowNull DateManager> geburtsdatum, final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.lehraemter = lehraemter;
 		this.lehrerId = lehrerId;
+
+		_validatoren.add(new ValidatorLpl01LehrerPersonaldatenLehramt(lehraemter, lehrerId, geburtsdatum, kontext));
 	}
 
 	@Override

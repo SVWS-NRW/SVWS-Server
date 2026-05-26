@@ -20,7 +20,7 @@ public final class ValidatorSsn10SchuelerStammdatenNachname extends Validator {
 	 * @param nachname der Supplier für den Nachnamen
 	 * @param kontext  der Validierungskontext
 	 */
-	public ValidatorSsn10SchuelerStammdatenNachname(@NotNull final Supplier<String> nachname, @NotNull final ValidatorKontext kontext) {
+	public ValidatorSsn10SchuelerStammdatenNachname(@NotNull final Supplier<@NotNull String> nachname, @NotNull final ValidatorKontext kontext) {
 		super(kontext);
 		this._nachname = nachname;
 	}
