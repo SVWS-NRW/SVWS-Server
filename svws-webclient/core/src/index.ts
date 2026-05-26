@@ -349,6 +349,7 @@ export { ValidatorLplk17LehrerPersonaldatenLehramtKombination } from './asd/vali
 export { ValidatorLplk18LehrerPersonaldatenLehramtKombination } from './asd/validate/lehrer/ValidatorLplk18LehrerPersonaldatenLehramtKombination';
 export { ValidatorLplk19LehrerPersonaldatenLehramtKombination } from './asd/validate/lehrer/ValidatorLplk19LehrerPersonaldatenLehramtKombination';
 export { ValidatorLplk20LehrerPersonaldatenLehramtKombination } from './asd/validate/lehrer/ValidatorLplk20LehrerPersonaldatenLehramtKombination';
+export { ValidatorLplkLehrerPersonaldatenLehramtKombination } from './asd/validate/lehrer/ValidatorLplkLehrerPersonaldatenLehramtKombination';
 export { ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten } from './asd/validate/lehrer/ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten';
 export { ValidatorLppa00LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen } from './asd/validate/lehrer/ValidatorLppa00LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen';
 export { ValidatorLppa01LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen } from './asd/validate/lehrer/ValidatorLppa01LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen';

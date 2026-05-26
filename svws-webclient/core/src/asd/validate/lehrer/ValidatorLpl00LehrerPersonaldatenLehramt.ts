@@ -1,6 +1,8 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { LehrerLehramtEintrag } from '../../../asd/data/lehrer/LehrerLehramtEintrag';
+import { DateManager } from '../../../asd/validate/DateManager';
 import { Schulform } from '../../../asd/types/schule/Schulform';
+import { ValidatorLpl01LehrerPersonaldatenLehramt } from '../../../asd/validate/lehrer/ValidatorLpl01LehrerPersonaldatenLehramt';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
@@ -25,12 +27,14 @@ export class ValidatorLpl00LehrerPersonaldatenLehramt extends Validator {
 	 *
 	 * @param lehraemter   			die Lehrämter, die geprüft werden sollen
 	 * @param lehrerId   			die LehrerId
+	 * @param geburtsdatum
 	 * @param kontext               der Kontext des Validators
 	 */
-	public constructor(lehraemter: Supplier<List<LehrerLehramtEintrag>>, lehrerId: Supplier<number>, kontext: ValidatorKontext) {
+	public constructor(lehraemter: Supplier<List<LehrerLehramtEintrag>>, lehrerId: Supplier<number>, geburtsdatum: Supplier<DateManager | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this.lehraemter = lehraemter;
 		this.lehrerId = lehrerId;
+		this._validatoren.add(new ValidatorLpl01LehrerPersonaldatenLehramt(lehraemter, lehrerId, geburtsdatum, kontext));
 	}
 
 	protected pruefe(): boolean {
