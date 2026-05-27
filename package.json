@@ -19,8 +19,8 @@
 		"@types/node": "^25.0.2",
 		"@typescript-eslint/eslint-plugin": "^8.0.0-alpha.30",
 		"@typescript-eslint/parser": "^8.0.0-alpha.30",
-		"@vitejs/plugin-vue": "^6.0.0",
 		"@vitejs/plugin-basic-ssl": "^2.3.0",
+		"@vitejs/plugin-vue": "^6.0.0",
 		"@vitest/coverage-v8": "^4.0.1",
 		"@vue/test-utils": "^2.4.6",
 		"@vue/tsconfig": "^0.9.0",
@@ -36,17 +36,12 @@
 		"typescript-eslint": "^8.0.0-alpha.30",
 		"unplugin-auto-import": "^21.0.0",
 		"unplugin-vue-components": "^32.0.0",
-		"unplugin-vue-markdown": "^30.0.0",
+		"unplugin-vue-markdown": "^32.0.0",
 		"vite": "^8.0.0",
 		"vitest": "^4.0.1",
 		"vue-component-type-helpers": "^3.1.5",
 		"vue-tsc": "^3.1.5"
 	},
-	"overrides": {
-    "unplugin-vue-markdown": {
-      "vite": "$vite"
-    }
-  },
 	"peerDependencies": {
 		"vue": "^3.4.13"
 	},
@@ -62,6 +57,7 @@
 		"svws-webclient/laufbahnplanung",
 		"svws-webclient/ui",
 		"tests/tests-server-api",
+		"tests/tests-server-dav",
 		"tests/tests-server-enm"
 	]
 }
