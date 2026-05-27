@@ -1,0 +1,64 @@
+import type { RouteStateInterface } from "~/router/RouteData";
+import { RouteData } from "~/router/RouteData";
+import { ArrayList, Arrays, type List, type Logo } from "@core";
+import { api } from "~/router/Api";
+
+interface RouteStateSchuleLogoverwaltung extends RouteStateInterface {
+	logos: List<Logo>;
+}
+
+const defaultState = <RouteStateSchuleLogoverwaltung>{
+	logos: new ArrayList(),
+};
+
+export class RouteDataSchuleLogoverwaltung extends RouteData<RouteStateSchuleLogoverwaltung> {
+
+	public constructor() {
+		super(defaultState);
+	}
+
+	public async ladeDaten() {
+		const logos = await api.server.getLogos(api.schema);
+		this.setPatchedState({ logos });
+	}
+
+	get logos(): List<Logo> {
+		return this._state.value.logos;
+	}
+
+	patchLogo = async (data: Partial<Logo>): Promise<Logo> => {
+		const logo = await api.server.patchLogo(data, api.schema, data.id ?? -1);
+		for (const tmpLogo of this.logos) {
+			if (tmpLogo.id === logo.id) {
+				Object.assign(tmpLogo, logo);
+				break;
+			}
+		}
+		this.commit();
+		return logo;
+	};
+
+	addLogo = async (data: Logo): Promise<Logo> => {
+		const logo = await api.server.addLogo(data, api.schema);
+		const logos = this.logos;
+		logos.add(logo);
+		this.setPatchedState({ logos });
+		return logo;
+	};
+
+	deleteLogo = async (logosToDelete: Logo[]): Promise<void> => {
+		const logoIds = Arrays.asList(logosToDelete.map(logo => logo.id));
+		await api.server.deleteLogos(logoIds, api.schema);
+
+		const logos = this.logos;
+		for (const id of logoIds) {
+			const logo = (logos.toArray() as Logo[]).find(l => l.id === id);
+			if (logo !== undefined) {
+				logos.remove(logo);
+			}
+		}
+
+		this.setPatchedState({ logos });
+	};
+
+}

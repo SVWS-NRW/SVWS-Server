@@ -377,6 +377,13 @@
 	mask-position: center;
 }
 
+@utility i-ri-contract-left-line {
+	mask-image: url(@icons/Arrows/contract-left-line.svg);
+	-webkit-mask-image: url(@icons/Arrows/contract-left-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
 @utility i-ri-corner-right-up-line {
 	mask-image: url(@icons/Arrows/corner-right-up-line.svg);
 	-webkit-mask-image: url(@icons/Arrows/corner-right-up-line.svg);
@@ -496,13 +503,6 @@
 	mask-position: center;
 }
 
-@utility i-ri-contract-left-line {
-	mask-image: url(@icons/Arrows/contract-left-line.svg);
-	-webkit-mask-image: url(@icons/Arrows/contract-left-line.svg);
-	mask-repeat: no-repeat;
-	mask-position: center;
-}
-
 @utility i-ri-expand-up-down-fill {
 	mask-image: url(@icons/Arrows/expand-up-down-fill.svg);
 	-webkit-mask-image: url(@icons/Arrows/expand-up-down-fill.svg);
@@ -548,6 +548,13 @@
 @utility i-ri-file-damage-line {
 	mask-image: url(@icons/Document/file-damage-line.svg);
 	-webkit-mask-image: url(@icons/Document/file-damage-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-file-unknow-line {
+	mask-image: url(@icons/Document/file-unknow-line.svg);
+	-webkit-mask-image: url(@icons/Document/file-unknow-line.svg);
 	mask-repeat: no-repeat;
 	mask-position: center;
 }

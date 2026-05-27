@@ -80,6 +80,7 @@ export { default as SvwsUiSubNav } from "./ui/nav/SvwsUiSubNav.vue";
 export { default as SvwsUiTabBar } from "./ui/nav/SvwsUiTabBar.vue";
 export { default as SvwsUiTabBarVertical } from "./ui/nav/SvwsUiTabBarVertical.vue";
 export { default as SvwsUiTable } from "./ui/layout/SvwsUiTable.vue";
+export { default as UiTableActions } from "./ui/controls/tablegrid/UiTableActions.vue";
 export { default as SvwsUiTextareaInput } from "./ui/controls/SvwsUiTextareaInput.vue";
 export { default as SvwsUiTextInput } from "./ui/controls/SvwsUiTextInput.vue";
 export { default as SvwsUiTodo } from "./ui/SvwsUiTodo.vue";

@@ -296,7 +296,7 @@
 
 .svws-ui-td {
 	@apply border-ui;
-	@apply flex items-start gap-1 overflow-hidden border-b leading-none;
+	@apply flex items-center gap-1 overflow-hidden border-b leading-none;
 	padding: 0.3rem 0.25rem;
 
 	&.svws-no-padding {
