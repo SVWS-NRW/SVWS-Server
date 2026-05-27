@@ -29,7 +29,7 @@ import jakarta.validation.constraints.NotNull;
  * CoreType: LehrerStammdaten
  */
 @DisplayName("Teste den Validator zu LehrerPersonalabschnittsdaten")
-class TestValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis {
+class TestValidatorLppr11LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis {
 
 	/** Stammdaten der Schule */
 	static final StatistikGesamt testdaten_001 =
@@ -72,8 +72,8 @@ class TestValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhael
 			final LehrerRechtsverhaeltnis rechtsverhaeltnis = LehrerRechtsverhaeltnis.P;
 			final Long idSchuljahresabschnitt = kontext.getSchuljahresabschnitt().id;
 
-			final ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis validator =
-					new ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
+			final ValidatorLppr11LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis validator =
+					new ValidatorLppr11LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
 							() -> idSchuljahresabschnitt,
 							() -> rechtsverhaeltnis,
 							() -> geburtsdatum,

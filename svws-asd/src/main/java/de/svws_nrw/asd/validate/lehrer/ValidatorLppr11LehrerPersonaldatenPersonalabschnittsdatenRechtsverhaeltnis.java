@@ -13,7 +13,7 @@ import jakarta.validation.constraints.NotNull;
  * Dieser Validator führt eine Statistikprüfung auf das Geburtsdatum im Kontext des Rechtsverhältnisses
  * der Abschnittsdaten eines Lehrers einer Schule aus.
  */
-public final class ValidatorLppr03LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis extends Validator {
+public final class ValidatorLppr11LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis extends Validator {
 
 	/** Das Geburtsdatum des Lehrers */
 	private final @NotNull Supplier<DateManager> _geburtsdatum;
@@ -32,7 +32,7 @@ public final class ValidatorLppr03LehrerPersonaldatenPersonalabschnittsdatenRech
 	 * @param geburtsdatum             das Geburtsdatum des Lehrers
 	 * @param kontext                  der Kontext des Validators
 	 */
-	public ValidatorLppr03LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
+	public ValidatorLppr11LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
 			final @NotNull Supplier<Long> idSchuljahresabschnitt,
 			final @NotNull Supplier<LehrerRechtsverhaeltnis> rechtsverhaeltnisNotNull,
 			final @NotNull Supplier<DateManager> geburtsdatum,
@@ -53,18 +53,17 @@ public final class ValidatorLppr03LehrerPersonaldatenPersonalabschnittsdatenRech
 		final int schuljahr = schuljahresabschnitt.schuljahr;
 
 		// Prüfe das Geburtsdatum bzw. das Alter bei den folgenden Rechtsverhältnissen...
-		if (_rechtsverhaeltnis.get().equals(LehrerRechtsverhaeltnis.W)) {
-			// Beamtet auf Widerruf
-			final int minJahr = schuljahr - 50; // das erste akzeptierte Geburtsjahr: vor 50 Jahren
-			final int maxJahr = schuljahr - 18; // das letzte akzeptierte Geburtsjahr: vor 18 Jahren
+		if (_rechtsverhaeltnis.get().equals(LehrerRechtsverhaeltnis.P)) {
+			// Beamtet auf Probe
+			final int minJahr = schuljahr - 55; // das erste akzeptierte Geburtsjahr: vor 55 Jahren
+			final int maxJahr = schuljahr - 20; // das letzte akzeptierte Geburtsjahr: vor 20 Jahren
 
 			if (!_geburtsdatum.get().istInJahren(minJahr, maxJahr)) {
-				addFehler(3, "Der Wert für das Geburtsjahr sollte bei Lehramtsanwärtern/-innen (Rechtsverhältnis = W)"
+				addFehler(2, "Der Wert für das Geburtsjahr sollte bei Beamten/-innen auf Probe (Rechtsverhältnis = P)"
 						+ " zwischen " + minJahr + " und " + maxJahr + " liegen. Bitte prüfen!");
 			}
 			return false;
 		}
 		return true;
 	}
-
 }

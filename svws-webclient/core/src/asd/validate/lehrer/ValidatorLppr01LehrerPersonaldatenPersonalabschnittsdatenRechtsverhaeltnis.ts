@@ -1,57 +1,45 @@
-import { JavaObject } from '../../../java/lang/JavaObject';
+import { ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis } from '../../../asd/validate/lehrer/ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis';
+import { ValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis } from '../../../asd/validate/lehrer/ValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis';
 import { DateManager } from '../../../asd/validate/DateManager';
+import { ValidatorLppr11LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis } from '../../../asd/validate/lehrer/ValidatorLppr11LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis';
 import type { Supplier } from '../../../java/util/function/Supplier';
+import { ValidatorLppr12LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis } from '../../../asd/validate/lehrer/ValidatorLppr12LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis';
 import { Class } from '../../../java/lang/Class';
-import { LehrerRechtsverhaeltnis } from '../../../asd/types/lehrer/LehrerRechtsverhaeltnis';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
-import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
+import { LehrerRechtsverhaeltnis } from '../../../asd/types/lehrer/LehrerRechtsverhaeltnis';
 import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis extends Validator {
 
 	/**
-	 * Das Geburtsdatum des Lehrers
-	 */
-	private readonly _geburtsdatum: Supplier<DateManager>;
-
-	/**
-	 * Die ID des Schuljahresabschnittes
-	 */
-	private readonly _idSchuljahresabschnitt: Supplier<number>;
-
-	/**
 	 * Das Rechtsverhältnis
 	 */
-	private readonly _rechtsverhaeltnis: Supplier<LehrerRechtsverhaeltnis>;
+	private readonly _idRechtsverhaeltnis: Supplier<number | null>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
-	 * @param rechtsverhaeltnisNotNull        das Rechtsverhältnis
+	 * @param idRechtsverhaeltnis      die ID des Rechtsverhältnis
 	 * @param geburtsdatum             das Geburtsdatum des Lehrers
 	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(idSchuljahresabschnitt: Supplier<number>, rechtsverhaeltnisNotNull: Supplier<LehrerRechtsverhaeltnis>, geburtsdatum: Supplier<DateManager>, kontext: ValidatorKontext) {
+	public constructor(idSchuljahresabschnitt: Supplier<number>, idRechtsverhaeltnis: Supplier<number | null>, geburtsdatum: Supplier<DateManager>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
-		this._rechtsverhaeltnis = rechtsverhaeltnisNotNull;
-		this._geburtsdatum = geburtsdatum;
+		this._idRechtsverhaeltnis = idRechtsverhaeltnis;
+		const rechtsverhaeltnisNotNull: Supplier<LehrerRechtsverhaeltnis> = { get: () => LehrerRechtsverhaeltnis.data().getWertByID(this.getNotNullSupplierLong(idRechtsverhaeltnis).get()) };
+		this._validatoren.add(new ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
+		this._validatoren.add(new ValidatorLppr11LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
+		this._validatoren.add(new ValidatorLppr12LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
+		this._validatoren.add(new ValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
 	}
 
 	protected pruefe(): boolean {
-		const schuljahresabschnitt: Schuljahresabschnitt | null = this.kontext().getSchuljahresabschnittByID(this._idSchuljahresabschnitt.get());
-		if (schuljahresabschnitt === null) {
-			return false;
-		}
-		const schuljahr: number = schuljahresabschnitt.schuljahr;
-		if (JavaObject.equalsTranspiler(this._rechtsverhaeltnis.get(), (LehrerRechtsverhaeltnis.L))) {
-			const minJahr: number = schuljahr - ((schuljahr <= 2023) ? 65 : ((schuljahr <= 2030) ? 66 : 67));
-			const maxJahr: number = schuljahr - 27;
-			if (!this._geburtsdatum.get().istInJahren(minJahr, maxJahr)) {
-				this.addFehler(1, "Der Wert für das Geburtsjahr sollte bei Beamten/-innen auf Lebenszeit (Rechtsverhältnis = L) zwischen " + minJahr + " und " + maxJahr + " liegen. Bitte prüfen!");
-			}
+		const idRechtsverhaeltnis: number | null = this._idRechtsverhaeltnis.get();
+		const rv: LehrerRechtsverhaeltnis | null = (idRechtsverhaeltnis === null) ? null : LehrerRechtsverhaeltnis.data().getWertByIDOrNull(idRechtsverhaeltnis);
+		if (rv === null) {
+			this.addFehler(0, "Kein gültiger Wert im Feld 'rechtsverhaeltnis'.");
 			return false;
 		}
 		return true;

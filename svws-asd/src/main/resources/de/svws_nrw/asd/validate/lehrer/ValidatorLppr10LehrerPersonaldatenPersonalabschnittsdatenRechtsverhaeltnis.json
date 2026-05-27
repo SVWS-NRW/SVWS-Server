@@ -1,0 +1,23 @@
+{
+  "version" : 1,
+  "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis",
+  "historie" : [ {
+    "praefix" : "LPPR10",
+    "altes_kuerzel" : "BB",
+    "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Rechtsverhaeltnis",
+    "dtos" : "LehrerPersonalabschnittsdaten",
+    "ausfuehrungsbereich_ui" : "Reiter Personaldaten",
+    "anzeigebereich_ui" : "Feld 'Rechtsverhaeltnis'",
+    "svws" : true,
+    "zebras" : true,
+    "vorbedingung" : ["LPPR01"],
+    "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],
+    "kann" : [ ],
+    "hinweis" : [ ],
+    "text" : "Der Wert für das Geburtsjahr sollte bei Beamten/-innen auf Lebenszeit (Rechtsverhältnis = L)' + ' zwischen ' + {aktuellesSchuljahr - ?} + ' und ' + {aktuellesSchuljahr - ?} + ' liegen. Bitte prüfen!",
+    "erlaeuterung" : "",
+    "bedingung" : "LehrerStammdaten.geburtsdatum >= 1946: LehrerPersonalabschnittsdaten.rechtsverhaeltnis = 'L'  ∧ LehrerStammdaten.geburtsdatum (Format: YYYY) < aktuellesSchuljahr - 55  ∧ LehrerStammdaten.geburtsdatum (Format: YYYY) > aktuellesSchuljahr - 20 ",
+    "gueltigVon" : null,
+    "gueltigBis" : null
+  } ]
+}

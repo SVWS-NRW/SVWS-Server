@@ -7,7 +7,7 @@ import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
 import { Validator } from '../../../asd/validate/Validator';
 
-export class ValidatorLppr04LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis extends Validator {
+export class ValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis extends Validator {
 
 	/**
 	 * Das Geburtsdatum des Lehrers
@@ -59,17 +59,17 @@ export class ValidatorLppr04LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.asd.validate.lehrer.ValidatorLppr04LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis';
+		return 'de.svws_nrw.asd.validate.lehrer.ValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis';
 	}
 
 	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.asd.validate.lehrer.ValidatorLppr04LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis', 'de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.Validator'].includes(name);
+		return ['de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.lehrer.ValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis', 'de.svws_nrw.asd.validate.Validator'].includes(name);
 	}
 
-	public static readonly class = new Class<ValidatorLppr04LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis>('de.svws_nrw.asd.validate.lehrer.ValidatorLppr04LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis');
+	public static readonly class = new Class<ValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis>('de.svws_nrw.asd.validate.lehrer.ValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis');
 
 }
 
-export function cast_de_svws_nrw_asd_validate_lehrer_ValidatorLppr04LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(obj: unknown): ValidatorLppr04LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis {
-	return obj as ValidatorLppr04LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis;
+export function cast_de_svws_nrw_asd_validate_lehrer_ValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(obj: unknown): ValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis {
+	return obj as ValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis;
 }

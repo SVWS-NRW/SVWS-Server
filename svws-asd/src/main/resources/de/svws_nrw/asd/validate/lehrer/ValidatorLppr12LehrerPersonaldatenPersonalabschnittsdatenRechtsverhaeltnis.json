@@ -1,8 +1,8 @@
 {
   "version" : 1,
-  "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppr03LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis",
+  "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppr12LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis",
   "historie" : [ {
-    "praefix" : "LPPR03",
+    "praefix" : "LPPR12",
     "altes_kuerzel" : "BB",
     "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Rechtsverhaeltnis",
     "dtos" : "LehrerPersonalabschnittsdaten",
@@ -10,7 +10,7 @@
     "anzeigebereich_ui" : "Feld 'Rechtsverhaeltnis'",
     "svws" : true,
     "zebras" : true,
-    "vorbedingung" : ["LPPR00"],
+    "vorbedingung" : ["LPPR01"],
     "muss" : [ ],
     "kann" : [ ],
     "hinweis" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],

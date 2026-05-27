@@ -29,7 +29,7 @@ import jakarta.validation.constraints.NotNull;
  * CoreType: LehrerStammdaten
  */
 @DisplayName("Teste den Validator zu LehrerPersonalabschnittsdaten")
-class TestValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis {
+class TestValidatorLppr12LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis {
 
 	/** Stammdaten der Schule */
 	static final StatistikGesamt testdaten_001 =
@@ -53,7 +53,7 @@ class TestValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhael
 
 
 	/**
-	 * Test von ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum auf zu junges Geburtsdatum
+	 * Test von ValidatorLppr12LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis auf zu junges Geburtsdatum
 	 *
 	 * CoreType: LehrerPersonalabschnittsdaten
 	 * Testfall: Das Geburtsdatum ist für das Rechtsverhältnis zu jung
@@ -69,21 +69,22 @@ class TestValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhael
 
 		try {
 			final @NotNull DateManager geburtsdatum = DateManager.from("2025-01-01");
-			final LehrerRechtsverhaeltnis rechtsverhaeltnis = LehrerRechtsverhaeltnis.L;
+			final LehrerRechtsverhaeltnis rechtsverhaeltnis = LehrerRechtsverhaeltnis.W;
 			final Long idSchuljahresabschnitt = kontext.getSchuljahresabschnitt().id;
-			final ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis validator =
-					new ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
+
+			final ValidatorLppr12LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis validator =
+					new ValidatorLppr12LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
 							() -> idSchuljahresabschnitt,
 							() -> rechtsverhaeltnis,
 							() -> geburtsdatum,
 							kontext);
 			assertEquals(false, validator.pruefe());
+
 		} catch (@SuppressWarnings("unused") final InvalidDateException e) {
 			assertEquals(true, false); // darf hier nicht hin
 			// Ist kein gültiges Geburtsdatum gesetzt, so werden die Prüfungen übersprungen.
 			// Die eigentliche Validierung des Geburtsdatums erfolgt bei den Lehrer-Stammdaten
 		}
-
-
 	}
+
 }

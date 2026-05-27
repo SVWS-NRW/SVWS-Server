@@ -7,7 +7,7 @@ import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
 import { Validator } from '../../../asd/validate/Validator';
 
-export class ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis extends Validator {
+export class ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis extends Validator {
 
 	/**
 	 * Das Geburtsdatum des Lehrers
@@ -29,7 +29,7 @@ export class ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
-	 * @param rechtsverhaeltnisNotNull      das Rechtsverhältnis
+	 * @param rechtsverhaeltnisNotNull        das Rechtsverhältnis
 	 * @param geburtsdatum             das Geburtsdatum des Lehrers
 	 * @param kontext                  der Kontext des Validators
 	 */
@@ -46,11 +46,11 @@ export class ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 			return false;
 		}
 		const schuljahr: number = schuljahresabschnitt.schuljahr;
-		if (JavaObject.equalsTranspiler(this._rechtsverhaeltnis.get(), (LehrerRechtsverhaeltnis.P))) {
-			const minJahr: number = schuljahr - 55;
-			const maxJahr: number = schuljahr - 20;
+		if (JavaObject.equalsTranspiler(this._rechtsverhaeltnis.get(), (LehrerRechtsverhaeltnis.L))) {
+			const minJahr: number = schuljahr - ((schuljahr <= 2023) ? 65 : ((schuljahr <= 2030) ? 66 : 67));
+			const maxJahr: number = schuljahr - 27;
 			if (!this._geburtsdatum.get().istInJahren(minJahr, maxJahr)) {
-				this.addFehler(2, "Der Wert für das Geburtsjahr sollte bei Beamten/-innen auf Probe (Rechtsverhältnis = P) zwischen " + minJahr + " und " + maxJahr + " liegen. Bitte prüfen!");
+				this.addFehler(1, "Der Wert für das Geburtsjahr sollte bei Beamten/-innen auf Lebenszeit (Rechtsverhältnis = L) zwischen " + minJahr + " und " + maxJahr + " liegen. Bitte prüfen!");
 			}
 			return false;
 		}
@@ -58,17 +58,17 @@ export class ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.asd.validate.lehrer.ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis';
+		return 'de.svws_nrw.asd.validate.lehrer.ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis';
 	}
 
 	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.lehrer.ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis', 'de.svws_nrw.asd.validate.Validator'].includes(name);
+		return ['de.svws_nrw.asd.validate.lehrer.ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis', 'de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.Validator'].includes(name);
 	}
 
-	public static readonly class = new Class<ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis>('de.svws_nrw.asd.validate.lehrer.ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis');
+	public static readonly class = new Class<ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis>('de.svws_nrw.asd.validate.lehrer.ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis');
 
 }
 
-export function cast_de_svws_nrw_asd_validate_lehrer_ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(obj: unknown): ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis {
-	return obj as ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis;
+export function cast_de_svws_nrw_asd_validate_lehrer_ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(obj: unknown): ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis {
+	return obj as ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis;
 }

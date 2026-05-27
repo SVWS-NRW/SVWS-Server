@@ -29,7 +29,7 @@ import jakarta.validation.constraints.NotNull;
  * CoreType: LehrerStammdaten
  */
 @DisplayName("Teste den Validator zu LehrerPersonalabschnittsdaten")
-class TestValidatorLppr04LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis {
+class TestValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis {
 
 	/** Stammdaten der Schule */
 	static final StatistikGesamt testdaten_001 =
@@ -68,23 +68,22 @@ class TestValidatorLppr04LehrerPersonaldatenPersonalabschnittsdatenRechtsverhael
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 
 		try {
-			final @NotNull DateManager geburtsdatum = DateManager.from("2005-01-01");
-			final LehrerRechtsverhaeltnis rechtsverhaeltnis = LehrerRechtsverhaeltnis.A;
+			final @NotNull DateManager geburtsdatum = DateManager.from("2025-01-01");
+			final LehrerRechtsverhaeltnis rechtsverhaeltnis = LehrerRechtsverhaeltnis.L;
 			final Long idSchuljahresabschnitt = kontext.getSchuljahresabschnitt().id;
-
-			final ValidatorLppr04LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis validator =
-					new ValidatorLppr04LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
+			final ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis validator =
+					new ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
 							() -> idSchuljahresabschnitt,
 							() -> rechtsverhaeltnis,
 							() -> geburtsdatum,
 							kontext);
 			assertEquals(false, validator.pruefe());
-
 		} catch (@SuppressWarnings("unused") final InvalidDateException e) {
 			assertEquals(true, false); // darf hier nicht hin
 			// Ist kein gültiges Geburtsdatum gesetzt, so werden die Prüfungen übersprungen.
 			// Die eigentliche Validierung des Geburtsdatums erfolgt bei den Lehrer-Stammdaten
 		}
-	}
 
+
+	}
 }

@@ -2,11 +2,11 @@ package de.svws_nrw.asd.validate.lehrer;
 
 import java.util.function.Supplier;
 
-import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
 import de.svws_nrw.asd.validate.DateManager;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -15,62 +15,48 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis extends Validator {
 
-	/** Das Geburtsdatum des Lehrers */
-	private final @NotNull Supplier<DateManager> _geburtsdatum;
-
-	/** Die ID des Schuljahresabschnittes */
-	private final @NotNull Supplier<Long> _idSchuljahresabschnitt;
-
 	/** Das Rechtsverhältnis */
-	private final @NotNull Supplier<LehrerRechtsverhaeltnis> _rechtsverhaeltnis;
+	private final @NotNull Supplier<@AllowNull Long> _idRechtsverhaeltnis;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
-	 * @param rechtsverhaeltnisNotNull        das Rechtsverhältnis
+	 * @param idRechtsverhaeltnis      die ID des Rechtsverhältnis
 	 * @param geburtsdatum             das Geburtsdatum des Lehrers
 	 * @param kontext                  der Kontext des Validators
 	 */
 	public ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
 			final @NotNull Supplier<Long> idSchuljahresabschnitt,
-			final @NotNull Supplier<LehrerRechtsverhaeltnis> rechtsverhaeltnisNotNull,
+			final @NotNull Supplier<@AllowNull Long> idRechtsverhaeltnis,
 			final @NotNull Supplier<DateManager> geburtsdatum,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		_idSchuljahresabschnitt = idSchuljahresabschnitt;
-		_rechtsverhaeltnis = rechtsverhaeltnisNotNull;
-		_geburtsdatum = geburtsdatum;
+		_idRechtsverhaeltnis = idRechtsverhaeltnis;
+		final @NotNull Supplier<LehrerRechtsverhaeltnis> rechtsverhaeltnisNotNull =
+				() -> LehrerRechtsverhaeltnis.data().getWertByID(getNotNullSupplierLong(idRechtsverhaeltnis).get());
+		_validatoren.add(new ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnisNotNull,
+				geburtsdatum, kontext));
+		_validatoren.add(new ValidatorLppr11LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnisNotNull,
+				geburtsdatum, kontext));
+		_validatoren.add(new ValidatorLppr12LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnisNotNull,
+				geburtsdatum, kontext));
+		_validatoren.add(new ValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnisNotNull,
+				geburtsdatum, kontext));
+
 	}
 
 	@Override
 	protected boolean pruefe() {
-		// Bestimme das Schuljahr über den Schuljahresabschnitt. Treten dabei Fehler auf, so ist dieser durch einen übergeordneten Validator zu prüfen.
-		final Schuljahresabschnitt schuljahresabschnitt = kontext().getSchuljahresabschnittByID(_idSchuljahresabschnitt.get());
-		if (schuljahresabschnitt == null) {
+		// Bestimme das Rechtsverhältnis. Ist dieses nicht angegeben, so wird im Folgenden von einem sonstigen Rechtsverhältnis ausgegangen
+		final Long idRechtsverhaeltnis = _idRechtsverhaeltnis.get();
+		final LehrerRechtsverhaeltnis rv = (idRechtsverhaeltnis == null) ? null : LehrerRechtsverhaeltnis.data().getWertByIDOrNull(idRechtsverhaeltnis);
+
+		if (rv == null) {
+			addFehler(0, "Kein gültiger Wert im Feld 'rechtsverhaeltnis'.");
 			return false;
 		}
-		final int schuljahr = schuljahresabschnitt.schuljahr;
 
-		// Prüfe das Geburtsdatum bzw. das Alter bei den folgenden Rechtsverhältnissen...
-		if (_rechtsverhaeltnis.get().equals(LehrerRechtsverhaeltnis.L)) {
-			// Beamtet auf Lebenszeit
-			/* Das erste akzeptierte Geburtsjahr variiert je nach Renteneintrittsalter:
-			 * - Schuljahre vor 2022: vor 1958 - Rentenaltersgrenze 65 Jahre
-			 * - Schuljahr 2023: Sonderfall - Definition Rentenaltersgrenze 65 Jahre
-			 * - Schuljahre 2024-2029: vor 1964 - Rentenaltersgrenze 66 Jahre
-			 * - Schuljahr 2030: Sonderfall - Definition Rentenaltersgrenze 66 Jahre
-			 * - Schuljahre nach 2030: ab 1964 - Rentenaltersgrenze 67 Jahre
-			 *  */
-			final int minJahr = schuljahr - ((schuljahr <= 2023) ? 65 : ((schuljahr <= 2030) ? 66 : 67));
-			final int maxJahr = schuljahr - 27;  // Das letzte akzeptierte Geburtsjahr: vor 27 Jahren
-
-			if (!_geburtsdatum.get().istInJahren(minJahr, maxJahr)) {
-				addFehler(1, "Der Wert für das Geburtsjahr sollte bei Beamten/-innen auf Lebenszeit (Rechtsverhältnis = L)"
-						+ " zwischen " + minJahr + " und " + maxJahr + " liegen. Bitte prüfen!");
-			}
-			return false;
-		}
 		return true;
 	}
 

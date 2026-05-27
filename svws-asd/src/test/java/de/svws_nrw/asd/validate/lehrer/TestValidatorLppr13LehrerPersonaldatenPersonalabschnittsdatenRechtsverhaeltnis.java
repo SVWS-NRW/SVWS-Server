@@ -29,7 +29,7 @@ import jakarta.validation.constraints.NotNull;
  * CoreType: LehrerStammdaten
  */
 @DisplayName("Teste den Validator zu LehrerPersonalabschnittsdaten")
-class TestValidatorLppr03LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis {
+class TestValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis {
 
 	/** Stammdaten der Schule */
 	static final StatistikGesamt testdaten_001 =
@@ -53,7 +53,7 @@ class TestValidatorLppr03LehrerPersonaldatenPersonalabschnittsdatenRechtsverhael
 
 
 	/**
-	 * Test von ValidatorLppr03LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis auf zu junges Geburtsdatum
+	 * Test von ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum auf zu junges Geburtsdatum
 	 *
 	 * CoreType: LehrerPersonalabschnittsdaten
 	 * Testfall: Das Geburtsdatum ist für das Rechtsverhältnis zu jung
@@ -68,12 +68,12 @@ class TestValidatorLppr03LehrerPersonaldatenPersonalabschnittsdatenRechtsverhael
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 
 		try {
-			final @NotNull DateManager geburtsdatum = DateManager.from("2025-01-01");
-			final LehrerRechtsverhaeltnis rechtsverhaeltnis = LehrerRechtsverhaeltnis.W;
+			final @NotNull DateManager geburtsdatum = DateManager.from("2005-01-01");
+			final LehrerRechtsverhaeltnis rechtsverhaeltnis = LehrerRechtsverhaeltnis.A;
 			final Long idSchuljahresabschnitt = kontext.getSchuljahresabschnitt().id;
 
-			final ValidatorLppr03LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis validator =
-					new ValidatorLppr03LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
+			final ValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis validator =
+					new ValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
 							() -> idSchuljahresabschnitt,
 							() -> rechtsverhaeltnis,
 							() -> geburtsdatum,
