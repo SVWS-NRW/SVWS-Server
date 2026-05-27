@@ -47,7 +47,7 @@
 	const readonly = computed(() => !hatKompetenzUpdate.value);
 
 	const orteById = computed<Map<number, OrtKatalogEintrag>>(() => props.manager().orteById);
-	const orte = computed(() => orteById.value.values());
+	const orte = computed(() => model.filteredOrte.value);
 	const model = new OrtsteilModelProxy(() => props.manager().auswahl(), () => props.manager(), orteById.value, props.patch);
 
 	const ortSelectManager = new SelectManager({

@@ -27,19 +27,21 @@ import java.util.stream.Collectors;
  */
 public final class DataOrtsteile extends DataManagerRevised<Long, DTOOrtsteil, OrtsteilKatalogEintrag> {
 
+	private static final String ORT_ID = "ort_id";
+	private static final String ORTSTEIL = "ortsteil";
 	private final DataOrte dataOrte;
 
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link OrtsteilKatalogEintrag}.
 	 *
-	 * @param conn   		die Datenbank-Verbindung für den Datenbankzugriff
-	 * @param dataOrte   	DataOrte
+	 * @param conn        die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param dataOrte    DataOrte
 	 */
 	public DataOrtsteile(final DBEntityManager conn, final DataOrte dataOrte) {
 		super(conn);
 		this.dataOrte = dataOrte;
 		setAttributesNotPatchable("id", "referenziertInAnderenTabellen");
-		setAttributesRequiredOnCreation("ort_id", "ortsteil");
+		setAttributesRequiredOnCreation(ORT_ID, ORTSTEIL);
 	}
 
 	@Override
@@ -60,13 +62,15 @@ public final class DataOrtsteile extends DataManagerRevised<Long, DTOOrtsteil, O
 	}
 
 	@Override
-	public OrtsteilKatalogEintrag getById(final Long id) throws ApiOperationException {
-		if (id == null)
+	public OrtsteilKatalogEintrag getById(final Long id) {
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Ortsteils darf nicht null sein.");
+		}
 
 		final DTOOrtsteil ortsteil = conn.queryByKey(DTOOrtsteil.class, id);
-		if (ortsteil == null)
+		if (ortsteil == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Der Ortsteil mit der ID %d wurde nicht gefunden.".formatted(id));
+		}
 
 		return map(ortsteil);
 	}
@@ -107,11 +111,11 @@ public final class DataOrtsteile extends DataManagerRevised<Long, DTOOrtsteil, O
 	}
 
 	@Override
-	protected void mapAttribute(final DTOOrtsteil dto, final String name, final Object value, final Map<String, Object> map) throws ApiOperationException {
+	protected void mapAttribute(final DTOOrtsteil dto, final String name, final Object value, final Map<String, Object> map) {
 		switch (name) {
 			case "id" -> ValidationUtils.validateId(dto.ID, name, value);
-			case "ortsteil" -> updateBezeichnung(dto, value, name);
-			case "ort_id" -> updateOrt(dto, value, name);
+			case ORTSTEIL -> updateBezeichnung(dto, value, map, name);
+			case ORT_ID -> updateOrt(dto, value, map, name);
 			case "sortierung" -> dto.Sortierung = JSONMapper.convertToInteger(value, false, name);
 			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, name);
 			case "bezeichnungOrt", "plzOrt" -> {
@@ -121,34 +125,69 @@ public final class DataOrtsteile extends DataManagerRevised<Long, DTOOrtsteil, O
 		}
 	}
 
-	private void updateOrt(final DTOOrtsteil dto, final Object value, final String name) throws ApiOperationException {
+	private void updateOrt(final DTOOrtsteil dto, final Object value, final Map<String, Object> map, final String name) {
 		final Long idOrt = JSONMapper.convertToLong(value, false, name);
-		if (Objects.equals(idOrt, dto.Ort_ID))
+		if (Objects.equals(idOrt, dto.Ort_ID)) {
 			return;
-		final DTOOrt ort = this.conn.queryByKey(DTOOrt.class, idOrt);
-		if (ort == null)
-			throw new ApiOperationException(Status.BAD_REQUEST, "Es wurde kein Ort mit der ID %d gefunden.".formatted(idOrt));
+		}
+		validateOrt(dto, idOrt, map);
 
 		dto.Ort_ID = idOrt;
 	}
 
-	private void updateBezeichnung(final DTOOrtsteil dto, final Object value, final String name) throws ApiOperationException {
-		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Ortsteil.col_Bezeichnung.datenlaenge(), name);
-		if (ValidationUtils.isBlankOrUnchanged(dto.Bezeichnung, bezeichnung))
-			return;
 
-		validateBezeichnung(dto.ID, bezeichnung);
+	private void updateBezeichnung(final DTOOrtsteil dto, final Object value, final Map<String, Object> map, final String name) {
+		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Ortsteil.col_Bezeichnung.datenlaenge(), name);
+		if (ValidationUtils.isBlankOrUnchanged(dto.Bezeichnung, bezeichnung)) {
+			return;
+		}
+		validateBezeichnung(dto, bezeichnung, map);
 
 		dto.Bezeichnung = bezeichnung;
 	}
 
-	private void validateBezeichnung(final Long id, final String bezeichnung) throws ApiOperationException {
-		final boolean isAlreadyUsed = this.conn
-				.queryAll(DTOOrtsteil.class).stream()
-				.anyMatch(e -> (e.ID != id) && Strings.CI.equals(bezeichnung, e.Bezeichnung));
-		if (isAlreadyUsed)
-			throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung des Ortsteil %s ist bereits vorhanden.".formatted(bezeichnung));
+	private void validateBezeichnung(final DTOOrtsteil dto, final String bezeichnung, final Map<String, Object> map) {
+		final Long idOrt = getIdOrtForValidation(dto, map);
+		if (isBezeichnungAlreadyUsed(dto, bezeichnung, idOrt)) {
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Die Bezeichnung des Ortsteils '%s' ist bereits vorhanden.".formatted(bezeichnung));
+		}
 	}
+
+	private void validateOrt(final DTOOrtsteil dto, final Long idOrt, final Map<String, Object> map) {
+		if (this.conn.queryByKey(DTOOrt.class, idOrt) == null) {
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Es wurde kein Ort mit der ID %d gefunden.".formatted(idOrt));
+		}
+		final String bezeichnung = getBezeichnungForValidation(dto, map);
+		if (isBezeichnungAlreadyUsed(dto, bezeichnung, idOrt)) {
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Die Bezeichnung des Ortsteils '%s' ist bereits vorhanden.".formatted(bezeichnung));
+		}
+	}
+
+	private Long getIdOrtForValidation(final DTOOrtsteil dto, final Map<String, Object> map) {
+		final boolean isPatch = this.conn.queryByKey(DTOOrtsteil.class, dto.ID) != null;
+		return isPatch
+				? dto.Ort_ID
+				: JSONMapper.convertToLong(map.get(ORT_ID), false, ORT_ID);
+	}
+
+	private String getBezeichnungForValidation(final DTOOrtsteil dto, final Map<String, Object> map) {
+		final boolean isPatch = this.conn.queryByKey(DTOOrtsteil.class, dto.ID) != null;
+		return isPatch
+				? dto.Bezeichnung
+				: JSONMapper.convertToString(map.get(ORTSTEIL), false, false,
+						Schema.tab_K_Ortsteil.col_Bezeichnung.datenlaenge(), ORTSTEIL);
+	}
+
+	private boolean isBezeichnungAlreadyUsed(final DTOOrtsteil dto, final String bezeichnung, final Long idOrt) {
+		return this.conn.queryAll(DTOOrtsteil.class).stream()
+				.anyMatch(e -> !Objects.equals(e.ID, dto.ID)
+						&& Objects.equals(e.Ort_ID, idOrt)
+						&& Strings.CI.equals(bezeichnung, e.Bezeichnung));
+	}
+
 
 	private static Set<Long> mapToIds(final List<DTOOrtsteil> ortsteile) {
 		return ortsteile.stream()
@@ -157,8 +196,9 @@ public final class DataOrtsteile extends DataManagerRevised<Long, DTOOrtsteil, O
 	}
 
 	private Set<Long> getIdsOfReferencedOrtsteile(final Set<Long> ids) {
-		if ((ids == null) || ids.isEmpty())
+		if ((ids == null) || ids.isEmpty()) {
 			return Collections.emptySet();
+		}
 
 		final String lehrer = "SELECT DISTINCT a.Ortsteil_ID FROM DTOLehrer a WHERE a.Ortsteil_ID IN :ids";
 		final String schueler = "SELECT DISTINCT b.Ortsteil_ID FROM DTOSchueler b WHERE b.Ortsteil_ID IN :ids";

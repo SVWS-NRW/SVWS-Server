@@ -332,6 +332,42 @@ class DataOrtsteileTest {
 	}
 
 	@Test
+	@DisplayName("patch | ort_id | Bezeichnung bereits vorhanden im neuen Ort")
+	void patchOrtIdBezeichnungAlreadyExistsInNewOrt() {
+		final var dto = new DTOOrtsteil(1L, "Barmen");
+		dto.Ort_ID = 10L;
+		final var existing = new DTOOrtsteil(2L, "Barmen");
+		existing.Ort_ID = 42L; // Ziel-Ort hat bereits "Barmen"
+
+		when(this.conn.queryByKey(DTOOrtsteil.class, 1L)).thenReturn(dto);
+		when(this.conn.queryByKey(DTOOrt.class, 42L)).thenReturn(mock(DTOOrt.class));
+		when(this.conn.queryAll(DTOOrtsteil.class)).thenReturn(List.of(dto, existing));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("ort_id", 42L)))
+				.isInstanceOf(ApiOperationException.class)
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | ort_id | Bezeichnung nicht vorhanden im neuen Ort → erlaubt")
+	void patchOrtIdBezeichnungNotInNewOrt() throws ApiOperationException {
+		final var dto = new DTOOrtsteil(1L, "Barmen");
+		dto.Ort_ID = 10L;
+		final var other = new DTOOrtsteil(2L, "Neustadt");
+		other.Ort_ID = 42L;
+
+		when(this.conn.queryByKey(DTOOrtsteil.class, 1L)).thenReturn(dto);
+		when(this.conn.queryByKey(DTOOrt.class, 42L)).thenReturn(mock(DTOOrt.class));
+		when(this.conn.queryAll(DTOOrtsteil.class)).thenReturn(List.of(dto, other));
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		assertThatNoException().isThrownBy(() -> this.data.patch(1L, Map.of("ort_id", 42L)));
+		assertThat(dto.Ort_ID).isEqualTo(42L);
+	}
+
+
+	@Test
 	@DisplayName("patch | ort_id")
 	void patchOrtId() throws ApiOperationException {
 		final var dto = new DTOOrtsteil(1L, "abc");
@@ -413,36 +449,8 @@ class DataOrtsteileTest {
 	}
 
 	@Test
-	@DisplayName("patch | ortsteil already used")
-	void patchOrtsteilAlreadyUsed() {
-		when(this.conn.queryByKey(DTOOrtsteil.class, 1L)).thenReturn(mock(DTOOrtsteil.class));
-		when(this.conn.queryAll(DTOOrtsteil.class)).thenReturn(List.of(new DTOOrtsteil(1L, "test")));
-
-		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, Map.of("ortsteil", "test")))
-				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Die Bezeichnung des Ortsteil test ist bereits vorhanden.")
-				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-	}
-
-	@Test
-	@DisplayName("patch | ortsteil already used different case")
-	void patchOrtsteilAlreadyUsedWithDifferentCase() {
-		when(this.conn.queryByKey(DTOOrtsteil.class, 1L)).thenReturn(mock(DTOOrtsteil.class));
-		when(this.conn.queryAll(DTOOrtsteil.class)).thenReturn(List.of(new DTOOrtsteil(2L, "TEST")));
-
-		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, Map.of("ortsteil", "test")))
-				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Die Bezeichnung des Ortsteil test ist bereits vorhanden.")
-				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-	}
-
-	@Test
 	@DisplayName("patch | ortsteil change case in same object")
 	void patchOrtsteilChangeCase() throws ApiOperationException {
-		final var dto = new DTOOrtsteil(1L, "test");
-		when(conn.queryAll(DTOOrtsteil.class)).thenReturn(List.of(dto));
 		final var newDto = new DTOOrtsteil(2L, "abc");
 		when(this.conn.queryByKey(DTOOrtsteil.class, 2L)).thenReturn(newDto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
@@ -453,18 +461,55 @@ class DataOrtsteileTest {
 	}
 
 	@Test
-	@DisplayName("patch | ortsteil dto is null | make sure no Nullpointer is thrown in equalsIgnoreCase check")
-	void patchOrtsteilInDtoISNull() {
-		final var dto = new DTOOrtsteil(1L, "123");
-		dto.Bezeichnung = null;
-		when(conn.queryAll(DTOOrtsteil.class)).thenReturn(List.of(dto));
-		final var newDto = new DTOOrtsteil(2L, "abc");
-		when(this.conn.queryByKey(DTOOrtsteil.class, 2L)).thenReturn(newDto);
+	@DisplayName("patch | ortsteil | bereits vorhanden für gleichen Ort")
+	void patchOrtsteilAlreadyExistsForSameOrt() {
+		final var dto = new DTOOrtsteil(1L, "Barmen");
+		dto.Ort_ID = 10L;
+		final var existing = new DTOOrtsteil(2L, "Neustadt");
+		existing.Ort_ID = 10L;
+
+		when(this.conn.queryByKey(DTOOrtsteil.class, 1L)).thenReturn(dto);
+		when(this.conn.queryAll(DTOOrtsteil.class)).thenReturn(List.of(dto, existing));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("ortsteil", "Neustadt")))
+				.isInstanceOf(ApiOperationException.class)
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | ortsteil | gleicher Name aber anderer Ort → erlaubt")
+	void patchOrtsteilSameNameDifferentOrt() throws ApiOperationException {
+		final var dto = new DTOOrtsteil(1L, "Barmen");
+		dto.Ort_ID = 10L;
+		final var other = new DTOOrtsteil(2L, "Neustadt");
+		other.Ort_ID = 99L; // anderer Ort
+
+		when(this.conn.queryByKey(DTOOrtsteil.class, 1L)).thenReturn(dto);
+		when(this.conn.queryAll(DTOOrtsteil.class)).thenReturn(List.of(dto, other));
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		assertThatNoException()
-				.isThrownBy(() -> this.data.patch(2L, Map.of("ortsteil", "test")));
+		assertThatNoException().isThrownBy(() -> this.data.patch(1L, Map.of("ortsteil", "Neustadt")));
+		assertThat(dto.Bezeichnung).isEqualTo("Neustadt");
 	}
+
+	@Test
+	@DisplayName("patch | ortsteil | case-insensitive Duplikat wird erkannt")
+	void patchOrtsteilDuplicateCaseInsensitive() {
+		final var dto = new DTOOrtsteil(1L, "Barmen");
+		dto.Ort_ID = 10L;
+		final var existing = new DTOOrtsteil(2L, "barmen");
+		existing.Ort_ID = 10L;
+
+		when(this.conn.queryByKey(DTOOrtsteil.class, 1L)).thenReturn(dto);
+		when(this.conn.queryAll(DTOOrtsteil.class)).thenReturn(List.of(dto, existing));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("ortsteil", "BARMEN")))
+				.isInstanceOf(ApiOperationException.class)
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
 
 	@Test
 	@DisplayName("patch | ortsteil")

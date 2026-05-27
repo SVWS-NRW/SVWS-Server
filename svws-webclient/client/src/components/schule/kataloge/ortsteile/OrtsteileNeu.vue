@@ -55,7 +55,7 @@
 	const isLoading = ref<boolean>(false);
 
 	const orteById = computed<Map<number, OrtKatalogEintrag>>(() => props.manager().orteById);
-	const orte = computed(() => orteById.value.values());
+	const orte = computed(() => model.filteredOrte.value);
 	const initialData = ref<OrtsteilKatalogEintrag>(Object.assign(new OrtsteilKatalogEintrag(), { istSichtbar: true, sortierung: 32000 }));
 	const model = new OrtsteilModelProxy(() => initialData.value, () => props.manager(), orteById.value);
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
