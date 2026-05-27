@@ -13,9 +13,9 @@
 					statistics required />
 			</div>
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Datum von" type="date" statistics
+				<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Datum von" type="date"
 					:model-value="manager().lernabschnittGet().datumAnfang || undefined" @change="datumAnfang => patch({datumAnfang})" />
-				<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Datum bis" type="date" statistics
+				<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Datum bis" type="date"
 					:model-value="manager().lernabschnittGet().datumEnde || undefined" @change="datumEnde => patch({datumEnde})" />
 				<svws-ui-spacing />
 				<div>
