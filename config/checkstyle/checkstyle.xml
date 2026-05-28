@@ -12,10 +12,17 @@
   <!-- See https://checkstyle.org/config_filefilters.html -->
   <module name="BeforeExecutionExclusionFileFilter">
     <property name="fileNamePattern" value="module\-info\.java$"/>
+    <property name="fileNamePattern" value=".*\.apt_generated.*"/>
   </module>
-    <!-- Exclude Files in 'src/main/gen'  -->
+  
+  <!-- Exclude Files in 'src/main/gen'  -->
   <module name="BeforeExecutionExclusionFileFilter">
     <property name="fileNamePattern" value=".*[\\/]src[\\/]main[\\/]gen[\\/].*$"/>
+  </module>
+
+  <module name="SuppressionSingleFilter">
+    <property name="files" value=".*apt_generated.*"/>
+    <property name="checks" value=".*"/>
   </module>
 
   <!-- https://checkstyle.org/config_filters.html#SuppressionFilter -->

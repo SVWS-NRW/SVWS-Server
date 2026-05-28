@@ -117,6 +117,63 @@ class SvwsEclipsePlugin implements Plugin<Project> {
 	}
 
 	/**
+	 * Konfiguriert die Eclipse-Annotation-Processing-Settings.
+	 * Wird nur auf Module angewendet, die das com.diffplug.eclipse.apt Plugin anwenden.
+	 */
+	void configureEclipseApt() {
+		def gp = project
+		gp.plugins.withId('com.diffplug.eclipse.apt') {
+			gp.sourceSets.main.java.srcDirs += '.apt_generated'
+			gp.sourceSets.test.java.srcDirs += '.apt_generated_tests'
+
+			gp.eclipse {
+				synchronizationTasks 'eclipseJdt', 'eclipseJdtApt', 'eclipseFactorypath'
+			}
+
+			gp.tasks.named('eclipseJdtApt').configure {
+				doFirst {
+					gp.file('.apt_generated').mkdirs()
+					gp.file('.apt_generated_tests').mkdirs()
+				}
+				doLast {
+					def prefsFile = gp.file('.settings/org.eclipse.jdt.apt.core.prefs')
+					if (!prefsFile.exists()) {
+						return
+					}
+
+					def props = new Properties()
+					prefsFile.withInputStream {
+						props.load(it)
+					}
+					props.setProperty('org.eclipse.jdt.apt.aptEnabled',       'true')
+					props.setProperty('org.eclipse.jdt.apt.reconcileEnabled', 'true')
+					props.setProperty('org.eclipse.jdt.apt.genSrcDir',        '.apt_generated')
+					props.setProperty('org.eclipse.jdt.apt.genTestSrcDir',    '.apt_generated_tests')
+					prefsFile.withOutputStream {
+						os -> props.store(os, null)
+					}
+				}
+			}
+
+			gp.tasks.named('eclipseJdt').configure {
+				doLast {
+					def prefsFile = gp.file('.settings/org.eclipse.jdt.core.prefs')
+					def props = new Properties()
+					if (prefsFile.exists()) {
+						prefsFile.withInputStream {
+							props.load(it)
+						}
+					}
+
+					props.setProperty('org.eclipse.jdt.core.compiler.processAnnotations', 'enabled')
+					prefsFile.parentFile.mkdirs()
+					prefsFile.withOutputStream { os -> props.store(os, null) }
+				}
+			}
+		}
+	}
+
+	/**
 	 * Fügt dem Gradle-Projekt die Aufgaben 'eclipse' hinzu.
 	 *
 	 * @param project das Gradle-Projekt, auf das dieses Plugin angewendet wird.
@@ -132,6 +189,7 @@ class SvwsEclipsePlugin implements Plugin<Project> {
 		this.addSetEclipseUiPreferenceMethod()
 
 		this.configureEclipse()
+		this.configureEclipseApt()
 	}
 
 }

@@ -1,5 +1,9 @@
 import org.gradle.internal.os.OperatingSystem
 
+plugins {
+	id 'com.diffplug.eclipse.apt'
+}
+
 configurations {
 	implementation.extendsFrom(crypto, database, jackson, jetty, resteasy, swagger, email, mapstructApi)
 	annotationProcessor.extendsFrom(mapstructProcessor)

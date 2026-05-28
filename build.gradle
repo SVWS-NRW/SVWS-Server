@@ -7,6 +7,7 @@ plugins {
 	id 'svws.gradle.node.plugin'
 	id "org.owasp.dependencycheck" version "10.0.4"
 	id "jacoco"
+	id 'com.diffplug.eclipse.apt' version '4.4.1' apply false
 }
 
 apply from: ("$rootDir/gradle/checkVulnerability.gradle")
@@ -352,7 +353,7 @@ tasks.register('aggregateCoverageReport', JacocoReport) {
 	group = "Verification"
 	description = "Erzeugt einen Jacoco Coverage Report zusammengefasst für alle Submodule"
 
-	def submodulesWithReports = subprojects.findAll {projectsWithJacoco.contains(it.name)}
+	def submodulesWithReports = subprojects.findAll { projectsWithJacoco.contains(it.name) }
 
 	executionData submodulesWithReports.collect {
 		it.layout.buildDirectory.file("jacoco/test.exec").get().asFile
