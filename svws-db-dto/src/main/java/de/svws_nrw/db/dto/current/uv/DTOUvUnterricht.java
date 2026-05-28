@@ -68,7 +68,7 @@ public final class DTOUvUnterricht {
 	@JsonProperty
 	public long Planungsabschnitt_ID;
 
-	/** Fremdschlüssel auf den Zeitrastereintrag (Tabelle UV_Zeitraster_Eintraege) */
+	/** Fremdschlüssel auf den Zeitrastereintrag (Tabelle UV_ZeitrasterEintraege) */
 	@Column(name = "ZeitrasterEintrag_ID")
 	@JsonProperty
 	public Long ZeitrasterEintrag_ID;

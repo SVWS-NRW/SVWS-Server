@@ -19,7 +19,7 @@ public class Tabelle_UV_Planungsabschnitte_Zeitraster extends SchemaTabelle {
 			.setNotNull()
 			.setJavaComment("Die ID des Planungsabschnitts als Fremdschlüssel auf die Tabelle UV_Planungsabschnitte");
 
-	/** Die Definition der Tabellenspalte Zeitraster */
+	/** Die Definition der Tabellenspalte Zeitraster_ID */
 	public final SchemaTabelleSpalte col_Zeitraster_ID = add("Zeitraster_ID", SchemaDatentypen.BIGINT, true)
 			.setNotNull()
 			.setJavaComment("ID des Zeitrasters des Planungsabschnitts");
@@ -40,7 +40,7 @@ public class Tabelle_UV_Planungsabschnitte_Zeitraster extends SchemaTabelle {
 			new Pair<>(col_Zeitraster_ID, Schema.tab_UV_Zeitraster.col_ID));
 
 	/**
-	 * Erstellt die Schema-Definition für die Tabelle UV_Schuelergruppen_Schueler.
+	 * Erstellt die Schema-Definition für die Tabelle UV_Planungsabschnitte_Zeitraster.
 	 */
 	public Tabelle_UV_Planungsabschnitte_Zeitraster() {
 		super("UV_Planungsabschnitte_Zeitraster", SchemaRevisionen.REV_48);

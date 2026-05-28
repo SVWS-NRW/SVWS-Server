@@ -29,11 +29,16 @@ public class Tabelle_UV_Planungsabschnitte_Schueler extends SchemaTabelle {
 			.setNotNull()
 			.setJavaComment("ID des Jahrgangs der dem Schüler zugeordnet wird");
 
-	/** Die Definition der Tabellenspalte Klassen_ID */
-	public final SchemaTabelleSpalte col_Klasse_ID = add("Klasse_ID", SchemaDatentypen.BIGINT, false)
+	/** Die Definition der Tabellenspalte Klasse_ID */
+	public final SchemaTabelleSpalte col_Klasse_ID_DEPRECATED = add("Klasse_ID", SchemaDatentypen.BIGINT, false)
 			.setNotNull()
-			.setJavaComment("Klassen_ID des Schülers für den Planungsabschnitt");
+			.setJavaComment("Klassen_ID des Schülers für den Planungsabschnitt")
+			.setVeraltet(SchemaRevisionen.REV_65);
 
+	/** Die Definition der Tabellenspalte Klasse_ID */
+	public final SchemaTabelleSpalte col_Klasse_ID = add("Klasse_ID", SchemaDatentypen.BIGINT, false)
+			.setJavaComment("Klassen_ID des Schülers für den Planungsabschnitt")
+			.setRevision(SchemaRevisionen.REV_66);
 
 
 	/** Die Definition des Fremdschlüssels auf UV_Planungsabschnitte */
@@ -67,7 +72,7 @@ public class Tabelle_UV_Planungsabschnitte_Schueler extends SchemaTabelle {
 			/* OnDelete: */ SchemaFremdschluesselAktionen.RESTRICT,
 			new Pair<>(col_Klasse_ID, Schema.tab_UV_Klassen.col_ID),
 			new Pair<>(col_Planungsabschnitt_ID, Schema.tab_UV_Klassen.col_Planungsabschnitt_ID)
-	).setVeraltet(SchemaRevisionen.REV_49);
+	).setVeraltet(SchemaRevisionen.REV_65);
 
 	/** Die Definition des Fremdschlüssels UVPlanungsabschnitteSchueler_UVKlassen_FK */
 	public final SchemaTabelleFremdschluessel fk_UVPlanungsabschnitteSchueler_UVKlassen_FK = addForeignKey(
@@ -76,10 +81,10 @@ public class Tabelle_UV_Planungsabschnitte_Schueler extends SchemaTabelle {
 			/* OnDelete: */ SchemaFremdschluesselAktionen.RESTRICT,
 			new Pair<>(col_Klasse_ID, Schema.tab_UV_Klassen.col_ID),
 			new Pair<>(col_Planungsabschnitt_ID, Schema.tab_UV_Klassen.col_Planungsabschnitt_ID)
-	).setRevision(SchemaRevisionen.REV_50);
+	).setRevision(SchemaRevisionen.REV_66);
 
 	/**
-	 * Erstellt die Schema-Defintion für die Tabelle UV_Planungsabschnitte_Schueler.
+	 * Erstellt die Schema-Definition für die Tabelle UV_Planungsabschnitte_Schueler.
 	 */
 	public Tabelle_UV_Planungsabschnitte_Schueler() {
 		super("UV_Planungsabschnitte_Schueler", SchemaRevisionen.REV_48);

@@ -12,7 +12,7 @@ import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 import de.svws_nrw.db.schema.SchemaTabelleUniqueIndex;
 
 /**
- * Diese Klasse beinhaltet die Schema-Definition für die Tabelle UV_Zeitraster_Eintraege.
+ * Diese Klasse beinhaltet die Schema-Definition für die Tabelle UV_ZeitrasterEintraege.
  */
 public class Tabelle_UV_ZeitrasterEintraege extends SchemaTabelle {
 
@@ -62,7 +62,7 @@ public class Tabelle_UV_ZeitrasterEintraege extends SchemaTabelle {
     );
 
     /**
-     * Erstellt die Schema-Definition für die Tabelle UV_Zeitraster_Eintraege.
+     * Erstellt die Schema-Definition für die Tabelle UV_ZeitrasterEintraege.
      */
     public Tabelle_UV_ZeitrasterEintraege() {
         super("UV_ZeitrasterEintraege", SchemaRevisionen.REV_48);

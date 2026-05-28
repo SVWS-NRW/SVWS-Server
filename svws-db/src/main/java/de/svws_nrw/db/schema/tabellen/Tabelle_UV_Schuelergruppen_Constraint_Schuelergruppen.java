@@ -14,7 +14,7 @@ import de.svws_nrw.db.schema.SchemaTabelleSpalte;
  */
 public class Tabelle_UV_Schuelergruppen_Constraint_Schuelergruppen extends SchemaTabelle {
 
-	/** Die Definition der Tabellenspalte ID */
+	/** Die Definition der Tabellenspalte Schuelergruppe_ID */
 	public final SchemaTabelleSpalte col_Schuelergruppe_ID = add("Schuelergruppe_ID", SchemaDatentypen.BIGINT, true)
 			.setNotNull()
 			.setJavaComment("ID der Schülergruppe");

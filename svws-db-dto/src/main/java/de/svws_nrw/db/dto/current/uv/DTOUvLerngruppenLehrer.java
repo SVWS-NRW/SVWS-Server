@@ -101,7 +101,7 @@ public final class DTOUvLerngruppenLehrer {
 	@JsonProperty
 	public int Reihenfolge;
 
-	/** Die Anzahl der Wochenstunden für die der Lehrer in dem Kurs eingesetzt wird */
+	/** Die Anzahl der Wochenstunden, für die der Lehrer in der Lerngruppe eingesetzt wird */
 	@Column(name = "Wochenstunden")
 	@JsonProperty
 	public double Wochenstunden;

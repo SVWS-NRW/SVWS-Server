@@ -50,7 +50,7 @@ public class Tabelle_UV_Unterrichte_Lerngruppenlehrer extends SchemaTabelle {
 
 
 	/**
-	 * Erstellt die Schema-Defintion für die Tabelle UV_Unterrichte_Lerngruppenlehrer.
+	 * Erstellt die Schema-Definition für die Tabelle UV_Unterrichte_Lerngruppenlehrer.
 	 */
 	public Tabelle_UV_Unterrichte_Lerngruppenlehrer() {
 		super("UV_Unterrichte_Lerngruppenlehrer", SchemaRevisionen.REV_48);

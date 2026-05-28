@@ -10,7 +10,7 @@ import de.svws_nrw.db.schema.SchemaTabelleFremdschluessel;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 
 /**
- * Diese Klasse beinhaltet die Schema-Definition für die Tabelle UV_Lerngruppen.
+ * Diese Klasse beinhaltet die Schema-Definition für die Tabelle UV_Lerngruppen_Schienen.
  */
 public class Tabelle_UV_Lerngruppen_Schienen extends SchemaTabelle {
 
@@ -58,7 +58,7 @@ public class Tabelle_UV_Lerngruppen_Schienen extends SchemaTabelle {
         setImportExport(true);
         setJavaSubPackage("uv");
         setJavaClassName("DTOUvLerngruppeSchiene");
-        setJavaComment("Tabelle für die Zuordnung einer Schiene zu einer Lerngruppen eines Planungsabschnitts der Unterrichtsverteilung (UV)");
+        setJavaComment("Tabelle für die Zuordnung einer Schiene zu einer Lerngruppe eines Planungsabschnitts der Unterrichtsverteilung (UV)");
     }
 
 }

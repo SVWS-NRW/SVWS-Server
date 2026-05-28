@@ -18,7 +18,7 @@ public final class DTOUvStundenplanErgebnisUnterrichtRaumPK implements Serializa
 	/** Fremdschlüssel auf den UV_Unterricht */
 	public long Unterricht_ID;
 
-	/** Fremdschlüssel auf den UV_Raeume */
+	/** Fremdschlüssel auf den Raum (Tabelle UV_Raeume) */
 	public long Raum_ID;
 
 	/**
