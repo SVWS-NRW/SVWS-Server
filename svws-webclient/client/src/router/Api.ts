@@ -38,11 +38,6 @@ class Api {
 		return this.conn.schema;
 	}
 
-	/** Gibt den Hostnamen zurück des SVWS-Servers zurück */
-	get hostname(): string {
-		return this.conn.hostname;
-	}
-
 	/** Gibt den Status zurück, ob der Benutzer authentifiziert wurde */
 	get authenticated(): boolean {
 		return this.conn.authenticated;
@@ -73,29 +68,13 @@ class Api {
 		return this.conn.mapCoreTypeData;
 	}
 
-	/** Setzt die Map der CoreTypeDaten zurück */
-	setMapCoreTypeData = (map: Map<string, any>) => {
-		this.conn.mapCoreTypeData = map;
-	};
-
-	/**
-	 * Setzt den Hostnamen des SVWS-Server für den Verbindungsaufbau.
-	 *
-	 * @param hostname   der Hostname des SVWS-Server
-	 */
-	setHostname = (hostname: string): void => {
-		return this.conn.setHostname(hostname);
-	};
-
 	/**
 	 * Versucht eine Verbindung zu der angegebenen Adresse herzustellen.
 	 *
-	 * @param adresse   die Adresse bestehend aus Hostnamen und ggf. Port des SVWS-Servers
-	 *
 	 * @returns bei Erfolg die Liste der auf dem Server zur Verfügung stehenden Schemata
 	 */
-	connectTo = async (adresse: string): Promise<List<DBSchemaListeEintrag>> => {
-		return await this.conn.connectTo(adresse);
+	connectTo = async (): Promise<List<DBSchemaListeEintrag>> => {
+		return await this.conn.connectTo();
 	};
 
 	/**

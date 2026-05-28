@@ -4,17 +4,18 @@
 			<img src="/images/Wappenzeichen_NRW_bw.svg" alt="Logo NRW" class="h-14">
 		</template>
 		<template #main>
-			<div class="grid grow grid-cols-1 gap-3 justify-items-center py-0.5">
-				<svws-ui-text-input v-model.trim="inputHostname" type="text" url placeholder="Serveraddresse" @keyup.enter="connect" @focus="inputFocus = true" :debounce-ms="0" />
-				<svws-ui-button type="secondary" @click="connect" :disabled="!(inputDBSchemata.size() === 0 || connecting || inputFocus )" :class="{'opacity-25 hover:opacity-100': inputDBSchemata.size() > 0 && !inputFocus}">
-					<span v-if="inputDBSchemata.size() === 0 || connecting || inputFocus">Verbinden</span>
-					<span v-else>Verbunden</span>
-					<svws-ui-spinner :spinning="connecting" />
-					<span class="icon i-ri-check-line" v-if="!connecting && inputDBSchemata.size() > 0 && !inputFocus" />
-				</svws-ui-button>
+			<div v-if="connecting || inputFocus" class="text-left my-1">
+				<span class="font-bold">Status: </span>Verbinde ...
+			</div>
+			<div v-else-if="inputDBSchemata.isEmpty() && !connecting" class="text-justify py-4">
+				<div class="font-bold pb-2">Kein Server verfügbar</div>
+				<div>
+					Bitte prüfen Sie, ob eine aktive Netzwerkverbindung zum SVWS-Server vorhanden ist.<br> Sollte dieses Problem weiterhin bestehen,
+					wenden Sie sich bitte an Ihren schulischen IT-Support oder an das Fachberaterteam.
+				</div>
 			</div>
 			<Transition>
-				<svws-ui-input-wrapper v-if="inputDBSchemata.size() > 0 && !connecting" class="mt-1" center>
+				<svws-ui-input-wrapper v-if="inputDBSchemata.size() > 0" class="mt-1" center>
 					<svws-ui-select v-model="schema" title="Datenbank-Schema" :items="inputDBSchemata" :item-text="i => `${i.name ?? 'SCHEMANAME FEHLT'}${i.isDeactivated ? ' (Nicht verfügbar)':''}`" class="w-full" @update:model-value="schema => schema && setSchema(schema)" />
 					<svws-ui-text-input v-model.trim="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" ref="refUsername" />
 					<svws-ui-text-input v-model.trim="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" />
@@ -31,7 +32,7 @@
 			</Transition>
 		</template>
 	</ui-login-layout>
-	<svws-ui-notifications v-if="error">
+	<svws-ui-notifications v-if="error !== null">
 		<svws-ui-notification type="error">
 			<template #header> {{ error.name }} </template>
 			{{ error.message }}
@@ -41,11 +42,11 @@
 
 <script setup lang="ts">
 
-	import { computed, nextTick, onMounted, ref, shallowRef } from "vue";
+	import { nextTick, onMounted, ref, shallowRef } from "vue";
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { LoginProps } from "./SLoginProps";
 	import type { DBSchemaListeEintrag, List } from "@core";
-	import { ArrayList, DeveloperNotificationException, JsonCoreTypeReader, UserNotificationException } from "@core";
+	import { ArrayList, DeveloperNotificationException, UserNotificationException } from "@core";
 	import { SvwsUiTextInput } from "@ui";
 	import { version } from '../../version';
 	import { githash } from '../../githash';
@@ -63,7 +64,7 @@
 		try {
 			const set = new Set();
 			set.difference(new Set());
-		} catch (e) {
+		} catch {
 			error.value = { name: "Achtung", message: "Ihr Browser ist veraltet. Bitte aktualisieren Sie Ihren Browser auf eine aktuelle Version. Die weitere Nutzung wird zu Fehlern im SVWS-Client führen." };
 		}
 	});
@@ -76,37 +77,25 @@
 
 	const inputDBSchemata = shallowRef<List<DBSchemaListeEintrag>>(new ArrayList());
 
-	const inputHostname = computed<string>({
-		get: () => props.hostname,
-		set: (value) => props.setHostname(value),
-	});
-
 	// Versuche zu beim Laden der Komponente automatisch mit Default-Einstellungen eine Verbindung zu dem Server aufzubauen
 	void connect();
-
-	async function initCoreTypes() {
-		const reader = new JsonCoreTypeReader(`https://${props.hostname}`);
-		await reader.loadAll();
-		reader.readAll();
-		props.setMapCoreTypeData(reader.mapCoreTypeData);
-	}
 
 	async function connect() {
 		connecting.value = true;
 		inputFocus.value = false;
 		error.value = null;
 		try {
-			inputDBSchemata.value = await props.connectTo(props.hostname);
+			inputDBSchemata.value = await props.connectTo();
 			if (inputDBSchemata.value.isEmpty()) {
 				throw new DeveloperNotificationException("Es sind keine Schemata vorhanden.");
 			}
 			schema.value = inputDBSchemata.value.get(0);
-			await initCoreTypes();
 		} catch (e) {
 			connection_failed.value = true;
 			connecting.value = false;
-			const message = e instanceof DeveloperNotificationException ? e.message : "Verbindung zum Server fehlgeschlagen. Bitte die Serveradresse prüfen und erneut versuchen.";
-			error.value = { name: "Serverfehler", message };
+			if (e instanceof DeveloperNotificationException) {
+				error.value = { name: "Serverfehler", message: e.message };
+			}
 			return;
 		}
 		let hasDefault = false;
@@ -147,17 +136,18 @@
 		inputFocus.value = false;
 		error.value = null;
 		if ((schema.value === undefined) || (schema.value.name === null)) {
-			return error.value = { name: "Eingabefehler", message: "Es muss ein gültiges Schema ausgewählt sein." };
+			error.value = { name: "Eingabefehler", message: "Es muss ein gültiges Schema ausgewählt sein." };
+			return;
 		}
 		authenticating.value = true;
 		try {
 			await props.login(schema.value.name, username.value, password.value);
 			firstauth.value = false;
-			if (!props.authenticated) {
-				error.value = { name: "Eingabefehler", message: "Passwort oder Benutzername falsch." };
-			} else {
+			if (props.authenticated) {
 				localStorage.setItem("SVWS-Client Last Used Schema", schema.value.name);
 				// localStorage.setItem(`SVWS-Client Last Used Username for Schema_${schema.value.name}`, username.value);
+			} else {
+				error.value = { name: "Eingabefehler", message: "Passwort oder Benutzername falsch." };
 			}
 		} catch (e) {
 			if (e instanceof UserNotificationException) {

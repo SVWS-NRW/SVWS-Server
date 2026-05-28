@@ -73,14 +73,11 @@ export class RouteLogin extends RouteNode<any, any> {
 
 	public getProps(): LoginProps {
 		return {
-			setHostname: api.setHostname,
 			setSchema: this.setSchema,
 			login: this.login,
 			connectTo: api.connectTo,
 			authenticated: api.authenticated,
-			hostname: api.hostname,
 			schemaPrevious: this.schema.value,
-			setMapCoreTypeData: api.setMapCoreTypeData,
 		};
 	}
 

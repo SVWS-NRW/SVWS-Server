@@ -1,6 +1,6 @@
 import { ref, shallowRef } from "vue";
 import type { BenutzerDaten, DBSchemaListeEintrag, List } from "@core";
-import { ApiSchema, ApiServer, ApiExternal, BenutzerKompetenz, ServerMode, DeveloperNotificationException, UserNotificationException, OpenApiError } from "@core";
+import { ApiServer, BenutzerKompetenz, DeveloperNotificationException, UserNotificationException, OpenApiError, JsonCoreTypeReader, ApiExternal } from "@core";
 import { Config } from "../../../ui/src/utils/Config";
 import { AES } from "~/utils/crypto/aes";
 import { AESAlgo } from "~/utils/crypto/aesAlgo";
@@ -12,11 +12,8 @@ export class ApiConnection {
 	// Gibt an, ob der Client beim Server authentifiziert ist
 	protected _authenticated = ref<boolean>(false);
 
-	// Der Hostname (evtl. mit Port) des Servers, bei dem der Login stattfindet
-	protected _hostname = ref<string>(globalThis.location.hostname + ":" + globalThis.location.port);
-
 	// Die URL mit welcher der Server verbunden ist
-	protected _url: string | undefined = undefined;
+	protected _url: string = `https://${globalThis.location.hostname}:${globalThis.location.port}`;
 
 	// Der Benutzername für den Login
 	protected _username = "";
@@ -30,13 +27,10 @@ export class ApiConnection {
 	// Der Name des Schemas auf dem SVWS-Server, bei dem der Login stattfindet
 	protected _schema: string | undefined;
 
-	// Das Schema für die API-Zugriffe
-	protected _schema_api: ApiSchema | undefined = undefined;
-
 	// Die Api selbst
 	protected _api: ApiServer | undefined;
 
-	// Die Api selbst
+	// Die externe Api
 	protected _apiExternal: ApiExternal | undefined;
 
 	// Die Benutzerdaten des angemeldeten Benutzers
@@ -93,11 +87,6 @@ export class ApiConnection {
 			throw new DeveloperNotificationException("Es liegt kein DB-Schema für die Api vor");
 		}
 		return this._schema;
-	}
-
-	// Gibt den Hostname zurück
-	get hostname(): string {
-		return this._hostname.value;
 	}
 
 	// Gibt den Status zurück, ob der Benutzer authentifiziert wurde
@@ -180,11 +169,6 @@ export class ApiConnection {
 		return this._mapCoreTypeData.value;
 	}
 
-	//* * Setzt die Map mit den CoreTypeDaten */
-	set mapCoreTypeData(map: Map<string, any>) {
-		this._mapCoreTypeData.value = map;
-	}
-
 	/**
 	 * Setzt den Benutzer-spezifischen Konfigurationseintrag
 	 *
@@ -205,32 +189,6 @@ export class ApiConnection {
 		await this.api.setClientConfigGlobalKey(value, this.schema, 'SVWS-Client', key);
 	};
 
-
-	/**
-	 * Stellt eine Verbindung zu dem angebenen Hostnamen her.
-	 *
-	 * @param hostname   der Hostname, evtl. mit Port-Adresse
-	 *
-	 * @returns die Liste der Schemata, welche über die Verbindung zur Verfügung stehen.
-	 */
-	protected async connect(hostname: string): Promise<List<DBSchemaListeEintrag>> {
-		const url = `https://${hostname}`;
-		const api = new ApiServer(url, "", "");
-		const schemata = await api.getConfigDBSchemata();
-		this._hostname.value = hostname;
-		this._url = url;
-		return schemata;
-	}
-
-	/**
-	 * Setzt den Hostnamen, der für die Verbindung verwendet wird.
-	 *
-	 * @param hostname    der Hostname
-	 */
-	setHostname = (hostname: string): void => {
-		this._hostname.value = hostname;
-	};
-
 	/**
 	 * Versucht eine Verbindung zu dem SVWS-Server mit dem angegebenen Hostnamen aufzubauen.
 	 *
@@ -238,36 +196,23 @@ export class ApiConnection {
 	 *
 	 * @returns {Promise<List<DBSchemaListeEintrag>>}
 	 */
-	connectTo = async (name: string): Promise<List<DBSchemaListeEintrag>> => {
-		const url = new URL('https://' + name);
-		const host = url.host;
-		console.log(`Verbinde zum SVWS-Server unter https://${host}...`);
+	connectTo = async (): Promise<List<DBSchemaListeEintrag>> => {
 		try {
-			const list = await this.connect(host);
-			if (url.port.length > 0) {
-				localStorage.setItem("SVWS-Client Port", url.port);
-			}
-			return list;
+			const api = new ApiServer(this._url, "", "");
+
+			// Lese die Informationen zu den DB-Schemata ein
+			const schemata = await api.getConfigDBSchemata();
+
+			// Lese die Daten für die Initialisierung der Core-Types ein
+			const reader = new JsonCoreTypeReader(this._url);
+			await reader.loadAll();
+			reader.readAll();
+			this._mapCoreTypeData.value = reader.mapCoreTypeData;
+
+			// ... und gib die Schemata zurück
+			return schemata;
 		} catch {
-			console.log(`Verbindung zum SVWS-Server unter https://${host} fehlgeschlagen`);
-		}
-		const hostname = url.hostname;
-		if (host !== hostname) {
-			console.log(`Verbinde zum SVWS-Server unter https://${hostname}...`);
-			try {
-				return await this.connect(hostname);
-			} catch {
-				console.log(`Verbindung zum SVWS-Server unter https://${hostname} fehlgeschlagen.`);
-			}
-		}
-		const port = localStorage.getItem("SVWS-Client Port");
-		if ((port !== null) && (port !== url.port)) {
-			console.log(`Verbinde zum SVWS-Server unter https://${hostname}:${port}...`);
-			try {
-				return await this.connect(`${hostname}:${port}`);
-			} catch {
-				console.log(`Verbindung zum SVWS-Server unter https://${hostname}:${port} fehlgeschlagen.`);
-			}
+			console.log(`Verbindung zum SVWS-Server unter ${this._url} fehlgeschlagen`);
 		}
 		throw new UserNotificationException('Es konnte keine Verbindung hergestellt werden.');
 	};
@@ -401,18 +346,9 @@ export class ApiConnection {
 	 */
 	login = async (schema: string, username: string, password: string): Promise<void> => {
 		try {
-			if (this._url === undefined) {
-				throw new DeveloperNotificationException("Keine gültige URL für einen Login verfügbar.");
-			}
-			this._schema_api = new ApiSchema(this._url, username, password);
-			const result = await this._schema_api.revision(schema);
-			// TODO verwende revision für Client Check
-			console.log(`DB-Revision: ${result}`);
 			this._schema = schema;
 			this._username = username;
 			this._password = password;
-			const aesKey = await AES.getKey256(password, username);
-			this._aes.value = new AES(AESAlgo.CBC, aesKey);
 			this._api = new ApiServer(this._url, this._username, this._password);
 			this._apiExternal = new ApiExternal(this._url, this._username, this._password);
 			this._authenticated.value = true;
@@ -421,6 +357,8 @@ export class ApiConnection {
 			this._kompetenzen.value = this.getKompetenzen(this._benutzerdaten.value);
 			this._kompetenzenKlasse.value = this.getKompetenzenKlasse(this._benutzerdaten.value);
 			this._kompetenzenAbiturjahrgaenge.value = this.getKompetenzenAbiturjahrgaenge(this._benutzerdaten.value);
+			const aesKey = await AES.getKey256(password, username);
+			this._aes.value = new AES(AESAlgo.CBC, aesKey);
 			await this.initConfig();
 		} catch (error) {
 			// Wenn Status 404, dann ist das Schema noch nicht initialisiert
@@ -432,6 +370,8 @@ export class ApiConnection {
 				throw new UserNotificationException(res);
 			}
 			// TODO Anmelde-Fehler wird nur in der App angezeigt. Der konkreten Fehler könnte ggf. geloggt werden...
+			this._api = undefined;
+			this._apiExternal = undefined;
 			this._authenticated.value = false;
 			this._benutzerdaten.value = undefined;
 			this._istAdmin.value = undefined;
@@ -463,7 +403,6 @@ export class ApiConnection {
 		this._kompetenzenAbiturjahrgaenge.value = undefined;
 		this._username = "";
 		this._password = "";
-		this._schema_api = undefined;
 		this._aes.value = undefined;
 		this._api = undefined;
 		this._apiExternal = undefined;
@@ -474,4 +413,3 @@ export class ApiConnection {
 	};
 
 }
-
