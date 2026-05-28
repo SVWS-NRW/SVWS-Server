@@ -79,7 +79,7 @@
 						th:classappend="${iterationVarSchueler.odd} ? 'bg-lightgrey'">
 						<td class="f-small ta-r bo-t-grey p-tb-0 p-lr-1" th:text="${iterationVarSchueler.count + '. '}">1.</td>
 						<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${schueler.nachnameVorname()}">Mustermann, Max</td>
-						<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${schueler.auswahlLernabschnitt().klasse().kuerzel()}">10a</td>
+						<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${(schueler.auswahlLernabschnitt() != null && schueler.auswahlLernabschnitt().klasse() != null) ? schueler.auswahlLernabschnitt().klasse().kuerzel() : ''}">10a</td>
 						<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${leistungsdaten.kursart()}">GKM</td>
 						<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${VorlageParameter.get('mitPunktenStattNoten') ? leistungsdaten.noteQuartalPunkte() : leistungsdaten.noteQuartalKuerzel()}">3+</td>
 						<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${VorlageParameter.get('mitPunktenStattNoten') ? leistungsdaten.notePunkte() : leistungsdaten.noteKuerzel()}">2-</td>

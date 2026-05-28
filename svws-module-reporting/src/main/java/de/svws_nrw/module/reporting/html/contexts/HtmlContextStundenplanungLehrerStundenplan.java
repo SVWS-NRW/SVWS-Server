@@ -51,8 +51,7 @@ public final class HtmlContextStundenplanungLehrerStundenplan extends HtmlContex
 					.map(ReportingLehrer::kuerzel).collect(Collectors.joining(","));
 		}
 
-		setContextData(stundenplaene);
-		sortiereContextMitRegistry();
+		setContextDataSortiert(stundenplaene, ReportingStundenplanungLehrerStundenplan.SORTIERUNG, ReportingStundenplanungLehrerStundenplan.class);
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();

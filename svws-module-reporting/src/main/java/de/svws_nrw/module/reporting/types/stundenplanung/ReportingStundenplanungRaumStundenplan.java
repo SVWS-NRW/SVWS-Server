@@ -3,6 +3,7 @@ package de.svws_nrw.module.reporting.types.stundenplanung;
 
 import java.util.Objects;
 
+import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 
 
@@ -10,6 +11,9 @@ import de.svws_nrw.module.reporting.types.ReportingBaseType;
  * Basis-Raum im Rahmen des Reportings für Daten vom Typ Raum-Stundenplan.
  */
 public class ReportingStundenplanungRaumStundenplan extends ReportingBaseType {
+
+	/** Die Sortierkonfiguration für {@link ReportingStundenplanungRaumStundenplan}. */
+	public static final ReportingSortierung<ReportingStundenplanungRaumStundenplan> SORTIERUNG = ReportingStundenplanungRaumStundenplanSortierung.SORTIERUNG;
 
 	/** Der Raum des Stundenplans. */
 	protected ReportingStundenplanungRaum raum;

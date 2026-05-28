@@ -8,6 +8,8 @@ import de.svws_nrw.core.data.schule.ReligionEintrag;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
+import de.svws_nrw.module.reporting.filterung.ReportingFilterung;
+import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungSchuelerklausur;
 import de.svws_nrw.module.reporting.types.person.ReportingPerson;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieher;
@@ -30,6 +32,12 @@ import java.util.Objects;
  * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Schüler.</p>
  */
 public class ReportingSchueler extends ReportingPerson {
+
+	/** Die Sortierkonfiguration für {@link ReportingSchueler}. */
+	public static final ReportingSortierung<ReportingSchueler> SORTIERUNG = ReportingSchuelerSortierung.SORTIERUNG;
+
+	/** Die Filterkonfiguration für {@link ReportingSchueler}. */
+	public static final ReportingFilterung<ReportingSchueler> FILTER = ReportingSchuelerFilter.FILTER;
 
 	/** Daten aller Lernabschnitte. */
 	private List<ReportingSchuelerLernabschnitt> lernabschnitte;

@@ -18,8 +18,6 @@ import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
-import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingKlasse;
-import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingKurs;
 import de.svws_nrw.module.reporting.types.lerngruppen.ProxyReportingKlasse;
 import de.svws_nrw.module.reporting.types.lerngruppen.ProxyReportingKurs;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
@@ -105,7 +103,7 @@ public class ReportingRepositoryLerngruppen {
 	public List<ReportingKlasse> klassen(final List<Long> idsKlassen, final boolean sortiereListe) {
 		final Comparator<ReportingKlasse> comparator = ComparatorFactory.buildComparator(this.reportingContext.sortierungService(),
 				this.reportingContext.logger(), ReportingKlasse.class.getSimpleName(),
-				SortierungRegistryReportingKlasse.sortierungRegistry(), sortiereListe);
+				ReportingKlasse.SORTIERUNG, sortiereListe);
 
 		return ReportingRepositoryUtils.erstelleReportingListe(idsKlassen, mapKlassenStammdaten, mapKlassen,
 				fehlendeIds -> {
@@ -216,7 +214,7 @@ public class ReportingRepositoryLerngruppen {
 	public List<ReportingKurs> kurse(final List<Long> idsKurse, final boolean sortiereListe) {
 		final Comparator<ReportingKurs> comparator = ComparatorFactory.buildComparator(this.reportingContext.sortierungService(),
 				this.reportingContext.logger(), ReportingKurs.class.getSimpleName(),
-				SortierungRegistryReportingKurs.sortierungRegistry(), sortiereListe);
+				ReportingKurs.SORTIERUNG, sortiereListe);
 
 		return ReportingRepositoryUtils.erstelleReportingListe(idsKurse, mapKursDaten, mapKurse,
 				fehlendeIds -> new DataKurse(this.reportingContext.conn()).getListByIDs(fehlendeIds, false),

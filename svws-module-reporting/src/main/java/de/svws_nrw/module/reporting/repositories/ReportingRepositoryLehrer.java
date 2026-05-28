@@ -13,7 +13,6 @@ import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
-import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingLehrer;
 import de.svws_nrw.module.reporting.types.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
@@ -123,7 +122,7 @@ public class ReportingRepositoryLehrer {
 	public List<ReportingLehrer> lehrer(final List<Long> idsLehrer, final boolean sortiereListe) {
 		final Comparator<ReportingLehrer> comparator = ComparatorFactory.buildComparator(this.reportingContext.sortierungService(),
 				this.reportingContext.logger(), ReportingLehrer.class.getSimpleName(),
-				SortierungRegistryReportingLehrer.sortierungRegistry(), sortiereListe);
+				ReportingLehrer.SORTIERUNG, sortiereListe);
 
 		return ReportingRepositoryUtils.erstelleReportingListe(idsLehrer, mapLehrerStammdaten, mapLehrer,
 				fehlendeIds -> new DataLehrerStammdaten(this.reportingContext.conn(), new DataLernplattformen(this.reportingContext.conn()),

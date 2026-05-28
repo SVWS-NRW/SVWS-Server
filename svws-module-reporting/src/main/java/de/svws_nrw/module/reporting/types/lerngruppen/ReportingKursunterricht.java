@@ -3,6 +3,7 @@ package de.svws_nrw.module.reporting.types.lerngruppen;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdaten;
 import jakarta.validation.constraints.NotNull;
@@ -12,6 +13,9 @@ import jakarta.validation.constraints.NotNull;
  * Repräsentiert Unterricht in einem Kurs.
  */
 public class ReportingKursunterricht extends ReportingKurs {
+
+	/** Die Sortierkonfiguration für {@link ReportingKursunterricht}. */
+	public static final ReportingSortierung<ReportingKursunterricht> SORTIERUNG = ReportingKursunterrichtSortierung.SORTIERUNG;
 
 	/** Der Lehrer, der diesen Unterricht bewertet. */
 	private final ReportingLehrer bewertenderLehrer;
@@ -29,7 +33,7 @@ public class ReportingKursunterricht extends ReportingKurs {
 	public ReportingKursunterricht(final @NotNull ReportingKurs kurs, final ReportingLehrer bewertenderLehrer,
 			final Map<Long, ReportingSchuelerLeistungsdaten> mapSchuelerLeistungsdaten) {
 		super(kurs.id(), kurs.schuljahresabschnitt(), kurs.kuerzel(), kurs.fach(), kurs.kurslehrer(), kurs.wochenstundenLehrkraefte(), kurs.schueler(),
-				kurs.sortierung(), kurs.wochenstunden(), kurs.bezeichnungZeugnis(), kurs.istEpochalunterricht(), kurs.istSichtbar(), kurs.jahrgaenge(),
+				kurs.sortierungEintrag(), kurs.wochenstunden(), kurs.bezeichnungZeugnis(), kurs.istEpochalunterricht(), kurs.istSichtbar(), kurs.jahrgaenge(),
 				kurs.kursartAllg(), kurs.schienen(), kurs.idsSchueler(), kurs.schulnummer());
 
 		this.bewertenderLehrer = bewertenderLehrer;

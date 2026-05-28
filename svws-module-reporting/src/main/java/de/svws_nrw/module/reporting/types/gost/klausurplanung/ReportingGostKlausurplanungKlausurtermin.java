@@ -5,6 +5,8 @@ import java.util.List;
 
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.DateUtils;
+import de.svws_nrw.module.reporting.filterung.ReportingFilterung;
+import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 
 
@@ -12,6 +14,14 @@ import de.svws_nrw.module.reporting.types.ReportingBaseType;
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKlausurplanungKlausurtermin.
  */
 public class ReportingGostKlausurplanungKlausurtermin extends ReportingBaseType {
+
+	/** Die Sortierkonfiguration für {@link ReportingGostKlausurplanungKlausurtermin} (siehe {@link ReportingGostKlausurplanungKlausurterminSortierung}). */
+	public static final ReportingSortierung<ReportingGostKlausurplanungKlausurtermin> SORTIERUNG =
+			ReportingGostKlausurplanungKlausurterminSortierung.SORTIERUNG;
+
+	/** Die Filterkonfiguration für {@link ReportingGostKlausurplanungKlausurtermin} (siehe {@link ReportingGostKlausurplanungKlausurterminFilter}). */
+	public static final ReportingFilterung<ReportingGostKlausurplanungKlausurtermin> FILTER =
+			ReportingGostKlausurplanungKlausurterminFilter.FILTER;
 
 	/** Die textuelle Bemerkung zum Termin, sofern vorhanden. */
 	protected String bemerkung;

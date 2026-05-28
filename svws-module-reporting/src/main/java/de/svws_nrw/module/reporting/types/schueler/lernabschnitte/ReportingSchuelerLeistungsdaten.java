@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.types.Note;
+import de.svws_nrw.module.reporting.filterung.ReportingFilterung;
+import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
@@ -17,6 +19,12 @@ import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Lernabschnitt.
  */
 public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
+
+	/** Die Sortierkonfiguration für {@link ReportingSchuelerLeistungsdaten}. */
+	public static final ReportingSortierung<ReportingSchuelerLeistungsdaten> SORTIERUNG = ReportingSchuelerLeistungsdatenSortierung.SORTIERUNG;
+
+	/** Die Filterkonfiguration für {@link ReportingSchuelerLeistungsdaten}. */
+	public static final ReportingFilterung<ReportingSchuelerLeistungsdaten> FILTER = ReportingSchuelerLeistungsdatenFilter.FILTER;
 
 	/** Gibt an, ob es sich bei der Fachbelegung um ein Abiturfach des Schülers handelt und wenn ja, um welches (NULL, 1, 2, 3, 4). */
 	protected Integer abifach;

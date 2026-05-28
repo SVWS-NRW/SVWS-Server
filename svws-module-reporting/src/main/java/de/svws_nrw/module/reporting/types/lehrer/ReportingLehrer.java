@@ -8,6 +8,8 @@ import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.core.types.PersonalTyp;
+import de.svws_nrw.module.reporting.filterung.ReportingFilterung;
+import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlassenunterricht;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKursunterricht;
 import de.svws_nrw.module.reporting.types.person.ReportingPerson;
@@ -16,6 +18,12 @@ import de.svws_nrw.module.reporting.types.person.ReportingPerson;
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Lehrer.
  */
 public class ReportingLehrer extends ReportingPerson {
+
+	/** Die Sortierkonfiguration für {@link ReportingLehrer}. */
+	public static final ReportingSortierung<ReportingLehrer> SORTIERUNG = ReportingLehrerSortierung.SORTIERUNG;
+
+	/** Die Filterkonfiguration für {@link ReportingLehrer}. */
+	public static final ReportingFilterung<ReportingLehrer> FILTER = ReportingLehrerFilter.FILTER;
 
 	/** Ggf. die Amtsbezeichnung des Lehrers. */
 	protected String amtsbezeichnung;

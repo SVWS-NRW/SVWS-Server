@@ -4,6 +4,8 @@ package de.svws_nrw.module.reporting.types.lerngruppen;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.svws_nrw.module.reporting.filterung.ReportingFilterung;
+import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
@@ -13,6 +15,12 @@ import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Klasse.
  */
 public class ReportingKlasse extends ReportingSchuelergruppe {
+
+	/** Die Sortierkonfiguration für {@link ReportingKlasse}. */
+	public static final ReportingSortierung<ReportingKlasse> SORTIERUNG = ReportingKlasseSortierung.SORTIERUNG;
+
+	/** Die Filterkonfiguration für {@link ReportingKlasse}. */
+	public static final ReportingFilterung<ReportingKlasse> FILTER = ReportingKlasseFilter.FILTER;
 
 	/** Gibt am WBK an, ob die Klasse im Sommersemester angefangen hat. */
 	protected boolean beginnSommersemester;
@@ -85,7 +93,7 @@ public class ReportingKlasse extends ReportingSchuelergruppe {
 	 * @param schuljahresabschnitt Der Schuljahresabschnitt der Klasse.
 	 * @param kuerzel Das Kürzel der Klasse.
 	 * @param schueler Die Liste der Schüler der Klasse.
-	 * @param sortierung Die Sortierreihenfolge des Jahrgangslisten-Eintrags.
+	 * @param sortierungEintrag Die Sortierreihenfolge des Jahrgangslisten-Eintrags.
 	 * @param beginnSommersemester Gibt am WBK an, ob die Klasse im Sommersemester angefangen hat.
 	 * @param beschreibung Eine zusätzliche Beschreibung zu der Klasse
 	 * @param folgeklasse Die Folgeklasse dieser Klasse zur idFolgeklasse, sofern diese bereits vorhanden ist.
@@ -111,13 +119,13 @@ public class ReportingKlasse extends ReportingSchuelergruppe {
 	 */
 	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingKlasse(final long id, final ReportingSchuljahresabschnitt schuljahresabschnitt, final String kuerzel,
-			final List<ReportingSchueler> schueler, final int sortierung, final boolean beginnSommersemester, final String beschreibung,
+			final List<ReportingSchueler> schueler, final int sortierungEintrag, final boolean beginnSommersemester, final String beschreibung,
 			final ReportingKlasse folgeklasse, final Long idAllgemeinbildendOrganisationsform, final Long idBerufsbildendOrganisationsform,
 			final Long idFachklasse, final Long idFolgeklasse, final Long idJahrgang, final long idKlassenart, final List<ReportingLehrer> klassenleitungen,
 			final List<Long> idsSchueler, final long idSchulgliederung, final Long idVorgaengerklasse, final Long idWeiterbildungOrganisationsform,
 			final ReportingJahrgang jahrgang, final String kuerzelFolgeklasse, final String kuerzelVorgaengerklasse, final String parallelitaet,
 			final String pruefungsordnung, final String teilstandort, final boolean verwendungAnkreuzkompetenzen, final ReportingKlasse vorgaengerklasse) {
-		super(id, schuljahresabschnitt, kuerzel, klassenleitungen, schueler, sortierung);
+		super(id, schuljahresabschnitt, kuerzel, klassenleitungen, schueler, sortierungEintrag);
 		this.beginnSommersemester = beginnSommersemester;
 		this.beschreibung = beschreibung;
 		this.folgeklasse = folgeklasse;

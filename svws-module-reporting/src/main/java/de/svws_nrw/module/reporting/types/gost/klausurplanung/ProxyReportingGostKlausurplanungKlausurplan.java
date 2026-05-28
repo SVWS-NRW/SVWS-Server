@@ -19,7 +19,6 @@ import de.svws_nrw.module.reporting.sortierung.ReportingSortierungService;
 import de.svws_nrw.module.reporting.types.lerngruppen.ProxyReportingKurs;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
-import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingGostKlausurplanungSchuelerklausur;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
@@ -152,7 +151,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 
 		final Comparator<ReportingGostKlausurplanungSchuelerklausur> comparator =
 				ComparatorFactory.buildComparator(sortierungService, logger, ReportingGostKlausurplanungSchuelerklausur.class.getSimpleName(),
-						SortierungRegistryReportingGostKlausurplanungSchuelerklausur.sortierungRegistry(), true);
+						ReportingGostKlausurplanungSchuelerklausur.SORTIERUNG, true);
 
 		super.schuelerklausuren.sort(comparator);
 		super.kursklausuren.forEach(kk -> kk.schuelerklausuren().sort(comparator));
@@ -164,19 +163,22 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 	private static Predicate<ReportingSchueler> setFilterSchueler(final ReportingContext reportingContext) {
 		return (reportingContext == null)
 				? s -> true
-				: reportingContext.filterService().getFilter(ReportingSchueler.class.getSimpleName(), null);
+				: ReportingSchueler.FILTER.bedingung(
+						reportingContext.filterService().getFilter(ReportingSchueler.class.getSimpleName()), null);
 	}
 
 	private static Predicate<ReportingKurs> setFilterKurse(final ReportingContext reportingContext) {
 		return (reportingContext == null)
 				? k -> true
-				: reportingContext.filterService().getFilter(ReportingKurs.class.getSimpleName(), null);
+				: ReportingKurs.FILTER.bedingung(
+						reportingContext.filterService().getFilter(ReportingKurs.class.getSimpleName()), null);
 	}
 
 	private static Predicate<ReportingGostKlausurplanungKlausurtermin> setFilterKlausurtermin(final ReportingContext reportingContext) {
 		return (reportingContext == null)
 				? p -> true
-				: reportingContext.filterService().getFilter(ReportingGostKlausurplanungKlausurtermin.class.getSimpleName(), null);
+				: ReportingGostKlausurplanungKlausurtermin.FILTER.bedingung(
+						reportingContext.filterService().getFilter(ReportingGostKlausurplanungKlausurtermin.class.getSimpleName()), null);
 	}
 
 	/**

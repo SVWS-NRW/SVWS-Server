@@ -1,70 +1,40 @@
-package de.svws_nrw.module.reporting.sortierung;
-
-import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
-import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungSchuelerStundenplan;
-import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungStundenplan;
-import de.svws_nrw.module.reporting.utils.ReportingTypesUtils;
+package de.svws_nrw.module.reporting.types.stundenplanung;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
+import de.svws_nrw.module.reporting.sortierung.FunktionBuilder;
+import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
+import de.svws_nrw.module.reporting.sortierung.SortierungRegistry;
+import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
+import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
+import de.svws_nrw.module.reporting.utils.ReportingTypesUtils;
+
 /**
- * Registry zur Definition erlaubter Sortierattribute für {@link ReportingStundenplanungSchuelerStundenplan}
- * sowie Hilfsmethoden zum Erzeugen passender Comparatoren.
+ * Begleit-Datei zu {@link ReportingStundenplanungSchuelerStundenplan}: hält die Sortierkonfiguration des Reporting-Typs (Registry + Standardsortierung).
+ * Die fertige {@link ReportingSortierung}-Instanz wird über {@link ReportingStundenplanungSchuelerStundenplan#SORTIERUNG} verwendet.
  */
-public final class SortierungRegistryReportingStundenplanungSchuelerStundenplan {
+public final class ReportingStundenplanungSchuelerStundenplanSortierung {
 
-	private SortierungRegistryReportingStundenplanungSchuelerStundenplan() {
-		throw new IllegalStateException("Statische Klasse mit Hilfsmethoden zur Sortierung von Daten für das Reporting. Initialisierung nicht möglich.");
+	/** Die Sortierkonfiguration für {@link ReportingStundenplanungSchuelerStundenplan}. */
+	public static final ReportingSortierung<ReportingStundenplanungSchuelerStundenplan> SORTIERUNG =
+			ReportingSortierung.<ReportingStundenplanungSchuelerStundenplan>builder()
+					.registry(buildRegistry())
+					.standard(buildStandard())
+					.build();
+
+	private ReportingStundenplanungSchuelerStundenplanSortierung() {
+		throw new IllegalStateException("Begleit-Klasse zur Sortierung von ReportingStundenplanungSchuelerStundenplan. Initialisierung nicht möglich.");
 	}
 
-	/**
-	 * Erstellt einen {@link Comparator} für die Klasse {@link ReportingStundenplanungSchuelerStundenplan} basierend
-	 * auf den angegebenen Attributen.
-	 *
-	 * @param attribute Eine Liste von Attributnamen, die die Sortierreihenfolge definieren.
-	 * @param validierungsfehler Liste, die unbekannte Attribute während der Validierung aufnimmt (optional).
-	 * @return Comparator entsprechend der Attribute für {@link ReportingStundenplanungSchuelerStundenplan}.
-	 */
-	public static Comparator<ReportingStundenplanungSchuelerStundenplan> buildComparator(final List<String> attribute, final List<String> validierungsfehler) {
-		return ComparatorBuilder.build(sortierungRegistry(), attribute, validierungsfehler);
-	}
-
-	/**
-	 * Erstellt einen {@link Comparator} für die Klasse {@link ReportingStundenplanungSchuelerStundenplan} basierend
-	 * auf der Standardsortierung.
-	 *
-	 * @param validierungsfehler Liste, die unbekannte Attribute während der Validierung aufnimmt (optional).
-	 * @return Comparator entsprechend der Standardsortierung für {@link ReportingStundenplanungSchuelerStundenplan}.
-	 */
-	public static Comparator<ReportingStundenplanungSchuelerStundenplan> buildComparatorStandard(final List<String> validierungsfehler) {
-		return ComparatorBuilder.build(sortierungRegistry(), standardsortierung(), validierungsfehler);
-	}
-
-	/**
-	 * Erstellt eine Liste von Strings, die die Attribute der Standardsortierung.
-	 * für {@link ReportingStundenplanungSchuelerStundenplan} repräsentieren.
-	 *
-	 * @return Eine Liste von Attributnamen in der Reihenfolge der Standardsortierung.
-	 */
-	public static List<String> standardsortierung() {
+	private static List<String> buildStandard() {
 		final ArrayList<String> standard = new ArrayList<>();
-		SortierungRegistryReportingSchueler.standardsortierung()
+		ReportingSchueler.SORTIERUNG.standardsortierung()
 				.forEach(attribut -> standard.add(ReportingTypesUtils.methodeToString(ReportingStundenplanungSchuelerStundenplan::schueler) + "." + attribut));
 		return standard;
 	}
 
-	/**
-	 * Stellt die {@link SortierungRegistry} für die Klasse {@link ReportingStundenplanungSchuelerStundenplan} öffentlich zur Verfügung
-	 *
-	 * @return Die konfigurierte Instanz von {@link SortierungRegistry} für {@link ReportingStundenplanungSchuelerStundenplan}.
-	 */
-	public static SortierungRegistry<ReportingStundenplanungSchuelerStundenplan> sortierungRegistry() {
-		return sortierungRegistryReportingReportingStundenplanungSchuelerStundenplan();
-	}
-
-	private static SortierungRegistry<ReportingStundenplanungSchuelerStundenplan> sortierungRegistryReportingReportingStundenplanungSchuelerStundenplan() {
+	private static SortierungRegistry<ReportingStundenplanungSchuelerStundenplan> buildRegistry() {
 		final SortierungRegistry<ReportingStundenplanungSchuelerStundenplan> reg = new SortierungRegistry<>();
 
 		// Sortierattribute für den eingebetteten Stundenplan
@@ -117,7 +87,7 @@ public final class SortierungRegistryReportingStundenplanungSchuelerStundenplan 
 
 		// Importiere alle Schüler-Attribute unter dem Prefix "schueler"
 		reg.importiereRegistryEintraege(ReportingTypesUtils.methodeToString(ReportingStundenplanungSchuelerStundenplan::schueler) + ".",
-				SortierungRegistryReportingSchueler.sortierungRegistry(), ReportingStundenplanungSchuelerStundenplan::schueler);
+				ReportingSchueler.SORTIERUNG.registry(), ReportingStundenplanungSchuelerStundenplan::schueler);
 
 		return reg;
 	}

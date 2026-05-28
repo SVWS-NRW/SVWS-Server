@@ -1,36 +1,27 @@
-package de.svws_nrw.module.reporting.filterung;
+package de.svws_nrw.module.reporting.types.schueler.lernabschnitte;
 
-import de.svws_nrw.module.reporting.repositories.ReportingContext;
-import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdaten;
+import de.svws_nrw.module.reporting.filterung.FilterRegistry;
+import de.svws_nrw.module.reporting.filterung.ReportingFilterung;
+import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.utils.ReportingTypesUtils;
 
 /**
- * Registry zur Definition erlaubter Filterattribute für {@link ReportingSchuelerLeistungsdaten}
- * sowie Hilfsmethoden zum Erzeugen passender Predicates.
+ * Begleit-Datei zu {@link ReportingSchuelerLeistungsdaten}: hält die Filterkonfiguration des Reporting-Typs (Registry).
+ * Die fertige {@link ReportingFilterung}-Instanz wird über {@link ReportingSchuelerLeistungsdaten#FILTER} verwendet.
  */
-public final class FilterRegistryReportingSchuelerLeistungsdaten {
+public final class ReportingSchuelerLeistungsdatenFilter {
 
-	private FilterRegistryReportingSchuelerLeistungsdaten() {
-		throw new IllegalStateException("Statische Klasse mit Hilfsmethoden zur Filterung von Daten für das Reporting. Initialisierung nicht möglich.");
+	/** Die Filterkonfiguration für {@link ReportingSchuelerLeistungsdaten}. */
+	public static final ReportingFilterung<ReportingSchuelerLeistungsdaten> FILTER =
+			ReportingFilterung.<ReportingSchuelerLeistungsdaten>builder()
+					.registry(buildRegistry())
+					.build();
+
+	private ReportingSchuelerLeistungsdatenFilter() {
+		throw new IllegalStateException("Begleit-Klasse zur Filterung von ReportingSchuelerLeistungsdaten. Initialisierung nicht möglich.");
 	}
 
-	/**
-	 * Stellt die {@link FilterRegistry} für die Klasse {@link ReportingSchuelerLeistungsdaten} öffentlich zur Verfügung.
-	 * Diese Methode wird vom {@link ReportingContext} via Reflection aufgerufen.
-	 *
-	 * @return Die konfigurierte Instanz von {@link FilterRegistry} für {@link ReportingSchuelerLeistungsdaten}.
-	 */
-	public static FilterRegistry<ReportingSchuelerLeistungsdaten> filterRegistry() {
-		return filterRegistryReportingSchuelerLeistungsdaten();
-	}
-
-	/**
-	 * Erstellt und konfiguriert eine {@link FilterRegistry} für die Klasse {@link ReportingSchuelerLeistungsdaten}.
-	 * Hier werden alle Attribute registriert, auf die ein Filter in den ReportingParametern angewendet werden kann.
-	 *
-	 * @return Die konfigurierte Instanz von {@link FilterRegistry} für {@link ReportingSchuelerLeistungsdaten}.
-	 */
-	private static FilterRegistry<ReportingSchuelerLeistungsdaten> filterRegistryReportingSchuelerLeistungsdaten() {
+	private static FilterRegistry<ReportingSchuelerLeistungsdaten> buildRegistry() {
 		final FilterRegistry<ReportingSchuelerLeistungsdaten> reg = new FilterRegistry<>();
 
 		// Grundlegende Attribute
@@ -70,7 +61,7 @@ public final class FilterRegistryReportingSchuelerLeistungsdaten {
 
 		// Attribute des zugeordneten Faches mit Prefix "fach" aus der Fach-Registry übernehmen.
 		reg.importiereRegistryEintraege(ReportingTypesUtils.methodeToString(ReportingSchuelerLeistungsdaten::fach) + ".",
-				FilterRegistryReportingFach.filterRegistry(), ReportingSchuelerLeistungsdaten::fach);
+				ReportingFach.FILTER.registry(), ReportingSchuelerLeistungsdaten::fach);
 
 		return reg;
 	}

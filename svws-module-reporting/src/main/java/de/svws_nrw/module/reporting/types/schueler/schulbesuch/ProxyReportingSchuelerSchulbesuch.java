@@ -46,6 +46,7 @@ public class ProxyReportingSchuelerSchulbesuch extends ReportingSchuelerSchulbes
 				schulbesuchsdaten.idEntlassjahrgangDieseSchule,
 				createEndlassgrund(reportingContext, schulbesuchsdaten.idEntlassgrundDieseSchule),
 				schulbesuchsdaten.idAbschlussartDieseSchule,
+				schulbesuchsdaten.schluesselHoechsterSchulabschluss,
 				createReportingSchulkatalogEintragNRW(reportingContext, schulbesuchsdaten.idAufnehmendeSchule),
 				ersetzeNullBlankTrim(schulbesuchsdaten.wechseldatumAufnehmendeSchule),
 				schulbesuchsdaten.wechselBestaetigtAufnehmendeSchule,
@@ -90,18 +91,18 @@ public class ProxyReportingSchuelerSchulbesuch extends ReportingSchuelerSchulbes
 
 	private static String uebergangsempfehlungKuerzel(final Long idUebergangsempfehlung) {
 		if (idUebergangsempfehlung == null) {
-			return "---";
+			return "";
 		}
 		final UebergangsempfehlungKatalogEintrag eintrag = Uebergangsempfehlung.data().getEintragByID(idUebergangsempfehlung);
-		return (eintrag == null) ? "---" : eintrag.kuerzel;
+		return (eintrag == null) ? "" : eintrag.kuerzel;
 	}
 
 	private static String uebergangsempfehlungText(final Long idUebergangsempfehlung) {
 		if (idUebergangsempfehlung == null) {
-			return "-----";
+			return "";
 		}
 		final UebergangsempfehlungKatalogEintrag eintrag = Uebergangsempfehlung.data().getEintragByID(idUebergangsempfehlung);
-		return (eintrag == null) ? "-----" : eintrag.text;
+		return (eintrag == null) ? "" : eintrag.text;
 	}
 
 	/**

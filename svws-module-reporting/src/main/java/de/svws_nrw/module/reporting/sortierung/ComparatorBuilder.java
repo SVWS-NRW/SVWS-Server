@@ -39,6 +39,29 @@ public final class ComparatorBuilder {
 	}
 
 	/**
+	 * Wie {@link #build(SortierungRegistry, List, List)}, jedoch ohne Fehlerliste. Ist ein Attribut nicht registriert,
+	 * wird eine {@link IllegalStateException} geworfen. Gedacht für Aufrufe mit intern definierten Attributen
+	 * (z. B. die Standardsortierung eines Reporting-Typs), bei denen ein unbekanntes Attribut nur ein Programmierfehler
+	 * sein kann.
+	 *
+	 * @param <T> Der Typ der Objekte, die mit dem Comparator verglichen werden sollen.
+	 * @param registry Die {@link SortierungRegistry}, die Comparatoren für die Attribute bereitstellt.
+	 * @param attribute Die Liste der Sortierattribute (mit optionaler Sortierrichtung).
+	 *
+	 * @return Ein Comparator gemäß den übergebenen Attributen.
+	 *
+	 * @throws IllegalStateException falls mindestens ein Attribut in der Registry nicht registriert ist.
+	 */
+	public static <T> Comparator<T> buildStrict(final SortierungRegistry<T> registry, final List<String> attribute) {
+		final List<String> validierungsfehler = new ArrayList<>();
+		final Comparator<T> comparator = build(registry, attribute, validierungsfehler);
+		if (!validierungsfehler.isEmpty()) {
+			throw new IllegalStateException("Unbekannte Sortierattribute in interner Sortierdefinition: " + validierungsfehler);
+		}
+		return comparator;
+	}
+
+	/**
 	 * Diese Klasse repräsentiert ein Attribut, das zur Sortierung verwendet wird.
 	 * Sie enthält das zu sortierende Attribut sowie die Information über die Sortierrichtung,
 	 * ob diese aufsteigend oder absteigend erfolgen soll.

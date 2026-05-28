@@ -40,8 +40,7 @@ public final class HtmlContextStundenplanungSchuelerStundenplan extends HtmlCont
 		this.reportingContext.repositorySchueler().schueler(idsAusgabe)
 				.forEach(schueler -> stundenplaene.add(new ReportingStundenplanungSchuelerStundenplan(schueler, stundenplan)));
 
-		setContextData(stundenplaene);
-		sortiereContextMitRegistry();
+		setContextDataSortiert(stundenplaene, ReportingStundenplanungSchuelerStundenplan.SORTIERUNG, ReportingStundenplanungSchuelerStundenplan.class);
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();

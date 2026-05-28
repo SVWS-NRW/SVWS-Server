@@ -2,6 +2,7 @@ package de.svws_nrw.module.reporting.types.schueler.lernabschnitte;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
+import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
@@ -31,9 +32,12 @@ public class ProxyReportingSchuelerLeistungsdatenMatrix extends ReportingSchuele
 			final ReportingSchuljahresabschnitt schuljahresabschnitt) {
 
 		super(schueler, schuljahresabschnitt,
-				reportingContext.sortierungService().getSortierungsAttribute(ReportingSchuelerLeistungsdaten.class.getSimpleName(), true),
-				reportingContext.sortierungService().getSortierungsAttribute(ReportingSchueler.class.getSimpleName(), true),
-				reportingContext.filterService().getFilter(ReportingSchuelerLeistungsdaten.class.getSimpleName(), null));
+				ComparatorFactory.buildComparator(reportingContext.sortierungService(), reportingContext.logger(),
+						ReportingSchuelerLeistungsdaten.class.getSimpleName(), ReportingSchuelerLeistungsdaten.SORTIERUNG, true),
+				ComparatorFactory.buildComparator(reportingContext.sortierungService(), reportingContext.logger(),
+						ReportingSchueler.class.getSimpleName(), ReportingSchueler.SORTIERUNG, true),
+				ReportingSchuelerLeistungsdaten.FILTER.bedingung(
+						reportingContext.filterService().getFilter(ReportingSchuelerLeistungsdaten.class.getSimpleName()), null));
 
 		this.reportingContext = reportingContext;
 	}

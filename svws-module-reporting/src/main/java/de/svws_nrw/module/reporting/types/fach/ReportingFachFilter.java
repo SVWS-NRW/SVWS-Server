@@ -1,36 +1,26 @@
-package de.svws_nrw.module.reporting.filterung;
+package de.svws_nrw.module.reporting.types.fach;
 
-import de.svws_nrw.module.reporting.repositories.ReportingContext;
-import de.svws_nrw.module.reporting.types.fach.ReportingFach;
+import de.svws_nrw.module.reporting.filterung.FilterRegistry;
+import de.svws_nrw.module.reporting.filterung.ReportingFilterung;
 import de.svws_nrw.module.reporting.utils.ReportingTypesUtils;
 
 /**
- * Registry zur Definition erlaubter Filterattribute für {@link ReportingFach}
- * sowie Hilfsmethoden zum Erzeugen passender Predicates.
+ * Begleit-Datei zu {@link ReportingFach}: hält die Filterkonfiguration des Reporting-Typs (Registry).
+ * Die fertige {@link ReportingFilterung}-Instanz wird über {@link ReportingFach#FILTER} verwendet.
  */
-public final class FilterRegistryReportingFach {
+public final class ReportingFachFilter {
 
-	private FilterRegistryReportingFach() {
-		throw new IllegalStateException("Statische Klasse mit Hilfsmethoden zur Filterung von Daten für das Reporting. Initialisierung nicht möglich.");
+	/** Die Filterkonfiguration für {@link ReportingFach}. */
+	public static final ReportingFilterung<ReportingFach> FILTER =
+			ReportingFilterung.<ReportingFach>builder()
+					.registry(buildRegistry())
+					.build();
+
+	private ReportingFachFilter() {
+		throw new IllegalStateException("Begleit-Klasse zur Filterung von ReportingFach. Initialisierung nicht möglich.");
 	}
 
-	/**
-	 * Stellt die {@link FilterRegistry} für die Klasse {@link ReportingFach} öffentlich zur Verfügung.
-	 * Diese Methode wird vom {@link ReportingContext} via Reflection aufgerufen.
-	 *
-	 * @return Die konfigurierte Instanz von {@link FilterRegistry} für {@link ReportingFach}.
-	 */
-	public static FilterRegistry<ReportingFach> filterRegistry() {
-		return filterRegistryReportingFach();
-	}
-
-	/**
-	 * Erstellt und konfiguriert eine {@link FilterRegistry} für die Klasse {@link ReportingFach}.
-	 * Hier werden alle Attribute registriert, auf die ein Filter in den ReportingParametern angewendet werden kann.
-	 *
-	 * @return Die konfigurierte Instanz von {@link FilterRegistry} für {@link ReportingFach}.
-	 */
-	private static FilterRegistry<ReportingFach> filterRegistryReportingFach() {
+	private static FilterRegistry<ReportingFach> buildRegistry() {
 		final FilterRegistry<ReportingFach> reg = new FilterRegistry<>();
 
 		// Grundlegende Attribute
@@ -39,7 +29,7 @@ public final class FilterRegistryReportingFach {
 		reg.registriereAttribut(ReportingFach::bezeichnung);
 		reg.registriereAttribut(ReportingFach::bezeichnungZeugnis);
 		reg.registriereAttribut(ReportingFach::bezeichnungUeberweisungszeugnis);
-		reg.registriereAttribut(ReportingFach::sortierung);
+		reg.registriereAttribut(ReportingFach::sortierungEintrag);
 
 		// Fachspezifische Attribute
 		reg.registriereAttribut(ReportingFach::aufgabenfeld);

@@ -185,13 +185,15 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 	private static Predicate<ReportingSchueler> setFilterSchueler(final ReportingContext reportingContext) {
 		return (reportingContext == null)
 				? s -> true
-				: reportingContext.filterService().getFilter(ReportingSchueler.class.getSimpleName(), null);
+				: ReportingSchueler.FILTER.bedingung(
+						reportingContext.filterService().getFilter(ReportingSchueler.class.getSimpleName()), null);
 	}
 
 	private static Predicate<ReportingGostKursplanungKurs> setFilterKurse(final ReportingContext reportingContext) {
 		return (reportingContext == null)
 				? k -> true
-				: reportingContext.filterService().getFilter(ReportingGostKursplanungKurs.class.getSimpleName(), null);
+				: ReportingGostKursplanungKurs.FILTER.bedingung(
+						reportingContext.filterService().getFilter(ReportingGostKursplanungKurs.class.getSimpleName()), null);
 	}
 
 	private static boolean istSchuelerFilterAktiv(final ReportingContext reportingContext) {

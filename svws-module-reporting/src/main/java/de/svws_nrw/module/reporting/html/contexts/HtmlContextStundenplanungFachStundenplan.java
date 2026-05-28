@@ -40,8 +40,7 @@ public final class HtmlContextStundenplanungFachStundenplan extends HtmlContext<
 		stundenplan.schuljahresabschnitt().faecher(idsAusgabe)
 				.forEach(fach -> stundenplaene.add(new ReportingStundenplanungFachStundenplan(fach, stundenplan)));
 
-		setContextData(stundenplaene);
-		sortiereContextMitRegistry();
+		setContextDataSortiert(stundenplaene, ReportingStundenplanungFachStundenplan.SORTIERUNG, ReportingStundenplanungFachStundenplan.class);
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();

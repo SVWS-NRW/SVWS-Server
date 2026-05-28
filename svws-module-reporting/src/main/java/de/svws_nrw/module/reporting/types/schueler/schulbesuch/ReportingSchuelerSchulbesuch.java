@@ -48,6 +48,9 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	/** Die ID des Abschlusses, welcher an dieser Schule erworben wurde. */
 	protected final String entlassungAbschlussartID;
 
+	/** Der Schlüssel für den höchsten Schulabschluss. */
+	protected final String hoechsterSchulabschlussSchluessel;
+
 	/** Die aufnehmende Schule nach einer Entlassung. */
 	protected final ReportingSchulkatalogEintragNRW aufnehmendeSchule;
 
@@ -111,6 +114,7 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	 * @param idEntlassjahrgang Die ID des Jahrgangs bei der Entlassung von dieser Schule.
 	 * @param entlassungGrund Die ID des Grundes für die Entlassung von dieser Schule.
 	 * @param entlassungAbschlussartID Die ID des Abschlusses, welcher an dieser Schule erworben wurde.
+	 * @param hoechsterSchulabschlussSchluessel Der Schlüssel für den höchsten Schulabschluss.
 	 * @param aufnehmendeSchule Die aufnehmende Schule nach einer Entlassung.
 	 * @param aufnehmendWechseldatum Das Datum beim Wechsel zu einer aufnehmenden Schule.
 	 * @param aufnehmendBestaetigt Gibt an, ob die aufnehmende Schule den Wechsel bestätigt hat.
@@ -133,10 +137,10 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 			final String vorigeEntlassdatum, final String vorigeEntlassjahrgang, final String vorigeArtLetzteVersetzung,
 			final String vorigeBemerkung, final KatalogEntlassgrund vorigeEntlassgrund, final String vorigeAbschlussartID,
 			final String entlassungDatum, final Long idEntlassjahrgang, final KatalogEntlassgrund entlassungGrund,
-			final String entlassungAbschlussartID, final ReportingSchulkatalogEintragNRW aufnehmendeSchule, final String aufnehmendWechseldatum,
-			final Boolean aufnehmendBestaetigt, final Integer grundschuleEinschulungsjahr, final Long grundschuleEinschulungsartID,
-			final Long idGrundschuleJahreEingangsphase, final String uebergangsempfehlungKuerzel, final String uebergangsempfehlungText,
-			final Integer sekIWechsel, final String sekIErsteSchulform, final Integer sekIIWechsel,
+			final String entlassungAbschlussartID, final String hoechsterSchulabschlussSchluessel, final ReportingSchulkatalogEintragNRW aufnehmendeSchule,
+			final String aufnehmendWechseldatum, final Boolean aufnehmendBestaetigt, final Integer grundschuleEinschulungsjahr,
+			final Long grundschuleEinschulungsartID, final Long idGrundschuleJahreEingangsphase, final String uebergangsempfehlungKuerzel,
+			final String uebergangsempfehlungText, final Integer sekIWechsel, final String sekIErsteSchulform, final Integer sekIIWechsel,
 			final Long idDauerKindergartenbesuch, final Long idKindergarten, final boolean verpflichtungSprachfoerderkurs,
 			final boolean teilnahmeSprachfoerderkurs, final List<ReportingSchuelerSchulbesuchSchule> alleSchulen) {
 		this.vorherigeSchule = vorherigeSchule;
@@ -151,6 +155,7 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 		this.idEntlassjahrgang = idEntlassjahrgang;
 		this.entlassungGrund = entlassungGrund;
 		this.entlassungAbschlussartID = entlassungAbschlussartID;
+		this.hoechsterSchulabschlussSchluessel = hoechsterSchulabschlussSchluessel;
 		this.aufnehmendeSchule = aufnehmendeSchule;
 		this.aufnehmendWechseldatum = aufnehmendWechseldatum;
 		this.aufnehmendBestaetigt = aufnehmendBestaetigt;
@@ -277,6 +282,15 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	 */
 	public String entlassungAbschlussartID() {
 		return entlassungAbschlussartID;
+	}
+
+	/**
+	 * Gibt den Schlüssel für den höchsten Schulabschluss zurück.
+	 *
+	 * @return Der Schlüssel für den höchsten Schulabschluss.
+	 */
+	public String hoechsterSchulabschlussSchluessel() {
+		return hoechsterSchulabschlussSchluessel;
 	}
 
 	/**

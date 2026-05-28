@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
+import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
@@ -13,6 +14,9 @@ import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Jahrgang.
  */
 public class ReportingJahrgang extends ReportingBaseType {
+
+	/** Die Sortierkonfiguration für {@link ReportingJahrgang}. */
+	public static final ReportingSortierung<ReportingJahrgang> SORTIERUNG = ReportingJahrgangSortierung.SORTIERUNG;
 
 	/** Die Anzahl der verbleibenden Restabschnitte (in der Regel Halbjahre) für einen Schüler des Jahrgangs zu Beginn eines Schuljahres. */
 	protected Integer anzahlRestabschnitte;
@@ -60,7 +64,7 @@ public class ReportingJahrgang extends ReportingBaseType {
 	protected ReportingSchuljahresabschnitt schuljahresabschnitt;
 
 	/** Die Sortierreihenfolge des Jahrgangs in der Liste der Jahrgänge. */
-	protected int sortierung;
+	protected int sortierungEintrag;
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
@@ -80,13 +84,13 @@ public class ReportingJahrgang extends ReportingBaseType {
 	 * @param istSichtbar Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
 	 * @param schueler Liste der Schüler des Jahrgangs.
 	 * @param schuljahresabschnitt Der Schuljahresabschnitt zu diesem Jahrgang.
-	 * @param sortierung Die Sortierreihenfolge des Jahrgangs in der Liste der Jahrgänge.
+	 * @param sortierungEintrag Die Sortierreihenfolge des Jahrgangs in der Liste der Jahrgänge.
 	 */
 	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingJahrgang(final Integer anzahlRestabschnitte, final String bezeichnung, final Long gueltigBis, final Long gueltigVon,
 			final ReportingJahrgang folgejahrgang, final long id, final Long idFolgejahrgang, final Jahrgaenge jahrgang, final List<ReportingKlasse> klassen,
 			final String kuerzel, final String kuerzelSchulgliederung, final String kuerzelStatistik, final boolean istSichtbar,
-			final List<ReportingSchueler> schueler, final ReportingSchuljahresabschnitt schuljahresabschnitt, final int sortierung) {
+			final List<ReportingSchueler> schueler, final ReportingSchuljahresabschnitt schuljahresabschnitt, final int sortierungEintrag) {
 		this.anzahlRestabschnitte = anzahlRestabschnitte;
 		this.bezeichnung = bezeichnung;
 		this.gueltigBis = gueltigBis;
@@ -102,7 +106,7 @@ public class ReportingJahrgang extends ReportingBaseType {
 		this.istSichtbar = istSichtbar;
 		this.schueler = schueler;
 		this.schuljahresabschnitt = schuljahresabschnitt;
-		this.sortierung = sortierung;
+		this.sortierungEintrag = sortierungEintrag;
 	}
 
 
@@ -320,10 +324,10 @@ public class ReportingJahrgang extends ReportingBaseType {
 	/**
 	 * Die Sortierreihenfolge des Jahrgangs in der Liste der Jahrgänge.
 	 *
-	 * @return Inhalt des Feldes sortierung
+	 * @return Inhalt des Feldes sortierungJahrgaenge
 	 */
-	public int sortierung() {
-		return sortierung;
+	public int sortierungEintrag() {
+		return sortierungEintrag;
 	}
 
 }

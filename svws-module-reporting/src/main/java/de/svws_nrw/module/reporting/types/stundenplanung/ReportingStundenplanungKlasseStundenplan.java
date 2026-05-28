@@ -3,6 +3,7 @@ package de.svws_nrw.module.reporting.types.stundenplanung;
 
 import java.util.Objects;
 
+import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 
@@ -11,6 +12,9 @@ import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Klassen-Stundenplan.
  */
 public class ReportingStundenplanungKlasseStundenplan extends ReportingBaseType {
+
+	/** Die Sortierkonfiguration für {@link ReportingStundenplanungKlasseStundenplan}. */
+	public static final ReportingSortierung<ReportingStundenplanungKlasseStundenplan> SORTIERUNG = ReportingStundenplanungKlasseStundenplanSortierung.SORTIERUNG;
 
 	/** Die Klasse des Stundenplans. */
 	protected ReportingKlasse klasse;

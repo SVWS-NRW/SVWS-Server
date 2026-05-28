@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 import de.svws_nrw.core.adt.map.ListMap2DLongKeys;
-import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingSchueler;
-import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingSchuelerLeistungsdaten;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
@@ -45,28 +43,25 @@ public class ReportingSchuelerLeistungsdatenMatrix {
 	 *
 	 * @param schueler                            Die Liste der potenziellen Schüler.
 	 * @param schuljahresabschnitt                Der Schuljahresabschnitt, für den die Daten ermittelt werden sollen.
-	 * @param sortierungsAttributeLeistungsdaten  Eine Liste von Attributnamen für die Sortierung der Leistungsdaten, aus der die Spaltenreihenfolge der Fächer
-	 *                                            abgeleitet wird. Eine vordefinierte Liste findet sich unter
-	 *                                            {@link SortierungRegistryReportingSchuelerLeistungsdaten#standardsortierung}.
-	 *                                            Ist die Liste leer oder null, wird die Standardsortierung verwendet.
-	 * @param sortierungsAttributeSchueler        Eine Liste von Attributnamen für die Sortierung der Zeilen mit den Schülern.
-	 *                                            Eine vordefinierte Liste findet sich unter {@link SortierungRegistryReportingSchueler#standardsortierung}.
-	 *                                            Ist die Liste leer oder null, wird die Standardsortierung verwendet.
+	 * @param comparatorLeistungsdaten            Der Comparator für die Sortierung der Leistungsdaten, aus der die Spaltenreihenfolge der Fächer
+	 *                                            abgeleitet wird. Ist der Comparator null, wird die Standardsortierung verwendet.
+	 * @param comparatorSchueler                  Der Comparator für die Sortierung der Zeilen mit den Schülern.
+	 *                                            Ist der Comparator null, wird die Standardsortierung verwendet.
 	 * @param filterLeistungsdaten                Ein Prädikat zum Filtern der Leistungsdaten. Nur Leistungsdaten, die den Filter passieren, werden in die Matrix
 	 *                                            aufgenommen; die Spaltenmenge ergibt sich aus deren Fächern.
 	 */
 	public ReportingSchuelerLeistungsdatenMatrix(final List<ReportingSchueler> schueler, final ReportingSchuljahresabschnitt schuljahresabschnitt,
-			final List<String> sortierungsAttributeLeistungsdaten, final List<String> sortierungsAttributeSchueler,
+			final Comparator<ReportingSchuelerLeistungsdaten> comparatorLeistungsdaten, final Comparator<ReportingSchueler> comparatorSchueler,
 			final Predicate<ReportingSchuelerLeistungsdaten> filterLeistungsdaten) {
 
-		// Prüfe die Listen mit den übergebenen Sortierungsattributen. Sind diese null oder empty, wähle die Standardsortierung aus der entsprechenden Registry.
-		List<String> sortLeistungsdaten = sortierungsAttributeLeistungsdaten;
-		if ((sortLeistungsdaten == null) || sortLeistungsdaten.isEmpty()) {
-			sortLeistungsdaten = SortierungRegistryReportingSchuelerLeistungsdaten.standardsortierung();
+		// Prüfe die übergebenen Comparatoren. Sind diese null, wähle die Standardsortierung aus der entsprechenden Registry.
+		Comparator<ReportingSchuelerLeistungsdaten> compLeistungsdaten = comparatorLeistungsdaten;
+		if (compLeistungsdaten == null) {
+			compLeistungsdaten = ReportingSchuelerLeistungsdaten.SORTIERUNG.comparator(ReportingSchuelerLeistungsdaten.SORTIERUNG.standardsortierung(), new ArrayList<>());
 		}
-		List<String> sortSchueler = sortierungsAttributeSchueler;
-		if ((sortSchueler == null) || sortSchueler.isEmpty()) {
-			sortSchueler = SortierungRegistryReportingSchueler.standardsortierung();
+		Comparator<ReportingSchueler> compSchueler = comparatorSchueler;
+		if (compSchueler == null) {
+			compSchueler = ReportingSchueler.SORTIERUNG.comparator(ReportingSchueler.SORTIERUNG.standardsortierung(), new ArrayList<>());
 		}
 
 		// Filter vorbereiten
@@ -77,12 +72,10 @@ public class ReportingSchuelerLeistungsdatenMatrix {
 		initialisiereMatrix(schueler, schuljahresabschnitt, effektiverFilter, alleLeistungsdaten);
 
 		// Schüler sortieren
-		this.schueler.sort(SortierungRegistryReportingSchueler.buildComparator(sortSchueler, new ArrayList<>()));
+		this.schueler.sort(compSchueler);
 
 		// Spaltenreihenfolge aus der Sortierung der Leistungsdaten ableiten (First-Encounter im sortierten Strom).
-		final Comparator<ReportingSchuelerLeistungsdaten> comparatorLeistungsdaten =
-				SortierungRegistryReportingSchuelerLeistungsdaten.buildComparator(sortLeistungsdaten, new ArrayList<>());
-		alleLeistungsdaten.sort(comparatorLeistungsdaten);
+		alleLeistungsdaten.sort(compLeistungsdaten);
 		for (final ReportingSchuelerLeistungsdaten daten : alleLeistungsdaten) {
 			this.mapAlleFaecher.putIfAbsent(daten.fach().id(), daten.fach());
 		}

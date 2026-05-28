@@ -5,7 +5,6 @@ import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.sortierung.ReportingSortierungService;
-import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingSchueler;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
@@ -73,7 +72,7 @@ public class ProxyReportingKlassenunterricht extends ReportingKlassenunterricht 
 
 		final Comparator<ReportingSchueler> comparator =
 				ComparatorFactory.buildComparator(sortierungService, logger, ReportingSchueler.class.getSimpleName(),
-						SortierungRegistryReportingSchueler.sortierungRegistry(), true);
+						ReportingSchueler.SORTIERUNG, true);
 		return schueler.stream().sorted(comparator).toList();
 	}
 

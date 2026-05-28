@@ -32,7 +32,6 @@ import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReporting
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdaten;
 import de.svws_nrw.repo.schueler.SchuelerAnkreuzkompetenzenRepositoryImpl;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
-import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerAnkreuzkompetenz;
@@ -118,7 +117,7 @@ public class ReportingRepositorySchueler {
 	public List<ReportingSchueler> schueler(final List<Long> idsSchueler, final boolean sortiereListe) {
 		final Comparator<ReportingSchueler> comparator = ComparatorFactory.buildComparator(this.reportingContext.sortierungService(),
 				this.reportingContext.logger(), ReportingSchueler.class.getSimpleName(),
-				SortierungRegistryReportingSchueler.sortierungRegistry(), sortiereListe);
+				ReportingSchueler.SORTIERUNG, sortiereListe);
 
 		return ReportingRepositoryUtils.erstelleReportingListe(idsSchueler, mapSchuelerStammdaten, mapSchueler,
 				fehlendeIds -> new DataSchuelerStammdaten(this.reportingContext.conn()).getListByIds(fehlendeIds),
@@ -353,6 +352,7 @@ public class ReportingRepositorySchueler {
 		schuelerAnkreuzkompetenzenZuSchuljahresabschnitt(lernabschnitt.idSchuljahresabschnitt());
 		return mapSchuelerAnkreuzkompetenzen.getOrDefault(lernabschnitt.id(), new ArrayList<>()).stream()
 				.map(dto -> (ReportingSchuelerAnkreuzkompetenz) new ProxyReportingSchuelerAnkreuzkompetenz(dto, lernabschnitt))
+				.sorted(Comparator.comparingInt(sak -> sak.ankreuzkompetenz().sortierung()))
 				.toList();
 	}
 

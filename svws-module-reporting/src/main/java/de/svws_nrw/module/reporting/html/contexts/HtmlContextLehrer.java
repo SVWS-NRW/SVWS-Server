@@ -42,8 +42,7 @@ public final class HtmlContextLehrer extends HtmlContext<ReportingLehrer> implem
 	 */
 	private void erzeugeContextFromLehrer(final List<ReportingLehrer> reportingLehrer) {
 
-		setContextData(reportingLehrer);
-		sortiereContextMitRegistry();
+		setContextDataGefiltertSortiert(reportingLehrer, ReportingLehrer.FILTER, ReportingLehrer.SORTIERUNG, ReportingLehrer.class);
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();
@@ -60,8 +59,8 @@ public final class HtmlContextLehrer extends HtmlContext<ReportingLehrer> implem
 	 */
 	private void erzeugeContextFromIds(final List<Long> idsLehrer) {
 
-		setContextData(this.reportingContext.repositoryLehrer().lehrer(idsLehrer));
-		sortiereContextMitRegistry();
+		setContextDataGefiltertSortiert(this.reportingContext.repositoryLehrer().lehrer(idsLehrer),
+				ReportingLehrer.FILTER, ReportingLehrer.SORTIERUNG, ReportingLehrer.class);
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();

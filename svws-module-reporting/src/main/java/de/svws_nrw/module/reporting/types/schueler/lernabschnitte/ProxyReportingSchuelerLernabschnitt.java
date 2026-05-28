@@ -12,7 +12,6 @@ import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
 import de.svws_nrw.module.reporting.sortierung.ReportingSortierungService;
-import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingSchuelerLeistungsdaten;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
@@ -211,10 +210,10 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 
 			final Comparator<ReportingSchuelerLeistungsdaten> comparator =
 					ComparatorFactory.buildComparator(sortierungService, logger, ReportingSchuelerLeistungsdaten.class.getSimpleName(),
-							SortierungRegistryReportingSchuelerLeistungsdaten.sortierungRegistry(), true);
+							ReportingSchuelerLeistungsdaten.SORTIERUNG, true);
 
-			final Predicate<ReportingSchuelerLeistungsdaten> filter =
-					this.reportingContext.filterService().getFilter(ReportingSchuelerLeistungsdaten.class.getSimpleName(), null);
+			final Predicate<ReportingSchuelerLeistungsdaten> filter = ReportingSchuelerLeistungsdaten.FILTER.bedingung(
+					this.reportingContext.filterService().getFilter(ReportingSchuelerLeistungsdaten.class.getSimpleName()), null);
 
 			final var leistungsdaten = this.reportingContext.repositorySchueler().leistungsdatenZuLernabschnitt(this);
 			super.setLeistungsdaten(leistungsdaten.stream().filter(filter).sorted(comparator).toList());

@@ -73,7 +73,7 @@ public abstract class ReportingLerngruppe extends ReportingSchuelergruppe {
 	protected ReportingLerngruppe(final @NotNull ReportingKlasse klasse, final @NotNull ReportingFach fach, final List<ReportingLehrer> fachlehrer,
 			final Map<Long, Double> wochenstundenFachlehrer, final List<ReportingSchueler> schueler, final int wochenstundenSchueler) {
 		super(klasse.id(), klasse.schuljahresabschnitt(), fach.kuerzel() + "-" + klasse.kuerzel(), fachlehrer,
-				((schueler != null) && !schueler.isEmpty()) ? schueler : klasse.schueler(), klasse.sortierung());
+				((schueler != null) && !schueler.isEmpty()) ? schueler : klasse.schueler(), klasse.sortierungEintrag());
 		this.fach = fach;
 		this.wochenstundenFachlehrer = (wochenstundenFachlehrer != null) ? wochenstundenFachlehrer : new HashMap<>();
 		this.wochenstundenSchueler = wochenstundenSchueler;

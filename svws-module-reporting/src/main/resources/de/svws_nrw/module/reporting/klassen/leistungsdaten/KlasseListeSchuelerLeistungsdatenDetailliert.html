@@ -28,12 +28,11 @@
 				   mitSeitenumbruch = ${VorlageParameter.get('mitSeitenumbruch')}">
 
 	<th:block th:each="klasse,iterKlasse : ${Klassen}">
-
-		<div th:each="schueler,itSchueler : ${klasse.schueler()}"
-			 th:class="${mitSeitenumbruch ? 'reset-page-counter start-new-page' : (itSchueler.first ? 'reset-page-counter' : '')}"
-			 th:style="${(!mitSeitenumbruch && !itSchueler.first) ? 'margin-top: 2cm;' : ''}"
-			 th:with="lernabschnitt = ${schueler.auswahlLernabschnitt()},
-					  defizitpunktzahl = ${schueler.istSchuelerInSek2OderWB(lernabschnitt.schuljahresabschnitt()) ? '04' : '03'}">
+		<div class="reset-page-counter start-new-page">
+			<div th:each="schueler,itSchueler : ${klasse.schueler()}"
+			     th:class="${mitSeitenumbruch ? 'start-new-page' : ''}"
+			     th:with="lernabschnitt = ${schueler.auswahlLernabschnitt()},
+					      defizitpunktzahl = ${schueler.istSchuelerInSek2OderWB(lernabschnitt.schuljahresabschnitt()) ? '04' : '03'}">
 
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
@@ -59,7 +58,7 @@
 				<tr style="page-break-inside: auto;"><td colspan="2" style="page-break-inside: auto;">
 
 			<!-- Ergänzende Schülerinformationen: eine Zeile mit drei Spalten (Fehlstunden | Versetzung/Abschluss | Förderschwerpunkt) -->
-			<table class="fixed-100 mp-0">
+			<table class="fixed-100 mp-0" style="page-break-inside: avoid;">
 				<colgroup>
 					<col style="width: 50%;" />
 					<col style="width: 50%;" />
@@ -90,8 +89,8 @@
 					        : ''}">Förderschwerpunkt
 					</td>
 					<td class="ta-rt f-tiny"
-					    th:text="${(mitUebergangsempfehlung && lernabschnitt != null)
-					        ? ('Übergangsempfehlung: ' + schueler.schulbesuch().uebergangsempfehlungKuerzel())
+					    th:text="${(mitUebergangsempfehlung)
+					        ? ('Übergangsempfehlung: ' + (schueler.schulbesuch().uebergangsempfehlungKuerzel().isEmpty() ? '---' : schueler.schulbesuch().uebergangsempfehlungKuerzel()))
 					        : ''}">Übergangsempfehlung: R/GY
 					</td>
 				</tr>
@@ -293,6 +292,7 @@
 			</table>
 			<!-- Ende Umschlag-Tabelle pro Schüler -->
 
+		</div>
 		</div>
 	</th:block>
 	</body>

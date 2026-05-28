@@ -84,7 +84,7 @@
 						<span th:if="${mitFoerderschwerpunkt && lernabschnitt != null && (lernabschnitt.foerderschwerpunkt1() != null || lernabschnitt.foerderschwerpunkt2() != null)}" class="displayblock f-tiny" th:text="${'Förderschwerpunkt: ' + ((lernabschnitt.foerderschwerpunkt1() != null) ? lernabschnitt.foerderschwerpunkt1().kuerzel : '') + ((lernabschnitt.foerderschwerpunkt1() != null && lernabschnitt.foerderschwerpunkt2() != null) ? '/' : '' ) + ((lernabschnitt.foerderschwerpunkt2() != null) ? lernabschnitt.foerderschwerpunkt2().kuerzel : '')}">S</span>
 						<span th:if="${mitVersetzungAbschluss && lernabschnitt != null}" class="displayblock f-tiny" th:text="${!lernabschnitt.versetzungsvermerkKuerzel().isEmpty() ? 'Versetzung: ' + lernabschnitt.versetzungsvermerkKuerzel() : 'Versetzung: -----'}">Versetzung: V</span>
 						<span th:if="${mitVersetzungAbschluss && lernabschnitt != null}" class="displayblock f-tiny" th:text="${(lernabschnitt.istAbschlussPrognose() ? 'Progn.: ' : 'Abschl.: ') + (!lernabschnitt.abschluss().isEmpty() ? lernabschnitt.abschluss() : '-----')}">Abschl.: MSA</span>
-						<span th:if="${mitUebergangsempfehlung && lernabschnitt != null}" class="displayblock f-tiny" th:text="${('Übergangsempfehlung: ' + schueler.schulbesuch().uebergangsempfehlungKuerzel())}">Übergangsempfehlung: R/GY</span>
+						<span th:if="${mitUebergangsempfehlung}" class="displayblock f-tiny" th:text="${('Übergangsempfehlung: ' + (schueler.schulbesuch().uebergangsempfehlungKuerzel().isEmpty() ? '---' : schueler.schulbesuch().uebergangsempfehlungKuerzel()))}">Übergangsempfehlung: R/GY</span>
 					</td>
 
 					<!-- Fehlstunden und Wiederholung-->

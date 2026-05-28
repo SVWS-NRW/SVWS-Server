@@ -3,6 +3,7 @@ package de.svws_nrw.module.reporting.types.stundenplanung;
 
 import java.util.Objects;
 
+import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 
@@ -11,6 +12,9 @@ import de.svws_nrw.module.reporting.types.fach.ReportingFach;
  * Basis-Fach im Rahmen des Reportings für Daten vom Typ Fach-Stundenplan.
  */
 public class ReportingStundenplanungFachStundenplan extends ReportingBaseType {
+
+	/** Die Sortierkonfiguration für {@link ReportingStundenplanungFachStundenplan}. */
+	public static final ReportingSortierung<ReportingStundenplanungFachStundenplan> SORTIERUNG = ReportingStundenplanungFachStundenplanSortierung.SORTIERUNG;
 
 	/** Das Fach des Stundenplans. */
 	protected ReportingFach fach;

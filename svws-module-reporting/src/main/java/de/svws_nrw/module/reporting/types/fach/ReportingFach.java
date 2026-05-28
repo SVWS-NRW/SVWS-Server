@@ -3,12 +3,20 @@ package de.svws_nrw.module.reporting.types.fach;
 import de.svws_nrw.asd.types.fach.Fachgruppe;
 import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
+import de.svws_nrw.module.reporting.filterung.ReportingFilterung;
+import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Fach.
  */
 public class ReportingFach extends ReportingBaseType {
+
+	/** Die Sortierkonfiguration für {@link ReportingFach}. */
+	public static final ReportingSortierung<ReportingFach> SORTIERUNG = ReportingFachSortierung.SORTIERUNG;
+
+	/** Die Filterkonfiguration für {@link ReportingFach}. */
+	public static final ReportingFilterung<ReportingFach> FILTER = ReportingFachFilter.FILTER;
 
 	/** Das Aufgabenfeld am Berufskolleg, zu welchem das Fach gehört */
 	protected String aufgabenfeld;
@@ -71,7 +79,7 @@ public class ReportingFach extends ReportingBaseType {
 	protected int maxZeichenInFachbemerkungen;
 
 	/** Die Sortierreihenfolge des Fächerlisten-Eintrags. */
-	protected int sortierung;
+	protected int sortierungEintrag;
 
 	/** Das Statistik-Kürzel des Faches */
 	protected ReportingStatistikFach statistikfach;
@@ -99,7 +107,7 @@ public class ReportingFach extends ReportingBaseType {
 	 * @param istSichtbar Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
 	 * @param kuerzel Das eindeutige Kürzel des Faches
 	 * @param maxZeichenInFachbemerkungen Gibt die maximale Anzahl an Zeichen an, doe in Fachbemerkungen genutzt werden dürfen.
-	 * @param sortierung Die Sortierreihenfolge des Fächerlisten-Eintrags.
+	 * @param sortierungEintrag Die Sortierreihenfolge des Fächerlisten-Eintrags.
 	 * @param statistikfach Das Statistik-Fach des Faches
 	 */
 	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
@@ -107,7 +115,7 @@ public class ReportingFach extends ReportingBaseType {
 			final String bezeichnungZeugnis, final String bilingualeSprache, final Fachgruppe fachgruppe, final boolean holeAusAltenLernabschnitten,
 			final long id, final boolean istFHRFach, final boolean istFremdsprache, final boolean istFremdSpracheNeuEinsetzend, final boolean istGostFach,
 			final boolean istNachpruefungErlaubt, final boolean istPruefungsordnungsRelevant, final boolean istSchriftlichBA, final boolean istSchriftlichZK,
-			final boolean istSichtbar, final String kuerzel, final int maxZeichenInFachbemerkungen, final int sortierung,
+			final boolean istSichtbar, final String kuerzel, final int maxZeichenInFachbemerkungen, final int sortierungEintrag,
 			final ReportingStatistikFach statistikfach) {
 		this.aufgabenfeld = aufgabenfeld;
 		this.aufZeugnis = aufZeugnis;
@@ -129,7 +137,7 @@ public class ReportingFach extends ReportingBaseType {
 		this.istSichtbar = istSichtbar;
 		this.kuerzel = kuerzel;
 		this.maxZeichenInFachbemerkungen = maxZeichenInFachbemerkungen;
-		this.sortierung = sortierung;
+		this.sortierungEintrag = sortierungEintrag;
 		this.statistikfach = statistikfach;
 	}
 
@@ -361,10 +369,10 @@ public class ReportingFach extends ReportingBaseType {
 	/**
 	 * Die Sortierreihenfolge des Fächerlisten-Eintrags.
 	 *
-	 * @return Inhalt des Feldes sortierung
+	 * @return Inhalt des Feldes sortierungEintrag
 	 */
-	public int sortierung() {
-		return sortierung;
+	public int sortierungEintrag() {
+		return sortierungEintrag;
 	}
 
 	/**

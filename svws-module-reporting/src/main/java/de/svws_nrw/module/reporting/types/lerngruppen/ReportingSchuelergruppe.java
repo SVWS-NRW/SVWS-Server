@@ -44,7 +44,7 @@ public abstract class ReportingSchuelergruppe extends ReportingBaseType {
 	private final List<ReportingKlasse> klassen = new ArrayList<>();
 
 	/** Die Sortierreihenfolge des Listen-Eintrags. */
-	private final int sortierung;
+	private final int sortierungEintrag;
 
 
 	/**
@@ -55,16 +55,16 @@ public abstract class ReportingSchuelergruppe extends ReportingBaseType {
 	 * @param kuerzel Das Kürzel der Schülergruppe.
 	 * @param lehrer Die Liste der Lehrer, die die Schülergruppe betreuen. Die erste Lehrkraft wird als Gruppenleitung interpretiert.
 	 * @param schueler Die Liste der Schüler der Schülergruppe.
-	 * @param sortierung Die Sortierreihenfolge des Listen-Eintrags.
+	 * @param sortierungEintrag Die Sortierreihenfolge des Listen-Eintrags.
 	 */
 	protected ReportingSchuelergruppe(final long id, final ReportingSchuljahresabschnitt schuljahresabschnitt, final String kuerzel,
-			final List<ReportingLehrer> lehrer, final List<ReportingSchueler> schueler, final int sortierung) {
+			final List<ReportingLehrer> lehrer, final List<ReportingSchueler> schueler, final int sortierungEintrag) {
 		this.id = id;
 		this.schuljahresabschnitt = schuljahresabschnitt;
 		this.kuerzel = ersetzeNullBlankTrim(kuerzel);
 		this.lehrer = (lehrer != null) ? new ArrayList<>(lehrer.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
 		this.schueler = (schueler != null) ? new ArrayList<>(schueler.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
-		this.sortierung = sortierung;
+		this.sortierungEintrag = sortierungEintrag;
 	}
 
 
@@ -91,7 +91,6 @@ public abstract class ReportingSchuelergruppe extends ReportingBaseType {
 
 	/**
 	 * Der Schuljahresabschnitt der Schülergruppe.
-
 	 *
 	 * @return Inhalt des Feldes schuljahresabschnitt
 	 */
@@ -120,10 +119,10 @@ public abstract class ReportingSchuelergruppe extends ReportingBaseType {
 	/**
 	 * Die Sortierreihenfolge des Listen-Eintrags.
 	 *
-	 * @return Inhalt des Feldes Sortierung
+	 * @return Inhalt des Feldes sortierungEintrag
 	 */
-	public int sortierung() {
-		return sortierung;
+	public int sortierungEintrag() {
+		return sortierungEintrag;
 	}
 
 	/**

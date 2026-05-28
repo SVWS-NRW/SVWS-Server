@@ -6,7 +6,6 @@ import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
 import de.svws_nrw.module.reporting.sortierung.ReportingSortierungService;
-import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingSchueler;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
@@ -139,7 +138,7 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 
 			final Comparator<ReportingSchueler> comparator =
 					ComparatorFactory.buildComparator(sortierungService, logger, ReportingSchueler.class.getSimpleName(),
-							SortierungRegistryReportingSchueler.sortierungRegistry(), true);
+							ReportingSchueler.SORTIERUNG, true);
 			super.schueler = klassen().stream().flatMap(k -> k.schueler().stream()).sorted(comparator).toList();
 		}
 		return super.schueler();

@@ -254,6 +254,7 @@ public class ProxyReportingLehrerFactoryUnterricht {
 					mapSchuelerLeistungsdaten));
 		}
 
+		result.sort(ReportingKlassenunterricht.SORTIERUNG.comparatorStandard());
 		return result;
 	}
 
@@ -325,6 +326,7 @@ public class ProxyReportingLehrerFactoryUnterricht {
 			}
 		}
 
+		result.sort(ReportingKursunterricht.SORTIERUNG.comparatorStandard());
 		return result;
 	}
 

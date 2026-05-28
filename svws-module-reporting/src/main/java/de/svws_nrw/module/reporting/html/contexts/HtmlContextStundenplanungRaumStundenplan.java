@@ -39,8 +39,7 @@ public final class HtmlContextStundenplanungRaumStundenplan extends HtmlContext<
 		final List<ReportingStundenplanungRaumStundenplan> stundenplaene = new ArrayList<>();
 		stundenplan.raeume(idsAusgabe).forEach(raum -> stundenplaene.add(new ReportingStundenplanungRaumStundenplan(raum, stundenplan)));
 
-		setContextData(stundenplaene);
-		sortiereContextMitRegistry();
+		setContextDataSortiert(stundenplaene, ReportingStundenplanungRaumStundenplan.SORTIERUNG, ReportingStundenplanungRaumStundenplan.class);
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();

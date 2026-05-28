@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import de.svws_nrw.module.reporting.filterung.ReportingFilterung;
+import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
@@ -20,6 +22,12 @@ import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
  * Ein Kurs ist eine spezielle Lerngruppe und erweitert ReportingLerngruppe.
  */
 public class ReportingKurs extends ReportingLerngruppe {
+
+	/** Die Sortierkonfiguration für {@link ReportingKurs}. */
+	public static final ReportingSortierung<ReportingKurs> SORTIERUNG = ReportingKursSortierung.SORTIERUNG;
+
+	/** Die Filterkonfiguration für {@link ReportingKurs}. */
+	public static final ReportingFilterung<ReportingKurs> FILTER = ReportingKursFilter.FILTER;
 
 	/** Eine Map, die die Leistungsdaten zur ID des Schülers speichert. */
 	private final Map<Long, ReportingSchuelerLeistungsdaten> mapSchuelerLeistungsdaten = new HashMap<>();

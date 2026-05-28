@@ -42,8 +42,7 @@ public final class HtmlContextKurse extends HtmlContext<ReportingKurs> implement
 	 */
 	private void erzeugeContextFromKurse(final List<ReportingKurs> reportingKurse) {
 
-		setContextData(reportingKurse);
-		sortiereContextMitRegistry();
+		setContextDataGefiltertSortiert(reportingKurse, ReportingKurs.FILTER, ReportingKurs.SORTIERUNG, ReportingKurs.class);
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();
@@ -60,8 +59,8 @@ public final class HtmlContextKurse extends HtmlContext<ReportingKurs> implement
 	 */
 	private void erzeugeContextFromIds(final List<Long> idsKurse) {
 
-		setContextData(reportingContext.repositoryLerngruppen().kurse(idsKurse, false));
-		sortiereContextMitRegistry();
+		setContextDataGefiltertSortiert(reportingContext.repositoryLerngruppen().kurse(idsKurse, false),
+				ReportingKurs.FILTER, ReportingKurs.SORTIERUNG, ReportingKurs.class);
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();

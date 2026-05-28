@@ -1,73 +1,46 @@
-package de.svws_nrw.module.reporting.sortierung;
-
-import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
-import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungLehrerStundenplan;
-import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungStundenplan;
-import de.svws_nrw.module.reporting.utils.ReportingTypesUtils;
+package de.svws_nrw.module.reporting.types.stundenplanung;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
+import de.svws_nrw.module.reporting.sortierung.FunktionBuilder;
+import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
+import de.svws_nrw.module.reporting.sortierung.SortierungRegistry;
+import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
+import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
+import de.svws_nrw.module.reporting.utils.ReportingTypesUtils;
+
 /**
- * Registry zur Definition erlaubter Sortierattribute für {@link ReportingStundenplanungLehrerStundenplan}
- * sowie Hilfsmethoden zum Erzeugen passender Comparatoren.
+ * Begleit-Datei zu {@link ReportingStundenplanungLehrerStundenplan}: hält die Sortierkonfiguration des Reporting-Typs (Registry + Standardsortierung).
+ * Die fertige {@link ReportingSortierung}-Instanz wird über {@link ReportingStundenplanungLehrerStundenplan#SORTIERUNG} verwendet.
  */
-public final class SortierungRegistryReportingStundenplanungLehrerStundenplan {
+public final class ReportingStundenplanungLehrerStundenplanSortierung {
 
-	private SortierungRegistryReportingStundenplanungLehrerStundenplan() {
-		throw new IllegalStateException("Statische Klasse mit Hilfsmethoden zur Sortierung von Daten für das Reporting. Initialisierung nicht möglich.");
+	/** Die Sortierkonfiguration für {@link ReportingStundenplanungLehrerStundenplan}. */
+	public static final ReportingSortierung<ReportingStundenplanungLehrerStundenplan> SORTIERUNG =
+			ReportingSortierung.<ReportingStundenplanungLehrerStundenplan>builder()
+					.registry(buildRegistry())
+					.standard(buildStandard())
+					.build();
+
+	private ReportingStundenplanungLehrerStundenplanSortierung() {
+		throw new IllegalStateException("Begleit-Klasse zur Sortierung von ReportingStundenplanungLehrerStundenplan. Initialisierung nicht möglich.");
 	}
 
-	/**
-	 * Erstellt einen Comparator für {@link ReportingStundenplanungLehrerStundenplan} anhand angegebener Attribute.
-	 *
-	 * @param attribute Die Sortierattribute (optional inkl. Richtungsangabe wie ":desc" oder führendem "-")
-	 * @param validierungsfehler Liste zum Sammeln unbekannter Attribute (optional)
-	 * @return Comparator für {@link ReportingStundenplanungLehrerStundenplan}
-	 */
-	public static Comparator<ReportingStundenplanungLehrerStundenplan> buildComparator(final List<String> attribute, final List<String> validierungsfehler) {
-		return ComparatorBuilder.build(sortierungRegistry(), attribute, validierungsfehler);
-	}
-
-	/**
-	 * Erstellt einen Comparator für {@link ReportingStundenplanungLehrerStundenplan} anhand der Standardsortierung.
-	 *
-	 * @param validierungsfehler Liste zum Sammeln unbekannter Attribute (optional)
-	 * @return Comparator für {@link ReportingStundenplanungLehrerStundenplan}
-	 */
-	public static Comparator<ReportingStundenplanungLehrerStundenplan> buildComparatorStandard(final List<String> validierungsfehler) {
-		return ComparatorBuilder.build(sortierungRegistry(), standardsortierung(), validierungsfehler);
-	}
-
-	/**
-	 * Erstellt eine Liste von Strings, die die Attribute der Standardsortierung.
-	 * für {@link ReportingStundenplanungLehrerStundenplan} repräsentieren.
-	 *
-	 * @return Eine Liste von Attributnamen in der Reihenfolge der Standardsortierung.
-	 */
-	public static List<String> standardsortierung() {
+	private static List<String> buildStandard() {
 		final ArrayList<String> standard = new ArrayList<>();
-		SortierungRegistryReportingLehrer.standardsortierung()
+		ReportingLehrer.SORTIERUNG.standardsortierung()
 				.forEach(attribut -> standard.add(ReportingTypesUtils.methodeToString(ReportingStundenplanungLehrerStundenplan::lehrer) + "." + attribut));
 		return standard;
 	}
 
-	/**
-	 * Stellt die {@link SortierungRegistry} für die Klasse {@link ReportingStundenplanungLehrerStundenplan} öffentlich zur Verfügung
-	 *
-	 * @return Die konfigurierte Instanz von {@link SortierungRegistry} für {@link ReportingStundenplanungLehrerStundenplan}.
-	 */
-	public static SortierungRegistry<ReportingStundenplanungLehrerStundenplan> sortierungRegistry() {
-		return sortierungRegistryReportingStundenplanungLehrerStundenplan();
-	}
-
-	private static SortierungRegistry<ReportingStundenplanungLehrerStundenplan> sortierungRegistryReportingStundenplanungLehrerStundenplan() {
+	private static SortierungRegistry<ReportingStundenplanungLehrerStundenplan> buildRegistry() {
 		final SortierungRegistry<ReportingStundenplanungLehrerStundenplan> reg = new SortierungRegistry<>();
 
 		// Sortierattribute für den eingebetteten Stundenplan
 		reg.registiereComparable(
-				ReportingTypesUtils.methodeToString(ReportingStundenplanungLehrerStundenplan::stundenplan) + "." + ReportingTypesUtils.methodeToString(ReportingStundenplanungStundenplan::id),
+				ReportingTypesUtils.methodeToString(ReportingStundenplanungLehrerStundenplan::stundenplan) + "."
+						+ ReportingTypesUtils.methodeToString(ReportingStundenplanungStundenplan::id),
 				FunktionBuilder.start(ReportingStundenplanungLehrerStundenplan::stundenplan)
 						.then(ReportingStundenplanungStundenplan::id)
 						.toFunction());
@@ -114,7 +87,7 @@ public final class SortierungRegistryReportingStundenplanungLehrerStundenplan {
 
 		// Importiere alle Lehrer-Attribute unter dem Prefix "lehrer"
 		reg.importiereRegistryEintraege(ReportingTypesUtils.methodeToString(ReportingStundenplanungLehrerStundenplan::lehrer) + ".",
-				SortierungRegistryReportingLehrer.sortierungRegistry(), ReportingStundenplanungLehrerStundenplan::lehrer);
+				ReportingLehrer.SORTIERUNG.registry(), ReportingStundenplanungLehrerStundenplan::lehrer);
 
 		return reg;
 	}

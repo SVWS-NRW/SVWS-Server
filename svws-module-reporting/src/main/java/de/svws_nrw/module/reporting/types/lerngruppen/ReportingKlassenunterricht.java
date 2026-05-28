@@ -1,5 +1,6 @@
 package de.svws_nrw.module.reporting.types.lerngruppen;
 
+import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
@@ -17,8 +18,14 @@ import java.util.Map;
  */
 public class ReportingKlassenunterricht extends ReportingLerngruppe {
 
+	/** Die Sortierkonfiguration für {@link ReportingKlassenunterricht}. */
+	public static final ReportingSortierung<ReportingKlassenunterricht> SORTIERUNG = ReportingKlassenunterrichtSortierung.SORTIERUNG;
+
 	/** Der Lehrer, der diesen Unterricht bewertet. */
 	private final ReportingLehrer bewertenderLehrer;
+
+	/** Die Klasse, in der dieser Unterricht stattfindet. */
+	private final ReportingKlasse klasse;
 
 	/** Der Jahrgang der Klasse, in der dieser Unterricht stattfindet. */
 	private final ReportingJahrgang jahrgang;
@@ -44,6 +51,7 @@ public class ReportingKlassenunterricht extends ReportingLerngruppe {
 			final int wochenstundenSchueler, final Map<Long, ReportingSchuelerLeistungsdaten> mapSchuelerLeistungsdaten) {
 		super(klasse, fach, fachlehrer, wochenstundenFachlehrer, schueler, wochenstundenSchueler);
 
+		this.klasse = klasse;
 		this.bewertenderLehrer = bewertenderLehrer;
 		this.jahrgang = klasse.jahrgang();
 
@@ -67,6 +75,15 @@ public class ReportingKlassenunterricht extends ReportingLerngruppe {
 	 */
 	public ReportingLehrer bewertenderLehrer() {
 		return bewertenderLehrer;
+	}
+
+	/**
+	 * Gibt die Klasse zurück, in der dieser Unterricht stattfindet.
+	 *
+	 * @return Die Klasse des Klassenunterrichts.
+	 */
+	public ReportingKlasse klasse() {
+		return klasse;
 	}
 
 	/**
