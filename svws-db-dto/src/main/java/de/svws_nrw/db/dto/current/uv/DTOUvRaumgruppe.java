@@ -19,81 +19,70 @@ import de.svws_nrw.csv.converter.current.DatumConverterSerializer;
 import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 
 /**
- * Diese Klasse dient als DTO für die Datenbanktabelle UV_Stundentafeln.
+ * Diese Klasse dient als DTO für die Datenbanktabelle UV_Raumgruppen.
  * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
-@Table(name = "UV_Stundentafeln")
-@JsonPropertyOrder({"ID", "Jahrgang_ID", "Bezeichnung", "GueltigVon", "GueltigBis", "Beschreibung"})
-public final class DTOUvStundentafel {
+@Table(name = "UV_Raumgruppen")
+@JsonPropertyOrder({"ID", "Bezeichnung", "GueltigVon", "GueltigBis", "Beschreibung"})
+public final class DTOUvRaumgruppe {
 
 	/** Die Datenbankabfrage für alle DTOs */
-	public static final String QUERY_ALL = "SELECT e FROM DTOUvStundentafel e";
+	public static final String QUERY_ALL = "SELECT e FROM DTOUvRaumgruppe e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM DTOUvStundentafel e WHERE e.ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM DTOUvRaumgruppe e WHERE e.ID = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM DTOUvStundentafel e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOUvRaumgruppe e WHERE e.ID IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOUvStundentafel e WHERE e.ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOUvRaumgruppe e WHERE e.ID IS NOT NULL";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
-	public static final String QUERY_BY_ID = "SELECT e FROM DTOUvStundentafel e WHERE e.ID = ?1";
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOUvRaumgruppe e WHERE e.ID = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
-	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOUvStundentafel e WHERE e.ID IN ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Jahrgang_ID */
-	public static final String QUERY_BY_JAHRGANG_ID = "SELECT e FROM DTOUvStundentafel e WHERE e.Jahrgang_ID = ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Jahrgang_ID */
-	public static final String QUERY_LIST_BY_JAHRGANG_ID = "SELECT e FROM DTOUvStundentafel e WHERE e.Jahrgang_ID IN ?1";
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOUvRaumgruppe e WHERE e.ID IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
-	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOUvStundentafel e WHERE e.Bezeichnung = ?1";
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOUvRaumgruppe e WHERE e.Bezeichnung = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
-	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOUvStundentafel e WHERE e.Bezeichnung IN ?1";
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOUvRaumgruppe e WHERE e.Bezeichnung IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes GueltigVon */
-	public static final String QUERY_BY_GUELTIGVON = "SELECT e FROM DTOUvStundentafel e WHERE e.GueltigVon = ?1";
+	public static final String QUERY_BY_GUELTIGVON = "SELECT e FROM DTOUvRaumgruppe e WHERE e.GueltigVon = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GueltigVon */
-	public static final String QUERY_LIST_BY_GUELTIGVON = "SELECT e FROM DTOUvStundentafel e WHERE e.GueltigVon IN ?1";
+	public static final String QUERY_LIST_BY_GUELTIGVON = "SELECT e FROM DTOUvRaumgruppe e WHERE e.GueltigVon IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes GueltigBis */
-	public static final String QUERY_BY_GUELTIGBIS = "SELECT e FROM DTOUvStundentafel e WHERE e.GueltigBis = ?1";
+	public static final String QUERY_BY_GUELTIGBIS = "SELECT e FROM DTOUvRaumgruppe e WHERE e.GueltigBis = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GueltigBis */
-	public static final String QUERY_LIST_BY_GUELTIGBIS = "SELECT e FROM DTOUvStundentafel e WHERE e.GueltigBis IN ?1";
+	public static final String QUERY_LIST_BY_GUELTIGBIS = "SELECT e FROM DTOUvRaumgruppe e WHERE e.GueltigBis IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Beschreibung */
-	public static final String QUERY_BY_BESCHREIBUNG = "SELECT e FROM DTOUvStundentafel e WHERE e.Beschreibung = ?1";
+	public static final String QUERY_BY_BESCHREIBUNG = "SELECT e FROM DTOUvRaumgruppe e WHERE e.Beschreibung = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Beschreibung */
-	public static final String QUERY_LIST_BY_BESCHREIBUNG = "SELECT e FROM DTOUvStundentafel e WHERE e.Beschreibung IN ?1";
+	public static final String QUERY_LIST_BY_BESCHREIBUNG = "SELECT e FROM DTOUvRaumgruppe e WHERE e.Beschreibung IN ?1";
 
-	/** ID der Stundentafel (generiert) */
+	/** ID der UV-Raumgruppe (generiert, planungsspezifisch) */
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
 	public long ID;
 
-	/** ID zur Kennzeichnung des Jahrgangs-Datensatzes */
-	@Column(name = "Jahrgang_ID")
-	@JsonProperty
-	public long Jahrgang_ID;
-
-	/** Bezeichnung der Stundentafel */
+	/** Die Bezeichnung der Raumgruppe */
 	@Column(name = "Bezeichnung")
 	@JsonProperty
 	public String Bezeichnung;
 
-	/** Das Datum, ab dem die Stundentafel gültig ist */
+	/** Das Datum, ab dem die Raumgruppe gültig ist */
 	@Column(name = "GueltigVon")
 	@JsonProperty
 	@Convert(converter = DatumConverter.class)
@@ -101,7 +90,7 @@ public final class DTOUvStundentafel {
 	@JsonDeserialize(using = DatumConverterDeserializer.class)
 	public String GueltigVon;
 
-	/** Das Datum, bis wann die Stundentafel gültig ist. Ist kein Datum gesetzt, gilt die Stundentafel unbegrenzt weiter */
+	/** Das Datum, bis wann die Raumgruppe gültig ist. Ist kein Datum gesetzt, gilt die Raumgruppe unbegrenzt weiter. */
 	@Column(name = "GueltigBis")
 	@JsonProperty
 	@Convert(converter = DatumConverter.class)
@@ -109,28 +98,26 @@ public final class DTOUvStundentafel {
 	@JsonDeserialize(using = DatumConverterDeserializer.class)
 	public String GueltigBis;
 
-	/** Beschreibung oder Kommentar zur Stundentafel */
+	/** Optionale Beschreibung oder Kommentar zur Raumgruppe */
 	@Column(name = "Beschreibung")
 	@JsonProperty
 	public String Beschreibung;
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse DTOUvStundentafel ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse DTOUvRaumgruppe ohne eine Initialisierung der Attribute.
 	 */
 	@SuppressWarnings("unused")
-	private DTOUvStundentafel() {
+	private DTOUvRaumgruppe() {
 	}
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse DTOUvStundentafel ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse DTOUvRaumgruppe ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
-	 * @param Jahrgang_ID   der Wert für das Attribut Jahrgang_ID
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 * @param GueltigVon   der Wert für das Attribut GueltigVon
 	 */
-	public DTOUvStundentafel(final long ID, final long Jahrgang_ID, final String Bezeichnung, final String GueltigVon) {
+	public DTOUvRaumgruppe(final long ID, final String Bezeichnung, final String GueltigVon) {
 		this.ID = ID;
-		this.Jahrgang_ID = Jahrgang_ID;
 		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
@@ -153,7 +140,7 @@ public final class DTOUvStundentafel {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		DTOUvStundentafel other = (DTOUvStundentafel) obj;
+		DTOUvRaumgruppe other = (DTOUvRaumgruppe) obj;
 		return ID == other.ID;
 	}
 
@@ -173,7 +160,7 @@ public final class DTOUvStundentafel {
 	 */
 	@Override
 	public String toString() {
-		return "DTOUvStundentafel(ID=" + this.ID + ", Jahrgang_ID=" + this.Jahrgang_ID + ", Bezeichnung=" + this.Bezeichnung + ", GueltigVon=" + this.GueltigVon + ", GueltigBis=" + this.GueltigBis + ", Beschreibung=" + this.Beschreibung + ")";
+		return "DTOUvRaumgruppe(ID=" + this.ID + ", Bezeichnung=" + this.Bezeichnung + ", GueltigVon=" + this.GueltigVon + ", GueltigBis=" + this.GueltigBis + ", Beschreibung=" + this.Beschreibung + ")";
 	}
 
 }

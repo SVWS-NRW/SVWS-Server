@@ -44,7 +44,7 @@ public class Tabelle_UV_Stundentafeln extends SchemaTabelle {
 			.setDefault("1899-01-01")
 			.setNotNull()
 			.setConverter(DatumConverter.class)
-			.setJavaComment("Das Datum, ab dem der Raum gültig ist")
+			.setJavaComment("Das Datum, ab dem die Stundentafel gültig ist")
 			.setRevision(SchemaRevisionen.REV_50);
 
 	/** Die Definition der Tabellenspalte GueltigBis */
@@ -73,7 +73,7 @@ public class Tabelle_UV_Stundentafeln extends SchemaTabelle {
 
 
 	/**
-	 * Erstellt die Schema-Defintion für die Tabelle UV_Stundentafeln.
+	 * Erstellt die Schema-Definition für die Tabelle UV_Stundentafeln.
 	 */
 	public Tabelle_UV_Stundentafeln() {
 		super("UV_Stundentafeln", SchemaRevisionen.REV_48);

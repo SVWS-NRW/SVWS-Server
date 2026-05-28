@@ -76,7 +76,7 @@ public final class DTOUvPlanungsabschnittSchueler {
 	/** Klassen_ID des Schülers für den Planungsabschnitt */
 	@Column(name = "Klasse_ID")
 	@JsonProperty
-	public long Klasse_ID;
+	public Long Klasse_ID;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOUvPlanungsabschnittSchueler ohne eine Initialisierung der Attribute.
@@ -90,13 +90,11 @@ public final class DTOUvPlanungsabschnittSchueler {
 	 * @param Planungsabschnitt_ID   der Wert für das Attribut Planungsabschnitt_ID
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 * @param Jahrgang_ID   der Wert für das Attribut Jahrgang_ID
-	 * @param Klasse_ID   der Wert für das Attribut Klasse_ID
 	 */
-	public DTOUvPlanungsabschnittSchueler(final long Planungsabschnitt_ID, final long Schueler_ID, final long Jahrgang_ID, final long Klasse_ID) {
+	public DTOUvPlanungsabschnittSchueler(final long Planungsabschnitt_ID, final long Schueler_ID, final long Jahrgang_ID) {
 		this.Planungsabschnitt_ID = Planungsabschnitt_ID;
 		this.Schueler_ID = Schueler_ID;
 		this.Jahrgang_ID = Jahrgang_ID;
-		this.Klasse_ID = Klasse_ID;
 	}
 
 

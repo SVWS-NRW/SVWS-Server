@@ -30,7 +30,7 @@ public class Tabelle_UV_Schienen_Constraint_Jahrgaenge extends SchemaTabelle {
 			.setJavaComment("Die ID des Planungsabschnitts als Fremdschlüssel auf die Tabelle UV_Planungsabschnitte");
 
 
-	/** Die Definition des Fremdschlüssels auf UV_Schuelergruppen */
+	/** Die Definition des Fremdschlüssels auf UV_Schienen */
 	public final SchemaTabelleFremdschluessel fk_UVSchienenJahrgaenge_UVSchuelergruppen_FK = addForeignKey(
 			"UVSchienenJahrgaenge_UVSchuelergruppen_FK",
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
@@ -49,7 +49,7 @@ public class Tabelle_UV_Schienen_Constraint_Jahrgaenge extends SchemaTabelle {
 
 
 	/**
-	 * Erstellt die Schema-Definition für die Tabelle UV_Schuelergruppen_Constraint_Jahrgaenge.
+	 * Erstellt die Schema-Definition für die Tabelle UV_Schienen_Constraint_Jahrgaenge.
 	 */
 	public Tabelle_UV_Schienen_Constraint_Jahrgaenge() {
 		super("UV_Schienen_Constraint_Jahrgaenge", SchemaRevisionen.REV_48);

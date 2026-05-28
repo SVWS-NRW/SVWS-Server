@@ -26,7 +26,7 @@ import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "UV_Raeume")
-@JsonPropertyOrder({"ID", "Kuerzel", "GueltigVon", "GueltigBis"})
+@JsonPropertyOrder({"ID", "Kuerzel", "Raumgruppe_ID", "Beschreibung", "Groesse", "GueltigVon", "GueltigBis"})
 public final class DTOUvRaum {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -53,6 +53,24 @@ public final class DTOUvRaum {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kuerzel */
 	public static final String QUERY_LIST_BY_KUERZEL = "SELECT e FROM DTOUvRaum e WHERE e.Kuerzel IN ?1";
 
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Raumgruppe_ID */
+	public static final String QUERY_BY_RAUMGRUPPE_ID = "SELECT e FROM DTOUvRaum e WHERE e.Raumgruppe_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Raumgruppe_ID */
+	public static final String QUERY_LIST_BY_RAUMGRUPPE_ID = "SELECT e FROM DTOUvRaum e WHERE e.Raumgruppe_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Beschreibung */
+	public static final String QUERY_BY_BESCHREIBUNG = "SELECT e FROM DTOUvRaum e WHERE e.Beschreibung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Beschreibung */
+	public static final String QUERY_LIST_BY_BESCHREIBUNG = "SELECT e FROM DTOUvRaum e WHERE e.Beschreibung IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Groesse */
+	public static final String QUERY_BY_GROESSE = "SELECT e FROM DTOUvRaum e WHERE e.Groesse = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Groesse */
+	public static final String QUERY_LIST_BY_GROESSE = "SELECT e FROM DTOUvRaum e WHERE e.Groesse IN ?1";
+
 	/** Die Datenbankabfrage für DTOs anhand des Attributes GueltigVon */
 	public static final String QUERY_BY_GUELTIGVON = "SELECT e FROM DTOUvRaum e WHERE e.GueltigVon = ?1";
 
@@ -75,6 +93,21 @@ public final class DTOUvRaum {
 	@Column(name = "Kuerzel")
 	@JsonProperty
 	public String Kuerzel;
+
+	/** Raumgruppe_ID, falls der Raum zu einer Gruppe gehört */
+	@Column(name = "Raumgruppe_ID")
+	@JsonProperty
+	public Long Raumgruppe_ID;
+
+	/** Gegebenenfalls eine ausführlichere Beschreibung des Raumes */
+	@Column(name = "Beschreibung")
+	@JsonProperty
+	public String Beschreibung;
+
+	/** Die Größe des Raumes, d.h. wie viele Schüler hier max. Platz haben */
+	@Column(name = "Groesse")
+	@JsonProperty
+	public int Groesse;
 
 	/** Das Datum, ab dem der Raum gültig ist */
 	@Column(name = "GueltigVon")
@@ -103,14 +136,16 @@ public final class DTOUvRaum {
 	 * Erstellt ein neues Objekt der Klasse DTOUvRaum ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
 	 * @param Kuerzel   der Wert für das Attribut Kuerzel
+	 * @param Groesse   der Wert für das Attribut Groesse
 	 * @param GueltigVon   der Wert für das Attribut GueltigVon
 	 */
-	public DTOUvRaum(final long ID, final String Kuerzel, final String GueltigVon) {
+	public DTOUvRaum(final long ID, final String Kuerzel, final int Groesse, final String GueltigVon) {
 		this.ID = ID;
 		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
+		this.Groesse = Groesse;
 		if (GueltigVon == null) {
 			throw new NullPointerException("GueltigVon must not be null");
 		}
@@ -149,7 +184,7 @@ public final class DTOUvRaum {
 	 */
 	@Override
 	public String toString() {
-		return "DTOUvRaum(ID=" + this.ID + ", Kuerzel=" + this.Kuerzel + ", GueltigVon=" + this.GueltigVon + ", GueltigBis=" + this.GueltigBis + ")";
+		return "DTOUvRaum(ID=" + this.ID + ", Kuerzel=" + this.Kuerzel + ", Raumgruppe_ID=" + this.Raumgruppe_ID + ", Beschreibung=" + this.Beschreibung + ", Groesse=" + this.Groesse + ", GueltigVon=" + this.GueltigVon + ", GueltigBis=" + this.GueltigBis + ")";
 	}
 
 }

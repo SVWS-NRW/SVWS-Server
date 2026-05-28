@@ -42,14 +42,14 @@ public class Tabelle_UV_Lerngruppen extends SchemaTabelle {
 			.setNotNull()
 			.setJavaComment("Die Anzahl der vorgesehenen Wochenstunden für die Lerngruppe");
 
-	/** Die Definition der Tabellenspalte Wochenstunden */
+	/** Die Definition der Tabellenspalte WochenstundenUnterrichtet */
 	public final SchemaTabelleSpalte col_WochenstundenUnterrichtet = add("WochenstundenUnterrichtet", SchemaDatentypen.FLOAT, false)
 			.setNotNull()
 			.setJavaComment("Die Anzahl der Wochenstunden, die die Lerngruppe tatsächlich unterrichtet wurde");
 
 
 
-	/** Die Definition der Tabellenspalte ExterneSchulNr */
+	/** Die Definition der Tabellenspalte KoopSchulNr */
 	public final SchemaTabelleSpalte col_KoopSchulNr = add("KoopSchulNr", SchemaDatentypen.VARCHAR, false).setDatenlaenge(6)
 			.setJavaComment("Schulnummer von Koopschule, null falls kein Koop");
 
@@ -86,12 +86,20 @@ public class Tabelle_UV_Lerngruppen extends SchemaTabelle {
 	).setVeraltet(SchemaRevisionen.REV_49);
 
 	/** Fremdschlüssel auf die Tabelle UV_Faecher */
-	public final SchemaTabelleFremdschluessel fk_UVLerngruppen_UVStundentafelnFaecher_FK = addForeignKey(
+	public final SchemaTabelleFremdschluessel fk_UVLerngruppen_UVStundentafelnFaecher_FK_Deprecated_Revision_53 = addForeignKey(
 			"UVLerngruppen_UVFaecher_FK",
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.RESTRICT,
 			new Pair<>(col_Fach_ID, Schema.tab_UV_Stundentafeln_Faecher.col_ID)
-	).setRevision(SchemaRevisionen.REV_50);
+	).setRevision(SchemaRevisionen.REV_50).setVeraltet(SchemaRevisionen.REV_65);
+
+	/** Fremdschlüssel auf die Tabelle UV_Faecher */
+	public final SchemaTabelleFremdschluessel fk_UVLerngruppen_UVFaecher_FK = addForeignKey(
+			"UVLerngruppen_UVFaecher_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.RESTRICT,
+			new Pair<>(col_Fach_ID, Schema.tab_UV_Faecher.col_ID)
+	).setRevision(SchemaRevisionen.REV_66);
 
 	/** Fremdschlüssel auf die Tabelle UV_Kurse */
 	public final SchemaTabelleFremdschluessel fk_UVLerngruppen_UVKurse_FK = addForeignKey(

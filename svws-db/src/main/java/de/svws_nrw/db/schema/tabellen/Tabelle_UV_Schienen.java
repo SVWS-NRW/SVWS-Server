@@ -55,7 +55,7 @@ public class Tabelle_UV_Schienen extends SchemaTabelle {
 	).setRevision(SchemaRevisionen.REV_49);
 
 	/**
-	 * Erstellt die Schema-Defintion für die Tabelle UV_Schienen.
+	 * Erstellt die Schema-Definition für die Tabelle UV_Schienen.
 	 */
 	public Tabelle_UV_Schienen() {
 		super("UV_Schienen", SchemaRevisionen.REV_48);

@@ -98,7 +98,7 @@ public final class DTOUvLehrerAnrechnungsstunden {
 	@JsonProperty
 	public double AnzahlStunden;
 
-	/** Das Datum, ab dem der Raum gültig ist */
+	/** Das Datum, ab dem die Anrechnungsstunde gültig ist */
 	@Column(name = "GueltigVon")
 	@JsonProperty
 	@Convert(converter = DatumConverter.class)
@@ -128,9 +128,8 @@ public final class DTOUvLehrerAnrechnungsstunden {
 	 * @param AnrechnungsgrundKrz   der Wert für das Attribut AnrechnungsgrundKrz
 	 * @param AnzahlStunden   der Wert für das Attribut AnzahlStunden
 	 * @param GueltigVon   der Wert für das Attribut GueltigVon
-	 * @param GueltigBis   der Wert für das Attribut GueltigBis
 	 */
-	public DTOUvLehrerAnrechnungsstunden(final long ID, final long Lehrer_ID, final String AnrechnungsgrundKrz, final double AnzahlStunden, final String GueltigVon, final String GueltigBis) {
+	public DTOUvLehrerAnrechnungsstunden(final long ID, final long Lehrer_ID, final String AnrechnungsgrundKrz, final double AnzahlStunden, final String GueltigVon) {
 		this.ID = ID;
 		this.Lehrer_ID = Lehrer_ID;
 		if (AnrechnungsgrundKrz == null) {
@@ -142,10 +141,6 @@ public final class DTOUvLehrerAnrechnungsstunden {
 			throw new NullPointerException("GueltigVon must not be null");
 		}
 		this.GueltigVon = GueltigVon;
-		if (GueltigBis == null) {
-			throw new NullPointerException("GueltigBis must not be null");
-		}
-		this.GueltigBis = GueltigBis;
 	}
 
 

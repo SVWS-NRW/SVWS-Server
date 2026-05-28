@@ -33,13 +33,21 @@ public class Tabelle_UV_Planungsabschnitte_Lehrer extends SchemaTabelle {
 			new Pair<>(col_Planungsabschnitt_ID, Schema.tab_UV_Planungsabschnitte.col_ID)
 	);
 
-	/** Die Definition des Fremdschlüssels auf UV_Lehrer */
-	public final SchemaTabelleFremdschluessel fk_UVPlanungsabschnitteLehrer_UVLehrer_FK = addForeignKey(
+	/** Die Definition des Fremdschlüssels auf UV_Lehrer_Deprecated_Revision_52 */
+	public final SchemaTabelleFremdschluessel fk_UVPlanungsabschnitteLehrer_UVLehrer_FK_Deprecated_Revision_52 = addForeignKey(
 			"UVPlanungsabschnitteLehrer_UVLehrer_FK",
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Lehrer_ID, Schema.tab_UV_Lehrer.col_ID)
-	);
+	).setVeraltet(SchemaRevisionen.REV_65);
+
+	/** Die Definition des Fremdschlüssels auf UV_Lehrer */
+	public final SchemaTabelleFremdschluessel fk_UVPlanungsabschnitteLehrer_UVLehrer_FK = addForeignKey(
+			"UVPlanungsabschnitteLehrer_UVLehrer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.RESTRICT,
+			new Pair<>(col_Lehrer_ID, Schema.tab_UV_Lehrer.col_ID)
+	).setRevision(SchemaRevisionen.REV_66);
 
 	/**
 	 * Erstellt die Schema-Definition für die Tabelle UV_Planungsabschnitte_Lehrer.

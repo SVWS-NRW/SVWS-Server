@@ -40,16 +40,24 @@ public class Tabelle_UV_Unterrichte_Raeume extends SchemaTabelle {
 	);
 
 	/** Die Definition des Fremdschlüssels UV_UnterrichteRaeume_Raeume_FK */
-	public final SchemaTabelleFremdschluessel fk_UV_UnterrichteRaeume_Raeume_FK = addForeignKey(
+	public final SchemaTabelleFremdschluessel fk_UV_UnterrichteRaeume_Raeume_FK_Deprecated_Revision_65 = addForeignKey(
 			"UV_UnterrichteRaeume_Raeume_FK",
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Raum_ID, Schema.tab_UV_Raeume.col_ID)
-	);
+	).setVeraltet(SchemaRevisionen.REV_65);
+
+	/** Die Definition des Fremdschlüssels UV_UnterrichteRaeume_Raeume_FK */
+	public final SchemaTabelleFremdschluessel fk_UV_UnterrichteRaeume_Raeume_FK = addForeignKey(
+			"UV_UnterrichteRaeume_Raeume_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.RESTRICT,
+			new Pair<>(col_Raum_ID, Schema.tab_UV_Raeume.col_ID)
+	).setRevision(SchemaRevisionen.REV_66);
 
 
 	/**
-	 * Erstellt die Schema-Defintion für die Tabelle UV_Unterrichte_Raeume.
+	 * Erstellt die Schema-Definition für die Tabelle UV_Unterrichte_Raeume.
 	 */
 	public Tabelle_UV_Unterrichte_Raeume() {
 		super("UV_Unterrichte_Raeume", SchemaRevisionen.REV_50);

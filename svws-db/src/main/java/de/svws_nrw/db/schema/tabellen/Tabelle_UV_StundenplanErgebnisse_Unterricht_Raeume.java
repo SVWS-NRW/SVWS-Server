@@ -27,7 +27,7 @@ public class Tabelle_UV_StundenplanErgebnisse_Unterricht_Raeume extends SchemaTa
 	/** Die Definition der Tabellenspalte Raum_ID */
 	public final SchemaTabelleSpalte col_Raum_ID = add("Raum_ID", SchemaDatentypen.BIGINT, true)
 			.setNotNull()
-			.setJavaComment("Fremdschlüssel auf den UV_Raeume");
+			.setJavaComment("Fremdschlüssel auf den Raum (Tabelle UV_Raeume)");
 
 
 	/** Die Definition des Fremdschlüssels UVStundenplanErgUntRaeume_UVStundenplanErg_FK */
@@ -53,7 +53,7 @@ public class Tabelle_UV_StundenplanErgebnisse_Unterricht_Raeume extends SchemaTa
 
 
 	/**
-	 * Erstellt die Schema-Definition für die Tabelle Tabelle_UV_StundenplanErgebnisse_Unterricht_Raeume.
+	 * Erstellt die Schema-Definition für die Tabelle UV_StundenplanErgebnisse_Unterricht_Raeume.
 	 */
 	public Tabelle_UV_StundenplanErgebnisse_Unterricht_Raeume() {
 		super("UV_StundenplanErgebnisse_Unterricht_Raeume", SchemaRevisionen.REV_48);
@@ -61,7 +61,7 @@ public class Tabelle_UV_StundenplanErgebnisse_Unterricht_Raeume extends SchemaTa
 		setImportExport(true);
 		setJavaSubPackage("uv");
 		setJavaClassName("DTOUvStundenplanErgebnisUnterrichtRaum");
-		setJavaComment("Tabelle für die Zuteilung von Räumen zu Unterrichten in der UV Stundenplanung");
+		setJavaComment("Tabelle für die Zuteilung von Räumen zu Unterrichten in der UV-Stundenplanung");
 	}
 
 }

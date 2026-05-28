@@ -41,7 +41,7 @@ public class Tabelle_UV_LehrerAnrechnungsstunden extends SchemaTabelle {
 			.setJavaComment("Anrechnungsstundentext für die Anrechnungsstunden")
 			.setRevision(SchemaRevisionen.REV_50);
 
-	/** Die Definition der Tabellenspalte Anzahl */
+	/** Die Definition der Tabellenspalte AnzahlStunden */
 	public final SchemaTabelleSpalte col_AnzahlStunden = add("AnzahlStunden", SchemaDatentypen.FLOAT, false)
 			.setNotNull()
 			.setJavaComment("Anzahl der Anrechnungsstunden")
@@ -60,15 +60,22 @@ public class Tabelle_UV_LehrerAnrechnungsstunden extends SchemaTabelle {
 			.setDefault("1899-01-01")
 			.setNotNull()
 			.setConverter(DatumConverter.class)
-			.setJavaComment("Das Datum, ab dem der Raum gültig ist")
+			.setJavaComment("Das Datum, ab dem die Anrechnungsstunde gültig ist")
 			.setRevision(SchemaRevisionen.REV_50);
 
 
-	/** Die Definition der Tabellenspalte GueltigBis */
-	public final SchemaTabelleSpalte col_GueltigBis = add("GueltigBis", SchemaDatentypen.DATE, false)
+	/** Die Definition der Tabellenspalte GueltigBis_Deprecated_Revision_49 */
+	public final SchemaTabelleSpalte col_GueltigBis_Deprecated_Revision_49 = add("GueltigBis", SchemaDatentypen.DATE, false)
 			.setNotNull()
 			.setConverter(DatumConverter.class)
-			.setJavaComment("Das Datum, bis wann die Anrechnungsstunde gültig ist");
+			.setJavaComment("Das Datum, bis wann die Anrechnungsstunde gültig ist")
+			.setVeraltet(SchemaRevisionen.REV_65);
+
+	/** Die Definition der Tabellenspalte GueltigBis */
+	public final SchemaTabelleSpalte col_GueltigBis = add("GueltigBis", SchemaDatentypen.DATE, false)
+			.setConverter(DatumConverter.class)
+			.setJavaComment("Das Datum, bis wann die Anrechnungsstunde gültig ist")
+			.setRevision(SchemaRevisionen.REV_66);
 
 
 

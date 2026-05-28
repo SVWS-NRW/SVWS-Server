@@ -51,7 +51,7 @@ public class Tabelle_UV_Lehrer extends SchemaTabelle {
 	);
 
 	/**
-	 * Erstellt die Schema-Defintion für die Tabelle UV_Lehrer.
+	 * Erstellt die Schema-Definition für die Tabelle UV_Lehrer.
 	 */
 	public Tabelle_UV_Lehrer() {
 		super("UV_Lehrer", SchemaRevisionen.REV_48);

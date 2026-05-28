@@ -93,7 +93,7 @@ public final class DTOUvPlanungsabschnitt {
 	@JsonProperty
 	public boolean Aktiv;
 
-	/** Das Datum, ab dem der Raum gültig ist */
+	/** Datum, ab dem der Planungsabschnitt gültig ist */
 	@Column(name = "GueltigVon")
 	@JsonProperty
 	@Convert(converter = DatumConverter.class)

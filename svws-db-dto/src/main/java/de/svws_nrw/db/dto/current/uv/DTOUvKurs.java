@@ -85,7 +85,7 @@ public final class DTOUvKurs {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schuelergruppe_ID */
 	public static final String QUERY_LIST_BY_SCHUELERGRUPPE_ID = "SELECT e FROM DTOUvKurs e WHERE e.Schuelergruppe_ID IN ?1";
 
-	/** ID der Klasse (generiert, planungsspezifisch) */
+	/** ID des Kurses (generiert, planungsspezifisch) */
 	@Id
 	@Column(name = "ID")
 	@JsonProperty

@@ -48,7 +48,7 @@ public class Tabelle_UV_Unterrichte_Raeume_Deprecated_Revision_49 extends Schema
 
 
 	/**
-	 * Erstellt die Schema-Defintion für die Tabelle UV_Unterrichte_Raeume.
+	 * Erstellt die Schema-Definition für die Tabelle UV_Unterrichte_Raeume.
 	 */
 	public Tabelle_UV_Unterrichte_Raeume_Deprecated_Revision_49() {
 		super("UV_Unterrichte_Raeume", SchemaRevisionen.REV_48);

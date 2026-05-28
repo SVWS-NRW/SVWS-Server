@@ -40,7 +40,7 @@ public class Tabelle_UV_Planungsabschnitte extends SchemaTabelle {
 			.setDefault("1899-01-01")
 			.setNotNull()
 			.setConverter(DatumConverter.class)
-			.setJavaComment("Das Datum, ab dem der Raum gültig ist")
+			.setJavaComment("Datum, ab dem der Planungsabschnitt gültig ist")
 			.setRevision(SchemaRevisionen.REV_50);
 
 

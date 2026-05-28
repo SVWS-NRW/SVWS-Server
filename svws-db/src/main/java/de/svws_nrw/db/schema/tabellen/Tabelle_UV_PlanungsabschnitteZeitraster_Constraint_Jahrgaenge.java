@@ -10,7 +10,7 @@ import de.svws_nrw.db.schema.SchemaTabelleFremdschluessel;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 
 /**
- * Diese Klasse beinhaltet die Schema-Definition für die Tabelle UV_Schuelergruppen_Constraint_Jahrgaenge.
+ * Diese Klasse beinhaltet die Schema-Definition für die Tabelle UV_PlanungsabschnitteZeitraster_Constraint_Jahrgaenge.
  */
 public class Tabelle_UV_PlanungsabschnitteZeitraster_Constraint_Jahrgaenge extends SchemaTabelle {
 
@@ -19,7 +19,7 @@ public class Tabelle_UV_PlanungsabschnitteZeitraster_Constraint_Jahrgaenge exten
 			.setNotNull()
 			.setJavaComment("Die ID des Planungsabschnitts als Fremdschlüssel auf die Tabelle UV_Planungsabschnitte");
 
-	/** Die Definition der Tabellenspalte Zeitraster */
+	/** Die Definition der Tabellenspalte Zeitraster_ID */
 	public final SchemaTabelleSpalte col_Zeitraster_ID = add("Zeitraster_ID", SchemaDatentypen.BIGINT, true)
 			.setNotNull()
 			.setJavaComment("ID des Zeitrasters des Planungsabschnitts");
@@ -31,7 +31,7 @@ public class Tabelle_UV_PlanungsabschnitteZeitraster_Constraint_Jahrgaenge exten
 
 
 
-	/** Die Definition des Fremdschlüssels auf UV_Schuelergruppen */
+	/** Die Definition des Fremdschlüssels auf UV_Planungsabschnitte_Zeitraster */
 	public final SchemaTabelleFremdschluessel fk_UVPlanungsabschnitteZeitrJahrg_UVPlanungsabschnitteZeitr_FK = addForeignKey(
 			"UVPlanungsabschnitteZeitrJahrg_UVPlanungsabschnitteZeitr_FK",
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
@@ -50,7 +50,7 @@ public class Tabelle_UV_PlanungsabschnitteZeitraster_Constraint_Jahrgaenge exten
 
 
 	/**
-	 * Erstellt die Schema-Definition für die Tabelle UV_Schuelergruppen_Constraint_Jahrgaenge.
+	 * Erstellt die Schema-Definition für die Tabelle UV_PlanungsabschnitteZeitraster_Constraint_Jahrgaenge.
 	 */
 	public Tabelle_UV_PlanungsabschnitteZeitraster_Constraint_Jahrgaenge() {
 		super("UV_PlanungsabschnitteZeitraster_Constraint_Jahrgaenge", SchemaRevisionen.REV_48);

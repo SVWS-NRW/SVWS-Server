@@ -61,7 +61,7 @@ public class Tabelle_UV_StundenplanErgebnisse_Unterricht_Lehrer extends SchemaTa
 		setImportExport(true);
 		setJavaSubPackage("uv");
 		setJavaClassName("DTOUvStundenplanErgebnisUnterrichtLehrer");
-		setJavaComment("Tabelle für die Zuteilung von Lerngruppen-Lehrern zu Unterrichten in der UV Stundenplanung");
+		setJavaComment("Tabelle für die Zuteilung von Lerngruppen-Lehrern zu Unterrichten in der UV-Stundenplanung");
 	}
 
 }

@@ -19,7 +19,7 @@ public class Tabelle_UV_Kurse extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte ID */
 	public final SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
 			.setNotNull()
-			.setJavaComment("ID der Klasse (generiert, planungsspezifisch)");
+			.setJavaComment("ID des Kurses (generiert, planungsspezifisch)");
 
 	/** Die Definition der Tabellenspalte Planungsabschnitt_ID */
 	public final SchemaTabelleSpalte col_Planungsabschnitt_ID = add("Planungsabschnitt_ID", SchemaDatentypen.BIGINT, false)
@@ -70,13 +70,22 @@ public class Tabelle_UV_Kurse extends SchemaTabelle {
             new Pair<>(col_Fach_ID, Schema.tab_UV_Faecher.col_ID)
     ).setVeraltet(SchemaRevisionen.REV_49);
 
-	/** Fremdschlüssel auf die Tabelle UV_Faecher */
-	public final SchemaTabelleFremdschluessel fk_UVKurse_UVFaecher_FK = addForeignKey(
+	/** Fremdschlüssel auf die Tabelle UV_Faecher DEPRECATED wegen OnDelete */
+	public final SchemaTabelleFremdschluessel fk_UVKurse_UVFaecher_FK_Deprecated_Revision_53 = addForeignKey(
 			"UVKurse_UVStundentafelnFaecher_FK",
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Fach_ID, Schema.tab_UV_Stundentafeln_Faecher.col_ID)
-	).setRevision(SchemaRevisionen.REV_50);
+	).setRevision(SchemaRevisionen.REV_50)
+			.setVeraltet(SchemaRevisionen.REV_65);
+
+	/** Fremdschlüssel auf die Tabelle UV_Faecher */
+	public final SchemaTabelleFremdschluessel fk_UVKurse_UVFaecher_FK = addForeignKey(
+			"UVKurse_UVFaecher_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.RESTRICT,
+			new Pair<>(col_Fach_ID, Schema.tab_UV_Faecher.col_ID)
+	).setRevision(SchemaRevisionen.REV_66);
 
     /** Fremdschlüssel auf die Tabelle UV_Schuelergruppen DEPRECATED wegen Bug bei Erstellung des FKs (Spaltenreihenfolge #4a702e6e) */
     public final SchemaTabelleFremdschluessel fk_UVKurse_UVSchuelergruppen_FK_Deprecated_Revision_49 = addForeignKey(

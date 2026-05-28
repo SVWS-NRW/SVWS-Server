@@ -68,7 +68,7 @@ public class Tabelle_UV_StundenplanErgebnisse_Unterricht_Zeitraster extends Sche
 		setImportExport(true);
 		setJavaSubPackage("uv");
 		setJavaClassName("DTOUvStundenplanErgebnisUnterrichtZeitraster");
-		setJavaComment("Tabelle für die Zuteilung von Zeitraster zu Unterrichten in der UV Stundenplanung");
+		setJavaComment("Tabelle für die Zuteilung von Zeitrastereinträgen zu Unterrichten in der UV-Stundenplanung");
 	}
 
 }

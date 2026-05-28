@@ -44,7 +44,7 @@ public class Tabelle_UV_Lerngruppen_Lehrer extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Wochenstunden */
 	public final SchemaTabelleSpalte col_Wochenstunden = add("Wochenstunden", SchemaDatentypen.FLOAT, false)
 			.setNotNull()
-			.setJavaComment("Die Anzahl der Wochenstunden für die der Lehrer in dem Kurs eingesetzt wird");
+			.setJavaComment("Die Anzahl der Wochenstunden, für die der Lehrer in der Lerngruppe eingesetzt wird");
 
 	/** Die Definition der Tabellenspalte WochenstundenAngerechnet */
 	public final SchemaTabelleSpalte col_WochenstundenAngerechnet = add("WochenstundenAngerechnet", SchemaDatentypen.FLOAT, false)
@@ -90,7 +90,7 @@ public class Tabelle_UV_Lerngruppen_Lehrer extends SchemaTabelle {
 	public final SchemaTabelleUniqueIndex unique_UV_Lerngruppen_Lehrer_UC2 = addUniqueIndex("UV_Lerngruppen_Lehrer_UC2",
 			col_Lerngruppe_ID,
 			col_Reihenfolge
-	);
+	).setVeraltet(SchemaRevisionen.REV_65);
 
 	/** Unique-Index für die Kombination ID und Planungsabschnitt_ID, benötigt durch 2-teiligen FK */
 	public final SchemaTabelleUniqueIndex unique_UV_Lerngruppen_Lehrer_UC3 = addUniqueIndex("UV_Lerngruppen_Lehrer_UC3",
@@ -100,7 +100,7 @@ public class Tabelle_UV_Lerngruppen_Lehrer extends SchemaTabelle {
 
 
 	/**
-	 * Erstellt die Schema-Defintion für die Tabelle UV_Lerngruppen_Lehrer.
+	 * Erstellt die Schema-Definition für die Tabelle UV_Lerngruppen_Lehrer.
 	 */
 	public Tabelle_UV_Lerngruppen_Lehrer() {
 		super("UV_Lerngruppen_Lehrer", SchemaRevisionen.REV_48);

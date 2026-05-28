@@ -76,7 +76,7 @@ public final class DTOUvFach {
 	@JsonProperty
 	public long Fach_ID;
 
-	/** Das Datum, ab dem der Raum gültig ist */
+	/** Datum, ab dem das Fach gültig ist */
 	@Column(name = "GueltigVon")
 	@JsonProperty
 	@Convert(converter = DatumConverter.class)

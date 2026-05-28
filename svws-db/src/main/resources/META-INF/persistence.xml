@@ -448,10 +448,12 @@
         <class>de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerZP10</class>
         <class>de.svws_nrw.db.dto.current.uv.DTOUvFach</class>
         <class>de.svws_nrw.db.dto.current.uv.DTOUvKlasse</class>
+        <class>de.svws_nrw.db.dto.current.uv.DTOUvKlassenLehrer</class>
         <class>de.svws_nrw.db.dto.current.uv.DTOUvKurs</class>
         <class>de.svws_nrw.db.dto.current.uv.DTOUvLehrer</class>
         <class>de.svws_nrw.db.dto.current.uv.DTOUvLehrerAnrechnungsstunden</class>
         <class>de.svws_nrw.db.dto.current.uv.DTOUvLehrerPflichtstundensoll</class>
+        <class>de.svws_nrw.db.dto.current.uv.DTOUvLehrerUnterrichtsfach</class>
         <class>de.svws_nrw.db.dto.current.uv.DTOUvLerngruppe</class>
         <class>de.svws_nrw.db.dto.current.uv.DTOUvLerngruppeSchiene</class>
         <class>de.svws_nrw.db.dto.current.uv.DTOUvLerngruppenLehrer</class>
@@ -460,6 +462,7 @@
         <class>de.svws_nrw.db.dto.current.uv.DTOUvPlanungsabschnittSchueler</class>
         <class>de.svws_nrw.db.dto.current.uv.DTOUvPlanungsabschnittZeitraster</class>
         <class>de.svws_nrw.db.dto.current.uv.DTOUvRaum</class>
+        <class>de.svws_nrw.db.dto.current.uv.DTOUvRaumgruppe</class>
         <class>de.svws_nrw.db.dto.current.uv.DTOUvSchiene</class>
         <class>de.svws_nrw.db.dto.current.uv.DTOUvSchienenConstraintJahrgang</class>
         <class>de.svws_nrw.db.dto.current.uv.DTOUvSchuelergruppe</class>

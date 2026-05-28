@@ -38,7 +38,7 @@ public class Tabelle_UV_Faecher extends SchemaTabelle {
 			.setDefault("1899-01-01")
 			.setNotNull()
 			.setConverter(DatumConverter.class)
-			.setJavaComment("Das Datum, ab dem der Raum gültig ist")
+			.setJavaComment("Datum, ab dem das Fach gültig ist")
 			.setRevision(SchemaRevisionen.REV_50);
 
 	/** Die Definition der Tabellenspalte GueltigBis */

@@ -87,7 +87,7 @@ public final class DTOUvLehrerPflichtstundensoll {
 	@JsonProperty
 	public double PflichtstdSoll;
 
-	/** Das Datum, ab dem der Raum gültig ist */
+	/** Das Datum, ab dem das Pflichtstundensoll gültig ist */
 	@Column(name = "GueltigVon")
 	@JsonProperty
 	@Convert(converter = DatumConverter.class)

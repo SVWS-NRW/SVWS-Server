@@ -25,16 +25,16 @@ public class Tabelle_UV_Unterrichte extends SchemaTabelle {
 			.setNotNull()
 			.setJavaComment("Die ID des Planungsabschnitts als Fremdschlüssel auf die Tabelle UV_Planungsabschnitte");
 
-    /** Fremdschlüssel auf das Zeitraster (Tabelle UV_Zeitraster_Eintraege) */
+    /** Fremdschlüssel auf den Zeitrastereintrag (Tabelle UV_ZeitrasterEintraege) */
     public final SchemaTabelleSpalte col_ZeitrasterEintrag_ID = add("ZeitrasterEintrag_ID", SchemaDatentypen.BIGINT, false)
-            .setJavaComment("Fremdschlüssel auf den Zeitrastereintrag (Tabelle UV_Zeitraster_Eintraege)");
+            .setJavaComment("Fremdschlüssel auf den Zeitrastereintrag (Tabelle UV_ZeitrasterEintraege)");
 
     /** Fremdschlüssel auf die Lerngruppe (Tabelle UV_Lerngruppen) */
     public final SchemaTabelleSpalte col_Lerngruppe_ID = add("Lerngruppe_ID", SchemaDatentypen.BIGINT, false)
             .setNotNull()
             .setJavaComment("Fremdschlüssel auf die Lerngruppe (Tabelle UV_Lerngruppen)");
 
-    /** Fremdschlüssel auf die Tabelle UV_Zeitraster */
+    /** Fremdschlüssel auf die Tabelle UV_ZeitrasterEintraege */
     public final SchemaTabelleFremdschluessel fk_UVUnterrichte_UVZeitrasterEintraege_FK = addForeignKey(
             "UVUnterrichte_UVZeitrasterEintraege_FK",
             /* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
