@@ -4,14 +4,15 @@
 			<img src="/images/Wappenzeichen_NRW_bw.svg" alt="Logo NRW" class="h-14">
 		</template>
 		<template #main>
-			<div class="grid grow grid-cols-1 gap-3 justify-items-center py-0.5">
-				<svws-ui-text-input v-model.trim="inputHostname" type="text" url placeholder="Serveradresse" @keyup.enter="connect" @focus="inputFocus = true" />
-				<svws-ui-button type="secondary" @click="connect" :disabled="!(!connected || connecting || inputFocus )" :class="{'opacity-25 hover:opacity-100': connected && !inputFocus}">
-					<span v-if="!connected || connecting || inputFocus">Verbinden</span>
-					<span v-else>Verbunden</span>
-					<svws-ui-spinner :spinning="connecting" />
-					<span class="icon i-ri-check-line" v-if="!connecting && connected && !inputFocus" />
-				</svws-ui-button>
+			<div v-if="connecting || inputFocus" class="text-left my-1">
+				<span class="font-bold">Status: </span>Verbinde ...
+			</div>
+			<div v-else-if="!connected && !connecting" class="text-justify py-4">
+				<div class="font-bold pb-2">Kein Server verfügbar</div>
+				<div>
+					Bitte prüfen Sie, ob eine aktive Netzwerkverbindung zum SVWS-Server vorhanden ist.<br> Sollte dieses Problem weiterhin bestehen,
+					wenden Sie sich bitte an Ihren schulischen IT-Support oder an das Fachberaterteam.
+				</div>
 			</div>
 			<Transition>
 				<svws-ui-input-wrapper v-if="connected && !connecting" class="mt-1" center>
@@ -36,7 +37,7 @@
 
 <script setup lang="ts">
 
-	import { computed, ref, shallowRef, watch } from "vue";
+	import { ref, shallowRef, watch } from "vue";
 	import type { LoginProps } from "./SLoginProps";
 	import { version } from '../../version';
 	import { githash } from '../../githash';
@@ -56,11 +57,6 @@
 
 	const connected = shallowRef<boolean>(false);
 
-	const inputHostname = computed<string>({
-		get: () => props.hostname,
-		set: (value) => props.setHostname(value),
-	});
-
 	// Versuche zu beim Laden der Komponente automatisch mit Default-Einstellungen eine Verbindung zu dem Server aufzubauen
 	void connect();
 
@@ -68,10 +64,7 @@
 		connecting.value = true;
 		inputFocus.value = false;
 		try {
-			connected.value = await props.connectTo(props.hostname);
-			if (!connected.value) {
-				throw new Error("Verbindung zum Server fehlgeschlagen. Bitte die Serveradresse prüfen und erneut versuchen.");
-			}
+			connected.value = await props.connectTo();
 		} catch (error) {
 			connection_failed.value = true;
 			connecting.value = false;

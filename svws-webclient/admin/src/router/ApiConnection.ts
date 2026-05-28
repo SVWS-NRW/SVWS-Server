@@ -10,11 +10,8 @@ export class ApiConnection {
 	// Gibt an, ob der Client beim Server authentifiziert ist
 	protected _authenticated = ref<boolean>(false);
 
-	// Der Hostname (evtl. mit Port) des Servers, bei dem der Login stattfindet
-	protected _hostname = ref<string>(globalThis.location.hostname + ":" + globalThis.location.port);
-
 	// Die URL mit welcher der Server verbunden ist
-	protected _url: string | undefined = undefined;
+	protected _url: string = `https://${globalThis.location.hostname}:${globalThis.location.port}`;
 
 	// Der Benutzername für den Login
 	protected _username = "";
@@ -55,11 +52,6 @@ export class ApiConnection {
 	}
 
 
-	// Gibt den Hostname zurück
-	get hostname(): string {
-		return this._hostname.value;
-	}
-
 	// Gibt den Status zurück, ob der Benutzer authentifiziert wurde
 	get authenticated(): boolean {
 		return this._authenticated.value;
@@ -86,53 +78,19 @@ export class ApiConnection {
 	}
 
 	/**
-	 * Setzt den Hostnamen, der für die Verbindung verwendet wird.
-	 *
-	 * @param hostname    der Hostname
-	 */
-	setHostname = (hostname: string): void => {
-		this._hostname.value = hostname;
-	};
-
-	/**
-	 * Versucht eine Verbindung zu dem SVWS-Server mit dem angegebenen Hostnamen aufzubauen.
-	 *
-	 * @param {string} name Der Hostname unter der der SVWS-Server erreichbar sein soll
+	 * Versucht eine Verbindung zu dem SVWS-Server aufzubauen.
 	 *
 	 * @returns {Promise<boolean>}
 	 */
-	connectTo = async (name: string): Promise<boolean> => {
-		let urlString = `https://${name}`;
-		const url = new URL(urlString);
-		const host = url.host;
-		console.log(`1. Versuch – Verbindung zum SVWS-Server unter https://${host} ...`);
+	connectTo = async (): Promise<boolean> => {
 		try {
-			const api = new ApiServer(urlString, "", "");
+			const api = new ApiServer(this._url, "", "");
 			await api.isAlivePrivileged();
-			this._hostname.value = host;
-			this._url = urlString;
-			console.log(`Verbindung erfolgreich hergestellt.`);
 			return true;
 		} catch {
-			console.log(`Verbindung zum SVWS-Server unter https://${host} fehlgeschlagen`);
+			console.log(`Verbindung zum SVWS-Server unter ${this._url} fehlgeschlagen`);
+			return false;
 		}
-		const hostname = url.hostname;
-		urlString = `https://${hostname}`;
-		if (host !== hostname) {
-			console.log(`2. Versuch – Verbindung zum SVWS-Server unter https://${hostname} ...`);
-			try {
-				const api = new ApiServer(urlString, "", "");
-				await api.isAlivePrivileged();
-				this._hostname.value = hostname;
-				this._url = urlString;
-				console.log(`Verbindung erfolgreich hergestellt.`);
-				return true;
-			} catch {
-				console.log(`Verbindung zum SVWS-Server unter https://${hostname} fehlgeschlagen.`);
-				console.log(`Bitte geben Sie einen anderen Hostnamen ein.`);
-			}
-		}
-		return false;
 	};
 
 
@@ -146,9 +104,6 @@ export class ApiConnection {
 	 */
 	login = async (username: string, password: string): Promise<boolean> => {
 		try {
-			if (this._url === undefined) {
-				throw new Error("Keine gültige URL für einen Login verfügbar.");
-			}
 			const api_priv = new ApiPrivileged(this._url, username, password);
 			const data = new BenutzerKennwort();
 			data.user = username;

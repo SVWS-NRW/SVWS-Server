@@ -35,11 +35,6 @@ class Api {
 		return this.conn.api_privileged;
 	}
 
-	/** Gibt den Hostnamen zurück des SVWS-Servers zurück */
-	get hostname(): string {
-		return this.conn.hostname;
-	}
-
 	/** Gibt den Status zurück, ob der Benutzer authentifiziert wurde */
 	get authenticated(): boolean {
 		return this.conn.authenticated;
@@ -71,23 +66,12 @@ class Api {
 	}
 
 	/**
-	 * Setzt den Hostnamen des SVWS-Server für den Verbindungsaufbau.
-	 *
-	 * @param hostname   der Hostname des SVWS-Server
-	 */
-	setHostname = (hostname: string): void => {
-		return this.conn.setHostname(hostname);
-	};
-
-	/**
-	 * Versucht eine Verbindung zu der angegebenen Adresse herzustellen.
-	 *
-	 * @param adresse   die Adresse bestehend aus Hostnamen und ggf. Port des SVWS-Servers
+	 * Versucht eine Verbindung herzustellen.
 	 *
 	 * @returns bei Erfolg true
 	 */
-	connectTo = async (adresse: string): Promise<boolean> => {
-		return await this.conn.connectTo(adresse);
+	connectTo = async (): Promise<boolean> => {
+		return await this.conn.connectTo();
 	};
 
 	/**
