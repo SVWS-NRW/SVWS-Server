@@ -81,9 +81,9 @@
 				<svws-ui-select title="Haltestelle" :readonly v-model="inputHaltestelleID" :items="haltestellenById"
 					:item-text="i => i.bezeichnung ?? ''" removable />
 				<svws-ui-text-input placeholder="Anmeldedatum" :readonly :model-value="schuelerListeManager().daten().anmeldedatum"
-					@change="anmeldedatum => patch({ anmeldedatum : anmeldedatum ?? null })" type="date" removable />
+					@change="v => patch({ anmeldedatum: v === '' ? null : v })" type="date" removable />
 				<svws-ui-text-input placeholder="Aufnahmedatum" :readonly :model-value="schuelerListeManager().daten().aufnahmedatum"
-					@change="aufnahmedatum => patch({ aufnahmedatum : aufnahmedatum ?? null })" type="date" statistics />
+					@change="v => patch({ aufnahmedatum: v === '' ? null : v })" type="date" statistics />
 				<svws-ui-spacing />
 				<svws-ui-input-wrapper :grid="2" class="input-wrapper--checkboxes">
 					<svws-ui-checkbox :readonly :model-value="schuelerListeManager().daten().istVolljaehrig" statistics
