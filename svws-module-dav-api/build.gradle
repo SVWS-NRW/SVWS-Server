@@ -11,11 +11,6 @@ sourceSets {
     }
 }
 
-//exclude javadoc for generated model without comments
-javadoc {
-    exclude 'de/svws_nrw/davapi/model/**'
-}
-
 //add new source folder to eclipse
 eclipse {
     classpath {

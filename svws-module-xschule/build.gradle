@@ -54,9 +54,5 @@ tasks.named('checkstyleMain').configure {
 	source = sourceSets.main.allJava.filter(notGenerated)
 }
 
-tasks.named('javadoc').configure {
-	source = sourceSets.main.allJava.filter(notGenerated)
-}
-
 compileJava.dependsOn(generateSourcesXSchule)
 sourcesJar.dependsOn(generateSourcesXSchule)

@@ -63,7 +63,7 @@ task signJars(type: Exec) {
 	doFirst {
 		def fileJarsToSign = new File("${projectDir}/build/jarsToSign.txt")
 		fileJarsToSign.withWriter { w -> "" }
-		fileTree(dir: "build/libs/", includes: ["**-${project.version}.jar"], excludes: ["**-javadoc.jar", "**-sources.jar"]).files.findAll {
+		fileTree(dir: "build/libs/", includes: ["**-${project.version}.jar"], excludes: ["**-sources.jar"]).files.findAll {
 			fileJarsToSign.withWriterAppend {
 				w -> w << it.toString() << "\n"
 			}

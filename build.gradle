@@ -76,8 +76,6 @@ allprojects {
 	apply plugin: 'svws.gradle.svwsvscode.plugin'
 	apply plugin: 'org.sonarqube'
 	apply plugin: 'checkstyle'
-	// TODO Support JPMS-Modules
-	// apply plugin: 'de.jjohannes.extra-java-module-info'
 
 	version = config.project.version
 	project.ext.latestRelease = config.project.version
@@ -90,20 +88,7 @@ allprojects {
 	}
 
 	java {
-		withJavadocJar()
 		withSourcesJar()
-	}
-
-	javadoc {
-		options.encoding = 'UTF-8'
-		options.charSet = 'UTF-8'
-		options.docEncoding = 'UTF-8'
-		options.addStringOption('Xmaxerrs', '10000')
-		options.addStringOption('Xmaxwarns', '10000')
-		if (JavaVersion.current().isJava9Compatible()) {
-			options.addBooleanOption('html5', true)
-			options.addStringOption('Xdoclint:none', '-quiet')
-		}
 	}
 
 	sonar {
@@ -112,15 +97,6 @@ allprojects {
 			property "sonar.junit.reportPaths", "${project.layout.buildDirectory.get()}/test-results/test"
 		}
 	}
-
-/*
-	eclipse {
-		project {
-			natures 'net.sf.eclipsecs.core.CheckstyleNature'
-			buildCommand 'net.sf.eclipsecs.core.CheckstyleBuilder'
-		}
-	}
-*/
 
 	test {
 		useJUnitPlatform()
@@ -275,20 +251,6 @@ nexusPublishing {
 			password = getOssrhToken()
 		}
 	}
-}
-
-
-task allJavadoc(type: Javadoc) {
-	group = "documentation"
-	project.subprojects.each {
-		if (it.plugins.hasPlugin('java')) {
-			source += it.java.sourceSets.main.allJava
-			classpath += it.java.sourceSets.main.compileClasspath
-		}
-	}
-	destinationDir = file("${buildDir}/docs/javadoc-all")
-	options.addStringOption('Xmaxerrs', '10000')
-	options.addStringOption('Xmaxwarns', '10000')
 }
 
 task prepareSigning(type: Exec) {
