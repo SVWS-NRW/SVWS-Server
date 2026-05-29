@@ -8,6 +8,8 @@ import type { Schulform } from "@core/asd/types/schule/Schulform";
 import { version } from '../../version';
 import { githash } from "../../githash";
 import { OpenApiError } from "@core/api/OpenApiError";
+import { activityState } from "./ActivityStateImpl";
+import { RouteManager } from "~/router/RouteManager";
 
 /**
  * Der Paylod from JWT-Token
@@ -208,8 +210,7 @@ class AuthStateImpl implements AuthState {
 				if (!this.authenticated) {
 					return false;
 				}
-				const { routeLogin } = await import("~/router/RouteLogin");
-				await routeLogin.logout();
+				await this.logout();
 				return true;
 			};
 			const result = await this._api.login();
@@ -309,14 +310,15 @@ class AuthStateImpl implements AuthState {
 		this._authenticated.value = true;
 		this._pending2FA.value = false;
 		this._totpSetup.value = null;
+		activityState.start(() => this.logout());
 	}
-
 
 	/**
 	 * Meldet den angemeldeten Benutzer bei der Api ab.
 	 */
 	public async logout(): Promise<void> {
 		this.stopTimer();
+		activityState.stop();
 		if (this._authenticated.value) {
 			await this.api.logout();
 		}
@@ -329,6 +331,8 @@ class AuthStateImpl implements AuthState {
 		this._api = undefined;
 		this._serverMode.value = ServerMode.STABLE;
 		this._schulform.value = null;
+		await RouteManager.doRoute({ name: 'login' });
+		RouteManager.resetRouteState();
 	}
 
 	private async receivedAccessToken(token: string) {
@@ -359,6 +363,7 @@ class AuthStateImpl implements AuthState {
 			this._timerID = null;
 		}
 	}
+
 }
 
 export const authState = new AuthStateImpl();

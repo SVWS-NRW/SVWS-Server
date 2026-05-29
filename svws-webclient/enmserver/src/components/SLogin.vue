@@ -1,5 +1,5 @@
 <template>
-	<ui-login-layout :version="auth.version" :githash="auth.githash" application="Web Noten Manager">
+	<ui-login-layout :version="auth.version" :githash="auth.githash" application="WebNotenManager">
 		<template #logo>
 			<img src="/images/Wappenzeichen_NRW_bw.svg" alt="Logo NRW" class="h-14">
 		</template>

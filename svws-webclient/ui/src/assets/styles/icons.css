@@ -1062,3 +1062,59 @@
 	mask-repeat: no-repeat;
 	mask-position: center;
 }
+
+@utility i-ri-progress-1-line {
+	mask-image: url(@icons/System/progress-1-line.svg);
+	-webkit-mask-image: url(@icons/System/progress-1-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-progress-2-line {
+	mask-image: url(@icons/System/progress-2-line.svg);
+	-webkit-mask-image: url(@icons/System/progress-2-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-progress-3-line {
+	mask-image: url(@icons/System/progress-3-line.svg);
+	-webkit-mask-image: url(@icons/System/progress-3-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-progress-4-line {
+	mask-image: url(@icons/System/progress-4-line.svg);
+	-webkit-mask-image: url(@icons/System/progress-4-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-progress-5-line {
+	mask-image: url(@icons/System/progress-5-line.svg);
+	-webkit-mask-image: url(@icons/System/progress-5-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-progress-6-line {
+	mask-image: url(@icons/System/progress-6-line.svg);
+	-webkit-mask-image: url(@icons/System/progress-6-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-progress-7-line {
+	mask-image: url(@icons/System/progress-7-line.svg);
+	-webkit-mask-image: url(@icons/System/progress-7-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-progress-8-line {
+	mask-image: url(@icons/System/progress-8-line.svg);
+	-webkit-mask-image: url(@icons/System/progress-8-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
