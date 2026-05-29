@@ -188,7 +188,7 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 				}
 				dto.AbiFach = (abiFach == null) ? null : ("" + abiFach);
 			}
-			case "istZP10oderZK10" -> dto.Prf10Fach = JSONMapper.convertToBoolean(value, false);
+			case "istZP10oderZKEF" -> dto.Prf10Fach = JSONMapper.convertToBoolean(value, false);
 			case "koopSchule" -> dto.SchulNr = JSONMapper.convertToIntegerInRange(value, true, 100000, 1000000);
 			case "lehrerID" -> {
 				final Long idLehrer = JSONMapper.convertToLong(value, true);
