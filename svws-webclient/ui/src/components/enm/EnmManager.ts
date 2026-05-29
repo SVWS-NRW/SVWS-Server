@@ -177,6 +177,12 @@ export class EnmManager {
 			this.mapTeilleistungsarten.put(t.id, t);
 		}
 
+		this.listAnkreuzkompetenzen = new ArrayList(daten.ankreuzkompetenzen.kompetenzen);
+		this.listAnkreuzkompetenzen.sort(this.comparatorAnkreuzkompetenzen);
+		for (const a of this.listAnkreuzkompetenzen) {
+			this.mapAnkreuzkompetenzen.put(a.id, a);
+		}
+
 		for (const l of daten.lerngruppen) {
 			this.mapLerngruppen.put(l.id, l);
 			this.mapLerngruppenSchueler.put(l.id, new ArrayList());
@@ -283,12 +289,6 @@ export class EnmManager {
 			}
 		}
 		this.listKlassenMitAnkreuzkompetenzen.sort(this.comparatorKlassen);
-
-		this.listAnkreuzkompetenzen = new ArrayList(daten.ankreuzkompetenzen.kompetenzen);
-		this.listAnkreuzkompetenzen.sort(this.comparatorAnkreuzkompetenzen);
-		for (const a of this.listAnkreuzkompetenzen) {
-			this.mapAnkreuzkompetenzen.put(a.id, a);
-		}
 	}
 
 	/**
@@ -808,6 +808,19 @@ export class EnmManager {
 		}
 		return klasse;
 	}
+
+
+	/**
+	 * Gibt die Liste der Ankreuzkompetenzen eines Schülers zurück.
+	 *
+	 * @param id   die ID der Schülers
+	 *
+	 * @returns die Lister der Ankreuzkompetenzen
+	 */
+	public schuelerGetAnkreuzkompetenzen(id: number): List<ENMv2SchuelerAnkreuzkompetenz> {
+		return this.mapSchuelerAnkreuzkompetenzen.get(id) ?? new ArrayList<ENMv2SchuelerAnkreuzkompetenz>();
+	}
+
 
 	/**
 	 * Gibt zurück, ob die Fehlstunden für den übergebenen Schüler fachbezogen ermittelt werden oder nicht.

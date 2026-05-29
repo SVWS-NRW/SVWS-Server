@@ -183,8 +183,8 @@
 	const gridManager = new GridManager<string, RowType, List<RowType>>({
 		daten: computed<List<RowType>>(() => {
 			const result = new ArrayList<RowType>();
-			const kompetenzen = auswahlZelle.value?.b.ankreuzkompetenzen;
-			if (kompetenzen === undefined || kompetenzen.isEmpty()) {
+			const kompetenzen = props.enmManager().schuelerGetAnkreuzkompetenzen(auswahlZelle.value?.b.id ?? -1);
+			if (kompetenzen.isEmpty()) {
 				return result;
 			}
 			const [first] = kompetenzen;
