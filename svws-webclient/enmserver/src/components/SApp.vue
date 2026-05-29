@@ -4,6 +4,28 @@
 			<svws-ui-menu :focus-switching-enabled :focus-help-visible>
 				<template #header>
 					<svws-ui-menu-header :user="auth.username" class="cursor-pointer" />
+					<div class="w-full text-center mt-4">
+						<svws-ui-tooltip position="right">
+							<div class="w-full flex items-center justify-center">
+								<span class="icon-xl" :class="{
+									'i-ri-checkbox-blank-circle-line icon-ui-success': activityState.remainingSeconds > 60,
+									'i-ri-progress-1-line icon-ui-success-hover': activityState.remainingSeconds <= 60 && activityState.remainingSeconds > 53,
+									'i-ri-progress-2-line icon-ui-warning': activityState.remainingSeconds <= 53 && activityState.remainingSeconds > 46,
+									'i-ri-progress-3-line icon-ui-warning-hover': activityState.remainingSeconds <= 46 && activityState.remainingSeconds > 39,
+									'i-ri-progress-4-line icon-ui-caution': activityState.remainingSeconds <= 39 && activityState.remainingSeconds > 32,
+									'i-ri-progress-5-line icon-ui-caution-hover': activityState.remainingSeconds <= 32 && activityState.remainingSeconds > 25,
+									'i-ri-progress-6-line icon-ui-danger': activityState.remainingSeconds <= 25 && activityState.remainingSeconds > 18,
+									'i-ri-progress-7-line icon-ui-danger-hover': activityState.remainingSeconds <= 18 && activityState.remainingSeconds > 11,
+									'i-ri-progress-8-line icon-ui-danger-hover': activityState.remainingSeconds <= 11,
+								}" />
+							</div>
+							<template #content>
+								<span class="font-mono">
+									{{ `${Math.floor(activityState.remainingSeconds / 60)}:${(activityState.remainingSeconds % 60).toString().padStart(2, '0')}` }} bis zum Ende Ihrer Sitzung. <br>Zum Verlängern klicken Sie mit der Maus auf das Fenster.
+								</span>
+							</template>
+						</svws-ui-tooltip>
+					</div>
 				</template>
 				<template #default>
 					<template v-for="item in apps" :key="item.name">
@@ -107,7 +129,9 @@
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import type { TabData } from "@ui/ui/nav/TabData";
 	import { useAuthState } from "~/states/AuthState";
+	import { useActivityState } from "~/states/ActivityState";
 
+	const activityState = useActivityState();
 	const auth = useAuthState();
 
 	const props = defineProps<AppProps>();
@@ -152,9 +176,8 @@
 	}
 
 	async function doLogout() {
-		document.title = "Abmelden…";
-		await props.logout();
-		document.title = "ENM - Externes Notenmodul";
+		await auth.logout();
+		document.title = "WeNoM";
 	}
 
 	onMounted(() => {

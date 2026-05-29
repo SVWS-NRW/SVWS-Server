@@ -4,7 +4,6 @@ import SLogin from "~/components/SLogin.vue";
 import type { LoginProps } from "~/components/SLoginProps";
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { ServerMode } from "@core/core/types/ServerMode";
-import { authState } from "~/states/AuthStateImpl";
 
 export class RouteLogin extends RouteNode<any, any> {
 
@@ -22,13 +21,6 @@ export class RouteLogin extends RouteNode<any, any> {
 
 	public finishLogin = async (): Promise<void> => {
 		await RouteManager.doRoute(this.routepath);
-	};
-
-	public logout = async () => {
-		this.routepath = "/";
-		await authState.logout();
-		await RouteManager.doRoute(this.getRoute());
-		RouteManager.resetRouteState();
 	};
 
 	public getProps(): LoginProps {

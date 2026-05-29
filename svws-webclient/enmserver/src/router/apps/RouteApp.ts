@@ -6,7 +6,6 @@ import { RoutingStatus } from "~/router/RoutingStatus";
 import { RouteDataApp } from "~/router/apps/RouteDataApp";
 import { routeError } from "~/router/error/RouteError";
 import SApp from "~/components/SApp.vue";
-import { routeLogin } from "~/router/RouteLogin";
 import { routeLeistungen } from "~/router/apps/RouteLeistungen";
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
@@ -71,7 +70,6 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	public getProps(): AppProps {
 		return {
-			logout: routeLogin.logout,
 			// Props für die Navigation
 			setApp: this.setApp,
 			app: this.getApp(),
