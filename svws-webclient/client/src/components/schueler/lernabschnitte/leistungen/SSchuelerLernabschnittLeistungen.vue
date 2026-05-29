@@ -4,9 +4,9 @@
 			<template #header>
 				<div role="row" class="svws-ui-tr">
 					<div role="columnheader" :class="{
-						'col-span-6': hatUpdateKompetenz && istGymOb,
-						'col-span-5': (hatUpdateKompetenz && !istGymOb) || (!hatUpdateKompetenz && istGymOb),
-						'col-span-4': !hatUpdateKompetenz && !istGymOb
+						'col-span-7': hatUpdateKompetenz && istGymOb,
+						'col-span-6': (hatUpdateKompetenz && !istGymOb) || (!hatUpdateKompetenz && istGymOb),
+						'col-span-5': !hatUpdateKompetenz && !istGymOb
 					}" aria-label="Fach" />
 					<div role="columnheader" class="svws-ui-td svws-align-center col-span-2" aria-label="Noten"> Noten </div>
 				</div>
@@ -20,6 +20,7 @@
 					<template v-if="istGymOb">
 						<div role="columnheader" class="svws-ui-td svws-align-center" aria-label="Abifach"> Abi </div>
 					</template>
+					<div role="columnheader" class="svws-ui-td svws-align-center" aria-label="Wochenstunden"> WStd </div>
 					<div role="columnheader" class="svws-ui-td svws-align-left" aria-label="Lehrer"> Lehrer </div>
 					<div role="columnheader" class="svws-ui-td svws-align-center" aria-label="Quartalsnote"> Quartal </div>
 					<div role="columnheader" class="svws-ui-td svws-align-center" aria-label="Halbjahresnote"> Halbjahr </div>
@@ -60,6 +61,7 @@
 					<template v-if="istGymOb">
 						<div class="svws-ui-td svws-align-center" role="cell"> {{ (leistung.abifach === null) ? "" : leistung.abifach }} </div>
 					</template>
+					<div class="svws-ui-td svws-align-center" role="cell"> {{ (leistung.wochenstunden === null) ? "" : leistung.wochenstunden }} </div>
 					<div class="svws-ui-td svws-divider" role="cell">
 						<svws-ui-select v-if="hatUpdateKompetenz" title="—" :items="manager().lehrerGetMengeAktiv()" :item-text="lehrer => textLehrer(lehrer)"
 							:model-value="manager().lehrerGetByLeistungIdOrNull(leistung.id)"
@@ -339,9 +341,10 @@
 				lehrerID: kurs.lehrer,
 				kursart: neueKursart?.daten(schuljahr.value)?.kuerzel ?? null,
 				abifach: neuesAbifach,
+				wochenstunden: kurs.wochenstunden,
 			}, leistung.id);
 		} else {
-			await props.patchLeistung({ kursID: kurs.id, lehrerID: kurs.lehrer }, leistung.id);
+			await props.patchLeistung({ kursID: kurs.id, lehrerID: kurs.lehrer, wochenstunden: kurs.wochenstunden }, leistung.id);
 		}
 	}
 
@@ -355,7 +358,7 @@
 		if (istGymOb.value) {
 			result += "3rem ";
 		}
-		result += "minmax(10rem, 2fr) 5rem 5rem";
+		result += "3rem minmax(10rem, 2fr) 5rem 5rem";
 		return result;
 	});
 </script>
