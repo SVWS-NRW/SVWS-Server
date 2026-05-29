@@ -34,7 +34,7 @@ export class Ankreuzkompetenz extends JavaObject {
 	/**
 	 * Gibt an in welchem Abschnitten (1. HJ, 2. HJ oder beide) die Ankreuzkompetenz benutzt wird.
 	 */
-	public abschnitt: number = 0;
+	public abschnitt: number | null = null;
 
 	/**
 	 * Gibt an, ob die Ankreuzkompetenz aktiv ist.
@@ -95,9 +95,7 @@ export class Ankreuzkompetenz extends JavaObject {
 		if (obj.floskelText === undefined)
 			throw new Error('invalid json format, missing attribute floskelText');
 		result.floskelText = obj.floskelText;
-		if (obj.abschnitt === undefined)
-			throw new Error('invalid json format, missing attribute abschnitt');
-		result.abschnitt = obj.abschnitt;
+		result.abschnitt = (obj.abschnitt === undefined) ? null : obj.abschnitt === null ? null : obj.abschnitt;
 		if (obj.istAktiv === undefined)
 			throw new Error('invalid json format, missing attribute istAktiv');
 		result.istAktiv = obj.istAktiv;
@@ -128,7 +126,7 @@ export class Ankreuzkompetenz extends JavaObject {
 		result += '"istASV" : ' + obj.istASV.toString() + ',';
 		result += '"schulgliederung" : ' + ((obj.schulgliederung === null) ? 'null' : JSON.stringify(obj.schulgliederung)) + ',';
 		result += '"floskelText" : ' + JSON.stringify(obj.floskelText) + ',';
-		result += '"abschnitt" : ' + obj.abschnitt.toString() + ',';
+		result += '"abschnitt" : ' + ((obj.abschnitt === null) ? 'null' : obj.abschnitt.toString()) + ',';
 		result += '"istAktiv" : ' + obj.istAktiv.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"fachSortierung" : ' + obj.fachSortierung.toString() + ',';
@@ -165,7 +163,7 @@ export class Ankreuzkompetenz extends JavaObject {
 			result += '"floskelText" : ' + JSON.stringify(obj.floskelText) + ',';
 		}
 		if (obj.abschnitt !== undefined) {
-			result += '"abschnitt" : ' + obj.abschnitt.toString() + ',';
+			result += '"abschnitt" : ' + ((obj.abschnitt === null) ? 'null' : obj.abschnitt.toString()) + ',';
 		}
 		if (obj.istAktiv !== undefined) {
 			result += '"istAktiv" : ' + obj.istAktiv.toString() + ',';

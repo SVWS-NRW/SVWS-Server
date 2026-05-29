@@ -38,8 +38,8 @@ public class Ankreuzkompetenz {
 	public @NotNull String floskelText = "";
 
 	/** Gibt an in welchem Abschnitten (1. HJ, 2. HJ oder beide) die Ankreuzkompetenz benutzt wird. */
-	@Schema(description = "gibt an in welchem Abschnitten (1. HJ(1), 2. HJ(2) oder beide(3) die Ankreuzkompetenz benutzt wird", example = "1")
-	public int abschnitt;
+	@Schema(description = "gibt an in welchem Abschnitten (1. HJ(1), 2. HJ(2) oder beide(0) die Ankreuzkompetenz benutzt wird", example = "1")
+	public Integer abschnitt;
 
 	/** Gibt an, ob die Ankreuzkompetenz aktiv ist. */
 	@Schema(description = "gibt an, ob die Ankreuzkompetenz aktiv ist", example = "true")

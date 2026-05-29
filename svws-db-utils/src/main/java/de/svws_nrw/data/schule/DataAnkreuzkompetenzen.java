@@ -80,7 +80,7 @@ public final class DataAnkreuzkompetenzen extends DataManagerRevised<Long, DTOAn
 		ankreuzkompetenz.idFach = ankreuzkompetenz.istASV ? null : dto.Fach_ID;
 		ankreuzkompetenz.schulgliederung = dto.Gliederung;
 		ankreuzkompetenz.floskelText = Objects.requireNonNullElse(dto.FloskelText, "");
-		ankreuzkompetenz.abschnitt = Objects.requireNonNullElse(dto.Abschnitt, 0);
+		ankreuzkompetenz.abschnitt = dto.Abschnitt;
 		ankreuzkompetenz.istAktiv = Boolean.TRUE.equals(dto.Aktiv);
 		ankreuzkompetenz.istSichtbar = Boolean.TRUE.equals(dto.Sichtbar);
 		ankreuzkompetenz.fachSortierung = Objects.requireNonNullElse(dto.FachSortierung, 0);

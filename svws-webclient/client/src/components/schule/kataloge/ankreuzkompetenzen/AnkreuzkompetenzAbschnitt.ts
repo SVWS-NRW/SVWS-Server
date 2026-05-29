@@ -10,6 +10,6 @@ export enum AnkreuzkompetenzAbschnitt {
 	HJ2 = 2,
 
 	/** Beide Halbjahre */
-	BEIDE = 3
+	BEIDE = 0
 
 }

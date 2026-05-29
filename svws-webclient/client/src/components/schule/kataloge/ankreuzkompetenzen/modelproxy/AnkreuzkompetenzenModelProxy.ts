@@ -83,11 +83,7 @@ export class AnkreuzkompetenzenModelProxy extends ModelProxy<Ankreuzkompetenz> {
 	});
 
 	abschnitt = computed<AbschnittOption | null>({
-		get: () => AnkreuzkompetenzenModelProxy.abschnittOptionen.find(a => a.id === this.proxy.abschnitt as AnkreuzkompetenzAbschnitt) ?? null,
-		set: (abschnitt: AbschnittOption | null) => {
-			if (abschnitt !== null) {
-				this.proxy.abschnitt = abschnitt.id;
-			}
-		},
+		get: () => AnkreuzkompetenzenModelProxy.abschnittOptionen.find(a => a.id === this.proxy.abschnitt) ?? null,
+		set: (abschnitt: AbschnittOption | null) => this.proxy.abschnitt = abschnitt?.id ?? null,
 	});
 }
