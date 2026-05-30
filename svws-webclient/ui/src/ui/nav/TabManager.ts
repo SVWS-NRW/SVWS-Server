@@ -9,22 +9,22 @@ import type { TabData } from "./TabData";
 export class TabManager {
 
 	// Der aktuell ausgewählte Tab
-	private _tab: ShallowRef<TabData>;
+	private readonly _tab: ShallowRef<TabData>;
 
 	// Das Array mit den verwalteten Tabs (siehe Konstruktor)
-	private _tabs: TabData[];
+	private readonly _tabs: TabData[];
 
 	// Die Callback-Funktion, falls das Tab neu gesetzt wird.
-	private _setTab: (value: TabData) => Promise<void>;
+	private readonly _setTab: (value: TabData) => Promise<void>;
 
 	// Eine Map für den schnellen Zugriff auf die Tabs
-	private _mapName = new Map<string, TabData>();
+	private readonly _mapName = new Map<string, TabData>();
 
 	// Eine Map für den schnellen Zugriff auf den Index des Arrays anhand des Tabnamens
-	private _mapNameToIndex = new Map<string, number>();
+	private readonly _mapNameToIndex = new Map<string, number>();
 
 	/** Eine Map mit den Tab-Groups für die Darstellung */
-	private _tabgroups = new Map<string, Array<TabData>>();
+	private readonly _tabgroups = new Map<string, Array<TabData>>();
 
 	/**
 	 * Erstellt einen neuen Manager.
@@ -189,6 +189,20 @@ export class TabManager {
 	 */
 	public getTabsOfGroup(groupname: string): Array<TabData> {
 		return this._tabgroups.get(groupname) ?? new Array<TabData>();
+	}
+
+	/**
+	 * Gibt zurück, ob mindestens ein sichtbarer Tab dabei ist.
+	 *
+	 * @returns true, wenn ein sichtbarer Tab dabei ist, ansonsten false
+	 */
+	public hasVisibleTabs(): boolean {
+		for (const tab of this.tabs) {
+			if (tab.hide !== true) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

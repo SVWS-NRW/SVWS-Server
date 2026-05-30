@@ -2,14 +2,14 @@
 	<Story title="Tab Bar" id="svws-ui-tab-bar" group="app" icon="ri:route-line" :layout="{type: 'grid', width: '90%'}">
 		<Variant title="Default" id="Default">
 			<svws-ui-header><span class="svws-headline">Headline</span><br><span class="svws-subline">Subtitle</span></svws-ui-header>
-			<svws-ui-tab-bar :tab-manager>
+			<svws-ui-tab-bar :tab-manager="() => tabManager">
 				Route: {{ selectedRoute.text }}
 			</svws-ui-tab-bar>
 			<div class="h-32" />
 		</Variant>
 
 		<Variant title="<svws-ui-tab-bar-vertical>" id="<svws-ui-tab-bar-vertical>">
-			<svws-ui-tab-bar-vertical :tab-manager="tabManagerVertical">
+			<svws-ui-tab-bar-vertical :tab-manager="() => tabManagerVertical">
 				Route: {{ selectedRouteVertical.text }}
 			</svws-ui-tab-bar-vertical>
 		</Variant>
@@ -34,8 +34,8 @@
 	async function setTab(tab: TabData) {
 		selectedRoute.value = tab;
 	}
-	const tabManager = () => new TabManager(tabs, tabs[0], setTab);
-	const selectedRoute = ref(tabManager().tab);
+	const tabManager = new TabManager(tabs, tabs[0], setTab);
+	const selectedRoute = ref(tabs[0]);
 
 	const tabsVertical = [
 		{ name: "home", text: "Home" },
@@ -49,7 +49,7 @@
 	async function setTabVertical(tab: TabData) {
 		selectedRouteVertical.value = tab;
 	}
-	const tabManagerVertical = () => new TabManager(tabsVertical, tabsVertical[0], setTabVertical);
-	const selectedRouteVertical = ref(tabManagerVertical().tab);
+	const tabManagerVertical = new TabManager(tabsVertical, tabsVertical[0], setTabVertical);
+	const selectedRouteVertical = ref(tabsVertical[0]);
 
 </script>

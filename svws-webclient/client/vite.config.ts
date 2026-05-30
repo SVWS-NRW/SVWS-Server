@@ -39,7 +39,17 @@ export default defineConfig(({ mode }) => {
 			} : {}),
 		},
 		plugins: [
-			Vue({ include: [/\.vue$/, /\.md$/] }),
+			Vue({
+				include: [/\.vue$/, /\.md$/],
+				features: {
+					customElement: 'html-preview',
+				},
+				template: {
+					compilerOptions: {
+						isCustomElement: tag => tag === 'html-preview',
+					},
+				},
+			}),
 			basicSsl(),
 			tailwindcss(),
 			Markdown({}),

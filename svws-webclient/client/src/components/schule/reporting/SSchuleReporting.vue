@@ -10,12 +10,8 @@
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<div class="page">
-			<svws-ui-content-card title="Reporting">
-				<svws-ui-input-wrapper>
-					<report-parameters :create-report :create-html-preview :id-hauptdaten-objekt="-1" :server-mode="ServerMode.DEV" />
-				</svws-ui-input-wrapper>
-			</svws-ui-content-card>
+		<div class="page page-flex-row">
+			<report-parameters :create-report :create-html-preview :id-hauptdaten-objekt="-1" show-json />
 		</div>
 	</div>
 </template>
@@ -23,7 +19,6 @@
 <script setup lang="ts">
 
 	import type { SchuleReportingProps } from "./SSchuleReportingProps";
-	import { ServerMode } from "@core";
 
 	const props = defineProps<SchuleReportingProps>();
 

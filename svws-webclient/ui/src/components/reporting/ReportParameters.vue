@@ -1,134 +1,154 @@
 <template>
-	<div class="w-full flex flex-row gap-8 items-start">
-		<div class="flex flex-col gap-4 shrink-0" :class="(serverState.hasDev && (createHtmlPreview !== undefined)) ? 'w-2/5' : 'w-full'">
-			<div v-if="reportvorlage === undefined">
-				<ui-select :manager="reportvorlageSelectManager" v-model="localReportvorlage" />
-			</div>
-			<div v-if="idAbschnitt === undefined">
-				<svws-ui-input-number v-model="localIdAbschnitt" placeholder="ID Schuljahresabschnitt" />
-			</div>
-			<div v-if="(idHauptdatenObjekt !== undefined) && (idHauptdatenObjekt < 0)">
-				<svws-ui-input-number v-model="localIdHauptdatenObjekt" placeholder="ID des Hauptdaten-Objekts" />
-			</div>
-			<div v-if="idsHauptdaten === undefined">
-				<svws-ui-text-input v-model="localIdsHauptdaten" placeholder="IDs Hauptdaten" />
-			</div>
-			<div v-if="idsDetaildaten === undefined">
-				<svws-ui-text-input v-model="localIdsDetaildaten" placeholder="IDs Detaildaten" />
-			</div>
-			<div>
-				<template v-for="gruppe in parameter.reportvorlageParameterGruppen" :key="gruppe.name">
-					<div v-if="gruppe.uiIstSichtbar === true && gruppe.reportvorlageParameter.size() > 0" class="border-2 border-ui-25 rounded-md p-2 my-2">
-						<div class="flex flex-col mb-2">
-							<div class="flex justify-between items-center">
-								<div class="font-bold">{{ gruppe.name }}</div>
-								<div class="flex flex-row">
-									<svws-ui-button @click="() => checkboxes.get(gruppe.name)?.forEach(vp => parameterWert(vp).value = true)" size="small" type="transparent">
-										<span class="icon i-ri-checkbox-line" />
-										Alle auswählen
-									</svws-ui-button>
-									<svws-ui-button @click="() => checkboxes.get(gruppe.name)?.forEach(vp => parameterWert(vp).value = false)" size="small" type="transparent">
-										<span class="icon i-ri-checkbox-blank-line" />
-										Alle abwählen
-									</svws-ui-button>
-								</div>
-							</div>
-							<div v-if="gruppe.beschreibung" class="text-sm mt-1">{{ gruppe.beschreibung }}</div>
-						</div>
-						<div :class="['grid gap-2', gruppe.uiAnzahlSpalten === 0 ? 'grid-cols-1' : gruppe.uiAnzahlSpalten > 6 ? 'grid-cols-6' : `grid-cols-${gruppe.uiAnzahlSpalten}`]">
-							<template v-for="vp in gruppe.reportvorlageParameter" :key="vp.name">
-								<div v-if="vp.uiIstSichtbar === true" :class="vp.uiAnzahlSpalten === 0 ? 'col-span-1' : vp.uiAnzahlSpalten > 6 ? 'col-span-6' : `col-span-${vp.uiAnzahlSpalten}`">
-									<component :is="inputComponent(vp)" v-model="parameterWert(vp).value" :name="vp.name" />
-									<label :for="vp.name"> {{ vp.bezeichnung }} </label>
-								</div>
-							</template>
-						</div>
-					</div>
-				</template>
-				<div class="text-left" />
-
-				<div v-if="parameter.sortierungDefinitionenGruppen.size() > 0" class="border-2 border-ui-25 rounded-md p-2 my-2 col-span-full">
-					<div class="font-bold mb-2">Sortierung</div>
-					<div class="flex items-center gap-x-4 gap-y-2">
-						<template v-for="gruppe of parameter.sortierungDefinitionenGruppen" :key="gruppe.bezeichnung">
-							<template v-if="gruppe.uiIstSichtbar && !gruppe.sortierungDefinitionenOptionen.isEmpty()">
-								<span>{{ gruppe.bezeichnung }}</span>
-								<ui-select :manager="mapSelectManagerSortierung.get(gruppe.bezeichnung)" :model-value="gruppe.sortierungDefinitionen.isEmpty() ? undefined : gruppe.sortierungDefinitionen.get(0)"
-									@update:model-value="v => v instanceof ReportingSortierungDefinition ? gruppe.sortierungDefinitionen = ListUtils.create1(v) : gruppe.sortierungDefinitionen.clear()" />
-							</template>
-						</template>
-					</div>
+	<div :class="[createHtmlPreview !== undefined ? 'w-2/5' : 'w-full']">
+		<svws-ui-tab-bar :tab-manager="() => tabManager">
+			<div v-if="selectedRoute.name === 'eingabe'" class="overflow-auto pr-6">
+				<div v-if="reportvorlage === undefined">
+					<ui-select :manager="reportvorlageSelectManager" v-model="localReportvorlage" />
 				</div>
-
-				<div v-if="parameter.filterDefinitionenGruppen.size() > 0" class="border-2 border-ui-25 rounded-md p-2 my-2 col-span-full">
-					<div class="font-bold mb-2">Filterung</div>
-					<div class="flex items-center gap-x-4 gap-y-2">
-						<template v-for="gruppe of parameter.filterDefinitionenGruppen" :key="gruppe.bezeichnung">
-							<template v-if="gruppe.uiIstSichtbar && !gruppe.filterDefinitionenOptionen.isEmpty()">
-								<span>{{ gruppe.bezeichnung }}</span>
-								<ui-select-multi v-if="gruppe.uiIstMultiselect" :manager="mapSelectManagerFilter.get(gruppe.bezeichnung)" :model-value="gruppe.filterDefinitionen"
-									@update:model-value="v => filterUpdate(v, gruppe.filterDefinitionen)" />
-								<ui-select v-else :manager="mapSelectManagerFilter.get(gruppe.bezeichnung)" :model-value="gruppe.filterDefinitionen.isEmpty() ? undefined : gruppe.filterDefinitionen.get(0)"
-									@update:model-value="v => v instanceof ReportingFilterDefinition ? gruppe.filterDefinitionen = ListUtils.create1(v) : gruppe.filterDefinitionen.clear()" />
-							</template>
-						</template>
-					</div>
+				<div v-if="idAbschnitt === undefined">
+					<svws-ui-input-number v-model="localIdAbschnitt" placeholder="ID Schuljahresabschnitt" />
 				</div>
-
-				<template v-if="ausgabeformat === 0 || ((parameter.ausgabeformatOptionen.size() > 1) && (ausgabeformat === undefined) && (parameter.ausgabeformat === 0))">
-					<ui-select :manager="ausgabeSelectManager" v-model="parameter.ausgabeformat" />
-				</template>
-
-				<!-- PDF-Ausgabe -->
-				<template v-if="parameter.ausgabeformatOptionen.contains(ReportingAusgabeformat.PDF.getId())">
-					<div class="text-left col-span-4 flex gap-2">
-						<svws-ui-button @click="downloadPDF" :is-loading class="mt-4">
-							<svws-ui-spinner v-if="isLoading" spinning />
-							<span v-else class="icon i-ri-printer-line" />
-							Drucken
-						</svws-ui-button>
-						<svws-ui-button v-if="serverState.hasDev && (createHtmlPreview !== undefined)"
-							@click="openHtmlPreview" :is-loading class="mt-4">
-							<svws-ui-spinner v-if="isLoading" spinning />
-							<span v-else class="icon i-ri-eye-line" />
-							Vorschau
-						</svws-ui-button>
-					</div>
-				</template>
-
-				<!-- E-Mail-Eingabefelder -->
-				<template v-if="(parameter.ausgabeformatOptionen.contains(ReportingAusgabeformat.EMAIL.getId())) && serverState.hasDev && (parameter.eMailDaten !== null)">
-					<div class="border-2 border-ui-25 rounded-md p-2 my-2">
-						<div class="flex flex-col mb-2">
-							<div class="font-bold">E-Mail-Versand</div>
-							<div class="text-sm mt-1">Pro Datensatz werden die Dateien gemäß der obiger Einstellungen erzeugt und dann als E-Mail an die zugeordnete Person versendet.</div>
-						</div>
-						<div class="flex flex-col gap-4">
-							<div class="flex flex-col gap-1">
-								<svws-ui-text-input v-model="parameter.eMailDaten.betreff" placeholder="Betreff eingeben" />
-								<svws-ui-textarea-input autoresize v-model="parameter.eMailDaten.text" placeholder="E-Mail-Text eingeben" />
+				<div v-if="(idHauptdatenObjekt !== undefined) && (idHauptdatenObjekt < 0)">
+					<svws-ui-input-number v-model="localIdHauptdatenObjekt" placeholder="ID des Hauptdaten-Objekts" />
+				</div>
+				<div v-if="idsHauptdaten === undefined">
+					<svws-ui-text-input v-model="localIdsHauptdaten" placeholder="IDs Hauptdaten" />
+				</div>
+				<div v-if="idsDetaildaten === undefined">
+					<svws-ui-text-input v-model="localIdsDetaildaten" placeholder="IDs Detaildaten" />
+				</div>
+				<div>
+					<template v-for="gruppe in parameter.reportvorlageParameterGruppen" :key="gruppe.name">
+						<div v-if="gruppe.uiIstSichtbar === true && gruppe.reportvorlageParameter.size() > 0" class="border-2 border-ui-25 rounded-md p-2 my-2">
+							<div class="flex flex-col mb-2">
+								<div class="flex justify-between items-center">
+									<div class="font-bold">{{ gruppe.name }}</div>
+									<div class="flex flex-row">
+										<svws-ui-button @click="() => checkboxes.get(gruppe.name)?.forEach(vp => parameterWert(vp).value = true)" size="small" type="transparent">
+											<span class="icon i-ri-checkbox-line" />
+											Alle auswählen
+										</svws-ui-button>
+										<svws-ui-button @click="() => checkboxes.get(gruppe.name)?.forEach(vp => parameterWert(vp).value = false)" size="small" type="transparent">
+											<span class="icon i-ri-checkbox-blank-line" />
+											Alle abwählen
+										</svws-ui-button>
+									</div>
+								</div>
+								<div v-if="gruppe.beschreibung" class="text-sm mt-1">{{ gruppe.beschreibung }}</div>
 							</div>
-							<svws-ui-checkbox v-model="parameter.eMailDaten.istPrivateEmailAlternative">
-								Private E-Mail-Adresse verwenden, wenn keine schulische E-Mail-Adresse vorhanden ist.
-							</svws-ui-checkbox>
+							<div :class="['grid gap-2', gruppe.uiAnzahlSpalten === 0 ? 'grid-cols-1' : gruppe.uiAnzahlSpalten > 6 ? 'grid-cols-6' : `grid-cols-${gruppe.uiAnzahlSpalten}`]">
+								<template v-for="vp in gruppe.reportvorlageParameter" :key="vp.name">
+									<div v-if="vp.uiIstSichtbar === true" :class="vp.uiAnzahlSpalten === 0 ? 'col-span-1' : vp.uiAnzahlSpalten > 6 ? 'col-span-6' : `col-span-${vp.uiAnzahlSpalten}`">
+										<component :is="inputComponent(vp)" v-model="parameterWert(vp).value" :name="vp.name" />
+										<label :for="vp.name"> {{ vp.bezeichnung }} </label>
+									</div>
+								</template>
+							</div>
+						</div>
+					</template>
+					<div class="text-left" />
+					<div v-if="parameter.sortierungDefinitionenGruppen.size() > 0" class="border-2 border-ui-25 rounded-md p-2 my-2 col-span-full">
+						<div class="font-bold mb-2">Sortierung</div>
+						<div class="flex items-center gap-x-4 gap-y-2">
+							<template v-for="gruppe of parameter.sortierungDefinitionenGruppen" :key="gruppe.bezeichnung">
+								<template v-if="gruppe.uiIstSichtbar && !gruppe.sortierungDefinitionenOptionen.isEmpty()">
+									<span>{{ gruppe.bezeichnung }}</span>
+									<ui-select :manager="mapSelectManagerSortierung.get(gruppe.bezeichnung)" :model-value="gruppe.sortierungDefinitionen.isEmpty() ? undefined : gruppe.sortierungDefinitionen.get(0)"
+										@update:model-value="v => v instanceof ReportingSortierungDefinition ? gruppe.sortierungDefinitionen = ListUtils.create1(v) : gruppe.sortierungDefinitionen.clear()" />
+								</template>
+							</template>
 						</div>
 					</div>
+					<div v-if="parameter.filterDefinitionenGruppen.size() > 0" class="border-2 border-ui-25 rounded-md p-2 my-2 col-span-full">
+						<div class="font-bold mb-2">Filterung</div>
+						<div class="flex items-center gap-x-4 gap-y-2">
+							<template v-for="gruppe of parameter.filterDefinitionenGruppen" :key="gruppe.bezeichnung">
+								<template v-if="gruppe.uiIstSichtbar && !gruppe.filterDefinitionenOptionen.isEmpty()">
+									<span>{{ gruppe.bezeichnung }}</span>
+									<ui-select-multi v-if="gruppe.uiIstMultiselect" :manager="mapSelectManagerFilter.get(gruppe.bezeichnung)" :model-value="gruppe.filterDefinitionen"
+										@update:model-value="v => filterUpdate(v, gruppe.filterDefinitionen)" />
+									<ui-select v-else :manager="mapSelectManagerFilter.get(gruppe.bezeichnung)" :model-value="gruppe.filterDefinitionen.isEmpty() ? undefined : gruppe.filterDefinitionen.get(0)"
+										@update:model-value="v => v instanceof ReportingFilterDefinition ? gruppe.filterDefinitionen = ListUtils.create1(v) : gruppe.filterDefinitionen.clear()" />
+								</template>
+							</template>
+						</div>
+					</div>
+					<template v-if="ausgabeformat === 0 || ((parameter.ausgabeformatOptionen.size() > 1) && (ausgabeformat === undefined) && (parameter.ausgabeformat === 0))">
+						<ui-select :manager="ausgabeSelectManager" v-model="parameter.ausgabeformat" />
+					</template>
+					<!-- PDF-Ausgabe -->
+					<template v-if="parameter.ausgabeformatOptionen.contains(ReportingAusgabeformat.PDF.getId())">
+						<div class="text-left col-span-4 flex gap-2">
+							<svws-ui-button @click="downloadPDF" :is-loading class="mt-4">
+								<svws-ui-spinner v-if="isLoading" spinning />
+								<span v-else class="icon i-ri-printer-line" />
+								Drucken
+							</svws-ui-button>
+							<svws-ui-button v-if="serverState.hasDev && (createHtmlPreview !== undefined)"
+								@click="openHtmlPreview" :is-loading class="mt-4">
+								<svws-ui-spinner v-if="isLoading" spinning />
+								<span v-else class="icon i-ri-eye-line" />
+								Vorschau
+							</svws-ui-button>
+						</div>
+					</template>
+					<!-- E-Mail-Eingabefelder -->
+					<template v-if="(parameter.ausgabeformatOptionen.contains(ReportingAusgabeformat.EMAIL.getId())) && serverState.hasDev && (parameter.eMailDaten !== null)">
+						<div class="border-2 border-ui-25 rounded-md p-2 my-2">
+							<div class="flex flex-col mb-2">
+								<div class="font-bold">E-Mail-Versand</div>
+								<div class="text-sm mt-1">Pro Datensatz werden die Dateien gemäß der obiger Einstellungen erzeugt und dann als E-Mail an die zugeordnete Person versendet.</div>
+							</div>
+							<div class="flex flex-col gap-4">
+								<div class="flex flex-col gap-1">
+									<svws-ui-text-input v-model="parameter.eMailDaten.betreff" placeholder="Betreff eingeben" />
+									<svws-ui-textarea-input autoresize v-model="parameter.eMailDaten.text" placeholder="E-Mail-Text eingeben" />
+								</div>
+								<svws-ui-checkbox v-model="parameter.eMailDaten.istPrivateEmailAlternative">
+									Private E-Mail-Adresse verwenden, wenn keine schulische E-Mail-Adresse vorhanden ist.
+								</svws-ui-checkbox>
+							</div>
+						</div>
+						<svws-ui-button @click="sendPdfByEmail" :is-loading>
+							<svws-ui-spinner v-if="isLoading" spinning />
+							<span v-else class="icon i-ri-mail-send-line" />
+							E-Mails senden
+						</svws-ui-button>
+					</template>
+				<!-- Ende: E-Mail-Eingabefelder -->
+				</div>
+			</div>
+			<div v-else>
+				<svws-ui-textarea-input v-model="altParameter" />
+				Achtung, die Buttons nur klicken, wenn die passende ausgabeformatOptionen gesetzt ist, sonst gibt es einen Fehler!
+				<div class="text-left col-span-4 flex gap-2">
+					<svws-ui-button @click="downloadPDF" :is-loading class="mt-4">
+						<svws-ui-spinner v-if="isLoading" spinning />
+						<span v-else class="icon i-ri-printer-line" />
+						Drucken
+					</svws-ui-button>
+					<svws-ui-button v-if="serverState.hasDev && (createHtmlPreview !== undefined)"
+						@click="openHtmlPreview" :is-loading class="mt-4">
+						<svws-ui-spinner v-if="isLoading" spinning />
+						<span v-else class="icon i-ri-eye-line" />
+						Vorschau
+					</svws-ui-button>
 					<svws-ui-button @click="sendPdfByEmail" :is-loading>
 						<svws-ui-spinner v-if="isLoading" spinning />
 						<span v-else class="icon i-ri-mail-send-line" />
 						E-Mails senden
 					</svws-ui-button>
-				</template>
-			<!-- Ende: E-Mail-Eingabefelder -->
-			</div>
-		</div>
-		<!-- HTML-Vorschau (rechte Spalte, nur in DEV mit verfügbarer Vorschau-API) -->
-		<div v-if="serverState.hasDev && (createHtmlPreview !== undefined)" class="w-3/5 sticky top-2 h-[calc(100vh-16rem)] flex flex-col">
-			<div class="relative flex-1 min-h-0 overflow-hidden rounded-md border-2 border-ui-25 bg-white shadow-sm flex items-center justify-center">
-				<iframe v-if="previewHtml !== ''" :srcdoc="previewHtml" class="absolute inset-0 w-full h-full border-0 bg-white" title="Reporting-Vorschau" />
-				<div v-else class="text-black italic text-center p-8">
-					Erstellen Sie eine Vorschau, um diese hier anzeigen zu lassen.
 				</div>
+			</div>
+		</svws-ui-tab-bar>
+	</div>
+	<!-- HTML-Vorschau (rechte Spalte, nur in DEV mit verfügbarer Vorschau-API) -->
+	<!-- <html-preview :html="previewHtml" v-if="serverState.hasDev && (createHtmlPreview !== undefined)" /> -->
+	<div v-if="serverState.hasDev && (createHtmlPreview !== undefined)" class="w-full sticky top-2 h-[calc(100vh-16rem)] flex flex-col">
+		<div class="relative flex-1 min-h-0 overflow-hidden rounded-md border-2 border-ui-25 bg-white shadow-sm flex items-center justify-center">
+			<iframe v-if="previewHtml !== ''" :srcdoc="previewHtml" class="absolute inset-0 w-full h-full border-0 bg-white" title="Reporting-Vorschau" />
+			<div v-else class="text-black italic text-center p-8">
+				Erstellen Sie eine Vorschau, um diese hier anzeigen zu lassen.
 			</div>
 		</div>
 	</div>
@@ -154,14 +174,17 @@
 	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
 	import { ReportingAusgabeformat } from "../../../../core/src/core/types/reporting/ReportingAusgabeformat";
 	import { ReportingReportvorlageParameterTyp } from "../../../../core/src/core/types/reporting/ReportingReportvorlageParameterTyp";
-	import { ServerMode } from "../../../../core/src/core/types/ServerMode";
 	import { SelectManager } from "../../../../ui/src/ui/controls/select/manager/SelectManager";
 	import { ReportingSortierungDefinition } from "../../../../core/src/core/data/reporting/ReportingSortierungDefinition";
 	import { ReportingFilterDefinition } from "../../../../core/src/core/data/reporting/ReportingFilterDefinition";
 	import { ListUtils } from "../../../../core/src";
+	import type { TabData } from "../../ui/nav/TabData";
+	import { TabManager } from "../../ui/nav/TabManager";
+
 	import { useServerState } from "../../states/ServerState";
 
 	const props = defineProps<{
+		showJson?: boolean;
 		reportvorlage?: ReportingReportvorlage;
 		idHauptdatenObjekt?: number;
 		idsHauptdaten?: Iterable<number>;
@@ -172,6 +195,18 @@
 		sendEMail?: (parameter: ReportingParameter) => Promise<SimpleOperationResponse>;
 		ausgabeformat?: number;
 	}>();
+
+	const tabs = computed<TabData[]>(() => [
+		{ name: "eingabe", text: "Eingabe", hide: !props.showJson },
+		{ name: "json", text: "JSON", hide: !props.showJson },
+	]);
+
+	async function setTab(tab: TabData) {
+		selectedRoute.value = tab;
+	}
+
+	const tabManager = new TabManager(tabs.value, tabs.value[0], setTab);
+	const selectedRoute = ref(tabs.value[0]);
 	const serverState = useServerState();
 
 	const isLoading = ref<boolean>(false);
@@ -184,6 +219,7 @@
 	const localIdsDetaildaten = ref<string>("");
 	const localIdAbschnitt = ref<number>(0);
 	const parameter = ref(new ReportingParameter());
+	const altParameter = ref();
 
 	watch(() => props.reportvorlage, () => {
 			localReportvorlage.value = props.reportvorlage;
@@ -323,6 +359,9 @@
 		parameter.value.idHauptdatenObjekt = (props.idHauptdatenObjekt !== undefined && props.idHauptdatenObjekt >= 0) ? props.idHauptdatenObjekt : localIdHauptdatenObjekt.value;
 		parameter.value.idsHauptdaten = listHauptdaten.value;
 		parameter.value.idsDetaildaten = listDetaildaten.value;
+		if (selectedRoute.value.name === 'json') {
+			parameter.value = ReportingParameter.transpilerFromJSON(altParameter.value);
+		}
 		parameter.value.ausgabeformat = ReportingAusgabeformat.PDF.getId();
 		try {
 			const { data, name } = await props.createReport(parameter.value);
@@ -346,6 +385,9 @@
 		parameter.value.idHauptdatenObjekt = (props.idHauptdatenObjekt !== undefined && props.idHauptdatenObjekt >= 0) ? props.idHauptdatenObjekt : localIdHauptdatenObjekt.value;
 		parameter.value.idsHauptdaten = listHauptdaten.value;
 		parameter.value.idsDetaildaten = listDetaildaten.value;
+		if (selectedRoute.value.name === 'json') {
+			parameter.value = ReportingParameter.transpilerFromJSON(altParameter.value);
+		}
 		parameter.value.ausgabeformat = ReportingAusgabeformat.HTML.getId();
 		try {
 			previewHtml.value = await props.createHtmlPreview(parameter.value);
@@ -372,5 +414,6 @@
 			isLoading.value = false;
 		}
 	}
+
 
 </script>

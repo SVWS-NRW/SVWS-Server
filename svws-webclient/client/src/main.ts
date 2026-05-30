@@ -1,4 +1,4 @@
-import { createApp } from "vue";
+import { createApp, defineCustomElement } from "vue";
 import { router } from "./router/RouteManager";
 
 import "../../ui/src/assets/styles/index.css";
@@ -11,6 +11,10 @@ import { schuleState } from "./states/SchuleStateImpl";
 import { SchuleStateKey } from "../../ui/src/states/SchuleState";
 import { serverState } from "./states/ServerStateImpl";
 import { ServerStateKey } from "../../ui/src/states/ServerState";
+import HtmlPreview from "../../ui/src/components/reporting/HtmlPreview.ce.vue";
+
+const CustomElementConstructor = defineCustomElement(HtmlPreview);
+customElements.define('html-preview', CustomElementConstructor);
 
 const app = createApp(SWrapper);
 app.use(router);

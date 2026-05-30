@@ -1,28 +1,28 @@
 <template>
 	<div :class="{ 'svws-ui-page': !secondary, 'svws-single-tab': tabManager().tabs.length === 1 }">
-		<div class="svws-ui-tabs" :class="{ 'svws-ui-tabs--secondary': secondary }">
+		<div v-if="tabManager().hasVisibleTabs()" class="svws-ui-tabs" :class="{ 'svws-ui-tabs--secondary': secondary }">
 			<div class="svws-ui-tabs--wrapper" :class="{'focus-region': focusSwitchingEnabled, 'highlighted': (tabManager().tabs.length > 1) && focusHelpVisible}">
 				<p v-if="(tabManager().tabs.length > 1) && focusHelpVisible && secondary" class="region-enumeration">6</p>
 				<p v-else-if="(tabManager().tabs.length > 1) && focusHelpVisible" class="region-enumeration">5</p>
-				<div v-if="state.scrolled" class="svws-ui-tabs--scroll-button -left-1 pl-1 bg-gradient-to-l" @click="scroll('left')">
+				<div v-if="state.scrolled" class="svws-ui-tabs--scroll-button -left-1 pl-1 bg-linear-to-l" @click="scroll('left')">
 					<svws-ui-button type="icon">
 						<span class="icon i-ri-arrow-left-s-line" />
 					</svws-ui-button>
 				</div>
 				<div ref="tabsListElement" class="svws-ui-tabs--list">
-					<template v-for="(tab, index) in props.tabManager().tabs" :key="index">
+					<template v-for="(tab) in props.tabManager().tabs" :key="tab.name">
 						<button v-if="!(tab.hide === true) && (tab.text !== '')" @click="tabManager().setTab(tab)" class="svws-ui-tab-button flex flex-row"
 							:class="{
-								'svws-active': tab.name === tabManager().tab.name,
-								'tabsFirstLevelFocusField': (tab.name === tabManager().tab.name) && !secondary,
-								'tabsSecondLevelFocusField': (tab.name === tabManager().tab.name) && secondary
+								'svws-active': tab.name === selectedTab.name,
+								'tabsFirstLevelFocusField': (tab.name === selectedTab.name) && !secondary,
+								'tabsSecondLevelFocusField': (tab.name === selectedTab.name) && secondary
 							}">
 							<span>{{ tab.text }}</span>
 							<slot name="badge" :tab />
 						</button>
 					</template>
 				</div>
-				<div v-if="!state.scrolledMax" class="svws-ui-tabs--scroll-button -right-1 pr-1 bg-gradient-to-r justify-end" @click="scroll('right')">
+				<div v-if="!state.scrolledMax" class="svws-ui-tabs--scroll-button -right-1 pr-1 bg-linear-to-r justify-end" @click="scroll('right')">
 					<svws-ui-button type="icon">
 						<span class="icon i-ri-arrow-right-s-line" />
 					</svws-ui-button>
@@ -38,7 +38,7 @@
 
 <script lang="ts" setup>
 
-	import { onMounted, onUnmounted, onUpdated, ref } from 'vue';
+	import { computed, onMounted, onUnmounted, onUpdated, ref } from 'vue';
 	import type { TabManager } from './TabManager';
 
 	const props = withDefaults(defineProps<{
@@ -76,8 +76,8 @@
 		state.value.maxScrollLeft = (tabsListElement.value?.scrollWidth ?? 0) - (tabsListElement.value?.clientWidth ?? 0);
 		state.value.scrolledMax = (tabsListElement.value?.scrollLeft ?? 0) >= state.value.maxScrollLeft;
 		tabsListElement.value?.addEventListener("scroll", handleScroll);
-		window.addEventListener("resize", handleScroll);
-		window.addEventListener("keydown", (event) => {
+		globalThis.addEventListener("resize", handleScroll);
+		globalThis.addEventListener("keydown", (event) => {
 			void switchTab(event);
 		});
 	});
@@ -85,8 +85,8 @@
 
 	onUnmounted(() => {
 		tabsListElement.value?.removeEventListener("scroll", handleScroll);
-		window.removeEventListener("resize", handleScroll);
-		window.removeEventListener("keydown", (event) => {
+		globalThis.removeEventListener("resize", handleScroll);
+		globalThis.removeEventListener("keydown", (event) => {
 			void switchTab(event);
 		});
 	});
@@ -96,6 +96,7 @@
 		handleScroll();
 	});
 
+	const selectedTab = computed(() => props.tabManager().tab);
 
 	function handleScroll() {
 		state.value.scrolled = (tabsListElement.value?.scrollLeft ?? 0) > state.value.scrollOffset;
