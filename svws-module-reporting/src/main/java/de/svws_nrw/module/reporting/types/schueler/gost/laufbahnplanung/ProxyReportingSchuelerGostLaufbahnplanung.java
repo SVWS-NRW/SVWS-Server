@@ -1,7 +1,6 @@
 package de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -260,9 +259,12 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 		final List<GostBeratungslehrer> beratungslehrer = gostJahrgangsdaten.beratungslehrer;
 		if (!beratungslehrer.isEmpty()) {
 			for (final GostBeratungslehrer lehrkraft : beratungslehrer) {
-				super.beratungslehrkraefte().add(this.reportingContext.repositoryLehrer().lehrer(lehrkraft.id));
+				final ReportingLehrer reportingLehrer = this.reportingContext.repositoryLehrer().lehrer(lehrkraft.id);
+				if (reportingLehrer != null) {
+					super.beratungslehrkraefte().add(reportingLehrer);
+				}
 			}
-			super.beratungslehrkraefte().sort(Comparator.comparing(ReportingLehrer::nachname).thenComparing(ReportingLehrer::vorname));
+			super.beratungslehrkraefte().sort(ReportingLehrer.SORTIERUNG.comparatorStandard());
 		}
 	}
 

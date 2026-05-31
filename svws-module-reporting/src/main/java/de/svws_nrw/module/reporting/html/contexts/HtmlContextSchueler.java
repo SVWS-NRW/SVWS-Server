@@ -44,7 +44,7 @@ public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> im
 	 */
 	private void erzeugeContextFromSchueler(final List<ReportingSchueler> reportingSchueler) {
 
-		setContextDataGefiltertSortiert(reportingSchueler, ReportingSchueler.FILTER, ReportingSchueler.SORTIERUNG, ReportingSchueler.class);
+		setContextData(reportingSchueler);
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();
@@ -61,8 +61,7 @@ public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> im
 	private void erzeugeContextFromIds(final List<Long> idsSchueler) {
 
 		// Rufe die Schülerdaten ab oder erzeuge sie, falls sie noch nicht existieren. Weise sie dann dem Context zu.
-		setContextDataGefiltertSortiert(this.reportingContext.repositorySchueler().schueler(idsSchueler),
-				ReportingSchueler.FILTER, ReportingSchueler.SORTIERUNG, ReportingSchueler.class);
+		setContextData(this.reportingContext.repositorySchueler().schueler(idsSchueler));
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();

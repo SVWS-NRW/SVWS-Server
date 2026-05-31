@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
@@ -88,12 +89,14 @@ public class ReportingRepositoryLehrer {
 	 * @return Das ReportingLehrer-Objekt, ein Fallback-Objekt mit leeren Stammdaten bei DB-Fehler oder fehlendem Eintrag.
 	 */
 	public ReportingLehrer lehrer(final long idLehrer) {
-		if (mapLehrer.containsKey(idLehrer)) {
-			return mapLehrer.get(idLehrer);
-		}
 		final List<ReportingLehrer> result = lehrer(List.of(idLehrer), false);
 		if (!result.isEmpty()) {
 			return result.getFirst();
+		}
+		// Liste leer: entweder Lehrkraft existiert nicht oder wurde durch den User-Filter ausgeschlossen.
+		// Existiert ein Eintrag im Cache, wurde sie gefiltert → null. Sonst Fallback-Objekt mit leeren Stammdaten.
+		if (mapLehrer.containsKey(idLehrer)) {
+			return null;
 		}
 		final LehrerStammdaten fallback = new LehrerStammdaten();
 		fallback.id = idLehrer;
@@ -123,13 +126,15 @@ public class ReportingRepositoryLehrer {
 		final Comparator<ReportingLehrer> comparator = ComparatorFactory.buildComparator(this.reportingContext.sortierungService(),
 				this.reportingContext.logger(), ReportingLehrer.class.getSimpleName(),
 				ReportingLehrer.SORTIERUNG, sortiereListe);
+		final Predicate<ReportingLehrer> filter = ReportingLehrer.FILTER.bedingung(
+				this.reportingContext.filterService().getFilter(ReportingLehrer.class.getSimpleName()), null);
 
 		return ReportingRepositoryUtils.erstelleReportingListe(idsLehrer, mapLehrerStammdaten, mapLehrer,
 				fehlendeIds -> new DataLehrerStammdaten(this.reportingContext.conn(), new DataLernplattformen(this.reportingContext.conn()),
 						new DataEinwilligungsarten(this.reportingContext.conn())).getListByIDs(fehlendeIds),
 				key -> new ProxyReportingLehrer(this.reportingContext, mapLehrerStammdaten.get(key)),
 				stammdaten -> stammdaten.id,
-				comparator,
+				comparator, filter,
 				"Lehrer", this.reportingContext.logger());
 	}
 

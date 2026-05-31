@@ -1,6 +1,7 @@
 package de.svws_nrw.module.reporting.types.gost.kursplanung;
 
 import de.svws_nrw.core.types.gost.GostHalbjahr;
+import de.svws_nrw.module.reporting.filterung.ReportingFilterung;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
@@ -16,6 +17,9 @@ import java.util.function.Predicate;
  * einer Proxy-Klasse, welche die Getter in Teilen überschreibt und dort die Daten aus der Datenbank nachlädt.</p>
  */
 public class ReportingGostKursplanungBlockungsergebnis extends ReportingBaseType {
+
+	/** Die Filterkonfiguration für {@link ReportingGostKursplanungBlockungsergebnis}. */
+	public static final ReportingFilterung<ReportingGostKursplanungBlockungsergebnis> FILTER = ReportingGostKursplanungBlockungsergebnisFilter.FILTER;
 
 	/** Das Kalenderjahr, in dem die Abiturprüfung des Blockungsergebnisses stattfindet */
 	protected int abiturjahr;
@@ -46,12 +50,6 @@ public class ReportingGostKursplanungBlockungsergebnis extends ReportingBaseType
 
 	/** Ein Prädikat, das bestimmt, welche Kurse in der Ausgabe enthalten sind. */
 	protected final Predicate<ReportingGostKursplanungKurs> filterKurse;
-
-	/** Gibt an, ob ein Filter auf die Hauptliste der Schüler angewendet wird. */
-	protected final boolean istSchuelerFilterAktiv;
-
-	/** Gibt an, ob ein Filter auf die Liste der Kurse angewendet wird. */
-	protected final boolean istKurseFilterAktiv;
 
 	/** Das Halbjahr der gymnasialen Oberstufe des Blockungsergebnisses */
 	protected GostHalbjahr gostHalbjahr;
@@ -87,16 +85,13 @@ public class ReportingGostKursplanungBlockungsergebnis extends ReportingBaseType
 	 * @param schueler                 Eine Liste vom Typ Schüler, die alle Schüler des Blockungsergebnisses beinhaltet.
 	 * @param filterSchueler           Ein Prädikat, das bestimmt, welche Schüler in der Ausgabe der Hauptliste enthalten sind.
 	 * @param filterKurse              Ein Prädikat, das bestimmt, welche Kurse in der Ausgabe enthalten sind.
-	 * @param istSchuelerFilterAktiv   Gibt an, ob ein Filter auf die Hauptliste der Schüler angewendet wird.
-	 * @param istKurseFilterAktiv      Gibt an, ob ein Filter auf die Liste der Kurse angewendet wird.
 	 */
 	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingGostKursplanungBlockungsergebnis(final int abiturjahr, final int anzahlDummy, final int anzahlExterne, final int anzahlMaxKurseProSchiene,
 			final int anzahlSchienen, final int anzahlSchueler, final String bezeichnung,
 			final Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik, final GostHalbjahr gostHalbjahr, final long id,
 			final List<ReportingGostKursplanungKurs> kurse, final List<ReportingGostKursplanungSchiene> schienen, final List<ReportingSchueler> schueler,
-			final Predicate<ReportingSchueler> filterSchueler, final Predicate<ReportingGostKursplanungKurs> filterKurse,
-			final boolean istSchuelerFilterAktiv, final boolean istKurseFilterAktiv) {
+			final Predicate<ReportingSchueler> filterSchueler, final Predicate<ReportingGostKursplanungKurs> filterKurse) {
 		this.abiturjahr = abiturjahr;
 		this.anzahlDummy = anzahlDummy;
 		this.anzahlExterne = anzahlExterne;
@@ -113,8 +108,6 @@ public class ReportingGostKursplanungBlockungsergebnis extends ReportingBaseType
 
 		this.filterSchueler = (filterSchueler == null) ? s -> true : filterSchueler;
 		this.filterKurse = (filterKurse == null) ? k -> true : filterKurse;
-		this.istSchuelerFilterAktiv = istSchuelerFilterAktiv;
-		this.istKurseFilterAktiv = istKurseFilterAktiv;
 	}
 
 
@@ -233,24 +226,6 @@ public class ReportingGostKursplanungBlockungsergebnis extends ReportingBaseType
 	 */
 	public long id() {
 		return id;
-	}
-
-	/**
-	 * Gibt an, ob ein Filter auf die Hauptliste der Schüler angewendet wird.
-	 *
-	 * @return {@code true}, wenn ein Schüler-Filter konfiguriert ist, sonst {@code false}.
-	 */
-	public boolean istSchuelerFilterAktiv() {
-		return istSchuelerFilterAktiv;
-	}
-
-	/**
-	 * Gibt an, ob ein Filter auf die Liste der Kurse angewendet wird.
-	 *
-	 * @return {@code true}, wenn ein Kurs-Filter konfiguriert ist, sonst {@code false}.
-	 */
-	public boolean istKurseFilterAktiv() {
-		return istKurseFilterAktiv;
 	}
 
 	/**

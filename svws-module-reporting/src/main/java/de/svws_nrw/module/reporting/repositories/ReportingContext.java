@@ -52,6 +52,8 @@ public class ReportingContext {
 	private final ReportingRepositoryLerngruppen repositoryLerngruppen;
 	private final ReportingRepositoryStundenplan repositoryStundenplan;
 	private final ReportingRepositoryGost repositoryGost;
+	private final ReportingRepositoryGostKlausurplanung repositoryGostKlausurplanung;
+	private final ReportingRepositoryGostKursplanung repositoryGostKursplanung;
 
 
 	/**
@@ -114,6 +116,10 @@ public class ReportingContext {
 		this.logger.logLn(LogLevel.DEBUG, 8, "Stundenplan-Repository erfolgreich erzeugt.");
 		this.repositoryGost = new ReportingRepositoryGost(this);
 		this.logger.logLn(LogLevel.DEBUG, 8, "GOST-Repository erfolgreich erzeugt.");
+		this.repositoryGostKlausurplanung = new ReportingRepositoryGostKlausurplanung(this);
+		this.logger.logLn(LogLevel.DEBUG, 8, "GOSt-Klausurplanung-Repository erfolgreich erzeugt.");
+		this.repositoryGostKursplanung = new ReportingRepositoryGostKursplanung(this);
+		this.logger.logLn(LogLevel.DEBUG, 8, "GOSt-Kursplanung-Repository erfolgreich erzeugt.");
 
 		// Erzeuge das Benutzer-Objekt für den aktuell angemeldeten Benutzer.
 		this.benutzer = initBenutzer();
@@ -297,6 +303,24 @@ public class ReportingContext {
 	 */
 	public ReportingRepositoryGost repositoryGost() {
 		return repositoryGost;
+	}
+
+	/**
+	 * Gibt das Domänen-Repository für die GOSt-Klausurplanung zurück.
+	 *
+	 * @return Das ReportingRepositoryGostKlausurplanung.
+	 */
+	public ReportingRepositoryGostKlausurplanung repositoryGostKlausurplanung() {
+		return repositoryGostKlausurplanung;
+	}
+
+	/**
+	 * Gibt das Domänen-Repository für die GOSt-Kursplanung zurück.
+	 *
+	 * @return Das ReportingRepositoryGostKursplanung.
+	 */
+	public ReportingRepositoryGostKursplanung repositoryGostKursplanung() {
+		return repositoryGostKursplanung;
 	}
 
 }

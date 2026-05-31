@@ -344,7 +344,7 @@ public final class EmailFactory {
 				yield new ArrayList<>(lehrer);
 			}
 			case GOSTKURSPLANUNG_KURSLEHRER -> {
-				final ReportingGostKursplanungKurs kurs = reportingContext.repositoryGost().kursplanungKurse().get(id);
+				final ReportingGostKursplanungKurs kurs = reportingContext.repositoryGostKursplanung().kurs(id);
 				if (kurs == null) {
 					yield new ArrayList<>();
 				}

@@ -8,6 +8,7 @@ import { ReportingReportvorlageUtils } from '../../../../core/utils/reporting/Re
 import { ReportingUIKomponentenTyp } from '../../../../core/types/reporting/ReportingUIKomponentenTyp';
 import { ReportingParameter } from '../../../../core/data/reporting/ReportingParameter';
 import { ReportingEMailEmpfaengerTyp } from '../../../../core/types/reporting/ReportingEMailEmpfaengerTyp';
+import { ReportingSortierungDefinitionFactory } from '../../../../core/utils/reporting/ReportingSortierungDefinitionFactory';
 import type { List } from '../../../../java/util/List';
 import { Class } from '../../../../java/lang/Class';
 import { Arrays } from '../../../../java/util/Arrays';
@@ -35,7 +36,7 @@ export class ReportingReportvorlageKonfigurationGost extends JavaObject {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static getGostKlausurplanungVSchuelerMitKlausuren(): ReportingParameter {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()), new ArrayList(), new ReportingEMailDaten(), new ArrayList(), ArrayList.of(ReportingReportvorlageUtils.erzeugeFilterDefinitionGruppe("Quartalsfilter", "ReportingGostKlausurplanungKlausurtermin", true, true, ReportingFilterVerknuepfung.OR, ReportingFilterDefinitionFactory.definitionen(ReportingFilterDefinitionFactory.definition("1. Quartal", "ReportingGostKlausurplanungKlausurtermin", ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("quartal", "1"))), ReportingFilterDefinitionFactory.definition("2. Quartal", "ReportingGostKlausurplanungKlausurtermin", ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("quartal", "2")))))), true, true);
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()), new ArrayList(), new ReportingEMailDaten(), ArrayList.of(ReportingReportvorlageUtils.erzeugeSortierungDefinitionGruppe("Schülersortierung", "ReportingSchueler", true, ReportingSortierungDefinitionFactory.definitionen(ReportingSortierungDefinitionFactory.standard("Sortierung nach Name und Vorname (Standard)", "ReportingSchueler"), ReportingSortierungDefinitionFactory.definition("Sortierung nach Klasse, Name, Vorname", "ReportingSchueler", false, ArrayList.of("auswahlLernabschnitt.klasse.sortierungEintrag", "auswahlLernabschnitt.klasse.kuerzel", "nachname", "vorname", "vornamen"))))), ArrayList.of(ReportingReportvorlageUtils.erzeugeFilterDefinitionGruppe("Quartalsfilter", "ReportingGostKlausurplanungSchuelerklausur", true, true, ReportingFilterVerknuepfung.OR, ReportingFilterDefinitionFactory.definitionen(ReportingFilterDefinitionFactory.definition("1. Quartal", "ReportingGostKlausurplanungSchuelerklausur", ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("klausurtermin.quartal", "1"))), ReportingFilterDefinitionFactory.definition("2. Quartal", "ReportingGostKlausurplanungSchuelerklausur", ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("klausurtermin.quartal", "2")))))), true, true);
 	}
 
 	/**

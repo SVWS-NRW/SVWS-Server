@@ -13,6 +13,7 @@ import de.svws_nrw.core.types.reporting.ReportingReportvorlageParameterTyp;
 import de.svws_nrw.core.types.reporting.ReportingUIKomponentenTyp;
 import de.svws_nrw.core.utils.reporting.ReportingFilterDefinitionFactory;
 import de.svws_nrw.core.utils.reporting.ReportingReportvorlageUtils;
+import de.svws_nrw.core.utils.reporting.ReportingSortierungDefinitionFactory;
 import jakarta.validation.constraints.NotNull;
 
 // SONARQUBE WARNUNG: Es sollen Konstanten für wiederkehrende Strings definiert werden. Das ist hier bei betroffenen Elementen nicht zielführend.
@@ -60,13 +61,18 @@ public final class ReportingReportvorlageKonfigurationGost {
 		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()),
 				new ArrayList<>(),
 				new ReportingEMailDaten(),
-				new ArrayList<>(),
-				List.of(ReportingReportvorlageUtils.erzeugeFilterDefinitionGruppe("Quartalsfilter", "ReportingGostKlausurplanungKlausurtermin", true, true, ReportingFilterVerknuepfung.OR,
+				List.of(ReportingReportvorlageUtils.erzeugeSortierungDefinitionGruppe("Schülersortierung", "ReportingSchueler", true,
+						ReportingSortierungDefinitionFactory.definitionen(
+								ReportingSortierungDefinitionFactory.standard("Sortierung nach Name und Vorname (Standard)", "ReportingSchueler"),
+								ReportingSortierungDefinitionFactory.definition("Sortierung nach Klasse, Name, Vorname", "ReportingSchueler", false,
+										List.of("auswahlLernabschnitt.klasse.sortierungEintrag", "auswahlLernabschnitt.klasse.kuerzel", "nachname", "vorname", "vornamen")))
+				)),
+				List.of(ReportingReportvorlageUtils.erzeugeFilterDefinitionGruppe("Quartalsfilter", "ReportingGostKlausurplanungSchuelerklausur", true, true, ReportingFilterVerknuepfung.OR,
 						ReportingFilterDefinitionFactory.definitionen(
-								ReportingFilterDefinitionFactory.definition("1. Quartal", "ReportingGostKlausurplanungKlausurtermin",
-										ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("quartal", "1"))),
-								ReportingFilterDefinitionFactory.definition("2. Quartal", "ReportingGostKlausurplanungKlausurtermin",
-										ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("quartal", "2"))))
+								ReportingFilterDefinitionFactory.definition("1. Quartal", "ReportingGostKlausurplanungSchuelerklausur",
+										ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("klausurtermin.quartal", "1"))),
+								ReportingFilterDefinitionFactory.definition("2. Quartal", "ReportingGostKlausurplanungSchuelerklausur",
+										ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("klausurtermin.quartal", "2"))))
 				)), true, true);
 	}
 

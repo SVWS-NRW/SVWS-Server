@@ -3,12 +3,11 @@ package de.svws_nrw.module.reporting.html.contexts;
 import java.util.function.Predicate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.module.reporting.types.gost.kursplanung.ProxyReportingGostKursplanungBlockungsergebnis;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
+import de.svws_nrw.module.reporting.repositories.ReportingRepositoryGostKursplanung;
+import de.svws_nrw.module.reporting.types.gost.kursplanung.ProxyReportingGostKursplanungBlockungsergebnis;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungBlockungsergebnis;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungKurs;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
@@ -57,10 +56,12 @@ public abstract class HtmlContextGostKursplanungBlockungsergebnis extends HtmlCo
 			final Predicate<ReportingSchueler> filterSchueler, final Predicate<ReportingGostKursplanungKurs> filterKurse) {
 		super(reportingContext);
 		this.blockungsergebnis = new ProxyReportingGostKursplanungBlockungsergebnis(reportingContext, quelle,
-				filterSchueler, filterKurse, quelle.istSchuelerFilterAktiv(), quelle.istKurseFilterAktiv());
+				filterSchueler, filterKurse);
 
 		final Context context = new Context();
 		context.setVariable("GostBlockungsergebnis", this.blockungsergebnis);
+		context.setVariable("zeigeProSchueler",
+				reportingContext.filterService().hatFilter(ReportingSchueler.class.getSimpleName()));
 		super.setContext(context);
 	}
 
@@ -76,17 +77,15 @@ public abstract class HtmlContextGostKursplanungBlockungsergebnis extends HtmlCo
 
 		try {
 			final long idBlockungsergebnis = this.reportingContext.reportingParameter().idHauptdatenObjekt();
-			reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Die ID der Blockungsergebnisses wurde ermittelt: " + idBlockungsergebnis);
-			final GostBlockungsergebnis ergebnis = this.reportingContext.repositoryGost().blockungsergebnis(idBlockungsergebnis);
-			reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Das Blockungsergebnis wurde ermittelt.");
-			final GostBlockungsdatenManager datenManager = this.reportingContext.repositoryGost().blockungsdatenManager(ergebnis.blockungID);
-			reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Der Datenmanager zum Blockungsergebnis wurde ermittelt.");
 
-			this.blockungsergebnis = new ProxyReportingGostKursplanungBlockungsergebnis(this.reportingContext, ergebnis, datenManager);
+			final ReportingRepositoryGostKursplanung repo = this.reportingContext.repositoryGostKursplanung();
+			repo.initManager(idBlockungsergebnis);
+			this.blockungsergebnis = repo.blockungsergebnis();
 
-			// Daten-Context für Thymeleaf erzeugen.
 			final Context context = new Context();
 			context.setVariable("GostBlockungsergebnis", this.blockungsergebnis);
+			context.setVariable("zeigeProSchueler",
+					reportingContext.filterService().hatFilter(ReportingSchueler.class.getSimpleName()));
 			super.setContext(context);
 		} catch (final ApiOperationException e) {
 			throw new ApiOperationException(Response.Status.NOT_FOUND, e,

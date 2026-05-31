@@ -9,7 +9,6 @@ import de.svws_nrw.core.data.benutzer.BenutzerEMailDaten;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
-import de.svws_nrw.module.reporting.types.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 
 /**
@@ -93,8 +92,11 @@ public class ProxyReportingBenutzer extends ReportingBenutzer {
 		}
 
 		// Prüfe, ob der angemeldete Benutzer Lehrer ist. Übernehme dann dessen Informationen. Andernfalls weitere Informationen aus der Datenbank laden.
-		if ((benutzer.getIdLehrer() != null) && this.reportingContext.repositoryLehrer().stammdaten().containsKey(benutzer.getIdLehrer())) {
-			super.lehrer = new ProxyReportingLehrer(this.reportingContext, this.reportingContext.repositoryLehrer().stammdaten().get(benutzer.getIdLehrer()));
+		// Hinweis: lehrer(id) kann trotz Cache-Treffer null liefern, wenn die Lehrkraft per User-Filter ausgeschlossen ist.
+		super.lehrer = (benutzer.getIdLehrer() != null) && this.reportingContext.repositoryLehrer().stammdaten().containsKey(benutzer.getIdLehrer())
+				? this.reportingContext.repositoryLehrer().lehrer(benutzer.getIdLehrer())
+				: null;
+		if (super.lehrer != null) {
 			super.anzeigename = super.lehrer.vornameNachname();
 			super.anrede = super.lehrer.anrede();
 			super.emailPrivat = super.lehrer.emailPrivat();

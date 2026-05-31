@@ -215,7 +215,7 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitSchuelerEmailPrivat", "mit E-Mail (privat)",
 										ReportingReportvorlageParameterTyp.BOOLEAN,
-										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 3),
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitSpalteSchuelerTelefonKontakte", "mit Telefonkontakten",
 										ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitErzieher", "mit Erziehern", ReportingReportvorlageParameterTyp.BOOLEAN,
@@ -231,9 +231,9 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 				new ReportingEMailDaten(),
 				List.of(ReportingReportvorlageUtils.erzeugeSortierungDefinitionGruppe("Schülersortierung", "ReportingSchueler", true,
 						ReportingSortierungDefinitionFactory.definitionen(
-								ReportingSortierungDefinitionFactory.standard("Standardsortierung der Schüler", "ReportingSchueler"),
+								ReportingSortierungDefinitionFactory.standard("Sortierung nach Name und Vorname (Standard)", "ReportingSchueler"),
 								ReportingSortierungDefinitionFactory.definition("Sortierung nach Klasse, Name, Vorname", "ReportingSchueler", false,
-										List.of("Klasse, Nachname, Vorname, Vornamen")))
+										List.of("auswahlLernabschnitt.klasse.sortierungEintrag", "auswahlLernabschnitt.klasse.kuerzel", "nachname", "vorname", "vornamen")))
 				)),
 				new ArrayList<>(), false, true);
 	}

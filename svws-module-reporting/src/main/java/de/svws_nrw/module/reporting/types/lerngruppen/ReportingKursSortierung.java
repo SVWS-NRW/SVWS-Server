@@ -22,7 +22,9 @@ public final class ReportingKursSortierung {
 			ReportingSortierung.<ReportingKurs>builder()
 					.registry(buildRegistry())
 					.standard(List.of(
-							ReportingTypesUtils.methodeToString(ReportingKurs::fach) + "." + ReportingTypesUtils.methodeToString(ReportingFach::sortierungEintrag),
+							"jahrgang." + ReportingTypesUtils.methodeToString(ReportingJahrgang::sortierungEintrag),
+							ReportingTypesUtils.methodeToString(ReportingKurs::fach) + "."
+									+ ReportingTypesUtils.methodeToString(ReportingFach::sortierungEintrag),
 							ReportingTypesUtils.methodeToString(ReportingKurs::kursartAllg),
 							ReportingTypesUtils.methodeToString(ReportingKurs::kuerzel),
 							ReportingTypesUtils.methodeToString(ReportingKurs::id)))
@@ -92,7 +94,7 @@ public final class ReportingKursSortierung {
 
 		// Verschachtelte Attribute: Erster Jahrgang aus der Liste der Jahrgänge
 		reg.importiereRegistryEintraege("jahrgang.", ReportingJahrgang.SORTIERUNG.registry(),
-				k -> (k.jahrgaenge() == null) || k.jahrgaenge().isEmpty() ? null : k.jahrgaenge().getFirst());
+				k -> ((k.jahrgaenge() == null) || k.jahrgaenge().isEmpty()) ? null : k.jahrgaenge().getFirst());
 
 		return reg;
 	}

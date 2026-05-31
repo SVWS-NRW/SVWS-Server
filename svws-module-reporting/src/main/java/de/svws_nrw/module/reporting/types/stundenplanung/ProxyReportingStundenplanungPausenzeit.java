@@ -10,6 +10,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanPausenzeit;
 import de.svws_nrw.core.types.Wochentag;
 import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 
 
 /**
@@ -60,8 +61,13 @@ public class ProxyReportingStundenplanungPausenzeit extends ReportingStundenplan
 			return;
 		}
 
-		// Klassen der Pausenzeit ergänzen.
-		pausenzeit.klassen.forEach(k -> super.klassen().add(stundenplan.schuljahresabschnitt().klasse(k)));
+		// Klassen der Pausenzeit ergänzen. Durch User-Filter ausgeschlossene Klassen (null) werden übersprungen.
+		pausenzeit.klassen.forEach(k -> {
+			final ReportingKlasse klasse = stundenplan.schuljahresabschnitt().klasse(k);
+			if (klasse != null) {
+				super.klassen().add(klasse);
+			}
+		});
 
 		// Pausenaufsichten erzeugen.
 		final List<ReportingStundenplanungPausenaufsicht> reportingAufsichten = new ArrayList<>();

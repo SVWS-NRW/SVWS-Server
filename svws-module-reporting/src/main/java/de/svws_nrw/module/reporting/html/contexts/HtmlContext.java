@@ -1,7 +1,6 @@
 package de.svws_nrw.module.reporting.html.contexts;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.svws_nrw.module.reporting.filterung.ReportingFilterung;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
 import org.thymeleaf.context.Context;
@@ -104,19 +103,4 @@ public abstract class HtmlContext<T> {
 		this.contextData = HtmlContextSortierung.sortiere(reportingContext, data, sortierung, typ);
 	}
 
-	/**
-	 * Filtert die übergebene Liste über {@link HtmlContextFilterung#filtere}, sortiert das Ergebnis über
-	 * {@link HtmlContextSortierung#sortiere} und übernimmt es als Context-Daten. Null-Werte werden herausgefiltert.
-	 * Bei Übergabe von null wird eine leere Liste gesetzt.
-	 *
-	 * @param data       die zu filternde, zu sortierende und zu setzende Datenliste
-	 * @param filter     die Filterkonfiguration des Reporting-Typs
-	 * @param sortierung die Sortierkonfiguration des Reporting-Typs
-	 * @param typ        die Klasse des Reporting-Typs (für das Auflösen der ReportParameter-Filter und -Sortierung)
-	 */
-	protected void setContextDataGefiltertSortiert(final List<T> data, final ReportingFilterung<T> filter,
-			final ReportingSortierung<T> sortierung, final Class<T> typ) {
-		final List<T> gefiltert = HtmlContextFilterung.filtere(reportingContext, data, filter, typ);
-		this.contextData = HtmlContextSortierung.sortiere(reportingContext, gefiltert, sortierung, typ);
-	}
 }

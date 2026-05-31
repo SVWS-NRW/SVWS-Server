@@ -9,7 +9,7 @@
 	</head>
 
 	<body th:with="KursplanungSchueler = ${GostBlockungsergebnis.schueler()}">
-		<div th:switch="${GostBlockungsergebnis.istSchuelerFilterAktiv()}">
+		<div th:switch="${zeigeProSchueler}">
 			<div th:case="false">
 				<div th:with="zeigeExtDummy = ${(GostBlockungsergebnis.anzahlExterne() > 0 || GostBlockungsergebnis.anzahlDummy() > 0)}"
 					 th:each="i,iterationVarSchueler : ${#numbers.sequence(0, 0)}">

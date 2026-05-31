@@ -2,12 +2,16 @@ package de.svws_nrw.module.reporting.types.gost.kursplanung;
 
 import java.util.List;
 
+import de.svws_nrw.module.reporting.filterung.ReportingFilterung;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKursplanungSchiene.
  */
 public class ReportingGostKursplanungSchiene extends ReportingBaseType {
+
+	/** Die Filterkonfiguration für {@link ReportingGostKursplanungSchiene}. */
+	public static final ReportingFilterung<ReportingGostKursplanungSchiene> FILTER = ReportingGostKursplanungSchieneFilter.FILTER;
 
 	/** Anzahl der Dummy-Schüler in der Schiene */
 	protected int anzahlDummy;

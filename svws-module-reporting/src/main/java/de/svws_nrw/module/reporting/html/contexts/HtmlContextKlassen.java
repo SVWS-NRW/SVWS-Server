@@ -42,7 +42,7 @@ public final class HtmlContextKlassen extends HtmlContext<ReportingKlasse> imple
 	 */
 	private void erzeugeContextFromKlassen(final List<ReportingKlasse> reportingKlassen) {
 
-		setContextDataGefiltertSortiert(reportingKlassen, ReportingKlasse.FILTER, ReportingKlasse.SORTIERUNG, ReportingKlasse.class);
+		setContextData(reportingKlassen);
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();
@@ -59,8 +59,7 @@ public final class HtmlContextKlassen extends HtmlContext<ReportingKlasse> imple
 	 */
 	private void erzeugeContextFromIds(final List<Long> idsKlassen) {
 
-		setContextDataGefiltertSortiert(reportingContext.repositoryLerngruppen().klassen(idsKlassen, false),
-				ReportingKlasse.FILTER, ReportingKlasse.SORTIERUNG, ReportingKlasse.class);
+		setContextData(reportingContext.repositoryLerngruppen().klassen(idsKlassen));
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();

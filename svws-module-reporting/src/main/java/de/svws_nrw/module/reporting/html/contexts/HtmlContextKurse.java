@@ -36,13 +36,15 @@ public final class HtmlContextKurse extends HtmlContext<ReportingKurs> implement
 
 
 	/**
-	 * Erzeugt den Context aus einer Liste von Kursen.
+	 * Erzeugt den Context aus einer Liste von Kursen. Die Liste wird gemäß der für {@link ReportingKurs}
+	 * konfigurierten Sortierung (benutzerdefiniert oder Standard) sortiert, damit beide Konstruktor-Pfade
+	 * dasselbe Ordnungsverhalten zeigen.
 	 *
 	 * @param reportingKurse   	Liste der Kurse, die berücksichtigt werden sollen.
 	 */
 	private void erzeugeContextFromKurse(final List<ReportingKurs> reportingKurse) {
 
-		setContextDataGefiltertSortiert(reportingKurse, ReportingKurs.FILTER, ReportingKurs.SORTIERUNG, ReportingKurs.class);
+		setContextDataSortiert(reportingKurse, ReportingKurs.SORTIERUNG, ReportingKurs.class);
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();
@@ -59,8 +61,7 @@ public final class HtmlContextKurse extends HtmlContext<ReportingKurs> implement
 	 */
 	private void erzeugeContextFromIds(final List<Long> idsKurse) {
 
-		setContextDataGefiltertSortiert(reportingContext.repositoryLerngruppen().kurse(idsKurse, false),
-				ReportingKurs.FILTER, ReportingKurs.SORTIERUNG, ReportingKurs.class);
+		setContextData(reportingContext.repositoryLerngruppen().kurse(idsKurse));
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();

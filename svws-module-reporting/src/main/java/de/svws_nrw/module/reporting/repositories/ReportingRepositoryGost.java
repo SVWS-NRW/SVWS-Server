@@ -6,30 +6,21 @@ import java.util.List;
 import java.util.Map;
 
 import de.svws_nrw.core.data.gost.Abiturdaten;
-import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionHjData;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.gost.DBUtilsGostLaufbahn;
 import de.svws_nrw.data.gost.DataGostAbiturdaten;
 import de.svws_nrw.data.gost.DataGostAbiturjahrgangFachwahlen;
-import de.svws_nrw.data.gost.DataGostBlockungsdaten;
-import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.data.gost.DataGostJahrgangFachkombinationen;
 import de.svws_nrw.data.gost.DataGostJahrgangsdaten;
 import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
-import de.svws_nrw.data.gost.klausurplan.DataGostKlausuren;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungKurs;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
-import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Domänen-Repository für GOSt-Daten (Abiturjahrgänge, Beratungsdaten, Kursplanung).
@@ -44,7 +35,6 @@ public class ReportingRepositoryGost {
 	private final Map<Long, GostLaufbahnplanungBeratungsdaten> mapBeratungsdaten = new HashMap<>();
 	private final Map<Long, Abiturdaten> mapBeratungsdatenAbiturdaten = new HashMap<>();
 	private final Map<Long, Abiturdaten> mapSchuelerAbiturdaten = new HashMap<>();
-	private final Map<Long, ReportingGostKursplanungKurs> mapKursplanungKurse = new HashMap<>();
 	private final Map<Integer, List<GostStatistikFachwahl>> mapFachwahlen = new HashMap<>();
 
 	/** Zwischenspeicher für die Liste der vorhandenen Abiturjahrgänge. */
@@ -147,15 +137,7 @@ public class ReportingRepositoryGost {
 				"GOSt-Beratungsdaten",
 				this.reportingContext.logger());
 
-		final Map<Long, GostLaufbahnplanungBeratungsdaten> result = new HashMap<>();
-		if (idsSchueler != null) {
-			for (final Long id : idsSchueler) {
-				if ((id != null) && (mapBeratungsdaten.get(id) != null)) {
-					result.put(id, mapBeratungsdaten.get(id));
-				}
-			}
-		}
-		return result;
+		return filtereMap(idsSchueler, mapBeratungsdaten);
 	}
 
 	/**
@@ -189,15 +171,7 @@ public class ReportingRepositoryGost {
 				"GOSt-Beratungsdaten-Abiturdaten",
 				this.reportingContext.logger());
 
-		final Map<Long, Abiturdaten> result = new HashMap<>();
-		if (idsSchueler != null) {
-			for (final Long id : idsSchueler) {
-				if ((id != null) && (mapBeratungsdatenAbiturdaten.get(id) != null)) {
-					result.put(id, mapBeratungsdatenAbiturdaten.get(id));
-				}
-			}
-		}
-		return result;
+		return filtereMap(idsSchueler, mapBeratungsdatenAbiturdaten);
 	}
 
 	// ##### Abiturdaten der Schüler #####
@@ -234,91 +208,7 @@ public class ReportingRepositoryGost {
 				"GOSt-Abiturdaten",
 				this.reportingContext.logger());
 
-		final Map<Long, Abiturdaten> result = new HashMap<>();
-		if (idsSchueler != null) {
-			for (final Long id : idsSchueler) {
-				if ((id != null) && (mapSchuelerAbiturdaten.get(id) != null)) {
-					result.put(id, mapSchuelerAbiturdaten.get(id));
-				}
-			}
-		}
-		return result;
-	}
-
-
-	// ##### Blockungsergebnis-Vorbedingung #####
-
-	/**
-	 * Prüft, ob zur übergebenen Blockungsergebnis-ID ein lesbares Ergebnis in der Datenbank existiert.
-	 *
-	 * @param idBlockungsergebnis Die ID des Blockungsergebnisses.
-	 *
-	 * @throws ApiOperationException Falls keine Daten ermittelt werden konnten ({@link Status#NOT_FOUND}).
-	 */
-	public void pruefeBlockungsergebnis(final long idBlockungsergebnis) throws ApiOperationException {
-		try {
-			DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(this.reportingContext.conn(),
-					DataGostBlockungsergebnisse.getErgebnisFromID(this.reportingContext.conn(), idBlockungsergebnis).blockungID);
-		} catch (final ApiOperationException aoe) {
-			this.reportingContext.logger().logLn(LogLevel.ERROR, 4,
-					"FEHLER: Mit der angegebenen Blockungsergebnis-ID konnte keine Daten ermittelt werden.");
-			throw new ApiOperationException(Status.NOT_FOUND, aoe,
-					"FEHLER: Mit der angegebenen Blockungsergebnis-ID konnte keine Daten ermittelt werden.");
-		}
-	}
-
-	/**
-	 * Lädt das GOSt-Blockungsergebnis zur übergebenen ID aus der Datenbank.
-	 *
-	 * @param idBlockungsergebnis Die ID des Blockungsergebnisses.
-	 *
-	 * @return Das geladene Blockungsergebnis.
-	 *
-	 * @throws ApiOperationException Falls das Ergebnis nicht ermittelt werden konnte.
-	 */
-	public GostBlockungsergebnis blockungsergebnis(final long idBlockungsergebnis) throws ApiOperationException {
-		return DataGostBlockungsergebnisse.getErgebnisFromID(this.reportingContext.conn(), idBlockungsergebnis);
-	}
-
-	/**
-	 * Lädt den Blockungsdaten-Manager zur angegebenen Blockungs-ID aus der Datenbank.
-	 *
-	 * @param idBlockung Die ID der Blockung.
-	 *
-	 * @return Der Blockungsdaten-Manager zur Blockung.
-	 *
-	 * @throws ApiOperationException Falls die Daten nicht ermittelt werden konnten.
-	 */
-	public GostBlockungsdatenManager blockungsdatenManager(final long idBlockung) throws ApiOperationException {
-		return DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(this.reportingContext.conn(), idBlockung);
-	}
-
-
-	// ##### Klausurplanungsdaten #####
-
-	/**
-	 * Lädt alle GOSt-Klausurplanungsdaten zur übergebenen Auswahl an Abiturjahrgang/Halbjahr-Paaren.
-	 *
-	 * @param selection Die Auswahl aus Abiturjahrgang und GOSt-Halbjahr.
-	 *
-	 * @return Die zusammengeführten Klausurplanungsdaten zur Auswahl.
-	 *
-	 * @throws ApiOperationException Falls die Daten nicht ermittelt werden konnten.
-	 */
-	public GostKlausurenCollectionAllData klausurplanDaten(final List<GostKlausurenCollectionHjData> selection) throws ApiOperationException {
-		return DataGostKlausuren.getAllData(this.reportingContext.conn(), selection);
-	}
-
-
-	// ##### Kursplanung #####
-
-	/**
-	 * Gibt die Map der aktuell geladenen Kursplanungs-Kurse zurück, indiziert nach Kurs-ID.
-	 *
-	 * @return Map der aktuell geladenen Kursplanung-Kurse
-	 */
-	public Map<Long, ReportingGostKursplanungKurs> kursplanungKurse() {
-		return mapKursplanungKurse;
+		return filtereMap(idsSchueler, mapSchuelerAbiturdaten);
 	}
 
 
@@ -343,5 +233,36 @@ public class ReportingRepositoryGost {
 				return List.of();
 			}
 		});
+	}
+
+
+	// ##### Hilfsmethoden #####
+
+	/**
+	 * Liefert für die übergebenen IDs eine neue Map mit den zugehörigen Werten aus dem Cache. {@code null}-IDs sowie IDs
+	 * ohne Cache-Eintrag (Wert {@code null}) werden übersprungen. Wird {@code null} als ID-Liste übergeben, ist das
+	 * Ergebnis eine leere Map.
+	 *
+	 * @param <V>   Der Wertetyp der Cache-Map.
+	 * @param ids   Die IDs, deren Cache-Einträge in das Ergebnis übernommen werden sollen.
+	 * @param cache Die Cache-Map, aus der die Werte gelesen werden.
+	 *
+	 * @return Eine neue Map mit den ID/Wert-Paaren der vorhandenen Cache-Einträge.
+	 */
+	private static <V> Map<Long, V> filtereMap(final List<Long> ids, final Map<Long, V> cache) {
+		final Map<Long, V> result = new HashMap<>();
+		if (ids == null) {
+			return result;
+		}
+		for (final Long id : ids) {
+			if (id == null) {
+				continue;
+			}
+			final V wert = cache.get(id);
+			if (wert != null) {
+				result.put(id, wert);
+			}
+		}
+		return result;
 	}
 }

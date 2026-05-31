@@ -326,7 +326,6 @@ public class HtmlFactory {
 			reportingContext.logger().logLn(LogLevel.DEBUG, 4, "FEHLER: Es wurde keine ID für ein Blockungsergebnis übergeben.");
 			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurde keine ID für ein Blockungsergebnis übergeben.");
 		}
-		reportingContext.repositoryGost().pruefeBlockungsergebnis(reportingParameter.idHauptdatenObjekt());
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 				"Erzeuge Datenkontext Gost-Kursplanung-Blockungsergebnis für die HTML-Generierung mit ID %s für Template %s."
 						.formatted(reportingParameter.idHauptdatenObjekt(), reportingReportvorlage.name()));
@@ -692,7 +691,7 @@ public class HtmlFactory {
 	/**
 	 * Validiert die Parameter für Gost-Daten.
 	 *
-	 * @param paarweise Gibt an, ob die Daten paarweise (Abiturjahrgang, GOSt-Halbjahr, Abiturjahrgang, GOSt-Halbjahr, ...) vorliegen müssen.
+	 * @param paarweise Gibt an, ob die Daten paarweise (Abiturjahrgang+GOSt-Halbjahr, Abiturjahrgang+GOSt-Halbjahr, ...) vorliegen müssen.
 	 *                  Ist der Wert false, wird ein einzelner Abiturjahrgang gefolgt von beliebigen Halbjahren erwartet.
 	 *
 	 * @throws ApiOperationException Falls die Parameter ungültig sind.
@@ -724,14 +723,13 @@ public class HtmlFactory {
 	 *
 	 * @param abiturjahr                 das zu prüfende Abiturjahr
 	 * @param vorhandeneAbiturjahrgaenge Liste der vorhandenen Abiturjahrgänge
-	 * @param errorMessage               die Fehlermeldung, die im Fehlerfall geworfen wird
 	 *
 	 * @throws ApiOperationException Falls das Abiturjahr ungültig ist.
 	 */
-	private void validiereAbiturjahr(final int abiturjahr, final List<Integer> vorhandeneAbiturjahrgaenge, final String errorMessage)
+	private void validiereAbiturjahr(final int abiturjahr, final List<Integer> vorhandeneAbiturjahrgaenge)
 			throws ApiOperationException {
 		if ((abiturjahr < 1900) || !vorhandeneAbiturjahrgaenge.contains(abiturjahr)) {
-			throw new ApiOperationException(Status.BAD_REQUEST, errorMessage);
+			throw new ApiOperationException(Status.BAD_REQUEST, "FEHLER: Ein Abiturjahr liegt außerhalb des Wertebereichs.");
 		}
 	}
 
@@ -749,7 +747,7 @@ public class HtmlFactory {
 	}
 
 	/**
-	 * Validiert die Parameter für Gost-Daten paarweise (Abiturjahrgang, GOSt-Halbjahr, ...).
+	 * Validiert die Parameter für Gost-Daten paarweise, d. h. am Abiturjahr ist direkt das Gost-Halbjahr angehängt (beispielsweise 20253).
 	 *
 	 * @param parameterDaten             Liste der Parameter
 	 * @param vorhandeneAbiturjahrgaenge Liste der vorhandenen Abiturjahrgänge
@@ -757,14 +755,13 @@ public class HtmlFactory {
 	 * @throws ApiOperationException Falls die Parameter ungültig sind.
 	 */
 	private void validiereParameterPaarweise(final List<Long> parameterDaten, final List<Integer> vorhandeneAbiturjahrgaenge) throws ApiOperationException {
-		if ((parameterDaten.size() % 2) != 0) {
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"FEHLER: Die Anzahl der Parameter für Abiturjahrgang und Gost-Halbjahr ist falsch.");
-		}
-		for (int i = 0; i < parameterDaten.size(); i += 2) {
-			validiereAbiturjahr(Math.toIntExact(parameterDaten.get(i)), vorhandeneAbiturjahrgaenge,
-					"FEHLER: Ein Abiturjahr liegt außerhalb des Wertebereichs.");
-			validiereHalbjahr(Math.toIntExact(parameterDaten.get(i + 1)));
+		for (final Long kombinierteId : parameterDaten) {
+			if (kombinierteId != null) {
+				final int abiturjahr = (int) (kombinierteId / 10);
+				validiereAbiturjahr(abiturjahr, vorhandeneAbiturjahrgaenge);
+				final int idGostHalbjahr = (int) (kombinierteId % 10);
+				validiereHalbjahr(idGostHalbjahr);
+			}
 		}
 	}
 
@@ -777,7 +774,7 @@ public class HtmlFactory {
 	 * @throws ApiOperationException Falls die Parameter ungültig sind.
 	 */
 	private void validiereParameterEinzeln(final List<Long> parameterDaten, final List<Integer> vorhandeneAbiturjahrgaenge) throws ApiOperationException {
-		validiereAbiturjahr(Math.toIntExact(parameterDaten.getFirst()), vorhandeneAbiturjahrgaenge, "FEHLER: Das Abiturjahr ist ungültig.");
+		validiereAbiturjahr(Math.toIntExact(parameterDaten.getFirst()), vorhandeneAbiturjahrgaenge);
 		for (int i = 1; i < parameterDaten.size(); i++) {
 			validiereHalbjahr(Math.toIntExact(parameterDaten.get(i)));
 		}

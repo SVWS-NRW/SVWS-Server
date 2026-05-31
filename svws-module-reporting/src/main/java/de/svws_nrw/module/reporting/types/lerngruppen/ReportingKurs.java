@@ -95,7 +95,8 @@ public class ReportingKurs extends ReportingLerngruppe {
 		this.bezeichnungZeugnis = bezeichnungZeugnis;
 		this.istEpochalunterricht = istEpochalunterricht;
 		this.istSichtbar = istSichtbar;
-		this.jahrgaenge = jahrgaenge;
+		this.jahrgaenge = (jahrgaenge == null) ? new ArrayList<>()
+				: new ArrayList<>(jahrgaenge.stream().filter(Objects::nonNull).sorted(ReportingJahrgang.SORTIERUNG.comparatorStandard()).toList());
 		this.kursartAllg = kursartAllg;
 		this.schienen = schienen;
 		this.idsSchueler = (idsSchueler != null) ? new ArrayList<>(idsSchueler.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();

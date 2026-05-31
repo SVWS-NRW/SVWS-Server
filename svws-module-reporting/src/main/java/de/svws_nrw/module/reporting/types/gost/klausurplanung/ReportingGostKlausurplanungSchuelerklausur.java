@@ -1,6 +1,7 @@
 package de.svws_nrw.module.reporting.types.gost.klausurplanung;
 
 import de.svws_nrw.core.utils.DateUtils;
+import de.svws_nrw.module.reporting.filterung.ReportingFilterung;
 import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
@@ -14,6 +15,10 @@ public class ReportingGostKlausurplanungSchuelerklausur extends ReportingBaseTyp
 	/** Die Sortierkonfiguration für {@link ReportingGostKlausurplanungSchuelerklausur} (siehe {@link ReportingGostKlausurplanungSchuelerklausurSortierung}). */
 	public static final ReportingSortierung<ReportingGostKlausurplanungSchuelerklausur> SORTIERUNG =
 			ReportingGostKlausurplanungSchuelerklausurSortierung.SORTIERUNG;
+
+	/** Die Filterkonfiguration für {@link ReportingGostKlausurplanungSchuelerklausur} (siehe {@link ReportingGostKlausurplanungSchuelerklausurFilter}). */
+	public static final ReportingFilterung<ReportingGostKlausurplanungSchuelerklausur> FILTER =
+			ReportingGostKlausurplanungSchuelerklausurFilter.FILTER;
 
 	/** Die textuelle Bemerkung zur Schülerklausur, sofern vorhanden. */
 	protected String bemerkung;

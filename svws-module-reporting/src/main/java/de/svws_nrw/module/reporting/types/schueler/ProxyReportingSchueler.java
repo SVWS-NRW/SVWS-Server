@@ -318,10 +318,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			// Sortiere die Lernabschnitte dieses Schülers und fülle damit seine Liste von Lernabschnitten.
 			super.setLernabschnitte(schuelerLernabschnittsdaten.stream()
 					.map(a -> (ReportingSchuelerLernabschnitt) new ProxyReportingSchuelerLernabschnitt(this.reportingContext, a))
-					.sorted(Comparator
-							.comparing((final ReportingSchuelerLernabschnitt a) -> a.schuljahresabschnitt().schuljahr())
-							.thenComparing((final ReportingSchuelerLernabschnitt a) -> a.schuljahresabschnitt().abschnitt())
-							.thenComparing(ReportingSchuelerLernabschnitt::wechselNr))
+					.sorted(ReportingSchuelerLernabschnitt.SORTIERUNG.comparatorStandard())
 					.toList());
 
 			final List<SchuelerLernabschnittsdaten> aktuelleAbschnitte =
@@ -375,8 +372,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			if (!listeSprachbelegungen.isEmpty()) {
 				super.sprachbelegungen.addAll(listeSprachbelegungen.stream()
 						.map(sb -> ((ReportingSchuelerSprachbelegung) new ProxyReportingSchuelerSprachbelegung(reportingContext, sb)))
-						.sorted(Comparator.comparing(ReportingSchuelerSprachbelegung::belegungVonJahrgang, Comparator.nullsLast(String::compareTo))
-								.thenComparing(ReportingSchuelerSprachbelegung::reihenfolge, Comparator.nullsLast(Integer::compareTo)))
+						.sorted(ReportingSchuelerSprachbelegung.SORTIERUNG.comparatorStandard())
 						.toList());
 			}
 		}

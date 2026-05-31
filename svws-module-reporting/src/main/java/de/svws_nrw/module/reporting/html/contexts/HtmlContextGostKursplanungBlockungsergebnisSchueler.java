@@ -44,6 +44,7 @@ public final class HtmlContextGostKursplanungBlockungsergebnisSchueler extends H
 			final ReportingGostKursplanungBlockungsergebnis quelle,
 			final Predicate<ReportingSchueler> filterSchueler, final Predicate<ReportingGostKursplanungKurs> filterKurse) {
 		super(reportingContext, quelle, filterSchueler, filterKurse);
+		getContext().setVariable("zeigeProSchueler", true);
 	}
 
 

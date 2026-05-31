@@ -1,6 +1,7 @@
 package de.svws_nrw.module.reporting.types.schueler.sprachen;
 
 import de.svws_nrw.asd.types.fach.Sprachreferenzniveau;
+import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.fach.ReportingStatistikFach;
 
@@ -8,6 +9,9 @@ import de.svws_nrw.module.reporting.types.fach.ReportingStatistikFach;
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKursplanungKursbelegung.
  */
 public class ReportingSchuelerSprachbelegung extends ReportingBaseType {
+
+	/** Die Sortierkonfiguration für {@link ReportingSchuelerSprachbelegung} (siehe {@link ReportingSchuelerSprachbelegungSortierung}). */
+	public static final ReportingSortierung<ReportingSchuelerSprachbelegung> SORTIERUNG = ReportingSchuelerSprachbelegungSortierung.SORTIERUNG;
 
 	/** Der Jahrgang, in dem die Belegung der Sprache beendet wurde - sofern sie schon beendet wurde */
 	protected String belegungBisJahrgang;

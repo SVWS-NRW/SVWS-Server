@@ -1,20 +1,15 @@
 package de.svws_nrw.module.reporting.types.schule;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import de.svws_nrw.asd.data.klassen.KlassenDaten;
-import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.module.reporting.types.ankreuzkompetenz.ProxyReportingAnkreuzkompetenz;
 import de.svws_nrw.module.reporting.types.ankreuzkompetenz.ReportingAnkreuzkompetenz;
 import de.svws_nrw.module.reporting.types.fach.ProxyReportingFach;
 import de.svws_nrw.module.reporting.types.jahrgang.ProxyReportingJahrgang;
-import de.svws_nrw.module.reporting.types.lerngruppen.ProxyReportingKlasse;
-import de.svws_nrw.module.reporting.types.lerngruppen.ProxyReportingKurs;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
@@ -120,17 +115,9 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 	public Map<Long, ReportingKlasse> klassen() {
 		if ((super.klassen == null) || super.klassen.isEmpty()) {
 			super.klassen = new HashMap<>();
-			final List<KlassenDaten> klassendaten = this.reportingContext.repositoryLerngruppen().klassenBySchuljahresabschnitt(this.id());
-			if (klassendaten.isEmpty()) {
-				return super.klassen;
+			for (final ReportingKlasse klasse : this.reportingContext.repositoryLerngruppen().klassen(this.id())) {
+				super.klassen.put(klasse.id(), klasse);
 			}
-
-			for (final KlassenDaten klasse : klassendaten) {
-				final ReportingKlasse reportingKlasse = new ProxyReportingKlasse(this.reportingContext, klasse);
-				super.klassen.put(reportingKlasse.id(), reportingKlasse);
-				this.reportingContext.repositoryLerngruppen().klassen().put(reportingKlasse.id(), reportingKlasse);
-			}
-
 		}
 		return super.klassen;
 	}
@@ -144,15 +131,8 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 	public Map<Long, ReportingKurs> kurse() {
 		if ((super.kurse == null) || super.kurse.isEmpty()) {
 			super.kurse = new HashMap<>();
-			final List<KursDaten> kurseDaten = this.reportingContext.repositoryLerngruppen().kurseBySchuljahresabschnitt(this.id());
-			if (kurseDaten.isEmpty()) {
-				return super.kurse;
-			}
-
-			for (final KursDaten kurs : kurseDaten) {
-				final ReportingKurs reportingKurs = new ProxyReportingKurs(this.reportingContext, kurs);
-				super.kurse.put(reportingKurs.id(), reportingKurs);
-				this.reportingContext.repositoryLerngruppen().kurse().put(reportingKurs.id(), reportingKurs);
+			for (final ReportingKurs kurs : this.reportingContext.repositoryLerngruppen().kurse(this.id())) {
+				super.kurse.put(kurs.id(), kurs);
 			}
 		}
 		return super.kurse;

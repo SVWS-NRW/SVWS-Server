@@ -9,6 +9,7 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
+import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerLeistungsdatenMatrix;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdatenMatrix;
@@ -63,6 +64,7 @@ public class ProxyReportingKurs extends ReportingKurs {
 					super.jahrgaenge.add(super.schuljahresabschnitt.jahrgang(idJahrgang));
 				}
 			}
+			super.jahrgaenge.sort(ReportingJahrgang.SORTIERUNG.comparatorStandard());
 		}
 
 		// Kurslehrer initialisieren
@@ -149,13 +151,7 @@ public class ProxyReportingKurs extends ReportingKurs {
 	public List<ReportingSchueler> schueler() {
 		if (super.schueler.isEmpty()) {
 			if (super.idsSchueler().isEmpty()) {
-				final KursDaten kursDaten = this.reportingContext.repositoryLerngruppen().kurs(super.id());
-				if (kursDaten == null) {
-					return super.schueler();
-				}
-				if ((kursDaten.schueler != null) && !kursDaten.schueler.isEmpty()) {
-					idsSchueler.addAll(kursDaten.schueler.stream().map(s -> s.id).toList());
-				}
+				idsSchueler.addAll(this.reportingContext.repositoryLerngruppen().kursSchuelerIds(super.id()));
 			}
 			if (!idsSchueler.isEmpty()) {
 				super.schueler = this.reportingContext.repositorySchueler().schueler(idsSchueler);

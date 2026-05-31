@@ -5,9 +5,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.stundenplan.StundenplanUnterricht;
-import de.svws_nrw.module.reporting.types.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
-import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 
 
 /**
@@ -51,10 +49,7 @@ public class ProxyReportingStundenplanungUnterricht extends ReportingStundenplan
 			}
 		}
 
-		super.lehrkraefte = unterricht.lehrer.stream()
-				.filter(l -> this.reportingContext.repositoryLehrer().stammdaten().get(l) != null)
-				.map(l -> (ReportingLehrer) new ProxyReportingLehrer(this.reportingContext, this.reportingContext.repositoryLehrer().stammdaten().get(l)))
-				.toList();
+		super.lehrkraefte = this.reportingContext.repositoryLehrer().lehrer(unterricht.lehrer);
 
 		if ((this.stundenplan.raeume() != null) && !this.stundenplan.raeume().isEmpty()) {
 			super.raeume = unterricht.raeume.stream().map(this.stundenplan::raum).toList();

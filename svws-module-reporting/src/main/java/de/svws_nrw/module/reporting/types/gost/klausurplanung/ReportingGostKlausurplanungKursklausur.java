@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.svws_nrw.core.utils.DateUtils;
+import de.svws_nrw.module.reporting.filterung.ReportingFilterung;
+import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
@@ -13,6 +15,14 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKlausurplanungKursklausur.
  */
 public class ReportingGostKlausurplanungKursklausur extends ReportingBaseType {
+
+	/** Die Filterkonfiguration für {@link ReportingGostKlausurplanungKursklausur} (siehe {@link ReportingGostKlausurplanungKursklausurFilter}). */
+	public static final ReportingFilterung<ReportingGostKlausurplanungKursklausur> FILTER =
+			ReportingGostKlausurplanungKursklausurFilter.FILTER;
+
+	/** Die Sortierkonfiguration für {@link ReportingGostKlausurplanungKursklausur} (siehe {@link ReportingGostKlausurplanungKursklausurSortierung}). */
+	public static final ReportingSortierung<ReportingGostKlausurplanungKursklausur> SORTIERUNG =
+			ReportingGostKlausurplanungKursklausurSortierung.SORTIERUNG;
 
 	/** Die Auswahlzeit in Minuten, sofern vorhanden. */
 	protected int auswahlzeit;

@@ -146,30 +146,4 @@ public class ReportingRepositoryStundenplan {
 		return this.mapStundenplanManager.get(idStundenplan);
 	}
 
-	/**
-	 * Gibt die Liste aller aktiven Stundenplandefinitionen zurück, absteigend nach Gültigkeitsbeginn sortiert.
-	 *
-	 * @return Liste aller Stundenplandefinitionen.
-	 */
-	public List<StundenplanListeEintrag> definitionen() {
-		return stundenplandefinitionen;
-	}
-
-	/**
-	 * Gibt die Map der bereits erzeugten StundenplanManager zurück, indiziert nach Stundenplan-ID.
-	 *
-	 * @return Map der StundenplanManager.
-	 */
-	public Map<Long, StundenplanManager> manager() {
-		return mapStundenplanManager;
-	}
-
-	/**
-	 * Gibt die Map der bereits erzeugten Reporting-Stundenpläne zurück, indiziert nach Stundenplan-ID.
-	 *
-	 * @return Map der Reporting-Stundenpläne.
-	 */
-	public Map<Long, ReportingStundenplanungStundenplan> stundenplaene() {
-		return mapStundenplaene;
-	}
 }

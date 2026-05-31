@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.schueler.SchuelerLeistungsdaten;
@@ -87,10 +88,6 @@ public class ReportingRepositorySchueler {
 	 * @return Das ReportingSchueler-Objekt oder null, falls der Schüler nicht existiert.
 	 */
 	public ReportingSchueler schueler(final long idSchueler) {
-		final ReportingSchueler reportingSchueler = mapSchueler.get(idSchueler);
-		if (reportingSchueler != null) {
-			return reportingSchueler;
-		}
 		final List<ReportingSchueler> result = schueler(List.of(idSchueler), false);
 		return result.isEmpty() ? null : result.getFirst();
 	}
@@ -118,12 +115,14 @@ public class ReportingRepositorySchueler {
 		final Comparator<ReportingSchueler> comparator = ComparatorFactory.buildComparator(this.reportingContext.sortierungService(),
 				this.reportingContext.logger(), ReportingSchueler.class.getSimpleName(),
 				ReportingSchueler.SORTIERUNG, sortiereListe);
+		final Predicate<ReportingSchueler> filter = ReportingSchueler.FILTER.bedingung(
+				this.reportingContext.filterService().getFilter(ReportingSchueler.class.getSimpleName()), null);
 
 		return ReportingRepositoryUtils.erstelleReportingListe(idsSchueler, mapSchuelerStammdaten, mapSchueler,
 				fehlendeIds -> new DataSchuelerStammdaten(this.reportingContext.conn()).getListByIds(fehlendeIds),
 				key -> new ProxyReportingSchueler(this.reportingContext, mapSchuelerStammdaten.get(key)),
 				stammdaten -> stammdaten.id,
-				comparator,
+				comparator, filter,
 				"Schüler", this.reportingContext.logger());
 	}
 

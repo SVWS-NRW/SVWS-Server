@@ -7,7 +7,6 @@ import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -333,7 +332,7 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 	 * @return Inhalt des Feldes beratungslehrkraefte
 	 */
 	public List<ReportingLehrer> beratungslehrkraefte() {
-		this.beratungslehrkraefte.sort(Comparator.comparing(ReportingLehrer::nachname).thenComparing(ReportingLehrer::vorname));
+		this.beratungslehrkraefte.sort(ReportingLehrer.SORTIERUNG.comparatorStandard());
 		return beratungslehrkraefte;
 	}
 

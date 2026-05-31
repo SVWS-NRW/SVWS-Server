@@ -12,10 +12,9 @@ import org.thymeleaf.context.Context;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionHjData;
-import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.repositories.ReportingRepositoryGostKlausurplanung;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ProxyReportingGostKlausurplanungKlausurplan;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurplan;
@@ -38,7 +37,7 @@ public abstract class HtmlContextGostKlausurplanungKlausurplan extends HtmlConte
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten. Der Klausurplan wird vollständig aus dem
 	 * Repository und den Reporting-Parametern aufgebaut; die Filterung der Schüler, Kurse und Klausurtermine erfolgt
-	 * über den FilterService anhand der konfigurierten Filterdefinitionen.
+	 * zentral im Repository anhand der konfigurierten FILTER-Companions.
 	 *
 	 * @param reportingContext	Context mit Parametern, Logger und Daten zum Reporting.
 	 *
@@ -82,15 +81,19 @@ public abstract class HtmlContextGostKlausurplanungKlausurplan extends HtmlConte
 	 */
 	private void erzeugeContext() throws ApiOperationException {
 
-		// In den idsHauptdaten der Reporting-Parameter werden im Wechsel das Abiturjahr und das GostHalbjahr (0 = EF.1 bis 5 = Q2.2) übergeben.
+		// In den idsHauptdaten der Reporting-Parameter werden das Abiturjahr und das GostHalbjahr (0 = EF.1 bis 5 = Q2.2) als kombinierte ID übergeben, also
+		// 20253 für Abitur 2025 in Q1.2.
 		// Hier werden die Daten NICHT validiert. Die Daten aus den Parametern müssen vorab validiert worden sein (HtmlFactory).
 		final List<Long> parameterDaten = reportingContext.reportingParameter().idsHauptdaten().stream().filter(Objects::nonNull).toList();
 		final List<GostKlausurenCollectionHjData> selection = new ArrayList<>();
 
 		if (!parameterDaten.isEmpty()) {
-			// Stelle die übergebenen Stufen und Halbjahre zusammen.
-			for (int i = 0; i < parameterDaten.size(); i = i + 2) {
-				selection.add(new GostKlausurenCollectionHjData(Math.toIntExact(parameterDaten.get(i)), Math.toIntExact(parameterDaten.get(i + 1))));
+			for (final Long kombinierteId : parameterDaten) {
+				if (kombinierteId != null) {
+					final int abiturjahr = (int) (kombinierteId / 10);
+					final int gostHalbjahr = (int) (kombinierteId % 10);
+					selection.add(new GostKlausurenCollectionHjData(abiturjahr, gostHalbjahr));
+				}
 			}
 		} else {
 			// Es wurden keine Stufen übergeben. Erzeuge die Ausgabe für alle Stufen gemäß Schuljahresabschnitt im Client.
@@ -106,13 +109,12 @@ public abstract class HtmlContextGostKlausurplanungKlausurplan extends HtmlConte
 		}
 
 		try {
-			final GostKlausurenCollectionAllData allData = this.reportingContext.repositoryGost().klausurplanDaten(selection);
-			final GostKlausurplanManager gostKlausurManager =
-					new GostKlausurplanManager(allData);
+			final ReportingRepositoryGostKlausurplanung repo = this.reportingContext.repositoryGostKlausurplanung();
+			repo.initManager(selection);
 
-			this.gostKlausurplan = new ProxyReportingGostKlausurplanungKlausurplan(this.reportingContext, gostKlausurManager);
+			this.gostKlausurplan = new ProxyReportingGostKlausurplanungKlausurplan(this.reportingContext,
+					repo.klausurtermine(), repo.kurse(), repo.kursklausuren(), repo.schueler(), repo.schuelerklausuren());
 
-			// Daten-Context für Thymeleaf erzeugen.
 			final Context context = new Context();
 			context.setVariable("GostKlausurplan", this.gostKlausurplan);
 

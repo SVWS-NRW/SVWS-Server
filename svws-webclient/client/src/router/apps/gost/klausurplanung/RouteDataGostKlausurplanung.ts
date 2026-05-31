@@ -601,8 +601,8 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		reportingParameter.idsHauptdaten = new ArrayList<number>();
 
 		if (title.indexOf(" alle ") <= 0) {
-			reportingParameter.idsHauptdaten.add(this.abiturjahr);
-			reportingParameter.idsHauptdaten.add(this.halbjahr.id);
+			// Die ID für ein bestimmtes Gost-Halbjahr eines Abiturjahrgangs wird als fünfstellige Zahl codiert.
+			reportingParameter.idsHauptdaten.add(((this.abiturjahr * 10) + this.halbjahr.id));
 		}
 
 		return await api.server.pdfReport(reportingParameter, api.schema);

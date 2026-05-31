@@ -68,17 +68,13 @@ public final class ReportingReportvorlageKonfigurationKurse {
 												ReportingReportvorlageParameterTyp.BOOLEAN,
 												"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
 										ReportingReportvorlageUtils.erzeugeVorlageParameter("mitSpalteSchuelerTelefonKontakte", "mit Telefonkontakten",
-												ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+												ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 3),
 										ReportingReportvorlageUtils.erzeugeVorlageParameter("mitErzieher", "mit Erziehern",
-												ReportingReportvorlageParameterTyp.BOOLEAN,
-												"" + false,
-												true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+												ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
 										ReportingReportvorlageUtils.erzeugeVorlageParameter("mitErzieherAnschrift", "mit Erzieher-Anschrift",
-												ReportingReportvorlageParameterTyp.BOOLEAN,
-												"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+												ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
 										ReportingReportvorlageUtils.erzeugeVorlageParameter("mitErzieherEmailPrivat", "mit Erzieher-E-Mail",
-												ReportingReportvorlageParameterTyp.BOOLEAN,
-												"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
+												ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
 								))),
 				ReportingReportvorlageUtils.erzeugeEmailParameter(
 						ReportingEMailEmpfaengerTyp.KURSLEHRER,

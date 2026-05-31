@@ -64,7 +64,7 @@ public class ProxyReportingSchuelerGostAbitur extends ReportingSchuelerGostAbitu
 				.addAll(abiturdaten.fachbelegungen.stream()
 						.map(f -> new ProxyReportingGostAbiturFachbelegung(this.reportingContext, abiturdaten.schuljahrAbitur, f)).toList());
 
-		this.fachbelegungen().sort(ReportingGostAbiturFachbelegung::compareToGost);
+		this.fachbelegungen().sort(ReportingGostAbiturFachbelegung.SORTIERUNG.comparatorStandard());
 	}
 
 

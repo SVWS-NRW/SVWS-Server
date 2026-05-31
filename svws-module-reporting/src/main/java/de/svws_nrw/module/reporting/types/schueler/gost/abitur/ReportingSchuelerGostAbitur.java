@@ -180,7 +180,7 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 		this.projektkursThema = projektkursThema;
 		this.pruefungBestanden = pruefungBestanden;
 
-		this.fachbelegungen().sort(ReportingGostAbiturFachbelegung::compareToGost);
+		this.fachbelegungen().sort(ReportingGostAbiturFachbelegung.SORTIERUNG.comparatorStandard());
 	}
 
 
