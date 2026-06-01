@@ -60,7 +60,7 @@ public class SchuelerSchulbesuchsdaten {
 
 
 	/** Der Schlüssel des Schulabschlusses (Allgemeinbildend) der zuvor besuchten Schule. */
-	@Schema(description = "Der Schlüssel des Schulabschlusses (Allgemeinbildend) der zuvor besuchten Schule.", example = "2")
+	@Schema(description = "Der Schlüssel des Schulabschlusses (Allgemeinbildend) der zuvor besuchten Schule.", example = "B")
 	public String schluesselAbschlussartAllgemeinbildendVorherigeSchule;
 
 	/** Der Schlüssel des Schulabschlusses (Berufsbildend) der zuvor besuchten Schule. */

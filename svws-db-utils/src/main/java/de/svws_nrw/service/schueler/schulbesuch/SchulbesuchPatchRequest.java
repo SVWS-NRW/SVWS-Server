@@ -46,7 +46,7 @@ public class SchulbesuchPatchRequest {
 	public JsonNullable<Long> idEntlassgrundVorherigeSchule = JsonNullable.undefined();
 
 	/** Der Schlüssel des Schulabschlusses (Allgemeinbildend) der zuvor besuchten Schule. */
-	@Schema(description = "Die ID des Schulabschlusses (Allgemeinbildend) der zuvor besuchten Schule.", example = "2")
+	@Schema(description = "Die ID des Schulabschlusses (Allgemeinbildend) der zuvor besuchten Schule.", example = "B")
 	@Size(max = 1)
 	public JsonNullable<String> schluesselAbschlussartAllgemeinbildendVorherigeSchule = JsonNullable.undefined();
 

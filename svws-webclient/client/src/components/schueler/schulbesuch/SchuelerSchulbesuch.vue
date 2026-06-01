@@ -12,7 +12,7 @@
 					:manager="hoechsterAbschlussManager"
 					v-model="model.hoechsterSchulabschluss.value"
 					:readonly />
-				<svws-ui-checkbox title="Berufsabschluss vorhanden" v-if="schuleIstBK"
+				<svws-ui-checkbox title="Berufsabschluss vorhanden" v-if="schuleIstBKoderWBK"
 					v-model="model.proxy.berufsabschlussVorhanden"
 					:readonly>
 					Berufsabschluss vorhanden
@@ -71,6 +71,14 @@
 				<ui-select label="Entlassgrund"
 					:manager="vorherigerEntlassgrundManager"
 					v-model="model.idEntlassgrundVorherigeSchule.value"
+					:readonly />
+				<ui-select label="Abschlussart Allgemeinbildend"
+					:manager="abschlussartAllgemeinbildendVorherigeSchuleManager"
+					v-model="model.abschlussartAllgemeinbildendVorherigeSchule.value"
+					:readonly />
+				<ui-select label="Abschlussart Berufsbildend" v-if="schuleIstBK"
+					:manager="abschlussartBerufsbildendVorherigeSchuleManager"
+					v-model="model.abschlussartBerufsbildendVorherigeSchule.value"
 					:readonly />
 				<!-- TODO: durch Ui-Select ersetzen: siehe Issue#3495-->
 				<svws-ui-text-input placeholder="Versetzung" span="full"
@@ -226,7 +234,7 @@
 
 	import type { JahrgangsDaten, KatalogEntlassgrund, Kindergarten, List, SchulEintrag } from "@core";
 	import { ArrayList, BenutzerKompetenz, Einschulungsart, Jahrgaenge, Kindergartenbesuch, PrimarstufeSchuleingangsphaseBesuchsjahre,
-		SchulabschlussAllgemeinbildend, Schulform, Uebergangsempfehlung } from "@core";
+		SchulabschlussAllgemeinbildend, Schulform, Uebergangsempfehlung, SchulabschlussBerufsbildend } from "@core";
 	import type { SchuelerSchulbesuchProps } from './SchuelerSchulbesuchProps';
 	import { CoreTypeSelectManager, SelectManager, useSchuleState, useServerState } from "@ui";
 	import { computed, ref, watch } from "vue";
@@ -247,6 +255,8 @@
 	const schuleHatPrimarstufe = computed(
 		() => [Schulform.G, Schulform.FW, Schulform.WF, Schulform.GM, Schulform.KS, Schulform.S, Schulform.GE, Schulform.V].includes(schuleState.schulform));
 	const schuleIstBK = computed(
+		() => [Schulform.SB, Schulform.BK].includes(schuleState.schulform));
+	const schuleIstBKoderWBK = computed(
 		() => [Schulform.SB, Schulform.BK, Schulform.WB].includes(schuleState.schulform));
 	const wechselBevorstehend = ref<boolean>(false);
 
@@ -330,6 +340,20 @@
 		options: computed(() => props.manager().entlassgruendeById.values()),
 		optionDisplayText: s => s.bezeichnung,
 		selectionDisplayText: s => s.bezeichnung,
+	});
+
+	const abschlussartAllgemeinbildendVorherigeSchuleManager = new CoreTypeSelectManager({
+		clazz: SchulabschlussAllgemeinbildend.class,
+		schuljahr: schuljahr,
+		optionDisplayText: "text",
+		selectionDisplayText: "text",
+	});
+
+	const abschlussartBerufsbildendVorherigeSchuleManager = new CoreTypeSelectManager({
+		clazz: SchulabschlussBerufsbildend.class,
+		schuljahr: schuljahr,
+		optionDisplayText: "text",
+		selectionDisplayText: "text",
 	});
 
 	const jahrgaengeManager = new SelectManager<JahrgangsDaten>({

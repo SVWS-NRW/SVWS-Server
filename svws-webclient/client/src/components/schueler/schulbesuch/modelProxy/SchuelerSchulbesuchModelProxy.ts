@@ -2,9 +2,10 @@ import type { SchuelerSchulbesuchManager } from "@ui";
 import { ModelProxy, ValidatorNumberRange, ValidatorStringLength } from "@ui";
 import type { EinschulungsartKatalogEintrag, HerkunftsartenKatalogEintrag, JahrgaengeKatalogEintrag, JahrgangsDaten, KatalogEntlassgrund, Kindergarten,
 	KindergartenbesuchKatalogEintrag, PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag, SchuelerSchulbesuchsdaten,
-	SchulabschlussAllgemeinbildendKatalogEintrag, SchulEintrag, SchulformKatalogEintrag, UebergangsempfehlungKatalogEintrag } from "@core";
+	SchulabschlussAllgemeinbildendKatalogEintrag,
+	SchulabschlussBerufsbildendKatalogEintrag, SchulEintrag, SchulformKatalogEintrag, UebergangsempfehlungKatalogEintrag } from "@core";
 import { Einschulungsart, Herkunftsarten, Jahrgaenge, Kindergartenbesuch, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, Uebergangsempfehlung,
-	SchulabschlussAllgemeinbildend } from "@core";
+	SchulabschlussAllgemeinbildend, SchulabschlussBerufsbildend } from "@core";
 import { computed } from "vue";
 
 export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuchsdaten> {
@@ -21,7 +22,8 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 				"idEntlassgrundDieseSchule", "idAbschlussartDieseSchule", "idKindergarten", "idDauerKindergartenbesuch", "verpflichtungSprachfoerderkurs",
 				"teilnahmeSprachfoerderkurs", "wechselBestaetigtAufnehmendeSchule", "idAufnehmendeSchule", "wechseldatumAufnehmendeSchule",
 				"idEinschulungsartGrundschule", "idEingangsphaseGrundschule", "idUebergangsempfehlungGrundschule", "kuerzelErsteSchulformSek1",
-				"berufsabschlussVorhanden", "schluesselHoechsterSchulabschluss"];
+				"berufsabschlussVorhanden", "schluesselHoechsterSchulabschluss", "schluesselAbschlussartAllgemeinbildendVorherigeSchule",
+				"schluesselAbschlussartBerufsbildendVorherigeSchule"];
 		super({ data, patch, listOfAutopatchProps, checkValidBeforePatch: true });
 		this.manager = manager;
 		this.addValidatoren();
@@ -66,6 +68,16 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 	idHerkunftsartVersetzungVorherigeSchule = computed<HerkunftsartenKatalogEintrag | null>({
 		get: () => Herkunftsarten.data().getEintragByID(Number(this.proxy.idHerkunftsartVersetzungVorherigeSchule ?? -1)),
 		set: (v: HerkunftsartenKatalogEintrag | null) => this.proxy.idHerkunftsartVersetzungVorherigeSchule = v?.id.toString() ?? null,
+	});
+
+	abschlussartAllgemeinbildendVorherigeSchule = computed<SchulabschlussAllgemeinbildendKatalogEintrag | null>({
+		get: () => SchulabschlussAllgemeinbildend.data().getEintragBySchuljahrUndSchluessel(this.manager().schuljahr, this.proxy.schluesselAbschlussartAllgemeinbildendVorherigeSchule ?? ''),
+		set: (v: SchulabschlussAllgemeinbildendKatalogEintrag | null) => this.proxy.schluesselAbschlussartAllgemeinbildendVorherigeSchule = v?.schluessel ?? null,
+	});
+
+	abschlussartBerufsbildendVorherigeSchule = computed<SchulabschlussAllgemeinbildendKatalogEintrag | null>({
+		get: () => SchulabschlussBerufsbildend.data().getEintragBySchuljahrUndSchluessel(this.manager().schuljahr, this.proxy.schluesselAbschlussartBerufsbildendVorherigeSchule ?? ''),
+		set: (v: SchulabschlussBerufsbildendKatalogEintrag | null) => this.proxy.schluesselAbschlussartBerufsbildendVorherigeSchule = v?.schluessel ?? null,
 	});
 
 	idEntlassjahrgangDieseSchule = computed<JahrgangsDaten | null>({
