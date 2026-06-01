@@ -209,14 +209,16 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 			case "aufZeugnis" -> dto.AufZeugnis = JSONMapper.convertToBoolean(value, false);
 			case "note" -> {
 				final String str = JSONMapper.convertToString(value, true, true, null);
-				if (Note.fromKuerzel(str) == null) {
+				final Note note = Note.fromKuerzel(str);
+				if ((note == Note.KEINE) && (str != null) && (!str.isEmpty())) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Das Notenkürzel ist ungültig");
 				}
 				dto.NotenKrz = str;
 			}
 			case "noteQuartal" -> {
 				final String str = JSONMapper.convertToString(value, true, true, null);
-				if (Note.fromKuerzel(str) == null) {
+				final Note note = Note.fromKuerzel(str);
+				if ((note == Note.KEINE) && (str != null) && (!str.isEmpty())) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Das Notenkürzel ist ungültig");
 				}
 				dto.NotenKrzQuartal = str;
