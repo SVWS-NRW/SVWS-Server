@@ -12,6 +12,7 @@ import de.svws_nrw.asd.types.schueler.Einschulungsart;
 import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
 import de.svws_nrw.asd.types.schule.Kindergartenbesuch;
 import de.svws_nrw.asd.types.schule.SchulabschlussAllgemeinbildend;
+import de.svws_nrw.asd.types.schule.SchulabschlussBerufsbildend;
 import de.svws_nrw.data.TransactionSupport;
 import de.svws_nrw.data.kataloge.DataKatalogEntlassgruende;
 import de.svws_nrw.data.schule.DataSchulen;
@@ -123,6 +124,69 @@ public final class SchulbesuchService {
 		patchRequest.idUebergangsempfehlungGrundschule.ifPresent(id -> patchUebergangsempfehlung(entity, id));
 		patchRequest.idDauerKindergartenbesuch.ifPresent(id -> patchKindergartenbesuch(entity, id));
 		patchRequest.schluesselHoechsterSchulabschluss.ifPresent(schluessel -> patchHoechsterSchulabschluss(entity, schluessel));
+		patchAbschlussartVorherigeSchule(entity, patchRequest);
+	}
+
+	private void patchAbschlussartVorherigeSchule(final DTOSchueler entity, final SchulbesuchPatchRequest patchRequest) {
+		final boolean allgemeinbildendPresent = patchRequest.schluesselAbschlussartAllgemeinbildendVorherigeSchule
+				.isPresent();
+		final boolean berufsbildendPresent = patchRequest.schluesselAbschlussartBerufsbildendVorherigeSchule.isPresent();
+
+		if (!allgemeinbildendPresent && !berufsbildendPresent) {
+			return;
+		}
+
+		final String schluesselAllgemeinbildend = patchRequest.schluesselAbschlussartAllgemeinbildendVorherigeSchule
+				.orElseGet(() -> extractAllgemeinbildend(entity.LSEntlassArt));
+
+		if (schluesselAllgemeinbildend == null) {
+			// kein berufsbildend ohne allgemeinbildend möglich
+			entity.LSEntlassArt = null;
+			return;
+		}
+
+		validateSchulabschlussAllgemeinbildend(schluesselAllgemeinbildend);
+
+		final String schluesselBerufsbildend = patchRequest.schluesselAbschlussartBerufsbildendVorherigeSchule
+				.orElseGet(() -> extractBerufsbildend(entity.LSEntlassArt));
+
+		if (schluesselBerufsbildend == null) {
+			entity.LSEntlassArt = schluesselAllgemeinbildend;
+			return;
+		}
+
+		validateSchulabschlussBerufsbildend(schluesselBerufsbildend);
+		entity.LSEntlassArt = schluesselBerufsbildend + schluesselAllgemeinbildend;
+	}
+
+	private static void validateSchulabschlussBerufsbildend(final String schluesselBerufsbildend) {
+		if (SchulabschlussBerufsbildend.data().getWertBySchluessel(schluesselBerufsbildend) == null) {
+			throw new ApiOperationException(
+					Status.BAD_REQUEST,
+					"Keine berufsbildender Schulabschluss mit dem Schlüssel %s gefunden.".formatted(schluesselBerufsbildend));
+		}
+	}
+
+	private static void validateSchulabschlussAllgemeinbildend(final String schluesselAllgemeinbildend) {
+		if (SchulabschlussAllgemeinbildend.data().getWertBySchluessel(schluesselAllgemeinbildend) == null) {
+			throw new ApiOperationException(
+					Status.BAD_REQUEST,
+					"Keine allgemeiner Schulabschluss mit dem Schlüssel %s gefunden.".formatted(schluesselAllgemeinbildend));
+		}
+	}
+
+	private String extractAllgemeinbildend(final String lsEntlassArt) {
+		if ((lsEntlassArt == null) || lsEntlassArt.isBlank()) {
+			return null;
+		}
+		return lsEntlassArt.substring(lsEntlassArt.length() - 1);
+	}
+
+	private String extractBerufsbildend(final String lsEntlassArt) {
+		if ((lsEntlassArt == null) || lsEntlassArt.isBlank() || (lsEntlassArt.length() < 2)) {
+			return null;
+		}
+		return lsEntlassArt.substring(0, 1);
 	}
 
 	private void patchHoechsterSchulabschluss(final DTOSchueler entity, final String schluessel) {
@@ -130,12 +194,7 @@ public final class SchulbesuchService {
 			entity.Entlassart = null;
 			return;
 		}
-		final var abschlussAllgemeinbildend = SchulabschlussAllgemeinbildend.data().getWertBySchluessel(schluessel);
-		if (abschlussAllgemeinbildend == null) {
-			throw new ApiOperationException(
-					Status.BAD_REQUEST,
-					"Keine Schulabschluss mit dem Schlüssel %s gefunden.".formatted(schluessel));
-		}
+		validateSchulabschlussAllgemeinbildend(schluessel);
 		entity.Entlassart = schluessel;
 	}
 

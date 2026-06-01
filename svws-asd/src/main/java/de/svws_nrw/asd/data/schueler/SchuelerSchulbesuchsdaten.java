@@ -58,9 +58,14 @@ public class SchuelerSchulbesuchsdaten {
 	@Schema(description = "Die ID des Entlassgrundes der zuvor besuchten Schule. ", example = "2")
 	public Long idEntlassgrundVorherigeSchule;
 
-	/** Die ID der Abschlussart, der an der zuvor besuchten Schule erworben wurde. */
-	@Schema(description = "Die ID der Abschlussart, der an der zuvor besuchten Schule erworben wurde.", example = "OA")
-	public String idAbschlussartVorherigeSchule;
+
+	/** Der Schlüssel des Schulabschlusses (Allgemeinbildend) der zuvor besuchten Schule. */
+	@Schema(description = "Der Schlüssel des Schulabschlusses (Allgemeinbildend) der zuvor besuchten Schule.", example = "2")
+	public String schluesselAbschlussartAllgemeinbildendVorherigeSchule;
+
+	/** Der Schlüssel des Schulabschlusses (Berufsbildend) der zuvor besuchten Schule. */
+	@Schema(description = "Der Schlüssel des Schulabschlusses (Berufsbildend) der zuvor besuchten Schule.", example = "2")
+	public String schluesselAbschlussartBerufsbildendVorherigeSchule;
 
 	/** Das Entlassdatum von dieser Schule. */
 	@Schema(description = "Das Entlassdatum von dieser Schule.", example = "1902-03-11")

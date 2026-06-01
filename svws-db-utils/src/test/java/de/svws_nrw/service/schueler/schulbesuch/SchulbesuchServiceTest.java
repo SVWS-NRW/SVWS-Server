@@ -620,4 +620,135 @@ class SchulbesuchServiceTest {
 				.hasFieldOrPropertyWithValue("status", Status.BAD_REQUEST);
 	}
 
+	// -------------------------------------------------------------------------
+	// patch - AbschlussartVorherigeSchule (schluesselAbschlussart*)
+	// -------------------------------------------------------------------------
+
+	@Test
+	@DisplayName("patch - patchAbschlussartVorherigeSchule - beide undefined - kein Patch")
+	void patchAbschlussartVorherigeSchule_beideUndefined() {
+		final var patchRequest = new SchulbesuchPatchRequest();
+		schueler.LSEntlassArt = "2A";
+		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
+
+		schulbesuchService.patch(idSchueler, patchRequest);
+
+		verify(schulbesuchMapper).patch(any(), schuelerCaptor.capture());
+		assertThat(schuelerCaptor.getValue().LSEntlassArt).isEqualTo("2A");
+	}
+
+	@Test
+	@DisplayName("patch - patchAbschlussartVorherigeSchule - nur allgemeinbildend - zweite Stelle ersetzen")
+	void patchAbschlussartVorherigeSchule_nurAllgemeinbildend() {
+		final var patchRequest = new SchulbesuchPatchRequest();
+		patchRequest.schluesselAbschlussartAllgemeinbildendVorherigeSchule = JsonNullable.of("A");
+		schueler.LSEntlassArt = "2G";
+		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
+
+		schulbesuchService.patch(idSchueler, patchRequest);
+
+		verify(schulbesuchMapper).patch(any(), schuelerCaptor.capture());
+		assertThat(schuelerCaptor.getValue().LSEntlassArt).isEqualTo("2A");
+	}
+
+	@Test
+	@DisplayName("patch - patchAbschlussartVorherigeSchule - nur allgemeinbildend - DB hat keinen berufsbildend")
+	void patchAbschlussartVorherigeSchule_nurAllgemeinbildend_ohneBerufsbildendInDb() {
+		final var patchRequest = new SchulbesuchPatchRequest();
+		patchRequest.schluesselAbschlussartAllgemeinbildendVorherigeSchule = JsonNullable.of("A");
+		schueler.LSEntlassArt = "G";
+		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
+
+		schulbesuchService.patch(idSchueler, patchRequest);
+
+		verify(schulbesuchMapper).patch(any(), schuelerCaptor.capture());
+		assertThat(schuelerCaptor.getValue().LSEntlassArt).isEqualTo("A");
+	}
+
+	@Test
+	@DisplayName("patch - patchAbschlussartVorherigeSchule - nur berufsbildend - erste Stelle ersetzen")
+	void patchAbschlussartVorherigeSchule_nurBerufsbildend() {
+		final var patchRequest = new SchulbesuchPatchRequest();
+		patchRequest.schluesselAbschlussartBerufsbildendVorherigeSchule = JsonNullable.of("3");
+		schueler.LSEntlassArt = "2G";
+		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
+
+		schulbesuchService.patch(idSchueler, patchRequest);
+
+		verify(schulbesuchMapper).patch(any(), schuelerCaptor.capture());
+		assertThat(schuelerCaptor.getValue().LSEntlassArt).isEqualTo("3G");
+	}
+
+	@Test
+	@DisplayName("patch - patchAbschlussartVorherigeSchule - nur berufsbildend - DB hat keinen allgemeinbildend - bleibt null")
+	void patchAbschlussartVorherigeSchule_nurBerufsbildend_ohneAllgemeinbildendInDb() {
+		final var patchRequest = new SchulbesuchPatchRequest();
+		patchRequest.schluesselAbschlussartBerufsbildendVorherigeSchule = JsonNullable.of("3");
+		schueler.LSEntlassArt = null;
+		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
+
+		schulbesuchService.patch(idSchueler, patchRequest);
+
+		verify(schulbesuchMapper).patch(any(), schuelerCaptor.capture());
+		assertThat(schuelerCaptor.getValue().LSEntlassArt).isNull();
+	}
+
+	@Test
+	@DisplayName("patch - patchAbschlussartVorherigeSchule - beide gesetzt - kombiniert")
+	void patchAbschlussartVorherigeSchule_beideGesetzt() {
+		final var patchRequest = new SchulbesuchPatchRequest();
+		patchRequest.schluesselAbschlussartAllgemeinbildendVorherigeSchule = JsonNullable.of("A");
+		patchRequest.schluesselAbschlussartBerufsbildendVorherigeSchule = JsonNullable.of("2");
+		schueler.LSEntlassArt = "3G";
+		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
+
+		schulbesuchService.patch(idSchueler, patchRequest);
+
+		verify(schulbesuchMapper).patch(any(), schuelerCaptor.capture());
+		assertThat(schuelerCaptor.getValue().LSEntlassArt).isEqualTo("2A");
+	}
+
+	@Test
+	@DisplayName("patch - patchAbschlussartVorherigeSchule - allgemeinbildend null - setzt LSEntlassArt auf null")
+	void patchAbschlussartVorherigeSchule_allgemeinbildendNull() {
+		final var patchRequest = new SchulbesuchPatchRequest();
+		patchRequest.schluesselAbschlussartAllgemeinbildendVorherigeSchule = JsonNullable.of(null);
+		schueler.LSEntlassArt = "2G";
+		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
+
+		schulbesuchService.patch(idSchueler, patchRequest);
+
+		verify(schulbesuchMapper).patch(any(), schuelerCaptor.capture());
+		assertThat(schuelerCaptor.getValue().LSEntlassArt).isNull();
+	}
+
+	@Test
+	@DisplayName("patch - patchAbschlussartVorherigeSchule - ungültiger allgemeinbildend Schlüssel - BAD_REQUEST")
+	void patchAbschlussartVorherigeSchule_ungueltigerAllgemeinbildendSchluessel() {
+		final var patchRequest = new SchulbesuchPatchRequest();
+		patchRequest.schluesselAbschlussartAllgemeinbildendVorherigeSchule = JsonNullable.of("UNGUELTIG");
+		schueler.LSEntlassArt = "2G";
+		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
+
+		assertThatException()
+				.isThrownBy(() -> schulbesuchService.patch(idSchueler, patchRequest))
+				.isInstanceOf(ApiOperationException.class)
+				.hasFieldOrPropertyWithValue("status", Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch - patchAbschlussartVorherigeSchule - ungültiger berufsbildend Schlüssel - BAD_REQUEST")
+	void patchAbschlussartVorherigeSchule_ungueltigerBerufsbildendSchluessel() {
+		final var patchRequest = new SchulbesuchPatchRequest();
+		patchRequest.schluesselAbschlussartBerufsbildendVorherigeSchule = JsonNullable.of("UNGUELTIG");
+		schueler.LSEntlassArt = "2G";
+		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
+
+		assertThatException()
+				.isThrownBy(() -> schulbesuchService.patch(idSchueler, patchRequest))
+				.isInstanceOf(ApiOperationException.class)
+				.hasFieldOrPropertyWithValue("status", Status.BAD_REQUEST);
+	}
+
+
 }

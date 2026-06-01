@@ -9,6 +9,9 @@ import de.svws_nrw.service.schueler.schulbesuch.SchulbesuchPatchRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.openapitools.jackson.nullable.JsonNullable;
 
 import java.util.List;
@@ -36,6 +39,46 @@ class SchulbesuchMapperTest {
 	// toApi – direkte Feld-Mappings
 	// -------------------------------------------------------------------------
 
+
+	@Test
+	@DisplayName("mapAbschlussartVorherigeSchule | Einstelliger Schlüssel setzt nur allgemeinbildend")
+	void toApi_mapptEinstelligenAbschlussartSchluessel() {
+		final var entity = createEntity(1L);
+		entity.LSEntlassArt = "A";
+
+		final var result = mapper.toApi(entity, emptyContext());
+
+		assertThat(result.schluesselAbschlussartAllgemeinbildendVorherigeSchule).isEqualTo("A");
+		assertThat(result.schluesselAbschlussartBerufsbildendVorherigeSchule).isNull();
+	}
+
+	@Test
+	@DisplayName("mapAbschlussartVorherigeSchule | Zweistelliger Schlüssel splittet korrekt auf beide Felder")
+	void toApi_mapptZweistelligenAbschlussartSchluessel() {
+		final var entity = createEntity(1L);
+		entity.LSEntlassArt = "2A";
+
+		final var result = mapper.toApi(entity, emptyContext());
+
+		assertThat(result.schluesselAbschlussartBerufsbildendVorherigeSchule).isEqualTo("2");
+		assertThat(result.schluesselAbschlussartAllgemeinbildendVorherigeSchule).isEqualTo("A");
+	}
+
+	@ParameterizedTest
+	@DisplayName("mapAbschlussartVorherigeSchule | null, blank, einstellige Ziffer auf null")
+	@NullSource
+	@ValueSource(strings = {" ", "   "})
+	void toApi_mapptZuNull(final String input) {
+		final var entity = createEntity(1L);
+		entity.LSEntlassArt = input;
+
+		final var result = mapper.toApi(entity, emptyContext());
+
+		assertThat(result.schluesselAbschlussartAllgemeinbildendVorherigeSchule).isNull();
+		assertThat(result.schluesselAbschlussartBerufsbildendVorherigeSchule).isNull();
+
+	}
+
 	@Nested
 	@DisplayName("toApi")
 	class ToApi {
@@ -59,7 +102,6 @@ class SchulbesuchMapperTest {
 			entity.LSJahrgang = "10";
 			entity.LSVersetzung = "V";
 			entity.LSBemerkung = "Guter Schüler";
-			entity.LSEntlassArt = "OA";
 
 			final var result = mapper.toApi(entity, emptyContext());
 
@@ -68,7 +110,6 @@ class SchulbesuchMapperTest {
 			assertThat(result.kuerzelEntlassjahrgangVorherigeSchule).isEqualTo("10");
 			assertThat(result.idHerkunftsartVersetzungVorherigeSchule).isEqualTo("V");
 			assertThat(result.bemerkungVorherigeSchule).isEqualTo("Guter Schüler");
-			assertThat(result.idAbschlussartVorherigeSchule).isEqualTo("OA");
 		}
 
 		@Test
@@ -340,7 +381,6 @@ class SchulbesuchMapperTest {
 			request.kuerzelEntlassjahrgangVorherigeSchule = JsonNullable.of("10");
 			request.idHerkunftsartVersetzungVorherigeSchule = JsonNullable.of("V");
 			request.bemerkungVorherigeSchule = JsonNullable.of("Bemerkung");
-			request.idAbschlussartVorherigeSchule = JsonNullable.of("OA");
 			request.entlassdatumDieseSchule = JsonNullable.of("2022-08-01");
 			request.idEntlassjahrgangDieseSchule = JsonNullable.of(3L);
 			request.wechseldatumAufnehmendeSchule = JsonNullable.of("2022-09-01");
@@ -362,7 +402,6 @@ class SchulbesuchMapperTest {
 						assertThat(e.LSJahrgang).isEqualTo("10");
 						assertThat(e.LSVersetzung).isEqualTo("V");
 						assertThat(e.LSBemerkung).isEqualTo("Bemerkung");
-						assertThat(e.LSEntlassArt).isEqualTo("OA");
 						assertThat(e.Entlassdatum).isEqualTo("2022-08-01");
 						assertThat(e.Entlassjahrgang_ID).isEqualTo(3L);
 						assertThat(e.Schulwechseldatum).isEqualTo("2022-09-01");

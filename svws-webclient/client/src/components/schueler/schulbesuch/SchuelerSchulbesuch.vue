@@ -72,9 +72,6 @@
 					:manager="vorherigerEntlassgrundManager"
 					v-model="model.idEntlassgrundVorherigeSchule.value"
 					:readonly />
-				<svws-ui-text-input placeholder="höchster Abschluss, der von der anderen Schule mitgebracht wurde"
-					v-model="model.proxy.idAbschlussartVorherigeSchule"
-					disabled statistics :readonly />
 				<!-- TODO: durch Ui-Select ersetzen: siehe Issue#3495-->
 				<svws-ui-text-input placeholder="Versetzung" span="full"
 					:model-value="model.idHerkunftsartVersetzungVorherigeSchule.value?.text ?? ''"

@@ -41,7 +41,7 @@ public class ProxyReportingSchuelerSchulbesuch extends ReportingSchuelerSchulbes
 				ersetzeNullBlankTrim(schulbesuchsdaten.idHerkunftsartVersetzungVorherigeSchule),
 				ersetzeNullBlankTrim(schulbesuchsdaten.bemerkungVorherigeSchule),
 				createEndlassgrund(reportingContext, schulbesuchsdaten.idEntlassgrundVorherigeSchule),
-				schulbesuchsdaten.idAbschlussartVorherigeSchule,
+				schulbesuchsdaten.schluesselAbschlussartBerufsbildendVorherigeSchule + schulbesuchsdaten.schluesselAbschlussartAllgemeinbildendVorherigeSchule,
 				ersetzeNullBlankTrim(schulbesuchsdaten.entlassdatumDieseSchule),
 				schulbesuchsdaten.idEntlassjahrgangDieseSchule,
 				createEndlassgrund(reportingContext, schulbesuchsdaten.idEntlassgrundDieseSchule),
