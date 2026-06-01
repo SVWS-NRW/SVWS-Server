@@ -268,7 +268,7 @@
 	const gesperrteKlassen = computed(() => {
 		let str = "";
 		for (const k of sperrenVorhanden.value) {
-			str += `${k.kuerzel}, `;
+			str += `${k.kuerzelAnzeige}, `;
 		}
 		return str.slice(0, -2);
 	});
