@@ -90,6 +90,9 @@
 								<span v-else class="icon i-ri-eye-line" />
 								Vorschau
 							</svws-ui-button>
+							<svws-ui-button v-if="serverState.hasDev" @click="downloadJSON('pdf')" :is-loading class="mt-4">
+								JSON
+							</svws-ui-button>
 						</div>
 					</template>
 					<!-- E-Mail-Eingabefelder -->
@@ -113,6 +116,9 @@
 							<svws-ui-spinner v-if="isLoading" spinning />
 							<span v-else class="icon i-ri-mail-send-line" />
 							E-Mails senden
+						</svws-ui-button>
+						<svws-ui-button v-if="serverState.hasDev" @click="downloadJSON('email')" :is-loading class="mt-4">
+							JSON
 						</svws-ui-button>
 					</template>
 				<!-- Ende: E-Mail-Eingabefelder -->
@@ -352,6 +358,28 @@
 		selectionDisplayText: option => option.getBezeichnung(),
 		optionDisplayText: option => option.getBezeichnung(),
 	});
+
+	async function downloadJSON(type: 'pdf' | 'email') {
+		parameter.value.idSchuljahresabschnitt = props.idAbschnitt ?? localIdAbschnitt.value;
+		parameter.value.idHauptdatenObjekt = (props.idHauptdatenObjekt !== undefined && props.idHauptdatenObjekt >= 0) ? props.idHauptdatenObjekt : localIdHauptdatenObjekt.value;
+		parameter.value.idsHauptdaten = listHauptdaten.value;
+		parameter.value.idsDetaildaten = listDetaildaten.value;
+		if (type === 'pdf') {
+			parameter.value.ausgabeformat = ReportingAusgabeformat.PDF.getId();
+		} else {
+			parameter.value.ausgabeformat = ReportingAusgabeformat.EMAIL.getId();
+		}
+		const json = ReportingParameter.transpilerToJSON(parameter.value);
+		const blob = new Blob([json], {
+			type: "application/json",
+		});
+		const link = document.createElement("a");
+		link.href = URL.createObjectURL(blob);
+		link.download = "ExportReprtingParameter.json";
+		link.target = "_blank";
+		link.click();
+		URL.revokeObjectURL(link.href);
+	}
 
 	async function downloadPDF() {
 		isLoading.value = true;
