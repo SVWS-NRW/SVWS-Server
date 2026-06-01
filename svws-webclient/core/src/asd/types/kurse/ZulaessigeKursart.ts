@@ -145,254 +145,264 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> implements Co
 	public static readonly FOGT: ZulaessigeKursart = new ZulaessigeKursart("FOGT", 23, );
 
 	/**
+	 * Kursart Förderung neu zugewanderter Schüler in Deutschfördergruppen
+	 */
+	public static readonly DF: ZulaessigeKursart = new ZulaessigeKursart("DF", 24, );
+
+	/**
 	 * Kursart Förderung neu zugewanderter Schüler in Deutschfördergruppen (teilweise äußere und innere Differenzierung)
 	 */
-	public static readonly DFG: ZulaessigeKursart = new ZulaessigeKursart("DFG", 24, );
+	public static readonly DFG: ZulaessigeKursart = new ZulaessigeKursart("DFG", 25, );
 
 	/**
 	 * Kursart Wahlpflichtbereich II (Kl. 09 und 10, bei G8: 08 und 09): 3. Fremdsprache
 	 */
-	public static readonly FS3: ZulaessigeKursart = new ZulaessigeKursart("FS3", 25, );
+	public static readonly FS3: ZulaessigeKursart = new ZulaessigeKursart("FS3", 26, );
 
 	/**
 	 * Kursart Förderung neu zugewanderter Schüler in Deutschförderklassen (vollständige äußere Differenzierung)
 	 */
-	public static readonly DFK: ZulaessigeKursart = new ZulaessigeKursart("DFK", 26, );
+	public static readonly DFK: ZulaessigeKursart = new ZulaessigeKursart("DFK", 27, );
 
 	/**
 	 * Kursart Förderunterricht
 	 */
-	public static readonly FU: ZulaessigeKursart = new ZulaessigeKursart("FU", 27, );
+	public static readonly FU: ZulaessigeKursart = new ZulaessigeKursart("FU", 28, );
 
 	/**
 	 * Kursart Stützunterricht Wahlbereich - Förderunterricht für ausländische u. ausgesiedelte Schüler
 	 */
-	public static readonly FUAUS: ZulaessigeKursart = new ZulaessigeKursart("FUAUS", 28, );
+	public static readonly FUAUS: ZulaessigeKursart = new ZulaessigeKursart("FUAUS", 29, );
 
 	/**
 	 * Kursart Fachunabhängiger Förderunterricht
 	 */
-	public static readonly FUF: ZulaessigeKursart = new ZulaessigeKursart("FUF", 29, );
+	public static readonly FUF: ZulaessigeKursart = new ZulaessigeKursart("FUF", 30, );
 
 	/**
 	 * Kursart Förderunterricht im Klassenverband
 	 */
-	public static readonly FUK: ZulaessigeKursart = new ZulaessigeKursart("FUK", 30, );
+	public static readonly FUK: ZulaessigeKursart = new ZulaessigeKursart("FUK", 31, );
 
 	/**
 	 * Kursart Förderunterricht für Teile von Klassen
 	 */
-	public static readonly FUT: ZulaessigeKursart = new ZulaessigeKursart("FUT", 31, );
+	public static readonly FUT: ZulaessigeKursart = new ZulaessigeKursart("FUT", 32, );
 
 	/**
 	 * Kursart fächerübergreifender Kurs
 	 */
-	public static readonly FUEK: ZulaessigeKursart = new ZulaessigeKursart("FUEK", 32, );
+	public static readonly FUEK: ZulaessigeKursart = new ZulaessigeKursart("FUEK", 33, );
 
 	/**
 	 * Kursart Grundebene/-kurs
 	 */
-	public static readonly G: ZulaessigeKursart = new ZulaessigeKursart("G", 33, );
+	public static readonly G: ZulaessigeKursart = new ZulaessigeKursart("G", 34, );
 
 	/**
 	 * Kursart Grundkurs – Bildungsgang Hauptschule
 	 */
-	public static readonly G_H: ZulaessigeKursart = new ZulaessigeKursart("G_H", 34, );
+	public static readonly G_H: ZulaessigeKursart = new ZulaessigeKursart("G_H", 35, );
 
 	/**
 	 * Kursart Grundkurs mündlich
 	 */
-	public static readonly GKM: ZulaessigeKursart = new ZulaessigeKursart("GKM", 35, );
+	public static readonly GKM: ZulaessigeKursart = new ZulaessigeKursart("GKM", 36, );
 
 	/**
 	 * Kursart Grundkurs schriftlich
 	 */
-	public static readonly GKS: ZulaessigeKursart = new ZulaessigeKursart("GKS", 36, );
+	public static readonly GKS: ZulaessigeKursart = new ZulaessigeKursart("GKS", 37, );
 
 	/**
 	 * Kursart Hausunterricht
 	 */
-	public static readonly HU: ZulaessigeKursart = new ZulaessigeKursart("HU", 37, );
+	public static readonly HU: ZulaessigeKursart = new ZulaessigeKursart("HU", 38, );
 
 	/**
 	 * Kursart Zusätzlicher Förderunterricht im Rahmen der Initiative Komm mit
 	 */
-	public static readonly KMFOE: ZulaessigeKursart = new ZulaessigeKursart("KMFOE", 38, );
+	public static readonly KMFOE: ZulaessigeKursart = new ZulaessigeKursart("KMFOE", 39, );
 
 	/**
 	 * Kursart Leistungskurs I
 	 */
-	public static readonly LK1: ZulaessigeKursart = new ZulaessigeKursart("LK1", 39, );
+	public static readonly LK1: ZulaessigeKursart = new ZulaessigeKursart("LK1", 40, );
 
 	/**
 	 * Kursart Leistungskurs II
 	 */
-	public static readonly LK2: ZulaessigeKursart = new ZulaessigeKursart("LK2", 40, );
+	public static readonly LK2: ZulaessigeKursart = new ZulaessigeKursart("LK2", 41, );
 
 	/**
 	 * Kursart Schülerinnen und Schüler mit besonderen Schwierigkeiten im Erlernen des Lesens und Rechtschreibens (LRS)
 	 */
-	public static readonly LRS: ZulaessigeKursart = new ZulaessigeKursart("LRS", 41, );
+	public static readonly LRS: ZulaessigeKursart = new ZulaessigeKursart("LRS", 42, );
 
 	/**
 	 * Kursart Unterricht in der Herkunftssprache (Muttersprachlicher Unterricht)
 	 */
-	public static readonly MEU: ZulaessigeKursart = new ZulaessigeKursart("MEU", 42, );
+	public static readonly MEU: ZulaessigeKursart = new ZulaessigeKursart("MEU", 43, );
 
 	/**
 	 * Kursart Förderung in der deutschen Sprache außerhalb von Sprachfördermaßnahmen
 	 */
-	public static readonly FDS: ZulaessigeKursart = new ZulaessigeKursart("FDS", 43, );
+	public static readonly FDS: ZulaessigeKursart = new ZulaessigeKursart("FDS", 44, );
 
 	/**
 	 * Kursart Neigungs- und Projektgruppe
 	 */
-	public static readonly NPG: ZulaessigeKursart = new ZulaessigeKursart("NPG", 44, );
+	public static readonly NPG: ZulaessigeKursart = new ZulaessigeKursart("NPG", 45, );
 
 	/**
 	 * Kursart Projektkurs
 	 */
-	public static readonly PJK: ZulaessigeKursart = new ZulaessigeKursart("PJK", 45, );
+	public static readonly PJK: ZulaessigeKursart = new ZulaessigeKursart("PJK", 46, );
 
 	/**
 	 * Kursart Profilklasse
 	 */
-	public static readonly PROJ: ZulaessigeKursart = new ZulaessigeKursart("PROJ", 46, );
+	public static readonly PROJ: ZulaessigeKursart = new ZulaessigeKursart("PROJ", 47, );
 
 	/**
 	 * Kursart Unterricht im Klassenverband
 	 */
-	public static readonly PUK: ZulaessigeKursart = new ZulaessigeKursart("PUK", 47, );
+	public static readonly PUK: ZulaessigeKursart = new ZulaessigeKursart("PUK", 48, );
 
 	/**
 	 * Kursart Pflichtunterricht für Teile von Klassen
 	 */
-	public static readonly PUT: ZulaessigeKursart = new ZulaessigeKursart("PUT", 48, );
+	public static readonly PUT: ZulaessigeKursart = new ZulaessigeKursart("PUT", 49, );
 
 	/**
 	 * Kursart Stütz- oder Förderkurs
 	 */
-	public static readonly SF: ZulaessigeKursart = new ZulaessigeKursart("SF", 49, );
+	public static readonly SF: ZulaessigeKursart = new ZulaessigeKursart("SF", 50, );
 
 	/**
 	 * Kursart Selbstlernphase
 	 */
-	public static readonly SLP: ZulaessigeKursart = new ZulaessigeKursart("SLP", 50, );
+	public static readonly SLP: ZulaessigeKursart = new ZulaessigeKursart("SLP", 51, );
 
 	/**
 	 * Kursart Wahlpflichtunterricht: Schwerpunktübergreifende Angebote
 	 */
-	public static readonly SPA: ZulaessigeKursart = new ZulaessigeKursart("SPA", 51, );
+	public static readonly SPA: ZulaessigeKursart = new ZulaessigeKursart("SPA", 52, );
 
 	/**
 	 * Kursart Sportförderunterricht
 	 */
-	public static readonly SPFU: ZulaessigeKursart = new ZulaessigeKursart("SPFU", 52, );
+	public static readonly SPFU: ZulaessigeKursart = new ZulaessigeKursart("SPFU", 53, );
 
 	/**
 	 * Kursart sonderpädagogische Förderung
 	 */
-	public static readonly SPF: ZulaessigeKursart = new ZulaessigeKursart("SPF", 53, );
+	public static readonly SPF: ZulaessigeKursart = new ZulaessigeKursart("SPF", 54, );
 
 	/**
 	 * Kursart Stützunterricht Wahlbereich - fachbezogen
 	 */
-	public static readonly SWFB: ZulaessigeKursart = new ZulaessigeKursart("SWFB", 54, );
+	public static readonly SWFB: ZulaessigeKursart = new ZulaessigeKursart("SWFB", 55, );
 
 	/**
 	 * Kursart Stützunterricht Wahlbereich - fachübergreifend
 	 */
-	public static readonly SWFW: ZulaessigeKursart = new ZulaessigeKursart("SWFW", 55, );
+	public static readonly SWFW: ZulaessigeKursart = new ZulaessigeKursart("SWFW", 56, );
 
 	/**
 	 * Kursart Unterricht im Rahmen des Schulversuchs Talentschule
 	 */
-	public static readonly TAL: ZulaessigeKursart = new ZulaessigeKursart("TAL", 56, );
+	public static readonly TAL: ZulaessigeKursart = new ZulaessigeKursart("TAL", 57, );
 
 	/**
 	 * Kursart Unterricht in der Herkunftssprache anstelle einer Pflichtfremdsprache oder eines Wahlpflichtfaches
 	 */
-	public static readonly UMPF: ZulaessigeKursart = new ZulaessigeKursart("UMPF", 57, );
+	public static readonly UMPF: ZulaessigeKursart = new ZulaessigeKursart("UMPF", 58, );
 
 	/**
 	 * Kursart Förderunterricht
 	 */
-	public static readonly VSU: ZulaessigeKursart = new ZulaessigeKursart("VSU", 58, );
+	public static readonly VSU: ZulaessigeKursart = new ZulaessigeKursart("VSU", 59, );
 
 	/**
 	 * Kursart Vertiefungsfach
 	 */
-	public static readonly VTF: ZulaessigeKursart = new ZulaessigeKursart("VTF", 59, );
+	public static readonly VTF: ZulaessigeKursart = new ZulaessigeKursart("VTF", 60, );
 
 	/**
 	 * Kursart Vertiefungsunterricht Wahlbereich - berufsfeld- / berufsbezogener fachpraxisorientierter Kurs
 	 */
-	public static readonly VUW: ZulaessigeKursart = new ZulaessigeKursart("VUW", 60, );
+	public static readonly VUW: ZulaessigeKursart = new ZulaessigeKursart("VUW", 61, );
 
 	/**
 	 * Kursart Wahlpflichtbereich
 	 */
-	public static readonly WP: ZulaessigeKursart = new ZulaessigeKursart("WP", 61, );
+	public static readonly WP: ZulaessigeKursart = new ZulaessigeKursart("WP", 62, );
 
 	/**
 	 * Kursart Wahlpflichtbereich: Fremdsprachlich
 	 */
-	public static readonly WP1FS: ZulaessigeKursart = new ZulaessigeKursart("WP1FS", 62, );
+	public static readonly WP1FS: ZulaessigeKursart = new ZulaessigeKursart("WP1FS", 63, );
 
 	/**
 	 * Kursart Wahlpflichtbereich: Musisch-künstlerisch
 	 */
-	public static readonly WP1MU: ZulaessigeKursart = new ZulaessigeKursart("WP1MU", 63, );
+	public static readonly WP1MU: ZulaessigeKursart = new ZulaessigeKursart("WP1MU", 64, );
 
 	/**
 	 * Kursart Wahlpflichtbereich: Naturwissenschaftlich - technisch
 	 */
-	public static readonly WP1NT: ZulaessigeKursart = new ZulaessigeKursart("WP1NT", 64, );
+	public static readonly WP1NT: ZulaessigeKursart = new ZulaessigeKursart("WP1NT", 65, );
 
 	/**
 	 * Kursart Wahlpflichtbereich: Sozialwissenschaftlich
 	 */
-	public static readonly WP1SW: ZulaessigeKursart = new ZulaessigeKursart("WP1SW", 65, );
+	public static readonly WP1SW: ZulaessigeKursart = new ZulaessigeKursart("WP1SW", 66, );
 
 	/**
 	 * Kursart Wahlpflichtbereich: Wirtschaftlich
 	 */
-	public static readonly WP1WW: ZulaessigeKursart = new ZulaessigeKursart("WP1WW", 66, );
+	public static readonly WP1WW: ZulaessigeKursart = new ZulaessigeKursart("WP1WW", 67, );
+
+	/**
+	 * Kursart Wahlpflichtbereich: Sportlich
+	 */
+	public static readonly WP1SP: ZulaessigeKursart = new ZulaessigeKursart("WP1SP", 68, );
 
 	/**
 	 * Kursart Wahlpflichtfach
 	 */
-	public static readonly WPF: ZulaessigeKursart = new ZulaessigeKursart("WPF", 67, );
+	public static readonly WPF: ZulaessigeKursart = new ZulaessigeKursart("WPF", 69, );
 
 	/**
 	 * Kursart Wahlpflichtbereich I
 	 */
-	public static readonly WPI: ZulaessigeKursart = new ZulaessigeKursart("WPI", 68, );
+	public static readonly WPI: ZulaessigeKursart = new ZulaessigeKursart("WPI", 70, );
 
 	/**
 	 * Kursart Wahlpflichtbereich I: 2. Fremdsprache
 	 */
-	public static readonly WPIGY: ZulaessigeKursart = new ZulaessigeKursart("WPIGY", 69, );
+	public static readonly WPIGY: ZulaessigeKursart = new ZulaessigeKursart("WPIGY", 71, );
 
 	/**
 	 * Kursart Wahlpflichtbereich II - Fächerkombination im math.-naturwiss, gesellschaftswiss. oder künstlerischen Schwerpunkt
 	 */
-	public static readonly WPII: ZulaessigeKursart = new ZulaessigeKursart("WPII", 70, );
+	public static readonly WPII: ZulaessigeKursart = new ZulaessigeKursart("WPII", 72, );
 
 	/**
 	 * Kursart Wahlpflichtunterricht
 	 */
-	public static readonly WPU: ZulaessigeKursart = new ZulaessigeKursart("WPU", 71, );
+	public static readonly WPU: ZulaessigeKursart = new ZulaessigeKursart("WPU", 73, );
 
 	/**
 	 * Kursart Zusatzkurs
 	 */
-	public static readonly ZK: ZulaessigeKursart = new ZulaessigeKursart("ZK", 72, );
+	public static readonly ZK: ZulaessigeKursart = new ZulaessigeKursart("ZK", 74, );
 
 	/**
 	 * Kursart zusätzliche Unterrichtsveranstaltung
 	 */
-	public static readonly ZUV: ZulaessigeKursart = new ZulaessigeKursart("ZUV", 73, );
+	public static readonly ZUV: ZulaessigeKursart = new ZulaessigeKursart("ZUV", 75, );
 
 	/**
 	 * Die Menge der Schulformen. Diese ist nach der Initialisierung nicht leer.
