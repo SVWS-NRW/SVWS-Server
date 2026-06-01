@@ -1,5 +1,5 @@
 {
-	"version": 2,
+	"version": 3,
 	"daten": [ {
 		"bezeichner": "OA",
 		"idStatistik": "1",
@@ -107,6 +107,13 @@
 			"kuerzel": "ASZBK",
 			"text": "Abschlusszeugnis (berufliche Kenntnisse, Fähigkeiten und Fertigkeiten)",
 			"gueltigVon": 2016,
+			"gueltigBis": 2025
+		}, {
+			"id": 160004,
+			"schluessel": "1",
+			"kuerzel": "ASZBK",
+			"text": "Abschlusszeugnis",
+			"gueltigVon": 2026,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -192,7 +199,7 @@
 			"text": "Vertiefte berufliche Kenntnisse",
 			"gueltigVon": null,
 			"gueltigBis": 2015
-		},  {
+		}, {
 			"id": 800001,
 			"schluessel": "8",
 			"kuerzel": "VBK",

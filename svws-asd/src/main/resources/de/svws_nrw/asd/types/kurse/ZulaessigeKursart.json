@@ -1,3003 +1,3099 @@
 {
-	"version": 3,
+	"version": 4,
 	"daten": [ {
 		"bezeichner": "AB3",
 		"idStatistik": "1",
 		"historie": [ {
 			"id": 0,
-			"kuerzel": "AB3",
-			"nummer": "71",
-			"text": "3. Abiturfach",
 			"schluessel": "AB3",
+			"kuerzel": "AB3",
+			"text": "3. Abiturfach",
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "WB",
+				"gliederung": null
+			} ],
+			"nummer": "71",
 			"bemerkungen": null,
 			"kuerzelAllg": "GK",
 			"bezeichnungAllg": "Grundkurs",
-			"erlaubtGOSt": true,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "WB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": 2022
+			"erlaubtGOSt": true
 		}, {
 			"id": 1,
-			"kuerzel": "AB3",
-			"nummer": "71",
-			"text": "3. Abiturfach",
 			"schluessel": "AB3",
+			"kuerzel": "AB3",
+			"text": "3. Abiturfach",
+			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "WB",
+				"gliederung": null
+			} ],
+			"nummer": "71",
 			"bemerkungen": null,
 			"kuerzelAllg": "GK",
 			"bezeichnungAllg": "Grundkurs",
-			"erlaubtGOSt": true,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "WB",
-					"gliederung": null
-				} ],
-			"gueltigVon": 2023,
-			"gueltigBis": null
+			"erlaubtGOSt": true
 		} ]
 	}, {
 		"bezeichner": "AB4",
 		"idStatistik": "2",
 		"historie": [ {
 			"id": 1000,
-			"kuerzel": "AB4",
-			"nummer": "71",
-			"text": "4. Abiturfach",
 			"schluessel": "AB4",
+			"kuerzel": "AB4",
+			"text": "4. Abiturfach",
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "WB",
+				"gliederung": null
+			} ],
+			"nummer": "71",
 			"bemerkungen": null,
 			"kuerzelAllg": "GK",
 			"bezeichnungAllg": "Grundkurs",
-			"erlaubtGOSt": true,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "WB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": 2022
+			"erlaubtGOSt": true
 		}, {
 			"id": 1001,
-			"kuerzel": "AB4",
-			"nummer": "71",
-			"text": "4. Abiturfach",
 			"schluessel": "AB4",
+			"kuerzel": "AB4",
+			"text": "4. Abiturfach",
+			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "WB",
+				"gliederung": null
+			} ],
+			"nummer": "71",
 			"bemerkungen": null,
 			"kuerzelAllg": "GK",
 			"bezeichnungAllg": "Grundkurs",
-			"erlaubtGOSt": true,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "WB",
-					"gliederung": null
-				} ],
-			"gueltigVon": 2023,
-			"gueltigBis": null
+			"erlaubtGOSt": true
 		} ]
 	}, {
 		"bezeichner": "AG",
 		"idStatistik": "3",
 		"historie": [ {
 			"id": 2000,
-			"kuerzel": "AG",
-			"nummer": "67",
-			"text": "Arbeitsgemeinschaft gemäß APO SI",
 			"schluessel": "AG",
+			"kuerzel": "AG",
+			"text": "Arbeitsgemeinschaft gemäß APO SI",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": "GY"
+			}, {
+				"schulform": "GM",
+				"gliederung": "GY"
+			}, {
+				"schulform": "GM",
+				"gliederung": "H"
+			}, {
+				"schulform": "GM",
+				"gliederung": "R"
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "H",
+				"gliederung": null
+			}, {
+				"schulform": "R",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": "GY"
+			}, {
+				"schulform": "SK",
+				"gliederung": "H"
+			}, {
+				"schulform": "SK",
+				"gliederung": "R"
+			}, {
+				"schulform": "SR",
+				"gliederung": null
+			} ],
+			"nummer": "67",
 			"bemerkungen": "gemäß § 3 Abs. 6 APO-SI",
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GE",
-					"gliederung": "GY"
-				}, {
-					"schulform": "GM",
-					"gliederung": "GY"
-				}, {
-					"schulform": "GM",
-					"gliederung": "H"
-				}, {
-					"schulform": "GM",
-					"gliederung": "R"
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "H",
-					"gliederung": null
-				}, {
-					"schulform": "R",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": "GY"
-				}, {
-					"schulform": "SK",
-					"gliederung": "H"
-				}, {
-					"schulform": "SK",
-					"gliederung": "R"
-				}, {
-					"schulform": "SR",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "AGGT",
 		"idStatistik": "4",
 		"historie": [ {
 			"id": 3000,
-			"kuerzel": "AGGT",
-			"nummer": "36",
-			"text": "Arbeitsgemeinschaft im Ganztagsbereich",
 			"schluessel": "AGGT",
+			"kuerzel": "AGGT",
+			"text": "Arbeitsgemeinschaft im Ganztagsbereich",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "G",
+				"gliederung": null
+			}, {
+				"schulform": "H",
+				"gliederung": null
+			}, {
+				"schulform": "KS",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "R",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": null
+			}, {
+				"schulform": "SR",
+				"gliederung": null
+			}, {
+				"schulform": "S",
+				"gliederung": null
+			}, {
+				"schulform": "V",
+				"gliederung": null
+			} ],
+			"nummer": "36",
 			"bemerkungen": "gemäß § 9 Abs. 2, 3  SchulG",
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "G",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "H",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "R",
-					"gliederung": null
-				}, {
-					"schulform": "KS",
-					"gliederung": null
-				}, {
-					"schulform": "S",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": null
-				}, {
-					"schulform": "SR",
-					"gliederung": null
-				}, {
-					"schulform": "V",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "AGKWB",
 		"idStatistik": "5",
 		"historie": [ {
 			"id": 4000,
-			"kuerzel": "AGKWB",
-			"nummer": "28",
-			"text": "Stütz- und Angleichungskurs / Förderunterricht",
 			"schluessel": "AGKWB",
+			"kuerzel": "AGKWB",
+			"text": "Stütz- und Angleichungskurs / Förderunterricht",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "WB",
+				"gliederung": null
+			} ],
+			"nummer": "28",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "WB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "AGK",
 		"idStatistik": "6",
 		"historie": [ {
 			"id": 5000,
-			"kuerzel": "AGK",
-			"nummer": "73",
-			"text": "Angleichungskurs",
 			"schluessel": "AGK",
+			"kuerzel": "AGK",
+			"text": "Angleichungskurs",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			} ],
+			"nummer": "73",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "AST",
 		"idStatistik": "7",
 		"historie": [ {
 			"id": 6000,
-			"kuerzel": "AST",
-			"nummer": "33",
-			"text": "Arbeits- bzw. Übungsstunde ",
 			"schluessel": "AST",
+			"kuerzel": "AST",
+			"text": "Arbeits- bzw. Übungsstunde ",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "G",
+				"gliederung": null
+			}, {
+				"schulform": "H",
+				"gliederung": null
+			}, {
+				"schulform": "KS",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "R",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": null
+			}, {
+				"schulform": "SR",
+				"gliederung": null
+			}, {
+				"schulform": "S",
+				"gliederung": null
+			}, {
+				"schulform": "V",
+				"gliederung": null
+			} ],
+			"nummer": "33",
 			"bemerkungen": "gemäß § 9 Abs. 2, 3  SchulG",
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "G",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "H",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "R",
-					"gliederung": null
-				}, {
-					"schulform": "KS",
-					"gliederung": null
-				}, {
-					"schulform": "S",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": null
-				}, {
-					"schulform": "SR",
-					"gliederung": null
-				}, {
-					"schulform": "V",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "BSP",
 		"idStatistik": "8",
 		"historie": [ {
 			"id": 7000,
-			"kuerzel": "BSP",
-			"nummer": "59",
-			"text": "Begegnung mit Sprachen in der Primarstufe",
 			"schluessel": "BSP",
+			"kuerzel": "BSP",
+			"text": "Begegnung mit Sprachen in der Primarstufe",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "FW",
+				"gliederung": null
+			}, {
+				"schulform": "HI",
+				"gliederung": null
+			}, {
+				"schulform": "WF",
+				"gliederung": null
+			} ],
+			"nummer": "59",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "FW",
-					"gliederung": null
-				}, {
-					"schulform": "HI",
-					"gliederung": null
-				}, {
-					"schulform": "WF",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "BUS",
 		"idStatistik": "9",
 		"historie": [ {
 			"id": 8000,
-			"kuerzel": "BUS",
-			"nummer": "94",
-			"text": "Unterricht im Rahmen von KAOA einschl. Schule trifft Arbeitswelt",
 			"schluessel": "BUS",
+			"kuerzel": "BUS",
+			"text": "Unterricht im Rahmen von KAOA einschl. Schule trifft Arbeitswelt",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "H",
+				"gliederung": null
+			}, {
+				"schulform": "KS",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "R",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": null
+			}, {
+				"schulform": "SR",
+				"gliederung": null
+			}, {
+				"schulform": "S",
+				"gliederung": null
+			}, {
+				"schulform": "V",
+				"gliederung": null
+			} ],
+			"nummer": "94",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "H",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "R",
-					"gliederung": null
-				}, {
-					"schulform": "KS",
-					"gliederung": null
-				}, {
-					"schulform": "S",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": null
-				}, {
-					"schulform": "SR",
-					"gliederung": null
-				}, {
-					"schulform": "V",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "E",
 		"idStatistik": "10",
 		"historie": [ {
 			"id": 9000,
-			"kuerzel": "E",
-			"nummer": "02",
-			"text": "Erweiterungsebene/-kurs",
 			"schluessel": "E",
+			"kuerzel": "E",
+			"text": "Erweiterungsebene/-kurs",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": null
+			} ],
+			"nummer": "02",
 			"bemerkungen": null,
 			"kuerzelAllg": "DK",
 			"bezeichnungAllg": "Differenzierungskurs",
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "E_H",
 		"idStatistik": "11",
 		"historie": [ {
 			"id": 10000,
-			"kuerzel": "E_H",
-			"nummer": "16",
-			"text": "Erweiterungskurs – Bildungsgang Hauptschule",
 			"schluessel": "E_H",
+			"kuerzel": "E_H",
+			"text": "Erweiterungskurs – Bildungsgang Hauptschule",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GM",
+				"gliederung": "H"
+			}, {
+				"schulform": "H",
+				"gliederung": null
+			}, {
+				"schulform": "KS",
+				"gliederung": null
+			}, {
+				"schulform": "R",
+				"gliederung": "H"
+			}, {
+				"schulform": "SK",
+				"gliederung": "H"
+			}, {
+				"schulform": "S",
+				"gliederung": null
+			}, {
+				"schulform": "V",
+				"gliederung": null
+			} ],
+			"nummer": "16",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GM",
-					"gliederung": "H"
-				}, {
-					"schulform": "H",
-					"gliederung": null
-				}, {
-					"schulform": "R",
-					"gliederung": "H"
-				}, {
-					"schulform": "KS",
-					"gliederung": null
-				}, {
-					"schulform": "S",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": "H"
-				}, {
-					"schulform": "V",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "EBA",
 		"idStatistik": "12",
 		"historie": [ {
 			"id": 11000,
-			"kuerzel": "EBA",
-			"nummer": "88",
-			"text": "Erweitertes Bildungsangebot",
 			"schluessel": "EBA",
+			"kuerzel": "EBA",
+			"text": "Erweitertes Bildungsangebot",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GM",
+				"gliederung": "H"
+			}, {
+				"schulform": "H",
+				"gliederung": null
+			}, {
+				"schulform": "R",
+				"gliederung": "H"
+			}, {
+				"schulform": "SK",
+				"gliederung": "H"
+			}, {
+				"schulform": "V",
+				"gliederung": null
+			} ],
+			"nummer": "88",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GM",
-					"gliederung": "H"
-				}, {
-					"schulform": "H",
-					"gliederung": null
-				}, {
-					"schulform": "R",
-					"gliederung": "H"
-				}, {
-					"schulform": "SK",
-					"gliederung": "H"
-				}, {
-					"schulform": "V",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "EF2",
 		"idStatistik": "13",
 		"historie": [ {
 			"id": 12000,
-			"kuerzel": "EF2",
-			"nummer": "57",
-			"text": "Einführung in die 2. Fremdsprache oder Ersatzfach",
 			"schluessel": "EF2",
+			"kuerzel": "EF2",
+			"text": "Einführung in die 2. Fremdsprache oder Ersatzfach",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "WB",
+				"gliederung": null
+			} ],
+			"nummer": "57",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "WB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "EFSP",
 		"idStatistik": "14",
 		"historie": [ {
 			"id": 13000,
-			"kuerzel": "EFSP",
-			"nummer": "71",
-			"text": "Ersatzfach für Sport als 4. Abiturfach",
 			"schluessel": "EFSP",
+			"kuerzel": "EFSP",
+			"text": "Ersatzfach für Sport als 4. Abiturfach",
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "WB",
+				"gliederung": null
+			} ],
+			"nummer": "71",
 			"bemerkungen": null,
 			"kuerzelAllg": "GK",
 			"bezeichnungAllg": "Grundkurs",
-			"erlaubtGOSt": true,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "WB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": 2022
+			"erlaubtGOSt": true
 		}, {
 			"id": 13001,
-			"kuerzel": "EFSP",
-			"nummer": "71",
-			"text": "Ersatzfach für Sport als 4. Abiturfach",
 			"schluessel": "EFSP",
+			"kuerzel": "EFSP",
+			"text": "Ersatzfach für Sport als 4. Abiturfach",
+			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "WB",
+				"gliederung": null
+			} ],
+			"nummer": "71",
 			"bemerkungen": null,
 			"kuerzelAllg": "GK",
 			"bezeichnungAllg": "Grundkurs",
-			"erlaubtGOSt": true,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "WB",
-					"gliederung": null
-				} ],
-			"gueltigVon": 2023,
-			"gueltigBis": null
+			"erlaubtGOSt": true
 		} ]
 	}, {
 		"bezeichner": "EGS1",
 		"idStatistik": "15",
 		"historie": [ {
 			"id": 14000,
-			"kuerzel": "EGS1",
-			"nummer": "96",
-			"text": "Ergänzungsstunden",
 			"schluessel": "EGS1",
+			"kuerzel": "EGS1",
+			"text": "Ergänzungsstunden",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "H",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "R",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": null
+			}, {
+				"schulform": "SR",
+				"gliederung": null
+			}, {
+				"schulform": "V",
+				"gliederung": null
+			} ],
+			"nummer": "96",
 			"bemerkungen": "gemäß § 3 Abs. 1, 3 und § 15 Abs. 3 APO-SI",
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "H",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "R",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": null
-				}, {
-					"schulform": "SR",
-					"gliederung": null
-				}, {
-					"schulform": "V",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "EGSN",
 		"idStatistik": "16",
 		"historie": [ {
 			"id": 15000,
-			"kuerzel": "EGSN",
-			"nummer": "97",
-			"text": "Ergänzungsstunden mit Benotung",
 			"schluessel": "EGSN",
+			"kuerzel": "EGSN",
+			"text": "Ergänzungsstunden mit Benotung",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			} ],
+			"nummer": "97",
 			"bemerkungen": "gemäß § 3 Abs. 1, 3 und § 19 Abs. 3 Nr.2 und 4 APO-SI",
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "EV",
 		"idStatistik": "17",
 		"historie": [ {
 			"id": 16000,
-			"kuerzel": "EV",
-			"nummer": "41",
-			"text": "Ergänzungs- oder Vertiefungskurs",
 			"schluessel": "EV",
+			"kuerzel": "EV",
+			"text": "Ergänzungs- oder Vertiefungskurs",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			} ],
+			"nummer": "41",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "EWBF",
 		"idStatistik": "18",
 		"historie": [ {
 			"id": 17000,
-			"kuerzel": "EWBF",
-			"nummer": "12",
-			"text": "Erweiterungsunterricht Wahlbereich - berufsbezogen, fachübergreifend",
 			"schluessel": "EWBF",
+			"kuerzel": "EWBF",
+			"text": "Erweiterungsunterricht Wahlbereich - berufsbezogen, fachübergreifend",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			} ],
+			"nummer": "12",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "EWF",
 		"idStatistik": "19",
 		"historie": [ {
 			"id": 18000,
-			"kuerzel": "EWF",
-			"nummer": "11",
-			"text": "Erweiterungsunterricht Wahlbereich - fach-, jedoch nicht abschlussbezogen",
 			"schluessel": "EWF",
+			"kuerzel": "EWF",
+			"text": "Erweiterungsunterricht Wahlbereich - fach-, jedoch nicht abschlussbezogen",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			} ],
+			"nummer": "11",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "EWFA",
 		"idStatistik": "20",
 		"historie": [ {
 			"id": 19000,
-			"kuerzel": "EWFA",
-			"nummer": "10",
-			"text": "Erweiterungsunterricht Wahlbereich - fach- und abschlussbezogen",
 			"schluessel": "EWFA",
+			"kuerzel": "EWFA",
+			"text": "Erweiterungsunterricht Wahlbereich - fach- und abschlussbezogen",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			} ],
+			"nummer": "10",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "F3",
 		"idStatistik": "21",
 		"historie": [ {
 			"id": 20000,
-			"kuerzel": "F3",
-			"nummer": "64",
-			"text": "Wahlplflichtunterricht: Einzelfach im math.-naturw., techn., gesellschaftsw., künstlerischen Schwerpunkt",
 			"schluessel": "F3",
+			"kuerzel": "F3",
+			"text": "Wahlplflichtunterricht: Einzelfach im math.-naturw., techn., gesellschaftsw., künstlerischen Schwerpunkt",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": "GY"
+			}, {
+				"schulform": "GM",
+				"gliederung": "GY"
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": null
+			} ],
+			"nummer": "64",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GE",
-					"gliederung": "GY"
-				}, {
-					"schulform": "GM",
-					"gliederung": "GY"
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "FAG",
 		"idStatistik": "22",
 		"historie": [ {
 			"id": 21000,
-			"kuerzel": "FAG",
-			"nummer": "58",
-			"text": "freiwillige Arbeitsgemeinschaft",
 			"schluessel": "FAG",
+			"kuerzel": "FAG",
+			"text": "freiwillige Arbeitsgemeinschaft",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "WB",
+				"gliederung": null
+			} ],
+			"nummer": "58",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "WB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "FFU",
 		"idStatistik": "23",
 		"historie": [ {
 			"id": 22000,
-			"kuerzel": "FFU",
-			"nummer": "04",
-			"text": "Fachbezogener Förderunterricht",
 			"schluessel": "FFU",
+			"kuerzel": "FFU",
+			"text": "Fachbezogener Förderunterricht",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": null
+			} ],
+			"nummer": "04",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "FOGT",
 		"idStatistik": "24",
 		"historie": [ {
 			"id": 23000,
-			"kuerzel": "FOGT",
-			"nummer": "37",
-			"text": "Förderangebot Ganztagsschule",
 			"schluessel": "FOGT",
+			"kuerzel": "FOGT",
+			"text": "Förderangebot Ganztagsschule",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "G",
+				"gliederung": null
+			}, {
+				"schulform": "H",
+				"gliederung": null
+			}, {
+				"schulform": "KS",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "R",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": null
+			}, {
+				"schulform": "SR",
+				"gliederung": null
+			}, {
+				"schulform": "S",
+				"gliederung": null
+			}, {
+				"schulform": "V",
+				"gliederung": null
+			} ],
+			"nummer": "37",
 			"bemerkungen": "gemäß § 9 Abs. 2, 3  SchulG",
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "G",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "H",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "R",
-					"gliederung": null
-				}, {
-					"schulform": "KS",
-					"gliederung": null
-				}, {
-					"schulform": "S",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": null
-				}, {
-					"schulform": "SR",
-					"gliederung": null
-				}, {
-					"schulform": "V",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "DFG",
 		"idStatistik": "25",
 		"historie": [ {
 			"id": 24000,
-			"kuerzel": "DFG",
-			"nummer": "89",
-			"text": "Förderung neu zugewanderter Schüler in Deutschfördergruppen (teilweise äußere und innere Differenzierung)",
 			"schluessel": "DFG",
+			"kuerzel": "DFG",
+			"text": "Förderung neu zugewanderter Schüler in Deutschfördergruppen (teilweise äußere und innere Differenzierung)",
+			"gueltigVon": null,
+			"gueltigBis": 2025,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "G",
+				"gliederung": null
+			}, {
+				"schulform": "H",
+				"gliederung": null
+			}, {
+				"schulform": "KS",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "R",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": null
+			}, {
+				"schulform": "SR",
+				"gliederung": null
+			}, {
+				"schulform": "S",
+				"gliederung": null
+			}, {
+				"schulform": "V",
+				"gliederung": null
+			} ],
+			"nummer": "89",
 			"bemerkungen": "gemäß Erlass 13-63 Nr. 3",
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "G",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "H",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "R",
-					"gliederung": null
-				}, {
-					"schulform": "KS",
-					"gliederung": null
-				}, {
-					"schulform": "S",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": null
-				}, {
-					"schulform": "SR",
-					"gliederung": null
-				}, {
-					"schulform": "V",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "FS3",
 		"idStatistik": "26",
 		"historie": [ {
 			"id": 25000,
-			"kuerzel": "FS3",
-			"nummer": "65",
-			"text": "Wahlpflichtbereich II (Kl. 09 und 10, bei G8: 08 und 09): 3. Fremdsprache",
 			"schluessel": "FS3",
+			"kuerzel": "FS3",
+			"text": "Wahlpflichtbereich II (Kl. 09 und 10, bei G8: 08 und 09): 3. Fremdsprache",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": "GY"
+			}, {
+				"schulform": "GM",
+				"gliederung": "GY"
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": "GY"
+			} ],
+			"nummer": "65",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GE",
-					"gliederung": "GY"
-				}, {
-					"schulform": "GM",
-					"gliederung": "GY"
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": "GY"
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "DFK",
 		"idStatistik": "27",
 		"historie": [ {
 			"id": 26000,
-			"kuerzel": "DFK",
-			"nummer": "90",
-			"text": "Förderung neu zugewanderter Schüler in Deutschförderklassen (vollständige äußere Differenzierung)",
 			"schluessel": "DFK",
+			"kuerzel": "DFK",
+			"text": "Förderung neu zugewanderter Schüler in Deutschförderklassen (vollständige äußere Differenzierung)",
+			"gueltigVon": null,
+			"gueltigBis": 2025,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "G",
+				"gliederung": null
+			}, {
+				"schulform": "H",
+				"gliederung": null
+			}, {
+				"schulform": "KS",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "R",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": null
+			}, {
+				"schulform": "SR",
+				"gliederung": null
+			}, {
+				"schulform": "S",
+				"gliederung": null
+			}, {
+				"schulform": "V",
+				"gliederung": null
+			} ],
+			"nummer": "90",
 			"bemerkungen": "gemäß Erlass 13-63 Nr. 3",
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "G",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "H",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "R",
-					"gliederung": null
-				}, {
-					"schulform": "KS",
-					"gliederung": null
-				}, {
-					"schulform": "S",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": null
-				}, {
-					"schulform": "SR",
-					"gliederung": null
-				}, {
-					"schulform": "V",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "FU",
 		"idStatistik": "28",
 		"historie": [ {
 			"id": 27000,
-			"kuerzel": "FU",
-			"nummer": "01",
-			"text": "Förderunterricht",
 			"schluessel": "FU",
+			"kuerzel": "FU",
+			"text": "Förderunterricht",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "KS",
+				"gliederung": null
+			}, {
+				"schulform": "S",
+				"gliederung": null
+			} ],
+			"nummer": "01",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "KS",
-					"gliederung": null
-				}, {
-					"schulform": "S",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "FUAUS",
 		"idStatistik": "29",
 		"historie": [ {
 			"id": 28000,
-			"kuerzel": "FUAUS",
-			"nummer": "03",
-			"text": "Stützunterricht Wahlbereich - Förderunterricht für ausländische u. ausgesiedelte Schüler",
 			"schluessel": "FUAUS",
+			"kuerzel": "FUAUS",
+			"text": "Stützunterricht Wahlbereich - Förderunterricht für ausländische u. ausgesiedelte Schüler",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			} ],
+			"nummer": "03",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "FUF",
 		"idStatistik": "30",
 		"historie": [ {
 			"id": 29000,
-			"kuerzel": "FUF",
-			"nummer": "05",
-			"text": "Fachunabhängiger Förderunterricht",
 			"schluessel": "FUF",
+			"kuerzel": "FUF",
+			"text": "Fachunabhängiger Förderunterricht",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": null
+			} ],
+			"nummer": "05",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "FUK",
 		"idStatistik": "31",
 		"historie": [ {
 			"id": 30000,
-			"kuerzel": "FUK",
-			"nummer": "99",
-			"text": "Förderunterricht im Klassenverband",
 			"schluessel": "FUK",
+			"kuerzel": "FUK",
+			"text": "Förderunterricht im Klassenverband",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "G",
+				"gliederung": null
+			} ],
+			"nummer": "99",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "G",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "FUT",
 		"idStatistik": "32",
 		"historie": [ {
 			"id": 31000,
-			"kuerzel": "FUT",
-			"nummer": "00",
-			"text": "Förderunterricht für Teile von Klassen",
 			"schluessel": "FUT",
+			"kuerzel": "FUT",
+			"text": "Förderunterricht für Teile von Klassen",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "G",
+				"gliederung": null
+			} ],
+			"nummer": "00",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "G",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "FUEK",
 		"idStatistik": "33",
 		"historie": [ {
 			"id": 32000,
-			"kuerzel": "FUEK",
-			"nummer": "79",
-			"text": "fächerübergreifender Kurs",
 			"schluessel": "FUEK",
+			"kuerzel": "FUEK",
+			"text": "fächerübergreifender Kurs",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "WB",
+				"gliederung": null
+			} ],
+			"nummer": "79",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "WB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "G",
 		"idStatistik": "34",
 		"historie": [ {
 			"id": 33000,
-			"kuerzel": "G",
-			"nummer": "01",
-			"text": "Grundebene/-kurs",
 			"schluessel": "G",
+			"kuerzel": "G",
+			"text": "Grundebene/-kurs",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": null
+			} ],
+			"nummer": "01",
 			"bemerkungen": null,
 			"kuerzelAllg": "DK",
 			"bezeichnungAllg": "Differenzierungskurs",
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "G_H",
 		"idStatistik": "35",
 		"historie": [ {
 			"id": 34000,
-			"kuerzel": "G_H",
-			"nummer": "13",
-			"text": "Grundkurs – Bildungsgang Hauptschule",
 			"schluessel": "G_H",
+			"kuerzel": "G_H",
+			"text": "Grundkurs – Bildungsgang Hauptschule",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GM",
+				"gliederung": "H"
+			}, {
+				"schulform": "H",
+				"gliederung": null
+			}, {
+				"schulform": "KS",
+				"gliederung": null
+			}, {
+				"schulform": "R",
+				"gliederung": "H"
+			}, {
+				"schulform": "SK",
+				"gliederung": "H"
+			}, {
+				"schulform": "S",
+				"gliederung": null
+			}, {
+				"schulform": "V",
+				"gliederung": null
+			} ],
+			"nummer": "13",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GM",
-					"gliederung": "H"
-				}, {
-					"schulform": "H",
-					"gliederung": null
-				}, {
-					"schulform": "R",
-					"gliederung": "H"
-				}, {
-					"schulform": "KS",
-					"gliederung": null
-				}, {
-					"schulform": "S",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": "H"
-				}, {
-					"schulform": "V",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "GKM",
 		"idStatistik": "36",
 		"historie": [ {
 			"id": 35000,
-			"kuerzel": "GKM",
-			"nummer": "71",
-			"text": "Grundkurs mündlich",
 			"schluessel": "GKM",
+			"kuerzel": "GKM",
+			"text": "Grundkurs mündlich",
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "WB",
+				"gliederung": null
+			} ],
+			"nummer": "71",
 			"bemerkungen": null,
 			"kuerzelAllg": "GK",
 			"bezeichnungAllg": "Grundkurs",
-			"erlaubtGOSt": true,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "WB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": 2022
+			"erlaubtGOSt": true
 		}, {
 			"id": 35001,
-			"kuerzel": "GKM",
-			"nummer": "71",
-			"text": "Grundkurs mündlich",
 			"schluessel": "GKM",
+			"kuerzel": "GKM",
+			"text": "Grundkurs mündlich",
+			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "WB",
+				"gliederung": null
+			} ],
+			"nummer": "71",
 			"bemerkungen": null,
 			"kuerzelAllg": "GK",
 			"bezeichnungAllg": "Grundkurs",
-			"erlaubtGOSt": true,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "WB",
-					"gliederung": null
-				} ],
-			"gueltigVon": 2023,
-			"gueltigBis": null
+			"erlaubtGOSt": true
 		} ]
 	}, {
 		"bezeichner": "GKS",
 		"idStatistik": "37",
 		"historie": [ {
 			"id": 36000,
-			"kuerzel": "GKS",
-			"nummer": "71",
-			"text": "Grundkurs schriftlich",
 			"schluessel": "GKS",
+			"kuerzel": "GKS",
+			"text": "Grundkurs schriftlich",
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "WB",
+				"gliederung": null
+			} ],
+			"nummer": "71",
 			"bemerkungen": null,
 			"kuerzelAllg": "GK",
 			"bezeichnungAllg": "Grundkurs",
-			"erlaubtGOSt": true,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "WB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": 2022
+			"erlaubtGOSt": true
 		}, {
 			"id": 36001,
-			"kuerzel": "GKS",
-			"nummer": "71",
-			"text": "Grundkurs schriftlich",
 			"schluessel": "GKS",
+			"kuerzel": "GKS",
+			"text": "Grundkurs schriftlich",
+			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "WB",
+				"gliederung": null
+			} ],
+			"nummer": "71",
 			"bemerkungen": null,
 			"kuerzelAllg": "GK",
 			"bezeichnungAllg": "Grundkurs",
-			"erlaubtGOSt": true,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "WB",
-					"gliederung": null
-				} ],
-			"gueltigVon": 2023,
-			"gueltigBis": null
+			"erlaubtGOSt": true
 		} ]
 	}, {
 		"bezeichner": "HU",
 		"idStatistik": "38",
 		"historie": [ {
 			"id": 37000,
-			"kuerzel": "HU",
-			"nummer": "99",
-			"text": "Hausunterricht",
 			"schluessel": "HU",
+			"kuerzel": "HU",
+			"text": "Hausunterricht",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "G",
+				"gliederung": null
+			}, {
+				"schulform": "H",
+				"gliederung": null
+			}, {
+				"schulform": "KS",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "R",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": null
+			}, {
+				"schulform": "SR",
+				"gliederung": null
+			}, {
+				"schulform": "S",
+				"gliederung": null
+			}, {
+				"schulform": "V",
+				"gliederung": null
+			}, {
+				"schulform": "WB",
+				"gliederung": null
+			} ],
+			"nummer": "99",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "G",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "H",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "R",
-					"gliederung": null
-				}, {
-					"schulform": "KS",
-					"gliederung": null
-				}, {
-					"schulform": "S",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": null
-				}, {
-					"schulform": "SR",
-					"gliederung": null
-				}, {
-					"schulform": "V",
-					"gliederung": null
-				}, {
-					"schulform": "WB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "KMFOE",
 		"idStatistik": "39",
 		"historie": [ {
 			"id": 38000,
-			"kuerzel": "KMFOE",
-			"nummer": "95",
-			"text": "Zusätzlicher Förderunterricht im Rahmen der Initiative Komm mit",
 			"schluessel": "KMFOE",
+			"kuerzel": "KMFOE",
+			"text": "Zusätzlicher Förderunterricht im Rahmen der Initiative Komm mit",
+			"gueltigVon": null,
+			"gueltigBis": 2021,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "H",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "R",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": null
+			}, {
+				"schulform": "SR",
+				"gliederung": null
+			}, {
+				"schulform": "V",
+				"gliederung": null
+			} ],
+			"nummer": "95",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "H",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "R",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": null
-				}, {
-					"schulform": "SR",
-					"gliederung": null
-				}, {
-					"schulform": "V",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": 2021
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "LK1",
 		"idStatistik": "40",
 		"historie": [ {
 			"id": 39000,
-			"kuerzel": "LK1",
-			"nummer": "72",
-			"text": "Leistungskurs I",
 			"schluessel": "LK1",
+			"kuerzel": "LK1",
+			"text": "Leistungskurs I",
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "WB",
+				"gliederung": null
+			} ],
+			"nummer": "72",
 			"bemerkungen": null,
 			"kuerzelAllg": "LK",
 			"bezeichnungAllg": "Leistungskurs",
-			"erlaubtGOSt": true,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "WB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": 2022
+			"erlaubtGOSt": true
 		}, {
 			"id": 39001,
-			"kuerzel": "LK1",
-			"nummer": "72",
-			"text": "Leistungskurs I",
 			"schluessel": "LK1",
+			"kuerzel": "LK1",
+			"text": "Leistungskurs I",
+			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "WB",
+				"gliederung": null
+			} ],
+			"nummer": "72",
 			"bemerkungen": null,
 			"kuerzelAllg": "LK",
 			"bezeichnungAllg": "Leistungskurs",
-			"erlaubtGOSt": true,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "WB",
-					"gliederung": null
-				} ],
-			"gueltigVon": 2023,
-			"gueltigBis": null
+			"erlaubtGOSt": true
 		} ]
 	}, {
 		"bezeichner": "LK2",
 		"idStatistik": "41",
 		"historie": [ {
 			"id": 40000,
-			"kuerzel": "LK2",
-			"nummer": "72",
-			"text": "Leistungskurs II",
 			"schluessel": "LK2",
+			"kuerzel": "LK2",
+			"text": "Leistungskurs II",
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "WB",
+				"gliederung": null
+			} ],
+			"nummer": "72",
 			"bemerkungen": null,
 			"kuerzelAllg": "LK",
 			"bezeichnungAllg": "Leistungskurs",
-			"erlaubtGOSt": true,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "WB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": 2022
+			"erlaubtGOSt": true
 		}, {
 			"id": 40001,
-			"kuerzel": "LK2",
-			"nummer": "72",
-			"text": "Leistungskurs II",
 			"schluessel": "LK2",
+			"kuerzel": "LK2",
+			"text": "Leistungskurs II",
+			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "WB",
+				"gliederung": null
+			} ],
+			"nummer": "72",
 			"bemerkungen": null,
 			"kuerzelAllg": "LK",
 			"bezeichnungAllg": "Leistungskurs",
-			"erlaubtGOSt": true,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "WB",
-					"gliederung": null
-				} ],
-			"gueltigVon": 2023,
-			"gueltigBis": null
+			"erlaubtGOSt": true
 		} ]
 	}, {
 		"bezeichner": "LRS",
 		"idStatistik": "42",
 		"historie": [ {
 			"id": 41000,
-			"kuerzel": "LRS",
-			"nummer": "82",
-			"text": "Schülerinnen und Schüler mit besonderen Schwierigkeiten im Erlernen des Lesens und Rechtschreibens (LRS)",
 			"schluessel": "LRS",
+			"kuerzel": "LRS",
+			"text": "Schülerinnen und Schüler mit besonderen Schwierigkeiten im Erlernen des Lesens und Rechtschreibens (LRS)",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "G",
+				"gliederung": null
+			}, {
+				"schulform": "H",
+				"gliederung": null
+			}, {
+				"schulform": "KS",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "R",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": null
+			}, {
+				"schulform": "SR",
+				"gliederung": null
+			}, {
+				"schulform": "S",
+				"gliederung": null
+			}, {
+				"schulform": "V",
+				"gliederung": null
+			} ],
+			"nummer": "82",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "G",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "H",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "R",
-					"gliederung": null
-				}, {
-					"schulform": "KS",
-					"gliederung": null
-				}, {
-					"schulform": "S",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": null
-				}, {
-					"schulform": "SR",
-					"gliederung": null
-				}, {
-					"schulform": "V",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "MEU",
 		"idStatistik": "43",
 		"historie": [ {
 			"id": 42000,
-			"kuerzel": "MEU",
-			"nummer": "84",
-			"text": "Unterricht in der Herkunftssprache",
 			"schluessel": "MEU",
+			"kuerzel": "MEU",
+			"text": "Unterricht in der Herkunftssprache",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "G",
+				"gliederung": null
+			}, {
+				"schulform": "H",
+				"gliederung": null
+			}, {
+				"schulform": "KS",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "R",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": null
+			}, {
+				"schulform": "SR",
+				"gliederung": null
+			}, {
+				"schulform": "S",
+				"gliederung": null
+			}, {
+				"schulform": "V",
+				"gliederung": null
+			} ],
+			"nummer": "84",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "G",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "H",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "R",
-					"gliederung": null
-				}, {
-					"schulform": "KS",
-					"gliederung": null
-				}, {
-					"schulform": "S",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": null
-				}, {
-					"schulform": "SR",
-					"gliederung": null
-				}, {
-					"schulform": "V",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "FDS",
 		"idStatistik": "44",
 		"historie": [ {
 			"id": 43000,
-			"kuerzel": "FDS",
-			"nummer": "85",
-			"text": "Förderung in der deutschen Sprache außerhalb von Sprachfördermaßnahmen",
 			"schluessel": "FDS",
+			"kuerzel": "FDS",
+			"text": "Förderung in der deutschen Sprache außerhalb von Sprachfördermaßnahmen",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "G",
+				"gliederung": null
+			}, {
+				"schulform": "H",
+				"gliederung": null
+			}, {
+				"schulform": "KS",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "R",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": null
+			}, {
+				"schulform": "SR",
+				"gliederung": null
+			}, {
+				"schulform": "S",
+				"gliederung": null
+			}, {
+				"schulform": "V",
+				"gliederung": null
+			} ],
+			"nummer": "85",
 			"bemerkungen": "gemäß Erlass 13-63 Nr. 3",
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "G",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "H",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "R",
-					"gliederung": null
-				}, {
-					"schulform": "KS",
-					"gliederung": null
-				}, {
-					"schulform": "S",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": null
-				}, {
-					"schulform": "SR",
-					"gliederung": null
-				}, {
-					"schulform": "V",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "NPG",
 		"idStatistik": "45",
 		"historie": [ {
 			"id": 44000,
-			"kuerzel": "NPG",
-			"nummer": "31",
-			"text": "Neigungs- und Projektgruppe",
 			"schluessel": "NPG",
+			"kuerzel": "NPG",
+			"text": "Neigungs- und Projektgruppe",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			} ],
+			"nummer": "31",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "PJK",
 		"idStatistik": "46",
 		"historie": [ {
 			"id": 45000,
-			"kuerzel": "PJK",
-			"nummer": "78",
-			"text": "Projektkurs",
 			"schluessel": "PJK",
+			"kuerzel": "PJK",
+			"text": "Projektkurs",
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			}, {
+				"schulform": "WB",
+				"gliederung": null
+			} ],
+			"nummer": "78",
 			"bemerkungen": "gemäß § 11 Abs. 8  APO - GOSt",
 			"kuerzelAllg": "PJK",
 			"bezeichnungAllg": "Projektkurs",
-			"erlaubtGOSt": true,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				}, {
-					"schulform": "WB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": 2022
+			"erlaubtGOSt": true
 		}, {
 			"id": 45001,
-			"kuerzel": "PJK",
-			"nummer": "78",
-			"text": "Projektkurs",
 			"schluessel": "PJK",
+			"kuerzel": "PJK",
+			"text": "Projektkurs",
+			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			}, {
+				"schulform": "WB",
+				"gliederung": null
+			} ],
+			"nummer": "78",
 			"bemerkungen": "gemäß § 11 Abs. 8  APO - GOSt",
 			"kuerzelAllg": "PJK",
 			"bezeichnungAllg": "Projektkurs",
-			"erlaubtGOSt": true,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				}, {
-					"schulform": "WB",
-					"gliederung": null
-				} ],
-			"gueltigVon": 2023,
-			"gueltigBis": null
+			"erlaubtGOSt": true
 		} ]
 	}, {
 		"bezeichner": "PROJ",
 		"idStatistik": "47",
 		"historie": [ {
 			"id": 46000,
-			"kuerzel": "PROJ",
-			"nummer": "55",
-			"text": "Profilklasse",
 			"schluessel": "PROJ",
+			"kuerzel": "PROJ",
+			"text": "Profilklasse",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": null
+			} ],
+			"nummer": "55",
 			"bemerkungen": "gemäß § 21 Abs. 3 APO-SI",
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "PUK",
 		"idStatistik": "48",
 		"historie": [ {
 			"id": 47000,
-			"kuerzel": "PUK",
-			"nummer": "99",
-			"text": "Unterricht im Klassenverband",
 			"schluessel": "PUK",
+			"kuerzel": "PUK",
+			"text": "Unterricht im Klassenverband",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "G",
+				"gliederung": null
+			}, {
+				"schulform": "H",
+				"gliederung": null
+			}, {
+				"schulform": "KS",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "R",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": null
+			}, {
+				"schulform": "SR",
+				"gliederung": null
+			}, {
+				"schulform": "S",
+				"gliederung": null
+			}, {
+				"schulform": "V",
+				"gliederung": null
+			} ],
+			"nummer": "99",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "G",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "H",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "R",
-					"gliederung": null
-				}, {
-					"schulform": "KS",
-					"gliederung": null
-				}, {
-					"schulform": "S",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": null
-				}, {
-					"schulform": "SR",
-					"gliederung": null
-				}, {
-					"schulform": "V",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "PUT",
 		"idStatistik": "49",
 		"historie": [ {
 			"id": 48000,
-			"kuerzel": "PUT",
-			"nummer": "00",
-			"text": "Pflichtunterricht für Teile von Klassen",
 			"schluessel": "PUT",
+			"kuerzel": "PUT",
+			"text": "Pflichtunterricht für Teile von Klassen",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "FW",
+				"gliederung": null
+			}, {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "G",
+				"gliederung": null
+			}, {
+				"schulform": "HI",
+				"gliederung": null
+			}, {
+				"schulform": "H",
+				"gliederung": null
+			}, {
+				"schulform": "KS",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "R",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": null
+			}, {
+				"schulform": "SR",
+				"gliederung": null
+			}, {
+				"schulform": "S",
+				"gliederung": null
+			}, {
+				"schulform": "V",
+				"gliederung": null
+			}, {
+				"schulform": "WB",
+				"gliederung": null
+			}, {
+				"schulform": "WF",
+				"gliederung": null
+			} ],
+			"nummer": "00",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "FW",
-					"gliederung": null
-				}, {
-					"schulform": "HI",
-					"gliederung": null
-				}, {
-					"schulform": "WF",
-					"gliederung": null
-				}, {
-					"schulform": "G",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "H",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "R",
-					"gliederung": null
-				}, {
-					"schulform": "KS",
-					"gliederung": null
-				}, {
-					"schulform": "S",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": null
-				}, {
-					"schulform": "SR",
-					"gliederung": null
-				}, {
-					"schulform": "V",
-					"gliederung": null
-				}, {
-					"schulform": "WB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "SF",
 		"idStatistik": "50",
 		"historie": [ {
 			"id": 49000,
-			"kuerzel": "SF",
-			"nummer": "42",
-			"text": "Stütz- oder Förderkurs",
 			"schluessel": "SF",
+			"kuerzel": "SF",
+			"text": "Stütz- oder Förderkurs",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			} ],
+			"nummer": "42",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "SLP",
 		"idStatistik": "51",
 		"historie": [ {
 			"id": 50000,
-			"kuerzel": "SLP",
-			"nummer": "44",
-			"text": "Selbstlernphase",
 			"schluessel": "SLP",
+			"kuerzel": "SLP",
+			"text": "Selbstlernphase",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			} ],
+			"nummer": "44",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "SPA",
 		"idStatistik": "52",
 		"historie": [ {
 			"id": 51000,
-			"kuerzel": "SPA",
-			"nummer": "63",
-			"text": "Wahlpflichtunterricht: Schwerpunktübergreifende Angebote",
 			"schluessel": "SPA",
+			"kuerzel": "SPA",
+			"text": "Wahlpflichtunterricht: Schwerpunktübergreifende Angebote",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": "GY"
+			}, {
+				"schulform": "GM",
+				"gliederung": "GY"
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": "GY"
+			} ],
+			"nummer": "63",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GE",
-					"gliederung": "GY"
-				}, {
-					"schulform": "GM",
-					"gliederung": "GY"
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": "GY"
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "SPFU",
 		"idStatistik": "53",
 		"historie": [ {
 			"id": 52000,
-			"kuerzel": "SPFU",
-			"nummer": "81",
-			"text": "Sportförderunterricht",
 			"schluessel": "SPFU",
+			"kuerzel": "SPFU",
+			"text": "Sportförderunterricht",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "G",
+				"gliederung": null
+			}, {
+				"schulform": "H",
+				"gliederung": null
+			}, {
+				"schulform": "KS",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "R",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": null
+			}, {
+				"schulform": "SR",
+				"gliederung": null
+			}, {
+				"schulform": "S",
+				"gliederung": null
+			}, {
+				"schulform": "V",
+				"gliederung": null
+			} ],
+			"nummer": "81",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "G",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "H",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "R",
-					"gliederung": null
-				}, {
-					"schulform": "KS",
-					"gliederung": null
-				}, {
-					"schulform": "S",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": null
-				}, {
-					"schulform": "SR",
-					"gliederung": null
-				}, {
-					"schulform": "V",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "SPF",
 		"idStatistik": "54",
 		"historie": [ {
 			"id": 53000,
-			"kuerzel": "SPF",
-			"nummer": "99",
-			"text": "sonderpädagogische Förderung",
 			"schluessel": "SPF",
+			"kuerzel": "SPF",
+			"text": "sonderpädagogische Förderung",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "KS",
+				"gliederung": null
+			}, {
+				"schulform": "S",
+				"gliederung": null
+			} ],
+			"nummer": "99",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "KS",
-					"gliederung": null
-				}, {
-					"schulform": "S",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "SWFB",
 		"idStatistik": "55",
 		"historie": [ {
 			"id": 54000,
-			"kuerzel": "SWFB",
-			"nummer": "01",
-			"text": "Stützunterricht Wahlbereich - fachbezogen",
 			"schluessel": "SWFB",
+			"kuerzel": "SWFB",
+			"text": "Stützunterricht Wahlbereich - fachbezogen",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			} ],
+			"nummer": "01",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "SWFW",
 		"idStatistik": "56",
 		"historie": [ {
 			"id": 55000,
-			"kuerzel": "SWFW",
-			"nummer": "02",
-			"text": "Stützunterricht Wahlbereich - fachübergreifend",
 			"schluessel": "SWFW",
+			"kuerzel": "SWFW",
+			"text": "Stützunterricht Wahlbereich - fachübergreifend",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			} ],
+			"nummer": "02",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "TAL",
 		"idStatistik": "57",
 		"historie": [ {
 			"id": 56000,
-			"kuerzel": "TAL",
-			"nummer": "91",
-			"text": "Unterricht im Rahmen des Schulversuchs Talentschule",
 			"schluessel": "TAL",
+			"kuerzel": "TAL",
+			"text": "Unterricht im Rahmen des Schulversuchs Talentschule",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "H",
+				"gliederung": null
+			}, {
+				"schulform": "R",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": null
+			} ],
+			"nummer": "91",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "H",
-					"gliederung": null
-				}, {
-					"schulform": "R",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "UMPF",
 		"idStatistik": "58",
 		"historie": [ {
 			"id": 57000,
-			"kuerzel": "UMPF",
-			"nummer": "56",
-			"text": "Unterricht in der Herkunftssprache anstelle einer Pflichtfremdsprache oder eines Wahlpflichtfaches",
 			"schluessel": "UMPF",
+			"kuerzel": "UMPF",
+			"text": "Unterricht in der Herkunftssprache anstelle einer Pflichtfremdsprache oder eines Wahlpflichtfaches",
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "H",
+				"gliederung": "R"
+			}, {
+				"schulform": "KS",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "R",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": null
+			}, {
+				"schulform": "SR",
+				"gliederung": null
+			}, {
+				"schulform": "S",
+				"gliederung": null
+			}, {
+				"schulform": "V",
+				"gliederung": null
+			} ],
+			"nummer": "56",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "H",
-					"gliederung": "R"
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "R",
-					"gliederung": null
-				}, {
-					"schulform": "KS",
-					"gliederung": null
-				}, {
-					"schulform": "S",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": null
-				}, {
-					"schulform": "SR",
-					"gliederung": null
-				}, {
-					"schulform": "V",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": 2022
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "VSU",
 		"idStatistik": "59",
 		"historie": [ {
 			"id": 58000,
-			"kuerzel": "VSU",
-			"nummer": "17",
-			"text": "Förderunterricht",
 			"schluessel": "VSU",
+			"kuerzel": "VSU",
+			"text": "Förderunterricht",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "H",
+				"gliederung": null
+			}, {
+				"schulform": "R",
+				"gliederung": "H"
+			}, {
+				"schulform": "SK",
+				"gliederung": "H"
+			}, {
+				"schulform": "V",
+				"gliederung": null
+			} ],
+			"nummer": "17",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "H",
-					"gliederung": null
-				}, {
-					"schulform": "R",
-					"gliederung": "H"
-				}, {
-					"schulform": "SK",
-					"gliederung": "H"
-				}, {
-					"schulform": "V",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "VTF",
 		"idStatistik": "60",
 		"historie": [ {
 			"id": 59000,
-			"kuerzel": "VTF",
-			"nummer": "77",
-			"text": "Vertiefungsfach",
 			"schluessel": "VTF",
+			"kuerzel": "VTF",
+			"text": "Vertiefungsfach",
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "WB",
+				"gliederung": null
+			} ],
+			"nummer": "77",
 			"bemerkungen": "gemäß § 8, 11  APO - GOSt",
 			"kuerzelAllg": "VTF",
 			"bezeichnungAllg": "Vertiefungskurs",
-			"erlaubtGOSt": true,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "WB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": 2022
+			"erlaubtGOSt": true
 		}, {
 			"id": 59001,
-			"kuerzel": "VTF",
-			"nummer": "77",
-			"text": "Vertiefungsfach",
 			"schluessel": "VTF",
+			"kuerzel": "VTF",
+			"text": "Vertiefungsfach",
+			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "WB",
+				"gliederung": null
+			} ],
+			"nummer": "77",
 			"bemerkungen": "gemäß § 8, 11  APO - GOSt",
 			"kuerzelAllg": "VTF",
 			"bezeichnungAllg": "Vertiefungskurs",
-			"erlaubtGOSt": true,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "WB",
-					"gliederung": null
-				} ],
-			"gueltigVon": 2023,
-			"gueltigBis": null
+			"erlaubtGOSt": true
 		} ]
 	}, {
 		"bezeichner": "VUW",
 		"idStatistik": "61",
 		"historie": [ {
 			"id": 60000,
-			"kuerzel": "VUW",
-			"nummer": "21",
-			"text": "Vertiefungsunterricht Wahlbereich - berufsfeld- / berufsbezogener fachpraxisorientierter Kurs",
 			"schluessel": "VUW",
+			"kuerzel": "VUW",
+			"text": "Vertiefungsunterricht Wahlbereich - berufsfeld- / berufsbezogener fachpraxisorientierter Kurs",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			} ],
+			"nummer": "21",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "WP",
 		"idStatistik": "62",
 		"historie": [ {
 			"id": 61000,
-			"kuerzel": "WP",
-			"nummer": "27",
-			"text": "Wahlpflichtbereich",
 			"schluessel": "WP",
+			"kuerzel": "WP",
+			"text": "Wahlpflichtbereich",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "WB",
+				"gliederung": null
+			} ],
+			"nummer": "27",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "WB",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "WP1FS",
 		"idStatistik": "63",
 		"historie": [ {
 			"id": 62000,
-			"kuerzel": "WP1FS",
-			"nummer": "61",
-			"text": "Wahlpflichtbereich: Fremdsprachlich",
 			"schluessel": "WP1FS",
+			"kuerzel": "WP1FS",
+			"text": "Wahlpflichtbereich: Fremdsprachlich",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": "GY"
+			}, {
+				"schulform": "GM",
+				"gliederung": "GY"
+			}, {
+				"schulform": "GM",
+				"gliederung": "R"
+			}, {
+				"schulform": "H",
+				"gliederung": "R"
+			}, {
+				"schulform": "KS",
+				"gliederung": "R"
+			}, {
+				"schulform": "R",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": "GY"
+			}, {
+				"schulform": "SK",
+				"gliederung": "R"
+			}, {
+				"schulform": "S",
+				"gliederung": "R"
+			}, {
+				"schulform": "SR",
+				"gliederung": null
+			} ],
+			"nummer": "61",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GE",
-					"gliederung": "GY"
-				}, {
-					"schulform": "GM",
-					"gliederung": "GY"
-				}, {
-					"schulform": "GM",
-					"gliederung": "R"
-				}, {
-					"schulform": "H",
-					"gliederung": "R"
-				}, {
-					"schulform": "R",
-					"gliederung": null
-				}, {
-					"schulform": "KS",
-					"gliederung": "R"
-				}, {
-					"schulform": "S",
-					"gliederung": "R"
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": "GY"
-				}, {
-					"schulform": "SK",
-					"gliederung": "R"
-				}, {
-					"schulform": "SR",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "WP1MU",
 		"idStatistik": "64",
 		"historie": [ {
 			"id": 63000,
-			"kuerzel": "WP1MU",
-			"nummer": "64",
-			"text": "Wahlpflichtbereich: Musisch-künstlerisch",
 			"schluessel": "WP1MU",
+			"kuerzel": "WP1MU",
+			"text": "Wahlpflichtbereich: Musisch-künstlerisch",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GM",
+				"gliederung": "R"
+			}, {
+				"schulform": "H",
+				"gliederung": "R"
+			}, {
+				"schulform": "KS",
+				"gliederung": "R"
+			}, {
+				"schulform": "R",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": "R"
+			}, {
+				"schulform": "S",
+				"gliederung": "R"
+			}, {
+				"schulform": "SR",
+				"gliederung": null
+			} ],
+			"nummer": "64",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GM",
-					"gliederung": "R"
-				}, {
-					"schulform": "H",
-					"gliederung": "R"
-				}, {
-					"schulform": "R",
-					"gliederung": null
-				}, {
-					"schulform": "KS",
-					"gliederung": "R"
-				}, {
-					"schulform": "S",
-					"gliederung": "R"
-				}, {
-					"schulform": "SK",
-					"gliederung": "R"
-				}, {
-					"schulform": "SR",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "WP1NT",
 		"idStatistik": "65",
 		"historie": [ {
 			"id": 64000,
-			"kuerzel": "WP1NT",
-			"nummer": "63",
-			"text": "Wahlpflichtbereich: Naturwissenschaftlich - technisch",
 			"schluessel": "WP1NT",
+			"kuerzel": "WP1NT",
+			"text": "Wahlpflichtbereich: Naturwissenschaftlich - technisch",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GM",
+				"gliederung": "R"
+			}, {
+				"schulform": "H",
+				"gliederung": "R"
+			}, {
+				"schulform": "KS",
+				"gliederung": "R"
+			}, {
+				"schulform": "R",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": "R"
+			}, {
+				"schulform": "S",
+				"gliederung": "R"
+			}, {
+				"schulform": "SR",
+				"gliederung": null
+			} ],
+			"nummer": "63",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GM",
-					"gliederung": "R"
-				}, {
-					"schulform": "H",
-					"gliederung": "R"
-				}, {
-					"schulform": "R",
-					"gliederung": null
-				}, {
-					"schulform": "KS",
-					"gliederung": "R"
-				}, {
-					"schulform": "S",
-					"gliederung": "R"
-				}, {
-					"schulform": "SK",
-					"gliederung": "R"
-				}, {
-					"schulform": "SR",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "WP1SW",
 		"idStatistik": "66",
 		"historie": [ {
 			"id": 65000,
-			"kuerzel": "WP1SW",
-			"nummer": "62",
-			"text": "Wahlpflichtbereich: Sozialwissenschaftlich",
 			"schluessel": "WP1SW",
+			"kuerzel": "WP1SW",
+			"text": "Wahlpflichtbereich: Sozialwissenschaftlich",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": "GY"
+			}, {
+				"schulform": "GM",
+				"gliederung": "R"
+			}, {
+				"schulform": "H",
+				"gliederung": "R"
+			}, {
+				"schulform": "KS",
+				"gliederung": "R"
+			}, {
+				"schulform": "R",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": "R"
+			}, {
+				"schulform": "S",
+				"gliederung": "R"
+			}, {
+				"schulform": "SR",
+				"gliederung": null
+			} ],
+			"nummer": "62",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GE",
-					"gliederung": "GY"
-				}, {
-					"schulform": "GM",
-					"gliederung": "R"
-				}, {
-					"schulform": "H",
-					"gliederung": "R"
-				}, {
-					"schulform": "R",
-					"gliederung": null
-				}, {
-					"schulform": "KS",
-					"gliederung": "R"
-				}, {
-					"schulform": "S",
-					"gliederung": "R"
-				}, {
-					"schulform": "SK",
-					"gliederung": "R"
-				}, {
-					"schulform": "SR",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "WP1WW",
 		"idStatistik": "67",
 		"historie": [ {
 			"id": 66000,
-			"kuerzel": "WP1WW",
-			"nummer": "68",
-			"text": "Wahlpflichtbereich: Wirtschaftlich",
 			"schluessel": "WP1WW",
+			"kuerzel": "WP1WW",
+			"text": "Wahlpflichtbereich: Wirtschaftlich",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GM",
+				"gliederung": "R"
+			}, {
+				"schulform": "H",
+				"gliederung": "R"
+			}, {
+				"schulform": "KS",
+				"gliederung": "R"
+			}, {
+				"schulform": "R",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": "R"
+			}, {
+				"schulform": "S",
+				"gliederung": "R"
+			}, {
+				"schulform": "SR",
+				"gliederung": null
+			} ],
+			"nummer": "68",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GM",
-					"gliederung": "R"
-				}, {
-					"schulform": "H",
-					"gliederung": "R"
-				}, {
-					"schulform": "R",
-					"gliederung": null
-				}, {
-					"schulform": "KS",
-					"gliederung": "R"
-				}, {
-					"schulform": "S",
-					"gliederung": "R"
-				}, {
-					"schulform": "SK",
-					"gliederung": "R"
-				}, {
-					"schulform": "SR",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
-	}, {
+	},{
+		"bezeichner": "WP1SP",
+		"idStatistik": "76",
+		"historie": [ {
+			"id": 75000,
+			"schluessel": "WP1SP",
+			"kuerzel": "WP1SP",
+			"text": "Wahlpflichtbereich: Sportlich",
+			"gueltigVon": 2026,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GM",
+				"gliederung": "R"
+			}, {
+				"schulform": "H",
+				"gliederung": "R"
+			}, {
+				"schulform": "KS",
+				"gliederung": "R"
+			}, {
+				"schulform": "R",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": "R"
+			}, {
+				"schulform": "S",
+				"gliederung": "R"
+			}, {
+				"schulform": "SR",
+				"gliederung": null
+			} ],
+			"nummer": "69",
+			"bemerkungen": null,
+			"kuerzelAllg": null,
+			"bezeichnungAllg": null,
+			"erlaubtGOSt": false
+		} ]
+	},{
 		"bezeichner": "WPF",
 		"idStatistik": "68",
 		"historie": [ {
 			"id": 67000,
-			"kuerzel": "WPF",
-			"nummer": "29",
-			"text": "Wahlpflichtfach",
 			"schluessel": "WPF",
+			"kuerzel": "WPF",
+			"text": "Wahlpflichtfach",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "H",
+				"gliederung": null
+			}, {
+				"schulform": "KS",
+				"gliederung": null
+			}, {
+				"schulform": "R",
+				"gliederung": "H"
+			}, {
+				"schulform": "SK",
+				"gliederung": "H"
+			}, {
+				"schulform": "S",
+				"gliederung": null
+			}, {
+				"schulform": "V",
+				"gliederung": null
+			} ],
+			"nummer": "29",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "H",
-					"gliederung": null
-				}, {
-					"schulform": "R",
-					"gliederung": "H"
-				}, {
-					"schulform": "KS",
-					"gliederung": null
-				}, {
-					"schulform": "S",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": "H"
-				}, {
-					"schulform": "V",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "WPI",
 		"idStatistik": "69",
 		"historie": [ {
 			"id": 68000,
-			"kuerzel": "WPI",
-			"nummer": "10",
-			"text": "Wahlpflichtbereich I",
 			"schluessel": "WPI",
+			"kuerzel": "WPI",
+			"text": "Wahlpflichtbereich I",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": null
+			} ],
+			"nummer": "10",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "WPIGY",
 		"idStatistik": "70",
 		"historie": [ {
 			"id": 69000,
-			"kuerzel": "WPIGY",
-			"nummer": "61",
-			"text": "Wahlpflichtbereich I: 2. Fremdsprache",
 			"schluessel": "WPIGY",
+			"kuerzel": "WPIGY",
+			"text": "Wahlpflichtbereich I: 2. Fremdsprache",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GY",
+				"gliederung": null
+			} ],
+			"nummer": "61",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GY",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "WPII",
 		"idStatistik": "71",
 		"historie": [ {
 			"id": 70000,
-			"kuerzel": "WPII",
-			"nummer": "62",
-			"text": "Wahlpflichtbereich II - Fächerkombination im math.-naturwiss, gesellschaftswiss. oder künstlerischen Schwerpunkt",
 			"schluessel": "WPII",
+			"kuerzel": "WPII",
+			"text": "Wahlpflichtbereich II - Fächerkombination im math.-naturwiss, gesellschaftswiss. oder künstlerischen Schwerpunkt",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GM",
+				"gliederung": "GY"
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "H",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": "GY"
+			} ],
+			"nummer": "62",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GM",
-					"gliederung": "GY"
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "H",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": "GY"
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "WPU",
 		"idStatistik": "72",
 		"historie": [ {
 			"id": 71000,
-			"kuerzel": "WPU",
-			"nummer": "26",
-			"text": "Wahlpflichtunterricht",
 			"schluessel": "WPU",
+			"kuerzel": "WPU",
+			"text": "Wahlpflichtunterricht",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GM",
+				"gliederung": "H"
+			}, {
+				"schulform": "H",
+				"gliederung": null
+			}, {
+				"schulform": "KS",
+				"gliederung": null
+			}, {
+				"schulform": "R",
+				"gliederung": "H"
+			}, {
+				"schulform": "SK",
+				"gliederung": "H"
+			}, {
+				"schulform": "S",
+				"gliederung": null
+			}, {
+				"schulform": "V",
+				"gliederung": null
+			} ],
+			"nummer": "26",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": false,
-			"zulaessig": [ {
-					"schulform": "GM",
-					"gliederung": "H"
-				}, {
-					"schulform": "H",
-					"gliederung": null
-				}, {
-					"schulform": "R",
-					"gliederung": "H"
-				}, {
-					"schulform": "KS",
-					"gliederung": null
-				}, {
-					"schulform": "S",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": "H"
-				}, {
-					"schulform": "V",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": false
 		} ]
 	}, {
 		"bezeichner": "ZK",
 		"idStatistik": "73",
 		"historie": [ {
 			"id": 72000,
-			"kuerzel": "ZK",
-			"nummer": "76",
-			"text": "Zusatzkurs",
 			"schluessel": "ZK",
+			"kuerzel": "ZK",
+			"text": "Zusatzkurs",
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			} ],
+			"nummer": "76",
 			"bemerkungen": "gemäß § 12 APO-GOSt",
 			"kuerzelAllg": "ZK",
 			"bezeichnungAllg": "Zusatzkurs",
-			"erlaubtGOSt": true,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": 2022
+			"erlaubtGOSt": true
 		}, {
 			"id": 72001,
-			"kuerzel": "ZK",
-			"nummer": "76",
-			"text": "Zusatzkurs",
 			"schluessel": "ZK",
+			"kuerzel": "ZK",
+			"text": "Zusatzkurs",
+			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			} ],
+			"nummer": "76",
 			"bemerkungen": "gemäß § 12 APO-GOSt",
 			"kuerzelAllg": "ZK",
 			"bezeichnungAllg": "Zusatzkurs",
-			"erlaubtGOSt": true,
-			"zulaessig": [ {
-					"schulform": "BK",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "SB",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				} ],
-			"gueltigVon": 2023,
-			"gueltigBis": null
+			"erlaubtGOSt": true
 		} ]
 	}, {
 		"bezeichner": "ZUV",
 		"idStatistik": "74",
 		"historie": [ {
 			"id": 73000,
-			"kuerzel": "ZUV",
-			"nummer": "99",
-			"text": "zusätzliche Unterrichtsveranstaltung",
 			"schluessel": "ZUV",
+			"kuerzel": "ZUV",
+			"text": "zusätzliche Unterrichtsveranstaltung",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "G",
+				"gliederung": null
+			}, {
+				"schulform": "H",
+				"gliederung": null
+			}, {
+				"schulform": "KS",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "R",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": null
+			}, {
+				"schulform": "SR",
+				"gliederung": null
+			}, {
+				"schulform": "S",
+				"gliederung": null
+			}, {
+				"schulform": "V",
+				"gliederung": null
+			} ],
+			"nummer": "99",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
 			"bezeichnungAllg": null,
-			"erlaubtGOSt": true,
-			"zulaessig": [ {
-					"schulform": "G",
-					"gliederung": null
-				}, {
-					"schulform": "GE",
-					"gliederung": null
-				}, {
-					"schulform": "GM",
-					"gliederung": null
-				}, {
-					"schulform": "GY",
-					"gliederung": null
-				}, {
-					"schulform": "H",
-					"gliederung": null
-				}, {
-					"schulform": "PS",
-					"gliederung": null
-				}, {
-					"schulform": "R",
-					"gliederung": null
-				}, {
-					"schulform": "KS",
-					"gliederung": null
-				}, {
-					"schulform": "S",
-					"gliederung": null
-				}, {
-					"schulform": "SG",
-					"gliederung": null
-				}, {
-					"schulform": "SK",
-					"gliederung": null
-				}, {
-					"schulform": "SR",
-					"gliederung": null
-				}, {
-					"schulform": "V",
-					"gliederung": null
-				} ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"erlaubtGOSt": true
 		} ]
-	} ]
+	}, 
+	{
+		"bezeichner": "DF",
+		"idStatistik": "75",
+		"historie": [ {
+			"id": 74000,
+			"schluessel": "DF",
+			"kuerzel": "DF",
+			"text": "Förderung neu zugewanderter Schülerinnen und Schüler in Deutschfördergruppen",
+			"gueltigVon": 2026,
+			"gueltigBis": null,
+			"zulaessig": [ {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GM",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "G",
+				"gliederung": null
+			}, {
+				"schulform": "H",
+				"gliederung": null
+			}, {
+				"schulform": "KS",
+				"gliederung": null
+			}, {
+				"schulform": "PS",
+				"gliederung": null
+			}, {
+				"schulform": "R",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "SK",
+				"gliederung": null
+			}, {
+				"schulform": "SR",
+				"gliederung": null
+			}, {
+				"schulform": "S",
+				"gliederung": null
+			}, {
+				"schulform": "V",
+				"gliederung": null
+			} ],
+			"nummer": "98",
+			"bemerkungen": "gemäß Erlass 13-63 Nr. 3",
+			"kuerzelAllg": null,
+			"bezeichnungAllg": null,
+			"erlaubtGOSt": false
+		} ]
+	}
+	]
 }

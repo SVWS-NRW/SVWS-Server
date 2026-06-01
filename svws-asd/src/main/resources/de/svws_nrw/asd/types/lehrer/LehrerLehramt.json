@@ -1,5 +1,5 @@
 {
-	"version": 3,
+	"version": 4,
 	"daten": [ {
 		"bezeichner": "ID_00",
 		"idStatistik": "1",
@@ -284,6 +284,13 @@
 			"kuerzel": "52",
 			"text": "Fachlehrer/-in in der Laufbahn des Werkstattlehrers (§ 36 LVO)",
 			"gueltigVon": null,
+			"gueltigBis": 2025
+		}, {
+			"id": 132,
+			"schluessel": "52",
+			"kuerzel": "52",
+			"text": "Fachlehrer/-in in der Laufbahn des Werkstattlehrers (§ 34 LVO)",
+			"gueltigVon": 2026,
 			"gueltigBis": null
 		} ]
 	}, {

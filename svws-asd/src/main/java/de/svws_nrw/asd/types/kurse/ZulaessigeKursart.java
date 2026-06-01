@@ -91,6 +91,9 @@ public enum ZulaessigeKursart implements CoreType<ZulaessigeKursartKatalogEintra
 	/** Kursart Förderangebot Ganztagsschule */
 	FOGT,
 
+	/** Kursart Förderung neu zugewanderter Schüler in Deutschfördergruppen */
+	DF,
+
 	/** Kursart Förderung neu zugewanderter Schüler in Deutschfördergruppen (teilweise äußere und innere Differenzierung) */
 	DFG,
 
@@ -219,6 +222,9 @@ public enum ZulaessigeKursart implements CoreType<ZulaessigeKursartKatalogEintra
 
 	/** Kursart Wahlpflichtbereich: Wirtschaftlich */
 	WP1WW,
+
+	/** Kursart Wahlpflichtbereich: Sportlich */
+	WP1SP,
 
 	/** Kursart Wahlpflichtfach */
 	WPF,

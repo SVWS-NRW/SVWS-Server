@@ -35,7 +35,7 @@ class TestZulaessigeKursart {
 	@Test
 	@DisplayName("Teste CoreType ZulaessigeKursart: Anzahl der vorhandenen Werte.")
 	void testZulaessigeKursart_AnzahlEintraege() {
-		assertEquals(74, ZulaessigeKursart.data().getWerte().size());
+		assertEquals(76, ZulaessigeKursart.data().getWerte().size());
 	}
 
 	/**
