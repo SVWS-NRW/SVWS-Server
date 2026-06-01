@@ -23,7 +23,7 @@ test('Admins können entsprechende Bereiche im STABLE Mode einsehen', async ({ p
 	await expect(page.getByText('Staatsangehörigkeit und Konfession')).toBeVisible();
 	await expect(page.getByText('Migrationshintergrund', { exact: true })).toBeVisible();
 	await expect(page.getByRole('combobox', { name: 'Fahrschüler' })).toBeVisible();
-	expect(await page.getByRole('combobox', { name: 'Konfession' }).inputValue()).toBe("evangelisch");
+	await expect(page.getByRole('combobox', { name: 'Konfession' }).locator('xpath=..').locator('.ui-select--selection')).toContainText('evangelisch');
 
 
 	await expect(page.getByRole('button', { name: 'Lernabschnitte' })).toBeVisible();

@@ -1,9 +1,11 @@
-import type { SchuelerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag, FoerderschwerpunktEintrag, ReligionEintrag, SchulEintrag, BenutzerKompetenz,
-	Telefonart, SchuelerTelefon, List, Haltestelle, Fahrschuelerart, ApiFile, ReportingParameter, SimpleOperationResponse } from "@core";
+import type { SchuelerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag, FoerderschwerpunktEintrag,
+	ReligionEintrag, SchulEintrag, Schulform, ServerMode, BenutzerKompetenz, Telefonart, SchuelerTelefon,
+	List, Haltestelle, Fahrschuelerart,	ApiFile, ReportingParameter, SimpleOperationResponse, ValidatorKontext } from "@core";
 import type { SchuelerListeManager } from "@ui";
 
 export interface SchuelerIndividualdatenProps {
 	patch: (data: Partial<SchuelerStammdaten>) => Promise<boolean>;
+	validatorKontext: () => ValidatorKontext;
 	schuelerListeManager: () => SchuelerListeManager;
 	mapSchulen: Map<string, SchulEintrag>;
 	orteById: Map<number, OrtKatalogEintrag>;
@@ -17,6 +19,8 @@ export interface SchuelerIndividualdatenProps {
 	addSchuelerTelefoneintrag: (data: Partial<SchuelerTelefon>, idSchueler: number) => Promise<void>;
 	patchSchuelerTelefoneintrag: (data: Partial<SchuelerTelefon>, idEintrag: number) => Promise<void>;
 	deleteSchuelerTelefoneintrage: (idsEintraege: List<number>) => Promise<void>;
+	schulform: Schulform;
+	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	autofocus: boolean;
 	getPDF: (parameter: ReportingParameter) => Promise<ApiFile>;

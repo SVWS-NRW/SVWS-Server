@@ -7,13 +7,13 @@ import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteS
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { routeApp } from "~/router/apps/RouteApp";
 import { api } from "~/router/Api";
-import { type SchuelerIndividualdatenGruppenprozesseProps } from "~/components/schueler/individualdaten/SSchuelerIndividualdatenGruppenprozesseProps";
+import { type SchuelerIndividualdatenGruppenprozesseProps } from "~/components/schueler/individualdaten/SchuelerIndividualdatenGruppenprozesseProps";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteDataSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteDataSchuelerIndividualdaten";
 import { routeError } from "~/router/error/RouteError";
 import { serverState } from "~/states/ServerStateImpl";
 
-const SSchuelerIndividualdatenGruppenprozesse = () => import("~/components/schueler/individualdaten/SSchuelerIndividualdatenGruppenprozesse.vue");
+const SSchuelerIndividualdatenGruppenprozesse = () => import("~/components/schueler/individualdaten/SchuelerIndividualdatenGruppenprozesse.vue");
 
 export class RouteSchuelerIndividualdatenGruppenprozesse extends RouteNode<RouteDataSchuelerIndividualdaten, RouteSchueler> {
 

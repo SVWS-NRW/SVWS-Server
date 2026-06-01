@@ -180,7 +180,7 @@
 
 	import type { Fahrschuelerart } from "@core";
 	import { BenutzerKompetenz, Nationalitaeten, SchuelerStatus, Schulform, Verkehrssprache } from "@core";
-	import type { SchuelerIndividualdatenGruppenprozesseProps } from "~/components/schueler/individualdaten/SSchuelerIndividualdatenGruppenprozesseProps";
+	import type { SchuelerIndividualdatenGruppenprozesseProps } from "~/components/schueler/individualdaten/SchuelerIndividualdatenGruppenprozesseProps";
 	import { computed, ref, watch, toRefs } from "vue";
 	import { CoreTypeSelectManager, SelectManager } from "@ui";
 
