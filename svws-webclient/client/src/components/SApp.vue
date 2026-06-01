@@ -62,7 +62,7 @@
 				<div class="h-full flex flex-col">
 					<div class="secondary-menu--headline">
 						<h1> {{ menu.mainEntry.text }} </h1>
-						<div><abschnitt-auswahl :daten="schuljahresabschnittsauswahl" /></div>
+						<div><abschnitt-auswahl :disabled="menu.current.name.startsWith('notenmodul')" :daten="schuljahresabschnittsauswahl" /></div>
 					</div>
 					<div class="secondary-menu--header" />
 					<div class="secondary-menu--content">
