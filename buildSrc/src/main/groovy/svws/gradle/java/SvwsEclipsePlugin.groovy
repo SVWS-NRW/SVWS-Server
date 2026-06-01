@@ -123,9 +123,6 @@ class SvwsEclipsePlugin implements Plugin<Project> {
 	void configureEclipseApt() {
 		def gp = project
 		gp.plugins.withId('com.diffplug.eclipse.apt') {
-			gp.sourceSets.main.java.srcDirs += '.apt_generated'
-			gp.sourceSets.test.java.srcDirs += '.apt_generated_tests'
-
 			gp.eclipse {
 				synchronizationTasks 'eclipseJdt', 'eclipseJdtApt', 'eclipseFactorypath'
 			}
