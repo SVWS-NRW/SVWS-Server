@@ -579,34 +579,4 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		api.status.stop();
 	};
 
-	getPDF = api.call(async (title: DownloadPDFTypen): Promise<ApiFile> => {
-		const istKlausurplan = title.startsWith("Klausurplan", 0);
-
-		const reportvorlage = istKlausurplan
-			? ReportingReportvorlage.GOST_KLAUSURPLANUNG_V_KLAUSURTERMINE_MIT_KURSEN
-			: ReportingReportvorlage.GOST_KLAUSURPLANUNG_V_SCHUELER_MIT_KLAUSUREN;
-
-		const reportingParameter = reportvorlage.getReportingParameter();
-
-		if (istKlausurplan) {
-			const istDetailliert = title.indexOf("detailliert") > 0;
-			reportvorlage.setReportingParameterVorlageparameter(reportingParameter, "mitKursklausuren", ((title.indexOf("Kurse") > 0) || istDetailliert).toString());
-			reportvorlage.setReportingParameterVorlageparameter(reportingParameter, "mitNachschreibern", ((title.indexOf("Nachschreiber") > 0) || istDetailliert).toString());
-			reportvorlage.setReportingParameterVorlageparameter(reportingParameter, "mitKlausurschreiberNamen", istDetailliert.toString());
-		}
-
-		reportvorlage.setReportingParameterVorlageparameter(reportingParameter, "einzelausgabeDaten", (title.indexOf("einzeln") > 0).toString());
-
-		reportingParameter.idSchuljahresabschnitt = abschnittState.auswahl.id;
-		reportingParameter.idsHauptdaten = new ArrayList<number>();
-
-		if (title.indexOf(" alle ") <= 0) {
-			// Die ID für ein bestimmtes Gost-Halbjahr eines Abiturjahrgangs wird als fünfstellige Zahl codiert.
-			reportingParameter.idsHauptdaten.add(((this.abiturjahr * 10) + this.halbjahr.id));
-		}
-
-		return await api.server.pdfReport(reportingParameter, api.schema);
-	});
-
-
 }

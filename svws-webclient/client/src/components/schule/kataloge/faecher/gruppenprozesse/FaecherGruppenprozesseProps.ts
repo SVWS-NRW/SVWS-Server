@@ -1,8 +1,7 @@
-import type { List, BenutzerKompetenz, ApiFile, ReportingParameter } from "@core";
+import type { BenutzerKompetenz, List } from "@core";
 import type { FaecherListeManager } from "@ui";
 
 export interface FaecherGruppenprozesseProps {
-	getPDF: (parameter: ReportingParameter) => Promise<ApiFile>;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	manager: () => FaecherListeManager;
 	delete: () => Promise<[boolean, List<string | null>]>;

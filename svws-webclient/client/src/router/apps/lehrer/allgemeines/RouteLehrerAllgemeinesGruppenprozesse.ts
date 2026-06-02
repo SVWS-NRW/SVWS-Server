@@ -28,8 +28,6 @@ export class RouteLehrerAllgemeinesGruppenprozesse extends RouteNode<any, RouteL
 	public getProps(to: RouteLocationNormalized): LehrerAllgemeinesGruppenprozesseProps {
 		return {
 			apiStatus: api.status,
-			getPDF: routeLehrer.data.getPDF,
-			sendEMail: routeLehrer.data.sendEMail,
 			mapStundenplaene: routeLehrer.data.mapStundenplaene,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			lehrerListeManager: () => routeLehrer.data.manager,

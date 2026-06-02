@@ -1,16 +1,16 @@
-import type { ApiFile, FachDaten, JavaSet, List, ReportingParameter, SimpleOperationResponse } from "@core";
-import { ArrayList, BenutzerKompetenz, DeveloperNotificationException } from "@core";
+import type { FachDaten, JavaSet, List, SimpleOperationResponse } from "@core";
+import { ArrayList, BenutzerKompetenz } from "@core";
 
 import { api } from "~/router/Api";
 
+import { FaecherListeManager, ViewType } from "@ui";
+import type { RouteParamsRawGeneric } from "vue-router";
+import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
+import { abschnittState } from "~/states/AbschnittStateImpl";
+import { schuleState } from "~/states/SchuleStateImpl";
 import { routeFaecherDaten } from "./RouteFaecherDaten";
 import { routeFaecherGruppenprozesse } from "./RouteFaecherGruppenprozesse";
 import { routeFaecherNeu } from "./RouteFaecherNeu";
-import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
-import type { RouteParamsRawGeneric } from "vue-router";
-import { ViewType, FaecherListeManager } from "@ui";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { schuleState } from "~/states/SchuleStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
@@ -92,17 +92,6 @@ export class RouteDataFaecher extends RouteDataAuswahl<FaecherListeManager, Rout
 		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
 		await this.gotoDefaultView(fach.id);
 	};
-
-	getPDF = api.call(async (reportingParameter: ReportingParameter): Promise<ApiFile> => {
-		if (!this.manager.liste.auswahlExists()) {
-			throw new DeveloperNotificationException("Dieser Stundenplan kann nur gedruckt werden, wenn mindestens ein Fach ausgewählt ist.");
-		}
-		reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
-		for (const l of this.manager.liste.auswahl()) {
-			reportingParameter.idsHauptdaten.add(l.id);
-		}
-		return await api.server.pdfReport(reportingParameter, api.schema);
-	});
 
 	sortFaecher = async () => {
 		if (this.manager.liste.list().isEmpty()) {

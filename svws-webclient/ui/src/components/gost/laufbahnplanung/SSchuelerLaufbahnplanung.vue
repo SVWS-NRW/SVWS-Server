@@ -40,9 +40,14 @@
 	import type { GostLaufbahnplanungBeratungsdaten } from "../../../../../core/src/core/data/gost/GostLaufbahnplanungBeratungsdaten";
 	import { LaufbahnplanungUiManager } from "./LaufbahnplanungUiManager";
 	import { useServerState } from "../../../states/ServerState";
+	import { useReportingState } from "../../../states/ReportingState";
+	import { ReportingReportvorlage } from "../../../../../core/src/core/types/reporting/ReportingReportvorlage";
+	import { useAbschnittState } from "../../../states/AbschnittState";
 
 	const props = defineProps<SchuelerLaufbahnplanungProps>();
 	const serverState = useServerState();
+	const abschnittState = useAbschnittState();
+	const reportingState = useReportingState();
 
 	const manager = computed<LaufbahnplanungUiManager>(() => new LaufbahnplanungUiManager(serverState.mode, props.abiturdatenManager, props.config, () => props.gostJahrgangsdaten, props.setWahl, { faecherZeigen: "app.schueler.laufbahnplanung.faecher.anzeigen", modus: "app.schueler.laufbahnplanung.modus" }));
 
@@ -84,13 +89,20 @@
 	];
 
 	async function downloadPDF(title: string) {
-		const { data, name } = await props.getPdfWahlbogen(title);
-		const link = document.createElement("a");
-		link.href = URL.createObjectURL(data);
-		link.download = name;
-		link.target = "_blank";
-		link.click();
-		URL.revokeObjectURL(link.href);
+		const reportingParameter = ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getReportingParameter();
+		reportingParameter.idSchuljahresabschnitt = abschnittState.auswahl.id;
+		reportingParameter.idsHauptdaten.add(props.schueler.id);
+		schleifen: for (const gruppe of reportingParameter.reportvorlageParameterGruppen) {
+			if (gruppe.name === "Inhaltsoptionen") {
+				for (const vp of gruppe.reportvorlageParameter) {
+					if (vp.name === "nurBelegteFaecher") {
+						vp.wert = (title === "Laufbahnwahlbogen (nur Belegung)").toString();
+						break schleifen;
+					}
+				}
+			}
+		}
+		await reportingState.createPDFReport(reportingParameter);
 	}
 
 	async function export_laufbahnplanung() {

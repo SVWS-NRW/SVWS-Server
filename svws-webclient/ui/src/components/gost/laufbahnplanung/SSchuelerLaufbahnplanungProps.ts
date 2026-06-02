@@ -18,7 +18,6 @@ export interface SchuelerLaufbahnplanungProps {
 	config: () => Config;
 	setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
 	setGostBelegpruefungsArt: (value: 'ef1' | 'gesamt' | 'auto') => Promise<void>;
-	getPdfWahlbogen: (title: string) => Promise<ApiFile>;
 	exportLaufbahnplanung: () => Promise<ApiFile>;
 	importLaufbahnplanung: (data: FormData) => Promise<void>;
 	schueler: SchuelerListeEintrag,

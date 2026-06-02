@@ -30,8 +30,7 @@
 			<template #modalTitle>Stundenplan drucken</template>
 			<template #modalContent>
 				<report-parameters :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_RAUM_STUNDENPLAN"
-					:id-hauptdaten-objekt="stundenplanManager().getStundenplan().id" :ids-hauptdaten="[raum?.id ?? -1]" :ids-detaildaten="[]" :create-report="getPDF"
-					:id-abschnitt="stundenplanManager().getAbschnitt()" />
+					:id-hauptdaten-objekt="stundenplanManager().getStundenplan().id" :ids-hauptdaten="[raum?.id ?? -1]" :ids-detaildaten="[]" />
 			</template>
 		</svws-ui-modal>
 	</div>

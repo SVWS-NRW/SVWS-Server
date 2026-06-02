@@ -26,7 +26,6 @@ export class RouteFaecherGruppenprozesse extends RouteNode<any, RouteFaecher> {
 
 	public getProps(_: RouteLocationNormalized): FaecherGruppenprozesseProps {
 		return {
-			getPDF: routeFaecher.data.getPDF,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeFaecher.data.manager,
 			delete: routeFaecher.data.delete,

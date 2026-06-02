@@ -781,7 +781,4 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 
 	gotoEintrag = async (eintrag?: StundenplanListeEintrag) => await RouteManager.doRoute(routeStundenplan.getRoute({ id: eintrag?.id }));
 
-	getPDF = api.call(async (reportingParameter: ReportingParameter): Promise<ApiFile> => {
-		return await api.server.pdfReport(reportingParameter, api.schema);
-	});
 }

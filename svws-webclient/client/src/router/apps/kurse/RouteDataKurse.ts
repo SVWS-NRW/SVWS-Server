@@ -126,22 +126,6 @@ export class RouteDataKurse extends RouteDataAuswahl<KursListeManager, RouteStat
 		this.commit();
 	};
 
-	getPDF = api.call(async (reportingParameter: ReportingParameter): Promise<ApiFile> => {
-		if (!this.manager.liste.auswahlExists()) {
-			throw new DeveloperNotificationException("Die Ausgabe kann nur erfolgen, wenn mindestens ein Kurs ausgewählt ist.");
-		}
-		reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
-		return await api.server.pdfReport(reportingParameter, api.schema);
-	});
-
-	sendEMail = api.call(async (reportingParameter: ReportingParameter): Promise<SimpleOperationResponse> => {
-		if (!this.manager.liste.auswahlExists()) {
-			throw new UserNotificationException("Dieser Report kann nur versendet werden, wenn mindestens ein Kurs ausgewählt ist.");
-		}
-		reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
-		return await api.server.emailReport(reportingParameter, api.schema);
-	});
-
 	/* TODO
 	setzeDefaultSortierung = async () => {
 		const idSchuljahresabschnitt = this._state.value.idSchuljahresabschnitt;

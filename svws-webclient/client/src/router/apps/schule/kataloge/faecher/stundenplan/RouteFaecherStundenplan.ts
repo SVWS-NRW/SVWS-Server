@@ -70,7 +70,6 @@ export class RouteFaecherStundenplan extends RouteNode<RouteDataFaecherStundenpl
 	public getProps(to: RouteLocationNormalized): FaecherStundenplanProps {
 		return {
 			apiStatus: api.status,
-			getPDF: this.data.getPDF,
 			ignoreEmpty: this.data.ganzerStundenplan,
 			id: routeFaecher.data.manager.daten().id,
 			stundenplan: () => (this.data.mapStundenplaene.size === 0 || !this.data.hasManager) ? undefined : this.data.auswahl,

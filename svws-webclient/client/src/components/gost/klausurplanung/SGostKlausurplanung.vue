@@ -26,10 +26,13 @@
 	import type { DownloadPDFTypen } from "./DownloadPDFTypen";
 	import type { GostKlausurplanungProps } from "./SGostKlausurplanungProps";
 	import { computed, onMounted, ref } from "vue";
-	import { useRegionSwitch } from "@ui";
+	import { useAbschnittState, useRegionSwitch, useReportingState } from "@ui";
 	import { SGostKlausurplanungVorgabenIgnoreManager } from "~/components/gost/klausurplanung/SGostKlausurplanungVorgabenIgnoreManager";
+	import { ArrayList, ReportingReportvorlage } from "@core";
 
 	const props = defineProps<GostKlausurplanungProps>();
+	const abschnittState = useAbschnittState();
+	const reportingState = useReportingState();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
@@ -60,13 +63,31 @@
 	];
 
 	async function downloadPDF(title: DownloadPDFTypen) {
-		const { data, name } = await props.getPDF(title);
-		const link = document.createElement("a");
-		link.href = URL.createObjectURL(data);
-		link.download = name;
-		link.target = "_blank";
-		link.click();
-		URL.revokeObjectURL(link.href);
+		const istKlausurplan = title.startsWith("Klausurplan", 0);
+
+		const reportvorlage = istKlausurplan
+			? ReportingReportvorlage.GOST_KLAUSURPLANUNG_V_KLAUSURTERMINE_MIT_KURSEN
+			: ReportingReportvorlage.GOST_KLAUSURPLANUNG_V_SCHUELER_MIT_KLAUSUREN;
+
+		const reportingParameter = reportvorlage.getReportingParameter();
+
+		if (istKlausurplan) {
+			const istDetailliert = title.indexOf("detailliert") > 0;
+			reportvorlage.setReportingParameterVorlageparameter(reportingParameter, "mitKursklausuren", ((title.indexOf("Kurse") > 0) || istDetailliert).toString());
+			reportvorlage.setReportingParameterVorlageparameter(reportingParameter, "mitNachschreibern", ((title.indexOf("Nachschreiber") > 0) || istDetailliert).toString());
+			reportvorlage.setReportingParameterVorlageparameter(reportingParameter, "mitKlausurschreiberNamen", istDetailliert.toString());
+		}
+
+		reportvorlage.setReportingParameterVorlageparameter(reportingParameter, "einzelausgabeDaten", (title.indexOf("einzeln") > 0).toString());
+
+		reportingParameter.idSchuljahresabschnitt = abschnittState.auswahl.id;
+		reportingParameter.idsHauptdaten = new ArrayList<number>();
+
+		if (title.indexOf(" alle ") <= 0) {
+			// Die ID für ein bestimmtes Gost-Halbjahr eines Abiturjahrgangs wird als fünfstellige Zahl codiert.
+			reportingParameter.idsHauptdaten.add(((props.jahrgangsdaten!.abiturjahr * 10) + props.halbjahr.id));
+		}
+		await reportingState.createPDFReport(reportingParameter);
 	}
 
 </script>

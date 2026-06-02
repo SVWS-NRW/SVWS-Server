@@ -1,7 +1,6 @@
-import type { ApiFile, FachDaten, LehrerUnterrichtsfach, LehrerFachrichtungEintrag, LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdaten,
-	LehrerPersonalabschnittsdatenAnrechnungsstunden, LehrerPersonaldaten, LehrerStammdaten, List, ReportingParameter, SchulEintrag, SimpleOperationResponse,
-	StundenplanListeEintrag } from "@core";
-import { ArrayList, BenutzerKompetenz, DeveloperNotificationException, UserNotificationException } from "@core";
+import type { FachDaten, LehrerUnterrichtsfach, LehrerFachrichtungEintrag, LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdaten,
+	LehrerPersonalabschnittsdatenAnrechnungsstunden, LehrerPersonaldaten, LehrerStammdaten, List, SchulEintrag, SimpleOperationResponse, StundenplanListeEintrag } from "@core";
+import { ArrayList, BenutzerKompetenz, DeveloperNotificationException } from "@core";
 import { api } from "~/router/Api";
 import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/individualdaten/RouteLehrerIndividualdaten";
 import { LehrerListeManager, type PendingStateManager, ViewType } from "@ui";
@@ -475,25 +474,6 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
 		await this.gotoDefaultView(lehrerStammdaten.id);
 	};
-
-	getPDF = api.call(async (reportingParameter: ReportingParameter): Promise<ApiFile> => {
-		if (!this.manager.liste.auswahlExists()) {
-			throw new DeveloperNotificationException("Dieser Stundenplan kann nur gedruckt werden, wenn mindestens ein Lehrer ausgewählt ist.");
-		}
-		reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
-		for (const l of this.manager.liste.auswahl()) {
-			reportingParameter.idsDetaildaten.add(l.id);
-		}
-		return await api.server.pdfReport(reportingParameter, api.schema);
-	});
-
-	sendEMail = api.call(async (reportingParameter: ReportingParameter): Promise<SimpleOperationResponse> => {
-		if (this.manager.liste.auswahlExists() || this.manager.hasDaten()) {
-			reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
-			return await api.server.emailReport(reportingParameter, api.schema);
-		}
-		throw new UserNotificationException("Dieser Report kann nur versendet werden, wenn mindestens ein Lehrer ausgewählt ist.");
-	});
 
 	patchMultiple = async (pendingStateManager: PendingStateManager<any>): Promise<void> => {
 		api.status.start();

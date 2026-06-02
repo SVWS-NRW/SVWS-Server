@@ -113,24 +113,6 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 		return res;
 	};
 
-	getPdfLaufbahnplanung = async (reportingParameter: ReportingParameter) => {
-		try {
-			api.status.start();
-			return await api.server.pdfReport(reportingParameter, api.schema);
-		} finally {
-			api.status.stop();
-		}
-	};
-
-	sendEmailPdfLaufbahnplanung = async (reportingParameter: ReportingParameter) => {
-		try {
-			api.status.start();
-			return await api.server.emailReport(reportingParameter, api.schema);
-		} finally {
-			api.status.stop();
-		}
-	};
-
 	resetFachwahlenAlle = async (ergebnisse: Iterable<GostBelegpruefungsErgebnisse>) => {
 		if ([...ergebnisse].length === this.listBelegpruefungsErgebnisse.size()) {
 			await api.server.resetGostAbiturjahrgangSchuelerFachwahlen(api.schema, this.abiturjahr);

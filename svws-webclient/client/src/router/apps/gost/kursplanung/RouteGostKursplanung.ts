@@ -292,8 +292,6 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			ergebnisAktivieren: this.data.ergebnisAktivieren,
 			ergebnisSynchronisieren: this.data.ergebnisSynchronisieren,
 			kurssortierung: this.data.kurssortierung,
-			getPDF: this.data.getPDF,
-			sendEmailPdf: this.data.sendEmailPdf,
 			existiertSchuljahresabschnitt: this.data.existiertSchuljahresabschnitt,
 			schuelerFilter: () => this.data.schuelerFilter,
 			faecherManager: routeGost.data.faecherManager,
@@ -302,6 +300,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			mapFachwahlStatistik: () => this.data.mapFachwahlStatistik,
 			updateKursSchuelerZuordnungen: this.data.updateKursSchuelerZuordnungen,
 			apiStatus: api.status,
+			idSchueler: this.data.auswahlSchueler.id,
 			// Config
 			blockungstabelleHidden: () => this.data.blockungstabelleHidden,
 			setBlockungstabelleHidden: this.data.setBlockungstabelleHidden,

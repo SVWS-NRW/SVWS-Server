@@ -24,8 +24,6 @@ export class RouteSchuleReporting extends RouteNode<RouteDataSchuleReporting, Ro
 
 	public getProps(to: RouteLocationNormalized): SchuleReportingProps {
 		return {
-			createReport: this.data.createReport,
-			createHtmlPreview: this.data.createHtmlPreview,
 		};
 	}
 }

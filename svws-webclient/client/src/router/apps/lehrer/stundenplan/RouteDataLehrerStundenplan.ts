@@ -1,4 +1,4 @@
-import { DeveloperNotificationException, StundenplanManager, type ApiFile, type ReportingParameter, type StundenplanKalenderwochenzuordnung, type StundenplanListeEintrag } from "@core";
+import { DeveloperNotificationException, StundenplanManager, type StundenplanKalenderwochenzuordnung, type StundenplanListeEintrag } from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
@@ -169,12 +169,4 @@ export class RouteDataLehrerStundenplan extends RouteData<RouteStateLehrerDataSt
 		await RouteManager.doRoute(routeLehrerStundenplan.getRoute({ wochentyp, kw }));
 	};
 
-	getPDF = api.call(async (reportingParameter: ReportingParameter): Promise<ApiFile> => {
-		if (!this.hasAuswahl) {
-			throw new DeveloperNotificationException("Dieser Stundenplan kann nur gedruckt werden, wenn mindestens ein Lehrer ausgewählt ist.");
-		}
-		reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
-		reportingParameter.idsHauptdaten.add(this.idLehrer);
-		return await api.server.pdfReport(reportingParameter, api.schema);
-	});
 }

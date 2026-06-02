@@ -1,7 +1,5 @@
-import type { ApiFile, List, ReportingParameter, SchuelerListeEintrag, SchuelerNeu, SchuelerStammdaten, SchuelerTelefon, SimpleOperationResponse,
-	StundenplanListeEintrag } from "@core";
-import { ArrayList, BenutzerKompetenz, SchuelerStatus, UserNotificationException } from "@core";
-
+import type { List, SchuelerListeEintrag, SchuelerNeu, SchuelerStammdaten, SchuelerTelefon, SimpleOperationResponse, StundenplanListeEintrag } from "@core";
+import { ArrayList, BenutzerKompetenz, SchuelerStatus } from "@core";
 import { api } from "~/router/Api";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
@@ -191,36 +189,6 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 
 		return [errorLog.isEmpty(), errorLog];
 	};
-
-	getPDF = api.call(async (reportingParameter: ReportingParameter): Promise<ApiFile> => {
-		if (this.manager.liste.auswahlExists() || this.manager.hasDaten()) {
-			reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
-			return await api.server.pdfReport(reportingParameter, api.schema);
-		}
-		throw new UserNotificationException("Dieser Report kann nur gedruckt werden, wenn mindestens ein Schüler ausgewählt ist.");
-	});
-
-	sendEMail = api.call(async (reportingParameter: ReportingParameter): Promise<SimpleOperationResponse> => {
-		if (this.manager.liste.auswahlExists() || this.manager.hasDaten()) {
-			reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
-			return await api.server.emailReport(reportingParameter, api.schema);
-		}
-		throw new UserNotificationException("Dieser Report kann nur versendet werden, wenn mindestens ein Schüler ausgewählt ist.");
-	});
-
-	fetchEMailJobStatus = api.call(async (jobId: number): Promise<SimpleOperationResponse> => {
-		if (this.manager.liste.auswahlExists() || this.manager.hasDaten()) {
-			return await api.server.getEmailJobStatus(api.schema, jobId);
-		}
-		throw new UserNotificationException("Dieser Report kann nur versendet werden, wenn mindestens ein Schüler ausgewählt ist.");
-	});
-
-	fetchEMailJobLog = api.call(async (jobId: number): Promise<SimpleOperationResponse> => {
-		if (this.manager.liste.auswahlExists() || this.manager.hasDaten()) {
-			return await api.server.getEmailJobLog(api.schema, jobId);
-		}
-		throw new UserNotificationException("Dieser Report kann nur versendet werden, wenn mindestens ein Schüler ausgewählt ist.");
-	});
 
 	patchMultiple = async (pendingStateManager: PendingStateManager<any>): Promise<void> => {
 		api.status.start();

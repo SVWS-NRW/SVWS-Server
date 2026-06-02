@@ -265,12 +265,9 @@
 	import { computed, ref } from "vue";
 	import type { SchuelerIndividualdatenProps } from "./SchuelerIndividualdatenProps";
 	import type { NationalitaetenKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchulEintrag, Fahrschuelerart, Haltestelle, SchuelerStatusKatalogEintrag, VerkehrsspracheKatalogEintrag } from "@core";
-	import {
-		SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, Verkehrssprache, BenutzerKompetenz, ServerMode,
-		ArrayList, ReportingReportvorlage,
-	} from "@core";
+	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, Verkehrssprache, BenutzerKompetenz, ServerMode, ArrayList, ReportingReportvorlage } from "@core";
 	import { orte_sort, ortsteilSort } from "~/utils/helfer";
-	import { CoreTypeSelectManager, SelectManager } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useReportingState } from "@ui";
 	import { SchuelerIndividualdatenModel } from "~/components/schueler/individualdaten/modelproxy/SchuelerIndividualdatenModelProxy";
 	import WiedervorlageModal from "~/components/wiedervorlage/WiedervorlageModal.vue";
 	import SchuelerTelefonnummern from "~/components/schueler/individualdaten/telefonnummern/SchuelerTelefonnummern.vue";
@@ -278,6 +275,7 @@
 	// --- Setup ---
 
 	const props = defineProps<SchuelerIndividualdatenProps>();
+	const reportingState = useReportingState();
 
 	const schuljahr = computed<number>(() => props.schuelerListeManager().schuelerGetSchuljahrOrException());
 
@@ -428,17 +426,8 @@
 		const reportingParameter = ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG.getReportingParameter();
 		ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG.setReportingParameterVorlageparameter(reportingParameter, "mitSchullogo", "true");
 		reportingParameter.idsHauptdaten.add(props.schuelerListeManager().auswahlID());
-		reportingParameter.idSchuljahresabschnitt = props.schuelerListeManager().getSchuljahresabschnittSchule().id;
 		loading.value = true;
-		// TODO Wenn await getPDF ERROR wirt, werden alle folgenden Zeilen übersprungen,
-		// somit wird loading = false nie erreicht!.
-		const { data, name } = await props.getPDF(reportingParameter);
-		const link = document.createElement("a");
-		link.href = URL.createObjectURL(data);
-		link.download = name;
-		link.target = "_blank";
-		link.click();
-		URL.revokeObjectURL(link.href);
+		await reportingState.createPDFReport(reportingParameter);
 		loading.value = false;
 	}
 

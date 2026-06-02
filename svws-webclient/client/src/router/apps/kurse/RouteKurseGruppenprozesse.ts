@@ -27,8 +27,6 @@ export class RouteKurseGruppenprozesse extends RouteNode<any, RouteKurse> {
 	public getProps(to: RouteLocationNormalized): KurseGruppenprozesseProps {
 		return {
 			apiStatus: api.status,
-			getPDF: routeKurse.data.getPDF,
-			sendEMail: routeKurse.data.sendEMail,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeKurse.data.manager,
 			deleteKurse: routeKurse.data.delete,

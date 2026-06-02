@@ -1,4 +1,4 @@
-import type { ApiFile, BenutzerKompetenz, GostBelegpruefungsArt, GostBelegpruefungsErgebnisse, GostJahrgangsdaten, List, ReportingParameter, SimpleOperationResponse } from "@core";
+import type { ApiFile, BenutzerKompetenz, GostBelegpruefungsArt, GostBelegpruefungsErgebnisse, GostJahrgangsdaten, List } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
@@ -12,8 +12,6 @@ export interface GostLaufbahnfehlerProps {
 	gotoSprachenfolge: (d: number) => Promise<RoutingStatus>;
 	importLaufbahnplanung: (data: FormData) => Promise<void>;
 	exportLaufbahnplanung: (schueler: List<number>) => Promise<ApiFile>;
-	getPdfLaufbahnplanung: (reportingParameter: ReportingParameter) => Promise<ApiFile>;
-	sendEmailPdfLaufbahnplanung: (parameter: ReportingParameter) => Promise<SimpleOperationResponse>;
 	resetFachwahlenAlle: (ergebnisse: Iterable<GostBelegpruefungsErgebnisse>) => Promise<void>;
 	jahrgangsdaten: () => GostJahrgangsdaten;
 	apiStatus: ApiStatus;

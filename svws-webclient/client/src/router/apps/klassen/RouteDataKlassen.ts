@@ -208,19 +208,4 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 		await RouteManager.doRoute(routeLehrer.getRoute({ id: eintrag.id }));
 	};
 
-	getPDF = api.call(async (reportingParameter: ReportingParameter): Promise<ApiFile> => {
-		if (!this.manager.liste.auswahlExists()) {
-			throw new DeveloperNotificationException("Die Ausgabe kann nur erfolgen, wenn mindestens eine Klasse ausgewählt ist.");
-		}
-		reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
-		return await api.server.pdfReport(reportingParameter, api.schema);
-	});
-
-	sendEMail = api.call(async (reportingParameter: ReportingParameter): Promise<SimpleOperationResponse> => {
-		if (!this.manager.liste.auswahlExists()) {
-			throw new UserNotificationException("Dieser Report kann nur versendet werden, wenn mindestens eine Klasse ausgewählt ist.");
-		}
-		reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
-		return await api.server.emailReport(reportingParameter, api.schema);
-	});
 }

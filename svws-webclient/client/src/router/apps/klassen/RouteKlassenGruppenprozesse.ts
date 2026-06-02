@@ -31,8 +31,6 @@ export class RouteKlasseGruppenprozesse extends RouteNode<any, RouteKlassen> {
 	public getProps(to: RouteLocationNormalized): KlassenGruppenprozesseProps {
 		return {
 			apiStatus: api.status,
-			getPDF: routeKlassen.data.getPDF,
-			sendEMail: routeKlassen.data.sendEMail,
 			mapStundenplaene: routeKlassen.data.mapStundenplaene,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeKlassen.data.manager,

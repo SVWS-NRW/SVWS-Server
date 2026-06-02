@@ -1,10 +1,9 @@
-import type { ApiFile, StundenplanListeEintrag, StundenplanKalenderwochenzuordnung, StundenplanManager, ReportingParameter } from "@core";
+import type { StundenplanListeEintrag, StundenplanKalenderwochenzuordnung, StundenplanManager } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 
 export interface LehrerStundenplanProps {
 	apiStatus: ApiStatus;
-	getPDF: (parameter: ReportingParameter) => Promise<ApiFile>;
 	ignoreEmpty?: boolean;
 	id: number,
 	stundenplan: () => StundenplanListeEintrag | undefined;

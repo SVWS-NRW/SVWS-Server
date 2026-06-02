@@ -128,38 +128,6 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 		await this.setGostBelegpruefungErgebnis();
 	});
 
-	getPdfWahlbogen = async (title: string) => {
-		const reportingParameter = ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getReportingParameter();
-		reportingParameter.idSchuljahresabschnitt = abschnittState.auswahl.id;
-		reportingParameter.idsHauptdaten.add(this.auswahl.id);
-		switch (title) {
-			case 'Laufbahnwahlbogen':
-				for (const gruppe of reportingParameter.reportvorlageParameterGruppen) {
-					if (gruppe.name === "Inhaltsoptionen") {
-						for (const vp of gruppe.reportvorlageParameter) {
-							if (vp.name === "nurBelegteFaecher") {
-								vp.wert = false.toString();
-							}
-						}
-					}
-				}
-				return await api.server.pdfReport(reportingParameter, api.schema);
-			case 'Laufbahnwahlbogen (nur Belegung)':
-				for (const gruppe of reportingParameter.reportvorlageParameterGruppen) {
-					if (gruppe.name === "Inhaltsoptionen") {
-						for (const vp of gruppe.reportvorlageParameter) {
-							if (vp.name === "nurBelegteFaecher") {
-								vp.wert = true.toString();
-							}
-						}
-					}
-				}
-				return await api.server.pdfReport(reportingParameter, api.schema);
-			default:
-				throw new DeveloperNotificationException('Es wurde kein passender Parameter zur Erzeugung des PDF übergeben.');
-		}
-	};
-
 	exportLaufbahnplanung = api.call(async (): Promise<ApiFile> => {
 		return await api.server.exportGostSchuelerLaufbahnplanung(api.schema, this.auswahl.id);
 	});

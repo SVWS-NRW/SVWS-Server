@@ -170,7 +170,6 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 		return {
 			apiStatus: api.status,
 			kMan: () => routeGostKlausurplanung.data.manager,
-			getPDF: this.data.getPDF,
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
 			halbjahr: this.data.halbjahr,

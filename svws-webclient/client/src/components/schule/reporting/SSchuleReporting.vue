@@ -11,7 +11,7 @@
 			<div class="svws-ui-header--actions" />
 		</header>
 		<div class="page page-flex-row">
-			<report-parameters :create-report :create-html-preview :id-hauptdaten-objekt="-1" show-json />
+			<report-parameters :id-hauptdaten-objekt="-1" create-html-preview show-json />
 		</div>
 	</div>
 </template>

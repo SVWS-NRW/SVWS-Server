@@ -89,7 +89,6 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			config: () => api.config,
 			setWahl: this.data.setWahl,
 			setGostBelegpruefungsArt: this.data.setGostBelegpruefungsArt,
-			getPdfWahlbogen: this.data.getPdfWahlbogen,
 			exportLaufbahnplanung: this.data.exportLaufbahnplanung,
 			importLaufbahnplanung: this.data.importLaufbahnplanung,
 			schueler: this.data.auswahl,

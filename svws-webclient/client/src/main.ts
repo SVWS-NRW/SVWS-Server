@@ -5,13 +5,15 @@ import "../../ui/src/assets/styles/index.css";
 import "./main.css";
 
 import SWrapper from "~/components/SWrapper.vue";
+import HtmlPreview from "../../ui/src/components/reporting/HtmlPreview.ce.vue";
 import { AbschnittStateKey } from "../../ui/src/states/AbschnittState";
 import { abschnittState } from "./states/AbschnittStateImpl";
 import { schuleState } from "./states/SchuleStateImpl";
 import { SchuleStateKey } from "../../ui/src/states/SchuleState";
 import { serverState } from "./states/ServerStateImpl";
 import { ServerStateKey } from "../../ui/src/states/ServerState";
-import HtmlPreview from "../../ui/src/components/reporting/HtmlPreview.ce.vue";
+import { reportingState } from "./states/ReportingStateImpl";
+import { ReportingStateKey } from "../../ui/src/states/ReportingState";
 
 const CustomElementConstructor = defineCustomElement(HtmlPreview);
 customElements.define('html-preview', CustomElementConstructor);
@@ -21,6 +23,7 @@ app.use(router);
 app.provide(AbschnittStateKey, abschnittState);
 app.provide(SchuleStateKey, schuleState);
 app.provide(ServerStateKey, serverState);
+app.provide(ReportingStateKey, reportingState);
 
 app.directive('autofocus', {
 	mounted: (el: HTMLInputElement, binding) => {

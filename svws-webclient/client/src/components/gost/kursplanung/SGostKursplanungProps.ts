@@ -36,8 +36,6 @@ export interface GostKursplanungProps {
 	ergebnisHochschreiben: () => Promise<void>;
 	ergebnisAktivieren: () => Promise<boolean>;
 	ergebnisSynchronisieren: () => Promise<void>;
-	getPDF: (title: DownloadPDFTypen) => Promise<ApiFile>;
-	sendEmailPdf: (parameter: ReportingParameter) => Promise<SimpleOperationResponse>;
 	jahrgangsdaten: () => GostJahrgangsdaten;
 	kurssortierung: WritableComputedRef<'fach' | 'kursart'>;
 	existiertSchuljahresabschnitt: boolean;
@@ -50,6 +48,7 @@ export interface GostKursplanungProps {
 	mapFachwahlStatistik: () => Map<number, GostStatistikFachwahl>;
 	apiStatus: ApiStatus;
 	updateKursSchuelerZuordnungen: (update: GostBlockungsergebnisKursSchuelerZuordnungUpdate) => Promise<boolean>;
+	idSchueler: number;
 	// Config
 	zeigeSchienenbezeichnungen: () => boolean;
 	setZeigeSchienenbezeichnungen: (value: boolean) => Promise<void>;

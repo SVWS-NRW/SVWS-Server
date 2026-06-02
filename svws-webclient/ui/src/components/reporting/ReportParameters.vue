@@ -1,12 +1,9 @@
 <template>
-	<div :class="[createHtmlPreview !== undefined ? 'w-2/5' : 'w-full']">
+	<div :class="[createHtmlPreview ? 'w-2/5' : 'w-full']">
 		<svws-ui-tab-bar :tab-manager="() => tabManager">
 			<div v-if="selectedRoute.name === 'eingabe'" class="overflow-auto pr-6">
 				<div v-if="reportvorlage === undefined">
 					<ui-select :manager="reportvorlageSelectManager" v-model="localReportvorlage" />
-				</div>
-				<div v-if="idAbschnitt === undefined">
-					<svws-ui-input-number v-model="localIdAbschnitt" placeholder="ID Schuljahresabschnitt" />
 				</div>
 				<div v-if="(idHauptdatenObjekt !== undefined) && (idHauptdatenObjekt < 0)">
 					<svws-ui-input-number v-model="localIdHauptdatenObjekt" placeholder="ID des Hauptdaten-Objekts" />
@@ -84,13 +81,13 @@
 								<span v-else class="icon i-ri-printer-line" />
 								Drucken
 							</svws-ui-button>
-							<svws-ui-button v-if="serverState.hasDev && (createHtmlPreview !== undefined)"
+							<svws-ui-button v-if="serverState.hasDev && createHtmlPreview"
 								@click="openHtmlPreview" :is-loading class="mt-4">
 								<svws-ui-spinner v-if="isLoading" spinning />
 								<span v-else class="icon i-ri-eye-line" />
 								Vorschau
 							</svws-ui-button>
-							<svws-ui-button v-if="serverState.hasDev" @click="downloadJSON('pdf')" :is-loading class="mt-4">
+							<svws-ui-button v-if="serverState.hasDev && showJson" @click="downloadJSON('pdf')" :is-loading class="mt-4">
 								JSON
 							</svws-ui-button>
 						</div>
@@ -117,7 +114,7 @@
 							<span v-else class="icon i-ri-mail-send-line" />
 							E-Mails senden
 						</svws-ui-button>
-						<svws-ui-button v-if="serverState.hasDev" @click="downloadJSON('email')" :is-loading class="mt-4">
+						<svws-ui-button v-if="serverState.hasDev && showJson" @click="downloadJSON('email')" :is-loading class="mt-4">
 							JSON
 						</svws-ui-button>
 					</template>
@@ -133,7 +130,7 @@
 						<span v-else class="icon i-ri-printer-line" />
 						Drucken
 					</svws-ui-button>
-					<svws-ui-button v-if="serverState.hasDev && (createHtmlPreview !== undefined)"
+					<svws-ui-button v-if="serverState.hasDev && createHtmlPreview"
 						@click="openHtmlPreview" :is-loading class="mt-4">
 						<svws-ui-spinner v-if="isLoading" spinning />
 						<span v-else class="icon i-ri-eye-line" />
@@ -150,7 +147,7 @@
 	</div>
 	<!-- HTML-Vorschau (rechte Spalte, nur in DEV mit verfügbarer Vorschau-API) -->
 	<!-- <html-preview :html="previewHtml" v-if="serverState.hasDev && (createHtmlPreview !== undefined)" /> -->
-	<div v-if="serverState.hasDev && (createHtmlPreview !== undefined)" class="w-full sticky top-2 h-[calc(100vh-16rem)] flex flex-col">
+	<div v-if="serverState.hasDev && createHtmlPreview" class="w-full sticky top-2 h-[calc(100vh-16rem)] flex flex-col">
 		<div class="relative flex-1 min-h-0 overflow-hidden rounded-md border-2 border-ui-25 bg-white shadow-sm flex items-center justify-center">
 			<iframe v-if="previewHtml !== ''" :srcdoc="previewHtml" class="absolute inset-0 w-full h-full border-0 bg-white" title="Reporting-Vorschau" />
 			<div v-else class="text-black italic text-center p-8">
@@ -174,8 +171,6 @@
 	import { ReportingParameter } from "../../../../core/src/core/data/reporting/ReportingParameter";
 	import { ReportingUIKomponentenTyp } from "../../../../core/src/core/types/reporting/ReportingUIKomponentenTyp";
 	import type { ReportingReportvorlageParameter } from "../../../../core/src/core/data/reporting/ReportingReportvorlageParameter";
-	import type { ApiFile } from "../../../../core/src/api/BaseApi";
-	import type { SimpleOperationResponse } from "../../../../core/src/core/data/SimpleOperationResponse";
 	import type { List } from "../../../../core/src/java/util/List";
 	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
 	import { ReportingAusgabeformat } from "../../../../core/src/core/types/reporting/ReportingAusgabeformat";
@@ -188,6 +183,7 @@
 	import { TabManager } from "../../ui/nav/TabManager";
 
 	import { useServerState } from "../../states/ServerState";
+	import { useReportingState } from "../../states/ReportingState.js";
 
 	const props = defineProps<{
 		showJson?: boolean;
@@ -195,12 +191,12 @@
 		idHauptdatenObjekt?: number;
 		idsHauptdaten?: Iterable<number>;
 		idsDetaildaten?: Iterable<number>;
-		idAbschnitt?: number;
-		createReport: (parameter: ReportingParameter) => Promise<ApiFile>;
-		createHtmlPreview?: (parameter: ReportingParameter) => Promise<string>;
-		sendEMail?: (parameter: ReportingParameter) => Promise<SimpleOperationResponse>;
 		ausgabeformat?: number;
+		createHtmlPreview?: boolean;
 	}>();
+
+	const serverState = useServerState();
+	const reportingState = useReportingState();
 
 	const tabs = computed<TabData[]>(() => [
 		{ name: "eingabe", text: "Eingabe", hide: !props.showJson },
@@ -213,7 +209,6 @@
 
 	const tabManager = new TabManager(tabs.value, tabs.value[0], setTab);
 	const selectedRoute = ref(tabs.value[0]);
-	const serverState = useServerState();
 
 	const isLoading = ref<boolean>(false);
 	const previewHtml = ref<string>('');
@@ -223,7 +218,6 @@
 	const localIdHauptdatenObjekt = ref<number>(-1);
 	const localIdsHauptdaten = ref<string>("");
 	const localIdsDetaildaten = ref<string>("");
-	const localIdAbschnitt = ref<number>(0);
 	const parameter = ref(new ReportingParameter());
 	const altParameter = ref();
 
@@ -360,7 +354,6 @@
 	});
 
 	async function downloadJSON(type: 'pdf' | 'email') {
-		parameter.value.idSchuljahresabschnitt = props.idAbschnitt ?? localIdAbschnitt.value;
 		parameter.value.idHauptdatenObjekt = (props.idHauptdatenObjekt !== undefined && props.idHauptdatenObjekt >= 0) ? props.idHauptdatenObjekt : localIdHauptdatenObjekt.value;
 		parameter.value.idsHauptdaten = listHauptdaten.value;
 		parameter.value.idsDetaildaten = listDetaildaten.value;
@@ -369,47 +362,29 @@
 		} else {
 			parameter.value.ausgabeformat = ReportingAusgabeformat.EMAIL.getId();
 		}
-		const json = ReportingParameter.transpilerToJSON(parameter.value);
-		const blob = new Blob([json], {
-			type: "application/json",
-		});
-		const link = document.createElement("a");
-		link.href = URL.createObjectURL(blob);
-		link.download = "ExportReprtingParameter.json";
-		link.target = "_blank";
-		link.click();
-		URL.revokeObjectURL(link.href);
+		await reportingState.createJSONReportingParameter(parameter.value);
 	}
 
 	async function downloadPDF() {
 		isLoading.value = true;
-		parameter.value.idSchuljahresabschnitt = props.idAbschnitt ?? localIdAbschnitt.value;
 		parameter.value.idHauptdatenObjekt = (props.idHauptdatenObjekt !== undefined && props.idHauptdatenObjekt >= 0) ? props.idHauptdatenObjekt : localIdHauptdatenObjekt.value;
 		parameter.value.idsHauptdaten = listHauptdaten.value;
 		parameter.value.idsDetaildaten = listDetaildaten.value;
 		if (selectedRoute.value.name === 'json') {
 			parameter.value = ReportingParameter.transpilerFromJSON(altParameter.value);
 		}
-		parameter.value.ausgabeformat = ReportingAusgabeformat.PDF.getId();
 		try {
-			const { data, name } = await props.createReport(parameter.value);
-			const link = document.createElement("a");
-			link.href = URL.createObjectURL(data);
-			link.download = name;
-			link.target = "_blank";
-			link.click();
-			URL.revokeObjectURL(link.href);
+			await reportingState.createPDFReport(parameter.value);
 		} finally {
 			isLoading.value = false;
 		}
 	}
 
 	async function openHtmlPreview() {
-		if (props.createHtmlPreview === undefined) {
+		if (!props.createHtmlPreview) {
 			return;
 		}
 		isLoading.value = true;
-		parameter.value.idSchuljahresabschnitt = props.idAbschnitt ?? localIdAbschnitt.value;
 		parameter.value.idHauptdatenObjekt = (props.idHauptdatenObjekt !== undefined && props.idHauptdatenObjekt >= 0) ? props.idHauptdatenObjekt : localIdHauptdatenObjekt.value;
 		parameter.value.idsHauptdaten = listHauptdaten.value;
 		parameter.value.idsDetaildaten = listDetaildaten.value;
@@ -418,30 +393,24 @@
 		}
 		parameter.value.ausgabeformat = ReportingAusgabeformat.HTML.getId();
 		try {
-			previewHtml.value = await props.createHtmlPreview(parameter.value);
+			previewHtml.value = await reportingState.createHTMLReport(parameter.value);
 		} finally {
 			isLoading.value = false;
 		}
 	}
 
 	async function sendPdfByEmail() {
-		if (props.sendEMail === undefined) {
-			return;
-		}
 		isLoading.value = true;
-		parameter.value.idSchuljahresabschnitt = props.idAbschnitt ?? localIdAbschnitt.value;
 		parameter.value.idHauptdatenObjekt = (props.idHauptdatenObjekt !== undefined && props.idHauptdatenObjekt >= 0) ? props.idHauptdatenObjekt : localIdHauptdatenObjekt.value;
 		parameter.value.idsHauptdaten = listHauptdaten.value;
 		parameter.value.idsDetaildaten = listDetaildaten.value;
-		parameter.value.ausgabeformat = ReportingAusgabeformat.EMAIL.getId();
 		try {
-			const result = await props.sendEMail(parameter.value);
+			const result = await reportingState.createEMailReport(parameter.value);
 			status.value = result.success;
 			logs.value = result.log;
 		} finally {
 			isLoading.value = false;
 		}
 	}
-
 
 </script>

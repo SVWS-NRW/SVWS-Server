@@ -129,11 +129,13 @@
 	import { computed, ref, onMounted } from "vue";
 	import type { GostKursplanungProps } from "./SGostKursplanungProps";
 	import type { DownloadPDFTypen } from "./DownloadPDFTypen";
-	import { BenutzerKompetenz, GostHalbjahr, HashSet, ReportingReportvorlage, ServerMode, SetUtils } from "@core";
-	import { useRegionSwitch, useServerState } from "@ui";
+	import { ArrayList, BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, HashSet, ListUtils, ReportingAusgabeformat, ReportingFilterDefinitionGruppeFactory, ReportingReportvorlage, SetUtils, type ReportingParameter } from "@core";
+	import { useAbschnittState, useRegionSwitch, useReportingState, useServerState } from "@ui";
 
 	const props = defineProps<GostKursplanungProps>();
 	const serverState = useServerState();
+	const abschnittState = useAbschnittState();
+	const reportingState = useReportingState();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
@@ -170,37 +172,72 @@
 	}
 
 	const dropdownList = computed(() => {
-		const actions = [{ text: "Schülerliste markierte Kurse", action: () => downloadPDF("Schülerliste markierte Kurse"), default: true }];
-
-		if (ServerMode.DEV.checkServerMode(serverState.mode)) {
-			actions.push({ text: "E-Mail mit Schülerliste markierte Kurse", action: () => sendPdfByMail(), default: false });
+		const actions = [{ text: "Schülerliste markierte Kurse", action: () => createReport("Schülerliste markierte Kurse", 'pdf'), default: true }];
+		if (serverState.hasDev) {
+			actions.push({ text: "E-Mail mit Schülerliste markierte Kurse", action: () => createReport("Schülerliste markierte Kurse", 'email'), default: false });
 		}
-
-		actions.push({ text: "Kurse mit Statistikwerten", action: () => downloadPDF("Kurse mit Statistikwerten"), default: false });
-		actions.push({ text: "Kurse-Schienen-Zuordnung", action: () => downloadPDF("Kurse-Schienen-Zuordnung"), default: false });
-		actions.push({ text: "Kurse-Schienen-Zuordnung markierter Schüler", action: () => downloadPDF("Kurse-Schienen-Zuordnung markierter Schüler"), default: false });
-		actions.push({ text: "Kurse-Schienen-Zuordnung gefilterte Schüler", action: () => downloadPDF("Kurse-Schienen-Zuordnung gefilterte Schüler"), default: false });
-		actions.push({ text: "Kursbelegung markierter Schüler", action: () => downloadPDF("Kursbelegung markierter Schüler"), default: false });
-		actions.push({ text: "Kursbelegung gefilterte Schüler", action: () => downloadPDF("Kursbelegung gefilterte Schüler"), default: false });
+		actions.push(
+			{ text: "Kurse mit Statistikwerten", action: () => createReport("Kurse mit Statistikwerten", 'pdf'), default: false },
+			{ text: "Kurse-Schienen-Zuordnung", action: () => createReport("Kurse-Schienen-Zuordnung", 'pdf'), default: false },
+			{ text: "Kurse-Schienen-Zuordnung markierter Schüler", action: () => createReport("Kurse-Schienen-Zuordnung markierter Schüler", 'pdf'), default: false },
+			{ text: "Kurse-Schienen-Zuordnung gefilterte Schüler", action: () => createReport("Kurse-Schienen-Zuordnung gefilterte Schüler", 'pdf'), default: false },
+			{ text: "Kursbelegung markierter Schüler", action: () => createReport("Kursbelegung markierter Schüler", 'pdf'), default: false },
+			{ text: "Kursbelegung gefilterte Schüler", action: () => createReport("Kursbelegung gefilterte Schüler", 'pdf'), default: false }
+		);
 
 		return actions;
 	});
 
-	async function downloadPDF(title: DownloadPDFTypen) {
-		const { data, name } = await props.getPDF(title);
-		const link = document.createElement("a");
-		link.href = URL.createObjectURL(data);
-		link.download = name;
-		link.target = "_blank";
-		link.click();
-		URL.revokeObjectURL(link.href);
-	}
+	async function createReport(title: DownloadPDFTypen, type: 'pdf' | 'email') {
+		const idsKurse = new ArrayList<number>();
+		for (const idKurs of props.getKursauswahl()) {
+			idsKurse.add(idKurs);
+		}
+		const idsSchueler = new ArrayList<number>();
+		for (const idSchueler of props.schuelerFilter().filtered.value) {
+			idsSchueler.add(idSchueler.id);
+		}
 
-	async function sendPdfByMail() {
-		const reportingParameter = ReportingReportvorlage.GOST_KURSPLANUNG_V_KURS_MIT_KURSSCHUELERN.getReportingParameter();
-		await props.sendEmailPdf(reportingParameter);
+		let reportingParameter: ReportingParameter;
+		switch (title) {
+			case "Schülerliste markierte Kurse":
+				reportingParameter = ReportingReportvorlage.GOST_KURSPLANUNG_V_KURS_MIT_KURSSCHUELERN.getReportingParameter();
+				reportingParameter.filterDefinitionenGruppen.add(ReportingFilterDefinitionGruppeFactory.gruppeAusIds("Kursauswahl", "ReportingGostKursplanungKurs", false, idsKurse));
+				break;
+			case "Kurse mit Statistikwerten":
+				reportingParameter = ReportingReportvorlage.GOST_KURSPLANUNG_V_KURSE_MIT_STATISTIKWERTEN.getReportingParameter();
+				reportingParameter.filterDefinitionenGruppen.add(ReportingFilterDefinitionGruppeFactory.gruppeAusIds("Kursauswahl", "ReportingGostKursplanungKurs", false, idsKurse));
+				break;
+			case "Kurse-Schienen-Zuordnung":
+				reportingParameter = ReportingReportvorlage.GOST_KURSPLANUNG_V_SCHUELER_MIT_SCHIENEN_KURSEN.getReportingParameter();
+				break;
+			case "Kurse-Schienen-Zuordnung markierter Schüler":
+				reportingParameter = ReportingReportvorlage.GOST_KURSPLANUNG_V_SCHUELER_MIT_SCHIENEN_KURSEN.getReportingParameter();
+				reportingParameter.filterDefinitionenGruppen.add(ReportingFilterDefinitionGruppeFactory.gruppeAusIds("Schülerauswahl", "ReportingSchueler", false, ListUtils.create1(props.idSchueler)));
+				break;
+			case "Kurse-Schienen-Zuordnung gefilterte Schüler":
+				reportingParameter = ReportingReportvorlage.GOST_KURSPLANUNG_V_SCHUELER_MIT_SCHIENEN_KURSEN.getReportingParameter();
+				reportingParameter.filterDefinitionenGruppen.add(ReportingFilterDefinitionGruppeFactory.gruppeAusIds("Schülerauswahl", "ReportingSchueler", false, idsSchueler));
+				break;
+			case "Kursbelegung markierter Schüler":
+				reportingParameter = ReportingReportvorlage.GOST_KURSPLANUNG_V_SCHUELER_MIT_KURSEN.getReportingParameter();
+				reportingParameter.filterDefinitionenGruppen.add(ReportingFilterDefinitionGruppeFactory.gruppeAusIds("Schülerauswahl", "ReportingSchueler", false, ListUtils.create1(props.idSchueler)));
+				break;
+			case "Kursbelegung gefilterte Schüler":
+				reportingParameter = ReportingReportvorlage.GOST_KURSPLANUNG_V_SCHUELER_MIT_KURSEN.getReportingParameter();
+				reportingParameter.filterDefinitionenGruppen.add(ReportingFilterDefinitionGruppeFactory.gruppeAusIds("Schülerauswahl", "ReportingSchueler", false, idsSchueler));
+				break;
+			default:
+				throw new DeveloperNotificationException(`Es konnte keine Ausgabe für die gewählte Option gefunden werden. Bitte melden Sie diesen Fehler. Die nicht vorhandene Option lautet '${title}'`);
+		}
+		reportingParameter.idHauptdatenObjekt = props.getErgebnismanager().getErgebnis().id;
+		reportingParameter.idSchuljahresabschnitt = abschnittState.auswahl.id;
+		if (type === 'pdf') {
+			await reportingState.createPDFReport(reportingParameter);
+		} else {
+			await reportingState.createEMailReport(reportingParameter);
+		}
 	}
-
 
 	const actionsKursSchuelerzuordnung = computed(() => {
 		const filter = props.schuelerFilter();
