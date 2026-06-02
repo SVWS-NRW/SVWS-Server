@@ -9,15 +9,15 @@ import { routeApp } from "~/router/apps/RouteApp";
 import { type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteDataSchuelerErziehungsberechtigte } from "~/router/apps/schueler/erziehungsberechtigte/RouteDataSchuelerErziehungsberechtigte";
 
-import type { SchuelerErziehungsberechtigteProps } from "~/components/schueler/erziehungsberechtigte/SSchuelerErziehungsberechtigteProps";
+import type { SchuelerErziehungsberechtigteProps } from "~/components/schueler/erziehungsberechtigte/SchuelerErziehungsberechtigteProps";
 import { api } from "~/router/Api";
 
-const SSchuelerErziehungsberechtigte = () => import("~/components/schueler/erziehungsberechtigte/SSchuelerErziehungsberechtigte.vue");
+const SchuelerErziehungsberechtigte = () => import("~/components/schueler/erziehungsberechtigte/SchuelerErziehungsberechtigte.vue");
 
 export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchuelerErziehungsberechtigte, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN], "schueler.erziehungsberechtigte", "erziehungsberechtigte", SSchuelerErziehungsberechtigte, new RouteDataSchuelerErziehungsberechtigte());
+		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN], "schueler.erziehungsberechtigte", "erziehungsberechtigte", SchuelerErziehungsberechtigte, new RouteDataSchuelerErziehungsberechtigte());
 		super.mode = ServerMode.ALPHA;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Erziehungsberechtigte";

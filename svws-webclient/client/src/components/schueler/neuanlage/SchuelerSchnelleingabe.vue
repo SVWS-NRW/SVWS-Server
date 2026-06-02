@@ -2,6 +2,7 @@
 	<div class="page page-grid-cards">
 		<schueler-schnelleingabe-anmeldedaten :manager
 			:readonly
+			:schuljahr
 			:patch-schueler
 			:patch-schulbesuchsdaten
 			:patch-lernabschnittsdaten
@@ -9,14 +10,15 @@
 		<schueler-schnelleingabe-schuelerdaten :manager
 			:readonly
 			:patch-schueler
-			:patch-lernabschnittsdaten />
+			:patch-lernabschnittsdaten
+			:schuljahr />
 		<schueler-schnelleingabe-erzieher :manager
 			:get-erzieher
 			:add-erzieher
 			:patch-erzieher
 			:patch-erzieher-an-position
 			:delete-erzieher
-			:readonly
+			:schuljahr
 			:update-kompetenz="hatKompetenzUpdate" />
 		<schueler-schnelleingabe-telefonnummern :manager
 			:get-telefone
@@ -26,7 +28,8 @@
 			:update-kompetenz="hatKompetenzUpdate" />
 		<schueler-schnelleingabe-vorschulentwicklung v-if="schulenMitPrimaerstufe"
 			:manager
-			:patch-schulbesuchsdaten />
+			:patch-schulbesuchsdaten
+			:schuljahr />
 		<schueler-schnelleingabe-vermerke :manager
 			:get-vermerke
 			:add-vermerk
@@ -46,23 +49,25 @@
 <script setup lang="ts">
 
 	import { BenutzerKompetenz, Schulform } from "@core";
-	import { useSchuleState } from "@ui";
 	import { computed } from "vue";
+	import { useAbschnittState, useSchuleState } from "@ui";
 	import type { SchuelerSchnelleingabeProps } from "~/components/schueler/neuanlage/SchuelerSchnelleingabeProps";
 
 	const props = defineProps<SchuelerSchnelleingabeProps>();
+	const abschnittState = useAbschnittState();
 	const schuleState = useSchuleState();
 
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
+	const schuljahr = computed<number>(() => abschnittState.auswahl.schuljahr);
 
 	const schulenMitPrimaerstufe = computed(() => {
 		const erlaubteSchulformen = [Schulform.G, Schulform.FW, Schulform.WF, Schulform.GM, Schulform.KS, Schulform.S, Schulform.GE, Schulform.V];
 		return erlaubteSchulformen.includes(schuleState.schulform);
 	});
 
-	async function cancel() {
-		await props.gotoDefaultView(props.manager().stammdaten.id);
+	function cancel() {
+		void props.gotoDefaultView(props.manager().stammdaten.id);
 	}
 
 </script>
