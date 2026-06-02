@@ -12,7 +12,7 @@ export class ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 	 */
 	private readonly _idBeschaeftigungsart: Supplier<number | null>;
 
-	private static readonly fehlertext: string = "Kein Wert im Feld 'beschaeftigungsart'.";
+	private static readonly FEHLERTEXT: string = "Kein Wert im Feld 'beschaeftigungsart'.";
 
 
 	/**
@@ -32,7 +32,7 @@ export class ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 	protected pruefe(): boolean {
 		const idBeschaeftigungsart: number | null = this._idBeschaeftigungsart.get();
 		if (idBeschaeftigungsart === null) {
-			this.addFehler(0, ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart.fehlertext);
+			this.addFehler(0, ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart.FEHLERTEXT);
 			return false;
 		}
 		return true;

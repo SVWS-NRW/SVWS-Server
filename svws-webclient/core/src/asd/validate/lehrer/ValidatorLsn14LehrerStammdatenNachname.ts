@@ -12,7 +12,7 @@ export class ValidatorLsn14LehrerStammdatenNachname extends Validator {
 	 */
 	private readonly daten: Supplier<string>;
 
-	private static readonly fehlertext5: string = "Nachname der Lehrkraft: Die zweite Stelle des Nachnamens ist mit einem Großbuchstaben besetzt. Bitte stellen sie sicher, dass nur der erste Buchstabe des Nachnamens ein Großbuchstabe ist. Bitte schreiben Sie auf ihn folgende Buchstaben klein.";
+	private static readonly FEHLERTEXT: string = "Nachname der Lehrkraft: Die zweite Stelle des Nachnamens ist mit einem Großbuchstaben besetzt. Bitte stellen sie sicher, dass nur der erste Buchstabe des Nachnamens ein Großbuchstabe ist. Bitte schreiben Sie auf ihn folgende Buchstaben klein.";
 
 
 	/**
@@ -29,7 +29,7 @@ export class ValidatorLsn14LehrerStammdatenNachname extends Validator {
 	protected pruefe(): boolean {
 		const nachnameOhneZusatz: string = NamensManager.getOhneZusatz(this.daten.get());
 		if (nachnameOhneZusatz.length > 1 && JavaCharacter.isUpperCase(nachnameOhneZusatz.charAt(1))) {
-			this.addFehler(5, ValidatorLsn14LehrerStammdatenNachname.fehlertext5);
+			this.addFehler(5, ValidatorLsn14LehrerStammdatenNachname.FEHLERTEXT);
 			return false;
 		}
 		return true;

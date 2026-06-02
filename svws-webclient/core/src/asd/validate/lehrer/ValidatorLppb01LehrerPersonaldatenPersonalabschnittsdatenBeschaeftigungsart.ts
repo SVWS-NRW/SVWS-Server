@@ -13,7 +13,7 @@ export class ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 	 */
 	private readonly _idBeschaeftigungsart: Supplier<number>;
 
-	private static readonly fehlertext: string = "Lehrer Beschäftigungsart: Das Feld 'Beschäftigungsart' muss zulässig sein.";
+	private static readonly FEHLERTEXT: string = "Lehrer Beschäftigungsart: Das Feld 'Beschäftigungsart' muss zulässig sein.";
 
 
 	/**
@@ -37,7 +37,7 @@ export class ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 		const idBeschaeftigungsart: number = this._idBeschaeftigungsart.get();
 		const ba: LehrerBeschaeftigungsart | null = LehrerBeschaeftigungsart.data().getWertByIDOrNull(idBeschaeftigungsart);
 		if (ba === null) {
-			this.addFehler(0, ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart.fehlertext);
+			this.addFehler(0, ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart.FEHLERTEXT);
 			return false;
 		}
 		return true;

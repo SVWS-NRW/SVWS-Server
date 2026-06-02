@@ -20,7 +20,7 @@ export class ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 	 */
 	private readonly _schuljahr: number;
 
-	private static readonly fehlertext: string = "Lehrer Beschäftigungsart: Der eingetragene Wert für das Feld 'Beschäftigungsart' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.";
+	private static readonly FEHLERTEXT: string = "Lehrer Beschäftigungsart: Der eingetragene Wert für das Feld 'Beschäftigungsart' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.";
 
 
 	/**
@@ -43,7 +43,7 @@ export class ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 	protected pruefe(): boolean {
 		const lehrerBeschaeftigungsartKatalogEintrag: LehrerBeschaeftigungsartKatalogEintrag | null = this._beschaeftigungsartNotNull.get().daten(this._schuljahr);
 		if (lehrerBeschaeftigungsartKatalogEintrag === null) {
-			this.addFehler(0, ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart.fehlertext);
+			this.addFehler(0, ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart.FEHLERTEXT);
 			return false;
 		}
 		return true;
