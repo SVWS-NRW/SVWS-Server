@@ -2,7 +2,6 @@ package de.svws_nrw.asd.validate.lehrer;
 
 import java.util.function.Supplier;
 
-import de.svws_nrw.asd.types.lehrer.LehrerBeschaeftigungsart;
 import de.svws_nrw.asd.types.lehrer.LehrerEinsatzstatus;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
@@ -16,27 +15,27 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart extends Validator {
 
 	/** Die Beschaeftigungsart */
-	private final @NotNull Supplier<@AllowNull LehrerBeschaeftigungsart> _beschaeftigungsart;
+	private final @NotNull Supplier<@AllowNull Long> _idBeschaeftigungsart;
+	private static final @NotNull String FEHLERTEXT = "Kein Wert im Feld 'beschaeftigungsart'.";
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param pflichtstundensoll     das Pflichtstundensoll
-	 * @param einsatzstatus        der Einsatzstatus
-	 * @param beschaeftigungsart   die Beschäftigungsart
+	 * @param einsatzstatus          der Einsatzstatus
+	 * @param idBeschaeftigungsart   die ID der Beschäftigungsart
 	 * @param kontext                der Kontext des Validators
 	 */
 	public ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(
-			final @NotNull Supplier<@AllowNull LehrerBeschaeftigungsart> beschaeftigungsart,
+			final @NotNull Supplier<@AllowNull Long> idBeschaeftigungsart,
 			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
 			final @NotNull Supplier<@AllowNull LehrerEinsatzstatus> einsatzstatus,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		_beschaeftigungsart = beschaeftigungsart;
-		final @NotNull Supplier<@NotNull LehrerBeschaeftigungsart> beschaeftigungsartNotNull = getNotNullObjectSupplier(beschaeftigungsart);
-		_validatoren.add(new ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(beschaeftigungsartNotNull, einsatzstatus, kontext));
+		_idBeschaeftigungsart = idBeschaeftigungsart;
+
 		_validatoren.add(
-				new ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(beschaeftigungsartNotNull, einsatzstatus, pflichtstundensoll,
+				new ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(getNotNullSupplierLong(idBeschaeftigungsart), pflichtstundensoll, einsatzstatus,
 						kontext));
 
 	}
@@ -44,14 +43,14 @@ public final class ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBesc
 
 	@Override
 	protected boolean pruefe() {
-		final LehrerBeschaeftigungsart beschaeftigungsart = _beschaeftigungsart.get();
+		// Bestimme die Beschäftigungsart.
+		final Long idBeschaeftigungsart = _idBeschaeftigungsart.get();
 
-		if (beschaeftigungsart == null) {
-			addFehler(0, "Kein Wert im Feld 'beschaeftigungsart'.");
+		if (idBeschaeftigungsart == null) {
+			addFehler(0, FEHLERTEXT);
 			return false;
 		}
 
 		return true;
 	}
-
 }

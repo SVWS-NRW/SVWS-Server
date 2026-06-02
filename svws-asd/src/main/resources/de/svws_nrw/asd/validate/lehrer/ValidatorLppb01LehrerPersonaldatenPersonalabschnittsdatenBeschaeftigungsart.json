@@ -1,0 +1,24 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart",
+    "historie" : [ {
+      "praefix" : "LPPB01",
+      "altes_kuerzel" : "",
+      "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Beschaeftigungsart",
+      "dtos" : "LehrerPersonalabschnittsdaten",
+      "ausfuehrungsbereich_ui" : "Lehrer, Reiter 'Personaldaten'",
+      "anzeigebereich_ui" : "Feld 'Beschäftigungsart'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["LPPB00"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Lehrer Beschäftigungsart: Das Feld 'Beschäftigungsart' muss zulässig sein.",
+      "erlaeuterung" : "",
+      "bedingung" : "LehrerPersonalabschnittsdaten.idBeschaeftigungsart ≠ einer ID eines Eintrags in LehrerBeschaeftigungsart.json", 
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
+  

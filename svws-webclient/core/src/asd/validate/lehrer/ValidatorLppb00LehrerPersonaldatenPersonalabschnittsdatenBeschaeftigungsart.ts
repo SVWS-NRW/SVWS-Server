@@ -1,40 +1,38 @@
-import { LehrerBeschaeftigungsart } from '../../../asd/types/lehrer/LehrerBeschaeftigungsart';
-import { ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart } from '../../../asd/validate/lehrer/ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart';
+import { ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart } from '../../../asd/validate/lehrer/ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { LehrerEinsatzstatus } from '../../../asd/types/lehrer/LehrerEinsatzstatus';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
-import { ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart } from '../../../asd/validate/lehrer/ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart';
 
 export class ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart extends Validator {
 
 	/**
 	 * Die Beschaeftigungsart
 	 */
-	private readonly _beschaeftigungsart: Supplier<LehrerBeschaeftigungsart | null>;
+	private readonly _idBeschaeftigungsart: Supplier<number | null>;
+
+	private static readonly fehlertext: string = "Kein Wert im Feld 'beschaeftigungsart'.";
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param pflichtstundensoll     das Pflichtstundensoll
-	 * @param einsatzstatus        der Einsatzstatus
-	 * @param beschaeftigungsart   die Beschäftigungsart
+	 * @param einsatzstatus          der Einsatzstatus
+	 * @param idBeschaeftigungsart   die ID der Beschäftigungsart
 	 * @param kontext                der Kontext des Validators
 	 */
-	public constructor(beschaeftigungsart: Supplier<LehrerBeschaeftigungsart | null>, pflichtstundensoll: Supplier<number | null>, einsatzstatus: Supplier<LehrerEinsatzstatus | null>, kontext: ValidatorKontext) {
+	public constructor(idBeschaeftigungsart: Supplier<number | null>, pflichtstundensoll: Supplier<number | null>, einsatzstatus: Supplier<LehrerEinsatzstatus | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._beschaeftigungsart = beschaeftigungsart;
-		const beschaeftigungsartNotNull: Supplier<LehrerBeschaeftigungsart> = this.getNotNullObjectSupplier(beschaeftigungsart);
-		this._validatoren.add(new ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(beschaeftigungsartNotNull, einsatzstatus, kontext));
-		this._validatoren.add(new ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(beschaeftigungsartNotNull, einsatzstatus, pflichtstundensoll, kontext));
+		this._idBeschaeftigungsart = idBeschaeftigungsart;
+		this._validatoren.add(new ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(this.getNotNullSupplierLong(idBeschaeftigungsart), pflichtstundensoll, einsatzstatus, kontext));
 	}
 
 	protected pruefe(): boolean {
-		const beschaeftigungsart: LehrerBeschaeftigungsart | null = this._beschaeftigungsart.get();
-		if (beschaeftigungsart === null) {
-			this.addFehler(0, "Kein Wert im Feld 'beschaeftigungsart'.");
+		const idBeschaeftigungsart: number | null = this._idBeschaeftigungsart.get();
+		if (idBeschaeftigungsart === null) {
+			this.addFehler(0, ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart.fehlertext);
 			return false;
 		}
 		return true;

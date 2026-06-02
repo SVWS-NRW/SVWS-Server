@@ -24,6 +24,8 @@ public final class ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBesc
 	/** Das Pflichtstundensoll */
 	private final @NotNull Supplier<@AllowNull Double> _pflichtstundensoll;
 
+	private static final @NotNull String FEHLERTEXT = "Laut Ihren Angaben handelt es sich um eine voll abgeordnete Lehrkraft mit Gestellungsvertrag. Es ist zu erwarten, \"\n\"dass eine Lehrkraft mit Gestellungsvertrag Unterricht an Ihrer Schule erteilt. Bitte überprüfen Sie Ihre Angaben.";
+
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
@@ -49,13 +51,11 @@ public final class ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBesc
 		final LehrerBeschaeftigungsart beschaeftigungsart = _beschaeftigungsart.get();
 		final LehrerEinsatzstatus einsatzstatus = _einsatzstatus.get();
 		final Double pflichtstundensoll = _pflichtstundensoll.get();
-		final String fehlertext3 = "Laut Ihren Angaben handelt es sich um eine voll abgeordnete Lehrkraft mit Gestellungsvertrag. Es ist zu erwarten, "
-				+ "dass eine Lehrkraft mit Gestellungsvertrag Unterricht an Ihrer Schule erteilt. Bitte überprüfen Sie Ihre Angaben.";
 
 		if (LehrerBeschaeftigungsart.G == beschaeftigungsart
 				&& LehrerEinsatzstatus.A == einsatzstatus
 				&& pflichtstundensoll == 0) {
-			addFehler(3, fehlertext3);
+			addFehler(3, FEHLERTEXT);
 			return false;
 		}
 

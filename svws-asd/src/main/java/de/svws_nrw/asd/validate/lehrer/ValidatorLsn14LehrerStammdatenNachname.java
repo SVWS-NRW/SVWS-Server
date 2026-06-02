@@ -15,6 +15,8 @@ public final class ValidatorLsn14LehrerStammdatenNachname extends Validator {
 
 	/** Der Lehrer-Nachname */
 	private final @NotNull Supplier<String> daten;
+	private static final @NotNull  String FEHLERTEXT =
+			"Nachname der Lehrkraft: Die zweite Stelle des Nachnamens ist mit einem Großbuchstaben besetzt. Bitte stellen sie sicher, dass nur der erste Buchstabe des Nachnamens ein Großbuchstabe ist. Bitte schreiben Sie auf ihn folgende Buchstaben klein.";
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
@@ -30,11 +32,9 @@ public final class ValidatorLsn14LehrerStammdatenNachname extends Validator {
 	@Override
 	protected boolean pruefe() {
 		final @NotNull String nachnameOhneZusatz = NamensManager.getOhneZusatz(daten.get());
-		final String fehlertext5 =
-				"Nachname der Lehrkraft: Die zweite Stelle des Nachnamens ist mit einem Großbuchstaben besetzt. Bitte stellen sie sicher, dass nur der erste Buchstabe des Nachnamens ein Großbuchstabe ist. Bitte schreiben Sie auf ihn folgende Buchstaben klein.";
 
 		if (nachnameOhneZusatz.length() > 1 && Character.isUpperCase(nachnameOhneZusatz.charAt(1))) {
-			addFehler(5, fehlertext5);
+			addFehler(5, FEHLERTEXT);
 			return false;
 		}
 

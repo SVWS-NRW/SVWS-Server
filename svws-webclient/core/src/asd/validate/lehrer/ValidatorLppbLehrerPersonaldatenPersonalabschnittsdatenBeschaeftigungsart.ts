@@ -1,4 +1,3 @@
-import { LehrerBeschaeftigungsart } from '../../../asd/types/lehrer/LehrerBeschaeftigungsart';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart } from '../../../asd/validate/lehrer/ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart';
 import { Class } from '../../../java/lang/Class';
@@ -20,8 +19,7 @@ export class ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigu
 	public constructor(idBeschaeftigungsart: Supplier<number | null>, idEinsatzstatus: Supplier<number | null>, pflichtstundensoll: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		const einsatzstatus: Supplier<LehrerEinsatzstatus | null> = { get: () => LehrerEinsatzstatus.data().getWertByIDOrNull(idEinsatzstatus.get()) };
-		const beschaeftigungsart: Supplier<LehrerBeschaeftigungsart | null> = { get: () => LehrerBeschaeftigungsart.data().getWertByIDOrNull(idBeschaeftigungsart.get()) };
-		this._validatoren.add(new ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(beschaeftigungsart, pflichtstundensoll, einsatzstatus, kontext));
+		this._validatoren.add(new ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(idBeschaeftigungsart, pflichtstundensoll, einsatzstatus, kontext));
 	}
 
 	protected pruefe(): boolean {

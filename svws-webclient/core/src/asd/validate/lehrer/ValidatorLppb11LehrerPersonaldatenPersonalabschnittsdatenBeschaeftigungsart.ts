@@ -22,6 +22,8 @@ export class ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 	 */
 	private readonly _pflichtstundensoll: Supplier<number | null>;
 
+	private static readonly fehlertext: string = "Laut Ihren Angaben handelt es sich um eine voll abgeordnete Lehrkraft mit Gestellungsvertrag. Es ist zu erwarten, \"\n\"dass eine Lehrkraft mit Gestellungsvertrag Unterricht an Ihrer Schule erteilt. Bitte überprüfen Sie Ihre Angaben.";
+
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
@@ -42,9 +44,8 @@ export class ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 		const beschaeftigungsart: LehrerBeschaeftigungsart | null = this._beschaeftigungsart.get();
 		const einsatzstatus: LehrerEinsatzstatus | null = this._einsatzstatus.get();
 		const pflichtstundensoll: number | null = this._pflichtstundensoll.get();
-		const fehlertext3: string | null = "Laut Ihren Angaben handelt es sich um eine voll abgeordnete Lehrkraft mit Gestellungsvertrag. Es ist zu erwarten, dass eine Lehrkraft mit Gestellungsvertrag Unterricht an Ihrer Schule erteilt. Bitte überprüfen Sie Ihre Angaben.";
 		if (LehrerBeschaeftigungsart.G as unknown === beschaeftigungsart as unknown && LehrerEinsatzstatus.A as unknown === einsatzstatus as unknown && pflichtstundensoll === 0) {
-			this.addFehler(3, fehlertext3);
+			this.addFehler(3, ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart.fehlertext);
 			return false;
 		}
 		return true;
