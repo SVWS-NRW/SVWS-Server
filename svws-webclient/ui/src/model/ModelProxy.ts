@@ -138,6 +138,16 @@ export class ModelProxy<T extends object> {
 
 
 	/**
+	 * Gibt eine ComputedRef für den Zugriff auf die "Original"-Daten zurück.
+	 *
+	 * @returns die ComputedRef mit den "Original"-Daten
+	 */
+	public get dataComputed(): ComputedRef<T> {
+		return this._dataForProxy;
+	}
+
+
+	/**
 	 * Prüft, sofern die Option checkValidBeforePatch aktiviert ist, für ein gegebenes Attribut,
 	 * ob dieses für einen Patch akzeptiert wird. Das Default-Verhalten ist hier, dass einfach geprüft wird,
 	 * ob ein Validator für das Attribut angeschlagen hat oder nicht. Soll von diesem Verhalten abgewichen werden,

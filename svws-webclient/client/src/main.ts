@@ -25,6 +25,13 @@ app.provide(SchuleStateKey, schuleState);
 app.provide(ServerStateKey, serverState);
 app.provide(ReportingStateKey, reportingState);
 
+if (process.env.NODE_ENV === 'development') {
+	const { registerSVWSDevTools } = await import("../../ui/src/devtools/stateInspector");
+	const { registerSVWSModelProxyDevTools } = await import("../../ui/src/devtools/modelProxyInspector");
+	registerSVWSDevTools(app);
+	registerSVWSModelProxyDevTools(app);
+}
+
 app.directive('autofocus', {
 	mounted: (el: HTMLInputElement, binding) => {
 		if (<boolean>binding.instance?.$props.autofocus) {
