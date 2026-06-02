@@ -66,7 +66,7 @@ export function formatToLocalDate(dateString: string | null, fallback: string = 
 		return fallback;
 	}
 
-	return date.toLocaleDateString("de-DE");
+	return date.toLocaleDateString("de-DE", { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
 /**
@@ -77,7 +77,7 @@ export function formatToLocalDate(dateString: string | null, fallback: string = 
  */
 export function getDateFromDateTime(dateTime: string): string | undefined {
 
-	const customDateTimeRegex = /^(\d{4}-\d{2}-\d{2})\s\d{2}:\d{2}:\d{2}\.\d{3}$/;
+	const customDateTimeRegex = /^(\d{4}-\d{2}-\d{2})\s\d{2}:\d{2}:\d{2}\.\d{1,3}$/;
 	const customMatch = customDateTimeRegex.exec(dateTime);
 	if (customMatch?.[1] !== undefined) {
 		const datePart = customMatch[1];
@@ -107,5 +107,5 @@ export function formatDateToDateTime(date: string): string | undefined {
 		console.error("formatDateToDateTime: Ungültiges Eingabedatum:", date);
 	}
 
-	return `${date} 00:00:00.000`;
+	return `${date} 00:00:00.0`;
 }

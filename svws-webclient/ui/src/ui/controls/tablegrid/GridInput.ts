@@ -15,7 +15,7 @@ import { DeveloperNotificationException } from "../../../../../core/src/core/exc
 export abstract class GridInput<KEY, DATA> {
 
 	// Der Grid-Manager, der dieses Grid-Input verwaltet
-	protected _gridManager: GridManager<KEY, any, Collection<any> | List<any>>;
+	protected _gridManager: GridManager<KEY, any, Collection<any> | any[]>;
 
 	// Der Schlüsselwert zur eindeutigen Identifikation der Zelle, in welchem sich das Grid-input befindet
 	protected _key: KEY;
@@ -45,7 +45,7 @@ export abstract class GridInput<KEY, DATA> {
 	 * @param row           die Zeile, in welcher sich das Input befindet
 	 * @param elem          das HTML-Element, welches dem Grid-Input und damit der Zelle des Grid zugeordnet ist
 	 */
-	constructor(gridManager: GridManager<KEY, any, Collection<any> | List<any>>, key: KEY, col: number, row: number, elem: HTMLElement) {
+	constructor(gridManager: GridManager<KEY, any, Collection<any> | any[]>, key: KEY, col: number, row: number, elem: HTMLElement) {
 		this._gridManager = gridManager;
 		this._key = key;
 		this._col = col;
@@ -64,7 +64,7 @@ export abstract class GridInput<KEY, DATA> {
 	/**
 	 * Gibt den Grid-Manager zurück, welcher dieses Grid-Input verwaltet
 	 */
-	public get gridManager(): GridManager<KEY, any, Collection<any> | List<any>> {
+	public get gridManager(): GridManager<KEY, any, Collection<any> | any[]> {
 		return this._gridManager;
 	}
 

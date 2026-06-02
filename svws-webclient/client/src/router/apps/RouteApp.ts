@@ -10,7 +10,7 @@ import { AppCache } from "~/cache/AppCache";
 import { api } from "~/router/Api";
 import { routeBenutzerprofil } from "./benutzerprofil/RouteBenutzerprofil";
 import { routeBenutzerprofilNutzereinstellungen } from "~/router/apps/benutzerprofil/nutzereinstellungen/RouteBenutzerprofilNutzereinstellungen";
-// import { routeBenutzerprofilWiedervorlagen } from "~/router/apps/benutzerprofil/wiedervorlagen/RouteBenutzerprofilWiedervorlagen";
+import { routeBenutzerprofilWiedervorlagen } from "~/router/apps/benutzerprofil/wiedervorlagen/RouteBenutzerprofilWiedervorlagen";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeKlassen } from "~/router/apps/klassen/RouteKlassen";
@@ -169,7 +169,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		];
 		this._menuBenutzerprofil = [
 			// Aufgaben
-			// routeBenutzerprofilWiedervorlagen,
+			routeBenutzerprofilWiedervorlagen,
 			// Einstellungen
 			routeBenutzerprofilNutzereinstellungen,
 		];

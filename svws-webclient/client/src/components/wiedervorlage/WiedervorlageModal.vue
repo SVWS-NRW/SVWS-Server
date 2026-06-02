@@ -107,16 +107,16 @@
 	});
 
 	function getTypPerson() {
-		if (props.type === "erzieher") {
-			return 3;
+		switch (props.type) {
+			case "lehrkraft":
+				return 1;
+			case "schueler":
+				return 2;
+			case "erzieher":
+				return 3;
+			default:
+				return null;
 		}
-		if (props.type === "schueler") {
-			return 2;
-		}
-		if (props.type === "lehrkraft") {
-			return 1;
-		}
-		return null;
 	}
 
 	function setInitialData() {

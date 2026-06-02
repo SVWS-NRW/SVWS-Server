@@ -25,7 +25,7 @@ export class GridInputAbiturPruefungsreihenfolge<KEY> extends GridInputInnerText
 	 * @param elem          das HTML-Element, welches dem Grid-Input und damit der Zelle des Grid zugeordnet ist
 	 * @param setter        der Setter zum Schreiben der Daten des Grid-Input
 	 */
-	constructor(gridManager: GridManager<KEY, any, Collection<any> | List<any>>, key: KEY, col: number, row: number, elem: HTMLElement, setter: (value: number | null) => void) {
+	constructor(gridManager: GridManager<KEY, any, Collection<any> | any[]>, key: KEY, col: number, row: number, elem: HTMLElement, setter: (value: number | null) => void) {
 		super(gridManager, key, col, row, elem);
 		this._setter = setter;
 		super.updateText(null);

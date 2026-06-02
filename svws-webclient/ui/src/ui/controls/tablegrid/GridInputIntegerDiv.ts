@@ -30,7 +30,7 @@ export class GridInputIntegerDiv<KEY> extends GridInputInnerText<KEY, number | n
 	 * @param max           die maximale Zahl, die erlaubt ist
 	 * @param setter        der Setter zum Schreiben der Daten des Grid-Input
 	 */
-	constructor(gridManager: GridManager<KEY, any, Collection<any> | List<any>>, key: KEY, col: number, row: number, elem: HTMLElement, max: number | null,
+	constructor(gridManager: GridManager<KEY, any, Collection<any> | any[]>, key: KEY, col: number, row: number, elem: HTMLElement, max: number | null,
 		setter: (value: number | null) => void) {
 		super(gridManager, key, col, row, elem);
 		this._max = max;

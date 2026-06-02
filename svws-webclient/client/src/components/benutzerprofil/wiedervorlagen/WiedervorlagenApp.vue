@@ -1,0 +1,223 @@
+<template>
+	<!--	Header -->
+	<header class="svws-ui-header">
+		<div class="svws-ui-header--title">
+			<div class="svws-headline-wrapper">
+				<h2 class="svws-headline">
+					Wiedervorlagen
+				</h2>
+				<span class="svws-subline inline-flex gap-x-3 gap-y-1 items-center">
+					<span class="mt-1">{{ benutzer().anzeigename }}</span>
+					<svws-ui-badge type="light" title="ID" class="font-mono m-0" size="small">
+						ID: {{ benutzer().id }}
+					</svws-ui-badge>
+				</span>
+			</div>
+		</div>
+		<div class="svws-ui-header--actions" />
+	</header>
+
+	<div class="page">
+		<!--	Filter	-->
+		<div class="bg-ui-neutral rounded-md w-full pt-1 pb-2 px-1 mb-5">
+			<div class="flex flex-col lg:flex-row gap-x-3 gap-y-1">
+				<div class="max-w-[30em] w-100">
+					<svws-ui-text-input type="search" placeholder="Suche in Bemerkung/Name" v-model="filter.search" removable />
+				</div>
+				<div class="max-w-[30em] w-100">
+					<svws-ui-text-input type="date" placeholder="Wiedervorlage bis" v-model="filter.tsWiedervorlage" removable class="max-w-[30em]" />
+				</div>
+				<svws-ui-checkbox type="toggle" v-model="filter.toggleUnerledigt" title="Nur unerledigte"
+					class="flex shrink-0 lg:mt-[0.6em]">
+					Nur unerledigte
+				</svws-ui-checkbox>
+			</div>
+		</div>
+
+		<!--  Content  -->
+		<template v-if="!hasWiedervorlagen">
+			<div class="mt-6">Aktuell liegen keine Wiedervorlagen vor.</div>
+		</template>
+		<template v-else-if="gridManager.daten.length === 0">
+			<div class="mt-6">Mit den gesetzten Filter liegen keine Wiedervorlagen vor.</div>
+			<div class="mt-2">Filter zurücksetzen, um alle Wiedervorlagen zu sehen.</div>
+			<div class="mt-6"><svws-ui-button @click="resetFilters">Filter zurücksetzen</svws-ui-button></div>
+		</template>
+		<template v-else>
+			<!--	Table	-->
+			<ui-table-grid name="Wiedervorlagen" :manager="() => gridManager">
+				<template #header>
+					<template v-for="column in gridColumns" :key="`header-${column.kuerzel}`">
+						<th v-if="column.kuerzel === 'auswahl'" class="flex items-start justify-center">
+							<svws-ui-checkbox :model-value="bulkChecked" disabled title="Alle Wiedervorlagen an-/abwählen" />
+						</th>
+						<th v-else-if="column.kuerzel === 'rowActions'" />
+						<th v-else class="text-left">{{ column.name }}</th>
+					</template>
+				</template>
+				<template #default="{ row }">
+					<td class="flex items-start justify-center">
+						<svws-ui-checkbox :model-value="selection.includes(row)" disabled title="Wiedervorlage an-/abwählen" />
+					</td>
+					<td class="text-left">
+						<template v-if="row.tsWiedervorlage !== null">
+							{{ formatToLocalDate(getDateFromDateTime(row.tsWiedervorlage) ?? null) }}
+						</template>
+					</td>
+					<td class="text-left">
+						{{ getPerson(row.typPerson) }}
+					</td>
+					<td class="text-left flex flex-row">
+						<template v-if="row.idPerson !== null">
+							<button type="button" @click.stop="goToPerson(row)" class="button button--icon p-0! h-[1.6em]! w-[1.6em]!" title="Schüler ansehen">
+								<span class="icon i-ri-link" />
+							</button>
+							<span>{{ row.namePerson }}</span>
+						</template>
+						<template v-else>—</template>
+					</td>
+					<td class="text-left line-clamp-6">
+						{{ row.bemerkung }}
+					</td>
+					<td class="text-left">
+						{{ row.nameBenutzerAngelegt }}
+					</td>
+					<td class="text-left">
+						<template v-if="row.tsAngelegt !== null">
+							{{ formatToLocalDate(getDateFromDateTime(row.tsAngelegt) ?? null) }}
+						</template>
+					</td>
+					<td class="text-left">
+						{{ row.nameBenutzerErledigt ?? "—" }}
+					</td>
+					<td class="text-left">
+						<template v-if="row.tsErledigt !== null">
+							{{ formatToLocalDate(getDateFromDateTime(row.tsErledigt) ?? null) }}
+						</template>
+						<template v-else>—</template>
+					</td>
+					<td class="text-left">
+						{{ row.automatischErledigt ? 'an' : 'aus' }}
+					</td>
+					<td>
+						<ui-table-actions :actions="rowActions(row)" :items="row" />
+					</td>
+				</template>
+				<template #footer>
+					<td class="col-span-full my-1">
+						<ui-table-actions :actions="bulkActions" :items="selection" always-visible />
+					</td>
+				</template>
+			</ui-table-grid>
+		</template>
+	</div>
+</template>
+
+<script setup lang="ts">
+	import { computed, ref } from "vue";
+	import { GridManager } from "@ui";
+	import type { WiedervorlageEintrag } from "@core";
+	import { getDateFromDateTime, formatToLocalDate, formatDateToDateTime } from "~/utils/date";
+	import type { WiedervorlagenAppProps } from "./WiedervorlagenAppProps";
+	import type { TableActions } from "../../../../../ui/src/ui/controls/tablegrid/UiTableActions.vue";
+
+	const props = defineProps<WiedervorlagenAppProps>();
+
+	const hasWiedervorlagen = computed(() => props.getListWiedervorlagen().size() > 0);
+
+	function getPerson(personID: null | number) {
+		switch (personID) {
+			case 1:
+				return "Lehrkraft";
+			case 2:
+				return "Schüler/Schülerin";
+			case 3:
+				return "Erziehungsberechtigte";
+			default:
+				return "Allgemein";
+		}
+	}
+
+	//# region ------------------------ Table ------------------------
+	const gridColumns = [
+		{ kuerzel: "auswahl", name: "Auswahl", width: "3rem", hideable: false },
+		{ kuerzel: "tsWiedervorlage", name: "Wiedervorlage am", width: "minmax(7rem, 0.25fr)", hideable: false },
+		{ kuerzel: "typPerson", name: "Art", width: "minmax(8rem, 0.25fr)", hideable: false },
+		{ kuerzel: "idPerson", name: "Name", width: "minmax(8rem, 0.25fr)", hideable: false },
+		{ kuerzel: "bemerkung", name: "Bemerkung", width: "minmax(12rem, 1fr)", hideable: false },
+		{ kuerzel: "idBenutzer", name: "Angelegt von", width: "minmax(8rem, 0.25fr)", hideable: false },
+		{ kuerzel: "tsAngelegt", name: "Angelegt am", width: "minmax(7rem, 0.25fr)", hideable: false },
+		{ kuerzel: "idBenutzerErledigt", name: "Erledigt von", width: "minmax(8rem, 0.25fr)", hideable: false },
+		{ kuerzel: "tsErledigt", name: "Erledigt am", width: "minmax(7rem, 0.25fr)", hideable: false },
+		{ kuerzel: "automatischErledigt", name: "Automatisch löschen", width: "7rem", hideable: false },
+		{ kuerzel: "rowActions", name: "Row-Actions", width: '7em' },
+	];
+
+	const gridManager = new GridManager<string, WiedervorlageEintrag, WiedervorlageEintrag[]>({
+		daten: computed<WiedervorlageEintrag[]>(() => {
+			let wiedervorlagen: WiedervorlageEintrag[] = props.getListWiedervorlagen().toArray() as WiedervorlageEintrag[];
+
+			// for search input search in 'bemerkung' or 'namePerson' fields
+			if (filter.value.search !== "") {
+				const searchValue = filter.value.search.trim().toLowerCase();
+
+				wiedervorlagen = wiedervorlagen.filter(wiedervorlage =>
+					(wiedervorlage.namePerson !== null && wiedervorlage.namePerson.toLowerCase().includes(searchValue)) ||
+					wiedervorlage.bemerkung.toLowerCase().includes(searchValue))
+				;
+			}
+
+			// for date input filter for wiedervorlagen due <= the date
+			if (filter.value.tsWiedervorlage !== "") {
+				const dateAsDateTime = formatDateToDateTime(filter.value.tsWiedervorlage);
+				wiedervorlagen = wiedervorlagen.filter((wiedervorlage): boolean => {
+					if (dateAsDateTime === undefined || wiedervorlage.tsWiedervorlage === null) {
+						return false;
+					}
+
+					return wiedervorlage.tsWiedervorlage <= dateAsDateTime;
+				});
+			}
+
+			// for toggle filter for all or only unfinished wiedervorlagen
+			if (filter.value.toggleUnerledigt === true) {
+				wiedervorlagen = wiedervorlagen.filter(wiedervorlage => wiedervorlage.tsErledigt === null);
+			}
+
+			return wiedervorlagen;
+		}),
+		getRowKey: row => `${row.id}`,
+		columns: gridColumns,
+	});
+
+	//# endregion
+
+	//# region ------------------------ Filters ------------------------
+	const filter = ref({ search: "", tsWiedervorlage: "", toggleUnerledigt: true });
+
+	function resetFilters() {
+		filter.value = { search: "", tsWiedervorlage: "", toggleUnerledigt: false };
+	}
+	//# endregion
+
+	//# region ----------------------- Selection & Actions ------------------------
+
+	/* currently only implemented as readonly checkboxes and action buttons	 */
+	const selection = ref<WiedervorlageEintrag[]>([]);
+	const bulkChecked = computed(() => selection.value.length > 0);
+	const bulkActions = computed(() => {
+		return [
+			{ label: "Allgemeine Wiedervorlage anlegen", action: () => {}, iconClasses: " i-ri-add-line", disabled: true },
+			{ label: "Ausgewählte Wiedervorlagen löschen", action: () => {}, iconClasses: "i-ri-delete-bin-line icon-ui-danger", disabled: true },
+		];
+	});
+
+	function rowActions(row: WiedervorlageEintrag): TableActions<WiedervorlageEintrag>[] {
+		return [
+			{ label: "Wiedervorlage als erledigt markieren", action: () => {}, iconClasses: "i-ri-check-line", disabled: true },
+			{ label: "Wiedervorlage bearbeiten", action: () => {}, iconClasses: "i-ri-edit-2-line", disabled: true },
+			{ label: "Wiedervorlage löschen", action: () => { }, iconClasses: "i-ri-delete-bin-line icon-ui-danger", disabled: true },
+		];
+	}
+	//# endregion
+</script>

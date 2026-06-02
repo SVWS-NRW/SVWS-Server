@@ -36,7 +36,7 @@ export class GridInputNumberFixed<KEY> extends GridInputInnerText<KEY, number | 
 	 * @param dp            die Anzahl der zulässigen Nachkommastellen (decimal places)
 	 * @param setter        der Setter zum Schreiben der Daten des Grid-Input
 	 */
-	constructor(gridManager: GridManager<KEY, any, Collection<any> | List<any>>, key: KEY, col: number, row: number, elem: HTMLElement, max: number | null,
+	constructor(gridManager: GridManager<KEY, any, Collection<any> | any[]>, key: KEY, col: number, row: number, elem: HTMLElement, max: number | null,
 		dp: number, setter: (value: number | null) => void) {
 		super(gridManager, key, col, row, elem);
 		this._max = max;

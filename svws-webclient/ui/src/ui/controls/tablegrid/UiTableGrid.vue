@@ -28,7 +28,6 @@
 
 	import { computed } from 'vue';
 	import type { Collection } from '../../../../../core/src/java/util/Collection';
-	import type { List } from '../../../../../core/src/java/util/List';
 	import type { GridManager } from './GridManager';
 
 	export interface CellFormat {
@@ -43,7 +42,7 @@
 		headerCount?: number,
 		footerCount?: number,
 		name?: string | undefined,
-		manager: () => GridManager<U, T, Collection<T> | List<T>>,
+		manager: () => GridManager<U, T, Collection<T> | T[]>,
 		hideSelection?: boolean,
 	}>(), {
 		headerCount: 1,

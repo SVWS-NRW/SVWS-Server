@@ -23,7 +23,7 @@ export class GridInputInnerText<KEY, DATA> extends GridInput<KEY, DATA> {
 	 * @param autoCommit    gibt an, ob die Daten des Grid-Inputs automatisch über den Setter geschrieben werden sollen,
 	 *                      sobald das Input-Element den Fokus verliert
 	 */
-	constructor(gridManager: GridManager<KEY, any, Collection<any> | List<any>>, key: KEY, col: number, row: number, elem: HTMLElement, autoCommit: boolean = true) {
+	constructor(gridManager: GridManager<KEY, any, Collection<any> | any[]>, key: KEY, col: number, row: number, elem: HTMLElement, autoCommit: boolean = true) {
 		super(gridManager, key, col, row, elem);
 		this._autoCommit = autoCommit;
 	}

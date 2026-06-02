@@ -102,7 +102,7 @@ export default defineConfig(
 			"@stylistic/switch-colon-spacing": ["error", {"after": true, "before": false}],
 			"@stylistic/template-curly-spacing": ["error", "never"],
 			"@stylistic/spaced-comment": ["error", "always", {
-				"markers": ["/"]
+				"markers": ["/", "#"]
 			  }],
 			"@stylistic/space-in-parens": ["error", "never"],
 			"@stylistic/no-whitespace-before-property": "error",
@@ -138,7 +138,7 @@ export default defineConfig(
 			"@typescript-eslint/no-confusing-void-expression": "off",
 			"@typescript-eslint/no-unnecessary-type-assertion": "off",
 			"@typescript-eslint/no-unnecessary-type-arguments": "off",
-			
+
 			"@typescript-eslint/no-misused-promises": "error",
 			"@typescript-eslint/no-floating-promises": "error",
 			"@typescript-eslint/consistent-type-imports": "warn",

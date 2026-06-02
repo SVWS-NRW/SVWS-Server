@@ -33,11 +33,14 @@ export interface GridColumn<DATA> {
 	hideable?: boolean,
 }
 
+function isArray<DATA>(list: Collection<DATA> | DATA[]): list is DATA[] {
+	return Array.isArray(list);
+}
 
 /**
  * Das Konfigurationsobjekt für die initiale Konfiguration eines Grid-Managers.
  */
-export interface GridManagerConfig<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> {
+export interface GridManagerConfig<KEY, DATA, LIST extends Collection<DATA> | DATA[]> {
 
 	/** Die Daten für die Zeilen, die mit dem Grid-Manager verwaltet werden */
 	daten: Ref<LIST>,
@@ -59,7 +62,7 @@ export interface GridManagerConfig<KEY, DATA, LIST extends Collection<DATA> | Li
 /**
  * Ein Manager, um die Daten und die Inputs in einem UiTableGrid zu Verwalten.
  */
-export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> {
+export class GridManager<KEY, DATA, LIST extends Collection<DATA> | DATA[]> {
 
 	/** Gibt an, ob die Informationen zum State aktuell sind oder nicht. */
 	private _stateUpToDate: boolean = false;
@@ -954,7 +957,9 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> 
 	 */
 	public set focusRowLast(row: number | null) {
 		const daten = this._daten.value;
-		if ((row === null) || (row < 0) || (row >= daten.size())) {
+		const datenLength = isArray(daten) ? daten.length : daten.size();
+
+		if ((row === null) || (row < 0) || (row >= datenLength)) {
 			return;
 		}
 		const input = this.getInputByPosition(row, this.focusColumnLast);
@@ -1121,3 +1126,4 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> 
 	}
 
 }
+

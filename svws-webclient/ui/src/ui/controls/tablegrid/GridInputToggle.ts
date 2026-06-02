@@ -27,7 +27,7 @@ export class GridInputToggle<KEY> extends GridInput<KEY, boolean> {
 	 * @param elem          das HTML-Element, welches dem Grid-Input und damit der Zelle des Grid zugeordnet ist
 	 * @param setter        der Setter zum Schreiben der Daten des Grid-Input
 	 */
-	constructor(gridManager: GridManager<KEY, any, Collection<any> | List<any>>, key: KEY, col: number, row: number, elem: HTMLElement, setter: (value: boolean) => void) {
+	constructor(gridManager: GridManager<KEY, any, Collection<any> | any[]>, key: KEY, col: number, row: number, elem: HTMLElement, setter: (value: boolean) => void) {
 		super(gridManager, key, col, row, elem);
 		this._setter = setter;
 	}
