@@ -42,6 +42,9 @@ export class RouteConfig extends RouteNode<RouteDataConfig, RouteApp> {
 	public getProps(to: RouteLocationNormalized): ConfigAppProps {
 		return {
 			getCert: this.data.getCert,
+			createCert: this.data.createCert,
+			uploadCert: this.data.uploadCert,
+			apiStatus: api.status,
 		};
 	}
 

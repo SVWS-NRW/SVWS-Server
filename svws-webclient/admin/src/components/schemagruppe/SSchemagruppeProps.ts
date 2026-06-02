@@ -1,5 +1,5 @@
+import type { ApiFile } from "@core/api/BaseApi";
 import type { SchemaListeEintrag } from "@core/core/data/db/SchemaListeEintrag";
-import type { ApiFile } from "@core/index";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface SchemagruppeProps {

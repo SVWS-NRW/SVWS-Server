@@ -49,8 +49,12 @@ test('Smoke-Test - Basic', async ({ page }) => {
 	await page.getByRole('link', { name: 'Konfiguration' }).click();
 	await expect(page.locator('.svws-headline')).toContainText('Konfiguration des SVWS-Servers');
 	// prüfen ob Zertifikat exportieren Button angezeigt wird
-	const certificateBtnLocator = page.locator('.i-ri-upload-2-line').locator('..');
-	await expect(certificateBtnLocator).toContainText("Zertifikat exportieren");
+	const certificateBtnLocatorExport = page.locator('.i-ri-download-2-line').locator('..');
+	await expect(certificateBtnLocatorExport).toContainText("Zertifikat exportieren");
+	const certificateBtnLocatorImport = page.locator('.i-ri-upload-2-line').locator('..');
+	await expect(certificateBtnLocatorImport).toContainText("Zertifikat importieren");
+	const certificateBtnLocatorCreate = page.locator('.i-ri-certificate-2-line').locator('..');
+	await expect(certificateBtnLocatorCreate).toContainText("Zertifikat generieren");
 
 	// Logout prüfen
 	await logout();

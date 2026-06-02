@@ -1132,3 +1132,10 @@
 	mask-repeat: no-repeat;
 	mask-position: center;
 }
+
+@utility i-ri-certificate-2-line {
+	mask-image: url(@icons/Document/certificate-2-line.svg);
+	-webkit-mask-image: url(@icons/Document/certificate-2-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}

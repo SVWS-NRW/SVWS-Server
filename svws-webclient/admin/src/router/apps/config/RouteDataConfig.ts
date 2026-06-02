@@ -1,3 +1,4 @@
+import type { TLSCertificateInfo } from "@core/core/data/TLSCertificateInfo";
 import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 
@@ -13,18 +14,18 @@ interface RouteStateConfig {
 
 export class RouteDataConfig {
 
-	private static _defaultState: RouteStateConfig = {
+	private static readonly _defaultState: RouteStateConfig = {
 		view: routeSchemaUebersicht,
 	};
 
-	private _state = shallowRef(RouteDataConfig._defaultState);
+	private readonly _state = shallowRef(RouteDataConfig._defaultState);
 
 	private setPatchedDefaultState(patch: Partial<RouteStateConfig>) {
-		this._state.value = Object.assign({ ... RouteDataConfig._defaultState }, patch);
+		this._state.value = { ... RouteDataConfig._defaultState, ...patch };
 	}
 
 	private setPatchedState(patch: Partial<RouteStateConfig>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
+		this._state.value = { ... this._state.value, ...patch };
 	}
 
 	private commit(): void {
@@ -45,6 +46,26 @@ export class RouteDataConfig {
 
 	getCert = async () => {
 		return await api.server.getConfigCertificateFile();
+	};
+
+	createCert = async (tlsCertificateInfo: TLSCertificateInfo, alias: string): Promise<boolean> => {
+		api.status.start();
+		try {
+			await api.privileged.createConfigPrivateKeySelfSignedCertificate(tlsCertificateInfo, alias);
+			return true;
+		} finally {
+			api.status.stop();
+		}
+	};
+
+	uploadCert = async (formData: FormData, alias: string): Promise<boolean> => {
+		api.status.start();
+		try {
+			await api.privileged.setConfigPrivateKeyCertificateBase64(formData, alias);
+			return true;
+		} finally {
+			api.status.stop();
+		}
 	};
 
 }
