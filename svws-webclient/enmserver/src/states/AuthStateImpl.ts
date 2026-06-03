@@ -239,7 +239,12 @@ class AuthStateImpl implements AuthState {
 		} catch (e) {
 			await this.logout();
 			if ((e instanceof OpenApiError) && (e.response?.status !== 401)) {
-				const message = await e.response?.text() ?? "Unbekannter Grund.";
+				let message = await e.response?.text() ?? "";
+				if ((message === "") && import.meta.env.DEV) {
+					message = `Der Server ist nicht erreichbar. Haben Sie ihn gestartet und wenn ja, ist WeNoM die Adresse mit Port bekannt? `
+					+ (import.meta.env.VITE_PHP_API_URL === undefined ? `Wenn der PHP-Server läuft, aber nicht unter der gleichen Adresse wie der Client erreichbar ist, müssen Sie eine .env.local-Datei anlegen mit dem Wert: VITE_PHP_API_URL=https://serveradresse:port`
+						: `Es ist in einer .env-Datei die Server-Adresse ${import.meta.env.VITE_PHP_API_URL} angegeben. Bitte überprüfen Sie, ob der Server unter dieser Adresse erreichbar ist.`);
+				}
 				return { success: false, message: `Anmeldung fehlgeschlagen: ${message}` };
 			}
 			return { success: false, message: "Benutzername oder Passwort falsch." };

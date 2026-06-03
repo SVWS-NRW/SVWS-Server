@@ -5,17 +5,14 @@
 		</template>
 		<template #main>
 			<Transition mode="out-in">
-				<!-- Zeige an, wenn der Browser veraltet ist -->
-				<div v-if="browserVeraltet" class="text-ui-danger font-medium"> Ihr Browser ist veraltet und kann für den WebNotenManager nicht verwendet werden. Bitte benutzen Sie einen modernen Browser. </div>
-
 				<!-- 1. Schritt: Anmeldung mit Benutzername und Kennwort als erstem Faktor -->
-				<div v-else-if="!auth.pendingPasswordChange && !auth.pending2FA">
+				<div v-if="!auth.pendingPasswordChange && !auth.pending2FA">
 					<Transition>
 						<svws-ui-input-wrapper v-if="!connecting" class="mt-1" center>
 							<svws-ui-text-input v-model.trim="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" @methods="handleInputMethodsUsername" />
 							<svws-ui-text-input v-model.trim="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" />
 							<svws-ui-spacing />
-							<div v-if="errorMessage" class="text-ui-danger font-medium my-2"> {{ errorMessage }} </div>
+							<div v-if="errorMessage" class="text-ui-danger font-medium my-2 text-left"> {{ errorMessage }} </div>
 							<div class="flex gap-2">
 								<svws-ui-modal-hilfe> <s-login-hilfe /> </svws-ui-modal-hilfe>
 								<svws-ui-button @click="doLogin" type="primary" :disabled="authenticating || (username.length === 0) || (password.length === 0)">
@@ -108,7 +105,6 @@
 	const username = ref("");
 	const password = ref("");
 	const totpToken = ref<string>("");
-	const browserVeraltet = ref<boolean>(false);
 	const errorMessage = ref<string | null>(null);
 
 	const connecting = ref(false);
@@ -164,14 +160,6 @@
 
 
 	onMounted(async () => {
-		try {
-			const set = new Set();
-			set.difference(new Set());
-		} catch {
-			browserVeraltet.value = true;
-			return;
-		}
-
 		await initCoreTypes();
 
 		await nextTick();

@@ -7,11 +7,18 @@
 			<div v-if="connecting || inputFocus" class="text-left my-1">
 				<span class="font-bold">Status: </span>Verbinde ...
 			</div>
-			<div v-else-if="!connected && !connecting" class="text-justify py-4">
+			<div v-else-if="!connected && !connecting" class="text-left py-4">
 				<div class="font-bold pb-2">Kein Server verfügbar</div>
 				<div>
-					Bitte prüfen Sie, ob eine aktive Netzwerkverbindung zum SVWS-Server vorhanden ist.<br> Sollte dieses Problem weiterhin bestehen,
-					wenden Sie sich bitte an Ihren schulischen IT-Support oder an das Fachberaterteam.
+					<template v-if="viteServerModeDEV">
+						<div>Der Server ist nicht erreichbar. Haben Sie ihn gestartet und wenn ja, ist dem SVWS-Client die Adresse mit Port bekannt?</div>
+						<div v-if="viteProxyAdresse !== undefined">Es ist in einer <code>.env</code>-Datei die Server-Adresse <code>{{ viteProxyAdresse }}</code> angegeben. Bitte überprüfen Sie, ob der Server unter dieser Adresse erreichbar ist.</div>
+						<div v-else>Wenn der SVWS-Server läuft, aber nicht unter der gleichen Adresse wie der Client erreichbar ist, müssen Sie eine <code>.env.local</code>-Datei anlegen mit dem Wert: <code>VITE_SERVER_API_URL=https://serveradresse:port</code></div>
+					</template>
+					<div class="text-justify py-4">
+						Bitte prüfen Sie, ob eine aktive Netzwerkverbindung zum SVWS-Server vorhanden ist.<br> Sollte dieses Problem weiterhin bestehen,
+						wenden Sie sich bitte an Ihren schulischen IT-Support oder an das Fachberaterteam.
+					</div>
 				</div>
 			</div>
 			<Transition>
@@ -37,12 +44,20 @@
 
 <script setup lang="ts">
 
-	import { ref, shallowRef, watch } from "vue";
+	import { onMounted, ref, shallowRef, watch } from "vue";
 	import type { LoginProps } from "./SLoginProps";
 	import { version } from '../../version';
 	import { githash } from '../../githash';
 
 	const props = defineProps<LoginProps>();
+
+	const viteProxyAdresse = ref();
+	const viteServerModeDEV = ref(false);
+
+	onMounted(() => {
+		viteProxyAdresse.value = import.meta.env.VITE_SERVER_API_URL;
+		viteServerModeDEV.value = import.meta.env.DEV;
+	});
 
 	const firstauth = ref(true);
 	const username = ref("root");
