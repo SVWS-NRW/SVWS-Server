@@ -1,51 +1,68 @@
 <template>
 	<div class="page page-flex-row">
-		<!-- Daten mit dem Webnotenmanager synchronisieren -->
-		<div class="max-w-164">
-			<div class="text-headline-md mb-4">Daten abgleichen</div>
-			<svws-ui-input-wrapper>
-				<div>
-					<div> Führt einen Abgleich der Daten in beide Richtungen durch, indem zuerst die neuen lokalen Daten zum Webnotenmanager hochgeladen werden und anschließend neue Daten vom Webnotenmanager abgeholt werden. </div>
-					<svws-ui-button type="primary" @click="call(synchronize)">
-						<span class="i-ri-download-2-line icon" />
-						<span class="i-ri-upload-2-line icon mr-2" />
-						Synchronisieren
-					</svws-ui-button>
-				</div>
-				<div>
-					<div> Lädt die lokalen Daten zum Webnotenmanager hoch und aktualisiert diesen ggf. mit neueren Daten dort. </div>
-					<svws-ui-button type="primary" @click="call(upload)">
-						<span class="i-ri-upload-2-line icon mr-2" />
-						Hochladen
-					</svws-ui-button>
-				</div>
-				<div>
-					<div> Lädt die Daten vom Webnotenmanager herunter und aktualisiert ggf. die lokalen Daten.</div>
-					<svws-ui-button type="primary" @click="call(download)">
-						<span class="i-ri-download-2-line icon mr-2" />
-						Herunterladen
-					</svws-ui-button>
-				</div>
-			</svws-ui-input-wrapper>
+		<div class="min-w-fit flex flex-col gap-8">
+			<!-- Daten mit dem WebNotenManager synchronisieren -->
+			<div class="max-w-164">
+				<div class="text-headline-md mb-4">Daten abgleichen</div>
+				<svws-ui-input-wrapper>
+					<div>
+						<div> Führt einen Abgleich der Daten in beide Richtungen durch, indem zuerst die neuen lokalen Daten zum WebNotenManager hochgeladen werden und anschließend neue Daten vom WebNotenManager abgeholt werden. </div>
+						<svws-ui-button type="primary" @click="call(synchronize)">
+							<span class="i-ri-download-2-line icon" />
+							<span class="i-ri-upload-2-line icon mr-2" />
+							Synchronisieren
+						</svws-ui-button>
+					</div>
+					<div>
+						<div> Lädt die lokalen Daten zum WebNotenManager hoch und aktualisiert diesen ggf. mit neueren Daten dort. </div>
+						<svws-ui-button type="primary" @click="call(upload)">
+							<span class="i-ri-upload-2-line icon mr-2" />
+							Hochladen
+						</svws-ui-button>
+					</div>
+					<div>
+						<div> Lädt die Daten vom WebNotenManager herunter und aktualisiert ggf. die lokalen Daten.</div>
+						<svws-ui-button type="primary" @click="call(download)">
+							<span class="i-ri-download-2-line icon mr-2" />
+							Herunterladen
+						</svws-ui-button>
+					</div>
+				</svws-ui-input-wrapper>
+			</div>
+			<!-- Den WebNotenManager zurücksetzen -->
+			<div class="max-w-164">
+				<div class="text-headline-md mb-4">Entfernen der Daten</div>
+				<div>Achtung, wenn Daten auf dem WebNotenManager entfernt werden, gehen alle dort eingegebenen Daten unwiderruflich verloren. Dies sollte nur durchgeführt werden, wenn alle Daten synchronisiert worden sind oder der WebNotenManager für den aktuellen Lernabschnitt nicht weiter verwendet wird.</div>
+				<svws-ui-button type="danger" @click="show = true">
+					Den Löschdialog öffnen …
+				</svws-ui-button>
+				<svws-ui-modal v-model:show="show" size="medium" class="hidden" type="danger">
+					<template #modalTitle>Daten entfernen</template>
+					<template #modalDescription>
+						<div class="text-justify space-y-4">
+							<div>Es wird unterschieden zwischen den <span class="font-bold">Lernabschnittsdaten</span> und <span class="font-bold">Allen Daten</span>.</div>
+							<div>Ersteres entfernt alle Daten des Lernabschnittes vom WebNotenManager. Die Benutzerdaten bleiben auf dem Server des WebNotenManagers zwar erhalten, eine Anmeldung am Client des WebNotenManagers ist danach aber nicht mehr möglich da keine Leistungsdaten vorhanden sind.</div>
+							<div>Letzteres entfernt alle Daten des Lernabschnittes vom WebNotenManager, die Konfigurationseinstellungen und auch die Benutzerdaten. Die dort gespeicherten Anmeldeinformationen gehen damit verloren.</div>
+						</div>
+					</template>
+					<template #modalActions>
+						<div class="w-full flex justify-between">
+							<svws-ui-button type="secondary" @click="show = false">Abbrechen</svws-ui-button>
+							<div class="flex flex-row">
+								<svws-ui-button type="danger" @click="call(reset).then(() => show = false)">
+									Lernabschnittsdaten entfernen
+								</svws-ui-button>
+								<svws-ui-button class="justify-self-end" type="danger" @click="call(truncate).then(() => show = false)">Alle Daten entfernen</svws-ui-button>
+							</div>
+						</div>
+					</template>
+				</svws-ui-modal>
+			</div>
 		</div>
 
-		<!-- Den Webnotenmanager zurücksetzen -->
-		<div class="max-w-164">
-			<div class="text-headline-md mb-4">Entfernen der Daten</div>
-			<svws-ui-input-wrapper>
-				<div>
-					<div> Entfernt alle Daten des Lernabschnittes vom Webnotenmanager. Die Benutzerdaten bleiben auf dem Server des Webnotenmanagers zwar erhalten, eine Anmeldung am Client des Webnotenmanagers ist danach aber nicht mehr möglich da keine Leistungsdaten vorhanden sind.</div>
-					<svws-ui-button type="primary" @click="call(reset)">
-						Daten entfernen
-					</svws-ui-button>
-				</div>
-				<div>
-					<div> Entfernt alle Daten des Lernabschnittes vom Webnotenmanager, die Konfigurationseinstellungen und auch die Benutzerdaten. Die dort gespeicherten Anmeldeinformationen gehen damit verloren.</div>
-					<svws-ui-button type="danger" @click="call(truncate)">
-						Daten, Konfiguration und Benutzer entfernen
-					</svws-ui-button>
-				</div>
-			</svws-ui-input-wrapper>
+		<!-- Die Ausgabe des Logs -->
+		<div v-if="status !== null && manager().auswahl().id > 0" class="min-w-fit grow h-full overflow-hidden flex flex-col gap-4">
+			<log-box :logs="status.log" :status="status.success" />
 		</div>
 	</div>
 </template>
@@ -60,6 +77,7 @@
 
 	const status = ref<SimpleOperationResponse | null>(null);
 	const spinning = ref<boolean>(false);
+	const show = ref(false);
 
 	async function call(func: () => Promise<SimpleOperationResponse>) {
 		status.value = null;
