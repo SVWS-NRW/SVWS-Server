@@ -1067,6 +1067,7 @@
   "sprachendaten" : {
     "schuelerID" : 1015,
     "belegungen" : [ {
+      "id" : -1,
       "sprache" : "L",
       "reihenfolge" : 1,
       "belegungVonJahrgang" : "08",

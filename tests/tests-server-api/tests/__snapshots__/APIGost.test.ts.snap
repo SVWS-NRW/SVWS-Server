@@ -2208,6 +2208,7 @@ GostLeistungen {
           "hatHebraicum": false,
           "hatKleinesLatinum": false,
           "hatLatinum": false,
+          "id": 5102,
           "istNachweis": false,
           "referenzniveau": "B1/B2",
           "reihenfolge": 1,
@@ -2222,6 +2223,7 @@ GostLeistungen {
           "hatHebraicum": false,
           "hatKleinesLatinum": false,
           "hatLatinum": false,
+          "id": 5103,
           "istNachweis": false,
           "referenzniveau": "B1",
           "reihenfolge": 2,
@@ -2241,6 +2243,7 @@ GostLeistungen {
         Sprachpruefung {
           "anspruchsniveauId": 3,
           "ersetzteSprache": "T",
+          "id": 1,
           "istFeststellungspruefung": false,
           "istHSUPruefung": true,
           "jahrgang": "09",

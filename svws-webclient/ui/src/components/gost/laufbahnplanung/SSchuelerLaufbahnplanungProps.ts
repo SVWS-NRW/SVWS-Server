@@ -4,7 +4,6 @@ import type { AbiturdatenManager } from "../../../../../core/src/core/abschluss/
 import type { GostBelegpruefungErgebnis } from "../../../../../core/src/core/abschluss/gost/GostBelegpruefungErgebnis";
 import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
 import type { GostLaufbahnplanungBeratungsdaten } from "../../../../../core/src/core/data/gost/GostLaufbahnplanungBeratungsdaten";
-import type { GostLaufbahnplanungDaten } from "../../../../../core/src/core/data/gost/GostLaufbahnplanungDaten";
 import type { GostSchuelerFachwahl } from "../../../../../core/src/core/data/gost/GostSchuelerFachwahl";
 import type { LehrerListeEintrag } from "../../../../../core/src/core/data/lehrer/LehrerListeEintrag";
 import type { SchuelerListeEintrag } from "../../../../../core/src/core/data/schueler/SchuelerListeEintrag";
@@ -29,7 +28,7 @@ export interface SchuelerLaufbahnplanungProps {
 	abiturdatenManager: () => AbiturdatenManager;
 	listLehrer: ArrayList<LehrerListeEintrag>;
 	id?: number;
-	zwischenspeicher?: GostLaufbahnplanungDaten;
+	hatZwischenspeicher: boolean;
 	saveLaufbahnplanung: () => Promise<void>;
 	restoreLaufbahnplanung: () => Promise<void>;
 	resetFachwahlen: (forceDelete: boolean) => Promise<void>;

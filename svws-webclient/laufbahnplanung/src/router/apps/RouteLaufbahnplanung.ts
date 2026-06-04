@@ -8,7 +8,7 @@ import { routeLadeDaten } from "./RouteLadeDaten";
 
 import LaufbahnplanungOberstufe from "~/components/LaufbahnplanungOberstufe.vue";
 import type { LaufbahnplanungOberstufeProps } from "~/components/LaufbahnplanungOberstufeProps";
-import { GostLaufbahnplanungDaten } from "@core/core/data/gost/GostLaufbahnplanungDaten";
+import { GostLaufbahnplanungExportV1 } from "@core/core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1";
 
 
 export class RouteLaufbahnplanung extends RouteNode<unknown, RouteApp> {
@@ -50,7 +50,7 @@ export class RouteLaufbahnplanung extends RouteNode<unknown, RouteApp> {
 			gostBelegpruefungErgebnis: () => routeApp.data.gostBelegpruefungErgebnis,
 			abiturdatenManager: () => routeApp.data.abiturdatenManager,
 			id: undefined,
-			zwischenspeicher: routeApp.data.zwischenspeicher === undefined ? undefined : new GostLaufbahnplanungDaten(),
+			zwischenspeicher: (routeApp.data.zwischenspeicher === undefined) ? undefined : new GostLaufbahnplanungExportV1(),
 			saveLaufbahnplanung: routeApp.data.saveLaufbahnplanung,
 			restoreLaufbahnplanung: routeApp.data.restoreLaufbahnplanung,
 			resetFachwahlen: routeApp.data.resetFachwahlen,

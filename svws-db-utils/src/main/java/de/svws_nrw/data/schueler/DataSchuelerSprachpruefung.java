@@ -1,6 +1,5 @@
 package de.svws_nrw.data.schueler;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,12 +12,12 @@ import de.svws_nrw.asd.data.jahrgang.JahrgaengeKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.Sprachpruefung;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.Note;
-import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.core.types.fach.Sprachpruefungniveau;
-import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
 import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.asd.types.fach.Sprachreferenzniveau;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
+import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.core.types.fach.Sprachpruefungniveau;
+import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -27,8 +26,6 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerSprachpruefungen;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 
@@ -65,6 +62,7 @@ public final class DataSchuelerSprachpruefung extends DataManagerRevised<Long, D
 		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, dto.Schueler_ID);
 		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dtoSchueler.Schuljahresabschnitts_ID);
 		final Sprachpruefung daten = new Sprachpruefung();
+		daten.id = dto.ID;
 		daten.sprache = dto.Sprache;
 		daten.ersetzteSprache = SprachendatenUtils.getErsetzeSprache(dto.Sprache);
 		daten.jahrgang = dto.ASDJahrgang;
@@ -246,14 +244,13 @@ public final class DataSchuelerSprachpruefung extends DataManagerRevised<Long, D
 	public void checkBeforePatch(final DTOSchuelerSprachpruefungen dto, final Map<String, Object> patchAttributes) throws ApiOperationException {
 		// Prüfe ggf., ob der Benutzer die Rechte in Abhängigkeit der aktuellen Klasse des Schülers hat, um die Sprachprüfung zu verändern
 		checkFunktionsbezogeneKompetenzAufAktuellenLernabschnitt();
-		if (patchAttributes.get("sprache") == null) {
-			throw new ApiOperationException(Status.BAD_REQUEST, "Bei einem Patch für die Sprachprüfung muss ein Sprachkürzel angegeben werden.");
-		}
-		final String patchSprache = JSONMapper.convertToString(patchAttributes.get("sprache"), false, false, 2);
-		if (!patchSprache.equals(dto.Sprache)) {
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Bei einem Patch für die Sprachprüfung muss das Sprachkürzel im Patch mit dem Sprachkürzel im DTO übereinstimmen.");
+		if (patchAttributes.get("sprache") != null) {
+			final String patchSprache = JSONMapper.convertToString(patchAttributes.get("sprache"), false, false, 2);
+			if (!patchSprache.equals(dto.Sprache)) {
+				throw new ApiOperationException(Status.BAD_REQUEST,
+						"Bei einem Patch für die Sprachprüfung muss das Sprachkürzel im Patch mit dem Sprachkürzel im DTO übereinstimmen.");
 			}
+		}
 	}
 
 
@@ -296,101 +293,6 @@ public final class DataSchuelerSprachpruefung extends DataManagerRevised<Long, D
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Sprachprüfung mit der ID %d gefunden.".formatted(id));
 		}
 		return map(belegung);
-	}
-
-
-	private DTOSchuelerSprachpruefungen getDTO(final @NotNull String kuerzel) throws ApiOperationException {
-		if (kuerzel.isBlank()) {
-			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein gültiges Kürzel übergeben.");
-		}
-		// Überprüfe, ob die Schüler-ID gültig ist.
-		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, idSchueler);
-		if (schueler == null) {
-			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Schüler mit der ID %d gefunden.".formatted(idSchueler));
-		}
-		// Bestimme die zugehörige Sprachprüfung
-		final List<DTOSchuelerSprachpruefungen> belegungen = conn.queryList(
-				"SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Schueler_ID = ?1 AND e.Sprache = ?2", DTOSchuelerSprachpruefungen.class, idSchueler,
-				kuerzel);
-		if (belegungen.isEmpty()) {
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Sprachprüfung mit dem Kürzel gefunden.");
-		}
-		if (belegungen.size() > 1) {
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Es wurden mehrere Einträge zu dem Schüler mit der ID %d und der Sprache %s gefunden."
-					.formatted(idSchueler, kuerzel));
-		}
-		return belegungen.get(0);
-	}
-
-	/**
-	 * Bestimmt die Sprachprüfung anhand des übergebenen Sprachkürzels und der Schüler-ID.
-	 *
-	 * @param kuerzel   das Sprach-Kürzel
-	 *
-	 * @return die Sprachprüfung
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	private Sprachpruefung getByKuerzel(final @NotNull String kuerzel) throws ApiOperationException {
-		return map(getDTO(kuerzel));
-	}
-
-
-	/**
-	 * Bestimmt das DTO anhand des übergebenen Kürzels der Sprachbelegung und der Schüler-ID
-	 *
-	 * @param kuerzel   das Kürzel der Sprachbelegung
-	 *
-	 * @return die Sprachbelegung als Response
-	 *
-	 * @throws ApiOperationException im FehlerFall
-	 */
-	public Response getByKuerzelAsResponse(final @NotNull String kuerzel) throws ApiOperationException {
-		final Sprachpruefung daten = getByKuerzel(kuerzel);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-	}
-
-
-	/**
-	 * Passt die Informationen der Sprachprüfung mit dem übergebenen Sprach-Kürzel des Schülers mithilfe des
-	 * JSON-Patches aus dem übergebenen {@link InputStream} an.
-	 *
-	 * @param kuerzel   das Sprachkürzel
-	 * @param is        der Input-Stream
-	 *
-	 * @return die HTTP-Response
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public Response patchByKuerzelAsResponse(final @NotNull String kuerzel, final InputStream is) throws ApiOperationException {
-		final DTOSchuelerSprachpruefungen dto = getDTO(kuerzel);
-		if (dto == null) {
-			throw new ApiOperationException(Status.NOT_FOUND,
-					"Es konnte keine Sprachprüfung zu dem Sprach-Kürzel %s bei dem Schüler mit der ID %d gefunden werden.".formatted(kuerzel, this.idSchueler));
-		}
-		final Map<String, Object> attributesToPatch = JSONMapper.toMap(is);
-		attributesToPatch.put("sprache", kuerzel);
-		patch(dto.ID, attributesToPatch);
-		return Response.status(Status.NO_CONTENT).build();
-	}
-
-
-	/**
-	 * Löscht eine Sprachprüfung anhand des übergebenen Sprachkürzels und der Schüler-ID.
-	 *
-	 * @param kuerzel   das Kürzel der Sprache
-	 *
-	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public Response deleteByKuerzelAsResponse(final @NotNull String kuerzel) throws ApiOperationException {
-		// Bestimme das DTO
-		final DTOSchuelerSprachpruefungen dto = getDTO(kuerzel);
-		if (dto == null) {
-			throw new ApiOperationException(Status.NOT_FOUND);
-		}
-		return deleteAsResponse(dto.ID);
 	}
 
 }

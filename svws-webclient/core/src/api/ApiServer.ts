@@ -90,7 +90,7 @@ import { GostKlausurterminblockungDaten } from '../core/data/gost/klausurplanung
 import { GostKlausurvorgabe } from '../core/data/gost/klausurplanung/GostKlausurvorgabe';
 import { GostKursklausur } from '../core/data/gost/klausurplanung/GostKursklausur';
 import { GostLaufbahnplanungBeratungsdaten } from '../core/data/gost/GostLaufbahnplanungBeratungsdaten';
-import { GostLaufbahnplanungDaten } from '../core/data/gost/GostLaufbahnplanungDaten';
+import { GostLaufbahnplanungExportV1 } from '../core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1';
 import { GostLeistungen } from '../core/data/gost/GostLeistungen';
 import { GostNachschreibterminblockungKonfiguration } from '../core/data/gost/klausurplanung/GostNachschreibterminblockungKonfiguration';
 import { GostSchuelerFachwahl } from '../core/data/gost/GostSchuelerFachwahl';
@@ -7432,7 +7432,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Laufbahndaten der gymnasialen Oberstufe
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostLaufbahnplanungDaten
+	 *     - Rückgabe-Typ: GostLaufbahnplanungExportV1
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Laufbahndaten auszulesen.
 	 *   Code 404: Es wurden nicht alle benötigten Daten für das Erstellen der Laufbahn-Daten gefunden.
 	 *
@@ -7441,13 +7441,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Laufbahndaten der gymnasialen Oberstufe
 	 */
-	public async exportGostSchuelerLaufbahnplanungsdaten(schema : string, id : number) : Promise<GostLaufbahnplanungDaten> {
+	public async exportGostSchuelerLaufbahnplanungsdaten(schema : string, id : number) : Promise<GostLaufbahnplanungExportV1> {
 		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/daten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
-		return GostLaufbahnplanungDaten.transpilerFromJSON(text);
+		return GostLaufbahnplanungExportV1.transpilerFromJSON(text);
 	}
 
 
@@ -7465,17 +7465,17 @@ export class ApiServer extends BaseApi {
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *
-	 * @param {GostLaufbahnplanungDaten} data - der Request-Body für die HTTP-Methode
+	 * @param {GostLaufbahnplanungExportV1} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 *
 	 * @returns Der Log vom Import der Laufbahndaten
 	 */
-	public async importGostSchuelerLaufbahnplanungsdaten(data : GostLaufbahnplanungDaten, schema : string, id : number) : Promise<SimpleOperationResponse> {
+	public async importGostSchuelerLaufbahnplanungsdaten(data : GostLaufbahnplanungExportV1, schema : string, id : number) : Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/daten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = GostLaufbahnplanungDaten.transpilerToJSON(data);
+		const body : string = GostLaufbahnplanungExportV1.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
@@ -12135,6 +12135,94 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getSchuelerSprachpruefung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/sprache/{idEintrag : \d+}/pruefung
+	 *
+	 * Liest die Sprachprüfung mit der angegebenen Eintrag-ID des Schülers mit seinerer angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Sprachprüfung des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Sprachpruefung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Sprachprüfung anzusehen.
+	 *   Code 404: Kein Schüler mit der angegebenen ID oder kein Sprachprüfungs-Eintrag mit der angegebenen Eintrags-ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} idEintrag - der Pfad-Parameter idEintrag
+	 *
+	 * @returns Die Sprachprüfung des Schülers
+	 */
+	public async getSchuelerSprachpruefung(schema : string, id : number, idEintrag : number) : Promise<Sprachpruefung> {
+		const path = "/db/{schema}/schueler/{id : \\d+}/sprache/{idEintrag : \\d+}/pruefung"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{idEintrag\s*(:[^{}]+({[^{}]+})*)?}/g, idEintrag.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return Sprachpruefung.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchSchuelerSprachpruefung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/sprache/{idEintrag : \d+}/pruefung
+	 *
+	 * Passt die Sprachprüfung zu der angegebenen Schüler-ID und der angegebenen Eintrags-ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachprüfungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Sprachprüfung integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Sprachprüfungen zu ändern.
+	 *   Code 404: Kein Schüler-Eintrag mit der angegebenen ID gefunden oder kein Sprachprüfungs-Eintrag mit der angegebenen Eintrags-ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Sprachpruefung>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} idEintrag - der Pfad-Parameter idEintrag
+	 */
+	public async patchSchuelerSprachpruefung(data : Partial<Sprachpruefung>, schema : string, id : number, idEintrag : number) : Promise<void> {
+		const path = "/db/{schema}/schueler/{id : \\d+}/sprache/{idEintrag : \\d+}/pruefung"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{idEintrag\s*(:[^{}]+({[^{}]+})*)?}/g, idEintrag.toString());
+		const body : string = Sprachpruefung.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteSchuelerSprachpruefung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/sprache/{idEintrag : \d+}/pruefung
+	 *
+	 * Entfernt eine Sprachprüfung eines Schülers.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachprüfungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Sprachprüfung wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Sprachpruefung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Sprachprüfung zu entferne.
+	 *   Code 404: Kein Schüler mit der angegebenen ID oder kein Eintrag mit der angegebenen Eintrags-ID gefunden.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} idEintrag - der Pfad-Parameter idEintrag
+	 *
+	 * @returns Die Sprachprüfung wurde erfolgreich entfernt.
+	 */
+	public async deleteSchuelerSprachpruefung(schema : string, id : number, idEintrag : number) : Promise<Sprachpruefung> {
+		const path = "/db/{schema}/schueler/{id : \\d+}/sprache/{idEintrag : \\d+}/pruefung"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{idEintrag\s*(:[^{}]+({[^{}]+})*)?}/g, idEintrag.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return Sprachpruefung.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getSchuelerSprachbelegung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/sprache/{sprache : [A-Z]+}/belegung
 	 *
 	 * Liest die Spachbelegungen zu der Sprache mit dem angegebenen Sprachkürzel des Schülers mit der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
@@ -12219,94 +12307,6 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return Sprachbelegung.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getSchuelerSprachpruefung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/sprache/{sprache : [A-Z]+}/pruefung
-	 *
-	 * Liest die Sprachprüfung zu der Sprache mit dem angegebenen Sprachkürzel des Schülers mit der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Sprachprüfung des Schülers
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Sprachpruefung
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Sprachprüfung anzusehen.
-	 *   Code 404: Kein Schüler mit der angegebenen ID gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 * @param {string} sprache - der Pfad-Parameter sprache
-	 *
-	 * @returns Die Sprachprüfung des Schülers
-	 */
-	public async getSchuelerSprachpruefung(schema : string, id : number, sprache : string) : Promise<Sprachpruefung> {
-		const path = "/db/{schema}/schueler/{id : \\d+}/sprache/{sprache : [A-Z]+}/pruefung"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
-			.replace(/{sprache\s*(:[^{}]+({[^{}]+})*)?}/g, sprache);
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return Sprachpruefung.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der PATCH-Methode patchSchuelerSprachpruefung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/sprache/{sprache : [A-Z]+}/pruefung
-	 *
-	 * Passt die Sprachprüfung zu der angegebenen Schüler-ID und dem angegebenen Sprachkürzel an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachprüfungen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich in die Sprachprüfung integriert.
-	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Sprachprüfungen zu ändern.
-	 *   Code 404: Kein Schüler-Eintrag mit der angegebenen ID gefunden oder keine Sprachprüfung für die Sprache gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {Partial<Sprachpruefung>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 * @param {string} sprache - der Pfad-Parameter sprache
-	 */
-	public async patchSchuelerSprachpruefung(data : Partial<Sprachpruefung>, schema : string, id : number, sprache : string) : Promise<void> {
-		const path = "/db/{schema}/schueler/{id : \\d+}/sprache/{sprache : [A-Z]+}/pruefung"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
-			.replace(/{sprache\s*(:[^{}]+({[^{}]+})*)?}/g, sprache);
-		const body : string = Sprachpruefung.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der DELETE-Methode deleteSchuelerSprachpruefung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/sprache/{sprache : [A-Z]+}/pruefung
-	 *
-	 * Entfernt eine Sprachprüfung eines Schülers.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachprüfungen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Sprachprüfung wurde erfolgreich entfernt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Sprachpruefung
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Sprachbelegung anzulegen.
-	 *   Code 404: Kein Schüler mit der angegebenen ID oder keine Sprache mit dem Kürzel gefunden.
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 * @param {string} sprache - der Pfad-Parameter sprache
-	 *
-	 * @returns Die Sprachprüfung wurde erfolgreich entfernt.
-	 */
-	public async deleteSchuelerSprachpruefung(schema : string, id : number, sprache : string) : Promise<Sprachpruefung> {
-		const path = "/db/{schema}/schueler/{id : \\d+}/sprache/{sprache : [A-Z]+}/pruefung"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
-			.replace(/{sprache\s*(:[^{}]+({[^{}]+})*)?}/g, sprache);
-		const result : string = await super.deleteJSON(path, null);
-		const text = result;
-		return Sprachpruefung.transpilerFromJSON(text);
 	}
 
 

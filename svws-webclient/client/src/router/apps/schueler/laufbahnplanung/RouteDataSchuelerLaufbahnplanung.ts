@@ -1,10 +1,9 @@
-import type { Abiturdaten, ApiFile, GostBlockungListeneintrag, GostBlockungsergebnis, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag, SchuelerListeEintrag } from "@core";
-import { AbiturdatenManager, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, GostHalbjahr, DeveloperNotificationException, ArrayList, ReportingReportvorlage } from "@core";
+import type { Abiturdaten, ApiFile, GostBlockungListeneintrag, GostBlockungsergebnis, GostLaufbahnplanungExportV1, GostSchuelerFachwahl, LehrerListeEintrag, SchuelerListeEintrag } from "@core";
+import { AbiturdatenManager, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, GostHalbjahr, DeveloperNotificationException, ArrayList } from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
-import { abschnittState } from "~/states/AbschnittStateImpl";
 import { serverState } from "~/states/ServerStateImpl";
 
 
@@ -18,7 +17,7 @@ interface RouteStateSchuelerLaufbahnplanung extends RouteStateInterface {
 	gostJahrgangsdaten: GostJahrgangsdaten;
 	gostLaufbahnBeratungsdaten: GostLaufbahnplanungBeratungsdaten;
 	listeLehrer: ArrayList<LehrerListeEintrag>;
-	zwischenspeicher: GostLaufbahnplanungDaten | undefined;
+	zwischenspeicher: GostLaufbahnplanungExportV1 | undefined;
 }
 
 const defaultState = <RouteStateSchuelerLaufbahnplanung> {
@@ -89,7 +88,7 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 		return BenutzerTyp.getByID(typ) === BenutzerTyp.LEHRER ? typID : undefined;
 	}
 
-	get zwischenspeicher(): GostLaufbahnplanungDaten | undefined {
+	get zwischenspeicher(): GostLaufbahnplanungExportV1 | undefined {
 		return this._state.value.zwischenspeicher;
 	}
 

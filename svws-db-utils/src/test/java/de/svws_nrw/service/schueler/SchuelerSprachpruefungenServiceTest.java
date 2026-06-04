@@ -61,6 +61,7 @@ class SchuelerSprachpruefungenServiceTest {
 		final Sprachpruefung result = service.toApi(dto, abschnitt);
 
 		assertNotNull(result);
+		assertEquals(dto.ID, result.id);
 		assertEquals(dto.Sprache, result.sprache);
 		assertEquals(dto.ASDJahrgang, result.jahrgang);
 		assertEquals(dto.Pruefungsdatum, result.pruefungsdatum);
@@ -94,6 +95,7 @@ class SchuelerSprachpruefungenServiceTest {
 		final List<Sprachpruefung> result = repositoryBackedService.getSprachpruefungen(100L, abschnitt);
 
 		assertEquals(1, result.size());
+		assertEquals(10L, result.get(0).id);
 		assertEquals("IM", result.get(0).sprache);
 		assertEquals("09", result.get(0).jahrgang);
 	}

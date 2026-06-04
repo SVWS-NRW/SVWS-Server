@@ -18,9 +18,9 @@ import { Abiturdaten } from "@core/core/data/gost/Abiturdaten";
 import type { GostBeratungslehrer } from "@core/core/data/gost/GostBeratungslehrer";
 import { GostJahrgang } from "@core/core/data/gost/GostJahrgang";
 import { GostJahrgangsdaten } from "@core/core/data/gost/GostJahrgangsdaten";
-import { GostLaufbahnplanungDaten } from "@core/core/data/gost/GostLaufbahnplanungDaten";
-import { GostLaufbahnplanungDatenFachbelegung } from "@core/core/data/gost/GostLaufbahnplanungDatenFachbelegung";
-import { GostLaufbahnplanungDatenSchueler } from "@core/core/data/gost/GostLaufbahnplanungDatenSchueler";
+import { GostLaufbahnplanungExportV1 } from "@core/core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1";
+import { GostLaufbahnplanungExportV1Fachbelegung } from "@core/core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1Fachbelegung";
+import { GostLaufbahnplanungExportV1Schueler } from "@core/core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1Schueler";
 import type { GostSchuelerFachwahl } from "@core/core/data/gost/GostSchuelerFachwahl";
 import { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
@@ -32,6 +32,8 @@ import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
 import { Config, ConfigElement } from "@ui/utils/Config";
 import { ServerMode } from "@core/core/types/ServerMode";
+import { Sprachbelegung } from "@core/asd/data/schueler/Sprachbelegung";
+import { Sprachpruefung } from "@core/asd/data/schueler/Sprachpruefung";
 
 
 interface RouteState {
@@ -119,8 +121,8 @@ export class RouteData {
 	}
 
 	protected createAbiturdatenmanager(faecherManager?: GostFaecherManager, daten?: Abiturdaten): AbiturdatenManager | undefined {
-		const abiturdaten = (daten === undefined) ? this._state.value.abiturdaten : daten;
-		const fachManager = (faecherManager === undefined) ? this._state.value.faecherManager : faecherManager;
+		const abiturdaten = daten ?? this._state.value.abiturdaten;
+		const fachManager = faecherManager ?? this._state.value.faecherManager;
 		if ((abiturdaten === undefined) || (fachManager === undefined)) {
 			return undefined;
 		}
@@ -139,7 +141,7 @@ export class RouteData {
 		return new AbiturdatenManager(this.serverMode, abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.EF1);
 	}
 
-	public async ladeDaten(daten: GostLaufbahnplanungDaten) {
+	public async ladeDaten(daten: GostLaufbahnplanungExportV1) {
 		// Lade die Informationen zur Schule
 		const schuleStammdaten = new SchuleStammdaten();
 		schuleStammdaten.schulNr = daten.schulNr;
@@ -178,7 +180,40 @@ export class RouteData {
 		// Erstelle das Abiturdaten-Objekt mit den Fachbelegungen
 		const abiturdaten = new Abiturdaten();
 		abiturdaten.abiturjahr = daten.abiturjahr;
-		abiturdaten.sprachendaten = planungsdaten.sprachendaten;
+		for (const bel of planungsdaten.sprachendaten.belegungen) {
+			const mappedBel = new Sprachbelegung();
+			mappedBel.sprache = bel.sprache;
+			mappedBel.istNachweis = bel.istNachweis;
+			mappedBel.reihenfolge = bel.reihenfolge;
+			mappedBel.belegungVonJahrgang = bel.belegungVonJahrgang;
+			mappedBel.belegungVonAbschnitt = bel.belegungVonAbschnitt;
+			mappedBel.belegungBisJahrgang = bel.belegungBisJahrgang;
+			mappedBel.belegungBisAbschnitt = bel.belegungBisAbschnitt;
+			mappedBel.referenzniveau = bel.referenzniveau;
+			mappedBel.hatKleinesLatinum = bel.hatKleinesLatinum;
+			mappedBel.hatLatinum = bel.hatLatinum;
+			mappedBel.hatGraecum = bel.hatGraecum;
+			mappedBel.hatHebraicum = bel.hatHebraicum;
+			abiturdaten.sprachendaten.belegungen.add(mappedBel);
+		}
+		for (const pruef of planungsdaten.sprachendaten.pruefungen) {
+			const mappedPruef = new Sprachpruefung();
+			mappedPruef.sprache = pruef.sprache;
+			mappedPruef.jahrgang = pruef.jahrgang;
+			mappedPruef.anspruchsniveauId = pruef.anspruchsniveauId;
+			mappedPruef.pruefungsdatum = pruef.pruefungsdatum;
+			mappedPruef.ersetzteSprache = pruef.ersetzteSprache;
+			mappedPruef.istHSUPruefung = pruef.istHSUPruefung;
+			mappedPruef.istFeststellungspruefung = pruef.istFeststellungspruefung;
+			mappedPruef.kannErstePflichtfremdspracheErsetzen = pruef.kannErstePflichtfremdspracheErsetzen;
+			mappedPruef.kannZweitePflichtfremdspracheErsetzen = pruef.kannZweitePflichtfremdspracheErsetzen;
+			mappedPruef.kannWahlpflichtfremdspracheErsetzen = pruef.kannWahlpflichtfremdspracheErsetzen;
+			mappedPruef.kannBelegungAlsFortgefuehrteSpracheErlauben = pruef.kannBelegungAlsFortgefuehrteSpracheErlauben;
+			mappedPruef.referenzniveau = pruef.referenzniveau;
+			mappedPruef.note = pruef.note;
+			mappedPruef.zeugnisbezeichnung = pruef.zeugnisbezeichnung;
+			abiturdaten.sprachendaten.pruefungen.add(mappedPruef);
+		}
 		abiturdaten.bilingualeSprache = planungsdaten.bilingualeSprache;
 		for (const hj of GostHalbjahr.values()) {
 			abiturdaten.bewertetesHalbjahr[hj.id] = planungsdaten.bewertetesHalbjahr[hj.id];
@@ -235,15 +270,15 @@ export class RouteData {
 		});
 	}
 
-	public async schreibeDaten(): Promise<GostLaufbahnplanungDaten> {
+	public async schreibeDaten(): Promise<GostLaufbahnplanungExportV1> {
 		if ((this._state.value.faecherManager === undefined) || (this._state.value.abiturdaten === undefined) || (this._state.value.auswahl === undefined)) {
 			throw new UserNotificationException("Es müssen Abiturdaten geladen sein.");
 		}
-		const daten = new GostLaufbahnplanungDaten();
+		const daten = new GostLaufbahnplanungExportV1();
 		daten.schulNr = this._state.value.schuleStammdaten.schulNr;
 		daten.schulBezeichnung1 = this._state.value.schuleStammdaten.bezeichnung1;
-		daten.schulBezeichnung2 = (this._state.value.schuleStammdaten.bezeichnung2 === null) ? "" : this._state.value.schuleStammdaten.bezeichnung2;
-		daten.schulBezeichnung3 = (this._state.value.schuleStammdaten.bezeichnung3 === null) ? "" : this._state.value.schuleStammdaten.bezeichnung3;
+		daten.schulBezeichnung2 = this._state.value.schuleStammdaten.bezeichnung2 ?? "";
+		daten.schulBezeichnung3 = this._state.value.schuleStammdaten.bezeichnung3 ?? "";
 		daten.anmerkungen = "Letzte Änderung am " + (new Date()).toLocaleDateString("de-DE", { dateStyle: "short" });
 		daten.abiturjahr = this._state.value.abiturdaten.abiturjahr;
 		daten.jahrgang = this._state.value.gostJahrgang.jahrgang;
@@ -257,7 +292,7 @@ export class RouteData {
 			daten.fachkombinationen.add(fk);
 		}
 		daten.faecher.addAll(this._state.value.faecherManager.faecher());
-		const s = new GostLaufbahnplanungDatenSchueler();
+		const s = new GostLaufbahnplanungExportV1Schueler();
 		s.id = this._state.value.auswahl.id;
 		s.idEnc = this._state.value.schuelerIDEncrypted;
 		s.vorname = this._state.value.auswahl.vorname;
@@ -270,7 +305,7 @@ export class RouteData {
 		}
 		for (let i = 0; i < this._state.value.abiturdaten.fachbelegungen.size() ; i++) {
 			const belegung = this._state.value.abiturdaten.fachbelegungen.get(i);
-			const fb = new GostLaufbahnplanungDatenFachbelegung();
+			const fb = new GostLaufbahnplanungExportV1Fachbelegung();
 			fb.fachID = belegung.fachID;
 			fb.abiturFach = belegung.abiturFach;
 			for (const hj of GostHalbjahr.values()) {
@@ -427,7 +462,7 @@ export class RouteData {
 	};
 
 	exportLaufbahnplanung = async (): Promise<ApiFile> => {
-		const json = GostLaufbahnplanungDaten.transpilerToJSON(await this.schreibeDaten());
+		const json = GostLaufbahnplanungExportV1.transpilerToJSON(await this.schreibeDaten());
 		const rawData = new Response(json).body;
 		if (rawData === null) {
 			throw new UserNotificationException("Unerwarteter Fehler beim Erstellen der Export-Daten aufgetreten.");
@@ -447,7 +482,7 @@ export class RouteData {
 		}
 		const ds = new DecompressionStream("gzip");
 		const rawData = await (new Response(gzData.stream().pipeThrough(ds))).text();
-		const laufbahnplanungsdaten = GostLaufbahnplanungDaten.transpilerFromJSON(rawData);
+		const laufbahnplanungsdaten = GostLaufbahnplanungExportV1.transpilerFromJSON(rawData);
 		const revRequired = 1;
 		if (laufbahnplanungsdaten.lpRevision !== revRequired) {
 			throw new UserNotificationException("Die Revision der Laufbahnplanungsdatei (" + laufbahnplanungsdaten.lpRevision + ") entspricht nicht der unterstützen Revision " + revRequired);

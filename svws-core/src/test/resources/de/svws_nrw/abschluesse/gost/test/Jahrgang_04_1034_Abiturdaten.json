@@ -1126,6 +1126,7 @@
     "schuelerID": 1034,
     "belegungen": [
       {
+        "id" : -1,
         "sprache": "E",
         "reihenfolge": 1,
         "belegungVonJahrgang": "05",
@@ -1140,6 +1141,7 @@
         "istNachweis": false
       },
       {
+        "id" : -1,
         "sprache": "F",
         "reihenfolge": 2,
         "belegungVonJahrgang": "07",

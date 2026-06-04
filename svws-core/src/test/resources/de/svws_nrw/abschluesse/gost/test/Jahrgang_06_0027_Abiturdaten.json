@@ -356,6 +356,7 @@
   "sprachendaten" : {
     "schuelerID" : 27,
     "belegungen" : [ {
+      "id" : -1,
       "sprache" : "S",
       "reihenfolge" : 2,
       "belegungVonJahrgang" : "EF",
@@ -370,6 +371,7 @@
       "istNachweis": false
     } ],
     "pruefungen" : [ {
+      "id" : -1,
       "sprache" : "F",
       "jahrgang" : "09",
       "anspruchsniveauId" : 3,
@@ -384,6 +386,7 @@
       "referenzniveau" : null,
       "note" : 2
     }, {
+      "id" : -1,
       "sprache" : "F",
       "jahrgang" : "EF",
       "anspruchsniveauId" : 4,

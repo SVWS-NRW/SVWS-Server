@@ -9,6 +9,9 @@ import jakarta.validation.constraints.NotNull;
 @TranspilerDTO
 public class Sprachpruefung {
 
+	/** Die ID des Sprachprüfungseintrages */
+	public long id = -1;
+
 	/** Das einstellige Sprachkürzel des geprüften Faches */
 	public @NotNull String sprache = "";
 

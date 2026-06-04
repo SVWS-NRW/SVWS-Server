@@ -1,10 +1,9 @@
-package de.svws_nrw.core.data.gost;
+package de.svws_nrw.core.data.gost.laufbahnplanung.v1;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.svws_nrw.transpiler.TranspilerDTO;
-import de.svws_nrw.asd.data.schueler.Sprachendaten;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,12 +12,14 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 
 /**
- * Die Klasse enthält die Informationen zu einem Schüler bei den Laufbahnplanungs-Daten der gymnasialen Oberstufe.
+ * Datenaustauschformat für die Laufbahnplanung der gymnasialen Oberstufe:
+ *
+ * - DTO für einen Schüler und seinen Laufbahnplanungs-Daten
  */
 @XmlRootElement
 @Schema(description = "Enthält die Informationen zu einem Schüler bei den Laufbahnplanungs-Daten der gymnasialen Oberstufe.")
 @TranspilerDTO
-public class GostLaufbahnplanungDatenSchueler {
+public class GostLaufbahnplanungExportV1Schueler {
 
 	/** Die eindeutige ID des Schülers */
 	@Schema(description = "Die eindeutige ID des Schülers.", example = "4711")
@@ -51,19 +52,19 @@ public class GostLaufbahnplanungDatenSchueler {
 	public final @NotNull boolean[] bewertetesHalbjahr = new boolean[6];
 
 	/** Ein Array mit den Fachbelegungen in der Oberstufe. */
-	@ArraySchema(schema = @Schema(implementation = GostLaufbahnplanungDatenFachbelegung.class,
+	@ArraySchema(schema = @Schema(implementation = GostLaufbahnplanungExportV1Fachbelegung.class,
 			description = "Ein Array mit den Fachbelegungen in der Oberstufe."))
-	public final @NotNull List<GostLaufbahnplanungDatenFachbelegung> fachbelegungen = new ArrayList<>();
+	public final @NotNull List<GostLaufbahnplanungExportV1Fachbelegung> fachbelegungen = new ArrayList<>();
 
 	/** Die Sprachendaten des Schülers mit Informationen zu Sprachbelegungen (Sprachenfolge) und zu Sprachprüfungen. */
-	@Schema(implementation = Sprachendaten.class,
+	@Schema(implementation = GostLaufbahnplanungExportV1Sprachen.class,
 			description = "Die Sprachenfolge und die Sprachprüfungen des Schülers unter Einbeziehung der Daten aus der Sekundarstufe I.")
-	public @NotNull Sprachendaten sprachendaten = new Sprachendaten();
+	public @NotNull GostLaufbahnplanungExportV1Sprachen sprachendaten = new GostLaufbahnplanungExportV1Sprachen();
 
 	/**
 	 * Leerer Standardkonstruktor.
 	 */
-	public GostLaufbahnplanungDatenSchueler() {
+	public GostLaufbahnplanungExportV1Schueler() {
 		// leer
 	}
 

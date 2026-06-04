@@ -78,6 +78,7 @@ public final class SchuelerSprachenfolgeService {
 	 */
 	public Sprachbelegung toApi(final DTOSchuelerSprachenfolge dto) {
 		final var daten = new Sprachbelegung();
+		daten.id = dto.ID;
 		daten.sprache = dto.Sprache;
 		daten.istNachweis = Boolean.TRUE.equals(dto.IstNachweis);
 		daten.reihenfolge = dto.ReihenfolgeNr;

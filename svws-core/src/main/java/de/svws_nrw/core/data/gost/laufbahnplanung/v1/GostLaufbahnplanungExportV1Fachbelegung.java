@@ -1,4 +1,4 @@
-package de.svws_nrw.core.data.gost;
+package de.svws_nrw.core.data.gost.laufbahnplanung.v1;
 
 import de.svws_nrw.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
@@ -13,7 +13,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "Enthält die Informationen zu einer Fachbelegung bei den Laufbahnplanungs-Daten der gymnasialen Oberstufe.")
 @TranspilerDTO
-public class GostLaufbahnplanungDatenFachbelegung {
+public class GostLaufbahnplanungExportV1Fachbelegung {
 
 	/** Die ID des Faches der Gymnasialen Oberstufe, welches belegt wurde. */
 	public long fachID = -1;
@@ -30,7 +30,7 @@ public class GostLaufbahnplanungDatenFachbelegung {
 	/**
 	 * Leerer Standardkonstruktor.
 	 */
-	public GostLaufbahnplanungDatenFachbelegung() {
+	public GostLaufbahnplanungExportV1Fachbelegung() {
 		// leer
 	}
 

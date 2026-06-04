@@ -1188,6 +1188,7 @@
     "schuelerID": 2183,
     "belegungen": [
       {
+        "id" : -1,
         "sprache": "E",
         "reihenfolge": 1,
         "belegungVonJahrgang": "05",
@@ -1202,6 +1203,7 @@
         "istNachweis": false
       },
       {
+        "id" : -1,
         "sprache": "G",
         "reihenfolge": 2,
         "belegungVonJahrgang": "09",

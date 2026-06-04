@@ -1,4 +1,4 @@
-import type { Comparator, List, SchuelerListeEintrag, Sprachbelegung, Sprachpruefung } from "@core";
+import type { List, SchuelerListeEintrag, Sprachbelegung, Sprachpruefung } from "@core";
 import { ArrayList, DeveloperNotificationException, JavaInteger } from "@core";
 
 import { api } from "~/router/Api";
@@ -54,7 +54,7 @@ export class RouteDataSchuelerSprachen extends RouteData<RouteStateSchuelerSprac
 			api.status.start();
 			const sprachbelegungen = await api.server.getSchuelerSprachbelegungen(api.schema, auswahl.id);
 			const sprachpruefungen = await api.server.getSchuelerSprachpruefungen(api.schema, auswahl.id);
-			sprachbelegungen.sort(<Comparator<Sprachbelegung>>{ compare(n1: Sprachbelegung, n2: Sprachbelegung) {
+			sprachbelegungen.sort({ compare(n1: Sprachbelegung, n2: Sprachbelegung) {
 				return JavaInteger.compare(n1.reihenfolge ?? 0, n2.reihenfolge ?? 0);
 			} });
 			this.setPatchedState({ auswahl, sprachbelegungen, sprachpruefungen });
@@ -119,12 +119,9 @@ export class RouteDataSchuelerSprachen extends RouteData<RouteStateSchuelerSprac
 	};
 
 	getSprachpruefung(data: Partial<Sprachpruefung>): Sprachpruefung | null {
-		if ((data.sprache === undefined) || (data.sprache === "")) {
-			return null;
-		}
 		let pruefung: Sprachpruefung | null = null;
 		for (const p of this._state.value.sprachpruefungen) {
-			if (p.sprache === data.sprache) {
+			if (p.id === data.id) {
 				pruefung = p;
 				break;
 			}
@@ -132,27 +129,22 @@ export class RouteDataSchuelerSprachen extends RouteData<RouteStateSchuelerSprac
 		return pruefung;
 	}
 
-	patchSprachpruefung = async (data: Partial<Sprachpruefung>, sprache: string): Promise<void> => {
-		const pruefung = this.getSprachpruefung({ sprache });
+	patchSprachpruefung = async (data: Partial<Sprachpruefung>, id: number): Promise<void> => {
+		const pruefung = this.getSprachpruefung({ id });
 		if (pruefung === null) {
 			return;
 		}
 		api.status.start();
-		await api.server.patchSchuelerSprachpruefung(data, api.schema, this.auswahl.id, pruefung.sprache);
+		await api.server.patchSchuelerSprachpruefung(data, api.schema, this.auswahl.id, pruefung.id);
 		Object.assign(pruefung, data);
 		this.commit();
 		api.status.stop();
 	};
 
 	addSprachpruefung = async (data: Partial<Sprachpruefung>): Promise<Sprachpruefung | null> => {
-		// Prüfe, ob bereits eine Sprachpruefung für das angegeben Sprach-Kürzel existiert
-		let pruefung: Sprachpruefung | null = this.getSprachpruefung(data);
-		if ((pruefung !== null) && (pruefung.istHSUPruefung === data.istHSUPruefung) && (pruefung.istFeststellungspruefung === data.istFeststellungspruefung)) {
-			return null;
-		}
 		// Füge die Sprachprüfung hinzu
 		api.status.start();
-		pruefung = await api.server.addSchuelerSprachpruefung(data, api.schema, this.auswahl.id);
+		const pruefung = await api.server.addSchuelerSprachpruefung(data, api.schema, this.auswahl.id);
 		this._state.value.sprachpruefungen.add(pruefung);
 		this.commit();
 		api.status.stop();
@@ -167,7 +159,7 @@ export class RouteDataSchuelerSprachen extends RouteData<RouteStateSchuelerSprac
 		}
 		// Entferne die Sprachprüfung
 		api.status.start();
-		const result = await api.server.deleteSchuelerSprachpruefung(api.schema, this.auswahl.id, pruefung.sprache);
+		const result = await api.server.deleteSchuelerSprachpruefung(api.schema, this.auswahl.id, pruefung.id);
 		const liste = this._state.value.sprachpruefungen;
 		liste.removeElementAt(liste.indexOf(pruefung));
 		this.commit();

@@ -1621,25 +1621,25 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Sprachprüfung eines Schülers in einer Sprache.
 	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id        die Datenbank-ID zur Identifikation des Schülers
-	 * @param sprache   das Sprachkürzel der Sprache
-	 * @param request   die Informationen zur HTTP-Anfrage
+	 * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id          die Datenbank-ID zur Identifikation des Schülers
+	 * @param idEintrag   die ID des Eintrages der Sprachprüfung
+	 * @param request     die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die Spachprüfung des Schülers
 	 */
 	@GET
-	@Path("/{id : \\d+}/sprache/{sprache : [A-Z]+}/pruefung")
-	@Operation(summary = "Liefert zu der ID des Schülers und dem Sprachkürzel die zugehörige Sprachprüfung.",
-			description = "Liest die Sprachprüfung zu der Sprache mit dem angegebenen Sprachkürzel des Schülers mit der angegebenen ID aus der Datenbank und liefert diese zurück. "
+	@Path("/{id : \\d+}/sprache/{idEintrag : \\d+}/pruefung")
+	@Operation(summary = "Liefert zu der ID des Schülers und der ID des Eintrages die zugehörige Sprachprüfung.",
+			description = "Liest die Sprachprüfung mit der angegebenen Eintrag-ID des Schülers mit seinerer angegebenen ID aus der Datenbank und liefert diese zurück. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die Sprachprüfung des Schülers",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Sprachpruefung.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Sprachprüfung anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Kein Schüler mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler mit der angegebenen ID oder kein Sprachprüfungs-Eintrag mit der angegebenen Eintrags-ID gefunden")
 	public Response getSchuelerSprachpruefung(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@PathParam("sprache") final @NotNull String sprache, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSprachpruefung(conn, id).getByKuerzelAsResponse(sprache),
+			@PathParam("idEintrag") final long idEintrag, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSprachpruefung(conn, id).getByIdAsResponse(idEintrag),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN);
 	}
@@ -1648,31 +1648,31 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für das Patchen der Sprachprüfung eines Schülers in einer Sprache.
 	 *
-	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
-	 * @param id        die Datenbank-ID zur Identifikation des Schülers
-	 * @param sprache   das Sprachkürzel der Sprache
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
-	 * @param request   die Informationen zur HTTP-Anfrage
+	 * @param schema      das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id          die Datenbank-ID zur Identifikation des Schülers
+	 * @param idEintrag   die ID des Eintrages der Sprachprüfung
+	 * @param is          der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request     die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
 	 */
 	@PATCH
-	@Path("/{id : \\d+}/sprache/{sprache : [A-Z]+}/pruefung")
-	@Operation(summary = "Liefert zu der ID des Schülers und dem Sprachkürzel die zugehörige Sprachprüfung.",
-			description = "Passt die Sprachprüfung zu der angegebenen Schüler-ID und dem angegebenen Sprachkürzel an und speichert das Ergebnis in der Datenbank. "
+	@Path("/{id : \\d+}/sprache/{idEintrag : \\d+}/pruefung")
+	@Operation(summary = "Passti die zu der ID des Schülers und der ID des Eintrages zugehörige Sprachprüfung am.",
+			description = "Passt die Sprachprüfung zu der angegebenen Schüler-ID und der angegebenen Eintrags-ID an und speichert das Ergebnis in der Datenbank. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachprüfungen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Sprachprüfung integriert.")
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Sprachprüfungen zu ändern.")
-	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden oder keine Sprachprüfung für die Sprache gefunden")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden oder kein Sprachprüfungs-Eintrag mit der angegebenen Eintrags-ID gefunden")
 	@ApiResponse(responseCode = "409",
 			description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchSchuelerSprachpruefung(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@PathParam("sprache") final @NotNull String sprache, @RequestBody(description = "Der Patch für die Sprachprüfung", required = true,
+			@PathParam("idEintrag") final long idEintrag, @RequestBody(description = "Der Patch für die Sprachprüfung", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Sprachpruefung.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSprachpruefung(conn, id).patchByKuerzelAsResponse(sprache, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSprachpruefung(conn, id).patchAsResponse(idEintrag, is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN);
@@ -1713,27 +1713,27 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für das Entfernen der Sprachprüfung eines Schülers.
 	 *
-	 * @param schema    das Datenbankschema
-	 * @param id        die Schueler-ID
-	 * @param sprache   das Sprachkürzel der Sprache
-	 * @param request   die Informationen zur HTTP-Anfrage
+	 * @param schema      das Datenbankschema
+	 * @param id          die Schueler-ID
+	 * @param idEintrag   die ID des Eintrages der Sprachprüfung
+	 * @param request     die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten Sprachprüfung
 	 */
 	@DELETE
-	@Path("/{id : \\d+}/sprache/{sprache : [A-Z]+}/pruefung")
+	@Path("/{id : \\d+}/sprache/{idEintrag : \\d+}/pruefung")
 	@Operation(summary = "Entfernt eine Sprachprüfung eines Schülers.",
 			description = "Entfernt eine Sprachprüfung eines Schülers."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachprüfungen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die Sprachprüfung wurde erfolgreich entfernt.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Sprachpruefung.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Sprachbelegung anzulegen.")
-	@ApiResponse(responseCode = "404", description = "Kein Schüler mit der angegebenen ID oder keine Sprache mit dem Kürzel gefunden.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Sprachprüfung zu entferne.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler mit der angegebenen ID oder kein Eintrag mit der angegebenen Eintrags-ID gefunden.")
 	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteSchuelerSprachpruefung(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@PathParam("sprache") final @NotNull String sprache, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSprachpruefung(conn, id).deleteByKuerzelAsResponse(sprache),
+			@PathParam("idEintrag") final long idEintrag, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSprachpruefung(conn, id).deleteAsResponse(idEintrag),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN);

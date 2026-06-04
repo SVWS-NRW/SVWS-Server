@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -42,12 +43,18 @@ import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostBelegpruefungsErgebnisse;
+import de.svws_nrw.core.data.gost.GostBeratungslehrer;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
-import de.svws_nrw.core.data.gost.GostLaufbahnplanungDaten;
-import de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenFachbelegung;
-import de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenSchueler;
 import de.svws_nrw.core.data.gost.GostSchuelerFachwahl;
+import de.svws_nrw.core.data.gost.laufbahnplanung.v1.GostLaufbahnplanungExportV1;
+import de.svws_nrw.core.data.gost.laufbahnplanung.v1.GostLaufbahnplanungExportV1Beratungslehrer;
+import de.svws_nrw.core.data.gost.laufbahnplanung.v1.GostLaufbahnplanungExportV1Fach;
+import de.svws_nrw.core.data.gost.laufbahnplanung.v1.GostLaufbahnplanungExportV1Fachbelegung;
+import de.svws_nrw.core.data.gost.laufbahnplanung.v1.GostLaufbahnplanungExportV1Fachkombination;
+import de.svws_nrw.core.data.gost.laufbahnplanung.v1.GostLaufbahnplanungExportV1Schueler;
+import de.svws_nrw.core.data.gost.laufbahnplanung.v1.GostLaufbahnplanungExportV1Sprachbelegung;
+import de.svws_nrw.core.data.gost.laufbahnplanung.v1.GostLaufbahnplanungExportV1Sprachpruefung;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
@@ -506,7 +513,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private GostLaufbahnplanungDaten getLaufbahnplanungsdaten(final DTOSchueler dtoSchueler) throws ApiOperationException {
+	private GostLaufbahnplanungExportV1 getLaufbahnplanungExportV1(final DTOSchueler dtoSchueler) throws ApiOperationException {
 		// Lese die Daten aus der Datenbank
 		final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, dtoSchueler.ID);
 		final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(abidaten.schuljahrAbitur, conn, abidaten.abiturjahr);
@@ -541,7 +548,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 			aktJahrgang = (halbjahr == null) ? "" : halbjahr.jahrgang;
 		}
 		// Schreibe die Daten in das Export-DTO
-		final GostLaufbahnplanungDaten daten = new GostLaufbahnplanungDaten();
+		final GostLaufbahnplanungExportV1 daten = new GostLaufbahnplanungExportV1();
 		daten.schulNr = schule.SchulNr;
 		daten.schulBezeichnung1 = (schule.Bezeichnung1 == null) ? "" : schule.Bezeichnung1;
 		daten.schulBezeichnung2 = (schule.Bezeichnung2 == null) ? "" : schule.Bezeichnung2;
@@ -554,13 +561,60 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 		daten.beginnZusatzkursGE = jahrgangsdaten.ZusatzkursGEErstesHalbjahr;
 		daten.hatZusatzkursSW = jahrgangsdaten.ZusatzkursSWVorhanden;
 		daten.beginnZusatzkursSW = jahrgangsdaten.ZusatzkursSWErstesHalbjahr;
-		daten.beratungslehrer.addAll(DataGostBeratungslehrer.getBeratungslehrer(conn, dtosBeratungslehrer));
-		daten.faecher.addAll(gostFaecher.faecher());
+		for (final GostBeratungslehrer beratungslehrer : DataGostBeratungslehrer.getBeratungslehrer(conn, dtosBeratungslehrer)) {
+			final GostLaufbahnplanungExportV1Beratungslehrer exportBeratungslehrer = new GostLaufbahnplanungExportV1Beratungslehrer();
+			exportBeratungslehrer.id = beratungslehrer.id;
+			exportBeratungslehrer.kuerzel = beratungslehrer.kuerzel;
+			exportBeratungslehrer.nachname = beratungslehrer.nachname;
+			exportBeratungslehrer.vorname = beratungslehrer.vorname;
+			daten.beratungslehrer.add(exportBeratungslehrer);
+		}
+		for (final GostFach fach : gostFaecher.faecher()) {
+			final GostLaufbahnplanungExportV1Fach exportFach = new GostLaufbahnplanungExportV1Fach();
+			exportFach.id = fach.id;
+			exportFach.kuerzel = fach.kuerzel;
+			exportFach.kuerzelAnzeige = fach.kuerzelAnzeige;
+			exportFach.bezeichnung = fach.bezeichnung;
+			exportFach.sortierung = fach.sortierung;
+			exportFach.istPruefungsordnungsRelevant = fach.istPruefungsordnungsRelevant;
+			exportFach.istFremdsprache = fach.istFremdsprache;
+			exportFach.istFremdSpracheNeuEinsetzend = fach.istFremdSpracheNeuEinsetzend;
+			exportFach.biliSprache = fach.biliSprache;
+			exportFach.istMoeglichAbiLK = fach.istMoeglichAbiLK;
+			exportFach.istMoeglichAbiGK = fach.istMoeglichAbiGK;
+			exportFach.istMoeglichEF1 = fach.istMoeglichEF1;
+			exportFach.istMoeglichEF2 = fach.istMoeglichEF2;
+			exportFach.istMoeglichQ11 = fach.istMoeglichQ11;
+			exportFach.istMoeglichQ12 = fach.istMoeglichQ12;
+			exportFach.istMoeglichQ21 = fach.istMoeglichQ21;
+			exportFach.istMoeglichQ22 = fach.istMoeglichQ22;
+			exportFach.wochenstundenQualifikationsphase = 3;
+			exportFach.projektKursLeitfach1ID = null;
+			exportFach.projektKursLeitfach1Kuerzel = null;
+			exportFach.projektKursLeitfach2ID = null;
+			exportFach.projektKursLeitfach2Kuerzel = null;
+			daten.faecher.add(exportFach);
+		}
 		for (final DTOGostJahrgangFachkombinationen kombi : kombis) {
-			daten.fachkombinationen.add(DataGostJahrgangFachkombinationen.dtoMapper.apply(kombi));
+			final GostLaufbahnplanungExportV1Fachkombination exportKombi = new GostLaufbahnplanungExportV1Fachkombination();
+			exportKombi.id = kombi.ID;
+			exportKombi.abiturjahr = kombi.Abi_Jahrgang;
+			exportKombi.fachID1 = kombi.Fach1_ID;
+			exportKombi.kursart1 = kombi.Kursart1;
+			exportKombi.fachID2 = kombi.Fach2_ID;
+			exportKombi.kursart2 = kombi.Kursart2;
+			exportKombi.gueltigInHalbjahr[0] = kombi.EF1;
+			exportKombi.gueltigInHalbjahr[1] = kombi.EF2;
+			exportKombi.gueltigInHalbjahr[2] = kombi.Q11;
+			exportKombi.gueltigInHalbjahr[3] = kombi.Q12;
+			exportKombi.gueltigInHalbjahr[4] = kombi.Q21;
+			exportKombi.gueltigInHalbjahr[5] = kombi.Q22;
+			exportKombi.typ = kombi.Typ.getValue();
+			exportKombi.hinweistext = kombi.Hinweistext;
+			daten.fachkombinationen.add(exportKombi);
 		}
 		final AES aes = DBUtilsSchueler.getOrCreateSchuelerAES(conn, dtoSchueler.ID);
-		final GostLaufbahnplanungDatenSchueler schuelerDaten = new GostLaufbahnplanungDatenSchueler();
+		final GostLaufbahnplanungExportV1Schueler schuelerDaten = new GostLaufbahnplanungExportV1Schueler();
 		schuelerDaten.id = dtoSchueler.ID;
 		try {
 			schuelerDaten.idEnc = aes.encryptBase64(ByteBuffer.wrap(new byte[8]).putLong(schuelerDaten.id).array());
@@ -575,7 +629,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 			System.arraycopy(abidaten.bewertetesHalbjahr, 0, schuelerDaten.bewertetesHalbjahr, 0, GostHalbjahr.maxHalbjahre);
 		}
 		for (final AbiturFachbelegung fbel : abidaten.fachbelegungen) {
-			final GostLaufbahnplanungDatenFachbelegung fb = new GostLaufbahnplanungDatenFachbelegung();
+			final GostLaufbahnplanungExportV1Fachbelegung fb = new GostLaufbahnplanungExportV1Fachbelegung();
 			fb.fachID = fbel.fachID;
 			fb.abiturFach = fbel.abiturFach;
 			for (int i = 0; i < GostHalbjahr.maxHalbjahre; i++) {
@@ -589,7 +643,40 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 			}
 			schuelerDaten.fachbelegungen.add(fb);
 		}
-		schuelerDaten.sprachendaten = abidaten.sprachendaten;
+		for (final Sprachbelegung bel : abidaten.sprachendaten.belegungen) {
+			final GostLaufbahnplanungExportV1Sprachbelegung exportBel = new GostLaufbahnplanungExportV1Sprachbelegung();
+			exportBel.sprache = bel.sprache;
+			exportBel.istNachweis = bel.istNachweis;
+			exportBel.reihenfolge = bel.reihenfolge;
+			exportBel.belegungVonJahrgang = bel.belegungVonJahrgang;
+			exportBel.belegungVonAbschnitt = bel.belegungVonAbschnitt;
+			exportBel.belegungBisJahrgang = bel.belegungBisJahrgang;
+			exportBel.belegungBisAbschnitt = bel.belegungBisAbschnitt;
+			exportBel.referenzniveau = bel.referenzniveau;
+			exportBel.hatKleinesLatinum = bel.hatKleinesLatinum;
+			exportBel.hatLatinum = bel.hatLatinum;
+			exportBel.hatGraecum = bel.hatGraecum;
+			exportBel.hatHebraicum = bel.hatHebraicum;
+			schuelerDaten.sprachendaten.belegungen.add(exportBel);
+		}
+		for (final Sprachpruefung pruef : abidaten.sprachendaten.pruefungen) {
+			final GostLaufbahnplanungExportV1Sprachpruefung exportPruef = new GostLaufbahnplanungExportV1Sprachpruefung();
+			exportPruef.sprache = pruef.sprache;
+			exportPruef.jahrgang = pruef.jahrgang;
+			exportPruef.anspruchsniveauId = pruef.anspruchsniveauId;
+			exportPruef.pruefungsdatum = pruef.pruefungsdatum;
+			exportPruef.ersetzteSprache = pruef.ersetzteSprache;
+			exportPruef.istHSUPruefung = pruef.istHSUPruefung;
+			exportPruef.istFeststellungspruefung = pruef.istFeststellungspruefung;
+			exportPruef.kannErstePflichtfremdspracheErsetzen = pruef.kannErstePflichtfremdspracheErsetzen;
+			exportPruef.kannZweitePflichtfremdspracheErsetzen = pruef.kannZweitePflichtfremdspracheErsetzen;
+			exportPruef.kannWahlpflichtfremdspracheErsetzen = pruef.kannWahlpflichtfremdspracheErsetzen;
+			exportPruef.kannBelegungAlsFortgefuehrteSpracheErlauben = pruef.kannBelegungAlsFortgefuehrteSpracheErlauben;
+			exportPruef.referenzniveau = pruef.referenzniveau;
+			exportPruef.note = pruef.note;
+			exportPruef.zeugnisbezeichnung = pruef.zeugnisbezeichnung;
+			schuelerDaten.sprachendaten.pruefungen.add(exportPruef);
+		}
 		daten.schueler.add(schuelerDaten);
 		return daten;
 	}
@@ -610,7 +697,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 		if (dtoSchueler == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
 		}
-		final GostLaufbahnplanungDaten daten = getLaufbahnplanungsdaten(dtoSchueler);
+		final GostLaufbahnplanungExportV1 daten = getLaufbahnplanungExportV1(dtoSchueler);
 		final String filename =
 				"Laufbahnplanung_%d_%s_%s_%s_%d.lp".formatted(daten.abiturjahr, daten.jahrgang, dtoSchueler.Nachname, dtoSchueler.Vorname, dtoSchueler.ID);
 		return JSONMapper.gzipFileResponseFromObject(daten, filename);
@@ -640,7 +727,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 			try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 				try (ZipOutputStream zos = new ZipOutputStream(baos)) {
 					for (final DTOSchueler dtoSchueler : dtos) {
-						final GostLaufbahnplanungDaten daten = getLaufbahnplanungsdaten(dtoSchueler);
+						final GostLaufbahnplanungExportV1 daten = getLaufbahnplanungExportV1(dtoSchueler);
 						final String filename = "Laufbahnplanung_%d_%s_%s_%s_%d.lp".formatted(daten.abiturjahr, daten.jahrgang, dtoSchueler.Nachname,
 								dtoSchueler.Vorname, dtoSchueler.ID);
 						final byte[] filedata = JSONMapper.gzipByteArrayFromObject(daten);
@@ -675,7 +762,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 		if (dtoSchueler == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
 		}
-		final GostLaufbahnplanungDaten daten = getLaufbahnplanungsdaten(dtoSchueler);
+		final GostLaufbahnplanungExportV1 daten = getLaufbahnplanungExportV1(dtoSchueler);
 		return Response.ok(daten).type(MediaType.APPLICATION_JSON).build();
 	}
 
@@ -692,7 +779,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private static boolean doImport(final DBEntityManager conn, final DTOSchueler dtoSchueler, final GostLaufbahnplanungDaten laufbahnplanungsdaten,
+	private static boolean doImport(final DBEntityManager conn, final DTOSchueler dtoSchueler, final GostLaufbahnplanungExportV1 laufbahnplanungsdaten,
 			final Logger logger) throws ApiOperationException {
 		// Lese die Informationen zur Schule ein und prüfe, ob die Schulnummer übereinstimmt.
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
@@ -719,7 +806,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 			return false;
 		}
 		// Bestimme die Daten des Schülers in den Laufbahnplanungsdaten
-		final GostLaufbahnplanungDatenSchueler daten = laufbahnplanungsdaten.schueler.stream().filter(s -> s.id == dtoSchueler.ID).findFirst().orElse(null);
+		final GostLaufbahnplanungExportV1Schueler daten = laufbahnplanungsdaten.schueler.stream().filter(s -> s.id == dtoSchueler.ID).findFirst().orElse(null);
 		if (daten == null) {
 			logger.logLn("Fehler: Die Laufbahnplanungsdatei enthält keinen Schüler mit der ID " + dtoSchueler.ID + ".");
 			return false;
@@ -751,7 +838,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 			logger.logLn("Hinweis: Die Anzahl der Sprachprüfungen stimmen nicht überein.");
 		}
 		final Map<String, Sprachbelegung> sprachBelegungen = abidaten.sprachendaten.belegungen.stream().collect(Collectors.toMap(b -> b.sprache, b -> b));
-		for (final Sprachbelegung belegung : daten.sprachendaten.belegungen) {
+		for (final GostLaufbahnplanungExportV1Sprachbelegung belegung : daten.sprachendaten.belegungen) {
 			final Sprachbelegung vergleich = sprachBelegungen.get(belegung.sprache);
 			if (vergleich == null) {
 				logger.logLn("Hinweis: Die Sprachbelegung für die Sprache " + belegung.sprache + " wurde in der Datenbank nicht gefunden.");
@@ -770,31 +857,33 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 				logger.logLn("Hinweis: Die Sprachbelegung für die Sprache " + belegung.sprache + " stimmt nicht mit der Eintragung in der Datenbank überein.");
 			}
 		}
-		final Map<String, Sprachpruefung> sprachPruefungen = abidaten.sprachendaten.pruefungen.stream().collect(Collectors.toMap(b -> b.sprache, b -> b));
-		for (final Sprachpruefung pruefung : daten.sprachendaten.pruefungen) {
-			final Sprachpruefung vergleich = sprachPruefungen.get(pruefung.sprache);
-			if (vergleich == null) {
-				logger.logLn("Hinweis: Die Sprachprüfung für die Sprache " + pruefung.sprache + " wurde in der Datenbank nicht gefunden.");
-				continue;
+		for (final GostLaufbahnplanungExportV1Sprachpruefung pruefung : daten.sprachendaten.pruefungen) {
+			boolean found = false;
+			for (final Sprachpruefung vergleich : abidaten.sprachendaten.pruefungen) {
+				if (Objects.equals(pruefung.sprache, vergleich.sprache)) {
+					final boolean vglNiveau = ((pruefung.anspruchsniveauId == null) && (vergleich.anspruchsniveauId == null))
+							|| ((pruefung.anspruchsniveauId != null) && (vergleich.anspruchsniveauId != null)
+									&& (pruefung.anspruchsniveauId.intValue() == vergleich.anspruchsniveauId.intValue()));
+					final boolean vglErsSprache = ((pruefung.ersetzteSprache == null) && (vergleich.ersetzteSprache == null))
+							|| ((pruefung.ersetzteSprache != null) && (vergleich.ersetzteSprache != null)
+									&& (pruefung.ersetzteSprache.equals(vergleich.ersetzteSprache)));
+					if (vglNiveau && vglErsSprache
+							&& (pruefung.kannErstePflichtfremdspracheErsetzen == vergleich.kannErstePflichtfremdspracheErsetzen)
+							&& (pruefung.kannZweitePflichtfremdspracheErsetzen == vergleich.kannZweitePflichtfremdspracheErsetzen)
+							&& (pruefung.kannWahlpflichtfremdspracheErsetzen == vergleich.kannWahlpflichtfremdspracheErsetzen)
+							&& (pruefung.kannBelegungAlsFortgefuehrteSpracheErlauben == vergleich.kannBelegungAlsFortgefuehrteSpracheErlauben)) {
+						found = true;
+						break;
+					}
+				}
 			}
-			final boolean vglNiveau = ((pruefung.anspruchsniveauId == null) && (vergleich.anspruchsniveauId == null))
-					|| ((pruefung.anspruchsniveauId != null) && (vergleich.anspruchsniveauId != null)
-							&& (pruefung.anspruchsniveauId.intValue() == vergleich.anspruchsniveauId.intValue()));
-			final boolean vglErsSprache = ((pruefung.ersetzteSprache == null) && (vergleich.ersetzteSprache == null))
-					|| ((pruefung.ersetzteSprache != null) && (vergleich.ersetzteSprache != null)
-							&& (pruefung.ersetzteSprache.equals(vergleich.ersetzteSprache)));
-			if (!vglNiveau || !vglErsSprache
-					|| (pruefung.kannErstePflichtfremdspracheErsetzen != vergleich.kannErstePflichtfremdspracheErsetzen)
-					|| (pruefung.kannZweitePflichtfremdspracheErsetzen != vergleich.kannZweitePflichtfremdspracheErsetzen)
-					|| (pruefung.kannWahlpflichtfremdspracheErsetzen != vergleich.kannWahlpflichtfremdspracheErsetzen)
-					|| (pruefung.kannBelegungAlsFortgefuehrteSpracheErlauben != vergleich.kannBelegungAlsFortgefuehrteSpracheErlauben)) {
-				logger.logLn("Hinweis: Die Sprachprüfung für die Sprache " + pruefung.sprache
-						+ " stimmt nicht nicht mit der Eintragung in der Datenbank überein.");
+			if (!found) {
+				logger.logLn("Hinweis: Eine Sprachprüfung für die Sprache " + pruefung.sprache + " wurde in der Datenbank nicht gefunden.");
 			}
 		}
 		// Prüfe die Fachbelegungen bei den Fachbelegungen, wo bereits Leistungsdaten in der Datenbank hinterlegt sind und übernehme die restlichen Fachwahlen
 		final Map<Long, AbiturFachbelegung> dbBelegungen = abidaten.fachbelegungen.stream().collect(Collectors.toMap(b -> b.fachID, b -> b));
-		final Map<Long, GostLaufbahnplanungDatenFachbelegung> dateiBelegungen = daten.fachbelegungen.stream().collect(Collectors.toMap(b -> b.fachID, b -> b));
+		final Map<Long, GostLaufbahnplanungExportV1Fachbelegung> dateiBelegungen = daten.fachbelegungen.stream().collect(Collectors.toMap(b -> b.fachID, b -> b));
 		for (final Long idFach : dateiBelegungen.keySet()) {
 			final GostFach fach = gostFaecher.get(idFach);
 			if (fach == null) {
@@ -811,7 +900,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 		for (final Long idFach : beide) {
 			// Prüfe, ob sich Fachbelegungen in Halbjahren unterscheiden, die bereits Leistungsdaten enthalten
 			final AbiturFachbelegung db = dbBelegungen.get(idFach);
-			final GostLaufbahnplanungDatenFachbelegung datei = dateiBelegungen.get(idFach);
+			final GostLaufbahnplanungExportV1Fachbelegung datei = dateiBelegungen.get(idFach);
 			boolean identisch = true;
 			for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
 				final String dbKursart = (db.belegungen[halbjahr.id] == null) ? null : db.belegungen[halbjahr.id].kursartKuerzel;
@@ -839,7 +928,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 		beide = tmp;
 		for (final Long idFach : nurDatei) {
 			// Prüfe, ob Fachbelegungen zu einem Halbjahr hinzugefügt werden sollen, die bereits Leistungsdaten enthalten
-			final GostLaufbahnplanungDatenFachbelegung datei = dateiBelegungen.get(idFach);
+			final GostLaufbahnplanungExportV1Fachbelegung datei = dateiBelegungen.get(idFach);
 			for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
 				if ((abidaten.bewertetesHalbjahr[halbjahr.id]) && (datei.kursart[halbjahr.id] != null)) {
 					logger.logLn("Fehler: Das Halbjahr " + halbjahr.kuerzel
@@ -871,7 +960,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 							DTOGostSchuelerFachbelegungen.class, dtoSchueler.ID, alle);
 			final Map<Long, DTOGostSchuelerFachbelegungen> mapFachwahlen = fachwahlen.stream().collect(Collectors.toMap(f -> f.Fach_ID, f -> f));
 			for (final Long idFach : Stream.concat(beide.stream(), nurDatei.stream()).collect(Collectors.toSet())) {
-				final GostLaufbahnplanungDatenFachbelegung datei = dateiBelegungen.get(idFach);
+				final GostLaufbahnplanungExportV1Fachbelegung datei = dateiBelegungen.get(idFach);
 				DTOGostSchuelerFachbelegungen fachwahl = mapFachwahlen.get(idFach);
 				// Ergänze ggf. Fachwahl-Einträge, welche zwar durch Leistungsdaten bestehen, aber nicht wirklich in der DB abgelegt sind.
 				if (fachwahl == null) {
@@ -946,9 +1035,9 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 				break;
 			}
 			// Entpacke die ZIP-Datei
-			GostLaufbahnplanungDaten laufbahnplanungsdaten = null;
+			GostLaufbahnplanungExportV1 laufbahnplanungsdaten = null;
 			try {
-				laufbahnplanungsdaten = JSONMapper.toObjectGZip(daten, GostLaufbahnplanungDaten.class);
+				laufbahnplanungsdaten = JSONMapper.toObjectGZip(daten, GostLaufbahnplanungExportV1.class);
 			} catch (final CompressionException e) {
 				logger.log("Fehler beim Öffnen der Datei.");
 				logger.log("Fehlernachricht: " + e.getMessage());
@@ -1010,9 +1099,9 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
 		// Importiere die Daten...
-		GostLaufbahnplanungDaten laufbahnplanungsdaten = null;
+		GostLaufbahnplanungExportV1 laufbahnplanungsdaten = null;
 		try {
-			laufbahnplanungsdaten = JSONMapper.toObjectGZip(data, GostLaufbahnplanungDaten.class);
+			laufbahnplanungsdaten = JSONMapper.toObjectGZip(data, GostLaufbahnplanungExportV1.class);
 		} catch (final CompressionException e) {
 			logger.log("Fehler beim Öffnen der Datei.");
 			logger.log("Fehlernachricht: " + e.getMessage());
@@ -1038,7 +1127,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response importJSON(final long idSchueler, final GostLaufbahnplanungDaten laufbahnplanungsdaten) throws ApiOperationException {
+	public Response importJSON(final long idSchueler, final GostLaufbahnplanungExportV1 laufbahnplanungsdaten) throws ApiOperationException {
 		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat und ob der Schüler überhaupt existiert.
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);

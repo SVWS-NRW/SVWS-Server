@@ -12,6 +12,9 @@ import jakarta.validation.constraints.NotNull;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Sprachbelegung {
 
+	/** Die ID des Sprachbelegungseintrages */
+	public long id = -1;
+
 	/** Das einstellige Sprachkürzel des belegten Faches */
 	public @NotNull String sprache = "";
 

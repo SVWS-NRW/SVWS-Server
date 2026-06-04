@@ -704,6 +704,7 @@
   "sprachendaten" : {
     "schuelerID" : 1057,
     "belegungen" : [ {
+      "id" : -1,
       "sprache" : "S",
       "reihenfolge" : 1,
       "belegungVonJahrgang" : "EF",

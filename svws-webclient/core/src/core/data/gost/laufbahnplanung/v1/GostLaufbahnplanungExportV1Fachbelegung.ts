@@ -1,8 +1,8 @@
-import { JavaObject } from '../../../java/lang/JavaObject';
-import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
-import { Class } from '../../../java/lang/Class';
+import { JavaObject } from '../../../../../java/lang/JavaObject';
+import { GostHalbjahr } from '../../../../../core/types/gost/GostHalbjahr';
+import { Class } from '../../../../../java/lang/Class';
 
-export class GostLaufbahnplanungDatenFachbelegung extends JavaObject {
+export class GostLaufbahnplanungExportV1Fachbelegung extends JavaObject {
 
 	/**
 	 * Die ID des Faches der Gymnasialen Oberstufe, welches belegt wurde.
@@ -33,18 +33,18 @@ export class GostLaufbahnplanungDatenFachbelegung extends JavaObject {
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenFachbelegung';
+		return 'de.svws_nrw.core.data.gost.laufbahnplanung.v1.GostLaufbahnplanungExportV1Fachbelegung';
 	}
 
 	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenFachbelegung'].includes(name);
+		return ['de.svws_nrw.core.data.gost.laufbahnplanung.v1.GostLaufbahnplanungExportV1Fachbelegung'].includes(name);
 	}
 
-	public static readonly class = new Class<GostLaufbahnplanungDatenFachbelegung>('de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenFachbelegung');
+	public static readonly class = new Class<GostLaufbahnplanungExportV1Fachbelegung>('de.svws_nrw.core.data.gost.laufbahnplanung.v1.GostLaufbahnplanungExportV1Fachbelegung');
 
-	public static transpilerFromJSON(json: string): GostLaufbahnplanungDatenFachbelegung {
-		const obj = JSON.parse(json) as Partial<GostLaufbahnplanungDatenFachbelegung>;
-		const result = new GostLaufbahnplanungDatenFachbelegung();
+	public static transpilerFromJSON(json: string): GostLaufbahnplanungExportV1Fachbelegung {
+		const obj = JSON.parse(json) as Partial<GostLaufbahnplanungExportV1Fachbelegung>;
+		const result = new GostLaufbahnplanungExportV1Fachbelegung();
 		if (obj.fachID === undefined)
 			throw new Error('invalid json format, missing attribute fachID');
 		result.fachID = obj.fachID;
@@ -62,7 +62,7 @@ export class GostLaufbahnplanungDatenFachbelegung extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSON(obj: GostLaufbahnplanungDatenFachbelegung): string {
+	public static transpilerToJSON(obj: GostLaufbahnplanungExportV1Fachbelegung): string {
 		let result = '{';
 		result += '"fachID" : ' + obj.fachID.toString() + ',';
 		result += '"abiturFach" : ' + ((obj.abiturFach === null) ? 'null' : obj.abiturFach.toString()) + ',';
@@ -87,7 +87,7 @@ export class GostLaufbahnplanungDatenFachbelegung extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSONPatch(obj: Partial<GostLaufbahnplanungDatenFachbelegung>): string {
+	public static transpilerToJSONPatch(obj: Partial<GostLaufbahnplanungExportV1Fachbelegung>): string {
 		let result = '{';
 		if (obj.fachID !== undefined) {
 			result += '"fachID" : ' + obj.fachID.toString() + ',';
@@ -124,6 +124,6 @@ export class GostLaufbahnplanungDatenFachbelegung extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_gost_GostLaufbahnplanungDatenFachbelegung(obj: unknown): GostLaufbahnplanungDatenFachbelegung {
-	return obj as GostLaufbahnplanungDatenFachbelegung;
+export function cast_de_svws_nrw_core_data_gost_laufbahnplanung_v1_GostLaufbahnplanungExportV1Fachbelegung(obj: unknown): GostLaufbahnplanungExportV1Fachbelegung {
+	return obj as GostLaufbahnplanungExportV1Fachbelegung;
 }

@@ -1019,6 +1019,7 @@
   "sprachendaten" : {
     "schuelerID" : 1079,
     "belegungen" : [ {
+      "id" : -1,
       "sprache" : "F",
       "reihenfolge" : 1,
       "belegungVonJahrgang" : "EF",

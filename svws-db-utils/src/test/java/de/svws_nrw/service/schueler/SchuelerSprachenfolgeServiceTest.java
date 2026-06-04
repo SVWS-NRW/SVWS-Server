@@ -47,6 +47,7 @@ class SchuelerSprachenfolgeServiceTest {
 		final Sprachbelegung result = service.toApi(dto);
 
 		assertNotNull(result);
+		assertEquals(10L, result.id);
 		assertEquals("E", result.sprache);
 		assertTrue(result.istNachweis);
 		assertEquals(1, result.reihenfolge);
@@ -76,6 +77,7 @@ class SchuelerSprachenfolgeServiceTest {
 		final List<Sprachbelegung> result = repositoryBackedService.getSprachenfolge(100L);
 
 		assertEquals(1, result.size());
+		assertEquals(10L, result.get(0).id);
 		assertEquals("E", result.get(0).sprache);
 		assertTrue(result.get(0).istNachweis);
 		assertEquals(1, result.get(0).reihenfolge);

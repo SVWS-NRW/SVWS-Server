@@ -1,4 +1,4 @@
-package de.svws_nrw.core.data.gost;
+package de.svws_nrw.core.data.gost.laufbahnplanung.v1;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,12 +11,15 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 
 /**
- * Die Klasse enthält die Informationen zum Export von Laufbahnplanungs-Daten zu einem Abiturjahrgang der gymnasialen Oberstufe.
+ * Datenaustauschformat für die Laufbahnplanung der gymnasialen Oberstufe:
+ *
+ * - Daten zu Schülern eines Abiturjahrgang der gymnasialen Oberstufe
+ * - Dies sind i.A. nicht mehrere Schüler des Abiturjahrgangs, meist wird eine Export-Datei mit einem Schüler erstellt
  */
 @XmlRootElement
 @Schema(description = "Enthält die Informationen zum Export von Laufbahnplanungs-Daten zu einem Abiturjahrgang der gymnasialen Oberstufe.")
 @TranspilerDTO
-public class GostLaufbahnplanungDaten {
+public class GostLaufbahnplanungExportV1 {
 
 	/** Die Revision des LP-Datenformates, um zu überprüfen, ob die Datei in dem richtigen Format vorliegt (-1 für Entwickler-Revisionen und ansonsten aufsteigend ab 1) */
 	@Schema(description = "Die Revision des ENM-Datenformates, um zu überprüfen, ob die Datei in dem richtigen Format vorliegt (-1 für Entwickler-Revisionen und ansonsten aufsteigend ab 1).",
@@ -38,6 +41,7 @@ public class GostLaufbahnplanungDaten {
 	/** Der dritte Teil (von dreien) der Bezeichnung der Schule */
 	@Schema(description = "die Bezeichnung 3 der Schule", example = "")
 	public @NotNull String schulBezeichnung3 = "";
+
 	/** Anmerkungen zu diesen Daten */
 	@Schema(description = "anmerkungen zu diesen Daten", example = "Exportiert am 30.2.2023")
 	public @NotNull String anmerkungen = "";
@@ -73,25 +77,25 @@ public class GostLaufbahnplanungDaten {
 	public String beginnZusatzkursSW;
 
 	/** Die Liste der Beratungslehrer für diesen Jahrgang */
-	@ArraySchema(schema = @Schema(implementation = GostBeratungslehrer.class))
-	public final @NotNull List<GostBeratungslehrer> beratungslehrer = new ArrayList<>();
+	@ArraySchema(schema = @Schema(implementation = GostLaufbahnplanungExportV1Beratungslehrer.class))
+	public final @NotNull List<GostLaufbahnplanungExportV1Beratungslehrer> beratungslehrer = new ArrayList<>();
 
 	/** Die Liste der Fächer der gymnasialen Oberstufe für diesen Jahrgang */
-	@ArraySchema(schema = @Schema(implementation = GostFach.class))
-	public final @NotNull List<GostFach> faecher = new ArrayList<>();
+	@ArraySchema(schema = @Schema(implementation = GostLaufbahnplanungExportV1Fach.class))
+	public final @NotNull List<GostLaufbahnplanungExportV1Fach> faecher = new ArrayList<>();
 
 	/** Die Liste der notwendigen und der unzulässigen Kursart-spezifischen Fach-Kombinationen für diesen Jahrgang */
-	@ArraySchema(schema = @Schema(implementation = GostJahrgangFachkombination.class))
-	public final @NotNull List<GostJahrgangFachkombination> fachkombinationen = new ArrayList<>();
+	@ArraySchema(schema = @Schema(implementation = GostLaufbahnplanungExportV1Fachkombination.class))
+	public final @NotNull List<GostLaufbahnplanungExportV1Fachkombination> fachkombinationen = new ArrayList<>();
 
 	/** Die Liste der Schüler mit ihren Laufbahnplanungsdaten. */
-	@ArraySchema(schema = @Schema(implementation = GostLaufbahnplanungDatenSchueler.class))
-	public final @NotNull List<GostLaufbahnplanungDatenSchueler> schueler = new ArrayList<>();
+	@ArraySchema(schema = @Schema(implementation = GostLaufbahnplanungExportV1Schueler.class))
+	public final @NotNull List<GostLaufbahnplanungExportV1Schueler> schueler = new ArrayList<>();
 
 	/**
 	 * Leerer Standardkonstruktor.
 	 */
-	public GostLaufbahnplanungDaten() {
+	public GostLaufbahnplanungExportV1() {
 		// leer
 	}
 

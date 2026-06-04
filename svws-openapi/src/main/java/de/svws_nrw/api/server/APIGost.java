@@ -15,10 +15,10 @@ import de.svws_nrw.core.data.gost.GostJahrgangFachwahlen;
 import de.svws_nrw.core.data.gost.GostJahrgangFachwahlenHalbjahr;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
-import de.svws_nrw.core.data.gost.GostLaufbahnplanungDaten;
 import de.svws_nrw.core.data.gost.GostLeistungen;
 import de.svws_nrw.core.data.gost.GostSchuelerFachwahl;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
+import de.svws_nrw.core.data.gost.laufbahnplanung.v1.GostLaufbahnplanungExportV1;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
@@ -1572,7 +1572,7 @@ public class APIGost {
 					+ "notwendige Berechtigung zum Auslesen der Daten besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die Laufbahndaten der gymnasialen Oberstufe",
 			content = @Content(mediaType = "application/json",
-					schema = @Schema(implementation = GostLaufbahnplanungDaten.class)))
+					schema = @Schema(implementation = GostLaufbahnplanungExportV1.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Laufbahndaten auszulesen.")
 	@ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für das Erstellen der Laufbahn-Daten gefunden.")
 	public Response exportGostSchuelerLaufbahnplanungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
@@ -1605,7 +1605,7 @@ public class APIGost {
 	public Response importGostSchuelerLaufbahnplanungsdaten(@PathParam("schema") final String schema,
 			@PathParam("id") final long id,
 			@RequestBody(description = "Die Laufbahnplanungsdaten", required = false, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = GostLaufbahnplanungDaten.class))) final GostLaufbahnplanungDaten daten,
+					schema = @Schema(implementation = GostLaufbahnplanungExportV1.class))) final GostLaufbahnplanungExportV1 daten,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn, null).importJSON(id, daten),
 				request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN);

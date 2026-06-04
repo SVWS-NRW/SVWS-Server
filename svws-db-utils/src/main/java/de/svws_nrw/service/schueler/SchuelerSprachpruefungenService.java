@@ -86,7 +86,7 @@ public final class SchuelerSprachpruefungenService {
 	 */
 	public Sprachpruefung toApi(final DTOSchuelerSprachpruefungen dto, final Schuljahresabschnitt abschnitt) {
 		final var daten = new Sprachpruefung();
-
+		daten.id = dto.ID;
 		daten.sprache = dto.Sprache;
 		daten.jahrgang = dto.ASDJahrgang;
 		daten.anspruchsniveauId = (dto.Anspruchsniveau == null) ? null : dto.Anspruchsniveau.daten.id;

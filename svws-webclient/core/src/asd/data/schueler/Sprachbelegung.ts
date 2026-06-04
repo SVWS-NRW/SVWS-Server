@@ -4,6 +4,11 @@ import { Class } from '../../../java/lang/Class';
 export class Sprachbelegung extends JavaObject {
 
 	/**
+	 * Die ID des Sprachbelegungseintrages
+	 */
+	public id: number = -1;
+
+	/**
 	 * Das einstellige Sprachkürzel des belegten Faches
 	 */
 	public sprache: string = "";
@@ -84,6 +89,9 @@ export class Sprachbelegung extends JavaObject {
 	public static transpilerFromJSON(json: string): Sprachbelegung {
 		const obj = JSON.parse(json) as Partial<Sprachbelegung>;
 		const result = new Sprachbelegung();
+		if (obj.id === undefined)
+			throw new Error('invalid json format, missing attribute id');
+		result.id = obj.id;
 		if (obj.sprache === undefined)
 			throw new Error('invalid json format, missing attribute sprache');
 		result.sprache = obj.sprache;
@@ -113,6 +121,7 @@ export class Sprachbelegung extends JavaObject {
 
 	public static transpilerToJSON(obj: Sprachbelegung): string {
 		let result = '{';
+		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"sprache" : ' + JSON.stringify(obj.sprache) + ',';
 		result += '"istNachweis" : ' + obj.istNachweis.toString() + ',';
 		result += '"reihenfolge" : ' + ((obj.reihenfolge === null) ? 'null' : obj.reihenfolge.toString()) + ',';
@@ -132,6 +141,9 @@ export class Sprachbelegung extends JavaObject {
 
 	public static transpilerToJSONPatch(obj: Partial<Sprachbelegung>): string {
 		let result = '{';
+		if (obj.id !== undefined) {
+			result += '"id" : ' + obj.id.toString() + ',';
+		}
 		if (obj.sprache !== undefined) {
 			result += '"sprache" : ' + JSON.stringify(obj.sprache) + ',';
 		}

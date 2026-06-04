@@ -682,9 +682,6 @@ export { GostJahrgangFachwahlen } from './core/data/gost/GostJahrgangFachwahlen'
 export { GostJahrgangFachwahlenHalbjahr } from './core/data/gost/GostJahrgangFachwahlenHalbjahr';
 export { GostJahrgangsdaten } from './core/data/gost/GostJahrgangsdaten';
 export { GostLaufbahnplanungBeratungsdaten } from './core/data/gost/GostLaufbahnplanungBeratungsdaten';
-export { GostLaufbahnplanungDaten } from './core/data/gost/GostLaufbahnplanungDaten';
-export { GostLaufbahnplanungDatenFachbelegung } from './core/data/gost/GostLaufbahnplanungDatenFachbelegung';
-export { GostLaufbahnplanungDatenSchueler } from './core/data/gost/GostLaufbahnplanungDatenSchueler';
 export { GostLeistungen } from './core/data/gost/GostLeistungen';
 export { GostLeistungenFachbelegung } from './core/data/gost/GostLeistungenFachbelegung';
 export { GostLeistungenFachwahl } from './core/data/gost/GostLeistungenFachwahl';
@@ -716,6 +713,15 @@ export { GostSchuelerklausur } from './core/data/gost/klausurplanung/GostSchuele
 export { GostSchuelerklausurTermin } from './core/data/gost/klausurplanung/GostSchuelerklausurTermin';
 export { GostSchuelerklausurTerminRich } from './core/data/gost/klausurplanung/GostSchuelerklausurTerminRich';
 export { GostSchuelerklausurterminraumstunde } from './core/data/gost/klausurplanung/GostSchuelerklausurterminraumstunde';
+export { GostLaufbahnplanungExportV1 } from './core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1';
+export { GostLaufbahnplanungExportV1Beratungslehrer } from './core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1Beratungslehrer';
+export { GostLaufbahnplanungExportV1Fach } from './core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1Fach';
+export { GostLaufbahnplanungExportV1Fachbelegung } from './core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1Fachbelegung';
+export { GostLaufbahnplanungExportV1Fachkombination } from './core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1Fachkombination';
+export { GostLaufbahnplanungExportV1Schueler } from './core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1Schueler';
+export { GostLaufbahnplanungExportV1Sprachbelegung } from './core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1Sprachbelegung';
+export { GostLaufbahnplanungExportV1Sprachen } from './core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1Sprachen';
+export { GostLaufbahnplanungExportV1Sprachpruefung } from './core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1Sprachpruefung';
 export { JahrgangsDaten } from './core/data/jahrgang/JahrgangsDaten';
 export { Kalender } from './core/data/kalender/Kalender';
 export { KalenderEintrag } from './core/data/kalender/KalenderEintrag';

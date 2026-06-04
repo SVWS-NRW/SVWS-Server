@@ -42,7 +42,12 @@ files
 	.forEach((file) => {
 		const [_, jahrgang, nr] = basename(file, ".json").split("_");
 		abiturdaten[jahrgang] ||= {};
-		abiturdaten[jahrgang][nr] = Abiturdaten.transpilerFromJSON(readFileSync(resolve(test_dir, file), "utf8"));
+		try {
+			abiturdaten[jahrgang][nr] = Abiturdaten.transpilerFromJSON(readFileSync(resolve(test_dir, file), "utf8"));
+		} catch (e) {
+			console.error("Datei: " + file);
+			throw e;
+		}
 	});
 files
 	.filter((file) => file.includes("_Belegpruefungsergebnis_Gesamt"))

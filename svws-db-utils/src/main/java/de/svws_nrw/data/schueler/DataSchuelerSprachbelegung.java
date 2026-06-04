@@ -61,6 +61,7 @@ public final class DataSchuelerSprachbelegung extends DataManagerRevised<Long, D
 	private static Sprachbelegung mapInternal(final DBEntityManager conn, final DTOSchueler dtoSchueler, final DTOSchuelerSprachenfolge dto) {
 		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dtoSchueler.Schuljahresabschnitts_ID);
 		final Sprachbelegung daten = new Sprachbelegung();
+		daten.id = dto.ID;
 		daten.sprache = dto.Sprache;
 		daten.istNachweis = (dto.IstNachweis != null) && dto.IstNachweis;
 		daten.reihenfolge = dto.ReihenfolgeNr;

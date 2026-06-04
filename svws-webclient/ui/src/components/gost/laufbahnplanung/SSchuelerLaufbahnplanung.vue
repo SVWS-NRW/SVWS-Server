@@ -5,8 +5,8 @@
 				<svws-ui-button type="transparent" @click="export_laufbahnplanung"><span class="icon-sm i-ri-upload-2-line" />Exportieren</svws-ui-button>
 				<svws-ui-button type="transparent" @click="show = true"><span class="icon-sm i-ri-download-2-line" /> Importieren…</svws-ui-button>
 				<s-laufbahnplanung-import-modal v-model:show="show" :import-laufbahnplanung />
-				<svws-ui-button :type="zwischenspeicher === undefined ? 'transparent' : 'error'" @click="saveLaufbahnplanung">Planung merken</svws-ui-button>
-				<svws-ui-button type="danger" @click="restoreLaufbahnplanung" v-if="zwischenspeicher !== undefined">Planung wiederherstellen</svws-ui-button>
+				<svws-ui-button :type="!hatZwischenspeicher ? 'transparent' : 'error'" @click="saveLaufbahnplanung">Planung merken</svws-ui-button>
+				<svws-ui-button type="danger" @click="restoreLaufbahnplanung" v-if="hatZwischenspeicher">Planung wiederherstellen</svws-ui-button>
 				<svws-ui-button :type="manager.modus === 'normal' ? 'transparent' : 'danger'" @click="manager.switchModus()" title="Modus wechseln">
 					<span class="icon-sm i-ri-loop-right-line" /> Modus: <span>{{ manager.modus }}</span>
 				</svws-ui-button>

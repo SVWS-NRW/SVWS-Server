@@ -1057,6 +1057,7 @@
   "sprachendaten" : {
     "schuelerID" : 1085,
     "belegungen" : [ {
+      "id" : -1,
       "sprache" : "E",
       "reihenfolge" : 1,
       "belegungVonJahrgang" : "05",
@@ -1070,6 +1071,7 @@
       "hatHebraicum" : false,
       "istNachweis": false
     }, {
+      "id" : -1,
       "sprache" : "L",
       "reihenfolge" : 2,
       "belegungVonJahrgang" : "07",
@@ -1083,6 +1085,7 @@
       "hatHebraicum" : false,
       "istNachweis": false
     }, {
+      "id" : -1,
       "sprache" : "F",
       "reihenfolge" : 3,
       "belegungVonJahrgang" : "09",

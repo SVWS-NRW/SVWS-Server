@@ -90,7 +90,7 @@
 
 	const props = defineProps<{
 		sprachpruefungen: () => List<Sprachpruefung>;
-		patchSprachpruefung: (data: Partial<Sprachpruefung>, sprache: string) => Promise<void>;
+		patchSprachpruefung: (data: Partial<Sprachpruefung>, id: number) => Promise<void>;
 		addSprachpruefung: (data: Partial<Sprachpruefung>) => Promise<Sprachpruefung | null>;
 		removeSprachpruefung: (data: Sprachpruefung) => Promise<Sprachpruefung>;
 		schuelerListeManager: () => SchuelerListeManager;
@@ -113,7 +113,7 @@
 		for (const sprachpruefung of sprachpruefungen) {
 			if (!sprachpruefung.istHSUPruefung) {
 				const patchMethod = async (proxy: Partial<Sprachpruefung>) => {
-					await props.patchSprachpruefung(proxy, sprachpruefung.sprache);
+					await props.patchSprachpruefung(proxy, sprachpruefung.id);
 					return true;
 				};
 				const modelProxy = new SchuelerSprachpruefungModelProxy(() => sprachpruefung, props.schuelerListeManager, patchMethod);
@@ -169,15 +169,11 @@
 	}
 
 	const verfuegbareSprachpruefungen = computed(() => {
-		const pruefungenFeststellung = new Set();
 		const sprachen = [];
-		for (const p of gridManager.daten) {
-			pruefungenFeststellung.add(p.data.sprache);
-		}
 		for (const k of Fach.getListFremdsprachenKuerzelAtomar(schuljahr.value)) {
 			const sprache = Fach.getMapFremdsprachenKuerzelAtomar(schuljahr.value).get(k);
 			const spracheEintrag = sprache?.daten(schuljahr.value) ?? null;
-			if ((spracheEintrag !== null) && spracheEintrag.istHKFS && !spracheEintrag.istAusRegUFach && !pruefungenFeststellung.has(k)) {
+			if ((spracheEintrag !== null) && spracheEintrag.istHKFS && !spracheEintrag.istAusRegUFach) {
 				sprachen.push(k);
 			}
 		}

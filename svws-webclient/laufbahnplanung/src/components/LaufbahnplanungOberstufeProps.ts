@@ -2,7 +2,7 @@ import type { ApiFile } from "@core/api/BaseApi";
 import type { AbiturdatenManager } from "@core/core/abschluss/gost/AbiturdatenManager";
 import type { GostBelegpruefungErgebnis } from "@core/core/abschluss/gost/GostBelegpruefungErgebnis";
 import type { GostJahrgangsdaten } from "@core/core/data/gost/GostJahrgangsdaten";
-import type { GostLaufbahnplanungDaten } from "@core/core/data/gost/GostLaufbahnplanungDaten";
+import type { GostLaufbahnplanungExportV1 } from "@core/core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1";
 import type { GostSchuelerFachwahl } from "@core/core/data/gost/GostSchuelerFachwahl";
 import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
 import type { ServerMode } from "@core/core/types/ServerMode";
@@ -21,7 +21,7 @@ export interface LaufbahnplanungOberstufeProps {
 	gostBelegpruefungErgebnis: () => GostBelegpruefungErgebnis;
 	abiturdatenManager: () => AbiturdatenManager;
 	id?: number;
-	zwischenspeicher?: GostLaufbahnplanungDaten;
+	zwischenspeicher?: GostLaufbahnplanungExportV1;
 	saveLaufbahnplanung: () => Promise<void>;
 	restoreLaufbahnplanung: () => Promise<void>;
 	resetFachwahlen: (forceDelete: boolean) => Promise<void>;

@@ -1,11 +1,11 @@
-import { JavaObject } from '../../../java/lang/JavaObject';
-import { GostLaufbahnplanungDatenFachbelegung } from '../../../core/data/gost/GostLaufbahnplanungDatenFachbelegung';
-import { ArrayList } from '../../../java/util/ArrayList';
-import type { List } from '../../../java/util/List';
-import { Class } from '../../../java/lang/Class';
-import { Sprachendaten } from '../../../asd/data/schueler/Sprachendaten';
+import { JavaObject } from '../../../../../java/lang/JavaObject';
+import { GostLaufbahnplanungExportV1Sprachen } from '../../../../../core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1Sprachen';
+import { ArrayList } from '../../../../../java/util/ArrayList';
+import type { List } from '../../../../../java/util/List';
+import { Class } from '../../../../../java/lang/Class';
+import { GostLaufbahnplanungExportV1Fachbelegung } from '../../../../../core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1Fachbelegung';
 
-export class GostLaufbahnplanungDatenSchueler extends JavaObject {
+export class GostLaufbahnplanungExportV1Schueler extends JavaObject {
 
 	/**
 	 * Die eindeutige ID des Schülers
@@ -45,12 +45,12 @@ export class GostLaufbahnplanungDatenSchueler extends JavaObject {
 	/**
 	 * Ein Array mit den Fachbelegungen in der Oberstufe.
 	 */
-	public readonly fachbelegungen: List<GostLaufbahnplanungDatenFachbelegung> = new ArrayList<GostLaufbahnplanungDatenFachbelegung>();
+	public readonly fachbelegungen: List<GostLaufbahnplanungExportV1Fachbelegung> = new ArrayList<GostLaufbahnplanungExportV1Fachbelegung>();
 
 	/**
 	 * Die Sprachendaten des Schülers mit Informationen zu Sprachbelegungen (Sprachenfolge) und zu Sprachprüfungen.
 	 */
-	public sprachendaten: Sprachendaten = new Sprachendaten();
+	public sprachendaten: GostLaufbahnplanungExportV1Sprachen = new GostLaufbahnplanungExportV1Sprachen();
 
 
 	/**
@@ -61,18 +61,18 @@ export class GostLaufbahnplanungDatenSchueler extends JavaObject {
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenSchueler';
+		return 'de.svws_nrw.core.data.gost.laufbahnplanung.v1.GostLaufbahnplanungExportV1Schueler';
 	}
 
 	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenSchueler'].includes(name);
+		return ['de.svws_nrw.core.data.gost.laufbahnplanung.v1.GostLaufbahnplanungExportV1Schueler'].includes(name);
 	}
 
-	public static readonly class = new Class<GostLaufbahnplanungDatenSchueler>('de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenSchueler');
+	public static readonly class = new Class<GostLaufbahnplanungExportV1Schueler>('de.svws_nrw.core.data.gost.laufbahnplanung.v1.GostLaufbahnplanungExportV1Schueler');
 
-	public static transpilerFromJSON(json: string): GostLaufbahnplanungDatenSchueler {
-		const obj = JSON.parse(json) as Partial<GostLaufbahnplanungDatenSchueler>;
-		const result = new GostLaufbahnplanungDatenSchueler();
+	public static transpilerFromJSON(json: string): GostLaufbahnplanungExportV1Schueler {
+		const obj = JSON.parse(json) as Partial<GostLaufbahnplanungExportV1Schueler>;
+		const result = new GostLaufbahnplanungExportV1Schueler();
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
@@ -96,16 +96,16 @@ export class GostLaufbahnplanungDatenSchueler extends JavaObject {
 		}
 		if (obj.fachbelegungen !== undefined) {
 			for (const elem of obj.fachbelegungen) {
-				result.fachbelegungen.add(GostLaufbahnplanungDatenFachbelegung.transpilerFromJSON(JSON.stringify(elem)));
+				result.fachbelegungen.add(GostLaufbahnplanungExportV1Fachbelegung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		if (obj.sprachendaten === undefined)
 			throw new Error('invalid json format, missing attribute sprachendaten');
-		result.sprachendaten = Sprachendaten.transpilerFromJSON(JSON.stringify(obj.sprachendaten));
+		result.sprachendaten = GostLaufbahnplanungExportV1Sprachen.transpilerFromJSON(JSON.stringify(obj.sprachendaten));
 		return result;
 	}
 
-	public static transpilerToJSON(obj: GostLaufbahnplanungDatenSchueler): string {
+	public static transpilerToJSON(obj: GostLaufbahnplanungExportV1Schueler): string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"idEnc" : ' + JSON.stringify(obj.idEnc) + ',';
@@ -124,18 +124,18 @@ export class GostLaufbahnplanungDatenSchueler extends JavaObject {
 		result += '"fachbelegungen" : [ ';
 		for (let i = 0; i < obj.fachbelegungen.size(); i++) {
 			const elem = obj.fachbelegungen.get(i);
-			result += GostLaufbahnplanungDatenFachbelegung.transpilerToJSON(elem);
+			result += GostLaufbahnplanungExportV1Fachbelegung.transpilerToJSON(elem);
 			if (i < obj.fachbelegungen.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
-		result += '"sprachendaten" : ' + Sprachendaten.transpilerToJSON(obj.sprachendaten) + ',';
+		result += '"sprachendaten" : ' + GostLaufbahnplanungExportV1Sprachen.transpilerToJSON(obj.sprachendaten) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
 	}
 
-	public static transpilerToJSONPatch(obj: Partial<GostLaufbahnplanungDatenSchueler>): string {
+	public static transpilerToJSONPatch(obj: Partial<GostLaufbahnplanungExportV1Schueler>): string {
 		let result = '{';
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
@@ -170,14 +170,14 @@ export class GostLaufbahnplanungDatenSchueler extends JavaObject {
 			result += '"fachbelegungen" : [ ';
 			for (let i = 0; i < obj.fachbelegungen.size(); i++) {
 				const elem = obj.fachbelegungen.get(i);
-				result += GostLaufbahnplanungDatenFachbelegung.transpilerToJSON(elem);
+				result += GostLaufbahnplanungExportV1Fachbelegung.transpilerToJSON(elem);
 				if (i < obj.fachbelegungen.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
 		}
 		if (obj.sprachendaten !== undefined) {
-			result += '"sprachendaten" : ' + Sprachendaten.transpilerToJSON(obj.sprachendaten) + ',';
+			result += '"sprachendaten" : ' + GostLaufbahnplanungExportV1Sprachen.transpilerToJSON(obj.sprachendaten) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
@@ -186,6 +186,6 @@ export class GostLaufbahnplanungDatenSchueler extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_gost_GostLaufbahnplanungDatenSchueler(obj: unknown): GostLaufbahnplanungDatenSchueler {
-	return obj as GostLaufbahnplanungDatenSchueler;
+export function cast_de_svws_nrw_core_data_gost_laufbahnplanung_v1_GostLaufbahnplanungExportV1Schueler(obj: unknown): GostLaufbahnplanungExportV1Schueler {
+	return obj as GostLaufbahnplanungExportV1Schueler;
 }

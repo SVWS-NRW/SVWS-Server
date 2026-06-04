@@ -1,0 +1,93 @@
+package de.svws_nrw.core.data.gost.laufbahnplanung.v1;
+
+import de.svws_nrw.transpiler.TranspilerDTO;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
+
+/**
+ * Diese Klasse stellt die Core-Types für
+ * Eigenschaften einen Oberstufenfaches für die Abiturberechnung zur Verfügung.
+ * Core-Types dienen als grundlegende abstrakte Datentypen sowohl für die Core-Algorithmen
+ * als auch für die OpenAPI-Schnittstelle.
+ */
+@XmlRootElement
+@Schema(description = "Informationen zu einem Fach der gymnasialen Oberstufe.")
+@TranspilerDTO
+public class GostLaufbahnplanungExportV1Fach {
+
+	/** Die ID des Faches */
+	public long id = -1;
+
+	/** Das Statistik-Kürzel des Faches */
+	public @NotNull String kuerzel = "";
+
+	/** Das Fach-Kürzel, welches zur Anzeige verwendet wird. */
+	public String kuerzelAnzeige = null;
+
+	/** Die Bezeichnung des Faches */
+	public String bezeichnung = null;
+
+	/** Die Nummer, welche die Sortierung der Fächer angibt. */
+	public int sortierung = 32000;
+
+	/** Gibt an, ob es sich um ein Fach handelt, welches relevant für die Prüfungsordnung ist oder nicht (z.B. bei der Belegprüfung). */
+	public boolean istPruefungsordnungsRelevant = true;
+
+	/** Gibt an, ob es sich bei dem Fach um eine Fremdsprache handelt oder nicht */
+	public boolean istFremdsprache = false;
+
+	/** Gibt an, ob das Fache eine neu einsetzende Fremdsprache ist. */
+	public boolean istFremdSpracheNeuEinsetzend = false;
+
+	/** Gibt im Falle eines bilingualen Sachfaches das einstellige Fremdsprachenkürzel an. */
+	public String biliSprache = null;
+
+
+	/** Gibt an, ob das Fach als Leistungskurs im Abitur gewählt werden kann. */
+	public boolean istMoeglichAbiLK = false;
+
+	/** Gibt an, ob das Fach als Grundkurs im Abitur gewählt werden kann. */
+	public boolean istMoeglichAbiGK = false;
+
+	/** Gibt an, ob das Fach in der EF.1 gewählt werden kann. */
+	public boolean istMoeglichEF1 = false;
+
+	/** Gibt an, ob das Fach in der EF.2 gewählt werden kann. */
+	public boolean istMoeglichEF2 = false;
+
+	/** Gibt an, ob das Fach in der Q1.1 gewählt werden kann. */
+	public boolean istMoeglichQ11 = false;
+
+	/** Gibt an, ob das Fach in der Q1.2 gewählt werden kann. */
+	public boolean istMoeglichQ12 = false;
+
+	/** Gibt an, ob das Fach in der Q2.1 gewählt werden kann. */
+	public boolean istMoeglichQ21 = false;
+
+	/** Gibt an, ob das Fach in der Q2.2 gewählt werden kann. */
+	public boolean istMoeglichQ22 = false;
+
+	/** Die Wochenstundenzahl des Faches in der Qualifikationsphase */
+	public int wochenstundenQualifikationsphase = 3;
+
+	/** Die Fach-ID des Leit- bzw. Referenzfaches eines Projektkurses oder Vertiefungsfaches */
+	public Long projektKursLeitfach1ID = null;
+
+	/** Das Fach-Kürzel des Leit- bzw. Referenzfaches eines Projektkurses oder Vertiefungsfaches */
+	public String projektKursLeitfach1Kuerzel = null;
+
+	/** Die Fach-ID des zweiten Leit- bzw. Referenzfaches eines Projektkurses */
+	public Long projektKursLeitfach2ID = null;
+
+	/** Die Fach-Kürzel des zweiten Leit- bzw. Referenzfaches eines Projektkurses */
+	public String projektKursLeitfach2Kuerzel = null;
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostLaufbahnplanungExportV1Fach() {
+		// leer
+	}
+
+}

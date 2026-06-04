@@ -1096,6 +1096,7 @@
   "sprachendaten" : {
     "schuelerID" : 1032,
     "belegungen" : [ {
+      "id" : -1,
       "sprache" : "E",
       "reihenfolge" : 1,
       "belegungVonJahrgang" : "05",
@@ -1109,6 +1110,7 @@
       "hatHebraicum" : false,
       "istNachweis": false
     }, {
+      "id" : -1,
       "sprache" : "L",
       "reihenfolge" : 2,
       "belegungVonJahrgang" : "06",

@@ -100,7 +100,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			abiturdatenManager: () => this.data.abiturdatenManager,
 			listLehrer: this.data.listeLehrer,
 			id: this.data.id,
-			zwischenspeicher: this.data.zwischenspeicher,
+			hatZwischenspeicher: (this.data.zwischenspeicher !== undefined),
 			saveLaufbahnplanung: this.data.saveLaufbahnplanung,
 			restoreLaufbahnplanung: this.data.restoreLaufbahnplanung,
 			resetFachwahlen: this.data.resetFachwahlen,
