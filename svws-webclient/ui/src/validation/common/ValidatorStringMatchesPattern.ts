@@ -32,8 +32,8 @@ const STRING_PATTERN_MAP: Record<StringPattern, StringPatternDefinition> = {
 		errorMessage: "Der Wert darf keine führenden oder nachgestellten Leerzeichen enthalten.",
 	},
 	[StringPattern.IS_PHONE_NUMBER]: {
-		regex: /^(?:(?:\+\d\d{0,2} (?:[1-9]\d{1,4}) (?:[1-9]\d{2,6})(?:[ -]\d{1,5})?)|(?:0[1-9]\d{1,4} \d{1,8}(?:[ -]\d{1,8})?)?)$/,
-		errorMessage: "Die angegebene Telefonnummer hat ein ungültiges Format. Zulässig sind ein + bei der Vorwahl, Leerzeichen als Trennzeichen und ein - für eine Durchwahl.",
+		regex: /^[+]?\d[\d\-/()]*\d$|^\d+$/,
+		errorMessage: "Die angegebene Telefonnummer hat ein ungültiges Format. Zulässig sind ein + bei der Vorwahl sowie -, / und () als Trennzeichen.",
 	},
 	[StringPattern.IS_EMAIL]: {
 		regex: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))([^@]?|@((\[\d{1,3}(\.\d{1,3}){3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})))$/,
