@@ -7,7 +7,9 @@
 						class="contentFocusField"
 						v-model="model.selectedSchulform.value"
 						:manager="schulformSelectManager"
-						:readonly />
+						:readonly="isInternal"
+						:validation="() => model.getFehler('idSchulform')"
+						required :removable="false" />
 					<svws-ui-text-input placeholder="Statistik-Schulnummer"
 						:model-value="model.proxy.schulnummerStatistik"
 						readonly statistics />
@@ -94,6 +96,7 @@
 	const model = new SchuleModelProxy(() => props.manager().daten(), () => props.manager().liste.list(), props.patch);
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const readonly = computed(() => !hatKompetenzUpdate.value);
+	const isInternal = computed<boolean>(() => model.proxy.schulnummerStatistik?.charAt(0) === "1");
 
 	const schulformSelectManager = new CoreTypeSelectManager({
 		clazz: Schulform.class,

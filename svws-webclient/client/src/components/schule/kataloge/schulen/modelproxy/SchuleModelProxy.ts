@@ -1,11 +1,11 @@
-import { ModelProxy, StringPattern, ValidatorInputRequired, ValidatorNumberRange, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
+import { ModelProxy, StringPattern, ValidatorInputRequired, ValidatorNumberRange, ValidatorStringLength, ValidatorStringMatchesPattern,
+	ValidatorStrasse } from "@ui";
 import type { SchulEintrag, SchulformKatalogEintrag } from "@core";
 import { AdressenUtils, Schulform } from "@core";
 import { ValidatorSchuleKuerzel } from "~/components/schule/kataloge/schulen/modelproxy/validation/ValidatorSchuleKuerzel";
 import { ValidatorSchuleKurzbezeichnung } from "~/components/schule/kataloge/schulen/modelproxy/validation/ValidatorSchuleKurzbezeichnung";
 import { ValidatorSchuleSchulname } from "~/components/schule/kataloge/schulen/modelproxy/validation/ValidatorSchuleSchulname";
 import { computed } from "vue";
-import { ValidatorStrasse } from "../../../../../../../ui/src/validation/common/ValidatorStrasse";
 
 export class SchuleModelProxy extends ModelProxy<SchulEintrag> {
 
@@ -52,6 +52,8 @@ export class SchuleModelProxy extends ModelProxy<SchulEintrag> {
 
 		this.addValidator(new ValidatorNumberRange((): number => this.proxy.sortierung, 0, 32000), "sortierung");
 		this.addValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), 'sortierung');
+
+		this.addValidator(new ValidatorInputRequired((): number | null => this.proxy.idSchulform), 'idSchulform');
 
 		this.addValidator(new ValidatorStrasse(() => this.adresse.value, 55, 10, 30),
 			"strassenname", "hausnummer", "zusatzHausnummer");
