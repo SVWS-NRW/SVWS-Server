@@ -3,8 +3,12 @@ package de.svws_nrw.api.server;
 import java.io.InputStream;
 import java.util.List;
 
+import de.svws_nrw.asd.data.schule.Schulleitung;
+import de.svws_nrw.controller.schule.schulleitung.SchulleitungControllerFactory;
 import de.svws_nrw.service.lehrer.LehrerMehrleistungCreateRequest;
 import de.svws_nrw.service.lehrer.LehrerMehrleistungPatchRequest;
+import de.svws_nrw.service.schule.schulleitung.SchulleitungCreateRequest;
+import de.svws_nrw.service.schule.schulleitung.SchulleitungPatchRequest;
 import org.jboss.resteasy.annotations.GZIP;
 
 import de.svws_nrw.asd.data.lehrer.LehrerAbgangsgrundKatalogEintrag;
@@ -2012,4 +2016,146 @@ public class APILehrer {
 				BenutzerKompetenz.LEHRERDATEN_AENDERN);
 	}
 
+	/**
+	 * Die OpenAPI-Methode für das Abrufen aller Schulleitungseinträge.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit der Liste aller Schulleitungseinträge
+	 */
+	@GET
+	@Path("/schulleitung")
+	@Operation(summary = "Gibt alle Schulleitungseinträge zurück.",
+			description = "Gibt alle Schulleitungseinträge zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Schulleitungseinträge wurden erfolgreich abgerufen.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = Schulleitung.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schulleitungseinträge abzurufen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response getAllSchulleitungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return SchulleitungControllerFactory
+				.withReadAccess(request)
+				.getSchulleitungController()
+				.getAll();
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Abrufen aller Schulleitungseinträge eines Lehrers.
+	 *
+	 * @param schema      das Datenbankschema
+	 * @param idLehrer    die ID des Lehrers
+	 * @param request     die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit der Liste der Schulleitungseinträge des Lehrers
+	 */
+	@GET
+	@Path("/schulleitung/{idLehrer : \\d+}")
+	@Operation(summary = "Gibt alle Schulleitungseinträge eines Lehrers zurück.",
+			description = "Gibt alle Schulleitungseinträge des angegebenen Lehrers zurück,"
+					+ " insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Schulleitungseinträge des Lehrers wurden erfolgreich abgerufen.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = Schulleitung.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schulleitungseinträge abzurufen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response getAllSchulleitungenByLehrer(@PathParam("schema") final String schema, @PathParam("idLehrer") final long idLehrer, @Context final HttpServletRequest request) {
+		return SchulleitungControllerFactory
+				.withReadAccess(request)
+				.getSchulleitungController()
+				.getAllByIdLehrer(idLehrer);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Hinzufügen eines Schulleitungseintrags.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param input     die Daten des neuen Schulleitungseintrags
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem neu erstellten Schulleitungseintrag
+	 */
+	@POST
+	@Path("/schulleitung")
+	@Operation(summary = "Erstellt einen neuen Schulleitungseintrag und gibt das zugehörige Objekt zurück.",
+			description = "Erstellt einen neuen Schulleitungseintrag, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "201", description = "Der Schulleitungseintrag wurde erfolgreich hinzugefügt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Schulleitung.class)))
+	@ApiResponse(responseCode = "400", description = "Die Eingabedaten sind fehlerhaft (z.B. ungültiges Datumsformat oder unbekannte Leitungsfunktion).")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schulleitungseinträge hinzuzufügen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addSchulleitung(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten des zu erstellenden Schulleitungseintrags ohne ID, die automatisch generiert wird",
+					required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = Schulleitung.class))) final SchulleitungCreateRequest input,
+			@Context final HttpServletRequest request) {
+		return SchulleitungControllerFactory
+				.withWriteAccess(request)
+				.getSchulleitungController()
+				.create(input);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen eines Schulleitungseintrags.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation des Schulleitungseintrags
+	 * @param patch     das partielle Update als {@link SchulleitungPatchRequest}
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/schulleitung/{id : \\d+}")
+	@Operation(summary = "Patcht und persistiert den zur ID zugehörigen Schulleitungseintrag.",
+			description = "Patcht und persistiert den Schulleitungseintrag, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich ausgeführt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Schulleitung.class)))
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schulleitungseinträge zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Schulleitungseintrag mit der angegebenen ID gefunden.")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. Enddatum liegt vor Startdatum).")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchSchulleitung(@PathParam("schema") final String schema,
+			@PathParam("id") final long id,
+			@RequestBody(description = "Der Patch für den Schulleitungseintrag", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = Schulleitung.class))) final SchulleitungPatchRequest patch,
+			@Context final HttpServletRequest request) {
+		return SchulleitungControllerFactory
+				.withWriteAccess(request)
+				.getSchulleitungController()
+				.patch(id, patch);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Schulleitungseinträge.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param ids       die IDs der zu löschenden Schulleitungseinträge
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status und den Ergebnissen der Löschoperationen
+	 */
+	@DELETE
+	@Path("/schulleitung/multiple")
+	@Operation(summary = "Entfernt mehrere Schulleitungseinträge.",
+			description = "Entfernt die angegebenen Schulleitungseinträge, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Schulleitungseinträge wurden erfolgreich entfernt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schulleitungseinträge zu entfernen.")
+	@ApiResponse(responseCode = "404", description = "Mindestens ein Schulleitungseintrag ist nicht vorhanden.")
+	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteSchulleitungen(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der zu löschenden Schulleitungseinträge", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids, @Context final HttpServletRequest request) {
+		return SchulleitungControllerFactory
+				.withDeleteAccess(request)
+				.getSchulleitungController()
+				.delete(ids);
+	}
 }

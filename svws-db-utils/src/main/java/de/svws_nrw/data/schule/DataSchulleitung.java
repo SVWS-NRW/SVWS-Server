@@ -52,8 +52,8 @@ public final class DataSchulleitung extends DataManager<Long> {
 		daten.idLehrer = dto.LehrerID;
 		daten.idLeitungsfunktion = dto.LeitungsfunktionID;
 		daten.bezeichnung = dto.Funktionstext;
-		daten.beginn = dto.Von;
-		daten.ende = dto.Bis;
+		daten.datumBeginnLeitungsfunktion = dto.Von;
+		daten.datumEndeLeitungsfunktion = dto.Bis;
 		return daten;
 	};
 
@@ -156,8 +156,8 @@ public final class DataSchulleitung extends DataManager<Long> {
 					dto.LehrerID = id;
 				}
 			}),
-			Map.entry("beginn", (conn, dto, value, map) -> dto.Von = JSONMapper.convertToString(value, true, false, null)),  // TODO convertToDate im JSONMapper
-			Map.entry("ende", (conn, dto, value, map) -> dto.Bis = JSONMapper.convertToString(value, true, false, null))  // TODO convertToDate im JSONMapper
+			Map.entry("datumBeginnLeitungsfunktion", (conn, dto, value, map) -> dto.Von = JSONMapper.convertToString(value, true, false, null)),  // TODO convertToDate im JSONMapper
+			Map.entry("datumEndeLeitungsfunktion", (conn, dto, value, map) -> dto.Bis = JSONMapper.convertToString(value, true, false, null))  // TODO convertToDate im JSONMapper
 	);
 
 

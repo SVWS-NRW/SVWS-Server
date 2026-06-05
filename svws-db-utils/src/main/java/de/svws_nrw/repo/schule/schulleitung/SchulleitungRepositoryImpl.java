@@ -1,4 +1,6 @@
-package de.svws_nrw.repo.schule;
+package de.svws_nrw.repo.schule.schulleitung;
+
+import java.util.List;
 
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOSchulleitung;
@@ -12,10 +14,19 @@ public final class SchulleitungRepositoryImpl extends RepositoryImpl<DTOSchullei
 	/**
 	 * Erstellt ein neues Repository.
 	 *
-	 * @param conn   die aktuelle Datenbank-Verbindung
+	 * @param conn die aktuelle Datenbank-Verbindung
 	 */
 	public SchulleitungRepositoryImpl(final DBEntityManager conn) {
 		super(conn, DTOSchulleitung.class, o -> o.ID, (o, id) -> o.ID = id);
 	}
 
+	@Override
+	public List<DTOSchulleitung> getAllByIdLehrer(final long idLehrer) {
+		return conn.queryList(DTOSchulleitung.QUERY_BY_LEHRERID, DTOSchulleitung.class, idLehrer);
+	}
+
+	@Override
+	public List<DTOSchulleitung> getAllByIdLeitungsfunktion(final long idLeitungsfunktion) {
+		return conn.queryList(DTOSchulleitung.QUERY_BY_LEITUNGSFUNKTIONID, DTOSchulleitung.class, idLeitungsfunktion);
+	}
 }

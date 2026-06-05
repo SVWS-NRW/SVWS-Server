@@ -43,7 +43,7 @@ public class Tabelle_Schulleitung extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Bis */
 	public final SchemaTabelleSpalte col_Bis = add("Bis", SchemaDatentypen.DATETIME, false)
 			.setConverter(DatumConverter.class)
-			.setJavaComment("Endedatum");
+			.setJavaComment("datumEndeLeitungsfunktion");
 
 
 	/** Die Definition des Fremdschlüssels Schulleitung_Leitungsfunktion_FK */

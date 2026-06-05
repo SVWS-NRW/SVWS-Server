@@ -6,6 +6,8 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungsKlassen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.repo.RepositoryFactory;
+import de.svws_nrw.repo.schule.schulleitung.SchulleitungRepository;
+import de.svws_nrw.repo.schule.schulleitung.SchulleitungRepositoryImpl;
 
 /**
  * Eine Factory zum Erstellen von Repositories für Datenbank-Entitäten und ggf. auch komplexere Abfragen.

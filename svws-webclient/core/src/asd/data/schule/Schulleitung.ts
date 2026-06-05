@@ -26,12 +26,12 @@ export class Schulleitung extends JavaObject {
 	/**
 	 * Das Datum, mit welchem die Leitungsfunktion übernommen wurde
 	 */
-	public beginn: string | null = null;
+	public datumBeginnLeitungsfunktion: string | null = null;
 
 	/**
 	 * Das Datum, bis zu welchem die Leitungsfunktion übernommen wurde
 	 */
-	public ende: string | null = null;
+	public datumEndeLeitungsfunktion: string | null = null;
 
 
 	/**
@@ -66,8 +66,8 @@ export class Schulleitung extends JavaObject {
 		if (obj.idLehrer === undefined)
 			throw new Error('invalid json format, missing attribute idLehrer');
 		result.idLehrer = obj.idLehrer;
-		result.beginn = (obj.beginn === undefined) ? null : obj.beginn === null ? null : obj.beginn;
-		result.ende = (obj.ende === undefined) ? null : obj.ende === null ? null : obj.ende;
+		result.datumBeginnLeitungsfunktion = (obj.datumBeginnLeitungsfunktion === undefined) ? null : obj.datumBeginnLeitungsfunktion === null ? null : obj.datumBeginnLeitungsfunktion;
+		result.datumEndeLeitungsfunktion = (obj.datumEndeLeitungsfunktion === undefined) ? null : obj.datumEndeLeitungsfunktion === null ? null : obj.datumEndeLeitungsfunktion;
 		return result;
 	}
 
@@ -77,8 +77,8 @@ export class Schulleitung extends JavaObject {
 		result += '"idLeitungsfunktion" : ' + obj.idLeitungsfunktion.toString() + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"idLehrer" : ' + obj.idLehrer.toString() + ',';
-		result += '"beginn" : ' + ((obj.beginn === null) ? 'null' : JSON.stringify(obj.beginn)) + ',';
-		result += '"ende" : ' + ((obj.ende === null) ? 'null' : JSON.stringify(obj.ende)) + ',';
+		result += '"datumBeginnLeitungsfunktion" : ' + ((obj.datumBeginnLeitungsfunktion === null) ? 'null' : JSON.stringify(obj.datumBeginnLeitungsfunktion)) + ',';
+		result += '"datumEndeLeitungsfunktion" : ' + ((obj.datumEndeLeitungsfunktion === null) ? 'null' : JSON.stringify(obj.datumEndeLeitungsfunktion)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -98,11 +98,11 @@ export class Schulleitung extends JavaObject {
 		if (obj.idLehrer !== undefined) {
 			result += '"idLehrer" : ' + obj.idLehrer.toString() + ',';
 		}
-		if (obj.beginn !== undefined) {
-			result += '"beginn" : ' + ((obj.beginn === null) ? 'null' : JSON.stringify(obj.beginn)) + ',';
+		if (obj.datumBeginnLeitungsfunktion !== undefined) {
+			result += '"datumBeginnLeitungsfunktion" : ' + ((obj.datumBeginnLeitungsfunktion === null) ? 'null' : JSON.stringify(obj.datumBeginnLeitungsfunktion)) + ',';
 		}
-		if (obj.ende !== undefined) {
-			result += '"ende" : ' + ((obj.ende === null) ? 'null' : JSON.stringify(obj.ende)) + ',';
+		if (obj.datumEndeLeitungsfunktion !== undefined) {
+			result += '"datumEndeLeitungsfunktion" : ' + ((obj.datumEndeLeitungsfunktion === null) ? 'null' : JSON.stringify(obj.datumEndeLeitungsfunktion)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

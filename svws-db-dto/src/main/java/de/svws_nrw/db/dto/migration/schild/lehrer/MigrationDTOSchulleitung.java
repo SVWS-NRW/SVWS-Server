@@ -106,7 +106,7 @@ public final class MigrationDTOSchulleitung {
 	@JsonDeserialize(using = MigrationDatumConverterDeserializer.class)
 	public String Von;
 
-	/** Endedatum */
+	/** datumEndeLeitungsfunktion */
 	@Column(name = "Bis")
 	@JsonProperty
 	@Convert(converter = MigrationDatumConverter.class)

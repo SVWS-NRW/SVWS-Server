@@ -106,7 +106,7 @@ public final class DTOSchulleitung {
 	@JsonDeserialize(using = DatumConverterDeserializer.class)
 	public String Von;
 
-	/** Endedatum */
+	/** datumEndeLeitungsfunktion */
 	@Column(name = "Bis")
 	@JsonProperty
 	@Convert(converter = DatumConverter.class)

@@ -10710,6 +10710,153 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getAllSchulleitungen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/schulleitung
+	 *
+	 * Gibt alle Schulleitungseinträge zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Schulleitungseinträge wurden erfolgreich abgerufen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Schulleitung>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schulleitungseinträge abzurufen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Schulleitungseinträge wurden erfolgreich abgerufen.
+	 */
+	public async getAllSchulleitungen(schema : string) : Promise<List<Schulleitung>> {
+		const path = "/db/{schema}/lehrer/schulleitung"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Schulleitung>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schulleitung.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addSchulleitung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/schulleitung
+	 *
+	 * Erstellt einen neuen Schulleitungseintrag, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Schulleitungseintrag wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Schulleitung
+	 *   Code 400: Die Eingabedaten sind fehlerhaft (z.B. ungültiges Datumsformat oder unbekannte Leitungsfunktion).
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schulleitungseinträge hinzuzufügen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Schulleitung>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Schulleitungseintrag wurde erfolgreich hinzugefügt.
+	 */
+	public async addSchulleitung(data : Partial<Schulleitung>, schema : string) : Promise<Schulleitung> {
+		const path = "/db/{schema}/lehrer/schulleitung"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = Schulleitung.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return Schulleitung.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchSchulleitung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/schulleitung/{id : \d+}
+	 *
+	 * Patcht und persistiert den Schulleitungseintrag, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich ausgeführt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Schulleitung
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schulleitungseinträge zu ändern.
+	 *   Code 404: Kein Schulleitungseintrag mit der angegebenen ID gefunden.
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. Enddatum liegt vor Startdatum).
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Schulleitung>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Patch wurde erfolgreich ausgeführt.
+	 */
+	public async patchSchulleitung(data : Partial<Schulleitung>, schema : string, id : number) : Promise<Schulleitung> {
+		const path = "/db/{schema}/lehrer/schulleitung/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = Schulleitung.transpilerToJSONPatch(data);
+		const result : string = await super.patchJSONWithResponse(path, body);
+		const text = result;
+		return Schulleitung.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getAllSchulleitungenByLehrer für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/schulleitung/{idLehrer : \d+}
+	 *
+	 * Gibt alle Schulleitungseinträge des angegebenen Lehrers zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Schulleitungseinträge des Lehrers wurden erfolgreich abgerufen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Schulleitung>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schulleitungseinträge abzurufen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idLehrer - der Pfad-Parameter idLehrer
+	 *
+	 * @returns Die Schulleitungseinträge des Lehrers wurden erfolgreich abgerufen.
+	 */
+	public async getAllSchulleitungenByLehrer(schema : string, idLehrer : number) : Promise<List<Schulleitung>> {
+		const path = "/db/{schema}/lehrer/schulleitung/{idLehrer : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idLehrer\s*(:[^{}]+({[^{}]+})*)?}/g, idLehrer.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Schulleitung>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schulleitung.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteSchulleitungen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/schulleitung/multiple
+	 *
+	 * Entfernt die angegebenen Schulleitungseinträge, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Schulleitungseinträge wurden erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schulleitungseinträge zu entfernen.
+	 *   Code 404: Mindestens ein Schulleitungseintrag ist nicht vorhanden.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Schulleitungseinträge wurden erfolgreich entfernt.
+	 */
+	public async deleteSchulleitungen(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/lehrer/schulleitung/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode getLehrerStammdatenMultiple für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/stammdaten
 	 *
 	 * Liest die Stammdaten der Lehrer zu der angegebenen IDs aus der Datenbank und liefert diese zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten besitzt.

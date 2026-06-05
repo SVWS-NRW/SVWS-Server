@@ -276,8 +276,8 @@ class DataLehrerStammdatenTest {
 				.hasFieldOrPropertyWithValue("idLehrer", 1L)
 				.hasFieldOrPropertyWithValue("idLeitungsfunktion", 1L)
 				.hasFieldOrPropertyWithValue("bezeichnung", "abc")
-				.hasFieldOrPropertyWithValue("beginn", "abc")
-				.hasFieldOrPropertyWithValue("ende", "abc");
+				.hasFieldOrPropertyWithValue("datumBeginnLeitungsfunktion", "abc")
+				.hasFieldOrPropertyWithValue("datumEndeLeitungsfunktion", "abc");
 	}
 
 	@Test

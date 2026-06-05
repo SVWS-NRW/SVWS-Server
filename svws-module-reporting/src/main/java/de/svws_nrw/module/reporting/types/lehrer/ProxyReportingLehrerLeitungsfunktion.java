@@ -13,7 +13,7 @@ public class ProxyReportingLehrerLeitungsfunktion extends ReportingLehrerLeitung
 	 * @param schulleitung Die Schulleitungsdaten.
 	 */
 	public ProxyReportingLehrerLeitungsfunktion(final Schulleitung schulleitung) {
-		super(schulleitung.beginn, schulleitung.bezeichnung, schulleitung.ende, schulleitung.idLeitungsfunktion);
+		super(schulleitung.datumBeginnLeitungsfunktion, schulleitung.bezeichnung, schulleitung.datumEndeLeitungsfunktion, schulleitung.idLeitungsfunktion);
 	}
 
 

@@ -31,12 +31,12 @@ public class Schulleitung {
 	public long idLehrer = -1;
 
 	/** Das Datum, mit welchem die Leitungsfunktion übernommen wurde */
-	@Schema(description = "das Datum, mit welchem die Leitunsfunktion übernommen wurde", example = "2019-01-06")
-	public String beginn = null;
+	@Schema(description = "das Datum, mit welchem die Leitungsfunktion übernommen wurde", example = "2019-01-06")
+	public String datumBeginnLeitungsfunktion;
 
 	/** Das Datum, bis zu welchem die Leitungsfunktion übernommen wurde */
-	@Schema(description = "das Datum, bis zu welchem die Leitunsfunktion übernommen wurde", example = "2020-02-18")
-	public String ende = null;
+	@Schema(description = "das Datum, bis zu welchem die Leitungsfunktion übernommen wurde", example = "2020-02-18")
+	public String datumEndeLeitungsfunktion;
 
 	/**
 	 * Leerer Standardkonstruktor.

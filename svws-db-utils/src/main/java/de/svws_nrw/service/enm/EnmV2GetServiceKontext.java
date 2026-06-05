@@ -75,7 +75,7 @@ import de.svws_nrw.repo.schule.AbteilungenKlassenRepository;
 import de.svws_nrw.repo.schule.AbteilungenRepository;
 import de.svws_nrw.repo.schule.SchuleRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
-import de.svws_nrw.repo.schule.SchulleitungRepository;
+import de.svws_nrw.repo.schule.schulleitung.SchulleitungRepository;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -575,8 +575,10 @@ public final class EnmV2GetServiceKontext {
 				.filter(l -> (l.LeitungsfunktionID == 1) || (l.LeitungsfunktionID == 2))
 				.filter(l -> {
 					try {
-						final DateManager von = (l.Von == null) ? DateManager.fromValues(1900, 1, 1) : DateManager.from(l.Von);
-						final DateManager bis = (l.Bis == null) ? DateManager.fromValues(9999, 12, 31) : DateManager.from(l.Bis);
+						final DateManager von = (l.Von
+								== null) ? DateManager.fromValues(1900, 1, 1) : DateManager.from(l.Von);
+						final DateManager bis = (l.Bis
+								== null) ? DateManager.fromValues(9999, 12, 31) : DateManager.from(l.Bis);
 						return (von.compareTo(abschnittBis) <= 0) && (bis.compareTo(abschnittVon) >= 0);
 					} catch (@SuppressWarnings("unused") final InvalidDateException e) {
 						return false;
