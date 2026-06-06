@@ -56,9 +56,9 @@ export class ReportingStateImpl extends StateManager<ReportingReactiveState> imp
 	};
 
 	public createJSONReportingParameter = async (reportingParameter: ReportingParameter): Promise<void> => {
-		const json = ReportingParameter.transpilerToJSON(reportingParameter);
+		const json = JSON.stringify(JSON.parse(ReportingParameter.transpilerToJSON(reportingParameter)), null, '\t');
 		const data = new Blob([json], { type: "application/json" });
-		const apiFile = { name: "ExportReportingParameter.json", data };
+		const apiFile = { name: reportingParameter.reportvorlage + "_ReportingParameter.json", data };
 		await this.downloadApiFile(apiFile);
 	};
 

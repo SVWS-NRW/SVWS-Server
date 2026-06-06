@@ -87,8 +87,11 @@
 								<span v-else class="icon i-ri-eye-line" />
 								Vorschau
 							</svws-ui-button>
+							<svws-ui-button v-if="serverState.hasDev && showJson" @click="downloadJSON('html')" :is-loading class="mt-4">
+								JSON für HTML
+							</svws-ui-button>
 							<svws-ui-button v-if="serverState.hasDev && showJson" @click="downloadJSON('pdf')" :is-loading class="mt-4">
-								JSON
+								JSON für PDF
 							</svws-ui-button>
 						</div>
 					</template>
@@ -140,6 +143,10 @@
 						<svws-ui-spinner v-if="isLoading" spinning />
 						<span v-else class="icon i-ri-mail-send-line" />
 						E-Mails senden
+					</svws-ui-button>
+					<svws-ui-button @click="downloadJSONAusTextfeld" :is-loading>
+						<span class="icon i-ri-save-3-line" />
+						JSON speichern
 					</svws-ui-button>
 				</div>
 			</div>
@@ -353,16 +360,22 @@
 		optionDisplayText: option => option.getBezeichnung(),
 	});
 
-	async function downloadJSON(type: 'pdf' | 'email') {
+	async function downloadJSON(type: 'html' | 'pdf' | 'email') {
 		parameter.value.idHauptdatenObjekt = (props.idHauptdatenObjekt !== undefined && props.idHauptdatenObjekt >= 0) ? props.idHauptdatenObjekt : localIdHauptdatenObjekt.value;
 		parameter.value.idsHauptdaten = listHauptdaten.value;
 		parameter.value.idsDetaildaten = listDetaildaten.value;
-		if (type === 'pdf') {
+		if (type === 'html') {
+			parameter.value.ausgabeformat = ReportingAusgabeformat.HTML.getId();
+		} else if (type === 'pdf') {
 			parameter.value.ausgabeformat = ReportingAusgabeformat.PDF.getId();
 		} else {
 			parameter.value.ausgabeformat = ReportingAusgabeformat.EMAIL.getId();
 		}
 		await reportingState.createJSONReportingParameter(parameter.value);
+	}
+
+	async function downloadJSONAusTextfeld() {
+		await reportingState.createJSONReportingParameter(ReportingParameter.transpilerFromJSON(altParameter.value));
 	}
 
 	async function downloadPDF() {
