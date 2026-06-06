@@ -4,13 +4,13 @@
 			Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
 		</div>
 		<div v-if="serverState.hasDev" class="flex flex-col gap-4">
-			<ui-card v-if="hatKompetenzDrucken && (stundenplaeneById.size > 0)" icon="i-ri-printer-line" title="Stundenplan drucken" subtitle="Drucke die Stundenpläne der ausgewählten Klassen."
+			<ui-card v-if="hatKompetenzDrucken && (stundenplaeneById.size > 0)" icon="i-ri-printer-line" title="Stundenplan drucken" subtitle="Drucke die Stundenpläne der ausgewählten Fächer."
 				:is-open="currentAction === 'print'" @update:is-open="isOpen => setCurrentAction('print', isOpen)">
 				<div class="flex flex-col">
 					<div>
 						<ui-select v-model="stundenplanModel" :manager="stundenplanSelectManager" label="Stundenplan" />
 					</div>
-					<report-parameters :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN"
+					<report-parameters :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_FACH_STUNDENPLAN"
 						:id-hauptdaten-objekt="stundenplanModel?.id ?? -1" :ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
 				</div>
 			</ui-card>
