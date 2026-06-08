@@ -23,11 +23,11 @@
 		<!-- Im Schuljahr vor der Aufname !-->
 		<svws-ui-content-card title="Im Schuljahr vor der Aufname">
 			<div class="pb-4 flex flex-row gap-6 items-center">
-				<svws-ui-radio-option label="Schulbesuch in NRW"
+				<svws-ui-radio-option label="Öffentliche oder Ersatzschule in NRW"
 					:model-value="currentMode"
 					@update:model-value="setMode(Schulauswahl.INTERNAL)"
 					:value="Schulauswahl.INTERNAL" />
-				<svws-ui-radio-option label="Außerhalb von NRW"
+				<svws-ui-radio-option label="Sonstige Schule"
 					:model-value="currentMode"
 					@update:model-value="setMode(Schulauswahl.EXTERNAL)"
 					:value="Schulauswahl.EXTERNAL" />
@@ -37,7 +37,7 @@
 					:value="Schulauswahl.NONE" />
 			</div>
 			<svws-ui-input-wrapper :grid="2">
-				<ui-select label="Schule"
+				<ui-select :label="labelVorherigeSchuleAuswahl"
 					:class="{ 'invisible pointer-events-none': currentMode === Schulauswahl.NONE }"
 					:manager="vorherigeSchuleManager"
 					v-model="model.vorherigeSchule.value"
@@ -330,6 +330,16 @@
 			return filtered;
 		},
 	};
+
+	const labelVorherigeSchuleAuswahl = computed(() => {
+		if (currentMode.value === Schulauswahl.INTERNAL) {
+			return 'Öffentliche oder Ersatz-Schulen in NRW';
+		}
+		if (currentMode.value === Schulauswahl.EXTERNAL) {
+			return 'Schulen außerhalb von NRW oder sonstige Schulen in NRW';
+		}
+		return '';
+	});
 
 	const hoechsterAbschlussManager = new CoreTypeSelectManager({
 		clazz: SchulabschlussAllgemeinbildend.class,
