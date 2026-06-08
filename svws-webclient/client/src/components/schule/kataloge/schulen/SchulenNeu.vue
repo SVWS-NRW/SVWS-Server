@@ -3,10 +3,10 @@
 		<svws-ui-content-card>
 			<svws-ui-input-wrapper :grid="1">
 				<div class="pb-4 flex flex-row gap-6 items-center">
-					<svws-ui-radio-option label=" Schule aus NRW erstellen "
+					<svws-ui-radio-option label=" Öffentliche oder Ersatz-Schule in NRW "
 						v-model="isInternal"
 						:value="true" :disabled="!hatKompetenzAdd" />
-					<svws-ui-radio-option label=" Externe Schule erstellen "
+					<svws-ui-radio-option label=" Sonstige Schule "
 						v-model="isInternal"
 						:value="false" :disabled="!hatKompetenzAdd" />
 				</div>
@@ -14,14 +14,14 @@
 					<template #content>
 						Schulen außerhalb NRW und sonstige Herkünfte z.B. auch nicht staatl. anerkannte Schulen.
 					</template>
-					<ui-select label="Schulen außerhalb von NRW und Privatschulen" class="pb-4 w-full"
+					<ui-select label="Schulen außerhalb von NRW oder sonstige Schulen in NRW" class="pb-4 w-full"
 						:manager="externeSchulenSelectManager"
 						v-model="selectedExterneSchulen"
 						:validation="() => model.getFehler('schulnummerStatistik')"
 						:disabled="!hatKompetenzAdd" required :removable="false" />
 				</svws-ui-tooltip>
 				<ui-select v-if="isInternal"
-					label="Schulen innerhalb NRW" class="pb-4 w-full"
+					label="Öffentliche oder Ersatz-Schulen in NRW" class="pb-4 w-full"
 					:manager="schulenNRWSelectManager"
 					v-model="selectedSchule"
 					:validation="() => model.getFehler('schulnummerStatistik')"
