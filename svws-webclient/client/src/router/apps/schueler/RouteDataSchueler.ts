@@ -183,10 +183,6 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Schülern vor.');
 		}
 
-		if (!this.manager.liste.auswahlExists()) {
-			errorLog.add('Es ist kein Schüler ausgewählt.');
-		}
-
 		return [errorLog.isEmpty(), errorLog];
 	};
 

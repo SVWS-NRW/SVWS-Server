@@ -27,9 +27,9 @@
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen"
 				subtitle="Setze einen Löschvermerk bei den ausgewählten Schülern." :is-open="currentAction === 'delete'"
 				@update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
-				<div>
-					<span v-if="deleteSchuelerCheck()[0]">Bereit zum Löschen.</span>
-					<template v-else v-for="message in deleteSchuelerCheck()[1]" :key="message">
+				<div v-if="isDeleteConditionSectionVisible">
+					<span v-if="selectedAllowedToDelete">Bereit zum Löschen.</span>
+					<template v-else v-for="message in deleteCheckErrors" :key="message">
 						<span class="text-ui-danger"> {{ message }} <br> </span>
 					</template>
 				</div>
@@ -66,8 +66,12 @@
 	const hatKompetenzDruckenStundenplan = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN) && hatKompetenzDrucken.value));
 	const hatKompetenzDruckenSchuelerIndividualdaten = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN) && hatKompetenzDrucken.value));
 	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LOESCHEN));
-
 	const hatIrgendwelcheKompetenzen = computed(() => hatKompetenzDrucken.value || hatKompetenzLoeschen.value || hatKompetenzDruckenStundenplan.value || hatKompetenzDruckenSchuelerIndividualdaten.value);
+
+	const isDeleteDisabled = computed<boolean>(() => !hatKompetenzLoeschen.value || !props.schuelerListeManager().liste.auswahlExists() || !selectedAllowedToDelete.value || loading.value);
+	const deleteCheckErrors = computed<List<string>>(() => props.deleteSchuelerCheck()[1]);
+	const selectedAllowedToDelete = computed(() => props.deleteSchuelerCheck()[0]);
+	const isDeleteConditionSectionVisible = computed<boolean>(() => (props.schuelerListeManager().liste.auswahlExists() || (statusAction.value === undefined)));
 
 	const stundenplanAuswahl = ref<StundenplanListeEintrag>();
 	const stundenplanModel = computed({
@@ -99,8 +103,6 @@
 		const date = DateUtils.extractFromDateISO8601(iso);
 		return "" + date[5];
 	}
-
-	const isDeleteDisabled = computed<boolean>(() => !hatKompetenzLoeschen.value || !props.schuelerListeManager().liste.auswahlExists() || !props.deleteSchuelerCheck()[0] || loading.value);
 
 	const currentAction = ref<Action>('');
 	const loading = ref<boolean>(false);

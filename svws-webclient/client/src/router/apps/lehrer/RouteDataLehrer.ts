@@ -455,10 +455,6 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Lehrern vor.');
 		}
 
-		if (!this.manager.liste.auswahlExists()) {
-			errorLog.add('Es wurde kein Lehrer zum Löschen ausgewählt.');
-		}
-
 		for (const id of this.manager.getIdsReferenzierterLehrer()) {
 			const lehrer = this.manager.liste.get(id);
 			if (lehrer) {

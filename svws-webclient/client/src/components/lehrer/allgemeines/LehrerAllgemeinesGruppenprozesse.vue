@@ -29,9 +29,9 @@
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen"
 				subtitle="Setze einen Löschvermerk bei den ausgewählten Lehrkräften." :is-open="currentAction === 'delete'"
 				@update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
-				<div>
-					<span v-if="deleteCheck().success">Bereit zum Löschen.</span>
-					<template v-else v-for="message in deleteCheck().logs" :key="message">
+				<div v-if="isDeleteConditionSectionVisible">
+					<span v-if="selectedAllowedToDelete">Bereit zum Löschen.</span>
+					<template v-else v-for="message in deleteCheckErrors" :key="message">
 						<span class="text-ui-danger"> {{ message }} <br> </span>
 					</template>
 				</div>
@@ -68,7 +68,11 @@
 	const hatKompetenzDruckenStundenplan = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN) && hatKompetenzDrucken.value));
 	const hatKompetenzDruckenSchuelerLeistungsdaten = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN) && hatKompetenzDrucken.value));
 	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LOESCHEN));
-	const isDeleteDisabled = computed<boolean>(() => !hatKompetenzLoeschen.value || !props.lehrerListeManager().liste.auswahlExists() || !props.deleteCheck().success || loading.value);
+
+	const isDeleteDisabled = computed<boolean>(() => !hatKompetenzLoeschen.value || !props.lehrerListeManager().liste.auswahlExists() || !selectedAllowedToDelete.value || loading.value);
+	const deleteCheckErrors = computed<Iterable<string>>(() => props.deleteCheck().logs);
+	const selectedAllowedToDelete = computed<boolean>(() => props.deleteCheck().success);
+	const isDeleteConditionSectionVisible = computed<boolean>(() => (props.lehrerListeManager().liste.auswahlExists() || (statusAction.value === undefined)));
 
 	const stundenplanAuswahl = ref<StundenplanListeEintrag>();
 
