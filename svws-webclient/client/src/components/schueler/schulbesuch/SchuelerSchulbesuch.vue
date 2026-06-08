@@ -86,7 +86,7 @@
 					:manager="abschlussartAllgemeinbildendVorherigeSchuleManager"
 					v-model="model.abschlussartAllgemeinbildendVorherigeSchule.value"
 					:readonly />
-				<ui-select label="Abschlussart Berufsbildend" v-if="schuleIstBK"
+				<ui-select label="Abschlussart Berufsbildend" v-if="abschlussartBerufsbildendSelectable"
 					:manager="abschlussartBerufsbildendVorherigeSchuleManager"
 					v-model="model.abschlussartBerufsbildendVorherigeSchule.value"
 					:readonly />
@@ -264,8 +264,6 @@
 	const schuljahr = computed(() => props.manager().schuljahr);
 	const schuleHatPrimarstufe = computed(
 		() => [Schulform.G, Schulform.FW, Schulform.WF, Schulform.GM, Schulform.KS, Schulform.S, Schulform.GE, Schulform.V].includes(schuleState.schulform));
-	const schuleIstBK = computed(
-		() => [Schulform.SB, Schulform.BK].includes(schuleState.schulform));
 	const schuleIstBKoderWBK = computed(
 		() => [Schulform.SB, Schulform.BK, Schulform.WB].includes(schuleState.schulform));
 	const wechselBevorstehend = ref<boolean>(false);
@@ -302,6 +300,15 @@
 	}
 
 	enum Schulauswahl { INTERNAL, EXTERNAL, NONE }
+
+	const abschlussartBerufsbildendSelectable = computed(() => {
+		if (currentMode.value === Schulauswahl.NONE) {
+			return true;
+		}
+		return model.vorherigeSchulform.value !== null &&
+			[Schulform.SB, Schulform.BK].includes(model.vorherigeSchulform.value);
+	});
+
 
 	const vorherigeSchuleFilter = {
 		key: "schulauswahlModus",
