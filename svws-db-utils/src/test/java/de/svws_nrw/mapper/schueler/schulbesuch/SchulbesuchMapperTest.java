@@ -392,6 +392,7 @@ class SchulbesuchMapperTest {
 			request.idKindergarten = JsonNullable.of(7L);
 			request.verpflichtungSprachfoerderkurs = JsonNullable.of(true);
 			request.teilnahmeSprachfoerderkurs = JsonNullable.of(false);
+			request.schulformVorherigeSchule = JsonNullable.of("AS");
 			final var entity = createEntity(1L);
 
 			mapper.patch(request, entity);
@@ -413,6 +414,7 @@ class SchulbesuchMapperTest {
 						assertThat(e.Kindergarten_ID).isEqualTo(7L);
 						assertThat(e.VerpflichtungSprachfoerderkurs).isTrue();
 						assertThat(e.TeilnahmeSprachfoerderkurs).isFalse();
+						assertThat(e.LSSchulform).isEqualTo("AS");
 					});
 		}
 

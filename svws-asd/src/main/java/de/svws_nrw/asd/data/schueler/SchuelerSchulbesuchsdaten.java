@@ -34,8 +34,8 @@ public class SchuelerSchulbesuchsdaten {
 	@Schema(description = "die ID der zuvor besuchten Schule", example = "12")
 	public Long idVorherigeSchule;
 
-	/** Die Schulform der zuvor besuchten Schule. */
-	@Schema(description = "Die Schulform der zuvor besuchten Schule.", example = "Grundschule")
+	/** Der Schlüssel der Schulform der zuvor besuchten Schule. */
+	@Schema(description = "Der Schlüssel der Schulform der zuvor besuchten Schule.", example = "Grundschule")
 	public String schulformVorherigeSchule;
 
 	/** Das Entlassdatum an der zuvor besuchten Schule. */

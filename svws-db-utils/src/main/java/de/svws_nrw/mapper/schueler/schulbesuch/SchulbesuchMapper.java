@@ -212,6 +212,7 @@ public interface SchulbesuchMapper {
 	@Mapping(source = "kuerzelEntlassjahrgangVorherigeSchule", 		target = "LSJahrgang")
 	@Mapping(source = "idHerkunftsartVersetzungVorherigeSchule", 	target = "LSVersetzung")
 	@Mapping(source = "bemerkungVorherigeSchule", 					target = "LSBemerkung")
+	@Mapping(source = "schulformVorherigeSchule",              		target = "LSSchulform")
 	@Mapping(source = "entlassdatumDieseSchule", 					target = "Entlassdatum")
 	@Mapping(source = "idEntlassjahrgangDieseSchule", 				target = "Entlassjahrgang_ID")
 	@Mapping(source = "wechseldatumAufnehmendeSchule", 				target = "Schulwechseldatum")
