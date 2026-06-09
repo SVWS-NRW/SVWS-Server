@@ -28,7 +28,7 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 	public idVorherigeSchule: number | null = null;
 
 	/**
-	 * Die Schulform der zuvor besuchten Schule.
+	 * Der Schlüssel der Schulform der zuvor besuchten Schule.
 	 */
 	public schulformVorherigeSchule: string | null = null;
 
