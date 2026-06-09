@@ -2,8 +2,8 @@ import type { SchuelerSchulbesuchManager } from "@ui";
 import { ModelProxy, ValidatorNumberRange, ValidatorStringLength } from "@ui";
 import type { EinschulungsartKatalogEintrag, HerkunftsartenKatalogEintrag, JahrgaengeKatalogEintrag, JahrgangsDaten, KatalogEntlassgrund, Kindergarten,
 	KindergartenbesuchKatalogEintrag, PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag, SchuelerSchulbesuchsdaten,
-	SchulabschlussAllgemeinbildendKatalogEintrag, HerkunftSonstigeKatalogEintrag, HerkunftSchulformKatalogEintrag,
-	SchulabschlussBerufsbildendKatalogEintrag, SchulEintrag, SchulformKatalogEintrag, UebergangsempfehlungKatalogEintrag } from "@core";
+	SchulabschlussAllgemeinbildendKatalogEintrag, HerkunftSonstigeKatalogEintrag, SchulabschlussBerufsbildendKatalogEintrag, SchulEintrag,
+	SchulformKatalogEintrag, UebergangsempfehlungKatalogEintrag } from "@core";
 import { Einschulungsart, Herkunftsarten, Jahrgaenge, Kindergartenbesuch, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, Uebergangsempfehlung,
 	SchulabschlussAllgemeinbildend, SchulabschlussBerufsbildend, HerkunftSchulform, HerkunftSonstige } from "@core";
 import { computed } from "vue";
@@ -39,23 +39,21 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 
 	vorherigeSchule = computed<SchulEintrag | null>({
 		get: () => this.manager().schulenById.get(this.proxy.idVorherigeSchule ?? -1) ?? null,
-		set: (v: SchulEintrag | null) => this.proxy.idVorherigeSchule = v?.id ?? null,
+		set: (v: SchulEintrag | null) => {
+			this.proxy.idVorherigeSchule = v?.id ?? null;
+			this.proxy.schulformVorherigeSchule = HerkunftSchulform.data().getEintragByID(v?.idSchulform ?? -1)?.schluessel ?? null;
+		},
 	});
 
 	vorherigeSchulform = computed<Schulform | null>(() => Schulform.data().getWertByIDOrNull(this.vorherigeSchule.value?.idSchulform ?? -1));
-
-	schulformVorherigeSchuleExtern = computed<HerkunftSchulformKatalogEintrag | null>({
-		get: () => HerkunftSchulform.data().getEintragBySchuljahrUndSchluessel(this.manager().schuljahr, this.proxy.schulformVorherigeSchule ?? '') ?? null,
-		set: (v: HerkunftSchulformKatalogEintrag | null) => this.proxy.schulformVorherigeSchule = v?.schluessel ?? null,
-	});
 
 	schulformVorherigeSchuleKeinAbschluss = computed<HerkunftSonstigeKatalogEintrag | null>({
 		get: () => HerkunftSonstige.data().getEintragBySchuljahrUndSchluessel(this.manager().schuljahr, this.proxy.schulformVorherigeSchule ?? '') ?? null,
 		set: (v: HerkunftSonstigeKatalogEintrag | null) => this.proxy.schulformVorherigeSchule = v?.schluessel ?? null,
 	});
 
-	schulformVorherigeSchuleIntern = computed<string | null>(
-		() => HerkunftSchulform.data().getEintragByID(this.vorherigeSchule.value?.idSchulform ?? -1)?.text ?? null);
+	schulformVorherigeSchule = computed<string | null>(
+		() => HerkunftSchulform.data().getEintragBySchuljahrUndSchluessel(this.manager().schuljahr, this.proxy.schulformVorherigeSchule ?? "")?.text ?? null);
 
 	schulnummerStatistik = computed<string | null>(() => this.vorherigeSchule.value?.schulnummerStatistik ?? null);
 

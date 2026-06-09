@@ -52,15 +52,9 @@
 						<span class="icon i-ri-link" />Zur Schule
 					</svws-ui-button>
 				</div>
-
-				<svws-ui-text-input placeholder="Schulform" v-if="currentMode === Schulauswahl.INTERNAL"
-					:model-value="model.schulformVorherigeSchuleIntern.value"
+				<svws-ui-text-input placeholder="Schulform" v-if="currentMode !== Schulauswahl.NONE"
+					:model-value="model.schulformVorherigeSchule.value"
 					statistics readonly />
-				<ui-select label="Schulform" v-if="currentMode === Schulauswahl.EXTERNAL"
-					:manager="schulformVorherigExternManager"
-					v-model="model.schulformVorherigeSchuleExtern.value"
-					:disabled="model.vorherigeSchule.value === null"
-					:readonly required :removable="false" />
 				<ui-select label="Schulform" v-if="currentMode === Schulauswahl.NONE"
 					:manager="schulformVorherigKeinAbschlussManager"
 					v-model="model.schulformVorherigeSchuleKeinAbschluss.value"
@@ -244,7 +238,7 @@
 
 	import type { JahrgangsDaten, KatalogEntlassgrund, Kindergarten, List, SchulEintrag } from "@core";
 	import { ArrayList, BenutzerKompetenz, Einschulungsart, Jahrgaenge, Kindergartenbesuch, PrimarstufeSchuleingangsphaseBesuchsjahre,
-		SchulabschlussAllgemeinbildend, Schulform, Uebergangsempfehlung, SchulabschlussBerufsbildend, HerkunftSchulform, HerkunftSonstige } from "@core";
+		SchulabschlussAllgemeinbildend, Schulform, Uebergangsempfehlung, SchulabschlussBerufsbildend, HerkunftSonstige } from "@core";
 	import type { SchuelerSchulbesuchProps } from './SchuelerSchulbesuchProps';
 	import { CoreTypeSelectManager, SelectManager, useSchuleState, useServerState } from "@ui";
 	import { computed, ref, watch } from "vue";
@@ -359,13 +353,6 @@
 		clazz: Jahrgaenge.class,
 		schuljahr: schuljahr,
 		schulformen: model.vorherigeSchulform,
-		optionDisplayText: "text",
-		selectionDisplayText: "text",
-	});
-
-	const schulformVorherigExternManager = new CoreTypeSelectManager({
-		clazz: HerkunftSchulform.class,
-		schuljahr: schuljahr,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});
