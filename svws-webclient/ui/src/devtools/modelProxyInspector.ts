@@ -188,7 +188,6 @@ function setDeepValue(rootObj: any, path: string[], value: any): void {
  */
 function requestUpdate(): void {
 	if (devtoolsApi === null) {
-		console.warn('DevTools Inspektor für Model-Proxies: In requestTreeUpdate: devtoolsApi ist noch null, Update wird übersprungen.');
 		return;
 	}
 	void nextTick(() => {
