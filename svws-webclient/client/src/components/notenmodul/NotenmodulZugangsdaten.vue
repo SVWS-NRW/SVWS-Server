@@ -15,7 +15,10 @@
 			</div>
 		</svws-ui-header>
 		<div class="page ">
-			<div class="h-full overflow-auto flex gap-16">
+			<div v-if="gridManager.daten.isEmpty()">
+				Es sind keine Lehrkräfte vorhanden, die hier angezeigt werden können.
+			</div>
+			<div v-else class="h-full overflow-auto flex gap-16">
 				<ui-table-grid name="Lehrer" :manager="() => gridManager">
 					<template #header>
 						<template v-for="col of gridManager.cols.values()" :key="col.name">
@@ -105,7 +108,8 @@
 						</div>
 						<div class="content-card--content">
 							<div class="">
-								Das Passwort wird auf das Initialpasswort zurückgesetzt. Bei der nächsten Anmeldung des Benutzers wird ein individuelles Passwort generiert.
+								Das Passwort wird auf das Initialpasswort zurückgesetzt.
+								<br>Bei der nächsten Anmeldung des Benutzers wird ein individuelles Passwort generiert.
 								<div class="flex items-center">
 									<svws-ui-button type="primary" @click="doResetPassword()">Passwort zurücksetzen</svws-ui-button>
 									<span v-if="pingType === 'resetPassword'" class="icon-xl i-ri-check-line icon-ui-success" />
@@ -125,9 +129,12 @@
 							<div class="content-card--headline">Zwei-Faktor-Authentifizierung</div>
 						</div>
 						<div class="content-card--content">
-							<div class="">
+							<div>
 								Welche Art der Zwei-Faktor-Authentifizierung soll verwendet werden
-								<ui-select :manager="zfaManager" v-model="art2fa" :removable="false" />
+								<div class="flex gap-2">
+									<svws-ui-button @click="art2faAuswahl(0)" :disabled="selected.art2FA === 0">Kein 2FA</svws-ui-button>
+									<svws-ui-button @click="art2faAuswahl(1)" :disabled="selected.art2FA === 1">TOTP</svws-ui-button>
+								</div>
 							</div>
 							<div v-if="selected.art2FA === 1" class="mt-4">
 								Zwei-Faktor-Authentifizierung (2FA)
@@ -147,10 +154,18 @@
 						</div>
 						<div class="content-card--content">
 							<div>
-								Die Passwörter werden auf das Initialpasswort zurückgesetzt
+								Die Passwörter werden auf das jeweilige Initialpasswort zurückgesetzt.
+								<br>Bei der nächsten Anmeldung des Benutzers wird ein individuelles Passwort generiert.
 								<div class="flex items-center">
 									<svws-ui-button type="primary" @click="doResetPassword()">Passwörter zurücksetzen</svws-ui-button>
 									<span v-if="pingType === 'resetPassword'" class="icon-xl i-ri-check-line icon-ui-success" />
+								</div>
+							</div>
+							<div class="mt-4">
+								Ersetze die Initialpasswörter mit einem Neuen.
+								<div class="flex items-center">
+									<svws-ui-button type="primary" @click="doGenerateInitialPassword()">Neues Initialpasswort</svws-ui-button>
+									<span v-if="pingType === 'generateInitialPassword'" class="icon-xl i-ri-check-line icon-ui-success" />
 								</div>
 							</div>
 						</div>
@@ -177,6 +192,9 @@
 						</div>
 					</div>
 				</div>
+				<div v-else class="font-bold">
+					Wählen Sie zur Bearbeitung eine oder mehrere Lehrkräfte aus der Übersicht aus.
+				</div>
 			</div>
 		</div>
 	</div>
@@ -188,7 +206,7 @@
 	import type { NotenmodulZugangsdatenProps } from './NotenmodulZugangsdatenProps';
 	import type { List } from "@core";
 	import { ArrayList, DeveloperNotificationException, ENMv2Lehrer } from "@core";
-	import { GridManager, SelectManager } from '@ui';
+	import { GridManager } from '@ui';
 
 	const props = defineProps<NotenmodulZugangsdatenProps>();
 	const search = ref<string>("");
@@ -202,17 +220,6 @@
 			auswahl.value.splice(idx, 1);
 		}
 	}
-
-	const art2fa = computed({
-		get: () => selected.value?.art2FA ?? 0,
-		set: value => {
-			if (selected.value !== null) {
-				void props.set2fa(value, selected.value.id);
-				selected.value.art2FA = value;
-				triggerRef(selected);
-			}
-		},
-	});
 
 	async function art2faAuswahl(type: number) {
 		for (const lehrer of auswahl.value) {
@@ -230,25 +237,6 @@
 	);
 
 	const selected = computed(() => (gridManager.focusRow === null) ? null : lehrerListe.value.get(gridManager.focusRow));
-
-	const zfaManager = new SelectManager({
-		options: new Set([0, 1]),
-		optionDisplayText: which2fa,
-		selectionDisplayText: which2fa,
-	});
-
-	function which2fa(v: number) {
-		switch (v) {
-			case 0:
-				return "keine Zwei-Faktor-Authentifizierung";
-			case 1:
-				return "Zwei-Faktor-Authentifizierung mit TOTP";
-			case 2:
-				return "Zwei-Faktor-Authentifizierung per EMail";
-			default:
-				return "";
-		}
-	}
 
 	const lehrerListe = computed<List<ENMv2Lehrer>>(() => {
 		const searchValueLowerCase = search.value.toLocaleLowerCase();
@@ -355,6 +343,14 @@
 	}
 
 	async function doGenerateInitialPassword() {
+		if (auswahl.value.length > 0) {
+			for (const lehrer of auswahl.value) {
+				const newInitialPassword = await props.generateInitialPassword(lehrer.id);
+				props.mapEnmInitialKennwoerter().put(lehrer.id, newInitialPassword);
+			}
+			pingTimer(new ENMv2Lehrer(), 'generateInitialPassword');
+			return;
+		}
 		if (selected.value === null) {
 			return;
 		}
