@@ -59,23 +59,16 @@
 					:manager="schulformVorherigKeinAbschlussManager"
 					v-model="model.schulformVorherigeSchuleKeinAbschluss.value"
 					:readonly required :removable="false" />
-				<svws-ui-text-input placeholder="Entlassen am" type="date"
+				<svws-ui-text-input :placeholder="labelEntlassdatum" type="date"
 					v-model="model.proxy.entlassdatumVorherigeSchule"
 					statistics :readonly />
-				<ui-select label="Entlassjahrgang"
-					:manager="vorherigeEntlassjahrgaengeManager"
-					v-model="model.kuerzelEntlassjahrgangVorherigeSchule.value"
-					statistics
-					:disabled="model.vorherigeSchule.value === undefined" :readonly />
+
 				<svws-ui-text-input placeholder="Bemerkung" span="full"
 					v-model="model.proxy.bemerkungVorherigeSchule"
 					:validation="() => model.getFehler('bemerkungVorherigeSchule')"
 					@commit="model.patch"
 					:max-len="255" :readonly />
-				<ui-select label="Entlassgrund"
-					:manager="vorherigerEntlassgrundManager"
-					v-model="model.idEntlassgrundVorherigeSchule.value"
-					:readonly />
+
 				<ui-select label="Abschlussart Allgemeinbildend"
 					:manager="abschlussartAllgemeinbildendVorherigeSchuleManager"
 					v-model="model.abschlussartAllgemeinbildendVorherigeSchule.value"
@@ -86,8 +79,20 @@
 					:readonly />
 				<!-- TODO: durch Ui-Select ersetzen: siehe Issue#3495-->
 				<svws-ui-text-input placeholder="Versetzung" span="full"
+					:class="{ 'invisible pointer-events-none': currentMode === Schulauswahl.NONE }"
 					:model-value="model.idHerkunftsartVersetzungVorherigeSchule.value?.text ?? ''"
 					readonly statistics />
+				<ui-select label="Entlassjahrgang"
+					:class="{ 'invisible pointer-events-none': currentMode === Schulauswahl.NONE }"
+					:manager="vorherigeEntlassjahrgaengeManager"
+					v-model="model.kuerzelEntlassjahrgangVorherigeSchule.value"
+					statistics
+					:disabled="model.vorherigeSchule.value === undefined" :readonly />
+				<ui-select label="Entlassgrund"
+					:class="{ 'invisible pointer-events-none': currentMode === Schulauswahl.NONE }"
+					:manager="vorherigerEntlassgrundManager"
+					v-model="model.idEntlassgrundVorherigeSchule.value"
+					:readonly />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 
@@ -334,6 +339,14 @@
 		}
 		return '';
 	});
+
+	const labelEntlassdatum = computed(() => {
+		if (currentMode.value === Schulauswahl.NONE) {
+			return 'Datum';
+		}
+		return 'Entlassen am';
+	});
+
 
 	const hoechsterAbschlussManager = new CoreTypeSelectManager({
 		clazz: SchulabschlussAllgemeinbildend.class,
