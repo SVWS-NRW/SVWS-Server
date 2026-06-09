@@ -61,7 +61,7 @@ public class LehrerStammdaten {
 
 	/** Ggf. die ID für die Staatsangehörigkeit des Lehrers. */
 	@Schema(description = "Ggf. die ID für die Staatsangehörigkeit des Lehrers.", example = "000")
-	public String staatsangehoerigkeitID;
+	public Long idStaatsangehoerigkeit;
 
 	/** Ggf. der Straßenname im Wohnort des Lehrers. */
 	@Schema(description = "Ggf. der Straßenname im Wohnort des Lehrers.", example = "Musterweg")

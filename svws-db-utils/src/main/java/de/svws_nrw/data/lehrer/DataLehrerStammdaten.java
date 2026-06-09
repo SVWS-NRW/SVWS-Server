@@ -1,5 +1,12 @@
 package de.svws_nrw.data.lehrer;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
@@ -25,13 +32,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das
@@ -41,6 +41,7 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 
 	private final DataLernplattformen dataLernplattformen;
 	private final DataEinwilligungsarten dataEinwilligungsarten;
+
 	/**
 	 * Erstellt einen neuen {@link DataManager} für das Core-DTO {@link LehrerStammdaten}.
 	 *
@@ -65,8 +66,9 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 	@Override
 	public LehrerStammdaten getById(final Long id) throws ApiOperationException {
 		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
-		if (lehrer == null)
+		if (lehrer == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Lehrkraft mit der ID %d gefunden.".formatted(id));
+		}
 
 		return map(lehrer);
 	}
@@ -91,7 +93,7 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 		final List<Lernplattform> availableLernPlattformen = dataLernplattformen.getAll();
 
 		final List<DTOLehrerLernplattform> initialLehrerLernPlattformen = availableLernPlattformen.stream()
-				.map(l ->  new DTOLehrerLernplattform(newLehrer.id, l.id, false, false, false, false))
+				.map(l -> new DTOLehrerLernplattform(newLehrer.id, l.id, false, false, false, false))
 				.toList();
 
 		conn.transactionPersistAll(initialLehrerLernPlattformen);
@@ -132,8 +134,9 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public List<LehrerStammdaten> getListByIDs(final List<Long> idsLehrer) throws ApiOperationException {
-		if ((idsLehrer == null) || idsLehrer.isEmpty())
+		if ((idsLehrer == null) || idsLehrer.isEmpty()) {
 			return new ArrayList<>();
+		}
 
 		final List<DTOLehrer> lehrer = conn.queryByKeyList(DTOLehrer.class, idsLehrer);
 		return mapList(lehrer);
@@ -177,7 +180,7 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 		daten.vorname = (dtoLehrer.Vorname == null) ? "" : dtoLehrer.Vorname;
 		daten.geschlecht = (dtoLehrer.Geschlecht == null) ? -1 : dtoLehrer.Geschlecht.id;
 		daten.geburtsdatum = dtoLehrer.Geburtsdatum;
-		daten.staatsangehoerigkeitID = (dtoLehrer.staatsangehoerigkeit == null) ? null : dtoLehrer.staatsangehoerigkeit.historie().getLast().iso3;
+		daten.idStaatsangehoerigkeit = (dtoLehrer.staatsangehoerigkeit == null) ? null : dtoLehrer.staatsangehoerigkeit.historie().getLast().id;
 		daten.strassenname = dtoLehrer.Strassenname;
 		daten.hausnummer = dtoLehrer.HausNr;
 		daten.hausnummerZusatz = dtoLehrer.HausNrZusatz;
@@ -196,8 +199,9 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 	@Override
 	public List<LehrerStammdaten> mapList(final Collection<DTOLehrer> lehrer) throws ApiOperationException {
 		final var result = new ArrayList<LehrerStammdaten>();
-		if ((lehrer == null) || lehrer.isEmpty())
+		if ((lehrer == null) || lehrer.isEmpty()) {
 			return result;
+		}
 		final Map<Long, DTOLehrerFoto> mapFotos = conn.queryByKeyList(DTOLehrerFoto.class, lehrer.stream().map(l -> l.ID).toList())
 				.stream().collect(Collectors.toMap(lf -> lf.Lehrer_ID, lf -> lf));
 		for (final DTOLehrer l : lehrer) {
@@ -216,7 +220,8 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 			case "kuerzel" -> updateKuerzel(dto, value);
 			case "personalTyp" -> dto.PersonTyp =
 					Optional.ofNullable(PersonalTyp.fromKuerzel(JSONMapper.convertToString(value, false, false, null, "personalTyp")))
-							.orElseThrow(() -> new ApiOperationException(Status.CONFLICT, "Ein PersonalTyp mit dem Kuerzel %s wurde nicht gefunden.".formatted(value)));
+							.orElseThrow(() -> new ApiOperationException(Status.CONFLICT,
+									"Ein PersonalTyp mit dem Kuerzel %s wurde nicht gefunden.".formatted(value)));
 			case "anrede" -> dto.Anrede =
 					JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Anrede.datenlaenge(), "anrede");
 			case "titel" -> dto.Titel =
@@ -232,11 +237,11 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 							.orElseThrow(() -> new ApiOperationException(Status.CONFLICT, "Kein Geschlecht mit dem dem Wert %s vorhanden.".formatted(value)));
 			case "geburtsdatum" -> dto.Geburtsdatum =
 					JSONMapper.convertToString(value, true, true, null, "geburtsdatum"); // TODO convertToDate im JSONMapper
-			case "staatsangehoerigkeitID" -> updateStaatsangehoerigkeitID(dto, value);
+			case "idStaatsangehoerigkeit" -> updateIdStaatsangehoerigkeit(dto, value);
 			case "strassenname" -> dto.Strassenname =
 					JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Strassenname.datenlaenge(), "strassenname");
 			case "hausnummer" -> dto.HausNr =
-						 JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_HausNr.datenlaenge(), "hausnummer");
+					JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_HausNr.datenlaenge(), "hausnummer");
 			case "hausnummerZusatz" -> dto.HausNrZusatz =
 					JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_HausNrZusatz.datenlaenge(), "hausnummerZusatz");
 			case "wohnortID" -> setWohnort(dto, JSONMapper.convertToLong(value, true, "wohnortID"),
@@ -264,33 +269,37 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 	private void updateKuerzel(final DTOLehrer dto, final Object value) throws ApiOperationException {
 		final String kuerzel = JSONMapper.convertToString(value, false, false, Schema.tab_K_Lehrer.col_Kuerzel.datenlaenge(), "kuerzel");
 		// Kuerzel ist unveraendert
-		if ((dto.Kuerzel != null) && dto.Kuerzel.equals(kuerzel))
+		if ((dto.Kuerzel != null) && dto.Kuerzel.equals(kuerzel)) {
 			return;
+		}
 
 		// theoretischer Fall, der nicht eintreten sollte
 		final List<DTOLehrer> lehrer = conn.queryList(DTOLehrer.QUERY_BY_KUERZEL, DTOLehrer.class, kuerzel);
 
-		if (lehrer.size() > 1)
+		if (lehrer.size() > 1) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Mehr als ein Lehrer mit dem gleichen Kuerzel vorhanden");
+		}
 
 		// kuerzel bereits vorhanden
 		if (!lehrer.isEmpty()) {
 			final DTOLehrer dtoLehrer = lehrer.getFirst();
-			if ((dtoLehrer != null) && (dtoLehrer.ID != dto.ID))
+			if ((dtoLehrer != null) && (dtoLehrer.ID != dto.ID)) {
 				throw new ApiOperationException(Status.BAD_REQUEST, "Das Kuerzel %s ist bereits vorhanden.".formatted(value));
+			}
 		}
 
 		// kuerzel wird gepatched
 		dto.Kuerzel = kuerzel;
 	}
 
-	private static void updateStaatsangehoerigkeitID(final DTOLehrer dto, final Object value) throws ApiOperationException {
-		final String id = JSONMapper.convertToString(value, true, true, null, "staatsangehoerigkeitID");
-		if ((id == null) || (id.isBlank()))
+	private static void updateIdStaatsangehoerigkeit(final DTOLehrer dto, final Object value) throws ApiOperationException {
+		final Long id = JSONMapper.convertToLong(value, true, "idStaatsangehoerigkeit");
+		if (id == null) {
 			dto.staatsangehoerigkeit = null;
-		else
-			dto.staatsangehoerigkeit = Optional.ofNullable(Nationalitaeten.getByISO3(id))
+		} else {
+			dto.staatsangehoerigkeit = Optional.ofNullable(Nationalitaeten.data().getWertByIDOrNull(id))
 					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "keine Nationalität zur ID %s vorhanden.".formatted(id)));
+		}
 	}
 
 	/**
@@ -305,19 +314,22 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 	 */
 	private void setWohnort(final DTOLehrer lehrer, final Long wohnortID, final Long ortsteilID)
 			throws ApiOperationException {
-		if ((wohnortID != null) && ((wohnortID < 0) || (conn.queryByKey(DTOOrt.class, wohnortID) == null)))
+		if ((wohnortID != null) && ((wohnortID < 0) || (conn.queryByKey(DTOOrt.class, wohnortID) == null))) {
 			throw new ApiOperationException(Status.CONFLICT, "WohnortID %d ungültig.".formatted(wohnortID));
+		}
 
-		if ((ortsteilID != null) && (ortsteilID < 0))
+		if ((ortsteilID != null) && (ortsteilID < 0)) {
 			throw new ApiOperationException(Status.CONFLICT, "OrtsteilID %d ungültig.".formatted(ortsteilID));
+		}
 
 		lehrer.Ort_ID = wohnortID;
 		// Prüfe, ob die Ortsteil ID in Bezug auf die WohnortID gültig ist, wähle hierbei null-Verweise auf die K_Ort-Tabelle als überall gültig
 		lehrer.Ortsteil_ID = Optional.ofNullable(ortsteilID)
 				.map(id -> {
 					final DTOOrtsteil ortsteil = conn.queryByKey(DTOOrtsteil.class, id);
-					if ((ortsteil == null) || (ortsteil.Ort_ID == null) || (!ortsteil.Ort_ID.equals(wohnortID)))
+					if ((ortsteil == null) || (ortsteil.Ort_ID == null) || (!ortsteil.Ort_ID.equals(wohnortID))) {
 						return null;
+					}
 					return id;
 				})
 				.orElse(null);
@@ -326,11 +338,13 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 	private void updateFoto(final DTOLehrer dto, final Object value) throws ApiOperationException {
 		final String strData = JSONMapper.convertToString(value, true, true, null, "foto: strgData");
 		DTOLehrerFoto lehrerFoto = conn.queryByKey(DTOLehrerFoto.class, dto.ID);
-		if (lehrerFoto == null)
+		if (lehrerFoto == null) {
 			lehrerFoto = new DTOLehrerFoto(dto.ID);
+		}
 		final String oldFoto = lehrerFoto.FotoBase64;
-		if (((strData == null) && (oldFoto == null)) || ((strData != null) && (strData.equals(oldFoto))))
+		if (((strData == null) && (oldFoto == null)) || ((strData != null) && (strData.equals(oldFoto)))) {
 			return;
+		}
 		lehrerFoto.FotoBase64 = strData;
 		conn.transactionPersist(lehrerFoto);
 	}

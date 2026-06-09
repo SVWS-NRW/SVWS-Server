@@ -18,8 +18,8 @@
 				<svws-ui-text-input placeholder="Geburtsdatum" type="date" v-model="data.geburtsdatum" statistics :disabled />
 				<svws-ui-select title="Staatsangehörigkeit" :items="Nationalitaeten.values()" :item-text="i => i.historie().getLast().staatsangehoerigkeit"
 					:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" autocomplete statistics
-					:model-value="Nationalitaeten.getByISO3(data.staatsangehoerigkeitID)" :valid="fieldIsValid('staatsangehoerigkeitID')"
-					@update:model-value="v => data.staatsangehoerigkeitID = v?.historie().getLast().iso3 ?? null" :disabled />
+					:model-value="Nationalitaeten.data().getWertByIDOrNull(data.idStaatsangehoerigkeit)" :valid="fieldIsValid('idStaatsangehoerigkeit')"
+					@update:model-value="v => data.idStaatsangehoerigkeit = v?.historie().getLast().id ?? null" :disabled />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Akademischer Grad" v-model="data.titel" :valid="fieldIsValid('titel')" :max-len="20" :disabled />
 				<svws-ui-text-input placeholder="Amtsbezeichnung" v-model="data.amtsbezeichnung" :valid="fieldIsValid('amtsbezeichnung')" :max-len="15"
@@ -99,8 +99,8 @@
 					return Geschlecht.fromValue(data.value.geschlecht) !== null;
 				case 'vorname':
 					return stringIsValid(data.value.vorname, true, 80);
-				case 'staatsangehoerigkeitID':
-					return (data.value.staatsangehoerigkeitID === null) || (Nationalitaeten.getByISO3(data.value.staatsangehoerigkeitID) !== null);
+				case 'idStaatsangehoerigkeit':
+					return (data.value.idStaatsangehoerigkeit === null) || (Nationalitaeten.data().getWertByIDOrNull(data.value.idStaatsangehoerigkeit) !== null);
 				case 'titel':
 					return stringIsValid(data.value.titel, false, 20);
 				case 'amtsbezeichnung':

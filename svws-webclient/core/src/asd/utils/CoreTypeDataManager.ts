@@ -475,6 +475,23 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 *
 	 * @param id   die ID
 	 *
+	 * @return der Schluessel zur ID
+	 *
+	 * @throws CoreTypeException   wenn kein Eintrag gefunden wird
+	 */
+	public getSchluesselByID(id: number | null): string | null {
+		const tmp: T | null = this._mapIDToEintrag.get(id);
+		if (tmp === null) {
+			throw new CoreTypeException(this._name + ": Kein Schluessel-Eintrag für die ID " + id + " gefunden.")
+		}
+		return tmp.schluessel;
+	}
+
+	/**
+	 * Gibt den Schluessel für die angegebene ID zurück.
+	 *
+	 * @param id   die ID
+	 *
 	 * @return der Schluessel zur ID oder null
 	 */
 	public getSchluesselByIDOrNull(id: number | null): string | null {

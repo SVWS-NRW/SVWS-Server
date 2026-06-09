@@ -47,7 +47,7 @@ public class LehrerStatistikGesamt {
 
 	/** Ggf. die ID für die Staatsangehörigkeit des Lehrers. */
 	@Schema(description = "Ggf. die ID für die Staatsangehörigkeit des Lehrers.", example = "000")
-	public String staatsangehoerigkeitID;
+	public Long idStaatsangehoerigkeit;
 
 	/** Die Lehrämter des Lehrers. */
 	@ArraySchema(schema = @Schema(implementation = LehrerLehramtEintrag.class, description = "Ein Array mit den Lehrämtern des Lehrers."))

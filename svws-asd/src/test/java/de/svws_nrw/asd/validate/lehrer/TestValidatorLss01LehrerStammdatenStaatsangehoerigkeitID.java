@@ -31,10 +31,10 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 class TestValidatorLss01LehrerStammdatenStaatsangehoerigkeitID {
 
 	private static final String TESTDATEN_STAATSANGEOERIGKEITID = """
-			'000'       , true
-			'Müller'    , false
-			'ARG'       , false
-			'333'       , true
+			88088065   , true
+			-1         , false
+			0          , false
+			88088067   , true
 		""";
 
 	/** Stammdaten der Schule */
@@ -56,20 +56,20 @@ class TestValidatorLss01LehrerStammdatenStaatsangehoerigkeitID {
 	 *
 	 * CoreType: LehrerStammdaten
 	 *
-	 * @param staatsangehoerigkeitID   die staatsangehoerigkeitID, welche bei den eingelesenen Testdaten ersetzt wird
+	 * @param idStaatsangehoerigkeit   die staatsangehoerigkeitID, welche bei den eingelesenen Testdaten ersetzt wird
 	 * @param result                   gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
 	@DisplayName("Tests für ValidatorLss01LehrerStammdatenStaatsangehoerigkeitID")
 	@ParameterizedTest
 	@CsvSource(textBlock = TESTDATEN_STAATSANGEOERIGKEITID, nullValues = { "null" })
-	void testValidatorLss01LehrerStammdatenStaatsangehoerigkeitID(final String staatsangehoerigkeitID, final boolean result) {
+	void testValidatorLss01LehrerStammdatenStaatsangehoerigkeitID(final Long idStaatsangehoerigkeit, final boolean result) {
 
 		// Erzeuge den Kontext für die Validierung
 		final ValidatorKontext kontext =
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorLss01LehrerStammdatenStaatsangehoerigkeitID validator =
-				new ValidatorLss01LehrerStammdatenStaatsangehoerigkeitID(() -> staatsangehoerigkeitID, () -> null, kontext);
+				new ValidatorLss01LehrerStammdatenStaatsangehoerigkeitID(() -> idStaatsangehoerigkeit, () -> null, kontext);
 		assertEquals(result, validator.pruefe());
 	}
 

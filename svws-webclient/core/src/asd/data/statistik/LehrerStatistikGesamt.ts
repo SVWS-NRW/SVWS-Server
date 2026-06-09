@@ -40,7 +40,7 @@ export class LehrerStatistikGesamt extends JavaObject {
 	/**
 	 * Ggf. die ID für die Staatsangehörigkeit des Lehrers.
 	 */
-	public staatsangehoerigkeitID: string | null = null;
+	public idStaatsangehoerigkeit: number | null = null;
 
 	/**
 	 * Die Lehrämter des Lehrers.
@@ -119,7 +119,7 @@ export class LehrerStatistikGesamt extends JavaObject {
 		if (obj.geschlecht === undefined)
 			throw new Error('invalid json format, missing attribute geschlecht');
 		result.geschlecht = obj.geschlecht;
-		result.staatsangehoerigkeitID = (obj.staatsangehoerigkeitID === undefined) ? null : obj.staatsangehoerigkeitID === null ? null : obj.staatsangehoerigkeitID;
+		result.idStaatsangehoerigkeit = (obj.idStaatsangehoerigkeit === undefined) ? null : obj.idStaatsangehoerigkeit === null ? null : obj.idStaatsangehoerigkeit;
 		if (obj.lehraemter !== undefined) {
 			for (const elem of obj.lehraemter) {
 				result.lehraemter.add(LehrerLehramtEintrag.transpilerFromJSON(JSON.stringify(elem)));
@@ -155,7 +155,7 @@ export class LehrerStatistikGesamt extends JavaObject {
 		result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';
 		result += '"geburtsdatum" : ' + ((obj.geburtsdatum === null) ? 'null' : JSON.stringify(obj.geburtsdatum)) + ',';
 		result += '"geschlecht" : ' + obj.geschlecht.toString() + ',';
-		result += '"staatsangehoerigkeitID" : ' + ((obj.staatsangehoerigkeitID === null) ? 'null' : JSON.stringify(obj.staatsangehoerigkeitID)) + ',';
+		result += '"idStaatsangehoerigkeit" : ' + ((obj.idStaatsangehoerigkeit === null) ? 'null' : obj.idStaatsangehoerigkeit.toString()) + ',';
 		result += '"lehraemter" : [ ';
 		for (let i = 0; i < obj.lehraemter.size(); i++) {
 			const elem = obj.lehraemter.get(i);
@@ -217,8 +217,8 @@ export class LehrerStatistikGesamt extends JavaObject {
 		if (obj.geschlecht !== undefined) {
 			result += '"geschlecht" : ' + obj.geschlecht.toString() + ',';
 		}
-		if (obj.staatsangehoerigkeitID !== undefined) {
-			result += '"staatsangehoerigkeitID" : ' + ((obj.staatsangehoerigkeitID === null) ? 'null' : JSON.stringify(obj.staatsangehoerigkeitID)) + ',';
+		if (obj.idStaatsangehoerigkeit !== undefined) {
+			result += '"idStaatsangehoerigkeit" : ' + ((obj.idStaatsangehoerigkeit === null) ? 'null' : obj.idStaatsangehoerigkeit.toString()) + ',';
 		}
 		if (obj.lehraemter !== undefined) {
 			result += '"lehraemter" : [ ';

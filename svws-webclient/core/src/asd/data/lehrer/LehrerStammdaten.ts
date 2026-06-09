@@ -59,7 +59,7 @@ export class LehrerStammdaten extends JavaObject {
 	/**
 	 * Ggf. die ID für die Staatsangehörigkeit des Lehrers.
 	 */
-	public staatsangehoerigkeitID: string | null = null;
+	public idStaatsangehoerigkeit: number | null = null;
 
 	/**
 	 * Ggf. der Straßenname im Wohnort des Lehrers.
@@ -169,7 +169,7 @@ export class LehrerStammdaten extends JavaObject {
 			throw new Error('invalid json format, missing attribute geschlecht');
 		result.geschlecht = obj.geschlecht;
 		result.geburtsdatum = (obj.geburtsdatum === undefined) ? null : obj.geburtsdatum === null ? null : obj.geburtsdatum;
-		result.staatsangehoerigkeitID = (obj.staatsangehoerigkeitID === undefined) ? null : obj.staatsangehoerigkeitID === null ? null : obj.staatsangehoerigkeitID;
+		result.idStaatsangehoerigkeit = (obj.idStaatsangehoerigkeit === undefined) ? null : obj.idStaatsangehoerigkeit === null ? null : obj.idStaatsangehoerigkeit;
 		result.strassenname = (obj.strassenname === undefined) ? null : obj.strassenname === null ? null : obj.strassenname;
 		result.hausnummer = (obj.hausnummer === undefined) ? null : obj.hausnummer === null ? null : obj.hausnummer;
 		result.hausnummerZusatz = (obj.hausnummerZusatz === undefined) ? null : obj.hausnummerZusatz === null ? null : obj.hausnummerZusatz;
@@ -206,7 +206,7 @@ export class LehrerStammdaten extends JavaObject {
 		result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
 		result += '"geschlecht" : ' + obj.geschlecht.toString() + ',';
 		result += '"geburtsdatum" : ' + ((obj.geburtsdatum === null) ? 'null' : JSON.stringify(obj.geburtsdatum)) + ',';
-		result += '"staatsangehoerigkeitID" : ' + ((obj.staatsangehoerigkeitID === null) ? 'null' : JSON.stringify(obj.staatsangehoerigkeitID)) + ',';
+		result += '"idStaatsangehoerigkeit" : ' + ((obj.idStaatsangehoerigkeit === null) ? 'null' : obj.idStaatsangehoerigkeit.toString()) + ',';
 		result += '"strassenname" : ' + ((obj.strassenname === null) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
 		result += '"hausnummer" : ' + ((obj.hausnummer === null) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
 		result += '"hausnummerZusatz" : ' + ((obj.hausnummerZusatz === null) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
@@ -264,8 +264,8 @@ export class LehrerStammdaten extends JavaObject {
 		if (obj.geburtsdatum !== undefined) {
 			result += '"geburtsdatum" : ' + ((obj.geburtsdatum === null) ? 'null' : JSON.stringify(obj.geburtsdatum)) + ',';
 		}
-		if (obj.staatsangehoerigkeitID !== undefined) {
-			result += '"staatsangehoerigkeitID" : ' + ((obj.staatsangehoerigkeitID === null) ? 'null' : JSON.stringify(obj.staatsangehoerigkeitID)) + ',';
+		if (obj.idStaatsangehoerigkeit !== undefined) {
+			result += '"idStaatsangehoerigkeit" : ' + ((obj.idStaatsangehoerigkeit === null) ? 'null' : obj.idStaatsangehoerigkeit.toString()) + ',';
 		}
 		if (obj.strassenname !== undefined) {
 			result += '"strassenname" : ' + ((obj.strassenname === null) ? 'null' : JSON.stringify(obj.strassenname)) + ',';

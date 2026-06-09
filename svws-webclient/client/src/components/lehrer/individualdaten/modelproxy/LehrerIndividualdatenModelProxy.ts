@@ -31,7 +31,7 @@ export class LehrerIndividualdatenModelProxy extends ModelProxy<LehrerStammdaten
 	 */
 	constructor(data: () => LehrerStammdaten, validatorKontext: () => ValidatorKontext, manager: () => LehrerListeManager, orteById: Map<number, OrtKatalogEintrag>, ortsteileById: Map<number, OrtsteilKatalogEintrag>, patch?: (data: Partial<LehrerStammdaten>) => Promise<boolean>) {
 		const listOfAutopatchProps: Iterable<keyof LehrerStammdaten> = ["istSichtbar", "istRelevantFuerStatistik", "personalTyp", "geschlecht",
-			"staatsangehoerigkeitID", "wohnortID", "ortsteilID"];
+			"idStaatsangehoerigkeit", "wohnortID", "ortsteilID"];
 		super({ data, patch, checkValidBeforePatch: true, listOfAutopatchProps });
 		this.schuljahr = validatorKontext().getSchuljahr();
 		this.manager = manager;
@@ -58,7 +58,7 @@ export class LehrerIndividualdatenModelProxy extends ModelProxy<LehrerStammdaten
 		this.addValidator(new ValidatorLsdLehrerStammdatenGeburtsdatum({ get: () => this.proxy.geburtsdatum }, validatorKontext()), "geburtsdatum");
 
 		// Staatsangehörigkeit
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.staatsangehoerigkeitID), "staatsangehoerigkeitID");
+		this.addValidator(new ValidatorInputRequired(() => this.proxy.idStaatsangehoerigkeit), "idStaatsangehoerigkeit");
 
 		// Akademischer Grad
 		this.addValidator(new ValidatorStringLength(() => this.proxy.titel, null, 20), "titel");
@@ -102,10 +102,10 @@ export class LehrerIndividualdatenModelProxy extends ModelProxy<LehrerStammdaten
 
 	selectedStaatsangehoerigkeit = computed<NationalitaetenKatalogEintrag | null>({
 		get: () => {
-			const wert = Nationalitaeten.getByISO3(this.proxy.staatsangehoerigkeitID) ?? Nationalitaeten.getDEU();
+			const wert = Nationalitaeten.data().getWertByIDOrNull(this.proxy.idStaatsangehoerigkeit) ?? Nationalitaeten.getDEU();
 			return Nationalitaeten.data().getEintragBySchuljahrUndWert(this.schuljahr, wert);
 		},
-		set: (value: NationalitaetenKatalogEintrag | null) => this.proxy.staatsangehoerigkeitID = value?.iso3 ?? null,
+		set: (value: NationalitaetenKatalogEintrag | null) => this.proxy.idStaatsangehoerigkeit = value?.id ?? null,
 	});
 
 	selectedWohnort = computed<OrtKatalogEintrag | null>({

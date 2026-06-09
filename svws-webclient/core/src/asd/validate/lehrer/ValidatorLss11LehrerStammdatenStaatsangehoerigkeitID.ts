@@ -1,5 +1,8 @@
 import type { JavaSet } from '../../../java/util/JavaSet';
 import { java_util_Set_of } from '../../../java/util/JavaSet';
+import { Schulform } from '../../../asd/types/schule/Schulform';
+import { NationalitaetenKatalogEintrag } from '../../../asd/data/schule/NationalitaetenKatalogEintrag';
+import { Nationalitaeten } from '../../../asd/types/schule/Nationalitaeten';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { LehrerRechtsverhaeltnis } from '../../../asd/types/lehrer/LehrerRechtsverhaeltnis';
@@ -11,7 +14,7 @@ export class ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID extends Valida
 	/**
 	 * Die Lehrer-Stammdaten
 	 */
-	private readonly _staatsangehoerigkeitID: Supplier<string>;
+	private readonly _staatsangehoerigkeitSchluessel: Supplier<string>;
 
 	private readonly _rechtsverhaeltnis: Supplier<LehrerRechtsverhaeltnis | null>;
 
@@ -25,13 +28,13 @@ export class ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID extends Valida
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param staatsangehoerigkeitID   die StaatsangehoerigkeitID des Lehrers
+	 * @param staatsangehoerigkeitSchluessel   der staatsangehoerigkeitSchluessel des Lehrers
 	 * @param rechtsverhaeltnis        das Rechtsverhältnis des Lehrers
 	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(staatsangehoerigkeitID: Supplier<string>, rechtsverhaeltnis: Supplier<LehrerRechtsverhaeltnis | null>, kontext: ValidatorKontext) {
+	public constructor(staatsangehoerigkeitSchluessel: Supplier<string>, rechtsverhaeltnis: Supplier<LehrerRechtsverhaeltnis | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._staatsangehoerigkeitID = staatsangehoerigkeitID;
+		this._staatsangehoerigkeitSchluessel = staatsangehoerigkeitSchluessel;
 		this._rechtsverhaeltnis = rechtsverhaeltnis;
 	}
 
@@ -39,9 +42,15 @@ export class ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID extends Valida
 		if (this._rechtsverhaeltnis.get() === null) {
 			return true;
 		}
-		if (ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID.setRechtsverhaeltnis.contains(this._rechtsverhaeltnis.get()) && !ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID.setStaatsangehoerigkeit.contains(this._staatsangehoerigkeitID.get())) {
-			this.addFehler(0, ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID.FEHLERTEXT);
-			return false;
+		const schuljahr: number = this.kontext().getSchuljahr();
+		const schulform: Schulform | null = this.kontext().getSchulform();
+		const nationalitaet: Nationalitaeten | null = Nationalitaeten.data().getBySchuljahrAndSchulformAndSchluessel(schuljahr, schulform, this._staatsangehoerigkeitSchluessel.get());
+		if ((nationalitaet !== null)) {
+			const katalogEintrag: NationalitaetenKatalogEintrag | null = nationalitaet.daten(schuljahr);
+			if (ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID.setRechtsverhaeltnis.contains(this._rechtsverhaeltnis.get()) && (katalogEintrag !== null) && !ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID.setStaatsangehoerigkeit.contains(katalogEintrag.iso3)) {
+				this.addFehler(0, ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID.FEHLERTEXT);
+				return false;
+			}
 		}
 		return true;
 	}

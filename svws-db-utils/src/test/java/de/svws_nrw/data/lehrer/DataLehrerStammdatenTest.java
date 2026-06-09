@@ -1,5 +1,17 @@
 package de.svws_nrw.data.lehrer;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
@@ -7,6 +19,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.asd.data.schule.Schulleitung;
@@ -25,28 +48,6 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFoto;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOSchulleitung;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @DisplayName("Diese Klasse testet die Klasse DataLehrerStammdaten")
 @ExtendWith(MockitoExtension.class)
@@ -86,15 +87,15 @@ class DataLehrerStammdatenTest {
 		final DTOLehrer mockedLehrer = getDtoLehrer();
 		final InputStream is = TestUtils.fromObject(coreDtoLehrer);
 		when(this.conn.queryByKey(eq(DTOLehrer.class), any())).thenReturn(mockedLehrer);
-		when(conn.transactionPersist(any(DTOLehrer.class))).thenReturn(true);
-		when(conn.transactionPersistAll(anyList())).thenReturn(true);
+		when(this.conn.transactionPersist(any(DTOLehrer.class))).thenReturn(true);
+		when(this.conn.transactionPersistAll(anyList())).thenReturn(true);
 
 		this.dataLehrerStammdaten.addAsResponse(is);
 
-		verify(dataLernplattformen).getAll();
-		verify(dataEinwilligungsarten).getAll();
+		verify(this.dataLernplattformen).getAll();
+		verify(this.dataEinwilligungsarten).getAll();
 
-		verify(conn, times(2)).transactionPersistAll(any(Collection.class));
+		verify(this.conn, times(2)).transactionPersistAll(any(Collection.class));
 	}
 
 	@Test
@@ -103,7 +104,7 @@ class DataLehrerStammdatenTest {
 		final var dtoLehrer = getDtoLehrer();
 		when(this.conn.queryByKey(DTOLehrer.class, dtoLehrer.ID)).thenReturn(dtoLehrer);
 
-		assertThat(dataLehrerStammdaten.getById(dtoLehrer.ID))
+		assertThat(this.dataLehrerStammdaten.getById(dtoLehrer.ID))
 				.isInstanceOf(LehrerStammdaten.class)
 				.hasFieldOrPropertyWithValue("id", dtoLehrer.ID);
 	}
@@ -113,7 +114,7 @@ class DataLehrerStammdatenTest {
 	void getByIdTest_wrongID() {
 		when(this.conn.queryByKey(any(), any())).thenReturn(null);
 
-		final var throwable = catchThrowable(() -> dataLehrerStammdaten.getById(1L));
+		final var throwable = catchThrowable(() -> this.dataLehrerStammdaten.getById(1L));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
@@ -229,7 +230,7 @@ class DataLehrerStammdatenTest {
 		final var dtoLehrer = getDtoLehrer();
 		final var foto = new DTOLehrerFoto(1L);
 		foto.FotoBase64 = "abc";
-		when(conn.queryByKey(DTOLehrerFoto.class, 1L)).thenReturn(foto);
+		when(this.conn.queryByKey(DTOLehrerFoto.class, 1L)).thenReturn(foto);
 
 		assertThat(this.dataLehrerStammdaten.map(dtoLehrer))
 				.isInstanceOf(LehrerStammdaten.class)
@@ -243,7 +244,7 @@ class DataLehrerStammdatenTest {
 				.hasFieldOrPropertyWithValue("vorname", "abc")
 				.hasFieldOrPropertyWithValue("geschlecht", Geschlecht.M.id)
 				.hasFieldOrPropertyWithValue("geburtsdatum", "abc")
-				.hasFieldOrPropertyWithValue("staatsangehoerigkeitID", "DEU")
+				.hasFieldOrPropertyWithValue("idStaatsangehoerigkeit", 68069085L)
 				.hasFieldOrPropertyWithValue("strassenname", "abc")
 				.hasFieldOrPropertyWithValue("hausnummer", "abc")
 				.hasFieldOrPropertyWithValue("hausnummerZusatz", "abc")
@@ -265,7 +266,7 @@ class DataLehrerStammdatenTest {
 		final var dtoSchulleitung = new DTOSchulleitung(1L, 1L, "abc", 1L);
 		dtoSchulleitung.Von = "abc";
 		dtoSchulleitung.Bis = "abc";
-		when(conn.queryList(DTOSchulleitung.QUERY_BY_LEHRERID, DTOSchulleitung.class, 1L))
+		when(this.conn.queryList(DTOSchulleitung.QUERY_BY_LEHRERID, DTOSchulleitung.class, 1L))
 				.thenReturn(List.of(dtoSchulleitung));
 
 		final var lehrerStammdaten = this.dataLehrerStammdaten.map(dtoLehrer);
@@ -304,7 +305,7 @@ class DataLehrerStammdatenTest {
 				.hasFieldOrPropertyWithValue("nachname", "")
 				.hasFieldOrPropertyWithValue("vorname", "")
 				.hasFieldOrPropertyWithValue("geschlecht", -1)
-				.hasFieldOrPropertyWithValue("staatsangehoerigkeitID", null)
+				.hasFieldOrPropertyWithValue("idStaatsangehoerigkeit", null)
 				.hasFieldOrPropertyWithValue("istSichtbar", true)
 				.hasFieldOrPropertyWithValue("istRelevantFuerStatistik", true)
 				.hasFieldOrPropertyWithValue("foto", null);
@@ -316,7 +317,7 @@ class DataLehrerStammdatenTest {
 		final var dtoLehrer = getDtoLehrer();
 		final var foto = new DTOLehrerFoto(1L);
 		foto.FotoBase64 = "abc";
-		when(conn.queryByKeyList(DTOLehrerFoto.class, List.of(1L))).thenReturn(List.of(foto));
+		when(this.conn.queryByKeyList(DTOLehrerFoto.class, List.of(1L))).thenReturn(List.of(foto));
 
 		assertThat(this.dataLehrerStammdaten.mapList(List.of(dtoLehrer)))
 				.isInstanceOf(List.class)
@@ -332,7 +333,7 @@ class DataLehrerStammdatenTest {
 						.hasFieldOrPropertyWithValue("vorname", "abc")
 						.hasFieldOrPropertyWithValue("geschlecht", Geschlecht.M.id)
 						.hasFieldOrPropertyWithValue("geburtsdatum", "abc")
-						.hasFieldOrPropertyWithValue("staatsangehoerigkeitID", "DEU")
+						.hasFieldOrPropertyWithValue("idStaatsangehoerigkeit", 68069085L)
 						.hasFieldOrPropertyWithValue("strassenname", "abc")
 						.hasFieldOrPropertyWithValue("hausnummer", "abc")
 						.hasFieldOrPropertyWithValue("hausnummerZusatz", "abc")
@@ -393,7 +394,7 @@ class DataLehrerStammdatenTest {
 						.hasFieldOrPropertyWithValue("nachname", "")
 						.hasFieldOrPropertyWithValue("vorname", "")
 						.hasFieldOrPropertyWithValue("geschlecht", -1)
-						.hasFieldOrPropertyWithValue("staatsangehoerigkeitID", null)
+						.hasFieldOrPropertyWithValue("idStaatsangehoerigkeit", null)
 						.hasFieldOrPropertyWithValue("istSichtbar", true)
 						.hasFieldOrPropertyWithValue("istRelevantFuerStatistik", true)
 						.hasFieldOrPropertyWithValue("foto", null));
@@ -418,7 +419,7 @@ class DataLehrerStammdatenTest {
 			case "vorname" -> assertThat(expectedDTO.Vorname).isEqualTo(value);
 			case "geschlecht" -> assertThat(expectedDTO.Geschlecht).isEqualTo(value);
 			case "geburtsdatum" -> assertThat(expectedDTO.Geburtsdatum).isEqualTo(value);
-			case "staatsangehoerigkeitID" -> assertThat(expectedDTO.staatsangehoerigkeit).isEqualTo(value);
+			case "idStaatsangehoerigkeit" -> assertThat(expectedDTO.staatsangehoerigkeit).isEqualTo(value);
 			case "strassenname" -> assertThat(expectedDTO.Strassenname).isEqualTo(value);
 			case "hausnummer" -> assertThat(expectedDTO.HausNr).isEqualTo(value);
 			case "hausnummerZusatz" -> assertThat(expectedDTO.HausNrZusatz).isEqualTo(value);
@@ -449,7 +450,7 @@ class DataLehrerStammdatenTest {
 				arguments("vorname", "abc"),
 				arguments("geschlecht", Geschlecht.M),
 				arguments("geburtsdatum", "abc"),
-				arguments("staatsangehoerigkeitID", Nationalitaeten.getByISO3("DEU")),
+				arguments("idStaatsangehoerigkeit", Nationalitaeten.getByISO3("DEU")),
 				arguments("strassenname", "abc"),
 				arguments("hausnummer", "abc"),
 				arguments("hausnummerZusatz", "abc"),
@@ -528,29 +529,19 @@ class DataLehrerStammdatenTest {
 	}
 
 	@Test
-	@DisplayName("mapAttribute | staatsangehoerigkeitID is Null")
-	void mapAttributeTest_staatsangehoerigkeitIDNull() throws ApiOperationException {
+	@DisplayName("mapAttribute | idStaatsangehoerigkeit is Null")
+	void mapAttributeTest_idStaatsangehoerigkeitNull() throws ApiOperationException {
 		final var expectedDTO = getDtoLehrer();
 
-		this.dataLehrerStammdaten.mapAttribute(expectedDTO, "staatsangehoerigkeitID", null, null);
+		this.dataLehrerStammdaten.mapAttribute(expectedDTO, "idStaatsangehoerigkeit", null, null);
 
 		assertThat(expectedDTO).hasFieldOrPropertyWithValue("staatsangehoerigkeit", null);
 	}
 
 	@Test
-	@DisplayName("mapAttribute | staatsangehoerigkeitID is Blank")
-	void mapAttributeTest_staatsangehoerigkeitIDBlank() throws ApiOperationException {
-		final var expectedDTO = getDtoLehrer();
-
-		this.dataLehrerStammdaten.mapAttribute(expectedDTO, "staatsangehoerigkeitID", "", null);
-
-		assertThat(expectedDTO).hasFieldOrPropertyWithValue("staatsangehoerigkeit", null);
-	}
-
-	@Test
-	@DisplayName("mapAttribute | staatsangehoerigkeitID is Not Valid")
-	void mapAttributeTest_staatsangehoerigkeitIDNotValid() {
-		final var throwable = catchThrowable(() -> this.dataLehrerStammdaten.mapAttribute(null, "staatsangehoerigkeitID", "-1", null));
+	@DisplayName("mapAttribute | idStaatsangehoerigkeit is Not Valid")
+	void mapAttributeTest_idStaatsangehoerigkeitNotValid() {
+		final var throwable = catchThrowable(() -> this.dataLehrerStammdaten.mapAttribute(null, "idStaatsangehoerigkeit", "-1", null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
@@ -562,7 +553,7 @@ class DataLehrerStammdatenTest {
 	@DisplayName("mapAttribute | wohnortID Valid")
 	void mapAttributeTest_wohnortID() throws ApiOperationException {
 		final var expectedDTO = getDtoLehrer();
-		when(conn.queryByKey(DTOOrt.class, 11L)).thenReturn(mock(DTOOrt.class));
+		when(this.conn.queryByKey(DTOOrt.class, 11L)).thenReturn(mock(DTOOrt.class));
 
 		this.dataLehrerStammdaten.mapAttribute(expectedDTO, "wohnortID", 11, Map.of("ortsteilID", 22));
 
@@ -587,8 +578,8 @@ class DataLehrerStammdatenTest {
 		final var expectedDTO = getDtoLehrer();
 		final var dtoOrtsteil = new DTOOrtsteil(11L, "abc");
 		dtoOrtsteil.Ort_ID = 22L;
-		when(conn.queryByKey(DTOOrt.class, 22L)).thenReturn(mock(DTOOrt.class));
-		when(conn.queryByKey(DTOOrtsteil.class, 11L)).thenReturn(dtoOrtsteil);
+		when(this.conn.queryByKey(DTOOrt.class, 22L)).thenReturn(mock(DTOOrt.class));
+		when(this.conn.queryByKey(DTOOrtsteil.class, 11L)).thenReturn(dtoOrtsteil);
 
 		this.dataLehrerStammdaten.mapAttribute(expectedDTO, "ortsteilID", 11, Map.of("wohnortID", 22L));
 
@@ -599,8 +590,8 @@ class DataLehrerStammdatenTest {
 	@DisplayName("mapAttribute | ortsteil.Ort_ID is null")
 	void mapAttributeTest_ortIdNull() throws ApiOperationException {
 		final var expectedDTO = getDtoLehrer();
-		when(conn.queryByKey(DTOOrt.class, 22L)).thenReturn(mock(DTOOrt.class));
-		when(conn.queryByKey(DTOOrtsteil.class, 11L)).thenReturn(new DTOOrtsteil(11L, "abc"));
+		when(this.conn.queryByKey(DTOOrt.class, 22L)).thenReturn(mock(DTOOrt.class));
+		when(this.conn.queryByKey(DTOOrtsteil.class, 11L)).thenReturn(new DTOOrtsteil(11L, "abc"));
 
 		this.dataLehrerStammdaten.mapAttribute(expectedDTO, "ortsteilID", 11, Map.of("wohnortID", 22L));
 
@@ -611,8 +602,8 @@ class DataLehrerStammdatenTest {
 	@DisplayName("mapAttribute | ortsteil not found")
 	void mapAttributeTest_ortsteilNotFound() throws ApiOperationException {
 		final var expectedDTO = getDtoLehrer();
-		when(conn.queryByKey(DTOOrt.class, 22L)).thenReturn(mock(DTOOrt.class));
-		when(conn.queryByKey(DTOOrtsteil.class, 11L)).thenReturn(null);
+		when(this.conn.queryByKey(DTOOrt.class, 22L)).thenReturn(mock(DTOOrt.class));
+		when(this.conn.queryByKey(DTOOrtsteil.class, 11L)).thenReturn(null);
 
 		this.dataLehrerStammdaten.mapAttribute(expectedDTO, "ortsteilID", 11, Map.of("wohnortID", 22L));
 
@@ -623,10 +614,10 @@ class DataLehrerStammdatenTest {
 	@DisplayName("mapAttribute | ort and ortsteil dont match")
 	void mapAttributeTest_OrtAndOrtsteilDontMatch() throws ApiOperationException {
 		final var expectedDTO = getDtoLehrer();
-		when(conn.queryByKey(DTOOrt.class, 22L)).thenReturn(mock(DTOOrt.class));
+		when(this.conn.queryByKey(DTOOrt.class, 22L)).thenReturn(mock(DTOOrt.class));
 		final var dtoOrtsteil = new DTOOrtsteil(11L, "abc");
 		dtoOrtsteil.Ort_ID = 15L;
-		when(conn.queryByKey(DTOOrtsteil.class, 11L)).thenReturn(dtoOrtsteil);
+		when(this.conn.queryByKey(DTOOrtsteil.class, 11L)).thenReturn(dtoOrtsteil);
 
 		this.dataLehrerStammdaten.mapAttribute(expectedDTO, "ortsteilID", 11, Map.of("wohnortID", 22L));
 
@@ -636,7 +627,7 @@ class DataLehrerStammdatenTest {
 	@Test
 	@DisplayName("mapAttribute | ortsteilID is Not Valid")
 	void mapAttributeTest_ortsteilIDNotValid() {
-		when(conn.queryByKey(DTOOrt.class, 22L)).thenReturn(mock(DTOOrt.class));
+		when(this.conn.queryByKey(DTOOrt.class, 22L)).thenReturn(mock(DTOOrt.class));
 
 		final var throwable = catchThrowable(() -> this.dataLehrerStammdaten.mapAttribute(getDtoLehrer(), "ortsteilID", -1, Map.of("wohnortID", 22L)));
 
@@ -652,13 +643,13 @@ class DataLehrerStammdatenTest {
 		final var expectedDTO = new DTOLehrer(1L, "1", "1");
 		final var foto = new DTOLehrerFoto(1L);
 		foto.FotoBase64 = "abc";
-		when(conn.queryByKey(DTOLehrerFoto.class, 1L)).thenReturn(foto);
+		when(this.conn.queryByKey(DTOLehrerFoto.class, 1L)).thenReturn(foto);
 		final var expectedFoto = new DTOLehrerFoto(1L);
 		expectedFoto.FotoBase64 = "cde";
 
 		this.dataLehrerStammdaten.mapAttribute(expectedDTO, "foto", "cde", null);
 
-		verify(conn, times(1)).transactionPersist(expectedFoto);
+		verify(this.conn, times(1)).transactionPersist(expectedFoto);
 	}
 
 	@Test
@@ -667,22 +658,22 @@ class DataLehrerStammdatenTest {
 		final var expectedDTO = new DTOLehrer(1L, "1", "1");
 		final var foto = new DTOLehrerFoto(1L);
 		foto.FotoBase64 = "abc";
-		when(conn.queryByKey(DTOLehrerFoto.class, 1L)).thenReturn(foto);
+		when(this.conn.queryByKey(DTOLehrerFoto.class, 1L)).thenReturn(foto);
 
 		this.dataLehrerStammdaten.mapAttribute(expectedDTO, "foto", "abc", null);
 
-		verify(conn, never()).transactionPersist(any());
+		verify(this.conn, never()).transactionPersist(any());
 	}
 
 	@Test
 	@DisplayName("mapAttribute | altes und neues foto null | kein update")
 	void mapAttributeTest_oldAndNewFotoNull() throws ApiOperationException {
 		final var expectedDTO = new DTOLehrer(1L, "1", "1");
-		when(conn.queryByKey(DTOLehrerFoto.class, 1L)).thenReturn(null);
+		when(this.conn.queryByKey(DTOLehrerFoto.class, 1L)).thenReturn(null);
 
 		this.dataLehrerStammdaten.mapAttribute(expectedDTO, "foto", null, null);
 
-		verify(conn, never()).transactionPersist(any());
+		verify(this.conn, never()).transactionPersist(any());
 	}
 
 	@ParameterizedTest

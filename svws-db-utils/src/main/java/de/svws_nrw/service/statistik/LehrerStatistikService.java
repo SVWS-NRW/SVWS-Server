@@ -82,7 +82,7 @@ public final class LehrerStatistikService {
 		daten.nachname = (dtoLehrer.Nachname == null) ? "" : dtoLehrer.Nachname;
 		daten.geburtsdatum = dtoLehrer.Geburtsdatum;
 		daten.geschlecht = (dtoLehrer.Geschlecht == null) ? -1 : dtoLehrer.Geschlecht.id;
-		daten.staatsangehoerigkeitID = (dtoLehrer.staatsangehoerigkeit == null) ? null : dtoLehrer.staatsangehoerigkeit.historie().getLast().iso3;
+		daten.idStaatsangehoerigkeit = (dtoLehrer.staatsangehoerigkeit == null) ? null : dtoLehrer.staatsangehoerigkeit.historie().getLast().id;
 		daten.lehraemter.addAll(lehraemter);
 
 		// Hänge die abschnittsrelevanten Lehrer-Daten an

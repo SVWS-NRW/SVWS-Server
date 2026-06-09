@@ -1,5 +1,5 @@
-import { ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID } from '../../../asd/validate/lehrer/ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID';
 import { Nationalitaeten } from '../../../asd/types/schule/Nationalitaeten';
+import { ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID } from '../../../asd/validate/lehrer/ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID';
 import { ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID } from '../../../asd/validate/lehrer/ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
@@ -12,26 +12,28 @@ export class ValidatorLss01LehrerStammdatenStaatsangehoerigkeitID extends Valida
 	/**
 	 * Die Lehrer-Stammdaten
 	 */
-	private readonly _staatsangehoerigkeitID: Supplier<string>;
+	private readonly _idStaatsangehoerigkeit: Supplier<number>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param staatsangehoerigkeitID   die StaatsangehoerigkeitID des Lehrers
+	 * @param idStaatsangehoerigkeit   die idStaatsangehoerigkeit des Lehrers
 	 * @param rechtsverhaeltnis        das Rechtsverhältnis des Lehrers
 	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(staatsangehoerigkeitID: Supplier<string>, rechtsverhaeltnis: Supplier<LehrerRechtsverhaeltnis | null>, kontext: ValidatorKontext) {
+	public constructor(idStaatsangehoerigkeit: Supplier<number>, rechtsverhaeltnis: Supplier<LehrerRechtsverhaeltnis | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._staatsangehoerigkeitID = staatsangehoerigkeitID;
-		this._validatoren.add(new ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID(staatsangehoerigkeitID, kontext));
-		this._validatoren.add(new ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID(staatsangehoerigkeitID, rechtsverhaeltnis, kontext));
+		this._idStaatsangehoerigkeit = idStaatsangehoerigkeit;
+		const staatsangehoerigkeitSchluessel: Supplier<string> = this.getNotNullSupplier({ get: () => Nationalitaeten.data().getSchluesselByIDOrNull(this._idStaatsangehoerigkeit.get()) });
+		const schuljahr: Supplier<number> = { get: () => kontext.getSchuljahr() };
+		this._validatoren.add(new ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID(staatsangehoerigkeitSchluessel, schuljahr, kontext));
+		this._validatoren.add(new ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID(staatsangehoerigkeitSchluessel, rechtsverhaeltnis, kontext));
 	}
 
 	protected pruefe(): boolean {
-		const staatsangehoerigkeitID: Nationalitaeten | null = Nationalitaeten.getByDESTATIS(this._staatsangehoerigkeitID.get());
-		if (staatsangehoerigkeitID === null) {
+		const staatsangehoerigkeitSchluessel: string | null = Nationalitaeten.data().getSchluesselByIDOrNull(this._idStaatsangehoerigkeit.get());
+		if (staatsangehoerigkeitSchluessel === null) {
 			this.addFehler(0, "Das Feld 'Staatsangehörigkeit' muss zulässig sein. ");
 			return false;
 		}

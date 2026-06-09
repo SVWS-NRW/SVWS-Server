@@ -61,7 +61,7 @@
 				<ui-select label="Staatsangehörigkeit"
 					v-model="modelProxy.selectedStaatsangehoerigkeit.value"
 					:manager="staatsangehoerigkeitManager"
-					:validation="() => modelProxy.getFehler('staatsangehoerigkeitID')"
+					:validation="() => modelProxy.getFehler('idStaatsangehoerigkeit')"
 					:readonly required searchable statistics :removable="false" />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Akademischer Grad"

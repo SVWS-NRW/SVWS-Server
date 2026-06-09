@@ -44,7 +44,7 @@ export class ValidatorGesamt extends Validator {
 		this._validatoren.addAll(this.validatoren);
 		const gesamt: StatistikGesamt = this.daten.get();
 		for (const lehrer of gesamt.lehrer) {
-			this._validatoren.add(new ValidatorLsLehrerStammdaten({ get: () => lehrer.nachname }, { get: () => lehrer.vorname }, { get: () => lehrer.geburtsdatum }, { get: () => lehrer.geschlecht }, { get: () => lehrer.kuerzel }, { get: () => lehrer.staatsangehoerigkeitID }, { get: () => lehrer.idRechtsverhaeltnis }, this.kontext()));
+			this._validatoren.add(new ValidatorLsLehrerStammdaten({ get: () => lehrer.nachname }, { get: () => lehrer.vorname }, { get: () => lehrer.geburtsdatum }, { get: () => lehrer.geschlecht }, { get: () => lehrer.kuerzel }, { get: () => lehrer.idStaatsangehoerigkeit }, { get: () => lehrer.idRechtsverhaeltnis }, this.kontext()));
 			this._validatoren.add(new ValidatorLpLehrerPersonaldaten({ get: () => lehrer.id }, { get: () => gesamt.schule.idSchuljahresabschnitt }, { get: () => lehrer.idRechtsverhaeltnis }, { get: () => lehrer.pflichtstundensoll }, { get: () => lehrer.anrechnungen }, { get: () => lehrer.idEinsatzstatus }, { get: () => lehrer.idBeschaeftigungsart }, { get: () => lehrer.geburtsdatum }, { get: () => lehrer.lehraemter }, { get: () => lehrer.mehrleistung }, { get: () => lehrer.minderleistung }, this.kontext()));
 		}
 		for (const schueler of gesamt.schueler) {

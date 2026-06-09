@@ -484,6 +484,25 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 *
 	 * @param id   die ID
 	 *
+	 * @return der Schluessel zur ID
+	 *
+	 * @throws CoreTypeException   wenn kein Eintrag gefunden wird
+	 */
+	public String getSchluesselByID(final Long id) {
+		final T tmp = this._mapIDToEintrag.get(id);
+
+		if (tmp == null) {
+			throw new CoreTypeException(this._name + ": Kein Schluessel-Eintrag für die ID " + id + " gefunden.");
+		}
+
+		return tmp.schluessel;
+	}
+
+	/**
+	 * Gibt den Schluessel für die angegebene ID zurück.
+	 *
+	 * @param id   die ID
+	 *
 	 * @return der Schluessel zur ID oder null
 	 */
 	public String getSchluesselByIDOrNull(final Long id) {

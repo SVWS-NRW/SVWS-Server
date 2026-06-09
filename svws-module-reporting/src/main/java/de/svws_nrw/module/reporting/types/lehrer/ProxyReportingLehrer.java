@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
@@ -63,7 +64,7 @@ public class ProxyReportingLehrer extends ReportingLehrer {
 				new ArrayList<>(),
 				ersetzeNullBlankTrim(lehrerStammdaten.nachname),
 				PersonalTyp.fromKuerzel(lehrerStammdaten.personalTyp),
-				Nationalitaeten.getByDESTATIS(lehrerStammdaten.staatsangehoerigkeitID),
+				Nationalitaeten.data().getWertByID(lehrerStammdaten.idStaatsangehoerigkeit),
 				null,
 				ersetzeNullBlankTrim(lehrerStammdaten.strassenname),
 				ersetzeNullBlankTrim(lehrerStammdaten.telefon),
@@ -77,7 +78,7 @@ public class ProxyReportingLehrer extends ReportingLehrer {
 				(lehrerStammdaten.ortsteilID != null) ? reportingContext.repositoryKataloge().ortsteile().get(lehrerStammdaten.ortsteilID) : null);
 
 		this.reportingContext = reportingContext;
-		this.factoryUnterrichte = new ProxyReportingLehrerFactoryUnterricht(this.reportingContext, this);
+		factoryUnterrichte = new ProxyReportingLehrerFactoryUnterricht(this.reportingContext, this);
 
 		lehrerStammdaten.leitungsfunktionen
 				.forEach(leitungsfunktion -> super.leitungsfunktionen.add(new ProxyReportingLehrerLeitungsfunktion(leitungsfunktion)));
@@ -127,7 +128,7 @@ public class ProxyReportingLehrer extends ReportingLehrer {
 	@Override
 	public List<ReportingKlassenunterricht> klassenunterrichtAlsFachlehrer() {
 		if (!istInitKlassenunterrichtAlsFachlehrer) {
-			super.klassenunterrichtAlsFachlehrer = this.factoryUnterrichte.klassenunterrichtAlsFachlehrer();
+			super.klassenunterrichtAlsFachlehrer = factoryUnterrichte.klassenunterrichtAlsFachlehrer();
 			istInitKlassenunterrichtAlsFachlehrer = true;
 		}
 		return super.klassenunterrichtAlsFachlehrer;

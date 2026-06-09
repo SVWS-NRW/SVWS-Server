@@ -180,7 +180,7 @@ public class AggregationLehrerStatistikExport {
 			fehlermeldungen.add(e.getLocalizedMessage() + " Das Geburtsdatum des Lehrers mit folgender ID konnte nicht geparst werden " + lehrer.id);
 		}
 		lehrerExport.geschlecht = lehrer.geschlecht;
-		lehrerExport.staatsangehoerigkeit = lehrer.staatsangehoerigkeitID;
+		lehrerExport.staatsangehoerigkeit = lehrer.idStaatsangehoerigkeit;
 		lehrerExport.rechtsverhaeltnis = LehrerRechtsverhaeltnis.data().getNameByIDOrNull(lehrer.idRechtsverhaeltnis);
 		lehrerExport.beschaeftigungsart = LehrerBeschaeftigungsart.data().getNameByIDOrNull(lehrer.idBeschaeftigungsart);
 		lehrerExport.einsatzstatus = LehrerEinsatzstatus.data().getNameByIDOrNull(lehrer.idEinsatzstatus);

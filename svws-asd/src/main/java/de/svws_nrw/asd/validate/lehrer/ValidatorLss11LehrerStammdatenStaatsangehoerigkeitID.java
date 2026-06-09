@@ -3,7 +3,10 @@ package de.svws_nrw.asd.validate.lehrer;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import de.svws_nrw.asd.data.schule.NationalitaetenKatalogEintrag;
 import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
+import de.svws_nrw.asd.types.schule.Nationalitaeten;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 import de.svws_nrw.transpiler.annotations.AllowNull;
@@ -16,7 +19,7 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID extends Validator {
 
 	/** Die Lehrer-Stammdaten */
-	private final @NotNull Supplier<String> _staatsangehoerigkeitID;
+	private final @NotNull Supplier<@NotNull String> _staatsangehoerigkeitSchluessel;
 	private final @NotNull Supplier<@AllowNull LehrerRechtsverhaeltnis> _rechtsverhaeltnis;
 	private static final @NotNull Set<LehrerRechtsverhaeltnis> setRechtsverhaeltnis =
 			Set.of(LehrerRechtsverhaeltnis.L, LehrerRechtsverhaeltnis.N, LehrerRechtsverhaeltnis.P, LehrerRechtsverhaeltnis.W);
@@ -33,29 +36,41 @@ public final class ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID extends 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param staatsangehoerigkeitID   die StaatsangehoerigkeitID des Lehrers
+	 * @param staatsangehoerigkeitSchluessel   der staatsangehoerigkeitSchluessel des Lehrers
 	 * @param rechtsverhaeltnis        das Rechtsverhältnis des Lehrers
 	 * @param kontext                  der Kontext des Validators
 	 */
-	public ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID(final @NotNull Supplier<String> staatsangehoerigkeitID,
+	public ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID(final @NotNull Supplier<@NotNull String> staatsangehoerigkeitSchluessel,
 			final @NotNull Supplier<@AllowNull LehrerRechtsverhaeltnis> rechtsverhaeltnis,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		_staatsangehoerigkeitID = staatsangehoerigkeitID;
-		_rechtsverhaeltnis = rechtsverhaeltnis;
+		this._staatsangehoerigkeitSchluessel = staatsangehoerigkeitSchluessel;
+		this._rechtsverhaeltnis = rechtsverhaeltnis;
 	}
 
 	@Override
 	protected boolean pruefe() {
 
-		if (_rechtsverhaeltnis.get() == null) {
+		if (this._rechtsverhaeltnis.get() == null) {
 			return true;
 		}
 
-		if (setRechtsverhaeltnis.contains(_rechtsverhaeltnis.get())
-				&& !setStaatsangehoerigkeit.contains(_staatsangehoerigkeitID.get())) {
-			addFehler(0, FEHLERTEXT);
-			return false;
+		final int schuljahr = kontext().getSchuljahr();
+		final Schulform schulform = kontext().getSchulform();
+
+		final Nationalitaeten nationalitaet =
+				Nationalitaeten.data().getBySchuljahrAndSchulformAndSchluessel(schuljahr, schulform, this._staatsangehoerigkeitSchluessel.get());
+
+		if ((nationalitaet != null)) {
+			final NationalitaetenKatalogEintrag katalogEintrag = nationalitaet.daten(schuljahr);
+
+			if (setRechtsverhaeltnis.contains(this._rechtsverhaeltnis.get()) && (katalogEintrag != null)
+					&& !setStaatsangehoerigkeit
+							.contains(
+									katalogEintrag.iso3)) {
+				addFehler(0, FEHLERTEXT);
+				return false;
+			}
 		}
 		return true;
 	}
