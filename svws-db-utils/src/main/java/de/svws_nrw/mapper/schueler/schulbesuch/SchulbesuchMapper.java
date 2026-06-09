@@ -43,6 +43,7 @@ public interface SchulbesuchMapper {
 	@Mapping(source = "entity.LSJahrgang",                		target = "kuerzelEntlassjahrgangVorherigeSchule")
 	@Mapping(source = "entity.LSVersetzung",              		target = "idHerkunftsartVersetzungVorherigeSchule")
 	@Mapping(source = "entity.LSBemerkung",               		target = "bemerkungVorherigeSchule")
+	@Mapping(source = "entity.LSSGL_SIM",               		target = "schluesselSchulgliederungVorherigeSchule")
 	@Mapping(source = "entity.Entlassdatum",              		target = "entlassdatumDieseSchule")
 	@Mapping(source = "entity.Entlassjahrgang_ID",        		target = "idEntlassjahrgangDieseSchule")
 	@Mapping(source = "entity.Schulwechseldatum",         		target = "wechseldatumAufnehmendeSchule")
@@ -209,6 +210,8 @@ public interface SchulbesuchMapper {
 	 */
 	@Mapping(source = "berufsabschlussVorhanden",			 		target = "HatBerufsausbildung")
 	@Mapping(source = "entlassdatumVorherigeSchule", 				target = "LSSchulEntlassDatum")
+	@Mapping(source = "schluesselSchulgliederungVorherigeSchule", 	target = "LSSGL_SIM")
+	@Mapping(source = "schluesselSchulgliederungVorherigeSchule", 	target = "LSSGL")
 	@Mapping(source = "kuerzelEntlassjahrgangVorherigeSchule", 		target = "LSJahrgang")
 	@Mapping(source = "idHerkunftsartVersetzungVorherigeSchule", 	target = "LSVersetzung")
 	@Mapping(source = "bemerkungVorherigeSchule", 					target = "LSBemerkung")

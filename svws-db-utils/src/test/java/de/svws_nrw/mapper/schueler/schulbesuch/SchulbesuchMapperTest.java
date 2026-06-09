@@ -102,6 +102,7 @@ class SchulbesuchMapperTest {
 			entity.LSJahrgang = "10";
 			entity.LSVersetzung = "V";
 			entity.LSBemerkung = "Guter Schüler";
+			entity.LSSGL_SIM = "A12";
 
 			final var result = mapper.toApi(entity, emptyContext());
 
@@ -110,6 +111,7 @@ class SchulbesuchMapperTest {
 			assertThat(result.kuerzelEntlassjahrgangVorherigeSchule).isEqualTo("10");
 			assertThat(result.idHerkunftsartVersetzungVorherigeSchule).isEqualTo("V");
 			assertThat(result.bemerkungVorherigeSchule).isEqualTo("Guter Schüler");
+			assertThat(result.schluesselSchulgliederungVorherigeSchule).isEqualTo("A12");
 		}
 
 		@Test
@@ -393,6 +395,7 @@ class SchulbesuchMapperTest {
 			request.verpflichtungSprachfoerderkurs = JsonNullable.of(true);
 			request.teilnahmeSprachfoerderkurs = JsonNullable.of(false);
 			request.schulformVorherigeSchule = JsonNullable.of("AS");
+			request.schluesselSchulgliederungVorherigeSchule = JsonNullable.of("A12");
 			final var entity = createEntity(1L);
 
 			mapper.patch(request, entity);
@@ -415,6 +418,8 @@ class SchulbesuchMapperTest {
 						assertThat(e.VerpflichtungSprachfoerderkurs).isTrue();
 						assertThat(e.TeilnahmeSprachfoerderkurs).isFalse();
 						assertThat(e.LSSchulform).isEqualTo("AS");
+						assertThat(e.LSSGL).isEqualTo("A12");
+						assertThat(e.LSSGL_SIM).isEqualTo("A12");
 					});
 		}
 

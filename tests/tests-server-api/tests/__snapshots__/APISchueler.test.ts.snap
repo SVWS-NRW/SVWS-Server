@@ -27928,6 +27928,7 @@ SchuelerSchulbesuchsdaten {
   "schluesselAbschlussartAllgemeinbildendVorherigeSchule": null,
   "schluesselAbschlussartBerufsbildendVorherigeSchule": null,
   "schluesselHoechsterSchulabschluss": null,
+  "schluesselSchulgliederungVorherigeSchule": null,
   "schulformVorherigeSchule": "G",
   "teilnahmeSprachfoerderkurs": false,
   "verpflichtungSprachfoerderkurs": false,

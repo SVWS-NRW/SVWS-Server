@@ -67,6 +67,10 @@ public class SchuelerSchulbesuchsdaten {
 	@Schema(description = "Der Schlüssel des Schulabschlusses (Berufsbildend) der zuvor besuchten Schule.", example = "2")
 	public String schluesselAbschlussartBerufsbildendVorherigeSchule;
 
+	/** Der Schlüssel der Schulgliederung (BK/SB) der zuvor besuchten Schule. */
+	@Schema(description = "Der Schlüssel der Schulgliederung (BK/SB) der zuvor besuchten Schule.", example = "A12")
+	public String schluesselSchulgliederungVorherigeSchule;
+
 	/** Das Entlassdatum von dieser Schule. */
 	@Schema(description = "Das Entlassdatum von dieser Schule.", example = "1902-03-11")
 	public String entlassdatumDieseSchule;

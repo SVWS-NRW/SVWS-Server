@@ -13,6 +13,7 @@ import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
 import de.svws_nrw.asd.types.schule.Kindergartenbesuch;
 import de.svws_nrw.asd.types.schule.SchulabschlussAllgemeinbildend;
 import de.svws_nrw.asd.types.schule.SchulabschlussBerufsbildend;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.data.TransactionSupport;
 import de.svws_nrw.data.kataloge.DataKatalogEntlassgruende;
 import de.svws_nrw.data.schule.DataSchulen;
@@ -124,7 +125,16 @@ public final class SchulbesuchService {
 		patchRequest.idUebergangsempfehlungGrundschule.ifPresent(id -> patchUebergangsempfehlung(entity, id));
 		patchRequest.idDauerKindergartenbesuch.ifPresent(id -> patchKindergartenbesuch(entity, id));
 		patchRequest.schluesselHoechsterSchulabschluss.ifPresent(schluessel -> patchHoechsterSchulabschluss(entity, schluessel));
+		patchRequest.schluesselSchulgliederungVorherigeSchule.ifPresent(this::validateSchulgliederung);
 		patchAbschlussartVorherigeSchule(entity, patchRequest);
+	}
+
+	private void validateSchulgliederung(final String schluessel) {
+		if (Schulgliederung.data().getWertBySchluessel(schluessel) == null) {
+			throw new ApiOperationException(
+					Status.BAD_REQUEST,
+					"Keine Schulgliederung mit dem Schlüssel %s gefunden.".formatted(schluessel));
+		}
 	}
 
 	private void patchAbschlussartVorherigeSchule(final DTOSchueler entity, final SchulbesuchPatchRequest patchRequest) {

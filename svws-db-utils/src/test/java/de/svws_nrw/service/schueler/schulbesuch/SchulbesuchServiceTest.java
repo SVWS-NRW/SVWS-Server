@@ -257,7 +257,7 @@ class SchulbesuchServiceTest {
 	// -------------------------------------------------------------------------
 
 	@Test
-	@DisplayName("patch - höchster Schulabschluss")
+	@DisplayName("patch - Entlassart")
 	void patchEntlassart() {
 		final var patchRequest = new SchulbesuchPatchRequest();
 		final var schluessel = SchulabschlussAllgemeinbildend.ABITUR.historie().getLast().schluessel;
@@ -272,7 +272,7 @@ class SchulbesuchServiceTest {
 	}
 
 	@Test
-	@DisplayName("patch - höchster Schulabschluss - null")
+	@DisplayName("patch - Entlassart - null")
 	void patchEntlassart_null() {
 		final var patchRequest = new SchulbesuchPatchRequest();
 		patchRequest.schluesselHoechsterSchulabschluss = JsonNullable.of(null);
@@ -286,7 +286,7 @@ class SchulbesuchServiceTest {
 	}
 
 	@Test
-	@DisplayName("patch - höchster Schulabschluss - wrong schluessel")
+	@DisplayName("patch - Entlassart - wrong schluessel")
 	void patchEntlassart_wrongSchluessel() {
 		final var patchRequest = new SchulbesuchPatchRequest();
 		patchRequest.schluesselHoechsterSchulabschluss = JsonNullable.of("--");
@@ -296,6 +296,24 @@ class SchulbesuchServiceTest {
 		assertThatException()
 				.isThrownBy(() -> schulbesuchService.patch(idSchueler, patchRequest))
 				.isInstanceOf(ApiOperationException.class)
+				.hasFieldOrPropertyWithValue("status", Status.BAD_REQUEST);
+	}
+
+	// -------------------------------------------------------------------------
+	// patch - Schulgliederung
+	// -------------------------------------------------------------------------
+
+	@Test
+	@DisplayName("patch - Schulgliederung - wrong schluessel")
+	void patchSchulgliederung_wrongSchluessel() {
+		final var patchRequest = new SchulbesuchPatchRequest();
+		patchRequest.schluesselSchulgliederungVorherigeSchule = JsonNullable.of("--");
+		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
+
+		assertThatException()
+				.isThrownBy(() -> schulbesuchService.patch(idSchueler, patchRequest))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Keine Schulgliederung mit dem Schlüssel -- gefunden.")
 				.hasFieldOrPropertyWithValue("status", Status.BAD_REQUEST);
 	}
 

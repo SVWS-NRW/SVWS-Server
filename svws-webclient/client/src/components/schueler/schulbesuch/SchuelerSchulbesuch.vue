@@ -93,6 +93,10 @@
 					:manager="vorherigerEntlassgrundManager"
 					v-model="model.idEntlassgrundVorherigeSchule.value"
 					:readonly />
+				<ui-select label="Schulgliederung" v-if="selectedSchuleIstBK"
+					:manager="schulgliederungManager"
+					v-model="model.schulgliederungVorherigeSchule.value"
+					:readonly />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 
@@ -243,7 +247,7 @@
 
 	import type { JahrgangsDaten, KatalogEntlassgrund, Kindergarten, List, SchulEintrag } from "@core";
 	import { ArrayList, BenutzerKompetenz, Einschulungsart, Jahrgaenge, Kindergartenbesuch, PrimarstufeSchuleingangsphaseBesuchsjahre,
-		SchulabschlussAllgemeinbildend, Schulform, Uebergangsempfehlung, SchulabschlussBerufsbildend, HerkunftSonstige } from "@core";
+		SchulabschlussAllgemeinbildend, Schulform, Uebergangsempfehlung, SchulabschlussBerufsbildend, HerkunftSonstige, Schulgliederung } from "@core";
 	import type { SchuelerSchulbesuchProps } from './SchuelerSchulbesuchProps';
 	import { CoreTypeSelectManager, SelectManager, useSchuleState, useServerState } from "@ui";
 	import { computed, ref, watch } from "vue";
@@ -261,6 +265,10 @@
 		(data) => props.patch(props.manager().daten.id, data)
 	);
 	const schuljahr = computed(() => props.manager().schuljahr);
+	const selectedSchuleIstBK = computed(() => {
+		return model.vorherigeSchulform.value !== null &&
+			[Schulform.BK, Schulform.SB].includes(model.vorherigeSchulform.value);
+	});
 	const schuleHatPrimarstufe = computed(
 		() => [Schulform.G, Schulform.FW, Schulform.WF, Schulform.GM, Schulform.KS, Schulform.S, Schulform.GE, Schulform.V].includes(schuleState.schulform));
 	const schuleIstBKoderWBK = computed(
@@ -451,6 +459,13 @@
 
 	const sekIErsteSchulformManager = new CoreTypeSelectManager({
 		clazz: Schulform.class,
+		schuljahr: schuljahr,
+		optionDisplayText: "text",
+		selectionDisplayText: "text",
+	});
+
+	const schulgliederungManager = new CoreTypeSelectManager({
+		clazz: Schulgliederung.class,
 		schuljahr: schuljahr,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
