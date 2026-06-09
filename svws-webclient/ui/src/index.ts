@@ -115,6 +115,7 @@ export { PendingStateManager } from "./ui/wrapper/PendingStateManager";
 export { StateManager } from "./ui/StateManager";
 export { EnmManager } from "./components/enm/EnmManager";
 export { EnmSperrManager } from "./components/enm/EnmSperrManager";
+export { EnmSpaltenManager } from "./components/enm/EnmSpaltenManager";
 export { EnmLerngruppenAuswahlListeManager } from "./components/enm/EnmLerngruppenAuswahlListeManager";
 export { EnmKlassenleitungAuswahlListeManager } from "./components/enm/EnmKlassenleitungAuswahlListeManager";
 export type { EnmLerngruppenAuswahlEintrag } from "./components/enm/EnmManager";

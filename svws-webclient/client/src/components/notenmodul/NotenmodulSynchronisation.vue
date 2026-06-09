@@ -61,7 +61,8 @@
 		</div>
 
 		<!-- Die Ausgabe des Logs -->
-		<div v-if="status !== null && manager().auswahl().id > 0" class="min-w-fit grow h-full overflow-hidden flex flex-col gap-4">
+		<div v-if="spinning" class="flex items-center h-12 gap-2"><svws-ui-spinner spinning /> Führe Aktion aus…</div>
+		<div v-else-if="status !== null && manager().auswahl().id > 0" class="min-w-fit grow h-full overflow-hidden flex flex-col gap-4">
 			<log-box :logs="status.log" :status="status.success" />
 		</div>
 	</div>
