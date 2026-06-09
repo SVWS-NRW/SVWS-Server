@@ -1,7 +1,7 @@
 import type { RouteParamsRawGeneric } from "vue-router";
 import type { List, JavaMap, ENMServerConnection, Abteilung } from "@core";
 import { ENMServerConfigElement, ENMConfigKlasse, ArrayList, UnsupportedOperationException, OpenApiError, DeveloperNotificationException, HashMap, SimpleOperationResponse, UserNotificationException, ENMConfigSpalte, ENMv2Abteilung } from "@core";
-import { WenomAuswahlListeManager, ViewType } from "@ui";
+import { WenomAuswahlListeManager, ViewType, EnmSperrManager } from "@ui";
 import { api } from "~/router/Api";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { routeNotenmodulKonfiguration } from "./RouteNotenmodulKonfiguration";
@@ -10,7 +10,6 @@ import { routeNotenmodulVerbindungGruppenprozesse } from "./RouteNotenmodulGrupp
 import { routeNotenmodul } from "./RouteNotenmodul";
 import { NotenmodulConfigManagerSperrungen, type NotenmodulConfigManagerSperrungenGruppierung } from "./NotenmodulConfigManagerSperrungen";
 import { NotenmodulConfigManagerSichtbareSpalten } from "./NotenmodulConfigManagerSichtbareSpalten";
-import { EnmSperrManager } from "../../../../../ui/src/components/enm/EnmSperrManager";
 import { abschnittState } from "~/states/AbschnittStateImpl";
 import { schuleState } from "~/states/SchuleStateImpl";
 
@@ -28,7 +27,7 @@ interface RouteStateNotenmodulAdministration extends RouteStateAuswahlInterface<
 export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAuswahlListeManager, RouteStateNotenmodulAdministration> {
 
 	public constructor() {
-		super(<RouteStateNotenmodulAdministration>{
+		super({
 			idSchuljahresabschnitt: -1,
 			manager: new WenomAuswahlListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
 			view: routeNotenmodulKonfiguration,
@@ -214,7 +213,7 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 			return;
 		}
 
-		// Bestimme die Lokale Notenmodul-Konfiguration und kopiere Einträge in die WeNoM-Server-Konfiguration
+		// Bestimme die lokale Notenmodul-Konfiguration und kopiere Einträge in die WeNoM-Server-Konfiguration
 		const config = await api.server.getNotenmodulLocalConfig(api.schema);
 		let configSperrungen = null;
 		let configSichtbarkeit = null;
@@ -456,7 +455,9 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 
 	wenomSynchronize = api.call(async (): Promise<SimpleOperationResponse> => {
 		try {
-			return await api.server.synchronizeENMDaten(api.schema, this.manager.auswahl().id);
+			const res = await api.server.synchronizeENMDaten(api.schema, this.manager.auswahl().id);
+			await routeNotenmodul.data.entferneDaten();
+			return res;
 		} catch (e) {
 			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
 				try {
@@ -473,7 +474,9 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 
 	wenomDownload = api.call(async (): Promise<SimpleOperationResponse> => {
 		try {
-			return await api.server.downloadENMDaten(api.schema, this.manager.auswahl().id);
+			const res = await api.server.downloadENMDaten(api.schema, this.manager.auswahl().id);
+			await routeNotenmodul.data.entferneDaten();
+			return res;
 		} catch (e) {
 			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
 				try {

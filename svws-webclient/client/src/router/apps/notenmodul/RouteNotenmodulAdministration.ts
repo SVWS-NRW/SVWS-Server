@@ -1,13 +1,10 @@
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { WenomAuswahlListeManager } from "@ui";
-
 import { RouteNotenmodulMenuGroup } from "./RouteNotenmodulMenuGroup";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import type { RouteApp } from "../RouteApp";
 import { RouteDataNotenmodulAdministration } from "./RouteDataNotenmodulAdministration";
 import { routeNotenmodulKonfiguration } from "./RouteNotenmodulKonfiguration";
-import type { NotenmodulAdministrationAppProps } from "~/components/notenmodul/NotenmodulAdministrationAppProps";
-import type { NotenmodulAdministrationAuswahlProps } from "~/components/notenmodul/NotenmodulAdministrationAuswahlProps";
 import { routeNotenmodulSynchronisation } from "./RouteNotenmodulSynchronisation";
 import { routeNotenmodulVerbindungNeu } from "./RouteNotenmodulVerbindungNeu";
 import { routeNotenmodulVerbindungGruppenprozesse } from "./RouteNotenmodulGruppenprozesse";
@@ -24,12 +21,9 @@ export class RouteNotenmodulAdministration extends RouteAuswahlNode<WenomAuswahl
 			BenutzerKompetenz.NOTENMODUL_ADMINISTRATION,
 		], "notenmodul.administration", String.raw`notenmodul/administration/:id(-?\d+)?`, NotenmodulAdministrationApp, NotenmodulAdministrationAuswahl, new RouteDataNotenmodulAdministration());
 		super.mode = ServerMode.STABLE;
-		super.getAuswahlListProps = (props) => (<NotenmodulAdministrationAuswahlProps>{
+		super.getAuswahlListProps = (props) => ({
 			...props,
 			manager: () => routeNotenmodulAdministration.data.manager,
-		});
-		super.getAuswahlProps = props => (<NotenmodulAdministrationAppProps>{
-			...props,
 		});
 		super.text = "Serververbindungen";
 		super.children = [

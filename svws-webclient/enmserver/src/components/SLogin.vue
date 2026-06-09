@@ -63,7 +63,7 @@
 						</template>
 						<div>
 							<p class="font-bold">Geben Sie den Code ein:</p>
-							<svws-ui-text-input v-model="totpToken" placeholder="Code" :min-len="6" :max-len="6"
+							<svws-ui-text-input v-model="totpToken" placeholder="Code" :min-len="6" :max-len="6" ref="totpTokenInput"
 								@keyup.enter="doVerifyTotp" @methods="handleInputMethodsTotpToken" />
 							<div v-if="errorMessage" class="text-ui-danger font-medium"> {{ errorMessage }} </div>
 						</div>
@@ -83,7 +83,7 @@
 
 <script setup lang="ts">
 
-	import { computed, nextTick, onMounted, ref, watch } from "vue";
+	import { computed, nextTick, onMounted, ref, watch, watchEffect } from "vue";
 	import type { LoginProps } from "./SLoginProps";
 	import { JsonCoreTypeReaderStatic } from "../../../core/src/asd/utils/JsonCoreTypeReaderStatic";
 	import SvwsUiTextInput from "@ui/ui/controls/SvwsUiTextInput.vue";
@@ -151,13 +151,12 @@
 		}
 	});
 
-	watch(() => auth.pending2FA, async (active) => {
-		if (active) {
-			await nextTick();
-			totpTokenInput.value?.focus();
+	watchEffect(() => {
+		const input = totpTokenInput.value;
+		if ((input !== undefined) && (typeof input.focus === 'function')) {
+			input.focus();
 		}
 	});
-
 
 	onMounted(async () => {
 		await initCoreTypes();

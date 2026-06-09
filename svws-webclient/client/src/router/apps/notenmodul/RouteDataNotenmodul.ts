@@ -4,8 +4,7 @@ import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeNotenmodulLeistungen } from "./RouteNotenmodulLeistungen";
 import type { EnmLerngruppenAuswahlEintrag } from "@ui";
-import { EnmManager, EnmSperrManager } from "@ui";
-import { EnmSpaltenManager } from "../../../../../ui/src/components/enm/EnmSpaltenManager";
+import { EnmManager, EnmSperrManager, EnmSpaltenManager } from "@ui";
 
 
 interface RouteStateNotenmodul extends RouteStateInterface {
@@ -32,7 +31,7 @@ interface RouteStateNotenmodul extends RouteStateInterface {
 export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 
 	public constructor() {
-		super(<RouteStateNotenmodul>{
+		super({
 			daten: null,
 			manager: null,
 			view: routeNotenmodulLeistungen,
@@ -44,7 +43,6 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	}
 
 	public async ladeDaten() {
-		// TODO dies verhindert anscheinend das korrekte Nachladen beim Entern der Route, obwohl bei leave ein Entfernen der Daten initiiert wird!
 		if (this._state.value.daten !== null) {
 			return;
 		}
