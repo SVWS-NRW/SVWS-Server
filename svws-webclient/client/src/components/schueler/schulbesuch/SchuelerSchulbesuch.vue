@@ -78,8 +78,7 @@
 					v-model="model.abschlussartBerufsbildendVorherigeSchule.value"
 					:readonly />
 				<!-- TODO: durch Ui-Select ersetzen: siehe Issue#3495-->
-				<svws-ui-text-input placeholder="Versetzung" span="full"
-					:class="{ 'invisible pointer-events-none': currentMode === Schulauswahl.NONE }"
+				<svws-ui-text-input placeholder="Versetzung" span="full" v-if="currentMode !== Schulauswahl.NONE"
 					:model-value="model.idHerkunftsartVersetzungVorherigeSchule.value?.text ?? ''"
 					readonly statistics />
 				<ui-select label="Entlassjahrgang"
