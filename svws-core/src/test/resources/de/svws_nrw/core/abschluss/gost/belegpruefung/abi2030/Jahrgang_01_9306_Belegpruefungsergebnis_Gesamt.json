@@ -1,0 +1,13 @@
+{
+  "erfolgreich" : true,
+  "fehlercodes" : [ {
+    "code" : "NW_FS_13_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Da von EF.1 bis Q2.2 weniger als zwei Fremdsprachen schriftlich belegt wurden, liegt ausschließlich ein naturwissenschaftlich-technischer Schwerpunkt vor."
+  }, {
+    "code" : "ANZ_24_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "In der Qualifikationsphase gewählte Vertiefungskurse zählen zu den 40 zu belegenden Kursen, können aber nicht in die Gesamtqualifikation eingebracht werden."
+  } ],
+  "log" : [ ]
+}

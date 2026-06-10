@@ -1,0 +1,27 @@
+{
+  "abiturjahr" : 2030,
+  "jahrgang" : "10",
+  "halbjahr" : 2,
+  "bezeichnung" : "Abi 2030 (10)",
+  "istAbgeschlossen" : false,
+  "textBeratungsbogen" : null,
+  "textMailversand" : null,
+  "hatZusatzkursGE" : true,
+  "beginnZusatzkursGE" : "Q2.1",
+  "hatZusatzkursSW" : true,
+  "beginnZusatzkursSW" : "Q2.1",
+  "anzahlKursblockungen" : [ 0, 0, 0, 0, 0, 0 ],
+  "istBlockungFestgelegt" : [ false, false, false, false, false, false ],
+  "existierenNotenInLeistungsdaten" : [ false, false, false, false, false, false ],
+  "beratungslehrer" : [ {
+    "id" : 59,
+    "kuerzel" : "MOHN",
+    "nachname" : "Mohnke",
+    "vorname" : "Annett"
+  }, {
+    "id" : 77,
+    "kuerzel" : "SPLI",
+    "nachname" : "Spliedt",
+    "vorname" : "Thomas"
+  } ]
+}

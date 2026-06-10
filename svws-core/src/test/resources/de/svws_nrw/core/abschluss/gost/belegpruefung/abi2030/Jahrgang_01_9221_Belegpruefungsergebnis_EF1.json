@@ -1,0 +1,9 @@
+{
+  "erfolgreich" : true,
+  "fehlercodes" : [ {
+    "code" : "L_10_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Um das Latinum zu erlangen muss Latein in EF.1 schriftlich fortgeführt werden."
+  } ],
+  "log" : [ ]
+}

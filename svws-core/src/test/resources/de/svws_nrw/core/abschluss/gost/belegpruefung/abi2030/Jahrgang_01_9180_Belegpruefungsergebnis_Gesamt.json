@@ -1,0 +1,21 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "NW_FS_13_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Da von EF.1 bis Q2.2 weniger als zwei Fremdsprachen schriftlich belegt wurden, liegt ausschließlich ein naturwissenschaftlich-technischer Schwerpunkt vor."
+  }, {
+    "code" : "ABI_27",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Ein Projektkurs kann nur als 5. Abiturfach gewählt werden, wenn sein Referenzfach in der Q1 schriftlich belegt wurde."
+  }, {
+    "code" : "ABI_28",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Ein Projektkurs kann nur als 5. Abiturfach gewählt werden, wenn sein Referenzfach nicht bereits als Abiturfach gewählt wurde."
+  }, {
+    "code" : "ANZ_24_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "In der Qualifikationsphase gewählte Vertiefungskurse zählen zu den 40 zu belegenden Kursen, können aber nicht in die Gesamtqualifikation eingebracht werden."
+  } ],
+  "log" : [ ]
+}

@@ -1,0 +1,17 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "L_10_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Um das Latinum zu erlangen muss Latein in EF.1 und EF.2 belegt werden."
+  }, {
+    "code" : "PF_21",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Es muss genau ein Projektkurs gewählt werden."
+  }, {
+    "code" : "LK1_13",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Es sind insgesamt fünf Abiturfächer zu belegen."
+  } ],
+  "log" : [ ]
+}

@@ -36,6 +36,7 @@ import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.gost.DBUtilsGostLaufbahn;
 import de.svws_nrw.data.gost.DataGostJahrgangFachkombinationen;
 import de.svws_nrw.data.gost.DataGostJahrgangsdaten;
+import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBEntityManager;
@@ -125,6 +126,7 @@ public class GenerateTestdatenLaufbahn {
 			final DBConfig dbConfig = svwsconfig.getDBConfig(dbSchema);
 			final Benutzer user = Benutzer.create(dbConfig);
 			try (DBEntityManager conn = user.getEntityManager()) {
+				user.schuleSetStammdaten(DataSchuleStammdaten.getStammdaten(conn));
 
 				// Lese die ID für den ersten generierten Jahrgang ein
 				int jahrgangID;
@@ -148,7 +150,7 @@ public class GenerateTestdatenLaufbahn {
 					throw new DeveloperNotificationException("Datenbank-Schema enthält keine Daten für die Gymnasiale Oberstufe (Unzulässige Schulform)");
 				}
 
-				final String outPath = "../svws-core/src/test/resources/de/svws_nrw/abschluesse/gost/test";
+				final String outPath = "../svws-core/src/test/resources/de/svws_nrw/core/abschluss/gost/belegpruefung/abi2030";
 				// Files.createDirectories(Paths.get(outPath));
 
 				final ObjectMapper mapper = new ObjectMapper()
@@ -157,6 +159,9 @@ public class GenerateTestdatenLaufbahn {
 				// Lese die Fächerdaten aus der Datenbank und generiere die Testdateien
 				final List<DTOGostJahrgangsdaten> jahrgaenge = conn.queryAll(DTOGostJahrgangsdaten.class);
 				for (final DTOGostJahrgangsdaten jahrgang : jahrgaenge) {
+					if (jahrgang.Abi_Jahrgang < 0) {
+						continue;
+					}
 					try {
 						final @NotNull GostJahrgangsdaten gostJahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, jahrgang.Abi_Jahrgang);
 						final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(schuljahresabschnitt.Jahr, conn, jahrgang.Abi_Jahrgang);
@@ -195,6 +200,9 @@ public class GenerateTestdatenLaufbahn {
 					final String strJahrgangID = mapAbiJahrgangToJahrgangID.get(abiturdaten.abiturjahr);
 					final GostJahrgangsdaten gostJahrgangsdaten = mapJahrgangIDToGostJahrgangsdaten.get(strJahrgangID);
 					final GostFaecherManager faecherManager = mapJahrgangIDToGostFaecher.get(strJahrgangID);
+					if (faecherManager == null) {
+						continue;
+					}
 					faecherManager.addFachkombinationenAll(mapJahrgangIDToGostFaecherkombinationen.get(strJahrgangID));
 					logger.logLn("Generiere Daten für " + strSchuelerID + " des Jahrgangs " + strJahrgangID);
 

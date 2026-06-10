@@ -1,0 +1,9 @@
+{
+  "erfolgreich" : true,
+  "fehlercodes" : [ {
+    "code" : "BIL_11_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Im bilingualen Bildungsgang sollten zwei bilinguale Sachfächer belegt werden."
+  } ],
+  "log" : [ ]
+}
