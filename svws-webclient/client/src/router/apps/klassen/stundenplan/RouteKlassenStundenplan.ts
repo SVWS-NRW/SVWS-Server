@@ -1,5 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-import type { KlassenStundenplanProps } from "~/components/klassen/stundenplan/SKlassenStundenplanProps";
+import type { KlassenStundenplanProps } from "~/components/klassen/stundenplan/KlassenStundenplanProps";
 import { BenutzerKompetenz, Schulform, ServerMode, DeveloperNotificationException } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
@@ -8,12 +8,13 @@ import { RouteDataKlassenStundenplan } from "~/router/apps/klassen/stundenplan/R
 import { ConfigElement } from "../../../../../../ui/src/utils/Config";
 import { api } from "~/router/Api";
 
-const SKlassenStundenplan = () => import("~/components/klassen/stundenplan/SKlassenStundenplan.vue");
+const KlassenStundenplan = () => import("~/components/klassen/stundenplan/KlassenStundenplan.vue");
 
 export class RouteKlassenStundenplan extends RouteNode<RouteDataKlassenStundenplan, RouteKlassen> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN], "klassen.stundenplan", String.raw`stundenplan/:idStundenplan(\d+)?/:wochentyp(\d+)?/:kw(\d+\.\d+)?`, SKlassenStundenplan, new RouteDataKlassenStundenplan());
+		super(Schulform.values(), [BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN], "klassen.stundenplan",
+			String.raw`stundenplan/:idStundenplan(\d+)?/:wochentyp(\d+)?/:kw(\d+\.\d+)?`, KlassenStundenplan, new RouteDataKlassenStundenplan());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";

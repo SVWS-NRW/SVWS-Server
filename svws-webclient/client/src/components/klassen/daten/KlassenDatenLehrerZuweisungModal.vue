@@ -26,9 +26,9 @@
 
 	import { computed, ref } from "vue";
 	import type { List, LehrerListeEintrag } from "@core";
-	import type { SKlassenDatenLehrerZuweisungModalProps } from "~/components/klassen/daten/SKlassenDatenLehrerZuweisungModalProps";
+	import type { KlassenDatenLehrerZuweisungModalProps } from "~/components/klassen/daten/KlassenDatenLehrerZuweisungModalProps";
 
-	const props = defineProps<SKlassenDatenLehrerZuweisungModalProps>();
+	const props = defineProps<KlassenDatenLehrerZuweisungModalProps>();
 
 	const clickedRow = ref<LehrerListeEintrag | undefined>(undefined);
 

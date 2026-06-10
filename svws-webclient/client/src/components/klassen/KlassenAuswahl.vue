@@ -25,7 +25,7 @@
 				<template #actions v-if="hatKompetenzAendern">
 					<div class="flex gap-5">
 						<template v-if="manager().liste.size() > 0">
-							<s-klassen-auswahl-sortierung-modal v-slot="{ openModal }" :setze-default-sortierung>
+							<klassen-auswahl-sortierung-modal v-slot="{ openModal }" :setze-default-sortierung>
 								<svws-ui-tooltip position="bottom">
 									<svws-ui-button type="secondary" @click="openModal">
 										Standardsortierung anwenden&nbsp;...
@@ -34,7 +34,7 @@
 										Standardsortierung wiederherstellen
 									</template>
 								</svws-ui-tooltip>
-							</s-klassen-auswahl-sortierung-modal>
+							</klassen-auswahl-sortierung-modal>
 						</template>
 						<svws-ui-tooltip position="bottom">
 							<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="gotoHinzufuegenView(true)" :has-focus="rowsFiltered.length === 0">
@@ -54,7 +54,7 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { KlassenAuswahlProps } from "./SKlassenAuswahlProps";
+	import type { KlassenAuswahlProps } from "./KlassenAuswahlProps";
 	import type { JahrgangsDaten, KlassenDaten, LehrerListeEintrag, Schulgliederung } from "@core";
 	import { BenutzerKompetenz } from "@core";
 	import { useAbschnittState, useRegionSwitch, ViewType } from "@ui";

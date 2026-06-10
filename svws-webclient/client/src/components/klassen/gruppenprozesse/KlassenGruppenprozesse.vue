@@ -68,7 +68,7 @@
 <script setup lang="ts">
 
 	import { ref, computed } from "vue";
-	import type { KlassenGruppenprozesseProps } from "./SKlassenGruppenprozesseProps";
+	import type { KlassenGruppenprozesseProps } from "./KlassenGruppenprozesseProps";
 	import type { StundenplanListeEintrag, List } from "@core";
 	import { ArrayList, BenutzerKompetenz, DateUtils, ReportingReportvorlage } from "@core";
 	import { SelectManager, useServerState } from "@ui";

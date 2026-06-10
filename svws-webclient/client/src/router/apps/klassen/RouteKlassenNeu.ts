@@ -6,14 +6,14 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeKlassen, type RouteKlassen } from "~/router/apps/klassen/RouteKlassen";
 import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
-import type { KlassenNeuProps } from "~/components/klassen/SKlassenNeuProps";
+import type { KlassenNeuProps } from "~/components/klassen/KlassenNeuProps";
 
-const SKlassenNeu = () => import("~/components/klassen/SKlassenNeu.vue");
+const KlassenNeu = () => import("~/components/klassen/KlassenNeu.vue");
 
 export class RouteKlassenNeu extends RouteNode<any, RouteKlassen> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN], "klassen.neu", "neu", SKlassenNeu);
+		super(Schulform.values(), [BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN], "klassen.neu", "neu", KlassenNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);

@@ -46,7 +46,7 @@
 <script setup lang="ts">
 
 	import { ref, computed, onMounted, watch, shallowRef } from "vue";
-	import type { KlassenNeuProps } from "~/components/klassen/SKlassenNeuProps";
+	import type { KlassenNeuProps } from "~/components/klassen/KlassenNeuProps";
 	import { KlassenDaten, AllgemeinbildendOrganisationsformen, Klassenart, Schulgliederung, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen, type JahrgangsDaten } from "@core";
 	import { KlassenDatenModelProxy } from "./KlassenDatenModelProxy";
 	import { useSchuleState } from "@ui";

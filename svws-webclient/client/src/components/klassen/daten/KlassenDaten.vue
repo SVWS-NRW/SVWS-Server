@@ -80,9 +80,9 @@
 								</svws-ui-button>
 							</div>
 							<div style="display: flex; justify-content: flex-end">
-								<s-klassen-daten-lehrer-zuweisung-modal v-slot="{openModal}" :manager :add-klassenleitung>
+								<klassen-daten-lehrer-zuweisung-modal v-slot="{openModal}" :manager :add-klassenleitung>
 									<svws-ui-button type="icon" @click="openModal"> <span class="icon i-ri-add-line" /> </svws-ui-button>
-								</s-klassen-daten-lehrer-zuweisung-modal>
+								</klassen-daten-lehrer-zuweisung-modal>
 							</div>
 						</div>
 					</template>
@@ -113,7 +113,7 @@
 
 	import { computed, ref, watch } from "vue";
 	import { useSchuleState, type DataTableColumn } from "@ui";
-	import type { KlassenDatenProps } from "./SKlassenDatenProps";
+	import type { KlassenDatenProps } from "./KlassenDatenProps";
 	import type { LehrerListeEintrag, KlassenDaten, Klassenart, Schulgliederung, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen, JahrgangsDaten } from "@core";
 	import { SchuelerStatus, Schulform, BenutzerKompetenz, Jahrgaenge } from "@core";
 	import { KlassenDatenModelProxy } from "../KlassenDatenModelProxy";

@@ -5,14 +5,14 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { routeKlassen, type RouteKlassen } from "~/router/apps/klassen/RouteKlassen";
-import type { KlassenDatenProps } from "~/components/klassen/daten/SKlassenDatenProps";
+import type { KlassenDatenProps } from "~/components/klassen/daten/KlassenDatenProps";
 
-const SKlassenDaten = () => import("~/components/klassen/daten/SKlassenDaten.vue");
+const KlassenDaten = () => import("~/components/klassen/daten/KlassenDaten.vue");
 
 export class RouteKlassenDaten extends RouteNode<any, RouteKlassen> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN], "klassen.daten", "daten", SKlassenDaten);
+		super(Schulform.values(), [BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN], "klassen.daten", "daten", KlassenDaten);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Klasse";

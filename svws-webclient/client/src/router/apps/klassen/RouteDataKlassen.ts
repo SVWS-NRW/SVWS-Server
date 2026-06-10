@@ -77,8 +77,11 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 		const listSchueler = await api.server.getSchuelerFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const listLehrer = await api.server.getLehrerFuerAbschnitt(api.schema, idSchuljahresabschnitt);
+
 		const manager = new KlassenListeManager(idSchuljahresabschnitt, schuleState.abschnitt.id, abschnittState.alle,
 			schuleState.schulform, listKlassen, listSchueler, listJahrgaenge, listLehrer);
+
+
 		if (this._state.value.manager === undefined) {
 			manager.setFilterAuswahlPermitted(true);
 		} else {

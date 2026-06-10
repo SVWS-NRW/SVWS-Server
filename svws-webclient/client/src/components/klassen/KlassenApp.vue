@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 
-	import type { KlassenAppProps } from "./SKlassenAppProps";
+	import type { KlassenAppProps } from "./KlassenAppProps";
 	import { computed } from "vue";
 	import { useRegionSwitch, ViewType } from "@ui";
 
