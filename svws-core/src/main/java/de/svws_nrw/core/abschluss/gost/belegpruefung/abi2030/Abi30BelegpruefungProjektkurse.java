@@ -91,7 +91,7 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 		pruefeBelegungEF();
 		pruefeBelegung();
 		if (projektkurs != null) {
-			pruefeBelegungLeitfaecher();
+			pruefeBelegungReferenzfaecher();
 		}
 
 		// ist der Kurs eine besondere Lernleistung?
@@ -159,9 +159,9 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 
 
 	/**
-	 * Prüft die Belegung der Leitfächer
+	 * Prüft die Belegung der Referenzfächer
 	 */
-	private void pruefeBelegungLeitfaecher() {
+	private void pruefeBelegungReferenzfaecher() {
 		if (projektkurs == null) {
 			return;
 		}
@@ -170,9 +170,9 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 			return;
 		}
 		// Prüfe nun, ob genau ein Leitfach/Referenzfach belegt wurde
-		final AbiturFachbelegung leitfach1 = manager.getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
-		final AbiturFachbelegung leitfach2 = manager.getFachbelegungByKuerzel(fach.projektKursLeitfach2Kuerzel);
-		if ((leitfach1 == null) && (leitfach2 == null)) {
+		final AbiturFachbelegung referenzfach1 = manager.getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
+		final AbiturFachbelegung referenzfach2 = manager.getFachbelegungByKuerzel(fach.projektKursLeitfach2Kuerzel);
+		if ((referenzfach1 == null) && (referenzfach2 == null)) {
 			addFehler(GostBelegungsfehler.GOST30_PF_22);
 			return;
 		}
@@ -180,9 +180,9 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 		// Prüfe, ob die Belegung des ersten Leitfaches als Referenzfach geeignet ist
 		boolean hatReferenzfach1Belegung = false;
 		boolean hatReferenzfach1BelegungSchriftlich = false;
-		if (leitfach1 != null) {
+		if (referenzfach1 != null) {
 			// Prüfe, ob die Fachdefinition des Leitfaches zulässig ist (eigentlich keine individuelle Belegprüfung)
-			final GostFach lf = manager.getFach(leitfach1);
+			final GostFach lf = manager.getFach(referenzfach1);
 			if (lf == null) {
 				addFehler(GostBelegungsfehler.GOST30_PF_25);
 				return;
@@ -193,16 +193,16 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 			}
 
 			// Prüfe die Belegung des Referenzfaches in EF und Q1 und die Schriftlichkeit in der Q1
-			hatReferenzfach1Belegung = manager.pruefeBelegung(leitfach1, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12);
-			hatReferenzfach1BelegungSchriftlich = manager.pruefeBelegungMitSchriftlichkeit(leitfach1, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12);
+			hatReferenzfach1Belegung = manager.pruefeBelegung(referenzfach1, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12);
+			hatReferenzfach1BelegungSchriftlich = manager.pruefeBelegungMitSchriftlichkeit(referenzfach1, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12);
 		}
 
 		// Prüfe, ob die Belegung des zweiten Leitfaches als Referenzfach geeignet ist
 		boolean hatReferenzfach2Belegung = false;
 		boolean hatReferenzfach2BelegungSchriftlich = false;
-		if (leitfach2 != null) {
+		if (referenzfach2 != null) {
 			// Prüfe, ob die Fachdefinition des Leitfaches zulässig ist (eigentlich keine individuelle Belegprüfung)
-			final GostFach lf = manager.getFach(leitfach2);
+			final GostFach lf = manager.getFach(referenzfach2);
 			if (lf == null) {
 				addFehler(GostBelegungsfehler.GOST30_PF_25);
 				return;
@@ -213,8 +213,8 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 			}
 
 			// Prüfe die Belegung des Referenzfaches in EF und Q1 und die Schriftlichkeit in der Q1
-			hatReferenzfach2Belegung = manager.pruefeBelegung(leitfach2, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12);
-			hatReferenzfach2BelegungSchriftlich = manager.pruefeBelegungMitSchriftlichkeit(leitfach2, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12);
+			hatReferenzfach2Belegung = manager.pruefeBelegung(referenzfach2, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12);
+			hatReferenzfach2BelegungSchriftlich = manager.pruefeBelegungMitSchriftlichkeit(referenzfach2, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12);
 		}
 
 		// Prüfe, ob einer der beiden Referenzfächer belegt wurde

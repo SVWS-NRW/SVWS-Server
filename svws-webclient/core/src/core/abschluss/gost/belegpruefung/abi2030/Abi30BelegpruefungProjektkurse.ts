@@ -67,7 +67,7 @@ export class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 		this.pruefeBelegungEF();
 		this.pruefeBelegung();
 		if (this.projektkurs !== null) {
-			this.pruefeBelegungLeitfaecher();
+			this.pruefeBelegungReferenzfaecher();
 		}
 		if (this.manager.istProjektKursBesondereLernleistung()) {
 			this.addFehler((this.projektkurs !== null) ? GostBelegungsfehler.GOST30_PF_16_INFO : GostBelegungsfehler.GOST30_PF_15);
@@ -121,9 +121,9 @@ export class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 	}
 
 	/**
-	 * Prüft die Belegung der Leitfächer
+	 * Prüft die Belegung der Referenzfächer
 	 */
-	private pruefeBelegungLeitfaecher(): void {
+	private pruefeBelegungReferenzfaecher(): void {
 		if (this.projektkurs === null) {
 			return;
 		}
@@ -131,16 +131,16 @@ export class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 		if (fach === null) {
 			return;
 		}
-		const leitfach1: AbiturFachbelegung | null = this.manager.getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
-		const leitfach2: AbiturFachbelegung | null = this.manager.getFachbelegungByKuerzel(fach.projektKursLeitfach2Kuerzel);
-		if ((leitfach1 === null) && (leitfach2 === null)) {
+		const referenzfach1: AbiturFachbelegung | null = this.manager.getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
+		const referenzfach2: AbiturFachbelegung | null = this.manager.getFachbelegungByKuerzel(fach.projektKursLeitfach2Kuerzel);
+		if ((referenzfach1 === null) && (referenzfach2 === null)) {
 			this.addFehler(GostBelegungsfehler.GOST30_PF_22);
 			return;
 		}
 		let hatReferenzfach1Belegung: boolean = false;
 		let hatReferenzfach1BelegungSchriftlich: boolean = false;
-		if (leitfach1 !== null) {
-			const lf: GostFach | null = this.manager.getFach(leitfach1);
+		if (referenzfach1 !== null) {
+			const lf: GostFach | null = this.manager.getFach(referenzfach1);
 			if (lf === null) {
 				this.addFehler(GostBelegungsfehler.GOST30_PF_25);
 				return;
@@ -149,13 +149,13 @@ export class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 			if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf as unknown === Fach.PX as unknown) || (zf as unknown === Fach.VX as unknown))) {
 				this.addFehler(GostBelegungsfehler.GOST30_PF_19);
 			}
-			hatReferenzfach1Belegung = this.manager.pruefeBelegung(leitfach1, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12);
-			hatReferenzfach1BelegungSchriftlich = this.manager.pruefeBelegungMitSchriftlichkeit(leitfach1, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12);
+			hatReferenzfach1Belegung = this.manager.pruefeBelegung(referenzfach1, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12);
+			hatReferenzfach1BelegungSchriftlich = this.manager.pruefeBelegungMitSchriftlichkeit(referenzfach1, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12);
 		}
 		let hatReferenzfach2Belegung: boolean = false;
 		let hatReferenzfach2BelegungSchriftlich: boolean = false;
-		if (leitfach2 !== null) {
-			const lf: GostFach | null = this.manager.getFach(leitfach2);
+		if (referenzfach2 !== null) {
+			const lf: GostFach | null = this.manager.getFach(referenzfach2);
 			if (lf === null) {
 				this.addFehler(GostBelegungsfehler.GOST30_PF_25);
 				return;
@@ -164,8 +164,8 @@ export class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 			if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf as unknown === Fach.PX as unknown) || (zf as unknown === Fach.VX as unknown))) {
 				this.addFehler(GostBelegungsfehler.GOST30_PF_19);
 			}
-			hatReferenzfach2Belegung = this.manager.pruefeBelegung(leitfach2, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12);
-			hatReferenzfach2BelegungSchriftlich = this.manager.pruefeBelegungMitSchriftlichkeit(leitfach2, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12);
+			hatReferenzfach2Belegung = this.manager.pruefeBelegung(referenzfach2, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12);
+			hatReferenzfach2BelegungSchriftlich = this.manager.pruefeBelegungMitSchriftlichkeit(referenzfach2, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12);
 		}
 		if (!hatReferenzfach1Belegung && !hatReferenzfach2Belegung) {
 			this.addFehler(GostBelegungsfehler.GOST30_PF_23);

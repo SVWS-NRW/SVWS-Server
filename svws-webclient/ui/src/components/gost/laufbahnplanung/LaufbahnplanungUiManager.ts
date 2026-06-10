@@ -641,6 +641,22 @@ export class LaufbahnplanungUiManager {
 		return "rgb(" + farbe.red + "," + farbe.green + "," + farbe.blue + ")";
 	}
 
+
+	/**
+	 * Gibt zurück, ob es sich bei dem Fach um ein bilinguales Fach handelt oder nicht.
+	 *
+	 * @param fach   das Fach, welches auf Bilingualität geprüft wird
+	 *
+	 * @returns true, wenn es bilingual unterrichtet wird, und ansonsten false
+	 */
+	public istBilingual(fach: GostFach): boolean {
+		if (GostFachbereich.FREMDSPRACHE.hat(fach) || GostFachbereich.DEUTSCH.hat(fach)) {
+			return false;
+		}
+		return (fach.biliSprache !== null) && (fach.biliSprache !== "D");
+	}
+
+
 	/**
 	 * Eine Map welche den Fächern in den Halbjahren die vergebenen Noten zuordnet.
 	 */
@@ -1708,25 +1724,21 @@ export class LaufbahnplanungUiManager {
 					wahl.halbjahre[GostHalbjahr.Q21.id] = null;
 					wahl.halbjahre[GostHalbjahr.Q22.id] = null;
 				}
-				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(fach) && (this.jahrgang().hatZusatzkursSW)) {
+				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(fach) && (this.jahrgang().hatZusatzkursSW) && !this.istBilingual(fach)) {
 					const beginn: GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.jahrgang().beginnZusatzkursSW);
 					if (beginn !== null) {
 						if (beginn === GostHalbjahr.Q11) {
-							if (!this.stepperHatSchuelerFachwahl(wahl, GostHalbjahr.EF2) && !this.hatDoppelbelegung(fach, GostHalbjahr.EF2)) {
-								wahl.halbjahre[GostHalbjahr.Q11.id] = 'ZK';
-								wahl.halbjahre[GostHalbjahr.Q12.id] = 'ZK';
-							}
+							wahl.halbjahre[GostHalbjahr.Q11.id] = 'ZK';
+							wahl.halbjahre[GostHalbjahr.Q12.id] = 'ZK';
 						}
 					}
 				}
-				if (GostFachbereich.GESCHICHTE.hat(fach) && this.jahrgang().hatZusatzkursGE) {
+				if (GostFachbereich.GESCHICHTE.hat(fach) && this.jahrgang().hatZusatzkursGE && !this.istBilingual(fach)) {
 					const beginn: GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.jahrgang().beginnZusatzkursGE);
 					if (beginn !== null) {
 						if (beginn === GostHalbjahr.Q11) {
-							if (!this.stepperHatSchuelerFachwahl(wahl, GostHalbjahr.EF2) && !this.hatDoppelbelegung(fach, GostHalbjahr.EF2)) {
-								wahl.halbjahre[GostHalbjahr.Q11.id] = 'ZK';
-								wahl.halbjahre[GostHalbjahr.Q12.id] = 'ZK';
-							}
+							wahl.halbjahre[GostHalbjahr.Q11.id] = 'ZK';
+							wahl.halbjahre[GostHalbjahr.Q12.id] = 'ZK';
 						}
 					}
 					if ((beginn !== null) && (beginn === GostHalbjahr.Q11) && (wahl.halbjahre[GostHalbjahr.EF2.id] === null)) {
@@ -1806,46 +1818,29 @@ export class LaufbahnplanungUiManager {
 					wahl.halbjahre[GostHalbjahr.Q21.id] = "M";
 					wahl.halbjahre[GostHalbjahr.Q22.id] = null;
 				}
-				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(fach) && (this.jahrgang().hatZusatzkursSW)) {
+				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(fach) && (this.jahrgang().hatZusatzkursSW) && !this.istBilingual(fach)) {
 					const beginn: GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.jahrgang().beginnZusatzkursSW);
 					if (beginn !== null) {
 						if (beginn === GostHalbjahr.Q11) {
-							if (!this.stepperHatSchuelerFachwahl(wahl, GostHalbjahr.EF2) && !this.hatDoppelbelegung(fach, GostHalbjahr.EF2)) {
-								wahl.halbjahre[GostHalbjahr.Q11.id] = 'ZK';
-								wahl.halbjahre[GostHalbjahr.Q12.id] = 'ZK';
-							}
+							wahl.halbjahre[GostHalbjahr.Q11.id] = 'ZK';
+							wahl.halbjahre[GostHalbjahr.Q12.id] = 'ZK';
 						}
 						if (beginn === GostHalbjahr.Q12) {
-							if (!this.stepperHatSchuelerFachwahl(wahl, GostHalbjahr.Q11) && !this.hatDoppelbelegung(fach, GostHalbjahr.Q11)) {
-								wahl.halbjahre[GostHalbjahr.Q12.id] = 'ZK';
-								wahl.halbjahre[GostHalbjahr.Q21.id] = 'ZK';
-							}
+							wahl.halbjahre[GostHalbjahr.Q12.id] = 'ZK';
+							wahl.halbjahre[GostHalbjahr.Q21.id] = 'ZK';
 						}
 					}
 				}
-				if (GostFachbereich.GESCHICHTE.hat(fach) && this.jahrgang().hatZusatzkursGE) {
+				if (GostFachbereich.GESCHICHTE.hat(fach) && this.jahrgang().hatZusatzkursGE && !this.istBilingual(fach)) {
 					const beginn: GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.jahrgang().beginnZusatzkursGE);
 					if (beginn !== null) {
 						if (beginn === GostHalbjahr.Q11) {
-							if (!this.stepperHatSchuelerFachwahl(wahl, GostHalbjahr.EF2) && !this.hatDoppelbelegung(fach, GostHalbjahr.EF2)) {
-								wahl.halbjahre[GostHalbjahr.Q11.id] = 'ZK';
-								wahl.halbjahre[GostHalbjahr.Q12.id] = 'ZK';
-							}
+							wahl.halbjahre[GostHalbjahr.Q11.id] = 'ZK';
+							wahl.halbjahre[GostHalbjahr.Q12.id] = 'ZK';
 						}
 						if (beginn === GostHalbjahr.Q12) {
-							if (!this.stepperHatSchuelerFachwahl(wahl, GostHalbjahr.Q11) && !this.hatDoppelbelegung(fach, GostHalbjahr.Q11)) {
-								wahl.halbjahre[GostHalbjahr.Q12.id] = 'ZK';
-								wahl.halbjahre[GostHalbjahr.Q21.id] = 'ZK';
-							}
-						}
-					}
-					if ((beginn !== null) && (((beginn === GostHalbjahr.Q11) && (wahl.halbjahre[GostHalbjahr.EF2.id] === null)) || ((beginn === GostHalbjahr.Q12) && (wahl.halbjahre[GostHalbjahr.Q11.id] === null)))) {
-						if (beginn === GostHalbjahr.Q11) {
-							wahl.halbjahre[GostHalbjahr.Q11.id] = "ZK";
-						}
-						wahl.halbjahre[GostHalbjahr.Q12.id] = "ZK";
-						if (beginn === GostHalbjahr.Q12) {
-							wahl.halbjahre[GostHalbjahr.Q21.id] = "ZK";
+							wahl.halbjahre[GostHalbjahr.Q12.id] = 'ZK';
+							wahl.halbjahre[GostHalbjahr.Q21.id] = 'ZK';
 						}
 					}
 				}
@@ -1914,7 +1909,7 @@ export class LaufbahnplanungUiManager {
 				if (istPJK && (wahl.halbjahre[GostHalbjahr.Q12.id] === null) && fach.istMoeglichQ22) {
 					wahl.halbjahre[GostHalbjahr.Q22.id] = "M";
 				}
-				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(fach) && (this.jahrgang().hatZusatzkursSW)) {
+				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(fach) && this.jahrgang().hatZusatzkursSW && !this.istBilingual(fach)) {
 					const beginn: GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.jahrgang().beginnZusatzkursSW);
 					if (beginn !== null) {
 						if (beginn === GostHalbjahr.Q12) {
@@ -1931,7 +1926,7 @@ export class LaufbahnplanungUiManager {
 						}
 					}
 				}
-				if (GostFachbereich.GESCHICHTE.hat(fach) && this.jahrgang().hatZusatzkursGE) {
+				if (GostFachbereich.GESCHICHTE.hat(fach) && this.jahrgang().hatZusatzkursGE && !this.istBilingual(fach)) {
 					const beginn: GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.jahrgang().beginnZusatzkursGE);
 					if (beginn !== null) {
 						if (beginn === GostHalbjahr.Q12) {
@@ -2009,7 +2004,7 @@ export class LaufbahnplanungUiManager {
 		switch (wahl.halbjahre[GostHalbjahr.Q22.id]) {
 			case null:
 				wahl.halbjahre[GostHalbjahr.Q22.id] = "M";
-				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(fach) && (this.jahrgang().hatZusatzkursSW)) {
+				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(fach) && this.jahrgang().hatZusatzkursSW && !this.istBilingual(fach)) {
 					const beginn: GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.jahrgang().beginnZusatzkursSW);
 					if (beginn !== null) {
 						if (beginn === GostHalbjahr.Q21) {
@@ -2020,7 +2015,7 @@ export class LaufbahnplanungUiManager {
 						}
 					}
 				}
-				if (GostFachbereich.GESCHICHTE.hat(fach) && this.jahrgang().hatZusatzkursGE) {
+				if (GostFachbereich.GESCHICHTE.hat(fach) && this.jahrgang().hatZusatzkursGE && !this.istBilingual(fach)) {
 					const beginn: GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.jahrgang().beginnZusatzkursGE);
 					if (beginn !== null) {
 						if (beginn === GostHalbjahr.Q21) {
@@ -2095,14 +2090,12 @@ export class LaufbahnplanungUiManager {
 					wahl.halbjahre[GostHalbjahr.Q21.id] = "S";
 					wahl.halbjahre[GostHalbjahr.Q22.id] = "S";
 				}
-				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(fach) && (this.jahrgang().hatZusatzkursSW)) {
+				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(fach) && this.jahrgang().hatZusatzkursSW && !this.istBilingual(fach)) {
 					const beginn: GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.jahrgang().beginnZusatzkursSW);
 					if (beginn !== null) {
 						if (beginn === GostHalbjahr.Q12) {
-							if (!this.stepperHatSchuelerFachwahl(wahl, GostHalbjahr.Q11) && !this.hatDoppelbelegung(fach, GostHalbjahr.Q11)) {
-								wahl.halbjahre[GostHalbjahr.Q12.id] = 'ZK';
-								wahl.halbjahre[GostHalbjahr.Q21.id] = 'ZK';
-							}
+							wahl.halbjahre[GostHalbjahr.Q12.id] = 'ZK';
+							wahl.halbjahre[GostHalbjahr.Q21.id] = 'ZK';
 						}
 						if (beginn === GostHalbjahr.Q21) {
 							if (!this.stepperHatSchuelerFachwahl(wahl, GostHalbjahr.Q12) && !this.hatDoppelbelegung(fach, GostHalbjahr.Q12)) {
@@ -2112,14 +2105,12 @@ export class LaufbahnplanungUiManager {
 						}
 					}
 				}
-				if (GostFachbereich.GESCHICHTE.hat(fach) && this.jahrgang().hatZusatzkursGE) {
+				if (GostFachbereich.GESCHICHTE.hat(fach) && this.jahrgang().hatZusatzkursGE && !this.istBilingual(fach)) {
 					const beginn: GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.jahrgang().beginnZusatzkursGE);
 					if (beginn !== null) {
 						if (beginn === GostHalbjahr.Q12) {
-							if (!this.stepperHatSchuelerFachwahl(wahl, GostHalbjahr.Q11) && !this.hatDoppelbelegung(fach, GostHalbjahr.Q11)) {
-								wahl.halbjahre[GostHalbjahr.Q12.id] = 'ZK';
-								wahl.halbjahre[GostHalbjahr.Q21.id] = 'ZK';
-							}
+							wahl.halbjahre[GostHalbjahr.Q12.id] = 'ZK';
+							wahl.halbjahre[GostHalbjahr.Q21.id] = 'ZK';
 						}
 						if (beginn === GostHalbjahr.Q21) {
 							if (!this.stepperHatSchuelerFachwahl(wahl, GostHalbjahr.Q12) && !this.hatDoppelbelegung(fach, GostHalbjahr.Q12)) {
@@ -2193,7 +2184,7 @@ export class LaufbahnplanungUiManager {
 				if (istPJK) {
 					wahl.halbjahre[GostHalbjahr.Q22.id] = "S";
 				}
-				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(fach) && (this.jahrgang().hatZusatzkursSW)) {
+				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(fach) && this.jahrgang().hatZusatzkursSW && !this.istBilingual(fach)) {
 					const beginn: GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.jahrgang().beginnZusatzkursSW);
 					if (beginn !== null) {
 						if (beginn === GostHalbjahr.Q21) {
@@ -2204,7 +2195,7 @@ export class LaufbahnplanungUiManager {
 						}
 					}
 				}
-				if (GostFachbereich.GESCHICHTE.hat(fach) && this.jahrgang().hatZusatzkursGE) {
+				if (GostFachbereich.GESCHICHTE.hat(fach) && this.jahrgang().hatZusatzkursGE && !this.istBilingual(fach)) {
 					const beginn: GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.jahrgang().beginnZusatzkursGE);
 					if (beginn !== null) {
 						if (beginn === GostHalbjahr.Q21) {

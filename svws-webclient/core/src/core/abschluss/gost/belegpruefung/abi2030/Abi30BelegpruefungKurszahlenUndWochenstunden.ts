@@ -1,5 +1,4 @@
 import { JavaObject } from '../../../../../java/lang/JavaObject';
-import { Fach } from '../../../../../asd/types/fach/Fach';
 import { GostFach } from '../../../../../core/data/gost/GostFach';
 import { Abi30BelegpruefungProjektkurse, cast_de_svws_nrw_core_abschluss_gost_belegpruefung_abi2030_Abi30BelegpruefungProjektkurse } from '../../../../../core/abschluss/gost/belegpruefung/abi2030/Abi30BelegpruefungProjektkurse';
 import { AbiturFachbelegung } from '../../../../../core/data/gost/AbiturFachbelegung';
@@ -116,10 +115,6 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 		this.wochenstundenEinfuehrungsphase = 0;
 		this.wochenstundenQualifikationsphase = 0;
 		const projektkurse: Abi30BelegpruefungProjektkurse = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_abi2030_Abi30BelegpruefungProjektkurse(this.pruefungen_vorher[0]));
-		const musik: AbiturFachbelegung | null = this.manager.getFachbelegungByKuerzel(Fach.MU.name());
-		const blockIHatMusikLK: boolean = this.manager.pruefeBelegungHatMindestensEinmalKursart(musik, GostKursart.LK, ...GostHalbjahr.getQualifikationsphase());
-		const blockIHatMusikGKAbitur: boolean = this.manager.pruefeBelegungHatMindestensEinmalKursart(musik, GostKursart.GK, ...GostHalbjahr.getQualifikationsphase()) && (musik !== null) && ((musik.abiturFach !== null) && ((musik.abiturFach === 3) || (musik.abiturFach === 4)));
-		let blockIAnzahlMusik: number = 0;
 		let blockIAnzahlErsatzfach: number = 0;
 		const kursarten: Array<GostKursart> = GostKursart.values();
 		for (const halbjahr of GostHalbjahr.values()) {
@@ -143,7 +138,6 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 			if ((fach === null) || (!fach.istPruefungsordnungsRelevant)) {
 				continue;
 			}
-			const zulFach: Fach | null = Fach.getBySchluesselOrDefault(fach.kuerzel);
 			let istLKFach: boolean = false;
 			for (const fachbelegungHalbjahr of fachbelegung.belegungen) {
 				if (fachbelegungHalbjahr === null) {
@@ -162,44 +156,19 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 					continue;
 				}
 				let istAnrechenbar: boolean = true;
-				let istAnrechenbarHalbjahr: boolean = true;
 				let istNullPunkteBelegungInQPhase: boolean = false;
-				const istMusik: boolean = (zulFach as unknown === Fach.MU as unknown);
 				const istErsatzfach: boolean = GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach);
-				const istMusikErsatzfach: boolean = istErsatzfach && ((zulFach as unknown === Fach.IN as unknown) || (zulFach as unknown === Fach.VO as unknown));
 				if (halbjahr.istQualifikationsphase()) {
-					if (istMusik || istMusikErsatzfach) {
-						blockIAnzahlMusik++;
-						if (blockIHatMusikLK) {
-							istAnrechenbar = !istMusikErsatzfach;
-							istAnrechenbarHalbjahr = !istMusikErsatzfach;
-							if (!istAnrechenbar && (this.pruefungs_art as unknown === GostBelegpruefungsArt.GESAMT as unknown)) {
-								this.addFehler(GostBelegungsfehler.GOST30_ANZ_21_INFO);
-							}
-						} else
-							if (blockIHatMusikGKAbitur) {
-								istAnrechenbar = (blockIAnzahlMusik <= 6);
-								if (!istAnrechenbar && (this.pruefungs_art as unknown === GostBelegpruefungsArt.GESAMT as unknown)) {
-									this.addFehler(GostBelegungsfehler.GOST30_ANZ_22_INFO);
-								}
-							} else {
-								istAnrechenbar = (blockIAnzahlMusik <= 5);
-								if (!istAnrechenbar && (this.pruefungs_art as unknown === GostBelegpruefungsArt.GESAMT as unknown)) {
-									this.addFehler(GostBelegungsfehler.GOST30_ANZ_23_INFO);
-								}
-							}
-					}
 					if (istErsatzfach) {
 						blockIAnzahlErsatzfach++;
-						const istAnrechenbarErsatzfach: boolean = (blockIAnzahlErsatzfach <= 2);
-						if (!istAnrechenbarErsatzfach && (this.pruefungs_art as unknown === GostBelegpruefungsArt.GESAMT as unknown)) {
+						istAnrechenbar = (blockIAnzahlErsatzfach <= 2);
+						if (!istAnrechenbar && (this.pruefungs_art as unknown === GostBelegpruefungsArt.GESAMT as unknown)) {
 							this.addFehler(GostBelegungsfehler.GOST30_ANZ_20_INFO);
 						}
-						istAnrechenbar = istAnrechenbar && istAnrechenbarErsatzfach;
 					}
 					istNullPunkteBelegungInQPhase = AbiturdatenManager.istNullPunkteBelegungInQPhase(fachbelegungHalbjahr);
 				}
-				if (istAnrechenbarHalbjahr && !istNullPunkteBelegungInQPhase) {
+				if (!istNullPunkteBelegungInQPhase) {
 					let kurszahlenHalbjahr: ArrayMap<GostKursart, number> | null = this.kurszahlen.get(halbjahr);
 					if (kurszahlenHalbjahr === null) {
 						kurszahlenHalbjahr = new ArrayMap(GostKursart.values());
@@ -207,7 +176,7 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 					const kurszahlAlt: number | null = kurszahlenHalbjahr.get(kursart);
 					kurszahlenHalbjahr.put(kursart, (kurszahlAlt === null) ? 1 : (kurszahlAlt + 1));
 				}
-				if (istAnrechenbarHalbjahr && !istNullPunkteBelegungInQPhase && ((kursart as unknown === GostKursart.GK as unknown) || (halbjahr.istQualifikationsphase() && ((kursart as unknown === GostKursart.ZK as unknown) || ((kursart as unknown === GostKursart.PJK as unknown) && (projektkurse.istAnrechenbar(fachbelegungHalbjahr))))))) {
+				if (!istNullPunkteBelegungInQPhase && ((kursart as unknown === GostKursart.GK as unknown) || (halbjahr.istQualifikationsphase() && ((kursart as unknown === GostKursart.ZK as unknown) || ((kursart as unknown === GostKursart.PJK as unknown) && (projektkurse.istAnrechenbar(fachbelegungHalbjahr))))))) {
 					const kurszahlAnrechenbar: number | null = this.kurszahlenAnrechenbar.get(halbjahr);
 					this.kurszahlenAnrechenbar.put(halbjahr, (kurszahlAnrechenbar === null) ? 1 : (kurszahlAnrechenbar + 1));
 					const kurszahlGK: number | null = this.kurszahlenGrundkurse.get(halbjahr);
@@ -302,7 +271,6 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 
 	protected pruefeGesamt(): void {
 		this.pruefeGrundkurseEF();
-		this.pruefeGrundkurseQ();
 		this.pruefeLeistungskurse();
 		this.pruefeVertiefungskurseQ();
 		this.pruefeAnrechenbareKurse();
@@ -322,24 +290,6 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 		const kurszahlGK_EF2: number | null = this.kurszahlenGrundkurse.get(GostHalbjahr.EF2);
 		if ((kurszahlGK_EF1 === null) || (kurszahlGK_EF1 < 10) || (kurszahlGK_EF2 === null) || (kurszahlGK_EF2 < 10)) {
 			this.addFehler(GostBelegungsfehler.GOST30_ANZ_10);
-		}
-	}
-
-	/**
-	 * Gesamtprüfung Punkt 61:
-	 * Prüfe, ob in den Halbjahren der Qualifikationsphase mindestens 7 Grundkurse belegt wurden.
-	 * Dazu zählen auch Zusatzkurse sowie solche Projektkurse, die 2 Halbjahre belegt wurden
-	 * und zu keiner besonderen Lernleistung zählen.
-	 */
-	private pruefeGrundkurseQ(): void {
-		if (this.kurszahlenGrundkurse === null) {
-			throw new NullPointerException()
-		}
-		for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
-			const kurszahlGK: number | null = this.kurszahlenGrundkurse.get(halbjahr);
-			if ((kurszahlGK === null) || (kurszahlGK < 7)) {
-				this.addFehler(GostBelegungsfehler.GOST30_GKS_10);
-			}
 		}
 	}
 

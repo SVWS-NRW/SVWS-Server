@@ -133,22 +133,7 @@ public enum GostBelegungsfehler {
 
 	/** BelegungsfehlerArt ANZ_20_INFO */
 	GOST30_ANZ_20_INFO("ANZ_20_INFO", GostBelegungsfehlerArt.HINWEIS,
-			"In der Qualifikationsphase sind nur maximal zwei Kurse in einem Ersatzfach des literarisch-künstlerischen Fachbereichs anrechenbar.",
-			null),
-
-	/** BelegungsfehlerArt ANZ_21_INFO */
-	GOST30_ANZ_21_INFO("ANZ_21_INFO", GostBelegungsfehlerArt.HINWEIS,
-			"Bei der Wahl eines Musik-Leistungskurse sind vokal- und instrumentalpraktische Kurse nicht in der Qualifikationsphase nicht anrechenbar.",
-			null),
-
-	/** BelegungsfehlerArt ANZ_22_INFO */
-	GOST30_ANZ_22_INFO("ANZ_22_INFO", GostBelegungsfehlerArt.HINWEIS,
-			"Bei der Wahl eines Musik-Grundkurses als Abiturfach sind maximal 6 Kurse Musik-Kurse (Musik, vokal- oder instrumentalpraktischer Grundkurs) in der Qualifikationsphase anrechenbar.",
-			null),
-
-	/** BelegungsfehlerArt ANZ_23_INFO */
-	GOST30_ANZ_23_INFO("ANZ_23_INFO", GostBelegungsfehlerArt.HINWEIS,
-			"In der Qualifikationsphase sind, wenn Musik nicht als Abiturfach gewählt wird, maximal 5 Kurse Musik-Kurse (Musik, vokal- oder instrumentalpraktischer Grundkurs) anrechenbar.",
+			"In der Qualifikationsphase können nur maximal zwei Kurse in dem Ersatzfach Literatur in die Gesamtqualifikation eingebracht werden.",
 			null),
 
 	/** BelegungsfehlerArt ANZ_24_INFO */
@@ -296,19 +281,14 @@ public enum GostBelegungsfehler {
 			"Geschichte muss von EF.1 bis wenigstens Q1.2 oder als Zusatzkurs belegt werden.",
 			null),
 
-	/** BelegungsfehlerArt GKS_10 */
-	GOST30_GKS_10("GKS_10", GostBelegungsfehlerArt.BELEGUNG,
-			"In der Qualifikationsphase sind pro Halbjahr mindestens 7 Fächer in Grundkursen zu wählen.",
-			null),
-
 	/** BelegungsfehlerArt GW_10 */
 	GOST30_GW_10("GW_10", GostBelegungsfehlerArt.BELEGUNG,
-			"Mindestens eine Gesellschaftswissenschaft muss von Q1.1 bis Q2.2 durchgehend belegt werden.",
+			"Mindestens eine Gesellschaftswissenschaft muss von EF.1 bis Q2.2 durchgehend belegt werden.",
 			"Mindestens eine Gesellschaftswissenschaft muss in EF.1 belegt werden und durchgängig belegbar sein."),
 
 	/** BelegungsfehlerArt GW_11 */
 	GOST30_GW_11("GW_11", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
-			"In EF.1 und EF.2 muss mindestens eine Gesellschaftswissenschaft schriftlich belegt sein.",
+			"In EF.1 und EF.2 muss jeweils mindestens eine Gesellschaftswissenschaft schriftlich belegt sein.",
 			"Mindestens eine Gesellschaftswissenschaft muss in EF.1 schriftlich belegt werden."),
 
 	/** BelegungsfehlerArt GW_12 */
@@ -428,7 +408,7 @@ public enum GostBelegungsfehler {
 
 	/** BelegungsfehlerArt PF_21 */
 	GOST30_PF_21("PF_21", GostBelegungsfehlerArt.BELEGUNG,
-			"Es muss genau ein Projektkurses gewählt werden.",
+			"Es muss genau ein Projektkurs gewählt werden.",
 			null),
 
 	/** BelegungsfehlerArt PF_22 */
@@ -478,7 +458,7 @@ public enum GostBelegungsfehler {
 
 	/** BelegungsfehlerArt ZK_10 */
 	GOST30_ZK_10("ZK_10", GostBelegungsfehlerArt.BELEGUNG,
-			"Ein Zusatzkurs in Geschichte oder Sozialwissenschaften kann nur angewählt werden, wenn das Fach im vorangegangenen Halbjahr nicht belegt wurde.",
+			"Ein Zusatzkurs in Geschichte oder Sozialwissenschaften kann nur angewählt werden, wenn das Fach in der Qualifikationsphase nicht mindestens im Umfang von zwei Kurshalbjahren belegt wurde.",
 			null),
 
 	/** BelegungsfehlerArt ZK_12 */

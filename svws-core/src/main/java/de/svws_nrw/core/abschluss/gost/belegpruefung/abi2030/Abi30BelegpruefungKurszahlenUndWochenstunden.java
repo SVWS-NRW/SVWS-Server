@@ -3,7 +3,6 @@ package de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030;
 import java.util.List;
 
 import de.svws_nrw.asd.types.Note;
-import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefung;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
@@ -108,13 +107,8 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 		wochenstundenQualifikationsphase = 0;
 		final @NotNull Abi30BelegpruefungProjektkurse projektkurse = ((@NotNull Abi30BelegpruefungProjektkurse) pruefungen_vorher[0]);
 
-		// ermittle, ob die Abiturbelegungsart von Musik und initialisiere die Zählung der Musikkurse bzw. der Ersatzfachkurse (siehe u.a. VV zu APO Gost §11.2.4)
-		final AbiturFachbelegung musik = manager.getFachbelegungByKuerzel(Fach.MU.name());
-		final boolean blockIHatMusikLK = manager.pruefeBelegungHatMindestensEinmalKursart(musik, GostKursart.LK, GostHalbjahr.getQualifikationsphase());
-		final boolean blockIHatMusikGKAbitur = manager.pruefeBelegungHatMindestensEinmalKursart(musik, GostKursart.GK, GostHalbjahr.getQualifikationsphase())
-				&& (musik != null) && ((musik.abiturFach != null) && ((musik.abiturFach == 3) || (musik.abiturFach == 4)));
-		int blockIAnzahlMusik = 0;      // die Gesamtzahl der Kurse der Qualifikationsphase in Musik oder in einem vokal- oder instrumentalpraktischen Grundkurs
-		int blockIAnzahlErsatzfach = 0; // die Gesamtzahl der Kurse der Qualifikationsphase in einem Ersatzfach des literarisch künstlerischen Bereichs
+		// ermittle, ob die Abiturbelegungsart von Musik und initialisiere die Zählung der Ersatzfachkurse (siehe u.a. VV zu APO Gost §11.3.4)
+		int blockIAnzahlErsatzfach = 0; // die Gesamtzahl der Kurse der Qualifikationsphase in dem Ersatzfach Literatur
 
 		// Erzeuge zunächst Einträge mit 0 für die Kurszahlen und Wochenstunden in allen HashMaps
 		final @NotNull GostKursart @NotNull [] kursarten = GostKursart.values();
@@ -141,7 +135,6 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 			if ((fach == null) || (!fach.istPruefungsordnungsRelevant)) {
 				continue;
 			}
-			final Fach zulFach = Fach.getBySchluesselOrDefault(fach.kuerzel);
 			boolean istLKFach = false;
 			for (final AbiturFachbelegungHalbjahr fachbelegungHalbjahr : fachbelegung.belegungen) {
 				if (fachbelegungHalbjahr == null) {
@@ -150,6 +143,7 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 
 				// Überspringe Sport-Kurse, die in diesem Halbjahr die Note "AT" beinhalten, bei der Zählung der Kursstunden
 				// und der Wochenstunden. Der Schüler ist in diesem Halbjahr aufgrund eines Attestes von Sport befreit.
+				// TODO Diese Prüfung kann für Sport AT vaorraussichtlich entfallen
 				final Note note = Note.fromKuerzel(fachbelegungHalbjahr.notenkuerzel);
 				if (GostFachbereich.SPORT.hat(fach) && Note.ATTEST.equals(note)) {
 					continue;
@@ -161,54 +155,30 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 					continue;
 				}
 				final GostKursart kursart = GostKursart.fromKuerzel(fachbelegungHalbjahr.kursartKuerzel);
-				if (kursart == null) { // Dies kann z.B. bei einem Sportattest ("AT") der Fall sein.
+				if (kursart == null) { // Dies kann z.B. bei einem Sportattest ("AT") der Fall sein. TODO Kommentar entfernen
 					continue;
 				}
 
 				boolean istAnrechenbar = true;
-				boolean istAnrechenbarHalbjahr = true;   // Für den Speziallfall, dass Musikkurse nicht anrechenbar sind (s.u.), kann vorab nicht festgelegt werden in welchem Halbjahr der Kurs nicht anrechenbar ist
 				boolean istNullPunkteBelegungInQPhase = false;
 
-				// Prüfe die Sonderbedingungen für die musikalischen Fächer und die Ersatzfächer (APO Gost §11.2.4 und APO Gost §28.7, §28.8 und VVs)
-				final boolean istMusik = (zulFach == Fach.MU);
+				// Prüfe die Sonderbedingungen für die musikalischen Fächer und die Ersatzfächer (APO Gost §11.3.4 und APO Gost §26.7 und VVs)
 				final boolean istErsatzfach = GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach);
-				final boolean istMusikErsatzfach = istErsatzfach && ((zulFach == Fach.IN) || (zulFach == Fach.VO));
 				if (halbjahr.istQualifikationsphase()) {
-					if (istMusik || istMusikErsatzfach) {
-						blockIAnzahlMusik++;
-						if (blockIHatMusikLK) {
-							istAnrechenbar = !istMusikErsatzfach;
-							istAnrechenbarHalbjahr = !istMusikErsatzfach;
-							if (!istAnrechenbar && (pruefungs_art == GostBelegpruefungsArt.GESAMT)) {
-								addFehler(GostBelegungsfehler.GOST30_ANZ_21_INFO);
-							}
-						} else if (blockIHatMusikGKAbitur) {
-							istAnrechenbar = (blockIAnzahlMusik <= 6);
-							if (!istAnrechenbar && (pruefungs_art == GostBelegpruefungsArt.GESAMT)) {
-								addFehler(GostBelegungsfehler.GOST30_ANZ_22_INFO);
-							}
-						} else {
-							istAnrechenbar = (blockIAnzahlMusik <= 5);
-							if (!istAnrechenbar && (pruefungs_art == GostBelegpruefungsArt.GESAMT)) {
-								addFehler(GostBelegungsfehler.GOST30_ANZ_23_INFO);
-							}
-						}
-					}
 					if (istErsatzfach) {
 						blockIAnzahlErsatzfach++;
-						final boolean istAnrechenbarErsatzfach = (blockIAnzahlErsatzfach <= 2);
-						if (!istAnrechenbarErsatzfach && (pruefungs_art == GostBelegpruefungsArt.GESAMT)) {
+						istAnrechenbar = (blockIAnzahlErsatzfach <= 2);
+						if (!istAnrechenbar && (pruefungs_art == GostBelegpruefungsArt.GESAMT)) {
 							addFehler(GostBelegungsfehler.GOST30_ANZ_20_INFO);
 						}
-						istAnrechenbar = istAnrechenbar && istAnrechenbarErsatzfach;
 					}
 
-					// Prüfung, ob in den Leistungsdaten der Kurs mit null Punkten abgeschlossen wurde. Dann ist er nicht anrechenbar im Rahmen der Gesamtqualifikation.
+					// Prüfung, ob in den Leistungsdaten der Kurs mit null Punkten abgeschlossen wurde. Dann ist er nicht anrechenbar auf die Kurszahl und auch nicht einbringbar im Rahmen der Gesamtqualifikation.
 					istNullPunkteBelegungInQPhase = AbiturdatenManager.istNullPunkteBelegungInQPhase(fachbelegungHalbjahr);
 				}
 
 				// Für das Halbjahr
-				if (istAnrechenbarHalbjahr && !istNullPunkteBelegungInQPhase) {
+				if (!istNullPunkteBelegungInQPhase) {
 					ArrayMap<GostKursart, Integer> kurszahlenHalbjahr = kurszahlen.get(halbjahr);
 					if (kurszahlenHalbjahr == null) {
 						kurszahlenHalbjahr = new ArrayMap<>(GostKursart.values());
@@ -218,7 +188,7 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 				}
 
 				// Für die Grundkurse
-				if (istAnrechenbarHalbjahr && !istNullPunkteBelegungInQPhase
+				if (!istNullPunkteBelegungInQPhase
 						&& ((kursart == GostKursart.GK) || (halbjahr.istQualifikationsphase() && ((kursart == GostKursart.ZK)
 								|| ((kursart == GostKursart.PJK) && (projektkurse.istAnrechenbar(fachbelegungHalbjahr))))))) {
 					final Integer kurszahlAnrechenbar = kurszahlenAnrechenbar.get(halbjahr);
@@ -324,7 +294,6 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 	protected void pruefeGesamt() {
 		// Führe die Belegprüfung für die gesamte Oberstufe durch
 		pruefeGrundkurseEF();
-		pruefeGrundkurseQ();
 		pruefeLeistungskurse();
 		pruefeVertiefungskurseQ();
 		pruefeAnrechenbareKurse();
@@ -345,25 +314,6 @@ public final class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBele
 		final Integer kurszahlGK_EF2 = kurszahlenGrundkurse.get(GostHalbjahr.EF2);
 		if ((kurszahlGK_EF1 == null) || (kurszahlGK_EF1 < 10) || (kurszahlGK_EF2 == null) || (kurszahlGK_EF2 < 10)) {
 			addFehler(GostBelegungsfehler.GOST30_ANZ_10);
-		}
-	}
-
-
-	/**
-	 * Gesamtprüfung Punkt 61:
-	 * Prüfe, ob in den Halbjahren der Qualifikationsphase mindestens 7 Grundkurse belegt wurden.
-	 * Dazu zählen auch Zusatzkurse sowie solche Projektkurse, die 2 Halbjahre belegt wurden
-	 * und zu keiner besonderen Lernleistung zählen.
-	 */
-	private void pruefeGrundkurseQ() {
-		if (kurszahlenGrundkurse == null) {
-			throw new NullPointerException();
-		}
-		for (final GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
-			final Integer kurszahlGK = kurszahlenGrundkurse.get(halbjahr);
-			if ((kurszahlGK == null) || (kurszahlGK < 7)) {
-				addFehler(GostBelegungsfehler.GOST30_GKS_10);
-			}
 		}
 	}
 

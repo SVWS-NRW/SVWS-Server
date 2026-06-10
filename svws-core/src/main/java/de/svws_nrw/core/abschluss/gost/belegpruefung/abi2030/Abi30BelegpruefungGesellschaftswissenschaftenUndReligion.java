@@ -9,7 +9,6 @@ import de.svws_nrw.core.abschluss.gost.GostBelegpruefung;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.abschluss.gost.GostBelegungsfehler;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
-import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
@@ -59,13 +58,15 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 	private ArrayList<AbiturFachbelegung> zusatzkursFachbelegungen;
 
 
+
 	/**
 	 * Erstellt eine neue Belegprüfung für den Bereich der Gesellschaftswissenschaften und Religion.
 	 *
 	 * @param manager        der Daten-Manager für die Abiturdaten
 	 * @param pruefungsArt   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
 	 */
-	public Abi30BelegpruefungGesellschaftswissenschaftenUndReligion(final @NotNull AbiturdatenManager manager, final @NotNull GostBelegpruefungsArt pruefungsArt) {
+	public Abi30BelegpruefungGesellschaftswissenschaftenUndReligion(final @NotNull AbiturdatenManager manager,
+			final @NotNull GostBelegpruefungsArt pruefungsArt) {
 		super(manager, pruefungsArt);
 	}
 
@@ -163,7 +164,8 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 	 */
 	private void pruefeSchriftlichkeitEF() {
 		if ((!manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(gesellschaftswissenschaften, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
-				|| (!manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(gesellschaftswissenschaften, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF2))) {
+				|| (!manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(gesellschaftswissenschaften, GostSchriftlichkeit.SCHRIFTLICH,
+						GostHalbjahr.EF2))) {
 			addFehler(GostBelegungsfehler.GOST30_GW_11);
 		}
 	}
@@ -195,9 +197,10 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 		if (manager.pruefeBelegungExistiertDurchgehendSchriftlich(religion)) {
 			return;
 		}
-		// Behandlung des Spezialfalles bei Philosophie, wenn diese die einzige Gesellschaftswissenschaft ist, aber in der EF nicht belegt
+		// Behandlung des Spezialfalles bei Philosophie, wenn diese die einzige Gesellschaftswissenschaft ist, aber in der EF nicht unbedingt schriftlich belegt ist
 		if (manager.pruefeBelegung(philosophie, GostHalbjahr.getQualifikationsphase())
-				&& manager.pruefeBelegungMitSchriftlichkeit(philosophie, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21)) {
+				&& manager.pruefeBelegungMitSchriftlichkeit(philosophie, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12,
+						GostHalbjahr.Q21)) {
 			return;
 		}
 		addFehler(GostBelegungsfehler.GOST30_GW_12);
@@ -261,7 +264,7 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 			if ((belegungQ11 && (manager.zaehleBelegungInHalbjahren(fachbelegungenZK, GostHalbjahr.Q21, GostHalbjahr.Q22) > 0))
 					|| (belegungQ12 && (manager.zaehleBelegungInHalbjahren(fachbelegungenZK, GostHalbjahr.Q22) > 0))) {
 				addFehler(GostBelegungsfehler.GOST30_ZK_18);
-			// Prüfe, ob mehr als zwei Zusatzkurse belegt wurden oder die Belegung in nicht aufeinander folgenden Halbjahren ist
+				// Prüfe, ob mehr als zwei Zusatzkurse belegt wurden oder die Belegung in nicht aufeinander folgenden Halbjahren ist
 			}
 		} else if (halbjahre.size() > 1) {
 			addFehler(GostBelegungsfehler.GOST30_ZK_12);
@@ -269,7 +272,8 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 		// Prüfe, ob bei den Halbjahren des Zusatzkurses im Halbjahr davor eine Belegung vorliegt - beim ersten Halbjahr darf dies nicht der Fall sein!
 		if (!halbjahre.isEmpty()) {
 			final GostHalbjahr prevHalbjahr = halbjahre.get(0).previous();
-			if ((prevHalbjahr != null) && (manager.pruefeBelegung(fachbelegung, prevHalbjahr))) {
+			if ((prevHalbjahr != null) && (prevHalbjahr != GostHalbjahr.EF2) && (prevHalbjahr != GostHalbjahr.Q11)
+					&& (manager.pruefeBelegung(fachbelegung, prevHalbjahr))) {
 				addFehler(GostBelegungsfehler.GOST30_ZK_10);
 			}
 		}
@@ -376,6 +380,8 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 	 * Gesellschaftswissenschaft belegt wurde.
 	 */
 	private void pruefeReligionQ1() {
+		int anzahlErsatzGE = 0;
+		int anzahlErsatzSW = 0;
 		for (final GostHalbjahr halbjahr : GostHalbjahr.getHalbjahreFromJahrgang("Q1")) {
 			// Wurde Religion in dem Halbjahr belegt?
 			if (manager.pruefeBelegungExistiertEinzeln(religion, halbjahr)) {
@@ -411,12 +417,36 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 			// Prüfe, ob Geschichte als Ausgleich genutzt werden kann. Dies ist dann der Fall, wenn mehr
 			// als zwei GE-Kurse in der Qualifikationsphase belegt wurden - also 3 Kurse (bei vieren wäre
 			// zuvor eine durchgängige Belegung erkannt worden). Durch die Nutzung des Halbjahreskurses
-			// als Ersatz für Religion müssen zwei zusammenhängende Kurse in Geschichte übrig bleiben.
+			// als Ersatz für Religion müssen zwei Kurse in Geschichte übrig bleiben.
 			// Somit kann Geschichte nur als Ersatz für Religion in der Q1.1 dienen, sofern es - wie hier
 			// der Fall - nicht durchgängig belegt wurde.
 			// Analog: Sozialwissenschaften
-			if ((halbjahr == GostHalbjahr.Q11) && (manager.pruefeBelegungExistiertEinzeln(geschichte, GostHalbjahr.Q11)
-					|| manager.pruefeBelegungExistiertEinzeln(sozialwissenschaften, GostHalbjahr.Q11))) {
+			boolean found = false;
+			if (halbjahr == GostHalbjahr.Q11) {
+				if (manager.pruefeBelegungExistiertEinzeln(geschichte, halbjahr)
+					&& (manager.zaehleBelegungInHalbjahren(geschichte, GostHalbjahr.getQualifikationsphase()) > 2)) {
+					anzahlErsatzGE++;
+					found = true;
+				}
+				if (manager.pruefeBelegungExistiertEinzeln(sozialwissenschaften, halbjahr)
+							&& (manager.zaehleBelegungInHalbjahren(sozialwissenschaften, GostHalbjahr.getQualifikationsphase()) > 2)) {
+					anzahlErsatzSW++;
+					found = true;
+				}
+			} else {
+				final boolean hatErsatzQ11 = (anzahlErsatzGE == 1) || (anzahlErsatzSW == 1);
+				if ((!hatErsatzQ11 || (anzahlErsatzGE == 1)) && manager.pruefeBelegungExistiertEinzeln(geschichte, halbjahr)
+						&& (manager.zaehleBelegungInHalbjahren(geschichte, GostHalbjahr.getQualifikationsphase()) > 2 + anzahlErsatzGE)) {
+					anzahlErsatzGE++;
+					found = true;
+				}
+				if ((!hatErsatzQ11 || (anzahlErsatzSW == 1)) && manager.pruefeBelegungExistiertEinzeln(sozialwissenschaften, halbjahr)
+						&& (manager.zaehleBelegungInHalbjahren(sozialwissenschaften, GostHalbjahr.getQualifikationsphase()) > 2 + anzahlErsatzSW)) {
+					anzahlErsatzSW++;
+					found = true;
+				}
+			}
+			if (found) {
 				continue;
 			}
 
@@ -438,33 +468,43 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 			return;
 		}
 
+		// TODO Prüfe, ob PL als Ersatzfach ausfällt, wenn ja, dann muss die Ersatzfachprüfung alternativ erfolgen...
+
 		// Prüfe ob die Belegungen in den einzelnen Halbjahren und in deren Vorgänger-Halbjahren korrekt sind oder Lücken aufweisen
-		for (final AbiturFachbelegungHalbjahr belegung : philosophie.belegungen) {
-			if (belegung == null) {
-				continue;
+		boolean hatKontinuitaetPL = true;
+		boolean hatKontinuitaetRE = true;
+		boolean hatteRE = false;
+		for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
+			final boolean hatPL = manager.pruefeBelegung(philosophie, halbjahr);
+			final boolean hatRE = manager.pruefeBelegungExistiertEinzeln(religion, halbjahr);
+
+			// Wenn Religion nicht gewählt wurde, aber PL, dann fungiert es als Ersatzfach und ab jetzt setzt die Kontinuität für PL wieder ein
+			if (!hatRE && hatPL) {
+				hatKontinuitaetPL = true;
 			}
-			final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(belegung.halbjahrKuerzel);
-			if (halbjahr == null) {
-				continue;
+
+			// Wenn Philosophie gewählt wurde, aber keine Kontinuität vorliegt, dann wurde es als Ersatzfach für Religion gewählt und Religion darf jetzt nicht belegt sein
+			if (hatPL && !hatKontinuitaetPL) {
+				if (hatRE) {
+					addFehler(GostBelegungsfehler.GOST30_E1BEL_10);
+				}
 			}
-			// In EF.1 darf neu gewählt werden
-			final GostHalbjahr prevHalbjahr = halbjahr.previous();
-			if (prevHalbjahr == null) {
-				continue;
+
+			// Wenn Religion gewählt wurde, aber keine Kontinuität vorliegt, dann muss hier Philosophie gewählt sein
+			if (hatRE && !hatKontinuitaetRE) {
+				if (!hatPL) {
+					addFehler(GostBelegungsfehler.GOST30_E1BEL_10);
+				}
 			}
-			// Wurde Philosophie in dem Halbjahr weiterbelegt, so liegt kein Belegungsfehler vor
-			if (manager.pruefeBelegung(philosophie, prevHalbjahr)) {
-				continue;
-			}
-			// Philosophie wurde nicht weiterbelegt!
-			// Wurde Philosophie überhaupt als Ersatz für Religion gewählt? -> Wenn nicht, dann liegt eine Lücke in der Belegung von Philosophie vor
-			if (manager.pruefeBelegungExistiertEinzeln(religion, halbjahr)) {
+
+			// In der Q2 kann Religion nicht mehr neu angewählt werde, da dann keine Belegverpflichtung mehr vorhanden ist und das Prinzip der Kontinuität vorliegt
+			if (hatRE && !hatteRE && halbjahr.istIn(GostHalbjahr.Q21, GostHalbjahr.Q22)) {
 				addFehler(GostBelegungsfehler.GOST30_E1BEL_10);
 			}
-			// Wurde Religion im vorigen Halbjahr belegt? -> Wenn nicht, dann liegt ebenfalls eine Lücke bei der Belegung von Philosophie vor (bzw. bei Religion)
-			if (!manager.pruefeBelegungExistiertEinzeln(religion, prevHalbjahr)) {
-				addFehler(GostBelegungsfehler.GOST30_E1BEL_10);
-			}
+
+			hatKontinuitaetPL = hatKontinuitaetPL && hatPL;
+			hatKontinuitaetRE = hatKontinuitaetRE && (hatRE || hatPL);
+			hatteRE = hatteRE || hatRE;
 		}
 	}
 

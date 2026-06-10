@@ -216,7 +216,7 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 			}
 		if (!halbjahre.isEmpty()) {
 			const prevHalbjahr: GostHalbjahr | null = halbjahre.get(0).previous();
-			if ((prevHalbjahr !== null) && (this.manager.pruefeBelegung(fachbelegung, prevHalbjahr))) {
+			if ((prevHalbjahr !== null) && (prevHalbjahr as unknown !== GostHalbjahr.EF2 as unknown) && (prevHalbjahr as unknown !== GostHalbjahr.Q11 as unknown) && (this.manager.pruefeBelegung(fachbelegung, prevHalbjahr))) {
 				this.addFehler(GostBelegungsfehler.GOST30_ZK_10);
 			}
 		}
@@ -297,6 +297,8 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 	 * Gesellschaftswissenschaft belegt wurde.
 	 */
 	private pruefeReligionQ1(): void {
+		let anzahlErsatzGE: number = 0;
+		let anzahlErsatzSW: number = 0;
 		for (const halbjahr of GostHalbjahr.getHalbjahreFromJahrgang("Q1")) {
 			if (this.manager.pruefeBelegungExistiertEinzeln(this.religion, halbjahr)) {
 				continue;
@@ -314,7 +316,28 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 			if (this.manager.zaehleBelegungInHalbjahren(this.sonstige_gesellschaftswissenschaften, halbjahr) > 0) {
 				continue;
 			}
-			if ((halbjahr as unknown === GostHalbjahr.Q11 as unknown) && (this.manager.pruefeBelegungExistiertEinzeln(this.geschichte, GostHalbjahr.Q11) || this.manager.pruefeBelegungExistiertEinzeln(this.sozialwissenschaften, GostHalbjahr.Q11))) {
+			let found: boolean = false;
+			if (halbjahr as unknown === GostHalbjahr.Q11 as unknown) {
+				if (this.manager.pruefeBelegungExistiertEinzeln(this.geschichte, halbjahr) && (this.manager.zaehleBelegungInHalbjahren(this.geschichte, ...GostHalbjahr.getQualifikationsphase()) > 2)) {
+					anzahlErsatzGE++;
+					found = true;
+				}
+				if (this.manager.pruefeBelegungExistiertEinzeln(this.sozialwissenschaften, halbjahr) && (this.manager.zaehleBelegungInHalbjahren(this.sozialwissenschaften, ...GostHalbjahr.getQualifikationsphase()) > 2)) {
+					anzahlErsatzSW++;
+					found = true;
+				}
+			} else {
+				const hatErsatzQ11: boolean = (anzahlErsatzGE === 1) || (anzahlErsatzSW === 1);
+				if ((!hatErsatzQ11 || (anzahlErsatzGE === 1)) && this.manager.pruefeBelegungExistiertEinzeln(this.geschichte, halbjahr) && (this.manager.zaehleBelegungInHalbjahren(this.geschichte, ...GostHalbjahr.getQualifikationsphase()) > 2 + anzahlErsatzGE)) {
+					anzahlErsatzGE++;
+					found = true;
+				}
+				if ((!hatErsatzQ11 || (anzahlErsatzSW === 1)) && this.manager.pruefeBelegungExistiertEinzeln(this.sozialwissenschaften, halbjahr) && (this.manager.zaehleBelegungInHalbjahren(this.sozialwissenschaften, ...GostHalbjahr.getQualifikationsphase()) > 2 + anzahlErsatzSW)) {
+					anzahlErsatzSW++;
+					found = true;
+				}
+			}
+			if (found) {
 				continue;
 			}
 			this.addFehler(GostBelegungsfehler.GOST30_RE_10);
@@ -331,27 +354,31 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 		if (this.philosophie === null) {
 			return;
 		}
-		for (const belegung of this.philosophie.belegungen) {
-			if (belegung === null) {
-				continue;
+		let hatKontinuitaetPL: boolean = true;
+		let hatKontinuitaetRE: boolean = true;
+		let hatteRE: boolean = false;
+		for (const halbjahr of GostHalbjahr.values()) {
+			const hatPL: boolean = this.manager.pruefeBelegung(this.philosophie, halbjahr);
+			const hatRE: boolean = this.manager.pruefeBelegungExistiertEinzeln(this.religion, halbjahr);
+			if (!hatRE && hatPL) {
+				hatKontinuitaetPL = true;
 			}
-			const halbjahr: GostHalbjahr | null = GostHalbjahr.fromKuerzel(belegung.halbjahrKuerzel);
-			if (halbjahr === null) {
-				continue;
+			if (hatPL && !hatKontinuitaetPL) {
+				if (hatRE) {
+					this.addFehler(GostBelegungsfehler.GOST30_E1BEL_10);
+				}
 			}
-			const prevHalbjahr: GostHalbjahr | null = halbjahr.previous();
-			if (prevHalbjahr === null) {
-				continue;
+			if (hatRE && !hatKontinuitaetRE) {
+				if (!hatPL) {
+					this.addFehler(GostBelegungsfehler.GOST30_E1BEL_10);
+				}
 			}
-			if (this.manager.pruefeBelegung(this.philosophie, prevHalbjahr)) {
-				continue;
-			}
-			if (this.manager.pruefeBelegungExistiertEinzeln(this.religion, halbjahr)) {
+			if (hatRE && !hatteRE && halbjahr.istIn(GostHalbjahr.Q21, GostHalbjahr.Q22)) {
 				this.addFehler(GostBelegungsfehler.GOST30_E1BEL_10);
 			}
-			if (!this.manager.pruefeBelegungExistiertEinzeln(this.religion, prevHalbjahr)) {
-				this.addFehler(GostBelegungsfehler.GOST30_E1BEL_10);
-			}
+			hatKontinuitaetPL = hatKontinuitaetPL && hatPL;
+			hatKontinuitaetRE = hatKontinuitaetRE && (hatRE || hatPL);
+			hatteRE = hatteRE || hatRE;
 		}
 	}
 
