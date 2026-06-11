@@ -1,0 +1,25 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLplf00LehrerPersonaldatenLehramtFachrichtung",
+    "historie" : [ {
+      "praefix" : "LPLF00",
+      "altes_kuerzel" : "",
+      "zweig" : "Lehrer-Personaldaten-Lehramt-Fachrichtung",
+      "dtos" : "LehrerFachrichtungEintrag",
+      "ausfuehrungsbereich_ui" : "Lehrer, Reiter 'Personaldaten', Pop-up 'Lehrbefähigung/Fachrichtung hinzufügen'???",
+      "anzeigebereich_ui" : "Feld 'Fachrichtungen'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Lehrer Fachrichtung: Das Feld darf nicht leer sein.",
+      "erlaeuterung" : "",
+      "bedingung" : "LehrerFachrichtungEintrag.idFachrichtung = @",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
+  
+  
