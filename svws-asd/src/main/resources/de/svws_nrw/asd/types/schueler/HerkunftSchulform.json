@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "daten": [
     {
       "bezeichner": "BK",
@@ -1004,6 +1004,68 @@
                     "FW",
                     "HI",
                     "WF",                   
+                    "GE",
+                    "GY",
+                    "H",
+                    "PS",
+                    "R",
+                    "KS",
+                    "S",
+                    "SG",
+                    "SK",
+                    "SR",
+                    "V",
+                    "WB"
+                  ],
+                  "gueltigVon": 2023,
+                  "gueltigBis": null
+                }
+              ]},
+            {
+              "bezeichner": "SF",
+              "idStatistik": "25",
+              "historie": [
+                {
+                  "id": 25000,
+                  "schluessel": "SF",
+                  "kuerzel": "SF",
+                  "text": "Sonstige Schulform",
+                  "schulformen": [
+                    "BK",
+                    "SB",
+                    "FW",
+                    "HI",
+                    "WF",
+                    "G",
+                    "GE",
+                    "GM",
+                    "GY",
+                    "H",
+                    "PS",
+                    "R",
+                    "KS",
+                    "S",
+                    "SG",
+                    "SK",
+                    "SR",
+                    "V",
+                    "WB"
+                  ],
+                  "gueltigVon": null,
+                  "gueltigBis": 2022
+                },
+                {
+                  "id": 25001,
+                  "schluessel": "SF",
+                  "kuerzel": "SF",
+                  "text": "Sonstige Schulform",
+                  "schulformen": [
+                    "BK",
+                    "SB",
+                    "FW",
+                    "HI",
+                    "WF",
+                    "G",                   
                     "GE",
                     "GY",
                     "H",
