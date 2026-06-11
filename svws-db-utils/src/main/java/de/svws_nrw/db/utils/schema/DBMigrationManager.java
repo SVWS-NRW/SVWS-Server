@@ -1612,22 +1612,22 @@ public final class DBMigrationManager {
 				logger.logLn(LogLevel.ERROR, strFehlerKeinLehrer.formatted(daten.Lehrer_ID));
 				entities.remove(i);
 			} else if ((daten.Jahr == null) || (daten.Abschnitt == null)) {
-				logger.logLn(LogLevel.ERROR, strFehlerLernabschnittUngueltigNull.formatted("LehrerEntlastung", daten.ID));
+				logger.logLn(LogLevel.ERROR, strFehlerLernabschnittUngueltigNull.formatted("LehrerEntlastung", daten.id));
 				entities.remove(i);
 			} else if (!lehrerAbschnitte.contains("" + daten.Lehrer_ID + "." + daten.Jahr + "." + daten.Abschnitt)) {
-				logger.logLn(LogLevel.ERROR, strFehlerLernabschnittUngueltig.formatted("LehrerEntlastung", daten.ID));
+				logger.logLn(LogLevel.ERROR, strFehlerLernabschnittUngueltig.formatted("LehrerEntlastung", daten.id));
 				entities.remove(i);
 			} else {
 				// Entferne ggf. Duplikate in Bezug auf die Entlastungsgründe bei den gleichen Lehrerabschnittsdaten
-				final String key = "" + daten.Lehrer_ID + "." + daten.Jahr + "." + daten.Abschnitt + "." + daten.EntlastungsgrundKrz;
+				final String key = "" + daten.Lehrer_ID + "." + daten.Jahr + "." + daten.Abschnitt + "." + daten.entlastungsgrundKrz;
 				final MigrationDTOLehrerEntlastungsstunde other = map.get(key);
 				if (other == null) {
 					map.put(key, daten);
 				} else {
-					other.EntlastungStd += daten.EntlastungStd;
+					other.anzahl += daten.anzahl;
 					logger.logLn(LogLevel.ERROR,
 							"Entferne ungültigen Datensatz (ID %d): Ein Entlastungsgrund darf nur einmal in den Abschnittsdaten vorkommen. Addiere die Entlastungsstunden auf den vorigen Eintrag mit der ID %d."
-									.formatted(daten.ID, other.ID));
+									.formatted(daten.id, other.id));
 					entities.remove(i);
 				}
 			}
@@ -1635,7 +1635,7 @@ public final class DBMigrationManager {
 		// Füge eine ID als Primärschlüssel hinzu.
 		for (int i = 0; i < entities.size(); i++) {
 			final MigrationDTOLehrerEntlastungsstunde daten = entities.get(i);
-			daten.ID = (long) (i + 1);
+			daten.id = (long) (i + 1);
 		}
 		return true;
 	}

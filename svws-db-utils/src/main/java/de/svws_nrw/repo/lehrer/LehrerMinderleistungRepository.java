@@ -19,6 +19,14 @@ public interface LehrerMinderleistungRepository extends Repository<DTOLehrerEntl
 	 *
 	 * @return die Zuordnung
 	 */
-	Map<Long, List<DTOLehrerEntlastungsstunde>> getMapByAbschnitt(Collection<Long> idsAbschnitte);
+	Map<Long, List<DTOLehrerEntlastungsstunde>> getMapByAbschnittIds(Collection<Long> idsAbschnitte);
+
+	/**
+	 * Ermittelt Entlastungsstunden nach Abschnitts ID
+	 * @param idAbschnitt die ID des Abschnitts
+	 *
+	 * @return Liste von {@link DTOLehrerEntlastungsstunde}
+	 */
+	List<DTOLehrerEntlastungsstunde> getAllByLehrerAbschnittId(long idAbschnitt);
 
 }

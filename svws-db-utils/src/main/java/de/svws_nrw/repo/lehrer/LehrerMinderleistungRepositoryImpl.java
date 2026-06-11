@@ -22,20 +22,26 @@ public final class LehrerMinderleistungRepositoryImpl extends RepositoryImpl<DTO
 	 * @param conn   die aktuelle Datenbank-Verbindung
 	 */
 	public LehrerMinderleistungRepositoryImpl(final DBEntityManager conn) {
-		super(conn, DTOLehrerEntlastungsstunde.class, o -> o.ID, (o, id) -> o.ID = id);
+		super(conn, DTOLehrerEntlastungsstunde.class, o -> o.id, (o, id) -> o.id = id);
 	}
 
 	@Override
-	public Map<Long, List<DTOLehrerEntlastungsstunde>> getMapByAbschnitt(final Collection<Long> idsAbschnitte) {
+	public Map<Long, List<DTOLehrerEntlastungsstunde>> getMapByAbschnittIds(final Collection<Long> idsAbschnitte) {
 		if ((idsAbschnitte == null) || (idsAbschnitte.isEmpty())) {
 			return Collections.emptyMap();
 		}
-		final var list = conn.queryList(DTOLehrerEntlastungsstunde.QUERY_LIST_BY_ABSCHNITT_ID, DTOLehrerEntlastungsstunde.class, idsAbschnitte);
-		final var map = list.stream().collect(Collectors.groupingBy(f -> f.Abschnitt_ID));
+
+		final var list = conn.queryList(DTOLehrerEntlastungsstunde.QUERY_LIST_BY_IDABSCHNITTSDATEN, DTOLehrerEntlastungsstunde.class, idsAbschnitte);
+		final var map = list.stream().collect(Collectors.groupingBy(f -> f.idAbschnittsdaten));
 		for (final long idAbschnitt : idsAbschnitte) {
 			map.computeIfAbsent(idAbschnitt, id -> new ArrayList<>());
 		}
 		return map;
+	}
+
+	@Override
+	public List<DTOLehrerEntlastungsstunde> getAllByLehrerAbschnittId(final long idAbschnitt) {
+		return conn.queryList(DTOLehrerEntlastungsstunde.QUERY_BY_IDABSCHNITTSDATEN, DTOLehrerEntlastungsstunde.class, idAbschnitt);
 	}
 
 }

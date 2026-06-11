@@ -30,7 +30,7 @@ public interface LehrerAnrechnungsstundenController {
 	Response getList(Collection<Long> ids);
 
 	/**
-	 * Führt einen Patch für den Eintrag für allgemeine Anrechnungsstunden eine Lehrers aus.
+	 * Führt einen Patch für den Eintrag für allgemeine Anrechnungsstunden eines Lehrers aus.
 	 * Der Patch enthält die ID des Eintrages auf welchen er sich bezieht.
 	 *
 	 * @param patch   der Patch

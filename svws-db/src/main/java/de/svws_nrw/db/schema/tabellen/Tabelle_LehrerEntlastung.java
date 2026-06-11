@@ -18,6 +18,7 @@ public class Tabelle_LehrerEntlastung extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte ID */
 	public final SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
 			.setNotNull()
+			.setJavaName("id")
 			.setJavaComment("ID für den Eintrag für die Entlastungsstunden (Mehr-Minderleistung)");
 
 	/** Die Definition der Tabellenspalte Lehrer_ID */
@@ -29,14 +30,17 @@ public class Tabelle_LehrerEntlastung extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Abschnitt_ID */
 	public final SchemaTabelleSpalte col_Abschnitt_ID = add("Abschnitt_ID", SchemaDatentypen.BIGINT, false)
 			.setNotNull()
+			.setJavaName("idAbschnittsdaten")
 			.setJavaComment("ID der Lehrerabschnittsdaten");
 
 	/** Die Definition der Tabellenspalte EntlastungsgrundKrz */
 	public final SchemaTabelleSpalte col_EntlastungsgrundKrz = add("EntlastungsgrundKrz", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
+			.setJavaName("entlastungsgrundKrz")
 			.setJavaComment("Kürzel für die Entlastungsstunden (Minderleistung)");
 
 	/** Die Definition der Tabellenspalte EntlastungStd */
 	public final SchemaTabelleSpalte col_EntlastungStd = add("EntlastungStd", SchemaDatentypen.FLOAT, false)
+			.setJavaName("anzahl")
 			.setJavaComment("Anzahl für die Entlastungsstunden (Minderleistung)");
 
 	/** Die Definition der Tabellenspalte Jahr */

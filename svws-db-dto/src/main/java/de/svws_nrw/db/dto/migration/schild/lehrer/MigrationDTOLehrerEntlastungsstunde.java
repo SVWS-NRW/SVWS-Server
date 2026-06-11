@@ -18,26 +18,26 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerEntlastung")
-@JsonPropertyOrder({"ID", "Lehrer_ID", "Abschnitt_ID", "EntlastungsgrundKrz", "EntlastungStd", "Jahr", "Abschnitt", "SchulnrEigner"})
+@JsonPropertyOrder({"id", "Lehrer_ID", "idAbschnittsdaten", "entlastungsgrundKrz", "anzahl", "Jahr", "Abschnitt", "SchulnrEigner"})
 public final class MigrationDTOLehrerEntlastungsstunde {
 
 	/** Die Datenbankabfrage für alle DTOs */
 	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOLehrerEntlastungsstunde e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM MigrationDTOLehrerEntlastungsstunde e WHERE e.ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOLehrerEntlastungsstunde e WHERE e.id = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOLehrerEntlastungsstunde e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOLehrerEntlastungsstunde e WHERE e.id IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOLehrerEntlastungsstunde e WHERE e.ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOLehrerEntlastungsstunde e WHERE e.id IS NOT NULL";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
-	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOLehrerEntlastungsstunde e WHERE e.ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes id */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOLehrerEntlastungsstunde e WHERE e.id = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
-	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOLehrerEntlastungsstunde e WHERE e.ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes id */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOLehrerEntlastungsstunde e WHERE e.id IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Lehrer_ID */
 	public static final String QUERY_BY_LEHRER_ID = "SELECT e FROM MigrationDTOLehrerEntlastungsstunde e WHERE e.Lehrer_ID = ?1";
@@ -45,23 +45,23 @@ public final class MigrationDTOLehrerEntlastungsstunde {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lehrer_ID */
 	public static final String QUERY_LIST_BY_LEHRER_ID = "SELECT e FROM MigrationDTOLehrerEntlastungsstunde e WHERE e.Lehrer_ID IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Abschnitt_ID */
-	public static final String QUERY_BY_ABSCHNITT_ID = "SELECT e FROM MigrationDTOLehrerEntlastungsstunde e WHERE e.Abschnitt_ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idAbschnittsdaten */
+	public static final String QUERY_BY_IDABSCHNITTSDATEN = "SELECT e FROM MigrationDTOLehrerEntlastungsstunde e WHERE e.idAbschnittsdaten = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abschnitt_ID */
-	public static final String QUERY_LIST_BY_ABSCHNITT_ID = "SELECT e FROM MigrationDTOLehrerEntlastungsstunde e WHERE e.Abschnitt_ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idAbschnittsdaten */
+	public static final String QUERY_LIST_BY_IDABSCHNITTSDATEN = "SELECT e FROM MigrationDTOLehrerEntlastungsstunde e WHERE e.idAbschnittsdaten IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes EntlastungsgrundKrz */
-	public static final String QUERY_BY_ENTLASTUNGSGRUNDKRZ = "SELECT e FROM MigrationDTOLehrerEntlastungsstunde e WHERE e.EntlastungsgrundKrz = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes entlastungsgrundKrz */
+	public static final String QUERY_BY_ENTLASTUNGSGRUNDKRZ = "SELECT e FROM MigrationDTOLehrerEntlastungsstunde e WHERE e.entlastungsgrundKrz = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes EntlastungsgrundKrz */
-	public static final String QUERY_LIST_BY_ENTLASTUNGSGRUNDKRZ = "SELECT e FROM MigrationDTOLehrerEntlastungsstunde e WHERE e.EntlastungsgrundKrz IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes entlastungsgrundKrz */
+	public static final String QUERY_LIST_BY_ENTLASTUNGSGRUNDKRZ = "SELECT e FROM MigrationDTOLehrerEntlastungsstunde e WHERE e.entlastungsgrundKrz IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes EntlastungStd */
-	public static final String QUERY_BY_ENTLASTUNGSTD = "SELECT e FROM MigrationDTOLehrerEntlastungsstunde e WHERE e.EntlastungStd = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes anzahl */
+	public static final String QUERY_BY_ANZAHL = "SELECT e FROM MigrationDTOLehrerEntlastungsstunde e WHERE e.anzahl = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes EntlastungStd */
-	public static final String QUERY_LIST_BY_ENTLASTUNGSTD = "SELECT e FROM MigrationDTOLehrerEntlastungsstunde e WHERE e.EntlastungStd IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes anzahl */
+	public static final String QUERY_LIST_BY_ANZAHL = "SELECT e FROM MigrationDTOLehrerEntlastungsstunde e WHERE e.anzahl IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Jahr */
 	public static final String QUERY_BY_JAHR = "SELECT e FROM MigrationDTOLehrerEntlastungsstunde e WHERE e.Jahr = ?1";
@@ -85,7 +85,7 @@ public final class MigrationDTOLehrerEntlastungsstunde {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public Long id;
 
 	/** DEPRECATED: Lehrer-ID für die Entlastungsstunden (Mehr-Minderleistung), in LehrerAbchnittsdaten enthalten */
 	@Column(name = "Lehrer_ID")
@@ -95,17 +95,17 @@ public final class MigrationDTOLehrerEntlastungsstunde {
 	/** ID der Lehrerabschnittsdaten */
 	@Column(name = "Abschnitt_ID")
 	@JsonProperty
-	public Long Abschnitt_ID;
+	public Long idAbschnittsdaten;
 
 	/** Kürzel für die Entlastungsstunden (Minderleistung) */
 	@Column(name = "EntlastungsgrundKrz")
 	@JsonProperty
-	public String EntlastungsgrundKrz;
+	public String entlastungsgrundKrz;
 
 	/** Anzahl für die Entlastungsstunden (Minderleistung) */
 	@Column(name = "EntlastungStd")
 	@JsonProperty
-	public Double EntlastungStd;
+	public Double anzahl;
 
 	/** Schuljahr für die Entlastungsstunden (Minderleistung) */
 	@Column(name = "Jahr")
@@ -131,23 +131,23 @@ public final class MigrationDTOLehrerEntlastungsstunde {
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse MigrationDTOLehrerEntlastungsstunde ohne eine Initialisierung der Attribute.
-	 * @param ID   der Wert für das Attribut ID
+	 * @param id   der Wert für das Attribut id
 	 * @param Lehrer_ID   der Wert für das Attribut Lehrer_ID
-	 * @param Abschnitt_ID   der Wert für das Attribut Abschnitt_ID
+	 * @param idAbschnittsdaten   der Wert für das Attribut idAbschnittsdaten
 	 */
-	public MigrationDTOLehrerEntlastungsstunde(final Long ID, final Long Lehrer_ID, final Long Abschnitt_ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
+	public MigrationDTOLehrerEntlastungsstunde(final Long id, final Long Lehrer_ID, final Long idAbschnittsdaten) {
+		if (id == null) {
+			throw new NullPointerException("id must not be null");
 		}
-		this.ID = ID;
+		this.id = id;
 		if (Lehrer_ID == null) {
 			throw new NullPointerException("Lehrer_ID must not be null");
 		}
 		this.Lehrer_ID = Lehrer_ID;
-		if (Abschnitt_ID == null) {
-			throw new NullPointerException("Abschnitt_ID must not be null");
+		if (idAbschnittsdaten == null) {
+			throw new NullPointerException("idAbschnittsdaten must not be null");
 		}
-		this.Abschnitt_ID = Abschnitt_ID;
+		this.idAbschnittsdaten = idAbschnittsdaten;
 	}
 
 
@@ -163,11 +163,11 @@ public final class MigrationDTOLehrerEntlastungsstunde {
 			return false;
 		}
 		MigrationDTOLehrerEntlastungsstunde other = (MigrationDTOLehrerEntlastungsstunde) obj;
-		if (ID == null) {
-			if (other.ID != null) {
+		if (id == null) {
+			if (other.id != null) {
 				return false;
 			}
-		} else if (!ID.equals(other.ID)) {
+		} else if (!id.equals(other.id)) {
 			return false;
 		}
 		return true;
@@ -177,7 +177,7 @@ public final class MigrationDTOLehrerEntlastungsstunde {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -189,7 +189,7 @@ public final class MigrationDTOLehrerEntlastungsstunde {
 	 */
 	@Override
 	public String toString() {
-		return "MigrationDTOLehrerEntlastungsstunde(ID=" + this.ID + ", Lehrer_ID=" + this.Lehrer_ID + ", Abschnitt_ID=" + this.Abschnitt_ID + ", EntlastungsgrundKrz=" + this.EntlastungsgrundKrz + ", EntlastungStd=" + this.EntlastungStd + ", Jahr=" + this.Jahr + ", Abschnitt=" + this.Abschnitt + ", SchulnrEigner=" + this.SchulnrEigner + ")";
+		return "MigrationDTOLehrerEntlastungsstunde(id=" + this.id + ", Lehrer_ID=" + this.Lehrer_ID + ", idAbschnittsdaten=" + this.idAbschnittsdaten + ", entlastungsgrundKrz=" + this.entlastungsgrundKrz + ", anzahl=" + this.anzahl + ", Jahr=" + this.Jahr + ", Abschnitt=" + this.Abschnitt + ", SchulnrEigner=" + this.SchulnrEigner + ")";
 	}
 
 }

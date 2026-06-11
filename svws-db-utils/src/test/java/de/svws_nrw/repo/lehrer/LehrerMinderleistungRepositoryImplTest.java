@@ -32,17 +32,17 @@ class LehrerMinderleistungRepositoryImplTest {
 
 	@Test
 	@DisplayName("Test: Prüfe, ob getMapByAbschnitt die Minderleistungen nach Abschnitt-IDs korrekt gruppiert.")
-	void testGetMapByAbschnitt() {
+	void testGetMapByAbschnittIds() {
 		// Stenario: Drei Abschnitte mit zwei, einem bzw. keinem Minderleistungsgrund
 		final List<Long> idsAbschnitte = Arrays.asList(100L, 200L, 300L);
 		final DTOLehrerEntlastungsstunde e1 = new DTOLehrerEntlastungsstunde(1L, 100L);
 		final DTOLehrerEntlastungsstunde e2 = new DTOLehrerEntlastungsstunde(2L, 100L);
 		final DTOLehrerEntlastungsstunde e3 = new DTOLehrerEntlastungsstunde(3L, 200L);
 
-		when(conn.queryList(DTOLehrerEntlastungsstunde.QUERY_LIST_BY_ABSCHNITT_ID, DTOLehrerEntlastungsstunde.class, idsAbschnitte))
+		when(conn.queryList(DTOLehrerEntlastungsstunde.QUERY_LIST_BY_IDABSCHNITTSDATEN, DTOLehrerEntlastungsstunde.class, idsAbschnitte))
 				.thenReturn(Arrays.asList(e1, e2, e3));
 
-		final Map<Long, List<DTOLehrerEntlastungsstunde>> result = repository.getMapByAbschnitt(idsAbschnitte);
+		final Map<Long, List<DTOLehrerEntlastungsstunde>> result = repository.getMapByAbschnittIds(idsAbschnitte);
 
 		// Prüfe, ob die Gruppierung korrekt durchgeführt wurde
 		assertNotNull(result);
@@ -55,19 +55,19 @@ class LehrerMinderleistungRepositoryImplTest {
 
 		// Prüfung Abschnitt 200
 		assertEquals(1, result.get(200L).size());
-		assertEquals(e3, result.get(200L).get(0));
+		assertEquals(e3, result.get(200L).getFirst());
 
 		// Prüfung Abschnitt 300
 		assertTrue(result.get(300L).isEmpty());
 
-		verify(conn).queryList(DTOLehrerEntlastungsstunde.QUERY_LIST_BY_ABSCHNITT_ID, DTOLehrerEntlastungsstunde.class, idsAbschnitte);
+		verify(conn).queryList(DTOLehrerEntlastungsstunde.QUERY_LIST_BY_IDABSCHNITTSDATEN, DTOLehrerEntlastungsstunde.class, idsAbschnitte);
 	}
 
 	@Test
 	@DisplayName("Test: Prüfe, ob getMapByAbschnitt bei null oder leeren IDs eine leere Map liefert.")
-	void testGetMapByAbschnittEmpty() {
-		assertTrue(repository.getMapByAbschnitt(null).isEmpty());
-		assertTrue(repository.getMapByAbschnitt(List.of()).isEmpty());
+	void testGetMapByAbschnittIdsEmpty() {
+		assertTrue(repository.getMapByAbschnittIds(null).isEmpty());
+		assertTrue(repository.getMapByAbschnittIds(List.of()).isEmpty());
 		verifyNoInteractions(conn);
 	}
 
@@ -82,7 +82,7 @@ class LehrerMinderleistungRepositoryImplTest {
 
 		final DTOLehrerEntlastungsstunde result = repository.create(neu);
 
-		assertEquals(neueId, result.ID);
+		assertEquals(neueId, result.id);
 		verify(conn).transactionGetNextID(DTOLehrerEntlastungsstunde.class);
 		verify(conn).transactionPersist(neu);
 	}

@@ -10182,6 +10182,29 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der PATCH-Methode patchLehrerPersonalabschnittsdatenMinderleistungen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/minderleistung
+	 *
+	 * Passt die Minderleistungen an und speichert die Ergebnisse in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personalabschnittsdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Minderleistung integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten zu ändern.
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 */
+	public async patchLehrerPersonalabschnittsdatenMinderleistungen(data : List<Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, schema : string) : Promise<void> {
+		const path = "/db/{schema}/lehrer/personalabschnittsdaten/minderleistung"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<LehrerPersonalabschnittsdatenAnrechnungsstunden>).map(d => LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(d)).join() + "]";
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getLehrerPersonalabschnittsdatenMinderleistung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/minderleistung/{id : \d+}
 	 *
 	 * Liest die Minderleistung zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.
@@ -10216,7 +10239,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Minderleistung wurde erfolgreich entfernt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: LehrerPersonalabschnittsdatenAnrechnungsstunden
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Minderleistung zu löschen.
 	 *   Code 404: Keine Minderleistung mit der angegebenen ID gefunden
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft
@@ -10227,13 +10250,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Minderleistung wurde erfolgreich entfernt.
 	 */
-	public async deleteLehrerPersonalabschnittsdatenMinderleistung(schema : string, id : number) : Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
+	public async deleteLehrerPersonalabschnittsdatenMinderleistung(schema : string, id : number) : Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/minderleistung/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
-		return LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text);
+		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
 
 

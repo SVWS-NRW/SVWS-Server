@@ -102,4 +102,16 @@ public final class LehrerPersonaldatenControllerFactory {
 		final LehrerMehrleistungService getService = serviceFactory.getLehrerMehrleistungService();
 		return new LehrerMehrleistungControllerImpl(getService);
 	}
+
+	/**
+	 * Erstellt einen Controller für die Lehrer-Minderleistungen
+	 *
+	 * @return der Controller
+	 *
+	 * @throws ApiOperationException wenn ein Fehler bei der Überprüfung der Berechtigung auftritt
+	 */
+	public LehrerMinderleistungController getLehrerMinderleistungController() throws ApiOperationException {
+		return new LehrerMinderleistungControllerImpl(serviceFactory.getLehrerMinderleistungService());
+	}
+
 }

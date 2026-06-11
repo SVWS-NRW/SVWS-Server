@@ -1,17 +1,19 @@
 package de.svws_nrw.service.lehrer;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.verify;
-
+import de.svws_nrw.asd.utils.CoreTypeDataManager;
+import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
+import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
-import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.verify;
 
 
 /**
@@ -100,6 +102,19 @@ class LehrerServiceFactoryTest {
 	    verify(repoSchuleFactory).getSchuljahresabschnitteRepository();
 	    verify(repoLehrerFactory).getLehrerAbschnittsdatenRepository();
 	    verify(repoLehrerFactory).getLehrerAnrechnungRepository();
+	}
+
+	@Test
+	@DisplayName("Test: Prüfe, ob getLehrerMinderleistungService den Service mit dem Kontext korrekt erstellt")
+	void testGetLehrerMinderleistungService() {
+		try (MockedStatic<CoreTypeDataManager> ignored = Mockito.mockStatic(CoreTypeDataManager.class)) {
+			final var service = serviceFactory.getLehrerMinderleistungService();
+			assertNotNull(service);
+
+			verify(repoSchuleFactory).getSchuljahresabschnitteRepository();
+			verify(repoLehrerFactory).getLehrerAbschnittsdatenRepository();
+			verify(repoLehrerFactory).getLehrerMinderleistungRepository();
+		}
 	}
 
 }

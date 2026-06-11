@@ -18,65 +18,65 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerEntlastung")
-@JsonPropertyOrder({"ID", "Abschnitt_ID", "EntlastungsgrundKrz", "EntlastungStd"})
+@JsonPropertyOrder({"id", "idAbschnittsdaten", "entlastungsgrundKrz", "anzahl"})
 public final class DTOLehrerEntlastungsstunde {
 
 	/** Die Datenbankabfrage für alle DTOs */
 	public static final String QUERY_ALL = "SELECT e FROM DTOLehrerEntlastungsstunde e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.id = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.id IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.id IS NOT NULL";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
-	public static final String QUERY_BY_ID = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes id */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.id = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
-	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes id */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.id IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Abschnitt_ID */
-	public static final String QUERY_BY_ABSCHNITT_ID = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.Abschnitt_ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idAbschnittsdaten */
+	public static final String QUERY_BY_IDABSCHNITTSDATEN = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.idAbschnittsdaten = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abschnitt_ID */
-	public static final String QUERY_LIST_BY_ABSCHNITT_ID = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.Abschnitt_ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idAbschnittsdaten */
+	public static final String QUERY_LIST_BY_IDABSCHNITTSDATEN = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.idAbschnittsdaten IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes EntlastungsgrundKrz */
-	public static final String QUERY_BY_ENTLASTUNGSGRUNDKRZ = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.EntlastungsgrundKrz = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes entlastungsgrundKrz */
+	public static final String QUERY_BY_ENTLASTUNGSGRUNDKRZ = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.entlastungsgrundKrz = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes EntlastungsgrundKrz */
-	public static final String QUERY_LIST_BY_ENTLASTUNGSGRUNDKRZ = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.EntlastungsgrundKrz IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes entlastungsgrundKrz */
+	public static final String QUERY_LIST_BY_ENTLASTUNGSGRUNDKRZ = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.entlastungsgrundKrz IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes EntlastungStd */
-	public static final String QUERY_BY_ENTLASTUNGSTD = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.EntlastungStd = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes anzahl */
+	public static final String QUERY_BY_ANZAHL = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.anzahl = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes EntlastungStd */
-	public static final String QUERY_LIST_BY_ENTLASTUNGSTD = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.EntlastungStd IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes anzahl */
+	public static final String QUERY_LIST_BY_ANZAHL = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.anzahl IN ?1";
 
 	/** ID für den Eintrag für die Entlastungsstunden (Mehr-Minderleistung) */
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public long ID;
+	public long id;
 
 	/** ID der Lehrerabschnittsdaten */
 	@Column(name = "Abschnitt_ID")
 	@JsonProperty
-	public long Abschnitt_ID;
+	public long idAbschnittsdaten;
 
 	/** Kürzel für die Entlastungsstunden (Minderleistung) */
 	@Column(name = "EntlastungsgrundKrz")
 	@JsonProperty
-	public String EntlastungsgrundKrz;
+	public String entlastungsgrundKrz;
 
 	/** Anzahl für die Entlastungsstunden (Minderleistung) */
 	@Column(name = "EntlastungStd")
 	@JsonProperty
-	public Double EntlastungStd;
+	public Double anzahl;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOLehrerEntlastungsstunde ohne eine Initialisierung der Attribute.
@@ -87,12 +87,12 @@ public final class DTOLehrerEntlastungsstunde {
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOLehrerEntlastungsstunde ohne eine Initialisierung der Attribute.
-	 * @param ID   der Wert für das Attribut ID
-	 * @param Abschnitt_ID   der Wert für das Attribut Abschnitt_ID
+	 * @param id   der Wert für das Attribut id
+	 * @param idAbschnittsdaten   der Wert für das Attribut idAbschnittsdaten
 	 */
-	public DTOLehrerEntlastungsstunde(final long ID, final long Abschnitt_ID) {
-		this.ID = ID;
-		this.Abschnitt_ID = Abschnitt_ID;
+	public DTOLehrerEntlastungsstunde(final long id, final long idAbschnittsdaten) {
+		this.id = id;
+		this.idAbschnittsdaten = idAbschnittsdaten;
 	}
 
 
@@ -108,14 +108,14 @@ public final class DTOLehrerEntlastungsstunde {
 			return false;
 		}
 		DTOLehrerEntlastungsstunde other = (DTOLehrerEntlastungsstunde) obj;
-		return ID == other.ID;
+		return id == other.id;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Long.hashCode(ID);
+		result = prime * result + Long.hashCode(id);
 		return result;
 	}
 
@@ -127,7 +127,7 @@ public final class DTOLehrerEntlastungsstunde {
 	 */
 	@Override
 	public String toString() {
-		return "DTOLehrerEntlastungsstunde(ID=" + this.ID + ", Abschnitt_ID=" + this.Abschnitt_ID + ", EntlastungsgrundKrz=" + this.EntlastungsgrundKrz + ", EntlastungStd=" + this.EntlastungStd + ")";
+		return "DTOLehrerEntlastungsstunde(id=" + this.id + ", idAbschnittsdaten=" + this.idAbschnittsdaten + ", entlastungsgrundKrz=" + this.entlastungsgrundKrz + ", anzahl=" + this.anzahl + ")";
 	}
 
 }

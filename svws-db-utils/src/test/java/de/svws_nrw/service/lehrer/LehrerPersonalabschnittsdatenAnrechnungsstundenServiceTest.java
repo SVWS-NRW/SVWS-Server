@@ -195,18 +195,18 @@ class LehrerPersonalabschnittsdatenAnrechnungsstundenServiceTest {
 
 		// Eine Minderleistungsstunden mit gültigen Kürzel für den Grund
 		final DTOLehrerEntlastungsstunde dto1 = new DTOLehrerEntlastungsstunde(500L, lehrerAbschnitt1Id);
-		dto1.EntlastungsgrundKrz = "260";
-		dto1.EntlastungStd = 2.0;
+		dto1.entlastungsgrundKrz = "260";
+		dto1.anzahl = 2.0;
 
 		// Eine Minderleistungsstunden mit fehlerhaftem Kürzel für den Grund
 		final DTOLehrerEntlastungsstunde dto2 = new DTOLehrerEntlastungsstunde(500L, lehrerAbschnitt1Id);
-		dto2.EntlastungsgrundKrz = "FALSCH";
+		dto2.entlastungsgrundKrz = "FALSCH";
 
 		// Und nochmal Lehrer-Abschnittsdaten, wo keine Minderleistungsstunden hinterlegt sind.
 		final long lehrerAbschnitt2Id = 101L;
 		final DTOLehrerAbschnittsdaten lehrerAbschnitt2 = new DTOLehrerAbschnittsdaten(lehrerAbschnitt2Id, lehrerId, idSchuljahresabschnitt);
 
-		when(repoMinderleistung.getMapByAbschnitt(anyCollection())).thenReturn(
+		when(repoMinderleistung.getMapByAbschnittIds(anyCollection())).thenReturn(
 				Map.of(lehrerAbschnitt1Id, List.of(dto1, dto2), lehrerAbschnitt2Id, Collections.emptyList()));
 
 		final Map<Long, List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> result =
@@ -237,7 +237,7 @@ class LehrerPersonalabschnittsdatenAnrechnungsstundenServiceTest {
 		assertEquals(0.0, eintrag2.anzahl, "Ein Wert von null muss auf 0.0 umgewandelt werden.");
 
 		verify(repoAbschnitte, atLeastOnce()).getById(idSchuljahresabschnitt);
-		verify(repoMinderleistung).getMapByAbschnitt(anyCollection());
+		verify(repoMinderleistung).getMapByAbschnittIds(anyCollection());
 	}
 
 }

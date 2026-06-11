@@ -83,15 +83,15 @@ public final class LehrerPersonalabschnittsdatenAnrechnungsstundenService {
 		final DTOSchuljahresabschnitte abschnitt = repoSchuljahresabschnitte.getById(dtoAbschnitt.Schuljahresabschnitts_ID);
 
 		final LehrerPersonalabschnittsdatenAnrechnungsstunden daten = new LehrerPersonalabschnittsdatenAnrechnungsstunden();
-		daten.id = dto.ID;
-		daten.idAbschnittsdaten = dto.Abschnitt_ID;
+		daten.id = dto.id;
+		daten.idAbschnittsdaten = dto.idAbschnittsdaten;
 
 		// Ermittle die Art des Grundes. Ist dieser nicht gültig für das Halbjahr, so wird keine Fehlermeldung ausgegeben, sondern der Grund auf null gesetzt.
-		final LehrerMinderleistungsarten art = LehrerMinderleistungsarten.data().getWertByKuerzel(dto.EntlastungsgrundKrz);
+		final LehrerMinderleistungsarten art = LehrerMinderleistungsarten.data().getWertByKuerzel(dto.entlastungsgrundKrz);
 		final LehrerMinderleistungsartKatalogEintrag artEintrag = (art == null) ? null : art.daten(abschnitt.Jahr);
 		daten.idGrund = (artEintrag == null) ? null : artEintrag.id;
 
-		daten.anzahl = (dto.EntlastungStd == null) ? 0.0 : dto.EntlastungStd;
+		daten.anzahl = (dto.anzahl == null) ? 0.0 : dto.anzahl;
 		return daten;
 	}
 
@@ -137,7 +137,7 @@ public final class LehrerPersonalabschnittsdatenAnrechnungsstundenService {
 	public @NotNull Map<Long, List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> getMapMinderleistungen(
 			final Collection<DTOLehrerAbschnittsdaten> abschnitte) {
 		final var idsAbschnitte = abschnitte.stream().map(a -> a.ID).toList();
-		final var mapMinderleistungen = lehrerMinderleistungenRepository.getMapByAbschnitt(idsAbschnitte);
+		final var mapMinderleistungen = lehrerMinderleistungenRepository.getMapByAbschnittIds(idsAbschnitte);
 		return abschnitte.stream().collect(Collectors.toMap(a -> a.ID,
 				a -> mapMinderleistungen.getOrDefault(a.ID, Collections.emptyList()).stream().map(b -> mapMinderleistung(a, b)).toList()));
 	}

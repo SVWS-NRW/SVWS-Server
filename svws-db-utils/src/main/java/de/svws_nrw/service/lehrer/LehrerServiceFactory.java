@@ -1,6 +1,9 @@
 package de.svws_nrw.service.lehrer;
 
 import de.svws_nrw.mapper.lehrer.LehrerMehrleistungMapper;
+import de.svws_nrw.asd.types.lehrer.LehrerMinderleistungsarten;
+import de.svws_nrw.asd.utils.CoreTypeDataManager;
+import de.svws_nrw.mapper.lehrer.LehrerMinderleistungMapper;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
 
@@ -128,4 +131,20 @@ public final class LehrerServiceFactory {
 				lehrerRepositoryFactory.getLehrerMehrleistungRepository()),
 				LehrerMehrleistungMapper.INSTANCE);
 	}
+
+	/**
+	 * Erstellt einen neuen Service für den Zugriff auf Einträge zu den Minderleistungen bei Lehrern.
+	 *
+	 * @return der Service für die Minderleistungen von Lehrern.
+	 */
+	public LehrerMinderleistungService getLehrerMinderleistungService() {
+		return new LehrerMinderleistungService(
+				lehrerRepositoryFactory.getLehrerMinderleistungRepository(),
+				schuleRepositoryFactory.getSchuljahresabschnitteRepository(),
+				lehrerRepositoryFactory.getLehrerAbschnittsdatenRepository(),
+				LehrerMinderleistungMapper.INSTANCE,
+				CoreTypeDataManager.getManager(LehrerMinderleistungsarten.class)
+		);
+	}
+
 }
