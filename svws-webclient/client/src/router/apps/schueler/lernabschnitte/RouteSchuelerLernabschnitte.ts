@@ -16,17 +16,17 @@ import { routeSchuelerLernabschnittFoerderempfehlungen } from "./RouteSchuelerLe
 import { RouteDataSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteDataSchuelerLernabschnitte";
 
 
-import type { SchuelerLernabschnitteProps } from "~/components/schueler/lernabschnitte/SSchuelerLernabschnitteProps";
+import type { SchuelerLernabschnitteProps } from "~/components/schueler/lernabschnitte/SchuelerLernabschnitteProps";
 import { routeSchuelerLernabschnittGostKlausuren } from "./RouteSchuelerLernabschnittGostKlausuren";
 import type { TabData } from "@ui";
 
-const SSchuelerLernabschnitte = () => import("~/components/schueler/lernabschnitte/SSchuelerLernabschnitte.vue");
+const SchuelerLernabschnitte = () => import("~/components/schueler/lernabschnitte/SchuelerLernabschnitte.vue");
 
 
 export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLernabschnitte, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN], "schueler.lernabschnitt", "lernabschnitt/:abschnitt(\\d+)?/:wechselNr(\\d+)?", SSchuelerLernabschnitte, new RouteDataSchuelerLernabschnitte());
+		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN], "schueler.lernabschnitt", "lernabschnitt/:abschnitt(\\d+)?/:wechselNr(\\d+)?", SchuelerLernabschnitte, new RouteDataSchuelerLernabschnitte());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Lernabschnitte";

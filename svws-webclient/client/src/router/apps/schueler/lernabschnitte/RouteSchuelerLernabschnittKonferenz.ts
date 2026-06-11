@@ -5,15 +5,15 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeSchuelerLernabschnitte, type RouteSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnitte";
 
-import type { SchuelerLernabschnittKonferenzProps } from "~/components/schueler/lernabschnitte/konferenz/SSchuelerLernabschnittKonferenzProps";
+import type { SchuelerLernabschnittKonferenzProps } from "~/components/schueler/lernabschnitte/konferenz/SchuelerLernabschnittKonferenzProps";
 import { api } from "~/router/Api";
 
-const SSchuelerLernabschnittAllgmein = () => import("~/components/schueler/lernabschnitte/konferenz/SSchuelerLernabschnittKonferenz.vue");
+const SchuelerLernabschnittAllgmein = () => import("~/components/schueler/lernabschnitte/konferenz/SchuelerLernabschnittKonferenz.vue");
 
 export class RouteSchuelerLernabschnittKonferenz extends RouteNode<any, RouteSchuelerLernabschnitte> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN], "schueler.lernabschnitt.konferenz", "konferenz", SSchuelerLernabschnittAllgmein);
+		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN], "schueler.lernabschnitt.konferenz", "konferenz", SchuelerLernabschnittAllgmein);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Konferenz";

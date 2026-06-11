@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 
-	import type { SchuelerLernabschnittNachpruefungProps } from "./SSchuelerLernabschnittNachpruefungProps";
+	import type { SchuelerLernabschnittNachpruefungProps } from "./SchuelerLernabschnittNachpruefungProps";
 
 	const props = defineProps<SchuelerLernabschnittNachpruefungProps>();
 

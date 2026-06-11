@@ -5,15 +5,15 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeSchuelerLernabschnitte, type RouteSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnitte";
 
-import type { SchuelerLernabschnittZeugnisdruckProps } from "~/components/schueler/lernabschnitte/zeugnisdruck/SSchuelerLernabschnittZeugnisdruckProps";
+import type { SchuelerLernabschnittZeugnisdruckProps } from "~/components/schueler/lernabschnitte/zeugnisdruck/SchuelerLernabschnittZeugnisdruckProps";
 import { api } from "~/router/Api";
 
-const SSchuelerLernabschnittAllgmein = () => import("~/components/schueler/lernabschnitte/zeugnisdruck/SSchuelerLernabschnittZeugnisdruck.vue");
+const SchuelerLernabschnittAllgemein = () => import("~/components/schueler/lernabschnitte/zeugnisdruck/SchuelerLernabschnittZeugnisdruck.vue");
 
 export class RouteSchuelerLernabschnittZeugnisdruck extends RouteNode<any, RouteSchuelerLernabschnitte> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN], "schueler.lernabschnitt.zeugnisdruck", "zeugnisdruck", SSchuelerLernabschnittAllgmein);
+		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN], "schueler.lernabschnitt.zeugnisdruck", "zeugnisdruck", SchuelerLernabschnittAllgemein);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Zeugnisdruck";

@@ -1,18 +1,9 @@
 <template>
 	<div class="w-250 p-4">
 		<svws-ui-content-card>
-			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Konferenz-Datum" :model-value="manager().lernabschnittGet().datumKonferenz" type="date" disabled />
-				<svws-ui-text-input placeholder="Zeugnis-Datum" :model-value="manager().lernabschnittGet().datumZeugnis" @change="datumZeugnis=>patch({ datumZeugnis })" type="date" focus />
-			</svws-ui-input-wrapper>
-			<svws-ui-spacing />
-			<svws-ui-input-wrapper class="opacity-50">
-				<svws-ui-todo> TODO: nur Anzeige - abschluss </svws-ui-todo>
-				<svws-ui-todo> TODO: nur Anzeige - abschlussBerufsbildend </svws-ui-todo>
-				<svws-ui-todo> TODO: zeugnisart </svws-ui-todo>
-			</svws-ui-input-wrapper>
-			<svws-ui-spacing />
 			<svws-ui-input-wrapper>
+				<svws-ui-text-input placeholder="Konferenz-Datum" :readonly :model-value="manager().lernabschnittGet().datumKonferenz" @change="datumKonferenz=>patch({ datumKonferenz })" type="date" focus />
+				<svws-ui-spacing />
 				<svws-ui-textarea-input placeholder="Zeugnisbemerkungen" :readonly :model-value="manager().lernabschnittGet().bemerkungen.zeugnisAllgemein"
 					@change="zeugnisAllgemein => patchBemerkungen({ zeugnisAllgemein: zeugnisAllgemein === null ? '' : zeugnisAllgemein })" resizeable="vertical" :autoresize="true" />
 				<svws-ui-textarea-input placeholder="Arbeits- und Sozialverhalten" :readonly :model-value="manager().lernabschnittGet().bemerkungen.zeugnisASV"
@@ -30,10 +21,10 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { SchuelerLernabschnittZeugnisdruckProps } from "./SSchuelerLernabschnittZeugnisdruckProps";
+	import type { SchuelerLernabschnittKonferenzProps } from "./SchuelerLernabschnittKonferenzProps";
 	import { BenutzerKompetenz } from "@core";
 
-	const props = defineProps<SchuelerLernabschnittZeugnisdruckProps>();
+	const props = defineProps<SchuelerLernabschnittKonferenzProps>();
 	const readonly = computed<boolean>(() => !(props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN)
 		|| props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN))
 	);

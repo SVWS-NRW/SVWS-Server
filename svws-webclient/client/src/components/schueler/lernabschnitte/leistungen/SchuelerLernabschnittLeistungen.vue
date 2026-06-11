@@ -125,7 +125,7 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import type { SchuelerLernabschnittLeistungenProps } from "./SSchuelerLernabschnittLeistungenProps";
+	import type { SchuelerLernabschnittLeistungenProps } from "./SchuelerLernabschnittLeistungenProps";
 	import type { SchuelerLeistungsdaten, List, KursDaten, FachDaten, LehrerListeEintrag } from "@core";
 	import { Note, ZulaessigeKursart, ArrayList, Fach, BenutzerKompetenz, BenutzerTyp, Jahrgaenge } from "@core";
 	import { useSchuleState } from "@ui";

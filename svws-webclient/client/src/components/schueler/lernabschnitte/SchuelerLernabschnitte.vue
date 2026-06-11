@@ -34,7 +34,7 @@
 <script setup lang="ts">
 
 	import { useRegionSwitch } from "@ui";
-	import type { SchuelerLernabschnitteProps } from "./SSchuelerLernabschnitteProps";
+	import type { SchuelerLernabschnitteProps } from "./SchuelerLernabschnitteProps";
 
 	const props = defineProps<SchuelerLernabschnitteProps>();
 

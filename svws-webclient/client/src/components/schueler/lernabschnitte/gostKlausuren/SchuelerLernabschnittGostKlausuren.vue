@@ -115,7 +115,7 @@
 
 	import { ref } from "vue";
 	import type { DataTableColumn } from "@ui";
-	import type { SchuelerLernabschnittGostKlausurenProps } from "./SSchuelerLernabschnittGostKlausurenProps";
+	import type { SchuelerLernabschnittGostKlausurenProps } from "./SchuelerLernabschnittGostKlausurenProps";
 	import type { GostSchuelerklausur } from "@core";
 	import { GostHalbjahr, GostSchuelerklausurTermin, DateUtils } from "@core";
 

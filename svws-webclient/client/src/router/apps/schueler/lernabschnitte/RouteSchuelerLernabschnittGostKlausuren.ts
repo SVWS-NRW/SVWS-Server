@@ -7,12 +7,12 @@ import { routeError } from "~/router/error/RouteError";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeSchuelerLernabschnitte, type RouteSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnitte";
 
-import type { SchuelerLernabschnittGostKlausurenProps } from "~/components/schueler/lernabschnitte/gostKlausuren/SSchuelerLernabschnittGostKlausurenProps";
+import type { SchuelerLernabschnittGostKlausurenProps } from "~/components/schueler/lernabschnitte/gostKlausuren/SchuelerLernabschnittGostKlausurenProps";
 import { api } from "~/router/Api";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeSchuelerLernabschnittAllgemein } from "./RouteSchuelerLernabschnittAllgemein";
 
-const SSchuelerLernabschnittGostKlausuren = () => import("~/components/schueler/lernabschnitte/gostKlausuren/SSchuelerLernabschnittGostKlausuren.vue");
+const SchuelerLernabschnittGostKlausuren = () => import("~/components/schueler/lernabschnitte/gostKlausuren/SchuelerLernabschnittGostKlausuren.vue");
 
 export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<any, RouteSchuelerLernabschnitte> {
 
@@ -20,7 +20,7 @@ export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<any, Rout
 		super(schulformenGymOb, [
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
-		], "schueler.lernabschnitt.gostklausuren", "gostklausuren", SSchuelerLernabschnittGostKlausuren);
+		], "schueler.lernabschnitt.gostklausuren", "gostklausuren", SchuelerLernabschnittGostKlausuren);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Klausuren";

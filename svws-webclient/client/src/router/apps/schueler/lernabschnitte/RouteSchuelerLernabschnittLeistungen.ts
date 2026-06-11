@@ -6,15 +6,15 @@ import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { routeSchuelerLernabschnitte, type RouteSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnitte";
 
-import type { SchuelerLernabschnittLeistungenProps } from "~/components/schueler/lernabschnitte/leistungen/SSchuelerLernabschnittLeistungenProps";
+import type { SchuelerLernabschnittLeistungenProps } from "~/components/schueler/lernabschnitte/leistungen/SchuelerLernabschnittLeistungenProps";
 import { routeSchueler } from "../RouteSchueler";
 
-const SSchuelerLernabschnittLeistungen = () => import("~/components/schueler/lernabschnitte/leistungen/SSchuelerLernabschnittLeistungen.vue");
+const SchuelerLernabschnittLeistungen = () => import("~/components/schueler/lernabschnitte/leistungen/SchuelerLernabschnittLeistungen.vue");
 
 export class RouteSchuelerLernabschnittLeistungen extends RouteNode<any, RouteSchuelerLernabschnitte> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN], "schueler.lernabschnitt.leistungen", "leistungen", SSchuelerLernabschnittLeistungen);
+		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN], "schueler.lernabschnitt.leistungen", "leistungen", SchuelerLernabschnittLeistungen);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Leistungsdaten";

@@ -5,16 +5,16 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeSchuelerLernabschnitte, type RouteSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnitte";
 
-import type { SchuelerLernabschnittAllgemeinProps } from "~/components/schueler/lernabschnitte/allgemein/SSchuelerLernabschnittAllgemeinProps";
+import type { SchuelerLernabschnittAllgemeinProps } from "~/components/schueler/lernabschnitte/allgemein/SchuelerLernabschnittAllgemeinProps";
 import { api } from "~/router/Api";
 import { routeSchueler } from "../RouteSchueler";
 
-const SSchuelerLernabschnittAllgmein = () => import("~/components/schueler/lernabschnitte/allgemein/SSchuelerLernabschnittAllgemein.vue");
+const SchuelerLernabschnittAllgmein = () => import("~/components/schueler/lernabschnitte/allgemein/SchuelerLernabschnittAllgemein.vue");
 
 export class RouteSchuelerLernabschnittAllgemein extends RouteNode<any, RouteSchuelerLernabschnitte> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN], "schueler.lernabschnitt.allgemein", "allgemein", SSchuelerLernabschnittAllgmein);
+		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN], "schueler.lernabschnitt.allgemein", "allgemein", SchuelerLernabschnittAllgmein);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Allgemein";

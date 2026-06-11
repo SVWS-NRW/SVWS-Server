@@ -30,7 +30,7 @@
 
 	import { computed } from 'vue';
 	import { BenutzerKompetenz, type KlassenDaten } from "@core";
-	import type { SchuelerLernabschnittVersetzungAbschlussProps } from "./SSchuelerLernabschnittVersetzungAbschlussProps";
+	import type { SchuelerLernabschnittVersetzungAbschlussProps } from "./SchuelerLernabschnittVersetzungAbschlussProps";
 
 	const props = defineProps<SchuelerLernabschnittVersetzungAbschlussProps>();
 	const readonly = computed<boolean>(() => !(props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN)
