@@ -373,18 +373,6 @@
 			"gueltigBis": null
 		} ]
 	}, {
-		"bezeichner": "CV",
-		"idStatistik": "175000",
-		"historie": [ {
-			"id": 175000,
-			"kuerzel": "cv",
-			"schluessel": "cv",
-			"text": "Tschuwaschisch",
-			"iso3": "chv",
-			"gueltigVon": null,
-			"gueltigBis": null
-		} ]
-	}, {
 		"bezeichner": "CY",
 		"idStatistik": "30000",
 		"historie": [ {

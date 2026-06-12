@@ -153,6 +153,10 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 		this._mapBezeichnerToHistorie = data;
 		this._mapBezeichnerToStatistikID = idsStatistik;
 		for (final @NotNull U coreTypeValue : values) {
+			if (_mapBezeichnerToEnum.containsKey(coreTypeValue.name())) {
+				throw new CoreTypeException(_name + ": Der Core-Type-Bezeichner " + coreTypeValue.name()
+					+ "wurde mehrfach zugeordnet. Dies ist nicht zulässig. Der Core-Type konnte nicht vollständig initialisiert werden.");
+			}
 			_mapBezeichnerToEnum.put(coreTypeValue.name(), coreTypeValue);
 			final List<T> historie = _mapBezeichnerToHistorie.get(coreTypeValue.name());
 			if (historie == null) {

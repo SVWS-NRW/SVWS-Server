@@ -145,6 +145,9 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 		this._mapBezeichnerToHistorie = data;
 		this._mapBezeichnerToStatistikID = idsStatistik;
 		for (const coreTypeValue of values) {
+			if (this._mapBezeichnerToEnum.containsKey(coreTypeValue.name())) {
+				throw new CoreTypeException(this._name + ": Der Core-Type-Bezeichner " + coreTypeValue.name() + "wurde mehrfach zugeordnet. Dies ist nicht zulässig. Der Core-Type konnte nicht vollständig initialisiert werden.")
+			}
 			this._mapBezeichnerToEnum.put(coreTypeValue.name(), coreTypeValue);
 			const historie: List<T> | null = this._mapBezeichnerToHistorie.get(coreTypeValue.name());
 			if (historie === null) {

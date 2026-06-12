@@ -90,9 +90,14 @@ public class JsonCoreTypeData<T extends CoreTypeData> {
 						"Die JSON-Datei muss bei den IDs der Historien eindeutige Werte verwenden. Der Wert " + tmpIdStatistik + " kommt mehrfach vor.");
 			}
 			idsStatistik.add(tmpIdStatistik);
-			this._mapStatistikIDs.put(bezeichner.asText(), tmpIdStatistik);
+			final String strBezeichner = bezeichner.asText();
+			if (this._mapData.containsKey(strBezeichner)) {
+				throw new IOException(
+						"Die JSON-Datei muss bei den Bezeichnern der Historien eindeutige Zeichenketten verwenden. Der Bezeichner '" + strBezeichner + "' kommt mehrfach vor.");
+			}
+			this._mapStatistikIDs.put(strBezeichner, tmpIdStatistik);
 			final var list = new ArrayList<T>();
-			this._mapData.put(bezeichner.asText(), list);
+			this._mapData.put(strBezeichner, list);
 			for (final JsonNode obj : historie) {
 				list.add(mapper.readValue(obj.toString(), clazz));
 			}
