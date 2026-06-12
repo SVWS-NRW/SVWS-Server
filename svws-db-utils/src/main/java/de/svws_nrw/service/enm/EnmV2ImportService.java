@@ -33,6 +33,7 @@ import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLeistungs
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerTeilleistungen;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.db.utils.TimestampUtils;
 import de.svws_nrw.repo.enm.NotenmodulCredentialsRepository;
 import de.svws_nrw.repo.enm.NotenmodulCredentialsTimestampsRepository;
 import de.svws_nrw.repo.lehrer.LehrerRepository;
@@ -314,7 +315,7 @@ public class EnmV2ImportService {
 			}
 			DTONotenmodulCredentials cred = kontext.mapLehrerCreds.get(enmLehrer.id);
 			final DTOTimestampsNotenmodulCredentials credTS = kontext.mapLehrerCredsTimestamps.get(enmLehrer.id);
-			if (isTimestampAfter(enmLehrer.tsPasswordHash, credTS == null ? null : credTS.tsPasswordHash)) {
+			if (isTimestampAfter(enmLehrer.tsPasswordHash, credTS == null ? null : TimestampUtils.convertUtcToLocal(credTS.tsPasswordHash))) {
 				if (cred == null) {
 					cred = new DTONotenmodulCredentials(enmLehrer.id, "", enmLehrer.passwordHash, 0, true);
 				} else {
@@ -351,43 +352,43 @@ public class EnmV2ImportService {
 		final DTOSchuelerPSFachBemerkungen lernabschnittsbemerkungen = kontext.mapLernabschnittsbemerkungen.getOrDefault(enmSchueler.lernabschnitt.id,
 				new DTOSchuelerPSFachBemerkungen(idNeueFachbemerkung, enmSchueler.lernabschnitt.id));
 
-		boolean updatedBemerkungen = updateIfNewerOr(enmSchueler.bemerkungen.tsASV, lernabschnittTS.tsASV, neuBemerkungen, () -> {
+		boolean updatedBemerkungen = updateIfNewerOr(enmSchueler.bemerkungen.tsASV, TimestampUtils.convertUtcToLocal(lernabschnittTS.tsASV), neuBemerkungen, () -> {
 			lernabschnittsbemerkungen.ASV = enmSchueler.bemerkungen.ASV;
-			lernabschnittTS.tsASV = enmSchueler.bemerkungen.tsASV;
+			lernabschnittTS.tsASV = TimestampUtils.convertLocalToUtc(enmSchueler.bemerkungen.tsASV);
 		});
-		updatedBemerkungen |= updateIfNewerOr(enmSchueler.bemerkungen.tsAUE, lernabschnittTS.tsAUE, neuBemerkungen, () -> {
+		updatedBemerkungen |= updateIfNewerOr(enmSchueler.bemerkungen.tsAUE, TimestampUtils.convertUtcToLocal(lernabschnittTS.tsAUE), neuBemerkungen, () -> {
 			lernabschnittsbemerkungen.AUE = enmSchueler.bemerkungen.AUE;
-			lernabschnittTS.tsAUE = enmSchueler.bemerkungen.tsAUE;
+			lernabschnittTS.tsAUE = TimestampUtils.convertLocalToUtc(enmSchueler.bemerkungen.tsAUE);
 		});
-		updatedBemerkungen |= updateIfNewerOr(enmSchueler.bemerkungen.tsLELS, lernabschnittTS.tsLELS, neuBemerkungen, () -> {
+		updatedBemerkungen |= updateIfNewerOr(enmSchueler.bemerkungen.tsLELS, TimestampUtils.convertUtcToLocal(lernabschnittTS.tsLELS), neuBemerkungen, () -> {
 			lernabschnittsbemerkungen.LELS = enmSchueler.bemerkungen.LELS;
-			lernabschnittTS.tsLELS = enmSchueler.bemerkungen.tsLELS;
+			lernabschnittTS.tsLELS = TimestampUtils.convertLocalToUtc(enmSchueler.bemerkungen.tsLELS);
 		});
-		updatedBemerkungen |= updateIfNewerOr(enmSchueler.bemerkungen.tsSchulformEmpf, lernabschnittTS.tsESF, neuBemerkungen, () -> {
+		updatedBemerkungen |= updateIfNewerOr(enmSchueler.bemerkungen.tsSchulformEmpf, TimestampUtils.convertUtcToLocal(lernabschnittTS.tsESF), neuBemerkungen, () -> {
 			lernabschnittsbemerkungen.ESF = enmSchueler.bemerkungen.schulformEmpf;
-			lernabschnittTS.tsESF = enmSchueler.bemerkungen.tsSchulformEmpf;
+			lernabschnittTS.tsESF = TimestampUtils.convertLocalToUtc(enmSchueler.bemerkungen.tsSchulformEmpf);
 		});
-		updatedBemerkungen |= updateIfNewerOr(enmSchueler.bemerkungen.tsFoerderbemerkungen, lernabschnittTS.tsBemerkungFSP, neuBemerkungen, () -> {
+		updatedBemerkungen |= updateIfNewerOr(enmSchueler.bemerkungen.tsFoerderbemerkungen, TimestampUtils.convertUtcToLocal(lernabschnittTS.tsBemerkungFSP), neuBemerkungen, () -> {
 			lernabschnittsbemerkungen.BemerkungFSP = enmSchueler.bemerkungen.foerderbemerkungen;
-			lernabschnittTS.tsBemerkungFSP = enmSchueler.bemerkungen.tsFoerderbemerkungen;
+			lernabschnittTS.tsBemerkungFSP = TimestampUtils.convertLocalToUtc(enmSchueler.bemerkungen.tsFoerderbemerkungen);
 		});
-		updatedBemerkungen |= updateIfNewerOr(enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen, lernabschnittTS.tsBemerkungVersetzung,
+		updatedBemerkungen |= updateIfNewerOr(enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen, TimestampUtils.convertUtcToLocal(lernabschnittTS.tsBemerkungVersetzung),
 				neuBemerkungen, () -> {
 					lernabschnittsbemerkungen.BemerkungVersetzung = enmSchueler.bemerkungen.individuelleVersetzungsbemerkungen;
-					lernabschnittTS.tsBemerkungVersetzung = enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen;
+					lernabschnittTS.tsBemerkungVersetzung = TimestampUtils.convertLocalToUtc(enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen);
 				});
 
-		boolean updatedLernabschnitt = updateIfNewer(enmSchueler.bemerkungen.tsZB, lernabschnittTS.tsZeugnisBem, () -> {
+		boolean updatedLernabschnitt = updateIfNewer(enmSchueler.bemerkungen.tsZB, TimestampUtils.convertUtcToLocal(lernabschnittTS.tsZeugnisBem), () -> {
 			lernabschnitt.ZeugnisBem = enmSchueler.bemerkungen.ZB;
-			lernabschnittTS.tsZeugnisBem = enmSchueler.bemerkungen.tsZB;
+			lernabschnittTS.tsZeugnisBem = TimestampUtils.convertLocalToUtc(enmSchueler.bemerkungen.tsZB);
 		});
-		updatedLernabschnitt |= updateIfNewer(enmSchueler.lernabschnitt.tsFehlstundenGesamt, lernabschnittTS.tsSumFehlStd, () -> {
+		updatedLernabschnitt |= updateIfNewer(enmSchueler.lernabschnitt.tsFehlstundenGesamt, TimestampUtils.convertUtcToLocal(lernabschnittTS.tsSumFehlStd), () -> {
 			lernabschnitt.SumFehlStd = enmSchueler.lernabschnitt.fehlstundenGesamt;
-			lernabschnittTS.tsSumFehlStd = enmSchueler.lernabschnitt.tsFehlstundenGesamt;
+			lernabschnittTS.tsSumFehlStd = TimestampUtils.convertLocalToUtc(enmSchueler.lernabschnitt.tsFehlstundenGesamt);
 		});
-		updatedLernabschnitt |= updateIfNewer(enmSchueler.lernabschnitt.tsFehlstundenGesamtUnentschuldigt, lernabschnittTS.tsSumFehlStdU, () -> {
+		updatedLernabschnitt |= updateIfNewer(enmSchueler.lernabschnitt.tsFehlstundenGesamtUnentschuldigt, TimestampUtils.convertUtcToLocal(lernabschnittTS.tsSumFehlStdU), () -> {
 			lernabschnitt.SumFehlStdU = enmSchueler.lernabschnitt.fehlstundenGesamtUnentschuldigt;
-			lernabschnittTS.tsSumFehlStdU = enmSchueler.lernabschnitt.tsFehlstundenGesamtUnentschuldigt;
+			lernabschnittTS.tsSumFehlStdU = TimestampUtils.convertLocalToUtc(enmSchueler.lernabschnitt.tsFehlstundenGesamtUnentschuldigt);
 		});
 
 		if (updatedBemerkungen && !neuBemerkungen) {
@@ -411,13 +412,13 @@ public class EnmV2ImportService {
 			final DTOSchuelerAnkreuzfloskeln ankreuzkompetenz = kontext.mapAnkreuzkompetenzen.get(enmAnkreuzkompetenz.id);
 			final DTOTimestampsSchuelerAnkreuzkompetenzen ankreuzkompetenzTS = kontext.mapAnkreuzkompetenzenTimestamps.get(enmAnkreuzkompetenz.id);
 
-			final boolean updatedAnkreuzkompetenz = updateIfNewer(enmAnkreuzkompetenz.tsStufe, ankreuzkompetenzTS.tsStufe, () -> {
+			final boolean updatedAnkreuzkompetenz = updateIfNewer(enmAnkreuzkompetenz.tsStufe, TimestampUtils.convertUtcToLocal(ankreuzkompetenzTS.tsStufe), () -> {
 				ankreuzkompetenz.Stufe1 = enmAnkreuzkompetenz.stufen[0];
 				ankreuzkompetenz.Stufe2 = enmAnkreuzkompetenz.stufen[1];
 				ankreuzkompetenz.Stufe3 = enmAnkreuzkompetenz.stufen[2];
 				ankreuzkompetenz.Stufe4 = enmAnkreuzkompetenz.stufen[3];
 				ankreuzkompetenz.Stufe5 = enmAnkreuzkompetenz.stufen[4];
-				ankreuzkompetenzTS.tsStufe = enmAnkreuzkompetenz.tsStufe;
+				ankreuzkompetenzTS.tsStufe = TimestampUtils.convertLocalToUtc(enmAnkreuzkompetenz.tsStufe);
 			});
 
 			if (updatedAnkreuzkompetenz) {
@@ -433,21 +434,21 @@ public class EnmV2ImportService {
 			final DTOSchuelerTeilleistung teilleistung = kontext.mapTeilleistungen.get(enmTeilleistung.id);
 			final DTOTimestampsSchuelerTeilleistungen teilleistungTS = kontext.mapTeilleistungenTimestamps.get(enmTeilleistung.id);
 
-			boolean updatedTeilleistung = updateIfNewer(enmTeilleistung.tsArtID, teilleistungTS.tsArt_ID, () -> {
+			boolean updatedTeilleistung = updateIfNewer(enmTeilleistung.tsArtID, TimestampUtils.convertUtcToLocal(teilleistungTS.tsArt_ID), () -> {
 				teilleistung.Art_ID = enmTeilleistung.artID;
-				teilleistungTS.tsArt_ID = enmTeilleistung.tsArtID;
+				teilleistungTS.tsArt_ID = TimestampUtils.convertLocalToUtc(enmTeilleistung.tsArtID);
 			});
-			updatedTeilleistung |= updateIfNewer(enmTeilleistung.tsDatum, teilleistungTS.tsDatum, () -> {
+			updatedTeilleistung |= updateIfNewer(enmTeilleistung.tsDatum, TimestampUtils.convertUtcToLocal(teilleistungTS.tsDatum), () -> {
 				teilleistung.Datum = enmTeilleistung.datum;
-				teilleistungTS.tsDatum = enmTeilleistung.tsDatum;
+				teilleistungTS.tsDatum = TimestampUtils.convertLocalToUtc(enmTeilleistung.tsDatum);
 			});
-			updatedTeilleistung |= updateIfNewer(enmTeilleistung.tsBemerkung, teilleistungTS.tsBemerkung, () -> {
+			updatedTeilleistung |= updateIfNewer(enmTeilleistung.tsBemerkung, TimestampUtils.convertUtcToLocal(teilleistungTS.tsBemerkung), () -> {
 				teilleistung.Bemerkung = enmTeilleistung.bemerkung;
-				teilleistungTS.tsBemerkung = enmTeilleistung.tsBemerkung;
+				teilleistungTS.tsBemerkung = TimestampUtils.convertLocalToUtc(enmTeilleistung.tsBemerkung);
 			});
-			updatedTeilleistung |= updateIfNewer(enmTeilleistung.tsNote, teilleistungTS.tsNotenKrz, () -> {
+			updatedTeilleistung |= updateIfNewer(enmTeilleistung.tsNote, TimestampUtils.convertUtcToLocal(teilleistungTS.tsNotenKrz), () -> {
 				teilleistung.NotenKrz = enmTeilleistung.note;
-				teilleistungTS.tsNotenKrz = enmTeilleistung.tsNote;
+				teilleistungTS.tsNotenKrz = TimestampUtils.convertLocalToUtc(enmTeilleistung.tsNote);
 			});
 
 			if (updatedTeilleistung) {
@@ -462,29 +463,29 @@ public class EnmV2ImportService {
 			final DTOSchuelerLeistungsdaten leistung = kontext.mapLeistungen.get(enmLeistung.id);
 			final DTOTimestampsSchuelerLeistungsdaten leistungTS = kontext.mapLeistungenTimestamps.get(enmLeistung.id);
 
-			boolean updatedLeistung = updateIfNewer(enmLeistung.tsFachbezogeneBemerkungen, leistungTS.tsLernentw, () -> {
+			boolean updatedLeistung = updateIfNewer(enmLeistung.tsFachbezogeneBemerkungen, TimestampUtils.convertUtcToLocal(leistungTS.tsLernentw), () -> {
 				leistung.Lernentw = enmLeistung.fachbezogeneBemerkungen;
-				leistungTS.tsLernentw = enmLeistung.tsFachbezogeneBemerkungen;
+				leistungTS.tsLernentw = TimestampUtils.convertLocalToUtc(enmLeistung.tsFachbezogeneBemerkungen);
 			});
-			updatedLeistung |= updateIfNewer(enmLeistung.tsFehlstundenFach, leistungTS.tsFehlStd, () -> {
+			updatedLeistung |= updateIfNewer(enmLeistung.tsFehlstundenFach, TimestampUtils.convertUtcToLocal(leistungTS.tsFehlStd), () -> {
 				leistung.FehlStd = enmLeistung.fehlstundenFach;
-				leistungTS.tsFehlStd = enmLeistung.tsFehlstundenFach;
+				leistungTS.tsFehlStd = TimestampUtils.convertLocalToUtc(enmLeistung.tsFehlstundenFach);
 			});
-			updatedLeistung |= updateIfNewer(enmLeistung.tsFehlstundenUnentschuldigtFach, leistungTS.tsuFehlStd, () -> {
+			updatedLeistung |= updateIfNewer(enmLeistung.tsFehlstundenUnentschuldigtFach, TimestampUtils.convertUtcToLocal(leistungTS.tsuFehlStd), () -> {
 				leistung.uFehlStd = enmLeistung.fehlstundenUnentschuldigtFach;
-				leistungTS.tsuFehlStd = enmLeistung.tsFehlstundenUnentschuldigtFach;
+				leistungTS.tsuFehlStd = TimestampUtils.convertLocalToUtc(enmLeistung.tsFehlstundenUnentschuldigtFach);
 			});
-			updatedLeistung |= updateIfNewer(enmLeistung.tsIstGemahnt, leistungTS.tsWarnung, () -> {
+			updatedLeistung |= updateIfNewer(enmLeistung.tsIstGemahnt, TimestampUtils.convertUtcToLocal(leistungTS.tsWarnung), () -> {
 				leistung.Warnung = enmLeistung.istGemahnt;
-				leistungTS.tsWarnung = enmLeistung.tsIstGemahnt;
+				leistungTS.tsWarnung = TimestampUtils.convertLocalToUtc(enmLeistung.tsIstGemahnt);
 			});
-			updatedLeistung |= updateIfNewer(enmLeistung.tsNote, leistungTS.tsNotenKrz, () -> {
+			updatedLeistung |= updateIfNewer(enmLeistung.tsNote, TimestampUtils.convertUtcToLocal(leistungTS.tsNotenKrz), () -> {
 				leistung.NotenKrz = enmLeistung.note;
-				leistungTS.tsNotenKrz = enmLeistung.tsNote;
+				leistungTS.tsNotenKrz = TimestampUtils.convertLocalToUtc(enmLeistung.tsNote);
 			});
-			updatedLeistung |= updateIfNewer(enmLeistung.tsNoteQuartal, leistungTS.tsNotenKrzQuartal, () -> {
+			updatedLeistung |= updateIfNewer(enmLeistung.tsNoteQuartal, TimestampUtils.convertUtcToLocal(leistungTS.tsNotenKrzQuartal), () -> {
 				leistung.NotenKrzQuartal = enmLeistung.noteQuartal;
-				leistungTS.tsNotenKrzQuartal = enmLeistung.tsNoteQuartal;
+				leistungTS.tsNotenKrzQuartal = TimestampUtils.convertLocalToUtc(enmLeistung.tsNoteQuartal);
 			});
 
 			if (updatedLeistung) {

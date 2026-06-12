@@ -69,22 +69,22 @@ public final class DTOTimestampsNotenmodulCredentials {
 	@JsonProperty
 	public long idLehrer;
 
-	/** Der Zeitstempel der letzten Änderung an dem Password-Hash der Notenmodul-Credentials. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an dem Password-Hash der Notenmodul-Credentials. */
 	@Column(name = "tsPasswordHash")
 	@JsonProperty
 	public String tsPasswordHash;
 
-	/** Der Zeitstempel der letzten Änderung an der Art der Zwei-Faktor-Authentifizierung. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an der Art der Zwei-Faktor-Authentifizierung. */
 	@Column(name = "tsArt2FA")
 	@JsonProperty
 	public String tsArt2FA;
 
-	/** Der Zeitstempel der letzten Änderung an dem Shared-Secret für TOTP. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an dem Shared-Secret für TOTP. */
 	@Column(name = "tsTotpSecret")
 	@JsonProperty
 	public String tsTotpSecret;
 
-	/** Der Zeitstempel der letzten Änderung an der Information, ob es sich bei der nächsten Anmeldung um eine erstanmeldung handelt oder nicht. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an der Information, ob es sich bei der nächsten Anmeldung um eine erstanmeldung handelt oder nicht. */
 	@Column(name = "tsIstErstanmeldung")
 	@JsonProperty
 	public String tsIstErstanmeldung;

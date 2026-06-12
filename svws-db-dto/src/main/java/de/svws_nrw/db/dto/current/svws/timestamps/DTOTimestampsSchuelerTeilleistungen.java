@@ -75,27 +75,27 @@ public final class DTOTimestampsSchuelerTeilleistungen {
 	@JsonProperty
 	public long ID;
 
-	/** Der Zeitstempel der letzten Änderung an dem Datum der Teilleistung, wann diese erbracht wurde. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an dem Datum der Teilleistung, wann diese erbracht wurde. */
 	@Column(name = "tsDatum")
 	@JsonProperty
 	public String tsDatum;
 
-	/** Der Zeitstempel der letzten Änderung an der Lehrer-ID. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an der Lehrer-ID. */
 	@Column(name = "tsLehrer_ID")
 	@JsonProperty
 	public String tsLehrer_ID;
 
-	/** Der Zeitstempel der letzten Änderung der Teilleistungsart. */
+	/** Der Zeitstempel (UTC) der letzten Änderung der Teilleistungsart. */
 	@Column(name = "tsArt_ID")
 	@JsonProperty
 	public String tsArt_ID;
 
-	/** Der Zeitstempel der letzten Änderung an der Bemerkung. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an der Bemerkung. */
 	@Column(name = "tsBemerkung")
 	@JsonProperty
 	public String tsBemerkung;
 
-	/** Der Zeitstempel der letzten Änderung an der Note. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an der Note. */
 	@Column(name = "tsNotenKrz")
 	@JsonProperty
 	public String tsNotenKrz;

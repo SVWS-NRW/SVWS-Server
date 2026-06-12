@@ -51,7 +51,7 @@ public final class DTODavSyncTokenLehrer {
 	@JsonProperty
 	public long ID;
 
-	/** Der Zeitstempel der letzten Änderung an für einen Card-DAV-Eintrag relevanten Lehrerdaten. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an für einen Card-DAV-Eintrag relevanten Lehrerdaten. */
 	@Column(name = "SyncToken")
 	@JsonProperty
 	public String SyncToken;

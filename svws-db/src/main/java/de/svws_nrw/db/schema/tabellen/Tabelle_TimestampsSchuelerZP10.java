@@ -25,37 +25,37 @@ public class Tabelle_TimestampsSchuelerZP10 extends SchemaTabelle {
 	public final SchemaTabelleSpalte col_tsVornote = add("tsVornote", SchemaDatentypen.DATETIME, false)
 			.setDatenlaenge(3)
 			.setNotNull()
-			.setJavaComment("Der Zeitstempel der letzten Änderung an der Vornote.");
+			.setJavaComment("Der Zeitstempel (UTC) der letzten Änderung an der Vornote.");
 
 	/** Die Definition der Tabellenspalte tsNoteSchriftlichePruefung */
 	public final SchemaTabelleSpalte col_tsNoteSchriftlichePruefung = add("tsNoteSchriftlichePruefung", SchemaDatentypen.DATETIME, false)
 			.setDatenlaenge(3)
 			.setNotNull()
-			.setJavaComment("Der Zeitstempel der letzten Änderung an der Note zur schriftlichen Prüfung.");
+			.setJavaComment("Der Zeitstempel (UTC) der letzten Änderung an der Note zur schriftlichen Prüfung.");
 
 	/** Die Definition der Tabellenspalte tsMuendlichePruefung */
 	public final SchemaTabelleSpalte col_tsMuendlichePruefung = add("tsMuendlichePruefung", SchemaDatentypen.DATETIME, false)
 			.setDatenlaenge(3)
 			.setNotNull()
-			.setJavaComment("Der Zeitstempel der letzten Änderung zu der Information, ob eine mündliche Prüfung nötig ist oder nicht.");
+			.setJavaComment("Der Zeitstempel (UTC) der letzten Änderung zu der Information, ob eine mündliche Prüfung nötig ist oder nicht.");
 
 	/** Die Definition der Tabellenspalte tsMuendlichePruefungFreiwillig */
 	public final SchemaTabelleSpalte col_tsMuendlichePruefungFreiwillig = add("tsMuendlichePruefungFreiwillig", SchemaDatentypen.DATETIME, false)
 			.setDatenlaenge(3)
 			.setNotNull()
-			.setJavaComment("Der Zeitstempel der letzten Änderung zu der Information, ob eine freiwillige mündliche Prüfung gewählt wurde oder nicht.");
+			.setJavaComment("Der Zeitstempel (UTC) der letzten Änderung zu der Information, ob eine freiwillige mündliche Prüfung gewählt wurde oder nicht.");
 
 	/** Die Definition der Tabellenspalte tsNoteMuendlichePruefung */
 	public final SchemaTabelleSpalte col_tsNoteMuendlichePruefung = add("tsNoteMuendlichePruefung", SchemaDatentypen.DATETIME, false)
 			.setDatenlaenge(3)
 			.setNotNull()
-			.setJavaComment("Der Zeitstempel der letzten Änderung an der Note zur mündlichen Prüfung.");
+			.setJavaComment("Der Zeitstempel (UTC) der letzten Änderung an der Note zur mündlichen Prüfung.");
 
 	/** Die Definition der Tabellenspalte tsAbschlussnote */
 	public final SchemaTabelleSpalte col_tsAbschlussnote = add("tsAbschlussnote", SchemaDatentypen.DATETIME, false)
 			.setDatenlaenge(3)
 			.setNotNull()
-			.setJavaComment("Der Zeitstempel der letzten Änderung an der Abschlussnote.");
+			.setJavaComment("Der Zeitstempel (UTC) der letzten Änderung an der Abschlussnote.");
 
 	/** Die Definition des Fremdschlüssels TimestampsSchuelerTeilleistungen_FK */
 	public final SchemaTabelleFremdschluessel fk_TimestampsSchuelerZP10_FK = addForeignKey(
@@ -66,16 +66,27 @@ public class Tabelle_TimestampsSchuelerZP10 extends SchemaTabelle {
 
 
 	/** Trigger t_INSERT_TimestampsSchuelerZP10 */
-	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_TimestampsSchuelerZP10 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_TimestampsSchuelerZP10_UNTIL_REV67 = addTrigger(
 			"t_INSERT_TimestampsSchuelerZP10",
 			DBDriver.MARIA_DB,
 			"""
 			AFTER INSERT ON SchuelerZP10 FOR EACH ROW
 			INSERT INTO TimestampsSchuelerZP10(ID, tsVornote, tsNoteSchriftlichePruefung, tsMuendlichePruefung, tsMuendlichePruefungFreiwillig, tsNoteMuendlichePruefung, tsAbschlussnote) VALUES (NEW.ID, CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3));
-			""", Schema.tab_SchuelerZP10, Schema.tab_TimestampsSchuelerZP10);
+			""", Schema.tab_SchuelerZP10, Schema.tab_TimestampsSchuelerZP10)
+			.setVeraltet(SchemaRevisionen.REV_67);
+
+	/** Trigger t_INSERT_TimestampsSchuelerZP10 */
+	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_TimestampsSchuelerZP10 = addTrigger(
+			"t_INSERT_TimestampsSchuelerZP10",
+			DBDriver.MARIA_DB,
+			"""
+			AFTER INSERT ON SchuelerZP10 FOR EACH ROW
+			INSERT INTO TimestampsSchuelerZP10(ID, tsVornote, tsNoteSchriftlichePruefung, tsMuendlichePruefung, tsMuendlichePruefungFreiwillig, tsNoteMuendlichePruefung, tsAbschlussnote) VALUES (NEW.ID, UTC_TIMESTAMP(3), UTC_TIMESTAMP(3), UTC_TIMESTAMP(3), UTC_TIMESTAMP(3), UTC_TIMESTAMP(3), UTC_TIMESTAMP(3));
+			""", Schema.tab_SchuelerZP10, Schema.tab_TimestampsSchuelerZP10)
+			.setRevision(SchemaRevisionen.REV_67);
 
 	/** Trigger t_UPDATE_TimestampsSchuelerZP10 */
-	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsSchuelerZP10 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsSchuelerZP10_UNTIL_REV67 = addTrigger(
 			"t_UPDATE_TimestampsSchuelerZP10",
 			DBDriver.MARIA_DB,
 			"""
@@ -101,7 +112,38 @@ public class Tabelle_TimestampsSchuelerZP10 extends SchemaTabelle {
 			    END IF;
 			END
 			""",
-			Schema.tab_SchuelerZP10, Schema.tab_TimestampsSchuelerZP10);
+			Schema.tab_SchuelerZP10, Schema.tab_TimestampsSchuelerZP10)
+			.setVeraltet(SchemaRevisionen.REV_67);
+
+	/** Trigger t_UPDATE_TimestampsSchuelerZP10 */
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsSchuelerZP10 = addTrigger(
+			"t_UPDATE_TimestampsSchuelerZP10",
+			DBDriver.MARIA_DB,
+			"""
+			AFTER UPDATE ON SchuelerZP10 FOR EACH ROW
+			BEGIN
+			    IF (OLD.Vornote IS NULL AND NEW.Vornote IS NOT NULL) OR (OLD.Vornote <> NEW.Vornote) THEN
+			        UPDATE TimestampsSchuelerZP10 SET tsVornote = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
+			    END IF;
+			    IF (OLD.NoteSchriftlich IS NULL AND NEW.NoteSchriftlich IS NOT NULL) OR (OLD.NoteSchriftlich <> NEW.NoteSchriftlich) THEN
+			        UPDATE TimestampsSchuelerZP10 SET tsNoteSchriftlichePruefung = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
+			    END IF;
+			    IF (OLD.MdlPruefung IS NULL AND NEW.MdlPruefung IS NOT NULL) OR (OLD.MdlPruefung <> NEW.MdlPruefung) THEN
+			        UPDATE TimestampsSchuelerZP10 SET tsMuendlichePruefung = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
+			    END IF;
+			    IF (OLD.MdlPruefungFW IS NULL AND NEW.MdlPruefungFW IS NOT NULL) OR (OLD.MdlPruefungFW <> NEW.MdlPruefungFW) THEN
+			        UPDATE TimestampsSchuelerZP10 SET tsMuendlichePruefungFreiwillig = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
+			    END IF;
+			    IF (OLD.NoteMuendlich IS NULL AND NEW.NoteMuendlich IS NOT NULL) OR (OLD.NoteMuendlich <> NEW.NoteMuendlich) THEN
+			        UPDATE TimestampsSchuelerZP10 SET tsNoteMuendlichePruefung = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
+			    END IF;
+			    IF (OLD.NoteAbschluss IS NULL AND NEW.NoteAbschluss IS NOT NULL) OR (OLD.NoteAbschluss <> NEW.NoteAbschluss) THEN
+			        UPDATE TimestampsSchuelerZP10 SET tsAbschlussnote = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
+			    END IF;
+			END
+			""",
+			Schema.tab_SchuelerZP10, Schema.tab_TimestampsSchuelerZP10)
+			.setRevision(SchemaRevisionen.REV_67);
 
 
 	/**
