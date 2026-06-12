@@ -37,8 +37,8 @@
 							<svws-ui-select label="Sichtbar für folgenden Benutzergruppen"
 								v-model="modelProxy.proxy.idBenutzergruppe"
 								:empty-text="() => 'keine'"
-								:disabled="benutzerGruppen.isEmpty()"
-								:items="benutzerGruppen"
+								:disabled="wiedervorlageState.benutzerGruppen.isEmpty()"
+								:items="wiedervorlageState.benutzerGruppen"
 								:item-text="item => item.bezeichnung"
 								removable />
 							<svws-ui-checkbox v-model="modelProxy.proxy.automatischErledigt">Eintrag automatisch löschen</svws-ui-checkbox>
@@ -59,12 +59,12 @@
 
 <script setup lang="ts">
 	import { computed, ref, watch } from 'vue';
-	import type { BenutzergruppeListeEintrag, List, WiedervorlageEintrag } from "@core";
-	import { ArrayList } from "@core";
-	import { api } from "~/router/Api";
+	import type { WiedervorlageEintrag } from "@core";
 	import { dateToday, dateTodayPlus, formatDateToDateTime } from "~/utils/date";
 	import type { Wiedervorlage } from "~/components/wiedervorlage/Wiedervorlage";
 	import { WiedervorlageModelProxy } from "~/components/wiedervorlage/WiedervorlageModelProxy";
+	import { useWiedervorlageState } from "@ui";
+	const wiedervorlageState = useWiedervorlageState();
 
 	const props = withDefaults(defineProps<{
 		personId: number,
@@ -89,8 +89,6 @@
 	};
 
 	const modelProxy = new WiedervorlageModelProxy(() => defaultValue);
-
-	const benutzerGruppen = ref<List<BenutzergruppeListeEintrag>>(new ArrayList());
 
 	const hatFehler = computed(() => {
 		return modelProxy.getAlleFehler().size() > 0;
@@ -139,10 +137,6 @@
 
 		// open Modal
 		show.value = true;
-
-		// fetch benutzergruppen
-		// (Note: Can be moved to e.g. app cache in further implementation steps)
-		await fetchBenutzergruppen();
 	}
 
 	function closeModal() {
@@ -164,32 +158,13 @@
 	}
 
 	async function create(data: Partial<WiedervorlageEintrag>) {
-		return api.server.addWiedervorlageEintrag(
-			data,
-			api.schema).then(() => {
-				// add confirmation notification?
-				closeModal();
-			});
+		await wiedervorlageState.addWiedervorlage(data);
+		// add confirmation notification?
+		closeModal();
 	}
 
 	async function update(data: Partial<WiedervorlageEintrag>) {
 		// add update in further implementation steps
-	}
-
-	async function fetchBenutzergruppen() {
-		if (!benutzerGruppen.value.isEmpty()) {
-			return;
-		}
-
-		if (api.benutzerIstAdmin) {
-			benutzerGruppen.value = await api.server.getBenutzergruppenliste(api.schema).then(data => {
-				return data;
-			});
-		} else {
-			benutzerGruppen.value = await api.server.getBenutzerDatenEigene(api.schema).then(data => {
-				return data.gruppen;
-			});
-		}
 	}
 
 	watch(

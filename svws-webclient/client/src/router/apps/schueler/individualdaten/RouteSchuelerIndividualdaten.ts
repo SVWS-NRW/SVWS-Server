@@ -6,11 +6,11 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteDataSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteDataSchuelerIndividualdaten";
-
 import type { SchuelerIndividualdatenProps } from "~/components/schueler/individualdaten/SchuelerIndividualdatenProps";
 import { api } from "~/router/Api";
 import { schuleState } from "~/states/SchuleStateImpl";
 import { serverState } from "~/states/ServerStateImpl";
+import { wiedervorlageState } from "~/states/WiedervorlageStateImpl";
 
 const SSchuelerIndividualdaten = () => import("~/components/schueler/individualdaten/SchuelerIndividualdaten.vue");
 
@@ -25,6 +25,9 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
+		// initialize used states
+		await wiedervorlageState.init();
+
 		if (isEntering) {
 			await this.data.ladeListe();
 		}
