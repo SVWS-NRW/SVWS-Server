@@ -13,6 +13,7 @@
   "TLSKeystorePassword" : "${SVWS_TLS_KEYSTORE_PASSWORD}",
   "ClientPath" : "../client",
   "AdminClientPath" : "../adminclient",
+  "ModuleClientPath" : "../apps",
   "LoggingEnabled" : true,
   "LoggingPath" : "logs",
   "ServerMode" : "stable",

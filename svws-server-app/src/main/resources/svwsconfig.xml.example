@@ -29,6 +29,9 @@
 	<!-- Gibt den Pfad an, wo die Dateien des Admin Web-Clients liegen -->
 	<AdminClientPath>webclient/admin/build</AdminClientPath>
 	
+	<!-- Gibt den Pfad an, wo in Unterverzeichnissen die Dateien der zusätzlichen SVWS-Apps liegen -->
+	<AppsPath>null</AppsPath>
+	
 	<!-- Gibt an, ob Logging in Dateien aktiviert werden soll. -->
 	<LoggingEnabled>true</LoggingEnabled>
 	

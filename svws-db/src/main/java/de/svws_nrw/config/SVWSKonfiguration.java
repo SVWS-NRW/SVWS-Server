@@ -373,6 +373,16 @@ public final class SVWSKonfiguration {
 	}
 
 
+	/**
+	 * Gibt den Pfad zu den Apps-Dateien zurück. Sind keine Apps vorhanden, so wird null zurückgegeben.
+	 *
+	 * @return der Pfad zu den Apps-Dateien zurück.
+	 */
+	public String getAppsPath() {
+		return ((dto == null) || (dto.appsPath == null) || ("".equals(dto.appsPath))) ? null : dto.appsPath;
+	}
+
+
 	private static final boolean default_enableClientProtection = false;
 
 	/**

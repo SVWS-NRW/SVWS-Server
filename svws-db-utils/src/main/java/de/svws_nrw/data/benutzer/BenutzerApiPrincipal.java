@@ -146,7 +146,7 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 		}
 
 		// Prüfe, ob die Pfade "admin", "/debug/" oder "/openapi/" angefragt werden. Hier erfolgt immer ein anonymer Zugriff und keine Überprüfung über die DB
-		boolean isAnonymous = path.matches("/admin(/.*)?") || path.matches("/debug(/.*)?") || path.matches("/openapi/.*");
+		boolean isAnonymous = path.matches("/app(/.*)?") || path.matches("/admin(/.*)?") || path.matches("/debug(/.*)?") || path.matches("/openapi/.*");
 		// Prüfe, ob aufgrund der Konfiguration ein anonymer Zugriff auf den SVWS-Client ermöglicht werden soll
 		if ((!SVWSKonfiguration.get().isEnableClientProtection())
 				&& (path.matches("/") || path.matches("/.*\\.html")

@@ -2,7 +2,7 @@ FROM eclipse-temurin:21
 
 RUN apt update && apt-get -y upgrade && apt-get -y install gettext zip && apt autoclean
 
-RUN mkdir -p /opt/app/svws/client && mkdir /opt/app/svws/conf && mkdir /opt/app/svws/init
+RUN mkdir -p /opt/app/svws/client && mkdir -p /opt/app/svws/apps && mkdir /opt/app/svws/conf && mkdir /opt/app/svws/init
 
 COPY app /opt/app/svws
 COPY svwsconfig-template.json /opt/app/svws/svwsconfig-template.json

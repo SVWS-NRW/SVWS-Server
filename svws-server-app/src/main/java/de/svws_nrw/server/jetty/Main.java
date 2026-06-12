@@ -223,6 +223,7 @@ public class Main {
 		// Lese alle HTML, CSS and Javascript Ressourcen für den Web-Client und den Admin-Web-Client
 		ResourceFileManager.client();
 		ResourceFileManager.admin();
+		ResourceFileManager.apps();
 
 		// Sperre zunächst alle konfigurierten Datenbank-Verbindungen und aktiviere diese erste nachdem die Prüfung erfolgreich war
 		final List<DBSchemaListeEintrag> schemata = svwsconfig.getSchemaList();

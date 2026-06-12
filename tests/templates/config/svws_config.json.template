@@ -14,6 +14,7 @@
 	"TLSKeystorePassword": "changeit",
 	"ClientPath": "./client",
 	"AdminClientPath": "./admin",
+	"AppsPath": "./apps",
 	"LoggingEnabled": true,
 	"LoggingPath": "logs",
 	"ServerMode": "GRADLE_PLACEHOLDER_SERVER_MODE",

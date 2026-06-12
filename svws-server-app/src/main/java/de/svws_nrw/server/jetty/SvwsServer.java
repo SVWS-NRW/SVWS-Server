@@ -38,6 +38,7 @@ import de.svws_nrw.api.RestAppClient;
 import de.svws_nrw.api.RestAppDav;
 import de.svws_nrw.api.RestAppDebug;
 import de.svws_nrw.api.RestAppExternal;
+import de.svws_nrw.api.RestAppApps;
 import de.svws_nrw.api.RestAppSchemaRoot;
 import de.svws_nrw.api.RestAppServer;
 import de.svws_nrw.config.SVWSKonfiguration;
@@ -305,6 +306,7 @@ public final class SvwsServer {
 		final SVWSKonfiguration config = SVWSKonfiguration.get();
 		addApplication(RestAppServer.class, RestAppServer.getPathSpecification());
 		addApplication(RestAppClient.class, RestAppClient.getPathSpecification());
+		addApplication(RestAppApps.class, RestAppApps.getPathSpecification());
 		addApplication(RestAppDav.class, RestAppDav.getPathSpecification());
 		addApplication(RestAppDebug.class, RestAppDebug.getPathSpecification());
 		addApplication(RestAppExternal.class, RestAppExternal.getPathSpecification());

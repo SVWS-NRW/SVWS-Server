@@ -27,6 +27,9 @@ public final class ResourceFileManager {
 	/** Verwaltet die Ressourcen des Admin-Web-Clients */
 	private static ResourceFileManager _admin = null;
 
+	/** Verwaltet die Ressourcen der SVWS-Apps*/
+	private static ResourceFileManager _apps = null;
+
 
 	/**
 	 * Erstellt einen neuen Manager für alle Datei-Ressourcen in dem angegebenen Pfad.
@@ -71,6 +74,25 @@ public final class ResourceFileManager {
 			_admin = new ResourceFileManager(path);
 		}
 		return _admin;
+	}
+
+
+	/**
+	 * Gibt die Ressourcen der SVWS-Apps zurück.
+	 *
+	 * @return die Ressourcen der SVWS-Apps
+	 */
+	public static ResourceFileManager apps() {
+		if (_apps == null) {
+			Logger.global().logLn("Füge die Datei-Ressourcen für die SVWS-Apps hinzu:");
+			final SVWSKonfiguration config = SVWSKonfiguration.get();
+			final String path = config.getAppsPath();
+			if ((path == null) || (path.isBlank())) {
+				return null;
+			}
+			_apps = new ResourceFileManager(path);
+		}
+		return _apps;
 	}
 
 
