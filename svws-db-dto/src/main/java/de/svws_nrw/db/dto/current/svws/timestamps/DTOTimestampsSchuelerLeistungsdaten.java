@@ -81,32 +81,32 @@ public final class DTOTimestampsSchuelerLeistungsdaten {
 	@JsonProperty
 	public long ID;
 
-	/** Der Zeitstempel der letzten Änderung an der Note. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an der Note. */
 	@Column(name = "tsNotenKrz")
 	@JsonProperty
 	public String tsNotenKrz;
 
-	/** Der Zeitstempel der letzten Änderung an der Note. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an der Note. */
 	@Column(name = "tsNotenKrzQuartal")
 	@JsonProperty
 	public String tsNotenKrzQuartal;
 
-	/** Der Zeitstempel der letzten Änderung an den Fehlstunden. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an den Fehlstunden. */
 	@Column(name = "tsFehlStd")
 	@JsonProperty
 	public String tsFehlStd;
 
-	/** Der Zeitstempel der letzten Änderung an den unentschuldigten Fehlstunden. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an den unentschuldigten Fehlstunden. */
 	@Column(name = "tsuFehlStd")
 	@JsonProperty
 	public String tsuFehlStd;
 
-	/** Der Zeitstempel der letzten Änderung an den fachbezogenen Bemerkungen. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an den fachbezogenen Bemerkungen. */
 	@Column(name = "tsLernentw")
 	@JsonProperty
 	public String tsLernentw;
 
-	/** Der Zeitstempel der letzten Änderung, ob gemahnt wird. */
+	/** Der Zeitstempel (UTC) der letzten Änderung, ob gemahnt wird. */
 	@Column(name = "tsWarnung")
 	@JsonProperty
 	public String tsWarnung;

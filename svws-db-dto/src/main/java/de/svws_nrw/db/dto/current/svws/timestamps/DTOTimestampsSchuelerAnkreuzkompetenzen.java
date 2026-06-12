@@ -51,7 +51,7 @@ public final class DTOTimestampsSchuelerAnkreuzkompetenzen {
 	@JsonProperty
 	public long ID;
 
-	/** Der Zeitstempel der letzten Änderung an der Stufe, welche der Ankreuzkompetenz zugeordnet ist. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an der Stufe, welche der Ankreuzkompetenz zugeordnet ist. */
 	@Column(name = "tsStufe")
 	@JsonProperty
 	public String tsStufe;

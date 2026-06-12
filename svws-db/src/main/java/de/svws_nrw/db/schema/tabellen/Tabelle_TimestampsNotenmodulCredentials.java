@@ -25,27 +25,27 @@ public class Tabelle_TimestampsNotenmodulCredentials extends SchemaTabelle {
 	public final SchemaTabelleSpalte col_tsPasswordHash = add("tsPasswordHash", SchemaDatentypen.DATETIME, false)
 			.setDatenlaenge(3)
 			.setNotNull()
-			.setJavaComment("Der Zeitstempel der letzten Änderung an dem Password-Hash der Notenmodul-Credentials.");
+			.setJavaComment("Der Zeitstempel (UTC) der letzten Änderung an dem Password-Hash der Notenmodul-Credentials.");
 
 	/** Die Definition der Tabellenspalte tsArt2FA */
 	public final SchemaTabelleSpalte col_tsArt2FA = add("tsArt2FA", SchemaDatentypen.DATETIME, false)
 			.setDatenlaenge(3)
 			.setNotNull()
-			.setJavaComment("Der Zeitstempel der letzten Änderung an der Art der Zwei-Faktor-Authentifizierung.")
+			.setJavaComment("Der Zeitstempel (UTC) der letzten Änderung an der Art der Zwei-Faktor-Authentifizierung.")
 			.setRevision(SchemaRevisionen.REV_60);
 
 	/** Die Definition der Tabellenspalte tsTotpSecret */
 	public final SchemaTabelleSpalte col_tsTotpSecret = add("tsTotpSecret", SchemaDatentypen.DATETIME, false)
 			.setDatenlaenge(3)
 			.setNotNull()
-			.setJavaComment("Der Zeitstempel der letzten Änderung an dem Shared-Secret für TOTP.")
+			.setJavaComment("Der Zeitstempel (UTC) der letzten Änderung an dem Shared-Secret für TOTP.")
 			.setRevision(SchemaRevisionen.REV_60);
 
 	/** Die Definition der Tabellenspalte tsIstErstanmeldung */
 	public final SchemaTabelleSpalte col_tsIstErstanmeldung = add("tsIstErstanmeldung", SchemaDatentypen.DATETIME, false)
 			.setDatenlaenge(3)
 			.setNotNull()
-			.setJavaComment("Der Zeitstempel der letzten Änderung an der Information, ob es sich bei der nächsten Anmeldung um eine erstanmeldung handelt oder nicht.")
+			.setJavaComment("Der Zeitstempel (UTC) der letzten Änderung an der Information, ob es sich bei der nächsten Anmeldung um eine erstanmeldung handelt oder nicht.")
 			.setRevision(SchemaRevisionen.REV_60);
 
 	/** Die Definition des Fremdschlüssels TimestampsNotenmodulCredentials_FK */
@@ -67,14 +67,25 @@ public class Tabelle_TimestampsNotenmodulCredentials extends SchemaTabelle {
 			.setVeraltet(SchemaRevisionen.REV_60);
 
 	/** Trigger t_INSERT_TimestampsNotenmodulCredentials */
-	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_TimestampsNotenmodulCredentials = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_TimestampsNotenmodulCredentials_UNTIL_REV67 = addTrigger(
 			"t_INSERT_TimestampsNotenmodulCredentials",
 			DBDriver.MARIA_DB,
 			"""
 			AFTER INSERT ON Notenmodul_Credentials FOR EACH ROW
 			INSERT INTO TimestampsNotenmodulCredentials(idLehrer, tsPasswordHash, tsArt2FA, tsTotpSecret, tsIstErstanmeldung) VALUES (NEW.idLehrer, CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3));
 			""", Schema.tab_Notenmodul_Credentials, Schema.tab_TimestampsNotenmodulCredentials)
-			.setRevision(SchemaRevisionen.REV_60);
+			.setRevision(SchemaRevisionen.REV_60)
+			.setVeraltet(SchemaRevisionen.REV_67);
+
+	/** Trigger t_INSERT_TimestampsNotenmodulCredentials */
+	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_TimestampsNotenmodulCredentials = addTrigger(
+			"t_INSERT_TimestampsNotenmodulCredentials",
+			DBDriver.MARIA_DB,
+			"""
+			AFTER INSERT ON Notenmodul_Credentials FOR EACH ROW
+			INSERT INTO TimestampsNotenmodulCredentials(idLehrer, tsPasswordHash, tsArt2FA, tsTotpSecret, tsIstErstanmeldung) VALUES (NEW.idLehrer, UTC_TIMESTAMP(3), UTC_TIMESTAMP(3), UTC_TIMESTAMP(3), UTC_TIMESTAMP(3));
+			""", Schema.tab_Notenmodul_Credentials, Schema.tab_TimestampsNotenmodulCredentials)
+			.setRevision(SchemaRevisionen.REV_67);
 
 	/** Trigger t_UPDATE_TimestampsNotenmodulCredentials */
 	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsNotenmodulCredentials_UNTIL_REV60 = addTrigger(
@@ -117,7 +128,7 @@ public class Tabelle_TimestampsNotenmodulCredentials extends SchemaTabelle {
 			.setVeraltet(SchemaRevisionen.REV_63);
 
 	/** Trigger t_UPDATE_TimestampsNotenmodulCredentials */
-	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsNotenmodulCredentials = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsNotenmodulCredentials_UNTIL_REV67 = addTrigger(
 			"t_UPDATE_TimestampsNotenmodulCredentials",
 			DBDriver.MARIA_DB,
 			"""
@@ -138,7 +149,32 @@ public class Tabelle_TimestampsNotenmodulCredentials extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_Notenmodul_Credentials, Schema.tab_TimestampsNotenmodulCredentials)
-			.setRevision(SchemaRevisionen.REV_63);
+			.setRevision(SchemaRevisionen.REV_63)
+			.setVeraltet(SchemaRevisionen.REV_67);
+
+	/** Trigger t_UPDATE_TimestampsNotenmodulCredentials */
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsNotenmodulCredentials = addTrigger(
+			"t_UPDATE_TimestampsNotenmodulCredentials",
+			DBDriver.MARIA_DB,
+			"""
+			AFTER UPDATE ON Notenmodul_Credentials FOR EACH ROW
+			BEGIN
+			    IF (OLD.passwordHash IS NULL AND NEW.passwordHash IS NOT NULL) OR (OLD.passwordHash <> NEW.passwordHash) THEN
+			        UPDATE TimestampsNotenmodulCredentials SET tsPasswordHash = UTC_TIMESTAMP(3) WHERE idLehrer = NEW.idLehrer;
+			    END IF;
+			    IF (OLD.art2FA <> NEW.art2FA) THEN
+			        UPDATE TimestampsNotenmodulCredentials SET tsArt2FA = UTC_TIMESTAMP(3) WHERE idLehrer = NEW.idLehrer;
+			    END IF;
+			    IF (OLD.totpSecret IS NULL AND NEW.totpSecret IS NOT NULL) OR (OLD.totpSecret <> NEW.totpSecret) THEN
+			        UPDATE TimestampsNotenmodulCredentials SET tsTotpSecret = UTC_TIMESTAMP(3), tsIstErstanmeldung = UTC_TIMESTAMP(3) WHERE idLehrer = NEW.idLehrer;
+			    END IF;
+			    IF (OLD.istErstanmeldung <> NEW.istErstanmeldung) THEN
+			        UPDATE TimestampsNotenmodulCredentials SET tsIstErstanmeldung = UTC_TIMESTAMP(3) WHERE idLehrer = NEW.idLehrer;
+			    END IF;
+			END
+			""",
+			Schema.tab_Notenmodul_Credentials, Schema.tab_TimestampsNotenmodulCredentials)
+			.setRevision(SchemaRevisionen.REV_67);
 
 	/**
 	 * Erstellt die Schema-Definition für die Tabelle TimestampsNotenmodulCredentials.

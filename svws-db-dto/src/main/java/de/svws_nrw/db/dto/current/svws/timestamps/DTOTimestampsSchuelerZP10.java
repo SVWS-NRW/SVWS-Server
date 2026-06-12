@@ -81,32 +81,32 @@ public final class DTOTimestampsSchuelerZP10 {
 	@JsonProperty
 	public long ID;
 
-	/** Der Zeitstempel der letzten Änderung an der Vornote. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an der Vornote. */
 	@Column(name = "tsVornote")
 	@JsonProperty
 	public String tsVornote;
 
-	/** Der Zeitstempel der letzten Änderung an der Note zur schriftlichen Prüfung. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an der Note zur schriftlichen Prüfung. */
 	@Column(name = "tsNoteSchriftlichePruefung")
 	@JsonProperty
 	public String tsNoteSchriftlichePruefung;
 
-	/** Der Zeitstempel der letzten Änderung zu der Information, ob eine mündliche Prüfung nötig ist oder nicht. */
+	/** Der Zeitstempel (UTC) der letzten Änderung zu der Information, ob eine mündliche Prüfung nötig ist oder nicht. */
 	@Column(name = "tsMuendlichePruefung")
 	@JsonProperty
 	public String tsMuendlichePruefung;
 
-	/** Der Zeitstempel der letzten Änderung zu der Information, ob eine freiwillige mündliche Prüfung gewählt wurde oder nicht. */
+	/** Der Zeitstempel (UTC) der letzten Änderung zu der Information, ob eine freiwillige mündliche Prüfung gewählt wurde oder nicht. */
 	@Column(name = "tsMuendlichePruefungFreiwillig")
 	@JsonProperty
 	public String tsMuendlichePruefungFreiwillig;
 
-	/** Der Zeitstempel der letzten Änderung an der Note zur mündlichen Prüfung. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an der Note zur mündlichen Prüfung. */
 	@Column(name = "tsNoteMuendlichePruefung")
 	@JsonProperty
 	public String tsNoteMuendlichePruefung;
 
-	/** Der Zeitstempel der letzten Änderung an der Abschlussnote. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an der Abschlussnote. */
 	@Column(name = "tsAbschlussnote")
 	@JsonProperty
 	public String tsAbschlussnote;

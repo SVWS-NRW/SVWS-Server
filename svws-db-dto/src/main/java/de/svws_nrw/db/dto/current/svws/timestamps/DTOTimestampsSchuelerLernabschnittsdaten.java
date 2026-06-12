@@ -99,47 +99,47 @@ public final class DTOTimestampsSchuelerLernabschnittsdaten {
 	@JsonProperty
 	public long ID;
 
-	/** Der Zeitstempel der letzten Änderung an der Summe der Fehlstunden. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an der Summe der Fehlstunden. */
 	@Column(name = "tsSumFehlStd")
 	@JsonProperty
 	public String tsSumFehlStd;
 
-	/** Der Zeitstempel der letzten Änderung an der Summe der unentschuldigten Fehlstunden. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an der Summe der unentschuldigten Fehlstunden. */
 	@Column(name = "tsSumFehlStdU")
 	@JsonProperty
 	public String tsSumFehlStdU;
 
-	/** Der Zeitstempel der letzten Änderung an den Zeugnisbemerkungen. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an den Zeugnisbemerkungen. */
 	@Column(name = "tsZeugnisBem")
 	@JsonProperty
 	public String tsZeugnisBem;
 
-	/** Der Zeitstempel der letzten Änderung an den Bemerkungen zum Arbeits- und Sozialverhalten. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an den Bemerkungen zum Arbeits- und Sozialverhalten. */
 	@Column(name = "tsASV")
 	@JsonProperty
 	public String tsASV;
 
-	/** Der Zeitstempel der letzten Änderung an den Bemerkungen zum außerunterrichtlichen Engagement. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an den Bemerkungen zum außerunterrichtlichen Engagement. */
 	@Column(name = "tsAUE")
 	@JsonProperty
 	public String tsAUE;
 
-	/** Der Zeitstempel der letzten Änderung zu der Lern und Leistungsentwicklung (LELS) in den Fächern. */
+	/** Der Zeitstempel (UTC) der letzten Änderung zu der Lern und Leistungsentwicklung (LELS) in den Fächern. */
 	@Column(name = "tsLELS")
 	@JsonProperty
 	public String tsLELS;
 
-	/** Der Zeitstempel der letzten Änderung an der "Empfehlung der Schulform" beim Übergang von Primar- nach SekI. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an der "Empfehlung der Schulform" beim Übergang von Primar- nach SekI. */
 	@Column(name = "tsESF")
 	@JsonProperty
 	public String tsESF;
 
-	/** Der Zeitstempel der letzten Änderung an der Förderschwerpunktbemerkung. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an der Förderschwerpunktbemerkung. */
 	@Column(name = "tsBemerkungFSP")
 	@JsonProperty
 	public String tsBemerkungFSP;
 
-	/** Der Zeitstempel der letzten Änderung an den Bemerkungen zur Versetzung. */
+	/** Der Zeitstempel (UTC) der letzten Änderung an den Bemerkungen zur Versetzung. */
 	@Column(name = "tsBemerkungVersetzung")
 	@JsonProperty
 	public String tsBemerkungVersetzung;

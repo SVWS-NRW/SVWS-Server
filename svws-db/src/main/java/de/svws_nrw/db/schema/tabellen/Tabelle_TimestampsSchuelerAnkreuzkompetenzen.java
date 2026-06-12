@@ -25,7 +25,7 @@ public class Tabelle_TimestampsSchuelerAnkreuzkompetenzen extends SchemaTabelle 
 	public final SchemaTabelleSpalte col_tsStufe = add("tsStufe", SchemaDatentypen.DATETIME, false)
 			.setDatenlaenge(3)
 			.setNotNull()
-			.setJavaComment("Der Zeitstempel der letzten Änderung an der Stufe, welche der Ankreuzkompetenz zugeordnet ist.");
+			.setJavaComment("Der Zeitstempel (UTC) der letzten Änderung an der Stufe, welche der Ankreuzkompetenz zugeordnet ist.");
 
 
 	/** Die Definition des Fremdschlüssels TimestampsSchuelerAnkreuzkompetenzen_FK */
@@ -37,16 +37,27 @@ public class Tabelle_TimestampsSchuelerAnkreuzkompetenzen extends SchemaTabelle 
 
 
 	/** Trigger t_INSERT_TimestampsSchuelerAnkreuzkompetenzen */
-	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_TimestampsSchuelerAnkreuzkompetenzen = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_TimestampsSchuelerAnkreuzkompetenzen_UNTIL_REV67 = addTrigger(
 			"t_INSERT_TimestampsSchuelerAnkreuzkompetenzen",
 			DBDriver.MARIA_DB,
 			"""
 			AFTER INSERT ON SchuelerAnkreuzfloskeln FOR EACH ROW
 			INSERT INTO TimestampsSchuelerAnkreuzkompetenzen(ID, tsStufe) VALUES (NEW.ID, CURTIME(3));
-			""", Schema.tab_SchuelerAnkreuzfloskeln, Schema.tab_TimestampsSchuelerAnkreuzkompetenzen);
+			""", Schema.tab_SchuelerAnkreuzfloskeln, Schema.tab_TimestampsSchuelerAnkreuzkompetenzen)
+			.setVeraltet(SchemaRevisionen.REV_67);
+
+	/** Trigger t_INSERT_TimestampsSchuelerAnkreuzkompetenzen */
+	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_TimestampsSchuelerAnkreuzkompetenzen = addTrigger(
+			"t_INSERT_TimestampsSchuelerAnkreuzkompetenzen",
+			DBDriver.MARIA_DB,
+			"""
+			AFTER INSERT ON SchuelerAnkreuzfloskeln FOR EACH ROW
+			INSERT INTO TimestampsSchuelerAnkreuzkompetenzen(ID, tsStufe) VALUES (NEW.ID, UTC_TIMESTAMP(3));
+			""", Schema.tab_SchuelerAnkreuzfloskeln, Schema.tab_TimestampsSchuelerAnkreuzkompetenzen)
+			.setRevision(SchemaRevisionen.REV_67);
 
 	/** Trigger t_UPDATE_TimestampsSchuelerAnkreuzkompetenzen */
-	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsSchuelerAnkreuzkompetenzen = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsSchuelerAnkreuzkompetenzen_UNTIL_REV67 = addTrigger(
 			"t_UPDATE_TimestampsSchuelerAnkreuzkompetenzen",
 			DBDriver.MARIA_DB,
 			"""
@@ -61,8 +72,27 @@ public class Tabelle_TimestampsSchuelerAnkreuzkompetenzen extends SchemaTabelle 
 			    END IF;
 			END
 			""",
-			Schema.tab_SchuelerAnkreuzfloskeln, Schema.tab_TimestampsSchuelerAnkreuzkompetenzen);
+			Schema.tab_SchuelerAnkreuzfloskeln, Schema.tab_TimestampsSchuelerAnkreuzkompetenzen)
+			.setVeraltet(SchemaRevisionen.REV_67);
 
+	/** Trigger t_UPDATE_TimestampsSchuelerAnkreuzkompetenzen */
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsSchuelerAnkreuzkompetenzen = addTrigger(
+			"t_UPDATE_TimestampsSchuelerAnkreuzkompetenzen",
+			DBDriver.MARIA_DB,
+			"""
+			AFTER UPDATE ON SchuelerAnkreuzfloskeln FOR EACH ROW
+			BEGIN
+			    IF (OLD.Stufe1 IS NULL AND NEW.Stufe1 IS NOT NULL) OR (OLD.Stufe1 <> NEW.Stufe1) OR
+			       (OLD.Stufe2 IS NULL AND NEW.Stufe2 IS NOT NULL) OR (OLD.Stufe2 <> NEW.Stufe2) OR
+			       (OLD.Stufe3 IS NULL AND NEW.Stufe3 IS NOT NULL) OR (OLD.Stufe3 <> NEW.Stufe3) OR
+			       (OLD.Stufe4 IS NULL AND NEW.Stufe4 IS NOT NULL) OR (OLD.Stufe4 <> NEW.Stufe4) OR
+			       (OLD.Stufe5 IS NULL AND NEW.Stufe5 IS NOT NULL) OR (OLD.Stufe5 <> NEW.Stufe5) THEN
+			        UPDATE TimestampsSchuelerAnkreuzkompetenzen SET tsStufe = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
+			    END IF;
+			END
+			""",
+			Schema.tab_SchuelerAnkreuzfloskeln, Schema.tab_TimestampsSchuelerAnkreuzkompetenzen)
+			.setRevision(SchemaRevisionen.REV_67);
 
 	/**
 	 * Erstellt die Schema-Definition für die Tabelle TimestampsSchuelerAnkreuzkompetenzen.

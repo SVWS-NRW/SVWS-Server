@@ -25,31 +25,31 @@ public class Tabelle_TimestampsSchuelerTeilleistungen extends SchemaTabelle {
 	public final SchemaTabelleSpalte col_tsDatum = add("tsDatum", SchemaDatentypen.DATETIME, false)
 			.setDatenlaenge(3)
 			.setNotNull()
-			.setJavaComment("Der Zeitstempel der letzten Änderung an dem Datum der Teilleistung, wann diese erbracht wurde.");
+			.setJavaComment("Der Zeitstempel (UTC) der letzten Änderung an dem Datum der Teilleistung, wann diese erbracht wurde.");
 
 	/** Die Definition der Tabellenspalte tsLehrer_ID */
 	public final SchemaTabelleSpalte col_tsLehrer_ID = add("tsLehrer_ID", SchemaDatentypen.DATETIME, false)
 			.setDatenlaenge(3)
 			.setNotNull()
-			.setJavaComment("Der Zeitstempel der letzten Änderung an der Lehrer-ID.");
+			.setJavaComment("Der Zeitstempel (UTC) der letzten Änderung an der Lehrer-ID.");
 
 	/** Die Definition der Tabellenspalte tsArt_ID */
 	public final SchemaTabelleSpalte col_tsArt_ID = add("tsArt_ID", SchemaDatentypen.DATETIME, false)
 			.setDatenlaenge(3)
 			.setNotNull()
-			.setJavaComment("Der Zeitstempel der letzten Änderung der Teilleistungsart.");
+			.setJavaComment("Der Zeitstempel (UTC) der letzten Änderung der Teilleistungsart.");
 
 	/** Die Definition der Tabellenspalte tsBemerkung */
 	public final SchemaTabelleSpalte col_tsBemerkung = add("tsBemerkung", SchemaDatentypen.DATETIME, false)
 			.setDatenlaenge(3)
 			.setNotNull()
-			.setJavaComment("Der Zeitstempel der letzten Änderung an der Bemerkung.");
+			.setJavaComment("Der Zeitstempel (UTC) der letzten Änderung an der Bemerkung.");
 
 	/** Die Definition der Tabellenspalte tsNotenKrz */
 	public final SchemaTabelleSpalte col_tsNotenKrz = add("tsNotenKrz", SchemaDatentypen.DATETIME, false)
 			.setDatenlaenge(3)
 			.setNotNull()
-			.setJavaComment("Der Zeitstempel der letzten Änderung an der Note.");
+			.setJavaComment("Der Zeitstempel (UTC) der letzten Änderung an der Note.");
 
 
 	/** Die Definition des Fremdschlüssels TimestampsSchuelerTeilleistungen_FK */
@@ -61,16 +61,27 @@ public class Tabelle_TimestampsSchuelerTeilleistungen extends SchemaTabelle {
 
 
 	/** Trigger t_INSERT_TimestampsSchuelerTeilleistungen */
-	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_TimestampsSchuelerTeilleistungen = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_TimestampsSchuelerTeilleistungen_UNTIL_REV67 = addTrigger(
 			"t_INSERT_TimestampsSchuelerTeilleistungen",
 			DBDriver.MARIA_DB,
 			"""
 			AFTER INSERT ON SchuelerEinzelleistungen FOR EACH ROW
 			INSERT INTO TimestampsSchuelerTeilleistungen(ID, tsDatum, tsLehrer_ID, tsArt_ID, tsBemerkung, tsNotenKrz) VALUES (NEW.ID, CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3));
-			""", Schema.tab_SchuelerEinzelleistungen, Schema.tab_TimestampsSchuelerTeilleistungen);
+			""", Schema.tab_SchuelerEinzelleistungen, Schema.tab_TimestampsSchuelerTeilleistungen)
+			.setVeraltet(SchemaRevisionen.REV_67);
+
+	/** Trigger t_INSERT_TimestampsSchuelerTeilleistungen */
+	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_TimestampsSchuelerTeilleistungen = addTrigger(
+			"t_INSERT_TimestampsSchuelerTeilleistungen",
+			DBDriver.MARIA_DB,
+			"""
+			AFTER INSERT ON SchuelerEinzelleistungen FOR EACH ROW
+			INSERT INTO TimestampsSchuelerTeilleistungen(ID, tsDatum, tsLehrer_ID, tsArt_ID, tsBemerkung, tsNotenKrz) VALUES (NEW.ID, UTC_TIMESTAMP(3), UTC_TIMESTAMP(3), UTC_TIMESTAMP(3), UTC_TIMESTAMP(3), UTC_TIMESTAMP(3));
+			""", Schema.tab_SchuelerEinzelleistungen, Schema.tab_TimestampsSchuelerTeilleistungen)
+			.setRevision(SchemaRevisionen.REV_67);
 
 	/** Trigger t_UPDATE_TimestampsSchuelerTeilleistungen */
-	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsSchuelerTeilleistungen = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsSchuelerTeilleistungen_UNTIL_REV67 = addTrigger(
 			"t_UPDATE_TimestampsSchuelerTeilleistungen",
 			DBDriver.MARIA_DB,
 			"""
@@ -93,8 +104,35 @@ public class Tabelle_TimestampsSchuelerTeilleistungen extends SchemaTabelle {
 			    END IF;
 			END
 			""",
-			Schema.tab_SchuelerEinzelleistungen, Schema.tab_TimestampsSchuelerTeilleistungen);
+			Schema.tab_SchuelerEinzelleistungen, Schema.tab_TimestampsSchuelerTeilleistungen)
+			.setVeraltet(SchemaRevisionen.REV_67);
 
+	/** Trigger t_UPDATE_TimestampsSchuelerTeilleistungen */
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsSchuelerTeilleistungen = addTrigger(
+			"t_UPDATE_TimestampsSchuelerTeilleistungen",
+			DBDriver.MARIA_DB,
+			"""
+			AFTER UPDATE ON SchuelerEinzelleistungen FOR EACH ROW
+			BEGIN
+			    IF (OLD.Datum IS NULL AND NEW.Datum IS NOT NULL) OR (OLD.Datum <> NEW.Datum) THEN
+			        UPDATE TimestampsSchuelerTeilleistungen SET tsDatum = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
+			    END IF;
+			    IF (OLD.Lehrer_ID IS NULL AND NEW.Lehrer_ID IS NOT NULL) OR (OLD.Lehrer_ID <> NEW.Lehrer_ID) THEN
+			        UPDATE TimestampsSchuelerTeilleistungen SET tsLehrer_ID = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
+			    END IF;
+			    IF (OLD.Art_ID IS NULL AND NEW.Art_ID IS NOT NULL) OR (OLD.Art_ID <> NEW.Art_ID) THEN
+			        UPDATE TimestampsSchuelerTeilleistungen SET tsArt_ID = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
+			    END IF;
+			    IF (OLD.Bemerkung IS NULL AND NEW.Bemerkung IS NOT NULL) OR (OLD.Bemerkung <> NEW.Bemerkung) THEN
+			        UPDATE TimestampsSchuelerTeilleistungen SET tsBemerkung = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
+			    END IF;
+			    IF (OLD.NotenKrz IS NULL AND NEW.NotenKrz IS NOT NULL) OR (OLD.NotenKrz <> NEW.NotenKrz) THEN
+			        UPDATE TimestampsSchuelerTeilleistungen SET tsNotenKrz = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
+			    END IF;
+			END
+			""",
+			Schema.tab_SchuelerEinzelleistungen, Schema.tab_TimestampsSchuelerTeilleistungen)
+			.setRevision(SchemaRevisionen.REV_67);
 
 	/**
 	 * Erstellt die Schema-Definition für die Tabelle TimestampsSchuelerTeilleistungen.

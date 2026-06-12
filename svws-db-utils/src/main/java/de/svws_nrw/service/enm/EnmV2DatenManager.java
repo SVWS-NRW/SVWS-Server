@@ -35,6 +35,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungen;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsNotenmodulCredentials;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerZP10;
+import de.svws_nrw.db.utils.TimestampUtils;
 import de.svws_nrw.ext.jbcrypt.BCrypt;
 import jakarta.validation.constraints.NotNull;
 
@@ -210,14 +211,14 @@ public class EnmV2DatenManager {
 		enmLehrer.geschlecht = lehrer.Geschlecht.kuerzel;
 		enmLehrer.eMailDienstlich = lehrer.eMailDienstlich;
 		enmLehrer.passwordHash = (creds == null) ? "" : creds.passwordHash;
-		enmLehrer.tsPasswordHash = (tsCreds == null) ? null : tsCreds.tsPasswordHash;
+		enmLehrer.tsPasswordHash = (tsCreds == null) ? null : TimestampUtils.convertUtcToLocal(tsCreds.tsPasswordHash);
 		enmLehrer.istInitialPassword = (creds != null) && (creds.initialkennwort != null) && (creds.passwordHash != null)
 				&& BCrypt.checkpw(creds.initialkennwort, creds.passwordHash);
 		enmLehrer.art2FA = (creds == null) ? 0 : creds.art2FA;
-		enmLehrer.tsArt2FA = (tsCreds == null) ? null : tsCreds.tsArt2FA;
+		enmLehrer.tsArt2FA = (tsCreds == null) ? null : TimestampUtils.convertUtcToLocal(tsCreds.tsArt2FA);
 		enmLehrer.totpSecret = (creds == null) || (creds.totpSecret == null) ? "" : creds.totpSecret;
 		enmLehrer.istErstanmeldung = (creds == null) || creds.istErstanmeldung;
-		enmLehrer.tsIstErstanmeldung = (tsCreds == null) ? null : tsCreds.tsIstErstanmeldung;
+		enmLehrer.tsIstErstanmeldung = (tsCreds == null) ? null : TimestampUtils.convertUtcToLocal(tsCreds.tsIstErstanmeldung);
 		daten.lehrer.add(enmLehrer);
 		mapLehrer.put(lehrer.ID, enmLehrer);
 		return true;
@@ -627,7 +628,7 @@ public class EnmV2DatenManager {
 		kompetenz.id = id;
 		kompetenz.kompetenzID = kompetenzID;
 		kompetenz.stufen = stufen;
-		kompetenz.tsStufe = tsStufe;
+		kompetenz.tsStufe = TimestampUtils.convertUtcToLocal(tsStufe);
 		schueler.ankreuzkompetenzen.add(kompetenz);
 		return kompetenz;
 	}
@@ -657,22 +658,22 @@ public class EnmV2DatenManager {
 		enmLeistung.id = leistung.ID;
 		enmLeistung.lerngruppenID = lerngruppenID;
 		enmLeistung.note = leistung.NotenKrz;
-		enmLeistung.tsNote = tsLeistung.tsNotenKrz;
+		enmLeistung.tsNote = TimestampUtils.convertUtcToLocal(tsLeistung.tsNotenKrz);
 		enmLeistung.noteQuartal = leistung.NotenKrzQuartal;
-		enmLeistung.tsNoteQuartal = tsLeistung.tsNotenKrzQuartal;
+		enmLeistung.tsNoteQuartal = TimestampUtils.convertUtcToLocal(tsLeistung.tsNotenKrzQuartal);
 		enmLeistung.istSchriftlich = istSchriftlich;
 		enmLeistung.abiturfach = abiturfach;
 		enmLeistung.fehlstundenFach = leistung.FehlStd;
-		enmLeistung.tsFehlstundenFach = tsLeistung.tsFehlStd;
+		enmLeistung.tsFehlstundenFach = TimestampUtils.convertUtcToLocal(tsLeistung.tsFehlStd);
 		enmLeistung.fehlstundenUnentschuldigtFach = leistung.uFehlStd;
-		enmLeistung.tsFehlstundenUnentschuldigtFach = tsLeistung.tsuFehlStd;
+		enmLeistung.tsFehlstundenUnentschuldigtFach = TimestampUtils.convertUtcToLocal(tsLeistung.tsuFehlStd);
 		enmLeistung.fachbezogeneBemerkungen = leistung.Lernentw;
-		enmLeistung.tsFachbezogeneBemerkungen = tsLeistung.tsLernentw;
+		enmLeistung.tsFachbezogeneBemerkungen = TimestampUtils.convertUtcToLocal(tsLeistung.tsLernentw);
 		enmLeistung.istDifferenzierungkursErweitert = istDifferenzierungkursErweitert;
 		enmLeistung.neueZuweisungKursart = null;
 		enmLeistung.tsNeueZuweisungKursart = null;
 		enmLeistung.istGemahnt = istGemahnt;
-		enmLeistung.tsIstGemahnt = tsLeistung.tsWarnung;
+		enmLeistung.tsIstGemahnt = TimestampUtils.convertUtcToLocal(tsLeistung.tsWarnung);
 		enmLeistung.mahndatum = mahndatum;
 		schueler.leistungsdaten.add(enmLeistung);
 		return enmLeistung;
@@ -724,17 +725,17 @@ public class EnmV2DatenManager {
 		enmZP10.idFach = zp10.Fach_ID;
 		enmZP10.idLehrer = zp10.Fachlehrer_ID;
 		enmZP10.vornote = zp10.Vornote;
-		enmZP10.tsVornote = tsZP10.tsVornote;
+		enmZP10.tsVornote = TimestampUtils.convertUtcToLocal(tsZP10.tsVornote);
 		enmZP10.noteSchriftlichePruefung = zp10.NoteSchriftlich;
-		enmZP10.tsNoteSchriftlichePruefung = tsZP10.tsNoteSchriftlichePruefung;
+		enmZP10.tsNoteSchriftlichePruefung = TimestampUtils.convertUtcToLocal(tsZP10.tsNoteSchriftlichePruefung);
 		enmZP10.muendlichePruefung = (zp10.MdlPruefung != null) && zp10.MdlPruefung;
-		enmZP10.tsMuendlichePruefung = tsZP10.tsMuendlichePruefung;
+		enmZP10.tsMuendlichePruefung = TimestampUtils.convertUtcToLocal(tsZP10.tsMuendlichePruefung);
 		enmZP10.muendlichePruefungFreiwillig = (zp10.MdlPruefungFW != null) && zp10.MdlPruefungFW;
-		enmZP10.tsMuendlichePruefungFreiwillig = tsZP10.tsMuendlichePruefungFreiwillig;
+		enmZP10.tsMuendlichePruefungFreiwillig = TimestampUtils.convertUtcToLocal(tsZP10.tsMuendlichePruefungFreiwillig);
 		enmZP10.noteMuendlichePruefung = zp10.NoteMuendlich;
-		enmZP10.tsNoteMuendlichePruefung = tsZP10.tsNoteMuendlichePruefung;
+		enmZP10.tsNoteMuendlichePruefung = TimestampUtils.convertUtcToLocal(tsZP10.tsNoteMuendlichePruefung);
 		enmZP10.abschlussnote = zp10.NoteAbschluss;
-		enmZP10.tsAbschlussnote = tsZP10.tsAbschlussnote;
+		enmZP10.tsAbschlussnote = TimestampUtils.convertUtcToLocal(tsZP10.tsAbschlussnote);
 		schueler.zp10.add(enmZP10);
 	}
 

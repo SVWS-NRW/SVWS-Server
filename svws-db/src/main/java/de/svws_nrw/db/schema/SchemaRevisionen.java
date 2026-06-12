@@ -48,6 +48,7 @@ import de.svws_nrw.db.schema.revisionen.Revision58Updates;
 import de.svws_nrw.db.schema.revisionen.Revision60Updates;
 import de.svws_nrw.db.schema.revisionen.Revision61Updates;
 import de.svws_nrw.db.schema.revisionen.Revision62Updates;
+import de.svws_nrw.db.schema.revisionen.Revision67Updates;
 import de.svws_nrw.db.schema.revisionen.Revision6Updates;
 import de.svws_nrw.db.schema.revisionen.RevisionNoUpdates;
 
@@ -329,21 +330,24 @@ public enum SchemaRevisionen {
 
 	/** Anpassung der Tabellen zur Unterrichtsverteilung (Primär- und Fremdschlüssel) Teil 2 CREATE von 2 Tabellen LehrerUnterrichtsfaecher, Raumgruppen und
 	 * KlassenLehrern, Spalten und FKs */
-	REV_66(66, "2026-05-28");
+	REV_66(66, "2026-05-28"),
+
+	/** Verwende in der Datenbank grundsätzlich UTC-Zeitstempel in Triggern. Die Handhabung der Zeitzone erfolgt ggf. im SVWS-Server */
+	REV_67(67, "2026-06-08");
 
 	/**
 	 * Gibt die größte Revisionsnummer an, die in dieser Enumeration definiert wurde und
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_66;
+	public static final SchemaRevisionen maxRevision = REV_67;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_66;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_67;
 
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
@@ -450,6 +454,7 @@ public enum SchemaRevisionen {
 				case REV_60 -> new Revision60Updates();
 				case REV_61 -> new Revision61Updates();
 				case REV_62 -> new Revision62Updates();
+				case REV_67 -> new Revision67Updates();
 				default -> new RevisionNoUpdates(this);
 			};
 		}

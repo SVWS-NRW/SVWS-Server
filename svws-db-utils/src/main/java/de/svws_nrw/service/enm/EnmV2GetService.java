@@ -47,6 +47,7 @@ import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLernabsch
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerTeilleistungen;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerZP10;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.db.utils.TimestampUtils;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -192,9 +193,9 @@ public final class EnmV2GetService {
 		enmSchueler = kontext.manager.getSchueler(lernabschnitt.Schueler_ID);
 		enmSchueler.lernabschnitt.id = lernabschnitt.ID;
 		enmSchueler.lernabschnitt.fehlstundenGesamt = lernabschnitt.SumFehlStd;
-		enmSchueler.lernabschnitt.tsFehlstundenGesamt = tsLernabschnitt.tsSumFehlStd;
+		enmSchueler.lernabschnitt.tsFehlstundenGesamt = TimestampUtils.convertUtcToLocal(tsLernabschnitt.tsSumFehlStd);
 		enmSchueler.lernabschnitt.fehlstundenGesamtUnentschuldigt = lernabschnitt.SumFehlStdU;
-		enmSchueler.lernabschnitt.tsFehlstundenGesamtUnentschuldigt = tsLernabschnitt.tsSumFehlStdU;
+		enmSchueler.lernabschnitt.tsFehlstundenGesamtUnentschuldigt = TimestampUtils.convertUtcToLocal(tsLernabschnitt.tsSumFehlStdU);
 		enmSchueler.lernabschnitt.pruefungsordnung = lernabschnitt.PruefOrdnung;
 		final Note noteLB1 = Note.fromNoteSekI(lernabschnitt.Gesamtnote_GS);
 		final Note noteLB2 = Note.fromNoteSekI(lernabschnitt.Gesamtnote_NW);
@@ -203,19 +204,19 @@ public final class EnmV2GetService {
 		enmSchueler.lernabschnitt.foerderschwerpunkt1 = kontext.getFoerderschwerpunktKuerzel(lernabschnitt.Foerderschwerpunkt_ID);
 		enmSchueler.lernabschnitt.foerderschwerpunkt2 = kontext.getFoerderschwerpunktKuerzel(lernabschnitt.Foerderschwerpunkt2_ID);
 		enmSchueler.bemerkungen.ASV = (bemerkungen == null) ? null : bemerkungen.ASV;
-		enmSchueler.bemerkungen.tsASV = tsLernabschnitt.tsASV;
+		enmSchueler.bemerkungen.tsASV = TimestampUtils.convertUtcToLocal(tsLernabschnitt.tsASV);
 		enmSchueler.bemerkungen.AUE = (bemerkungen == null) ? null : bemerkungen.AUE;
-		enmSchueler.bemerkungen.tsAUE = tsLernabschnitt.tsAUE;
+		enmSchueler.bemerkungen.tsAUE = TimestampUtils.convertUtcToLocal(tsLernabschnitt.tsAUE);
 		enmSchueler.bemerkungen.ZB = lernabschnitt.ZeugnisBem;
-		enmSchueler.bemerkungen.tsZB = tsLernabschnitt.tsZeugnisBem;
+		enmSchueler.bemerkungen.tsZB = TimestampUtils.convertUtcToLocal(tsLernabschnitt.tsZeugnisBem);
 		enmSchueler.bemerkungen.LELS = (bemerkungen == null) ? null : bemerkungen.LELS;
-		enmSchueler.bemerkungen.tsLELS = tsLernabschnitt.tsLELS;
+		enmSchueler.bemerkungen.tsLELS = TimestampUtils.convertUtcToLocal(tsLernabschnitt.tsLELS);
 		enmSchueler.bemerkungen.schulformEmpf = (bemerkungen == null) ? null : bemerkungen.ESF;
-		enmSchueler.bemerkungen.tsSchulformEmpf = tsLernabschnitt.tsESF;
+		enmSchueler.bemerkungen.tsSchulformEmpf = TimestampUtils.convertUtcToLocal(tsLernabschnitt.tsESF);
 		enmSchueler.bemerkungen.individuelleVersetzungsbemerkungen = (bemerkungen == null) ? null : bemerkungen.BemerkungVersetzung;
-		enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen = tsLernabschnitt.tsBemerkungVersetzung;
+		enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen = TimestampUtils.convertUtcToLocal(tsLernabschnitt.tsBemerkungVersetzung);
 		enmSchueler.bemerkungen.foerderbemerkungen = (bemerkungen == null) ? null : bemerkungen.BemerkungFSP;
-		enmSchueler.bemerkungen.tsFoerderbemerkungen = tsLernabschnitt.tsBemerkungFSP;
+		enmSchueler.bemerkungen.tsFoerderbemerkungen = TimestampUtils.convertUtcToLocal(tsLernabschnitt.tsBemerkungFSP);
 		return enmSchueler;
 	}
 
@@ -332,9 +333,11 @@ public final class EnmV2GetService {
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
 						"Es konnten keine Zeitstempel für die Teilleistungen ausgelesen werden. Dies deutet auf einen Fehler in der Datenbank hin.");
 			}
-			kontext.manager.addSchuelerTeilleistung(enmLeistung, teilleistung.ID, teilleistung.Art_ID, teilleistungTimestamps.tsArt_ID,
-					teilleistung.Datum, teilleistungTimestamps.tsDatum, teilleistung.Bemerkung, teilleistungTimestamps.tsBemerkung,
-					teilleistung.NotenKrz, teilleistungTimestamps.tsNotenKrz);
+			kontext.manager.addSchuelerTeilleistung(enmLeistung, teilleistung.ID,
+					teilleistung.Art_ID, TimestampUtils.convertUtcToLocal(teilleistungTimestamps.tsArt_ID),
+					teilleistung.Datum, TimestampUtils.convertUtcToLocal(teilleistungTimestamps.tsDatum),
+					teilleistung.Bemerkung, TimestampUtils.convertUtcToLocal(teilleistungTimestamps.tsBemerkung),
+					teilleistung.NotenKrz, TimestampUtils.convertUtcToLocal(teilleistungTimestamps.tsNotenKrz));
 		}
 	}
 
