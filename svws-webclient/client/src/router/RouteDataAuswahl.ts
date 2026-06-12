@@ -181,24 +181,6 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 */
 	public abstract addID(param: RouteParamsRawGeneric, id: number): void;
 
-
-	/**
-	 * Gibt den Eintrag des Managers passend zu dem übergebenen Schlüssel zurück. Ist dieser nicht vorhanden,
-	 * so wird als Default der erste Wert der gefilterten Liste zurückgegeben. Ist diese leer, so wird null
-	 * zurückgegeben.
-	 *
-	 * @param id   die ID des Eintrags
-	 *
-	 * @returns der Eintrag
-	 */
-	public getEintragOrDefault(id: number): TAuswahl | null {
-		if (this.manager.liste.has(id)) {
-			return this.manager.liste.get(id);
-		}
-		return this.manager.filtered().isEmpty() ? null : this.manager.filtered().get(0);
-	}
-
-
 	/**
 	 * Die Methode muss überschrieben werden und kümmert sich um das Nachladen von Daten, wenn in der
 	 * Auswahl ein neuer Eintrag ausgewählt wird.
@@ -257,7 +239,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 			return;
 		}
 
-		const eintrag = this.getEintragOrDefault(id);
+		const eintrag = this.manager.getEintragOrDefault(id);
 		const daten = await this.ladeDaten(eintrag, this._state.value);
 		await this.updateDaten(daten);
 		this.commit();
@@ -380,7 +362,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 				? this.view.getRoute(params) : this.defaultView.getRoute(params);
 			const result = await RouteManager.doRoute(route);
 			if (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE) {
-				const eintrag = this.getEintragOrDefault(id);
+				const eintrag = this.manager.getEintragOrDefault(id);
 				await this.setDaten(eintrag);
 			}
 

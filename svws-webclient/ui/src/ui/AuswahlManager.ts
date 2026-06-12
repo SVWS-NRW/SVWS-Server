@@ -26,7 +26,8 @@ import { AttributMitAuswahl } from './AttributMitAuswahl';
 export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 
 	/**
-	 * Ein Auswahl-Attribut für die Auswahliste. Dieses wird nicht für eine Filterung verwendet, sondern für eine Mehrfachauswahl
+	 * Ein Auswahl-Attribut für die Auswahliste. Dieses wird nicht für eine Filterung verwendet,
+	 * sondern für eine Mehrfachauswahl
 	 */
 	public readonly liste: AttributMitAuswahl<TID, TAuswahl>;
 
@@ -523,6 +524,21 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	 */
 	public setListeDaten(listeDaten: JavaMap<TID, TDaten>): void {
 		this._listeDaten = listeDaten;
+	}
+
+	/**
+	 * Gibt den Eintrag zu dem übergebenen Schlüssel zurück. Ist dieser nicht vorhanden, so wird als Default
+	 * der erste Wert der gefilterten Liste zurückgegeben. Ist diese leer, so wird null zurückgegeben.
+	 *
+	 * @param id   die ID des Eintrags
+	 *
+	 * @returns der Eintrag
+	 */
+	public getEintragOrDefault(id: TID): TAuswahl | null {
+		if (this.liste.has(id)) {
+			return this.liste.get(id);
+		}
+		return this.filtered().isEmpty() ? null : this.filtered().get(0);
 	}
 
 	/**
