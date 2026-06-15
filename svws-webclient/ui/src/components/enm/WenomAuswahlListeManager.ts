@@ -7,7 +7,7 @@ import { Arrays } from '../../../../core/src/java/util/Arrays';
 import type { JavaFunction } from '../../../../core/src/java/util/function/JavaFunction';
 import { JavaLong } from '../../../../core/src/java/lang/JavaLong';
 import { ENMServerConnection } from '../../../../core/src/core/data/enm/ENMServerConnection';
-import { SimpleOperationResponse } from '../../../../core/src/core/data/SimpleOperationResponse';
+import type { SimpleOperationResponse } from '../../../../core/src/core/data/SimpleOperationResponse';
 
 /**
  * Ein Manager für die Auswahl-Liste der Klassenleitungen im Externen Notenmodul (ENM)
@@ -35,16 +35,16 @@ export class WenomAuswahlListeManager extends AuswahlManager<number, ENMServerCo
 		}
 	}
 
-	public getConnectionResponse(id: number): SimpleOperationResponse {
+	public getConnectionResponse(id: number): SimpleOperationResponse | null {
 		const res = this._mapAvailability.get(id);
 		if ((res === undefined) || (res === null)) {
-			return new SimpleOperationResponse();
+			return null;
 		} else {
 			return res;
 		}
 	}
 
-	public getAuswahlConnectionResponse(): SimpleOperationResponse {
+	public getAuswahlConnectionResponse(): SimpleOperationResponse | null {
 		const id = this.auswahl().id;
 		return this.getConnectionResponse(id);
 	}
@@ -71,6 +71,12 @@ export class WenomAuswahlListeManager extends AuswahlManager<number, ENMServerCo
 	public setAuswahlSetupResponse(res: boolean | null) {
 		const id = this.auswahlID();
 		if ((id !== null) && (id >= 0)) {
+			this._mapSetupResponse.set(id, res);
+		}
+	}
+
+	public setSetupResponse(id: number, res: boolean | null) {
+		if (id >= 0) {
 			this._mapSetupResponse.set(id, res);
 		}
 	}

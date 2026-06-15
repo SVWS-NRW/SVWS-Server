@@ -2,42 +2,52 @@
 	<div class="page page-flex-row">
 		<div class="min-w-fit flex flex-col gap-8">
 			<div class="min-w-148 max-w-196">
-				<div class="text-headline-md mb-4">Verbindung zum Webnotenmanager einrichten</div>
-				<svws-ui-input-wrapper>
-					<div>Adresse: {{ manager().auswahl().url }}</div>
-					<svws-ui-notification v-if="manager().getAuswahlSetupResponse()" type="success">
-						Auf dem Websapce des ENM-Server wurde erfolgreich eine Datenbank und ein Secret erstellt. Bitte lesen Sie das Secret aus und geben Sie es unten in das Feld ein.
-						<br>Standardmäßig befindet sich das Secret in der Datei <span class="font-mono">php/db/client.sec</span> ihres Webspace.
-					</svws-ui-notification>
-					<svws-ui-notification v-if="(manager().getAuswahlSetupResponse() === false) && !manager().getAuswahlConnectionResponse().success" type="warning">
+				<div class="text-headline-md mb-4 flex flex-row items-center gap-2">
+					<svws-ui-tooltip autosize>
+						<span v-if="manager().auswahl().serverTLSCertIsTrusted" class="icon-lg i-ri-verified-badge-fill icon-ui-success" />
+						<span v-else class="icon-lg i-ri-error-warning-fill icon-ui-danger" />
+						<template #content v-if="manager().auswahl().serverTLSCertIsTrusted && (validCert !== null)">
+							<div>Diese Verbindung ist sicher</div>
+							<div>Das verwendete Zertifikat wurde ausgestellt von <span class="font-bold">{{ validCert.issuer }}</span></div>
+							<div>Inhaberin dieses Zertifikats ist <span class="font-bold">{{ validCert.subject }}</span></div>
+							<div>Es ist gütig von {{ validCert.validSince }} bis {{ validCert.validUntil }}</div>
+						</template>
+						<template #content v-else>
+							<div>Diese Verbindung ist nicht sicher</div>
+							Bitte prüfen Sie, ob diesem Zertifikat vertraut werden kann.
+						</template>
+					</svws-ui-tooltip>
+					<span class="">{{ manager().auswahl().url }}</span>
+					<div><a :href="manager().auswahl().url" target="_blank" rel="noopener noreferrer"><span class="icon i-ri-link cursor-pointer" /></a></div>
+				</div>
+				<svws-ui-input-wrapper v-if="!manager().auswahl().serverTLSCertIsTrusted">
+					<div v-if="cert === null">Kein Zertifikat angegeben.</div>
+					<div v-else class="flex flex-col gap-2 mb-4">
+						<div>
+							<div class="font-bold">Unbekanntes Zertifikat</div>
+							<div><span class="font-bold">Inhaber:</span> {{ cert.subject }}</div>
+							<div><span class="font-bold">Aussteller:</span> {{ cert.issuer }}</div>
+							<div><span class="font-bold">Gültigkeit:</span> {{ }} bis {{ cert.validUntil !== null ? DateUtils.gibDatumGermanFormat(cert.validUntil) : 'Fehler' }}</div>
+						</div>
+						<div class="bg-ui-warning rounded-md p-2 text-ui-onwarning">
+							Achtung, Sie können nur fortfahren mit der Einrichtung des WebNotenManagers, wenn Sie diesem Zertifikat vertrauen.
+							Eine Bestätigung des Zertifikats schaltet die angegebene Verbindung für den aktiven Datenaustausch frei, bei dem auch personenbezogene Daten übermittelt werden.
+							Bestätigen Sie diesen Schritt nur, wenn Sie sicher sind, dass diese Verbindung vertrauenswürdig ist.
+							<br>Wenn Sie sich unsicher sind, fragen Sie bitte Ihren IT-Support.
+						</div>
+						<svws-ui-button @click="trustCertificate(true)"> Zertifikat vertrauen </svws-ui-button>
+					</div>
+				</svws-ui-input-wrapper>
+				<svws-ui-input-wrapper v-if="manager().auswahl().serverTLSCertIsTrusted">
+					<div v-if="manager().getAuswahlConnectionResponse()?.success === false" class="bg-ui-warning rounded-md p-2">
 						Um Daten mit dem ENM-Server austauschen zu können, muss das auf dem Webspace abgelegte Secret ausgelesen und in das unten angegebene Feld eingefügt werden.
 						<br>Standardmäßig befindet sich das Secret in der Datei <span class="font-mono">php/db/client.sec</span> ihres Webspace.
-					</svws-ui-notification>
+					</div>
 					<svws-ui-text-input v-if="manager().getAuswahlSetupResponse() !== null" :model-value="manager().auswahl().clientSecret" type="password" placeholder="Secret" @change="clientSecret => (clientSecret !== null) && updateServerConnection({ clientSecret })" required />
 					<svws-ui-text-input :model-value="manager().auswahl().bezeichnung" type="text" placeholder="Bezeichnung" @change="bezeichnung => updateServerConnection({ bezeichnung: bezeichnung ?? null })" />
 					<svws-ui-button type="primary" @click="connect(manager().auswahl().id)">
 						Verbindungsdaten prüfen
 					</svws-ui-button>
-				</svws-ui-input-wrapper>
-				<svws-ui-input-wrapper v-if="manager().auswahl().serverTLSCertIsKnown === false" class="mt-8">
-					<div class="text-headline-md">TLS-Zertifikat des Servers </div>
-					<div v-if="cert === null">Kein Zertifikat angegeben.</div>
-					<div v-else>
-						<div class="text-headline-sm">Inhaber</div>
-						<div class="pl-4">{{ cert.subject }}</div>
-						<div class="text-headline-sm">Aussteller</div>
-						<div class="pl-4">{{ cert.issuer }}</div>
-						<div class="text-headline-sm">Gültigkeit</div>
-						<div class="pl-4">von: {{ cert.validSince }}</div>
-						<div class="pl-4">bis: {{ cert.validUntil }}</div>
-					</div>
-					<svws-ui-notification v-if="(manager().getAuswahlSetupResponse() === null) && !manager().auswahl().serverTLSCertIsTrusted && (manager().auswahl().clientSecret === '')" type="warning">
-						Es wurde noch kein Secret gesetzt und dem Zertifikat wird nicht vertraut.
-						<br>Damit der ENM-Server ein Secret erzeugen kann, muss dem Zertifikat und damit der Verbindung vertraut werden.
-					</svws-ui-notification>
-					<svws-ui-checkbox :model-value="manager().auswahl().serverTLSCertIsTrusted" @update:model-value="value => trustCertificate(value)">
-						Zertifikat vertrauen?
-					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
 			</div>
 		</div>
@@ -52,10 +62,11 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import type { TLSCertificate } from '@core';
+	import { DateUtils, type TLSCertificate } from '@core';
 	import type { NotenmodulVerbindungProps } from './NotenmodulVerbindungProps';
 
 	const props = defineProps<NotenmodulVerbindungProps>();
+
 
 	const cert = computed<TLSCertificate | null>(() => {
 		const connInfo = props.manager().auswahl();
@@ -66,5 +77,20 @@
 	});
 
 	const status = computed(() => props.manager().getAuswahlConnectionResponse());
+
+	const validCert = computed(() => {
+		if (cert.value === null) {
+			return null;
+		}
+		const issuerArr = cert.value.issuer?.split(',') ?? [];
+		const subjectArr = cert.value.subject?.split(',') ?? [];
+		const c = {
+			issuer: issuerArr.find(i => i.startsWith('O='))?.slice(2) ?? 'Fehler',
+			subject: subjectArr.find(i => i.startsWith('CN=') || i.startsWith('O='))?.slice(3) ?? 'Fehler',
+			validSince: cert.value.validSince === null ? 'Fehler' : DateUtils.gibDatumGermanFormat(cert.value.validSince),
+			validUntil: cert.value.validUntil === null ? 'Fehler' : DateUtils.gibDatumGermanFormat(cert.value.validUntil),
+		};
+		return c;
+	});
 
 </script>

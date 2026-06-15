@@ -77,23 +77,17 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		return mapAbteilungen;
 	}
 
-	public async setSchuljahresabschnitt(idSchuljahresabschnitt: number, isEntering: boolean): Promise<number | null> {
-		const result = await super.setSchuljahresabschnitt(idSchuljahresabschnitt, isEntering);
-		await routeNotenmodul.data.ladeDaten();
-		const listAbteilungen = await api.server.getAbteilungenByIdJahresAbschnitt(api.schema, idSchuljahresabschnitt);
-		this._state.value.mapAbteilungen = this.createMapAbteilungen(listAbteilungen);
-		const arr = [];
-		for (const server of this.manager.filtered()) {
-			arr.push(this.connect(server.id));
-		}
-		await Promise.all(arr);
-		return result;
-	}
-
 	protected async createManager(): Promise<Partial<RouteStateNotenmodulAdministration>> {
+		await routeNotenmodul.data.ladeDaten();
+		const listAbteilungen = await api.server.getAbteilungenByIdJahresAbschnitt(api.schema, schuleState.abschnitt.id);
+		this._state.value.mapAbteilungen = this.createMapAbteilungen(listAbteilungen);
 		const list = await api.server.getENMServerConnections(api.schema);
 		const manager = new WenomAuswahlListeManager(schuleState.abschnitt.id,
 			schuleState.abschnitt.id, abschnittState.alle, schuleState.schulform, list);
+		this._state.value.manager = manager;
+		for (const server of list) {
+			void this.connect(server.id);
+		}
 		return { manager };
 	}
 
@@ -145,6 +139,7 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 	}
 
 	public async ladeDaten(auswahl: ENMServerConnection, state: Partial<RouteStateNotenmodulAdministration>): Promise<ENMServerConnection> {
+		await this.connect(auswahl.id);
 		return auswahl;
 	}
 
@@ -279,17 +274,16 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		// ... zunächst ein Wenom-Setup
 		let result = await this.wenomSetup(id);
 		if (typeof result === "boolean") {
-			manager.setAuswahlSetupResponse(result);
+			manager.setSetupResponse(id, result);
 		} else {
-			manager.setAuswahlSetupResponse(null);
+			manager.setSetupResponse(id, null);
 		}
-		if ((result instanceof SimpleOperationResponse) && (result.id === null)) {
-			manager.setConnectionResponse(id, result);
-			this.setPatchedState({ manager });
-			return;
+		if (!(result instanceof SimpleOperationResponse) || (result.id !== null)) {
+			// ... Führe die eigentlich Überprüfung der Verbindung durch
+			result = await this.wenomCheck(id);
+			const patch = await api.server.getENMServerConnection(api.schema, id);
+			Object.assign(manager.liste.getOrException(id), patch);
 		}
-		// ... Führe die eigentlich Überprüfung der Verbindung durch
-		result = await this.wenomCheck(id);
 		manager.setConnectionResponse(id, result);
 		this.setPatchedState({ manager });
 	};
@@ -321,10 +315,8 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 	};
 
 	wenomAddCredentials = async (data: Partial<ENMServerConnection>): Promise<void> => {
-		const manager = this.manager;
 		try {
 			const server = await api.server.addENMServerConnection(data, api.schema);
-			manager.liste.add(server);
 			await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
 			await this.gotoDefaultView(server.id);
 		} catch { /** */ }

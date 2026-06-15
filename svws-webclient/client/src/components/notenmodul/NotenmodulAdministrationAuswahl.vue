@@ -9,8 +9,9 @@
 				:model-value="[...props.manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)" :columns :filter-open="true" count scroll-into-view scroll allow-arrow-key-selection
 				:focus-switching-enabled :focus-help-visible selectable :unselectable="new Set([manager().getKonfigurationLokal()])">
 				<template #cell(id)="{ rowData }">
-					<span class="icon i-ri-checkbox-circle-fill mr-3 icon-ui-success" v-if="(manager().getConnectionResponse(rowData.id).success) || (rowData.id === -1)" />
-					<span class="icon i-ri-alert-fill mr-3 icon-ui-danger" v-else-if="manager().getConnectionResponse(rowData.id).success === false" />
+					<span class="icon i-ri-checkbox-circle-fill mr-3 icon-ui-success" v-if="(manager().getConnectionResponse(rowData.id)?.success) || (rowData.id === -1)" />
+					<span class="icon i-ri-alert-fill mr-3 icon-ui-danger" v-else-if="manager().getConnectionResponse(rowData.id)?.success === false" />
+					<svws-ui-spinner spinning v-else />
 				</template>
 				<template #actions>
 					<svws-ui-tooltip position="bottom">

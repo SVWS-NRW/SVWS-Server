@@ -1139,3 +1139,17 @@
 	mask-repeat: no-repeat;
 	mask-position: center;
 }
+
+@utility i-ri-verified-badge-line {
+	mask-image: url(@icons/Business/verified-badge-line.svg);
+	-webkit-mask-image: url(@icons/Business/verified-badge-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-verified-badge-fill {
+	mask-image: url(@icons/Business/verified-badge-fill.svg);
+	-webkit-mask-image: url(@icons/Business/verified-badge-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
