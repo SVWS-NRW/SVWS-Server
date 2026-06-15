@@ -27,8 +27,8 @@ export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten>
 		patch?: (data: Partial<SchuelerStammdaten>) => Promise<boolean>
 	) {
 		const listOfAutopatchProps: Iterable<keyof SchuelerStammdaten> = ["geschlecht", "status", "fahrschuelerArtID",
-			"haltestelleID", "staatsangehoerigkeitID", "staatsangehoerigkeit2ID", "religionID", "geburtsland",
-			"verkehrspracheFamilie", "geburtslandMutter", "geburtslandVater", "istDuplikat", "istVolljaehrig",
+			"haltestelleID", "idStaatsangehoerigkeit", "idStaatsangehoerigkeit2", "religionID", "idGeburtsland",
+			"idVerkehrspracheFamilie", "idGeburtslandMutter", "idGeburtslandVater", "istDuplikat", "istVolljaehrig",
 			"keineAuskunftAnDritte", "istSchulpflichtErfuellt", "istBerufsschulpflichtErfuellt", "hatMasernimpfnachweis",
 			"erhaeltSchuelerBAFOEG", "druckeKonfessionAufZeugnisse", "hatMigrationshintergrund",
 		];
@@ -101,7 +101,7 @@ export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten>
 		this.addValidator(new ValidatorStringLength(() => this.proxy.beruf, null, 100), "beruf");
 
 		// 1. Staatsangehörigkeit – Required
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.staatsangehoerigkeitID), "staatsangehoerigkeitID");
+		this.addValidator(new ValidatorInputRequired(() => this.proxy.idStaatsangehoerigkeit), "idStaatsangehoerigkeit");
 
 		// Konfession – Required
 		this.addValidator(new ValidatorInputRequired(() => this.proxy.religionID), "religionID");
@@ -149,33 +149,33 @@ export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten>
 	});
 
 	staatsangehoerigkeitID = computed<NationalitaetenKatalogEintrag | null>({
-		get: () => Nationalitaeten.getByISO3(this.proxy.staatsangehoerigkeitID)?.daten(this.schuljahr()) ?? null,
-		set: (v: NationalitaetenKatalogEintrag | null) => this.proxy.staatsangehoerigkeitID = v?.iso3 ?? null,
+		get: () => Nationalitaeten.data().getWertByIDOrNull(this.proxy.idStaatsangehoerigkeit)?.daten(this.schuljahr()) ?? null,
+		set: (v: NationalitaetenKatalogEintrag | null) => this.proxy.idStaatsangehoerigkeit = v?.id ?? null,
 	});
 
 	staatsangehoerigkeit2ID = computed<NationalitaetenKatalogEintrag | null>({
-		get: () => Nationalitaeten.getByISO3(this.proxy.staatsangehoerigkeit2ID)?.daten(this.schuljahr()) ?? null,
-		set: (v: NationalitaetenKatalogEintrag | null) => this.proxy.staatsangehoerigkeit2ID = v?.iso3 ?? null,
+		get: () => Nationalitaeten.data().getWertByIDOrNull(this.proxy.idStaatsangehoerigkeit2)?.daten(this.schuljahr()) ?? null,
+		set: (v: NationalitaetenKatalogEintrag | null) => this.proxy.idStaatsangehoerigkeit2 = v?.id ?? null,
 	});
 
 	geburtsland = computed<NationalitaetenKatalogEintrag | null>({
-		get: () => Nationalitaeten.getByISO3(this.proxy.geburtsland)?.daten(this.schuljahr()) ?? null,
-		set: (v: NationalitaetenKatalogEintrag | null) => this.proxy.geburtsland = v?.iso3 ?? null,
+		get: () => Nationalitaeten.data().getWertByIDOrNull(this.proxy.idGeburtsland)?.daten(this.schuljahr()) ?? null,
+		set: (v: NationalitaetenKatalogEintrag | null) => this.proxy.idGeburtsland = v?.id ?? null,
 	});
 
 	geburtslandMutter = computed<NationalitaetenKatalogEintrag | null>({
-		get: () => Nationalitaeten.getByISO3(this.proxy.geburtslandMutter)?.daten(this.schuljahr()) ?? null,
-		set: (v: NationalitaetenKatalogEintrag | null) => this.proxy.geburtslandMutter = v?.iso3 ?? null,
+		get: () => Nationalitaeten.data().getWertByIDOrNull(this.proxy.idGeburtslandMutter)?.daten(this.schuljahr()) ?? null,
+		set: (v: NationalitaetenKatalogEintrag | null) => this.proxy.idGeburtslandMutter = v?.id ?? null,
 	});
 
 	geburtslandVater = computed<NationalitaetenKatalogEintrag | null>({
-		get: () => Nationalitaeten.getByISO3(this.proxy.geburtslandVater)?.daten(this.schuljahr()) ?? null,
-		set: (v: NationalitaetenKatalogEintrag | null) => this.proxy.geburtslandVater = v?.iso3 ?? null,
+		get: () => Nationalitaeten.data().getWertByIDOrNull(this.proxy.idGeburtslandVater)?.daten(this.schuljahr()) ?? null,
+		set: (v: NationalitaetenKatalogEintrag | null) => this.proxy.idGeburtslandVater = v?.id ?? null,
 	});
 
 	verkehrspracheFamilie = computed<VerkehrsspracheKatalogEintrag | null>({
-		get: () => Verkehrssprache.getByIsoKuerzel(this.proxy.verkehrspracheFamilie)?.daten(this.schuljahr()) ?? null,
-		set: (v: VerkehrsspracheKatalogEintrag | null) => this.proxy.verkehrspracheFamilie = v?.iso3 ?? null,
+		get: () => Verkehrssprache.data().getWertByIDOrNull(this.proxy.idVerkehrspracheFamilie)?.daten(this.schuljahr()) ?? null,
+		set: (v: VerkehrsspracheKatalogEintrag | null) => this.proxy.idVerkehrspracheFamilie = v?.id ?? null,
 	});
 
 	selectedOrt = computed<OrtKatalogEintrag | null>({

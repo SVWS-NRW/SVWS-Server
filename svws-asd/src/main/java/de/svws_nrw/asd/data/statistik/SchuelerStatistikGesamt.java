@@ -35,12 +35,12 @@ public class SchuelerStatistikGesamt {
 	public Long wohnortID;
 
 	/** Die ID der Staatsangehörigkeit des Schülerdatensatzes. */
-	@Schema(description = "die ID der Staatsangehörigkeit", example = "000")
-	public String staatsangehoerigkeitID;
+	@Schema(description = "die ID der Staatsangehörigkeit", example = "123456")
+	public Long idStaatsangehoerigkeit;
 
 	/** Die ID einer zweiten Staatsangehörigkeit des Schülerdatensatzes. */
 	@Schema(description = "ggf. die ID einer zweiten Staatsangehörigkeit", example = "121")
-	public String staatsangehoerigkeit2ID;
+	public Long idStaatsangehoerigkeit2;
 
 	/** Die ID der Religion des Schülerdatensatzes. */
 	@Schema(description = "ggf. die ID der Religion", example = "4711")
@@ -72,21 +72,21 @@ public class SchuelerStatistikGesamt {
 	@Schema(description = "ggf. das Zuzugsjahr", example = "2013")
 	public Integer zuzugsjahr;
 
-	/** Das Geburtsland des Schülerdatensatzes. */
-	@Schema(description = "ggf. das Geburtsland", example = "Brasilien")
-	public String geburtsland;
+	/** Die Id des Geburtslandes des Schülerdatensatzes. */
+	@Schema(description = "ggf. die Id des Geburtslandes", example = "12345")
+	public Long idGeburtsland;
 
-	/** Die Verkehrssprache der Familie des Schülerdatensatzes. */
-	@Schema(description = "ggf. die in der Familie hauptsächlich gesprochen Sprache", example = "Portugiesisch")
-	public String verkehrspracheFamilie;
+	/** Die Id der Verkehrssprache der Familie des Schülerdatensatzes. */
+	@Schema(description = "ggf. die Id der in der Familie hauptsächlich gesprochen Sprache", example = "123456")
+	public Long idVerkehrspracheFamilie;
 
-	/** Das Geburtsland des Vaters des Schülerdatensatzes. */
-	@Schema(description = "ggf. das Geburtsland des Vaters", example = "Argentinien")
-	public String geburtslandVater;
+	/** Die Id des Geburtslandes des Vaters des Schülerdatensatzes. */
+	@Schema(description = "ggf. die Id des Geburtslandes des Vaters", example = "123456")
+	public Long idGeburtslandVater;
 
-	/** Das Geburtsland der Mutter des Schülerdatensatzes. */
-	@Schema(description = "ggf. das Geburtsland der Mutter", example = "Brasilien")
-	public String geburtslandMutter;
+	/** Die Id des Geburtslandes der Mutter des Schülerdatensatzes. */
+	@Schema(description = "ggf. die Id des Geburtslandes der Mutter", example = "123456")
+	public Long idGeburtslandMutter;
 
 	/** Die allgemeinen Angaben zu den Lernabschnitten der Schüler. */
 	@ArraySchema(schema = @Schema(implementation = SchuelerLernabschnittStatistikGesamt.class,

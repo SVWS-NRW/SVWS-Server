@@ -137,8 +137,8 @@ public final class SchuelerStatistikService {
 		daten.geschlecht = dtoSchueler.Geschlecht.id;
 		daten.geburtsdatum = dtoSchueler.Geburtsdatum;
 		daten.wohnortID = dtoSchueler.Ort_ID;
-		daten.staatsangehoerigkeitID = (dtoSchueler.StaatKrz == null) ? null : dtoSchueler.StaatKrz.historie().getLast().iso3;
-		daten.staatsangehoerigkeit2ID = (dtoSchueler.StaatKrz2 == null) ? null : dtoSchueler.StaatKrz2.historie().getLast().iso3;
+		daten.idStaatsangehoerigkeit = (dtoSchueler.StaatKrz == null) ? null : dtoSchueler.StaatKrz.historie().getLast().id;
+		daten.idStaatsangehoerigkeit2 = (dtoSchueler.StaatKrz2 == null) ? null : dtoSchueler.StaatKrz2.historie().getLast().id;
 		daten.religionID = dtoSchueler.Religion_ID;
 		daten.status = dtoSchueler.idStatus;
 		daten.religionabmeldung = dtoSchueler.Religionsabmeldung;
@@ -147,10 +147,10 @@ public final class SchuelerStatistikService {
 
 		daten.hatMigrationshintergrund = Boolean.TRUE.equals(dtoSchueler.Migrationshintergrund);
 		daten.zuzugsjahr = dtoSchueler.JahrZuzug;
-		daten.geburtsland = (dtoSchueler.GeburtslandSchueler == null) ? null : dtoSchueler.GeburtslandSchueler.historie().getLast().iso3;
-		daten.verkehrspracheFamilie = (dtoSchueler.VerkehrsspracheFamilie == null) ? null : dtoSchueler.VerkehrsspracheFamilie.historie().getLast().iso3;
-		daten.geburtslandVater = (dtoSchueler.GeburtslandVater == null) ? null : dtoSchueler.GeburtslandVater.historie().getLast().iso3;
-		daten.geburtslandMutter = (dtoSchueler.GeburtslandMutter == null) ? null : dtoSchueler.GeburtslandMutter.historie().getLast().iso3;
+		daten.idGeburtsland = (dtoSchueler.GeburtslandSchueler == null) ? null : dtoSchueler.GeburtslandSchueler.historie().getLast().id;
+		daten.idVerkehrspracheFamilie = (dtoSchueler.VerkehrsspracheFamilie == null) ? null : dtoSchueler.VerkehrsspracheFamilie.historie().getLast().id;
+		daten.idGeburtslandVater = (dtoSchueler.GeburtslandVater == null) ? null : dtoSchueler.GeburtslandVater.historie().getLast().id;
+		daten.idGeburtslandMutter = (dtoSchueler.GeburtslandMutter == null) ? null : dtoSchueler.GeburtslandMutter.historie().getLast().id;
 
 		daten.vorherigeSchuleNr = dtoSchueler.LSSchulNr;
 		daten.vorigeAllgHerkunft = dtoSchueler.LSSchulform;
@@ -189,24 +189,25 @@ public final class SchuelerStatistikService {
 	 */
 	public List<SchuelerStatistikGesamt> getList() {
 		// Bestimme zunächst den aktuellen Schuljahresabschnitt der Schule
-		final long idSchuljahresabschnitt = schuleRepository.getSchuljahresabschnitt();
+		final long idSchuljahresabschnitt = this.schuleRepository.getSchuljahresabschnitt();
 
 		// Bestimme dann die aktiven Schüler aus diesem Schuljahresabschnitt
-		final var mapSchueler = schuelerRepository.getMapAktiveBySchuljahresabschnitt(idSchuljahresabschnitt);
+		final var mapSchueler = this.schuelerRepository.getMapAktiveBySchuljahresabschnitt(idSchuljahresabschnitt);
 
 		// Bestimme dann die aktuellen Lernabschnitte zu diesen Schülern
-		final var mapLernabschnitte = schuelerLernabschnittRepository.getMapBySchuelerIDsAndSchuljahreabschnitt(mapSchueler.keySet(), idSchuljahresabschnitt);
+		final var mapLernabschnitte =
+				this.schuelerLernabschnittRepository.getMapBySchuelerIDsAndSchuljahreabschnitt(mapSchueler.keySet(), idSchuljahresabschnitt);
 		final var idsAbschnitte = mapLernabschnitte.values().stream().map(a -> a.ID).toList();
 
 		// Bestimme die Leistungsdaten zu den Lernabschnitten
-		final var mapLeistungsdaten = schuelerLeistungsdatenRepository.getMapListByLernabschnittsIds(idsAbschnitte);
+		final var mapLeistungsdaten = this.schuelerLeistungsdatenRepository.getMapListByLernabschnittsIds(idsAbschnitte);
 
 		// Bestimme dann die Prüfungsfächer im Abiturbereich zu den übergebenen Schülern
-		final var dtosSchuelerAbitur = schuelerAbiturRepository.getListBySchuelerIds(mapSchueler.keySet());
+		final var dtosSchuelerAbitur = this.schuelerAbiturRepository.getListBySchuelerIds(mapSchueler.keySet());
 		final var mapSchuelerAbitur = dtosSchuelerAbitur.stream().collect(Collectors.toMap(sa -> sa.Schueler_ID, sa -> sa));
-		final var dtosSchuelerAbiturFach = schuelerAbiturFachRepository.getListBySchuelerIdsNurPruefungsfaecher(mapSchueler.keySet());
+		final var dtosSchuelerAbiturFach = this.schuelerAbiturFachRepository.getListBySchuelerIdsNurPruefungsfaecher(mapSchueler.keySet());
 		final var idsFaecher = dtosSchuelerAbiturFach.stream().map(f -> f.Fach_ID).distinct().toList();
-		final var mapFaecher = fachRepository.findListByIds(idsFaecher).stream().collect(Collectors.toMap(f -> f.ID, f -> f.StatistikKuerzel));
+		final var mapFaecher = this.fachRepository.findListByIds(idsFaecher).stream().collect(Collectors.toMap(f -> f.ID, f -> f.StatistikKuerzel));
 		final Map<Long, List<String>> mapSchuelerAbiturFach =
 				dtosSchuelerAbiturFach.stream().collect(Collectors.groupingBy(f -> f.Schueler_ID, Collectors.collectingAndThen(
 						Collectors.toList(), list -> {
@@ -217,7 +218,7 @@ public final class SchuelerStatistikService {
 							final List<String> kuerzel = new ArrayList<>();
 							for (int i = 0; i < list.size(); i++) {
 								final var abiFach = list.get(i);
-								if (i + 1 != abiFach.AbiturFach.id) {
+								if ((i + 1) != abiFach.AbiturFach.id) {
 									return Collections.emptyList();
 								}
 								final var fachkuerzel = mapFaecher.get(abiFach.Fach_ID);

@@ -1,6 +1,5 @@
 package de.svws_nrw.asd.export.aggregation;
 
-import static de.svws_nrw.asd.export.aggregation.AggregationStatistikExport.DEU;
 import static de.svws_nrw.asd.export.aggregation.AggregationStatistikExport.EIN_LEERZEICHEN;
 import static de.svws_nrw.asd.export.aggregation.AggregationStatistikExport.auffuellenStellengerecht;
 
@@ -31,7 +30,9 @@ import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
+import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Verkehrssprache;
 import de.svws_nrw.asd.validate.DateManager;
 import de.svws_nrw.asd.validate.InvalidDateException;
 
@@ -101,6 +102,11 @@ public class AggregationKlassenStatistikExport {
 	 */
 	private final StatistikGesamt statistikGesamt;
 
+	/**
+	 * Das Schuljahr.
+	 */
+	private final int aktuellesSchuljahr;
+
 
 
 	/**
@@ -112,21 +118,24 @@ public class AggregationKlassenStatistikExport {
 	 * @param klasseIdMap
 	 * @param fachIdMap
 	 * @param jahrgangIdMap
+	 * @param aktuellesSchuljahr
 	 */
 	public AggregationKlassenStatistikExport(final StatistikGesamt statistikGesamt, final StatistikExport statistikExport,
 			final LinkedList<String> fehlermeldungen, final Map<Long, Long> jahrgangIdMap, final Map<Long, FachStatistikGesamt> fachIdMap,
-			final Map<Long, KlassenStatistikGesamt> klasseIdMap, final Map<Long, LehrerStatistikGesamt> lehrerIdMap) {
+			final Map<Long, KlassenStatistikGesamt> klasseIdMap, final Map<Long, LehrerStatistikGesamt> lehrerIdMap, final int aktuellesSchuljahr) {
 		this.statistikGesamt = statistikGesamt;
 		this.statistikExport = statistikExport;
 		this.fehlermeldungen = fehlermeldungen;
-		schulform = Schulform.data().getWertByBezeichner(statistikGesamt.schule.schulform);
+		this.schulform = Schulform.data().getWertByBezeichner(statistikGesamt.schule.schulform);
 		this.jahrgangIdMap = jahrgangIdMap;
 		this.fachIdMap = fachIdMap;
 		this.klasseIdMap = klasseIdMap;
 		this.lehrerIdMap = lehrerIdMap;
+		this.aktuellesSchuljahr = aktuellesSchuljahr;
+
 	}
 
-	private static void erstellenKlassenZuwanderungsgeschichte(final List<SchuelerStatistikGesamt> teilKlassenSchueler,
+	private void erstellenKlassenZuwanderungsgeschichte(final List<SchuelerStatistikGesamt> teilKlassenSchueler,
 			final KlassenStatistikExport klassenStatistikExport) {
 
 		final KlassenZuwanderungsgeschichteStatistikExport klassenZuwanderungsgeschichteStatistikExport = new KlassenZuwanderungsgeschichteStatistikExport();
@@ -135,13 +144,14 @@ public class AggregationKlassenStatistikExport {
 			if (e.hatMigrationshintergrund) {
 				klassenZuwanderungsgeschichteStatistikExport.zuwanderungsgeschichteInsgesamt++;
 
-				if (!DEU.equalsIgnoreCase(e.geburtsland)) {
+				if (!Long.valueOf(Nationalitaeten.getDEU().daten(this.aktuellesSchuljahr).id).equals(e.idGeburtsland)) {
 					klassenZuwanderungsgeschichteStatistikExport.zuwanderungsgeschichteEigenerZuzug++;
 				}
-				if (!DEU.equalsIgnoreCase(e.geburtslandMutter) || !DEU.equalsIgnoreCase(e.geburtslandVater)) {
+				if (!Long.valueOf(Nationalitaeten.getDEU().daten(this.aktuellesSchuljahr).id).equals(e.idGeburtslandMutter)
+						|| !Long.valueOf(Nationalitaeten.getDEU().daten(this.aktuellesSchuljahr).id).equals(e.idGeburtslandVater)) {
 					klassenZuwanderungsgeschichteStatistikExport.zuwanderungsgeschichteElternteilZugezogen++;
 				}
-				if (!"de".equalsIgnoreCase(e.verkehrspracheFamilie)) {
+				if (!Long.valueOf(Verkehrssprache.getDEU().daten(this.aktuellesSchuljahr).id).equals(e.idVerkehrspracheFamilie)) {
 					klassenZuwanderungsgeschichteStatistikExport.zuwanderungsgeschichteNichtDeutscheVerkehrssprache++;
 				}
 			}
@@ -160,12 +170,12 @@ public class AggregationKlassenStatistikExport {
 	 */
 	public String ermittelnBilingualeSprache(final long fachId) {
 
-		if ((Schulform.H == schulform) || (Schulform.V == schulform) || (Schulform.S == schulform) || (Schulform.FW == schulform)) {
+		if ((Schulform.H == this.schulform) || (Schulform.V == this.schulform) || (Schulform.S == this.schulform) || (Schulform.FW == this.schulform)) {
 			return "";
 		}
 
-		return fachIdMap.get(fachId).bilingualeSprache.equals("D") ? ""
-				: fachIdMap.get(fachId).bilingualeSprache;
+		return this.fachIdMap.get(fachId).bilingualeSprache.equals("D") ? ""
+				: this.fachIdMap.get(fachId).bilingualeSprache;
 	}
 
 	/**
@@ -176,7 +186,7 @@ public class AggregationKlassenStatistikExport {
 	 */
 	public boolean run() {
 
-		if (statistikGesamt == null) {
+		if (this.statistikGesamt == null) {
 			return false;
 		}
 
@@ -188,15 +198,15 @@ public class AggregationKlassenStatistikExport {
 
 	private String bauenBildungsbereich(final TeilKlassenKey klassenKey) {
 		String bildungsbereich = "";
-		if (Schulform.FW.equals(schulform) || Schulform.WF.equals(schulform) || Schulform.HI.equals(schulform)
-				|| Schulform.SG.equals(schulform)) {
+		if (Schulform.FW.equals(this.schulform) || Schulform.WF.equals(this.schulform) || Schulform.HI.equals(this.schulform)
+				|| Schulform.SG.equals(this.schulform)) {
 			if (!klassenKey.foerderschwerp.isBlank()) {
 				bildungsbereich = "S";
 			} else {
 				bildungsbereich = "A";
 			}
 
-			if (Schulform.HI.equals(schulform)) {
+			if (Schulform.HI.equals(this.schulform)) {
 				if ("K02".equals(klassenKey.gliederung)) {
 					bildungsbereich = "K";
 				}
@@ -214,16 +224,16 @@ public class AggregationKlassenStatistikExport {
 
 		//Gruppieren
 		final Map<TeilKlassenKey, List<SchuelerStatistikGesamt>> gruppiert =
-				statistikGesamt.schueler.stream()
+				this.statistikGesamt.schueler.stream()
 						.filter(e -> SchuelerStatus.data().getSchluesselByIDOrNull((long) e.status).equals("2")) // nur aktive Schüler; Status = 2
 						.collect(Collectors.groupingBy(
-								e -> new TeilKlassenKey(e, klasseIdMap, lehrerIdMap, statistikGesamt.schule.idSchuljahresabschnitt,
-										jahrgangIdMap, schulform, fehlermeldungen)));
+								e -> new TeilKlassenKey(e, this.klasseIdMap, this.lehrerIdMap, this.statistikGesamt.schule.idSchuljahresabschnitt,
+										this.jahrgangIdMap, this.schulform, this.fehlermeldungen)));
 
 		//Sortieren
 		Comparator<Map.Entry<TeilKlassenKey, List<SchuelerStatistikGesamt>>> comparator;
 
-		if (Schulform.BK.equals(schulform) || Schulform.SB.equals(schulform)) {
+		if (Schulform.BK.equals(this.schulform) || Schulform.SB.equals(this.schulform)) {
 			comparator =
 					Comparator.comparing((final Map.Entry<TeilKlassenKey, List<SchuelerStatistikGesamt>> e) -> e.getKey().klassenKuerzel)
 							.thenComparing(e -> e.getKey().gliederung)
@@ -278,7 +288,7 @@ public class AggregationKlassenStatistikExport {
 			final long anzahl = anzahlProKlasse.getOrDefault(klassenkuerzel, 0L);
 			String teilklassenkuerzel = null;
 
-			if ((Schulform.BK == schulform) || (Schulform.SB == schulform)) {
+			if ((Schulform.BK == this.schulform) || (Schulform.SB == this.schulform)) {
 
 				if (!klassenkuerzel.equals(letzteKlasse)) {
 					letzteKlasse = klassenkuerzel;
@@ -319,18 +329,19 @@ public class AggregationKlassenStatistikExport {
 		final Map<AltersstrukturKey, List<SchuelerStatistikGesamt>> map = schuelerStatistikGesamt.stream()
 				.collect(Collectors
 						.groupingBy(s -> {
+							final String iso3 = getNationalitaetIso3(s.idStaatsangehoerigkeit);
 							try {
-								return new AltersstrukturKey(s.staatsangehoerigkeitID, String.valueOf(DateManager.from(s.geburtsdatum).getJahr()));
+								return new AltersstrukturKey(iso3, String.valueOf(DateManager.from(s.geburtsdatum).getJahr()));
 							} catch (final InvalidDateException e) {
-								fehlermeldungen.add("Folgendes Geburtsdatum konnte nicht geparst werden: " + s.geburtsdatum);
-								return new AltersstrukturKey(s.staatsangehoerigkeitID, "");
+								this.fehlermeldungen.add("Folgendes Geburtsdatum konnte nicht geparst werden: " + s.geburtsdatum);
+								return new AltersstrukturKey(iso3, "");
 							}
 						}));
 
 		map.entrySet().stream().forEach(t -> {
 			final KlassenAltersstrukturStatistikExport klassenAltersstrukturStatistikExport = new KlassenAltersstrukturStatistikExport();
 			klassenAltersstrukturStatistikExport.nationalitaet = t.getKey().nationalitaet;
-			if (DEU.equalsIgnoreCase(klassenAltersstrukturStatistikExport.nationalitaet)) {
+			if ("DEU".equalsIgnoreCase(klassenAltersstrukturStatistikExport.nationalitaet)) {
 				klassenAltersstrukturStatistikExport.nationalitaet = "";
 			}
 			klassenAltersstrukturStatistikExport.geburtsjahr = t.getKey().geburtsjahr;
@@ -341,18 +352,26 @@ public class AggregationKlassenStatistikExport {
 
 	}
 
+	/**
+	 * @param idStaatsangehoerigkeit
+	 * @return der ISO3-Wert zur übergebenen ID
+	 */
+	private String getNationalitaetIso3(final Long idStaatsangehoerigkeit) {
+		return Nationalitaeten.data().getWertByID(idStaatsangehoerigkeit).daten(this.aktuellesSchuljahr).iso3;
+	}
+
 	private void erstellenKlassenNationalitaetenStatistikExport(final List<SchuelerStatistikGesamt> schuelerStatistikGesamt,
 			final KlassenStatistikExport klassenStatistikExport) {
 		final Map<String, List<SchuelerStatistikGesamt>> map =
 				schuelerStatistikGesamt.stream().collect(Collectors.groupingBy(s -> {
-					if (s.staatsangehoerigkeitID == null) {
-						fehlermeldungen.add("Der SchuelerStatistikGesamt-Satz mit folgender ID hat eine StaatsangehoerigkeitID von Null: " + s.id);
+					if (s.idStaatsangehoerigkeit == null) {
+						this.fehlermeldungen.add("Der SchuelerStatistikGesamt-Satz mit folgender ID hat eine StaatsangehoerigkeitID von Null: " + s.id);
 						return "";
 					}
-					return s.staatsangehoerigkeitID;
+					return getNationalitaetIso3(s.idStaatsangehoerigkeit);
 				}));
 
-		map.entrySet().stream().filter(f -> !f.getKey().equalsIgnoreCase(AggregationStatistikExport.DEU)).forEach(t -> {
+		map.entrySet().stream().filter(f -> !f.getKey().equalsIgnoreCase("DEU")).forEach(t -> {
 			final KlassenNationalitaetenStatistikExport klassenNationalitaetenStatistikExport = new KlassenNationalitaetenStatistikExport();
 			klassenNationalitaetenStatistikExport.nationalitaet = t.getKey();
 			klassenNationalitaetenStatistikExport.insgesamtZusammen = t.getValue().size();
@@ -371,34 +390,34 @@ public class AggregationKlassenStatistikExport {
 			final KlassenStatistikExport klassenStatistikExport = new KlassenStatistikExport();
 			SchuelerLernabschnittStatistikGesamt lernabschnitt = new SchuelerLernabschnittStatistikGesamt();
 			final Optional<SchuelerLernabschnittStatistikGesamt> optional =
-					e.getValue().getFirst().lernabschnitte.stream().filter(k -> k.idSchuljahresabschnitt == statistikGesamt.schule.idSchuljahresabschnitt)
+					e.getValue().getFirst().lernabschnitte.stream().filter(k -> k.idSchuljahresabschnitt == this.statistikGesamt.schule.idSchuljahresabschnitt)
 							.findFirst();
 
 			if (optional.isPresent()) {
 				lernabschnitt = optional.get();
 			}
-			final KlassenStatistikGesamt klasse = klasseIdMap.get(lernabschnitt.idKlasse);
+			final KlassenStatistikGesamt klasse = this.klasseIdMap.get(lernabschnitt.idKlasse);
 			// TODO: Frage an Methodik, ob das so in Ordnung ist.
 			if (klasse.idJahrgang == null) {
 				// B-Schule
 				klassenStatistikExport.jahrgang = "";
 				// Jahrgangsübergreifende Klasse
-				if (!(Schulform.BK.equals(schulform) || Schulform.SB.equals(schulform) || Schulform.WB.equals(schulform))) {
+				if (!(Schulform.BK.equals(this.schulform) || Schulform.SB.equals(this.schulform) || Schulform.WB.equals(this.schulform))) {
 					klassenStatistikExport.jahrgang = "JU";
 				}
 			} else {
-				klassenStatistikExport.jahrgang = Jahrgaenge.data().getSchluesselByIDOrNull(jahrgangIdMap.get(klasse.idJahrgang));
+				klassenStatistikExport.jahrgang = Jahrgaenge.data().getSchluesselByIDOrNull(this.jahrgangIdMap.get(klasse.idJahrgang));
 			}
 
 			if (klassenStatistikExport.jahrgang == null) {
 				klassenStatistikExport.jahrgang = "";
-				fehlermeldungen
+				this.fehlermeldungen
 						.add("Über die Klasse mit folgender ID konnte kein Jahrgang ermittelt werden: " + klasse.id + " idJahrgang: " + klasse.idJahrgang);
 			}
 
 			// Jahrgänge "01" und "02" müssen in bestimmten Fällen in die Bezeichnung für die Schuleingangsphase umgesetzt werden
 			if (Set.of("01", "02").contains(klassenStatistikExport.jahrgang)
-					&& !(Schulform.BK.equals(schulform) || Schulform.SB.equals(schulform) || Schulform.WB.equals(schulform))) {
+					&& !(Schulform.BK.equals(this.schulform) || Schulform.SB.equals(this.schulform) || Schulform.WB.equals(this.schulform))) {
 
 				if (klassenStatistikExport.jahrgang.equals("01")) {
 					klassenStatistikExport.jahrgang = "1E";
@@ -407,8 +426,8 @@ public class AggregationKlassenStatistikExport {
 				}
 			}
 
-			if (schulform.istAllgemeinbildend()) {
-				final String parallelitaet = klasseIdMap.get(lernabschnitt.idKlasse).parallelitaet;
+			if (this.schulform.istAllgemeinbildend()) {
+				final String parallelitaet = this.klasseIdMap.get(lernabschnitt.idKlasse).parallelitaet;
 				klassenStatistikExport.bildungsgangkennzeichen =
 						parallelitaet == null ? EIN_LEERZEICHEN : parallelitaet.trim();
 
@@ -421,7 +440,7 @@ public class AggregationKlassenStatistikExport {
 			}
 			// Jahrgänge "01" und "02" müssen in bestimmten Fällen in die Bezeichnung für die Schuleingangsphase umgesetzt werden
 			if (Set.of("01", "02").contains(e.getKey().aktJahrgang)
-					&& !(Schulform.BK.equals(schulform) || Schulform.SB.equals(schulform) || Schulform.WB.equals(schulform))) {
+					&& !(Schulform.BK.equals(this.schulform) || Schulform.SB.equals(this.schulform) || Schulform.WB.equals(this.schulform))) {
 				klassenStatistikExport.jahrgangTeilklasse = PrimarstufeSchuleingangsphaseBesuchsjahre.data()
 						.getSchluesselByIDOrNull(e.getValue().getFirst().lernabschnitte.getFirst().epJahre.longValue());
 			}
@@ -437,21 +456,20 @@ public class AggregationKlassenStatistikExport {
 			klassenStatistikExport.kuerzelKlassenlehrer = e.getKey().labk;
 			klassenStatistikExport.organisationsform = e.getKey().orgForm;
 			klassenStatistikExport.reformpaedagogik = e.getKey().reformpdg;
-			klassenStatistikExport.schuelerAuslaendischWeiblich = (int) e.getValue().stream().filter(w ->
-			//TODO staatsangehoerigkeitID auf idStaatsangehoerigkeit umstellen
-			(Geschlecht.W.id == w.geschlecht) && !DEU.equalsIgnoreCase(w.staatsangehoerigkeitID)
-			).count();
-			klassenStatistikExport.schuelerAuslaendischZusammen = (int) e.getValue().stream().filter(w ->
-			//TODO staatsangehoerigkeitID auf idStaatsangehoerigkeit umstellen
-			!DEU.equalsIgnoreCase(w.staatsangehoerigkeitID)
-			).count();
+			klassenStatistikExport.schuelerAuslaendischWeiblich = (int) e.getValue().stream()
+					.filter(w -> (Geschlecht.W.id == w.geschlecht)
+							&& (Nationalitaeten.getDEU().daten(this.aktuellesSchuljahr).id != w.idStaatsangehoerigkeit.longValue())
+					).count();
+			klassenStatistikExport.schuelerAuslaendischZusammen =
+					(int) e.getValue().stream().filter(w -> Nationalitaeten.getDEU().daten(this.aktuellesSchuljahr).id != w.idStaatsangehoerigkeit.longValue()
+					).count();
 			klassenStatistikExport.schuelerInsgesamt = e.getValue().size();
 			klassenStatistikExport.schuelerWeiblich = (int) e.getValue().stream().filter(w -> Geschlecht.W.id == w.geschlecht
 			).count();
 			klassenStatistikExport.schulgliederung = e.getKey().gliederung;
 
-			if ((schulform == Schulform.BK) || (schulform == Schulform.SB)) {
-				klassenStatistikExport.schulinterneBezeichnung = klasseIdMap.get(lernabschnitt.idKlasse).kuerzel;
+			if ((this.schulform == Schulform.BK) || (this.schulform == Schulform.SB)) {
+				klassenStatistikExport.schulinterneBezeichnung = this.klasseIdMap.get(lernabschnitt.idKlasse).kuerzel;
 			} else {
 				klassenStatistikExport.schulinterneBezeichnung = "";
 			}
@@ -477,7 +495,7 @@ public class AggregationKlassenStatistikExport {
 			// **X98 - Zuwanderungsgeschichte
 			erstellenKlassenZuwanderungsgeschichte(e.getValue(), klassenStatistikExport);
 
-			statistikExport.klassenStatistikExport.add(klassenStatistikExport);
+			this.statistikExport.klassenStatistikExport.add(klassenStatistikExport);
 		});
 
 

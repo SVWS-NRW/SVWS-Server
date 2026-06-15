@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import de.svws_nrw.base.email.EmailJobManager;
 import de.svws_nrw.core.data.benutzer.BenutzerEMailDaten;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
@@ -49,7 +50,7 @@ public class ProxyReportingBenutzer extends ReportingBenutzer {
 				"",
 				"",
 				"",
-				"",
+				null,
 				"",
 				"",
 				null,
@@ -103,7 +104,7 @@ public class ProxyReportingBenutzer extends ReportingBenutzer {
 			super.emailSchule = super.lehrer.emailSchule();
 			super.faxSchule = super.lehrer.faxSchule();
 			super.geburtsdatum = super.lehrer.geburtsdatum();
-			super.geburtsland = super.lehrer.geburtsland();
+			super.idGeburtsland = super.lehrer.idGeburtsland();
 			super.geburtsname = super.lehrer.geburtsname();
 			super.geburtsort = super.lehrer.geburtsort();
 			super.geschlecht = super.lehrer.geschlecht();

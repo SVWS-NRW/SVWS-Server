@@ -5,30 +5,32 @@ import java.util.Comparator;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.svws_nrw.asd.data.schueler.Sprachbelegung;
-import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
-import de.svws_nrw.core.data.gost.Abiturdaten;
+
 import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
+import de.svws_nrw.asd.data.schueler.Sprachbelegung;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
+import de.svws_nrw.asd.types.schule.Verkehrssprache;
+import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
+import de.svws_nrw.core.data.gost.Abiturdaten;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ProxyReportingErzieher;
-import de.svws_nrw.module.reporting.types.schueler.schulbesuch.ProxyReportingSchuelerSchulbesuch;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieher;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieherArtGruppe;
-import de.svws_nrw.module.reporting.types.schueler.schulbesuch.ReportingSchuelerSchulbesuch;
-import de.svws_nrw.module.reporting.types.schueler.telefon.ReportingSchuelerTelefonkontakt;
 import de.svws_nrw.module.reporting.types.schueler.gost.abitur.ProxyReportingSchuelerGostAbitur;
-import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.ProxyReportingSchuelerGostLaufbahnplanung;
-import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerLernabschnitt;
-import de.svws_nrw.module.reporting.types.schueler.sprachen.ProxyReportingSchuelerSprachbelegung;
-import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.schueler.gost.abitur.ReportingSchuelerGostAbitur;
+import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.ProxyReportingSchuelerGostLaufbahnplanung;
 import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.ReportingSchuelerGostLaufbahnplanung;
+import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerLernabschnitt;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
+import de.svws_nrw.module.reporting.types.schueler.schulbesuch.ProxyReportingSchuelerSchulbesuch;
+import de.svws_nrw.module.reporting.types.schueler.schulbesuch.ReportingSchuelerSchulbesuch;
+import de.svws_nrw.module.reporting.types.schueler.sprachen.ProxyReportingSchuelerSprachbelegung;
 import de.svws_nrw.module.reporting.types.schueler.sprachen.ReportingSchuelerSprachbelegung;
+import de.svws_nrw.module.reporting.types.schueler.telefon.ReportingSchuelerTelefonkontakt;
 
 /**
  * Proxy-Klasse im Rahmen des Reportings für Daten vom Typ Schüler und erweitert die Klasse {@link ReportingSchueler}.
@@ -63,9 +65,9 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				schuelerStammdaten.fahrschuelerArtID,
 				schuelerStammdaten.foto,
 				ersetzeNullBlankTrim(schuelerStammdaten.geburtsdatum),
-				ersetzeNullBlankTrim(schuelerStammdaten.geburtsland),
-				ersetzeNullBlankTrim(schuelerStammdaten.geburtslandMutter),
-				ersetzeNullBlankTrim(schuelerStammdaten.geburtslandVater),
+				schuelerStammdaten.idGeburtsland,
+				schuelerStammdaten.idGeburtslandMutter,
+				schuelerStammdaten.idGeburtslandVater,
 				ersetzeNullBlankTrim(schuelerStammdaten.geburtsname),
 				ersetzeNullBlankTrim(schuelerStammdaten.geburtsort),
 				Geschlecht.fromValue(schuelerStammdaten.geschlecht),
@@ -91,15 +93,15 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				null,
 				null,
 				new ArrayList<>(),
-				getNationalitaet(schuelerStammdaten.staatsangehoerigkeitID),
-				getNationalitaet(schuelerStammdaten.staatsangehoerigkeit2ID),
+				Nationalitaeten.data().getWertByID(schuelerStammdaten.idStaatsangehoerigkeit),
+				Nationalitaeten.data().getWertByID(schuelerStammdaten.idStaatsangehoerigkeit2),
 				SchuelerStatus.data().getWertByKuerzel("" + schuelerStammdaten.status),
 				ersetzeNullBlankTrim(schuelerStammdaten.strassenname),
 				new ArrayList<>(),
 				ersetzeNullBlankTrim(schuelerStammdaten.telefon),
 				ersetzeNullBlankTrim(schuelerStammdaten.telefonMobil),
 				"",
-				ersetzeNullBlankTrim(schuelerStammdaten.verkehrspracheFamilie),
+				Verkehrssprache.data().getWertByID(schuelerStammdaten.idVerkehrspracheFamilie).historie().getLast().iso3,
 				ersetzeNullBlankTrim(schuelerStammdaten.vorname),
 				ersetzeNullBlankTrim(schuelerStammdaten.alleVornamen),
 				null,
@@ -117,28 +119,6 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 		// Füge Stammdaten des Schülers für weitere Verwendung in der Map im Repository hinzu.
 		this.reportingContext.repositorySchueler().stammdaten().put(super.id(), schuelerStammdaten);
 	}
-
-
-	private static Nationalitaeten getNationalitaet(final String nationalitaetId) {
-		if ((nationalitaetId == null) || nationalitaetId.isBlank()) {
-			return null;
-		}
-
-		Nationalitaeten result = Nationalitaeten.getByISO3(nationalitaetId);
-		if (result != null) {
-			return result;
-		}
-
-		result = Nationalitaeten.getByISO2(nationalitaetId);
-		if (result != null) {
-			return result;
-		}
-
-		result = Nationalitaeten.getByDESTATIS(nationalitaetId);
-
-		return result;
-	}
-
 
 	// ##### Hash und Equals Methoden #####
 
@@ -169,7 +149,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	 * @return Repository für das Reporting
 	 */
 	public ReportingContext reportingContext() {
-		return reportingContext;
+		return this.reportingContext;
 	}
 
 
@@ -228,7 +208,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 		if (!super.erzieher.isEmpty()) {
 			return;
 		}
-		final List<ErzieherStammdaten> listeErzieherStammdaten = this.reportingContext.repositorySchueler().erzieherStammdaten(this.id());
+		final List<ErzieherStammdaten> listeErzieherStammdaten = this.reportingContext.repositorySchueler().erzieherStammdaten(id());
 		if (!listeErzieherStammdaten.isEmpty()) {
 			super.erzieher.addAll(listeErzieherStammdaten.stream().map(e -> new ProxyReportingErzieher(this.reportingContext, e, this)).toList());
 			erzieherGruppieren();
@@ -274,7 +254,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	@Override
 	public ReportingSchuelerGostAbitur gostAbitur() {
 		if (super.gostAbitur == null) {
-			final Abiturdaten abiturdaten = this.reportingContext.repositoryGost().schuelerAbiturdaten(this.id());
+			final Abiturdaten abiturdaten = this.reportingContext.repositoryGost().schuelerAbiturdaten(id());
 			if (abiturdaten == null) {
 				return null;
 			}
@@ -305,7 +285,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	public List<ReportingSchuelerLernabschnitt> lernabschnitte() {
 		if (super.lernabschnitte() == null) {
 			final List<SchuelerLernabschnittsdaten> schuelerLernabschnittsdaten =
-					this.reportingContext.repositorySchueler().lernabschnitte(this.id());
+					this.reportingContext.repositorySchueler().lernabschnitte(id());
 
 			// Wenn, wie bei einer Neuaufnahme, keine Lernabschnitte vorhanden sind, so wird die leere Liste zurückgegeben.
 			if (schuelerLernabschnittsdaten.isEmpty()) {
@@ -351,9 +331,9 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	@Override
 	public ReportingSchuelerSchulbesuch schulbesuch() {
 		if (super.schulbesuch == null) {
-			final SchuelerSchulbesuchsdaten schulbesuchsdaten = this.reportingContext.repositorySchueler().schulbesuchsdaten(this.id());
+			final SchuelerSchulbesuchsdaten schulbesuchsdaten = this.reportingContext.repositorySchueler().schulbesuchsdaten(id());
 			if (schulbesuchsdaten != null) {
-				super.schulbesuch = new ProxyReportingSchuelerSchulbesuch(reportingContext, schulbesuchsdaten);
+				super.schulbesuch = new ProxyReportingSchuelerSchulbesuch(this.reportingContext, schulbesuchsdaten);
 			}
 		}
 		return super.schulbesuch;
@@ -368,10 +348,10 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	@Override
 	public List<ReportingSchuelerSprachbelegung> sprachbelegungen() {
 		if (super.sprachbelegungen.isEmpty()) {
-			final List<Sprachbelegung> listeSprachbelegungen = this.reportingContext.repositorySchueler().sprachbelegungen(this.id());
+			final List<Sprachbelegung> listeSprachbelegungen = this.reportingContext.repositorySchueler().sprachbelegungen(id());
 			if (!listeSprachbelegungen.isEmpty()) {
 				super.sprachbelegungen.addAll(listeSprachbelegungen.stream()
-						.map(sb -> ((ReportingSchuelerSprachbelegung) new ProxyReportingSchuelerSprachbelegung(reportingContext, sb)))
+						.map(sb -> ((ReportingSchuelerSprachbelegung) new ProxyReportingSchuelerSprachbelegung(this.reportingContext, sb)))
 						.sorted(ReportingSchuelerSprachbelegung.SORTIERUNG.comparatorStandard())
 						.toList());
 			}
@@ -387,7 +367,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	@Override
 	public List<ReportingSchuelerTelefonkontakt> telefonKontakte() {
 		if (super.telefonKontakte.isEmpty()) {
-			final List<ReportingSchuelerTelefonkontakt> telefonkontakte = this.reportingContext.repositorySchueler().telefonkontakte(this.id());
+			final List<ReportingSchuelerTelefonkontakt> telefonkontakte = this.reportingContext.repositorySchueler().telefonkontakte(id());
 			if (!telefonkontakte.isEmpty()) {
 				super.telefonKontakte.addAll(telefonkontakte);
 			}

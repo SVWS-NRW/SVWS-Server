@@ -248,7 +248,7 @@ test('Button Zurücksetzen, setzt Pending State bei allen Feldern zurück', asyn
 	await expect(page.locator(tooltipFahrschuelerId)).toHaveCount(0);
 	await expect(page.locator('#tooltip-status')).toHaveCount(0);
 	await expect(page.locator(tooltipHaltestelleId)).toHaveCount(0);
-	await expect(page.locator('#tooltip-staatsangehoerigkeitID')).toHaveCount(0);
+	await expect(page.locator('#tooltip-idStaatsangehoerigkeit')).toHaveCount(0);
 });
 
 test('Änderung wird vorgenommen, anschließend kann Pending State zurückgesetzt werden', async ({ page }) => {
@@ -294,13 +294,13 @@ test('Jedes Feld erzeugt bei einer Änderung einen korrekten Pending State Toolt
 	// 1. Staatsangehörigkeit
 	await page.getByRole('combobox', { name: '1. Staatsangehörigkeit' }).click();
 	await page.getByRole('option', { name: 'ALB - Albanien' }).click();
-	await page.locator('#tooltip-staatsangehoerigkeitID').hover();
+	await page.locator('#tooltip-idStaatsangehoerigkeit').hover();
 	expect(await getContentOfActiveTooltip(page)).toBe("Aktuell: Deutschland (2)  Nachher: Albanien (2)");
 
 	// 2. Staatsangehörigkeit
 	await page.getByRole('combobox', { name: '2. Staatsangehörigkeit' }).click();
 	await page.getByRole('option', { name: 'ALB - Albanien' }).click();
-	await page.locator('#tooltip-staatsangehoerigkeit2ID').hover();
+	await page.locator('#tooltip-idStaatsangehoerigkeit2').hover();
 	expect(await getContentOfActiveTooltip(page)).toBe("Aktuell: Keine Daten (2)  Nachher: Albanien (2)");
 
 	// Religion / Konfession
@@ -362,22 +362,22 @@ test('Jedes Feld erzeugt bei einer Änderung einen korrekten Pending State Toolt
 
 	await page.getByRole('combobox', { name: 'Geburtsland', exact: true }).click();
 	await page.getByRole('option', { name: 'AFG - Afghanistan' }).click();
-	await page.locator('#tooltip-geburtsland').hover();
+	await page.locator('#tooltip-idGeburtsland').hover();
 	expect(await getContentOfActiveTooltip(page)).toBe("Aktuell: Keine Daten (2)  Nachher: Afghanistan (2)");
 
 	await page.getByRole('combobox', { name: 'Verkehrssprache', exact: true }).click();
 	await page.getByRole('option', { name: 'aa - Afar' }).click();
-	await page.locator('#tooltip-verkehrspracheFamilie').hover();
+	await page.locator('#tooltip-idVerkehrspracheFamilie').hover();
 	expect(await getContentOfActiveTooltip(page)).toBe("Aktuell: Keine Daten (2)  Nachher: Afar (2)");
 
 	await page.getByRole('combobox', { name: 'Geburtsland Mutter' }).first().click();
 	await page.getByRole('option', { name: 'ALB - Albanien' }).click();
-	await page.locator('#tooltip-geburtslandMutter').hover();
+	await page.locator('#tooltip-idGeburtslandMutter').hover();
 	expect(await getContentOfActiveTooltip(page)).toBe("Aktuell: Keine Daten (2)  Nachher: Albanien (2)");
 
 	await page.getByRole('combobox', { name: 'Geburtsland Vater' }).first().click();
 	await page.getByRole('option', { name: 'ALB - Albanien' }).click();
-	await page.locator('#tooltip-geburtslandVater').hover();
+	await page.locator('#tooltip-idGeburtslandVater').hover();
 	expect(await getContentOfActiveTooltip(page)).toBe("Aktuell: Keine Daten (2)  Nachher: Albanien (2)");
 });
 

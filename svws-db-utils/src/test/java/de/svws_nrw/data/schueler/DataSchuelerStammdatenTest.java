@@ -1,11 +1,37 @@
 package de.svws_nrw.data.schueler;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.time.Year;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+
+import org.apache.commons.lang3.RandomStringUtils;
+import org.assertj.core.api.InstanceOfAssertFactories;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
@@ -27,31 +53,6 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerFoto;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.annotation.Nonnull;
 import jakarta.ws.rs.core.Response;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.assertj.core.api.InstanceOfAssertFactories;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class DataSchuelerStammdatenTest {
@@ -70,13 +71,13 @@ class DataSchuelerStammdatenTest {
 	@Test
 	void getById() throws ApiOperationException {
 		final DTOSchueler schuelerDto = createDTOSchueler();
-		when(conn.queryByKey(DTOSchueler.class, 1L)).thenReturn(schuelerDto);
+		when(this.conn.queryByKey(DTOSchueler.class, 1L)).thenReturn(schuelerDto);
 
 		final DTOSchuelerFoto schuelerFotoDto = new DTOSchuelerFoto(1L);
 		schuelerFotoDto.FotoBase64 = "TestBase64Foto";
-		when(conn.queryByKey(DTOSchuelerFoto.class, 1L)).thenReturn(schuelerFotoDto);
+		when(this.conn.queryByKey(DTOSchuelerFoto.class, 1L)).thenReturn(schuelerFotoDto);
 
-		final SchuelerStammdaten result = cut.getById(1L);
+		final SchuelerStammdaten result = this.cut.getById(1L);
 
 		assertThat(result).isNotNull()
 				.hasFieldOrPropertyWithValue("foto", schuelerFotoDto.FotoBase64)
@@ -97,18 +98,18 @@ class DataSchuelerStammdatenTest {
 				.hasFieldOrPropertyWithValue("telefonMobil", schuelerDto.Fax)
 				.hasFieldOrPropertyWithValue("emailPrivat", schuelerDto.Email)
 				.hasFieldOrPropertyWithValue("emailSchule", schuelerDto.SchulEmail)
-				.hasFieldOrPropertyWithValue("staatsangehoerigkeitID", schuelerDto.StaatKrz.historie().getLast().iso3)
-				.hasFieldOrPropertyWithValue("staatsangehoerigkeit2ID", schuelerDto.StaatKrz2.historie().getLast().iso3)
+				.hasFieldOrPropertyWithValue("idStaatsangehoerigkeit", schuelerDto.StaatKrz.historie().getLast().id)
+				.hasFieldOrPropertyWithValue("idStaatsangehoerigkeit2", schuelerDto.StaatKrz2.historie().getLast().id)
 				.hasFieldOrPropertyWithValue("religionID", schuelerDto.Religion_ID)
 				.hasFieldOrPropertyWithValue("druckeKonfessionAufZeugnisse", schuelerDto.KonfDruck)
 				.hasFieldOrPropertyWithValue("religionabmeldung", schuelerDto.Religionsabmeldung)
 				.hasFieldOrPropertyWithValue("religionanmeldung", schuelerDto.Religionsanmeldung)
 				.hasFieldOrPropertyWithValue("hatMigrationshintergrund", schuelerDto.Migrationshintergrund)
 				.hasFieldOrPropertyWithValue("zuzugsjahr", schuelerDto.JahrZuzug)
-				.hasFieldOrPropertyWithValue("geburtsland", schuelerDto.GeburtslandSchueler.historie().getLast().iso3)
-				.hasFieldOrPropertyWithValue("verkehrspracheFamilie", schuelerDto.VerkehrsspracheFamilie.historie().getLast().iso3)
-				.hasFieldOrPropertyWithValue("geburtslandVater", schuelerDto.GeburtslandVater.historie().getLast().iso3)
-				.hasFieldOrPropertyWithValue("geburtslandMutter", schuelerDto.GeburtslandMutter.historie().getLast().iso3)
+				.hasFieldOrPropertyWithValue("idGeburtsland", schuelerDto.GeburtslandSchueler.historie().getLast().id)
+				.hasFieldOrPropertyWithValue("idVerkehrspracheFamilie", schuelerDto.VerkehrsspracheFamilie.historie().getLast().id)
+				.hasFieldOrPropertyWithValue("idGeburtslandVater", schuelerDto.GeburtslandVater.historie().getLast().id)
+				.hasFieldOrPropertyWithValue("idGeburtslandMutter", schuelerDto.GeburtslandMutter.historie().getLast().id)
 				.hasFieldOrPropertyWithValue("status", schuelerDto.idStatus)
 				.hasFieldOrPropertyWithValue("istDuplikat", schuelerDto.Duplikat)
 				.hasFieldOrPropertyWithValue("externeSchulNr", schuelerDto.ExterneSchulNr)
@@ -207,16 +208,14 @@ class DataSchuelerStammdatenTest {
 				arguments("emailSchule", "", "", null),
 				arguments("emailSchule", RandomStringUtils.insecure().nextAscii(101), null, new ApiOperationException(Response.Status.BAD_REQUEST,
 						"Attribut emailSchule: Die Länge des Strings ist auf 100 Zeichen limitiert.")),
-				arguments("staatsangehoerigkeitID", "AFG", Nationalitaeten.getByISO3("AFG"), null),
-				arguments("staatsangehoerigkeitID", null, null, null),
-				arguments("staatsangehoerigkeitID", "", null, null),
-				arguments("staatsangehoerigkeitID", "abc", null,
-						new ApiOperationException(Response.Status.NOT_FOUND, "Es wurde keine Nationalität zum Wert abc gefunden.")),
-				arguments("staatsangehoerigkeit2ID", "AFG", Nationalitaeten.getByISO3("AFG"), null),
-				arguments("staatsangehoerigkeit2ID", null, null, null),
-				arguments("staatsangehoerigkeit2ID", "", null, null),
-				arguments("staatsangehoerigkeit2ID", "abc", null,
-						new ApiOperationException(Response.Status.NOT_FOUND, "Es wurde keine Nationalität zum Wert abc gefunden.")),
+				arguments("idStaatsangehoerigkeit", 65070071L, Nationalitaeten.data().getWertByBezeichner("AFG"), null),
+				arguments("idStaatsangehoerigkeit", null, null, null),
+				arguments("idStaatsangehoerigkeit", 999999L, null,
+						new ApiOperationException(Response.Status.NOT_FOUND, "Es wurde keine Nationalität zum Wert 999999 gefunden.")),
+				arguments("idStaatsangehoerigkeit2", 65070071L, Nationalitaeten.data().getWertByBezeichner("AFG"), null),
+				arguments("idStaatsangehoerigkeit2", null, null, null),
+				arguments("idStaatsangehoerigkeit2", 999999L, null,
+						new ApiOperationException(Response.Status.NOT_FOUND, "Es wurde keine Nationalität zum Wert 999999 gefunden.")),
 				arguments("religionID", 123L, 123L, null),
 				arguments("religionID", null, null, null),
 				arguments("religionID", -2L, null, new ApiOperationException(Response.Status.BAD_REQUEST,
@@ -248,26 +247,22 @@ class DataSchuelerStammdatenTest {
 				arguments("zuzugsjahr", null, null, null),
 				arguments("zuzugsjahr", "abc", null, new ApiOperationException(Response.Status.BAD_REQUEST,
 						"Attribut zuzugsjahr: Fehler beim Konvertieren zu Integer: Das Objekt ist keine Zahl.")),
-				arguments("verkehrspracheFamilie", "abk", Verkehrssprache.getByIsoKuerzel("abk"), null),
-				arguments("verkehrspracheFamilie", null, null, null),
-				arguments("verkehrspracheFamilie", "", null, null),
-				arguments("verkehrspracheFamilie", "abc", null,
-						new ApiOperationException(Response.Status.NOT_FOUND, "Es wurde keine Verkehrssprache zum Wert abc gefunden.")),
-				arguments("geburtsland", "AFG", Nationalitaeten.getByISO3("AFG"), null),
-				arguments("geburtsland", null, null, null),
-				arguments("geburtsland", "", null, null),
-				arguments("geburtsland", "abc", null,
-						new ApiOperationException(Response.Status.NOT_FOUND, "Es wurde keine Nationalität zum Wert abc gefunden.")),
-				arguments("geburtslandVater", "AFG", Nationalitaeten.getByISO3("AFG"), null),
-				arguments("geburtslandVater", null, null, null),
-				arguments("geburtslandVater", "", null, null),
-				arguments("geburtslandVater", "abc", null,
-						new ApiOperationException(Response.Status.NOT_FOUND, "Es wurde keine Nationalität zum Wert abc gefunden.")),
-				arguments("geburtslandMutter", "AFG", Nationalitaeten.getByISO3("AFG"), null),
-				arguments("geburtslandMutter", null, null, null),
-				arguments("geburtslandMutter", "", null, null),
-				arguments("geburtslandMutter", "abc", null,
-						new ApiOperationException(Response.Status.NOT_FOUND, "Es wurde keine Nationalität zum Wert abc gefunden.")),
+				arguments("idVerkehrspracheFamilie", 3000, Verkehrssprache.getByIsoKuerzel("abk"), null),
+				arguments("idVerkehrspracheFamilie", null, null, null),
+				arguments("idVerkehrspracheFamilie", 999999L, null,
+						new ApiOperationException(Response.Status.NOT_FOUND, "Es wurde keine Verkehrssprache zum Wert 999999 gefunden.")),
+				arguments("idGeburtsland", 65070071L, Nationalitaeten.data().getWertByBezeichner("AFG"), null),
+				arguments("idGeburtsland", null, null, null),
+				arguments("idGeburtsland", 999999L, null,
+						new ApiOperationException(Response.Status.NOT_FOUND, "Es wurde keine Nationalität zum Wert 999999 gefunden.")),
+				arguments("idGeburtslandVater", 65070071L, Nationalitaeten.data().getWertByBezeichner("AFG"), null),
+				arguments("idGeburtslandVater", null, null, null),
+				arguments("idGeburtslandVater", 999999L, null,
+						new ApiOperationException(Response.Status.NOT_FOUND, "Es wurde keine Nationalität zum Wert 999999 gefunden.")),
+				arguments("idGeburtslandMutter", 65070071L, Nationalitaeten.data().getWertByBezeichner("AFG"), null),
+				arguments("idGeburtslandMutter", null, null, null),
+				arguments("idGeburtslandMutter", 999999L, null,
+						new ApiOperationException(Response.Status.NOT_FOUND, "Es wurde keine Nationalität zum Wert 999999 gefunden.")),
 				arguments("status", 3, 3, null),
 				arguments("status", 999, null, new ApiOperationException(Response.Status.NOT_FOUND, "Es wurde kein SchuelerStatus zum Wert 999 gefunden.")),
 				arguments("status", null, null, new ApiOperationException(Response.Status.BAD_REQUEST, "Attribut status: Der Wert null ist nicht erlaubt")),
@@ -368,7 +363,7 @@ class DataSchuelerStammdatenTest {
 
 		mapAttributeStubbings(attributeName, expectedValue, schuelerFotoDto);
 
-		final Throwable throwable = catchThrowable(() -> cut.mapAttribute(schuelerDto, attributeName, givenValue, Collections.emptyMap()));
+		final Throwable throwable = catchThrowable(() -> this.cut.mapAttribute(schuelerDto, attributeName, givenValue, Collections.emptyMap()));
 		if (expectedException != null) {
 			assertThat(throwable).isInstanceOf(ApiOperationException.class)
 					.hasMessage(expectedException.getMessage())
@@ -394,8 +389,8 @@ class DataSchuelerStammdatenTest {
 				case "emailPrivat" -> assertThat(schuelerDto.Email).isEqualTo(expectedValue);
 				case "emailSchule" -> assertThat(schuelerDto.SchulEmail).isEqualTo(expectedValue);
 				// Daten zur Staatsangehörigkeit und zur Religion
-				case "staatsangehoerigkeitID" -> assertThat(schuelerDto.StaatKrz).isEqualTo(expectedValue);
-				case "staatsangehoerigkeit2ID" -> assertThat(schuelerDto.StaatKrz2).isEqualTo(expectedValue);
+				case "idStaatsangehoerigkeit" -> assertThat(schuelerDto.StaatKrz).isEqualTo(expectedValue);
+				case "idStaatsangehoerigkeit2" -> assertThat(schuelerDto.StaatKrz2).isEqualTo(expectedValue);
 				case "religionID" -> assertThat(schuelerDto.Religion_ID).isEqualTo(expectedValue);
 				case "druckeKonfessionAufZeugnisse" -> assertThat(schuelerDto.KonfDruck).isEqualTo(expectedValue);
 				case "religionabmeldung" -> assertThat(schuelerDto.Religionsabmeldung).isEqualTo(expectedValue);
@@ -403,10 +398,10 @@ class DataSchuelerStammdatenTest {
 				// Daten zum Migrationshintergrund
 				case "hatMigrationshintergrund" -> assertThat(schuelerDto.Migrationshintergrund).isEqualTo(expectedValue);
 				case "zuzugsjahr" -> assertThat(schuelerDto.JahrZuzug).isEqualTo(expectedValue);
-				case "verkehrspracheFamilie" -> assertThat(schuelerDto.VerkehrsspracheFamilie).isEqualTo(expectedValue);
-				case "geburtsland" -> assertThat(schuelerDto.GeburtslandSchueler).isEqualTo(expectedValue);
-				case "geburtslandVater" -> assertThat(schuelerDto.GeburtslandVater).isEqualTo(expectedValue);
-				case "geburtslandMutter" -> assertThat(schuelerDto.GeburtslandMutter).isEqualTo(expectedValue);
+				case "idVerkehrspracheFamilie" -> assertThat(schuelerDto.VerkehrsspracheFamilie).isEqualTo(expectedValue);
+				case "idGeburtsland" -> assertThat(schuelerDto.GeburtslandSchueler).isEqualTo(expectedValue);
+				case "idGeburtslandVater" -> assertThat(schuelerDto.GeburtslandVater).isEqualTo(expectedValue);
+				case "idGeburtslandMutter" -> assertThat(schuelerDto.GeburtslandMutter).isEqualTo(expectedValue);
 				// Statusdaten
 				case "status" -> assertThat(schuelerDto.idStatus).isEqualTo(expectedValue);
 				case "externeSchulNr" -> assertThat(schuelerDto.ExterneSchulNr).isEqualTo(expectedValue);
@@ -438,19 +433,19 @@ class DataSchuelerStammdatenTest {
 		final DTOHaltestellen haltestelleDto = new DTOHaltestellen(33L, "TestHaltestelle");
 
 		if (attributeName.equals("foto")) {
-			when(conn.queryByKey(DTOSchuelerFoto.class, 1L)).thenReturn(schuelerFotoDto);
+			when(this.conn.queryByKey(DTOSchuelerFoto.class, 1L)).thenReturn(schuelerFotoDto);
 		} else if (attributeName.equals("religionID") && Long.valueOf(123L).equals(expectedValue)) {
-			when(conn.queryByKey(DTOKonfession.class, 123L)).thenReturn(konfessionDto);
+			when(this.conn.queryByKey(DTOKonfession.class, 123L)).thenReturn(konfessionDto);
 		} else if (attributeName.equals("status") && (expectedValue != null)) {
 			final Benutzer benutzer = mock(Benutzer.class);
 			final Schuljahresabschnitt schuljahresabschnitt = new Schuljahresabschnitt();
 			schuljahresabschnitt.schuljahr = 2000;
 			when(benutzer.schuleGetSchuljahresabschnittByIdOrDefault(99L)).thenReturn(schuljahresabschnitt);
-			when(conn.getUser()).thenReturn(benutzer);
+			when(this.conn.getUser()).thenReturn(benutzer);
 		} else if (attributeName.equals("fahrschuelerArtID") && Long.valueOf(22L).equals(expectedValue)) {
-			when(conn.queryByKey(DTOFahrschuelerart.class, 22L)).thenReturn(fahrschuelerartDto);
+			when(this.conn.queryByKey(DTOFahrschuelerart.class, 22L)).thenReturn(fahrschuelerartDto);
 		} else if (attributeName.equals("haltestelleID") && Long.valueOf(33L).equals(expectedValue)) {
-			when(conn.queryByKey(DTOHaltestellen.class, 33L)).thenReturn(haltestelleDto);
+			when(this.conn.queryByKey(DTOHaltestellen.class, 33L)).thenReturn(haltestelleDto);
 		}
 	}
 
@@ -459,9 +454,9 @@ class DataSchuelerStammdatenTest {
 		final List<Long> ids = List.of(1L, 2L);
 		final DTOSchueler dtoSchueler1 = createDTOSchuelerWithId(1L);
 		final DTOSchueler dtoSchueler2 = createDTOSchuelerWithId(2L);
-		when(conn.queryByKeyList(DTOSchueler.class, ids)).thenReturn(List.of(dtoSchueler1, dtoSchueler2));
+		when(this.conn.queryByKeyList(DTOSchueler.class, ids)).thenReturn(List.of(dtoSchueler1, dtoSchueler2));
 
-		final Response result = cut.getListByIdsAsResponse(ids);
+		final Response result = this.cut.getListByIdsAsResponse(ids);
 
 		assertThat(result.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
 		assertThat(result.getEntity()).asInstanceOf(InstanceOfAssertFactories.LIST)
@@ -474,16 +469,16 @@ class DataSchuelerStammdatenTest {
 		final List<Long> ids = List.of(1L, 2L);
 		final DTOSchueler dtoSchueler1 = createDTOSchuelerSimpleWithId(1L);
 		final DTOSchueler dtoSchueler2 = createDTOSchuelerSimpleWithId(2L);
-		when(conn.queryByKeyList(DTOSchueler.class, ids)).thenReturn(List.of(dtoSchueler1, dtoSchueler2));
+		when(this.conn.queryByKeyList(DTOSchueler.class, ids)).thenReturn(List.of(dtoSchueler1, dtoSchueler2));
 
-		final List<DTOSchueler> result = cut.getDTOList(ids);
+		final List<DTOSchueler> result = this.cut.getDTOList(ids);
 
 		assertThat(result).hasSize(2).contains(dtoSchueler1, dtoSchueler2);
 	}
 
 	@Test
 	void getDTOListWithIdsIsNull() {
-		assertThatThrownBy(() -> cut.getDTOList(null))
+		assertThatThrownBy(() -> this.cut.getDTOList(null))
 				.isInstanceOf(ApiOperationException.class)
 				.hasMessage("Die Liste der IDs für die Schüler darf nicht null sein.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
@@ -492,16 +487,16 @@ class DataSchuelerStammdatenTest {
 	@Test
 	void getDTO() throws ApiOperationException {
 		final DTOSchueler dtoSchueler = createDTOSchueler();
-		when(conn.queryByKey(DTOSchueler.class, 1L)).thenReturn(dtoSchueler);
+		when(this.conn.queryByKey(DTOSchueler.class, 1L)).thenReturn(dtoSchueler);
 
-		final DTOSchueler result = cut.getDTO(1L);
+		final DTOSchueler result = this.cut.getDTO(1L);
 
 		assertThat(result).isEqualTo(dtoSchueler);
 	}
 
 	@Test
 	void getDTOWithIdIsNull() {
-		assertThatThrownBy(() -> cut.getDTO(null))
+		assertThatThrownBy(() -> this.cut.getDTO(null))
 				.isInstanceOf(ApiOperationException.class)
 				.hasMessage("Die ID für den Schüler darf nicht null sein.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
@@ -509,9 +504,9 @@ class DataSchuelerStammdatenTest {
 
 	@Test
 	void getDTOWithIdNotFound() {
-		when(conn.queryByKey(DTOSchueler.class, 1L)).thenReturn(null);
+		when(this.conn.queryByKey(DTOSchueler.class, 1L)).thenReturn(null);
 
-		assertThatThrownBy(() -> cut.getDTO(1L))
+		assertThatThrownBy(() -> this.cut.getDTO(1L))
 				.isInstanceOf(ApiOperationException.class)
 				.hasMessage("Kein Schüler zur ID 1 gefunden.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
@@ -521,7 +516,7 @@ class DataSchuelerStammdatenTest {
 	void getLongId() throws ApiOperationException {
 		final DTOSchueler schuelerDto = createDTOSchuelerSimple();
 
-		final long result = cut.getLongId(schuelerDto);
+		final long result = this.cut.getLongId(schuelerDto);
 
 		assertThat(result).isEqualTo(1L);
 	}
@@ -542,24 +537,30 @@ class DataSchuelerStammdatenTest {
 						new ApiOperationException(Response.Status.BAD_REQUEST,
 								"Die Kombination von Ort und Ortsteil ist nicht zulässig. Der Ortsteil ist dem Ort nicht zugeordnet.")),
 				Arguments.of(
-						new HashMap<>() {{
-							put("wohnortID", null);
-							put("ortsteilID", 11L);
-						}},
+						new HashMap<>() {
+							{
+								put("wohnortID", null);
+								put("ortsteilID", 11L);
+							}
+						},
 						null, null,
 						new ApiOperationException(Response.Status.BAD_REQUEST,
 								"Die Kombination von Ort und Ortsteil ist nicht zulässig. Der Ortsteil ist dem Ort nicht zugeordnet.")),
 				Arguments.of(
-						new HashMap<>() {{
-							put("wohnortID", 10L);
-							put("ortsteilID", null);
-						}},
+						new HashMap<>() {
+							{
+								put("wohnortID", 10L);
+								put("ortsteilID", null);
+							}
+						},
 						10L, null, null),
 				Arguments.of(
-						new HashMap<>() {{
-							put("wohnortID", null);
-							put("ortsteilID", null);
-						}},
+						new HashMap<>() {
+							{
+								put("wohnortID", null);
+								put("ortsteilID", null);
+							}
+						},
 						null, null, null)
 		);
 	}
@@ -575,15 +576,15 @@ class DataSchuelerStammdatenTest {
 		ortsteilDto2.Ort_ID = 20L;
 
 
-		lenient().when(conn.queryByKey(DTOSchueler.class, schuelerDto.ID)).thenReturn(schuelerDto);
-		lenient().when(conn.transactionPersist(any())).thenReturn(true);
-		lenient().doNothing().when(conn).transactionFlush();
-		lenient().when(conn.existsBy(DTOOrt.QUERY_BY_ID, DTOOrt.class, 10L)).thenReturn(true);
-		lenient().when(conn.existsBy(DTOOrt.QUERY_BY_ID, DTOOrt.class, 20L)).thenReturn(true);
-		lenient().when(conn.queryByKey(DTOOrtsteil.class, 11L)).thenReturn(ortsteilDto1);
-		lenient().when(conn.queryByKey(DTOOrtsteil.class, 21L)).thenReturn(ortsteilDto2);
+		lenient().when(this.conn.queryByKey(DTOSchueler.class, schuelerDto.ID)).thenReturn(schuelerDto);
+		lenient().when(this.conn.transactionPersist(any())).thenReturn(true);
+		lenient().doNothing().when(this.conn).transactionFlush();
+		lenient().when(this.conn.existsBy(DTOOrt.QUERY_BY_ID, DTOOrt.class, 10L)).thenReturn(true);
+		lenient().when(this.conn.existsBy(DTOOrt.QUERY_BY_ID, DTOOrt.class, 20L)).thenReturn(true);
+		lenient().when(this.conn.queryByKey(DTOOrtsteil.class, 11L)).thenReturn(ortsteilDto1);
+		lenient().when(this.conn.queryByKey(DTOOrtsteil.class, 21L)).thenReturn(ortsteilDto2);
 
-		final Throwable throwable = catchThrowable(() -> cut.patchAsResponse(schuelerDto.ID, TestUtils.fromObject(givenPatchMap)));
+		final Throwable throwable = catchThrowable(() -> this.cut.patchAsResponse(schuelerDto.ID, TestUtils.fromObject(givenPatchMap)));
 		if ((expectedException != null) || (throwable != null)) {
 			Assertions.assertNotNull(expectedException, "Es wurde eine Exception geworfen, obwohl keine Exception erwartet wurde.");
 			assertThat(throwable)
@@ -600,59 +601,59 @@ class DataSchuelerStammdatenTest {
 	@Test
 	void mapSchuelerFotoWithIdenticalFoto() throws ApiOperationException {
 		final DTOSchuelerFoto oldDtoSchuelerFoto = getDtoSchuelerFoto();
-		when(conn.queryByKey(DTOSchuelerFoto.class, 1L)).thenReturn(oldDtoSchuelerFoto);
+		when(this.conn.queryByKey(DTOSchuelerFoto.class, 1L)).thenReturn(oldDtoSchuelerFoto);
 		final DTOSchueler schuelerDto = createDTOSchuelerSimple();
 
-		cut.mapSchuelerFoto(schuelerDto, "Base64TestFoto");
+		this.cut.mapSchuelerFoto(schuelerDto, "Base64TestFoto");
 
-		verify(conn, times(0)).transactionPersist(any());
-		verify(conn, times(0)).transactionRemove(any());
+		verify(this.conn, times(0)).transactionPersist(any());
+		verify(this.conn, times(0)).transactionRemove(any());
 	}
 
 	@Test
 	void mapSchuelerFotoWithDifferentFoto() throws ApiOperationException {
 		final DTOSchuelerFoto oldDtoSchuelerFoto = getDtoSchuelerFoto();
-		when(conn.queryByKey(DTOSchuelerFoto.class, 1L)).thenReturn(oldDtoSchuelerFoto);
+		when(this.conn.queryByKey(DTOSchuelerFoto.class, 1L)).thenReturn(oldDtoSchuelerFoto);
 		final DTOSchueler schuelerDto = createDTOSchuelerSimple();
 
-		cut.mapSchuelerFoto(schuelerDto, "Base64TestFotoNew");
+		this.cut.mapSchuelerFoto(schuelerDto, "Base64TestFotoNew");
 
-		verify(conn, times(1)).transactionPersist(
+		verify(this.conn, times(1)).transactionPersist(
 				argThat(o -> o.equals(oldDtoSchuelerFoto)
 						&& (o instanceof final DTOSchuelerFoto foto)
 						&& foto.FotoBase64.equals("Base64TestFotoNew")
 						&& (foto.Schueler_ID == 1L)));
-		verify(conn, times(0)).transactionRemove(any());
+		verify(this.conn, times(0)).transactionRemove(any());
 	}
 
 	@Test
 	void mapSchuelerFotoWithDifferentFotoAndNoOldFoto() throws ApiOperationException {
-		when(conn.queryByKey(DTOSchuelerFoto.class, 1L)).thenReturn(null);
+		when(this.conn.queryByKey(DTOSchuelerFoto.class, 1L)).thenReturn(null);
 		final DTOSchueler schuelerDto = createDTOSchuelerSimple();
 
-		cut.mapSchuelerFoto(schuelerDto, "Base64TestFotoNew");
+		this.cut.mapSchuelerFoto(schuelerDto, "Base64TestFotoNew");
 
-		verify(conn, times(1)).transactionPersist(
+		verify(this.conn, times(1)).transactionPersist(
 				argThat(o -> (o instanceof final DTOSchuelerFoto foto)
 						&& foto.FotoBase64.equals("Base64TestFotoNew")
 						&& (foto.Schueler_ID == 1L)));
-		verify(conn, times(0)).transactionRemove(any());
+		verify(this.conn, times(0)).transactionRemove(any());
 	}
 
 	@Test
 	void mapSchuelerFotoWithValueIsEmptyString() throws ApiOperationException {
 		final DTOSchuelerFoto oldDtoSchuelerFoto = getDtoSchuelerFoto();
-		when(conn.queryByKey(DTOSchuelerFoto.class, 1L)).thenReturn(oldDtoSchuelerFoto);
+		when(this.conn.queryByKey(DTOSchuelerFoto.class, 1L)).thenReturn(oldDtoSchuelerFoto);
 		final DTOSchueler schuelerDto = createDTOSchuelerSimple();
 
-		cut.mapSchuelerFoto(schuelerDto, "");
+		this.cut.mapSchuelerFoto(schuelerDto, "");
 
-		verify(conn, times(1)).transactionPersist(
+		verify(this.conn, times(1)).transactionPersist(
 				argThat(o -> o.equals(oldDtoSchuelerFoto)
 						&& (o instanceof final DTOSchuelerFoto foto)
 						&& foto.FotoBase64.isEmpty()
 						&& (foto.Schueler_ID == 1L)));
-		verify(conn, times(0)).transactionRemove(any());
+		verify(this.conn, times(0)).transactionRemove(any());
 	}
 
 	@Nonnull
@@ -664,41 +665,41 @@ class DataSchuelerStammdatenTest {
 
 	@Test
 	void mapSchuelerFotoWithValueIsEmptyStringAndNoOldFoto() throws ApiOperationException {
-		when(conn.queryByKey(DTOSchuelerFoto.class, 1L)).thenReturn(null);
+		when(this.conn.queryByKey(DTOSchuelerFoto.class, 1L)).thenReturn(null);
 		final DTOSchueler schuelerDto = createDTOSchuelerSimple();
 
-		cut.mapSchuelerFoto(schuelerDto, "");
+		this.cut.mapSchuelerFoto(schuelerDto, "");
 
-		verify(conn, times(1)).transactionPersist(
+		verify(this.conn, times(1)).transactionPersist(
 				argThat(o -> (o instanceof final DTOSchuelerFoto foto)
 						&& foto.FotoBase64.isEmpty()
 						&& (foto.Schueler_ID == 1L)));
-		verify(conn, times(0)).transactionRemove(any());
+		verify(this.conn, times(0)).transactionRemove(any());
 	}
 
 	@Test
 	@DisplayName("Prüft, dass keine DB Transaction stattfindet, wenn kein Schüler-Foto existiert und null als Wert übergeben wird.")
 	void mapSchuelerFotoWithValueIsNull() throws ApiOperationException {
-		when(conn.queryByKey(DTOSchuelerFoto.class, 1L)).thenReturn(null);
+		when(this.conn.queryByKey(DTOSchuelerFoto.class, 1L)).thenReturn(null);
 		final DTOSchueler schuelerDto = createDTOSchuelerSimple();
 
-		cut.mapSchuelerFoto(schuelerDto, null);
+		this.cut.mapSchuelerFoto(schuelerDto, null);
 
-		verify(conn, times(0)).transactionPersist(any());
-		verify(conn, times(0)).transactionRemove(any());
+		verify(this.conn, times(0)).transactionPersist(any());
+		verify(this.conn, times(0)).transactionRemove(any());
 	}
 
 	@Test
 	void mapSchuelerFotoExistsWithValueIsNull() throws ApiOperationException {
 		final DTOSchuelerFoto oldDtoSchuelerFoto = getOldDtoSchuelerFoto();
 		oldDtoSchuelerFoto.FotoBase64 = "Base64TestFoto";
-		when(conn.queryByKey(DTOSchuelerFoto.class, 1L)).thenReturn(oldDtoSchuelerFoto);
+		when(this.conn.queryByKey(DTOSchuelerFoto.class, 1L)).thenReturn(oldDtoSchuelerFoto);
 		final DTOSchueler schuelerDto = createDTOSchuelerSimple();
 
-		cut.mapSchuelerFoto(schuelerDto, null);
+		this.cut.mapSchuelerFoto(schuelerDto, null);
 
-		verify(conn, times(0)).transactionPersist(any());
-		verify(conn, times(1)).transactionRemove(
+		verify(this.conn, times(0)).transactionPersist(any());
+		verify(this.conn, times(1)).transactionRemove(
 				argThat(o -> (o instanceof final DTOSchuelerFoto foto)
 						&& (foto.Schueler_ID == oldDtoSchuelerFoto.Schueler_ID)
 				));

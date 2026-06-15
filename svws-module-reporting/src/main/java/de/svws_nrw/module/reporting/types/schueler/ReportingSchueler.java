@@ -1,13 +1,18 @@
 package de.svws_nrw.module.reporting.types.schueler;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import de.svws_nrw.asd.types.Geschlecht;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
+import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.core.adt.map.ListMap3DLongKeys;
 import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
-import de.svws_nrw.asd.types.Geschlecht;
-import de.svws_nrw.asd.types.schueler.SchuelerStatus;
-import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.module.reporting.filterung.ReportingFilterung;
 import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungSchuelerklausur;
@@ -23,10 +28,6 @@ import de.svws_nrw.module.reporting.types.schueler.sprachen.ReportingSchuelerSpr
 import de.svws_nrw.module.reporting.types.schueler.telefon.ReportingSchuelerTelefonkontakt;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.utils.ReportingImageUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Schüler.</p>
@@ -85,11 +86,11 @@ public class ReportingSchueler extends ReportingPerson {
 	/** Eine HTML-kompatible Bildquelle (Data-URI) für das Foto des Schülers. Der MIME-Type wird, falls nicht explizit bekannt, aus den Base64-Daten ermittelt. */
 	protected String fotoHtmlSource;
 
-	/** Das Geburtsland der Mutter des Schülers. */
-	protected String geburtslandMutter;
+	/** Die ID des Geburtslandes der Mutter des Schülers. */
+	protected Long idGeburtslandMutter;
 
-	/** Das Geburtsland des Vaters des Schülers. */
-	protected String geburtslandVater;
+	/** Die ID des Geburtslandes des Vaters des Schülers. */
+	protected Long idGeburtslandVater;
 
 	/** Daten der Abiturdaten der GOSt. */
 	protected ReportingSchuelerGostAbitur gostAbitur;
@@ -177,9 +178,9 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @param fahrschuelerArtID Die ID der Art des Fahr des Schülers.
 	 * @param foto Das Foto (in Base64 kodiert) des Schülers.
 	 * @param geburtsdatum Das Geburtsdatum des Schülers.
-	 * @param geburtsland Das Geburtsland des Schülers.
-	 * @param geburtslandMutter Das Geburtsland der Mutter des Schülers.
-	 * @param geburtslandVater Das Geburtsland des Vaters des Schülers.
+	 * @param idGeburtsland Das Geburtsland des Schülers.
+	 * @param idGeburtslandMutter Das Geburtsland der Mutter des Schülers.
+	 * @param idGeburtslandVater Das Geburtsland des Vaters des Schülers.
 	 * @param geburtsname Der Geburtsname des Schülers.
 	 * @param geburtsort Der Geburtsort des Schülers.
 	 * @param geschlecht Das Geschlecht des Schülers.
@@ -225,8 +226,8 @@ public class ReportingSchueler extends ReportingPerson {
 			final String anrede, final String aufnahmedatum, final ReportingSchuelerLernabschnitt auswahlLernabschnitt,
 			final boolean druckeKonfessionAufZeugnisse, final String emailPrivat, final String emailSchule, final boolean erhaeltMeisterBAFOEG,
 			final boolean erhaeltSchuelerBAFOEG, final List<ReportingErzieher> erzieher, final List<ReportingErzieherArtGruppe> erzieherArtGruppen,
-			final String externeSchulNr, final Long fahrschuelerArtID, final String foto, final String geburtsdatum, final String geburtsland,
-			final String geburtslandMutter, final String geburtslandVater, final String geburtsname, final String geburtsort, final Geschlecht geschlecht,
+			final String externeSchulNr, final Long fahrschuelerArtID, final String foto, final String geburtsdatum, final Long idGeburtsland,
+			final Long idGeburtslandMutter, final Long idGeburtslandVater, final String geburtsname, final String geburtsort, final Geschlecht geschlecht,
 			final ReportingSchuelerGostAbitur gostAbitur, final List<ReportingGostKlausurplanungSchuelerklausur> gostKlausurplanungSchuelerklausuren,
 			final List<ReportingSchuelerGostKursplanungKursbelegung> gostKursplanungKursbelegungen,
 			final ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung, final Long haltestelleID, final boolean hatMasernimpfnachweis,
@@ -239,7 +240,7 @@ public class ReportingSchueler extends ReportingPerson {
 			final List<ReportingSchuelerTelefonkontakt> telefonKontakte, final String telefonPrivat, final String telefonPrivatMobil, final String titel,
 			final String verkehrspracheFamilie, final String vorname, final String vornamen, final OrtKatalogEintrag wohnort,
 			final OrtsteilKatalogEintrag wohnortsteil, final Integer zuzugsjahr) {
-		super(anrede, emailPrivat, emailSchule, "", geburtsdatum, geburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz, nachname,
+		super(anrede, emailPrivat, emailSchule, "", geburtsdatum, idGeburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz, nachname,
 				staatsangehoerigkeit, staatsangehoerigkeit2, strassenname, telefonPrivat, telefonPrivatMobil, "", "", titel, vorname, vornamen, wohnort,
 				wohnortsteil);
 		this.aktuellerLernabschnitt = aktuellerLernabschnitt;
@@ -255,8 +256,8 @@ public class ReportingSchueler extends ReportingPerson {
 		this.fahrschuelerArtID = fahrschuelerArtID;
 		this.foto = foto;
 		this.fotoHtmlSource = ReportingImageUtils.base64ImageToHtmlImageSource(this.foto, null, null);
-		this.geburtslandMutter = geburtslandMutter;
-		this.geburtslandVater = geburtslandVater;
+		this.idGeburtslandMutter = idGeburtslandMutter;
+		this.idGeburtslandVater = idGeburtslandVater;
 		this.gostAbitur = gostAbitur;
 		this.gostKlausurplanungSchuelerklausuren = gostKlausurplanungSchuelerklausuren;
 		this.gostKursplanungKursbelegungen = gostKursplanungKursbelegungen;
@@ -281,7 +282,7 @@ public class ReportingSchueler extends ReportingPerson {
 		this.zuzugsjahr = zuzugsjahr;
 
 		if (lernabschnitte != null) {
-			this.setLernabschnitte(lernabschnitte);
+			setLernabschnitte(lernabschnitte);
 		}
 	}
 
@@ -291,7 +292,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Geschlechtsspezifisches Wort für "Schüler/Schülerin"
 	 */
 	public String schuelerIn() {
-		switch (geschlecht) {
+		switch (this.geschlecht) {
 			case Geschlecht.W -> {
 				return "Schülerin";
 			}
@@ -311,8 +312,9 @@ public class ReportingSchueler extends ReportingPerson {
 	 * Hashcode der Klasse
 	 * @return Hashcode der Klasse
 	 */
+	@Override
 	public int hashCode() {
-		return 31 + Long.hashCode(id);
+		return 31 + Long.hashCode(this.id);
 	}
 
 	/**
@@ -320,6 +322,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @param obj Das Vergleichsobjekt
 	 * @return	true, falls es das gleiche Objekt ist, andernfalls false.
 	 */
+	@Override
 	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
@@ -330,7 +333,7 @@ public class ReportingSchueler extends ReportingPerson {
 		if (!(obj instanceof final ReportingSchueler other)) {
 			return false;
 		}
-		return (id == other.id);
+		return (this.id == other.id);
 	}
 
 
@@ -344,7 +347,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Der Lernabschnitt zum SchuljahresAbschnitt oder null, wenn kein solcher Abschnitt existiert.
 	 */
 	public ReportingSchuelerLernabschnitt aktiverLernabschnittInSchuljahresabschnitt(final ReportingSchuljahresabschnitt schuljahresabschnitt) {
-		if ((this.lernabschnitte() == null) || this.lernabschnitte().isEmpty()) {
+		if ((lernabschnitte() == null) || lernabschnitte().isEmpty()) {
 			return null;
 		}
 		return this.mapLernabschnitte.getSingle12OrNull(schuljahresabschnitt.id(), 0);
@@ -356,7 +359,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes aktuellerLernabschnitt
 	 */
 	public ReportingSchuelerLernabschnitt aktuellerLernabschnitt() {
-		return aktuellerLernabschnitt;
+		return this.aktuellerLernabschnitt;
 	}
 
 	/**
@@ -365,7 +368,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes anmeldedatum
 	 */
 	public String anmeldedatum() {
-		return anmeldedatum;
+		return this.anmeldedatum;
 	}
 
 	/**
@@ -374,7 +377,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes aufnahmedatum
 	 */
 	public String aufnahmedatum() {
-		return aufnahmedatum;
+		return this.aufnahmedatum;
 	}
 
 	/**
@@ -383,7 +386,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes auswahlLernabschnitt
 	 */
 	public ReportingSchuelerLernabschnitt auswahlLernabschnitt() {
-		return auswahlLernabschnitt;
+		return this.auswahlLernabschnitt;
 	}
 
 	/**
@@ -392,7 +395,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes druckeKonfessionAufZeugnisse
 	 */
 	public boolean druckeKonfessionAufZeugnisse() {
-		return druckeKonfessionAufZeugnisse;
+		return this.druckeKonfessionAufZeugnisse;
 	}
 
 	/**
@@ -401,7 +404,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes erhaeltMeisterBAFOEG
 	 */
 	public boolean erhaeltMeisterBAFOEG() {
-		return erhaeltMeisterBAFOEG;
+		return this.erhaeltMeisterBAFOEG;
 	}
 
 	/**
@@ -410,7 +413,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes erhaeltSchuelerBAFOEG
 	 */
 	public boolean erhaeltSchuelerBAFOEG() {
-		return erhaeltSchuelerBAFOEG;
+		return this.erhaeltSchuelerBAFOEG;
 	}
 
 	/**
@@ -419,7 +422,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes erzieher
 	 */
 	public List<ReportingErzieher> erzieher() {
-		return erzieher;
+		return this.erzieher;
 	}
 
 	/**
@@ -428,7 +431,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes erzieherArtGruppen
 	 */
 	public List<ReportingErzieherArtGruppe> erzieherArtGruppen() {
-		return erzieherArtGruppen;
+		return this.erzieherArtGruppen;
 	}
 
 	/**
@@ -437,7 +440,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes erzieher ohne evtl. volljähren Schüler.
 	 */
 	public List<ReportingErzieher> erzieherOhneVolljaehrigenSchueler() {
-		return erzieher.stream().filter(e -> !e.istVolljaehrigerSchueler()).toList();
+		return this.erzieher.stream().filter(e -> !e.istVolljaehrigerSchueler()).toList();
 	}
 
 	/**
@@ -455,7 +458,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes externeSchulNr
 	 */
 	public String externeSchulNr() {
-		return externeSchulNr;
+		return this.externeSchulNr;
 	}
 
 	/**
@@ -464,7 +467,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes fahrschuelerArtID
 	 */
 	public Long fahrschuelerArtID() {
-		return fahrschuelerArtID;
+		return this.fahrschuelerArtID;
 	}
 
 	/**
@@ -473,7 +476,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes foto
 	 */
 	public String foto() {
-		return foto;
+		return this.foto;
 	}
 
 	/**
@@ -487,21 +490,21 @@ public class ReportingSchueler extends ReportingPerson {
 	}
 
 	/**
-	 * Das Geburtsland der Mutter des Schülers.
+	 * Die ID des Geburtslandes der Mutter des Schülers.
 	 *
 	 * @return Inhalt des Feldes geburtslandMutter
 	 */
-	public String geburtslandMutter() {
-		return geburtslandMutter;
+	public Long idGeburtslandMutter() {
+		return this.idGeburtslandMutter;
 	}
 
 	/**
-	 * Das Geburtsland des Vaters des Schülers.
+	 * Die ID des Geburtslandes des Vaters des Schülers.
 	 *
 	 * @return Inhalt des Feldes geburtslandVater
 	 */
-	public String geburtslandVater() {
-		return geburtslandVater;
+	public Long idGeburtslandVater() {
+		return this.idGeburtslandVater;
 	}
 
 	/**
@@ -510,7 +513,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes gostAbitur
 	 */
 	public ReportingSchuelerGostAbitur gostAbitur() {
-		return gostAbitur;
+		return this.gostAbitur;
 	}
 
 	/**
@@ -519,7 +522,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes gostLaufbahnplanung
 	 */
 	public ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung() {
-		return gostLaufbahnplanung;
+		return this.gostLaufbahnplanung;
 	}
 
 	/**
@@ -528,7 +531,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes gostKlausurplanungSchuelerklausuren
 	 */
 	public List<ReportingGostKlausurplanungSchuelerklausur> gostKlausurplanungSchuelerklausuren() {
-		return gostKlausurplanungSchuelerklausuren;
+		return this.gostKlausurplanungSchuelerklausuren;
 	}
 
 	/**
@@ -539,7 +542,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 */
 	@JsonIgnore
 	public ReportingSchuelerGostKursplanungKursbelegung getGostKursplanungKursbelegungById(final long idKurs) {
-		return this.gostKursplanungKursbelegungen().stream().filter(b -> b.kurs().id() == idKurs).findAny().orElse(null);
+		return gostKursplanungKursbelegungen().stream().filter(b -> b.kurs().id() == idKurs).findAny().orElse(null);
 	}
 
 	/**
@@ -548,7 +551,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes gostKursplanungKursbelegungen
 	 */
 	public List<ReportingSchuelerGostKursplanungKursbelegung> gostKursplanungKursbelegungen() {
-		return gostKursplanungKursbelegungen;
+		return this.gostKursplanungKursbelegungen;
 	}
 
 	/**
@@ -557,7 +560,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes haltestelleID
 	 */
 	public Long haltestelleID() {
-		return haltestelleID;
+		return this.haltestelleID;
 	}
 
 	/**
@@ -566,7 +569,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes hatMasernimpfnachweis
 	 */
 	public boolean hatMasernimpfnachweis() {
-		return hatMasernimpfnachweis;
+		return this.hatMasernimpfnachweis;
 	}
 
 	/**
@@ -575,7 +578,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes hatMigrationshintergrund
 	 */
 	public boolean hatMigrationshintergrund() {
-		return hatMigrationshintergrund;
+		return this.hatMigrationshintergrund;
 	}
 
 	/**
@@ -584,7 +587,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes id
 	 */
 	public long id() {
-		return id;
+		return this.id;
 	}
 
 	/**
@@ -593,7 +596,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes istBerufsschulpflichtErfuellt
 	 */
 	public Boolean istBerufsschulpflichtErfuellt() {
-		return istBerufsschulpflichtErfuellt;
+		return this.istBerufsschulpflichtErfuellt;
 	}
 
 	/**
@@ -602,7 +605,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes istDuplikat
 	 */
 	public boolean istDuplikat() {
-		return istDuplikat;
+		return this.istDuplikat;
 	}
 
 	/**
@@ -613,7 +616,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return true, wenn der Schüler in der Primarstufe ist, sonst false.
 	 */
 	public boolean istSchuelerInPrimarstufe(final ReportingSchuljahresabschnitt schuljahresabschnitt) {
-		return this.aktiverLernabschnittInSchuljahresabschnitt(schuljahresabschnitt).jahrgang().istJahrgangImBereichPrimarstufe();
+		return aktiverLernabschnittInSchuljahresabschnitt(schuljahresabschnitt).jahrgang().istJahrgangImBereichPrimarstufe();
 	}
 
 	/**
@@ -626,7 +629,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 *         ansonsten false.
 	 */
 	public boolean istSchuelerInSek1(final ReportingSchuljahresabschnitt schuljahresabschnitt) {
-		return this.aktiverLernabschnittInSchuljahresabschnitt(schuljahresabschnitt).jahrgang().istJahrgangImBereichSek1();
+		return aktiverLernabschnittInSchuljahresabschnitt(schuljahresabschnitt).jahrgang().istJahrgangImBereichSek1();
 	}
 
 	/**
@@ -639,7 +642,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 *         ansonsten false.
 	 */
 	public boolean istSchuelerInSek2OderWB(final ReportingSchuljahresabschnitt schuljahresabschnitt) {
-		return this.aktiverLernabschnittInSchuljahresabschnitt(schuljahresabschnitt).jahrgang().istJahrgangImBereichSek2OderWeiterbildung();
+		return aktiverLernabschnittInSchuljahresabschnitt(schuljahresabschnitt).jahrgang().istJahrgangImBereichSek2OderWeiterbildung();
 	}
 
 	/**
@@ -648,7 +651,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes istSchulpflichtErfuellt
 	 */
 	public Boolean istSchulpflichtErfuellt() {
-		return istSchulpflichtErfuellt;
+		return this.istSchulpflichtErfuellt;
 	}
 
 	/**
@@ -657,7 +660,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes istVolljaehrig
 	 */
 	public Boolean istVolljaehrig() {
-		return istVolljaehrig;
+		return this.istVolljaehrig;
 	}
 
 	/**
@@ -666,7 +669,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes keineAuskunftAnDritte
 	 */
 	public boolean keineAuskunftAnDritte() {
-		return keineAuskunftAnDritte;
+		return this.keineAuskunftAnDritte;
 	}
 
 	/**
@@ -677,10 +680,10 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Der Lernabschnitt zur ID.
 	 */
 	public ReportingSchuelerLernabschnitt lernabschnittById(final long id) {
-		if ((this.lernabschnitte() == null) || this.lernabschnitte().isEmpty()) {
+		if ((lernabschnitte() == null) || lernabschnitte().isEmpty()) {
 			return null;
 		}
-		return mapLernabschnitte.getSingle3OrNull(id);
+		return this.mapLernabschnitte.getSingle3OrNull(id);
 	}
 
 	/**
@@ -689,7 +692,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes lernabschnitte
 	 */
 	public List<ReportingSchuelerLernabschnitt> lernabschnitte() {
-		return lernabschnitte;
+		return this.lernabschnitte;
 	}
 
 	/**
@@ -700,10 +703,10 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Die Lernabschnitte zur ID.
 	 */
 	public List<ReportingSchuelerLernabschnitt> lernabschnittBySchuljahresabschnittsId(final long id) {
-		if ((this.lernabschnitte() == null) || this.lernabschnitte().isEmpty()) {
+		if ((lernabschnitte() == null) || lernabschnitte().isEmpty()) {
 			return new ArrayList<>();
 		}
-		return mapLernabschnitte.get1(id);
+		return this.mapLernabschnitte.get1(id);
 	}
 
 	/**
@@ -712,7 +715,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes religionabmeldung
 	 */
 	public String religionabmeldung() {
-		return religionabmeldung;
+		return this.religionabmeldung;
 	}
 
 	/**
@@ -721,7 +724,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes religionanmeldung
 	 */
 	public String religionanmeldung() {
-		return religionanmeldung;
+		return this.religionanmeldung;
 	}
 
 	/**
@@ -730,7 +733,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes religion
 	 */
 	public ReligionEintrag religion() {
-		return religion;
+		return this.religion;
 	}
 
 	/**
@@ -739,7 +742,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes schulbesuch
 	 */
 	public ReportingSchuelerSchulbesuch schulbesuch() {
-		return schulbesuch;
+		return this.schulbesuch;
 	}
 
 
@@ -749,7 +752,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes sprachbelegungen
 	 */
 	public List<ReportingSchuelerSprachbelegung> sprachbelegungen() {
-		return sprachbelegungen;
+		return this.sprachbelegungen;
 	}
 
 	/**
@@ -758,7 +761,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Wahr, wenn das kleine Latinum erreicht wurde, sonst false.
 	 */
 	public boolean hatKleinesLatinum() {
-		for (final ReportingSchuelerSprachbelegung sprachbelegung : sprachbelegungen) {
+		for (final ReportingSchuelerSprachbelegung sprachbelegung : this.sprachbelegungen) {
 			if (sprachbelegung.hatKleinesLatinum()) {
 				return true;
 			}
@@ -772,7 +775,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Wahr, wenn das Latinum erreicht wurde, sonst false.
 	 */
 	public boolean hatLatinum() {
-		for (final ReportingSchuelerSprachbelegung sprachbelegung : sprachbelegungen) {
+		for (final ReportingSchuelerSprachbelegung sprachbelegung : this.sprachbelegungen) {
 			if (sprachbelegung.hatLatinum()) {
 				return true;
 			}
@@ -786,7 +789,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Wahr, wenn das Graecum erreicht wurde, sonst false.
 	 */
 	public boolean hatGraecum() {
-		for (final ReportingSchuelerSprachbelegung sprachbelegung : sprachbelegungen) {
+		for (final ReportingSchuelerSprachbelegung sprachbelegung : this.sprachbelegungen) {
 			if (sprachbelegung.hatGraecum()) {
 				return true;
 			}
@@ -800,7 +803,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Wahr, wenn das Hebraicum erreicht wurde, sonst false.
 	 */
 	public boolean hatHebraicum() {
-		for (final ReportingSchuelerSprachbelegung sprachbelegung : sprachbelegungen) {
+		for (final ReportingSchuelerSprachbelegung sprachbelegung : this.sprachbelegungen) {
 			if (sprachbelegung.hatHebraicum()) {
 				return true;
 			}
@@ -816,7 +819,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 */
 	public String alteSprachenQualifikationen() {
 		int hatErreicht = 0;
-		for (final ReportingSchuelerSprachbelegung sprachbelegung : sprachbelegungen) {
+		for (final ReportingSchuelerSprachbelegung sprachbelegung : this.sprachbelegungen) {
 			hatErreicht = hatErreicht + (sprachbelegung.hatLatinum() ? 1 : 0) + (sprachbelegung.hatGraecum() ? 2 : 0) + (sprachbelegung.hatHebraicum() ? 4 : 0);
 		}
 		return switch (hatErreicht) {
@@ -837,7 +840,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes status
 	 */
 	public SchuelerStatus status() {
-		return status;
+		return this.status;
 	}
 
 	/**
@@ -846,7 +849,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes telefonKontakte
 	 */
 	public List<ReportingSchuelerTelefonkontakt> telefonKontakte() {
-		return telefonKontakte;
+		return this.telefonKontakte;
 	}
 
 	/**
@@ -855,7 +858,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes verkehrspracheFamilie
 	 */
 	public String verkehrspracheFamilie() {
-		return verkehrspracheFamilie;
+		return this.verkehrspracheFamilie;
 	}
 
 	/**
@@ -864,7 +867,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Inhalt des Feldes zuzugsjahr
 	 */
 	public Integer zuzugsjahr() {
-		return zuzugsjahr;
+		return this.zuzugsjahr;
 	}
 
 
@@ -896,7 +899,7 @@ public class ReportingSchueler extends ReportingPerson {
 		final List<ReportingSchuelerLernabschnitt> lernabschnitteNonNull = new ArrayList<>(lernabschnitte.stream().filter(Objects::nonNull).toList());
 		this.lernabschnitte.addAll(lernabschnitteNonNull);
 
-		lernabschnitteNonNull.forEach(la -> mapLernabschnitte.add(la.schuljahresabschnitt().id(), la.wechselNr(), la.id(), la));
+		lernabschnitteNonNull.forEach(la -> this.mapLernabschnitte.add(la.schuljahresabschnitt().id(), la.wechselNr(), la.id(), la));
 	}
 
 }

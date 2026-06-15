@@ -30,12 +30,12 @@ export class SchuelerStatistikGesamt extends JavaObject {
 	/**
 	 * Die ID der Staatsangehörigkeit des Schülerdatensatzes.
 	 */
-	public staatsangehoerigkeitID: string | null = null;
+	public idStaatsangehoerigkeit: number | null = null;
 
 	/**
 	 * Die ID einer zweiten Staatsangehörigkeit des Schülerdatensatzes.
 	 */
-	public staatsangehoerigkeit2ID: string | null = null;
+	public idStaatsangehoerigkeit2: number | null = null;
 
 	/**
 	 * Die ID der Religion des Schülerdatensatzes.
@@ -73,24 +73,24 @@ export class SchuelerStatistikGesamt extends JavaObject {
 	public zuzugsjahr: number | null = null;
 
 	/**
-	 * Das Geburtsland des Schülerdatensatzes.
+	 * Die Id des Geburtslandes des Schülerdatensatzes.
 	 */
-	public geburtsland: string | null = null;
+	public idGeburtsland: number | null = null;
 
 	/**
-	 * Die Verkehrssprache der Familie des Schülerdatensatzes.
+	 * Die Id der Verkehrssprache der Familie des Schülerdatensatzes.
 	 */
-	public verkehrspracheFamilie: string | null = null;
+	public idVerkehrspracheFamilie: number | null = null;
 
 	/**
-	 * Das Geburtsland des Vaters des Schülerdatensatzes.
+	 * Die Id des Geburtslandes des Vaters des Schülerdatensatzes.
 	 */
-	public geburtslandVater: string | null = null;
+	public idGeburtslandVater: number | null = null;
 
 	/**
-	 * Das Geburtsland der Mutter des Schülerdatensatzes.
+	 * Die Id des Geburtslandes der Mutter des Schülerdatensatzes.
 	 */
-	public geburtslandMutter: string | null = null;
+	public idGeburtslandMutter: number | null = null;
 
 	/**
 	 * Die allgemeinen Angaben zu den Lernabschnitten der Schüler.
@@ -186,8 +186,8 @@ export class SchuelerStatistikGesamt extends JavaObject {
 		result.geschlecht = obj.geschlecht;
 		result.geburtsdatum = (obj.geburtsdatum === undefined) ? null : obj.geburtsdatum === null ? null : obj.geburtsdatum;
 		result.wohnortID = (obj.wohnortID === undefined) ? null : obj.wohnortID === null ? null : obj.wohnortID;
-		result.staatsangehoerigkeitID = (obj.staatsangehoerigkeitID === undefined) ? null : obj.staatsangehoerigkeitID === null ? null : obj.staatsangehoerigkeitID;
-		result.staatsangehoerigkeit2ID = (obj.staatsangehoerigkeit2ID === undefined) ? null : obj.staatsangehoerigkeit2ID === null ? null : obj.staatsangehoerigkeit2ID;
+		result.idStaatsangehoerigkeit = (obj.idStaatsangehoerigkeit === undefined) ? null : obj.idStaatsangehoerigkeit === null ? null : obj.idStaatsangehoerigkeit;
+		result.idStaatsangehoerigkeit2 = (obj.idStaatsangehoerigkeit2 === undefined) ? null : obj.idStaatsangehoerigkeit2 === null ? null : obj.idStaatsangehoerigkeit2;
 		result.religionID = (obj.religionID === undefined) ? null : obj.religionID === null ? null : obj.religionID;
 		if (obj.status === undefined)
 			throw new Error('invalid json format, missing attribute status');
@@ -199,10 +199,10 @@ export class SchuelerStatistikGesamt extends JavaObject {
 			throw new Error('invalid json format, missing attribute hatMigrationshintergrund');
 		result.hatMigrationshintergrund = obj.hatMigrationshintergrund;
 		result.zuzugsjahr = (obj.zuzugsjahr === undefined) ? null : obj.zuzugsjahr === null ? null : obj.zuzugsjahr;
-		result.geburtsland = (obj.geburtsland === undefined) ? null : obj.geburtsland === null ? null : obj.geburtsland;
-		result.verkehrspracheFamilie = (obj.verkehrspracheFamilie === undefined) ? null : obj.verkehrspracheFamilie === null ? null : obj.verkehrspracheFamilie;
-		result.geburtslandVater = (obj.geburtslandVater === undefined) ? null : obj.geburtslandVater === null ? null : obj.geburtslandVater;
-		result.geburtslandMutter = (obj.geburtslandMutter === undefined) ? null : obj.geburtslandMutter === null ? null : obj.geburtslandMutter;
+		result.idGeburtsland = (obj.idGeburtsland === undefined) ? null : obj.idGeburtsland === null ? null : obj.idGeburtsland;
+		result.idVerkehrspracheFamilie = (obj.idVerkehrspracheFamilie === undefined) ? null : obj.idVerkehrspracheFamilie === null ? null : obj.idVerkehrspracheFamilie;
+		result.idGeburtslandVater = (obj.idGeburtslandVater === undefined) ? null : obj.idGeburtslandVater === null ? null : obj.idGeburtslandVater;
+		result.idGeburtslandMutter = (obj.idGeburtslandMutter === undefined) ? null : obj.idGeburtslandMutter === null ? null : obj.idGeburtslandMutter;
 		if (obj.lernabschnitte !== undefined) {
 			for (const elem of obj.lernabschnitte) {
 				result.lernabschnitte.add(SchuelerLernabschnittStatistikGesamt.transpilerFromJSON(JSON.stringify(elem)));
@@ -231,8 +231,8 @@ export class SchuelerStatistikGesamt extends JavaObject {
 		result += '"geschlecht" : ' + obj.geschlecht.toString() + ',';
 		result += '"geburtsdatum" : ' + ((obj.geburtsdatum === null) ? 'null' : JSON.stringify(obj.geburtsdatum)) + ',';
 		result += '"wohnortID" : ' + ((obj.wohnortID === null) ? 'null' : obj.wohnortID.toString()) + ',';
-		result += '"staatsangehoerigkeitID" : ' + ((obj.staatsangehoerigkeitID === null) ? 'null' : JSON.stringify(obj.staatsangehoerigkeitID)) + ',';
-		result += '"staatsangehoerigkeit2ID" : ' + ((obj.staatsangehoerigkeit2ID === null) ? 'null' : JSON.stringify(obj.staatsangehoerigkeit2ID)) + ',';
+		result += '"idStaatsangehoerigkeit" : ' + ((obj.idStaatsangehoerigkeit === null) ? 'null' : obj.idStaatsangehoerigkeit.toString()) + ',';
+		result += '"idStaatsangehoerigkeit2" : ' + ((obj.idStaatsangehoerigkeit2 === null) ? 'null' : obj.idStaatsangehoerigkeit2.toString()) + ',';
 		result += '"religionID" : ' + ((obj.religionID === null) ? 'null' : obj.religionID.toString()) + ',';
 		result += '"status" : ' + obj.status.toString() + ',';
 		result += '"religionabmeldung" : ' + ((obj.religionabmeldung === null) ? 'null' : JSON.stringify(obj.religionabmeldung)) + ',';
@@ -240,10 +240,10 @@ export class SchuelerStatistikGesamt extends JavaObject {
 		result += '"bkAzvo" : ' + ((obj.bkAzvo === null) ? 'null' : obj.bkAzvo.toString()) + ',';
 		result += '"hatMigrationshintergrund" : ' + obj.hatMigrationshintergrund.toString() + ',';
 		result += '"zuzugsjahr" : ' + ((obj.zuzugsjahr === null) ? 'null' : obj.zuzugsjahr.toString()) + ',';
-		result += '"geburtsland" : ' + ((obj.geburtsland === null) ? 'null' : JSON.stringify(obj.geburtsland)) + ',';
-		result += '"verkehrspracheFamilie" : ' + ((obj.verkehrspracheFamilie === null) ? 'null' : JSON.stringify(obj.verkehrspracheFamilie)) + ',';
-		result += '"geburtslandVater" : ' + ((obj.geburtslandVater === null) ? 'null' : JSON.stringify(obj.geburtslandVater)) + ',';
-		result += '"geburtslandMutter" : ' + ((obj.geburtslandMutter === null) ? 'null' : JSON.stringify(obj.geburtslandMutter)) + ',';
+		result += '"idGeburtsland" : ' + ((obj.idGeburtsland === null) ? 'null' : obj.idGeburtsland.toString()) + ',';
+		result += '"idVerkehrspracheFamilie" : ' + ((obj.idVerkehrspracheFamilie === null) ? 'null' : obj.idVerkehrspracheFamilie.toString()) + ',';
+		result += '"idGeburtslandVater" : ' + ((obj.idGeburtslandVater === null) ? 'null' : obj.idGeburtslandVater.toString()) + ',';
+		result += '"idGeburtslandMutter" : ' + ((obj.idGeburtslandMutter === null) ? 'null' : obj.idGeburtslandMutter.toString()) + ',';
 		result += '"lernabschnitte" : [ ';
 		for (let i = 0; i < obj.lernabschnitte.size(); i++) {
 			const elem = obj.lernabschnitte.get(i);
@@ -283,11 +283,11 @@ export class SchuelerStatistikGesamt extends JavaObject {
 		if (obj.wohnortID !== undefined) {
 			result += '"wohnortID" : ' + ((obj.wohnortID === null) ? 'null' : obj.wohnortID.toString()) + ',';
 		}
-		if (obj.staatsangehoerigkeitID !== undefined) {
-			result += '"staatsangehoerigkeitID" : ' + ((obj.staatsangehoerigkeitID === null) ? 'null' : JSON.stringify(obj.staatsangehoerigkeitID)) + ',';
+		if (obj.idStaatsangehoerigkeit !== undefined) {
+			result += '"idStaatsangehoerigkeit" : ' + ((obj.idStaatsangehoerigkeit === null) ? 'null' : obj.idStaatsangehoerigkeit.toString()) + ',';
 		}
-		if (obj.staatsangehoerigkeit2ID !== undefined) {
-			result += '"staatsangehoerigkeit2ID" : ' + ((obj.staatsangehoerigkeit2ID === null) ? 'null' : JSON.stringify(obj.staatsangehoerigkeit2ID)) + ',';
+		if (obj.idStaatsangehoerigkeit2 !== undefined) {
+			result += '"idStaatsangehoerigkeit2" : ' + ((obj.idStaatsangehoerigkeit2 === null) ? 'null' : obj.idStaatsangehoerigkeit2.toString()) + ',';
 		}
 		if (obj.religionID !== undefined) {
 			result += '"religionID" : ' + ((obj.religionID === null) ? 'null' : obj.religionID.toString()) + ',';
@@ -310,17 +310,17 @@ export class SchuelerStatistikGesamt extends JavaObject {
 		if (obj.zuzugsjahr !== undefined) {
 			result += '"zuzugsjahr" : ' + ((obj.zuzugsjahr === null) ? 'null' : obj.zuzugsjahr.toString()) + ',';
 		}
-		if (obj.geburtsland !== undefined) {
-			result += '"geburtsland" : ' + ((obj.geburtsland === null) ? 'null' : JSON.stringify(obj.geburtsland)) + ',';
+		if (obj.idGeburtsland !== undefined) {
+			result += '"idGeburtsland" : ' + ((obj.idGeburtsland === null) ? 'null' : obj.idGeburtsland.toString()) + ',';
 		}
-		if (obj.verkehrspracheFamilie !== undefined) {
-			result += '"verkehrspracheFamilie" : ' + ((obj.verkehrspracheFamilie === null) ? 'null' : JSON.stringify(obj.verkehrspracheFamilie)) + ',';
+		if (obj.idVerkehrspracheFamilie !== undefined) {
+			result += '"idVerkehrspracheFamilie" : ' + ((obj.idVerkehrspracheFamilie === null) ? 'null' : obj.idVerkehrspracheFamilie.toString()) + ',';
 		}
-		if (obj.geburtslandVater !== undefined) {
-			result += '"geburtslandVater" : ' + ((obj.geburtslandVater === null) ? 'null' : JSON.stringify(obj.geburtslandVater)) + ',';
+		if (obj.idGeburtslandVater !== undefined) {
+			result += '"idGeburtslandVater" : ' + ((obj.idGeburtslandVater === null) ? 'null' : obj.idGeburtslandVater.toString()) + ',';
 		}
-		if (obj.geburtslandMutter !== undefined) {
-			result += '"geburtslandMutter" : ' + ((obj.geburtslandMutter === null) ? 'null' : JSON.stringify(obj.geburtslandMutter)) + ',';
+		if (obj.idGeburtslandMutter !== undefined) {
+			result += '"idGeburtslandMutter" : ' + ((obj.idGeburtslandMutter === null) ? 'null' : obj.idGeburtslandMutter.toString()) + ',';
 		}
 		if (obj.lernabschnitte !== undefined) {
 			result += '"lernabschnitte" : [ ';

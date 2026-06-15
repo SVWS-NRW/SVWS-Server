@@ -191,18 +191,18 @@
 	});
 
 	const staatsangehoerigkeit = computed<NationalitaetenKatalogEintrag | null>({
-		get: () => Nationalitaeten.getByISO3(props.manager().stammdaten.staatsangehoerigkeitID)?.daten(abschnittState.auswahl.schuljahr) ?? null,
+		get: () => Nationalitaeten.data().getWertByIDOrNull(props.manager().stammdaten.idStaatsangehoerigkeit)?.daten(abschnittState.auswahl.schuljahr) ?? null,
 		set: (value) => {
-			props.manager().stammdaten.staatsangehoerigkeitID = value?.iso3 ?? null;
-			void props.patchSchueler({ staatsangehoerigkeitID: value?.iso3 ?? null }, manager().stammdaten.id);
+			props.manager().stammdaten.idStaatsangehoerigkeit = value?.id ?? null;
+			void props.patchSchueler({ idStaatsangehoerigkeit: value?.id ?? null }, manager().stammdaten.id);
 		},
 	});
 
 	const staatsangehoerigkeit2 = computed<NationalitaetenKatalogEintrag | null>({
-		get: () => Nationalitaeten.getByISO3(props.manager().stammdaten.staatsangehoerigkeit2ID)?.daten(abschnittState.auswahl.schuljahr) ?? null,
+		get: () => Nationalitaeten.data().getWertByIDOrNull(props.manager().stammdaten.idStaatsangehoerigkeit2)?.daten(abschnittState.auswahl.schuljahr) ?? null,
 		set: (value) => {
-			props.manager().stammdaten.staatsangehoerigkeit2ID = value?.iso3 ?? null;
-			void props.patchSchueler({ staatsangehoerigkeit2ID: value?.iso3 ?? null }, manager().stammdaten.id);
+			props.manager().stammdaten.idStaatsangehoerigkeit2 = value?.id ?? null;
+			void props.patchSchueler({ idStaatsangehoerigkeit2: value?.id ?? null }, manager().stammdaten.id);
 		},
 	});
 
@@ -228,34 +228,34 @@
 	});
 
 	const geburtsland = computed<NationalitaetenKatalogEintrag | null>({
-		get: () => Nationalitaeten.getByISO3(manager().stammdaten.geburtsland)?.daten(abschnittState.auswahl.schuljahr) ?? null,
+		get: () => Nationalitaeten.data().getWertByIDOrNull(manager().stammdaten.idGeburtsland)?.daten(abschnittState.auswahl.schuljahr) ?? null,
 		set: (value) => {
-			manager().stammdaten.geburtsland = value?.iso3 ?? null;
-			void props.patchSchueler({ geburtsland: value?.iso3 }, manager().stammdaten.id);
+			manager().stammdaten.idGeburtsland = value?.id ?? null;
+			void props.patchSchueler({ idGeburtsland: value?.id }, manager().stammdaten.id);
 		},
 	});
 
 	const geburtslandMutter = computed<NationalitaetenKatalogEintrag | null>({
-		get: () => Nationalitaeten.getByISO3(props.manager().stammdaten.geburtslandMutter)?.daten(abschnittState.auswahl.schuljahr) ?? null,
+		get: () => Nationalitaeten.data().getWertByIDOrNull(props.manager().stammdaten.idGeburtslandMutter)?.daten(abschnittState.auswahl.schuljahr) ?? null,
 		set: (value) => {
-			props.manager().stammdaten.geburtslandMutter = value?.iso3 ?? null;
-			void props.patchSchueler({ geburtslandMutter: value?.iso3 }, manager().stammdaten.id);
+			props.manager().stammdaten.idGeburtslandMutter = value?.id ?? null;
+			void props.patchSchueler({ idGeburtslandMutter: value?.id }, manager().stammdaten.id);
 		},
 	});
 
 	const geburtslandVater = computed<NationalitaetenKatalogEintrag | null>({
-		get: () => Nationalitaeten.getByISO3(props.manager().stammdaten.geburtslandVater)?.daten(abschnittState.auswahl.schuljahr) ?? null,
+		get: () => Nationalitaeten.data().getWertByIDOrNull(props.manager().stammdaten.idGeburtslandVater)?.daten(abschnittState.auswahl.schuljahr) ?? null,
 		set: (value) => {
-			props.manager().stammdaten.geburtslandVater = value?.iso3 ?? null;
-			void props.patchSchueler({ geburtslandVater: value?.iso3 }, manager().stammdaten.id);
+			props.manager().stammdaten.idGeburtslandVater = value?.id ?? null;
+			void props.patchSchueler({ idGeburtslandVater: value?.id }, manager().stammdaten.id);
 		},
 	});
 
 	const verkehrssprache = computed<VerkehrsspracheKatalogEintrag | null>({
-		get: () => Verkehrssprache.getByIsoKuerzel(props.manager().stammdaten.verkehrspracheFamilie)?.daten(abschnittState.auswahl.schuljahr) ?? null,
+		get: () => Verkehrssprache.data().getWertByIDOrNull(props.manager().stammdaten.idVerkehrspracheFamilie)?.daten(abschnittState.auswahl.schuljahr) ?? null,
 		set: (value) => {
-			props.manager().stammdaten.verkehrspracheFamilie = value?.iso3 ?? null;
-			void props.patchSchueler({ verkehrspracheFamilie: value?.iso3 }, manager().stammdaten.id);
+			props.manager().stammdaten.idVerkehrspracheFamilie = value?.id ?? null;
+			void props.patchSchueler({ idVerkehrspracheFamilie: value?.id }, manager().stammdaten.id);
 		},
 	});
 

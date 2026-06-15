@@ -102,11 +102,11 @@
 			</svws-ui-content-card>
 			<svws-ui-content-card title="Staatsangehörigkeit und Konfession" v-if="hatKompetenzAnsehen">
 				<svws-ui-input-wrapper :grid="2">
-					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="staatsangehoerigkeitID">
+					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="idStaatsangehoerigkeit">
 						<ui-select v-model="staatsangehoerigkeitID" label="1. Staatsangehörigkeit" :manager="ersteStaatsAngehoerigkeitSelectManager" statistics
 							:removable="false" />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="staatsangehoerigkeit2ID">
+					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="idStaatsangehoerigkeit2">
 						<ui-select v-model="staatsangehoerigkeit2ID" label="2. Staatsangehörigkeit"	:manager="zweiteStaatsAngehoerigkeitSelectManager" statistics
 							:removable="false" />
 					</ui-gruppenprozesse-wrapper>
@@ -148,23 +148,23 @@
 							:disabled="!hatMigrationshintergrund" statistics :steps="false" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate"
 							:min="minZuzugsjahr" :max="maxZuzugsjahr" />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="geburtsland" :nullable="hatMigrationshintergrund">
-						<ui-select v-model="geburtsland" label="Geburtsland" :manager="geburtslandSelectManager" :disabled="!hatMigrationshintergrund"
+					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="idGeburtsland" :nullable="hatMigrationshintergrund">
+						<ui-select v-model="idGeburtsland" label="Geburtsland" :manager="geburtslandSelectManager" :disabled="!hatMigrationshintergrund"
 							:readonly="hatMigrationshintergrund && !hatKompetenzUpdate" :removable="false" statistics />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="verkehrspracheFamilie"
+					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="idVerkehrspracheFamilie"
 						:nullable="hatMigrationshintergrund">
 						<ui-select v-model="verkehrssprache" label="Verkehrssprache" :manager="verkehrsspracheSelectManager"
 							:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" :removable="false"
 							searchable statistics />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="geburtslandMutter"
+					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="idGeburtslandMutter"
 						:nullable="hatMigrationshintergrund">
 						<ui-select v-model="geburtslandMutter" label="Geburtsland Mutter" :manager="geburtslandMutterSelectManager"
 							:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" :removable="false" searchable
 							statistics />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="geburtslandVater" :nullable="hatMigrationshintergrund">
+					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="idGeburtslandVater" :nullable="hatMigrationshintergrund">
 						<ui-select v-model="geburtslandVater" label="Geburtsland Vater" :manager="geburtslandVaterSelectManager"
 							:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" :removable="false"
 							searchable statistics />
@@ -202,7 +202,7 @@
 	const fahrschuelerArtID = pendingStateManager.value().fahrschuelerArtID;
 	const haltestelleID = pendingStateManager.value().haltestelleID;
 	const hatMigrationshintergrund = pendingStateManager.value().hatMigrationshintergrund;
-	const geburtsland = pendingStateManager.value().geburtsland;
+	const idGeburtsland = pendingStateManager.value().idGeburtsland;
 	const geburtslandMutter = pendingStateManager.value().geburtslandMutter;
 	const geburtslandVater = pendingStateManager.value().geburtslandVater;
 	const verkehrssprache = pendingStateManager.value().verkehrssprache;
@@ -314,16 +314,16 @@
 	}
 
 	function resetMigrationsHintergrundInputs() {
-		geburtsland.value = null;
+		zuzugsjahr.value = null;
 		props.pendingStateManager().removePendingState('zuzugsjahr');
-		geburtsland.value = null;
-		props.pendingStateManager().removePendingState('geburtsland');
+		idGeburtsland.value = null;
+		props.pendingStateManager().removePendingState('idGeburtsland');
 		verkehrssprache.value = null;
-		props.pendingStateManager().removePendingState('verkehrspracheFamilie');
+		props.pendingStateManager().removePendingState('idVerkehrspracheFamilie');
 		geburtslandMutter.value = null;
-		props.pendingStateManager().removePendingState('geburtslandMutter');
+		props.pendingStateManager().removePendingState('idGeburtslandMutter');
 		geburtslandVater.value = null;
-		props.pendingStateManager().removePendingState('geburtslandVater');
+		props.pendingStateManager().removePendingState('idGeburtslandVater');
 	}
 
 </script>

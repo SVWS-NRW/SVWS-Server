@@ -96,12 +96,12 @@ export class SchuelerStammdaten extends JavaObject {
 	/**
 	 * Die ID der Staatsangehörigkeit des Schülerdatensatzes.
 	 */
-	public staatsangehoerigkeitID: string | null = null;
+	public idStaatsangehoerigkeit: number | null = null;
 
 	/**
 	 * Die ID einer zweiten Staatsangehörigkeit des Schülerdatensatzes.
 	 */
-	public staatsangehoerigkeit2ID: string | null = null;
+	public idStaatsangehoerigkeit2: number | null = null;
 
 	/**
 	 * Die ID der Religion des Schülerdatensatzes.
@@ -134,24 +134,24 @@ export class SchuelerStammdaten extends JavaObject {
 	public zuzugsjahr: number | null = null;
 
 	/**
-	 * Das Geburtsland des Schülerdatensatzes.
+	 * Die Id des Geburtslandes des Schülerdatensatzes.
 	 */
-	public geburtsland: string | null = null;
+	public idGeburtsland: number | null = null;
 
 	/**
-	 * Die Verkehrssprache der Familie des Schülerdatensatzes.
+	 * Die ID zur Verkehrssprache der Familie des Schülerdatensatzes.
 	 */
-	public verkehrspracheFamilie: string | null = null;
+	public idVerkehrspracheFamilie: number | null = null;
 
 	/**
-	 * Das Geburtsland des Vaters des Schülerdatensatzes.
+	 * Die Id des Geburtslandes des Vaters des Schülerdatensatzes.
 	 */
-	public geburtslandVater: string | null = null;
+	public idGeburtslandVater: number | null = null;
 
 	/**
-	 * Das Geburtsland der Mutter des Schülerdatensatzes.
+	 * Die Id des Geburtslandes der Mutter des Schülerdatensatzes.
 	 */
-	public geburtslandMutter: string | null = null;
+	public idGeburtslandMutter: number | null = null;
 
 	/**
 	 * Die ID des Status des Schülerdatensatzes.
@@ -289,8 +289,8 @@ export class SchuelerStammdaten extends JavaObject {
 		result.telefonMobil = (obj.telefonMobil === undefined) ? null : obj.telefonMobil === null ? null : obj.telefonMobil;
 		result.emailPrivat = (obj.emailPrivat === undefined) ? null : obj.emailPrivat === null ? null : obj.emailPrivat;
 		result.emailSchule = (obj.emailSchule === undefined) ? null : obj.emailSchule === null ? null : obj.emailSchule;
-		result.staatsangehoerigkeitID = (obj.staatsangehoerigkeitID === undefined) ? null : obj.staatsangehoerigkeitID === null ? null : obj.staatsangehoerigkeitID;
-		result.staatsangehoerigkeit2ID = (obj.staatsangehoerigkeit2ID === undefined) ? null : obj.staatsangehoerigkeit2ID === null ? null : obj.staatsangehoerigkeit2ID;
+		result.idStaatsangehoerigkeit = (obj.idStaatsangehoerigkeit === undefined) ? null : obj.idStaatsangehoerigkeit === null ? null : obj.idStaatsangehoerigkeit;
+		result.idStaatsangehoerigkeit2 = (obj.idStaatsangehoerigkeit2 === undefined) ? null : obj.idStaatsangehoerigkeit2 === null ? null : obj.idStaatsangehoerigkeit2;
 		result.religionID = (obj.religionID === undefined) ? null : obj.religionID === null ? null : obj.religionID;
 		if (obj.druckeKonfessionAufZeugnisse === undefined)
 			throw new Error('invalid json format, missing attribute druckeKonfessionAufZeugnisse');
@@ -301,10 +301,10 @@ export class SchuelerStammdaten extends JavaObject {
 			throw new Error('invalid json format, missing attribute hatMigrationshintergrund');
 		result.hatMigrationshintergrund = obj.hatMigrationshintergrund;
 		result.zuzugsjahr = (obj.zuzugsjahr === undefined) ? null : obj.zuzugsjahr === null ? null : obj.zuzugsjahr;
-		result.geburtsland = (obj.geburtsland === undefined) ? null : obj.geburtsland === null ? null : obj.geburtsland;
-		result.verkehrspracheFamilie = (obj.verkehrspracheFamilie === undefined) ? null : obj.verkehrspracheFamilie === null ? null : obj.verkehrspracheFamilie;
-		result.geburtslandVater = (obj.geburtslandVater === undefined) ? null : obj.geburtslandVater === null ? null : obj.geburtslandVater;
-		result.geburtslandMutter = (obj.geburtslandMutter === undefined) ? null : obj.geburtslandMutter === null ? null : obj.geburtslandMutter;
+		result.idGeburtsland = (obj.idGeburtsland === undefined) ? null : obj.idGeburtsland === null ? null : obj.idGeburtsland;
+		result.idVerkehrspracheFamilie = (obj.idVerkehrspracheFamilie === undefined) ? null : obj.idVerkehrspracheFamilie === null ? null : obj.idVerkehrspracheFamilie;
+		result.idGeburtslandVater = (obj.idGeburtslandVater === undefined) ? null : obj.idGeburtslandVater === null ? null : obj.idGeburtslandVater;
+		result.idGeburtslandMutter = (obj.idGeburtslandMutter === undefined) ? null : obj.idGeburtslandMutter === null ? null : obj.idGeburtslandMutter;
 		if (obj.status === undefined)
 			throw new Error('invalid json format, missing attribute status');
 		result.status = obj.status;
@@ -364,18 +364,18 @@ export class SchuelerStammdaten extends JavaObject {
 		result += '"telefonMobil" : ' + ((obj.telefonMobil === null) ? 'null' : JSON.stringify(obj.telefonMobil)) + ',';
 		result += '"emailPrivat" : ' + ((obj.emailPrivat === null) ? 'null' : JSON.stringify(obj.emailPrivat)) + ',';
 		result += '"emailSchule" : ' + ((obj.emailSchule === null) ? 'null' : JSON.stringify(obj.emailSchule)) + ',';
-		result += '"staatsangehoerigkeitID" : ' + ((obj.staatsangehoerigkeitID === null) ? 'null' : JSON.stringify(obj.staatsangehoerigkeitID)) + ',';
-		result += '"staatsangehoerigkeit2ID" : ' + ((obj.staatsangehoerigkeit2ID === null) ? 'null' : JSON.stringify(obj.staatsangehoerigkeit2ID)) + ',';
+		result += '"idStaatsangehoerigkeit" : ' + ((obj.idStaatsangehoerigkeit === null) ? 'null' : obj.idStaatsangehoerigkeit.toString()) + ',';
+		result += '"idStaatsangehoerigkeit2" : ' + ((obj.idStaatsangehoerigkeit2 === null) ? 'null' : obj.idStaatsangehoerigkeit2.toString()) + ',';
 		result += '"religionID" : ' + ((obj.religionID === null) ? 'null' : obj.religionID.toString()) + ',';
 		result += '"druckeKonfessionAufZeugnisse" : ' + obj.druckeKonfessionAufZeugnisse.toString() + ',';
 		result += '"religionabmeldung" : ' + ((obj.religionabmeldung === null) ? 'null' : JSON.stringify(obj.religionabmeldung)) + ',';
 		result += '"religionanmeldung" : ' + ((obj.religionanmeldung === null) ? 'null' : JSON.stringify(obj.religionanmeldung)) + ',';
 		result += '"hatMigrationshintergrund" : ' + obj.hatMigrationshintergrund.toString() + ',';
 		result += '"zuzugsjahr" : ' + ((obj.zuzugsjahr === null) ? 'null' : obj.zuzugsjahr.toString()) + ',';
-		result += '"geburtsland" : ' + ((obj.geburtsland === null) ? 'null' : JSON.stringify(obj.geburtsland)) + ',';
-		result += '"verkehrspracheFamilie" : ' + ((obj.verkehrspracheFamilie === null) ? 'null' : JSON.stringify(obj.verkehrspracheFamilie)) + ',';
-		result += '"geburtslandVater" : ' + ((obj.geburtslandVater === null) ? 'null' : JSON.stringify(obj.geburtslandVater)) + ',';
-		result += '"geburtslandMutter" : ' + ((obj.geburtslandMutter === null) ? 'null' : JSON.stringify(obj.geburtslandMutter)) + ',';
+		result += '"idGeburtsland" : ' + ((obj.idGeburtsland === null) ? 'null' : obj.idGeburtsland.toString()) + ',';
+		result += '"idVerkehrspracheFamilie" : ' + ((obj.idVerkehrspracheFamilie === null) ? 'null' : obj.idVerkehrspracheFamilie.toString()) + ',';
+		result += '"idGeburtslandVater" : ' + ((obj.idGeburtslandVater === null) ? 'null' : obj.idGeburtslandVater.toString()) + ',';
+		result += '"idGeburtslandMutter" : ' + ((obj.idGeburtslandMutter === null) ? 'null' : obj.idGeburtslandMutter.toString()) + ',';
 		result += '"status" : ' + obj.status.toString() + ',';
 		result += '"istDuplikat" : ' + obj.istDuplikat.toString() + ',';
 		result += '"externeSchulNr" : ' + ((obj.externeSchulNr === null) ? 'null' : JSON.stringify(obj.externeSchulNr)) + ',';
@@ -455,11 +455,11 @@ export class SchuelerStammdaten extends JavaObject {
 		if (obj.emailSchule !== undefined) {
 			result += '"emailSchule" : ' + ((obj.emailSchule === null) ? 'null' : JSON.stringify(obj.emailSchule)) + ',';
 		}
-		if (obj.staatsangehoerigkeitID !== undefined) {
-			result += '"staatsangehoerigkeitID" : ' + ((obj.staatsangehoerigkeitID === null) ? 'null' : JSON.stringify(obj.staatsangehoerigkeitID)) + ',';
+		if (obj.idStaatsangehoerigkeit !== undefined) {
+			result += '"idStaatsangehoerigkeit" : ' + ((obj.idStaatsangehoerigkeit === null) ? 'null' : obj.idStaatsangehoerigkeit.toString()) + ',';
 		}
-		if (obj.staatsangehoerigkeit2ID !== undefined) {
-			result += '"staatsangehoerigkeit2ID" : ' + ((obj.staatsangehoerigkeit2ID === null) ? 'null' : JSON.stringify(obj.staatsangehoerigkeit2ID)) + ',';
+		if (obj.idStaatsangehoerigkeit2 !== undefined) {
+			result += '"idStaatsangehoerigkeit2" : ' + ((obj.idStaatsangehoerigkeit2 === null) ? 'null' : obj.idStaatsangehoerigkeit2.toString()) + ',';
 		}
 		if (obj.religionID !== undefined) {
 			result += '"religionID" : ' + ((obj.religionID === null) ? 'null' : obj.religionID.toString()) + ',';
@@ -479,17 +479,17 @@ export class SchuelerStammdaten extends JavaObject {
 		if (obj.zuzugsjahr !== undefined) {
 			result += '"zuzugsjahr" : ' + ((obj.zuzugsjahr === null) ? 'null' : obj.zuzugsjahr.toString()) + ',';
 		}
-		if (obj.geburtsland !== undefined) {
-			result += '"geburtsland" : ' + ((obj.geburtsland === null) ? 'null' : JSON.stringify(obj.geburtsland)) + ',';
+		if (obj.idGeburtsland !== undefined) {
+			result += '"idGeburtsland" : ' + ((obj.idGeburtsland === null) ? 'null' : obj.idGeburtsland.toString()) + ',';
 		}
-		if (obj.verkehrspracheFamilie !== undefined) {
-			result += '"verkehrspracheFamilie" : ' + ((obj.verkehrspracheFamilie === null) ? 'null' : JSON.stringify(obj.verkehrspracheFamilie)) + ',';
+		if (obj.idVerkehrspracheFamilie !== undefined) {
+			result += '"idVerkehrspracheFamilie" : ' + ((obj.idVerkehrspracheFamilie === null) ? 'null' : obj.idVerkehrspracheFamilie.toString()) + ',';
 		}
-		if (obj.geburtslandVater !== undefined) {
-			result += '"geburtslandVater" : ' + ((obj.geburtslandVater === null) ? 'null' : JSON.stringify(obj.geburtslandVater)) + ',';
+		if (obj.idGeburtslandVater !== undefined) {
+			result += '"idGeburtslandVater" : ' + ((obj.idGeburtslandVater === null) ? 'null' : obj.idGeburtslandVater.toString()) + ',';
 		}
-		if (obj.geburtslandMutter !== undefined) {
-			result += '"geburtslandMutter" : ' + ((obj.geburtslandMutter === null) ? 'null' : JSON.stringify(obj.geburtslandMutter)) + ',';
+		if (obj.idGeburtslandMutter !== undefined) {
+			result += '"idGeburtslandMutter" : ' + ((obj.idGeburtslandMutter === null) ? 'null' : obj.idGeburtslandMutter.toString()) + ',';
 		}
 		if (obj.status !== undefined) {
 			result += '"status" : ' + obj.status.toString() + ',';

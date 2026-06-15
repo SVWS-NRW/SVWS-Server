@@ -89,4 +89,13 @@ public class Verkehrssprache extends CoreTypeSimple<VerkehrsspracheKatalogEintra
 		return _mapIso3.get(kuerzel);
 	}
 
+	/**
+	 * Gibt die Verkehrssprache für deutsch zurück.
+	 *
+	 * @return Verkehrssprache für deutsch
+	 */
+	public static Verkehrssprache getDEU() {
+		return getByIsoKuerzel("de");
+	}
+
 }

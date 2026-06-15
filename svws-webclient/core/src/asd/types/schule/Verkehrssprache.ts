@@ -80,6 +80,15 @@ export class Verkehrssprache extends CoreTypeSimple<VerkehrsspracheKatalogEintra
 		return Verkehrssprache._mapIso3.get(kuerzel);
 	}
 
+	/**
+	 * Gibt die Verkehrssprache für deutsch zurück.
+	 *
+	 * @return Verkehrssprache für deutsch
+	 */
+	public static getDEU(): Verkehrssprache | null {
+		return Verkehrssprache.getByIsoKuerzel("de");
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.asd.types.schule.Verkehrssprache';
 	}

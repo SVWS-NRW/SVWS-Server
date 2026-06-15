@@ -25,14 +25,14 @@ class TestAggregationStatistikExport {
 //	static final StatistikGesamt testdaten_001 =
 //			JsonReader.fromResource("de/svws_nrw/asd/export/aggregation/StatistikGesamt_BK.json", StatistikGesamt.class);
 
-//	static final StatistikGesamt testdaten_001 =
-//			JsonReader.fromResource("de/svws_nrw/asd/export/aggregation/StatistikGesamt_GY.json", StatistikGesamt.class);
+	static final StatistikGesamt testdaten_001 =
+			JsonReader.fromResource("de/svws_nrw/asd/export/aggregation/StatistikGesamt_GY.json", StatistikGesamt.class);
 
 //	static final StatistikGesamt testdaten_001 =
 //			JsonReader.fromResource("de/svws_nrw/asd/export/aggregation/StatistikGesamt_S.json", StatistikGesamt.class);
 
-	static final StatistikGesamt testdaten_001 =
-			JsonReader.fromResource("de/svws_nrw/asd/export/aggregation/StatistikGesamt_G.json", StatistikGesamt.class);
+//	static final StatistikGesamt testdaten_001 =
+//			JsonReader.fromResource("de/svws_nrw/asd/export/aggregation/StatistikGesamt_G.json", StatistikGesamt.class);
 
 
 	/**

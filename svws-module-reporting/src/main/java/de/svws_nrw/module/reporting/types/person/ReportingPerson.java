@@ -29,7 +29,7 @@ public class ReportingPerson extends ReportingBaseType {
 	protected String geburtsdatum;
 
 	/** Das Geburtsland. */
-	protected String geburtsland;
+	protected Long idGeburtsland;
 
 	/** Der Geburtsname. */
 	protected String geburtsname;
@@ -93,7 +93,7 @@ public class ReportingPerson extends ReportingBaseType {
 	 * @param emailSchule			Die schulische E-Mail-Adresse.
 	 * @param faxSchule 			Die schulische Fax-Nummer.
 	 * @param geburtsdatum			Das Geburtsdatum.
-	 * @param geburtsland			Das Geburtsland.
+	 * @param idGeburtsland			Das Geburtsland.
 	 * @param geburtsname			Der Geburtsname.
 	 * @param geburtsort			Der Geburtsort.
 	 * @param geschlecht			Das Geschlecht.
@@ -115,7 +115,7 @@ public class ReportingPerson extends ReportingBaseType {
 	 */
 	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingPerson(final String anrede, final String emailPrivat, final String emailSchule, final String faxSchule, final String geburtsdatum,
-			final String geburtsland, final String geburtsname, final String geburtsort, final Geschlecht geschlecht, final String hausnummer,
+			final Long idGeburtsland, final String geburtsname, final String geburtsort, final Geschlecht geschlecht, final String hausnummer,
 			final String hausnummerZusatz, final String nachname, final Nationalitaeten staatsangehoerigkeit, final Nationalitaeten staatsangehoerigkeit2,
 			final String strassenname, final String telefonPrivat, final String telefonPrivatMobil, final String telefonSchule,
 			final String telefonSchuleMobil, final String titel, final String vorname, final String vornamen, final OrtKatalogEintrag wohnort,
@@ -126,7 +126,7 @@ public class ReportingPerson extends ReportingBaseType {
 		this.emailSchule = emailSchule;
 		this.faxSchule = faxSchule;
 		this.geburtsdatum = geburtsdatum;
-		this.geburtsland = geburtsland;
+		this.idGeburtsland = idGeburtsland;
 		this.geburtsname = geburtsname;
 		this.geburtsort = geburtsort;
 		this.geschlecht = geschlecht;
@@ -528,8 +528,8 @@ public class ReportingPerson extends ReportingBaseType {
 	 *
 	 * @return Inhalt des Feldes geburtsland
 	 */
-	public String geburtsland() {
-		return geburtsland;
+	public Long idGeburtsland() {
+		return idGeburtsland;
 	}
 
 	/**

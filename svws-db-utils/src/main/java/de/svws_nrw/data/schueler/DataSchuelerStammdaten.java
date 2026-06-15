@@ -8,6 +8,11 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerStatusKatalogEintrag;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
@@ -31,10 +36,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Strings;
 
 
 /**
@@ -59,7 +60,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	@Override
 	public SchuelerStammdaten getById(final Long id) {
 		final DTOSchueler dto = getDTO(id);
-		final DTOSchuelerFoto dtoSchuelerFoto = conn.queryByKey(DTOSchuelerFoto.class, id);
+		final DTOSchuelerFoto dtoSchuelerFoto = this.conn.queryByKey(DTOSchuelerFoto.class, id);
 		final SchuelerStammdaten schuelerStammdaten = map(dto);
 		schuelerStammdaten.foto = Optional.ofNullable(dtoSchuelerFoto).map(sf -> sf.FotoBase64).orElse(null);
 		return schuelerStammdaten;
@@ -107,7 +108,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	 */
 	public List<SchuelerStammdaten> getListByIds(final List<Long> ids) {
 		final List<DTOSchueler> schuelerDtos = getDTOList(ids);
-		final Map<Long, DTOSchuelerFoto> fotoDtosBySchuelerId = conn.queryByKeyList(DTOSchuelerFoto.class, ids).stream()
+		final Map<Long, DTOSchuelerFoto> fotoDtosBySchuelerId = this.conn.queryByKeyList(DTOSchuelerFoto.class, ids).stream()
 				.collect(Collectors.toMap(sf -> sf.Schueler_ID, sf -> sf));
 
 		return schuelerDtos.stream()
@@ -136,7 +137,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für den Schüler darf nicht null sein.");
 		}
-		final DTOSchueler dto = conn.queryByKey(DTOSchueler.class, id);
+		final DTOSchueler dto = this.conn.queryByKey(DTOSchueler.class, id);
 		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein Schüler zur ID " + id + " gefunden.");
 		}
@@ -157,7 +158,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		if (ids == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die Liste der IDs für die Schüler darf nicht null sein.");
 		}
-		return conn.queryByKeyList(DTOSchueler.class, CollectionUtils.emptyIfNull(ids));
+		return this.conn.queryByKeyList(DTOSchueler.class, CollectionUtils.emptyIfNull(ids));
 	}
 
 
@@ -194,8 +195,8 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		daten.emailPrivat = dto.Email;
 		daten.emailSchule = dto.SchulEmail;
 		// Daten zur Staatsangehörigkeit und zur Religion
-		daten.staatsangehoerigkeitID = (dto.StaatKrz == null) ? null : dto.StaatKrz.historie().getLast().iso3;
-		daten.staatsangehoerigkeit2ID = (dto.StaatKrz2 == null) ? null : dto.StaatKrz2.historie().getLast().iso3;
+		daten.idStaatsangehoerigkeit = (dto.StaatKrz == null) ? null : dto.StaatKrz.historie().getLast().id;
+		daten.idStaatsangehoerigkeit2 = (dto.StaatKrz2 == null) ? null : dto.StaatKrz2.historie().getLast().id;
 		daten.religionID = dto.Religion_ID;
 		daten.druckeKonfessionAufZeugnisse = dto.KonfDruck;
 		daten.religionabmeldung = dto.Religionsabmeldung;
@@ -204,10 +205,10 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		// TODO DB-Converter für boolean statt Boolean beim Migrationshintergrund
 		daten.hatMigrationshintergrund = Boolean.TRUE.equals(dto.Migrationshintergrund);
 		daten.zuzugsjahr = dto.JahrZuzug;
-		daten.geburtsland = (dto.GeburtslandSchueler == null) ? null : dto.GeburtslandSchueler.historie().getLast().iso3;
-		daten.verkehrspracheFamilie = (dto.VerkehrsspracheFamilie == null) ? null : dto.VerkehrsspracheFamilie.historie().getLast().iso3;
-		daten.geburtslandVater = (dto.GeburtslandVater == null) ? null : dto.GeburtslandVater.historie().getLast().iso3;
-		daten.geburtslandMutter = (dto.GeburtslandMutter == null) ? null : dto.GeburtslandMutter.historie().getLast().iso3;
+		daten.idGeburtsland = (dto.GeburtslandSchueler == null) ? null : dto.GeburtslandSchueler.historie().getLast().id;
+		daten.idVerkehrspracheFamilie = (dto.VerkehrsspracheFamilie == null) ? null : dto.VerkehrsspracheFamilie.historie().getLast().id;
+		daten.idGeburtslandVater = (dto.GeburtslandVater == null) ? null : dto.GeburtslandVater.historie().getLast().id;
+		daten.idGeburtslandMutter = (dto.GeburtslandMutter == null) ? null : dto.GeburtslandMutter.historie().getLast().id;
 		// Statusdaten
 		daten.status = dto.idStatus;
 		daten.istDuplikat = dto.Duplikat;
@@ -263,8 +264,8 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 					"emailSchule");
 
 			// Daten zur Staatsangehörigkeit und zur Religion
-			case "staatsangehoerigkeitID" -> mapStaatsangehoerigkeitID(dto, value);
-			case "staatsangehoerigkeit2ID" -> mapStaatsangehoerigkeit2ID(dto, value);
+			case "idStaatsangehoerigkeit" -> mapStaatsangehoerigkeit(dto, value);
+			case "idStaatsangehoerigkeit2" -> mapStaatsangehoerigkeit2(dto, value);
 			case "religionID" -> mapReligionID(dto, value);
 			case "druckeKonfessionAufZeugnisse" -> dto.KonfDruck = JSONMapper.convertToBoolean(value, false, "druckeKonfessionAufZeugnisse");
 			case "religionabmeldung" -> dto.Religionsabmeldung = JSONMapper.convertToString(value, true, true, null, "religionabmeldung");
@@ -273,10 +274,10 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 			// Daten zum Migrationshintergrund
 			case "hatMigrationshintergrund" -> dto.Migrationshintergrund = JSONMapper.convertToBoolean(value, false, "hatMigrationshintergrund");
 			case "zuzugsjahr" -> dto.JahrZuzug = JSONMapper.convertToIntegerInRange(value, true, 1900, Year.now().plusYears(1).getValue(), "zuzugsjahr");
-			case "verkehrspracheFamilie" -> mapVerkehrsspracheFamilie(dto, value);
-			case "geburtsland" -> mapGeburtsland(dto, value);
-			case "geburtslandVater" -> mapGeburtslandVater(dto, value);
-			case "geburtslandMutter" -> mapGeburtslandMutter(dto, value);
+			case "idVerkehrspracheFamilie" -> mapVerkehrsspracheFamilie(dto, value);
+			case "idGeburtsland" -> mapGeburtsland(dto, value);
+			case "idGeburtslandVater" -> mapGeburtslandVater(dto, value);
+			case "idGeburtslandMutter" -> mapGeburtslandMutter(dto, value);
 
 			// Statusdaten
 			case "status" -> mapStatus(dto, value);
@@ -344,21 +345,21 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		updateWohnortAndOrtsteil(dto, wohnortId, ortsteilId);
 	}
 
-	private static void mapStaatsangehoerigkeitID(final DTOSchueler dto, final Object value) {
-		final String staatsangehoerigkeitID = JSONMapper.convertToString(value, true, true, null, "staatsangehoerigkeitID");
-		if ((staatsangehoerigkeitID == null) || staatsangehoerigkeitID.isEmpty()) {
+	private static void mapStaatsangehoerigkeit(final DTOSchueler dto, final Object value) {
+		final Long idStaatsangehoerigkeit = JSONMapper.convertToLong(value, true, "idStaatsangehoerigkeit");
+		if (idStaatsangehoerigkeit == null) {
 			dto.StaatKrz = null;
 		} else {
-			dto.StaatKrz = getNationalitaetByISO3(staatsangehoerigkeitID);
+			dto.StaatKrz = getNationalitaetByID(idStaatsangehoerigkeit);
 		}
 	}
 
-	private static void mapStaatsangehoerigkeit2ID(final DTOSchueler dto, final Object value) {
-		final String staatsangehoerigkeit2ID = JSONMapper.convertToString(value, true, true, null, "staatsangehoerigkeit2ID");
-		if (StringUtils.isBlank(staatsangehoerigkeit2ID)) {
+	private static void mapStaatsangehoerigkeit2(final DTOSchueler dto, final Object value) {
+		final Long idStaatsangehoerigkeit2 = JSONMapper.convertToLong(value, true, "idStaatsangehoerigkeit2");
+		if (idStaatsangehoerigkeit2 == null) {
 			dto.StaatKrz2 = null;
 		} else {
-			dto.StaatKrz2 = getNationalitaetByISO3(staatsangehoerigkeit2ID);
+			dto.StaatKrz2 = getNationalitaetByID(idStaatsangehoerigkeit2);
 		}
 	}
 
@@ -371,54 +372,54 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	}
 
 	private void checkReligionExists(final Long religionID) {
-		final DTOKonfession religionDto = conn.queryByKey(DTOKonfession.class, religionID);
+		final DTOKonfession religionDto = this.conn.queryByKey(DTOKonfession.class, religionID);
 		if (religionDto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Konfession zur ID %d gefunden.".formatted(religionID));
 		}
 	}
 
 	private static void mapGeburtsland(final DTOSchueler dto, final Object value) {
-		final String geburtsland = JSONMapper.convertToString(value, true, true, null, "geburtsland");
-		if (StringUtils.isBlank(geburtsland)) {
+		final Long idGeburtsland = JSONMapper.convertToLong(value, true, "idGeburtsland");
+		if (idGeburtsland == null) {
 			dto.GeburtslandSchueler = null;
 		} else {
-			dto.GeburtslandSchueler = getNationalitaetByISO3(geburtsland);
+			dto.GeburtslandSchueler = getNationalitaetByID(idGeburtsland);
 		}
 	}
 
 	private static void mapVerkehrsspracheFamilie(final DTOSchueler dto, final Object value) {
-		final String verkehrsspracheFamilie = JSONMapper.convertToString(value, true, true, null, "verkehrsspracheFamilie");
-		if (StringUtils.isBlank(verkehrsspracheFamilie)) {
+		final Long idVerkehrsspracheFamilie = JSONMapper.convertToLong(value, true, "idVerkehrsspracheFamilie");
+		if (idVerkehrsspracheFamilie == null) {
 			dto.VerkehrsspracheFamilie = null;
 		} else {
-			dto.VerkehrsspracheFamilie = getVerkehrssprache(verkehrsspracheFamilie);
+			dto.VerkehrsspracheFamilie = getVerkehrsspracheByID(idVerkehrsspracheFamilie);
 		}
 	}
 
 	@Nonnull
-	private static Verkehrssprache getVerkehrssprache(final String verkehrsspracheFamilie) {
-		final Verkehrssprache verkehrssprache = Verkehrssprache.getByIsoKuerzel(verkehrsspracheFamilie);
+	private static Verkehrssprache getVerkehrsspracheByID(final Long idVerkehrsspracheFamilie) {
+		final Verkehrssprache verkehrssprache = Verkehrssprache.data().getWertByIDOrNull(idVerkehrsspracheFamilie);
 		if (verkehrssprache == null) {
-			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Verkehrssprache zum Wert %s gefunden.".formatted(verkehrsspracheFamilie));
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Verkehrssprache zum Wert %s gefunden.".formatted(idVerkehrsspracheFamilie));
 		}
 		return verkehrssprache;
 	}
 
 	private static void mapGeburtslandVater(final DTOSchueler dto, final Object value) {
-		final String geburtslandVater = JSONMapper.convertToString(value, true, true, null, "geburtslandVater");
-		if (StringUtils.isBlank(geburtslandVater)) {
+		final Long idGeburtslandVater = JSONMapper.convertToLong(value, true, "idGeburtslandVater");
+		if (idGeburtslandVater == null) {
 			dto.GeburtslandVater = null;
 		} else {
-			dto.GeburtslandVater = getNationalitaetByISO3(geburtslandVater);
+			dto.GeburtslandVater = getNationalitaetByID(idGeburtslandVater);
 		}
 	}
 
 	private static void mapGeburtslandMutter(final DTOSchueler dto, final Object value) {
-		final String geburtslandMutter = JSONMapper.convertToString(value, true, true, null, "geburtslandMutter");
-		if (StringUtils.isBlank(geburtslandMutter)) {
+		final Long idGeburtslandMutter = JSONMapper.convertToLong(value, true, "idGeburtslandMutter");
+		if (idGeburtslandMutter == null) {
 			dto.GeburtslandMutter = null;
 		} else {
-			dto.GeburtslandMutter = getNationalitaetByISO3(geburtslandMutter);
+			dto.GeburtslandMutter = getNationalitaetByID(idGeburtslandMutter);
 		}
 	}
 
@@ -434,7 +435,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein SchuelerStatus zum Wert %d gefunden.".formatted(status));
 		}
 
-		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(schuelerDto.Schuljahresabschnitts_ID);
+		final Schuljahresabschnitt abschnitt = this.conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(schuelerDto.Schuljahresabschnitts_ID);
 		final SchuelerStatusKatalogEintrag schuelerStatusEintrag = schuelerStatus.daten(abschnitt.schuljahr);
 		if (schuelerStatusEintrag == null) {
 			throw new ApiOperationException(Status.NOT_FOUND,
@@ -459,7 +460,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	}
 
 	private void checkFahrschuelerArtExists(final Long fahrschuelerArtId) {
-		final DTOFahrschuelerart fahrschuelerArtDto = conn.queryByKey(DTOFahrschuelerart.class, fahrschuelerArtId);
+		final DTOFahrschuelerart fahrschuelerArtDto = this.conn.queryByKey(DTOFahrschuelerart.class, fahrschuelerArtId);
 		if (fahrschuelerArtDto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Fahrschülerart zur ID %d gefunden.".formatted(fahrschuelerArtId));
 		}
@@ -474,7 +475,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	}
 
 	private void checkHaltestelleExists(final Long haltestelleId) {
-		final DTOHaltestellen haltestellenDto = conn.queryByKey(DTOHaltestellen.class, haltestelleId);
+		final DTOHaltestellen haltestellenDto = this.conn.queryByKey(DTOHaltestellen.class, haltestelleId);
 		if (haltestellenDto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Haltestelle zur ID %d gefunden.".formatted(haltestelleId));
 		}
@@ -492,7 +493,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	 */
 	void mapSchuelerFoto(final DTOSchueler schuelerDto, final Object value) {
 		final String newSchuelerFotoBase64 = JSONMapper.convertToString(value, true, true, null);
-		final DTOSchuelerFoto schuelerFotoDto = conn.queryByKey(DTOSchuelerFoto.class, schuelerDto.ID);
+		final DTOSchuelerFoto schuelerFotoDto = this.conn.queryByKey(DTOSchuelerFoto.class, schuelerDto.ID);
 
 		if (isDeleteSchuelerFoto(schuelerFotoDto, newSchuelerFotoBase64)) {
 			deleteSchuelerFoto(schuelerFotoDto);
@@ -513,13 +514,13 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	}
 
 	private void deleteSchuelerFoto(final DTOSchuelerFoto schuelerFotoDto) {
-		conn.transactionRemove(schuelerFotoDto);
+		this.conn.transactionRemove(schuelerFotoDto);
 	}
 
 	private void createOrUpdateSchuelerFoto(final Long idSchueler, final DTOSchuelerFoto existingDto, final String newFotoBase64) {
 		final var schuelerFotoDto = ObjectUtils.getIfNull(existingDto, new DTOSchuelerFoto(idSchueler));
 		schuelerFotoDto.FotoBase64 = newFotoBase64;
-		conn.transactionPersist(schuelerFotoDto);
+		this.conn.transactionPersist(schuelerFotoDto);
 	}
 
 	private void updateWohnortAndOrtsteil(final DTOSchueler schueler, final Long wohnortID, final Long ortsteilID) {
@@ -540,18 +541,18 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		if (ortsteilID == null) {
 			return true;
 		}
-		final DTOOrtsteil ortsteilDto = conn.queryByKey(DTOOrtsteil.class, ortsteilID);
+		final DTOOrtsteil ortsteilDto = this.conn.queryByKey(DTOOrtsteil.class, ortsteilID);
 		return (ortsteilDto != null) && Objects.equals(ortsteilDto.Ort_ID, wohnortID);
 	}
 
 	private boolean ortExists(final Long ortId) {
-		return conn.existsBy(DTOOrt.QUERY_BY_ID, DTOOrt.class, ortId);
+		return this.conn.existsBy(DTOOrt.QUERY_BY_ID, DTOOrt.class, ortId);
 	}
 
-	private static Nationalitaeten getNationalitaetByISO3(final String iso3) {
-		final Nationalitaeten nationalitaet = Nationalitaeten.getByISO3(iso3);
+	private static Nationalitaeten getNationalitaetByID(final Long id) {
+		final Nationalitaeten nationalitaet = Nationalitaeten.data().getWertByIDOrNull(id);
 		if (nationalitaet == null) {
-			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Nationalität zum Wert %s gefunden.".formatted(iso3));
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Nationalität zum Wert %s gefunden.".formatted(id));
 		}
 		return nationalitaet;
 	}

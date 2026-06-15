@@ -34,7 +34,7 @@ public class ProxyReportingErzieher extends ReportingErzieher {
 				"",
 				erzieherStammdaten.erhaeltAnschreiben,
 				"",
-				"",
+				null,
 				"",
 				"",
 				null,

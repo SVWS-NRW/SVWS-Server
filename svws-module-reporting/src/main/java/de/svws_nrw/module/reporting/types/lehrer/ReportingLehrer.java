@@ -3,10 +3,10 @@ package de.svws_nrw.module.reporting.types.lehrer;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
-import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
+import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
+import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.core.types.PersonalTyp;
 import de.svws_nrw.module.reporting.filterung.ReportingFilterung;
 import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
@@ -65,7 +65,7 @@ public class ReportingLehrer extends ReportingPerson {
 	 * @param faxSchule Die schulische Faxnummer des Lehrers.
 	 * @param foto Ggf. das Foto des Lehrers (jpg, Base64-kodiert.)
 	 * @param geburtsdatum Das Geburtsdatum des Lehrers.
-	 * @param geburtsland Das Geburtsland des Lehrers.
+	 * @param idGeburtsland Das Geburtsland des Lehrers.
 	 * @param geburtsname Der Geburtsname des Lehrers.
 	 * @param geburtsort Der Geburtsort des Lehrers.
 	 * @param geschlecht Das Geschlecht des Lehrers.
@@ -91,13 +91,13 @@ public class ReportingLehrer extends ReportingPerson {
 	 */
 	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingLehrer(final String amtsbezeichnung, final String anrede, final String emailPrivat, final String emailSchule, final String faxSchule,
-			final String foto, final String geburtsdatum, final String geburtsland, final String geburtsname, final String geburtsort,
+			final String foto, final String geburtsdatum, final Long idGeburtsland, final String geburtsname, final String geburtsort,
 			final Geschlecht geschlecht, final String hausnummer, final String hausnummerZusatz, final long id, final String kuerzel,
 			final List<ReportingLehrerLeitungsfunktion> leitungsfunktionen, final String nachname, final PersonalTyp personalTyp,
 			final Nationalitaeten staatsangehoerigkeit, final Nationalitaeten staatsangehoerigkeit2, final String strassenname, final String telefonPrivat,
 			final String telefonPrivatMobil, final String telefonSchule, final String telefonSchuleMobil, final String titel, final String vorname,
 			final String vornamen, final OrtKatalogEintrag wohnort, final OrtsteilKatalogEintrag wohnortsteil) {
-		super(anrede, emailPrivat, emailSchule, faxSchule, geburtsdatum, geburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz,
+		super(anrede, emailPrivat, emailSchule, faxSchule, geburtsdatum, idGeburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz,
 				nachname, staatsangehoerigkeit, staatsangehoerigkeit2, strassenname, telefonPrivat, telefonPrivatMobil, telefonSchule, telefonSchuleMobil,
 				titel, vorname, vornamen, wohnort, wohnortsteil);
 		this.amtsbezeichnung = amtsbezeichnung;
@@ -116,6 +116,7 @@ public class ReportingLehrer extends ReportingPerson {
 	 * Hashcode der Klasse
 	 * @return Hashcode der Klasse
 	 */
+	@Override
 	public int hashCode() {
 		return 31 + Long.hashCode(id);
 	}
@@ -125,6 +126,7 @@ public class ReportingLehrer extends ReportingPerson {
 	 * @param obj Das Vergleichsobjekt
 	 * @return	true, falls es das gleiche Objekt ist, andernfalls false.
 	 */
+	@Override
 	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;

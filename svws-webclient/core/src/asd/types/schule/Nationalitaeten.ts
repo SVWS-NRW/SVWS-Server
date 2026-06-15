@@ -3,9 +3,13 @@ import { HashMap } from '../../../java/util/HashMap';
 import { CoreTypeDataManager } from '../../../asd/utils/CoreTypeDataManager';
 import { NationalitaetenKatalogEintrag } from '../../../asd/data/schule/NationalitaetenKatalogEintrag';
 import { Class } from '../../../java/lang/Class';
-import { CoreTypeException } from '../../../asd/data/CoreTypeException';
 
 export class Nationalitaeten extends CoreTypeSimple<NationalitaetenKatalogEintrag, Nationalitaeten> {
+
+	/**
+	 * Eine Hashmap mit allen definierten Nationalitäten, zugeordnet zu dem dreistelligen ISO-Code
+	 */
+	private static readonly _mapBezeichner: HashMap<string, Nationalitaeten> = new HashMap<string, Nationalitaeten>();
 
 	/**
 	 * Eine Hashmap mit allen definierten Nationalitäten, zugeordnet zu dem dreistelligen ISO-Code
@@ -163,11 +167,7 @@ export class Nationalitaeten extends CoreTypeSimple<NationalitaetenKatalogEintra
 	 * @return die Nationalität DEU
 	 */
 	public static getDEU(): Nationalitaeten {
-		const deu: Nationalitaeten | null = Nationalitaeten.getByISO3("DEU");
-		if (deu === null) {
-			throw new CoreTypeException("Core-Type nicht korrekt initialisiert. DEU kann nicht gefunden werden.")
-		}
-		return deu;
+		return Nationalitaeten.data().getWertByBezeichner("DEU");
 	}
 
 	transpilerCanonicalName(): string {

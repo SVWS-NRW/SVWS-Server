@@ -2,7 +2,6 @@ package de.svws_nrw.asd.types.schule;
 
 import java.util.HashMap;
 
-import de.svws_nrw.asd.data.CoreTypeException;
 import de.svws_nrw.asd.data.schule.NationalitaetenKatalogEintrag;
 import de.svws_nrw.asd.types.CoreTypeSimple;
 import de.svws_nrw.asd.utils.CoreTypeDataManager;
@@ -25,6 +24,9 @@ public class Nationalitaeten extends CoreTypeSimple<NationalitaetenKatalogEintra
 	/* ----- Die nachfolgenden Attribute werden nicht initialisiert und werden als Cache verwendet, um z.B. den Schuljahres-bezogenen Zugriff zu cachen ----- */
 
 	/** Eine Hashmap mit allen definierten Nationalitäten, zugeordnet zu dem dreistelligen ISO-Code */
+	private static final @NotNull HashMap<String, Nationalitaeten> _mapBezeichner = new HashMap<>();
+
+	/** Eine Hashmap mit allen definierten Nationalitäten, zugeordnet zu dem dreistelligen ISO-Code */
 	private static final @NotNull HashMap<String, Nationalitaeten> _mapISO3 = new HashMap<>();
 
 	/** Eine Hashmap mit allen definierten Nationalitäten, zugeordnet zu dem zweistelligen ISO-Code */
@@ -39,7 +41,7 @@ public class Nationalitaeten extends CoreTypeSimple<NationalitaetenKatalogEintra
 	 * Erstellt eine Nationalitäten mit Standardwerten
 	 */
 	public Nationalitaeten() {
-		// nichts zu tun
+		 // nichts zu tun
 	}
 
 
@@ -102,7 +104,6 @@ public class Nationalitaeten extends CoreTypeSimple<NationalitaetenKatalogEintra
 		}
 		return _mapISO3;
 	}
-
 
 	/**
 	 * Gibt eine Map von den zweistelligen ISO-Codes der Nationalitäten auf die zugehörigen Nationalitäten
@@ -183,11 +184,7 @@ public class Nationalitaeten extends CoreTypeSimple<NationalitaetenKatalogEintra
 	 * @return die Nationalität DEU
 	 */
 	public static @NotNull Nationalitaeten getDEU() {
-		final Nationalitaeten deu = getByISO3("DEU");
-		if (deu == null) {
-			throw new CoreTypeException("Core-Type nicht korrekt initialisiert. DEU kann nicht gefunden werden.");
-		}
-		return deu;
+		return data().getWertByBezeichner("DEU");
 	}
 
 }

@@ -1,6 +1,7 @@
 package de.svws_nrw.module.reporting.types.schule;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.base.email.EmailJobManager;
@@ -64,7 +65,7 @@ public class ReportingBenutzer extends ReportingPerson {
 	 * @param emailSmtpPasswort Das AES-verschlüsselte SMTP-Kennwort des Benutzers.
 	 * @param faxSchule Die schulische Faxnummer des Benutzers.
 	 * @param geburtsdatum Das Geburtsdatum des Benutzers.
-	 * @param geburtsland Das Geburtsland des Benutzers.
+	 * @param idGeburtsland Das Geburtsland des Benutzers.
 	 * @param geburtsname Der Geburtsname des Benutzers.
 	 * @param geburtsort Der Geburtsort des Benutzers.
 	 * @param geschlecht Das Geschlecht des Benutzers.
@@ -91,12 +92,12 @@ public class ReportingBenutzer extends ReportingPerson {
 	public ReportingBenutzer(final String anrede, final String anzeigename, final String benutzername, final String emailAnzeigename,
 			final EmailJobManager emailJobManager, final String emailPrivat, final String emailSchule, final String emailSignatur,
 			final String emailSmtpAdresse, final String emailSmtpBenutzername, final String emailSmtpPasswort, final String faxSchule,
-			final String geburtsdatum, final String geburtsland, final String geburtsname, final String geburtsort, final Geschlecht geschlecht,
+			final String geburtsdatum, final Long idGeburtsland, final String geburtsname, final String geburtsort, final Geschlecht geschlecht,
 			final String hausnummer, final String hausnummerZusatz, final long id, final boolean istAdmin, final ReportingLehrer lehrer,
 			final String nachname, final Nationalitaeten staatsangehoerigkeit, final Nationalitaeten staatsangehoerigkeit2, final String strassenname,
 			final String telefonPrivat, final String telefonPrivatMobil, final String telefonSchule, final String telefonSchuleMobil, final String titel,
 			final String vorname, final String vornamen, final OrtKatalogEintrag wohnort, final OrtsteilKatalogEintrag wohnortsteil) {
-		super(anrede, emailPrivat, emailSchule, faxSchule, geburtsdatum, geburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz,
+		super(anrede, emailPrivat, emailSchule, faxSchule, geburtsdatum, idGeburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz,
 				nachname, staatsangehoerigkeit, staatsangehoerigkeit2, strassenname, telefonPrivat, telefonPrivatMobil, telefonSchule,
 				telefonSchuleMobil, titel, vorname, vornamen, wohnort, wohnortsteil);
 		this.anzeigename = anzeigename;
@@ -118,6 +119,7 @@ public class ReportingBenutzer extends ReportingPerson {
 	 * Hashcode der Klasse
 	 * @return Hashcode der Klasse
 	 */
+	@Override
 	public int hashCode() {
 		return 31 + Long.hashCode(id);
 	}
@@ -127,6 +129,7 @@ public class ReportingBenutzer extends ReportingPerson {
 	 * @param obj Das Vergleichsobjekt
 	 * @return	true, falls es das gleiche Objekt ist, andernfalls false.
 	 */
+	@Override
 	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;

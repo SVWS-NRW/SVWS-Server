@@ -40,10 +40,6 @@ import de.svws_nrw.asd.types.schule.Schulform;
  */
 public class AggregationStatistikExport {
 
-	/**
-	 * Kürzel für deutsche Nationalität/Sprache
-	 */
-	public static final String DEU = "deu";
 
 	/**
 	 * Ein String mit drei Leerzeichen.
@@ -243,7 +239,7 @@ public class AggregationStatistikExport {
 		erfolg = aggregationLehrerStatistikExport.run();
 		// Klassendaten
 		final AggregationKlassenStatistikExport aggregationKlassenStatistikExport =
-				new AggregationKlassenStatistikExport(statistikGesamt, statistikExport, fehlermeldungen, jahrgangIdMap, fachIdMap, klasseIdMap, lehrerIdMap);
+				new AggregationKlassenStatistikExport(statistikGesamt, statistikExport, fehlermeldungen, jahrgangIdMap, fachIdMap, klasseIdMap, lehrerIdMap, aktuellesSchuljahr);
 		erfolg = aggregationKlassenStatistikExport.run();
 		// Unterrichtverteilungsdaten
 		final AggregationUvdStatistikExport aggregationUvdStatistikExport =

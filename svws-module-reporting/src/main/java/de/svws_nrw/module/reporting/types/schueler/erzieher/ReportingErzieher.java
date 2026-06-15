@@ -38,7 +38,7 @@ public class ReportingErzieher extends ReportingPerson {
 	 * @param emailSchule Schulische E-Mail-Adresse des Erziehers.
 	 * @param erhaeltAnschreiben Gibt an, ob der Erzieher ein Anschreiben erhält oder nicht.
 	 * @param geburtsdatum Das Geburtsdatum des Erziehers.
-	 * @param geburtsland Das Geburtsland des Erziehers.
+	 * @param idGeburtsland Das Geburtsland des Erziehers.
 	 * @param geburtsname Der Geburtsname des Erziehers.
 	 * @param geburtsort Der Geburtsort des Erziehers.
 	 * @param geschlecht Das Geschlecht des Erziehers.
@@ -60,12 +60,12 @@ public class ReportingErzieher extends ReportingPerson {
 	 */
 	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingErzieher(final String anrede, final ReportingErzieherArt art, final String bemerkung, final String emailPrivat, final String emailSchule,
-			final Boolean erhaeltAnschreiben, final String geburtsdatum, final String geburtsland, final String geburtsname, final String geburtsort,
+			final Boolean erhaeltAnschreiben, final String geburtsdatum, final Long idGeburtsland, final String geburtsname, final String geburtsort,
 			final Geschlecht geschlecht, final String hausnummer, final String hausnummerZusatz, final long id, final String nachname,
 			final ReportingSchueler schueler, final Nationalitaeten staatsangehoerigkeit, final Nationalitaeten staatsangehoerigkeit2,
 			final String strassenname, final String telefonPrivat, final String telefonPrivatMobil, final String titel, final String vorname,
 			final String vornamen, final OrtKatalogEintrag wohnort, final OrtsteilKatalogEintrag wohnortsteil) {
-		super(anrede, emailPrivat, emailSchule, "", geburtsdatum, geburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz,
+		super(anrede, emailPrivat, emailSchule, "", geburtsdatum, idGeburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz,
 				nachname, staatsangehoerigkeit, staatsangehoerigkeit2, strassenname, telefonPrivat, telefonPrivatMobil, "", "", titel, vorname,
 				vornamen, wohnort, wohnortsteil);
 		this.art = art;
@@ -82,6 +82,7 @@ public class ReportingErzieher extends ReportingPerson {
 	 * Hashcode der Klasse
 	 * @return Hashcode der Klasse
 	 */
+	@Override
 	public int hashCode() {
 		return 31 + Long.hashCode(id);
 	}
@@ -91,6 +92,7 @@ public class ReportingErzieher extends ReportingPerson {
 	 * @param obj Das Vergleichsobjekt
 	 * @return	true, falls es das gleiche Objekt ist, andernfalls false.
 	 */
+	@Override
 	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
