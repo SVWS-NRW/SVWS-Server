@@ -14,11 +14,5 @@
 		"lint-tsc": "vue-tsc --noEmit",
 		"serve": "vite preview",
 		"build": "vite build"
-	},
-	"dependencies": {
-		"@headlessui/vue": "^1.7.7",
-		"@floating-ui/vue": "^1.0.2",
-		"vue": "^3.3",
-		"vue-router": "^5.0.1"
 	}
 }
