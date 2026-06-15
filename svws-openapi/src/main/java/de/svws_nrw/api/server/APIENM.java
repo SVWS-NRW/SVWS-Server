@@ -169,7 +169,7 @@ public class APIENM {
 	@ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
 	public Response getLehrerENMDaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return EnmV1ControllerFactory.withReadAccess(request)
+		return EnmV1ControllerFactory.withReadAccessFunktionsbezogen(request, id)
 				.getEnmV1Controller()
 				.get(id);
 	}
@@ -278,7 +278,7 @@ public class APIENM {
 	@ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
 	public Response getLehrerENMv2Daten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return EnmV2ControllerFactory.withReadAccess(request)
+		return EnmV2ControllerFactory.withReadAccessFunktionsbezogen(request, id)
 				.getEnmV2Controller()
 				.get(id);
 	}
