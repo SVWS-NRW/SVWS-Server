@@ -196,6 +196,11 @@ public final class NotenmodulVerbindungenService {
 		patch.clientID.ifPresent(val -> daten.clientID = val);
 		patch.clientSecret.ifPresent(val -> daten.clientSecret = val);
 		patch.serverTLSCertIsTrusted.ifPresent(val -> daten.serverTLSCertIsTrusted = val);
+		if (patch.url.isPresent() || patch.clientID.isPresent() || patch.clientSecret.isPresent() || patch.serverTLSCertIsTrusted.isPresent()) {
+			daten.tokenTimestamp = null;
+			daten.token = null;
+			daten.tokenExpiresIn = null;
+		}
 	}
 
 

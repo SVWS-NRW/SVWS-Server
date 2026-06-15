@@ -28,7 +28,7 @@ export class RouteNotenmodulKonfiguration extends RouteNode<any, RouteNotenmodul
 	protected checkHidden(params?: RouteParams) {
 		try {
 			const { id } = (params === undefined) ? { id: undefined } : RouteNode.getIntParams(params, ["id"]);
-			if ((id !== -1) && (id !== undefined) && !routeNotenmodulAdministration.data.manager.getConnectionResponse(id).success) {
+			if ((id !== -1) && (id !== undefined) && !(routeNotenmodulAdministration.data.manager.getConnectionResponse(id)?.success ?? false)) {
 				return routeNotenmodulAdministration.getRouteDefaultChild({ id });
 			}
 			return false;
