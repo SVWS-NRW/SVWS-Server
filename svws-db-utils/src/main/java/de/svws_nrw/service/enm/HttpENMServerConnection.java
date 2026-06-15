@@ -173,6 +173,20 @@ final class HttpENMServerConnection {
 
 
 	/**
+	 * Entfernt das aktuelle Token für die Verbindung.
+	 */
+	public void removeToken() {
+		logger.logLn("Entferne das Verbindungstoken...");
+		this.dto.tokenTimestamp = null;
+		this.dto.token = null;
+		this.dto.tokenExpiresIn = null;
+		repository.update(this.dto);
+		repository.flush();
+		logger.logLn("Das Token wurde entfernt.");
+	}
+
+
+	/**
 	 * Methode zum Versenden eines HTTP-Requests mithilfe der Methode {@link #send(HttpRequest, BodyHandler)}.
 	 *
 	 * @param <T> generischer Typ der Response

@@ -172,9 +172,9 @@ public final class NotenmodulSynchronisationService {
 	 */
 	public SimpleOperationResponse synchronize(final long idVerbindung) {
 		return executeWithLog("Synchronisation", logger -> {
-			final HttpENMServerConnection client = new HttpENMServerConnection(repository, logger, idVerbindung, true, false);
-			downloadENMDaten(client, logger);
-			uploadENMDaten(client, logger);
+			final HttpENMServerConnection client = transactional(() -> new HttpENMServerConnection(repository, logger, idVerbindung, true, false));
+			transactional(() -> downloadENMDaten(client, logger));
+			transactional(() -> uploadENMDaten(client, logger));
 		});
 	}
 
@@ -188,8 +188,10 @@ public final class NotenmodulSynchronisationService {
 	 */
 	public SimpleOperationResponse upload(final long idVerbindung) {
 		return executeWithLog("Upload", logger -> {
-			final HttpENMServerConnection client = new HttpENMServerConnection(repository, logger, idVerbindung, true, false);
-			uploadENMDaten(client, logger);
+			transactional(() -> {
+				final HttpENMServerConnection client = new HttpENMServerConnection(repository, logger, idVerbindung, true, false);
+				uploadENMDaten(client, logger);
+			});
 		});
 	}
 
@@ -203,8 +205,10 @@ public final class NotenmodulSynchronisationService {
 	 */
 	public SimpleOperationResponse download(final long idVerbindung) {
 		return executeWithLog("Download", logger -> {
-			final HttpENMServerConnection client = new HttpENMServerConnection(repository, logger, idVerbindung, true, false);
-			downloadENMDaten(client, logger);
+			transactional(() -> {
+				final HttpENMServerConnection client = new HttpENMServerConnection(repository, logger, idVerbindung, true, false);
+				downloadENMDaten(client, logger);
+			});
 		});
 	}
 
@@ -228,6 +232,7 @@ public final class NotenmodulSynchronisationService {
 			if (response.statusCode() != Status.OK.getStatusCode()) {
 				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
 			}
+			client.removeToken();
 		}));
 	}
 
