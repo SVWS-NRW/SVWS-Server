@@ -63,8 +63,12 @@ class ApiSecure {
      * Prüft die Erreichbarkeit und die Gültigkeit des Access-Tokens.
      */
     private function check(): void {
+        $minPHPVersion = '8.2.0';
+        $currentPHPVersion = phpversion();
         $result = [
-            "ts" => TimeUtils::now()
+            "ts" => TimeUtils::now(),
+            "phpversion" => $currentPHPVersion,
+            "phpIsCompatible" => version_compare($currentPHPVersion, $minPHPVersion, '>=')
         ];
         Http::exit200OKJson(json_encode($result));
     }

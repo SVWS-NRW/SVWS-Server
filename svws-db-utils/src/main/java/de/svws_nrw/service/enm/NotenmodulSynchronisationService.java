@@ -258,6 +258,8 @@ public final class NotenmodulSynchronisationService {
 		}));
 	}
 
+
+
 	/**
 	 * Prüft, ob der ENM-Server mit den hinterlegten Verbindungsdaten erreichbar ist.
 	 *
@@ -279,9 +281,23 @@ public final class NotenmodulSynchronisationService {
 			}
 
 			try {
-				// Einlesen der Zeit vom externen Server
 				final String body = response.body();
 				final JsonNode rootNode = JSONMapper.mapper.readTree(body);
+
+				// PHP-Version überprüfen
+				final JsonNode phpversionNode = rootNode.get("phpversion");
+				final JsonNode phpIsCompatible = rootNode.get("phpIsCompatible");
+				if ((phpversionNode == null) || (phpIsCompatible == null) || (!phpIsCompatible.isBoolean()) || (!phpversionNode.isTextual())) {
+					logger.logLn("Fehler beim Auslesen der PHP-Version und deren Kompatibilität.");
+					throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
+				}
+				logger.logLn("PHP-Version: " + phpversionNode.asText());
+				if (!phpIsCompatible.asBoolean()) {
+					logger.logLn("Die PHP-Version ist nicht kompatibel.");
+					throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
+				}
+
+				// Einlesen der Zeit vom externen Server
 				final JsonNode tsNode = rootNode.get("ts");
 				if (tsNode == null) {
 					logger.logLn("Fehler beim Auslesen des Zeitstempels vom externen Server.");
