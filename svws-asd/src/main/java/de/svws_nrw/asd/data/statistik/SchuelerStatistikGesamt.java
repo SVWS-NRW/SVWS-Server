@@ -128,6 +128,10 @@ public class SchuelerStatistikGesamt {
 	@Schema(description = "die ID des Abschlusses, welcher an dieser Schule erworben wurde", example = "OA")
 	public String idEntlassungAbschlussart;
 
+	/** Der Beginn des Bildungsgangs eines Schülers. (nur B-Schulen) */
+	@Schema(description = "der Beginn des Bildungsgangs eines Schülers", example = "1911-11-11")
+	public String beginnBildungsgang;
+
 	/** Ist Schüler einer Justizvollzugsanstalt. */
 	@Schema(description = "ist Schüler einer Justizvollzugsanstalt", example = "True")
 	public boolean istJvaSchueler;

@@ -138,6 +138,11 @@ export class SchuelerStatistikGesamt extends JavaObject {
 	public idEntlassungAbschlussart: string | null = null;
 
 	/**
+	 * Der Beginn des Bildungsgangs eines Schülers. (nur B-Schulen)
+	 */
+	public beginnBildungsgang: string | null = null;
+
+	/**
 	 * Ist Schüler einer Justizvollzugsanstalt.
 	 */
 	public istJvaSchueler: boolean = false;
@@ -216,6 +221,7 @@ export class SchuelerStatistikGesamt extends JavaObject {
 		result.vorigeEntlassjahrgang = (obj.vorigeEntlassjahrgang === undefined) ? null : obj.vorigeEntlassjahrgang === null ? null : obj.vorigeEntlassjahrgang;
 		result.entlassungDatum = (obj.entlassungDatum === undefined) ? null : obj.entlassungDatum === null ? null : obj.entlassungDatum;
 		result.idEntlassungAbschlussart = (obj.idEntlassungAbschlussart === undefined) ? null : obj.idEntlassungAbschlussart === null ? null : obj.idEntlassungAbschlussart;
+		result.beginnBildungsgang = (obj.beginnBildungsgang === undefined) ? null : obj.beginnBildungsgang === null ? null : obj.beginnBildungsgang;
 		if (obj.istJvaSchueler === undefined)
 			throw new Error('invalid json format, missing attribute istJvaSchueler');
 		result.istJvaSchueler = obj.istJvaSchueler;
@@ -260,6 +266,7 @@ export class SchuelerStatistikGesamt extends JavaObject {
 		result += '"vorigeEntlassjahrgang" : ' + ((obj.vorigeEntlassjahrgang === null) ? 'null' : JSON.stringify(obj.vorigeEntlassjahrgang)) + ',';
 		result += '"entlassungDatum" : ' + ((obj.entlassungDatum === null) ? 'null' : JSON.stringify(obj.entlassungDatum)) + ',';
 		result += '"idEntlassungAbschlussart" : ' + ((obj.idEntlassungAbschlussart === null) ? 'null' : JSON.stringify(obj.idEntlassungAbschlussart)) + ',';
+		result += '"beginnBildungsgang" : ' + ((obj.beginnBildungsgang === null) ? 'null' : JSON.stringify(obj.beginnBildungsgang)) + ',';
 		result += '"istJvaSchueler" : ' + obj.istJvaSchueler.toString() + ',';
 		result += '"idGrundschuleEinschulungsart" : ' + ((obj.idGrundschuleEinschulungsart === null) ? 'null' : obj.idGrundschuleEinschulungsart.toString()) + ',';
 		result += '"idKuerzelGrundschuleUebergangsempfehlung" : ' + ((obj.idKuerzelGrundschuleUebergangsempfehlung === null) ? 'null' : obj.idKuerzelGrundschuleUebergangsempfehlung.toString()) + ',';
@@ -355,6 +362,9 @@ export class SchuelerStatistikGesamt extends JavaObject {
 		}
 		if (obj.idEntlassungAbschlussart !== undefined) {
 			result += '"idEntlassungAbschlussart" : ' + ((obj.idEntlassungAbschlussart === null) ? 'null' : JSON.stringify(obj.idEntlassungAbschlussart)) + ',';
+		}
+		if (obj.beginnBildungsgang !== undefined) {
+			result += '"beginnBildungsgang" : ' + ((obj.beginnBildungsgang === null) ? 'null' : JSON.stringify(obj.beginnBildungsgang)) + ',';
 		}
 		if (obj.istJvaSchueler !== undefined) {
 			result += '"istJvaSchueler" : ' + obj.istJvaSchueler.toString() + ',';

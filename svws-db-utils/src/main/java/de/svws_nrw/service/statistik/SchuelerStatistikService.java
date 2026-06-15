@@ -161,6 +161,7 @@ public final class SchuelerStatistikService {
 
 		daten.entlassungDatum = dtoSchueler.Entlassdatum;
 		daten.idEntlassungAbschlussart = dtoSchueler.Entlassart;
+		daten.beginnBildungsgang = dtoSchueler.BeginnBildungsgang;
 		daten.istJvaSchueler = (dtoSchueler.JVA != null) && dtoSchueler.JVA;
 
 		final Einschulungsart einschulungsart = Einschulungsart.data().getWertBySchluessel(dtoSchueler.EinschulungsartASD);
