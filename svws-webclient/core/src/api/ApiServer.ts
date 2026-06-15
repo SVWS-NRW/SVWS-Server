@@ -4005,6 +4005,62 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getGesamtschuleSchuelerPrognoseLeistungsdatenQuartal für den Zugriff auf die URL https://{hostname}/db/{schema}/gesamtschule/schueler/{id : \d+}/prognose_leistungsdaten/quartal
+	 *
+	 * Liest die Leistungsdaten des aktuellen Lernabschnittes in Bezug auf die Prognose- bzw. Abschlussberechnung in der Sek I der Gesamtschule des Schülers mit der angegebene ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Leistungsdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Leistungsdaten des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GEAbschlussFaecher
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Leistungsdaten anzusehen.
+	 *   Code 404: Kein Schüler-Eintrag mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Leistungsdaten des Schülers
+	 */
+	public async getGesamtschuleSchuelerPrognoseLeistungsdatenQuartal(schema : string, id : number) : Promise<GEAbschlussFaecher> {
+		const path = "/db/{schema}/gesamtschule/schueler/{id : \\d+}/prognose_leistungsdaten/quartal"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return GEAbschlussFaecher.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGesamtschuleSchuelerPrognosLeistungsdatenQuartalFuerAbschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/gesamtschule/schueler/{id : \d+}/prognose_leistungsdaten/quartal/abschnitt/{abschnittID : \d+}
+	 *
+	 * Liest die Leistungsdaten des angegebenen Lernabschnittes in Bezug auf die Prognose- bzw. Abschlussberechnung in der Sek I der Gesamtschule des Schülers mit der angegebene ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Leistungsdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Leistungsdaten des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GEAbschlussFaecher
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Leistungsdaten anzusehen.
+	 *   Code 404: Kein Schüler-Eintrag mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} abschnittID - der Pfad-Parameter abschnittID
+	 *
+	 * @returns Die Leistungsdaten des Schülers
+	 */
+	public async getGesamtschuleSchuelerPrognosLeistungsdatenQuartalFuerAbschnitt(schema : string, id : number, abschnittID : number) : Promise<GEAbschlussFaecher> {
+		const path = "/db/{schema}/gesamtschule/schueler/{id : \\d+}/prognose_leistungsdaten/quartal/abschnitt/{abschnittID : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{abschnittID\s*(:[^{}]+({[^{}]+})*)?}/g, abschnittID.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return GEAbschlussFaecher.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode getGostAbiturBelegpruefungEF1 für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abitur/belegpruefung/EF1
 	 *
 	 * Prüft anhand der übergeben Abiturdaten, ob die Belegung in den Abiturdaten korrekt ist oder nicht. Es werden ggf. auch Belegungsfehler und Hinweise zur Belegung zurückgegeben.

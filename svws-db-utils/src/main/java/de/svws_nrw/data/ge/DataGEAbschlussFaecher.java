@@ -56,8 +56,30 @@ public final class DataGEAbschlussFaecher extends DataManager<Long> {
 		if (schule == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
 		}
-		return getPrognoseLeistungsdaten(id, schule.Schuljahresabschnitts_ID);
+		return getPrognoseLeistungsdaten(id, schule.Schuljahresabschnitts_ID, false);
 	}
+
+
+	/**
+	 * Fragt die Leistungsdaten aus dem angegebenen Abschnitt zu der ID eines Schüler für
+	 * die Abschlussberechnung an der Gesamtschule ab..
+	 *
+	 * @param id            die ID des Schüler, für den die Leistungsdaten ausgelesen werden sollen
+	 *
+	 * @return die Liste der Fächer
+	 * @throws ApiOperationException   falls eine der beiden IDs null ist.
+	 */
+	public Response getForQuartal(final Long id) throws ApiOperationException {
+		if (id == null) {
+			throw new ApiOperationException(Status.NOT_FOUND);
+		}
+		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+		if (schule == null) {
+			throw new ApiOperationException(Status.NOT_FOUND);
+		}
+		return getPrognoseLeistungsdaten(id, schule.Schuljahresabschnitts_ID, true);
+	}
+
 
 	/**
 	 * Fragt die Leistungsdaten aus dem angegebenen Abschnitt zu der ID eines Schüler für
@@ -65,16 +87,18 @@ public final class DataGEAbschlussFaecher extends DataManager<Long> {
 	 *
 	 * @param id            die ID des Schüler, für den die Leistungsdaten ausgelesen werden sollen
 	 * @param abschnittID   der Schuljahresabschnitt, für den die Leistungsdaten ausgelesen werden sollen
+	 * @param istQuartal    gibt an, ob die Leistungsdaten zum Quartal zurückgegeben werden sollen oder zum Halbjahr
 	 *
 	 * @return die Liste der Fächer
 	 * @throws ApiOperationException   falls eine der beiden IDs null ist.
 	 */
-	public Response getByAbschnitt(final Long id, final Long abschnittID) throws ApiOperationException {
+	public Response getByAbschnitt(final Long id, final Long abschnittID, final boolean istQuartal) throws ApiOperationException {
 		if ((id == null) || (abschnittID == null)) {
 			throw new ApiOperationException(Status.NOT_FOUND);
 		}
-		return getPrognoseLeistungsdaten(id, abschnittID);
+		return getPrognoseLeistungsdaten(id, abschnittID, istQuartal);
 	}
+
 
 	@Override
 	public Response patch(final Long id, final InputStream is) {
@@ -86,17 +110,18 @@ public final class DataGEAbschlussFaecher extends DataManager<Long> {
 	/**
 	 * Ermittelt die Leistungsdaten in Bezug auf die Prognose- bzw. Abschlussberechnung in der Sek I der
 	 * Gesamtschule für den Schüler mit der angegebenen ID aus der Datenbank für das angegebene Schuljahr und
-	 * den angegebenen Abschnitt (Quartal oder Halbjahr)
+	 * das angegebene Halbjahr
 	 *
-	 * @param id           die ID des Schülers
-	 * @param idAbschnitt  die ID des Schuljahresabschnittes, von dem die Leistungsdaten abgefragt werden
+	 * @param id            die ID des Schülers
+	 * @param idAbschnitt   die ID des Schuljahresabschnittes, von dem die Leistungsdaten abgefragt werden
+	 * @param istQuartal    gibt an, ob die Leistungsdaten zum Quartal zurückgegeben werden sollen oder zum Halbjahr
 	 *
 	 * @return die HTTP-Antwort mit den Leistungsdaten des angegebenen Lernabschnittes für den Schüler
 	 *         mit der angegebenen ID oder eine HTTP-Fehlermeldung
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private Response getPrognoseLeistungsdaten(final long id, final long idAbschnitt) throws ApiOperationException {
+	private Response getPrognoseLeistungsdaten(final long id, final long idAbschnitt, final boolean istQuartal) throws ApiOperationException {
 		// Prüft, ob der Abschnitt in der Schule definiert ist.
 		final DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, idAbschnitt);
 		if (abschnitt == null) {
@@ -115,7 +140,7 @@ public final class DataGEAbschlussFaecher extends DataManager<Long> {
 			throw new ApiOperationException(Status.NOT_FOUND);
 		}
 
-		// Bestimme den Lernabschnitt anhand des angegebenen Schuljahres und des Abschnittes im Schuljahr
+		// Bestimme den Lernabschnitt anhand des angegebenen Schuljahres und des Halbjahres im Schuljahr
 		final DTOSchuelerLernabschnittsdaten lernabschnitt =
 				conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHUELER_ID, DTOSchuelerLernabschnittsdaten.class, id)
 						.stream().filter(l -> (l.Schuljahresabschnitts_ID == idAbschnitt)).findFirst().orElse(null);
@@ -138,14 +163,18 @@ public final class DataGEAbschlussFaecher extends DataManager<Long> {
 				.filter(l -> (l.AufZeugnis != null) && (l.AufZeugnis))
 				.map(l -> {
 					final DTOFach fach = faecher.get(l.Fach_ID);
-					if (fach == null) {
+					if ((fach == null) || (l.Kursart == null) || (l.KursartAllg == null)) {
 						return null;
 					}
 					final GELeistungsdifferenzierteKursart kursart = "E".equals(l.Kursart) ? GELeistungsdifferenzierteKursart.E
 							: ("G".equals(l.Kursart) ? GELeistungsdifferenzierteKursart.G : GELeistungsdifferenzierteKursart.Sonstige);
 					final boolean istFremdsprache = (fach.IstFremdsprache != null) && fach.IstFremdsprache;
-					final Note note = Note.data().getWertByKuerzel(l.NotenKrz);
-					if (note == null) {
+					final String notenKuerzel = istQuartal ? l.NotenKrzQuartal : l.NotenKrz;
+					if (notenKuerzel == null) {
+						return null;
+					}
+					final Note note = Note.data().getWertByKuerzel(notenKuerzel);
+					if ((note == null) || (note == Note.KEINE)) {
 						return null;
 					}
 					final Integer noteSekI = note.getNoteSekI(abschnitt.Jahr);
