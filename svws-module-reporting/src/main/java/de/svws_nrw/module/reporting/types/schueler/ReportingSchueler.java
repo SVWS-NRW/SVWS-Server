@@ -14,6 +14,7 @@ import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
 import de.svws_nrw.module.reporting.filterung.ReportingFilterung;
+import de.svws_nrw.module.reporting.signing.SchulbescheinigungQrDaten;
 import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungSchuelerklausur;
 import de.svws_nrw.module.reporting.types.person.ReportingPerson;
@@ -86,11 +87,11 @@ public class ReportingSchueler extends ReportingPerson {
 	/** Eine HTML-kompatible Bildquelle (Data-URI) für das Foto des Schülers. Der MIME-Type wird, falls nicht explizit bekannt, aus den Base64-Daten ermittelt. */
 	protected String fotoHtmlSource;
 
-	/** Die ID des Geburtslandes der Mutter des Schülers. */
-	protected Long idGeburtslandMutter;
+	/** Das Geburtsland der Mutter des Schülers. */
+	protected String geburtslandMutter;
 
-	/** Die ID des Geburtslandes des Vaters des Schülers. */
-	protected Long idGeburtslandVater;
+	/** Das Geburtsland des Vaters des Schülers. */
+	protected String geburtslandVater;
 
 	/** Daten der Abiturdaten der GOSt. */
 	protected ReportingSchuelerGostAbitur gostAbitur;
@@ -143,6 +144,9 @@ public class ReportingSchueler extends ReportingPerson {
 	/** Daten zum bisherigen und zukünftigen Schulbesuch. */
 	protected ReportingSchuelerSchulbesuch schulbesuch;
 
+	/** Die gerenderten QR-Codes der signierten Schulbescheinigung; werden lazy über das Repository befüllt. */
+	protected SchulbescheinigungQrDaten schulbescheinigungQrDaten;
+
 	/** Daten aller Sprachbelegungen. */
 	protected List<ReportingSchuelerSprachbelegung> sprachbelegungen;
 
@@ -178,9 +182,9 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @param fahrschuelerArtID Die ID der Art des Fahr des Schülers.
 	 * @param foto Das Foto (in Base64 kodiert) des Schülers.
 	 * @param geburtsdatum Das Geburtsdatum des Schülers.
-	 * @param idGeburtsland Das Geburtsland des Schülers.
-	 * @param idGeburtslandMutter Das Geburtsland der Mutter des Schülers.
-	 * @param idGeburtslandVater Das Geburtsland des Vaters des Schülers.
+	 * @param geburtsland Das Geburtsland des Schülers.
+	 * @param geburtslandMutter Das Geburtsland der Mutter des Schülers.
+	 * @param geburtslandVater Das Geburtsland des Vaters des Schülers.
 	 * @param geburtsname Der Geburtsname des Schülers.
 	 * @param geburtsort Der Geburtsort des Schülers.
 	 * @param geschlecht Das Geschlecht des Schülers.
@@ -226,8 +230,8 @@ public class ReportingSchueler extends ReportingPerson {
 			final String anrede, final String aufnahmedatum, final ReportingSchuelerLernabschnitt auswahlLernabschnitt,
 			final boolean druckeKonfessionAufZeugnisse, final String emailPrivat, final String emailSchule, final boolean erhaeltMeisterBAFOEG,
 			final boolean erhaeltSchuelerBAFOEG, final List<ReportingErzieher> erzieher, final List<ReportingErzieherArtGruppe> erzieherArtGruppen,
-			final String externeSchulNr, final Long fahrschuelerArtID, final String foto, final String geburtsdatum, final Long idGeburtsland,
-			final Long idGeburtslandMutter, final Long idGeburtslandVater, final String geburtsname, final String geburtsort, final Geschlecht geschlecht,
+			final String externeSchulNr, final Long fahrschuelerArtID, final String foto, final String geburtsdatum, final String geburtsland,
+			final String geburtslandMutter, final String geburtslandVater, final String geburtsname, final String geburtsort, final Geschlecht geschlecht,
 			final ReportingSchuelerGostAbitur gostAbitur, final List<ReportingGostKlausurplanungSchuelerklausur> gostKlausurplanungSchuelerklausuren,
 			final List<ReportingSchuelerGostKursplanungKursbelegung> gostKursplanungKursbelegungen,
 			final ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung, final Long haltestelleID, final boolean hatMasernimpfnachweis,
@@ -240,7 +244,7 @@ public class ReportingSchueler extends ReportingPerson {
 			final List<ReportingSchuelerTelefonkontakt> telefonKontakte, final String telefonPrivat, final String telefonPrivatMobil, final String titel,
 			final String verkehrspracheFamilie, final String vorname, final String vornamen, final OrtKatalogEintrag wohnort,
 			final OrtsteilKatalogEintrag wohnortsteil, final Integer zuzugsjahr) {
-		super(anrede, emailPrivat, emailSchule, "", geburtsdatum, idGeburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz, nachname,
+		super(anrede, emailPrivat, emailSchule, "", geburtsdatum, geburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz, nachname,
 				staatsangehoerigkeit, staatsangehoerigkeit2, strassenname, telefonPrivat, telefonPrivatMobil, "", "", titel, vorname, vornamen, wohnort,
 				wohnortsteil);
 		this.aktuellerLernabschnitt = aktuellerLernabschnitt;
@@ -256,8 +260,8 @@ public class ReportingSchueler extends ReportingPerson {
 		this.fahrschuelerArtID = fahrschuelerArtID;
 		this.foto = foto;
 		this.fotoHtmlSource = ReportingImageUtils.base64ImageToHtmlImageSource(this.foto, null, null);
-		this.idGeburtslandMutter = idGeburtslandMutter;
-		this.idGeburtslandVater = idGeburtslandVater;
+		this.geburtslandMutter = geburtslandMutter;
+		this.geburtslandVater = geburtslandVater;
 		this.gostAbitur = gostAbitur;
 		this.gostKlausurplanungSchuelerklausuren = gostKlausurplanungSchuelerklausuren;
 		this.gostKursplanungKursbelegungen = gostKursplanungKursbelegungen;
@@ -490,21 +494,21 @@ public class ReportingSchueler extends ReportingPerson {
 	}
 
 	/**
-	 * Die ID des Geburtslandes der Mutter des Schülers.
+	 * Das Geburtsland der Mutter des Schülers.
 	 *
 	 * @return Inhalt des Feldes geburtslandMutter
 	 */
-	public Long idGeburtslandMutter() {
-		return this.idGeburtslandMutter;
+	public String geburtslandMutter() {
+		return this.geburtslandMutter;
 	}
 
 	/**
-	 * Die ID des Geburtslandes des Vaters des Schülers.
+	 * Das Geburtsland des Vaters des Schülers.
 	 *
 	 * @return Inhalt des Feldes geburtslandVater
 	 */
-	public Long idGeburtslandVater() {
-		return this.idGeburtslandVater;
+	public String geburtslandVater() {
+		return this.geburtslandVater;
 	}
 
 	/**
@@ -743,6 +747,15 @@ public class ReportingSchueler extends ReportingPerson {
 	 */
 	public ReportingSchuelerSchulbesuch schulbesuch() {
 		return this.schulbesuch;
+	}
+
+	/**
+	 * Die gerenderten QR-Codes der signierten Schulbescheinigung des Schülers.
+	 *
+	 * @return Inhalt des Feldes schulbescheinigungQrDaten
+	 */
+	public SchulbescheinigungQrDaten schulbescheinigungQrDaten() {
+		return schulbescheinigungQrDaten;
 	}
 
 

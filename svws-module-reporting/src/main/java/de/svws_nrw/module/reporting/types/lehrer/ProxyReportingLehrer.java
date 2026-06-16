@@ -53,7 +53,7 @@ public class ProxyReportingLehrer extends ReportingLehrer {
 				"",
 				lehrerStammdaten.foto,
 				ersetzeNullBlankTrim(lehrerStammdaten.geburtsdatum),
-				null,
+				"",
 				"",
 				"",
 				Geschlecht.fromValue(lehrerStammdaten.geschlecht),

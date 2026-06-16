@@ -1,5 +1,7 @@
 package de.svws_nrw.module.reporting.repositories;
 
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -7,9 +9,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.base.compression.GZip;
+import de.svws_nrw.core.utils.encoding.Base45;
 import de.svws_nrw.asd.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
@@ -32,6 +37,11 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerLeistungsdaten;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdaten;
 import de.svws_nrw.repo.schueler.SchuelerAnkreuzkompetenzenRepositoryImpl;
+import de.svws_nrw.module.reporting.signing.SchulbescheinigungQrEinstellungen;
+import de.svws_nrw.module.reporting.signing.SchulbescheinigungQrDaten;
+import de.svws_nrw.module.reporting.signing.SchulbescheinigungXmlFactory;
+import de.svws_nrw.module.reporting.signing.SignierAnfrage;
+import de.svws_nrw.module.reporting.signing.SignierErgebnis;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
 import de.svws_nrw.module.reporting.types.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
@@ -42,6 +52,9 @@ import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchue
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerZuweisung;
 import de.svws_nrw.module.reporting.types.schueler.telefon.ProxyReportingSchuelerTelefonkontakt;
 import de.svws_nrw.module.reporting.types.schueler.telefon.ReportingSchuelerTelefonkontakt;
+import de.svws_nrw.module.reporting.types.schule.ProxyReportingSchule;
+import de.svws_nrw.module.reporting.types.schule.ReportingSchule;
+import de.svws_nrw.module.reporting.utils.ReportingBarcodeUtils;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.service.schueler.schulbesuch.SchulbesuchServiceFactory;
 
@@ -64,6 +77,7 @@ public class ReportingRepositorySchueler {
 	private final Map<Long, List<ReportingSchuelerTelefonkontakt>> mapSchuelerTelefonkontakte = new HashMap<>();
 	private final Map<Long, List<ReportingSchuelerZuweisung>> mapSchuelerZuweisungen = new HashMap<>();
 	private final Map<Long, List<DTOSchuelerAnkreuzfloskeln>> mapSchuelerAnkreuzkompetenzen = new HashMap<>();
+	private final Map<Long, SchulbescheinigungQrDaten> mapSchulbescheinigungQrDaten = new HashMap<>();
 	private final Set<Long> idsLernabschnitteZuLadenLeistungsdaten = new HashSet<>();
 	private final Set<Long> idsLernabschnitteZuLadenAnkreuzkompetenzen = new HashSet<>();
 
@@ -223,6 +237,136 @@ public class ReportingRepositorySchueler {
 				.getByIds(idsSchueler)
 				.stream()
 				.collect(Collectors.toMap(sb -> sb.id, sb -> sb));
+	}
+
+
+	// ##### Signierte Schulbescheinigung (QR-Codes) #####
+
+	/**
+	 * Liefert die gerenderten QR-Codes der signierten Schulbescheinigung zum übergebenen Schüler. Beim ersten Zugriff
+	 * werden für alle bekannten Schüler die XML-Dokumente erzeugt, in einem einzigen Batch signiert und die beiden
+	 * QR-Codes (Inhalt und Signatur) als SVG gerendert; das Ergebnis wird im Cache abgelegt.
+	 *
+	 * @param idSchueler Die ID des Schülers.
+	 *
+	 * @return Die QR-Daten der Schulbescheinigung; im Fehlerfall ein Eintrag mit gesetzter Fehlermeldung (niemals {@code null}).
+	 */
+	public SchulbescheinigungQrDaten schulbescheinigungQrDaten(final long idSchueler) {
+		ReportingRepositoryUtils.ladeFehlendeWerteInRepositoryMap(
+				mapSchuelerStammdaten.keySet(),
+				mapSchulbescheinigungQrDaten,
+				this::ladeSchulbescheinigungQrDaten,
+				"Schulbescheinigung-QR-Daten",
+				this.reportingContext.logger());
+		return mapSchulbescheinigungQrDaten.get(idSchueler);
+	}
+
+	/**
+	 * Erzeugt für alle übergebenen Schüler die QR-Daten der Schulbescheinigung in einem einzigen Signier-Batch.
+	 * Der Loader fängt alle Fehler ab und liefert für jede ID einen Eintrag (im Fehlerfall mit gesetzter Fehlermeldung),
+	 * damit niemals {@code null} in der Cache-Map landet.
+	 *
+	 * @param idsSchueler Die IDs der zu verarbeitenden Schüler.
+	 *
+	 * @return Map von der Schüler-ID auf die zugehörigen QR-Daten.
+	 */
+	private Map<Long, SchulbescheinigungQrDaten> ladeSchulbescheinigungQrDaten(final List<Long> idsSchueler) {
+		final Map<Long, SchulbescheinigungQrDaten> ergebnis = new HashMap<>();
+
+		// Gemeinsame Schul- und Abschnittsdaten einmalig ermitteln. Schlägt dies fehl, erhalten alle Schüler eine Fehlermeldung.
+		final ReportingSchule schule;
+		final String ausstellungOrt;
+		final String ausstellungDatum;
+		final String bildungsgangEnddatum;
+		try {
+			schule = new ProxyReportingSchule(this.reportingContext);
+			ausstellungOrt = schule.ort();
+			ausstellungDatum = LocalDate.now().toString();
+			bildungsgangEnddatum = (schule.aktuellerSchuljahresabschnitt().schuljahr() + 1) + "-07-31";
+		} catch (final Exception e) {
+			ReportingExceptionUtils.logException(
+					"INFO: Schul- bzw. Abschnittsdaten für die Schulbescheinigung konnten nicht ermittelt werden.", e,
+					this.reportingContext.logger(), LogLevel.INFO, 0);
+			for (final Long id : idsSchueler) {
+				ergebnis.put(id, new SchulbescheinigungQrDaten(null, null,
+						"Schul- bzw. Abschnittsdaten konnten nicht ermittelt werden: " + e.getMessage()));
+			}
+			return ergebnis;
+		}
+
+		// Je Schüler das XSchule-XML erzeugen und eine anonyme Signieranfrage sammeln.
+		final List<SignierAnfrage> anfragen = new ArrayList<>();
+		final Map<UUID, Long> correlationZuSchueler = new HashMap<>();
+		final Map<UUID, byte[]> correlationZuXml = new HashMap<>();
+		for (final Long id : idsSchueler) {
+			try {
+				final String xml = SchulbescheinigungXmlFactory.erzeugeXml(
+						this.schueler(id), schule, ausstellungOrt, ausstellungDatum, bildungsgangEnddatum);
+				final byte[] xmlBytes = xml.getBytes(StandardCharsets.UTF_8);
+				final UUID correlationId = UUID.randomUUID();
+				anfragen.add(new SignierAnfrage(correlationId, xmlBytes));
+				correlationZuSchueler.put(correlationId, id);
+				correlationZuXml.put(correlationId, xmlBytes);
+			} catch (final Exception e) {
+				ergebnis.put(id, new SchulbescheinigungQrDaten(null, null, "Die Schulbescheinigung konnte nicht erzeugt werden: " + e.getMessage()));
+			}
+		}
+
+		// Genau ein Batch-Aufruf an den Signierport für alle Schüler.
+		final Map<UUID, SignierErgebnis> signaturen;
+		try {
+			signaturen = this.reportingContext.dokumentSignierer().signiereBatch(anfragen);
+		} catch (final Exception e) {
+			ReportingExceptionUtils.logException("INFO: Der Signierdienst für die Schulbescheinigung ist nicht erreichbar.", e,
+					this.reportingContext.logger(), LogLevel.INFO, 0);
+			for (final Long id : correlationZuSchueler.values()) {
+				ergebnis.put(id, new SchulbescheinigungQrDaten(null, null, "Der Signierdienst ist nicht erreichbar: " + e.getMessage()));
+			}
+			return ergebnis;
+		}
+
+		// Je Schüler die QR-Codes rendern (Kapazitätsprüfung == Render-Aufruf, identisches EC-Level).
+		for (final SignierAnfrage anfrage : anfragen) {
+			final UUID correlationId = anfrage.correlationId();
+			ergebnis.put(correlationZuSchueler.get(correlationId),
+					baueSchulbescheinigungQrDaten(correlationZuXml.get(correlationId), signaturen.get(correlationId)));
+		}
+
+		return ergebnis;
+	}
+
+	/**
+	 * Rendert die beiden QR-Codes einer Schulbescheinigung als SVG. QR1 (Inhalt) wird immer erzeugt; QR2 (Signatur) nur bei
+	 * erfolgreicher Signierung. Render-Fehler (z. B. Kapazitätsüberschreitung) werden gefangen und als Fehlermeldung abgelegt.
+	 *
+	 * @param xmlBytes        Das signierte XSchule-XML als Bytes (für QR1).
+	 * @param signierErgebnis Das Signierergebnis des Schülers (für QR2); darf {@code null} sein.
+	 *
+	 * @return Die QR-Daten mit beiden SVGs (Erfolg) oder mit gesetzter Fehlermeldung.
+	 */
+	private static SchulbescheinigungQrDaten baueSchulbescheinigungQrDaten(final byte[] xmlBytes, final SignierErgebnis signierErgebnis) {
+		final String qr1Svg;
+		try {
+			final String qr1Inhalt = SchulbescheinigungQrEinstellungen.PRAEFIX_QR1 + Base45.encode(GZip.encode(xmlBytes));
+			qr1Svg = ReportingBarcodeUtils.erzeuge2DCodeQRCode(
+					qr1Inhalt, SchulbescheinigungQrEinstellungen.QR_BREITE_MM, SchulbescheinigungQrEinstellungen.QR_HOEHE_MM, SchulbescheinigungQrEinstellungen.EC_QR1);
+		} catch (final Exception e) {
+			return new SchulbescheinigungQrDaten(null, null, "Der Inhalt-QR-Code konnte nicht erzeugt werden: " + e.getMessage());
+		}
+
+		if ((signierErgebnis == null) || !signierErgebnis.istErfolgreich()) {
+			final String fehler = (signierErgebnis == null) ? "Es wurde kein Signierergebnis geliefert." : signierErgebnis.fehler();
+			return new SchulbescheinigungQrDaten(qr1Svg, null, fehler);
+		}
+
+		try {
+			final String qr2Inhalt = SchulbescheinigungQrEinstellungen.PRAEFIX_QR2 + Base45.encode(GZip.encode(signierErgebnis.cms()));
+			final String qr2Svg = ReportingBarcodeUtils.erzeuge2DCodeQRCode(
+					qr2Inhalt, SchulbescheinigungQrEinstellungen.QR_BREITE_MM, SchulbescheinigungQrEinstellungen.QR_HOEHE_MM, SchulbescheinigungQrEinstellungen.EC_QR2);
+			return new SchulbescheinigungQrDaten(qr1Svg, qr2Svg, null);
+		} catch (final Exception e) {
+			return new SchulbescheinigungQrDaten(qr1Svg, null, "Der Signatur-QR-Code konnte nicht erzeugt werden: " + e.getMessage());
+		}
 	}
 
 	// ##### Lernabschnitts- und Leistungsdaten, Ankreuzkompetenzen #####

@@ -1,1 +1,118 @@
-/* Ergänzende Einträge zu den allgemeinen css-Styles. Überschreiben diese bei gleicher Bezeichnung */
+/* Legt die Seitenränder fest. */
+@page {
+	margin: 10mm 10mm 10mm 10mm;
+}
+
+/* Abstand des Formulars zum Betreff. */
+.formular {
+	margin-top: 6mm;
+}
+
+/* Formatierung für die Beschriftung des Hinweistextes. */
+.hinweis-label {
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+/* Box für das optionale Ordnungsmerkmal. */
+.ordnungsmerkmal-box {
+	position: absolute;
+	top: 84mm;
+	right: 10mm;
+	width: 100mm;
+	height: 8.5mm;
+	border: 0.5mm solid #555555;
+}
+
+/* Titelbeschriftung auf der oberen Rahmenlinie der Box. */
+.ordnungsmerkmal-box .om-titel {
+	position: absolute;
+	top: -2.25mm;
+	left: 3mm;
+	line-height: 4mm;
+	background-color: #ffffff;
+	padding: 0 1mm;
+	font-size: 0.8em;
+}
+
+/* Fußnote auf der unteren Rahmenlinie der Box. */
+.ordnungsmerkmal-box .om-fussnote {
+	position: absolute;
+	top: 6.5mm;
+	right: 3mm;
+	line-height: 4mm;
+	background-color: #ffffff;
+	padding: 0 1mm;
+	font-size: 0.7em;
+}
+
+/* Abstand zwischen den Bescheinigungsabschnitten. */
+.bescheinigung-abschnitt {
+	margin-bottom: 5mm;
+}
+
+/* Formatierung des ersten Satzes in Abschnitt I. */
+.person-satz {
+	margin: 0 0 3mm 0;
+}
+
+/* Statustabelle für die Ausrichtung der Statusangaben. */
+.status-tabelle {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 0 0 1mm 0;
+}
+
+.status-tabelle th,
+.status-tabelle td {
+	vertical-align: middle;
+	padding: 0;
+}
+
+/* Kleiner Abstand zwischen Zeilen der Statustabelle. */
+.status-tabelle .zeile-abstand-klein td {
+	padding-top: 1mm;
+}
+
+/* Größerer Abstand zwischen Abschnitten der Statustabelle. */
+.status-tabelle .zeile-abstand td {
+	padding-top: 3mm;
+}
+
+.status-tabelle .ankreuz-zelle {
+	width: 7mm;
+}
+
+.status-tabelle .label {
+	width: 55mm;
+	padding-right: 2mm;
+}
+
+.unterschrift-tabelle {
+	width: 100%;
+}
+
+/* Abstand für die "gez."-Zeile bei fehlender Unterschrift. */
+.gez-zeile {
+	margin-top: 8mm;
+}
+
+.hinweis {
+	margin-top: 3mm;
+}
+
+/* Blocksatz für Hinweistexte. */
+.hinweis p {
+	text-align: justify;
+}
+
+/* Ausrichtung der QR-Code-Beschriftung. */
+.qr-tabelle .qr-beschriftung {
+	text-align: left;
+	vertical-align: top;
+}
+
+.qr-nr {
+	vertical-align: super;
+	font-size: 0.7em;
+}

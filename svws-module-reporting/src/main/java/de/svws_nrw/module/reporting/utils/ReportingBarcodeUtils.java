@@ -86,9 +86,9 @@ public final class ReportingBarcodeUtils {
 	}
 
 	/**
-	 * Erstellt aus einem übergebenen String einen QR-Code im SVG-Format.
+	 * Erstellt aus einem übergebenen String einen QR-Code (Fehlerkorrektur-Level M) im SVG-Format.
 	 *
-	 * @param qrInhalt   Der Inhalt, der als QR-Code dargestellt werden soll. Maximal 1000 Zeichen werden unterstützt.
+	 * @param qrInhalt   Der Inhalt, der als QR-Code dargestellt werden soll.
 	 * @param breiteInMM Die Breite des QR-Codes in Millimetern. Wenn negativ oder 0, wird die Standardbreite von 50mm verwendet.
 	 * @param hoeheInMM  Die Höhe des QR-Codes in Millimetern. Wenn negativ oder 0, wird die Standardhöhe von 50mm verwendet.
 	 *
@@ -96,15 +96,32 @@ public final class ReportingBarcodeUtils {
 	 *         Eine Einbettung könnte dabei mittels Thymeleaf erfolgen: {@code "<img th:src="${StringAusDieserMethode}" alt="QR-Code" />}
 	 */
 	public static @NotNull String erzeuge2DCodeQRCode(final String qrInhalt, final double breiteInMM, final double hoeheInMM) {
+		return erzeuge2DCodeQRCode(qrInhalt, breiteInMM, hoeheInMM, QRCodeErrorCorrection.M);
+	}
+
+	/**
+	 * Erstellt aus einem übergebenen String einen QR-Code im SVG-Format mit wählbarem Fehlerkorrektur-Level.
+	 *
+	 * <p>Die Version wird automatisch bis maximal Version 40 skaliert. Bei rein alphanumerischem Inhalt (z. B.
+	 * Base45-kodierte Daten) wählt die Bibliothek selbsttätig den kapazitätsstärksten Alphanumerik-Modus; ein
+	 * fester Zeichensatz wird daher bewusst nicht gesetzt. Passt der Inhalt nicht in Version 40, wird eine
+	 * {@link ApiOperationException} geworfen (kein stilles Abschneiden).</p>
+	 *
+	 * @param qrInhalt   Der Inhalt, der als QR-Code dargestellt werden soll.
+	 * @param breiteInMM Die Breite des QR-Codes in Millimetern. Wenn negativ oder 0, wird die Standardbreite von 50mm verwendet.
+	 * @param hoeheInMM  Die Höhe des QR-Codes in Millimetern. Wenn negativ oder 0, wird die Standardhöhe von 50mm verwendet.
+	 * @param ecLevel    Das Fehlerkorrektur-Level (L = höchste Kapazität, H = höchste Redundanz).
+	 *
+	 * @return Der QR-Code als Base64-codierter SVG-String zur direkten Einbettung in HTML (Data-URI).
+	 */
+	public static @NotNull String erzeuge2DCodeQRCode(final String qrInhalt, final double breiteInMM, final double hoeheInMM,
+			final QRCodeErrorCorrection ecLevel) {
 		// Dimensionen des QR-Codes in mm festlegen.
 		final double breiteMM = (breiteInMM <= 0) ? 50.0 : breiteInMM;
 		final double hoeheMM = (hoeheInMM <= 0) ? 50.0 : hoeheInMM;
 
-		// Inhalt des QR-Codes normalisieren. Dabei wird die Länge des normalisierten Inhalts auf max. 1000 Zeichen begrenzt.
-		String qrInhaltNormalisiert = ((qrInhalt == null) || qrInhalt.trim().isBlank()) ? "" : qrInhalt.trim();
-		if (qrInhaltNormalisiert.length() > 1000) {
-			qrInhaltNormalisiert = qrInhaltNormalisiert.substring(0, 1000);
-		}
+		// Inhalt des QR-Codes normalisieren (kein Längen-Cap: ein Abschneiden würde z. B. eine Signatur zerstören).
+		final String qrInhaltNormalisiert = ((qrInhalt == null) || qrInhalt.trim().isBlank()) ? "" : qrInhalt.trim();
 
 		// Wenn Inhalt des QR-Codes leer ist, dann leeres SVG zurückgeben.
 		if (qrInhaltNormalisiert.isBlank()) {
@@ -116,11 +133,11 @@ public final class ReportingBarcodeUtils {
 			// Instance des TwoDCode erzeugen.
 			final TwoDCode tdc = new TwoDCode(TwoDType.QRCODE);
 			tdc.setContent(qrInhaltNormalisiert);
-			tdc.setCharset(null); // ISO-8859-1
+			tdc.setCharset(null); // kein CHARACTER_SET-Hint -> Bibliothek wählt automatisch den optimalen (alphanumerischen) Modus
 			tdc.setQRCodeVersion(QRCodeVersion.AUTO);
-			tdc.setQRCodeErrCorr(QRCodeErrorCorrection.M);
+			tdc.setQRCodeErrCorr(ecLevel);
 
-			// Prüfe, ob der Inhalt enkodiert werden kann, und baue das Symbol.
+			// canEncode() prüft nur die Zeichen-Gültigkeit, nicht die QR-Kapazität; die Kapazitätsgrenze (V40) wirft buildSymbol().
 			final TwoDSymbol symbol;
 			if (tdc.canEncode()) {
 				symbol = tdc.buildSymbol();

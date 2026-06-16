@@ -17,6 +17,7 @@ import de.svws_nrw.asd.types.schule.Verkehrssprache;
 import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
+import de.svws_nrw.module.reporting.signing.SchulbescheinigungQrDaten;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ProxyReportingErzieher;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieher;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieherArtGruppe;
@@ -65,9 +66,9 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				schuelerStammdaten.fahrschuelerArtID,
 				schuelerStammdaten.foto,
 				ersetzeNullBlankTrim(schuelerStammdaten.geburtsdatum),
-				schuelerStammdaten.idGeburtsland,
-				schuelerStammdaten.idGeburtslandMutter,
-				schuelerStammdaten.idGeburtslandVater,
+				geburtslandBezeichnung(schuelerStammdaten.idGeburtsland),
+				geburtslandBezeichnung(schuelerStammdaten.idGeburtslandMutter),
+				geburtslandBezeichnung(schuelerStammdaten.idGeburtslandVater),
 				ersetzeNullBlankTrim(schuelerStammdaten.geburtsname),
 				ersetzeNullBlankTrim(schuelerStammdaten.geburtsort),
 				Geschlecht.fromValue(schuelerStammdaten.geschlecht),
@@ -93,15 +94,17 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				null,
 				null,
 				new ArrayList<>(),
-				Nationalitaeten.data().getWertByID(schuelerStammdaten.idStaatsangehoerigkeit),
-				Nationalitaeten.data().getWertByID(schuelerStammdaten.idStaatsangehoerigkeit2),
+				Nationalitaeten.data().getWertByIDOrNull(schuelerStammdaten.idStaatsangehoerigkeit),
+				Nationalitaeten.data().getWertByIDOrNull(schuelerStammdaten.idStaatsangehoerigkeit2),
 				SchuelerStatus.data().getWertByKuerzel("" + schuelerStammdaten.status),
 				ersetzeNullBlankTrim(schuelerStammdaten.strassenname),
 				new ArrayList<>(),
 				ersetzeNullBlankTrim(schuelerStammdaten.telefon),
 				ersetzeNullBlankTrim(schuelerStammdaten.telefonMobil),
 				"",
-				Verkehrssprache.data().getWertByID(schuelerStammdaten.idVerkehrspracheFamilie).historie().getLast().iso3,
+				(Verkehrssprache.data().getWertByIDOrNull(schuelerStammdaten.idVerkehrspracheFamilie) != null)
+						? Verkehrssprache.data().getWertByIDOrNull(schuelerStammdaten.idVerkehrspracheFamilie).historie().getLast().iso3
+						: "",
 				ersetzeNullBlankTrim(schuelerStammdaten.vorname),
 				ersetzeNullBlankTrim(schuelerStammdaten.alleVornamen),
 				null,
@@ -118,6 +121,18 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 		// Füge Stammdaten des Schülers für weitere Verwendung in der Map im Repository hinzu.
 		this.reportingContext.repositorySchueler().stammdaten().put(super.id(), schuelerStammdaten);
+	}
+
+	/**
+	 * Ermittelt zur ID eines Geburtslandes dessen Bezeichnung aus dem Nationalitäten-Katalog.
+	 *
+	 * @param idGeburtsland Die ID des Geburtslandes oder null.
+	 *
+	 * @return Die Bezeichnung des Geburtslandes oder ein leerer String, wenn kein Eintrag vorliegt.
+	 */
+	private static String geburtslandBezeichnung(final Long idGeburtsland) {
+		final Nationalitaeten nationalitaet = Nationalitaeten.data().getWertByIDOrNull(idGeburtsland);
+		return (nationalitaet != null) ? nationalitaet.historie().getLast().bezeichnung : "";
 	}
 
 	// ##### Hash und Equals Methoden #####
@@ -373,6 +388,20 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			}
 		}
 		return super.telefonKontakte;
+	}
+
+	/**
+	 * Stellt die gerenderten QR-Codes der signierten Schulbescheinigung des Schülers zur Verfügung. Beim ersten Zugriff
+	 * werden die Daten über das Repository in einem einzigen Signier-Batch für alle Schüler erzeugt und zwischengespeichert.
+	 *
+	 * @return Die QR-Daten der Schulbescheinigung.
+	 */
+	@Override
+	public SchulbescheinigungQrDaten schulbescheinigungQrDaten() {
+		if (super.schulbescheinigungQrDaten == null) {
+			super.schulbescheinigungQrDaten = this.reportingContext.repositorySchueler().schulbescheinigungQrDaten(this.id());
+		}
+		return super.schulbescheinigungQrDaten;
 	}
 
 

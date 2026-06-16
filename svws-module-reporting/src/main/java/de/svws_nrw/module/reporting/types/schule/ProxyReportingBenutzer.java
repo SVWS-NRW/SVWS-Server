@@ -50,7 +50,7 @@ public class ProxyReportingBenutzer extends ReportingBenutzer {
 				"",
 				"",
 				"",
-				null,
+				"",
 				"",
 				"",
 				null,
@@ -94,7 +94,7 @@ public class ProxyReportingBenutzer extends ReportingBenutzer {
 
 		// Prüfe, ob der angemeldete Benutzer Lehrer ist. Übernehme dann dessen Informationen. Andernfalls weitere Informationen aus der Datenbank laden.
 		// Hinweis: lehrer(id) kann trotz Cache-Treffer null liefern, wenn die Lehrkraft per User-Filter ausgeschlossen ist.
-		super.lehrer = (benutzer.getIdLehrer() != null) && this.reportingContext.repositoryLehrer().stammdaten().containsKey(benutzer.getIdLehrer())
+		super.lehrer = ((benutzer.getIdLehrer() != null) && this.reportingContext.repositoryLehrer().stammdaten().containsKey(benutzer.getIdLehrer()))
 				? this.reportingContext.repositoryLehrer().lehrer(benutzer.getIdLehrer())
 				: null;
 		if (super.lehrer != null) {
@@ -104,7 +104,7 @@ public class ProxyReportingBenutzer extends ReportingBenutzer {
 			super.emailSchule = super.lehrer.emailSchule();
 			super.faxSchule = super.lehrer.faxSchule();
 			super.geburtsdatum = super.lehrer.geburtsdatum();
-			super.idGeburtsland = super.lehrer.idGeburtsland();
+			super.geburtsland = super.lehrer.geburtsland();
 			super.geburtsname = super.lehrer.geburtsname();
 			super.geburtsort = super.lehrer.geburtsort();
 			super.geschlecht = super.lehrer.geschlecht();

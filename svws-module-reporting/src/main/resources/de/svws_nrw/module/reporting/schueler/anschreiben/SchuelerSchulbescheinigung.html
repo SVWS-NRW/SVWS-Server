@@ -14,138 +14,210 @@
 				   keineAnschrift = ${VorlageParameter.get('keineAnschrift')},
 				   keinInfoblock = ${VorlageParameter.get('keinInfoblock')},
 				   keineUnterschrift = ${VorlageParameter.get('keineUnterschrift')},
+				   mitDigitaleSignatur = ${VorlageParameter.get('mitDigitaleSignatur')},
+				   qrCodeBreite = ${VorlageParameter.get('qrCodeBreite')},
+				   qrCodeHoehe = ${VorlageParameter.get('qrCodeHoehe')},
 				   versandinformationen = ${VorlageParameter.get('versandinformationen')}">
 
-		<th:block th:each="schueler,iterationVarSchueler : ${Schueler}"
-				  th:with="anzahlEmpfaenger = ${fuerErzieher ? schueler.erzieherArtGruppen().size() : 1 }">
+	<th:block th:each="schueler,iterationVarSchueler : ${Schueler}"
+              th:with="istAktuell = ${schueler.schulbesuch().entlassungDatum().isEmpty()},
+                       anzahlEmpfaenger = ${fuerErzieher ? schueler.erzieherArtGruppen().size() : 1 }">
 
-			<th:block th:if="${anzahlEmpfaenger >= 1}" th:each="empfaenger,iterationVarEmpfaenger : ${#numbers.sequence(1, anzahlEmpfaenger)}">
-				<!--Beginn: Definition des linken Seitenbereiches mit Faltmarken. Diese werden per CSS in den @page-Boxen positioniert-->
-				<th:block th:if="${istDruckausgabe}">
-					<div class="pageLeftMiddle">
-						<hr class="faltmarke1" />
-						<hr class="lochmarke" />
-						<hr class="faltmarke2" />
-					</div>
-				</th:block>
-				<!--Ende: Definition des linken Seitenbereiches -->
-
-				<!-- WICHTIG: Absolut-positionierte Elemente müssen von einem relativen Element mit einer Höhe größer 0 umschlossen sein, damit sie auf mehreren Seiten gedruckt werden! -->
-				<div class="din5008-seitenrahmen start-new-page" style="position: relative;">
-
-					<!-- Briefkopfbereich -->
-					<div th:if="${mitBildBriefkopf}" class="briefkopfbereich">
-						<!-- Hier kann eine Grafik (35mm hoch und 190mm breit) als Ersatz für den gesamten Briefkopf eingebunden werden. -->
-					</div>
-
-					<!-- Schulbezeichnung und Anschrift -->
-					<div th:if="${!mitBildBriefkopf}" class="absenderanschrift">
-						<span th:utext="${Schule.anschriftVollstaendigHtml()}">Schulbezeichnung1<br/>Schulbezeichnung2<br/>Schulbezeichnung3<br/>Musterstraße 123A<br/>12345 Musterstadt</span>
-					</div>
-
-					<!-- Schullogo -->
-					<div th:if="${!mitBildBriefkopf && mitSchullogo}" class="schullogo">
-						<img style="max-height: 100%; max-width: 100%; object-fit: scale-down;" th:src="@{${Schule.schullogoHtmlImageSource()}}" alt="Schullogo"/>
-					</div>
-
-					<!-- Rücksendeinformationen -->
-					<div th:if="${!keineAnschrift}" class="ruecksendeinformationen bo-b-grey">
-						<p class="f-very-tiny ta-lb ruecksendeinformationentext" th:text="${Schule.ruecksendeinformation()}">Adresse der Schule als Rücksendeinformation</p>
-					</div>
-
-					<!-- Versandinformationen -->
-					<div th:if="${!keineAnschrift}" class="versandinformationen">
-						<p class="f-tiny f-bold ta-lb" th:text="${versandinformationen}">Einschreiben</p>
-					</div>
-
-					<!-- Anschrift -->
-					<div th:if="${!keineAnschrift}" class="empfaengeranschrift">
-						<p th:utext="${fuerErzieher ? schueler.erzieherArtGruppen().get(empfaenger - 1).anschriftVornamenNachname() : schueler.anschriftVornamenNachname()}">Frau Sabine und Herrn Otto Mustermann<br/>Musterstraße 123A<br/>12345 Musterstadt</p>
-					</div>
-
-					<!-- Infoblock -->
-					<div th:if="${!keinInfoblock}" class="infoblock">
-						<table>
-							<colgroup>
-								<col style="width: 23%;"/>
-								<col style="width: 2%;"/>
-								<col style="width: 75%;"/>
-							</colgroup>
-							<tr>
-								<th class="ta-l">Kontakt:</th>
-								<th class="ta-l"></th>
-								<th class="ta-l" th:text="${Benutzer.hatLehrkraftdaten() ? Benutzer.lehrer().anredeNachname() : Benutzer.anzeigename()}">Herr Mustermann-Schuster</th>
-							</tr>
-							<tr>
-								<td class="ta-l">Telefon:</td>
-								<td class="ta-l"></td>
-								<td class="ta-l" th:text="${Schule.telefon()}">01234 567 899-0</td>
-							</tr>
-							<tr>
-								<td class="ta-l">Telefax:</td>
-								<td class="ta-l"></td>
-								<td class="ta-l" th:text="${Schule.fax()}">01234 567 899-99</td>
-							</tr>
-							<tr>
-								<td class="ta-l">Webseite:</td>
-								<td class="ta-l"></td>
-								<td class="ta-l" th:text="${Schule.webAdresse()}">https://www.die-beste-schule-in-nrw.de</td>
-							</tr>
-							<tr>
-								<td class="ta-l">E-Mail:</td>
-								<td class="ta-l"></td>
-								<td class="ta-l" th:text="${Benutzer.hatLehrkraftdaten() ? Benutzer.lehrer().emailSchule() : Schule.email()}">sekretariat@schule-email.de</td>
-							</tr>
-						</table>
-					</div>
-
-					<!-- OrtUndDatum -->
-					<div class="ortunddatum">
-						<p th:text="${Schule.ort() + ', den ' + #dates.format(#dates.createNow(), 'dd.MM.yyyy')}">Düsseldorf, den 15.03.2024</p>
-					</div>
-
-					<!-- Schreiben -->
-					<div class="schreiben">
-						<p class="f-bold m-b-2em">Schulbescheinigung</p>
-						<p class="m-b-1em">Hiermit wird bescheinigt, dass</p>
-						<p class="m-l-2em" th:text="${schueler.vornamenNachname()} + ', '"></p>
-						<p class="m-l-2em"  th:text="'geboren am ' + ${#convert.toDateDE(schueler.geburtsdatum()) + (!schueler.geburtsort().isEmpty() ? (' in ' + schueler.geburtsort()) : '')} + ', '"></p>
-						<p class="m-l-2em m-b-1em" th:text="'wohnhaft in ' + ${schueler.strassennameHausnummer()} + ', ' + ${schueler.plzOrt()} + ', '"></p>
-						<th:block th:if="${schueler.schulbesuch().entlassungDatum().isEmpty()}">
-							<p class="m-b-1em" th:text="'seit dem ' + ${#convert.toDateDE(schueler.aufnahmedatum())} + ' unsere Schule,'"></p>
-							<p class="m-l-2em m-b-1em" th:utext="${Schule.anschriftVollstaendigHtml()} + ','">Schulbezeichnung1<br/>Schulbezeichnung2<br/>Schulbezeichnung3<br/>Musterstraße 123A<br/>12345 Musterstadt</p>
-							<p class="m-b-1em" th:text="'besucht und aktuell am Unterricht der Jahrgangsstufe ' + ${schueler.aktuellerLernabschnitt().jahrgang() == null ? '---' : schueler.aktuellerLernabschnitt().jahrgang().kuerzel()} + ' teilnimmt.'"></p>
-							<p class="m-b-1em" th:text="'Bei einem regulären Verlauf der Schullaufbahn wird diese voraussichtlich im Juli ' + ${schueler.aktuellerLernabschnitt().jahrVoraussichtlicheEntlassung()} + ' enden.'"></p>
-						</th:block>
-						<th:block th:if="${!schueler.schulbesuch().entlassungDatum().isEmpty()}">
-							<p class="m-b-1em" th:text="'vom ' + ${#convert.toDateDE(schueler.aufnahmedatum())} + ' bis zum ' + ${#convert.toDateDE(schueler.schulbesuch().entlassungDatum())} + ' unsere Schule,'"></p>
-							<p class="m-l-2em m-b-1em" th:utext="${Schule.anschriftVollstaendigHtml()} + ','">Schulbezeichnung1<br/>Schulbezeichnung2<br/>Schulbezeichnung3<br/>Musterstraße 123A<br/>12345 Musterstadt</p>
-							<p class="m-b-1em" th:text="'besucht hat.'"></p>
-						</th:block>
-						<table th:if="${!keineUnterschrift}">
-							<tr style="height: 10mm">
-								<th style="width: 70mm;" class="bo-b-grey"></th>
-							</tr>
-							<tr>
-								<td style="width: 70mm;" class="f-very-tiny ta-ct">Unterschrift, Stempel der Schule</td>
-							</tr>
-						</table>
-						<table th:if="${keineUnterschrift}">
-							<tr style="height: 5mm">
-								<th style="width: 100%;" class="ta-lb">
-									<p th:text="${Benutzer.hatLehrkraftdaten() ? ('gez. ' +  Benutzer.lehrer().unterschriftfeld(true, true)) : ('gez. ' +  Benutzer.anzeigename())}">gez. T. Musterfrau</p>
-								</th>
-							</tr>
-							<tr>
-								<td style="width: 100%;" class="ta-lt">
-									<p class="f-tiny">Dieses Schreiben wurde automatisiert erstellt und ist ohne Unterschrift gültig.</p>
-								</td>
-							</tr>
-						</table>
-					</div>
+		<th:block th:if="${anzahlEmpfaenger >= 1}" th:each="empfaenger,iterationVarEmpfaenger : ${#numbers.sequence(1, anzahlEmpfaenger)}">
+			<!--Beginn: Definition des linken Seitenbereiches mit Faltmarken. Diese werden per CSS in den @page-Boxen positioniert-->
+			<th:block th:if="${istDruckausgabe}">
+				<div class="pageLeftMiddle">
+					<hr class="faltmarke1" />
+					<hr class="lochmarke" />
+					<hr class="faltmarke2" />
 				</div>
 			</th:block>
+			<!--Ende: Definition des linken Seitenbereiches -->
 
+			<!-- WICHTIG: Absolut-positionierte Elemente müssen von einem relativen Element mit einer Höhe größer 0 umschlossen sein, damit sie auf mehreren Seiten gedruckt werden! -->
+			<div class="din5008-seitenrahmen start-new-page" style="position: relative;">
+
+				<!-- Briefkopfbereich -->
+				<div th:if="${mitBildBriefkopf}" class="briefkopfbereich">
+					<!-- Hier kann eine Grafik (35mm hoch und 190mm breit) als Ersatz für den gesamten Briefkopf eingebunden werden. -->
+				</div>
+
+				<!-- Schulbezeichnung und Anschrift -->
+				<div th:if="${!mitBildBriefkopf}" class="absenderanschrift">
+					<span th:utext="${Schule.anschriftVollstaendigHtml()}">Schulbezeichnung1<br/>Schulbezeichnung2<br/>Schulbezeichnung3<br/>Musterstraße 123A<br/>12345 Musterstadt</span>
+				</div>
+
+				<!-- Schullogo -->
+				<div th:if="${!mitBildBriefkopf && mitSchullogo}" class="schullogo">
+					<img style="max-height: 100%; max-width: 100%; object-fit: scale-down;" th:src="@{${Schule.schullogoHtmlImageSource()}}" alt="Schullogo"/>
+				</div>
+
+				<!-- Rücksendeinformationen -->
+				<div th:if="${!keineAnschrift}" class="ruecksendeinformationen bo-b-grey">
+					<p class="f-very-tiny ta-lb ruecksendeinformationentext" th:text="${Schule.ruecksendeinformation()}">Adresse der Schule als Rücksendeinformation</p>
+				</div>
+
+				<!-- Versandinformationen -->
+				<div th:if="${!keineAnschrift}" class="versandinformationen">
+					<p class="f-tiny f-bold ta-lb" th:text="${versandinformationen}">Einschreiben</p>
+				</div>
+
+				<!-- Anschrift -->
+				<div th:if="${!keineAnschrift}" class="empfaengeranschrift">
+					<p th:utext="${fuerErzieher ? schueler.erzieherArtGruppen().get(empfaenger - 1).anschriftVornamenNachname() : schueler.anschriftVornamenNachname()}">Frau Sabine und Herrn Otto Mustermann<br/>Musterstraße 123A<br/>12345 Musterstadt</p>
+				</div>
+
+				<!-- Infoblock -->
+				<div th:if="${!keinInfoblock}" class="infoblock">
+					<table>
+						<colgroup>
+							<col style="width: 23%;"/>
+							<col style="width: 2%;"/>
+							<col style="width: 75%;"/>
+						</colgroup>
+						<tr>
+							<th class="ta-l">Kontakt:</th>
+							<th class="ta-l"></th>
+							<th class="ta-l" th:text="${Benutzer.hatLehrkraftdaten() ? Benutzer.lehrer().anredeNachname() : Benutzer.anzeigename()}">Herr Mustermann-Schuster</th>
+						</tr>
+						<tr>
+							<td class="ta-l">Telefon:</td>
+							<td class="ta-l"></td>
+							<td class="ta-l" th:text="${Schule.telefon()}">01234 567 899-0</td>
+						</tr>
+						<tr>
+							<td class="ta-l">Telefax:</td>
+							<td class="ta-l"></td>
+							<td class="ta-l" th:text="${Schule.fax()}">01234 567 899-99</td>
+						</tr>
+						<tr>
+							<td class="ta-l">Webseite:</td>
+							<td class="ta-l"></td>
+							<td class="ta-l" th:text="${Schule.webAdresse()}">https://www.die-beste-schule-in-nrw.de</td>
+						</tr>
+						<tr>
+							<td class="ta-l">E-Mail:</td>
+							<td class="ta-l"></td>
+							<td class="ta-l" th:text="${Benutzer.hatLehrkraftdaten() ? Benutzer.lehrer().emailSchule() : Schule.email()}">sekretariat@schule-email.de</td>
+						</tr>
+						<tr>
+							<td class="ta-l">Schulnummer:</td>
+							<td class="ta-l"></td>
+							<td class="ta-l" th:text="${Schule.schulnummer()}">1234567</td>
+						</tr>
+					</table>
+				</div>
+
+				<!-- OrtUndDatum -->
+				<div class="ortunddatum">
+					<p th:text="${Schule.ort() + ', den ' + #dates.format(#dates.createNow(), 'dd.MM.yyyy')}">Düsseldorf, den 15.03.2024</p>
+				</div>
+
+				<!-- Optionales Ordnungsmerkmal: leeres, rechtsbündiges Feld zum Selbstausfüllen durch den Empfänger (siehe Hinweistext). Die Beschriftungen sitzen auf dem Rahmen und unterbrechen ihn. Wird immer gedruckt. -->
+				<div class="ordnungsmerkmal-box">
+					<span class="om-titel">optionales Ordnungsmerkmal</span>
+					<span class="om-fussnote">(nicht von der Schule auszufüllen)</span>
+				</div>
+
+				<!-- Schreiben -->
+				<div class="schreiben">
+					<p class="f-bold m-b-2em">Schulbescheinigung</p>
+					<!-- Formular ab Abschnitt I. -->
+					<div class="formular">
+						<!-- Abschnitt I.: Person und Status -->
+						<div class="bescheinigung-abschnitt">
+							<p class="person-satz" th:text="${schueler.vornamen() + ' ' + schueler.nachname() + ', geboren am ' + #convert.toDateDE(schueler.geburtsdatum()) + ','}">Julia Musterfrau, geboren am 23.10.2012,</p>
+
+							<table class="status-tabelle">
+								<colgroup>
+									<col style="width: 7mm;"/>
+									<col style="width: 55mm;"/>
+									<col style="width: auto;"/>
+								</colgroup>
+								<tr>
+									<th class="ankreuz-zelle ta-l"><img class="ankreuz" th:src="${#convert.toCheckboxSVG(istAktuell, 14)}" width="14" height="14" alt="[]"/></th>
+									<th class="ta-l" colspan="2">besucht aktuell unsere Schule:</th>
+								</tr>
+								<tr>
+									<td></td>
+									<td class="label ta-l">aktuelles Datum</td>
+									<td class="ta-l" th:with="wert=${istAktuell ? #dates.format(#dates.createNow(), 'dd.MM.yyyy') : ''}"><span class="formularfeld"><span th:if="${wert.isEmpty()}" class="formularfeld-strich"></span><span th:unless="${wert.isEmpty()}" th:text="${wert}"></span></span>,</td>
+								</tr>
+								<tr class="zeile-abstand-klein">
+									<td></td>
+									<td class="label ta-l">voraussichtlich bis</td>
+									<td class="ta-l" th:with="wert=${istAktuell and !schueler.aktuellerLernabschnitt().jahrVoraussichtlicheEntlassung().isEmpty() ? ('31.07.' + schueler.aktuellerLernabschnitt().jahrVoraussichtlicheEntlassung()) : ''}"><span class="formularfeld"><span th:if="${wert.isEmpty()}" class="formularfeld-strich"></span><span th:unless="${wert.isEmpty()}" th:text="${wert}"></span></span>.</td>
+								</tr>
+								<tr class="zeile-abstand">
+									<td class="ankreuz-zelle ta-l"><img class="ankreuz" th:src="${#convert.toCheckboxSVG(!istAktuell, 14)}" width="14" height="14" alt="[]"/></td>
+									<td class="label ta-l">besuchte unsere Schule bis zum</td>
+									<td class="ta-l" th:with="wert=${!istAktuell ? #convert.toDateDE(schueler.schulbesuch().entlassungDatum()) : ''}"><span class="formularfeld"><span th:if="${wert.isEmpty()}" class="formularfeld-strich"></span><span th:unless="${wert.isEmpty()}" th:text="${wert}"></span></span>.</td>
+								</tr>
+							</table>
+
+						</div>
+
+						<!-- Abschnitt II.: Unterschrift. unterzeichner wird einmal definiert, damit "i. A." und "gez." denselben Namen zeigen. -->
+						<div class="bescheinigung-abschnitt" th:with="unterzeichner = ${Benutzer.hatLehrkraftdaten() ? Benutzer.lehrer().unterschriftfeld(false, false) : Benutzer.anzeigename()}">
+							<p class="f-bold" th:text="${'i. A. ' + unterzeichner}">i. A. Sylvester Sekretär</p>
+							<!-- Mit Unterschrift: leeres Unterschrift-/Stempelfeld zum händischen Ausfüllen. -->
+							<table th:unless="${keineUnterschrift}" class="unterschrift-tabelle">
+								<colgroup>
+									<col style="width: 45%;"/>
+									<col style="width: 10%;"/>
+									<col style="width: 45%;"/>
+								</colgroup>
+								<tr style="height: 18mm"><td></td><td></td><td></td></tr>
+								<tr>
+									<th class="bo-t-grey f-very-tiny ta-l" scope="col">Unterschrift</th>
+									<td></td>
+									<th class="bo-t-grey f-very-tiny ta-l" scope="col">Stempel der Schule</th>
+								</tr>
+							</table>
+							<!-- Ohne Unterschrift: "gez. <Name>" statt des Unterschriftsfeldes, darunter der Hinweis auf die automatisierte Erstellung. -->
+							<th:block th:if="${keineUnterschrift}">
+								<p class="gez-zeile" th:text="'gez. ' + ${unterzeichner}">gez. Sylvester Sekretär</p>
+								<p class="f-tiny">Dieses Schreiben wurde automatisiert erstellt und ist ohne Unterschrift gültig.</p>
+							</th:block>
+						</div>
+
+						<!-- Hinweis zum optionalen Ordnungsmerkmal -->
+						<div class="hinweis">
+							<p class="f-tiny"><span class="hinweis-label">Hinweise:</span></p>
+							<!-- &#173; = weiche Trennstellen (Soft Hyphen): unsichtbar, außer wenn der Blocksatz an dieser Stelle umbricht. Minimiert die Wortabstände bei langen Komposita. -->
+							<p class="f-tiny">Im Feld „optionales Ord&#173;nungs&#173;merkmal“ kann von der Emp&#173;fängerin/dem Emp&#173;fänger der Be&#173;schei&#173;nigung, d.h. der Schüle&#173;rin/dem Schüler bzw. der/dem Er&#173;ziehungs&#173;berech&#173;tigten, ein Ord&#173;nungs&#173;merkmal wie z.B. eine Mit&#173;glieds&#173;nummer, eine Kinder&#173;geld&#173;nummer, eine Be&#173;darfs&#173;gemein&#173;schafts&#173;nummer, eine An&#173;schrift o.Ä. einge&#173;tragen werden, wenn und wie dies von der Stelle ge&#173;fordert ist, der die Be&#173;schei&#173;nigung vor&#173;gelegt werden soll. (Dieses Feld ist nicht von der Schule aus&#173;zufüllen und der Inhalt dieses Feldes wird nicht von der Schule be&#173;scheinigt.)</p>
+							<p class="f-tiny">Das unter "voraussichtlich bis" genannte Enddatum entspricht dem rechnerischen Ende des aktuell besuchten Bildungsgangs.</p>
+						</div>
+					</div>
+				</div>
+
+					<!-- QR-Codes der signierten Schulbescheinigung am Seitenende. Direkt im (relativen) Seitenrahmen verankert.
+						 bottom: -10mm schiebt den Block 10 mm unter die Seitenrahmen-Unterkante; das passt jetzt, weil der untere
+						 Seitenrand in dieser Vorlage auf 10 mm reduziert ist (siehe @page in der CSS). -->
+					<!-- WICHTIG: th:with und th:if NICHT auf dasselbe Element setzen - th:if hat höhere Präzedenz und liefe vor der Definition von qr. -->
+					<div th:if="${mitDigitaleSignatur}" style="position: absolute; bottom: -10mm; left: 15mm;" th:with="qr = ${schueler.schulbescheinigungQrDaten()}">
+						<th:block th:if="${qr != null}">
+							<div th:if="${qr.qr2Svg() != null}">
+								<table class="qr-tabelle">
+									<tr>
+										<!-- Explizite mm-Maße am img (aus den Vorlage-Parametern): die intrinsische SVG-Größe wird von Renderern wie openhtmltopdf nicht zuverlässig honoriert. -->
+										<th><img th:style="'width: ' + ${qrCodeBreite} + 'mm; height: ' + ${qrCodeHoehe} + 'mm;'" th:src="${qr.qr1Svg()}" alt="QR-Code mit dem Inhalt der Schulbescheinigung"/></th>
+										<th style="width: 20mm;"></th>
+										<th><img th:style="'width: ' + ${qrCodeBreite} + 'mm; height: ' + ${qrCodeHoehe} + 'mm;'" th:src="${qr.qr2Svg()}" alt="QR-Code mit der Signatur der Schulbescheinigung"/></th>
+									</tr>
+									<tr>
+										<td class="f-very-tiny qr-beschriftung"><span class="qr-nr">1</span> xschule.schueler.schulbescheinigung.xml.gz.base45</td>
+										<td></td>
+										<td class="f-very-tiny qr-beschriftung"><span class="qr-nr">2</span> signature_cms.p7s.gz.base45</td>
+									</tr>
+								</table>
+							</div>
+							<p th:unless="${qr.qr2Svg() != null}" class="f-tiny" th:text="${qr.fehlermeldung()}">Signierung nicht verfügbar.</p>
+						</th:block>
+					</div>
+			</div>
+
+			</th:block>
 		</th:block>
 	</body>
 </html>
