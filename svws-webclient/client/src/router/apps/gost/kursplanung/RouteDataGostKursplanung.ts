@@ -1,13 +1,9 @@
 
 import { computed } from "vue";
-import type { DownloadPDFTypen } from "~/components/gost/kursplanung/DownloadPDFTypen";
-import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten,
-	GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List, GostBlockungRegelUpdate,
-	GostBlockungsergebnisKursSchuelerZuordnungUpdate, Schueler, ReportingParameter } from "@core";
+import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten,
+	GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List, GostBlockungRegelUpdate, GostBlockungsergebnisKursSchuelerZuordnungUpdate, Schueler } from "@core";
 import { GostBlockungsdaten, GostBlockungsergebnis, ArrayList, DeveloperNotificationException,
-	GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr,
-	HashSet, ReportingReportvorlage,
-	ReportingAusgabeformat, ReportingFilterDefinitionGruppeFactory } from "@core";
+	GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, HashSet } from "@core";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";

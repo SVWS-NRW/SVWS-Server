@@ -300,7 +300,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			mapFachwahlStatistik: () => this.data.mapFachwahlStatistik,
 			updateKursSchuelerZuordnungen: this.data.updateKursSchuelerZuordnungen,
 			apiStatus: api.status,
-			idSchueler: this.data.auswahlSchueler.id,
+			idSchueler: () => this.data.auswahlSchueler.id,
 			// Config
 			blockungstabelleHidden: () => this.data.blockungstabelleHidden,
 			setBlockungstabelleHidden: this.data.setBlockungstabelleHidden,
