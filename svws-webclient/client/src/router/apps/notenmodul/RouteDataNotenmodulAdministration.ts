@@ -75,9 +75,9 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		return mapAbteilungen;
 	}
 
-	protected async createManager(): Promise<Partial<RouteStateNotenmodulAdministration>> {
+	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateNotenmodulAdministration>> {
 		await routeNotenmodul.data.ladeDaten();
-		const listAbteilungen = await api.server.getAbteilungenByIdJahresAbschnitt(api.schema, schuleState.abschnitt.id);
+		const listAbteilungen = await api.server.getAbteilungenByIdJahresAbschnitt(api.schema, idSchuljahresabschnitt);
 		this._state.value.mapAbteilungen = this.createMapAbteilungen(listAbteilungen);
 		const list = await api.server.getENMServerConnections(api.schema);
 		const manager = new WenomAuswahlListeManager(api.schuleStammdaten.idSchuljahresabschnitt,
