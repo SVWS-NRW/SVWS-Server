@@ -24,6 +24,7 @@ import { HashMap2D } from "../../../../core/src/core/adt/map/HashMap2D";
 import { Note } from "../../../../core/src/asd/types/Note";
 import { EnmSperrManager } from "./EnmSperrManager";
 import { EnmSpaltenManager } from "./EnmSpaltenManager";
+import type { ENMv2Abteilung } from "../../../../core/src";
 
 /**
  * Das Interface für die Einträge der Auswahlliste für die Lerngruppen
@@ -72,6 +73,9 @@ export class EnmManager {
 
 	/** Eine Map von der ID der Jahrgänge auf deren Objekte */
 	readonly mapJahrgaenge: JavaMap<number, ENMv2Jahrgang> = new HashMap<number, ENMv2Jahrgang>();
+
+	/** Eine Map mit den Abteilungen */
+	readonly mapAbteilungen: JavaMap<number, ENMv2Abteilung> = new HashMap<number, ENMv2Abteilung>();
 
 	/** Eine Map von der ID der Klassen auf deren Objekte */
 	readonly mapKlassen: JavaMap<number, ENMv2Klasse> = new HashMap<number, ENMv2Klasse>();
@@ -154,6 +158,10 @@ export class EnmManager {
 
 		for (const j of daten.jahrgaenge) {
 			this.mapJahrgaenge.put(j.id, j);
+		}
+
+		for (const a of daten.abteilungen) {
+			this.mapAbteilungen.put(a.id, a);
 		}
 
 		for (const k of daten.klassen) {
