@@ -1,6 +1,6 @@
 import type { RouteParamsRawGeneric } from "vue-router";
-import type { List, JavaMap, ENMServerConnection, Abteilung } from "@core";
-import { ENMServerConfigElement, ENMConfigKlasse, ArrayList, UnsupportedOperationException, OpenApiError, DeveloperNotificationException, HashMap, SimpleOperationResponse, UserNotificationException, ENMConfigSpalte, ENMv2Abteilung } from "@core";
+import type { List, JavaMap, ENMServerConnection } from "@core";
+import { ENMServerConfigElement, ENMConfigKlasse, ArrayList, UnsupportedOperationException, OpenApiError, DeveloperNotificationException, HashMap, SimpleOperationResponse, UserNotificationException, ENMConfigSpalte } from "@core";
 import { WenomAuswahlListeManager, ViewType, EnmSperrManager } from "@ui";
 import { api } from "~/router/Api";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
@@ -17,7 +17,6 @@ interface RouteStateNotenmodulAdministration extends RouteStateAuswahlInterface<
 	connected: boolean;
 	mapNotenmodulConfigServer: JavaMap<string, string>;
 	mapNotenmodulConfigGlobal: JavaMap<string, string>;
-	mapAbteilungen: JavaMap<number, ENMv2Abteilung>;
 	managerSperrungen: NotenmodulConfigManagerSperrungen;
 	managerSichtbareSpalten: NotenmodulConfigManagerSichtbareSpalten;
 }
@@ -34,7 +33,6 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 			connected: false,
 			mapNotenmodulConfigServer: new HashMap<string, string>(),
 			mapNotenmodulConfigGlobal: new HashMap<string, string>(),
-			mapAbteilungen: new HashMap<number, ENMv2Abteilung>(),
 			managerSperrungen: new NotenmodulConfigManagerSperrungen(new ArrayList(), new HashMap(), new HashMap(), new HashMap(), new HashMap(), async () => {}, 'Keine', async () => {}),
 			managerSichtbareSpalten: new NotenmodulConfigManagerSichtbareSpalten(new ArrayList(), new HashMap(), async () => {}),
 		}, { gruppenprozesse: routeNotenmodulVerbindungGruppenprozesse, hinzufuegen: routeNotenmodulVerbindungNeu });
@@ -59,26 +57,8 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		});
 	}
 
-	private createMapAbteilungen(listAbteilungen: List<Abteilung>) {
-		const mapAbteilungen = new HashMap<number, ENMv2Abteilung>();
-		for (const abteilung of listAbteilungen) {
-			const enmAbteilung = new ENMv2Abteilung();
-			enmAbteilung.id = abteilung.id;
-			enmAbteilung.idAbteilungsleiter = abteilung.idAbteilungsleiter;
-			enmAbteilung.bezeichnung = abteilung.bezeichnung;
-			enmAbteilung.sortierung = abteilung.sortierung;
-			for (const klasse of abteilung.klassenzuordnungen) {
-				enmAbteilung.klassenzuordnungen.add(klasse.idKlasse);
-			}
-			mapAbteilungen.put(enmAbteilung.id, enmAbteilung);
-		}
-		return mapAbteilungen;
-	}
-
-	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateNotenmodulAdministration>> {
+	protected async createManager(): Promise<Partial<RouteStateNotenmodulAdministration>> {
 		await routeNotenmodul.data.ladeDaten();
-		const listAbteilungen = await api.server.getAbteilungenByIdJahresAbschnitt(api.schema, idSchuljahresabschnitt);
-		this._state.value.mapAbteilungen = this.createMapAbteilungen(listAbteilungen);
 		const list = await api.server.getENMServerConnections(api.schema);
 		const manager = new WenomAuswahlListeManager(api.schuleStammdaten.idSchuljahresabschnitt,
 			api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte, api.schulform, list);
@@ -126,8 +106,7 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 				liste.add(klasse);
 			}
 		}
-		const { mapKlassen, mapTeilleistungsarten, mapJahrgaenge } = routeNotenmodul.data.manager;
-		const mapAbteilungen = this._state.value.mapAbteilungen;
+		const { mapKlassen, mapTeilleistungsarten, mapJahrgaenge, mapAbteilungen } = routeNotenmodul.data.manager;
 		return new NotenmodulConfigManagerSperrungen(liste, mapKlassen, mapTeilleistungsarten, mapJahrgaenge, mapAbteilungen,
 			this.writeConfigSperrungen, this.gruppierungAuswahl, this.setGruppierungAuswahl);
 	}
@@ -162,10 +141,6 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 
 	protected deleteMessage(id: number, eintrag: any): string {
 		throw new UnsupportedOperationException("Die Methode ist nicht implementiert.");
-	}
-
-	get mapAbteilungen() {
-		return this._state.value.mapAbteilungen;
 	}
 
 	public get manager(): WenomAuswahlListeManager {
