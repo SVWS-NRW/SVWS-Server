@@ -25,11 +25,12 @@
 							<template v-if="params.i === 1">
 								<th class="text-left">Fach</th>
 								<th>Kompetenz</th>
-								<th class="text-center">1</th>
-								<th class="text-center">2</th>
-								<th class="text-center">3</th>
-								<th class="text-center">4</th>
-								<th class="text-center">5</th>
+								<th v-for="column of columns" :key="column.kuerzel" class="text-center">
+									<svws-ui-tooltip>
+										{{ column.kuerzel }}
+										<template #content>{{ column.name }}</template>
+									</svws-ui-tooltip>
+								</th>
 							</template>
 						</template>
 						<template #default="{ row, index }">
@@ -41,7 +42,7 @@
 									</svws-ui-tooltip>
 								</td>
 								<td v-if="auswahlZelle?.b.klasseID && enmManager().sperrungen.istSpalteneingabeErlaubt(auswahlZelle.b.klasseID, 'FB')"
-									:ref="inputBemerkung(mapLeistungen.get(row.gruppe.id), 1, index)" class="ui-table-grid-button col-span-6 text-left"
+									:ref="inputBemerkung(mapLeistungen.get(row.gruppe.id), 1, index)" class="ui-table-grid-button text-left" :style="`grid-column: span ${columns.length + 1} / span ${columns.length + 1}`"
 									:class="{
 										'bg-ui-selected': ((gridManager.focusColumn === 1) && (gridManager.focusRow === index)),
 										'contentFocusField': gridManager.isFocusLast(1, index),
@@ -54,7 +55,7 @@
 									</svws-ui-tooltip>
 									<span v-else class="text-ui-50"> Fachbemerkung </span>
 								</td>
-								<td v-else class="ui-table-grid-button col-span-6 text-left">
+								<td v-else class="ui-table-grid-button text-left" :style="`grid-column: span ${columns.length + 1} / span ${columns.length + 1}`">
 									<svws-ui-tooltip v-if="(row.kompetenz.fachbezogeneBemerkungen !== null) && (row.kompetenz.fachbezogeneBemerkungen.length > 20)" class="h-full w-full">
 										<span class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ row.kompetenz.fachbezogeneBemerkungen }}</span>
 										<template #content>
@@ -68,19 +69,21 @@
 								<td />
 								<td class="text-left"> {{ enmManager().mapAnkreuzkompetenzen.get(row.kompetenz.kompetenzID)?.text }} </td>
 								<template v-for="stufe, col of row.kompetenz.stufen" :key="col+2">
-									<td v-if="auswahlZelle?.b.klasseID && enmManager().sperrungen.istSpalteneingabeErlaubt(auswahlZelle.b.klasseID, 'Note')"
-										:ref="inputStufe(row.kompetenz, col+2, index)" class="ui-table-grid-button"
-										:class="{
-											'bg-ui-selected': (gridManager.focusColumn === col+2),
-											'contentFocusField': gridManager.isFocusLast(col+2, index),
-										}">
-										<span v-if="stufe" class="icon-sm align-middle i-ri-checkbox-line" />
-										<span v-else class="icon-sm align-middle i-ri-checkbox-blank-line" />
-									</td>
-									<td v-else>
-										<span v-if="stufe" class="icon-sm align-middle i-ri-checkbox-line" />
-										<span v-else class="icon-sm align-middle i-ri-checkbox-blank-line" />
-									</td>
+									<template v-if="columns.at(col) !== undefined">
+										<td v-if="auswahlZelle?.b.klasseID && enmManager().sperrungen.istSpalteneingabeErlaubt(auswahlZelle.b.klasseID, 'Note')"
+											:ref="inputStufe(row.kompetenz, col+2, index)" class="ui-table-grid-button"
+											:class="{
+												'bg-ui-selected': (gridManager.focusColumn === col+2),
+												'contentFocusField': gridManager.isFocusLast(col+2, index),
+											}">
+											<span v-if="stufe" class="icon-sm align-middle i-ri-checkbox-line" />
+											<span v-else class="icon-sm align-middle i-ri-checkbox-blank-line" />
+										</td>
+										<td v-else>
+											<span v-if="stufe" class="icon-sm align-middle i-ri-checkbox-line" />
+											<span v-else class="icon-sm align-middle i-ri-checkbox-blank-line" />
+										</td>
+									</template>
 								</template>
 							</template>
 						</template>
@@ -179,6 +182,18 @@
 		};
 	}
 
+	const columns = computed(() => {
+		const arr = [];
+		for (let index = 1; index <= props.enmManager().daten.ankreuzkompetenzen.textStufen.length; index++) {
+			const stufe = props.enmManager().daten.ankreuzkompetenzen.textStufen[index - 1];
+			if (stufe === null) {
+				return arr;
+			}
+			arr.push({ kuerzel: index.toString(), name: stufe, width: "2rem", hideable: false });
+		}
+		return arr;
+	});
+
 	type RowType = { gruppe: ENMv2Fach, kompetenz: ENMv2SchuelerAnkreuzkompetenz | ENMv2Leistung };
 	const gridManager = new GridManager<string, RowType, List<RowType>>({
 		daten: computed<List<RowType>>(() => {
@@ -215,13 +230,9 @@
 		columns: [
 			{ kuerzel: "Fach", name: "Fach", width: "6rem", hideable: false },
 			{ kuerzel: "Kürzel", name: "Kürzel", width: "60rem", hideable: false },
-			{ kuerzel: "Stufe1", name: "Stufe 1", width: "2rem", hideable: false },
-			{ kuerzel: "Stufe2", name: "Stufe 2", width: "2rem", hideable: false },
-			{ kuerzel: "Stufe3", name: "Stufe 3", width: "2rem", hideable: false },
-			{ kuerzel: "Stufe4", name: "Stufe 4", width: "2rem", hideable: false },
-			{ kuerzel: "Stufe5", name: "Stufe 5", width: "2rem", hideable: false },
-		],
+		].concat(columns.value),
 	});
+
 	defineExpose({ gridManager, gridManagerSchueler });
 
 	function inputStufe(kompetenz: ENMv2SchuelerAnkreuzkompetenz, col: number, index: number) {
