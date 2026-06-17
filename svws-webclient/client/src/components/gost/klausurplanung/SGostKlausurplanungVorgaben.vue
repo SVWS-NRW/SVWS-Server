@@ -27,6 +27,10 @@
 				<template #cell(auswahlzeit)="{ value }">
 					<span :class="{'opacity-25': !value}">{{ value }}</span>
 				</template>
+				<template #cell(istGklMoeglich)="{ value }">
+					<span class="icon i-ri-presentation-line -my-0.5" v-if="value" />
+					<span v-else class="opacity-25">—</span>
+				</template>
 				<template #cell(istMdlPruefung)="{ value }">
 					<span class="icon i-ri-chat-1-line -my-0.5" v-if="value" />
 					<span v-else class="opacity-25">—</span>
@@ -74,6 +78,13 @@
 						<svws-ui-input-number placeholder="Dauer (Minuten)" :model-value="activeVorgabe.dauer" @change="dauer => activeVorgabe.id !== 0 ? patchKlausurvorgabe({dauer: dauer!}, activeVorgabe.id) : activeVorgabe.dauer = dauer!" :disabled="activeVorgabe.id < 0" />
 						<svws-ui-input-number placeholder="Auswahlzeit (Minuten)" type="number" :model-value="activeVorgabe.auswahlzeit" @change="auswahlzeit => activeVorgabe.id !== 0 ? patchKlausurvorgabe({auswahlzeit: auswahlzeit!}, activeVorgabe.id) : activeVorgabe.auswahlzeit = auswahlzeit!" :disabled="activeVorgabe.id < 0" />
 						<svws-ui-spacing />
+						<div v-if="(activeVorgabe.abiJahrgang === -1 || activeVorgabe.abiJahrgang >= 2030) && activeVorgabe.kursart === 'GK' && activeVorgabe.halbjahr !== GostHalbjahr.Q22.id">
+							<label class="block font-bold mb-1" for="rbgGklMoeglich">Gleichwertiger komplexer Leistungsnachweis</label>
+							<svws-ui-radio-group id="rbgGklMoeglich" :row="true">
+								<svws-ui-radio-option v-for="value in formMoeglichNichtMoeglich" :class="value.key ? 'order-1' : 'order-0'" :key="value.label" :value="value.label" name="formGklMoeglich" :label="value.label" :model-value="activeVorgabe.istGklMoeglich ? 'möglich' : 'nicht möglich'" @click="activeVorgabe.id !== 0 ? patchKlausurvorgabe({istGklMoeglich: value.key}, activeVorgabe.id) : activeVorgabe.istGklMoeglich = value.key" :disabled="activeVorgabe.id < 0" />
+							</svws-ui-radio-group>
+						</div>
+						<div class="border-t border-ui-25 pt-4 font-bold">Klausurdetails</div>
 						<div>
 							<label class="sr-only" for="rbgMdlPruefung">Mündliche Prüfung: </label>
 							<svws-ui-radio-group id="rbgMdlPruefung" :row="true">
@@ -118,6 +129,7 @@
 	import { watch, computed, ref, onMounted, onUnmounted } from 'vue';
 	import type { DataTableColumn } from "@ui";
 	import type { GostFach } from "@core";
+	import { GostHalbjahr } from "@core";
 	import { BenutzerKompetenz, ArrayList, GostKlausurvorgabe, Fach, ListUtils } from "@core";
 	import type { GostKlausurplanungVorgabenProps } from "./SGostKlausurplanungVorgabenProps";
 
@@ -137,6 +149,7 @@
 
 	const formKursarten = computed(() => ["GK", "LK"]);
 	const formJaNein = computed(() => [{ key: true, name: "Ja" }, { key: false, name: "Nein" }]);
+	const formMoeglichNichtMoeglich = computed(() => [{ key: true, label: "möglich" }, { key: false, label: "nicht möglich" }]);
 	const formQuartale = computed(() => [1, 2]);
 	const inputVorgabeFach: WritableComputedRef<GostFach | undefined> = computed({
 		get() {
@@ -212,6 +225,7 @@
 		{ key: 'quartal', label: 'Quartal', span: 0.5, sortable: true },
 		{ key: 'dauer', label: 'Dauer', tooltip: 'Dauer in Minuten', span: 0.5, sortable: true },
 		{ key: 'auswahlzeit', label: 'Auswahlzeit', tooltip: 'Auswahlzeit in Minuten', span: 0.5, sortable: false },
+		{ key: 'istGklMoeglich', label: 'G', align: "center", tooltip: 'GKL möglich', fixedWidth: 2.5 },
 		{ key: 'istMdlPruefung', label: 'M', align: "center", tooltip: 'Mündliche Prüfung', fixedWidth: 2.5 },
 		{ key: 'istAudioNotwendig', label: 'A', align: "center", tooltip: 'Mit Audioteil', fixedWidth: 2.5 },
 		{ key: 'istVideoNotwendig', label: 'V', align: "center", tooltip: 'Mit Videoteil', fixedWidth: 2.5 },

@@ -45,6 +45,11 @@ export class GostKlausurvorgabe extends JavaObject {
 	public auswahlzeit: number = 0;
 
 	/**
+	 * Die Information, ob es möglich ist, diese Klausur durch eine GKL zu ersetzen.
+	 */
+	public istGklMoeglich: boolean = false;
+
+	/**
 	 * Die Information, ob es sich um eine mündliche Prüfung handelt.
 	 */
 	public istMdlPruefung: boolean = false;
@@ -128,6 +133,9 @@ export class GostKlausurvorgabe extends JavaObject {
 		if (obj.auswahlzeit === undefined)
 			throw new Error('invalid json format, missing attribute auswahlzeit');
 		result.auswahlzeit = obj.auswahlzeit;
+		if (obj.istGklMoeglich === undefined)
+			throw new Error('invalid json format, missing attribute istGklMoeglich');
+		result.istGklMoeglich = obj.istGklMoeglich;
 		if (obj.istMdlPruefung === undefined)
 			throw new Error('invalid json format, missing attribute istMdlPruefung');
 		result.istMdlPruefung = obj.istMdlPruefung;
@@ -151,6 +159,7 @@ export class GostKlausurvorgabe extends JavaObject {
 		result += '"kursart" : ' + JSON.stringify(obj.kursart) + ',';
 		result += '"dauer" : ' + obj.dauer.toString() + ',';
 		result += '"auswahlzeit" : ' + obj.auswahlzeit.toString() + ',';
+		result += '"istGklMoeglich" : ' + obj.istGklMoeglich.toString() + ',';
 		result += '"istMdlPruefung" : ' + obj.istMdlPruefung.toString() + ',';
 		result += '"istAudioNotwendig" : ' + obj.istAudioNotwendig.toString() + ',';
 		result += '"istVideoNotwendig" : ' + obj.istVideoNotwendig.toString() + ',';
@@ -185,6 +194,9 @@ export class GostKlausurvorgabe extends JavaObject {
 		}
 		if (obj.auswahlzeit !== undefined) {
 			result += '"auswahlzeit" : ' + obj.auswahlzeit.toString() + ',';
+		}
+		if (obj.istGklMoeglich !== undefined) {
+			result += '"istGklMoeglich" : ' + obj.istGklMoeglich.toString() + ',';
 		}
 		if (obj.istMdlPruefung !== undefined) {
 			result += '"istMdlPruefung" : ' + obj.istMdlPruefung.toString() + ',';

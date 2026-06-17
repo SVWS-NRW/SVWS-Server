@@ -369,6 +369,15 @@ export class LaufbahnplanungUiManager {
 	}
 
 	/**
+	 * Gibt zurück, ob die Komponente mit den Wahlen der GKLs angezeigt werden soll oder nicht.
+	 *
+	 * @returns true, wenn sie angezeigt werden soll, und ansonsten false
+	 */
+	public zeigeGKLWahlen(): boolean {
+		return this.isAbi30ff.value;
+	}
+
+	/**
 	 * Gibt die CSS-Klasse zur Einstufung zurück, ob der Halbjahresdurchschnitt der Wochenstunden genügt.
 	 *
 	 * @param wst   die Wochenstunden

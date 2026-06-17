@@ -27,6 +27,7 @@
 			<div class="flex flex-col gap-y-16 lg:gap-y-20">
 				<s-laufbahnplanung-card-beratung v-if="visible && hatUpdateKompetenz" :gost-laufbahn-beratungsdaten :patch-beratungsdaten="doPatchBeratungsdaten" :list-lehrer :id :schueler :updated />
 				<s-laufbahnplanung-card-status v-if="visible" :abiturdaten-manager :fehlerliste="() => gostBelegpruefungErgebnis().fehlercodes" :gost-belegpruefungs-art :set-gost-belegpruefungs-art />
+				<s-laufbahnplanung-card-gkl v-if="visible && manager.zeigeGKLWahlen()" :abiturdaten-manager />
 			</div>
 		</div>
 	</div>

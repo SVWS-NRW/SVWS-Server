@@ -125,6 +125,7 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 		daten.istAudioNotwendig = dto.IstAudioNotwendig;
 		daten.istVideoNotwendig = dto.IstVideoNotwendig;
 		daten.istMdlPruefung = dto.IstMdlPruefung;
+		daten.istGklMoeglich = dto.IstGklMoeglich;
 		return daten;
 	}
 
@@ -155,6 +156,7 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 			case "kursart" -> dto.Kursart = checkKursart(JSONMapper.convertToString(value, false, false, null));
 			case "dauer" -> dto.Dauer = JSONMapper.convertToInteger(value, false, name);
 			case "auswahlzeit" -> dto.Auswahlzeit = JSONMapper.convertToInteger(value, false, name);
+			case "istGklMoeglich" -> dto.IstGklMoeglich = JSONMapper.convertToBoolean(value, false, name);
 			case "istMdlPruefung" -> dto.IstMdlPruefung = JSONMapper.convertToBoolean(value, false, name);
 			case "istAudioNotwendig" -> dto.IstAudioNotwendig = JSONMapper.convertToBoolean(value, false, name);
 			case "istVideoNotwendig" -> dto.IstVideoNotwendig = JSONMapper.convertToBoolean(value, false, name);

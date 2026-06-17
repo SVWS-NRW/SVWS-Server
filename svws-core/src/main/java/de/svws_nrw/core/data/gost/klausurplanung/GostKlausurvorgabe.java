@@ -46,6 +46,10 @@ public class GostKlausurvorgabe {
 	@Schema(description = "die Auswahlzeit in Minuten, sofern vorhanden", example = "30")
 	public int auswahlzeit = 0;
 
+	/** Die Information, ob es möglich ist, diese Klausur durch eine GKL zu ersetzen. */
+	@Schema(defaultValue = "false", description = "die Information, ob es möglich ist, diese Klausur durch eine GKL zu ersetzen", example = "false")
+	public boolean istGklMoeglich = false;
+
 	/** Die Information, ob es sich um eine mündliche Prüfung handelt. */
 	@Schema(defaultValue = "false", description = "die Information, ob es sich um eine mündliche Prüfung handelt", example = "false")
 	public boolean istMdlPruefung = false;

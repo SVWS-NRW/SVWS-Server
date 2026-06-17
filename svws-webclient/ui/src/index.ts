@@ -18,6 +18,7 @@ export { default as LogBox } from "./components/boxes/LogBox.vue";
 export { default as CodeBox } from "./components/boxes/CodeBox.vue";
 export { default as QrCode } from "./components/qr/QrCode.vue";
 export { default as SLaufbahnplanungCardBeratung } from "./components/gost/laufbahnplanung/SLaufbahnplanungCardBeratung.vue";
+export { default as SLaufbahnplanungCardGkl } from "./components/gost/laufbahnplanung/SLaufbahnplanungCardGkl.vue";
 export { default as SLaufbahnplanungCardPlanung } from "./components/gost/laufbahnplanung/SLaufbahnplanungCardPlanung.vue";
 export { default as SLaufbahnplanungCardStatus } from "./components/gost/laufbahnplanung/SLaufbahnplanungCardStatus.vue";
 export { default as SLaufbahnplanungFach } from "./components/gost/laufbahnplanung/SLaufbahnplanungFach.vue";
