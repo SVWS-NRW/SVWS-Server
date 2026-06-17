@@ -114,6 +114,7 @@ import { Kindergarten } from '../core/data/schule/Kindergarten';
 import { KindergartenbesuchKatalogEintrag } from '../asd/data/schule/KindergartenbesuchKatalogEintrag';
 import { KlassenartKatalogEintrag } from '../asd/data/klassen/KlassenartKatalogEintrag';
 import { KlassenDaten } from '../asd/data/klassen/KlassenDaten';
+import { KlassenDatenMinimal } from '../asd/data/klassen/KlassenDatenMinimal';
 import { KlassenListeEintrag } from '../asd/data/klassen/KlassenListeEintrag';
 import { KursDaten } from '../asd/data/kurse/KursDaten';
 import { KursLehrer } from '../asd/data/kurse/KursLehrer';
@@ -8619,6 +8620,35 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KlassenListeEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KlassenListeEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKlassenDatenMinimalBySchuljahresabschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/klassen/minimal/abschnitt/{idSchuljahresabschnitt : \d+}
+	 *
+	 * Erstellt eine Liste aller in der Datenbank vorhanden Klassen (Minimalvariante).
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste von KlassenDatenMinimal-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<KlassenDatenMinimal>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Klassendaten anzusehen.
+	 *   Code 404: Keine Klassen-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idSchuljahresabschnitt - der Pfad-Parameter idSchuljahresabschnitt
+	 *
+	 * @returns Eine Liste von KlassenDatenMinimal-Einträgen
+	 */
+	public async getKlassenDatenMinimalBySchuljahresabschnitt(schema : string, idSchuljahresabschnitt : number) : Promise<List<KlassenDatenMinimal>> {
+		const path = "/db/{schema}/klassen/minimal/abschnitt/{idSchuljahresabschnitt : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idSchuljahresabschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitt.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<KlassenDatenMinimal>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KlassenDatenMinimal.transpilerFromJSON(text)); });
 		return ret;
 	}
 

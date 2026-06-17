@@ -12,12 +12,16 @@ import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
 import type { List } from "../../../../../core/src/java/util/List";
 import { Pair } from "../../../../../core/src/asd/adt/Pair";
 import { KlassenListeManager } from "../../../../src/ui/manager/klassen/KlassenListeManager";
+import { KlassenListeEintrag } from "../../../../../core/src/asd/data/klassen/KlassenListeEintrag";
+import type { KlassenDatenMinimal } from "../../../../../core/src/asd/data/klassen/KlassenDatenMinimal";
 
 describe("Tests für KlassenListeManager", () => {
 	// Testet, ob das HTML korrekt gerendert wird
 	const schulform: Schulform = Schulform.GY;
 	let schuljahresabschnitte: ArrayList<Schuljahresabschnitt> = new ArrayList<Schuljahresabschnitt>();
-	const klassen: ArrayList<KlassenDaten> = new ArrayList<KlassenDaten>();
+	const klassen: ArrayList<KlassenListeEintrag> = new ArrayList<KlassenListeEintrag>();
+	const klassenVorabschnitt: ArrayList<KlassenDatenMinimal> = new ArrayList<KlassenDatenMinimal>();
+	const klassenFolgeabschnitt: ArrayList<KlassenDatenMinimal> = new ArrayList<KlassenDatenMinimal>();
 	const schueler: ArrayList<SchuelerListeEintrag> = new ArrayList<SchuelerListeEintrag>();
 	const jahrgaenge: ArrayList<JahrgangsDaten> = new ArrayList<JahrgangsDaten>();
 	const lehrer: ArrayList<LehrerListeEintrag> = new ArrayList<LehrerListeEintrag>();
@@ -33,32 +37,28 @@ describe("Tests für KlassenListeManager", () => {
 		schuljahresabschnitte.add(sab);
 	});
 
+	const createKlassenListeManager = () => new KlassenListeManager(
+		1,
+		1,
+		schulform,
+		{
+			schuljahresabschnitte: schuljahresabschnitte,
+			klassenAktAbschnitt: klassen,
+			klassenVorabschnitt: klassenVorabschnitt,
+			klassenFolgeabschnitt: klassenFolgeabschnitt,
+			schueler: schueler,
+			jahrgaenge: jahrgaenge,
+			lehrer: lehrer,
+		}
+	);
+
 	test("Initialization | KlassenListeManager should be initialized correctly", () => {
-		const klassenListeManager = new KlassenListeManager(
-			1,
-			1,
-			schuljahresabschnitte,
-			schulform,
-			klassen,
-			schueler,
-			jahrgaenge,
-			lehrer
-		);
+		const klassenListeManager = createKlassenListeManager();
 		expect(klassenListeManager).not.toBeNull();
 	});
 
 	test("Initialization | KlassenListeManager should be initialized correctly, even with Schulform = null", () => {
-		const klassenListeManager = new KlassenListeManager(
-			1,
-			1,
-			schuljahresabschnitte,
-			schulform,
-			klassen,
-			schueler,
-			jahrgaenge,
-			lehrer
-		);
-
+		const klassenListeManager = createKlassenListeManager();
 		expect(klassenListeManager.schulgliederungen.list().toArray()).toEqual(
 			Schulgliederung.getBySchuljahrAndSchulform(
 				2020,
@@ -68,37 +68,43 @@ describe("Tests für KlassenListeManager", () => {
 	});
 
 	test("Initialization | Klasse not in Jahrgänge throws Exception", () => {
-		const _klassen: ArrayList<KlassenDaten> = new ArrayList<KlassenDaten>();
-		const k = new KlassenDaten();
+		const _klassen: ArrayList<KlassenListeEintrag> = new ArrayList<KlassenListeEintrag>();
+		const k = new KlassenListeEintrag();
 		k.id = -1;
-		k.idJahrgang = 2;
+		k.idJahrgang = 2; // existiert nicht in jahrgaenge
 		_klassen.add(k);
 
-		expect(() => {
-			new KlassenListeManager(
-				1,
-				1,
+		const manager = new KlassenListeManager(
+			1, 1, schulform,
+			{
 				schuljahresabschnitte,
-				schulform,
-				_klassen,
-				schueler,
-				jahrgaenge,
-				lehrer
-			);
-		}).toThrowError("Kein gültiger Schlüsselwert.");
+				klassenAktAbschnitt: _klassen,
+				klassenVorabschnitt: klassenVorabschnitt,
+				klassenFolgeabschnitt: klassenFolgeabschnitt,
+				schueler, jahrgaenge, lehrer,
+			}
+		);
+
+		// Schulgliederungsauswahl setzen → checkFilter ruft getOrException auf
+		const ersteSgld = manager.schulgliederungen.list().get(0);
+		manager.schulgliederungen.auswahlAdd(ersteSgld);
+
+		expect(() => {
+			manager.filtered();
+		}).toThrow("Kein gültiger Schlüsselwert.");
 	});
 
 	test("Initialization | Klasse in Jahrgänge throws no Exception", () => {
 		const _jahrgaenge: ArrayList<JahrgangsDaten> =
 			new ArrayList<JahrgangsDaten>();
-		const _klassen: ArrayList<KlassenDaten> = new ArrayList<KlassenDaten>();
+		const _klassen: ArrayList<KlassenListeEintrag> = new ArrayList<KlassenListeEintrag>();
 
 		const jgd = new JahrgangsDaten();
 		jgd.id = 1;
 		_jahrgaenge.add(jgd);
 
 		for (let i = 0; i < 10; i++) {
-			const k = new KlassenDaten();
+			const k = new KlassenListeEintrag();
 			k.id = -1;
 			k.idJahrgang = 1;
 			_klassen.add(k);
@@ -107,12 +113,16 @@ describe("Tests für KlassenListeManager", () => {
 		const manager = new KlassenListeManager(
 			1,
 			1,
-			schuljahresabschnitte,
 			schulform,
-			_klassen,
-			schueler,
-			_jahrgaenge,
-			lehrer
+			{
+				schuljahresabschnitte: schuljahresabschnitte,
+				klassenAktAbschnitt: _klassen,
+				klassenVorabschnitt: klassenVorabschnitt,
+				klassenFolgeabschnitt: klassenFolgeabschnitt,
+				schueler: schueler,
+				jahrgaenge: _jahrgaenge,
+				lehrer: lehrer,
+			}
 		);
 
 		expect(manager).not.toBeNull();
@@ -122,13 +132,13 @@ describe("Tests für KlassenListeManager", () => {
 	test("Initialization | Klasse not in Jahrgänge throws no Exception if klassen.jahrgaenge is null", () => {
 		const _jahrgaenge: ArrayList<JahrgangsDaten> =
 			new ArrayList<JahrgangsDaten>();
-		const _klassen: ArrayList<KlassenDaten> = new ArrayList<KlassenDaten>();
+		const _klassen: ArrayList<KlassenListeEintrag> = new ArrayList<KlassenListeEintrag>();
 
 		const jgd = new JahrgangsDaten();
 		jgd.id = 1;
 		_jahrgaenge.add(jgd);
 
-		const k = new KlassenDaten();
+		const k = new KlassenListeEintrag();
 		k.id = -1;
 		// k.idJahrgang bleibt undefined/null
 		_klassen.add(k);
@@ -136,28 +146,23 @@ describe("Tests für KlassenListeManager", () => {
 		const manager = new KlassenListeManager(
 			1,
 			1,
-			schuljahresabschnitte,
 			schulform,
-			_klassen,
-			schueler,
-			_jahrgaenge,
-			lehrer
+			{
+				schuljahresabschnitte: schuljahresabschnitte,
+				klassenAktAbschnitt: _klassen,
+				klassenVorabschnitt: klassenVorabschnitt,
+				klassenFolgeabschnitt: klassenFolgeabschnitt,
+				schueler: schueler,
+				jahrgaenge: _jahrgaenge,
+				lehrer: lehrer,
+			}
 		);
 
 		expect(manager).not.toBeNull();
 	});
 
 	test("Update | Updating class data should reflect changes", () => {
-		const manager = new KlassenListeManager(
-			1,
-			1,
-			schuljahresabschnitte,
-			schulform,
-			klassen,
-			schueler,
-			jahrgaenge,
-			lehrer
-		);
+		const manager = createKlassenListeManager();
 
 		const originalData = new KlassenDaten();
 		originalData.kuerzel = "A";
@@ -173,16 +178,7 @@ describe("Tests für KlassenListeManager", () => {
 	});
 
 	test("Update | Updating class returns true when klassenleitung is set", () => {
-		const manager = new KlassenListeManager(
-			1,
-			1,
-			schuljahresabschnitte,
-			schulform,
-			klassen,
-			schueler,
-			jahrgaenge,
-			lehrer
-		);
+		const manager = createKlassenListeManager();
 
 		manager.auswahlKlassenLeitung = new LehrerListeEintrag();
 
@@ -254,38 +250,20 @@ describe("Tests für KlassenListeManager", () => {
 				3,
 				true
 			);
-		}).toThrowError(
+		}).toThrow(
 			"Es wurde keine Klassenleitung mit der angegebenen Klassen- und Lehrer-ID gefunden."
 		);
 	});
 
 	test("Retrieve Students | Should return a non-null list of students", () => {
-		const manager = new KlassenListeManager(
-			1,
-			1,
-			schuljahresabschnitte,
-			schulform,
-			klassen,
-			schueler,
-			jahrgaenge,
-			lehrer
-		);
+		const manager = createKlassenListeManager();
 
 		const schuelerListe = manager.getSchuelerListe();
 		expect(schuelerListe).not.toBeNull();
 	});
 
 	test("Compare | KlassenDaten should be compared correctly based on 'klassen' criteria", () => {
-		const manager = new KlassenListeManager(
-			1,
-			1,
-			schuljahresabschnitte,
-			schulform,
-			klassen,
-			schueler,
-			jahrgaenge,
-			lehrer
-		);
+		const manager = createKlassenListeManager();
 
 		const klasse1 = new KlassenDaten();
 		klasse1.id = 1;
@@ -309,29 +287,17 @@ describe("Tests für KlassenListeManager", () => {
 	});
 
 	test("Compare | KlassenDaten should be compared correctly based on 'schueleranzahl' criteria ascending", () => {
-		const manager = new KlassenListeManager(
-			1,
-			1,
-			schuljahresabschnitte,
-			schulform,
-			klassen,
-			schueler,
-			jahrgaenge,
-			lehrer
-		);
+		const manager = createKlassenListeManager();
 
-		const klasse1 = new KlassenDaten();
+		const klasse1 = new KlassenListeEintrag();
 		klasse1.id = 1;
 		klasse1.kuerzel = "A";
-		klasse1.schueler = ArrayList.of(
-			new Schueler(),
-			new Schueler()
-		);
+		klasse1.anzahlZugeordneteSchueler = 5;
 
-		const klasse2 = new KlassenDaten();
+		const klasse2 = new KlassenListeEintrag();
 		klasse2.id = 2;
 		klasse2.kuerzel = "B";
-		klasse2.schueler = ArrayList.of(new Schueler());
+		klasse2.anzahlZugeordneteSchueler = 1;
 
 		manager.orderSet(ArrayList.of(new Pair("schueleranzahl", true))); // ascending
 
@@ -342,16 +308,7 @@ describe("Tests für KlassenListeManager", () => {
 	});
 
 	test("Compare | KlassenDaten should be compared correctly based on 'schueleranzahl' criteria descending", () => {
-		const manager = new KlassenListeManager(
-			1,
-			1,
-			schuljahresabschnitte,
-			schulform,
-			klassen,
-			schueler,
-			jahrgaenge,
-			lehrer
-		);
+		const manager = createKlassenListeManager();
 
 		const klasse1 = new KlassenDaten();
 		klasse1.id = 1;
@@ -375,16 +332,7 @@ describe("Tests für KlassenListeManager", () => {
 	});
 
 	test("Compare | DeveloperNotificationException should be thrown for unknown criteria", () => {
-		const manager = new KlassenListeManager(
-			1,
-			1,
-			schuljahresabschnitte,
-			schulform,
-			klassen,
-			schueler,
-			jahrgaenge,
-			lehrer
-		);
+		const manager = createKlassenListeManager();
 
 		const klasse1 = new KlassenDaten();
 		klasse1.id = 1;
@@ -404,7 +352,7 @@ describe("Tests für KlassenListeManager", () => {
 		expect(() => {
 			// access private method
 			(manager as any).compareAuswahl(klasse1, klasse2);
-		}).toThrowError(
+		}).toThrow(
 			"Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt."
 		);
 	});

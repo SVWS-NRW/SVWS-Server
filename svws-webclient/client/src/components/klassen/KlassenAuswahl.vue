@@ -18,8 +18,8 @@
 					<svws-ui-multi-select v-model="filterLehrer" title="Klassenleitung" :items="manager().lehrer.list()" :item-text="text" :item-filter="find" />
 					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="manager().schulgliederungen.list()" :item-text="textSchulgliederung" />
 				</template>
-				<template #cell(schueler)="{value}"> {{ value.size() }} </template>
-				<template #cell(klassenLeitungen)="{value}">
+				<template #cell(anzahlZugeordneteSchueler)="{value}"> {{ value }} </template>
+				<template #cell(idsKlassenleitungen)="{value}">
 					{{ lehrerkuerzel(value) }}
 				</template>
 				<template #actions v-if="hatKompetenzAendern">
@@ -55,7 +55,7 @@
 
 	import { computed, ref } from "vue";
 	import type { KlassenAuswahlProps } from "./KlassenAuswahlProps";
-	import type { JahrgangsDaten, KlassenDaten, LehrerListeEintrag, Schulgliederung } from "@core";
+	import type { JahrgangsDaten, KlassenListeEintrag, LehrerListeEintrag, Schulgliederung } from "@core";
 	import { BenutzerKompetenz } from "@core";
 	import { useAbschnittState, useRegionSwitch, ViewType } from "@ui";
 
@@ -67,8 +67,8 @@
 
 	const columns = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc", span: 0.5 },
-		{ key: "klassenLeitungen", label: "Klassenleitung" },
-		{ key: "schueler", label: "Schüler", span: 0.5, sortable: true },
+		{ key: "idsKlassenleitungen", label: "Klassenleitung" },
+		{ key: "anzahlZugeordneteSchueler", label: "Schüler", span: 0.5, sortable: true },
 	];
 
 	function text(eintrag: LehrerListeEintrag | JahrgangsDaten): string {
@@ -124,7 +124,7 @@
 
 	const search = ref<string>("");
 
-	const rowsFiltered = computed<KlassenDaten[]>(() => {
+	const rowsFiltered = computed<KlassenListeEintrag[]>(() => {
 		const arr = [];
 		for (const e of props.manager().filtered()) {
 			if ((e.kuerzel !== null) && e.kuerzel.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
@@ -155,7 +155,7 @@
 		return props.manager().hasDaten() ? props.manager().auswahl() : null;
 	});
 
-	async function setAuswahl(items: KlassenDaten[]) {
+	async function setAuswahl(items: KlassenListeEintrag[]) {
 		props.manager().liste.auswahlClear();
 		for (const item of items) {
 			if (props.manager().liste.hasValue(item)) {

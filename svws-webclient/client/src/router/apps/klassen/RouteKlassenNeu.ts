@@ -28,8 +28,6 @@ export class RouteKlassenNeu extends RouteNode<any, RouteKlassen> {
 	public getProps(to: RouteLocationNormalized): KlassenNeuProps {
 		return {
 			manager: () => routeKlassen.data.manager,
-			mapKlassenVorigerAbschnitt: () => routeKlassen.data.mapKlassenVorigerAbschnitt,
-			mapKlassenFolgenderAbschnitt: () => routeKlassen.data.mapKlassenFolgenderAbschnitt,
 			add: routeKlassen.data.add,
 			gotoDefaultView: routeKlassen.data.gotoDefaultView,
 			checkpoint: this.checkpoint,

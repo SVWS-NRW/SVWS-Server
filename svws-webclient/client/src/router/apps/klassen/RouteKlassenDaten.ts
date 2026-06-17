@@ -24,8 +24,6 @@ export class RouteKlassenDaten extends RouteNode<any, RouteKlassen> {
 			patch: routeKlassen.data.patch,
 			manager: () => routeKlassen.data.manager,
 			setFilter: routeKlassen.data.setFilter,
-			mapKlassenVorigerAbschnitt: () => routeKlassen.data.mapKlassenVorigerAbschnitt,
-			mapKlassenFolgenderAbschnitt: () => routeKlassen.data.mapKlassenFolgenderAbschnitt,
 			gotoSchueler: routeKlassen.data.gotoSchueler,
 			gotoLehrer: routeKlassen.data.gotoLehrer,
 			addKlassenleitung: routeKlassen.data.addKlassenleitung,

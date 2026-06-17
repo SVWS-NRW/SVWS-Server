@@ -75,7 +75,6 @@ public final class DBEntityManager implements AutoCloseable {
 	 * Konstruktor für die interne Nutzung. Es wird eine neue Instanz auf Basis
 	 * der übergebenen Konfiguration (siehe {@link DBConfig}) erstellt. Für den
 	 * Fall, dass die Verbindung nicht erfolgreich ist, wird eine
-	 * {@link DBConnectionException} generiert.
 	 *
 	 * @param user      der Benutzer, der dieser Verbindung zugeordnet ist.
 	 * @param factory   die Factory für die Datenbank-Verbindungen
@@ -1144,6 +1143,26 @@ public final class DBEntityManager implements AutoCloseable {
 	 */
 	public Query getNativeQuery(final String query) {
 		return em.createNativeQuery(query);
+	}
+
+	/**
+	 * Führt eine Native SQL-Abfrage auf die Datenbank aus und gibt das Ergebnis als
+	 * Liste von Objekt-Arrays zurück. Dabei entspricht jedes Objekt-Array einem Datensatz
+	 * der Abfrage. Die übergebenen Parameter werden als positionale Parameter (ab Position 1)
+	 * in die Anfrage eingesetzt.
+	 *
+	 * @param sql     der native SQL-Befehl mit positionalen Parametern (z.B. {@code ?1}, {@code ?2}, ...)
+	 * @param params  die positionalen Parameter der SQL-Anfrage in der Reihenfolge ihrer Verwendung
+	 *
+	 * @return das Abfrage-Ergebnis als Liste von Objekt-Arrays
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Object[]> queryNativeWithParameters(final String sql, final Object... params) {
+		final Query q = em.createNativeQuery(sql);
+		for (int i = 0; i < params.length; i++) {
+			q.setParameter(i + 1, params[i]);
+		}
+		return q.getResultList();
 	}
 
 

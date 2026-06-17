@@ -1,7 +1,7 @@
-import type { KlassenDaten } from "../../../core/src/asd/data/klassen/KlassenDaten";
 import { BasicValidator } from "../../../core/src/asd/validate/BasicValidator";
 import { ValidatorFehlerart } from "../../../core/src/asd/validate/ValidatorFehlerart";
 import { JavaString } from "../../../core/src/java/lang/JavaString";
+import type { KlassenListeEintrag } from "../../../core/src/asd/data/klassen/KlassenListeEintrag";
 
 /**
  * Ein Validator, welcher prüft, ob ein Klassenkürzel gültig ist und nicht bereits bei einer anderen Klasse vorhanden ist.
@@ -12,7 +12,7 @@ export class ValidatorKlassenKuerzel extends BasicValidator {
 	private readonly data: () => string | null | undefined;
 
 	/** Eine Menge der Klassenkürzel, wo das Kürzel der zu validierenden Klasse nicht mehr enthalten ist. */
-	private readonly menge: () => Iterable<KlassenDaten>;
+	private readonly menge: () => Iterable<KlassenListeEintrag>;
 
 	/** Die ID der Klasse oder null, falls eine neue Klasse erstellt wird */
 	private readonly id: () => number | null;
@@ -30,7 +30,7 @@ export class ValidatorKlassenKuerzel extends BasicValidator {
 	 * @param menge   die Liste der Klassen mit ihren Kürzeln
 	 * @param id      die ID der zu validierenden Klasse, sofern diese in der Liste der Klassen enthalten ist
 	 */
-	constructor(data: () => string | null | undefined, menge: () => Iterable<KlassenDaten>, id: () => number | null = () => null) {
+	constructor(data: () => string | null | undefined, menge: () => Iterable<KlassenListeEintrag>, id: () => number | null = () => null) {
 		super(ValidatorFehlerart.MUSS);
 		this.data = data;
 		this.menge = menge;

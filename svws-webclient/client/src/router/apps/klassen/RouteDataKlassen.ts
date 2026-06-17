@@ -1,6 +1,5 @@
-
-import type { KlassenDaten, Schueler, List, LehrerListeEintrag, SimpleOperationResponse, ApiFile, ReportingParameter, StundenplanListeEintrag } from "@core";
-import { BenutzerKompetenz, UserNotificationException, ArrayList, DeveloperNotificationException } from "@core";
+import type { KlassenDaten, KlassenListeEintrag, LehrerListeEintrag, List, Schueler, SimpleOperationResponse, StundenplanListeEintrag } from "@core";
+import { ArrayList, BenutzerKompetenz, DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -10,7 +9,7 @@ import { routeKlasseGruppenprozesse } from "./RouteKlassenGruppenprozesse";
 import type { RouteNode } from "~/router/RouteNode";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeKlassenNeu } from "~/router/apps/klassen/RouteKlassenNeu";
-import { ViewType, KlassenListeManager } from "@ui";
+import { KlassenListeManager, ViewType } from "@ui";
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
@@ -19,8 +18,6 @@ import { schuleState } from "~/states/SchuleStateImpl";
 
 interface RouteStateKlassen extends RouteStateAuswahlInterface<KlassenListeManager> {
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
-	mapKlassenVorigerAbschnitt: Map<number, KlassenDaten>;
-	mapKlassenFolgenderAbschnitt: Map<number, KlassenDaten>;
 	oldView?: RouteNode<any, any>;
 }
 
@@ -28,8 +25,6 @@ const defaultState: RouteStateKlassen = {
 	idSchuljahresabschnitt: -1,
 	manager: undefined,
 	mapStundenplaene: new Map(),
-	mapKlassenVorigerAbschnitt: new Map<number, KlassenDaten>(),
-	mapKlassenFolgenderAbschnitt: new Map<number, KlassenDaten>(),
 	view: routeKlassenDaten,
 	oldView: undefined,
 	activeViewType: ViewType.DEFAULT,
@@ -49,14 +44,6 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 		return this._state.value.idSchuljahresabschnitt;
 	}
 
-	get mapKlassenVorigerAbschnitt(): Map<number, KlassenDaten> {
-		return this._state.value.mapKlassenVorigerAbschnitt;
-	}
-
-	get mapKlassenFolgenderAbschnitt(): Map<number, KlassenDaten> {
-		return this._state.value.mapKlassenFolgenderAbschnitt;
-	}
-
 	get mapStundenplaene(): Map<number, StundenplanListeEintrag> {
 		return this._state.value.mapStundenplaene;
 	}
@@ -67,32 +54,41 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 			throw new DeveloperNotificationException('Es ist kein gültiger Schuljahresabschnitt ausgewählt');
 		}
 		// Lade die Kataloge und erstelle den Manager
-		const listKlassen = await api.server.getListKlassenDatenBySchuljahresabschnitt(api.schema, idSchuljahresabschnitt);
-		const mapKlassenVorigerAbschnitt = schuljahresabschnitt.idVorigerAbschnitt === null
-			? new Map<number, KlassenDaten>()
-			: await api.getKlassenListe(schuljahresabschnitt.idVorigerAbschnitt);
-		const mapKlassenFolgenderAbschnitt = schuljahresabschnitt.idFolgeAbschnitt === null
-			? new Map<number, KlassenDaten>()
-			: await api.getKlassenListe(schuljahresabschnitt.idFolgeAbschnitt);
-		const listSchueler = await api.server.getSchuelerFuerAbschnitt(api.schema, idSchuljahresabschnitt);
-		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
-		const listLehrer = await api.server.getLehrerFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 
-		const manager = new KlassenListeManager(idSchuljahresabschnitt, schuleState.abschnitt.id, abschnittState.alle,
-			schuleState.schulform, listKlassen, listSchueler, listJahrgaenge, listLehrer);
-
-
+		const [klassen, klassenVorabschnitt, klassenFolgeabschnitt, schueler, lehrer, jahrgaenge] = await Promise.all([
+			api.server.getListKlassenListeEintragBySchuljahresabschnitt(api.schema, idSchuljahresabschnitt),
+			api.server.getKlassenDatenMinimalBySchuljahresabschnitt(api.schema, schuljahresabschnitt.idVorigerAbschnitt ?? -1),
+			api.server.getKlassenDatenMinimalBySchuljahresabschnitt(api.schema, schuljahresabschnitt.idFolgeAbschnitt ?? -1),
+			api.server.getSchuelerFuerAbschnitt(api.schema, idSchuljahresabschnitt),
+			api.server.getLehrerFuerAbschnitt(api.schema, idSchuljahresabschnitt),
+			api.server.getJahrgaenge(api.schema),
+		]);
+		const manager = new KlassenListeManager(
+			idSchuljahresabschnitt,
+			schuleState.abschnitt.id,
+			schuleState.schulform,
+			{
+				schuljahresabschnitte: abschnittState.alle,
+				klassenAktAbschnitt: klassen,
+				klassenVorabschnitt: klassenVorabschnitt,
+				klassenFolgeabschnitt: klassenFolgeabschnitt,
+				schueler: schueler,
+				jahrgaenge: jahrgaenge,
+				lehrer: lehrer,
+			});
 		if (this._state.value.manager === undefined) {
 			manager.setFilterAuswahlPermitted(true);
 		} else {
 			manager.useFilter(this._state.value.manager);
 		}
-		return { manager, mapKlassenVorigerAbschnitt, mapKlassenFolgenderAbschnitt };
+		return { manager };
 	}
 
-	public async ladeDaten(auswahl: KlassenDaten | null): Promise<KlassenDaten | null> {
-		// Die Daten sind vollständig in der Liste enthalten, kein Aufruf der API notwendig
-		return auswahl;
+	public async ladeDaten(auswahl: KlassenListeEintrag | null): Promise<KlassenDaten | null> {
+		if (auswahl === null) {
+			return null;
+		}
+		return await api.server.getKlasse(api.schema, auswahl.id);
 	}
 
 	protected async doPatch(data: Partial<KlassenDaten>, id: number): Promise<boolean> {

@@ -2,6 +2,7 @@ package de.svws_nrw.api.server;
 
 import java.io.InputStream;
 
+import de.svws_nrw.asd.data.klassen.KlassenDatenMinimal;
 import de.svws_nrw.asd.data.klassen.KlassenListeEintrag;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.data.klassen.DataKlassenliste;
@@ -101,6 +102,31 @@ public class APIKlassen {
 	public Response getListKlassenListeEintragBySchuljahresabschnitt(@PathParam("schema") final String schema,
 			@PathParam("idSchuljahresabschnitt") final long idSchuljahresabschnitt, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassenliste(conn).getListBySchuljahresabschnittIDAsResponse(idSchuljahresabschnitt),
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Liste der Klassen (Minimalvariante) im angegebenen Schema.
+	 *
+	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param idSchuljahresabschnitt     die ID des Schuljahresabschnitts
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return              die Liste der Klassen (Minimalvariante) mit ID des Datenbankschemas
+	 */
+	@GET
+	@GZIP
+	@Path("/minimal/abschnitt/{idSchuljahresabschnitt : \\d+}")
+	@Operation(summary = "Gibt eine Übersicht von allen Klassen (Minimalvariante) zurück.",
+			description = "Erstellt eine Liste aller in der Datenbank vorhanden Klassen (Minimalvariante).")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von KlassenDatenMinimal-Einträgen",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KlassenDatenMinimal.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Klassendaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Klassen-Einträge gefunden")
+	public Response getKlassenDatenMinimalBySchuljahresabschnitt(@PathParam("schema") final String schema,
+			@PathParam("idSchuljahresabschnitt") final long idSchuljahresabschnitt, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassenliste(conn)
+						.getKlassenDatenMinimalByIdSchuljahresabschnitt(idSchuljahresabschnitt),
 				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 

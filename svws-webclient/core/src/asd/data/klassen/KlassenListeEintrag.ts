@@ -1,4 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { ArrayList } from '../../../java/util/ArrayList';
+import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 
 export class KlassenListeEintrag extends JavaObject {
@@ -33,6 +35,21 @@ export class KlassenListeEintrag extends JavaObject {
 	 */
 	public parallelitaet: string | null = null;
 
+	/**
+	 * Gibt die Anzahl der Schüler, die dieser Klasse zugeordnet sind zurück.
+	 */
+	public anzahlZugeordneteSchueler: number = 0;
+
+	/**
+	 * Die Liste der IDs der Klassenleitungen der Klasse.
+	 */
+	public idsKlassenleitungen: List<number> = new ArrayList<number>();
+
+	/**
+	 * Die Sortierreihenfolge des Klassenlisten-Eintrags.
+	 */
+	public sortierung: number = 0;
+
 
 	public constructor() {
 		super();
@@ -63,6 +80,17 @@ export class KlassenListeEintrag extends JavaObject {
 			throw new Error('invalid json format, missing attribute beschreibung');
 		result.beschreibung = obj.beschreibung;
 		result.parallelitaet = (obj.parallelitaet === undefined) ? null : obj.parallelitaet === null ? null : obj.parallelitaet;
+		if (obj.anzahlZugeordneteSchueler === undefined)
+			throw new Error('invalid json format, missing attribute anzahlZugeordneteSchueler');
+		result.anzahlZugeordneteSchueler = obj.anzahlZugeordneteSchueler;
+		if (obj.idsKlassenleitungen !== undefined) {
+			for (const elem of obj.idsKlassenleitungen) {
+				result.idsKlassenleitungen.add(elem);
+			}
+		}
+		if (obj.sortierung === undefined)
+			throw new Error('invalid json format, missing attribute sortierung');
+		result.sortierung = obj.sortierung;
 		return result;
 	}
 
@@ -74,6 +102,16 @@ export class KlassenListeEintrag extends JavaObject {
 		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
 		result += '"parallelitaet" : ' + ((obj.parallelitaet === null) ? 'null' : JSON.stringify(obj.parallelitaet)) + ',';
+		result += '"anzahlZugeordneteSchueler" : ' + obj.anzahlZugeordneteSchueler.toString() + ',';
+		result += '"idsKlassenleitungen" : [ ';
+		for (let i = 0; i < obj.idsKlassenleitungen.size(); i++) {
+			const elem = obj.idsKlassenleitungen.get(i);
+			result += elem.toString();
+			if (i < obj.idsKlassenleitungen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -98,6 +136,22 @@ export class KlassenListeEintrag extends JavaObject {
 		}
 		if (obj.parallelitaet !== undefined) {
 			result += '"parallelitaet" : ' + ((obj.parallelitaet === null) ? 'null' : JSON.stringify(obj.parallelitaet)) + ',';
+		}
+		if (obj.anzahlZugeordneteSchueler !== undefined) {
+			result += '"anzahlZugeordneteSchueler" : ' + obj.anzahlZugeordneteSchueler.toString() + ',';
+		}
+		if (obj.idsKlassenleitungen !== undefined) {
+			result += '"idsKlassenleitungen" : [ ';
+			for (let i = 0; i < obj.idsKlassenleitungen.size(); i++) {
+				const elem = obj.idsKlassenleitungen.get(i);
+				result += elem.toString();
+				if (i < obj.idsKlassenleitungen.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (obj.sortierung !== undefined) {
+			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

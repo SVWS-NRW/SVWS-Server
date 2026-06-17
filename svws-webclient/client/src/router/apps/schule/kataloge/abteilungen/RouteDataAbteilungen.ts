@@ -1,7 +1,7 @@
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import type { Abteilung, KlassenListeEintrag, List, SimpleOperationResponse } from "@core";
+import type { Abteilung, KlassenDatenMinimal, List, SimpleOperationResponse } from "@core";
 import { AbteilungKlassenzuordnung, ArrayList, Arrays } from "@core";
 import { AbteilungenListeManager, ViewType } from "@ui";
 import { routeAbteilungenGruppenprozesse } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungenGruppenprozesse";
@@ -16,7 +16,7 @@ import { schuleState } from "~/states/SchuleStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
-	manager: new AbteilungenListeManager(-1, -1, new ArrayList(), null, new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList()),
+	manager: undefined,
 	view: routeAbteilungenDaten,
 	activeViewType: ViewType.DEFAULT,
 	oldView: undefined,
@@ -33,20 +33,36 @@ export class RouteDataAbteilungen extends RouteDataAuswahl<AbteilungenListeManag
 	}
 
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateAuswahlInterface<AbteilungenListeManager>>> {
-		const abteilungen = await api.server.getAbteilungenByIdJahresAbschnitt(api.schema, idSchuljahresabschnitt);
-		const lehrer = await api.server.getLehrer(api.schema);
-		const klassenAktAbschnitt = await api.server.getListKlassenListeEintragBySchuljahresabschnitt(api.schema, idSchuljahresabschnitt);
+		const [abteilungenAktAbschnitt, lehrer, klassenAktAbschnitt] = await Promise.all([
+			api.server.getAbteilungenByIdJahresAbschnitt(api.schema, idSchuljahresabschnitt),
+			api.server.getLehrer(api.schema),
+			api.server.getKlassenDatenMinimalBySchuljahresabschnitt(api.schema, idSchuljahresabschnitt),
+		]);
 
 		const abteilungenFolgeAbschnitt = new ArrayList<Abteilung>();
-		const klassenFolgeAbschnitt = new ArrayList<KlassenListeEintrag>();
+		const klassenFolgeAbschnitt = new ArrayList<KlassenDatenMinimal>();
 		const schuljahresabschnitt = abschnittState.get(idSchuljahresabschnitt);
 		if ((schuleState.abschnitt.id === schuljahresabschnitt.id) && (schuljahresabschnitt.idFolgeAbschnitt !== null)) {
-			abteilungenFolgeAbschnitt.addAll(await api.server.getAbteilungenByIdJahresAbschnitt(api.schema, schuljahresabschnitt.idFolgeAbschnitt));
-			klassenFolgeAbschnitt.addAll(await api.server.getListKlassenListeEintragBySchuljahresabschnitt(api.schema, schuljahresabschnitt.idFolgeAbschnitt));
+			const [abteilungenByIdJahresabschnitt, klassenDatenMinimal] = await Promise.all([
+				api.server.getAbteilungenByIdJahresAbschnitt(api.schema, schuljahresabschnitt.idFolgeAbschnitt),
+				api.server.getKlassenDatenMinimalBySchuljahresabschnitt(api.schema, schuljahresabschnitt.idFolgeAbschnitt),
+			]);
+			abteilungenFolgeAbschnitt.addAll(abteilungenByIdJahresabschnitt);
+			klassenFolgeAbschnitt.addAll(klassenDatenMinimal);
 		}
 
-		const manager = new AbteilungenListeManager(idSchuljahresabschnitt, schuleState.abschnitt.id, abschnittState.alle,
-			schuleState.schulform, abteilungen, abteilungenFolgeAbschnitt, lehrer, klassenAktAbschnitt, klassenFolgeAbschnitt);
+		const manager = new AbteilungenListeManager(
+			idSchuljahresabschnitt,
+			schuleState.abschnitt.id,
+			schuleState.schulform, {
+				schuljahresabschnitte: abschnittState.alle,
+				abteilungenAktAbschnitt,
+				abteilungenFolgeAbschnitt,
+				lehrer,
+				klassenAktAbschnitt,
+				klassenFolgeAbschnitt,
+			}
+		);
 		return { manager };
 	}
 

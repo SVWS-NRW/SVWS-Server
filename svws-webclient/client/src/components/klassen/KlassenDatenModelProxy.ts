@@ -1,5 +1,7 @@
 import { computed } from "vue";
-import { AllgemeinbildendOrganisationsformen, ArrayList, BerufskollegOrganisationsformen, Jahrgaenge, Klassenart, Schulgliederung, WeiterbildungskollegOrganisationsformen, type JahrgangsDaten, type KlassenDaten, type List } from "@core";
+import { AllgemeinbildendOrganisationsformen, ArrayList, BerufskollegOrganisationsformen, Jahrgaenge, Klassenart, Schulgliederung,
+	WeiterbildungskollegOrganisationsformen } from "@core";
+import type { JahrgangsDaten, KlassenDaten, List, KlassenListeEintrag, KlassenDatenMinimal } from "@core";
 import { ModelProxy, ValidatorKlassenKuerzel, ValidatorStringLength, type KlassenListeManager } from "@ui";
 
 /**
@@ -8,24 +10,15 @@ import { ModelProxy, ValidatorKlassenKuerzel, ValidatorStringLength, type Klasse
 export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 
 	protected manager: () => KlassenListeManager;
-	protected mapKlassenVorigerAbschnitt: () => Map<number, KlassenDaten>;
-	protected mapKlassenFolgenderAbschnitt: () => Map<number, KlassenDaten>;
 
-	/**
-	 * Erstellt einen validierenden Proxy für das Core-DTO KlassenDaten.
-	 *
-	 * @param data               ein Lambda für den Zugriff auf die "Original"-Daten
-	 * @param vorhanden          die vorhandenen Klassen
-	 * @param patchMethod        ggf. die Methode zum Patchen der einzelnen Attribute, sofern das automatische Patchen
-	 *                           bei Änderungen gewünscht ist
-	 */
-	constructor(data: () => KlassenDaten, vorhanden: () => Iterable<KlassenDaten>, manager: () => KlassenListeManager,
-		mapKlassenVorigerAbschnitt: () => Map<number, KlassenDaten>, mapKlassenFolgenderAbschnitt: () => Map<number, KlassenDaten>,
-		listOfAutopatchProps?: Iterable<keyof KlassenDaten>, patch?: (data: Partial<KlassenDaten>) => Promise<boolean>) {
+	constructor(
+		data: () => KlassenDaten,
+		vorhanden: () => Iterable<KlassenListeEintrag>,
+		manager: () => KlassenListeManager,
+		listOfAutopatchProps?: Iterable<keyof KlassenDaten>,
+		patch?: (data: Partial<KlassenDaten>) => Promise<boolean>) {
 		super({ data, patch, listOfAutopatchProps });
 		this.manager = manager;
-		this.mapKlassenVorigerAbschnitt = mapKlassenVorigerAbschnitt;
-		this.mapKlassenFolgenderAbschnitt = mapKlassenFolgenderAbschnitt;
 		this.addValidator(new ValidatorKlassenKuerzel(() => this.proxy.kuerzel ?? null, vorhanden), "kuerzel");
 		this.addValidator(new ValidatorStringLength(() => this.proxy.beschreibung, 1, 150), "beschreibung");
 		this.validate();
@@ -92,18 +85,18 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 		return result;
 	});
 
-	vorgaengerklasse = computed<KlassenDaten | null>({
+	vorgaengerklasse = computed<KlassenDatenMinimal | null>({
 		get: () => {
 			const id = this.proxy.idVorgaengerklasse;
-			return (id === null) ? null : this.mapKlassenVorigerAbschnitt().get(id) ?? null;
+			return (id === null) ? null : this.manager().klassenByIdVorabschnitt.get(id) ?? null;
 		},
 		set: (value) => this.proxy.idVorgaengerklasse = value?.id ?? null,
 	});
 
-	folgeklasse = computed<KlassenDaten | null>({
+	folgeklasse = computed<KlassenDatenMinimal | null>({
 		get: () => {
 			const id = this.proxy.idFolgeklasse;
-			return (id === null) ? null : this.mapKlassenFolgenderAbschnitt().get(id) ?? null;
+			return (id === null) ? null : this.manager().klassenByIdFolgeAbschnitt.get(id) ?? null;
 		},
 		set: (value) => this.proxy.idFolgeklasse = value?.id ?? null,
 	});
@@ -111,11 +104,11 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 	kuerzelVorgaengerklasse = computed<string | null>(() => this.proxy.kuerzelVorgaengerklasse ?? '&nbsp;');
 	kuerzelFolgeklasse = computed<string | null>(() => this.proxy.kuerzelFolgeklasse ?? '&nbsp;');
 
-	listeFolgeklassen = computed<List<KlassenDaten>>(() => {
-		const result = new ArrayList<KlassenDaten>();
+	listeFolgeklassen = computed<List<KlassenDatenMinimal>>(() => {
+		const result = new ArrayList<KlassenDatenMinimal>();
 		const idJahrgang = this.proxy.idJahrgang;
 		if (idJahrgang === null) {
-			for (const kl of this.mapKlassenFolgenderAbschnitt().values()) {
+			for (const kl of this.manager().klassenByIdFolgeAbschnitt.values()) {
 				result.add(kl);
 			}
 			return result;
@@ -134,7 +127,7 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 		} else {
 			schulgliederung = Schulgliederung.data().getWertBySchluessel(jg.kuerzelSchulgliederung);
 		}
-		for (const kl of this.mapKlassenFolgenderAbschnitt().values()) {
+		for (const kl of this.manager().klassenByIdFolgeAbschnitt.values()) {
 			if (kl.idJahrgang === null) {
 				result.add(kl); // Jahrgangunabhängige Klassen können als Vorgängerklassen vorkommen
 			} else {
@@ -151,11 +144,11 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 		return result;
 	});
 
-	listeVorgaengerklassen = computed<List<KlassenDaten>>(() => {
-		const result = new ArrayList<KlassenDaten>();
+	listeVorgaengerklassen = computed<List<KlassenDatenMinimal>>(() => {
+		const result = new ArrayList<KlassenDatenMinimal>();
 		const idJahrgang = this.proxy.idJahrgang;
 		if (idJahrgang === null) {
-			for (const kl of this.mapKlassenVorigerAbschnitt().values()) {
+			for (const kl of this.manager().klassenByIdVorabschnitt.values()) {
 				result.add(kl);
 			}
 			return result;
@@ -174,7 +167,7 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 		} else {
 			schulgliederung = Schulgliederung.data().getWertBySchluessel(jg.kuerzelSchulgliederung);
 		}
-		for (const kl of this.mapKlassenVorigerAbschnitt().values()) {
+		for (const kl of this.manager().klassenByIdVorabschnitt.values()) {
 			if (kl.idJahrgang === null) {
 				result.add(kl); // Jahrgangunabhängige Klassen können als Vorgängerklassen vorkommen
 			} else {

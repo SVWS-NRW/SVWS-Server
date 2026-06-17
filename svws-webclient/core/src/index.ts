@@ -130,6 +130,7 @@ export { KAOAMerkmaleOptionsartenKatalogEintrag } from './asd/data/kaoa/KAOAMerk
 export { KAOAZusatzmerkmalKatalogEintrag } from './asd/data/kaoa/KAOAZusatzmerkmalKatalogEintrag';
 export { KAOAZusatzmerkmaleOptionsartenKatalogEintrag } from './asd/data/kaoa/KAOAZusatzmerkmaleOptionsartenKatalogEintrag';
 export { KlassenDaten } from './asd/data/klassen/KlassenDaten';
+export { KlassenDatenMinimal } from './asd/data/klassen/KlassenDatenMinimal';
 export { KlassenListeEintrag } from './asd/data/klassen/KlassenListeEintrag';
 export { KlassenartKatalogEintrag } from './asd/data/klassen/KlassenartKatalogEintrag';
 export { KursDaten } from './asd/data/kurse/KursDaten';

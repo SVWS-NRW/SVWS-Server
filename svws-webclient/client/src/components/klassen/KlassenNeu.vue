@@ -56,7 +56,11 @@
 
 	const dataNotPatched = shallowRef(new KlassenDaten());
 
-	const modelProxy = new KlassenDatenModelProxy(() => dataNotPatched.value, () => props.manager().liste.list(), props.manager, props.mapKlassenVorigerAbschnitt, props.mapKlassenFolgenderAbschnitt);
+	const modelProxy = new KlassenDatenModelProxy(
+		() => dataNotPatched.value,
+		() => props.manager().liste.list(),
+		props.manager
+	);
 
 	onMounted(() => {
 		const proxy = modelProxy.proxy;

@@ -1,12 +1,10 @@
 import { JavaObject } from '../../../../../core/src/java/lang/JavaObject';
-import { HashMap2D } from '../../../../../core/src/core/adt/map/HashMap2D';
 import type { KlassenDaten } from '../../../../../core/src/asd/data/klassen/KlassenDaten';
 import type { SchuelerListeEintrag } from '../../../../../core/src/core/data/schueler/SchuelerListeEintrag';
 import type { SchuelerStatusKatalogEintrag } from '../../../../../core/src/asd/data/schueler/SchuelerStatusKatalogEintrag';
 import type { JavaSet } from '../../../../../core/src/java/util/JavaSet';
 import { HashMap } from '../../../../../core/src/java/util/HashMap';
 import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
-import { KlassenUtils } from '../../../../../core/src/core/utils/klassen/KlassenUtils';
 import { SchuelerUtils } from '../../../../../core/src/core/utils/schueler/SchuelerUtils';
 import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
 import type { JahrgangsDaten } from '../../../../../core/src/core/data/jahrgang/JahrgangsDaten';
@@ -30,29 +28,50 @@ import { LehrerUtils } from '../../../../../core/src/core/utils/lehrer/LehrerUti
 import type { Schueler } from '../../../../../core/src/asd/data/schueler/Schueler';
 import type { Runnable } from '../../../../../core/src/java/lang/Runnable';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
-import { Class } from '../../../../../core/src/java/lang/Class';
 import { Arrays } from '../../../../../core/src/java/util/Arrays';
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
+import type { JavaMap } from '../../../../../core/src/java/util/JavaMap';
+import type { KlassenListeEintrag } from "../../../../../core/src/asd/data/klassen/KlassenListeEintrag";
+import type { KlassenDatenMinimal } from "../../../../../core/src/asd/data/klassen/KlassenDatenMinimal";
 
-export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, KlassenDaten> {
+
+export interface KlassenLookups {
+	schuljahresabschnitte: List<Schuljahresabschnitt>,
+	klassenAktAbschnitt: List<KlassenListeEintrag>,
+	klassenVorabschnitt: List<KlassenDatenMinimal>,
+	klassenFolgeabschnitt: List<KlassenDatenMinimal>,
+	schueler: List<SchuelerListeEintrag>,
+	jahrgaenge: List<JahrgangsDaten>,
+	lehrer: List<LehrerListeEintrag>
+}
+
+export class KlassenListeManager extends AuswahlManager<number, KlassenListeEintrag, KlassenDaten> {
+
+	/**
+	 * Ein Default-Comparator für den Vergleich von KlassenListeEinträgen.
+	 */
+	public static readonly comparator: Comparator<KlassenListeEintrag> = {
+		compare: (a: KlassenListeEintrag, b: KlassenListeEintrag) => {
+			if (a.kuerzel !== null && b.kuerzel !== null) {
+				const cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
+				if (cmp !== 0) {
+					return cmp;
+				}
+			}
+			return JavaLong.compare(a.id, b.id);
+		},
+	};
+
 
 	/**
 	 * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
 	 */
-	private static readonly _klasseToId: JavaFunction<KlassenDaten, number> = { apply: (k: KlassenDaten) => k.id };
+	private static readonly _klassenListeToId: JavaFunction<KlassenListeEintrag, number> = { apply: (k: KlassenListeEintrag) => k.id };
 
 	/**
-	 * Zusätzliche Maps, welche zum schnellen Zugriff auf Teilmengen der Liste verwendet werden können
+	 * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
 	 */
-	private readonly _mapKlasseInJahrgang: HashMap2D<number, number, KlassenDaten> = new HashMap2D<number, number, KlassenDaten>();
-
-	private readonly _mapKlasseHatSchueler: HashMap2D<number, number, KlassenDaten> = new HashMap2D<number, number, KlassenDaten>();
-
-	private readonly _mapKlassenlehrerInKlasse: HashMap2D<number, number, KlassenDaten> = new HashMap2D<number, number, KlassenDaten>();
-
-	private readonly _mapKlasseInSchulgliederung: HashMap2D<string, number, KlassenDaten> = new HashMap2D<string, number, KlassenDaten>();
-
-	private readonly _mapKlasseByKuerzel: HashMap<string, KlassenDaten> = new HashMap<string, KlassenDaten>();
+	private static readonly _klassenDatenToId: JavaFunction<KlassenDaten, number> = { apply: (k: KlassenDaten) => k.id };
 
 	/**
 	 * Sets mit Listen zur aktuellen Auswahl
@@ -124,60 +143,52 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 		// empty block
 	} };
 
+	private readonly _klassenByIdVorabschnitt: JavaMap<number, KlassenDatenMinimal>;
+	private readonly _klassenByIdFolgeAbschnitt: JavaMap<number, KlassenDatenMinimal>;
 
-	/**
-	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
-	 *
-	 * @param schuljahresabschnitt    der Schuljahresabschnitt, auf den sich die Klassenauswahl bezieht
-	 * @param schuljahresabschnitte        die Liste der Schuljahresabschnitte
-	 * @param schuljahresabschnittSchule   der Schuljahresabschnitt, in welchem sich die Schule aktuell befindet.
-	 * @param schulform     die Schulform der Schule
-	 * @param klassen       die Liste der Klassen
-	 * @param schueler      die Liste der Schüler
-	 * @param jahrgaenge    die Liste der Jahrgänge
-	 * @param lehrer        die Liste der Lehrer
-	 */
-	public constructor(schuljahresabschnitt: number, schuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>, schulform: Schulform | null, klassen: List<KlassenDaten>, schueler: List<SchuelerListeEintrag>, jahrgaenge: List<JahrgangsDaten>, lehrer: List<LehrerListeEintrag>) {
-		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, klassen, KlassenUtils.comparator, KlassenListeManager._klasseToId, KlassenListeManager._klasseToId, Arrays.asList(new Pair("klassen", true), new Pair("schueleranzahl", true)));
+
+	public constructor(
+		schuljahresabschnitt: number,
+		schuljahresabschnittSchule: number,
+		schulform: Schulform | null,
+		lookups: KlassenLookups
+	) {
+		super(
+			schuljahresabschnitt,
+			schuljahresabschnittSchule,
+			lookups.schuljahresabschnitte,
+			schulform,
+			lookups.klassenAktAbschnitt,
+			KlassenListeManager.comparator,
+			KlassenListeManager._klassenListeToId,
+			KlassenListeManager._klassenDatenToId,
+			Arrays.asList(new Pair("klassen", true),
+				new Pair("schueleranzahl", true))
+		);
 		this.schuelerstatus = new AttributMitAuswahl(Arrays.asList(...SchuelerStatus.values()), this._schuelerstatusToId, KlassenListeManager._comparatorSchuelerStatus, this._eventHandlerFilterChanged);
-		this.schueler = new AttributMitAuswahl(schueler, KlassenListeManager._schuelerToId, SchuelerUtils.comparator, this._eventSchuelerAuswahlChanged);
-		this.jahrgaenge = new AttributMitAuswahl(jahrgaenge, KlassenListeManager._jahrgangToId, JahrgaengeListeManager.comparator, this._eventHandlerFilterChanged);
-		this.lehrer = new AttributMitAuswahl(lehrer, KlassenListeManager._lehrerToId, LehrerUtils.comparator, this._eventHandlerFilterChanged);
+		this.schueler = new AttributMitAuswahl(lookups.schueler, KlassenListeManager._schuelerToId, SchuelerUtils.comparator, this._eventSchuelerAuswahlChanged);
+		this.jahrgaenge = new AttributMitAuswahl(lookups.jahrgaenge, KlassenListeManager._jahrgangToId, JahrgaengeListeManager.comparator, this._eventHandlerFilterChanged);
+		this.lehrer = new AttributMitAuswahl(lookups.lehrer, KlassenListeManager._lehrerToId, LehrerUtils.comparator, this._eventHandlerFilterChanged);
 		const gliederungen: List<Schulgliederung> = (schulform === null) ? Arrays.asList(...Schulgliederung.values()) : Schulgliederung.getBySchuljahrAndSchulform(this.getSchuljahr(), schulform);
 		this.schulgliederungen = new AttributMitAuswahl(gliederungen, this._schulgliederungToId, KlassenListeManager._comparatorSchulgliederung, this._eventHandlerFilterChanged);
-		this.initKlassen();
 		this.auswahlKlassenLeitung = null;
 		this.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
 		this.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
 		this.schuelerstatus.auswahlAdd(SchuelerStatus.NEUAUFNAHME);
 		this.schuelerstatus.auswahlAdd(SchuelerStatus.WARTELISTE);
+		this._klassenByIdVorabschnitt = this.mapKlassen(lookups.klassenVorabschnitt);
+		this._klassenByIdFolgeAbschnitt = this.mapKlassen(lookups.klassenFolgeabschnitt);
 	}
 
-	private initKlassen(): void {
-		for (const k of this.liste.list()) {
-			if (k.idJahrgang !== null) {
-				this._mapKlasseInJahrgang.put(k.idJahrgang, k.id, k);
-				const j: JahrgangsDaten | null = this.jahrgaenge.getOrException(k.idJahrgang);
-				if (j.kuerzelSchulgliederung !== null) {
-					const gliederung: Schulgliederung | null = this.schulgliederungen.get(j.kuerzelSchulgliederung);
-					if (gliederung !== null) {
-						this._mapKlasseInSchulgliederung.put(j.kuerzelSchulgliederung, k.id, k);
-					}
-				}
-			}
-			for (const s of k.schueler) {
-				this._mapKlasseHatSchueler.put(s.id, k.id, k);
-			}
-			for (const l of k.klassenLeitungen) {
-				this._mapKlassenlehrerInKlasse.put(l, k.id, k);
-			}
-			if (k.kuerzel !== null) {
-				this._mapKlasseByKuerzel.put(k.kuerzel, k);
-			}
+	private mapKlassen(klassen: List<KlassenDatenMinimal>): JavaMap<number, KlassenDatenMinimal> {
+		const result: JavaMap<number, KlassenDatenMinimal> | null = new HashMap<number, KlassenDatenMinimal>();
+		for (const v of klassen) {
+			result.put(v.id, v);
 		}
+		return result;
 	}
 
-	protected onSetDaten(eintrag: KlassenDaten, daten: KlassenDaten): boolean {
+	protected onSetDaten(eintrag: KlassenListeEintrag, daten: KlassenDaten): boolean {
 		let updateEintrag: boolean = false;
 		if (!JavaObject.equalsTranspiler(daten.kuerzel, (eintrag.kuerzel))) {
 			eintrag.kuerzel = daten.kuerzel;
@@ -212,16 +223,16 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	 *
 	 * @return das Ergebnis des Vergleichs (-1 kleiner, 0 gleich und 1 größer)
 	 */
-	protected compareAuswahl(a: KlassenDaten, b: KlassenDaten): number {
+	protected compareAuswahl(a: KlassenListeEintrag, b: KlassenListeEintrag): number {
 		for (const criteria of this._order) {
 			const field: string | null = criteria.a;
 			const asc: boolean = (criteria.b === null) || criteria.b;
 			let cmp: number;
 			if (JavaObject.equalsTranspiler("klassen", (field))) {
-				cmp = KlassenUtils.comparator.compare(a, b);
+				cmp = KlassenListeManager.comparator.compare(a, b);
 			} else
 				if (JavaObject.equalsTranspiler("schueleranzahl", (field))) {
-					cmp = JavaInteger.compare(a.schueler.size(), b.schueler.size());
+					cmp = JavaInteger.compare(a.anzahlZugeordneteSchueler, b.anzahlZugeordneteSchueler);
 				} else {
 					throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
 				}
@@ -236,20 +247,20 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	protected onMehrfachauswahlChanged(): void {
 		this.setKlassenIDsMitSchuelern.clear();
 		for (const k of this.liste.auswahl()) {
-			if (!k.schueler.isEmpty()) {
+			if (k.anzahlZugeordneteSchueler !== 0) {
 				this.setKlassenIDsMitSchuelern.add(k.id);
 			}
 		}
 	}
 
-	protected checkFilter(eintrag: KlassenDaten): boolean {
+	protected checkFilter(eintrag: KlassenListeEintrag): boolean {
 		this._filteredSchuelerListe = null;
 		if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang === null) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang)))) {
 			return false;
 		}
 		if (this.lehrer.auswahlExists()) {
 			let hatEinenLehrer: boolean = false;
-			for (const idLehrer of eintrag.klassenLeitungen) {
+			for (const idLehrer of eintrag.idsKlassenleitungen) {
 				if (this.lehrer.auswahlHasKey(idLehrer)) {
 					hatEinenLehrer = true;
 				}
@@ -315,18 +326,6 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	 */
 	public setAuswahlKlassenLeitung(klassenLeitung: LehrerListeEintrag | null): void {
 		this.auswahlKlassenLeitung = klassenLeitung;
-	}
-
-	/**
-	 * Gibt die Klassendaten anhand des übergebenen Kürzels zurück.
-	 * Ist das Kürzel ungültig, so wird null zurückgegeben.
-	 *
-	 * @param kuerzel  das Kürzel
-	 *
-	 * @return die Klassendaten oder null
-	 */
-	public getByKuerzelOrNull(kuerzel: string): KlassenDaten | null {
-		return this._mapKlasseByKuerzel.get(kuerzel);
 	}
 
 	/**
@@ -425,18 +424,13 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 		this.schulgliederungen.setAuswahl(srcManager.schulgliederungen);
 	}
 
-	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.utils.klassen.KlassenListeManager';
+
+	get klassenByIdFolgeAbschnitt(): JavaMap<number, KlassenDatenMinimal> {
+		return this._klassenByIdFolgeAbschnitt;
 	}
 
-	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.klassen.KlassenListeManager'].includes(name);
+	get klassenByIdVorabschnitt(): JavaMap<number, KlassenDatenMinimal> {
+		return this._klassenByIdVorabschnitt;
 	}
-
-	public static class = new Class<KlassenListeManager>('de.svws_nrw.core.utils.klassen.KlassenListeManager');
-
 }
 
-export function cast_de_svws_nrw_core_utils_klassen_KlassenListeManager(obj: unknown): KlassenListeManager {
-	return obj as KlassenListeManager;
-}

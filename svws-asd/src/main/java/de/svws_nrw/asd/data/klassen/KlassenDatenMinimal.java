@@ -1,12 +1,7 @@
 package de.svws_nrw.asd.data.klassen;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.svws_nrw.transpiler.TranspilerDTO;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -16,7 +11,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "Die minimalen Daten einer Klasse für die Anzeige in eine Liste.")
 @TranspilerDTO
-public class KlassenListeEintrag {
+public class KlassenDatenMinimal {
 
 	/** Die ID der Klasse. */
 	@Schema(description = "die ID der Klasse", example = "4709")
@@ -36,22 +31,10 @@ public class KlassenListeEintrag {
 
 	/** Eine zusätzliche Beschreibung zu der Klasse */
 	@Schema(description = "Eine zusätzliche Beschreibung zu der Klasse", example = "09b - bilinguale Klasse")
-	public @NotNull String beschreibung = "";
+	public String beschreibung;
 
 	/** Das Kürzel für die Parallelität der Klasse innerhalb des Jahrgangs (A-Z). */
 	@Schema(description = "das Kürzel für die Parallelität der Klasse innerhalb des Jahrgangs (A-Z)", example = "B", nullable = true)
 	public String parallelitaet;
-
-	/** Gibt die Anzahl der Schüler, die dieser Klasse zugeordnet sind zurück. */
-	@Schema(description = "Gibt die Anzahl der Schüler, die dieser Klasse zugeordnet sind zurück.", example = "12")
-	public int anzahlZugeordneteSchueler;
-
-	/** Die Liste der IDs der Klassenleitungen der Klasse. */
-	@ArraySchema(schema = @Schema(implementation = Long.class))
-	public @NotNull List<Long> idsKlassenleitungen = new ArrayList<>();
-
-	/** Die Sortierreihenfolge des Klassenlisten-Eintrags. */
-	@Schema(description = "die Sortierreihenfolge des Klassenlisten-Eintrags", example = "1")
-	public int sortierung;
 
 }
