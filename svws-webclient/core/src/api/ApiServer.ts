@@ -11678,6 +11678,9 @@ export class ApiServer extends BaseApi {
 	 *   Code 200: Der Report mit den übergebenen Daten wurde erfolgreich erstellt.
 	 *     - Mime-Type: application/pdf
 	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 400: Die übergebenen Parameter sind fehlerhaft.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den geforderten Report zu erstellen.
 	 *   Code 404: Kein Eintrag zu den übergebenen Daten gefunden.
 	 *   Code 500: Es ist ein unbekannter Fehler aufgetreten.
@@ -11705,6 +11708,9 @@ export class ApiServer extends BaseApi {
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Report mit den übergebenen Daten wurde erfolgreich erstellt und als E-Mail versendet.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 400: Die übergebenen Parameter sind fehlerhaft.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den geforderten Report zu erstellen.
@@ -11737,6 +11743,9 @@ export class ApiServer extends BaseApi {
 	 *   Code 200: Der Report wurde erfolgreich als HTML erzeugt.
 	 *     - Mime-Type: text/html
 	 *     - Rückgabe-Typ: String
+	 *   Code 400: Die übergebenen Parameter sind fehlerhaft.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den geforderten Report zu erstellen.
 	 *   Code 404: Kein Eintrag zu den übergebenen Daten gefunden.
 	 *   Code 500: Es ist ein unbekannter Fehler aufgetreten.

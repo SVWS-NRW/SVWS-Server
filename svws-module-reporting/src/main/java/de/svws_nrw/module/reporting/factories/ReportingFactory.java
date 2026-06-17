@@ -67,7 +67,7 @@ public final class ReportingFactory {
 			if (conn == null) {
 				this.logger.logLn(LogLevel.ERROR, 4, "### FEHLER: Es wurde keine Verbindung zur Datenbank für die Initialisierung der Reporting-Factory "
 						+ "übergeben.");
-				throw new ApiOperationException(Status.NOT_FOUND,
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
 						"### FEHLER: Es wurde keine Verbindung zur Datenbank für die Initialisierung der Reporting-Factory übergeben.");
 			}
 
@@ -76,7 +76,7 @@ public final class ReportingFactory {
 			if (reportingParameter == null) {
 				this.logger.logLn(LogLevel.ERROR, 4, "### FEHLER: Es wurden keine Reporting-Parameter für die Initialisierung der Reporting-Factory übergeben"
 						+ ".");
-				throw new ApiOperationException(Status.NOT_FOUND,
+				throw new ApiOperationException(Status.BAD_REQUEST,
 						"### FEHLER: Es wurden keine Reporting-Parameter für die Initialisierung der Reporting-Factory übergeben.");
 			}
 			this.reportingParameter = reportingParameter;
@@ -136,6 +136,8 @@ public final class ReportingFactory {
 			this.reportingContext = new ReportingContext(conn, this.reportingParameter, this.logger, this.log);
 
 			this.logger.logLn(LogLevel.DEBUG, 0, "<<< Ende des Initialisierens der Reporting-Factory und des Validierens übergebener Daten.");
+		} catch (final ApiOperationException aoe) {
+			throw aoe;
 		} catch (final Exception e) {
 			ReportingExceptionUtils.logException(
 					"### FEHLER: Während der Initialisierung und Validierung der Daten der Reporting-Factory ist ein Fehler aufgetreten.", e, logger,
@@ -341,7 +343,7 @@ public final class ReportingFactory {
 				case null, default -> {
 					logger.logLn(LogLevel.ERROR, 4, "FEHLER: Kein bekanntes Ausgabeformat für die Report-Generierung übergeben.");
 					final SimpleOperationResponse sop = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log);
-					throw new ApiOperationException(Status.NOT_FOUND, null, sop, MediaType.APPLICATION_JSON);
+					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, null, sop, MediaType.APPLICATION_JSON);
 				}
 			}
 			// Prüfe nun, ob während der Report-Generierung ein Fehler aufgetreten ist, der als Error ins Log geschrieben wurde, aber nicht als Fehler
@@ -354,6 +356,8 @@ public final class ReportingFactory {
 			// Wenn kein Fehler vermerkt wurde, kann der Report zurückgegeben werden.
 			this.logger.logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung einer API-Response zur Report-Generierung.");
 			return reportResponse;
+		} catch (final ApiOperationException aoe) {
+			throw aoe;
 		} catch (final Exception e) {
 			ReportingExceptionUtils.logException(
 					"### FEHLER: Während der Erzeugung einer API-Response zur Report-Generierung ist ein Fehler aufgetreten.", e, logger,

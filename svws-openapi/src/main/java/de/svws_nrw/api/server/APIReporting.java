@@ -60,6 +60,8 @@ public class APIReporting {
 					+ "Weitergehende Berechtigungen werden im Vorfeld der Reporterstellung überprüft.")
 	@ApiResponse(responseCode = "200", description = "Der Report wurde erfolgreich als HTML erzeugt.",
 			content = @Content(mediaType = MediaType.TEXT_HTML, schema = @Schema(implementation = String.class)))
+	@ApiResponse(responseCode = "400", description = "Die übergebenen Parameter sind fehlerhaft.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den geforderten Report zu erstellen.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag zu den übergebenen Daten gefunden.")
 	@ApiResponse(responseCode = "500", description = "Es ist ein unbekannter Fehler aufgetreten.",
@@ -95,10 +97,12 @@ public class APIReporting {
 					+ "Weitergehende Berechtigungen werden im Vorfeld der Reporterstellung überprüft.")
 	@ApiResponse(responseCode = "200", description = "Der Report mit den übergebenen Daten wurde erfolgreich erstellt.",
 			content = @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "binary", description = "Report")))
+	@ApiResponse(responseCode = "400", description = "Die übergebenen Parameter sind fehlerhaft.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den geforderten Report zu erstellen.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag zu den übergebenen Daten gefunden.")
 	@ApiResponse(responseCode = "500", description = "Es ist ein unbekannter Fehler aufgetreten.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SimpleOperationResponse.class)))
 	public Response pdfReport(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten und Einstellungen, mit denen der Report erstellt werden soll.", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
@@ -129,10 +133,12 @@ public class APIReporting {
 					+ "Weitergehende Berechtigungen werden im Vorfeld der Reporterstellung überprüft.")
 	@ApiResponse(responseCode = "200", description = "Der Report mit den übergebenen Daten wurde erfolgreich erstellt und als E-Mail versendet.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "400", description = "Die übergebenen Parameter sind fehlerhaft.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den geforderten Report zu erstellen.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag zu den übergebenen Daten gefunden.")
 	@ApiResponse(responseCode = "500", description = "Es ist ein unbekannter Fehler aufgetreten.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SimpleOperationResponse.class)))
 	public Response emailReport(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten und Einstellungen, mit denen der Report erstellt und versendet werden soll.", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,

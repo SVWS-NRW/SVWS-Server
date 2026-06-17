@@ -324,7 +324,7 @@ public class HtmlFactory {
 		validiereSchuleMitGost();
 		if (reportingParameter.idHauptdatenObjekt() < 0) {
 			reportingContext.logger().logLn(LogLevel.DEBUG, 4, "FEHLER: Es wurde keine ID für ein Blockungsergebnis übergeben.");
-			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurde keine ID für ein Blockungsergebnis übergeben.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "FEHLER: Es wurde keine ID für ein Blockungsergebnis übergeben.");
 		}
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 				"Erzeuge Datenkontext Gost-Kursplanung-Blockungsergebnis für die HTML-Generierung mit ID %s für Template %s."
@@ -334,7 +334,7 @@ public class HtmlFactory {
 				new HtmlContextGostKursplanungBlockungsergebnisKurse(reportingContext);
 			case GOST_KURSPLANUNG_V_SCHUELER_MIT_KURSEN, GOST_KURSPLANUNG_V_SCHUELER_MIT_SCHIENEN_KURSEN ->
 				new HtmlContextGostKursplanungBlockungsergebnisSchueler(reportingContext);
-			default -> throw new ApiOperationException(Response.Status.NOT_FOUND,
+			default -> throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR,
 					"FEHLER: Für die Reportvorlage %s ist im Datenkontext GOSt-Kursplanung kein HTML-Context implementiert.".formatted(
 							reportingReportvorlage.name()));
 		};
@@ -357,7 +357,7 @@ public class HtmlFactory {
 		final HtmlContextGostKlausurplanungKlausurplan htmlContextGostKlausurplan = switch (reportingReportvorlage) {
 			case GOST_KLAUSURPLANUNG_V_SCHUELER_MIT_KLAUSUREN -> new HtmlContextGostKlausurplanungKlausurplanSchueler(reportingContext);
 			case GOST_KLAUSURPLANUNG_V_KLAUSURTERMINE_MIT_KURSEN -> new HtmlContextGostKlausurplanungKlausurplanTermine(reportingContext);
-			default -> throw new ApiOperationException(Response.Status.NOT_FOUND,
+			default -> throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR,
 					"FEHLER: Für die Reportvorlage %s ist im Datenkontext GOSt-Klausurplanung kein HTML-Context implementiert.".formatted(
 							reportingReportvorlage.name()));
 		};
@@ -486,7 +486,8 @@ public class HtmlFactory {
 		final String htmlTemplateCode = ResourceUtils.text(reportingReportvorlage.getRootPfadHtmlTemplate());
 		if (htmlTemplateCode == null) {
 			reportingContext.logger().logLn(LogLevel.ERROR, 4, "### FEHLER: Die HTML-Template-Datei für die HTML-Erzeugung konnte nicht eingelesen werden.");
-			throw new ApiOperationException(Status.NOT_FOUND, "### FEHLER: Die HTML-Template-Datei für die HTML-Erzeugung konnte nicht eingelesen werden.");
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+					"### FEHLER: Die HTML-Template-Datei für die HTML-Erzeugung konnte nicht eingelesen werden.");
 		}
 
 		final List<ReportBuilderHtml> htmlBuilders = new ArrayList<>();
@@ -613,7 +614,7 @@ public class HtmlFactory {
 	 * Bereinigt die übergebene Liste von IDs (null-Einträge und Duplikate entfernen) und prüft anschließend, dass die bereinigte Liste nicht leer ist
 	 * und zu jeder enthaltenen ID ein passendes Objekt in {@code geladeneObjekte} existiert.
 	 * Die IDs der geladenen Objekte werden mittels des übergebenen {@code idExtractor} bestimmt.
-	 * Im Fehlerfall wird die zugehörige Meldung geloggt und eine {@link ApiOperationException} mit Status {@link Status#NOT_FOUND} geworfen.
+	 * Im Fehlerfall wird die zugehörige Meldung geloggt und eine {@link ApiOperationException} mit Status {@link Status#BAD_REQUEST} geworfen.
 	 *
 	 * @param <T>                         Typ der geladenen Objekte.
 	 * @param idsUebergeben               Liste der übergebenen IDs (kann null-Einträge und Duplikate enthalten).
@@ -652,7 +653,7 @@ public class HtmlFactory {
 	/**
 	 * Bereinigt die übergebene Roh-Liste von IDs (null-Einträge und Duplikate entfernen) und prüft anschließend, dass die bereinigte Liste nicht leer ist
 	 * und jede enthaltene ID in {@code idsVorhanden} existiert. Im Fehlerfall wird die zugehörige Meldung geloggt und eine
-	 * {@link ApiOperationException} mit Status {@link Status#NOT_FOUND} geworfen.
+	 * {@link ApiOperationException} mit Status {@link Status#BAD_REQUEST} geworfen.
 	 *
 	 * @param idsUebergeben               Liste der übergebenen IDs (kann null-Einträge und Duplikate enthalten).
 	 * @param idsVorhanden                Menge der tatsächlich vorhandenen IDs.
@@ -666,12 +667,12 @@ public class HtmlFactory {
 		final List<Long> idsBereinigt = idsUebergeben.stream().filter(Objects::nonNull).distinct().toList();
 		if (idsBereinigt.isEmpty()) {
 			reportingContext.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden keine %s übergeben.".formatted(fehlermeldungIdTyp));
-			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden keine %s übergeben.".formatted(fehlermeldungIdTyp));
+			throw new ApiOperationException(Status.BAD_REQUEST, "FEHLER: Es wurden keine %s übergeben.".formatted(fehlermeldungIdTyp));
 		}
 		for (final Long id : idsBereinigt) {
 			if (!idsVorhanden.contains(id)) {
 				reportingContext.logger().logLn(LogLevel.ERROR, 4, fehlermeldungUnvollstaendig);
-				throw new ApiOperationException(Status.NOT_FOUND, fehlermeldungUnvollstaendig);
+				throw new ApiOperationException(Status.BAD_REQUEST, fehlermeldungUnvollstaendig);
 			}
 		}
 	}
@@ -684,7 +685,7 @@ public class HtmlFactory {
 	private void validiereSchuleMitGost() throws ApiOperationException {
 		if (!reportingContext.repositorySchule().istSchuleMitGost()) {
 			reportingContext.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die Schule besitzt keine gymnasiale Oberstufe (GOSt).");
-			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Die Schule besitzt keine gymnasiale Oberstufe (GOSt).");
+			throw new ApiOperationException(Status.BAD_REQUEST, "FEHLER: Die Schule besitzt keine gymnasiale Oberstufe (GOSt).");
 		}
 	}
 
