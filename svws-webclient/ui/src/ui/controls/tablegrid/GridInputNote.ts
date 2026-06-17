@@ -2,7 +2,6 @@ import { shallowRef } from "vue";
 import type { GridManager } from "./GridManager";
 import { GridInputInnerText } from "./GridInputInnerText";
 import { Note } from "../../../../../core/src/asd/types/Note";
-import type { List } from "../../../../../core/src/java/util/List";
 import type { Collection } from "../../../../../core/src/java/util/Collection";
 
 /**

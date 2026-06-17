@@ -1,6 +1,5 @@
 import type { GridManager } from "./GridManager";
 import { GridInput } from "./GridInput";
-import type { List } from "../../../../../core/src/java/util/List";
 import type { Collection } from "../../../../../core/src/java/util/Collection";
 
 /**
