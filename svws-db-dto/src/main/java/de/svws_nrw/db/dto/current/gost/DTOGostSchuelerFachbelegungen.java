@@ -28,7 +28,7 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 @IdClass(DTOGostSchuelerFachbelegungenPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Schueler_Fachwahlen")
-@JsonPropertyOrder({"Schueler_ID", "Fach_ID", "EF1_Kursart", "EF1_Punkte", "EF2_Kursart", "EF2_Punkte", "Q11_Kursart", "Q11_Punkte", "Q12_Kursart", "Q12_Punkte", "Q21_Kursart", "Q21_Punkte", "Q22_Kursart", "Q22_Punkte", "AbiturFach", "Bemerkungen", "Markiert_Q1", "Markiert_Q2", "Markiert_Q3", "Markiert_Q4", "ergebnisAbiturpruefung", "hatMuendlichePflichtpruefung", "ergebnisMuendlichePruefung"})
+@JsonPropertyOrder({"Schueler_ID", "Fach_ID", "EF1_Kursart", "EF1_Punkte", "EF2_Kursart", "EF2_Punkte", "Q11_Kursart", "Q11_Punkte", "Q12_Kursart", "Q12_Punkte", "Q21_Kursart", "Q21_Punkte", "Q22_Kursart", "Q22_Punkte", "AbiturFach", "Bemerkungen", "Markiert_Q1", "Markiert_Q2", "Markiert_Q3", "Markiert_Q4", "ergebnisAbiturpruefung", "hatMuendlichePflichtpruefung", "ergebnisMuendlichePruefung", "Referenzfach_ID"})
 public final class DTOGostSchuelerFachbelegungen {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -178,6 +178,12 @@ public final class DTOGostSchuelerFachbelegungen {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ergebnisMuendlichePruefung */
 	public static final String QUERY_LIST_BY_ERGEBNISMUENDLICHEPRUEFUNG = "SELECT e FROM DTOGostSchuelerFachbelegungen e WHERE e.ergebnisMuendlichePruefung IN ?1";
 
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Referenzfach_ID */
+	public static final String QUERY_BY_REFERENZFACH_ID = "SELECT e FROM DTOGostSchuelerFachbelegungen e WHERE e.Referenzfach_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Referenzfach_ID */
+	public static final String QUERY_LIST_BY_REFERENZFACH_ID = "SELECT e FROM DTOGostSchuelerFachbelegungen e WHERE e.Referenzfach_ID IN ?1";
+
 	/** Gymnasiale Oberstufe - Schülerdaten - Fachwahlen: ID des Schülers in der Schuelertabelle */
 	@Id
 	@Column(name = "Schueler_ID")
@@ -310,6 +316,11 @@ public final class DTOGostSchuelerFachbelegungen {
 	@JsonProperty
 	public Integer ergebnisMuendlichePruefung;
 
+	/** Gymnasiale Oberstufe - Schülerdaten - Fachwahlen - ID des Referenzfachs für den Projektkurs */
+	@Column(name = "Referenzfach_ID")
+	@JsonProperty
+	public Long Referenzfach_ID;
+
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostSchuelerFachbelegungen ohne eine Initialisierung der Attribute.
 	 */
@@ -364,7 +375,7 @@ public final class DTOGostSchuelerFachbelegungen {
 	 */
 	@Override
 	public String toString() {
-		return "DTOGostSchuelerFachbelegungen(Schueler_ID=" + this.Schueler_ID + ", Fach_ID=" + this.Fach_ID + ", EF1_Kursart=" + this.EF1_Kursart + ", EF1_Punkte=" + this.EF1_Punkte + ", EF2_Kursart=" + this.EF2_Kursart + ", EF2_Punkte=" + this.EF2_Punkte + ", Q11_Kursart=" + this.Q11_Kursart + ", Q11_Punkte=" + this.Q11_Punkte + ", Q12_Kursart=" + this.Q12_Kursart + ", Q12_Punkte=" + this.Q12_Punkte + ", Q21_Kursart=" + this.Q21_Kursart + ", Q21_Punkte=" + this.Q21_Punkte + ", Q22_Kursart=" + this.Q22_Kursart + ", Q22_Punkte=" + this.Q22_Punkte + ", AbiturFach=" + this.AbiturFach + ", Bemerkungen=" + this.Bemerkungen + ", Markiert_Q1=" + this.Markiert_Q1 + ", Markiert_Q2=" + this.Markiert_Q2 + ", Markiert_Q3=" + this.Markiert_Q3 + ", Markiert_Q4=" + this.Markiert_Q4 + ", ergebnisAbiturpruefung=" + this.ergebnisAbiturpruefung + ", hatMuendlichePflichtpruefung=" + this.hatMuendlichePflichtpruefung + ", ergebnisMuendlichePruefung=" + this.ergebnisMuendlichePruefung + ")";
+		return "DTOGostSchuelerFachbelegungen(Schueler_ID=" + this.Schueler_ID + ", Fach_ID=" + this.Fach_ID + ", EF1_Kursart=" + this.EF1_Kursart + ", EF1_Punkte=" + this.EF1_Punkte + ", EF2_Kursart=" + this.EF2_Kursart + ", EF2_Punkte=" + this.EF2_Punkte + ", Q11_Kursart=" + this.Q11_Kursart + ", Q11_Punkte=" + this.Q11_Punkte + ", Q12_Kursart=" + this.Q12_Kursart + ", Q12_Punkte=" + this.Q12_Punkte + ", Q21_Kursart=" + this.Q21_Kursart + ", Q21_Punkte=" + this.Q21_Punkte + ", Q22_Kursart=" + this.Q22_Kursart + ", Q22_Punkte=" + this.Q22_Punkte + ", AbiturFach=" + this.AbiturFach + ", Bemerkungen=" + this.Bemerkungen + ", Markiert_Q1=" + this.Markiert_Q1 + ", Markiert_Q2=" + this.Markiert_Q2 + ", Markiert_Q3=" + this.Markiert_Q3 + ", Markiert_Q4=" + this.Markiert_Q4 + ", ergebnisAbiturpruefung=" + this.ergebnisAbiturpruefung + ", hatMuendlichePflichtpruefung=" + this.hatMuendlichePflichtpruefung + ", ergebnisMuendlichePruefung=" + this.ergebnisMuendlichePruefung + ", Referenzfach_ID=" + this.Referenzfach_ID + ")";
 	}
 
 }

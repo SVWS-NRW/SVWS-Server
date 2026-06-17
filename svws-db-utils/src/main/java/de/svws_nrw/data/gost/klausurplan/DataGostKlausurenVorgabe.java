@@ -367,7 +367,7 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 			if (!exists) {
 				final DTOGostKlausurenVorgaben k =
 						new DTOGostKlausurenVorgaben(idNMK++, abiturjahr, vorgabe.Halbjahr, vorgabe.Quartal, vorgabe.Fach_ID, vorgabe.Kursart, vorgabe.Dauer,
-								vorgabe.Auswahlzeit, vorgabe.IstMdlPruefung, vorgabe.IstAudioNotwendig, vorgabe.IstVideoNotwendig);
+								vorgabe.Auswahlzeit, vorgabe.IstGklMoeglich, vorgabe.IstMdlPruefung, vorgabe.IstAudioNotwendig, vorgabe.IstVideoNotwendig);
 				k.Bemerkungen = vorgabe.Bemerkungen;
 				vorgabenNeu.add(k);
 			}
@@ -420,7 +420,7 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 				}
 				for (final int q : quartale) {
 					final DTOGostKlausurenVorgaben vorgabeNeu = new DTOGostKlausurenVorgaben(idNMK++, -1, halbjahr, q, fach.id, ka,
-							berechneApoKlausurdauer(halbjahr, ka, fach), 0, false, false, false);
+							berechneApoKlausurdauer(halbjahr, ka, fach), 0, false, false, false, false);
 					if (manager.get(vorgabeNeu.Halbjahr).vorgabeGetByHalbjahrAndQuartalAndKursartallgAndFachid(-1, halbjahr, vorgabeNeu.Quartal,
 							vorgabeNeu.Kursart, vorgabeNeu.Fach_ID) == null) {
 						neueVorgaben.add(vorgabeNeu);

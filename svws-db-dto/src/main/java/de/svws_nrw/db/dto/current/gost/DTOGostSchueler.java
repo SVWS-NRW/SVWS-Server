@@ -29,7 +29,7 @@ import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Schueler")
-@JsonPropertyOrder({"Schueler_ID", "DatumBeratung", "DatumRuecklauf", "HatSportattest", "Kommentar", "Beratungslehrer_ID", "PruefPhase", "BesondereLernleistung_Art", "BesondereLernleistung_Punkte"})
+@JsonPropertyOrder({"Schueler_ID", "DatumBeratung", "DatumRuecklauf", "HatSportattest", "Kommentar", "Beratungslehrer_ID", "PruefPhase", "BesondereLernleistung_Art", "BesondereLernleistung_Punkte", "GKL_EF_AF1_Klausurvorgabe_ID", "GKL_EF_AF2_Klausurvorgabe_ID", "GKL_EF_AF3_Klausurvorgabe_ID", "GKL_Q_AF1_Klausurvorgabe_ID", "GKL_Q_AF2_Klausurvorgabe_ID", "GKL_Q_AF3_Klausurvorgabe_ID"})
 public final class DTOGostSchueler {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -98,6 +98,42 @@ public final class DTOGostSchueler {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BesondereLernleistung_Punkte */
 	public static final String QUERY_LIST_BY_BESONDERELERNLEISTUNG_PUNKTE = "SELECT e FROM DTOGostSchueler e WHERE e.BesondereLernleistung_Punkte IN ?1";
 
+	/** Die Datenbankabfrage für DTOs anhand des Attributes GKL_EF_AF1_Klausurvorgabe_ID */
+	public static final String QUERY_BY_GKL_EF_AF1_KLAUSURVORGABE_ID = "SELECT e FROM DTOGostSchueler e WHERE e.GKL_EF_AF1_Klausurvorgabe_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GKL_EF_AF1_Klausurvorgabe_ID */
+	public static final String QUERY_LIST_BY_GKL_EF_AF1_KLAUSURVORGABE_ID = "SELECT e FROM DTOGostSchueler e WHERE e.GKL_EF_AF1_Klausurvorgabe_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes GKL_EF_AF2_Klausurvorgabe_ID */
+	public static final String QUERY_BY_GKL_EF_AF2_KLAUSURVORGABE_ID = "SELECT e FROM DTOGostSchueler e WHERE e.GKL_EF_AF2_Klausurvorgabe_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GKL_EF_AF2_Klausurvorgabe_ID */
+	public static final String QUERY_LIST_BY_GKL_EF_AF2_KLAUSURVORGABE_ID = "SELECT e FROM DTOGostSchueler e WHERE e.GKL_EF_AF2_Klausurvorgabe_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes GKL_EF_AF3_Klausurvorgabe_ID */
+	public static final String QUERY_BY_GKL_EF_AF3_KLAUSURVORGABE_ID = "SELECT e FROM DTOGostSchueler e WHERE e.GKL_EF_AF3_Klausurvorgabe_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GKL_EF_AF3_Klausurvorgabe_ID */
+	public static final String QUERY_LIST_BY_GKL_EF_AF3_KLAUSURVORGABE_ID = "SELECT e FROM DTOGostSchueler e WHERE e.GKL_EF_AF3_Klausurvorgabe_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes GKL_Q_AF1_Klausurvorgabe_ID */
+	public static final String QUERY_BY_GKL_Q_AF1_KLAUSURVORGABE_ID = "SELECT e FROM DTOGostSchueler e WHERE e.GKL_Q_AF1_Klausurvorgabe_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GKL_Q_AF1_Klausurvorgabe_ID */
+	public static final String QUERY_LIST_BY_GKL_Q_AF1_KLAUSURVORGABE_ID = "SELECT e FROM DTOGostSchueler e WHERE e.GKL_Q_AF1_Klausurvorgabe_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes GKL_Q_AF2_Klausurvorgabe_ID */
+	public static final String QUERY_BY_GKL_Q_AF2_KLAUSURVORGABE_ID = "SELECT e FROM DTOGostSchueler e WHERE e.GKL_Q_AF2_Klausurvorgabe_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GKL_Q_AF2_Klausurvorgabe_ID */
+	public static final String QUERY_LIST_BY_GKL_Q_AF2_KLAUSURVORGABE_ID = "SELECT e FROM DTOGostSchueler e WHERE e.GKL_Q_AF2_Klausurvorgabe_ID IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes GKL_Q_AF3_Klausurvorgabe_ID */
+	public static final String QUERY_BY_GKL_Q_AF3_KLAUSURVORGABE_ID = "SELECT e FROM DTOGostSchueler e WHERE e.GKL_Q_AF3_Klausurvorgabe_ID = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GKL_Q_AF3_Klausurvorgabe_ID */
+	public static final String QUERY_LIST_BY_GKL_Q_AF3_KLAUSURVORGABE_ID = "SELECT e FROM DTOGostSchueler e WHERE e.GKL_Q_AF3_Klausurvorgabe_ID IN ?1";
+
 	/** Gymnasiale Oberstufe - Schülerdaten: Die ID des Schülers in der Schülertabelle */
 	@Id
 	@Column(name = "Schueler_ID")
@@ -153,6 +189,36 @@ public final class DTOGostSchueler {
 	@JsonProperty
 	public Integer BesondereLernleistung_Punkte;
 
+	/** Gymnasiale Oberstufe - Schülerdaten: Gleichwertiger Komplexer Leistungsnachweis: ID der Klausurvorgabe der EF in Aufgabenfeld 1 */
+	@Column(name = "GKL_EF_AF1_Klausurvorgabe_ID")
+	@JsonProperty
+	public Long GKL_EF_AF1_Klausurvorgabe_ID;
+
+	/** Gymnasiale Oberstufe - Schülerdaten: Gleichwertiger Komplexer Leistungsnachweis: ID der Klausurvorgabe der EF in Aufgabenfeld 2 */
+	@Column(name = "GKL_EF_AF2_Klausurvorgabe_ID")
+	@JsonProperty
+	public Long GKL_EF_AF2_Klausurvorgabe_ID;
+
+	/** Gymnasiale Oberstufe - Schülerdaten: Gleichwertiger Komplexer Leistungsnachweis: ID der Klausurvorgabe der EF in Aufgabenfeld 3 */
+	@Column(name = "GKL_EF_AF3_Klausurvorgabe_ID")
+	@JsonProperty
+	public Long GKL_EF_AF3_Klausurvorgabe_ID;
+
+	/** Gymnasiale Oberstufe - Schülerdaten: Gleichwertiger Komplexer Leistungsnachweis: ID der Klausurvorgabe der Q-Phase in Aufgabenfeld 1 */
+	@Column(name = "GKL_Q_AF1_Klausurvorgabe_ID")
+	@JsonProperty
+	public Long GKL_Q_AF1_Klausurvorgabe_ID;
+
+	/** Gymnasiale Oberstufe - Schülerdaten: Gleichwertiger Komplexer Leistungsnachweis: ID der Klausurvorgabe der Q-Phase in Aufgabenfeld 2 */
+	@Column(name = "GKL_Q_AF2_Klausurvorgabe_ID")
+	@JsonProperty
+	public Long GKL_Q_AF2_Klausurvorgabe_ID;
+
+	/** Gymnasiale Oberstufe - Schülerdaten: Gleichwertiger Komplexer Leistungsnachweis: ID der Klausurvorgabe der Q-Phase in Aufgabenfeld 3 */
+	@Column(name = "GKL_Q_AF3_Klausurvorgabe_ID")
+	@JsonProperty
+	public Long GKL_Q_AF3_Klausurvorgabe_ID;
+
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostSchueler ohne eine Initialisierung der Attribute.
 	 */
@@ -202,7 +268,7 @@ public final class DTOGostSchueler {
 	 */
 	@Override
 	public String toString() {
-		return "DTOGostSchueler(Schueler_ID=" + this.Schueler_ID + ", DatumBeratung=" + this.DatumBeratung + ", DatumRuecklauf=" + this.DatumRuecklauf + ", HatSportattest=" + this.HatSportattest + ", Kommentar=" + this.Kommentar + ", Beratungslehrer_ID=" + this.Beratungslehrer_ID + ", PruefPhase=" + this.PruefPhase + ", BesondereLernleistung_Art=" + this.BesondereLernleistung_Art + ", BesondereLernleistung_Punkte=" + this.BesondereLernleistung_Punkte + ")";
+		return "DTOGostSchueler(Schueler_ID=" + this.Schueler_ID + ", DatumBeratung=" + this.DatumBeratung + ", DatumRuecklauf=" + this.DatumRuecklauf + ", HatSportattest=" + this.HatSportattest + ", Kommentar=" + this.Kommentar + ", Beratungslehrer_ID=" + this.Beratungslehrer_ID + ", PruefPhase=" + this.PruefPhase + ", BesondereLernleistung_Art=" + this.BesondereLernleistung_Art + ", BesondereLernleistung_Punkte=" + this.BesondereLernleistung_Punkte + ", GKL_EF_AF1_Klausurvorgabe_ID=" + this.GKL_EF_AF1_Klausurvorgabe_ID + ", GKL_EF_AF2_Klausurvorgabe_ID=" + this.GKL_EF_AF2_Klausurvorgabe_ID + ", GKL_EF_AF3_Klausurvorgabe_ID=" + this.GKL_EF_AF3_Klausurvorgabe_ID + ", GKL_Q_AF1_Klausurvorgabe_ID=" + this.GKL_Q_AF1_Klausurvorgabe_ID + ", GKL_Q_AF2_Klausurvorgabe_ID=" + this.GKL_Q_AF2_Klausurvorgabe_ID + ", GKL_Q_AF3_Klausurvorgabe_ID=" + this.GKL_Q_AF3_Klausurvorgabe_ID + ")";
 	}
 
 }

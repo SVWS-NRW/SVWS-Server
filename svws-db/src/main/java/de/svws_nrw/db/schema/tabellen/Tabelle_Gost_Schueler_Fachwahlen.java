@@ -121,6 +121,10 @@ public class Tabelle_Gost_Schueler_Fachwahlen extends SchemaTabelle {
 	public final SchemaTabelleSpalte col_ergebnisMuendlichePruefung = add("ergebnisMuendlichePruefung", SchemaDatentypen.INT, false)
 			.setJavaComment("Gymnasiale Oberstufe - Schülerdaten - Fachwahlen - Abiturberechnung: Ergebnis der mündlichen Prüfung im 1. - 3. Fach");
 
+	/** Die Definition der Tabellenspalte Referenzfach_ID */
+	public final SchemaTabelleSpalte col_Referenzfach_ID = add("Referenzfach_ID", SchemaDatentypen.BIGINT, false)
+			.setJavaComment("Gymnasiale Oberstufe - Schülerdaten - Fachwahlen - ID des Referenzfachs für den Projektkurs").setRevision(SchemaRevisionen.REV_68);
+
 
 	/** Die Definition des Fremdschlüssels Gost_Schueler_Fachwahlen_Schueler_ID_FK */
 	public final SchemaTabelleFremdschluessel fk_Gost_Schueler_Fachwahlen_Schueler_ID_FK = addForeignKey(
@@ -137,6 +141,14 @@ public class Tabelle_Gost_Schueler_Fachwahlen extends SchemaTabelle {
 			/* OnDelete: */ SchemaFremdschluesselAktionen.RESTRICT,
 			new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 	);
+
+	/** Die Definition des Fremdschlüssels Gost_Schueler_Fachwahlen_Referenzfach_ID_FK */
+	public final SchemaTabelleFremdschluessel fk_Gost_Schueler_Fachwahlen_Referenzfach_ID_FK = addForeignKey(
+			"Gost_Schueler_Fachwahlen_Referenzfach_ID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.RESTRICT,
+			new Pair<>(col_Referenzfach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
+	).setRevision(SchemaRevisionen.REV_68);
 
 
 	/** Die Definition des Non-Unique-Index Gost_Schueler_Fachwahlen_IDX_Schueler_ID */

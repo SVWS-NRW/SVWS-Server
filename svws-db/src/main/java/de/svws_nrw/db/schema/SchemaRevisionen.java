@@ -333,21 +333,24 @@ public enum SchemaRevisionen {
 	REV_66(66, "2026-05-28"),
 
 	/** Verwende in der Datenbank grundsätzlich UTC-Zeitstempel in Triggern. Die Handhabung der Zeitzone erfolgt ggf. im SVWS-Server */
-	REV_67(67, "2026-06-08");
+	REV_67(67, "2026-06-08"),
+
+	/** Anpassung der Tabellen zu Klausurvorgaben und Hinzufügen einer neuen Tabelle für die Definition von GKLs bei Schülern */
+	REV_68(68, "2026-06-11");
 
 	/**
 	 * Gibt die größte Revisionsnummer an, die in dieser Enumeration definiert wurde und
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_67;
+	public static final SchemaRevisionen maxRevision = REV_68;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_67;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_68;
 
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
