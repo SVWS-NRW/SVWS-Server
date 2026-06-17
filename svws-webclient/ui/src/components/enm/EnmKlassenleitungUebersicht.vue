@@ -48,7 +48,7 @@
 								<span class="icon" :class="gridManager.hasHiddenColumn ? 'i-ri-layout-column-fill' : 'i-ri-layout-column-line'" />
 								<span class="icon i-ri-arrow-down-s-line" />
 								<template #content>
-									<ul class="min-w-[10rem] flex flex-col gap-0.5 pt-1">
+									<ul class="min-w-40 flex flex-col gap-0.5 pt-1">
 										<template v-for="hideable of gridManager.hideableColumns" :key="hideable.name">
 											<li>
 												<svws-ui-checkbox :model-value="gridManager.isColVisible(hideable.kuerzel)" @update:model-value="value => gridManager.setColVisibility(hideable.kuerzel, value)">
@@ -237,23 +237,26 @@
 	defineExpose({ gridManager });
 
 	function inputFehlstunden(pair: PairNN<ENMv2Klasse, ENMv2Schueler>, col: number, index: number) {
-		const key = 'FS_' + pair.a.id + "_" + pair.b.id;
-		const setter = (value: number | null) => {
-			const patch = <Partial<ENMv2Lernabschnitt>>{ fehlstundenGesamt: value };
-			const inputFSU = gridManager.getInputByKey('FSU_' + pair.a.id + "_" + pair.b.id);
+		const keyFS = 'FS_' + pair.a.id + "_" + pair.b.id;
+		const keyFSU = 'FSU_' + pair.a.id + "_" + pair.b.id;
+		const setter = (fehlstundenGesamt: number | null) => {
+			const fehlstundenGesamtUnentschuldigt = pair.b.lernabschnitt.fehlstundenGesamtUnentschuldigt;
+			const patch = <Partial<ENMv2Lernabschnitt>>{ fehlstundenGesamt, fehlstundenGesamtUnentschuldigt };
+			const inputFSU = gridManager.getInputByKey(keyFSU);
 			if (inputFSU !== null) {
 				const inputFSUTyped = inputFSU as GridInputIntegerDiv<string>;
-				inputFSUTyped.max = value ?? 0;
-				if ((patch.fehlstundenGesamtUnentschuldigt ?? 0) > (value ?? 0)) {
-					patch.fehlstundenGesamtUnentschuldigt = (value ?? 0);
+				inputFSUTyped.max = fehlstundenGesamt ?? 0;
+				if ((patch.fehlstundenGesamtUnentschuldigt ?? 0) > (fehlstundenGesamt ?? 0)) {
+					patch.fehlstundenGesamtUnentschuldigt = (fehlstundenGesamt ?? 0);
 				}
 			}
-			void props.patchLernabschnitt(pair.b.lernabschnitt, { fehlstundenGesamt: value });
+			void props.patchLernabschnitt(pair.b.lernabschnitt, patch);
+			gridManager.update(keyFSU, patch.fehlstundenGesamtUnentschuldigt);
 		};
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
-			const input = gridManager.applyInputIntegerDiv(key, col, index, element, 999, setter);
+			const input = gridManager.applyInputIntegerDiv(keyFS, col, index, element, 999, setter);
 			if (input !== null) {
-				watchEffect(() => gridManager.update(key, pair.b.lernabschnitt.fehlstundenGesamt));
+				watchEffect(() => gridManager.update(keyFS, pair.b.lernabschnitt.fehlstundenGesamt));
 			}
 		};
 	}

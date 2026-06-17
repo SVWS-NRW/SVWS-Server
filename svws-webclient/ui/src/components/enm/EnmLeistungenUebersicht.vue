@@ -283,23 +283,26 @@
 	}
 
 	function inputFehlstunden(pair: PairNN<ENMv2Leistung, ENMv2Schueler>, col: number, index: number) {
-		const key = 'FS_' + pair.a.id + "_" + pair.b.id;
-		const setter = (value: number | null) => {
-			const patch = <Partial<ENMv2Leistung>>{ fehlstundenFach: value };
+		const keyFS = 'FS_' + pair.a.id + "_" + pair.b.id;
+		const keyFSU = 'FSU_' + pair.a.id + "_" + pair.b.id;
+		const setter = (fehlstundenFach: number | null) => {
+			const fehlstundenUnentschuldigtFach = pair.a.fehlstundenUnentschuldigtFach;
+			const patch = <Partial<ENMv2Leistung>>{ fehlstundenFach, fehlstundenUnentschuldigtFach };
 			const inputFSU = gridManager.getInputByKey('FSU_' + pair.a.id + "_" + pair.b.id);
 			if (inputFSU !== null) {
 				const inputFSUTyped = inputFSU as GridInputIntegerDiv<string>;
-				inputFSUTyped.max = value ?? 0;
-				if ((patch.fehlstundenUnentschuldigtFach ?? 0) > (value ?? 0)) {
-					patch.fehlstundenUnentschuldigtFach = (value ?? 0);
+				inputFSUTyped.max = fehlstundenFach ?? 0;
+				if ((patch.fehlstundenUnentschuldigtFach ?? 0) > (fehlstundenFach ?? 0)) {
+					patch.fehlstundenUnentschuldigtFach = (fehlstundenFach ?? 0);
 				}
 			}
-			void props.patchLeistung(pair.a, { fehlstundenFach: value });
+			void props.patchLeistung(pair.a, patch);
+			gridManager.update(keyFSU, patch.fehlstundenUnentschuldigtFach);
 		};
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
-			const input = gridManager.applyInputIntegerDiv(key, col, index, element, 999, setter);
+			const input = gridManager.applyInputIntegerDiv(keyFS, col, index, element, 999, setter);
 			if (input !== null) {
-				watchEffect(() => gridManager.update(key, pair.a.fehlstundenFach));
+				watchEffect(() => gridManager.update(keyFS, pair.a.fehlstundenFach));
 			}
 		};
 	}

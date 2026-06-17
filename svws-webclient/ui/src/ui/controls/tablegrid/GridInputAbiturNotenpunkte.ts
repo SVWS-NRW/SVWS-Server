@@ -4,7 +4,6 @@ import { GridInputInnerText } from "./GridInputInnerText";
 import type { NoteKatalogEintrag } from "../../../../../core/src/asd/data/NoteKatalogEintrag";
 import { Note } from "../../../../../core/src/asd/types/Note";
 import type { Collection } from "../../../../../core/src/java/util/Collection";
-import type { List } from "../../../../../core/src/java/util/List";
 
 /**
  * Ein Grid-Input für die Schnelleingabe der Notenpunkte im Abiturbereich.
