@@ -222,13 +222,25 @@
 	}
 
 	async function art2faAuswahl(type: number) {
-		for (const lehrer of auswahl.value) {
-			if (lehrer.art2FA !== type) {
-				await props.set2fa(type, lehrer.id);
-			}
-			lehrer.art2FA = type;
+		// Wenn keine Mehrfachauswahl vorhanden ist, aber ein Eintrag selektiert wurde, nur dort aktualisieren
+		if ((auswahl.value.length === 0) && (selected.value !== null)) {
+			await props.set2fa(type, selected.value.id);
+			selected.value.art2FA = type;
+			triggerRef(selected);
+			triggerRef(lehrerListe);
+			return;
 		}
-		triggerRef(lehrerListe);
+
+		// wenn mehrere Lehrer in der Liste ausgewählt sind, diese aktualisieren
+		if (auswahl.value.length > 0) {
+			for (const lehrer of auswahl.value) {
+				if (lehrer.art2FA !== type) {
+					await props.set2fa(type, lehrer.id);
+				}
+				lehrer.art2FA = type;
+			}
+			triggerRef(lehrerListe);
+		}
 	}
 
 	const validatorEmail = (value: string | null): boolean => ((value === null) || (value === '')) ? true : (
