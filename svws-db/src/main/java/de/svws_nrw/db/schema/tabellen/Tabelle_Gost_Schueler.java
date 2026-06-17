@@ -61,6 +61,36 @@ public class Tabelle_Gost_Schueler extends SchemaTabelle {
 	public final SchemaTabelleSpalte col_BesondereLernleistung_Punkte = add("BesondereLernleistung_Punkte", SchemaDatentypen.INT, false)
 			.setJavaComment("Gymnasiale Oberstufe - Schülerdaten: Die Notenpunkte der besonderen Lernleistung ");
 
+	/** Die Definition der Tabellenspalte GKL_EF_AF1_Klausurvorgabe_ID */
+	public final SchemaTabelleSpalte col_GKL_EF_AF1_Klausurvorgabe_ID = add("GKL_EF_AF1_Klausurvorgabe_ID", SchemaDatentypen.BIGINT, false)
+			.setJavaComment("Gymnasiale Oberstufe - Schülerdaten: Gleichwertiger Komplexer Leistungsnachweis: ID der Klausurvorgabe der EF in Aufgabenfeld 1")
+			.setRevision(SchemaRevisionen.REV_68);
+
+	/** Die Definition der Tabellenspalte GKL_EF_AF2_Klausurvorgabe_ID */
+	public final SchemaTabelleSpalte col_GKL_EF_AF2_Klausurvorgabe_ID = add("GKL_EF_AF2_Klausurvorgabe_ID", SchemaDatentypen.BIGINT, false)
+			.setJavaComment("Gymnasiale Oberstufe - Schülerdaten: Gleichwertiger Komplexer Leistungsnachweis: ID der Klausurvorgabe der EF in Aufgabenfeld 2")
+			.setRevision(SchemaRevisionen.REV_68);
+
+	/** Die Definition der Tabellenspalte GKL_EF_AF3_Klausurvorgabe_ID */
+	public final SchemaTabelleSpalte col_GKL_EF_AF3_Klausurvorgabe_ID = add("GKL_EF_AF3_Klausurvorgabe_ID", SchemaDatentypen.BIGINT, false)
+			.setJavaComment("Gymnasiale Oberstufe - Schülerdaten: Gleichwertiger Komplexer Leistungsnachweis: ID der Klausurvorgabe der EF in Aufgabenfeld 3")
+			.setRevision(SchemaRevisionen.REV_68);
+
+	/** Die Definition der Tabellenspalte GKL_Q_AF1_Klausurvorgabe_ID */
+	public final SchemaTabelleSpalte col_GKL_Q_AF1_Klausurvorgabe_ID = add("GKL_Q_AF1_Klausurvorgabe_ID", SchemaDatentypen.BIGINT, false)
+			.setJavaComment("Gymnasiale Oberstufe - Schülerdaten: Gleichwertiger Komplexer Leistungsnachweis: ID der Klausurvorgabe der Q-Phase in Aufgabenfeld 1")
+			.setRevision(SchemaRevisionen.REV_68);
+
+	/** Die Definition der Tabellenspalte GKL_Q_AF2_Klausurvorgabe_ID */
+	public final SchemaTabelleSpalte col_GKL_Q_AF2_Klausurvorgabe_ID = add("GKL_Q_AF2_Klausurvorgabe_ID", SchemaDatentypen.BIGINT, false)
+			.setJavaComment("Gymnasiale Oberstufe - Schülerdaten: Gleichwertiger Komplexer Leistungsnachweis: ID der Klausurvorgabe der Q-Phase in Aufgabenfeld 2")
+			.setRevision(SchemaRevisionen.REV_68);
+
+	/** Die Definition der Tabellenspalte GKL_Q_AF3_Klausurvorgabe_ID */
+	public final SchemaTabelleSpalte col_GKL_Q_AF3_Klausurvorgabe_ID = add("GKL_Q_AF3_Klausurvorgabe_ID", SchemaDatentypen.BIGINT, false)
+			.setJavaComment("Gymnasiale Oberstufe - Schülerdaten: Gleichwertiger Komplexer Leistungsnachweis: ID der Klausurvorgabe der Q-Phase in Aufgabenfeld 3")
+			.setRevision(SchemaRevisionen.REV_68);
+
 
 	/** Die Definition des Fremdschlüssels Gost_Schueler_Schueler_ID_FK */
 	public final SchemaTabelleFremdschluessel fk_Gost_Schueler_Schueler_ID_FK = addForeignKey(
@@ -69,6 +99,54 @@ public class Tabelle_Gost_Schueler extends SchemaTabelle {
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 	);
+
+	/** Die Definition des Fremdschlüssels Gost_Schueler_GKL_EF_AF1_Klausurvorgabe_ID_FK */
+	public final SchemaTabelleFremdschluessel fk_Gost_Schueler_GKL_EF_AF1_Klausurvorgabe_ID_FK = addForeignKey(
+			"Gost_Schueler_GKL_EF_AF1_Klausurvorgabe_ID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.RESTRICT,
+			new Pair<>(col_GKL_EF_AF1_Klausurvorgabe_ID, Schema.tab_Gost_Klausuren_Vorgaben.col_ID)
+	).setRevision(SchemaRevisionen.REV_68);
+
+	/** Die Definition des Fremdschlüssels Gost_Schueler_GKL_EF_AF2_Klausurvorgabe_ID_FK */
+	public final SchemaTabelleFremdschluessel fk_Gost_Schueler_GKL_EF_AF2_Klausurvorgabe_ID_FK = addForeignKey(
+			"Gost_Schueler_GKL_EF_AF2_Klausurvorgabe_ID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.RESTRICT,
+			new Pair<>(col_GKL_EF_AF2_Klausurvorgabe_ID, Schema.tab_Gost_Klausuren_Vorgaben.col_ID)
+	).setRevision(SchemaRevisionen.REV_68);
+
+	/** Die Definition des Fremdschlüssels Gost_Schueler_GKL_EF_AF3_Klausurvorgabe_ID_FK */
+	public final SchemaTabelleFremdschluessel fk_Gost_Schueler_GKL_EF_AF3_Klausurvorgabe_ID_FK = addForeignKey(
+			"Gost_Schueler_GKL_EF_AF3_Klausurvorgabe_ID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.RESTRICT,
+			new Pair<>(col_GKL_EF_AF3_Klausurvorgabe_ID, Schema.tab_Gost_Klausuren_Vorgaben.col_ID)
+	).setRevision(SchemaRevisionen.REV_68);
+
+	/** Die Definition des Fremdschlüssels Gost_Schueler_GKL_Q_AF1_Klausurvorgabe_ID_FK */
+	public final SchemaTabelleFremdschluessel fk_Gost_Schueler_GKL_Q_AF1_Klausurvorgabe_ID_FK = addForeignKey(
+			"Gost_Schueler_GKL_Q_AF1_Klausurvorgabe_ID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.RESTRICT,
+			new Pair<>(col_GKL_Q_AF1_Klausurvorgabe_ID, Schema.tab_Gost_Klausuren_Vorgaben.col_ID)
+	).setRevision(SchemaRevisionen.REV_68);
+
+	/** Die Definition des Fremdschlüssels Gost_Schueler_GKL_Q_AF2_Klausurvorgabe_ID_FK */
+	public final SchemaTabelleFremdschluessel fk_Gost_Schueler_GKL_Q_AF2_Klausurvorgabe_ID_FK = addForeignKey(
+			"Gost_Schueler_GKL_Q_AF2_Klausurvorgabe_ID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.RESTRICT,
+			new Pair<>(col_GKL_Q_AF2_Klausurvorgabe_ID, Schema.tab_Gost_Klausuren_Vorgaben.col_ID)
+	).setRevision(SchemaRevisionen.REV_68);
+
+	/** Die Definition des Fremdschlüssels Gost_Schueler_GKL_Q_AF3_Klausurvorgabe_ID_FK */
+	public final SchemaTabelleFremdschluessel fk_Gost_Schueler_GKL_Q_AF3_Klausurvorgabe_ID_FK = addForeignKey(
+			"Gost_Schueler_GKL_Q_AF3_Klausurvorgabe_ID_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.RESTRICT,
+			new Pair<>(col_GKL_Q_AF3_Klausurvorgabe_ID, Schema.tab_Gost_Klausuren_Vorgaben.col_ID)
+	).setRevision(SchemaRevisionen.REV_68);
 
 
 	/**

@@ -62,6 +62,14 @@ public class Tabelle_Gost_Klausuren_Vorgaben extends SchemaTabelle {
 			.setNotNull()
 			.setJavaComment("Das Dauer der Auswahlzeit in Minuten");
 
+	/** Die Definition der Tabellenspalte IstGklMoeglich */
+	public final SchemaTabelleSpalte col_IstGklMoeglich = add("IstGklMoeglich", SchemaDatentypen.INT, false)
+			.setDefault("0")
+			.setNotNull()
+			.setConverter(Boolean01Converter.class)
+			.setJavaComment("Gibt an, ob bei dieser Klausur eine GKL möglich ist: 1 - true, 0 - false.")
+			.setRevision(SchemaRevisionen.REV_68);
+
 	/** Die Definition der Tabellenspalte IstMdlPruefung */
 	public final SchemaTabelleSpalte col_IstMdlPruefung = add("IstMdlPruefung", SchemaDatentypen.INT, false)
 			.setDefault("0")

@@ -35,7 +35,7 @@ import de.svws_nrw.csv.converter.current.gost.GOStKursartConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Klausuren_Vorgaben")
-@JsonPropertyOrder({"ID", "Abi_Jahrgang", "Halbjahr", "Quartal", "Fach_ID", "Kursart", "Dauer", "Auswahlzeit", "IstMdlPruefung", "IstAudioNotwendig", "IstVideoNotwendig", "Bemerkungen"})
+@JsonPropertyOrder({"ID", "Abi_Jahrgang", "Halbjahr", "Quartal", "Fach_ID", "Kursart", "Dauer", "Auswahlzeit", "IstGklMoeglich", "IstMdlPruefung", "IstAudioNotwendig", "IstVideoNotwendig", "Bemerkungen"})
 public final class DTOGostKlausurenVorgaben {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -97,6 +97,12 @@ public final class DTOGostKlausurenVorgaben {
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Auswahlzeit */
 	public static final String QUERY_LIST_BY_AUSWAHLZEIT = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Auswahlzeit IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstGklMoeglich */
+	public static final String QUERY_BY_ISTGKLMOEGLICH = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.IstGklMoeglich = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstGklMoeglich */
+	public static final String QUERY_LIST_BY_ISTGKLMOEGLICH = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.IstGklMoeglich IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes IstMdlPruefung */
 	public static final String QUERY_BY_ISTMDLPRUEFUNG = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.IstMdlPruefung = ?1";
@@ -169,6 +175,14 @@ public final class DTOGostKlausurenVorgaben {
 	@JsonProperty
 	public int Auswahlzeit;
 
+	/** Gibt an, ob bei dieser Klausur eine GKL möglich ist: 1 - true, 0 - false. */
+	@Column(name = "IstGklMoeglich")
+	@JsonProperty
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
+	public Boolean IstGklMoeglich;
+
 	/** Gibt an, ob es sich um eine mündliche Prüfunge handelt oder nicht: 1 - true, 0 - false. */
 	@Column(name = "IstMdlPruefung")
 	@JsonProperty
@@ -215,11 +229,12 @@ public final class DTOGostKlausurenVorgaben {
 	 * @param Kursart   der Wert für das Attribut Kursart
 	 * @param Dauer   der Wert für das Attribut Dauer
 	 * @param Auswahlzeit   der Wert für das Attribut Auswahlzeit
+	 * @param IstGklMoeglich   der Wert für das Attribut IstGklMoeglich
 	 * @param IstMdlPruefung   der Wert für das Attribut IstMdlPruefung
 	 * @param IstAudioNotwendig   der Wert für das Attribut IstAudioNotwendig
 	 * @param IstVideoNotwendig   der Wert für das Attribut IstVideoNotwendig
 	 */
-	public DTOGostKlausurenVorgaben(final long ID, final int Abi_Jahrgang, final GostHalbjahr Halbjahr, final int Quartal, final long Fach_ID, final GostKursart Kursart, final int Dauer, final int Auswahlzeit, final Boolean IstMdlPruefung, final Boolean IstAudioNotwendig, final Boolean IstVideoNotwendig) {
+	public DTOGostKlausurenVorgaben(final long ID, final int Abi_Jahrgang, final GostHalbjahr Halbjahr, final int Quartal, final long Fach_ID, final GostKursart Kursart, final int Dauer, final int Auswahlzeit, final Boolean IstGklMoeglich, final Boolean IstMdlPruefung, final Boolean IstAudioNotwendig, final Boolean IstVideoNotwendig) {
 		this.ID = ID;
 		this.Abi_Jahrgang = Abi_Jahrgang;
 		this.Halbjahr = Halbjahr;
@@ -231,6 +246,7 @@ public final class DTOGostKlausurenVorgaben {
 		this.Kursart = Kursart;
 		this.Dauer = Dauer;
 		this.Auswahlzeit = Auswahlzeit;
+		this.IstGklMoeglich = IstGklMoeglich;
 		this.IstMdlPruefung = IstMdlPruefung;
 		this.IstAudioNotwendig = IstAudioNotwendig;
 		this.IstVideoNotwendig = IstVideoNotwendig;
@@ -268,7 +284,7 @@ public final class DTOGostKlausurenVorgaben {
 	 */
 	@Override
 	public String toString() {
-		return "DTOGostKlausurenVorgaben(ID=" + this.ID + ", Abi_Jahrgang=" + this.Abi_Jahrgang + ", Halbjahr=" + this.Halbjahr + ", Quartal=" + this.Quartal + ", Fach_ID=" + this.Fach_ID + ", Kursart=" + this.Kursart + ", Dauer=" + this.Dauer + ", Auswahlzeit=" + this.Auswahlzeit + ", IstMdlPruefung=" + this.IstMdlPruefung + ", IstAudioNotwendig=" + this.IstAudioNotwendig + ", IstVideoNotwendig=" + this.IstVideoNotwendig + ", Bemerkungen=" + this.Bemerkungen + ")";
+		return "DTOGostKlausurenVorgaben(ID=" + this.ID + ", Abi_Jahrgang=" + this.Abi_Jahrgang + ", Halbjahr=" + this.Halbjahr + ", Quartal=" + this.Quartal + ", Fach_ID=" + this.Fach_ID + ", Kursart=" + this.Kursart + ", Dauer=" + this.Dauer + ", Auswahlzeit=" + this.Auswahlzeit + ", IstGklMoeglich=" + this.IstGklMoeglich + ", IstMdlPruefung=" + this.IstMdlPruefung + ", IstAudioNotwendig=" + this.IstAudioNotwendig + ", IstVideoNotwendig=" + this.IstVideoNotwendig + ", Bemerkungen=" + this.Bemerkungen + ")";
 	}
 
 }

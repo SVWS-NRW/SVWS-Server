@@ -759,6 +759,9 @@ public final class Schema {
 	public static final Tabelle_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler tab_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler =
 			add(new Tabelle_Gost_Blockung_Zwischenergebnisse_Kurs_Schueler());
 
+	/** Tabelle Gost_Klausuren_Vorgaben */
+	public static final Tabelle_Gost_Klausuren_Vorgaben tab_Gost_Klausuren_Vorgaben = add(new Tabelle_Gost_Klausuren_Vorgaben());
+
 	/** Tabelle Gost_Schueler */
 	public static final Tabelle_Gost_Schueler tab_Gost_Schueler = add(new Tabelle_Gost_Schueler());
 
@@ -1137,9 +1140,6 @@ public final class Schema {
 
 	/** Tabelle_Schulbewerbung_Importe */
 	public static final Tabelle_Schulbewerbung_Importe tab_Schulbewerbung_Importe = add(new Tabelle_Schulbewerbung_Importe());
-
-	/** Tabelle Gost_Klausuren_Vorgaben */
-	public static final Tabelle_Gost_Klausuren_Vorgaben tab_Gost_Klausuren_Vorgaben = add(new Tabelle_Gost_Klausuren_Vorgaben());
 
 	/** Tabelle Gost_Klausuren_Termine */
 	public static final Tabelle_Gost_Klausuren_Termine tab_Gost_Klausuren_Termine = add(new Tabelle_Gost_Klausuren_Termine());
