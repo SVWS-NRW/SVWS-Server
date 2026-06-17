@@ -1,6 +1,7 @@
 import type { GridManager } from "./GridManager";
 import { GridInputInnerText } from "./GridInputInnerText";
 import type { Collection } from "../../../../../core/src/java/util/Collection";
+import type { List } from "../../../../../core/src/java/util/List";
 
 /**
  * Ein Grid-Input für die Schnelleingabe der Reihenfolge der mündlichen Prüfungen im Abiturbereich.

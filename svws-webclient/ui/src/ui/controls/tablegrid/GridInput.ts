@@ -1,6 +1,7 @@
 import { shallowRef } from "vue";
 import type { GridManager } from "./GridManager";
 import type { Collection } from "../../../../../core/src/java/util/Collection";
+import type { List } from "../../../../../core/src/java/util/List";
 import { DeveloperNotificationException } from "../../../../../core/src/core/exceptions/DeveloperNotificationException";
 
 /**

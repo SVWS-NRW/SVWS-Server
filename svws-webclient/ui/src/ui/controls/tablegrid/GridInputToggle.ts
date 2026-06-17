@@ -2,6 +2,7 @@ import { shallowRef } from "vue";
 import type { GridManager } from "./GridManager";
 import { GridInput } from "./GridInput";
 import type { Collection } from "../../../../../core/src/java/util/Collection";
+import type { List } from "../../../../../core/src/java/util/List";
 
 /**
  * Diese Klasse ist eine Basisklasse für Grid-Inputs, welche einfache boolean-Toggles
