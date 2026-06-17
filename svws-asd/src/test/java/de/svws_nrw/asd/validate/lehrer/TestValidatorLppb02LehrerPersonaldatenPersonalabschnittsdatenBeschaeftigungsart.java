@@ -8,7 +8,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import de.svws_nrw.asd.data.statistik.StatistikGesamt;
-import de.svws_nrw.asd.types.lehrer.LehrerBeschaeftigungsart;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.asd.utils.json.JsonReader;
@@ -37,11 +36,9 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 class TestValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart {
 
 	private static final String TESTDATEN_LPPB02 = """
-		'ST', 2018, true
-		'ST', 2025, false
-		'X' , 2018, true
-		'V' , 2018, true
-		'T' , 2018, true
+		11, 2018, true
+		11, 2025, false
+		15 , 2018, true
 		""";
 
 	/** Stammdaten der Schule */
@@ -63,23 +60,23 @@ class TestValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigun
 	 *
 	 * CoreType: LehrerPersonalabschnittsdaten
 	 *
-	 * @param beschaeftigungsart
-	 * @param schuljahr
-	 * @param result     gibt an, welches Ergebnis bei den Testdaten erwartet wird
+	 * @param idBeschaeftigungsart   die beschaeftigungsart
+	 * @param schuljahr  	         das Schuljahr
+	 * @param result                 gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
 	@DisplayName("Tests für ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart")
 	@ParameterizedTest
 	@CsvSource(textBlock = TESTDATEN_LPPB02)
-	void testValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(final String beschaeftigungsart, final Integer schuljahr, final boolean result) {
-
+	void testValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(final Long idBeschaeftigungsart, final Integer schuljahr,
+			final boolean result) {
 		// Erzeuge den Kontext für die Validierung
 		final ValidatorKontext kontext =
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
+		kontext.getSchuljahresabschnitt().schuljahr = schuljahr;
 		final ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart validator =
 				new ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(
-						() -> LehrerBeschaeftigungsart.data().getWertByBezeichnerOrNull(beschaeftigungsart),
-						() -> schuljahr,
+						() -> idBeschaeftigungsart,
 						null,
 						null,
 						kontext);

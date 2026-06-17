@@ -38,7 +38,7 @@ public abstract class Validator extends BasicValidator {
 	 * @return ein Supplier, welcher keine Null-Werte liefert, sondern ggf. eine NullPointerException wirft.
 	 */
 	@SuppressWarnings("static-method")
-	protected final <T> @NotNull Supplier<T> getNotNullObjectSupplier(final @NotNull Supplier<@AllowNull T> supplier) {
+	protected final <T> @NotNull Supplier<T> getNotNullSupplierObject(final @NotNull Supplier<@AllowNull T> supplier) {
 		return () -> {
 			final T value = supplier.get();
 			if (value == null)

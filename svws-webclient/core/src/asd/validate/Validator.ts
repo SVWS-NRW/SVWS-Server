@@ -38,7 +38,7 @@ export abstract class Validator extends BasicValidator {
 	 *
 	 * @return ein Supplier, welcher keine Null-Werte liefert, sondern ggf. eine NullPointerException wirft.
 	 */
-	protected getNotNullObjectSupplier<T>(supplier: Supplier<T | null>): Supplier<T> {
+	protected getNotNullSupplierObject<T>(supplier: Supplier<T | null>): Supplier<T> {
 		return { get: () => {
 			const value: T | null = supplier.get();
 			if (value === null)

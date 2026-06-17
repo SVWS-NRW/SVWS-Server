@@ -46,19 +46,10 @@ public final class ValidatorLppa02LehrerPersonaldatenPersonalabschnittsdatenAnre
 			return true;
 		}
 
-		final int aktuellesSchuljahr = this.kontext().getSchuljahr();
 
 		for (final LehrerPersonalabschnittsdatenAnrechnungsstunden eintrag : liste) {
-			// Falls keine ID vorhanden ist, wird dies in LPPA00/01 geprüft.
-			if (eintrag.idGrund == null) {
-				continue;
-			}
 
-			final LehrerAnrechnungsgrund grund = LehrerAnrechnungsgrund.data().getWertByIDOrNull(eintrag.idGrund);
-
-			// Ein Grund ist ungültig, wenn er nicht im Katalog existiert oder
-			// für das spezifische Schuljahr keine gültigen Historien-Daten (gueltigVon/Bis) vorliegen.
-			if ((grund == null) || (grund.daten(aktuellesSchuljahr) == null)) {
+			if (!LehrerAnrechnungsgrund.data().isGueltig(eintrag.idGrund, kontext().getSchuljahr())) {
 				addFehler(0, "Der eingetragene Wert für das Feld 'Anrechnungsgründe' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.");
 				return false;
 			}

@@ -46,7 +46,7 @@ public final class ValidatorLpla01LehrerPersonaldatenLehramtLehrbefaehigung exte
 		for (final LehrerLehramtEintrag lehrerLehramtEintrag : liste) {
 			for (final LehrerLehrbefaehigungEintrag lehrerLehrbefaehigungEintrag : lehrerLehramtEintrag.lehrbefaehigungen) {
 				// Prüfung, ob die ID im Katalog vorhanden ist.
-				if (LehrerLehrbefaehigung.data().getWertByIDOrNull(lehrerLehrbefaehigungEintrag.idLehrbefaehigung) == null) {
+				if (!LehrerLehrbefaehigung.data().isGueltig(lehrerLehrbefaehigungEintrag.idLehrbefaehigung, kontext().getSchuljahr())) {
 					addFehler(0, "Das Feld 'Lehrbefaehigung' muss zulässig sein. ");
 					return false;
 				}

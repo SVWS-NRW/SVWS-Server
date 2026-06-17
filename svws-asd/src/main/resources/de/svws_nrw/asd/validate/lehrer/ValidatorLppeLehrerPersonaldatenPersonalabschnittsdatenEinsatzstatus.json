@@ -1,0 +1,18 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppeLehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus",
+    "historie" : [ {
+      "praefix" : "LPPE",
+      "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Einsatzstatus",
+      "dtos" : "LehrerPersonalabschnittsdaten",
+      "ausfuehrungsbereich_ui" : "Lehrer, Reiter 'Personaldaten'",
+      "anzeigebereich_ui" : "Feld 'Einsatzstatus'",
+      "svws" : true,
+      "zebras" : true,
+      "muss": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis": [ ],
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  } 

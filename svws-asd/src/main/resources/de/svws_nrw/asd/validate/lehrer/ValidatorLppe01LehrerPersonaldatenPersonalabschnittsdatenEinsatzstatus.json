@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppe01LehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus",
+    "historie" : [ {
+      "praefix" : "LPPE01",
+      "altes_kuerzel" : "",
+      "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Einsatzstatus",
+      "dtos" : "LehrerPersonalabschnittsdaten",
+      "ausfuehrungsbereich_ui" : "Lehrer, Reiter 'Personaldaten'",
+      "anzeigebereich_ui" : "Feld 'Einsatzstatus'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["LPPE00"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Lehrer Einsatzstatus: Das Feld 'Einsatzstatus' muss zulässig sein.",
+      "erlaeuterung" : "",
+      "bedingung" : "LehrerPersonalabschnittsdaten.idEinsatzstatus ≠ einer ID eines Eintrags in LehrerEinsatzstatus.json", 
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  } 

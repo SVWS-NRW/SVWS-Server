@@ -65,9 +65,7 @@ public final class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extend
 		this._idRechtsverhaeltnis = idRechtsverhaeltnis;
 
 		// Hinzufügen der fachspezifischen Validatoren
-		validatoren.add(
-				new ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, idEinsatzstatus, idBeschaeftigungsart,
-						kontext));
+		validatoren.add(new ValidatorLppaLehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(anrechnungen, lehraemter, pflichtstundensoll, kontext));
 
 		validatoren.add(new ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(getNotNullSupplierLong(idBeschaeftigungsart),
 				getNotNullSupplierLong(idEinsatzstatus), pflichtstundensoll, kontext));
@@ -75,7 +73,12 @@ public final class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extend
 		validatoren.add(new ValidatorLppbbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(idBeschaeftigungsart, pflichtstundensoll,
 				idEinsatzstatus, mehrleistungen, minderleistungen, kontext));
 
-		validatoren.add(new ValidatorLppaLehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(anrechnungen, lehraemter, pflichtstundensoll, kontext));
+		validatoren.add(new ValidatorLppeLehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus(idEinsatzstatus, kontext));
+
+		validatoren.add(
+				new ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, idEinsatzstatus, idBeschaeftigungsart,
+						kontext));
+
 	}
 
 	@Override
@@ -87,7 +90,7 @@ public final class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extend
 			// Prüfung des Rechtsverhältnisses erfordert ein gültiges Geburtsdatum
 			final @NotNull DateManager datum = DateManager.from(this._geburtsdatum.get());
 			final @NotNull Supplier<@AllowNull DateManager> supplierGeburtsdatumNullable = () -> datum;
-			final @NotNull Supplier<DateManager> supplierGeburtsdatum = this.getNotNullObjectSupplier(supplierGeburtsdatumNullable);
+			final @NotNull Supplier<DateManager> supplierGeburtsdatum = this.getNotNullSupplierObject(supplierGeburtsdatumNullable);
 
 			_validatoren.add(new ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(_idSchuljahresabschnitt, _idRechtsverhaeltnis,
 					supplierGeburtsdatum, this.kontext()));

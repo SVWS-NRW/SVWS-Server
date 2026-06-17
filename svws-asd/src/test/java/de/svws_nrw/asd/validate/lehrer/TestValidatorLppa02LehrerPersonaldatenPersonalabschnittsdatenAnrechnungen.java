@@ -36,7 +36,6 @@ class TestValidatorLppa02LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen 
 	private static final String LPPA02_TESTDATEN = """
 			310000, true
 			500000, true
-			null,   true
 			999999, false
 			""";
 

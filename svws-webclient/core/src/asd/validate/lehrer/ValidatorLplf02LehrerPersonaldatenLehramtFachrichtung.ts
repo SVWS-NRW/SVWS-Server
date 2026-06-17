@@ -2,7 +2,6 @@ import { LehrerFachrichtung } from '../../../asd/types/lehrer/LehrerFachrichtung
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
-import { LehrerFachrichtungKatalogEintrag } from '../../../asd/data/lehrer/LehrerFachrichtungKatalogEintrag';
 import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorLplf02LehrerPersonaldatenLehramtFachrichtung extends Validator {
@@ -25,11 +24,7 @@ export class ValidatorLplf02LehrerPersonaldatenLehramtFachrichtung extends Valid
 	}
 
 	protected pruefe(): boolean {
-		const idFachrichtung: number | null = this._idFachrichtung.get();
-		const wert: LehrerFachrichtung | null = LehrerFachrichtung.data().getWertByIDOrNull(idFachrichtung);
-		const schuljahr: number = this.kontext().getSchuljahr();
-		const eintragAktuell: LehrerFachrichtungKatalogEintrag | null = (wert === null) ? null : LehrerFachrichtung.data().getEintragBySchuljahrUndWert(schuljahr, wert);
-		if ((eintragAktuell === null) || (eintragAktuell.id !== idFachrichtung)) {
+		if (!LehrerFachrichtung.data().isGueltig(this._idFachrichtung.get(), this.kontext().getSchuljahr())) {
 			this.addFehler(0, "Lehrer Fachrichtung: Der eingetragene Wert für das Feld 'Fachrichtung' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.");
 			return false;
 		}

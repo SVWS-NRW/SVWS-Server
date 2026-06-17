@@ -155,7 +155,7 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 		for (final @NotNull U coreTypeValue : values) {
 			if (_mapBezeichnerToEnum.containsKey(coreTypeValue.name())) {
 				throw new CoreTypeException(_name + ": Der Core-Type-Bezeichner " + coreTypeValue.name()
-					+ "wurde mehrfach zugeordnet. Dies ist nicht zulässig. Der Core-Type konnte nicht vollständig initialisiert werden.");
+						+ "wurde mehrfach zugeordnet. Dies ist nicht zulässig. Der Core-Type konnte nicht vollständig initialisiert werden.");
 			}
 			_mapBezeichnerToEnum.put(coreTypeValue.name(), coreTypeValue);
 			final List<T> historie = _mapBezeichnerToHistorie.get(coreTypeValue.name());
@@ -545,6 +545,27 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 */
 	public U getWertByIDOrNull(final Long id) {
 		return _mapIDToEnum.get(id);
+	}
+
+
+	/**
+	 * Prüft, ob zu der übergebenen ID ein im Schuljahr gültiger Eintrag existiert
+	 * @param id
+	 * @param schuljahr
+	 * @return  gültig oder nicht
+	 */
+	public boolean isGueltig(final Long id, final int schuljahr) {
+		final U wert = this.getWertByIDOrNull(id);
+		if (wert == null) {
+			return false;
+		}
+		final T katalogEintrag = getEintragBySchuljahrUndWert(schuljahr, wert);
+
+		// Prüft auf fehlende Werte, inaktive Schuljahre und falsche Historien-IDs
+		if ((katalogEintrag == null) || (katalogEintrag.id != id)) {
+			return false;
+		}
+		return true;
 	}
 
 

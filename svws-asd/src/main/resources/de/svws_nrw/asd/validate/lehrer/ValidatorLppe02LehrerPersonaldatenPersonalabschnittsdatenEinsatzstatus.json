@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppe02LehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus",
+    "historie" : [ {
+      "praefix" : "LPPE02",
+      "altes_kuerzel" : "",
+      "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Einsatzstatus",
+      "dtos" : "LehrerPersonalabschnittsdaten",
+      "ausfuehrungsbereich_ui" : "Lehrer, Reiter 'Personaldaten'",
+      "anzeigebereich_ui" : "Feld 'Einsatzstatus'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["LPPE01"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Lehrer Einsatzstatus: Der eingetragene Wert für das Feld 'Einsatzstatus' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.",
+      "erlaeuterung" : "",
+      "bedingung" : "LehrerPersonalabschnittsdaten.idEinsatzstatus ≙ einem gültigen Historieneintrag in LehrerEinsatzstatus.json", 
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  } 

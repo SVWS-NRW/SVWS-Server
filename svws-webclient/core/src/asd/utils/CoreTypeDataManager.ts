@@ -532,6 +532,24 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	}
 
 	/**
+	 * Prüft, ob zu der übergebenen ID ein im Schuljahr gültiger Eintrag existiert
+	 * @param id
+	 * @param schuljahr
+	 * @return  gültig oder nicht
+	 */
+	public isGueltig(id: number | null, schuljahr: number): boolean {
+		const wert: U | null = this.getWertByIDOrNull(id);
+		if (wert === null) {
+			return false;
+		}
+		const katalogEintrag: T | null = this.getEintragBySchuljahrUndWert(schuljahr, wert);
+		if ((katalogEintrag === null) || (katalogEintrag.id !== id)) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
 	 * Gibt den Core-Type-Wert für den angegebene numerischen Schlüssel zurück.
 	 *
 	 * @param schluessel   der numerische Schlüssel

@@ -1,6 +1,5 @@
 import { LehrerBeschaeftigungsart } from '../../../asd/types/lehrer/LehrerBeschaeftigungsart';
 import { ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart } from '../../../asd/validate/lehrer/ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart';
-import { LehrerBeschaeftigungsartKatalogEintrag } from '../../../asd/data/lehrer/LehrerBeschaeftigungsartKatalogEintrag';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { LehrerEinsatzstatus } from '../../../asd/types/lehrer/LehrerEinsatzstatus';
@@ -13,12 +12,7 @@ export class ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 	/**
 	 * Die Beschaeftigungsart
 	 */
-	private readonly _beschaeftigungsartNotNull: Supplier<LehrerBeschaeftigungsart>;
-
-	/**
-	 * Das Schuljahr
-	 */
-	private readonly _schuljahr: number;
+	private readonly _idBeschaeftigungsart: Supplier<number>;
 
 	private static readonly FEHLERTEXT: string = "Lehrer Beschäftigungsart: Der eingetragene Wert für das Feld 'Beschäftigungsart' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.";
 
@@ -26,23 +20,21 @@ export class ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 	/**
 	 * Erstellt einen neuen Validator für die Existenzprüfung der Anrechnungsgründe im Katalog.
 	 *
-	 * @param beschaeftigungsartNotNull     die Beschäftigungsart
-	 * @param schuljahr
-	 * @param pflichtstundensoll     das Pflichtstundensoll
-	 * @param einsatzstatus          der Einsatzstatus
-	 * @param kontext                der Kontext des Validators
+	 * @param idBeschaeftigungsart     die Beschäftigungsart
+	 * @param pflichtstundensoll       das Pflichtstundensoll
+	 * @param einsatzstatus            der Einsatzstatus
+	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(beschaeftigungsartNotNull: Supplier<LehrerBeschaeftigungsart>, schuljahr: Supplier<number>, pflichtstundensoll: Supplier<number | null>, einsatzstatus: Supplier<LehrerEinsatzstatus | null>, kontext: ValidatorKontext) {
+	public constructor(idBeschaeftigungsart: Supplier<number>, pflichtstundensoll: Supplier<number | null>, einsatzstatus: Supplier<LehrerEinsatzstatus | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._beschaeftigungsartNotNull = beschaeftigungsartNotNull;
-		this._schuljahr = schuljahr.get().valueOf();
+		this._idBeschaeftigungsart = idBeschaeftigungsart;
+		const beschaeftigungsartNotNull: Supplier<LehrerBeschaeftigungsart> = { get: () => LehrerBeschaeftigungsart.data().getWertByID(this.getNotNullSupplierLong(idBeschaeftigungsart).get()) };
 		this._validatoren.add(new ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(beschaeftigungsartNotNull, einsatzstatus, kontext));
 		this._validatoren.add(new ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(beschaeftigungsartNotNull, einsatzstatus, pflichtstundensoll, kontext));
 	}
 
 	protected pruefe(): boolean {
-		const lehrerBeschaeftigungsartKatalogEintrag: LehrerBeschaeftigungsartKatalogEintrag | null = this._beschaeftigungsartNotNull.get().daten(this._schuljahr);
-		if (lehrerBeschaeftigungsartKatalogEintrag === null) {
+		if (!LehrerBeschaeftigungsart.data().isGueltig(this._idBeschaeftigungsart.get(), this.kontext().getSchuljahr())) {
 			this.addFehler(0, ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart.FEHLERTEXT);
 			return false;
 		}

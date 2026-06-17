@@ -42,27 +42,19 @@ public final class ValidatorLpla02LehrerPersonaldatenLehramtLehrbefaehigung exte
 
 		boolean fehlerVorhanden = false;
 
-		List<LehrerLehramtEintrag> lehrerLehramtEintragList = lehraemter.get();
+		final List<LehrerLehramtEintrag> lehrerLehramtEintragList = lehraemter.get();
 
 		if (lehrerLehramtEintragList != null) {
 
 			for (final @NotNull LehrerLehramtEintrag lehrerLehramtEintrag : lehrerLehramtEintragList) {
 
-				for (LehrerLehrbefaehigungEintrag lehrerLehrbefaehigungEintrag : lehrerLehramtEintrag.lehrbefaehigungen) {
+				for (final LehrerLehrbefaehigungEintrag lehrerLehrbefaehigungEintrag : lehrerLehramtEintrag.lehrbefaehigungen) {
 
-					LehrerLehrbefaehigung lehrerLehrbefaehigung =
-							LehrerLehrbefaehigung.data().getWertByIDOrNull(lehrerLehrbefaehigungEintrag.idLehrbefaehigung);
 
-					if (lehrerLehrbefaehigung == null) {
-						// die idLehrbefaehigung befindet sich gar nicht im Katalog LehrerLehrbefaehigungen.json
+					if (!LehrerLehrbefaehigung.data().isGueltig(lehrerLehrbefaehigungEintrag.idLehrbefaehigung, kontext().getSchuljahr())) {
+
 						fehlerVorhanden = true;
 						addFehler(0, "Der eingetragene Wert für das Feld 'Lehrbefähigungen' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.");
-					} else {
-						if (lehrerLehrbefaehigung.daten(kontext().getSchuljahr()) == null) {
-							// die zu überprüfende idLehrbehaehigung gilt nicht im zu überprüfenden Zeitraum
-							fehlerVorhanden = true;
-							addFehler(0, "Der eingetragene Wert für das Feld 'Lehrbefähigungen' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.");
-						}
 					}
 				}
 

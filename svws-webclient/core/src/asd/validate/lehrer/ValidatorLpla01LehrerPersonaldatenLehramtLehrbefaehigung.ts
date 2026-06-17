@@ -35,7 +35,7 @@ export class ValidatorLpla01LehrerPersonaldatenLehramtLehrbefaehigung extends Va
 		}
 		for (const lehrerLehramtEintrag of liste) {
 			for (const lehrerLehrbefaehigungEintrag of lehrerLehramtEintrag.lehrbefaehigungen) {
-				if (LehrerLehrbefaehigung.data().getWertByIDOrNull(lehrerLehrbefaehigungEintrag.idLehrbefaehigung) === null) {
+				if (!LehrerLehrbefaehigung.data().isGueltig(lehrerLehrbefaehigungEintrag.idLehrbefaehigung, this.kontext().getSchuljahr())) {
 					this.addFehler(0, "Das Feld 'Lehrbefaehigung' muss zulässig sein. ");
 					return false;
 				}

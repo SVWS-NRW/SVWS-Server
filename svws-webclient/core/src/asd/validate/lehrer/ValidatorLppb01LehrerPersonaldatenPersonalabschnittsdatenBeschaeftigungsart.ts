@@ -27,10 +27,9 @@ export class ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 	public constructor(idBeschaeftigungsart: Supplier<number>, pflichtstundensoll: Supplier<number | null>, einsatzstatus: Supplier<LehrerEinsatzstatus | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idBeschaeftigungsart = idBeschaeftigungsart;
-		const beschaeftigungsartNotNull: Supplier<LehrerBeschaeftigungsart> = { get: () => LehrerBeschaeftigungsart.data().getWertByID(this.getNotNullSupplierLong(idBeschaeftigungsart).get()) };
 		const schuljahr2: number = kontext.getSchuljahr();
 		const schuljahr: Supplier<number> = { get: () => schuljahr2 };
-		this._validatoren.add(new ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(beschaeftigungsartNotNull, schuljahr, pflichtstundensoll, einsatzstatus, kontext));
+		this._validatoren.add(new ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(idBeschaeftigungsart, pflichtstundensoll, einsatzstatus, kontext));
 	}
 
 	protected pruefe(): boolean {

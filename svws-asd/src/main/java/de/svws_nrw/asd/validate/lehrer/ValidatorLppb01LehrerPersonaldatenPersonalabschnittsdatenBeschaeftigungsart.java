@@ -34,12 +34,12 @@ public final class ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBesc
 		super(kontext);
 		_idBeschaeftigungsart = idBeschaeftigungsart;
 
-		final @NotNull Supplier<@NotNull LehrerBeschaeftigungsart> beschaeftigungsartNotNull = () -> LehrerBeschaeftigungsart.data().getWertByID(getNotNullSupplierLong(idBeschaeftigungsart).get());
 		final @NotNull Integer schuljahr2 = kontext.getSchuljahr();
 		final @NotNull Supplier<Integer> schuljahr = () -> schuljahr2;
 
 		_validatoren.add(
-				new ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(beschaeftigungsartNotNull, schuljahr, pflichtstundensoll, einsatzstatus,
+				new ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(idBeschaeftigungsart, pflichtstundensoll,
+						einsatzstatus,
 						kontext));
 
 	}

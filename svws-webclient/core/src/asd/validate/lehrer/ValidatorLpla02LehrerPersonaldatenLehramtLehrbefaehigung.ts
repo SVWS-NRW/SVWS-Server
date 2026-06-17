@@ -35,19 +35,13 @@ export class ValidatorLpla02LehrerPersonaldatenLehramtLehrbefaehigung extends Va
 
 	protected pruefe(): boolean {
 		let fehlerVorhanden: boolean = false;
-		let lehrerLehramtEintragList: List<LehrerLehramtEintrag> | null = this.lehraemter.get();
+		const lehrerLehramtEintragList: List<LehrerLehramtEintrag> | null = this.lehraemter.get();
 		if (lehrerLehramtEintragList !== null) {
 			for (const lehrerLehramtEintrag of lehrerLehramtEintragList) {
-				for (let lehrerLehrbefaehigungEintrag of lehrerLehramtEintrag.lehrbefaehigungen) {
-					let lehrerLehrbefaehigung: LehrerLehrbefaehigung | null = LehrerLehrbefaehigung.data().getWertByIDOrNull(lehrerLehrbefaehigungEintrag.idLehrbefaehigung);
-					if (lehrerLehrbefaehigung === null) {
+				for (const lehrerLehrbefaehigungEintrag of lehrerLehramtEintrag.lehrbefaehigungen) {
+					if (!LehrerLehrbefaehigung.data().isGueltig(lehrerLehrbefaehigungEintrag.idLehrbefaehigung, this.kontext().getSchuljahr())) {
 						fehlerVorhanden = true;
 						this.addFehler(0, "Der eingetragene Wert für das Feld 'Lehrbefähigungen' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.");
-					} else {
-						if (lehrerLehrbefaehigung.daten(this.kontext().getSchuljahr()) === null) {
-							fehlerVorhanden = true;
-							this.addFehler(0, "Der eingetragene Wert für das Feld 'Lehrbefähigungen' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.");
-						}
 					}
 				}
 				if (fehlerVorhanden) {
