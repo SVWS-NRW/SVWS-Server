@@ -252,7 +252,7 @@
 			</svws-ui-table>
 		</ui-card>
 
-		<ui-card v-if="!raumkapazitaetUeberschritten().isEmpty()" icon="i-ri-team-line" title="Raumkapazität überschritten" :fehler="ValidatorFehlerart.KANN"
+		<ui-card v-if="termineOhneStundenplan().isEmpty() && !raumkapazitaetUeberschritten().isEmpty()" icon="i-ri-team-line" title="Raumkapazität überschritten" :fehler="ValidatorFehlerart.KANN"
 			:subtitle="raumkapazitaetUeberschritten().size() + ' Klausurtermin' + (raumkapazitaetUeberschritten().size() === 1 ? '' : 'e') + ' mit überschrittener Raumkapazität gefunden.'"
 			:is-open="currentAction === 'termine_raumkapazität'" @update:is-open="(isOpen) => setCurrentAction('termine_raumkapazität', isOpen)">
 			<svws-ui-table :items="raumkapazitaetUeberschritten()" :columns="addStatusColumn(colsTermine, 'Gehe zu')">

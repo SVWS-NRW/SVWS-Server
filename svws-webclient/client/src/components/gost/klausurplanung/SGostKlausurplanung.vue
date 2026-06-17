@@ -44,8 +44,18 @@
 		undefined
 	);
 
-	const numErrors = computed<number>(() => props.kMan().planungsfehlerGetAnzahlByHalbjahrAndQuartal(props.jahrgangsdaten!.abiturjahr, props.halbjahr, props.quartalsauswahl.value, props.getConfigNumberValue("kwErrorLimit"), vorgabenIgnoreManager.getAll()));
-	const numWarnings = computed<number>(() => props.kMan().planungshinweiseGetAnzahlByHalbjahrAndQuartal(props.jahrgangsdaten!.abiturjahr, props.halbjahr, props.quartalsauswahl.value, props.getConfigNumberValue("kwWarnLimit"), props.getConfigNumberValue("kwErrorLimit")));
+	const numErrors = computed<number>(() => {
+		if (props.jahrgangsdaten!.abiturjahr === -1) {
+			return 0;
+		}
+		return props.kMan().planungsfehlerGetAnzahlByHalbjahrAndQuartal(props.jahrgangsdaten!.abiturjahr, props.halbjahr, props.quartalsauswahl.value, props.getConfigNumberValue("kwErrorLimit"), vorgabenIgnoreManager.getAll());
+	});
+	const numWarnings = computed<number>(() => {
+		if (props.jahrgangsdaten!.abiturjahr === -1) {
+			return 0;
+		}
+		return props.kMan().planungshinweiseGetAnzahlByHalbjahrAndQuartal(props.jahrgangsdaten!.abiturjahr, props.halbjahr, props.quartalsauswahl.value, props.getConfigNumberValue("kwWarnLimit"), props.getConfigNumberValue("kwErrorLimit"));
+	});
 
 	const dropdownList = [
 		{ text: "Klausurplan (Kurse)", action: () => downloadPDF("Klausurplan (Kurse)") },
