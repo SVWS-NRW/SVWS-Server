@@ -310,6 +310,7 @@ class AuthStateImpl implements AuthState {
 		this._authenticated.value = true;
 		this._pending2FA.value = false;
 		this._totpSetup.value = null;
+		await this.updateRefreshTokenTimer();
 		activityState.start(() => this.logout());
 	}
 
@@ -335,8 +336,7 @@ class AuthStateImpl implements AuthState {
 		RouteManager.resetRouteState();
 	}
 
-	private async receivedAccessToken(token: string) {
-		this._token.value = token;
+	private async updateRefreshTokenTimer() {
 		const seconds = this.expirationSeconds - 14;
 		if (seconds > 0) {
 			this.startTimer(seconds);
@@ -345,9 +345,14 @@ class AuthStateImpl implements AuthState {
 		}
 	}
 
+	private async receivedAccessToken(token: string) {
+		this._token.value = token;
+	}
+
 	private async doRefreshToken(): Promise<void> {
 		const result = await this.api.refreshToken();
 		await this.receivedAccessToken(result.token);
+		await this.updateRefreshTokenTimer();
 	}
 
 	private startTimer(seconds: number): void {
