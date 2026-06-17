@@ -50,7 +50,7 @@
 								</template>
 								<template v-else>
 									<th />
-									<th />
+									<th> <svws-ui-text-input headless v-model="search" placeholder="Floskeln nach Kürzel oder Text suchen" /> </th>
 									<th> <ui-select v-if="niveauSet.size > 0" headless :manager="niveauManager" v-model="niveauSelected" removable /> </th>
 									<th> <ui-select v-if="jahrgangSet.size > 0" headless :manager="jahrgangManager" v-model="jahrgangSelected" :removable="false" /> </th>
 								</template>
@@ -163,6 +163,8 @@
 		columns: [{ kuerzel: "Name", name: "Name, Vorname", width: '15rem' }],
 	});
 
+	const search = ref<string>("");
+
 	const gridManager = new GridManager<string, RowType, List<RowType>>({
 		daten: computed<List<RowType>>(() => {
 			const result = new ArrayList<RowType>();
@@ -173,12 +175,21 @@
 			for (const gruppe of floskelgruppen.value) {
 				result.add({ gruppe, floskel: null });
 				for (const floskel of gruppe.floskeln) {
+					// filtere nach Fach, wenn Leistung ausgewählt
+					if ((props.auswahl.leistung !== null) && (floskel.fachID !== null) && (props.enmManager().lerngruppeByIDOrException(props.auswahl.leistung.lerngruppenID).fachID !== floskel.fachID)) {
+						continue;
+					}
 					// wende den Filter für den Jahrgang an
 					if ((jahrgangSelected.value !== undefined) && (floskel.jahrgangID !== null) && (jahrgangSelected.value !== floskel.jahrgangID)) {
 						continue;
 					}
 					// wenden den Filter für das Niveau an
 					if ((niveauSelected.value !== undefined) && (floskel.niveau !== niveauSelected.value)) {
+						continue;
+					}
+					const seachLower = search.value.toLocaleLowerCase();
+					if (!((floskel.text !== null) && floskel.text.toLocaleLowerCase().includes(seachLower))
+						&& !((floskel.kuerzel !== null) && floskel.kuerzel.toLocaleLowerCase().includes(seachLower))) {
 						continue;
 					}
 					result.add({ gruppe, floskel });
@@ -214,7 +225,7 @@
 		for (const gruppe of floskelgruppen.value) {
 			for (const floskel of gruppe.floskeln) {
 				// Prüfe, wenn es sich um fachbezogene Floskeln handelt auch das Fach der Floskel zu dem Fach der Leistung passt
-				if ((props.auswahl.leistung !== null) && (floskel.fachID !== null) && ((props.enmManager().lerngruppeByIDOrException(props.auswahl.leistung.lerngruppenID).fachID !== floskel.fachID))) {
+				if ((props.auswahl.leistung !== null) && (floskel.fachID !== null) && (props.enmManager().lerngruppeByIDOrException(props.auswahl.leistung.lerngruppenID).fachID !== floskel.fachID)) {
 					continue;
 				}
 				if (floskel.jahrgangID !== null) {
