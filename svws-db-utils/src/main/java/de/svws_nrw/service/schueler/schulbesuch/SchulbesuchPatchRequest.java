@@ -65,6 +65,10 @@ public class SchulbesuchPatchRequest {
 	@Size(max = 5)
 	public JsonNullable<String> schluesselSchulgliederungVorherigeSchule = JsonNullable.undefined();
 
+	/** Der Schlüssel des CoreTypes der Fachklasse der zuvor besuchten Schule (BK/SB). */
+	@Schema(description = "Der Schlüssel des CoreTypes der Fachklasse der zuvor besuchten Schule (BK/SB).", example = "170-10100")
+	public JsonNullable<@Size(max = 10) String> schluesselCoreTypeFachklasseVorherigeSchule = JsonNullable.undefined();
+
 	/** Das Entlassdatum von dieser Schule. */
 	@Schema(description = "Das Entlassdatum von dieser Schule.", example = "1902-03-11")
 	@ValidDateFormat

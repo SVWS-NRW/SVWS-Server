@@ -27927,6 +27927,7 @@ SchuelerSchulbesuchsdaten {
   },
   "schluesselAbschlussartAllgemeinbildendVorherigeSchule": null,
   "schluesselAbschlussartBerufsbildendVorherigeSchule": null,
+  "schluesselCoreTypeFachklasseVorherigeSchule": null,
   "schluesselHoechsterSchulabschluss": null,
   "schluesselSchulgliederungVorherigeSchule": null,
   "schulformVorherigeSchule": "G",

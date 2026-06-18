@@ -96,6 +96,10 @@
 					:manager="schulgliederungManager"
 					v-model="model.schulgliederungVorherigeSchule.value"
 					:readonly />
+				<ui-select label="Fachklasse" v-if="selectedSchuleIstBK"
+					:manager="fachklasseManager"
+					v-model="model.fachklasseVorherigeSchule.value"
+					:readonly />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 
@@ -246,7 +250,7 @@
 
 	import type { JahrgangsDaten, KatalogEntlassgrund, Kindergarten, List, SchulEintrag } from "@core";
 	import { ArrayList, BenutzerKompetenz, Einschulungsart, Jahrgaenge, Kindergartenbesuch, PrimarstufeSchuleingangsphaseBesuchsjahre,
-		SchulabschlussAllgemeinbildend, Schulform, Uebergangsempfehlung, SchulabschlussBerufsbildend, HerkunftSonstige, Schulgliederung } from "@core";
+		SchulabschlussAllgemeinbildend, Schulform, Uebergangsempfehlung, SchulabschlussBerufsbildend, HerkunftSonstige, Schulgliederung, Fachklasse } from "@core";
 	import type { SchuelerSchulbesuchProps } from './SchuelerSchulbesuchProps';
 	import { CoreTypeSelectManager, SelectManager, useSchuleState, useServerState } from "@ui";
 	import { computed, ref, watch } from "vue";
@@ -465,6 +469,13 @@
 
 	const schulgliederungManager = new CoreTypeSelectManager({
 		clazz: Schulgliederung.class,
+		schuljahr: schuljahr,
+		optionDisplayText: "text",
+		selectionDisplayText: "text",
+	});
+
+	const fachklasseManager = new CoreTypeSelectManager({
+		clazz: Fachklasse.class,
 		schuljahr: schuljahr,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",

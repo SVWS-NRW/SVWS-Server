@@ -365,6 +365,42 @@ class SchulbesuchMapperTest {
 						assertThat(r.idDauerKindergartenbesuch).isNull();
 					});
 		}
+
+		@Test
+		@DisplayName("Rekonstruiert Schlüssel korrekt bei zweistelligem Präfix (10-179-02 -> 10-17902)")
+		void toApi_mapptFachklasseMitZweistelligemPraefix() {
+			final var entity = createEntity(1L);
+			entity.LSFachklKennung = "10-179-02";
+
+			final var result = mapper.toApi(entity, emptyContext());
+
+			assertThat(result.schluesselCoreTypeFachklasseVorherigeSchule).isEqualTo("10-17902");
+		}
+
+		@Test
+		@DisplayName("Rekonstruiert Schlüssel korrekt bei dreistelligem Präfix (170-179-02 -> 170-17902)")
+		void toApi_mapptFachklasseMitDreistelligemPraefix() {
+			final var entity = createEntity(1L);
+			entity.LSFachklKennung = "170-179-02";
+
+			final var result = mapper.toApi(entity, emptyContext());
+
+			assertThat(result.schluesselCoreTypeFachklasseVorherigeSchule).isEqualTo("170-17902");
+		}
+
+		@ParameterizedTest
+		@DisplayName("Liefert null bei null oder leerem LSFachklKennung")
+		@NullSource
+		@ValueSource(strings = {" ", "   "})
+		void toApi_mapptNullOderBlankZuNull(final String input) {
+			final var entity = createEntity(1L);
+			entity.LSFachklKennung = input;
+
+			final var result = mapper.toApi(entity, emptyContext());
+
+			assertThat(result.schluesselCoreTypeFachklasseVorherigeSchule).isNull();
+		}
+
 	}
 
 	// -------------------------------------------------------------------------

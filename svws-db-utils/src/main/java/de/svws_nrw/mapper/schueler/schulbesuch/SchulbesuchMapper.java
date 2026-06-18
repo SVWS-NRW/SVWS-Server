@@ -94,6 +94,27 @@ public interface SchulbesuchMapper {
 	}
 
 	/**
+	 * Rekonstruiert den ursprünglichen Fachklassen-Schlüssel (z.B. '10-17902')
+	 * aus dem gespeicherten Feld {@link DTOSchueler#LSFachklKennung} (z.B. '10-179-02')
+	 * und setzt ihn auf das Zielobjekt.
+	 *
+	 * @param entity die Schüler-Entity mit dem Quellfeld
+	 * @param target das Zielobjekt der Mapping-Operation
+	 */
+	@AfterMapping
+	default void mapFachklasse(
+			final DTOSchueler entity,
+			@MappingTarget final SchuelerSchulbesuchsdaten target) {
+		final var kennung = entity.LSFachklKennung;
+		if ((kennung == null) || kennung.isBlank()) {
+			return;
+		}
+		// "10-179-02" -> letzten Bindestrich entfernen -> "10-17902"
+		final int lastDash = kennung.lastIndexOf("-");
+		target.schluesselCoreTypeFachklasseVorherigeSchule = kennung.substring(0, lastDash) + kennung.substring(lastDash + 1);
+	}
+
+	/**
 	 * Setzt nach dem Mapping die Merkmale und bisherigen Schulen aus dem {@link SchulbesuchMappingContext}.
 	 *
 	 * @param ctx    der Kontext mit den Listen

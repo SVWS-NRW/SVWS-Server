@@ -319,6 +319,75 @@ class SchulbesuchServiceTest {
 
 
 	// -------------------------------------------------------------------------
+	// patch - Fachklasse
+	// -------------------------------------------------------------------------
+
+	@Test
+	@DisplayName("patch - Fachklasse - wrong schluessel")
+	void patchFachklasse_wrongSchluessel() {
+		final var patchRequest = new SchulbesuchPatchRequest();
+		patchRequest.schluesselCoreTypeFachklasseVorherigeSchule = JsonNullable.of("99-99999");
+		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
+
+		assertThatException()
+				.isThrownBy(() -> schulbesuchService.patch(idSchueler, patchRequest))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Keine Fachklasse mit dem Schlüssel 99-99999 gefunden.")
+				.hasFieldOrPropertyWithValue("status", Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch - Fachklasse - wrong format")
+	void patchFachklasse_wrongFormat() {
+		final var patchRequest = new SchulbesuchPatchRequest();
+		patchRequest.schluesselCoreTypeFachklasseVorherigeSchule = JsonNullable.of("--");
+		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
+
+		assertThatException()
+				.isThrownBy(() -> schulbesuchService.patch(idSchueler, patchRequest))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Der Schlüssel '--' entspricht nicht dem erwarteten Format (z.B. 'XX-XXXXX' oder 'XXX-XXXXX').")
+				.hasFieldOrPropertyWithValue("status", Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch - Fachklasse")
+	void patchFachklasse() {
+		final var patchRequest = new SchulbesuchPatchRequest();
+		patchRequest.schluesselCoreTypeFachklasseVorherigeSchule = JsonNullable.of("170-10100");
+		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
+
+		schueler.LSFachklSIM = "beforePatch";
+		schueler.LSFachklKennung = "beforePatch";
+		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
+
+		schulbesuchService.patch(idSchueler, patchRequest);
+
+		verify(schulbesuchMapper).patch(any(), schuelerCaptor.capture());
+		assertThat(schuelerCaptor.getValue().LSFachklSIM).isEqualTo("10100");
+		assertThat(schuelerCaptor.getValue().LSFachklKennung).isEqualTo("170-101-00");
+	}
+
+	@Test
+	@DisplayName("patch - Fachklasse - null")
+	void patchFachklasse_null() {
+		final var patchRequest = new SchulbesuchPatchRequest();
+		patchRequest.schluesselCoreTypeFachklasseVorherigeSchule = JsonNullable.of(null);
+		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
+
+		schueler.LSFachklSIM = "beforePatch";
+		schueler.LSFachklKennung = "beforePatch";
+		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
+
+		schulbesuchService.patch(idSchueler, patchRequest);
+
+		verify(schulbesuchMapper).patch(any(), schuelerCaptor.capture());
+		assertThat(schuelerCaptor.getValue().LSFachklSIM).isNull();
+		assertThat(schuelerCaptor.getValue().LSFachklKennung).isNull();
+	}
+
+
+	// -------------------------------------------------------------------------
 	// patch - LSSchulNr (idVorherigeSchule)
 	// -------------------------------------------------------------------------
 

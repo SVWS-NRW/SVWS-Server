@@ -10,6 +10,7 @@ import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
 import de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre;
 import de.svws_nrw.asd.types.schueler.Einschulungsart;
 import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
+import de.svws_nrw.asd.types.schule.Fachklasse;
 import de.svws_nrw.asd.types.schule.Kindergartenbesuch;
 import de.svws_nrw.asd.types.schule.SchulabschlussAllgemeinbildend;
 import de.svws_nrw.asd.types.schule.SchulabschlussBerufsbildend;
@@ -126,10 +127,36 @@ public final class SchulbesuchService {
 		patchRequest.idDauerKindergartenbesuch.ifPresent(id -> patchKindergartenbesuch(entity, id));
 		patchRequest.schluesselHoechsterSchulabschluss.ifPresent(schluessel -> patchHoechsterSchulabschluss(entity, schluessel));
 		patchRequest.schluesselSchulgliederungVorherigeSchule.ifPresent(this::validateSchulgliederung);
+		patchRequest.schluesselCoreTypeFachklasseVorherigeSchule.ifPresent(schluessel -> patchFachklasse(entity, schluessel));
 		patchAbschlussartVorherigeSchule(entity, patchRequest);
 	}
 
+	private void patchFachklasse(final DTOSchueler entity, final String schluessel) {
+		if (schluessel == null) {
+			entity.LSFachklKennung = null;
+			entity.LSFachklSIM = null;
+			return;
+		}
+		if (!schluessel.matches("\\d{2,3}-\\d{5}")) {
+			throw new ApiOperationException(
+					Status.BAD_REQUEST,
+					"Der Schlüssel '%s' entspricht nicht dem erwarteten Format (z.B. 'XX-XXXXX' oder 'XXX-XXXXX')."
+							.formatted(schluessel));
+		}
+		if (Fachklasse.data().getWertBySchluessel(schluessel) == null) {
+			throw new ApiOperationException(
+					Status.BAD_REQUEST,
+					"Keine Fachklasse mit dem Schlüssel %s gefunden.".formatted(schluessel));
+		}
+		final var sb = new StringBuilder(schluessel);
+		entity.LSFachklKennung = sb.insert(sb.length() - 2, "-").toString();
+		entity.LSFachklSIM = schluessel.substring(schluessel.indexOf("-") + 1);
+	}
+
 	private void validateSchulgliederung(final String schluessel) {
+		if (schluessel == null) {
+			return;
+		}
 		if (Schulgliederung.data().getWertBySchluessel(schluessel) == null) {
 			throw new ApiOperationException(
 					Status.BAD_REQUEST,
