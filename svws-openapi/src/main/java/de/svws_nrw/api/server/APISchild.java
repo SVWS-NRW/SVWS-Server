@@ -2,8 +2,9 @@ package de.svws_nrw.api.server;
 
 import java.util.List;
 
+import de.svws_nrw.controller.kataloge.Schild3FachklasseDQRNiveauZuordnungControllerFactory;
 import de.svws_nrw.core.data.schild3.Schild3KatalogEintragAbiturInfos;
-import de.svws_nrw.core.data.schild3.Schild3KatalogEintragDQRNiveaus;
+import de.svws_nrw.core.data.schild3.Schild3FachklasseDQRNiveauZuordnung;
 import de.svws_nrw.core.data.schild3.Schild3KatalogEintragDatenart;
 import de.svws_nrw.core.data.schild3.Schild3KatalogEintragExportCSV;
 import de.svws_nrw.core.data.schild3.Schild3KatalogEintragFilterFehlendeEintraege;
@@ -16,7 +17,6 @@ import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.schild3.DataSchildAbiturInfos;
-import de.svws_nrw.data.schild3.DataSchildDQRNiveaus;
 import de.svws_nrw.data.schild3.DataSchildDatenart;
 import de.svws_nrw.data.schild3.DataSchildExportCSV;
 import de.svws_nrw.data.schild3.DataSchildFilterFehlendeEintraege;
@@ -122,13 +122,13 @@ public class APISchild {
 			description = "Die Liste der Einträge aus dem Schild-Katalog DQR-Niveaus. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen für den Schild-Katalog DQR-Niveaus",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Schild3KatalogEintragDQRNiveaus.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Schild3FachklasseDQRNiveauZuordnung.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-	public Response getKatalogSchild3DQRNiveaus(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.run(() -> (new DataSchildDQRNiveaus()).getAll(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
+	public Response getSchild3FachklasseDQRNiveauZuordnungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return Schild3FachklasseDQRNiveauZuordnungControllerFactory.withReadAccess(request)
+				.getDQRNiveauController()
+				.getAll();
 	}
 
 

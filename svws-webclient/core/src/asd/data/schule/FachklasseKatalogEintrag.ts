@@ -14,14 +14,14 @@ export class FachklasseKatalogEintrag extends CoreTypeData {
 	public fkSchluessel2: string | null = null;
 
 	/**
-	 * Index zur Ermittlung der Schulgliederung für Fachklassen des Berufskollegs. Referenziert auf {@link SchulgliederungKatalogEintrag}.
+	 * Hier wird ein Fachklasseneintrag einem bkIndex zugeordnet. Aus der Schulgliederung kann der bkIndex ermittelt werden, um die korrekte Fachklasse zu ermitteln.
 	 */
 	public bkIndex: number = -1;
 
 	/**
 	 * ID des DQRNiveaus im CoreType DQRNiveau.
 	 */
-	public dqrNiveau: number = -1;
+	public dqrNiveau: number | null = null;
 
 	/**
 	 * Gibt an, ob die Fachklassen ausgelaufen ist oder nicht
@@ -100,9 +100,7 @@ export class FachklasseKatalogEintrag extends CoreTypeData {
 		if (obj.bkIndex === undefined)
 			throw new Error('invalid json format, missing attribute bkIndex');
 		result.bkIndex = obj.bkIndex;
-		if (obj.dqrNiveau === undefined)
-			throw new Error('invalid json format, missing attribute dqrNiveau');
-		result.dqrNiveau = obj.dqrNiveau;
+		result.dqrNiveau = (obj.dqrNiveau === undefined) ? null : obj.dqrNiveau === null ? null : obj.dqrNiveau;
 		if (obj.istAusgelaufen === undefined)
 			throw new Error('invalid json format, missing attribute istAusgelaufen');
 		result.istAusgelaufen = obj.istAusgelaufen;
@@ -131,7 +129,7 @@ export class FachklasseKatalogEintrag extends CoreTypeData {
 		result += '"fkSchluessel" : ' + ((obj.fkSchluessel === null) ? 'null' : JSON.stringify(obj.fkSchluessel)) + ',';
 		result += '"fkSchluessel2" : ' + ((obj.fkSchluessel2 === null) ? 'null' : JSON.stringify(obj.fkSchluessel2)) + ',';
 		result += '"bkIndex" : ' + obj.bkIndex + ',';
-		result += '"dqrNiveau" : ' + obj.dqrNiveau + ',';
+		result += '"dqrNiveau" : ' + ((obj.dqrNiveau === null) ? 'null' : obj.dqrNiveau.toString()) + ',';
 		result += '"istAusgelaufen" : ' + obj.istAusgelaufen.toString() + ',';
 		result += '"berufsfeldGruppe" : ' + ((obj.berufsfeldGruppe === null) ? 'null' : JSON.stringify(obj.berufsfeldGruppe)) + ',';
 		result += '"berufsfeld" : ' + ((obj.berufsfeld === null) ? 'null' : JSON.stringify(obj.berufsfeld)) + ',';
@@ -175,7 +173,7 @@ export class FachklasseKatalogEintrag extends CoreTypeData {
 			result += '"bkIndex" : ' + obj.bkIndex + ',';
 		}
 		if (obj.dqrNiveau !== undefined) {
-			result += '"dqrNiveau" : ' + obj.dqrNiveau + ',';
+			result += '"dqrNiveau" : ' + ((obj.dqrNiveau === null) ? 'null' : obj.dqrNiveau.toString()) + ',';
 		}
 		if (obj.istAusgelaufen !== undefined) {
 			result += '"istAusgelaufen" : ' + obj.istAusgelaufen.toString() + ',';

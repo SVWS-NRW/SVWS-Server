@@ -11,7 +11,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * Sie liefert die Daten einer Fachklasse.
  */
 @XmlRootElement
-@Schema(description = "Ein Eintrag im Katalog einer Fachklasse.")
+@Schema(description = "Ein Eintrag im Katalog der Fachklassen.")
 @TranspilerDTO
 public class FachklasseKatalogEintrag extends CoreTypeData {
 
@@ -23,13 +23,13 @@ public class FachklasseKatalogEintrag extends CoreTypeData {
 	@Schema(description = "Teil 2 des Fachklassen Schlüssels", example = "00")
 	public String fkSchluessel2;
 
-	/** Index zur Ermittlung der Schulgliederung für Fachklassen des Berufskollegs. Referenziert auf {@link SchulgliederungKatalogEintrag}. */
-	@Schema(description = "Index zur Ermittlung der Schulgliederung für Fachklassen des Berufskollegs", example = "10")
+	/** Hier wird ein Fachklasseneintrag einem bkIndex zugeordnet. Aus der Schulgliederung kann der bkIndex ermittelt werden, um die korrekte Fachklasse zu ermitteln. */
+	@Schema(description = "Hier wird ein Fachklasseneintrag einem bkIndex zugeordnet. Aus der Schulgliederung kann der bkIndex ermittelt werden, um die korrekte Fachklasse zu ermitteln", example = "10")
 	public @NotNull Integer bkIndex = -1;
 
 	/** ID des DQRNiveaus im CoreType DQRNiveau. */
 	@Schema(description = "ID des DQRNiveaus", example = "1")
-	public @NotNull Integer dqrNiveau = -1;
+	public Integer dqrNiveau;
 
 	/** Gibt an, ob die Fachklassen ausgelaufen ist oder nicht */
 	@Schema(description = "gibt an, ob die Fachklassen ausgelaufen ist oder nicht", example = "false")

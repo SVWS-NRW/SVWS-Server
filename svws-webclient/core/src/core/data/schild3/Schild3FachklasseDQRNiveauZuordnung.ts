@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Class } from '../../../java/lang/Class';
 
-export class Schild3KatalogEintragDQRNiveaus extends JavaObject {
+export class Schild3FachklasseDQRNiveauZuordnung extends JavaObject {
 
 	/**
 	 * DQR-Niveau für Gliederung
@@ -29,26 +29,23 @@ export class Schild3KatalogEintragDQRNiveaus extends JavaObject {
 	public gueltigBis: number | null = null;
 
 
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
 	public constructor() {
 		super();
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.data.schild3.Schild3KatalogEintragDQRNiveaus';
+		return 'de.svws_nrw.core.data.schild3.Schild3FachklasseDQRNiveauZuordnung';
 	}
 
 	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.core.data.schild3.Schild3KatalogEintragDQRNiveaus'].includes(name);
+		return ['de.svws_nrw.core.data.schild3.Schild3FachklasseDQRNiveauZuordnung'].includes(name);
 	}
 
-	public static readonly class = new Class<Schild3KatalogEintragDQRNiveaus>('de.svws_nrw.core.data.schild3.Schild3KatalogEintragDQRNiveaus');
+	public static readonly class = new Class<Schild3FachklasseDQRNiveauZuordnung>('de.svws_nrw.core.data.schild3.Schild3FachklasseDQRNiveauZuordnung');
 
-	public static transpilerFromJSON(json: string): Schild3KatalogEintragDQRNiveaus {
-		const obj = JSON.parse(json) as Partial<Schild3KatalogEintragDQRNiveaus>;
-		const result = new Schild3KatalogEintragDQRNiveaus();
+	public static transpilerFromJSON(json: string): Schild3FachklasseDQRNiveauZuordnung {
+		const obj = JSON.parse(json) as Partial<Schild3FachklasseDQRNiveauZuordnung>;
+		const result = new Schild3FachklasseDQRNiveauZuordnung();
 		result.Gliederung = (obj.Gliederung === undefined) ? null : obj.Gliederung === null ? null : obj.Gliederung;
 		result.FKS = (obj.FKS === undefined) ? null : obj.FKS === null ? null : obj.FKS;
 		result.DQR_Niveau = (obj.DQR_Niveau === undefined) ? null : obj.DQR_Niveau === null ? null : obj.DQR_Niveau;
@@ -57,7 +54,7 @@ export class Schild3KatalogEintragDQRNiveaus extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSON(obj: Schild3KatalogEintragDQRNiveaus): string {
+	public static transpilerToJSON(obj: Schild3FachklasseDQRNiveauZuordnung): string {
 		let result = '{';
 		result += '"Gliederung" : ' + ((obj.Gliederung === null) ? 'null' : JSON.stringify(obj.Gliederung)) + ',';
 		result += '"FKS" : ' + ((obj.FKS === null) ? 'null' : JSON.stringify(obj.FKS)) + ',';
@@ -69,7 +66,7 @@ export class Schild3KatalogEintragDQRNiveaus extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSONPatch(obj: Partial<Schild3KatalogEintragDQRNiveaus>): string {
+	public static transpilerToJSONPatch(obj: Partial<Schild3FachklasseDQRNiveauZuordnung>): string {
 		let result = '{';
 		if (obj.Gliederung !== undefined) {
 			result += '"Gliederung" : ' + ((obj.Gliederung === null) ? 'null' : JSON.stringify(obj.Gliederung)) + ',';
@@ -93,6 +90,6 @@ export class Schild3KatalogEintragDQRNiveaus extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_schild3_Schild3KatalogEintragDQRNiveaus(obj: unknown): Schild3KatalogEintragDQRNiveaus {
-	return obj as Schild3KatalogEintragDQRNiveaus;
+export function cast_de_svws_nrw_core_data_schild3_Schild3FachklasseDQRNiveauZuordnung(obj: unknown): Schild3FachklasseDQRNiveauZuordnung {
+	return obj as Schild3FachklasseDQRNiveauZuordnung;
 }

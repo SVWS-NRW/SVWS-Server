@@ -162,9 +162,9 @@ import { PruefungsordnungKatalogEintrag } from '../core/data/schule/Pruefungsord
 import { Raum } from '../core/data/schule/Raum';
 import { ReligionEintrag } from '../core/data/schule/ReligionEintrag';
 import { ReportingParameter } from '../core/data/reporting/ReportingParameter';
+import { Schild3FachklasseDQRNiveauZuordnung } from '../core/data/schild3/Schild3FachklasseDQRNiveauZuordnung';
 import { Schild3KatalogEintragAbiturInfos } from '../core/data/schild3/Schild3KatalogEintragAbiturInfos';
 import { Schild3KatalogEintragDatenart } from '../core/data/schild3/Schild3KatalogEintragDatenart';
-import { Schild3KatalogEintragDQRNiveaus } from '../core/data/schild3/Schild3KatalogEintragDQRNiveaus';
 import { Schild3KatalogEintragExportCSV } from '../core/data/schild3/Schild3KatalogEintragExportCSV';
 import { Schild3KatalogEintragFilterFehlendeEintraege } from '../core/data/schild3/Schild3KatalogEintragFilterFehlendeEintraege';
 import { Schild3KatalogEintragLaender } from '../core/data/schild3/Schild3KatalogEintragLaender';
@@ -11821,14 +11821,14 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getKatalogSchild3DQRNiveaus für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/dqr_niveaus
+	 * Implementierung der GET-Methode getSchild3FachklasseDQRNiveauZuordnungen für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/dqr_niveaus
 	 *
 	 * Die Liste der Einträge aus dem Schild-Katalog DQR-Niveaus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Katalog-Einträgen für den Schild-Katalog DQR-Niveaus
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<Schild3KatalogEintragDQRNiveaus>
+	 *     - Rückgabe-Typ: List<Schild3FachklasseDQRNiveauZuordnung>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Katalog-Einträge gefunden
 	 *
@@ -11836,13 +11836,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog DQR-Niveaus
 	 */
-	public async getKatalogSchild3DQRNiveaus(schema : string) : Promise<List<Schild3KatalogEintragDQRNiveaus>> {
+	public async getSchild3FachklasseDQRNiveauZuordnungen(schema : string) : Promise<List<Schild3FachklasseDQRNiveauZuordnung>> {
 		const path = "/db/{schema}/schild3/dqr_niveaus"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<Schild3KatalogEintragDQRNiveaus>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragDQRNiveaus.transpilerFromJSON(text)); });
+		const ret = new ArrayList<Schild3FachklasseDQRNiveauZuordnung>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schild3FachklasseDQRNiveauZuordnung.transpilerFromJSON(text)); });
 		return ret;
 	}
 

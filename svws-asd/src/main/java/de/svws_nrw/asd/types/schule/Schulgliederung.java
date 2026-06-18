@@ -1,5 +1,6 @@
 package de.svws_nrw.asd.types.schule;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
@@ -716,8 +717,28 @@ public enum Schulgliederung implements @NotNull CoreType<SchulgliederungKatalogE
 	 *
 	 * @return die bei der Schulform in dem angegebenen Schuljahr dem Schlüssel zugehörige Schulgliederung oder null falls eine solche nicht existiert
 	 */
-	public static Schulgliederung getBySchuljahrAndSchulformAndSchluessel(final int schuljahr, final @NotNull Schulform schulform, final @NotNull String schluessel) {
+	public static Schulgliederung getBySchuljahrAndSchulformAndSchluessel(final int schuljahr, final @NotNull Schulform schulform,
+			final @NotNull String schluessel) {
 		return data().getBySchuljahrAndSchulformAndSchluessel(schuljahr, schulform, schluessel);
+	}
+
+	/**
+	 * Liefert die zulässigen Schulgliederungen für den angegebenen bkIndex in dem angegebenen Schuljahr
+	 *
+	 * @param schuljahr das Schuljahr
+	 * @param bkIndex der bkIndex
+	 *
+	 * @return Liste von {@link Schulgliederung}
+	 */
+	public static List<Schulgliederung> getBySchuljahrAndBKIndex(final int schuljahr, final int bkIndex) {
+		final List<Schulgliederung> schulgliederungenOfBKIndex = new ArrayList<>();
+		for (final Schulgliederung schulgliederung : data().getWerte()) {
+			final SchulgliederungKatalogEintrag schulgliederungEintrag = schulgliederung.daten(schuljahr);
+			if ((schulgliederungEintrag != null) && (schulgliederungEintrag.bkIndex != null) && (schulgliederungEintrag.bkIndex == bkIndex)) {
+				schulgliederungenOfBKIndex.add(schulgliederung);
+			}
+		}
+		return schulgliederungenOfBKIndex;
 	}
 
 }

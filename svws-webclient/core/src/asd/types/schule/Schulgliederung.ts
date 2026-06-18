@@ -1,6 +1,7 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { CoreTypeDataManager } from '../../../asd/utils/CoreTypeDataManager';
 import { Schulform } from '../../../asd/types/schule/Schulform';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { SchulgliederungKatalogEintrag } from '../../../asd/data/schule/SchulgliederungKatalogEintrag';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
@@ -717,6 +718,25 @@ export class Schulgliederung extends JavaEnum<Schulgliederung> implements CoreTy
 	 */
 	public static getBySchuljahrAndSchulformAndSchluessel(schuljahr: number, schulform: Schulform, schluessel: string): Schulgliederung | null {
 		return Schulgliederung.data().getBySchuljahrAndSchulformAndSchluessel(schuljahr, schulform, schluessel);
+	}
+
+	/**
+	 * Liefert die zulässigen Schulgliederungen für den angegebenen bkIndex in dem angegebenen Schuljahr
+	 *
+	 * @param schuljahr das Schuljahr
+	 * @param bkIndex der bkIndex
+	 *
+	 * @return Liste von {@link Schulgliederung}
+	 */
+	public static getBySchuljahrAndBKIndex(schuljahr: number, bkIndex: number): List<Schulgliederung> | null {
+		const schulgliederungenOfBKIndex: List<Schulgliederung> | null = new ArrayList<Schulgliederung>();
+		for (const schulgliederung of Schulgliederung.data().getWerte()) {
+			const schulgliederungEintrag: SchulgliederungKatalogEintrag | null = schulgliederung.daten(schuljahr);
+			if ((schulgliederungEintrag !== null) && (schulgliederungEintrag.bkIndex !== null) && (schulgliederungEintrag.bkIndex === bkIndex)) {
+				schulgliederungenOfBKIndex.add(schulgliederung);
+			}
+		}
+		return schulgliederungenOfBKIndex;
 	}
 
 	/**

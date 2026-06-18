@@ -772,8 +772,8 @@ export { ReportingReportvorlageParameterGruppe } from './core/data/reporting/Rep
 export { ReportingSortierungDefinition } from './core/data/reporting/ReportingSortierungDefinition';
 export { ReportingSortierungDefinitionGruppe } from './core/data/reporting/ReportingSortierungDefinitionGruppe';
 export { DatenbankVerbindungsdaten } from './core/data/schema/DatenbankVerbindungsdaten';
+export { Schild3FachklasseDQRNiveauZuordnung } from './core/data/schild3/Schild3FachklasseDQRNiveauZuordnung';
 export { Schild3KatalogEintragAbiturInfos } from './core/data/schild3/Schild3KatalogEintragAbiturInfos';
-export { Schild3KatalogEintragDQRNiveaus } from './core/data/schild3/Schild3KatalogEintragDQRNiveaus';
 export { Schild3KatalogEintragDatenart } from './core/data/schild3/Schild3KatalogEintragDatenart';
 export { Schild3KatalogEintragExportCSV } from './core/data/schild3/Schild3KatalogEintragExportCSV';
 export { Schild3KatalogEintragFilterFehlendeEintraege } from './core/data/schild3/Schild3KatalogEintragFilterFehlendeEintraege';

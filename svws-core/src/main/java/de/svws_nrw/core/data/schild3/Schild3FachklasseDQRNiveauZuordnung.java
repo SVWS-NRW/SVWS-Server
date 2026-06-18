@@ -10,7 +10,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "Schild3-Katalog DQR-Niveaus")
 @TranspilerDTO
-public class Schild3KatalogEintragDQRNiveaus {
+public class Schild3FachklasseDQRNiveauZuordnung {
 
 	/** DQR-Niveau für Gliederung */
 	@Schema(description = "DQR-Niveau für Gliederung")
@@ -31,12 +31,5 @@ public class Schild3KatalogEintragDQRNiveaus {
 	/** Gültig bis Schuljahr */
 	@Schema(description = "Gültig bis Schuljahr")
 	public Integer gueltigBis;
-
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
-	public Schild3KatalogEintragDQRNiveaus() {
-		// leer
-	}
 
 }
