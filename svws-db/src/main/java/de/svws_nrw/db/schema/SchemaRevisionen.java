@@ -49,6 +49,7 @@ import de.svws_nrw.db.schema.revisionen.Revision60Updates;
 import de.svws_nrw.db.schema.revisionen.Revision61Updates;
 import de.svws_nrw.db.schema.revisionen.Revision62Updates;
 import de.svws_nrw.db.schema.revisionen.Revision67Updates;
+import de.svws_nrw.db.schema.revisionen.Revision69Updates;
 import de.svws_nrw.db.schema.revisionen.Revision6Updates;
 import de.svws_nrw.db.schema.revisionen.RevisionNoUpdates;
 
@@ -336,21 +337,24 @@ public enum SchemaRevisionen {
 	REV_67(67, "2026-06-08"),
 
 	/** Anpassung der Tabellen zu Klausurvorgaben und Hinzufügen einer neuen Tabelle für die Definition von GKLs bei Schülern */
-	REV_68(68, "2026-06-11");
+	REV_68(68, "2026-06-11"),
+
+	/** Tabelle: Schueler -> Spalte LSSchulform Werte FE und SK auf S umschlüsseln (Anderungen in der HerkunftSonstige.json durch IT-NRW Issue #3578) */
+	REV_69(69, "2026-06-18");
 
 	/**
 	 * Gibt die größte Revisionsnummer an, die in dieser Enumeration definiert wurde und
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_68;
+	public static final SchemaRevisionen maxRevision = REV_69;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_68;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_69;
 
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
@@ -458,6 +462,7 @@ public enum SchemaRevisionen {
 				case REV_61 -> new Revision61Updates();
 				case REV_62 -> new Revision62Updates();
 				case REV_67 -> new Revision67Updates();
+				case REV_69 -> new Revision69Updates();
 				default -> new RevisionNoUpdates(this);
 			};
 		}

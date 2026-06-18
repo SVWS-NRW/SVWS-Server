@@ -1,5 +1,5 @@
 {
-    "version": 3,
+    "version": 4,
     "daten": [
       {
         "bezeichner": "AS",
@@ -18,7 +18,7 @@
             "id": 1001,
             "schluessel": "AS",
             "kuerzel": "AS",
-            "text": "Ausländische Schüler/-innen, die seit den letzten amtlichen Schuldaten aus dem Ausland zugezogen sind",
+            "text": "Aus dem Ausland zugezogen",
             "schulformen": ["BK", "SB", "WB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V"],
             "gueltigVon": 2023,
             "gueltigBis": null
@@ -33,23 +33,8 @@
             "id": 2000,
             "schluessel": "ES",
             "kuerzel": "ES",
-            "text": "Keine Schule bzw. kein Förderschulkindergarten (Einschulung)",
+            "text": "Einschulung (keine Schule/kein Förderschulkindergarten",
             "schulformen": ["FW", "HI", "WF", "G", "PS", "KS", "S", "V"],
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      },
-      {
-        "bezeichner": "FE",
-        "idStatistik": "3",
-        "historie": [
-          {
-            "id": 3000,
-            "schluessel": "FE",
-            "kuerzel": "FE",
-            "text": "Hausfrüherziehung für Hör- bzw. Sehgeschädigte",
-            "schulformen": ["FW", "HI", "WF", "KS", "S"],
             "gueltigVon": null,
             "gueltigBis": null
           }
@@ -65,21 +50,6 @@
             "kuerzel": "HU",
             "text": "Hochschule, Universität",
             "schulformen": ["BK", "SB"],
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      },
-      {
-        "bezeichner": "SK",
-        "idStatistik": "5",
-        "historie": [
-          {
-            "id": 5000,
-            "schluessel": "SK",
-            "kuerzel": "SK",
-            "text": "Förderschulkindergarten (einschließlich frühkindliche Förderung)",
-            "schulformen": ["FW", "HI", "WF", "G", "PS", "KS", "S", "V"],
             "gueltigVon": null,
             "gueltigBis": null
           }
@@ -147,7 +117,7 @@
             "id": 10001,
             "schluessel": "XS",
             "kuerzel": "XS",
-            "text": "Sonstige Schule bzw. keine Schule, auch seit den letzten amtlichen Schuldaten aus dem Ausland zugezogene deutsche Schüler/-innen",
+            "text": "Sonstiges",
             "schulformen": ["BK", "SB", "WB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V"],
             "gueltigVon": 2023,
             "gueltigBis": null
@@ -156,4 +126,3 @@
       }
     ]
   }
-  
