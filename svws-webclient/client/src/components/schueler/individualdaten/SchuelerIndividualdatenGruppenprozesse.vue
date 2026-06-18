@@ -54,7 +54,7 @@
 							@update:model-value="setAufnahmedatum" type="date" :removable="false" statistics />
 					</ui-gruppenprozesse-wrapper>
 					<svws-ui-spacing />
-					<svws-ui-input-wrapper :grid="2" class="input-wrapper--checkboxes !gap-y-2">
+					<svws-ui-input-wrapper :grid="2" class="input-wrapper--checkboxes gap-y-2!">
 						<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="istVolljaehrig"
 							:nullable="false">
 							<svws-ui-checkbox :disabled="!hatKompetenzUpdate" v-model="istVolljaehrig"
@@ -178,7 +178,7 @@
 
 <script setup lang="ts">
 
-	import type { Fahrschuelerart } from "@core";
+	import type { Fahrschuelerart, SchulEintrag } from "@core";
 	import { BenutzerKompetenz, Nationalitaeten, SchuelerStatus, Schulform, Verkehrssprache } from "@core";
 	import type { SchuelerIndividualdatenGruppenprozesseProps } from "~/components/schueler/individualdaten/SchuelerIndividualdatenGruppenprozesseProps";
 	import { computed, ref, watch, toRefs } from "vue";
@@ -253,9 +253,14 @@
 	});
 	const stammschuleSelectManager = new SelectManager({
 		options: schulen,
-		optionDisplayText: selected => selected.kuerzel ?? selected.schulnummerStatistik ?? selected.kurzbezeichnung ?? selected.name,
-		selectionDisplayText: selected => selected.kuerzel ?? selected.schulnummerStatistik ?? selected.kurzbezeichnung ?? selected.name,
+		selectionDisplayText: getSchulnummerText,
+		optionDisplayText: getSchulnummerText,
 	});
+
+	function getSchulnummerText(eintrag: SchulEintrag | null): string {
+		const text = `${eintrag?.schulnummerStatistik ?? ''} ${eintrag?.kuerzel ?? eintrag?.kurzbezeichnung ?? ''}`;
+		return text.length > 0 ? text : 'Fehlende Angaben';
+	}
 	const geburtslandSelectManager = new CoreTypeSelectManager({
 		clazz: Nationalitaeten.class, schuljahr: schuljahr, schulformen: schulform,
 	});

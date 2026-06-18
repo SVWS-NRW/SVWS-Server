@@ -74,9 +74,9 @@
 					:readonly :removable="false" required statistics focus-class-content />
 				<ui-select v-if="model.proxy.status === SchuelerStatus.EXTERN.daten(schuljahr)?.id"
 					label="Stammschule"
-					v-model="inputStammschule"
+					v-model="model.proxy.externeSchulNr"
 					:manager="stammschuleManager"
-					:removable="inputStammschule !== null"
+					:removable="model.proxy.externeSchulNr !== null"
 					:readonly searchable />
 				<div v-else />
 				<template v-if="serverMode === ServerMode.DEV">
@@ -264,10 +264,10 @@
 
 	import { computed, ref } from "vue";
 	import type { SchuelerIndividualdatenProps } from "./SchuelerIndividualdatenProps";
-	import type { NationalitaetenKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchulEintrag, Fahrschuelerart, Haltestelle, SchuelerStatusKatalogEintrag, VerkehrsspracheKatalogEintrag } from "@core";
-	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, Verkehrssprache, BenutzerKompetenz, ServerMode, ArrayList, ReportingReportvorlage } from "@core";
+	import type { JavaSet, NationalitaetenKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, Fahrschuelerart, Haltestelle, SchuelerStatusKatalogEintrag, VerkehrsspracheKatalogEintrag } from "@core";
+	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, Verkehrssprache, BenutzerKompetenz, ServerMode, ArrayList, ReportingReportvorlage, HashSet } from "@core";
 	import { orte_sort, ortsteilSort } from "~/utils/helfer";
-	import { CoreTypeSelectManager, SelectManager, useReportingState } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useReportingState, useSchuleState } from "@ui";
 	import { SchuelerIndividualdatenModel } from "~/components/schueler/individualdaten/modelproxy/SchuelerIndividualdatenModelProxy";
 	import WiedervorlageModal from "~/components/wiedervorlage/WiedervorlageModal.vue";
 	import SchuelerTelefonnummern from "~/components/schueler/individualdaten/telefonnummern/SchuelerTelefonnummern.vue";
@@ -276,6 +276,7 @@
 
 	const props = defineProps<SchuelerIndividualdatenProps>();
 	const reportingState = useReportingState();
+	const schuleState = useSchuleState();
 
 	const schuljahr = computed<number>(() => props.schuelerListeManager().schuelerGetSchuljahrOrException());
 
@@ -329,19 +330,29 @@
 		selectionDisplayText: i => i.bezeichnung ?? '',
 	});
 
-	const stammschuleManager = new SelectManager<SchulEintrag>({
-		options: computed(() => props.mapSchulen.values()),
-		optionDisplayText: i => i.kuerzel ?? i.schulnummerStatistik ?? i.kurzbezeichnung ?? i.name,
-		selectionDisplayText: i => i.kuerzel ?? i.schulnummerStatistik ?? i.kurzbezeichnung ?? i.name,
+	const eigeneSchulnummer = computed<string>(() => `${schuleState.validatorKontext.getSchulnummer()}`);
+	const moeglicheStammschulnummern = computed<JavaSet<string>>(() => {
+		// Füge zunächst alle Schulnummern mit eingetragenen Kürzeln im Schul-Katalog hinzu
+		const result = new HashSet<string>();
+		for (const schule of props.mapSchulen.values()) {
+			if ((schule.schulnummerStatistik !== null) && (schule.schulnummerStatistik !== eigeneSchulnummer.value)) {
+				result.add(schule.schulnummerStatistik);
+			}
+		}
+		return result;
 	});
 
-	const inputStammschule = computed<SchulEintrag | null>({
-		get: () => (model.proxy.externeSchulNr === null) ? null : (props.mapSchulen.get(model.proxy.externeSchulNr) ?? null),
-		set: (value) => {
-			model.proxy.externeSchulNr = value?.schulnummerStatistik ?? null;
-			void model.patch();
-		},
+	const stammschuleManager = new SelectManager({
+		options: moeglicheStammschulnummern,
+		selectionDisplayText: getSchulnummerText,
+		optionDisplayText: getSchulnummerText,
 	});
+
+	function getSchulnummerText(schulnummer: string): string {
+		const eintrag = props.mapSchulen.get(schulnummer);
+		const text = `${eintrag?.schulnummerStatistik ?? ''} ${eintrag?.kuerzel ?? eintrag?.kurzbezeichnung ?? ''}`;
+		return text.length > 0 ? text : 'Fehlende Angaben';
+	}
 
 	// --- Karte "Staatsangehörigkeit und Konfession" ---
 

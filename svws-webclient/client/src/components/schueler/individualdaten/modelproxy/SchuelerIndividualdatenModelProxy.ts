@@ -30,7 +30,7 @@ export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten>
 			"haltestelleID", "idStaatsangehoerigkeit", "idStaatsangehoerigkeit2", "religionID", "idGeburtsland",
 			"idVerkehrspracheFamilie", "idGeburtslandMutter", "idGeburtslandVater", "istDuplikat", "istVolljaehrig",
 			"keineAuskunftAnDritte", "istSchulpflichtErfuellt", "istBerufsschulpflichtErfuellt", "hatMasernimpfnachweis",
-			"erhaeltSchuelerBAFOEG", "druckeKonfessionAufZeugnisse", "hatMigrationshintergrund",
+			"erhaeltSchuelerBAFOEG", "druckeKonfessionAufZeugnisse", "hatMigrationshintergrund", "externeSchulNr",
 		];
 		super({ data, patch, listOfAutopatchProps, checkValidBeforePatch: true });
 		this.schuljahr = schuljahr;
@@ -186,7 +186,7 @@ export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten>
 	selectedOrtsteil = computed<OrtsteilKatalogEintrag | null>({
 		get: () => this.ortsteileById().get(this.proxy.ortsteilID ?? -1) ?? null,
 		set: (value: OrtsteilKatalogEintrag | null) => {
-			const v = value ?? null;
+			const v = value;
 			const wohnortId = (v === null) ? this.proxy.wohnortID : (this.orteById().get(v.ort_id ?? -1)?.id ?? null);
 			const ortsteilId = (v === null || wohnortId === null) ? null : v.id;
 			this.setAndPatchOrtAndOrtsteil(wohnortId, ortsteilId);
