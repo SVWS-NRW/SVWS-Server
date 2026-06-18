@@ -21,7 +21,7 @@
 		</svws-ui-content-card>
 		<div />
 		<!-- Im Schuljahr vor der Aufname !-->
-		<svws-ui-content-card title="Im Schuljahr vor der Aufname">
+		<svws-ui-content-card title="Im Schuljahr vor der Aufname" class="[&_.content-card--content]:min-h-105">
 			<div class="pb-4 flex flex-row gap-6 items-center">
 				<svws-ui-radio-option label="Öffentliche oder Ersatzschule in NRW"
 					:model-value="currentMode"
@@ -36,49 +36,46 @@
 					@update:model-value="setMode(Schulauswahl.NONE)"
 					:value="Schulauswahl.NONE" />
 			</div>
-			<svws-ui-input-wrapper :grid="2">
-				<ui-select :label="labelVorherigeSchuleAuswahl"
-					:class="{ 'invisible pointer-events-none': currentMode === Schulauswahl.NONE }"
+			<div class="flex" v-if="!keinSchulbesuch">
+				<ui-select :label="labelVorherigeSchuleAuswahl" v-if="!keinSchulbesuch"
 					:manager="vorherigeSchuleManager"
 					v-model="model.vorherigeSchule.value"
 					:readonly />
-				<div class="flex" :class="{ 'invisible pointer-events-none': currentMode === Schulauswahl.NONE }">
-					<svws-ui-text-input placeholder="Statistik-Schulnummer"
-						:model-value="model.schulnummerStatistik.value"
-						statistics readonly />
-					<svws-ui-button type="transparent" class="min-w-fit"
-						@click="goToSchule(manager().daten.idVorherigeSchule ?? -1)"
-						:disabled="manager().daten.idVorherigeSchule === null">
-						<span class="icon i-ri-link" />Zur Schule
-					</svws-ui-button>
-				</div>
-				<svws-ui-text-input placeholder="Schulform" v-if="currentMode !== Schulauswahl.NONE"
+				<svws-ui-button type="transparent" class="min-w-fit"
+					@click="goToSchule(manager().daten.idVorherigeSchule ?? -1)"
+					:disabled="manager().daten.idVorherigeSchule === null">
+					<span class="icon i-ri-link" />Zur Schule
+				</svws-ui-button>
+			</div>
+			<svws-ui-input-wrapper :grid="2">
+				<svws-ui-text-input placeholder="Schulform" v-if="!keinSchulbesuch"
 					:model-value="model.schulformVorherigeSchule.value"
 					statistics readonly />
-				<ui-select label="Schulform" v-if="currentMode === Schulauswahl.NONE"
+				<ui-select label="vorherige Tätigkeit / Herkunft" v-if="currentMode === Schulauswahl.NONE"
 					:manager="schulformVorherigKeinAbschlussManager"
 					v-model="model.schulformVorherigeSchuleKeinAbschluss.value"
 					:readonly required :removable="false" />
+				<svws-ui-text-input placeholder="Statistik-Schulnummer" v-if="!keinSchulbesuch"
+					:model-value="model.schulnummerStatistik.value"
+					statistics readonly />
 				<svws-ui-text-input :placeholder="labelEntlassdatum" type="date"
 					v-model="model.proxy.entlassdatumVorherigeSchule"
 					statistics :readonly />
-
 				<svws-ui-text-input placeholder="Bemerkung" span="full"
 					v-model="model.proxy.bemerkungVorherigeSchule"
 					:validation="() => model.getFehler('bemerkungVorherigeSchule')"
 					@commit="model.patch"
 					:max-len="255" :readonly />
-
-				<ui-select label="Abschlussart Allgemeinbildend"
+				<ui-select label="Höchster allgemeinbildender Abschluss" v-if="abschlussartAllgemeinbildendSelectable"
 					:manager="abschlussartAllgemeinbildendVorherigeSchuleManager"
 					v-model="model.abschlussartAllgemeinbildendVorherigeSchule.value"
 					:readonly />
-				<ui-select label="Abschlussart Berufsbildend" v-if="abschlussartBerufsbildendSelectable"
+				<ui-select label="Höchster berufsbildender Abschluss" v-if="abschlussartBerufsbildendSelectable"
 					:manager="abschlussartBerufsbildendVorherigeSchuleManager"
 					v-model="model.abschlussartBerufsbildendVorherigeSchule.value"
 					:readonly />
 				<!-- TODO: durch Ui-Select ersetzen: siehe Issue#3495-->
-				<svws-ui-text-input placeholder="Versetzung" span="full" v-if="currentMode !== Schulauswahl.NONE"
+				<svws-ui-text-input placeholder="Versetzung" span="full" v-if="!keinSchulbesuch"
 					:model-value="model.idHerkunftsartVersetzungVorherigeSchule.value?.text ?? ''"
 					readonly statistics />
 				<ui-select label="Entlassjahrgang"
@@ -277,7 +274,7 @@
 	const schuleIstBKoderWBK = computed(
 		() => [Schulform.SB, Schulform.BK, Schulform.WB].includes(schuleState.schulform));
 	const wechselBevorstehend = ref<boolean>(false);
-
+	const keinSchulbesuch = computed(() => currentMode.value === Schulauswahl.NONE);
 	// --- Toggle Schulauswahl ---
 
 	const schulauswahlMode = ref<Schulauswahl | null>(null);
@@ -316,7 +313,11 @@
 			return true;
 		}
 		return model.vorherigeSchulform.value !== null &&
-			[Schulform.SB, Schulform.BK].includes(model.vorherigeSchulform.value);
+			[Schulform.SB, Schulform.BK, Schulform.WB].includes(model.vorherigeSchulform.value);
+	});
+
+	const abschlussartAllgemeinbildendSelectable = computed(() => {
+		return !(model.vorherigeSchulform.value !== null && [Schulform.G].includes(model.vorherigeSchulform.value));
 	});
 
 
@@ -358,7 +359,6 @@
 		return 'Entlassen am';
 	});
 
-
 	const hoechsterAbschlussManager = new CoreTypeSelectManager({
 		clazz: SchulabschlussAllgemeinbildend.class,
 		schuljahr: schuljahr,
@@ -377,15 +377,15 @@
 		clazz: Jahrgaenge.class,
 		schuljahr: schuljahr,
 		schulformen: model.vorherigeSchulform,
-		optionDisplayText: "text",
-		selectionDisplayText: "text",
+		optionDisplayText: "kuerzelText",
+		selectionDisplayText: "kuerzelText",
 	});
 
 	const schulformVorherigKeinAbschlussManager = new CoreTypeSelectManager({
 		clazz: HerkunftSonstige.class,
 		schuljahr: schuljahr,
-		optionDisplayText: "text",
-		selectionDisplayText: "text",
+		optionDisplayText: "kuerzelText",
+		selectionDisplayText: "kuerzelText",
 	});
 
 	const vorherigerEntlassgrundManager = new SelectManager<KatalogEntlassgrund>({
@@ -397,15 +397,15 @@
 	const abschlussartAllgemeinbildendVorherigeSchuleManager = new CoreTypeSelectManager({
 		clazz: SchulabschlussAllgemeinbildend.class,
 		schuljahr: schuljahr,
-		optionDisplayText: "text",
-		selectionDisplayText: "text",
+		optionDisplayText: "kuerzelText",
+		selectionDisplayText: "kuerzelText",
 	});
 
 	const abschlussartBerufsbildendVorherigeSchuleManager = new CoreTypeSelectManager({
 		clazz: SchulabschlussBerufsbildend.class,
 		schuljahr: schuljahr,
-		optionDisplayText: "text",
-		selectionDisplayText: "text",
+		optionDisplayText: "kuerzelText",
+		selectionDisplayText: "kuerzelText",
 	});
 
 	const jahrgaengeManager = new SelectManager<JahrgangsDaten>({
@@ -470,15 +470,15 @@
 	const schulgliederungManager = new CoreTypeSelectManager({
 		clazz: Schulgliederung.class,
 		schuljahr: schuljahr,
-		optionDisplayText: "text",
-		selectionDisplayText: "text",
+		optionDisplayText: "kuerzelText",
+		selectionDisplayText: "kuerzelText",
 	});
 
 	const fachklasseManager = new CoreTypeSelectManager({
 		clazz: Fachklasse.class,
 		schuljahr: schuljahr,
-		optionDisplayText: "text",
-		selectionDisplayText: "text",
+		optionDisplayText: "kuerzelText",
+		selectionDisplayText: "kuerzelText",
 	});
 
 	const schulwechselGrundSelectManager = new SelectManager({
