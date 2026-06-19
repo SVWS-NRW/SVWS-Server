@@ -59,7 +59,7 @@ class SchulleitungControllerFactoryTest {
 	private void mockInfrastruktur(final SchulleitungRepositoryFactory repoFactory,
 			final LehrerLeitungsfunktionRepositoryFactory schulleitungRepoFactory,
 			final SchulleitungServiceFactory mockedServiceFactory) {
-		dbBenutzerUtilsMock.when(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN))
+		dbBenutzerUtilsMock.when(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_AENDERN))
 				.thenReturn(mock(DBEntityManager.class));
 		repoFactoryStaticMock.when(SchulleitungRepositoryFactory::getNewInstance)
 				.thenReturn(repoFactory);
@@ -84,7 +84,7 @@ class SchulleitungControllerFactoryTest {
 				.isNotNull()
 				.isInstanceOf(SchulleitungControllerFactory.class);
 
-		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN), times(1));
+		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_ANSEHEN), times(1));
 		repoFactoryStaticMock.verify(SchulleitungRepositoryFactory::getNewInstance, times(1));
 		leitungsfunktionRepoFactoryStaticMock.verify(LehrerLeitungsfunktionRepositoryFactory::getNewInstance, times(1));
 		serviceFactoryStaticMock.verify(() -> SchulleitungServiceFactory.getNewInstance(repoFactory, schulleitungRepoFactory, SchulleitungMapper.INSTANCE), times(1));
@@ -105,7 +105,7 @@ class SchulleitungControllerFactoryTest {
 				.isNotNull()
 				.isInstanceOf(SchulleitungControllerFactory.class);
 
-		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN), times(1));
+		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_AENDERN), times(1));
 		repoFactoryStaticMock.verify(SchulleitungRepositoryFactory::getNewInstance, times(1));
 		leitungsfunktionRepoFactoryStaticMock.verify(LehrerLeitungsfunktionRepositoryFactory::getNewInstance, times(1));
 		serviceFactoryStaticMock.verify(() -> SchulleitungServiceFactory.getNewInstance(repoFactory, schulleitungRepoFactory, SchulleitungMapper.INSTANCE), times(1));

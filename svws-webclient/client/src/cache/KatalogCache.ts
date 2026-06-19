@@ -1,6 +1,4 @@
-import type { Abteilung, Beschaeftigungsart, Betrieb, Betriebsart, EinschulungsartKatalogEintrag, Einwilligungsart, Erzieherart, FachDaten, Fahrschuelerart,
-	Floskel, Floskelgruppe, FoerderschwerpunktEintrag, Haltestelle, JahrgangsDaten, KatalogEntlassgrund, Kindergarten, Lernplattform, List, Merkmal,
-	OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchulEintrag, Telefonart, VermerkartEintrag } from "@core";
+import type { Abteilung, Beschaeftigungsart, Betrieb, Betriebsart, EinschulungsartKatalogEintrag, Einwilligungsart, Erzieherart, FachDaten, Fahrschuelerart, Floskel, Floskelgruppe, FoerderschwerpunktEintrag, Haltestelle, JahrgangsDaten, KatalogEntlassgrund, Kindergarten, Leitungsfunktion, Lernplattform, List, Merkmal, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchulEintrag, Telefonart, VermerkartEintrag } from "@core";
 import { Katalog } from "~/cache/Katalog";
 import { api } from "~/router/Api";
 import { schuleState } from "~/states/SchuleStateImpl";
@@ -38,6 +36,7 @@ export class KatalogCache {
 	private _schulenById: Map<number, SchulEintrag> = new Map();
 	private _telefonartenById: Map<number, Telefonart> = new Map();
 	private _vermerkartenById: Map<number, VermerkartEintrag> = new Map();
+	private _leitungsfunktionenById: Map<number, Leitungsfunktion> = new Map();
 
 	public constructor() {
 		this.initializeCacheUpdater();
@@ -162,6 +161,11 @@ export class KatalogCache {
 		this._katalogCacheUpdater.set(Katalog.MERKMALE, async () => {
 			const result = await api.server.getMerkmale(api.schema);
 			return { merkmaleById: this.convertToMap(result) };
+		});
+
+		this._katalogCacheUpdater.set(Katalog.LEITUNGSFUNKTIONEN, async () => {
+			const result = await api.server.getLeitungsfunktionen(api.schema);
+			return { leitungsfunktionenById: this.convertToMap(result) };
 		});
 	}
 
@@ -372,5 +376,13 @@ export class KatalogCache {
 
 	set merkmaleById(value: Map<number, Merkmal>) {
 		this._merkmaleById = value;
+	}
+
+	get leitungsfunktionenById(): Map<number, Leitungsfunktion> {
+		return this._leitungsfunktionenById;
+	}
+
+	set leitungsfunktionenById(value: Map<number, Leitungsfunktion>) {
+		this._leitungsfunktionenById = value;
 	}
 }

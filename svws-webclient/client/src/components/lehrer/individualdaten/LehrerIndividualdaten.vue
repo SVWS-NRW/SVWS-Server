@@ -129,49 +129,220 @@
 					:readonly />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
-		<svws-ui-content-card title="Leitungsfunktionen">
-			<svws-ui-table :columns="colsLeitungsfunktionen" :items="dataNotPatched().leitungsfunktionen" count>
+		<svws-ui-content-card title="Leitungsfunktionen" v-if="serverState.mode === ServerMode.DEV">
+			<svws-ui-table class="max-h-72! w-full"
+				v-model="selectedLeitungsfunktionen"
+				:items="getListLeitungsfunktionen()"
+				:clicked="clickedLeitungsfunktion"
+				@update:clicked="lf => patchLeitungsfunktionModal(lf)"
+				:columns="leitungsfunktionenTableColumns"
+				:clickable="!readonly"
+				:selectable="!readonly"
+				scroll scroll-into-view count>
 				<template #cell(idLeitungsfunktion)="{ value }">
-					{{ LehrerLeitungsfunktion.data().getWertByID(value)?.daten(schuljahr)?.text ?? '—' }}
+					{{ getBezeichnungLeitungsfunktion(value) }}
 				</template>
-				<template #cell(beginn)="{ value }">
-					{{ (value === null) || (JavaString.isBlank(value)) ? '—' : DateUtils.gibDatumGermanFormat(value) }}
+				<template #cell(datumBeginnLeitungsfunktion)="{ value }">
+					{{ formatDatum(value) }}
 				</template>
-				<template #cell(ende)="{ value }">
-					{{ (value === null) || (JavaString.isBlank(value)) ? '—' : DateUtils.gibDatumGermanFormat(value) }}
+				<template #cell(datumEndeLeitungsfunktion)="{ value }">
+					{{ formatDatum(value) }}
+				</template>
+				<template #actions v-if="!readonly">
+					<div class="inline-flex gap-4">
+						<svws-ui-button type="trash"
+							@click="deleteSelectedLeitungsfunktionen"
+							:disabled="selectedLeitungsfunktionen.length === 0" />
+						<svws-ui-button title="Leitungsfunktion hinzufügen"
+							type="icon"
+							@click="addLeitungsfunktionModal">
+							<span class="icon i-ri-add-line" />
+						</svws-ui-button>
+					</div>
 				</template>
 			</svws-ui-table>
+			<svws-ui-modal :show="showModalLeitungsfunktion" @update:show="closeModalLeitungsfunktion">
+				<template #modalTitle>
+					{{ currentLeitungsfunktionMode === LeitungsfunktionMode.PATCH ? 'Leitungsfunktion bearbeiten' : 'Leitungsfunktion hinzufügen' }}
+				</template>
+				<template #modalContent>
+					<svws-ui-input-wrapper :grid="2" class="text-left">
+						<ui-select label="Funktion"
+							class="col-span-full"
+							v-model="selectedFunktion"
+							:manager="leitungsfunktionManager"
+							searchable required :removable="false" />
+						<svws-ui-text-input placeholder="Bezeichnung" type="text" class="col-span-full"
+							v-model="leitungsfunktionEntry.bezeichnung"
+							:max-len="255" required />
+						<svws-ui-text-input placeholder="Von" type="date"
+							v-model="leitungsfunktionEntry.datumBeginnLeitungsfunktion"
+							:max-date="optionalDate(leitungsfunktionEntry.datumEndeLeitungsfunktion)" />
+						<svws-ui-text-input placeholder="Bis" type="date"
+							v-model="leitungsfunktionEntry.datumEndeLeitungsfunktion"
+							:min-date="optionalDate(leitungsfunktionEntry.datumBeginnLeitungsfunktion)" />
+					</svws-ui-input-wrapper>
+					<div class="mt-7 flex flex-row gap-4 justify-end">
+						<svws-ui-button type="secondary" @click="closeModalLeitungsfunktion">Abbrechen</svws-ui-button>
+						<svws-ui-button @click="saveLeitungsfunktion" :disabled="saveLeitungsfunktionDisabled">
+							Speichern
+						</svws-ui-button>
+					</div>
+				</template>
+			</svws-ui-modal>
 		</svws-ui-content-card>
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { computed } from "vue";
-	import type { NationalitaetenKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
-	import { BenutzerKompetenz, DateUtils, Geschlecht, JavaString, LehrerLeitungsfunktion, Nationalitaeten, PersonalTyp } from "@core";
-	import { CoreTypeSelectManager, SelectManager, useSchuleState } from "@ui";
+	import { computed, ref } from "vue";
+	import type { Leitungsfunktion, NationalitaetenKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
+	import { BenutzerKompetenz, DateUtils, Geschlecht, JavaString, Nationalitaeten, PersonalTyp, Schulleitung, ArrayList, ServerMode } from "@core";
+	import type { DataTableColumn } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useSchuleState, useServerState } from "@ui";
 	import type { LehrerIndividualdatenProps } from "./LehrerIndividualdatenProps";
 	import { LehrerIndividualdatenModelProxy } from "./modelproxy/LehrerIndividualdatenModelProxy";
 	import WiedervorlageModal from "~/components/wiedervorlage/WiedervorlageModal.vue";
 
 	const props = defineProps<LehrerIndividualdatenProps>();
 	const schuleState = useSchuleState();
+	const serverState = useServerState();
 
 	const manager = () => props.lehrerListeManager();
 	const dataNotPatched = () => props.lehrerListeManager().daten();
 	const modelProxy = new LehrerIndividualdatenModelProxy(dataNotPatched, () => schuleState.validatorKontext, manager, props.orteById, props.ortsteileById, props.patch);
 
-	const schuljahr = computed<number>(() => props.lehrerListeManager().getSchuljahr());
-
 	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRERDATEN_AENDERN));
+	const selectedLeitungsfunktionen = ref<Schulleitung[]>([]);
+	const clickedLeitungsfunktion = ref<Schulleitung | null>(null);
+	const leitungsfunktionEntry = ref<Schulleitung>(new Schulleitung());
 
-	const colsLeitungsfunktionen = [
-		{ key: 'idLeitungsfunktion', label: 'Funktion', span: 2 },
-		{ key: 'beginn', label: 'Von', span: 1 },
-		{ key: 'ende', label: 'Bis', span: 1 },
+	enum LeitungsfunktionMode { ADD, PATCH, DEFAULT }
+
+	const currentLeitungsfunktionMode = ref<LeitungsfunktionMode>(LeitungsfunktionMode.DEFAULT);
+	const showModalLeitungsfunktion = ref<boolean>(false);
+
+	function getBezeichnungLeitungsfunktion(idLeitungsfunktion: number): string {
+		return props.mapLeitungsfunktionen.get(idLeitungsfunktion)?.bezeichnung ?? '-';
+	}
+
+	function formatDatum(value: string | null): string {
+		return (value === null) || JavaString.isBlank(value) ? '-' : DateUtils.gibDatumGermanFormat(value);
+	}
+
+	function optionalDate(value: string | null): string | undefined {
+		return ((value === null) || JavaString.isBlank(value)) ? undefined : value;
+	}
+
+	const leitungsfunktionenTableColumns: DataTableColumn[] = [
+		{ key: "idLeitungsfunktion", label: "Funktion", span: 2 },
+		{ key: "bezeichnung", label: "Bezeichnung", span: 3 },
+		{ key: "datumBeginnLeitungsfunktion", label: "Von", span: 1 },
+		{ key: "datumEndeLeitungsfunktion", label: "Bis", span: 1 },
 	];
 
+	const leitungsfunktionManager = new SelectManager({
+		options: computed(() => [...props.mapLeitungsfunktionen.values()]),
+		optionDisplayText: i => i.bezeichnung,
+		selectionDisplayText: i => i.bezeichnung,
+	});
+
+	const selectedFunktion = computed<Leitungsfunktion | null>({
+		get: () => props.mapLeitungsfunktionen.get(leitungsfunktionEntry.value.idLeitungsfunktion) ?? null,
+		set: (selected) => leitungsfunktionEntry.value.idLeitungsfunktion = selected?.id ?? -1,
+	});
+
+	const datumLeitungsfunktionValid = computed<boolean>(() => {
+		const von = leitungsfunktionEntry.value.datumBeginnLeitungsfunktion;
+		const bis = leitungsfunktionEntry.value.datumEndeLeitungsfunktion;
+		if ((von === null) || JavaString.isBlank(von) || (bis === null) || JavaString.isBlank(bis)) {
+			return true;
+		}
+		return bis >= von;
+	});
+
+	const saveLeitungsfunktionDisabled = computed<boolean>(() =>
+		(selectedFunktion.value === null) ||
+		JavaString.isBlank(leitungsfunktionEntry.value.bezeichnung) ||
+		!datumLeitungsfunktionValid.value
+	);
+
+	function resetLeitungsfunktion() {
+		leitungsfunktionEntry.value = new Schulleitung();
+		leitungsfunktionEntry.value.idLeitungsfunktion = -1;
+	}
+
+	function openModalLeitungsfunktion() {
+		showModalLeitungsfunktion.value = true;
+	}
+
+	function closeModalLeitungsfunktion() {
+		resetLeitungsfunktion();
+		currentLeitungsfunktionMode.value = LeitungsfunktionMode.DEFAULT;
+		showModalLeitungsfunktion.value = false;
+	}
+
+	function addLeitungsfunktionModal() {
+		resetLeitungsfunktion();
+		currentLeitungsfunktionMode.value = LeitungsfunktionMode.ADD;
+		openModalLeitungsfunktion();
+	}
+
+	function patchLeitungsfunktionModal(lf: Schulleitung) {
+		resetLeitungsfunktion();
+		currentLeitungsfunktionMode.value = LeitungsfunktionMode.PATCH;
+		leitungsfunktionEntry.value.id = lf.id;
+		leitungsfunktionEntry.value.idLehrer = lf.idLehrer;
+		leitungsfunktionEntry.value.idLeitungsfunktion = lf.idLeitungsfunktion;
+		leitungsfunktionEntry.value.bezeichnung = lf.bezeichnung;
+		leitungsfunktionEntry.value.datumBeginnLeitungsfunktion = lf.datumBeginnLeitungsfunktion;
+		leitungsfunktionEntry.value.datumEndeLeitungsfunktion = lf.datumEndeLeitungsfunktion;
+		clickedLeitungsfunktion.value = lf;
+		openModalLeitungsfunktion();
+	}
+
+	async function saveLeitungsfunktion() {
+		const { id, ...partialDataWithoutId } = leitungsfunktionEntry.value;
+
+		if (currentLeitungsfunktionMode.value === LeitungsfunktionMode.ADD) {
+			if (!props.getListLeitungsfunktionen().isEmpty()) {
+				clickedLeitungsfunktion.value = props.getListLeitungsfunktionen().getFirst();
+			}
+
+			await props.addLeitungsfunktion(partialDataWithoutId, dataNotPatched().id);
+
+			if (!props.getListLeitungsfunktionen().isEmpty()) {
+				clickedLeitungsfunktion.value = props.getListLeitungsfunktionen().getLast();
+			}
+
+			closeModalLeitungsfunktion();
+			return;
+		}
+
+		if (currentLeitungsfunktionMode.value === LeitungsfunktionMode.PATCH) {
+			if (leitungsfunktionEntry.value.id <= 0) {
+				return;
+			}
+
+			await props.patchLeitungsfunktion(partialDataWithoutId, leitungsfunktionEntry.value.id);
+			closeModalLeitungsfunktion();
+		}
+	}
+
+	async function deleteSelectedLeitungsfunktionen() {
+		if (selectedLeitungsfunktionen.value.length === 0) {
+			return;
+		}
+
+		const ids = new ArrayList<number>();
+		for (const s of selectedLeitungsfunktionen.value) {
+			ids.add(s.id);
+		}
+
+		await props.deleteLeitungsfunktionen(ids);
+		selectedLeitungsfunktionen.value = [];
+	}
 
 	/**
 	 * Selects

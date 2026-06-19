@@ -63,7 +63,7 @@ export class RouteLehrer extends RouteAuswahlNode<LehrerListeManager, RouteDataL
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
 		if (isEntering) {
-			await routeApp.cache.refreshKataloge(Katalog.ORTE, Katalog.ORTSTEILE);
+			await routeApp.cache.refreshKataloge(Katalog.ORTE, Katalog.ORTSTEILE, Katalog.LEITUNGSFUNKTIONEN);
 		}
 		return super.update(to, to_params, from, from_params, isEntering, redirected);
 	}

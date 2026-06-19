@@ -45,7 +45,7 @@ public final class SchulleitungControllerFactory {
 	 * @return eine SchulleitungControllerFactory-Instanz mit Leseberechtigung
 	 */
 	public static SchulleitungControllerFactory withReadAccess(final HttpServletRequest request) {
-		return getNewInstance(request, BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN);
+		return getNewInstance(request, BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
 	}
 
 	/**
@@ -58,7 +58,7 @@ public final class SchulleitungControllerFactory {
 	 * @return eine SchulleitungControllerFactory-Instanz mit Schreibberechtigung
 	 */
 	public static SchulleitungControllerFactory withWriteAccess(final HttpServletRequest request) {
-		return getNewInstance(request, BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
+		return getNewInstance(request, BenutzerKompetenz.LEHRERDATEN_AENDERN);
 	}
 
 	/**

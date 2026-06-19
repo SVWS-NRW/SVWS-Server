@@ -1,5 +1,4 @@
-import type { FachDaten, LehrerUnterrichtsfach, LehrerFachrichtungEintrag, LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdaten,
-	LehrerPersonalabschnittsdatenAnrechnungsstunden, LehrerPersonaldaten, LehrerStammdaten, List, SchulEintrag, SimpleOperationResponse, StundenplanListeEintrag } from "@core";
+import type { FachDaten, LehrerUnterrichtsfach, LehrerFachrichtungEintrag, LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdaten, LehrerPersonalabschnittsdatenAnrechnungsstunden, LehrerPersonaldaten, LehrerStammdaten, List, SchulEintrag, SimpleOperationResponse, StundenplanListeEintrag, Schulleitung } from "@core";
 import { ArrayList, BenutzerKompetenz, DeveloperNotificationException } from "@core";
 import { api } from "~/router/Api";
 import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/individualdaten/RouteLehrerIndividualdaten";
@@ -20,6 +19,7 @@ interface RouteStateLehrer extends RouteStateAuswahlInterface<LehrerListeManager
 	mapSchulen: Map<string, SchulEintrag>;
 	mapFaecher: Map<number, FachDaten>;
 	lehrerUnterrichtsfaecher: List<LehrerUnterrichtsfach>;
+	listLeitungsfunktionen: List<Schulleitung>;
 	pendingStateManager: PendingStateManagerLehrerIndividualdaten | undefined;
 }
 
@@ -33,6 +33,7 @@ const defaultState = <RouteStateLehrer>{
 	mapSchulen: new Map(),
 	mapFaecher: new Map(),
 	lehrerUnterrichtsfaecher: new ArrayList(),
+	listLeitungsfunktionen: new ArrayList(),
 	pendingStateManager: undefined,
 };
 
@@ -110,10 +111,19 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		if (auswahl === null) {
 			return null;
 		}
+
 		if (this.manager.hasPersonalDaten()) {
 			this._state.value.lehrerUnterrichtsfaecher = await api.server.getLehrerUnterrichtsfaecher(api.schema, auswahl.id);
 		}
-		return await api.server.getLehrerStammdaten(api.schema, auswahl.id);
+
+		const [stammdaten, listLeitungsfunktionen] = await Promise.all([
+			api.server.getLehrerStammdaten(api.schema, auswahl.id),
+			api.server.getAllSchulleitungenByLehrer(api.schema, auswahl.id),
+		]);
+
+		this._state.value.listLeitungsfunktionen = listLeitungsfunktionen;
+
+		return stammdaten;
 	}
 
 	protected async updateManager(manager: LehrerListeManager, managerAlt: LehrerListeManager, daten: LehrerStammdaten) {
@@ -196,6 +206,45 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		await api.server.patchLehrerStammdaten(data, api.schema, id);
 		return true;
 	}
+
+	get getListLeitungsfunktionen(): List<Schulleitung> {
+		const list = new ArrayList<Schulleitung>();
+		list.addAll(this._state.value.listLeitungsfunktionen);
+		return list;
+	}
+
+	addLeitungsfunktion = async (data: Partial<Schulleitung>, idLehrer: number): Promise<void> => {
+		const eintrag = await api.server.addSchulleitung({ ...data, idLehrer }, api.schema);
+		const listLeitungsfunktionen = this.getListLeitungsfunktionen;
+		listLeitungsfunktionen.add(eintrag);
+		this.setPatchedState({ listLeitungsfunktionen });
+	};
+
+	patchLeitungsfunktion = async (data: Partial<Schulleitung>, idEintrag: number): Promise<void> => {
+		await api.server.patchSchulleitung(data, api.schema, idEintrag);
+		const listLeitungsfunktionen = this.getListLeitungsfunktionen;
+		for (const l of listLeitungsfunktionen) {
+			if (l.id === idEintrag) {
+				Object.assign(l, data);
+				break;
+			}
+		}
+		this.setPatchedState({ listLeitungsfunktionen });
+	};
+
+	deleteLeitungsfunktionen = async (idsEintraege: List<number>): Promise<void> => {
+		await api.server.deleteSchulleitungen(idsEintraege, api.schema);
+		const listLeitungsfunktionen = this.getListLeitungsfunktionen;
+		for (const id of idsEintraege) {
+			for (let i = 0; i < listLeitungsfunktionen.size(); i++) {
+				if (listLeitungsfunktionen.get(i).id === id) {
+					listLeitungsfunktionen.removeElementAt(i);
+					break;
+				}
+			}
+		}
+		this.setPatchedState({ listLeitungsfunktionen });
+	};
 
 	patchPersonaldaten = async (data: Partial<LehrerPersonaldaten>): Promise<boolean> => {
 		if (!this.manager.hasPersonalDaten()) {

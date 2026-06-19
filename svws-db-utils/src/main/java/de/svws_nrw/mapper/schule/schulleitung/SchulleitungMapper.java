@@ -25,7 +25,7 @@ public interface SchulleitungMapper {
 	 *
 	 * @return {@link Schulleitung}
 	 */
-	@Mapping(target = "id",                 ignore = true)
+	@Mapping(source = "ID",                 target = "id")
 	@Mapping(source = "LeitungsfunktionID", target = "idLeitungsfunktion")
 	@Mapping(source = "Funktionstext",      target = "bezeichnung")
 	@Mapping(source = "LehrerID",           target = "idLehrer")
