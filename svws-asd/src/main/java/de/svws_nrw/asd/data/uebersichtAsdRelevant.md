@@ -117,7 +117,6 @@
 | KAOAKategorieEintrag                           | Nein                     |
 | KAOAMerkmalEintrag                             | Nein                     |
 | KAOAZusatzmerkmalEintrag                       | Nein                     |
-| KatalogEintragOrte                             | ?                        |
 | KatalogEintragOrtsteile                        | ?                        |
 | KatalogEintragStrassen                         | ?                        |
 | OrtKatalogEintrag                              | ?                        |

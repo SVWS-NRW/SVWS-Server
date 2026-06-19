@@ -21,7 +21,6 @@ import de.svws_nrw.asd.types.schule.Religion;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.base.CsvReader;
-import de.svws_nrw.core.data.kataloge.KatalogEintragOrte;
 import de.svws_nrw.core.data.schule.SchulenKatalogEintrag;
 import de.svws_nrw.core.types.schule.PersonTyp;
 import de.svws_nrw.core.utils.AdressenUtils;
@@ -612,9 +611,9 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 
 		// K-Ort aus der Default-Daten-Tabelle befüllen
 		final ArrayList<DTOOrt> dtoOrt = new ArrayList<>();
-		final List<KatalogEintragOrte> katalog = CsvReader.fromResource("daten/csv/Orte.csv", KatalogEintragOrte.class);
+		final List<KatalogEintragOrt> katalog = CsvReader.fromResource("daten/csv/Orte.csv", KatalogEintragOrt.class);
 		for (int i = 0; i < katalog.size(); i++) {
-			final KatalogEintragOrte ort = katalog.get(i);
+			final KatalogEintragOrt ort = katalog.get(i);
 			final DTOOrt dto = new DTOOrt((long) i + 1, ort.PLZ, ort.Ort);
 			dtoOrt.add(dto);
 		}
@@ -683,6 +682,9 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 
 		// Liefere die Schul-Stammdaten der neu angelegten Schule zurück.
 		return this.get(null);
+	}
+
+	private record KatalogEintragOrt(Long ID, String PLZ, String RegSchl, String Ort, Integer Sortierung, Integer gueltigVon, Integer gueltigBis) {
 	}
 
 }
