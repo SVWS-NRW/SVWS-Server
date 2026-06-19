@@ -642,7 +642,14 @@ public final class EnmV2GetService {
 			}
 
 			// Bestimme Fach und Niveau der Floskel
-			final ENMv2Fach fach = (floskel.Fach_ID == null) ? null : kontext.manager.getFach(floskel.Fach_ID);
+			ENMv2Fach fach = null;
+			if (floskel.Fach_ID != null) {
+				fach = kontext.manager.getFach(floskel.Fach_ID);
+				if (fach == null) {
+					// Wurde das Fach nicht hinzugefügt, so braucht die Floskel im Client auch nicht zur Verfügung stehen
+					continue;
+				}
+			}
 			final Long niveau = (floskel.Niveau == null) ? null : floskel.Niveau.longValue();
 
 			// Füge die Floskel entweder allgemein (idJahrgang = null) oder für alle Jahrgänge hinzu
