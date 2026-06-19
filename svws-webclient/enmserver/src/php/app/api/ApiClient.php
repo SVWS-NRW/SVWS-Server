@@ -9,7 +9,6 @@ use wenom\Http;
 use wenom\PatchManager;
 use wenom\ENMDatenManager;
 use wenom\TimeUtils;
-use wenom\Version;
 
 /**
  * Diese Klasse verwaltet die Client-Schnittstelle des WeNoM-Servers.
@@ -171,13 +170,6 @@ class ApiClient {
                     'auth' => fn($config, $db, $auth) => $auth->pruefeLehrerSession(),
                     'call' => fn($config, $db, $auth, $lehrer) => $this->patchTeilleistung($db, $lehrer)
                 ]
-            ],
-            'version' => [
-                'GET' => [
-                    'init' => fn() => [],
-                    'auth' => fn() => true,
-                    'call' => fn() => $this->version()
-                ]
             ]
         ];
 
@@ -196,16 +188,6 @@ class ApiClient {
      */
     private function alive(): void {
         Http::exit204NoContent();
-    }
-
-    /**
-     * Einfache Abfrage der Version und des Git-Hash
-     */
-    private function version(): void {
-        Http::exit200OKJson(json_encode([
-            "version" => Version::VERSION,
-            "githash" => Version::GITHASH
-        ]));
     }
 
     /**

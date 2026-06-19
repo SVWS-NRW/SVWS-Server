@@ -23,20 +23,12 @@ export interface ApiLoginData {
 export class ApiEnmServer extends BaseApi {
 
 	/**
-	 * Erstellt eine neue API ohne Zugangsdaten.
-	 *
-	 */
-	public constructor();
-
-	/**
 	 * Erstellt eine neue API mit der übergebenen Konfiguration.
 	 *
 	 * @param {string} username - der Benutzername für den API-Zugriff
 	 * @param {string} password - das Kennwort des Benutzers für den API-Zugriff
 	 */
-	public constructor(username: string, password: string);
-
-	public constructor(username?: string, password?: string) {
+	public constructor(username: string, password: string) {
 		super(username, password);
 	}
 
@@ -200,19 +192,6 @@ export class ApiEnmServer extends BaseApi {
 	 */
 	public async isAlive(): Promise<void> {
 		await super.getTextBased("/api/alive", '*/*');
-	}
-
-	/**
-	 * Implementierung der GET-Methode getVersion für den Zugriff auf die URL https://{hostname}/api/version
-	 *
-	 * Eine Methode zur Abfrage der Version und des Git-Hashes des PHP-Servers.
-	 *
-	 * @returns die Version und der Git-Hash des Servers
-	 */
-	public async getVersion(): Promise<{ version: string, githash: string | null }> {
-		const response = await super.getTextBased("/api/version", 'application/json');
-		const { version, githash } = JSON.parse(response.data);
-		return { version, githash };
 	}
 
 	/**
