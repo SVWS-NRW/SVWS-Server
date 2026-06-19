@@ -35,3 +35,5 @@ node_modules
 /.npmrc
 
 core/jsr.json
+
+/enmserver/src/php/app/Version.php

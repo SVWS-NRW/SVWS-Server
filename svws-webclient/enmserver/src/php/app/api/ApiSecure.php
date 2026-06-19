@@ -9,6 +9,7 @@ use wenom\Http;
 use wenom\ImportManager;
 use wenom\ENMDatenManager;
 use wenom\TimeUtils;
+use wenom\Version;
 
 /**
  * Diese Klasse verwaltet die Secure-Schnittstelle für die Kommunikation mit dem SVWS-Server
@@ -65,8 +66,17 @@ class ApiSecure {
     private function check(): void {
         $minPHPVersion = '8.2.0';
         $currentPHPVersion = phpversion();
+        try {
+            $version = Version::VERSION;
+            $githash = Version::GITHASH;
+        } catch (\Throwable $e) {
+            $version = "";
+            $githash = null;
+        }
         $result = [
             "ts" => TimeUtils::now(),
+            "version" => $version,
+            "githash" => $githash,
             "phpversion" => $currentPHPVersion,
             "phpIsCompatible" => version_compare($currentPHPVersion, $minPHPVersion, '>=')
         ];

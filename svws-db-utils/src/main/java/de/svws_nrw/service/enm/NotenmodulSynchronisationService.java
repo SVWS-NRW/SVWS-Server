@@ -284,6 +284,11 @@ public final class NotenmodulSynchronisationService {
 				final String body = response.body();
 				final JsonNode rootNode = JSONMapper.mapper.readTree(body);
 
+				// WeNoM-Version und Git-Hash überprüfen und ausgeben
+				final JsonNode versionNode = rootNode.get("version");
+				final JsonNode githashNode = rootNode.get("githash");
+				logger.logLn("WeNoM-Version: " + versionNode.asText() + " - " + (githashNode.isNull() ? "---" : githashNode.asText().substring(0, 8)));
+
 				// PHP-Version überprüfen
 				final JsonNode phpversionNode = rootNode.get("phpversion");
 				final JsonNode phpIsCompatible = rootNode.get("phpIsCompatible");

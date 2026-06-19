@@ -196,6 +196,14 @@ fileGithashTSLaufbahnplanung.withWriter { w -> w << 'export const githash = ' + 
 def fileGithashTSEnmServer = new File("${rootDir}/svws-webclient/enmserver/githash.ts")
 fileGithashTSEnmServer.withWriter { w -> w << 'export const githash = ' + tsGitHashStr }
 
+def fileVersionPHPEnmServer = new File("${rootDir}/svws-webclient/enmserver/src/php/app/Version.php")
+fileVersionPHPEnmServer.withWriter { w -> w << """<?php
+namespace wenom;
+class Version {
+    public const VERSION = "${config.project.version}";
+    public const GITHASH = ${tsGitHashStr};
+}
+"""}
 
 task npmPrepare(type: NpmInstall) {
 	group = "build"

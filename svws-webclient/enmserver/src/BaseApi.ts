@@ -21,7 +21,7 @@ export class BaseApi {
 	}
 
 	/** Der Anmeldename beim Server */
-	protected username: string;
+	protected username: string = "";
 
 	/** Der Default-RequestInit für einen Fetch */
 	protected requestinit: RequestInit = {
@@ -38,7 +38,10 @@ export class BaseApi {
 	 * @param {string} username - der Benutzername für den API-Zugriff
 	 * @param {string} password - das Kennwort des Benutzers für den API-Zugriff
 	 */
-	public constructor(username: string, password: string) {
+	public constructor(username?: string, password?: string) {
+		if ((username === undefined) || (password === undefined)) {
+			return;
+		}
 		this.username = username;
 		this.setBasicAuth(password);
 	}
