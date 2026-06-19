@@ -39,6 +39,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.gost.GostServiceFactoryBuilder;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -273,7 +274,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 		if ((jg == Jahrgaenge.EF) || (jg == Jahrgaenge.Q1) || (jg == Jahrgaenge.Q2)) {
 			// Bestimme alle Schüler-IDs des angegebenen Abiturjahrgangs
 			final Map<Long, DTOFach> mapFaecher = faecher.stream().collect(Collectors.toMap(f -> f.ID, f -> f));
-			final List<DTOSchueler> schueler = DBUtilsGostLaufbahn.getSchuelerOfAbiturjahrgang(conn, abiturjahr);
+			final List<DTOSchueler> schueler = GostServiceFactoryBuilder.getGostServiceFactory().getGostSchuelerService().getByAbiturjahrgang(abiturjahr);
 			if ((schueler != null) && (!schueler.isEmpty())) {
 				final List<Long> schuelerIDs = schueler.stream().map(s -> s.ID).toList();
 				final Set<Long> schuelerIDsBereitsVorhanden = schuelerIDs.isEmpty() ? Collections.emptySet()

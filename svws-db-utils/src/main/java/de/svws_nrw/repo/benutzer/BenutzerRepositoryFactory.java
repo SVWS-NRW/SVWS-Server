@@ -43,4 +43,13 @@ public final class BenutzerRepositoryFactory extends RepositoryFactory {
 		return getOrCreate(BenutzergruppenMitgliedRepository.class, () -> new BenutzergruppenMitgliedRepositoryImpl(conn));
 	}
 
+	/**
+	 * Erzeugt ein neues {@link CredentialsRepository}.
+	 *
+	 * @return {@link CredentialsRepository}
+	 */
+	public CredentialsRepository getCredentialsRepository() {
+		return getOrCreate(CredentialsRepository.class, () -> new CredentialsRepositoryImpl(conn));
+	}
+
 }

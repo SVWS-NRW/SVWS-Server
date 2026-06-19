@@ -420,7 +420,7 @@ public enum GostHalbjahr {
 	 * @return das Halbjahr oder null, falls es kein gültiges Halbjahr mit den Angaben gibt.
 	 */
 	public static GostHalbjahr fromBkJahrgangUndHalbjahr(final String jahrgang, final int halbjahr) {
-		if ((halbjahr != 1) && (halbjahr != 2)) {
+		if ((jahrgang == null) || ((halbjahr != 1) && (halbjahr != 2))) {
 			return null;
 		}
 		switch (jahrgang) {

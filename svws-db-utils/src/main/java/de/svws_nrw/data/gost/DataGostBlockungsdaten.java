@@ -28,6 +28,7 @@ import de.svws_nrw.core.data.gost.GostBlockungSchiene;
 import de.svws_nrw.core.data.gost.GostBlockungsdaten;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene;
 import de.svws_nrw.core.data.gost.GostFachwahl;
+import de.svws_nrw.core.data.gost.GostJahrgangFachwahlenHalbjahr;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahlHalbjahr;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
@@ -71,6 +72,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.gost.GostServiceFactoryBuilder;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -275,7 +277,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		final Set<Long> schuelerIDsJahrgang = schuelerDTOs.stream().map(s -> s.ID).collect(Collectors.toSet());
 		final List<Schueler> schuelerListe = new ArrayList<>();
 		for (final DTOSchueler dto : schuelerDTOs) {
-			if (!DBUtilsGost.pruefeIstAnSchule(dto, blockung.Halbjahr, blockung.Abi_Jahrgang, mapSchuljahresabschnitte)) {
+			if (!DBUtilsGost.pruefeIstAnSchule(dto, blockung.Halbjahr, blockung.Abi_Jahrgang, conn.getUser())) {
 				continue;
 			}
 			schuelerListe.add(DataSchuelerliste.mapToSchueler(dto, blockung.Abi_Jahrgang));
@@ -306,8 +308,9 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 						throw new ApiOperationException(Status.CONFLICT,
 								"Für die Schüler-ID %d aus der Blockung konnte der aktuelle Lernabschnitt nicht bestimmt werden.".formatted(s.ID));
 					}
-					tmpSchuelerListe.add(DataSchuelerliste.erstelleSchuelerlistenEintrag(s, mapSchuljahresabschnitte.get(abschnitt.Schuljahresabschnitts_ID).Jahr,
-							abschnitt, mapJahrgaenge, schulform));
+					tmpSchuelerListe
+							.add(DataSchuelerliste.erstelleSchuelerlistenEintrag(s, mapSchuljahresabschnitte.get(abschnitt.Schuljahresabschnitts_ID).Jahr,
+									abschnitt, mapJahrgaenge, schulform));
 				}
 				for (final SchuelerListeEintrag s : tmpSchuelerListe) {
 					final DTOSchueler dto = mapSchueler.get(s.id);
@@ -329,8 +332,9 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		manager.schuelerAddListe(schuelerListe);
 
 		// Schüler-Fachwahl-Menge hinzufügen.
-		final List<GostFachwahl> fachwahlen =
-				(new DataGostAbiturjahrgangFachwahlen(conn, blockung.Abi_Jahrgang)).getSchuelerFachwahlenHalbjahr(blockung.Halbjahr).fachwahlen;
+		final GostJahrgangFachwahlenHalbjahr jahrgangsFachwahlen = GostServiceFactoryBuilder.getGostServiceFactory().getGostJahrgangFachwahlService()
+				.getSchuelerFachwahlenHalbjahr(blockung.Abi_Jahrgang, blockung.Halbjahr);
+		final List<GostFachwahl> fachwahlen = jahrgangsFachwahlen.fachwahlen;
 		manager.fachwahlAddListe(fachwahlen);
 
 		if (!regelListeAdd.isEmpty()) {
@@ -481,8 +485,8 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		}
 		// Lese die Fachwahlstatistiken aus der Datenbank - liegen keine vor, so kann auch keine Blockung erstellt
 		// werden.
-		final DataGostAbiturjahrgangFachwahlen dataFachwahlen = new DataGostAbiturjahrgangFachwahlen(conn, abiturjahr);
-		final List<GostStatistikFachwahl> fachwahlen = dataFachwahlen.getFachwahlen();
+		final List<GostStatistikFachwahl> fachwahlen =
+				GostServiceFactoryBuilder.getGostServiceFactory().getGostJahrgangFachwahlService().getFachwahlStatistik(abiturjahr);
 		if (fachwahlen == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
 		}
@@ -591,8 +595,9 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		}
 		conn.transactionFlush();
 		// Bestimme die Fachwahlen aus der DB
-		blockungsdaten.fachwahlen
-				.addAll((new DataGostAbiturjahrgangFachwahlen(conn, blockungsdaten.abijahrgang)).getSchuelerFachwahlenHalbjahr(gostHalbjahr).fachwahlen);
+		final GostJahrgangFachwahlenHalbjahr jahrgangsFachwahlen = GostServiceFactoryBuilder.getGostServiceFactory().getGostJahrgangFachwahlService()
+				.getSchuelerFachwahlenHalbjahr(blockungsdaten.abijahrgang, gostHalbjahr);
+		blockungsdaten.fachwahlen.addAll(jahrgangsFachwahlen.fachwahlen);
 		// Ergänze Blockungsliste
 		conn.transactionFlush();
 		DataGostBlockungsergebnisse.getErgebnisListe(conn, manager);
@@ -957,8 +962,8 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		}
 		conn.transactionFlush();
 		// Ermittle die Fachwahlen des Abiturjahrgangs
-		final GostFachwahlManager managerFachwahlen =
-				(new DataGostAbiturjahrgangFachwahlen(conn, blockungDuplikat.Abi_Jahrgang)).getFachwahlManager(blockungDuplikat.Halbjahr);
+		final GostFachwahlManager managerFachwahlen = GostServiceFactoryBuilder.getGostServiceFactory().getGostJahrgangFachwahlService()
+				.getFachwahlManager(blockungDuplikat.Abi_Jahrgang, blockungDuplikat.Halbjahr);
 		// Dupliziere Kurs-Schüler-Zuordnung
 		final List<DTOGostBlockungZwischenergebnisKursSchueler> zuordnungKursSchuelerListeOriginal = conn.queryList(
 				DTOGostBlockungZwischenergebnisKursSchueler.QUERY_BY_ZWISCHENERGEBNIS_ID,
@@ -979,7 +984,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		final List<DTOGostBlockungRegel> regelnOriginal = conn.queryList(DTOGostBlockungRegel.QUERY_BY_BLOCKUNG_ID,
 				DTOGostBlockungRegel.class, ergebnisOriginal.Blockung_ID);
 		for (final DTOGostBlockungRegel regelOriginal : regelnOriginal) {
-			mapRegelOriginal_RegeltypParam1Param2.put(regelOriginal.ID, new long[] {regelOriginal.Typ.typ, -1, -1});
+			mapRegelOriginal_RegeltypParam1Param2.put(regelOriginal.ID, new long[] { regelOriginal.Typ.typ, -1, -1 });
 		}
 		// Ungültige Regeln identifizieren (Teil II: Parameterwerte pro Regel aggregieren)
 		if (!regelnOriginal.isEmpty()) {
@@ -1073,8 +1078,6 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		final int schuljahr = halbjahr.getSchuljahrFromAbiturjahr(abiturjahr);
 
 		// Bestimme den zugehörigen Schuljahresabschnitt
-		final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte =
-				conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
 		final List<DTOSchuljahresabschnitte> listSchuljahresabschnitte = conn
 				.queryList("SELECT e FROM DTOSchuljahresabschnitte e WHERE e.Jahr = ?1 AND e.Abschnitt = ?2",
 						DTOSchuljahresabschnitte.class, schuljahr, halbjahr.halbjahr);
@@ -1149,7 +1152,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				mapLernabschnitte.remove(laid);
 			} else {
 				final DTOSchueler dtoSchueler = mapSchueler.get(la.Schueler_ID);
-				if ((dtoSchueler == null) || (!DBUtilsGost.pruefeIstAnSchule(dtoSchueler, halbjahr, abiturjahr, mapSchuljahresabschnitte))) {
+				if ((dtoSchueler == null) || (!DBUtilsGost.pruefeIstAnSchule(dtoSchueler, halbjahr, abiturjahr, conn.getUser()))) {
 					mapLernabschnitte.remove(laid);
 				}
 			}
@@ -1289,7 +1292,8 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		// Regeln sind keine bekannt, also werden auch keine erstellt.
 
 		// Ermittle die Fachwahlen des Abiturjahrgangs
-		final GostFachwahlManager managerFachwahlen = (new DataGostAbiturjahrgangFachwahlen(conn, blockung.Abi_Jahrgang)).getFachwahlManager(blockung.Halbjahr);
+		final GostFachwahlManager managerFachwahlen = GostServiceFactoryBuilder.getGostServiceFactory().getGostJahrgangFachwahlService()
+				.getFachwahlManager(blockung.Abi_Jahrgang, blockung.Halbjahr);
 
 		// Erstelle die Kurs-Schüler-Zuordnungen
 		for (final DTOSchuelerLeistungsdaten ld : listLeistungsdaten) {

@@ -40,6 +40,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.abitur.DTOSchuelerAbiturFach;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.gost.GostServiceFactoryBuilder;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -97,6 +98,15 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 	}
 
 
+	private Abiturdaten getVergleichsdaten(final long idSchueler) {
+		return GostServiceFactoryBuilder.getGostServiceFactory().getGostAbiturdatenService().get(idSchueler);
+	}
+
+	private Map<Long, Abiturdaten> getVergleichsdaten(final List<Long> idsSchueler) {
+		return GostServiceFactoryBuilder.getGostServiceFactory().getGostAbiturdatenService().getMap(idsSchueler);
+	}
+
+
 	@Override
 	public Abiturdaten getById(final Long id) throws ApiOperationException {
 		// Prüfe zunächst den Schüler auf Existenz.
@@ -106,7 +116,7 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 		}
 
 		// Ermittle für einen Vergleich die Abiturdaten für Block I aus den Leistungsdaten, nutze dafür den entsprechenden Service
-		final Abiturdaten abidatenVergleich = DBUtilsGostLaufbahn.get(conn, id);
+		final Abiturdaten abidatenVergleich = getVergleichsdaten(id);
 		if (abidatenVergleich == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es konnten keine Abiturdaten aus den Leistungsdaten ausgelesen werden.");
 		}
@@ -134,7 +144,8 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 		final Abiturdaten abidaten = erzeugeAbiturdaten(dtoSchuelerAbitur, abidatenVergleich, sprachenfolge, faecher, mapGostFaecherManager);
 		if (abidaten == null) {
 			throw new ApiOperationException(Status.NOT_FOUND,
-					"Es konnten keine Abiturdaten für den Schüler mit der ID %d aus der Datenbank zusammengestellt werden, da der zugehörige Schuljahresabschnitt in der Datenbank (noch) nicht angelegt ist.".formatted(id));
+					"Es konnten keine Abiturdaten für den Schüler mit der ID %d aus der Datenbank zusammengestellt werden, da der zugehörige Schuljahresabschnitt in der Datenbank (noch) nicht angelegt ist."
+							.formatted(id));
 		}
 		return abidaten;
 	}
@@ -142,10 +153,12 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 
 	@Override
 	public List<Abiturdaten> getList() throws ApiOperationException {
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		if (schuljahresabschnitt == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Abiturjahrgang angegeben oder dieser wurde nicht in der Datenbank gefunden.");
 		}
-		final List<DTOSchueler> schuelerListe = DBUtilsGostLaufbahn.getSchuelerOfAbiturjahrgang(conn, schuljahresabschnitt.schuljahr + 1);
+		final List<DTOSchueler> schuelerListe =
+				GostServiceFactoryBuilder.getGostServiceFactory().getGostSchuelerService().getByAbiturjahrgang(schuljahresabschnitt.schuljahr + 1);
 		if (schuelerListe.isEmpty()) {
 			return new ArrayList<>();
 		}
@@ -453,6 +466,9 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 		// Map erstellen, um Fächer-Manager zu sammeln und nicht für jeden Schüler anlegen zu müssen.
 		final Map<Integer, GostFaecherManager> mapGostFaecherManager = new HashMap<>();
 
+		// Hole die Vergleichsdaten aus den Laufbahnplanungsdaten
+		final Map<Long, Abiturdaten> mapVergleichsdaten = this.getVergleichsdaten(idsSchuelerNonNull);
+
 		for (final Long idSchueler : idsSchuelerNonNull) {
 			// Hole die Abiturdaten zur Schüler-ID aus der Map. Wenn diese nicht existieren, gibt es keine Abiturdaten zum Schüler.
 			if ((mapDTOsSchuelerAbitur.get(idSchueler) == null) || mapDTOsSchuelerAbitur.get(idSchueler).isEmpty()) {
@@ -474,8 +490,7 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 			}
 
 			// Ermittle für einen Vergleich die Abiturdaten für Block I aus den Leistungsdaten, nutze dafür den entsprechenden Service.
-			// TODO: Hier müsste auch die folgende Methode mehrere IDs umgestellt und aus der for-Schleife gezogen werden.
-			final Abiturdaten abidatenVergleich = DBUtilsGostLaufbahn.get(conn, idSchueler);
+			final Abiturdaten abidatenVergleich = mapVergleichsdaten.get(idSchueler);
 			if (abidatenVergleich == null) {
 				continue;
 			}
@@ -898,7 +913,7 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public Response copyAbiturdatenAusLeistungsdaten(final long id) throws ApiOperationException {
-		final Abiturdaten abidaten = (new DataGostSchuelerLaufbahnplanung(conn, null)).getById(id);
+		final Abiturdaten abidaten = GostServiceFactoryBuilder.getGostServiceFactory().getGostAbiturdatenService().get(id);
 		if ((!abidaten.bewertetesHalbjahr[GostHalbjahr.Q11.id]) || (!abidaten.bewertetesHalbjahr[GostHalbjahr.Q12.id])
 				|| (!abidaten.bewertetesHalbjahr[GostHalbjahr.Q21.id]) || (!abidaten.bewertetesHalbjahr[GostHalbjahr.Q22.id])) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Es liegen noch nicht alle Leistungen für die Qualifikationsphase vor.");

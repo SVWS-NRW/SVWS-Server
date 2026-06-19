@@ -2,6 +2,7 @@ package de.svws_nrw.db.utils.gost.app;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Proxy;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.jboss.resteasy.core.ResteasyContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -33,7 +35,6 @@ import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
-import de.svws_nrw.data.gost.DBUtilsGostLaufbahn;
 import de.svws_nrw.data.gost.DataGostJahrgangFachkombinationen;
 import de.svws_nrw.data.gost.DataGostJahrgangsdaten;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
@@ -46,6 +47,17 @@ import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
+import de.svws_nrw.repo.gost.GostRepositoryFactory;
+import de.svws_nrw.repo.kataloge.KatalogeRepositoryFactory;
+import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
+import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
+import de.svws_nrw.service.benutzer.BenutzerServiceFactory;
+import de.svws_nrw.service.crypto.CryptoServiceFactory;
+import de.svws_nrw.service.gost.GostAbiturdatenService;
+import de.svws_nrw.service.gost.GostServiceFactory;
+import de.svws_nrw.service.schueler.SchuelerServiceFactory;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -128,6 +140,8 @@ public class GenerateTestdatenLaufbahn {
 			try (DBEntityManager conn = user.getEntityManager()) {
 				user.schuleSetStammdaten(DataSchuleStammdaten.getStammdaten(conn));
 
+				final GostAbiturdatenService gostAbiturdatenService = createGostAbiturdatenService(conn);
+
 				// Lese die ID für den ersten generierten Jahrgang ein
 				int jahrgangID;
 				try {
@@ -190,7 +204,7 @@ public class GenerateTestdatenLaufbahn {
 					final String strSchuelerID = String.format("%04d", schueler.Schueler_ID);
 					Abiturdaten abiturdaten;
 					try {
-						abiturdaten = DBUtilsGostLaufbahn.get(conn, schueler.Schueler_ID);
+						abiturdaten = gostAbiturdatenService.get(schueler.Schueler_ID);
 					} catch (@SuppressWarnings("unused") final Exception e) {
 						abiturdaten = null;
 					}
@@ -225,6 +239,53 @@ public class GenerateTestdatenLaufbahn {
 			cmdLine.printOptionsAndExit(2, e.getMessage());
 		} catch (final DBException e) {
 			cmdLine.printOptionsAndExit(3, e.getMessage());
+		}
+	}
+
+
+	/**
+	 * Erstellt und initialisiert einen GostAbiturdatenService über Mocking.
+	 *
+	 * @param conn   die Datenbank-Verbindung
+	 *
+	 * @return der initialisierte GostAbiturdatenService
+	 */
+	public static GostAbiturdatenService createGostAbiturdatenService(final DBEntityManager conn) {
+		if (conn == null) {
+			throw new IllegalArgumentException("Die DB-Verbindung darf nicht null sein.");
+		}
+
+		// Erzeuge einen Mocked Request für den RestEasy-Kontext, um die Repositories mit der Verbindung initialisieren zu können
+		final HttpServletRequest mockedRequest = (HttpServletRequest) Proxy.newProxyInstance(
+				HttpServletRequest.class.getClassLoader(),
+				new Class<?>[] { HttpServletRequest.class },
+				(proxy, method, args) -> {
+					if ("getAttribute".equals(method.getName()) && (args.length == 1) && ("connection".equals(args[0]))) {
+						return conn;
+					}
+					return null;
+				}
+		);
+
+		try {
+			// Erzeuge die einzelnen Repository-Klassen mit dem angepassten Zugriff über den Mocked Request in den Context-Daten
+			ResteasyContext.pushContext(HttpServletRequest.class, mockedRequest);
+			final BenutzerRepositoryFactory benutzerRepositoryFactory = BenutzerRepositoryFactory.getNewInstance();
+			final SchuelerRepositoryFactory schuelerRepositoryFactory = SchuelerRepositoryFactory.getNewInstance();
+			final GostServiceFactory gostServiceFactory = GostServiceFactory.getNewInstance(
+					GostRepositoryFactory.getNewInstance(),
+					schuelerRepositoryFactory,
+					LehrerRepositoryFactory.getNewInstance(),
+					benutzerRepositoryFactory,
+					KatalogeRepositoryFactory.getNewInstance(),
+					BenutzerServiceFactory.getNewInstance(benutzerRepositoryFactory),
+					CryptoServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory),
+					SchuelerServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory)
+			);
+			return gostServiceFactory.getGostAbiturdatenService();
+		} finally {
+			// Entferne den Mocked Request wieder aus den Context-Daten - das Repository kennt jetzt die Verbindung
+			ResteasyContext.clearContextData();
 		}
 	}
 

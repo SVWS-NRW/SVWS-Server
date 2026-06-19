@@ -18,17 +18,6 @@ public final class SchuelerSprachenfolgeService {
 	/** Das Repository für die Sprachenfolge der Schüler. */
 	private final SchuelerSprachenfolgeRepository schuelerSprachenfolgeRepository;
 
-	/** Cache für die Sprachenfolge-Daten, gruppiert nach Schüler-ID. */
-	private Map<Long, List<DTOSchuelerSprachenfolge>> mapSprachenfolge = new HashMap<>();
-
-
-	/**
-	 * Erstellt einen neuen Service.
-	 */
-	public SchuelerSprachenfolgeService() {
-		this.schuelerSprachenfolgeRepository = null;
-	}
-
 
 	/**
 	 * Erstellt einen neuen Service mit Repository-Anbindung.
@@ -41,31 +30,19 @@ public final class SchuelerSprachenfolgeService {
 
 
 	/**
-	 * Lädt die Sprachenfolge-Daten für die angegebenen Schüler in den Service-Cache.
+	 * Bestimmt die Sprachbelegungen mehrerer Schüler.
 	 *
-	 * @param idsSchueler   die IDs der Schüler
+	 * @param idsSchueler   die ID des Schülers, für welche die Sprachbelegungen bestimmt werden sollen
+	 *
+	 * @return eine Map mit den Sprachbelegungen der Schüler zugeordnet zu deren IDs
 	 */
-	public void fetchData(final Collection<Long> idsSchueler) {
-		if (schuelerSprachenfolgeRepository == null) {
-			throw new IllegalStateException("Der SchuelerSprachenfolgeService wurde ohne Repository initialisiert.");
+	public Map<Long, List<Sprachbelegung>> getMapSprachenfolgen(final Collection<Long> idsSchueler) {
+		final Map<Long, List<DTOSchuelerSprachenfolge>> map = schuelerSprachenfolgeRepository.getMapBySchuelerIDs(idsSchueler);
+		final Map<Long, List<Sprachbelegung>> result = new HashMap<>();
+		for (final var entry : map.entrySet()) {
+			result.put(entry.getKey(), entry.getValue().stream().map(SchuelerSprachenfolgeService::toApi).toList());
 		}
-		mapSprachenfolge = schuelerSprachenfolgeRepository.getMapBySchuelerIDs(idsSchueler);
-	}
-
-
-	/**
-	 * Gibt die Sprachbelegungen eines Schülers aus dem Service-Cache zurück.
-	 *
-	 * @param idSchueler   die ID des Schülers
-	 *
-	 * @return die Sprachbelegungen des Schülers
-	 */
-	public List<Sprachbelegung> getSprachenfolge(final Long idSchueler) {
-		final var list = mapSprachenfolge.get(idSchueler);
-		if (list == null) {
-			return List.of();
-		}
-		return list.stream().map(this::toApi).toList();
+		return result;
 	}
 
 
@@ -76,7 +53,7 @@ public final class SchuelerSprachenfolgeService {
 	 *
 	 * @return das API-Objekt, welches aus dem DTO-Objekt konvertiert wurde
 	 */
-	public Sprachbelegung toApi(final DTOSchuelerSprachenfolge dto) {
+	public static Sprachbelegung toApi(final DTOSchuelerSprachenfolge dto) {
 		final var daten = new Sprachbelegung();
 		daten.id = dto.ID;
 		daten.sprache = dto.Sprache;

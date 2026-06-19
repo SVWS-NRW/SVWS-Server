@@ -29,6 +29,7 @@ import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungSchiene;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.gost.GostServiceFactoryBuilder;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -102,7 +103,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 		final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, regel.Blockung_ID);
 		if (blockung == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Blockung mit der ID %d kann für die Regel nicht gefunden werden."
-				.formatted(regel.Blockung_ID));
+					.formatted(regel.Blockung_ID));
 		}
 		for (final Entry<String, Object> entry : map.entrySet()) {
 			final String key = entry.getKey();
@@ -215,7 +216,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 		final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
 		if (blockung == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Blockung mit der ID %d kann für die Regel nicht gefunden werden."
-				.formatted(idBlockung));
+					.formatted(idBlockung));
 		}
 		// Prüfe ob die ID des Typs korrekt ist
 		final GostKursblockungRegelTyp regelTyp = GostKursblockungRegelTyp.fromTyp(idRegelTyp);
@@ -262,7 +263,8 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 		daten.id = idRegel;
 		daten.typ = regelTyp.typ;
 		// Füge Default-Parameter zu der Regel hinzu.
-		final List<DTOSchueler> schueler = DBUtilsGostLaufbahn.getSchuelerOfAbiturjahrgang(conn, blockung.Abi_Jahrgang);
+		final List<DTOSchueler> schueler =
+				GostServiceFactoryBuilder.getGostServiceFactory().getGostSchuelerService().getByAbiturjahrgang(blockung.Abi_Jahrgang);
 		final GostFaecherManager faecher = DataGostFaecher.getFaecherManager(conn, blockung.Abi_Jahrgang);
 		final Set<Long> setSchuelerIDs = schueler.stream().map(s -> s.ID).collect(Collectors.toSet());
 		for (int i = 0; i < regelTyp.getParamCount(); i++) {
@@ -414,7 +416,8 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 			// Bestimme die ID, ab welcher die Datensätze eingefügt werden
 			long idRegel = conn.transactionGetNextID(DTOGostBlockungRegel.class);
 			// Bestimme die Schüler des Abiturjahrgangs, falls Regeln einen Schüler-Bezug haben
-			final List<DTOSchueler> schueler = DBUtilsGostLaufbahn.getSchuelerOfAbiturjahrgang(conn, blockung.Abi_Jahrgang);
+			final List<DTOSchueler> schueler =
+					GostServiceFactoryBuilder.getGostServiceFactory().getGostSchuelerService().getByAbiturjahrgang(blockung.Abi_Jahrgang);
 			final Set<Long> setSchuelerIDs = schueler.stream().map(s -> s.ID).collect(Collectors.toSet());
 			final GostFaecherManager faecher = DataGostFaecher.getFaecherManager(conn, blockung.Abi_Jahrgang);
 			// Durchwandere die Regeln und füge sie nacheinander hinzu
@@ -463,7 +466,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 		final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
 		if (blockung == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Blockung mit der ID %d kann für die Regel nicht gefunden werden."
-				.formatted(idBlockung));
+					.formatted(idBlockung));
 		}
 		final List<GostBlockungRegel> daten = DataGostBlockungRegel.addRegelnInternal(conn, blockung, regeln);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
@@ -491,7 +494,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 		final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, regel.Blockung_ID);
 		if (blockung == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Blockung mit der ID %d kann für die Regel nicht gefunden werden."
-				.formatted(regel.Blockung_ID));
+					.formatted(regel.Blockung_ID));
 		}
 		// Bestimme die Regel-Parameter (diese werden beim Entfernen der Regel automatisch mit entfernt.
 		final GostBlockungRegel daten = new GostBlockungRegel();
@@ -532,7 +535,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 		final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
 		if (blockung == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Blockung mit der ID %d kann für die Regel nicht gefunden werden."
-				.formatted(idBlockung));
+					.formatted(idBlockung));
 		}
 		// Entferne die Regeln
 		if (!conn.transactionRemoveAll(regeln)) {

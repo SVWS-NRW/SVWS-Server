@@ -24,6 +24,11 @@ export class Abiturdaten extends JavaObject {
 	public schuljahrAbitur: number = 0;
 
 	/**
+	 * Die aktuelle Jahrgangsstufe, welche dem Schüler in den Abiturdaten derzeit zugeordnet ist.
+	 */
+	public jahrgang: string | null = null;
+
+	/**
 	 * Gibt für die einzelnen {@link GostHalbjahr}-Werte an, ob gewertete Leistungsdaten vorhanden sind oder es sich um Werte der Laufbahnplanung handelt.
 	 */
 	public readonly bewertetesHalbjahr: Array<boolean> = Array(6).fill(false);
@@ -218,6 +223,7 @@ export class Abiturdaten extends JavaObject {
 		if (obj.schuljahrAbitur === undefined)
 			throw new Error('invalid json format, missing attribute schuljahrAbitur');
 		result.schuljahrAbitur = obj.schuljahrAbitur;
+		result.jahrgang = (obj.jahrgang === undefined) ? null : obj.jahrgang === null ? null : obj.jahrgang;
 		if (obj.bewertetesHalbjahr !== undefined) {
 			for (let i = 0; i < obj.bewertetesHalbjahr.length; i++) {
 				result.bewertetesHalbjahr[i] = obj.bewertetesHalbjahr[i];
@@ -283,6 +289,7 @@ export class Abiturdaten extends JavaObject {
 		result += '"schuelerID" : ' + obj.schuelerID.toString() + ',';
 		result += '"abiturjahr" : ' + obj.abiturjahr.toString() + ',';
 		result += '"schuljahrAbitur" : ' + obj.schuljahrAbitur.toString() + ',';
+		result += '"jahrgang" : ' + ((obj.jahrgang === null) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
 		result += '"bewertetesHalbjahr" : [ ';
 		for (let i = 0; i < obj.bewertetesHalbjahr.length; i++) {
 			const elem = obj.bewertetesHalbjahr[i];
@@ -345,6 +352,9 @@ export class Abiturdaten extends JavaObject {
 		}
 		if (obj.schuljahrAbitur !== undefined) {
 			result += '"schuljahrAbitur" : ' + obj.schuljahrAbitur.toString() + ',';
+		}
+		if (obj.jahrgang !== undefined) {
+			result += '"jahrgang" : ' + ((obj.jahrgang === null) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
 		}
 		if (obj.bewertetesHalbjahr !== undefined) {
 			const a = obj.bewertetesHalbjahr;

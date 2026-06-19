@@ -25,17 +25,6 @@ public final class SchuelerSprachpruefungenService {
 	/** Das Repository für die Sprachprüfungen der Schüler. */
 	private final SchuelerSprachpruefungenRepository schuelerSprachpruefungenRepository;
 
-	/** Cache für die Sprachprüfungen-Daten, gruppiert nach Schüler-ID. */
-	private Map<Long, List<DTOSchuelerSprachpruefungen>> mapSprachpruefungen = new HashMap<>();
-
-
-	/**
-	 * Erstellt einen neuen Service.
-	 */
-	public SchuelerSprachpruefungenService() {
-		this.schuelerSprachpruefungenRepository = null;
-	}
-
 
 	/**
 	 * Erstellt einen neuen Service mit Repository-Anbindung.
@@ -48,33 +37,22 @@ public final class SchuelerSprachpruefungenService {
 
 
 	/**
-	 * Lädt die Sprachprüfungen-Daten für die angegebenen Schüler in den Service-Cache.
+	 * Bestimmt die Sprachprüfungen mehrerer Schüler.
 	 *
-	 * @param idsSchueler   die IDs der Schüler
+	 * @param idsSchueler   die ID des Schülers, für welche die Sprachprüfungen bestimmt werden sollen
+	 * @param abschnitt     der Schuljahresabschnitt für die Konvertierung
+	 *
+	 * @return eine Map mit den Sprachprüfungen der Schüler zugeordnet zu deren IDs
 	 */
-	public void fetchData(final Collection<Long> idsSchueler) {
-		if (schuelerSprachpruefungenRepository == null) {
-			throw new IllegalStateException("Der SchuelerSprachpruefungenService wurde ohne Repository initialisiert.");
+	public Map<Long, List<Sprachpruefung>> getMapSprachenfolgen(final Collection<Long> idsSchueler, final Schuljahresabschnitt abschnitt) {
+		final Map<Long, List<DTOSchuelerSprachpruefungen>> map = schuelerSprachpruefungenRepository.getMapBySchuelerIDs(idsSchueler);
+		final Map<Long, List<Sprachpruefung>> result = new HashMap<>();
+		for (final var entry : map.entrySet()) {
+			result.put(entry.getKey(), entry.getValue().stream().map(dto -> toApi(dto, abschnitt)).toList());
 		}
-		mapSprachpruefungen = schuelerSprachpruefungenRepository.getMapBySchuelerIDs(idsSchueler);
+		return result;
 	}
 
-
-	/**
-	 * Gibt die Sprachprüfungen eines Schülers aus dem Service-Cache zurück.
-	 *
-	 * @param idSchueler   die ID des Schülers
-	 * @param abschnitt    der Schuljahresabschnitt für die Konvertierung
-	 *
-	 * @return die Sprachprüfungen des Schülers
-	 */
-	public List<Sprachpruefung> getSprachpruefungen(final Long idSchueler, final Schuljahresabschnitt abschnitt) {
-		final var list = mapSprachpruefungen.get(idSchueler);
-		if (list == null) {
-			return List.of();
-		}
-		return list.stream().map(dto -> toApi(dto, abschnitt)).toList();
-	}
 
 	/**
 	 * Konvertiert die übergebenen DTO-Objekte in die API-Objekte.
@@ -84,7 +62,7 @@ public final class SchuelerSprachpruefungenService {
 	 *
 	 * @return das API-Objekt, welches aus dem DTO-Objekt konvertiert wurde
 	 */
-	public Sprachpruefung toApi(final DTOSchuelerSprachpruefungen dto, final Schuljahresabschnitt abschnitt) {
+	public static Sprachpruefung toApi(final DTOSchuelerSprachpruefungen dto, final Schuljahresabschnitt abschnitt) {
 		final var daten = new Sprachpruefung();
 		daten.id = dto.ID;
 		daten.sprache = dto.Sprache;

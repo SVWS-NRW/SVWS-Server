@@ -17,9 +17,7 @@ import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFachbelegungen;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
-import de.svws_nrw.db.dto.current.gost.DTOGostSchuelerFachbelegungen;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
-import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
@@ -286,40 +284,6 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 
 
 	/**
-	 * Setzt die Fachwahlen des angegebenen Schülers mit den Vorgabe-Fachwahlen des
-	 * angegebenen Schülers zurück. Es werden die existierenden Fachwahlen entfernt
-	 * und die Fachwahlen aus dem Abiturjahrgang übernommen.
-	 *
-	 * Hinweis: Es muss eine Transaktion auf der Datenbankverbindung aktiv sein
-	 *
-	 * @param conn         die zu nutzende Datenbank-Verbindung mit einer aktiven Transaktion
-	 * @param jahrgang     die Daten zum Abiturjahrgang
-	 * @param idSchueler   die ID des Schülers
-	 *
-	 * @throws ApiOperationException   falls ein Fehler auftritt und die Operation abgebrochen werden sollte.
-	 */
-	public static void transactionResetSchueler(final DBEntityManager conn, final DTOGostJahrgangsdaten jahrgang, final long idSchueler)
-			throws ApiOperationException {
-		final int abijahr = jahrgang.Abi_Jahrgang;
-		final List<DTOGostJahrgangFachbelegungen> dtoFachwahlen = conn.queryList(DTOGostJahrgangFachbelegungen.QUERY_BY_ABI_JAHRGANG,
-				DTOGostJahrgangFachbelegungen.class, abijahr);
-		conn.transactionExecuteDelete("DELETE FROM DTOGostSchuelerFachbelegungen e WHERE e.Schueler_ID = %d".formatted(idSchueler));
-		for (final DTOGostJahrgangFachbelegungen dto : dtoFachwahlen) {
-			final DTOGostSchuelerFachbelegungen fw = new DTOGostSchuelerFachbelegungen(idSchueler, dto.Fach_ID);
-			fw.EF1_Kursart = dto.EF1_Kursart;
-			fw.EF2_Kursart = dto.EF2_Kursart;
-			fw.Q11_Kursart = dto.Q11_Kursart;
-			fw.Q12_Kursart = dto.Q11_Kursart;
-			fw.Q21_Kursart = dto.Q21_Kursart;
-			fw.Q22_Kursart = dto.Q22_Kursart;
-			fw.AbiturFach = dto.AbiturFach;
-			fw.Bemerkungen = dto.Bemerkungen;
-			conn.transactionPersist(fw);
-		}
-	}
-
-
-	/**
 	 * Setzt die Vorlage-Fachwahlen für den angegebenen Abiturjahrgang zurück.
 	 * Es werden alle existierenden Fachwahlen entfernt und die Fachwahlen
 	 * aus dem Vorlage-Abiturjahrgang übernommen.
@@ -373,28 +337,5 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 		return Response.status(Status.NO_CONTENT).build();
 	}
 
-
-	/**
-	 * Setzt die Fachwahlen bei allen (!) Schülern des angegebenen Abiturjahrgangs
-	 * zurück.
-	 *
-	 * @param abijahr   der Abiturjahrgang
-	 *
-	 * @return Die HTTP-Response der Operation
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public Response resetSchuelerAlle(final Integer abijahr) throws ApiOperationException {
-		DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
-		if (jahrgang == null) {
-			throw new ApiOperationException(Status.NOT_FOUND);
-		}
-		final List<DTOSchueler> listSchueler = (new DataGostJahrgangSchuelerliste(conn, abijahr)).getSchuelerDTOs();
-		for (final DTOSchueler schueler : listSchueler) {
-			transactionResetSchueler(conn, jahrgang, schueler.ID);
-		}
-		return Response.status(Status.NO_CONTENT).build();
-	}
 
 }

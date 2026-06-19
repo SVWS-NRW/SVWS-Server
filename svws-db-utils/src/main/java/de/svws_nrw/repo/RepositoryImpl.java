@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.ObjLongConsumer;
 import java.util.function.ToLongFunction;
 import java.util.stream.Collectors;
@@ -88,7 +89,7 @@ public abstract class RepositoryImpl<T> extends RepositoryBaseImpl<T, Long> impl
 	 */
 	@Override
 	public Map<Long, T> findMapByIds(final Collection<Long> ids) {
-		return this.findListByIds(ids).stream().collect(Collectors.toMap(this.getId::applyAsLong, e -> e));
+		return this.findListByIds(ids).stream().filter(Objects::nonNull).collect(Collectors.toMap(this.getId::applyAsLong, e -> e));
 	}
 
 

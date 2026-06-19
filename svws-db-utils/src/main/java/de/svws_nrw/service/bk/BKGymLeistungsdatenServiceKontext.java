@@ -70,9 +70,6 @@ public final class BKGymLeistungsdatenServiceKontext {
 	/** Der Schuljahresabschnitt, in welchem die Leistungsdaten benötigt werden */
 	private DTOSchuljahresabschnitte schuljahresabschnitt;
 
-	/** Der Schuljahresabschnitt, in welchem die Leistungsdaten benötigt werden als API-Objekt */
-	private Schuljahresabschnitt schuljahresabschnittApi;
-
 	/** Eine Map mit den Jahrgangsdaten zugeordnet zu der Jahrgangs-ID */
 	private Map<Long, DTOJahrgang> mapJahrgaenge;
 
@@ -90,6 +87,12 @@ public final class BKGymLeistungsdatenServiceKontext {
 
 	/** Eine Map mit den Leistungsdaten nach Abschnitt-ID und Fach-ID */
 	private HashMap2D<Long, Long, DTOSchuelerLeistungsdaten> mapLeistungsdaten = new HashMap2D<>();
+
+	/** Eine Map mit den Sprachbelegungen nach der Schüler-ID */
+	private Map<Long, List<Sprachbelegung>> mapSprachenfolgen = new HashMap<>();
+
+	/** Eine Map mit den Sprachprüfungen nach der Schüler-ID */
+	private Map<Long, List<Sprachpruefung>> mapSprachenpruefungen = new HashMap<>();
 
 
 	/** Service zur Konvertierung der Schueler-Sprachenfolge in API-Objekte */
@@ -159,7 +162,7 @@ public final class BKGymLeistungsdatenServiceKontext {
 		// Bestimme zunächst die Schulspezifischen Informationen, insbesondere zum Schuljahresabschnitt
 		final long idSchuljahresabschnitt = schuleRepository.getFirst().Schuljahresabschnitts_ID;
 		schuljahresabschnitt = schuljahresabschnitteRepository.getById(idSchuljahresabschnitt);
-		schuljahresabschnittApi = SchuljahresabschnittService.toApi(schuljahresabschnitt);
+		final Schuljahresabschnitt schuljahresabschnittApi = SchuljahresabschnittService.toApi(schuljahresabschnitt);
 
 		// Lade die Schuljahresabschnitte in den Cache, damit diese für die Sortierung der Lernabschnitte zur Verfügung stehen.
 		mapSchuljahresabschnitte = schuljahresabschnitteRepository.getMap();
@@ -171,10 +174,10 @@ public final class BKGymLeistungsdatenServiceKontext {
 		mapLernabschnittsdaten = schuelerLernabschnittRepository.getMapByLernabschnittID(idsSchueler);
 
 		// Lade die SchuelerSprachenfolge in den Cache des zugehörigen Services
-		schuelerSprachenfolgeService.fetchData(idsSchueler);
+		mapSprachenfolgen = schuelerSprachenfolgeService.getMapSprachenfolgen(idsSchueler);
 
 		// Lade die SchuelerSprachpruefungen in den Cache des zugehörigen Services
-		schuelerSprachpruefungenService.fetchData(idsSchueler);
+		mapSprachenpruefungen = schuelerSprachpruefungenService.getMapSprachenfolgen(idsSchueler, schuljahresabschnittApi);
 
 		final var alleLernabschnittIDs = mapLernabschnittIDs.values().stream().flatMap(List::stream).toList();
 		mapLeistungsdaten = schuelerLeistungsdatenRepository.getMapByLernabschnittsIds(alleLernabschnittIDs);
@@ -253,7 +256,7 @@ public final class BKGymLeistungsdatenServiceKontext {
 	 * @return die Sprachbelegungen (Sprachenfolge) des Schülers
 	 */
 	public @NotNull List<Sprachbelegung> getSprachenfolge(final Long idSchueler) {
-		return schuelerSprachenfolgeService.getSprachenfolge(idSchueler);
+		return mapSprachenfolgen.getOrDefault(idSchueler, new ArrayList<>());
 	}
 
 
@@ -265,7 +268,7 @@ public final class BKGymLeistungsdatenServiceKontext {
 	 * @return die Sprachprüfungen des Schülers
 	 */
 	public @NotNull List<Sprachpruefung> getSprachpruefungen(final Long idSchueler) {
-		return schuelerSprachpruefungenService.getSprachpruefungen(idSchueler, schuljahresabschnittApi);
+		return mapSprachenpruefungen.getOrDefault(idSchueler, new ArrayList<>());
 	}
 
 
@@ -414,7 +417,7 @@ public final class BKGymLeistungsdatenServiceKontext {
 			final DTOSchuelerLernabschnittsdaten abschnitt = mapLernabschnittsdaten.get(leistungsdaten.Abschnitt_ID);
 			final DTOFach dtoFach = mapFaecher.get(leistungsdaten.Fach_ID);
 			final DTOSchuljahresabschnitte sjAbschnitt = (abschnitt != null) ? mapSchuljahresabschnitte.get(abschnitt.Schuljahresabschnitts_ID) : null;
-			if ((kursart == null) || (dtoFach == null) || (sjAbschnitt == null)) {
+			if ((abschnitt == null) || (kursart == null) || (dtoFach == null) || (sjAbschnitt == null)) {
 				continue;
 			}
 			final var belegung = new BKGymLeistungenFachHalbjahr();

@@ -3,6 +3,7 @@ package de.svws_nrw.repo.schueler;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.repo.Repository;
@@ -67,4 +68,46 @@ public interface SchuelerLernabschnittRepository extends Repository<DTOSchuelerL
 	 */
 	Map<Long, List<Long>> getMapAllLernabschnittIDsBySchuelerIDs(Collection<Long> idsSchueler);
 
+	/**
+	 * Gibt für die Schüler-ID die Lernabschnittsdaten zurück, welche die Wechsel-Nummer 0 haben und deren Schuljahresabschnitt-IDs
+	 * dem Schüler aktuell zugeordnet ist.
+	 *
+	 * @param idSchueler   die IDs der Schüler
+	 *
+	 * @return die Lernabschnittsdaten
+	 */
+	Optional<DTOSchuelerLernabschnittsdaten> findAktuellBySchuelerID(Long idSchueler);
+
+	/**
+	 * Gibt für die übergebene Menge an Schüler-IDs eine Map zurück, die jeder Schüler-ID die Lernabschnittsdaten
+	 * zuordnet, welche die Wechsel-Nummer 0 haben und deren Schuljahresabschnitt-IDs dem Schüler zugeordnet ist.
+	 * Sollte eine Schüler-ID nicht gefunden werden oder kein aktueller Lernabschnitt dazu, so ist die Schüler-ID
+	 * auch nicht in der zurückgegebenen Map vertreten.
+	 *
+	 * @param idsSchueler                die IDs der Schüler
+	 *
+	 * @return die Map mit der Zuordnung
+	 */
+	Map<Long, DTOSchuelerLernabschnittsdaten> getMapAktuelleBySchuelerIDs(Collection<Long> idsSchueler);
+
+	/**
+	 * Gibt für die übergebene Menge an Schüler-IDs eine Map zurück, die jeder Schüler-ID die Liste aller
+	 * gewerteten Lernabschnittsdaten der Gymnasialen Oberstufe zuordnet.
+	 * Sollte eine Schüler-ID nicht gefunden werden, so wird für diesen eine leere Liste in der Map zurückgegeben.
+	 *
+	 * @param   idsSchueler die IDs der Schüler
+	 *
+	 * @return die Map mit den Lernabschnitts-IDs pro Schüler
+	 */
+	Map<Long, List<DTOSchuelerLernabschnittsdaten>> getMapGostLernabschnitteBySchuelerIDs(Collection<Long> idsSchueler);
+
+	/**
+	 * Gibt die gewerteten Lernabschnitte des Schülers in dem angegeben Jahrgang zurück.
+	 *
+	 * @param idSchueler    die ID des Schülers
+	 * @param asdJahrgang   der Statistik-Jahrgang
+	 *
+	 * @return die Liste der Lernabschnitte
+	 */
+	List<DTOSchuelerLernabschnittsdaten> getGewerteteAbschnittInASDJahrgang(long idSchueler, String asdJahrgang);
 }

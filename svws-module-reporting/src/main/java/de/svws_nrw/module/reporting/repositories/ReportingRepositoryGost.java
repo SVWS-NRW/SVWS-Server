@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
@@ -12,15 +13,14 @@ import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
-import de.svws_nrw.data.gost.DBUtilsGostLaufbahn;
 import de.svws_nrw.data.gost.DataGostAbiturdaten;
-import de.svws_nrw.data.gost.DataGostAbiturjahrgangFachwahlen;
 import de.svws_nrw.data.gost.DataGostJahrgangFachkombinationen;
 import de.svws_nrw.data.gost.DataGostJahrgangsdaten;
 import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
+import de.svws_nrw.service.gost.GostServiceFactoryBuilder;
 
 /**
  * Domänen-Repository für GOSt-Daten (Abiturjahrgänge, Beratungsdaten, Kursplanung).
@@ -167,7 +167,8 @@ public class ReportingRepositoryGost {
 		ReportingRepositoryUtils.ladeFehlendeWerteInRepositoryMap(
 				idsSchueler,
 				mapBeratungsdatenAbiturdaten,
-				ids -> DBUtilsGostLaufbahn.getMapFromIDs(this.reportingContext.conn(), ids),
+				ids -> GostServiceFactoryBuilder.getGostServiceFactory().getGostAbiturdatenService().getList(ids)
+						.stream().collect(Collectors.toMap(a -> a.schuelerID, a -> a)),
 				"GOSt-Beratungsdaten-Abiturdaten",
 				this.reportingContext.logger());
 
@@ -225,7 +226,7 @@ public class ReportingRepositoryGost {
 	public List<GostStatistikFachwahl> fachwahlen(final int abiturjahr) {
 		return mapFachwahlen.computeIfAbsent(abiturjahr, jahr -> {
 			try {
-				return new DataGostAbiturjahrgangFachwahlen(this.reportingContext.conn(), jahr).getFachwahlen();
+				return GostServiceFactoryBuilder.getGostServiceFactory().getGostJahrgangFachwahlService().getFachwahlStatistik(jahr);
 			} catch (final ApiOperationException e) {
 				ReportingExceptionUtils.logException(
 						"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der GOSt-Fachwahlstatistik.", e,

@@ -17,6 +17,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.gost.GostServiceFactoryBuilder;
 import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -52,10 +53,11 @@ public final class DataGostJahrgangSchuelerliste extends DataManager<Integer> {
 	 * @throws ApiOperationException   für den Fall, dass keine Schüler für den Abiturjahrgang bestimmt werden konnten
 	 */
 	List<DTOSchueler> getSchuelerDTOs() throws ApiOperationException {
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		if (abijahrgang == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
 		}
-		return DBUtilsGostLaufbahn.getSchuelerOfAbiturjahrgang(conn, abijahrgang);
+		return GostServiceFactoryBuilder.getGostServiceFactory().getGostSchuelerService().getByAbiturjahrgang(abijahrgang);
 	}
 
 	/**

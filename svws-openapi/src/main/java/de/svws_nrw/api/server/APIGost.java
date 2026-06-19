@@ -1,6 +1,14 @@
 package de.svws_nrw.api.server;
 
+import java.io.InputStream;
+import java.util.List;
+
+import org.jboss.resteasy.annotations.GZIP;
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+
 import de.svws_nrw.config.SVWSKonfiguration;
+import de.svws_nrw.controller.gost.GostLaufbahnplanungControllerFactory;
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnis;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
@@ -30,7 +38,6 @@ import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.data.gost.DataGostAbiturdaten;
-import de.svws_nrw.data.gost.DataGostAbiturjahrgangFachwahlen;
 import de.svws_nrw.data.gost.DataGostBeratungslehrer;
 import de.svws_nrw.data.gost.DataGostFaecher;
 import de.svws_nrw.data.gost.DataGostJahrgangFachkombinationen;
@@ -62,13 +69,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-
-import org.jboss.resteasy.annotations.GZIP;
-import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
-import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
-
-import java.io.InputStream;
-import java.util.List;
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die SVWS-Datenbank in Bezug auf die gymnasiale Oberstufe.
@@ -485,19 +485,8 @@ public class APIGost {
 	@ApiResponse(responseCode = "404", description = "Keine Fachwahlen gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
 	public Response getGostAbiturjahrgangFachwahlstatistik(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> {
-			if (abiturjahr < 0) {
-				throw new ApiOperationException(Status.NOT_FOUND, "Fachwahlen sind für den Vorlagen-Abiturjahrgang nicht verfügbar.");
-			}
-			return (new DataGostAbiturjahrgangFachwahlen(conn, abiturjahr)).getList();
-		},
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
-				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
+		return GostLaufbahnplanungControllerFactory.withAccessForKlausurplanungOrKursplanungOrLaufbahnplanung(request)
+				.getGostLaufbahnplanungController().getJahrgangFachwahlStatistik(abiturjahr);
 	}
 
 
@@ -523,19 +512,8 @@ public class APIGost {
 	@ApiResponse(responseCode = "404", description = "Keine Fachwahlen gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
 	public Response getGostAbiturjahrgangFachwahlen(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> {
-			if (abiturjahr < 0) {
-				throw new ApiOperationException(Status.NOT_FOUND, "Fachwahlen sind für den Vorlagen-Abiturjahrgang nicht verfügbar.");
-			}
-			return (new DataGostAbiturjahrgangFachwahlen(conn, abiturjahr)).getSchuelerFachwahlenResponse();
-		},
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
-				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
+		return GostLaufbahnplanungControllerFactory.withAccessForKlausurplanungOrKursplanungOrLaufbahnplanung(request)
+				.getGostLaufbahnplanungController().getJahrgangsFachwahlen(abiturjahr);
 	}
 
 
@@ -562,19 +540,8 @@ public class APIGost {
 	@ApiResponse(responseCode = "404", description = "Keine Fachwahlen gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
 	public Response getGostAbiturjahrgangHalbjahrFachwahlen(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
 			@PathParam("halbjahr") final int halbjahr, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> {
-			if (abiturjahr < 0) {
-				throw new ApiOperationException(Status.NOT_FOUND, "Fachwahlen sind für den Vorlagen-Abiturjahrgang nicht verfügbar.");
-			}
-			return (new DataGostAbiturjahrgangFachwahlen(conn, abiturjahr)).getSchuelerFachwahlenResponseHalbjahr(halbjahr);
-		},
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
-				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
+		return GostLaufbahnplanungControllerFactory.withAccessForKlausurplanungOrKursplanungOrLaufbahnplanung(request)
+				.getGostLaufbahnplanungController().getJahrgangsFachwahlenForHalbjahr(abiturjahr, halbjahr);
 	}
 
 
@@ -813,10 +780,8 @@ public class APIGost {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response resetGostAbiturjahrgangSchuelerFachwahlen(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostJahrgangLaufbahnplanung(conn).resetSchuelerAlle(abiturjahr),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
+		return GostLaufbahnplanungControllerFactory.withAccessForLaufbahnplanung(request)
+				.getGostLaufbahnplanungController().resetAbiturjahrgang(abiturjahr);
 	}
 
 
@@ -844,12 +809,8 @@ public class APIGost {
 			+ "gefunden")
 	public Response getGostSchuelerLaufbahnplanung(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn, null).getByIdAsResponse(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
+		return GostLaufbahnplanungControllerFactory.withAccessForKursplanungOrLaufbahnplanung(request)
+				.getGostLaufbahnplanungController().getBySchuelerID(id);
 	}
 
 
@@ -878,13 +839,8 @@ public class APIGost {
 			content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)))
 	public Response getGostAbiturjahrgangLaufbahndaten(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> (new DataGostSchuelerLaufbahnplanung(conn, abiturjahr)).getListAsResponse(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
+		return GostLaufbahnplanungControllerFactory.withAccessForKursplanungOrLaufbahnplanung(request)
+				.getGostLaufbahnplanungController().getListByAbiturjahrgang(abiturjahr);
 	}
 
 
@@ -979,12 +935,8 @@ public class APIGost {
 			+ "ID gefunden")
 	public Response getGostSchuelerFachwahl(@PathParam("schema") final String schema, @PathParam("schuelerid") final long schueler_id,
 			@PathParam("fachid") final long fach_id, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn, null).getFachwahl(schueler_id, fach_id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
+		return GostLaufbahnplanungControllerFactory.withAccessForKursplanungOrLaufbahnplanung(request)
+				.getGostLaufbahnplanungController().getFachwahl(schueler_id, fach_id);
 	}
 
 
@@ -1016,12 +968,8 @@ public class APIGost {
 			@RequestBody(description = "Der Patch für die Fachdaten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					schema = @Schema(implementation = GostSchuelerFachwahl.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn, null).patchFachwahl(schueler_id, fach_id, is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
+		return GostLaufbahnplanungControllerFactory.withAccessForKursplanungOrLaufbahnplanung(request)
+				.getGostLaufbahnplanungController().patchFachwahl(schueler_id, fach_id, is);
 	}
 
 
@@ -1045,10 +993,8 @@ public class APIGost {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response resetGostSchuelerFachwahlen(@PathParam("schema") final String schema, @PathParam("schuelerid") final long schuelerid,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn, null).reset(schuelerid),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
+		return GostLaufbahnplanungControllerFactory.withAccessForLaufbahnplanung(request)
+				.getGostLaufbahnplanungController().reset(schuelerid);
 	}
 
 
@@ -1074,10 +1020,8 @@ public class APIGost {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteGostSchuelerFachwahlen(@PathParam("schema") final String schema, @PathParam("schuelerid") final long schuelerid,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn, null).delete(schuelerid),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
+		return GostLaufbahnplanungControllerFactory.withAccessForLaufbahnplanung(request)
+				.getGostLaufbahnplanungController().deleteFachwahlen(List.of(schuelerid));
 	}
 
 
@@ -1106,10 +1050,8 @@ public class APIGost {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn, null).deleteMultiple(JSONMapper.toListOfLong(is)),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
+		return GostLaufbahnplanungControllerFactory.withAccessForLaufbahnplanung(request)
+				.getGostLaufbahnplanungController().deleteFachwahlen(JSONMapper.toListOfLong(is));
 	}
 
 
@@ -1518,8 +1460,8 @@ public class APIGost {
 	@ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für das Erstellen der Laufbahn-Daten gefunden.")
 	public Response exportGostSchuelerLaufbahnplanung(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn, null).exportGZip(id),
-				request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN);
+		return GostLaufbahnplanungControllerFactory.withAccessForLaufbahnplanungAllgemein(request)
+				.getGostLaufbahnplanungController().exportGZip(id);
 	}
 
 
@@ -1549,8 +1491,8 @@ public class APIGost {
 			@RequestBody(description = "Die Laufbahnplanungsdatei - der Dateiname ist US-ASCII und darf daher u.a. keine Umlaute enthalten", required = true,
 					content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final SimpleBinaryMultipartBody multipart,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn, null).importGZip(id, multipart.data),
-				request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN);
+		return GostLaufbahnplanungControllerFactory.withAccessForLaufbahnplanungAllgemein(request)
+				.getGostLaufbahnplanungController().importGostLaufbahnplanungGZip(multipart.data);
 	}
 
 
@@ -1577,8 +1519,8 @@ public class APIGost {
 	@ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für das Erstellen der Laufbahn-Daten gefunden.")
 	public Response exportGostSchuelerLaufbahnplanungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn, null).exportJSON(id),
-				request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN);
+		return GostLaufbahnplanungControllerFactory.withAccessForLaufbahnplanungAllgemein(request)
+				.getGostLaufbahnplanungController().exportJSON(id);
 	}
 
 
@@ -1607,8 +1549,8 @@ public class APIGost {
 			@RequestBody(description = "Die Laufbahnplanungsdaten", required = false, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					schema = @Schema(implementation = GostLaufbahnplanungExportV1.class))) final GostLaufbahnplanungExportV1 daten,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn, null).importJSON(id, daten),
-				request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN);
+		return GostLaufbahnplanungControllerFactory.withAccessForLaufbahnplanungAllgemein(request)
+				.getGostLaufbahnplanungController().importGostLaufbahnplanung(daten);
 	}
 
 
@@ -1635,8 +1577,8 @@ public class APIGost {
 			@RequestBody(description = "Die Laufbahnplanungsdaten", required = true, content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA,
 					schema = @Schema(implementation = MultipleBinaryMultipartBody.class))) @MultipartForm final MultipartFormDataInput multipart,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn, null).importGZip(multipart),
-				request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN);
+		return GostLaufbahnplanungControllerFactory.withAccessForLaufbahnplanungAllgemein(request)
+				.getGostLaufbahnplanungController().importGostLaufbahnplanungGZip(multipart);
 	}
 
 
@@ -1666,8 +1608,8 @@ public class APIGost {
 			@RequestBody(description = "Die Liste der IDs der Schüler", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostSchuelerLaufbahnplanung(conn, null).exportGZip(ids),
-				request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN);
+		return GostLaufbahnplanungControllerFactory.withAccessForLaufbahnplanungAllgemein(request)
+				.getGostLaufbahnplanungController().exportGZip(ids);
 	}
 
 }

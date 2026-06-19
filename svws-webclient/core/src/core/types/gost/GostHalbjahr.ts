@@ -456,7 +456,7 @@ export class GostHalbjahr extends JavaEnum<GostHalbjahr> {
 	 * @return das Halbjahr oder null, falls es kein gültiges Halbjahr mit den Angaben gibt.
 	 */
 	public static fromBkJahrgangUndHalbjahr(jahrgang: string | null, halbjahr: number): GostHalbjahr | null {
-		if ((halbjahr !== 1) && (halbjahr !== 2)) {
+		if ((jahrgang === null) || ((halbjahr !== 1) && (halbjahr !== 2))) {
 			return null;
 		}
 		switch (jahrgang) {

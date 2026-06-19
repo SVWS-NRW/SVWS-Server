@@ -20,8 +20,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 @Schema(description = "enthält die Informationen der gymnasialen Oberstufe eines Schülers in Bezug auf das Abitur.")
-@JsonPropertyOrder({ "schuelerID", "abiturjahr", "schuljahrAbitur", "fachbelegungen", "sprachenfolge", "sprachpruefungen", "bilingualeSprache",
-		"latinum", "kleinesLatinum", "graecum", "hebraicum",
+@JsonPropertyOrder({ "schuelerID", "abiturjahr", "schuljahrAbitur", "jahrgang", "fachbelegungen", "sprachenfolge", "sprachpruefungen",
+		"bilingualeSprache", "latinum", "kleinesLatinum", "graecum", "hebraicum",
 		"block1FehlstundenGesamt", "block1FehlstundenUnentschuldigt", "projektKursThema", "projektkursLeitfach1Kuerzel",
 		"projektkursLeitfach2Kuerzel", "besondereLernleistung", "besondereLernleistungNotenKuerzel", "besondereLernleistungThema",
 		"block1AnzahlKurse", "block1DefiziteGesamt", "block1DefiziteLK", "block1PunktSummeGK", "block1PunktSummeLK", "block1PunktSummeNormiert",
@@ -41,6 +41,10 @@ public class Abiturdaten {
 	/** Das Schuljahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird. */
 	@Schema(description = "Das Schuljahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird.", example = "2024")
 	public int schuljahrAbitur;
+
+	/** Die aktuelle Jahrgangsstufe, welche dem Schüler in den Abiturdaten derzeit zugeordnet ist. */
+	@Schema(description = "die aktuelle Jahrgangstufe, welche dem Schüler in den Abiturdaten derzeit zugeordnet ist", example = "Q1")
+	public String jahrgang;
 
 
 	/** Gibt für die einzelnen {@link GostHalbjahr}-Werte an, ob gewertete Leistungsdaten vorhanden sind oder es sich um Werte der Laufbahnplanung handelt. */
