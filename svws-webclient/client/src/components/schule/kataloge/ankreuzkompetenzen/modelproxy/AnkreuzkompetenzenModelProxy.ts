@@ -39,7 +39,7 @@ export class AnkreuzkompetenzenModelProxy extends ModelProxy<Ankreuzkompetenz> {
 		patch?: (data: Partial<Ankreuzkompetenz>) => Promise<boolean>
 	) {
 		const listOfAutopatchProps: Iterable<keyof Ankreuzkompetenz> =
-			["idFach", "schulgliederung", "abschnitt", "istAktiv", "istSichtbar"];
+			["schulgliederung", "abschnitt", "istAktiv", "istSichtbar"];
 		super({ data, patch, listOfAutopatchProps, checkValidBeforePatch: true });
 		this._schuljahr = schuljahr;
 		this._faecherById = faecherById;
@@ -65,6 +65,9 @@ export class AnkreuzkompetenzenModelProxy extends ModelProxy<Ankreuzkompetenz> {
 				this.proxy.istASV = false;
 				this.validate();
 			}
+			if (this.getFehler("floskelText").isEmpty() && this.getFehler("idFach").isEmpty()) {
+				void this.patch();
+			}
 		},
 	});
 
@@ -74,6 +77,9 @@ export class AnkreuzkompetenzenModelProxy extends ModelProxy<Ankreuzkompetenz> {
 			this.proxy.istASV = istASV;
 			this.proxy.idFach = null;
 			this.validate();
+			if (this.getFehler("floskelText").isEmpty() && this.getFehler("idFach").isEmpty()) {
+				void this.patch();
+			}
 		},
 	});
 

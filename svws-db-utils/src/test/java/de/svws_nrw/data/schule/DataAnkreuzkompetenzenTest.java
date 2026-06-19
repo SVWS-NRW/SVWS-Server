@@ -526,26 +526,36 @@ class DataAnkreuzkompetenzenTest {
 	@Test
 	@DisplayName("patch | floskelText already used")
 	void patchFloskelTextAlreadyUsed() {
-		when(this.conn.queryByKey(DTOAnkreuzfloskeln.class, 1L)).thenReturn(mock(DTOAnkreuzfloskeln.class));
-		when(this.conn.queryAll(DTOAnkreuzfloskeln.class)).thenReturn(List.of(new DTOAnkreuzfloskeln(1L, 0, "test")));
+		final DTOAnkreuzfloskeln patchedAnkreuzkompetenz = new DTOAnkreuzfloskeln(1L, 0, "TEST");
+		patchedAnkreuzkompetenz.Fach_ID = 10L;
+		final DTOAnkreuzfloskeln existingAnkreuzkompetenz = new DTOAnkreuzfloskeln(2L, 0, "test");
+		existingAnkreuzkompetenz.Fach_ID = 10L;
+
+		when(this.conn.queryByKey(DTOAnkreuzfloskeln.class, 1L)).thenReturn(patchedAnkreuzkompetenz);
+		when(this.conn.queryAll(DTOAnkreuzfloskeln.class)).thenReturn(List.of(existingAnkreuzkompetenz));
 
 		assertThatException()
 				.isThrownBy(() -> this.data.patch(1L, Map.of("floskelText", "test")))
 				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Der Floskeltext test ist bereits vorhanden.")
+				.withMessage("Der Floskeltext test wird für die FachID 10 bereits verwendet.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
 	@DisplayName("patch | floskelText already used different case")
 	void patchFloskelTextAlreadyUsedWithDifferentCase() {
-		when(this.conn.queryByKey(DTOAnkreuzfloskeln.class, 1L)).thenReturn(mock(DTOAnkreuzfloskeln.class));
-		when(this.conn.queryAll(DTOAnkreuzfloskeln.class)).thenReturn(List.of(new DTOAnkreuzfloskeln(2L, 0, "TEST")));
+		final DTOAnkreuzfloskeln patchedAnkreuzkompetenz = new DTOAnkreuzfloskeln(1L, 0, "TEST");
+		patchedAnkreuzkompetenz.Fach_ID = 10L;
+		final DTOAnkreuzfloskeln existingAnkreuzkompetenz = new DTOAnkreuzfloskeln(2L, 0, "TEST");
+		existingAnkreuzkompetenz.Fach_ID = 10L;
+
+		when(this.conn.queryByKey(DTOAnkreuzfloskeln.class, 1L)).thenReturn(patchedAnkreuzkompetenz);
+		when(this.conn.queryAll(DTOAnkreuzfloskeln.class)).thenReturn(List.of(existingAnkreuzkompetenz));
 
 		assertThatException()
 				.isThrownBy(() -> this.data.patch(1L, Map.of("floskelText", "test")))
 				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Der Floskeltext test ist bereits vorhanden.")
+				.withMessage("Der Floskeltext test wird für die FachID 10 bereits verwendet.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
@@ -587,6 +597,23 @@ class DataAnkreuzkompetenzenTest {
 		this.data.patch(1L, Map.of("floskelText", "neu"));
 
 		assertThat(dto.FloskelText).isEqualTo("neu");
+	}
+
+	@Test
+	@DisplayName("patch | same floskelText with different Fach_ID")
+	void patchFloskelTextWithDifferentFachID() throws ApiOperationException {
+		final DTOAnkreuzfloskeln patchedAnkreuzkompetenz = new DTOAnkreuzfloskeln(1L, 0, "abc");
+		patchedAnkreuzkompetenz.Fach_ID = 10L;
+		final DTOAnkreuzfloskeln existingAnkreuzkompetenz = new DTOAnkreuzfloskeln(2L, 0, "test");
+		existingAnkreuzkompetenz.Fach_ID = 20L;
+
+		when(this.conn.queryByKey(DTOAnkreuzfloskeln.class, 1L)).thenReturn(patchedAnkreuzkompetenz);
+		when(this.conn.queryAll(DTOAnkreuzfloskeln.class)).thenReturn(List.of(existingAnkreuzkompetenz));
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(1L, Map.of("floskelText", "test"));
+
+		assertThat(patchedAnkreuzkompetenz.FloskelText).isEqualTo("test");
 	}
 
 	@Test

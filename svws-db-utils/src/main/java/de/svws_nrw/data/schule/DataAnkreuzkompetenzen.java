@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.types.schule.Schulgliederung;
@@ -22,6 +23,7 @@ import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzfloskeln;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.annotation.Nonnull;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import org.apache.commons.lang3.Strings;
@@ -202,7 +204,7 @@ public final class DataAnkreuzkompetenzen extends DataManagerRevised<Long, DTOAn
 			return;
 		}
 
-		validateFloskelText(dto.ID, floskelText);
+		validateFloskelText(dto.ID, dto.Fach_ID, floskelText);
 
 		dto.FloskelText = floskelText;
 	}
@@ -248,16 +250,20 @@ public final class DataAnkreuzkompetenzen extends DataManagerRevised<Long, DTOAn
 		return ankreuzkompetenz;
 	}
 
-	private void validateFloskelText(final Long id, final String floskelText) {
+	private void validateFloskelText(final Long id, final Long idFach, final String floskelText) {
 		final boolean isAlreadyUsed = this.conn
 				.queryAll(DTOAnkreuzfloskeln.class)
 				.stream()
-				.anyMatch(f -> (f.ID != id) && Strings.CI.equals(floskelText, f.FloskelText));
-
+				.anyMatch(sameFloskelTextAndFachID(id, idFach, floskelText));
 
 		if (isAlreadyUsed) {
-			throw new ApiOperationException(Status.BAD_REQUEST, "Der Floskeltext %s ist bereits vorhanden.".formatted(floskelText));
+			throw new ApiOperationException(Status.BAD_REQUEST, "Der Floskeltext %s wird für die FachID %d bereits verwendet.".formatted(floskelText, idFach));
 		}
+	}
+
+	@Nonnull
+	private static Predicate<DTOAnkreuzfloskeln> sameFloskelTextAndFachID(final Long id, final Long idFach, final String floskelText) {
+		return f -> (f.ID != id) && Objects.equals(f.Fach_ID, idFach) && Strings.CI.equals(floskelText, f.FloskelText);
 	}
 
 	@Override

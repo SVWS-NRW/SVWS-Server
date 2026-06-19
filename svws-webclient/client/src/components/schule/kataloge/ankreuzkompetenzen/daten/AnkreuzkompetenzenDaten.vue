@@ -15,11 +15,11 @@
 					<ui-select v-else
 						label="Fach"
 						v-model="model.fach.value"
+						:validation="() => model.getFehler('idFach')"
 						:manager="faecherSelectManager"
 						:removable="false" required />
 					<svws-ui-checkbox class="my-auto"
 						v-model="model.istASV.value"
-						@commit="model.patch"
 						:readonly="!hatKompetenzUpdate">
 						ASV
 					</svws-ui-checkbox>
