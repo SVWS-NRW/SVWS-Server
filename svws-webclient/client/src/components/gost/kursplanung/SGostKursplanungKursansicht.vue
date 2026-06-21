@@ -234,7 +234,7 @@
 													:class="istKursAusgewaehlt(kurs).value ? 'font-bold' : 'opacity-50'">
 													<svws-ui-tooltip v-if="getErgebnismanager().getOfKursAnzahlSchuelerExternePlusDummies(kurs.id) > 0">
 														<span class="whitespace-nowrap">{{ getErgebnismanager().getOfKursAnzahlSchuelerPlusDummy(kurs.id) }}<span class="font-bold">*</span></span>
-														<template #content>{{ getErgebnismanager().getOfKursAnzahlSchuelerInterne(kurs.id) }} und {{ getErgebnismanager().getOfKursAnzahlSchuelerExternePlusDummies(kurs.id) }} zusätzliche Kursteilnehmer</template>
+														<template #content>{{ getErgebnismanager().getOfKursAnzahlSchuelerInterne(kurs.id) }} und {{ getErgebnismanager().getOfKursAnzahlSchuelerExternePlusDummies(kurs.id) }} {{ getErgebnismanager().getOfKursAnzahlSchuelerExternePlusDummies(kurs.id) === 1 ? 'zusätzlicher' : 'zusätzliche' }} Kursteilnehmer</template>
 													</svws-ui-tooltip>
 													<span v-else>{{ getErgebnismanager().getOfKursAnzahlSchueler(kurs.id) }}</span>
 												</div>
