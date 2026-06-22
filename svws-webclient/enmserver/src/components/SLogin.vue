@@ -4,7 +4,7 @@
 			<img src="/images/Wappenzeichen_NRW_bw.svg" alt="Logo NRW" class="h-14">
 		</template>
 		<template #main>
-			<Transition mode="out-in">
+			<Transition v-if="serverValid" mode="out-in">
 				<!-- Zeige an, wenn der Browser veraltet ist -->
 				<div v-if="browserVeraltet" class="text-ui-danger font-medium"> Ihr Browser ist veraltet und kann für den WebNotenManager nicht verwendet werden. Bitte benutzen Sie einen modernen Browser. </div>
 
@@ -80,6 +80,18 @@
 					</div>
 				</svws-ui-input-wrapper>
 			</Transition>
+			<div v-else-if="(server !== undefined) && (server !== null)" class="text-left">
+				<div>Die Version des PHP-Servers stimmt nicht überein mit der Version des WeNoM-Clients.</div>
+				<div class="mr-4 my-4">
+					<div class="flex justify-between">PHP-Server <span class="font-mono">{{ (server.version.length === 0) ? "Version unbekannt" : server.version + " - " + server.githash?.slice(0,8) }}</span></div>
+					<div class="flex justify-between">WeNoM-Client <span class="font-mono">{{ authState.version }} - {{ authState.githash.slice(0,8) }}</span></div>
+				</div>
+				<div>Bitte wenden Sie sich an ihren Systemadministrator.</div>
+			</div>
+			<div v-else-if="server === null" class="text-left my-4">
+				<div>Der Server ist nicht erreichbar</div>
+				<div>Bitte wenden Sie sich an ihren Systemadministrator.</div>
+			</div>
 		</template>
 	</ui-login-layout>
 </template>
@@ -91,9 +103,13 @@
 	import { JsonCoreTypeReaderStatic } from "../../../core/src/asd/utils/JsonCoreTypeReaderStatic";
 	import SvwsUiTextInput from "@ui/ui/controls/SvwsUiTextInput.vue";
 	import { useAuthState } from "~/states/AuthState";
+	import { authState } from "~/states/AuthStateImpl";
 
 	const props = defineProps<LoginProps>();
 	const auth = useAuthState();
+
+	const server = ref<{ version: string, githash: string | null } | null>();
+	const serverValid = computed(() => (server.value !== undefined) && (server.value !== null) && (server.value.version === authState.version) && (server.value.githash === authState.githash));
 
 	// Greife auf Methoden der Textinputs zurück, um dieses automatisch Fokussieren zu können
 	const totpTokenInput = ref<{ focus: () => void } | undefined>(undefined);
@@ -172,7 +188,7 @@
 		}
 
 		await initCoreTypes();
-
+		server.value = await authState.checkVersion();
 		await nextTick();
 		usernameInput.value?.focus();
 	});

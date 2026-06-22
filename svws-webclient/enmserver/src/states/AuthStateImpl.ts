@@ -194,6 +194,20 @@ class AuthStateImpl implements AuthState {
 	}
 
 	/**
+	 * Gibt die Version und den Git-Hash des Servers zurück
+	 *
+	 * @returns die Version und der Git-Hash des Servers
+	 */
+	public async checkVersion(): Promise<{ version: string, githash: string | null } | null> {
+		try {
+			const api = new ApiEnmServer();
+			return await api.getVersion();
+		} catch {
+			return null;
+		}
+	}
+
+	/**
 	 * Authentifiziert den Benutzer mit dem angebenen Benutzernamen und Kennwort bei dem
 	 * angebenen Schema.
 	 *
