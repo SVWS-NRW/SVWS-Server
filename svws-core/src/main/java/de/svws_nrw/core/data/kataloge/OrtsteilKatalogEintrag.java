@@ -14,7 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class OrtsteilKatalogEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(description = "die ID des Katalog-Eintrags", example = "42")
+	@Schema(description = "die ID des Katalog-Eintrags", example = "42", accessMode = Schema.AccessMode.READ_ONLY)
 	public long id;
 
 	/** Der Name des Ortsteils. */
@@ -26,11 +26,11 @@ public class OrtsteilKatalogEintrag {
 	public Long ort_id;
 
 	/** Die Bezeichnung des zugehörigen Ortes. */
-	@Schema(description = "Die Bezeichnung des zugehörigen Ortes", example = "Kassel", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Die Bezeichnung des zugehörigen Ortes", example = "Herne", accessMode = Schema.AccessMode.READ_ONLY)
 	public String bezeichnungOrt;
 
 	/** Die Postleitzahl des zugehörigen Ortes. */
-	@Schema(description = "die Postleitzahl des zugehörigen Ortes", example = "47111", accessMode = Schema.AccessMode.READ_ONLY)
+	@Schema(description = "die Postleitzahl des zugehörigen Ortes", example = "44649", accessMode = Schema.AccessMode.READ_ONLY)
 	public String plzOrt;
 
 	/** Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an. */
@@ -42,19 +42,12 @@ public class OrtsteilKatalogEintrag {
 	public boolean istSichtbar;
 
 	/** Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht. */
-	@Schema(description = "gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht", example = "true")
+	@Schema(description = "gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht", example = "true", accessMode = Schema.AccessMode.READ_ONLY)
 	public boolean istAenderbar;
 
 	/** Gibt an, ob der Ortsteil in anderen Datenbanktabellen referenziert ist oder nicht. */
-	@Schema(description = "Gibt an, ob der Ortsteil in anderen Datenbanktabellen referenziert ist oder nicht.", example = "true", accessMode =
-			Schema.AccessMode.READ_ONLY)
+	@Schema(description = "Gibt an, ob der Ortsteil in anderen Datenbanktabellen referenziert ist oder nicht.", example = "true",
+			accessMode = Schema.AccessMode.READ_ONLY)
 	public boolean referenziertInAnderenTabellen = false;
-
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
-	public OrtsteilKatalogEintrag() {
-		// leer
-	}
 
 }

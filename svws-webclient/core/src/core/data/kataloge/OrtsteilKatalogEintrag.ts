@@ -49,9 +49,6 @@ export class OrtsteilKatalogEintrag extends JavaObject {
 	public referenziertInAnderenTabellen: boolean = false;
 
 
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
 	public constructor() {
 		super();
 	}
