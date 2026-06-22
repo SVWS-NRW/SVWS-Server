@@ -5,68 +5,70 @@
 			<h3 class="text-base font-semibold mb-2 flex justify-start">Allgemeine Angaben</h3>
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 				<svws-ui-text-input placeholder="Angelegt am" type="date"
-					v-model="data.datumAngelegt"
-					:valid="() => fieldIsValid('datumAngelegt')" required />
+					v-model="model.proxy.datumAngelegt"
+					:validation="() => model.getFehler('datumAngelegt')"
+					required />
 				<svws-ui-text-input placeholder="Betroffene Fächer"
-					v-model="data.faecher"
-					:valid="() => fieldIsValid('faecher')" required :max-len="255" />
+					v-model="model.proxy.faecher"
+					:validation="() => model.getFehler('faecher')"
+					required :max-len="255" />
 			</div>
 			<h3 class="text-base font-semibold flex justify-start">Diagnose</h3>
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 				<svws-ui-textarea-input placeholder="Inhaltliche prozessbezogene Kompetenzen" class="h-36 max-h-36 overflow-y-auto"
-					:model-value="data.diagnoseKompetenzenInhaltlichProzessbezogen"
-					@input="value => data.diagnoseKompetenzenInhaltlichProzessbezogen = value"
+					v-model="model.proxy.diagnoseKompetenzenInhaltlichProzessbezogen"
+					:validation="() => model.getFehler('diagnoseKompetenzenInhaltlichProzessbezogen')"
 					:rows="6" resizeable="none" />
 				<svws-ui-textarea-input placeholder="Methodische Kompetenzen" class="h-36 max-h-36 overflow-y-auto"
-					:model-value="data.diagnoseKompetenzenMethodisch"
-					@input="value => data.diagnoseKompetenzenMethodisch = value"
+					v-model="model.proxy.diagnoseKompetenzenMethodisch"
+					:validation="() => model.getFehler('diagnoseKompetenzenMethodisch')"
 					:rows="6" resizeable="none" />
 				<svws-ui-textarea-input placeholder="Lern- und Arbeitsverhalten" class="h-36 max-h-36 overflow-y-auto"
-					:model-value="data.diagnoseLernUndArbeitsverhalten"
-					@input="value => data.diagnoseLernUndArbeitsverhalten = value"
+					v-model="model.proxy.diagnoseLernUndArbeitsverhalten"
+					:validation="() => model.getFehler('diagnoseLernUndArbeitsverhalten')"
 					:rows="6" resizeable="none" />
 			</div>
 			<h3 class="text-base font-semibold flex justify-start">Maßnahme</h3>
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 				<svws-ui-textarea-input placeholder="Inhaltliche prozessbezogene Kompetenzen" class="h-36 max-h-36 overflow-y-auto"
-					:model-value="data.massnahmeKompetenzenInhaltlichProzessbezogen"
-					@input="value => data.massnahmeKompetenzenInhaltlichProzessbezogen = value"
+					v-model="model.proxy.massnahmeKompetenzenInhaltlichProzessbezogen"
+					:validation="() => model.getFehler('massnahmeKompetenzenInhaltlichProzessbezogen')"
 					:rows="6" resizeable="none" />
 				<svws-ui-textarea-input placeholder="Methodische Kompetenzen" class="h-36 max-h-36 overflow-y-auto"
-					:model-value="data.massnahmeKompetenzenMethodische"
-					@input="value => data.massnahmeKompetenzenMethodische = value"
+					v-model="model.proxy.massnahmeKompetenzenMethodische"
+					:validation="() => model.getFehler('massnahmeKompetenzenMethodische')"
 					:rows="6" resizeable="none" />
 				<svws-ui-textarea-input placeholder="Lern- und Arbeitsverhalten" class="h-36 max-h-36 overflow-y-auto"
-					:model-value="data.massnahmeLernArbeitsverhalten"
-					@input="value => data.massnahmeLernArbeitsverhalten = value"
+					v-model="model.proxy.massnahmeLernArbeitsverhalten"
+					:validation="() => model.getFehler('massnahmeLernArbeitsverhalten')"
 					:rows="6" resizeable="none" />
 			</div>
 			<h3 class="text-base font-semibold flex justify-start">Verantwortlichkeit</h3>
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 				<svws-ui-textarea-input placeholder="Schüler" class="h-36 max-h-36 overflow-y-auto"
-					:model-value="data.verantwortlichkeitSchueler"
-					@input="value => data.verantwortlichkeitSchueler = value"
+					v-model="model.proxy.verantwortlichkeitSchueler"
+					:validation="() => model.getFehler('verantwortlichkeitSchueler')"
 					:rows="6" resizeable="none" />
 				<svws-ui-textarea-input placeholder="Erziehungsberechtigte" class="h-36 max-h-36 overflow-y-auto"
-					:model-value="data.verantwortlichkeitEltern"
-					@input="value => data.verantwortlichkeitEltern = value"
+					v-model="model.proxy.verantwortlichkeitEltern"
+					:validation="() => model.getFehler('verantwortlichkeitEltern')"
 					:rows="6" resizeable="none" />
 			</div>
 			<h3 class="text-base font-semibold flex justify-start">Weiteres Vorgehen</h3>
 			<svws-ui-input-wrapper :grid="4" class="gap-4">
-				<svws-ui-text-input type="date" placeholder="Umsetzung von" v-model="data.datumUmsetzungVon" />
-				<svws-ui-text-input type="date" placeholder="Umsetzung bis" v-model="data.datumUmsetzungBis" />
-				<svws-ui-text-input type="date" placeholder="Überprüfung bis" v-model="data.datumUeberpruefung" />
-				<svws-ui-text-input type="date" placeholder="Nächstes Beratungsgespräch" v-model="data.datumNaechstesBeratungsgespraech" />
+				<svws-ui-text-input type="date" placeholder="Umsetzung von" v-model="model.proxy.datumUmsetzungVon" />
+				<svws-ui-text-input type="date" placeholder="Umsetzung bis" v-model="model.proxy.datumUmsetzungBis" />
+				<svws-ui-text-input type="date" placeholder="Überprüfung bis" v-model="model.proxy.datumUeberpruefung" />
+				<svws-ui-text-input type="date" placeholder="Nächstes Beratungsgespräch" v-model="model.proxy.datumNaechstesBeratungsgespraech" />
 			</svws-ui-input-wrapper>
 			<svws-ui-input-wrapper :grid="4" class="gap-4">
 				<div class="col-span-2" />
 				<svws-ui-checkbox class="mt-1 justify-end col-span-1 justify-self-start"
-					v-model="data.eingabeFertig">
+					v-model="model.proxy.eingabeFertig">
 					Texteingabe abgeschlossen
 				</svws-ui-checkbox>
 				<svws-ui-checkbox class="mt-1 justify-end col-span-1 justify-self-start"
-					v-model="data.abgeschlossen">
+					v-model="model.proxy.abgeschlossen">
 					Empfehlung abgeschlossen
 				</svws-ui-checkbox>
 			</svws-ui-input-wrapper>
@@ -85,8 +87,8 @@
 <script setup lang="ts">
 
 	import { computed, ref } from 'vue';
-	import { SchuelerFoerderempfehlung, JavaString } from '@core';
-	import { mandatoryInputIsValid } from "~/util/validation/Validation";
+	import { SchuelerFoerderempfehlung } from '@core';
+	import { SchuelerFoerderempfehlungModelProxy } from "~/components/schueler/lernabschnitte/foerderempfehlungen/modelproxy/SchuelerFoerderempfehlungModelProxy";
 
 	const props = defineProps<{
 		add: (data: Partial<SchuelerFoerderempfehlung>) => Promise<void>,
@@ -97,17 +99,19 @@
 		(e: 'update:isOpen', v: boolean): void;
 	}>();
 
-	const data = ref<SchuelerFoerderempfehlung>(createModel());
+	const initialData = ref<SchuelerFoerderempfehlung>(createModel());
+	const model = new SchuelerFoerderempfehlungModelProxy(() => initialData.value);
+	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
 	const modalIsOpen = computed<boolean>({
 		get: () => props.isOpen,
 		set: (v: boolean) => {
-			data.value = createModel();
+			initialData.value = createModel();
 			emit("update:isOpen", v);
 		},
 	});
 
 	function closeModal() {
-		data.value = createModel();
+		initialData.value = createModel();
 		emit("update:isOpen", false);
 	}
 
@@ -116,33 +120,9 @@
 	}
 
 	async function addFoerderempfehlung(): Promise<void> {
-		const { guid, idKlasse, idLehrer, ...partialData } = data.value;
+		const { guid, idKlasse, idLehrer, ...partialData } = model.proxy;
 		await props.add(partialData);
 		closeModal();
-	}
-
-	const formIsValid = computed(() => {
-		return Object.keys(data.value)
-			.every((field: string) => fieldIsValid(field as keyof SchuelerFoerderempfehlung));
-	});
-
-	const fieldIsValid = (field: keyof SchuelerFoerderempfehlung): boolean => {
-		switch (field) {
-			case 'datumAngelegt':
-				return datumAngelegtIsValid();
-			case 'faecher':
-				return faecherIsValid();
-			default:
-				return true;
-		}
-	};
-
-	function datumAngelegtIsValid(): boolean {
-		return (data.value.datumAngelegt !== null) && !JavaString.isBlank(data.value.datumAngelegt);
-	}
-
-	function faecherIsValid(): boolean {
-		return mandatoryInputIsValid(data.value.faecher, 255);
 	}
 
 </script>

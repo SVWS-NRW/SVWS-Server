@@ -43,7 +43,7 @@ export class RouteDataSchuelerLernabschnittFoerderempfehlungen extends RouteData
 		this.commit();
 	};
 
-	patchFoerderempfehlung = async (data: Partial<SchuelerFoerderempfehlung>, guid: string) => {
+	patchFoerderempfehlung = async (data: Partial<SchuelerFoerderempfehlung>, guid: string): Promise<boolean> => {
 		await api.server.patchFoerderempfehlung(data, api.schema, guid);
 		for (const empfehlung of this._state.value.listFoerderempfehlungen) {
 			if (empfehlung.guid === guid) {
@@ -52,6 +52,7 @@ export class RouteDataSchuelerLernabschnittFoerderempfehlungen extends RouteData
 			}
 		}
 		this.commit();
+		return true;
 	};
 
 	deleteFoerderempfehlungen = async (guIDs: List<string>) => {
