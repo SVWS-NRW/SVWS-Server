@@ -18,7 +18,7 @@
 			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
 			<th:block th:replace="~{fragments/reportPageHeaderFooter :: pageHeaderFooter(
 					headerRight='Kurs: ' + ${kurs.kuerzel()} +
-						'<br/>Klassenleitung: ' + (${(kurs.kursleitung() != '') ? kurs.kursleitung() : '---'}))}">
+						'<br/>Kursleitung: ' + (${(kurs.kursleitung() != null) ? kurs.kursleitung().kuerzel() : '---'}))}">
 			</th:block>
 			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
 

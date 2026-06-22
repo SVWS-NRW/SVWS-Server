@@ -9,9 +9,9 @@
 		<title></title>
 	</head>
 
-	<body th:with="schuljahr = ${Schule.auswahlSchuljahresabschnitt().schuljahr()},
-				   ueberschrift = ${(VorlageParameter.get('ueberschrift') == null) ? '' : ('' + VorlageParameter.get('ueberschrift'))},
-				   bemerkung = ${(VorlageParameter.get('bemerkung') == null) ? '' : ('' + VorlageParameter.get('bemerkung'))},
+	<body th:with="schuljahr = ${(Schule.auswahlSchuljahresabschnitt() != null) ? Schule.auswahlSchuljahresabschnitt().schuljahr() : 0},
+				   ueberschrift = ${(VorlageParameter.get('ueberschrift') == null) ? '' : ('' + #strings.trim(VorlageParameter.get('ueberschrift')))},
+				   bemerkung = ${(VorlageParameter.get('bemerkung') == null) ? '' : ('' + #strings.trim(VorlageParameter.get('bemerkung')))},
 				   mitFoto = ${VorlageParameter.get('mitFoto')},
 	               mitSchuelerKlasse = ${VorlageParameter.get('mitSchuelerKlasse')},
 				   mitSchuelerAlleVornamen = ${VorlageParameter.get('mitSchuelerAlleVornamen')},
@@ -34,13 +34,13 @@
 	               fallNurAnschriftUndTelefonOderEmail = ${mitSchuelerAnschrift && !mitSpalteSchuelerTelefonKontakte && !mitSpalteErzieher && !(mitSchuelerTelefonPrivat && mitSchuelerEMail) && (mitSchuelerTelefonPrivat || mitSchuelerEMail)}">
 
 	<div class="reset-page-counter start-new-page" th:each="kurs,iterationVarKurs : ${Kurse}"
-		th:with="anzeigeUeberschrift = ${#strings.isEmpty(ueberschrift.trim()) ? ('Kursliste ' + kurs.kuerzel()) : #strings.replace(ueberschrift, '<Kürzel>', kurs.kuerzel())},
+		th:with="anzeigeUeberschrift = ${#strings.isEmpty(ueberschrift) ? ('Kursliste ' + kurs.kuerzel()) : #strings.replace(ueberschrift, '<Kürzel>', kurs.kuerzel())},
 		         anzeigeUeberschriftFinal = ${#strings.length(anzeigeUeberschrift) > 45 ? #strings.substring(anzeigeUeberschrift, 0, 45) : anzeigeUeberschrift}">
 		<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 		<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
 		<th:block th:replace="~{fragments/reportPageHeaderFooter :: pageHeaderFooter(
 				headerRight='Kurs: ' + ${kurs.kuerzel()} +
-					'<br/>Kursleitung: ' + ${(kurs.kursleitung() != '') ? kurs.kursleitung().kuerzel() : '---'})}">
+					'<br/>Kursleitung: ' + ${(kurs.kursleitung() != null) ? kurs.kursleitung().kuerzel() : '---'})}">
 		</th:block>
 		<!--Ende: Definition Seitenköpfe und Seitenfüße -->
 
@@ -50,9 +50,9 @@
 					<col th:if="${mitFoto}" style="width: 12mm;" />  <!-- Schüler: Foto -->
 					<col th:style="${'width: ' + (mitFoto ? '44mm' : '56mm') + ';'}" />    <!-- Schüler: Name, Angaben, Anschrift -->
 					<col style="width: 12mm;" />     <!-- Schüler: Individuelle Kursart -->
-					<col style="width: 53mm;" />    <!-- Schüler: E-Mail und Telefon -->
-					<col style="width: 53mm;" />    <!-- Telefonkontakte -->
-					<col />          				<!-- Füllt auf 100% der Breite auf. Ist leer im Hochformat oder nimmt Erzieher, Anschrift, E-Mail auf. -->
+					<col style="width: 53mm;" />     <!-- Schüler: E-Mail und Telefon -->
+					<col style="width: 53mm;" />     <!-- Telefonkontakte -->
+					<col />          		<!-- Füllt auf 100% der Breite auf. Ist leer im Hochformat oder nimmt Erzieher, Anschrift, E-Mail auf. -->
 				</colgroup>
 				<thead>
 					<tr>
@@ -72,7 +72,7 @@
 										Klassen: EFA,EFB - Belegung: GKM: 12, GKS: 10"
 									</td>
 								</tr>
-								<tr th:if="${!#strings.isEmpty(bemerkung.trim())}">
+								<tr th:if="${!#strings.isEmpty(bemerkung)}">
 									<td colspan="2" class="ta-l" style="font-size: 9pt; font-weight: normal" th:text="${bemerkung}">Bemerkung</td>
 								</tr>
 								<tr>
@@ -127,7 +127,7 @@
 										<td class="mp-0" th:text="${mitSchuelerAlleVornamen ? schueler.nachnameVornamen() : schueler.nachnameVorname()}">
 											Mustermann, Maximilian Moritz
 										</td>
-										<td th:if="mitSchuelerKlasse" class="mp-0 ta-rt" style="width: 7mm" th:text="${mitSchuelerKlasse ? schueler.auswahlLernabschnitt().klasse().kuerzel() : ''}">
+										<td th:if="mitSchuelerKlasse" class="mp-0 ta-rt" style="width: 7mm" th:text="${(mitSchuelerKlasse && schueler.auswahlLernabschnitt() != null && schueler.auswahlLernabschnitt().klasse() != null) ? schueler.auswahlLernabschnitt().klasse().kuerzel() : ''}">
 											06C
 										</td>
 									</tr>
@@ -174,7 +174,7 @@
 											<td class="mp-0" th:text="${mitSchuelerAlleVornamen ? schueler.nachnameVornamen() : schueler.nachnameVorname()}">
 												Mustermann, Maximilian Moritz
 											</td>
-											<td th:if="mitSchuelerKlasse" class="mp-0 ta-rt" style="width: 7mm" th:text="${mitSchuelerKlasse ? schueler.auswahlLernabschnitt().klasse().kuerzel() : ''}">
+											<td th:if="mitSchuelerKlasse" class="mp-0 ta-rt" style="width: 7mm" th:text="${(mitSchuelerKlasse && schueler.auswahlLernabschnitt() != null && schueler.auswahlLernabschnitt().klasse() != null) ? schueler.auswahlLernabschnitt().klasse().kuerzel() : ''}">
 												06C
 											</td>
 										</tr>
@@ -220,7 +220,7 @@
 											<td class="mp-0" th:text="${mitSchuelerAlleVornamen ? schueler.nachnameVornamen() : schueler.nachnameVorname()}">
 												Mustermann, Maximilian Moritz
 											</td>
-											<td th:if="mitSchuelerKlasse" class="mp-0 ta-rt" style="width: 7mm" th:text="${mitSchuelerKlasse ? schueler.auswahlLernabschnitt().klasse().kuerzel() : ''}">
+											<td th:if="mitSchuelerKlasse" class="mp-0 ta-rt" style="width: 7mm" th:text="${(mitSchuelerKlasse && schueler.auswahlLernabschnitt() != null && schueler.auswahlLernabschnitt().klasse() != null) ? schueler.auswahlLernabschnitt().klasse().kuerzel() : ''}">
 												06C
 											</td>
 										</tr>

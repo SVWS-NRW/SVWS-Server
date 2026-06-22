@@ -8,7 +8,7 @@
 		<title></title>
 	</head>
 
-	<body th:with="KursplanungSchueler = ${GostBlockungsergebnis.schueler()}">
+	<body th:with="KursplanungSchueler = ${GostBlockungsergebnis.schueler()}, ergebnisHalbjahr = ${GostBlockungsergebnis.gostHalbjahr()}">
 		<div th:switch="${zeigeProSchueler}">
 			<div th:case="false">
 				<div th:with="zeigeExtDummy = ${(GostBlockungsergebnis.anzahlExterne() > 0 || GostBlockungsergebnis.anzahlDummy() > 0)}"
@@ -18,7 +18,7 @@
 					<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
 					<th:block th:replace="~{fragments/reportPageHeaderFooter :: pageHeaderFooter(
 						headerRight='Kurse-Schienen-Zuordnung' +
-							'<br/>Abitur ' + ${GostBlockungsergebnis.abiturjahr()} + ' - ' + ${GostBlockungsergebnis.gostHalbjahr().kuerzel} +
+							'<br/>Abitur ' + ${GostBlockungsergebnis.abiturjahr()} + ' - ' + ${ergebnisHalbjahr != null ? ergebnisHalbjahr.kuerzel : ''} +
 							'<br/>Gesamt: ' + ${GostBlockungsergebnis.anzahlSchueler()} + ' SuS' + (${zeigeExtDummy} ? ', davon ' + ${GostBlockungsergebnis.anzahlExterne()} + '/' + ${GostBlockungsergebnis.anzahlDummy()} + ' Externe/Platzhalter' : ''),
 						footerCenter=${GostBlockungsergebnis.bezeichnung()} + ' (Erg-ID ' + ${GostBlockungsergebnis.id()} + ') - Angaben zu SuS in den Kursen: Gesamt (Schriftlich,Abiturfach) (Externe,Platzhalter)',
 						footerRight=${'Kurse-Schienen-Zuordnung'})}">
@@ -27,7 +27,7 @@
 
 					<table class="fixed-100 p-0">
 						<tr>
-							<th style="width: 100%; border-bottom: 1px grey solid; vertical-align: middle"><h3 class="m-t-0" th:text="${'Kurse-Schienen-Zuordnung - Abitur ' + GostBlockungsergebnis.abiturjahr() + ' - ' + GostBlockungsergebnis.gostHalbjahr().kuerzel}">Kurse-Schienen-Zuordnung - Abitur 2023 - Q1.2</h3></th>
+							<th style="width: 100%; border-bottom: 1px grey solid; vertical-align: middle"><h3 class="m-t-0" th:text="${'Kurse-Schienen-Zuordnung - Abitur ' + GostBlockungsergebnis.abiturjahr() + ' - ' + (ergebnisHalbjahr != null ? ergebnisHalbjahr.kuerzel : '')}">Kurse-Schienen-Zuordnung - Abitur 2023 - Q1.2</h3></th>
 						</tr>
 						<tr style="height: 3px;">
 							<td></td>
@@ -52,9 +52,10 @@
 								<p class="m-t-0 ta-l" style="font-size: 6pt;" th:utext="${Schiene.kurse().size() + (Schiene.kurse().size() == 1 ? ' Kurs' : ' Kurse' ) + '<br/>' + Schiene.anzahlSchueler() + ' S.' + (zeigeExtDummy ? ' (' + Schiene.anzahlExterne() + ',' + Schiene.anzahlDummy() + ')' : '')}">5 Kurse<br/>98 S. (2,5)</p>
 							</th>
 							<td class="bo-grey" th:each="Kurs : ${Schiene.kurse()}"
-								th:style="${(Kurs.fach().statistikfach().htmlFarbeRGB() == null || Kurs.fach().statistikfach().htmlFarbeRGB().isEmpty()) ? '' : ' background-color: ' + Kurs.fach().statistikfach().htmlFarbeRGB() + ';'}">
+								th:with="kursFach = ${Kurs.fach()}, kursStatFach = ${kursFach != null ? kursFach.statistikfach() : null}, kursKursart = ${Kurs.gostKursart()}, farbe = ${kursStatFach != null ? kursStatFach.htmlFarbeRGB() : null}"
+								th:style="${(farbe == null || farbe.isEmpty()) ? '' : ' background-color: ' + farbe + ';'}">
 								<p class="m-t-0 f-bold" th:style="${'font-size: ' + schriftgroesse + ';'}" th:text="${Kurs.bezeichnung}">M-GK2</p>
-								<p class="m-t-0" style="font-size: 6pt;" th:text="${Kurs.gostKursart().kuerzel}">GK</p>
+								<p class="m-t-0" style="font-size: 6pt;" th:text="${kursKursart != null ? kursKursart.kuerzel : ''}">GK</p>
 								<p class="m-t-0" style="font-size: 6pt;"
 								   th:with="summeABs = ${Kurs.anzahlAB12() + Kurs.anzahlAB3() + Kurs.anzahlAB4()}"
 								   th:utext="${Kurs.anzahlSchueler() + ' (' + Kurs.anzahlSchuelerSchriftlich() + ',' + summeABs + ') (' + Kurs.anzahlExterne() + ',' + Kurs.anzahlDummy() + ')' + '<br/>' + Kurs.lehrkraefteAuflistung()}">
@@ -74,7 +75,7 @@
 					<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
 					<th:block th:replace="~{fragments/reportPageHeaderFooter :: pageHeaderFooter(
 						headerRight='Kurse-Schienen-Zuordnung' +
-							'<br/>Abitur ' + ${GostBlockungsergebnis.abiturjahr()} + ' - ' + ${GostBlockungsergebnis.gostHalbjahr().kuerzel} +
+							'<br/>Abitur ' + ${GostBlockungsergebnis.abiturjahr()} + ' - ' + ${ergebnisHalbjahr != null ? ergebnisHalbjahr.kuerzel : ''} +
 							'<br/>Gesamt: ' + ${GostBlockungsergebnis.anzahlSchueler()} + ' SuS' + (${zeigeExtDummy} ? ', davon ' + ${GostBlockungsergebnis.anzahlExterne()} + '/' + ${GostBlockungsergebnis.anzahlDummy()} + ' Externe/Platzhalter' : ''),
 						footerCenter=${GostBlockungsergebnis.bezeichnung()} + ' (Erg-ID ' + ${GostBlockungsergebnis.id()} + ') - Angaben zu SuS in den Kursen: Gesamt (Schriftlich,Abiturfach) (Externe,Platzhalter)',
 						footerRight=${#lists.size(KursplanungSchueler) > 0 ? 'Druck ' + iterationVarSchueler.count + '/' + #lists.size(KursplanungSchueler) : 'Kurse-Schienen-Zuordnung'})}">
@@ -108,13 +109,13 @@
 								<p class="m-t-0 ta-l" style="font-size: 6pt;" th:utext="${Schiene.kurse().size() + (Schiene.kurse().size() == 1 ? ' Kurs' : ' Kurse' ) + '<br/>' + Schiene.anzahlSchueler() + ' S.' + (zeigeExtDummy ? ' (' + Schiene.anzahlExterne()+ ',' + Schiene.anzahlDummy() + ')' : '')}">5 Kurse<br/>98 S. (2,5)</p>
 							</th>
 							<td class="bo-grey" th:each="Kurs : ${Schiene.kurse()}"
-								th:with="istBelegt = ${!(schueler.getGostKursplanungKursbelegungById(Kurs.id) == null)}, istGueltig = ${istBelegt && schueler.getGostKursplanungKursbelegungById(Kurs.id).hatGueltigeFachwahl()}"
-								th:style="${(!istBelegt || Kurs.fach().statistikfach().htmlFarbeRGB() == null || Kurs.fach().statistikfach().htmlFarbeRGB().isEmpty()) ? '' : ' background-color: ' + Kurs.fach().statistikfach().htmlFarbeRGB() + ';'}">
+								th:with="istBelegt = ${!(schueler.getGostKursplanungKursbelegungById(Kurs.id) == null)}, istGueltig = ${istBelegt && schueler.getGostKursplanungKursbelegungById(Kurs.id).hatGueltigeFachwahl()}, kursFach = ${Kurs.fach()}, kursStatFach = ${kursFach != null ? kursFach.statistikfach() : null}, kursKursart = ${Kurs.gostKursart()}, farbe = ${kursStatFach != null ? kursStatFach.htmlFarbeRGB() : null}"
+								th:style="${(!istBelegt || farbe == null || farbe.isEmpty()) ? '' : ' background-color: ' + farbe + ';'}">
 								<p class="m-t-0 f-bold" th:style="${'font-size: ' + schriftgroesse + ';'}" th:styleappend="${istBelegt && !istGueltig} ? 'color: red;'" th:text="${Kurs.bezeichnung()}">M-GK2</p>
-								<p th:if="${!istBelegt}" class="m-t-0" style="font-size: 6pt;" th:text="${Kurs.gostKursart().kuerzel}">GK</p>
-								<div th:if="${istBelegt}" th:each="Kursbelegung : ${schueler.gostKursplanungKursbelegungen()}">
-									<p th:if="${Kursbelegung.kurs().id() == Kurs.id()}" class="m-t-0" style="font-size: 6pt;"
-									   th:utext="${Kurs.gostKursart().kuerzel + '-' + (Kursbelegung.istSchriftlich() ? 's' : 'm') + ((Kursbelegung.abiturfach() == null || Kursbelegung.abiturfach().isEmpty() || #strings.equalsIgnoreCase('E', GostBlockungsergebnis.gostHalbjahr().kuerzel.charAt(0))) ? '' : ' Abifach ' + Kursbelegung.abiturfach())}">
+								<p th:if="${!istBelegt}" class="m-t-0" style="font-size: 6pt;" th:text="${kursKursart != null ? kursKursart.kuerzel : ''}">GK</p>
+								<div th:if="${istBelegt}" th:each="Kursbelegung : ${schueler.gostKursplanungKursbelegungen()}" th:with="belKurs = ${Kursbelegung.kurs()}">
+									<p th:if="${belKurs != null && belKurs.id() == Kurs.id()}" class="m-t-0" style="font-size: 6pt;"
+									   th:utext="${(kursKursart != null ? kursKursart.kuerzel : '') + '-' + (Kursbelegung.istSchriftlich() ? 's' : 'm') + ((Kursbelegung.abiturfach() == null || Kursbelegung.abiturfach().isEmpty() || (ergebnisHalbjahr != null && #strings.equalsIgnoreCase('E', ergebnisHalbjahr.kuerzel.charAt(0)))) ? '' : ' Abifach ' + Kursbelegung.abiturfach())}">
 										GK-s Abifach 3
 									</p>
 								</div>

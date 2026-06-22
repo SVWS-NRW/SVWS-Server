@@ -77,25 +77,27 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="fachwahlstatistik : ${GostLaufbahnplanungAbiturjahrgangFachwahlstatistiken}" th:style="'background-color: ' + ${fachwahlstatistik.fach().statistikfach().htmlFarbeRGB()} + ';'">
-					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0" th:text="${fachwahlstatistik.fach().kuerzel()}">D</td>
-					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;" th:text="${fachwahlstatistik.ef1().wahlenGK()}">87</td>
-					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" th:text="${fachwahlstatistik.ef1().wahlenGKSchriftlich()}">47</td>
-					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;" th:text="${fachwahlstatistik.ef2().wahlenGK()}">87</td>
-					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" th:text="${fachwahlstatistik.ef2().wahlenGKSchriftlich()}">47</td>
-					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;" th:text="${fachwahlstatistik.q11().wahlenGK()}">87</td>
-					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" th:text="${fachwahlstatistik.q11().wahlenGKSchriftlich()}">47</td>
-					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;" th:text="${fachwahlstatistik.q12().wahlenGK()}">87</td>
-					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" th:text="${fachwahlstatistik.q12().wahlenGKSchriftlich()}">47</td>
-					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;" th:text="${fachwahlstatistik.q21().wahlenGK()}">87</td>
-					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" th:text="${fachwahlstatistik.q21().wahlenGKSchriftlich()}">47</td>
-					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" th:text="${fachwahlstatistik.q21().wahlenZK()}">40</td>
-					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;" th:text="${fachwahlstatistik.q22().wahlenGK()}">87</td>
-					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" th:text="${fachwahlstatistik.q22().wahlenGKSchriftlich()}">47</td>
-					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" th:text="${fachwahlstatistik.q22().wahlenZK()}">40</td>
-					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;" th:text="${fachwahlstatistik.q22().wahlenLK()}">42</td>
-					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" th:text="${fachwahlstatistik.q22().wahlenAB3()}">87</td>
-					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;" th:text="${fachwahlstatistik.q22().wahlenAB4()}">47</td>
+				<tr th:each="fachwahlstatistik : ${GostLaufbahnplanungAbiturjahrgangFachwahlstatistiken}"
+					th:with="fwFach = ${fachwahlstatistik.fach()}, fwStatFach = ${fwFach != null ? fwFach.statistikfach() : null}, ef1 = ${fachwahlstatistik.ef1()}, ef2 = ${fachwahlstatistik.ef2()}, q11 = ${fachwahlstatistik.q11()}, q12 = ${fachwahlstatistik.q12()}, q21 = ${fachwahlstatistik.q21()}, q22 = ${fachwahlstatistik.q22()}"
+					th:style="'background-color: ' + ${fwStatFach != null ? fwStatFach.htmlFarbeRGB() : ''} + ';'">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0" th:text="${fwFach != null ? fwFach.kuerzel() : ''}">D</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;" th:text="${ef1 != null ? ef1.wahlenGK() : ''}">87</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" th:text="${ef1 != null ? ef1.wahlenGKSchriftlich() : ''}">47</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;" th:text="${ef2 != null ? ef2.wahlenGK() : ''}">87</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" th:text="${ef2 != null ? ef2.wahlenGKSchriftlich() : ''}">47</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;" th:text="${q11 != null ? q11.wahlenGK() : ''}">87</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" th:text="${q11 != null ? q11.wahlenGKSchriftlich() : ''}">47</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;" th:text="${q12 != null ? q12.wahlenGK() : ''}">87</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" th:text="${q12 != null ? q12.wahlenGKSchriftlich() : ''}">47</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;" th:text="${q21 != null ? q21.wahlenGK() : ''}">87</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" th:text="${q21 != null ? q21.wahlenGKSchriftlich() : ''}">47</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" th:text="${q21 != null ? q21.wahlenZK() : ''}">40</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;" th:text="${q22 != null ? q22.wahlenGK() : ''}">87</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" th:text="${q22 != null ? q22.wahlenGKSchriftlich() : ''}">47</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" th:text="${q22 != null ? q22.wahlenZK() : ''}">40</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;" th:text="${q22 != null ? q22.wahlenLK() : ''}">42</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" th:text="${q22 != null ? q22.wahlenAB3() : ''}">87</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;" th:text="${q22 != null ? q22.wahlenAB4() : ''}">47</td>
 				</tr>
 			</tbody>
 		</table>

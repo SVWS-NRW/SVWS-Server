@@ -9,8 +9,8 @@
 		<title></title>
 	</head>
 
-	<body th:with="schuljahr = ${Schule.auswahlSchuljahresabschnitt().schuljahr()},
-				   abschnitt = ${Schule.auswahlSchuljahresabschnitt()},
+	<body th:with="abschnitt = ${Schule.auswahlSchuljahresabschnitt()},
+				   schuljahr = ${abschnitt != null ? abschnitt.schuljahr() : 0},
 				   mitPunktenStattNoten = ${VorlageParameter.get('mitPunktenStattNoten')},
 				   mitIndividuellerKursart = ${VorlageParameter.get('mitIndividuellerKursart')},
 				   mitGesamtfehlstunden = ${VorlageParameter.get('mitGesamtfehlstunden')},
@@ -32,7 +32,7 @@
 			<div th:each="schueler,itSchueler : ${klasse.schueler()}"
 			     th:class="${mitSeitenumbruch ? 'start-new-page' : ''}"
 			     th:with="lernabschnitt = ${schueler.auswahlLernabschnitt()},
-					      defizitpunktzahl = ${schueler.istSchuelerInSek2OderWB(lernabschnitt.schuljahresabschnitt()) ? '04' : '03'}">
+					      defizitpunktzahl = ${(lernabschnitt != null && schueler.istSchuelerInSek2OderWB(lernabschnitt.schuljahresabschnitt())) ? '04' : '03'}">
 
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
@@ -50,7 +50,7 @@
 						<th scope="row" class="ta-lb f-bold" style="font-size: 13pt;"
 							th:text="${itSchueler.count + '. ' + schueler.nachnameVorname()}">1. Mustermann, Max</th>
 						<th scope="row" class="ta-rb"
-							th:text="${'Klasse ' + klasse.kuerzel() + ' - Schuljahr ' + Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittLang()}">Klasse 10a - Schuljahr</th>
+							th:text="${'Klasse ' + klasse.kuerzel() + ' - Schuljahr ' + (abschnitt != null ? abschnitt.textSchuljahresabschnittLang() : '')}">Klasse 10a - Schuljahr</th>
 					</tr>
 					<tr><th scope="col" colspan="2" class="bo-t-grey" style="height: 2mm"></th></tr>
 				</thead>
@@ -88,9 +88,9 @@
 								+ ((lernabschnitt.foerderschwerpunkt2() != null) ? lernabschnitt.foerderschwerpunkt2().kuerzel : '')
 					        : ''}">Förderschwerpunkt
 					</td>
-					<td class="ta-rt f-tiny"
+					<td class="ta-rt f-tiny" th:with="schulbesuch = ${schueler.schulbesuch()}"
 					    th:text="${(mitUebergangsempfehlung)
-					        ? ('Übergangsempfehlung: ' + (schueler.schulbesuch().uebergangsempfehlungKuerzel().isEmpty() ? '---' : schueler.schulbesuch().uebergangsempfehlungKuerzel()))
+					        ? ('Übergangsempfehlung: ' + ((schulbesuch == null || schulbesuch.uebergangsempfehlungKuerzel().isEmpty()) ? '---' : schulbesuch.uebergangsempfehlungKuerzel()))
 					        : ''}">Übergangsempfehlung: R/GY
 					</td>
 				</tr>
@@ -176,7 +176,7 @@
 								<table class="fixed-100 mp-0">
 									<thead th:if="${false}"><tr><th scope="col">Col1</th><th scope="col">Col2</th><th scope="col">Col3</th><th scope="col">Col4</th><th scope="col">Col5</th><th scope="col">Col6</th></tr></thead>
 									<tr th:each="ak : ${leistung.ankreuzkompetenzen()}">
-										<td class="ta-lt" th:text="${ak.ankreuzkompetenz().floskelText()}">Kompetenz</td>
+										<td class="ta-lt" th:text="${ak.ankreuzkompetenz() != null ? ak.ankreuzkompetenz().floskelText() : ''}">Kompetenz</td>
 										<td class="ta-ct" style="width: 5mm; vertical-align: top;"><img th:src="${#convert.toCheckboxSVG(ak.stufe1(), 12)}" width="12" height="12" style="vertical-align: top;" alt="[]" /></td>
 										<td class="ta-ct" style="width: 5mm; vertical-align: top;"><img th:src="${#convert.toCheckboxSVG(ak.stufe2(), 12)}" width="12" height="12" style="vertical-align: top;" alt="[]" /></td>
 										<td class="ta-ct" style="width: 5mm; vertical-align: top;"><img th:src="${#convert.toCheckboxSVG(ak.stufe3(), 12)}" width="12" height="12" style="vertical-align: top;" alt="[]" /></td>
@@ -203,7 +203,7 @@
 								<table class="fixed-100 mp-0">
 									<thead th:if="${false}"><tr><th scope="col">Col1</th><th scope="col">Col2</th><th scope="col">Col3</th><th scope="col">Col4</th><th scope="col">Col5</th><th scope="col">Col6</th></tr></thead>
 									<tr th:each="ak : ${akListe}">
-										<td class="ta-lt" th:text="${ak.ankreuzkompetenz().floskelText()}">Kompetenz</td>
+										<td class="ta-lt" th:text="${ak.ankreuzkompetenz() != null ? ak.ankreuzkompetenz().floskelText() : ''}">Kompetenz</td>
 										<td class="ta-ct" style="width: 5mm; vertical-align: top;"><img th:src="${#convert.toCheckboxSVG(ak.stufe1(), 12)}" width="12" height="12" style="vertical-align: top;" alt="[]" /></td>
 										<td class="ta-ct" style="width: 5mm; vertical-align: top;"><img th:src="${#convert.toCheckboxSVG(ak.stufe2(), 12)}" width="12" height="12" style="vertical-align: top;" alt="[]" /></td>
 										<td class="ta-ct" style="width: 5mm; vertical-align: top;"><img th:src="${#convert.toCheckboxSVG(ak.stufe3(), 12)}" width="12" height="12" style="vertical-align: top;" alt="[]" /></td>
@@ -244,7 +244,7 @@
 							<table class="fixed-100 mp-0">
 								<thead th:if="${false}"><!-- Header nur für SonarCube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th><th scope="col">Col3</th><th scope="col">Col4</th><th scope="col">Col5</th><th scope="col">Col6</th></tr></thead>
 								<tr th:each="ak : ${lernabschnitt.ankreuzkompetenzenASV()}">
-									<td class="ta-lt" th:text="${ak.ankreuzkompetenz().floskelText()}">Kompetenz</td>
+									<td class="ta-lt" th:text="${ak.ankreuzkompetenz() != null ? ak.ankreuzkompetenz().floskelText() : ''}">Kompetenz</td>
 									<td class="ta-ct" style="width: 5mm; vertical-align: top;"><img th:src="${#convert.toCheckboxSVG(ak.stufe1(), 12)}" width="12" height="12" style="vertical-align: top;" alt="[]" /></td>
 									<td class="ta-ct" style="width: 5mm; vertical-align: top;"><img th:src="${#convert.toCheckboxSVG(ak.stufe2(), 12)}" width="12" height="12" style="vertical-align: top;" alt="[]" /></td>
 									<td class="ta-ct" style="width: 5mm; vertical-align: top;"><img th:src="${#convert.toCheckboxSVG(ak.stufe3(), 12)}" width="12" height="12" style="vertical-align: top;" alt="[]" /></td>

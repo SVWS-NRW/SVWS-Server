@@ -9,8 +9,8 @@
 		<title></title>
 	</head>
 
-	<body th:with="schuljahr = ${Schule.auswahlSchuljahresabschnitt().schuljahr()},
-				   abschnitt = ${Schule.auswahlSchuljahresabschnitt()},
+	<body th:with="abschnitt = ${Schule.auswahlSchuljahresabschnitt()},
+				   schuljahr = ${abschnitt != null ? abschnitt.schuljahr() : 0},
 				   mitQuartalsnote = ${VorlageParameter.get('mitQuartalsnote')},
 				   mitPunktenStattNoten = ${VorlageParameter.get('mitPunktenStattNoten')},
 				   mitIndividuellerKursart = ${VorlageParameter.get('mitIndividuellerKursart')},
@@ -55,7 +55,7 @@
 					<table class="fixed-100 mp-0">
 						<tr>
 							<th scope="row" class="ta-lb f-bold" style="font-size: 13pt;" th:text="${'Leistungsübersicht ' + klasse.kuerzel()}">Leistungsübersicht</th>
-							<th scope="row" class="ta-rb" th:text="${(mitQuartalsnote ? (Schule.auswahlSchuljahresabschnitt().abschnitt() == 1 ? '1' : '3' ) + '. Quartal - ' : '')  + 'Schuljahr ' + Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittLang()}">HJ</th>
+							<th scope="row" class="ta-rb" th:text="${(mitQuartalsnote ? ((abschnitt != null && abschnitt.abschnitt() == 1) ? '1' : '3' ) + '. Quartal - ' : '')  + 'Schuljahr ' + (abschnitt != null ? abschnitt.textSchuljahresabschnittLang() : '')}">HJ</th>
 						</tr>
 						<tr><td colspan="2" class="bo-t-grey" style="height: 2mm"></td></tr>
 					</table>
@@ -72,7 +72,7 @@
 			<tbody>
 			<th:block th:each="schueler, itSchueler : ${matrix.schueler()}"
 					  th:with="lernabschnitt = ${matrix.schuelerLernabschnitt(schueler)},
-							   defizitpunktzahl = ${schueler.istSchuelerInSek2OderWB(lernabschnitt.schuljahresabschnitt()) ? '04' : '03'}">
+							   defizitpunktzahl = ${(lernabschnitt != null && schueler.istSchuelerInSek2OderWB(lernabschnitt.schuljahresabschnitt())) ? '04' : '03'}">
 				<tr th:classappend="${itSchueler.even} ? 'bg-lightgrey'">
 					<!-- Nummer -->
 					<td class="ta-ct bo-t-grey p-tb-05 p-lr-1">
@@ -84,7 +84,7 @@
 						<span th:if="${mitFoerderschwerpunkt && lernabschnitt != null && (lernabschnitt.foerderschwerpunkt1() != null || lernabschnitt.foerderschwerpunkt2() != null)}" class="displayblock f-tiny" th:text="${'Förderschwerpunkt: ' + ((lernabschnitt.foerderschwerpunkt1() != null) ? lernabschnitt.foerderschwerpunkt1().kuerzel : '') + ((lernabschnitt.foerderschwerpunkt1() != null && lernabschnitt.foerderschwerpunkt2() != null) ? '/' : '' ) + ((lernabschnitt.foerderschwerpunkt2() != null) ? lernabschnitt.foerderschwerpunkt2().kuerzel : '')}">S</span>
 						<span th:if="${mitVersetzungAbschluss && lernabschnitt != null}" class="displayblock f-tiny" th:text="${!lernabschnitt.versetzungsvermerkKuerzel().isEmpty() ? 'Versetzung: ' + lernabschnitt.versetzungsvermerkKuerzel() : 'Versetzung: -----'}">Versetzung: V</span>
 						<span th:if="${mitVersetzungAbschluss && lernabschnitt != null}" class="displayblock f-tiny" th:text="${(lernabschnitt.istAbschlussPrognose() ? 'Progn.: ' : 'Abschl.: ') + (!lernabschnitt.abschluss().isEmpty() ? lernabschnitt.abschluss() : '-----')}">Abschl.: MSA</span>
-						<span th:if="${mitUebergangsempfehlung}" class="displayblock f-tiny" th:text="${('Übergangsempfehlung: ' + (schueler.schulbesuch().uebergangsempfehlungKuerzel().isEmpty() ? '---' : schueler.schulbesuch().uebergangsempfehlungKuerzel()))}">Übergangsempfehlung: R/GY</span>
+						<span th:if="${mitUebergangsempfehlung}" class="displayblock f-tiny" th:with="schulbesuch = ${schueler.schulbesuch()}" th:text="${('Übergangsempfehlung: ' + ((schulbesuch == null || schulbesuch.uebergangsempfehlungKuerzel().isEmpty()) ? '---' : schulbesuch.uebergangsempfehlungKuerzel()))}">Übergangsempfehlung: R/GY</span>
 					</td>
 
 					<!-- Fehlstunden und Wiederholung-->
@@ -160,14 +160,14 @@
 						<tr th:if="${leistung != null && leistung.textFachbezogeneLernentwicklung() != null && !leistung.textFachbezogeneLernentwicklung().isEmpty()}"
 							th:classappend="${itSchueler.even} ? 'bg-lightgrey'">
 							<td class="ta-lt p-tb-05 p-lr-1"></td>
-							<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-tiny f-bold" th:text="'Bem. zum Fach ' + ${leistung.fach().kuerzel()} + ':'">Bem. zum Fach</td>
+							<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-tiny f-bold" th:text="'Bem. zum Fach ' + ${leistung.fach() != null ? leistung.fach().kuerzel() : ''} + ':'">Bem. zum Fach</td>
 							<td th:colspan="${matrix.spaltenFaecher().size() + (mitGesamtfehlstunden ? 2 : 1)}" class="bo-t-grey p-tb-05 p-lr-1 f-tiny ta-lt" th:text="${leistung.textFachbezogeneLernentwicklung()}">Fachbezogene Bemerkung</td>
 						</tr>
 					</th:block>
 				</th:block>
 
 				<!-- LELS allgemein, in der Regel an Grundschulen -->
-				<tr th:if="${mitLernentwicklung && !lernabschnitt.zeugnisLELSText().isEmpty()}"
+				<tr th:if="${mitLernentwicklung && lernabschnitt != null && !lernabschnitt.zeugnisLELSText().isEmpty()}"
 					th:classappend="${itSchueler.even} ? 'bg-lightgrey'">
 					<td class="ta-lt p-tb-05 p-lr-1"></td>
 					<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-tiny f-bold">Lernentwicklung:</td>
@@ -175,7 +175,7 @@
 				</tr>
 
 				<!-- Förderschwerpunkt -->
-				<tr th:if="${mitFoerderschwerpunkt && !lernabschnitt.foerderschwerpunktText().isEmpty()}"
+				<tr th:if="${mitFoerderschwerpunkt && lernabschnitt != null && !lernabschnitt.foerderschwerpunktText().isEmpty()}"
 					th:classappend="${itSchueler.even} ? 'bg-lightgrey'">
 					<td class="ta-lt p-tb-05 p-lr-1"></td>
 					<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-tiny f-bold">Bem. Förderschwerpunkt:</td>
@@ -184,7 +184,7 @@
 
 				<!-- Bemerkungen Zeilen: Nur anzeigen wenn Inhalt vorhanden ist -->
 				<!-- ASV -->
-				<tr th:if="${mitASVBemerkung && !lernabschnitt.zeugnisASVText().isEmpty()}"
+				<tr th:if="${mitASVBemerkung && lernabschnitt != null && !lernabschnitt.zeugnisASVText().isEmpty()}"
 					th:classappend="${itSchueler.even} ? 'bg-lightgrey'">
 					<td class="ta-lt p-tb-05 p-lr-1"></td>
 					<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-tiny f-bold">Arbeits- und Sozialverh.:</td>
@@ -192,7 +192,7 @@
 				</tr>
 
 				<!-- AUE -->
-				<tr th:if="${mitAUEBemerkung && !lernabschnitt.zeugnisAUEText().isEmpty()}"
+				<tr th:if="${mitAUEBemerkung && lernabschnitt != null && !lernabschnitt.zeugnisAUEText().isEmpty()}"
 					th:classappend="${itSchueler.even} ? 'bg-lightgrey'">
 					<td class="ta-lt p-tb-05 p-lr-1"></td>
 					<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-tiny f-bold">Außerunt. Engagement:</td>
@@ -200,7 +200,7 @@
 				</tr>
 
 				<!-- Zeugnisbemerkung -->
-				<tr th:if="${mitZeugnisbemerkung && !lernabschnitt.zeugnisBemerkungText().isEmpty()}"
+				<tr th:if="${mitZeugnisbemerkung && lernabschnitt != null && !lernabschnitt.zeugnisBemerkungText().isEmpty()}"
 					th:classappend="${itSchueler.even} ? 'bg-lightgrey'">
 					<td class="ta-lt p-tb-05 p-lr-1"></td>
 					<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-tiny f-bold">Zeugnisbemerkungen:</td>
@@ -208,7 +208,7 @@
 				</tr>
 
 				<!-- Versetzungsentscheidung -->
-				<tr th:if="${mitVersetzungsentscheidung && !lernabschnitt.versetzungsentscheidungText().isEmpty()}"
+				<tr th:if="${mitVersetzungsentscheidung && lernabschnitt != null && !lernabschnitt.versetzungsentscheidungText().isEmpty()}"
 					th:classappend="${itSchueler.even} ? 'bg-lightgrey'">
 					<td class="ta-lt p-tb-05 p-lr-1"></td>
 					<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-tiny f-bold">Versetzungsentscheidung:</td>
@@ -216,7 +216,7 @@
 				</tr>
 
 				<!-- Schulformempfehlung -->
-				<tr th:if="${mitUebergangsempfehlung && !lernabschnitt.uebergangsempfehlungText().isEmpty()}"
+				<tr th:if="${mitUebergangsempfehlung && lernabschnitt != null && !lernabschnitt.uebergangsempfehlungText().isEmpty()}"
 					th:classappend="${itSchueler.even} ? 'bg-lightgrey'">
 					<td class="ta-lt p-tb-05 p-lr-1"></td>
 					<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-tiny f-bold">Übergangsempfehlung:</td>

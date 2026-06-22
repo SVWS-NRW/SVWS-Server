@@ -14,7 +14,7 @@
 			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
 			<th:block th:replace="~{fragments/reportPageHeaderFooter :: pageHeaderFooter(
 				headerRight='Kurs: ' + ${kurs.kuerzel()} +
-					'<br/>Kursleitung: ' + ${(kurs.kursleitung() != '') ? kurs.kursleitung().kuerzel() : '---'})}">
+					'<br/>Kursleitung: ' + ${(kurs.kursleitung() != null) ? kurs.kursleitung().kuerzel() : '---'})}">
 			</th:block>
 			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
 
@@ -74,18 +74,19 @@
 				</thead>
 				<tbody>
 					<tr th:each="schueler,iterationVarSchueler : ${kurs.schueler()}"
-						th:with="leistungsdaten = ${schueler.aktiverLernabschnittInSchuljahresabschnitt(kurs.schuljahresabschnitt()).leistungsdatenZurIdKurs(kurs.id())},
-								 bemerkung = ${leistungsdaten.textFachbezogeneLernentwicklung()}"
+						th:with="lernabschnitt = ${kurs.schuljahresabschnitt() != null ? schueler.aktiverLernabschnittInSchuljahresabschnitt(kurs.schuljahresabschnitt()) : null},
+								 leistungsdaten = ${lernabschnitt != null ? lernabschnitt.leistungsdatenZurIdKurs(kurs.id()) : null},
+								 bemerkung = ${leistungsdaten != null ? leistungsdaten.textFachbezogeneLernentwicklung() : ''}"
 						th:classappend="${iterationVarSchueler.odd} ? 'bg-lightgrey'">
 						<td class="f-small ta-r bo-t-grey p-tb-0 p-lr-1" th:text="${iterationVarSchueler.count + '. '}">1.</td>
 						<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${schueler.nachnameVorname()}">Mustermann, Max</td>
 						<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${(schueler.auswahlLernabschnitt() != null && schueler.auswahlLernabschnitt().klasse() != null) ? schueler.auswahlLernabschnitt().klasse().kuerzel() : ''}">10a</td>
-						<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${leistungsdaten.kursart()}">GKM</td>
-						<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${VorlageParameter.get('mitPunktenStattNoten') ? leistungsdaten.noteQuartalPunkte() : leistungsdaten.noteQuartalKuerzel()}">3+</td>
-						<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${VorlageParameter.get('mitPunktenStattNoten') ? leistungsdaten.notePunkte() : leistungsdaten.noteKuerzel()}">2-</td>
-						<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${leistungsdaten.istGemahnt()} ? 'ja' : ''">ja</td>
-						<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${leistungsdaten.fehlstundenGesamt()}">25</td>
-						<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${leistungsdaten.fehlstundenUnentschuldigt()}">5</td>
+						<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${leistungsdaten != null ? leistungsdaten.kursart() : ''}">GKM</td>
+						<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${leistungsdaten == null ? '' : (VorlageParameter.get('mitPunktenStattNoten') ? leistungsdaten.noteQuartalPunkte() : leistungsdaten.noteQuartalKuerzel())}">3+</td>
+						<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${leistungsdaten == null ? '' : (VorlageParameter.get('mitPunktenStattNoten') ? leistungsdaten.notePunkte() : leistungsdaten.noteKuerzel())}">2-</td>
+						<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${(leistungsdaten != null && leistungsdaten.istGemahnt()) ? 'ja' : ''}">ja</td>
+						<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${leistungsdaten != null ? leistungsdaten.fehlstundenGesamt() : ''}">25</td>
+						<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${leistungsdaten != null ? leistungsdaten.fehlstundenUnentschuldigt() : ''}">5</td>
 						<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${#strings.isEmpty(bemerkung) ? '' : 'ja'}">ja</td>
 					</tr>
 				</tbody>
@@ -121,8 +122,9 @@
 					</thead>
 					<tbody>
 						<th:block th:each="schueler,iterationVarSchueler : ${kurs.schueler()}"
-								  th:with="leistungsdaten = ${schueler.aktiverLernabschnittInSchuljahresabschnitt(kurs.schuljahresabschnitt()).leistungsdatenZurIdKurs(kurs.id())},
-										   bemerkung = ${leistungsdaten.textFachbezogeneLernentwicklung()}">
+								  th:with="lernabschnitt = ${kurs.schuljahresabschnitt() != null ? schueler.aktiverLernabschnittInSchuljahresabschnitt(kurs.schuljahresabschnitt()) : null},
+										   leistungsdaten = ${lernabschnitt != null ? lernabschnitt.leistungsdatenZurIdKurs(kurs.id()) : null},
+										   bemerkung = ${leistungsdaten != null ? leistungsdaten.textFachbezogeneLernentwicklung() : ''}">
 							<tr th:if="${!#strings.isEmpty(bemerkung)}" th:classappend="${iterationVarSchueler.odd} ? 'bg-lightgrey'">
 								<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${iterationVarSchueler.count + '. '}">1.</td>
 								<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${schueler.nachnameVorname()}">Mustermann, Max</td>

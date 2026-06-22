@@ -8,20 +8,20 @@
 		<title></title>
 	</head>
 
-	<body th:with="KursplanungSchueler = ${GostBlockungsergebnis.schueler()}">
+	<body th:with="KursplanungSchueler = ${GostBlockungsergebnis.schueler()}, ergebnisHalbjahr = ${GostBlockungsergebnis.gostHalbjahr()}">
 		<div style="page-break-inside: avoid;" th:each="schueler,iterationVarSchueler : ${KursplanungSchueler}">
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
 			<th:block th:replace="~{fragments/reportPageHeaderFooter :: pageHeaderFooter(
 				headerRight='Kursbelegungen' +
-					'<br/>Abitur ' + ${GostBlockungsergebnis.abiturjahr()} + ' - ' + ${GostBlockungsergebnis.gostHalbjahr().kuerzel},
+					'<br/>Abitur ' + ${GostBlockungsergebnis.abiturjahr()} + ' - ' + ${ergebnisHalbjahr != null ? ergebnisHalbjahr.kuerzel : ''},
 				footerCenter=${GostBlockungsergebnis.bezeichnung() + ' (Erg-ID ' + GostBlockungsergebnis.id() + ')'})}">
 			</th:block>
 			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
 
 			<table th:if="${iterationVarSchueler.count == iterationVarSchueler.first}" class="fixed-100 p-0">
 				<tr>
-					<th style="width: 100%; border-bottom: 1px grey solid; vertical-align: middle"><h3 th:text="${'Kursbelegungen - Abitur ' + GostBlockungsergebnis.abiturjahr() + ' - ' + GostBlockungsergebnis.gostHalbjahr()}">Kursbelegungen der Schülerinnen und Schüler - Abitur 2023 - Q1.2</h3></th>
+					<th style="width: 100%; border-bottom: 1px grey solid; vertical-align: middle"><h3 th:text="${'Kursbelegungen - Abitur ' + GostBlockungsergebnis.abiturjahr() + ' - ' + (ergebnisHalbjahr != null ? ergebnisHalbjahr : '')}">Kursbelegungen der Schülerinnen und Schüler - Abitur 2023 - Q1.2</h3></th>
 				</tr>
 			</table>
 			<!--Definiere pro Schüler eine Tabelle mit seinen Kursen. Um ein ruhigeres und lesbares Layout zu erhalten definiere zwei
@@ -49,9 +49,11 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td class="bo-grey" th:each="Kursbelegung : ${schueler.gostKursplanungKursbelegungen()}" th:style="${((Kursbelegung.kurs().fach().statistikfach().htmlFarbeRGB() == null || (Kursbelegung.kurs().fach().statistikfach().htmlFarbeRGB().isEmpty())) ? '' : ' background-color: ' + Kursbelegung.kurs().fach().statistikfach().htmlFarbeRGB() + ';')}">
-						<p class="m-t-0 f-bold" th:style="${'font-size: ' + schriftgroesse + ';'}" th:styleappend="${!Kursbelegung.hatGueltigeFachwahl()} ? 'color: red;'" th:text="${Kursbelegung.kurs().bezeichnung()}">M-GK2</p>
-						<p class="m-t-0" style="font-size: 6pt;" th:utext="${Kursbelegung.kurs().gostKursart().kuerzel + '-' + (Kursbelegung.istSchriftlich() ? 's' : 'm') + ((Kursbelegung.abiturfach() == null || Kursbelegung.abiturfach().isEmpty() || #strings.equalsIgnoreCase('E', GostBlockungsergebnis.gostHalbjahr().kuerzel.charAt(0))) ? '' : ' Abifach ' + Kursbelegung.abiturfach()) + '<br/>' + Kursbelegung.kurs().lehrkraefteAuflistung()}">GK-s Abifach 3<br/>ABC</p>
+					<td class="bo-grey" th:each="Kursbelegung : ${schueler.gostKursplanungKursbelegungen()}"
+						th:with="belKurs = ${Kursbelegung.kurs()}, belFach = ${belKurs != null ? belKurs.fach() : null}, belStatFach = ${belFach != null ? belFach.statistikfach() : null}, belKursart = ${belKurs != null ? belKurs.gostKursart() : null}, farbe = ${belStatFach != null ? belStatFach.htmlFarbeRGB() : null}"
+						th:style="${(farbe == null || farbe.isEmpty()) ? '' : ' background-color: ' + farbe + ';'}">
+						<p class="m-t-0 f-bold" th:style="${'font-size: ' + schriftgroesse + ';'}" th:styleappend="${!Kursbelegung.hatGueltigeFachwahl()} ? 'color: red;'" th:text="${belKurs != null ? belKurs.bezeichnung() : ''}">M-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;" th:utext="${(belKursart != null ? belKursart.kuerzel : '') + '-' + (Kursbelegung.istSchriftlich() ? 's' : 'm') + ((Kursbelegung.abiturfach() == null || Kursbelegung.abiturfach().isEmpty() || (ergebnisHalbjahr != null && #strings.equalsIgnoreCase('E', ergebnisHalbjahr.kuerzel.charAt(0)))) ? '' : ' Abifach ' + Kursbelegung.abiturfach()) + '<br/>' + (belKurs != null ? belKurs.lehrkraefteAuflistung() : '')}">GK-s Abifach 3<br/>ABC</p>
 					</td>
 				</tr>
 				<tr style="height: 3px;">

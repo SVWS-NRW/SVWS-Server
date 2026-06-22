@@ -8,8 +8,9 @@
 		<title></title>
 	</head>
 
-	<body th:with="KursplanungKurse = ${GostBlockungsergebnis.kurse()}">
-		<div class="reset-page-counter start-new-page" th:each="Kurs,iterationVarKurs : ${KursplanungKurse}">
+	<body th:with="KursplanungKurse = ${GostBlockungsergebnis.kurse()}, ergebnisHalbjahr = ${GostBlockungsergebnis.gostHalbjahr()}">
+		<div class="reset-page-counter start-new-page" th:each="Kurs,iterationVarKurs : ${KursplanungKurse}"
+			 th:with="kursHalbjahr = ${Kurs.gostHalbjahr()}, kursKursart = ${Kurs.gostKursart()}">
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
 			<th:block th:replace="~{fragments/reportPageHeaderFooter :: pageHeaderFooter(
@@ -39,7 +40,7 @@
 				</colgroup>
 				<thead>
 					<tr>
-						<th colspan="15" class="bo-b-grey"><h2 th:text="'Kursplanung ' + ${Kurs.gostHalbjahr().kuerzel} + ' - Kursliste'">Kursplanung Q2.1 - Kursliste</h2></th>
+						<th colspan="15" class="bo-b-grey"><h2 th:text="'Kursplanung ' + ${kursHalbjahr != null ? kursHalbjahr.kuerzel : ''} + ' - Kursliste'">Kursplanung Q2.1 - Kursliste</h2></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -51,17 +52,17 @@
 						<td></td>
 						<td class="f-bold" th:text="${Kurs.lehrkraefteAuflistung()}">ABC</td>
 						<td></td>
-						<td class="f-bold" th:text="${Kurs.gostKursart().kuerzel}">GK</td>
+						<td class="f-bold" th:text="${kursKursart != null ? kursKursart.kuerzel : ''}">GK</td>
 						<td></td>
 						<td class="f-small ta-c" th:text="(${Kurs.anzahlExterne()} == 0) ? ${Kurs.anzahlSchueler()} : ${Kurs.anzahlSchueler()} + ' (Ex. ' + ${Kurs.anzahlExterne()} + ')'">23 (Ext. 08)</td>
 						<td></td>
 						<td class="f-small ta-c" th:text="${Kurs.anzahlSchuelerSchriftlich()}">12</td>
 						<td></td>
-						<td class="f-small ta-c" th:text="${#strings.equalsIgnoreCase('E', Kurs.gostHalbjahr().kuerzel.charAt(0)) ? '' : Kurs.anzahlAB12()}">0</td>
+						<td class="f-small ta-c" th:text="${(kursHalbjahr == null || #strings.equalsIgnoreCase('E', kursHalbjahr.kuerzel.charAt(0))) ? '' : Kurs.anzahlAB12()}">0</td>
 						<td></td>
-						<td class="f-small ta-c" th:utext="${#strings.equalsIgnoreCase('E', Kurs.gostHalbjahr().kuerzel.charAt(0)) ? '' : (Kurs.anzahlAB3() + (#strings.equalsIgnoreCase('1', Kurs.gostHalbjahr().kuerzel.charAt(1)) ? '<span style=\'font-size: 0.6em;\'> (Pl.)</span>'  : ''))}">5</td>
+						<td class="f-small ta-c" th:utext="${(kursHalbjahr == null || #strings.equalsIgnoreCase('E', kursHalbjahr.kuerzel.charAt(0))) ? '' : (Kurs.anzahlAB3() + (#strings.equalsIgnoreCase('1', kursHalbjahr.kuerzel.charAt(1)) ? '<span style=\'font-size: 0.6em;\'> (Pl.)</span>'  : ''))}">5</td>
 						<td></td>
-						<td class="f-small ta-c" th:utext="${#strings.equalsIgnoreCase('E', Kurs.gostHalbjahr().kuerzel.charAt(0)) ? '' : (Kurs.anzahlAB4() + (#strings.equalsIgnoreCase('1', Kurs.gostHalbjahr().kuerzel.charAt(1)) ? '<span style=\'font-size: 0.6em;\'> (Pl.)</span>'  : ''))}">3</td>
+						<td class="f-small ta-c" th:utext="${(kursHalbjahr == null || #strings.equalsIgnoreCase('E', kursHalbjahr.kuerzel.charAt(0))) ? '' : (Kurs.anzahlAB4() + (#strings.equalsIgnoreCase('1', kursHalbjahr.kuerzel.charAt(1)) ? '<span style=\'font-size: 0.6em;\'> (Pl.)</span>'  : ''))}">3</td>
 					</tr>
 					<tr>
 						<td class="cell-small-grey">Kursbezeichnung</td>
@@ -108,14 +109,15 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="Kursschueler,iterationVarSchueler : ${Kurs.schueler()}" th:classappend="${iterationVarSchueler.odd} ? 'bg-lightgrey'">
+					<tr th:each="Kursschueler,iterationVarSchueler : ${Kurs.schueler()}"
+						th:with="belegung = ${Kursschueler.getGostKursplanungKursbelegungById(Kurs.id())}" th:classappend="${iterationVarSchueler.odd} ? 'bg-lightgrey'">
 						<td class="bo-b-grey p-tb-0 p-lr-1 f-small c-grey" th:text="${#numbers.formatInteger(iterationVarSchueler.count,2)} + '.'">Nr.</td>
 						<td class="bo-b-grey p-tb-0 p-lr-1" th:text="${Kursschueler.nachname()} + ', ' + ${Kursschueler.vorname()}">Mustermann, Max</td>
 						<td th:if="(${Kurs.anzahlExterne()} != 0)" class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${Kursschueler.externeSchulNr()}">123456</td>
-						<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).hatGueltigeFachwahl() ? (Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).istSchriftlich() ? 's' : 'm') : 'ungültig'}">s</td>
-						<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:utext="${Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).hatGueltigeFachwahl() ? (#strings.equalsIgnoreCase('E', GostBlockungsergebnis.gostHalbjahr().kuerzel.charAt(0)) ? '' : (Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).abiturfach() + (((#strings.equalsIgnoreCase('1', GostBlockungsergebnis.gostHalbjahr().kuerzel.charAt(1)) && Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).abiturfach() > 2) ? '<span style=\'font-size: 0.6em;\'> (Planung)</span>'  : '')))) : 'ungültig'}">3</td>
+						<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${(belegung != null && belegung.hatGueltigeFachwahl()) ? (belegung.istSchriftlich() ? 's' : 'm') : 'ungültig'}">s</td>
+						<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:utext="${(belegung != null && belegung.hatGueltigeFachwahl()) ? ((ergebnisHalbjahr != null && #strings.equalsIgnoreCase('E', ergebnisHalbjahr.kuerzel.charAt(0))) ? '' : (belegung.abiturfach() + (((ergebnisHalbjahr != null && #strings.equalsIgnoreCase('1', ergebnisHalbjahr.kuerzel.charAt(1)) && belegung.abiturfach() > 2) ? '<span style=\'font-size: 0.6em;\'> (Planung)</span>'  : '')))) : 'ungültig'}">3</td>
 						<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${#convert.toDateDE(Kursschueler.geburtsdatum())}">22.08.2008</td>
-						<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${Kursschueler.geschlecht().kuerzel}">w</td>
+						<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${Kursschueler.geschlecht() != null ? Kursschueler.geschlecht().kuerzel : ''}">w</td>
 					</tr>
 				</tbody>
 			</table>

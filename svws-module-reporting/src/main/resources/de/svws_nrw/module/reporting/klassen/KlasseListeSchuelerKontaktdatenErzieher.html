@@ -9,9 +9,9 @@
 		<title></title>
 	</head>
 
-	<body th:with="schuljahr = ${Schule.auswahlSchuljahresabschnitt().schuljahr()},
-	               ueberschrift = ${(VorlageParameter.get('ueberschrift') == null) ? '' : ('' + VorlageParameter.get('ueberschrift'))},
-	               bemerkung = ${(VorlageParameter.get('bemerkung') == null) ? '' : ('' + VorlageParameter.get('bemerkung'))},
+	<body th:with="schuljahr = ${(Schule.auswahlSchuljahresabschnitt() != null) ? Schule.auswahlSchuljahresabschnitt().schuljahr() : 0},
+	               ueberschrift = ${(VorlageParameter.get('ueberschrift') == null) ? '' : ('' + #strings.trim(VorlageParameter.get('ueberschrift')))},
+	               bemerkung = ${(VorlageParameter.get('bemerkung') == null) ? '' : ('' + #strings.trim(VorlageParameter.get('bemerkung')))},
 	               mitFoto = ${VorlageParameter.get('mitFoto')},
 	               mitSchuelerAlleVornamen = ${VorlageParameter.get('mitSchuelerAlleVornamen')},
 	               mitSchuelerGeschlecht = ${VorlageParameter.get('mitSchuelerGeschlecht')},
@@ -33,7 +33,7 @@
 	               fallNurAnschriftUndTelefonOderEmail = ${mitSchuelerAnschrift && !mitSpalteSchuelerTelefonKontakte && !mitSpalteErzieher && !(mitSchuelerTelefonPrivat && mitSchuelerEMail) && (mitSchuelerTelefonPrivat || mitSchuelerEMail)}">
 
 		<div class="reset-page-counter start-new-page" th:each="klasse,iterationVarKlasse : ${Klassen}"
-		     th:with="anzeigeUeberschrift = ${#strings.isEmpty(ueberschrift.trim()) ? ('Klassenliste ' + klasse.kuerzel()) : #strings.replace(ueberschrift, '<Kürzel>', klasse.kuerzel())},
+		     th:with="anzeigeUeberschrift = ${#strings.isEmpty(ueberschrift) ? ('Klassenliste ' + klasse.kuerzel()) : #strings.replace(ueberschrift, '<Kürzel>', klasse.kuerzel())},
 					  anzeigeUeberschriftFinal = ${#strings.length(anzeigeUeberschrift) > 45 ? #strings.substring(anzeigeUeberschrift, 0, 45) : anzeigeUeberschrift}">
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
@@ -68,7 +68,7 @@
 									<td class="ta-lt" style="width: 35%; font-size: 9pt;" th:text="${klasse.schueler().size() + ' Personen ' + klasse.statistikGeschlechter()}">22 Personen (12/10/0)</td>
 									<td class="ta-rt" style="width: 65%; font-size: 9pt;" th:text="${(klasse.jahrgang() != null) ? ('Jahrgangsstufe: ' + klasse.jahrgang().kuerzel()) : ''}">Jahrgangsstufe: EF}"></td>
 								</tr>
-								<tr th:if="${!#strings.isEmpty(bemerkung.trim())}">
+								<tr th:if="${!#strings.isEmpty(bemerkung)}">
 									<td colspan="2" class="ta-l" style="font-size: 9pt; font-weight: normal" th:text="${bemerkung}">Bemerkung</td>
 								</tr>
 								<tr>
