@@ -81,13 +81,19 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		if (auswahl === null) {
 			return null;
 		}
-		const [res, listSchuelerTelefoneintraege] = await Promise.all([
+
+		const resolveSchuelerTelefoneOrEmpty = api.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)
+			? api.server.getSchuelerTelefone(api.schema, auswahl.id)
+			: Promise.resolve(new ArrayList<SchuelerTelefon>());
+		const [stammdaten, schuelerTelefone] = await Promise.all([
 			api.server.getSchuelerStammdaten(api.schema, auswahl.id),
-			api.server.getSchuelerTelefone(api.schema, auswahl.id),
+			resolveSchuelerTelefoneOrEmpty,
 		]);
-		this.manager.schuelerstatus.auswahlAdd(SchuelerStatus.data().getWertByID(res.status));
-		state.listSchuelerTelefoneintraege = listSchuelerTelefoneintraege;
-		return res;
+
+		this.manager.schuelerstatus.auswahlAdd(SchuelerStatus.data().getWertByID(stammdaten.status));
+		state.listSchuelerTelefoneintraege = schuelerTelefone;
+
+		return stammdaten;
 	}
 
 	public async ladeDatenMultiple(auswahlList: List<SchuelerListeEintrag>, state: Partial<RouteStateSchueler>): Promise<List<SchuelerStammdaten> | null> {

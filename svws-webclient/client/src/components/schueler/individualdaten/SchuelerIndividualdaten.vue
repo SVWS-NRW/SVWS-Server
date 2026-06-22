@@ -213,7 +213,7 @@
 					type="date" removable statistics />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
-		<schueler-telefonnummern v-if="serverMode === ServerMode.DEV"
+		<schueler-telefonnummern v-if="serverMode === ServerMode.DEV && hatKompetenzAnsehen"
 			:readonly
 			:id-schueler="model.proxy.id"
 			:map-telefon-arten="props.mapTelefonArten"
