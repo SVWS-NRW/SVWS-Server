@@ -100,7 +100,7 @@ public class ReportingGostAbiturFachbelegung extends ReportingBaseType {
 		this.block2PunkteZwischenstand = block2PunkteZwischenstand;
 		this.fach = fach;
 		this.halbjahresbelegungen = halbjahresbelegungen;
-		this.letzteKursart = letzteKursart;
+		this.letzteKursart = ersetzeNullBlankTrim(letzteKursart);
 
 		if (halbjahresbelegungen == null) {
 			this.halbjahresbelegungen = new ReportingGostAbiturFachbelegungHalbjahr[6];
@@ -134,8 +134,11 @@ public class ReportingGostAbiturFachbelegung extends ReportingBaseType {
 	 * @return Die Fachbezeichnung des Faches, ggf. erweitert um den Zusatz "(LK/eA)".
 	 */
 	public String zeugnisFachbezeichnung(final boolean mitLKBezeichnung) {
+		if (this.fach == null) {
+			return "";
+		}
 		if (mitLKBezeichnung && (abiturFach != null) && (abiturFach <= 2)) {
-			return (fach.bezeichnungZeugnis() + " (LK/eA)");
+			return (this.fach.bezeichnungZeugnis() + " (LK/eA)");
 		} else {
 			return this.fach.bezeichnungZeugnis();
 		}
@@ -341,7 +344,7 @@ public class ReportingGostAbiturFachbelegung extends ReportingBaseType {
 	/**
 	 * Das Fach der gymnasialen Oberstufe, welches belegt wurde.
 	 *
-	 * @return Inhalt des Feldes fach
+	 * @return Inhalt des Feldes fach; kann {@code null} sein, wenn der Belegung kein Fach zugeordnet ist.
 	 */
 	public ReportingFach fach() {
 		return fach;
@@ -359,7 +362,7 @@ public class ReportingGostAbiturFachbelegung extends ReportingBaseType {
 	/**
 	 * Die letzte Kursart der gymnasialen Oberstufe (LK, GK, ZK, PJK, VTF), mit welcher das Fach belegt wurde
 	 *
-	 * @return Inhalt des Feldes letzteKursart
+	 * @return Inhalt des Feldes letzteKursart; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String letzteKursart() {
 		return letzteKursart;

@@ -108,7 +108,7 @@ public class ProxyReportingStundenplanungUnterrichtsrasterstunde extends Reporti
 	public List<ReportingStundenplanungUnterricht> unterrichteFach(final long idFach, final int wochentyp,
 			final boolean inklusiveWochentyp0) {
 		// Wenn noch Unterrichte zum Fach in dieser Zeitrasterstunde fehlen, lade sie aus dem Manager.
-		if (this.stundenplanManager != null) {
+		if ((this.stundenplanManager != null) && (this.wochentag != null)) {
 			final List<StundenplanUnterricht> managerUnterricht =
 					stundenplanManager.unterrichtGetMengeByFachIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(idFach, this.wochentag.id,
 							this.stundeImUnterrichtsraster, wochentyp, -2, inklusiveWochentyp0);
@@ -139,7 +139,7 @@ public class ProxyReportingStundenplanungUnterrichtsrasterstunde extends Reporti
 	public List<ReportingStundenplanungUnterricht> unterrichteKlasse(final long idKlasse, final int wochentyp,
 			final boolean inklusiveWochentyp0) {
 		// Wenn noch Unterrichte zur Klasse in dieser Zeitrasterstunde fehlen, lade sie aus dem Manager.
-		if (this.stundenplanManager != null) {
+		if ((this.stundenplanManager != null) && (this.wochentag != null)) {
 			final List<StundenplanUnterricht> managerUnterricht =
 					stundenplanManager.unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idKlasse, this.wochentag.id,
 							this.stundeImUnterrichtsraster, wochentyp, inklusiveWochentyp0);
@@ -187,7 +187,7 @@ public class ProxyReportingStundenplanungUnterrichtsrasterstunde extends Reporti
 	public List<ReportingStundenplanungUnterricht> unterrichteLehrkraefte(final List<Long> idsLehrer, final int wochentyp,
 			final boolean inklusiveWochentyp0) {
 		// Wenn noch Unterrichte zu den Lehrkräften in dieser Zeitrasterstunde fehlen, lade sie aus dem Manager.
-		if (this.stundenplanManager != null) {
+		if ((this.stundenplanManager != null) && (this.wochentag != null)) {
 			final List<ReportingStundenplanungUnterricht> result = new ArrayList<>();
 			for (final long idLehrer : idsLehrer) {
 				final List<StundenplanUnterricht> managerUnterricht =
@@ -221,7 +221,7 @@ public class ProxyReportingStundenplanungUnterrichtsrasterstunde extends Reporti
 	public List<ReportingStundenplanungUnterricht> unterrichteRaum(final long idRaum, final int wochentyp,
 			final boolean inklusiveWochentyp0) {
 		// Wenn noch Unterrichte zum Raum in dieser Zeitrasterstunde fehlen, lade sie aus dem Manager.
-		if (this.stundenplanManager != null) {
+		if ((this.stundenplanManager != null) && (this.wochentag != null)) {
 			final List<StundenplanUnterricht> managerUnterricht =
 					stundenplanManager.unterrichtGetMengeByRaumIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(idRaum, this.wochentag.id,
 							this.stundeImUnterrichtsraster, wochentyp, -2, inklusiveWochentyp0);
@@ -253,7 +253,7 @@ public class ProxyReportingStundenplanungUnterrichtsrasterstunde extends Reporti
 	public List<ReportingStundenplanungUnterricht> unterrichteSchueler(final long idSchueler, final int wochentyp,
 			final boolean inklusiveWochentyp0) {
 		// Wenn noch Unterrichte zum Schüler in dieser Zeitrasterstunde fehlen, lade sie aus dem Manager.
-		if (this.stundenplanManager != null) {
+		if ((this.stundenplanManager != null) && (this.wochentag != null)) {
 			final List<StundenplanUnterricht> managerUnterricht =
 					stundenplanManager.unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idSchueler, this.wochentag.id,
 							this.stundeImUnterrichtsraster, wochentyp, inklusiveWochentyp0);

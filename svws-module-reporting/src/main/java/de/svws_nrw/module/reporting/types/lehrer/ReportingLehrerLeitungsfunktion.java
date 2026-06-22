@@ -24,13 +24,13 @@ public class ReportingLehrerLeitungsfunktion extends ReportingBaseType {
 	 *
 	 * @param beginn             Das Datum, mit welchem die Leitungsfunktion übernommen wurde
 	 * @param bezeichnung        Die Bezeichnung der Leitungsfunktion, z. B. für Unterschriften.
-	 * @param ende               Das Datum, bis zu welchem die Leitungsfunktion übernommen wurde
+	 * @param ende               Das Datum, bis zu welchem die Leitungsfunktion übernommen wurde, oder {@code null}, wenn die Funktion aktuell ausgeübt wird.
 	 * @param idLeitungsfunktion Die ID der Leitungsfunktion des Lehrers. (1 - Schulleitung, 2 - Stv. Schulleitung)
 	 */
 	public ReportingLehrerLeitungsfunktion(final String beginn, final String bezeichnung, final String ende, final long idLeitungsfunktion) {
-		this.beginn = beginn;
-		this.bezeichnung = bezeichnung;
-		this.ende = ende;
+		this.beginn = ersetzeNullBlankTrim(beginn);
+		this.bezeichnung = ersetzeNullBlankTrim(bezeichnung);
+		this.ende = ersetzeNullBlankTrim(ende);
 		this.idLeitungsfunktion = idLeitungsfunktion;
 	}
 
@@ -72,7 +72,7 @@ public class ReportingLehrerLeitungsfunktion extends ReportingBaseType {
 	 * @return true, wenn die ID der Leitungsfunktion der Schulleitung (1) entspricht, sonst false
 	 */
 	public boolean istSchulleitungAktuell() {
-		return ((idLeitungsfunktion == 1) && (ende == null));
+		return ((idLeitungsfunktion == 1) && ende.isEmpty());
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class ReportingLehrerLeitungsfunktion extends ReportingBaseType {
 	 * @return true, wenn die ID der Leitungsfunktion der stellvertretenden Schulleitung (2) entspricht, sonst false
 	 */
 	public boolean istStvSchulleitungAktuell() {
-		return ((idLeitungsfunktion == 2) && (ende == null));
+		return ((idLeitungsfunktion == 2) && ende.isEmpty());
 	}
 
 
@@ -99,7 +99,7 @@ public class ReportingLehrerLeitungsfunktion extends ReportingBaseType {
 	/**
 	 * Gibt die Bezeichnung der Leitungsfunktion zurück.
 	 *
-	 * @return Die Bezeichnung der Leitungsfunktion, z. B. für Unterschriften
+	 * @return Die Bezeichnung der Leitungsfunktion, z. B. für Unterschriften; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String bezeichnung() {
 		return bezeichnung;
@@ -108,7 +108,7 @@ public class ReportingLehrerLeitungsfunktion extends ReportingBaseType {
 	/**
 	 * Gibt das Datum zurück, mit welchem die Leitungsfunktion übernommen wurde.
 	 *
-	 * @return Das Datum des Beginns der Leitungsfunktion
+	 * @return Das Datum des Beginns der Leitungsfunktion; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String beginn() {
 		return beginn;
@@ -117,7 +117,7 @@ public class ReportingLehrerLeitungsfunktion extends ReportingBaseType {
 	/**
 	 * Gibt das Datum zurück, bis zu welchem die Leitungsfunktion übernommen wurde.
 	 *
-	 * @return Das Datum des Endes der Leitungsfunktion
+	 * @return Das Datum des Endes der Leitungsfunktion; nie {@code null}, ein leerer String bedeutet, dass sie aktuell noch ausgeübt wird.
 	 */
 	public String ende() {
 		return ende;

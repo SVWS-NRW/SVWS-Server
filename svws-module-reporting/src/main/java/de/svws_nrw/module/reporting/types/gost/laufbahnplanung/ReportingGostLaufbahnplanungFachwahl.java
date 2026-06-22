@@ -66,18 +66,18 @@ public class ReportingGostLaufbahnplanungFachwahl extends ReportingBaseType {
 	public ReportingGostLaufbahnplanungFachwahl(final String abiturfach, final String belegungEF1, final String belegungEF2, final String belegungQ11,
 			final String belegungQ12, final String belegungQ21, final String belegungQ22, final ReportingFach fach, final Boolean fachIstBelegtInGOSt,
 			final Boolean fachIstFortfuehrbareFremdspracheInGOSt, final String jahrgangFremdsprachenbeginn, final String positionFremdsprachenfolge) {
-		this.abiturfach = abiturfach;
-		this.belegungEF1 = belegungEF1;
-		this.belegungEF2 = belegungEF2;
-		this.belegungQ11 = belegungQ11;
-		this.belegungQ12 = belegungQ12;
-		this.belegungQ21 = belegungQ21;
-		this.belegungQ22 = belegungQ22;
+		this.abiturfach = ersetzeNullBlankTrim(abiturfach);
+		this.belegungEF1 = ersetzeNullBlankTrim(belegungEF1);
+		this.belegungEF2 = ersetzeNullBlankTrim(belegungEF2);
+		this.belegungQ11 = ersetzeNullBlankTrim(belegungQ11);
+		this.belegungQ12 = ersetzeNullBlankTrim(belegungQ12);
+		this.belegungQ21 = ersetzeNullBlankTrim(belegungQ21);
+		this.belegungQ22 = ersetzeNullBlankTrim(belegungQ22);
 		this.fach = fach;
 		this.fachIstBelegtInGOSt = fachIstBelegtInGOSt;
 		this.fachIstFortfuehrbareFremdspracheInGOSt = fachIstFortfuehrbareFremdspracheInGOSt;
-		this.jahrgangFremdsprachenbeginn = jahrgangFremdsprachenbeginn;
-		this.positionFremdsprachenfolge = positionFremdsprachenfolge;
+		this.jahrgangFremdsprachenbeginn = ersetzeNullBlankTrim(jahrgangFremdsprachenbeginn);
+		this.positionFremdsprachenfolge = ersetzeNullBlankTrim(positionFremdsprachenfolge);
 	}
 
 
@@ -87,7 +87,7 @@ public class ReportingGostLaufbahnplanungFachwahl extends ReportingBaseType {
 	/**
 	 * Abiturfacheintrag, sofern das belegte Fach als Abiturfach gewählt wurde
 	 *
-	 * @return Inhalt des Feldes abiturfach
+	 * @return Inhalt des Feldes abiturfach; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String abiturfach() {
 		return abiturfach;
@@ -96,7 +96,7 @@ public class ReportingGostLaufbahnplanungFachwahl extends ReportingBaseType {
 	/**
 	 * Fachbelegung in der EF.1
 	 *
-	 * @return Inhalt des Feldes belegungEF1
+	 * @return Inhalt des Feldes belegungEF1; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String belegungEF1() {
 		return belegungEF1;
@@ -105,7 +105,7 @@ public class ReportingGostLaufbahnplanungFachwahl extends ReportingBaseType {
 	/**
 	 * Fachbelegung in der EF.2
 	 *
-	 * @return Inhalt des Feldes belegungEF2
+	 * @return Inhalt des Feldes belegungEF2; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String belegungEF2() {
 		return belegungEF2;
@@ -114,7 +114,7 @@ public class ReportingGostLaufbahnplanungFachwahl extends ReportingBaseType {
 	/**
 	 * Fachbelegung in der Q1.1
 	 *
-	 * @return Inhalt des Feldes belegungQ11
+	 * @return Inhalt des Feldes belegungQ11; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String belegungQ11() {
 		return belegungQ11;
@@ -123,7 +123,7 @@ public class ReportingGostLaufbahnplanungFachwahl extends ReportingBaseType {
 	/**
 	 * Fachbelegung in der Q1.2
 	 *
-	 * @return Inhalt des Feldes belegungQ12
+	 * @return Inhalt des Feldes belegungQ12; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String belegungQ12() {
 		return belegungQ12;
@@ -132,7 +132,7 @@ public class ReportingGostLaufbahnplanungFachwahl extends ReportingBaseType {
 	/**
 	 * Fachbelegung in der Q2.1
 	 *
-	 * @return Inhalt des Feldes belegungQ21
+	 * @return Inhalt des Feldes belegungQ21; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String belegungQ21() {
 		return belegungQ21;
@@ -141,7 +141,7 @@ public class ReportingGostLaufbahnplanungFachwahl extends ReportingBaseType {
 	/**
 	 * Fachbelegung in der Q2.2
 	 *
-	 * @return Inhalt des Feldes belegungQ22
+	 * @return Inhalt des Feldes belegungQ22; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String belegungQ22() {
 		return belegungQ22;
@@ -150,7 +150,7 @@ public class ReportingGostLaufbahnplanungFachwahl extends ReportingBaseType {
 	/**
 	 * Das Fach der Fachwahl
 	 *
-	 * @return Inhalt des Feldes fach
+	 * @return Inhalt des Feldes fach; kann {@code null} sein, wenn kein Fach zugeordnet ist.
 	 */
 	public ReportingFach fach() {
 		return fach;
@@ -177,7 +177,7 @@ public class ReportingGostLaufbahnplanungFachwahl extends ReportingBaseType {
 	/**
 	 * Fach ist eine Fremdsprache: Jahrgangsstufe des Beginns der Sprachbelegung
 	 *
-	 * @return Inhalt des Feldes jahrgangFremdsprachenbeginn
+	 * @return Inhalt des Feldes jahrgangFremdsprachenbeginn; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String jahrgangFremdsprachenbeginn() {
 		return jahrgangFremdsprachenbeginn;
@@ -186,7 +186,7 @@ public class ReportingGostLaufbahnplanungFachwahl extends ReportingBaseType {
 	/**
 	 * Fach ist eine Fremdsprache: Position in der Fremdsprachenfolge bzw. Prüfungsvermerk
 	 *
-	 * @return Inhalt des Feldes positionFremdsprachenfolge
+	 * @return Inhalt des Feldes positionFremdsprachenfolge; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String positionFremdsprachenfolge() {
 		return positionFremdsprachenfolge;

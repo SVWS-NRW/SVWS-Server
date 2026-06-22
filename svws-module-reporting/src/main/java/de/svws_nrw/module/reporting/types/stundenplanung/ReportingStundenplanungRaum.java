@@ -39,12 +39,12 @@ public class ReportingStundenplanungRaum extends ReportingBaseType {
 	 */
 	public ReportingStundenplanungRaum(final String beschreibung, final long id, final Long idRaumKatalog, final Long idStundenplan, final int kapazitaet,
 			final String kuerzel) {
-		this.beschreibung = beschreibung;
+		this.beschreibung = ersetzeNullBlankTrim(beschreibung);
 		this.id = id;
 		this.idRaumKatalog = idRaumKatalog;
 		this.idStundenplan = idStundenplan;
 		this.kapazitaet = kapazitaet;
-		this.kuerzel = kuerzel;
+		this.kuerzel = ersetzeNullBlankTrim(kuerzel);
 	}
 
 
@@ -82,7 +82,7 @@ public class ReportingStundenplanungRaum extends ReportingBaseType {
 	/**
 	 * Die Beschreibung des Raumes.
 	 *
-	 * @return Inhalt des Feldes beschreibung
+	 * @return Inhalt des Feldes beschreibung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String beschreibung() {
 		return beschreibung;
@@ -100,18 +100,18 @@ public class ReportingStundenplanungRaum extends ReportingBaseType {
 	/**
 	 * Optional: Die ID des Raumes im Katalog der Räume der Schule.
 	 *
-	 * @return Inhalt des Feldes idRaumKatalog
+	 * @return Inhalt des Feldes idRaumKatalog; kann {@code null} sein, wenn keine Zuordnung besteht.
 	 */
-	public long idRaumKatalog() {
+	public Long idRaumKatalog() {
 		return idRaumKatalog;
 	}
 
 	/**
 	 * Optional: Die ID eines Stundenplans kann hier als ergänzende Information gespeichert werden.
 	 *
-	 * @return Inhalt des Feldes idStundenplan
+	 * @return Inhalt des Feldes idStundenplan; kann {@code null} sein, wenn keine Zuordnung besteht.
 	 */
-	public long idStundenplan() {
+	public Long idStundenplan() {
 		return idStundenplan;
 	}
 
@@ -127,7 +127,7 @@ public class ReportingStundenplanungRaum extends ReportingBaseType {
 	/**
 	 * Das Kürzel des Raumes.
 	 *
-	 * @return Inhalt des Feldes kuerzel
+	 * @return Inhalt des Feldes kuerzel; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String kuerzel() {
 		return kuerzel;

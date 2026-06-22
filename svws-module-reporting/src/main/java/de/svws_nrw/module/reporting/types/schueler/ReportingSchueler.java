@@ -248,23 +248,29 @@ public class ReportingSchueler extends ReportingPerson {
 				staatsangehoerigkeit, staatsangehoerigkeit2, strassenname, telefonPrivat, telefonPrivatMobil, "", "", titel, vorname, vornamen, wohnort,
 				wohnortsteil);
 		this.aktuellerLernabschnitt = aktuellerLernabschnitt;
-		this.anmeldedatum = anmeldedatum;
-		this.aufnahmedatum = aufnahmedatum;
+		this.anmeldedatum = ersetzeNullBlankTrim(anmeldedatum);
+		this.aufnahmedatum = ersetzeNullBlankTrim(aufnahmedatum);
 		this.auswahlLernabschnitt = auswahlLernabschnitt;
 		this.druckeKonfessionAufZeugnisse = druckeKonfessionAufZeugnisse;
 		this.erhaeltMeisterBAFOEG = erhaeltMeisterBAFOEG;
 		this.erhaeltSchuelerBAFOEG = erhaeltSchuelerBAFOEG;
-		this.erzieher = (erzieher != null) ? erzieher : new ArrayList<>();
-		this.erzieherArtGruppen = (erzieherArtGruppen != null) ? erzieherArtGruppen : new ArrayList<>();
-		this.externeSchulNr = externeSchulNr;
+		this.erzieher = (erzieher != null) ? new ArrayList<>(erzieher.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
+		this.erzieherArtGruppen = (erzieherArtGruppen != null) ? new ArrayList<>(erzieherArtGruppen.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
+		this.externeSchulNr = ersetzeNullBlankTrim(externeSchulNr);
 		this.fahrschuelerArtID = fahrschuelerArtID;
-		this.foto = foto;
+		this.foto = ersetzeNullBlankTrim(foto);
 		this.fotoHtmlSource = ReportingImageUtils.base64ImageToHtmlImageSource(this.foto, null, null);
-		this.geburtslandMutter = geburtslandMutter;
-		this.geburtslandVater = geburtslandVater;
+		this.geburtslandMutter = ersetzeNullBlankTrim(geburtslandMutter);
+		this.geburtslandVater = ersetzeNullBlankTrim(geburtslandVater);
 		this.gostAbitur = gostAbitur;
-		this.gostKlausurplanungSchuelerklausuren = gostKlausurplanungSchuelerklausuren;
-		this.gostKursplanungKursbelegungen = gostKursplanungKursbelegungen;
+		this.gostKlausurplanungSchuelerklausuren =
+				(gostKlausurplanungSchuelerklausuren != null)
+						? new ArrayList<>(gostKlausurplanungSchuelerklausuren.stream().filter(Objects::nonNull).toList())
+						: new ArrayList<>();
+		this.gostKursplanungKursbelegungen =
+				(gostKursplanungKursbelegungen != null)
+						? new ArrayList<>(gostKursplanungKursbelegungen.stream().filter(Objects::nonNull).toList())
+						: new ArrayList<>();
 		this.gostLaufbahnplanung = gostLaufbahnplanung;
 		this.haltestelleID = haltestelleID;
 		this.hatMasernimpfnachweis = hatMasernimpfnachweis;
@@ -275,14 +281,14 @@ public class ReportingSchueler extends ReportingPerson {
 		this.istSchulpflichtErfuellt = istSchulpflichtErfuellt;
 		this.istVolljaehrig = istVolljaehrig;
 		this.keineAuskunftAnDritte = keineAuskunftAnDritte;
-		this.religionabmeldung = religionabmeldung;
-		this.religionanmeldung = religionanmeldung;
+		this.religionabmeldung = ersetzeNullBlankTrim(religionabmeldung);
+		this.religionanmeldung = ersetzeNullBlankTrim(religionanmeldung);
 		this.religion = religion;
 		this.schulbesuch = schulbesuch;
-		this.sprachbelegungen = (sprachbelegungen != null) ? sprachbelegungen : new ArrayList<>();
+		this.sprachbelegungen = (sprachbelegungen != null) ? new ArrayList<>(sprachbelegungen.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
 		this.status = status;
-		this.telefonKontakte = (telefonKontakte != null) ? telefonKontakte : new ArrayList<>();
-		this.verkehrspracheFamilie = verkehrspracheFamilie;
+		this.telefonKontakte = (telefonKontakte != null) ? new ArrayList<>(telefonKontakte.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
+		this.verkehrspracheFamilie = ersetzeNullBlankTrim(verkehrspracheFamilie);
 		this.zuzugsjahr = zuzugsjahr;
 
 		if (lernabschnitte != null) {
@@ -369,7 +375,7 @@ public class ReportingSchueler extends ReportingPerson {
 	/**
 	 * Das Anmeldedatum des Schülers.
 	 *
-	 * @return Inhalt des Feldes anmeldedatum
+	 * @return Inhalt des Feldes anmeldedatum; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String anmeldedatum() {
 		return this.anmeldedatum;
@@ -378,7 +384,7 @@ public class ReportingSchueler extends ReportingPerson {
 	/**
 	 * Das Aufnahmedatum des Schülers.
 	 *
-	 * @return Inhalt des Feldes aufnahmedatum
+	 * @return Inhalt des Feldes aufnahmedatum; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String aufnahmedatum() {
 		return this.aufnahmedatum;
@@ -423,7 +429,7 @@ public class ReportingSchueler extends ReportingPerson {
 	/**
 	 * Die Liste der Erzieher des Schülers.
 	 *
-	 * @return Inhalt des Feldes erzieher
+	 * @return Inhalt des Feldes erzieher; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingErzieher> erzieher() {
 		return this.erzieher;
@@ -432,7 +438,7 @@ public class ReportingSchueler extends ReportingPerson {
 	/**
 	 * Die Liste der Erzieher gruppiert nach Erzieher-Art in Listen von Erziehern.
 	 *
-	 * @return Inhalt des Feldes erzieherArtGruppen
+	 * @return Inhalt des Feldes erzieherArtGruppen; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingErzieherArtGruppe> erzieherArtGruppen() {
 		return this.erzieherArtGruppen;
@@ -457,9 +463,9 @@ public class ReportingSchueler extends ReportingPerson {
 	}
 
 	/**
-	 * Die Schulnummer bei einem externen Schüler oder null, wenn der Schüler kein externer Schüler ist.
+	 * Die Schulnummer bei einem externen Schüler oder ein leerer String, wenn der Schüler kein externer Schüler ist.
 	 *
-	 * @return Inhalt des Feldes externeSchulNr
+	 * @return Inhalt des Feldes externeSchulNr; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String externeSchulNr() {
 		return this.externeSchulNr;
@@ -477,7 +483,7 @@ public class ReportingSchueler extends ReportingPerson {
 	/**
 	 * Das Foto (in Base64 kodiert) des Schülers.
 	 *
-	 * @return Inhalt des Feldes foto
+	 * @return Inhalt des Feldes foto; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String foto() {
 		return this.foto;
@@ -496,7 +502,7 @@ public class ReportingSchueler extends ReportingPerson {
 	/**
 	 * Das Geburtsland der Mutter des Schülers.
 	 *
-	 * @return Inhalt des Feldes geburtslandMutter
+	 * @return Inhalt des Feldes geburtslandMutter; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String geburtslandMutter() {
 		return this.geburtslandMutter;
@@ -505,7 +511,7 @@ public class ReportingSchueler extends ReportingPerson {
 	/**
 	 * Das Geburtsland des Vaters des Schülers.
 	 *
-	 * @return Inhalt des Feldes geburtslandVater
+	 * @return Inhalt des Feldes geburtslandVater; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String geburtslandVater() {
 		return this.geburtslandVater;
@@ -532,7 +538,7 @@ public class ReportingSchueler extends ReportingPerson {
 	/**
 	 * Die Klausuren des Schülers in einer GOSt-Klausurplanung. Sie werden beim Initialisieren eines Klausurplans initialisiert.
 	 *
-	 * @return Inhalt des Feldes gostKlausurplanungSchuelerklausuren
+	 * @return Inhalt des Feldes gostKlausurplanungSchuelerklausuren; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingGostKlausurplanungSchuelerklausur> gostKlausurplanungSchuelerklausuren() {
 		return this.gostKlausurplanungSchuelerklausuren;
@@ -546,13 +552,13 @@ public class ReportingSchueler extends ReportingPerson {
 	 */
 	@JsonIgnore
 	public ReportingSchuelerGostKursplanungKursbelegung getGostKursplanungKursbelegungById(final long idKurs) {
-		return gostKursplanungKursbelegungen().stream().filter(b -> b.kurs().id() == idKurs).findAny().orElse(null);
+		return gostKursplanungKursbelegungen().stream().filter(b -> (b.kurs() != null) && (b.kurs().id() == idKurs)).findAny().orElse(null);
 	}
 
 	/**
 	 * Die Kursbelegungen des Schülers in einer GOSt-Kursplanung. Sie werden beim Initialisieren eines Blockungsergebnisses initialisiert.
 	 *
-	 * @return Inhalt des Feldes gostKursplanungKursbelegungen
+	 * @return Inhalt des Feldes gostKursplanungKursbelegungen; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingSchuelerGostKursplanungKursbelegung> gostKursplanungKursbelegungen() {
 		return this.gostKursplanungKursbelegungen;
@@ -620,7 +626,8 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return true, wenn der Schüler in der Primarstufe ist, sonst false.
 	 */
 	public boolean istSchuelerInPrimarstufe(final ReportingSchuljahresabschnitt schuljahresabschnitt) {
-		return aktiverLernabschnittInSchuljahresabschnitt(schuljahresabschnitt).jahrgang().istJahrgangImBereichPrimarstufe();
+		final ReportingSchuelerLernabschnitt lernabschnitt = aktiverLernabschnittInSchuljahresabschnitt(schuljahresabschnitt);
+		return (lernabschnitt != null) && (lernabschnitt.jahrgang() != null) && lernabschnitt.jahrgang().istJahrgangImBereichPrimarstufe();
 	}
 
 	/**
@@ -633,7 +640,8 @@ public class ReportingSchueler extends ReportingPerson {
 	 *         ansonsten false.
 	 */
 	public boolean istSchuelerInSek1(final ReportingSchuljahresabschnitt schuljahresabschnitt) {
-		return aktiverLernabschnittInSchuljahresabschnitt(schuljahresabschnitt).jahrgang().istJahrgangImBereichSek1();
+		final ReportingSchuelerLernabschnitt lernabschnitt = aktiverLernabschnittInSchuljahresabschnitt(schuljahresabschnitt);
+		return (lernabschnitt != null) && (lernabschnitt.jahrgang() != null) && lernabschnitt.jahrgang().istJahrgangImBereichSek1();
 	}
 
 	/**
@@ -646,7 +654,9 @@ public class ReportingSchueler extends ReportingPerson {
 	 *         ansonsten false.
 	 */
 	public boolean istSchuelerInSek2OderWB(final ReportingSchuljahresabschnitt schuljahresabschnitt) {
-		return aktiverLernabschnittInSchuljahresabschnitt(schuljahresabschnitt).jahrgang().istJahrgangImBereichSek2OderWeiterbildung();
+		final ReportingSchuelerLernabschnitt lernabschnitt = aktiverLernabschnittInSchuljahresabschnitt(schuljahresabschnitt);
+		return (lernabschnitt != null) && (lernabschnitt.jahrgang() != null)
+				&& lernabschnitt.jahrgang().istJahrgangImBereichSek2OderWeiterbildung();
 	}
 
 	/**
@@ -716,7 +726,7 @@ public class ReportingSchueler extends ReportingPerson {
 	/**
 	 * Das Datum der Religionsabmeldung des Schülers.
 	 *
-	 * @return Inhalt des Feldes religionabmeldung
+	 * @return Inhalt des Feldes religionabmeldung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String religionabmeldung() {
 		return this.religionabmeldung;
@@ -725,7 +735,7 @@ public class ReportingSchueler extends ReportingPerson {
 	/**
 	 * Das Datum der Religionsanmeldung des Schülers.
 	 *
-	 * @return Inhalt des Feldes religionanmeldung
+	 * @return Inhalt des Feldes religionanmeldung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String religionanmeldung() {
 		return this.religionanmeldung;
@@ -762,7 +772,7 @@ public class ReportingSchueler extends ReportingPerson {
 	/**
 	 * Daten aller Sprachbelegungen.
 	 *
-	 * @return Inhalt des Feldes sprachbelegungen
+	 * @return Inhalt des Feldes sprachbelegungen; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingSchuelerSprachbelegung> sprachbelegungen() {
 		return this.sprachbelegungen;
@@ -859,7 +869,7 @@ public class ReportingSchueler extends ReportingPerson {
 	/**
 	 * Eine Liste der telefonischen Kontakte zum Schüler.
 	 *
-	 * @return Inhalt des Feldes telefonKontakte
+	 * @return Inhalt des Feldes telefonKontakte; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingSchuelerTelefonkontakt> telefonKontakte() {
 		return this.telefonKontakte;
@@ -868,7 +878,7 @@ public class ReportingSchueler extends ReportingPerson {
 	/**
 	 * Die Verkehrssprache der Familie des Schülers.
 	 *
-	 * @return Inhalt des Feldes verkehrspracheFamilie
+	 * @return Inhalt des Feldes verkehrspracheFamilie; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String verkehrspracheFamilie() {
 		return this.verkehrspracheFamilie;
@@ -912,7 +922,8 @@ public class ReportingSchueler extends ReportingPerson {
 		final List<ReportingSchuelerLernabschnitt> lernabschnitteNonNull = new ArrayList<>(lernabschnitte.stream().filter(Objects::nonNull).toList());
 		this.lernabschnitte.addAll(lernabschnitteNonNull);
 
-		lernabschnitteNonNull.forEach(la -> this.mapLernabschnitte.add(la.schuljahresabschnitt().id(), la.wechselNr(), la.id(), la));
+		lernabschnitteNonNull.stream().filter(la -> la.schuljahresabschnitt() != null)
+				.forEach(la -> this.mapLernabschnitte.add(la.schuljahresabschnitt().id(), la.wechselNr(), la.id(), la));
 	}
 
 }

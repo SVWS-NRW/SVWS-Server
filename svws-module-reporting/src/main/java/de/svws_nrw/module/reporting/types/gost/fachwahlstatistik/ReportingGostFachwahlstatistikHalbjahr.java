@@ -96,7 +96,7 @@ public class ReportingGostFachwahlstatistikHalbjahr extends ReportingBaseType {
 	/**
 	 * Das Fach, für welches die Statistikdaten der Fachwahlen ermittelt wurden.
 	 *
-	 * @return Inhalt des Feldes fach
+	 * @return Inhalt des Feldes fach; kann {@code null} sein, wenn kein Fach zugeordnet ist.
 	 */
 	public ReportingFach fach() {
 		return fach;
@@ -105,7 +105,7 @@ public class ReportingGostFachwahlstatistikHalbjahr extends ReportingBaseType {
 	/**
 	 * Gibt das Gost-Halbjahr zurück, dem diese Fachwahlstatistik zugeordnet ist.
 	 *
-	 * @return Das Gost-Halbjahr zur Fachwahlstatistik.
+	 * @return Das Gost-Halbjahr zur Fachwahlstatistik; kann {@code null} sein, wenn kein Halbjahr zugeordnet ist.
 	 */
 	public GostHalbjahr gostHalbjahr() {
 		return gostHalbjahr;

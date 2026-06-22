@@ -2,6 +2,7 @@ package de.svws_nrw.module.reporting.types.schule;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -82,11 +83,11 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 		this.idVorherigerAbschnitt = idVorherigerAbschnitt;
 		this.folgenderAbschnitt = folgenderAbschnitt;
 		this.vorherigerAbschnitt = vorherigerAbschnitt;
-		this.faecher = faecher;
-		this.jahrgaenge = jahrgaenge;
-		this.klassen = klassen;
-		this.kurse = kurse;
-		this.ankreuzkompetenzen = ankreuzkompetenzen;
+		this.faecher = (faecher != null) ? new HashMap<>(faecher) : new HashMap<>();
+		this.jahrgaenge = (jahrgaenge != null) ? new HashMap<>(jahrgaenge) : new HashMap<>();
+		this.klassen = (klassen != null) ? new HashMap<>(klassen) : new HashMap<>();
+		this.kurse = (kurse != null) ? new HashMap<>(kurse) : new HashMap<>();
+		this.ankreuzkompetenzen = (ankreuzkompetenzen != null) ? new HashMap<>(ankreuzkompetenzen) : new HashMap<>();
 	}
 
 
@@ -136,7 +137,7 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 		if (idsNonNull.isEmpty()) {
 			return result;
 		}
-		idsNonNull.forEach(idFach -> result.add(fach(idFach)));
+		idsNonNull.stream().map(this::fach).filter(Objects::nonNull).forEach(result::add);
 		return result;
 	}
 
@@ -167,7 +168,7 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 		if (idsNonNull.isEmpty()) {
 			return result;
 		}
-		idsNonNull.forEach(idJahrgang -> result.add(jahrgang(idJahrgang)));
+		idsNonNull.stream().map(this::jahrgang).filter(Objects::nonNull).forEach(result::add);
 		return result;
 	}
 
@@ -198,7 +199,7 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 		if (idsNonNull.isEmpty()) {
 			return result;
 		}
-		idsNonNull.forEach(idKlasse -> result.add(klasse(idKlasse)));
+		idsNonNull.stream().map(this::klasse).filter(Objects::nonNull).forEach(result::add);
 		return result;
 	}
 
@@ -229,14 +230,14 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 		if (idsNonNull.isEmpty()) {
 			return result;
 		}
-		idsNonNull.forEach(idKurs -> result.add(kurs(idKurs)));
+		idsNonNull.stream().map(this::kurs).filter(Objects::nonNull).forEach(result::add);
 		return result;
 	}
 
 	/**
 	 * Die Map der Ankreuzkompetenzen des Schuljahresabschnitts
 	 *
-	 * @return Inhalt des Feldes ankreuzkompetenzen
+	 * @return Inhalt des Feldes ankreuzkompetenzen; nie {@code null}, bei fehlender Zuordnung eine leere Map.
 	 */
 	public Map<Long, ReportingAnkreuzkompetenz> ankreuzkompetenzen() {
 		return ankreuzkompetenzen;
@@ -269,7 +270,7 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 		if (idsNonNull.isEmpty()) {
 			return result;
 		}
-		idsNonNull.forEach(idAnkreuzkompetenz -> result.add(ankreuzkompetenz(idAnkreuzkompetenz)));
+		idsNonNull.stream().map(this::ankreuzkompetenz).filter(Objects::nonNull).forEach(result::add);
 		return result;
 	}
 
@@ -391,7 +392,7 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 	/**
 	 * Die Map der Fächer des Schuljahresabschnitts
 	 *
-	 * @return Inhalt des Feldes faecher
+	 * @return Inhalt des Feldes faecher; nie {@code null}, bei fehlender Zuordnung eine leere Map.
 	 */
 	public Map<Long, ReportingFach> faecher() {
 		return faecher;
@@ -400,7 +401,7 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 	/**
 	 * Die Map der Jahrgänge des Schuljahresabschnitts
 	 *
-	 * @return Inhalt des Feldes jahrgaenge
+	 * @return Inhalt des Feldes jahrgaenge; nie {@code null}, bei fehlender Zuordnung eine leere Map.
 	 */
 	public Map<Long, ReportingJahrgang> jahrgaenge() {
 		return jahrgaenge;
@@ -409,7 +410,7 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 	/**
 	 * Die Map der Klassen des Schuljahresabschnitts
 	 *
-	 * @return Inhalt des Feldes klassen
+	 * @return Inhalt des Feldes klassen; nie {@code null}, bei fehlender Zuordnung eine leere Map.
 	 */
 	public Map<Long, ReportingKlasse> klassen() {
 		return klassen;
@@ -418,7 +419,7 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 	/**
 	 * Die Map der Kurse des Schuljahresabschnitts
 	 *
-	 * @return Inhalt des Feldes kurse
+	 * @return Inhalt des Feldes kurse; nie {@code null}, bei fehlender Zuordnung eine leere Map.
 	 */
 	public Map<Long, ReportingKurs> kurse() {
 		return kurse;

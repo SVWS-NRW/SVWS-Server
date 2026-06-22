@@ -92,13 +92,13 @@ public class ReportingKurs extends ReportingLerngruppe {
 			final List<ReportingJahrgang> jahrgaenge, final String kursartAllg, final List<Integer> schienen, final List<Long> idsSchueler,
 			final Integer schulnummer) {
 		super(id, schuljahresabschnitt, kuerzel, fach, kurslehrer, wochenstundenKurslehrer, schueler, wochenstunden, sortierung);
-		this.bezeichnungZeugnis = bezeichnungZeugnis;
+		this.bezeichnungZeugnis = ersetzeNullBlankTrim(bezeichnungZeugnis);
 		this.istEpochalunterricht = istEpochalunterricht;
 		this.istSichtbar = istSichtbar;
 		this.jahrgaenge = (jahrgaenge == null) ? new ArrayList<>()
 				: new ArrayList<>(jahrgaenge.stream().filter(Objects::nonNull).sorted(ReportingJahrgang.SORTIERUNG.comparatorStandard()).toList());
-		this.kursartAllg = kursartAllg;
-		this.schienen = schienen;
+		this.kursartAllg = ersetzeNullBlankTrim(kursartAllg);
+		this.schienen = (schienen != null) ? new ArrayList<>(schienen.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
 		this.idsSchueler = (idsSchueler != null) ? new ArrayList<>(idsSchueler.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
 		this.schulnummer = schulnummer;
 	}
@@ -248,7 +248,7 @@ public class ReportingKurs extends ReportingLerngruppe {
 	/**
 	 * Ggf. die Zeugnisbezeichnung des Kurses.
 	 *
-	 * @return Inhalt des Feldes bezeichnungZeugnis
+	 * @return Inhalt des Feldes bezeichnungZeugnis; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String bezeichnungZeugnis() {
 		return bezeichnungZeugnis;
@@ -275,7 +275,7 @@ public class ReportingKurs extends ReportingLerngruppe {
 	/**
 	 * Die allgemeine Kursart, welche zur Filterung der speziellen Kursarten verwendet wird.
 	 *
-	 * @return Inhalt des Feldes kursartAllg
+	 * @return Inhalt des Feldes kursartAllg; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String kursartAllg() {
 		return kursartAllg;
@@ -284,7 +284,7 @@ public class ReportingKurs extends ReportingLerngruppe {
 	/**
 	 * Die Nummern der Kurs-Schienen, in welchen sich der Kurs befindet - sofern eine Schiene zugeordnet wurde.
 	 *
-	 * @return Inhalt des Feldes schienen
+	 * @return Inhalt des Feldes schienen; nie {@code null}, bei fehlender Schienenzuordnung eine leere Liste.
 	 */
 	public List<Integer> schienen() {
 		return schienen;
@@ -293,7 +293,7 @@ public class ReportingKurs extends ReportingLerngruppe {
 	/**
 	 * Die Schüler des Kurses als Liste ihrer IDs.
 	 *
-	 * @return Inhalt des Feldes idsSchueler
+	 * @return Inhalt des Feldes idsSchueler; nie {@code null}, bei fehlenden Schülern eine leere Liste.
 	 */
 	public List<Long> idsSchueler() {
 		return idsSchueler;
@@ -302,7 +302,7 @@ public class ReportingKurs extends ReportingLerngruppe {
 	/**
 	 * Die Schulnummer des Kurses, falls der Kurs an einer anderen Schule stattfindet.
 	 *
-	 * @return Inhalt des Feldes schulnummer
+	 * @return Inhalt des Feldes schulnummer; {@code null}, falls der Kurs an der eigenen Schule stattfindet.
 	 */
 	public Integer schulnummer() {
 		return schulnummer;

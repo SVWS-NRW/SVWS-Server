@@ -68,13 +68,13 @@ public class ReportingAnkreuzkompetenz extends ReportingBaseType {
 		this.abschnitt = abschnitt;
 		this.fach = fach;
 		this.fachSortierung = fachSortierung;
-		this.floskelText = floskelText;
+		this.floskelText = ersetzeNullBlankTrim(floskelText);
 		this.id = id;
 		this.istAktiv = istAktiv;
 		this.istASV = istASV;
 		this.istSichtbar = istSichtbar;
-		this.jahrgaenge = (jahrgaenge != null) ? jahrgaenge : new HashMap<>();
-		this.schulgliederung = schulgliederung;
+		this.jahrgaenge = (jahrgaenge != null) ? new HashMap<>(jahrgaenge) : new HashMap<>();
+		this.schulgliederung = ersetzeNullBlankTrim(schulgliederung);
 		this.sortierung = sortierung;
 	}
 
@@ -140,7 +140,7 @@ public class ReportingAnkreuzkompetenz extends ReportingBaseType {
 	/**
 	 * Der Text der Ankreuzkompetenz.
 	 *
-	 * @return Inhalt des Feldes floskelText
+	 * @return Inhalt des Feldes floskelText; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String floskelText() {
 		return floskelText;
@@ -185,7 +185,7 @@ public class ReportingAnkreuzkompetenz extends ReportingBaseType {
 	/**
 	 * Die Map der Jahrgänge, denen die Ankreuzkompetenz zugeordnet ist (Schlüssel ist die ID des Jahrgangs).
 	 *
-	 * @return Inhalt des Feldes jahrgaenge
+	 * @return Inhalt des Feldes jahrgaenge; nie {@code null}, bei fehlender Zuordnung eine leere Map.
 	 */
 	public Map<Long, ReportingJahrgang> jahrgaenge() {
 		return jahrgaenge;
@@ -194,7 +194,7 @@ public class ReportingAnkreuzkompetenz extends ReportingBaseType {
 	/**
 	 * Die Schulgliederung, zu der die Ankreuzkompetenz gehört (nur relevant für Berufskolleg).
 	 *
-	 * @return Inhalt des Feldes schulgliederung
+	 * @return Inhalt des Feldes schulgliederung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String schulgliederung() {
 		return schulgliederung;

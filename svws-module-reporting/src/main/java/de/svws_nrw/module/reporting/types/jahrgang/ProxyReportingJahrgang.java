@@ -112,7 +112,7 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 	 */
 	@Override
 	public List<ReportingKlasse> klassen() {
-		if (super.klassen().isEmpty()) {
+		if (super.klassen().isEmpty() && (super.schuljahresabschnitt != null)) {
 			super.klassen =
 					super.schuljahresabschnitt.klassen().values().stream()
 							.filter(k -> k.idJahrgang() == super.id())

@@ -154,7 +154,8 @@ public class ReportingGostFachwahlstatistik extends ReportingBaseType {
 
 		final List<Integer> idsCheckedHalbjahre = idsGostHalbjahre.stream().filter(Objects::nonNull).distinct().toList();
 
-		return listGostFachwahlstatistikHalbjahre.stream().filter(fs -> idsCheckedHalbjahre.contains(fs.gostHalbjahr().id)).toList();
+		return listGostFachwahlstatistikHalbjahre.stream()
+				.filter(fs -> (fs.gostHalbjahr() != null) && idsCheckedHalbjahre.contains(fs.gostHalbjahr().id)).toList();
 	}
 
 	/**
@@ -192,11 +193,12 @@ public class ReportingGostFachwahlstatistik extends ReportingBaseType {
 		fachwahlstatistikHalbjahre.stream().filter(Objects::nonNull)
 				.filter(fs -> fs.abiturjahr == this.abiturjahr)
 				.filter(fs -> fs.fach() == this.fach)
+				.filter(fs -> fs.gostHalbjahr != null)
 				.toList()
 				.forEach(fs -> mapGostFachwahlstatistikHalbjahre.put(fs.gostHalbjahr.id, fs));
 
 		listGostFachwahlstatistikHalbjahre.addAll(mapGostFachwahlstatistikHalbjahre.values().stream()
-				.sorted(Comparator.comparing(fs -> fs.gostHalbjahr().id))
+				.sorted(Comparator.comparing(fs -> (fs.gostHalbjahr() == null) ? -1 : fs.gostHalbjahr().id))
 				.toList());
 	}
 

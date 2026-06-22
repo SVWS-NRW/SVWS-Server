@@ -62,10 +62,10 @@ public class ReportingSchulkatalogEintragNRW extends ReportingSchuleBasisdatenNR
 		super(bezeichnung, email, fax, hausnummer, ort, plz, schulnummer, strassenname, telefon, hausnummerZusatz);
 		this.id = id;
 		this.istSichtbar = istSichtbar;
-		this.kuerzel = kuerzel;
-		this.kurzbezeichnung = kurzbezeichnung;
+		this.kuerzel = ersetzeNullBlankTrim(kuerzel);
+		this.kurzbezeichnung = ersetzeNullBlankTrim(kurzbezeichnung);
 		this.schulform = schulform;
-		this.schulleiter = schulleiter;
+		this.schulleiter = ersetzeNullBlankTrim(schulleiter);
 		this.sortierung = sortierung;
 	}
 
@@ -93,7 +93,7 @@ public class ReportingSchulkatalogEintragNRW extends ReportingSchuleBasisdatenNR
 	/**
 	 * Gibt das Kürzel der Schule zurück.
 	 *
-	 * @return das Kürzel der Schule
+	 * @return das Kürzel der Schule; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String kuerzel() {
 		return this.kuerzel;
@@ -102,7 +102,7 @@ public class ReportingSchulkatalogEintragNRW extends ReportingSchuleBasisdatenNR
 	/**
 	 * Gibt die Kurzbezeichnung der Schule zurück.
 	 *
-	 * @return die Kurzbezeichnung der Schule
+	 * @return die Kurzbezeichnung der Schule; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String kurzbezeichnung() {
 		return this.kurzbezeichnung;
@@ -120,7 +120,7 @@ public class ReportingSchulkatalogEintragNRW extends ReportingSchuleBasisdatenNR
 	/**
 	 * Gibt den Namen des/der Schulleiters/Schulleiterin zurück.
 	 *
-	 * @return den Namen des/der Schulleiters/Schulleiterin
+	 * @return den Namen des/der Schulleiters/Schulleiterin; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String schulleiter() {
 		return this.schulleiter;

@@ -52,15 +52,15 @@ public class ReportingSchuelerSchulbesuchSchule extends ReportingBaseType {
 	public ReportingSchuelerSchulbesuchSchule(final String datumVon, final String datumBis, final String idAbschlussart, final Long idEntlassgrund,
 			final String idOrganisationsform, final String jahrgangVon, final String jahrgangBis, final ReportingSchulkatalogEintragNRW schule,
 			final String schulgliederung) {
-		this.datumVon = datumVon;
-		this.datumBis = datumBis;
-		this.idAbschlussart = idAbschlussart;
+		this.datumVon = ersetzeNullBlankTrim(datumVon);
+		this.datumBis = ersetzeNullBlankTrim(datumBis);
+		this.idAbschlussart = ersetzeNullBlankTrim(idAbschlussart);
 		this.idEntlassgrund = idEntlassgrund;
-		this.idOrganisationsform = idOrganisationsform;
-		this.jahrgangVon = jahrgangVon;
-		this.jahrgangBis = jahrgangBis;
+		this.idOrganisationsform = ersetzeNullBlankTrim(idOrganisationsform);
+		this.jahrgangVon = ersetzeNullBlankTrim(jahrgangVon);
+		this.jahrgangBis = ersetzeNullBlankTrim(jahrgangBis);
 		this.schule = schule;
-		this.schulgliederung = schulgliederung;
+		this.schulgliederung = ersetzeNullBlankTrim(schulgliederung);
 	}
 
 	// ##### Getter #####
@@ -68,7 +68,7 @@ public class ReportingSchuelerSchulbesuchSchule extends ReportingBaseType {
 	/**
 	 * Gibt die ID des Abschlusses zurück.
 	 *
-	 * @return Die ID des Abschlusses.
+	 * @return Die ID des Abschlusses; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String abschlussartID() {
 		return idAbschlussart;
@@ -77,7 +77,7 @@ public class ReportingSchuelerSchulbesuchSchule extends ReportingBaseType {
 	/**
 	 * Gibt das Datum zurück, ab dem die Schule besucht wurde.
 	 *
-	 * @return Das Datum, ab dem die Schule besucht wurde.
+	 * @return Das Datum, ab dem die Schule besucht wurde; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String datumVon() {
 		return datumVon;
@@ -86,7 +86,7 @@ public class ReportingSchuelerSchulbesuchSchule extends ReportingBaseType {
 	/**
 	 * Gibt das Datum zurück, bis wann die Schule besucht wurde.
 	 *
-	 * @return Das Datum, bis wann die Schule besucht wurde.
+	 * @return Das Datum, bis wann die Schule besucht wurde; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String datumBis() {
 		return datumBis;
@@ -104,7 +104,7 @@ public class ReportingSchuelerSchulbesuchSchule extends ReportingBaseType {
 	/**
 	 * Gibt die ID der Organisationsform der Schule zurück.
 	 *
-	 * @return Die ID der Organisationsform.
+	 * @return Die ID der Organisationsform; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String organisationsFormID() {
 		return idOrganisationsform;
@@ -113,7 +113,7 @@ public class ReportingSchuelerSchulbesuchSchule extends ReportingBaseType {
 	/**
 	 * Gibt den Jahrgang zurück, ab dem die Schule besucht wurde.
 	 *
-	 * @return Der Jahrgang, ab dem die Schule besucht wurde.
+	 * @return Der Jahrgang, ab dem die Schule besucht wurde; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String jahrgangVon() {
 		return jahrgangVon;
@@ -122,7 +122,7 @@ public class ReportingSchuelerSchulbesuchSchule extends ReportingBaseType {
 	/**
 	 * Gibt den Jahrgang zurück, bis wann die Schule besucht wurde.
 	 *
-	 * @return Der Jahrgang, bis wann die Schule besucht wurde.
+	 * @return Der Jahrgang, bis wann die Schule besucht wurde; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String jahrgangBis() {
 		return jahrgangBis;
@@ -140,7 +140,7 @@ public class ReportingSchuelerSchulbesuchSchule extends ReportingBaseType {
 	/**
 	 * Gibt den Schlüssel des Bildungsganges/Schulgliederung zurück.
 	 *
-	 * @return Der Schlüssel des Bildungsganges/Schulgliederung.
+	 * @return Der Schlüssel des Bildungsganges/Schulgliederung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String schulgliederung() {
 		return schulgliederung;

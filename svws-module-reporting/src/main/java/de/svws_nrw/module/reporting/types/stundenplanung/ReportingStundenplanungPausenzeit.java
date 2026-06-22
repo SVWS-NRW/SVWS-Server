@@ -4,6 +4,7 @@ package de.svws_nrw.module.reporting.types.stundenplanung;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.adt.map.ListMap4DLongKeys;
@@ -54,8 +55,10 @@ public class ReportingStundenplanungPausenzeit extends ReportingStundenplanungZe
 		super(beginn, ende, wochentag);
 		this.id = id;
 		this.stundenplan = stundenplan;
-		this.bezeichnung = bezeichnung;
-		this.klassen.addAll(klassen);
+		this.bezeichnung = ersetzeNullBlankTrim(bezeichnung);
+		if (klassen != null) {
+			this.klassen.addAll(klassen.stream().filter(Objects::nonNull).toList());
+		}
 		setPausenaufsichten(pausenaufsichten);
 	}
 
@@ -110,7 +113,8 @@ public class ReportingStundenplanungPausenzeit extends ReportingStundenplanungZe
 	 * @return Eine Zeichenkette mit den Klassen nach Jahrgängen und Parallelität.
 	 */
 	public String klassenAuflistungJahrgangParallelitaet() {
-		return this.klassen().stream().map(k -> k.jahrgang().kuerzel() + k.parallelitaet()).sorted().collect(Collectors.joining(","));
+		return this.klassen().stream().filter(k -> k.jahrgang() != null).map(k -> k.jahrgang().kuerzel() + k.parallelitaet()).sorted()
+				.collect(Collectors.joining(","));
 	}
 
 	/**
@@ -128,6 +132,7 @@ public class ReportingStundenplanungPausenzeit extends ReportingStundenplanungZe
 		}
 
 		return listKlassen.stream()
+				.filter(k -> k.jahrgang() != null)
 				.collect(Collectors.groupingBy(k -> k.jahrgang().kuerzel(), Collectors.mapping(ReportingKlasse::parallelitaet,
 						Collectors.joining()))) // Parallelitäten der Klassen einer Stufe verbinden.
 				.entrySet().stream()
@@ -151,7 +156,7 @@ public class ReportingStundenplanungPausenzeit extends ReportingStundenplanungZe
 	/**
 	 * Liefert den Stundenplan, zu dem diese Stunde aus dem Unterrichtsraster gehört.
 	 *
-	 * @return Der Stundenplan der Unterrichtsstunde.
+	 * @return Der Stundenplan der Unterrichtsstunde; kann {@code null} sein, wenn kein Stundenplan zugeordnet ist.
 	 */
 	public ReportingStundenplanungStundenplan stundenplan() {
 		return stundenplan;
@@ -282,8 +287,12 @@ public class ReportingStundenplanungPausenzeit extends ReportingStundenplanungZe
 	public void setPausenaufsichten(final List<ReportingStundenplanungPausenaufsicht> pausenaufsichten) {
 		this.pausenaufsichten.clear();
 		this.listMapPausenaufsichten = new ListMap4DLongKeys<>();
-		this.pausenaufsichten.addAll(pausenaufsichten);
-		this.pausenaufsichten.forEach(pa -> this.listMapPausenaufsichten.add(pa.id(), pa.lehrkraft().id(), pa.idAufsichtsbereich(), pa.wochentyp(), pa));
+		if (pausenaufsichten == null) {
+			return;
+		}
+		this.pausenaufsichten.addAll(pausenaufsichten.stream().filter(Objects::nonNull).toList());
+		this.pausenaufsichten.forEach(pa -> this.listMapPausenaufsichten.add(pa.id(), (pa.lehrkraft() != null) ? pa.lehrkraft().id() : -1, pa.idAufsichtsbereich(),
+				pa.wochentyp(), pa));
 	}
 
 }

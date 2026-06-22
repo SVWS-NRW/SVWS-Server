@@ -24,7 +24,7 @@ public class ReportingErzieherArt extends ReportingBaseType {
 	 * @param sortierung	Der Wert der Sortierung der Erzieher-Art.
 	 */
 	public ReportingErzieherArt(final String bezeichnung, final long id, final Integer sortierung) {
-		this.bezeichnung = bezeichnung;
+		this.bezeichnung = ersetzeNullBlankTrim(bezeichnung);
 		this.id = id;
 		this.sortierung = sortierung;
 	}
@@ -63,7 +63,7 @@ public class ReportingErzieherArt extends ReportingBaseType {
 	/**
 	 * Bezeichnung der Erzieher-Art
 	 *
-	 * @return Inhalt des Feldes bezeichnung
+	 * @return Inhalt des Feldes bezeichnung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String bezeichnung() {
 		return bezeichnung;

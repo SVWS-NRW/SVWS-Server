@@ -74,7 +74,7 @@ public class ProxyReportingGostKursplanungKurs extends ReportingGostKursplanungK
 	 */
 	@Override
 	public ReportingGostKursplanungFachwahlstatistik fachwahlstatistik() {
-		if (super.fachwahlstatistik() == null) {
+		if ((super.fachwahlstatistik() == null) && (this.fach() != null)) {
 			super.fachwahlstatistik = this.reportingGostKursplanungBlockungsergebnis.fachwahlstatistik().get(this.fach().id());
 		}
 		return super.fachwahlstatistik();
@@ -108,7 +108,7 @@ public class ProxyReportingGostKursplanungKurs extends ReportingGostKursplanungK
 					.stream()
 					.filter(s -> s.gostKursplanungKursbelegungen()
 							.stream()
-							.anyMatch(k -> k.kurs().id() == this.id()))
+							.anyMatch(k -> (k.kurs() != null) && (k.kurs().id() == this.id())))
 					.toList());
 		}
 		return super.schueler();

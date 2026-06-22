@@ -1,6 +1,8 @@
 package de.svws_nrw.module.reporting.types.gost.kursplanung;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.svws_nrw.module.reporting.filterung.ReportingFilterung;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
@@ -66,11 +68,13 @@ public class ReportingGostKursplanungSchiene extends ReportingBaseType {
 		this.anzahlExterne = anzahlExterne;
 		this.anzahlSchueler = anzahlSchueler;
 		this.hatKollisionen = hatKollisionen;
-		this.bezeichnung = bezeichnung;
+		this.bezeichnung = ersetzeNullBlankTrim(bezeichnung);
 		this.id = id;
-		this.idsKurseMitKollisionen = idsKurseMitKollisionen;
-		this.idsSchuelerMitKollisionen = idsSchuelerMitKollisionen;
-		this.kurse = kurse;
+		this.idsKurseMitKollisionen = (idsKurseMitKollisionen != null)
+				? new ArrayList<>(idsKurseMitKollisionen.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
+		this.idsSchuelerMitKollisionen = (idsSchuelerMitKollisionen != null)
+				? new ArrayList<>(idsSchuelerMitKollisionen.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
+		this.kurse = (kurse != null) ? new ArrayList<>(kurse.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
 		this.nummer = nummer;
 	}
 
@@ -108,7 +112,7 @@ public class ReportingGostKursplanungSchiene extends ReportingBaseType {
 	/**
 	 * Bezeichnung der Schiene
 	 *
-	 * @return Inhalt des Feldes bezeichnung
+	 * @return Inhalt des Feldes bezeichnung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String bezeichnung() {
 		return bezeichnung;
@@ -135,7 +139,7 @@ public class ReportingGostKursplanungSchiene extends ReportingBaseType {
 	/**
 	 * Eine Liste mit IDs von Kursen in der Schiene, die eine Kollision enthalten.
 	 *
-	 * @return Inhalt des Feldes idsKurseMitKollisionen
+	 * @return Inhalt des Feldes idsKurseMitKollisionen; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<Long> idsKurseMitKollisionen() {
 		return idsKurseMitKollisionen;
@@ -144,7 +148,7 @@ public class ReportingGostKursplanungSchiene extends ReportingBaseType {
 	/**
 	 * Eine Liste mit IDs von Schülern in der Schiene, die eine Kollision enthalten.
 	 *
-	 * @return Inhalt des Feldes idsSchuelerMitKollisionen
+	 * @return Inhalt des Feldes idsSchuelerMitKollisionen; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<Long> idsSchuelerMitKollisionen() {
 		return idsSchuelerMitKollisionen;
@@ -153,7 +157,7 @@ public class ReportingGostKursplanungSchiene extends ReportingBaseType {
 	/**
 	 * Eine Liste vom Typ Kurse, die alle Kurse der Schiene und deren Daten enthält.
 	 *
-	 * @return Inhalt des Feldes kurse
+	 * @return Inhalt des Feldes kurse; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingGostKursplanungKurs> kurse() {
 		return kurse;

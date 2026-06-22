@@ -100,14 +100,14 @@ public class ReportingBenutzer extends ReportingPerson {
 		super(anrede, emailPrivat, emailSchule, faxSchule, geburtsdatum, geburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz,
 				nachname, staatsangehoerigkeit, staatsangehoerigkeit2, strassenname, telefonPrivat, telefonPrivatMobil, telefonSchule,
 				telefonSchuleMobil, titel, vorname, vornamen, wohnort, wohnortsteil);
-		this.anzeigename = anzeigename;
-		this.benutzername = benutzername;
-		this.emailAnzeigename = emailAnzeigename;
+		this.anzeigename = ersetzeNullBlankTrim(anzeigename);
+		this.benutzername = ersetzeNullBlankTrim(benutzername);
+		this.emailAnzeigename = ersetzeNullBlankTrim(emailAnzeigename);
 		this.emailJobManager = emailJobManager;
-		this.emailSignatur = emailSignatur;
-		this.emailSmtpAdresse = emailSmtpAdresse;
-		this.emailSmtpBenutzername = emailSmtpBenutzername;
-		this.emailSmtpPasswort = emailSmtpPasswort;
+		this.emailSignatur = ersetzeNullBlankTrim(emailSignatur);
+		this.emailSmtpAdresse = ersetzeNullBlankTrim(emailSmtpAdresse);
+		this.emailSmtpBenutzername = ersetzeNullBlankTrim(emailSmtpBenutzername);
+		this.emailSmtpPasswort = ersetzeNullBlankTrim(emailSmtpPasswort);
 		this.id = id;
 		this.istAdmin = istAdmin;
 		this.lehrer = lehrer;
@@ -161,7 +161,7 @@ public class ReportingBenutzer extends ReportingPerson {
 	/**
 	 * Der Anzeigename (displayname) des Benutzers.
 	 *
-	 * @return Inhalt des Feldes anzeigename
+	 * @return Inhalt des Feldes anzeigename; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String anzeigename() {
 		return anzeigename;
@@ -170,7 +170,7 @@ public class ReportingBenutzer extends ReportingPerson {
 	/**
 	 * Der Benutzername (username) des Benutzers.
 	 *
-	 * @return Inhalt des Feldes benutzername
+	 * @return Inhalt des Feldes benutzername; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String benutzername() {
 		return benutzername;
@@ -179,7 +179,7 @@ public class ReportingBenutzer extends ReportingPerson {
 	/**
 	 * Der Anzeigename des Benutzers beim Versand von E-Mails.
 	 *
-	 * @return Inhalt des Feldes emailAnzeigename
+	 * @return Inhalt des Feldes emailAnzeigename; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String emailAnzeigename() {
 		return emailAnzeigename;
@@ -198,7 +198,7 @@ public class ReportingBenutzer extends ReportingPerson {
 	/**
 	 * Die Signatur des Benutzers beim E-Mail-Versand.
 	 *
-	 * @return Inhalt des Feldes emailSignatur
+	 * @return Inhalt des Feldes emailSignatur; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String emailSignatur() {
 		return emailSignatur;
@@ -207,7 +207,7 @@ public class ReportingBenutzer extends ReportingPerson {
 	/**
 	 * Die E-Mail-Adresse des Benutzers, die für den Versand per SMTP genutzt wird.
 	 *
-	 * @return Inhalt des Feldes emailSmtpAdresse
+	 * @return Inhalt des Feldes emailSmtpAdresse; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String emailSmtpAdresse() {
 		return emailSmtpAdresse;
@@ -216,7 +216,7 @@ public class ReportingBenutzer extends ReportingPerson {
 	/**
 	 * Der Anmeldename für den SMTP-Server.
 	 *
-	 * @return Inhalt des Feldes emailSmtpBenutzername
+	 * @return Inhalt des Feldes emailSmtpBenutzername; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String emailSmtpBenutzername() {
 		return emailSmtpBenutzername;
@@ -225,7 +225,7 @@ public class ReportingBenutzer extends ReportingPerson {
 	/**
 	 * Das AES-verschlüsselte SMTP-Kennwort des Benutzers.
 	 *
-	 * @return Inhalt des Feldes emailSmtpPasswort
+	 * @return Inhalt des Feldes emailSmtpPasswort; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String emailSmtpPasswort() {
 		return emailSmtpPasswort;

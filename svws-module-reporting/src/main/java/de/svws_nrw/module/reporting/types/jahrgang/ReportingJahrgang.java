@@ -1,6 +1,8 @@
 package de.svws_nrw.module.reporting.types.jahrgang;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
@@ -92,19 +94,19 @@ public class ReportingJahrgang extends ReportingBaseType {
 			final String kuerzel, final String kuerzelSchulgliederung, final String kuerzelStatistik, final boolean istSichtbar,
 			final List<ReportingSchueler> schueler, final ReportingSchuljahresabschnitt schuljahresabschnitt, final int sortierungEintrag) {
 		this.anzahlRestabschnitte = anzahlRestabschnitte;
-		this.bezeichnung = bezeichnung;
+		this.bezeichnung = ersetzeNullBlankTrim(bezeichnung);
 		this.gueltigBis = gueltigBis;
 		this.gueltigVon = gueltigVon;
 		this.folgejahrgang = folgejahrgang;
 		this.id = id;
 		this.idFolgejahrgang = idFolgejahrgang;
 		this.jahrgang = jahrgang;
-		this.klassen = klassen;
-		this.kuerzel = kuerzel;
-		this.kuerzelSchulgliederung = kuerzelSchulgliederung;
-		this.kuerzelStatistik = kuerzelStatistik;
+		this.klassen = (klassen != null) ? new ArrayList<>(klassen.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
+		this.kuerzel = ersetzeNullBlankTrim(kuerzel);
+		this.kuerzelSchulgliederung = ersetzeNullBlankTrim(kuerzelSchulgliederung);
+		this.kuerzelStatistik = ersetzeNullBlankTrim(kuerzelStatistik);
 		this.istSichtbar = istSichtbar;
-		this.schueler = schueler;
+		this.schueler = (schueler != null) ? new ArrayList<>(schueler.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
 		this.schuljahresabschnitt = schuljahresabschnitt;
 		this.sortierungEintrag = sortierungEintrag;
 	}
@@ -198,7 +200,7 @@ public class ReportingJahrgang extends ReportingBaseType {
 	/**
 	 * Der Name bzw. die Bezeichnung des Jahrgangs.
 	 *
-	 * @return Inhalt des Feldes bezeichnung
+	 * @return Inhalt des Feldes bezeichnung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String bezeichnung() {
 		return bezeichnung;
@@ -252,7 +254,7 @@ public class ReportingJahrgang extends ReportingBaseType {
 	/**
 	 * Liste der Klassen des Jahrgangs.
 	 *
-	 * @return Inhalt des Feldes klassen
+	 * @return Inhalt des Feldes klassen; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingKlasse> klassen() {
 		return klassen;
@@ -261,7 +263,7 @@ public class ReportingJahrgang extends ReportingBaseType {
 	/**
 	 * Das Kürzel des Jahrgangs.
 	 *
-	 * @return Inhalt des Feldes kuerzel
+	 * @return Inhalt des Feldes kuerzel; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String kuerzel() {
 		return kuerzel;
@@ -270,7 +272,7 @@ public class ReportingJahrgang extends ReportingBaseType {
 	/**
 	 * Das Kürzel der Schulgliederung, der der Eintrag zugeordnet ist.
 	 *
-	 * @return Inhalt des Feldes kuerzelSchulgliederung
+	 * @return Inhalt des Feldes kuerzelSchulgliederung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String kuerzelSchulgliederung() {
 		return kuerzelSchulgliederung;
@@ -279,7 +281,7 @@ public class ReportingJahrgang extends ReportingBaseType {
 	/**
 	 * Das dem Jahrgang zugeordnete Statistik-Kürzel.
 	 *
-	 * @return Inhalt des Feldes kuerzelStatistik
+	 * @return Inhalt des Feldes kuerzelStatistik; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String kuerzelStatistik() {
 		return kuerzelStatistik;
@@ -306,7 +308,7 @@ public class ReportingJahrgang extends ReportingBaseType {
 	/**
 	 * Liste der Schüler des Jahrgangs.
 	 *
-	 * @return Inhalt des Feldes schueler
+	 * @return Inhalt des Feldes schueler; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingSchueler> schueler() {
 		return schueler;

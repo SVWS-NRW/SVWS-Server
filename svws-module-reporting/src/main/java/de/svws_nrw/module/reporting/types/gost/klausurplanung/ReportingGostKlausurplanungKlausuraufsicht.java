@@ -39,7 +39,7 @@ public class ReportingGostKlausurplanungKlausuraufsicht extends ReportingBaseTyp
 			final ReportingLehrer lehrer, final ReportingStundenplanungUnterrichtsrasterstunde unterrichtsstunde) {
 		this.aufsichtsbeginn = aufsichtsbeginn;
 		this.aufsichtsende = aufsichtsende;
-		this.bemerkung = bemerkung;
+		this.bemerkung = ersetzeNullBlankTrim(bemerkung);
 		this.lehrer = lehrer;
 		this.unterrichtsstunde = unterrichtsstunde;
 	}
@@ -68,7 +68,7 @@ public class ReportingGostKlausurplanungKlausuraufsicht extends ReportingBaseTyp
 	/**
 	 * Die textuelle Bemerkung zur Klausuraufsicht.
 	 *
-	 * @return Inhalt des Feldes bemerkung
+	 * @return Inhalt des Feldes bemerkung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String bemerkung() {
 		return bemerkung;
@@ -77,7 +77,7 @@ public class ReportingGostKlausurplanungKlausuraufsicht extends ReportingBaseTyp
 	/**
 	 * Der aufsichtsführende Lehrer.
 	 *
-	 * @return Inhalt des Feldes lehrer
+	 * @return Inhalt des Feldes lehrer; kann {@code null} sein, wenn kein Lehrer zugeordnet ist.
 	 */
 	public ReportingLehrer lehrer() {
 		return lehrer;
@@ -86,7 +86,7 @@ public class ReportingGostKlausurplanungKlausuraufsicht extends ReportingBaseTyp
 	/**
 	 * Die Unterrichtsstunde (Eintrag im Zeitraster des Stundenplans), die der Aufsicht zugeordnet ist.
 	 *
-	 * @return Inhalt des Feldes unterrichtsstunde
+	 * @return Inhalt des Feldes unterrichtsstunde; kann {@code null} sein, wenn keine Unterrichtsstunde zugeordnet ist.
 	 */
 	public ReportingStundenplanungUnterrichtsrasterstunde unterrichtsstunde() {
 		return unterrichtsstunde;

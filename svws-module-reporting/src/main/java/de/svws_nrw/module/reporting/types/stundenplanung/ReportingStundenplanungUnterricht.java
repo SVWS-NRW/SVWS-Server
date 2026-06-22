@@ -3,6 +3,7 @@ package de.svws_nrw.module.reporting.types.stundenplanung;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
@@ -66,17 +67,14 @@ public class ReportingStundenplanungUnterricht extends ReportingBaseType {
 
 		this.id = id;
 		this.fach = fach;
-		this.klassen = klassen;
-		if (klassen == null) {
-			this.klassen = new ArrayList<>();
-		}
+		this.klassen = (klassen != null) ? new ArrayList<>(klassen.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
 		this.kurs = kurs;
 		if (this.kurs != null) {
 			this.klassen = this.kurs.klassen();
 		}
-		this.lehrkraefte = lehrkraefte;
-		this.raeume = raeume;
-		this.schienen = schienen;
+		this.lehrkraefte = (lehrkraefte != null) ? new ArrayList<>(lehrkraefte.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
+		this.raeume = (raeume != null) ? new ArrayList<>(raeume.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
+		this.schienen = (schienen != null) ? new ArrayList<>(schienen.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
 		this.wochentyp = wochentyp;
 		this.stundeImUnterrichtsraster = stundeImUnterrichtsraster;
 	}
@@ -104,7 +102,7 @@ public class ReportingStundenplanungUnterricht extends ReportingBaseType {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof final ReportingStundenplanungStundenplan other)) {
+		if (!(obj instanceof final ReportingStundenplanungUnterricht other)) {
 			return false;
 		}
 		return (id == other.id);
@@ -129,7 +127,8 @@ public class ReportingStundenplanungUnterricht extends ReportingBaseType {
 	 * @return Eine Zeichenkette mit den Klassen nach Jahrgängen und Parallelität.
 	 */
 	public String klassenAuflistungJahrgangParallelitaet() {
-		return this.klassen().stream().map(k -> k.jahrgang().kuerzel() + k.parallelitaet()).sorted().collect(Collectors.joining(","));
+		return this.klassen().stream().filter(k -> k.jahrgang() != null).map(k -> k.jahrgang().kuerzel() + k.parallelitaet()).sorted()
+				.collect(Collectors.joining(","));
 	}
 
 	/**
@@ -149,6 +148,7 @@ public class ReportingStundenplanungUnterricht extends ReportingBaseType {
 		}
 
 		return listKlassen.stream()
+				.filter(k -> k.jahrgang() != null)
 				.collect(Collectors.groupingBy(k -> k.jahrgang().kuerzel(), Collectors.mapping(ReportingKlasse::parallelitaet,
 						Collectors.joining()))) // Parallelitäten der Klassen einer Stufe verbinden.
 				.entrySet().stream()
@@ -183,7 +183,7 @@ public class ReportingStundenplanungUnterricht extends ReportingBaseType {
 	/**
 	 * Gibt das Fach des Unterrichts zurück.
 	 *
-	 * @return Das Fach des Unterrichts.
+	 * @return Das Fach des Unterrichts; kann {@code null} sein, wenn dem Unterricht kein Fach zugeordnet ist.
 	 */
 	public ReportingFach fach() {
 		return fach;
@@ -201,7 +201,7 @@ public class ReportingStundenplanungUnterricht extends ReportingBaseType {
 	/**
 	 * Gibt die Klassen zurück, die dieser Unterrichtseinheit zugeordnet sind.
 	 *
-	 * @return Die Klassen dieser Unterrichtseinheit.
+	 * @return Die Klassen dieser Unterrichtseinheit; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingKlasse> klassen() {
 		return klassen;
@@ -219,7 +219,7 @@ public class ReportingStundenplanungUnterricht extends ReportingBaseType {
 	/**
 	 * Gibt die Lehrkräfte zurück, die diesem Unterricht zugeordnet sind.
 	 *
-	 * @return Die Lehrkräfte diesem Unterricht.
+	 * @return Die Lehrkräfte diesem Unterricht; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingLehrer> lehrkraefte() {
 		return lehrkraefte;
@@ -228,7 +228,7 @@ public class ReportingStundenplanungUnterricht extends ReportingBaseType {
 	/**
 	 * Gibt die Räume zurück, die diesem Unterricht zugeordnet sind.
 	 *
-	 * @return Die Räume diesem Unterricht.
+	 * @return Die Räume diesem Unterricht; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingStundenplanungRaum> raeume() {
 		return raeume;
@@ -237,7 +237,7 @@ public class ReportingStundenplanungUnterricht extends ReportingBaseType {
 	/**
 	 * Gibt die IDs der Schienen zurück, die diesem Unterricht zugeordnet sind.
 	 *
-	 * @return Die IDs der Schienen diesem Unterricht.
+	 * @return Die IDs der Schienen diesem Unterricht; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<Long> schienen() {
 		return schienen;
@@ -259,7 +259,7 @@ public class ReportingStundenplanungUnterricht extends ReportingBaseType {
 	/**
 	 * Gibt die Stunde im Unterrichtsraster des Stundenplans zurück.
 	 *
-	 * @return Die Stunde im Unterrichtsraster des Stundenplans.
+	 * @return Die Stunde im Unterrichtsraster des Stundenplans; kann {@code null} sein, wenn keine zugeordnet ist.
 	 */
 	public ReportingStundenplanungUnterrichtsrasterstunde stundeImUnterrichtsraster() {
 		return stundeImUnterrichtsraster;

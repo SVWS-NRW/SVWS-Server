@@ -67,7 +67,7 @@ public class ReportingGostKlausurplanungSchuelerklausur extends ReportingBaseTyp
 			final ReportingGostKlausurplanungKlausurtermin klausurtermin, final ReportingGostKlausurplanungKursklausur kursklausur,
 			final int nummerTerminfolge, final ReportingSchueler schueler, final Integer startzeit) {
 		this.klausurraum = klausurraum;
-		this.bemerkung = bemerkung;
+		this.bemerkung = ersetzeNullBlankTrim(bemerkung);
 		this.id = id;
 		this.idSchuelerklausurtermin = idSchuelerklausurtermin;
 		this.klausurtermin = klausurtermin;
@@ -101,7 +101,7 @@ public class ReportingGostKlausurplanungSchuelerklausur extends ReportingBaseTyp
 	/**
 	 * Die textuelle Bemerkung zur Schülerklausur, sofern vorhanden.
 	 *
-	 * @return Inhalt des Feldes bemerkung
+	 * @return Inhalt des Feldes bemerkung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String bemerkung() {
 		return bemerkung;
@@ -128,7 +128,7 @@ public class ReportingGostKlausurplanungSchuelerklausur extends ReportingBaseTyp
 	/**
 	 * Der Klausurraum dieses Schülerklausurtermins, inklusive der Aufsichten für die Unterrichtsstunden der Klausur.
 	 *
-	 * @return Inhalt des Feldes klausurraum
+	 * @return Inhalt des Feldes klausurraum; kann {@code null} sein, wenn kein Raum zugeordnet ist.
 	 */
 	public ReportingGostKlausurplanungKlausurraum klausurraum() {
 		return klausurraum;
@@ -137,7 +137,7 @@ public class ReportingGostKlausurplanungSchuelerklausur extends ReportingBaseTyp
 	/**
 	 * Der Termin der Schülerklausur aus den Klausurterminen.
 	 *
-	 * @return Inhalt des Feldes klausurtermin
+	 * @return Inhalt des Feldes klausurtermin; kann {@code null} sein, wenn kein Termin zugeordnet ist.
 	 */
 	public ReportingGostKlausurplanungKlausurtermin klausurtermin() {
 		return klausurtermin;
@@ -146,7 +146,7 @@ public class ReportingGostKlausurplanungSchuelerklausur extends ReportingBaseTyp
 	/**
 	 * Die Kursklausur, die zu dieser Schülerklausur geführt hat. Deren Vorgaben gelten auch für die Schülerklausur.
 	 *
-	 * @return Inhalt des Feldes kursklausur
+	 * @return Inhalt des Feldes kursklausur; kann {@code null} sein, wenn keine Kursklausur zugeordnet ist.
 	 */
 	public ReportingGostKlausurplanungKursklausur kursklausur() {
 		return kursklausur;
@@ -164,7 +164,7 @@ public class ReportingGostKlausurplanungSchuelerklausur extends ReportingBaseTyp
 	/**
 	 * Der Schüler dieser Schülerklausur.
 	 *
-	 * @return Inhalt des Feldes schueler
+	 * @return Inhalt des Feldes schueler; kann {@code null} sein, wenn kein Schüler zugeordnet ist.
 	 */
 	public ReportingSchueler schueler() {
 		return schueler;

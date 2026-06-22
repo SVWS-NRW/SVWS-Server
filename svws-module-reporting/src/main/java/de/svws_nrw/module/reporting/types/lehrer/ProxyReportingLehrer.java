@@ -64,7 +64,7 @@ public class ProxyReportingLehrer extends ReportingLehrer {
 				new ArrayList<>(),
 				ersetzeNullBlankTrim(lehrerStammdaten.nachname),
 				PersonalTyp.fromKuerzel(lehrerStammdaten.personalTyp),
-				Nationalitaeten.data().getWertByID(lehrerStammdaten.idStaatsangehoerigkeit),
+				Nationalitaeten.data().getWertByIDOrNull(lehrerStammdaten.idStaatsangehoerigkeit),
 				null,
 				ersetzeNullBlankTrim(lehrerStammdaten.strassenname),
 				ersetzeNullBlankTrim(lehrerStammdaten.telefon),

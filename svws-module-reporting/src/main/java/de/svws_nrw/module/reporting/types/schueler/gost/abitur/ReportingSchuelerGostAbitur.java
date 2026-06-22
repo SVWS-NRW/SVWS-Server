@@ -153,11 +153,11 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 		this.abiturjahr = abiturjahr;
 		this.abiturSchuljahr = abiturSchuljahr;
 		this.abiturSchuljahresabschnitt = abiturSchuljahresabschnitt;
-		this.besondereLernleistungArt = besondereLernleistungArt;
+		this.besondereLernleistungArt = ersetzeNullBlankTrim(besondereLernleistungArt);
 		this.besondereLernleistungNote = besondereLernleistungNote;
-		this.besondereLernleistungThema = besondereLernleistungThema;
+		this.besondereLernleistungThema = ersetzeNullBlankTrim(besondereLernleistungThema);
 		this.bewertetesHalbjahr = bewertetesHalbjahr;
-		this.bilingualeSprache = bilingualeSprache;
+		this.bilingualeSprache = ersetzeNullBlankTrim(bilingualeSprache);
 		this.block1AnzahlKurse = block1AnzahlKurse;
 		this.block1DefiziteGesamt = block1DefiziteGesamt;
 		this.block1DefiziteLK = block1DefiziteLK;
@@ -171,13 +171,13 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 		this.block2DefiziteGesamt = block2DefiziteGesamt;
 		this.block2DefiziteLK = block2DefiziteLK;
 		this.block2PunktSumme = block2PunktSumme;
-		this.fachbelegungen = fachbelegungen;
+		this.fachbelegungen = (fachbelegungen != null) ? new ArrayList<>(fachbelegungen.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
 		this.freiwilligerRuecktritt = freiwilligerRuecktritt;
 		this.gesamtPunkte = gesamtPunkte;
 		this.gesamtPunkteVerbesserung = gesamtPunkteVerbesserung;
 		this.gesamtPunkteVerschlechterung = gesamtPunkteVerschlechterung;
-		this.note = note;
-		this.projektkursThema = projektkursThema;
+		this.note = ersetzeNullBlankTrim(note);
+		this.projektkursThema = ersetzeNullBlankTrim(projektkursThema);
 		this.pruefungBestanden = pruefungBestanden;
 
 		this.fachbelegungen().sort(ReportingGostAbiturFachbelegung.SORTIERUNG.comparatorStandard());
@@ -468,7 +468,7 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 	/**
 	 * Art der besonderen Lernleistung (K - keine, P - in einem Projektkurs, E - extern).
 	 *
-	 * @return Inhalt des Feldes besondereLernleistung
+	 * @return Inhalt des Feldes besondereLernleistungArt; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String besondereLernleistungArt() {
 		return besondereLernleistungArt;
@@ -486,7 +486,7 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 	/**
 	 * Das Thema der besonderen Lernleistung.
 	 *
-	 * @return Inhalt des Feldes besondereLernleistungThema
+	 * @return Inhalt des Feldes besondereLernleistungThema; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String besondereLernleistungThema() {
 		return besondereLernleistungThema;
@@ -504,7 +504,7 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 	/**
 	 * Das einstellige Kürzel der Sprache des bilingualen Bildungsganges, falls der Schüler an einem solchen teilnimmt.
 	 *
-	 * @return Inhalt des Feldes bilingualeSprache
+	 * @return Inhalt des Feldes bilingualeSprache; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String bilingualeSprache() {
 		return bilingualeSprache;
@@ -630,7 +630,7 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 	/**
 	 * Die Liste mit den Fachbelegungen in der Oberstufe.
 	 *
-	 * @return Inhalt des Feldes fachbelegungen
+	 * @return Inhalt des Feldes fachbelegungen; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public final List<ReportingGostAbiturFachbelegung> fachbelegungen() {
 		return fachbelegungen;
@@ -678,11 +678,11 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 	 * @return Inhalt des Feldes note
 	 */
 	public String note() {
-		if ((note == null) || note.trim().isEmpty()) {
+		if (note.isEmpty()) {
 			return "---";
 		}
 
-		String checkNote = note.trim();
+		String checkNote = note;
 		if (!checkNote.contains(",")) {
 			checkNote += ",0";
 		}
@@ -708,7 +708,7 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 	/**
 	 * Das Projektkursthema, sofern ein Projektkurs belegt wurde.
 	 *
-	 * @return Inhalt des Feldes projektkursThema
+	 * @return Inhalt des Feldes projektkursThema; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String projektkursThema() {
 		return projektkursThema;

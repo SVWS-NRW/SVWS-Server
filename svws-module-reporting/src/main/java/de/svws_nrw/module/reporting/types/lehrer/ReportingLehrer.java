@@ -2,6 +2,7 @@ package de.svws_nrw.module.reporting.types.lehrer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
@@ -100,11 +101,11 @@ public class ReportingLehrer extends ReportingPerson {
 		super(anrede, emailPrivat, emailSchule, faxSchule, geburtsdatum, geburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz,
 				nachname, staatsangehoerigkeit, staatsangehoerigkeit2, strassenname, telefonPrivat, telefonPrivatMobil, telefonSchule, telefonSchuleMobil,
 				titel, vorname, vornamen, wohnort, wohnortsteil);
-		this.amtsbezeichnung = amtsbezeichnung;
+		this.amtsbezeichnung = ersetzeNullBlankTrim(amtsbezeichnung);
 		this.foto = foto;
 		this.id = id;
-		this.kuerzel = kuerzel;
-		this.leitungsfunktionen = leitungsfunktionen;
+		this.kuerzel = ersetzeNullBlankTrim(kuerzel);
+		this.leitungsfunktionen = (leitungsfunktionen != null) ? new ArrayList<>(leitungsfunktionen.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
 		this.personalTyp = personalTyp;
 
 		// Weitere Daten, wie die Unterrichtsdaten, werden per Lazy-loading nachgeladen.
@@ -227,7 +228,7 @@ public class ReportingLehrer extends ReportingPerson {
 	/**
 	 * Ggf. die Amtsbezeichnung des Lehrers.
 	 *
-	 * @return Inhalt des Feldes amtsbezeichnung
+	 * @return Inhalt des Feldes amtsbezeichnung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String amtsbezeichnung() {
 		return amtsbezeichnung;
@@ -236,7 +237,7 @@ public class ReportingLehrer extends ReportingPerson {
 	/**
 	 * Ggf. das Foto des Lehrers (jpg, Base64-kodiert des Lehrers).
 	 *
-	 * @return Inhalt des Feldes foto
+	 * @return Inhalt des Feldes foto; kann {@code null} sein, wenn kein Foto hinterlegt ist.
 	 */
 	public String foto() {
 		return foto;
@@ -254,7 +255,7 @@ public class ReportingLehrer extends ReportingPerson {
 	/**
 	 * Eine Liste von Leitungsfunktionen, die der Lehrer besaß oder besitzt.
 	 *
-	 * @return Inhalt des Feldes leitungsfunktionen
+	 * @return Inhalt des Feldes leitungsfunktionen; nie {@code null}, bei fehlenden Funktionen eine leere Liste.
 	 */
 	public List<ReportingLehrerLeitungsfunktion> leitungsfunktionen() {
 		return leitungsfunktionen;
@@ -263,7 +264,7 @@ public class ReportingLehrer extends ReportingPerson {
 	/**
 	 * Das Kürzel des Lehrers.
 	 *
-	 * @return Inhalt des Feldes kuerzel
+	 * @return Inhalt des Feldes kuerzel; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String kuerzel() {
 		return kuerzel;
@@ -308,7 +309,7 @@ public class ReportingLehrer extends ReportingPerson {
 	/**
 	 * Die Bezeichnung des Personals-Typs des Lehrers.
 	 *
-	 * @return Inhalt des Feldes personalTyp
+	 * @return Inhalt des Feldes personalTyp; kann {@code null} sein, wenn dem Lehrer kein Personaltyp zugeordnet ist.
 	 */
 	public PersonalTyp personalTyp() {
 		return personalTyp;

@@ -53,7 +53,7 @@ public abstract class ReportingLerngruppe extends ReportingSchuelergruppe {
 			final List<ReportingSchueler> schueler, final int wochenstundenSchueler, final int sortierung) {
 		super(id, schuljahresabschnitt, kuerzel, fachlehrer, schueler, sortierung);
 		this.fach = fach;
-		this.wochenstundenFachlehrer = (wochenstundenFachlehrer != null) ? wochenstundenFachlehrer : new HashMap<>();
+		this.wochenstundenFachlehrer = (wochenstundenFachlehrer != null) ? new HashMap<>(wochenstundenFachlehrer) : new HashMap<>();
 		this.wochenstundenSchueler = wochenstundenSchueler;
 
 		// Validiere die Daten der Lehrer und ihrer Wochenstunden. Passe sie ggf. an, sodass sie konsistent sind und der bewertende Fachlehrer gesetzt ist.
@@ -75,7 +75,7 @@ public abstract class ReportingLerngruppe extends ReportingSchuelergruppe {
 		super(klasse.id(), klasse.schuljahresabschnitt(), fach.kuerzel() + "-" + klasse.kuerzel(), fachlehrer,
 				((schueler != null) && !schueler.isEmpty()) ? schueler : klasse.schueler(), klasse.sortierungEintrag());
 		this.fach = fach;
-		this.wochenstundenFachlehrer = (wochenstundenFachlehrer != null) ? wochenstundenFachlehrer : new HashMap<>();
+		this.wochenstundenFachlehrer = (wochenstundenFachlehrer != null) ? new HashMap<>(wochenstundenFachlehrer) : new HashMap<>();
 		this.wochenstundenSchueler = wochenstundenSchueler;
 
 		// Validiere die Daten der Lehrer und ihrer Wochenstunden. Passe sie ggf. an, sodass sie konsistent sind und der bewertende Fachlehrer gesetzt ist.
@@ -140,7 +140,7 @@ public abstract class ReportingLerngruppe extends ReportingSchuelergruppe {
 	 * Gibt die Wochenstunden der Lehrkräfte der Lerngruppe zurück. Der Schlüssel der Map repräsentiert die ID einer Lehrkraft, und der zugehörige Wert gibt
 	 * die Anzahl der Wochenstunden an, die dieser Lehrkraft zugeordnet sind.
 	 *
-	 * @return Eine Map, die die Wochenstunden der Lehrkräfte zur Lehrer-ID enthält.
+	 * @return Eine Map, die die Wochenstunden der Lehrkräfte zur Lehrer-ID enthält; nie {@code null}, bei fehlender Zuordnung eine leere Map.
 	 */
 	public Map<Long, Double> wochenstundenFachlehrer() {
 		return wochenstundenFachlehrer;

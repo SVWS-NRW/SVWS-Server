@@ -1,6 +1,8 @@
 package de.svws_nrw.module.reporting.types.schule;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
@@ -93,15 +95,19 @@ public class ReportingSchule extends ReportingSchuleBasisdatenNRW {
 		this.anzahlJahrgangsstufenProJahr = anzahlJahrgangsstufenProJahr;
 		this.anzahlSchuljahresabschnitteProJahr = anzahlSchuljahresabschnitteProJahr;
 		this.auswahlSchuljahresabschnitt = auswahlSchuljahresabschnitt;
-		this.bezeichnungSchuljahresabschnitt = bezeichnungSchuljahresabschnitt;
-		this.bezeichnungenSchuljahresabschnitte = bezeichnungenSchuljahresabschnitte;
+		this.bezeichnungSchuljahresabschnitt = ersetzeNullBlankTrim(bezeichnungSchuljahresabschnitt);
+		this.bezeichnungenSchuljahresabschnitte = (bezeichnungenSchuljahresabschnitte != null)
+				? new ArrayList<>(bezeichnungenSchuljahresabschnitte.stream().filter(Objects::nonNull).toList())
+				: new ArrayList<>();
 		this.dauerUnterrichtseinheit = dauerUnterrichtseinheit;
-		this.schuljahresabschnitte = schuljahresabschnitte;
+		this.schuljahresabschnitte = (schuljahresabschnitte != null)
+				? new ArrayList<>(schuljahresabschnitte.stream().filter(Objects::nonNull).toList())
+				: new ArrayList<>();
 		this.schulform = schulform;
 		this.schulleitung = schulleitung;
 		this.schullogo = schullogo;
 		this.stvSchulleitung = stvSchulleitung;
-		this.webAdresse = webAdresse;
+		this.webAdresse = ersetzeNullBlankTrim(webAdresse);
 	}
 
 
@@ -147,7 +153,7 @@ public class ReportingSchule extends ReportingSchuleBasisdatenNRW {
 	/**
 	 * Die allgemeine Bezeichnung der Abschnitte (z.B. Quartal oder Halbjahr)
 	 *
-	 * @return Inhalt des Feldes bezeichnungSchuljahresabschnitt
+	 * @return Inhalt des Feldes bezeichnungSchuljahresabschnitt; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String bezeichnungSchuljahresabschnitt() {
 		return bezeichnungSchuljahresabschnitt;
@@ -156,7 +162,7 @@ public class ReportingSchule extends ReportingSchuleBasisdatenNRW {
 	/**
 	 * Eine Liste der einzelnen speziellen Bezeichnungen für die Abschnitte (z.B. 1. Halbjahr, 2. Halbjahr)
 	 *
-	 * @return Inhalt des Feldes bezeichnungenSchuljahresabschnitte
+	 * @return Inhalt des Feldes bezeichnungenSchuljahresabschnitte; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<String> bezeichnungenSchuljahresabschnitte() {
 		return bezeichnungenSchuljahresabschnitte;
@@ -175,7 +181,7 @@ public class ReportingSchule extends ReportingSchuleBasisdatenNRW {
 	/**
 	 * Die Liste der Schuljahresabschnitte, welche an der Schule definiert sind.
 	 *
-	 * @return Inhalt des Feldes schuljahresabschnitte
+	 * @return Inhalt des Feldes schuljahresabschnitte; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingSchuljahresabschnitt> schuljahresabschnitte() {
 		return schuljahresabschnitte;
@@ -229,7 +235,7 @@ public class ReportingSchule extends ReportingSchuleBasisdatenNRW {
 	/**
 	 * Die Adresse der Homepage der Schule (Domain-Name)
 	 *
-	 * @return Inhalt des Feldes webAdresse
+	 * @return Inhalt des Feldes webAdresse; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String webAdresse() {
 		return webAdresse;

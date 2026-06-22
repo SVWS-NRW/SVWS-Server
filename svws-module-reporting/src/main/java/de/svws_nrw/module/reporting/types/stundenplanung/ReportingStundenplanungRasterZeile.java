@@ -33,7 +33,7 @@ public class ReportingStundenplanungRasterZeile extends ReportingStundenplanungZ
 		super(null, null, null);
 
 		this.zeilennummer = zeilennummer;
-		this.zeilenbeschriftung = zeilenbeschriftung;
+		this.zeilenbeschriftung = ersetzeNullBlankTrim(zeilenbeschriftung);
 		addRasterElemente(rasterElemente);
 	}
 
@@ -180,7 +180,7 @@ public class ReportingStundenplanungRasterZeile extends ReportingStundenplanungZ
 	/**
 	 * Gibt die Beschriftung der Zeile im Raster zurück.
 	 *
-	 * @return die Zeilenbeschriftung
+	 * @return die Zeilenbeschriftung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String zeilenbeschriftung() {
 		return zeilenbeschriftung;

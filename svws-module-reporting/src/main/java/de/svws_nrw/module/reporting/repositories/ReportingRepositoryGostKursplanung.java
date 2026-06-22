@@ -303,6 +303,7 @@ public class ReportingRepositoryGostKursplanung {
 				.filter(s -> !manager.getOfSchieneKursmengeSortiert(s.id).isEmpty()).toList();
 
 		// Blockungsergebnis-Proxy mit leeren Listen vorab erzeugen — Schienen- und Kurs-Proxys halten eine Rückreferenz.
+		// Die vollständig aufgebauten Listen werden dem Ergebnis am Ende dieser Methode per setSchienen/setKurse übergeben.
 		final List<ReportingGostKursplanungKurs> kurseListe = new ArrayList<>();
 		final List<ReportingGostKursplanungSchiene> schienenListe = new ArrayList<>();
 		final ProxyReportingGostKursplanungBlockungsergebnis proxy = new ProxyReportingGostKursplanungBlockungsergebnis(
@@ -370,6 +371,10 @@ public class ReportingRepositoryGostKursplanung {
 
 			reportingKurs.schienen().forEach(s -> mapSchienen.get(s.id()).kurse().add(reportingKurs));
 		}
+
+		// kurseListe / schienenListe sind jetzt vollständig aufgebaut → in das Ergebnis als Defensivkopie übernehmen.
+		proxy.setSchienen(schienenListe);
+		proxy.setKurse(kurseListe);
 	}
 
 	private void ergaenzeKursbelegung(final long idKursschueler, final long kursId,

@@ -31,7 +31,7 @@ public class ReportingSchuelerGostKursplanungKursbelegung extends ReportingBaseT
 	 */
 	public ReportingSchuelerGostKursplanungKursbelegung(final String abiturfach, final boolean hatGueltigeFachwahl, final boolean istSchriftlich,
 			final ReportingGostKursplanungKurs kurs) {
-		this.abiturfach = abiturfach;
+		this.abiturfach = ersetzeNullBlankTrim(abiturfach);
 		this.hatGueltigeFachwahl = hatGueltigeFachwahl;
 		this.istSchriftlich = istSchriftlich;
 		this.kurs = kurs;
@@ -44,7 +44,7 @@ public class ReportingSchuelerGostKursplanungKursbelegung extends ReportingBaseT
 	/**
 	 * Nummer des Abiturfaches, sofern das Fach des Kurses ein Abiturfach des Schülers ist.
 	 *
-	 * @return Inhalt des Feldes abiturfach
+	 * @return Inhalt des Feldes abiturfach; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String abiturfach() {
 		return abiturfach;
@@ -71,7 +71,7 @@ public class ReportingSchuelerGostKursplanungKursbelegung extends ReportingBaseT
 	/**
 	 * Der Kurs, der vom Schüler belegt wird.
 	 *
-	 * @return Inhalt des Feldes kurs
+	 * @return Inhalt des Feldes kurs; kann {@code null} sein, wenn der Belegung kein Kurs zugeordnet ist.
 	 */
 	public ReportingGostKursplanungKurs kurs() {
 		return kurs;

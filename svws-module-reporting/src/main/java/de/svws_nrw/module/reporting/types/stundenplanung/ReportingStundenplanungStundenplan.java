@@ -98,13 +98,15 @@ public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 			final List<ReportingStundenplanungPausenzeit> pausenzeiten, final List<ReportingStundenplanungRaum> raeume,
 			final ReportingSchuljahresabschnitt schuljahresabschnitt, final int wochenperiodizitaet, final Map<Integer, String> wochenbezeichnungen,
 			final List<ReportingStundenplanungUnterrichtsrasterstunde> unterrichtsrasterstunden) {
-		this.beschreibung = beschreibung;
-		this.gueltigAb = gueltigAb;
-		this.gueltigBis = gueltigBis;
+		this.beschreibung = ersetzeNullBlankTrim(beschreibung);
+		this.gueltigAb = ersetzeNullBlankTrim(gueltigAb);
+		this.gueltigBis = ersetzeNullBlankTrim(gueltigBis);
 		this.id = id;
 		this.schuljahresabschnitt = schuljahresabschnitt;
 		this.wochenperiodizitaet = wochenperiodizitaet;
-		this.mapWochenbezeichnungen.putAll(wochenbezeichnungen);
+		if (wochenbezeichnungen != null) {
+			this.mapWochenbezeichnungen.putAll(wochenbezeichnungen);
+		}
 
 		setRaeume(raeume);
 		setRasterUnterrichteUndPausen(unterrichtsrasterstunden, pausenzeiten);
@@ -153,11 +155,13 @@ public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 		if ((datum == null) || (datum.length() != 10)) {
 			return false;
 		}
-		if ((gueltigAb != null) && (gueltigBis != null)) {
+		final boolean hatAb = !gueltigAb.isEmpty();
+		final boolean hatBis = !gueltigBis.isEmpty();
+		if (hatAb && hatBis) {
 			return (datum.compareTo(gueltigAb) >= 0) && (datum.compareTo(gueltigBis) <= 0);
-		} else if (gueltigAb != null) {
+		} else if (hatAb) {
 			return (datum.compareTo(gueltigAb) >= 0);
-		} else if (gueltigBis != null) {
+		} else if (hatBis) {
 			return (datum.compareTo(gueltigBis) <= 0);
 		}
 
@@ -262,7 +266,7 @@ public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 	/**
 	 * Die Beschreibung des Stundenplans.
 	 *
-	 * @return Inhalt des Feldes beschreibung
+	 * @return Inhalt des Feldes beschreibung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String beschreibung() {
 		return beschreibung;
@@ -271,7 +275,7 @@ public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 	/**
 	 * Datum, ab dem der Stundenplan gültig ist.
 	 *
-	 * @return Inhalt des Feldes gueltigAb
+	 * @return Inhalt des Feldes gueltigAb; nie {@code null}, ein leerer String bedeutet "keine untere Gültigkeitsgrenze".
 	 */
 	public String gueltigAb() {
 		return gueltigAb;
@@ -280,7 +284,7 @@ public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 	/**
 	 * Datum, bis zu dem der Stundenplan gültig ist.
 	 *
-	 * @return Inhalt des Feldes gueltigBis
+	 * @return Inhalt des Feldes gueltigBis; nie {@code null}, ein leerer String bedeutet "keine obere Gültigkeitsgrenze".
 	 */
 	public String gueltigBis() {
 		return gueltigBis;
@@ -307,7 +311,7 @@ public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 	/**
 	 * Der Schuljahresabschnitt, dem dieser Stundenplan zugeordnet ist.
 	 *
-	 * @return Inhalt des Feldes schuljahresabschnitt
+	 * @return Inhalt des Feldes schuljahresabschnitt; kann {@code null} sein, wenn kein Schuljahresabschnitt zugeordnet ist.
 	 */
 	public ReportingSchuljahresabschnitt schuljahresabschnitt() {
 		return schuljahresabschnitt;
@@ -368,7 +372,9 @@ public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 	 */
 	protected void setRaeume(final List<ReportingStundenplanungRaum> raeume) {
 		this.raeume.clear();
-		this.raeume.addAll(raeume);
+		if (raeume != null) {
+			this.raeume.addAll(raeume.stream().filter(Objects::nonNull).toList());
+		}
 		this.raeume.sort(Comparator.comparing(ReportingStundenplanungRaum::kuerzel));
 
 		this.mapRaeume.clear();
@@ -385,15 +391,18 @@ public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 			final List<ReportingStundenplanungPausenzeit> pausenzeiten) {
 		// Erzeuge zunächst alle Eintragungen zu den Unterrichtsrasterstunden.
 		this.unterrichtsrasterstunden.clear();
-		this.unterrichtsrasterstunden
-				.addAll(unterrichtsrasterstunden.stream().sorted(Comparator.comparing((ReportingStundenplanungUnterrichtsrasterstunde zrs) -> zrs.wochentag.id)
-						.thenComparing((ReportingStundenplanungUnterrichtsrasterstunde zrs) -> zrs.stundeImUnterrichtsraster)).toList());
+		if (unterrichtsrasterstunden != null) {
+			this.unterrichtsrasterstunden.addAll(unterrichtsrasterstunden.stream().filter(Objects::nonNull)
+					.sorted(Comparator.comparing((ReportingStundenplanungUnterrichtsrasterstunde zrs) -> (zrs.wochentag == null) ? -1 : zrs.wochentag.id)
+							.thenComparing((ReportingStundenplanungUnterrichtsrasterstunde zrs) -> zrs.stundeImUnterrichtsraster)).toList());
+		}
 
 		this.mapUnterrichtsrasterstunden.clear();
 		this.mapUnterrichtsrasterstunden.putAll(this.unterrichtsrasterstunden.stream().collect(Collectors.toMap(zr -> zr.id, zr -> zr)));
 
 		this.listMapUnterrichtsrasterstundenZuTagUndStunde = new ListMap2DLongKeys<>();
-		this.unterrichtsrasterstunden.forEach(zr -> listMapUnterrichtsrasterstundenZuTagUndStunde.add(zr.wochentag.id, zr.stundeImUnterrichtsraster, zr));
+		this.unterrichtsrasterstunden
+				.forEach(zr -> listMapUnterrichtsrasterstundenZuTagUndStunde.add((zr.wochentag == null) ? -1 : zr.wochentag.id, zr.stundeImUnterrichtsraster, zr));
 
 		this.rasterUnterrichteStundennummern.clear();
 		this.rasterUnterrichteStundennummern.addAll(this.unterrichtsrasterstunden.stream().map(zr -> zr.stundeImUnterrichtsraster).distinct().toList());
@@ -403,7 +412,9 @@ public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 
 		// Erzeuge dann die Eintragungen zu den Pausenzeiten.
 		this.pausenzeiten.clear();
-		this.pausenzeiten.addAll(pausenzeiten);
+		if (pausenzeiten != null) {
+			this.pausenzeiten.addAll(pausenzeiten.stream().filter(Objects::nonNull).toList());
+		}
 		this.pausenzeiten.sort(null);
 
 		this.mapPausenzeiten.clear();
@@ -452,6 +463,12 @@ public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 	 * In dieses Raster werden dann die definierten Pausenzeiten gesetzt.
 	 */
 	private void erzeugeRasterPausen() {
+		// Ohne ein Raster der Unterrichte (z. B. wenn nur Pausenzeiten, aber keine Unterrichtsrasterstunden definiert sind) kann kein darauf
+		// aufbauendes Pausenraster erzeugt werden. Ohne diesen Abbruch würde rasterUnterrichte.getFirst()/getLast() eine Exception werfen.
+		if (rasterUnterrichte.isEmpty()) {
+			return;
+		}
+
 		// Nach der Erzeugung des Rasters der Unterrichte erzeuge das der Pausen.
 		final List<ReportingStundenplanungRasterZeile> rasterPausenNachStundeUndTagen = new ArrayList<>();
 
@@ -464,7 +481,7 @@ public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 			element.wochentag = tageselement.wochentag;
 			element.zeilennummer = 0;
 			listeErstePausenzeileMitRasterelementProTag.add(element);
-			listMapPausenrastereintragZuTagUndStunde.add(element.wochentag.id, element.zeilennummer, element);
+			listMapPausenrastereintragZuTagUndStunde.add((element.wochentag == null) ? -1 : element.wochentag.id, element.zeilennummer, element);
 		}
 		rasterPausenNachStundeUndTagen.add(new ReportingStundenplanungRasterZeile(0, "", listeErstePausenzeileMitRasterelementProTag));
 
@@ -478,7 +495,7 @@ public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 				element.wochentag = rasterUnterrichte.get(i).rasterElemente().get(j).wochentag;
 				element.zeilennummer = i;
 				listePausenzeileMitRasterelementProTag.add(element);
-				listMapPausenrastereintragZuTagUndStunde.add(element.wochentag.id, element.zeilennummer, element);
+				listMapPausenrastereintragZuTagUndStunde.add((element.wochentag == null) ? -1 : element.wochentag.id, element.zeilennummer, element);
 			}
 			rasterPausenNachStundeUndTagen.add(new ReportingStundenplanungRasterZeile(i, "", listePausenzeileMitRasterelementProTag));
 		}
@@ -492,7 +509,7 @@ public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 			element.wochentag = tageselement.wochentag;
 			element.zeilennummer = rasterUnterrichte.size();
 			listeLetztePausenzeileMitRasterelementProTag.add(element);
-			listMapPausenrastereintragZuTagUndStunde.add(element.wochentag.id, element.zeilennummer, element);
+			listMapPausenrastereintragZuTagUndStunde.add((element.wochentag == null) ? -1 : element.wochentag.id, element.zeilennummer, element);
 		}
 		rasterPausenNachStundeUndTagen.add(new ReportingStundenplanungRasterZeile(rasterUnterrichte.size(), "", listeLetztePausenzeileMitRasterelementProTag));
 

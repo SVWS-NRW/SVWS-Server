@@ -41,8 +41,8 @@ public class ReportingStundenplanungPausenaufsicht extends ReportingBaseType {
 	public ReportingStundenplanungPausenaufsicht(final long id, final String aufsichtsbereichBeschreibung, final String aufsichtsbereichKuerzel,
 			final long idAufsichtsbereich, final ReportingLehrer lehrkraft, final int wochentyp) {
 		this.id = id;
-		this.aufsichtsbereichBeschreibung = aufsichtsbereichBeschreibung;
-		this.aufsichtsbereichKuerzel = aufsichtsbereichKuerzel;
+		this.aufsichtsbereichBeschreibung = ersetzeNullBlankTrim(aufsichtsbereichBeschreibung);
+		this.aufsichtsbereichKuerzel = ersetzeNullBlankTrim(aufsichtsbereichKuerzel);
 		this.idAufsichtsbereich = idAufsichtsbereich;
 		this.lehrkraft = lehrkraft;
 		this.wochentyp = wochentyp;
@@ -71,7 +71,7 @@ public class ReportingStundenplanungPausenaufsicht extends ReportingBaseType {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof final ReportingStundenplanungStundenplan other)) {
+		if (!(obj instanceof final ReportingStundenplanungPausenaufsicht other)) {
 			return false;
 		}
 		return (id == other.id);
@@ -94,7 +94,7 @@ public class ReportingStundenplanungPausenaufsicht extends ReportingBaseType {
 	/**
 	 * Gibt die Beschreibung des Aufsichtsbereichs zurück, der dieser Pausenaufsicht zugeordnet ist.
 	 *
-	 * @return die Beschreibung des Aufsichtsbereichs.
+	 * @return die Beschreibung des Aufsichtsbereichs; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String aufsichtsbereichBeschreibung() {
 		return aufsichtsbereichBeschreibung;
@@ -103,7 +103,7 @@ public class ReportingStundenplanungPausenaufsicht extends ReportingBaseType {
 	/**
 	 * Gibt das Kürzel des Aufsichtsbereichs zurück, der dieser Pausenaufsicht zugeordnet ist.
 	 *
-	 * @return das Kürzel des Aufsichtsbereichs.
+	 * @return das Kürzel des Aufsichtsbereichs; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String aufsichtsbereichKuerzel() {
 		return aufsichtsbereichKuerzel;
@@ -121,7 +121,7 @@ public class ReportingStundenplanungPausenaufsicht extends ReportingBaseType {
 	/**
 	 * Gibt die Lehrkraft zurück, die dieser Pausenaufsicht zugeordnet ist.
 	 *
-	 * @return die Lehrkraft.
+	 * @return die Lehrkraft; kann {@code null} sein, wenn der Pausenaufsicht keine Lehrkraft zugeordnet ist.
 	 */
 	public ReportingLehrer lehrkraft() {
 		return lehrkraft;

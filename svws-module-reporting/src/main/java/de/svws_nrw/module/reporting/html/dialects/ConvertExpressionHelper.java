@@ -34,9 +34,12 @@ public class ConvertExpressionHelper {
 	 *
 	 * @param dateISO8601		Der String, der das im ISO-Format yyyy-MM-dd vorliegende Datum enthält.
 	 *
-	 * @return					Das übergebene Datum als Date-Objekt.
+	 * @return					Das übergebene Datum als Date-Objekt oder {@code null}, falls kein Datum übergeben wurde.
 	 */
 	public Date toDateObject(final String dateISO8601) {
+		if ((dateISO8601 == null) || dateISO8601.isBlank()) {
+			return null;
+		}
 		final @NotNull int[] info = DateUtils.extractFromDateISO8601(dateISO8601);
 		return Date.from(LocalDate.of(info[0], info[1], info[2]).atStartOfDay(ZoneId.systemDefault()).toInstant());
 	}
@@ -175,7 +178,8 @@ public class ConvertExpressionHelper {
 	 * @param breiteInMM		Die gewünschte Breite des Barcodes in Millimetern.
 	 * @param hoeheInMM			Die gewünschte Höhe des Barcodes in Millimetern.
 	 *
-	 * @return					Der Barcode als Base64-codierter SVG-String zur direkten Einbettung in HTML (Data-URI) oder null, falls ein Fehler auftritt.
+	 * @return					Der Barcode als Base64-codierter SVG-String zur direkten Einbettung in HTML (Data-URI). Bei leerem oder null-Inhalt
+	 *                          wird ein leeres, transparentes SVG zurückgegeben (nie null).
 	 *                          Eine Einbettung könnte dabei mittels Thymeleaf erfolgen:
 	 *                          {@code <img th:src="${#convert.toBarcodeCode128AsSvgHtmlImageSource(schueler.id(), 50, 30)}"
 	 *                                      th:alt="${'Barcode zur ID ' + schueler.id()}" />}
@@ -192,7 +196,8 @@ public class ConvertExpressionHelper {
 	 * @param breiteInMM	Die gewünschte Breite des QR-Codes in Millimetern.
 	 * @param hoeheInMM		Die gewünschte Höhe des QR-Codes in Millimetern.
 	 *
-	 * @return				Der QR-Code als Base64-codierter SVG-String zur direkten Einbettung in HTML (Data-URI) oder null, falls ein Fehler auftritt.
+	 * @return				Der QR-Code als Base64-codierter SVG-String zur direkten Einbettung in HTML (Data-URI). Bei leerem oder null-Inhalt
+	 *                      wird ein leeres, transparentes SVG zurückgegeben (nie null).
 	 *                      Eine Einbettung könnte dabei mittels Thymeleaf erfolgen:
 	 *                      {@code <img th:src="${#convert.to2DCodeQRCodeAsSvgHtmlImageSource('Hello World', 50, 50)}"
 	 *                                  th:alt="'QR-Code'" />}

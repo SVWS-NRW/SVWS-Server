@@ -28,9 +28,9 @@ public class ReportingGostLaufbahnplanungErgebnismeldung extends ReportingBaseTy
 	 */
 	public ReportingGostLaufbahnplanungErgebnismeldung(final String code, final ReportingGostLaufbahnplanungErgebnismeldungKategorie kategorie,
 			final String meldung) {
-		this.code = code;
+		this.code = ersetzeNullBlankTrim(code);
 		this.kategorie = kategorie;
-		this.meldung = meldung;
+		this.meldung = ersetzeNullBlankTrim(meldung);
 	}
 
 
@@ -40,7 +40,7 @@ public class ReportingGostLaufbahnplanungErgebnismeldung extends ReportingBaseTy
 	/**
 	 * Interner Code der Meldung aus der Prüfung, wenn vorhanden, sonst leer,
 	 *
-	 * @return Inhalt des Feldes code
+	 * @return Inhalt des Feldes code; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String code() {
 		return code;
@@ -49,7 +49,7 @@ public class ReportingGostLaufbahnplanungErgebnismeldung extends ReportingBaseTy
 	/**
 	 * Kategorie der Meldung, bspw. Fehler oder Hinweis.
 	 *
-	 * @return Inhalt des Feldes kategorie
+	 * @return Inhalt des Feldes kategorie; kann {@code null} sein, wenn keine Kategorie zugeordnet ist.
 	 */
 	public ReportingGostLaufbahnplanungErgebnismeldungKategorie kategorie() {
 		return kategorie;
@@ -58,7 +58,7 @@ public class ReportingGostLaufbahnplanungErgebnismeldung extends ReportingBaseTy
 	/**
 	 * Text zur Meldung für den Benutzer
 	 *
-	 * @return Inhalt des Feldes meldung
+	 * @return Inhalt des Feldes meldung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String meldung() {
 		return meldung;

@@ -54,7 +54,10 @@ public class ReportingStundenplanungRasterElement extends ReportingStundenplanun
 		this.pausenzeiten.addAll(Objects.requireNonNullElseGet(pausenzeiten, ArrayList::new));
 
 		this.pausenzeiten.forEach(pz -> this.pausenaufsichten.addAll(pz.pausenaufsichten().stream().sorted().toList()));
-		this.pausenaufsichten.forEach(pa -> this.listMapPausenaufsichten.add(pa.id(), pa.lehrkraft().id(), pa.idAufsichtsbereich(), pa.wochentyp(), pa));
+		this.pausenaufsichten.forEach(
+				pa -> this.listMapPausenaufsichten.add(pa.id(), (pa.lehrkraft() != null)
+						? pa.lehrkraft().id()
+						: -1, pa.idAufsichtsbereich(), pa.wochentyp(), pa));
 	}
 
 
@@ -66,7 +69,7 @@ public class ReportingStundenplanungRasterElement extends ReportingStundenplanun
 	 */
 	@Override
 	public int hashCode() {
-		return 31 + Objects.hash(zeilennummer, wochentag.id);
+		return 31 + Objects.hash(zeilennummer, wochentag);
 	}
 
 	/**
@@ -85,7 +88,7 @@ public class ReportingStundenplanungRasterElement extends ReportingStundenplanun
 		if (!(obj instanceof final ReportingStundenplanungRasterElement other)) {
 			return false;
 		}
-		return (Objects.equals(zeilennummer, other.zeilennummer)) && (Objects.equals(wochentag.id, other.wochentag.id));
+		return (Objects.equals(zeilennummer, other.zeilennummer)) && (Objects.equals(wochentag, other.wochentag));
 	}
 
 	/**
@@ -310,7 +313,9 @@ public class ReportingStundenplanungRasterElement extends ReportingStundenplanun
 
 		this.pausenaufsichten.addAll(pausenzeit.pausenaufsichten());
 		pausenzeit.pausenaufsichten()
-				.forEach(pa -> this.listMapPausenaufsichten.add(pa.id(), pa.lehrkraft().id(), pa.idAufsichtsbereich(), pa.wochentyp(), pa));
+				.forEach(pa -> this.listMapPausenaufsichten.add(pa.id(), (pa.lehrkraft() != null)
+						? pa.lehrkraft().id()
+						: -1, pa.idAufsichtsbereich(), pa.wochentyp(), pa));
 	}
 
 

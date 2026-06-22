@@ -137,7 +137,16 @@ public final class ReportingFactory {
 
 			this.logger.logLn(LogLevel.DEBUG, 0, "<<< Ende des Initialisierens der Reporting-Factory und des Validierens übergebener Daten.");
 		} catch (final ApiOperationException aoe) {
-			throw aoe;
+			// Die ApiOperationException wird unverändert weitergereicht, damit der ursprüngliche Status-Code nach außen erhalten bleibt.
+			// Stacktrace und Log werden dennoch wie im allgemeinen catch-Zweig protokolliert und auf der Konsole ausgegeben.
+			ReportingExceptionUtils.logException(
+					"### FEHLER: Während der Initialisierung und Validierung der Daten der Reporting-Factory ist ein Fehler aufgetreten.", aoe, logger,
+					LogLevel.ERROR, 0);
+			final SimpleOperationResponse sop = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log);
+			// Gebe das Log, das in der SimpleOperationResponse für Entwicklungszwecke auf der Console aus.
+			sop.log.forEach(Logger.global()::logLn);
+			// Wirf die Exception mit dem ursprünglichen Status-Code neu, aber mit dem vollständigen Log als Body
+			throw new ApiOperationException(aoe.getStatus(), aoe, sop, MediaType.APPLICATION_JSON);
 		} catch (final Exception e) {
 			ReportingExceptionUtils.logException(
 					"### FEHLER: Während der Initialisierung und Validierung der Daten der Reporting-Factory ist ein Fehler aufgetreten.", e, logger,
@@ -357,7 +366,16 @@ public final class ReportingFactory {
 			this.logger.logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung einer API-Response zur Report-Generierung.");
 			return reportResponse;
 		} catch (final ApiOperationException aoe) {
-			throw aoe;
+			// Die ApiOperationException wird unverändert weitergereicht, damit der ursprüngliche Status-Code nach außen erhalten bleibt.
+			// Stacktrace und Log werden dennoch wie im allgemeinen catch-Zweig protokolliert und auf der Konsole ausgegeben.
+			ReportingExceptionUtils.logException(
+					"### FEHLER: Während der Erzeugung einer API-Response zur Report-Generierung ist ein Fehler aufgetreten.", aoe, logger,
+					LogLevel.ERROR, 0);
+			final SimpleOperationResponse sop = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log);
+			// Gebe das Log, das in der SimpleOperationResponse für Entwicklungszwecke auf der Console aus.
+			sop.log.forEach(Logger.global()::logLn);
+			// Wirf die Exception mit dem ursprünglichen Status-Code neu, aber mit dem vollständigen Log als Body
+			throw new ApiOperationException(aoe.getStatus(), aoe, sop, MediaType.APPLICATION_JSON);
 		} catch (final Exception e) {
 			ReportingExceptionUtils.logException(
 					"### FEHLER: Während der Erzeugung einer API-Response zur Report-Generierung ist ein Fehler aufgetreten.", e, logger,

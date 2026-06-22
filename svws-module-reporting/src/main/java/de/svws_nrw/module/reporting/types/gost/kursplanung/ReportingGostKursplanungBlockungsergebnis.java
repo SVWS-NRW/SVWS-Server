@@ -6,8 +6,10 @@ import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -98,13 +100,13 @@ public class ReportingGostKursplanungBlockungsergebnis extends ReportingBaseType
 		this.anzahlMaxKurseProSchiene = anzahlMaxKurseProSchiene;
 		this.anzahlSchienen = anzahlSchienen;
 		this.anzahlSchueler = anzahlSchueler;
-		this.bezeichnung = bezeichnung;
-		this.fachwahlstatistik = fachwahlstatistik;
+		this.bezeichnung = ersetzeNullBlankTrim(bezeichnung);
+		this.fachwahlstatistik = (fachwahlstatistik != null) ? new HashMap<>(fachwahlstatistik) : new HashMap<>();
 		this.gostHalbjahr = gostHalbjahr;
 		this.id = id;
-		this.kurse = (kurse != null) ? kurse : new ArrayList<>();
-		this.schienen = (schienen != null) ? schienen : new ArrayList<>();
-		this.schueler = (schueler != null) ? schueler : new ArrayList<>();
+		this.kurse = (kurse != null) ? new ArrayList<>(kurse.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
+		this.schienen = (schienen != null) ? new ArrayList<>(schienen.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
+		this.schueler = (schueler != null) ? new ArrayList<>(schueler.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
 
 		this.filterSchueler = (filterSchueler == null) ? s -> true : filterSchueler;
 		this.filterKurse = (filterKurse == null) ? k -> true : filterKurse;
@@ -195,7 +197,7 @@ public class ReportingGostKursplanungBlockungsergebnis extends ReportingBaseType
 	/**
 	 * Map mit den Fachwahlstatistiken des GOSt-Halbjahres des Blockungsergebnisses zur Fach-ID
 	 *
-	 * @return Inhalt des Feldes fachwahlstatistik
+	 * @return Inhalt des Feldes fachwahlstatistik; nie {@code null}, bei fehlender Zuordnung eine leere Map.
 	 */
 	public Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik() {
 		return fachwahlstatistik;
@@ -204,7 +206,7 @@ public class ReportingGostKursplanungBlockungsergebnis extends ReportingBaseType
 	/**
 	 * Bezeichnung des Blockungsergebnisses
 	 *
-	 * @return Inhalt des Feldes bezeichnung
+	 * @return Inhalt des Feldes bezeichnung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String bezeichnung() {
 		return bezeichnung;
@@ -213,7 +215,7 @@ public class ReportingGostKursplanungBlockungsergebnis extends ReportingBaseType
 	/**
 	 * Das Halbjahr der gymnasialen Oberstufe des Blockungsergebnisses
 	 *
-	 * @return Inhalt des Feldes gostHalbjahr
+	 * @return Inhalt des Feldes gostHalbjahr; kann {@code null} sein, wenn kein Halbjahr zugeordnet ist.
 	 */
 	public GostHalbjahr gostHalbjahr() {
 		return gostHalbjahr;
@@ -241,10 +243,10 @@ public class ReportingGostKursplanungBlockungsergebnis extends ReportingBaseType
 	/**
 	 * Eine Liste vom Typ Schiene, die alle Schienen des Blockungsergebnisses beinhaltet.
 	 *
-	 * @return Inhalt des Feldes schienen
+	 * @return Inhalt des Feldes schienen; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingGostKursplanungSchiene> schienen() {
-		return schienen;
+		return schienen.stream().toList();
 	}
 
 	/**
@@ -255,6 +257,27 @@ public class ReportingGostKursplanungBlockungsergebnis extends ReportingBaseType
 	 */
 	public List<ReportingSchueler> schueler() {
 		return this.schueler.stream().filter(filterSchueler).toList();
+	}
+
+
+	/**
+	 * Setzt die Liste der Kurse als gefilterte Defensivkopie. Wird vom Repository erst NACH dem vollständigen Aufbau
+	 * der Kurs-Proxys aufgerufen, da diese eine Rückreferenz auf dieses Blockungsergebnis benötigen und daher erst
+	 * nach dessen Konstruktion erzeugt werden können.
+	 *
+	 * @param kurse Die vollständig aufgebaute Liste der Kurse.
+	 */
+	public void setKurse(final List<ReportingGostKursplanungKurs> kurse) {
+		this.kurse = (kurse != null) ? new ArrayList<>(kurse.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
+	}
+
+	/**
+	 * Setzt die Liste der Schienen als gefilterte Defensivkopie (analog zu {@link #setKurse}).
+	 *
+	 * @param schienen Die vollständig aufgebaute Liste der Schienen.
+	 */
+	public void setSchienen(final List<ReportingGostKursplanungSchiene> schienen) {
+		this.schienen = (schienen != null) ? new ArrayList<>(schienen.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
 	}
 
 }

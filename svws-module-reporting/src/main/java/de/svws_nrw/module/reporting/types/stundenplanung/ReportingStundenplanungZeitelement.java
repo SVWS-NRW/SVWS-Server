@@ -43,7 +43,7 @@ public class ReportingStundenplanungZeitelement extends ReportingBaseType implem
 	 * @return Hashcode der Klasse
 	 */
 	public int hashCode() {
-		return 31 + Objects.hash(beginn, ende, wochentag.id);
+		return 31 + Objects.hash(beginn, ende, wochentag);
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class ReportingStundenplanungZeitelement extends ReportingBaseType implem
 			return false;
 		}
 		return (Objects.equals(beginn, other.beginn)) && (Objects.equals(ende, other.ende))
-				&& (Objects.equals(wochentag.id, other.wochentag.id));
+				&& (Objects.equals(wochentag, other.wochentag));
 	}
 
 	/**
@@ -283,7 +283,7 @@ public class ReportingStundenplanungZeitelement extends ReportingBaseType implem
 	/**
 	 * Liefert den Wochentag, an dem dieses Element liegt.
 	 *
-	 * @return Der Wochentag dieses Elements.
+	 * @return Der Wochentag dieses Elements; kann {@code null} sein, wenn kein Wochentag zugeordnet ist.
 	 */
 	public Wochentag wochentag() {
 		return wochentag;

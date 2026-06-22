@@ -3,6 +3,7 @@ package de.svws_nrw.module.reporting.types.lerngruppen;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.svws_nrw.module.reporting.filterung.ReportingFilterung;
 import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
@@ -127,7 +128,7 @@ public class ReportingKlasse extends ReportingSchuelergruppe {
 			final String pruefungsordnung, final String teilstandort, final boolean verwendungAnkreuzkompetenzen, final ReportingKlasse vorgaengerklasse) {
 		super(id, schuljahresabschnitt, kuerzel, klassenleitungen, schueler, sortierungEintrag);
 		this.beginnSommersemester = beginnSommersemester;
-		this.beschreibung = beschreibung;
+		this.beschreibung = ersetzeNullBlankTrim(beschreibung);
 		this.folgeklasse = folgeklasse;
 		this.idAllgemeinbildendOrganisationsform = idAllgemeinbildendOrganisationsform;
 		this.idBerufsbildendOrganisationsform = idBerufsbildendOrganisationsform;
@@ -135,16 +136,16 @@ public class ReportingKlasse extends ReportingSchuelergruppe {
 		this.idFolgeklasse = idFolgeklasse;
 		this.idJahrgang = idJahrgang;
 		this.idKlassenart = idKlassenart;
-		this.idsSchueler = idsSchueler;
+		this.idsSchueler = (idsSchueler != null) ? new ArrayList<>(idsSchueler.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
 		this.idSchulgliederung = idSchulgliederung;
 		this.idVorgaengerklasse = idVorgaengerklasse;
 		this.idWeiterbildungOrganisationsform = idWeiterbildungOrganisationsform;
 		this.jahrgang = jahrgang;
-		this.kuerzelFolgeklasse = kuerzelFolgeklasse;
-		this.kuerzelVorgaengerklasse = kuerzelVorgaengerklasse;
-		this.parallelitaet = parallelitaet;
-		this.pruefungsordnung = pruefungsordnung;
-		this.teilstandort = teilstandort;
+		this.kuerzelFolgeklasse = ersetzeNullBlankTrim(kuerzelFolgeklasse);
+		this.kuerzelVorgaengerklasse = ersetzeNullBlankTrim(kuerzelVorgaengerklasse);
+		this.parallelitaet = ersetzeNullBlankTrim(parallelitaet);
+		this.pruefungsordnung = ersetzeNullBlankTrim(pruefungsordnung);
+		this.teilstandort = ersetzeNullBlankTrim(teilstandort);
 		this.verwendungAnkreuzkompetenzen = verwendungAnkreuzkompetenzen;
 		this.vorgaengerklasse = vorgaengerklasse;
 	}
@@ -177,7 +178,7 @@ public class ReportingKlasse extends ReportingSchuelergruppe {
 	/**
 	 * Eine zusätzliche Beschreibung zu der Klasse
 	 *
-	 * @return Inhalt des Feldes Beschreibung
+	 * @return Inhalt des Feldes Beschreibung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String beschreibung() {
 		return beschreibung;
@@ -249,7 +250,7 @@ public class ReportingKlasse extends ReportingSchuelergruppe {
 	/**
 	 * Die Liste der IDs der Schüler der Klasse.
 	 *
-	 * @return Inhalt des Feldes idsSchueler
+	 * @return Inhalt des Feldes idsSchueler; nie {@code null}, bei fehlenden Schülern eine leere Liste.
 	 */
 	public List<Long> idsSchueler() {
 		return idsSchueler;
@@ -285,7 +286,7 @@ public class ReportingKlasse extends ReportingSchuelergruppe {
 	/**
 	 * Der Jahrgang, dem die Klasse zugeordnet ist.
 	 *
-	 * @return Inhalt des Feldes Jahrgang
+	 * @return Inhalt des Feldes Jahrgang; kann {@code null} sein, wenn der Klasse kein Jahrgang zugeordnet ist.
 	 */
 	public ReportingJahrgang jahrgang() {
 		return jahrgang;
@@ -330,7 +331,7 @@ public class ReportingKlasse extends ReportingSchuelergruppe {
 	/**
 	 * Das Kürzel der Folgeklasse.
 	 *
-	 * @return Inhalt des Feldes kuerzelFolgeklasse
+	 * @return Inhalt des Feldes kuerzelFolgeklasse; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String kuerzelFolgeklasse() {
 		return kuerzelFolgeklasse;
@@ -339,7 +340,7 @@ public class ReportingKlasse extends ReportingSchuelergruppe {
 	/**
 	 * Das Kürzel der Vorgängerklasse.
 	 *
-	 * @return Inhalt des Feldes kuerzelVorgaengerklasse
+	 * @return Inhalt des Feldes kuerzelVorgaengerklasse; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String kuerzelVorgaengerklasse() {
 		return kuerzelVorgaengerklasse;
@@ -348,7 +349,7 @@ public class ReportingKlasse extends ReportingSchuelergruppe {
 	/**
 	 * Das Kürzel für die Parallelität der Klasse innerhalb des Jahrgangs (A-Z).
 	 *
-	 * @return Inhalt des Feldes parallelitaet
+	 * @return Inhalt des Feldes parallelitaet; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String parallelitaet() {
 		return parallelitaet;
@@ -357,7 +358,7 @@ public class ReportingKlasse extends ReportingSchuelergruppe {
 	/**
 	 * Die zugewiesene Prüfungsordnung, welche in Schild 3 genutzt wird.
 	 *
-	 * @return Inhalt des Feldes pruefungsordnung
+	 * @return Inhalt des Feldes pruefungsordnung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String pruefungsordnung() {
 		return pruefungsordnung;
@@ -366,7 +367,7 @@ public class ReportingKlasse extends ReportingSchuelergruppe {
 	/**
 	 * Adressmerkmal des Teilstandorts für die Klasse
 	 *
-	 * @return Inhalt des Feldes teilstandort
+	 * @return Inhalt des Feldes teilstandort; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String teilstandort() {
 		return teilstandort;

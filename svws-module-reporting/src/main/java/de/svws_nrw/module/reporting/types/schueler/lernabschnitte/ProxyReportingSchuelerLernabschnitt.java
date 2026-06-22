@@ -151,7 +151,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	 */
 	@Override
 	public List<ReportingSchuelerAnkreuzkompetenz> ankreuzkompetenzen() {
-		if (super.ankreuzkompetenzen == null) {
+		if ((super.ankreuzkompetenzen == null) || super.ankreuzkompetenzen.isEmpty()) {
 			super.ankreuzkompetenzen = this.reportingContext.repositorySchueler().schuelerLernabschnittAnkreuzkompetenzen(this);
 		}
 		return super.ankreuzkompetenzen;
@@ -177,7 +177,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	 */
 	@Override
 	public ReportingJahrgang jahrgang() {
-		if ((super.jahrgang == null) && (super.idJahrgang != null) && (super.idJahrgang >= 0)) {
+		if ((super.jahrgang == null) && (super.idJahrgang != null) && (super.idJahrgang >= 0) && (super.schuljahresabschnitt != null)) {
 			super.jahrgang = super.schuljahresabschnitt.jahrgang(super.idJahrgang);
 		}
 		return super.jahrgang();
@@ -190,7 +190,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	 */
 	@Override
 	public ReportingKlasse klasse() {
-		if ((super.klasse() == null) && (super.idKlasse() != null) && (super.idKlasse() >= 0)) {
+		if ((super.klasse() == null) && (super.idKlasse() != null) && (super.idKlasse() >= 0) && (super.schuljahresabschnitt != null)) {
 			super.klasse = super.schuljahresabschnitt.klasse(super.idKlasse);
 		}
 		return super.klasse();
@@ -256,7 +256,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	 */
 	@Override
 	public List<ReportingSchuelerZuweisung> zuweisungen() {
-		if (super.zuweisungen == null) {
+		if ((super.zuweisungen == null) || super.zuweisungen.isEmpty()) {
 			super.zuweisungen = this.reportingContext.repositorySchueler().zuweisungen(this.id(), this);
 		}
 		return super.zuweisungen;

@@ -298,9 +298,9 @@ public abstract class ReportingSchuelergruppe extends ReportingBaseType {
 		if ((schueler == null) || schueler.isEmpty()) {
 			return "(0/0/0)";
 		}
-		final long anzahlM = schueler.stream().filter(s -> "m".equalsIgnoreCase(s.geschlecht().kuerzel)).count();
-		final long anzahlW = schueler.stream().filter(s -> "w".equalsIgnoreCase(s.geschlecht().kuerzel)).count();
-		final long anzahlD = schueler.stream().filter(s -> "d".equalsIgnoreCase(s.geschlecht().kuerzel)).count();
+		final long anzahlM = schueler.stream().filter(s -> (s.geschlecht() != null) && "m".equalsIgnoreCase(s.geschlecht().kuerzel)).count();
+		final long anzahlW = schueler.stream().filter(s -> (s.geschlecht() != null) && "w".equalsIgnoreCase(s.geschlecht().kuerzel)).count();
+		final long anzahlD = schueler.stream().filter(s -> (s.geschlecht() != null) && "d".equalsIgnoreCase(s.geschlecht().kuerzel)).count();
 		return String.format("(%d/%d/%d)", anzahlM, anzahlW, anzahlD);
 	}
 

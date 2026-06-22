@@ -61,11 +61,12 @@ public class ReportingGostKlausurplanungKlausurplan extends ReportingBaseType {
 			final Predicate<ReportingGostKlausurplanungKlausurtermin> filterKlausurtermine) {
 
 		// Fülle die Basislisten mit den übergebenen Daten.
-		this.schueler = (schueler != null) ? schueler : new ArrayList<>();
-		this.kurse = (kurse != null) ? kurse : new ArrayList<>();
-		this.klausurtermine = (klausurtermine != null) ? klausurtermine : new ArrayList<>();
-		this.kursklausuren = (kursklausuren != null) ? kursklausuren : new ArrayList<>();
-		this.schuelerklausuren = (schuelerklausuren != null) ? schuelerklausuren : new ArrayList<>();
+		this.schueler = (schueler != null) ? new ArrayList<>(schueler.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
+		this.kurse = (kurse != null) ? new ArrayList<>(kurse.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
+		this.klausurtermine = (klausurtermine != null) ? new ArrayList<>(klausurtermine.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
+		this.kursklausuren = (kursklausuren != null) ? new ArrayList<>(kursklausuren.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
+		this.schuelerklausuren =
+				(schuelerklausuren != null) ? new ArrayList<>(schuelerklausuren.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
 
 		this.filterSchueler = (filterSchueler == null) ? s -> true : filterSchueler;
 		this.filterKurse = (filterKurse == null) ? k -> true : filterKurse;
@@ -81,7 +82,7 @@ public class ReportingGostKlausurplanungKlausurplan extends ReportingBaseType {
 	 * @return Liste der Datumsangaben der Klausurtermine
 	 */
 	public List<String> datumsangabenKlausurtermine() {
-		return this.klausurtermine.stream().filter(filterKlausurtermine).filter(t -> Objects.nonNull(t.datum())).map(t -> t.datum).sorted().distinct().toList();
+		return this.klausurtermine.stream().filter(filterKlausurtermine).filter(t -> !t.datum().isEmpty()).map(t -> t.datum).sorted().distinct().toList();
 	}
 
 	/**
@@ -90,7 +91,7 @@ public class ReportingGostKlausurplanungKlausurplan extends ReportingBaseType {
 	 * @return Liste der Klausurtermine mit Datumsangabe
 	 */
 	public List<ReportingGostKlausurplanungKlausurtermin> klausurtermineMitDatum() {
-		return this.klausurtermine.stream().filter(filterKlausurtermine).filter(t -> Objects.nonNull(t.datum())).toList();
+		return this.klausurtermine.stream().filter(filterKlausurtermine).filter(t -> !t.datum().isEmpty()).toList();
 	}
 
 	/**
@@ -99,7 +100,7 @@ public class ReportingGostKlausurplanungKlausurplan extends ReportingBaseType {
 	 * @return Liste der Klausurtermine ohne Datumsangabe
 	 */
 	public List<ReportingGostKlausurplanungKlausurtermin> klausurtermineOhneDatum() {
-		return this.klausurtermine.stream().filter(filterKlausurtermine).filter(t -> Objects.isNull(t.datum())).toList();
+		return this.klausurtermine.stream().filter(filterKlausurtermine).filter(t -> t.datum().isEmpty()).toList();
 	}
 
 	/**

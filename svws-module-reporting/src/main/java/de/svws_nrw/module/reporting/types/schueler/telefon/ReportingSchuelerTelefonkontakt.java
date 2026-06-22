@@ -34,11 +34,11 @@ public class ReportingSchuelerTelefonkontakt extends ReportingBaseType {
 	 */
 	public ReportingSchuelerTelefonkontakt(final String bemerkung, final String bezeichnung, final boolean istGesperrt,
 			final int sortierung, final String telefonnummer) {
-		this.bemerkung = bemerkung;
-		this.bezeichnung = bezeichnung;
+		this.bemerkung = ersetzeNullBlankTrim(bemerkung);
+		this.bezeichnung = ersetzeNullBlankTrim(bezeichnung);
 		this.istGesperrt = istGesperrt;
 		this.sortierung = sortierung;
-		this.telefonnummer = telefonnummer;
+		this.telefonnummer = ersetzeNullBlankTrim(telefonnummer);
 	}
 
 
@@ -48,7 +48,7 @@ public class ReportingSchuelerTelefonkontakt extends ReportingBaseType {
 	/**
 	 * Eine ergänzende Bemerkung zum Telefonkontakt.
 	 *
-	 * @return Inhalt des Feldes bemerkung
+	 * @return Inhalt des Feldes bemerkung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String bemerkung() {
 		return bemerkung;
@@ -57,7 +57,7 @@ public class ReportingSchuelerTelefonkontakt extends ReportingBaseType {
 	/**
 	 * Die Bezeichnung des Telefonkontaktes.
 	 *
-	 * @return Inhalt des Feldes bezeichnung
+	 * @return Inhalt des Feldes bezeichnung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String bezeichnung() {
 		return bezeichnung;
@@ -84,7 +84,7 @@ public class ReportingSchuelerTelefonkontakt extends ReportingBaseType {
 	/**
 	 * Die Telefonnummer des Kontakts.
 	 *
-	 * @return Inhalt des Feldes telefonnummer
+	 * @return Inhalt des Feldes telefonnummer; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String telefonnummer() {
 		return telefonnummer;

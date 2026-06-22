@@ -121,28 +121,28 @@ public class ReportingPerson extends ReportingBaseType {
 			final String telefonSchuleMobil, final String titel, final String vorname, final String vornamen, final OrtKatalogEintrag wohnort,
 			final OrtsteilKatalogEintrag wohnortsteil) {
 		super();
-		this.anrede = anrede;
-		this.emailPrivat = emailPrivat;
-		this.emailSchule = emailSchule;
-		this.faxSchule = faxSchule;
-		this.geburtsdatum = geburtsdatum;
-		this.geburtsland = geburtsland;
-		this.geburtsname = geburtsname;
-		this.geburtsort = geburtsort;
+		this.anrede = ersetzeNullBlankTrim(anrede);
+		this.emailPrivat = ersetzeNullBlankTrim(emailPrivat);
+		this.emailSchule = ersetzeNullBlankTrim(emailSchule);
+		this.faxSchule = ersetzeNullBlankTrim(faxSchule);
+		this.geburtsdatum = ersetzeNullBlankTrim(geburtsdatum);
+		this.geburtsland = ersetzeNullBlankTrim(geburtsland);
+		this.geburtsname = ersetzeNullBlankTrim(geburtsname);
+		this.geburtsort = ersetzeNullBlankTrim(geburtsort);
 		this.geschlecht = geschlecht;
-		this.hausnummer = hausnummer;
-		this.hausnummerZusatz = hausnummerZusatz;
-		this.nachname = nachname;
+		this.hausnummer = ersetzeNullBlankTrim(hausnummer);
+		this.hausnummerZusatz = ersetzeNullBlankTrim(hausnummerZusatz);
+		this.nachname = ersetzeNullBlankTrim(nachname);
 		this.staatsangehoerigkeit = staatsangehoerigkeit;
 		this.staatsangehoerigkeit2 = staatsangehoerigkeit2;
-		this.strassenname = strassenname;
-		this.telefonPrivat = telefonPrivat;
-		this.telefonPrivatMobil = telefonPrivatMobil;
-		this.telefonSchule = telefonSchule;
-		this.telefonSchuleMobil = telefonSchuleMobil;
-		this.titel = titel;
-		this.vorname = vorname;
-		this.vornamen = vornamen;
+		this.strassenname = ersetzeNullBlankTrim(strassenname);
+		this.telefonPrivat = ersetzeNullBlankTrim(telefonPrivat);
+		this.telefonPrivatMobil = ersetzeNullBlankTrim(telefonPrivatMobil);
+		this.telefonSchule = ersetzeNullBlankTrim(telefonSchule);
+		this.telefonSchuleMobil = ersetzeNullBlankTrim(telefonSchuleMobil);
+		this.titel = ersetzeNullBlankTrim(titel);
+		this.vorname = ersetzeNullBlankTrim(vorname);
+		this.vornamen = ersetzeNullBlankTrim(vornamen);
 		this.wohnort = wohnort;
 		this.wohnortsteil = wohnortsteil;
 	}
@@ -481,7 +481,7 @@ public class ReportingPerson extends ReportingBaseType {
 	/**
 	 * Die Anrede.
 	 *
-	 * @return Inhalt des Feldes anrede
+	 * @return Inhalt des Feldes anrede; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String anrede() {
 		return anrede;
@@ -490,7 +490,7 @@ public class ReportingPerson extends ReportingBaseType {
 	/**
 	 * Die private E-Mail-Adresse.
 	 *
-	 * @return Inhalt des Feldes emailPrivat
+	 * @return Inhalt des Feldes emailPrivat; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String emailPrivat() {
 		return emailPrivat;
@@ -499,7 +499,7 @@ public class ReportingPerson extends ReportingBaseType {
 	/**
 	 * Die schulische E-Mail-Adresse.
 	 *
-	 * @return Inhalt des Feldes emailSchule
+	 * @return Inhalt des Feldes emailSchule; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String emailSchule() {
 		return emailSchule;
@@ -508,7 +508,7 @@ public class ReportingPerson extends ReportingBaseType {
 	/**
 	 * Die schulische Fax-Nummer.
 	 *
-	 * @return Inhalt des Feldes faxSchule
+	 * @return Inhalt des Feldes faxSchule; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String faxSchule() {
 		return faxSchule;
@@ -517,7 +517,7 @@ public class ReportingPerson extends ReportingBaseType {
 	/**
 	 * Das Geburtsdatum.
 	 *
-	 * @return Inhalt des Feldes geburtsdatum
+	 * @return Inhalt des Feldes geburtsdatum; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String geburtsdatum() {
 		return geburtsdatum;
@@ -526,7 +526,7 @@ public class ReportingPerson extends ReportingBaseType {
 	/**
 	 * Das Geburtsland.
 	 *
-	 * @return Inhalt des Feldes geburtsland
+	 * @return Inhalt des Feldes geburtsland; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String geburtsland() {
 		return geburtsland;
@@ -535,7 +535,7 @@ public class ReportingPerson extends ReportingBaseType {
 	/**
 	 * Der Geburtsname.
 	 *
-	 * @return Inhalt des Feldes geburtsname
+	 * @return Inhalt des Feldes geburtsname; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String geburtsname() {
 		return geburtsname;
@@ -544,7 +544,7 @@ public class ReportingPerson extends ReportingBaseType {
 	/**
 	 * Der Geburtsort.
 	 *
-	 * @return Inhalt des Feldes geburtsort
+	 * @return Inhalt des Feldes geburtsort; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String geburtsort() {
 		return geburtsort;
@@ -553,7 +553,7 @@ public class ReportingPerson extends ReportingBaseType {
 	/**
 	 * Das Geschlecht.
 	 *
-	 * @return Inhalt des Feldes geschlecht
+	 * @return Inhalt des Feldes geschlecht; kann {@code null} sein, wenn kein Geschlecht zugeordnet ist.
 	 */
 	public Geschlecht geschlecht() {
 		return geschlecht;
@@ -601,7 +601,7 @@ public class ReportingPerson extends ReportingBaseType {
 	/**
 	 * Ggf. die Hausnummer zur Straße im Wohnort.
 	 *
-	 * @return Inhalt des Feldes hausnummer
+	 * @return Inhalt des Feldes hausnummer; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String hausnummer() {
 		return hausnummer;
@@ -610,7 +610,7 @@ public class ReportingPerson extends ReportingBaseType {
 	/**
 	 * Ggf. der Hausnummerzusatz zur Straße im Wohnort.
 	 *
-	 * @return Inhalt des Feldes hausnummerZusatz
+	 * @return Inhalt des Feldes hausnummerZusatz; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String hausnummerZusatz() {
 		return hausnummerZusatz;
@@ -619,7 +619,7 @@ public class ReportingPerson extends ReportingBaseType {
 	/**
 	 * Der Name.
 	 *
-	 * @return Inhalt des Feldes nachname
+	 * @return Inhalt des Feldes nachname; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String nachname() {
 		return nachname;
@@ -646,7 +646,7 @@ public class ReportingPerson extends ReportingBaseType {
 	/**
 	 * Ggf. der Straßenname im Wohnort.
 	 *
-	 * @return Inhalt des Feldes strassenname
+	 * @return Inhalt des Feldes strassenname; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String strassenname() {
 		return strassenname;
@@ -655,7 +655,7 @@ public class ReportingPerson extends ReportingBaseType {
 	/**
 	 * Die private Telefonnummer.
 	 *
-	 * @return Inhalt des Feldes telefonPrivat
+	 * @return Inhalt des Feldes telefonPrivat; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String telefonPrivat() {
 		return telefonPrivat;
@@ -664,7 +664,7 @@ public class ReportingPerson extends ReportingBaseType {
 	/**
 	 * Die private Mobilfunk-Telefonnummer.
 	 *
-	 * @return Inhalt des Feldes telefonPrivatMobil
+	 * @return Inhalt des Feldes telefonPrivatMobil; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String telefonPrivatMobil() {
 		return telefonPrivatMobil;
@@ -673,7 +673,7 @@ public class ReportingPerson extends ReportingBaseType {
 	/**
 	 * Die schulische Telefonnummer.
 	 *
-	 * @return Inhalt des Feldes telefonSchule
+	 * @return Inhalt des Feldes telefonSchule; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String telefonSchule() {
 		return telefonSchule;
@@ -682,7 +682,7 @@ public class ReportingPerson extends ReportingBaseType {
 	/**
 	 * Die schulische Mobilifunk-Telefonnummer.
 	 *
-	 * @return Inhalt des Feldes telefonSchuleMobil
+	 * @return Inhalt des Feldes telefonSchuleMobil; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String telefonSchuleMobil() {
 		return telefonSchuleMobil;
@@ -691,7 +691,7 @@ public class ReportingPerson extends ReportingBaseType {
 	/**
 	 * Die Titel.
 	 *
-	 * @return Inhalt des Feldes titel
+	 * @return Inhalt des Feldes titel; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String titel() {
 		return titel;
@@ -700,7 +700,7 @@ public class ReportingPerson extends ReportingBaseType {
 	/**
 	 * Der Vorname (Rufname).
 	 *
-	 * @return Inhalt des Feldes vorname
+	 * @return Inhalt des Feldes vorname; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String vorname() {
 		return vorname;
@@ -709,7 +709,7 @@ public class ReportingPerson extends ReportingBaseType {
 	/**
 	 * Alle Vornamen, sofern es mehrere gibt.
 	 *
-	 * @return Inhalt des Feldes vornamen
+	 * @return Inhalt des Feldes vornamen; nie {@code null}, bei fehlendem Wert ein leerer String. Sind keine weiteren Vornamen vorhanden, wird der Rufname zurückgegeben.
 	 */
 	public String vornamen() {
 		if (!vornamen.isEmpty()) {

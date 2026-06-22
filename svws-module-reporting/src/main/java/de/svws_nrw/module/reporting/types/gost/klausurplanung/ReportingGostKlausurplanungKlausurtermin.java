@@ -2,6 +2,7 @@ package de.svws_nrw.module.reporting.types.gost.klausurplanung;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.DateUtils;
@@ -82,17 +83,17 @@ public class ReportingGostKlausurplanungKlausurtermin extends ReportingBaseType 
 			final List<ReportingGostKlausurplanungKlausurraum> klausurraeume, final List<ReportingGostKlausurplanungKursklausur> kursklausuren,
 			final boolean nachschreiberZugelassen, final int quartal, final List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren,
 			final Integer startzeit) {
-		this.bemerkung = bemerkung;
-		this.bezeichnung = bezeichnung;
-		this.datum = datum;
+		this.bemerkung = ersetzeNullBlankTrim(bemerkung);
+		this.bezeichnung = ersetzeNullBlankTrim(bezeichnung);
+		this.datum = ersetzeNullBlankTrim(datum);
 		this.gostHalbjahr = gostHalbjahr;
 		this.id = id;
 		this.istHaupttermin = istHaupttermin;
-		this.klausurraeume = klausurraeume;
-		this.kursklausuren = kursklausuren;
+		this.klausurraeume = (klausurraeume != null) ? new ArrayList<>(klausurraeume.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
+		this.kursklausuren = (kursklausuren != null) ? new ArrayList<>(kursklausuren.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
 		this.nachschreiberZugelassen = nachschreiberZugelassen;
 		this.quartal = quartal;
-		this.schuelerklausuren = schuelerklausuren;
+		this.schuelerklausuren = (schuelerklausuren != null) ? new ArrayList<>(schuelerklausuren.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
 		this.startzeit = startzeit;
 	}
 
@@ -150,8 +151,11 @@ public class ReportingGostKlausurplanungKlausurtermin extends ReportingBaseType 
 				temp = temp + " ???";
 			}
 			if (!raum.aufsichten.isEmpty()) {
-				temp = temp + " (Std. " + raum.aufsichten.getFirst().unterrichtsstunde.stundeImUnterrichtsraster() + "-"
-						+ raum.aufsichten.getLast().unterrichtsstunde.stundeImUnterrichtsraster() + ")";
+				final var ersteStunde = raum.aufsichten.getFirst().unterrichtsstunde;
+				final var letzteStunde = raum.aufsichten.getLast().unterrichtsstunde;
+				if ((ersteStunde != null) && (letzteStunde != null)) {
+					temp = temp + " (Std. " + ersteStunde.stundeImUnterrichtsraster() + "-" + letzteStunde.stundeImUnterrichtsraster() + ")";
+				}
 			}
 			if (!temp.isEmpty()) {
 				tempList.add(temp);
@@ -170,7 +174,7 @@ public class ReportingGostKlausurplanungKlausurtermin extends ReportingBaseType 
 	/**
 	 * Die textuelle Bemerkung zum Termin, sofern vorhanden.
 	 *
-	 * @return Inhalt des Feldes bemerkung
+	 * @return Inhalt des Feldes bemerkung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String bemerkung() {
 		return bemerkung;
@@ -179,7 +183,7 @@ public class ReportingGostKlausurplanungKlausurtermin extends ReportingBaseType 
 	/**
 	 * Die Bezeichnung des Klausurtermins, falls schon gesetzt.
 	 *
-	 * @return Inhalt des Feldes bezeichnung
+	 * @return Inhalt des Feldes bezeichnung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String bezeichnung() {
 		return bezeichnung;
@@ -188,7 +192,7 @@ public class ReportingGostKlausurplanungKlausurtermin extends ReportingBaseType 
 	/**
 	 * Das Datum des Klausurtermins, falls schon gesetzt.
 	 *
-	 * @return Inhalt des Feldes datum
+	 * @return Inhalt des Feldes datum; nie {@code null}, ein leerer String bedeutet, dass dem Termin noch kein Datum zugewiesen wurde.
 	 */
 	public String datum() {
 		return datum;
@@ -224,7 +228,7 @@ public class ReportingGostKlausurplanungKlausurtermin extends ReportingBaseType 
 	/**
 	 * Die Klausurräume dieses Termines, inklusive der Aufsichten für die Unterrichtsstunden der Klausur.
 	 *
-	 * @return Inhalt des Feldes klausurraeume
+	 * @return Inhalt des Feldes klausurraeume; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingGostKlausurplanungKlausurraum> klausurraeume() {
 		return klausurraeume;
@@ -233,7 +237,7 @@ public class ReportingGostKlausurplanungKlausurtermin extends ReportingBaseType 
 	/**
 	 * Die Liste von Kursklausuren zu diesem Klausurtermin.
 	 *
-	 * @return Inhalt des Feldes kursklausuren
+	 * @return Inhalt des Feldes kursklausuren; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingGostKlausurplanungKursklausur> kursklausuren() {
 		return kursklausuren;
@@ -260,7 +264,7 @@ public class ReportingGostKlausurplanungKlausurtermin extends ReportingBaseType 
 	/**
 	 * Die Liste aller Schülerklausuren zu diesem Termin.
 	 *
-	 * @return Inhalt des Feldes schuelerklausuren
+	 * @return Inhalt des Feldes schuelerklausuren; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren() {
 		return schuelerklausuren;

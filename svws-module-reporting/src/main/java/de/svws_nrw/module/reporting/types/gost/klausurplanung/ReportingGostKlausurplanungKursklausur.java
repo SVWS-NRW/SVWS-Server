@@ -2,6 +2,7 @@ package de.svws_nrw.module.reporting.types.gost.klausurplanung;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.module.reporting.filterung.ReportingFilterung;
@@ -78,7 +79,7 @@ public class ReportingGostKlausurplanungKursklausur extends ReportingBaseType {
 			final boolean istVideoNotwendig, final ReportingGostKlausurplanungKlausurtermin klausurtermin, final ReportingKurs kurs,
 			final List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren, final Integer startzeit) {
 		this.auswahlzeit = auswahlzeit;
-		this.bemerkung = bemerkung;
+		this.bemerkung = ersetzeNullBlankTrim(bemerkung);
 		this.dauer = dauer;
 		this.id = id;
 		this.istAudioNotwendig = istAudioNotwendig;
@@ -86,7 +87,7 @@ public class ReportingGostKlausurplanungKursklausur extends ReportingBaseType {
 		this.istVideoNotwendig = istVideoNotwendig;
 		this.klausurtermin = klausurtermin;
 		this.kurs = kurs;
-		this.schuelerklausuren = schuelerklausuren;
+		this.schuelerklausuren = (schuelerklausuren != null) ? new ArrayList<>(schuelerklausuren.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
 		this.startzeit = startzeit;
 	}
 
@@ -134,7 +135,7 @@ public class ReportingGostKlausurplanungKursklausur extends ReportingBaseType {
 		if (this.kurs == null) {
 			return new ArrayList<>();
 		}
-		return schuelerklausuren.stream().map(s -> s.schueler.vorname() + " " + s.schueler.nachname()).toList();
+		return schuelerklausuren.stream().filter(s -> s.schueler != null).map(s -> s.schueler.vorname() + " " + s.schueler.nachname()).toList();
 	}
 
 	/**
@@ -187,6 +188,7 @@ public class ReportingGostKlausurplanungKursklausur extends ReportingBaseType {
 
 		if (!klausurenMitRaumUndStunden.isEmpty()) {
 			return klausurenMitRaumUndStunden.getFirst().klausurraum.aufsichten.stream()
+					.filter(a -> a.unterrichtsstunde != null)
 					.map(a -> a.unterrichtsstunde.stundeImUnterrichtsraster()).toList();
 		}
 		return new ArrayList<>();
@@ -244,7 +246,7 @@ public class ReportingGostKlausurplanungKursklausur extends ReportingBaseType {
 	/**
 	 * Die textuelle Bemerkung zur Kursklausur, sofern vorhanden.
 	 *
-	 * @return Inhalt des Feldes bemerkung
+	 * @return Inhalt des Feldes bemerkung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String bemerkung() {
 		return bemerkung;
@@ -298,7 +300,7 @@ public class ReportingGostKlausurplanungKursklausur extends ReportingBaseType {
 	/**
 	 * Der Termin aus der Klausurplanung, an dem diese Kursklausur stattfindet.
 	 *
-	 * @return Inhalt des Feldes klausurtermin
+	 * @return Inhalt des Feldes klausurtermin; kann {@code null} sein, wenn kein Termin zugeordnet ist.
 	 */
 	public ReportingGostKlausurplanungKlausurtermin klausurtermin() {
 		return klausurtermin;
@@ -307,7 +309,7 @@ public class ReportingGostKlausurplanungKursklausur extends ReportingBaseType {
 	/**
 	 * Der Kurs, indem die Klausur geschrieben wird, mit seinen Daten.
 	 *
-	 * @return Inhalt des Feldes kurs
+	 * @return Inhalt des Feldes kurs; kann {@code null} sein, wenn kein Kurs zugeordnet ist.
 	 */
 	public ReportingKurs kurs() {
 		return kurs;
@@ -316,7 +318,7 @@ public class ReportingGostKlausurplanungKursklausur extends ReportingBaseType {
 	/**
 	 * Die Liste der Schüler aus dem Kurs, die diese Klausur schreiben.
 	 *
-	 * @return Inhalt des Feldes klausurschreiber
+	 * @return Inhalt des Feldes klausurschreiber; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren() {
 		return schuelerklausuren;
@@ -325,7 +327,7 @@ public class ReportingGostKlausurplanungKursklausur extends ReportingBaseType {
 	/**
 	 * Die Startzeit der Klausur in Minuten seit 0 Uhr, wenn abweichend vom Klausurtermin, sonst null.
 	 *
-	 * @return Inhalt des Feldes startzeit
+	 * @return Inhalt des Feldes startzeit; kann {@code null} sein, wenn keine abweichende Startzeit gesetzt ist.
 	 */
 	public Integer startzeit() {
 		return startzeit;

@@ -54,18 +54,8 @@ public class ProxyReportingKurs extends ReportingKurs {
 		// Schuljahresabschnitt zum Kurs ermitteln
 		super.schuljahresabschnitt = this.reportingContext.repositorySchule().schuljahresabschnitt(kursDaten.idSchuljahresabschnitt);
 
-		// Fach setzen
-		super.fach = super.schuljahresabschnitt.fach(kursDaten.idFach);
-
-		// Jahrgänge setzen
-		if ((kursDaten.idJahrgaenge != null) && !kursDaten.idJahrgaenge.isEmpty()) {
-			for (final Long idJahrgang : kursDaten.idJahrgaenge) {
-				if (this.reportingContext.repositoryKataloge().jahrgaenge().containsKey(idJahrgang)) {
-					super.jahrgaenge.add(super.schuljahresabschnitt.jahrgang(idJahrgang));
-				}
-			}
-			super.jahrgaenge.sort(ReportingJahrgang.SORTIERUNG.comparatorStandard());
-		}
+		// Fach und Jahrgänge initialisieren
+		initFachUndJahrgaenge(kursDaten);
 
 		// Kurslehrer initialisieren
 		initKurslehrer(kursDaten);
@@ -74,6 +64,31 @@ public class ProxyReportingKurs extends ReportingKurs {
 		if ((kursDaten.schueler != null) && !kursDaten.schueler.isEmpty()) {
 			super.idsSchueler = kursDaten.schueler.stream().map(s -> s.id).toList();
 		}
+	}
+
+	private void initFachUndJahrgaenge(final KursDaten kursDaten) {
+		// Fach und Jahrgänge können nur bei vorhandenem Schuljahresabschnitt aufgelöst werden.
+		if (super.schuljahresabschnitt == null) {
+			return;
+		}
+
+		// Fach setzen
+		super.fach = super.schuljahresabschnitt.fach(kursDaten.idFach);
+
+		// Jahrgänge setzen
+		if ((kursDaten.idJahrgaenge == null) || kursDaten.idJahrgaenge.isEmpty()) {
+			return;
+		}
+
+		for (final Long idJahrgang : kursDaten.idJahrgaenge) {
+			if (this.reportingContext.repositoryKataloge().jahrgaenge().containsKey(idJahrgang)) {
+				final ReportingJahrgang jahrgang = super.schuljahresabschnitt.jahrgang(idJahrgang);
+				if (jahrgang != null) {
+					super.jahrgaenge.add(jahrgang);
+				}
+			}
+		}
+		super.jahrgaenge.sort(ReportingJahrgang.SORTIERUNG.comparatorStandard());
 	}
 
 	private void initKurslehrer(final KursDaten kursDaten) {

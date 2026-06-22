@@ -91,22 +91,22 @@ public class ReportingStatistikFach extends ReportingBaseType {
 			final ReportingFach fach, final Fachgruppe fachgruppe, final Integer gueltigBis, final Integer gueltigVon, final String htmlFarbeRGB,
 			final long idFachkatalog, final boolean istAusRegUFach, final boolean istErsatzPflichtFS, final boolean istFremdsprache, final boolean istHKFS,
 			final boolean istKonfKoop, final String kuerzel, final String kuerzelASD, final boolean nurSII) {
-		this.abJahrgang = abJahrgang;
+		this.abJahrgang = ersetzeNullBlankTrim(abJahrgang);
 		this.aufgabenfeld = aufgabenfeld;
-		this.bezeichnung = bezeichnung;
+		this.bezeichnung = ersetzeNullBlankTrim(bezeichnung);
 		this.exportASD = exportASD;
 		this.fachgruppe = fachgruppe;
 		this.gueltigBis = gueltigBis;
 		this.gueltigVon = gueltigVon;
-		this.htmlFarbeRGB = htmlFarbeRGB;
+		this.htmlFarbeRGB = ersetzeNullBlankTrim(htmlFarbeRGB);
 		this.idFachkatalog = idFachkatalog;
 		this.istAusRegUFach = istAusRegUFach;
 		this.istErsatzPflichtFS = istErsatzPflichtFS;
 		this.istFremdsprache = istFremdsprache;
 		this.istHKFS = istHKFS;
 		this.istKonfKoop = istKonfKoop;
-		this.kuerzel = kuerzel;
-		this.kuerzelASD = kuerzelASD;
+		this.kuerzel = ersetzeNullBlankTrim(kuerzel);
+		this.kuerzelASD = ersetzeNullBlankTrim(kuerzelASD);
 		this.nurSII = nurSII;
 		setFach(fach);
 	}
@@ -144,7 +144,7 @@ public class ReportingStatistikFach extends ReportingBaseType {
 	/**
 	 * Der ASD-Jahrgang, ab dem das Fach zulässig ist (z.B. bei Fremdsprachen)
 	 *
-	 * @return Inhalt des Feldes abJahrgang
+	 * @return Inhalt des Feldes abJahrgang; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String abJahrgang() {
 		return abJahrgang;
@@ -162,7 +162,7 @@ public class ReportingStatistikFach extends ReportingBaseType {
 	/**
 	 * Die textuelle Beschreibung des Faches
 	 *
-	 * @return Inhalt des Feldes bezeichnung
+	 * @return Inhalt des Feldes bezeichnung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String bezeichnung() {
 		return bezeichnung;
@@ -217,7 +217,7 @@ public class ReportingStatistikFach extends ReportingBaseType {
 	/**
 	 * Die RGB-Farbe des Faches für html
 	 *
-	 * @return Inhalt des Feldes htmlFarbeRGB
+	 * @return Inhalt des Feldes htmlFarbeRGB; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String htmlFarbeRGB() {
 		return htmlFarbeRGB;
@@ -280,7 +280,7 @@ public class ReportingStatistikFach extends ReportingBaseType {
 	/**
 	 * Das atomare Kürzel des Faches (z.B. bei Fremdsprachen - für das Sprachenkürzel) - Teil des Kürzels für die amtliche Schulstatistik
 	 *
-	 * @return Inhalt des Feldes kuerzel
+	 * @return Inhalt des Feldes kuerzel; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String kuerzel() {
 		return kuerzel;
@@ -289,7 +289,7 @@ public class ReportingStatistikFach extends ReportingBaseType {
 	/**
 	 * Das eindeutige Kürzel des Faches entsprechend der Vorgaben der amtlichen Schulstatistik
 	 *
-	 * @return Inhalt des Feldes kuerzelASD
+	 * @return Inhalt des Feldes kuerzelASD; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String kuerzelASD() {
 		return kuerzelASD;

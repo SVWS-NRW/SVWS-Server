@@ -35,7 +35,7 @@ public class ProxyReportingStundenplanungUnterricht extends ReportingStundenplan
 		this.reportingContext = reportingContext;
 		this.stundenplan = stundenplan;
 
-		if (this.stundenplan.schuljahresabschnitt() != null) {
+		if ((this.stundenplan != null) && (this.stundenplan.schuljahresabschnitt() != null)) {
 			super.fach = this.stundenplan.schuljahresabschnitt().fach(unterricht.idFach);
 			if (unterricht.idKurs != null) {
 				super.kurs = this.stundenplan.schuljahresabschnitt().kurs(unterricht.idKurs);
@@ -51,7 +51,7 @@ public class ProxyReportingStundenplanungUnterricht extends ReportingStundenplan
 
 		super.lehrkraefte = this.reportingContext.repositoryLehrer().lehrer(unterricht.lehrer);
 
-		if ((this.stundenplan.raeume() != null) && !this.stundenplan.raeume().isEmpty()) {
+		if ((this.stundenplan != null) && (this.stundenplan.raeume() != null) && !this.stundenplan.raeume().isEmpty()) {
 			super.raeume = unterricht.raeume.stream().map(this.stundenplan::raum).toList();
 		}
 
@@ -60,7 +60,7 @@ public class ProxyReportingStundenplanungUnterricht extends ReportingStundenplan
 
 		super.wochentyp = unterricht.wochentyp;
 
-		super.stundeImUnterrichtsraster = this.stundenplan.unterrichtsrasterstunde(unterricht.idZeitraster);
+		super.stundeImUnterrichtsraster = (this.stundenplan != null) ? this.stundenplan.unterrichtsrasterstunde(unterricht.idZeitraster) : null;
 	}
 
 

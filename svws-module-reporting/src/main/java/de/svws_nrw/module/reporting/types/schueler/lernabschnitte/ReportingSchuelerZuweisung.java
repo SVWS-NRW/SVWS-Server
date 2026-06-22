@@ -27,7 +27,7 @@ public class ReportingSchuelerZuweisung extends ReportingBaseType {
 	 */
 	public ReportingSchuelerZuweisung(final ReportingFach fach, final String kursart, final ReportingSchuelerLernabschnitt lernabschnitt) {
 		this.fach = fach;
-		this.kursart = kursart;
+		this.kursart = ersetzeNullBlankTrim(kursart);
 		this.lernabschnitt = lernabschnitt;
 	}
 
@@ -46,7 +46,7 @@ public class ReportingSchuelerZuweisung extends ReportingBaseType {
 	/**
 	 * Die Kursart der Zuweisung.
 	 *
-	 * @return Inhalt des Feldes kursart
+	 * @return Inhalt des Feldes kursart; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String kursart() {
 		return kursart;

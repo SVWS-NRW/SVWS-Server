@@ -1,7 +1,9 @@
 
 package de.svws_nrw.module.reporting.types.schueler.schulbesuch;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.svws_nrw.core.data.kataloge.KatalogEntlassgrund;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
@@ -144,34 +146,34 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 			final Long idDauerKindergartenbesuch, final Long idKindergarten, final boolean verpflichtungSprachfoerderkurs,
 			final boolean teilnahmeSprachfoerderkurs, final List<ReportingSchuelerSchulbesuchSchule> alleSchulen) {
 		this.vorherigeSchule = vorherigeSchule;
-		this.vorigeAllgHerkunft = vorigeAllgHerkunft;
-		this.vorigeEntlassdatum = vorigeEntlassdatum;
-		this.vorigeEntlassjahrgang = vorigeEntlassjahrgang;
-		this.vorigeArtLetzteVersetzung = vorigeArtLetzteVersetzung;
-		this.vorigeBemerkung = vorigeBemerkung;
+		this.vorigeAllgHerkunft = ersetzeNullBlankTrim(vorigeAllgHerkunft);
+		this.vorigeEntlassdatum = ersetzeNullBlankTrim(vorigeEntlassdatum);
+		this.vorigeEntlassjahrgang = ersetzeNullBlankTrim(vorigeEntlassjahrgang);
+		this.vorigeArtLetzteVersetzung = ersetzeNullBlankTrim(vorigeArtLetzteVersetzung);
+		this.vorigeBemerkung = ersetzeNullBlankTrim(vorigeBemerkung);
 		this.vorigeEntlassgrund = vorigeEntlassgrund;
-		this.vorigeAbschlussartID = vorigeAbschlussartID;
-		this.entlassungDatum = entlassungDatum;
+		this.vorigeAbschlussartID = ersetzeNullBlankTrim(vorigeAbschlussartID);
+		this.entlassungDatum = ersetzeNullBlankTrim(entlassungDatum);
 		this.idEntlassjahrgang = idEntlassjahrgang;
 		this.entlassungGrund = entlassungGrund;
-		this.entlassungAbschlussartID = entlassungAbschlussartID;
-		this.hoechsterSchulabschlussSchluessel = hoechsterSchulabschlussSchluessel;
+		this.entlassungAbschlussartID = ersetzeNullBlankTrim(entlassungAbschlussartID);
+		this.hoechsterSchulabschlussSchluessel = ersetzeNullBlankTrim(hoechsterSchulabschlussSchluessel);
 		this.aufnehmendeSchule = aufnehmendeSchule;
-		this.aufnehmendWechseldatum = aufnehmendWechseldatum;
+		this.aufnehmendWechseldatum = ersetzeNullBlankTrim(aufnehmendWechseldatum);
 		this.aufnehmendBestaetigt = aufnehmendBestaetigt;
 		this.grundschuleEinschulungsjahr = grundschuleEinschulungsjahr;
 		this.grundschuleEinschulungsartID = grundschuleEinschulungsartID;
 		this.idGrundschuleJahreEingangsphase = idGrundschuleJahreEingangsphase;
-		this.uebergangsempfehlungKuerzel = uebergangsempfehlungKuerzel;
-		this.uebergangsempfehlungText = uebergangsempfehlungText;
+		this.uebergangsempfehlungKuerzel = ersetzeNullBlankTrim(uebergangsempfehlungKuerzel);
+		this.uebergangsempfehlungText = ersetzeNullBlankTrim(uebergangsempfehlungText);
 		this.sekIWechsel = sekIWechsel;
-		this.sekIErsteSchulform = sekIErsteSchulform;
+		this.sekIErsteSchulform = ersetzeNullBlankTrim(sekIErsteSchulform);
 		this.sekIIWechsel = sekIIWechsel;
 		this.idDauerKindergartenbesuch = idDauerKindergartenbesuch;
 		this.idKindergarten = idKindergarten;
 		this.verpflichtungSprachfoerderkurs = verpflichtungSprachfoerderkurs;
 		this.teilnahmeSprachfoerderkurs = teilnahmeSprachfoerderkurs;
-		this.alleSchulen = alleSchulen;
+		this.alleSchulen = (alleSchulen != null) ? new ArrayList<>(alleSchulen.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
 	}
 
 	// ##### Getter #####
@@ -188,7 +190,7 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	/**
 	 * Gibt die allgemeine Herkunftsart des Schülers zurück.
 	 *
-	 * @return Die allgemeine Herkunftsart des Schülers.
+	 * @return Die allgemeine Herkunftsart des Schülers; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String vorigeAllgHerkunft() {
 		return vorigeAllgHerkunft;
@@ -197,7 +199,7 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	/**
 	 * Gibt das Entlassdatum an der zuvor besuchten Schule zurück.
 	 *
-	 * @return Das Entlassdatum an der zuvor besuchten Schule.
+	 * @return Das Entlassdatum an der zuvor besuchten Schule; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String vorigeEntlassdatum() {
 		return vorigeEntlassdatum;
@@ -206,7 +208,7 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	/**
 	 * Gibt den Entlassjahrgang an der zuvor besuchten Schule zurück.
 	 *
-	 * @return Der Entlassjahrgang an der zuvor besuchten Schule.
+	 * @return Der Entlassjahrgang an der zuvor besuchten Schule; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String vorigeEntlassjahrgang() {
 		return vorigeEntlassjahrgang;
@@ -215,7 +217,7 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	/**
 	 * Gibt die ID der Art der letzten Versetzung an der zuvor besuchten Schule zurück.
 	 *
-	 * @return Die ID der Art der letzten Versetzung.
+	 * @return Die ID der Art der letzten Versetzung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String vorigeArtLetzteVersetzung() {
 		return vorigeArtLetzteVersetzung;
@@ -224,7 +226,7 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	/**
 	 * Gibt die Bemerkungen zu der zuvor besuchten Schule zurück.
 	 *
-	 * @return Die Bemerkungen zu der zuvor besuchten Schule.
+	 * @return Die Bemerkungen zu der zuvor besuchten Schule; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String vorigeBemerkung() {
 		return vorigeBemerkung;
@@ -242,7 +244,7 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	/**
 	 * Gibt die ID des Abschlusses der zuvor besuchten Schule zurück.
 	 *
-	 * @return Die ID des Abschlusses.
+	 * @return Die ID des Abschlusses; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String vorigeAbschlussartID() {
 		return vorigeAbschlussartID;
@@ -251,7 +253,7 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	/**
 	 * Gibt das Entlassdatum von dieser Schule zurück.
 	 *
-	 * @return Das Entlassdatum von dieser Schule.
+	 * @return Das Entlassdatum von dieser Schule; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String entlassungDatum() {
 		return entlassungDatum;
@@ -278,7 +280,7 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	/**
 	 * Gibt die ID des Abschlusses dieser Schule zurück.
 	 *
-	 * @return Die ID des Abschlusses.
+	 * @return Die ID des Abschlusses; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String entlassungAbschlussartID() {
 		return entlassungAbschlussartID;
@@ -287,7 +289,7 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	/**
 	 * Gibt den Schlüssel für den höchsten Schulabschluss zurück.
 	 *
-	 * @return Der Schlüssel für den höchsten Schulabschluss.
+	 * @return Der Schlüssel für den höchsten Schulabschluss; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String hoechsterSchulabschlussSchluessel() {
 		return hoechsterSchulabschlussSchluessel;
@@ -305,7 +307,7 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	/**
 	 * Gibt das Datum beim Wechsel zu einer aufnehmenden Schule zurück.
 	 *
-	 * @return Das Datum beim Wechsel.
+	 * @return Das Datum beim Wechsel; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String aufnehmendWechseldatum() {
 		return aufnehmendWechseldatum;
@@ -350,7 +352,7 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	/**
 	 * Gibt die ID für das Kürzel für die Übergangsempfehlung der Grundschule zurück.
 	 *
-	 * @return Die ID für die Übergangsempfehlung.
+	 * @return Die ID für die Übergangsempfehlung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String uebergangsempfehlungKuerzel() {
 		return uebergangsempfehlungKuerzel;
@@ -359,7 +361,7 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	/**
 	 * Das Kürzel für die Übergangsempfehlung der Grundschule in die Sekundarstufe I.
 	 *
-	 * @return Die Übergangsempfehlung als Kürzel.
+	 * @return Die Übergangsempfehlung als Kürzel; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String uebergangsempfehlung() {
 		return uebergangsempfehlungText;
@@ -377,7 +379,7 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	/**
 	 * Gibt das Kürzel der ersten Schulform in der Sekundarstufe I zurück.
 	 *
-	 * @return Das Kürzel der ersten Schulform.
+	 * @return Das Kürzel der ersten Schulform; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String sekIErsteSchulform() {
 		return sekIErsteSchulform;
@@ -431,7 +433,7 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	/**
 	 * Gibt die Liste aller bisher besuchten Schulen zurück.
 	 *
-	 * @return Die Liste aller bisher besuchten Schulen.
+	 * @return Die Liste aller bisher besuchten Schulen; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingSchuelerSchulbesuchSchule> alleSchulen() {
 		return alleSchulen;

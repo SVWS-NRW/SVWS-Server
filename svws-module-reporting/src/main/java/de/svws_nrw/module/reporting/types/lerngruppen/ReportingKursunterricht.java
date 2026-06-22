@@ -52,7 +52,7 @@ public class ReportingKursunterricht extends ReportingKurs {
 	 * Der Lehrer, der gemäß Leistungsdaten den Unterricht bewertet. Da Klassenunterrichte nur über die Leistungsdaten definiert sind, ist dies der erste
 	 * Lehrer aus der Liste der Fachlehrer.
 	 *
-	 * @return Der bewertende Lehrer.
+	 * @return Der bewertende Lehrer; kann {@code null} sein, wenn dem Unterricht keine bewertende Lehrkraft zugeordnet ist.
 	 */
 	public ReportingLehrer bewertenderLehrer() {
 		return this.bewertenderLehrer;

@@ -8,7 +8,9 @@ import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -101,15 +103,15 @@ public class ReportingGostKursplanungKurs extends ReportingBaseType {
 		this.anzahlExterne = anzahlExterne;
 		this.anzahlSchueler = anzahlSchueler;
 		this.anzahlSchuelerSchriftlich = anzahlSchuelerSchriftlich;
-		this.bezeichnung = bezeichnung;
+		this.bezeichnung = ersetzeNullBlankTrim(bezeichnung);
 		this.fach = fach;
 		this.fachwahlstatistik = fachwahlstatistik;
 		this.gostHalbjahr = gostHalbjahr;
 		this.gostKursart = gostKursart;
 		this.id = id;
-		this.lehrkraefte = lehrkraefte;
-		this.schienen = schienen;
-		this.schueler = schueler;
+		this.lehrkraefte = (lehrkraefte != null) ? new ArrayList<>(lehrkraefte.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
+		this.schienen = (schienen != null) ? new ArrayList<>(schienen.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
+		this.schueler = (schueler != null) ? new ArrayList<>(schueler.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
 	}
 
 
@@ -203,7 +205,7 @@ public class ReportingGostKursplanungKurs extends ReportingBaseType {
 	/**
 	 * Bezeichnung des Kurses.
 	 *
-	 * @return Inhalt des Feldes bezeichnung
+	 * @return Inhalt des Feldes bezeichnung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String bezeichnung() {
 		return bezeichnung;
@@ -212,7 +214,7 @@ public class ReportingGostKursplanungKurs extends ReportingBaseType {
 	/**
 	 * Das Fach des Kurses
 	 *
-	 * @return Inhalt des Feldes fach
+	 * @return Inhalt des Feldes fach; kann {@code null} sein, wenn kein Fach zugeordnet ist.
 	 */
 	public ReportingFach fach() {
 		return fach;
@@ -221,7 +223,7 @@ public class ReportingGostKursplanungKurs extends ReportingBaseType {
 	/**
 	 * Die Fachwahl-Statistik zum Fach und zur Kursart des Kurses für das GOSt-Halbjahr des Kurses
 	 *
-	 * @return Inhalt des Feldes fachwahlstatistik
+	 * @return Inhalt des Feldes fachwahlstatistik; kann {@code null} sein, wenn keine Statistik zugeordnet ist.
 	 */
 	public ReportingGostKursplanungFachwahlstatistik fachwahlstatistik() {
 		return fachwahlstatistik;
@@ -230,7 +232,7 @@ public class ReportingGostKursplanungKurs extends ReportingBaseType {
 	/**
 	 * Halbjahr der Oberstufe für den Kurs gemäß Blockungsergebnis.
 	 *
-	 * @return Inhalt des Feldes gostHalbjahr
+	 * @return Inhalt des Feldes gostHalbjahr; kann {@code null} sein, wenn kein Halbjahr zugeordnet ist.
 	 */
 	public GostHalbjahr gostHalbjahr() {
 		return gostHalbjahr;
@@ -239,7 +241,7 @@ public class ReportingGostKursplanungKurs extends ReportingBaseType {
 	/**
 	 * Kursart des Kurses.
 	 *
-	 * @return Inhalt des Feldes gostKursart
+	 * @return Inhalt des Feldes gostKursart; kann {@code null} sein, wenn keine Kursart zugeordnet ist.
 	 */
 	public GostKursart gostKursart() {
 		return gostKursart;
@@ -257,7 +259,7 @@ public class ReportingGostKursplanungKurs extends ReportingBaseType {
 	/**
 	 * Liste der Lehrkräfte des Kurses.
 	 *
-	 * @return Inhalt des Feldes lehrkraefte
+	 * @return Inhalt des Feldes lehrkraefte; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingLehrer> lehrkraefte() {
 		return lehrkraefte;
@@ -266,7 +268,7 @@ public class ReportingGostKursplanungKurs extends ReportingBaseType {
 	/**
 	 * Eine Liste vom Typ Schiene, die die Schienen beinhaltet, in denen der Kurs gemäß Blockungsergebnis liegt.
 	 *
-	 * @return Inhalt des Feldes schienen
+	 * @return Inhalt des Feldes schienen; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingGostKursplanungSchiene> schienen() {
 		return schienen;
@@ -275,7 +277,7 @@ public class ReportingGostKursplanungKurs extends ReportingBaseType {
 	/**
 	 * Eine Liste vom Typ Kursschueler, die alle Schülerinnen und Schüler des Kurses enthält.
 	 *
-	 * @return Inhalt des Feldes schueler
+	 * @return Inhalt des Feldes schueler; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingSchueler> schueler() {
 		return schueler;

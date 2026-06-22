@@ -31,7 +31,12 @@ public class ProxyReportingGostKursplanungFachwahlstatistik extends ReportingGos
 		int kursgroessendifferenzPJK = -1;
 		int kursgroessendifferenzVTF = -1;
 
-		final ReportingFach reportingFach = super.reportingGostFachwahlstatistik.fach();
+		final ReportingFach reportingFach = (super.reportingGostFachwahlstatistik == null) ? null : super.reportingGostFachwahlstatistik.fach();
+
+		// Ohne zugeordnetes Fach können keine Kursgrößendifferenzen ermittelt werden; die Werte bleiben auf dem Default (-1) aus dem Super-Konstruktor.
+		if (reportingFach == null) {
+			return;
+		}
 
 		try {
 			kursgroessendifferenzLK = ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.LK.id);

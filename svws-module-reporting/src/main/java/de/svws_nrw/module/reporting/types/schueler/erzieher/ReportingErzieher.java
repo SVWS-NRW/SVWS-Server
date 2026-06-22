@@ -69,7 +69,7 @@ public class ReportingErzieher extends ReportingPerson {
 				nachname, staatsangehoerigkeit, staatsangehoerigkeit2, strassenname, telefonPrivat, telefonPrivatMobil, "", "", titel, vorname,
 				vornamen, wohnort, wohnortsteil);
 		this.art = art;
-		this.bemerkung = bemerkung;
+		this.bemerkung = ersetzeNullBlankTrim(bemerkung);
 		this.erhaeltAnschreiben = erhaeltAnschreiben;
 		this.id = id;
 		this.schueler = schueler;
@@ -189,7 +189,7 @@ public class ReportingErzieher extends ReportingPerson {
 	/**
 	 * Anmerkungen zum Erzieher.
 	 *
-	 * @return Inhalt des Feldes bemerkung
+	 * @return Inhalt des Feldes bemerkung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String bemerkung() {
 		return bemerkung;

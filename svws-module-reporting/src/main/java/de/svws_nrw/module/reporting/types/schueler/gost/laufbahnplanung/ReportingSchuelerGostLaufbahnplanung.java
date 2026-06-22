@@ -7,7 +7,9 @@ import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -179,22 +181,23 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 			final double wochenstundenDurchschnittEF, final double wochenstundenDurchschnittQ1, final double wochenstundenDurchschnittQ2,
 			final double wochenstundenDurchschnittQPh, final double wochenstundenGesamt) {
 		this.abiturjahr = abiturjahr;
-		this.aktuellesGOStHalbjahr = aktuellesGOStHalbjahr;
-		this.aktuelleKlasse = aktuelleKlasse;
-		this.auswahlGOStHalbjahr = auswahlGOStHalbjahr;
-		this.auswahlKlasse = auswahlKlasse;
-		this.beratungsbogenText = beratungsbogenText;
-		this.beratungslehrkraefte = beratungslehrkraefte;
-		this.emailText = emailText;
-		this.fachwahlen = fachwahlen;
-		this.fehler = fehler;
-		this.folgeAktuellesGOStHalbjahr = folgeAktuellesGOStHalbjahr;
-		this.folgeAuswahlGOStHalbjahr = folgeAuswahlGOStHalbjahr;
-		this.hinweise = hinweise;
-		this.letzteBeratungDatum = letzteBeratungDatum;
+		this.aktuellesGOStHalbjahr = ersetzeNullBlankTrim(aktuellesGOStHalbjahr);
+		this.aktuelleKlasse = ersetzeNullBlankTrim(aktuelleKlasse);
+		this.auswahlGOStHalbjahr = ersetzeNullBlankTrim(auswahlGOStHalbjahr);
+		this.auswahlKlasse = ersetzeNullBlankTrim(auswahlKlasse);
+		this.beratungsbogenText = ersetzeNullBlankTrim(beratungsbogenText);
+		this.beratungslehrkraefte =
+				(beratungslehrkraefte != null) ? new ArrayList<>(beratungslehrkraefte.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
+		this.emailText = ersetzeNullBlankTrim(emailText);
+		this.fachwahlen = (fachwahlen != null) ? new ArrayList<>(fachwahlen.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
+		this.fehler = (fehler != null) ? new ArrayList<>(fehler.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
+		this.folgeAktuellesGOStHalbjahr = ersetzeNullBlankTrim(folgeAktuellesGOStHalbjahr);
+		this.folgeAuswahlGOStHalbjahr = ersetzeNullBlankTrim(folgeAuswahlGOStHalbjahr);
+		this.hinweise = (hinweise != null) ? new ArrayList<>(hinweise.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
+		this.letzteBeratungDatum = ersetzeNullBlankTrim(letzteBeratungDatum);
 		this.letzteBeratungLehrkraft = letzteBeratungLehrkraft;
-		this.letzterRuecklaufDatum = letzterRuecklaufDatum;
-		this.kommentar = kommentar;
+		this.letzterRuecklaufDatum = ersetzeNullBlankTrim(letzterRuecklaufDatum);
+		this.kommentar = ersetzeNullBlankTrim(kommentar);
 		this.kursanzahlEF1 = kursanzahlEF1;
 		this.kursanzahlEF2 = kursanzahlEF2;
 		this.kursanzahlQ11 = kursanzahlQ11;
@@ -202,7 +205,7 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 		this.kursanzahlQ21 = kursanzahlQ21;
 		this.kursanzahlQ22 = kursanzahlQ22;
 		this.kursanzahlQPh = kursanzahlQPh;
-		this.pruefungsordnung = pruefungsordnung;
+		this.pruefungsordnung = ersetzeNullBlankTrim(pruefungsordnung);
 		this.wochenstundenEF1 = wochenstundenEF1;
 		this.wochenstundenEF2 = wochenstundenEF2;
 		this.wochenstundenQ11 = wochenstundenQ11;
@@ -230,7 +233,7 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 		// Ausgabe der Informationen (Zeit und Person) der letzten Beratung zusammenstellen, je nachdem, welche Informationen hinterlegt sind.
 		String letzteBeratung = "Die letzte Beratung wurde durchgeführt";
 		boolean hatLetzteBeratung = false;
-		if ((letzteBeratungDatum != null) && !letzteBeratungDatum.isBlank() && !letzteBeratungDatum.isEmpty()) {
+		if (!letzteBeratungDatum.isEmpty()) {
 			letzteBeratung = letzteBeratung + " am "
 					+ LocalDate.parse(letzteBeratungDatum, DateTimeFormatter.ofPattern("yyyy-MM-dd")).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 			hatLetzteBeratung = true;
@@ -284,7 +287,7 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 	/**
 	 * Die aktuelle Klasse zum aktuellen Halbjahr der Oberstufenlaufbahn
 	 *
-	 * @return Inhalt des Feldes aktuelleKlasse
+	 * @return Inhalt des Feldes aktuelleKlasse; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String aktuelleKlasse() {
 		return aktuelleKlasse;
@@ -293,7 +296,7 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 	/**
 	 * Das Halbjahr der Oberstufenlaufbahn gemäß Halbjahr der Schule
 	 *
-	 * @return Inhalt des Feldes aktuellesGOStHalbjahr
+	 * @return Inhalt des Feldes aktuellesGOStHalbjahr; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String aktuellesGOStHalbjahr() {
 		return aktuellesGOStHalbjahr;
@@ -302,7 +305,7 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 	/**
 	 * Die Klasse zum ausgewählten Halbjahr der Oberstufenlaufbahn
 	 *
-	 * @return Inhalt des Feldes auswahlKlasse
+	 * @return Inhalt des Feldes auswahlKlasse; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String auswahlKlasse() {
 		return auswahlKlasse;
@@ -311,7 +314,7 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 	/**
 	 * Das ausgewählte Halbjahr der Oberstufenlaufbahn
 	 *
-	 * @return Inhalt des Feldes auswahlGOStHalbjahr
+	 * @return Inhalt des Feldes auswahlGOStHalbjahr; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String auswahlGOStHalbjahr() {
 		return auswahlGOStHalbjahr;
@@ -320,7 +323,7 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 	/**
 	 * Der Text der Schule für den Beratungsbogen
 	 *
-	 * @return Inhalt des Feldes beratungsbogenText
+	 * @return Inhalt des Feldes beratungsbogenText; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String beratungsbogenText() {
 		return beratungsbogenText;
@@ -329,7 +332,7 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 	/**
 	 * Beratungslehrkräfte des Abiturjahrgangs durch Semikolon getrennt
 	 *
-	 * @return Inhalt des Feldes beratungslehrkraefte
+	 * @return Inhalt des Feldes beratungslehrkraefte; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingLehrer> beratungslehrkraefte() {
 		this.beratungslehrkraefte.sort(ReportingLehrer.SORTIERUNG.comparatorStandard());
@@ -339,7 +342,7 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 	/**
 	 * Der Text der Schule für den E-Mail-Versand
 	 *
-	 * @return Inhalt des Feldes emailText
+	 * @return Inhalt des Feldes emailText; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String emailText() {
 		return emailText;
@@ -348,7 +351,7 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 	/**
 	 * Eine Liste vom Typ Fachwahl, die alle Fachwahlen und deren Daten enthält.
 	 *
-	 * @return Inhalt des Feldes fachwahlen
+	 * @return Inhalt des Feldes fachwahlen; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingGostLaufbahnplanungFachwahl> fachwahlen() {
 		return fachwahlen;
@@ -357,7 +360,7 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 	/**
 	 * Eine Liste vom Typ Fehler, die alle Fehler zur Laufbahn und deren Daten enthält.
 	 *
-	 * @return Inhalt des Feldes fehler
+	 * @return Inhalt des Feldes fehler; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingGostLaufbahnplanungErgebnismeldung> fehler() {
 		return fehler;
@@ -366,7 +369,7 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 	/**
 	 * Das folgende Halbjahr der Oberstufenlaufbahn auf das aktuelle Halbjahr, also in der Regel das Halbjahr, für das die Beratung erfolgt
 	 *
-	 * @return Inhalt des Feldes folgeAktuellesGOStHalbjahr
+	 * @return Inhalt des Feldes folgeAktuellesGOStHalbjahr; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String folgeAktuellesGOStHalbjahr() {
 		return folgeAktuellesGOStHalbjahr;
@@ -375,7 +378,7 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 	/**
 	 * Das folgende Halbjahr der Oberstufenlaufbahn auf das ausgewählte Halbjahr, also in der Regel das Halbjahr, für das die Beratung erfolgt
 	 *
-	 * @return Inhalt des Feldes folgeAuswahlGOStHalbjahr
+	 * @return Inhalt des Feldes folgeAuswahlGOStHalbjahr; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String folgeAuswahlGOStHalbjahr() {
 		return folgeAuswahlGOStHalbjahr;
@@ -384,7 +387,7 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 	/**
 	 * Eine Liste vom Typ Hinweise, die alle Hinweise zur Laufbahn und deren Daten enthält.
 	 *
-	 * @return Inhalt des Feldes hinweise
+	 * @return Inhalt des Feldes hinweise; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingGostLaufbahnplanungErgebnismeldung> hinweise() {
 		return hinweise;
@@ -393,7 +396,7 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 	/**
 	 * Das Datum der letzten Beratung
 	 *
-	 * @return Inhalt des Feldes letzteBeratungDatum
+	 * @return Inhalt des Feldes letzteBeratungDatum; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String letzteBeratungDatum() {
 		return letzteBeratungDatum;
@@ -411,7 +414,7 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 	/**
 	 * Das Datum des Rücklaufes der letzten importierten Wahldatei
 	 *
-	 * @return Inhalt des Feldes letzterRuecklaufDatum
+	 * @return Inhalt des Feldes letzterRuecklaufDatum; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String letzterRuecklaufDatum() {
 		return letzterRuecklaufDatum;
@@ -420,7 +423,7 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 	/**
 	 * Kommentar der Schule zur Laufbahn
 	 *
-	 * @return Inhalt des Feldes kommentar
+	 * @return Inhalt des Feldes kommentar; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String kommentar() {
 		return kommentar;
@@ -501,7 +504,7 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 	/**
 	 * Die Prüfungsordnung des Schülers aus dem aktuellen Lernabschnitt
 	 *
-	 * @return Inhalt des Feldes pruefungsordnung
+	 * @return Inhalt des Feldes pruefungsordnung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String pruefungsordnung() {
 		return pruefungsordnung;

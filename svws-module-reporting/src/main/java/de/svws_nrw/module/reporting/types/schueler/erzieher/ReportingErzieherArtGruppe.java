@@ -1,6 +1,8 @@
 package de.svws_nrw.module.reporting.types.schueler.erzieher;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
@@ -42,17 +44,12 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 	 */
 	public ReportingErzieherArtGruppe(final String bezeichnung, final List<ReportingErzieher> erzieher, final long id, final ReportingSchueler schueler,
 			final Integer sortierung) {
-		this.bezeichnung = bezeichnung;
-		this.erzieher = erzieher;
+		this.bezeichnung = ersetzeNullBlankTrim(bezeichnung);
+		this.erzieher = (erzieher != null) ? new ArrayList<>(erzieher.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
 		this.id = id;
 		this.schueler = schueler;
 		this.sortierung = sortierung;
-
-		if (erzieher == null) {
-			this.erzieherAnzahl = 0;
-		} else {
-			this.erzieherAnzahl = erzieher.size();
-		}
+		this.erzieherAnzahl = this.erzieher.size();
 	}
 
 	// ##### Berechnete Felder #####
@@ -449,7 +446,7 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 	/**
 	 * Bezeichnung der gruppierten Erzieher-Art.
 	 *
-	 * @return Inhalt des Feldes bezeichnung
+	 * @return Inhalt des Feldes bezeichnung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String bezeichnung() {
 		return bezeichnung;
@@ -458,7 +455,7 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 	/**
 	 * Die Erzieher in dieser Gruppe.
 	 *
-	 * @return Inhalt des Feldes erzieher
+	 * @return Inhalt des Feldes erzieher; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingErzieher> erzieher() {
 		return erzieher;

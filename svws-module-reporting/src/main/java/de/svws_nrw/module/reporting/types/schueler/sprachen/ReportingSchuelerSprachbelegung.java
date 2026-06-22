@@ -72,16 +72,16 @@ public class ReportingSchuelerSprachbelegung extends ReportingBaseType {
 			final String belegungVonJahrgang, final boolean hatGraecum, final boolean hatHebraicum, final boolean hatKleinesLatinum, final boolean hatLatinum,
 			final Sprachreferenzniveau referenzniveau, final Integer reihenfolge, final String sprache, final ReportingStatistikFach statistikfach) {
 		this.belegungBisAbschnitt = belegungBisAbschnitt;
-		this.belegungBisJahrgang = belegungBisJahrgang;
+		this.belegungBisJahrgang = ersetzeNullBlankTrim(belegungBisJahrgang);
 		this.belegungVonAbschnitt = belegungVonAbschnitt;
-		this.belegungVonJahrgang = belegungVonJahrgang;
+		this.belegungVonJahrgang = ersetzeNullBlankTrim(belegungVonJahrgang);
 		this.hatGraecum = hatGraecum;
 		this.hatHebraicum = hatHebraicum;
 		this.hatKleinesLatinum = hatKleinesLatinum;
 		this.hatLatinum = hatLatinum;
 		this.referenzniveau = referenzniveau;
 		this.reihenfolge = reihenfolge;
-		this.sprache = sprache;
+		this.sprache = ersetzeNullBlankTrim(sprache);
 		this.statistikfach = statistikfach;
 	}
 
@@ -92,7 +92,7 @@ public class ReportingSchuelerSprachbelegung extends ReportingBaseType {
 	/**
 	 * Der Jahrgang, in dem die Belegung der Sprache beendet wurde - sofern sie schon beendet wurde
 	 *
-	 * @return Inhalt des Feldes belegungBisJahrgang
+	 * @return Inhalt des Feldes belegungBisJahrgang; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String belegungBisJahrgang() {
 		return belegungBisJahrgang;
@@ -110,7 +110,7 @@ public class ReportingSchuelerSprachbelegung extends ReportingBaseType {
 	/**
 	 * Der Jahrgang, in dem die Sprache zum ersten Mal belegt wurde
 	 *
-	 * @return Inhalt des Feldes belegungVonJahrgang
+	 * @return Inhalt des Feldes belegungVonJahrgang; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String belegungVonJahrgang() {
 		return belegungVonJahrgang;
@@ -182,7 +182,7 @@ public class ReportingSchuelerSprachbelegung extends ReportingBaseType {
 	/**
 	 * Das einstellige Sprachkürzel des Faches der Sprache
 	 *
-	 * @return Inhalt des Feldes sprache
+	 * @return Inhalt des Feldes sprache; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String sprache() {
 		return sprache;

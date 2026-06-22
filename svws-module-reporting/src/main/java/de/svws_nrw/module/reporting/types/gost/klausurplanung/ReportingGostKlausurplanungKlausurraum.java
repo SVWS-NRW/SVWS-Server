@@ -1,7 +1,9 @@
 package de.svws_nrw.module.reporting.types.gost.klausurplanung;
 
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungRaum;
@@ -38,8 +40,8 @@ public class ReportingGostKlausurplanungKlausurraum extends ReportingBaseType {
 	 */
 	public ReportingGostKlausurplanungKlausurraum(final List<ReportingGostKlausurplanungKlausuraufsicht> aufsichten, final String bemerkung, final long id,
 			final ReportingGostKlausurplanungKlausurtermin klausurtermin, final ReportingStundenplanungRaum raumdaten) {
-		this.aufsichten = aufsichten;
-		this.bemerkung = bemerkung;
+		this.aufsichten = (aufsichten != null) ? new ArrayList<>(aufsichten.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
+		this.bemerkung = ersetzeNullBlankTrim(bemerkung);
 		this.id = id;
 		this.klausurtermin = klausurtermin;
 		this.raumdaten = raumdaten;
@@ -51,7 +53,7 @@ public class ReportingGostKlausurplanungKlausurraum extends ReportingBaseType {
 	/**
 	 * Die Klausuraufsichten in diesem Raum für den Klausurtermin.
 	 *
-	 * @return Inhalt des Feldes aufsichten
+	 * @return Inhalt des Feldes aufsichten; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingGostKlausurplanungKlausuraufsicht> aufsichten() {
 		return aufsichten;
@@ -60,7 +62,7 @@ public class ReportingGostKlausurplanungKlausurraum extends ReportingBaseType {
 	/**
 	 * Die Bemerkung zum Raum für die Klausur.
 	 *
-	 * @return Inhalt des Feldes bemerkung
+	 * @return Inhalt des Feldes bemerkung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String bemerkung() {
 		return bemerkung;
@@ -78,7 +80,7 @@ public class ReportingGostKlausurplanungKlausurraum extends ReportingBaseType {
 	/**
 	 * Der Klausurtermin, dem dieser Raum mit seinen Aufsichten zugeordnet wurde.
 	 *
-	 * @return Inhalt des Feldes klausurtermin
+	 * @return Inhalt des Feldes klausurtermin; kann {@code null} sein, wenn kein Termin zugeordnet ist.
 	 */
 	public ReportingGostKlausurplanungKlausurtermin klausurtermin() {
 		return klausurtermin;
@@ -87,7 +89,7 @@ public class ReportingGostKlausurplanungKlausurraum extends ReportingBaseType {
 	/**
 	 * Die Daten des Raumes gemäß dem zum Klausurtermin gültigen Stundenplanes.
 	 *
-	 * @return Inhalt des Feldes raumdaten
+	 * @return Inhalt des Feldes raumdaten; kann {@code null} sein, wenn keine Raumdaten zugeordnet sind.
 	 */
 	public ReportingStundenplanungRaum raumdaten() {
 		return raumdaten;

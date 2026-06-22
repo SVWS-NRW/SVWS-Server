@@ -1,7 +1,9 @@
 
 package de.svws_nrw.module.reporting.types.schule;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.utils.ReportingStrings;
@@ -61,16 +63,16 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 	public ReportingSchuleBasisdatenNRW(final List<String> bezeichnung, final String email, final String fax,
 			final String hausnummer, final String ort, final String plz, final long schulnummer, final String strassenname, final String telefon,
 			final String hausnummerZusatz) {
-		this.bezeichnung = bezeichnung;
-		this.email = email;
-		this.fax = fax;
-		this.hausnummer = hausnummer;
-		this.ort = ort;
-		this.plz = plz;
+		this.bezeichnung = (bezeichnung != null) ? new ArrayList<>(bezeichnung.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
+		this.email = ersetzeNullBlankTrim(email);
+		this.fax = ersetzeNullBlankTrim(fax);
+		this.hausnummer = ersetzeNullBlankTrim(hausnummer);
+		this.ort = ersetzeNullBlankTrim(ort);
+		this.plz = ersetzeNullBlankTrim(plz);
 		this.schulnummer = schulnummer;
-		this.strassenname = strassenname;
-		this.telefon = telefon;
-		this.hausnummerZusatz = hausnummerZusatz;
+		this.strassenname = ersetzeNullBlankTrim(strassenname);
+		this.telefon = ersetzeNullBlankTrim(telefon);
+		this.hausnummerZusatz = ersetzeNullBlankTrim(hausnummerZusatz);
 	}
 
 	// ##### Berechnete Felder #####
@@ -153,7 +155,7 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 	 * @return Postleitzahl und Wohnort
 	 */
 	public String plzOrt() {
-		if ((this.plz == null)) {
+		if (this.plz.isEmpty()) {
 			return "";
 		}
 		return (this.plz + " " + this.ort).trim();
@@ -190,7 +192,7 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 	/**
 	 * Die unter Umständen max. dreizeilige Bezeichnung der Schule.
 	 *
-	 * @return Die dreizeilige Bezeichnung der Schule.
+	 * @return Die dreizeilige Bezeichnung der Schule; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<String> bezeichnung() {
 		return bezeichnung;
@@ -199,7 +201,7 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 	/**
 	 * Gibt die Mailadresse der Schule zurück.
 	 *
-	 * @return die Mailadresse der Schule
+	 * @return die Mailadresse der Schule; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String email() {
 		return this.email;
@@ -208,7 +210,7 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 	/**
 	 * Gibt die Faxnummer der Schule zurück.
 	 *
-	 * @return die Faxnummer der Schule
+	 * @return die Faxnummer der Schule; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String fax() {
 		return this.fax;
@@ -217,7 +219,7 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 	/**
 	 * Gibt die Hausnummer zur Straße, in der die Schule liegt, zurück.
 	 *
-	 * @return die Hausnummer zur Straße
+	 * @return die Hausnummer zur Straße; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String hausnummer() {
 		return this.hausnummer;
@@ -226,7 +228,7 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 	/**
 	 * Gibt den Ort an, in dem die Schule liegt, zurück.
 	 *
-	 * @return Ort der Schule
+	 * @return Ort der Schule; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String ort() {
 		return this.ort;
@@ -235,7 +237,7 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 	/**
 	 * Gibt die Postleitzahl des Gebietes an, in dem die Schule liegt, zurück.
 	 *
-	 * @return die Postleitzahl der Schule
+	 * @return die Postleitzahl der Schule; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String plz() {
 		return this.plz;
@@ -253,7 +255,7 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 	/**
 	 * Gibt den Straßennamen der Straße an, in der die Schule liegt, zurück.
 	 *
-	 * @return den Straßennamen der Schule
+	 * @return den Straßennamen der Schule; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String strassenname() {
 		return this.strassenname;
@@ -262,7 +264,7 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 	/**
 	 * Gibt die Telefonnummer der Schule zurück.
 	 *
-	 * @return die Telefonnummer der Schule
+	 * @return die Telefonnummer der Schule; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String telefon() {
 		return this.telefon;
@@ -271,7 +273,7 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 	/**
 	 * Gibt den Hausnummernzusatz der Straße an, in der die Schule liegt, zurück.
 	 *
-	 * @return den Hausnummernzusatz der Straße
+	 * @return den Hausnummernzusatz der Straße; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String hausnummerZusatz() {
 		return this.hausnummerZusatz;

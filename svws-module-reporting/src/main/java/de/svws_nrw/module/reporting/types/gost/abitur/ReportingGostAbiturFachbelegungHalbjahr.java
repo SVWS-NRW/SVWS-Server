@@ -61,14 +61,14 @@ public class ReportingGostAbiturFachbelegungHalbjahr extends ReportingBaseType {
 	public ReportingGostAbiturFachbelegungHalbjahr(final String bilingualeSprache, final Boolean block1gewertet, final Boolean block1kursAufZeugnis,
 			final int fehlstundenGesamt, final int fehlstundenUnentschuldigt, final String halbjahrKuerzel, final boolean istSchriftlich,
 			final String kursartKuerzel, final ReportingLehrer lehrer, final Note note, final int wochenstunden) {
-		this.bilingualeSprache = bilingualeSprache;
+		this.bilingualeSprache = ersetzeNullBlankTrim(bilingualeSprache);
 		this.block1gewertet = block1gewertet;
 		this.block1kursAufZeugnis = block1kursAufZeugnis;
 		this.fehlstundenGesamt = fehlstundenGesamt;
 		this.fehlstundenUnentschuldigt = fehlstundenUnentschuldigt;
-		this.halbjahrKuerzel = halbjahrKuerzel;
+		this.halbjahrKuerzel = ersetzeNullBlankTrim(halbjahrKuerzel);
 		this.istSchriftlich = istSchriftlich;
-		this.kursartKuerzel = kursartKuerzel;
+		this.kursartKuerzel = ersetzeNullBlankTrim(kursartKuerzel);
 		this.lehrer = lehrer;
 		this.note = note;
 		this.wochenstunden = wochenstunden;
@@ -81,7 +81,7 @@ public class ReportingGostAbiturFachbelegungHalbjahr extends ReportingBaseType {
 	/**
 	 * Das einstellige Kürzel der bilingualen Sprache, sofern das Fach bilingual unterrichtet wurde.
 	 *
-	 * @return Inhalt des Feldes bilingualeSprache
+	 * @return Inhalt des Feldes bilingualeSprache; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String bilingualeSprache() {
 		return bilingualeSprache;
@@ -126,7 +126,7 @@ public class ReportingGostAbiturFachbelegungHalbjahr extends ReportingBaseType {
 	/**
 	 * Das Kürzel des Halbjahres der Fachbelegung
 	 *
-	 * @return Inhalt des Feldes halbjahrKuerzel
+	 * @return Inhalt des Feldes halbjahrKuerzel; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String halbjahrKuerzel() {
 		return halbjahrKuerzel;
@@ -144,7 +144,7 @@ public class ReportingGostAbiturFachbelegungHalbjahr extends ReportingBaseType {
 	/**
 	 * Das Kürzel der Kursart der gymnasialen Oberstufe dieser Fachbelegung
 	 *
-	 * @return Inhalt des Feldes kursartKuerzel
+	 * @return Inhalt des Feldes kursartKuerzel; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String kursartKuerzel() {
 		return kursartKuerzel;
@@ -153,7 +153,7 @@ public class ReportingGostAbiturFachbelegungHalbjahr extends ReportingBaseType {
 	/**
 	 * Die Lehrkraft, welche die Note erteilt.
 	 *
-	 * @return Inhalt des Feldes lehrer
+	 * @return Inhalt des Feldes lehrer; kann {@code null} sein, wenn keine Lehrkraft zugeordnet ist.
 	 */
 	public ReportingLehrer lehrer() {
 		return lehrer;
@@ -162,7 +162,7 @@ public class ReportingGostAbiturFachbelegungHalbjahr extends ReportingBaseType {
 	/**
 	 * Die erteilte Note.
 	 *
-	 * @return Inhalt des Feldes note
+	 * @return Inhalt des Feldes note; kann {@code null} sein, wenn keine Note erteilt wurde.
 	 */
 	public Note note() {
 		return note;

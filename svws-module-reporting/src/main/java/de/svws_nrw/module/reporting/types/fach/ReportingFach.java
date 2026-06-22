@@ -117,12 +117,12 @@ public class ReportingFach extends ReportingBaseType {
 			final boolean istNachpruefungErlaubt, final boolean istPruefungsordnungsRelevant, final boolean istSchriftlichBA, final boolean istSchriftlichZK,
 			final boolean istSichtbar, final String kuerzel, final int maxZeichenInFachbemerkungen, final int sortierungEintrag,
 			final ReportingStatistikFach statistikfach) {
-		this.aufgabenfeld = aufgabenfeld;
+		this.aufgabenfeld = ersetzeNullBlankTrim(aufgabenfeld);
 		this.aufZeugnis = aufZeugnis;
-		this.bezeichnung = bezeichnung;
-		this.bezeichnungUeberweisungszeugnis = bezeichnungUeberweisungszeugnis;
-		this.bezeichnungZeugnis = bezeichnungZeugnis;
-		this.bilingualeSprache = bilingualeSprache;
+		this.bezeichnung = ersetzeNullBlankTrim(bezeichnung);
+		this.bezeichnungUeberweisungszeugnis = ersetzeNullBlankTrim(bezeichnungUeberweisungszeugnis);
+		this.bezeichnungZeugnis = ersetzeNullBlankTrim(bezeichnungZeugnis);
+		this.bilingualeSprache = ersetzeNullBlankTrim(bilingualeSprache);
 		this.fachgruppe = fachgruppe;
 		this.holeAusAltenLernabschnitten = holeAusAltenLernabschnitten;
 		this.id = id;
@@ -135,7 +135,7 @@ public class ReportingFach extends ReportingBaseType {
 		this.istSchriftlichBA = istSchriftlichBA;
 		this.istSchriftlichZK = istSchriftlichZK;
 		this.istSichtbar = istSichtbar;
-		this.kuerzel = kuerzel;
+		this.kuerzel = ersetzeNullBlankTrim(kuerzel);
 		this.maxZeichenInFachbemerkungen = maxZeichenInFachbemerkungen;
 		this.sortierungEintrag = sortierungEintrag;
 		this.statistikfach = statistikfach;
@@ -179,8 +179,9 @@ public class ReportingFach extends ReportingBaseType {
 	 * @return int-Wert des Vergleiches gemäß {@link Comparable#compareTo(Object)}
 	 */
 	public static int compareToGost(final ReportingFach fach1, final ReportingFach fach2) {
-		return GostFachbereich.compareFach(Fach.getBySchluesselOrDefault(fach1.statistikfach().kuerzelASD()),
-				Fach.getBySchluesselOrDefault(fach2.statistikfach().kuerzelASD()));
+		final String kuerzelASD1 = (fach1.statistikfach() == null) ? "" : fach1.statistikfach().kuerzelASD();
+		final String kuerzelASD2 = (fach2.statistikfach() == null) ? "" : fach2.statistikfach().kuerzelASD();
+		return GostFachbereich.compareFach(Fach.getBySchluesselOrDefault(kuerzelASD1), Fach.getBySchluesselOrDefault(kuerzelASD2));
 	}
 
 
@@ -189,7 +190,7 @@ public class ReportingFach extends ReportingBaseType {
 	/**
 	 * Das Aufgabenfeld am Berufskolleg, zu welchem das Fach gehört
 	 *
-	 * @return Inhalt des Feldes aufgabenfeld
+	 * @return Inhalt des Feldes aufgabenfeld; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String aufgabenfeld() {
 		return aufgabenfeld;
@@ -207,7 +208,7 @@ public class ReportingFach extends ReportingBaseType {
 	/**
 	 * Die Bezeichnung des Faches
 	 *
-	 * @return Inhalt des Feldes bezeichnung
+	 * @return Inhalt des Feldes bezeichnung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String bezeichnung() {
 		return bezeichnung;
@@ -216,7 +217,7 @@ public class ReportingFach extends ReportingBaseType {
 	/**
 	 * Die Bezeichnung des Faches auf Überweisungszeugnissen
 	 *
-	 * @return Inhalt des Feldes bezeichnungUeberweisungszeugnis
+	 * @return Inhalt des Feldes bezeichnungUeberweisungszeugnis; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String bezeichnungUeberweisungszeugnis() {
 		return bezeichnungUeberweisungszeugnis;
@@ -225,7 +226,7 @@ public class ReportingFach extends ReportingBaseType {
 	/**
 	 * Die Bezeichnung des Faches auf allgemeinen Zeugnissen
 	 *
-	 * @return Inhalt des Feldes bezeichnungZeugnis
+	 * @return Inhalt des Feldes bezeichnungZeugnis; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String bezeichnungZeugnis() {
 		return bezeichnungZeugnis;
@@ -234,7 +235,7 @@ public class ReportingFach extends ReportingBaseType {
 	/**
 	 * Die Sprache (das einstellige Fremdsprachenkürzel) an, in der das Fach unterrichtet wird, sofern es sich um ein bilinguales Sachfach handelt.
 	 *
-	 * @return Inhalt des Feldes bilingualeSprache
+	 * @return Inhalt des Feldes bilingualeSprache; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String bilingualeSprache() {
 		return bilingualeSprache;
@@ -351,7 +352,7 @@ public class ReportingFach extends ReportingBaseType {
 	/**
 	 * Das eindeutige Kürzel des Faches
 	 *
-	 * @return Inhalt des Feldes kuerzel
+	 * @return Inhalt des Feldes kuerzel; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String kuerzel() {
 		return kuerzel;
@@ -378,7 +379,7 @@ public class ReportingFach extends ReportingBaseType {
 	/**
 	 * Das Statistik-Fach des Faches
 	 *
-	 * @return Inhalt des Feldes statistikfach
+	 * @return Inhalt des Feldes statistikfach; kann {@code null} sein, wenn dem Fach kein Statistikfach zugeordnet ist.
 	 */
 	public ReportingStatistikFach statistikfach() {
 		return statistikfach;

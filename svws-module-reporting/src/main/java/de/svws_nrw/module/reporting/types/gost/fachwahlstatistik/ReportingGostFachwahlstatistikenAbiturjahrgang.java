@@ -33,9 +33,15 @@ public class ReportingGostFachwahlstatistikenAbiturjahrgang extends ReportingBas
 	 * Sortierung nach der ID des Halbjahres.
 	 */
 	private static final Comparator<ReportingGostFachwahlstatistikHalbjahr> comparatorFachGostHalbjahr =
-			(o1, o2) -> (ReportingFach.compareToGost(o1.fach(), o2.fach()) == 0)
-					? Integer.compare(o1.gostHalbjahr().id, o2.gostHalbjahr().id)
-					: ReportingFach.compareToGost(o1.fach(), o2.fach());
+			(o1, o2) -> {
+				final int compFach = ReportingFach.compareToGost(o1.fach(), o2.fach());
+				if (compFach != 0) {
+					return compFach;
+				}
+				final int id1 = (o1.gostHalbjahr() == null) ? -1 : o1.gostHalbjahr().id;
+				final int id2 = (o2.gostHalbjahr() == null) ? -1 : o2.gostHalbjahr().id;
+				return Integer.compare(id1, id2);
+			};
 
 
 	/** Der Abiturjahrgang in Form des Abiturjahres, dessen Fachwahlstatistik betrachtet werden soll. */
@@ -157,7 +163,7 @@ public class ReportingGostFachwahlstatistikenAbiturjahrgang extends ReportingBas
 		return listmapGostFachwahlstatistikenHalbjahre.keySet1().stream()
 				.filter(idsCheckedFeacher::contains)
 				.flatMap(fach -> listmapGostFachwahlstatistikenHalbjahre.get1(fach).stream()
-						.filter(statistik -> idsCheckedHalbjahre.contains(statistik.gostHalbjahr().id)))
+						.filter(statistik -> (statistik.gostHalbjahr() != null) && idsCheckedHalbjahre.contains(statistik.gostHalbjahr().id)))
 				.sorted(comparatorFachGostHalbjahr)
 				.toList();
 	}
@@ -207,7 +213,7 @@ public class ReportingGostFachwahlstatistikenAbiturjahrgang extends ReportingBas
 		final List<ReportingGostFachwahlstatistik> tempGostFachwahlstatistiken =
 				gostFachwahlstatistiken.stream().filter(Objects::nonNull).distinct()
 						.filter(fs -> (fs.abiturjahr == this.abiturjahr))
-						.filter(fs -> fs.fach().istGostFach())
+						.filter(fs -> (fs.fach() != null) && fs.fach().istGostFach())
 						.toList();
 
 		tempGostFachwahlstatistiken.forEach(fs -> mapGostFachwahlstatistiken.put(fs.fach.id(), fs));
@@ -216,7 +222,9 @@ public class ReportingGostFachwahlstatistikenAbiturjahrgang extends ReportingBas
 
 		for (final ReportingGostFachwahlstatistik fs : listGostFachwahlstatistiken) {
 			for (final ReportingGostFachwahlstatistikHalbjahr fshj : fs.fachwahlstatistik()) {
-				listmapGostFachwahlstatistikenHalbjahre.add(fshj.fach().id(), fshj.gostHalbjahr().id, fshj);
+				if ((fshj.fach() != null) && (fshj.gostHalbjahr() != null)) {
+					listmapGostFachwahlstatistikenHalbjahre.add(fshj.fach().id(), fshj.gostHalbjahr().id, fshj);
+				}
 			}
 		}
 	}
