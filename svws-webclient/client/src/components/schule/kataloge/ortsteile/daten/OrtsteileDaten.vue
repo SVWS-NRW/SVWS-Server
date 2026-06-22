@@ -10,7 +10,7 @@
 						:max-len="30" required :readonly />
 					<ui-select label="Ort"
 						v-model="model.ort.value"
-						:validation="() => model.getFehler('ort_id')"
+						:validation="() => model.getFehler('idOrt')"
 						:manager="ortSelectManager"
 						searchable required :removable="false" :readonly />
 				</svws-ui-input-wrapper>

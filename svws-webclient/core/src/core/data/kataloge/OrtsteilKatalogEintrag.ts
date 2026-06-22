@@ -16,7 +16,7 @@ export class OrtsteilKatalogEintrag extends JavaObject {
 	/**
 	 * Die ID des zugehörigen Ortes.
 	 */
-	public ort_id: number | null = null;
+	public idOrt: number | null = null;
 
 	/**
 	 * Die Bezeichnung des zugehörigen Ortes.
@@ -70,7 +70,7 @@ export class OrtsteilKatalogEintrag extends JavaObject {
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.ortsteil = (obj.ortsteil === undefined) ? null : obj.ortsteil === null ? null : obj.ortsteil;
-		result.ort_id = (obj.ort_id === undefined) ? null : obj.ort_id === null ? null : obj.ort_id;
+		result.idOrt = (obj.idOrt === undefined) ? null : obj.idOrt === null ? null : obj.idOrt;
 		result.bezeichnungOrt = (obj.bezeichnungOrt === undefined) ? null : obj.bezeichnungOrt === null ? null : obj.bezeichnungOrt;
 		result.plzOrt = (obj.plzOrt === undefined) ? null : obj.plzOrt === null ? null : obj.plzOrt;
 		if (obj.sortierung === undefined)
@@ -92,7 +92,7 @@ export class OrtsteilKatalogEintrag extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"ortsteil" : ' + ((obj.ortsteil === null) ? 'null' : JSON.stringify(obj.ortsteil)) + ',';
-		result += '"ort_id" : ' + ((obj.ort_id === null) ? 'null' : obj.ort_id.toString()) + ',';
+		result += '"idOrt" : ' + ((obj.idOrt === null) ? 'null' : obj.idOrt.toString()) + ',';
 		result += '"bezeichnungOrt" : ' + ((obj.bezeichnungOrt === null) ? 'null' : JSON.stringify(obj.bezeichnungOrt)) + ',';
 		result += '"plzOrt" : ' + ((obj.plzOrt === null) ? 'null' : JSON.stringify(obj.plzOrt)) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
@@ -112,8 +112,8 @@ export class OrtsteilKatalogEintrag extends JavaObject {
 		if (obj.ortsteil !== undefined) {
 			result += '"ortsteil" : ' + ((obj.ortsteil === null) ? 'null' : JSON.stringify(obj.ortsteil)) + ',';
 		}
-		if (obj.ort_id !== undefined) {
-			result += '"ort_id" : ' + ((obj.ort_id === null) ? 'null' : obj.ort_id.toString()) + ',';
+		if (obj.idOrt !== undefined) {
+			result += '"idOrt" : ' + ((obj.idOrt === null) ? 'null' : obj.idOrt.toString()) + ',';
 		}
 		if (obj.bezeichnungOrt !== undefined) {
 			result += '"bezeichnungOrt" : ' + ((obj.bezeichnungOrt === null) ? 'null' : JSON.stringify(obj.bezeichnungOrt)) + ',';

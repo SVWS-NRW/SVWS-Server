@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  */
 public final class DataOrtsteile extends DataManagerRevised<Long, DTOOrtsteil, OrtsteilKatalogEintrag> {
 
-	private static final String ORT_ID = "ort_id";
+	private static final String ORT_ID = "idOrt";
 	private static final String ORTSTEIL = "ortsteil";
 	private final DataOrte dataOrte;
 
@@ -54,7 +54,7 @@ public final class DataOrtsteile extends DataManagerRevised<Long, DTOOrtsteil, O
 		final OrtsteilKatalogEintrag daten = new OrtsteilKatalogEintrag();
 		daten.id = dto.ID;
 		daten.ortsteil = dto.Bezeichnung;
-		daten.ort_id = dto.Ort_ID;
+		daten.idOrt = dto.Ort_ID;
 		daten.sortierung = Objects.requireNonNullElse(dto.Sortierung, 32000);
 		daten.istSichtbar = Boolean.TRUE.equals(dto.Sichtbar);
 		daten.istAenderbar = Boolean.TRUE.equals(dto.Aenderbar);
@@ -102,7 +102,7 @@ public final class DataOrtsteile extends DataManagerRevised<Long, DTOOrtsteil, O
 
 	private static OrtsteilKatalogEintrag setOrtFields(final OrtsteilKatalogEintrag ortsteil, final Map<Long, OrtKatalogEintrag> orteById) {
 		// Zum Anzeigen in der Auswahlliste im Frontend
-		final OrtKatalogEintrag ort = orteById.get(ortsteil.ort_id);
+		final OrtKatalogEintrag ort = orteById.get(ortsteil.idOrt);
 		if (ort != null) {
 			ortsteil.bezeichnungOrt = ort.ortsname;
 			ortsteil.plzOrt = ort.plz;

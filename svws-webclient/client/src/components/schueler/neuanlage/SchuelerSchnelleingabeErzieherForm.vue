@@ -113,7 +113,7 @@
 		if (idWohnort === null) {
 			return ortsteile.value;
 		}
-		return ortsteile.value.filter(o => o.ort_id === idWohnort);
+		return ortsteile.value.filter(o => o.idOrt === idWohnort);
 	});
 
 	const ortsteil = computed<OrtsteilKatalogEintrag | null>({

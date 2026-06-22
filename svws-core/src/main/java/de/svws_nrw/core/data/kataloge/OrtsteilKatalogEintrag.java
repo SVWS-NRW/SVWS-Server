@@ -23,7 +23,7 @@ public class OrtsteilKatalogEintrag {
 
 	/** Die ID des zugehörigen Ortes. */
 	@Schema(description = "die ID des zugehörigen Ortes", example = "4711")
-	public Long ort_id;
+	public Long idOrt;
 
 	/** Die Bezeichnung des zugehörigen Ortes. */
 	@Schema(description = "Die Bezeichnung des zugehörigen Ortes", example = "Herne", accessMode = Schema.AccessMode.READ_ONLY)

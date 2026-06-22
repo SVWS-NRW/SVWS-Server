@@ -393,7 +393,7 @@
 			return result;
 		}
 		for (const ortsteil of props.ortsteileById.values()) {
-			if (ortsteil.ort_id === modelProxy.proxy.wohnortID) {
+			if (ortsteil.idOrt === modelProxy.proxy.wohnortID) {
 				result.push(ortsteil);
 			}
 		}

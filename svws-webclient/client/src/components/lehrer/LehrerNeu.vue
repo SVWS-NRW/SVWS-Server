@@ -69,7 +69,7 @@
 	const ortsteile = computed<Array<OrtsteilKatalogEintrag>>(() => {
 		const result: Array<OrtsteilKatalogEintrag> = [];
 		for (const ortsteil of props.ortsteileById.values()) {
-			if (ortsteil.ort_id === data.value.wohnortID) {
+			if (ortsteil.idOrt === data.value.wohnortID) {
 				result.push(ortsteil);
 			}
 		}

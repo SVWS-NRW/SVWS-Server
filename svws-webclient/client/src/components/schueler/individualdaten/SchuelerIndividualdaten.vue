@@ -405,8 +405,8 @@
 	const ortsteile = computed(() => {
 		const filtered = new ArrayList<OrtsteilKatalogEintrag>();
 		for (const ortsteil of props.ortsteileById.values()) {
-			if (((ortsteil.ort_id === null) && (ortsteil.id === model.proxy.ortsteilID))
-				|| (ortsteil.ort_id === model.proxy.wohnortID)) {
+			if (((ortsteil.idOrt === null) && (ortsteil.id === model.proxy.ortsteilID))
+				|| (ortsteil.idOrt === model.proxy.wohnortID)) {
 				filtered.add(ortsteil);
 			}
 		}

@@ -41,14 +41,14 @@ export class OrtsteilModelProxy extends ModelProxy<OrtsteilKatalogEintrag> {
 				() => this.proxy,
 				(data: OrtsteilKatalogEintrag) => data.id,
 				(data: OrtsteilKatalogEintrag) => data.ortsteil,
-				() => [...ortsteile()].filter(e => e.ort_id === this.proxy.ort_id),
+				() => [...ortsteile()].filter(e => e.idOrt === this.proxy.idOrt),
 				false
 			),
 			'ortsteil'
 		);
 		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.ortsteil, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'ortsteil');
 		// Ort
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.ort_id), 'ort_id');
+		this.addValidator(new ValidatorInputRequired(() => this.proxy.idOrt), 'idOrt');
 		// sortierung
 		this.addValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
 	}
@@ -60,7 +60,7 @@ export class OrtsteilModelProxy extends ModelProxy<OrtsteilKatalogEintrag> {
 		}
 		return [...this.orteById.values()].filter(ort =>
 			![...this.manager().liste.list()].some(e =>
-				e.ort_id === ort.id &&
+				e.idOrt === ort.id &&
 						e.id !== this.proxy.id &&
 						e.ortsteil?.trim().toLowerCase() === currentOrtsteil
 			)
@@ -68,7 +68,7 @@ export class OrtsteilModelProxy extends ModelProxy<OrtsteilKatalogEintrag> {
 	});
 
 	ort = computed<OrtKatalogEintrag | null>({
-		get: () => this.orteById.get(this.proxy.ort_id ?? -1) ?? null,
+		get: () => this.orteById.get(this.proxy.idOrt ?? -1) ?? null,
 		set: (v: OrtKatalogEintrag | null) => void this.updateOrt(v),
 	});
 
@@ -78,11 +78,11 @@ export class OrtsteilModelProxy extends ModelProxy<OrtsteilKatalogEintrag> {
 			return;
 		}
 
-		this.proxy.ort_id = ort.id;
+		this.proxy.idOrt = ort.id;
 		this.proxy.bezeichnungOrt = ort.ortsname;
 		this.proxy.plzOrt = ort.plz;
 		if (this.manager().hasDaten()) {
-			this.manager().daten().ort_id = ort.id;
+			this.manager().daten().idOrt = ort.id;
 			this.manager().daten().bezeichnungOrt = ort.ortsname;
 			this.manager().daten().plzOrt = ort.plz;
 		}

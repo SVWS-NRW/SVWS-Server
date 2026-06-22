@@ -187,7 +187,7 @@ export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten>
 		get: () => this.ortsteileById().get(this.proxy.ortsteilID ?? -1) ?? null,
 		set: (value: OrtsteilKatalogEintrag | null) => {
 			const v = value;
-			const wohnortId = (v === null) ? this.proxy.wohnortID : (this.orteById().get(v.ort_id ?? -1)?.id ?? null);
+			const wohnortId = (v === null) ? this.proxy.wohnortID : (this.orteById().get(v.idOrt ?? -1)?.id ?? null);
 			const ortsteilId = (v === null || wohnortId === null) ? null : v.id;
 			this.setAndPatchOrtAndOrtsteil(wohnortId, ortsteilId);
 		},

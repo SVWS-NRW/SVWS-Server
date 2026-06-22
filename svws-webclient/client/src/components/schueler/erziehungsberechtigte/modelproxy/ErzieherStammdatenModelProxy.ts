@@ -89,7 +89,7 @@ export class ErzieherStammdatenModelProxy extends ModelProxy<ErzieherStammdaten>
 
 	ortsteileFiltered = computed<OrtsteilKatalogEintrag[]>(
 		() => Array.from(this._ortsteileById().values())
-			.filter(o => o.ort_id === this.proxy.wohnortID)
+			.filter(o => o.idOrt === this.proxy.wohnortID)
 	);
 
 	adresse = computed({

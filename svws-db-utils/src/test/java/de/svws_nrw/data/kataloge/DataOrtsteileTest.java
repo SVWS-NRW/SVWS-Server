@@ -58,19 +58,19 @@ class DataOrtsteileTest {
 	@DisplayName("setAttributesRequiredOnCreation: ortsteil")
 	void setAttributesRequiredOnCreationOrtsteil() {
 		assertThatException()
-				.isThrownBy(() -> this.data.add(Map.of("ort_id", "test")))
+				.isThrownBy(() -> this.data.add(Map.of("idOrt", "test")))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Es werden weitere Attribute (ortsteil) benötigt, damit die Entität erstellt werden kann.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
-	@DisplayName("setAttributesRequiredOnCreation: ort_id")
+	@DisplayName("setAttributesRequiredOnCreation: idOrt")
 	void setAttributesRequiredOnCreationOrtId() {
 		assertThatException()
 				.isThrownBy(() -> this.data.add(Map.of("ortsteil", "test")))
 				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Es werden weitere Attribute (ort_id) benötigt, damit die Entität erstellt werden kann.")
+				.withMessage("Es werden weitere Attribute (idOrt) benötigt, damit die Entität erstellt werden kann.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
@@ -292,47 +292,47 @@ class DataOrtsteileTest {
 	}
 
 	@Test
-	@DisplayName("patch | ort_id | null")
+	@DisplayName("patch | idOrt | null")
 	void patchOrtIdIsNull() {
 		when(this.conn.queryByKey(DTOOrtsteil.class, 1L)).thenReturn(mock(DTOOrtsteil.class));
 		final var map = new HashMap<String, Object>();
-		map.put("ort_id", null);
+		map.put("idOrt", null);
 
 		assertThatException()
 				.isThrownBy(() -> this.data.patch(1L, map))
 				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Attribut ort_id: Der Wert null ist nicht erlaubt")
+				.withMessage("Attribut idOrt: Der Wert null ist nicht erlaubt")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
-	@DisplayName("patch | ort_id | no changes")
+	@DisplayName("patch | idOrt | no changes")
 	void patchOrtIdNoChanges() throws ApiOperationException {
 		final var dto = new DTOOrtsteil(1L, "abc");
 		dto.Ort_ID = 42L;
 		when(this.conn.queryByKey(DTOOrtsteil.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		this.data.patch(1L, Map.of("ort_id", 42L));
+		this.data.patch(1L, Map.of("idOrt", 42L));
 
 		assertThat(dto.Ort_ID).isEqualTo(42L);
 		verify(this.conn, never()).queryByKey(DTOOrt.class, 42);
 	}
 
 	@Test
-	@DisplayName("patch | ort_id | wrong id")
+	@DisplayName("patch | idOrt | wrong id")
 	void patchOrtIdNoMatch() {
 		when(this.conn.queryByKey(DTOOrtsteil.class, 1L)).thenReturn(mock(DTOOrtsteil.class));
 
 		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, Map.of("ort_id", 42L)))
+				.isThrownBy(() -> this.data.patch(1L, Map.of("idOrt", 42L)))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Es wurde kein Ort mit der ID 42 gefunden.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
-	@DisplayName("patch | ort_id | Bezeichnung bereits vorhanden im neuen Ort")
+	@DisplayName("patch | idOrt | Bezeichnung bereits vorhanden im neuen Ort")
 	void patchOrtIdBezeichnungAlreadyExistsInNewOrt() {
 		final var dto = new DTOOrtsteil(1L, "Barmen");
 		dto.Ort_ID = 10L;
@@ -344,13 +344,13 @@ class DataOrtsteileTest {
 		when(this.conn.queryAll(DTOOrtsteil.class)).thenReturn(List.of(dto, existing));
 
 		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, Map.of("ort_id", 42L)))
+				.isThrownBy(() -> this.data.patch(1L, Map.of("idOrt", 42L)))
 				.isInstanceOf(ApiOperationException.class)
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
-	@DisplayName("patch | ort_id | Bezeichnung nicht vorhanden im neuen Ort → erlaubt")
+	@DisplayName("patch | idOrt | Bezeichnung nicht vorhanden im neuen Ort → erlaubt")
 	void patchOrtIdBezeichnungNotInNewOrt() throws ApiOperationException {
 		final var dto = new DTOOrtsteil(1L, "Barmen");
 		dto.Ort_ID = 10L;
@@ -362,13 +362,13 @@ class DataOrtsteileTest {
 		when(this.conn.queryAll(DTOOrtsteil.class)).thenReturn(List.of(dto, other));
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		assertThatNoException().isThrownBy(() -> this.data.patch(1L, Map.of("ort_id", 42L)));
+		assertThatNoException().isThrownBy(() -> this.data.patch(1L, Map.of("idOrt", 42L)));
 		assertThat(dto.Ort_ID).isEqualTo(42L);
 	}
 
 
 	@Test
-	@DisplayName("patch | ort_id")
+	@DisplayName("patch | idOrt")
 	void patchOrtId() throws ApiOperationException {
 		final var dto = new DTOOrtsteil(1L, "abc");
 		dto.Ort_ID = 11L;
@@ -376,7 +376,7 @@ class DataOrtsteileTest {
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 		when(this.conn.queryByKey(DTOOrt.class, 42L)).thenReturn(mock(DTOOrt.class));
 
-		this.data.patch(1L, Map.of("ort_id", 42L));
+		this.data.patch(1L, Map.of("idOrt", 42L));
 
 		assertThat(dto.Ort_ID).isEqualTo(42L);
 	}

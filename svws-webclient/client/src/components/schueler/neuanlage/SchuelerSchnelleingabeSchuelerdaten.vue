@@ -160,7 +160,7 @@
 		if (idWohnort === null) {
 			return ortsteile;
 		}
-		return ortsteile.filter(o => o.ort_id === idWohnort);
+		return ortsteile.filter(o => o.idOrt === idWohnort);
 	});
 
 	const geschlecht = computed<Geschlecht | null>({
