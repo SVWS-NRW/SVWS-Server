@@ -731,6 +731,15 @@ export { GostLaufbahnplanungExportV1Schueler } from './core/data/gost/laufbahnpl
 export { GostLaufbahnplanungExportV1Sprachbelegung } from './core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1Sprachbelegung';
 export { GostLaufbahnplanungExportV1Sprachen } from './core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1Sprachen';
 export { GostLaufbahnplanungExportV1Sprachpruefung } from './core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1Sprachpruefung';
+export { GostLaufbahnplanungExportV2 } from './core/data/gost/laufbahnplanung/v2/GostLaufbahnplanungExportV2';
+export { GostLaufbahnplanungExportV2Beratungslehrer } from './core/data/gost/laufbahnplanung/v2/GostLaufbahnplanungExportV2Beratungslehrer';
+export { GostLaufbahnplanungExportV2Fach } from './core/data/gost/laufbahnplanung/v2/GostLaufbahnplanungExportV2Fach';
+export { GostLaufbahnplanungExportV2Fachkombination } from './core/data/gost/laufbahnplanung/v2/GostLaufbahnplanungExportV2Fachkombination';
+export { GostLaufbahnplanungExportV2GKL } from './core/data/gost/laufbahnplanung/v2/GostLaufbahnplanungExportV2GKL';
+export { GostLaufbahnplanungExportV2Schueler } from './core/data/gost/laufbahnplanung/v2/GostLaufbahnplanungExportV2Schueler';
+export { GostLaufbahnplanungExportV2SchuelerFachbelegung } from './core/data/gost/laufbahnplanung/v2/GostLaufbahnplanungExportV2SchuelerFachbelegung';
+export { GostLaufbahnplanungExportV2SchuelerSprachbelegung } from './core/data/gost/laufbahnplanung/v2/GostLaufbahnplanungExportV2SchuelerSprachbelegung';
+export { GostLaufbahnplanungExportV2SchuelerSprachpruefung } from './core/data/gost/laufbahnplanung/v2/GostLaufbahnplanungExportV2SchuelerSprachpruefung';
 export { JahrgangsDaten } from './core/data/jahrgang/JahrgangsDaten';
 export { Kalender } from './core/data/kalender/Kalender';
 export { KalenderEintrag } from './core/data/kalender/KalenderEintrag';

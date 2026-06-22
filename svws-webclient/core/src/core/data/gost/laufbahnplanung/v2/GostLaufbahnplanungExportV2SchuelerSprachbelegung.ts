@@ -1,0 +1,180 @@
+import { JavaObject } from '../../../../../java/lang/JavaObject';
+import { Class } from '../../../../../java/lang/Class';
+
+export class GostLaufbahnplanungExportV2SchuelerSprachbelegung extends JavaObject {
+
+	/**
+	 * Das einstellige Sprachkürzel des belegten Faches
+	 */
+	public sprache: string = "";
+
+	/**
+	 * Für WbK: Gibt an, ob die Sprachbelegung einer zweiten Fremdsprache durch Nachweis erfolgt (siehe §34 Abst 3,4 APO-WbK)
+	 */
+	public istNachweis: boolean = false;
+
+	/**
+	 * Gibt an, an welcher Stelle in der Sprachenfolge die Sprache begonnen wurde
+	 */
+	public reihenfolge: number | null = null;
+
+	/**
+	 * Der Jahrgang, in dem die Sprache zum ersten mal belegt wurde
+	 */
+	public belegungVonJahrgang: string | null = null;
+
+	/**
+	 * Der Abschnitt des Jahrganges, in welchem die Sprache zum ersten mal belegt wurde
+	 */
+	public belegungVonAbschnitt: number | null = null;
+
+	/**
+	 * Der Jahrgang, in dem die Belegung der Sprache beendet wurde - sofern sie schon beendet wurde
+	 */
+	public belegungBisJahrgang: string | null = null;
+
+	/**
+	 * Der Abschnitt des Jahrgangs, in dem die Belegung der Sprache beendet wurde - sofern sie schon beendet wurde
+	 */
+	public belegungBisAbschnitt: number | null = null;
+
+	/**
+	 * Das Referenzniveau, welches bisher erreicht wurde
+	 */
+	public referenzniveau: string | null = null;
+
+	/**
+	 * Gibt an, ob das kleine Latinum erreicht wurde oder nicht.
+	 */
+	public hatKleinesLatinum: boolean = false;
+
+	/**
+	 * Gibt an, ob das Latinum erreicht wurde oder nicht.
+	 */
+	public hatLatinum: boolean = false;
+
+	/**
+	 * Gibt an, ob das Graecum erreicht wurde oder nicht.
+	 */
+	public hatGraecum: boolean = false;
+
+	/**
+	 * Gibt an, ob das Hebraicum erreicht wurde oder nicht.
+	 */
+	public hatHebraicum: boolean = false;
+
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public constructor() {
+		super();
+	}
+
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.gost.laufbahnplanung.v2.GostLaufbahnplanungExportV2SchuelerSprachbelegung';
+	}
+
+	isTranspiledInstanceOf(name: string): boolean {
+		return ['de.svws_nrw.core.data.gost.laufbahnplanung.v2.GostLaufbahnplanungExportV2SchuelerSprachbelegung'].includes(name);
+	}
+
+	public static readonly class = new Class<GostLaufbahnplanungExportV2SchuelerSprachbelegung>('de.svws_nrw.core.data.gost.laufbahnplanung.v2.GostLaufbahnplanungExportV2SchuelerSprachbelegung');
+
+	public static transpilerFromJSON(json: string): GostLaufbahnplanungExportV2SchuelerSprachbelegung {
+		const obj = JSON.parse(json) as Partial<GostLaufbahnplanungExportV2SchuelerSprachbelegung>;
+		const result = new GostLaufbahnplanungExportV2SchuelerSprachbelegung();
+		if (obj.sprache === undefined)
+			throw new Error('invalid json format, missing attribute sprache');
+		result.sprache = obj.sprache;
+		if (obj.istNachweis === undefined)
+			throw new Error('invalid json format, missing attribute istNachweis');
+		result.istNachweis = obj.istNachweis;
+		result.reihenfolge = (obj.reihenfolge === undefined) ? null : obj.reihenfolge === null ? null : obj.reihenfolge;
+		result.belegungVonJahrgang = (obj.belegungVonJahrgang === undefined) ? null : obj.belegungVonJahrgang === null ? null : obj.belegungVonJahrgang;
+		result.belegungVonAbschnitt = (obj.belegungVonAbschnitt === undefined) ? null : obj.belegungVonAbschnitt === null ? null : obj.belegungVonAbschnitt;
+		result.belegungBisJahrgang = (obj.belegungBisJahrgang === undefined) ? null : obj.belegungBisJahrgang === null ? null : obj.belegungBisJahrgang;
+		result.belegungBisAbschnitt = (obj.belegungBisAbschnitt === undefined) ? null : obj.belegungBisAbschnitt === null ? null : obj.belegungBisAbschnitt;
+		result.referenzniveau = (obj.referenzniveau === undefined) ? null : obj.referenzniveau === null ? null : obj.referenzniveau;
+		if (obj.hatKleinesLatinum === undefined)
+			throw new Error('invalid json format, missing attribute hatKleinesLatinum');
+		result.hatKleinesLatinum = obj.hatKleinesLatinum;
+		if (obj.hatLatinum === undefined)
+			throw new Error('invalid json format, missing attribute hatLatinum');
+		result.hatLatinum = obj.hatLatinum;
+		if (obj.hatGraecum === undefined)
+			throw new Error('invalid json format, missing attribute hatGraecum');
+		result.hatGraecum = obj.hatGraecum;
+		if (obj.hatHebraicum === undefined)
+			throw new Error('invalid json format, missing attribute hatHebraicum');
+		result.hatHebraicum = obj.hatHebraicum;
+		return result;
+	}
+
+	public static transpilerToJSON(obj: GostLaufbahnplanungExportV2SchuelerSprachbelegung): string {
+		let result = '{';
+		result += '"sprache" : ' + JSON.stringify(obj.sprache) + ',';
+		result += '"istNachweis" : ' + obj.istNachweis.toString() + ',';
+		result += '"reihenfolge" : ' + ((obj.reihenfolge === null) ? 'null' : obj.reihenfolge.toString()) + ',';
+		result += '"belegungVonJahrgang" : ' + ((obj.belegungVonJahrgang === null) ? 'null' : JSON.stringify(obj.belegungVonJahrgang)) + ',';
+		result += '"belegungVonAbschnitt" : ' + ((obj.belegungVonAbschnitt === null) ? 'null' : obj.belegungVonAbschnitt.toString()) + ',';
+		result += '"belegungBisJahrgang" : ' + ((obj.belegungBisJahrgang === null) ? 'null' : JSON.stringify(obj.belegungBisJahrgang)) + ',';
+		result += '"belegungBisAbschnitt" : ' + ((obj.belegungBisAbschnitt === null) ? 'null' : obj.belegungBisAbschnitt.toString()) + ',';
+		result += '"referenzniveau" : ' + ((obj.referenzniveau === null) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
+		result += '"hatKleinesLatinum" : ' + obj.hatKleinesLatinum.toString() + ',';
+		result += '"hatLatinum" : ' + obj.hatLatinum.toString() + ',';
+		result += '"hatGraecum" : ' + obj.hatGraecum.toString() + ',';
+		result += '"hatHebraicum" : ' + obj.hatHebraicum.toString() + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj: Partial<GostLaufbahnplanungExportV2SchuelerSprachbelegung>): string {
+		let result = '{';
+		if (obj.sprache !== undefined) {
+			result += '"sprache" : ' + JSON.stringify(obj.sprache) + ',';
+		}
+		if (obj.istNachweis !== undefined) {
+			result += '"istNachweis" : ' + obj.istNachweis.toString() + ',';
+		}
+		if (obj.reihenfolge !== undefined) {
+			result += '"reihenfolge" : ' + ((obj.reihenfolge === null) ? 'null' : obj.reihenfolge.toString()) + ',';
+		}
+		if (obj.belegungVonJahrgang !== undefined) {
+			result += '"belegungVonJahrgang" : ' + ((obj.belegungVonJahrgang === null) ? 'null' : JSON.stringify(obj.belegungVonJahrgang)) + ',';
+		}
+		if (obj.belegungVonAbschnitt !== undefined) {
+			result += '"belegungVonAbschnitt" : ' + ((obj.belegungVonAbschnitt === null) ? 'null' : obj.belegungVonAbschnitt.toString()) + ',';
+		}
+		if (obj.belegungBisJahrgang !== undefined) {
+			result += '"belegungBisJahrgang" : ' + ((obj.belegungBisJahrgang === null) ? 'null' : JSON.stringify(obj.belegungBisJahrgang)) + ',';
+		}
+		if (obj.belegungBisAbschnitt !== undefined) {
+			result += '"belegungBisAbschnitt" : ' + ((obj.belegungBisAbschnitt === null) ? 'null' : obj.belegungBisAbschnitt.toString()) + ',';
+		}
+		if (obj.referenzniveau !== undefined) {
+			result += '"referenzniveau" : ' + ((obj.referenzniveau === null) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
+		}
+		if (obj.hatKleinesLatinum !== undefined) {
+			result += '"hatKleinesLatinum" : ' + obj.hatKleinesLatinum.toString() + ',';
+		}
+		if (obj.hatLatinum !== undefined) {
+			result += '"hatLatinum" : ' + obj.hatLatinum.toString() + ',';
+		}
+		if (obj.hatGraecum !== undefined) {
+			result += '"hatGraecum" : ' + obj.hatGraecum.toString() + ',';
+		}
+		if (obj.hatHebraicum !== undefined) {
+			result += '"hatHebraicum" : ' + obj.hatHebraicum.toString() + ',';
+		}
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+}
+
+export function cast_de_svws_nrw_core_data_gost_laufbahnplanung_v2_GostLaufbahnplanungExportV2SchuelerSprachbelegung(obj: unknown): GostLaufbahnplanungExportV2SchuelerSprachbelegung {
+	return obj as GostLaufbahnplanungExportV2SchuelerSprachbelegung;
+}
