@@ -83,7 +83,7 @@
 										<th:block th:each="unterricht,iterationvarUnterricht : ${unterrichte}">
 											<tr>
 												<th scope="col" class="f-small ta-lm"></th>
-                                                <td th:if="${unterricht.kurs() == null}" colspan="3" class="f-small ta-l" th:classappend="${!iterationvarUnterricht.first ? ' bo-t-grey' : ''}" th:text="${mitFachkuerzelStattFachbezeichnung ? unterricht.fach().kuerzel() : unterricht.fach().bezeichnung()}">Mathematik</td>
+                                                <td th:if="${unterricht.kurs() == null}" colspan="3" class="f-small ta-l" th:classappend="${!iterationvarUnterricht.first ? ' bo-t-grey' : ''}" th:text="${unterricht.fach() == null ? '' : (mitFachkuerzelStattFachbezeichnung ? unterricht.fach().kuerzel() : unterricht.fach().bezeichnung())}">Mathematik</td>
                                                 <th:block th:if="${(unterricht.kurs() != null)}">
                                                     <th:block th:if="${(mitFachStattKursbezeichnung)}"
 															  th:with="kursFachausgabe = ${mitFachkuerzelStattFachbezeichnung ? unterricht.kurs().fach().kuerzel() : unterricht.kurs().fach().bezeichnung()}">

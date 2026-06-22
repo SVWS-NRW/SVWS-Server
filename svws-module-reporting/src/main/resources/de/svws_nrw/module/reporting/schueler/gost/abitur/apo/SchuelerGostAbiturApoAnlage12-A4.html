@@ -9,7 +9,7 @@
 	</head>
 
 	<body>
-		<th:block th:each="schueler,iterationVarSchueler : ${Schueler}"
+		<th:block th:each="schueler,iterationVarSchueler : ${Schueler}" th:if="${schueler.gostAbitur() != null}"
 			 th:with="schuljahr = ${schueler.gostAbitur().abiturSchuljahr()},
 					  abiturLernabschnitt = ${schueler.aktiverLernabschnittInSchuljahresabschnitt(schueler.gostAbitur().abiturSchuljahresabschnitt())},
 					  fachbelegungenAbiturfaecher = ${schueler.gostAbitur().fachbelegungenAbiturfaecher()},
@@ -28,25 +28,25 @@
 					  textBeratungslehrerUnterschrift = ${VorlageParameter.get('textBeratungslehrerUnterschrift')},
 					  textBeratungslehrerUnterschriftBezeichnung = ${VorlageParameter.get('textBeratungslehrerUnterschriftBezeichnung')},
 
-					  hatTextZAAVorsitz = ${textZAAVorsitzUnterschrift != '' or textZAAVorsitzUnterschriftBezeichnung != ''},
+					  hatTextZAAVorsitz = ${textZAAVorsitzUnterschrift != '' || textZAAVorsitzUnterschriftBezeichnung != ''},
 					  finalZAAVorsitzUnterschrift = ${hatTextZAAVorsitz ? textZAAVorsitzUnterschrift : (mitPersoenlichenUnterschriften ? (Schule.schulleitung() != null ? Schule.schulleitung().unterschriftfeld(true, true) : 'N. N., OStD') : 'Vorsitzende/r des Zentralen Abiturausschusses')},
-					  finalZAAVorsitzBezeichnung = ${hatTextZAAVorsitz ? textZAAVorsitzUnterschriftBezeichnung : (mitPersoenlichenUnterschriften ? (Schule.schulleitung() != null ? (Schule.schulleitung().geschlecht().kuerzel.equalsIgnoreCase('W') ? '(Vorsitzende des Zentralen Abiturausschusses)' : (Schule.schulleitung().geschlecht().kuerzel.equalsIgnoreCase('M') ? '(Vorsitzender des Zentralen Abiturausschusses)' : '(Vorsitz des Zentralen Abiturausschusses)')) : '(Vorsitzende/r des Zentralen Abiturausschusses)') : '')},
+					  finalZAAVorsitzBezeichnung = ${hatTextZAAVorsitz ? textZAAVorsitzUnterschriftBezeichnung : (mitPersoenlichenUnterschriften ? (Schule.schulleitung() != null ? (Schule.schulleitung().geschlecht() == null ? '(Vorsitz des Zentralen Abiturausschusses)' : (Schule.schulleitung().geschlecht().kuerzel.equalsIgnoreCase('W') ? '(Vorsitzende des Zentralen Abiturausschusses)' : (Schule.schulleitung().geschlecht().kuerzel.equalsIgnoreCase('M') ? '(Vorsitzender des Zentralen Abiturausschusses)' : '(Vorsitz des Zentralen Abiturausschusses)'))) : '(Vorsitzende/r des Zentralen Abiturausschusses)') : '')},
 
-					  hatTextSchulleitung = ${textSchulleitungUnterschrift != '' or textSchulleitungUnterschriftBezeichnung != ''},
+					  hatTextSchulleitung = ${textSchulleitungUnterschrift != '' || textSchulleitungUnterschriftBezeichnung != ''},
 					  finalSchulleitungUnterschrift = ${hatTextSchulleitung ? textSchulleitungUnterschrift : (mitPersoenlichenUnterschriften ? (Schule.schulleitung() != null ? Schule.schulleitung().unterschriftfeld(true, true) : 'N. N., OStD') : 'Schulleiter/in')},
-					  finalSchulleitungBezeichnung = ${hatTextSchulleitung ? textSchulleitungUnterschriftBezeichnung : (mitPersoenlichenUnterschriften ? (Schule.schulleitung() != null ? '(' + Schule.schulleitung().schulleitungsfunktion().bezeichnung() + ')' : '(Schulleiter/in)') : '')},
+					  finalSchulleitungBezeichnung = ${hatTextSchulleitung ? textSchulleitungUnterschriftBezeichnung : (mitPersoenlichenUnterschriften ? (Schule.schulleitung() != null && Schule.schulleitung().schulleitungsfunktion() != null ? '(' + Schule.schulleitung().schulleitungsfunktion().bezeichnung() + ')' : '(Schulleiter/in)') : '')},
 
-					  hatTextSchultraeger = ${textSchultraegerUnterschrift != '' or textSchultraegerUnterschriftBezeichnung != ''},
-					  hatTextBeratungslehrer = ${textBeratungslehrerUnterschrift != '' or textBeratungslehrerUnterschriftBezeichnung != ''},
-					  zweiteBeratungslehrkraftAktiv = ${mitZweiterBeratungslehrerUnterschrift and !hatTextSchultraeger},
-					  beratungslehrer1 = ${abiturLernabschnitt.klasse().klassenlehrer().size() > 0 ? abiturLernabschnitt.klasse().klassenlehrer().get(0) : null},
-					  beratungslehrer2 = ${abiturLernabschnitt.klasse().klassenlehrer().size() > 1 ? abiturLernabschnitt.klasse().klassenlehrer().get(1) : null},
+					  hatTextSchultraeger = ${textSchultraegerUnterschrift != '' || textSchultraegerUnterschriftBezeichnung != ''},
+					  hatTextBeratungslehrer = ${textBeratungslehrerUnterschrift != '' || textBeratungslehrerUnterschriftBezeichnung != ''},
+					  zweiteBeratungslehrkraftAktiv = ${mitZweiterBeratungslehrerUnterschrift && !hatTextSchultraeger},
+					  beratungslehrer1 = ${(abiturLernabschnitt != null && abiturLernabschnitt.klasse() != null && abiturLernabschnitt.klasse().klassenlehrer().size() > 0) ? abiturLernabschnitt.klasse().klassenlehrer().get(0) : null},
+					  beratungslehrer2 = ${(abiturLernabschnitt != null && abiturLernabschnitt.klasse() != null && abiturLernabschnitt.klasse().klassenlehrer().size() > 1) ? abiturLernabschnitt.klasse().klassenlehrer().get(1) : null},
 
 					  finalSchultraegerUnterschrift = ${hatTextSchultraeger ? textSchultraegerUnterschrift : (zweiteBeratungslehrkraftAktiv ? (mitPersoenlichenUnterschriften ? (beratungslehrer1 != null ? beratungslehrer1.unterschriftfeld(true, true) : 'N. N., OStR') : 'Beratungslehrer/in') : (mitPersoenlichenUnterschriften ? 'N. N., OStR' : 'Vertreter/in des Schulträgers'))},
-					  finalSchultraegerBezeichnung = ${hatTextSchultraeger ? textSchultraegerUnterschriftBezeichnung : (zweiteBeratungslehrkraftAktiv ? (mitPersoenlichenUnterschriften ? (beratungslehrer1 != null ? (beratungslehrer1.geschlecht().kuerzel.equalsIgnoreCase('W') ? '(Beratungslehrerin)' : (beratungslehrer1.geschlecht().kuerzel.equalsIgnoreCase('M') ? '(Beratungslehrer)' : '(Beratungslehrkraft)')) : '(Beratungslehrer/in)') : '') : (mitPersoenlichenUnterschriften ? '(Vertreter/in des Schulträgers)' : ''))},
+					  finalSchultraegerBezeichnung = ${hatTextSchultraeger ? textSchultraegerUnterschriftBezeichnung : (zweiteBeratungslehrkraftAktiv ? (mitPersoenlichenUnterschriften ? (beratungslehrer1 != null ? (beratungslehrer1.geschlecht() == null ? '(Beratungslehrkraft)' : (beratungslehrer1.geschlecht().kuerzel.equalsIgnoreCase('W') ? '(Beratungslehrerin)' : (beratungslehrer1.geschlecht().kuerzel.equalsIgnoreCase('M') ? '(Beratungslehrer)' : '(Beratungslehrkraft)'))) : '(Beratungslehrer/in)') : '') : (mitPersoenlichenUnterschriften ? '(Vertreter/in des Schulträgers)' : ''))},
 
 					  finalBeratungslehrerUnterschrift = ${hatTextBeratungslehrer ? textBeratungslehrerUnterschrift : (mitPersoenlichenUnterschriften ? (zweiteBeratungslehrkraftAktiv ? (beratungslehrer2 != null ? beratungslehrer2.unterschriftfeld(true, true) : 'N. N., OStR') : (beratungslehrer1 != null ? beratungslehrer1.unterschriftfeld(true, true) : 'N. N., OStR')) : 'Beratungslehrer/in')},
-					  finalBeratungslehrerBezeichnung = ${hatTextBeratungslehrer ? textBeratungslehrerUnterschriftBezeichnung : (mitPersoenlichenUnterschriften ? (zweiteBeratungslehrkraftAktiv ? (beratungslehrer2 != null ? (beratungslehrer2.geschlecht().kuerzel.equalsIgnoreCase('W') ? '(Beratungslehrerin)' : (beratungslehrer2.geschlecht().kuerzel.equalsIgnoreCase('M') ? '(Beratungslehrer)' : '(Beratungslehrkraft)')) : '(Beratungslehrer/in)') : (beratungslehrer1 != null ? (beratungslehrer1.geschlecht().kuerzel.equalsIgnoreCase('W') ? '(Beratungslehrerin)' : (beratungslehrer1.geschlecht().kuerzel.equalsIgnoreCase('M') ? '(Beratungslehrer)' : '(Beratungslehrkraft)')) : '(Beratungslehrer/in)')) : '')}">
+					  finalBeratungslehrerBezeichnung = ${hatTextBeratungslehrer ? textBeratungslehrerUnterschriftBezeichnung : (mitPersoenlichenUnterschriften ? (zweiteBeratungslehrkraftAktiv ? (beratungslehrer2 != null ? (beratungslehrer2.geschlecht() == null ? '(Beratungslehrkraft)' : (beratungslehrer2.geschlecht().kuerzel.equalsIgnoreCase('W') ? '(Beratungslehrerin)' : (beratungslehrer2.geschlecht().kuerzel.equalsIgnoreCase('M') ? '(Beratungslehrer)' : '(Beratungslehrkraft)'))) : '(Beratungslehrer/in)') : (beratungslehrer1 != null ? (beratungslehrer1.geschlecht() == null ? '(Beratungslehrkraft)' : (beratungslehrer1.geschlecht().kuerzel.equalsIgnoreCase('W') ? '(Beratungslehrerin)' : (beratungslehrer1.geschlecht().kuerzel.equalsIgnoreCase('M') ? '(Beratungslehrer)' : '(Beratungslehrkraft)'))) : '(Beratungslehrer/in)')) : '')}">
 
 		<!-- Seite 1 Beginn #################################################################################################################################### -->
 			<div class="start-new-page p-l-6 p-r-4">
@@ -77,10 +77,10 @@
 								<td style="width: 100%; height: 17mm; font-size: 17pt; " class="f-bold ta-cb" th:text="${schueler.vornamenNachname()}">Anna Mustermann</td>
 							</tr>
 							<tr>
-								<td style="width: 100%; height: 4mm; font-size: 9pt;" class="ta-ct p-tb-0 p-lr-4-4" th:text="${schueler.druckeKonfessionAufZeugnisse() ? '(' + schueler.religion().bezeichnungZeugnis + ')' : ''}">(Konfession)</td>
+								<td style="width: 100%; height: 4mm; font-size: 9pt;" class="ta-ct p-tb-0 p-lr-4-4" th:text="${(schueler.druckeKonfessionAufZeugnisse() && schueler.religion() != null) ? '(' + schueler.religion().bezeichnungZeugnis + ')' : ''}">(Konfession)</td>
 							</tr>
 							<tr>
-								<td style="width: 100%; height: 16mm; font-size: 13pt; " class="ta-cb" th:text="${'geboren am ' + #convert.toDateDELong(schueler.geburtsdatum())  + ' in ' + schueler.wohnort().ortsname}">geboren am 31. September 2006 in Musterstadt am Rhein</td>
+								<td style="width: 100%; height: 16mm; font-size: 13pt; " class="ta-cb" th:text="${'geboren am ' + #convert.toDateDELong(schueler.geburtsdatum())  + ' in ' + schueler.wohnortname()}">geboren am 31. September 2006 in Musterstadt am Rhein</td>
 							</tr>
 							<tr>
 								<td style="width: 100%; height: 12mm; font-size: 13pt; " class="ta-cb" th:text="${'wohnhaft in ' + schueler.geburtsort()}">wohnhaft in Musterstadt am Rhein</td>
@@ -241,7 +241,7 @@
 										</tr>
 										<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungenVertiefungskurseZeugnisrelevant()}">
 											<tr style="height: 7.25mm">
-												<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong" th:text="${fachbelegung.fach().bezeichnungZeugnis()}">Fachbezeichnung</td>
+												<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong" th:text="${fachbelegung.fach() != null ? fachbelegung.fach().bezeichnungZeugnis() : ''}">Fachbezeichnung</td>
 												<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ11(schuljahr, true)}">06</td>
 												<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ12(schuljahr, true)}">07</td>
 												<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.zeugnisNotenpunkteQ21(schuljahr, true)}">08</td>
@@ -408,28 +408,28 @@
 											<td class="p-lr-2 ta-cm bo-black-strong">mündlich</td>
 										</tr>
 										<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungenAbiturfaecher()}">
-											<tr style="height: 11.5mm"  th:if="${fachbelegung.fach().aufZeugnis() && (fachbelegung.abiturFach() != null && fachbelegung.abiturFach() == 1)}">
+											<tr style="height: 11.5mm"  th:if="${fachbelegung.fach() != null && fachbelegung.fach().aufZeugnis() && (fachbelegung.abiturFach() != null && fachbelegung.abiturFach() == 1)}">
 												<td class="p-tb-3 p-lr-2 ta-lm bo-black-strong" th:text="${'1. ' + fachbelegung.fach().bezeichnungZeugnis() + ' (LK/eA)'}">Fachbezeichnung</td>
 												<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.block2PruefungNote().getNotenpunkteZweistellig(schuljahr) == null ? '--' : fachbelegung.block2PruefungNote().getNotenpunkteZweistellig(schuljahr)}">06</td>
 												<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.block2MuendlichePruefungNote().getNotenpunkteZweistellig(schuljahr) == null ? '--' : fachbelegung.block2MuendlichePruefungNote().getNotenpunkteZweistellig(schuljahr)}">07</td>
 											</tr>
 										</th:block>
 										<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungenAbiturfaecher()}">
-											<tr style="height: 11.5mm" th:if="${fachbelegung.fach().aufZeugnis() && (fachbelegung.abiturFach() != null && fachbelegung.abiturFach() == 2)}">
+											<tr style="height: 11.5mm" th:if="${fachbelegung.fach() != null && fachbelegung.fach().aufZeugnis() && (fachbelegung.abiturFach() != null && fachbelegung.abiturFach() == 2)}">
 												<td class="p-tb-3 p-lr-2 ta-lm bo-black-strong" th:text="${'2. ' + fachbelegung.fach().bezeichnungZeugnis() + ' (LK/eA)'}">Fachbezeichnung</td>
 												<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.block2PruefungNote().getNotenpunkteZweistellig(schuljahr) == null ? '--' : fachbelegung.block2PruefungNote().getNotenpunkteZweistellig(schuljahr)}">06</td>
 												<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.block2MuendlichePruefungNote().getNotenpunkteZweistellig(schuljahr) == null ? '--' : fachbelegung.block2MuendlichePruefungNote().getNotenpunkteZweistellig(schuljahr)}">07</td>
 											</tr>
 										</th:block>
 										<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungenAbiturfaecher()}">
-											<tr style="height: 11.5mm" th:if="${fachbelegung.fach().aufZeugnis() && (fachbelegung.abiturFach() != null && fachbelegung.abiturFach() == 3)}">
+											<tr style="height: 11.5mm" th:if="${fachbelegung.fach() != null && fachbelegung.fach().aufZeugnis() && (fachbelegung.abiturFach() != null && fachbelegung.abiturFach() == 3)}">
 												<td class="p-tb-3 p-lr-2 ta-lm bo-black-strong" th:text="${'3. ' + fachbelegung.fach().bezeichnungZeugnis()}">Fachbezeichnung</td>
 												<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.block2PruefungNote().getNotenpunkteZweistellig(schuljahr) == null ? '--' : fachbelegung.block2PruefungNote().getNotenpunkteZweistellig(schuljahr)}">06</td>
 												<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.block2MuendlichePruefungNote().getNotenpunkteZweistellig(schuljahr) == null ? '--' : fachbelegung.block2MuendlichePruefungNote().getNotenpunkteZweistellig(schuljahr)}">07</td>
 											</tr>
 										</th:block>
 										<th:block th:each="fachbelegung : ${schueler.gostAbitur().fachbelegungenAbiturfaecher()}">
-											<tr style="height: 11.5mm" th:if="${fachbelegung.fach().aufZeugnis() && (fachbelegung.abiturFach() != null && fachbelegung.abiturFach() == 4)}">
+											<tr style="height: 11.5mm" th:if="${fachbelegung.fach() != null && fachbelegung.fach().aufZeugnis() && (fachbelegung.abiturFach() != null && fachbelegung.abiturFach() == 4)}">
 												<td class="p-tb-3 p-lr-2 ta-lm bo-black-strong" th:text="${'4. ' + fachbelegung.fach().bezeichnungZeugnis()}">Fachbezeichnung</td>
 												<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong">--</td>
 												<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong" th:text="${fachbelegung.block2PruefungNote().getNotenpunkteZweistellig(schuljahr) == null ? '--' : fachbelegung.block2PruefungNote().getNotenpunkteZweistellig(schuljahr)}">06</td>
@@ -621,7 +621,7 @@
 															<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-lm bo-black-strong" th:text="${(sprachbelegung.statistikfach().fach() != null) ? sprachbelegung.statistikfach().fach().bezeichnungZeugnis() : sprachbelegung.statistikfach().bezeichnung()}">Fachbezeichnung</td>
 															<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${(sprachbelegung.belegungVonJahrgang() == null || sprachbelegung.belegungVonJahrgang().isEmpty()) ? '--' : 'von ' + sprachbelegung.belegungVonJahrgang() + ((sprachbelegung.belegungVonAbschnitt() == null || sprachbelegung.belegungVonAbschnitt() < 1) ? '.1' : '.' + sprachbelegung.belegungVonAbschnitt())}">05.1</td>
 															<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${(sprachbelegung.belegungBisJahrgang() == null || sprachbelegung.belegungBisJahrgang().isEmpty()) ? '--' : 'bis ' + sprachbelegung.belegungBisJahrgang() + ((sprachbelegung.belegungBisAbschnitt() == null || sprachbelegung.belegungBisAbschnitt() < 1) ? '.1' : '.' + sprachbelegung.belegungBisAbschnitt())}">Q2.2</td>
-															<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${(sprachbelegung.referenzniveau() == null) ? '--' : sprachbelegung.referenzniveau().daten(schuljahr).text}">B2/C1</td>
+															<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black-strong" th:text="${(sprachbelegung.referenzniveau() == null || sprachbelegung.referenzniveau().daten(schuljahr) == null) ? '--' : sprachbelegung.referenzniveau().daten(schuljahr).text}">B2/C1</td>
 														</tr>
 													</th:block>
 												</table>
@@ -677,7 +677,7 @@
 										</tr>
 										<tr>
 											<td style="width: 100%; height: 14mm;" class="ta-lm">
-												<p th:text="${Schule.ort() + ', den ' + #convert.toDateDELong(schueler.schulbesuch().entlassungDatum())}">
+												<p th:text="${Schule.ort() + ', den ' + #convert.toDateDELong((schueler.schulbesuch() != null) ? schueler.schulbesuch().entlassungDatum() : null)}">
 												Ort, Datum</p>
 											</td>
 										</tr>

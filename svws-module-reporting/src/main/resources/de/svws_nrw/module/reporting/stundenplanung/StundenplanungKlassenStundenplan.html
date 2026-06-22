@@ -12,7 +12,7 @@
 		<div class="reset-page-counter start-new-page"
 			 th:each="plan,iterationVarPlan : ${KlassenStundenplaene}"
 			 th:with="mitPausenzeiten = ${VorlageParameter.get('mitPausenzeiten')},
-					  mitFachStattKursbezeichnung = ${VorlageParameter.get('mitFachStattKursbezeichnung') && !plan.klasse().jahrgang().istJahrgangImBereichSek2OderWeiterbildung()},
+					  mitFachStattKursbezeichnung = ${VorlageParameter.get('mitFachStattKursbezeichnung') && (plan.klasse().jahrgang() == null || !plan.klasse().jahrgang().istJahrgangImBereichSek2OderWeiterbildung())},
 					  mitFachkuerzelStattFachbezeichnung = ${VorlageParameter.get('mitFachkuerzelStattFachbezeichnung')}">
 
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
@@ -78,7 +78,7 @@
 										<th:block th:each="unterricht,iterationvarUnterricht : ${unterrichte}">
 											<tr>
 												<th class="f-small ta-lm"></th>
-                                                <th th:if="${unterricht.kurs() == null}" colspan="3" class="f-small ta-lm" th:classappend="${!iterationvarUnterricht.first ? ' bo-t-grey' : ''}" th:text="${mitFachkuerzelStattFachbezeichnung ? unterricht.fach().kuerzel() : unterricht.fach().bezeichnung()}">Mathematik</th>
+                                                <th th:if="${unterricht.kurs() == null}" colspan="3" class="f-small ta-lm" th:classappend="${!iterationvarUnterricht.first ? ' bo-t-grey' : ''}" th:text="${unterricht.fach() == null ? '' : (mitFachkuerzelStattFachbezeichnung ? unterricht.fach().kuerzel() : unterricht.fach().bezeichnung())}">Mathematik</th>
 												<th th:if="${unterricht.kurs() != null}" colspan="3" class="f-small ta-lm" th:classappend="${!iterationvarUnterricht.first ? ' bo-t-grey' : ''}" th:text="${mitFachStattKursbezeichnung ? (mitFachkuerzelStattFachbezeichnung ? unterricht.kurs().fach().kuerzel() : unterricht.kurs().fach().bezeichnung()) : unterricht.kurs().kuerzel()}">M-GK2</th>
 												<th class="f-small ta-lm"></th>
 											</tr>

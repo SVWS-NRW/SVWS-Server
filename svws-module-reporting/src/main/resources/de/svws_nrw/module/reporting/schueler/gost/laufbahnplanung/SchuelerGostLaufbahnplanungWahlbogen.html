@@ -62,7 +62,7 @@
 					<th class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid; border-right: 1px grey solid;">Abitur</th>
 				</tr>
 				</thead>
-				<tr th:each="Fachwahl : ${schueler.gostLaufbahnplanung().fachwahlen()}" th:if="${(!nurBelegteFaecher || Fachwahl.fachIstBelegtInGOSt()) && Fachwahl.fach().istPruefungsordnungsRelevant()}"  th:style="'background-color: ' + ${Fachwahl.fach().statistikfach().htmlFarbeRGB()} + ';'">
+				<tr th:each="Fachwahl : ${schueler.gostLaufbahnplanung().fachwahlen()}" th:if="${(!nurBelegteFaecher || Fachwahl.fachIstBelegtInGOSt()) && Fachwahl.fach() != null && Fachwahl.fach().istPruefungsordnungsRelevant()}"  th:style="'background-color: ' + ${Fachwahl.fach().statistikfach() != null ? Fachwahl.fach().statistikfach().htmlFarbeRGB() : ''} + ';'">
 					<td class="ta-l f-bold bo-b-grey p-tb-0 p-lr-1 m-0" th:text="${Fachwahl.fach().kuerzel()}"><b>D</b></td>
 					<td class="ta-l f-bold bo-b-grey p-tb-0 p-lr-1 m-0" th:text="${Fachwahl.fach().bezeichnung()}"><b>Deutsch</b></td>
 					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;" th:switch="${Fachwahl.jahrgangFremdsprachenbeginn()}">
@@ -113,7 +113,7 @@
 					</tr>
 					<tr th:if="${nurBelegteFaecher}">
 						<td colspan="10" class="f-tiny" style="font-style: italic">
-							<p class="f-small">Wählbare Fächer des Abiturjahrgangs: <span th:each="Fachwahl,iterationVarFach : ${schueler.gostLaufbahnplanung().fachwahlen()}" th:text="${Fachwahl.fach().bezeichnung()} + ${iterationVarFach.count != iterationVarFach.size ? ', ' : ''}">Deutsch, Englisch</span></p>
+							<p class="f-small">Wählbare Fächer des Abiturjahrgangs: <span th:each="Fachwahl,iterationVarFach : ${schueler.gostLaufbahnplanung().fachwahlen()}" th:text="${Fachwahl.fach() != null ? Fachwahl.fach().bezeichnung() : ''} + ${iterationVarFach.count != iterationVarFach.size ? ', ' : ''}">Deutsch, Englisch</span></p>
 						</td>
 					</tr>
 				</tfoot>

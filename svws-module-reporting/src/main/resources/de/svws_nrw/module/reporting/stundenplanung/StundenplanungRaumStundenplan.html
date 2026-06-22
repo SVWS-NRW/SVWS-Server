@@ -84,7 +84,7 @@
 												<td></td>
 												<td class="f-small ta-lm" th:text="${unterricht.lehrkraefteAuflistung()}">ABC</td>
 												<td class="f-small ta-cm"></td>
-                                                <td class="f-small ta-rm" th:text="${unterricht.fach().kuerzel()}">D</td>
+                                                <td class="f-small ta-rm" th:text="${unterricht.fach() != null ? unterricht.fach().kuerzel() : ''}">D</td>
 												<td></td>
 											</tr>
 										</th:block>

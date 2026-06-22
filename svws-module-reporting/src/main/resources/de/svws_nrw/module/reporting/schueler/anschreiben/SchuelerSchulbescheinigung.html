@@ -20,7 +20,7 @@
 				   versandinformationen = ${VorlageParameter.get('versandinformationen')}">
 
 	<th:block th:each="schueler,iterationVarSchueler : ${Schueler}"
-              th:with="istAktuell = ${schueler.schulbesuch().entlassungDatum().isEmpty()},
+              th:with="istAktuell = ${(schueler.schulbesuch() == null) || schueler.schulbesuch().entlassungDatum().isEmpty()},
                        anzahlEmpfaenger = ${fuerErzieher ? schueler.erzieherArtGruppen().size() : 1 }">
 
 		<th:block th:if="${anzahlEmpfaenger >= 1}" th:each="empfaenger,iterationVarEmpfaenger : ${#numbers.sequence(1, anzahlEmpfaenger)}">
@@ -146,12 +146,12 @@
 								<tr class="zeile-abstand-klein">
 									<td></td>
 									<td class="label ta-l">voraussichtlich bis</td>
-									<td class="ta-l" th:with="wert=${istAktuell and !schueler.aktuellerLernabschnitt().jahrVoraussichtlicheEntlassung().isEmpty() ? ('31.07.' + schueler.aktuellerLernabschnitt().jahrVoraussichtlicheEntlassung()) : ''}"><span class="formularfeld"><span th:if="${wert.isEmpty()}" class="formularfeld-strich"></span><span th:unless="${wert.isEmpty()}" th:text="${wert}"></span></span>.</td>
+									<td class="ta-l" th:with="wert=${(istAktuell && schueler.aktuellerLernabschnitt() != null && !schueler.aktuellerLernabschnitt().jahrVoraussichtlicheEntlassung().isEmpty()) ? ('31.07.' + schueler.aktuellerLernabschnitt().jahrVoraussichtlicheEntlassung()) : ''}"><span class="formularfeld"><span th:if="${wert.isEmpty()}" class="formularfeld-strich"></span><span th:unless="${wert.isEmpty()}" th:text="${wert}"></span></span>.</td>
 								</tr>
 								<tr class="zeile-abstand">
 									<td class="ankreuz-zelle ta-l"><img class="ankreuz" th:src="${#convert.toCheckboxSVG(!istAktuell, 14)}" width="14" height="14" alt="[]"/></td>
 									<td class="label ta-l">besuchte unsere Schule bis zum</td>
-									<td class="ta-l" th:with="wert=${!istAktuell ? #convert.toDateDE(schueler.schulbesuch().entlassungDatum()) : ''}"><span class="formularfeld"><span th:if="${wert.isEmpty()}" class="formularfeld-strich"></span><span th:unless="${wert.isEmpty()}" th:text="${wert}"></span></span>.</td>
+									<td class="ta-l" th:with="wert=${(!istAktuell && schueler.schulbesuch() != null) ? #convert.toDateDE(schueler.schulbesuch().entlassungDatum()) : ''}"><span class="formularfeld"><span th:if="${wert.isEmpty()}" class="formularfeld-strich"></span><span th:unless="${wert.isEmpty()}" th:text="${wert}"></span></span>.</td>
 								</tr>
 							</table>
 

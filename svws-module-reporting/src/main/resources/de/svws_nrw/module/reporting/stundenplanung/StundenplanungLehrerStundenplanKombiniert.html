@@ -75,7 +75,7 @@
 											<th:block th:each="pausenaufsicht,iterationvarPausenaufsicht : ${pausenaufsichten}">
 												<tr>
 													<th class="f-tiny ta-lm"></th>
-													<th colspan="3" class="f-tiny f-bold ta-cm bg-lightgrey" th:classappend="${!iterationvarPausenaufsicht.first ? ' bo-t-grey' : ''}" th:text="${pausenaufsicht.aufsichtsbereichKuerzel() + ' (' + pausenaufsicht.lehrkraft().kuerzel() + ')' }">Mensa (ABC)</th>
+													<th colspan="3" class="f-tiny f-bold ta-cm bg-lightgrey" th:classappend="${!iterationvarPausenaufsicht.first ? ' bo-t-grey' : ''}" th:text="${pausenaufsicht.aufsichtsbereichKuerzel() + (pausenaufsicht.lehrkraft() != null ? ' (' + pausenaufsicht.lehrkraft().kuerzel() + ')' : '')}">Mensa (ABC)</th>
 													<th class="f-tiny ta-rm"></th>
 												</tr>
 											</th:block>
@@ -109,7 +109,7 @@
 											</tr>
 											<tr>
 												<td></td>
-												<td th:if="${unterricht.kurs() == null}" class="f-small ta-l" th:text="${mitFachkuerzelStattFachbezeichnung ? unterricht.fach().kuerzel() : unterricht.fach().bezeichnung()}">Mathematik</td>
+												<td th:if="${unterricht.kurs() == null}" class="f-small ta-l" th:text="${unterricht.fach() == null ? '' : (mitFachkuerzelStattFachbezeichnung ? unterricht.fach().kuerzel() : unterricht.fach().bezeichnung())}">Mathematik</td>
 												<td th:if="${unterricht.kurs() != null}" class="f-small ta-l" th:text="${unterricht.kurs().kuerzel()}">M-GK2</td>
 												<td class="f-small ta-l"></td>
 												<td class="f-small ta-r" th:text="${unterricht.lehrkraefteAuflistung()}">ABC</td>
@@ -119,7 +119,7 @@
 										<th:block th:if="${mitPausenaufsichten}" th:each="pausenaufsicht,iterationvarPausenaufsicht : ${pausenaufsichten}">
 											<tr>
 												<td class="f-tiny f-bold ta-lm"></td>
-												<td colspan="3" class="f-tiny f-bold ta-cm bg-lightgrey" th:classappend="${(!iterationvarPausenaufsicht.first || unterrichte.size() > 0) ? ' bo-t-grey' : ''}" th:text="${pausenaufsicht.aufsichtsbereichKuerzel() + ' (' + pausenaufsicht.lehrkraft().kuerzel() + ')' }">Mensa (ABC)</td>
+												<td colspan="3" class="f-tiny f-bold ta-cm bg-lightgrey" th:classappend="${(!iterationvarPausenaufsicht.first || unterrichte.size() > 0) ? ' bo-t-grey' : ''}" th:text="${pausenaufsicht.aufsichtsbereichKuerzel() + (pausenaufsicht.lehrkraft() != null ? ' (' + pausenaufsicht.lehrkraft().kuerzel() + ')' : '')}">Mensa (ABC)</td>
 												<td class="f-tiny f-bold ta-rm"></td>
 											</tr>
 										</th:block>

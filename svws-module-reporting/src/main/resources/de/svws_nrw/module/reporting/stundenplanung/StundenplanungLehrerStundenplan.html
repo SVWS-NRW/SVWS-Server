@@ -110,7 +110,7 @@
 											</tr>
 											<tr>
 												<td></td>
-												<td th:if="${unterricht.kurs() == null}" colspan="3" class="f-small ta-l" th:text="${mitFachkuerzelStattFachbezeichnung ? unterricht.fach().kuerzel() : unterricht.fach().bezeichnung()}">Mathematik</td>
+												<td th:if="${unterricht.kurs() == null}" colspan="3" class="f-small ta-l" th:text="${unterricht.fach() == null ? '' : (mitFachkuerzelStattFachbezeichnung ? unterricht.fach().kuerzel() : unterricht.fach().bezeichnung())}">Mathematik</td>
 												<td th:if="${unterricht.kurs() != null}" colspan="3" class="f-small ta-l" th:text="${unterricht.kurs().kuerzel()}">M-GK2</td>
 												<td></td>
 											</tr>
