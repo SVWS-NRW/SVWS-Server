@@ -16,6 +16,7 @@ export enum StringPattern {
 	NO_WHITESPACES,
 	NO_LEADING_OR_TRAILING_WHITESPACES,
 	IS_PHONE_NUMBER,
+	IS_PHONE_NUMBER_OR_EXTENSION,
 	IS_EMAIL
 }
 
@@ -33,7 +34,11 @@ const STRING_PATTERN_MAP: Record<StringPattern, StringPatternDefinition> = {
 	},
 	[StringPattern.IS_PHONE_NUMBER]: {
 		regex: /^[+]?\d[\d\-/()]*\d$|^\d+$/,
-		errorMessage: "Die angegebene Telefonnummer hat ein ungültiges Format. Zulässig sind ein + bei der Vorwahl sowie -, / und () als Trennzeichen.",
+		errorMessage: "Die angegebene Telefonnummer hat ein ungültiges Format. Zulässige Zeichen: Ziffern von 0-9, Plus(+) bei der Vorwahl, Minus(-), Schrägstrich(/) und Klammern als Trennzeichen.",
+	},
+	[StringPattern.IS_PHONE_NUMBER_OR_EXTENSION]: {
+		regex: /^(-?\d+|[+]?\d[\d\-/()]*\d)$/,
+		errorMessage: "Die angegebene Durchwahl/Telefonnummer hat ein ungültiges Format. Durchwahl: Ziffern von 0-9, Minus(-) als vorangestelltes Trennzeichen. Telefonnummer: Ziffern von 0-9, Plus(+) bei der Vorwahl, Minus(-), Schrägstrich(/) und Klammern als Trennzeichen.",
 	},
 	[StringPattern.IS_EMAIL]: {
 		regex: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))([^@]?|@((\[\d{1,3}(\.\d{1,3}){3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})))$/,

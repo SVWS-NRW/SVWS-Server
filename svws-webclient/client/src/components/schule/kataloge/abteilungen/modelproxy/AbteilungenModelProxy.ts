@@ -1,9 +1,8 @@
 import type { Abteilung, LehrerListeEintrag } from "@core";
 import type { AbteilungenListeManager, ViewType } from "@ui";
-import { ModelProxy, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
+import { ModelProxy, ValidatorStringLength, ValidatorStringMatchesPattern, StringPattern } from "@ui";
 import { ValidatorAbteilungBezeichnung } from "~/components/schule/kataloge/abteilungen/modelproxy/validation/ValidatorAbteilungBezeichnung";
 import { computed } from "vue";
-import { StringPattern } from "../../../../../../../ui/src/validation/common/ValidatorStringMatchesPattern";
 
 /**
  * ModelProxy für Abteilungen.
@@ -34,7 +33,7 @@ export class AbteilungenModelProxy extends ModelProxy<Abteilung> {
 		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.email, StringPattern.IS_EMAIL), 'email');
 		this.addValidator(new ValidatorStringLength(() => this.proxy.email, null, 100), 'email');
 
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.durchwahl, StringPattern.IS_PHONE_NUMBER), 'durchwahl');
+		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.durchwahl, StringPattern.IS_PHONE_NUMBER_OR_EXTENSION), 'durchwahl');
 		this.addValidator(new ValidatorStringLength(() => this.proxy.durchwahl, null, 20), 'durchwahl');
 	}
 
