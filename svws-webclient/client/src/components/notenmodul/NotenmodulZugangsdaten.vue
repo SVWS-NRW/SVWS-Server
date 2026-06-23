@@ -352,6 +352,7 @@
 		await props.resetPassword(selected.value.id);
 		pingTimer(selected.value, "resetPassword");
 		selected.value.istInitialPassword = true;
+		triggerRef(selected);
 	}
 
 	async function doGenerateInitialPassword() {
