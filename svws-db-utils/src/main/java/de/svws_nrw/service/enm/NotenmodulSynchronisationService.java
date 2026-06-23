@@ -173,8 +173,21 @@ public final class NotenmodulSynchronisationService {
 	public SimpleOperationResponse synchronize(final long idVerbindung) {
 		return executeWithLog("Synchronisation", logger -> {
 			final HttpENMServerConnection client = transactional(() -> new HttpENMServerConnection(repository, logger, idVerbindung, true, false));
-			transactional(() -> downloadENMDaten(client, logger));
+			boolean retryDownload = false;
+			try {
+				transactional(() -> downloadENMDaten(client, logger));
+			} catch (final ApiOperationException aoe) {
+				if (aoe.getStatus() == Status.NOT_FOUND) {
+					retryDownload = true;
+					logger.logLn("Es konnten im SVWS-Server nicht alle Daten gefunden werden. Das Herunterladen wird nach dem Abgleich in die andere Richtung erneut probiert...");
+				} else {
+					throw aoe;
+				}
+			}
 			transactional(() -> uploadENMDaten(client, logger));
+			if (retryDownload) {
+				transactional(() -> downloadENMDaten(client, logger));
+			}
 		});
 	}
 
