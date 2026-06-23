@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -15,6 +17,7 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
@@ -69,20 +72,27 @@ public final class DataGostSchuelerLaufbahnplanungBeratungsdaten extends DataMan
 	/**
 	 * Gibt die Beratungsdaten eines Schülers zur GostLaufbahnplanung zurück.
 	 *
-	 * @param schueler_id	Die ID des Schülers
+	 * @param idSchueler   die ID des Schülers
 	 *
-	 * @return				Die GostLaufbahnplanungBeratungsdaten des Schülers.
+	 * @return die GostLaufbahnplanungBeratungsdaten des Schülers.
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public GostLaufbahnplanungBeratungsdaten getFromID(final Long schueler_id) throws ApiOperationException {
-		if (schueler_id == null) {
+	public GostLaufbahnplanungBeratungsdaten getFromID(final Long idSchueler) throws ApiOperationException {
+		if (idSchueler == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Schüler-ID übergeben.");
 		}
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		final DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schueler_id);
+
+		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, idSchueler);
+		if (schueler == null) {
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Schüler mit der ID %d gefunden.".formatted(idSchueler));
+		}
+
+		DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, idSchueler);
 		if (gostSchueler == null) {
-			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Schüler mit Daten zur GOSt mit der ID " + schueler_id + " gefunden.");
+			gostSchueler = new DTOGostSchueler(idSchueler, false);
+			conn.transactionPersist(gostSchueler);
 		}
 		return dtoMapper.apply(gostSchueler);
 	}
@@ -90,26 +100,42 @@ public final class DataGostSchuelerLaufbahnplanungBeratungsdaten extends DataMan
 	/**
 	 * Gibt die Beratungsdaten zu mehreren Schülern zur GostLaufbahnplanung zurück.
 	 *
-	 * @param schueler_ids	Die IDs der Schüler
+	 * @param idsSchueler   die IDs der Schüler
 	 *
-	 * @return				Die GostLaufbahnplanungBeratungsdaten der Schüler.
+	 * @return die GostLaufbahnplanungBeratungsdaten der Schüler.
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Map<Long, GostLaufbahnplanungBeratungsdaten> getMapFromIDs(final List<Long> schueler_ids) throws ApiOperationException {
-		if (schueler_ids == null) {
+	public Map<Long, GostLaufbahnplanungBeratungsdaten> getMapFromIDs(final List<Long> idsSchueler) throws ApiOperationException {
+		if (idsSchueler == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Schüler-IDs übergeben.");
 		}
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		final Map<Long, DTOGostSchueler> mapGostSchueler = conn.queryList(DTOGostSchueler.QUERY_LIST_BY_SCHUELER_ID, DTOGostSchueler.class, schueler_ids)
+		final Set<Long> tmp = idsSchueler.stream().filter(Objects::nonNull).collect(Collectors.toSet());
+		final List<DTOSchueler> schueler = conn.queryByKeyList(DTOSchueler.class, tmp);
+		if (schueler.size() != tmp.size()) {
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurden Schüler-IDs übergeben, die nicht gültig sind.");
+		}
+
+		final Map<Long, DTOGostSchueler> mapGostSchueler = conn.queryList(DTOGostSchueler.QUERY_LIST_BY_SCHUELER_ID, DTOGostSchueler.class, idsSchueler)
 				.stream().collect(Collectors.toMap(s -> s.Schueler_ID, s -> s));
+		if (mapGostSchueler.size() != tmp.size()) {
+			tmp.removeAll(mapGostSchueler.keySet());
+			for (final Long idSchueler : tmp) {
+				final DTOGostSchueler gostSchueler = new DTOGostSchueler(idSchueler, false);
+				conn.transactionPersist(gostSchueler);
+				mapGostSchueler.put(idSchueler, gostSchueler);
+			}
+		}
+		conn.transactionFlush();
+
 		final Map<Long, GostLaufbahnplanungBeratungsdaten> result = new HashMap<>();
-		for (final Long sID : schueler_ids) {
-			final var schueler = mapGostSchueler.get(sID);
-			if (schueler == null) {
+		for (final Long sID : idsSchueler) {
+			final var gostSchueler = mapGostSchueler.get(sID);
+			if (gostSchueler == null) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Es wurden Schüler-IDs übergeben, die nicht zur GOSt gehören.");
 			}
-			result.put(sID, dtoMapper.apply(schueler));
+			result.put(sID, dtoMapper.apply(gostSchueler));
 		}
 		return result;
 	}
