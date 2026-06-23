@@ -1734,21 +1734,21 @@ public final class DBMigrationManager {
 				logger.logLn(LogLevel.ERROR, strFehlerKeinLehrer.formatted(daten.Lehrer_ID));
 				entities.remove(i);
 			} else if ((daten.Jahr == null) || (daten.Abschnitt == null)) {
-				logger.logLn(LogLevel.ERROR, strFehlerLernabschnittUngueltigNull.formatted("LehrerFunktionen", daten.ID));
+				logger.logLn(LogLevel.ERROR, strFehlerLernabschnittUngueltigNull.formatted("LehrerFunktionen", daten.id));
 				entities.remove(i);
 			} else if (!lehrerAbschnitte.contains("" + daten.Lehrer_ID + "." + daten.Jahr + "." + daten.Abschnitt)) {
-				logger.logLn(LogLevel.ERROR, strFehlerLernabschnittUngueltig.formatted("LehrerFunktionen", daten.ID));
+				logger.logLn(LogLevel.ERROR, strFehlerLernabschnittUngueltig.formatted("LehrerFunktionen", daten.id));
 				entities.remove(i);
 			} else {
 				// Entferne ggf. Duplikate in Bezug auf die Lehrerfunktion bei den gleichen Lehrerabschnittsdaten
-				final String key = "" + daten.Lehrer_ID + "." + daten.Jahr + "." + daten.Abschnitt + "." + daten.Funktion_ID;
+				final String key = "" + daten.Lehrer_ID + "." + daten.Jahr + "." + daten.Abschnitt + "." + daten.idFunktion;
 				final MigrationDTOLehrerFunktion other = map.get(key);
 				if (other == null) {
 					map.put(key, daten);
 				} else {
 					logger.logLn(LogLevel.ERROR,
 							"Entferne ungültigen Datensatz (ID %d): Eine Lehrerfunktion darf nur einmal in den Abschnittsdaten vorkommen. Es existiert bereits ein Datendatz mit der ID %d."
-									.formatted(daten.ID, other.ID));
+									.formatted(daten.id, other.id));
 					entities.remove(i);
 				}
 			}
@@ -1756,7 +1756,7 @@ public final class DBMigrationManager {
 		// Füge eine ID als Primärschlüssel hinzu.
 		for (int i = 0; i < entities.size(); i++) {
 			final MigrationDTOLehrerFunktion daten = entities.get(i);
-			daten.ID = (long) (i + 1);
+			daten.id = (long) (i + 1);
 		}
 		return true;
 	}

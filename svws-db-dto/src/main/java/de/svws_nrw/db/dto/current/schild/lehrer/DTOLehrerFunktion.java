@@ -18,54 +18,54 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerFunktionen")
-@JsonPropertyOrder({"ID", "Abschnitt_ID", "Funktion_ID"})
+@JsonPropertyOrder({"id", "idAbschnitt", "idFunktion"})
 public final class DTOLehrerFunktion {
 
 	/** Die Datenbankabfrage für alle DTOs */
 	public static final String QUERY_ALL = "SELECT e FROM DTOLehrerFunktion e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM DTOLehrerFunktion e WHERE e.ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM DTOLehrerFunktion e WHERE e.id = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM DTOLehrerFunktion e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOLehrerFunktion e WHERE e.id IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOLehrerFunktion e WHERE e.ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOLehrerFunktion e WHERE e.id IS NOT NULL";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
-	public static final String QUERY_BY_ID = "SELECT e FROM DTOLehrerFunktion e WHERE e.ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes id */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOLehrerFunktion e WHERE e.id = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
-	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOLehrerFunktion e WHERE e.ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes id */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOLehrerFunktion e WHERE e.id IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Abschnitt_ID */
-	public static final String QUERY_BY_ABSCHNITT_ID = "SELECT e FROM DTOLehrerFunktion e WHERE e.Abschnitt_ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idAbschnitt */
+	public static final String QUERY_BY_IDABSCHNITT = "SELECT e FROM DTOLehrerFunktion e WHERE e.idAbschnitt = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abschnitt_ID */
-	public static final String QUERY_LIST_BY_ABSCHNITT_ID = "SELECT e FROM DTOLehrerFunktion e WHERE e.Abschnitt_ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idAbschnitt */
+	public static final String QUERY_LIST_BY_IDABSCHNITT = "SELECT e FROM DTOLehrerFunktion e WHERE e.idAbschnitt IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Funktion_ID */
-	public static final String QUERY_BY_FUNKTION_ID = "SELECT e FROM DTOLehrerFunktion e WHERE e.Funktion_ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idFunktion */
+	public static final String QUERY_BY_IDFUNKTION = "SELECT e FROM DTOLehrerFunktion e WHERE e.idFunktion = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Funktion_ID */
-	public static final String QUERY_LIST_BY_FUNKTION_ID = "SELECT e FROM DTOLehrerFunktion e WHERE e.Funktion_ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idFunktion */
+	public static final String QUERY_LIST_BY_IDFUNKTION = "SELECT e FROM DTOLehrerFunktion e WHERE e.idFunktion IN ?1";
 
 	/** ID für den Eintrag für die schulinterne Funktion eines Lehrers */
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public long ID;
+	public long id;
 
 	/** ID der Lehrerabschnittsdaten */
 	@Column(name = "Abschnitt_ID")
 	@JsonProperty
-	public long Abschnitt_ID;
+	public long idAbschnitt;
 
 	/** ID der schulinternen Funktion */
 	@Column(name = "Funktion_ID")
 	@JsonProperty
-	public long Funktion_ID;
+	public long idFunktion;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOLehrerFunktion ohne eine Initialisierung der Attribute.
@@ -76,14 +76,14 @@ public final class DTOLehrerFunktion {
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOLehrerFunktion ohne eine Initialisierung der Attribute.
-	 * @param ID   der Wert für das Attribut ID
-	 * @param Abschnitt_ID   der Wert für das Attribut Abschnitt_ID
-	 * @param Funktion_ID   der Wert für das Attribut Funktion_ID
+	 * @param id   der Wert für das Attribut id
+	 * @param idAbschnitt   der Wert für das Attribut idAbschnitt
+	 * @param idFunktion   der Wert für das Attribut idFunktion
 	 */
-	public DTOLehrerFunktion(final long ID, final long Abschnitt_ID, final long Funktion_ID) {
-		this.ID = ID;
-		this.Abschnitt_ID = Abschnitt_ID;
-		this.Funktion_ID = Funktion_ID;
+	public DTOLehrerFunktion(final long id, final long idAbschnitt, final long idFunktion) {
+		this.id = id;
+		this.idAbschnitt = idAbschnitt;
+		this.idFunktion = idFunktion;
 	}
 
 
@@ -99,14 +99,14 @@ public final class DTOLehrerFunktion {
 			return false;
 		}
 		DTOLehrerFunktion other = (DTOLehrerFunktion) obj;
-		return ID == other.ID;
+		return id == other.id;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Long.hashCode(ID);
+		result = prime * result + Long.hashCode(id);
 		return result;
 	}
 
@@ -118,7 +118,7 @@ public final class DTOLehrerFunktion {
 	 */
 	@Override
 	public String toString() {
-		return "DTOLehrerFunktion(ID=" + this.ID + ", Abschnitt_ID=" + this.Abschnitt_ID + ", Funktion_ID=" + this.Funktion_ID + ")";
+		return "DTOLehrerFunktion(id=" + this.id + ", idAbschnitt=" + this.idAbschnitt + ", idFunktion=" + this.idFunktion + ")";
 	}
 
 }

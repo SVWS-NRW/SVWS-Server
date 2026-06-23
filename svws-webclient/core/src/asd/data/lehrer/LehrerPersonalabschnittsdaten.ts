@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { LehrerPersonalabschnittsdatenLehrerfunktion } from '../../../asd/data/lehrer/LehrerPersonalabschnittsdatenLehrerfunktion';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { LehrerPersonalabschnittsdatenAnrechnungsstunden } from '../../../asd/data/lehrer/LehrerPersonalabschnittsdatenAnrechnungsstunden';
+import { LehrerFunktion } from '../../../asd/data/lehrer/LehrerFunktion';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 
@@ -65,7 +65,7 @@ export class LehrerPersonalabschnittsdaten extends JavaObject {
 	/**
 	 * Die schulspezifischen-Funktionen, die einem Lehrer in dem Abschnitt der Abschnittsdaten zugeordnet sind.
 	 */
-	public readonly funktionen: List<LehrerPersonalabschnittsdatenLehrerfunktion> = new ArrayList<LehrerPersonalabschnittsdatenLehrerfunktion>();
+	public readonly funktionen: List<LehrerFunktion> = new ArrayList<LehrerFunktion>();
 
 
 	/**
@@ -119,7 +119,7 @@ export class LehrerPersonalabschnittsdaten extends JavaObject {
 		}
 		if (obj.funktionen !== undefined) {
 			for (const elem of obj.funktionen) {
-				result.funktionen.add(LehrerPersonalabschnittsdatenLehrerfunktion.transpilerFromJSON(JSON.stringify(elem)));
+				result.funktionen.add(LehrerFunktion.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -162,7 +162,7 @@ export class LehrerPersonalabschnittsdaten extends JavaObject {
 		result += '"funktionen" : [ ';
 		for (let i = 0; i < obj.funktionen.size(); i++) {
 			const elem = obj.funktionen.get(i);
-			result += LehrerPersonalabschnittsdatenLehrerfunktion.transpilerToJSON(elem);
+			result += LehrerFunktion.transpilerToJSON(elem);
 			if (i < obj.funktionen.size() - 1)
 				result += ',';
 		}
@@ -232,7 +232,7 @@ export class LehrerPersonalabschnittsdaten extends JavaObject {
 			result += '"funktionen" : [ ';
 			for (let i = 0; i < obj.funktionen.size(); i++) {
 				const elem = obj.funktionen.get(i);
-				result += LehrerPersonalabschnittsdatenLehrerfunktion.transpilerToJSON(elem);
+				result += LehrerFunktion.transpilerToJSON(elem);
 				if (i < obj.funktionen.size() - 1)
 					result += ',';
 			}

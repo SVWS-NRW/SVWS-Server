@@ -130,7 +130,7 @@ public final class DataLeitungsfunktionen extends DataManagerRevised<Long, DTOLe
 		if ((ids == null) || ids.isEmpty()) {
 			return Collections.emptySet();
 		}
-		final String query = "SELECT DISTINCT lf.Funktion_ID FROM DTOLehrerFunktion lf WHERE lf.Funktion_ID IN :ids";
+		final String query = "SELECT DISTINCT lf.idFunktion FROM DTOLehrerFunktion lf WHERE lf.idFunktion IN :ids";
 		final List<Long> results = this.conn
 				.query(query, Long.class)
 				.setParameter("ids", ids)

@@ -11,25 +11,18 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "Schulspezifische Lehrerfunktion bei Lehrerabschnittsdaten.")
 @TranspilerDTO
-public class LehrerPersonalabschnittsdatenLehrerfunktion {
+public class LehrerFunktion {
 
 	/** Die ID für diesen Eintrag. */
-	@Schema(description = "Die ID für diesen Eintrag.", example = "4711")
-	public long id = -1;
+	@Schema(description = "Die ID für diesen Eintrag.", example = "4711", accessMode = Schema.AccessMode.READ_ONLY)
+	public long id;
 
 	/** Die ID der Lehrerabschnittsdaten. */
 	@Schema(description = "Die ID der Lehrerabschnittsdaten.", example = "4712")
-	public long idAbschnittsdaten = -1;
+	public long idAbschnittsdaten;
 
 	/** Die ID in dem Katalog der schulspezifischen Lehrerfunktionen. */
 	@Schema(description = "Die ID in dem Katalog der schulspezifischen Lehrerfunktionen.", example = "4713")
-	public long idFunktion = -1;
-
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
-	public LehrerPersonalabschnittsdatenLehrerfunktion() {
-		// leer
-	}
+	public long idFunktion;
 
 }

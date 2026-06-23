@@ -18,6 +18,7 @@ public class Tabelle_LehrerFunktionen extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte ID */
 	public final SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
 			.setNotNull()
+			.setJavaName("id")
 			.setJavaComment("ID für den Eintrag für die schulinterne Funktion eines Lehrers");
 
 	/** Die Definition der Tabellenspalte Lehrer_ID */
@@ -29,11 +30,13 @@ public class Tabelle_LehrerFunktionen extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Abschnitt_ID */
 	public final SchemaTabelleSpalte col_Abschnitt_ID = add("Abschnitt_ID", SchemaDatentypen.BIGINT, false)
 			.setNotNull()
+			.setJavaName("idAbschnitt")
 			.setJavaComment("ID der Lehrerabschnittsdaten");
 
 	/** Die Definition der Tabellenspalte Funktion_ID */
 	public final SchemaTabelleSpalte col_Funktion_ID = add("Funktion_ID", SchemaDatentypen.BIGINT, false)
 			.setNotNull()
+			.setJavaName("idFunktion")
 			.setJavaComment("ID der schulinternen Funktion");
 
 	/** Die Definition der Tabellenspalte Jahr */

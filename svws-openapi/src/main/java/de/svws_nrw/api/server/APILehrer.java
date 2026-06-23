@@ -21,7 +21,7 @@ import de.svws_nrw.asd.data.lehrer.LehrerMehrleistungsartKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerMinderleistungsartKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdaten;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstunden;
-import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenLehrerfunktion;
+import de.svws_nrw.asd.data.lehrer.LehrerFunktion;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten;
 import de.svws_nrw.asd.data.lehrer.LehrerRechtsverhaeltnisKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
@@ -1451,7 +1451,7 @@ public class APILehrer {
 			description = "Liest die Lehrerfunktion zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die Funktion", content = @Content(mediaType = "application/json",
-			schema = @Schema(implementation = LehrerPersonalabschnittsdatenLehrerfunktion.class)))
+			schema = @Schema(implementation = LehrerFunktion.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Lehrerfunktion mit der angegebenen ID gefunden")
 	public Response getLehrerPersonalabschnittsdatenLehrerfunktionen(@PathParam("schema") final String schema, @PathParam("id") final long id,
@@ -1476,13 +1476,13 @@ public class APILehrer {
 			description = "Erstellt einen neuen Datensatz für eine Lehrerfunktion und gibt das zugehörige Objekt zurück.. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen neuer Lehrerfunktion besitzt.")
 	@ApiResponse(responseCode = "201", description = "Die Lehrerfunktion wurde erfolgreich hinzugefügt.",
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerPersonalabschnittsdatenLehrerfunktion.class)))
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerFunktion.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Lehrerfunktion anzulegen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addLehrerPersonalabschnittsdatenLehrerfunktionen(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten des zu erstellenden Lehrerfunktion ohne ID, welche automatisch generiert wird", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							schema = @Schema(implementation = LehrerPersonalabschnittsdatenLehrerfunktion.class))) final InputStream is,
+							schema = @Schema(implementation = LehrerFunktion.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
 				conn -> new DataLehrerPersonalabschnittsdatenLehrerfunktionen(conn).addAsResponse(is),
@@ -1518,7 +1518,7 @@ public class APILehrer {
 	public Response patchLehrerPersonalabschnittsdatenLehrerfunktionen(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch für die Lehrerfunktion", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							schema = @Schema(implementation = LehrerPersonalabschnittsdatenLehrerfunktion.class))) final InputStream is,
+							schema = @Schema(implementation = LehrerFunktion.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonalabschnittsdatenLehrerfunktionen(conn).patchAsResponse(id, is),
 				request, ServerMode.STABLE,
@@ -1539,7 +1539,7 @@ public class APILehrer {
 	@Operation(summary = "Entfernt die Lehrerfunktion zu der angegebenen ID an.",
 			description = "Entfernt die Lehrerfunktion zu der angegebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen einer Lehrerfunktion hat.")
 	@ApiResponse(responseCode = "200", description = "Die Lehrerfunktion wurde erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = LehrerPersonalabschnittsdatenLehrerfunktion.class)))
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = LehrerFunktion.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Lehrerfunktion zu löschen.")
 	@ApiResponse(responseCode = "404", description = "Keine Lehrerfunktion mit der angegebenen ID gefunden")
 	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")

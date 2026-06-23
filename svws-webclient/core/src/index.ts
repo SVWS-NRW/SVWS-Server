@@ -143,6 +143,7 @@ export { LehrerEinsatzstatusKatalogEintrag } from './asd/data/lehrer/LehrerEinsa
 export { LehrerFachrichtungAnerkennungKatalogEintrag } from './asd/data/lehrer/LehrerFachrichtungAnerkennungKatalogEintrag';
 export { LehrerFachrichtungEintrag } from './asd/data/lehrer/LehrerFachrichtungEintrag';
 export { LehrerFachrichtungKatalogEintrag } from './asd/data/lehrer/LehrerFachrichtungKatalogEintrag';
+export { LehrerFunktion } from './asd/data/lehrer/LehrerFunktion';
 export { LehrerLehramtAnerkennungKatalogEintrag } from './asd/data/lehrer/LehrerLehramtAnerkennungKatalogEintrag';
 export { LehrerLehramtEintrag } from './asd/data/lehrer/LehrerLehramtEintrag';
 export { LehrerLehramtKatalogEintrag } from './asd/data/lehrer/LehrerLehramtKatalogEintrag';
@@ -154,7 +155,6 @@ export { LehrerMehrleistungsartKatalogEintrag } from './asd/data/lehrer/LehrerMe
 export { LehrerMinderleistungsartKatalogEintrag } from './asd/data/lehrer/LehrerMinderleistungsartKatalogEintrag';
 export { LehrerPersonalabschnittsdaten } from './asd/data/lehrer/LehrerPersonalabschnittsdaten';
 export { LehrerPersonalabschnittsdatenAnrechnungsstunden } from './asd/data/lehrer/LehrerPersonalabschnittsdatenAnrechnungsstunden';
-export { LehrerPersonalabschnittsdatenLehrerfunktion } from './asd/data/lehrer/LehrerPersonalabschnittsdatenLehrerfunktion';
 export { LehrerPersonaldaten } from './asd/data/lehrer/LehrerPersonaldaten';
 export { LehrerPflichtstundensollVollzeitKatalogEintrag } from './asd/data/lehrer/LehrerPflichtstundensollVollzeitKatalogEintrag';
 export { LehrerRechtsverhaeltnisKatalogEintrag } from './asd/data/lehrer/LehrerRechtsverhaeltnisKatalogEintrag';

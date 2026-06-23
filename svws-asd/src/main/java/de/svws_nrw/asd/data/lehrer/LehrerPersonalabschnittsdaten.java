@@ -70,7 +70,7 @@ public class LehrerPersonalabschnittsdaten {
 	/** Die schulspezifischen-Funktionen, die einem Lehrer in dem Abschnitt der Abschnittsdaten zugeordnet sind. */
 	@ArraySchema(schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class,
 			description = "Ein Array mit schulspezifischen-Funktionen, die einem Lehrer in dem Abschnitt der Abschnittsdaten zugeordnet sind."))
-	public final @NotNull List<LehrerPersonalabschnittsdatenLehrerfunktion> funktionen = new ArrayList<>();
+	public final @NotNull List<LehrerFunktion> funktionen = new ArrayList<>();
 
 	/**
 	 * Leerer Standardkonstruktor.
