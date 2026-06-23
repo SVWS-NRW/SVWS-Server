@@ -6,25 +6,27 @@
 				<div class="text-headline-md mb-4">Daten abgleichen</div>
 				<svws-ui-input-wrapper>
 					<div>
-						<div> Führt einen Abgleich der Daten in beide Richtungen durch, indem zuerst die neuen lokalen Daten zum WebNotenManager hochgeladen werden und anschließend neue Daten vom WebNotenManager abgeholt werden. </div>
-						<svws-ui-button type="primary" @click="call(synchronize)">
-							<span class="i-ri-download-2-line icon" />
-							<span class="i-ri-upload-2-line icon mr-2" />
-							Synchronisieren
-						</svws-ui-button>
-					</div>
-					<div>
-						<div> Lädt die lokalen Daten zum WebNotenManager hoch und aktualisiert diesen ggf. mit neueren Daten dort. </div>
+						<div> Lädt die lokalen Daten zum WebNotenManager hoch und aktualisiert diesen ggf. zeitstempelbasiert mit neueren Daten. </div>
 						<svws-ui-button type="primary" @click="call(upload)">
 							<span class="i-ri-upload-2-line icon mr-2" />
 							Hochladen
 						</svws-ui-button>
 					</div>
 					<div>
-						<div> Lädt die Daten vom WebNotenManager herunter und aktualisiert ggf. die lokalen Daten.</div>
+						<div> Lädt die Daten vom WebNotenManager herunter und aktualisiert ggf. zeitstempelbasiert die lokalen Daten.</div>
 						<svws-ui-button type="primary" @click="call(download)">
 							<span class="i-ri-download-2-line icon mr-2" />
 							Herunterladen
+						</svws-ui-button>
+					</div>
+					<div>
+						<div>
+							Führt einen Abgleich der Daten in beide Richtungen durch, indem zuerst neue Daten vom WebNotenManager abgeholt werden und anschließend neue lokale Daten in den WebNotenManager hochgeladen werden.
+						</div>
+						<svws-ui-button type="primary" @click="call(synchronize)">
+							<span class="i-ri-download-2-line icon" />
+							<span class="i-ri-upload-2-line icon mr-2" />
+							Synchronisieren
 						</svws-ui-button>
 					</div>
 				</svws-ui-input-wrapper>
