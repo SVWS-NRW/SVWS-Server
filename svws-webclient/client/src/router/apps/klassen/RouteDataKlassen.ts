@@ -1,4 +1,5 @@
-import type { KlassenDaten, KlassenListeEintrag, LehrerListeEintrag, List, Schueler, SimpleOperationResponse, StundenplanListeEintrag } from "@core";
+import type { KlassenDaten, KlassenDatenMinimal, KlassenListeEintrag, LehrerListeEintrag, List, Schueler, Schuljahresabschnitt,
+	SimpleOperationResponse, StundenplanListeEintrag } from "@core";
 import { ArrayList, BenutzerKompetenz, DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";
@@ -57,12 +58,13 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 
 		const [klassen, klassenVorabschnitt, klassenFolgeabschnitt, schueler, lehrer, jahrgaenge] = await Promise.all([
 			api.server.getListKlassenListeEintragBySchuljahresabschnitt(api.schema, idSchuljahresabschnitt),
-			api.server.getKlassenDatenMinimalBySchuljahresabschnitt(api.schema, schuljahresabschnitt.idVorigerAbschnitt ?? -1),
-			api.server.getKlassenDatenMinimalBySchuljahresabschnitt(api.schema, schuljahresabschnitt.idFolgeAbschnitt ?? -1),
+			this.getKlassenVorabschnitt(schuljahresabschnitt),
+			this.getKlassenFolgeabschnitt(schuljahresabschnitt),
 			api.server.getSchuelerFuerAbschnitt(api.schema, idSchuljahresabschnitt),
 			api.server.getLehrerFuerAbschnitt(api.schema, idSchuljahresabschnitt),
 			api.server.getJahrgaenge(api.schema),
-		]);
+		])
+		;
 		const manager = new KlassenListeManager(
 			idSchuljahresabschnitt,
 			schuleState.abschnitt.id,
@@ -82,6 +84,18 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 			manager.useFilter(this._state.value.manager);
 		}
 		return { manager };
+	}
+
+	private getKlassenVorabschnitt(schuljahresabschnitt: Schuljahresabschnitt) {
+		return (schuljahresabschnitt.idVorigerAbschnitt === null)
+			? Promise.resolve(new ArrayList<KlassenDatenMinimal>())
+			: api.server.getKlassenDatenMinimalBySchuljahresabschnitt(api.schema, schuljahresabschnitt.idVorigerAbschnitt);
+	}
+
+	private getKlassenFolgeabschnitt(schuljahresabschnitt: Schuljahresabschnitt) {
+		return (schuljahresabschnitt.idFolgeAbschnitt === null)
+			? Promise.resolve(new ArrayList<KlassenDatenMinimal>())
+			: api.server.getKlassenDatenMinimalBySchuljahresabschnitt(api.schema, schuljahresabschnitt.idFolgeAbschnitt);
 	}
 
 	public async ladeDaten(auswahl: KlassenListeEintrag | null): Promise<KlassenDaten | null> {

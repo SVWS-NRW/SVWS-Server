@@ -36,7 +36,7 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 	schulgliederungen = computed(() => Schulgliederung.getBySchuljahrAndSchulform(this.manager().getSchuljahr(), this.manager().schulform()));
 
 	klassenart = computed<Klassenart | null>({
-		get: () => (this.proxy.idKlassenart === -1) ? null : Klassenart.data().getWertByID(this.proxy.idKlassenart),
+		get: () => ((this.proxy.idKlassenart === null) || (this.proxy.idKlassenart === -1)) ? null : Klassenart.data().getWertByID(this.proxy.idKlassenart),
 		set: (value) => this.proxy.idKlassenart = value?.daten(this.manager().getSchuljahr())?.id ?? -1,
 	});
 	klassenarten = computed(() => Klassenart.getBySchuljahrAndSchulform(this.manager().getSchuljahr(), this.manager().schulform()));
