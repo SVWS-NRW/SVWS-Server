@@ -1,9 +1,12 @@
 <template>
 	<slot :open-modal />
-	<svws-ui-modal v-model:show="show" size="small">
+	<svws-ui-modal v-model:show="show" size="medium">
 		<template #modalTitle>Information zum Datenschutz</template>
 		<template #modalDescription>
-			<div class="space-y-2 text-left">
+			<div v-if="auskunftState.datentschutz !== null" class="text-left">
+				<mark-down :text="auskunftState.datentschutz" />
+			</div>
+			<div v-else class="space-y-2 text-left">
 				<p>
 					Die automatische Verarbeitung von personenbezogenen Daten von Schülerinnen und Schülern und Erziehungsberechtigten muss zur
 					Erfüllung der den Schulen durch Rechtsvorschrift übertragenen Aufgaben erforderlich sein bzw. die
@@ -23,6 +26,9 @@
 <script setup lang="ts">
 
 	import { ref } from 'vue';
+	import { useAuskunftState } from '../../states/AuskunftState';
+
+	const auskunftState = useAuskunftState();
 
 	const show = ref<boolean>(false);
 

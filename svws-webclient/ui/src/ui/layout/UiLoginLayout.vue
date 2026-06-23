@@ -38,7 +38,9 @@
 									</div>
 								</div>
 								<nav class="flex items-center gap-2">
-									<a class="login-footer-link" href="#">Impressum</a>
+									<impressum-modal v-slot="{ openModal }">
+										<a class="login-footer-link" href="#" @click="openModal()">Impressum</a>
+									</impressum-modal>
 									<datenschutz-modal v-slot="{ openModal }">
 										<a class="login-footer-link" href="#" @click="openModal()">Datenschutz</a>
 									</datenschutz-modal>

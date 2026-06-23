@@ -91,6 +91,7 @@ export { default as UiValidationTooltip } from "./ui/UiValidationTooltip.vue";
 // Use exports
 export { useRegionSwitch } from "./ui/composables/useRegionSwitch";
 export { usePaneSplitter } from "./ui/composables/usePaneSplitter";
+export { useAuskunftState, type AuskunftState } from "./states/AuskunftState";
 
 // Type exports
 export type { DataTableColumn, SortByAndOrder } from "./types";
