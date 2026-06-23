@@ -99,6 +99,7 @@ export { useSchuleState, type SchuleState } from "./states/SchuleState";
 export { useServerState, type ServerState } from "./states/ServerState";
 export { useReportingState, type ReportingState } from "./states/ReportingState";
 export { useWiedervorlageState, type WiedervorlageState } from "./states/WiedervorlageState";
+export { useAuskunftState, type AuskunftState } from "./states/AuskunftState";
 
 // Type exports
 export type { DataTableColumn, SortByAndOrder } from "./types";

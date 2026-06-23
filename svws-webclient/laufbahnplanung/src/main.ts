@@ -7,8 +7,12 @@ import "./main.css";
 import SWrapper from "~/components/SWrapper.vue";
 import { ServerStateKey } from "@ui/states/ServerState";
 import { serverState } from "./states/ServerStateImpl";
+import { AuskunftStateKey } from "@ui/states/AuskunftState";
+import { auskunftState } from "./states/AuskunftStateImpl";
 
 const app = createApp(SWrapper);
+app.provide(AuskunftStateKey, auskunftState);
+
 app.use(router);
 app.provide(ServerStateKey, serverState);
 

@@ -216,6 +216,19 @@ export class ApiEnmServer extends BaseApi {
 	}
 
 	/**
+	 * Implementierung der GET-Methode getAuskunft für den Zugriff auf die URL https://{hostname}/api/auskunft
+	 *
+	 * Eine Methode zur Abfrage der Auskunftdaten des PHP-Servers.
+	 *
+	 * @returns die Auskunftdaten des Servers
+	 */
+	public async getAuskunft(): Promise<{ impressum: string | null, datenschutz: string | null }> {
+		const response = await super.getTextBased("/api/auskunft", 'application/json');
+		const { impressum, datenschutz } = JSON.parse(response.data);
+		return { impressum, datenschutz };
+	}
+
+	/**
 	 * Implementierung der POST-Methode patchENMLeistung für den Zugriff auf die URL https://{hostname}/api/leistung
 	 *
 	 * Die Methode erlaubt das Patchen von ENM-Leistungsdaten.

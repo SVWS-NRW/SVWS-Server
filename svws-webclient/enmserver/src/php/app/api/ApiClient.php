@@ -23,7 +23,6 @@ class ApiClient {
         return [$config, $db, new ENMAuth($db, $config)];
     }
 
-
     /**
      * Prüft den HTTP-Request und delegiert den Aufruf - sofern gültig an die konkrete API-Methode
      * Eine Prüfung der HTTP-Methode erfolgt hier vor dem konkreten Methodenaufruf.
@@ -46,6 +45,13 @@ class ApiClient {
                     'init' => fn() => $this->createAppContext(),
                     'auth' => fn($config, $db, $auth) => $auth->pruefeLehrerSession(),
                     'call' => fn($config, $db, $auth, $lehrer) => $this->patchAnkreuzkompetenz($db, $lehrer)
+                ]
+            ],
+            'auskunft' => [
+                'GET' => [
+                    'init' => fn() => [new Config(), null, null],
+                    'auth' => fn() => true,
+                    'call' => fn($config) => $this->auskunft($config)
                 ]
             ],
             'bemerkungen' => [
@@ -216,6 +222,22 @@ class ApiClient {
     }
 
     /**
+     * Einfache Abfrage der Auskünfte über Impressum und Datenschutz, wenn vorhanden
+     */
+    private function auskunft(Config $config): void {
+        $dbPath = $config->getDatabasePath();
+        $impressumPath = $dbPath.'/Impressum.md';
+        $datenschutzPath = $dbPath.'/Datenschutz.md';
+
+        $impressum = file_exists($impressumPath) ? file_get_contents($impressumPath) : null;
+        $datenschutz = file_exists($datenschutzPath) ? file_get_contents($datenschutzPath) : null;
+
+        Http::exit200OKJson(json_encode([
+            "impressum" => $impressum,
+            "datenschutz" => $datenschutz
+        ]));
+    }
+    /**
      * Initialisiert den Server beim ersten Aufruf.
      * Erstellt das Client Secret und die Datenbankstruktur.
      */
@@ -236,6 +258,7 @@ class ApiClient {
         // Erfolg melden
         Http::exit204NoContent();
     }
+    
 
     /**
      * Gibt die Schulform aus den ENM-Daten zurück.

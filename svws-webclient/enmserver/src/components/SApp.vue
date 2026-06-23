@@ -68,11 +68,11 @@
 					</div>
 				</template>
 				<template #metaNavigation>
-					<a href="https://www.svws.nrw.de/faq/impressum">
-						<svws-ui-button type="transparent">
+					<impressum-modal v-slot="{ openModal }">
+						<svws-ui-button type="transparent" @click="openModal()">
 							Impressum
 						</svws-ui-button>
-					</a>
+					</impressum-modal>
 					<datenschutz-modal v-slot="{ openModal }">
 						<svws-ui-button type="transparent" @click="openModal()">
 							Datenschutz
@@ -130,9 +130,11 @@
 	import type { TabData } from "@ui/ui/nav/TabData";
 	import { useAuthState } from "~/states/AuthState";
 	import { useActivityState } from "~/states/ActivityState";
+	import { useAuskunftState } from "@ui/index";
 
 	const activityState = useActivityState();
 	const auth = useAuthState();
+	const auskunftState = useAuskunftState();
 
 	const props = defineProps<AppProps>();
 

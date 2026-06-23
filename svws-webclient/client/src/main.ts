@@ -16,6 +16,8 @@ import { reportingState } from "./states/ReportingStateImpl";
 import { ReportingStateKey } from "../../ui/src/states/ReportingState";
 import { wiedervorlageState } from "~/states/WiedervorlageStateImpl";
 import { WiedervorlageStateKey } from "../../ui/src/states/WiedervorlageState";
+import { AuskunftStateKey } from "../../ui/src/states/AuskunftState";
+import { auskunftState } from "./states/AuskunftStateImpl";
 
 const CustomElementConstructor = defineCustomElement(HtmlPreview);
 customElements.define('html-preview', CustomElementConstructor);
@@ -27,6 +29,7 @@ app.provide(SchuleStateKey, schuleState);
 app.provide(ServerStateKey, serverState);
 app.provide(ReportingStateKey, reportingState);
 app.provide(WiedervorlageStateKey, wiedervorlageState);
+app.provide(AuskunftStateKey, auskunftState);
 
 if (process.env.NODE_ENV === 'development') {
 	const { registerSVWSDevTools } = await import("../../ui/src/devtools/stateInspector");
