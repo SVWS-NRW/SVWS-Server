@@ -11,7 +11,7 @@
 						v-model="model.ort.value"
 						:validation="() => model.getFehler('idOrt')"
 						:manager="ortManager"
-						searchable required :removable="false" />
+						required :removable="false" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />
@@ -21,8 +21,7 @@
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
 						:min="0" :max="32000"
-						:disabled
-						:removable="false" required />
+						:disabled :removable="false" required />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="model.proxy.istSichtbar">
 						Sichtbar
@@ -46,7 +45,7 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import { BenutzerKompetenz, type OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
+	import { BenutzerKompetenz, OrtsteilKatalogEintrag } from "@core";
 	import type { OrtsteileNeuProps } from "~/components/schule/kataloge/ortsteile/OrtsteileNeuProps";
 	import { SelectManager } from "@ui";
 	import { OrtsteilModelProxy } from "~/components/schule/kataloge/ortsteile/modelproxy/OrtsteilModelProxy";
@@ -54,15 +53,13 @@
 	const props = defineProps<OrtsteileNeuProps>();
 	const isLoading = ref<boolean>(false);
 
-	const orteById = computed<Map<number, OrtKatalogEintrag>>(() => props.manager().orteById);
-	const orte = computed(() => model.filteredOrte.value);
 	const initialData = ref<OrtsteilKatalogEintrag>(Object.assign(new OrtsteilKatalogEintrag(), { istSichtbar: true, sortierung: 32000 }));
-	const model = new OrtsteilModelProxy(() => initialData.value, () => props.manager(), orteById.value);
+	const model = new OrtsteilModelProxy(() => initialData.value, props.manager);
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 
 	const ortManager = new SelectManager({
-		options: orte,
+		options: model.filteredOrte,
 		optionDisplayText: v => v.plz + ' ' + v.ortsname,
 		selectionDisplayText: v => v.plz + ' ' + v.ortsname,
 	});

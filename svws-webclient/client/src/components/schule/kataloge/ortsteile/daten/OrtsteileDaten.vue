@@ -12,7 +12,7 @@
 						v-model="model.ort.value"
 						:validation="() => model.getFehler('idOrt')"
 						:manager="ortSelectManager"
-						searchable required :removable="false" :readonly />
+						required :removable="false" :readonly />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />
@@ -38,7 +38,7 @@
 <script setup lang="ts">
 	import type { OrtsteileDatenProps } from "~/components/schule/kataloge/ortsteile/daten/OrtsteileDatenProps";
 	import { computed } from "vue";
-	import { BenutzerKompetenz, type OrtKatalogEintrag } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import { SelectManager } from "@ui";
 	import { OrtsteilModelProxy } from "~/components/schule/kataloge/ortsteile/modelproxy/OrtsteilModelProxy";
 
@@ -46,12 +46,10 @@
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const readonly = computed(() => !hatKompetenzUpdate.value);
 
-	const orteById = computed<Map<number, OrtKatalogEintrag>>(() => props.manager().orteById);
-	const orte = computed(() => model.filteredOrte.value);
-	const model = new OrtsteilModelProxy(() => props.manager().auswahl(), () => props.manager(), orteById.value, props.patch);
+	const model = new OrtsteilModelProxy(() => props.manager().auswahl(), props.manager, props.patch);
 
 	const ortSelectManager = new SelectManager({
-		options: orte,
+		options: model.filteredOrte,
 		optionDisplayText: v => v.plz + ' ' + v.ortsname,
 		selectionDisplayText: v => v.plz + ' ' + v.ortsname,
 	});
