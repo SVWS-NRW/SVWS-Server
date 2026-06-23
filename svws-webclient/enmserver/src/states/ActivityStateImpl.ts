@@ -74,7 +74,7 @@ class ActivityStateImpl implements ActivityState {
 		addEventListener("keydown", () => this.activityTracker(), this._options);
 		this._activity = false;
 		this._lastActivity = Date.now();
-		this._remainingSeconds.value = 300;
+		this._remainingSeconds.value = ActivityStateImpl.MAX_REMAINING_SECONDS;
 		this._intervalID = globalThis.setInterval(() => void this.checkActivity(), ActivityStateImpl.INTERVAL_MILLI_SECONDS);
 	}
 
