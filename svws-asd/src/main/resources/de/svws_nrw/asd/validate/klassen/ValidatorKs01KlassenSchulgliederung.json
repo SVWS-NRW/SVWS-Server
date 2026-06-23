@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.klassen.ValidatorKs01KlassenSchulgliederung",
+    "historie" : [ {
+      "praefix" : "KS01",
+      "zweig" : "Klassen-Schulgliederung",
+      "dtos" : "KlassenDaten",
+      "ausfuehrungsbereich_ui" : "Klassen, Reiter 'Klasse'",
+      "anzeigebereich_ui" : "Feld 'Schulgliederung'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["KS00"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Schulgliederung der Klasse: Das Feld 'Schulgliederung' muss zulässig sein.",
+      "erlaeuterung" : "",
+      "bedingung" : "KlassenDaten.idSchulgliederung ≠ einer id eines Eintrages in Schulgliederung.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }

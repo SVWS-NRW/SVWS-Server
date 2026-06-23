@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.klassen.ValidatorKs02KlassenSchulgliederung",
+    "historie" : [ {
+      "praefix" : "KS02",
+      "zweig" : "Klassen-Schulgliederung",
+      "dtos" : "KlassenDaten",
+      "ausfuehrungsbereich_ui" : "Klassen, Reiter 'Klasse'",
+      "anzeigebereich_ui" : "Feld 'Schulgliederung'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["KS01"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Schulgliederung der Klasse: Der eingetragene Wert für das Feld 'Schulgliederung' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.",
+      "erlaeuterung" : "Hier soll geprüft werden, ob der ausgewählte Katalogeintrag zum Zeitpunkt der Prüfung zeitlich gültig ist, über gueltigVon und gueltigBis im Katalog",
+      "bedingung" : "KlassenDaten.idSchulgliederung ≠ einem zeitlich gültigen Historieneintrag in Schulgliederung.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
