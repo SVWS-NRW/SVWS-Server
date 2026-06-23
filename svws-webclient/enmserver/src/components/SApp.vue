@@ -176,7 +176,7 @@
 	}
 
 	async function doLogout() {
-		await auth.logout();
+		await auth.logout(true);
 		document.title = "WeNoM";
 	}
 

@@ -15,7 +15,7 @@
 							<svws-ui-text-input v-model.trim="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" @methods="handleInputMethodsUsername" />
 							<svws-ui-text-input v-model.trim="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" />
 							<svws-ui-spacing />
-							<div v-if="errorMessage" class="text-ui-danger font-medium my-2"> {{ errorMessage }} </div>
+							<div v-if="auth.message !== null" class="text-ui-danger font-medium my-2 text-left"> {{ auth.message }} </div>
 							<div class="flex gap-2">
 								<svws-ui-modal-hilfe> <s-login-hilfe /> </svws-ui-modal-hilfe>
 								<svws-ui-button @click="doLogin" type="primary" :disabled="authenticating || (username.length === 0) || (password.length === 0)">
@@ -39,7 +39,7 @@
 						</div>
 						<p class="text-sm mb-4"><span class="font-bold">Bestätigen:</span> Das neue Kennwort wird aktiviert und muss fortan verwendet werden.</p>
 						<p class="text-sm mb-4"><span class="font-bold">Abbrechen:</span> Das Initialkennwort bleibt vorerst gültig. Bei der nächsten Anmeldung wird ein neuer Vorschlag generiert</p>
-						<div v-if="errorMessage" class="text-ui-danger font-medium"> {{ errorMessage }} </div>
+						<div v-if="auth.message !== null" class="text-ui-danger font-medium"> {{ auth.message }} </div>
 					</div>
 					<span v-if="expirationSeconds > 0" class="text-sm font-normal font-mono opacity-50 my-2 w-full text-center">
 						Anmeldesitzung läuft in {{ formattedExpiration }} ab
@@ -68,7 +68,7 @@
 							<p class="font-bold">Geben Sie den Code ein:</p>
 							<svws-ui-text-input v-model="totpToken" placeholder="Code" :min-len="6" :max-len="6" ref="totpTokenInput"
 								@keyup.enter="doVerifyTotp" @methods="handleInputMethodsTotpToken" />
-							<div v-if="errorMessage" class="text-ui-danger font-medium"> {{ errorMessage }} </div>
+							<div v-if="auth.message !== null" class="text-ui-danger font-medium"> {{ auth.message }} </div>
 						</div>
 						<span v-if="expirationSeconds > 0" class="text-sm font-normal font-mono opacity-50 text-center w-full my-2">
 							Anmeldesitzung läuft in {{ formattedExpiration }} ab
@@ -84,7 +84,7 @@
 				<div>Die Version des PHP-Servers stimmt nicht überein mit der Version des WeNoM-Clients.</div>
 				<div class="mr-4 my-4">
 					<div class="flex justify-between">PHP-Server <span class="font-mono">{{ (server.version.length === 0) ? "Version unbekannt" : server.version + " - " + server.githash?.slice(0,8) }}</span></div>
-					<div class="flex justify-between">WeNoM-Client <span class="font-mono">{{ authState.version }} - {{ authState.githash.slice(0,8) }}</span></div>
+					<div class="flex justify-between">WeNoM-Client <span class="font-mono">{{ auth.version }} - {{ auth.githash.slice(0,8) }}</span></div>
 				</div>
 				<div>Bitte wenden Sie sich an ihren Systemadministrator.</div>
 			</div>
@@ -103,13 +103,12 @@
 	import { JsonCoreTypeReaderStatic } from "../../../core/src/asd/utils/JsonCoreTypeReaderStatic";
 	import SvwsUiTextInput from "@ui/ui/controls/SvwsUiTextInput.vue";
 	import { useAuthState } from "~/states/AuthState";
-	import { authState } from "~/states/AuthStateImpl";
 
 	const props = defineProps<LoginProps>();
 	const auth = useAuthState();
 
 	const server = ref<{ version: string, githash: string | null } | null>();
-	const serverValid = computed(() => (server.value !== undefined) && (server.value !== null) && (server.value.version === authState.version) && (server.value.githash === authState.githash));
+	const serverValid = computed(() => (server.value !== undefined) && (server.value !== null) && (server.value.version === auth.version) && (server.value.githash === auth.githash));
 
 	// Greife auf Methoden der Textinputs zurück, um dieses automatisch Fokussieren zu können
 	const totpTokenInput = ref<{ focus: () => void } | undefined>(undefined);
@@ -125,7 +124,6 @@
 	const password = ref("");
 	const totpToken = ref<string>("");
 	const browserVeraltet = ref<boolean>(false);
-	const errorMessage = ref<string | null>(null);
 
 	const connecting = ref(false);
 	const authenticating = ref(false);
@@ -188,7 +186,7 @@
 		}
 
 		await initCoreTypes();
-		server.value = await authState.checkVersion();
+		server.value = await auth.checkVersion();
 		await nextTick();
 		usernameInput.value?.focus();
 	});
@@ -199,12 +197,10 @@
 	}
 
 	async function doLogin() {
-		errorMessage.value = null;
 		try {
 			authenticating.value = true;
-			const { success, message } = await auth.login(username.value, password.value);
+			const success = await auth.login(username.value, password.value);
 			if (!success) {
-				errorMessage.value = message ?? "unbekannter Grund";
 				return;
 			}
 			if (auth.authenticated && !auth.pending2FA && !auth.pendingPasswordChange) {
@@ -222,7 +218,6 @@
 		stopTimer();
 		await auth.logout();
 
-		errorMessage.value = null;
 		totpToken.value = "";
 		username.value = "";
 		password.value = "";
@@ -233,15 +228,10 @@
 
 
 	async function doConfirmPasswordChange(): Promise<void> {
-		errorMessage.value = null;
-		const { success, message } = await auth.confirmPasswordChange();
-		if (success) {
-			if (auth.authenticated && !auth.pending2FA) {
-				stopTimer();
-				await props.finishLogin();
-			}
-		} else {
-			errorMessage.value = message ?? "Das Kennwort konnte nicht bestätigt werden.";
+		const success = await auth.confirmPasswordChange();
+		if (success && auth.authenticated && !auth.pending2FA) {
+			stopTimer();
+			await props.finishLogin();
 		}
 	}
 
@@ -252,14 +242,12 @@
 		if (!isTokenValid.value) {
 			return;
 		}
-		errorMessage.value = null;
-		const { success, message } = await auth.verifyTotp(totpToken.value);
+		const success = await auth.verifyTotp(totpToken.value);
 		if (success) {
 			stopTimer();
 			await props.finishLogin();
 		} else {
 			// Bei einem Fehler wieder zur Eingabe zurückkehren
-			errorMessage.value = message ?? "Der eingegebene Code ist ungültig. Bitte versuchen Sie es erneut.";
 			totpToken.value = "";
 			totpTokenInput.value?.focus();
 		}
