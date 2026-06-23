@@ -4,18 +4,6 @@ import type { ServerMode } from '@core/core/types/ServerMode';
 import { inject, type InjectionKey } from 'vue';
 
 /**
- *	Rückgabetyp der Kommunikation mit der API
- */
-export interface AuthResult {
-
-	/** Gibt an, ob die Kommunikation mit der API erfolgreich war oder nicht */
-	success: boolean;
-
-	/** Die Mitteilung, die möglicherweise von der API zurückgegeben wurde */
-	message?: string;
-}
-
-/**
  *  Die Schnittstelle für den Zustand der Authentifizierung im Client
  */
 export interface AuthState {
@@ -65,6 +53,15 @@ export interface AuthState {
 	/** Liefert im Falle einer Erstanmeldung die Setup-Daten für den QR-Code bei TOTP */
 	get totpSetup(): { secret: string, issuer: string, account: string } | null;
 
+	/** Gibt den Anmeldezustand zurück */
+	get message(): string | null;
+
+	/**
+	 * Gibt die Version und den Git-Hash des Servers zurück
+	 *
+	 * @returns die Version und der Git-Hash des Servers
+	 */
+	checkVersion(): Promise<{ version: string, githash: string | null } | null>;
 
 	/**
 	 * Startet den Login-Vorgang mit dem angebenen Benutzernamen und Kennwort. Im Rahmen einer
@@ -75,14 +72,14 @@ export interface AuthState {
 	 *
 	 * @returns eine Promise bezüglich des Login-Erfolgs
 	 */
-	login(username: string, password: string): Promise<AuthResult>;
+	login(username: string, password: string): Promise<boolean>;
 
 	/**
 	 * Bestätigt die Änderung des Kennwortes, sofern ein neue Kennwort vom Server bereitsteht.
 	 *
 	 * @returns eine Promise bezüglich des Erfolges beim Bestätigen des kennwortes
 	 */
-	confirmPasswordChange(): Promise<AuthResult>;
+	confirmPasswordChange(): Promise<boolean>;
 
 	/**
 	 * Prüft den übergebenen TOTP-Token, um den Login-Vorgang bei einer Zwei-Faktor-Authentifizierung abzuschließen.
@@ -91,12 +88,12 @@ export interface AuthState {
 	 *
 	 * @returns true im Erfolgsfall
 	 */
-	verifyTotp(code: string): Promise<AuthResult>;
+	verifyTotp(code: string): Promise<boolean>;
 
 	/**
 	 * Meldet den angemeldeten Benutzer bei der Api ab.
 	 */
-	logout(): Promise<void>;
+	logout(silent?: boolean): Promise<void>;
 }
 
 export const AuthStateKey: InjectionKey<AuthState> = Symbol('AuthState');

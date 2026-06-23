@@ -1,5 +1,5 @@
 import { ref, shallowRef } from "vue";
-import type { AuthResult, AuthState } from "./AuthState";
+import type { AuthState } from "./AuthState";
 import { ApiEnmServer } from "~/ApiEnmServer";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
@@ -68,6 +68,9 @@ class AuthStateImpl implements AuthState {
 
 	// ein Timeout für Refreshes
 	private _timerID: ReturnType<typeof setTimeout> | null = null;
+
+	// eine Nachricht über den Anmeldezustand
+	private readonly _message = ref<string | null>(null);
 
 
 	/** Gibt die Version der Anwendung zurück */
@@ -146,6 +149,12 @@ class AuthStateImpl implements AuthState {
 		return false;
 	}
 
+	/**
+	 * Gibt den Anmeldezustand zurück
+	 */
+	public get message(): string | null {
+		return this._message.value;
+	}
 
 	/**
 	 * Bestimmt den Payload den JWT-Access-Tokens
@@ -219,8 +228,9 @@ class AuthStateImpl implements AuthState {
 	 *
 	 * @returns eine Promise bezüglich des Login-Erfolgs
 	 */
-	public async login(username: string, password: string): Promise<AuthResult> {
+	public async login(username: string, password: string): Promise<boolean> {
 		try {
+			this._message.value = null;
 			this._username = username;
 			this._api = new ApiEnmServer(this._username, password);
 			this._api.onUnauthorized = async () => {
@@ -239,7 +249,7 @@ class AuthStateImpl implements AuthState {
 				const payload = this.getTokenPayload() as JWTPayload & { pwd: string };
 				this._generatedPassword.value = payload.pwd;
 				this._authenticated.value = false;
-				return { success: true };
+				return true;
 			}
 
 			// Wenn 2FA aktiv ist, dann muss dieser noch geprüft werden ...
@@ -247,12 +257,12 @@ class AuthStateImpl implements AuthState {
 				this._pending2FA.value = true;
 				this._totpSetup.value = result.setup;
 				this._authenticated.value = false;
-				return { success: true };
+				return true;
 			}
 
 			// ... und wenn nicht, dann kann der Login abgeschlossen werden
 			await this.finalizeLogin();
-			return { success: true };
+			return true;
 		} catch (e) {
 			await this.logout();
 			if ((e instanceof OpenApiError) && (e.response?.status !== 401)) {
@@ -262,15 +272,18 @@ class AuthStateImpl implements AuthState {
 					+ (import.meta.env.VITE_PHP_API_URL === undefined ? `Wenn der PHP-Server läuft, aber nicht unter der gleichen Adresse wie der Client erreichbar ist, müssen Sie eine .env.local-Datei anlegen mit dem Wert: VITE_PHP_API_URL=https://serveradresse:port`
 						: `Es ist in einer .env-Datei die Server-Adresse ${import.meta.env.VITE_PHP_API_URL} angegeben. Bitte überprüfen Sie, ob der Server unter dieser Adresse erreichbar ist.`);
 				}
-				return { success: false, message: `Anmeldung fehlgeschlagen: ${message}` };
+				this._message.value = `Anmeldung fehlgeschlagen: ${message}`;
+				return false;
 			}
-			return { success: false, message: "Benutzername oder Passwort falsch." };
+			this._message.value = "Benutzername oder Passwort falsch.";
+			return false;
 		}
 	}
 
 
-	public async confirmPasswordChange(): Promise<AuthResult> {
+	public async confirmPasswordChange(): Promise<boolean> {
 		try {
+			this._message.value = null;
 			const result = await this.api.changePassword();
 			await this.receivedAccessToken(result.token);
 
@@ -282,18 +295,20 @@ class AuthStateImpl implements AuthState {
 				this._pending2FA.value = true;
 				this._totpSetup.value = result.setup;
 				this._authenticated.value = false;
-				return { success: true };
+				return true;
 			}
 
 			// ... und wenn nicht, dann kann der Login abgeschlossen werden
 			await this.finalizeLogin();
-			return { success: true };
+			return true;
 		} catch (e) {
 			await this.logout();
 			if ((e instanceof OpenApiError) && (e.response?.status === 403)) {
-				return { success: false, message: `Passwortänderung fehlgeschlagen: Das Initialpasswort wurde bereits an anderer Stelle neu gesetzt.` };
+				this._message.value = "Passwortänderung fehlgeschlagen: Das Initialpasswort wurde bereits an anderer Stelle neu gesetzt.";
+				return false;
 			}
-			return { success: false, message: "Passwortänderung fehlgeschlagen." };
+			this._message.value = "Passwortänderung fehlgeschlagen";
+			return false;
 		}
 	}
 
@@ -305,20 +320,23 @@ class AuthStateImpl implements AuthState {
 	 *
 	 * @returns true im Erfolgsfall
 	 */
-	public async verifyTotp(code: string): Promise<AuthResult> {
+	public async verifyTotp(code: string): Promise<boolean> {
 		try {
+			this._message.value = null;
 			const result = await this.api.loginTotp(code);
 			await this.receivedAccessToken(result.token);
 
 			await this.finalizeLogin();
-			return { success: true };
+			return true;
 		} catch (e) {
 			await this.logout();
 			if ((e instanceof OpenApiError) && (e.response?.status !== 401)) {
 				const message = await e.response?.text() ?? "Unbekannter Grund.";
-				return { success: false, message: `Anmeldung fehlgeschlagen: ${message}` };
+				this._message.value = `Anmeldung fehlgeschlagen: ${message}`;
+				return false;
 			}
-			return { success: false, message: "Code fehlerhaft." };
+			this._message.value = "Code fehlerhaft";
+			return false;
 		}
 	}
 
@@ -339,20 +357,20 @@ class AuthStateImpl implements AuthState {
 	/**
 	 * Meldet den angemeldeten Benutzer bei der Api ab.
 	 */
-	public async logout(): Promise<void> {
+	public async logout(silent: boolean = false): Promise<void> {
 		if (this._isLoggingOut) {
 			return;
 		}
 		this._isLoggingOut = true;
+		this._message.value = null;
 		this.stopTimer();
 		activityState.stop();
-		let exception: UserNotificationException | null = null;
 		if (this._authenticated.value) {
 			try {
 				await this.api.logout();
 			} catch (e: unknown) {
 				if (e instanceof UserNotificationException) {
-					exception = e;
+					this._message.value = silent ? null : e.getMessage();
 				}
 			}
 		}
@@ -368,9 +386,6 @@ class AuthStateImpl implements AuthState {
 		await RouteManager.doRoute({ name: 'login' });
 		RouteManager.resetRouteState();
 		this._isLoggingOut = false;
-		if (exception !== null) {
-			throw exception;
-		}
 	}
 
 	private async updateRefreshTokenTimer() {
