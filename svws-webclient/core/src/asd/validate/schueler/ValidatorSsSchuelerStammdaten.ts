@@ -1,4 +1,5 @@
 import { ValidatorSsgSchuelerStammdatenGeschlecht } from '../../../asd/validate/schueler/ValidatorSsgSchuelerStammdatenGeschlecht';
+import { ValidatorSsmSchuelerStammdatenMigrationshintergrund } from '../../../asd/validate/schueler/ValidatorSsmSchuelerStammdatenMigrationshintergrund';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { ValidatorSsdSchuelerStammdatenGeburtsdatum } from '../../../asd/validate/schueler/ValidatorSsdSchuelerStammdatenGeburtsdatum';
 import { Class } from '../../../java/lang/Class';
@@ -11,14 +12,17 @@ export class ValidatorSsSchuelerStammdaten extends Validator {
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param geschlecht    das geschlecht des Schuelers
-	 * @param geburtsdatum  das geburtsdatum des Schuelers
-	 * @param kontext       der Kontext des Validators
+	 * @param geschlecht                das geschlecht des Schuelers
+	 * @param geburtsdatum              das geburtsdatum des Schuelers
+	 * @param idGeburtsland             die ID des Geburtslandes
+	 * @param hatMigrationshintergrund  Migrationshintergrund vorhanden
+	 * @param kontext                   der Kontext des Validators
 	 */
-	public constructor(geschlecht: Supplier<number | null>, geburtsdatum: Supplier<string | null>, kontext: ValidatorKontext) {
+	public constructor(geschlecht: Supplier<number | null>, geburtsdatum: Supplier<string | null>, idGeburtsland: Supplier<number | null>, hatMigrationshintergrund: Supplier<boolean>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._validatoren.add(new ValidatorSsgSchuelerStammdatenGeschlecht(geschlecht, kontext));
 		this._validatoren.add(new ValidatorSsdSchuelerStammdatenGeburtsdatum(geburtsdatum, kontext));
+		this._validatoren.add(new ValidatorSsmSchuelerStammdatenMigrationshintergrund(idGeburtsland, hatMigrationshintergrund, kontext));
 	}
 
 	protected pruefe(): boolean {

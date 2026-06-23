@@ -1,0 +1,24 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSsml02SchuelerStammdatenMigrationshintergrundGeburtsland",
+    "historie" : [ {
+      "praefix" : "SSML02",
+      "altes_kuerzel" : "",
+      "zweig" : "Schueler-Stammdaten-Migrationshintergrund-Geburtsland",
+      "dtos" : "SchuelerStammdaten",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Individualdaten'",
+      "anzeigebereich_ui" : "Feld 'Geburtsland'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["SSML01"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Geburtsland des Schülers: Der eingetragene Wert für das Feld 'Geburtsland' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.",
+      "erlaeuterung" : "Hier soll geprüft werden, ob der ausgewählte Katalogeintrag zum Zeitpunkt der Prüfung zeitlich gültig ist, über gueltigVon und gueltigBis im Katalog",
+      "bedingung" : "SchuelerStammdaten.idGeburtsland ≙ einem gültigen Historieneintrag in Nationalitaeten.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
+  

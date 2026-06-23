@@ -77,6 +77,8 @@ public final class ValidatorGesamt extends Validator {
 			_validatoren.add(new ValidatorSsSchuelerStammdaten(
 					() -> schueler.geschlecht,
 					() -> schueler.geburtsdatum,
+					() -> schueler.idGeburtsland,
+					() -> schueler.hatMigrationshintergrund,
 					this.kontext()));
 		}
 		return true;

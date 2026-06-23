@@ -1,0 +1,24 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland",
+    "historie" : [ {
+      "praefix" : "SSML00",
+      "altes_kuerzel" : "",
+      "zweig" : "Schueler-Stammdaten-Migrationshintergrund-Geburtsland",
+      "dtos" : "SchuelerStammdaten",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Individualdaten'",
+      "anzeigebereich_ui" : "Feld 'Geburtsland'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Geburtsland des Schülers: Wenn ein Migrationshintergrund vorhanden ist, muss das Feld 'Geburtsland' besetzt sein.",
+      "erlaeuterung" : "",
+      "bedingung" : "SchuelerStammdaten.hatMigrationshintergrund = TRUE ∧ SchuelerStammdaten.idGeburtsland = @",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
+  

@@ -1,4 +1,4 @@
-package de.svws_nrw.asd.validate.lehrer;
+package de.svws_nrw.asd.validate.schueler;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -16,7 +16,7 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 /**
  * <p> Testklasse für die Validatoren
  * <ul>
- *   <li> {@link ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart}
+ *   <li> {@link ValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland}
  * </ul>
  * </p>
  *
@@ -24,13 +24,14 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
  *
  * Für jeden Testfall ist eine Methode vorgesehen, in der mittels setzeTestdaten(...) die zugehörigen Testfälle erzeugt werden.
  */
-@DisplayName("Tests ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart")
-class TestValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart {
+@DisplayName("Tests ValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland")
+class TestValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland {
 
-	private static final String TESTDATEN_BESCHAEFTIGUNGSART = """
-			-1          , false
-			1           , true
-			2           , true
+	private static final String TESTDATEN_GEBURTSLAND = """
+			null        , false , true
+			null        , true  , false
+			-1          , true  , true
+			500         , true  , true
 		""";
 
 	/** Stammdaten der Schule */
@@ -48,23 +49,24 @@ class TestValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigun
 	}
 
 	/**
-	 * Test von ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart
+	 * Test von ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart
 	 *
-	 * @param beschaeftigungsart  die Beschaeftigungsart
-	 * @param result     gibt an, welches Ergebnis bei den Testdaten erwartet wird
+	 * @param idGeburtsland             die Beschaeftigungsart
+	 * @param hatMigrationshintergrund  hat Migrationshintergrund
+	 * @param result                    gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
-	@DisplayName("Tests für ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart")
+	@DisplayName("Tests für ValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland")
 	@ParameterizedTest
-	@CsvSource(textBlock = TESTDATEN_BESCHAEFTIGUNGSART, nullValues = { "null" })
-	void testValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(final Long beschaeftigungsart,
+	@CsvSource(textBlock = TESTDATEN_GEBURTSLAND, nullValues = { "null" })
+	void testValidatorSsml01SchuelerStammdatenMigrationshintergrundGeburtsland(final Long idGeburtsland, final boolean hatMigrationshintergrund,
 			final boolean result) {
 		// Erzeuge den Kontext für die Validierung
 		final ValidatorKontext kontext =
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
-		final ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart validator =
-				new ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(
-						() -> beschaeftigungsart, null, null, kontext);
+		final ValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland validator =
+				new ValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland(
+						() -> idGeburtsland, () -> hatMigrationshintergrund, kontext);
 		assertEquals(result, validator.pruefe());
 	}
 
