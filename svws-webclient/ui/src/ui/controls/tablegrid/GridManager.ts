@@ -56,6 +56,9 @@ export interface GridManagerConfig<KEY, DATA, LIST extends Collection<DATA> | DA
 
 	/** Erlaube die Selektion von Zeilen eines Grids ohne Inputs */
 	allowEmptyRowSelection?: boolean,
+
+	/** Blockiert den Fokuswechsel innerhalb des Grids. Solange `true`, ist kein Fokuswechsel möglich. */
+	locked?: Ref<boolean>,
 }
 
 
@@ -111,6 +114,9 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | DATA[]> {
 	/** Gibt an, ob eine Zeile ausgewählt werden darf, wenn keinbe Inputs vorhanden sind */
 	private readonly _allowEmptyRowSelection: boolean = false;
 
+	/** Blockiert den Fokuswechsel innerhalb des Grids. Solange `true`, ist kein Fokuswechsel möglich. */
+	private readonly _locked: Ref<boolean>;
+
 
 	/**
 	 * Erstellt einen neuen Grid-Manager.
@@ -131,6 +137,7 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | DATA[]> {
 			this._colsVisible = config.colsVisible;
 		}
 		this._allowEmptyRowSelection = config.allowEmptyRowSelection === true;
+		this._locked = config.locked ?? ref(false);
 	}
 
 
@@ -877,6 +884,10 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | DATA[]> {
 	 * @param input   das aktuell fokussierte Input-Element oder null
 	 */
 	public set focusInput(input: GridInput<KEY, any> | null) {
+		// wenn das Grid blockiert ist, keine Fokussierung durchführen
+		if (this._locked.value) {
+			return;
+		}
 		if (input !== null) {
 			this._focusLastKey.value = input.key;
 			this._stateUpToDate = false;

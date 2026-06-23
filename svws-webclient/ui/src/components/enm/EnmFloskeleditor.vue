@@ -9,8 +9,10 @@
 					<ui-table-grid name="Schüler" :manager="() => gridManagerSchueler">
 						<template #default="{ row, index }">
 							<td :ref="auswahlSchueler(index)" :class="[
-								'cursor-pointer text-left',
-								gridManagerSchueler.focusRowLast === index ? 'bg-ui-selected modalFocusField':'',
+								'text-left',
+								(gridManagerSchueler.focusRowLast === index) && !unsavedInput ? 'bg-ui-selected modalFocusField':'',
+								(gridManagerSchueler.focusRowLast === index) && unsavedInput ? 'bg-ui-warning':'',
+								unsavedInput ? 'cursor-not-allowed':'cursor-pointer',
 							]">
 								{{ row.a }} {{ row.b.nachname }}, {{ row.b.vorname }}
 							</td>
@@ -24,7 +26,7 @@
 								v-model="text" autoresize />
 						</div>
 						<div class="flex justify-between gap-2 w-full flex-row-reverse">
-							<div v-if="showButtons" class="flex gap-2">
+							<div v-if="unsavedInput" class="flex gap-2">
 								<svws-ui-button @click="doPatchLeistung" :type="clean ? 'primary':'secondary'">
 									{{ clean ? 'Speichern':'Anwenden' }}
 								</svws-ui-button>
@@ -128,40 +130,6 @@
 		'VERS': 'Versetzung',
 		'ZB': 'Zeugnis-Bemerkungen',
 	} as const;
-
-	const gridManagerSchueler = new GridManager<string, PairNN<string, ENMv2Schueler>, List<PairNN<string, ENMv2Schueler>>>({
-		daten: computed<List<PairNN<string, ENMv2Schueler>>>(() => {
-			const result = new ArrayList<PairNN<string, ENMv2Schueler>>();
-			for (const lerngruppenAuswahl of props.lerngruppenAuswahl()) {
-				if (lerngruppenAuswahl instanceof ENMv2Klasse) {
-					const listSchueler = props.enmManager().mapKlassenSchueler.get(lerngruppenAuswahl.id);
-					const klasse = props.enmManager().mapKlassen.get(lerngruppenAuswahl.id);
-					if ((klasse === null) || (listSchueler === null)) {
-						continue;
-					}
-					const list = new ArrayList<PairNN<string, ENMv2Schueler>>();
-					for (const schueler of listSchueler) {
-						const pair = new PairNN<string, ENMv2Schueler>(klasse.kuerzel ?? '???', schueler);
-						list.add(pair);
-					}
-					result.addAll(list);
-				} else {
-					const leistungen = props.enmManager().mapLerngruppeLeistungen.get(lerngruppenAuswahl.id);
-					const fach = props.enmManager().lerngruppeByIDOrException(lerngruppenAuswahl.id);
-					if (leistungen === null) {
-						continue;
-					}
-					for (const pairLeistung of leistungen) {
-						const pair = new PairNN<string, ENMv2Schueler>(fach.bezeichnung ?? '???', pairLeistung.b);
-						result.add(pair);
-					}
-				}
-			}
-			return result;
-		}),
-		getRowKey: row => `${row.a}_${row.b.id}`,
-		columns: [{ kuerzel: "Name", name: "Name, Vorname", width: '15rem' }],
-	});
 
 	const search = ref<string>("");
 
@@ -273,7 +241,11 @@
 
 	function auswahlSchueler(index: number) {
 		const key = `Schueler_${index}`;
-		const setter = () => props.onUpdate(index, false);
+		const setter = () => {
+			if (!unsavedInput.value) {
+				props.onUpdate(index, false);
+			}
+		};
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManagerSchueler.applyInputToggle(key, 1, index, element, setter);
 			if (input !== null) {
@@ -314,7 +286,7 @@
 	});
 
 	const text = ref<string | null>(null);
-	const showButtons = computed(() => text.value !== bemerkung.value);
+	const unsavedInput = computed(() => text.value !== bemerkung.value);
 
 	watch(bemerkung, () => text.value = bemerkung.value, { immediate: true });
 
@@ -329,6 +301,41 @@
 			}
 		}
 		return floskeln;
+	});
+
+	const gridManagerSchueler = new GridManager<string, PairNN<string, ENMv2Schueler>, List<PairNN<string, ENMv2Schueler>>>({
+		daten: computed<List<PairNN<string, ENMv2Schueler>>>(() => {
+			const result = new ArrayList<PairNN<string, ENMv2Schueler>>();
+			for (const lerngruppenAuswahl of props.lerngruppenAuswahl()) {
+				if (lerngruppenAuswahl instanceof ENMv2Klasse) {
+					const listSchueler = props.enmManager().mapKlassenSchueler.get(lerngruppenAuswahl.id);
+					const klasse = props.enmManager().mapKlassen.get(lerngruppenAuswahl.id);
+					if ((klasse === null) || (listSchueler === null)) {
+						continue;
+					}
+					const list = new ArrayList<PairNN<string, ENMv2Schueler>>();
+					for (const schueler of listSchueler) {
+						const pair = new PairNN<string, ENMv2Schueler>(klasse.kuerzel ?? '???', schueler);
+						list.add(pair);
+					}
+					result.addAll(list);
+				} else {
+					const leistungen = props.enmManager().mapLerngruppeLeistungen.get(lerngruppenAuswahl.id);
+					const fach = props.enmManager().lerngruppeByIDOrException(lerngruppenAuswahl.id);
+					if (leistungen === null) {
+						continue;
+					}
+					for (const pairLeistung of leistungen) {
+						const pair = new PairNN<string, ENMv2Schueler>(fach.bezeichnung ?? '???', pairLeistung.b);
+						result.add(pair);
+					}
+				}
+			}
+			return result;
+		}),
+		getRowKey: row => `${row.a}_${row.b.id}`,
+		columns: [{ kuerzel: "Name", name: "Name, Vorname", width: '15rem' }],
+		locked: unsavedInput,
 	});
 
 	/**
