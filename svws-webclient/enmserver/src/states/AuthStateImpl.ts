@@ -36,6 +36,9 @@ class AuthStateImpl implements AuthState {
 	// Gibt an, ob der Client beim Server authentifiziert ist
 	private readonly _authenticated = ref<boolean>(false);
 
+	// Gibt an, ob der Client sich momentan in der Phase der Abmeldung befindet
+	private _isLoggingOut = false;
+
 	// Gibt an, ob gerade eine Passwort-Änderung stattfindet
 	private readonly _pendingPasswordChange = ref<boolean>(false);
 
@@ -337,10 +340,21 @@ class AuthStateImpl implements AuthState {
 	 * Meldet den angemeldeten Benutzer bei der Api ab.
 	 */
 	public async logout(): Promise<void> {
+		if (this._isLoggingOut) {
+			return;
+		}
+		this._isLoggingOut = true;
 		this.stopTimer();
 		activityState.stop();
+		let exception: UserNotificationException | null = null;
 		if (this._authenticated.value) {
-			await this.api.logout();
+			try {
+				await this.api.logout();
+			} catch (e: unknown) {
+				if (e instanceof UserNotificationException) {
+					exception = e;
+				}
+			}
 		}
 		this._authenticated.value = false;
 		this._pending2FA.value = false;
@@ -353,6 +367,10 @@ class AuthStateImpl implements AuthState {
 		this._schulform.value = null;
 		await RouteManager.doRoute({ name: 'login' });
 		RouteManager.resetRouteState();
+		this._isLoggingOut = false;
+		if (exception !== null) {
+			throw exception;
+		}
 	}
 
 	private async updateRefreshTokenTimer() {
