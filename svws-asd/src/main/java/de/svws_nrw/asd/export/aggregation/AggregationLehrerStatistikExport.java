@@ -183,7 +183,10 @@ public class AggregationLehrerStatistikExport {
 		lehrerExport.staatsangehoerigkeit = lehrer.idStaatsangehoerigkeit;
 		lehrerExport.rechtsverhaeltnis = LehrerRechtsverhaeltnis.data().getNameByIDOrNull(lehrer.idRechtsverhaeltnis);
 		lehrerExport.beschaeftigungsart = LehrerBeschaeftigungsart.data().getNameByIDOrNull(lehrer.idBeschaeftigungsart);
-		lehrerExport.einsatzstatus = LehrerEinsatzstatus.data().getNameByIDOrNull(lehrer.idEinsatzstatus);
+		lehrerExport.einsatzstatus = LehrerEinsatzstatus.data().getSchluesselByIDOrNull(lehrer.idEinsatzstatus);
+		if ("*".equals(lehrerExport.einsatzstatus)) {
+			lehrerExport.einsatzstatus = "";
+		}
 		lehrerExport.pflichtstundensoll = lehrer.pflichtstundensoll == null ? 0.0 : lehrer.pflichtstundensoll;
 		lehrerExport.zuErteilenderUnterricht = ((lehrerExport.pflichtstundensoll - lehrer.anrechnungen.stream().mapToDouble(e -> e.anzahl).sum())
 				+ lehrer.mehrleistung.stream().mapToDouble(e -> e.anzahl).sum()) - lehrer.minderleistung.stream().mapToDouble(e -> e.anzahl).sum();
