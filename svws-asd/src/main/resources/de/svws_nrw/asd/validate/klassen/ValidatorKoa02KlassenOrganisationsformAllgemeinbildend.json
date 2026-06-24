@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.klassen.ValidatorKoa02KlassenOrganisationsformAllgemeinbildend",
+    "historie" : [ {
+      "praefix" : "KOA02",
+      "zweig" : "Klassen-Organisationsform",
+      "dtos" : "KlassenDaten",
+      "ausfuehrungsbereich_ui" : "Klassen, Reiter 'Klasse'",
+      "anzeigebereich_ui" : "Feld 'Organisationsform'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["KOA01"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "SR", "SG"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Organisationsform der Klasse: Der eingetragene Wert für das Feld 'Organisationsform' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.",
+      "erlaeuterung" : "Hier soll geprüft werden, ob der ausgewählte Katalogeintrag zum Zeitpunkt der Prüfung zeitlich gültig ist, über gueltigVon und gueltigBis im Katalog.",
+      "bedingung" : "KlassenDaten.idAllgemeinbildendOrganisationsform ≠ einem zeitlich gültigen Historieneintrag in AllgemeinbildendOrganisationsformen.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }

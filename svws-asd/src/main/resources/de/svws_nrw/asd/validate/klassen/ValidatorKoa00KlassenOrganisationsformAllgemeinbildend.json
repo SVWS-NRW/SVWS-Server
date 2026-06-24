@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.klassen.ValidatorKoa00KlassenOrganisationsformAllgemeinbildend",
+    "historie" : [ {
+      "praefix" : "KOA00",
+      "zweig" : "Klassen-Organisationsform",
+      "dtos" : "KlassenDaten",
+      "ausfuehrungsbereich_ui" : "Klassen, Reiter 'Klasse'",
+      "anzeigebereich_ui" : "Feld 'Organisationsform'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "SR", "SG"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Organisationsform der Klasse: Kein Wert vorhanden.",
+      "erlaeuterung" : "",
+      "bedingung" : "KlassenDaten.idAllgemeinbildendOrganisationsform = @",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
