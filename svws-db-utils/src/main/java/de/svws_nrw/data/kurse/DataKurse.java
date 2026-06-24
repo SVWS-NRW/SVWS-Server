@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,7 @@ import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -105,7 +107,7 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 		daten.schienen.addAll(convertSchienenStrToList(dto.Schienen));
 		daten.wochenstunden = (dto.WochenStd == null) ? 0 : dto.WochenStd;
 		daten.wochenstundenLehrer = (dto.WochenstdKL == null) ? daten.wochenstunden : dto.WochenstdKL;
-		daten.idKursFortschreibungsart =  (dto.Fortschreibungsart == null) ? KursFortschreibungsart.KEINE.id : dto.Fortschreibungsart.id;
+		daten.idKursFortschreibungsart = (dto.Fortschreibungsart == null) ? KursFortschreibungsart.KEINE.id : dto.Fortschreibungsart.id;
 		daten.schulnummer = dto.SchulNr;
 		daten.istEpochalunterricht = (dto.EpochU != null) && dto.EpochU;
 		daten.bezeichnungZeugnis = dto.ZeugnisBez;
@@ -125,7 +127,7 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 			case "kuerzel" -> dto.KurzBez =
 					JSONMapper.convertToString(value, false, false, Schema.tab_Kurse.col_KurzBez.datenlaenge(), name);
 			case "kursartAllg" -> // TODO Prüfe Kursart
-					dto.KursartAllg = JSONMapper.convertToString(value, false, true, Schema.tab_Kurse.col_KursartAllg.datenlaenge(), name);
+				dto.KursartAllg = JSONMapper.convertToString(value, false, true, Schema.tab_Kurse.col_KursartAllg.datenlaenge(), name);
 			case "sortierung" -> dto.Sortierung = JSONMapper.convertToIntegerInRange(value, false, 0, 32000, name);
 			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, name);
 			case "wochenstunden" -> dto.WochenStd = JSONMapper.convertToIntegerInRange(value, false, 0, 40, name);
@@ -212,14 +214,25 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 		final Long id = JSONMapper.convertToLong(value, true, name);
 		if (id == null) {
 			dto.Lehrer_ID = null;
-			return;
-		}
-		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
-		if (lehrer == null) {
-			throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Lehrer mit der angegebenen ID %d gefunden werden.".formatted(id));
+		} else {
+			final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
+			if (lehrer == null) {
+				throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Lehrer mit der angegebenen ID %d gefunden werden.".formatted(id));
+			}
+			dto.Lehrer_ID = id;
 		}
 
-		dto.Lehrer_ID = id;
+		// Übertrage die Änderungen auch auf die Leistungsdaten der Schüler in dem Kurs
+		final List<DTOSchuelerLeistungsdaten> listLeistungsdaten = conn.queryList(DTOSchuelerLeistungsdaten.QUERY_BY_KURS_ID, DTOSchuelerLeistungsdaten.class, dto.ID);
+		if (listLeistungsdaten.isEmpty()) {
+			return;
+		}
+		for (final DTOSchuelerLeistungsdaten leistungsdaten : listLeistungsdaten) {
+			if (!Objects.equals(leistungsdaten.Fachlehrer_ID, dto.Lehrer_ID)) {
+				leistungsdaten.Fachlehrer_ID = dto.Lehrer_ID;
+				conn.transactionPersist(leistungsdaten);
+			}
+		}
 	}
 
 	private void mapIdFach(final DTOKurs dto, final String name, final Object value) throws ApiOperationException {
@@ -414,7 +427,8 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 	 *
 	 * @return die Liste der Kurse
 	 */
-	public static @NotNull List<KursDaten> getKursListenFuerAbschnitt(final DBEntityManager conn, final Long idSchuljahresabschnitt, final boolean mitSchuelerListe) {
+	public static @NotNull List<KursDaten> getKursListenFuerAbschnitt(final DBEntityManager conn, final Long idSchuljahresabschnitt,
+			final boolean mitSchuelerListe) {
 		final @NotNull List<DTOKurs> kurse = (idSchuljahresabschnitt == null)
 				? conn.queryAll(DTOKurs.class)
 				: conn.queryList(DTOKurs.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKurs.class, idSchuljahresabschnitt);
