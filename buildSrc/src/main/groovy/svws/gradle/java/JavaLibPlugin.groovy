@@ -29,8 +29,8 @@ class JavaLibPlugin implements Plugin<Project> {
 	void addDatabase() {
 		def versionPersistenceAPI = '3.2.0';
 		def versionEclipselink = '4.0.9';
-		def versionMariaDB = '3.5.7';
-		def versionSQLite = '3.51.2.0';
+		def versionMariaDB = '3.5.9';
+		def versionSQLite = '3.53.2.0';
 		def versionUCanAccess = '5.1.5';
 		def versionJackcess = '5.1.2';
 		def versionMySQL = '9.6.0';
@@ -50,8 +50,8 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addJacksonConfiguration() {
-		def version = "2.21.1";
-		def version_annotations = "2.21";
+		def version = "2.22.0";
+		def version_annotations = "2.22";
 		project.configurations.create('jackson');
 		project.dependencies.add('jackson', 'com.fasterxml.jackson.core:jackson-annotations:' + version_annotations);
 		project.dependencies.add('jackson', 'com.fasterxml.jackson.core:jackson-core:' + version);
@@ -63,7 +63,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addJettyConfiguration() {
-		def version = "12.1.8";
+		def version = "12.1.10";
 		def versionServletApi = "6.1.0";
 		project.configurations.create('jetty');
 		project.dependencies.add('jetty', 'jakarta.servlet:jakarta.servlet-api:' + versionServletApi);
@@ -102,7 +102,8 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addRestEasyConfiguration() {
-		def version = "7.0.1.Final";
+		def version = "7.0.2.Final";
+		def versionJsonNullable = "0.2.10";
 		project.configurations.create('resteasy');
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-core:' + version);
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-jackson2-provider:' + version);
@@ -111,7 +112,7 @@ class JavaLibPlugin implements Plugin<Project> {
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-validator-provider:' + version);
 		// vulnerability fix for: org.jboss.resteasy:resteasy-multipart-provider:6.2.12.Final -> pin org.eclipse.angus:angus-mail:2.0.4
 		project.dependencies.add('resteasy', 'org.eclipse.angus:angus-mail:2.0.5');
-		project.dependencies.add('resteasy', 'org.openapitools:jackson-databind-nullable:0.2.9')
+		project.dependencies.add('resteasy', 'org.openapitools:jackson-databind-nullable:' + versionJsonNullable);
 	}
 
 
