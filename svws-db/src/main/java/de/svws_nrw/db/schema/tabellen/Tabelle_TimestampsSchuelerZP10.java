@@ -86,7 +86,7 @@ public class Tabelle_TimestampsSchuelerZP10 extends SchemaTabelle {
 			.setRevision(SchemaRevisionen.REV_67);
 
 	/** Trigger t_UPDATE_TimestampsSchuelerZP10 */
-	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsSchuelerZP10_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsSchuelerZP10_UNTIL_REV70 = addTrigger(
 			"t_UPDATE_TimestampsSchuelerZP10",
 			DBDriver.MARIA_DB,
 			"""
@@ -113,7 +113,7 @@ public class Tabelle_TimestampsSchuelerZP10 extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_SchuelerZP10, Schema.tab_TimestampsSchuelerZP10)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 	/** Trigger t_UPDATE_TimestampsSchuelerZP10 */
 	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsSchuelerZP10 = addTrigger(
@@ -122,28 +122,28 @@ public class Tabelle_TimestampsSchuelerZP10 extends SchemaTabelle {
 			"""
 			AFTER UPDATE ON SchuelerZP10 FOR EACH ROW
 			BEGIN
-			    IF (OLD.Vornote IS NULL AND NEW.Vornote IS NOT NULL) OR (OLD.Vornote <> NEW.Vornote) THEN
+			    IF NOT (OLD.Vornote <=> NEW.Vornote) THEN
 			        UPDATE TimestampsSchuelerZP10 SET tsVornote = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
 			    END IF;
-			    IF (OLD.NoteSchriftlich IS NULL AND NEW.NoteSchriftlich IS NOT NULL) OR (OLD.NoteSchriftlich <> NEW.NoteSchriftlich) THEN
+			    IF NOT (OLD.NoteSchriftlich <=> NEW.NoteSchriftlich) THEN
 			        UPDATE TimestampsSchuelerZP10 SET tsNoteSchriftlichePruefung = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
 			    END IF;
-			    IF (OLD.MdlPruefung IS NULL AND NEW.MdlPruefung IS NOT NULL) OR (OLD.MdlPruefung <> NEW.MdlPruefung) THEN
+			    IF NOT (OLD.MdlPruefung <=> NEW.MdlPruefung) THEN
 			        UPDATE TimestampsSchuelerZP10 SET tsMuendlichePruefung = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
 			    END IF;
-			    IF (OLD.MdlPruefungFW IS NULL AND NEW.MdlPruefungFW IS NOT NULL) OR (OLD.MdlPruefungFW <> NEW.MdlPruefungFW) THEN
+			    IF NOT (OLD.MdlPruefungFW <=> NEW.MdlPruefungFW) THEN
 			        UPDATE TimestampsSchuelerZP10 SET tsMuendlichePruefungFreiwillig = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
 			    END IF;
-			    IF (OLD.NoteMuendlich IS NULL AND NEW.NoteMuendlich IS NOT NULL) OR (OLD.NoteMuendlich <> NEW.NoteMuendlich) THEN
+			    IF NOT (OLD.NoteMuendlich <=> NEW.NoteMuendlich) THEN
 			        UPDATE TimestampsSchuelerZP10 SET tsNoteMuendlichePruefung = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
 			    END IF;
-			    IF (OLD.NoteAbschluss IS NULL AND NEW.NoteAbschluss IS NOT NULL) OR (OLD.NoteAbschluss <> NEW.NoteAbschluss) THEN
+			    IF NOT (OLD.NoteAbschluss <=> NEW.NoteAbschluss) THEN
 			        UPDATE TimestampsSchuelerZP10 SET tsAbschlussnote = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
 			    END IF;
 			END
 			""",
 			Schema.tab_SchuelerZP10, Schema.tab_TimestampsSchuelerZP10)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 
 	/**

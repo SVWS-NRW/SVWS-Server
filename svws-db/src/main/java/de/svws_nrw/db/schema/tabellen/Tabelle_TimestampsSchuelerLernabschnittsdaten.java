@@ -153,7 +153,7 @@ public class Tabelle_TimestampsSchuelerLernabschnittsdaten extends SchemaTabelle
 
 
 	/** Trigger t_UPDATE_TimestampsSchuelerLernabschnittsdaten */
-	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsSchuelerLernabschnittsdaten_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsSchuelerLernabschnittsdaten_UNTIL_REV70 = addTrigger(
 			"t_UPDATE_TimestampsSchuelerLernabschnittsdaten",
 			DBDriver.MARIA_DB,
 			"""
@@ -172,7 +172,7 @@ public class Tabelle_TimestampsSchuelerLernabschnittsdaten extends SchemaTabelle
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_TimestampsSchuelerLernabschnittsdaten)
 			.setRevision(SchemaRevisionen.REV_29)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 	/** Trigger t_INSERT_TimestampsSchuelerLernabschnittsdaten_Bemerkungen */
 	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_TimestampsSchuelerLernabschnittsdaten_Bemerkungen_UNTIL_REV67 = addTrigger(
@@ -187,7 +187,7 @@ public class Tabelle_TimestampsSchuelerLernabschnittsdaten extends SchemaTabelle
 
 
 	/** Trigger t_UPDATE_TimestampsSchuelerLernabschnittsdaten_Bemerkungen */
-	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsSchuelerLernabschnittsdaten_Bemerkungen_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsSchuelerLernabschnittsdaten_Bemerkungen_UNTIL_REV70 = addTrigger(
 			"t_UPDATE_TimestampsSchuelerLernabschnittsdaten_Bemerkungen",
 			DBDriver.MARIA_DB,
 			"""
@@ -215,7 +215,7 @@ public class Tabelle_TimestampsSchuelerLernabschnittsdaten extends SchemaTabelle
 			""",
 			Schema.tab_SchuelerLD_PSFachBem, Schema.tab_TimestampsSchuelerLernabschnittsdaten)
 			.setRevision(SchemaRevisionen.REV_29)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 
 	/** Trigger t_INSERT_TimestampsSchuelerLernabschnittsdaten */
@@ -236,19 +236,19 @@ public class Tabelle_TimestampsSchuelerLernabschnittsdaten extends SchemaTabelle
 			"""
 			AFTER UPDATE ON SchuelerLernabschnittsdaten FOR EACH ROW
 			BEGIN
-			    IF (OLD.SumFehlStd IS NULL AND NEW.SumFehlStd IS NOT NULL) OR (OLD.SumFehlStd <> NEW.SumFehlStd) THEN
+			    IF NOT (OLD.SumFehlStd <=> NEW.SumFehlStd) THEN
 			        UPDATE TimestampsSchuelerLernabschnittsdaten SET tsSumFehlStd = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
 			    END IF;
-			    IF (OLD.SumFehlStdU IS NULL AND NEW.SumFehlStdU IS NOT NULL) OR (OLD.SumFehlStdU <> NEW.SumFehlStdU) THEN
+			    IF NOT (OLD.SumFehlStdU <=> NEW.SumFehlStdU) THEN
 			        UPDATE TimestampsSchuelerLernabschnittsdaten SET tsSumFehlStdU = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
 			    END IF;
-			    IF (OLD.ZeugnisBem IS NULL AND NEW.ZeugnisBem IS NOT NULL) OR (OLD.ZeugnisBem <> NEW.ZeugnisBem) THEN
+			    IF NOT (OLD.ZeugnisBem <=> NEW.ZeugnisBem) THEN
 			        UPDATE TimestampsSchuelerLernabschnittsdaten SET tsZeugnisBem = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
 			    END IF;
 			END
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_TimestampsSchuelerLernabschnittsdaten)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 	/** Trigger t_INSERT_TimestampsSchuelerLernabschnittsdaten_Bemerkungen */
 	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_TimestampsSchuelerLernabschnittsdaten_Bemerkungen = addTrigger(
@@ -268,28 +268,28 @@ public class Tabelle_TimestampsSchuelerLernabschnittsdaten extends SchemaTabelle
 			"""
 			AFTER UPDATE ON SchuelerLD_PSFachBem FOR EACH ROW
 			BEGIN
-			    IF (OLD.ASV IS NULL AND NEW.ASV IS NOT NULL) OR (OLD.ASV <> NEW.ASV) THEN
+			    IF NOT (OLD.ASV <=> NEW.ASV) THEN
 			        UPDATE TimestampsSchuelerLernabschnittsdaten SET tsASV = UTC_TIMESTAMP(3) WHERE ID = NEW.Abschnitt_ID;
 			    END IF;
-			    IF (OLD.AUE IS NULL AND NEW.AUE IS NOT NULL) OR (OLD.AUE <> NEW.AUE) THEN
+			    IF NOT (OLD.AUE <=> NEW.AUE) THEN
 			        UPDATE TimestampsSchuelerLernabschnittsdaten SET tsAUE = UTC_TIMESTAMP(3) WHERE ID = NEW.Abschnitt_ID;
 			    END IF;
-			    IF (OLD.LELS IS NULL AND NEW.LELS IS NOT NULL) OR (OLD.LELS <> NEW.LELS) THEN
+			    IF NOT (OLD.LELS <=> NEW.LELS) THEN
 			        UPDATE TimestampsSchuelerLernabschnittsdaten SET tsLELS = UTC_TIMESTAMP(3) WHERE ID = NEW.Abschnitt_ID;
 			    END IF;
-			    IF (OLD.ESF IS NULL AND NEW.ESF IS NOT NULL) OR (OLD.ESF <> NEW.ESF) THEN
+			    IF NOT (OLD.ESF <=> NEW.ESF) THEN
 			        UPDATE TimestampsSchuelerLernabschnittsdaten SET tsESF = UTC_TIMESTAMP(3) WHERE ID = NEW.Abschnitt_ID;
 			    END IF;
-			    IF (OLD.BemerkungFSP IS NULL AND NEW.BemerkungFSP IS NOT NULL) OR (OLD.BemerkungFSP <> NEW.BemerkungFSP) THEN
+			    IF NOT (OLD.BemerkungFSP <=> NEW.BemerkungFSP) THEN
 			        UPDATE TimestampsSchuelerLernabschnittsdaten SET tsBemerkungFSP = UTC_TIMESTAMP(3) WHERE ID = NEW.Abschnitt_ID;
 			    END IF;
-			    IF (OLD.BemerkungVersetzung IS NULL AND NEW.BemerkungVersetzung IS NOT NULL) OR (OLD.BemerkungVersetzung <> NEW.BemerkungVersetzung) THEN
+			    IF NOT (OLD.BemerkungVersetzung <=> NEW.BemerkungVersetzung) THEN
 			        UPDATE TimestampsSchuelerLernabschnittsdaten SET tsBemerkungVersetzung = UTC_TIMESTAMP(3) WHERE ID = NEW.Abschnitt_ID;
 			    END IF;
 			END
 			""",
 			Schema.tab_SchuelerLD_PSFachBem, Schema.tab_TimestampsSchuelerLernabschnittsdaten)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 
 	/**
