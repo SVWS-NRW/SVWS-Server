@@ -81,7 +81,7 @@ public class Tabelle_TimestampsSchuelerTeilleistungen extends SchemaTabelle {
 			.setRevision(SchemaRevisionen.REV_67);
 
 	/** Trigger t_UPDATE_TimestampsSchuelerTeilleistungen */
-	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsSchuelerTeilleistungen_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsSchuelerTeilleistungen_UNTIL_REV70 = addTrigger(
 			"t_UPDATE_TimestampsSchuelerTeilleistungen",
 			DBDriver.MARIA_DB,
 			"""
@@ -105,7 +105,7 @@ public class Tabelle_TimestampsSchuelerTeilleistungen extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_SchuelerEinzelleistungen, Schema.tab_TimestampsSchuelerTeilleistungen)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 	/** Trigger t_UPDATE_TimestampsSchuelerTeilleistungen */
 	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsSchuelerTeilleistungen = addTrigger(
@@ -114,25 +114,25 @@ public class Tabelle_TimestampsSchuelerTeilleistungen extends SchemaTabelle {
 			"""
 			AFTER UPDATE ON SchuelerEinzelleistungen FOR EACH ROW
 			BEGIN
-			    IF (OLD.Datum IS NULL AND NEW.Datum IS NOT NULL) OR (OLD.Datum <> NEW.Datum) THEN
+			    IF NOT (OLD.Datum <=> NEW.Datum) THEN
 			        UPDATE TimestampsSchuelerTeilleistungen SET tsDatum = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
 			    END IF;
-			    IF (OLD.Lehrer_ID IS NULL AND NEW.Lehrer_ID IS NOT NULL) OR (OLD.Lehrer_ID <> NEW.Lehrer_ID) THEN
+			    IF NOT (OLD.Lehrer_ID <=> NEW.Lehrer_ID) THEN
 			        UPDATE TimestampsSchuelerTeilleistungen SET tsLehrer_ID = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
 			    END IF;
-			    IF (OLD.Art_ID IS NULL AND NEW.Art_ID IS NOT NULL) OR (OLD.Art_ID <> NEW.Art_ID) THEN
+			    IF NOT (OLD.Art_ID <=> NEW.Art_ID) THEN
 			        UPDATE TimestampsSchuelerTeilleistungen SET tsArt_ID = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
 			    END IF;
-			    IF (OLD.Bemerkung IS NULL AND NEW.Bemerkung IS NOT NULL) OR (OLD.Bemerkung <> NEW.Bemerkung) THEN
+			    IF NOT (OLD.Bemerkung <=> NEW.Bemerkung) THEN
 			        UPDATE TimestampsSchuelerTeilleistungen SET tsBemerkung = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
 			    END IF;
-			    IF (OLD.NotenKrz IS NULL AND NEW.NotenKrz IS NOT NULL) OR (OLD.NotenKrz <> NEW.NotenKrz) THEN
+			    IF NOT (OLD.NotenKrz <=> NEW.NotenKrz) THEN
 			        UPDATE TimestampsSchuelerTeilleistungen SET tsNotenKrz = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
 			    END IF;
 			END
 			""",
 			Schema.tab_SchuelerEinzelleistungen, Schema.tab_TimestampsSchuelerTeilleistungen)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 	/**
 	 * Erstellt die Schema-Definition für die Tabelle TimestampsSchuelerTeilleistungen.

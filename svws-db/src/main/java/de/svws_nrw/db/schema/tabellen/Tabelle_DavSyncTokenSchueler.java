@@ -36,7 +36,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			new Pair<>(col_ID, Schema.tab_Schueler.col_ID));
 
 	/** Trigger t_UPDATE_DavSyncTokenSchueler_Schueler */
-	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Schueler_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Schueler_UNTIL_REV70 = addTrigger(
 			"t_UPDATE_DavSyncTokenSchueler_Schueler",
 			DBDriver.MARIA_DB,
 			"""
@@ -65,10 +65,10 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_Schueler, Schema.tab_DavSyncTokenSchueler)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 	/** Trigger t_UPDATE_DavSyncTokenSchueler_Kurs_Schueler */
-	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Kurs_Schueler_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Kurs_Schueler_UNTIL_REV70 = addTrigger(
 			"t_UPDATE_DavSyncTokenSchueler_Kurs_Schueler",
 			DBDriver.MARIA_DB,
 			"""
@@ -92,10 +92,10 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 	/** Trigger t_INSERT_DavSyncTokenSchueler_Kurs_Schueler */
-	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_Kurs_Schueler_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_Kurs_Schueler_UNTIL_REV70 = addTrigger(
 			"t_INSERT_DavSyncTokenSchueler_Kurs_Schueler",
 			DBDriver.MARIA_DB,
 			"""
@@ -111,10 +111,10 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 	/** Trigger t_DELETE_DavSyncTokenSchueler_Kurs_Schueler */
-	public final SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_Kurs_Schueler_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_Kurs_Schueler_UNTIL_REV70 = addTrigger(
 			"t_DELETE_DavSyncTokenSchueler_Kurs_Schueler",
 			DBDriver.MARIA_DB,
 			"""
@@ -130,11 +130,11 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 
 	/** Trigger t_UPDATE_DavSyncTokenSchueler_SchuelerErzAdr */
-	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_SchuelerErzAdr_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_SchuelerErzAdr_UNTIL_REV70 = addTrigger(
 			"t_UPDATE_DavSyncTokenSchueler_SchuelerErzAdr",
 			DBDriver.MARIA_DB,
 			"""
@@ -173,11 +173,11 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 
 	/** Trigger t_INSERT_DavSyncTokenSchueler_SchuelerErzAdr */
-	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_SchuelerErzAdr_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_SchuelerErzAdr_UNTIL_REV70 = addTrigger(
 			"t_INSERT_DavSyncTokenSchueler_SchuelerErzAdr",
 			DBDriver.MARIA_DB,
 			"""
@@ -193,10 +193,10 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 	/** Trigger t_DELETE_DavSyncTokenSchueler_SchuelerErzAdr */
-	public final SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_SchuelerErzAdr_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_SchuelerErzAdr_UNTIL_REV70 = addTrigger(
 			"t_DELETE_DavSyncTokenSchueler_SchuelerErzAdr",
 			DBDriver.MARIA_DB,
 			"""
@@ -212,10 +212,10 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 	/** Trigger t_UPDATE_DavSyncTokenSchueler_SchuelerTelefone */
-	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_SchuelerTelefone_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_SchuelerTelefone_UNTIL_REV70 = addTrigger(
 			"t_UPDATE_DavSyncTokenSchueler_SchuelerTelefone",
 			DBDriver.MARIA_DB,
 			"""
@@ -239,10 +239,10 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_SchuelerTelefone, Schema.tab_DavSyncTokenSchueler)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 	/** Trigger t_INSERT_DavSyncTokenSchueler_SchuelerTelefone */
-	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_SchuelerTelefone_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_SchuelerTelefone_UNTIL_REV70 = addTrigger(
 			"t_INSERT_DavSyncTokenSchueler_SchuelerTelefone",
 			DBDriver.MARIA_DB,
 			"""
@@ -258,10 +258,10 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_SchuelerTelefone, Schema.tab_DavSyncTokenSchueler)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 	/** Trigger t_DELETE_DavSyncTokenSchueler_SchuelerTelefone */
-	public final SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_SchuelerTelefone_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_SchuelerTelefone_UNTIL_REV70 = addTrigger(
 			"t_DELETE_DavSyncTokenSchueler_SchuelerTelefone",
 			DBDriver.MARIA_DB,
 			"""
@@ -277,10 +277,10 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_SchuelerTelefone, Schema.tab_DavSyncTokenSchueler)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 	/** Trigger t_UPDATE_DavSyncTokenSchueler_K_Ort */
-	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_K_Ort_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_K_Ort_UNTIL_REV70 = addTrigger(
 			"t_UPDATE_DavSyncTokenSchueler_K_Ort",
 			DBDriver.MARIA_DB,
 			"""
@@ -304,10 +304,10 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_K_Ort, Schema.tab_Schueler, Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 	/** Trigger t_INSERT_DavSyncTokenSchueler_K_Ort */
-	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_K_Ort_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_K_Ort_UNTIL_REV70 = addTrigger(
 			"t_INSERT_DavSyncTokenSchueler_K_Ort",
 			DBDriver.MARIA_DB,
 			"""
@@ -331,10 +331,10 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_K_Ort, Schema.tab_Schueler, Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 	/** Trigger t_DELETE_DavSyncTokenSchueler_K_Ort */
-	public final SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_K_Ort_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_K_Ort_UNTIL_REV70 = addTrigger(
 			"t_DELETE_DavSyncTokenSchueler_K_Ort",
 			DBDriver.MARIA_DB,
 			"""
@@ -358,10 +358,10 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_K_Ort, Schema.tab_Schueler, Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 	/** Trigger t_UPDATE_DavSyncTokenSchueler_Kurse */
-	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Kurse_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Kurse_UNTIL_REV70 = addTrigger(
 			"t_UPDATE_DavSyncTokenSchueler_Kurse",
 			DBDriver.MARIA_DB,
 			"""
@@ -387,10 +387,10 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_Kurse, Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 	/** Trigger t_INSERT_DavSyncTokenSchueler_Kurse */
-	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_Kurse_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_Kurse_UNTIL_REV70 = addTrigger(
 			"t_INSERT_DavSyncTokenSchueler_Kurse",
 			DBDriver.MARIA_DB,
 			"""
@@ -408,10 +408,10 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_Kurse, Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 	/** Trigger t_DELETE_DavSyncTokenSchueler_Kurse */
-	public final SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_Kurse_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_Kurse_UNTIL_REV70 = addTrigger(
 			"t_DELETE_DavSyncTokenSchueler_Kurse",
 			DBDriver.MARIA_DB,
 			"""
@@ -429,10 +429,10 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_Kurse, Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 	/** Trigger t_UPDATE_DavSyncTokenSchueler_Klassen */
-	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Klassen_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Klassen_UNTIL_REV70 = addTrigger(
 			"t_UPDATE_DavSyncTokenSchueler_Klassen",
 			DBDriver.MARIA_DB,
 			"""
@@ -458,10 +458,10 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_Klassen, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 	/** Trigger t_INSERT_DavSyncTokenSchueler_Klassen */
-	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_Klassen_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_Klassen_UNTIL_REV70 = addTrigger(
 			"t_INSERT_DavSyncTokenSchueler_Klassen",
 			DBDriver.MARIA_DB,
 			"""
@@ -479,10 +479,10 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_Klassen, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 	/** Trigger t_DELETE_DavSyncTokenSchueler_Klassen */
-	public final SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_Klassen_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_Klassen_UNTIL_REV70 = addTrigger(
 			"t_DELETE_DavSyncTokenSchueler_Klassen",
 			DBDriver.MARIA_DB,
 			"""
@@ -500,10 +500,10 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_Klassen, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 	/** Trigger t_UPDATE_DavSyncTokenSchueler_SchuelerLernabschnittsdaten */
-	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_SchuelerLernabschnittsdaten_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_SchuelerLernabschnittsdaten_UNTIL_REV70 = addTrigger(
 			"t_UPDATE_DavSyncTokenSchueler_SchuelerLernabschnittsdaten",
 			DBDriver.MARIA_DB,
 			"""
@@ -526,10 +526,10 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 	/** Trigger t_INSERT_DavSyncTokenSchueler_SchuelerLernabschnittsdaten */
-	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_SchuelerLernabschnittsdaten_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_SchuelerLernabschnittsdaten_UNTIL_REV70 = addTrigger(
 			"t_INSERT_DavSyncTokenSchueler_SchuelerLernabschnittsdaten",
 			DBDriver.MARIA_DB,
 			"""
@@ -545,10 +545,10 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 	/** Trigger t_DELETE_DavSyncTokenSchueler_SchuelerLernabschnittsdaten */
-	public final SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_SchuelerLernabschnittsdaten_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_SchuelerLernabschnittsdaten_UNTIL_REV70 = addTrigger(
 			"t_DELETE_DavSyncTokenSchueler_SchuelerLernabschnittsdaten",
 			DBDriver.MARIA_DB,
 			"""
@@ -564,10 +564,10 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 	/** Trigger t_UPDATE_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge */
-	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge_UNTIL_REV70 = addTrigger(
 			"t_UPDATE_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge",
 			DBDriver.MARIA_DB,
 			"""
@@ -599,10 +599,10 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			""",
 			Schema.tab_EigeneSchule_Jahrgaenge, Schema.tab_Kurse, Schema.tab_Kurs_Schueler, Schema.tab_Klassen,
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 	/** Trigger t_INSERT_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge */
-	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge_UNTIL_REV70 = addTrigger(
 			"t_INSERT_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge",
 			DBDriver.MARIA_DB,
 			"""
@@ -627,10 +627,10 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			""",
 			Schema.tab_EigeneSchule_Jahrgaenge, Schema.tab_Kurse, Schema.tab_Kurs_Schueler, Schema.tab_Klassen,
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 	/** Trigger t_DELETE_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge */
-	public final SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge_UNTIL_REV67 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge_UNTIL_REV70 = addTrigger(
 			"t_DELETE_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge",
 			DBDriver.MARIA_DB,
 			"""
@@ -655,7 +655,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			""",
 			Schema.tab_EigeneSchule_Jahrgaenge, Schema.tab_Kurse, Schema.tab_Kurs_Schueler, Schema.tab_Klassen,
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler)
-			.setVeraltet(SchemaRevisionen.REV_67);
+			.setVeraltet(SchemaRevisionen.REV_70);
 
 
 	/** Trigger t_UPDATE_DavSyncTokenSchueler_Schueler */
@@ -668,13 +668,13 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			    DECLARE changed BOOLEAN;
 			    DECLARE token DATETIME;
 			    SET changed := 0;
-			    IF OLD.Name <> NEW.Name OR OLD.Vorname <> NEW.Vorname OR OLD.Strassenname <> NEW.Strassenname
-			            OR OLD.HausNr <> NEW.HausNr OR OLD.HausNrZusatz <> NEW.HausNrZusatz
-			            OR OLD.Ort_ID <> NEW.Ort_ID OR OLD.Ortsteil_ID <> NEW.Ortsteil_ID
-			            OR OLD.Telefon <> NEW.Telefon OR OLD.Fax <> NEW.Fax
-			            OR OLD.Email <> NEW.Email OR OLD.SchulEmail <> NEW.SchulEmail
-			            OR OLD.Geschlecht <> NEW.Geschlecht
-			            OR OLD.Status <> NEW.Status THEN
+			    IF NOT(OLD.Name <=> NEW.Name AND OLD.Vorname <=> NEW.Vorname AND OLD.Strassenname <=> NEW.Strassenname
+			            AND OLD.HausNr <=> NEW.HausNr AND OLD.HausNrZusatz <=> NEW.HausNrZusatz
+			            AND OLD.Ort_ID <=> NEW.Ort_ID AND OLD.Ortsteil_ID <=> NEW.Ortsteil_ID
+			            AND OLD.Telefon <=> NEW.Telefon AND OLD.Fax <=> NEW.Fax
+			            AND OLD.Email <=> NEW.Email AND OLD.SchulEmail <=> NEW.SchulEmail
+			            AND OLD.Geschlecht <=> NEW.Geschlecht
+			            AND OLD.Status <=> NEW.Status) THEN
 			        SET changed := 1;
 			    END IF;
 			    IF changed = TRUE THEN
@@ -688,7 +688,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_Schueler, Schema.tab_DavSyncTokenSchueler)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 	/** Trigger t_UPDATE_DavSyncTokenSchueler_Kurs_Schueler */
 	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Kurs_Schueler = addTrigger(
@@ -715,7 +715,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 	/** Trigger t_INSERT_DavSyncTokenSchueler_Kurs_Schueler */
 	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_Kurs_Schueler = addTrigger(
@@ -734,7 +734,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 	/** Trigger t_DELETE_DavSyncTokenSchueler_Kurs_Schueler */
 	public final SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_Kurs_Schueler = addTrigger(
@@ -753,7 +753,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 
 	/** Trigger t_UPDATE_DavSyncTokenSchueler_SchuelerErzAdr */
@@ -775,13 +775,13 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			            UPDATE DavSyncTokenSchueler SET SyncToken = UTC_TIMESTAMP(3) WHERE ID = OLD.Schueler_ID;
 			        END IF;
 			    END IF;
-			    IF OLD.ErzOrt_ID <> NEW.ErzOrt_ID OR OLD.ErzStrassenname <> NEW.ErzStrassenname
-			            OR OLD.ErzOrtsteil_ID <> NEW.ErzOrtsteil_ID
-			            OR OLD.ErzieherArt_ID <> NEW.ErzieherArt_ID
-			            OR OLD.ErzHausNr <> NEW.ErzHausNr OR OLD.ErzHausNrZusatz <> NEW.ErzHausNrZusatz
-			            OR OLD.ErzEmail <> NEW.ErzEmail OR OLD.ErzEmail2 <> NEW.ErzEmail2
-			            OR OLD.Name1 <> NEW.Name1 OR OLD.Name2 <> NEW.Name2
-			            OR OLD.Vorname1 <> NEW.Vorname1 OR OLD.Vorname2 <> NEW.Vorname2
+			    IF NOT (OLD.ErzOrt_ID <=> NEW.ErzOrt_ID AND OLD.ErzStrassenname <=> NEW.ErzStrassenname
+			            AND OLD.ErzOrtsteil_ID <=> NEW.ErzOrtsteil_ID
+			            AND OLD.ErzieherArt_ID <=> NEW.ErzieherArt_ID
+			            AND OLD.ErzHausNr <=> NEW.ErzHausNr AND OLD.ErzHausNrZusatz <=> NEW.ErzHausNrZusatz
+			            AND OLD.ErzEmail <=> NEW.ErzEmail AND OLD.ErzEmail2 <=> NEW.ErzEmail2
+			            AND OLD.Name1 <=> NEW.Name1 AND OLD.Name2 <=> NEW.Name2
+			            AND OLD.Vorname1 <=> NEW.Vorname1 AND OLD.Vorname2 <=> NEW.Vorname2)
 			            THEN
 			        SET changed := 1;
 			    END IF;
@@ -796,7 +796,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 
 	/** Trigger t_INSERT_DavSyncTokenSchueler_SchuelerErzAdr */
@@ -816,7 +816,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 	/** Trigger t_DELETE_DavSyncTokenSchueler_SchuelerErzAdr */
 	public final SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_SchuelerErzAdr = addTrigger(
@@ -835,7 +835,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 	/** Trigger t_UPDATE_DavSyncTokenSchueler_SchuelerTelefone */
 	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_SchuelerTelefone = addTrigger(
@@ -862,7 +862,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_SchuelerTelefone, Schema.tab_DavSyncTokenSchueler)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 	/** Trigger t_INSERT_DavSyncTokenSchueler_SchuelerTelefone */
 	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_SchuelerTelefone = addTrigger(
@@ -881,7 +881,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_SchuelerTelefone, Schema.tab_DavSyncTokenSchueler)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 	/** Trigger t_DELETE_DavSyncTokenSchueler_SchuelerTelefone */
 	public final SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_SchuelerTelefone = addTrigger(
@@ -900,7 +900,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_SchuelerTelefone, Schema.tab_DavSyncTokenSchueler)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 	/** Trigger t_UPDATE_DavSyncTokenSchueler_K_Ort */
 	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_K_Ort = addTrigger(
@@ -927,7 +927,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_K_Ort, Schema.tab_Schueler, Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 	/** Trigger t_INSERT_DavSyncTokenSchueler_K_Ort */
 	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_K_Ort = addTrigger(
@@ -954,7 +954,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_K_Ort, Schema.tab_Schueler, Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 	/** Trigger t_DELETE_DavSyncTokenSchueler_K_Ort */
 	public final SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_K_Ort = addTrigger(
@@ -981,7 +981,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_K_Ort, Schema.tab_Schueler, Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 	/** Trigger t_UPDATE_DavSyncTokenSchueler_Kurse */
 	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Kurse = addTrigger(
@@ -993,8 +993,8 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			    DECLARE changed BOOLEAN;
 			    DECLARE token DATETIME;
 			    SET changed := 0;
-			    IF OLD.ID <> NEW.ID OR OLD.KurzBez <> NEW.KurzBez OR OLD.Jahrgang_ID <> NEW.Jahrgang_ID
-			            OR OLD.ASDJahrgang <> NEW.ASDJahrgang THEN
+			    IF NOT (OLD.ID <=> NEW.ID AND OLD.KurzBez <=> NEW.KurzBez AND OLD.Jahrgang_ID <=> NEW.Jahrgang_ID
+			            AND OLD.ASDJahrgang <=> NEW.ASDJahrgang) THEN
 			        SET changed := 1;
 			    END IF;
 			    IF changed = TRUE THEN
@@ -1010,7 +1010,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_Kurse, Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 	/** Trigger t_INSERT_DavSyncTokenSchueler_Kurse */
 	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_Kurse = addTrigger(
@@ -1031,7 +1031,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_Kurse, Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 	/** Trigger t_DELETE_DavSyncTokenSchueler_Kurse */
 	public final SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_Kurse = addTrigger(
@@ -1052,7 +1052,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_Kurse, Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 	/** Trigger t_UPDATE_DavSyncTokenSchueler_Klassen */
 	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Klassen = addTrigger(
@@ -1064,8 +1064,8 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			    DECLARE changed BOOLEAN;
 			    DECLARE token DATETIME;
 			    SET changed := 0;
-			    IF OLD.ID <> NEW.ID OR OLD.Klasse <> NEW.Klasse OR OLD.ASDKlasse <> NEW.ASDKlasse
-			            OR OLD.Jahrgang_ID <> NEW.Jahrgang_ID THEN
+			    IF NOT (OLD.ID <=> NEW.ID AND OLD.Klasse <=> NEW.Klasse AND OLD.ASDKlasse <=> NEW.ASDKlasse
+			            AND OLD.Jahrgang_ID <=> NEW.Jahrgang_ID) THEN
 			        SET changed := 1;
 			    END IF;
 			    IF changed = TRUE THEN
@@ -1081,7 +1081,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_Klassen, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 	/** Trigger t_INSERT_DavSyncTokenSchueler_Klassen */
 	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_Klassen = addTrigger(
@@ -1102,7 +1102,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_Klassen, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 	/** Trigger t_DELETE_DavSyncTokenSchueler_Klassen */
 	public final SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_Klassen = addTrigger(
@@ -1123,7 +1123,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_Klassen, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 	/** Trigger t_UPDATE_DavSyncTokenSchueler_SchuelerLernabschnittsdaten */
 	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_SchuelerLernabschnittsdaten = addTrigger(
@@ -1135,7 +1135,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			    DECLARE changed BOOLEAN;
 			    DECLARE token DATETIME;
 			    SET changed := 0;
-			    IF OLD.ID <> NEW.ID OR OLD.Klassen_ID <> NEW.Klassen_ID OR OLD.Schueler_ID <> NEW.Schueler_ID THEN
+			    IF NOT (OLD.ID <=> NEW.ID AND OLD.Klassen_ID <=> NEW.Klassen_ID AND OLD.Schueler_ID <=> NEW.Schueler_ID) THEN
 			        SET changed := 1;
 			    END IF;
 			    IF changed = TRUE THEN
@@ -1149,7 +1149,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 	/** Trigger t_INSERT_DavSyncTokenSchueler_SchuelerLernabschnittsdaten */
 	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_SchuelerLernabschnittsdaten = addTrigger(
@@ -1168,7 +1168,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 	/** Trigger t_DELETE_DavSyncTokenSchueler_SchuelerLernabschnittsdaten */
 	public final SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_SchuelerLernabschnittsdaten = addTrigger(
@@ -1187,7 +1187,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 	/** Trigger t_UPDATE_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge */
 	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge = addTrigger(
@@ -1199,7 +1199,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			    DECLARE changed BOOLEAN;
 			    DECLARE token DATETIME;
 			    SET changed := 0;
-			    IF OLD.ID <> NEW.ID OR OLD.InternKrz <> NEW.InternKrz THEN
+			    IF NOT (OLD.ID <=> NEW.ID AND OLD.InternKrz <=> NEW.InternKrz) THEN
 			        SET changed := 1;
 			    END IF;
 			    IF changed = TRUE THEN
@@ -1222,7 +1222,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			""",
 			Schema.tab_EigeneSchule_Jahrgaenge, Schema.tab_Kurse, Schema.tab_Kurs_Schueler, Schema.tab_Klassen,
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 	/** Trigger t_INSERT_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge */
 	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge = addTrigger(
@@ -1250,7 +1250,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			""",
 			Schema.tab_EigeneSchule_Jahrgaenge, Schema.tab_Kurse, Schema.tab_Kurs_Schueler, Schema.tab_Klassen,
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 	/** Trigger t_DELETE_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge */
 	public final SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_EigeneSchule_Jahrgaenge = addTrigger(
@@ -1278,7 +1278,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			""",
 			Schema.tab_EigeneSchule_Jahrgaenge, Schema.tab_Kurse, Schema.tab_Kurs_Schueler, Schema.tab_Klassen,
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_DavSyncTokenSchueler)
-			.setRevision(SchemaRevisionen.REV_67);
+			.setRevision(SchemaRevisionen.REV_70);
 
 
 	/**
