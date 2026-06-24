@@ -73,7 +73,7 @@ test('Admins können entsprechende Bereiche im STABLE Mode einsehen', async ({ p
 
 
 	await expect(page.getByRole('button', { name: 'Sonstiges' })).toBeVisible();
-	await expect(page.getByRole('button', { name: 'Erziehungsberechtigte' })).toHaveCount(0);
+	await expect(page.getByRole('button', { name: 'Erziehungsberechtigte' })).toBeVisible();
 	await expect(page.getByRole('button', { name: 'Ausbildungsbetriebe' })).toHaveCount(0);
 	await expect(page.getByRole('button', { name: 'KAoA' })).toHaveCount(0);
 	await expect(page.getByRole('button', { name: 'Schulbesuch' })).toHaveCount(0);

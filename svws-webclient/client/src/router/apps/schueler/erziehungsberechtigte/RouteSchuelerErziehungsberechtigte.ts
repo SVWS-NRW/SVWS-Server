@@ -18,7 +18,7 @@ export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchue
 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN], "schueler.erziehungsberechtigte", "erziehungsberechtigte", SchuelerErziehungsberechtigte, new RouteDataSchuelerErziehungsberechtigte());
-		super.mode = ServerMode.ALPHA;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Erziehungsberechtigte";
 	}
