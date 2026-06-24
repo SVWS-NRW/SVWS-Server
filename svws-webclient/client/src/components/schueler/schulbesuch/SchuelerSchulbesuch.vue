@@ -19,7 +19,14 @@
 				</svws-ui-checkbox>
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
-		<div />
+		<svws-ui-content-card title="Schulbesuchsjahre" v-if="showSchulbesuchsjahre">
+			<svws-ui-input-wrapper :grid="2">
+				<svws-ui-input-number placeholder="Schulbesuchsjahre"
+					:model-value="schulbesuchsjahre"
+					readonly />
+			</svws-ui-input-wrapper>
+		</svws-ui-content-card>
+		<div v-else />
 		<!-- Im Schuljahr vor der Aufname !-->
 		<svws-ui-content-card title="Im Schuljahr vor der Aufname" class="[&_.content-card--content]:min-h-105">
 			<div class="pb-4 flex flex-row gap-6 items-center">
@@ -273,10 +280,32 @@
 		() => [Schulform.G, Schulform.FW, Schulform.WF, Schulform.GM, Schulform.KS, Schulform.S, Schulform.GE, Schulform.V].includes(schuleState.schulform));
 	const schuleIstBKoderWBK = computed(
 		() => [Schulform.SB, Schulform.BK, Schulform.WB].includes(schuleState.schulform));
+
 	const wechselBevorstehend = ref<boolean>(false);
 	const keinSchulbesuch = computed(() => currentMode.value === Schulauswahl.NONE);
-	// --- Toggle Schulauswahl ---
 
+	// --- Schulbesuchsjahre ---
+	const showSchulbesuchsjahre = computed(
+		() => [Schulform.FW, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.R, Schulform.S, Schulform.KS, Schulform.SG, Schulform.SK,
+			Schulform.SR, Schulform.V, Schulform.WF].includes(schuleState.schulform));
+	const schulbesuchsjahre = computed<number | null>(() => {
+		if ((model.proxy.einschulungsjahrGrundschule === null) || (model.proxy.idEingangsphaseGrundschule === null)) {
+			return null;
+		}
+		const selectedEingangsPhase = PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertByIDOrNull(model.proxy.idEingangsphaseGrundschule);
+		if (selectedEingangsPhase === null) {
+			return null;
+		}
+		let result = schuleState.abschnitt.schuljahr - model.proxy.einschulungsjahrGrundschule;
+		// Das dritte EP-Jahr wird nicht zum Schulbesuch dazugerechnet -> als würde man ein Jahr später eingeschult werden
+		if (PrimarstufeSchuleingangsphaseBesuchsjahre.E3.statistikId() === selectedEingangsPhase.statistikId()) {
+			result = result - 1;
+		}
+		return Math.max(result, 0);
+	});
+
+
+	// --- Toggle Schulauswahl ---
 	const schulauswahlMode = ref<Schulauswahl | null>(null);
 
 	watch(() => props.manager().daten.id, () => {
