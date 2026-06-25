@@ -51,6 +51,7 @@ import de.svws_nrw.db.schema.revisionen.Revision62Updates;
 import de.svws_nrw.db.schema.revisionen.Revision67Updates;
 import de.svws_nrw.db.schema.revisionen.Revision69Updates;
 import de.svws_nrw.db.schema.revisionen.Revision6Updates;
+import de.svws_nrw.db.schema.revisionen.Revision71Updates;
 import de.svws_nrw.db.schema.revisionen.RevisionNoUpdates;
 
 /**
@@ -343,21 +344,24 @@ public enum SchemaRevisionen {
 	REV_69(69, "2026-06-18"),
 
 	/** Verwende in Triggern beim Abgleich von Zeitstempeln den Spaceship-Operator*/
-	REV_70(70, "2026-06-24");
+	REV_70(70, "2026-06-24"),
+
+	/** Ergänzen des Fremdschlüssels auf K_Lehrer in der Tabelle Schueler_AllgAdr für das Feld Betreuungslehrer_ID */
+	REV_71(71, "2026-06-24");
 
 	/**
 	 * Gibt die größte Revisionsnummer an, die in dieser Enumeration definiert wurde und
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_70;
+	public static final SchemaRevisionen maxRevision = REV_71;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_70;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_71;
 
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
@@ -466,6 +470,7 @@ public enum SchemaRevisionen {
 				case REV_62 -> new Revision62Updates();
 				case REV_67 -> new Revision67Updates();
 				case REV_69 -> new Revision69Updates();
+				case REV_71 -> new Revision71Updates();
 				default -> new RevisionNoUpdates(this);
 			};
 		}

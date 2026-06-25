@@ -125,6 +125,14 @@ public class Tabelle_Schueler_AllgAdr extends SchemaTabelle {
 			new Pair<>(col_Vertragsart_ID, Schema.tab_K_BeschaeftigungsArt.col_ID)
 	).setRevision(SchemaRevisionen.REV_2);
 
+	/** Die Definition des Fremdschlüssels SchuelerAllgAdr_Betreuungslehrer_FK */
+	public final SchemaTabelleFremdschluessel fk_SchuelerAllgAdr_Betreuungslehrer_FK = addForeignKey(
+			"SchuelerAllgAdr_Betreuungslehrer_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
+			new Pair<>(col_Betreuungslehrer_ID, Schema.tab_K_Lehrer.col_ID)
+	).setRevision(SchemaRevisionen.REV_71);
+
 
 	/** Die Definition des Non-Unique-Index Schueler_AllgAdr_IDX1 */
 	public final SchemaTabelleIndex index_Schueler_AllgAdr_IDX1 = addIndex("Schueler_AllgAdr_IDX1",
