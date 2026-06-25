@@ -330,6 +330,10 @@ export { ValidatorKoa00KlassenOrganisationsformAllgemeinbildend } from './asd/va
 export { ValidatorKoa01KlassenOrganisationsformAllgemeinbildend } from './asd/validate/klassen/ValidatorKoa01KlassenOrganisationsformAllgemeinbildend';
 export { ValidatorKoa02KlassenOrganisationsformAllgemeinbildend } from './asd/validate/klassen/ValidatorKoa02KlassenOrganisationsformAllgemeinbildend';
 export { ValidatorKoaKlassenOrganisationsformAllgemeinbildend } from './asd/validate/klassen/ValidatorKoaKlassenOrganisationsformAllgemeinbildend';
+export { ValidatorKob00KlassenOrganisationsformBerufsbildend } from './asd/validate/klassen/ValidatorKob00KlassenOrganisationsformBerufsbildend';
+export { ValidatorKob01KlassenOrganisationsformBerufsbildend } from './asd/validate/klassen/ValidatorKob01KlassenOrganisationsformBerufsbildend';
+export { ValidatorKob02KlassenOrganisationsformBerufsbildend } from './asd/validate/klassen/ValidatorKob02KlassenOrganisationsformBerufsbildend';
+export { ValidatorKobKlassenOrganisationsformBerufsbildend } from './asd/validate/klassen/ValidatorKobKlassenOrganisationsformBerufsbildend';
 export { ValidatorKs00KlassenSchulgliederung } from './asd/validate/klassen/ValidatorKs00KlassenSchulgliederung';
 export { ValidatorKs01KlassenSchulgliederung } from './asd/validate/klassen/ValidatorKs01KlassenSchulgliederung';
 export { ValidatorKs02KlassenSchulgliederung } from './asd/validate/klassen/ValidatorKs02KlassenSchulgliederung';

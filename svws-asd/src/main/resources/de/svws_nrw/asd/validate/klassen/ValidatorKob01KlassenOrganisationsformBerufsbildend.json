@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.klassen.ValidatorKob01KlassenOrganisationsformBerufsbildend",
+    "historie" : [ {
+      "praefix" : "KOB01",
+      "zweig" : "Klassen-Organisationsform",
+      "dtos" : "KlassenDaten",
+      "ausfuehrungsbereich_ui" : "Klassen, Reiter 'Klasse'",
+      "anzeigebereich_ui" : "Feld 'Organisationsform'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["KOB00"],
+      "muss" : ["SB", "BK"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Organisationsform der Klasse: Das Feld 'Organisationsform' muss zulässig sein.",
+      "erlaeuterung" : "",
+      "bedingung" : "KlassenDaten.idBerufsbildendOrganisationsform ≠ einer id eines Eintrages in BerufskollegOrganisationsformen.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
