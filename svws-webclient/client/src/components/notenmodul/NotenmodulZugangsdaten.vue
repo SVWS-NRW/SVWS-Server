@@ -342,6 +342,7 @@
 		if (auswahl.value.length > 0) {
 			for (const lehrer of auswahl.value) {
 				await props.resetPassword(lehrer.id);
+				lehrer.istInitialPassword = true;
 			}
 			pingTimer(new ENMv2Lehrer(), 'resetPassword');
 			return;
