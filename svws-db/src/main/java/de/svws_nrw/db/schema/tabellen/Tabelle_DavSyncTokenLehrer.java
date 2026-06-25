@@ -656,7 +656,7 @@ public class Tabelle_DavSyncTokenLehrer extends SchemaTabelle {
 			"""
 			AFTER UPDATE ON K_Ort FOR EACH ROW
 			BEGIN
-			    DECLARE token DATETIAND;
+			    DECLARE token DATETIME;
 			    FOR sid IN (SELECT ID AS Lehrer_ID FROM K_Lehrer WHERE Ort_ID = NEW.ID OR Ort_ID = OLD.ID) DO
 			        SET token := (SELECT SyncToken FROM DavSyncTokenLehrer WHERE ID = sid.Lehrer_ID);
 			        IF token IS NULL THEN
