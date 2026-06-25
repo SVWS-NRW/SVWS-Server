@@ -22,19 +22,19 @@ export class KonfessionModelProxy extends ModelProxy<ReligionEintrag> {
 		patch?: (data: Partial<ReligionEintrag>) => Promise<boolean>
 	) {
 		const listOfAutopatchProps: Iterable<keyof ReligionEintrag> = ["kuerzel", "istSichtbar"];
-		super({ data, patch, listOfAutopatchProps, checkValidBeforePatch: true });
+		super({ data, patch, listOfAutopatchProps });
 		this.schuljahr = schuljahr;
 		this.addValidatoren(alleKonfessionen);
 		this.validate();
 	}
 
 	private addValidatoren(liste: () => Iterable<ReligionEintrag>) {
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.kuerzel), "kuerzel");
-		this.addValidator(new ValidatorKonfessionBezeichnung(() => this.proxy, liste), "bezeichnung");
-		this.addValidator(new ValidatorStringLength(() => this.proxy.bezeichnungZeugnis, null, 50), "bezeichnungZeugnis");
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.bezeichnungZeugnis, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "bezeichnungZeugnis");
-		this.addValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.sortierung), "sortierung");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.kuerzel), "kuerzel");
+		this.addBlockingValidator(new ValidatorKonfessionBezeichnung(() => this.proxy, liste), "bezeichnung");
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.bezeichnungZeugnis, null, 50), "bezeichnungZeugnis");
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.bezeichnungZeugnis, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "bezeichnungZeugnis");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.sortierung), "sortierung");
 	}
 
 	selectedKonfession = computed<CoreTypeData | null>({

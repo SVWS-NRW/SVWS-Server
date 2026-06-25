@@ -16,6 +16,9 @@ public class ValidatorFehler {
 	/** Die Fehlermeldung, welche vom Validator gemeldet wurde */
 	private final @NotNull String _fehlermeldung;
 
+	/** Gibt an, ob der Fehler für das Patchen in der UI blockierend ist oder nicht. */
+	private boolean _isBlocking = false;
+
 
 	/**
 	 * Erstellt einen neuen Validierungs-Fehler
@@ -122,5 +125,25 @@ public class ValidatorFehler {
 	public @NotNull ValidatorFehlerart getFehlerart() {
 		return _validator.getValidatorFehlerart();
 	}
+
+
+	/**
+	 * Gibt zurück, ob der Validator-Fehler das Patchen in der UI blockieren soll oder nicht.
+	 *
+	 * @return true, wenn der Fehler ein Patchen von Daten in der UI blockieren sollen, und ansonsten false
+	 */
+	public boolean isBlocking() {
+		return this._isBlocking;
+	}
+
+
+	/**
+	 * Setzt, dass es sich bei diesem Fehler um einen blockierenden Fehler handelt, d.h.
+	 * das ein Fehler ein Patchen von Daten aufgrund einer Eingabe blockieren soll.
+	 */
+	public void setBlocking() {
+		this._isBlocking = true;
+	}
+
 
 }

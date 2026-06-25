@@ -22,7 +22,7 @@ export class TeilleistungsartenModelProxy extends ModelProxy<Teilleistungsart> {
 	) {
 		const listOfAutopatchProps: Iterable<keyof Teilleistungsart> = ["istSichtbar"];
 
-		super({ data, patch, checkValidBeforePatch: true, listOfAutopatchProps });
+		super({ data, patch, listOfAutopatchProps });
 
 		this.addValidatoren(liste);
 		this.validate();
@@ -30,7 +30,7 @@ export class TeilleistungsartenModelProxy extends ModelProxy<Teilleistungsart> {
 
 
 	private addValidatoren(liste: () => Iterable<Teilleistungsart>) {
-		this.addValidator(new ValidatorTeilleistungsartBezeichnung(() => this.proxy, liste), "bezeichnung");
-		this.addValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addBlockingValidator(new ValidatorTeilleistungsartBezeichnung(() => this.proxy, liste), "bezeichnung");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
 	}
 }

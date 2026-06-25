@@ -26,9 +26,6 @@ interface ModelProxyConfigurationComplete<T extends object> {
 	/** Gibt an, welche Props automatisch gepatcht werden sollen bei einer Änderung */
 	listOfAutopatchProps: Iterable<keyof T>;
 
-	/** Gibt an, ob vor dem ausführen eines Patches geprüft wird, ob der Pending-State valide ist. */
-	checkValidBeforePatch: boolean;
-
 	/** Gibt an, ob die Validierung zu Beginn komplett oder in Teilen deaktiviert ist */
 	listOfDisabledPropValidations: Iterable<keyof T>;
 
@@ -81,7 +78,6 @@ export class ModelProxy<T extends object> {
 			autoRevalidate: config.autoRevalidate ?? false,
 			patch: config.patch,
 			listOfAutopatchProps: config.listOfAutopatchProps ?? [],
-			checkValidBeforePatch: config.checkValidBeforePatch ?? false,
 			listOfDisabledPropValidations: config.listOfDisabledPropValidations ?? [],
 		};
 
@@ -116,16 +112,30 @@ export class ModelProxy<T extends object> {
 	}
 
 	/**
-	 * Fügt einen neuen Validator zur automatischen Validierung bei allen angegebenen Attributen hinzu.
+	 * Fügt einen neuen Validator zur automatischen Validierung bei allen angegebenen Attributen hinzu. Dieser
+	 * Validator verhindert nicht automatisch das Patchen von Daten.
 	 *
 	 * @param validator   der hinzuzufügende Validator
 	 * @param prop        das Attribut des Proxies, bei welchem der Validator ausgeführt werden soll und welchem die
 	 *                    Validatorfehler zugeordnet werden.
-	 * @param props       die zusätzlichen Attribute des Proxies, bei welchen der Validator ausgeführt werden soll.	 */
+	 * @param props       die zusätzlichen Attribute des Proxies, bei welchen der Validator ausgeführt werden soll.
+	 */
 	public addValidator(validator: BasicValidator, prop: keyof T, ...props: Array<keyof T>): void {
-		this._validation.addValidator(validator, prop, ...props);
+		this._validation.addValidator(validator, false, prop, ...props);
 	}
 
+	/**
+	 * Fügt einen neuen Validator zur automatischen Validierung bei allen angegebenen Attributen hinzu. Dieser
+	 * Validator verhindert das automatische Patchen der Daten.
+	 *
+	 * @param validator   der hinzuzufügende Validator
+	 * @param prop        das Attribut des Proxies, bei welchem der Validator ausgeführt werden soll und welchem die
+	 *                    Validatorfehler zugeordnet werden.
+	 * @param props       die zusätzlichen Attribute des Proxies, bei welchen der Validator ausgeführt werden soll.
+	 */
+	public addBlockingValidator(validator: BasicValidator, prop: keyof T, ...props: Array<keyof T>): void {
+		this._validation.addValidator(validator, true, prop, ...props);
+	}
 
 	/**
 	 * Gibt die "Original"-Daten zum aktuellen Zeitpunkt mithilfe des Zugriffs über die Referenz zurück.
@@ -148,18 +158,17 @@ export class ModelProxy<T extends object> {
 
 
 	/**
-	 * Prüft, sofern die Option checkValidBeforePatch aktiviert ist, für ein gegebenes Attribut,
-	 * ob dieses für einen Patch akzeptiert wird. Das Default-Verhalten ist hier, dass einfach geprüft wird,
-	 * ob ein Validator für das Attribut angeschlagen hat oder nicht. Soll von diesem Verhalten abgewichen werden,
-	 * so sollte diese Methode in der spezialisierten Klasse überschrieben werden, um das Patch-Verhalten
-	 * feiner zu steruen.
+	 * Prüft für ein gegebenes Attribut, ob dieses für einen Patch akzeptiert wird.
+	 * Dabei wird geprüft, ob für das Attribut ein blockierender Fehler eines blockierenden Validators vorliegt.
+	 * Für eine feinere Steuerung des Patch-Verhaltens kann diese Methode in der spezialisierten Klasse überschrieben
+	 * werden.
 	 *
 	 * @param prop   das zu prüfende Attribut
 	 *
-	 * @returns true, wenn das Attribut gepatcht werden darf, und ansonsten false
+	 * @returns true, wenn für das Attribut keine blockierenden Fehler vorliegen und gepatcht werden darf, und ansonsten false
 	 */
 	public isValidForPatch(prop: keyof T): boolean {
-		return this.getFehler(prop).isEmpty();
+		return this.getBlockierendeFehler(prop).isEmpty();
 	}
 
 
@@ -170,30 +179,53 @@ export class ModelProxy<T extends object> {
 	 * Diese Methode kann bei Bedarf für komplexere Implementierungen in spezialisierten Klassen auch
 	 * überschrieben werden.
 	 *
-	 * @returns true, wenn keine Patch-Methode vorhanden ist, der Pending-State leer ist oder die Patch-Methode erfolgreich ausgeführt wurde
-	 *          false, wenn eine erfolgreiche Validierung für den Patch gefordert ist, diese jedoch fehlschlägt, oder der Patch selber fehlschlägt
+	 * @returns true, wenn keine Patch-Methode vorhanden ist, der Pending-State leer ist oder die Patch-Methode
+	 *              erfolgreich mit allen Attributen ausgeführt wurde
+	 *          false, wenn eine erfolgreiche Validierung für den Patch zumindest teilweise fehlschlägt,
+	 *              oder der Patch selber fehlschlägt
 	 */
 	public patch = async (): Promise<boolean> => {
+		// Prüfe, ob überhaupt eine Patch-Methode konfiguriert wurde -> wenn nicht, dann war der Aufruf erfolgreich
 		if (this._config.patch === undefined) {
 			return true;
 		}
+
+		// Bestimme die Attribute, welche für den Patch noch ausstehend sind
 		const pending = this.pending;
 		const keys = Object.keys(pending) as Array<keyof T>;
 		if (keys.length <= 0) {
 			return true;
 		}
-		if (this._config.checkValidBeforePatch) {
-			for (const prop of keys) {
-				if (!this.isValidForPatch(prop)) {
-					return false;
-				}
+
+		// Bereite den tatsächlichen Patch vor - nur mit Attributen, wo kein blockierender Fehler aufgetreten ist
+		const patchData: Partial<T> = {};
+		const patchedKeys: Array<keyof T> = [];
+		for (const prop of keys) {
+			if (this.isValidForPatch(prop)) {
+				patchData[prop] = pending[prop];
+				patchedKeys.push(prop);
 			}
 		}
+
+		// Wenn alle geänderten Attribute blockierende Fehler aufweisen, so ist der Patch fehlgeschlagen
+		if (patchedKeys.length <= 0) {
+			return false;
+		}
+
+		// Wenn nicht, dann führe die konfigurierte Patch-Methode mit allen Attribute aus, nicht durch blockierende Fehler vom Patch ausgenommen sind.
 		const result = await this._config.patch(pending);
 		if (result) {
-			this._pending.value = {};
+			const remainingPending = {} as Partial<T>;
+			for (const prop of keys) {
+				if (!patchedKeys.includes(prop)) {
+					remainingPending[prop] = pending[prop];
+				}
+			}
+			this._pending.value = remainingPending;
 		}
-		return result;
+
+		// Der Patch war vollständig erfolgreich, wenn die Patch-Methode erfolgreich war und auch alle Attribute gepatcht wurden
+		return result && (patchedKeys.length === keys.length);
 	};
 
 
@@ -251,6 +283,13 @@ export class ModelProxy<T extends object> {
 
 
 	/**
+	 * Führt eine Validierung durch und aktualisiert die Fehlerlisten.
+	 */
+	public validate(): void {
+		this._validation.validate();
+	}
+
+	/**
 	 * Gibt alle Fehler zurück, welche bei der Validierung aufgetreten sind.
 	 *
 	 * @param prop   das Attribut, für welches die Fehlerliste erzeugt werden soll
@@ -259,13 +298,6 @@ export class ModelProxy<T extends object> {
 	 */
 	public getFehler(prop: keyof T): List<ValidatorFehler> {
 		return this._validation.getFehler(prop);
-	}
-
-	/**
-	 * Führt eine Validierung durch und aktualisiert die Fehlerlisten.
-	 */
-	public validate(): void {
-		this._validation.validate();
 	}
 
 	/**
@@ -287,6 +319,35 @@ export class ModelProxy<T extends object> {
 	}
 
 	/**
+	 * Gibt alle blockierenden Fehler zurück, welche bei der Validierung aufgetreten sind.
+	 *
+	 * @param prop   das Attribut, für welches die Fehlerliste erzeugt werden soll
+	 *
+	 * @returns die Fehlerliste mit den blockierenden Fehlern für das Attribut
+	 */
+	public getBlockierendeFehler(prop: keyof T): List<ValidatorFehler> {
+		return this._validation.getBlockierendeFehler(prop);
+	}
+
+	/**
+	 * Gibt alle blockierenden Fehler zurück, die bei den Validierungen aller Attribute aufgetreten sind.
+	 *
+	 * @returns die Fehlerliste mit allen blockierenden Fehlern in Bezug auf das Proxy-DTO
+	 */
+	public getAlleBlockierendenFehler(): List<ValidatorFehler> {
+		return this._validation.getAlleBlockierendenFehler();
+	}
+
+	/**
+	 * Gibt zurück, ob bei der Validierung aller Attribute mindestens ein blockierender Fehler aufgetreten ist.
+	 *
+	 * @returns true, wenn mindestens ein blockierender Fehler aufgetreten ist, und ansonsten false
+	 */
+	public hatBlockierendeFehler(): boolean {
+		return !this._validation.getAlleBlockierendenFehler().isEmpty();
+	}
+
+	/**
 	 * Wechselt den Status für das übergebene Attribut, ob eine Valididerung
 	 * stattfindet oder nicht.
 	 *
@@ -301,7 +362,7 @@ export class ModelProxy<T extends object> {
 	 */
 	public reset(): void {
 		this._proxy.value = this.createNewProxy();
-		this._pending.value = <Partial<T>>{};
+		this._pending.value = {};
 		this.validate();
 	}
 

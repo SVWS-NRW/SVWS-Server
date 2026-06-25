@@ -16,7 +16,7 @@ export class SchuelerFoerderempfehlungModelProxy extends ModelProxy<SchuelerFoer
 	) {
 		const listOfAutopatchProps: Iterable<keyof SchuelerFoerderempfehlung> = ["datumUmsetzungVon", "datumUmsetzungBis", "datumUeberpruefung",
 			"datumNaechstesBeratungsgespraech", "abgeschlossen", "eingabeFertig"];
-		super({ data, patch, listOfAutopatchProps, checkValidBeforePatch: true });
+		super({ data, patch, listOfAutopatchProps });
 		this.addValidatoren();
 		this.validate();
 	}
@@ -24,11 +24,11 @@ export class SchuelerFoerderempfehlungModelProxy extends ModelProxy<SchuelerFoer
 	public addValidatoren() {
 
 		// Angelegt am
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.datumAngelegt), "datumAngelegt");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.datumAngelegt), "datumAngelegt");
 
 		// Betroffene Fächer
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.faecher), "faecher");
-		this.addValidator(new ValidatorStringLength(() => this.proxy.faecher, null, 255), "faecher");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.faecher), "faecher");
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.faecher, null, 255), "faecher");
 
 		// Alle Freitext-Felder dürfen keine führenden/nachgestellten Leerzeichen enthalten
 		this.addPatternValidatoren(StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES,
@@ -46,7 +46,7 @@ export class SchuelerFoerderempfehlungModelProxy extends ModelProxy<SchuelerFoer
 	 */
 	private addPatternValidatoren(pattern: StringPattern, ...props: Array<keyof SchuelerFoerderempfehlung>): void {
 		for (const prop of props) {
-			this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy[prop] as string | null, pattern), prop);
+			this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy[prop] as string | null, pattern), prop);
 		}
 	}
 

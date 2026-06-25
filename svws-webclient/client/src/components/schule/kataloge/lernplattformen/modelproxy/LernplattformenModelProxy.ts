@@ -23,16 +23,16 @@ export class LernplattformenModelProxy extends ModelProxy<Lernplattform> {
 		manager: () => LernplattformListeManager,
 		patch?: (data: Partial<Lernplattform>) => Promise<boolean>
 	) {
-		super({ data, patch, checkValidBeforePatch: true });
+		super({ data, patch });
 		this.manager = manager;
 		this.addValidatoren();
 		this.validate();
 	}
 
 	private addValidatoren() {
-		this.addValidator(new ValidatorStringIsUniqueInList(() => this.proxy, (data: Lernplattform) => data.id, (data: Lernplattform) => data.bezeichnung, () => this.manager().liste.list(), false), 'bezeichnung');
-		this.addValidator(new ValidatorStringLength(() => this.proxy.bezeichnung, null, 255), 'bezeichnung');
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.bezeichnung), 'bezeichnung');
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.bezeichnung, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'bezeichnung');
+		this.addBlockingValidator(new ValidatorStringIsUniqueInList(() => this.proxy, (data: Lernplattform) => data.id, (data: Lernplattform) => data.bezeichnung, () => this.manager().liste.list(), false), 'bezeichnung');
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.bezeichnung, null, 255), 'bezeichnung');
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.bezeichnung), 'bezeichnung');
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.bezeichnung, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'bezeichnung');
 	}
 }

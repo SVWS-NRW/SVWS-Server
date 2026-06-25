@@ -26,7 +26,7 @@ export class FloskelgruppeModelProxy extends ModelProxy<Floskelgruppe> {
 		patch?: (data: Partial<Floskelgruppe>) => Promise<boolean>
 	) {
 		const listOfAutopatchProps: Iterable<keyof Floskelgruppe> = ['idFloskelgruppenart'];
-		super({ data, patch, listOfAutopatchProps, checkValidBeforePatch: true });
+		super({ data, patch, listOfAutopatchProps });
 		this.schuljahr = schuljahr;
 		this.addValidatoren(alleFloskelgruppen);
 		this.validate();
@@ -34,9 +34,9 @@ export class FloskelgruppeModelProxy extends ModelProxy<Floskelgruppe> {
 	}
 
 	private addValidatoren(liste: () => Iterable<Floskelgruppe>) {
-		this.addValidator(new ValidatorFloskelgruppeKuerzel(() => this.proxy, liste), "kuerzel");
-		this.addValidator(new ValidatorFloskelgruppeBezeichnung(() => this.proxy, liste), "bezeichnung");
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.idFloskelgruppenart), 'idFloskelgruppenart');
+		this.addBlockingValidator(new ValidatorFloskelgruppeKuerzel(() => this.proxy, liste), "kuerzel");
+		this.addBlockingValidator(new ValidatorFloskelgruppeBezeichnung(() => this.proxy, liste), "bezeichnung");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idFloskelgruppenart), 'idFloskelgruppenart');
 	}
 
 	selectedFloskelgruppenart = computed<FloskelgruppenartKatalogEintrag | null>({

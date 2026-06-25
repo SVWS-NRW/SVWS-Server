@@ -24,18 +24,18 @@ export class FahrschuelerartenModelProxy extends ModelProxy<Fahrschuelerart> {
 		patch?: (data: Partial<Fahrschuelerart>) => Promise<boolean>
 	) {
 		const listOfAutopatchProps: Iterable<keyof Fahrschuelerart> = ['istSichtbar'];
-		super({ data, patch, listOfAutopatchProps, checkValidBeforePatch: true });
+		super({ data, patch, listOfAutopatchProps });
 		this.manager = manager;
 		this.addValidatoren();
 		this.validate();
 	}
 
 	private addValidatoren() {
-		this.addValidator(new ValidatorStringIsUniqueInList(() => this.proxy, (data: Fahrschuelerart) => data.id, (data: Fahrschuelerart) => data.bezeichnung, () => this.manager().liste.list(), false), 'bezeichnung');
-		this.addValidator(new ValidatorStringLength(() => this.proxy.bezeichnung, null, 30), 'bezeichnung');
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.bezeichnung), 'bezeichnung');
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.bezeichnung, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'bezeichnung');
+		this.addBlockingValidator(new ValidatorStringIsUniqueInList(() => this.proxy, (data: Fahrschuelerart) => data.id, (data: Fahrschuelerart) => data.bezeichnung, () => this.manager().liste.list(), false), 'bezeichnung');
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.bezeichnung, null, 30), 'bezeichnung');
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.bezeichnung), 'bezeichnung');
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.bezeichnung, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'bezeichnung');
 		// sortierung
-		this.addValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
 	}
 }

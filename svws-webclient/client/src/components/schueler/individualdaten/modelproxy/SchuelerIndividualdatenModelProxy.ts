@@ -32,7 +32,7 @@ export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten>
 			"keineAuskunftAnDritte", "istSchulpflichtErfuellt", "istBerufsschulpflichtErfuellt", "hatMasernimpfnachweis",
 			"erhaeltSchuelerBAFOEG", "druckeKonfessionAufZeugnisse", "hatMigrationshintergrund", "externeSchulNr",
 		];
-		super({ data, patch, listOfAutopatchProps, checkValidBeforePatch: true });
+		super({ data, patch, listOfAutopatchProps });
 		this.schuljahr = schuljahr;
 		this.religionenById = religionenById;
 		this.fahrschuelerartenById = fahrschuelerartenById;
@@ -53,62 +53,62 @@ export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten>
 
 	private addUiValidatoren() {
 		// Nachname
-		this.addValidator(new ValidatorStringLength(() => this.proxy.nachname, null, 120), "nachname");
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.nachname, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "nachname");
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.nachname, null, 120), "nachname");
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.nachname, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "nachname");
 
 		// Rufname (vorname) – Required durch ASD abgedeckt
-		this.addValidator(new ValidatorStringLength(() => this.proxy.vorname, null, 80), "vorname");
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.vorname, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "vorname");
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.vorname, null, 80), "vorname");
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.vorname, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "vorname");
 
 		// Alle Vornamen
-		this.addValidator(new ValidatorStringLength(() => this.proxy.alleVornamen, null, 255), "alleVornamen");
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.alleVornamen, null, 255), "alleVornamen");
 
 		// Geburtsdatum – Required + Datumsformat durch ASD abgedeckt
-		this.addValidator(new ValidatorSchuelerGeburtsdatum(() => this.proxy.geburtsdatum, () => null, false), "geburtsdatum");
+		this.addBlockingValidator(new ValidatorSchuelerGeburtsdatum(() => this.proxy.geburtsdatum, () => null, false), "geburtsdatum");
 
 		// Geburtsort
-		this.addValidator(new ValidatorStringLength(() => this.proxy.geburtsort, null, 100), "geburtsort");
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.geburtsort, null, 100), "geburtsort");
 
 		// Geburtsname
-		this.addValidator(new ValidatorStringLength(() => this.proxy.geburtsname, null, 120), "geburtsname");
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.geburtsname, null, 120), "geburtsname");
 
 		// Straße (parallel zu #3222)
-		this.addValidator(new ValidatorStrasse(() => this.adresse.value, 55, 10, 30), "strassenname", "hausnummer", "hausnummerZusatz");
+		this.addBlockingValidator(new ValidatorStrasse(() => this.adresse.value, 55, 10, 30), "strassenname", "hausnummer", "hausnummerZusatz");
 
 		// Telefon
-		this.addValidator(new ValidatorStringLength(() => this.proxy.telefon, null, 20), "telefon");
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.telefon, StringPattern.IS_PHONE_NUMBER), "telefon");
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.telefon, null, 20), "telefon");
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.telefon, StringPattern.IS_PHONE_NUMBER), "telefon");
 
 		// Mobil / Fax
-		this.addValidator(new ValidatorStringLength(() => this.proxy.telefonMobil, null, 20), "telefonMobil");
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.telefonMobil, StringPattern.IS_PHONE_NUMBER), "telefonMobil");
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.telefonMobil, null, 20), "telefonMobil");
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.telefonMobil, StringPattern.IS_PHONE_NUMBER), "telefonMobil");
 
 		// Private E-Mail
-		this.addValidator(new ValidatorStringLength(() => this.proxy.emailPrivat, null, 100), "emailPrivat");
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.emailPrivat, StringPattern.IS_EMAIL), "emailPrivat");
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.emailPrivat, null, 100), "emailPrivat");
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.emailPrivat, StringPattern.IS_EMAIL), "emailPrivat");
 
 		// Schulische E-Mail
-		this.addValidator(new ValidatorStringLength(() => this.proxy.emailSchule, null, 100), "emailSchule");
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.emailSchule, StringPattern.IS_EMAIL), "emailSchule");
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.emailSchule, null, 100), "emailSchule");
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.emailSchule, StringPattern.IS_EMAIL), "emailSchule");
 
 		// Status – Required
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.status), "status");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.status), "status");
 
 		// Schülerausweis-Nummer
-		this.addValidator(new ValidatorStringLength(() => this.proxy.idSchuelerausweis, null, 30), "idSchuelerausweis");
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.idSchuelerausweis, null, 30), "idSchuelerausweis");
 
 		// Beruf
-		this.addValidator(new ValidatorStringLength(() => this.proxy.beruf, null, 100), "beruf");
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.beruf, null, 100), "beruf");
 
 		// 1. Staatsangehörigkeit – Required
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.idStaatsangehoerigkeit), "idStaatsangehoerigkeit");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idStaatsangehoerigkeit), "idStaatsangehoerigkeit");
 
 		// Konfession – Required
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.religionID), "religionID");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.religionID), "religionID");
 
 		// Zuzugsjahr
 		const nextYear = new Date().getFullYear() + 1;
-		this.addValidator(new ValidatorNumberRange(() => this.proxy.zuzugsjahr, nextYear - 100, nextYear), "zuzugsjahr");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.zuzugsjahr, nextYear - 100, nextYear), "zuzugsjahr");
 	}
 
 	geschlecht = computed<Geschlecht | null>({

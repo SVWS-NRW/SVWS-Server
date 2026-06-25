@@ -1,5 +1,5 @@
 import type { LehrerStammdaten, NationalitaetenKatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag, ValidatorKontext } from "@core";
-import { AdressenUtils, Geschlecht, Nationalitaeten, PersonalTyp, ValidatorLsdLehrerStammdatenGeburtsdatum } from "@core";
+import { AdressenUtils, Geschlecht, Nationalitaeten, PersonalTyp, ValidatorLsdLehrerStammdatenGeburtsdatum, ValidatorLsnLehrerStammdatenNachname } from "@core";
 import type { LehrerListeManager } from "@ui";
 import { ModelProxy, StringPattern, ValidatorInputRequired, ValidatorStrasse, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
 import { computed } from "vue";
@@ -32,7 +32,7 @@ export class LehrerIndividualdatenModelProxy extends ModelProxy<LehrerStammdaten
 	constructor(data: () => LehrerStammdaten, validatorKontext: () => ValidatorKontext, manager: () => LehrerListeManager, orteById: Map<number, OrtKatalogEintrag>, ortsteileById: Map<number, OrtsteilKatalogEintrag>, patch?: (data: Partial<LehrerStammdaten>) => Promise<boolean>) {
 		const listOfAutopatchProps: Iterable<keyof LehrerStammdaten> = ["istSichtbar", "istRelevantFuerStatistik", "personalTyp", "geschlecht",
 			"idStaatsangehoerigkeit", "wohnortID", "ortsteilID"];
-		super({ data, patch, checkValidBeforePatch: true, listOfAutopatchProps });
+		super({ data, patch, listOfAutopatchProps });
 		this.schuljahr = validatorKontext().getSchuljahr();
 		this.manager = manager;
 		this.orteById = orteById;
@@ -40,52 +40,53 @@ export class LehrerIndividualdatenModelProxy extends ModelProxy<LehrerStammdaten
 
 
 		// Kürzel
-		this.addValidator(new ValidatorLehrerIndividualdatenKuerzel(() => this.proxy, () => this.manager().liste.list()), "kuerzel");
+		this.addBlockingValidator(new ValidatorLehrerIndividualdatenKuerzel(() => this.proxy, () => this.manager().liste.list()), "kuerzel");
 
 		// Personal-Typ
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.personalTyp), "personalTyp");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.personalTyp), "personalTyp");
 
 		// Nachname
-		this.addValidator(new ValidatorLehrerIndividualdatenNachname(() => this.proxy.nachname, validatorKontext), "nachname");
+		this.addBlockingValidator(new ValidatorLehrerIndividualdatenNachname(() => this.proxy.nachname, validatorKontext), "nachname");
+		this.addValidator(new ValidatorLsnLehrerStammdatenNachname({ get: () => this.proxy.nachname }, validatorKontext()), "nachname");
 
 		// Vorname
-		this.addValidator(new ValidatorLehrerIndividualdatenVorname(() => this.proxy.vorname, validatorKontext), "vorname");
+		this.addBlockingValidator(new ValidatorLehrerIndividualdatenVorname(() => this.proxy.vorname, validatorKontext), "vorname");
 
 		// Geschlecht
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.geschlecht), "geschlecht");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.geschlecht), "geschlecht");
 
 		// Geburtsdatum
 		this.addValidator(new ValidatorLsdLehrerStammdatenGeburtsdatum({ get: () => this.proxy.geburtsdatum }, validatorKontext()), "geburtsdatum");
 
 		// Staatsangehörigkeit
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.idStaatsangehoerigkeit), "idStaatsangehoerigkeit");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idStaatsangehoerigkeit), "idStaatsangehoerigkeit");
 
 		// Akademischer Grad
-		this.addValidator(new ValidatorStringLength(() => this.proxy.titel, null, 20), "titel");
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.titel, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "titel");
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.titel, null, 20), "titel");
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.titel, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "titel");
 
 		// Amtsbezeichnung
-		this.addValidator(new ValidatorStringLength(() => this.proxy.amtsbezeichnung, null, 15), "amtsbezeichnung");
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.amtsbezeichnung, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "amtsbezeichnung");
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.amtsbezeichnung, null, 15), "amtsbezeichnung");
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.amtsbezeichnung, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "amtsbezeichnung");
 
 		// Straße
-		this.addValidator(new ValidatorStrasse(() => this.adresse.value, 55, 10, 30), "strassenname", "hausnummer", "hausnummerZusatz");
+		this.addBlockingValidator(new ValidatorStrasse(() => this.adresse.value, 55, 10, 30), "strassenname", "hausnummer", "hausnummerZusatz");
 
 		// Telefonnummer
-		this.addValidator(new ValidatorStringLength(() => this.proxy.telefon, null, 20), "telefon");
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.telefon, StringPattern.IS_PHONE_NUMBER), "telefon");
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.telefon, null, 20), "telefon");
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.telefon, StringPattern.IS_PHONE_NUMBER), "telefon");
 
 		// Mobil oder Fax
-		this.addValidator(new ValidatorStringLength(() => this.proxy.telefonMobil, null, 20), "telefonMobil");
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.telefonMobil, StringPattern.IS_PHONE_NUMBER), "telefonMobil");
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.telefonMobil, null, 20), "telefonMobil");
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.telefonMobil, StringPattern.IS_PHONE_NUMBER), "telefonMobil");
 
 		// Private E-Mail-Adresse
-		this.addValidator(new ValidatorStringLength(() => this.proxy.emailPrivat, null, 100), "emailPrivat");
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.emailPrivat, StringPattern.IS_EMAIL), "emailPrivat");
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.emailPrivat, null, 100), "emailPrivat");
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.emailPrivat, StringPattern.IS_EMAIL), "emailPrivat");
 
 		// Dienstliche E-Mail-Adresse
-		this.addValidator(new ValidatorStringLength(() => this.proxy.emailDienstlich, null, 100), "emailDienstlich");
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.emailDienstlich, StringPattern.IS_EMAIL), "emailDienstlich");
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.emailDienstlich, null, 100), "emailDienstlich");
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.emailDienstlich, StringPattern.IS_EMAIL), "emailDienstlich");
 
 		this.validate();
 	}

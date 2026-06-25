@@ -28,7 +28,7 @@ export class FachModelProxy extends ModelProxy<FachDaten> {
 			'istPruefungsordnungsRelevant', 'istMoeglichAlsNeueFremdspracheInSekII', 'istFremdsprache',
 			'istNachpruefungErlaubt', 'istSchriftlichZK', 'holeAusAltenLernabschnitten',
 			'kuerzelStatistik', 'bilingualeSprache', 'aufgabenfeld'];
-		super({ data, patch, listOfAutopatchProps, checkValidBeforePatch: true });
+		super({ data, patch, listOfAutopatchProps });
 		this.schuljahr = schuljahr;
 
 		this.addValidatoren(alleFaecher);
@@ -36,16 +36,16 @@ export class FachModelProxy extends ModelProxy<FachDaten> {
 	}
 
 	private addValidatoren(liste: () => Iterable<FachDaten>) {
-		this.addValidator(new ValidatorFachKuerzel(() => this.proxy, liste), 'kuerzel');
-		this.addValidator(new ValidatorFachBezeichnung(() => this.proxy, liste), 'bezeichnung');
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.kuerzelStatistik), 'kuerzelStatistik');
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.bezeichnungZeugnis, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'bezeichnungZeugnis');
-		this.addValidator(new ValidatorStringLength(() => this.proxy.bezeichnungZeugnis, null, 255), 'bezeichnungZeugnis');
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.bezeichnungUeberweisungszeugnis, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'bezeichnungUeberweisungszeugnis');
-		this.addValidator(new ValidatorStringLength(() => this.proxy.bezeichnungUeberweisungszeugnis, null, 255), 'bezeichnungUeberweisungszeugnis');
-		this.addValidator(new ValidatorNumberRange(() => this.proxy.maxZeichenInFachbemerkungen, 0, JavaInteger.MAX_VALUE), 'maxZeichenInFachbemerkungen');
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.sortierung), 'sortierung');
-		this.addValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), 'sortierung');
+		this.addBlockingValidator(new ValidatorFachKuerzel(() => this.proxy, liste), 'kuerzel');
+		this.addBlockingValidator(new ValidatorFachBezeichnung(() => this.proxy, liste), 'bezeichnung');
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.kuerzelStatistik), 'kuerzelStatistik');
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.bezeichnungZeugnis, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'bezeichnungZeugnis');
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.bezeichnungZeugnis, null, 255), 'bezeichnungZeugnis');
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.bezeichnungUeberweisungszeugnis, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'bezeichnungUeberweisungszeugnis');
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.bezeichnungUeberweisungszeugnis, null, 255), 'bezeichnungUeberweisungszeugnis');
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.maxZeichenInFachbemerkungen, 0, JavaInteger.MAX_VALUE), 'maxZeichenInFachbemerkungen');
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.sortierung), 'sortierung');
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), 'sortierung');
 	}
 
 	selectedFach = computed<FachKatalogEintrag | null>({

@@ -20,8 +20,8 @@ describe("ModelProxyValidation Testsuite", () => {
 			expect(modelValidation).toBeTruthy();
 
 			const validatorFirstName = new FirstNameValidatorMock(() => initialModel.value.firstName);
-			modelValidation.addValidator(validatorFirstName, "firstName");
-			expect(() => modelValidation.addValidator(validatorFirstName, "firstName")).toThrow("Ein Validator sollte nur einmalig zu der Konfiguration hinzugefügt werden. Bitte fassen sie die Aufrufe zusammen.");
+			modelValidation.addValidator(validatorFirstName, false, "firstName");
+			expect(() => modelValidation.addValidator(validatorFirstName, false, "firstName")).toThrow("Ein Validator sollte nur einmalig zu der Konfiguration hinzugefügt werden. Bitte fassen sie die Aufrufe zusammen.");
 		});
 
 		test("ModelProxyValidation Initialisierung führt, wenn konfiguriert, eine initiale Validierung aus", () => {
@@ -43,8 +43,8 @@ describe("ModelProxyValidation Testsuite", () => {
 			const validatorFirstName = new FirstNameValidatorMock(() => initialModel.value.firstName);
 
 			const modelValidation = new ModelProxyValidation<TestModel>(false, ["firstName"]);
-			modelValidation.addValidator(validatorFirstName, "firstName", "lastName"); // lastName ist hier nicht nötig, wird aber für die Coverage ergänzt.
-			modelValidation.addValidator(validatorLastName, "lastName", "firstName");
+			modelValidation.addValidator(validatorFirstName, false, "firstName", "lastName"); // lastName ist hier nicht nötig, wird aber für die Coverage ergänzt.
+			modelValidation.addValidator(validatorLastName, false, "lastName", "firstName");
 			modelValidation.validate();
 
 			expect(modelValidation.getAlleFehler().isEmpty()).toBe(true);
@@ -56,8 +56,8 @@ describe("ModelProxyValidation Testsuite", () => {
 			const validatorFirstName = new FirstNameValidatorMock(() => initialModel.value.firstName);
 
 			const modelValidation = new ModelProxyValidation<TestModel>(false, ["firstName"]);
-			modelValidation.addValidator(validatorFirstName, "firstName");
-			modelValidation.addValidator(validatorLastName, "lastName", "firstName");
+			modelValidation.addValidator(validatorFirstName, false, "firstName");
+			modelValidation.addValidator(validatorLastName, false, "lastName", "firstName");
 
 			// eslint-disable-next-line @typescript-eslint/dot-notation
 			const isValidatorForProp = modelValidation['isValidatorForProp'] as (prop: keyof TestModel, validator: BasicValidator) => boolean;
@@ -86,8 +86,8 @@ describe("ModelProxyValidation Testsuite", () => {
 			const validatorLastName = new LastNameValidatorMock(() => initialModel.value.lastName, () => initialModel.value.firstName);
 
 			const modelValidation = new ModelProxyValidation<TestModel>(true, ["firstName"]);
-			modelValidation.addValidator(validatorFirstName, "firstName");
-			modelValidation.addValidator(validatorLastName, "lastName", "firstName");
+			modelValidation.addValidator(validatorFirstName, false, "firstName");
+			modelValidation.addValidator(validatorLastName, false, "lastName", "firstName");
 
 			// Der Validator für lastName erzeugt zwei Fehler, der Validator für firstName wurde deaktiviert
 			expect(modelValidation.getFehler("firstName").size()).toBe(0);
@@ -131,6 +131,45 @@ describe("ModelProxyValidation Testsuite", () => {
 			expect(modelValidation.getAlleFehler().size()).toBe(2);
 		});
 
+	});
+
+
+	describe("ModelProxyValidation Blockierende Validatoren", () => {
+		test("Ein blockierender Validator markiert die Fehler als blockierend und füllt die blockierenden Listen", () => {
+			const initialModel = ref<TestModel>({ id: 1, firstName: 'Max', lastName: 'Mustermann' });
+			const modelValidation = new ModelProxyValidation<TestModel>(false, []);
+			const validatorFirstName = new FirstNameValidatorMock(() => initialModel.value.firstName);
+
+			// Registrierung eines blockierenden Validators
+			modelValidation.addValidator(validatorFirstName, true, "firstName");
+			modelValidation.validate();
+
+			// Fehler müssen in den normalen UND den blockierenden Listen sein
+			expect(modelValidation.getAlleFehler().size()).toBe(1);
+			expect(modelValidation.getAlleBlockierendenFehler().size()).toBe(1);
+			expect(modelValidation.getBlockierendeFehler("firstName").size()).toBe(1);
+
+			// Das Fehler-Objekt selbst muss das Flag auf true haben
+			const fehler = modelValidation.getAlleBlockierendenFehler().get(0);
+			expect(fehler.isBlocking()).toBe(true);
+		});
+
+		test("Ein nicht-blockierender Validator lässt das blockierende Ergebnis leer", () => {
+			const initialModel = ref<TestModel>({ id: 1, firstName: 'Max', lastName: 'Mustermann' });
+			const modelValidation = new ModelProxyValidation<TestModel>(false, []);
+			const validatorFirstName = new FirstNameValidatorMock(() => initialModel.value.firstName);
+
+			// Registrierung als nicht-blockierender Validator
+			modelValidation.addValidator(validatorFirstName, false, "firstName");
+			modelValidation.validate();
+
+			expect(modelValidation.getAlleFehler().size()).toBe(1);
+			expect(modelValidation.getAlleBlockierendenFehler().isEmpty()).toBe(true);
+			expect(modelValidation.getBlockierendeFehler("firstName").isEmpty()).toBe(true);
+
+			const fehler = modelValidation.getAlleFehler().get(0);
+			expect(fehler.isBlocking()).toBe(false);
+		});
 	});
 
 });
@@ -187,7 +226,7 @@ class LastNameValidatorMock extends BasicValidator {
 
 function getModelProxyValidation(data: () => TestModel, autoRevalidate: boolean, disabled: Iterable<keyof TestModel> = []): ModelProxyValidation<TestModel> {
 	const modelValidation = new ModelProxyValidation<TestModel>(autoRevalidate, disabled);
-	modelValidation.addValidator(new FirstNameValidatorMock(() => data().firstName), 'firstName');
-	modelValidation.addValidator(new LastNameValidatorMock(() => data().lastName, () => data().firstName), 'lastName', 'firstName');
+	modelValidation.addValidator(new FirstNameValidatorMock(() => data().firstName), false, 'firstName');
+	modelValidation.addValidator(new LastNameValidatorMock(() => data().lastName, () => data().firstName), false, 'lastName', 'firstName');
 	return modelValidation;
 }

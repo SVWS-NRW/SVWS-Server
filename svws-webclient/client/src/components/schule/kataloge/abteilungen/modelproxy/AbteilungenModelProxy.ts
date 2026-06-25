@@ -14,7 +14,7 @@ export class AbteilungenModelProxy extends ModelProxy<Abteilung> {
 
 	constructor(data: () => Abteilung, manager: () => AbteilungenListeManager, viewType: ViewType, patch?: (data: Partial<Abteilung>) => Promise<boolean>) {
 		const listOfAutopatchProps: Iterable<keyof Abteilung> = ["idAbteilungsleiter", "istSichtbar"];
-		super({ data, patch, checkValidBeforePatch: true, listOfAutopatchProps });
+		super({ data, patch, listOfAutopatchProps });
 		this.manager = manager;
 		this.viewType = viewType;
 
@@ -24,17 +24,17 @@ export class AbteilungenModelProxy extends ModelProxy<Abteilung> {
 	}
 
 	private addValidatoren() {
-		this.addValidator(new ValidatorAbteilungBezeichnung(() => this.proxy, () => this.manager().liste.list(),
+		this.addBlockingValidator(new ValidatorAbteilungBezeichnung(() => this.proxy, () => this.manager().liste.list(),
 			() => this.manager().abteilungenFolgeAbschnittById.values(), this.viewType), "bezeichnung");
 
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.raum, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'raum');
-		this.addValidator(new ValidatorStringLength(() => this.proxy.raum, null, 20), 'raum');
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.raum, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'raum');
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.raum, null, 20), 'raum');
 
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.email, StringPattern.IS_EMAIL), 'email');
-		this.addValidator(new ValidatorStringLength(() => this.proxy.email, null, 100), 'email');
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.email, StringPattern.IS_EMAIL), 'email');
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.email, null, 100), 'email');
 
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.durchwahl, StringPattern.IS_PHONE_NUMBER_OR_EXTENSION), 'durchwahl');
-		this.addValidator(new ValidatorStringLength(() => this.proxy.durchwahl, null, 20), 'durchwahl');
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.durchwahl, StringPattern.IS_PHONE_NUMBER_OR_EXTENSION), 'durchwahl');
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.durchwahl, null, 20), 'durchwahl');
 	}
 
 	abteilungsleiter = computed<LehrerListeEintrag | null>({

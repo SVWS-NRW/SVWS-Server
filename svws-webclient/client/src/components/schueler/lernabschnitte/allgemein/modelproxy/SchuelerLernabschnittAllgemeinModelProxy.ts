@@ -22,20 +22,20 @@ export class SchuelerLernabschnittAllgemeinModelProxy extends ModelProxy<Schuele
 			"hatAOSF", "hatAutismus", "hatSchwerbehinderungsNachweis",
 			"hatZieldifferentenUnterricht", "datumAnfang", "datumEnde", "epJahre",
 		];
-		super({ data, patch, listOfAutopatchProps, checkValidBeforePatch: true });
+		super({ data, patch, listOfAutopatchProps });
 		this.manager = manager;
 		this.schulform = schulform;
 
 		// Pflichtfelder
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.klassenID), "klassenID");
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.jahrgangID), "jahrgangID");
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.epJahre), "epJahre");
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.schulgliederung), "schulgliederung");
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.pruefungsOrdnung), "pruefungsOrdnung");
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.pruefungsOrdnung, StringPattern.NO_WHITESPACES), "pruefungsOrdnung");
-		this.addValidator(new ValidatorStringLength(() => this.proxy.pruefungsOrdnung, null, 20), "pruefungsOrdnung");
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.organisationsform), "organisationsform");
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.Klassenart), "Klassenart");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.klassenID), "klassenID");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.jahrgangID), "jahrgangID");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.epJahre), "epJahre");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.schulgliederung), "schulgliederung");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.pruefungsOrdnung), "pruefungsOrdnung");
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.pruefungsOrdnung, StringPattern.NO_WHITESPACES), "pruefungsOrdnung");
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.pruefungsOrdnung, null, 20), "pruefungsOrdnung");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.organisationsform), "organisationsform");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.Klassenart), "Klassenart");
 
 		this.validate();
 	}

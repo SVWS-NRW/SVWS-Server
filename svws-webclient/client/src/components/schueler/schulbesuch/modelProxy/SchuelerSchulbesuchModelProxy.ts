@@ -24,17 +24,17 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 				"idEinschulungsartGrundschule", "idEingangsphaseGrundschule", "idUebergangsempfehlungGrundschule", "kuerzelErsteSchulformSek1",
 				"berufsabschlussVorhanden", "schluesselHoechsterSchulabschluss", "schluesselAbschlussartAllgemeinbildendVorherigeSchule",
 				"schluesselAbschlussartBerufsbildendVorherigeSchule", "schluesselSchulgliederungVorherigeSchule", "schluesselCoreTypeFachklasseVorherigeSchule"];
-		super({ data, patch, listOfAutopatchProps, checkValidBeforePatch: true });
+		super({ data, patch, listOfAutopatchProps });
 		this.manager = manager;
 		this.addValidatoren();
 		this.validate();
 	}
 
 	private addValidatoren() {
-		this.addValidator(new ValidatorStringLength(() => this.proxy.bemerkungVorherigeSchule, null, 255), "bemerkungVorherigeSchule");
-		this.addValidator(new ValidatorNumberRange(() => this.proxy.einschulungsjahrGrundschule, 1900, 2100), "einschulungsjahrGrundschule");
-		this.addValidator(new ValidatorNumberRange(() => this.proxy.wechseljahrSekI, 1900, 2100), "wechseljahrSekI");
-		this.addValidator(new ValidatorNumberRange(() => this.proxy.wechseljahrSekII, 1900, 2100), "wechseljahrSekII");
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.bemerkungVorherigeSchule, null, 255), "bemerkungVorherigeSchule");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.einschulungsjahrGrundschule, 1900, 2100), "einschulungsjahrGrundschule");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.wechseljahrSekI, 1900, 2100), "wechseljahrSekI");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.wechseljahrSekII, 1900, 2100), "wechseljahrSekII");
 	}
 
 	vorherigeSchule = computed<SchulEintrag | null>({

@@ -23,6 +23,11 @@ export class ValidatorFehler extends JavaObject {
 	 */
 	private readonly _fehlermeldung: string;
 
+	/**
+	 * Gibt an, ob der Fehler für das Patchen in der UI blockierend ist oder nicht.
+	 */
+	private _isBlocking: boolean = false;
+
 
 	/**
 	 * Erstellt einen neuen Validierungs-Fehler
@@ -120,6 +125,23 @@ export class ValidatorFehler extends JavaObject {
 	 */
 	public getFehlerart(): ValidatorFehlerart {
 		return this._validator.getValidatorFehlerart();
+	}
+
+	/**
+	 * Gibt zurück, ob der Validator-Fehler das Patchen in der UI blockieren soll oder nicht.
+	 *
+	 * @return true, wenn der Fehler ein Patchen von Daten in der UI blockieren sollen, und ansonsten false
+	 */
+	public isBlocking(): boolean {
+		return this._isBlocking;
+	}
+
+	/**
+	 * Setzt, dass es sich bei diesem Fehler um einen blockierenden Fehler handelt, d.h.
+	 * das ein Fehler ein Patchen von Daten aufgrund einer Eingabe blockieren soll.
+	 */
+	public setBlocking(): void {
+		this._isBlocking = true;
 	}
 
 	transpilerCanonicalName(): string {

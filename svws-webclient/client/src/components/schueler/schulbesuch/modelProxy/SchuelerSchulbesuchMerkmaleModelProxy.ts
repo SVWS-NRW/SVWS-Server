@@ -11,7 +11,7 @@ export class SchuelerSchulbesuchMerkmaleModelProxy extends ModelProxy<SchuelerSc
 	constructor(
 		data: () => SchuelerSchulbesuchMerkmal,
 		manager: () => SchuelerSchulbesuchManager) {
-		super({ data, checkValidBeforePatch: true });
+		super({ data });
 		this.manager = manager;
 	}
 

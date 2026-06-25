@@ -24,7 +24,7 @@ export class OrtsteilModelProxy extends ModelProxy<OrtsteilKatalogEintrag> {
 		manager: () => OrtsteileListeManager,
 		patch?: (data: Partial<OrtsteilKatalogEintrag>) => Promise<boolean>
 	) {
-		super({ data, patch, checkValidBeforePatch: true });
+		super({ data, patch });
 		this.manager = manager;
 		this.addValidatoren(() => manager().liste.list());
 		this.validate();
@@ -32,9 +32,9 @@ export class OrtsteilModelProxy extends ModelProxy<OrtsteilKatalogEintrag> {
 
 	private addValidatoren(ortsteile: () => Iterable<OrtsteilKatalogEintrag>) {
 		// Ortsteil
-		this.addValidator(new ValidatorStringLength(() => this.proxy.ortsteil, null, 30), 'ortsteil');
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.ortsteil), 'ortsteil');
-		this.addValidator(
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.ortsteil, null, 30), 'ortsteil');
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.ortsteil), 'ortsteil');
+		this.addBlockingValidator(
 			new ValidatorStringIsUniqueInList(
 				() => this.proxy,
 				(ortsteil: OrtsteilKatalogEintrag) => ortsteil.id,
@@ -44,11 +44,11 @@ export class OrtsteilModelProxy extends ModelProxy<OrtsteilKatalogEintrag> {
 			),
 			'ortsteil', 'idOrt'
 		);
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.ortsteil, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'ortsteil');
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.ortsteil, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'ortsteil');
 		// Ort
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.idOrt), 'idOrt');
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idOrt), 'idOrt');
 		// sortierung
-		this.addValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
 	}
 
 	filteredOrte = computed<Iterable<OrtKatalogEintrag>>(() => {

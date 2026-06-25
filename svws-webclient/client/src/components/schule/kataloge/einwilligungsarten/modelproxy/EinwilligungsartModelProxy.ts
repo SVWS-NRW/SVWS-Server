@@ -30,7 +30,7 @@ export class EinwilligungsartModelProxy extends ModelProxy<Einwilligungsart> {
 		patch?: (data: Partial<Einwilligungsart>) => Promise<boolean>
 	) {
 		const listOfAutopatchProps: Iterable<keyof Einwilligungsart> = ['schluessel', 'istSichtbar'];
-		super({ data, patch, listOfAutopatchProps, checkValidBeforePatch: true });
+		super({ data, patch, listOfAutopatchProps });
 		this.manager = manager;
 		this.schuljahr = schuljahr;
 		this.addValidatoren();
@@ -39,12 +39,12 @@ export class EinwilligungsartModelProxy extends ModelProxy<Einwilligungsart> {
 
 
 	private addValidatoren() {
-		this.addValidator(new ValidatorEinwilligungsartBezeichnungIsUniqueInList(() => this.proxy.bezeichnung, this.manager), 'bezeichnung');
-		this.addValidator(new ValidatorStringLength(() => this.proxy.bezeichnung, null, 250), 'bezeichnung');
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.bezeichnung), 'bezeichnung');
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.bezeichnung, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'bezeichnung');
+		this.addBlockingValidator(new ValidatorEinwilligungsartBezeichnungIsUniqueInList(() => this.proxy.bezeichnung, this.manager), 'bezeichnung');
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.bezeichnung, null, 250), 'bezeichnung');
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.bezeichnung), 'bezeichnung');
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.bezeichnung, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'bezeichnung');
 		// sortierung
-		this.addValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
 	}
 
 	einwilligungsschluessel = computed<EinwilligungsschluesselKatalogEintrag | null>({

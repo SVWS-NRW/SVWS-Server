@@ -22,43 +22,43 @@ export class SchuleModelProxy extends ModelProxy<SchulEintrag> {
 		patch?: (data: Partial<SchulEintrag>) => Promise<boolean>
 	) {
 		const listOfAutopatchProps: Iterable<keyof SchulEintrag> = ["schulnummerStatistik", "idSchulform", "istSichtbar"];
-		super({ data, patch, listOfAutopatchProps, checkValidBeforePatch: true });
+		super({ data, patch, listOfAutopatchProps });
 		this.addValidatoren(alleSchulen);
 		this.validate();
 	}
 
 	private addValidatoren(liste: () => Iterable<SchulEintrag>) {
 
-		this.addValidator(new ValidatorSchuleKuerzel((): SchulEintrag => this.proxy, liste), 'kuerzel');
-		this.addValidator(new ValidatorSchuleKurzbezeichnung((): SchulEintrag => this.proxy, liste), 'kurzbezeichnung');
-		this.addValidator(new ValidatorSchuleSchulname((): SchulEintrag => this.proxy, liste), 'name');
-		this.addValidator(new ValidatorStringLength(() => this.proxy.schulleiter, null, 40), 'schulleiter');
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.schulleiter, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'schulleiter');
+		this.addBlockingValidator(new ValidatorSchuleKuerzel((): SchulEintrag => this.proxy, liste), 'kuerzel');
+		this.addBlockingValidator(new ValidatorSchuleKurzbezeichnung((): SchulEintrag => this.proxy, liste), 'kurzbezeichnung');
+		this.addBlockingValidator(new ValidatorSchuleSchulname((): SchulEintrag => this.proxy, liste), 'name');
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.schulleiter, null, 40), 'schulleiter');
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.schulleiter, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'schulleiter');
 
-		this.addValidator(new ValidatorStringLength(() => this.proxy.plz, null, 10), 'plz');
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.plz, StringPattern.NO_WHITESPACES), 'plz');
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.plz, null, 10), 'plz');
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.plz, StringPattern.NO_WHITESPACES), 'plz');
 
-		this.addValidator(new ValidatorStringLength(() => this.proxy.ort, null, 50), 'ort');
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.ort, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'ort');
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.ort, null, 50), 'ort');
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.ort, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'ort');
 
-		this.addValidator(new ValidatorStringLength(() => this.proxy.telefon, null, 20), 'telefon');
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.telefon, StringPattern.IS_PHONE_NUMBER), 'telefon');
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.telefon, null, 20), 'telefon');
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.telefon, StringPattern.IS_PHONE_NUMBER), 'telefon');
 
-		this.addValidator(new ValidatorStringLength(() => this.proxy.fax, null, 20), 'fax');
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.fax, StringPattern.IS_PHONE_NUMBER), 'fax');
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.fax, null, 20), 'fax');
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.fax, StringPattern.IS_PHONE_NUMBER), 'fax');
 
-		this.addValidator(new ValidatorStringLength(() => this.proxy.email, null, 40), 'email');
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.email, StringPattern.IS_EMAIL), 'email');
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.email, null, 40), 'email');
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.email, StringPattern.IS_EMAIL), 'email');
 
-		this.addValidator(new ValidatorNumberRange((): number => this.proxy.sortierung, 0, 32000), "sortierung");
-		this.addValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), 'sortierung');
+		this.addBlockingValidator(new ValidatorNumberRange((): number => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addBlockingValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), 'sortierung');
 
-		this.addValidator(new ValidatorInputRequired((): number | null => this.proxy.idSchulform), 'idSchulform');
+		this.addBlockingValidator(new ValidatorInputRequired((): number | null => this.proxy.idSchulform), 'idSchulform');
 
-		this.addValidator(new ValidatorStrasse(() => this.adresse.value, 55, 10, 30),
+		this.addBlockingValidator(new ValidatorStrasse(() => this.adresse.value, 55, 10, 30),
 			"strassenname", "hausnummer", "zusatzHausnummer");
 
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.schulnummerStatistik), 'schulnummerStatistik');
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.schulnummerStatistik), 'schulnummerStatistik');
 	}
 
 	adresse = computed({

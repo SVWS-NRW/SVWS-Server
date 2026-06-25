@@ -40,7 +40,7 @@ export class AnkreuzkompetenzenModelProxy extends ModelProxy<Ankreuzkompetenz> {
 	) {
 		const listOfAutopatchProps: Iterable<keyof Ankreuzkompetenz> =
 			["schulgliederung", "abschnitt", "istAktiv", "istSichtbar"];
-		super({ data, patch, listOfAutopatchProps, checkValidBeforePatch: true });
+		super({ data, patch, listOfAutopatchProps });
 		this._schuljahr = schuljahr;
 		this._faecherById = faecherById;
 		this.addValidatoren(liste);
@@ -48,13 +48,13 @@ export class AnkreuzkompetenzenModelProxy extends ModelProxy<Ankreuzkompetenz> {
 	}
 
 	private addValidatoren(liste: () => Iterable<Ankreuzkompetenz>) {
-		this.addValidator(new ValidatorAnkreuzfloskelText(() => this.proxy, liste), "floskelText");
+		this.addBlockingValidator(new ValidatorAnkreuzfloskelText(() => this.proxy, liste), "floskelText");
 		// Fach
-		this.addValidator(new ValidatorInputRequired(() => (this.proxy.istASV ? "ASV" : this.proxy.idFach)), "idFach");
+		this.addBlockingValidator(new ValidatorInputRequired(() => (this.proxy.istASV ? "ASV" : this.proxy.idFach)), "idFach");
 		// Abschnitt
-		this.addValidator(new ValidatorInputRequired(() => this.abschnitt.value), "abschnitt");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.abschnitt.value), "abschnitt");
 		// sortierung
-		this.addValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
 	}
 
 	fach = computed<FachDaten | null>({

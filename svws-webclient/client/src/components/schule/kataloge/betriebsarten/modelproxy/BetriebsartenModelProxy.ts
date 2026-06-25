@@ -20,13 +20,13 @@ export class BetriebsartenModelProxy extends ModelProxy<Betriebsart> {
 		patch?: (data: Partial<Betriebsart>) => Promise<boolean>
 	) {
 		const listOfAutopatchProps: Iterable<keyof Betriebsart> = ["istSichtbar"];
-		super({ data, patch, listOfAutopatchProps, checkValidBeforePatch: true });
+		super({ data, patch, listOfAutopatchProps });
 		this.addValidatoren(liste);
 		this.validate();
 	}
 
 	private addValidatoren(liste: () => Iterable<Betriebsart>) {
-		this.addValidator(new ValidatorBetriebsartBezeichnung(() => this.proxy, liste), "bezeichnung");
-		this.addValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addBlockingValidator(new ValidatorBetriebsartBezeichnung(() => this.proxy, liste), "bezeichnung");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
 	}
 }

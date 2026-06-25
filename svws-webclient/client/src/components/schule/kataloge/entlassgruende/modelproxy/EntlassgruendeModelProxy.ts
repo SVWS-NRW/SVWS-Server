@@ -21,14 +21,14 @@ export class EntlassgruendeModelProxy extends ModelProxy<KatalogEntlassgrund> {
 		patch?: (data: Partial<KatalogEntlassgrund>) => Promise<boolean>
 	) {
 		const listOfAutopatchProps: Iterable<keyof KatalogEntlassgrund> = ["istSichtbar"];
-		super({ data, patch, listOfAutopatchProps, checkValidBeforePatch: true });
+		super({ data, patch, listOfAutopatchProps });
 		this.addValidatoren(alleEntlassgruende);
 		this.validate();
 
 	}
 
 	private addValidatoren(liste: () => Iterable<KatalogEntlassgrund>) {
-		this.addValidator(new ValidatorEntlassgrundBezeichnung(() => this.proxy, liste), "bezeichnung");
-		this.addValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addBlockingValidator(new ValidatorEntlassgrundBezeichnung(() => this.proxy, liste), "bezeichnung");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
 	}
 }

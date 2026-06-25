@@ -295,7 +295,7 @@ describe("ModelProxy Testsuite", () => {
 			expect(dataAfterPatch).toBeUndefined();
 		});
 
-		test("FirstName wird zu unzulässigem Wert geändert und gepatcht -> Die Patch-Action wird dennoch aufgerufen und es existieren Validierungsfehler", async () => {
+		test("FirstName wird zu unzulässigem Wert geändert und gepatcht -> Die Patch-Action wird dennoch aufgerufen und es existieren Validierungsfehler, aber kein blockierender", async () => {
 			const initialModel = ref<TestModel>({ id: 1, firstName: 'Max', lastName: 'Mustermann' });
 			let valueAfterPatch;
 			const patchAction = async (data: Partial<TestModel>): Promise<boolean> => {
@@ -306,34 +306,76 @@ describe("ModelProxy Testsuite", () => {
 
 			const modelProxy = new ModelProxyMock({ data: () => initialModel.value, patch: patchAction }, false);
 
-			// FirstName wird zu unzulässigem Wert geändert und gepatcht -> Patch-Action wird nicht aufgerufen
-			modelProxy.proxy.firstName = '';
-
-			await modelProxy.patch();
-
-			expect(modelProxy.getFehler("firstName").size()).toBe(1);
-			expect(valueAfterPatch).toBeDefined();
-		});
-
-		test("FirstName wird zu unzulässigem Wert geändert und gepatcht, eine Validierung vor dem Patch ist aktiviert -> der Patch schlägt fehl", async () => {
-			const initialModel = ref<TestModel>({ id: 1, firstName: 'Max', lastName: 'Mustermann' });
-			let patchresult;
-			const patchAction = async (data: Partial<TestModel>): Promise<boolean> => {
-				patchresult = data.firstName;
-				await Promise.resolve();
-				return true;
-			};
-
-			const modelProxy = new ModelProxyMock({ data: () => initialModel.value, patch: patchAction, checkValidBeforePatch: true }, false);
-
-			// FirstName wird zu unzulässigem Wert geändert und gepatcht -> Patch-Action wird nicht aufgerufen
+			// FirstName wird zu unzulässigem Wert geändert und gepatcht -> Patch-Action wird aufgerufen
 			modelProxy.proxy.firstName = '';
 
 			const success = await modelProxy.patch();
 
-			expect(success).toBe(false);
+			expect(success).toBe(true);
 			expect(modelProxy.getFehler("firstName").size()).toBe(1);
-			expect(patchresult).toBeUndefined();
+			expect(valueAfterPatch).toBe('');
+			expect(modelProxy.hatFehler()).toBe(true);
+			expect(modelProxy.hatBlockierendeFehler()).toBe(false);
+		});
+
+
+		test("FirstName wird zu unzulässigem Wert geändert und gepatcht -> Die Patch-Action wird nicht aufgerufen, da der Validator blockierend ist und es existiert ein blockierender Validierungsfehler", async () => {
+			const initialModel = ref<TestModel>({ id: 1, firstName: 'Max', lastName: 'Mustermann', email: 'none@home.com' });
+			let valueAfterPatch;
+			const patchAction = async (data: Partial<TestModel>): Promise<boolean> => {
+				valueAfterPatch = data.email;
+				await Promise.resolve();
+				return true;
+			};
+
+			const modelProxy = new ModelProxyMock({ data: () => initialModel.value, patch: patchAction }, false);
+			modelProxy.addBlockingValidatorMock(new FirstNameValidatorMock(() => modelProxy.proxy.email ?? ''), 'email');
+
+			// email wird auf einen für den blockierenden Validator unzulässigene Wert geändert und gepatcht -> Patch-Aktion wird nicht aufgerufen
+			modelProxy.proxy.email = '';
+
+			const success = await modelProxy.patch();
+
+			// Der Patch darf nicht ausgeführt werden
+			expect(success).toBe(false);
+			expect(valueAfterPatch).toBe('none@home.com');
+			expect(modelProxy.hatBlockierendeFehler()).toBe(true);
+			expect(modelProxy.isValidForPatch('email')).toBe(false);
+			expect(modelProxy.pending.email).toBe('');
+		});
+
+
+		test("Ein partieller Patch erlaubt das teilweise Senden von Attributen, welche keine blockierenden Fehler haben", async () => {
+			const initialModel = ref<TestModel>({ id: 1, firstName: 'Max', lastName: 'Mustermann', email: 'none@home.com' });
+			let receivedPatchData: Partial<TestModel> = {};
+			const patchAction = async (data: Partial<TestModel>): Promise<boolean> => {
+				receivedPatchData = data;
+				await Promise.resolve();
+				return true;
+			};
+
+			const modelProxy = new ModelProxyMock({ data: () => initialModel.value, patch: patchAction }, false);
+			modelProxy.addBlockingValidatorMock(new FirstNameValidatorMock(() => modelProxy.proxy.email ?? ''), 'email');
+
+			// Die Email führt zu einem blockierendem Fehler, alles andere nicht
+			modelProxy.proxy.lastName = 'Musterfrau';
+			modelProxy.proxy.firstName = 'Erika';
+			modelProxy.proxy.email = '';
+
+			const success = await modelProxy.patch();
+
+			// success ist false, da ein blockierender Fehler den vollständigen Patch verhindert hat
+			expect(success).toBe(false);
+			expect(modelProxy.hatBlockierendeFehler()).toBe(true);
+			expect(modelProxy.isValidForPatch('lastName')).toBe(true);
+			expect(modelProxy.isValidForPatch('firstName')).toBe(true);
+			expect(modelProxy.isValidForPatch('email')).toBe(false);
+			expect(receivedPatchData.lastName).toBe('Musterfrau');
+			expect(receivedPatchData.firstName).toBe('Erika');
+			expect(receivedPatchData.email).toBeUndefined();
+			expect(modelProxy.pending.lastName).toBeUndefined();
+			expect(modelProxy.pending.firstName).toBeUndefined();
+			expect(modelProxy.pending.email).toBe('');
 		});
 	});
 
@@ -355,6 +397,10 @@ class ModelProxyMock extends ModelProxy<TestModel> {
 		if (immediateValidation) {
 			this.validate();
 		}
+	}
+
+	public addBlockingValidatorMock(validator: BasicValidator, prop: keyof TestModel, ...props: Array<keyof TestModel>): void {
+		this.addBlockingValidator(validator, prop, ...props);
 	}
 }
 

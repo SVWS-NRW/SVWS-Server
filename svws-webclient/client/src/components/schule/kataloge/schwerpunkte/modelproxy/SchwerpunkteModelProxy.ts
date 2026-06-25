@@ -20,14 +20,14 @@ export class SchwerpunkteModelProxy extends ModelProxy<SchuelerSchwerpunkt> {
 		patch?: (data: Partial<SchuelerSchwerpunkt>) => Promise<boolean>
 	) {
 		const listOfAutopatchProps: Iterable<keyof SchuelerSchwerpunkt> = ["istSichtbar"];
-		super({ data, patch, listOfAutopatchProps, checkValidBeforePatch: true });
+		super({ data, patch, listOfAutopatchProps });
 		this.addValidatoren(alleSchwerpunkte);
 		this.validate();
 	}
 
 	private addValidatoren(liste: () => Iterable<SchuelerSchwerpunkt>) {
-		this.addValidator(new ValidatorSchwerpunktBezeichnung((): SchuelerSchwerpunkt => this.proxy, liste), "bezeichnung");
-		this.addValidator(new ValidatorNumberRange((): number => this.proxy.sortierung, 0, 32000), "sortierung");
-		this.addValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), 'sortierung');
+		this.addBlockingValidator(new ValidatorSchwerpunktBezeichnung((): SchuelerSchwerpunkt => this.proxy, liste), "bezeichnung");
+		this.addBlockingValidator(new ValidatorNumberRange((): number => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addBlockingValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), 'sortierung');
 	}
 }

@@ -14,21 +14,21 @@ export class OrtModelProxy extends ModelProxy<OrtKatalogEintrag> {
 		patch?: (data: Partial<OrtKatalogEintrag>) => Promise<boolean>
 	) {
 		const listOfAutopatchProps: Iterable<keyof OrtKatalogEintrag> = ['sortierung', 'istSichtbar'];
-		super({ data, patch, listOfAutopatchProps, checkValidBeforePatch: true });
+		super({ data, patch, listOfAutopatchProps });
 
 		this.addValidatoren(alleOrte);
 		this.validate();
 	}
 
 	private addValidatoren(liste: () => Iterable<OrtKatalogEintrag>) {
-		this.addValidator(new ValidatorOrtPlzOrtsnameUnique(() => this.proxy, liste), "ortsname", "plz");
-		this.addValidator(new ValidatorOrtPlz(() => this.proxy), "plz");
-		this.addValidator(new ValidatorOrtOrtsname(() => this.proxy), "ortsname");
-		this.addValidator(new ValidatorStringLength(() => this.proxy.kreis, null, 3), "kreis");
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.kreis, StringPattern.NO_WHITESPACES), "kreis");
-		this.addValidator(new ValidatorStringLength(() => this.proxy.kuerzelBundesland, null, 2), "kuerzelBundesland");
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.kuerzelBundesland, StringPattern.NO_WHITESPACES), "kuerzelBundesland");
-		this.addValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.sortierung), "sortierung");
+		this.addBlockingValidator(new ValidatorOrtPlzOrtsnameUnique(() => this.proxy, liste), "ortsname", "plz");
+		this.addBlockingValidator(new ValidatorOrtPlz(() => this.proxy), "plz");
+		this.addBlockingValidator(new ValidatorOrtOrtsname(() => this.proxy), "ortsname");
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.kreis, null, 3), "kreis");
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.kreis, StringPattern.NO_WHITESPACES), "kreis");
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.kuerzelBundesland, null, 2), "kuerzelBundesland");
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.kuerzelBundesland, StringPattern.NO_WHITESPACES), "kuerzelBundesland");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.sortierung), "sortierung");
 	}
 }

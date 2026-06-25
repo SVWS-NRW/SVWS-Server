@@ -15,6 +15,12 @@ class ModelProxyValidationResult<T extends object> {
 	/** Die Gesamtmenge der Fehler aller Props */
 	all = new ArrayList<ValidatorFehler>();
 
+	/** Die Listen der blockierenden Fehler für die einzelnen Props */
+	propsBlocking = new Map<keyof T, List<ValidatorFehler>>();
+
+	/** Die Gesamtmenge der blockierenden Fehler aller Props */
+	allBlocking = new ArrayList<ValidatorFehler>();
+
 }
 
 /**
@@ -30,6 +36,9 @@ export class ModelProxyValidation<T extends object> {
 
 	/** Ein Zuordnung der Props, welche bei Ännderung das ausführen des Validator anstoßen. */
 	private readonly mapPropsByValidator = new Map<BasicValidator, Set<keyof T>>();
+
+	/** Die Menge an blockierenden Validatoren */
+	private readonly setOfBlockingValidators = new Set<BasicValidator>();
 
 	/** Das Ergebnis der Validierieung mit den Fehlerlisten */
 	private readonly result = shallowRef(new ModelProxyValidationResult<T>());
@@ -56,17 +65,23 @@ export class ModelProxyValidation<T extends object> {
 	 * Fügt einen neuen Validator zur automatischen Validierung bei allen angegebenen Attributen hinzu.
 	 * Die einzelnen Fehler werden dabei der ersten Prop in der Liste zugeordnet.
 	 *
-	 * @param validator   der hinzuzufügende Validator
-	 * @param prop        das Attribut des Proxies, bei welchem der Validator ausgeführt werden soll und welchem die
-	 *                    Validatorfehler zugeordnet werden.
-	 * @param props       die zusätzlichen Attribute des Proxies, bei welchen der Validator ausgeführt werden soll.
+	 * @param validator    der hinzuzufügende Validator
+	 * @param isBlocking   gibt an, dass Fehler von diesem Validator das automatische Patchen, der Daten blockieren soll.
+	 * @param prop         das Attribut des Proxies, bei welchem der Validator ausgeführt werden soll und welchem die
+	 *                     Validatorfehler zugeordnet werden.
+	 * @param props        die zusätzlichen Attribute des Proxies, bei welchen der Validator ausgeführt werden soll.
 	 */
-	public addValidator(validator: BasicValidator, prop: keyof T, ...props: Array<keyof T>): void {
+	public addValidator(validator: BasicValidator, isBlocking: boolean, prop: keyof T, ...props: Array<keyof T>): void {
 		if (this.mapPropByValidator.has(validator)) {
 			throw new Error("Ein Validator sollte nur einmalig zu der Konfiguration hinzugefügt werden. Bitte fassen sie die Aufrufe zusammen.");
 		}
 		this.mapPropByValidator.set(validator, prop);
 		this.mapPropsByValidator.set(validator, new Set<keyof T>([prop, ...props]));
+
+		if (isBlocking) {
+			this.setOfBlockingValidators.add(validator);
+		}
+
 		if (this.autoRevalidate) {
 			this.validate();
 		}
@@ -165,16 +180,36 @@ export class ModelProxyValidation<T extends object> {
 				continue;
 			}
 
+			// Prüfe, on der Validator blockierende Fehler erzeugt, wenn ja, dann markiere die Fehler entsprechend
+			const isBlockingValidator = this.setOfBlockingValidators.has(validator);
+			const validatorFehler = validator.getFehler();
+			if (isBlockingValidator) {
+				for (const fehler of validatorFehler) {
+					fehler.setBlocking();
+				}
+			}
+
 			// Sammle die Fehler für Fehlerliste der Prop
 			let fehlerListe = result.props.get(prop);
 			if (fehlerListe === undefined) {
 				fehlerListe = new ArrayList<ValidatorFehler>();
 				result.props.set(prop, fehlerListe);
 			}
-			fehlerListe.addAll(validator.getFehler());
+			fehlerListe.addAll(validatorFehler);
 
 			// Füge alle Fehler der aktiven Validatoren zu der Gesamtfehlerliste hinzu
-			result.all.addAll(validator.getFehler());
+			result.all.addAll(validatorFehler);
+
+			// Wenn der Validator als blockierend gekennzeichnet ist, dann müssen die Fehler auch in den zugehörigen Datenstrukturen eingetragen werden.
+			if (isBlockingValidator) {
+				let blockingFehlerListe = result.propsBlocking.get(prop);
+				if (blockingFehlerListe === undefined) {
+					blockingFehlerListe = new ArrayList<ValidatorFehler>();
+					result.propsBlocking.set(prop, blockingFehlerListe);
+				}
+				blockingFehlerListe.addAll(validatorFehler);
+				result.allBlocking.addAll(validatorFehler);
+			}
 		}
 
 		// Setze die Fehlerlisten neu, um die Reaktivität bei Zugriff auf die Validierungsergebnisse zu gewährleisten
@@ -183,7 +218,7 @@ export class ModelProxyValidation<T extends object> {
 
 
 	/**
-	 * Gibt alle Fehler zurück, welche bei der Validierung aufgetreten sind.
+	 * Gibt alle Fehler für ein bestimmtes Attribut zurück, welche bei der Validierung aufgetreten sind.
 	 *
 	 * @param prop   das Attribut, für welches die Fehlerliste erzeugt werden soll
 	 *
@@ -204,6 +239,27 @@ export class ModelProxyValidation<T extends object> {
 	 */
 	public getAlleFehler(): List<ValidatorFehler> {
 		return this.result.value.all;
+	}
+
+	/**
+	 * Gibt alle blockierenden Fehler für ein bestimmtes Attribut zurück, welche bei der Validierung aufgetreten sind.
+	 *
+	 * @param prop   das Attribut, für welches die Fehlerliste erzeugt werden soll
+	 *
+	 * @returns die Fehlerliste mit allen blockierenden Fehlern für das Attribut
+	 */
+	public getBlockierendeFehler(prop: keyof T): List<ValidatorFehler> {
+		return this.result.value.propsBlocking.get(prop) ?? new ArrayList<ValidatorFehler>();
+	}
+
+	/**
+	 * Gibt alle blockierenden Fehler des Proxies zurück, Welcher bei den Validierungen aller Attribute
+	 * aufgetreten sind.
+	 *
+	 * @returns die Fehlerliste mit allen blockierenden Fehlern in Bezug auf das Proxy-DTO
+	 */
+	public getAlleBlockierendenFehler(): List<ValidatorFehler> {
+		return this.result.value.allBlocking;
 	}
 
 	/**

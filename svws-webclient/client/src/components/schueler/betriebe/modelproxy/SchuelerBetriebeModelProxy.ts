@@ -15,7 +15,7 @@ export class SchuelerBetriebeModelProxy extends ModelProxy<SchuelerBetrieb> {
 	) {
 		const listOfAutopatchProps: Iterable<keyof SchuelerBetrieb> =
 			["id", "idBetrieb", "erhaeltAnschreiben", "istPraktikum", "idBeschaeftigungsart", "idBetreuungslehrer", "idAnsprechpartner"];
-		super({ data, patch, listOfAutopatchProps, checkValidBeforePatch: true });
+		super({ data, patch, listOfAutopatchProps });
 		this.manager = manager;
 		this.addValidatoren();
 		this.validate();
@@ -23,10 +23,10 @@ export class SchuelerBetriebeModelProxy extends ModelProxy<SchuelerBetrieb> {
 
 	private addValidatoren() {
 		// betrieb
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.idBetrieb), 'idBetrieb');
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idBetrieb), 'idBetrieb');
 		// ausbilder
-		this.addValidator(new ValidatorStringLength(() => this.proxy.nameAusbilder, null, 30), "nameAusbilder");
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.nameAusbilder, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "nameAusbilder");
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.nameAusbilder, null, 30), "nameAusbilder");
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.nameAusbilder, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "nameAusbilder");
 	}
 
 	betrieb = computed<Betrieb | null>({

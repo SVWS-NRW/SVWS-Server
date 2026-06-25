@@ -32,7 +32,7 @@ export class JahrgangModelProxy extends ModelProxy<JahrgangsDaten> {
 	) {
 		const listOfAutopatchProps: Iterable<keyof JahrgangsDaten> =
 			["idFolgejahrgang", "kuerzelSchulgliederung", "kuerzelStatistik", "idBildungsstufe", "istSichtbar"];
-		super({ data, patch, listOfAutopatchProps, checkValidBeforePatch: true });
+		super({ data, patch, listOfAutopatchProps });
 		this.schuljahr = schuljahr;
 		this.jahrgaengeById = this.mapJahrgaenge(jahrgaenge());
 		this.addValidatoren(jahrgaenge);
@@ -48,15 +48,15 @@ export class JahrgangModelProxy extends ModelProxy<JahrgangsDaten> {
 	}
 
 	private addValidatoren(jahrgaenge: () => Iterable<JahrgangsDaten>) {
-		this.addValidator(new ValidatorJahrgangKuerzel(() => this.proxy, jahrgaenge), "kuerzel");
-		this.addValidator(new ValidatorJahrgangBezeichnung(() => this.proxy, jahrgaenge), "bezeichnung");
-		this.addValidator(new ValidatorJahrgangKurzbezeichnung(() => this.proxy, jahrgaenge), "kurzbezeichnung");
+		this.addBlockingValidator(new ValidatorJahrgangKuerzel(() => this.proxy, jahrgaenge), "kuerzel");
+		this.addBlockingValidator(new ValidatorJahrgangBezeichnung(() => this.proxy, jahrgaenge), "bezeichnung");
+		this.addBlockingValidator(new ValidatorJahrgangKurzbezeichnung(() => this.proxy, jahrgaenge), "kurzbezeichnung");
 		// ASD-Jahrgang
-		this.addValidator(new ValidatorInputRequired(() => this.proxy.kuerzelStatistik), "kuerzelStatistik");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.kuerzelStatistik), "kuerzelStatistik");
 		// anzahlRestabschnitte
-		this.addValidator(new ValidatorNumberRange(() => this.proxy.anzahlRestabschnitte, 0, 40), "anzahlRestabschnitte");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.anzahlRestabschnitte, 0, 40), "anzahlRestabschnitte");
 		// sortierung
-		this.addValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
 	}
 
 	schulgliederung = computed<SchulgliederungKatalogEintrag | null>({

@@ -20,15 +20,14 @@ export class TelefonartenModelProxy extends ModelProxy<Telefonart> {
 		patch?: (data: Partial<Telefonart>) => Promise<boolean>
 	) {
 		const listOfAutopatchProps: Iterable<keyof Telefonart> = ["istSichtbar"];
-		super({ data, patch, listOfAutopatchProps, checkValidBeforePatch: true });
+		super({ data, patch, listOfAutopatchProps });
 		this.addValidatoren(alleTelefonarten);
 		this.validate();
 	}
 
 	private addValidatoren(liste: () => Iterable<Telefonart>) {
-		this.addValidator(new ValidatorTelefonartBezeichnung((): Telefonart => this.proxy, liste), "bezeichnung");
-		this.addValidator(new ValidatorNumberRange((): number => this.proxy.sortierung, 0, 32000), "sortierung");
-		this.addValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), "sortierung");
-
+		this.addBlockingValidator(new ValidatorTelefonartBezeichnung((): Telefonart => this.proxy, liste), "bezeichnung");
+		this.addBlockingValidator(new ValidatorNumberRange((): number => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addBlockingValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), "sortierung");
 	}
 }
