@@ -791,6 +791,7 @@ export { LernplattformV1Lerngruppe } from './core/data/lernplattform/v1/Lernplat
 export { LernplattformV1Login } from './core/data/lernplattform/v1/LernplattformV1Login';
 export { LernplattformV1Schueler } from './core/data/lernplattform/v1/LernplattformV1Schueler';
 export { OAuth2ClientConnection } from './core/data/oauth2/OAuth2ClientConnection';
+export { OAuthCredentials } from './core/data/oauth2/OAuthCredentials';
 export { ReportingEMailDaten } from './core/data/reporting/ReportingEMailDaten';
 export { ReportingFilterDefinition } from './core/data/reporting/ReportingFilterDefinition';
 export { ReportingFilterDefinitionGruppe } from './core/data/reporting/ReportingFilterDefinitionGruppe';

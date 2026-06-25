@@ -74,7 +74,6 @@ public class APIOAuth {
 				BenutzerKompetenz.ADMIN);
 	}
 
-
 	/**
 	 * Die OpenAPI-Methode für das Patchen der OAuth2-Client-Secrets.
 	 *
