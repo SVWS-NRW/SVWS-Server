@@ -326,6 +326,10 @@ export { ValidatorGldGesamtLehrerdatenDuplikate } from './asd/validate/gesamt/Va
 export { ValidatorGsGesamtSchuelerdaten } from './asd/validate/gesamt/ValidatorGsGesamtSchuelerdaten';
 export { ValidatorGsd10GesamtSchuelerdatenDuplikate } from './asd/validate/gesamt/ValidatorGsd10GesamtSchuelerdatenDuplikate';
 export { ValidatorGsdGesamtSchuelerdatenDuplikate } from './asd/validate/gesamt/ValidatorGsdGesamtSchuelerdatenDuplikate';
+export { ValidatorKk00KlassenKlassenart } from './asd/validate/klassen/ValidatorKk00KlassenKlassenart';
+export { ValidatorKk01KlassenKlassenart } from './asd/validate/klassen/ValidatorKk01KlassenKlassenart';
+export { ValidatorKk02KlassenKlassenart } from './asd/validate/klassen/ValidatorKk02KlassenKlassenart';
+export { ValidatorKkKlassenKlassenart } from './asd/validate/klassen/ValidatorKkKlassenKlassenart';
 export { ValidatorKoa00KlassenOrganisationsformAllgemeinbildend } from './asd/validate/klassen/ValidatorKoa00KlassenOrganisationsformAllgemeinbildend';
 export { ValidatorKoa01KlassenOrganisationsformAllgemeinbildend } from './asd/validate/klassen/ValidatorKoa01KlassenOrganisationsformAllgemeinbildend';
 export { ValidatorKoa02KlassenOrganisationsformAllgemeinbildend } from './asd/validate/klassen/ValidatorKoa02KlassenOrganisationsformAllgemeinbildend';

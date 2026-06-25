@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.klassen.ValidatorKk01KlassenKlassenart",
+    "historie" : [ {
+      "praefix" : "KK01",
+      "zweig" : "Klassen-Klassenart",
+      "dtos" : "KlassenDaten",
+      "ausfuehrungsbereich_ui" : "Klassen, Reiter 'Klasse'",
+      "anzeigebereich_ui" : "Feld 'Klassenart'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["KK00"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Art der Klasse: Das Feld 'Klassenart' muss zulässig sein.",
+      "erlaeuterung" : "",
+      "bedingung" : "KlassenDaten.idKlassenart ≠ einer id eines Eintrages in Klassenart.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }

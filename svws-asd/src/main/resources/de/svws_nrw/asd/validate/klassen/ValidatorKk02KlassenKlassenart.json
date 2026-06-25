@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.klassen.ValidatorKk02KlassenKlassenart",
+    "historie" : [ {
+      "praefix" : "KK02",
+      "zweig" : "Klassen-Klassenart",
+      "dtos" : "KlassenDaten",
+      "ausfuehrungsbereich_ui" : "Klassen, Reiter 'Klasse'",
+      "anzeigebereich_ui" : "Feld 'Klassenart'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["KK01"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Art der Klasse: Der eingetragene Wert für das Feld 'Klassenart' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.",
+      "erlaeuterung" : "Hier soll geprüft werden, ob der ausgewählte Katalogeintrag zum Zeitpunkt der Prüfung zeitlich gültig ist, über gueltigVon und gueltigBis im Katalog",
+      "bedingung" : "KlassenDaten.idKlassenart ≠ einem zeitlich gültigen Historieneintrag in Klassenart.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }

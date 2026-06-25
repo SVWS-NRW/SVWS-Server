@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.klassen.ValidatorKk00KlassenKlassenart",
+    "historie" : [ {
+      "praefix" : "KK00",
+      "zweig" : "Klassen-Klassenart",
+      "dtos" : "KlassenDaten",
+      "ausfuehrungsbereich_ui" : "Klassen, Reiter 'Klasse'",
+      "anzeigebereich_ui" : "Feld 'Klassenart'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Art der Klasse: Kein Wert vorhanden.",
+      "erlaeuterung" : "",
+      "bedingung" : "KlassenDaten.idKlassenart = @",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
