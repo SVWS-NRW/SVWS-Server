@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerFunktionen")
-@JsonPropertyOrder({"id", "Lehrer_ID", "idAbschnitt", "idFunktion", "Jahr", "Abschnitt", "SchulnrEigner"})
+@JsonPropertyOrder({"id", "Lehrer_ID", "idAbschnittsdaten", "idFunktion", "Jahr", "Abschnitt", "SchulnrEigner"})
 public final class MigrationDTOLehrerFunktion {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -45,11 +45,11 @@ public final class MigrationDTOLehrerFunktion {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lehrer_ID */
 	public static final String QUERY_LIST_BY_LEHRER_ID = "SELECT e FROM MigrationDTOLehrerFunktion e WHERE e.Lehrer_ID IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes idAbschnitt */
-	public static final String QUERY_BY_IDABSCHNITT = "SELECT e FROM MigrationDTOLehrerFunktion e WHERE e.idAbschnitt = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idAbschnittsdaten */
+	public static final String QUERY_BY_IDABSCHNITTSDATEN = "SELECT e FROM MigrationDTOLehrerFunktion e WHERE e.idAbschnittsdaten = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idAbschnitt */
-	public static final String QUERY_LIST_BY_IDABSCHNITT = "SELECT e FROM MigrationDTOLehrerFunktion e WHERE e.idAbschnitt IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idAbschnittsdaten */
+	public static final String QUERY_LIST_BY_IDABSCHNITTSDATEN = "SELECT e FROM MigrationDTOLehrerFunktion e WHERE e.idAbschnittsdaten IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes idFunktion */
 	public static final String QUERY_BY_IDFUNKTION = "SELECT e FROM MigrationDTOLehrerFunktion e WHERE e.idFunktion = ?1";
@@ -89,7 +89,7 @@ public final class MigrationDTOLehrerFunktion {
 	/** ID der Lehrerabschnittsdaten */
 	@Column(name = "Abschnitt_ID")
 	@JsonProperty
-	public Long idAbschnitt;
+	public Long idAbschnittsdaten;
 
 	/** ID der schulinternen Funktion */
 	@Column(name = "Funktion_ID")
@@ -122,12 +122,12 @@ public final class MigrationDTOLehrerFunktion {
 	 * Erstellt ein neues Objekt der Klasse MigrationDTOLehrerFunktion ohne eine Initialisierung der Attribute.
 	 * @param id   der Wert für das Attribut id
 	 * @param Lehrer_ID   der Wert für das Attribut Lehrer_ID
-	 * @param idAbschnitt   der Wert für das Attribut idAbschnitt
+	 * @param idAbschnittsdaten   der Wert für das Attribut idAbschnittsdaten
 	 * @param idFunktion   der Wert für das Attribut idFunktion
 	 * @param Jahr   der Wert für das Attribut Jahr
 	 * @param Abschnitt   der Wert für das Attribut Abschnitt
 	 */
-	public MigrationDTOLehrerFunktion(final Long id, final Long Lehrer_ID, final Long idAbschnitt, final Long idFunktion, final Integer Jahr, final Integer Abschnitt) {
+	public MigrationDTOLehrerFunktion(final Long id, final Long Lehrer_ID, final Long idAbschnittsdaten, final Long idFunktion, final Integer Jahr, final Integer Abschnitt) {
 		if (id == null) {
 			throw new NullPointerException("id must not be null");
 		}
@@ -136,10 +136,10 @@ public final class MigrationDTOLehrerFunktion {
 			throw new NullPointerException("Lehrer_ID must not be null");
 		}
 		this.Lehrer_ID = Lehrer_ID;
-		if (idAbschnitt == null) {
-			throw new NullPointerException("idAbschnitt must not be null");
+		if (idAbschnittsdaten == null) {
+			throw new NullPointerException("idAbschnittsdaten must not be null");
 		}
-		this.idAbschnitt = idAbschnitt;
+		this.idAbschnittsdaten = idAbschnittsdaten;
 		if (idFunktion == null) {
 			throw new NullPointerException("idFunktion must not be null");
 		}
@@ -193,7 +193,7 @@ public final class MigrationDTOLehrerFunktion {
 	 */
 	@Override
 	public String toString() {
-		return "MigrationDTOLehrerFunktion(id=" + this.id + ", Lehrer_ID=" + this.Lehrer_ID + ", idAbschnitt=" + this.idAbschnitt + ", idFunktion=" + this.idFunktion + ", Jahr=" + this.Jahr + ", Abschnitt=" + this.Abschnitt + ", SchulnrEigner=" + this.SchulnrEigner + ")";
+		return "MigrationDTOLehrerFunktion(id=" + this.id + ", Lehrer_ID=" + this.Lehrer_ID + ", idAbschnittsdaten=" + this.idAbschnittsdaten + ", idFunktion=" + this.idFunktion + ", Jahr=" + this.Jahr + ", Abschnitt=" + this.Abschnitt + ", SchulnrEigner=" + this.SchulnrEigner + ")";
 	}
 
 }

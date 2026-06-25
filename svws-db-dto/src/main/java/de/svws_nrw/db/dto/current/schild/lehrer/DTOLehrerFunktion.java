@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerFunktionen")
-@JsonPropertyOrder({"id", "idAbschnitt", "idFunktion"})
+@JsonPropertyOrder({"id", "idAbschnittsdaten", "idFunktion"})
 public final class DTOLehrerFunktion {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -39,11 +39,11 @@ public final class DTOLehrerFunktion {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes id */
 	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOLehrerFunktion e WHERE e.id IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes idAbschnitt */
-	public static final String QUERY_BY_IDABSCHNITT = "SELECT e FROM DTOLehrerFunktion e WHERE e.idAbschnitt = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idAbschnittsdaten */
+	public static final String QUERY_BY_IDABSCHNITTSDATEN = "SELECT e FROM DTOLehrerFunktion e WHERE e.idAbschnittsdaten = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idAbschnitt */
-	public static final String QUERY_LIST_BY_IDABSCHNITT = "SELECT e FROM DTOLehrerFunktion e WHERE e.idAbschnitt IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idAbschnittsdaten */
+	public static final String QUERY_LIST_BY_IDABSCHNITTSDATEN = "SELECT e FROM DTOLehrerFunktion e WHERE e.idAbschnittsdaten IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes idFunktion */
 	public static final String QUERY_BY_IDFUNKTION = "SELECT e FROM DTOLehrerFunktion e WHERE e.idFunktion = ?1";
@@ -60,7 +60,7 @@ public final class DTOLehrerFunktion {
 	/** ID der Lehrerabschnittsdaten */
 	@Column(name = "Abschnitt_ID")
 	@JsonProperty
-	public long idAbschnitt;
+	public long idAbschnittsdaten;
 
 	/** ID der schulinternen Funktion */
 	@Column(name = "Funktion_ID")
@@ -77,12 +77,12 @@ public final class DTOLehrerFunktion {
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOLehrerFunktion ohne eine Initialisierung der Attribute.
 	 * @param id   der Wert für das Attribut id
-	 * @param idAbschnitt   der Wert für das Attribut idAbschnitt
+	 * @param idAbschnittsdaten   der Wert für das Attribut idAbschnittsdaten
 	 * @param idFunktion   der Wert für das Attribut idFunktion
 	 */
-	public DTOLehrerFunktion(final long id, final long idAbschnitt, final long idFunktion) {
+	public DTOLehrerFunktion(final long id, final long idAbschnittsdaten, final long idFunktion) {
 		this.id = id;
-		this.idAbschnitt = idAbschnitt;
+		this.idAbschnittsdaten = idAbschnittsdaten;
 		this.idFunktion = idFunktion;
 	}
 
@@ -118,7 +118,7 @@ public final class DTOLehrerFunktion {
 	 */
 	@Override
 	public String toString() {
-		return "DTOLehrerFunktion(id=" + this.id + ", idAbschnitt=" + this.idAbschnitt + ", idFunktion=" + this.idFunktion + ")";
+		return "DTOLehrerFunktion(id=" + this.id + ", idAbschnittsdaten=" + this.idAbschnittsdaten + ", idFunktion=" + this.idFunktion + ")";
 	}
 
 }

@@ -8992,6 +8992,37 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getLehrerFunktionenByAbschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/{id : \d+}/abschnittsdaten/{idAbschnitt : \d+}/funktionen
+	 *
+	 * Liest alle Lehrerfunktionen zum angegebenen Lehrerabschnitt aus der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Liste der Lehrerfunktionen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<LehrerFunktion>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.
+	 *   Code 404: Kein Lehrerabschnitt mit der angegebenen ID gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} idAbschnitt - der Pfad-Parameter idAbschnitt
+	 *
+	 * @returns Die Liste der Lehrerfunktionen
+	 */
+	public async getLehrerFunktionenByAbschnitt(schema : string, id : number, idAbschnitt : number) : Promise<List<LehrerFunktion>> {
+		const path = "/db/{schema}/lehrer/{id : \\d+}/abschnittsdaten/{idAbschnitt : \\d+}/funktionen"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{idAbschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idAbschnitt.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<LehrerFunktion>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerFunktion.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getLehrerLernplattformen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/{id : \d+}/lernplattformen
 	 *
 	 * Liest die Lernplattformen des Lehrers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten besitzt.
@@ -9791,6 +9822,229 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getLehrerFunktionen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/funktionen
+	 *
+	 * Liest alle Lehrerfunktionen aus der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Liste der Lehrerfunktionen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<LehrerFunktion>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Liste der Lehrerfunktionen
+	 */
+	public async getLehrerFunktionen(schema : string) : Promise<List<LehrerFunktion>> {
+		const path = "/db/{schema}/lehrer/funktionen"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<LehrerFunktion>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerFunktion.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode createLehrerFunktion für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/funktionen
+	 *
+	 * Erstellt eine neue Lehrerfunktion und speichert diese in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die erstellte Lehrerfunktion
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerFunktion
+	 *   Code 400: Die Kombination aus Abschnitt und Funktion existiert bereits.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten zu ändern.
+	 *
+	 * @param {Partial<LehrerFunktion>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die erstellte Lehrerfunktion
+	 */
+	public async createLehrerFunktion(data : Partial<LehrerFunktion>, schema : string) : Promise<LehrerFunktion> {
+		const path = "/db/{schema}/lehrer/funktionen"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = LehrerFunktion.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return LehrerFunktion.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getLehrerFunktion für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/funktionen/{id : \d+}
+	 *
+	 * Liest die Lehrerfunktion mit der angegebenen ID aus der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lehrerfunktion
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerFunktion
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.
+	 *   Code 404: Keine Lehrerfunktion mit der angegebenen ID gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Lehrerfunktion
+	 */
+	public async getLehrerFunktion(schema : string, id : number) : Promise<LehrerFunktion> {
+		const path = "/db/{schema}/lehrer/funktionen/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return LehrerFunktion.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchLehrerFunktion für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/funktionen/{id : \d+}
+	 *
+	 * Aktualisiert die Lehrerfunktion mit der angegebenen ID. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die aktualisierte Lehrerfunktion
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerFunktion
+	 *   Code 400: Die Kombination aus Abschnitt und Funktion existiert bereits.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten zu ändern.
+	 *   Code 404: Keine Lehrerfunktion mit der angegebenen ID gefunden.
+	 *
+	 * @param {Partial<LehrerFunktion>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die aktualisierte Lehrerfunktion
+	 */
+	public async patchLehrerFunktion(data : Partial<LehrerFunktion>, schema : string, id : number) : Promise<LehrerFunktion> {
+		const path = "/db/{schema}/lehrer/funktionen/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = LehrerFunktion.transpilerToJSONPatch(data);
+		const result : string = await super.patchJSONWithResponse(path, body);
+		const text = result;
+		return LehrerFunktion.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteLehrerFunktion für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/funktionen/{id : \d+}
+	 *
+	 * Löscht die Lehrerfunktion mit der angegebenen ID. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Das Ergebnis der Löschoperation
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten zu ändern.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Das Ergebnis der Löschoperation
+	 */
+	public async deleteLehrerFunktion(schema : string, id : number) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/lehrer/funktionen/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode createLehrerFunktionen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/funktionen/multiple
+	 *
+	 * Erstellt mehrere neue Lehrerfunktionen und speichert diese in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die erstellten Lehrerfunktionen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<LehrerFunktion>
+	 *   Code 400: Eine Kombination aus Abschnitt und Funktion existiert bereits.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten zu ändern.
+	 *
+	 * @param {List<Partial<LehrerFunktion>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die erstellten Lehrerfunktionen
+	 */
+	public async createLehrerFunktionen(data : List<Partial<LehrerFunktion>>, schema : string) : Promise<List<LehrerFunktion>> {
+		const path = "/db/{schema}/lehrer/funktionen/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<LehrerFunktion>).map(d => LehrerFunktion.transpilerToJSONPatch(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<LehrerFunktion>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerFunktion.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchLehrerFunktionen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/funktionen/multiple
+	 *
+	 * Aktualisiert die Lehrerfunktionen mit den angegebenen IDs. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die aktualisierten Lehrerfunktionen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<LehrerFunktion>
+	 *   Code 400: Eine Kombination aus Abschnitt und Funktion existiert bereits.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten zu ändern.
+	 *   Code 404: Eine Lehrerfunktion mit einer angegebenen ID wurde nicht gefunden.
+	 *
+	 * @param {List<Partial<LehrerFunktion>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die aktualisierten Lehrerfunktionen
+	 */
+	public async patchLehrerFunktionen(data : List<Partial<LehrerFunktion>>, schema : string) : Promise<List<LehrerFunktion>> {
+		const path = "/db/{schema}/lehrer/funktionen/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<LehrerFunktion>).map(d => LehrerFunktion.transpilerToJSONPatch(d)).join() + "]";
+		const result : string = await super.patchJSONWithResponse(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<LehrerFunktion>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerFunktion.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteLehrerFunktionen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/funktionen/multiple
+	 *
+	 * Löscht die Lehrerfunktionen mit den angegebenen IDs. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Ergebnisse der Löschoperationen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten zu ändern.
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Ergebnisse der Löschoperationen
+	 */
+	public async deleteLehrerFunktionen(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/lehrer/funktionen/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getLehrerLeitungsfunktionen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/leitungsfunktionen
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Lehrerleitungsfunktionen unter Angabe der ID und der Bezeichnung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
@@ -10014,115 +10268,6 @@ export class ApiServer extends BaseApi {
 		const ret = new ArrayList<LehrerPersonalabschnittsdatenAnrechnungsstunden>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text)); });
 		return ret;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getLehrerPersonalabschnittsdatenLehrerfunktionen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/lehrerfunktionen/{id : \d+}
-	 *
-	 * Liest die Lehrerfunktion zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Funktion
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: LehrerFunktion
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten anzusehen.
-	 *   Code 404: Keine Lehrerfunktion mit der angegebenen ID gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die Funktion
-	 */
-	public async getLehrerPersonalabschnittsdatenLehrerfunktionen(schema : string, id : number) : Promise<LehrerFunktion> {
-		const path = "/db/{schema}/lehrer/personalabschnittsdaten/lehrerfunktionen/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return LehrerFunktion.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der PATCH-Methode patchLehrerPersonalabschnittsdatenLehrerfunktionen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/lehrerfunktionen/{id : \d+}
-	 *
-	 * Passt die Lehrerfunktion zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personalabschnittsdaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich in die Lehrerfunktion integriert.
-	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten zu ändern.
-	 *   Code 404: Keine Lehrerfunktion mit der angegebenen ID gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {Partial<LehrerFunktion>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 */
-	public async patchLehrerPersonalabschnittsdatenLehrerfunktionen(data : Partial<LehrerFunktion>, schema : string, id : number) : Promise<void> {
-		const path = "/db/{schema}/lehrer/personalabschnittsdaten/lehrerfunktionen/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = LehrerFunktion.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der DELETE-Methode deleteLehrerPersonalabschnittsdatenLehrerfunktionen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/lehrerfunktionen/{id : \d+}
-	 *
-	 * Entfernt die Lehrerfunktion zu der angegebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen einer Lehrerfunktion hat.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Lehrerfunktion wurde erfolgreich entfernt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: LehrerFunktion
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Lehrerfunktion zu löschen.
-	 *   Code 404: Keine Lehrerfunktion mit der angegebenen ID gefunden
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die Lehrerfunktion wurde erfolgreich entfernt.
-	 */
-	public async deleteLehrerPersonalabschnittsdatenLehrerfunktionen(schema : string, id : number) : Promise<LehrerFunktion> {
-		const path = "/db/{schema}/lehrer/personalabschnittsdaten/lehrerfunktionen/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
-		const text = result;
-		return LehrerFunktion.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode addLehrerPersonalabschnittsdatenLehrerfunktionen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/lehrerfunktionen/add
-	 *
-	 * Erstellt einen neuen Datensatz für eine Lehrerfunktion und gibt das zugehörige Objekt zurück.. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen neuer Lehrerfunktion besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 201: Die Lehrerfunktion wurde erfolgreich hinzugefügt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: LehrerFunktion
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Lehrerfunktion anzulegen.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {Partial<LehrerFunktion>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Die Lehrerfunktion wurde erfolgreich hinzugefügt.
-	 */
-	public async addLehrerPersonalabschnittsdatenLehrerfunktionen(data : Partial<LehrerFunktion>, schema : string) : Promise<LehrerFunktion> {
-		const path = "/db/{schema}/lehrer/personalabschnittsdaten/lehrerfunktionen/add"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = LehrerFunktion.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
-		const text = result;
-		return LehrerFunktion.transpilerFromJSON(text);
 	}
 
 

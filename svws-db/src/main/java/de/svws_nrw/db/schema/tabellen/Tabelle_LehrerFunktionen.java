@@ -30,7 +30,7 @@ public class Tabelle_LehrerFunktionen extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Abschnitt_ID */
 	public final SchemaTabelleSpalte col_Abschnitt_ID = add("Abschnitt_ID", SchemaDatentypen.BIGINT, false)
 			.setNotNull()
-			.setJavaName("idAbschnitt")
+			.setJavaName("idAbschnittsdaten")
 			.setJavaComment("ID der Lehrerabschnittsdaten");
 
 	/** Die Definition der Tabellenspalte Funktion_ID */

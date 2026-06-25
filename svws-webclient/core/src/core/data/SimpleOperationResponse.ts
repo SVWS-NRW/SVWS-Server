@@ -21,11 +21,36 @@ export class SimpleOperationResponse extends JavaObject {
 	public log: List<string> = new ArrayList<string>();
 
 
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
 	public constructor() {
 		super();
+	}
+
+	/**
+	 * Erstellt eine erfolgreiche {@link SimpleOperationResponse}.
+	 *
+	 * @param id die ID des betroffenen Objektes
+	 * @return eine erfolgreiche Response
+	 */
+	public static ofSuccess(id: number): SimpleOperationResponse {
+		const response = new SimpleOperationResponse();
+		response.id = id;
+		response.success = true;
+		return response;
+	}
+
+	/**
+	 * Erstellt eine fehlerhafte {@link SimpleOperationResponse}.
+	 *
+	 * @param id      die ID des betroffenen Objektes
+	 * @param message die Fehlermeldung
+	 * @return eine fehlerhafte Response
+	 */
+	public static ofError(id: number, message: string): SimpleOperationResponse {
+		const response = new SimpleOperationResponse();
+		response.id = id;
+		response.success = false;
+		response.log.add(message);
+		return response;
 	}
 
 	transpilerCanonicalName(): string {

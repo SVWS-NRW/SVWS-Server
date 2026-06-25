@@ -21,6 +21,8 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenService;
+import de.svws_nrw.service.lehrer.funktion.LehrerFunktionService;
+import de.svws_nrw.service.lehrer.funktion.LehrerFunktionServiceFactory;
 import de.svws_nrw.service.lehrer.LehrerMehrleistungService;
 import de.svws_nrw.service.lehrer.LehrerMinderleistungService;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
@@ -73,7 +75,7 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManagerRevised<
 		daten.anrechnungen.addAll(anrechnungsService.getListByLehrerabschnittsdatenId(id));
 		daten.mehrleistung.addAll(mehrleistungService.getListByLehrerabschnittsdatenId(id));
 		daten.minderleistung.addAll(minderleistungService.getListByLehrerabschnittsdatenId(id));
-		daten.funktionen.addAll(DataLehrerPersonalabschnittsdatenLehrerfunktionen.getByLehrerabschnittsdatenId(conn, id));
+		daten.funktionen.addAll(LehrerFunktionServiceFactory.getNewInstance().getLehrerFunktionService().getListByIdAbschnitt(id));
 		return daten;
 	}
 
@@ -158,6 +160,7 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManagerRevised<
 		final LehrerMehrleistungService mehrleistungService = factory.getLehrerMehrleistungService();
 		final LehrerMinderleistungService minderleistungService = factory.getLehrerMinderleistungService();
 		final LehrerAnrechnungsstundenService anrechnungsstundenService = factory.getLehrerAnrechnungsstundenService();
+		final LehrerFunktionService lehrerFunktionService = LehrerFunktionServiceFactory.getNewInstance().getLehrerFunktionService();
 		// Konvertiere sie und füge sie zur Liste hinzu
 		for (final DTOLehrerAbschnittsdaten l : abschnittsdaten) {
 			final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(l.Schuljahresabschnitts_ID);
@@ -165,7 +168,7 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManagerRevised<
 			daten.anrechnungen.addAll(anrechnungsstundenService.getListByLehrerabschnittsdatenId(l.ID));
 			daten.mehrleistung.addAll(mehrleistungService.getListByLehrerabschnittsdatenId(l.ID));
 			daten.minderleistung.addAll(minderleistungService.getListByLehrerabschnittsdatenId(l.ID));
-			daten.funktionen.addAll(DataLehrerPersonalabschnittsdatenLehrerfunktionen.getByLehrerabschnittsdatenId(conn, l.ID));
+			daten.funktionen.addAll(lehrerFunktionService.getListByIdAbschnitt(l.ID));
 			result.add(daten);
 		}
 		return result;

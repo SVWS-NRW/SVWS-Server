@@ -33,10 +33,31 @@ public class SimpleOperationResponse {
 	public @NotNull List<String> log = new ArrayList<>();
 
 	/**
-	 * Leerer Standardkonstruktor.
+	 * Erstellt eine erfolgreiche {@link SimpleOperationResponse}.
+	 *
+	 * @param id die ID des betroffenen Objektes
+	 * @return eine erfolgreiche Response
 	 */
-	public SimpleOperationResponse() {
-		// leer
+	public static @NotNull SimpleOperationResponse ofSuccess(final long id) {
+		final var response = new SimpleOperationResponse();
+		response.id = id;
+		response.success = true;
+		return response;
+	}
+
+	/**
+	 * Erstellt eine fehlerhafte {@link SimpleOperationResponse}.
+	 *
+	 * @param id      die ID des betroffenen Objektes
+	 * @param message die Fehlermeldung
+	 * @return eine fehlerhafte Response
+	 */
+	public static @NotNull SimpleOperationResponse ofError(final long id, final @NotNull String message) {
+		final var response = new SimpleOperationResponse();
+		response.id = id;
+		response.success = false;
+		response.log.add(message);
+		return response;
 	}
 
 }

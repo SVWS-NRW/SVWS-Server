@@ -15,6 +15,7 @@ import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.DbConnectionProvider;
 import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenService;
 import de.svws_nrw.service.lehrer.LehrerMehrleistungService;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
@@ -70,6 +71,8 @@ class DataLehrerPersonaldatenTest {
 
 	private MockedStatic<LehrerServiceFactory> mockedFactory;
 
+	private MockedStatic<DbConnectionProvider> dbConnectionProviderMock;
+
 	@BeforeAll
 	static void setUpAll() {
 		ASDCoreTypeUtils.initAll();
@@ -81,11 +84,14 @@ class DataLehrerPersonaldatenTest {
 		mockedFactory.when(LehrerServiceFactory::getNewInstance).thenReturn(serviceFactory);
 		lenient().when(serviceFactory.getLehrerAnrechnungsstundenService()).thenReturn(anrechnungsService);
 		lenient().when(serviceFactory.getLehrerMehrleistungService()).thenReturn(mehrleistungService);
+		dbConnectionProviderMock = mockStatic(DbConnectionProvider.class);
+		dbConnectionProviderMock.when(DbConnectionProvider::getConnection).thenReturn(mock(DBEntityManager.class));
 	}
 
 	@AfterEach
 	void tearDown() {
 		mockedFactory.close();
+		dbConnectionProviderMock.close();
 	}
 
 
