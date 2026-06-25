@@ -24,8 +24,6 @@ export class ValidatorSsml01SchuelerStammdatenMigrationshintergrundGeburtsland e
 	public constructor(idGeburtsland: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idGeburtsland = idGeburtsland;
-		const schuljahr2: number = kontext.getSchuljahr();
-		const schuljahr: Supplier<number> = { get: () => schuljahr2 };
 		this._validatoren.add(new ValidatorSsml02SchuelerStammdatenMigrationshintergrundGeburtsland(idGeburtsland, kontext));
 	}
 

@@ -1,0 +1,24 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSlk01SchuelerLernabschnittsdatenKlassenart",
+    "historie" : [ {
+      "praefix" : "SLK01",
+      "altes_kuerzel" : "",
+      "zweig" : "Schueler-Lernabschnittsdaten-Klassenart",
+      "dtos" : "SchuelerLernabschnittsdaten",
+     "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Lernabschnitte', Unterreiter 'Allgemein'",
+    "anzeigebereich_ui" : "Feld 'Klassenart'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["SLK00"],
+    "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "SR", "SG"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Klassenart des Schülers: Das Feld 'Klassenart' muss zulässig sein.",
+      "erlaeuterung" : "",
+      "bedingung" : "SchuelerLernabschnittsdaten.idKlassenart ≠ einer id eines Eintrages in Klassenart.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
+  

@@ -1,0 +1,24 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSlk02SchuelerLernabschnittsdatenKlassenart",
+    "historie" : [ {
+      "praefix" : "SLK02",
+      "altes_kuerzel" : "",
+      "zweig" : "Schueler-Lernabschnittsdaten-Klassenart",
+      "dtos" : "SchuelerLernabschnittsdaten",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Lernabschnitte', Unterreiter 'Allgemein'",
+    "anzeigebereich_ui" : "Feld 'Klassenart'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["SLK01"],
+    "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "SR", "SG"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Schüler Klassenart: Der eingetragene Wert für das Feld 'Klassenart' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.",
+      "erlaeuterung" : "Hier soll geprüft werden, ob der ausgewählte Katalogeintrag zum Zeitpunkt der Prüfung zeitlich gültig ist, über gueltigVon und gueltigBis im Katalog",
+      "bedingung" : "LehrerPersonalabschnittsdaten.idEinsatzstatus ≙ einem zeitlich gültigen Historieneintrag in Klassenart.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
+  

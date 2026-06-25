@@ -30,9 +30,6 @@ public final class ValidatorSsml01SchuelerStammdatenMigrationshintergrundGeburts
 		super(kontext);
 		_idGeburtsland = idGeburtsland;
 
-		final @NotNull Integer schuljahr2 = kontext.getSchuljahr();
-		final @NotNull Supplier<Integer> schuljahr = () -> schuljahr2;
-
 		_validatoren.add(
 				new ValidatorSsml02SchuelerStammdatenMigrationshintergrundGeburtsland(idGeburtsland, kontext));
 

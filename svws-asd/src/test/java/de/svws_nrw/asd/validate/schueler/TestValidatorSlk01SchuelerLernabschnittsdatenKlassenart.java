@@ -16,22 +16,19 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 /**
  * <p> Testklasse für die Validatoren
  * <ul>
- *   <li> {@link ValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland}
+ *   <li> {@link ValidatorSlk01SchuelerLernabschnittsdatenKlassenart}
  * </ul>
  * </p>
  *
  * Die Testdaten sind fehlerfrei und werden mit Jackson in die entsprechende statische Datenstruktur eingelesen.
  *
- * Für jeden Testfall ist eine Methode vorgesehen, in der mittels setzeTestdaten(...) die zugehörigen Testfälle erzeugt werden.
  */
-@DisplayName("Tests ValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland")
-class TestValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland {
+@DisplayName("Tests ValidatorSlk01SchuelerLernabschnittsdatenKlassenart")
+class TestValidatorSlk01SchuelerLernabschnittsdatenKlassenart {
 
-	private static final String TESTDATEN_GEBURTSLAND = """
-			null        , false , true
-			null        , true  , false
-			-1          , true  , true
-			500         , true  , true
+	private static final String TESTDATEN_KLASSENART = """
+			-1          , false
+			5000        , true
 		""";
 
 	/** Stammdaten der Schule */
@@ -49,24 +46,23 @@ class TestValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland {
 	}
 
 	/**
-	 * Test von ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart
+	 * Test von ValidatorSlk01SchuelerLernabschnittsdatenKlassenart
 	 *
-	 * @param idGeburtsland             die Beschaeftigungsart
-	 * @param hatMigrationshintergrund  hat Migrationshintergrund
-	 * @param result                    gibt an, welches Ergebnis bei den Testdaten erwartet wird
+	 * @param idKlassenart  ID Klassenart
+	 * @param result        gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
-	@DisplayName("Tests für ValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland")
+	@DisplayName("Tests für ValidatorSlk01SchuelerLernabschnittsdatenKlassenart")
 	@ParameterizedTest
-	@CsvSource(textBlock = TESTDATEN_GEBURTSLAND, nullValues = { "null" })
-	void testValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland(final Long idGeburtsland, final boolean hatMigrationshintergrund,
+	@CsvSource(textBlock = TESTDATEN_KLASSENART, nullValues = { "null" })
+	void testValidatorSsml01SchuelerStammdatenMigrationshintergrundGeburtsland(final Long idKlassenart,
 			final boolean result) {
 		// Erzeuge den Kontext für die Validierung
 		final ValidatorKontext kontext =
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
-		final ValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland validator =
-				new ValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland(
-						() -> idGeburtsland, () -> hatMigrationshintergrund, kontext);
+		final ValidatorSlk01SchuelerLernabschnittsdatenKlassenart validator =
+				new ValidatorSlk01SchuelerLernabschnittsdatenKlassenart(
+						() -> idKlassenart, kontext);
 		assertEquals(result, validator.pruefe());
 	}
 
