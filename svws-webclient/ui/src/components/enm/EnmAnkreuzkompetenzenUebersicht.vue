@@ -34,11 +34,11 @@
 							</template>
 						</template>
 						<template #default="{ row, index }">
-							<template v-if="row.kompetenz instanceof ENMv2Leistung">
+							<template v-if="row.gruppe instanceof ENMv2Fach && row.kompetenz === null">
 								<td class="text-left bg-ui-50">
 									<svws-ui-tooltip class="w-full">
-										{{ row.gruppe.kuerzelAnzeige }}
-										<template #content> {{ row.gruppe.bezeichnung }} </template>
+										{{ row.gruppe?.kuerzelAnzeige ?? '' }}
+										<template #content> {{ row.gruppe?.bezeichnung ?? '' }} </template>
 									</svws-ui-tooltip>
 								</td>
 								<td v-if="auswahlZelle?.b.klasseID && enmManager().sperrungen.istSpalteneingabeErlaubt(auswahlZelle.b.klasseID, 'FB')"
@@ -47,25 +47,70 @@
 										'bg-ui-selected': ((gridManager.focusColumn === 1) && (gridManager.focusRow === index)),
 										'contentFocusField': gridManager.isFocusLast(1, index),
 									}">
-									<svws-ui-tooltip v-if="(row.kompetenz.fachbezogeneBemerkungen !== null) && (row.kompetenz.fachbezogeneBemerkungen.length > 20)" class="h-full w-full">
-										<span class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ row.kompetenz.fachbezogeneBemerkungen }}</span>
+									<svws-ui-tooltip v-if="(mapLeistungen.get(row.gruppe.id)?.fachbezogeneBemerkungen ?? null !== null) && (mapLeistungen.get(row.gruppe.id)?.fachbezogeneBemerkungen?.length ?? 0 > 20)" class="h-full w-full">
+										<span class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ mapLeistungen.get(row.gruppe.id)?.fachbezogeneBemerkungen }}</span>
 										<template #content>
-											{{ row.kompetenz.fachbezogeneBemerkungen }}
+											{{ mapLeistungen.get(row.gruppe.id)?.fachbezogeneBemerkungen }}
 										</template>
 									</svws-ui-tooltip>
 									<span v-else class="text-ui-50"> Fachbemerkung </span>
 								</td>
 								<td v-else class="ui-table-grid-button text-left" :style="`grid-column: span ${columns.length + 1} / span ${columns.length + 1}`">
-									<svws-ui-tooltip v-if="(row.kompetenz.fachbezogeneBemerkungen !== null) && (row.kompetenz.fachbezogeneBemerkungen.length > 20)" class="h-full w-full">
-										<span class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ row.kompetenz.fachbezogeneBemerkungen }}</span>
+									<svws-ui-tooltip v-if="(mapLeistungen.get(row.gruppe.id)?.fachbezogeneBemerkungen ?? null !== null) && (mapLeistungen.get(row.gruppe.id)?.fachbezogeneBemerkungen?.length ?? 0 > 20)" class="h-full w-full">
+										<span class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ mapLeistungen.get(row.gruppe.id)?.fachbezogeneBemerkungen }}</span>
 										<template #content>
-											{{ row.kompetenz.fachbezogeneBemerkungen }}
+											{{ mapLeistungen.get(row.gruppe.id)?.fachbezogeneBemerkungen }}
 										</template>
 									</svws-ui-tooltip>
 									<span v-else class="text-ui-50"> kein Fachbemerkung hinterlegt </span>
 								</td>
 							</template>
-							<template v-else>
+							<template v-else-if="row.gruppe === null && row.kompetenz === null">
+								<td class="text-left bg-ui-50">
+									<svws-ui-tooltip class="w-full">
+										ASV
+										<template #content> Arbeits- und Sozialverhalten </template>
+									</svws-ui-tooltip>
+								</td>
+								<td v-if="auswahlZelle?.b.klasseID && enmManager().sperrungen.istSpalteneingabeErlaubt(auswahlZelle.b.klasseID, 'ASV')"
+									:ref="inputASVBemerkung(1, index)" class="ui-table-grid-button text-left" :style="`grid-column: span ${columns.length + 1} / span ${columns.length + 1}`"
+									:class="{
+										'bg-ui-selected': ((gridManager.focusColumn === 1) && (gridManager.focusRow === index)),
+										'contentFocusField': gridManager.isFocusLast(1, index),
+									}">
+									<svws-ui-tooltip v-if="(asvBemerkung !== null) && (asvBemerkung.length > 20)" class="h-full w-full">
+										<span class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ asvBemerkung }}</span>
+										<template #content>
+											{{ asvBemerkung }}
+										</template>
+									</svws-ui-tooltip>
+									<span v-else class="text-ui-50"> ASV-Bemerkung </span>
+								</td>
+								<td v-else class="ui-table-grid-button text-left" :style="`grid-column: span ${columns.length + 1} / span ${columns.length + 1}`">
+									<svws-ui-tooltip v-if="(asvBemerkung !== null) && (asvBemerkung.length > 20)" class="h-full w-full">
+										<span class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ asvBemerkung }}</span>
+										<template #content>
+											{{ asvBemerkung }}
+										</template>
+									</svws-ui-tooltip>
+									<span v-else class="text-ui-50"> kein ASV-Bemerkung hinterlegt </span>
+								</td>
+							</template>
+							<template v-else-if="typeof row.gruppe === 'string' && row.kompetenz === null">
+								<td v-if="row.gruppe.length < 10" class="text-left bg-ui-50">
+									{{ row.gruppe }}
+								</td>
+								<td v-else class="bg-ui-50">
+									<svws-ui-tooltip class="h-full w-full">
+										<span class="text-ellipsis overflow-hidden whitespace-nowrap w-full text-left">{{ row.gruppe }}</span>
+										<template #content>
+											{{ row.gruppe }}
+										</template>
+									</svws-ui-tooltip>
+								</td>
+								<td :style="`grid-column: span ${columns.length + 1} / span ${columns.length + 1}`" />
+							</template>
+							<template v-else-if="row.kompetenz !== null">
 								<td />
 								<td class="text-left"> {{ enmManager().mapAnkreuzkompetenzen.get(row.kompetenz.kompetenzID)?.text }} </td>
 								<template v-for="stufe, col of row.kompetenz.stufen" :key="col+2">
@@ -99,9 +144,9 @@
 
 	import type { ComponentPublicInstance } from 'vue';
 	import { computed, ref, shallowRef, watch, watchEffect } from 'vue';
-	import { ENMv2Leistung } from '../../../../core/src/core/data/enm/v2/ENMv2Leistung';
+	import type { ENMv2Leistung } from '../../../../core/src/core/data/enm/v2/ENMv2Leistung';
 	import type { ENMv2Schueler } from '../../../../core/src/core/data/enm/v2/ENMv2Schueler';
-	import type { ENMv2Fach } from '../../../../core/src/core/data/enm/v2/ENMv2Fach';
+	import { ENMv2Fach } from '../../../../core/src/core/data/enm/v2/ENMv2Fach';
 	import type { ENMv2SchuelerAnkreuzkompetenz } from '../../../../core/src/core/data/enm/v2/ENMv2SchuelerAnkreuzkompetenz';
 	import { PairNN } from '../../../../core/src/asd/adt/PairNN';
 	import type { List } from '../../../../core/src/java/util/List';
@@ -194,7 +239,7 @@
 		return arr;
 	});
 
-	type RowType = { gruppe: ENMv2Fach, kompetenz: ENMv2SchuelerAnkreuzkompetenz | ENMv2Leistung };
+	type RowType = { gruppe: ENMv2Fach | string | null, kompetenz: ENMv2SchuelerAnkreuzkompetenz | null };
 	const gridManager = new GridManager<string, RowType, List<RowType>>({
 		daten: computed<List<RowType>>(() => {
 			const result = new ArrayList<RowType>();
@@ -202,31 +247,43 @@
 			if (kompetenzen.isEmpty()) {
 				return result;
 			}
-			const [first] = kompetenzen;
-			let fach = props.enmManager().mapFaecher.get(props.enmManager().mapAnkreuzkompetenzen.get(first.kompetenzID)?.fachID ?? null);
-			if (fach !== null) {
-				const leistung = mapLeistungen.value.get(fach.id);
-				if (leistung !== undefined) {
-					result.add({ gruppe: fach, kompetenz: leistung });
-				}
-			}
+			const katalog = props.enmManager().daten.ankreuzkompetenzen;
+			let fach: ENMv2Fach | string | null;
+			let letztesFach: ENMv2Fach | string | null = "";
 			for (const kompetenz of kompetenzen) {
-				const nextFach = props.enmManager().mapFaecher.get(props.enmManager().mapAnkreuzkompetenzen.get(kompetenz.kompetenzID)?.fachID ?? null);
-				if (nextFach === null) {
-					continue;
-				}
-				if (nextFach !== fach) {
-					const leistung = mapLeistungen.value.get(nextFach.id);
-					if (leistung !== undefined) {
-						result.add({ gruppe: nextFach, kompetenz: leistung });
+				const kompetenzFachOrNull = props.enmManager().mapFaecher.get(props.enmManager().mapAnkreuzkompetenzen.get(kompetenz.kompetenzID)?.fachID ?? null);
+				if (kompetenzFachOrNull === null) {
+					// Nur einfügen, wenn Benutzer die Klassenleitung ist
+					if ((auswahlZelle.value === undefined) || !props.enmManager().listKlassenKlassenlehrer.contains(auswahlZelle.value.a)) {
+						continue;
 					}
-					fach = nextFach;
+					const ankreuzkompetenz = props.enmManager().mapAnkreuzkompetenzen.get(kompetenz.kompetenzID);
+					if (ankreuzkompetenz === null) {
+						continue;
+					} else if (ankreuzkompetenz.istFachkompetenz) {
+						fach = ((katalog.textSonstiges === null) || (katalog.textSonstiges.length === 0)) ? 'Sonstiges' : katalog.textSonstiges;
+					} else {
+						fach = null;
+					}
+				} else {
+					fach = kompetenzFachOrNull;
 				}
-				result.add({ gruppe: nextFach, kompetenz });
+				if (letztesFach !== fach) {
+					result.add({ gruppe: fach, kompetenz: null });
+				}
+				result.add({ gruppe: fach, kompetenz });
+				letztesFach = fach;
 			}
 			return result;
 		}),
-		getRowKey: row => `${row.gruppe.id}__${row.kompetenz.id}`,
+		getRowKey: row => {
+			if (row.gruppe === null) {
+				return (row.kompetenz === null) ? "ASV" : `ASV__${row.kompetenz.id}`;
+			} else if (typeof row.gruppe === 'string') {
+				return (row.kompetenz === null) ? "Sonstige" : `Sonstige__${row.kompetenz.id}`;
+			}
+			return `${row.gruppe.id}__${row.kompetenz?.id}`;
+		},
 		columns: [
 			{ kuerzel: "Fach", name: "Fach", width: "6rem", hideable: false },
 			{ kuerzel: "Kürzel", name: "Kürzel", width: "60rem", hideable: false },
@@ -266,6 +323,23 @@
 		};
 	}
 
+	function inputASVBemerkung(col: number, index: number) {
+		const schueler = auswahlZelle.value?.b;
+		if (schueler === undefined) {
+			return;
+		}
+		const key = 'ASV_' + schueler.id;
+		const indexSchueler = gridManagerSchueler.daten.indexOf(auswahlZelle.value);
+		const setter = (_value: boolean) => void props.focusFloskelEditor(auswahlZelle.value?.b ?? null, null, indexSchueler, true);
+		return (element: Element | ComponentPublicInstance<unknown> | null) => {
+			const input = gridManager.applyInputToggle(key, col, index, element, setter);
+			if (input !== null) {
+				gridManager.update(key, false);
+				gridManager.setNavigationOnEnter(key, null);
+			}
+		};
+	}
+
 	const sperrenVorhanden = computed(() => {
 		const set = new Set<ENMv2Klasse>();
 		for (const klasse of props.auswahl()) {
@@ -282,6 +356,12 @@
 			str += `${k.kuerzelAnzeige}, `;
 		}
 		return str.slice(0, -2);
+	});
+
+	const asvBemerkung = computed(() => {
+		// TODO Aufruf entfernen, Reaktivität funktioniert sonst nicht. Sollte über State laufen
+		void props.auswahl();
+		return auswahlZelle.value?.b.bemerkungen.ASV ?? null;
 	});
 
 </script>
