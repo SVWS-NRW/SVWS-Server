@@ -1,5 +1,5 @@
 <template>
-	<enm-ankreuzkompetenzen :enm-manager :auswahl :patch-leistung :patch-ankreuzkompetenz />
+	<enm-ankreuzkompetenzen :enm-manager :auswahl :patch-leistung :patch-ankreuzkompetenz :patch-bemerkungen />
 </template>
 
 <script setup lang="ts">

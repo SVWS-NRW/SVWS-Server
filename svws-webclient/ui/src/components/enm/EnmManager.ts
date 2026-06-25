@@ -583,9 +583,14 @@ export class EnmManager {
 		if (tmp !== 0) {
 			return tmp;
 		}
-		const tmp2 = a.sortierung - b.sortierung;
-		if (tmp2 !== 0) {
-			return tmp;
+		if (a.istFachkompetenz && !b.istFachkompetenz) {
+			return 1;
+		} else if (!a.istFachkompetenz && b.istFachkompetenz) {
+			return -1;
+		}
+		const tmp3 = a.sortierung - b.sortierung;
+		if (tmp3 !== 0) {
+			return tmp3;
 		}
 		return a.text.localeCompare(b.text);
 	};

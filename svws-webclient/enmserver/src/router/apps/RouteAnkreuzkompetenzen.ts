@@ -24,6 +24,7 @@ export class RouteAnkreuzkompetenzen extends RouteNode<any, RouteApp> {
 			enmManager: () => routeApp.data.manager,
 			auswahl: () => routeApp.data.auswahlKlassen,
 			patchLeistung: routeApp.data.patchLeistung,
+			patchBemerkungen: routeApp.data.patchBemerkungen,
 			patchAnkreuzkompetenz: routeApp.data.patchAnkreuzkompetenz,
 		};
 	}

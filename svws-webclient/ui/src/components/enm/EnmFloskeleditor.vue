@@ -75,7 +75,7 @@
 			</div>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="show = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="show = false"> Beenden </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
@@ -137,7 +137,7 @@
 		daten: computed<List<RowType>>(() => {
 			const result = new ArrayList<RowType>();
 			const auswahl = props.auswahl;
-			if ((auswahl.schueler === null) || ((auswahl.leistung === null) && (auswahl.klasse === null))) {
+			if (auswahl.schueler === null) {
 				return result;
 			}
 			for (const gruppe of floskelgruppen.value) {

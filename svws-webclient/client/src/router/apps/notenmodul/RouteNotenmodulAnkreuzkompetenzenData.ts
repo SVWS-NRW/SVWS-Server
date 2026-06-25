@@ -28,6 +28,7 @@ export class RouteNotenmodulAnkreuzkompetenzenData extends RouteNode<any, RouteN
 			enmManager: () => routeNotenmodul.data.manager,
 			auswahl: () => routeNotenmodul.data.auswahlKlassen,
 			patchLeistung: routeNotenmodul.data.patchLeistung,
+			patchBemerkungen: routeNotenmodul.data.patchBemerkungen,
 			patchAnkreuzkompetenz: routeNotenmodul.data.patchAnkreuzkompetenz,
 		};
 	}
