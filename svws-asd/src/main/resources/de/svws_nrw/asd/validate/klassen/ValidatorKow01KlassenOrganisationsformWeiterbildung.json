@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.klassen.ValidatorKow01KlassenOrganisationsformWeiterbildung",
+    "historie" : [ {
+      "praefix" : "KOW01",
+      "zweig" : "Klassen-Organisationsform",
+      "dtos" : "KlassenDaten",
+      "ausfuehrungsbereich_ui" : "Klassen, Reiter 'Klasse'",
+      "anzeigebereich_ui" : "Feld 'Organisationsform'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["KOW00"],
+      "muss" : ["WB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Organisationsform der Klasse: Das Feld 'Organisationsform' muss zulässig sein.",
+      "erlaeuterung" : "",
+      "bedingung" : "KlassenDaten.idWeiterbildungOrganisationsform ≠ einer id eines Eintrages in WeiterbildungskollegOrganisationsformen.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }

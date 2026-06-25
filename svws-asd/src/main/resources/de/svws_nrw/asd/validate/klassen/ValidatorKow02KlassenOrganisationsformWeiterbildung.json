@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.klassen.ValidatorKow02KlassenOrganisationsformWeiterbildung",
+    "historie" : [ {
+      "praefix" : "KOW02",
+      "zweig" : "Klassen-Organisationsform",
+      "dtos" : "KlassenDaten",
+      "ausfuehrungsbereich_ui" : "Klassen, Reiter 'Klasse'",
+      "anzeigebereich_ui" : "Feld 'Organisationsform'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["KOW01"],
+      "muss" : ["WB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Organisationsform der Klasse: Der eingetragene Wert für das Feld 'Organisationsform' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.",
+      "erlaeuterung" : "Hier soll geprüft werden, ob der ausgewählte Katalogeintrag zum Zeitpunkt der Prüfung zeitlich gültig ist, über gueltigVon und gueltigBis im Katalog.",
+      "bedingung" : "KlassenDaten.idWeiterbildungOrganisationsform ≠ einem zeitlich gültigen Historieneintrag in WeiterbildungskollegOrganisationsformen.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
