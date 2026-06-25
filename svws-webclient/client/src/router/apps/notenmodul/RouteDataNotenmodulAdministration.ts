@@ -422,6 +422,7 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		try {
 			const res = await api.server.synchronizeENMDaten(api.schema, this.manager.auswahl().id);
 			await routeNotenmodul.data.entferneDaten();
+			await routeNotenmodul.data.ladeDaten();
 			return res;
 		} catch (e) {
 			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
@@ -441,6 +442,7 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		try {
 			const res = await api.server.downloadENMDaten(api.schema, this.manager.auswahl().id);
 			await routeNotenmodul.data.entferneDaten();
+			await routeNotenmodul.data.ladeDaten();
 			return res;
 		} catch (e) {
 			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
