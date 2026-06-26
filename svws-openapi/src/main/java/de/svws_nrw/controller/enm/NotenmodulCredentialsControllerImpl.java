@@ -3,6 +3,7 @@ package de.svws_nrw.controller.enm;
 import java.util.List;
 
 import de.svws_nrw.data.Responses;
+import de.svws_nrw.service.enm.NotenmodulCredentialGeneratorService;
 import de.svws_nrw.service.enm.NotenmodulCredentialsService;
 import jakarta.ws.rs.core.Response;
 
@@ -11,15 +12,19 @@ import jakarta.ws.rs.core.Response;
  */
 public final class NotenmodulCredentialsControllerImpl implements NotenmodulCredentialsController {
 
-	private final NotenmodulCredentialsService service;
+	private final NotenmodulCredentialsService notenmodulCredentialsService;
+	private final NotenmodulCredentialGeneratorService notenmodulCredentialGeneratorService;
 
 	/**
 	 * Erstellt für  die Datenbank-Verbindung eine neue Controller-Instanz.
 	 *
-	 * @param service   der Service
+	 * @param notenmodulCredentialsService           der Service für den Zugriff auf die Credentials
+	 * @param notenmodulCredentialGeneratorService   der Service für das Generieren der Credentials
 	 */
-	public NotenmodulCredentialsControllerImpl(final NotenmodulCredentialsService service) {
-		this.service = service;
+	public NotenmodulCredentialsControllerImpl(final NotenmodulCredentialsService notenmodulCredentialsService,
+			final NotenmodulCredentialGeneratorService notenmodulCredentialGeneratorService) {
+		this.notenmodulCredentialsService = notenmodulCredentialsService;
+		this.notenmodulCredentialGeneratorService = notenmodulCredentialGeneratorService;
 	}
 
 	/**
@@ -29,7 +34,7 @@ public final class NotenmodulCredentialsControllerImpl implements NotenmodulCred
 	 */
 	@Override
 	public Response getInitialkennwoerter() {
-		return Responses.ok(service.getInitialkennwoerter());
+		return Responses.ok(notenmodulCredentialsService.getInitialkennwoerter());
 	}
 
 
@@ -42,7 +47,7 @@ public final class NotenmodulCredentialsControllerImpl implements NotenmodulCred
 	 */
 	@Override
 	public Response getInitialkennwoerter(final List<Long> idsLehrer) {
-		return Responses.ok(service.getInitialkennwoerter(idsLehrer));
+		return Responses.ok(notenmodulCredentialsService.getInitialkennwoerter(idsLehrer));
 	}
 
 
@@ -55,7 +60,7 @@ public final class NotenmodulCredentialsControllerImpl implements NotenmodulCred
 	 */
 	@Override
 	public Response getInitialkennwort(final long idLehrer) {
-		final String cred = service.getInitialkennwort(idLehrer);
+		final String cred = notenmodulCredentialsService.getInitialkennwort(idLehrer);
 		return Responses.ok("\"" + cred + "\"");
 	}
 
@@ -65,7 +70,7 @@ public final class NotenmodulCredentialsControllerImpl implements NotenmodulCred
 	 */
 	@Override
 	public Response generateMissingCredentials() {
-		service.generateMissingCredentials();
+		notenmodulCredentialGeneratorService.generateMissingCredentials();
 		return Responses.noContent();
 	}
 
@@ -78,7 +83,7 @@ public final class NotenmodulCredentialsControllerImpl implements NotenmodulCred
 	 */
 	@Override
 	public Response resetPassword(final long idLehrer) {
-		service.resetPassword(idLehrer);
+		notenmodulCredentialsService.resetPassword(idLehrer);
 		return Responses.noContent();
 	}
 
@@ -90,7 +95,7 @@ public final class NotenmodulCredentialsControllerImpl implements NotenmodulCred
 	 */
 	@Override
 	public Response generateInitialPassword(final long idLehrer) {
-		final String cred = service.generateInitialPassword(idLehrer);
+		final String cred = notenmodulCredentialsService.generateInitialPassword(idLehrer);
 		return Responses.ok("\"" + cred + "\"");
 	}
 
@@ -105,7 +110,7 @@ public final class NotenmodulCredentialsControllerImpl implements NotenmodulCred
 	 */
 	@Override
 	public Response resetTotpSecret(final long idLehrer) {
-		service.resetTotpSecret(idLehrer);
+		notenmodulCredentialsService.resetTotpSecret(idLehrer);
 		return Responses.noContent();
 	}
 
@@ -119,7 +124,7 @@ public final class NotenmodulCredentialsControllerImpl implements NotenmodulCred
 	 */
 	@Override
 	public Response setArt2FA(final long idLehrer, final Integer art2FA) {
-		service.setArt2FA(idLehrer, art2FA);
+		notenmodulCredentialsService.setArt2FA(idLehrer, art2FA);
 		return Responses.noContent();
 	}
 

@@ -43,7 +43,6 @@ import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLernabsch
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerTeilleistungen;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerZP10;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.repo.enm.NotenmodulCredentialsRepository;
 import de.svws_nrw.repo.enm.NotenmodulCredentialsTimestampsRepository;
 import de.svws_nrw.repo.faecher.FachRepository;
 import de.svws_nrw.repo.jahrgaenge.JahrgaengeRepository;
@@ -179,8 +178,8 @@ public final class EnmV2GetServiceKontext {
 	/** Das Repository für den Zugriff auf den Katalog der Teilleistungsarten */
 	private final TeilleistungsartRepository teilleistungsartRepository;
 
-	/** Das Repository für den Zugriff auf die Credentials der Lehrer für das Notenmodul */
-	private final NotenmodulCredentialsRepository notenmodulCredentialsRepository;
+	/** Der Service für den Zugriff bzw. die Erstellung von Credentials der Lehrer für das Notenmodul */
+	private final NotenmodulCredentialGeneratorService notenmodulCredentialGeneratorService;
 
 	/** Das Repository für den Zugriff auf die Zeitstempel für die Credentials der Lehrer für das Notenmodul */
 	private final NotenmodulCredentialsTimestampsRepository notenmodulCredentialsTimestampsRepository;
@@ -323,7 +322,7 @@ public final class EnmV2GetServiceKontext {
 			final FloskelgruppenRepository floskelgruppenRepository,
 			final FloskelJahrgaengeRepository floskelJahrgaengeRepository,
 			final TeilleistungsartRepository teilleistungsartRepository,
-			final NotenmodulCredentialsRepository notenmodulCredentialsRepository,
+			final NotenmodulCredentialGeneratorService notenmodulCredentialGeneratorService,
 			final NotenmodulCredentialsTimestampsRepository notenmodulCredentialsTimestampsRepository) {
 		this.schuleRepository = schuleRepository;
 		this.schulleitungRepository = schulleitungRepository;
@@ -356,7 +355,7 @@ public final class EnmV2GetServiceKontext {
 		this.floskelgruppenRepository = floskelgruppenRepository;
 		this.floskelJahrgaengeRepository = floskelJahrgaengeRepository;
 		this.teilleistungsartRepository = teilleistungsartRepository;
-		this.notenmodulCredentialsRepository = notenmodulCredentialsRepository;
+		this.notenmodulCredentialGeneratorService = notenmodulCredentialGeneratorService;
 		this.notenmodulCredentialsTimestampsRepository = notenmodulCredentialsTimestampsRepository;
 	}
 
@@ -394,7 +393,7 @@ public final class EnmV2GetServiceKontext {
 	 * @param floskelgruppenRepository                         das Repository für den Zugriff auf den Katalog der Floskelgruppen
 	 * @param floskelJahrgaengeRepository                      das Repository für den Zugriff auf die Jahrgangszuordnungen der Floskeln
 	 * @param teilleistungsartRepository                       das Repository für den Zugriff auf den Katalog der Teilleistungsarten
-	 * @param notenmodulCredentialsRepository                  das Repository für den Zugriff auf die Credentials der Lehrer für das Notenmodul
+	 * @param notenmodulCredentialGeneratorService             der Service für den Zugriff auf bzw. das Erstellen von Credentials der Lehrer für das Notenmodul
 	 * @param notenmodulCredentialsTimestampsRepository        das Repository für den Zugriff auf die Zeitstempel für die Credentials
 	 *                                                         der Lehrer für das Notenmodul
 	 *
@@ -431,7 +430,7 @@ public final class EnmV2GetServiceKontext {
 			final FloskelgruppenRepository floskelgruppenRepository,
 			final FloskelJahrgaengeRepository floskelJahrgaengeRepository,
 			final TeilleistungsartRepository teilleistungsartRepository,
-			final NotenmodulCredentialsRepository notenmodulCredentialsRepository,
+			final NotenmodulCredentialGeneratorService notenmodulCredentialGeneratorService,
 			final NotenmodulCredentialsTimestampsRepository notenmodulCredentialsTimestampsRepository) {
 		return new EnmV2GetServiceKontext(schuleRepository, schulleitungRepository, schuljahresabschnitteRepository,
 				abteilungenRepository, abteilungenKlassenRepository, lehrerRepository, fachRepository,
@@ -443,7 +442,7 @@ public final class EnmV2GetServiceKontext {
 				kurseRepository, klassenRepository, klassenleitungenRepository, jahrgaengeRepository, foerderschwerpunkteRepository,
 				ankreuzkompetenzenKonfigurationRepository, ankreuzkompetenzenRepository, ankreuzkompetenzenJahrgaengeRepository,
 				floskelRepository, floskelgruppenRepository, floskelJahrgaengeRepository, teilleistungsartRepository,
-				notenmodulCredentialsRepository, notenmodulCredentialsTimestampsRepository);
+				notenmodulCredentialGeneratorService, notenmodulCredentialsTimestampsRepository);
 	}
 
 
@@ -641,7 +640,7 @@ public final class EnmV2GetServiceKontext {
 
 		// Lese nun die restlichen nicht schülerspezifischen ENM-Daten ein
 		this.schule = schuleRepository.getFirst();
-		this.mapLehrerPWHash = notenmodulCredentialsRepository.getMap();
+		this.mapLehrerPWHash = notenmodulCredentialGeneratorService.generateMissingCredentials();
 		this.mapLehrerPWHashTimestamps = notenmodulCredentialsTimestampsRepository.getMap();
 		this.ankreuzkompetenzenKonfiguration = ankreuzkompetenzenKonfigurationRepository.findFirst();
 		this.mapKatalogAnkreuzkompetenzen = ankreuzkompetenzenRepository.getMap();
