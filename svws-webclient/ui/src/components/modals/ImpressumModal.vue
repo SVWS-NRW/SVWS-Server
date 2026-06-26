@@ -7,7 +7,7 @@
 				<mark-down :text="auskunftState.impressum" />
 			</div>
 			<div v-else class="space-y-2 text-left">
-				Das Impressum für diese Seite
+				Das Impressum für diese Seite wird nachgereicht. Bitte fragen Sie bei Ihrer Schule nach Details.
 			</div>
 		</template>
 		<template #modalActions>

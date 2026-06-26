@@ -10,6 +10,8 @@ import { serverState } from "./states/ServerStateImpl";
 import { AuskunftStateKey } from "@ui/states/AuskunftState";
 import { auskunftState } from "./states/AuskunftStateImpl";
 
+await auskunftState.init();
+
 const app = createApp(SWrapper);
 app.provide(AuskunftStateKey, auskunftState);
 
