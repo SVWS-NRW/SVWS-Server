@@ -1,4 +1,3 @@
-import { StateManager } from "../../../index";
 import type { List } from '../../../../../core/src/java/util/List';
 import type { JavaMap } from '../../../../../core/src/java/util/JavaMap';
 import type { JavaSet } from '../../../../../core/src/java/util/JavaSet';
@@ -9,6 +8,7 @@ import { SchuelerListeEintrag } from '../../../../../core/src/core/data/schueler
 import { HashSet } from '../../../../../core/src/java/util/HashSet';
 import { HashMap } from '../../../../../core/src/java/util/HashMap';
 import { KAOAKategorie } from '../../../../../core/src/asd/types/kaoa/KAOAKategorie';
+import { StateManager } from '../../StateManager';
 
 
 interface SchuelerKaoaState {

@@ -115,7 +115,7 @@
 								<td class="text-left"> {{ enmManager().mapAnkreuzkompetenzen.get(row.kompetenz.kompetenzID)?.text }} </td>
 								<template v-for="stufe, col of row.kompetenz.stufen" :key="col+2">
 									<template v-if="columns.at(col) !== undefined">
-										<td v-if="auswahlZelle?.b.klasseID && enmManager().sperrungen.istSpalteneingabeErlaubt(auswahlZelle.b.klasseID, 'Note')"
+										<td v-if="auswahlZelle?.b.klasseID && enmManager().sperrungen.istSpalteneingabeErlaubt(auswahlZelle.b.klasseID, (row.gruppe === null) ? 'ASV' : 'Note')"
 											:ref="inputStufe(row.kompetenz, col+2, index)" class="ui-table-grid-button"
 											:class="{
 												'bg-ui-selected': (gridManager.focusColumn === col+2),

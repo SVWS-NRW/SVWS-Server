@@ -130,11 +130,9 @@
 	import type { TabData } from "@ui/ui/nav/TabData";
 	import { useAuthState } from "~/states/AuthState";
 	import { useActivityState } from "~/states/ActivityState";
-	import { useAuskunftState } from "@ui/index";
 
 	const activityState = useActivityState();
 	const auth = useAuthState();
-	const auskunftState = useAuskunftState();
 
 	const props = defineProps<AppProps>();
 
