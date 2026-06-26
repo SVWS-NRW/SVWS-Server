@@ -49,6 +49,7 @@ export class RouteDataSchuelerEinwilligungen extends RouteData<RouteStateSchuele
 			}
 		}
 		this.commit();
+		return true;
 	};
 
 	public async ladeDaten(auswahl: SchuelerListeEintrag | null | undefined) {

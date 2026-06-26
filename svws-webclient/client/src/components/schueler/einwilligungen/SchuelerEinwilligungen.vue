@@ -3,18 +3,16 @@
 		<svws-ui-input-wrapper :grid="1">
 			<svws-ui-content-card v-if="hasAbgefragteEinwilligungen" title="Abgefragt" class="col-span-full">
 				<div class="space-y-2">
-					<div v-for="einwilligung of einwilligungen()" :key="einwilligung.idEinwilligungsart">
-						<template v-if="einwilligung.abgefragt || einwilligung.status">
-							<ui-card :title="getBezeichnungEinwilligungsart(einwilligung.idEinwilligungsart)" :info="getEinwilligungsstatus(einwilligung)">
+					<div v-for="einwilligung of einwilligungenProxies" :key="einwilligung.proxy.idEinwilligungsart">
+						<template v-if="einwilligung.proxy.abgefragt || einwilligung.proxy.status">
+							<ui-card :title="getBezeichnungEinwilligungsart(einwilligung.proxy.idEinwilligungsart)" :info="getEinwilligungsstatus(einwilligung.proxy)">
 								<div class="w-1/5">
 									<p class="text-headline-md mb-1"> Status </p>
 								</div>
-								<svws-ui-checkbox class="w-2/5" :model-value="einwilligung.abgefragt" type="checkbox" title="Abgefragt"
-									@update:model-value="abgefragt => patch({ abgefragt }, einwilligung.idEinwilligungsart)" :readonly>
+								<svws-ui-checkbox class="w-2/5" v-model="einwilligung.currentAbgefragt.value" type="checkbox" title="Abgefragt" :readonly>
 									Abgefragt
 								</svws-ui-checkbox>
-								<svws-ui-checkbox class="w-2/5" :model-value="einwilligung.status" type="checkbox" title="Zugestimmt"
-									@update:model-value="status => patch({ status }, einwilligung.idEinwilligungsart)" :readonly>
+								<svws-ui-checkbox class="w-2/5" v-model="einwilligung.currentStatus.value" type="checkbox" title="Zugestimmt" :readonly>
 									Zugestimmt
 								</svws-ui-checkbox>
 							</ui-card>
@@ -24,18 +22,16 @@
 			</svws-ui-content-card>
 			<svws-ui-content-card v-if="hasNichtAbgefragteEinwilligungen" title="Nicht abgefragt" class="col-span-full">
 				<div class="space-y-2">
-					<div v-for="einwilligung of einwilligungen()" :key="einwilligung.idEinwilligungsart">
-						<template v-if="!einwilligung.abgefragt && !einwilligung.status">
-							<ui-card :title="getBezeichnungEinwilligungsart(einwilligung.idEinwilligungsart)">
+					<div v-for="einwilligung of einwilligungenProxies" :key="einwilligung.proxy.idEinwilligungsart">
+						<template v-if="!einwilligung.proxy.abgefragt && !einwilligung.proxy.status">
+							<ui-card :title="getBezeichnungEinwilligungsart(einwilligung.proxy.idEinwilligungsart)">
 								<div class="w-1/5">
 									<p class="text-headline-md mb-1"> Status </p>
 								</div>
-								<svws-ui-checkbox class="w-2/5" :model-value="einwilligung.abgefragt" type="checkbox" title="Abgefragt"
-									@update:model-value="abgefragt => patch({ abgefragt }, einwilligung.idEinwilligungsart)" :readonly>
+								<svws-ui-checkbox class="w-2/5" v-model="einwilligung.currentAbgefragt.value" type="checkbox" title="Abgefragt" :readonly>
 									Abgefragt
 								</svws-ui-checkbox>
-								<svws-ui-checkbox class="w-2/5" :model-value="einwilligung.status" type="checkbox" title="Zugestimmt"
-									@update:model-value="status => updateEinwilligungStatus(einwilligung, status)" :readonly>
+								<svws-ui-checkbox class="w-2/5" v-model="einwilligung.currentStatus.value" type="checkbox" title="Zugestimmt" :readonly>
 									Zugestimmt
 								</svws-ui-checkbox>
 							</ui-card>
@@ -49,14 +45,23 @@
 
 <script setup lang="ts">
 	import { computed } from "vue";
-	import type { SchuelerEinwilligungenProps } from './SchuelerEinwilligungenProps';
 	import type { SchuelerEinwilligung } from "@core";
-	import { BenutzerKompetenz } from "@core";
+	import { ArrayList, BenutzerKompetenz } from "@core";
+	import type { SchuelerEinwilligungenProps } from './SchuelerEinwilligungenProps';
+	import { SchuelerEinwilligungenModelProxy } from "./modelProxy/SchuelerEinwilligungenModelProxy";
 
 	const props = defineProps<SchuelerEinwilligungenProps>();
 
 	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_EINWILLIGUNGEN_AENDERN));
 	const readonly = computed(() => !hatKompetenzAendern.value);
+	const einwilligungenProxies = computed(() => {
+		const result = new ArrayList<SchuelerEinwilligungenModelProxy>();
+		for (const einwilligung of props.einwilligungen()) {
+			const modelProxy = new SchuelerEinwilligungenModelProxy(() => einwilligung, (data: Partial<SchuelerEinwilligung>) => props.patch(data, einwilligung.idEinwilligungsart));
+			result.add(modelProxy);
+		}
+		return result;
+	});
 
 	const hasAbgefragteEinwilligungen = computed(() => {
 		for (const einwilligung of props.einwilligungen()) {
@@ -80,14 +85,6 @@
 		return props.mapEinwilligungsarten.get(idEinwilligungsart)?.bezeichnung ?? "";
 	}
 
-	async function updateEinwilligungStatus(einwilligung: SchuelerEinwilligung, status: boolean) {
-		const update: Partial<SchuelerEinwilligung> = { status };
-		if ((status) && (!einwilligung.abgefragt)) {
-			update.abgefragt = true;
-		}
-		await props.patch(update, einwilligung.idEinwilligungsart);
-	}
-
 	function getEinwilligungsstatus(einwilligung: SchuelerEinwilligung): string {
 		if (einwilligung.abgefragt && einwilligung.status) {
 			return 'Abgefragt und Zugestimmt';
@@ -99,4 +96,5 @@
 			return '';
 		}
 	}
+
 </script>
