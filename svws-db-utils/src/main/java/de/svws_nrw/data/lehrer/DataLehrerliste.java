@@ -70,10 +70,10 @@ public final class DataLehrerliste extends DataManagerRevised<Long, DTOLehrer, L
 		if (l.DatumZugang != null) {
 			final LocalDate dateZugang = LocalDate.parse(l.DatumZugang);
 			final int year = dateZugang.getYear();
-			if (year > schuljahresabschnitt.schuljahr + 1) {
+			if (year > (schuljahresabschnitt.schuljahr + 1)) {
 				return false;
 			}
-			if (year == schuljahresabschnitt.schuljahr + 1) {
+			if (year == (schuljahresabschnitt.schuljahr + 1)) {
 				final int month = dateZugang.getMonthValue();
 				if (month >= 8) {
 					return false;
@@ -96,12 +96,12 @@ public final class DataLehrerliste extends DataManagerRevised<Long, DTOLehrer, L
 			if ((year < schuljahresabschnitt.schuljahr) || ((schuljahresabschnitt.abschnitt == 2) && (year == schuljahresabschnitt.schuljahr))) {
 				return false;
 			}
-			if (year <= schuljahresabschnitt.schuljahr + 1) {
+			if (year <= (schuljahresabschnitt.schuljahr + 1)) {
 				final int month = dateAbgang.getMonthValue();
 				if ((schuljahresabschnitt.abschnitt == 1) && (year == schuljahresabschnitt.schuljahr) && (month <= 7)) {
 					return false;
 				}
-				if ((schuljahresabschnitt.abschnitt == 2) && (year == schuljahresabschnitt.schuljahr + 1)) {
+				if ((schuljahresabschnitt.abschnitt == 2) && (year == (schuljahresabschnitt.schuljahr + 1))) {
 					final DateManager date = Termin.getLetzterUnterrichtstagImErstenHalbjahr(schuljahresabschnitt.schuljahr);
 					if (date != null) {
 						final int day = dateAbgang.getDayOfMonth();
@@ -255,9 +255,10 @@ public final class DataLehrerliste extends DataManagerRevised<Long, DTOLehrer, L
 		final String queryKlassenleitung = "SELECT DISTINCT d.Lehrer_ID FROM DTOKlassenLeitung d WHERE d.Lehrer_ID IN :idsLehrer";
 		final String queryKursLehrer = "SELECT DISTINCT e.Lehrer_ID FROM DTOKursLehrer e WHERE e.Lehrer_ID IN :idsLehrer";
 		final String querySchulleitung = "SELECT DISTINCT f.LehrerID FROM DTOSchulleitung f WHERE f.LehrerID IN :idsLehrer";
+		final String querySchuelerBetriebe = "SELECT DISTINCT g.idBetreuungslehrer FROM DTOSchuelerBetrieb g WHERE g.idBetreuungslehrer IN :idsLehrer";
 
 		final String query = String.join("\nUNION ALL\n", queryKurse, querySchuelerLeistungsdaten, querySchuelerLernabschnittsdaten,
-				queryKlassenleitung, queryKursLehrer, querySchulleitung
+				queryKlassenleitung, queryKursLehrer, querySchulleitung, querySchuelerBetriebe
 		);
 		final List<Long> results = conn.query(query, Long.class).setParameter("idsLehrer", idsLehrer).getResultList();
 		return new HashSet<>(results);
