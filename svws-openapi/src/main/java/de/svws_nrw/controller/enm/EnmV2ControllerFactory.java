@@ -15,7 +15,7 @@ import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
 import de.svws_nrw.service.enm.EnmV2GetService;
 import de.svws_nrw.service.enm.EnmV2ImportService;
-import de.svws_nrw.service.enm.EnmV2ServiceFactory;
+import de.svws_nrw.service.enm.NotenmodulServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -25,7 +25,7 @@ import jakarta.ws.rs.core.Response.Status;
 public final class EnmV2ControllerFactory {
 
 	/** Die Service-Factory für die ENM-Daten in Version 2 */
-	private final EnmV2ServiceFactory serviceFactory;
+	private final NotenmodulServiceFactory serviceFactory;
 
 
 	/**
@@ -34,13 +34,13 @@ public final class EnmV2ControllerFactory {
 	 * im Interface aufgerufen werden.
 	 */
 	private EnmV2ControllerFactory() {
-		this.serviceFactory = EnmV2ServiceFactory.getNewInstance(
+		this.serviceFactory = NotenmodulServiceFactory.getNewInstance(
+				NotenmodulRepositoryFactory.getNewInstance(),
+				LehrerRepositoryFactory.getNewInstance(),
+				SchuelerRepositoryFactory.getNewInstance(),
 				KatalogeRepositoryFactory.getNewInstance(),
 				KlassenRepositoryFactory.getNewInstance(),
 				KurseRepositoryFactory.getNewInstance(),
-				LehrerRepositoryFactory.getNewInstance(),
-				NotenmodulRepositoryFactory.getNewInstance(),
-				SchuelerRepositoryFactory.getNewInstance(),
 				SchuleRepositoryFactory.getNewInstance());
 	}
 

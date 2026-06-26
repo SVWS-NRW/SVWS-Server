@@ -15,7 +15,7 @@ import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
 import de.svws_nrw.service.enm.EnmV1GetService;
 import de.svws_nrw.service.enm.EnmV1ImportService;
-import de.svws_nrw.service.enm.EnmV1ServiceFactory;
+import de.svws_nrw.service.enm.NotenmodulServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -25,7 +25,7 @@ import jakarta.ws.rs.core.Response.Status;
 public final class EnmV1ControllerFactory {
 
 	/** Die Service-Factory für die ENM-Daten in Version 1 */
-	private final EnmV1ServiceFactory serviceFactory;
+	private final NotenmodulServiceFactory serviceFactory;
 
 
 	/**
@@ -34,16 +34,15 @@ public final class EnmV1ControllerFactory {
 	 * im Interface aufgerufen werden.
 	 */
 	private EnmV1ControllerFactory() {
-		this.serviceFactory = EnmV1ServiceFactory.getNewInstance(
+		this.serviceFactory = NotenmodulServiceFactory.getNewInstance(
+				NotenmodulRepositoryFactory.getNewInstance(),
+				LehrerRepositoryFactory.getNewInstance(),
+				SchuelerRepositoryFactory.getNewInstance(),
 				KatalogeRepositoryFactory.getNewInstance(),
 				KlassenRepositoryFactory.getNewInstance(),
 				KurseRepositoryFactory.getNewInstance(),
-				LehrerRepositoryFactory.getNewInstance(),
-				NotenmodulRepositoryFactory.getNewInstance(),
-				SchuelerRepositoryFactory.getNewInstance(),
 				SchuleRepositoryFactory.getNewInstance());
 	}
-
 
 	/**
 	 * Diese statische Methode dient dem Zugriff auf die in der API-Schicht.

@@ -40,22 +40,22 @@ public final class NotenmodulSynchronisationService {
 	private final NotenmodulVerbindungenRepository repository;
 	private final EnmV2GetService enmGetService;
 	private final EnmV2ImportService enmImportService;
-	private final NotenmodulCredentialsService notenmodulCredentialService;
+	private final NotenmodulCredentialGeneratorService notenmodulCredentialGeneratorService;
 
 	/**
 	 * Erstellt einen neuen Service für die Notenmodul-Verbindung zu einem externen Notenmodul-Server
 	 *
-	 * @param repository                    das Repository für den Zugriff auf die Notenmodul-Verbindungen
-	 * @param enmGetService                 der Service zum Einlesen der ENM-Daten aus der SVWS-Datenbank
-	 * @param enmImportService              der Service für den Import der ENM-Daten
-	 * @param notenmodulCredentialService   der Service für die Verwaltung der Notenmodul-Credentials
+	 * @param repository                             das Repository für den Zugriff auf die Notenmodul-Verbindungen
+	 * @param enmGetService                          der Service zum Einlesen der ENM-Daten aus der SVWS-Datenbank
+	 * @param enmImportService                       der Service für den Import der ENM-Daten
+	 * @param notenmodulCredentialGeneratorService   der Service für die Verwaltung/Erstellung der Notenmodul-Credentials
 	 */
 	public NotenmodulSynchronisationService(final NotenmodulVerbindungenRepository repository, final EnmV2GetService enmGetService,
-			final EnmV2ImportService enmImportService, final NotenmodulCredentialsService notenmodulCredentialService) {
+			final EnmV2ImportService enmImportService, final NotenmodulCredentialGeneratorService notenmodulCredentialGeneratorService) {
 		this.repository = repository;
 		this.enmGetService = enmGetService;
 		this.enmImportService = enmImportService;
-		this.notenmodulCredentialService = notenmodulCredentialService;
+		this.notenmodulCredentialGeneratorService = notenmodulCredentialGeneratorService;
 	}
 
 
@@ -140,7 +140,7 @@ public final class NotenmodulSynchronisationService {
 	private void uploadENMDaten(final HttpENMServerConnection client, final Logger logger) throws ApiOperationException {
 		try {
 			logger.logLn("Ergänze ggf. Credentials für neue Lehrer...");
-			notenmodulCredentialService.generateMissingCredentials();
+			notenmodulCredentialGeneratorService.generateMissingCredentials();
 
 			logger.logLn("Bestimme die ENM-Daten aus der Datenbank des SVWS-Servers...");
 			final ENMv2Daten enmDaten = enmGetService.get(null); // null für schulenweiten Export

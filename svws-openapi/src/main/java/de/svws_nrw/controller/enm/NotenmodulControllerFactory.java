@@ -12,8 +12,6 @@ import de.svws_nrw.repo.kurse.KurseRepositoryFactory;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
-import de.svws_nrw.service.enm.EnmV2ServiceFactory;
-import de.svws_nrw.service.enm.NotenmodulCredentialsService;
 import de.svws_nrw.service.enm.NotenmodulLocalService;
 import de.svws_nrw.service.enm.NotenmodulServiceFactory;
 import de.svws_nrw.service.enm.NotenmodulSynchronisationService;
@@ -24,9 +22,6 @@ import jakarta.servlet.http.HttpServletRequest;
  * Die Controller-Factory für den Bereich des Notenmoduls
  */
 public final class NotenmodulControllerFactory {
-
-	/** Die Service-Factory für die ENM-Daten in Version 1 */
-	private final EnmV2ServiceFactory enmV2ServiceFactory;
 
 	/** Die Service-Factory für das Notenmodul */
 	private final NotenmodulServiceFactory notenmodulServiceFactory;
@@ -44,22 +39,15 @@ public final class NotenmodulControllerFactory {
 	 */
 	private NotenmodulControllerFactory(final Benutzer authenticatedUser) {
 		this.authenticatedUser = authenticatedUser;
-		this.enmV2ServiceFactory = EnmV2ServiceFactory.getNewInstance(
+		this.notenmodulServiceFactory = NotenmodulServiceFactory.getNewInstance(
+				NotenmodulRepositoryFactory.getNewInstance(),
+				LehrerRepositoryFactory.getNewInstance(),
+				SchuelerRepositoryFactory.getNewInstance(),
 				KatalogeRepositoryFactory.getNewInstance(),
 				KlassenRepositoryFactory.getNewInstance(),
 				KurseRepositoryFactory.getNewInstance(),
-				LehrerRepositoryFactory.getNewInstance(),
-				NotenmodulRepositoryFactory.getNewInstance(),
-				SchuelerRepositoryFactory.getNewInstance(),
 				SchuleRepositoryFactory.getNewInstance());
-		final var notenmodulRepositoryFactory = NotenmodulRepositoryFactory.getNewInstance();
-		final var lehrerRepositoryFactory = LehrerRepositoryFactory.getNewInstance();
-		final var schuelerRepositoryFactory = SchuelerRepositoryFactory.getNewInstance();
-		final var katalogeRepositoryFactory = KatalogeRepositoryFactory.getNewInstance();
-		this.notenmodulServiceFactory = NotenmodulServiceFactory.getNewInstance(notenmodulRepositoryFactory, this.enmV2ServiceFactory, lehrerRepositoryFactory,
-				schuelerRepositoryFactory, katalogeRepositoryFactory);
 	}
-
 
 	/**
 	 * Diese statische Methode dient dem Zugriff auf die in der API-Schicht.
@@ -134,8 +122,8 @@ public final class NotenmodulControllerFactory {
 	 * @return der Controller
 	 */
 	public NotenmodulCredentialsController getNotenmodulCredentialsController() {
-		final NotenmodulCredentialsService service = notenmodulServiceFactory.getNotenmodulCredentialsService();
-		return new NotenmodulCredentialsControllerImpl(service);
+		return new NotenmodulCredentialsControllerImpl(notenmodulServiceFactory.getNotenmodulCredentialsService(),
+				notenmodulServiceFactory.getNotenmodulCredentialGeneratorService());
 	}
 
 
