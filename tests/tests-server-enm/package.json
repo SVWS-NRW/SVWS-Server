@@ -3,7 +3,7 @@
 	"description": "SVWS-Server-Projekt: ENM-Server Tests",
 	"author": "MSB NRW",
 	"license": "BSD-3-Clause",
-	"version": "1.3.2",
+	"version": "1.3.3",
 	"files": [
 		"dist"
 	],
