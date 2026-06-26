@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { ReportingFilterVerknuepfung } from '../../../core/types/reporting/ReportingFilterVerknuepfung';
+import { ReportingFilterDefinitionFactory } from '../../../core/utils/reporting/ReportingFilterDefinitionFactory';
+import { ReportingFilterVerknuepfung, cast_de_svws_nrw_core_types_reporting_ReportingFilterVerknuepfung } from '../../../core/types/reporting/ReportingFilterVerknuepfung';
 import { ReportingFilterDefinition } from '../../../core/data/reporting/ReportingFilterDefinition';
 import { ReportingReportvorlageParameter } from '../../../core/data/reporting/ReportingReportvorlageParameter';
 import { ReportingSortierungDefinitionGruppe } from '../../../core/data/reporting/ReportingSortierungDefinitionGruppe';
@@ -7,7 +8,9 @@ import { ReportingReportvorlageParameterTyp } from '../../../core/types/reportin
 import { ReportingEMailDaten } from '../../../core/data/reporting/ReportingEMailDaten';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { ReportingUIKomponentenTyp } from '../../../core/types/reporting/ReportingUIKomponentenTyp';
+import { JavaString } from '../../../java/lang/JavaString';
 import { ReportingFilterKriterium } from '../../../core/data/reporting/ReportingFilterKriterium';
+import { SchuelerStatus } from '../../../asd/types/schueler/SchuelerStatus';
 import { ReportingParameter } from '../../../core/data/reporting/ReportingParameter';
 import { ReportingSortierungDefinition } from '../../../core/data/reporting/ReportingSortierungDefinition';
 import { ReportingEMailEmpfaengerTyp } from '../../../core/types/reporting/ReportingEMailEmpfaengerTyp';
@@ -15,6 +18,7 @@ import { ReportingFilterDefinitionGruppe } from '../../../core/data/reporting/Re
 import { ReportingFilterEintrag } from '../../../core/data/reporting/ReportingFilterEintrag';
 import { ReportingReportvorlageParameterGruppe } from '../../../core/data/reporting/ReportingReportvorlageParameterGruppe';
 import type { List } from '../../../java/util/List';
+import { cast_java_util_List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import { Arrays } from '../../../java/util/Arrays';
 import { ReportingAusgabeformat } from '../../../core/types/reporting/ReportingAusgabeformat';
@@ -152,15 +156,91 @@ export class ReportingReportvorlageUtils extends JavaObject {
 	 *
 	 * @return Ein ReportingFilterDefinitionGruppe-Objekt mit den angegebenen Eigenschaften
 	 */
-	public static erzeugeFilterDefinitionGruppe(bezeichnung: string, typ: string, uiIstSichtbar: boolean, uiIstMultiselect: boolean, multiselectVerknuepfung: ReportingFilterVerknuepfung, filterDefinitionenOptionen: List<ReportingFilterDefinition>): ReportingFilterDefinitionGruppe {
-		const gruppe: ReportingFilterDefinitionGruppe | null = new ReportingFilterDefinitionGruppe();
-		gruppe.bezeichnung = bezeichnung;
-		gruppe.typ = typ;
-		gruppe.uiIstSichtbar = uiIstSichtbar;
-		gruppe.uiIstMultiselect = uiIstMultiselect;
-		gruppe.multiselectVerknuepfung = multiselectVerknuepfung.getId();
-		gruppe.filterDefinitionenOptionen = new ArrayList(filterDefinitionenOptionen);
-		return gruppe;
+	public static erzeugeFilterDefinitionGruppe(bezeichnung: string, typ: string, uiIstSichtbar: boolean, uiIstMultiselect: boolean, multiselectVerknuepfung: ReportingFilterVerknuepfung, filterDefinitionenOptionen: List<ReportingFilterDefinition>) : ReportingFilterDefinitionGruppe;
+
+	/**
+	 * Erstellt ein ReportingFilterDefinitionGruppe-Objekt mit einer Vorauswahl an Filterdefinitionen.
+	 *
+	 * <p>Wichtig: Die Einträge in {@code filterDefinitionenVorauswahl} müssen dieselben Objektinstanzen sein wie die entsprechenden Einträge in
+	 * {@code filterDefinitionenOptionen}, da die UI die Vorauswahl über die Objektidentität ermittelt.</p>
+	 *
+	 * @param bezeichnung                    Bezeichnung der Filter-Definition-Gruppe
+	 * @param typ                            Typ der Filter-Definition-Gruppe
+	 * @param uiIstSichtbar                  Gibt an, ob die Filter-Definition-Gruppe in der UI sichtbar sein soll
+	 * @param uiIstMultiselect               Gibt an, ob die Filter-Definition-Gruppe als Multiselect in der UI angezeigt werden soll
+	 * @param multiselectVerknuepfung        Verknüpfung für Multiselect-Filter-Definitionen
+	 * @param filterDefinitionenOptionen     Liste der ReportingFilterDefinition-Objekte, die in der Filter-Definition-Gruppe zur Verfügung stehen
+	 * @param filterDefinitionenVorauswahl   Liste der ReportingFilterDefinition-Objekte, die in der Gruppe vorausgewählt sein sollen
+	 *
+	 * @return Ein ReportingFilterDefinitionGruppe-Objekt mit den angegebenen Eigenschaften
+	 */
+	public static erzeugeFilterDefinitionGruppe(bezeichnung: string, typ: string, uiIstSichtbar: boolean, uiIstMultiselect: boolean, multiselectVerknuepfung: ReportingFilterVerknuepfung, filterDefinitionenOptionen: List<ReportingFilterDefinition>, filterDefinitionenVorauswahl: List<ReportingFilterDefinition>) : ReportingFilterDefinitionGruppe;
+
+	/**
+	 * Implementation for method overloads of 'erzeugeFilterDefinitionGruppe'
+	 */
+	public static erzeugeFilterDefinitionGruppe(__param0: string, __param1: string, __param2: boolean, __param3: boolean, __param4: ReportingFilterVerknuepfung, __param5: List<ReportingFilterDefinition>, __param6?: List<ReportingFilterDefinition>): ReportingFilterDefinitionGruppe {
+		if (((__param0 !== undefined) && (typeof __param0 === "string")) && ((__param1 !== undefined) && (typeof __param1 === "string")) && ((__param2 !== undefined) && typeof __param2 === "boolean") && ((__param3 !== undefined) && typeof __param3 === "boolean") && ((__param4 !== undefined) && ((__param4 instanceof JavaObject) && (__param4.isTranspiledInstanceOf('de.svws_nrw.core.types.reporting.ReportingFilterVerknuepfung')))) && ((__param5 !== undefined) && ((__param5 instanceof JavaObject) && (__param5.isTranspiledInstanceOf('java.util.List'))) || (__param5 === null)) && (__param6 === undefined)) {
+			const bezeichnung: string = __param0;
+			const typ: string = __param1;
+			const uiIstSichtbar: boolean = __param2 as boolean;
+			const uiIstMultiselect: boolean = __param3 as boolean;
+			const multiselectVerknuepfung: ReportingFilterVerknuepfung = cast_de_svws_nrw_core_types_reporting_ReportingFilterVerknuepfung(__param4);
+			const filterDefinitionenOptionen: List<ReportingFilterDefinition> = cast_java_util_List(__param5);
+			const gruppe: ReportingFilterDefinitionGruppe | null = new ReportingFilterDefinitionGruppe();
+			gruppe.bezeichnung = bezeichnung;
+			gruppe.typ = typ;
+			gruppe.uiIstSichtbar = uiIstSichtbar;
+			gruppe.uiIstMultiselect = uiIstMultiselect;
+			gruppe.multiselectVerknuepfung = multiselectVerknuepfung.getId();
+			gruppe.filterDefinitionenOptionen = new ArrayList(filterDefinitionenOptionen);
+			return gruppe;
+		} else if (((__param0 !== undefined) && (typeof __param0 === "string")) && ((__param1 !== undefined) && (typeof __param1 === "string")) && ((__param2 !== undefined) && typeof __param2 === "boolean") && ((__param3 !== undefined) && typeof __param3 === "boolean") && ((__param4 !== undefined) && ((__param4 instanceof JavaObject) && (__param4.isTranspiledInstanceOf('de.svws_nrw.core.types.reporting.ReportingFilterVerknuepfung')))) && ((__param5 !== undefined) && ((__param5 instanceof JavaObject) && (__param5.isTranspiledInstanceOf('java.util.List'))) || (__param5 === null)) && ((__param6 !== undefined) && ((__param6 instanceof JavaObject) && (__param6.isTranspiledInstanceOf('java.util.List'))) || (__param6 === null))) {
+			const bezeichnung: string = __param0;
+			const typ: string = __param1;
+			const uiIstSichtbar: boolean = __param2 as boolean;
+			const uiIstMultiselect: boolean = __param3 as boolean;
+			const multiselectVerknuepfung: ReportingFilterVerknuepfung = cast_de_svws_nrw_core_types_reporting_ReportingFilterVerknuepfung(__param4);
+			const filterDefinitionenOptionen: List<ReportingFilterDefinition> = cast_java_util_List(__param5);
+			const filterDefinitionenVorauswahl: List<ReportingFilterDefinition> = cast_java_util_List(__param6);
+			const gruppe: ReportingFilterDefinitionGruppe | null = ReportingReportvorlageUtils.erzeugeFilterDefinitionGruppe(bezeichnung, typ, uiIstSichtbar, uiIstMultiselect, multiselectVerknuepfung, filterDefinitionenOptionen);
+			gruppe.filterDefinitionen = new ArrayList(filterDefinitionenVorauswahl);
+			return gruppe;
+		} else throw new Error('invalid method overload');
+	}
+
+	/**
+	 * Erstellt die Filter-Definition-Gruppe "Statusfilter" für den Reporting-Typ "ReportingSchueler". Als Optionen werden alle Werte des
+	 * {@link SchuelerStatus} angeboten (Multiselect, OR-Verknüpfung); vorausgewählt sind die Status AKTIV und EXTERN.
+	 *
+	 * @return Ein ReportingFilterDefinitionGruppe-Objekt für die Filterung nach dem Schülerstatus
+	 */
+	public static erzeugeSchuelerStatusfilterGruppe(): ReportingFilterDefinitionGruppe {
+		const optionen: List<ReportingFilterDefinition> | null = new ArrayList<ReportingFilterDefinition>();
+		const vorauswahl: List<ReportingFilterDefinition> | null = new ArrayList<ReportingFilterDefinition>();
+		for (const status of SchuelerStatus.values()) {
+			const definition: ReportingFilterDefinition | null = ReportingFilterDefinitionFactory.definition(ReportingReportvorlageUtils.normalisiereSchuelerStatusBezeichnung(status.name()), "ReportingSchueler", ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("status", status.name())));
+			optionen.add(definition);
+			if ((status as unknown === SchuelerStatus.AKTIV as unknown) || (status as unknown === SchuelerStatus.EXTERN as unknown)) {
+				vorauswahl.add(definition);
+			}
+		}
+		return ReportingReportvorlageUtils.erzeugeFilterDefinitionGruppe("Schülerstatus", "ReportingSchueler", true, true, ReportingFilterVerknuepfung.OR, optionen, vorauswahl);
+	}
+
+	/**
+	 * Normalisiert den technischen Namen eines {@link SchuelerStatus} für die Anzeige, indem der erste Buchstabe groß und die übrigen Buchstaben klein
+	 * geschrieben werden (z. B. "AKTIV" wird zu "Aktiv").
+	 *
+	 * @param name Der technische Name (Enum-Name) des Status
+	 *
+	 * @return Die normalisierte Bezeichnung für die Anzeige
+	 */
+	private static normalisiereSchuelerStatusBezeichnung(name: string): string {
+		if (JavaString.isEmpty(name)) {
+			return name;
+		}
+		return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
 	}
 
 	/**
@@ -305,11 +385,24 @@ export class ReportingReportvorlageUtils extends JavaObject {
 			fdgCopy.uiIstMultiselect = fdg.uiIstMultiselect;
 			fdgCopy.multiselectVerknuepfung = fdg.multiselectVerknuepfung;
 			if (fdg.filterDefinitionenOptionen !== null) {
-				fdgCopy.filterDefinitionenOptionen.addAll(ReportingReportvorlageUtils.cloneFilterDefinitionen(fdg.filterDefinitionenOptionen));
+				const optionenKopie: List<ReportingFilterDefinition> | null = ReportingReportvorlageUtils.cloneFilterDefinitionen(fdg.filterDefinitionenOptionen);
+				fdgCopy.filterDefinitionenOptionen.addAll(optionenKopie);
+				ReportingReportvorlageUtils.uebertrageFilterVorauswahl(fdg, optionenKopie, fdgCopy);
 			}
 			result.add(fdgCopy);
 		}
 		return result;
+	}
+
+	private static uebertrageFilterVorauswahl(fdg: ReportingFilterDefinitionGruppe, optionenKopie: List<ReportingFilterDefinition>, fdgCopy: ReportingFilterDefinitionGruppe): void {
+		if (fdg.filterDefinitionen !== null) {
+			for (const vorauswahl of fdg.filterDefinitionen) {
+				const index: number = fdg.filterDefinitionenOptionen.indexOf(vorauswahl);
+				if ((index >= 0) && (index < optionenKopie.size())) {
+					fdgCopy.filterDefinitionen.add(optionenKopie.get(index));
+				}
+			}
+		}
 	}
 
 	private static cloneFilterDefinitionen(source: List<ReportingFilterDefinition> | null): List<ReportingFilterDefinition> {

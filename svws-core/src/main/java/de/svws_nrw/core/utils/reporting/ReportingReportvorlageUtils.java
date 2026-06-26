@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.data.reporting.ReportingEMailDaten;
 import de.svws_nrw.core.data.reporting.ReportingFilterDefinition;
 import de.svws_nrw.core.data.reporting.ReportingFilterDefinitionGruppe;
@@ -209,6 +210,69 @@ public final class ReportingReportvorlageUtils {
 	}
 
 	/**
+	 * Erstellt ein ReportingFilterDefinitionGruppe-Objekt mit einer Vorauswahl an Filterdefinitionen.
+	 *
+	 * <p>Wichtig: Die Einträge in {@code filterDefinitionenVorauswahl} müssen dieselben Objektinstanzen sein wie die entsprechenden Einträge in
+	 * {@code filterDefinitionenOptionen}, da die UI die Vorauswahl über die Objektidentität ermittelt.</p>
+	 *
+	 * @param bezeichnung                    Bezeichnung der Filter-Definition-Gruppe
+	 * @param typ                            Typ der Filter-Definition-Gruppe
+	 * @param uiIstSichtbar                  Gibt an, ob die Filter-Definition-Gruppe in der UI sichtbar sein soll
+	 * @param uiIstMultiselect               Gibt an, ob die Filter-Definition-Gruppe als Multiselect in der UI angezeigt werden soll
+	 * @param multiselectVerknuepfung        Verknüpfung für Multiselect-Filter-Definitionen
+	 * @param filterDefinitionenOptionen     Liste der ReportingFilterDefinition-Objekte, die in der Filter-Definition-Gruppe zur Verfügung stehen
+	 * @param filterDefinitionenVorauswahl   Liste der ReportingFilterDefinition-Objekte, die in der Gruppe vorausgewählt sein sollen
+	 *
+	 * @return Ein ReportingFilterDefinitionGruppe-Objekt mit den angegebenen Eigenschaften
+	 */
+	public static @NotNull ReportingFilterDefinitionGruppe erzeugeFilterDefinitionGruppe(
+			final @NotNull String bezeichnung, final @NotNull String typ, final boolean uiIstSichtbar, final boolean uiIstMultiselect,
+			final @NotNull ReportingFilterVerknuepfung multiselectVerknuepfung,
+			final @NotNull List<ReportingFilterDefinition> filterDefinitionenOptionen,
+			final @NotNull List<ReportingFilterDefinition> filterDefinitionenVorauswahl) {
+		final ReportingFilterDefinitionGruppe gruppe = erzeugeFilterDefinitionGruppe(bezeichnung, typ, uiIstSichtbar, uiIstMultiselect,
+				multiselectVerknuepfung, filterDefinitionenOptionen);
+		gruppe.filterDefinitionen = new ArrayList<>(filterDefinitionenVorauswahl);
+		return gruppe;
+	}
+
+	/**
+	 * Erstellt die Filter-Definition-Gruppe "Statusfilter" für den Reporting-Typ "ReportingSchueler". Als Optionen werden alle Werte des
+	 * {@link SchuelerStatus} angeboten (Multiselect, OR-Verknüpfung); vorausgewählt sind die Status AKTIV und EXTERN.
+	 *
+	 * @return Ein ReportingFilterDefinitionGruppe-Objekt für die Filterung nach dem Schülerstatus
+	 */
+	public static @NotNull ReportingFilterDefinitionGruppe erzeugeSchuelerStatusfilterGruppe() {
+		final List<ReportingFilterDefinition> optionen = new ArrayList<>();
+		final List<ReportingFilterDefinition> vorauswahl = new ArrayList<>();
+		for (final SchuelerStatus status : SchuelerStatus.values()) {
+			final ReportingFilterDefinition definition = ReportingFilterDefinitionFactory.definition(
+					normalisiereSchuelerStatusBezeichnung(status.name()), "ReportingSchueler",
+					ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("status", status.name())));
+			optionen.add(definition);
+			if ((status == SchuelerStatus.AKTIV) || (status == SchuelerStatus.EXTERN)) {
+				vorauswahl.add(definition);
+			}
+		}
+		return erzeugeFilterDefinitionGruppe("Schülerstatus", "ReportingSchueler", true, true, ReportingFilterVerknuepfung.OR, optionen, vorauswahl);
+	}
+
+	/**
+	 * Normalisiert den technischen Namen eines {@link SchuelerStatus} für die Anzeige, indem der erste Buchstabe groß und die übrigen Buchstaben klein
+	 * geschrieben werden (z. B. "AKTIV" wird zu "Aktiv").
+	 *
+	 * @param name Der technische Name (Enum-Name) des Status
+	 *
+	 * @return Die normalisierte Bezeichnung für die Anzeige
+	 */
+	private static @NotNull String normalisiereSchuelerStatusBezeichnung(final @NotNull String name) {
+		if (name.isEmpty()) {
+			return name;
+		}
+		return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+	}
+
+	/**
 	 * Normalisiert den Eingabestring für Schlüsselangaben, indem er Leerzeichen entfernt und in Kleinbuchstaben umgewandelt wird.
 	 *
 	 * @param input Der Eingabestring, der normalisiert werden soll
@@ -354,11 +418,26 @@ public final class ReportingReportvorlageUtils {
 			fdgCopy.uiIstMultiselect = fdg.uiIstMultiselect;
 			fdgCopy.multiselectVerknuepfung = fdg.multiselectVerknuepfung;
 			if (fdg.filterDefinitionenOptionen != null) {
-				fdgCopy.filterDefinitionenOptionen.addAll(cloneFilterDefinitionen(fdg.filterDefinitionenOptionen));
+				final List<ReportingFilterDefinition> optionenKopie = cloneFilterDefinitionen(fdg.filterDefinitionenOptionen);
+				fdgCopy.filterDefinitionenOptionen.addAll(optionenKopie);
+				// Die Vorauswahl muss auf die geklonten Options-Instanzen abgebildet werden, damit die UI sie über die Objektidentität als ausgewählt erkennt.
+				uebertrageFilterVorauswahl(fdg, optionenKopie, fdgCopy);
 			}
 			result.add(fdgCopy);
 		}
 		return result;
+	}
+
+	private static void uebertrageFilterVorauswahl(final @NotNull ReportingFilterDefinitionGruppe fdg,
+			final @NotNull List<ReportingFilterDefinition> optionenKopie, final @NotNull ReportingFilterDefinitionGruppe fdgCopy) {
+		if (fdg.filterDefinitionen != null) {
+			for (final ReportingFilterDefinition vorauswahl : fdg.filterDefinitionen) {
+				final int index = fdg.filterDefinitionenOptionen.indexOf(vorauswahl);
+				if ((index >= 0) && (index < optionenKopie.size())) {
+					fdgCopy.filterDefinitionen.add(optionenKopie.get(index));
+				}
+			}
+		}
 	}
 
 	private static @NotNull List<ReportingFilterDefinition> cloneFilterDefinitionen(final List<ReportingFilterDefinition> source) {

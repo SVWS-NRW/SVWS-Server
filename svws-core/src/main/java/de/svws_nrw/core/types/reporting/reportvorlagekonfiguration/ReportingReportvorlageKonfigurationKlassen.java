@@ -41,7 +41,7 @@ public final class ReportingReportvorlageKonfigurationKlassen {
 						false,
 						"",
 						""),
-				new ArrayList<>(), new ArrayList<>(), true, true);
+				new ArrayList<>(), List.of(ReportingReportvorlageUtils.erzeugeSchuelerStatusfilterGruppe()), true, true);
 	}
 
 	/**
@@ -91,7 +91,7 @@ public final class ReportingReportvorlageKonfigurationKlassen {
 						false,
 						"",
 						""),
-				new ArrayList<>(), new ArrayList<>(), true, true);
+				new ArrayList<>(), List.of(ReportingReportvorlageUtils.erzeugeSchuelerStatusfilterGruppe()), true, true);
 	}
 
 	/**
@@ -153,7 +153,7 @@ public final class ReportingReportvorlageKonfigurationKlassen {
 								ReportingFilterDefinitionFactory.definition(
 										"Nur Einträge mit prüfungsordnungsrelevanten Fächern", "ReportingSchuelerLeistungsdaten",
 										ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("fach.istPruefungsordnungsRelevant", "true"))))
-				)), true, true);
+				), ReportingReportvorlageUtils.erzeugeSchuelerStatusfilterGruppe()), true, true);
 	}
 
 	/**
@@ -213,6 +213,6 @@ public final class ReportingReportvorlageKonfigurationKlassen {
 								ReportingFilterDefinitionFactory.definition(
 										"Nur Einträge mit prüfungsordnungsrelevanten Fächern", "ReportingSchuelerLeistungsdaten",
 										ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("fach.istPruefungsordnungsRelevant", "true"))))
-				)), true, true);
+				), ReportingReportvorlageUtils.erzeugeSchuelerStatusfilterGruppe()), true, true);
 	}
 }

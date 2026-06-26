@@ -81,7 +81,7 @@ public final class ReportingReportvorlageKonfigurationKurse {
 						false,
 						"",
 						""),
-				new ArrayList<>(), new ArrayList<>(), true, true);
+				new ArrayList<>(), List.of(ReportingReportvorlageUtils.erzeugeSchuelerStatusfilterGruppe()), true, true);
 	}
 
 	/**
@@ -104,7 +104,7 @@ public final class ReportingReportvorlageKonfigurationKurse {
 						false,
 						"",
 						""),
-				new ArrayList<>(), new ArrayList<>(), true, true);
+				new ArrayList<>(), List.of(ReportingReportvorlageUtils.erzeugeSchuelerStatusfilterGruppe()), true, true);
 	}
 
 	/**
@@ -125,6 +125,6 @@ public final class ReportingReportvorlageKonfigurationKurse {
 										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
 						))),
 				new ReportingEMailDaten(),
-				new ArrayList<>(), new ArrayList<>(), true, true);
+				new ArrayList<>(), List.of(ReportingReportvorlageUtils.erzeugeSchuelerStatusfilterGruppe()), true, true);
 	}
 }
