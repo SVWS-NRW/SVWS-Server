@@ -373,10 +373,10 @@
 
 	const labelVorherigeSchuleAuswahl = computed(() => {
 		if (currentMode.value === Schulauswahl.INTERNAL) {
-			return 'Öffentliche oder Ersatz-Schulen in NRW';
+			return 'Öffentliche oder Ersatz-Schule in NRW';
 		}
 		if (currentMode.value === Schulauswahl.EXTERNAL) {
-			return 'Schulen außerhalb von NRW oder sonstige Schulen in NRW';
+			return 'Schule außerhalb von NRW oder sonstige Schule in NRW';
 		}
 		return '';
 	});

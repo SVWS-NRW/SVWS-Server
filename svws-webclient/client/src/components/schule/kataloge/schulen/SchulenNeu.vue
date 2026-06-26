@@ -12,16 +12,16 @@
 				</div>
 				<svws-ui-tooltip v-if="!isInternal" color="primary" :show-arrow="false" :indicator="false">
 					<template #content>
-						Schulen außerhalb NRW und sonstige Herkünfte z.B. auch nicht staatl. anerkannte Schulen.
+						Schule außerhalb NRW und sonstige Herkünfte z.B. auch nicht staatl. anerkannte Schule.
 					</template>
-					<ui-select label="Schulen außerhalb von NRW oder sonstige Schulen in NRW" class="pb-4 w-full"
+					<ui-select label="Schule außerhalb von NRW oder sonstige Schule in NRW" class="pb-4 w-full"
 						:manager="externeSchulenSelectManager"
 						v-model="selectedExterneSchulen"
 						:validation="() => model.getFehler('schulnummerStatistik')"
 						:disabled="!hatKompetenzAdd" required :removable="false" />
 				</svws-ui-tooltip>
 				<ui-select v-if="isInternal"
-					label="Öffentliche oder Ersatz-Schulen in NRW" class="pb-4 w-full"
+					label="Öffentliche oder Ersatz-Schule in NRW" class="pb-4 w-full"
 					:manager="schulenNRWSelectManager"
 					v-model="selectedSchule"
 					:validation="() => model.getFehler('schulnummerStatistik')"
