@@ -287,7 +287,7 @@
 	// --- Schulbesuchsjahre ---
 	const showSchulbesuchsjahre = computed(
 		() => [Schulform.FW, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.R, Schulform.S, Schulform.KS, Schulform.SG, Schulform.SK,
-			Schulform.SR, Schulform.V, Schulform.WF].includes(schuleState.schulform));
+			Schulform.SR, Schulform.V, Schulform.WF, Schulform.HI].includes(schuleState.schulform));
 	const schulbesuchsjahre = computed<number | null>(() => {
 		if ((model.proxy.einschulungsjahrGrundschule === null) || (model.proxy.idEingangsphaseGrundschule === null)) {
 			return null;
