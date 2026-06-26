@@ -368,10 +368,10 @@ public class AggregationKlassenStatistikExport {
 						this.fehlermeldungen.add("Der SchuelerStatistikGesamt-Satz mit folgender ID hat eine StaatsangehoerigkeitID von Null: " + s.id);
 						return "";
 					}
-					return getNationalitaetIso3(s.idStaatsangehoerigkeit);
+					return Nationalitaeten.data().getWertByID(s.idStaatsangehoerigkeit).daten(this.aktuellesSchuljahr).schluessel;
 				}));
 
-		map.entrySet().stream().filter(f -> !f.getKey().equalsIgnoreCase("DEU")).forEach(t -> {
+		map.entrySet().stream().filter(f -> !f.getKey().equalsIgnoreCase(Nationalitaeten.getDEU().daten(this.aktuellesSchuljahr).schluessel)).forEach(t -> {
 			final KlassenNationalitaetenStatistikExport klassenNationalitaetenStatistikExport = new KlassenNationalitaetenStatistikExport();
 			klassenNationalitaetenStatistikExport.nationalitaet = t.getKey();
 			klassenNationalitaetenStatistikExport.insgesamtZusammen = t.getValue().size();
