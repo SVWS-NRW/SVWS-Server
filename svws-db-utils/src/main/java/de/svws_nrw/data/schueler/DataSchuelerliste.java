@@ -123,7 +123,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 			eintrag.idJahrgang = -1L;
 			eintrag.epJahre = null;
 			eintrag.jahrgang = "";
-			eintrag.schulgliederung = "";
+			eintrag.idSchulgliederung = -1L;
 		} else {
 			eintrag.idSchuljahresabschnitt = aktAbschnitt.Schuljahresabschnitts_ID;
 			eintrag.idKlasse = (aktAbschnitt.Klassen_ID == null) ? -1 : aktAbschnitt.Klassen_ID;
@@ -139,9 +139,11 @@ public final class DataSchuelerliste extends DataManager<Long> {
 			if (aktAbschnitt.Schulgliederung == null) {
 				final Schulgliederung sgl = Schulgliederung.getDefault(schulform);
 				final SchulgliederungKatalogEintrag sglke = (sgl == null) ? null : sgl.daten(schuljahr);
-				eintrag.schulgliederung = (sglke == null) ? "" : sglke.kuerzel;
+				eintrag.idSchulgliederung = (sglke == null) ? -1L : sglke.id;
 			} else {
-				eintrag.schulgliederung = aktAbschnitt.Schulgliederung;
+				final var schulgliederung = Schulgliederung.data().getWertBySchluessel(aktAbschnitt.Schulgliederung);
+				final var schulgliederungEintrag = (schulgliederung == null) ? null : schulgliederung.daten(schuljahr);
+				eintrag.idSchulgliederung = (schulgliederungEintrag == null) ? null : schulgliederungEintrag.id;
 			}
 		}
 		eintrag.status = schueler.idStatus;
@@ -331,7 +333,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 				if (schuljahresabschnitt == null) {
 					continue;
 				}
-				s.abiturjahrgang = GostAbiturjahrUtils.getGostAbiturjahr(schulform, Schulgliederung.data().getWertByKuerzel(s.schulgliederung),
+				s.abiturjahrgang = GostAbiturjahrUtils.getGostAbiturjahr(schulform, Schulgliederung.data().getWertByIDOrNull(s.idSchulgliederung),
 						schuljahresabschnitt.schuljahr, s.jahrgang);
 			}
 		}

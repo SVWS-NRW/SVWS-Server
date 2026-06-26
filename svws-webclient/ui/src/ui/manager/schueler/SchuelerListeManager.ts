@@ -61,7 +61,7 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 
 	private readonly _mapSchuelerInAbiturjahrgang: HashMap2D<number, number, SchuelerListeEintrag> = new HashMap2D<number, number, SchuelerListeEintrag>();
 
-	private readonly _mapSchuelerInSchulgliederung: HashMap2D<string, number, SchuelerListeEintrag> = new HashMap2D<string, number, SchuelerListeEintrag>();
+	private readonly _mapSchuelerInSchulgliederung: HashMap2D<number, number, SchuelerListeEintrag> = new HashMap2D<number, number, SchuelerListeEintrag>();
 
 	private readonly _mapKlassenlehrerInSchueler: HashMap2D<number, number, LehrerListeEintrag> = new HashMap2D<number, number, LehrerListeEintrag>();
 
@@ -105,14 +105,14 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	/**
 	 * Das Filter-Attribut für die Schulgliederungen
 	 */
-	public readonly schulgliederungen: AttributMitAuswahl<string, Schulgliederung>;
+	public readonly schulgliederungen: AttributMitAuswahl<number, Schulgliederung>;
 
-	private readonly _schulgliederungToId: JavaFunction<Schulgliederung, string> = { apply: (sg: Schulgliederung) => {
+	private readonly _schulgliederungToId: JavaFunction<Schulgliederung, number> = { apply: (sg: Schulgliederung) => {
 		const sglke: SchulgliederungKatalogEintrag | null = sg.daten(this.getSchuljahr());
 		if (sglke === null) {
 			throw new IllegalArgumentException(JavaString.format("Die Schulgliederung %s ist in dem Schuljahr %d nicht gültig.", sg.name(), this.getSchuljahr()));
 		}
-		return sglke.kuerzel;
+		return sglke.id;
 	} };
 
 	private static readonly _comparatorSchulgliederung: Comparator<Schulgliederung> = { compare: (a: Schulgliederung, b: Schulgliederung) => a.ordinal() - b.ordinal() };
@@ -187,8 +187,8 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 			if (s.abiturjahrgang !== null) {
 				this._mapSchuelerInAbiturjahrgang.put(s.abiturjahrgang, s.id, s);
 			}
-			if (!JavaString.isBlank(s.schulgliederung)) {
-				this._mapSchuelerInSchulgliederung.put(s.schulgliederung, s.id, s);
+			if (s.idSchulgliederung >= 0) {
+				this._mapSchuelerInSchulgliederung.put(s.idSchulgliederung, s.id, s);
 			}
 			if (klasse !== null) {
 				for (const idKlassenlehrer of klasse.klassenLeitungen) {
@@ -327,7 +327,7 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 				return false;
 			}
 		}
-		if (this.schulgliederungen.auswahlExists() && ((JavaString.isBlank(eintrag.schulgliederung)) || (!this.schulgliederungen.auswahlHasKey(eintrag.schulgliederung)))) {
+		if (this.schulgliederungen.auswahlExists() && ((eintrag.idSchulgliederung < 0) || (!this.schulgliederungen.auswahlHasKey(eintrag.idSchulgliederung)))) {
 			return false;
 		}
 		if (this.schuelerstatus.auswahlExists() && (this.istSchuljahresabschnittAktuell()) && (!this.schuelerstatus.auswahlHasKey(eintrag.status))) {

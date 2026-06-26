@@ -17,10 +17,10 @@ export class SchuelerLernabschnittAllgemeinModelProxy extends ModelProxy<Schuele
 	) {
 		const listOfAutopatchProps: Iterable<keyof SchuelerLernabschnittsdaten> = [
 			"klassenID", "jahrgangID", "tutorID", "sonderpaedagogeID",
-			"schulgliederung", "pruefungsOrdnung", "organisationsform", "Klassenart",
+			"idSchulgliederung", "pruefungsOrdnung", "idOrganisationsform", "idKlassenart",
 			"bilingualerZweig", "foerderschwerpunkt1ID", "foerderschwerpunkt2ID",
 			"hatAOSF", "hatAutismus", "hatSchwerbehinderungsNachweis",
-			"hatZieldifferentenUnterricht", "datumAnfang", "datumEnde", "epJahre",
+			"hatZieldifferentenUnterricht", "datumAnfang", "datumEnde", "idEpJahre",
 		];
 		super({ data, patch, listOfAutopatchProps });
 		this.manager = manager;
@@ -29,13 +29,13 @@ export class SchuelerLernabschnittAllgemeinModelProxy extends ModelProxy<Schuele
 		// Pflichtfelder
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.klassenID), "klassenID");
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.jahrgangID), "jahrgangID");
-		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.epJahre), "epJahre");
-		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.schulgliederung), "schulgliederung");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idEpJahre), "idEpJahre");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idSchulgliederung), "idSchulgliederung");
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.pruefungsOrdnung), "pruefungsOrdnung");
 		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.pruefungsOrdnung, StringPattern.NO_WHITESPACES), "pruefungsOrdnung");
 		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.pruefungsOrdnung, null, 20), "pruefungsOrdnung");
-		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.organisationsform), "organisationsform");
-		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.Klassenart), "Klassenart");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idOrganisationsform), "idOrganisationsform");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idKlassenart), "idKlassenart");
 
 		this.validate();
 	}
@@ -60,13 +60,13 @@ export class SchuelerLernabschnittAllgemeinModelProxy extends ModelProxy<Schuele
 			if (!SchuelerLernabschnittAllgemeinModelProxy.primarschulformen.has(this.schulform())) {
 				return null;
 			}
-			const ep = this.proxy.epJahre ?? null;
+			const ep = this.proxy.idEpJahre ?? null;
 			if (ep === null) {
 				return null;
 			}
 			return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertByIDOrNull(ep)?.daten(this.manager().schuljahrGet()) ?? null;
 		},
-		set: (v: PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag | null) => this.proxy.epJahre = v?.id ?? null,
+		set: (v: PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag | null) => this.proxy.idEpJahre = v?.id ?? null,
 	});
 
 	tutor = computed<LehrerListeEintrag | null>({
@@ -92,43 +92,43 @@ export class SchuelerLernabschnittAllgemeinModelProxy extends ModelProxy<Schuele
 	klassenart = computed<KlassenartKatalogEintrag | null>({
 		get: () => {
 			const schuljahr = this.manager().schuljahrGet();
-			const wert = Klassenart.data().getWertByKuerzel(this.proxy.Klassenart ?? "");
+			const wert = Klassenart.data().getWertByIDOrNull(this.proxy.idKlassenart);
 			if ((wert === null) || !wert.hatSchulform(schuljahr, this.schulform())) {
 				return null;
 			}
 			return Klassenart.data().getEintragBySchuljahrUndWert(schuljahr, wert);
 		},
-		set: (v: KlassenartKatalogEintrag | null) => this.proxy.Klassenart = v?.kuerzel ?? null,
+		set: (v: KlassenartKatalogEintrag | null) => this.proxy.idKlassenart = v?.id ?? null,
 	});
 
 	gliederung = computed<SchulgliederungKatalogEintrag | null>({
 		get: () => {
 			const schuljahr = this.manager().schuljahrGet();
-			const wert = Schulgliederung.data().getWertByKuerzel(this.proxy.schulgliederung ?? "");
+			const wert = Schulgliederung.data().getWertByIDOrNull(this.proxy.idSchulgliederung);
 			if ((wert === null) || !wert.hatSchulform(schuljahr, this.schulform())) {
 				return null;
 			}
 			return Schulgliederung.data().getEintragBySchuljahrUndWert(schuljahr, wert);
 		},
-		set: (v: SchulgliederungKatalogEintrag | null) => this.proxy.schulgliederung = v?.kuerzel ?? null,
+		set: (v: SchulgliederungKatalogEintrag | null) => this.proxy.idSchulgliederung = v?.id ?? null,
 	});
 
 	organisationsform = computed<OrganisationsformKatalogEintrag | null>({
 		get: () => {
-			const kuerzel = this.proxy.organisationsform;
-			if (kuerzel === null) {
+			const idOrga = this.proxy.idOrganisationsform;
+			if (idOrga === null) {
 				return null;
 			}
 			const schuljahr = this.manager().schuljahrGet();
 			if (this.schulform() === Schulform.WB) {
-				return WeiterbildungskollegOrganisationsformen.data().getWertByKuerzel(kuerzel)?.daten(schuljahr) ?? null;
+				return WeiterbildungskollegOrganisationsformen.data().getWertByIDOrNull(idOrga)?.daten(schuljahr) ?? null;
 			}
 			if ((this.schulform() === Schulform.BK) || (this.schulform() === Schulform.SB)) {
-				return BerufskollegOrganisationsformen.data().getWertByKuerzel(kuerzel)?.daten(schuljahr) ?? null;
+				return BerufskollegOrganisationsformen.data().getWertByIDOrNull(idOrga)?.daten(schuljahr) ?? null;
 			}
-			return AllgemeinbildendOrganisationsformen.data().getWertByKuerzel(kuerzel)?.daten(schuljahr) ?? null;
+			return AllgemeinbildendOrganisationsformen.data().getWertByIDOrNull(idOrga)?.daten(schuljahr) ?? null;
 		},
-		set: (v: OrganisationsformKatalogEintrag | null) => this.proxy.organisationsform = v?.kuerzel ?? null,
+		set: (v: OrganisationsformKatalogEintrag | null) => this.proxy.idOrganisationsform = v?.id ?? null,
 	});
 
 	bilingualerZweig = computed<BilingualeSpracheKatalogEintrag | null>({

@@ -13,8 +13,8 @@ import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
 import de.svws_nrw.module.reporting.sortierung.ReportingSortierungService;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
-import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 
 /**
  * Proxy-Klasse im Rahmen des Reportings für Daten vom Typ Lernabschnitt und erweitert die Klasse {@link ReportingSchuelerLernabschnitt}.
@@ -71,16 +71,16 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 				schuelerLernabschnittsdaten.istGewertet,
 				schuelerLernabschnittsdaten.istWiederholung,
 				null,
-				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.Klassenart),
+				schuelerLernabschnittsdaten.idKlassenart,
 				new ArrayList<>(),
 				null,
 				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.noteDurchschnitt),
 				schuelerLernabschnittsdaten.noteLernbereichGSbzwAL,
 				schuelerLernabschnittsdaten.noteLernbereichNW,
-				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.organisationsform),
+				schuelerLernabschnittsdaten.idOrganisationsform,
 				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.pruefungsOrdnung),
 				null,
-				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.schulgliederung),
+				schuelerLernabschnittsdaten.idSchulgliederung,
 				null,
 				null,
 				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.textErgebnisPruefungsalgorithmus),
@@ -106,7 +106,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 		super.schueler = this.reportingContext.repositorySchueler().schueler().get(schuelerLernabschnittsdaten.schuelerID);
 
 		schuelerLernabschnittsdaten.leistungsdaten.forEach(
-				l -> this.reportingContext.repositorySchueler().leistungsdaten().add(this.schueler().id(), this.id(), l.id, l));
+				l -> this.reportingContext.repositorySchueler().leistungsdaten().add(schueler().id(), id(), l.id, l));
 	}
 
 
@@ -139,7 +139,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	 * @return Repository für das Reporting
 	 */
 	public ReportingContext reportingContext() {
-		return reportingContext;
+		return this.reportingContext;
 	}
 
 
@@ -257,7 +257,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	@Override
 	public List<ReportingSchuelerZuweisung> zuweisungen() {
 		if ((super.zuweisungen == null) || super.zuweisungen.isEmpty()) {
-			super.zuweisungen = this.reportingContext.repositorySchueler().zuweisungen(this.id(), this);
+			super.zuweisungen = this.reportingContext.repositorySchueler().zuweisungen(id(), this);
 		}
 		return super.zuweisungen;
 	}

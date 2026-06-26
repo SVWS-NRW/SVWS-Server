@@ -272,10 +272,10 @@ export class SchuelerLernabschnittManager {
 	 * @return die Schulgliederung oder null
 	 */
 	public lernabschnittGetGliederung(): Schulgliederung | null {
-		if (this._lernabschnittsdaten.schulgliederung === null) {
+		if (this._lernabschnittsdaten.idSchulgliederung === null) {
 			return null;
 		}
-		return Schulgliederung.data().getWertByKuerzel(this._lernabschnittsdaten.schulgliederung);
+		return Schulgliederung.data().getWertByIDOrNull(this._lernabschnittsdaten.idSchulgliederung);
 	}
 
 	/**

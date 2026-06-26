@@ -59,7 +59,7 @@ export class SchuelerListeEintrag extends JavaObject {
 	/**
 	 * Das Kürzel der aktuellen Schulgliederung des Schülers
 	 */
-	public schulgliederung: string = "";
+	public idSchulgliederung: number = -1;
 
 	/**
 	 * Die Bezeichnung des Status des Schülers (Aktiv, Extern, etc.).
@@ -156,9 +156,9 @@ export class SchuelerListeEintrag extends JavaObject {
 		result.jahrgang = obj.jahrgang;
 		result.epJahre = (obj.epJahre === undefined) ? null : obj.epJahre === null ? null : obj.epJahre;
 		result.abiturjahrgang = (obj.abiturjahrgang === undefined) ? null : obj.abiturjahrgang === null ? null : obj.abiturjahrgang;
-		if (obj.schulgliederung === undefined)
-			throw new Error('invalid json format, missing attribute schulgliederung');
-		result.schulgliederung = obj.schulgliederung;
+		if (obj.idSchulgliederung === undefined)
+			throw new Error('invalid json format, missing attribute idSchulgliederung');
+		result.idSchulgliederung = obj.idSchulgliederung;
 		if (obj.status === undefined)
 			throw new Error('invalid json format, missing attribute status');
 		result.status = obj.status;
@@ -192,7 +192,7 @@ export class SchuelerListeEintrag extends JavaObject {
 		result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang) + ',';
 		result += '"epJahre" : ' + ((obj.epJahre === null) ? 'null' : obj.epJahre.toString()) + ',';
 		result += '"abiturjahrgang" : ' + ((obj.abiturjahrgang === null) ? 'null' : obj.abiturjahrgang.toString()) + ',';
-		result += '"schulgliederung" : ' + JSON.stringify(obj.schulgliederung) + ',';
+		result += '"idSchulgliederung" : ' + obj.idSchulgliederung + ',';
 		result += '"status" : ' + obj.status.toString() + ',';
 		result += '"istDuplikat" : ' + obj.istDuplikat.toString() + ',';
 		result += '"externeSchulNr" : ' + ((obj.externeSchulNr === null) ? 'null' : JSON.stringify(obj.externeSchulNr)) + ',';
@@ -243,8 +243,8 @@ export class SchuelerListeEintrag extends JavaObject {
 		if (obj.abiturjahrgang !== undefined) {
 			result += '"abiturjahrgang" : ' + ((obj.abiturjahrgang === null) ? 'null' : obj.abiturjahrgang.toString()) + ',';
 		}
-		if (obj.schulgliederung !== undefined) {
-			result += '"schulgliederung" : ' + JSON.stringify(obj.schulgliederung) + ',';
+		if (obj.idSchulgliederung !== undefined) {
+			result += '"idSchulgliederung" : ' + obj.idSchulgliederung + ',';
 		}
 		if (obj.status !== undefined) {
 			result += '"status" : ' + obj.status.toString() + ',';

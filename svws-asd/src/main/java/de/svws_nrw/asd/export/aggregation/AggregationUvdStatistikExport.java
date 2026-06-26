@@ -28,6 +28,7 @@ import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre;
 import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
 import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 
 /*
  * AggregationStatistikExport.java
@@ -148,8 +149,12 @@ public class AggregationUvdStatistikExport {
 			return "";
 		}
 
-		return fachIdMap.get(fachId).bilingualeSprache.equals("D") ? ""
-				: fachIdMap.get(fachId).bilingualeSprache;
+		final FachStatistikGesamt fach = fachIdMap.get(fachId);
+		if ((fach != null) && (fach.bilingualeSprache != null)) {
+			return fach.bilingualeSprache.equals("D") ? "" : fach.bilingualeSprache;
+		}
+
+		return "";
 	}
 
 	/**
@@ -190,11 +195,27 @@ public class AggregationUvdStatistikExport {
 			final SchuelerLernabschnittStatistikGesamt lernabschnitt =
 					AggregationUtils.ermittelnLernabschnitt(schueler, statistikGesamt.schule.idSchuljahresabschnitt);
 			final KlassenStatistikGesamt klasse = klasseIdMap.get(lernabschnitt.idKlasse);
+
 			// TODO: Welchen wert bekommen wir für JU (Jahrgangsübergreifende Klassen)? NULL oder leer?
-			String jahrgangKurseImKlassenverband = Jahrgaenge.data().getSchluesselByIDOrNull(jahrgangIdMap.get(klasse.idJahrgang)) == null ? "JU"
-					: Jahrgaenge.data().getSchluesselByIDOrNull(jahrgangIdMap.get(klasse.idJahrgang));
-			String jahrgangKurseOhneKlassenverband = Jahrgaenge.data().getSchluesselByIDOrNull(jahrgangIdMap.get(lernabschnitt.idJahrgang)) == null ? "JU"
-					: Jahrgaenge.data().getSchluesselByIDOrNull(jahrgangIdMap.get(lernabschnitt.idJahrgang));
+			String jahrgangKurseImKlassenverband = "JU";
+			if (klasse != null) {
+				final Long jgId = jahrgangIdMap.get(klasse.idJahrgang);
+				if (jgId != null) {
+					final String jgKuerzel = Jahrgaenge.data().getSchluesselByIDOrNull(jgId);
+					if (jgKuerzel != null) {
+						jahrgangKurseImKlassenverband = jgKuerzel;
+					}
+				}
+			}
+
+			String jahrgangKurseOhneKlassenverband = "JU";
+			final Long jgIdLa = jahrgangIdMap.get(lernabschnitt.idJahrgang);
+			if (jgIdLa != null) {
+				final String jgKuerzelLa = Jahrgaenge.data().getSchluesselByIDOrNull(jgIdLa);
+				if (jgKuerzelLa != null) {
+					jahrgangKurseOhneKlassenverband = jgKuerzelLa;
+				}
+			}
 
 			// Jahrgänge "01" und "02" müssen in bestimmten Fällen in die Bezeichnung für die Schuleingangsphase umgesetzt werden
 			if (Set.of("01", "02").contains(jahrgangKurseImKlassenverband)
@@ -210,10 +231,23 @@ public class AggregationUvdStatistikExport {
 			// Jahrgänge "01" und "02" müssen in bestimmten Fällen in die Bezeichnung für die Schuleingangsphase umgesetzt werden
 			if (Set.of("01", "02").contains(jahrgangKurseOhneKlassenverband)
 					&& !(Schulform.BK.equals(schulform) || Schulform.SB.equals(schulform) || Schulform.WB.equals(schulform))) {
-				jahrgangKurseOhneKlassenverband = PrimarstufeSchuleingangsphaseBesuchsjahre.data()
-						.getSchluesselByIDOrNull(schueler.lernabschnitte.getFirst().epJahre.longValue());
+
+				final Long epJahre =
+						((schueler.lernabschnitte != null) && (!schueler.lernabschnitte.isEmpty()) && (schueler.lernabschnitte.getFirst().epJahre != null))
+								? schueler.lernabschnitte.getFirst().epJahre.longValue()
+								: null;
+
+				if (epJahre != null) {
+					final String epSchluessel = PrimarstufeSchuleingangsphaseBesuchsjahre.data().getSchluesselByIDOrNull(epJahre);
+					if (epSchluessel != null) {
+						jahrgangKurseOhneKlassenverband = epSchluessel;
+					}
+				}
 			}
-			final String jahrgangSgl = jahrgangKurseOhneKlassenverband.concat(lernabschnitt.schulgliederung);
+
+			final Schulgliederung sgl = Schulgliederung.data().getWertByIDOrNull(lernabschnitt.idSchulgliederung);
+			final String sglName = (sgl != null) ? sgl.name() : "";
+			final String jahrgangSgl = jahrgangKurseOhneKlassenverband.concat(sglName);
 
 			for (final SchuelerLeistungsdatenStatistikGesamt l : lernabschnitt.leistungsdaten) {
 				//Sätze ohne LehrerID oder Wochenstunden können ignoriert werden
@@ -227,10 +261,18 @@ public class AggregationUvdStatistikExport {
 					} else { // Kurse ohne Klassenverband
 
 						// Nur Kurse in die Map aufnehmen, die nicht an einer anderen Schule unterrichtet werden.
-						if (kurseIdMap.get(l.kursID).schulnummer == null) {
-							final ZulaessigeKursartKatalogEintrag kursartKatalogEintrag =
-									ZulaessigeKursart.data().getWertByKuerzel(l.kursart).daten(aktuellesSchuljahr);
-							final String key = jahrgangSgl.concat(kursartKatalogEintrag.nummer);
+						final KursStatistikGesamt kurs = kurseIdMap.get(l.kursID);
+						if ((kurs != null) && (kurs.schulnummer == null)) {
+							String kursartNummer = "";
+							final var zulKursart = ZulaessigeKursart.data().getWertByKuerzel(l.kursart);
+							if (zulKursart != null) {
+								final ZulaessigeKursartKatalogEintrag kursartKatalogEintrag = zulKursart.daten(aktuellesSchuljahr);
+								if (kursartKatalogEintrag != null) {
+									kursartNummer = kursartKatalogEintrag.nummer;
+								}
+							}
+
+							final String key = jahrgangSgl.concat(kursartNummer);
 
 							// KursID-Eintrag schon vorhanden
 							if (kurseOhneKlassenverband.containsKey(l.kursID)) {
@@ -304,34 +346,40 @@ public class AggregationUvdStatistikExport {
 
 		// Kurse im Klassenverband zuerst.
 		for (final Entry<String, List<SchuelerLeistungsdatenStatistikGesamt>> entry : kurseImKlassenverband.entrySet()) {
-			final UnterrichtsverteilungStatistikExport uvdExport = new UnterrichtsverteilungStatistikExport();
-			uvdExport.unterrichtseinheitennummer = String.format("%04d", uenr++);
-			if (entry.getValue().getFirst().zusatzkraftID != null) {
-				uvdExport.folgezeilenmerkmal = "2";
-				uvdExport.kopplungsnummer = "001";
-			} else {
-				uvdExport.folgezeilenmerkmal = "1";
-				uvdExport.kopplungsnummer = "000";
-			}
+			if ((entry.getValue() != null) && (!entry.getValue().isEmpty())) {
+				final SchuelerLeistungsdatenStatistikGesamt firstItem = entry.getValue().getFirst();
 
-			uvdExport.jahrgang = entry.getKey().substring(0, 2);
-			uvdExport.bildungsgangkennzeichen = entry.getKey().substring(2, 3);
-			uvdExport.parallelitaet2 = entry.getKey().substring(3, 4);
-			uvdExport.wochenstunden = entry.getValue().getFirst().wochenstunden;
-			uvdExport.fach = entry.getKey().substring(8);
-			uvdExport.kuerzel = entry.getKey().substring(4, 8);
-			uvdExport.bilingualSprache = ermittelnBilingualeSprache(entry.getValue().getFirst().fachID);
-			uvdExportList.add(uvdExport);
+				final UnterrichtsverteilungStatistikExport uvdExport = new UnterrichtsverteilungStatistikExport();
+				uvdExport.unterrichtseinheitennummer = String.format("%04d", uenr++);
+				if (firstItem.zusatzkraftID != null) {
+					uvdExport.folgezeilenmerkmal = "2";
+					uvdExport.kopplungsnummer = "001";
+				} else {
+					uvdExport.folgezeilenmerkmal = "1";
+					uvdExport.kopplungsnummer = "000";
+				}
 
-			if (entry.getValue().getFirst().zusatzkraftID != null) {
-				final UnterrichtsverteilungStatistikExport uvdexportZusatzkraft = new UnterrichtsverteilungStatistikExport();
-				uvdexportZusatzkraft.unterrichtseinheitennummer = uvdExport.unterrichtseinheitennummer;
-				uvdexportZusatzkraft.folgezeilenmerkmal = "6";
-				uvdexportZusatzkraft.kopplungsnummer = "002";
-				uvdexportZusatzkraft.wochenstunden = entry.getValue().getFirst().zusatzkraftWochenstunden;
-				uvdexportZusatzkraft.kuerzel = lehrerIdMap.get(entry.getValue().getFirst().zusatzkraftID).kuerzel;
+				uvdExport.jahrgang = entry.getKey().substring(0, 2);
+				uvdExport.bildungsgangkennzeichen = entry.getKey().substring(2, 3);
+				uvdExport.parallelitaet2 = entry.getKey().substring(3, 4);
+				uvdExport.wochenstunden = firstItem.wochenstunden;
+				uvdExport.fach = entry.getKey().substring(8);
+				uvdExport.kuerzel = entry.getKey().substring(4, 8);
+				uvdExport.bilingualSprache = ermittelnBilingualeSprache(firstItem.fachID);
+				uvdExportList.add(uvdExport);
 
-				uvdExportList.add(uvdexportZusatzkraft);
+				if (firstItem.zusatzkraftID != null) {
+					final UnterrichtsverteilungStatistikExport uvdexportZusatzkraft = new UnterrichtsverteilungStatistikExport();
+					uvdexportZusatzkraft.unterrichtseinheitennummer = uvdExport.unterrichtseinheitennummer;
+					uvdexportZusatzkraft.folgezeilenmerkmal = "6";
+					uvdexportZusatzkraft.kopplungsnummer = "002";
+					uvdexportZusatzkraft.wochenstunden = firstItem.zusatzkraftWochenstunden;
+
+					final LehrerStatistikGesamt zusatzLehrer = lehrerIdMap.get(firstItem.zusatzkraftID);
+					uvdexportZusatzkraft.kuerzel = (zusatzLehrer != null) ? zusatzLehrer.kuerzel : "";
+
+					uvdExportList.add(uvdexportZusatzkraft);
+				}
 			}
 		}
 
@@ -340,7 +388,18 @@ public class AggregationUvdStatistikExport {
 			//TODO: uenr=169 sollte eine Schülerfolgezeile haben; Hauptsatz Q1 Schülerzahlen 11und6w, Schülerfolgezeile Q2 szahlen 1und1w
 			int durchlaeufe = 0;
 			int kopplungsnr = 2;
+
+			if ((kursMap.getValue() == null) || (kursMap.getValue().isEmpty())) {
+				continue;
+			}
+
 			final Entry<String, List<SchuelerLeistungsdatenStatistikGesamt>> stammEntry = kursMap.getValue().entrySet().iterator().next();
+
+			if ((stammEntry.getValue() == null) || (stammEntry.getValue().isEmpty())) {
+				continue;
+			}
+
+			final SchuelerLeistungsdatenStatistikGesamt firstStammItem = stammEntry.getValue().getFirst();
 			final UnterrichtsverteilungStatistikExport uvdExport = new UnterrichtsverteilungStatistikExport();
 			uvdExport.unterrichtseinheitennummer = String.format("%04d", uenr++);
 			uvdExport.folgezeilenmerkmal = "1";
@@ -348,17 +407,32 @@ public class AggregationUvdStatistikExport {
 			uvdExport.jahrgang = stammEntry.getKey().substring(0, 2);
 			uvdExport.schulgliederung = stammEntry.getKey().substring(2, 5);
 			uvdExport.artDerGruppe = stammEntry.getKey().substring(5);
+
 			final KursStatistikGesamt kursStatistikGesamt = kurseIdMap.get(kursMap.getKey());
-			uvdExport.wochenstunden = kursStatistikGesamt.wochenstundenLehrer;
-			uvdExport.fach = fachIdMap.get(stammEntry.getValue().getFirst().fachID).kuerzelStatistik;
-			uvdExport.kuerzel = lehrerIdMap.get(kursStatistikGesamt.lehrer).kuerzel;
-			uvdExport.bilingualSprache = ermittelnBilingualeSprache(stammEntry.getValue().getFirst().fachID);
+			if (kursStatistikGesamt != null) {
+				uvdExport.wochenstunden = kursStatistikGesamt.wochenstundenLehrer;
+				final LehrerStatistikGesamt lehrer = lehrerIdMap.get(kursStatistikGesamt.lehrer);
+				uvdExport.kuerzel = (lehrer != null) ? lehrer.kuerzel : "";
+			} else {
+				uvdExport.wochenstunden = 0;
+				uvdExport.kuerzel = "";
+			}
+
+			final FachStatistikGesamt fach = fachIdMap.get(firstStammItem.fachID);
+			uvdExport.fach = (fach != null) ? fach.kuerzelStatistik : "";
+			uvdExport.bilingualSprache = ermittelnBilingualeSprache(firstStammItem.fachID);
 			uvdExport.schuelerInsgesamt = stammEntry.getValue().size();
 			//TODO: ExterneSchulNr ist in SchuelerStatistikGesamt noch nicht vorhanden; Soll NULL sein, wenn nicht von externer Schule!?
 			//uvdExport.fremdschueler = schuelerVonAndererSchuleProKursId.get()
 
 			if (jahrgaengeSek2.contains(uvdExport.jahrgang)) {
-				uvdExport.schuelerWeiblich = schuelerzahlenWeiblichProKursIdUndKey.get(kursMap.getKey()).values().iterator().next().intValue();
+				final HashMap<String, Long> countMap = schuelerzahlenWeiblichProKursIdUndKey.get(kursMap.getKey());
+				if ((countMap != null) && (!countMap.isEmpty())) {
+					final Long count = countMap.values().iterator().next();
+					uvdExport.schuelerWeiblich = (count != null) ? count.intValue() : 0;
+				} else {
+					uvdExport.schuelerWeiblich = 0;
+				}
 			}
 
 			uvdExportList.add(uvdExport);
@@ -374,16 +448,25 @@ public class AggregationUvdStatistikExport {
 					uvdexportKursSchueler.unterrichtseinheitennummer = uvdExport.unterrichtseinheitennummer;
 					uvdexportKursSchueler.folgezeilenmerkmal = "3";
 					uvdexportKursSchueler.kopplungsnummer = String.format("%03d", kopplungsnr++);
-					uvdexportKursSchueler.schuelerInsgesamt = entry.getValue().size();
-					uvdexportKursSchueler.schuelerWeiblich = schuelerzahlenWeiblichProKursIdUndKey.get(kursMap.getKey()).get(entry.getKey()).intValue();
+					uvdexportKursSchueler.schuelerInsgesamt = (entry.getValue() != null) ? entry.getValue().size() : 0;
+
+					final HashMap<String, Long> keyMap = schuelerzahlenWeiblichProKursIdUndKey.get(kursMap.getKey());
+					if (keyMap != null) {
+						final Long count = keyMap.get(entry.getKey());
+						uvdexportKursSchueler.schuelerWeiblich = (count != null) ? count.intValue() : 0;
+					} else {
+						uvdexportKursSchueler.schuelerWeiblich = 0;
+					}
+
 					uvdexportKursSchueler.jahrgang = entry.getKey().substring(0, 2);
 					uvdexportKursSchueler.schulgliederung = entry.getKey().substring(2, 5);
 					uvdexportKursSchueler.artDerGruppe = entry.getKey().substring(5);
 
 					// Fach bei den Schülerfolgezeilen nur füllen wenn es sich um eine Fremdsprache mit Sprachenbeginn handelt.
-					if ((uvdExport.fach.toCharArray().length > 1) && (!Set.of("S3", "S4").contains(uvdExport.fach))
+					if ((uvdExport.fach != null) && (uvdExport.fach.toCharArray().length > 1) && (!Set.of("S3", "S4").contains(uvdExport.fach))
 							&& StringUtils.isNumeric(uvdExport.fach.substring(1))) {
-						uvdexportKursSchueler.fach = fachIdMap.get(stammEntry.getValue().getFirst().fachID).kuerzelStatistik;
+						final FachStatistikGesamt firstFach = fachIdMap.get(firstStammItem.fachID);
+						uvdexportKursSchueler.fach = (firstFach != null) ? firstFach.kuerzelStatistik : "";
 					}
 
 					uvdExportList.add(uvdexportKursSchueler);
@@ -391,7 +474,7 @@ public class AggregationUvdStatistikExport {
 			}
 
 
-			if (kursStatistikGesamt.weitereLehrer != null) {
+			if ((kursStatistikGesamt != null) && (kursStatistikGesamt.weitereLehrer != null)) {
 
 				for (final KursLehrer kursLehrer : kursStatistikGesamt.weitereLehrer) {
 
@@ -403,7 +486,9 @@ public class AggregationUvdStatistikExport {
 					uvdexportZusatzkraft.unterrichtseinheitennummer = uvdExport.unterrichtseinheitennummer;
 					uvdexportZusatzkraft.folgezeilenmerkmal = "6";
 					uvdexportZusatzkraft.kopplungsnummer = String.format("%03d", kopplungsnr++);
-					uvdexportZusatzkraft.kuerzel = lehrerIdMap.get(kursLehrer.idLehrer).kuerzel;
+
+					final LehrerStatistikGesamt addLehrer = lehrerIdMap.get(kursLehrer.idLehrer);
+					uvdexportZusatzkraft.kuerzel = (addLehrer != null) ? addLehrer.kuerzel : "";
 					uvdexportZusatzkraft.wochenstunden = kursLehrer.wochenstundenLehrer;
 
 					uvdExportList.add(uvdexportZusatzkraft);
@@ -429,9 +514,16 @@ public class AggregationUvdStatistikExport {
 	private void bauenMapKurseImKlassenverband(final HashMap<String, List<SchuelerLeistungsdatenStatistikGesamt>> kurseImKlassenverband,
 			final SchuelerLeistungsdatenStatistikGesamt schuelerLeistungsdaten,
 			final String jahrgangKurseImKlassenverband, final KlassenStatistikGesamt klasse) {
-		final String fach = auffuellenStellengerecht(fachIdMap.get(schuelerLeistungsdaten.fachID).kuerzelStatistik, 2);
-		final String lehrerkuerzel = auffuellenStellengerecht(lehrerIdMap.get(schuelerLeistungsdaten.lehrerID).kuerzel, 4);
-		final String key = jahrgangKurseImKlassenverband.concat(auffuellenStellengerecht(klasse.parallelitaet, 2))
+
+		final FachStatistikGesamt fachObj = fachIdMap.get(schuelerLeistungsdaten.fachID);
+		final String fach = (fachObj != null) ? auffuellenStellengerecht(fachObj.kuerzelStatistik, 2) : "  ";
+
+		final LehrerStatistikGesamt lehrerObj = lehrerIdMap.get(schuelerLeistungsdaten.lehrerID);
+		final String lehrerkuerzel = (lehrerObj != null) ? auffuellenStellengerecht(lehrerObj.kuerzel, 4) : "    ";
+
+		final String parallelitaetStr = (klasse != null && klasse.parallelitaet != null) ? auffuellenStellengerecht(klasse.parallelitaet, 2) : "  ";
+
+		final String key = jahrgangKurseImKlassenverband.concat(parallelitaetStr)
 				.concat(lehrerkuerzel).concat(fach);
 
 		if (!kurseImKlassenverband.containsKey(key)) {
@@ -439,6 +531,5 @@ public class AggregationUvdStatistikExport {
 		}
 		kurseImKlassenverband.get(key).add(schuelerLeistungsdaten);
 	}
-
 
 }

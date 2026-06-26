@@ -15,7 +15,7 @@
 				<ui-select label="EP-Jahr"
 					v-model="model.epJahr.value"
 					:manager="epJahrManager"
-					:validation="() => model.getFehler('epJahre')"
+					:validation="() => model.getFehler('idEpJahre')"
 					:disabled="!hatUpdateKompetenz" statistics required :removable="false" />
 			</div>
 			<svws-ui-input-wrapper :grid="2">
@@ -48,7 +48,7 @@
 					<ui-select label="Schulgliederung"
 						v-model="model.gliederung.value"
 						:manager="gliederungManager"
-						:validation="() => model.getFehler('schulgliederung')"
+						:validation="() => model.getFehler('idSchulgliederung')"
 						:disabled="!hatUpdateKompetenz" statistics required :removable="false" />
 					<svws-ui-text-input placeholder="Prüfungsordnung"
 						v-model="model.proxy.pruefungsOrdnung"
@@ -57,12 +57,12 @@
 					<ui-select label="Organisationsform"
 						v-model="model.organisationsform.value"
 						:manager="organisationsformManager"
-						:validation="() => model.getFehler('organisationsform')"
+						:validation="() => model.getFehler('idOrganisationsform')"
 						:disabled="!hatUpdateKompetenz" statistics required :removable="false" />
 					<ui-select label="Klassenart"
 						v-model="model.klassenart.value"
 						:manager="klassenartManager"
-						:validation="() => model.getFehler('Klassenart')"
+						:validation="() => model.getFehler('idKlassenart')"
 						:disabled="!hatUpdateKompetenz" statistics required :removable="false" />
 				</svws-ui-input-wrapper>
 				<svws-ui-spacing />

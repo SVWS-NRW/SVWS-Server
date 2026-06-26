@@ -24,7 +24,7 @@ export class SchuelerLernabschnittStatistikGesamt extends JavaObject {
 	/**
 	 * Das Kürzel der Schulgliederung bzw. des Bildungsgangs des Schülers.
 	 */
-	public schulgliederung: string | null = null;
+	public idSchulgliederung: number | null = null;
 
 	/**
 	 * Die ID des Jahrgangs des Schülers oder null, falls kein Jahrgang zugeordnet ist
@@ -42,14 +42,14 @@ export class SchuelerLernabschnittStatistikGesamt extends JavaObject {
 	public idFachklasse: number | null = null;
 
 	/**
-	 * Das Kürzel der Organisationsform der Schule in Bezug auf den Schüler (z.B. Ganztag - siehe Core-Type)
+	 * Die ID der Organisationsform der Schule in Bezug auf den Schüler (z.B. Ganztag - siehe Core-Type)
 	 */
-	public organisationsform: string | null = null;
+	public idOrganisationsform: number | null = null;
 
 	/**
-	 * Das Kürzel der Klassenart in Bezug auf den Schüler (z.B. Regelklasse - siehe Core-Type)
+	 * Die ID der Klassenart in Bezug auf den Schüler (z.B. Regelklasse - siehe Core-Type)
 	 */
-	public Klassenart: string | null = "RK";
+	public idKlassenart: number | null = 7000;
 
 	/**
 	 * Gibt an, ob eine Schwerbehinderung nachgewiesen ist oder nicht
@@ -104,12 +104,12 @@ export class SchuelerLernabschnittStatistikGesamt extends JavaObject {
 			throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
 		result.idKlasse = (obj.idKlasse === undefined) ? null : obj.idKlasse === null ? null : obj.idKlasse;
-		result.schulgliederung = (obj.schulgliederung === undefined) ? null : obj.schulgliederung === null ? null : obj.schulgliederung;
+		result.idSchulgliederung = (obj.idSchulgliederung === undefined) ? null : obj.idSchulgliederung === null ? null : obj.idSchulgliederung;
 		result.idJahrgang = (obj.idJahrgang === undefined) ? null : obj.idJahrgang === null ? null : obj.idJahrgang;
 		result.epJahre = (obj.epJahre === undefined) ? null : obj.epJahre === null ? null : obj.epJahre;
 		result.idFachklasse = (obj.idFachklasse === undefined) ? null : obj.idFachklasse === null ? null : obj.idFachklasse;
-		result.organisationsform = (obj.organisationsform === undefined) ? null : obj.organisationsform === null ? null : obj.organisationsform;
-		result.Klassenart = (obj.Klassenart === undefined) ? null : obj.Klassenart === null ? null : obj.Klassenart;
+		result.idOrganisationsform = (obj.idOrganisationsform === undefined) ? null : obj.idOrganisationsform === null ? null : obj.idOrganisationsform;
+		result.idKlassenart = (obj.idKlassenart === undefined) ? null : obj.idKlassenart === null ? null : obj.idKlassenart;
 		if (obj.hatSchwerbehinderungsNachweis === undefined)
 			throw new Error('invalid json format, missing attribute hatSchwerbehinderungsNachweis');
 		result.hatSchwerbehinderungsNachweis = obj.hatSchwerbehinderungsNachweis;
@@ -129,12 +129,12 @@ export class SchuelerLernabschnittStatistikGesamt extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
 		result += '"idKlasse" : ' + ((obj.idKlasse === null) ? 'null' : obj.idKlasse.toString()) + ',';
-		result += '"schulgliederung" : ' + ((obj.schulgliederung === null) ? 'null' : JSON.stringify(obj.schulgliederung)) + ',';
+		result += '"idSchulgliederung" : ' + ((obj.idSchulgliederung === null) ? 'null' : obj.idSchulgliederung.toString()) + ',';
 		result += '"idJahrgang" : ' + ((obj.idJahrgang === null) ? 'null' : obj.idJahrgang.toString()) + ',';
 		result += '"epJahre" : ' + ((obj.epJahre === null) ? 'null' : obj.epJahre.toString()) + ',';
 		result += '"idFachklasse" : ' + ((obj.idFachklasse === null) ? 'null' : obj.idFachklasse.toString()) + ',';
-		result += '"organisationsform" : ' + ((obj.organisationsform === null) ? 'null' : JSON.stringify(obj.organisationsform)) + ',';
-		result += '"Klassenart" : ' + ((obj.Klassenart === null) ? 'null' : JSON.stringify(obj.Klassenart)) + ',';
+		result += '"idOrganisationsform" : ' + ((obj.idOrganisationsform === null) ? 'null' : obj.idOrganisationsform.toString()) + ',';
+		result += '"idKlassenart" : ' + ((obj.idKlassenart === null) ? 'null' : obj.idKlassenart.toString()) + ',';
 		result += '"hatSchwerbehinderungsNachweis" : ' + obj.hatSchwerbehinderungsNachweis.toString() + ',';
 		result += '"idFoerderschwerpunkt1" : ' + ((obj.idFoerderschwerpunkt1 === null) ? 'null' : obj.idFoerderschwerpunkt1.toString()) + ',';
 		result += '"idFoerderschwerpunkt2" : ' + ((obj.idFoerderschwerpunkt2 === null) ? 'null' : obj.idFoerderschwerpunkt2.toString()) + ',';
@@ -163,8 +163,8 @@ export class SchuelerLernabschnittStatistikGesamt extends JavaObject {
 		if (obj.idKlasse !== undefined) {
 			result += '"idKlasse" : ' + ((obj.idKlasse === null) ? 'null' : obj.idKlasse.toString()) + ',';
 		}
-		if (obj.schulgliederung !== undefined) {
-			result += '"schulgliederung" : ' + ((obj.schulgliederung === null) ? 'null' : JSON.stringify(obj.schulgliederung)) + ',';
+		if (obj.idSchulgliederung !== undefined) {
+			result += '"idSchulgliederung" : ' + ((obj.idSchulgliederung === null) ? 'null' : obj.idSchulgliederung.toString()) + ',';
 		}
 		if (obj.idJahrgang !== undefined) {
 			result += '"idJahrgang" : ' + ((obj.idJahrgang === null) ? 'null' : obj.idJahrgang.toString()) + ',';
@@ -175,11 +175,11 @@ export class SchuelerLernabschnittStatistikGesamt extends JavaObject {
 		if (obj.idFachklasse !== undefined) {
 			result += '"idFachklasse" : ' + ((obj.idFachklasse === null) ? 'null' : obj.idFachklasse.toString()) + ',';
 		}
-		if (obj.organisationsform !== undefined) {
-			result += '"organisationsform" : ' + ((obj.organisationsform === null) ? 'null' : JSON.stringify(obj.organisationsform)) + ',';
+		if (obj.idOrganisationsform !== undefined) {
+			result += '"idOrganisationsform" : ' + ((obj.idOrganisationsform === null) ? 'null' : obj.idOrganisationsform.toString()) + ',';
 		}
-		if (obj.Klassenart !== undefined) {
-			result += '"Klassenart" : ' + ((obj.Klassenart === null) ? 'null' : JSON.stringify(obj.Klassenart)) + ',';
+		if (obj.idKlassenart !== undefined) {
+			result += '"idKlassenart" : ' + ((obj.idKlassenart === null) ? 'null' : obj.idKlassenart.toString()) + ',';
 		}
 		if (obj.hatSchwerbehinderungsNachweis !== undefined) {
 			result += '"hatSchwerbehinderungsNachweis" : ' + obj.hatSchwerbehinderungsNachweis.toString() + ',';

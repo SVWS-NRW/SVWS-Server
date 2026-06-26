@@ -41,8 +41,9 @@ public abstract class Validator extends BasicValidator {
 	protected final <T> @NotNull Supplier<T> getNotNullSupplierObject(final @NotNull Supplier<@AllowNull T> supplier) {
 		return () -> {
 			final T value = supplier.get();
-			if (value == null)
+			if (value == null) {
 				throw new NullPointerException();
+			}
 			return value;
 		};
 	}
@@ -127,8 +128,9 @@ public abstract class Validator extends BasicValidator {
 	protected final @NotNull Supplier<@AllowNull DateManager> getDateManagerSupplier(final @NotNull Supplier<@AllowNull String> supplier) {
 		return () -> {
 			final String value = supplier.get();
-			if (value == null)
+			if (value == null) {
 				return null;
+			}
 			try {
 				return DateManager.from(value);
 			} catch (@SuppressWarnings("unused") final InvalidDateException e) {

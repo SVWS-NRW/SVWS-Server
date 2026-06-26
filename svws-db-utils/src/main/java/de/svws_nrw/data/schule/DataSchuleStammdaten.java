@@ -129,11 +129,13 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	 */
 	public static SchuleStammdaten getStammdaten(final DBEntityManager conn) throws ApiOperationException {
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
+		if (schule == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schuldaten für die Schule vorhanden.");
+		}
 		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
-		if (schuljahresabschnitt == null)
+		if (schuljahresabschnitt == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Schule hat keinen gültigen aktuellen Schuljahresabschnitt.");
+		}
 		final SchuleStammdaten daten = map(schule);
 		daten.abschnitte.addAll((new DataSchuljahresabschnitte(conn)).getAbschnitte());
 		return daten;
@@ -152,8 +154,9 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	 */
 	public Integer getSchulnummer() {
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
+		if (schule == null) {
 			return null;
+		}
 		return schule.SchulNr;
 	}
 
@@ -167,8 +170,9 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	 */
 	public Response getSchulnummerResponse() throws ApiOperationException {
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
+		if (schule == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(schule.SchulNr).build();
 	}
 
@@ -182,8 +186,9 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	 */
 	public static int getAnzahlAbschnitte(final DBEntityManager conn) {
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if ((schule == null) || (schule.AnzahlAbschnitte == null))
+		if ((schule == null) || (schule.AnzahlAbschnitte == null)) {
 			return 2;   // Default-Wert
+		}
 		return schule.AnzahlAbschnitte;
 	}
 
@@ -193,8 +198,9 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() > 0) {
 			final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-			if (schule == null)
+			if (schule == null) {
 				throw new ApiOperationException(Status.NOT_FOUND);
+			}
 			for (final Entry<String, Object> entry : map.entrySet()) {
 				final String key = entry.getKey();
 				final Object value = entry.getValue();
@@ -232,21 +238,25 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 						final Map<String, Object> mapAbschnitte = (Map<String, Object>) value;
 						if (mapAbschnitte.containsKey("anzahlAbschnitte")) {
 							final Integer anzahlAbschnitte = JSONMapper.convertToInteger(mapAbschnitte.get("anzahlAbschnitte"), false);
-							if ((anzahlAbschnitte < 1) || (anzahlAbschnitte > 4))
+							if ((anzahlAbschnitte < 1) || (anzahlAbschnitte > 4)) {
 								throw new ApiOperationException(Status.CONFLICT);
+							}
 							schule.AnzahlAbschnitte = anzahlAbschnitte;
 						}
-						if (mapAbschnitte.containsKey("abschnittBez"))
+						if (mapAbschnitte.containsKey("abschnittBez")) {
 							schule.AbschnittBez = JSONMapper.convertToString(mapAbschnitte.get("abschnittBez"), true, true,
 									Schema.tab_EigeneSchule.col_BezAbschnitt1.datenlaenge());
+						}
 						if (mapAbschnitte.containsKey("bezAbschnitte")) {
 							final List<?> bezAbschnitte = (List<?>) mapAbschnitte.get("bezAbschnitte");
-							if (bezAbschnitte.size() != schule.AnzahlAbschnitte)
+							if (bezAbschnitte.size() != schule.AnzahlAbschnitte) {
 								throw new ApiOperationException(Status.CONFLICT);
+							}
 							for (int i = 0; i < bezAbschnitte.size(); i++) {
 								final Object objBezeichnung = bezAbschnitte.get(i);
-								if (!(objBezeichnung instanceof String))
+								if (!(objBezeichnung instanceof String)) {
 									throw new ApiOperationException(Status.BAD_REQUEST);
+								}
 								switch (i) {
 									case 0 -> schule.BezAbschnitt1 = (String) objBezeichnung;
 									case 1 -> schule.BezAbschnitt2 = (String) objBezeichnung;
@@ -279,8 +289,9 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	 */
 	public Response getSchullogo() throws ApiOperationException {
 		final DTOEigeneSchuleLogo logo = conn.querySingle(DTOEigeneSchuleLogo.class);
-		if (logo == null)
+		if (logo == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		final String daten = "\"" + logo.LogoBase64 + "\"";
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -292,8 +303,9 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	 */
 	public String getSchullogoBase64() {
 		final DTOEigeneSchuleLogo logo = conn.querySingle(DTOEigeneSchuleLogo.class);
-		if (logo == null)
+		if (logo == null) {
 			return "";
+		}
 		return logo.LogoBase64;
 	}
 
@@ -308,8 +320,9 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	 */
 	public Response putSchullogo(final InputStream is) throws ApiOperationException {
 		final DTOEigeneSchuleLogo logo = conn.querySingle(DTOEigeneSchuleLogo.class);
-		if (logo == null)
+		if (logo == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		logo.LogoBase64 = JSONMapper.toString(is);
 		conn.transactionPersist(logo);
 		return Response.ok().build();
@@ -328,9 +341,10 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	public Response init(final int schulnummer) throws ApiOperationException {
 		// Prüfe, ob bereits ein Eintrag in der Tabelle EigeneSchule vorliegt...
 		DTOEigeneSchule eigeneSchule = conn.querySingle(DTOEigeneSchule.class);
-		if (eigeneSchule != null)
+		if (eigeneSchule != null) {
 			throw new ApiOperationException(Status.CONFLICT, "Das Datenbank-Schema kann nicht mit einer Schule initialisiert werden, da es bereits einen"
 					+ " Schuleintrag enthält.");
+		}
 		// Prüfe, ob die Schulnummer im Katalog der Schulen vorkommt.
 		final List<SchulenKatalogEintrag> katalogSchulen = DataKatalogSchulen.getKatalog();
 		SchulenKatalogEintrag schulEintrag = null;
@@ -340,8 +354,9 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 				break;
 			}
 		}
-		if (schulEintrag == null)
+		if (schulEintrag == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schule mit der Schulnummer " + schulnummer + " im Katalog der Schulen gefunden.");
+		}
 		// Bestimme das aktuelle Datum
 		final LocalDate date = LocalDate.now();
 		final int month = date.getMonthValue();
@@ -358,12 +373,14 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 			case "81" -> Schulform.S;
 			default -> Schulform.data().getWertBySchluessel(schulEintrag.SF);
 		};
-		if (schulform == null)
+		if (schulform == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schulform mit der Nummer " + schulEintrag.SF + " bei den Schulformen gefunden.");
+		}
 		final SchulformKatalogEintrag ske = schulform.daten(schuljahr);
-		if (ske == null)
+		if (ske == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die Schulform mit der Nummer %s ist im Schuljahr %d nicht gültig."
 					.formatted(schulEintrag.SF, schuljahr));
+		}
 		eigeneSchule.SchulformKuerzel = ske.kuerzel;
 		eigeneSchule.SchulformNr = ske.schluessel;
 		eigeneSchule.SchulformBez = ske.text;
@@ -562,8 +579,9 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		final ArrayList<DTOBeschaeftigungsart> beschaeftigungsart = new ArrayList<>();
 		beschaeftigungsart.add(new DTOBeschaeftigungsart(1L, "Ausbildung"));
 		beschaeftigungsart.add(new DTOBeschaeftigungsart(2L, "Praktikum"));
-		for (int i = 0; i < beschaeftigungsart.size(); i++)
+		for (int i = 0; i < beschaeftigungsart.size(); i++) {
 			beschaeftigungsart.get(i).Sortierung = i + 1;
+		}
 		conn.transactionPersistAll(beschaeftigungsart);
 		conn.transactionFlush();
 
@@ -580,8 +598,9 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		einschulungsart.add(new DTOEinschulungsart(1L, "normal"));
 		einschulungsart.add(new DTOEinschulungsart(2L, "vorzeitig"));
 		einschulungsart.add(new DTOEinschulungsart(3L, "zurückgestellt"));
-		for (int i = 0; i < einschulungsart.size(); i++)
+		for (int i = 0; i < einschulungsart.size(); i++) {
 			einschulungsart.get(i).Sortierung = i + 1;
+		}
 		conn.transactionPersistAll(einschulungsart);
 		conn.transactionFlush();
 
@@ -591,8 +610,9 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		entlassart.add(new DTOEntlassarten(2L, "Normaler Abschluss"));
 		entlassart.add(new DTOEntlassarten(3L, "Ohne Angabe"));
 		entlassart.add(new DTOEntlassarten(4L, "Wechsel zu anderer Schule"));
-		for (int i = 0; i < entlassart.size(); i++)
+		for (int i = 0; i < entlassart.size(); i++) {
 			entlassart.get(i).Sortierung = i + 1;
+		}
 		conn.transactionPersistAll(entlassart);
 		conn.transactionFlush();
 
@@ -604,8 +624,9 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		erzieherarten.add(new DTOErzieherart(4L, "Schülerin ist volljährig"));
 		erzieherarten.add(new DTOErzieherart(5L, "Eltern"));
 		erzieherarten.add(new DTOErzieherart(6L, "Sonstige"));
-		for (int i = 0; i < erzieherarten.size(); i++)
+		for (int i = 0; i < erzieherarten.size(); i++) {
 			erzieherarten.get(i).Sortierung = i + 1;
+		}
 		conn.transactionPersistAll(erzieherarten);
 		conn.transactionFlush();
 
@@ -625,8 +646,9 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		int i = 1;
 		for (final Religion kon : Religion.values()) {
 			final CoreTypeData eintrag = kon.daten(schuljahr);
-			if (eintrag == null)
+			if (eintrag == null) {
 				continue;
+			}
 			final DTOKonfession dto = new DTOKonfession(i, eintrag.text);
 			dto.StatistikKrz = eintrag.kuerzel;
 			dto.Sortierung = i;
@@ -659,8 +681,9 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		schwerpunkte.add(new DTOSchuelerSchwerpunkt(2L, "sozialwissenschaftlich"));
 		schwerpunkte.add(new DTOSchuelerSchwerpunkt(3L, "musisch-künstlerisch"));
 		schwerpunkte.add(new DTOSchuelerSchwerpunkt(4L, "fremdsprachlich"));
-		for (i = 0; i < schwerpunkte.size(); i++)
+		for (i = 0; i < schwerpunkte.size(); i++) {
 			schwerpunkte.get(i).Sortierung = i + 1;
+		}
 		conn.transactionPersistAll(schwerpunkte);
 		conn.transactionFlush();
 
@@ -675,8 +698,9 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		telefonArten.add(new DTOTelefonArt(7L, "Festnetznummer"));
 		telefonArten.add(new DTOTelefonArt(8L, "Mobilnummer"));
 		telefonArten.add(new DTOTelefonArt(9L, "Fax-Nummer"));
-		for (i = 0; i < telefonArten.size(); i++)
+		for (i = 0; i < telefonArten.size(); i++) {
 			telefonArten.get(i).Sortierung = i + 1;
+		}
 		conn.transactionPersistAll(telefonArten);
 		conn.transactionFlush();
 

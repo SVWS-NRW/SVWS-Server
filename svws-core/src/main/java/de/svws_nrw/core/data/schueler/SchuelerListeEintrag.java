@@ -61,7 +61,7 @@ public class SchuelerListeEintrag {
 
 	/** Das Kürzel der aktuellen Schulgliederung des Schülers */
 	@Schema(description = "das Kürzel der aktuellen Schulgliederung des Schülers", example = "GY9")
-	public @NotNull String schulgliederung = "";
+	public @NotNull Long idSchulgliederung = -1L;
 
 	/** Die Bezeichnung des Status des Schülers (Aktiv, Extern, etc.).*/
 	@Schema(description = "die Bezeichnung des Status des Schülers (Aktiv, Extern, etc.)", example = "2")

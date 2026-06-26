@@ -50,7 +50,7 @@ class TestJSONMapper {
 			original.idSchuljahresabschnittSchueler = 5L;
 			original.idKlasse = 43L;
 			original.abiturjahrgang = 2050;
-			original.schulgliederung = Schulgliederung.GY8.daten(2024).kuerzel;
+			original.idSchulgliederung = Schulgliederung.GY8.daten(2024).id;
 			original.kurse.add(142L);
 			original.kurse.add(1433L);
 			final byte[] encoded = JSONMapper.gzipByteArrayFromObject(original);
@@ -64,11 +64,10 @@ class TestJSONMapper {
 			assertEquals(original.idSchuljahresabschnittSchueler, decoded.idSchuljahresabschnittSchueler);
 			assertEquals(original.idKlasse, decoded.idKlasse);
 			assertEquals(original.abiturjahrgang, decoded.abiturjahrgang);
-			assertEquals(original.schulgliederung, decoded.schulgliederung);
+			assertEquals(original.idSchulgliederung, decoded.idSchulgliederung);
 			assertEquals(original.kurse.size(), decoded.kurse.size());
-			for (int i = 0; i < original.kurse.size(); i++) {
+			for (int i = 0; i < original.kurse.size(); i++)
 				assertEquals(original.kurse.get(i), decoded.kurse.get(i));
-			}
 		} catch (final CompressionException e) {
 			fail(e);
 		}

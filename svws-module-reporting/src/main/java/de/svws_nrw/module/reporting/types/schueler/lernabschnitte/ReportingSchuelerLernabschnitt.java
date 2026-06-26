@@ -1,17 +1,5 @@
 package de.svws_nrw.module.reporting.types.schueler.lernabschnitte;
 
-import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittNachpruefungsdaten;
-import de.svws_nrw.core.adt.map.ListMap3DLongKeys;
-import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
-import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
-import de.svws_nrw.module.reporting.types.ReportingBaseType;
-import de.svws_nrw.module.reporting.types.fach.ReportingFach;
-import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
-import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
-import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
-import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
-import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -21,6 +9,18 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittNachpruefungsdaten;
+import de.svws_nrw.core.adt.map.ListMap3DLongKeys;
+import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
+import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
+import de.svws_nrw.module.reporting.types.ReportingBaseType;
+import de.svws_nrw.module.reporting.types.fach.ReportingFach;
+import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
+import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
+import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
+import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Lernabschnitt.
@@ -144,8 +144,8 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	/** Die Klasse des Schülers aus diesem Lernabschnitt */
 	protected ReportingKlasse klasse;
 
-	/** Das Kürzel der Klassenart in Bezug auf den Schüler (z.B. Regelklasse - siehe Core-Type) */
-	protected String klassenart;
+	/** Die ID der Klassenart in Bezug auf den Schüler (z.B. Regelklasse - siehe Core-Type) */
+	protected Long idKlassenart;
 
 	/** Die Informationen zu den Nachprüfungen in diesem Lernabschnitt oder null, falls keine vorhanden sind. */
 	protected SchuelerLernabschnittNachpruefungsdaten nachpruefungen;
@@ -159,8 +159,8 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	/** Die Lernbereichsnote Naturwissenschaft für den Hauptschulabschluss nach Klassen 10 */
 	protected Integer noteLernbereichNW;
 
-	/** Das Kürzel der Organisationsform der Schule in Bezug auf den Schüler (z.B. Ganztag - siehe Core-Type) */
-	protected String organisationsform;
+	/** Die ID der Organisationsform der Schule in Bezug auf den Schüler (z.B. Ganztag - siehe Core-Type) */
+	protected Long idOrganisationsform;
 
 	/** Die Prüfungsordnung, die beim Schüler in diesem Lernabschnitt anzuwenden ist. */
 	protected String pruefungsOrdnung;
@@ -168,8 +168,8 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	/** Der Schüler, zu dem diese Lernabschnittsdaten gehören. */
 	protected ReportingSchueler schueler;
 
-	/** Das Kürzel der Schulgliederung bzw. des Bildungsgangs des Schülers. */
-	protected String schulgliederung;
+	/** Die ID der Schulgliederung bzw. des Bildungsgangs des Schülers. */
+	protected Long idSchulgliederung;
 
 	/** Der Schuljahresabschnitt, zu welchem diese Lernabschnittsdaten gehören. */
 	protected ReportingSchuljahresabschnitt schuljahresabschnitt;
@@ -261,16 +261,16 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @param istGewertet Gibt an, ob es sich um einen gewerteten Abschnitt handelt oder nicht
 	 * @param istWiederholung Gibt an, ob es sich bei dem Abschnitt um einen wiederholten Abschnitt handelt oder nicht
 	 * @param klasse Die Klasse des Schülers aus diesem Lernabschnitt
-	 * @param klassenart Das Kürzel der Klassenart in Bezug auf den Schüler (z.B. Regelklasse - siehe Core-Type)
+	 * @param idKlassenart Das Kürzel der Klassenart in Bezug auf den Schüler (z.B. Regelklasse - siehe Core-Type)
 	 * @param leistungsdaten Die Leistungsdaten des Schülers in diesem Lernabschnitt.
 	 * @param nachpruefungen Die Informationen zu den Nachprüfungen in diesem Lernabschnitt oder null, falls keine vorhanden sind.
 	 * @param noteDurchschnitt Die Durchschnittsnote in diesem Lernabschnitt - wird ggf. von einem Prüfungsalgorithmus gesetzt und kann dann ausgelesen werden
 	 * @param noteLernbereichGSbzwAL Die Lernbereichsnote Gesellschaftswissenschaft oder Arbeitslehre für den Hauptschulabschluss nach Klassen 10
 	 * @param noteLernbereichNW Die Lernbereichsnote Naturwissenschaft für den Hauptschulabschluss nach Klassen 10
-	 * @param organisationsform Das Kürzel der Organisationsform der Schule in Bezug auf den Schüler (z.B. Ganztag - siehe Core-Type)
+	 * @param idOrganisationsform Das Kürzel der Organisationsform der Schule in Bezug auf den Schüler (z.B. Ganztag - siehe Core-Type)
 	 * @param pruefungsOrdnung Die Prüfungsordnung, die beim Schüler in diesem Lernabschnitt anzuwenden ist.
 	 * @param schueler Der Schüler, zu dem diese Lernabschnittsdaten gehören.
-	 * @param schulgliederung Das Kürzel der Schulgliederung bzw. des Bildungsgangs des Schülers.
+	 * @param idSchulgliederung Die ID der Schulgliederung bzw. des Bildungsgangs des Schülers.
 	 * @param schuljahresabschnitt Der Schuljahresabschnitt, zu welchem diese Lernabschnittsdaten gehören.
 	 * @param sonderpaedagoge Der Sonderpädagoge, der den Schüler betreut
 	 * @param textErgebnisPruefungsalgorithmus Die textuelle Ausgabe des Prüfungsalgorithmus für die Versetzungs-/Abschlussberechnung
@@ -297,10 +297,10 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 			final Long idFoerderschwerpunkt1, final Long idFoerderschwerpunkt2, final Long idFolgeklasse, final Long idJahrgang, final Long idKlasse,
 			final long idSchueler, final long idSchuljahresabschnitt, final Long idSchwerpunkt, final Long idSonderpaedagoge, final Long idTutor,
 			final boolean istAbschlussPrognose, final boolean istFachpraktischerAnteilAusreichend, final boolean istGewertet, final boolean istWiederholung,
-			final ReportingKlasse klasse, final String klassenart, final List<ReportingSchuelerLeistungsdaten> leistungsdaten,
+			final ReportingKlasse klasse, final Long idKlassenart, final List<ReportingSchuelerLeistungsdaten> leistungsdaten,
 			final SchuelerLernabschnittNachpruefungsdaten nachpruefungen, final String noteDurchschnitt, final Integer noteLernbereichGSbzwAL,
-			final Integer noteLernbereichNW, final String organisationsform, final String pruefungsOrdnung, final ReportingSchueler schueler,
-			final String schulgliederung, final ReportingSchuljahresabschnitt schuljahresabschnitt, final ReportingLehrer sonderpaedagoge,
+			final Integer noteLernbereichNW, final Long idOrganisationsform, final String pruefungsOrdnung, final ReportingSchueler schueler,
+			final Long idSchulgliederung, final ReportingSchuljahresabschnitt schuljahresabschnitt, final ReportingLehrer sonderpaedagoge,
 			final String textErgebnisPruefungsalgorithmus, final ReportingLehrer tutor, final String uebergangsempfehlungText,
 			final String versetzungsentscheidungText, final String versetzungsvermerkKuerzel, final int wechselNr, final String zeugnisart,
 			final String zeugnisASVText, final String zeugnisAUEText, final String zeugnisBemerkungText, final String zeugnisLELSText,
@@ -308,7 +308,8 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 		this.abschluss = ersetzeNullBlankTrim(abschluss);
 		this.abschlussart = abschlussart;
 		this.abschlussBerufsbildend = ersetzeNullBlankTrim(abschlussBerufsbildend);
-		this.ankreuzkompetenzen = (ankreuzkompetenzen != null) ? new ArrayList<>(ankreuzkompetenzen.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
+		this.ankreuzkompetenzen =
+				(ankreuzkompetenzen != null) ? new ArrayList<>(ankreuzkompetenzen.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
 		this.bilingualerZweig = ersetzeNullBlankTrim(bilingualerZweig);
 		this.datumAnfang = ersetzeNullBlankTrim(datumAnfang);
 		this.datumEnde = ersetzeNullBlankTrim(datumEnde);
@@ -343,16 +344,16 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 		this.istGewertet = istGewertet;
 		this.istWiederholung = istWiederholung;
 		this.klasse = klasse;
-		this.klassenart = ersetzeNullBlankTrim(klassenart);
+		this.idKlassenart = idKlassenart;
 		this.leistungsdaten = (leistungsdaten != null) ? new ArrayList<>(leistungsdaten.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
 		this.nachpruefungen = nachpruefungen;
 		this.noteDurchschnitt = ersetzeNullBlankTrim(noteDurchschnitt);
 		this.noteLernbereichGSbzwAL = noteLernbereichGSbzwAL;
 		this.noteLernbereichNW = noteLernbereichNW;
-		this.organisationsform = ersetzeNullBlankTrim(organisationsform);
+		this.idOrganisationsform = idOrganisationsform;
 		this.pruefungsOrdnung = ersetzeNullBlankTrim(pruefungsOrdnung);
 		this.schueler = schueler;
-		this.schulgliederung = ersetzeNullBlankTrim(schulgliederung);
+		this.idSchulgliederung = idSchulgliederung;
 		this.schuljahresabschnitt = schuljahresabschnitt;
 		this.sonderpaedagoge = sonderpaedagoge;
 		this.textErgebnisPruefungsalgorithmus = ersetzeNullBlankTrim(textErgebnisPruefungsalgorithmus);
@@ -379,7 +380,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 */
 	@Override
 	public int hashCode() {
-		return 31 + Long.hashCode(id);
+		return 31 + Long.hashCode(this.id);
 	}
 
 	/**
@@ -398,7 +399,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 		if (!(obj instanceof final ReportingSchuelerLernabschnitt other)) {
 			return false;
 		}
-		return (id == other.id);
+		return (this.id == other.id);
 	}
 
 
@@ -411,7 +412,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Voraussichtliches Entlassungsdatum
 	 */
 	public String jahrVoraussichtlicheEntlassung() {
-		if ((this.jahrgang() == null) || (this.schuljahresabschnitt() == null) || (this.jahrgang.anzahlRestabschnitte() == null)) {
+		if ((jahrgang() == null) || (schuljahresabschnitt() == null) || (this.jahrgang.anzahlRestabschnitte() == null)) {
 			return "";
 		}
 
@@ -427,7 +428,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes abschluss; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String abschluss() {
-		return abschluss;
+		return this.abschluss;
 	}
 
 	/**
@@ -436,7 +437,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes abschlussart
 	 */
 	public Integer abschlussart() {
-		return abschlussart;
+		return this.abschlussart;
 	}
 
 	/**
@@ -445,7 +446,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes abschlussBerufsbildend; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String abschlussBerufsbildend() {
-		return abschlussBerufsbildend;
+		return this.abschlussBerufsbildend;
 	}
 
 	/**
@@ -454,7 +455,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes ankreuzkompetenzen; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingSchuelerAnkreuzkompetenz> ankreuzkompetenzen() {
-		return ankreuzkompetenzen;
+		return this.ankreuzkompetenzen;
 	}
 
 	/**
@@ -464,10 +465,10 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Liste der Ankreuzkompetenzen zum ASV.
 	 */
 	public List<ReportingSchuelerAnkreuzkompetenz> ankreuzkompetenzenASV() {
-		if (this.ankreuzkompetenzen() == null) {
+		if (ankreuzkompetenzen() == null) {
 			return new ArrayList<>();
 		}
-		return this.ankreuzkompetenzen().stream()
+		return ankreuzkompetenzen().stream()
 				.filter(a -> (a.ankreuzkompetenz() != null) && a.ankreuzkompetenz().istASV())
 				.sorted(Comparator.comparingInt(a -> a.ankreuzkompetenz().sortierung()))
 				.toList();
@@ -481,20 +482,20 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Map mit Fach als Schlüssel und Liste der Ankreuzkompetenz-Belegungen als Wert.
 	 */
 	public Map<ReportingFach, List<ReportingSchuelerAnkreuzkompetenz>> ankreuzkompetenzenFaecherOhneLeistungsdaten() {
-		if (this.ankreuzkompetenzen() == null) {
+		if (ankreuzkompetenzen() == null) {
 			return new LinkedHashMap<>();
 		}
-		final Set<Long> idsFaecherMitLeistungen = (this.leistungsdaten() == null) ? new HashSet<>()
-				: this.leistungsdaten().stream()
+		final Set<Long> idsFaecherMitLeistungen = (leistungsdaten() == null) ? new HashSet<>()
+				: leistungsdaten().stream()
 						.filter(l -> l.fach() != null)
 						.map(l -> l.fach().id())
 						.collect(Collectors.toSet());
-		return this.ankreuzkompetenzen().stream()
+		return ankreuzkompetenzen().stream()
 				.filter(a -> (a.ankreuzkompetenz() != null)
 						&& (a.ankreuzkompetenz().fach() != null)
 						&& !idsFaecherMitLeistungen.contains(a.ankreuzkompetenz().fach().id()))
 				.sorted(Comparator
-						.comparingInt((ReportingSchuelerAnkreuzkompetenz a) -> a.ankreuzkompetenz().fachSortierung())
+						.comparingInt((final ReportingSchuelerAnkreuzkompetenz a) -> a.ankreuzkompetenz().fachSortierung())
 						.thenComparingInt(a -> a.ankreuzkompetenz().sortierung()))
 				.collect(Collectors.groupingBy(
 						a -> a.ankreuzkompetenz().fach(),
@@ -508,7 +509,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes bilingualerZweig; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String bilingualerZweig() {
-		return bilingualerZweig;
+		return this.bilingualerZweig;
 	}
 
 	/**
@@ -517,7 +518,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes datumAnfang; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String datumAnfang() {
-		return datumAnfang;
+		return this.datumAnfang;
 	}
 
 	/**
@@ -526,7 +527,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes datumEnde; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String datumEnde() {
-		return datumEnde;
+		return this.datumEnde;
 	}
 
 	/**
@@ -535,7 +536,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes datumKonferenz; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String datumKonferenz() {
-		return datumKonferenz;
+		return this.datumKonferenz;
 	}
 
 	/**
@@ -544,7 +545,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes datumZeugnis; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String datumZeugnis() {
-		return datumZeugnis;
+		return this.datumZeugnis;
 	}
 
 	/**
@@ -553,7 +554,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes fehlstundenGesamt
 	 */
 	public int fehlstundenGesamt() {
-		return fehlstundenGesamt;
+		return this.fehlstundenGesamt;
 	}
 
 	/**
@@ -562,7 +563,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes fehlstundenGrenzwert
 	 */
 	public Integer fehlstundenGrenzwert() {
-		return fehlstundenGrenzwert;
+		return this.fehlstundenGrenzwert;
 	}
 
 	/**
@@ -571,7 +572,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes fehlstundenUnentschuldigt
 	 */
 	public int fehlstundenUnentschuldigt() {
-		return fehlstundenUnentschuldigt;
+		return this.fehlstundenUnentschuldigt;
 	}
 
 	/**
@@ -580,7 +581,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes foerderschwerpunkt1
 	 */
 	public FoerderschwerpunktEintrag foerderschwerpunkt1() {
-		return foerderschwerpunkt1;
+		return this.foerderschwerpunkt1;
 	}
 
 	/**
@@ -589,7 +590,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes foerderschwerpunkt2
 	 */
 	public FoerderschwerpunktEintrag foerderschwerpunkt2() {
-		return foerderschwerpunkt2;
+		return this.foerderschwerpunkt2;
 	}
 
 	/**
@@ -598,7 +599,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes foerderschwerpunktText; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String foerderschwerpunktText() {
-		return foerderschwerpunktText;
+		return this.foerderschwerpunktText;
 	}
 
 	/**
@@ -607,7 +608,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes folgeklasse
 	 */
 	public ReportingKlasse folgeklasse() {
-		return folgeklasse;
+		return this.folgeklasse;
 	}
 
 	/**
@@ -616,7 +617,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes hatAOSF
 	 */
 	public boolean hatAOSF() {
-		return hatAOSF;
+		return this.hatAOSF;
 	}
 
 	/**
@@ -625,7 +626,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes hatAutismus
 	 */
 	public boolean hatAutismus() {
-		return hatAutismus;
+		return this.hatAutismus;
 	}
 
 	/**
@@ -634,7 +635,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes hatSchwerbehinderungsNachweis
 	 */
 	public boolean hatSchwerbehinderungsNachweis() {
-		return hatSchwerbehinderungsNachweis;
+		return this.hatSchwerbehinderungsNachweis;
 	}
 
 	/**
@@ -643,7 +644,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes hatZieldifferentenUnterricht
 	 */
 	public boolean hatZieldifferentenUnterricht() {
-		return hatZieldifferentenUnterricht;
+		return this.hatZieldifferentenUnterricht;
 	}
 
 	/**
@@ -652,7 +653,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes jahrgang; kann {@code null} sein, wenn dem Lernabschnitt kein Jahrgang zugeordnet ist.
 	 */
 	public ReportingJahrgang jahrgang() {
-		return jahrgang;
+		return this.jahrgang;
 	}
 
 	/**
@@ -661,7 +662,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes id
 	 */
 	public long id() {
-		return id;
+		return this.id;
 	}
 
 	/**
@@ -670,7 +671,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes idFachklasse
 	 */
 	public Long idFachklasse() {
-		return idFachklasse;
+		return this.idFachklasse;
 	}
 
 	/**
@@ -679,7 +680,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes idFoerderschwerpunkt1
 	 */
 	public Long idFoerderschwerpunkt1() {
-		return idFoerderschwerpunkt1;
+		return this.idFoerderschwerpunkt1;
 	}
 
 	/**
@@ -688,7 +689,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes idFoerderschwerpunkt2
 	 */
 	public Long idFoerderschwerpunkt2() {
-		return idFoerderschwerpunkt2;
+		return this.idFoerderschwerpunkt2;
 	}
 
 	/**
@@ -697,7 +698,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes idFolgeklasse
 	 */
 	public Long idFolgeklasse() {
-		return idFolgeklasse;
+		return this.idFolgeklasse;
 	}
 
 	/**
@@ -706,7 +707,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes idJahrgang
 	 */
 	public Long idJahrgang() {
-		return idJahrgang;
+		return this.idJahrgang;
 	}
 
 	/**
@@ -715,7 +716,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes idKlasse
 	 */
 	public Long idKlasse() {
-		return idKlasse;
+		return this.idKlasse;
 	}
 
 	/**
@@ -724,7 +725,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes idSchueler
 	 */
 	public long idSchueler() {
-		return idSchueler;
+		return this.idSchueler;
 	}
 
 	/**
@@ -733,7 +734,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes idSchuljahresabschnitt
 	 */
 	public long idSchuljahresabschnitt() {
-		return idSchuljahresabschnitt;
+		return this.idSchuljahresabschnitt;
 	}
 
 	/**
@@ -742,7 +743,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes idSchwerpunkt
 	 */
 	public Long idSchwerpunkt() {
-		return idSchwerpunkt;
+		return this.idSchwerpunkt;
 	}
 
 	/**
@@ -751,7 +752,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes idSonderpaedagoge
 	 */
 	public Long idSonderpaedagoge() {
-		return idSonderpaedagoge;
+		return this.idSonderpaedagoge;
 	}
 
 	/**
@@ -760,7 +761,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes idTutor
 	 */
 	public Long idTutor() {
-		return idTutor;
+		return this.idTutor;
 	}
 
 	/**
@@ -769,7 +770,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes istAbschlussPrognose
 	 */
 	public boolean istAbschlussPrognose() {
-		return istAbschlussPrognose;
+		return this.istAbschlussPrognose;
 	}
 
 	/**
@@ -778,7 +779,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes istFachpraktischerAnteilAusreichend
 	 */
 	public boolean istFachpraktischerAnteilAusreichend() {
-		return istFachpraktischerAnteilAusreichend;
+		return this.istFachpraktischerAnteilAusreichend;
 	}
 
 	/**
@@ -787,7 +788,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes istGewertet
 	 */
 	public boolean istGewertet() {
-		return istGewertet;
+		return this.istGewertet;
 	}
 
 	/**
@@ -796,7 +797,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes istWiederholung
 	 */
 	public boolean istWiederholung() {
-		return istWiederholung;
+		return this.istWiederholung;
 	}
 
 	/**
@@ -805,16 +806,16 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes klasse; kann {@code null} sein, wenn dem Lernabschnitt keine Klasse zugeordnet ist.
 	 */
 	public ReportingKlasse klasse() {
-		return klasse;
+		return this.klasse;
 	}
 
 	/**
 	 * Das Kürzel der Klassenart in Bezug auf den Schüler (z.B. Regelklasse - siehe Core-Type)
 	 *
-	 * @return Inhalt des Feldes klassenart; nie {@code null}, bei fehlendem Wert ein leerer String.
+	 * @return Inhalt des Feldes klassenart
 	 */
-	public String klassenart() {
-		return klassenart;
+	public Long idKlassenart() {
+		return this.idKlassenart;
 	}
 
 	/**
@@ -827,7 +828,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 			return new ArrayList<>();
 		}
 		// Unterrichte ohne Kurs haben die ID -1 in der ListMap im dritten Index (Kurs-ID)
-		return listMapLeistungsdaten.get3(-1);
+		return this.listMapLeistungsdaten.get3(-1);
 	}
 
 	/**
@@ -845,7 +846,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes leistungsdaten; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingSchuelerLeistungsdaten> leistungsdaten() {
-		return leistungsdaten;
+		return this.leistungsdaten;
 	}
 
 	/**
@@ -854,12 +855,12 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Liste von Schüler-Leistungsdaten, die Klassenunterricht darstellen.
 	 */
 	public List<ReportingSchuelerLeistungsdaten> leistungsdatenKlassenunterrichte() {
-		if (this.leistungsdaten() == null) {
+		if (leistungsdaten() == null) {
 			return new ArrayList<>();
 		}
 
 		// Klassenunterrichte haben keine Kurs-ID, also hat Key3 den Wert -1.
-		return listMapLeistungsdaten.get3(-1);
+		return this.listMapLeistungsdaten.get3(-1);
 	}
 
 	/**
@@ -868,14 +869,14 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Liste von Schüler-Leistungsdaten, die Kursunterricht darstellen.
 	 */
 	public List<ReportingSchuelerLeistungsdaten> leistungsdatenKursunterrichte() {
-		if (this.leistungsdaten() == null) {
+		if (leistungsdaten() == null) {
 			return new ArrayList<>();
 		}
 
 		// Kursunterrichte haben eine Kurs-ID, also hat Key3 einen Wert größer -1.
 		final List<ReportingSchuelerLeistungsdaten> leistungsdatenKursunterrichte = new ArrayList<>();
-		listMapLeistungsdaten.keySet3().stream().toList().stream().filter(idKurs -> (idKurs > -1))
-				.forEach(idKurs -> leistungsdatenKursunterrichte.addAll(listMapLeistungsdaten.get3(idKurs)));
+		this.listMapLeistungsdaten.keySet3().stream().toList().stream().filter(idKurs -> (idKurs > -1))
+				.forEach(idKurs -> leistungsdatenKursunterrichte.addAll(this.listMapLeistungsdaten.get3(idKurs)));
 
 		return leistungsdatenKursunterrichte;
 	}
@@ -890,13 +891,13 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * Kursart PUK oder leer gewählt. Wird kein Eintrag gefunden, so wird null zurückgegeben.
 	 */
 	public ReportingSchuelerLeistungsdaten leistungsdatenKlassenunterrichtZurIdFachIdLehrer(final long idFach, final long idLehrer) {
-		if ((idFach < 0) || (idLehrer < 0) || (this.leistungsdaten() == null)) {
+		if ((idFach < 0) || (idLehrer < 0) || (leistungsdaten() == null)) {
 			return null;
 		}
 
 		// Klassenunterrichte haben keine Kurs-ID, also hat Key3 den Wert -1.
 		final List<ReportingSchuelerLeistungsdaten> leistungsdatenZumFachUndLehrer =
-				listMapLeistungsdaten.get23(idFach, -1).stream().filter(l -> (l.fachlehrer() != null) && (l.fachlehrer().id() == idLehrer)).toList();
+				this.listMapLeistungsdaten.get23(idFach, -1).stream().filter(l -> (l.fachlehrer() != null) && (l.fachlehrer().id() == idLehrer)).toList();
 
 		// Wenn es keinen Eintrag gibt, gebe null zurück.
 		if (leistungsdatenZumFachUndLehrer.isEmpty()) {
@@ -925,8 +926,8 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 *         entsprechenden Leistungsdaten gefunden werden.
 	 */
 	public ReportingSchuelerLeistungsdaten leistungsdatenZurId(final long id) {
-		if ((id >= 0) && (this.leistungsdaten() != null)) {
-			return listMapLeistungsdaten.getSingle1OrNull(id);
+		if ((id >= 0) && (leistungsdaten() != null)) {
+			return this.listMapLeistungsdaten.getSingle1OrNull(id);
 		}
 		return null;
 	}
@@ -940,8 +941,8 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * oder eine leere Liste, falls keine Daten gefunden wurden.
 	 */
 	public List<ReportingSchuelerLeistungsdaten> leistungsdatenZurIdFach(final long idFach) {
-		if ((idFach >= 0) && (this.leistungsdaten() != null)) {
-			return listMapLeistungsdaten.get2(idFach);
+		if ((idFach >= 0) && (leistungsdaten() != null)) {
+			return this.listMapLeistungsdaten.get2(idFach);
 		}
 		return new ArrayList<>();
 	}
@@ -955,8 +956,8 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 *         oder null, wenn keine entsprechenden Daten gefunden werden.
 	 */
 	public ReportingSchuelerLeistungsdaten leistungsdatenZurIdKurs(final long idKurs) {
-		if ((idKurs >= 0) && (this.leistungsdaten() != null)) {
-			return listMapLeistungsdaten.getSingle3OrNull(idKurs);
+		if ((idKurs >= 0) && (leistungsdaten() != null)) {
+			return this.listMapLeistungsdaten.getSingle3OrNull(idKurs);
 		}
 		return null;
 	}
@@ -967,7 +968,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes nachpruefungen
 	 */
 	public SchuelerLernabschnittNachpruefungsdaten nachpruefungen() {
-		return nachpruefungen;
+		return this.nachpruefungen;
 	}
 
 	/**
@@ -976,7 +977,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes noteDurchschnitt; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String noteDurchschnitt() {
-		return noteDurchschnitt;
+		return this.noteDurchschnitt;
 	}
 
 	/**
@@ -985,7 +986,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes noteLernbereichGSbzwAL
 	 */
 	public Integer noteLernbereichGSbzwAL() {
-		return noteLernbereichGSbzwAL;
+		return this.noteLernbereichGSbzwAL;
 	}
 
 	/**
@@ -994,16 +995,16 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes noteLernbereichNW
 	 */
 	public Integer noteLernbereichNW() {
-		return noteLernbereichNW;
+		return this.noteLernbereichNW;
 	}
 
 	/**
-	 * Das Kürzel der Organisationsform der Schule in Bezug auf den Schüler (z.B. Ganztag - siehe Core-Type)
+	 * Die ID der Organisationsform der Schule in Bezug auf den Schüler (z.B. Ganztag - siehe Core-Type)
 	 *
-	 * @return Inhalt des Feldes organisationsform; nie {@code null}, bei fehlendem Wert ein leerer String.
+	 * @return die ID der Organisationsform.
 	 */
-	public String organisationsform() {
-		return organisationsform;
+	public Long idOrganisationsform() {
+		return this.idOrganisationsform;
 	}
 
 	/**
@@ -1012,7 +1013,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes pruefungsOrdnung; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String pruefungsOrdnung() {
-		return pruefungsOrdnung;
+		return this.pruefungsOrdnung;
 	}
 
 	/**
@@ -1021,16 +1022,16 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes schueler
 	 */
 	public ReportingSchueler schueler() {
-		return schueler;
+		return this.schueler;
 	}
 
 	/**
-	 * Das Kürzel der Schulgliederung bzw. des Bildungsgangs des Schülers.
+	 * Die ID der Schulgliederung bzw. des Bildungsgangs des Schülers.
 	 *
-	 * @return Inhalt des Feldes schulgliederung; nie {@code null}, bei fehlendem Wert ein leerer String.
+	 * @return die ID des Feldes schulgliederung.
 	 */
-	public String schulgliederung() {
-		return schulgliederung;
+	public Long idSchulgliederung() {
+		return this.idSchulgliederung;
 	}
 
 	/**
@@ -1039,7 +1040,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes schuljahresabschnitt; kann {@code null} sein, wenn kein Schuljahresabschnitt zugeordnet ist.
 	 */
 	public ReportingSchuljahresabschnitt schuljahresabschnitt() {
-		return schuljahresabschnitt;
+		return this.schuljahresabschnitt;
 	}
 
 	/**
@@ -1048,7 +1049,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes sonderpaedagoge
 	 */
 	public ReportingLehrer sonderpaedagoge() {
-		return sonderpaedagoge;
+		return this.sonderpaedagoge;
 	}
 
 	/**
@@ -1057,7 +1058,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes textErgebnisPruefungsalgorithmus; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String textErgebnisPruefungsalgorithmus() {
-		return textErgebnisPruefungsalgorithmus;
+		return this.textErgebnisPruefungsalgorithmus;
 	}
 
 	/**
@@ -1066,7 +1067,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes tutor
 	 */
 	public ReportingLehrer tutor() {
-		return tutor;
+		return this.tutor;
 	}
 
 	/**
@@ -1075,7 +1076,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes uebergangsempfehlungText; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String uebergangsempfehlungText() {
-		return uebergangsempfehlungText;
+		return this.uebergangsempfehlungText;
 	}
 
 	/**
@@ -1084,7 +1085,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes versetzungsentscheidungText; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String versetzungsentscheidungText() {
-		return versetzungsentscheidungText;
+		return this.versetzungsentscheidungText;
 	}
 
 	/**
@@ -1093,7 +1094,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes versetzungsvermerkKuerzel; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String versetzungsvermerkKuerzel() {
-		return versetzungsvermerkKuerzel;
+		return this.versetzungsvermerkKuerzel;
 	}
 
 	/**
@@ -1102,7 +1103,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes wechselNr
 	 */
 	public int wechselNr() {
-		return wechselNr;
+		return this.wechselNr;
 	}
 
 	/**
@@ -1111,7 +1112,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes zeugnisart; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String zeugnisart() {
-		return zeugnisart;
+		return this.zeugnisart;
 	}
 
 	/**
@@ -1120,7 +1121,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes zeugnisASVText; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String zeugnisASVText() {
-		return zeugnisASVText;
+		return this.zeugnisASVText;
 	}
 
 	/**
@@ -1129,7 +1130,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes zeugnisAUEText; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String zeugnisAUEText() {
-		return zeugnisAUEText;
+		return this.zeugnisAUEText;
 	}
 
 	/**
@@ -1138,7 +1139,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes zeugnisBemerkungText; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String zeugnisBemerkungText() {
-		return zeugnisBemerkungText;
+		return this.zeugnisBemerkungText;
 	}
 
 	/**
@@ -1147,7 +1148,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes zeugnisLELSText; nie {@code null}, bei fehlendem Wert ein leerer String.
 	 */
 	public String zeugnisLELSText() {
-		return zeugnisLELSText;
+		return this.zeugnisLELSText;
 	}
 
 	/**
@@ -1156,7 +1157,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Inhalt des Feldes zuweisungen; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
 	 */
 	public List<ReportingSchuelerZuweisung> zuweisungen() {
-		return zuweisungen;
+		return this.zuweisungen;
 	}
 
 

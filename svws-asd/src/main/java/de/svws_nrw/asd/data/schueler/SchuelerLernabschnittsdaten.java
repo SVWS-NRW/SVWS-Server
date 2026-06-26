@@ -77,15 +77,15 @@ public class SchuelerLernabschnittsdaten {
 
 	/** Das Kürzel der Schulgliederung bzw. des Bildungsgangs des Schülers. */
 	@Schema(description = "das Kürzel der Schulgliederung bzw. des Bildungsgangs des Schülers", example = "B09")
-	public String schulgliederung;
+	public Long idSchulgliederung;
 
 	/** Die ID des Jahrgangs des Schülers oder null, falls kein Jahrgang zugeordnet ist */
 	@Schema(description = "die ID des Jahrgangs des Schülers oder null, falls kein Jahrgang zugeordnet ist", example = "78")
 	public Long jahrgangID = null;
 
-	/** Die bisherige Anzahl der Jahre in der Schuleingangssphase */
-	@Schema(description = "die bisherige Anzahl der Jahre in der Schuleingangssphase", example = "2")
-	public Integer epJahre = null;
+	/** Die ID der bisherigen Anzahl der Jahre in der Schuleingangssphase */
+	@Schema(description = "Die ID der bisherigen Anzahl der Jahre in der Schuleingangssphase", example = "2")
+	public Long idEpJahre = null;
 
 	/** Die ID der Fachklasse des Schülers an einem Berufskolleg */
 	@Schema(description = "die ID der Fachklasse des Schülers an einem Berufskolleg", example = "null")
@@ -95,13 +95,13 @@ public class SchuelerLernabschnittsdaten {
 	@Schema(description = "der Schwerpunkt eines Schülers laut dem Schwerpunkt-Katalog", example = "null")
 	public Long schwerpunktID = null;
 
-	/** Das Kürzel der Organisationsform der Schule in Bezug auf den Schüler (z.B. Ganztag - siehe Core-Type) */
-	@Schema(description = "das Kürzel der Organisationsform der Schule in Bezug auf den Schüler (z.B. Ganztag)", example = "null")
-	public String organisationsform = null;
+	/** Die ID der Organisationsform der Schule in Bezug auf den Schüler (z.B. Ganztag - siehe Core-Type) */
+	@Schema(description = "Die ID der Organisationsform der Schule in Bezug auf den Schüler (z.B. Ganztag)", example = "null")
+	public Long idOrganisationsform = null;
 
-	/** Das Kürzel der Klassenart in Bezug auf den Schüler (z.B. Regelklasse - siehe Core-Type) */
-	@Schema(description = "das Kürzel der Klassenart in Bezug auf den Schüler (z.B. Regelklasse)", example = "null")
-	public String Klassenart = "RK";
+	/** Die ID der Klassenart in Bezug auf den Schüler (z.B. Regelklasse - siehe Core-Type) */
+	@Schema(description = "Die ID der Klassenart in Bezug auf den Schüler (z.B. Regelklasse)", example = "7000")
+	public Long idKlassenart = 7000L;
 
 	/** Die Summe der Gesamtfehlstunden für den gesamten Lernabschnitt */
 	@Schema(description = "die Summe der Gesamtfehlstunden für den gesamten Lernabschnitt", example = "0")

@@ -7,17 +7,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.asd.data.schule.NationalitaetenKatalogEintrag;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.data.statistik.AbiturStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.SchuelerLeistungsdatenStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.SchuelerLernabschnittStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.SchuelerStatistikGesamt;
+import de.svws_nrw.asd.types.klassen.Klassenart;
 import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
 import de.svws_nrw.asd.types.schueler.Einschulungsart;
 import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
+import de.svws_nrw.asd.types.schule.AllgemeinbildendOrganisationsformen;
+import de.svws_nrw.asd.types.schule.BerufskollegOrganisationsformen;
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
+import de.svws_nrw.asd.types.schule.WeiterbildungskollegOrganisationsformen;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.abitur.DTOSchuelerAbitur;
+import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
+import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.benutzer.BenutzerRepository;
 import de.svws_nrw.repo.faecher.FachRepository;
 import de.svws_nrw.repo.schueler.SchuelerAbiturFachRepository;
 import de.svws_nrw.repo.schueler.SchuelerAbiturRepository;
@@ -25,11 +36,15 @@ import de.svws_nrw.repo.schueler.SchuelerLeistungsdatenRepository;
 import de.svws_nrw.repo.schueler.SchuelerLernabschnittRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.repo.schule.SchuleRepository;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Ein Service für den Zugriff auf die Schülerdaten für die Statistik
  */
 public final class SchuelerStatistikService {
+
+	/** Das Repository für den Zugriff auf die Daten des aktuellen Benutzers */
+	private final BenutzerRepository benutzerRepository;
 
 	/** Das Repository für den Zugriff auf die Daten der Schule */
 	private final SchuleRepository schuleRepository;
@@ -56,6 +71,7 @@ public final class SchuelerStatistikService {
 	/**
 	 * Erstellt einen neuen Service.
 	 *
+	 * @param benutzerRepository                das Repository für den Zugriff auf die Daten des aktuellen Benutzers
 	 * @param schuleRepository                  das Repository für Schuldaten
 	 * @param schuelerRepository                das Repository für Schülerdaten
 	 * @param schuelerLernabschnittRepository   das Repository für Lernabschnitte der Schüler
@@ -64,13 +80,15 @@ public final class SchuelerStatistikService {
 	 * @param schuelerAbiturFachRepository      das Repository für Abiturfachdaten der Schüler
 	 * @param fachRepository                    das Repository für Fächer
 	 */
-	public SchuelerStatistikService(final SchuleRepository schuleRepository,
+	public SchuelerStatistikService(final BenutzerRepository benutzerRepository,
+			final SchuleRepository schuleRepository,
 			final SchuelerRepository schuelerRepository,
 			final SchuelerLernabschnittRepository schuelerLernabschnittRepository,
 			final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository,
 			final SchuelerAbiturRepository schuelerAbiturRepository,
 			final SchuelerAbiturFachRepository schuelerAbiturFachRepository,
 			final FachRepository fachRepository) {
+		this.benutzerRepository = benutzerRepository;
 		this.schuleRepository = schuleRepository;
 		this.schuelerRepository = schuelerRepository;
 		this.schuelerLernabschnittRepository = schuelerLernabschnittRepository;
@@ -111,33 +129,52 @@ public final class SchuelerStatistikService {
 	}
 
 	private static SchuelerLernabschnittStatistikGesamt mapLernabschnittsdaten(final DTOSchuelerLernabschnittsdaten dto,
-			final List<DTOSchuelerLeistungsdaten> dtosLeistungen) {
+			final List<DTOSchuelerLeistungsdaten> dtosLeistungen, final DTOEigeneSchule dtoEigeneSchule) {
 		final var daten = new SchuelerLernabschnittStatistikGesamt();
 		daten.id = dto.ID;
 		daten.idSchuljahresabschnitt = dto.Schuljahresabschnitts_ID;
 		daten.idKlasse = dto.Klassen_ID;
-		daten.schulgliederung = dto.Schulgliederung;
+		// TODO Nachfragen, ob String-werte den Schluesseln entsprechen
+		daten.idSchulgliederung = Schulgliederung.data().getWertBySchluesselOrException(dto.Schulgliederung).historie().getLast().id;
 		daten.idJahrgang = dto.Jahrgang_ID;
 		daten.epJahre = dto.EPJahre;
 		daten.idFachklasse = dto.Fachklasse_ID;
-		daten.organisationsform = dto.OrgFormKrz;
-		daten.Klassenart = dto.Klassenart;
+		// TODO Nachfragen, ob String-werte den Schluesseln entsprechen
+		if (Schulform.WB == Schulform.valueOf(dtoEigeneSchule.SchulformKuerzel)) {
+			daten.idOrganisationsform = WeiterbildungskollegOrganisationsformen.data().getWertBySchluesselOrException(dto.OrgFormKrz).historie().getLast().id;
+		} else if ((Schulform.BK == Schulform.valueOf(dtoEigeneSchule.SchulformKuerzel))
+				|| (Schulform.SB == Schulform.valueOf(dtoEigeneSchule.SchulformKuerzel))) {
+			daten.idOrganisationsform = BerufskollegOrganisationsformen.data().getWertBySchluesselOrException(dto.OrgFormKrz).historie().getLast().id;
+		} else {
+			daten.idOrganisationsform = AllgemeinbildendOrganisationsformen.data().getWertBySchluesselOrException(dto.OrgFormKrz).historie().getLast().id;
+		}
+
+		daten.idKlassenart = Klassenart.data().getWertBySchluesselOrException(dto.Klassenart).historie().getLast().id;
 		daten.hatSchwerbehinderungsNachweis = (dto.Schwerbehinderung != null) && dto.Schwerbehinderung;
 		daten.idFoerderschwerpunkt1 = dto.Foerderschwerpunkt_ID;
 		daten.idFoerderschwerpunkt2 = dto.Foerderschwerpunkt2_ID;
+		// TODO Katalog Versetzungsvermerk einbauen - muss noch erstellt werden
 		daten.versetzungsvermerk = dto.VersetzungKrz;
 		daten.leistungsdaten.addAll(dtosLeistungen.stream().map(SchuelerStatistikService::mapLeistungsdaten).toList());
 		return daten;
 	}
 
-	private static SchuelerStatistikGesamt map(final DTOSchueler dtoSchueler, final DTOSchuelerLernabschnittsdaten dtoLernabschnitt,
-			final List<DTOSchuelerLeistungsdaten> dtosLeistungen, final DTOSchuelerAbitur dtoAbitur, final List<String> abiturfaecher) {
+	private SchuelerStatistikGesamt map(final DTOSchueler dtoSchueler, final DTOSchuelerLernabschnittsdaten dtoLernabschnitt,
+			final List<DTOSchuelerLeistungsdaten> dtosLeistungen, final DTOSchuelerAbitur dtoAbitur, final List<String> abiturfaecher,
+			final DTOEigeneSchule dtoEigeneSchule) {
+		final Schuljahresabschnitt schuljahresabschnitt =
+				this.benutzerRepository.getAktuellerBenutzer().schuleGetSchuljahresabschnittByIdOrDefault(dtoSchueler.Schuljahresabschnitts_ID);
+		if (schuljahresabschnitt == null) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Konnte keinen Schuljahresabschnitt für den Schüler bestimmen.");
+		}
 		final var daten = new SchuelerStatistikGesamt();
 		daten.id = dtoSchueler.ID;
 		daten.geschlecht = dtoSchueler.Geschlecht.id;
 		daten.geburtsdatum = dtoSchueler.Geburtsdatum;
 		daten.wohnortID = dtoSchueler.Ort_ID;
-		daten.idStaatsangehoerigkeit = (dtoSchueler.StaatKrz == null) ? null : dtoSchueler.StaatKrz.historie().getLast().id;
+		final NationalitaetenKatalogEintrag staatsangehoerigkeit =
+				(dtoSchueler.StaatKrz == null) ? null : dtoSchueler.StaatKrz.daten(schuljahresabschnitt.schuljahr);
+		daten.idStaatsangehoerigkeit = (staatsangehoerigkeit == null) ? null : staatsangehoerigkeit.id;
 		daten.idStaatsangehoerigkeit2 = (dtoSchueler.StaatKrz2 == null) ? null : dtoSchueler.StaatKrz2.historie().getLast().id;
 		daten.religionID = dtoSchueler.Religion_ID;
 		daten.status = dtoSchueler.idStatus;
@@ -169,7 +206,7 @@ public final class SchuelerStatistikService {
 		final Uebergangsempfehlung uebergangsempfehlung = Uebergangsempfehlung.data().getWertBySchluessel(dtoSchueler.Uebergangsempfehlung_JG5);
 		daten.idKuerzelGrundschuleUebergangsempfehlung = (uebergangsempfehlung == null) ? null : uebergangsempfehlung.historie().getLast().id;
 		// Füge die Daten zum Lernabschnitt hinzu
-		daten.lernabschnitte.add(mapLernabschnittsdaten(dtoLernabschnitt, dtosLeistungen));
+		daten.lernabschnitte.add(mapLernabschnittsdaten(dtoLernabschnitt, dtosLeistungen, dtoEigeneSchule));
 
 		// Ergänze die Daten aus der Abiturtabelle, sofern für den Schüler welche vorliegen
 		if ((dtoAbitur == null) || (abiturfaecher == null) || (abiturfaecher.isEmpty())) {
@@ -235,7 +272,7 @@ public final class SchuelerStatistikService {
 		// Gebe alle Schülerinformationen zurück, wo ein Lernabschnitt im aktuellen Schuljahresabschnitt vorliegt
 		return mapLernabschnitte.keySet().stream().map(
 				id -> map(mapSchueler.get(id), mapLernabschnitte.get(id), mapLeistungsdaten.get(mapLernabschnitte.get(id).ID), mapSchuelerAbitur.get(id),
-						mapSchuelerAbiturFach.get(id)))
+						mapSchuelerAbiturFach.get(id), this.schuleRepository.getFirst()))
 				.toList();
 	}
 

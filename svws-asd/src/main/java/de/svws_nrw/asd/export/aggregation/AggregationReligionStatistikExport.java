@@ -21,6 +21,7 @@ import de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre;
 import de.svws_nrw.asd.types.schule.Foerderschwerpunkt;
 import de.svws_nrw.asd.types.schule.Religion;
 import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.asd.validate.DateManager;
 import de.svws_nrw.asd.validate.InvalidDateException;
 
@@ -291,45 +292,48 @@ public class AggregationReligionStatistikExport {
 			foerderschwerpunkt = "";
 		}
 
+		final Schulgliederung schulgliederung = Schulgliederung.data().getWertByIDOrNull(lernabschnitt.idSchulgliederung);
+		final String gliederungStr;
 
-		// Für die Schulform 25 (WB, Weiterbildungskolleg) wird diese Satzart nicht erhoben.
+		if (schulgliederung != null) {
+			gliederungStr = schulgliederung.name();
+		} else {
+			gliederungStr = "";
+			fehlermeldungen.add("Beim Schüler mit der ID: " + schueler.id + " ist die Schulgliederung NULL.");
+		}
+
 		switch (schulform) {
 			case G -> {
 				religionExport.jahrgang = jahrgang;
-				religionExport.schulgliederung = lernabschnitt.schulgliederung;
+				religionExport.schulgliederung = gliederungStr;
 				religionExport.bildungsbereich = EIN_LEERZEICHEN;
 				religionExport.foerderschwerpunkt = ZWEI_LEERZEICHEN;
 			}
-
 			case H, V, R, PS, SK, GE, GY -> {
 				religionExport.jahrgang = jahrgang;
 				religionExport.schulgliederung = DREI_LEERZEICHEN;
 				religionExport.bildungsbereich = EIN_LEERZEICHEN;
 				religionExport.foerderschwerpunkt = ZWEI_LEERZEICHEN;
 			}
-
 			case S, KS, SR, SG -> {
 				religionExport.jahrgang = ZWEI_LEERZEICHEN;
 				religionExport.schulgliederung = DREI_LEERZEICHEN;
 				religionExport.bildungsbereich = EIN_LEERZEICHEN;
 				religionExport.foerderschwerpunkt = foerderschwerpunkt;
 			}
-
 			case FW, HI, WF -> {
 				religionExport.jahrgang = ZWEI_LEERZEICHEN;
 				religionExport.schulgliederung = DREI_LEERZEICHEN;
 				religionExport.bildungsbereich =
-						AggregationStatistikExport.bauenBildungsbereich(lernabschnitt.schulgliederung, lernabschnitt.idFoerderschwerpunkt1, fehlermeldungen);
+						AggregationStatistikExport.bauenBildungsbereich(lernabschnitt.idSchulgliederung, lernabschnitt.idFoerderschwerpunkt1, fehlermeldungen);
 				religionExport.foerderschwerpunkt = ZWEI_LEERZEICHEN;
 			}
-
 			case BK, SB -> {
 				religionExport.jahrgang = ZWEI_LEERZEICHEN;
-				religionExport.schulgliederung = lernabschnitt.schulgliederung;
+				religionExport.schulgliederung = gliederungStr;
 				religionExport.bildungsbereich = EIN_LEERZEICHEN;
 				religionExport.foerderschwerpunkt = foerderschwerpunkt;
 			}
-
 			default ->
 				throw new IllegalArgumentException("Unbekannte Schulform: " + statistikGesamt.schule.schulform);
 		}

@@ -81,7 +81,7 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 	/**
 	 * Das Kürzel der Schulgliederung bzw. des Bildungsgangs des Schülers.
 	 */
-	public schulgliederung: string | null = null;
+	public idSchulgliederung: number | null = null;
 
 	/**
 	 * Die ID des Jahrgangs des Schülers oder null, falls kein Jahrgang zugeordnet ist
@@ -89,9 +89,9 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 	public jahrgangID: number | null = null;
 
 	/**
-	 * Die bisherige Anzahl der Jahre in der Schuleingangssphase
+	 * Die ID der bisherigen Anzahl der Jahre in der Schuleingangssphase
 	 */
-	public epJahre: number | null = null;
+	public idEpJahre: number | null = null;
 
 	/**
 	 * Die ID der Fachklasse des Schülers an einem Berufskolleg
@@ -104,14 +104,14 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 	public schwerpunktID: number | null = null;
 
 	/**
-	 * Das Kürzel der Organisationsform der Schule in Bezug auf den Schüler (z.B. Ganztag - siehe Core-Type)
+	 * Die ID der Organisationsform der Schule in Bezug auf den Schüler (z.B. Ganztag - siehe Core-Type)
 	 */
-	public organisationsform: string | null = null;
+	public idOrganisationsform: number | null = null;
 
 	/**
-	 * Das Kürzel der Klassenart in Bezug auf den Schüler (z.B. Regelklasse - siehe Core-Type)
+	 * Die ID der Klassenart in Bezug auf den Schüler (z.B. Regelklasse - siehe Core-Type)
 	 */
-	public Klassenart: string | null = "RK";
+	public idKlassenart: number | null = 7000;
 
 	/**
 	 * Die Summe der Gesamtfehlstunden für den gesamten Lernabschnitt
@@ -287,13 +287,13 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		result.klassenID = (obj.klassenID === undefined) ? null : obj.klassenID === null ? null : obj.klassenID;
 		result.tutorID = (obj.tutorID === undefined) ? null : obj.tutorID === null ? null : obj.tutorID;
 		result.folgeklassenID = (obj.folgeklassenID === undefined) ? null : obj.folgeklassenID === null ? null : obj.folgeklassenID;
-		result.schulgliederung = (obj.schulgliederung === undefined) ? null : obj.schulgliederung === null ? null : obj.schulgliederung;
+		result.idSchulgliederung = (obj.idSchulgliederung === undefined) ? null : obj.idSchulgliederung === null ? null : obj.idSchulgliederung;
 		result.jahrgangID = (obj.jahrgangID === undefined) ? null : obj.jahrgangID === null ? null : obj.jahrgangID;
-		result.epJahre = (obj.epJahre === undefined) ? null : obj.epJahre === null ? null : obj.epJahre;
+		result.idEpJahre = (obj.idEpJahre === undefined) ? null : obj.idEpJahre === null ? null : obj.idEpJahre;
 		result.fachklasseID = (obj.fachklasseID === undefined) ? null : obj.fachklasseID === null ? null : obj.fachklasseID;
 		result.schwerpunktID = (obj.schwerpunktID === undefined) ? null : obj.schwerpunktID === null ? null : obj.schwerpunktID;
-		result.organisationsform = (obj.organisationsform === undefined) ? null : obj.organisationsform === null ? null : obj.organisationsform;
-		result.Klassenart = (obj.Klassenart === undefined) ? null : obj.Klassenart === null ? null : obj.Klassenart;
+		result.idOrganisationsform = (obj.idOrganisationsform === undefined) ? null : obj.idOrganisationsform === null ? null : obj.idOrganisationsform;
+		result.idKlassenart = (obj.idKlassenart === undefined) ? null : obj.idKlassenart === null ? null : obj.idKlassenart;
 		if (obj.fehlstundenGesamt === undefined)
 			throw new Error('invalid json format, missing attribute fehlstundenGesamt');
 		result.fehlstundenGesamt = obj.fehlstundenGesamt;
@@ -360,13 +360,13 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		result += '"klassenID" : ' + ((obj.klassenID === null) ? 'null' : obj.klassenID.toString()) + ',';
 		result += '"tutorID" : ' + ((obj.tutorID === null) ? 'null' : obj.tutorID.toString()) + ',';
 		result += '"folgeklassenID" : ' + ((obj.folgeklassenID === null) ? 'null' : obj.folgeklassenID.toString()) + ',';
-		result += '"schulgliederung" : ' + ((obj.schulgliederung === null) ? 'null' : JSON.stringify(obj.schulgliederung)) + ',';
+		result += '"idSchulgliederung" : ' + ((obj.idSchulgliederung === null) ? 'null' : obj.idSchulgliederung.toString()) + ',';
 		result += '"jahrgangID" : ' + ((obj.jahrgangID === null) ? 'null' : obj.jahrgangID.toString()) + ',';
-		result += '"epJahre" : ' + ((obj.epJahre === null) ? 'null' : obj.epJahre.toString()) + ',';
+		result += '"idEpJahre" : ' + ((obj.idEpJahre === null) ? 'null' : obj.idEpJahre.toString()) + ',';
 		result += '"fachklasseID" : ' + ((obj.fachklasseID === null) ? 'null' : obj.fachklasseID.toString()) + ',';
 		result += '"schwerpunktID" : ' + ((obj.schwerpunktID === null) ? 'null' : obj.schwerpunktID.toString()) + ',';
-		result += '"organisationsform" : ' + ((obj.organisationsform === null) ? 'null' : JSON.stringify(obj.organisationsform)) + ',';
-		result += '"Klassenart" : ' + ((obj.Klassenart === null) ? 'null' : JSON.stringify(obj.Klassenart)) + ',';
+		result += '"idOrganisationsform" : ' + ((obj.idOrganisationsform === null) ? 'null' : obj.idOrganisationsform.toString()) + ',';
+		result += '"idKlassenart" : ' + ((obj.idKlassenart === null) ? 'null' : obj.idKlassenart.toString()) + ',';
 		result += '"fehlstundenGesamt" : ' + obj.fehlstundenGesamt.toString() + ',';
 		result += '"fehlstundenUnentschuldigt" : ' + obj.fehlstundenUnentschuldigt.toString() + ',';
 		result += '"fehlstundenGrenzwert" : ' + ((obj.fehlstundenGrenzwert === null) ? 'null' : obj.fehlstundenGrenzwert.toString()) + ',';
@@ -448,14 +448,14 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		if (obj.folgeklassenID !== undefined) {
 			result += '"folgeklassenID" : ' + ((obj.folgeklassenID === null) ? 'null' : obj.folgeklassenID.toString()) + ',';
 		}
-		if (obj.schulgliederung !== undefined) {
-			result += '"schulgliederung" : ' + ((obj.schulgliederung === null) ? 'null' : JSON.stringify(obj.schulgliederung)) + ',';
+		if (obj.idSchulgliederung !== undefined) {
+			result += '"idSchulgliederung" : ' + ((obj.idSchulgliederung === null) ? 'null' : obj.idSchulgliederung.toString()) + ',';
 		}
 		if (obj.jahrgangID !== undefined) {
 			result += '"jahrgangID" : ' + ((obj.jahrgangID === null) ? 'null' : obj.jahrgangID.toString()) + ',';
 		}
-		if (obj.epJahre !== undefined) {
-			result += '"epJahre" : ' + ((obj.epJahre === null) ? 'null' : obj.epJahre.toString()) + ',';
+		if (obj.idEpJahre !== undefined) {
+			result += '"idEpJahre" : ' + ((obj.idEpJahre === null) ? 'null' : obj.idEpJahre.toString()) + ',';
 		}
 		if (obj.fachklasseID !== undefined) {
 			result += '"fachklasseID" : ' + ((obj.fachklasseID === null) ? 'null' : obj.fachklasseID.toString()) + ',';
@@ -463,11 +463,11 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		if (obj.schwerpunktID !== undefined) {
 			result += '"schwerpunktID" : ' + ((obj.schwerpunktID === null) ? 'null' : obj.schwerpunktID.toString()) + ',';
 		}
-		if (obj.organisationsform !== undefined) {
-			result += '"organisationsform" : ' + ((obj.organisationsform === null) ? 'null' : JSON.stringify(obj.organisationsform)) + ',';
+		if (obj.idOrganisationsform !== undefined) {
+			result += '"idOrganisationsform" : ' + ((obj.idOrganisationsform === null) ? 'null' : obj.idOrganisationsform.toString()) + ',';
 		}
-		if (obj.Klassenart !== undefined) {
-			result += '"Klassenart" : ' + ((obj.Klassenart === null) ? 'null' : JSON.stringify(obj.Klassenart)) + ',';
+		if (obj.idKlassenart !== undefined) {
+			result += '"idKlassenart" : ' + ((obj.idKlassenart === null) ? 'null' : obj.idKlassenart.toString()) + ',';
 		}
 		if (obj.fehlstundenGesamt !== undefined) {
 			result += '"fehlstundenGesamt" : ' + obj.fehlstundenGesamt.toString() + ',';

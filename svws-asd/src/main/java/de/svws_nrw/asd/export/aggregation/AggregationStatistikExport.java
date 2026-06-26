@@ -15,6 +15,7 @@ import de.svws_nrw.asd.data.statistik.LehrerStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.StatistikGesamt;
 import de.svws_nrw.asd.export.data.StatistikExport;
 import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 
 /*
  * AggregationStatistikExport.java
@@ -150,13 +151,14 @@ public class AggregationStatistikExport {
 
 	/**
 	 * @param idFoerderschwerpunkt1
-	 * @param schulgliederung
+	 * @param idSchulgliederung
 	 * @param fehlermeldungen
 	 * @return der Bildungsbereich
 	 */
-	public static String bauenBildungsbereich(final String schulgliederung, final Long idFoerderschwerpunkt1, final List<String> fehlermeldungen) {
+	public static String bauenBildungsbereich(final Long idSchulgliederung, final Long idFoerderschwerpunkt1, final List<String> fehlermeldungen) {
+		final Schulgliederung schulgliederung = Schulgliederung.data().getWertByIDOrNull(idSchulgliederung);
 
-		if (DREI_LEERZEICHEN.equals(schulgliederung) && (idFoerderschwerpunkt1 == null)) { // If unnötig! Kann weg?!
+		if (Schulgliederung.DEFAULT.equals(schulgliederung) && (idFoerderschwerpunkt1 == null)) { // If unnötig! Kann weg?!
 			return "A";
 		}
 
@@ -164,16 +166,16 @@ public class AggregationStatistikExport {
 			return "S";
 		}
 
-		if ("K02".equals(schulgliederung)) {
+		if (Schulgliederung.K02.equals(schulgliederung)) {
 			return "K";
 		}
 
-		if ("H01".equals(schulgliederung) || "H02".equals(schulgliederung)) {
+		if (Schulgliederung.H01.equals(schulgliederung) || Schulgliederung.H02.equals(schulgliederung)) {
 			return "B";
 		}
 
 		fehlermeldungen.add(
-				"Bildungsbereich konnnte nicht ermittelt werden - Schulgliederung: " + schulgliederung + " idFörderschwerpunkt1: " + idFoerderschwerpunkt1);
+				"Bildungsbereich konnnte nicht ermittelt werden - Schulgliederung: " + idSchulgliederung + " idFörderschwerpunkt1: " + idFoerderschwerpunkt1);
 		return null;
 	}
 
@@ -239,7 +241,8 @@ public class AggregationStatistikExport {
 		erfolg = aggregationLehrerStatistikExport.run();
 		// Klassendaten
 		final AggregationKlassenStatistikExport aggregationKlassenStatistikExport =
-				new AggregationKlassenStatistikExport(statistikGesamt, statistikExport, fehlermeldungen, jahrgangIdMap, fachIdMap, klasseIdMap, lehrerIdMap, aktuellesSchuljahr);
+				new AggregationKlassenStatistikExport(statistikGesamt, statistikExport, fehlermeldungen, jahrgangIdMap, fachIdMap, klasseIdMap, lehrerIdMap,
+						aktuellesSchuljahr);
 		erfolg = aggregationKlassenStatistikExport.run();
 		// Unterrichtverteilungsdaten
 		final AggregationUvdStatistikExport aggregationUvdStatistikExport =

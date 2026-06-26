@@ -138,7 +138,7 @@
 	const schuljahr = computed<number>(() => props.schuelerListeManager().schuelerGetSchuljahrOrException());
 	const auswahl = ref(new Array<Sprachbelegung>());
 	const selectSprachen = ref<ComponentExposed<typeof SvwsUiSelect<string[]>>>();
-	const schulgliederung = computed<Schulgliederung | null>(() => Schulgliederung.data().getWertByKuerzel(props.schuelerListeManager().auswahl().schulgliederung));
+	const schulgliederung = computed<Schulgliederung | null>(() => Schulgliederung.data().getWertByIDOrNull(props.schuelerListeManager().auswahl().idSchulgliederung));
 	const hatSpalteNachweis = computed<boolean>(() => schuleState.schulform === Schulform.WB);
 	const hatSpaltenZeitraum = computed(() => {
 		const istBKoderSB = [Schulform.BK, Schulform.SB].includes(schuleState.schulform);

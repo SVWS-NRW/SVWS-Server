@@ -41,8 +41,9 @@ export abstract class Validator extends BasicValidator {
 	protected getNotNullSupplierObject<T>(supplier: Supplier<T | null>): Supplier<T> {
 		return { get: () => {
 			const value: T | null = supplier.get();
-			if (value === null)
+			if (value === null) {
 				throw new NullPointerException()
+			}
 			return value;
 		} };
 	}
@@ -118,8 +119,9 @@ export abstract class Validator extends BasicValidator {
 	protected getDateManagerSupplier(supplier: Supplier<string | null>): Supplier<DateManager | null> {
 		return { get: () => {
 			const value: string | null = supplier.get();
-			if (value === null)
+			if (value === null) {
 				return null;
+			}
 			try {
 				return DateManager.from(value);
 			} catch(e : any) {

@@ -1,6 +1,7 @@
 package de.svws_nrw.controller.statistik;
 
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
 import de.svws_nrw.repo.kataloge.KatalogeRepositoryFactory;
 import de.svws_nrw.repo.klassen.KlassenRepositoryFactory;
 import de.svws_nrw.repo.kurse.KurseRepositoryFactory;
@@ -32,6 +33,7 @@ public final class StatistikControllerFactoryImpl implements StatistikController
 		final var lehrerServiceFactory = LehrerServiceFactory.getNewInstance(lehrerRepositoryFactory, schuleRepositoryFactory);
 		final var schuleServiceFactory = SchuleServiceFactory.getNewInstance(schuleRepositoryFactory);
 		this.serviceFactory = StatistikServiceFactory.getNewInstance(
+				BenutzerRepositoryFactory.getNewInstance(),
 				KatalogeRepositoryFactory.getNewInstance(),
 				KlassenRepositoryFactory.getNewInstance(),
 				KurseRepositoryFactory.getNewInstance(),
@@ -45,7 +47,7 @@ public final class StatistikControllerFactoryImpl implements StatistikController
 
 	@Override
 	public StatistikController getControllerStatistikGesamt() throws ApiOperationException {
-		final StatistikService service = serviceFactory.getStatistikService();
+		final StatistikService service = this.serviceFactory.getStatistikService();
 		return new StatistikControllerImpl(service);
 	}
 
