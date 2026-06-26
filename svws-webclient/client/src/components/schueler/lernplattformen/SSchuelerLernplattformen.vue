@@ -1,23 +1,21 @@
 <template>
 	<div class="page page-grid-cards">
 		<svws-ui-content-card class="col-span-full">
-			<svws-ui-table :items="props.schuelerLernplattformen()" :columns>
-				<template #cell(idLernplattform)="{ value }">
-					{{ getBezeichnungLernplattform(value) }}
+			<svws-ui-table :items="lernplattformenProxies" :columns>
+				<template #cell(idLernplattform)="{ rowData }">
+					{{ getBezeichnungLernplattform(rowData.proxy.idLernplattform) }}
 				</template>
 				<template #cell(EinwilligungAbgefragt)="{ rowData }">
-					<svws-ui-checkbox :model-value="rowData.einwilligungAbgefragt"
-						@update:model-value="value => patch({ einwilligungAbgefragt: value }, rowData.idLernplattform)" :readonly />
+					<svws-ui-checkbox v-model="rowData.proxy.einwilligungAbgefragt" :readonly />
 				</template>
 				<template #cell(EinwilligungNutzung)="{ rowData }">
-					<svws-ui-checkbox :model-value="rowData.einwilligungNutzung"
-						@update:model-value="value => patch({ einwilligungNutzung: value }, rowData.idLernplattform)" :readonly />
+					<svws-ui-checkbox v-model="rowData.proxy.einwilligungNutzung" :readonly />
 				</template>
-				<template #cell(benutzername)="{ value }">
-					{{ value }}
+				<template #cell(benutzername)="{ rowData }">
+					{{ rowData.proxy.benutzername }}
 				</template>
-				<template #cell(initialKennwort)="{ value }">
-					{{ value }}
+				<template #cell(initialKennwort)="{ rowData }">
+					{{ rowData.proxy.initialKennwort }}
 				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>
@@ -25,15 +23,25 @@
 </template>
 
 <script setup lang="ts">
-	import type { SchuelerLernplattformenProps } from "~/components/schueler/lernplattformen/SchuelerLernplattformenProps";
-	import type { DataTableColumn } from "@ui";
 	import { computed } from "vue";
-	import { BenutzerKompetenz } from "@core";
+	import type { DataTableColumn } from "@ui";
+	import type { SchuelerLernplattform } from "@core";
+	import { ArrayList, BenutzerKompetenz } from "@core";
+	import type { SchuelerLernplattformenProps } from "./SchuelerLernplattformenProps";
+	import { SchuelerLernplattformenModelProxy } from "./modelProxy/SchuelerLernplattformenModelProxy";
 
 	const props = defineProps<SchuelerLernplattformenProps>();
 
 	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const readonly = computed(() => !hatKompetenzAendern.value);
+	const lernplattformenProxies = computed(() => {
+		const result = new ArrayList<SchuelerLernplattformenModelProxy>();
+		for (const lernplattform of props.schuelerLernplattformen()) {
+			const modelProxy = new SchuelerLernplattformenModelProxy(() => lernplattform, (data: Partial<SchuelerLernplattform>) => props.patch(data, lernplattform.idLernplattform));
+			result.add(modelProxy);
+		}
+		return result;
+	});
 
 	const columns: DataTableColumn[] = [
 		{ key: "idLernplattform", label: "Lernplattform", sortable: true },

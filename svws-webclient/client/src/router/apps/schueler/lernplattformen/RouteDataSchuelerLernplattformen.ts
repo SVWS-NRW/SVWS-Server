@@ -53,6 +53,7 @@ export class RouteDataSchuelerLernplattformen extends RouteData<RouteStateSchuel
 		}
 		this.commit();
 		api.status.stop();
+		return true;
 	};
 
 	public async ladeDaten(auswahl: SchuelerListeEintrag | null | undefined) {
