@@ -75,8 +75,12 @@ public class ReportingSchueler extends ReportingPerson {
 	/** Die Liste der Erzieher gruppiert nach Erzieher-Art in Listen von Erziehern. */
 	protected List<ReportingErzieherArtGruppe> erzieherArtGruppen;
 
-	/** Die Schulnummer bei einem externen Schüler oder null, wenn der Schüler kein externer Schüler ist. */
+	/** Die Schulnummer bei einem externen Schüler oder ein leerer String, wenn der Schüler kein externer Schüler ist. */
 	protected String externeSchulNr;
+
+	/** Das Kürzel der externen Schule bei einem externen Schüler, sofern dieses im Schulkatalog hinterlegt ist. Andernfalls ein leerer String, wenn der
+	 * Schüler kein externer Schüler ist bzw. kein Kürzel hinterlegt ist. */
+	protected String externesSchulKuerzel;
 
 	/** Die ID der Art des Fahr des Schülers. */
 	protected Long fahrschuelerArtID;
@@ -178,7 +182,8 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @param erhaeltSchuelerBAFOEG Gibt an, ob der Schüler BAFÖG erhält oder nicht.
 	 * @param erzieher Die Liste der Erzieher des Schülers.
 	 * @param erzieherArtGruppen Die Liste der Erzieher gruppiert nach Erzieher-Art in Listen von Erziehern.
-	 * @param externeSchulNr Die Schulnummer bei einem externen Schüler oder null, wenn der Schüler kein externer Schüler ist.
+	 * @param externeSchulNr Die Schulnummer bei einem externen Schüler oder ein leerer String, wenn der Schüler kein externer Schüler ist.
+	 * @param externesSchulKuerzel Das Kürzel der externen Schule bei einem externen Schüler, sofern dieses im Schulkatalog hinterlegt ist. Andernfalls ein leerer String, wenn der Schüler kein externer Schüler ist bzw. kein Kürzel hinterlegt ist.
 	 * @param fahrschuelerArtID Die ID der Art des Fahr des Schülers.
 	 * @param foto Das Foto (in Base64 kodiert) des Schülers.
 	 * @param geburtsdatum Das Geburtsdatum des Schülers.
@@ -230,7 +235,8 @@ public class ReportingSchueler extends ReportingPerson {
 			final String anrede, final String aufnahmedatum, final ReportingSchuelerLernabschnitt auswahlLernabschnitt,
 			final boolean druckeKonfessionAufZeugnisse, final String emailPrivat, final String emailSchule, final boolean erhaeltMeisterBAFOEG,
 			final boolean erhaeltSchuelerBAFOEG, final List<ReportingErzieher> erzieher, final List<ReportingErzieherArtGruppe> erzieherArtGruppen,
-			final String externeSchulNr, final Long fahrschuelerArtID, final String foto, final String geburtsdatum, final String geburtsland,
+			final String externeSchulNr, final String externesSchulKuerzel, final Long fahrschuelerArtID, final String foto, final String geburtsdatum,
+			final String geburtsland,
 			final String geburtslandMutter, final String geburtslandVater, final String geburtsname, final String geburtsort, final Geschlecht geschlecht,
 			final ReportingSchuelerGostAbitur gostAbitur, final List<ReportingGostKlausurplanungSchuelerklausur> gostKlausurplanungSchuelerklausuren,
 			final List<ReportingSchuelerGostKursplanungKursbelegung> gostKursplanungKursbelegungen,
@@ -255,8 +261,10 @@ public class ReportingSchueler extends ReportingPerson {
 		this.erhaeltMeisterBAFOEG = erhaeltMeisterBAFOEG;
 		this.erhaeltSchuelerBAFOEG = erhaeltSchuelerBAFOEG;
 		this.erzieher = (erzieher != null) ? new ArrayList<>(erzieher.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
-		this.erzieherArtGruppen = (erzieherArtGruppen != null) ? new ArrayList<>(erzieherArtGruppen.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
+		this.erzieherArtGruppen =
+				(erzieherArtGruppen != null) ? new ArrayList<>(erzieherArtGruppen.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
 		this.externeSchulNr = ersetzeNullBlankTrim(externeSchulNr);
+		this.externesSchulKuerzel = ersetzeNullBlankTrim(externesSchulKuerzel);
 		this.fahrschuelerArtID = fahrschuelerArtID;
 		this.foto = ersetzeNullBlankTrim(foto);
 		this.fotoHtmlSource = ReportingImageUtils.base64ImageToHtmlImageSource(this.foto, null, null);
@@ -469,6 +477,15 @@ public class ReportingSchueler extends ReportingPerson {
 	 */
 	public String externeSchulNr() {
 		return this.externeSchulNr;
+	}
+
+	/**
+	 * Das Kürzel der externen Schule bei einem externen Schüler, sofern dieses im Schulkatalog hinterlegt ist.
+	 *
+	 * @return Inhalt des Feldes externesSchulKuerzel; nie {@code null}, bei fehlendem Wert ein leerer String.
+	 */
+	public String externesSchulKuerzel() {
+		return this.externesSchulKuerzel;
 	}
 
 	/**

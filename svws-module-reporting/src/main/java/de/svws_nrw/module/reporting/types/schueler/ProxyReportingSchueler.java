@@ -16,6 +16,7 @@ import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.asd.types.schule.Verkehrssprache;
 import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
 import de.svws_nrw.core.data.gost.Abiturdaten;
+import de.svws_nrw.core.data.kataloge.SchulEintrag;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.signing.SchulbescheinigungQrDaten;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ProxyReportingErzieher;
@@ -63,6 +64,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				new ArrayList<>(),
 				new ArrayList<>(),
 				ersetzeNullBlankTrim(schuelerStammdaten.externeSchulNr),
+				"",
 				schuelerStammdaten.fahrschuelerArtID,
 				schuelerStammdaten.foto,
 				ersetzeNullBlankTrim(schuelerStammdaten.geburtsdatum),
@@ -260,6 +262,24 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 		super.erzieherArtGruppen.sort(Comparator.comparing(ReportingErzieherArtGruppe::sortierung).thenComparing(ReportingErzieherArtGruppe::bezeichnung));
 	}
 
+
+	/**
+	 * Das Kürzel der externen Schule bei einem externen Schüler, sofern dieses im Schulkatalog hinterlegt ist.
+	 *
+	 * @return Inhalt des Feldes externesSchulKuerzel; nie {@code null}, bei fehlendem Wert ein leerer String.
+	 */
+	@Override
+	public String externesSchulKuerzel() {
+		if ((super.externeSchulNr() != null) && !super.externeSchulNr().isEmpty() && super.externesSchulKuerzel.isEmpty()) {
+			final SchulEintrag schule = this.reportingContext.repositoryKataloge().schulen().get(super.externeSchulNr());
+			if ((schule != null) && (schule.kuerzel != null) && !schule.kuerzel.isEmpty()) {
+				super.externesSchulKuerzel = schule.kuerzel;
+			} else {
+				super.externesSchulKuerzel = "";
+			}
+		}
+		return super.externesSchulKuerzel;
+	}
 
 	/**
 	 * Stellt die Daten zum Abitur in der GOSt des Schülers zur Verfügung.

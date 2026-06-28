@@ -156,18 +156,8 @@ public class ConvertExpressionHelper {
 	 * @return Das SVG als HTML-String.
 	 */
 	public String toCheckboxSVG(final Boolean checked, final int size) {
-		final String svg;
-		if (Boolean.TRUE.equals(checked)) {
-			svg = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" width=\"" + size + "\" height=\"" + size + "\" fill=\"none\" stroke=\"black\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\">"
-					+ "<path d=\"M21 11V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12\" />"
-					+ "<path d=\"M8 12l4 4L22 4\" />"
-					+ "</svg>";
-		} else {
-			svg = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" width=\"" + size + "\" height=\"" + size + "\" fill=\"none\" stroke=\"black\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\">"
-					+ "<rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\" />"
-					+ "</svg>";
-		}
-		return "data:image/svg+xml;base64," + Base64.getEncoder().encodeToString(svg.getBytes(StandardCharsets.UTF_8));
+		final String iconName = Boolean.TRUE.equals(checked) ? "checkbox_checked" : "checkbox_blank";
+		return ReportingIcon.get(iconName, size, "black");
 	}
 
 	/**

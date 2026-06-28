@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.svws_nrw.module.reporting.html.contexts.HtmlContext;
 import de.svws_nrw.module.reporting.html.dialects.ConvertExpressionDialect;
+import de.svws_nrw.module.reporting.html.dialects.IconExpressionDialect;
 import de.svws_nrw.module.reporting.html.dialects.InlineExpressionDialect;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -47,6 +48,7 @@ public final class ReportBuilderUtils {
 		engine.addTemplateResolver(stringResolver);
 		engine.addDialect(new ConvertExpressionDialect());
 		engine.addDialect(new InlineExpressionDialect());
+		engine.addDialect(new IconExpressionDialect());
 		return engine;
 	}
 

@@ -140,6 +140,9 @@ sup {
 .ta-lb, .ta-cb, .ta-rb {
 	vertical-align: bottom;
 }
+.icon {
+	vertical-align: -0.125em;
+}
 
 
 /*

@@ -21,7 +21,7 @@
 					'<br/>Schulnummer: ' + ${Schule.schulnummer()}">Inhalt oben rechts</div>
 				<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')} + ' von ' + ${Benutzer.benutzername()}">Gedruckt am 02.02.2022 von ABC</div>
 				<!--/*@thymesVar id="footerCenter" type="String"*/-->
-				<div class="pageBottomCenter" th:text="${footerCenter}">Inhalt unten zentriert</div>
+				<div class="pageBottomCenter" th:utext="${footerCenter}">Inhalt unten zentriert</div>
 				<!--/*@thymesVar id="footerRight" type="String"*/-->
 				<div class="pageBottomRight"><span class="page-nums-print" th:text="${footerRight != null ? footerRight + ' - Seite ' : 'Seite '}">Seite </span></div>
 			</th:block>
