@@ -10,9 +10,9 @@ import { routeLehrerIndividualdatenGruppenprozesse } from "~/router/apps/lehrer/
 import { PendingStateManagerLehrerIndividualdaten } from "~/router/apps/lehrer/individualdaten/PendingStateManagerLehrerIndividualdaten";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeLehrerAllgemeinesGruppenprozesse } from "./allgemeines/RouteLehrerAllgemeinesGruppenprozesse";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { schuleState } from "~/states/SchuleStateImpl";
-import { serverState } from "~/states/ServerStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { serverStateImpl } from "~/states/ServerStateImpl";
 
 interface RouteStateLehrer extends RouteStateAuswahlInterface<LehrerListeManager> {
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
@@ -84,8 +84,8 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		const listLehrer = await api.server.getLehrer(api.schema);
 
 		// Erstelle den Lehrer-Liste-Manager
-		const manager = new LehrerListeManager(idSchuljahresabschnitt, schuleState.abschnitt.id, abschnittState.alle,
-			schuleState.schulform, listLehrer);
+		const manager = new LehrerListeManager(idSchuljahresabschnitt, schuleStateImpl.abschnitt.id, abschnittStateImpl.alle,
+			schuleStateImpl.schulform, listLehrer);
 
 		// Übernehme den Filter von dem vorigen Manager oder initialisiere ihn neu, falls kein voriger Manager vorhanden ist
 		if (this._state.value.manager === undefined) {
@@ -100,7 +100,7 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		// abgerufen wurde und somit die Bedingung, welche Route als Default für Gruppenprozesse genutzt werden soll, nicht geprüft werden kann
 		// Diese Stelle eignet sich als Alternative, da sie noch vor dem ersten Betreten der Route aber bereits nach dem Abruf der ServerModes liegt
 		// TODO: Ausbauen sobald die Route routeSchuelerIndividualdatenGruppenprozesse im "Stable" Mode bereitsteht
-		if (!serverState.hasDev) {
+		if (!serverStateImpl.hasDev) {
 			this._defaultState = { ...defaultState, gruppenprozesseView: routeLehrerAllgemeinesGruppenprozesse };
 		}
 

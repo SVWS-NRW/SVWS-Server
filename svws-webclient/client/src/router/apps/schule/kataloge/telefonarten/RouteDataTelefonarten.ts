@@ -8,8 +8,8 @@ import type { RouteParamsRawGeneric } from "vue-router";
 import { routeTelefonartenGruppenprozesse } from "~/router/apps/schule/kataloge/telefonarten/RouteTelefonartenGruppenprozesse";
 import { routeTelefonartenNeu } from "~/router/apps/schule/kataloge/telefonarten/RouteTelefonartenNeu";
 import { routeTelefonartenDaten } from "~/router/apps/schule/kataloge/telefonarten/RouteTelefonartenDaten";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { schuleState } from "~/states/SchuleStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
@@ -30,8 +30,8 @@ export class RouteDataTelefonarten extends RouteDataAuswahl<TelefonartenListeMan
 
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateAuswahlInterface<TelefonartenListeManager>>> {
 		const telefonarten = await api.server.getTelefonarten(api.schema);
-		const manager = new TelefonartenListeManager(idSchuljahresabschnitt, schuleState.abschnitt.id, abschnittState.alle,
-			schuleState.schulform, telefonarten);
+		const manager = new TelefonartenListeManager(idSchuljahresabschnitt, schuleStateImpl.abschnitt.id, abschnittStateImpl.alle,
+			schuleStateImpl.schulform, telefonarten);
 		return { manager };
 	}
 

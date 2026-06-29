@@ -87,4 +87,4 @@ export class AbschnittStateImpl extends StateManager<AbschnittReactiveState> imp
 
 }
 
-export const abschnittState = new AbschnittStateImpl();
+export const abschnittStateImpl = new AbschnittStateImpl();

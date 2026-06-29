@@ -11,8 +11,8 @@ import { TabManager, Checkpoint, ViewType } from "@ui";
 import { api } from "~/router/Api";
 import { routerManager } from "./RouteManager";
 import type { RouteData } from "./RouteData";
-import { schuleState } from "~/states/SchuleStateImpl";
-import { serverState } from "~/states/ServerStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { serverStateImpl } from "~/states/ServerStateImpl";
 
 /**
  * Diese abstrakte Klasse ist die Basisklasse aller Knoten für
@@ -369,7 +369,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	public get children(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._children) {
-			if (api.authenticated && (!node.mode.checkServerMode(serverState.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
+			if (api.authenticated && (!node.mode.checkServerMode(serverStateImpl.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
 				continue;
 			}
 			result.push(node);
@@ -396,7 +396,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	public get menu(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._menu) {
-			if (api.authenticated && (!node.mode.checkServerMode(serverState.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
+			if (api.authenticated && (!node.mode.checkServerMode(serverStateImpl.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
 				continue;
 			}
 			result.push(node);
@@ -571,7 +571,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @returns true, falls die Schulform erlaubt ist und ansonsten false
 	 */
 	public hatSchulform(): boolean {
-		return api.authenticated && this._schulformenErlaubt.has(schuleState.schulform);
+		return api.authenticated && this._schulformenErlaubt.has(schuleStateImpl.schulform);
 	}
 
 	/**

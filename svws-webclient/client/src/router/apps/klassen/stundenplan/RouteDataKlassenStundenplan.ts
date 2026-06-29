@@ -4,7 +4,7 @@ import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 import { routeKlassenStundenplan } from "./RouteKlassenStundenplan";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 
 interface RouteStateKlassenDataStundenplan extends RouteStateInterface {
@@ -84,7 +84,7 @@ export class RouteDataKlassenStundenplan extends RouteData<RouteStateKlassenData
 	};
 
 	public async ladeListe(idKlasse: number): Promise<boolean> {
-		const idSchuljahresabschnitt = abschnittState.auswahl.id;
+		const idSchuljahresabschnitt = abschnittStateImpl.auswahl.id;
 		if (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt) {
 			return false;
 		}

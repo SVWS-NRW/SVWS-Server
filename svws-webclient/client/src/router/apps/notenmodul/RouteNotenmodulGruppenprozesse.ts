@@ -4,7 +4,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { routeNotenmodulAdministration, type RouteNotenmodulAdministration } from "./RouteNotenmodulAdministration";
 import type { NotenmodulVerbindungGruppenprozesseProps } from "~/components/notenmodul/NotenmodulVerbindungGruppenprozesseProps";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const NotenmodulVerbindungGruppenprozesse = () => import("~/components/notenmodul/NotenmodulVerbindungGruppenprozesse.vue");
 
@@ -21,7 +21,7 @@ export class RouteNotenmodulVerbindungGruppenprozesse extends RouteNode<any, Rou
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittStateImpl.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): NotenmodulVerbindungGruppenprozesseProps {

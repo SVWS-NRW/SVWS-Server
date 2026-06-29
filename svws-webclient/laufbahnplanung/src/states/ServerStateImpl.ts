@@ -28,4 +28,4 @@ export class ServerStateImpl implements ServerState {
 
 }
 
-export const serverState = new ServerStateImpl();
+export const serverStateImpl = new ServerStateImpl();

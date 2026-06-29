@@ -7,7 +7,7 @@ import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
 import { routeSchulen } from "~/router/apps/schule/kataloge/schulen/RouteSchulen";
 import { api } from "~/router/Api";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const SchulenNeu = () => import("~/components/schule/kataloge/schulen/SchulenNeu.vue");
 
@@ -23,7 +23,7 @@ export class RouteSchulenNeu extends RouteNode<any, RouteSchulen> {
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittStateImpl.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): SchulenNeuProps {

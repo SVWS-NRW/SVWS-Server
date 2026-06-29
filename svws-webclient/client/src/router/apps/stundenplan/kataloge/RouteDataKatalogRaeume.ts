@@ -8,8 +8,8 @@ import { RouteManager } from "~/router/RouteManager";
 
 import { routeKatalogRaeume } from "./RouteKatalogRaeume";
 import { routeStundenplan } from "../RouteStundenplan";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { schuleState } from "~/states/SchuleStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 interface RouteStateKatalogRaeume extends RouteStateInterface {
 	raumListeManager: RaumListeManager;
@@ -31,7 +31,7 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 
 	public async ladeListe() {
 		const listKatalogeintraege = await api.server.getRaeume(api.schema);
-		const raumListeManager = new RaumListeManager(schuleState.abschnitt.id, schuleState.abschnitt.id, abschnittState.alle, schuleState.schulform, listKatalogeintraege);
+		const raumListeManager = new RaumListeManager(schuleStateImpl.abschnitt.id, schuleStateImpl.abschnitt.id, abschnittStateImpl.alle, schuleStateImpl.schulform, listKatalogeintraege);
 		raumListeManager.setFilterAuswahlPermitted(true);
 		this.setPatchedDefaultState({ raumListeManager });
 	}

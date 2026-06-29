@@ -8,7 +8,7 @@ import type { Schulform } from "@core/asd/types/schule/Schulform";
 import { version } from '../../version';
 import { githash } from "../../githash";
 import { OpenApiError } from "@core/api/OpenApiError";
-import { activityState } from "./ActivityStateImpl";
+import { activityStateImpl } from "./ActivityStateImpl";
 import { RouteManager } from "~/router/RouteManager";
 
 /**
@@ -351,7 +351,7 @@ class AuthStateImpl implements AuthState {
 		this._pending2FA.value = false;
 		this._totpSetup.value = null;
 		await this.updateRefreshTokenTimer();
-		activityState.start(() => this.logout());
+		activityStateImpl.start(() => this.logout());
 	}
 
 	/**
@@ -364,7 +364,7 @@ class AuthStateImpl implements AuthState {
 		this._isLoggingOut = true;
 		this._message.value = null;
 		this.stopTimer();
-		activityState.stop();
+		activityStateImpl.stop();
 		if (this._authenticated.value) {
 			try {
 				await this.api.logout();
@@ -423,4 +423,4 @@ class AuthStateImpl implements AuthState {
 
 }
 
-export const authState = new AuthStateImpl();
+export const authStateImpl = new AuthStateImpl();

@@ -6,19 +6,19 @@ import "./main.css";
 
 import SWrapper from "~/components/SWrapper.vue";
 import { ActivityStateKey } from "./states/ActivityState";
-import { activityState } from "./states/ActivityStateImpl";
+import { activityStateImpl } from "./states/ActivityStateImpl";
 import { AuthStateKey } from "./states/AuthState";
-import { authState } from "./states/AuthStateImpl";
+import { authStateImpl } from "./states/AuthStateImpl";
 import { AuskunftStateKey } from "@ui/states/AuskunftState";
-import { auskunftState } from "./states/AuskunftStateImpl";
+import { auskunftStateImpl } from "./states/AuskunftStateImpl";
 
-await auskunftState.init();
+await auskunftStateImpl.init();
 
 const app = createApp(SWrapper);
 app.use(router);
-app.provide(ActivityStateKey, activityState);
-app.provide(AuthStateKey, authState);
-app.provide(AuskunftStateKey, auskunftState);
+app.provide(ActivityStateKey, activityStateImpl);
+app.provide(AuthStateKey, authStateImpl);
+app.provide(AuskunftStateKey, auskunftStateImpl);
 
 await router.isReady();
 app.mount("#app");

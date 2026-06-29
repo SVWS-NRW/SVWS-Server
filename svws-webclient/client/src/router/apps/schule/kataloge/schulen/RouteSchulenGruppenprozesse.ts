@@ -6,7 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { routeSchulen, type RouteSchulen } from "~/router/apps/schule/kataloge/schulen/RouteSchulen";
 import type { SchulenGruppenprozesseProps } from "~/components/schule/kataloge/schulen/gruppenprozesse/SchulenGruppenprozesseProps";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const SchulenGruppenprozesse = () => import("~/components/schule/kataloge/schulen/gruppenprozesse/SchulenGruppenprozesse.vue");
 
@@ -21,7 +21,7 @@ export class RouteSchulenGruppenprozesse extends RouteNode<any, RouteSchulen> {
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittStateImpl.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): SchulenGruppenprozesseProps {

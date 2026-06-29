@@ -8,8 +8,8 @@ import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import { routeEinwilligungsartenGruppenprozesse } from "~/router/apps/schule/kataloge/einwilligungsarten/RouteEinwilligungsartenGruppenprozesse";
 import { routeEinwilligungsartenNeu } from "~/router/apps/schule/kataloge/einwilligungsarten/RouteEinwilligungsartenNeu";
 import type { RouteParamsRawGeneric } from "vue-router";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { schuleState } from "~/states/SchuleStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
@@ -27,8 +27,8 @@ export class RouteDataEinwilligungsarten extends RouteDataAuswahl<Einwilligungsa
 
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<EinwilligungsartenListeManager>>> {
 		const einwilligungsarten = await api.server.getEinwilligungsarten(api.schema);
-		const manager = new EinwilligungsartenListeManager(schuleState.abschnitt.id, schuleState.abschnitt.id, abschnittState.alle,
-			schuleState.schulform, einwilligungsarten);
+		const manager = new EinwilligungsartenListeManager(schuleStateImpl.abschnitt.id, schuleStateImpl.abschnitt.id, abschnittStateImpl.alle,
+			schuleStateImpl.schulform, einwilligungsarten);
 		return { manager };
 	}
 

@@ -6,8 +6,8 @@ import { RouteNode } from "~/router/RouteNode";
 import { type RouteApp } from "~/router/apps/RouteApp";
 import { routeEinstellungenBenutzer } from "./benutzer/RouteEinstellungenBenutzer";
 import { AppMenuGroup } from "@ui";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { schuleState } from "~/states/SchuleStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 export class RouteEinstellungen extends RouteNode<any, RouteApp> {
 
@@ -27,8 +27,8 @@ export class RouteEinstellungen extends RouteNode<any, RouteApp> {
 	}
 
 	public benutzerKompetenzen = (gruppe: BenutzerKompetenzGruppe): List<BenutzerKompetenz> => {
-		const schuljahr = abschnittState.auswahl.schuljahr;
-		return BenutzerKompetenz.getKompetenzenMitSchulform(schuljahr, gruppe, schuleState.schulform);
+		const schuljahr = abschnittStateImpl.auswahl.schuljahr;
+		return BenutzerKompetenz.getKompetenzenMitSchulform(schuljahr, gruppe, schuleStateImpl.schulform);
 	};
 }
 

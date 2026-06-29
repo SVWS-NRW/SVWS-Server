@@ -16,8 +16,8 @@ import { routeGostKlausurplanungSchienen } from "./RouteGostKlausurplanungSchien
 import { routeGostKlausurplanungNachschreiber } from "./RouteGostKlausurplanungNachschreiber";
 import type { RouteParams } from "vue-router";
 import { routeStundenplan } from "../../stundenplan/RouteStundenplan";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { schuleState } from "~/states/SchuleStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 interface RouteStateGostKlausurplanung extends RouteStateInterface {
 	// Daten nur abhängig von dem Abiturjahrgang
@@ -156,7 +156,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 				const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgang(api.schema, -1);
 				this.manager.vorgabeAddAll(listKlausurvorgaben);
 				const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, -1);
-				const faecherManager = new GostFaecherManager(schuleState.abschnitt.schuljahr, listFaecher);
+				const faecherManager = new GostFaecherManager(schuleStateImpl.abschnitt.schuljahr, listFaecher);
 				this.manager.setFaecherManager(-1, faecherManager);
 			}
 			if (this._state.value.abiturjahr === -1) {
@@ -164,7 +164,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 				return true;
 			}
 			const schuljahr = halbjahr.getSchuljahrFromAbiturjahr(this._state.value.abiturjahr);
-			const abschnitt = abschnittState.getBySchuljahrUndHalbjahr(schuljahr, halbjahr.halbjahr);
+			const abschnitt = abschnittStateImpl.getBySchuljahrUndHalbjahr(schuljahr, halbjahr.halbjahr);
 			if (abschnitt === null) {
 				this.setPatchedState(result);
 				return true;

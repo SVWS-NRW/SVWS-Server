@@ -10,8 +10,8 @@ import { routeNotenmodulVerbindungGruppenprozesse } from "./RouteNotenmodulGrupp
 import { routeNotenmodul } from "./RouteNotenmodul";
 import { NotenmodulConfigManagerSperrungen, type NotenmodulConfigManagerSperrungenGruppierung } from "./NotenmodulConfigManagerSperrungen";
 import { NotenmodulConfigManagerSichtbareSpalten } from "./NotenmodulConfigManagerSichtbareSpalten";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { schuleState } from "~/states/SchuleStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 
 interface RouteStateNotenmodulAdministration extends RouteStateAuswahlInterface<WenomAuswahlListeManager> {
@@ -62,8 +62,8 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 	protected async createManager(): Promise<Partial<RouteStateNotenmodulAdministration>> {
 		await routeNotenmodul.data.ladeDaten();
 		const list = await api.server.getENMServerConnections(api.schema);
-		const manager = new WenomAuswahlListeManager(schuleState.abschnitt.id,
-			schuleState.abschnitt.id, abschnittState.alle, schuleState.schulform, list);
+		const manager = new WenomAuswahlListeManager(schuleStateImpl.abschnitt.id,
+			schuleStateImpl.abschnitt.id, abschnittStateImpl.alle, schuleStateImpl.schulform, list);
 		this._state.value.manager = manager;
 		for (const server of list) {
 			void this.connect(server.id);

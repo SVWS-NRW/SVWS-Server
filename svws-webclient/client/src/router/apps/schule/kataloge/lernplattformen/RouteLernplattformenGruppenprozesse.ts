@@ -6,7 +6,7 @@ import { ViewType } from "@ui";
 import type { RouteLernplattformen } from "~/router/apps/schule/kataloge/lernplattformen/RouteLernplattformen";
 import { routeLernplattformen } from "~/router/apps/schule/kataloge/lernplattformen/RouteLernplattformen";
 import type { LernplattformenGruppenprozesseProps } from "~/components/schule/kataloge/lernplattformen/gruppenprozesse/LernplattformenGruppenprozesseProps";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const LernplattformenGruppenprozesse = () =>
 	import("~/components/schule/kataloge/lernplattformen/gruppenprozesse/LernplattformenGruppenprozesse.vue");
@@ -23,7 +23,7 @@ export class RouteLernplattformenGruppenprozesse extends RouteNode<any, RouteLer
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittStateImpl.auswahl.id, id: "" } };
 	}
 
 	public getProps(): LernplattformenGruppenprozesseProps {

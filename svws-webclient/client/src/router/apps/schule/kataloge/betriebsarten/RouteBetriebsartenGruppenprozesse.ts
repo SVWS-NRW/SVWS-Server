@@ -5,7 +5,7 @@ import { ViewType } from "@ui";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import type { BetriebsartenGruppenprozesseProps } from "~/components/schule/kataloge/betriebsarten/gruppenprozesse/BetriebsartenGruppenprozesseProps";
 import { api } from "~/router/Api";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const BetriebsartenGruppenprozesse = () => import(
 	"~/components/schule/kataloge/betriebsarten/gruppenprozesse/BetriebsartenGruppenprozesse.vue");
@@ -20,7 +20,7 @@ class RouteBetriebsartenGruppenprozesse extends RouteNode<any, RouteBetriebsarte
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittStateImpl.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): BetriebsartenGruppenprozesseProps {

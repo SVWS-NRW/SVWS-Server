@@ -16,7 +16,7 @@ import { RouteDataGostKursplanung } from "~/router/apps/gost/kursplanung/RouteDa
 import { ConfigElement } from "../../../../../../ui/src/utils/Config";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeError } from "~/router/error/RouteError";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const SGostKursplanung = () => import("~/components/gost/kursplanung/SGostKursplanung.vue");
 const SGostKursplanungAuswahl = () => import("~/components/gost/kursplanung/SGostKursplanungAuswahl.vue");
@@ -54,7 +54,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		try {
 			const { abiturjahr } = params ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: null };
 			if ((abiturjahr === null) || (abiturjahr === -1)) {
-				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, abiturjahr } };
+				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: abschnittStateImpl.auswahl.id, abiturjahr } };
 			}
 			return false;
 		} catch (e) {
@@ -96,9 +96,9 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			const halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
 			// Prüfe das Halbjahr und setzte dieses ggf.
 			if ((abiturjahrwechsel) || (halbjahr === null)) {
-				let hj = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, abschnittState.auswahl.schuljahr, abschnittState.auswahl.abschnitt);
+				let hj = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, abschnittStateImpl.auswahl.schuljahr, abschnittStateImpl.auswahl.abschnitt);
 				// In zwei Fällen existiert kein Halbjahr, z.B. weil der Abiturjahrgang abgeschlossen ist oder noch in der Sek I ist.
-				hj ??= (abiturjahr < abschnittState.auswahl.schuljahr + abschnittState.auswahl.abschnitt) ? GostHalbjahr.Q22 : GostHalbjahr.EF1;
+				hj ??= (abiturjahr < abschnittStateImpl.auswahl.schuljahr + abschnittStateImpl.auswahl.abschnitt) ? GostHalbjahr.Q22 : GostHalbjahr.EF1;
 				return this.getRouteHalbjahr(abiturjahr, hj.id);
 			}
 			const changedHalbjahr: boolean = await this.data.setHalbjahr(halbjahr);

@@ -6,7 +6,7 @@ import { ViewType } from "@ui";
 import type { RouteErzieherarten } from "~/router/apps/schule/kataloge/erzieherarten/RouteErzieherarten";
 import { routeErzieherarten } from "~/router/apps/schule/kataloge/erzieherarten/RouteErzieherarten";
 import type { ErzieherartenGruppenprozesseProps } from "~/components/schule/kataloge/erzieherarten/gruppenprozesse/ErzieherartenGruppenprozesseProps";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const ErzieherartenGruppenprozesse = () => import("~/components/schule/kataloge/erzieherarten/gruppenprozesse/ErzieherartenGruppenprozesse.vue");
 
@@ -22,7 +22,7 @@ export class RouteErzieherartenGruppenprozesse extends RouteNode<any, RouteErzie
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittStateImpl.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): ErzieherartenGruppenprozesseProps {

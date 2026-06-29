@@ -8,8 +8,8 @@ import { api } from "~/router/Api";
 import { routeEntlassgruendeDaten } from "~/router/apps/schule/kataloge/entlassgruende/RouteEntlassgruendeDaten";
 import { routeEntlassgruendeGruppenprozesse } from "~/router/apps/schule/kataloge/entlassgruende/RouteEntlassgruendeGruppenprozesse";
 import { routeEntlassgruendeNeu } from "~/router/apps/schule/kataloge/entlassgruende/RouteEntlassgruendeNeu";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { schuleState } from "~/states/SchuleStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
@@ -27,8 +27,8 @@ export class RouteDataEntlassgruende extends RouteDataAuswahl<EntlassgruendeList
 
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<EntlassgruendeListeManager>>> {
 		const entlassgruende = await api.server.getEntlassgruende(api.schema);
-		const manager = new EntlassgruendeListeManager(schuleState.abschnitt.id, schuleState.abschnitt.id, abschnittState.alle,
-			schuleState.schulform, entlassgruende);
+		const manager = new EntlassgruendeListeManager(schuleStateImpl.abschnitt.id, schuleStateImpl.abschnitt.id, abschnittStateImpl.alle,
+			schuleStateImpl.schulform, entlassgruende);
 		return { manager };
 	}
 

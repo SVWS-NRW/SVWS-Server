@@ -5,7 +5,7 @@ import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
 import { routeNotenmodulAdministration, type RouteNotenmodulAdministration } from "./RouteNotenmodulAdministration";
 import type { NotenmodulVerbindungNeuProps } from "~/components/notenmodul/NotenmodulVerbindungNeuProps";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const NotenmodulVerbindungNeu = () => import("~/components/notenmodul/NotenmodulVerbindungNeu.vue");
 
@@ -23,7 +23,7 @@ export class RouteNotenmodulVerbindungNeu extends RouteNode<any, RouteNotenmodul
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittStateImpl.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): NotenmodulVerbindungNeuProps {

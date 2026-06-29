@@ -14,7 +14,7 @@ import { routeGostKursplanung, type RouteGostKursplanung } from "~/router/apps/g
 import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbahnplanung/RouteSchuelerLaufbahnplanung";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
 import { routeError } from "~/router/error/RouteError";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const SGostKursplanungUmwahlansicht = () => import("~/components/gost/kursplanung/SGostKursplanungUmwahlansicht.vue");
 const SGostKursplanungSchuelerAuswahl = () => import("~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahl.vue");
@@ -43,7 +43,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<any, RouteGostKurspl
 		try {
 			const { abiturjahr } = params ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: null };
 			if ((abiturjahr === null) || (abiturjahr === -1)) {
-				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, abiturjahr } };
+				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: abschnittStateImpl.auswahl.id, abiturjahr } };
 			}
 			return false;
 		} catch (e) {

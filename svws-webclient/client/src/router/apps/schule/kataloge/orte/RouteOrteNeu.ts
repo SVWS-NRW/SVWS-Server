@@ -8,7 +8,7 @@ import { api } from "~/router/Api";
 import type { RouteOrte } from "~/router/apps/schule/kataloge/orte/RouteOrte";
 import { routeOrte } from "~/router/apps/schule/kataloge/orte/RouteOrte";
 import type { OrteNeuProps } from "~/components/schule/kataloge/orte/OrteNeuProps";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const OrteNeu = () => import("~/components/schule/kataloge/orte/OrteNeu.vue");
 
@@ -24,7 +24,7 @@ export class RouteOrteNeu extends RouteNode<any, RouteOrte> {
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittStateImpl.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): OrteNeuProps {

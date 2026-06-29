@@ -6,7 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { api } from "~/router/Api";
 import { routeEntlassgruende } from "~/router/apps/schule/kataloge/entlassgruende/RouteEntlassgruende";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const EntlassgruendeGruppenprozesse = () => import("~/components/schule/kataloge/entlassgruende/gruppenprozesse/EntlassgruendeGruppenprozesse.vue");
 
@@ -22,7 +22,7 @@ export class RouteEntlassgruendeGruppenprozesse extends RouteNode<any, RouteEntl
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittStateImpl.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): EntlassgruendeGruppenprozesseProps {

@@ -8,8 +8,8 @@ import { api } from "~/router/Api";
 import { routeHaltestellenDaten } from "~/router/apps/schule/kataloge/haltestellen/RouteHaltestellenDaten";
 import { routeHaltestellenGruppenprozesse } from "~/router/apps/schule/kataloge/haltestellen/RouteHaltestellenGruppenprozesse";
 import { routeHaltestellenNeu } from "~/router/apps/schule/kataloge/haltestellen/RouteHaltestellenNeu";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { schuleState } from "~/states/SchuleStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
@@ -27,8 +27,8 @@ export class RouteDataHaltestellen extends RouteDataAuswahl<HaltestellenListeMan
 
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<HaltestellenListeManager>>> {
 		const haltestellen = await api.server.getHaltestellen(api.schema);
-		const manager = new HaltestellenListeManager(schuleState.abschnitt.id, schuleState.abschnitt.id, abschnittState.alle,
-			schuleState.schulform, haltestellen);
+		const manager = new HaltestellenListeManager(schuleStateImpl.abschnitt.id, schuleStateImpl.abschnitt.id, abschnittStateImpl.alle,
+			schuleStateImpl.schulform, haltestellen);
 		return { manager };
 	}
 

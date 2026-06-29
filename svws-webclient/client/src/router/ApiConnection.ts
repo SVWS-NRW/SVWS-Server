@@ -4,8 +4,8 @@ import { ApiServer, BenutzerKompetenz, DeveloperNotificationException, UserNotif
 import { Config } from "../../../ui/src/utils/Config";
 import { AES } from "~/utils/crypto/aes";
 import { AESAlgo } from "~/utils/crypto/aesAlgo";
-import { schuleState } from "~/states/SchuleStateImpl";
-import { serverState } from "~/states/ServerStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { serverStateImpl } from "~/states/ServerStateImpl";
 
 export class ApiConnection {
 
@@ -382,8 +382,8 @@ export class ApiConnection {
 			this.config.mapUser = new Map();
 			this.nonPersistentConfig.mapGlobal = new Map();
 			this.nonPersistentConfig.mapUser = new Map();
-			schuleState.reset();
-			serverState.reset();
+			schuleStateImpl.reset();
+			serverStateImpl.reset();
 			this._aes.value = undefined;
 		}
 	};
@@ -394,8 +394,8 @@ export class ApiConnection {
 	 */
 	logout = async (): Promise<void> => {
 		this._authenticated.value = false;
-		schuleState.reset();
-		serverState.reset();
+		schuleStateImpl.reset();
+		serverStateImpl.reset();
 		this._benutzerdaten.value = undefined;
 		this._istAdmin.value = undefined;
 		this._kompetenzen.value = undefined;

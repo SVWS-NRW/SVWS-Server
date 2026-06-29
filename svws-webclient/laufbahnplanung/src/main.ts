@@ -6,17 +6,17 @@ import "./main.css";
 
 import SWrapper from "~/components/SWrapper.vue";
 import { ServerStateKey } from "@ui/states/ServerState";
-import { serverState } from "./states/ServerStateImpl";
+import { serverStateImpl } from "./states/ServerStateImpl";
 import { AuskunftStateKey } from "@ui/states/AuskunftState";
-import { auskunftState } from "./states/AuskunftStateImpl";
+import { auskunftStateImpl } from "./states/AuskunftStateImpl";
 
-await auskunftState.init();
+await auskunftStateImpl.init();
 
 const app = createApp(SWrapper);
-app.provide(AuskunftStateKey, auskunftState);
+app.provide(AuskunftStateKey, auskunftStateImpl);
 
 app.use(router);
-app.provide(ServerStateKey, serverState);
+app.provide(ServerStateKey, serverStateImpl);
 
 await router.isReady();
 app.mount("#app");

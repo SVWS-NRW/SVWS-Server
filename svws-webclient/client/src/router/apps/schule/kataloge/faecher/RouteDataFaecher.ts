@@ -6,8 +6,8 @@ import { api } from "~/router/Api";
 import { FaecherListeManager, ViewType } from "@ui";
 import type { RouteParamsRawGeneric } from "vue-router";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { schuleState } from "~/states/SchuleStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { routeFaecherDaten } from "./RouteFaecherDaten";
 import { routeFaecherGruppenprozesse } from "./RouteFaecherGruppenprozesse";
 import { routeFaecherNeu } from "./RouteFaecherNeu";
@@ -39,8 +39,8 @@ export class RouteDataFaecher extends RouteDataAuswahl<FaecherListeManager, Rout
 			api.server.getFaecher(api.schema),
 			api.server.getStundenplanlisteFuerAbschnitt(api.schema, idSchuljahresabschnitt),
 		]);
-		const manager = new FaecherListeManager(idSchuljahresabschnitt, schuleState.abschnitt.id, abschnittState.alle,
-			schuleState.schulform, faecher, stundenplaene);
+		const manager = new FaecherListeManager(idSchuljahresabschnitt, schuleStateImpl.abschnitt.id, abschnittStateImpl.alle,
+			schuleStateImpl.schulform, faecher, stundenplaene);
 		return { manager };
 	}
 

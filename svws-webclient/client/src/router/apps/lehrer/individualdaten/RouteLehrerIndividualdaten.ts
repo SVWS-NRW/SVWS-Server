@@ -8,7 +8,7 @@ import { routeLehrer, type RouteLehrer } from "~/router/apps/lehrer/RouteLehrer"
 
 import type { LehrerIndividualdatenProps } from "~/components/lehrer/individualdaten/LehrerIndividualdatenProps";
 import { api } from "~/router/Api";
-import { wiedervorlageState } from "~/states/WiedervorlageStateImpl";
+import { wiedervorlageStateImpl } from "~/states/WiedervorlageStateImpl";
 
 const LehrerIndividualdaten = () => import("~/components/lehrer/individualdaten/LehrerIndividualdaten.vue");
 
@@ -23,7 +23,7 @@ export class RouteLehrerIndividualdaten extends RouteNode<any, RouteLehrer> {
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
 		// initialize used states
-		await wiedervorlageState.init();
+		await wiedervorlageStateImpl.init();
 	}
 
 	public getProps(to: RouteLocationNormalized): LehrerIndividualdatenProps {

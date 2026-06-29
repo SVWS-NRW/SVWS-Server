@@ -6,7 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { api } from "~/router/Api";
 import { routeHaltestellen } from "~/router/apps/schule/kataloge/haltestellen/RouteHaltestellen";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const HaltestellenGruppenprozesse = () => import("~/components/schule/kataloge/haltestellen/gruppenprozesse/HaltestellenGruppenprozesse.vue");
 
@@ -22,7 +22,7 @@ export class RouteHaltestellenGruppenprozesse extends RouteNode<any, RouteHaltes
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittStateImpl.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): HaltestellenGruppenprozesseProps {

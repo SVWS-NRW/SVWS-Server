@@ -8,7 +8,7 @@ import { api } from "~/router/Api";
 import type { RouteBetriebe } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebe";
 import { routeBetriebe } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebe";
 import type { BetriebeNeuProps } from "~/components/schule/kataloge/betriebe/BetriebeNeuProps";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const BetriebeNeu = () => import("~/components/schule/kataloge/betriebe/BetriebeNeu.vue");
 
@@ -24,7 +24,7 @@ export class RouteBetriebeNeu extends RouteNode<any, RouteBetriebe> {
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittStateImpl.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): BetriebeNeuProps {

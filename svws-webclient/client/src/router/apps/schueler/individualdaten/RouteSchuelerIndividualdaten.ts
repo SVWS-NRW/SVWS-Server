@@ -8,9 +8,9 @@ import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteS
 import { RouteDataSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteDataSchuelerIndividualdaten";
 import type { SchuelerIndividualdatenProps } from "~/components/schueler/individualdaten/SchuelerIndividualdatenProps";
 import { api } from "~/router/Api";
-import { schuleState } from "~/states/SchuleStateImpl";
-import { serverState } from "~/states/ServerStateImpl";
-import { wiedervorlageState } from "~/states/WiedervorlageStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { serverStateImpl } from "~/states/ServerStateImpl";
+import { wiedervorlageStateImpl } from "~/states/WiedervorlageStateImpl";
 
 const SSchuelerIndividualdaten = () => import("~/components/schueler/individualdaten/SchuelerIndividualdaten.vue");
 
@@ -26,7 +26,7 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
 		// initialize used states
-		await wiedervorlageState.init();
+		await wiedervorlageStateImpl.init();
 
 		if (isEntering) {
 			await this.data.ladeListe();
@@ -36,7 +36,7 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 	public getProps(to: RouteLocationNormalized): SchuelerIndividualdatenProps {
 		return {
 			patch: routeSchueler.data.patch,
-			validatorKontext: () => schuleState.validatorKontext,
+			validatorKontext: () => schuleStateImpl.validatorKontext,
 			schuelerListeManager: () => routeSchueler.data.manager,
 			orteById: routeApp.cache.kataloge.orteById,
 			ortsteileById: routeApp.cache.kataloge.ortsteileById,
@@ -50,8 +50,8 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 			patchSchuelerTelefoneintrag: routeSchueler.data.patchSchuelerTelefoneintrag,
 			deleteSchuelerTelefoneintrage: routeSchueler.data.deleteSchuelerTelefoneintrage,
 			mapSchulen: this.data.mapSchulen,
-			schulform: schuleState.schulform,
-			serverMode: serverState.mode,
+			schulform: schuleStateImpl.schulform,
+			serverMode: serverStateImpl.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			autofocus: routeSchueler.data.autofocus,
 		};

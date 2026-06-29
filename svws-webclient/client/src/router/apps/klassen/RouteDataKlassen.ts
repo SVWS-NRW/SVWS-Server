@@ -14,8 +14,8 @@ import { KlassenListeManager, ViewType } from "@ui";
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { schuleState } from "~/states/SchuleStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 interface RouteStateKlassen extends RouteStateAuswahlInterface<KlassenListeManager> {
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
@@ -50,7 +50,7 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 	}
 
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateKlassen>> {
-		const schuljahresabschnitt = abschnittState.getOrNull(idSchuljahresabschnitt);
+		const schuljahresabschnitt = abschnittStateImpl.getOrNull(idSchuljahresabschnitt);
 		if (schuljahresabschnitt === null) {
 			throw new DeveloperNotificationException('Es ist kein gültiger Schuljahresabschnitt ausgewählt');
 		}
@@ -67,10 +67,10 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 		;
 		const manager = new KlassenListeManager(
 			idSchuljahresabschnitt,
-			schuleState.abschnitt.id,
-			schuleState.schulform,
+			schuleStateImpl.abschnitt.id,
+			schuleStateImpl.schulform,
 			{
-				schuljahresabschnitte: abschnittState.alle,
+				schuljahresabschnitte: abschnittStateImpl.alle,
 				klassenAktAbschnitt: klassen,
 				klassenVorabschnitt: klassenVorabschnitt,
 				klassenFolgeabschnitt: klassenFolgeabschnitt,
@@ -208,7 +208,7 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 	};
 
 	add = async (partialKlasse: Partial<KlassenDaten>): Promise<void> => {
-		const neueKlasse = await api.server.addKlasse({ ...partialKlasse, idSchuljahresabschnitt: abschnittState.auswahl.id }, api.schema);
+		const neueKlasse = await api.server.addKlasse({ ...partialKlasse, idSchuljahresabschnitt: abschnittStateImpl.auswahl.id }, api.schema);
 		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
 		await this.gotoDefaultView(neueKlasse.id);
 	};

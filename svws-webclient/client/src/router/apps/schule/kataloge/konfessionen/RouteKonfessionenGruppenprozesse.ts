@@ -7,7 +7,7 @@ import { ViewType } from "@ui";
 import { routeKonfessionen } from "~/router/apps/schule/kataloge/konfessionen/RouteKonfessionen";
 import type { RouteKonfessionen } from "~/router/apps/schule/kataloge/konfessionen/RouteKonfessionen";
 import type { KonfessionenGruppenprozesseProps } from "~/components/schule/kataloge/konfessionen/gruppenprozesse/KonfessionenGruppenprozesseProps";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const KonfessionenGruppenprozesse = () => import("~/components/schule/kataloge/konfessionen/gruppenprozesse/KonfessionenGruppenprozesse.vue");
 
@@ -23,7 +23,7 @@ export class RouteKonfessionenGruppenprozesse extends RouteNode<any, RouteKonfes
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittStateImpl.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): KonfessionenGruppenprozesseProps {

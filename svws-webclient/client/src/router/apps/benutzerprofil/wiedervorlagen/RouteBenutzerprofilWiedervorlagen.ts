@@ -5,8 +5,8 @@ import { RouteBenutzerprofilMenuGroup } from "~/router/apps/benutzerprofil/Route
 import { RouteDataBenutzerprofilWiedervorlagen } from "~/router/apps/benutzerprofil/wiedervorlagen/RouteDataBenutzerprofilWiedervorlagen";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { WiedervorlagenAppProps } from "~/components/benutzerprofil/wiedervorlagen/WiedervorlagenAppProps";
-import { serverState } from "~/states/ServerStateImpl";
-import { wiedervorlageState } from "~/states/WiedervorlageStateImpl";
+import { serverStateImpl } from "~/states/ServerStateImpl";
+import { wiedervorlageStateImpl } from "~/states/WiedervorlageStateImpl";
 
 const App = () => import("~/components/benutzerprofil/wiedervorlagen/WiedervorlagenApp.vue");
 
@@ -31,7 +31,7 @@ export class RouteBenutzerprofilWiedervorlagen extends RouteNode<any, RouteApp> 
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
 		// initialize used states
-		await wiedervorlageState.init();
+		await wiedervorlageStateImpl.init();
 
 		// TODO: Remove when moved to state
 		// Wiedervorlagen bei jedem Schülerwechsel neu laden
@@ -42,7 +42,7 @@ export class RouteBenutzerprofilWiedervorlagen extends RouteNode<any, RouteApp> 
 
 		return {
 			benutzer: () => this.data.benutzer,
-			mode: serverState.mode,
+			mode: serverStateImpl.mode,
 			getListWiedervorlagen: () => this.data.wiedervorlagenListe,
 			goToPerson: this.data.goToPerson,
 		};

@@ -10,8 +10,8 @@ import { routeAbteilungenNeu } from "~/router/apps/schule/kataloge/abteilungen/R
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { schuleState } from "~/states/SchuleStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 
 const defaultState = {
@@ -41,8 +41,8 @@ export class RouteDataAbteilungen extends RouteDataAuswahl<AbteilungenListeManag
 
 		const abteilungenFolgeAbschnitt = new ArrayList<Abteilung>();
 		const klassenFolgeAbschnitt = new ArrayList<KlassenDatenMinimal>();
-		const schuljahresabschnitt = abschnittState.get(idSchuljahresabschnitt);
-		if ((schuleState.abschnitt.id === schuljahresabschnitt.id) && (schuljahresabschnitt.idFolgeAbschnitt !== null)) {
+		const schuljahresabschnitt = abschnittStateImpl.get(idSchuljahresabschnitt);
+		if ((schuleStateImpl.abschnitt.id === schuljahresabschnitt.id) && (schuljahresabschnitt.idFolgeAbschnitt !== null)) {
 			const [abteilungenByIdJahresabschnitt, klassenDatenMinimal] = await Promise.all([
 				api.server.getAbteilungenByIdJahresAbschnitt(api.schema, schuljahresabschnitt.idFolgeAbschnitt),
 				api.server.getKlassenDatenMinimalBySchuljahresabschnitt(api.schema, schuljahresabschnitt.idFolgeAbschnitt),
@@ -53,9 +53,9 @@ export class RouteDataAbteilungen extends RouteDataAuswahl<AbteilungenListeManag
 
 		const manager = new AbteilungenListeManager(
 			idSchuljahresabschnitt,
-			schuleState.abschnitt.id,
-			schuleState.schulform, {
-				schuljahresabschnitte: abschnittState.alle,
+			schuleStateImpl.abschnitt.id,
+			schuleStateImpl.schulform, {
+				schuljahresabschnitte: abschnittStateImpl.alle,
 				abteilungenAktAbschnitt,
 				abteilungenFolgeAbschnitt,
 				lehrer,
@@ -100,15 +100,15 @@ export class RouteDataAbteilungen extends RouteDataAuswahl<AbteilungenListeManag
 
 	protected deleteMessage(idAbteilung: number, _: Abteilung | null): string {
 		const abteilung = this.manager.liste.get(idAbteilung) ?? this.manager.abteilungenFolgeAbschnittById.get(idAbteilung);
-		const schuljahresabschnitt = abschnittState.getOrNull(abteilung?.idSchuljahresabschnitt ?? -1);
+		const schuljahresabschnitt = abschnittStateImpl.getOrNull(abteilung?.idSchuljahresabschnitt ?? -1);
 		const schuljahresabschnittText = (schuljahresabschnitt === null) ?
 			'???' : `${schuljahresabschnitt.schuljahr}/${(schuljahresabschnitt.schuljahr + 1) % 100}.${schuljahresabschnitt.abschnitt}`;
 		return `Abteilung ${abteilung?.bezeichnung ?? '???'} (Abschnitt: ${schuljahresabschnittText}, ID: ${idAbteilung}) wurde erfolgreich gelöscht.`;
 	}
 
 	add = async (abteilung: Partial<Abteilung>, assignedKlassenIds: List<number>, addAbteilungInFolgeAbschnitt: boolean): Promise<number> => {
-		const idAktAbschnitt = abschnittState.auswahl.id;
-		const idFolgeAbschnitt = abschnittState.auswahl.idFolgeAbschnitt;
+		const idAktAbschnitt = abschnittStateImpl.auswahl.id;
+		const idFolgeAbschnitt = abschnittStateImpl.auswahl.idFolgeAbschnitt;
 
 		const abteilungAktAbschnitt = await this.addAbteilungWithKlassenIds(abteilung, idAktAbschnitt, assignedKlassenIds);
 		this.manager.liste.add(abteilungAktAbschnitt);
@@ -180,11 +180,11 @@ export class RouteDataAbteilungen extends RouteDataAuswahl<AbteilungenListeManag
 	}
 
 	get isReadonly() {
-		return (abschnittState.auswahl.id !== schuleState.abschnitt.id) && (abschnittState.auswahl.id !== schuleState.abschnitt.idFolgeAbschnitt);
+		return (abschnittStateImpl.auswahl.id !== schuleStateImpl.abschnitt.id) && (abschnittStateImpl.auswahl.id !== schuleStateImpl.abschnitt.idFolgeAbschnitt);
 	}
 
 	get isAbteilungImZukuenftigenAbschnitt() {
-		return abschnittState.auswahl.id === schuleState.abschnitt.idFolgeAbschnitt;
+		return abschnittStateImpl.auswahl.id === schuleStateImpl.abschnitt.idFolgeAbschnitt;
 	}
 
 }

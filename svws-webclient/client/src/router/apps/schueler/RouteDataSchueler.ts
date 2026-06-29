@@ -9,9 +9,9 @@ import type { RouteParamsRawGeneric } from "vue-router";
 import { routeSchuelerIndividualdatenGruppenprozesse } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdatenGruppenprozesse";
 import { routeSchuelerAllgemeinesGruppenprozesse } from "~/router/apps/schueler/allgemeines/RouteSchuelerAllgemeinesGruppenprozesse";
 import { routeSchuelerSchnelleingabe } from "~/router/apps/schueler/neu/RouteSchuelerSchnelleingabe";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { schuleState } from "~/states/SchuleStateImpl";
-import { serverState } from "~/states/ServerStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { serverStateImpl } from "~/states/ServerStateImpl";
 
 
 interface RouteStateSchueler extends RouteStateAuswahlInterface<SchuelerListeManager> {
@@ -56,7 +56,7 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		]);
 
 		// Erstelle den Schüler-Liste-Manager
-		const manager = new SchuelerListeManager(schuleState.schulform, schuelerListe, lehrer, abschnittState.alle, schuleState.abschnitt.id);
+		const manager = new SchuelerListeManager(schuleStateImpl.schulform, schuelerListe, lehrer, abschnittStateImpl.alle, schuleStateImpl.abschnitt.id);
 
 		// Übernehme den Filter von dem vorigen Manager oder initialisiere ihn neu, falls kein voriger Manager vorhanden ist
 		if (this._state.value.manager === undefined) {
@@ -70,7 +70,7 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		// abgerufen wurde und somit die Bedingung, welche Route als Default für Gruppenprozesse genutzt werden soll, nicht geprüft werden kann
 		// Diese Stelle eignet sich als Alternative, da sie noch vor dem ersten Betreten der Route aber bereits nach dem Abruf der ServerModes liegt
 		// TODO: Ausbauen sobald die Route routeSchuelerIndividualdatenGruppenprozesse im "Stable" Mode bereitsteht
-		if (!serverState.hasDev) {
+		if (!serverStateImpl.hasDev) {
 			this._defaultState = { ...defaultState, gruppenprozesseView: routeSchuelerAllgemeinesGruppenprozesse };
 		}
 

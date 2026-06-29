@@ -11,8 +11,8 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeGostAbiturjahrNeu } from "./RouteGostAbiturjahrNeu";
 import { routeGostGruppenprozesse } from "./RouteGostGruppenprozesse";
 import type { TabData } from "@ui";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { schuleState } from "~/states/SchuleStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 interface RouteStateGost extends RouteStateInterface {
 	idSchuljahresabschnitt: number,
@@ -120,12 +120,12 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 
 	private async ladeJahrgaenge(idSchuljahresabschnitt: number): Promise<Map<number, JahrgangsDaten>> {
 		// Lade die Liste der Jahrgänge, für welche Abiturjahrgänge ggf. angelegt werden können.
-		const schuljahresabschnitt = abschnittState.getOrNull(idSchuljahresabschnitt) ?? schuleState.abschnitt;
+		const schuljahresabschnitt = abschnittStateImpl.getOrNull(idSchuljahresabschnitt) ?? schuleStateImpl.abschnitt;
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const mapJahrgaenge = new Map<number, JahrgangsDaten>();
 		for (const j of listJahrgaenge) {
 			const jg: Jahrgaenge | null = (j.kuerzelStatistik === null) ? null : Jahrgaenge.data().getWertByKuerzel(j.kuerzelStatistik);
-			if (jg?.hatSchulform(schuljahresabschnitt.schuljahr, schuleState.schulform) ?? false) {
+			if (jg?.hatSchulform(schuljahresabschnitt.schuljahr, schuleStateImpl.schulform) ?? false) {
 				mapJahrgaenge.set(j.id, j);
 			}
 		}
@@ -314,7 +314,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 			throw new DeveloperNotificationException("Dem Jahrgang mit der ID " + idJahrgang + " ist eine unbekannte Schulgliederung " + jahrgang.kuerzelSchulgliederung + " zugeordnet.");
 		}
 		const abiturjahr = (jahrgang.kuerzelStatistik === null) ? null
-			: GostAbiturjahrUtils.getGostAbiturjahr(schuleState.schulform, schulgliederung, abschnittState.auswahl.schuljahr, jahrgang.kuerzelStatistik);
+			: GostAbiturjahrUtils.getGostAbiturjahr(schuleStateImpl.schulform, schulgliederung, abschnittStateImpl.auswahl.schuljahr, jahrgang.kuerzelStatistik);
 		return abiturjahr ?? null;
 	}
 

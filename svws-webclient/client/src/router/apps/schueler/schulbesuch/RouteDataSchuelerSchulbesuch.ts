@@ -6,7 +6,7 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { SchuelerSchulbesuchManager } from "@ui";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 interface RouteStateDataSchuelerSchulbesuch extends RouteStateInterface {
 	schueler: SchuelerListeEintrag | undefined;
@@ -52,7 +52,7 @@ export class RouteDataSchuelerSchulbesuch extends RouteData<RouteStateDataSchuel
 
 	private mapSchuljahresabschnitte() {
 		const abschnitteById = new Map();
-		for (const abschnitt of abschnittState.alle) {
+		for (const abschnitt of abschnittStateImpl.alle) {
 			abschnitteById.set(abschnitt.id, abschnitt);
 		}
 		return abschnitteById;

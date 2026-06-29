@@ -27,7 +27,7 @@ import { routeSchuelerAbitur } from "./abitur/RouteSchuelerAbitur";
 import { routeSchuelerSchnelleingabe } from "~/router/apps/schueler/neu/RouteSchuelerSchnelleingabe";
 import { routeSchuelerNeu } from "~/router/apps/schueler/neu/RouteSchuelerNeu";
 import { Katalog } from "~/cache/Katalog";
-import { schuleState } from "~/states/SchuleStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 const SSchuelerAuswahl = () => import("~/components/schueler/SSchuelerAuswahl.vue");
 const SSchuelerApp = () => import("~/components/schueler/SSchuelerApp.vue");
@@ -41,11 +41,11 @@ export class RouteSchueler extends RouteAuswahlNode<SchuelerListeManager, RouteD
 		super.text = "Schüler";
 		super.getAuswahlListProps = (props) => (<SchuelerAuswahlProps>{
 			...props,
-			schulform: schuleState.schulform,
+			schulform: schuleStateImpl.schulform,
 		});
 		super.getAuswahlProps = props => (<SchuelerAppProps>{
 			...props,
-			schulform: schuleState.schulform,
+			schulform: schuleStateImpl.schulform,
 			gotoDefaultView: this.data.gotoDefaultView,
 		});
 		super.children = [

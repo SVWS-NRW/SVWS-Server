@@ -6,8 +6,8 @@ import type { RouteParamsRawGeneric } from "vue-router";
 import { routeLeitungsfunktionenDaten } from "~/router/apps/schule/kataloge/leitungsfunktionen/RouteLeitungsfunktionenDaten";
 import { routeLeitungsfunktionenGruppenprozesse } from "~/router/apps/schule/kataloge/leitungsfunktionen/RouteLeitungsfunktionenGruppenprozesse";
 import { routeLeitungsfunktionenNeu } from "~/router/apps/schule/kataloge/leitungsfunktionen/RouteLeitungsfunktionenNeu";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { schuleState } from "~/states/SchuleStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import type { Leitungsfunktion, List, SimpleOperationResponse } from "@core";
 import { ArrayList, BenutzerKompetenz } from "@core";
 import { LeitungsfunktionenListeManager, ViewType } from "@ui";
@@ -27,8 +27,8 @@ export class RouteDataLeitungsfunktionen extends RouteDataAuswahl<Leitungsfunkti
 
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<LeitungsfunktionenListeManager>>> {
 		const leitungsfunktionen = await api.server.getLeitungsfunktionen(api.schema);
-		const manager = new LeitungsfunktionenListeManager(schuleState.abschnitt.id, schuleState.abschnitt.id, abschnittState.alle,
-			schuleState.schulform, leitungsfunktionen);
+		const manager = new LeitungsfunktionenListeManager(schuleStateImpl.abschnitt.id, schuleStateImpl.abschnitt.id, abschnittStateImpl.alle,
+			schuleStateImpl.schulform, leitungsfunktionen);
 		return { manager };
 	}
 

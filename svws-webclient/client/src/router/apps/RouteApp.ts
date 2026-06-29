@@ -66,8 +66,8 @@ import { routeSchwerpunkte } from "~/router/apps/schule/kataloge/schwerpunkte/Ro
 import { routeAnkreuzkompetenzen } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteAnkreuzkompetenzen";
 import { routeTeilleistungsarten } from "~/router/apps/schule/kataloge/teilleistungsarten/RouteTeilleistungsarten";
 import { routeNotenmodulAnkreuzkompetenzen } from "./notenmodul/RouteNotenmodulAnkreuzkompetenzen";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { serverState } from "~/states/ServerStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { serverStateImpl } from "~/states/ServerStateImpl";
 import SApp from "~/components/SApp.vue";
 
 
@@ -87,7 +87,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	public get menuEinstellungen(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._menuEinstellungen) {
-			if (api.authenticated && (!node.mode.checkServerMode(serverState.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
+			if (api.authenticated && (!node.mode.checkServerMode(serverStateImpl.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
 				continue;
 			}
 			result.push(node);
@@ -104,7 +104,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	public get menuBenutzerprofil(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._menuBenutzerprofil) {
-			if (api.authenticated && (!node.mode.checkServerMode(serverState.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
+			if (api.authenticated && (!node.mode.checkServerMode(serverStateImpl.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
 				continue;
 			}
 			result.push(node);
@@ -121,7 +121,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	public get menuSchule(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._menuSchule) {
-			if (api.authenticated && (!node.mode.checkServerMode(serverState.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
+			if (api.authenticated && (!node.mode.checkServerMode(serverStateImpl.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
 				continue;
 			}
 			result.push(node);
@@ -138,7 +138,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	public get menuNotenmodul(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._menuNotenmodul) {
-			if (api.authenticated && (!node.mode.checkServerMode(serverState.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
+			if (api.authenticated && (!node.mode.checkServerMode(serverStateImpl.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
 				continue;
 			}
 			result.push(node);
@@ -242,10 +242,10 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			const { idSchuljahresabschnitt } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt"]);
 			// Prüfe, ob der Schuljahresabschnitt gültig gesetzt ist
 			if (idSchuljahresabschnitt === undefined) {
-				return this.getRouteDefaultChild({ idSchuljahresabschnitt: abschnittState.auswahl.id });
+				return this.getRouteDefaultChild({ idSchuljahresabschnitt: abschnittStateImpl.auswahl.id });
 			}
 			// Prüfe, ob der Schuljahresabschnitt gesetzt werden soll
-			await abschnittState.setAuswahl(idSchuljahresabschnitt);
+			await abschnittStateImpl.setAuswahl(idSchuljahresabschnitt);
 			// Prüfe, ob die View aktualisiert werden muss
 			let cur: RouteNode<any, any> = to;
 			while (cur.parent !== this) {
@@ -265,7 +265,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	public addRouteParamsFromState(): RouteParamsRawGeneric {
 		const schema = encodeURIComponent(api.schema);
-		const idSchuljahresabschnitt = abschnittState.auswahl.id;
+		const idSchuljahresabschnitt = abschnittStateImpl.auswahl.id;
 		return { schema, idSchuljahresabschnitt };
 	}
 

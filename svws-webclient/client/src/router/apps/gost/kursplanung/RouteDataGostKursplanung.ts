@@ -10,7 +10,7 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKursplanung";
 import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/RouteGostKursplanungSchueler";
 import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 type BlockungstabelleStates = 'nichts' | 'alles' | 'schienen';
 
@@ -235,7 +235,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			auswahlBlockung ??= listBlockungen.get(0);
 		}
 		const schuljahr = halbjahr.getSchuljahrFromAbiturjahr(this._state.value.abiturjahr);
-		const abschnitt = abschnittState.getBySchuljahrUndHalbjahr(schuljahr, halbjahr.halbjahr);
+		const abschnitt = abschnittStateImpl.getBySchuljahrUndHalbjahr(schuljahr, halbjahr.halbjahr);
 		const existiertSchuljahresabschnitt = (abschnitt !== null);
 		api.status.stop();
 		this.setPatchedState({

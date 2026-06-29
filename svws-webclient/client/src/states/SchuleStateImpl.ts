@@ -1,7 +1,7 @@
 import type { List, SchuleStammdaten, Schuljahresabschnitt } from "@core";
 import { DeveloperNotificationException, Schulform, Schulgliederung, ValidatorKontext } from "@core";
 import { api } from "~/router/Api";
-import { abschnittState } from "./AbschnittStateImpl";
+import { abschnittStateImpl } from "./AbschnittStateImpl";
 import type { SchuleState } from "@ui";
 import { StateManager } from "@ui";
 
@@ -43,10 +43,10 @@ export class SchuleStateImpl extends StateManager<SchuleReactiveState> implement
 				}
 			}
 			this.setPatchedDefaultState({ stammdaten, kontext, abschnitt });
-			abschnittState.init(stammdaten);
+			abschnittStateImpl.init(stammdaten);
 		} catch {
 			this.reset();
-			abschnittState.reset();
+			abschnittStateImpl.reset();
 			throw new DeveloperNotificationException("Es konnte kein State für die Stammdaten der Schule erzeugt werden");
 		}
 	}
@@ -101,7 +101,7 @@ export class SchuleStateImpl extends StateManager<SchuleReactiveState> implement
 	 * @returns eine Liste mit den Schulgliederungen
 	 */
 	public get schulgliederungen(): List<Schulgliederung> {
-		return Schulgliederung.getBySchuljahrAndSchulform(abschnittState.auswahl.schuljahr, this.schulform);
+		return Schulgliederung.getBySchuljahrAndSchulform(abschnittStateImpl.auswahl.schuljahr, this.schulform);
 	}
 
 	/**
@@ -118,4 +118,4 @@ export class SchuleStateImpl extends StateManager<SchuleReactiveState> implement
 
 }
 
-export const schuleState = new SchuleStateImpl();
+export const schuleStateImpl = new SchuleStateImpl();

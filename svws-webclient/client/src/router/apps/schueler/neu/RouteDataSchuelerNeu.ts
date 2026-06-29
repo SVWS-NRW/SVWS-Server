@@ -7,7 +7,7 @@ import { routeApp } from "~/router/apps/RouteApp";
 import { RouteManager } from "~/router/RouteManager";
 import { routeSchuelerSchnelleingabe } from "~/router/apps/schueler/neu/RouteSchuelerSchnelleingabe";
 import { SchuelerNeuManager } from "@ui";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 
 interface RouteStateDataSchuelerNeu extends RouteStateInterface {
@@ -36,17 +36,17 @@ export class RouteDataSchuelerNeu extends RouteData<RouteStateDataSchuelerNeu> {
 		const jahrgaengeById = routeApp.cache.kataloge.jahrgaengeById;
 		const religionenById = routeApp.cache.kataloge.religionenById;
 
-		return new SchuelerNeuManager(kindergaertenById, einschulungsartenById, jahrgaengeById, religionenById, abschnittState.alle, klassenFuerAbschnitt,
-			abschnittState.auswahl);
+		return new SchuelerNeuManager(kindergaertenById, einschulungsartenById, jahrgaengeById, religionenById, abschnittStateImpl.alle, klassenFuerAbschnitt,
+			abschnittStateImpl.auswahl);
 	}
 
 	private async getKlassenBySchuljahresabschnitt(): Promise<Map<number, List<KlassenListeEintrag>>> {
 		const klassenByIdAbschnitt = new Map();
-		const idAktuellerAbschnitt = abschnittState.auswahl.id;
+		const idAktuellerAbschnitt = abschnittStateImpl.auswahl.id;
 		const klassenAktuellerAbschnitt = await api.server.getListKlassenListeEintragBySchuljahresabschnitt(api.schema, idAktuellerAbschnitt);
 		klassenByIdAbschnitt.set(idAktuellerAbschnitt, klassenAktuellerAbschnitt);
 
-		const idFolgeabschnitt = abschnittState.auswahl.idFolgeAbschnitt;
+		const idFolgeabschnitt = abschnittStateImpl.auswahl.idFolgeAbschnitt;
 		if (idFolgeabschnitt !== null) {
 			const klassenFolgeAbschnitt = await api.server.getListKlassenListeEintragBySchuljahresabschnitt(api.schema, idFolgeabschnitt);
 			klassenByIdAbschnitt.set(idFolgeabschnitt, klassenFolgeAbschnitt);

@@ -6,7 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { api } from "~/router/Api";
 import { routeFahrschuelerarten } from "~/router/apps/schule/kataloge/fahrschuelerarten/RouteFahrschuelerarten";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const FahrschuelerartenGruppenprozesse = () => import("~/components/schule/kataloge/fahrschuelerarten/gruppenprozesse/FahrschuelerartenGruppenprozesse.vue");
 
@@ -22,7 +22,7 @@ export class RouteFahrschuelerartenGruppenprozesse extends RouteNode<any, RouteF
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittStateImpl.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): FahrschuelerartenGruppenprozesseProps {

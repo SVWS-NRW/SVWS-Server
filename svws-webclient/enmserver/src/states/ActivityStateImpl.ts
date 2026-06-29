@@ -97,4 +97,4 @@ class ActivityStateImpl implements ActivityState {
 
 }
 
-export const activityState = new ActivityStateImpl();
+export const activityStateImpl = new ActivityStateImpl();

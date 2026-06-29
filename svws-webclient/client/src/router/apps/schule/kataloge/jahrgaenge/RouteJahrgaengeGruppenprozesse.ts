@@ -6,7 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { type RouteJahrgaenge, routeJahrgaenge } from "~/router/apps/schule/kataloge/jahrgaenge/RouteJahrgaenge";
 import type { JahrgaengeGruppenprozesseProps } from "~/components/schule/kataloge/jahrgaenge/gruppenprozesse/JahrgaengeGruppenprozesseProps";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const JahrgaengeGruppenprozesse = () => import("~/components/schule/kataloge/jahrgaenge/gruppenprozesse/JahrgaengeGruppenprozesse.vue");
 
@@ -21,7 +21,7 @@ export class RouteJahrgaengeGruppenprozesse extends RouteNode<any, RouteJahrgaen
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittStateImpl.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): JahrgaengeGruppenprozesseProps {

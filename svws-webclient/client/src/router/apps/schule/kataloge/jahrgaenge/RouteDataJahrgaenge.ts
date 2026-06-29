@@ -8,8 +8,8 @@ import { routeJahrgaengeDaten } from "./RouteJahrgaengeDaten";
 import { routeJahrgaengeNeu } from "~/router/apps/schule/kataloge/jahrgaenge/RouteJahrgaengeNeu";
 import { routeJahrgaengeGruppenprozesse } from "~/router/apps/schule/kataloge/jahrgaenge/RouteJahrgaengeGruppenprozesse";
 import { api } from "~/router/Api";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { schuleState } from "~/states/SchuleStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 
 const defaultState = {
@@ -33,7 +33,7 @@ export class RouteDataJahrgaenge extends RouteDataAuswahl<JahrgaengeListeManager
 
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<JahrgaengeListeManager>>> {
 		const jahrgaenge = await api.server.getJahrgangsdaten(api.schema);
-		const manager = new JahrgaengeListeManager(schuleState.abschnitt.id, schuleState.abschnitt.id, abschnittState.alle, schuleState.schulform, jahrgaenge);
+		const manager = new JahrgaengeListeManager(schuleStateImpl.abschnitt.id, schuleStateImpl.abschnitt.id, abschnittStateImpl.alle, schuleStateImpl.schulform, jahrgaenge);
 
 		return { manager };
 	}

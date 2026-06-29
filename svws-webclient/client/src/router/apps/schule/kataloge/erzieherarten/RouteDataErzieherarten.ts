@@ -8,8 +8,8 @@ import type { RouteParamsRawGeneric } from "vue-router";
 import { routeErzieherartenDaten } from "~/router/apps/schule/kataloge/erzieherarten/RouteErzieherartenDaten";
 import { routeErzieherartenGruppenprozesse } from "~/router/apps/schule/kataloge/erzieherarten/RouteErzieherartenGruppenprozesse";
 import { routeErzieherartenNeu } from "~/router/apps/schule/kataloge/erzieherarten/RouteErzieherartenNeu";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { schuleState } from "~/states/SchuleStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
@@ -31,7 +31,7 @@ export class RouteDataErzieherarten extends RouteDataAuswahl<ErzieherartListeMan
 
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<ErzieherartListeManager>>> {
 		const erzieherarten = await api.server.getErzieherArten(api.schema);
-		const manager = new ErzieherartListeManager(schuleState.abschnitt.id, schuleState.abschnitt.id, abschnittState.alle, schuleState.schulform, erzieherarten);
+		const manager = new ErzieherartListeManager(schuleStateImpl.abschnitt.id, schuleStateImpl.abschnitt.id, abschnittStateImpl.alle, schuleStateImpl.schulform, erzieherarten);
 		return { manager };
 	}
 

@@ -5,10 +5,10 @@ import "@ui/assets/styles/index.css";
 
 import SWrapper from "~/components/SWrapper.vue";
 import { AuskunftStateKey } from "@ui/states/AuskunftState";
-import { auskunftState } from "./states/AuskunftStateImpl";
+import { auskunftStateImpl } from "./states/AuskunftStateImpl";
 
 const app = createApp(SWrapper);
-app.provide(AuskunftStateKey, auskunftState);
+app.provide(AuskunftStateKey, auskunftStateImpl);
 
 app.use(router);
 

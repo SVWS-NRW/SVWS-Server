@@ -9,8 +9,8 @@ import { OrtsteileListeManager } from "../../../../../../../ui/src/ui/manager/ka
 import { routeOrtsteileGruppenprozesse } from "~/router/apps/schule/kataloge/ortsteile/RouteOrtsteileGruppenprozesse";
 import { routeOrtsteileNeu } from "~/router/apps/schule/kataloge/ortsteile/RouteOrtsteileNeu";
 import { routeOrtsteileDaten } from "~/router/apps/schule/kataloge/ortsteile/RouteOrtsteileDaten";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { schuleState } from "~/states/SchuleStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 
 const defaultState = {
@@ -37,8 +37,8 @@ export class RouteDataOrtsteile extends RouteDataAuswahl<OrtsteileListeManager, 
 			api.server.getOrtsteile(api.schema),
 			api.server.getOrte(api.schema),
 		]);
-		const manager = new OrtsteileListeManager(schuleState.abschnitt.id, schuleState.abschnitt.id,
-			abschnittState.alle, schuleState.schulform, ortsteile, orte);
+		const manager = new OrtsteileListeManager(schuleStateImpl.abschnitt.id, schuleStateImpl.abschnitt.id,
+			abschnittStateImpl.alle, schuleStateImpl.schulform, ortsteile, orte);
 		return { manager };
 	}
 

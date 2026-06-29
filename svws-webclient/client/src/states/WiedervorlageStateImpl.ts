@@ -72,4 +72,4 @@ export class WiedervorlageStateImpl extends StateManager<WiedervorlageReactiveSt
 
 }
 
-export const wiedervorlageState = new WiedervorlageStateImpl();
+export const wiedervorlageStateImpl = new WiedervorlageStateImpl();

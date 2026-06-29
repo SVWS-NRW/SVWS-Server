@@ -11,7 +11,7 @@ import { type SchuelerIndividualdatenGruppenprozesseProps } from "~/components/s
 import { RouteManager } from "~/router/RouteManager";
 import { RouteDataSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteDataSchuelerIndividualdaten";
 import { routeError } from "~/router/error/RouteError";
-import { serverState } from "~/states/ServerStateImpl";
+import { serverStateImpl } from "~/states/ServerStateImpl";
 
 const SSchuelerIndividualdatenGruppenprozesse = () => import("~/components/schueler/individualdaten/SchuelerIndividualdatenGruppenprozesse.vue");
 
@@ -29,7 +29,7 @@ export class RouteSchuelerIndividualdatenGruppenprozesse extends RouteNode<Route
 
 	protected checkHidden(params?: RouteParams) {
 		try {
-			if (serverState.hasDev) {
+			if (serverStateImpl.hasDev) {
 				return false;
 			}
 			// if (!api.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN))

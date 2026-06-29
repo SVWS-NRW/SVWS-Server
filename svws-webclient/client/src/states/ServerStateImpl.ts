@@ -43,4 +43,4 @@ export class ServerStateImpl extends StateManager<ServerReactiveState> implement
 
 }
 
-export const serverState = new ServerStateImpl();
+export const serverStateImpl = new ServerStateImpl();

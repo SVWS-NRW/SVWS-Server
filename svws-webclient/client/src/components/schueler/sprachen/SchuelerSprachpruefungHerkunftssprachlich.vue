@@ -83,7 +83,7 @@
 	import { ArrayList, Fach, Jahrgaenge, Schulform, Schulgliederung, Sprachpruefungniveau, Sprachreferenzniveau, Note } from '@core';
 	import { GridManager, type SchuelerListeManager, type SvwsUiSelect } from '@ui';
 	import { SchuelerSprachpruefungModelProxy } from './SchuelerSprachpruefungModelProxy';
-	import { schuleState } from '~/states/SchuleStateImpl';
+	import { schuleStateImpl } from '~/states/SchuleStateImpl';
 
 	const props = defineProps<{
 		sprachpruefungen: () => List<Sprachpruefung>;
@@ -99,7 +99,7 @@
 	const selectSprachpruefung = ref<ComponentExposed<typeof SvwsUiSelect<string[]>>>();
 	const schulgliederung = computed<Schulgliederung | null>(() => Schulgliederung.data().getWertByIDOrNull(props.schuelerListeManager().auswahl().idSchulgliederung));
 	const hatSpaltenJahrgang = computed(() => {
-		const istBKoderSB = [Schulform.BK, Schulform.SB].includes(schuleState.schulform);
+		const istBKoderSB = [Schulform.BK, Schulform.SB].includes(schuleStateImpl.schulform);
 		const istSpezielleGliederung = (schulgliederung.value !== null) && [Schulgliederung.D01, Schulgliederung.D02].includes(schulgliederung.value);
 		return !(istBKoderSB && !istSpezielleGliederung);
 	});

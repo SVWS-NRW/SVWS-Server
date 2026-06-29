@@ -6,7 +6,7 @@ import { api } from "~/router/Api";
 import type { RouteFloskelgruppen } from "~/router/apps/schule/kataloge/floskelgruppen/RouteFloskelgruppen";
 import { routeFloskelgruppen } from "~/router/apps/schule/kataloge/floskelgruppen/RouteFloskelgruppen";
 import type { FloskelgruppenGruppenprozesseProps } from "~/components/schule/kataloge/floskelgruppen/gruppenprozesse/FloskelgruppenGruppenprozesseProps";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const FloskelgruppenGruppenprozesse = () => import(
 	"~/components/schule/kataloge/floskelgruppen/gruppenprozesse/FloskelgruppenGruppenprozesse.vue");
@@ -23,7 +23,7 @@ export class RouteFloskelgruppenGruppenprozesse extends RouteNode<any, RouteFlos
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittStateImpl.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): FloskelgruppenGruppenprozesseProps {

@@ -8,7 +8,7 @@ import { routeJahrgaenge } from "./RouteJahrgaenge";
 import type { RouteJahrgaenge } from "~/router/apps/schule/kataloge/jahrgaenge/RouteJahrgaenge";
 import type { JahrgaengeNeuProps } from "~/components/schule/kataloge/jahrgaenge/JahrgaengeNeuProps";
 import { api } from "~/router/Api";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const JahrgaengeNeu = () => import("~/components/schule/kataloge/jahrgaenge/JahrgaengeNeu.vue");
 
@@ -24,7 +24,7 @@ export class RouteJahrgaengeNeu extends RouteNode<any, RouteJahrgaenge> {
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittStateImpl.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): JahrgaengeNeuProps {

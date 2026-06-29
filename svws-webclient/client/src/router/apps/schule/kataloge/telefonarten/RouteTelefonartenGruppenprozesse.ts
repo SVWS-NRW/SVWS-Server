@@ -6,7 +6,7 @@ import { ViewType } from "@ui";
 import type { RouteTelefonarten } from "~/router/apps/schule/kataloge/telefonarten/RouteTelefonarten";
 import { routeTelefonarten } from "~/router/apps/schule/kataloge/telefonarten/RouteTelefonarten";
 import type { TelefonartenGruppenprozesseProps } from "~/components/schule/kataloge/telefonarten/gruppenprozesse/TelefonartenGruppenprozesseProps";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const TelefonartenGruppenprozesse = () => import("~/components/schule/kataloge/telefonarten/gruppenprozesse/TelefonartenGruppenprozesse.vue");
 
@@ -22,7 +22,7 @@ export class RouteTelefonartenGruppenprozesse extends RouteNode<any, RouteTelefo
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittStateImpl.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): TelefonartenGruppenprozesseProps {

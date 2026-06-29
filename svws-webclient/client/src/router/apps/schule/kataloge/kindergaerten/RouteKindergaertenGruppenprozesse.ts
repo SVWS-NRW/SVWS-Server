@@ -6,7 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { api } from "~/router/Api";
 import { routeKindergaerten } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaerten";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const KindergaertenGruppenprozesse = () => import("~/components/schule/kataloge/kindergaerten/gruppenprozesse/KindergaertenGruppenprozesse.vue");
 
@@ -22,7 +22,7 @@ export class RouteKindergaertenGruppenprozesse extends RouteNode<any, RouteKinde
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittStateImpl.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): KindergaertenGruppenprozesseProps {

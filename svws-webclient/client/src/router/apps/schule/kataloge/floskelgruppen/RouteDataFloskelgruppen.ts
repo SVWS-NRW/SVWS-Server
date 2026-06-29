@@ -8,8 +8,8 @@ import { api } from "~/router/Api";
 import { routeFloskelgruppenDaten } from "~/router/apps/schule/kataloge/floskelgruppen/RouteFloskelgruppenDaten";
 import { routeFloskelgruppenGruppenprozesse } from "~/router/apps/schule/kataloge/floskelgruppen/RouteFloskelgruppenGruppenprozesse";
 import { routeFloskelgruppenNeu } from "~/router/apps/schule/kataloge/floskelgruppen/RouteFloskelgruppenNeu";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { schuleState } from "~/states/SchuleStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 
 const defaultState = {
@@ -31,8 +31,8 @@ export class RouteDataFloskelgruppen extends RouteDataAuswahl<FloskelgruppenList
 
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<FloskelgruppenListeManager>>> {
 		const floskelgruppen = await api.server.getFloskelgruppen(api.schema);
-		const manager = new FloskelgruppenListeManager(schuleState.abschnitt.id, schuleState.abschnitt.id, abschnittState.alle,
-			schuleState.schulform, floskelgruppen);
+		const manager = new FloskelgruppenListeManager(schuleStateImpl.abschnitt.id, schuleStateImpl.abschnitt.id, abschnittStateImpl.alle,
+			schuleStateImpl.schulform, floskelgruppen);
 		return { manager };
 	}
 

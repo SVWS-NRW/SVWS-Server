@@ -6,7 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { routeAbteilungen } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungen";
 import { api } from "~/router/Api";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const AbteilungenGruppenprozesse = () => import("~/components/schule/kataloge/abteilungen/gruppenprozesse/AbteilungenGruppenprozesse.vue");
 
@@ -22,7 +22,7 @@ export class RouteAbteilungenGruppenprozesse extends RouteNode<any, RouteAbteilu
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittStateImpl.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): AbteilungenGruppenprozesseProps {

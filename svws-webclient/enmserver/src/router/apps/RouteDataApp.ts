@@ -15,7 +15,7 @@ import { shallowRef } from "vue";
 import { Config, ConfigElement } from "@ui/utils/Config";
 import { EnmSperrManager } from "@ui/components/enm/EnmSperrManager";
 import { EnmSpaltenManager } from "@ui/components/enm/EnmSpaltenManager";
-import { authState } from "~/states/AuthStateImpl";
+import { authStateImpl } from "~/states/AuthStateImpl";
 
 
 /**
@@ -84,7 +84,7 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 
 	private async ladeConfig(): Promise<Config> {
 		// Laden der Konfiguration
-		const cfg = await authState.api.getClientConfig();
+		const cfg = await authStateImpl.api.getClientConfig();
 		const mapUser = new Map<string, string>();
 		for (const c of cfg.user) {
 			mapUser.set(c.key, c.value);
@@ -99,7 +99,7 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 			throw new DeveloperNotificationException("Die Anwendung unterstützt kein Schreiben der globalen Konfiguration.");
 		}, async (key: string, value: string): Promise<void> => {
 			// Schreiben der benutzerspezifischen Konfiguration
-			await authState.api.setClientConfigUserKey(value, key);
+			await authStateImpl.api.setClientConfigUserKey(value, key);
 		});
 		config.mapGlobal = mapGlobal;
 		config.mapUser = mapUser;
@@ -128,7 +128,7 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 			const newState = <Partial<RouteStateApp>>{};
 
 			// Lade die ENM-Daten vom Server...
-			newState.daten = await authState.api.getLehrerENMDaten();
+			newState.daten = await authStateImpl.api.getLehrerENMDaten();
 
 			// Erstellen des Enm-Managers
 			newState.manager = new EnmManager(newState.daten, newState.daten.lehrerID ?? -1);
@@ -410,7 +410,7 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 */
 	public patchLeistung = async (data: ENMv2Leistung, patch: Partial<ENMv2Leistung>): Promise<void> => {
 		patch.id = data.id;
-		await authState.api.patchENMLeistung(patch);
+		await authStateImpl.api.patchENMLeistung(patch);
 		Object.assign(data, patch);
 		this.commit();
 	};
@@ -423,7 +423,7 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 */
 	public patchTeilleistung = async (data: ENMv2Teilleistung, patch: Partial<ENMv2Teilleistung>): Promise<void> => {
 		patch.id = data.id;
-		await authState.api.patchENMTeilleistung(patch);
+		await authStateImpl.api.patchENMTeilleistung(patch);
 		Object.assign(data, patch);
 		this.commit();
 	};
@@ -436,7 +436,7 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 * @param patch   die Daten des Patches
 	 */
 	public patchBemerkungen = async (id: number, data: ENMv2LeistungBemerkungen, patch: Partial<ENMv2LeistungBemerkungen>): Promise<void> => {
-		await authState.api.patchENMSchuelerBemerkungen(id, patch);
+		await authStateImpl.api.patchENMSchuelerBemerkungen(id, patch);
 		Object.assign(data, patch);
 		this.commit();
 	};
@@ -449,7 +449,7 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 */
 	public patchLernabschnitt = async (data: ENMv2Lernabschnitt, patch: Partial<ENMv2Lernabschnitt>): Promise<void> => {
 		patch.id = data.id;
-		await authState.api.patchENMSchuelerLernabschnitt(patch);
+		await authStateImpl.api.patchENMSchuelerLernabschnitt(patch);
 		Object.assign(data, patch);
 		this.commit();
 	};
@@ -463,7 +463,7 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	public patchAnkreuzkompetenz = async (data: ENMv2SchuelerAnkreuzkompetenz, patch: Partial<ENMv2SchuelerAnkreuzkompetenz>): Promise<void> => {
 		patch.id = data.id;
 		console.log(patch, 'für ID', data.id);
-		await authState.api.patchENMSchuelerAnkreuzkompetenzen(patch);
+		await authStateImpl.api.patchENMSchuelerAnkreuzkompetenzen(patch);
 		Object.assign(data, patch);
 		this.commit();
 	};

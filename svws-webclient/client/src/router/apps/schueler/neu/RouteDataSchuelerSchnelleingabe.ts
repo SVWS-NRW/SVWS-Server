@@ -7,7 +7,7 @@ import { api } from "~/router/Api";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeApp } from "~/router/apps/RouteApp";
 import { SchuelerSchnelleingabeManager } from "@ui";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 interface RouteStateDataSchuelerSchnelleingabe extends RouteStateInterface {
 	manager: SchuelerSchnelleingabeManager | undefined;
@@ -50,7 +50,7 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 		if (lernabschnitt === null) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Schüler-Lernabschnittsdaten nicht initialisiert");
 		}
-		const schuljahresabschnitte = abschnittState.alle;
+		const schuljahresabschnitte = abschnittStateImpl.alle;
 		const einschulungsartenById: Map<number, EinschulungsartKatalogEintrag> = routeApp.cache.kataloge.einschulungsartenById;
 		const erzieherartenById: Map<number, Erzieherart> = routeApp.cache.kataloge.erzieherartenById;
 		const faecherById: Map<number, FachDaten> = routeApp.cache.kataloge.faecherById;

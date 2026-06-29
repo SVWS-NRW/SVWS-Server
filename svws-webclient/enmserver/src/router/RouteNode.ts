@@ -10,7 +10,7 @@ import { Checkpoint } from "@ui/ui/modal/Checkpoint";
 import type { TabData } from "@ui/ui/nav/TabData";
 import { TabManager } from "@ui/ui/nav/TabManager";
 import { ViewType } from "@ui/ui/nav/ViewType";
-import { authState } from "~/states/AuthStateImpl";
+import { authStateImpl } from "~/states/AuthStateImpl";
 
 /**
  * Diese abstrakte Klasse ist die Basisklasse aller Knoten für
@@ -345,7 +345,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	public get children(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._children) {
-			if (authState.authenticated && (!node.mode.checkServerMode(authState.mode) || !node.hatSchulform())) {
+			if (authStateImpl.authenticated && (!node.mode.checkServerMode(authStateImpl.mode) || !node.hatSchulform())) {
 				continue;
 			}
 			result.push(node);
@@ -372,7 +372,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	public get menu(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._menu) {
-			if (authState.authenticated && (!node.mode.checkServerMode(authState.mode) || !node.hatSchulform())) {
+			if (authStateImpl.authenticated && (!node.mode.checkServerMode(authStateImpl.mode) || !node.hatSchulform())) {
 				continue;
 			}
 			result.push(node);
@@ -546,7 +546,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @returns true, falls die Schulform erlaubt ist und ansonsten false
 	 */
 	public hatSchulform(): boolean {
-		return authState.authenticated && this._schulformenErlaubt.has(authState.schulform);
+		return authStateImpl.authenticated && this._schulformenErlaubt.has(authStateImpl.schulform);
 	}
 
 	/**
@@ -563,7 +563,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 */
 	public hidden(params?: RouteParams): RouteLocationRaw | false {
 		// Prüfen, ob die aktuelle Schulform und die Kompetenzen des angemdelteten Benutzers die Route erlaubt oder nicht
-		if (authState.authenticated && (this.name !== "init")) {
+		if (authStateImpl.authenticated && (this.name !== "init")) {
 			if (!this.hatSchulform()) {
 				return this.parent?.getRoute() ?? false;
 			}

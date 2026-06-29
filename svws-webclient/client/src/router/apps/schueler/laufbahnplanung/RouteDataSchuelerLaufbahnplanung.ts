@@ -4,7 +4,7 @@ import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
-import { serverState } from "~/states/ServerStateImpl";
+import { serverStateImpl } from "~/states/ServerStateImpl";
 
 
 interface RouteStateSchuelerLaufbahnplanung extends RouteStateInterface {
@@ -99,16 +99,16 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 		}
 		const art = this.gostBelegpruefungsArt;
 		if (art === 'ef1') {
-			return new AbiturdatenManager(serverState.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.EF1);
+			return new AbiturdatenManager(serverStateImpl.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.EF1);
 		}
 		if (art === 'gesamt') {
-			return new AbiturdatenManager(serverState.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
+			return new AbiturdatenManager(serverStateImpl.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
 		}
-		const abiturdatenManager = new AbiturdatenManager(serverState.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
+		const abiturdatenManager = new AbiturdatenManager(serverStateImpl.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
 		if (abiturdatenManager.pruefeBelegungExistiert(abiturdatenManager.getFachbelegungen(), GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
 			return abiturdatenManager;
 		}
-		return new AbiturdatenManager(serverState.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.EF1);
+		return new AbiturdatenManager(serverStateImpl.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.EF1);
 	};
 
 	setGostBelegpruefungErgebnis = async () => {

@@ -7,8 +7,8 @@ import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/Rout
 import { ViewType, SchulenListeManager } from "@ui";
 import { routeSchulenGruppenprozesse } from "~/router/apps/schule/kataloge/schulen/RouteSchulenGruppenprozesse";
 import { routeSchulenNeu } from "~/router/apps/schule/kataloge/schulen/RouteSchulenNeu";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { schuleState } from "~/states/SchuleStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 
 const defaultState = {
@@ -34,7 +34,7 @@ export class RouteDataSchulen extends RouteDataAuswahl<SchulenListeManager, Rout
 		const schulen = await api.server.getSchulen(api.schema);
 		const katalogSchulen = await api.server.getKatalogSchulen(api.schema);
 		const manager = new SchulenListeManager(
-			schuleState.abschnitt.id, schuleState.abschnitt.id, abschnittState.alle, schuleState.schulform, schulen, katalogSchulen);
+			schuleStateImpl.abschnitt.id, schuleStateImpl.abschnitt.id, abschnittStateImpl.alle, schuleStateImpl.schulform, schulen, katalogSchulen);
 		return { manager };
 	}
 

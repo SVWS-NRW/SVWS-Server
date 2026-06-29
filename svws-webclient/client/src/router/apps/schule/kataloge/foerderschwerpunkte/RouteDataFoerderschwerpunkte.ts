@@ -8,8 +8,8 @@ import { api } from "~/router/Api";
 import { routeFoerderschwerpunkteDaten } from "~/router/apps/schule/kataloge/foerderschwerpunkte/RouteFoerderschwerpunkteDaten";
 import { routeFoerderschwerpunkteGruppenprozesse } from "~/router/apps/schule/kataloge/foerderschwerpunkte/RouteFoerderschwerpunkteGruppenprozesse";
 import { routeFoerderschwerpunkteNeu } from "~/router/apps/schule/kataloge/foerderschwerpunkte/RouteFoerderschwerpunkteNeu";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { schuleState } from "~/states/SchuleStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
@@ -27,8 +27,8 @@ export class RouteDataFoerderschwerpunkte extends RouteDataAuswahl<Foerderschwer
 
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<FoerderschwerpunkteListeManager>>> {
 		const foerderschwerpunkte = await api.server.getKatalogFoerderschwerpunkte(api.schema);
-		const manager = new FoerderschwerpunkteListeManager(schuleState.abschnitt.id, schuleState.abschnitt.id, abschnittState.alle,
-			schuleState.schulform, foerderschwerpunkte);
+		const manager = new FoerderschwerpunkteListeManager(schuleStateImpl.abschnitt.id, schuleStateImpl.abschnitt.id, abschnittStateImpl.alle,
+			schuleStateImpl.schulform, foerderschwerpunkte);
 		return { manager };
 	}
 

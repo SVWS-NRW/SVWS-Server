@@ -7,7 +7,7 @@ import { ViewType } from "@ui";
 import type { RouteOrtsteile } from "~/router/apps/schule/kataloge/ortsteile/RouteOrtsteile";
 import { routeOrtsteile } from "~/router/apps/schule/kataloge/ortsteile/RouteOrtsteile";
 import type { OrtsteileGruppenprozesseProps } from "~/components/schule/kataloge/ortsteile/gruppenprozesse/OrtsteileGruppenprozesseProps";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const OrtsteileGruppenprozesse = () => import("~/components/schule/kataloge/ortsteile/gruppenprozesse/OrtsteileGruppenprozesse.vue");
 
@@ -23,7 +23,7 @@ export class RouteOrtsteileGruppenprozesse extends RouteNode<any, RouteOrtsteile
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittStateImpl.auswahl.id, id: "" } };
 	}
 
 	public getProps(_: RouteLocationNormalized): OrtsteileGruppenprozesseProps {

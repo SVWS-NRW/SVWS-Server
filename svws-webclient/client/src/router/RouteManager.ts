@@ -10,7 +10,7 @@ import { routeLogin } from "~/router/login/RouteLogin";
 import { routeError } from "~/router/error/RouteError";
 import { DeveloperNotificationException, ServerMode } from "@core";
 import { RoutingStatus } from "~/router/RoutingStatus";
-import { serverState } from "~/states/ServerStateImpl";
+import { serverStateImpl } from "~/states/ServerStateImpl";
 
 interface RouteStateError {
 	code: number | undefined;
@@ -229,10 +229,10 @@ export class RouteManager {
 		if (api.authenticated && (!to_node.hatSchulform() || !to_node.hatEineKompetenz())) {
 			return false;
 		}
-		if (serverState.mode !== ServerMode.STABLE) {
+		if (serverStateImpl.mode !== ServerMode.STABLE) {
 			console.log("Routing '" + from.fullPath + "' --> '" + to.fullPath + "'"); // + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node.name + " " + JSON.stringify(to.params)
 		}
-		if (!to_node.mode.checkServerMode(serverState.mode)) {
+		if (!to_node.mode.checkServerMode(serverStateImpl.mode)) {
 			return await routeError.getErrorRoute(new DeveloperNotificationException("Die Route ist nicht verfügbar, da die Client-Funktionen sich derzeit in der Entwicklung befinden (Stand: " + to_node.mode.name() + ")."), 503);
 		}
 		// Rufe die beforeEach-Methode bei der Ziel-Route auf und prüfe, ob die Route abgelehnt oder umgeleite wird...
@@ -354,7 +354,7 @@ export class RouteManager {
 			this._routeLocation = to;
 			const from_node: RouteNode<any, any> | undefined = RouteNode.getNodeByName(from.name?.toString());
 			if (failure === undefined) {
-				if (serverState.mode !== ServerMode.STABLE) {
+				if (serverStateImpl.mode !== ServerMode.STABLE) {
 					console.log("Completed routing '" + from.fullPath + "' --> '" + to.fullPath + "'"); // + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node?.name + " " + JSON.stringify(to.params)
 				}
 				if ((to_node !== undefined) && (from_node !== undefined) && (from.fullPath !== "/") && api.authenticated && (!(to.name?.toString().startsWith("init") ?? false))) {
@@ -384,7 +384,7 @@ export class RouteManager {
 					}
 				}
 			} else {
-				if (serverState.mode !== ServerMode.STABLE) {
+				if (serverStateImpl.mode !== ServerMode.STABLE) {
 					console.log("Failed Routing '" + from.fullPath + "' --> '" + to.fullPath + "'"); //  + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node?.name + " " + JSON.stringify(to.params)
 				}
 			}

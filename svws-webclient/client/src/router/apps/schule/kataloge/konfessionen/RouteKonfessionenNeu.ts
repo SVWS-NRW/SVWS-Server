@@ -7,7 +7,7 @@ import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
 import { routeKonfessionen } from "~/router/apps/schule/kataloge/konfessionen/RouteKonfessionen";
 import { api } from "~/router/Api";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const KonfessionenNeu = () => import("~/components/schule/kataloge/konfessionen/KonfessionenNeu.vue");
 
@@ -23,7 +23,7 @@ export class RouteKonfessionenNeu extends RouteNode<any, RouteKonfessionen> {
 	}
 
 	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, id: "" } };
+		return { name: this.name, params: { idSchuljahresabschnitt: abschnittStateImpl.auswahl.id, id: "" } };
 	}
 
 	public getProps(to: RouteLocationNormalized): KonfessionenNeuProps {

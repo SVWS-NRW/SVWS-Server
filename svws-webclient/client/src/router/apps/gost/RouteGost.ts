@@ -26,7 +26,7 @@ import { routeError } from "~/router/error/RouteError";
 import { routeGostAbiturjahrNeu } from "./RouteGostAbiturjahrNeu";
 import { routeGostGruppenprozesse } from "./RouteGostGruppenprozesse";
 import { AppMenuGroup, ViewType } from "@ui";
-import { abschnittState } from "~/states/AbschnittStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const SGostAuswahl = () => import("~/components/gost/SGostAuswahl.vue");
 const SGostApp = () => import("~/components/gost/SGostApp.vue");
@@ -71,11 +71,11 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
 		try {
-			if (isEntering || (this.data.idSchuljahresabschnitt !== abschnittState.auswahl.id)) {
+			if (isEntering || (this.data.idSchuljahresabschnitt !== abschnittStateImpl.auswahl.id)) {
 				if (isEntering && (to === this) && (this.data.oldView !== undefined)) {
 					return this.data.oldView.getRoute(to_params);
 				}
-				await this.data.setSchuljahresabschnitt(abschnittState.auswahl.id);
+				await this.data.setSchuljahresabschnitt(abschnittStateImpl.auswahl.id);
 			}
 			if (to === this) {
 				return this.getRouteDefaultChild();
@@ -104,7 +104,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 			}
 			const redirect: RouteNode<any, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
 			if (redirect.hidden({ abiturjahr: abiturjahr.toString() }) !== false) {
-				return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: abschnittState.auswahl.id, abiturjahr } };
+				return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: abschnittStateImpl.auswahl.id, abiturjahr } };
 			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);

@@ -8,8 +8,8 @@ import { api } from "~/router/Api";
 import { routeFahrschuelerartenGruppenprozesse } from "~/router/apps/schule/kataloge/fahrschuelerarten/RouteFahrschuelerartenGruppenprozesse";
 import { routeFahrschuelerartenNeu } from "~/router/apps/schule/kataloge/fahrschuelerarten/RouteFahrschuelerartenNeu";
 import { routeFahrschuelerartenDaten } from "~/router/apps/schule/kataloge/fahrschuelerarten/RouteFahrschuelerartenDaten";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { schuleState } from "~/states/SchuleStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
@@ -27,8 +27,8 @@ export class RouteDataFahrschuelerarten extends RouteDataAuswahl<Fahrschuelerart
 
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<FahrschuelerartenListeManager>>> {
 		const fahrschuelerarten = await api.server.getFahrschuelerarten(api.schema);
-		const manager = new FahrschuelerartenListeManager(schuleState.abschnitt.id, schuleState.abschnitt.id, abschnittState.alle,
-			schuleState.schulform, fahrschuelerarten);
+		const manager = new FahrschuelerartenListeManager(schuleStateImpl.abschnitt.id, schuleStateImpl.abschnitt.id, abschnittStateImpl.alle,
+			schuleStateImpl.schulform, fahrschuelerarten);
 		return { manager };
 	}
 

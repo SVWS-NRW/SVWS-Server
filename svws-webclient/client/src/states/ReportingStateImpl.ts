@@ -2,7 +2,7 @@ import { ReportingAusgabeformat, ReportingParameter, type ApiFile, type SimpleOp
 import type { ReportingState } from "@ui";
 import { StateManager } from "@ui";
 import { api } from "~/router/Api";
-import { abschnittState } from "./AbschnittStateImpl";
+import { abschnittStateImpl } from "./AbschnittStateImpl";
 
 interface ReportingReactiveState {
 }
@@ -23,7 +23,7 @@ export class ReportingStateImpl extends StateManager<ReportingReactiveState> imp
 
 	public createPDFReport = async (reportingParameter: ReportingParameter): Promise<void> => {
 		reportingParameter.ausgabeformat = ReportingAusgabeformat.PDF.getId();
-		reportingParameter.idSchuljahresabschnitt = abschnittState.auswahl.id;
+		reportingParameter.idSchuljahresabschnitt = abschnittStateImpl.auswahl.id;
 		api.status.start();
 		try {
 			const apiFile = await api.server.pdfReport(reportingParameter, api.schema);
@@ -35,7 +35,7 @@ export class ReportingStateImpl extends StateManager<ReportingReactiveState> imp
 
 	public createEMailReport = async (reportingParameter: ReportingParameter): Promise<SimpleOperationResponse> => {
 		reportingParameter.ausgabeformat = ReportingAusgabeformat.EMAIL.getId();
-		reportingParameter.idSchuljahresabschnitt = abschnittState.auswahl.id;
+		reportingParameter.idSchuljahresabschnitt = abschnittStateImpl.auswahl.id;
 		api.status.start();
 		try {
 			return await api.server.emailReport(reportingParameter, api.schema);
@@ -46,7 +46,7 @@ export class ReportingStateImpl extends StateManager<ReportingReactiveState> imp
 
 	public createHTMLReport = async (reportingParameter: ReportingParameter): Promise<string> => {
 		reportingParameter.ausgabeformat = ReportingAusgabeformat.HTML.getId();
-		reportingParameter.idSchuljahresabschnitt = abschnittState.auswahl.id;
+		reportingParameter.idSchuljahresabschnitt = abschnittStateImpl.auswahl.id;
 		api.status.start();
 		try {
 			return await api.server.htmlReport(reportingParameter, api.schema);
@@ -75,4 +75,4 @@ export class ReportingStateImpl extends StateManager<ReportingReactiveState> imp
 
 }
 
-export const reportingState = new ReportingStateImpl();
+export const reportingStateImpl = new ReportingStateImpl();

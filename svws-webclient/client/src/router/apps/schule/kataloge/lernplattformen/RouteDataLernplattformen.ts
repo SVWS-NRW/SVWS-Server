@@ -10,8 +10,8 @@ import type { RouteParamsRawGeneric } from "vue-router";
 import { routeLernplattformenDaten } from "~/router/apps/schule/kataloge/lernplattformen/RouteLernplattformenDaten";
 import { routeLernplattformenGruppenprozesse } from "~/router/apps/schule/kataloge/lernplattformen/RouteLernplattformenGruppenprozesse";
 import { routeLernplattformenNeu } from "~/router/apps/schule/kataloge/lernplattformen/RouteLernplattformenNeu";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { schuleState } from "~/states/SchuleStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
@@ -33,7 +33,7 @@ export class RouteDataLernplattformen extends RouteDataAuswahl<LernplattformList
 
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<LernplattformListeManager>>> {
 		const lernplattformen = await api.server.getLernplattformen(api.schema);
-		const manager = new LernplattformListeManager(schuleState.abschnitt.id, schuleState.abschnitt.id, abschnittState.alle, schuleState.schulform, lernplattformen);
+		const manager = new LernplattformListeManager(schuleStateImpl.abschnitt.id, schuleStateImpl.abschnitt.id, abschnittStateImpl.alle, schuleStateImpl.schulform, lernplattformen);
 		return { manager };
 	}
 

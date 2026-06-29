@@ -11,8 +11,8 @@ import { routeInit } from "~/router/init/RouteInit";
 import SLogin from "~/components/SLogin.vue";
 import type { LoginProps } from "~/components/SLoginProps";
 import type { RouteParams, RouteLocationRaw } from "vue-router";
-import { schuleState } from "~/states/SchuleStateImpl";
-import { serverState } from "~/states/ServerStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { serverStateImpl } from "~/states/ServerStateImpl";
 
 export class RouteLogin extends RouteNode<any, any> {
 
@@ -42,7 +42,7 @@ export class RouteLogin extends RouteNode<any, any> {
 		await api.login(schema, username, password);
 		if (api.authenticated) {
 			try {
-				await Promise.all([schuleState.init(), serverState.init()]);
+				await Promise.all([schuleStateImpl.init(), serverStateImpl.init()]);
 				// Überprüfe das Schema, falls ein redirect nach dem Login geplant ist
 				if (this.routepath !== "/") {
 					if (!this.routepath.startsWith("/" + encodeURIComponent(schema))) {

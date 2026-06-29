@@ -7,8 +7,8 @@ import { routeNotenmodul } from "./RouteNotenmodul";
 import type { RouteParamsRawGeneric } from "vue-router";
 import type { ENMv2Lerngruppe, List, SimpleOperationResponse } from "@core";
 import { UnsupportedOperationException } from "@core";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { schuleState } from "~/states/SchuleStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 
 interface RouteStateNotenmodulTeilleistungen extends RouteStateAuswahlInterface<EnmLerngruppenAuswahlListeManager> {
@@ -34,8 +34,8 @@ export class RouteDataNotenmodulTeilleistungen extends RouteDataAuswahl<EnmLerng
 	}
 
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateNotenmodulTeilleistungen>> {
-		const manager = new EnmLerngruppenAuswahlListeManager(routeNotenmodul.data.manager, schuleState.abschnitt.id,
-			schuleState.abschnitt.id, abschnittState.alle, schuleState.schulform);
+		const manager = new EnmLerngruppenAuswahlListeManager(routeNotenmodul.data.manager, schuleStateImpl.abschnitt.id,
+			schuleStateImpl.abschnitt.id, abschnittStateImpl.alle, schuleStateImpl.schulform);
 		return { manager };
 	}
 

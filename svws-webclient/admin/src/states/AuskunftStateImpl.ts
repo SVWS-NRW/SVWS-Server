@@ -32,4 +32,4 @@ export class AuskunftStateImpl extends StateManager<AuskunftReactiveState> imple
 
 }
 
-export const auskunftState = new AuskunftStateImpl();
+export const auskunftStateImpl = new AuskunftStateImpl();

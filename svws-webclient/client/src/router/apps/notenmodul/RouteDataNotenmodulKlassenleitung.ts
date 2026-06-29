@@ -6,8 +6,8 @@ import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/Rout
 import { routeNotenmodulKlassenleitungData } from "./RouteNotenmodulKlassenleitungData";
 import { routeNotenmodul } from "./RouteNotenmodul";
 import type { RouteParamsRawGeneric } from "vue-router";
-import { abschnittState } from "~/states/AbschnittStateImpl";
-import { schuleState } from "~/states/SchuleStateImpl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 
 interface RouteStateNotenmodulKlassenleitung extends RouteStateAuswahlInterface<EnmKlassenleitungAuswahlListeManager> {
@@ -33,8 +33,8 @@ export class RouteDataNotenmodulKlassenleitung extends RouteDataAuswahl<EnmKlass
 	}
 
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateNotenmodulKlassenleitung>> {
-		const manager = new EnmKlassenleitungAuswahlListeManager(routeNotenmodul.data.manager, schuleState.abschnitt.id,
-			schuleState.abschnitt.id, abschnittState.alle, schuleState.schulform);
+		const manager = new EnmKlassenleitungAuswahlListeManager(routeNotenmodul.data.manager, schuleStateImpl.abschnitt.id,
+			schuleStateImpl.abschnitt.id, abschnittStateImpl.alle, schuleStateImpl.schulform);
 		return { manager };
 	}
 
