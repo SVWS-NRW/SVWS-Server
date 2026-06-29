@@ -193,6 +193,11 @@ export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten>
 		},
 	});
 
+	externeSchulNr = computed<string | null>({
+		get: () => this.proxy.externeSchulNr ?? null,
+		set: (v) => this.proxy.externeSchulNr = v ?? null,
+	});
+
 	private setAndPatchOrtAndOrtsteil(wohnortID: number | null, ortsteilID: number | null): void {
 		this.pending = { ...this.pending, wohnortID, ortsteilID };
 		void this.patch();

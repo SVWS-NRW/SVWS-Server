@@ -74,7 +74,7 @@
 					:readonly :removable="false" required statistics focus-class-content />
 				<ui-select v-if="model.proxy.status === SchuelerStatus.EXTERN.daten(schuljahr)?.id"
 					label="Stammschule"
-					v-model="model.proxy.externeSchulNr"
+					v-model="model.externeSchulNr.value"
 					:manager="stammschuleManager"
 					:removable="model.proxy.externeSchulNr !== null"
 					:readonly searchable />
