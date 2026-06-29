@@ -144,14 +144,14 @@ public class AggregationKlassenStatistikExport {
 			if (e.hatMigrationshintergrund) {
 				klassenZuwanderungsgeschichteStatistikExport.zuwanderungsgeschichteInsgesamt++;
 
-				if (!Long.valueOf(Nationalitaeten.getDEU().daten(this.aktuellesSchuljahr).id).equals(e.idGeburtsland)) {
+				if (e.idGeburtsland != null && !Long.valueOf(Nationalitaeten.getDEU().daten(this.aktuellesSchuljahr).id).equals(e.idGeburtsland)) {
 					klassenZuwanderungsgeschichteStatistikExport.zuwanderungsgeschichteEigenerZuzug++;
 				}
-				if (!Long.valueOf(Nationalitaeten.getDEU().daten(this.aktuellesSchuljahr).id).equals(e.idGeburtslandMutter)
-						|| !Long.valueOf(Nationalitaeten.getDEU().daten(this.aktuellesSchuljahr).id).equals(e.idGeburtslandVater)) {
+				if (e.idGeburtslandMutter != null && !Long.valueOf(Nationalitaeten.getDEU().daten(this.aktuellesSchuljahr).id).equals(e.idGeburtslandMutter)
+						|| e.idGeburtslandVater != null && !Long.valueOf(Nationalitaeten.getDEU().daten(this.aktuellesSchuljahr).id).equals(e.idGeburtslandVater)) {
 					klassenZuwanderungsgeschichteStatistikExport.zuwanderungsgeschichteElternteilZugezogen++;
 				}
-				if (!Long.valueOf(Verkehrssprache.getDEU().daten(this.aktuellesSchuljahr).id).equals(e.idVerkehrspracheFamilie)) {
+				if (e.idVerkehrspracheFamilie != null && !Long.valueOf(Verkehrssprache.getDEU().daten(this.aktuellesSchuljahr).id).equals(e.idVerkehrspracheFamilie)) {
 					klassenZuwanderungsgeschichteStatistikExport.zuwanderungsgeschichteNichtDeutscheVerkehrssprache++;
 				}
 			}
