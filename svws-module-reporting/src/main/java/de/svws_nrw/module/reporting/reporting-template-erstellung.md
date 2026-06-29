@@ -1,113 +1,565 @@
-# Reporting - Erstellung von HTML-Templates
-Das Reporting erzeugt für die über die API gestellten Anfragen eine Rückgabe in Form von HTML- oder PDF-Dateien. Die PDF-Dateien werden dabei ebenfalls aus HTML-Dateien erzeugt, wofür OpenHtmlToPDF verwendet wird.
-Daher sind HTML-Templates die Basis der Reporterstellung.
+# Reporting – Report-Vorlagen (HTML-Templates) erstellen
 
-Die HTML-Templates werden durch [Thymeleaf](https://www.thymeleaf.org) verarbeitet. Daher ist dessen Syntax für die Templates zu verwenden.
+Diese Anleitung zeigt **Schritt für Schritt**, wie man im SVWS-Server eine neue Report-Vorlage (z. B. eine Schülerliste, eine Bescheinigung, einen Stundenplan) erstellt.
 
-Auf diese Inhalte wird im Folgenden eingegangen werden.
+**Für wen ist diese Anleitung?** Für alle, die eine neue Druck-/PDF-Vorlage bauen wollen. Du brauchst **gute HTML-Kenntnisse** sowie **Kenntnisse in [Thymeleaf](https://www.thymeleaf.org)** (die Template-Sprache, mit der die Platzhalter gefüllt werden) und nur **Grundkenntnisse in Java** – die wenigen Java-Stellen sind hier komplett vorgegeben und müssen nur nach Muster kopiert werden.
 
-<!-- TOC -->
-* [Reporting - Erstellung von HTML-Templates](#reporting---erstellung-von-html-templates)
-  * [Template-Definitionen](#template-definitionen)
-    * [Die Benennung der *ReportingReportvorlage* und der *HtmlTemplateDefinition* und ihr Bezug zu den Daten-Contexts in Thymeleaf](#die-benennung-der-reportingreportvorlage-und-der-htmltemplatedefinition-und-ihr-bezug-zu-den-daten-contexts-in-thymeleaf)
-    * [Die Enum *ReportingReportvorlage* und ihre Angaben](#die-enum-reportingreportvorlage-und-ihre-angaben)
-  * [HTML-Templates](#html-templates)
-    * [Ordnerstruktur](#ordnerstruktur)
-    * [CSS-Dateien](#css-dateien)
-    * [HTML-Dateien erstellen](#html-dateien-erstellen)
-      * [Contexts - Namen und Objekt-Charakter](#contexts---namen-und-objekt-charakter)
-      * [Seiten - Layout, Einstellungen, Köpfe und Füße](#seiten---layout-einstellungen-köpfe-und-füße)
-      * [Thymeleaf-Dialekt #convert](#thymeleaf-dialekt-convert)
-  * [Report-Ausgabe testen](#report-ausgabe-testen)
-<!-- TOC -->
+> **Wichtig zu Thymeleaf:** Im Reporting wird Thymeleaf **ohne Spring** eingesetzt. Es stehen daher **nur die Basis-Funktionen** von Thymeleaf zur Verfügung – Spring-spezifische Erweiterungen (z. B. `th:field`, Spring-EL-Features, Formular-Bindung) funktionieren hier **nicht**. Wer Thymeleaf aus Spring-Projekten kennt, sollte das im Hinterkopf behalten.
 
+> **Thymeleaf-Dokumentation:** Eine Einführung und die vollständige Referenz der Basis-Funktionen findest du unter [thymeleaf.org/documentation.html](https://www.thymeleaf.org/documentation.html) (insbesondere „Using Thymeleaf"). Diese Anleitung setzt deren Grundlagen voraus und erklärt nur die SVWS-Besonderheiten.
 
-## Template-Definitionen
-Bevor ein HTML-Template erstellt werden kann, muss es zunächst definiert werden, damit später darauf zugegriffen werden kann. Dies erfolgt in der Enum *ReportingReportvorlage* (im Core unter svws-core/src/main/java/de/svws_nrw/core/types/reporting/ReportingReportvorlage.java) muss das Template definiert werden. Dabei sind die Hinweise bzgl. der Benennung in der Dokumentation oberhalb der Aufzählung unbedingt zu beachten. Dieser Core-Type dient dazu, dass die Vorlage später aus dem Client typsicher angesprochen werden kann.
+> **Schwester-Dokument:** Wie das Reporting-Modul *intern* aufgebaut ist (Schichten, Repositories, Datenfluss), steht in [`reporting-architektur.md`](reporting-architektur.md). Für das Erstellen von Vorlagen musst du das **nicht** lesen – diese Anleitung reicht.
 
-### Die Benennung der *ReportingReportvorlage* und der *HtmlTemplateDefinition* und ihr Bezug zu den Daten-Contexts in Thymeleaf
-Der erste Teil des Namens ist der Bereich, aus dem die Daten geholt werden sollen, und der zweite Teil der gewünschte Name der Vorlage. Beide werden durch ein "\_V_" voneinander getrennt. Folgende Bereiche gibt es beispielsweise:
-* SCHUELER_V_
-* KLASSEN_V_
-* KURSE_V_
-* LEHRER_V_
-* GOST_KURSPLANUNG_V_
-* GOST_KLAUSURPLANUNG_V_
+---
 
-Zu jedem dieser Bereiche kann es eine oder mehrere "Datenquellen" in Thymeleaf geben, dort werden sie als *Context* bezeichnet. Aktuell können davon folgende Contexts angesprochen werden:
-* Benennung SCHUELER_V_ entspricht dem Context "**Schueler**" in der HTML-Datei
-* Benennung KLASSEN_V_ entspricht dem Context "**Klassen**" in der HTML-Datei
-* Benennung KURSE_V_ entspricht dem Context "**Kurse**" in der HTML-Datei
-* Benennung LEHRER_V_ entspricht dem Context "**Lehrer**" in der HTML-Datei
-* Benennung GOST_KURSPLANUNG_V_ entspricht dem Context "**GostBlockungsergebnis**" in der HTML-Datei
-* Benennung GOST_KLAUSURPLANUNG_V_ entspricht dem Context "**GostKlausurplan**" in der HTML-Datei
+## Inhalt
 
-Unabhängig davon gibt es noch die Contexts "**Parameter**" (Daten der übergebenen ReportingParameter) und "**Schule**" (Daten der Schule), die immer angesprochen werden können.
+1. [Wie ein Report entsteht – das Grundprinzip](#1-wie-ein-report-entsteht--das-grundprinzip)
+2. [Wichtige Begriffe (Glossar)](#2-wichtige-begriffe-glossar)
+3. [Schnellstart: eine bestehende Vorlage kopieren](#3-schnellstart-eine-bestehende-vorlage-kopieren)
+4. [Schritt 1 – Die Vorlage registrieren (Java)](#4-schritt-1--die-vorlage-registrieren-java)
+5. [Schritt 2 – Die Dateien anlegen](#5-schritt-2--die-dateien-anlegen)
+6. [Schritt 3 – Das HTML-Grundgerüst](#6-schritt-3--das-html-grundgerüst)
+7. [Schritt 4 – Daten in die Vorlage einsetzen](#7-schritt-4--daten-in-die-vorlage-einsetzen)
+8. [Schritt 5 – Optionen des Nutzers (VorlageParameter)](#8-schritt-5--optionen-des-nutzers-vorlageparameter)
+9. [Schritt 6 – Datum, QR-Codes & Co. (Dialekt #convert)](#9-schritt-6--datum-qr-codes--co-dialekt-convert)
+10. [Schritt 7 – Layout & CSS](#10-schritt-7--layout--css)
+11. [Schritt 8 – Der Dateiname der Ausgabe (.name.tpl)](#11-schritt-8--der-dateiname-der-ausgabe-nametpl)
+12. [Schritt 9 – Testen](#12-schritt-9--testen)
+13. [Referenz: Verfügbare Daten-Contexts](#13-referenz-verfügbare-daten-contexts)
+14. [Referenz: Der Dialekt #convert](#14-referenz-der-dialekt-convert)
+15. [Goldene Regeln & häufige Fehler](#15-goldene-regeln--häufige-fehler)
+16. [Checkliste für eine neue Vorlage](#16-checkliste-für-eine-neue-vorlage)
 
-Zudem werden bei folgenden Bezeichnungen noch weitere Daten initialisiert und geprüft.
-* SCHUELER_v_GOST_LAUFBAHNPLANUNG_
-* SCHUELER_v_GOST_ABITUR_
+---
 
-Sofern daher Daten aus diesem Bereich verwendet werden sollen, ist es erforderlich, die Benennung entsprechend zu verwenden, damit direkt beim Aufruf die notwendigen Daten geladen und validiert werden.
+## 1. Wie ein Report entsteht – das Grundprinzip
 
-### Die Enum *ReportingReportvorlage* und ihre Angaben
-Für jedes Template, das angelegt werden soll, müssen hier alle Attribute und Parameter angegeben werden. In der Regel ist eine Orientierung an den bereits definierten HTML-Templates sinnvoll.
+Ein Report ist im Kern eine **HTML-Datei mit Platzhaltern**. Die Platzhalter werden zur Laufzeit mit echten Daten aus der Schuldatenbank gefüllt. Aus dem fertigen HTML wird dann – je nach Wunsch – direkt HTML angezeigt, ein **PDF** erzeugt oder eine **E-Mail** verschickt. Das PDF wird ebenfalls aus dem HTML erzeugt (mit der Bibliothek *OpenHtmlToPdf*).
 
-## HTML-Templates
-Die HTML-Template-Dateien werden im Reporting-Modul unter resources gespeichert. Dort ist bereits eine Ordnerstruktur angelegt unter svws-module-reporting/src/main/resources/de/svws_nrw/module/reporting.
+Die Platzhalter-Sprache heißt **[Thymeleaf](https://www.thymeleaf.org)**. Thymeleaf-Anweisungen stehen als zusätzliche Attribute im HTML, fast immer beginnend mit `th:`. Beispiel:
 
-Alle Templates verwenden Thymeleaf. Dieses definiert die zur Verfügung stehenden Möglichkeiten bei der Generierung, welche unter [https://www.thymeleaf.org/documentation.HTML](https://www.thymeleaf.org/documentation.HTML) dokumentiert sind.
+```html
+<!-- Statischer Text "Beispiel" wird beim Rendern durch den echten Nachnamen ersetzt -->
+<td th:text="${schueler.nachname()}">Beispiel</td>
+```
 
-### Ordnerstruktur
-Zu der oben bereits angesprochenen Ordnerstruktur unter resources ist Folgendes zu sagen.
+- Ohne Daten (z. B. Vorschau im Browser) sieht man den statischen Text `Beispiel`.
+- Mit Daten ersetzt Thymeleaf ihn durch den Wert von `schueler.nachname()`.
 
-* Der CSS-Ordner enthält CSS-Dateien, die von mehreren HTML-Dateien gemeinsam genutzt werden können. Einige davon definieren auch Einstellungen für die PDF-Ausgabe (Print-CSS).
-* Der fonts-Ordner enthält den Unicode-Font, der für HTML-Dateien verwendet wird.
-* Die weiteren Ordner enthalten thematisch sortierte HTML-Templates.
+Die Daten kommen aus sogenannten **Contexts** (Datenquellen). Welche Contexts gefüllt werden, hängt davon ab, in welchem „Bereich" deine Vorlage liegt (Schüler, Klassen, Lehrer …). Mehr dazu in [Abschnitt 13](#13-referenz-verfügbare-daten-contexts).
 
-### CSS-Dateien
-Grundsätzlich können in einem HTML-Template mehrere CSS-Dateien verwendet werden. Dies wird genutzt, um zum einen viele immer wieder verwendete Styles zentral zu speichern (diese liegen im CSS-Ordner) und zum anderen in einer weiteren CSS-Datei individuelle Styles für ein bestimmtes Template zu definieren (liegt parallel zur HTML-Datei).
+**Drei Dateien gehören zu einer Vorlage** (alle mit demselben Basisnamen, im selben Ordner):
 
-Die zentral abgelegten CSS-Dateien sind aufgeteilt in ein CSS für die PDF-Bibliothek, ein CSS für die Seiteneinstellungen mit Köpfen und Füßen und ein CSS mit den immer wieder verwendeten Styles für die Formatierungen.
+| Datei | Zweck | Pflicht? |
+|-------|-------|----------|
+| `MeinReport.html` | Die eigentliche Vorlage | ✅ ja |
+| `MeinReport.css` | Eigene Styles nur für diese Vorlage | empfohlen |
+| `MeinReport.name.tpl` | Bestimmt den Dateinamen der Ausgabedatei | ✅ ja |
 
-Das Einbinden der CSS-Datei in HTML muss mittels Thymeleaf erfolgen. Dazu wird *th:href* verwendet, damit die Pfade im realen Betrieb auch korrekt gesetzt werden. Ein solcher Aufruf wäre: *\<link rel="stylesheet" th:href="@{CSS/svws-reporting.CSS}" href="../../../CSS/svws-reporting.CSS" />*. Auf diese Art wird sowohl eine Vorschau bei der Entwicklung als auch die PDF-Generierung unterstützt.
+Dazu kommt **ein** Java-Eintrag, der die Vorlage im System bekannt macht (siehe Schritt 1).
 
-### HTML-Dateien erstellen
-In der Regel ist es am einfachsten, eine bestehende Datei zu kopieren, da so bereits der Head mit Angaben zu Thymeleaf und den CSS-Dateien vorhanden ist und abgesehen von Anpassungen der Dateinamen an dieser Stelle wenig zu tun ist. Danach kann zur Erstellung des Bodies übergehen werden.
+---
 
-An dieser Stelle müsste jetzt ein HTML- und Thymeleaf-Tutorial folgen, was aber den Umfang hier sprengen würde. D. h. aber, dass für die folgenden Schritte vorausgesetzt wird, dass man mit HTML und Thymeleaf vertraut ist. Daher werden nur noch einige Besonderheiten mit Bezug auf das Reporting angesprochen.
+## 2. Wichtige Begriffe (Glossar)
 
-#### Contexts - Namen und Objekt-Charakter
-Um die Templates mit Daten zu füllen, stehen folgende Contexts zur Verfügung, die bei entsprechend gewählter [Benennung](#die-benennung-der-reportingreportvorlage-und-der-htmltemplatedefinition-und-ihr-bezug-zu-den-daten-contexts-in-thymeleaf) des Templates mit Daten gefüllt werden.
-* GostBlockungsergebnis
-* GostKlausurplan
-* Parameter (wird immer gefüllt, enthält die übergebenen Daten der ReportingParameter)
-* Schueler
-* Klassen
-* Kurse
-* Lehrer
-* Schule (wird immer gefüllt, enthält die Daten der Schule)
+- **Report-Vorlage** – Eine konkrete Vorlage (z. B. „Klassenliste mit Kontaktdaten"). Jede Vorlage hat genau einen Eintrag in der Java-Enum `ReportingReportvorlage`.
+- **Context (Datenquelle)** – Eine benannte Sammlung von Daten, die im Template zur Verfügung steht, z. B. `Schueler`, `Klassen`, `Schule`. Im Template greift man darauf mit `${...}` zu.
+- **Reporting-Typ** – Ein Java-Datenobjekt wie `ReportingSchueler` oder `ReportingKlasse`. Seine Werte holst du über **Methoden mit Klammern**, z. B. `schueler.vorname()`. (Anders als bei normalen Webseiten gibt es hier keine „Felder ohne Klammern".)
+- **VorlageParameter** – Optionen, die der Nutzer vor dem Druck einstellt (Checkboxen, Textfelder …), z. B. „mit Foto". Im Template abgefragt mit `VorlageParameter.get('mitFoto')`.
+- **Fragment** – Ein wiederverwendbarer HTML-Baustein (z. B. der Seitenkopf). Du bindest ihn ein, statt ihn zu kopieren.
+- **Dialekt** – Eine SVWS-Erweiterung von Thymeleaf mit Zusatzfunktionen. Wichtig: `#convert` (Datum, QR-Codes …) und `#inline` (CSS einbetten – brauchst du nur indirekt).
+- **`.name.tpl`** – Eine kleine Vorlage, die den **Dateinamen** der erzeugten Datei festlegt.
 
-Diese Contexts sind Java-Objekte und können mit ihren Attributen und Methoden im Template verwendet werden, sofern Thymeleaf dies auch zulässt.
+---
 
-#### Seiten - Layout, Einstellungen, Köpfe und Füße
-Generell wird für das Seitenlayout [Print-CSS](https://wiki.selfhtml.org/wiki/Print-CSS) verwendet. Damit lassen sich viele Einstellungen für den Druck konfigurieren. Leider unterstützen aktuell die Browser dafür keine direkte Vorschau oder die Vorschau ist fehlerhaft. Daher sieht man das fertige Ergebnis erst nach dem Druck des Dokumentes.
+## 3. Schnellstart: eine bestehende Vorlage kopieren
 
-Zur Erstellung von Seitenköpfen- und füßen werden die sogenannten [Page-Margin-Boxs](https://wiki.selfhtml.org/wiki/Print-CSS#Zukunft:_Page-Margin_Boxen) verwendet. Auch hier gilt, dass die Vorschau aktuell nicht möglich oder fehlerhaft ist. In den bereits vorhandenen CSS-Dateien sind auch bereits Boxs eingerichtet und können im HTML-Template zu Beginn des Body eingefügt werden.
+Der schnellste Weg zu einer neuen Vorlage ist, eine **ähnliche bestehende** zu kopieren und anzupassen. Das spart das Grundgerüst und zeigt funktionierende Muster.
 
-Wichtig ist aber stets zu bedenken: Da die Erstellung der Ausgabe durch Rendern der HTML-Datei erfolgt, ist diese vom Programm abhängig, dass das HTML rendert. Hier unterscheiden sich schon in der Regel die Browser.
-Der SVWS-Server nutzt dafür OpenHtmlToPdf, welches zwar viele der Print-CSS Features unterstützt, dafür aber keinerlei CSS-Elemente, wie sie für moderne dynamische Webseiten verwendet werden, um deren Layout zu gestalten. Daher bleibt nur die Möglichkeit, Tabellen für die Layouterstellung zu verwenden.
+1. Suche unter `svws-module-reporting/src/main/resources/de/svws_nrw/module/reporting/` eine Vorlage, die deinem Ziel ähnelt (z. B. eine Liste im Ordner `schueler/listen/`).
+2. Kopiere die drei Dateien (`.html`, `.css`, `.name.tpl`) und gib ihnen einen neuen Basisnamen.
+3. Arbeite dann die Schritte 1–9 durch.
 
-#### Thymeleaf-Dialekt #convert
-Um neben den bereits implementierten Thymeleaf-Funktionen noch weitere Funktionen zur Verfügung stellen zu können, wurde Thymeleaf um einen sogenannten Dialekt erweitert.
-Dieser heißt #convert und stellt aktuell Umwandlungen für Datumsangaben zur Verfügung.
+Die folgenden Schritte erklären jeden Bestandteil – auch, wenn du kopiert hast, solltest du sie einmal lesen.
 
-Ein Beispiel wäre: *th:text="${#convert.toDateDE(schueler.geburtsdatum())}"*
+---
 
-Leider unterstützen die Plugins die Dialekte nicht. Daher können die zur Verfügung stehenden Methoden nur in deren Definition eingesehen werden. Für #convert ist diese hier zu finden: [#convert](HTML/dialects/ConvertExpressionHelper.java).
+## 4. Schritt 1 – Die Vorlage registrieren (Java)
 
+Damit der SVWS-Client die Vorlage anbieten kann, muss sie in einer **Java-Enum** eingetragen werden. Das ist die einzige Java-Stelle – sie folgt einem festen Muster.
 
-## Report-Ausgabe testen
-Die erstellten HTML-Templates können im Browser oder der IDE angezeigt werden, wenn man die dortige Vorschau nutzt. Dabei wird aber nur der statische Teil des HTML angezeigt, es werden keine Daten in das Template geladen.
+**Datei:** `svws-core/src/main/java/de/svws_nrw/core/types/reporting/ReportingReportvorlage.java`
 
-Unter Schule > Reporting im SVWS-Client können die Templates getestet werden.
+Füge einen neuen Enum-Eintrag hinzu. Orientiere dich an einem vorhandenen Eintrag aus demselben Bereich. Ein Eintrag sieht so aus:
+
+```java
+/** Report-Vorlage: Klasse - Liste - Schüler - Kontaktdaten - Erzieher */
+KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER("Klasse-Liste-Schueler-Kontaktdaten-Erzieher",
+        "Klassenliste mit Kontaktdaten",                          // uiTitel: Titel im Client
+        "Eine Liste mit den Kontaktdaten ... erzeugen.",          // uiBeschreibung: Text im Client
+        ReportingReportvorlageDatenContext.KLASSEN,               // welcher Datenbereich? -> bestimmt die Contexts
+        "klassen/KlasseListeSchuelerKontaktdatenErzieher.html",   // Pfad zur HTML-Datei (relativ zum resources-Ordner)
+        "Klasse-Liste-Schueler-Kontaktdaten-Erzieher",            // statischer Dateiname (Fallback ohne .name.tpl)
+        List.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN), // wer darf das? (mind. eine dieser Kompetenzen)
+        ReportingReportvorlageKonfigurationKlassen.getKlassenVListeSchuelerKontaktdatenerzieher() // Optionen (Schritt 5)
+),
+```
+
+Die Parameter im Einzelnen:
+
+| Parameter | Bedeutung |
+|-----------|-----------|
+| **Enum-Name** (`KLASSEN_V_…`) | Technischer Name nach dem Schema `HAUPTDATEN_V_DETAILDATEN`. Nur Großbuchstaben, Ziffern und `_`. |
+| **bezeichnung** (1. String) | Eindeutige technische Bezeichnung. **Keine Leerzeichen**, nur Buchstaben/Ziffern/`-`/`_`. |
+| **uiTitel** | Wird dem Nutzer im Client als Titel angezeigt. |
+| **uiBeschreibung** | Erklärtext im Client. |
+| **datenContext** | **Wichtig:** Wählt den Datenbereich aus `ReportingReportvorlageDatenContext` und entscheidet, **welche Contexts gefüllt werden** (siehe [Abschnitt 13](#13-referenz-verfügbare-daten-contexts)). |
+| **pfadHtmlTemplate** | Pfad zur HTML-Datei relativ zu `…/module/reporting/`. |
+| **dateiname** | Statischer Dateiname (ohne Endung) als Rückfallebene, falls keine `.name.tpl` greift. |
+| **benutzerKompetenzen** | Liste von `BenutzerKompetenz`. Der Nutzer braucht **mindestens eine** davon (ODER-Verknüpfung). |
+| **reportingParameter / Konfiguration** | Verweist auf die Methode, die die Nutzer-Optionen (VorlageParameter) definiert – siehe Schritt 5. |
+
+> **Mögliche Werte für `datenContext`:** `SCHUELER`, `LEHRER`, `KLASSEN`, `KURSE`, `GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG`, `GOST_KURSPLANUNG`, `GOST_KLAUSURPLANUNG`, `STUNDENPLANUNG`.
+
+---
+
+## 5. Schritt 2 – Die Dateien anlegen
+
+Alle Template-Dateien liegen unter:
+
+```
+svws-module-reporting/src/main/resources/de/svws_nrw/module/reporting/
+```
+
+Dort gibt es eine **thematische Ordnerstruktur**, u. a.:
+
+```
+css/          – gemeinsame CSS-Dateien (Seitenformate, globale Styles, PDF-Einstellungen)
+fonts/        – die eingebetteten Schriftarten (für das PDF)
+fragments/    – wiederverwendbare Bausteine (Seitenkopf/-fuß, HTML-Head)
+schueler/     – Vorlagen rund um Schüler (z. B. listen/, anschreiben/, gost/)
+klassen/      – Vorlagen rund um Klassen
+kurse/        – Vorlagen rund um Kurse
+lehrer/       – Vorlagen rund um Lehrkräfte
+gost/         – Oberstufe (kursplanung/, klausurplanung/, laufbahnplanung/)
+stundenplanung/ – Stundenpläne
+```
+
+Lege deine drei Dateien in den **passenden Themenordner** (oder einen neuen Unterordner). Der Pfad muss zum Eintrag aus Schritt 1 passen. Beispiel:
+
+```
+schueler/listen/MeineSchuelerliste.html
+schueler/listen/MeineSchuelerliste.css
+schueler/listen/MeineSchuelerliste.name.tpl
+```
+
+> **Wichtig:** HTML- und CSS-Datei müssen **denselben Basisnamen** haben und im **selben Ordner** liegen. Das System bindet die zugehörige CSS-Datei automatisch ein, indem es im HTML-Pfad `.html` durch `.css` ersetzt. Heißt deine HTML-Datei `MeineSchuelerliste.html`, wird automatisch `MeineSchuelerliste.css` gesucht.
+
+---
+
+## 6. Schritt 3 – Das HTML-Grundgerüst
+
+Jede Vorlage benutzt zwei fertige **Fragmente**: eines für den `<head>` (bindet alle CSS automatisch ein) und eines für **Seitenkopf und -fuß** im Druck. Du musst dich darum also nicht selbst kümmern.
+
+Hier ein vollständiges, kommentiertes Grundgerüst zum Kopieren:
+
+```html
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org"
+      th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}">
+
+    <!-- Diese Zeile hilft nur der IDE bei der Autovervollständigung des #convert-Dialekts: -->
+    <!--/* @thymesVar id="#convert" type="de.svws_nrw.module.reporting.html.dialects.ConvertExpressionHelper" */-->
+
+    <!-- KOPF: Bindet automatisch alle CSS-Dateien ein (gemeinsame + die eigene zur Vorlage). -->
+    <head th:replace="~{fragments/reportHtmlHead :: htmlHead(
+        title='Titel meiner Vorlage',
+        htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
+        namePageCSS='reporting-A4-hoch.css')}">
+        <title></title>
+    </head>
+
+    <body>
+
+        <!-- SEITENKOPF/-FUSS (erscheint nur im Druck/PDF auf jeder Seite). -->
+        <th:block th:replace="~{fragments/reportPageHeaderFooter :: pageHeaderFooter(
+            headerRight='Meine Überschrift')}">
+        </th:block>
+
+        <!-- AB HIER kommt dein eigentlicher Inhalt: -->
+        <table class="fixed-100 mp-0">
+            <!-- ... -->
+        </table>
+
+    </body>
+</html>
+```
+
+Was die drei `htmlHead`-Parameter bedeuten:
+
+- **`title`** – der Titel des Dokuments (`<title>`).
+- **`htmlTemplatePfad`** – immer `${Parameter.reportVorlage().getPfadHtmlTemplate()}` übernehmen. Daraus wird die vorlagen­eigene CSS-Datei abgeleitet.
+- **`namePageCSS`** – der Dateiname des **Seitenformats** aus dem `css/`-Ordner. Wähle eines (siehe [Abschnitt 10](#10-schritt-7--layout--css)), z. B. `reporting-A4-hoch.css` (Hochformat) oder `reporting-A4-quer.css` (Querformat). Du kannst das Format auch dynamisch wählen (siehe unten).
+
+> **Hinweis:** Du fügst **keine** `<link rel="stylesheet">`-Zeilen mehr ein. Das Head-Fragment bettet alle CSS direkt in das HTML ein – das ist Voraussetzung für die PDF-Erzeugung und die Vorschau im Client.
+
+---
+
+## 7. Schritt 4 – Daten in die Vorlage einsetzen
+
+### Einen einzelnen Wert ausgeben
+
+```html
+<td th:text="${schueler.nachname()}">Mustermann</td>
+```
+
+`th:text` ersetzt den Inhalt des Elements. Der statische Text (`Mustermann`) dient nur der Vorschau und wird beim Rendern überschrieben.
+
+### HTML-Inhalt ausgeben (z. B. mit Zeilenumbruch) – `th:utext`
+
+`th:text` zeigt alles als reinen Text. Wenn dein Wert **HTML** enthalten soll (etwa ein `<br/>`), nimm `th:utext`:
+
+```html
+<td th:utext="${schueler.strassennameHausnummer() + '<br/>' + schueler.plzOrt()}">
+    Hauptstraße 13a<br/>12345 Musterstadt
+</td>
+```
+
+> ⚠️ Bei `th:utext` muss der erzeugte Inhalt **gültiges XML** sein: schreibe `<br/>` (nicht `<br>`) und vermeide nackte `<`, `>`, `&`. Siehe [Goldene Regeln](#15-goldene-regeln--häufige-fehler).
+
+### Über eine Liste iterieren (Schleife)
+
+So gibst du z. B. alle Schüler nacheinander als Tabellenzeilen aus:
+
+```html
+<tr th:each="schueler, i : ${Schueler}">
+    <td th:text="${i.count + '.'}">1.</td>
+    <td th:text="${schueler.nachnameVorname()}">Mustermann, Max</td>
+</tr>
+```
+
+- `${Schueler}` ist der Context (die Liste).
+- `schueler` ist die Laufvariable (ein einzelnes `ReportingSchueler`-Objekt).
+- `i` ist die Status-Variable mit nützlichen Werten: `i.count` (1-basiert), `i.index` (0-basiert), `i.first`, `i.last`, `i.even`, `i.odd`.
+
+### Etwas nur unter einer Bedingung anzeigen
+
+```html
+<td th:if="${schueler.istVolljaehrig()}">volljährig</td>
+<td th:unless="${schueler.istVolljaehrig()}">minderjährig</td>
+```
+
+### Auf Unterobjekte zugreifen – und auf `null` achten
+
+Reporting-Objekte hängen zusammen (ein Schüler hat einen Lernabschnitt, der eine Klasse hat). Diese Unterobjekte können **`null`** sein. Es gibt hier **keine** Kurzschreibweise wie `?.` – du musst `null` selbst abfragen:
+
+```html
+<td th:text="${(schueler.auswahlLernabschnitt() != null
+                && schueler.auswahlLernabschnitt().klasse() != null)
+               ? schueler.auswahlLernabschnitt().klasse().kuerzel()
+               : ''}">06C</td>
+```
+
+Das Muster ist immer gleich: **erst auf `!= null` prüfen, dann den Wert holen, sonst `''`**.
+
+### Praktische Standard-Helfer von Thymeleaf
+
+Diese „`#`-Objekte" sind eingebaut und oft nützlich:
+
+- `#strings.isEmpty(text)`, `#strings.trim(text)`, `#strings.length(text)`
+- `#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')` – aktuelles Datum/Uhrzeit
+- Für SVWS-Datumswerte (z. B. Geburtsdatum) nimm aber `#convert` – siehe Schritt 6.
+
+### Zwischenvariablen mit `th:with`
+
+Wird ein Ausdruck oft gebraucht oder wird er kompliziert, berechne ihn einmal vorab:
+
+```html
+<body th:with="schuljahr = ${Schule.auswahlSchuljahresabschnitt() != null
+                            ? Schule.auswahlSchuljahresabschnitt().schuljahr() : 0}">
+    ...
+    <span th:text="${schuljahr}">2025</span>
+</body>
+```
+
+> **Welche Methoden hat ein Objekt?** Die verfügbaren Werte eines Reporting-Typs stehen in seiner Java-Klasse, z. B. `ReportingSchueler` unter `…/module/reporting/types/schueler/ReportingSchueler.java`. Jede öffentliche Methode (`public ... vorname()`) kannst du im Template als `schueler.vorname()` verwenden.
+
+---
+
+## 8. Schritt 5 – Optionen des Nutzers (VorlageParameter)
+
+Oft soll der Nutzer eine Vorlage anpassen können („mit Foto", „mit Geburtsdatum", eine eigene Überschrift …). Solche Optionen heißen **VorlageParameter**.
+
+### Im Template abfragen
+
+Der Context `VorlageParameter` ist immer verfügbar. Du liest eine Option mit ihrem Namen:
+
+```html
+<!-- Praktisch: einmal oben in Variablen ablegen ... -->
+<body th:with="mitFoto = ${VorlageParameter.get('mitFoto')},
+               ueberschrift = ${VorlageParameter.get('ueberschrift')}">
+
+    <!-- ... und dann nutzen: -->
+    <td th:if="${mitFoto}"> ... Foto ... </td>
+    <h1 th:text="${ueberschrift}">Überschrift</h1>
+</body>
+```
+
+`get('name')` liefert den Wert im passenden Typ zurück (Boolean für Checkboxen, String für Textfelder, Zahl für Zahlenfelder).
+
+### Die Optionen definieren (Java)
+
+Welche Optionen es gibt, steht in einer **Konfigurationsdatei** im Core, eine pro Bereich:
+
+```
+svws-core/.../core/types/reporting/reportvorlagekonfiguration/
+    ReportingReportvorlageKonfigurationSchueler.java
+    ReportingReportvorlageKonfigurationKlassen.java
+    ...
+```
+
+Dort legst du pro Vorlage eine Methode an (auf die der Enum-Eintrag aus Schritt 1 verweist). Eine Option sieht so aus:
+
+```java
+ReportingReportvorlageUtils.erzeugeVorlageParameter(
+    "mitFoto",                              // Name -> so fragst du ihn im Template ab
+    "mit Foto",                             // Beschriftung im Client
+    ReportingReportvorlageParameterTyp.BOOLEAN, // Typ: BOOLEAN / STRING / INTEGER
+    "" + false,                             // Standardwert
+    true,                                   // im Client sichtbar?
+    ReportingUIKomponentenTyp.CHECKBOX,     // Bedienelement: CHECKBOX / INPUT / NUMBERPICKER ...
+    1)                                      // Anzeige-Breite/Spalten im Client
+```
+
+Mehrere Optionen werden zu einer **Parametergruppe** (z. B. „Inhaltsoptionen") zusammengefasst. Am einfachsten kopierst du eine vorhandene Methode aus derselben Datei und passt Namen, Typen und Standardwerte an.
+
+> **Merke:** Der Name in `erzeugeVorlageParameter("mitFoto", …)` und der Name in `VorlageParameter.get('mitFoto')` **müssen exakt übereinstimmen**.
+
+---
+
+## 9. Schritt 6 – Datum, QR-Codes & Co. (Dialekt #convert)
+
+Thymeleaf kann von Haus aus nicht alles, was Reports brauchen. Dafür gibt es den SVWS-Dialekt **`#convert`**. Du rufst seine Funktionen wie ein Objekt mit Methoden auf:
+
+```html
+<!-- Ein ISO-Datum (z. B. "2008-12-31") deutsch formatieren: -->
+<td th:text="${#convert.toDateDE(schueler.geburtsdatum())}">31.12.2008</td>
+```
+
+Die wichtigsten Funktionen:
+
+| Aufruf | Ergebnis |
+|--------|----------|
+| `#convert.toDateDE(iso)` | `31.12.2008` |
+| `#convert.toDateDELong(iso)` | `31. Dezember 2008` |
+| `#convert.toWochentagDE(iso)` | `Mittwoch` |
+| `#convert.toKalenderwocheDE(iso)` | Kalenderwoche |
+| `#convert.toCheckboxSVG(boolean)` | ein angekreuztes/leeres Kästchen als Bild |
+| `#convert.to2DCodeQRCodeAsSvgHtmlImageSource(inhalt, breiteMM, hoeheMM)` | QR-Code als Bildquelle |
+| `#convert.toBarcodeCode128AsSvgHtmlImageSource(inhalt, breiteMM, hoeheMM)` | Barcode als Bildquelle |
+
+Die vollständige Liste steht in der Java-Klasse [`html/dialects/ConvertExpressionHelper.java`](html/dialects/ConvertExpressionHelper.java) – jede öffentliche Methode dort ist als `#convert.methodenName(...)` aufrufbar. Siehe auch [Abschnitt 14](#14-referenz-der-dialekt-convert).
+
+> Es gibt außerdem den Dialekt `#inline`, der CSS einbettet. Den brauchst du nicht direkt – er steckt schon im Head-Fragment.
+
+---
+
+## 10. Schritt 7 – Layout & CSS
+
+### Wichtigste Einschränkung: Layout über Tabellen
+
+Das PDF wird mit **OpenHtmlToPdf** erzeugt. Diese Bibliothek unterstützt **kein** modernes CSS-Layout (kein Flexbox, kein Grid). **Für die Anordnung von Inhalten musst du HTML-Tabellen verwenden** – auch dort, wo man auf einer Webseite `div`-Boxen nehmen würde. Das ist der größte Unterschied zur normalen Webentwicklung.
+
+### SonarQube-Regel: Layout-Tabellen brauchen einen (versteckten) Tabellenkopf
+
+Die statische Code-Analyse **SonarQube** verlangt aus Barrierefreiheits-Gründen, dass jede Tabelle Kopfzellen (`<th scope="col">`) besitzt. Reine **Layout-Tabellen** haben aber gar keine sichtbare Kopfzeile – sie würden die Regel verletzen.
+
+Die Lösung in den bestehenden Vorlagen: ein **per `th:if="${false}"` ausgeblendeter `<thead>`** direkt zu Beginn der Tabelle. Er erfüllt die Regel der Analyse, wird aber **nie gerendert** (die Bedingung ist immer `false`) und erscheint somit weder in der HTML-Ausgabe noch im PDF:
+
+```html
+<table class="fixed-100 mp-0">
+    <thead th:if="${false}"><!-- Header nur für SonarQube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+    <tr>
+        <td>...</td>
+        <td>...</td>
+    </tr>
+</table>
+```
+
+Regeln dazu:
+
+- **Pro Spalte ein `<th scope="col">`** im versteckten `<thead>` (oben sind es zwei Spalten → zwei `<th>`). Die Beschriftung ist egal (`Col1`, `Col2`, …), da nichts ausgegeben wird.
+- Der Kommentar `<!-- Header nur für SonarQube, keine Ausgabe -->` macht den Zweck für die nächste Person klar – bitte mit übernehmen.
+- Hat eine Tabelle **eine echte, sichtbare Kopfzeile** (mit `<thead>` und sinnvollen `<th>`), brauchst du diesen Trick **nicht** – dann ist die Regel ohnehin erfüllt.
+
+### Die drei Arten von CSS
+
+1. **Gemeinsame CSS** (im Ordner `css/`) – werden automatisch über das Head-Fragment eingebunden:
+   - `reporting-pdf.css` – Grundeinstellungen für die PDF-Bibliothek.
+   - `reporting-styles.css` – die **wiederverwendbaren Utility-Klassen** (s. u.).
+   - ein **Seitenformat**, das du über `namePageCSS` auswählst.
+2. **Deine eigene Vorlagen-CSS** (`MeinReport.css`, neben der HTML-Datei) – wird automatisch eingebunden und **überschreibt** bei gleichem Selektor die gemeinsamen Styles. Hier kommen Styles rein, die nur diese eine Vorlage braucht.
+
+### Seitenformate (`namePageCSS`)
+
+Übergib im Head-Fragment einen dieser Werte aus dem `css/`-Ordner:
+
+| Datei | Format |
+|-------|--------|
+| `reporting-A4-hoch.css` | A4 Hochformat |
+| `reporting-A4-quer.css` | A4 Querformat |
+| `reporting-A4-hoch-duplex.css` / `…-quer-duplex.css` | A4 mit beidseitigem Druck (Duplex) |
+| `reporting-A4-hoch-minimal-rand.css` / `…-quer-minimal-rand.css` | A4 mit minimalem Rand |
+| `reporting-A4-DIN5008.css` | A4 nach Brief-Norm DIN 5008 |
+| `reporting-A3-quer-minimal-rand.css` | A3 Querformat |
+
+Das Format darf auch **dynamisch** anhand von Optionen gewählt werden, z. B.:
+
+```html
+<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
+    title='Schülerliste',
+    htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
+    namePageCSS='reporting-A4' + (${querformat} ? '-quer' : '-hoch')
+                + (${duplex} ? '-duplex' : '') + '.css')}">
+```
+
+### Utility-Klassen aus `reporting-styles.css`
+
+In den bestehenden Vorlagen tauchen kurze Klassennamen auf. Sie kommen aus `reporting-styles.css` und sparen viel eigenes CSS. Beispiele:
+
+- `fixed-100` – Tabelle auf 100 % Breite mit festem Layout.
+- `mp-0` – ohne Außen-/Innenabstand (margin/padding 0).
+- `ta-l`, `ta-c`, `ta-r` – Text links/zentriert/rechts; Varianten mit `t`/`b` für oben/unten (z. B. `ta-lb` = links + unten).
+- `bo-t-grey`, `bo-b-grey` – graue Linie oben/unten.
+- `p-tb-05`, `p-lr-1` – Innenabstand oben/unten bzw. links/rechts (Zahl = Stärke).
+- `f-bold` – fett; `bg-lightgrey` – hellgrauer Hintergrund.
+- `head-small-grey` – kleine graue Spaltenüberschrift.
+
+> Schau am besten in `css/reporting-styles.css` und in eine bestehende Vorlage, um die jeweils passenden Klassen zu finden. Maße gibst du in **Millimetern** an (`mm`), das passt zum Druck (z. B. `style="width: 58mm;"`).
+
+### Seitenkopf und -fuß
+
+Kopf und Fuß jeder gedruckten Seite kommen aus dem Fragment `reportPageHeaderFooter` (Schritt 3). Es füllt automatisch Schulbezeichnung, Schuljahresabschnitt, Schulnummer, Druckdatum/-benutzer und Seitenzahlen. Über den Parameter `headerRight` gibst du den Text oben rechts vor. Diese Bereiche erscheinen nur bei der Druckausgabe (gesteuert über `Parameter.istDruckausgabe()`).
+
+---
+
+## 11. Schritt 8 – Der Dateiname der Ausgabe (.name.tpl)
+
+Wird der Report als Datei (oder ZIP mit mehreren Dateien) ausgegeben, bestimmt die `.name.tpl`-Datei den **Dateinamen**. Auch sie ist eine kleine Thymeleaf-Vorlage und hat Zugriff auf dieselben Contexts.
+
+Sie nutzt die kompakte „Text-Schreibweise" von Thymeleaf (`[# ...]` statt HTML-Tags). Beispiel:
+
+```text
+[# th:if="${Schueler.isEmpty()}"]
+    Schueler-Liste-Kontaktdaten-Erzieher
+[/]
+[# th:if="${!Schueler.isEmpty()}"]
+    [# th:each="schueler,iterState : ${Schueler}"]
+        [# th:if="${iterState.first}"]
+            Schueler-Liste-Kontaktdaten-Erzieher_[(${ #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm') })]
+        [/]
+    [/]
+[/]
+```
+
+- `[# th:... ]…[/]` ist eine Bedingung/Schleife.
+- `[(${ ... })]` gibt einen Wert aus (hier das aktuelle Datum als `20250131-1430`).
+
+Für den Anfang reicht es oft, eine vorhandene `.name.tpl` zu kopieren und den festen Textteil anzupassen.
+
+---
+
+## 12. Schritt 9 – Testen
+
+Es gibt zwei Wege, eine Vorlage zu prüfen:
+
+1. **Statische Vorschau in der IDE / im Browser** – Öffne die `.html`-Datei direkt. Du siehst nur das **statische** Gerüst mit den Platzhalter-Beispieltexten, **keine echten Daten**. Gut, um grobes Layout und HTML-Fehler zu sehen.
+2. **Echter Test im SVWS-Client** – mit echten Daten. Im Client unter **Schule → Reporting** die Vorlage auswählen, Optionen setzen und ausgeben (HTML/PDF). Nur so siehst du das tatsächliche Ergebnis inklusive Daten, Seitenumbrüchen und Druck-Layout.
+
+> Da Browser und OpenHtmlToPdf unterschiedlich rendern, ist für das **endgültige Aussehen immer das im Client erzeugte PDF maßgeblich** – nicht die Browser-Vorschau. Print-CSS-Effekte (Seitenränder, Kopf-/Fußzeilen) zeigt die Browser-Vorschau oft gar nicht oder fehlerhaft an.
+
+---
+
+## 13. Referenz: Verfügbare Daten-Contexts
+
+**Immer verfügbar** (unabhängig vom Bereich):
+
+| Context | Inhalt |
+|---------|--------|
+| `Schule` | Daten der Schule (Bezeichnung, Schulnummer, Schuljahresabschnitt …). |
+| `Parameter` | Die technischen Reporting-Parameter, u. a. `Parameter.istDruckausgabe()`, `Parameter.reportVorlage()`, `Parameter.duplexdruck`. |
+| `VorlageParameter` | Die vom Nutzer gesetzten Optionen (`VorlageParameter.get('…')`, siehe Schritt 5). |
+| `Benutzer` | Der angemeldete Benutzer (z. B. `Benutzer.benutzername()`). |
+
+**Bereichsabhängig** – gefüllt je nach `datenContext` aus Schritt 1:
+
+| `datenContext` | gefüllter Context | Inhalt (Reporting-Typ) |
+|----------------|-------------------|------------------------|
+| `SCHUELER` | `Schueler` | Liste von `ReportingSchueler` |
+| `KLASSEN` | `Klassen` | Liste von `ReportingKlasse` |
+| `KURSE` | `Kurse` | Liste von `ReportingKurs` |
+| `LEHRER` | `Lehrer` | Liste von `ReportingLehrer` |
+| `GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG` | `GostLaufbahnplanungAbiturjahrgangFachwahlStatistiken` | Fachwahlstatistiken |
+| `GOST_KURSPLANUNG` | `GostBlockungsergebnis` | Blockungsergebnis der Kursplanung |
+| `GOST_KLAUSURPLANUNG` | `GostKlausurplan` | Klausurplan |
+| `STUNDENPLANUNG` | `FaecherStundenplaene`, `KlassenStundenplaene`, `LehrerStundenplaene`, `RaeumeStundenplaene`, `SchuelerStundenplaene` | Stundenpläne je Sichtweise |
+
+> Jeder dieser Contexts ist ein **Java-Objekt bzw. eine Liste davon**. Welche Werte du abrufen kannst, steht in der jeweiligen `Reporting…`-Klasse unter `…/module/reporting/types/`.
+
+---
+
+## 14. Referenz: Der Dialekt #convert
+
+Aufruf im Template: `#convert.<methode>(<argumente>)`. Die Methoden stehen in `html/dialects/ConvertExpressionHelper.java`. Überblick nach Themen:
+
+- **Datum** (Eingabe ist ein ISO-Datum als String, z. B. `2008-12-31`):
+  `toDateDE`, `toDateDELong`, `toWochentagDE`, `toWochentagKurzDE`, `toKalenderwocheDE`, `toDateObject`.
+- **Grafische Elemente** (Ergebnis ist ein SVG, das du in `th:utext` oder als `img`-Quelle einsetzt):
+  `toCheckboxSVG(boolean)`, `toCheckboxSVG(boolean, groesse)`,
+  `to2DCodeQRCodeAsSvgHtmlImageSource(inhalt, breiteMM, hoeheMM)`,
+  `toBarcodeCode128AsSvgHtmlImageSource(inhalt, breiteMM, hoeheMM)`.
+- **Kompression & Codierung** (für QR-/Barcode-Inhalte): `compressGZipString`, `decompressGZipString`,
+  `encodeBase64`/`decodeBase64`, `encodeBase45`/`decodeBase45`, `encodeBase32`/`decodeBase32`.
+
+> Die meisten IDE-Plugins kennen diese Dialekte nicht und zeigen sie als „unbekannt" an. Das ist normal – zur Laufzeit funktionieren sie trotzdem. Die `@thymesVar`-Kommentarzeile aus dem Grundgerüst hilft der IDE etwas bei der Autovervollständigung.
+
+---
+
+## 15. Goldene Regeln & häufige Fehler
+
+- **Werte immer mit Klammern abrufen.** Reporting-Daten sind Methoden: `schueler.vorname()`, nicht `schueler.vorname`.
+- **Keine `?.`- oder `?:`-Kurzschreibweise.** Diese „Null-Sicherheits"-Operatoren gibt es hier nicht. Prüfe `null` immer ausdrücklich: `${x != null ? x.wert() : ''}`.
+- **Layout nur mit Tabellen.** Kein Flexbox/Grid – OpenHtmlToPdf unterstützt das nicht.
+- **Layout-Tabellen brauchen einen versteckten `<thead th:if="${false}">`** mit je einem `<th scope="col">` pro Spalte – sonst meckert SonarQube (siehe Schritt 7).
+- **`th:utext` braucht gültiges XML.** Schreibe `<br/>` statt `<br>`. Nackte `<`, `>`, `&` brechen die Erzeugung – auch in Kommentaren innerhalb von eingebettetem CSS/HTML. Im Zweifel `&lt;`, `&gt;`, `&amp;` verwenden.
+- **HTML-Datei und CSS-Datei: gleicher Name, gleicher Ordner.** Sonst wird deine Vorlagen-CSS nicht gefunden.
+- **Parametername muss exakt passen** – in der Java-Konfiguration und im `VorlageParameter.get('…')`.
+- **Maße in Millimetern** (`mm`) angeben – das ist druckgerecht.
+- **Endergebnis immer im Client/PDF prüfen**, nicht nur in der Browser-Vorschau.
+- **Fehlende Daten dürfen nicht abstürzen.** Wenn ein Wert fehlt, soll die Zelle leer bleiben (`''`), der Report aber sauber durchlaufen. Ein Absturz bei der Ausgabe ist immer ein Fehler in der Vorlage (oder im Modul), kein „normaler" Datenzustand.
+
+---
+
+## 16. Checkliste für eine neue Vorlage
+
+- [ ] **Enum-Eintrag** in `ReportingReportvorlage.java` angelegt (Name nach `HAUPTDATEN_V_DETAILDATEN`, korrekter `datenContext`, Pfad, Kompetenzen).
+- [ ] **Konfigurationsmethode** im passenden `ReportingReportvorlageKonfiguration…` angelegt und im Enum-Eintrag referenziert (auch wenn es keine Optionen gibt).
+- [ ] **Drei Dateien** im richtigen Themenordner: `.html`, `.css`, `.name.tpl` – gleicher Basisname.
+- [ ] **HTML-Grundgerüst** mit `reportHtmlHead`- und `reportPageHeaderFooter`-Fragment übernommen.
+- [ ] **Seitenformat** (`namePageCSS`) gewählt.
+- [ ] **Inhalt** mit `th:text`/`th:utext`, `th:each`, `th:if` umgesetzt; `null` überall abgesichert.
+- [ ] **Layout-Tabellen** mit verstecktem `<thead th:if="${false}">` (ein `<th scope="col">` pro Spalte) gegen die SonarQube-Regel abgesichert.
+- [ ] **Optionen** über `VorlageParameter.get('…')` eingebunden (falls vorhanden).
+- [ ] **Datum/Sonderelemente** über `#convert` formatiert.
+- [ ] **Im Client getestet** (HTML **und** PDF), mit und ohne gesetzte Optionen, auch mit leerer Datenmenge.
+
+---
+
+## Weiterführend
+
+- [`reporting-architektur.md`](reporting-architektur.md) – innerer Aufbau des Reporting-Moduls (für Entwickler, die das Modul selbst erweitern).
+- [Thymeleaf-Dokumentation](https://www.thymeleaf.org/documentation.html) – die zugrunde liegende Template-Sprache.
+- [Print-CSS (SELFHTML)](https://wiki.selfhtml.org/wiki/Print-CSS) – Hintergrund zu druckspezifischem CSS.
+</content>
+</invoke>
