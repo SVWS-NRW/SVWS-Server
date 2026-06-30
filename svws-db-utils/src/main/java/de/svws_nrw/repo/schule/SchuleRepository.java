@@ -15,4 +15,11 @@ public interface SchuleRepository extends Repository<DTOEigeneSchule> {
 	 */
 	long getSchuljahresabschnitt();
 
+	/**
+	 * Gibt die Schulnummer der Schule zurück.
+	 *
+	 * @return die Schulnummer der Schule
+	 */
+	int getSchulnummer();
+
 }

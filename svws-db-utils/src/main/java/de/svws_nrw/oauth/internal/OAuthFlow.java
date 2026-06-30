@@ -1,5 +1,7 @@
 package de.svws_nrw.oauth.internal;
 
+import de.svws_nrw.oauth.OAuthScope;
+
 /**
  * Strategie zum Beschaffen von OAuth-Tokens.
  *
@@ -15,7 +17,7 @@ public interface OAuthFlow {
 	 * @return neuer {@link AccessToken}
 	 * @throws TokenRequestException wenn der Token nicht beschafft werden kann
 	 */
-	AccessToken acquire(Credentials credentials, String scope);
+	AccessToken acquire(Credentials credentials, OAuthScope scope);
 
 	/**
 	 * Wirft diese Exception wenn ein Token-Request fehlschlaegt (HTTP/IO/Parsing).

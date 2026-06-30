@@ -35,6 +35,15 @@ public final class SchuleServiceFactory {
 
 
 	/**
+	 * Erstellt einen neuen Schule-Service für den Zugriff auf die Schuldaten.
+	 *
+	 * @return der Service für die Schuldaten
+	 */
+	public SchuleService getSchuleService() {
+		return new SchuleService(schuleRepositoryFactory.getSchuleRepository());
+	}
+
+	/**
 	 * Erstellt einen neuen Statistik-Service für den Zugriff auf Schuljahresabschnitte.
 	 *
 	 * @return der Service für die Schuljahresabschnitte
@@ -42,5 +51,6 @@ public final class SchuleServiceFactory {
 	public SchuljahresabschnittService getSchuljahresabschnittService() {
 		return new SchuljahresabschnittService(schuleRepositoryFactory.getSchuljahresabschnitteRepository());
 	}
+
 
 }

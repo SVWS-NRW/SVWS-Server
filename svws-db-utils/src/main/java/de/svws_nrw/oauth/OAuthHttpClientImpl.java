@@ -49,16 +49,16 @@ public final class OAuthHttpClientImpl implements OAuthHttpClient {
 	}
 
 	@Override
-	public <T> HttpResponse<T> send(final HttpRequest baseRequest, final String scope, final HttpResponse.BodyHandler<T> bodyHandler) {
+	public <T> HttpResponse<T> send(final HttpRequest baseRequest, final OAuthScope scope, final HttpResponse.BodyHandler<T> bodyHandler) {
 		return sendInternal(baseRequest, scope, bodyHandler);
 	}
 
 	@Override
-	public <T> HttpResponse<T> send(final HttpRequest baseRequest, final String scope, final Class<T> type) {
+	public <T> HttpResponse<T> send(final HttpRequest baseRequest, final OAuthScope scope, final Class<T> type) {
 		return sendInternal(baseRequest, scope, jsonBodyHandler(type));
 	}
 
-	private <T> HttpResponse<T> sendInternal(final HttpRequest baseRequest, final String scope, final HttpResponse.BodyHandler<T> bodyHandler) {
+	private <T> HttpResponse<T> sendInternal(final HttpRequest baseRequest, final OAuthScope scope, final HttpResponse.BodyHandler<T> bodyHandler) {
 		final var schema = new Schema(schemaService.getActiveSchema());
 		HttpResponse<T> response = sendWithToken(baseRequest, schema, scope, bodyHandler);
 
@@ -73,6 +73,9 @@ public final class OAuthHttpClientImpl implements OAuthHttpClient {
 		return responseInfo -> HttpResponse.BodySubscribers.mapping(
 				HttpResponse.BodySubscribers.ofString(StandardCharsets.UTF_8),
 				body -> {
+					if (body.isBlank()) {
+						return null;
+					}
 					try {
 						return OBJECT_MAPPER.readValue(body, type);
 					} catch (final JsonProcessingException e) {
@@ -84,7 +87,7 @@ public final class OAuthHttpClientImpl implements OAuthHttpClient {
 				});
 	}
 
-	private <T> HttpResponse<T> sendWithToken(final HttpRequest baseRequest, final Schema schema, final String scope,
+	private <T> HttpResponse<T> sendWithToken(final HttpRequest baseRequest, final Schema schema, final OAuthScope scope,
 			final HttpResponse.BodyHandler<T> bodyHandler) {
 		final AccessToken token = tokenProvider.getToken(schema, scope);
 		final HttpRequest authedRequest = HttpRequest.newBuilder(baseRequest, (k, v) -> true)

@@ -195,6 +195,12 @@ public enum BenutzerKompetenz {
 			"Bietet die Möglichkeit, Personengruppen aus Lehrkräften, Schülern, Erziehungsberechtigten oder außerschulischen Kontaktpersonen zu erstellen."
 	)),
 
+	/** Es werden Rechte für das Ausstellen von digitalen Signaturen benötigt, z.B. für Schulbescheinigungen. */
+	EXTRAS_DIGITALE_SIGNATUREN_AUSSTELLEN(new BenutzerKompetenzKatalogEintrag(
+			76, BenutzerKompetenzGruppe.EXTRAS, "Digitale Signaturen ausstellen", null,
+			"Erlaubt das Ausstellen von Digitalen Signaturen. (z.B. für Schulbescheinigungen)"
+	)),
+
 	/** Es werden Rechte zum Ansehen von Katalogen benötigt. */
 	KATALOG_EINTRAEGE_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
 			81, BenutzerKompetenzGruppe.KATALOG_EINTRAEGE, "Ansehen", null,
@@ -573,9 +579,8 @@ public enum BenutzerKompetenz {
 			"Ermöglicht das Eingeben der Prüfungsergebnisse eines Schülers an berufsbildenden Schulen nur für Abteilungs- oder Stufenleitungen."
 	));
 
-
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static final long VERSION = 2;
+	public static final long VERSION = 3;
 
 	/** Die Daten der Benutzerkompetenz */
 	public final @NotNull BenutzerKompetenzKatalogEintrag daten;

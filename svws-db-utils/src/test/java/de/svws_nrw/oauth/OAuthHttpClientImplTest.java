@@ -55,14 +55,14 @@ class OAuthHttpClientImplTest {
 		when(schemaService.getActiveSchema()).thenReturn("tenant_schema_a");
 		final AccessToken token = mock(AccessToken.class);
 		when(token.asAuthorizationHeader()).thenReturn("Bearer test-token");
-		when(tokenProvider.getToken(any(Schema.class), eq("scope-a"))).thenReturn(token);
+		when(tokenProvider.getToken(any(Schema.class), eq(OAuthScope.DEFAULT))).thenReturn(token);
 
 		final HttpResponse<String> response = mock(HttpResponse.class);
 		when(response.statusCode()).thenReturn(200);
 		when(delegate.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class))).thenReturn(response);
 
 		final HttpRequest baseRequest = HttpRequest.newBuilder(URI.create("https://api.example/resource")).GET().build();
-		cut.send(baseRequest, "scope-a", HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+		cut.send(baseRequest, OAuthScope.DEFAULT, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
 
 		final ArgumentCaptor<HttpRequest> requestCaptor = ArgumentCaptor.forClass(HttpRequest.class);
 		verify(delegate).send(requestCaptor.capture(), any(HttpResponse.BodyHandler.class));
@@ -77,7 +77,7 @@ class OAuthHttpClientImplTest {
 		when(schemaService.getActiveSchema()).thenReturn("tenant_schema_a");
 		final AccessToken token = mock(AccessToken.class);
 		when(token.asAuthorizationHeader()).thenReturn("Bearer test-token");
-		when(tokenProvider.getToken(any(Schema.class), eq("scope-a"))).thenReturn(token);
+		when(tokenProvider.getToken(any(Schema.class), eq(OAuthScope.DEFAULT))).thenReturn(token);
 
 		final HttpResponse<String> response401 = mock(HttpResponse.class);
 		when(response401.statusCode()).thenReturn(401);
@@ -88,13 +88,13 @@ class OAuthHttpClientImplTest {
 				.thenReturn(response200);
 
 		final HttpRequest baseRequest = HttpRequest.newBuilder(URI.create("https://api.example/resource")).GET().build();
-		final HttpResponse<String> actual = cut.send(baseRequest, "scope-a", HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+		final HttpResponse<String> actual = cut.send(baseRequest, OAuthScope.DEFAULT, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
 
 		assertSame(response200, actual);
 		verify(delegate, times(2)).send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class));
 
 		final ArgumentCaptor<Schema> schemaCaptor = ArgumentCaptor.forClass(Schema.class);
-		verify(tokenProvider, times(1)).invalidate(schemaCaptor.capture(), eq("scope-a"));
+		verify(tokenProvider, times(1)).invalidate(schemaCaptor.capture(), eq(OAuthScope.DEFAULT));
 		assertEquals("tenant_schema_a", schemaCaptor.getValue().name());
 	}
 
@@ -151,7 +151,7 @@ class OAuthHttpClientImplTest {
 		when(schemaService.getActiveSchema()).thenReturn("tenant_schema_a");
 		final AccessToken token = mock(AccessToken.class);
 		when(token.asAuthorizationHeader()).thenReturn("Bearer test-token");
-		when(tokenProvider.getToken(any(Schema.class), eq("scope-a"))).thenReturn(token);
+		when(tokenProvider.getToken(any(Schema.class), eq(OAuthScope.DEFAULT))).thenReturn(token);
 
 		when(delegate.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
 				.thenThrow(new IOException("io boom"));
@@ -159,7 +159,7 @@ class OAuthHttpClientImplTest {
 		final HttpRequest baseRequest = HttpRequest.newBuilder(URI.create("https://api.example/resource")).GET().build();
 		final HttpResponse.BodyHandler<String> bodyHandler = HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8);
 		final ApiOperationException ex = assertThrows(ApiOperationException.class,
-				() -> cut.send(baseRequest, "scope-a", bodyHandler));
+				() -> cut.send(baseRequest, OAuthScope.DEFAULT, bodyHandler));
 		assertNotNull(ex);
 		assertTrue(Thread.currentThread().isInterrupted());
 

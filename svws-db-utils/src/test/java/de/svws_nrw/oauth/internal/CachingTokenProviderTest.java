@@ -6,6 +6,7 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 
 import de.svws_nrw.oauth.CredStoreService;
+import de.svws_nrw.oauth.OAuthScope;
 import de.svws_nrw.oauth.Schema;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,10 +44,8 @@ class CachingTokenProviderTest {
 		// Da wir den CacheKey-Typ nicht sehen, nutzen wir mehrere invalidates fuer die verwendeten Keys.
 		final Schema schema = new Schema("tenant_schema_a");
 		final CachingTokenProvider provider = new CachingTokenProvider(mock(CredStoreService.class), mock(OAuthFlow.class));
-		provider.invalidate(schema, "scope-a");
-		provider.invalidate(schema, "scope-b");
+		provider.invalidate(schema, OAuthScope.DEFAULT);
 		provider.invalidate(schema, null);
-		provider.invalidate(schema, " ");
 	}
 
 	@Test
@@ -58,15 +57,15 @@ class CachingTokenProviderTest {
 		when(credStoreService.getBySchema(schema)).thenReturn(creds);
 
 		final AccessToken token = new AccessToken("v1", "Bearer", Instant.parse("2026-06-18T12:10:00Z"));
-		when(flow.acquire(creds, "scope-a")).thenReturn(token);
+		when(flow.acquire(creds, OAuthScope.DEFAULT)).thenReturn(token);
 
-		cut.getToken(schema, "scope-a");
+		cut.getToken(schema, OAuthScope.DEFAULT);
 
-		verify(flow, times(1)).acquire(creds, "scope-a");
+		verify(flow, times(1)).acquire(creds, OAuthScope.DEFAULT);
 	}
 
 	@Test
-	@DisplayName("getToken | normalizes blank scope to empty string")
+	@DisplayName("getToken | with null scope")
 	void getTokenNormalizesBlankScopeToEmptyString() {
 
 		final Schema schema = new Schema("tenant_schema_a");
@@ -74,11 +73,11 @@ class CachingTokenProviderTest {
 		when(credStoreService.getBySchema(schema)).thenReturn(creds);
 
 		final AccessToken token = new AccessToken("v1", "Bearer", Instant.parse("2026-06-18T12:10:00Z"));
-		when(flow.acquire(creds, "")).thenReturn(token);
+		when(flow.acquire(creds, null)).thenReturn(token);
 
-		final AccessToken actual = cut.getToken(schema, " \t");
+		final AccessToken actual = cut.getToken(schema, null);
 		assertSame(token, actual);
-		verify(flow, times(1)).acquire(creds, "");
+		verify(flow, times(1)).acquire(creds, null);
 	}
 
 	@Test
@@ -92,16 +91,16 @@ class CachingTokenProviderTest {
 
 		final AccessToken expired = new AccessToken("old", "Bearer", base);
 		final AccessToken fresh = new AccessToken("new", "Bearer", base.plusSeconds(60));
-		when(flow.acquire(creds, "scope-a"))
+		when(flow.acquire(creds, OAuthScope.DEFAULT))
 				.thenReturn(expired)
 				.thenReturn(fresh);
 
-		final AccessToken first = cut.getToken(schema, "scope-a");
-		final AccessToken second = cut.getToken(schema, "scope-a");
+		final AccessToken first = cut.getToken(schema, OAuthScope.DEFAULT);
+		final AccessToken second = cut.getToken(schema, OAuthScope.DEFAULT);
 
 		assertSame(expired, first);
 		assertSame(fresh, second);
-		verify(flow, times(2)).acquire(creds, "scope-a");
+		verify(flow, times(2)).acquire(creds, OAuthScope.DEFAULT);
 	}
 
 	@Test
@@ -114,16 +113,16 @@ class CachingTokenProviderTest {
 
 		final AccessToken token1 = new AccessToken("v1", "Bearer", Instant.parse("2026-06-18T12:10:00Z"));
 		final AccessToken token2 = new AccessToken("v2", "Bearer", Instant.parse("2026-06-18T12:10:00Z"));
-		when(flow.acquire(creds, "scope-a"))
+		when(flow.acquire(creds, OAuthScope.DEFAULT))
 				.thenReturn(token1)
 				.thenReturn(token2);
 
-		final AccessToken first = cut.getToken(schema, "scope-a");
-		cut.invalidate(schema, "scope-a");
-		final AccessToken second = cut.getToken(schema, "scope-a");
+		final AccessToken first = cut.getToken(schema, OAuthScope.DEFAULT);
+		cut.invalidate(schema, OAuthScope.DEFAULT);
+		final AccessToken second = cut.getToken(schema, OAuthScope.DEFAULT);
 
 		assertNotEquals(first, second);
-		verify(flow, times(2)).acquire(creds, "scope-a");
+		verify(flow, times(2)).acquire(creds, OAuthScope.DEFAULT);
 	}
 
 }

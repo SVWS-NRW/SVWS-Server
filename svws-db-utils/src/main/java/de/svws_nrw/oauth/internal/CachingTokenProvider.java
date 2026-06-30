@@ -7,9 +7,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import de.svws_nrw.oauth.CredStoreService;
+import de.svws_nrw.oauth.OAuthScope;
 import de.svws_nrw.oauth.Schema;
 import de.svws_nrw.oauth.TokenProvider;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Verwaltet OAuth-Tokens: Cache pro {@code (schema, scope)}-Kombination
@@ -65,8 +65,8 @@ public final class CachingTokenProvider implements TokenProvider {
 	 * @return gueltiger {@link AccessToken}
 	 */
 	@Override
-	public AccessToken getToken(final Schema schema, final String scope) {
-		final TokenCacheKey key = new TokenCacheKey(schema, normalizeScope(scope));
+	public AccessToken getToken(final Schema schema, final OAuthScope scope) {
+		final TokenCacheKey key = new TokenCacheKey(schema, scope);
 
 		final CompletableFuture<AccessToken> cached = CACHE.get(key);
 		if ((cached != null) && !cached.isCompletedExceptionally()) {
@@ -94,8 +94,8 @@ public final class CachingTokenProvider implements TokenProvider {
 	 * @param scope  OAuth-Scope
 	 */
 	@Override
-	public void invalidate(final Schema schema, final String scope) {
-		CACHE.remove(new TokenCacheKey(schema, normalizeScope(scope)));
+	public void invalidate(final Schema schema, final OAuthScope scope) {
+		CACHE.remove(new TokenCacheKey(schema, scope));
 	}
 
 	private CompletableFuture<AccessToken> acquireTokenAsync(final TokenCacheKey key) {
@@ -105,11 +105,7 @@ public final class CachingTokenProvider implements TokenProvider {
 		});
 	}
 
-	private static String normalizeScope(final String scope) {
-		return StringUtils.defaultIfBlank(scope, "").trim();
-	}
-
-	private record TokenCacheKey(Schema schema, String scope) {
+	private record TokenCacheKey(Schema schema, OAuthScope scope) {
 	}
 
 }

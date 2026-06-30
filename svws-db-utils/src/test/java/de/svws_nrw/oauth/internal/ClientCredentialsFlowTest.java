@@ -11,6 +11,7 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.Base64;
 
+import de.svws_nrw.oauth.OAuthScope;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -60,7 +61,7 @@ class ClientCredentialsFlowTest {
 		final HttpResponse<String> response = mockResponse(200, "{\"access_token\":\"t\",\"token_type\":\"Bearer\",\"expires_in\":60}");
 		when(client.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class))).thenReturn(response);
 
-		cut.acquire(creds, "scope-a");
+		cut.acquire(creds, OAuthScope.DEFAULT);
 
 		final ArgumentCaptor<HttpRequest> requestCaptor = ArgumentCaptor.forClass(HttpRequest.class);
 		verify(client, times(1)).send(requestCaptor.capture(), any(HttpResponse.BodyHandler.class));

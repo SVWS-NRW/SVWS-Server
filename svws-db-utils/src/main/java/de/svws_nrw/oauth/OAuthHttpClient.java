@@ -16,16 +16,16 @@ public interface OAuthHttpClient {
 	 *
 	 * @param <T>         Typ des Response-Body
 	 * @param baseRequest der fachliche Request ohne Authorization-Header
-	 * @param scope       OAuth-Scope fuer diesen Request;
+	 * @param scope       OAuthScope fuer diesen Request;
 	 *                    {@code null} oder leer nutzt den Default-Scope der Credentials
 	 * @param bodyHandler JDK-BodyHandler fuer den Response-Typ
 	 * @return die HTTP-Response des Endpunkts
 	 * @throws ApiOperationException bei Netzwerk- oder Interrupt-Fehlern
 	 */
-	<T> HttpResponse<T> send(HttpRequest baseRequest, String scope, HttpResponse.BodyHandler<T> bodyHandler);
+	<T> HttpResponse<T> send(HttpRequest baseRequest, OAuthScope scope, HttpResponse.BodyHandler<T> bodyHandler);
 
 	/**
-	 * Wie {@link #send(HttpRequest, String, HttpResponse.BodyHandler)},
+	 * Wie {@link #send(HttpRequest, OAuthScope, HttpResponse.BodyHandler)},
 	 * deserialisiert den Response-Body jedoch direkt nach {@code T} via Jackson.
 	 *
 	 * @param <T>         Zieltyp der Jackson-Deserialisierung
@@ -36,5 +36,5 @@ public interface OAuthHttpClient {
 	 * @return die HTTP-Response mit deserialisiertem Body
 	 * @throws ApiOperationException bei Netzwerk- oder Interrupt-Fehlern
 	 */
-	<T> HttpResponse<T> send(HttpRequest baseRequest, String scope, Class<T> type);
+	<T> HttpResponse<T> send(HttpRequest baseRequest, OAuthScope scope, Class<T> type);
 }

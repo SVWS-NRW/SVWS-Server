@@ -123,4 +123,15 @@ public class BenutzerKompetenzService {
 		}
 	}
 
+	/**
+	 * Prüft, ob der aktuelle Benutzer die übergebene Kompetenz hat.
+	 *
+	 * @param kompetenz die zu prüfende Kompetenz
+	 *
+	 * @return true, falls eine der Kompetenzen vorhanden ist, sonst false
+	 */
+	public boolean hatAktuellerBenutzerKompetenz(final BenutzerKompetenz kompetenz) {
+		final Benutzer benutzer = benutzerRepository.getAktuellerBenutzer();
+		return benutzer.hatVerwendeteKompetenz(kompetenz);
+	}
 }

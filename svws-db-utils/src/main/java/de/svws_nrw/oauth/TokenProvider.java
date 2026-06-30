@@ -16,12 +16,12 @@ public interface TokenProvider {
 	 *
 	 * @return aufgelöstes {@link AccessToken}
 	 */
-	AccessToken getToken(Schema schema, String scope);
+	AccessToken getToken(Schema schema, OAuthScope scope);
 
 	/** Invalidiert das gecachte Token (z.B. nach einem 401).
 	 *
 	 * @param schema Schema
 	 * @param scope scope
 	 */
-	void invalidate(Schema schema, String scope);
+	void invalidate(Schema schema, OAuthScope scope);
 }

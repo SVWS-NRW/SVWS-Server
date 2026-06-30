@@ -9,12 +9,14 @@ import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.time.Duration;
 import java.util.Base64;
+import java.util.Optional;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.svws_nrw.oauth.OAuthScope;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
@@ -52,14 +54,14 @@ public final class ClientCredentialsFlow implements OAuthFlow {
 	}
 
 	@Override
-	public AccessToken acquire(final Credentials creds, final String scope) {
+	public AccessToken acquire(final Credentials creds, final OAuthScope scope) {
 		final HttpRequest request = HttpRequest.newBuilder()
 				.uri(creds.tokenUrl())
 				.timeout(REQUEST_TIMEOUT_SEC)
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
 				.header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
 				.header(HttpHeaders.AUTHORIZATION, buildBasicAuthHeader(creds))
-				.POST(buildRequestBody(getEffectiveScope(creds, scope)))
+				.POST(buildRequestBody(resolveScope(creds, scope)))
 				.build();
 
 		try {
@@ -79,8 +81,10 @@ public final class ClientCredentialsFlow implements OAuthFlow {
 		return extractAccessToken(response.body());
 	}
 
-	private static String getEffectiveScope(final Credentials creds, final String scope) {
-		return StringUtils.isBlank(scope) ? scope : creds.defaultScope();
+	private static String resolveScope(final Credentials creds, final OAuthScope scope) {
+		return Optional.ofNullable(scope)
+				.map(OAuthScope::text)
+				.orElse(creds.defaultScope());
 	}
 
 	private static String buildBasicAuthHeader(final Credentials creds) {
