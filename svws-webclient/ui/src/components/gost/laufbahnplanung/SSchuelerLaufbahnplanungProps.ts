@@ -1,36 +1,8 @@
 import type { Config } from "../../../utils/Config";
-import type { ApiFile } from "../../../../../core/src/api/BaseApi";
-import type { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
-import type { GostBelegpruefungErgebnis } from "../../../../../core/src/core/abschluss/gost/GostBelegpruefungErgebnis";
-import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
-import type { GostLaufbahnplanungBeratungsdaten } from "../../../../../core/src/core/data/gost/GostLaufbahnplanungBeratungsdaten";
-import type { GostSchuelerFachwahl } from "../../../../../core/src/core/data/gost/GostSchuelerFachwahl";
-import type { LehrerListeEintrag } from "../../../../../core/src/core/data/lehrer/LehrerListeEintrag";
-import type { SchuelerListeEintrag } from "../../../../../core/src/core/data/schueler/SchuelerListeEintrag";
 import type { BenutzerKompetenz } from "../../../../../core/src/core/types/benutzer/BenutzerKompetenz";
-import type { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
-import type { ArrayList } from "../../../../../core/src/java/util/ArrayList";
 
 export interface SchuelerLaufbahnplanungProps {
 	benutzerKompetenzen?: Set<BenutzerKompetenz>,
 	benutzerKompetenzenAbiturjahrgaenge?: Set<number>;
 	config: () => Config;
-	setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
-	setGostBelegpruefungsArt: (value: 'ef1' | 'gesamt' | 'auto') => Promise<void>;
-	exportLaufbahnplanung: () => Promise<ApiFile>;
-	importLaufbahnplanung: (data: FormData) => Promise<void>;
-	schueler: SchuelerListeEintrag,
-	gostJahrgangsdaten: GostJahrgangsdaten;
-	gostLaufbahnBeratungsdaten: () => GostLaufbahnplanungBeratungsdaten;
-	patchBeratungsdaten: (data: Partial<GostLaufbahnplanungBeratungsdaten>) => Promise<void>;
-	gostBelegpruefungsArt: () => 'ef1' | 'gesamt' | 'auto';
-	gostBelegpruefungErgebnis: () => GostBelegpruefungErgebnis;
-	abiturdatenManager: () => AbiturdatenManager;
-	listLehrer: ArrayList<LehrerListeEintrag>;
-	id?: number;
-	hatZwischenspeicher: boolean;
-	saveLaufbahnplanung: () => Promise<void>;
-	restoreLaufbahnplanung: () => Promise<void>;
-	resetFachwahlen: (forceDelete: boolean) => Promise<void>;
-	gotoKursblockung: (halbjahr: GostHalbjahr) => Promise<void>;
 }

@@ -103,6 +103,9 @@ export class LaufbahnplanungUiManager {
 	 * @param serverMode               der Mode, in welchem der Server betrieben wird
 	 * @param manager                  der Abiturdaten-Manager zur Durchführung der Belegprüfung
 	 * @param config                   die Konfiguration des Clients
+	 * @param jahrgang                 die Daten zum Jahrgang
+	 * @param setWahl                  die Methode zum Setzen von Fachwahlen
+	 * @param configPfade              die zu verwendenden Pfade für das Speichern der Einstellungen in der Konfiguration (Nutzung des Managers in unterschiedlichen Ansichten)
 	 * @param ignoriereSprachenfolge   gibt an, ob bei den angebotenen Sprachfächern eine Sprachenfolge berücksichtigt werden soll oder nicht
 	 * @param belegungHatImmerNoten    gibt an, ob bei den einzelnen Fachbelegungen immer Noten bei den Leistungsdaten angenommen werden sollen
 	 */

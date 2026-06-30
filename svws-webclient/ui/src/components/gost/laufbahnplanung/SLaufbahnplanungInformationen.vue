@@ -33,17 +33,18 @@
 	import type { List } from '../../../../../core/src/java/util/List';
 	import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
 	import { GostBelegungsfehlerArt } from '../../../../../core/src/core/abschluss/gost/GostBelegungsfehlerArt';
+	import { useGostLaufbahnplanungState } from '../../../states/GostLaufbahnplanungState';
 
 	const props = withDefaults(defineProps<{
-		fehlerliste: () => List<GostBelegpruefungErgebnisFehler>;
 		scroll?: boolean;
 	}>(), {
 		scroll: false,
 	});
+	const gostLaufbahnplanungState = useGostLaufbahnplanungState();
 
 	const belegungsHinweise: ComputedRef<List<GostBelegpruefungErgebnisFehler>> = computed(() => {
 		const res = new ArrayList<GostBelegpruefungErgebnisFehler>();
-		for (const fehler of props.fehlerliste()) {
+		for (const fehler of gostLaufbahnplanungState.gostBelegpruefungErgebnis.fehlercodes) {
 			if (GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.HINWEIS) {
 				res.add(fehler);
 			}

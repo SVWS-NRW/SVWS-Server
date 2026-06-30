@@ -47,8 +47,8 @@
 				<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
 					<div class="svws-ui-td svws-align-center svws-divider svws-no-padding items-center">
 						{{ halbjahr.kuerzel }}
-						<svws-ui-tooltip v-if="gostJahrgangsdaten.anzahlKursblockungen[halbjahr.id] > 0">
-							<span @click.stop="gotoKursblockung(halbjahr)" class="cursor-pointer"><span class="icon-sm i-ri-link" /></span>
+						<svws-ui-tooltip v-if="gostLaufbahnplanungState.gostJahrgangsdaten.anzahlKursblockungen[halbjahr.id] > 0">
+							<span @click.stop="gostLaufbahnplanungState.gotoKursplanung(halbjahr)" class="cursor-pointer"><span class="icon-sm i-ri-link" /></span>
 							<template #content>
 								Zur {{ halbjahr.kuerzel }}-Kursblockung
 							</template>
@@ -62,7 +62,7 @@
 		</template>
 		<template #body>
 			<template v-for="fach in manager.faecherGefiltert" :key="fach.id">
-				<s-laufbahnplanung-fach :manager :abiturdaten-manager :gost-jahrgangsdaten :fach :hat-update-kompetenz :active-halbjahr-id
+				<s-laufbahnplanung-fach :manager :fach :hat-update-kompetenz :active-halbjahr-id
 					:active-focus="fach.id === activeFachId" @keydown="switchFocus($event)" @update:focus="(fachId: number, halbjahrId: number) => updateFocusState(fachId, halbjahrId)"
 					@update:focus:impossible="(fachId: number, halbjahrId: number) => retryFocus(fachId, halbjahrId)" />
 			</template>
@@ -170,24 +170,21 @@
 <script setup lang="ts">
 
 	import { ref, onMounted, computed } from "vue";
-	import type { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
-	import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
 	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
 	import type { DataTableColumn } from "../../../types";
 	import type { LaufbahnplanungUiManager } from "./LaufbahnplanungUiManager";
+	import { useGostLaufbahnplanungState } from "../../../states/GostLaufbahnplanungState";
 
 	const props = withDefaults(defineProps<{
 		manager: LaufbahnplanungUiManager;
-		abiturdatenManager: () => AbiturdatenManager;
-		gostJahrgangsdaten: GostJahrgangsdaten;
-		gotoKursblockung: (halbjahr: GostHalbjahr) => Promise<unknown>
 		title?: string | undefined;
 		hatUpdateKompetenz?: boolean;
 	}>(), {
 		title: undefined,
-		modus: 'normal',
 		hatUpdateKompetenz: true,
 	});
+
+	const gostLaufbahnplanungState = useGostLaufbahnplanungState();
 
 	const columns: Array<DataTableColumn> = [
 		{ key: "kuerzel", label: "Kürzel", align: 'center', minWidth: 5, span: 0.75 },

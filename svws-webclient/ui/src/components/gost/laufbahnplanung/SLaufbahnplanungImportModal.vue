@@ -12,13 +12,16 @@
 </template>
 
 <script setup lang="ts">
+
 	import { ref } from 'vue';
+	import { useGostLaufbahnplanungState } from '../../../states/GostLaufbahnplanungState';
 
 	const props = defineProps<{
 		show: boolean;
-		importLaufbahnplanung: (data: FormData) => Promise<void>;
 		multiple?: boolean;
 	}>();
+
+	const gostLaufbahnplanungState = useGostLaufbahnplanungState();
 
 	const emit = defineEmits<{
 		"update:show": [show: boolean];
@@ -42,7 +45,7 @@
 			formData.append("data", target.files[i], "lpfile" + (i + 1));
 		}
 		try {
-			await props.importLaufbahnplanung(formData);
+			await gostLaufbahnplanungState.importLaufbahnplanung(formData);
 			emit('update:show', false);
 		} catch (e) {
 			failed.value = true;

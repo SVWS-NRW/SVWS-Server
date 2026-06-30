@@ -21,15 +21,15 @@
 <script setup lang="ts">
 
 	import { ref } from "vue";
-	import type { LadeDatenProps } from "./LadeDatenProps";
 	import { version } from '../../version';
 	import { githash } from '../../githash';
 	import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
-
-	const props = defineProps<LadeDatenProps>();
+	import { useGostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
 
 	const status = ref<string | null | undefined>(undefined);
 	const loading = ref<boolean>(false);
+
+	const gostLaufbahnplanungState = useGostLaufbahnplanungState();
 
 	async function import_file(event: Event) {
 		const target = event.target as HTMLInputElement;
@@ -45,7 +45,7 @@
 		const formData = new FormData();
 		formData.append("data", file);
 		try {
-			await props.importLaufbahnplanung(formData);
+			await gostLaufbahnplanungState.importLaufbahnplanung(formData);
 		} catch (e) {
 			if (e instanceof UserNotificationException) {
 				status.value = e.message;

@@ -25,17 +25,15 @@
 <script setup lang="ts">
 
 	import { computed, reactive, type ComputedRef } from "vue";
-	import type { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
 	import type { GostFach } from "../../../../../core/src/core/data/gost/GostFach";
 	import { GostFachbereich } from "../../../../../core/src/core/types/gost/GostFachbereich";
 	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
 	import { GostKursart } from "../../../../../core/src/core/types/gost/GostKursart";
 	import { GostSchriftlichkeit } from "../../../../../core/src/core/types/gost/GostSchriftlichkeit";
 	import { SelectManager } from "../../../ui/controls/select/manager/SelectManager";
+	import { useGostLaufbahnplanungState } from "../../../states/GostLaufbahnplanungState";
 
-	const props = defineProps<{
-		abiturdatenManager: () => AbiturdatenManager;
-	}>();
+	const gostLaufbahnplanungState = useGostLaufbahnplanungState();
 
 	const auswahl = reactive({
 		ef: {
@@ -69,7 +67,7 @@
 
 	function getFaecher(bereich: GostFachbereich, halbjahre: GostHalbjahr[]): GostFach[] {
 		const result: GostFach[] = [];
-		const manager = props.abiturdatenManager();
+		const manager = gostLaufbahnplanungState.abiturdatenManager;
 		for (const fach of bereich.getFaecher()) {
 			for (const gostFach of manager.faecher().getByKuerzel(fach.name())) {
 				const fachbelegung = manager.getFachbelegungByID(gostFach.id);

@@ -4,7 +4,7 @@
 			<svws-ui-tooltip>
 				{{ pruefung.sprache }}
 				<template #content>
-					{{ Fach.data().getWertByKuerzel(pruefung.sprache)?.daten(schuljahr)?.text ?? '' }}
+					{{ Fach.data().getWertByKuerzel(pruefung.sprache)?.daten(schuljahr())?.text ?? '' }}
 				</template>
 			</svws-ui-tooltip>
 		</template>
@@ -22,14 +22,15 @@
 </template>
 
 <script setup lang="ts">
-	import { Fach } from '../../../../../core/src/asd/types/fach/Fach';
-	import type { Sprachendaten } from '../../../../../core/src/asd/data/schueler/Sprachendaten';
-	import { Sprachpruefungniveau } from '../../../../../core/src/core/types/fach/Sprachpruefungniveau';
 
-	const props = defineProps<{
-		schuljahr: number;
-		sprachendaten: () => Sprachendaten;
-	}>();
+	import { Fach } from '../../../../../core/src/asd/types/fach/Fach';
+	import { Sprachpruefungniveau } from '../../../../../core/src/core/types/fach/Sprachpruefungniveau';
+	import { useGostLaufbahnplanungState } from '../../../states/GostLaufbahnplanungState';
+
+	const gostLaufbahnplanungState = useGostLaufbahnplanungState();
+
+	const schuljahr = () => gostLaufbahnplanungState.abiturdatenManager.getSchuljahr();
+	const sprachendaten = () => gostLaufbahnplanungState.abiturdatenManager.getSprachendaten();
 
 	const columns = [{ key: 'sprache', label: 'Sprachprüfung' }, { key: 'typ', label: 'Typ' }, { key: 'anspruchsniveauId', label: "Niveau" }, { key: 'ersetzt', label: 'Ersetzt' }, { key: 'note', label: 'Note' }];
 

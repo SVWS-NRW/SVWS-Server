@@ -139,7 +139,6 @@
 
 	import { computed, onUpdated, ref } from "vue";
 	import { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
-	import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
 	import type { GostFach } from "../../../../../core/src/core/data/gost/GostFach";
 	import { Fachgruppe } from "../../../../../core/src/asd/types/fach/Fachgruppe";
 	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
@@ -148,11 +147,10 @@
 	import type { GostJahrgangFachkombination } from "../../../../../core/src/core/data/gost/GostJahrgangFachkombination";
 	import { GostFachbereich } from "../../../../../core/src/core/types/gost/GostFachbereich";
 	import type { LaufbahnplanungUiManager } from "./LaufbahnplanungUiManager";
+	import { useGostLaufbahnplanungState } from "../../../states/GostLaufbahnplanungState";
 
 	const props = withDefaults(defineProps<{
 		manager: LaufbahnplanungUiManager;
-		abiturdatenManager: () => AbiturdatenManager;
-		gostJahrgangsdaten: GostJahrgangsdaten;
 		fach: GostFach;
 		hatUpdateKompetenz: boolean;
 		activeFocus?: boolean;
@@ -160,6 +158,8 @@
 	}>(), {
 		activeHalbjahrId: 0,
 	});
+
+	const gostLaufbahnplanungState = useGostLaufbahnplanungState();
 
 
 	const emit = defineEmits<{
@@ -192,7 +192,7 @@
 	}
 
 	function istBewertet(halbjahr: GostHalbjahr): boolean {
-		return props.abiturdatenManager().istBewertet(halbjahr);
+		return gostLaufbahnplanungState.abiturdatenManager.istBewertet(halbjahr);
 	}
 
 	function getTooltipHalbjahr(halbjahr: GostHalbjahr): string {
@@ -201,15 +201,15 @@
 			if (note === null) {
 				return 'Es liegen keine Leistungsdaten vor!';
 			}
-			const schuljahr = props.abiturdatenManager().getSchuljahr();
+			const schuljahr = gostLaufbahnplanungState.abiturdatenManager.getSchuljahr();
 			return `Note ${note.daten(schuljahr)?.kuerzel ?? '-'} (keine Änderungen mehr möglich)`;
 		}
-		return (!props.manager.istMoeglich(props.fach, halbjahr)) ? 'Wahl nicht möglich' : '';
+		return props.manager.istMoeglich(props.fach, halbjahr) ? '' : 'Wahl nicht möglich';
 	}
 
 
 	const abi_wahl = computed<string>(() => {
-		const fachbelegung = props.abiturdatenManager().getFachbelegungByID(props.fach.id);
+		const fachbelegung = gostLaufbahnplanungState.abiturdatenManager.getFachbelegungByID(props.fach.id);
 		if ((fachbelegung === null) || (fachbelegung.abiturFach === null)) {
 			return "";
 		}
@@ -217,12 +217,12 @@
 	});
 
 	const wahlen = computed<string[]>(() => {
-		const fachbelegung = props.abiturdatenManager().getFachbelegungByID(props.fach.id);
+		const fachbelegung = gostLaufbahnplanungState.abiturdatenManager.getFachbelegungByID(props.fach.id);
 		if (fachbelegung === null) {
 			return ["", "", "", "", "", ""];
 		}
 		return fachbelegung.belegungen.map((b: AbiturFachbelegungHalbjahr | null) => {
-			b = (b !== null) ? b : new AbiturFachbelegungHalbjahr();
+			b = (b === null) ? new AbiturFachbelegungHalbjahr() : b;
 			if (AbiturdatenManager.istNullPunkteBelegungInQPhase(b)) {
 				return "6";
 			}
@@ -247,20 +247,20 @@
 		if (!kombi.gueltigInHalbjahr[hj.id]) {
 			return false;
 		}
-		const fach1 = props.abiturdatenManager().faecher().get(kombi.fachID1);
+		const fach1 = gostLaufbahnplanungState.abiturdatenManager.faecher().get(kombi.fachID1);
 		if (fach1 === null) {
 			return false;
 		}
-		const f1 = props.abiturdatenManager().getFachbelegungByID(fach1.id);
-		const f2 = props.abiturdatenManager().getFachbelegungByID(fachid);
+		const f1 = gostLaufbahnplanungState.abiturdatenManager.getFachbelegungByID(fach1.id);
+		const f2 = gostLaufbahnplanungState.abiturdatenManager.getFachbelegungByID(fachid);
 		const kursart1 = GostKursart.fromKuerzel(kombi.kursart1);
 		const kursart2 = GostKursart.fromKuerzel(kombi.kursart2);
 		const bel1 = kursart1
-			? props.abiturdatenManager().pruefeBelegungMitKursart(f1, kursart1, hj)
-			: props.abiturdatenManager().pruefeBelegung(f1, hj);
+			? gostLaufbahnplanungState.abiturdatenManager.pruefeBelegungMitKursart(f1, kursart1, hj)
+			: gostLaufbahnplanungState.abiturdatenManager.pruefeBelegung(f1, hj);
 		const bel2 = kursart2
-			? props.abiturdatenManager().pruefeBelegungMitKursart(f2, kursart2, hj)
-			: props.abiturdatenManager().pruefeBelegung(f2, hj);
+			? gostLaufbahnplanungState.abiturdatenManager.pruefeBelegungMitKursart(f2, kursart2, hj)
+			: gostLaufbahnplanungState.abiturdatenManager.pruefeBelegung(f2, hj);
 		if (bel2) {
 			return false;
 		}
@@ -268,7 +268,7 @@
 	}
 
 	function istFachkombiErforderlichHalbjahr(hj: GostHalbjahr): boolean {
-		for (const kombi of props.abiturdatenManager().faecher().getFachkombinationenErforderlich()) {
+		for (const kombi of gostLaufbahnplanungState.abiturdatenManager.faecher().getFachkombinationenErforderlich()) {
 			if (pruefeKombinationErforderlich(props.fach.id, kombi, hj)) {
 				return true;
 			}
@@ -292,24 +292,24 @@
 		const fachID2 = (fachid === kombi.fachID2) ? fachid : kombi.fachID2;
 		const kursart1 = (fachid === kombi.fachID2) ? GostKursart.fromKuerzel(kombi.kursart1) : GostKursart.fromKuerzel(kombi.kursart2);
 		const kursart2 = (fachid === kombi.fachID2) ? GostKursart.fromKuerzel(kombi.kursart2) : GostKursart.fromKuerzel(kombi.kursart1);
-		const fach1 = props.abiturdatenManager().faecher().get(fachID1);
-		const fach2 = props.abiturdatenManager().faecher().get(fachID2);
+		const fach1 = gostLaufbahnplanungState.abiturdatenManager.faecher().get(fachID1);
+		const fach2 = gostLaufbahnplanungState.abiturdatenManager.faecher().get(fachID2);
 		if ((fach1 === null) || (fach2 === null)) {
 			return false;
 		}
-		const f1 = props.abiturdatenManager().getFachbelegungByID(fach1.id);
-		const f2 = props.abiturdatenManager().getFachbelegungByID(fach2.id);
+		const f1 = gostLaufbahnplanungState.abiturdatenManager.getFachbelegungByID(fach1.id);
+		const f2 = gostLaufbahnplanungState.abiturdatenManager.getFachbelegungByID(fach2.id);
 		const bel1 = kursart1
-			? props.abiturdatenManager().pruefeBelegungMitKursart(f1, kursart1, hj)
-			: props.abiturdatenManager().pruefeBelegung(f1, hj);
+			? gostLaufbahnplanungState.abiturdatenManager.pruefeBelegungMitKursart(f1, kursart1, hj)
+			: gostLaufbahnplanungState.abiturdatenManager.pruefeBelegung(f1, hj);
 		const bel2 = kursart2
-			? props.abiturdatenManager().pruefeBelegungMitKursart(f2, kursart2, hj)
-			: props.abiturdatenManager().pruefeBelegung(f2, hj);
+			? gostLaufbahnplanungState.abiturdatenManager.pruefeBelegungMitKursart(f2, kursart2, hj)
+			: gostLaufbahnplanungState.abiturdatenManager.pruefeBelegung(f2, hj);
 		return bel1 && bel2;
 	}
 
 	function istFachkombiVerbotenHalbjahr(hj: GostHalbjahr): boolean {
-		const fachkombis = props.abiturdatenManager().faecher().getFachkombinationenVerboten();
+		const fachkombis = gostLaufbahnplanungState.abiturdatenManager.faecher().getFachkombinationenVerboten();
 		for (const kombi of fachkombis) {
 			if (pruefeKombinationVerboten(props.fach.id, kombi, hj)) {
 				return true;
@@ -374,10 +374,10 @@
 		}
 		let beginn;
 		if (sw) {
-			beginn = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursSW ?? "");
+			beginn = GostHalbjahr.fromKuerzel(gostLaufbahnplanungState.gostJahrgangsdaten.beginnZusatzkursSW ?? "");
 		}
 		if (ge) {
-			beginn = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursGE ?? "");
+			beginn = GostHalbjahr.fromKuerzel(gostLaufbahnplanungState.gostJahrgangsdaten.beginnZusatzkursGE ?? "");
 		}
 		if (!beginn || (beginn === halbjahr) || (beginn.next() === halbjahr)) {
 			return true;

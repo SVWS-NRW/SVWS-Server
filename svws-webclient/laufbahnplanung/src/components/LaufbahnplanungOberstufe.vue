@@ -2,8 +2,8 @@
 	<div class="page--header">
 		<div class="flex flex-row w-full">
 			<div class="grow">
-				<h2 class="text-headline"> {{ schueler.nachname }}, {{ schueler.vorname }} </h2>
-				Jahrgang {{ gostJahrgangsdaten.jahrgang }} ({{ gostJahrgangsdaten.bezeichnung }})
+				<h2 class="text-headline"> {{ gostLaufbahnplanungState.schueler.nachname }}, {{ gostLaufbahnplanungState.schueler.vorname }} </h2>
+				Jahrgang {{ gostLaufbahnplanungState.gostJahrgangsdaten.jahrgang }} ({{ gostLaufbahnplanungState.gostJahrgangsdaten.bezeichnung }})
 			</div>
 			<div class="flex flex-col gap-2">
 				<div class="flex gap-3">
@@ -22,29 +22,29 @@
 				<svws-ui-button type="transparent" @click="export_laufbahnplanung"><span class="icon-sm i-ri-upload-2-line" /> Speichern</svws-ui-button>
 				<svws-ui-button type="transparent" @click="showModalImport = true"><span class="icon-sm i-ri-download-2-line" /> Öffnen</svws-ui-button>
 				<s-laufbahnplanung-import-modal :show="showModalImport" :import-laufbahnplanung="import_laufbahnplanung" @update:show="val => showModalImport = val" />
-				<svws-ui-button :type="zwischenspeicher === undefined ? 'transparent' : 'error'" @click="saveLaufbahnplanung">Planung merken</svws-ui-button>
-				<svws-ui-button type="danger" @click="restoreLaufbahnplanung" v-if="zwischenspeicher !== undefined">Planung wiederherstellen</svws-ui-button>
+				<svws-ui-button :type="gostLaufbahnplanungState.hatZwischenspeicher ? 'error' : 'transparent'" @click="gostLaufbahnplanungState.saveLaufbahnplanung">Planung merken</svws-ui-button>
+				<svws-ui-button type="danger" @click="gostLaufbahnplanungState.restoreLaufbahnplanung" v-if="gostLaufbahnplanungState.hatZwischenspeicher">Planung wiederherstellen</svws-ui-button>
 				<svws-ui-button :type="manager.modus === 'normal' ? 'transparent' : 'danger'" @click="manager.switchModus()">
 					<span class="icon-sm i-ri-loop-right-line" /> Modus: <span>{{ manager.modus }}</span>
 				</svws-ui-button>
-				<s-modal-laufbahnplanung-kurswahlen-loeschen schueler-ansicht keine-vorlage :gost-jahrgangsdaten :reset-fachwahlen />
+				<s-modal-laufbahnplanung-kurswahlen-loeschen schueler-ansicht keine-vorlage />
 				<svws-ui-button type="transparent" @click="manager.switchFaecherAnzeigen()"> {{ "Fächer anzeigen: " + manager.getTextFaecherAnzeigen() }} </svws-ui-button>
 			</svws-ui-sub-nav>
 		</Teleport>
 
-		<div v-if="schueler.abiturjahrgang !== null" class="page page-flex-row">
+		<div v-if="gostLaufbahnplanungState.schueler.abiturjahrgang !== null" class="page page-flex-row">
 			<div class="grow overflow-y-auto overflow-x-hidden min-w-fit">
-				<s-laufbahnplanung-card-planung :manager :abiturdaten-manager :gost-jahrgangsdaten :goto-kursblockung="async () => {}" />
+				<s-laufbahnplanung-card-planung :manager />
 			</div>
-			<div class="w-2/5 3xl:w-1/2 min-w-[36rem] overflow-y-auto overflow-x-hidden">
+			<div class="w-2/5 3xl:w-1/2 min-w-xl overflow-y-auto overflow-x-hidden">
 				<div class="flex flex-col gap-16">
-					<s-laufbahnplanung-card-status :abiturdaten-manager :fehlerliste="() => gostBelegpruefungErgebnis().fehlercodes" :gost-belegpruefungs-art :set-gost-belegpruefungs-art />
+					<s-laufbahnplanung-card-status />
 				</div>
 			</div>
 		</div>
 		<div v-else class="page page-flex-row">Die Laufbahnplanung hat kein gültiges Abiturjahr, bitte prüfen Sie die importierte Datei.</div>
 	</svws-ui-tab-bar>
-	<!-- Modal zum Speichern der Laufbandatei -->
+	<!-- Modal zum Speichern der Laufbahndatei -->
 	<svws-ui-modal :show>
 		<template #modalTitle>Laufbahnplanung speichern</template>
 		<template #modalContent>
@@ -66,21 +66,32 @@
 	import { TabManager } from "@ui/ui/nav/TabManager";
 	import type { TabData } from "@ui/ui/nav/TabData";
 	import { LaufbahnplanungUiManager } from "@ui/components/gost/laufbahnplanung/LaufbahnplanungUiManager";
+	import { useGostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
+	import { useServerState } from "@ui/states/ServerState";
 
 	const props = defineProps<LaufbahnplanungOberstufeProps>();
+	const serverState = useServerState();
+	const gostLaufbahnplanungState = useGostLaufbahnplanungState();
 
 	const show = ref<boolean>(false);
 
-	const manager = computed<LaufbahnplanungUiManager>(() =>
-		new LaufbahnplanungUiManager(props.serverMode, props.abiturdatenManager, props.config, () => props.gostJahrgangsdaten, props.setWahl,
-			{ faecherZeigen: "app.schueler.laufbahnplanung.faecher.anzeigen", modus: "app.schueler.laufbahnplanung.modus" }, false, true));
+	const manager = computed<LaufbahnplanungUiManager>(() => new LaufbahnplanungUiManager(
+		serverState.mode,
+		() => gostLaufbahnplanungState.abiturdatenManager,
+		props.config,
+		() => gostLaufbahnplanungState.gostJahrgangsdaten,
+		gostLaufbahnplanungState.setWahl,
+		{ faecherZeigen: "app.schueler.laufbahnplanung.faecher.anzeigen", modus: "app.schueler.laufbahnplanung.modus" },
+		false,
+		true
+	));
 
 	const tabManager = new TabManager([], <TabData>{}, async (value: TabData) => {});
 
 	const showModalImport = ref<boolean>(false);
 
 	async function export_laufbahnplanung() {
-		const { data, name } = await props.exportLaufbahnplanung();
+		const { data, name } = await gostLaufbahnplanungState.exportLaufbahnplanung();
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(data);
 		link.download = name;
@@ -95,7 +106,7 @@
 	}
 
 	async function import_laufbahnplanung(formData: FormData) {
-		await props.importLaufbahnplanung(formData);
+		await gostLaufbahnplanungState.importLaufbahnplanung(formData);
 	}
 
 	async function handleClick() {

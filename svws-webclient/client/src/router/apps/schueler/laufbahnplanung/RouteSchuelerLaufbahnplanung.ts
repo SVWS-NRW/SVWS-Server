@@ -8,18 +8,18 @@ import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
-import { RouteDataSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbahnplanung/RouteDataSchuelerLaufbahnplanung";
 
 import { ConfigElement, SSchuelerLaufbahnplanung } from "@ui";
 import { schulformenGymOb } from "~/router/RouteHelper";
+import { gostLaufbahnplanungStateImpl } from "~/states/GostLaufbahnplanungStateImpl";
 
-export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLaufbahnplanung, RouteSchueler> {
+export class RouteSchuelerLaufbahnplanung extends RouteNode<any, RouteSchueler> {
 
 	public constructor() {
 		super(schulformenGymOb, [
 			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
-		], "schueler.laufbahnplanung", "laufbahnplanung", SSchuelerLaufbahnplanung, new RouteDataSchuelerLaufbahnplanung());
+		], "schueler.laufbahnplanung", "laufbahnplanung", SSchuelerLaufbahnplanung);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Laufbahnplanung";
@@ -65,13 +65,13 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			}
 			const { id } = RouteNode.getIntParams(to_params, ["id"]);
 			if (id === undefined) {
-				await this.data.ladeDaten(null);
-			} else {
-				try {
-					await this.data.ladeDaten(routeSchueler.data.manager.liste.get(id));
-				} catch {
-					return routeSchueler.getRoute({ id });
-				}
+				await gostLaufbahnplanungStateImpl.ladeSchuelerDaten(null);
+				return;
+			}
+			try {
+				await gostLaufbahnplanungStateImpl.ladeSchuelerDaten(routeSchueler.data.manager.liste.get(id));
+			} catch {
+				return routeSchueler.getRoute({ id });
 			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);
@@ -79,7 +79,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
-		await this.data.clear();
+		await gostLaufbahnplanungStateImpl.clear();
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerLaufbahnplanungProps {
@@ -87,28 +87,9 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			benutzerKompetenzenAbiturjahrgaenge: api.benutzerKompetenzenAbiturjahrgaenge,
 			config: () => api.config,
-			setWahl: this.data.setWahl,
-			setGostBelegpruefungsArt: this.data.setGostBelegpruefungsArt,
-			exportLaufbahnplanung: this.data.exportLaufbahnplanung,
-			importLaufbahnplanung: this.data.importLaufbahnplanung,
-			schueler: this.data.auswahl,
-			gostJahrgangsdaten: this.data.gostJahrgangsdaten,
-			gostLaufbahnBeratungsdaten: () => this.data.gostLaufbahnBeratungsdaten,
-			patchBeratungsdaten: this.data.patchBeratungsdaten,
-			gostBelegpruefungsArt: () => this.data.gostBelegpruefungsArt,
-			gostBelegpruefungErgebnis: () => this.data.gostBelegpruefungErgebnis,
-			abiturdatenManager: () => this.data.abiturdatenManager,
-			listLehrer: this.data.listeLehrer,
-			id: this.data.id,
-			hatZwischenspeicher: (this.data.zwischenspeicher !== undefined),
-			saveLaufbahnplanung: this.data.saveLaufbahnplanung,
-			restoreLaufbahnplanung: this.data.restoreLaufbahnplanung,
-			resetFachwahlen: this.data.resetFachwahlen,
-			gotoKursblockung: this.data.gotoKursblockung,
 		};
 	}
 
 }
 
 export const routeSchuelerLaufbahnplanung = new RouteSchuelerLaufbahnplanung();
-

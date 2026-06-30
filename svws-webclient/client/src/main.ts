@@ -18,6 +18,8 @@ import { wiedervorlageStateImpl } from "~/states/WiedervorlageStateImpl";
 import { WiedervorlageStateKey } from "../../ui/src/states/WiedervorlageState";
 import { AuskunftStateKey } from "../../ui/src/states/AuskunftState";
 import { auskunftStateImpl } from "./states/AuskunftStateImpl";
+import { GostLaufbahnplanungStateKey } from "../../ui/src/states/GostLaufbahnplanungState";
+import { gostLaufbahnplanungStateImpl } from "./states/GostLaufbahnplanungStateImpl";
 
 const CustomElementConstructor = defineCustomElement(HtmlPreview);
 customElements.define('html-preview', CustomElementConstructor);
@@ -30,6 +32,7 @@ app.provide(ServerStateKey, serverStateImpl);
 app.provide(ReportingStateKey, reportingStateImpl);
 app.provide(WiedervorlageStateKey, wiedervorlageStateImpl);
 app.provide(AuskunftStateKey, auskunftStateImpl);
+app.provide(GostLaufbahnplanungStateKey, gostLaufbahnplanungStateImpl);
 
 if (process.env.NODE_ENV === 'development') {
 	const { registerSVWSDevTools } = await import("../../ui/src/devtools/stateInspector");

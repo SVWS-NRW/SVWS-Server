@@ -8,10 +8,12 @@ import { routeLadeDaten } from "./RouteLadeDaten";
 
 import LaufbahnplanungOberstufe from "~/components/LaufbahnplanungOberstufe.vue";
 import type { LaufbahnplanungOberstufeProps } from "~/components/LaufbahnplanungOberstufeProps";
-import { GostLaufbahnplanungExportV1 } from "@core/core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1";
+import { gostLaufbahnplanungStateImpl } from "~/states/GostLaufbahnplanungStateImpl";
 
 
 export class RouteLaufbahnplanung extends RouteNode<unknown, RouteApp> {
+
+	private readonly gostLaufbahnplanungState = gostLaufbahnplanungStateImpl;
 
 	public constructor() {
 		super("laufbahnplanung", "laufbahnplanung", LaufbahnplanungOberstufe, null);
@@ -23,13 +25,13 @@ export class RouteLaufbahnplanung extends RouteNode<unknown, RouteApp> {
 		if (this.parent === undefined) {
 			return routeError.getRoute(new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert"));
 		}
-		if (!routeApp.data.hatAuswahl) {
+		if (!this.gostLaufbahnplanungState.hatAuswahl) {
 			return routeLadeDaten.getRoute();
 		}
 	}
 
 	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
-		routeApp.data.reset();
+		await this.gostLaufbahnplanungState.clear();
 	}
 
 	public getRoute(): RouteLocationRaw {
@@ -38,24 +40,9 @@ export class RouteLaufbahnplanung extends RouteNode<unknown, RouteApp> {
 
 	public getProps(to: RouteLocationNormalized): LaufbahnplanungOberstufeProps {
 		return {
-			serverMode: routeApp.data.serverMode,
-			config: () => routeApp.data.config,
-			setWahl: routeApp.data.setWahl,
-			setGostBelegpruefungsArt: routeApp.data.setGostBelegpruefungsArt,
-			exportLaufbahnplanung: routeApp.data.exportLaufbahnplanung,
-			importLaufbahnplanung: routeApp.data.importLaufbahnplanung,
-			schueler: routeApp.data.auswahl,
-			gostJahrgangsdaten: routeApp.data.gostJahrgangsdaten,
-			gostBelegpruefungsArt: () => routeApp.data.gostBelegpruefungsArt,
-			gostBelegpruefungErgebnis: () => routeApp.data.gostBelegpruefungErgebnis,
-			abiturdatenManager: () => routeApp.data.abiturdatenManager,
-			id: undefined,
-			zwischenspeicher: (routeApp.data.zwischenspeicher === undefined) ? undefined : new GostLaufbahnplanungExportV1(),
-			saveLaufbahnplanung: routeApp.data.saveLaufbahnplanung,
-			restoreLaufbahnplanung: routeApp.data.restoreLaufbahnplanung,
-			resetFachwahlen: routeApp.data.resetFachwahlen,
+			config: () => gostLaufbahnplanungStateImpl.config,
 			exitLaufbahnplanung: routeApp.data.exitLaufbahnplanung,
-			dirty: () => routeApp.data.dirty,
+			dirty: () => gostLaufbahnplanungStateImpl.modified,
 		};
 	}
 

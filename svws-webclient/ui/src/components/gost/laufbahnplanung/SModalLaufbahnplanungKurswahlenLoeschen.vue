@@ -22,17 +22,16 @@
 <script setup lang="ts">
 
 	import { computed, ref } from 'vue';
-	import type { GostJahrgangsdaten } from '../../../../../core/src/core/data/gost/GostJahrgangsdaten';
+	import { useGostLaufbahnplanungState } from '../../../states/GostLaufbahnplanungState';
 
 	const props = withDefaults(defineProps<{
-		gostJahrgangsdaten: GostJahrgangsdaten;
-		resetFachwahlen: (forceDelete: boolean) => Promise<void>;
 		schuelerAnsicht?: boolean;
 		keineVorlage?: boolean;
 	}>(), {
 		schuelerAnsicht: false,
 		keineVorlage: false,
 	});
+	const gostLaufbahnplanungState = useGostLaufbahnplanungState();
 
 	const show = ref<boolean>(false);
 	const doForceDelete = ref<boolean>(false);
@@ -43,7 +42,7 @@
 			return "Fachwahlen löschen";
 		} else if (props.schuelerAnsicht) {
 			return "Fachwahlen zurücksetzen";
-		} else if (props.gostJahrgangsdaten.abiturjahr === -1) {
+		} else if (gostLaufbahnplanungState.gostJahrgangsdaten.abiturjahr === -1) {
 			return "Zurücksetzen aus Standardwerte";
 		} else {
 			return "Zurücksetzen auf allg. Vorlage";
@@ -57,7 +56,7 @@
 			return "Alle Fachwahlen löschen";
 		} else if (props.schuelerAnsicht) {
 			return "Alle Fachwahlen zurücksetzen";
-		} else if (props.gostJahrgangsdaten.abiturjahr === -1) {
+		} else if (gostLaufbahnplanungState.gostJahrgangsdaten.abiturjahr === -1) {
 			return "Zurücksetzen aus Standardwerte";
 		} else {
 			return "Zurücksetzen der Vorlage auf die allgemeine Vorlage";
@@ -71,7 +70,7 @@
 			return "Soll die Laufbahnplanung vollständig geleert werden?";
 		} else if (props.schuelerAnsicht) {
 			return "Soll die Laufbahnplanung auf die jahrgangs-spezifische Vorlage zurückgesetzt werden?";
-		} else if (props.gostJahrgangsdaten.abiturjahr === -1) {
+		} else if (gostLaufbahnplanungState.gostJahrgangsdaten.abiturjahr === -1) {
 			return "Soll die Vorlage auf die Standardwerte zurückgesetzt werden?";
 		} else {
 			return "Soll diese jahrgangs-spezifisch Vorlage auf die allgemeine Vorlage zurückgesetzt werden?";
@@ -79,8 +78,8 @@
 	});
 
 	const hatFesteWahlen = computed<boolean>(() => {
-		const jg = props.gostJahrgangsdaten.jahrgang;
-		return (jg === "Q1") || (jg === "Q2") || ((jg === "EF") && (props.gostJahrgangsdaten.istBlockungFestgelegt[0]));
+		const jg = gostLaufbahnplanungState.gostJahrgangsdaten.jahrgang;
+		return (jg === "Q1") || (jg === "Q2") || ((jg === "EF") && (gostLaufbahnplanungState.gostJahrgangsdaten.istBlockungFestgelegt[0]));
 	});
 
 	function toggle_modal(forceDelete: boolean) {
@@ -92,7 +91,7 @@
 		const forceDelete = doForceDelete.value;
 		doForceDelete.value = false;
 		show.value = false;
-		await props.resetFachwahlen(forceDelete);
+		await gostLaufbahnplanungState.resetFachwahlen(forceDelete);
 	}
 
 </script>
