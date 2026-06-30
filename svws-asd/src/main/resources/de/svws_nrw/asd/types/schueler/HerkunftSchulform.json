@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 5,
   "daten": [
     {
       "bezeichner": "BK",
@@ -610,13 +610,13 @@
       ]
     },
     {
-      "bezeichner": "SE",
+      "bezeichner": "SK",
       "idStatistik": "15",
       "historie": [
         {
           "id": 15000,
-          "schluessel": "SE",
-          "kuerzel": "SE",
+          "schluessel": "SK",
+          "kuerzel": "SK",
           "text": "Sekundarschule",
           "schulformen": [
             "BK",
@@ -643,8 +643,8 @@
         },
         {
           "id": 15001,
-          "schluessel": "SE",
-          "kuerzel": "SE",
+          "schluessel": "SK",
+          "kuerzel": "SK",
           "text": "Sekundarschule",
           "schulformen": [
             "BK",

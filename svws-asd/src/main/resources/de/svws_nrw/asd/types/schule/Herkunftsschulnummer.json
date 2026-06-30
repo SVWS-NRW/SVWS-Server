@@ -1,5 +1,5 @@
 {
-    "version": 2,
+    "version": 3,
     "daten": [
       {
         "bezeichner": "SONSTIGES_AUSLAND",
@@ -294,7 +294,7 @@
             "id": 980500000,
             "schluessel": "980500",
             "kuerzel": "Sonstige",
-            "text": "Sonstige/keine Schule",
+            "text": "Sonstige Schule in Nordrhein-Westfalen",
             "zulaessig": [],
             "gueltigVon": null,
             "gueltigBis": null
