@@ -49,7 +49,7 @@ public class LehrerStatistikExport {
 
 	/** Die Staatsangehörigkeit des Lehrers. */
 	@Schema(description = "die Staatsangehörigkeit des Lehrers (Deutsch:'   ' -> Leer(3))", example = "123")
-	public Long staatsangehoerigkeit = 0L;
+	public String staatsangehoerigkeit = "";
 
 	/** Das Rechtsverhältnis unter welchem der Lehrer beschäftigt ist (z.B. Beamter auf Lebenszeit). */
 	@Schema(description = "das Rechtsverhältnis unter welchem der Lehrer beschäftigt ist (z.B. Beamter auf Lebenszeit).",

@@ -27,6 +27,7 @@ import de.svws_nrw.asd.types.lehrer.LehrerLehrbefaehigungAnerkennung;
 import de.svws_nrw.asd.types.lehrer.LehrerMehrleistungsarten;
 import de.svws_nrw.asd.types.lehrer.LehrerMinderleistungsarten;
 import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
+import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.asd.validate.DateManager;
 import de.svws_nrw.asd.validate.InvalidDateException;
 
@@ -180,7 +181,7 @@ public class AggregationLehrerStatistikExport {
 			fehlermeldungen.add(e.getLocalizedMessage() + " Das Geburtsdatum des Lehrers mit folgender ID konnte nicht geparst werden " + lehrer.id);
 		}
 		lehrerExport.geschlecht = lehrer.geschlecht;
-		lehrerExport.staatsangehoerigkeit = lehrer.idStaatsangehoerigkeit;
+		lehrerExport.staatsangehoerigkeit = Nationalitaeten.getDEU().equals(Nationalitaeten.data().getWertByID(lehrer.idStaatsangehoerigkeit)) ? "" :  Nationalitaeten.data().getSchluesselByIDOrNull(lehrer.idStaatsangehoerigkeit);
 		lehrerExport.rechtsverhaeltnis = LehrerRechtsverhaeltnis.data().getNameByIDOrNull(lehrer.idRechtsverhaeltnis);
 		lehrerExport.beschaeftigungsart = LehrerBeschaeftigungsart.data().getNameByIDOrNull(lehrer.idBeschaeftigungsart);
 		lehrerExport.einsatzstatus = LehrerEinsatzstatus.data().getSchluesselByIDOrNull(lehrer.idEinsatzstatus);
