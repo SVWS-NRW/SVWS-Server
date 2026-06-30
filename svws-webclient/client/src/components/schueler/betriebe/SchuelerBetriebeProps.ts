@@ -6,6 +6,6 @@ export interface SchuelerBetriebeProps {
 	manager: () => SchuelerBetriebeManager;
 	patch: (idSchuelerBetrieb: number, data: Partial<SchuelerBetrieb>) => Promise<boolean>;
 	add: (data: Partial<SchuelerBetrieb>) => Promise<SchuelerBetrieb>;
-	deleteEntries: (idsSchuelerBetriebe: List<number>) => Promise<boolean>;
+	deleteBetriebe: (idsSchuelerBetriebe: List<number>) => Promise<boolean>;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 }

@@ -1,12 +1,12 @@
 <template>
 	<svws-ui-content-card class="col-span-full">
 		<svws-ui-table class="contentFocusField"
-			v-model="selectedEntries"
-			:clicked="clickedEntry"
-			@update:clicked="(v) => emit('update:selectedBetrieb', v)"
-			:items="entries"
+			v-model="selectedBetriebe"
+			:clicked="selectedBetrieb" @update:clicked="value => emit('update:selectedBetrieb', value)"
+			:items="betriebe"
 			:columns
-			clickable selectable focus-first-element>
+			:disable-footer="!hatKompetenzBearbeiten" clickable :selectable="hatKompetenzBearbeiten"
+			focus-first-element>
 			<template #header(erhaeltAnschreiben)>
 				<svws-ui-tooltip>
 					<span class="icon i-ri-mail-send-line" />
@@ -71,35 +71,37 @@
 	import { formatToLocalDate } from "~/utils/date";
 	import { useSchuleState, type DataTableColumn, type SchuelerBetriebeManager } from "@ui";
 	import type { List, SchuelerBetrieb } from "@core";
-	import { Schulform, ArrayList } from "@core";
+	import { Schulform, ArrayList, BenutzerKompetenz } from "@core";
 
 	const props = defineProps<{
-		manager: () => SchuelerBetriebeManager;
-		deleteEntries: (idsSchuelerBetriebe: List<number>) => Promise<boolean>;
+		manager: () => SchuelerBetriebeManager,
+		selectedBetrieb: SchuelerBetrieb | null,
+		deleteBetriebe: (idsSchuelerBetriebe: List<number>) => Promise<boolean>,
+		benutzerKompetenzen: Set<BenutzerKompetenz>;
 	}>();
 	const schuleState = useSchuleState();
 
 	const emit = defineEmits<{
+		(e: 'update:selectedBetrieb', value: SchuelerBetrieb | null): void;
 		(e: 'create'): void;
-		(e: 'update:selectedBetrieb', v: SchuelerBetrieb | null): void;
 	}>();
 
+	const hatKompetenzBearbeiten = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const istBK = computed(() => {
 		const erlaubteSchulformen = [Schulform.BK, Schulform.SB, Schulform.WB];
 		return erlaubteSchulformen.includes(schuleState.schulform);
 	});
-	const entries = computed(() => props.manager().schuelerBetriebeById.values());
-	const selectedEntries = ref<SchuelerBetrieb[]>([]);
-	const hasSelectedEntries = computed(() => selectedEntries.value.length > 0);
-	const clickedEntry = ref<SchuelerBetrieb | null>(null);
+	const betriebe = computed(() => props.manager().schuelerBetriebeById.values());
+	const selectedBetriebe = ref<SchuelerBetrieb[]>([]);
+	const hasSelectedEntries = computed(() => selectedBetriebe.value.length > 0);
 
 	async function deleteSchuelerBetriebe() {
 		const idsToDelete = new ArrayList<number>();
-		for (const entry of selectedEntries.value) {
+		for (const entry of selectedBetriebe.value) {
 			idsToDelete.add(entry.id);
 		}
-		await props.deleteEntries(idsToDelete);
-		selectedEntries.value = [];
+		await props.deleteBetriebe(idsToDelete);
+		selectedBetriebe.value = [];
 		closeModal();
 	}
 

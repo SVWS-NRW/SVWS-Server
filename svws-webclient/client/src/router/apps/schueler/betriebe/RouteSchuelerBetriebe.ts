@@ -37,7 +37,7 @@ export class RouteSchuelerBetriebe extends RouteNode<RouteDataSchuelerBetriebe, 
 			manager: () => this.data.manager,
 			add: this.data.add,
 			patch: this.data.patch,
-			deleteEntries: this.data.delete,
+			deleteBetriebe: this.data.delete,
 			goToBetrieb: routeSchuelerBetriebe.data.goToBetrieb,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 		};

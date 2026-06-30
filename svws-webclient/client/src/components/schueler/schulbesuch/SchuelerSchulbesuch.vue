@@ -33,15 +33,18 @@
 				<svws-ui-radio-option label="Öffentliche oder Ersatzschule in NRW"
 					:model-value="currentMode"
 					@update:model-value="setMode(Schulauswahl.INTERNAL)"
-					:value="Schulauswahl.INTERNAL" />
+					:value="Schulauswahl.INTERNAL"
+					:disabled="readonly && (currentMode !== Schulauswahl.INTERNAL)" />
 				<svws-ui-radio-option label="Sonstige Schule"
 					:model-value="currentMode"
 					@update:model-value="setMode(Schulauswahl.EXTERNAL)"
-					:value="Schulauswahl.EXTERNAL" />
+					:value="Schulauswahl.EXTERNAL"
+					:disabled="readonly && (currentMode !== Schulauswahl.EXTERNAL)" />
 				<svws-ui-radio-option label="Kein Schulbesuch"
 					:model-value="currentMode"
 					@update:model-value="setMode(Schulauswahl.NONE)"
-					:value="Schulauswahl.NONE" />
+					:value="Schulauswahl.NONE"
+					:disabled="readonly && (currentMode !== Schulauswahl.NONE)" />
 			</div>
 			<div class="flex" v-if="!keinSchulbesuch">
 				<ui-select :label="labelVorherigeSchuleAuswahl" v-if="!keinSchulbesuch"

@@ -2,9 +2,10 @@
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Betriebe" class="col-span-full">
 			<schueler-betriebe-table :manager
-				:delete-entries
+				:delete-betriebe
+				v-model:selected-betrieb="selectedBetrieb"
 				@create="openModal()"
-				@update:selected-betrieb="(v) => selectedBetrieb = v ?? null" />
+				:benutzer-kompetenzen />
 			<schueler-betriebe-create-form :manager
 				:create-modal-is-open
 				:add
@@ -22,19 +23,13 @@
 <script setup lang="ts">
 
 	import type { SchuelerBetriebeProps } from "~/components/schueler/betriebe/SchuelerBetriebeProps";
-	import { computed, onMounted, onUpdated, ref } from 'vue';
+	import { computed, ref, watch } from 'vue';
 	import type { SchuelerBetrieb } from "@core";
 
 	const props = defineProps<SchuelerBetriebeProps>();
-	const entries = computed(() => [...props.manager().schuelerBetriebeById.values()]);
+
+	const betriebe = computed(() => [...props.manager().schuelerBetriebeById.values()]);
 	const selectedBetrieb = ref<SchuelerBetrieb | null>(null);
-
-	function updateSelectedBetrieb() {
-		selectedBetrieb.value = entries.value.length > 0 ? entries.value.at(0) ?? null : null;
-	}
-
-	onMounted(updateSelectedBetrieb);
-	onUpdated(updateSelectedBetrieb);
 
 	// --- create modal---
 	const createModalIsOpen = ref(false);
@@ -47,5 +42,16 @@
 		createModalIsOpen.value = false;
 		selectedBetrieb.value = null;
 	}
+
+	watch(betriebe, (neu) => {
+		if (neu.length === 0) {
+			selectedBetrieb.value = null;
+		} else if (selectedBetrieb.value === null) {
+			selectedBetrieb.value = neu[0];
+		} else {
+			const current = neu.find(e => e.id === selectedBetrieb.value?.id);
+			selectedBetrieb.value = current ?? neu[0];
+		}
+	}, { immediate: true });
 
 </script>

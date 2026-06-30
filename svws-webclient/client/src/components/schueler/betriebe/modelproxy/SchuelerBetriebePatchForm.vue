@@ -5,19 +5,21 @@
 				<ui-select label="Betreuende Lehrkraft"
 					v-model="model.betreuendeLehrkraft.value"
 					:deep-search-attributes="['kuerzel']"
-					:manager="lehrerManager" />
+					:manager="lehrerManager"
+					:readonly="!hatKompetenzBearbeiten" />
 				<ui-select label="Ansprechpartner im Betrieb"
 					v-model="model.ansprechpartner.value"
-					:manager="ansprechpartnerManager" />
+					:manager="ansprechpartnerManager"
+					:readonly="!hatKompetenzBearbeiten" />
 				<svws-ui-text-input placeholder="Betreuer/Ausbilder"
 					v-model="model.proxy.nameAusbilder"
 					@commit="model.patch"
 					:validation="() => model.getFehler('nameAusbilder')"
-					:max-len="30" />
+					:max-len="30" :readonly="!hatKompetenzBearbeiten" />
 				<ui-select label="Beschäftigungsart" v-if="istBK"
 					v-model="model.beschaeftigungsart.value"
 					:manager="beschaeftigungsartenManager"
-					searchable />
+					searchable :readonly="!hatKompetenzBearbeiten" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-spacing :size="2" />
@@ -91,6 +93,7 @@
 		return erlaubteSchulformen.includes(schuleState.schulform);
 	});
 	const hatKatalogeAnsehenKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN));
+	const hatKompetenzBearbeiten = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const lehrer = computed(() => props.manager().lehrerById.values());
 	const beschaeftigungsarten = computed(() => props.manager().beschaeftigungsartenById.values());
 	const ansprechpartner = computed(() => props.manager().ansprechpartnerById.values());
