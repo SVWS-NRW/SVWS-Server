@@ -21,10 +21,21 @@ export type GostBelegpruefungsModus = 'ef1' | 'gesamt' | 'auto';
 export interface GostLaufbahnplanungState {
 
 	/**
+	 * Gibt zurück, ob der State für die Laufbahnplanung aktuell gültig ist oder nicht.
+	 */
+	get valid(): boolean;
+
+	/**
 	 * Gibt die Informatione zu dem aktuell ausgewählten Schüler zurück, dessen Laufbahnplanungsdaten
 	 * gerade bearbeitet werden.
 	 */
 	get schueler(): SchuelerListeEintrag;
+
+	/**
+	 * Gibt die Informatione zu dem aktuell ausgewählten Schüler zurück, dessen Laufbahnplanungsdaten
+	 * gerade bearbeitet werden. Ist keiner ausgewählt, so wird null zurückgegeben.
+	 */
+	get schuelerOrNull(): SchuelerListeEintrag | null;
 
 	/**
 	 * Gibt die ID des angemeldeten Lehrers zurück, sofern ein Lehrer angmeldet ist

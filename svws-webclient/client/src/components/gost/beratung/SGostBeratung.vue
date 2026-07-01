@@ -1,5 +1,5 @@
 <template>
-	<div v-if="jahrgangsdaten() !== undefined" class="page page-flex-row max-w-480">
+	<div v-if="gostLaufbahnplanungState.valid" class="page page-flex-row max-w-480">
 		<Teleport to=".svws-sub-nav-target" v-if="hatUpdateKompetenz" defer>
 			<svws-ui-sub-nav :focus-switching-enabled :focus-help-visible>
 				<svws-ui-button :type="manager.modus === 'normal' ? 'transparent' : 'danger'" @click="manager.switchModus()" title="Modus wechseln">
@@ -55,10 +55,7 @@
 
 	const manager = computed<LaufbahnplanungUiManager>(() => new LaufbahnplanungUiManager(
 		serverState.mode,
-		() => gostLaufbahnplanungState.abiturdatenManager,
 		props.config,
-		props.jahrgangsdaten,
-		gostLaufbahnplanungState.setWahl,
 		{ faecherZeigen: "app.gost.beratung.faecher.anzeigen", modus: "app.gost.beratung.modus" },
 		true,
 		true
@@ -81,7 +78,8 @@
 				&& props.benutzerdaten.typ === BenutzerTyp.LEHRER.id && beratungslehrer);
 	});
 
-	const istAbiturjahrgang = computed<boolean>(() => (props.jahrgangsdaten().abiturjahr > 0));
+	const istAbiturjahrgang = computed<boolean>(() => (gostLaufbahnplanungState.valid &&
+		gostLaufbahnplanungState.gostJahrgangsdaten.abiturjahr > 0));
 
 	const lehrer = computed<Map<number, LehrerListeEintrag>>(() => {
 		const map = new Map<number, LehrerListeEintrag>(gostLaufbahnplanungState.mapLehrer);

@@ -1,145 +1,121 @@
 <template>
-	<svws-ui-table :items="manager.alleFaecher" :columns has-background scroll>
-		<template #header>
-			<div role="row" class="svws-ui-tr">
-				<div role="columnheader" class="svws-ui-td col-span-3 svws-divider">
-					Fachwahlen
-				</div>
-				<div role="columnheader" class="svws-ui-td svws-align-center col-span-2 svws-divider">
-					Sprachen
-				</div>
-				<div role="columnheader" class="svws-ui-td svws-align-center col-span-2 svws-divider">
-					EF
-				</div>
-				<div role="columnheader" class="svws-ui-td svws-align-center col-span-4 svws-divider">
-					Qualifikationsphase
-				</div>
-				<div role="columnheader" class="svws-ui-td svws-align-center">
-					Abitur
-				</div>
-			</div>
-			<div role="row" class="svws-ui-tr">
-				<div class="svws-ui-td">
-					Kürzel
-				</div>
-				<div class="svws-ui-td">
-					Fach
-				</div>
-				<div class="svws-ui-td svws-align-center svws-divider">
+	<ui-table-grid name="Laufbahnplanung" :header-count="2" :footer-count="3" :manager="() => gridManager">
+		<template #header="params">
+			<template v-if="params.i === 1">
+				<th class="text-left col-span-3 ui-divider">Fachwahlen</th>
+				<th class="text-center col-span-2 ui-divider">Sprachen</th>
+				<th class="text-center col-span-2 ui-divider">EF</th>
+				<th class="text-center col-span-4 ui-divider">Qualifikationsphase</th>
+				<th class="text-center">Abitur</th>
+			</template>
+			<template v-else>
+				<th class="text-left">Kürzel</th>
+				<th class="text-left">Fach</th>
+				<th class="text-center ui-divider">
 					<svws-ui-tooltip>
 						<span>WS</span>
 						<template #content>
 							Wochenstunden
 						</template>
 					</svws-ui-tooltip>
-				</div>
-				<div class="svws-ui-td svws-align-center svws-no-padding items-center">
-					Folge
-				</div>
-				<div class="svws-ui-td svws-align-center svws-divider svws-no-padding items-center">
+				</th>
+				<th class="text-center items-center">Folge</th>
+				<th class="text-center ui-divider">
 					<svws-ui-tooltip>
 						<span>ab JG</span>
 						<template #content>
 							Ab Jahrgang
 						</template>
 					</svws-ui-tooltip>
-				</div>
+				</th>
 				<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
-					<div class="svws-ui-td svws-align-center svws-divider svws-no-padding items-center">
+					<th class="text-center ui-divider relative">
 						{{ halbjahr.kuerzel }}
 						<svws-ui-tooltip v-if="gostLaufbahnplanungState.gostJahrgangsdaten.anzahlKursblockungen[halbjahr.id] > 0">
-							<span @click.stop="gostLaufbahnplanungState.gotoKursplanung(halbjahr)" class="cursor-pointer"><span class="icon-sm i-ri-link" /></span>
+							<span @click.stop="gostLaufbahnplanungState.gotoKursplanung(halbjahr)" class="cursor-pointer absolute right-1 top-1/2 -translate-y-1/2">
+								<span class="icon-sm i-ri-link" />
+							</span>
 							<template #content>
 								Zur {{ halbjahr.kuerzel }}-Kursblockung
 							</template>
 						</svws-ui-tooltip>
-					</div>
+					</th>
 				</template>
-				<div class="svws-ui-td svws-align-center svws-no-padding items-center">
-					Fach
-				</div>
-			</div>
-		</template>
-		<template #body>
-			<template v-for="fach in manager.faecherGefiltert" :key="fach.id">
-				<s-laufbahnplanung-fach :manager :fach :hat-update-kompetenz :active-halbjahr-id
-					:active-focus="fach.id === activeFachId" @keydown="switchFocus($event)" @update:focus="(fachId: number, halbjahrId: number) => updateFocusState(fachId, halbjahrId)"
-					@update:focus:impossible="(fachId: number, halbjahrId: number) => retryFocus(fachId, halbjahrId)" />
+				<th class="text-center">Fach</th>
 			</template>
 		</template>
-		<template #dataFooter>
-			<div role="row" class="svws-ui-tr">
-				<div role="rowheader" class="svws-ui-td font-bold svws-align-right col-span-5 svws-divider gap-1">
+		<template #default="{ row: fach, index: rowIndex }">
+			<s-laufbahnplanung-fach :grid-manager :manager :fach :hat-update-kompetenz :row-index />
+		</template>
+		<template #footer="params">
+			<template v-if="params.i === 1">
+				<td class="font-bold text-right col-span-5 ui-divider leading-none p-0">
 					<span>Kurse</span>
 					<svws-ui-tooltip>
-						<span class="icon i-ri-question-line -m-0.5 mx-0.5" />
+						<span class="icon-sm i-ri-question-line mx-1" />
 						<template #content>
 							{{ manager.getTooltipAnrechenbareKurse() }}
 						</template>
 					</svws-ui-tooltip>
-				</div>
-				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding items-center! " v-for="hj in GostHalbjahr.values()" :key="hj.id" :class="{'svws-divider': (hj.id === 1 || hj.id === 5)}">
-					<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-sm w-full m-0.5"
-						:class="manager.getAnrechenbareKurseCSS(hj)">
+				</td>
+				<td class="text-center leading-none" v-for="hj in GostHalbjahr.values()" :key="hj.id" :class="{ 'ui-divider': (hj.id === 1 || hj.id === 5) }">
+					<span class="inline-flex justify-center font-bold rounded-sm w-full h-fit mt-0.5 pb-0.5" :class="manager.getAnrechenbareKurseCSS(hj)">
 						{{ manager.getAnrechenbareKurse(hj) }}
 					</span>
-				</div>
-				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding items-center!">
-					<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-sm w-full m-0.5"
-						:class="manager.getSummeAnrechenbareKurseCSS()">
+				</td>
+				<td class="text-center leading-none">
+					<span class="inline-flex justify-center font-bold rounded-sm w-full my-0.5 pb-0.5" :class="manager.getSummeAnrechenbareKurseCSS()">
 						{{ manager.summeAnrechenbareKurse }}
 					</span>
-				</div>
-			</div>
-			<div role="row" class="svws-ui-tr">
-				<div role="rowheader" class="svws-ui-td font-bold svws-align-right col-span-5 svws-divider">
+				</td>
+			</template>
+			<template v-else-if="params.i === 2">
+				<td class="font-bold text-right col-span-5 ui-divider leading-none p-0">
 					<span>Wochenstunden</span>
 					<svws-ui-tooltip>
-						<span class="icon i-ri-question-line -m-0.5 mx-0.5" />
+						<span class="icon-sm i-ri-question-line mx-1" />
 						<template #content>
 							{{ manager.getTooltipWochenstunden() }}
 							Die Anzahl der Wochenstunden. Pro Halbjahr sollten etwa <strong>33—36</strong> Wochenstunden gewählt werden.
 						</template>
 					</svws-ui-tooltip>
-				</div>
-				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding items-center!" v-for="hj in GostHalbjahr.values()" :key="hj.id" :class="{'svws-divider': ((hj.id === 1) || (hj.id === 5))}">
-					<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-sm w-full m-0.5"
-						:class="manager.getWochenstundenCSS(hj)">
+				</td>
+				<td class="text-center leading-none" v-for="hj in GostHalbjahr.values()" :key="hj.id" :class="{ 'ui-divider': ((hj.id === 1) || (hj.id === 5)) }">
+					<span class="inline-flex justify-center font-bold rounded-sm w-full my-0.5 pb-0.5" :class="manager.getWochenstundenCSS(hj)">
 						{{ manager.getWochenstunden(hj) }}
 					</span>
-				</div>
-				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding items-center!">
-					<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-sm w-full m-0.5"
-						:class="manager.getWochenstundenJahressummeCSS()">
+				</td>
+				<td class="text-center leading-none">
+					<span class="inline-flex justify-center font-bold rounded-sm w-full my-0.5 pb-0.5" :class="manager.getWochenstundenJahressummeCSS()">
 						{{ manager.wochenstundenJahressumme }}
 					</span>
-				</div>
-			</div>
-			<div role="row" class="svws-ui-tr" v-if="manager.zeigeWochenstundenDurchschnitt()">
-				<div role="rowheader" class="svws-ui-td font-bold svws-align-right col-span-5 svws-divider">
+				</td>
+			</template>
+			<template v-else-if="manager.zeigeWochenstundenDurchschnitt()">
+				<td class="font-bold text-right col-span-5 ui-divider leading-none p-0">
 					<span>Durchschnitt</span>
 					<svws-ui-tooltip>
-						<span class="icon i-ri-question-line -m-0.5 mx-0.5" />
+						<span class="icon-sm i-ri-question-line mx-1" />
 						<template #content>
 							In der EF und Qualifikationsphase sollten jeweils im Durchschnitt <strong>34—36</strong> Wochenstunden erreicht werden.
 						</template>
 					</svws-ui-tooltip>
-				</div>
-				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding items-center! col-span-2 svws-divider">
-					<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-sm w-full m-0.5"
+				</td>
+				<td class="text-center items-center! col-span-2 ui-divider leading-none">
+					<span class="inline-flex justify-center font-bold rounded-sm w-full my-0.5 pb-0.5"
 						:class="manager.getWochenstundenDurchschnittEFCSS()">
 						{{ manager.wochenstundenDurchschnittEF }}
 					</span>
-				</div>
-				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding items-center! col-span-4 svws-divider">
-					<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-sm w-full m-0.5"
+				</td>
+				<td class="text-center items-center! col-span-4 ui-divider leading-none">
+					<span class="inline-flex justify-center font-bold rounded-sm w-full my-0.5 pb-0.5"
 						:class="manager.getWochenstundenDurchschnittQCSS()">
 						{{ manager.wochenstundenDurchschnittQ }}
 					</span>
-				</div>
-				<div role="cell" class="svws-ui-td svws-align-center">
+				</td>
+				<td class="text-center leading-none">
 					<svws-ui-tooltip>
-						<span class="icon i-ri-information-line -m-0.5" />
+						<span class="icon-sm i-ri-information-line m-0.5" />
 						<template #content>
 							<div class="flex flex-col gap-0.5 text-center">
 								<span class="flex gap-1 items-center">
@@ -161,19 +137,21 @@
 							</div>
 						</template>
 					</svws-ui-tooltip>
-				</div>
-			</div>
+				</td>
+			</template>
 		</template>
-	</svws-ui-table>
+	</ui-table-grid>
 </template>
 
 <script setup lang="ts">
 
-	import { ref, onMounted, computed } from "vue";
+	import { computed } from "vue";
 	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
-	import type { DataTableColumn } from "../../../types";
 	import type { LaufbahnplanungUiManager } from "./LaufbahnplanungUiManager";
 	import { useGostLaufbahnplanungState } from "../../../states/GostLaufbahnplanungState";
+	import { GridManager } from "../../../ui/controls/tablegrid/GridManager";
+	import type { GostFach } from "../../../../../core/src/core/data/gost/GostFach";
+	import type { Collection } from "../../../../../core/src/java/util/Collection";
 
 	const props = withDefaults(defineProps<{
 		manager: LaufbahnplanungUiManager;
@@ -186,129 +164,26 @@
 
 	const gostLaufbahnplanungState = useGostLaufbahnplanungState();
 
-	const columns: Array<DataTableColumn> = [
-		{ key: "kuerzel", label: "Kürzel", align: 'center', minWidth: 5, span: 0.75 },
-		{ key: "bezeichnung", label: "Bezeichnung", align: 'center', span: 3, minWidth: 12 },
-		{ key: "wstd", label: "WS", tooltip: "Wochenstunden", align: 'center', fixedWidth: 3 },
-		{ key: "folge", label: "Folge", align: 'center', fixedWidth: 4.5 },
-		{ key: "ab_jg", label: "ab Jg", align: 'center', fixedWidth: 4.5 },
-		{ key: "ef1", label: "EF.1", align: 'center', fixedWidth: 4.5 },
-		{ key: "ef2", label: "EF.2", align: 'center', fixedWidth: 4.5 },
-		{ key: "q1_1", label: "Q1.1", align: 'center', fixedWidth: 4.5 },
-		{ key: "q1_2", label: "Q1.2", align: 'center', fixedWidth: 4.5 },
-		{ key: "q2_1", label: "Q2.1", align: 'center', fixedWidth: 4.5 },
-		{ key: "q2_2", label: "Q2.2", align: 'center', fixedWidth: 4.5 },
-		{ key: "abiturfach", label: "Abiturfach", align: 'center', fixedWidth: 4.5 },
-	];
-
-	const faecherIds: number[] = [];
-
-	const activeFachId = ref();
-	const activeHalbjahrId = ref(0);
-	const activeDirection = ref<string>("");
-
-	// Aktives Fach und Halbjahr nach emit von "update:focus" durch Kindkomponente setzen
-	function updateFocusState(fachId: number, halbjahrId: number) {
-		activeFachId.value = fachId;
-		activeHalbjahrId.value = halbjahrId;
-	}
-
-	onMounted(() => {
-		// Fächer-IDs zu statischer Liste hinzufügen um Fächer durchschalten zu können
-		for (const fach of props.manager.alleFaecher) {
-			faecherIds.push(fach.id);
-		}
+	const gridManager = new GridManager<string, GostFach, Collection<GostFach>>({
+		daten: computed<Collection<GostFach>>(() => {
+			return props.manager.faecherGefiltert;
+		}),
+		getRowKey: row => `${row.id}`,
+		columns: [
+			{ kuerzel: "Kürzel", name: "Kürzel", width: "5rem", hideable: false },
+			{ kuerzel: "Bezeichnung", name: "Bezeichnung", width: "16rem", hideable: false },
+			{ kuerzel: "WS", name: "Wochenstunden", width: "3rem", hideable: false },
+			{ kuerzel: "Folge", name: "Folge", width: "4.5rem", hideable: false },
+			{ kuerzel: "ab Jg", name: "ab Jg", width: "4.5rem", hideable: false },
+			{ kuerzel: "EF.1", name: "EF.1", width: "4.5rem", hideable: false },
+			{ kuerzel: "EF.2", name: "EF.2", width: "4.5rem", hideable: false },
+			{ kuerzel: "Q1.1", name: "Q1.1", width: "4.5rem", hideable: false },
+			{ kuerzel: "Q1.2", name: "Q1.2", width: "4.5rem", hideable: false },
+			{ kuerzel: "Q2.1", name: "Q2.1", width: "4.5rem", hideable: false },
+			{ kuerzel: "Q2.2", name: "Q2.2", width: "4.5rem", hideable: false },
+			{ kuerzel: "Abiturfach", name: "Abiturfach", width: "4.5rem", hideable: false },
+		],
 	});
-
-	const faecherFilteredIds = computed<Array<number>>(() => {
-		const result = new Array<number>();
-		for (const fach of props.manager.faecherGefiltert) {
-			result.push(fach.id);
-		}
-		return result;
-	});
-
-	function switchFocusDown() {
-		const index = getFachFilteredIndexById(activeFachId.value);
-		const isLast = (index === null) || (index === faecherFilteredIds.value.length - 1);
-		activeFachId.value = isLast
-			? faecherFilteredIds.value[0]
-			: faecherFilteredIds.value[index + 1];
-	}
-
-	function switchFocusUp() {
-		const index = getFachFilteredIndexById(activeFachId.value);
-		const isFirst = (index === null) || (index === 0);
-		activeFachId.value = isFirst
-			? faecherFilteredIds.value[faecherFilteredIds.value.length - 1]
-			: faecherFilteredIds.value[index - 1];
-	}
-
-	// Fokus setzen: Fach wechseln (hoch/runter) oder Halbjahr wechseln (links/rechts)
-	function switchFocus(event: KeyboardEvent) {
-		if (faecherFilteredIds.value.length === 0) {
-			return;
-		}
-		if (!["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].includes(event.key)) {
-			return;
-		}
-		activeDirection.value = event.key;
-		event.preventDefault();
-		switch (event.key) {
-			case "ArrowDown":
-				switchFocusDown();
-				break;
-			case "ArrowUp":
-				switchFocusUp();
-				break;
-			case "ArrowRight":
-				activeHalbjahrId.value = (activeHalbjahrId.value + 1) % (GostHalbjahr.values().length + 1);
-				break;
-			case "ArrowLeft":
-				activeHalbjahrId.value = activeHalbjahrId.value === 0 ? GostHalbjahr.values().length : (activeHalbjahrId.value - 1);
-				break;
-		}
-	}
-
-	// Fokus neu setzen, wenn "update:focus:impossible" von der Kindkomponente emitted wurde
-	function retryFocus(fachId: number, halbjahrId: number) {
-		switch (activeDirection.value) {
-			case "ArrowDown":
-				switchFocusDown();
-				activeHalbjahrId.value = halbjahrId;
-				break;
-			case "ArrowUp":
-				switchFocusUp();
-				activeHalbjahrId.value = halbjahrId;
-				break;
-			case "ArrowRight":
-				activeFachId.value = fachId;
-				activeHalbjahrId.value = (halbjahrId + 1) % (GostHalbjahr.values().length + 1);
-				break;
-			case "ArrowLeft":
-				activeFachId.value = fachId;
-				activeHalbjahrId.value = halbjahrId === 0 ? GostHalbjahr.values().length : (halbjahrId - 1);
-				break;
-		}
-	}
-
-	function getFachIndexById(fachId: number): number {
-		for (let i = 0; i <= faecherIds.length; i++) {
-			if (faecherIds[i] === fachId) {
-				return i;
-			}
-		}
-		return -1;
-	}
-
-	function getFachFilteredIndexById(fachId: number): number | null {
-		for (let i = 0; i <= faecherFilteredIds.value.length; i++) {
-			if (faecherFilteredIds.value[i] === fachId) {
-				return i;
-			}
-		}
-		return null;
-	}
 
 </script>
 
@@ -338,10 +213,6 @@
 	.svws-ergebnis--more {
 		background-color: var(--color-bg-ui-success);
 		color: var(--color-text-ui-onsuccess);
-	}
-
-	.svws-ui-tr {
-		grid-template-columns: minmax(5rem, 0.75fr) minmax(12rem, 3fr) 3rem repeat(9, 4.5rem);
 	}
 
 </style>

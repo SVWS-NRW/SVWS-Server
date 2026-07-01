@@ -78,6 +78,10 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		this._state.value.config.addElements([new ConfigElement("app.schueler.laufbahnplanung.faecher.anzeigen", "user", "alle")]);
 	}
 
+	get valid(): boolean {
+		return (this._state.value.auswahl !== undefined) && (this._state.value.abiturdatenManager !== undefined);
+	}
+
 	public async clear() {
 		this.setPatchedDefaultState({});
 	}
@@ -91,6 +95,10 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 			throw new Error("Unerwarteter Fehler: Schülerauswahl nicht festgelegt, es können keine Informationen zur Laufbahnplanung abgerufen oder eingegeben werden.");
 		}
 		return this._state.value.auswahl;
+	}
+
+	get schuelerOrNull(): SchuelerListeEintrag | null {
+		return this._state.value.auswahl ?? null;
 	}
 
 	get gostJahrgangsdaten(): GostJahrgangsdaten {

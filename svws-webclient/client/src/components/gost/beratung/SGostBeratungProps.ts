@@ -6,5 +6,4 @@ export interface GostBeratungProps {
 	benutzerdaten: BenutzerDaten;
 	config: () => Config;
 	patchJahrgangsdaten: (data: Partial<GostJahrgangsdaten>, abiturjahr: number) => Promise<boolean>;
-	jahrgangsdaten: () => GostJahrgangsdaten;
 }

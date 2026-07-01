@@ -43,13 +43,16 @@ export class RouteGostBeratung extends RouteNode<any, RouteGost> {
 		}
 	}
 
+	public async leaveBefore(from: RouteNode<any, any>, from_params: RouteParams, to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
+		await gostLaufbahnplanungStateImpl.clear();
+	}
+
 	public getProps(to: RouteLocationNormalized): GostBeratungProps {
 		return {
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			benutzerdaten: api.benutzerdaten,
 			config: () => api.config,
 			patchJahrgangsdaten: routeGost.data.patchJahrgangsdaten,
-			jahrgangsdaten: () => routeGost.data.jahrgangsdaten,
 		};
 	}
 

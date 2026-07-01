@@ -78,7 +78,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<any, RouteSchueler> 
 		}
 	}
 
-	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
+	public async leaveBefore(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
 		await gostLaufbahnplanungStateImpl.clear();
 	}
 

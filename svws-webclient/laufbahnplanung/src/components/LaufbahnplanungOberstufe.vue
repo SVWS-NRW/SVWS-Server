@@ -1,60 +1,62 @@
 <template>
-	<div class="page--header">
-		<div class="flex flex-row w-full">
-			<div class="grow">
-				<h2 class="text-headline"> {{ gostLaufbahnplanungState.schueler.nachname }}, {{ gostLaufbahnplanungState.schueler.vorname }} </h2>
-				Jahrgang {{ gostLaufbahnplanungState.gostJahrgangsdaten.jahrgang }} ({{ gostLaufbahnplanungState.gostJahrgangsdaten.bezeichnung }})
-			</div>
-			<div class="flex flex-col gap-2">
-				<div class="flex gap-3">
-					<ui-color-mode />
-					<svws-ui-modal-hilfe> <hilfe-laufbahnplanung /> </svws-ui-modal-hilfe>
-					<svws-ui-button type="danger" @click="handleClick"><span class="icon-sm i-ri-logout-circle-line" /> Abmelden </svws-ui-button>
+	<template v-if="gostLaufbahnplanungState.valid">
+		<div class="page--header">
+			<div class="flex flex-row w-full">
+				<div class="grow">
+					<h2 class="text-headline"> {{ gostLaufbahnplanungState.schueler.nachname }}, {{ gostLaufbahnplanungState.schueler.vorname }} </h2>
+					Jahrgang {{ gostLaufbahnplanungState.gostJahrgangsdaten.jahrgang }} ({{ gostLaufbahnplanungState.gostJahrgangsdaten.bezeichnung }})
 				</div>
-				<div><span>{{ version }}</span> <span v-if="version.includes('SNAPSHOT')">{{ githash.substring(0, 8) }}</span></div>
-			</div>
-		</div>
-	</div>
-
-	<svws-ui-tab-bar :tab-manager="() => tabManager">
-		<Teleport defer to=".svws-sub-nav-target">
-			<svws-ui-sub-nav>
-				<svws-ui-button type="transparent" @click="export_laufbahnplanung"><span class="icon-sm i-ri-upload-2-line" /> Speichern</svws-ui-button>
-				<svws-ui-button type="transparent" @click="showModalImport = true"><span class="icon-sm i-ri-download-2-line" /> Öffnen</svws-ui-button>
-				<s-laufbahnplanung-import-modal :show="showModalImport" :import-laufbahnplanung="import_laufbahnplanung" @update:show="val => showModalImport = val" />
-				<svws-ui-button :type="gostLaufbahnplanungState.hatZwischenspeicher ? 'error' : 'transparent'" @click="gostLaufbahnplanungState.saveLaufbahnplanung">Planung merken</svws-ui-button>
-				<svws-ui-button type="danger" @click="gostLaufbahnplanungState.restoreLaufbahnplanung" v-if="gostLaufbahnplanungState.hatZwischenspeicher">Planung wiederherstellen</svws-ui-button>
-				<svws-ui-button :type="manager.modus === 'normal' ? 'transparent' : 'danger'" @click="manager.switchModus()">
-					<span class="icon-sm i-ri-loop-right-line" /> Modus: <span>{{ manager.modus }}</span>
-				</svws-ui-button>
-				<s-modal-laufbahnplanung-kurswahlen-loeschen schueler-ansicht keine-vorlage />
-				<svws-ui-button type="transparent" @click="manager.switchFaecherAnzeigen()"> {{ "Fächer anzeigen: " + manager.getTextFaecherAnzeigen() }} </svws-ui-button>
-			</svws-ui-sub-nav>
-		</Teleport>
-
-		<div v-if="gostLaufbahnplanungState.schueler.abiturjahrgang !== null" class="page page-flex-row">
-			<div class="grow overflow-y-auto overflow-x-hidden min-w-fit">
-				<s-laufbahnplanung-card-planung :manager />
-			</div>
-			<div class="w-2/5 3xl:w-1/2 min-w-xl overflow-y-auto overflow-x-hidden">
-				<div class="flex flex-col gap-16">
-					<s-laufbahnplanung-card-status />
+				<div class="flex flex-col gap-2">
+					<div class="flex gap-3">
+						<ui-color-mode />
+						<svws-ui-modal-hilfe> <hilfe-laufbahnplanung /> </svws-ui-modal-hilfe>
+						<svws-ui-button type="danger" @click="handleClick"><span class="icon-sm i-ri-logout-circle-line" /> Abmelden </svws-ui-button>
+					</div>
+					<div><span>{{ version }}</span> <span v-if="version.includes('SNAPSHOT')">{{ githash.substring(0, 8) }}</span></div>
 				</div>
 			</div>
 		</div>
-		<div v-else class="page page-flex-row">Die Laufbahnplanung hat kein gültiges Abiturjahr, bitte prüfen Sie die importierte Datei.</div>
-	</svws-ui-tab-bar>
-	<!-- Modal zum Speichern der Laufbahndatei -->
-	<svws-ui-modal :show>
-		<template #modalTitle>Laufbahnplanung speichern</template>
-		<template #modalContent>
-			Möchten Sie die Laufbahnplanungsdatei vor der Abmeldung speichern?
-			<div class="mt-7 flex flex-row gap-4 justify end">
-				<svws-ui-button type="secondary" @click="exitLaufbahnplanung">Nein</svws-ui-button>
-				<svws-ui-button @click="exit_laufbahnplanung">Speichern</svws-ui-button>
+
+		<svws-ui-tab-bar :tab-manager="() => tabManager">
+			<Teleport defer to=".svws-sub-nav-target">
+				<svws-ui-sub-nav>
+					<svws-ui-button type="transparent" @click="export_laufbahnplanung"><span class="icon-sm i-ri-upload-2-line" /> Speichern</svws-ui-button>
+					<svws-ui-button type="transparent" @click="showModalImport = true"><span class="icon-sm i-ri-download-2-line" /> Öffnen</svws-ui-button>
+					<s-laufbahnplanung-import-modal :show="showModalImport" :import-laufbahnplanung="import_laufbahnplanung" @update:show="val => showModalImport = val" />
+					<svws-ui-button :type="gostLaufbahnplanungState.hatZwischenspeicher ? 'error' : 'transparent'" @click="gostLaufbahnplanungState.saveLaufbahnplanung">Planung merken</svws-ui-button>
+					<svws-ui-button type="danger" @click="gostLaufbahnplanungState.restoreLaufbahnplanung" v-if="gostLaufbahnplanungState.hatZwischenspeicher">Planung wiederherstellen</svws-ui-button>
+					<svws-ui-button :type="manager.modus === 'normal' ? 'transparent' : 'danger'" @click="manager.switchModus()">
+						<span class="icon-sm i-ri-loop-right-line" /> Modus: <span>{{ manager.modus }}</span>
+					</svws-ui-button>
+					<s-modal-laufbahnplanung-kurswahlen-loeschen schueler-ansicht keine-vorlage />
+					<svws-ui-button type="transparent" @click="manager.switchFaecherAnzeigen()"> {{ "Fächer anzeigen: " + manager.getTextFaecherAnzeigen() }} </svws-ui-button>
+				</svws-ui-sub-nav>
+			</Teleport>
+
+			<div v-if="gostLaufbahnplanungState.schueler.abiturjahrgang !== null" class="page page-flex-row">
+				<div class="grow overflow-y-auto overflow-x-hidden min-w-fit">
+					<s-laufbahnplanung-card-planung :manager />
+				</div>
+				<div class="w-2/5 3xl:w-1/2 min-w-xl overflow-y-auto overflow-x-hidden">
+					<div class="flex flex-col gap-16">
+						<s-laufbahnplanung-card-status />
+					</div>
+				</div>
 			</div>
-		</template>
-	</svws-ui-modal>
+			<div v-else class="page page-flex-row">Die Laufbahnplanung hat kein gültiges Abiturjahr, bitte prüfen Sie die importierte Datei.</div>
+		</svws-ui-tab-bar>
+		<!-- Modal zum Speichern der Laufbahndatei -->
+		<svws-ui-modal :show>
+			<template #modalTitle>Laufbahnplanung speichern</template>
+			<template #modalContent>
+				Möchten Sie die Laufbahnplanungsdatei vor der Abmeldung speichern?
+				<div class="mt-7 flex flex-row gap-4 justify end">
+					<svws-ui-button type="secondary" @click="exitLaufbahnplanung">Nein</svws-ui-button>
+					<svws-ui-button @click="exit_laufbahnplanung">Speichern</svws-ui-button>
+				</div>
+			</template>
+		</svws-ui-modal>
+	</template>
 </template>
 
 <script setup lang="ts">
@@ -77,10 +79,7 @@
 
 	const manager = computed<LaufbahnplanungUiManager>(() => new LaufbahnplanungUiManager(
 		serverState.mode,
-		() => gostLaufbahnplanungState.abiturdatenManager,
 		props.config,
-		() => gostLaufbahnplanungState.gostJahrgangsdaten,
-		gostLaufbahnplanungState.setWahl,
 		{ faecherZeigen: "app.schueler.laufbahnplanung.faecher.anzeigen", modus: "app.schueler.laufbahnplanung.modus" },
 		false,
 		true

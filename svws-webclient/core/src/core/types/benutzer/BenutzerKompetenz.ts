@@ -491,7 +491,7 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	/**
 	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
-	public static readonly VERSION: number = 2;
+	public static readonly VERSION: number = 3;
 
 	/**
 	 * Die Daten der Benutzerkompetenz

@@ -228,5 +228,6 @@
 		}
 	);
 
-	defineExpose({ content: computed(() => localValue.value) });
+	defineExpose({ content: computed(() => localValue.value), localValue });
+
 </script>

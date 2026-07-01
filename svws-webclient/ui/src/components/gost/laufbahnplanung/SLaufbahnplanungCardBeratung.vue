@@ -37,12 +37,12 @@
 	const refKommentar = ref<ComponentExposed<typeof SvwsUiTextareaInput>>();
 	const beratungsdatum = computed<string>(() => gostLaufbahnplanungState.gostLaufbahnBeratungsdaten.beratungsdatum ?? new Date().toISOString().slice(0, -14));
 
-	watch(() => gostLaufbahnplanungState.schueler, () => {
+	watch(() => gostLaufbahnplanungState.schuelerOrNull, () => {
 		if ((refBeratungsdatum.value?.input?.value === undefined) || refKommentar.value?.content === undefined) {
 			return;
 		}
 		refBeratungsdatum.value.input.value = beratungsdatum.value;
-		refKommentar.value.content = gostLaufbahnplanungState.gostLaufbahnBeratungsdaten.kommentar;
+		refKommentar.value.localValue = gostLaufbahnplanungState.gostLaufbahnBeratungsdaten.kommentar;
 	});
 
 	watch(() => props.updated, (neu) => {

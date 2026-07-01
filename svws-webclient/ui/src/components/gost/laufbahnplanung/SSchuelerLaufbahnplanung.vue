@@ -54,39 +54,45 @@
 
 	const manager = computed<LaufbahnplanungUiManager>(() => new LaufbahnplanungUiManager(
 		serverState.mode,
-		() => gostLaufbahnplanungState.abiturdatenManager,
 		props.config,
-		() => gostLaufbahnplanungState.gostJahrgangsdaten,
-		gostLaufbahnplanungState.setWahl,
 		{ faecherZeigen: "app.schueler.laufbahnplanung.faecher.anzeigen", modus: "app.schueler.laufbahnplanung.modus" }
 	));
 
 	const hatUpdateKompetenz = computed<boolean>(() => {
-		if ((props.benutzerKompetenzen === undefined) || (props.benutzerKompetenzenAbiturjahrgaenge === undefined) || (gostLaufbahnplanungState.schueler.abiturjahrgang === null)) {
+		if ((props.benutzerKompetenzen === undefined) || (props.benutzerKompetenzenAbiturjahrgaenge === undefined)
+			|| (gostLaufbahnplanungState.schuelerOrNull === null) || (gostLaufbahnplanungState.schuelerOrNull.abiturjahrgang === null)) {
 			return false;
 		}
 		return props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
-			|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN) && props.benutzerKompetenzenAbiturjahrgaenge.has(gostLaufbahnplanungState.schueler.abiturjahrgang));
+			|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)
+				&& props.benutzerKompetenzenAbiturjahrgaenge.has(gostLaufbahnplanungState.schuelerOrNull.abiturjahrgang));
 	});
 
-	const visible = computed<boolean>(() => gostLaufbahnplanungState.schueler.abiturjahrgang !== null);
+	const visible = computed<boolean>(() => (gostLaufbahnplanungState.schuelerOrNull !== null)
+		&& (gostLaufbahnplanungState.schuelerOrNull.abiturjahrgang !== null));
 
 	const show = ref<boolean>(false);
 
 	const updated = ref<boolean>(false);
 	const curId = ref<number | undefined>();
 
-	watch(() => [gostLaufbahnplanungState.schueler, gostLaufbahnplanungState.gostBelegpruefungErgebnis], ([neu, neu2], [alt, alt2]) => {
-		if (alt !== neu) {
-			updated.value = false;
-			curId.value = undefined;
-		}
-		if ((neu2 !== alt2) && (updated.value === false) && (curId.value === gostLaufbahnplanungState.schueler.id)) {
-			updated.value = true;
-		} else {
-			curId.value = gostLaufbahnplanungState.schueler.id;
-		}
-	});
+	watch(() => [gostLaufbahnplanungState.schuelerOrNull, gostLaufbahnplanungState.gostBelegpruefungErgebnis],
+		([neu, neu2], [alt, alt2]) => {
+			if (gostLaufbahnplanungState.schuelerOrNull === null) {
+				updated.value = false;
+				curId.value = undefined;
+				return;
+			}
+			if (alt !== neu) {
+				updated.value = false;
+				curId.value = undefined;
+			}
+			if ((neu2 !== alt2) && (updated.value === false) && (curId.value === gostLaufbahnplanungState.schuelerOrNull.id)) {
+				updated.value = true;
+			} else {
+				curId.value = gostLaufbahnplanungState.schuelerOrNull.id;
+			}
+		});
 
 	async function doPatchBeratungsdaten(data: Partial<GostLaufbahnplanungBeratungsdaten>) {
 		await gostLaufbahnplanungState.patchBeratungsdaten(data);

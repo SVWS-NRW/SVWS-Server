@@ -57,6 +57,12 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		this.setPatchedDefaultState({});
 	}
 
+	get valid(): boolean {
+		return (this.mode !== undefined) && (this._state.value.abiturdatenManager !== undefined)
+			&& (((this.mode === 'schueler') && (this._state.value.auswahlSchueler !== undefined))
+				|| ((this.mode === 'abiturjahrgang') && (this._state.value.auswahlAbiturjahrgang !== undefined)));
+	}
+
 	get mode(): 'schueler' | 'abiturjahrgang' | undefined {
 		return this._state.value.mode;
 	}
@@ -69,6 +75,10 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Schülerauswahl nicht festgelegt, es können keine Informationen zur Laufbahnplanung abgerufen oder eingegeben werden.");
 		}
 		return this._state.value.auswahlSchueler;
+	}
+
+	get schuelerOrNull(): SchuelerListeEintrag | null {
+		return this._state.value.auswahlSchueler ?? null;
 	}
 
 	private get auswahlAbiturjahrgang(): number {
