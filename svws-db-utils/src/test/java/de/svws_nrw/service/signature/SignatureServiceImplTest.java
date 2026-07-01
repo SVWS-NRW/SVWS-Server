@@ -45,7 +45,7 @@ class SignatureServiceImplTest {
 	void setUp() {
 		httpClient = new OAuthHttpClientImplMock();
 		cut = new SignatureServiceImpl(httpClient, schuleService, benutzerKompetenzService, new ObjectMapper(), SIGNATURE_SERVICE_URI);
-		when(benutzerKompetenzService.hatAktuellerBenutzerKompetenz(BenutzerKompetenz.EXTRAS_DIGITALE_SIGNATUREN_AUSSTELLEN)).thenReturn(true);
+		when(benutzerKompetenzService.hatBenutzerKompetenz(BenutzerKompetenz.EXTRAS_DIGITALE_SIGNATUREN_AUSSTELLEN)).thenReturn(true);
 	}
 
 	// -------------------------------------------------------------------------
@@ -173,7 +173,7 @@ class SignatureServiceImplTest {
 		@Test
 		@DisplayName("sign() wirft ApiOperationException bei fehlender Berechtigung")
 		void sign_shouldThrowException_whenUserHasNoPermission() {
-			when(benutzerKompetenzService.hatAktuellerBenutzerKompetenz(BenutzerKompetenz.EXTRAS_DIGITALE_SIGNATUREN_AUSSTELLEN)).thenReturn(false);
+			when(benutzerKompetenzService.hatBenutzerKompetenz(BenutzerKompetenz.EXTRAS_DIGITALE_SIGNATUREN_AUSSTELLEN)).thenReturn(false);
 
 			final Map<Object, byte[]> payloadMap = Map.of(1L, "payload".getBytes());
 			assertThatThrownBy(() -> cut.sign(payloadMap))

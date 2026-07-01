@@ -64,7 +64,7 @@ public final class SignatureServiceImpl implements SignatureService {
 	}
 
 	private void checkUserHasPermissionToSign() {
-		if (!benutzerKompetenzService.hatAktuellerBenutzerKompetenz(BenutzerKompetenz.EXTRAS_DIGITALE_SIGNATUREN_AUSSTELLEN)) {
+		if (!benutzerKompetenzService.hatBenutzerKompetenz(BenutzerKompetenz.EXTRAS_DIGITALE_SIGNATUREN_AUSSTELLEN)) {
 			throw new ApiOperationException(
 					Response.Status.FORBIDDEN,
 					"User has no permissions to create digital signatures."

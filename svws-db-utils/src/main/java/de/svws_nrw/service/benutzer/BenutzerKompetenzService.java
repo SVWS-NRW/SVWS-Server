@@ -130,8 +130,8 @@ public class BenutzerKompetenzService {
 	 *
 	 * @return true, falls eine der Kompetenzen vorhanden ist, sonst false
 	 */
-	public boolean hatAktuellerBenutzerKompetenz(final BenutzerKompetenz kompetenz) {
+	public boolean hatBenutzerKompetenz(final BenutzerKompetenz kompetenz) {
 		final Benutzer benutzer = benutzerRepository.getAktuellerBenutzer();
-		return benutzer.hatVerwendeteKompetenz(kompetenz);
+		return benutzer.pruefeKompetenz(kompetenz);
 	}
 }
