@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}">
     <!--/* @thymesVar id="#convert" type="de.svws_nrw.module.reporting.html.dialects.ConvertExpressionHelper" */-->
+	<!--/* @thymesVar id="#icon" type="de.svws_nrw.module.reporting.html.dialects.IconExpressionHelper" */-->
 	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
 		title='Klausurtermine mit Kursen',
 		htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
@@ -106,7 +107,7 @@
 								<tr th:if="${mitKlausurschreiberNamen && !kursklausur.klausurschreiberNamen().isEmpty()}">
 									<td></td>
 									<td></td>
-									<td colspan="7" class="cell-small-grey p-tb-0 p-lr-1 ta-l" th:text="${kursklausur.textKlausurschreiberNamen()}">Max Mustermann, Tina Test</td>
+									<td colspan="7" class="cell-small-grey p-tb-0 p-lr-1 ta-l"><th:block th:each="klausurschreiber,iterationVarKlausurschreiber : ${kursklausur.klausurschreiber()}" th:with="istExtern = ${klausurschreiber.status() != null && klausurschreiber.status().name() == 'EXTERN'}"><span th:utext="${klausurschreiber.vorname() + ' ' + klausurschreiber.nachname() + (istExtern ? (' ' + #icon.get('external', 8, '#808080')) : '')}">Max Mustermann</span><span th:if="${!iterationVarKlausurschreiber.last}">, </span></th:block></td>
 								</tr>
 							</tbody>
 						</th:block>
@@ -173,7 +174,7 @@
 								  th:with="skSchueler = ${schuelerklausur.schueler()}, skKursklausur = ${schuelerklausur.kursklausur()}, skRaum = ${schuelerklausur.klausurraum()}, skKurs = ${skKursklausur != null ? skKursklausur.kurs() : null}, skLa = ${skSchueler != null ? skSchueler.auswahlLernabschnitt() : null}, skJahrgang = ${skLa != null ? skLa.jahrgang() : null}">
 							<tr>
 								<td></td>
-								<td colspan="2" class="bo-t-grey p-tb-0 p-lr-1" th:text="${skSchueler != null ? (skSchueler.nachname() + ', ' + skSchueler.vorname()) : ''}">Mustermann, Max</td>
+								<td colspan="2" class="bo-t-grey p-tb-0 p-lr-1 icon-text" th:utext="${skSchueler != null ? (skSchueler.nachname() + ', ' + skSchueler.vorname() + #icon.getExtern(9, skSchueler, VorlageParameter.get('mitExternerSchuleKuerzel'), ' ', '')) : ''}">Mustermann, Max</td>
 								<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${skJahrgang != null ? skJahrgang.kuerzel() : ''}">EF</td>
 								<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${skKurs != null ? skKurs.kuerzel() : ''}">GE-GK2</td>
 								<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${(skKurs == null || skKurs.kursleitung() == null) ? '' : skKurs.kursleitung().kuerzel()}">ABC</td>

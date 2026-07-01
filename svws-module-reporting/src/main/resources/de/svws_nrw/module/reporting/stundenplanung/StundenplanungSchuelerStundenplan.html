@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}, duplex = ${Parameter.duplexdruck}">
     <!--/* @thymesVar id="#convert" type="de.svws_nrw.module.reporting.html.dialects.ConvertExpressionHelper" */-->
+	<!--/* @thymesVar id="#icon" type="de.svws_nrw.module.reporting.html.dialects.IconExpressionHelper" */-->
 	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
 		title='Schüler-Stundenplan',
 		htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
@@ -43,7 +44,7 @@
 					<thead>
 						<!-- Angaben zum Schüler und Wochen -->
 						<tr th:if="${wochennummer == 1}">
-							<td th:colspan="${spaltenzahl - 1}" style="border-bottom: 1px grey solid; vertical-align: middle"><h3 class="m-t-0" th:text="${plan.schueler().nachnameVorname()}">Mustermann, Thomas</h3></td>
+							<td th:colspan="${spaltenzahl - 1}" style="border-bottom: 1px grey solid; vertical-align: middle"><h3 class="m-t-0 icon-text" th:utext="${plan.schueler().nachnameVorname() + #icon.getExtern(10, plan.schueler(), VorlageParameter.get('mitExternerSchuleKuerzel'), ' ', '')}">Mustermann, Thomas</h3></td>
                             <td class="ta-r" style="border-bottom: 1px grey solid; vertical-align: middle"><h3 class="m-t-0" th:text="${hatLernabschnittJahrgangKlasse ? lernabschnittZumStundenplan.klasse().kuerzel() : ''}">10A</h3></td>
 						</tr>
 						<tr th:if="${wochennummer == 1}" style="height: 3px;">

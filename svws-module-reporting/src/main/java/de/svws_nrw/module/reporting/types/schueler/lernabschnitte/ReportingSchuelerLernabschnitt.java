@@ -837,38 +837,6 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Liste der Leistungsdaten des Kursunterrichts
 	 */
 	public List<ReportingSchuelerLeistungsdaten> kursunterricht() {
-		return leistungsdaten().stream().filter(l -> (l.kurs() != null)).toList();
-	}
-
-	/**
-	 * Die Leistungsdaten des Schülers in diesem Lernabschnitt.
-	 *
-	 * @return Inhalt des Feldes leistungsdaten; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
-	 */
-	public List<ReportingSchuelerLeistungsdaten> leistungsdaten() {
-		return this.leistungsdaten;
-	}
-
-	/**
-	 * Liefert eine Liste von Schüler-Leistungsdaten, die Klassenunterricht darstellen.
-	 *
-	 * @return Liste von Schüler-Leistungsdaten, die Klassenunterricht darstellen.
-	 */
-	public List<ReportingSchuelerLeistungsdaten> leistungsdatenKlassenunterrichte() {
-		if (leistungsdaten() == null) {
-			return new ArrayList<>();
-		}
-
-		// Klassenunterrichte haben keine Kurs-ID, also hat Key3 den Wert -1.
-		return this.listMapLeistungsdaten.get3(-1);
-	}
-
-	/**
-	 * Liefert eine Liste von Schüler-Leistungsdaten, die Kursunterricht darstellen.
-	 *
-	 * @return Liste von Schüler-Leistungsdaten, die Kursunterricht darstellen.
-	 */
-	public List<ReportingSchuelerLeistungsdaten> leistungsdatenKursunterrichte() {
 		if (leistungsdaten() == null) {
 			return new ArrayList<>();
 		}
@@ -879,6 +847,15 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 				.forEach(idKurs -> leistungsdatenKursunterrichte.addAll(this.listMapLeistungsdaten.get3(idKurs)));
 
 		return leistungsdatenKursunterrichte;
+	}
+
+	/**
+	 * Die Leistungsdaten des Schülers in diesem Lernabschnitt.
+	 *
+	 * @return Inhalt des Feldes leistungsdaten; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
+	 */
+	public List<ReportingSchuelerLeistungsdaten> leistungsdaten() {
+		return this.leistungsdaten;
 	}
 
 	/**

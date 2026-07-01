@@ -1,5 +1,8 @@
 package de.svws_nrw.module.reporting.html.dialects;
 
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
+import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
+
 /**
  * Die Klasse stellt Icon-Methoden zur Verfügung, die über einen Thymeleaf-Dialect ({@code #icon}) und dessen
  * ExpressionFactory in HTML-Report-Templates verwendet werden können. Ein Icon wird als SVG (RemixIcon, fill-basiert)
@@ -61,5 +64,46 @@ public class IconExpressionHelper {
 			return "";
 		}
 		return "<img class=\"icon\" width=\"" + groessePx + "\" height=\"" + groessePx + "\" src=\"" + src + "\" alt=\"\" />";
+	}
+
+	/**
+	 * Liefert das Extern-Icon (Icon-Name {@code "external"}) in der angegebenen Größe und ergänzt optional das Kürzel der
+	 * Stammschule als Text rechts neben dem Icon, sofern der übergebene Schüler ein externer Schüler ist.
+	 *
+	 * @param groessePx                 Die Kantenlänge des Icons in Pixeln.
+	 * @param reportingSchueler         Der Schüler, für den das Extern-Icon erzeugt werden soll.
+	 * @param mitExternesSchulKuerzel   Gibt an, ob das Kürzel der externen Schule rechts neben dem Icon erscheinen soll.
+	 * @param fuehrenderText            Legt den Text fest, der vor dem Icon angegeben werden soll.
+	 * @param folgenderText             Legt den Text fest, der nach dem Icon angegeben werden soll.
+	 *
+	 * @return Das HTML-Fragment als String oder ein leerer String, falls das Icon unbekannt ist oder der Schüler kein externer Schüler ist.
+	 */
+	public String getExtern(final int groessePx, final ReportingSchueler reportingSchueler, final boolean mitExternesSchulKuerzel,
+			final String fuehrenderText, final String folgenderText) {
+		String result = "";
+		if ((reportingSchueler == null) || (reportingSchueler.status() != SchuelerStatus.EXTERN)) {
+			return result;
+		}
+		final String img = get("external", groessePx);
+		final String kuerzel = reportingSchueler.externesSchulKuerzel();
+		if (!img.isBlank()) {
+			result = img;
+			if (mitExternesSchulKuerzel && !kuerzel.isBlank()) {
+				result = "<span class=\"icon-extern\">" + img + "<span class=\"icon-extern-kuerzel\">" + escapeXml(kuerzel) + "</span></span>";
+			}
+		}
+		return result.isBlank() ? "" : (escapeXml(fuehrenderText) + result + escapeXml(folgenderText));
+	}
+
+	/**
+	 * Maskiert die für XML/XHTML kritischen Zeichen, damit ein Text gefahrlos in das per {@code th:utext} eingebundene
+	 * Fragment übernommen werden kann.
+	 *
+	 * @param text Der zu maskierende Text.
+	 *
+	 * @return Der maskierte Text.
+	 */
+	private static String escapeXml(final String text) {
+		return (text == null) ? "" : text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
 	}
 }

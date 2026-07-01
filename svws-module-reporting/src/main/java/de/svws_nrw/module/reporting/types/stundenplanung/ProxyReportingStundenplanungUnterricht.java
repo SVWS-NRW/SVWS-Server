@@ -55,7 +55,6 @@ public class ProxyReportingStundenplanungUnterricht extends ReportingStundenplan
 			super.raeume = unterricht.raeume.stream().map(this.stundenplan::raum).toList();
 		}
 
-		// TODO: Schienen noch als Reporting-Objekt definieren und verwenden.
 		super.schienen = unterricht.schienen;
 
 		super.wochentyp = unterricht.wochentyp;

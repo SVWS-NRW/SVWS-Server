@@ -125,6 +125,9 @@ public final class ReportingReportvorlageKonfigurationKurse {
 										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitBemerkungen", "mit fachbezogenen Bemerkungen",
 										ReportingReportvorlageParameterTyp.BOOLEAN,
+										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitExternerSchuleKuerzel", "mit Schulkürzel bei externen Schülern",
+										ReportingReportvorlageParameterTyp.BOOLEAN,
 										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
 						))),
 				new ReportingEMailDaten(),

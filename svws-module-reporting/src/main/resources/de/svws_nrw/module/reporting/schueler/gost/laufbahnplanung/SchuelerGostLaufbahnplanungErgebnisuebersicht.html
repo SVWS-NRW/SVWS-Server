@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}">
     <!--/* @thymesVar id="#convert" type="de.svws_nrw.module.reporting.html.dialects.ConvertExpressionHelper" */-->
+	<!--/* @thymesVar id="#icon" type="de.svws_nrw.module.reporting.html.dialects.IconExpressionHelper" */-->
 	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
 			title='Ergebnisübersicht-GOSt-Laufbahnplanung',
 			htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
@@ -50,7 +51,7 @@
 				</tr>
 				<tr class="ta-c">
 					<td class="c-grey f-small" th:text="${#numbers.formatInteger(iterationVarSchueler.count, 3) + '.'}">001.</td>
-					<td class="ta-l" th:text="${schueler.nachname()} + ', ' + ${schueler.vorname()}">Mustermann, Max</td>
+					<td class="ta-l icon-text" th:utext="${schueler.nachname() + ', ' + schueler.vorname() + #icon.getExtern(9, schueler, VorlageParameter.get('mitExternerSchuleKuerzel'), ' ', '')}">Mustermann, Max</td>
 					<td class="bo-b-grey" th:style="${schueler.gostLaufbahnplanung().kursanzahlEF1() < 10  ? 'background-color: red;' : (schueler.gostLaufbahnplanung().kursanzahlEF1() <= 10  ? 'background-color: yellow;' : '')}" th:text="${schueler.gostLaufbahnplanung().kursanzahlEF1()}">12</td>
 					<td class="bo-b-grey" th:style="${schueler.gostLaufbahnplanung().kursanzahlEF2() < 10  ? 'background-color: red;' : (schueler.gostLaufbahnplanung().kursanzahlEF2() <= 10  ? 'background-color: yellow;' : '')}" th:text="${schueler.gostLaufbahnplanung().kursanzahlEF2()}">11</td>
 					<td class="bo-b-grey" th:style="${schueler.gostLaufbahnplanung().kursanzahlQ11() < 9  ? 'background-color: red;' : (schueler.gostLaufbahnplanung().kursanzahlQ11() <= 9  ? 'background-color: yellow;' : '')}" th:text="${schueler.gostLaufbahnplanung().kursanzahlQ11()}">11</td>

@@ -2,6 +2,7 @@
 <html lang="de" xmlns:th="http://www.thymeleaf.org"
 	  th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}, duplex = ${Parameter.duplexdruck}">
     <!--/* @thymesVar id="#convert" type="de.svws_nrw.module.reporting.html.dialects.ConvertExpressionHelper" */-->
+	<!--/* @thymesVar id="#icon" type="de.svws_nrw.module.reporting.html.dialects.IconExpressionHelper" */-->
 	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
 			title='Klassenliste mit Leistungsdaten - detailliert',
 			htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
@@ -13,6 +14,7 @@
 				   schuljahr = ${abschnitt != null ? abschnitt.schuljahr() : 0},
 				   mitPunktenStattNoten = ${VorlageParameter.get('mitPunktenStattNoten')},
 				   mitIndividuellerKursart = ${VorlageParameter.get('mitIndividuellerKursart')},
+				   mitExternerSchuleKuerzel = ${VorlageParameter.get('mitExternerSchuleKuerzel')},
 				   mitGesamtfehlstunden = ${VorlageParameter.get('mitGesamtfehlstunden')},
 				   mitFachbezogenenFehlstunden = ${VorlageParameter.get('mitFachbezogenenFehlstunden')},
 				   mitFachbezogenenBemerkungen = ${VorlageParameter.get('mitFachbezogenenBemerkungen')},
@@ -47,8 +49,8 @@
 			<table class="fixed-100 mp-0">
 				<thead>
 					<tr>
-						<th scope="row" class="ta-lb f-bold" style="font-size: 13pt;"
-							th:text="${itSchueler.count + '. ' + schueler.nachnameVorname()}">1. Mustermann, Max</th>
+						<th scope="row" class="ta-lb f-bold icon-text" style="font-size: 13pt;"
+							th:utext="${itSchueler.count + '. ' + schueler.nachnameVorname() + #icon.getExtern(10, schueler, mitExternerSchuleKuerzel, ' ', '')}">1. Mustermann, Max</th>
 						<th scope="row" class="ta-rb"
 							th:text="${'Klasse ' + klasse.kuerzel() + ' - Schuljahr ' + (abschnitt != null ? abschnitt.textSchuljahresabschnittLang() : '')}">Klasse 10a - Schuljahr</th>
 					</tr>

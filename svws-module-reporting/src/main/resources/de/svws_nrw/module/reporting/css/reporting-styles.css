@@ -141,7 +141,21 @@ sup {
 	vertical-align: bottom;
 }
 .icon {
-	vertical-align: -0.125em;
+	vertical-align: baseline;
+}
+.icon-block .icon {
+	display: block;
+	margin: 0 auto;
+}
+.icon-extern {
+	white-space: nowrap;
+}
+.icon-extern .icon {
+	vertical-align: baseline;
+}
+.icon-extern-kuerzel {
+	font-size: 6pt;
+	margin-left: 0.1em;
 }
 
 
@@ -570,6 +584,10 @@ table {
 table.fixed-100 {
 	width: 100%;
 	table-layout: fixed;
+}
+table.auto-100 {
+	width: 100%;
+	table-layout: auto;
 }
 thead {
 	display: table-header-group;

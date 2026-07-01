@@ -2,6 +2,7 @@
 <html lang="de" xmlns:th="http://www.thymeleaf.org"
 	  th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}, duplex = ${Parameter.duplexdruck}, querformat=${VorlageParameter.get('mitQuerformat')}">
     <!--/* @thymesVar id="#convert" type="de.svws_nrw.module.reporting.html.dialects.ConvertExpressionHelper" */-->
+	<!--/* @thymesVar id="#icon" type="de.svws_nrw.module.reporting.html.dialects.IconExpressionHelper" */-->
 	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
 			title='Klassenliste mit Leistungsdaten',
 			htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
@@ -14,6 +15,7 @@
 				   mitQuartalsnote = ${VorlageParameter.get('mitQuartalsnote')},
 				   mitPunktenStattNoten = ${VorlageParameter.get('mitPunktenStattNoten')},
 				   mitIndividuellerKursart = ${VorlageParameter.get('mitIndividuellerKursart')},
+				   mitExternerSchuleKuerzel = ${VorlageParameter.get('mitExternerSchuleKuerzel')},
 				   mitZuweisung = ${VorlageParameter.get('mitZuweisung')},
 				   mitGesamtfehlstunden = ${VorlageParameter.get('mitGesamtfehlstunden')},
 				   mitFachbezogenenFehlstunden = ${VorlageParameter.get('mitFachbezogenenFehlstunden')},
@@ -80,7 +82,7 @@
 					</td>
 					<!-- Name und weitere Angaben -->
 					<td class="ta-lt bo-t-grey p-tb-05 p-lr-1">
-						<span th:text="${schueler.nachnameVorname()}">Mustermann, Max</span>
+						<span class="icon-text" th:utext="${schueler.nachnameVorname() + #icon.getExtern(8, schueler, mitExternerSchuleKuerzel, ' ', '')}">Mustermann, Max</span>
 						<span th:if="${mitFoerderschwerpunkt && lernabschnitt != null && (lernabschnitt.foerderschwerpunkt1() != null || lernabschnitt.foerderschwerpunkt2() != null)}" class="displayblock f-tiny" th:text="${'Förderschwerpunkt: ' + ((lernabschnitt.foerderschwerpunkt1() != null) ? lernabschnitt.foerderschwerpunkt1().kuerzel : '') + ((lernabschnitt.foerderschwerpunkt1() != null && lernabschnitt.foerderschwerpunkt2() != null) ? '/' : '' ) + ((lernabschnitt.foerderschwerpunkt2() != null) ? lernabschnitt.foerderschwerpunkt2().kuerzel : '')}">S</span>
 						<span th:if="${mitVersetzungAbschluss && lernabschnitt != null}" class="displayblock f-tiny" th:text="${!lernabschnitt.versetzungsvermerkKuerzel().isEmpty() ? 'Versetzung: ' + lernabschnitt.versetzungsvermerkKuerzel() : 'Versetzung: -----'}">Versetzung: V</span>
 						<span th:if="${mitVersetzungAbschluss && lernabschnitt != null}" class="displayblock f-tiny" th:text="${(lernabschnitt.istAbschlussPrognose() ? 'Progn.: ' : 'Abschl.: ') + (!lernabschnitt.abschluss().isEmpty() ? lernabschnitt.abschluss() : '-----')}">Abschl.: MSA</span>

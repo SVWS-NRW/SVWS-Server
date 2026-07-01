@@ -271,7 +271,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	@Override
 	public String externesSchulKuerzel() {
 		if ((super.externeSchulNr() != null) && !super.externeSchulNr().isEmpty() && super.externesSchulKuerzel.isEmpty()) {
-			final SchulEintrag schule = this.reportingContext.repositoryKataloge().schulen().get(super.externeSchulNr());
+			final SchulEintrag schule = this.reportingContext.repositoryKataloge().schulenNachSchulnummer().get(super.externeSchulNr());
 			if ((schule != null) && (schule.kuerzel != null) && !schule.kuerzel.isEmpty()) {
 				super.externesSchulKuerzel = schule.kuerzel;
 			} else {

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}">
     <!--/* @thymesVar id="#convert" type="de.svws_nrw.module.reporting.html.dialects.ConvertExpressionHelper" */-->
+	<!--/* @thymesVar id="#icon" type="de.svws_nrw.module.reporting.html.dialects.IconExpressionHelper" */-->
 	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
 		title='Kurse mit Schülern',
 		htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
@@ -90,8 +91,7 @@
 			<table class="fixed-100 p-0">
 				<colgroup>
 					<col style="width: 5%;" />
-					<col th:style="(${Kurs.anzahlExterne()} != 0) ? 'width: 38%;' : 'width: 50%;'" />
-					<col th:if="(${Kurs.anzahlExterne()} != 0)" style="width: 12%;" />
+					<col style="width: 50%;" />
 					<col style="width: 11%;" />
 					<col style="width: 11%" />
 					<col style="width: 15%" />
@@ -101,7 +101,6 @@
 					<tr>
 						<th class="head-small-grey ta-l">Nr.</th>
 						<th class="head-small-grey ta-l">Name, Vorname</th>
-						<th th:if="(${Kurs.anzahlExterne()} != 0)" class="head-small-grey ta-c">Ext. Schule</th>
 						<th class="head-small-grey ta-c">Belegung</th>
 						<th class="head-small-grey ta-c">Abiturfach</th>
 						<th class="head-small-grey ta-c">Geburtsdatum</th>
@@ -110,14 +109,15 @@
 				</thead>
 				<tbody>
 					<tr th:each="Kursschueler,iterationVarSchueler : ${Kurs.schueler()}"
-						th:with="belegung = ${Kursschueler.getGostKursplanungKursbelegungById(Kurs.id())}" th:classappend="${iterationVarSchueler.odd} ? 'bg-lightgrey'">
-						<td class="bo-b-grey p-tb-0 p-lr-1 f-small c-grey" th:text="${#numbers.formatInteger(iterationVarSchueler.count,2)} + '.'">Nr.</td>
-						<td class="bo-b-grey p-tb-0 p-lr-1" th:text="${Kursschueler.nachname()} + ', ' + ${Kursschueler.vorname()}">Mustermann, Max</td>
-						<td th:if="(${Kurs.anzahlExterne()} != 0)" class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${Kursschueler.externeSchulNr()}">123456</td>
+						th:with="belegung = ${Kursschueler.getGostKursplanungKursbelegungById(Kurs.id())},
+								 geschlechtIcon = ${Kursschueler.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@M ? 'male' : (Kursschueler.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@W ? 'female' : (Kursschueler.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@D ? 'diverse' : 'nogender'))}"
+						th:classappend="${iterationVarSchueler.odd} ? 'bg-lightgrey'">
+						<td class="bo-b-grey p-tb-0 p-lr-1 c-grey" th:text="${#numbers.formatInteger(iterationVarSchueler.count,2)} + '.'">Nr.</td>
+						<td class="bo-b-grey p-tb-0 p-lr-1 icon-text" th:utext="${Kursschueler.nachname() + ', ' + Kursschueler.vorname() + #icon.getExtern(9, Kursschueler, VorlageParameter.get('mitExternerSchuleKuerzel'), ' ', '')}">Mustermann, Max</td>
 						<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${(belegung != null && belegung.hatGueltigeFachwahl()) ? (belegung.istSchriftlich() ? 's' : 'm') : 'ungültig'}">s</td>
 						<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:utext="${(belegung != null && belegung.hatGueltigeFachwahl()) ? ((ergebnisHalbjahr != null && #strings.equalsIgnoreCase('E', ergebnisHalbjahr.kuerzel.charAt(0))) ? '' : (belegung.abiturfach() + (((ergebnisHalbjahr != null && #strings.equalsIgnoreCase('1', ergebnisHalbjahr.kuerzel.charAt(1)) && belegung.abiturfach() > 2) ? '<span style=\'font-size: 0.6em;\'> (Planung)</span>'  : '')))) : 'ungültig'}">3</td>
 						<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${#convert.toDateDE(Kursschueler.geburtsdatum())}">22.08.2008</td>
-						<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${Kursschueler.geschlecht() != null ? Kursschueler.geschlecht().kuerzel : ''}">w</td>
+						<td class="bo-b-grey p-tb-0 p-lr-1 ta-cm icon-block" th:utext="${Kursschueler.geschlecht() != null ? #icon.get(geschlechtIcon, 10) : ''}">w</td>
 					</tr>
 				</tbody>
 			</table>

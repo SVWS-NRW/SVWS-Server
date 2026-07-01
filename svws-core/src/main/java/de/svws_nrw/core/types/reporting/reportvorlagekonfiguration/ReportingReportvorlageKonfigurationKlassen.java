@@ -137,7 +137,9 @@ public final class ReportingReportvorlageKonfigurationKlassen {
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitUebergangsempfehlung", "mit Übergangsempfehlung",
 										ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 2),
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitQuerformat", "Ausgabe im Querformat erzeugen",
-										ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 2)))),
+										ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 2),
+								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitExternerSchuleKuerzel", "mit Schulkürzel bei externen Schülern",
+										ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)))),
 				new ReportingEMailDaten(),
 				List.of(ReportingReportvorlageUtils.erzeugeSortierungDefinitionGruppe("Leistungsdatensortierung", "ReportingSchuelerLeistungsdaten", true,
 						ReportingSortierungDefinitionFactory.definitionen(
@@ -197,7 +199,9 @@ public final class ReportingReportvorlageKonfigurationKlassen {
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitUebergangsempfehlung", "mit Übergangsempfehlung",
 										ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 2),
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitSeitenumbruch", "Seitenumbruch nach jedem Schüler",
-										ReportingReportvorlageParameterTyp.BOOLEAN, "" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 2)))),
+										ReportingReportvorlageParameterTyp.BOOLEAN, "" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 2),
+								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitExternerSchuleKuerzel", "mit Schulkürzel bei externen Schülern",
+										ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)))),
 				new ReportingEMailDaten(),
 				List.of(ReportingReportvorlageUtils.erzeugeSortierungDefinitionGruppe("Leistungsdatensortierung", "ReportingSchuelerLeistungsdaten", true,
 						ReportingSortierungDefinitionFactory.definitionen(

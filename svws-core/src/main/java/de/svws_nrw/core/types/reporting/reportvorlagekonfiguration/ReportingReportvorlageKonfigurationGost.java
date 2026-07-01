@@ -39,7 +39,9 @@ public final class ReportingReportvorlageKonfigurationGost {
 										ReportingReportvorlageParameterTyp.BOOLEAN,
 										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitKlausurschreiberNamen", "mit Namen der Klausurschreiber",
-										ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
+										ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitExternerSchuleKuerzel", "mit Schulkürzel bei externen Schülern",
+										ReportingReportvorlageParameterTyp.BOOLEAN, "" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
 						))),
 				new ReportingEMailDaten(),
 				new ArrayList<>(),
@@ -59,7 +61,13 @@ public final class ReportingReportvorlageKonfigurationGost {
 	 */
 	public static @NotNull ReportingParameter getGostKlausurplanungVSchuelerMitKlausuren() {
 		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()),
-				new ArrayList<>(),
+				List.of(ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
+						"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 1,
+						Arrays.asList(
+								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitExternerSchuleKuerzel", "mit Schulkürzel bei externen Schülern",
+										ReportingReportvorlageParameterTyp.BOOLEAN,
+										"" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
+						))),
 				new ReportingEMailDaten(),
 				List.of(ReportingReportvorlageUtils.erzeugeSortierungDefinitionGruppe("Schülersortierung", "ReportingSchueler", true,
 						ReportingSortierungDefinitionFactory.definitionen(
@@ -84,7 +92,13 @@ public final class ReportingReportvorlageKonfigurationGost {
 	public static @NotNull ReportingParameter getGostKursplanungVKursMitKursschuelern() {
 		return ReportingReportvorlageUtils.erzeugeReportingParameter(
 				List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()),
-				new ArrayList<>(),
+				List.of(ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
+						"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 1,
+						Arrays.asList(
+								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitExternerSchuleKuerzel", "mit Schulkürzel bei externen Schülern",
+										ReportingReportvorlageParameterTyp.BOOLEAN,
+										"" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
+						))),
 				ReportingReportvorlageUtils.erzeugeEmailParameter(
 						ReportingEMailEmpfaengerTyp.GOSTKURSPLANUNG_KURSLEHRER,
 						false,
@@ -112,7 +126,13 @@ public final class ReportingReportvorlageKonfigurationGost {
 	 */
 	public static @NotNull ReportingParameter getGostKursplanungVSchuelerMitKursen() {
 		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()),
-				new ArrayList<>(),
+				List.of(ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
+						"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 1,
+						Arrays.asList(
+								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitExternerSchuleKuerzel", "mit Schulkürzel bei externen Schülern",
+										ReportingReportvorlageParameterTyp.BOOLEAN,
+										"" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
+						))),
 				new ReportingEMailDaten(),
 				new ArrayList<>(), new ArrayList<>(), false, true);
 	}
@@ -124,7 +144,13 @@ public final class ReportingReportvorlageKonfigurationGost {
 	 */
 	public static @NotNull ReportingParameter getGostKursplanungVSchuelerMitSchienenKursen() {
 		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()),
-				new ArrayList<>(),
+				List.of(ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
+						"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 1,
+						Arrays.asList(
+								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitExternerSchuleKuerzel", "mit Schulkürzel bei externen Schülern",
+										ReportingReportvorlageParameterTyp.BOOLEAN,
+										"" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
+						))),
 				new ReportingEMailDaten(),
 				new ArrayList<>(), new ArrayList<>(), false, true);
 	}

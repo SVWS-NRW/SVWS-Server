@@ -139,6 +139,18 @@ public class ReportingGostKlausurplanungKursklausur extends ReportingBaseType {
 	}
 
 	/**
+	 * Die Liste der regulären Klausurschreiber dieser Kursklausur als Schüler-Objekte.
+	 *
+	 * @return	Liste der Klausurschreiber als Schüler.
+	 */
+	public List<ReportingSchueler> klausurschreiber() {
+		if (this.kurs == null) {
+			return new ArrayList<>();
+		}
+		return schuelerklausuren.stream().filter(s -> s.schueler != null).map(s -> s.schueler).toList();
+	}
+
+	/**
 	 * Die Liste der Räume, in denen die Schüler des Kurses ihre Klausur schreiben.
 	 *
 	 * @return Die Liste der Räume der Kursklausur.

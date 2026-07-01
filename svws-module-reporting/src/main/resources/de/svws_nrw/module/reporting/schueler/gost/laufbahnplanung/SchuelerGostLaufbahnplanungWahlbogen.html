@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}">
     <!--/* @thymesVar id="#convert" type="de.svws_nrw.module.reporting.html.dialects.ConvertExpressionHelper" */-->
+	<!--/* @thymesVar id="#icon" type="de.svws_nrw.module.reporting.html.dialects.IconExpressionHelper" */-->
 	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
 				title='Wahlbogen-GOSt-Laufbahnplanung',
 				htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
@@ -32,7 +33,7 @@
 				</tr>
 				<tr>
 					<td style="border-bottom: 1px grey solid; text-align: left; vertical-align: middle;"><h3>Wahlbogen <span th:if="${nurBelegteFaecher}" class="f-very-tiny">(nur belegte Fächer)</span></h3></td>
-					<td colspan="2" style="border-bottom: 1px grey solid; text-align: right; vertical-align: middle"><h3 th:text="${schueler.nachname() + ', ' + schueler.vorname()}">Musterfrau, Anna</h3></td>
+					<td colspan="2" style="border-bottom: 1px grey solid; text-align: right; vertical-align: middle"><h3 class="icon-text" th:utext="${schueler.nachname() + ', ' + schueler.vorname() + #icon.getExtern(10, schueler, VorlageParameter.get('mitExternerSchuleKuerzel'), ' ', '')}">Musterfrau, Anna</h3></td>
 				</tr>
 			</table>
 			<p class="f-small" th:if="${!#strings.isEmpty(schueler.gostLaufbahnplanung().beratungsbogenText())}" th:text="${schueler.gostLaufbahnplanung().beratungsbogenText()}">Text der Schule für den Beratungsbogen.</p>

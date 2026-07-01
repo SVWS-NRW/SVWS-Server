@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}, duplex = ${Parameter.duplexdruck}">
     <!--/* @thymesVar id="#convert" type="de.svws_nrw.module.reporting.html.dialects.ConvertExpressionHelper" */-->
+	<!--/* @thymesVar id="#icon" type="de.svws_nrw.module.reporting.html.dialects.IconExpressionHelper" */-->
 	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
 			title='Kursliste mit Fotos und Namen der Schülerinnen und Schüler',
 			htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
@@ -71,7 +72,7 @@
 									</div>
 								</div>
 								<div class="m-t-1 ta-c foto-text" th:text="${kurs.schueler()[i].vorname()}"></div>
-								<div class="m-b-3 ta-c foto-text" th:text="${kurs.schueler()[i].nachname()}"></div>
+								<div class="m-b-3 ta-c foto-text icon-text" th:utext="${kurs.schueler()[i].nachname() + #icon.getExtern(9, kurs.schueler()[i], false, ' ', '')}"></div>
 							</div>
 
 						</td>

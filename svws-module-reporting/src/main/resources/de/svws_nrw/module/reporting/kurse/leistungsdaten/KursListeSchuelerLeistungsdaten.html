@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}, duplex = ${Parameter.duplexdruck}">
     <!--/* @thymesVar id="#convert" type="de.svws_nrw.module.reporting.html.dialects.ConvertExpressionHelper" */-->
+	<!--/* @thymesVar id="#icon" type="de.svws_nrw.module.reporting.html.dialects.IconExpressionHelper" */-->
 	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
 		title='Leistungsdaten',
 		htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
@@ -8,7 +9,7 @@
 		<title></title>
 	</head>
 
-	<body>
+	<body th:with="mitExternerSchuleKuerzel = ${VorlageParameter.get('mitExternerSchuleKuerzel')}">
 		<div class="reset-page-counter start-new-page" th:each="kurs,iterationVarKurs : ${Kurse}">
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
@@ -78,16 +79,16 @@
 								 leistungsdaten = ${lernabschnitt != null ? lernabschnitt.leistungsdatenZurIdKurs(kurs.id()) : null},
 								 bemerkung = ${leistungsdaten != null ? leistungsdaten.textFachbezogeneLernentwicklung() : ''}"
 						th:classappend="${iterationVarSchueler.odd} ? 'bg-lightgrey'">
-						<td class="f-small ta-r bo-t-grey p-tb-0 p-lr-1" th:text="${iterationVarSchueler.count + '. '}">1.</td>
-						<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${schueler.nachnameVorname()}">Mustermann, Max</td>
-						<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${(schueler.auswahlLernabschnitt() != null && schueler.auswahlLernabschnitt().klasse() != null) ? schueler.auswahlLernabschnitt().klasse().kuerzel() : ''}">10a</td>
-						<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${leistungsdaten != null ? leistungsdaten.kursart() : ''}">GKM</td>
-						<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${leistungsdaten == null ? '' : (VorlageParameter.get('mitPunktenStattNoten') ? leistungsdaten.noteQuartalPunkte() : leistungsdaten.noteQuartalKuerzel())}">3+</td>
-						<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${leistungsdaten == null ? '' : (VorlageParameter.get('mitPunktenStattNoten') ? leistungsdaten.notePunkte() : leistungsdaten.noteKuerzel())}">2-</td>
-						<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${(leistungsdaten != null && leistungsdaten.istGemahnt()) ? 'ja' : ''}">ja</td>
-						<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${leistungsdaten != null ? leistungsdaten.fehlstundenGesamt() : ''}">25</td>
-						<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${leistungsdaten != null ? leistungsdaten.fehlstundenUnentschuldigt() : ''}">5</td>
-						<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${#strings.isEmpty(bemerkung) ? '' : 'ja'}">ja</td>
+						<td class="ta-r bo-t-grey p-tb-0 p-lr-1" th:text="${iterationVarSchueler.count + '. '}">1.</td>
+						<td class="bo-t-grey p-tb-0 p-lr-1 icon-text" th:utext="${schueler.nachnameVorname() + #icon.getExtern(9, schueler, mitExternerSchuleKuerzel, ' ', '')}">Mustermann, Max</td>
+						<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${(schueler.auswahlLernabschnitt() != null && schueler.auswahlLernabschnitt().klasse() != null) ? schueler.auswahlLernabschnitt().klasse().kuerzel() : ''}">10a</td>
+						<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${leistungsdaten != null ? leistungsdaten.kursart() : ''}">GKM</td>
+						<td class="bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${leistungsdaten == null ? '' : (VorlageParameter.get('mitPunktenStattNoten') ? leistungsdaten.noteQuartalPunkte() : leistungsdaten.noteQuartalKuerzel())}">3+</td>
+						<td class="bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${leistungsdaten == null ? '' : (VorlageParameter.get('mitPunktenStattNoten') ? leistungsdaten.notePunkte() : leistungsdaten.noteKuerzel())}">2-</td>
+						<td class="bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${(leistungsdaten != null && leistungsdaten.istGemahnt()) ? 'ja' : ''}">ja</td>
+						<td class="bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${leistungsdaten != null ? leistungsdaten.fehlstundenGesamt() : ''}">25</td>
+						<td class="bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${leistungsdaten != null ? leistungsdaten.fehlstundenUnentschuldigt() : ''}">5</td>
+						<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${#strings.isEmpty(bemerkung) ? '' : 'ja'}">ja</td>
 					</tr>
 				</tbody>
 			</table>
@@ -127,7 +128,7 @@
 										   bemerkung = ${leistungsdaten != null ? leistungsdaten.textFachbezogeneLernentwicklung() : ''}">
 							<tr th:if="${!#strings.isEmpty(bemerkung)}" th:classappend="${iterationVarSchueler.odd} ? 'bg-lightgrey'">
 								<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${iterationVarSchueler.count + '. '}">1.</td>
-								<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${schueler.nachnameVorname()}">Mustermann, Max</td>
+								<td class="f-small bo-t-grey p-tb-0 p-lr-1 icon-text" th:utext="${schueler.nachnameVorname() + #icon.getExtern(8, schueler, mitExternerSchuleKuerzel, ' ', '')}">Mustermann, Max</td>
 								<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${bemerkung}">fachbezogene Bemerkungen</td>
 							</tr>
 						</th:block>

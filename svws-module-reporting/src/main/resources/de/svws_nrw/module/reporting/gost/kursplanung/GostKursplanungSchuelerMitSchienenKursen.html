@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}">
     <!--/* @thymesVar id="#convert" type="de.svws_nrw.module.reporting.html.dialects.ConvertExpressionHelper" */-->
+	<!--/* @thymesVar id="#icon" type="de.svws_nrw.module.reporting.html.dialects.IconExpressionHelper" */-->
 	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
 		title='Schüler-Kurse-Schienen-Zuordnung',
 		htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
@@ -84,7 +85,7 @@
 
 					<table class="fixed-100 p-0">
 						<tr>
-							<th style="width: 100%; border-bottom: 1px grey solid; vertical-align: middle"><h3 class="m-t-0" th:text="${'Kurse-Schienen-Zuordnung - ' + schueler.nachname() + ', ' + schueler.vorname()}">Kurse-Schienen-Zuordnung - Mustermann, Max</h3></th>
+							<th style="width: 100%; border-bottom: 1px grey solid; vertical-align: middle"><h3 class="m-t-0 icon-text" th:utext="${'Kurse-Schienen-Zuordnung - ' + schueler.nachname() + ', ' + schueler.vorname() + #icon.getExtern(10, schueler, VorlageParameter.get('mitExternerSchuleKuerzel'), ' ', '')}">Kurse-Schienen-Zuordnung - Mustermann, Max</h3></th>
 						</tr>
 						<tr style="height: 3px;">
 							<td></td>

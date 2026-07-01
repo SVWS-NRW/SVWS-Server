@@ -48,7 +48,8 @@ public class ReportingRepositoryKataloge {
 	private Map<Long, OrtKatalogEintrag> katalogOrte;
 	private Map<Long, OrtsteilKatalogEintrag> katalogOrtsteile;
 	private Map<Long, ReligionEintrag> katalogReligionen;
-	private Map<String, SchulEintrag> katalogSchulen;
+	private Map<Long, SchulEintrag> katalogSchulen;
+	private Map<String, SchulEintrag> katalogSchulenNachSchulnummer;
 	private Map<Long, SchulformKatalogEintrag> katalogSchulformen;
 	private Map<Long, Telefonart> katalogTelefonnummerArten;
 	private Map<Long, DTOFach> mapFaecher;
@@ -155,22 +156,41 @@ public class ReportingRepositoryKataloge {
 	}
 
 	/**
-	 * Gibt die Map der Schul-Katalogeinträge zurück, indiziert nach Schulnummer. Wird beim ersten Zugriff aus der Datenbank geladen.
+	 * Gibt die Map der Schul-Katalogeinträge zurück, indiziert nach ihrer ID im Katalog. Wird beim ersten Zugriff aus der Datenbank geladen.
 	 *
 	 * @return Map der Schul-Katalogeinträge
 	 */
-	public Map<String, SchulEintrag> schulen() {
+	public Map<Long, SchulEintrag> schulen() {
 		if (katalogSchulen == null) {
 			try {
-				this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade Katalog Schulen.");
+				this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade Katalog Schulen, indiziert nach IDs.");
 				katalogSchulen = new DataSchulen(this.reportingContext.conn()).getAll().stream()
-						.filter(s -> (s.schulnummerStatistik != null) && (!s.schulnummerStatistik.isEmpty()))
-						.collect(Collectors.toMap(s -> s.schulnummerStatistik, s -> s, (s1, s2) -> s1));
+						.collect(Collectors.toMap(s -> s.id, s -> s));
 			} catch (final Exception e) {
-				throw fehlerKatalogdatenLaden("Schulen", e);
+				throw fehlerKatalogdatenLaden("Schulen (nach IDs)", e);
 			}
 		}
 		return katalogSchulen;
+	}
+
+	/**
+	 * Gibt die Map der Schul-Katalogeinträge zurück, indiziert nach Schulnummer. Sofern eine Schulnummer mehrfach vergeben wurde,
+	 * wird nur der erste Eintrag berücksichtigt. Wird beim ersten Zugriff aus der Datenbank geladen.
+	 *
+	 * @return Map der Schul-Katalogeinträge
+	 */
+	public Map<String, SchulEintrag> schulenNachSchulnummer() {
+		if (katalogSchulenNachSchulnummer == null) {
+			try {
+				this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade Katalog Schulen, indiziert nach Schulnummern.");
+				katalogSchulenNachSchulnummer = new DataSchulen(this.reportingContext.conn()).getAll().stream()
+						.filter(s -> (s.schulnummerStatistik != null) && (!s.schulnummerStatistik.isEmpty()))
+						.collect(Collectors.toMap(s -> s.schulnummerStatistik, s -> s, (s1, s2) -> s1));
+			} catch (final Exception e) {
+				throw fehlerKatalogdatenLaden("Schulen (nach Schulnummer)", e);
+			}
+		}
+		return katalogSchulenNachSchulnummer;
 	}
 
 	/**

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}">
 <!--/* @thymesVar id="#convert" type="de.svws_nrw.module.reporting.html.dialects.ConvertExpressionHelper" */-->
+	<!--/* @thymesVar id="#icon" type="de.svws_nrw.module.reporting.html.dialects.IconExpressionHelper" */-->
 	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
 		title='Schüler mit Klausuren',
 		htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
@@ -28,7 +29,7 @@
 						<th colspan="2" class="bo-b-grey"><h2 th:text="'Klausurplan ' + ${Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittLang()}">Klausurplan 2024/25 1. Halbjahr</h2></th>
 					</tr>
 					<tr>
-						<td class="p-t-25of100 bo-b-grey"><h3 th:text="${schueler.nachname()} + ', ' + ${schueler.vorname()}">Mustermann, Max</h3></td>
+						<td class="p-t-25of100 bo-b-grey"><h3 class="icon-text" th:utext="${schueler.nachname() + ', ' + schueler.vorname() + #icon.getExtern(10, schueler, VorlageParameter.get('mitExternerSchuleKuerzel'), ' ', '')}">Mustermann, Max</h3></td>
 						<td class="p-t-25of100 bo-b-grey ta-r" th:with="schLa = ${schueler.auswahlLernabschnitt()}, schKlasse = ${schLa != null ? schLa.klasse() : null}"><h3 th:text="${schKlasse != null ? schKlasse.kuerzel() : ''}">EF</h3></td>
 					</tr>
 				</thead>

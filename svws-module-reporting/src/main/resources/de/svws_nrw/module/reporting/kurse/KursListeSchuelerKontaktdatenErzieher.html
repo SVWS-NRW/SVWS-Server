@@ -109,7 +109,9 @@
 					<tr th:each="schueler,iterationVarSchueler : ${kurs.schueler()}"
 						th:with="istExtern = ${schueler.status() != null && schueler.status().name() == 'EXTERN'},
 								 geschlechtIcon = ${schueler.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@M ? 'male' : (schueler.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@W ? 'female' : (schueler.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@D ? 'diverse' : 'nogender'))},
-								 zeigeExterneSchule = ${istExtern && mitExternerSchuleKuerzel && !schueler.externesSchulKuerzel().isEmpty()}"
+								 zeigeExterneSchule = ${istExtern && mitExternerSchuleKuerzel && !schueler.externesSchulKuerzel().isEmpty()},
+								 schuelerKlasseKuerzel = ${(mitSchuelerKlasse && (schueler.auswahlLernabschnitt() != null) && (schueler.auswahlLernabschnitt().klasse() != null)) ? schueler.auswahlLernabschnitt().klasse().kuerzel() : ''},
+								 schuelerGebDatStaat = ${'' + (mitSchuelerGebDat ? #convert.toDateDE(schueler.geburtsdatum()) : '') + ((mitSchuelerGebDat && mitSchuelerStaat) ? ', ' : '') + (mitSchuelerStaat && (schueler.staatsangehoerigkeit() != null) && (schueler.staatsangehoerigkeit().daten(schuljahr) != null) ? schueler.staatsangehoerigkeit().daten(schuljahr).staatsangehoerigkeit : '')}"
 						th:classappend="${iterationVarSchueler.even} ? 'bg-lightgrey'">
 						<!-- Spalte für laufende Nummer -->
 						<td class="p-tb-05 p-lr-1 bo-b-grey" th:text="${iterationVarSchueler.count + '. '}">1.</td>
@@ -128,25 +130,22 @@
 						<!-- ### SONDERFALL: Anschrift und nur Telefon ODER E-Mail. Daher zweispaltige Angabe für Schüler und Anschrift und letzte Spalte Telefon oder E-Mail. ### -->
 						<th:block th:if="${fallNurAnschriftUndTelefonOderEmail}">
 							<td class="p-tb-05 p-lr-1 bo-b-grey">
-								<table class="fixed-100 mp-0">
+								<table class="auto-100 mp-0">
 									<thead th:if="${false}"><!-- Header nur für SonarCube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
 									<tr>
-										<td class="mp-0" th:text="${mitSchuelerAlleVornamen ? schueler.nachnameVornamen() : schueler.nachnameVorname()}">
+										<td class="mp-0 ta-lt" style="width: 100%;" th:text="${mitSchuelerAlleVornamen ? schueler.nachnameVornamen() : schueler.nachnameVorname()}">
 											Mustermann, Maximilian Moritz
 										</td>
-										<td th:if="${mitSchuelerKlasse || mitSchuelerGeschlecht || istExtern}" class="mp-0 ta-rt" style="width: 14mm" th:utext="${(istExtern ? (#icon.get('external', 10) + ' ') : '') + (mitSchuelerGeschlecht ? (#icon.get(geschlechtIcon, 10) + ' ') : '') + ((mitSchuelerKlasse && (schueler.auswahlLernabschnitt() != null) && (schueler.auswahlLernabschnitt().klasse() != null)) ? schueler.auswahlLernabschnitt().klasse().kuerzel() : '')}">
+										<td class="mp-0 ta-rt p-l-1" style="white-space: nowrap;" th:utext="${#icon.getExtern(10, schueler, false, '', '')}"></td><td class="mp-0 ta-rt p-l-1" style="white-space: nowrap;" th:utext="${mitSchuelerGeschlecht ? #icon.get(geschlechtIcon, 10) : ''}"></td><td class="mp-0 ta-rt p-l-1" th:text="${schuelerKlasseKuerzel}">
 											06C
 										</td>
 									</tr>
 									<tr th:if="${!fallNurBasisdaten && (mitSchuelerGebDat || mitSchuelerStaat)}" >
-										<td th:colspan="${zeigeExterneSchule ? 1 : ((mitSchuelerKlasse || mitSchuelerGeschlecht || istExtern) ? 2 : 1)}" class="mp-0 bo-t-grey"
-											th:text="${''
-													+ (mitSchuelerGebDat ? #convert.toDateDE(schueler.geburtsdatum()) : '')
-													+ ((mitSchuelerGebDat && mitSchuelerStaat) ? ', ' : '')
-													+ (mitSchuelerStaat && (schueler.staatsangehoerigkeit() != null) ? schueler.staatsangehoerigkeit().daten(schuljahr).staatsangehoerigkeit : '')}">
+										<td class="mp-0 bo-t-grey"
+											th:text="${schuelerGebDatStaat}">
 											(m), 12.08.1980, deutsch
 										</td>
-										<td th:if="${zeigeExterneSchule}" class="mp-0 bo-t-grey ta-rt" style="width: 14mm" th:text="${schueler.externesSchulKuerzel()}">EXT</td>
+										<td colspan="3" class="mp-0 bo-t-grey ta-rt p-l-1" th:text="${zeigeExterneSchule ? schueler.externesSchulKuerzel() : ''}">EXT</td>
 									</tr>
 								</table>
 							</td>
@@ -175,35 +174,29 @@
 							<!-- ### Es werden nur Daten des Schüler gewünscht, daher Hochformat mit Daten nebeneinander, soweit möglich. -->
 							<th:block th:if="${!mitSpalteSchuelerKontaktdaten && !mitSpalteSchuelerTelefonKontakte && !mitSpalteErzieher}">
 								<td class="p-tb-05 p-lr-1 bo-b-grey">
-									<table class="fixed-100 mp-0">
+									<table class="auto-100 mp-0">
 										<thead th:if="${false}"><!-- Header nur für SonarCube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
 										<tr>
-											<td class="mp-0" th:text="${mitSchuelerAlleVornamen ? schueler.nachnameVornamen() : schueler.nachnameVorname()}">
+											<td class="mp-0 ta-lt" style="width: 100%;" th:text="${mitSchuelerAlleVornamen ? schueler.nachnameVornamen() : schueler.nachnameVorname()}">
 												Mustermann, Maximilian Moritz
 											</td>
-											<td th:if="${mitSchuelerKlasse || mitSchuelerGeschlecht || istExtern}" class="mp-0 ta-rt" style="width: 14mm" th:utext="${(istExtern ? (#icon.get('external', 10) + ' ') : '') + (mitSchuelerGeschlecht ? (#icon.get(geschlechtIcon, 10) + ' ') : '') + ((mitSchuelerKlasse && (schueler.auswahlLernabschnitt() != null) && (schueler.auswahlLernabschnitt().klasse() != null)) ? schueler.auswahlLernabschnitt().klasse().kuerzel() : '')}">
+											<td class="mp-0 ta-rt p-l-1" style="white-space: nowrap;" th:utext="${#icon.getExtern(10, schueler, false, '', '')}"></td><td class="mp-0 ta-rt p-l-1" style="white-space: nowrap;" th:utext="${mitSchuelerGeschlecht ? #icon.get(geschlechtIcon, 10) : ''}"></td><td class="mp-0 ta-rt p-l-1" th:text="${schuelerKlasseKuerzel}">
 												06C
 											</td>
 										</tr>
 										<tr th:if="${!fallNurBasisdaten && (mitSchuelerGebDat || mitSchuelerStaat)}" >
-											<td th:colspan="${zeigeExterneSchule ? 1 : ((mitSchuelerKlasse || mitSchuelerGeschlecht || istExtern) ? 2 : 1)}" class="mp-0 bo-t-grey"
-												th:text="${''
-													+ (mitSchuelerGebDat ? #convert.toDateDE(schueler.geburtsdatum()) : '')
-													+ ((mitSchuelerGebDat && mitSchuelerStaat) ? ', ' : '')
-													+ (mitSchuelerStaat && (schueler.staatsangehoerigkeit() != null) ? schueler.staatsangehoerigkeit().daten(schuljahr).staatsangehoerigkeit : '')}">
+											<td class="mp-0 bo-t-grey"
+												th:text="${schuelerGebDatStaat}">
 												(m), 12.08.1980, deutsch
 											</td>
-											<td th:if="${zeigeExterneSchule}" class="mp-0 bo-t-grey ta-rt" style="width: 14mm" th:text="${schueler.externesSchulKuerzel()}">EXT</td>
+											<td colspan="3" class="mp-0 bo-t-grey ta-rt p-l-1" th:text="${zeigeExterneSchule ? schueler.externesSchulKuerzel() : ''}">EXT</td>
 										</tr>
 									</table>
 								</td>
 								<td class="p-tb-05 p-lr-1 bo-b-grey ta-ct" th:text="${kurs.schuelerIndividuelleKursart(schueler.id())}">GKM</td>
 								<th:block th:if="${fallNurBasisdaten}">
 									<td colspan="2" class="mp-0 bo-b-grey"
-										th:text="${''
-											+ (mitSchuelerGebDat ? #convert.toDateDE(schueler.geburtsdatum()) : '')
-											+ ((mitSchuelerGebDat && mitSchuelerStaat) ? ', ' : '')
-											+ (mitSchuelerStaat && (schueler.staatsangehoerigkeit() != null) ? schueler.staatsangehoerigkeit().daten(schuljahr).staatsangehoerigkeit : '')}">
+										th:text="${schuelerGebDatStaat}">
 										(m), 12.08.1980, deutsch
 									</td>
 								</th:block>
@@ -220,28 +213,25 @@
 							<!-- ### Es wird mindestens eine weitere Datenart gefordert und es ist NICHT der Sonderfall zuvor. Lege die Spalte für die Schülerdaten für alle folgenden Fälle an.  -->
 							<th:block th:if="${(mitSpalteSchuelerKontaktdaten || mitSpalteSchuelerTelefonKontakte || mitSpalteErzieher) && !(mitSchuelerAnschrift && !mitSpalteSchuelerTelefonKontakte && !mitSpalteErzieher && !(mitSchuelerTelefonPrivat && mitSchuelerEMail) && (mitSchuelerTelefonPrivat || mitSchuelerEMail))}">
 								<td class="p-tb-05 p-lr-1 bo-b-grey">
-									<table class="fixed-100 mp-0">
+									<table class="auto-100 mp-0">
 										<thead th:if="${false}"><!-- Header nur für SonarCube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
 										<tr>
-											<td class="mp-0" th:text="${mitSchuelerAlleVornamen ? schueler.nachnameVornamen() : schueler.nachnameVorname()}">
+											<td class="mp-0 ta-lt" style="width: 100%;" th:text="${mitSchuelerAlleVornamen ? schueler.nachnameVornamen() : schueler.nachnameVorname()}">
 												Mustermann, Maximilian Moritz
 											</td>
-											<td th:if="${mitSchuelerKlasse || mitSchuelerGeschlecht || istExtern}" class="mp-0 ta-rt" style="width: 14mm" th:utext="${(istExtern ? (#icon.get('external', 10) + ' ') : '') + (mitSchuelerGeschlecht ? (#icon.get(geschlechtIcon, 10) + ' ') : '') + ((mitSchuelerKlasse && (schueler.auswahlLernabschnitt() != null) && (schueler.auswahlLernabschnitt().klasse() != null)) ? schueler.auswahlLernabschnitt().klasse().kuerzel() : '')}">
+											<td class="mp-0 ta-rt p-l-1" style="white-space: nowrap;" th:utext="${#icon.getExtern(10, schueler, false, '', '')}"></td><td class="mp-0 ta-rt p-l-1" style="white-space: nowrap;" th:utext="${mitSchuelerGeschlecht ? #icon.get(geschlechtIcon, 10) : ''}"></td><td class="mp-0 ta-rt p-l-1" th:text="${schuelerKlasseKuerzel}">
 												06C
 											</td>
 										</tr>
 										<tr th:if="${mitSchuelerGebDat || mitSchuelerStaat}" >
-											<td th:colspan="${zeigeExterneSchule ? 1 : ((mitSchuelerKlasse || mitSchuelerGeschlecht || istExtern) ? 2 : 1)}" class="mp-0 bo-t-grey"
-												th:text="${''
-													+ (mitSchuelerGebDat ? #convert.toDateDE(schueler.geburtsdatum()) : '')
-													+ ((mitSchuelerGebDat && mitSchuelerStaat) ? ', ' : '')
-													+ (mitSchuelerStaat && (schueler.staatsangehoerigkeit() != null) ? schueler.staatsangehoerigkeit().daten(schuljahr).staatsangehoerigkeit : '')}">
+											<td class="mp-0 bo-t-grey"
+												th:text="${schuelerGebDatStaat}">
 												(m), 12.08.1980, deutsch
 											</td>
-											<td th:if="${zeigeExterneSchule}" class="mp-0 bo-t-grey ta-rt" style="width: 14mm" th:text="${schueler.externesSchulKuerzel()}">EXT</td>
+											<td colspan="3" class="mp-0 bo-t-grey ta-rt p-l-1" th:text="${zeigeExterneSchule ? schueler.externesSchulKuerzel() : ''}">EXT</td>
 										</tr>
 										<tr th:if="${mitSchuelerAnschrift}">
-											<td th:colspan="${(mitSchuelerKlasse || mitSchuelerGeschlecht || istExtern) ? 2 : 1}" class="mp-0 bo-t-grey" th:utext="${schueler.strassennameHausnummer() + '<br/>' + schueler.plzOrt()}">
+											<td colspan="4" class="mp-0 bo-t-grey" th:utext="${schueler.strassennameHausnummer() + '<br/>' + schueler.plzOrt()}">
 												Hauptstraße 13a<br/>12345 Musterstadt
 												</td>
 											</tr>
