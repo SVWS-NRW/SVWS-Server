@@ -94,6 +94,7 @@ public final class DBUtilsGostLaufbahn {
 			fach.istFSNeu = zulFach.daten(schuljahr).istFremdsprache && zulFach.daten(schuljahr).nurSII;
 			final GostAbiturFach tmpAbiturFach = GostAbiturFach.fromID(belegungPlanung.AbiturFach);
 			fach.abiturFach = (tmpAbiturFach == null) ? null : tmpAbiturFach.id;
+			fach.idReferenzfach = null; // Die Vorlage enthält keine Schüler-spezifische Wahl für das Referenzfach
 			GostKursart fachKursart = GostKursart.GK;
 			if ("PX".equals(gostFach.kuerzel)) {
 				fachKursart = GostKursart.PJK;

@@ -567,6 +567,7 @@ export class AbiturdatenManager extends JavaObject {
 		wahl.halbjahre[4] = AbiturdatenManager.getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.Q21);
 		wahl.halbjahre[5] = AbiturdatenManager.getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.Q22);
 		wahl.abiturFach = belegung.abiturFach;
+		wahl.idReferenzfach = belegung.idReferenzfach;
 		return wahl;
 	}
 

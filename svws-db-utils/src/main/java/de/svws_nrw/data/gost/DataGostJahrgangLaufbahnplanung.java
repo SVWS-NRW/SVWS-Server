@@ -94,6 +94,7 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 		fachwahl.halbjahre[4] = (fachbelegung == null) ? null : fachbelegung.Q21_Kursart;
 		fachwahl.halbjahre[5] = (fachbelegung == null) ? null : fachbelegung.Q22_Kursart;
 		fachwahl.abiturFach = (fachbelegung == null) ? null : fachbelegung.AbiturFach;
+		fachwahl.idReferenzfach = null;
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(fachwahl).build();
 	}
 
@@ -186,10 +187,16 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 					}
 					case "abiturFach" -> {
 						final Integer af = JSONMapper.convertToInteger(value, true);
-						if ((af != null) && ((af < 1) || (af > 4))) {
+						if ((af != null) && ((af < 1) || (af > 5))) {
 							throw new ApiOperationException(Status.CONFLICT);
 						}
 						fachbelegung.AbiturFach = af;
+					}
+					case "idReferenzfach" -> {
+						final Long idFach = JSONMapper.convertToLong(value, true, "idReferenzfach");
+						if (idFach != null) {
+							throw new ApiOperationException(Status.CONFLICT, "In der Vorlage für den Jahrgang kann ich keine gewähltes Referenzfach gesetzt werden.");
+						}
 					}
 					default -> throw new ApiOperationException(Status.BAD_REQUEST);
 				}

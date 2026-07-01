@@ -122,7 +122,7 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 
 
 	/**
-	 * Prüft, ob genau eine Projektkurs belegt wurde.
+	 * Prüft, ob genau ein Projektkurs belegt wurde.
 	 */
 	private void pruefeBelegung() {
 		if (projektkursBelegung.isEmpty()) {
@@ -223,9 +223,30 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 			return;
 		}
 
-		if ((!hatReferenzfach1Belegung || !hatReferenzfach1BelegungSchriftlich)
-				&& (!hatReferenzfach2Belegung || !hatReferenzfach2BelegungSchriftlich)) {
+		final boolean referenzfach1Waehlbar = (hatReferenzfach1Belegung && hatReferenzfach1BelegungSchriftlich);
+		final boolean referenzfach2Waehlbar = (hatReferenzfach2Belegung && hatReferenzfach2BelegungSchriftlich);
+		if (!referenzfach1Waehlbar && !referenzfach2Waehlbar) {
 			addFehler(GostBelegungsfehler.GOST30_PF_24);
+		}
+
+		// Prüfe, ob die gewählte Referenzfachbelegung möglich ist
+		if (projektkurs.idReferenzfach == null) {
+			addFehler(GostBelegungsfehler.GOST30_PF_26);
+		} else if (referenzfach1Waehlbar || referenzfach2Waehlbar) {
+			if (projektkurs.idReferenzfach.equals(fach.projektKursLeitfach1ID)) {
+				if (!referenzfach1Waehlbar) {
+					addFehler(GostBelegungsfehler.GOST30_PF_27);
+				} else if ((projektkurs.abiturFach != null) && (referenzfach1 != null) && (referenzfach1.abiturFach != null)) {
+					addFehler(GostBelegungsfehler.GOST30_PF_28);
+				}
+			}
+			if (projektkurs.idReferenzfach.equals(fach.projektKursLeitfach2ID)) {
+				if (!referenzfach2Waehlbar) {
+					addFehler(GostBelegungsfehler.GOST30_PF_27);
+				} else if ((projektkurs.abiturFach != null) && (referenzfach2 != null) && (referenzfach2.abiturFach != null)) {
+					addFehler(GostBelegungsfehler.GOST30_PF_28);
+				}
+			}
 		}
 	}
 

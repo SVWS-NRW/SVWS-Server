@@ -431,6 +431,21 @@ public enum GostBelegungsfehler {
 			"Ein Projektkurs kann nur belegt werden, wenn sein Referenzfach ein gültiges Fach in der gymnasialen Oberstufe ist.",
 			null),
 
+	/** BelegungsfehlerArt PF_26 */
+	GOST30_PF_26("PF_26", GostBelegungsfehlerArt.BELEGUNG,
+			"Es muss für einen Projektkurs ein Referenzfach gewählt werden.",
+			null),
+
+	/** BelegungsfehlerArt PF_27 */
+	GOST30_PF_27("PF_27", GostBelegungsfehlerArt.BELEGUNG,
+			"Das aktuell gewählte Referenzfach ist für diesen Projektkurs nicht möglich. Wählen Sie das andere Referenzfach oder passen Sie ggf. die anderen Fachwahlen an.",
+			null),
+
+	/** BelegungsfehlerArt PF_28 */
+	GOST30_PF_28("PF_28", GostBelegungsfehlerArt.BELEGUNG,
+			"Das aktuell gewählte Referenzfach ist Abiturfach und der Projektkurs wurde als 5. Abiturfach gewählt. Beides zusammen ist nicht möglich.",
+			null),
+
 	/** BelegungsfehlerArt RE_10 */
 	GOST30_RE_10("RE_10", GostBelegungsfehlerArt.BELEGUNG,
 			"Religionslehre muss wenigstens von EF.1-Q1.2 durchgehend belegt werden. Als Ersatz kann Philosophie dienen, sofern Philosophie nicht die einzige von EF.1 bis Q2.2 durchgehend belegte Gesellschaftswissenschaft ist. In diesem Fall muss ein weiteres Fach der Gesellschaftswissenschaften als Religionsersatz dienen.",

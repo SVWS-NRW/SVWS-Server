@@ -1,3 +1,4 @@
+import { JavaObject } from '../../../../../java/lang/JavaObject';
 import { GostFach } from '../../../../../core/data/gost/GostFach';
 import { Fach } from '../../../../../asd/types/fach/Fach';
 import { AbiturFachbelegung } from '../../../../../core/data/gost/AbiturFachbelegung';
@@ -92,7 +93,7 @@ export class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 	}
 
 	/**
-	 * Prüft, ob genau eine Projektkurs belegt wurde.
+	 * Prüft, ob genau ein Projektkurs belegt wurde.
 	 */
 	private pruefeBelegung(): void {
 		if (this.projektkursBelegung.isEmpty()) {
@@ -171,9 +172,32 @@ export class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 			this.addFehler(GostBelegungsfehler.GOST30_PF_23);
 			return;
 		}
-		if ((!hatReferenzfach1Belegung || !hatReferenzfach1BelegungSchriftlich) && (!hatReferenzfach2Belegung || !hatReferenzfach2BelegungSchriftlich)) {
+		const referenzfach1Waehlbar: boolean = (hatReferenzfach1Belegung && hatReferenzfach1BelegungSchriftlich);
+		const referenzfach2Waehlbar: boolean = (hatReferenzfach2Belegung && hatReferenzfach2BelegungSchriftlich);
+		if (!referenzfach1Waehlbar && !referenzfach2Waehlbar) {
 			this.addFehler(GostBelegungsfehler.GOST30_PF_24);
 		}
+		if (this.projektkurs.idReferenzfach === null) {
+			this.addFehler(GostBelegungsfehler.GOST30_PF_26);
+		} else
+			if (referenzfach1Waehlbar || referenzfach2Waehlbar) {
+				if (JavaObject.equalsTranspiler(this.projektkurs.idReferenzfach, (fach.projektKursLeitfach1ID))) {
+					if (!referenzfach1Waehlbar) {
+						this.addFehler(GostBelegungsfehler.GOST30_PF_27);
+					} else
+						if ((this.projektkurs.abiturFach !== null) && (referenzfach1 !== null) && (referenzfach1.abiturFach !== null)) {
+							this.addFehler(GostBelegungsfehler.GOST30_PF_28);
+						}
+				}
+				if (JavaObject.equalsTranspiler(this.projektkurs.idReferenzfach, (fach.projektKursLeitfach2ID))) {
+					if (!referenzfach2Waehlbar) {
+						this.addFehler(GostBelegungsfehler.GOST30_PF_27);
+					} else
+						if ((this.projektkurs.abiturFach !== null) && (referenzfach2 !== null) && (referenzfach2.abiturFach !== null)) {
+							this.addFehler(GostBelegungsfehler.GOST30_PF_28);
+						}
+				}
+			}
 	}
 
 	/**

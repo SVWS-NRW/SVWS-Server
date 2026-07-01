@@ -1,4 +1,5 @@
 import { computed, ref } from "vue";
+import type { AbiturFachbelegung } from "../../../../../core/src/core/data/gost/AbiturFachbelegung";
 import type { AbiturFachbelegungHalbjahr } from "../../../../../core/src/core/data/gost/AbiturFachbelegungHalbjahr";
 import type { GostFach } from "../../../../../core/src/core/data/gost/GostFach";
 import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
@@ -396,6 +397,19 @@ export class LaufbahnplanungUiManager {
 	 */
 	public zeigeGKLWahlen(): boolean {
 		return this.isAbi30ff.value;
+	}
+
+	/**
+	 * Gibt zurück, ob die Wahl des Referenzfaches angeboten wird oder nicht.
+	 *
+	 * @param fach   das Fach der Oberstufe
+	 */
+	public zeigeReferenzfachWahl(fach: GostFach): boolean {
+		if (!this.isAbi30ff.value || (fach.kuerzel !== "PX")) {
+			return false;
+		}
+		const wahl = this.manager.getSchuelerFachwahl(fach.id);
+		return ((wahl.halbjahre[GostHalbjahr.Q21.id] !== null) && (wahl.halbjahre[GostHalbjahr.Q22.id] !== null));
 	}
 
 	/**
@@ -991,6 +1005,54 @@ export class LaufbahnplanungUiManager {
 		return this._mapFremdsprachenMoeglich.value.get(fach) ?? false;
 	}
 
+
+	/**
+	 * Prüft, ob die angegeben Fachbelegung über den Projektkurs als 5. Abiturfach belegt wurde.
+	 *
+	 * @param fachbelegung   die zu prüfende Fachbelegung
+	 */
+	public istAbi30ProjektkursAbiturfach5(fachbelegung: AbiturFachbelegung) {
+		// Prüfe zunächst, ob das Fach nicht bereits selbst als Abiturfach gewählt wurde
+		if (fachbelegung.abiturFach !== null) {
+			return false;
+		}
+
+		// Prüfe dann, ob das potentiell als Referenzfach geeignet ist
+		const hatBelegungReferenzfach = (this.manager.pruefeBelegung(fachbelegung, GostHalbjahr.EF1, GostHalbjahr.EF2) &&
+			this.manager.pruefeBelegungMitSchriftlichkeit(fachbelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12));
+		if (!hatBelegungReferenzfach) {
+			return false;
+		}
+
+		// Prüfe nun den gewählten Projektkurs, ob dieser überhaupt eine Referenz auf dieses Fach hat
+		const listPJK = this.manager.getRelevanteFachbelegungen(GostFachbereich.PROJEKTKURSE);
+		if (listPJK.size() !== 1) {
+			return false;
+		}
+		const projektkurs = listPJK.getFirst();
+		return (projektkurs.abiturFach === 5) && (projektkurs.idReferenzfach === fachbelegung.fachID);
+	}
+
+
+	private pruefeAbi30ProjektkursBelegungReferenzfachMoeglich(fach: GostFach, nummer: 1 | 2): AbiturFachbelegung | null {
+		if (this.getFachgruppe(fach) !== Fachgruppe.FG_PX) {
+			return null;
+		}
+		let belegungReferenzfach;
+		if (nummer === 1) {
+			belegungReferenzfach = (fach.projektKursLeitfach1ID === null) ? null : this.manager.getFachbelegungByID(fach.projektKursLeitfach1ID);
+		} else {
+			belegungReferenzfach = (fach.projektKursLeitfach2ID === null) ? null : this.manager.getFachbelegungByID(fach.projektKursLeitfach2ID);
+		}
+		const hatBelegungReferenzfach = (this.manager.pruefeBelegung(belegungReferenzfach, GostHalbjahr.EF1, GostHalbjahr.EF2) &&
+			this.manager.pruefeBelegungMitSchriftlichkeit(belegungReferenzfach, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12));
+		if (!hatBelegungReferenzfach || !fach.istMoeglichQ21 || !fach.istMoeglichQ22
+			|| this.hatDoppelbelegung(fach, GostHalbjahr.Q21) || this.hatDoppelbelegung(fach, GostHalbjahr.Q22)) {
+			return null;
+		}
+		return belegungReferenzfach;
+	}
+
 	/**
 	 * Eine Map, welche angibt, ob bei den Fächern eine Belegung in den einzelnen Jahrgängen möglich ist oder nicht.
 	 */
@@ -1013,19 +1075,10 @@ export class LaufbahnplanungUiManager {
 					map.put(fach, GostHalbjahr.Q11, false);
 					map.put(fach, GostHalbjahr.Q12, false);
 					// Prüfe Belegung des Referenzfaches
-					const belegungReferenzfach1 = (fach.projektKursLeitfach1ID === null) ? null : this.manager.getFachbelegungByID(fach.projektKursLeitfach1ID);
-					const belegungReferenzfach2 = (fach.projektKursLeitfach2ID === null) ? null : this.manager.getFachbelegungByID(fach.projektKursLeitfach2ID);
-					const hatBelegungReferenzfach1 = (this.manager.pruefeBelegung(belegungReferenzfach1, GostHalbjahr.EF1, GostHalbjahr.EF2) &&
-						this.manager.pruefeBelegungMitSchriftlichkeit(belegungReferenzfach1, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12));
-					const hatBelegungReferenzfach2 = (this.manager.pruefeBelegung(belegungReferenzfach2, GostHalbjahr.EF1, GostHalbjahr.EF2) &&
-						this.manager.pruefeBelegungMitSchriftlichkeit(belegungReferenzfach2, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12));
-					if (hatBelegungReferenzfach1 || hatBelegungReferenzfach2) {
-						map.put(fach, GostHalbjahr.Q21, (fach.istMoeglichQ21 && !this.hatDoppelbelegung(fach, GostHalbjahr.Q21)));
-						map.put(fach, GostHalbjahr.Q22, (fach.istMoeglichQ22 && !this.hatDoppelbelegung(fach, GostHalbjahr.Q22)));
-					} else {
-						map.put(fach, GostHalbjahr.Q21, false);
-						map.put(fach, GostHalbjahr.Q22, false);
-					}
+					const referenzfachBelegungVorhanden = (this.pruefeAbi30ProjektkursBelegungReferenzfachMoeglich(fach, 1) !== null)
+						|| (this.pruefeAbi30ProjektkursBelegungReferenzfachMoeglich(fach, 2) !== null);
+					map.put(fach, GostHalbjahr.Q21, referenzfachBelegungVorhanden);
+					map.put(fach, GostHalbjahr.Q22, referenzfachBelegungVorhanden);
 				} else {
 					map.put(fach, GostHalbjahr.Q11, (fach.istMoeglichQ11 && !this.hatDoppelbelegung(fach, GostHalbjahr.Q11)));
 					map.put(fach, GostHalbjahr.Q12, (fach.istMoeglichQ12 && !this.hatDoppelbelegung(fach, GostHalbjahr.Q12)));
@@ -1373,6 +1426,26 @@ export class LaufbahnplanungUiManager {
 				await this.stepperAbiturNormal(fach);
 				return;
 		}
+	}
+
+
+	public async stepperReferenzfach(fach: GostFach) {
+		if (!this.isAbi30ff.value) {
+			return;
+		}
+		const istPJK = (this.getFachgruppe(fach) === Fachgruppe.FG_PX);
+		if (!istPJK) {
+			throw new DeveloperNotificationException("Der Stepper für ein Referenzfach darf nur bei Projektkurs-Fächern aufgerufen werden.");
+		}
+		const wahl = this.manager.getSchuelerFachwahl(fach.id);
+		if ((fach.projektKursLeitfach1ID !== null) && (wahl.idReferenzfach === null)) {
+			wahl.idReferenzfach = fach.projektKursLeitfach1ID;
+		} else if ((fach.projektKursLeitfach2ID !== null) && (wahl.idReferenzfach !== fach.projektKursLeitfach2ID)) {
+			wahl.idReferenzfach = fach.projektKursLeitfach2ID;
+		} else {
+			wahl.idReferenzfach = null;
+		}
+		await this.setWahl(fach.id, wahl);
 	}
 
 
@@ -2118,6 +2191,13 @@ export class LaufbahnplanungUiManager {
 				if (istPJK && (wahl.halbjahre[GostHalbjahr.Q12.id] === null) && fach.istMoeglichQ22) {
 					wahl.halbjahre[GostHalbjahr.Q21.id] = "S";
 					wahl.halbjahre[GostHalbjahr.Q22.id] = "S";
+					if (this.pruefeAbi30ProjektkursBelegungReferenzfachMoeglich(fach, 1) !== null) {
+						wahl.idReferenzfach = fach.projektKursLeitfach1ID;
+					} else if (this.pruefeAbi30ProjektkursBelegungReferenzfachMoeglich(fach, 2) !== null) {
+						wahl.idReferenzfach = fach.projektKursLeitfach2ID;
+					} else {
+						wahl.idReferenzfach = null;
+					}
 				}
 				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(fach) && this.jahrgang.hatZusatzkursSW && !this.istBilingual(fach)) {
 					const beginn: GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.jahrgang.beginnZusatzkursSW);
@@ -2163,6 +2243,9 @@ export class LaufbahnplanungUiManager {
 				break;
 			case "S":
 				wahl.halbjahre[GostHalbjahr.Q21.id] = (wahl.halbjahre[GostHalbjahr.Q12.id] === "LK") ? "LK" : null;
+				if (istPJK) {
+					wahl.idReferenzfach = null;
+				}
 				break;
 			case "ZK": {
 				const beginn: GostHalbjahr | null = (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(fach))
@@ -2249,6 +2332,9 @@ export class LaufbahnplanungUiManager {
 				break;
 			case "S":
 				wahl.halbjahre[GostHalbjahr.Q22.id] = (wahl.halbjahre[GostHalbjahr.Q21.id] === "LK") ? "LK" : null;
+				if (istPJK) {
+					wahl.idReferenzfach = null;
+				}
 				break;
 			case "ZK": {
 				const beginn: GostHalbjahr | null = (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(fach))

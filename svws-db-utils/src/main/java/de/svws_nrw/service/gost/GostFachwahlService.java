@@ -141,6 +141,7 @@ public class GostFachwahlService {
 				fachwahl.halbjahre[4] = fb.Q21_Kursart;
 				fachwahl.halbjahre[5] = fb.Q22_Kursart;
 				fachwahl.abiturFach = fb.AbiturFach;
+				fachwahl.idReferenzfach = fb.Referenzfach_ID;
 			}, () -> {
 				fachwahl.halbjahre[0] = null;
 				fachwahl.halbjahre[1] = null;
@@ -149,6 +150,7 @@ public class GostFachwahlService {
 				fachwahl.halbjahre[4] = null;
 				fachwahl.halbjahre[5] = null;
 				fachwahl.abiturFach = null;
+				fachwahl.idReferenzfach = null;
 			});
 			return fachwahl;
 		});
@@ -442,6 +444,15 @@ public class GostFachwahlService {
 						final int maxAbifach = AbiturdatenManager.nutzeExperimentellenCode(SVWSKonfiguration.get().getServerMode(), abiturjahr)
 								? 5 : 4;
 						fachbelegung.AbiturFach = JSONMapper.convertToIntegerInRange(value, true, 1, maxAbifach + 1);
+					}
+					case "idReferenzfach" -> {
+						final Long idReferenzfach = JSONMapper.convertToLong(value, true, "idReferenzfach");
+						if (idReferenzfach == null) {
+							fachbelegung.Referenzfach_ID = null;
+						} else {
+							fachRepository.findById(idReferenzfach).orElseThrow(() -> new ApiOperationException(Status.BAD_REQUEST, "Die ID für die Wahl des Referentfaches ist ungültig."));
+							fachbelegung.Referenzfach_ID = idReferenzfach;
+						}
 					}
 					default -> throw new ApiOperationException(Status.BAD_REQUEST);
 				}

@@ -1,6 +1,10 @@
 {
-  "erfolgreich" : true,
+  "erfolgreich" : false,
   "fehlercodes" : [ {
+    "code" : "PF_28",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Das aktuell gewählte Referenzfach ist Abiturfach und der Projektkurs wurde als 5. Abiturfach gewählt. Beides zusammen ist nicht möglich."
+  }, {
     "code" : "NW_FS_13_INFO",
     "art" : "HINWEIS",
     "beschreibung" : "Da von EF.1 bis Q2.2 weniger als zwei Fremdsprachen schriftlich belegt wurden, liegt ausschließlich ein naturwissenschaftlich-technischer Schwerpunkt vor."

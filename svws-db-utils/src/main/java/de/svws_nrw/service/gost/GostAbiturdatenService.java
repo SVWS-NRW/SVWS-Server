@@ -297,6 +297,7 @@ public class GostAbiturdatenService {
 					fach.fachID = leistungenFach.fach.id;
 					fach.istFSNeu = leistungenFach.istFSNeu;
 					fach.abiturFach = (GostAbiturFach.fromID(leistungenFach.abiturfach) == null) ? null : leistungenFach.abiturfach;
+					fach.idReferenzfach = null;
 					for (final GostLeistungenFachbelegung leistungenBelegung : leistungenFach.belegungen) {
 						if (!leistungenBelegung.abschnittGewertet) {
 							continue;
@@ -353,14 +354,16 @@ public class GostAbiturdatenService {
 				abidaten.block1FehlstundenGesamt = block1FehlstundenGesamt;
 				abidaten.block1FehlstundenUnentschuldigt = block1FehlstundenUnentschuldigt;
 
-				// Belegte Fächer aus den Leistungsdaten überprüfen und Abiturfach setzen
+				// Belegte Fächer aus den Leistungsdaten überprüfen und Abiturfach bzw. Referenzfach-ID setzen
 				for (final AbiturFachbelegung fach : abidaten.fachbelegungen) {
 					final DTOGostSchuelerFachbelegungen belegungPlanung = mapFachwahlen.get(fach.fachID);
 					if (belegungPlanung == null) {
 						fach.abiturFach = null;
+						fach.idReferenzfach = null;
 					} else {
 						final GostAbiturFach tmpAbiturFach = GostAbiturFach.fromID(belegungPlanung.AbiturFach);
 						fach.abiturFach = (tmpAbiturFach == null) ? null : tmpAbiturFach.id;
+						fach.idReferenzfach = belegungPlanung.Referenzfach_ID;
 					}
 				}
 
@@ -410,6 +413,8 @@ public class GostAbiturdatenService {
 					fach.istFSNeu = zulFach.daten(abidaten.schuljahrAbitur).istFremdsprache && zulFach.daten(abidaten.schuljahrAbitur).nurSII;
 					final GostAbiturFach tmpAbiturFach = GostAbiturFach.fromID(belegungPlanung.AbiturFach);
 					fach.abiturFach = (tmpAbiturFach == null) ? null : tmpAbiturFach.id;
+					fach.idReferenzfach = belegungPlanung.Referenzfach_ID;
+
 					GostKursart fachKursart = GostKursart.GK;
 					if ("PX".equals(gostFach.kuerzel)) {
 						fachKursart = GostKursart.PJK;

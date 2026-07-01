@@ -922,6 +922,7 @@
     "letzteKursart" : "PJK",
     "abiturFach" : null,
     "istFSNeu" : false,
+    "idReferenzfach" : 192,
     "block1PunktSumme" : null,
     "block1NotenpunkteDurchschnitt" : null,
     "block2NotenKuerzelPruefung" : null,

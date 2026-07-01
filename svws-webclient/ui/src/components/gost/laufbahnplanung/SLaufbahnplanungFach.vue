@@ -20,20 +20,35 @@
 	<td class="text-center ui-divider">
 		{{ fach.wochenstundenQualifikationsphase }}
 	</td>
-	<td class="text-center font-medium" :class="{ 'cell-disabled': !manager.istFremdsprache(fach) }">
-		<template v-if="manager.istFremdsprache(fach)">
-			<span v-if="manager.ignoriereSprachenfolge"> ? </span>
-			<span v-else-if="!manager.hatSprachbelegung(fach)"> — </span>
-			<span v-else> {{ manager.getSprachenfolgeNr(fach) }} </span>
-		</template>
-	</td>
-	<td class="text-center font-medium ui-divider" :class="{ 'cell-disabled': !manager.istFremdsprache(fach)}">
-		<template v-if="manager.istFremdsprache(fach)">
-			<span v-if="manager.ignoriereSprachenfolge"> ? </span>
-			<span v-else-if="!manager.hatSprachbelegung(fach)"> — </span>
-			<span v-else> {{ manager.getSprachenfolgeJahrgang(fach) }} </span>
-		</template>
-	</td>
+	<template v-if="manager.istFremdsprache(fach)">
+		<td class="text-center font-medium" :class="{ 'cell-disabled': !manager.istFremdsprache(fach) }">
+			<template v-if="manager.istFremdsprache(fach)">
+				<span v-if="manager.ignoriereSprachenfolge"> ? </span>
+				<span v-else-if="!manager.hatSprachbelegung(fach)"> — </span>
+				<span v-else> {{ manager.getSprachenfolgeNr(fach) }} </span>
+			</template>
+		</td>
+		<td class="text-center font-medium ui-divider" :class="{ 'cell-disabled': !manager.istFremdsprache(fach)}">
+			<template v-if="manager.istFremdsprache(fach)">
+				<span v-if="manager.ignoriereSprachenfolge"> ? </span>
+				<span v-else-if="!manager.hatSprachbelegung(fach)"> — </span>
+				<span v-else> {{ manager.getSprachenfolgeJahrgang(fach) }} </span>
+			</template>
+		</td>
+	</template>
+	<template v-else>
+		<td class="ui-table-grid-button text-center font-medium col-span-2 ui-divider"
+			:class="hatUpdateKompetenz ? {
+				'cursor-pointer': manager.zeigeReferenzfachWahl(fach),
+				'cursor-not-allowed': !manager.zeigeReferenzfachWahl(fach),
+				'cell-disabled': !manager.zeigeReferenzfachWahl(fach),
+			} : {}"
+			:ref="inputProjektkursReferenzfach(fach, rowIndex)">
+			<template v-if="manager.zeigeReferenzfachWahl(fach)">
+				<span class="text-left break-all line-clamp-1">{{ referenzfach }}</span>
+			</template>
+		</td>
+	</template>
 	<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
 		<td class="ui-table-grid-button text-center ui-divider select-none font-medium relative flex items-center justify-center"
 			:class="hatUpdateKompetenz ? {
@@ -106,16 +121,7 @@
 			</span>
 		</td>
 	</template>
-	<td v-if="hatUpdateKompetenz" class="text-center select-none font-medium"
-		:class="{
-			'cursor-pointer': manager.istMoeglichAbi(fach) && !istBewertet(GostHalbjahr.Q22), '': manager.istMoeglichAbi(fach),
-			'cursor-not-allowed': !manager.istMoeglichAbi(fach),
-			'cell-disabled': !manager.istMoeglichAbi(fach),
-			'cell-locked': istBewertet(GostHalbjahr.Q22) && manager.istMoeglichAbi(fach),
-		}">
-		<span v-if="abi_wahl" class="relative">{{ abi_wahl }}</span>
-	</td>
-	<td v-else class="ui-table-grid-button text-center select-none font-medium"
+	<td v-if="hatUpdateKompetenz" class="ui-table-grid-button text-center select-none font-medium"
 		:class="{
 			'cursor-pointer': manager.istMoeglichAbi(fach) && !istBewertet(GostHalbjahr.Q22), '': manager.istMoeglichAbi(fach),
 			'cursor-not-allowed': !manager.istMoeglichAbi(fach),
@@ -123,9 +129,9 @@
 			'cell-locked': istBewertet(GostHalbjahr.Q22) && manager.istMoeglichAbi(fach),
 		}"
 		:ref="inputAbitur(fach, rowIndex)">
-		<template v-if="abi_wahl">
-			<span class="relative">x{{ abi_wahl }}</span>
-			<span v-if="abi_wahl && !manager.istMoeglichAbi(fach) && hatUpdateKompetenz" class="absolute right-3">
+		<template v-if="abi_wahl !== ''">
+			<span class="relative">{{ abi_wahl }}</span>
+			<span v-if="(abi_wahl !== '') && !manager.istMoeglichAbi(fach) && hatUpdateKompetenz" class="absolute right-3">
 				<svws-ui-tooltip :color="'danger'">
 					<svws-ui-button type="icon" size="small" @click="manager.deleteFachwahlAbitur(fach)"
 						@keydown.enter.prevent="manager.deleteFachwahlAbitur(fach)" @keydown.space.prevent="manager.deleteFachwahlAbitur(fach)">
@@ -137,6 +143,15 @@
 				</svws-ui-tooltip>
 			</span>
 		</template>
+	</td>
+	<td v-else class="text-center select-none font-medium"
+		:class="{
+			'cursor-pointer': manager.istMoeglichAbi(fach) && !istBewertet(GostHalbjahr.Q22), '': manager.istMoeglichAbi(fach),
+			'cursor-not-allowed': !manager.istMoeglichAbi(fach),
+			'cell-disabled': !manager.istMoeglichAbi(fach),
+			'cell-locked': istBewertet(GostHalbjahr.Q22) && manager.istMoeglichAbi(fach),
+		}">
+		<span v-if="abi_wahl !== ''" class="relative">{{ abi_wahl }}</span>
 	</td>
 </template>
 
@@ -176,12 +191,15 @@
 			void props.manager.stepperAbitur(props.fach);
 		};
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
-			const input = props.gridManager.applyInputToggle(key, 7, rowIndex, element, setter);
+			const input = props.gridManager.applyInputToggle(key, 8, rowIndex, element, setter);
 			if (input !== null) {
+				input.navigateOnEnter = null;
 				watchEffect(() => {
-					const fachbelegung = gostLaufbahnplanungState.abiturdatenManager.getFachbelegungByID(props.fach.id);
-					const neu = (fachbelegung === null) || (fachbelegung.abiturFach === null) ? "" : fachbelegung.abiturFach.toString();
-					props.gridManager.update(key, neu);
+					if (gostLaufbahnplanungState.valid) {
+						const fachbelegung = gostLaufbahnplanungState.abiturdatenManager.getFachbelegungByID(props.fach.id);
+						const neu = (fachbelegung === null) || (fachbelegung.abiturFach === null) ? "" : fachbelegung.abiturFach.toString();
+						props.gridManager.update(key, neu);
+					}
 				});
 			}
 		};
@@ -196,9 +214,27 @@
 			void props.manager.stepper(props.fach, halbjahr);
 		};
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
-			const input = props.gridManager.applyInputToggle(key, halbjahr.id + 1, rowIndex, element, setter);
+			const input = props.gridManager.applyInputToggle(key, halbjahr.id + 2, rowIndex, element, setter);
 			if (input !== null) {
+				input.navigateOnEnter = null;
 				watchEffect(() => props.gridManager.update(key, wahlen.value[halbjahr.id]));
+			}
+		};
+	}
+
+	function inputProjektkursReferenzfach(fach: GostFach, rowIndex: number) {
+		const key = `Fach_${fach.id}_Referenzfach`;
+		const setter = (value: boolean) => {
+			if (!props.hatUpdateKompetenz) {
+				return;
+			}
+			void props.manager.stepperReferenzfach(props.fach);
+		};
+		return (element: Element | ComponentPublicInstance<unknown> | null) => {
+			const input = props.gridManager.applyInputToggle(key, 1, rowIndex, element, setter);
+			if (input !== null) {
+				input.navigateOnEnter = null;
+				watchEffect(() => props.gridManager.update(key, referenzfach.value));
 			}
 		};
 	}
@@ -225,8 +261,11 @@
 			return "";
 		}
 		const fachbelegung = gostLaufbahnplanungState.abiturdatenManager.getFachbelegungByID(props.fach.id);
-		if ((fachbelegung === null) || (fachbelegung.abiturFach === null)) {
+		if (fachbelegung === null) {
 			return "";
+		}
+		if (fachbelegung.abiturFach === null) {
+			return (props.manager.istAbi30ProjektkursAbiturfach5(fachbelegung)) ? "(5)" : "";
 		}
 		return fachbelegung.abiturFach.toString();
 	});
@@ -255,6 +294,22 @@
 			}
 			return b.schriftlich ? "S" : "M";
 		});
+	});
+
+
+	const referenzfach = computed<string>(() => {
+		if (!gostLaufbahnplanungState.valid) {
+			return "---";
+		}
+		const fachbelegung = gostLaufbahnplanungState.abiturdatenManager.getFachbelegungByID(props.fach.id);
+		if ((fachbelegung === null) || (fachbelegung.idReferenzfach === null)) {
+			return "---";
+		}
+		const referenzfach = gostLaufbahnplanungState.abiturdatenManager.faecher().get(fachbelegung.idReferenzfach);
+		if (referenzfach === null) {
+			return "---";
+		}
+		return `${referenzfach.kuerzelAnzeige} - ${referenzfach.bezeichnung}`;
 	});
 
 

@@ -996,6 +996,7 @@
     "abiturFach" : 5,
     "istFSNeu" : false,
     "block1PunktSumme" : null,
+    "idReferenzfach" : 79,
     "block1NotenpunkteDurchschnitt" : null,
     "block2NotenKuerzelPruefung" : null,
     "block2PunkteZwischenstand" : null,

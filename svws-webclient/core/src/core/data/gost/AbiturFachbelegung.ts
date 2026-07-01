@@ -26,6 +26,11 @@ export class AbiturFachbelegung extends JavaObject {
 	public istFSNeu: boolean = false;
 
 	/**
+	 * Im Falle eines Projektkurses die ID des für den Projektkurs gewählten Referenzfaches (ab Abitur 2030)
+	 */
+	public idReferenzfach: number | null = null;
+
+	/**
 	 * Die Punktsumme im Block I des Abiturs für die Fachbelegung
 	 */
 	public block1PunktSumme: number | null = null;
@@ -114,6 +119,7 @@ export class AbiturFachbelegung extends JavaObject {
 		if (obj.istFSNeu === undefined)
 			throw new Error('invalid json format, missing attribute istFSNeu');
 		result.istFSNeu = obj.istFSNeu;
+		result.idReferenzfach = (obj.idReferenzfach === undefined) ? null : obj.idReferenzfach === null ? null : obj.idReferenzfach;
 		result.block1PunktSumme = (obj.block1PunktSumme === undefined) ? null : obj.block1PunktSumme === null ? null : obj.block1PunktSumme;
 		result.block1NotenpunkteDurchschnitt = (obj.block1NotenpunkteDurchschnitt === undefined) ? null : obj.block1NotenpunkteDurchschnitt === null ? null : obj.block1NotenpunkteDurchschnitt;
 		result.block2NotenKuerzelPruefung = (obj.block2NotenKuerzelPruefung === undefined) ? null : obj.block2NotenKuerzelPruefung === null ? null : obj.block2NotenKuerzelPruefung;
@@ -139,6 +145,7 @@ export class AbiturFachbelegung extends JavaObject {
 		result += '"letzteKursart" : ' + ((obj.letzteKursart === null) ? 'null' : JSON.stringify(obj.letzteKursart)) + ',';
 		result += '"abiturFach" : ' + ((obj.abiturFach === null) ? 'null' : obj.abiturFach.toString()) + ',';
 		result += '"istFSNeu" : ' + obj.istFSNeu.toString() + ',';
+		result += '"idReferenzfach" : ' + ((obj.idReferenzfach === null) ? 'null' : obj.idReferenzfach.toString()) + ',';
 		result += '"block1PunktSumme" : ' + ((obj.block1PunktSumme === null) ? 'null' : obj.block1PunktSumme.toString()) + ',';
 		result += '"block1NotenpunkteDurchschnitt" : ' + ((obj.block1NotenpunkteDurchschnitt === null) ? 'null' : obj.block1NotenpunkteDurchschnitt.toString()) + ',';
 		result += '"block2NotenKuerzelPruefung" : ' + ((obj.block2NotenKuerzelPruefung === null) ? 'null' : JSON.stringify(obj.block2NotenKuerzelPruefung)) + ',';
@@ -176,6 +183,9 @@ export class AbiturFachbelegung extends JavaObject {
 		}
 		if (obj.istFSNeu !== undefined) {
 			result += '"istFSNeu" : ' + obj.istFSNeu.toString() + ',';
+		}
+		if (obj.idReferenzfach !== undefined) {
+			result += '"idReferenzfach" : ' + ((obj.idReferenzfach === null) ? 'null' : obj.idReferenzfach.toString()) + ',';
 		}
 		if (obj.block1PunktSumme !== undefined) {
 			result += '"block1PunktSumme" : ' + ((obj.block1PunktSumme === null) ? 'null' : obj.block1PunktSumme.toString()) + ',';

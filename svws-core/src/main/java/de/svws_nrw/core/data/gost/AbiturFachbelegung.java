@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
  */
 @XmlRootElement
 @Schema(description = "enthält die Informationen zu der Fachbelegung eines Schülers für das Abitur der gymnasialen Oberstufe.")
-@JsonPropertyOrder({ "fachID", "letzteKursart", "abiturFach", "istFSNeu", "block1PunktSumme", "block1NotenpunkteDurchschnitt",
+@JsonPropertyOrder({ "fachID", "letzteKursart", "abiturFach", "istFSNeu", "idReferenzfach", "block1PunktSumme", "block1NotenpunkteDurchschnitt",
 		"block2NotenKuerzelPruefung", "block2PunkteZwischenstand", "block2MuendlichePruefungAbweichung", "block2MuendlichePruefungBestehen",
 		"block2MuendlichePruefungFreiwillig", "block2MuendlichePruefungReihenfolge", "block2MuendlichePruefungNotenKuerzel", "block2Punkte",
 		"block2Pruefer", "belegungen" })
@@ -35,6 +35,9 @@ public class AbiturFachbelegung {
 	/** Gibt an, ob es sich um die Belegung einer neuen Fremdsprache handelt */
 	public boolean istFSNeu = false; // pruefe immer durch Lesen aus den Leistungsdaten: ist Neu, darf neu reicht nicht --> Sprachenfolgen prüfen!
 	// TODO sollte hier eine Diskrepanz zwischen istFSNeu und DarfFSNeu bestehen, so liegt ein Fehler vor - inkonsistente Daten...
+
+	/** Im Falle eines Projektkurses die ID des für den Projektkurs gewählten Referenzfaches (ab Abitur 2030) */
+	public Long idReferenzfach = null;
 
 
 	/** Die Punktsumme im Block I des Abiturs für die Fachbelegung */

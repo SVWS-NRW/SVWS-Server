@@ -23,6 +23,11 @@ public class GostSchuelerFachwahl {
 	@Schema(description = "die Nummer des Abiturfaches (1-4), falls dieses Fach als Abiturfach gewählt wurde und ansonsten null", example = "3")
 	public Integer abiturFach;
 
+	/** Im Falle eines Projektkurses die ID des für den Projektkurs gewählten Referenzfaches */
+	@Schema(description = "Im Falle eines Projektkurses die ID des für den Projektkurs gewählten Referenzfaches.", example = "null")
+	public Long idReferenzfach = null;
+
+
 	/**
 	 * Leerer Standardkonstruktor.
 	 */

@@ -13,6 +13,11 @@ export class GostSchuelerFachwahl extends JavaObject {
 	 */
 	public abiturFach: number | null = null;
 
+	/**
+	 * Im Falle eines Projektkurses die ID des für den Projektkurs gewählten Referenzfaches
+	 */
+	public idReferenzfach: number | null = null;
+
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -40,6 +45,7 @@ export class GostSchuelerFachwahl extends JavaObject {
 			}
 		}
 		result.abiturFach = (obj.abiturFach === undefined) ? null : obj.abiturFach === null ? null : obj.abiturFach;
+		result.idReferenzfach = (obj.idReferenzfach === undefined) ? null : obj.idReferenzfach === null ? null : obj.idReferenzfach;
 		return result;
 	}
 
@@ -54,6 +60,7 @@ export class GostSchuelerFachwahl extends JavaObject {
 		}
 		result += ' ]' + ',';
 		result += '"abiturFach" : ' + ((obj.abiturFach === null) ? 'null' : obj.abiturFach.toString()) + ',';
+		result += '"idReferenzfach" : ' + ((obj.idReferenzfach === null) ? 'null' : obj.idReferenzfach.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -74,6 +81,9 @@ export class GostSchuelerFachwahl extends JavaObject {
 		}
 		if (obj.abiturFach !== undefined) {
 			result += '"abiturFach" : ' + ((obj.abiturFach === null) ? 'null' : obj.abiturFach.toString()) + ',';
+		}
+		if (obj.idReferenzfach !== undefined) {
+			result += '"idReferenzfach" : ' + ((obj.idReferenzfach === null) ? 'null' : obj.idReferenzfach.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -859,6 +859,7 @@ public class LupoMDB {
 			final AbiturFachbelegung fachbelegung = new AbiturFachbelegung();
 			fachbelegung.fachID = lupoSchuelerFach.Fach_ID;
 			fachbelegung.abiturFach = lupoSchuelerFach.AbiturFach;
+			fachbelegung.idReferenzfach = null;
 			fachbelegung.istFSNeu = lupoFach.AlsNeueFSInSII;
 			GostKursart fachKursart = GostKursart.GK;
 			if ("PX".equals(lupoFach.StatistikKrz)) {

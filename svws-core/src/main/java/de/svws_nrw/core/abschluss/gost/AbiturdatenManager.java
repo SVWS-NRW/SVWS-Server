@@ -578,6 +578,7 @@ public class AbiturdatenManager {
 		wahl.halbjahre[4] = getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.Q21);
 		wahl.halbjahre[5] = getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.Q22);
 		wahl.abiturFach = belegung.abiturFach;
+		wahl.idReferenzfach = belegung.idReferenzfach;
 		return wahl;
 	}
 

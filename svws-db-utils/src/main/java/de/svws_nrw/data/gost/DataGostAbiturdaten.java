@@ -741,6 +741,7 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 				continue;
 			}
 			fach.istFSNeu = fachVergleich.istFSNeu;
+			fach.idReferenzfach = fachVergleich.idReferenzfach;
 			for (final AbiturFachbelegungHalbjahr belegung : fach.belegungen) {
 				if (belegung == null) {
 					continue;
@@ -841,6 +842,7 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 			dto.FachSortierung = fach.sortierung;
 			dto.KursartAllgemein = GostKursart.fromKuerzel(belegung.letzteKursart);
 			dto.AbiturFach = GostAbiturFach.fromID(belegung.abiturFach);
+			// TODO Datenbank-Tabelle für das Abitur um das Feld idReferenzfach erweitern und aus der Belegung hier mit abspeichern. Bei erzeugeAbiturdaten dann auch entsprechend anpassen...
 			// Information zu den einzelnen Halbjahren ermitteln
 			Long idKurs = null;
 			Long idFachlehrer = null;
