@@ -6,12 +6,16 @@
 		<div v-if="serverState.hasDev" class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzDrucken && (stundenplaeneById.size > 0)" icon="i-ri-printer-line" title="Stundenplan drucken" subtitle="Drucke die Stundenpläne der ausgewählten Fächer."
 				:is-open="currentAction === 'print'" @update:is-open="isOpen => setCurrentAction('print', isOpen)">
-				<div class="flex flex-col">
-					<div>
-						<ui-select v-model="stundenplanModel" :manager="stundenplanSelectManager" label="Stundenplan" />
-					</div>
-					<report-parameters :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_FACH_STUNDENPLAN"
-						:id-hauptdaten-objekt="stundenplanModel?.id ?? -1" :ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
+				<div class="flex flex-col w-full">
+					<ui-select label="Stundenplan"
+						v-model="stundenplanModel"
+						:manager="stundenplanSelectManager"
+						:removable="false" :disabled="!hasSelection" />
+					<report-parameters v-if="hasSelection"
+						:reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_FACH_STUNDENPLAN"
+						:id-hauptdaten-objekt="stundenplanModel?.id ?? -1"
+						:ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)"
+						:ids-detaildaten="[]" />
 				</div>
 			</ui-card>
 			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Fächer werden gelöscht" icon="i-ri-delete-bin-line">
@@ -36,7 +40,9 @@
 				subtitle="Die Sortierung wird auf alle Fächer angewendet, nicht nur auf die markierten."
 				:is-open="currentAction === 'sort'" @update:is-open="(isOpen) => setCurrentAction('sort', isOpen)">
 				<template #buttonFooterLeft>
-					<svws-ui-button class="mt-4" @click="sortModalIsOpen = true">
+					<svws-ui-button class="mt-4"
+						@click="sortModalIsOpen = true"
+						:disabled="!hasSelection">
 						<span class="icon i-ri-play-line" />
 						Standardsortierung Sek II anwenden
 					</svws-ui-button>
@@ -77,14 +83,15 @@
 	const schuleState = useSchuleState();
 
 	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
-	const hatKompetenzDrucken = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN));
 	const hatKompetenzUpdate = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-	const hatGymnasialeOberstufe = computed(() => props.manager().schulform().daten(schuleState.abschnitt.schuljahr)?.hatGymOb ?? false);
-	const stundenplaeneById = computed(() => props.manager().stundenplaeneById);
+	const hatKompetenzDrucken = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN));
+	const hatGymnasialeOberstufe = computed<boolean>(() => props.manager().schulform().daten(schuleState.abschnitt.schuljahr)?.hatGymOb ?? false);
+	const hasSelection = computed<boolean>(() => props.manager().liste.auswahlExists());
+	const stundenplaeneById = computed<Map<number, StundenplanListeEintrag>>(() => props.manager().stundenplaeneById);
 	const hatkeineErforderlicheKompetenz = computed<boolean>(() => !hatKompetenzLoeschen.value || !hatKompetenzDrucken.value || !hatKompetenzUpdate.value);
 	const deleteCheckErrors = computed<List<string>>(() => props.deleteCheck()[1]);
 	const selectedAllowedToDelete = computed<boolean>(() => props.deleteCheck()[0]);
-	const isPreConditionSectionVisible = computed<boolean>(() => (props.manager().liste.auswahlExists() || (status.value === undefined)));
+	const isPreConditionSectionVisible = computed<boolean>(() => (hasSelection.value || (status.value === undefined)));
 
 	// --- delete ---
 
@@ -128,7 +135,7 @@
 
 	const stundenplanOptions = computed(() => stundenplaeneById.value.values());
 	const stundenplanSelectManager = new SelectManager({
-		options: stundenplanOptions.value,
+		options: stundenplanOptions,
 		optionDisplayText: s => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '—' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '—' + toKW(s.gueltigBis) + ')',
 		selectionDisplayText: s => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '—' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '—' + toKW(s.gueltigBis) + ')',
 	});
