@@ -1,4 +1,4 @@
-import type { List, Raum, JahrgangsDaten, LehrerListeEintrag, StundenplanPausenaufsichtBereichUpdate, StundenplanKalenderwochenzuordnung, StundenplanListeEintrag, ApiFile, ReportingParameter, SimpleOperationResponse } from "@core";
+import type { List, Raum, JahrgangsDaten, LehrerListeEintrag, StundenplanPausenaufsichtBereichUpdate, StundenplanKalenderwochenzuordnung, StundenplanListeEintrag, SimpleOperationResponse } from "@core";
 import { StundenplanUnterrichtListeManager, StundenplanListeManager, ViewType } from "@ui";
 import { Stundenplan, StundenplanManager, StundenplanKonfiguration, StundenplanPausenaufsicht, Wochentag, StundenplanRaum, StundenplanAufsichtsbereich, StundenplanPausenzeit, StundenplanUnterricht, StundenplanZeitraster, DeveloperNotificationException, ArrayList, StundenplanJahrgang, UserNotificationException } from "@core";
 
@@ -158,6 +158,18 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 			throw new DeveloperNotificationException("Unerwarteter Fehler: stundenplanUnterrichtListeManager nicht initialisiert");
 		}
 		return this._state.value.stundenplanUnterrichtListeManager;
+	}
+
+	private updateStundenplanUnterrichtListeManager(): void {
+		if (!this.manager.hasDaten()) {
+			this._state.value.stundenplanUnterrichtListeManager = undefined;
+			return;
+		}
+		const stundenplanUnterrichtListeManager = new StundenplanUnterrichtListeManager(schuleStateImpl.schulform, this.manager.daten(), abschnittStateImpl.alle, this.manager.daten().getIDSchuljahresabschnitt());
+		if (this._state.value.stundenplanUnterrichtListeManager !== undefined) {
+			stundenplanUnterrichtListeManager.useFilter(this._state.value.stundenplanUnterrichtListeManager);
+		}
+		this._state.value.stundenplanUnterrichtListeManager = stundenplanUnterrichtListeManager;
 	}
 
 	get listRaeume(): List<Raum> {
@@ -481,6 +493,7 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 		}
 		await api.server.deleteStundenplanPausenaufsichten(listRemove, api.schema, this.manager.auswahl().id);
 		this.manager.daten().pausenaufsichtRemoveAllById(listRemove);
+		this.commit();
 		api.status.stop();
 	};
 
@@ -613,6 +626,7 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 		}
 		const res = await api.server.addStundenplanZeitrasterEintraege(list, api.schema, this.manager.auswahl().id);
 		this.manager.daten().zeitrasterAddAll(res);
+		this.updateStundenplanUnterrichtListeManager();
 		this.commit();
 		api.status.stop();
 	};
@@ -625,6 +639,7 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 		}
 		await api.server.patchStundenplanZeitrasterEintraege(list, api.schema);
 		this.manager.daten().zeitrasterPatchAttributesAll(list);
+		this.updateStundenplanUnterrichtListeManager();
 		this.commit();
 		api.status.stop();
 	};
@@ -641,6 +656,7 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 		if (!listID.isEmpty()) {
 			const list = await api.server.deleteStundenplanZeitrasterEintraege(listID, api.schema, this.manager.auswahl().id);
 			this.manager.daten().zeitrasterRemoveAll(list);
+			this.updateStundenplanUnterrichtListeManager();
 			if ((this.selected instanceof StundenplanZeitraster && list.contains(this.selected))
 				|| (typeof this.selected === 'number')
 				|| (this.selected instanceof Wochentag)) {
@@ -661,8 +677,8 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 			delete item.id;
 		}
 		const zeitraster = await api.server.addStundenplanZeitrasterEintraege(listKatalogeintraege, api.schema, this.manager.auswahl().id);
-		// kein Aufruf an den Manager notwendig, da wir die Route nun neu laden
 		this.manager.daten().zeitrasterAddAll(zeitraster);
+		this.updateStundenplanUnterrichtListeManager();
 		this.commit();
 		api.status.stop();
 	};
@@ -675,6 +691,7 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 		}
 		const unterrichte = await api.server.addStundenplanUnterrichte(list, api.schema);
 		this.manager.daten().unterrichtAddAll(unterrichte);
+		this.updateStundenplanUnterrichtListeManager();
 		this.commit();
 		api.status.stop();
 	};
@@ -698,6 +715,7 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 		}
 		await api.server.patchStundenplanUnterrichte(list, api.schema);
 		this.manager.daten().unterrichtPatchAttributesAll(list);
+		this.updateStundenplanUnterrichtListeManager();
 		this.commit();
 		api.status.stop();
 	};
@@ -713,6 +731,7 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 		}
 		const list = await api.server.deleteStundenplanUnterrichte(listID, api.schema, this.manager.auswahl().id);
 		this.manager.daten().unterrichtRemoveAll(list);
+		this.updateStundenplanUnterrichtListeManager();
 		if ((this.selected instanceof StundenplanUnterricht) && listID.contains(this.selected.id)) {
 			this._state.value.selected = undefined;
 		}
