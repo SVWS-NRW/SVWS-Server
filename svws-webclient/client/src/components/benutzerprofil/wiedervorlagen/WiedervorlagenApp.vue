@@ -20,17 +20,18 @@
 	<div class="page">
 		<!--	Filter	-->
 		<div class="bg-ui-neutral rounded-md w-full pt-1 pb-2 px-1 mb-5">
-			<div class="flex flex-col lg:flex-row gap-x-3 gap-y-1">
-				<div class="max-w-[30em] w-100">
+			<div class="flex flex-col md:flex-row flex-wrap lg:flex-nowrap gap-x-3 gap-y-1">
+				<div class="max-w-[30em] md:max-width-auto md:basis-[30em] shrink-1">
 					<svws-ui-text-input type="search" placeholder="Suche in Bemerkung/Name" v-model="filter.search" removable />
 				</div>
-				<div class="max-w-[30em] w-100">
+				<div class="max-w-[30em] md:max-width-auto md:basis-[30em] shrink-1">
 					<svws-ui-text-input type="date" placeholder="Wiedervorlage bis" v-model="filter.tsWiedervorlage" removable class="max-w-[30em]" />
 				</div>
-				<svws-ui-checkbox type="toggle" v-model="filter.toggleUnerledigt" title="Nur unerledigte"
-					class="flex shrink-0 lg:mt-[0.6em]">
-					Nur unerledigte
-				</svws-ui-checkbox>
+				<div class="flex md:basis-full lg:basis-auto md:mt-[0.6em]">
+					<svws-ui-checkbox type="toggle" v-model="filter.toggleUnerledigt" title="Nur unerledigte">
+						Nur unerledigte
+					</svws-ui-checkbox>
+				</div>
 			</div>
 		</div>
 
@@ -45,7 +46,7 @@
 		</template>
 		<template v-else>
 			<!--	Table	-->
-			<ui-table-grid name="Wiedervorlagen" :manager="() => gridManager">
+			<ui-table-grid name="Wiedervorlagen" :manager="() => gridManager" class="pb-25">
 				<template #header>
 					<template v-for="column in gridColumns" :key="`header-${column.kuerzel}`">
 						<th v-if="column.kuerzel === 'auswahl'" class="flex items-start justify-center">
@@ -111,11 +112,15 @@
 			</ui-table-grid>
 		</template>
 	</div>
+
+	<wiedervorlage-modal v-model="showCreateModal"
+		type="allgemein"
+		mode="create" />
 </template>
 
 <script setup lang="ts">
 	import { computed, ref } from "vue";
-	import { GridManager } from "@ui";
+	import { GridManager, useWiedervorlageState } from "@ui";
 	import type { WiedervorlageEintrag } from "@core";
 	import { getDateFromDateTime, formatToLocalDate, formatDateToDateTime } from "~/utils/date";
 	import type { WiedervorlagenAppProps } from "./WiedervorlagenAppProps";
@@ -123,7 +128,9 @@
 
 	const props = defineProps<WiedervorlagenAppProps>();
 
-	const hasWiedervorlagen = computed(() => props.getListWiedervorlagen().size() > 0);
+	const wiedervorlageState = useWiedervorlageState();
+
+	const hasWiedervorlagen = computed(() => wiedervorlageState.wiedervorlagenListe.size() > 0);
 
 	function getPerson(personID: null | number) {
 		switch (personID) {
@@ -153,35 +160,42 @@
 		{ kuerzel: "rowActions", name: "Row-Actions", width: '7em' },
 	];
 
+	/** Prüft, ob ein Suchbegriff dem Inhalt der Felder "bemerkung" oder "namePerson" von Wiedervorlagen entspricht */
+	function matchesSearch(wiedervorlage: WiedervorlageEintrag, searchValue: string): boolean {
+		const matchesName = wiedervorlage.namePerson !== null && wiedervorlage.namePerson.toLowerCase().includes(searchValue);
+		const matchesBemerkung = wiedervorlage.bemerkung.toLowerCase().includes(searchValue);
+		return matchesName || matchesBemerkung;
+	}
+
+	/** Prüft, ob eine Wiedervorlage bis zu gewähltem Datum vorliegt */
+	function matchesDate(wiedervorlage: WiedervorlageEintrag, tsWiedervorlage: string): boolean {
+		const dateAsDateTime = formatDateToDateTime(filter.value.tsWiedervorlage);
+		if (dateAsDateTime === undefined || wiedervorlage.tsWiedervorlage === null) {
+			return false;
+		}
+
+		return wiedervorlage.tsWiedervorlage <= dateAsDateTime;
+	}
+
 	const gridManager = new GridManager<string, WiedervorlageEintrag, WiedervorlageEintrag[]>({
 		daten: computed<WiedervorlageEintrag[]>(() => {
-			let wiedervorlagen: WiedervorlageEintrag[] = props.getListWiedervorlagen().toArray() as WiedervorlageEintrag[];
+			const searchValue = filter.value.search.trim().toLowerCase();
+			const wiedervorlagen: WiedervorlageEintrag[] = [];
 
-			// for search input search in 'bemerkung' or 'namePerson' fields
-			if (filter.value.search !== "") {
-				const searchValue = filter.value.search.trim().toLowerCase();
-
-				wiedervorlagen = wiedervorlagen.filter(wiedervorlage =>
-					(wiedervorlage.namePerson !== null && wiedervorlage.namePerson.toLowerCase().includes(searchValue)) ||
-					wiedervorlage.bemerkung.toLowerCase().includes(searchValue))
-				;
-			}
-
-			// for date input filter for wiedervorlagen due <= the date
-			if (filter.value.tsWiedervorlage !== "") {
-				const dateAsDateTime = formatDateToDateTime(filter.value.tsWiedervorlage);
-				wiedervorlagen = wiedervorlagen.filter((wiedervorlage): boolean => {
-					if (dateAsDateTime === undefined || wiedervorlage.tsWiedervorlage === null) {
-						return false;
-					}
-
-					return wiedervorlage.tsWiedervorlage <= dateAsDateTime;
-				});
-			}
-
-			// for toggle filter for all or only unfinished wiedervorlagen
-			if (filter.value.toggleUnerledigt === true) {
-				wiedervorlagen = wiedervorlagen.filter(wiedervorlage => wiedervorlage.tsErledigt === null);
+			for (const eintrag of wiedervorlageState.wiedervorlagenListe) {
+				// bei Sucheingabe auf Übereinstimmung prüfen
+				if (searchValue !== "" && !matchesSearch(eintrag, searchValue)) {
+					continue;
+				}
+				// bei Datumseingabe auf Übereinstimmung prüfen
+				if (filter.value.tsWiedervorlage !== "" && !matchesDate(eintrag, filter.value.tsWiedervorlage)) {
+					continue;
+				}
+				// bei aktiven Toggle zeige nur unerledigte Wiedervorlagen an - sonst alle
+				if (filter.value.toggleUnerledigt && eintrag.tsErledigt !== null) {
+					continue;
+				}
+				wiedervorlagen.push(eintrag);
 			}
 
 			return wiedervorlagen;
@@ -202,12 +216,14 @@
 
 	//# region ----------------------- Selection & Actions ------------------------
 
+	const showCreateModal = ref(false);
+
 	/* currently only implemented as readonly checkboxes and action buttons	 */
 	const selection = ref<WiedervorlageEintrag[]>([]);
 	const bulkChecked = computed(() => selection.value.length > 0);
 	const bulkActions = computed(() => {
 		return [
-			{ label: "Allgemeine Wiedervorlage anlegen", action: () => {}, iconClasses: " i-ri-add-line", disabled: true },
+			{ label: "Allgemeine Wiedervorlage anlegen", action: () => showCreateModal.value = true, iconClasses: "i-ri-add-line" },
 			{ label: "Ausgewählte Wiedervorlagen löschen", action: () => {}, iconClasses: "i-ri-delete-bin-line icon-ui-danger", disabled: true },
 		];
 	});

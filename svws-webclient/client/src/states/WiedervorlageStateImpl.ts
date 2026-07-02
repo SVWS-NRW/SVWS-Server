@@ -13,8 +13,13 @@ interface BenutzerGruppen {
 	data: List<BenutzergruppeListeEintrag>
 }
 
+interface Wiedervorlagen {
+	data: List<WiedervorlageEintrag>;
+}
+
 interface WiedervorlageReactiveState {
 	benutzerGruppen: BenutzerGruppen & State;
+	wiedervorlagenListe: Wiedervorlagen & State;
 }
 
 /**
@@ -25,27 +30,56 @@ export class WiedervorlageStateImpl extends StateManager<WiedervorlageReactiveSt
 	public constructor() {
 		super({
 			benutzerGruppen: { data: new ArrayList(), valid: false },
+			wiedervorlagenListe: { data: new ArrayList<WiedervorlageEintrag>(), valid: false },
 		});
 	}
 
-	get benutzerGruppen(): List<BenutzergruppeListeEintrag> {
+	public get benutzerGruppen(): List<BenutzergruppeListeEintrag> {
 		return this.state.benutzerGruppen.data;
 	}
 
-	init = async () => {
-		await this.getBenutzergruppen();
+	/** Getter für die Wiedervorlage-Liste */
+	public get wiedervorlagenListe(): List<WiedervorlageEintrag> {
+		return this.state.wiedervorlagenListe.data;
+	}
+
+	/** Initialisierung des States - lädt alle Daten */
+	public async init() {
+		await Promise.all([
+			this.getBenutzergruppen(),
+			this.ladeWiedervorlagen(),
+		]);
+	}
+
+	/** Lädt die Wiedervorlagen */
+	public async ladeWiedervorlagen() {
+		// for invalid data fetch fresh data
+		if (!this.state.wiedervorlagenListe.valid) {
+			const wiedervorlagenListe = await api.server.getWiedervorlageListe(api.schema);
+			// keep state stale to always get the newest list
+			this.setPatchedState({ wiedervorlagenListe: { data: wiedervorlagenListe, valid: false } });
+		}
 	};
 
-	addWiedervorlage = async (data: Partial<WiedervorlageEintrag>) => {
-		const wiedervorlage =	await api.server.addWiedervorlageEintrag(
+	/** Erstelle ine Wiedervorlage */
+	public async addWiedervorlage(data: Partial<WiedervorlageEintrag>) {
+		const response = await api.server.addWiedervorlageEintrag(
 			data,
 			api.schema);
-		return wiedervorlage;
+
+		return response;
 	};
 
-	getBenutzergruppen = async () => {
+	/** Patche eine Wiedervorlage */
+	public async patchWiedervorlage(data: Partial<WiedervorlageEintrag>, id: number) {
+		await api.server.patchWiedervorlageEintrag(data, api.schema, id);
+		await this.ladeWiedervorlagen();
+	};
+
+	/** Get Benutzergruppen */
+	public async getBenutzergruppen() {
+		// for invalid data fetch fresh data
 		if (!this.state.benutzerGruppen.valid) {
-			// only for invalid data fetch fresh data
 			let data;
 
 			if (api.benutzerIstAdmin) {
@@ -64,11 +98,6 @@ export class WiedervorlageStateImpl extends StateManager<WiedervorlageReactiveSt
 		// return data
 		return this.state.benutzerGruppen.data;
 	};
-
-
-
-
-
 
 }
 

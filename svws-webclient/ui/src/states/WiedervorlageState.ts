@@ -10,9 +10,15 @@ import type { BenutzergruppeListeEintrag } from "../../../core/src/core/data/ben
 export interface WiedervorlageState {
 	get benutzerGruppen(): List<BenutzergruppeListeEintrag>;
 
+	get wiedervorlagenListe(): List<WiedervorlageEintrag>;
+
 	init(): Promise<void>;
 
+	ladeWiedervorlagen(): Promise<void>;
+
 	addWiedervorlage(data: Partial<WiedervorlageEintrag>): Promise<WiedervorlageEintrag>;
+
+	patchWiedervorlage(data: Partial<WiedervorlageEintrag>, id: number): Promise<void>;
 
 	getBenutzergruppen(): Promise<List<BenutzergruppeListeEintrag>>;
 }

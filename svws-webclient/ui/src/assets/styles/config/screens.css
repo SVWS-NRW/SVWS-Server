@@ -1,3 +1,4 @@
+/* Extends the tailwind breakpoints with 3xl and 4xl */
 @theme {
 	--breakpoint-3xl: 1920px;
 	--breakpoint-4xl: 2160px;

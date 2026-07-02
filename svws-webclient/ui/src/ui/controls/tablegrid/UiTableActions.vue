@@ -3,15 +3,14 @@
 		<div :class="{ 'opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200' : !alwaysVisible }">
 			<div class="flex items-center justify-end">
 				<template v-for="action of actions" :key="action.label">
-					<svws-ui-tooltip>
-						<svws-ui-button v-if="action.trash" type="trash" @click="() => action.action(items)" :disabled="action.disabled" />
-						<svws-ui-button v-else type="icon" @click="() => action.action(items)" :disabled="action.disabled">
-							<span :class="[action.iconClasses, 'icon']" />
-						</svws-ui-button>
-						<template #content>
-							{{ action.label }}
-						</template>
-					</svws-ui-tooltip>
+					<svws-ui-button :type="action.trash ? 'trash' : 'icon'"
+						class="ui-table-actions--button"
+						:disabled="action.disabled"
+						:title="action.label"
+						:aria-label="action.label"
+						@click="() => action.action(items)">
+						<span :class="['icon', iconClass(action)]" />
+					</svws-ui-button>
 				</template>
 			</div>
 		</div>
@@ -41,6 +40,10 @@
 	}>(), {
 		alwaysVisible: false,
 		actions: () => [],
+	});
+
+	const iconClass = ((action: TableActions<T>) => {
+		return (action.trash === true) ? "" : action.iconClasses;
 	});
 
 </script>

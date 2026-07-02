@@ -1,7 +1,8 @@
-@import "./palette.css";
+@import "palette.css";
 
 @layer base {
 
+	/* Definition of light/dark theme colors */
 	:root {
 		/* TODO color-scheme: light dark; -> Als default - Browser-Default...*/
 		/* color-scheme: light; */
@@ -289,8 +290,9 @@
 } */
 
 
+/* Extending tailwind colors and box-shadow with a custom palette */
 @theme inline {
-
+  /* Generates tailwind class '.text-ui-*' */
 	--text-color-ui: var(--color-text-ui);
 	--text-color-ui-0: var(--color-text-ui-0);
 	--text-color-ui-10: var(--color-text-ui-10);
@@ -369,6 +371,7 @@
 	--text-color-uistatic-75: var(--color-text-uistatic-75);
 	--text-color-uistatic-100: var(--color-text-uistatic-100);
 
+	/* Generates tailwind class '.border-ui-*' */
 	--border-color-ui: var(--color-border-ui);
 	--border-color-ui-0: var(--color-border-ui-0);
 	--border-color-ui-10: var(--color-border-ui-10);
@@ -402,6 +405,7 @@
 	--border-color-uistatic-75: var(--color-text-uistatic-75);
 	--border-color-uistatic-100: var(--color-text-uistatic-100);
 
+	/* Generates tailwind class '.bg-ui-*' */
 	--background-color-ui: var(--color-bg-ui);
 	--background-color-ui-0: var(--color-bg-ui-0);
 	--background-color-ui-10: var(--color-bg-ui-10);
@@ -442,7 +446,7 @@
 	--background-color-uistatic-75: var(--color-bg-uistatic-75);
 	--background-color-uistatic-100: var(--color-bg-uistatic-100);
 
-
+	/* Generates tailwind class '.accent-ui-*' */
 	--accent-color-ui: var(--color-accent-ui);
 	--accent-color-ui-brand: var(--color-accent-ui-brand);
 	--accent-color-ui-statistic: var(--color-accent-ui-statistic);
@@ -463,6 +467,7 @@
 	--accent-color-ui-onneutral: var(--color-accent-ui-onneutral);
 	--accent-color-ui-ondisabled: var(--color-accent-ui-ondisabled);
 
+	/* Generates tailwind class '.ring-ui-*' */
 	--ring-color-ui: var(--color-ring-ui);
 	--ring-color-ui-brand: var(--color-ring-ui-brand);
 	--ring-color-ui-statistic: var(--color-ring-ui-statistic);
@@ -472,6 +477,7 @@
 	--ring-color-ui-caution: var(--color-ring-ui-caution);
 	--ring-color-ui-neutral: var(--color-ring-ui-neutral);
 
+	/* Generates tailwind class '.icon-ui-*' */
 	--icon-color-ui: var(--color-icon-ui);
 	--icon-color-ui-0: var(--color-icon-ui-0);
 	--icon-color-ui-10: var(--color-icon-ui-10);
@@ -550,6 +556,7 @@
 	--icon-color-uistatic-75: var(--color-icon-uistatic-75);
 	--icon-color-uistatic-100: var(--color-icon-uistatic-100);
 
+	/* Generates tailwind class '.shadow-ui-*' for box-shadow */
 	--shadow-ui-0: var(--color-shadow-ui-0);
 	--shadow-ui-10: var(--color-shadow-ui-10);
 	--shadow-ui-25: var(--color-shadow-ui-25);

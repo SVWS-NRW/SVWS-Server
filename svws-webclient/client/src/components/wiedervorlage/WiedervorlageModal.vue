@@ -1,4 +1,5 @@
 <template>
+	<!-- optional slot to render the button and provide a method to open the modal -->
 	<slot :open-modal />
 
 	<div class="absolute">
@@ -12,7 +13,7 @@
 			<template #modalContent>
 				<svws-ui-content-card>
 					<h3 class="text-left flex items-center">
-						<template v-if="type === 'general'">
+						<template v-if="type === 'allgemein'">
 							<span>Allgemein</span>
 						</template>
 						<template v-else-if="personName">
@@ -67,17 +68,25 @@
 	const wiedervorlageState = useWiedervorlageState();
 
 	const props = withDefaults(defineProps<{
-		personId: number,
+		personId?: number,
 		personName?: string,
 		mode?: "create" | "edit",
-		type?: "general" | "schueler" | "lehrkraft" | "erzieher",
+		type?: "allgemein" | "schueler" | "lehrkraft" | "erzieher",
 	}>(), {
 		mode: "create",
-		type: "general",
+		type: "allgemein",
 		personName: undefined,
+		personId: undefined,
 	});
 
-	const show = ref<boolean>(false);
+	const emit = defineEmits<{
+		// event when new entry was created
+		created: [val: WiedervorlageEintrag];
+		// even when an entry was changed
+		updated: [val: WiedervorlageEintrag];
+	}>();
+
+	const show = defineModel({ type: Boolean, default: false });
 
 	const defaultValue: Wiedervorlage = {
 		idBenutzergruppe: null,
@@ -118,7 +127,7 @@
 	}
 
 	function setInitialData() {
-		modelProxy.proxy.idPerson = props.personId;
+		modelProxy.proxy.idPerson = props.personId ?? null;
 		modelProxy.proxy.typPerson = getTypPerson();
 
 		if (props.mode === "create") {
@@ -132,9 +141,6 @@
 	}
 
 	async function openModal() {
-		// reset data to inital data
-		resetModal();
-
 		// open Modal
 		show.value = true;
 	}
@@ -158,9 +164,13 @@
 	}
 
 	async function create(data: Partial<WiedervorlageEintrag>) {
-		await wiedervorlageState.addWiedervorlage(data);
-		// add confirmation notification?
-		closeModal();
+		try {
+			const response = await wiedervorlageState.addWiedervorlage(data);
+			await wiedervorlageState.ladeWiedervorlagen();
+			emit("created", response);
+		} finally {
+			closeModal();
+		}
 	}
 
 	async function update(data: Partial<WiedervorlageEintrag>) {
@@ -168,9 +178,19 @@
 	}
 
 	watch(
+		show,
+		async () => {
+			if (show.value === true) {
+				// reset data to inital data
+				resetModal();
+			}
+		}
+	);
+
+	watch(
 		() => [props.personId],
 		() => {
-			modelProxy.proxy.idPerson = props.personId;
+			modelProxy.proxy.idPerson = props.personId ?? null;
 		}
 	);
 

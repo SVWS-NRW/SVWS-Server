@@ -1,8 +1,6 @@
-import type { BenutzerDaten, List, ServerMode, WiedervorlageEintrag } from "@core";
+import type { BenutzerDaten, ServerMode, WiedervorlageEintrag } from "@core";
 
 export interface WiedervorlagenAppProps {
-	mode: ServerMode;
 	benutzer: () => BenutzerDaten;
-	getListWiedervorlagen: () => List<WiedervorlageEintrag>;
-	goToPerson: (eintrag: WiedervorlageEintrag) => Promise<void>,
+	goToPerson: (eintrag: WiedervorlageEintrag) => Promise<void>;
 }

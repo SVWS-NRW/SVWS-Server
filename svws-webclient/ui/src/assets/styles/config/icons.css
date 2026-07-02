@@ -1,5 +1,4 @@
 @layer base {
-
 	:root {
 		--icon-size: 1.2rem;
 		--icon-size-xxs: 0.5rem;
@@ -9,11 +8,9 @@
 		--icon-size-xl: 2rem;
 		--icon-size-xxl: 4rem;
 	}
-
 }
 
-
-
+/*region: Base icon classes */
 @utility icon {
 	display: inline-block;
 	width: var(--icon-size);
@@ -23,6 +20,12 @@
 	background-color: var(--color-text-ui);
 }
 
+@utility icon-* {
+	background-color: --value(--icon-color-*);
+}
+/*endregion */
+
+/*region: Icon size classes */
 @utility icon-xxs {
 	display: inline-block;
 	width: var(--icon-size-xxs);
@@ -76,13 +79,9 @@
 	line-height: var(--icon-size-xxl);
 	background-color: var(--color-text-ui);
 }
+/*endregion*/
 
-
-@utility icon-* {
-	background-color: --value(--icon-color-*);
-}
-
-
+/*region: Classes for each svg icon */
 @utility i-ri-add-line {
 	mask-image: url(@icons/System/add-line.svg);
 	-webkit-mask-image: url(@icons/System/add-line.svg);
@@ -1153,3 +1152,4 @@
 	mask-repeat: no-repeat;
 	mask-position: center;
 }
+/*endregion*/

@@ -1,12 +1,8 @@
 @import "tailwindcss";
 @source "./../..";
 
-@import "./colors.css";
-@import "./borders.css";
-@import "./dimensions.css";
-@import "./fonts.css";
-@import "./screens.css";
-@import "./icons.css";
+/** tailwind overwrites and extensions */
+@import "./config/index.css";
 
 @import "../../ui/SvwsUiAvatar.css";
 @import "../../ui/SvwsUiBadge.css";
