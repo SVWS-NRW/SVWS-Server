@@ -1,7 +1,8 @@
 import type { OrtKatalogEintrag, OrtsteilKatalogEintrag, FoerderschwerpunktEintrag, ReligionEintrag, SchulEintrag, BenutzerKompetenz, Haltestelle, Fahrschuelerart } from "@core";
-import type { Checkpoint, SchuelerListeManager } from "@ui";
+import type { Checkpoint } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 import type { PendingStateManagerSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/PendingStateManagerSchuelerIndividualdaten";
+import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 
 export interface SchuelerIndividualdatenGruppenprozesseProps {
 	schuelerListeManager: () => SchuelerListeManager;

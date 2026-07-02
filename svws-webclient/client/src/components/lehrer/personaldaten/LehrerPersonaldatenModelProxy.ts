@@ -2,6 +2,7 @@ import type { ValidatorKontext, LehrerPersonaldaten, LehrerAbgangsgrundKatalogEi
 import { LehrerAbgangsgrund, LehrerZugangsgrund } from "@core";
 import { ModelProxy, type LehrerListeManager } from "@ui";
 import { computed } from "vue";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 /**
  * Der spezielle ModelProxy für die Lehrerstammdaten
@@ -29,7 +30,7 @@ export class LehrerPersonaldatenModelProxy extends ModelProxy<LehrerPersonaldate
 			if (wert === null) {
 				return null;
 			}
-			return LehrerZugangsgrund.data().getEintragBySchuljahrUndWert(this.manager().getSchuljahr(), wert);
+			return LehrerZugangsgrund.data().getEintragBySchuljahrUndWert(schuleStateImpl.schuljahr, wert);
 		},
 		set: (value) => this.proxy.zugangsgrund = value?.kuerzel ?? null,
 	});
@@ -40,7 +41,7 @@ export class LehrerPersonaldatenModelProxy extends ModelProxy<LehrerPersonaldate
 			if (wert === null) {
 				return null;
 			}
-			return LehrerAbgangsgrund.data().getEintragBySchuljahrUndWert(this.manager().getSchuljahr(), wert);
+			return LehrerAbgangsgrund.data().getEintragBySchuljahrUndWert(schuleStateImpl.schuljahr, wert);
 		},
 		set: (value) => this.proxy.abgangsgrund = value?.kuerzel ?? null,
 	});

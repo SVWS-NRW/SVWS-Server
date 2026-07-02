@@ -1,5 +1,5 @@
 import type { BenutzerKompetenz, List, Sprachbelegung, Sprachpruefung } from "@core";
-import type { SchuelerListeManager } from "@ui";
+import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 
 export interface SchuelerSprachenProps {
 	sprachbelegungen: () => List<Sprachbelegung>;

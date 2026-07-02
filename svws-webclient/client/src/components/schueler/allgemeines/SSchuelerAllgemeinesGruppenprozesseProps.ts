@@ -1,6 +1,6 @@
 import type { List, BenutzerKompetenz, StundenplanListeEintrag } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
-import type { SchuelerListeManager } from "@ui";
+import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 
 export interface SSchuelerAllgemeinesGruppenprozesseProps {
 	apiStatus: ApiStatus;

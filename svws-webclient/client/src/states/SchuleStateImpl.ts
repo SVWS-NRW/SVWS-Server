@@ -10,7 +10,7 @@ interface SchuleReactiveState {
 	stammdaten: SchuleStammdaten | null;
 	kontext: ValidatorKontext | null;
 	abschnitt: Schuljahresabschnitt | null;
-};
+}
 
 /**
  * Die Schnittstelle für den Zustand der Schule
@@ -102,6 +102,16 @@ export class SchuleStateImpl extends StateManager<SchuleReactiveState> implement
 	 */
 	public get schulgliederungen(): List<Schulgliederung> {
 		return Schulgliederung.getBySchuljahrAndSchulform(abschnittStateImpl.auswahl.schuljahr, this.schulform);
+	}
+
+	/**
+	 * Gibt das Schuljahr des Abschnitts zurück
+	 *
+	 * @returns das Schuljahr
+	 */
+	public get schuljahr(): number {
+		return this.abschnitt.schuljahr;
+
 	}
 
 	/**

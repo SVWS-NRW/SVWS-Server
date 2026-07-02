@@ -1,5 +1,5 @@
 import type { BenutzerDaten, BenutzerKompetenz, List, SchuelerLeistungsdaten, SchuelerLernabschnittsdaten } from "@core";
-import type { SchuelerListeManager } from "@ui";
+import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 import type { SchuelerLernabschnittManager } from "../SchuelerLernabschnittManager";
 
 export interface SchuelerLernabschnittLeistungenProps {

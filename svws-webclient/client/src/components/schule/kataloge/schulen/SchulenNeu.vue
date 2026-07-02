@@ -129,7 +129,7 @@
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const isInternal = ref<boolean>(true);
 	const selectedSchulenKatalogEintrag = ref<SchulenKatalogEintrag>();
-	const schuljahr = computed<number>(() => props.manager().getSchuljahr());
+	const schuljahr = computed<number>(() => schuleState.schuljahr);
 
 	const selectedExterneSchulen = computed<HerkunftsschulnummerKatalogEintrag | null>({
 		get: () => Herkunftsschulnummer.data().getEintragBySchuljahrUndSchluessel(abschnittState.auswahl.schuljahr, model.proxy.schulnummerStatistik ?? ""),

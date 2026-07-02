@@ -1,5 +1,4 @@
 
-import type { KursListeManager } from "@ui";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { type RouteApp } from "~/router/apps/RouteApp";
@@ -9,6 +8,7 @@ import { routeKursDaten } from "~/router/apps/kurse/RouteKursDaten";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import { routeKurseGruppenprozesse } from "./RouteKurseGruppenprozesse";
 import { routeKurseNeu } from "./RouteKurseNeu";
+import type { KursListeManager } from "~/states/kurse/KursListeManager";
 import type { KurseAuswahlProps } from "~/components/kurse/SKurseAuswahlProps";
 import { ConfigElement } from "../../../../../ui/src/utils/Config";
 import { api } from "~/router/Api";

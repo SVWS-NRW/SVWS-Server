@@ -1,6 +1,6 @@
-import type { ApiFile, KursDaten, KursLehrer, List, ReportingParameter, Schueler, SimpleOperationResponse } from "@core";
-import { UserNotificationException, DeveloperNotificationException } from "@core";
-import { KursListeManager } from "@ui";
+import type { KursDaten, KursLehrer, List, Schueler, SimpleOperationResponse } from "@core";
+import { DeveloperNotificationException } from "@core";
+import { KursListeManager } from "~/states/kurse/KursListeManager";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";

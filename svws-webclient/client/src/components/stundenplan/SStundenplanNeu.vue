@@ -47,12 +47,13 @@
 
 <script setup lang="ts">
 
-	import { DateUtils, type Stundenplan, type StundenplanListeEintrag, DeveloperNotificationException, ValidatorFehlerart } from "@core";
-	import { StundenplanListeManager } from "@ui";
+	import { DateUtils, type Stundenplan, type StundenplanListeEintrag, ValidatorFehlerart } from "@core";
+	import { StundenplanListeManager, useAbschnittState } from "@ui";
 
 	import { ref, onMounted, watch, computed } from "vue";
 	import type { StundenplanNeuProps } from "~/components/stundenplan/SStundenplanNeuProps";
 
+	const abschnittState = useAbschnittState();
 	const props = defineProps<StundenplanNeuProps>();
 
 	const isLoading = ref<boolean>(false);
@@ -74,11 +75,7 @@
 
 	onMounted(async () => {
 		const lastValidStundenplan = props.manager().getLastAktivStundenplan();
-		const abschnitt = props.manager().getSchuljahresabschnittAuswahl();
-
-		if (abschnitt === null) {
-			throw new DeveloperNotificationException("SchuljahresabschnittAuswahl ist null");
-		}
+		const abschnitt = abschnittState.auswahl;
 
 		const istErsterAbschnitt = abschnitt.abschnitt === 1;
 

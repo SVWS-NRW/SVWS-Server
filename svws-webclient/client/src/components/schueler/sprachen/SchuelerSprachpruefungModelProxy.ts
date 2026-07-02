@@ -1,6 +1,7 @@
 import { Jahrgaenge, Note, Sprachpruefungniveau, Sprachreferenzniveau, type Sprachpruefung } from "@core";
-import { ModelProxy, type SchuelerListeManager } from "@ui";
+import { ModelProxy } from "@ui";
 import { computed } from "vue";
+import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 
 /**
  * Der spezielle ModelProxy für die Sprachbelegung

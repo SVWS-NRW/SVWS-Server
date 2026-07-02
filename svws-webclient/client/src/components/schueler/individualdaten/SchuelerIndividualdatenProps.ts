@@ -1,7 +1,7 @@
 import type { SchuelerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag, FoerderschwerpunktEintrag,
 	ReligionEintrag, SchulEintrag, Schulform, ServerMode, BenutzerKompetenz, Telefonart, SchuelerTelefon,
 	List, Haltestelle, Fahrschuelerart, ValidatorKontext } from "@core";
-import type { SchuelerListeManager } from "@ui";
+import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 
 export interface SchuelerIndividualdatenProps {
 	patch: (data: Partial<SchuelerStammdaten>) => Promise<boolean>;

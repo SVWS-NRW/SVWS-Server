@@ -1,6 +1,7 @@
 import type { KlassenDaten } from "@core";
-import type { Checkpoint, KlassenListeManager } from "@ui";
+import type { Checkpoint } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
+import type { KlassenListeManager } from "~/states/klassen/KlassenListeManager";
 
 export interface KlassenNeuProps {
 	manager: () => KlassenListeManager;

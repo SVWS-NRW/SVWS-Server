@@ -182,7 +182,9 @@
 	import { BenutzerKompetenz, Nationalitaeten, SchuelerStatus, Schulform, Verkehrssprache } from "@core";
 	import type { SchuelerIndividualdatenGruppenprozesseProps } from "~/components/schueler/individualdaten/SchuelerIndividualdatenGruppenprozesseProps";
 	import { computed, ref, watch, toRefs } from "vue";
-	import { CoreTypeSelectManager, SelectManager } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useSchuleState } from "@ui";
+
+	const schuleState = useSchuleState();
 
 	const props = defineProps<SchuelerIndividualdatenGruppenprozesseProps>();
 
@@ -219,7 +221,7 @@
 	const hatKompetenzAnsehen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN));
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 
-	const schuljahr = computed(() => props.schuelerListeManager().getSchuljahr());
+	const schuljahr = computed(() => schuleState.schuljahr);
 	const schulform = computed(() => props.schuelerListeManager().schulform());
 	const religionen = computed(() => props.religionenById.values());
 	const fahrschuelerArten = computed(() => props.fahrschuelerartenById.values());

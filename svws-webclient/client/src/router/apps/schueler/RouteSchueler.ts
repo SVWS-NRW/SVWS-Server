@@ -2,7 +2,7 @@ import type { RouteLocationRaw, RouteParams } from "vue-router";
 
 import type { SchuelerAuswahlProps } from "~/components/schueler/SSchuelerAuswahlProps";
 import type { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
-import type { SchuelerListeManager } from "@ui";
+import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 import { AppMenuGroup } from "@ui";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";

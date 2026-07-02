@@ -1,5 +1,5 @@
 import type { Schulform } from "@core";
-import type { SchuelerListeManager } from "@ui";
+import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 
 import type { RouteAuswahlProps } from "~/router/RouteAuswahlNode";
 

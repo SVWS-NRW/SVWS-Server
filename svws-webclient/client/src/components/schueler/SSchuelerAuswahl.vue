@@ -17,7 +17,7 @@
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
 				<template #filterAdvanced>
-					<svws-ui-multi-select v-if="manager().istSchuljahresabschnittAktuell()" v-model="filterStatus" title="Status"
+					<svws-ui-multi-select v-if="abschnittState.istSchuljahresabschnittAktuell()" v-model="filterStatus" title="Status"
 						:items="manager().schuelerstatus.list()" :item-text="status => status.daten(abschnittState.auswahl.schuljahr)?.text ?? '—'" class="col-span-full" />
 					<div v-else class="col-span-full flex flex-wrap gap-x-5">
 						<svws-ui-checkbox type="toggle" v-model="filterNurMitLernabschitt">nur mit Lernabschnitt</svws-ui-checkbox>
@@ -109,7 +109,7 @@
 	// function getEpJahre(ep: number | null) {
 	// 	if (!primarstufe.value || (ep === null))
 	// 		return null;
-	// 	const schuljahr = props.manager().getSchuljahr();
+	// 	const schuljahr = schuleState.schuljahr;
 	// 	return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertBySchluesselOrException(ep.toString()).daten(schuljahr)?.kuerzel ?? null;
 	// }
 

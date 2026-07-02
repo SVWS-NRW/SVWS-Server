@@ -12,8 +12,8 @@ import type { KlassenAuswahlProps } from "~/components/klassen/KlassenAuswahlPro
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import { routeKlasseGruppenprozesse } from "./RouteKlassenGruppenprozesse";
 import { routeKlassenNeu } from "./RouteKlassenNeu";
-import type { KlassenListeManager } from "@ui";
 import { AppMenuGroup } from "@ui";
+import type { KlassenListeManager } from "~/states/klassen/KlassenListeManager";
 
 
 const KlassenAuswahl = () => import("~/components/klassen/KlassenAuswahl.vue");

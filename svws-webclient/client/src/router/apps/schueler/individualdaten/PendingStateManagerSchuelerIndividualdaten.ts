@@ -5,6 +5,7 @@ import type { NationalitaetenKatalogEintrag, SchuelerStammdaten, SchulEintrag, S
 import { Nationalitaeten, SchuelerStatus, Verkehrssprache } from "@core";
 import { computed } from "vue";
 import { routeApp } from "~/router/apps/RouteApp";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 /**
  * Die Klasse `PendingStateManagerSchuelerIndividualdaten` erweitert den `PendingStateManager`
@@ -37,16 +38,16 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 	 * verschiedenen Attributen spezifische Darstellungslogiken zu.
 	 */
 	private initializeAttributeDisplayMappers() {
-		this._attributeDisplayMappers.set('status', (value: any) => SchuelerStatus.data().getWertByKuerzel('' + value)?.daten(this.auswahlManager.getSchuljahr())?.text);
-		this._attributeDisplayMappers.set('idStaatsangehoerigkeit', (value: any) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(this.auswahlManager.getSchuljahr())?.bezeichnung);
-		this._attributeDisplayMappers.set('idStaatsangehoerigkeit2', (value: any) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(this.auswahlManager.getSchuljahr())?.bezeichnung);
+		this._attributeDisplayMappers.set('status', (value: any) => SchuelerStatus.data().getWertByKuerzel('' + value)?.daten(schuleStateImpl.schuljahr)?.text);
+		this._attributeDisplayMappers.set('idStaatsangehoerigkeit', (value: any) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(schuleStateImpl.schuljahr)?.bezeichnung);
+		this._attributeDisplayMappers.set('idStaatsangehoerigkeit2', (value: any) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(schuleStateImpl.schuljahr)?.bezeichnung);
 		this._attributeDisplayMappers.set('religionID', (value: any) => routeApp.cache.kataloge.religionenById.get(Number(value))?.bezeichnung);
 		this._attributeDisplayMappers.set('fahrschuelerArtID', (value: any) => routeApp.cache.kataloge.fahrschuelerartenById.get(Number(value))?.bezeichnung);
 		this._attributeDisplayMappers.set('haltestelleID', (value: any) => routeApp.cache.kataloge.haltestellenById.get(Number(value))?.bezeichnung);
-		this._attributeDisplayMappers.set('idVerkehrspracheFamilie', (value: any) => Verkehrssprache.data().getWertByIDOrNull(value)?.daten(this.auswahlManager.getSchuljahr())?.text);
-		this._attributeDisplayMappers.set('idGeburtsland', (value: any) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(this.auswahlManager.getSchuljahr())?.text);
-		this._attributeDisplayMappers.set('idGeburtslandMutter', (value: any) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(this.auswahlManager.getSchuljahr())?.text);
-		this._attributeDisplayMappers.set('idGeburtslandVater', (value: any) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(this.auswahlManager.getSchuljahr())?.text);
+		this._attributeDisplayMappers.set('idVerkehrspracheFamilie', (value: any) => Verkehrssprache.data().getWertByIDOrNull(value)?.daten(schuleStateImpl.schuljahr)?.text);
+		this._attributeDisplayMappers.set('idGeburtsland', (value: any) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(schuleStateImpl.schuljahr)?.text);
+		this._attributeDisplayMappers.set('idGeburtslandMutter', (value: any) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(schuleStateImpl.schuljahr)?.text);
+		this._attributeDisplayMappers.set('idGeburtslandVater', (value: any) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(schuleStateImpl.schuljahr)?.text);
 		this._attributeDisplayMappers.set('druckeKonfessionAufZeugnisse', this._defaultBooleanDisplayMapper);
 		this._attributeDisplayMappers.set('istVolljaehrig', this._defaultBooleanDisplayMapper);
 		this._attributeDisplayMappers.set('keineAuskunftAnDritte', this._defaultBooleanDisplayMapper);
@@ -64,7 +65,7 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 	 * Erzeugt das Attribut staatsangehoerigkeitID als computed value.
 	 */
 	public staatsangehoerigkeitID = this.genComputed<NationalitaetenKatalogEintrag | null>('idStaatsangehoerigkeit', null,
-		(value: number | null) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(this.auswahlManager.getSchuljahr()) ?? null,
+		(value: number | null) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(schuleStateImpl.schuljahr) ?? null,
 		(value: NationalitaetenKatalogEintrag | null) => value?.id
 	);
 
@@ -72,7 +73,7 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 	 * Erzeugt das Attribut staatsangehoerigkeit2ID als computed value.
 	 */
 	public staatsangehoerigkeit2ID = this.genComputed<NationalitaetenKatalogEintrag | null>('idStaatsangehoerigkeit2', null,
-		(value: number | null) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(this.auswahlManager.getSchuljahr()) ?? null,
+		(value: number | null) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(schuleStateImpl.schuljahr) ?? null,
 		(value: NationalitaetenKatalogEintrag | null) => value?.id
 	);
 
@@ -115,7 +116,7 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 	/**
 	 * Gibt zurück, ob alle Schüler in der Auswahl den Status "Extern" haben.
 	 */
-	public alleExtern = computed<boolean>(() => [...this.auswahlManager.liste.auswahl()].every(s => s.status === SchuelerStatus.EXTERN.daten(this.auswahlManager.getSchuljahr())?.id));
+	public alleExtern = computed<boolean>(() => [...this.auswahlManager.liste.auswahl()].every(s => s.status === SchuelerStatus.EXTERN.daten(schuleStateImpl.schuljahr)?.id));
 
 	/**
 	 * Erzeugt das Attribut stammschuleExtern als computed value.
@@ -202,7 +203,7 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 	 * Erzeugt das Attribut geburtsland als computed value.
 	 */
 	public idGeburtsland = this.genComputed<NationalitaetenKatalogEintrag | null>('idGeburtsland', null,
-		(value: number | null) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(this.auswahlManager.getSchuljahr()) ?? null,
+		(value: number | null) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(schuleStateImpl.schuljahr) ?? null,
 		(value) => value?.id
 	);
 
@@ -211,7 +212,7 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 	 */
 	public verkehrssprache = this.genComputed<VerkehrsspracheKatalogEintrag | null>('idVerkehrspracheFamilie', null,
 		(value: number | null | undefined) => (value === null || value === undefined) ? null
-			: Verkehrssprache.data().getWertByIDOrNull(value)?.daten(this.auswahlManager.getSchuljahr()) ?? null,
+			: Verkehrssprache.data().getWertByIDOrNull(value)?.daten(schuleStateImpl.schuljahr) ?? null,
 		(value) => value?.id
 	);
 
@@ -219,7 +220,7 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 	 * Erzeugt das Attribut geburtslandMutter als computed value.
 	 */
 	public geburtslandMutter = this.genComputed<NationalitaetenKatalogEintrag | null>('idGeburtslandMutter', null,
-		(value: number | null) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(this.auswahlManager.getSchuljahr()) ?? null,
+		(value: number | null) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(schuleStateImpl.schuljahr) ?? null,
 		(value) => value?.id
 	);
 
@@ -227,7 +228,7 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 	 * Erzeugt das Attribut geburtslandVater als computed value.
 	 */
 	public geburtslandVater = this.genComputed<NationalitaetenKatalogEintrag | null>('idGeburtslandVater', null,
-		(value: number | null) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(this.auswahlManager.getSchuljahr()) ?? null,
+		(value: number | null) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(schuleStateImpl.schuljahr) ?? null,
 		(value) => value?.id
 	);
 

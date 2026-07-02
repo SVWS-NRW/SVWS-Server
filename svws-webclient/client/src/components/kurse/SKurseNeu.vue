@@ -38,11 +38,15 @@
 	import type { JahrgangsDaten, FachDaten, LehrerListeEintrag, List } from "@core";
 	import { ArrayList, BenutzerKompetenz, JavaString, KursDaten, KursFortschreibungsart, ZulaessigeKursart } from "@core";
 	import { computed, ref, watch } from "vue";
+	import { useAbschnittState, useSchuleState } from "@ui";
+
+	const abschnittState = useAbschnittState();
+	const schuleState = useSchuleState();
 
 	const props = defineProps<KurseNeuProps>();
 	const data = ref<KursDaten>(Object.assign(new KursDaten(), { wochenstunden: 0, istSichtbar: true }));
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
-	const schuljahr = computed<number>(() => props.manager().getSchuljahr());
+	const schuljahr = computed<number>(() => schuleState.schuljahr);
 	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 	const isLoading = ref<boolean>(false);
 
@@ -183,7 +187,7 @@
 
 		props.checkpoint.active = false;
 		isLoading.value = true;
-		data.value.idSchuljahresabschnitt = props.manager().getSchuljahresabschnittSchule().id;
+		data.value.idSchuljahresabschnitt = abschnittState.auswahl.id;
 		const { id, weitereLehrer, wochenstundenLehrer, schueler, ...partialData } = data.value;
 		await props.add(partialData);
 		isLoading.value = false;

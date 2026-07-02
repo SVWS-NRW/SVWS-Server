@@ -97,17 +97,18 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import { useServerState, type DataTableColumn } from "@ui";
+	import { useServerState, type DataTableColumn, useSchuleState } from "@ui";
 	import type { KursDatenProps } from "./SKursDatenProps";
 	import type { JahrgangsDaten, LehrerListeEintrag, List } from "@core";
 	import { SchuelerStatus, ZulaessigeKursart, KursFortschreibungsart, ArrayList, BenutzerKompetenz, ServerMode, FachDaten, KursLehrer } from "@core";
 
 	const props = defineProps<KursDatenProps>();
 	const serverState = useServerState();
+	const schuleState = useSchuleState();
 
 	const readonly = computed(() => !hatKompetenzUpdate.value);
 
-	const schuljahr = computed<number>(() => props.manager().getSchuljahr());
+	const schuljahr = computed<number>(() => schuleState.schuljahr);
 
 	// TODO auch UNTERRICHTSVERTEILUNG_PLANUNG_ANSEHEN verwenden und hier unterscheiden zu UNTERRICHTSVERTEILUNG_ANSEHEN
 	const hatKompetenzAnsehen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN));

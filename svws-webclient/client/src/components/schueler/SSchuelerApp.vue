@@ -67,8 +67,10 @@
 
 	import { computed } from "vue";
 	import type { SchuelerAppProps } from "./SSchuelerAppProps";
-	import { useRegionSwitch, ViewType } from "@ui";
+	import { useRegionSwitch, useSchuleState, ViewType } from "@ui";
 	import { PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, type KlassenDaten } from "@core";
+
+	const schuleState = useSchuleState();
 
 	const props = defineProps<SchuelerAppProps>();
 
@@ -86,7 +88,7 @@
 		if (ep === null) {
 			return null;
 		}
-		const schuljahr = props.manager().getSchuljahr();
+		const schuljahr = schuleState.schuljahr;
 		return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertByIDOrNull(ep)?.daten(schuljahr)?.kuerzel ?? null;
 	});
 

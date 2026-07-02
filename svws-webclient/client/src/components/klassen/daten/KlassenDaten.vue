@@ -112,7 +112,7 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import { useSchuleState, type DataTableColumn } from "@ui";
+	import { useSchuleState, type DataTableColumn, useAbschnittState } from "@ui";
 	import type { KlassenDatenProps } from "./KlassenDatenProps";
 	import type { LehrerListeEintrag, KlassenDaten, Klassenart, Schulgliederung, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen, JahrgangsDaten } from "@core";
 	import { SchuelerStatus, Schulform, BenutzerKompetenz, Jahrgaenge } from "@core";
@@ -120,6 +120,7 @@
 
 	const props = defineProps<KlassenDatenProps>();
 	const schuleState = useSchuleState();
+	const abschnittState = useAbschnittState();
 
 	const listAndereKlassen = computed(() => {
 		const arr = [];
@@ -147,10 +148,10 @@
 		klassenleitungClicked.value = null;
 	});
 
-	const schuljahr = computed<number>(() => props.manager().getSchuljahr());
+	const schuljahr = computed<number>(() => schuleState.schuljahr);
 
 	function getSelectText(value: Klassenart | Schulgliederung | AllgemeinbildendOrganisationsformen | BerufskollegOrganisationsformen | WeiterbildungskollegOrganisationsformen) {
-		return value.daten(props.manager().getSchuljahr())?.kuerzel + ' - ' + value.daten(props.manager().getSchuljahr())?.text;
+		return value.daten(schuleState.schuljahr)?.kuerzel + ' - ' + value.daten(schuleState.schuljahr)?.text;
 	}
 
 	function getSelectTextJahrgang(jg: JahrgangsDaten): string {
@@ -235,10 +236,7 @@
 		if (istSemesterBetrieb()) {
 			return true;
 		}
-		const sja = props.manager().getSchuljahresabschnittAuswahl();
-		if (sja === null) {
-			return false;
-		}
+		const sja = abschnittState.auswahl;
 		return (sja.abschnitt === 1);
 	}
 
@@ -249,10 +247,7 @@
 		if (istSemesterBetrieb()) {
 			return true;
 		}
-		const sja = props.manager().getSchuljahresabschnittAuswahl();
-		if (sja === null) {
-			return false;
-		}
+		const sja = abschnittState.auswahl;
 		return (sja.abschnitt === 2);
 	}
 

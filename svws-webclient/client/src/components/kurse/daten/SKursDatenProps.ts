@@ -1,5 +1,5 @@
 import type { KursDaten, Schueler, BenutzerKompetenz, KursLehrer, List } from "@core";
-import type { KursListeManager } from "@ui";
+import type { KursListeManager } from "~/states/kurse/KursListeManager";
 
 export interface KursDatenProps {
 	benutzerKompetenzen: Set<BenutzerKompetenz>,

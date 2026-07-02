@@ -164,19 +164,17 @@ export { ValidatorSelectMultiOptionsRange } from "./validation/common/ValidatorS
 
 // Manager
 export { AuswahlManager } from "./ui/AuswahlManager";
+export { AttributMitAuswahl } from "./ui/AttributMitAuswahl";
 export { TelefonartenListeManager } from "./ui/manager/kataloge/TelefonartenListeManager";
 export { StundenplanListeManager } from "./ui/manager/stundenplan/StundenplanListeManager";
 export { StundenplanUnterrichtListeManager } from "./ui/manager/stundenplan/StundenplanUnterrichtListeManager";
 export { SchulenListeManager } from "./ui/manager/kataloge/SchulenListeManager";
-export { SchuelerListeManager } from "./ui/manager/schueler/SchuelerListeManager";
 export { SchuelerKAoAManager } from "./ui/manager/schueler/SchuelerKAoAManager";
 export { SchuelerBetriebeManager } from "./ui/manager/schueler/SchuelerBetriebeManager";
 export { KonfessionenListeManager } from "./ui/manager/kataloge/KonfessionenListeManager";
 export { RaumListeManager } from "./ui/manager/raum/RaumListeManager";
 export { LernplattformListeManager } from "./ui/manager/kataloge/LernplattformListeManager";
 export { LehrerListeManager } from "./ui/manager/lehrer/LehrerListeManager";
-export { KursListeManager } from "./ui/manager/kurse/KursListeManager";
-export { KlassenListeManager } from "./ui/manager/klassen/KlassenListeManager";
 export { AbteilungenListeManager } from './ui/manager/kataloge/AbteilungenListeManager';
 export { BeschaeftigungsartenListeManager } from './ui/manager/kataloge/BeschaeftigungsartenListeManager';
 export { BetriebsartenListeManager } from './ui/manager/kataloge/BetriebsartenListeManager';

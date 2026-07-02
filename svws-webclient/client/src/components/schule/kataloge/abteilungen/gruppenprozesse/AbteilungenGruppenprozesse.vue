@@ -32,7 +32,9 @@
 	import type { AbteilungenGruppenprozesseProps } from "./AbteilungenGruppenprozesseProps";
 	import type { List } from "@core";
 	import { BenutzerKompetenz } from "@core";
+	import { useAbschnittState } from "@ui";
 
+	const abschnittState = useAbschnittState();
 	const props = defineProps<AbteilungenGruppenprozesseProps>();
 
 	const isLoading = ref<boolean>(false);
@@ -60,7 +62,7 @@
 	}
 
 	function getTextFolgeAbschnitt() {
-		const folgeAbschnitt = props.manager().schuljahresabschnitte.get(props.manager().getSchuljahresabschnittAuswahl()?.idFolgeAbschnitt ?? -1);
+		const folgeAbschnitt = props.manager().schuljahresabschnitte.get(abschnittState.auswahl.idFolgeAbschnitt ?? -1);
 		if ((folgeAbschnitt === null) || (folgeAbschnitt.schuljahr <= 0)) {
 			return '';
 		}

@@ -1,5 +1,5 @@
 import type { List, BenutzerKompetenz } from "@core";
-import type { KursListeManager } from "@ui";
+import type { KursListeManager } from "~/states/kurse/KursListeManager";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface KurseGruppenprozesseProps {

@@ -1,5 +1,5 @@
 import type { LehrerListeEintrag, KlassenDaten, Schueler, BenutzerKompetenz } from "@core";
-import type { KlassenListeManager } from "@ui";
+import type { KlassenListeManager } from "~/states/klassen/KlassenListeManager";
 
 export interface KlassenDatenProps {
 	benutzerKompetenzen: Set<BenutzerKompetenz>,

@@ -3,6 +3,7 @@ import { ArrayList, DeveloperNotificationException } from "@core";
 import type { AbschnittState } from "@ui";
 import { StateManager } from "@ui";
 import { routerManager } from "~/router/RouteManager";
+import { schuleStateImpl } from "./SchuleStateImpl";
 
 interface AbschnittReactiveState {
 	/** Eine Map mit den Schuljahresabschnitten zugeordnet zu deren IDs */
@@ -83,6 +84,20 @@ export class AbschnittStateImpl extends StateManager<AbschnittReactiveState> imp
 			}
 		}
 		return result;
+	}
+
+	public istSchuljahresabschnittAktuell(): boolean {
+		return (this.auswahl.schuljahr === schuleStateImpl.abschnitt.schuljahr) && (this.auswahl === schuleStateImpl.abschnitt);
+	}
+
+	public istSchuljahresabschnittPlanung(): boolean {
+		return (this.auswahl.schuljahr > schuleStateImpl.abschnitt.schuljahr)
+				|| ((this.auswahl.schuljahr === schuleStateImpl.abschnitt.schuljahr) && (this.auswahl > schuleStateImpl.abschnitt));
+	}
+
+	public istSchuljahresabschnittVergangenheit(): boolean {
+		return (this.auswahl.schuljahr < schuleStateImpl.abschnitt.schuljahr)
+				|| ((this.auswahl.schuljahr === schuleStateImpl.abschnitt.schuljahr) && (this.auswahl.abschnitt < schuleStateImpl.abschnitt.abschnitt));
 	}
 
 }

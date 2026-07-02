@@ -2,7 +2,9 @@ import { computed } from "vue";
 import { AllgemeinbildendOrganisationsformen, ArrayList, BerufskollegOrganisationsformen, Jahrgaenge, Klassenart, Schulgliederung,
 	WeiterbildungskollegOrganisationsformen } from "@core";
 import type { JahrgangsDaten, KlassenDaten, List, KlassenListeEintrag, KlassenDatenMinimal } from "@core";
-import { ModelProxy, ValidatorKlassenKuerzel, ValidatorStringLength, type KlassenListeManager } from "@ui";
+import { ModelProxy, ValidatorKlassenKuerzel, ValidatorStringLength } from "@ui";
+import type { KlassenListeManager } from "~/states/klassen/KlassenListeManager";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 /**
  * Der spezielle ModelProxy für die Klassen-Daten
@@ -31,22 +33,22 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 
 	schulgliederung = computed<Schulgliederung | null>({
 		get: () => (this.proxy.idSchulgliederung === -1) ? null : Schulgliederung.data().getWertByID(this.proxy.idSchulgliederung),
-		set: (value) => this.proxy.idSchulgliederung = value?.daten(this.manager().getSchuljahr())?.id ?? -1,
+		set: (value) => this.proxy.idSchulgliederung = value?.daten(schuleStateImpl.schuljahr)?.id ?? -1,
 	});
-	schulgliederungen = computed(() => Schulgliederung.getBySchuljahrAndSchulform(this.manager().getSchuljahr(), this.manager().schulform()));
+	schulgliederungen = computed(() => Schulgliederung.getBySchuljahrAndSchulform(schuleStateImpl.schuljahr, this.manager().schulform()));
 
 	klassenart = computed<Klassenart | null>({
 		get: () => ((this.proxy.idKlassenart === null) || (this.proxy.idKlassenart === -1)) ? null : Klassenart.data().getWertByID(this.proxy.idKlassenart),
-		set: (value) => this.proxy.idKlassenart = value?.daten(this.manager().getSchuljahr())?.id ?? -1,
+		set: (value) => this.proxy.idKlassenart = value?.daten(schuleStateImpl.schuljahr)?.id ?? -1,
 	});
-	klassenarten = computed(() => Klassenart.getBySchuljahrAndSchulform(this.manager().getSchuljahr(), this.manager().schulform()));
+	klassenarten = computed(() => Klassenart.getBySchuljahrAndSchulform(schuleStateImpl.schuljahr, this.manager().schulform()));
 
 	organisationsformAllgemeinbildend = computed<AllgemeinbildendOrganisationsformen | null>({
 		get: () => {
 			const id = this.proxy.idAllgemeinbildendOrganisationsform;
 			return (id === null) ? null : AllgemeinbildendOrganisationsformen.data().getWertByID(id);
 		},
-		set: (value) => this.proxy.idAllgemeinbildendOrganisationsform = value?.daten(this.manager().getSchuljahr())?.id ?? null,
+		set: (value) => this.proxy.idAllgemeinbildendOrganisationsform = value?.daten(schuleStateImpl.schuljahr)?.id ?? null,
 	});
 	organisationsformenAllgemeinbildend = computed(() => AllgemeinbildendOrganisationsformen.values());
 
@@ -55,7 +57,7 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 			const id = this.proxy.idBerufsbildendOrganisationsform;
 			return (id === null) ? null : BerufskollegOrganisationsformen.data().getWertByID(id);
 		},
-		set: (value) => this.proxy.idBerufsbildendOrganisationsform = value?.daten(this.manager().getSchuljahr())?.id ?? null,
+		set: (value) => this.proxy.idBerufsbildendOrganisationsform = value?.daten(schuleStateImpl.schuljahr)?.id ?? null,
 	});
 	organisationsformenBerufsbildend = computed(() => BerufskollegOrganisationsformen.values());
 
@@ -64,7 +66,7 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 			const id = this.proxy.idWeiterbildungOrganisationsform;
 			return (id === null) ? null : WeiterbildungskollegOrganisationsformen.data().getWertByID(id);
 		},
-		set: (value) => this.proxy.idWeiterbildungOrganisationsform = value?.daten(this.manager().getSchuljahr())?.id ?? null,
+		set: (value) => this.proxy.idWeiterbildungOrganisationsform = value?.daten(schuleStateImpl.schuljahr)?.id ?? null,
 	});
 	organisationsformenWeiterbildend = computed(() => WeiterbildungskollegOrganisationsformen.values());
 
@@ -136,7 +138,7 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 				if (tmpJgKl === null) {
 					continue;
 				}
-				if (tmpJgKl.isNachfolgerVon(this.manager().getSchuljahr(), tmpJg, this.manager().schulform(), schulgliederung)) {
+				if (tmpJgKl.isNachfolgerVon(schuleStateImpl.schuljahr, tmpJg, this.manager().schulform(), schulgliederung)) {
 					result.add(kl);
 				}
 			}
@@ -176,7 +178,7 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 				if (tmpJgKl === null) {
 					continue;
 				}
-				if (tmpJgKl.isVorgaengerVon(this.manager().getSchuljahr(), tmpJg, this.manager().schulform(), schulgliederung)) {
+				if (tmpJgKl.isVorgaengerVon(schuleStateImpl.schuljahr, tmpJg, this.manager().schulform(), schulgliederung)) {
 					result.add(kl);
 				}
 			}

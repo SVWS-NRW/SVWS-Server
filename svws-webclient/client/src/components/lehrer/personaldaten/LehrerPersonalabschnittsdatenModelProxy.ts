@@ -3,6 +3,8 @@ import { LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerPersonalabschnitts
 import { ModelProxy, type LehrerListeManager } from "@ui";
 import { computed } from "vue";
 import { ArrayList } from '@core';
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 /**
  * Der spezielle ModelProxy für die Lehrerstammdaten
@@ -29,7 +31,7 @@ export class LehrerPersonalabschnittsdatenModelProxy extends ModelProxy<LehrerPe
 			const pseudo = new LehrerPersonalabschnittsdaten();
 			pseudo.id = -1;
 			pseudo.idLehrer = manager().auswahl().id;
-			pseudo.idSchuljahresabschnitt = manager().getSchuljahresabschnittAuswahl()?.id ?? -1;
+			pseudo.idSchuljahresabschnitt = abschnittStateImpl.auswahl.id;
 			return pseudo;
 		};
 		const listOfAutopatchProps: Iterable<keyof LehrerPersonalabschnittsdaten> = ["idRechtsverhaeltnis", "idBeschaeftigungsart", "idEinsatzstatus", "stammschulnummer"];
@@ -63,7 +65,7 @@ export class LehrerPersonalabschnittsdatenModelProxy extends ModelProxy<LehrerPe
 	}
 
 	rechtsverhaeltnis = computed<LehrerRechtsverhaeltnisKatalogEintrag | null>({
-		get: () => LehrerRechtsverhaeltnis.values().map(r => r.daten(this.manager().getSchuljahr()) ?? undefined)
+		get: () => LehrerRechtsverhaeltnis.values().map(r => r.daten(schuleStateImpl.schuljahr) ?? undefined)
 			.find(d => d?.id === this.proxy.idRechtsverhaeltnis) ?? null,
 		set: (value) => this.proxy.idRechtsverhaeltnis = value?.id ?? null,
 	});

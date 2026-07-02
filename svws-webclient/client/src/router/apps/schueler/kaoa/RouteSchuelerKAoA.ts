@@ -7,7 +7,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { api } from "~/router/Api";
-
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 const SchuelerKaoa = () => import("~/components/schueler/kaoa/SchuelerKaoa.vue");
 
@@ -27,7 +27,7 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 		try {
 			const { id } = RouteNode.getIntParams(params, ["id"]);
 			const auswahl = routeSchueler.data.manager.auswahl();
-			const schuljahr = routeSchueler.data.manager.getSchuljahr();
+			const schuljahr = schuleStateImpl.schuljahr;
 			if (!routeSchueler.data.manager.hasDaten()
 					|| (auswahl.status === SchuelerStatus.EXTERN.daten(schuljahr)?.id)
 					|| (auswahl.status === SchuelerStatus.EHEMALIGE.daten(schuljahr)?.id)

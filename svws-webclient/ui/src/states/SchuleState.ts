@@ -41,6 +41,15 @@ export interface SchuleState {
 	 */
 	get schulgliederungen(): List<Schulgliederung>;
 
+
+	/**
+	 * Gibt die Schulform der Schule zurück, wo der Benutzer angemeldet ist.
+	 *
+	 * @returns die Schulform
+	 */
+	get schuljahr(): number;
+
+
 	/**
 	 * Gibt den aktuellen Schulabschnitt zurück, in dem sich die Schule befindet.
 	 *

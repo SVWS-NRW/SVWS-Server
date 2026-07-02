@@ -121,8 +121,9 @@
 	import type { ComponentExposed } from 'vue-component-type-helpers';
 	import type { List, Sprachbelegung } from '@core';
 	import { ArrayList, Fach, Jahrgaenge, Schulform, Schulgliederung, Sprachreferenzniveau } from '@core';
-	import { GridManager, useSchuleState, useServerState, type SchuelerListeManager, type SvwsUiSelect } from '@ui';
+	import { GridManager, useSchuleState, useServerState, type SvwsUiSelect } from '@ui';
 	import { SchuelerSprachbelegungModelProxy } from './SchuelerSprachbelegungModelProxy';
+	import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 
 	const props = defineProps<{
 		sprachbelegungen: () => List<Sprachbelegung>;

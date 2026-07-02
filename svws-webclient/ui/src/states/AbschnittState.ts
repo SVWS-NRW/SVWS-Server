@@ -59,6 +59,30 @@ export interface AbschnittState {
 	 */
 	getBySchuljahrUndHalbjahr(schuljahr: number, halbjahr: number): Schuljahresabschnitt | null;
 
+	/**
+	 * Gibt zurück, ob der Schuljahresabschnitt der Auswahl mit dem aktuellen
+	 * Schuljahresabschnitt der Schule übereinstimmt.
+	 *
+	 * @return true, wenn die Schuljahresabschnitte übereinstimmen
+	 */
+	istSchuljahresabschnittAktuell(): boolean;
+
+	/**
+	 * Gibt zurück, ob sich bei dem Schuljahresabschnitt der Auswahl um einen Abschnitt in Planung handelt,
+	 * d.h. ob der Schuljahresabschnitt der Auswahl nach dem aktuellen Schuljahresabschnitt der Schule liegt.
+	 *
+	 * @return true, wenn der Schuljahresabschnitt der Auswahl ein Planungsabschnitt ist
+	 */
+	istSchuljahresabschnittPlanung(): boolean;
+
+	/**
+	 * Gibt zurück, ob sich bei dem Schuljahresabschnitt der Auswahl um einen
+	 * Abschnitt in der Vergangengheit handelt, d.h. ob der Schuljahresabschnitt
+	 * der Auswahl vor dem aktuellen Schuljahresabschnitt der Schule liegt.
+	 *
+	 * @return true, wenn der Schuljahresabschnitt der Auswahl ein vergangener Abschnitt ist
+	 */
+	istSchuljahresabschnittVergangenheit(): boolean;
 }
 
 export const AbschnittStateKey: InjectionKey<AbschnittState> = Symbol('AbschnittState');

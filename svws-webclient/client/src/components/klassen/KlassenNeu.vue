@@ -71,7 +71,7 @@
 	});
 
 	function getSelectText(value: Klassenart | Schulgliederung | AllgemeinbildendOrganisationsformen | BerufskollegOrganisationsformen | WeiterbildungskollegOrganisationsformen) {
-		return value.daten(props.manager().getSchuljahr())?.kuerzel + ' - ' + value.daten(props.manager().getSchuljahr())?.text;
+		return value.daten(schuleState.schuljahr)?.kuerzel + ' - ' + value.daten(schuleState.schuljahr)?.text;
 	}
 
 	function getSelectTextJahrgang(jg: JahrgangsDaten): string {
@@ -97,21 +97,21 @@
 	function initWithDefaults(daten: KlassenDaten) {
 		const schulgliederungDefault = Schulgliederung.getDefault(schuleState.schulform);
 		const schulgliederung = (schulgliederungDefault === null)
-			? Schulgliederung.getBySchuljahrAndSchulform(props.manager().getSchuljahr(), schuleState.schulform).getFirst()
+			? Schulgliederung.getBySchuljahrAndSchulform(schuleState.schuljahr, schuleState.schulform).getFirst()
 			: schulgliederungDefault;
-		const idSchulgliederung = schulgliederung.daten(props.manager().getSchuljahr())?.id ?? -1;
+		const idSchulgliederung = schulgliederung.daten(schuleState.schuljahr)?.id ?? -1;
 		daten.kuerzel = "";
 		daten.beschreibung = "";
 		daten.idJahrgang = null;
 		daten.parallelitaet = null;
 		daten.idSchulgliederung = idSchulgliederung;
 		if (schuleState.schulform.istAllgemeinbildend()) {
-			daten.idKlassenart = Klassenart.getDefault(schuleState.schulform)?.daten(props.manager().getSchuljahr())?.id ?? null;
-			daten.idAllgemeinbildendOrganisationsform = AllgemeinbildendOrganisationsformen.GANZTAG.daten(props.manager().getSchuljahr())?.id ?? null;
+			daten.idKlassenart = Klassenart.getDefault(schuleState.schulform)?.daten(schuleState.schuljahr)?.id ?? null;
+			daten.idAllgemeinbildendOrganisationsform = AllgemeinbildendOrganisationsformen.GANZTAG.daten(schuleState.schuljahr)?.id ?? null;
 		} else if (schuleState.schulform.istBerufsbildend()) {
-			daten.idBerufsbildendOrganisationsform = BerufskollegOrganisationsformen.VOLLZEIT.daten(props.manager().getSchuljahr())?.id ?? null;
+			daten.idBerufsbildendOrganisationsform = BerufskollegOrganisationsformen.VOLLZEIT.daten(schuleState.schuljahr)?.id ?? null;
 		} else if (schuleState.schulform.istWeiterbildung()) {
-			daten.idWeiterbildungOrganisationsform = WeiterbildungskollegOrganisationsformen.VOLLZEIT.daten(props.manager().getSchuljahr())?.id ?? null;
+			daten.idWeiterbildungOrganisationsform = WeiterbildungskollegOrganisationsformen.VOLLZEIT.daten(schuleState.schuljahr)?.id ?? null;
 		}
 	}
 

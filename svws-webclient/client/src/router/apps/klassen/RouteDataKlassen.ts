@@ -10,10 +10,11 @@ import { routeKlasseGruppenprozesse } from "./RouteKlassenGruppenprozesse";
 import type { RouteNode } from "~/router/RouteNode";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeKlassenNeu } from "~/router/apps/klassen/RouteKlassenNeu";
-import { KlassenListeManager, ViewType } from "@ui";
+import { ViewType } from "@ui";
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
+import { KlassenListeManager } from "~/states/klassen/KlassenListeManager";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 

@@ -77,12 +77,13 @@
 <script setup lang="ts">
 
 	import type { AbteilungenNeuProps } from "~/components/schule/kataloge/abteilungen/AbteilungenNeuProps";
-	import { type DataTableColumn, ViewType, SelectManager } from "@ui";
+	import { type DataTableColumn, ViewType, SelectManager, useAbschnittState } from "@ui";
 	import type { KlassenListeEintrag, List } from "@core";
 	import { ValidatorFehlerart, Abteilung, Arrays, BenutzerKompetenz } from "@core";
 	import { computed, ref, watch } from "vue";
 	import { AbteilungenModelProxy } from "~/components/schule/kataloge/abteilungen/modelproxy/AbteilungenModelProxy";
 
+	const abschnittState = useAbschnittState();
 	const props = defineProps<AbteilungenNeuProps>();
 
 	const columns: DataTableColumn[] = [{ key: "kuerzel", label: "Klasse" }];
@@ -127,7 +128,7 @@
 	}
 
 	function getTextFolgeAbschnitt() {
-		const folgeAbschnitt = props.manager().schuljahresabschnitte.get(props.manager().getSchuljahresabschnittAuswahl()?.idFolgeAbschnitt ?? -1);
+		const folgeAbschnitt = props.manager().schuljahresabschnitte.get(abschnittState.auswahl.idFolgeAbschnitt ?? -1);
 		if ((folgeAbschnitt === null) || folgeAbschnitt.schuljahr <= 0) {
 			return '';
 		}

@@ -85,8 +85,9 @@
 	import type { ComponentExposed } from 'vue-component-type-helpers';
 	import { ArrayList, Fach, Jahrgaenge, Schulform, Schulgliederung, Sprachpruefungniveau, Sprachreferenzniveau, Note } from '@core';
 	import type { List, Sprachpruefung } from '@core';
-	import { GridManager, useSchuleState, type SchuelerListeManager, type SvwsUiSelect } from '@ui';
+	import { GridManager, useSchuleState, type SvwsUiSelect } from '@ui';
 	import { SchuelerSprachpruefungModelProxy } from './SchuelerSprachpruefungModelProxy';
+	import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 
 	const props = defineProps<{
 		sprachpruefungen: () => List<Sprachpruefung>;
