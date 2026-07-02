@@ -42,6 +42,7 @@ import de.svws_nrw.asd.data.lehrer.LehrerMinderleistungsartKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerPflichtstundensollVollzeitKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerRechtsverhaeltnisKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerZugangsgrundKatalogEintrag;
+import de.svws_nrw.asd.data.schueler.AnrechnungsantragBKAZVOKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.BetreuungsartKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.EinschulungsartKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.HerkunftBildungsgangKatalogEintrag;
@@ -61,6 +62,7 @@ import de.svws_nrw.asd.data.schule.EinwilligungsschluesselKatalogEintrag;
 import de.svws_nrw.asd.data.schule.FachklasseKatalogEintrag;
 import de.svws_nrw.asd.data.schule.FloskelgruppenartKatalogEintrag;
 import de.svws_nrw.asd.data.schule.FoerderschwerpunktKatalogEintrag;
+import de.svws_nrw.asd.data.schule.FormBilingualerUnterrichtKatalogEintrag;
 import de.svws_nrw.asd.data.schule.FormOffenerGanztagKatalogEintrag;
 import de.svws_nrw.asd.data.schule.HerkunftsschulnummerKatalogEintrag;
 import de.svws_nrw.asd.data.schule.KindergartenbesuchKatalogEintrag;
@@ -108,6 +110,7 @@ import de.svws_nrw.asd.types.lehrer.LehrerMinderleistungsarten;
 import de.svws_nrw.asd.types.lehrer.LehrerPflichtstundensollVollzeit;
 import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
 import de.svws_nrw.asd.types.lehrer.LehrerZugangsgrund;
+import de.svws_nrw.asd.types.schueler.AnrechnungsantragBKAZVO;
 import de.svws_nrw.asd.types.schueler.Betreuungsart;
 import de.svws_nrw.asd.types.schueler.Einschulungsart;
 import de.svws_nrw.asd.types.schueler.HerkunftBildungsgang;
@@ -131,6 +134,7 @@ import de.svws_nrw.asd.types.schule.Einwilligungsschluessel;
 import de.svws_nrw.asd.types.schule.Fachklasse;
 import de.svws_nrw.asd.types.schule.Floskelgruppenart;
 import de.svws_nrw.asd.types.schule.Foerderschwerpunkt;
+import de.svws_nrw.asd.types.schule.FormBilingualerUnterricht;
 import de.svws_nrw.asd.types.schule.FormOffenerGanztag;
 import de.svws_nrw.asd.types.schule.Herkunftsschulnummer;
 import de.svws_nrw.asd.types.schule.Kindergartenbesuch;
@@ -554,6 +558,10 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 				"de/svws_nrw/asd/types/schule/DQRNiveau.json");
 		addSimple(Fachklasse.class, FachklasseKatalogEintrag.class,
 				"de/svws_nrw/asd/types/schule/Fachklasse.json");
+		addSimple(FormBilingualerUnterricht.class, FormBilingualerUnterrichtKatalogEintrag.class,
+				"de/svws_nrw/asd/types/schule/FormBilingualerUnterricht.json");
+		addSimple(AnrechnungsantragBKAZVO.class, AnrechnungsantragBKAZVOKatalogEintrag.class,
+				"de/svws_nrw/asd/types/schueler/AnrechnungsantragBKAZVO.json");
 
 	}
 

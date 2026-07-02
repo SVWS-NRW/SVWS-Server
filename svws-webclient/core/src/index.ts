@@ -160,6 +160,7 @@ export { LehrerPflichtstundensollVollzeitKatalogEintrag } from './asd/data/lehre
 export { LehrerRechtsverhaeltnisKatalogEintrag } from './asd/data/lehrer/LehrerRechtsverhaeltnisKatalogEintrag';
 export { LehrerStammdaten } from './asd/data/lehrer/LehrerStammdaten';
 export { LehrerZugangsgrundKatalogEintrag } from './asd/data/lehrer/LehrerZugangsgrundKatalogEintrag';
+export { AnrechnungsantragBKAZVOKatalogEintrag } from './asd/data/schueler/AnrechnungsantragBKAZVOKatalogEintrag';
 export { BetreuungsartKatalogEintrag } from './asd/data/schueler/BetreuungsartKatalogEintrag';
 export { EinschulungsartKatalogEintrag } from './asd/data/schueler/EinschulungsartKatalogEintrag';
 export { HerkunftBildungsgangKatalogEintrag } from './asd/data/schueler/HerkunftBildungsgangKatalogEintrag';
@@ -198,6 +199,7 @@ export { EinwilligungsschluesselKatalogEintrag } from './asd/data/schule/Einwill
 export { FachklasseKatalogEintrag } from './asd/data/schule/FachklasseKatalogEintrag';
 export { FloskelgruppenartKatalogEintrag } from './asd/data/schule/FloskelgruppenartKatalogEintrag';
 export { FoerderschwerpunktKatalogEintrag } from './asd/data/schule/FoerderschwerpunktKatalogEintrag';
+export { FormBilingualerUnterrichtKatalogEintrag } from './asd/data/schule/FormBilingualerUnterrichtKatalogEintrag';
 export { FormOffenerGanztagKatalogEintrag } from './asd/data/schule/FormOffenerGanztagKatalogEintrag';
 export { HerkunftsschulnummerKatalogEintrag } from './asd/data/schule/HerkunftsschulnummerKatalogEintrag';
 export { KindergartenbesuchKatalogEintrag } from './asd/data/schule/KindergartenbesuchKatalogEintrag';
@@ -268,6 +270,7 @@ export { LehrerMinderleistungsarten } from './asd/types/lehrer/LehrerMinderleist
 export { LehrerPflichtstundensollVollzeit } from './asd/types/lehrer/LehrerPflichtstundensollVollzeit';
 export { LehrerRechtsverhaeltnis } from './asd/types/lehrer/LehrerRechtsverhaeltnis';
 export { LehrerZugangsgrund } from './asd/types/lehrer/LehrerZugangsgrund';
+export { AnrechnungsantragBKAZVO } from './asd/types/schueler/AnrechnungsantragBKAZVO';
 export { Betreuungsart } from './asd/types/schueler/Betreuungsart';
 export { Einschulungsart } from './asd/types/schueler/Einschulungsart';
 export { HerkunftBildungsgang } from './asd/types/schueler/HerkunftBildungsgang';
@@ -291,6 +294,7 @@ export { Einwilligungsschluessel } from './asd/types/schule/Einwilligungsschlues
 export { Fachklasse } from './asd/types/schule/Fachklasse';
 export { Floskelgruppenart } from './asd/types/schule/Floskelgruppenart';
 export { Foerderschwerpunkt } from './asd/types/schule/Foerderschwerpunkt';
+export { FormBilingualerUnterricht } from './asd/types/schule/FormBilingualerUnterricht';
 export { FormOffenerGanztag } from './asd/types/schule/FormOffenerGanztag';
 export { Herkunftsschulnummer } from './asd/types/schule/Herkunftsschulnummer';
 export { Kindergartenbesuch } from './asd/types/schule/Kindergartenbesuch';
