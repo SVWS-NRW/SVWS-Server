@@ -14,22 +14,18 @@
 				</template>
 
 				<template #filterAdvanced>
-					<svws-ui-checkbox type="toggle"
-						v-model="showOnlyVisible">
+					<svws-ui-checkbox type="toggle" v-model="showOnlyVisible">
 						Nur Sichtbare
 					</svws-ui-checkbox>
 					<ui-select-multi label="Fach"
 						v-model="filterFaecher"
-						:manager="faecherManager"
-						searchable removable />
+						:manager="faecherManager" />
 					<ui-select-multi label="Schulgliederung"
 						v-model="filterSchulgliederungen"
-						:manager="schulgliederungManager"
-						searchable removable />
+						:manager="schulgliederungManager" />
 					<ui-select-multi label="Jahrgang"
 						v-model="filterJahrgaenge"
-						:manager="jahrgangManager"
-						searchable removable />
+						:manager="jahrgangManager" />
 				</template>
 
 				<template #cell(fach)="{ rowData }">
@@ -59,7 +55,7 @@
 
 <script setup lang="ts">
 	import type { DataTableColumn } from "@ui";
-	import { SelectManager, useRegionSwitch } from "@ui";
+	import { SelectManager, useRegionSwitch, useSchuleState } from "@ui";
 	import type { Ankreuzkompetenz, FachDaten, JahrgangsDaten } from "@core";
 	import { Schulgliederung } from "@core";
 	import { useKatalogAuswahl } from "~/composables/useKatalogAuswahl";
@@ -68,6 +64,8 @@
 
 	const props = defineProps<AnkreuzkompetenzenAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+	const schuleState = useSchuleState();
+
 	const manager = () => props.manager();
 	const {
 		filteredItems: filteredAnkreuzkompetenz,
@@ -87,8 +85,9 @@
 	];
 
 	const ASV_FACH = { id: -1, kuerzel: 'ASV', bezeichnung: 'ASV' } as FachDaten;
-	const faecher = computed<FachDaten[]>(() => [ASV_FACH, ...manager().faecherById.values()]);
-	const jahrgaenge = computed<JahrgangsDaten[]>(() => [...manager().jahrgaengeById.values()]);
+	const faecher = computed<Iterable<FachDaten>>(() => [ASV_FACH, ...manager().faecherById.values()]);
+	const schulgliederungen = computed<Iterable<Schulgliederung>>(() => Schulgliederung.data().getListBySchuljahrAndSchulform(schuleState.abschnitt.schuljahr, schuleState.schulform));
+	const jahrgaenge = computed<Iterable<JahrgangsDaten>>(() => manager().jahrgaengeById.values());
 
 	const filterFaecher = computed<FachDaten[]>({
 		get: () => manager().filterFaecher,
@@ -100,7 +99,7 @@
 
 	const filterSchulgliederungen = computed<Schulgliederung[]>({
 		get: () => manager().filterSchulgliederungen,
-		set: (value) => {
+		set: (value: Schulgliederung[]) => {
 			manager().filterSchulgliederungen = value;
 			void props.setFilter();
 		},
@@ -108,7 +107,7 @@
 
 	const filterJahrgaenge = computed<JahrgangsDaten[]>({
 		get: () => manager().filterJahrgaenge,
-		set: (value) => {
+		set: (value: JahrgangsDaten[]) => {
 			manager().filterJahrgaenge = value;
 			void props.setFilter();
 		},
@@ -121,7 +120,7 @@
 	});
 
 	const schulgliederungManager = new SelectManager<Schulgliederung>({
-		options: Schulgliederung.values(),
+		options: schulgliederungen,
 		optionDisplayText: s => s.name(),
 		selectionDisplayText: s => s.name(),
 	});
