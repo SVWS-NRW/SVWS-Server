@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLplaa10LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung",
+    "historie" : [ {
+      "praefix" : "LPLAA10",
+      "altes_kuerzel" : "BL1",
+      "zweig" : "Lehrer-Personaldaten-Lehramt-Lehrbefaehigung-Anerkennung",
+      "dtos" : "LehrerLehramtEintrag",
+      "ausfuehrungsbereich_ui" : "Reiter 'Personaldaten'",
+      "anzeigebereich_ui" : "Lehrämter, Anerkennungsgrund Lehrbefähigung (betreffende Zeile)",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["LPLAA02"],
+      "muss": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "SR", "SG", "BK", "SB"],
+      "kann" : [ ],
+      "hinweis": [ ],
+      "text" : "Der Anerkennungsgrund der Lehrbefähigung ist besetzt, es fehlt jedoch ein Eintrag im Feld 'Lehrbefähigungen'.",
+      "erlaeuterung" : "Ist der Fehler überhaupt sinnvoll? idLehrbefaehigung ist ein kleines long, also kann nicht leer sein?",
+      "bedingung" : "LehrerLehrbefaehigungEintrag.idAnerkennungsgrund ≠ @ ∧ LehrerLehrbefaehigungEintrag.idLehrbefaehigung = @",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }

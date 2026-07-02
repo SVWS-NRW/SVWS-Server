@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLplaa02LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung",
+    "historie" : [ {
+      "praefix" : "LPLAA02",
+      "altes_kuerzel" : "",
+      "zweig" : "Lehrer-Personaldaten-Lehramt-Lehrbefaehigung-Anerkennung",
+      "dtos" : "LehrerLehramtEintrag",
+      "ausfuehrungsbereich_ui" : "Reiter 'Personaldaten'",
+      "anzeigebereich_ui" : "Lehrämter, Anerkennungsgrund Lehrbefähigung (betreffende Zeile)",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["LPLAA01"],
+      "muss": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "SR", "SG", "BK", "SB"],
+      "kann" : [ ],
+      "hinweis": [ ],
+      "text" : "Der eingetragene Wert für das Feld 'Anerkennung Lehramt' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.",
+      "erlaeuterung" : "",
+      "bedingung" : "LehrerLehrbefaehigungEintrag.idAnerkennungsgrund ≙ einem gültigen Historieneintrag in LehrerLehramtAnerkennung.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }

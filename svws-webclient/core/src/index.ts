@@ -363,6 +363,10 @@ export { ValidatorLpla11LehrerPersonaldatenLehramtLehrbefaehigung } from './asd/
 export { ValidatorLpla12LehrerPersonaldatenLehramtLehrbefaehigung } from './asd/validate/lehrer/ValidatorLpla12LehrerPersonaldatenLehramtLehrbefaehigung';
 export { ValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung } from './asd/validate/lehrer/ValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung';
 export { ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung } from './asd/validate/lehrer/ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung';
+export { ValidatorLplaa00LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung } from './asd/validate/lehrer/ValidatorLplaa00LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung';
+export { ValidatorLplaa01LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung } from './asd/validate/lehrer/ValidatorLplaa01LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung';
+export { ValidatorLplaa02LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung } from './asd/validate/lehrer/ValidatorLplaa02LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung';
+export { ValidatorLplaaLehrerPersonaldatenLehramtLehrbefaehigungAnerkennung } from './asd/validate/lehrer/ValidatorLplaaLehrerPersonaldatenLehramtLehrbefaehigungAnerkennung';
 export { ValidatorLplf00LehrerPersonaldatenLehramtFachrichtung } from './asd/validate/lehrer/ValidatorLplf00LehrerPersonaldatenLehramtFachrichtung';
 export { ValidatorLplf01LehrerPersonaldatenLehramtFachrichtung } from './asd/validate/lehrer/ValidatorLplf01LehrerPersonaldatenLehramtFachrichtung';
 export { ValidatorLplf02LehrerPersonaldatenLehramtFachrichtung } from './asd/validate/lehrer/ValidatorLplf02LehrerPersonaldatenLehramtFachrichtung';
