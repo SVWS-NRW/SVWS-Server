@@ -168,6 +168,13 @@
 
 	const isValid = computed<boolean>(() => model.getAlleFehler().isEmpty() && model.proxy.schulnummerStatistik !== null);
 
+	function getSchulname(schule: SchulenKatalogEintrag) {
+		const bez1 = (schule.ABez1 ?? '').trim();
+		const bez2 = (schule.ABez2 ?? '').trim();
+		const bez3 = (schule.ABez3 ?? '').trim();
+		return (bez1 + ' ' + bez2 + ' ' + bez3).trim();
+	}
+
 	// befüllt das Formular mit den Werten der vorausgewählten Schule
 	function updateData(schule: SchulenKatalogEintrag | undefined | null) {
 		if (schule === undefined || schule === null) {
@@ -177,9 +184,8 @@
 
 		model.proxy.kurzbezeichnung = schule.KurzBez;
 		model.proxy.schulnummerStatistik = schule.SchulNr;
-		model.proxy.name = (schule.ABez1 ?? "") + (schule.ABez2 ?? "") + (schule.ABez3 ?? "");
-		const schulformWert = Schulform.data().getWertBySchluessel(schule.SF ?? "");
-		model.proxy.idSchulform = schulformWert === null ? null : Schulform.data().getEintragBySchuljahrUndWert(schuljahr.value, schulformWert)?.id ?? null;
+		model.proxy.name = getSchulname(schule);
+		model.proxy.idSchulform = Schulform.data().getEintragBySchuljahrUndSchluessel(schuljahr.value, schule.SF ?? "")?.id ?? null;
 		model.adresse.value = schule.Strasse;
 		model.proxy.plz = schule.PLZ;
 		model.proxy.ort = schule.Ort;

@@ -27,11 +27,13 @@ export class SchuleModelProxy extends ModelProxy<SchulEintrag> {
 		this.validate();
 	}
 
-	private addValidatoren(liste: () => Iterable<SchulEintrag>) {
+	private addValidatoren(alleSchulen: () => Iterable<SchulEintrag>) {
+		this.addBlockingValidator(new ValidatorSchuleKuerzel((): SchulEintrag => this.proxy, alleSchulen), 'kuerzel');
 
-		this.addBlockingValidator(new ValidatorSchuleKuerzel((): SchulEintrag => this.proxy, liste), 'kuerzel');
-		this.addBlockingValidator(new ValidatorSchuleKurzbezeichnung((): SchulEintrag => this.proxy, liste), 'kurzbezeichnung');
-		this.addBlockingValidator(new ValidatorSchuleSchulname((): SchulEintrag => this.proxy, liste), 'name');
+		this.addBlockingValidator(new ValidatorSchuleKurzbezeichnung((): SchulEintrag => this.proxy), 'kurzbezeichnung');
+
+		this.addBlockingValidator(new ValidatorSchuleSchulname((): SchulEintrag => this.proxy), 'name');
+
 		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.schulleiter, null, 40), 'schulleiter');
 		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.schulleiter, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'schulleiter');
 
