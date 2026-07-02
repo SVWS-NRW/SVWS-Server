@@ -13,7 +13,6 @@ import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.filterung.ReportingFilterService;
 import de.svws_nrw.module.reporting.parameter.ReportingParameterTypisiert;
-import de.svws_nrw.module.reporting.signing.DokumentSignierer;
 import de.svws_nrw.module.reporting.sortierung.ReportingSortierungService;
 import de.svws_nrw.module.reporting.types.schule.ProxyReportingBenutzer;
 
@@ -40,9 +39,6 @@ public class ReportingContext {
 
 	/** Service für die Erstellung von Filtern. */
 	private final ReportingFilterService filterService;
-
-	/** Signierer für die XSchule-Dokumente (Phase 1: Dummy-Signatur). */
-	private final DokumentSignierer dokumentSignierer;
 
 	/** Objekt zum aktuell angemeldeten Benutzer. */
 	private final ProxyReportingBenutzer benutzer;
@@ -103,8 +99,6 @@ public class ReportingContext {
 		this.sortierungService = new ReportingSortierungService(this.reportingParameterTypisiert, this.logger);
 		this.filterService = new ReportingFilterService(this.reportingParameterTypisiert, this.logger);
 		this.logger.logLn(LogLevel.DEBUG, 8, "Services für Sortierung und Filterung erfolgreich erzeugt.");
-		// Phase 1: Signierer mit Dummy-Signatur. In Phase 2 wird hier die echte Signaturanbindung eingezogen.
-		this.dokumentSignierer = new DokumentSignierer();
 		// WICHTIG: Während ihrer folgenden Initialisierung dürfen die Domänen-Repositories nur auf die
 		// Infrastruktur-Getter (conn(), logger(), sortierungService(), filterService()) zugreifen,
 		// da die Domänen-Repository-Felder zu diesem Zeitpunkt noch nicht gesetzt sind.
@@ -222,15 +216,6 @@ public class ReportingContext {
 	 */
 	public ReportingFilterService filterService() {
 		return filterService;
-	}
-
-	/**
-	 * Gibt den Signierer für die XSchule-Dokumente zurück (Phase 1: Dummy-Signatur).
-	 *
-	 * @return Der DokumentSignierer.
-	 */
-	public DokumentSignierer dokumentSignierer() {
-		return dokumentSignierer;
 	}
 
 
