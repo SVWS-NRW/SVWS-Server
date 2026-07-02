@@ -99,10 +99,10 @@
 			</div>
 			<div class="h-full grow overflow-y-auto flex flex-col">
 				<div class="pb-2">
-					<s-laufbahnplanung-fehler :fehlerliste="() => schueler.ergebnis.fehlercodes" :belegpruefungs-art="gostBelegpruefungsArt" />
+					<s-laufbahnplanung-fehler :fehlerliste="() => schueler.ergebnis.fehlercodes" :pruefungs-art="gostBelegpruefungsArt" />
 				</div>
 				<div>
-					<s-laufbahnplanung-informationen :fehlerliste="() => schueler.ergebnis.fehlercodes" :belegpruefungs-art="gostBelegpruefungsArt" />
+					<s-laufbahnplanung-informationen :fehlerliste="() => schueler.ergebnis.fehlercodes" />
 				</div>
 			</div>
 		</div>

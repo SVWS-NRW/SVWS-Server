@@ -5,7 +5,7 @@
 			<div class="svws-ui-tr" role="row">
 				<div class="svws-ui-td col-span-full align-middle" role="columnheader">
 					<span class="icon i-ri-checkbox-circle-fill shrink-0 icon-ui-success" v-if="belegungsfehler.size() === 0" />
-					{{ (belegungsfehler.size() === 0 ? 'Keine' : belegungsfehler.size()) }} {{ 'Laufbahnfehler' }} {{ gostLaufbahnplanungState.abiturdatenManager.getPruefungsArt().kuerzel }}
+					{{ (belegungsfehler.size() === 0 ? 'Keine' : belegungsfehler.size()) }} {{ 'Laufbahnfehler' }} {{ pruefungsArt().kuerzel }}
 				</div>
 			</div>
 		</template>
@@ -36,19 +36,19 @@
 	import type { GostBelegpruefungErgebnisFehler } from '../../../../../core/src/core/abschluss/gost/GostBelegpruefungErgebnisFehler';
 	import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
 	import { GostBelegungsfehlerArt } from '../../../../../core/src/core/abschluss/gost/GostBelegungsfehlerArt';
-	import { useGostLaufbahnplanungState } from '../../../states/GostLaufbahnplanungState';
+	import type { GostBelegpruefungsArt } from '../../../../../core/src/core/abschluss/gost/GostBelegpruefungsArt';
 
 	const props = withDefaults(defineProps<{
+		pruefungsArt: () => GostBelegpruefungsArt;
+		fehlerliste: () => List<GostBelegpruefungErgebnisFehler>;
 		scroll?: boolean;
 	}>(), {
 		scroll: false,
 	});
 
-	const gostLaufbahnplanungState = useGostLaufbahnplanungState();
-
 	const belegungsfehler = computed<List<GostBelegpruefungErgebnisFehler>>(() => {
 		const res = new ArrayList<GostBelegpruefungErgebnisFehler>();
-		for (const fehler of gostLaufbahnplanungState.gostBelegpruefungErgebnis.fehlercodes) {
+		for (const fehler of props.fehlerliste()) {
 			if (GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.BELEGUNG
 				|| GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.SCHRIFTLICHKEIT
 				|| GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.SCHULSPEZIFISCH) {

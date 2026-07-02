@@ -11,8 +11,9 @@
 		<div v-if="gostLaufbahnplanungState.abiturdatenManager.getBiligualenBildungsgang() !== null" class="mb-4">
 			<span class="font-bold">Hinweis:</span> Der Schüler befindet sich aktuell im Bilingualen Zweig ({{ gostLaufbahnplanungState.abiturdatenManager.getBiligualenBildungsgang() }})
 		</div>
-		<s-laufbahnplanung-fehler />
-		<s-laufbahnplanung-informationen />
+		<s-laufbahnplanung-fehler :fehlerliste="() => gostLaufbahnplanungState.gostBelegpruefungErgebnis.fehlercodes"
+			:pruefungs-art="gostLaufbahnplanungState.abiturdatenManager.getPruefungsArt" />
+		<s-laufbahnplanung-informationen :fehlerliste="() => gostLaufbahnplanungState.gostBelegpruefungErgebnis.fehlercodes" />
 		<s-laufbahnplanung-sprachpruefungen v-if="sprachendaten" />
 		<s-laufbahnplanung-fachkombinationen />
 	</div>
