@@ -96,7 +96,7 @@
 						</div>
 					</template>
 					<!-- E-Mail-Eingabefelder -->
-					<template v-if="(parameter.ausgabeformatOptionen.contains(ReportingAusgabeformat.EMAIL.getId())) && serverState.hasDev && (parameter.eMailDaten !== null)">
+					<template v-if="(parameter.ausgabeformatOptionen.contains(ReportingAusgabeformat.EMAIL.getId())) && serverState.hasAlpha && (parameter.eMailDaten !== null)">
 						<div class="border-2 border-ui-25 rounded-md p-2 my-2">
 							<div class="flex flex-col mb-2">
 								<div class="font-bold">E-Mail-Versand</div>

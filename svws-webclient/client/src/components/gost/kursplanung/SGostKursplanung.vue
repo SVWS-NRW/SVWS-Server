@@ -170,7 +170,7 @@
 
 	const dropdownList = computed(() => {
 		const actions = [{ text: "Schülerliste markierte Kurse", action: () => createReport("Schülerliste markierte Kurse", 'pdf'), default: true }];
-		if (serverState.hasDev) {
+		if (serverState.hasAlpha) {
 			actions.push({ text: "E-Mail mit Schülerliste markierte Kurse", action: () => createReport("Schülerliste markierte Kurse", 'email'), default: false });
 		}
 		actions.push(

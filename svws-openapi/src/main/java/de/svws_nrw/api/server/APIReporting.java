@@ -145,7 +145,7 @@ public class APIReporting {
 							schema = @Schema(implementation = ReportingParameter.class))) final ReportingParameter reportingParameter,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new ReportingFactory(conn, reportingParameter, ReportingAusgabeformat.EMAIL).createReportResponse(),
-				request, ServerMode.DEV,
+				request, ServerMode.ALPHA,
 				BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN,
 				BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN);
 	}

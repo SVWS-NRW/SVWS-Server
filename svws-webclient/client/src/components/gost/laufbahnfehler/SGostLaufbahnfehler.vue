@@ -269,7 +269,7 @@
 			{ text: `Laufbahnwahlbogen (gesamt, nur Belegung)`, action: () => downloadPDF("Laufbahnwahlbogen", true, false, false, false, 'pdf') },
 			{ text: `Laufbahnwahlbogen (einzeln, nur Belegung)`, action: () => downloadPDF("Laufbahnwahlbogen", true, false, false, true, 'pdf') },
 		];
-		if (serverState.hasDev) {
+		if (serverState.hasAlpha) {
 			actions.push({ text: `E-Mail mit Laufbahnwahlbogen`, action: () => downloadPDF("Laufbahnwahlbogen", false, false, false, false, 'email') },
 				{ text: `E-Mail mit Laufbahnwahlbogen (nur Belegung)`, action: () => downloadPDF("Laufbahnwahlbogen", true, false, false, false, 'email') });
 		}
