@@ -6,13 +6,13 @@ import type { EnmLerngruppenAuswahlListeManager } from "@ui";
 import { routeNotenmodul } from "./RouteNotenmodul";
 import { RouteNotenmodulMenuGroup } from "./RouteNotenmodulMenuGroup";
 import { RouteDataNotenmodulTeilleistungen } from "./RouteDataNotenmodulTeilleistungen";
-import { api } from "~/router/Api";
 import type { RouteApp } from "../RouteApp";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import type { NotenmodulTeilleistungenAuswahlProps } from "~/components/notenmodul/NotenmodulTeilleistungenAuswahlProps";
 import type { NotenmodulTeilleistungenAppProps } from "~/components/notenmodul/NotenmodulTeilleistungenAppProps";
 import { routeNotenmodulTeilleistungenData } from "./RouteNotenmodulTeilleistungenData";
 import type { RouteNode } from "~/router/RouteNode";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 const NotenmodulTeilleistungenApp = () => import("~/components/notenmodul/NotenmodulTeilleistungenApp.vue");
 const NotenmodulTeilleistungenAuswahl = () => import("~/components/notenmodul/NotenmodulTeilleistungenAuswahl.vue");
@@ -41,7 +41,7 @@ export class RouteNotenmodulTeilleistungen extends RouteAuswahlNode<EnmLerngrupp
 			enmManager: () => routeNotenmodul.data.manager,
 		});
 		super.text = "Teilleistungen";
-		api.config.addElements([
+		configStateImpl.config.addElements([
 			new ConfigElement("notenmodul.teilleistungen.table.columns", "user", "null"),
 		]);
 		super.children = [

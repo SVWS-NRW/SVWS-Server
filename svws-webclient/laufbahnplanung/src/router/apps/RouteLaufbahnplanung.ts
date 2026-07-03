@@ -13,8 +13,6 @@ import { gostLaufbahnplanungStateImpl } from "~/states/GostLaufbahnplanungStateI
 
 export class RouteLaufbahnplanung extends RouteNode<unknown, RouteApp> {
 
-	private readonly gostLaufbahnplanungState = gostLaufbahnplanungStateImpl;
-
 	public constructor() {
 		super("laufbahnplanung", "laufbahnplanung", LaufbahnplanungOberstufe, null);
 		super.propHandler = (route) => this.getProps(route);
@@ -25,13 +23,13 @@ export class RouteLaufbahnplanung extends RouteNode<unknown, RouteApp> {
 		if (this.parent === undefined) {
 			return routeError.getRoute(new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert"));
 		}
-		if (!this.gostLaufbahnplanungState.hatAuswahl) {
+		if (!gostLaufbahnplanungStateImpl.hatAuswahl) {
 			return routeLadeDaten.getRoute();
 		}
 	}
 
 	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
-		await this.gostLaufbahnplanungState.clear();
+		await gostLaufbahnplanungStateImpl.clear();
 	}
 
 	public getRoute(): RouteLocationRaw {

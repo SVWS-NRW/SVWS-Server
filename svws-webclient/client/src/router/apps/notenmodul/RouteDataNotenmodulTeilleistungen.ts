@@ -1,5 +1,4 @@
 import { EnmLerngruppenAuswahlListeManager, ViewType } from "@ui";
-import { api } from "~/router/Api";
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import { routeNotenmodulTeilleistungenData } from "./RouteNotenmodulTeilleistungenData";
@@ -9,6 +8,7 @@ import type { ENMv2Lerngruppe, List, SimpleOperationResponse } from "@core";
 import { UnsupportedOperationException } from "@core";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 
 interface RouteStateNotenmodulTeilleistungen extends RouteStateAuswahlInterface<EnmLerngruppenAuswahlListeManager> {
@@ -60,7 +60,7 @@ export class RouteDataNotenmodulTeilleistungen extends RouteDataAuswahl<EnmLerng
 	}
 
 	get columnsVisible(): Map<string, boolean | null> {
-		const config = JSON.parse(api.config.getValue("notenmodul.teilleistungen.table.columns"));
+		const config = JSON.parse(configStateImpl.config.getValue("notenmodul.teilleistungen.table.columns"));
 		if (config === null) {
 			return routeNotenmodul.data.manager.spalten.mapSpaltenTeilleistungen;
 		}
@@ -68,7 +68,7 @@ export class RouteDataNotenmodulTeilleistungen extends RouteDataAuswahl<EnmLerng
 	}
 
 	setColumnsVisible = async (value: Map<string, boolean | null>) => {
-		await api.config.setValue('notenmodul.teilleistungen.table.columns', JSON.stringify([...value]));
+		await configStateImpl.config.setValue('notenmodul.teilleistungen.table.columns', JSON.stringify([...value]));
 	};
 
 }

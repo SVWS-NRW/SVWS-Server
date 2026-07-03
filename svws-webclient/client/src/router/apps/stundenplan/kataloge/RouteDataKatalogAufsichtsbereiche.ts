@@ -92,27 +92,30 @@ export class RouteDataKatalogAufsichtsbereiche extends RouteData<RouteStateKatal
 		this.commit();
 	};
 
-	setKatalogAufsichtsbereicheImportJSON = api.call(async (formData: FormData) => {
-		const jsonFile = formData.get("data");
-		if (!(jsonFile instanceof File)) {
-			return;
-		}
-		const json = await jsonFile.text();
-		const aufsichtsbereiche: Partial<StundenplanAufsichtsbereich>[] = JSON.parse(json);
-		const list = new ArrayList<Partial<StundenplanAufsichtsbereich>>();
-		const stundenplanManager = this.stundenplanManager;
-		for (const item of aufsichtsbereiche) {
-			if ((item.kuerzel !== undefined) && (stundenplanManager.aufsichtsbereichGetByKuerzelOrNull(item.kuerzel) === null)) {
-				delete item.id;
-				list.add(item);
+	setKatalogAufsichtsbereicheImportJSON = async (formData: FormData) => {
+		await api.call(async (formData: FormData) => {
+			const jsonFile = formData.get("data");
+			if (!(jsonFile instanceof File)) {
+				return;
 			}
-		}
-		if (list.isEmpty()) {
-			return;
-		}
-		const res = await api.server.addAufsichtsbereiche(list, api.schema);
-		stundenplanManager.aufsichtsbereichAddAll(res);
-		await routeStundenplan.data.reloadVorlagen();
-		this.setPatchedState({ stundenplanManager });
-	});
+			const json = await jsonFile.text();
+			const aufsichtsbereiche: Partial<StundenplanAufsichtsbereich>[] = JSON.parse(json);
+			const list = new ArrayList<Partial<StundenplanAufsichtsbereich>>();
+			const stundenplanManager = this.stundenplanManager;
+			for (const item of aufsichtsbereiche) {
+				if ((item.kuerzel !== undefined) && (stundenplanManager.aufsichtsbereichGetByKuerzelOrNull(item.kuerzel) === null)) {
+					delete item.id;
+					list.add(item);
+				}
+			}
+			if (list.isEmpty()) {
+				return;
+			}
+			const res = await api.server.addAufsichtsbereiche(list, api.schema);
+			stundenplanManager.aufsichtsbereichAddAll(res);
+			await routeStundenplan.data.reloadVorlagen();
+			this.setPatchedState({ stundenplanManager });
+		})(formData);
+	};
+
 }

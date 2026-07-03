@@ -1,13 +1,17 @@
 import { ref, shallowRef } from "vue";
 import type { BenutzerDaten, DBSchemaListeEintrag, List } from "@core";
 import { ApiServer, BenutzerKompetenz, DeveloperNotificationException, UserNotificationException, OpenApiError, JsonCoreTypeReader, ApiExternal } from "@core";
-import { Config } from "../../../ui/src/utils/Config";
 import { AES } from "~/utils/crypto/aes";
 import { AESAlgo } from "~/utils/crypto/aesAlgo";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { serverStateImpl } from "~/states/ServerStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
+import type { ConfigState } from "../../../ui/src/states/ConfigState";
 
 export class ApiConnection {
+
+	// Der State der Konfiguration
+	protected configState: ConfigState = configStateImpl;
 
 	// Gibt an, ob der Client beim Server authentifiziert ist
 	protected _authenticated = ref<boolean>(false);
@@ -48,22 +52,9 @@ export class ApiConnection {
 	// Enthält die Abiturjahrgänge, bei denen der Benutzer als Beratungslehrer funktionsbezogene Kompetenzen hat
 	protected _kompetenzenAbiturjahrgaenge = shallowRef<Set<number> | undefined>(undefined);
 
-	// Die aktuelle Konfiguration der Schule, sofern ein Login stattgefunden hat
-	protected _config = ref<Config | undefined>(undefined);
-
-	// Die aktuelle temporäre, nicht in der DB festgehaltene Konfiguration der Schule
-	protected _nonPersistentConfig = ref<Config>(new Config(async (_, __) => {}, async (_, __) => { }));
-
 	// Die Map mit den CoreTypeDaten
 	protected _mapCoreTypeData = ref<Map<string, any> | undefined>(undefined);
 
-
-	/**
-	 * Erstellt ein neues Objekt für die Verwaltung der API-Verbindung.
-	 */
-	public constructor() {
-		this._config.value = new Config(this.setConfigGlobal, this.setConfigUser);
-	}
 
 	// Gibt die Server-API zurück.
 	get api(): ApiServer {
@@ -139,19 +130,6 @@ export class ApiConnection {
 		return this._kompetenzenAbiturjahrgaenge.value;
 	}
 
-	// Gibt die Konfiguration für den angemeldeten Benutzer zurück, sofern ein Login stattgefunden hat
-	get config(): Config {
-		if (this._config.value === undefined) {
-			throw new DeveloperNotificationException("Eine Konfiguration ist nicht vorhanden.");
-		}
-		return this._config.value as Config;
-	}
-
-	// Gibt die nicht perisstente Konfiguration zurück
-	get nonPersistentConfig(): Config {
-		return this._nonPersistentConfig.value as Config;
-	}
-
 	// Gibt ein Promise zurück mit einem AES-Schlüssel
 	get aes(): AES {
 		const aes = this._aes.value;
@@ -168,26 +146,6 @@ export class ApiConnection {
 		}
 		return this._mapCoreTypeData.value;
 	}
-
-	/**
-	 * Setzt den Benutzer-spezifischen Konfigurationseintrag
-	 *
-	 * @param key    der Schlüssel des Konfigurationseintrags
-	 * @param value  der Wert des Konfigurationseintrags
-	 */
-	protected setConfigUser = async (key: string, value: string): Promise<void> => {
-		await this.api.setClientConfigUserKey(value, this.schema, 'SVWS-Client', key);
-	};
-
-	/**
-	 * Setzt den globalen Konfigurationseintrag
-	 *
-	 * @param key    der Schlüssel des Konfigurationseintrags
-	 * @param value  der Wert des Konfigurationseintrags
-	 */
-	protected setConfigGlobal = async (key: string, value: string): Promise<void> => {
-		await this.api.setClientConfigGlobalKey(value, this.schema, 'SVWS-Client', key);
-	};
 
 	/**
 	 * Versucht eine Verbindung zu dem SVWS-Server mit dem angegebenen Hostnamen aufzubauen.
@@ -311,29 +269,6 @@ export class ApiConnection {
 		return result;
 	}
 
-	/**
-	 * Liest die Client-Konfiguration vom Server und erstellt das zugehörige
-	 * TypeScript-Objekt.
-	 *
-	 * @returns das Konfigurationsobjekt
-	 */
-	protected async initConfig(): Promise<void> {
-		const cfg = await this.api.getClientConfig(this.schema, 'SVWS-Client');
-		const mapUser = new Map<string, string>();
-		for (const c of cfg.user) {
-			mapUser.set(c.key, c.value);
-		}
-		const mapGlobal = new Map<string, string>();
-		for (const c of cfg.global) {
-			mapGlobal.set(c.key, c.value);
-		}
-		this.config.mapGlobal = mapGlobal;
-		this.config.mapUser = mapUser;
-		// nicht-persistente Config ebenfalls anlegen
-		this.nonPersistentConfig.mapGlobal = new Map<string, string>();
-		this.nonPersistentConfig.mapUser = new Map<string, string>();
-	}
-
 
 	/**
 	 * Authentifiziert den angebenen Benutzer mit dem angegebenen Kennwort.
@@ -359,7 +294,7 @@ export class ApiConnection {
 			this._kompetenzenAbiturjahrgaenge.value = this.getKompetenzenAbiturjahrgaenge(this._benutzerdaten.value);
 			const aesKey = await AES.getKey256(password, username);
 			this._aes.value = new AES(AESAlgo.CBC, aesKey);
-			await this.initConfig();
+			await this.configState.init();
 		} catch (error) {
 			// Wenn Status 404, dann ist das Schema noch nicht initialisiert
 			if ((error instanceof OpenApiError) && (error.response?.status === 404)) {
@@ -378,10 +313,7 @@ export class ApiConnection {
 			this._kompetenzen.value = undefined;
 			this._kompetenzenKlasse.value = undefined;
 			this._kompetenzenAbiturjahrgaenge.value = undefined;
-			this.config.mapGlobal = new Map();
-			this.config.mapUser = new Map();
-			this.nonPersistentConfig.mapGlobal = new Map();
-			this.nonPersistentConfig.mapUser = new Map();
+			this.configState.clear();
 			schuleStateImpl.reset();
 			serverStateImpl.reset();
 			this._aes.value = undefined;
@@ -406,10 +338,7 @@ export class ApiConnection {
 		this._aes.value = undefined;
 		this._api = undefined;
 		this._apiExternal = undefined;
-		this.config.mapGlobal = new Map();
-		this.config.mapUser = new Map();
-		this.nonPersistentConfig.mapGlobal = new Map();
-		this.nonPersistentConfig.mapUser = new Map();
+		this.configState.clear();
 	};
 
 }

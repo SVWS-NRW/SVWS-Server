@@ -27,6 +27,7 @@ import { routeGostAbiturjahrNeu } from "./RouteGostAbiturjahrNeu";
 import { routeGostGruppenprozesse } from "./RouteGostGruppenprozesse";
 import { AppMenuGroup, ViewType } from "@ui";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 const SGostAuswahl = () => import("~/components/gost/SGostAuswahl.vue");
 const SGostApp = () => import("~/components/gost/SGostApp.vue");
@@ -62,7 +63,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 		super.defaultChild = routeGostFaecher;
 		super.menugroup = AppMenuGroup.MAIN;
 		super.icon = "i-ri-graduation-cap-line";
-		api.config.addElements([
+		configStateImpl.config.addElements([
 			new ConfigElement("gost.auswahl.filterNurAktuelle", "user", "true"),
 			new ConfigElement("gost.auswahl.abiturjahr", "user", "-1"),
 			new ConfigElement("gost.tab.selected", "user", ""),

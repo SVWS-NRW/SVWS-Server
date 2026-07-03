@@ -1,6 +1,5 @@
 import { reactive } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, Router, NavigationFailure, RouteParams } from "vue-router";
-import { createRouter, createWebHashHistory } from "vue-router";
 
 import { RouteNode } from "~/router/RouteNode";
 import { api } from "~/router/Api";
@@ -142,6 +141,10 @@ export class RouteManager {
 			throw new DeveloperNotificationException("Unzulässiger Zugriff auf den RouteManager, bevor eine Instanz erzeugt wurde.");
 		}
 		return manager;
+	}
+
+	public static get instance() {
+		return this.getInstanceOrException();
 	}
 
 	/**
@@ -440,11 +443,3 @@ export class RouteManager {
 		await RouteManager.doRoute(locationRaw);
 	};
 }
-
-// Initialisiere den Router
-export const router = createRouter({
-	history: createWebHashHistory(import.meta.env.BASE_URL),
-	routes: [],
-});
-
-export const routerManager = RouteManager.create(router);

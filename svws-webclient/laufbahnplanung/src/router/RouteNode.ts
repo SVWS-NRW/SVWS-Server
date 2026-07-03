@@ -2,8 +2,7 @@ import type { ComputedRef, Ref } from "vue";
 import { computed, ref } from "vue";
 import type { RouteComponent, RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordName, RouteRecordRaw } from "vue-router";
 import { useRoute } from "vue-router";
-
-import { routerManager } from "./RouteManager";
+import { RouteManager } from "./RouteManager";
 
 /**
  * Diese abstrakte Klasse ist die Basisklasse aller Knoten für
@@ -344,8 +343,8 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 		try {
 			return await this.beforeEach(to, to_params, from, from_params);
 		} catch (e) {
-			routerManager.errorcode = undefined;
-			routerManager.error = e instanceof Error ? e : new Error("Fehler beim Routing in doBeforeEach(" + to.name + ", " + from?.name + ")");
+			RouteManager.instance.errorcode = undefined;
+			RouteManager.instance.error = e instanceof Error ? e : new Error("Fehler beim Routing in doBeforeEach(" + to.name + ", " + from?.name + ")");
 			return { name: "error" };
 		}
 	}
@@ -441,8 +440,8 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 		try {
 			return await this.enter(to, to_params);
 		} catch (e) {
-			routerManager.errorcode = undefined;
-			routerManager.error = e instanceof Error ? e : new Error("Fehler beim Routing in doEnter(" + to.name + ")");
+			RouteManager.instance.errorcode = undefined;
+			RouteManager.instance.error = e instanceof Error ? e : new Error("Fehler beim Routing in doEnter(" + to.name + ")");
 			return { name: "error" };
 		}
 	}
@@ -479,8 +478,8 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 			}
 			return await this.update(to, to_params);
 		} catch (e) {
-			routerManager.errorcode = undefined;
-			routerManager.error = e instanceof Error ? e : new Error("Fehler beim Routing in doUpdate(" + to.name + ")");
+			RouteManager.instance.errorcode = undefined;
+			RouteManager.instance.error = e instanceof Error ? e : new Error("Fehler beim Routing in doUpdate(" + to.name + ")");
 			return { name: "error" };
 		}
 	}
@@ -506,8 +505,8 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 		try {
 			return await this.leaveBefore(from, from_params);
 		} catch (e) {
-			routerManager.errorcode = undefined;
-			routerManager.error = e instanceof Error ? e : new Error("Fehler beim Routing in doLeaveBefore(" + from.name + ")");
+			RouteManager.instance.errorcode = undefined;
+			RouteManager.instance.error = e instanceof Error ? e : new Error("Fehler beim Routing in doLeaveBefore(" + from.name + ")");
 			return { name: "error" };
 		}
 	}

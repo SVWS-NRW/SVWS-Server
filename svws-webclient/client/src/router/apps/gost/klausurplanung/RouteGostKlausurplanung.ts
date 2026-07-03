@@ -26,6 +26,7 @@ import { routeGostKlausurplanungProbleme } from "./RouteGostKlausurplanungProble
 import type { TabData } from "@ui";
 import { CONFIG_KEY_GOST_KLAUSURPLAN_VORGABENTOIGNORE } from "~/components/gost/klausurplanung/SGostKlausurplanungVorgabenIgnoreManager";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 
 const SGostKlausurplanung = () => import("~/components/gost/klausurplanung/SGostKlausurplanung.vue");
@@ -54,7 +55,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			routeGostKlausurplanungProbleme,
 		];
 		super.defaultChild = routeGostKlausurplanungVorgaben;
-		api.config.addElements([
+		configStateImpl.config.addElements([
 			new ConfigElement("gost.klausurplan.quartal", "user", "0"),
 			new ConfigElement("gost.klausurplan.zeigeAlleJahrgaenge", "user", "false"),
 			new ConfigElement("gost.klausurplan.kwWarnLimit", "user", "3"),
@@ -104,9 +105,9 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 				throw new DeveloperNotificationException("Fehler: Das Abiturjahr darf an dieser Stelle nicht undefined sein.");
 			}
 			// Füge ggf. die Konfiguration fpr die Routen-Parameter zur Config hinzu
-			if (!api.config.hasElement("gost.klausurplan.routeparams")) {
+			if (!configStateImpl.config.hasElement("gost.klausurplan.routeparams")) {
 				const strAbiturjahr = (abiturjahr < 0) ? "vorlage" : ("abi" + abiturjahr);
-				api.config.addElement(new ConfigElement("gost.klausurplan.routeparams." + strAbiturjahr, "user", ""));
+				configStateImpl.config.addElement(new ConfigElement("gost.klausurplan.routeparams." + strAbiturjahr, "user", ""));
 			}
 			// Prüfe, ob ggf. Routing-Parameter für den Abiturjahrgang wiederhergestellt werden sollen...
 			if (isEntering) {
@@ -175,7 +176,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			halbjahr: this.data.halbjahr,
 			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab),
 			getConfigNumberValue: routeGostKlausurplanung.data.getConfigNumberValue,
-			getObjectValue: api.config.getObjectValue.bind(api.config),
+			getObjectValue: configStateImpl.config.getObjectValue.bind(configStateImpl.config),
 		};
 	}
 

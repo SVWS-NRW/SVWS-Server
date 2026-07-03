@@ -12,6 +12,7 @@ import { NotenmodulConfigManagerSperrungen, type NotenmodulConfigManagerSperrung
 import { NotenmodulConfigManagerSichtbareSpalten } from "./NotenmodulConfigManagerSichtbareSpalten";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 
 interface RouteStateNotenmodulAdministration extends RouteStateAuswahlInterface<WenomAuswahlListeManager> {
@@ -41,10 +42,10 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 	}
 
 	get gruppierungAuswahl(): NotenmodulConfigManagerSperrungenGruppierung {
-		return api.config.getValue("notenmodul.konfiguration.tabelle.gruppierung") as NotenmodulConfigManagerSperrungenGruppierung;
+		return configStateImpl.config.getValue("notenmodul.konfiguration.tabelle.gruppierung") as NotenmodulConfigManagerSperrungenGruppierung;
 	}
 	setGruppierungAuswahl = async (value: NotenmodulConfigManagerSperrungenGruppierung) => {
-		await api.config.setValue('notenmodul.konfiguration.tabelle.gruppierung', value);
+		await configStateImpl.config.setValue('notenmodul.konfiguration.tabelle.gruppierung', value);
 	};
 
 	public async entferneDaten() {
@@ -306,208 +307,231 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		this.setPatchedState({ manager });
 	};
 
-	notenmodulGetLocalConfig = api.call(async (): Promise<void> => {
-		try {
-			const config = await api.server.getNotenmodulLocalConfig(api.schema);
-			const mapENMServerConfigGlobal = new HashMap<string, string>();
-			const mapENMServerConfigServer = new HashMap<string, string>();
-			for (const element of config.global) {
-				mapENMServerConfigGlobal.put(element.key, element.value);
-			}
-			for (const element of config.server) {
-				mapENMServerConfigServer.put(element.key, element.value);
-			}
-			this.setPatchedState({ mapNotenmodulConfigServer: mapENMServerConfigServer, mapNotenmodulConfigGlobal: mapENMServerConfigGlobal });
-		} catch {
-			return;
-		}
-	});
-
-	wenomGetServerConfig = api.call(async (): Promise<void> => {
-		try {
-			const res = await api.server.getENMServerConfig(api.schema, this.manager.auswahl().id);
-			if (res.success && (res.config !== null)) {
+	notenmodulGetLocalConfig = async (): Promise<void> => {
+		await api.call(async (): Promise<void> => {
+			try {
+				const config = await api.server.getNotenmodulLocalConfig(api.schema);
 				const mapENMServerConfigGlobal = new HashMap<string, string>();
 				const mapENMServerConfigServer = new HashMap<string, string>();
-				for (const element of res.config.global) {
+				for (const element of config.global) {
 					mapENMServerConfigGlobal.put(element.key, element.value);
 				}
-				for (const element of res.config.server) {
+				for (const element of config.server) {
 					mapENMServerConfigServer.put(element.key, element.value);
 				}
-				this.setPatchedState({ mapNotenmodulConfigGlobal: mapENMServerConfigGlobal, mapNotenmodulConfigServer: mapENMServerConfigServer });
-			} else {
-				throw new DeveloperNotificationException("Keine Konfiguration geladen");
+				this.setPatchedState({ mapNotenmodulConfigServer: mapENMServerConfigServer, mapNotenmodulConfigGlobal: mapENMServerConfigGlobal });
+			} catch {
+				return;
 			}
-		} catch {
-			return;
-		}
-	});
+		})();
+	};
 
-	notenmodulSetLocalConfigElement = api.call(async (data: ENMServerConfigElement): Promise <void> => {
-		try {
-			const res = await api.server.setNotenmodulLocalConfig(data, api.schema);
-			if (data.type === 'server') {
-				this._state.value.mapNotenmodulConfigServer.put(data.key, data.value);
-			} else {
-				this._state.value.mapNotenmodulConfigGlobal.put(data.key, data.value);
-			}
-			return res;
-		} catch { /* */ }
-	});
-
-	wenomSetServerConfigElement = api.call(async (data: ENMServerConfigElement): Promise <SimpleOperationResponse> => {
-		try {
-			const res = await api.server.setENMServerConfigElement(data, api.schema, this.manager.auswahl().id);
-			if (data.type === 'server') {
-				this._state.value.mapNotenmodulConfigServer.put(data.key, data.value);
-			} else {
-				this._state.value.mapNotenmodulConfigGlobal.put(data.key, data.value);
-			}
-			return res;
-		} catch (e) {
-			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
-				try {
-					const json = await e.response.text();
-					return SimpleOperationResponse.transpilerFromJSON(json);
-				} catch { /* */ }
-			}
-			const res = new SimpleOperationResponse();
-			res.success = false;
-			res.log.add(`Unerwarteter Fehler beim Setzen einer Serverkonfiguration aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
-			return res;
-		}
-	});
-
-	wenomCheck = api.call(async (id?: number): Promise<SimpleOperationResponse> => {
-		try {
-			return await api.server.checkENMServer(api.schema, id ?? this.manager.auswahl().id);
-		} catch (e) {
-			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
-				try {
-					const json = await e.response.text();
-					return SimpleOperationResponse.transpilerFromJSON(json);
-				} catch { /* */ }
-			}
-			const res = new SimpleOperationResponse();
-			res.success = false;
-			res.log.add(`Unerwarteter Fehler beim Aufruf der Checkmethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
-			return res;
-		}
-	});
-
-	wenomSetup = api.call(async (id?: number): Promise<boolean | SimpleOperationResponse> => {
-		try {
-			return await api.server.setupENMServer(api.schema, id ?? this.manager.auswahl().id);
-		} catch (e) {
-			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
-				if (e.response.status === 409) {
-					const res = new SimpleOperationResponse();
-					res.id = 409;
-					res.success = false;
-					res.log.add('Dem Server-Zertifikat wird aktuell nicht vertraut.');
-					return res;
+	wenomGetServerConfig = async (): Promise<void> => {
+		await api.call(async (): Promise<void> => {
+			try {
+				const res = await api.server.getENMServerConfig(api.schema, this.manager.auswahl().id);
+				if (res.success && (res.config !== null)) {
+					const mapENMServerConfigGlobal = new HashMap<string, string>();
+					const mapENMServerConfigServer = new HashMap<string, string>();
+					for (const element of res.config.global) {
+						mapENMServerConfigGlobal.put(element.key, element.value);
+					}
+					for (const element of res.config.server) {
+						mapENMServerConfigServer.put(element.key, element.value);
+					}
+					this.setPatchedState({ mapNotenmodulConfigGlobal: mapENMServerConfigGlobal, mapNotenmodulConfigServer: mapENMServerConfigServer });
+				} else {
+					throw new DeveloperNotificationException("Keine Konfiguration geladen");
 				}
-				try {
-					const json = await e.response.text();
-					return SimpleOperationResponse.transpilerFromJSON(json);
-				} catch { /* */ }
+			} catch {
+				return;
 			}
-			const res = new SimpleOperationResponse();
-			res.success = false;
-			res.log.add(`Unerwarteter Fehler beim Aufruf der Setupmethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
-			return res;
-		}
-	});
+		})();
+	};
 
-	wenomSynchronize = api.call(async (): Promise<SimpleOperationResponse> => {
-		try {
-			const res = await api.server.synchronizeENMDaten(api.schema, this.manager.auswahl().id);
-			await routeNotenmodul.data.entferneDaten();
-			await routeNotenmodul.data.ladeDaten();
-			return res;
-		} catch (e) {
-			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
-				try {
-					const json = await e.response.text();
-					return SimpleOperationResponse.transpilerFromJSON(json);
-				} catch { /* */ }
-			}
-			const res = new SimpleOperationResponse();
-			res.success = false;
-			res.log.add(`Unerwarteter Fehler beim Aufruf der Synchronisationsmethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
-			return res;
-		}
-	});
+	notenmodulSetLocalConfigElement = async (data: ENMServerConfigElement): Promise <void> => {
+		await api.call(async (data: ENMServerConfigElement): Promise <void> => {
+			try {
+				const res = await api.server.setNotenmodulLocalConfig(data, api.schema);
+				if (data.type === 'server') {
+					this._state.value.mapNotenmodulConfigServer.put(data.key, data.value);
+				} else {
+					this._state.value.mapNotenmodulConfigGlobal.put(data.key, data.value);
+				}
+				return res;
+			} catch { /* */ }
+		})(data);
+	};
 
-	wenomDownload = api.call(async (): Promise<SimpleOperationResponse> => {
-		try {
-			const res = await api.server.downloadENMDaten(api.schema, this.manager.auswahl().id);
-			await routeNotenmodul.data.entferneDaten();
-			await routeNotenmodul.data.ladeDaten();
-			return res;
-		} catch (e) {
-			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
-				try {
-					const json = await e.response.text();
-					return SimpleOperationResponse.transpilerFromJSON(json);
-				} catch { /* */ }
+	wenomSetServerConfigElement = async (data: ENMServerConfigElement): Promise <SimpleOperationResponse> => {
+		return await api.call(async (data: ENMServerConfigElement): Promise <SimpleOperationResponse> => {
+			try {
+				const res = await api.server.setENMServerConfigElement(data, api.schema, this.manager.auswahl().id);
+				if (data.type === 'server') {
+					this._state.value.mapNotenmodulConfigServer.put(data.key, data.value);
+				} else {
+					this._state.value.mapNotenmodulConfigGlobal.put(data.key, data.value);
+				}
+				return res;
+			} catch (e) {
+				if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
+					try {
+						const json = await e.response.text();
+						return SimpleOperationResponse.transpilerFromJSON(json);
+					} catch { /* */ }
+				}
+				const res = new SimpleOperationResponse();
+				res.success = false;
+				res.log.add(`Unerwarteter Fehler beim Setzen einer Serverkonfiguration aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
+				return res;
 			}
-			const res = new SimpleOperationResponse();
-			res.success = false;
-			res.log.add(`Unerwarteter Fehler beim Aufruf der Downloadmethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
-			return res;
-		}
-	});
+		})(data);
+	};
 
-	wenomUpload = api.call(async (): Promise<SimpleOperationResponse> => {
-		try {
-			return await api.server.uploadENMDaten(api.schema, this.manager.auswahl().id);
-		} catch (e) {
-			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
-				try {
-					const json = await e.response.text();
-					return SimpleOperationResponse.transpilerFromJSON(json);
-				} catch { /* */ }
+	wenomCheck = async (id?: number): Promise<SimpleOperationResponse> => {
+		return await api.call(async (id?: number): Promise<SimpleOperationResponse> => {
+			try {
+				return await api.server.checkENMServer(api.schema, id ?? this.manager.auswahl().id);
+			} catch (e) {
+				if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
+					try {
+						const json = await e.response.text();
+						return SimpleOperationResponse.transpilerFromJSON(json);
+					} catch { /* */ }
+				}
+				const res = new SimpleOperationResponse();
+				res.success = false;
+				res.log.add(`Unerwarteter Fehler beim Aufruf der Checkmethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
+				return res;
 			}
-			const res = new SimpleOperationResponse();
-			res.success = false;
-			res.log.add(`Unerwarteter Fehler beim Aufruf der Uploadmethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
-			return res;
-		}
-	});
+		})(id);
+	};
 
-	wenomTruncate = api.call(async (): Promise<SimpleOperationResponse> => {
-		try {
-			return await api.server.truncateENMServer(api.schema, this.manager.auswahl().id);
-		} catch (e) {
-			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
-				try {
-					const json = await e.response.text();
-					return SimpleOperationResponse.transpilerFromJSON(json);
-				} catch { /* */ }
+	wenomSetup = async (id?: number): Promise<boolean | SimpleOperationResponse> => {
+		return await api.call(async (id?: number): Promise<boolean | SimpleOperationResponse> => {
+			try {
+				return await api.server.setupENMServer(api.schema, id ?? this.manager.auswahl().id);
+			} catch (e) {
+				if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
+					if (e.response.status === 409) {
+						const res = new SimpleOperationResponse();
+						res.id = 409;
+						res.success = false;
+						res.log.add('Dem Server-Zertifikat wird aktuell nicht vertraut.');
+						return res;
+					}
+					try {
+						const json = await e.response.text();
+						return SimpleOperationResponse.transpilerFromJSON(json);
+					} catch { /* */ }
+				}
+				const res = new SimpleOperationResponse();
+				res.success = false;
+				res.log.add(`Unerwarteter Fehler beim Aufruf der Setupmethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
+				return res;
 			}
-			const res = new SimpleOperationResponse();
-			res.success = false;
-			res.log.add(`Unerwarteter Fehler beim Aufruf der Truncatemethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
-			return res;
-		}
-	});
+		})(id);
+	};
 
-	wenomReset = api.call(async (): Promise<SimpleOperationResponse> => {
-		try {
-			return await api.server.resetENMServer(api.schema, this.manager.auswahl().id);
-		} catch (e) {
-			if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
-				try {
-					const json = await e.response.text();
-					return SimpleOperationResponse.transpilerFromJSON(json);
-				} catch { /* */ }
+	wenomSynchronize = async (): Promise<SimpleOperationResponse> => {
+		return await api.call(async (): Promise<SimpleOperationResponse> => {
+			try {
+				const res = await api.server.synchronizeENMDaten(api.schema, this.manager.auswahl().id);
+				await routeNotenmodul.data.entferneDaten();
+				await routeNotenmodul.data.ladeDaten();
+				return res;
+			} catch (e) {
+				if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
+					try {
+						const json = await e.response.text();
+						return SimpleOperationResponse.transpilerFromJSON(json);
+					} catch { /* */ }
+				}
+				const res = new SimpleOperationResponse();
+				res.success = false;
+				res.log.add(`Unerwarteter Fehler beim Aufruf der Synchronisationsmethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
+				return res;
 			}
-			const res = new SimpleOperationResponse();
-			res.success = false;
-			res.log.add(`Unerwarteter Fehler beim Aufruf der Resetmethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
-			return res;
-		}
-	});
+		})();
+	};
+
+	wenomDownload = async (): Promise<SimpleOperationResponse> => {
+		return await api.call(async (): Promise<SimpleOperationResponse> => {
+			try {
+				const res = await api.server.downloadENMDaten(api.schema, this.manager.auswahl().id);
+				await routeNotenmodul.data.entferneDaten();
+				await routeNotenmodul.data.ladeDaten();
+				return res;
+			} catch (e) {
+				if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
+					try {
+						const json = await e.response.text();
+						return SimpleOperationResponse.transpilerFromJSON(json);
+					} catch { /* */ }
+				}
+				const res = new SimpleOperationResponse();
+				res.success = false;
+				res.log.add(`Unerwarteter Fehler beim Aufruf der Downloadmethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
+				return res;
+			}
+		})();
+	};
+
+	wenomUpload = async (): Promise<SimpleOperationResponse> => {
+		return await api.call(async (): Promise<SimpleOperationResponse> => {
+			try {
+				return await api.server.uploadENMDaten(api.schema, this.manager.auswahl().id);
+			} catch (e) {
+				if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
+					try {
+						const json = await e.response.text();
+						return SimpleOperationResponse.transpilerFromJSON(json);
+					} catch { /* */ }
+				}
+				const res = new SimpleOperationResponse();
+				res.success = false;
+				res.log.add(`Unerwarteter Fehler beim Aufruf der Uploadmethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
+				return res;
+			}
+		})();
+	};
+
+	wenomTruncate = async (): Promise<SimpleOperationResponse> => {
+		return await api.call(async (): Promise<SimpleOperationResponse> => {
+			try {
+				return await api.server.truncateENMServer(api.schema, this.manager.auswahl().id);
+			} catch (e) {
+				if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
+					try {
+						const json = await e.response.text();
+						return SimpleOperationResponse.transpilerFromJSON(json);
+					} catch { /* */ }
+				}
+				const res = new SimpleOperationResponse();
+				res.success = false;
+				res.log.add(`Unerwarteter Fehler beim Aufruf der Truncatemethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
+				return res;
+			}
+		})();
+	};
+
+	wenomReset = async (): Promise<SimpleOperationResponse> => {
+		return await api.call(async (): Promise<SimpleOperationResponse> => {
+			try {
+				return await api.server.resetENMServer(api.schema, this.manager.auswahl().id);
+			} catch (e) {
+				if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
+					try {
+						const json = await e.response.text();
+						return SimpleOperationResponse.transpilerFromJSON(json);
+					} catch { /* */ }
+				}
+				const res = new SimpleOperationResponse();
+				res.success = false;
+				res.log.add(`Unerwarteter Fehler beim Aufruf der Resetmethode aufgetreten: ${e instanceof Error ? e.message : 'unbekannt'}`);
+				return res;
+			}
+		})();
+	};
+
 }

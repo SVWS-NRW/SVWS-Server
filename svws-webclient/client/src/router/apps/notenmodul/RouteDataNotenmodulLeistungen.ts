@@ -10,6 +10,7 @@ import type { RouteParamsRawGeneric } from "vue-router";
 import { routeNotenmodulLeistungenData } from "./RouteNotenmodulLeistungenData";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 
 interface RouteStateNotenmodulLeistungen extends RouteStateAuswahlInterface<EnmLerngruppenAuswahlListeManager> {
@@ -62,7 +63,7 @@ export class RouteDataNotenmodulLeistungen extends RouteDataAuswahl<EnmLerngrupp
 	}
 
 	get columnsVisible(): Map<string, boolean | null> {
-		const config = JSON.parse(api.config.getValue("notenmodul.leistungen.table.columns"));
+		const config = JSON.parse(configStateImpl.config.getValue("notenmodul.leistungen.table.columns"));
 		if (config === null) {
 			return routeNotenmodul.data.manager.spalten.mapSpaltenLeistungen;
 		}
@@ -70,7 +71,7 @@ export class RouteDataNotenmodulLeistungen extends RouteDataAuswahl<EnmLerngrupp
 	}
 
 	setColumnsVisible = async (value: Map<string, boolean | null>) => {
-		await api.config.setValue('notenmodul.leistungen.table.columns', JSON.stringify([...value]));
+		await configStateImpl.config.setValue('notenmodul.leistungen.table.columns', JSON.stringify([...value]));
 	};
 
 }

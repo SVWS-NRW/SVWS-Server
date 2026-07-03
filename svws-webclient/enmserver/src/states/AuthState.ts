@@ -1,7 +1,8 @@
 import type { Schulform } from '@core/asd/types/schule/Schulform';
 import { DeveloperNotificationException } from '@core/core/exceptions/DeveloperNotificationException';
 import type { ServerMode } from '@core/core/types/ServerMode';
-import { inject, type InjectionKey } from 'vue';
+import { AppContext } from '@ui/AppContext';
+import { type InjectionKey } from 'vue';
 
 /**
  *  Die Schnittstelle für den Zustand der Authentifizierung im Client
@@ -99,7 +100,7 @@ export interface AuthState {
 export const AuthStateKey: InjectionKey<AuthState> = Symbol('AuthState');
 
 export function useAuthState(): AuthState {
-	const auth = inject(AuthStateKey);
+	const auth = AppContext.instance.inject(AuthStateKey);
 	if (auth === undefined) {
 		throw new DeveloperNotificationException("Es wurde keine Instanz des AuthState über provide in der main.ts eingebunden.");
 	}

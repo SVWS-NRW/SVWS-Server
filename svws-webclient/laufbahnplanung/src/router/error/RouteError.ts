@@ -4,7 +4,7 @@ import { RouteNode } from "~/router/RouteNode";
 
 import SError from "~/components/error/SError.vue";
 import type { ErrorProps } from "~/components/error/SErrorProps";
-import { routerManager } from "~/router/RouteManager";
+import { RouteManager } from "~/router/RouteManager";
 
 
 export class RouteError extends RouteNode<unknown, any> {
@@ -25,17 +25,17 @@ export class RouteError extends RouteNode<unknown, any> {
 	}
 
 	public getRoute(error?: Error, errorcode?: number): RouteLocationRaw {
-		routerManager.resetErrorState();
-		routerManager.errorcode = errorcode;
-		routerManager.error = error;
+		RouteManager.instance.resetErrorState();
+		RouteManager.instance.errorcode = errorcode;
+		RouteManager.instance.error = error;
 		const params = errorcode === undefined ? {} : { errorcode };
 		return { name: this.name, params: params };
 	}
 
 	public getProps(): ErrorProps {
 		return {
-			code: routerManager.errorcode,
-			error: routerManager.error,
+			code: RouteManager.instance.errorcode,
+			error: RouteManager.instance.error,
 		};
 	}
 

@@ -21,6 +21,7 @@ import type { LehrerAppProps } from "~/components/lehrer/LehrerAppProps";
 import type { RouteNode } from "~/router/RouteNode";
 import type { RouteLocationRaw, RouteParams } from "vue-router";
 import { Katalog } from "~/cache/Katalog";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 const LehrerAuswahl = () => import("~/components/lehrer/LehrerAuswahl.vue");
 const LehrerApp = () => import("~/components/lehrer/LehrerApp.vue");
@@ -55,7 +56,7 @@ export class RouteLehrer extends RouteAuswahlNode<LehrerListeManager, RouteDataL
 			...props,
 			gotoDefaultView: this.data.gotoDefaultView,
 		});
-		api.config.addElements([
+		configStateImpl.config.addElements([
 			new ConfigElement("lehrer.auswahl.filterNurSichtbar", "user", "true"),
 			new ConfigElement("lehrer.auswahl.filterNurStatistikrelevant", "user", "true"),
 		]);

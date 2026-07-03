@@ -17,6 +17,7 @@ import { ConfigElement } from "../../../../../../ui/src/utils/Config";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeError } from "~/router/error/RouteError";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 const SGostKursplanung = () => import("~/components/gost/kursplanung/SGostKursplanung.vue");
 const SGostKursplanungAuswahl = () => import("~/components/gost/kursplanung/SGostKursplanungAuswahl.vue");
@@ -39,7 +40,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		this.isHidden = (params?: RouteParams) => {
 			return this.checkHidden(params);
 		};
-		api.config.addElements([
+		configStateImpl.config.addElements([
 			new ConfigElement("gost.kursplanung.kursansicht.ausgeblendet", "user", "nichts"), // nichts, alles, schienen
 			new ConfigElement("gost.kursplanung.kursansicht.sortierung", "user", "kursart"),
 			new ConfigElement("gost.kursplanung.kursansicht.zeigeSchienenbezeichnung", "user", "false"),

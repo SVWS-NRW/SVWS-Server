@@ -102,27 +102,29 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 		this.setPatchedState({ raumListeManager });
 	};
 
-	setKatalogRaeumeImportJSON = api.call(async (formData: FormData) => {
-		const jsonFile = formData.get("data");
-		if (!(jsonFile instanceof File)) {
-			return;
-		}
-		const json = await jsonFile.text();
-		const raeume: Partial<Raum>[] = JSON.parse(json);
-		const list = new ArrayList<Partial<Raum>>();
-		const raumListeManager = this.raumListeManager;
-		for (const item of raeume) {
-			if ((item.kuerzel !== undefined) && (raumListeManager.getByKuerzelOrNull(item.kuerzel) === null)) {
-				delete item.id;
-				list.add(item);
+	setKatalogRaeumeImportJSON = async (formData: FormData) => {
+		await api.call(async (formData: FormData) => {
+			const jsonFile = formData.get("data");
+			if (!(jsonFile instanceof File)) {
+				return;
 			}
-		}
-		if (list.isEmpty()) {
-			return;
-		}
-		const res = await api.server.addRaeume(list, api.schema);
-		raumListeManager.liste.addAll(res);
-		await routeStundenplan.data.reloadVorlagen();
-		this.setPatchedState({ raumListeManager });
-	});
+			const json = await jsonFile.text();
+			const raeume: Partial<Raum>[] = JSON.parse(json);
+			const list = new ArrayList<Partial<Raum>>();
+			const raumListeManager = this.raumListeManager;
+			for (const item of raeume) {
+				if ((item.kuerzel !== undefined) && (raumListeManager.getByKuerzelOrNull(item.kuerzel) === null)) {
+					delete item.id;
+					list.add(item);
+				}
+			}
+			if (list.isEmpty()) {
+				return;
+			}
+			const res = await api.server.addRaeume(list, api.schema);
+			raumListeManager.liste.addAll(res);
+			await routeStundenplan.data.reloadVorlagen();
+			this.setPatchedState({ raumListeManager });
+		})(formData);
+	};
 }

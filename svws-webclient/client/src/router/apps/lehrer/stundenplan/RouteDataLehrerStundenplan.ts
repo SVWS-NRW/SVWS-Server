@@ -5,6 +5,7 @@ import { RouteManager } from "~/router/RouteManager";
 
 import { routeLehrerStundenplan } from "~/router/apps/lehrer/stundenplan/RouteLehrerStundenplan";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 
 interface RouteStateLehrerDataStundenplan extends RouteStateInterface {
@@ -76,11 +77,11 @@ export class RouteDataLehrerStundenplan extends RouteData<RouteStateLehrerDataSt
 	}
 
 	get ganzerStundenplan(): boolean {
-		return api.config.getValue("lehrer.stundenplan.ganzerStundenplan") === 'true';
+		return configStateImpl.config.getValue("lehrer.stundenplan.ganzerStundenplan") === 'true';
 	}
 
 	setGanzerStundenplan = async (value: boolean) => {
-		await api.config.setValue("lehrer.stundenplan.ganzerStundenplan", value ? "true" : "false");
+		await configStateImpl.config.setValue("lehrer.stundenplan.ganzerStundenplan", value ? "true" : "false");
 	};
 
 	public async ladeListe(idLehrer: number): Promise<boolean> {

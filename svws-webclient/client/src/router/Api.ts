@@ -1,5 +1,4 @@
 import type { AES } from "~/utils/crypto/aes";
-import type { Config } from "../../../ui/src/utils/Config";
 import type { List, DBSchemaListeEintrag, ApiServer, ApiExternal, LehrerListeEintrag, SchuelerListeEintrag, KlassenDaten, KursDaten, JahrgangsDaten, BenutzerDaten, BenutzerKompetenz } from "@core";
 import { BenutzerTyp, DeveloperNotificationException } from "@core";
 
@@ -212,22 +211,6 @@ class Api {
 		return this.benutzerdaten.typID;
 	}
 
-
-	/// --- Die Konfiguration
-
-	/**
-	 * Gibt die benutzerspezifische und globale Konfiguration zurück.
-	 */
-	public get config(): Config {
-		return this.conn.config;
-	}
-
-	/**
-	 * Gibt die benutzerspezifische und globale nicht persistierte Konfiguration zurück.
-	 */
-	public get nonPersistentConfig(): Config {
-		return this.conn.nonPersistentConfig;
-	}
 
 	/// --- Methoden für den einfachen Api-Zugriff
 

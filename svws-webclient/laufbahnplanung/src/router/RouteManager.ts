@@ -1,6 +1,7 @@
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { AppContext } from "@ui/AppContext";
 import { reactive } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, Router, NavigationFailure } from "vue-router";
-import { createRouter, createWebHashHistory } from "vue-router";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/apps/RouteApp";
@@ -40,6 +41,18 @@ export class RouteManager {
 		// Füge die Haupt-Routen hinzu
 		this.router.addRoute(routeError.record);
 		this.router.addRoute(routeApp.record);
+	}
+
+	public static getInstanceOrException(): RouteManager {
+		const manager = RouteManager._instance;
+		if (manager === undefined) {
+			throw new DeveloperNotificationException("Unzulässiger Zugriff auf den RouteManager, bevor eine Instanz erzeugt wurde.");
+		}
+		return manager;
+	}
+
+	public static get instance() {
+		return this.getInstanceOrException();
 	}
 
 	public get errorcode(): number | undefined {
@@ -324,11 +337,3 @@ export class RouteManager {
 	}
 
 }
-
-// Initialisiere den Router
-export const router = createRouter({
-	history: createWebHashHistory(import.meta.env.BASE_URL),
-	routes: [],
-});
-
-export const routerManager = RouteManager.create(router);

@@ -7,6 +7,7 @@ import { routeKlassen, type RouteKlassen } from "~/router/apps/klassen/RouteKlas
 import { RouteDataKlassenStundenplan } from "~/router/apps/klassen/stundenplan/RouteDataKlassenStundenplan";
 import { ConfigElement } from "../../../../../../ui/src/utils/Config";
 import { api } from "~/router/Api";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 const KlassenStundenplan = () => import("~/components/klassen/stundenplan/KlassenStundenplan.vue");
 
@@ -19,7 +20,7 @@ export class RouteKlassenStundenplan extends RouteNode<RouteDataKlassenStundenpl
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
 		super.children = [];
-		api.config.addElements([
+		configStateImpl.config.addElements([
 			new ConfigElement("klasse.stundenplan.ganzerStundenplan", "user", "true"),
 		]);
 	}

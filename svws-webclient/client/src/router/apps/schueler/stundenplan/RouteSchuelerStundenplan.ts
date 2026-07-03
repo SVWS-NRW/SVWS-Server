@@ -7,6 +7,7 @@ import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteS
 import { RouteDataSchuelerStundenplan } from "~/router/apps/schueler/stundenplan/RouteDataSchuelerStundenplan";
 import { ConfigElement } from "../../../../../../ui/src/utils/Config";
 import { api } from "~/router/Api";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 
 const SSchuelerStundenplan = () => import("~/components/schueler/stundenplan/SSchuelerStundenplan.vue");
@@ -19,7 +20,7 @@ export class RouteSchuelerStundenplan extends RouteNode<RouteDataSchuelerStunden
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
 		super.children = [];
-		api.config.addElements([
+		configStateImpl.config.addElements([
 			new ConfigElement("schueler.stundenplan.ganzerStundenplan", "user", "true"),
 		]);
 	}

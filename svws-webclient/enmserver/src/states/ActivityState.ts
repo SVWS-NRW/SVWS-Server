@@ -1,5 +1,6 @@
 import { DeveloperNotificationException } from '@core/core/exceptions/DeveloperNotificationException';
-import { inject, type InjectionKey } from 'vue';
+import { AppContext } from '@ui/AppContext';
+import { type InjectionKey } from 'vue';
 
 /**
  *  Die Schnittstelle für den Zustand der Authentifizierung im Client
@@ -18,7 +19,7 @@ export interface ActivityState {
 export const ActivityStateKey: InjectionKey<ActivityState> = Symbol('ActivityState');
 
 export function useActivityState(): ActivityState {
-	const activityState = inject(ActivityStateKey);
+	const activityState = AppContext.instance.inject(ActivityStateKey);
 	if (activityState === undefined) {
 		throw new DeveloperNotificationException("Es wurde keine Instanz des ActivityState über provide in der main.ts eingebunden.");
 	}

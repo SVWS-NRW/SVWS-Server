@@ -1,24 +1,19 @@
 import { createApp } from "vue";
-import { router } from "./router/RouteManager";
 
 import "@ui/assets/styles/index.css";
 import "./main.css";
 
 import SWrapper from "~/components/SWrapper.vue";
-import { ActivityStateKey } from "./states/ActivityState";
-import { activityStateImpl } from "./states/ActivityStateImpl";
-import { AuthStateKey } from "./states/AuthState";
-import { authStateImpl } from "./states/AuthStateImpl";
-import { AuskunftStateKey } from "@ui/states/AuskunftState";
 import { auskunftStateImpl } from "./states/AuskunftStateImpl";
+import { registerStates } from "./states/registerStates";
+import { AppContext } from "@ui/AppContext";
+import { RouteManager } from "./router/RouteManager";
 
 await auskunftStateImpl.init();
 
-const app = createApp(SWrapper);
-app.use(router);
-app.provide(ActivityStateKey, activityStateImpl);
-app.provide(AuthStateKey, authStateImpl);
-app.provide(AuskunftStateKey, auskunftStateImpl);
+const context = AppContext.init(createApp(SWrapper));
+RouteManager.create(AppContext.instance.router);
 
-await router.isReady();
-app.mount("#app");
+registerStates();
+
+await context.mount();

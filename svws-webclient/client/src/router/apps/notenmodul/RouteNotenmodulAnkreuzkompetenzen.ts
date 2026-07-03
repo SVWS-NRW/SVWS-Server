@@ -14,6 +14,7 @@ import type { NotenmodulAnkreuzkompetenzenAuswahlProps } from "~/components/note
 import { RouteDataNotenmodulAnkreuzkompetenzen } from "./RouteDataNotenmodulAnkreuzkompetenzen";
 import { routeNotenmodulAnkreuzkompetenzenData } from "./RouteNotenmodulAnkreuzkompetenzenData";
 import { routeNotenmodulLeistungen } from "./RouteNotenmodulLeistungen";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 const NotenmodulAnkreuzkompetenzenApp = () => import("~/components/notenmodul/NotenmodulAnkreuzkompetenzenApp.vue");
 const NotenmodulAnkreuzkompetenzenAuswahl = () => import("~/components/notenmodul/NotenmodulAnkreuzkompetenzenAuswahl.vue");
@@ -43,7 +44,7 @@ export class RouteNotenmodulAnkreuzkompetenzen extends RouteAuswahlNode<EnmLerng
 		});
 		super.text = "Ankreuzkompetenzen";
 		this.isHidden = () => this.checkHidden();
-		api.config.addElements([
+		configStateImpl.config.addElements([
 			new ConfigElement("notenmodul.ankreuzkompetenzen.table.columns", "user", "null"),
 		]);
 		super.children = [

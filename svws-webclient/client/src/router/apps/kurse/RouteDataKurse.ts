@@ -14,6 +14,7 @@ import { routeKurseGruppenprozesse } from "./RouteKurseGruppenprozesse";
 import { routeKurseNeu } from "./RouteKurseNeu";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 type RouteStateKurse = RouteStateAuswahlInterface<KursListeManager>;
 
@@ -38,11 +39,11 @@ export class RouteDataKurse extends RouteDataAuswahl<KursListeManager, RouteStat
 	}
 
 	get filterNurSichtbar(): boolean {
-		return api.config.getValue("kurse.auswahl.filterNurSichtbar") === 'true';
+		return configStateImpl.config.getValue("kurse.auswahl.filterNurSichtbar") === 'true';
 	}
 
 	setFilterNurSichtbar = async (value: boolean) => {
-		await api.config.setValue('kurse.auswahl.filterNurSichtbar', value ? "true" : "false");
+		await configStateImpl.config.setValue('kurse.auswahl.filterNurSichtbar', value ? "true" : "false");
 	};
 
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateKurse>> {

@@ -13,6 +13,7 @@ import { ConfigElement } from "../../../../../../ui/src/utils/Config";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeError } from "~/router/error/RouteError";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 const SGostLaufbahnfehler = () => import("~/components/gost/laufbahnfehler/SGostLaufbahnfehler.vue");
 
@@ -29,7 +30,7 @@ export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehl
 		this.isHidden = (params?: RouteParams) => {
 			return this.checkHidden(params);
 		};
-		api.config.addElements([
+		configStateImpl.config.addElements([
 			new ConfigElement("gost.laufbahnfehler.filterFehler", "user", "true"),
 			new ConfigElement("gost.laufbahnfehler.filterExterne", "user", "false"),
 			new ConfigElement("gost.laufbahnfehler.filterNurMitFachwahlen", "user", "false"),

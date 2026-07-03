@@ -1,6 +1,7 @@
-import { inject, type InjectionKey } from "vue";
+import { type InjectionKey } from "vue";
 import { DeveloperNotificationException } from "../../../core/src/core/exceptions/DeveloperNotificationException";
 import type { ServerMode } from "../../../core/src/core/types/ServerMode";
+import { AppContext } from "../AppContext";
 
 /**
  * Die Schnittstelle für den Zustand der Schuljahresabschnitte und des aktuell ausgewählten Abschnitts
@@ -39,7 +40,7 @@ export interface ServerState {
 export const ServerStateKey: InjectionKey<ServerState> = Symbol('ServerState');
 
 export function useServerState(): ServerState {
-	const state = inject(ServerStateKey);
+	const state = AppContext.instance.inject(ServerStateKey);
 	if (state === undefined) {
 		throw new DeveloperNotificationException("Es wurden keine Informationen des ServerState über provide in der main.ts eingebunden");
 	}

@@ -1,14 +1,13 @@
 import type { RouteLocationRaw, RouteParams } from "vue-router";
 
-import { DeveloperNotificationException, OpenApiError, ServerMode } from "@core";
-import { BenutzerKompetenz, Schulform } from "@core";
+import { DeveloperNotificationException, OpenApiError, ServerMode, BenutzerKompetenz, Schulform } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 
 import SError from "~/components/error/SError.vue";
 import type { ErrorProps } from "~/components/error/SErrorProps";
-import { routerManager } from "~/router/RouteManager";
 import { api } from "../Api";
+import { RouteManager } from "../RouteManager";
 
 
 export class RouteError extends RouteNode<any, any> {
@@ -27,32 +26,32 @@ export class RouteError extends RouteNode<any, any> {
 	}
 
 	public async getErrorRoute(error?: Error, errorcode?: number): Promise<RouteLocationRaw> {
-		routerManager.resetErrorState();
-		routerManager.errorcode = errorcode;
-		routerManager.error = error;
-		routerManager.errortext = undefined;
+		RouteManager.instance.resetErrorState();
+		RouteManager.instance.errorcode = errorcode;
+		RouteManager.instance.error = error;
+		RouteManager.instance.errortext = undefined;
 		if ((error instanceof OpenApiError) && (error.response !== null)) {
-			routerManager.errorcode = error.response.status;
-			routerManager.errortext = await error.response.text();
+			RouteManager.instance.errorcode = error.response.status;
+			RouteManager.instance.errortext = await error.response.text();
 		}
 		const params = errorcode === undefined ? {} : { errorcode };
 		return { name: this.name, params: params };
 	}
 
 	public getSimpleErrorRoute(error?: Error, errorcode?: number): RouteLocationRaw {
-		routerManager.resetErrorState();
-		routerManager.errorcode = errorcode;
-		routerManager.error = error;
+		RouteManager.instance.resetErrorState();
+		RouteManager.instance.errorcode = errorcode;
+		RouteManager.instance.error = error;
 		const params = errorcode === undefined ? {} : { errorcode };
 		return { name: this.name, params: params };
 	}
 
 	public getProps(): ErrorProps {
-		console.error(routerManager.error);
+		console.error(RouteManager.instance.error);
 		return {
-			code: routerManager.errorcode,
-			error: routerManager.error,
-			errortext: routerManager.errortext,
+			code: RouteManager.instance.errorcode,
+			error: RouteManager.instance.error,
+			errortext: RouteManager.instance.errortext,
 			api: api,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 		};

@@ -4,9 +4,9 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeNotenmodulAdministration, type RouteNotenmodulAdministration } from "./RouteNotenmodulAdministration";
 import type { RouteLocationNormalized, RouteParams } from "vue-router";
 import type { NotenmodulKonfigurationProps } from "~/components/notenmodul/NotenmodulKonfigurationProps";
-import { api } from "~/router/Api";
 import { ConfigElement } from "@ui";
 import { routeError } from "~/router/error/RouteError";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 const NotenmodulKonfiguration = () => import("~/components/notenmodul/NotenmodulKonfiguration.vue");
 
@@ -20,7 +20,7 @@ export class RouteNotenmodulKonfiguration extends RouteNode<any, RouteNotenmodul
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Konfiguration";
 		this.isHidden = (params?: RouteParams) => this.checkHidden(params);
-		api.config.addElements([
+		configStateImpl.config.addElements([
 			new ConfigElement("notenmodul.konfiguration.tabelle.gruppierung", "user", "Keine"),
 		]);
 	}

@@ -1,7 +1,8 @@
-import { inject, type InjectionKey } from "vue";
+import { type InjectionKey } from "vue";
 import { DeveloperNotificationException } from "../../../core/src/core/exceptions/DeveloperNotificationException";
 import type { ReportingParameter } from "../../../core/src/core/data/reporting/ReportingParameter";
 import type { SimpleOperationResponse } from "../../../core/src/core/data/SimpleOperationResponse";
+import { AppContext } from "../AppContext";
 
 /**
  * Die Schnittstelle für den Zustand des Reportings
@@ -63,7 +64,7 @@ export interface ReportingState {
 export const ReportingStateKey: InjectionKey<ReportingState> = Symbol('ReportingState');
 
 export function useReportingState(): ReportingState {
-	const state = inject(ReportingStateKey);
+	const state = AppContext.instance.inject(ReportingStateKey);
 	if (state === undefined) {
 		throw new DeveloperNotificationException("Es wurden keine Informationen des ReportingState über provide in der main.ts eingebunden");
 	}

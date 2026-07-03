@@ -12,6 +12,7 @@ import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteS
 import { ConfigElement, SSchuelerLaufbahnplanung } from "@ui";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { gostLaufbahnplanungStateImpl } from "~/states/GostLaufbahnplanungStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 export class RouteSchuelerLaufbahnplanung extends RouteNode<any, RouteSchueler> {
 
@@ -26,9 +27,11 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<any, RouteSchueler> 
 		this.isHidden = (params?: RouteParams) => {
 			return this.checkHidden(params);
 		};
-		api.config.addElements([new ConfigElement("app.gost.belegpruefungsart", "user", "gesamt")]);
-		api.config.addElements([new ConfigElement("app.schueler.laufbahnplanung.modus", "user", "normal")]);
-		api.config.addElements([new ConfigElement("app.schueler.laufbahnplanung.faecher.anzeigen", "user", "alle")]);
+		configStateImpl.config.addElements([
+			new ConfigElement("app.gost.belegpruefungsart", "user", "gesamt"),
+			new ConfigElement("app.schueler.laufbahnplanung.modus", "user", "normal"),
+			new ConfigElement("app.schueler.laufbahnplanung.faecher.anzeigen", "user", "alle"),
+		]);
 	}
 
 	protected checkHidden(params?: RouteParams) {
@@ -86,7 +89,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<any, RouteSchueler> 
 		return {
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			benutzerKompetenzenAbiturjahrgaenge: api.benutzerKompetenzenAbiturjahrgaenge,
-			config: () => api.config,
+			config: () => configStateImpl.config,
 		};
 	}
 

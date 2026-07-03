@@ -1,6 +1,5 @@
 import { reactive } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, Router, NavigationFailure, RouteParams } from "vue-router";
-import { createRouter, createWebHashHistory } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeLogin } from "~/router/RouteLogin";
@@ -9,6 +8,7 @@ import { RoutingStatus } from "~/router/RoutingStatus";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { ServerMode } from "@core/core/types/ServerMode";
 import { authStateImpl } from "~/states/AuthStateImpl";
+import { AppContext } from "@ui/AppContext";
 
 interface RouteStateError {
 	code: number | undefined;
@@ -52,6 +52,18 @@ export class RouteManager {
 		this.router.addRoute(routeLogin.record);
 		this.router.addRoute(routeError.record);
 		this.router.addRoute(routeApp.record);
+	}
+
+	public static getInstanceOrException(): RouteManager {
+		const manager = RouteManager._instance;
+		if (manager === undefined) {
+			throw new DeveloperNotificationException("Unzulässiger Zugriff auf den RouteManager, bevor eine Instanz erzeugt wurde.");
+		}
+		return manager;
+	}
+
+	public static get instance() {
+		return this.getInstanceOrException();
 	}
 
 	public get errorcode(): number | undefined {
@@ -119,14 +131,6 @@ export class RouteManager {
 		// clean/remove checkpoint destination route for next checkpoint activation to prevent problems
 		currentCheckpoint.originallyDestinationRoute = undefined;
 		return RouteManager.doRoute(destinationRoute);
-	}
-
-	public static getInstanceOrException(): RouteManager {
-		const manager = RouteManager._instance;
-		if (manager === undefined) {
-			throw new DeveloperNotificationException("Unzulässiger Zugriff auf den RouteManager, bevor eine Instanz erzeugt wurde.");
-		}
-		return manager;
 	}
 
 	/**
@@ -408,11 +412,3 @@ export class RouteManager {
 	}
 
 }
-
-// Initialisiere den Router
-export const router = createRouter({
-	history: createWebHashHistory(import.meta.env.BASE_URL),
-	routes: [],
-});
-
-export const routerManager = RouteManager.create(router);

@@ -89,6 +89,9 @@ export { default as SvwsUiToggle } from "./ui/controls/SvwsUiToggle.vue";
 export { default as SvwsUiTooltip } from "./ui/SvwsUiTooltip.vue";
 export { default as UiValidationTooltip } from "./ui/UiValidationTooltip.vue";
 
+// AppContext
+export { AppContext } from "./AppContext";
+
 // Use exports
 export { useRegionSwitch } from "./ui/composables/useRegionSwitch";
 export { usePaneSplitter } from "./ui/composables/usePaneSplitter";

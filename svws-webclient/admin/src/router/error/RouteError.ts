@@ -1,8 +1,8 @@
 import type { RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
 import type { ErrorProps } from "~/components/error/SErrorProps";
-import { routerManager } from "~/router/RouteManager";
 import { ServerMode } from "@core/core/types/ServerMode";
+import { RouteManager } from "../RouteManager";
 
 const SError = () => import("~/components/error/SError.vue");
 
@@ -22,17 +22,17 @@ export class RouteError extends RouteNode<unknown, any> {
 	}
 
 	public getRoute(error?: Error, errorcode?: number): RouteLocationRaw {
-		routerManager.resetErrorState();
-		routerManager.errorcode = errorcode;
-		routerManager.error = error;
+		RouteManager.instance.resetErrorState();
+		RouteManager.instance.errorcode = errorcode;
+		RouteManager.instance.error = error;
 		const params = errorcode === undefined ? {} : { errorcode };
 		return { name: this.name, params: params };
 	}
 
 	public getProps(): ErrorProps {
 		return {
-			code: routerManager.errorcode,
-			error: routerManager.error,
+			code: RouteManager.instance.errorcode,
+			error: RouteManager.instance.error,
 		};
 	}
 

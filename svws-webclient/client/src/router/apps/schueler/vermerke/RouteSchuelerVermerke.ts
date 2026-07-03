@@ -7,6 +7,7 @@ import { RouteDataSchuelerVermerke } from "~/router/apps/schueler/vermerke/Route
 import type { SchuelerVermerkeProps } from "~/components/schueler/vermerke/SSchuelerVermerkeProps";
 import { api } from "~/router/Api";
 import { ConfigElement } from "../../../../../../ui/src/utils/Config";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 
 const SSchuelerVermerke = () => import("~/components/schueler/vermerke/SSchuelerVermerke.vue");
@@ -21,7 +22,7 @@ export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, 
 		this.isHidden = (params?: RouteParams) => {
 			return this.checkHidden(params);
 		};
-		api.config.addElements([
+		configStateImpl.config.addElements([
 			new ConfigElement("schueler.vermerke.filterNurSichtbare", "user", "true"),
 		]);
 	}

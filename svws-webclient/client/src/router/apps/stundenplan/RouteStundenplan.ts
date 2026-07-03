@@ -4,7 +4,6 @@ import type { RouteApp } from "~/router/apps/RouteApp";
 import type { DeveloperNotificationException } from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode, StundenplanKonfiguration } from "@core";
 
-import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 
 import { routeStundenplanDaten } from "~/router/apps/stundenplan/RouteStundenplanDaten";
@@ -26,6 +25,7 @@ import type { StundenplanListeManager } from "@ui";
 import { routeStundenplanNeu } from "./RouteStundenplanNeu";
 import { routeStundenplanGruppenprozesse } from "./RouteStundenplanGruppenprozesse";
 import { routeError } from "~/router/error/RouteError";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 const SStundenplanAuswahl = () => import("~/components/stundenplan/SStundenplanAuswahl.vue");
 const SStundenplanApp = () => import("~/components/stundenplan/SStundenplanApp.vue");
@@ -58,7 +58,7 @@ export class RouteStundenplan extends RouteAuswahlNode<StundenplanListeManager, 
 		super.menugroup = AppMenuGroup.MAIN;
 		super.icon = "i-ri-calendar-event-line";
 		const stundenplanConfig = new StundenplanKonfiguration();
-		api.config.addElements([
+		configStateImpl.config.addElements([
 			new ConfigElement("stundenplan.settings.defaults", "user", StundenplanKonfiguration.transpilerToJSON(stundenplanConfig)),
 		]);
 		super.updateIfTarget = this.doUpdateIfTarget;

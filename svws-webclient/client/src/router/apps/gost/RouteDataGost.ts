@@ -13,6 +13,7 @@ import { routeGostGruppenprozesse } from "./RouteGostGruppenprozesse";
 import type { TabData } from "@ui";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 interface RouteStateGost extends RouteStateInterface {
 	idSchuljahresabschnitt: number,
@@ -50,23 +51,23 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 	}
 
 	get filterNurAktuelle(): boolean {
-		return api.config.getValue("gost.auswahl.filterNurAktuelle") === 'true';
+		return configStateImpl.config.getValue("gost.auswahl.filterNurAktuelle") === 'true';
 	}
 
 	setFilterNurAktuelle = async (value: boolean) => {
-		await api.config.setValue('gost.auswahl.filterNurAktuelle', value ? "true" : "false");
+		await configStateImpl.config.setValue('gost.auswahl.filterNurAktuelle', value ? "true" : "false");
 	};
 
 	get abiturjahrFromConfig(): number {
-		return parseInt(api.config.getValue("gost.auswahl.abiturjahr"));
+		return parseInt(configStateImpl.config.getValue("gost.auswahl.abiturjahr"));
 	}
 
 	setAbiturjahrToConfig = async (value: number) => {
-		await api.config.setValue('gost.auswahl.abiturjahr', value.toString());
+		await configStateImpl.config.setValue('gost.auswahl.abiturjahr', value.toString());
 	};
 
 	get selectedTabFromConfig(): TabData {
-		const tab = api.config.getValue("gost.tab.selected");
+		const tab = configStateImpl.config.getValue("gost.tab.selected");
 		if (tab.length === 0) {
 			return { name: this.defaultView.name, text: this.defaultView.text };
 		}
@@ -74,7 +75,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 	}
 
 	setSelectedTabToConfig = async (value: TabData) => {
-		await api.config.setValue('gost.tab.selected', JSON.stringify(value));
+		await configStateImpl.config.setValue('gost.tab.selected', JSON.stringify(value));
 	};
 
 	get creationModeEnabled(): boolean {

@@ -3,6 +3,7 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import type { Comparator, List, SchuelerListeEintrag, SchuelerVermerke, VermerkartEintrag } from "@core";
 import { ArrayList, DeveloperNotificationException, JavaLong, JavaString } from "@core";
 import { api } from "~/router/Api";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 
 interface RouteStateSchuelerVermerke extends RouteStateInterface {
@@ -37,11 +38,11 @@ export class RouteDataSchuelerVermerke extends RouteData<RouteStateSchuelerVerme
 	}
 
 	get filterNurSichtbare(): boolean {
-		return api.config.getValue("schueler.vermerke.filterNurSichtbare") === 'true';
+		return configStateImpl.config.getValue("schueler.vermerke.filterNurSichtbare") === 'true';
 	}
 
 	setFilterNurSichtbare = async (value: boolean) => {
-		await api.config.setValue('schueler.vermerke.filterNurSichtbare', value ? "true" : "false");
+		await configStateImpl.config.setValue('schueler.vermerke.filterNurSichtbare', value ? "true" : "false");
 	};
 
 	get auswahl(): SchuelerListeEintrag {

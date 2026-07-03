@@ -13,6 +13,7 @@ import type { KurseAuswahlProps } from "~/components/kurse/SKurseAuswahlProps";
 import { ConfigElement } from "../../../../../ui/src/utils/Config";
 import { api } from "~/router/Api";
 import { AppMenuGroup } from "@ui";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 
 const SKurseAuswahl = () => import("~/components/kurse/SKurseAuswahl.vue");
@@ -36,7 +37,7 @@ export class RouteKurse extends RouteAuswahlNode<KursListeManager, RouteDataKurs
 			...props,
 			setFilterNurSichtbar: this.data.setFilterNurSichtbar,
 		});
-		api.config.addElements([
+		configStateImpl.config.addElements([
 			new ConfigElement("kurse.auswahl.filterNurSichtbar", "user", "true"),
 		]);
 	}

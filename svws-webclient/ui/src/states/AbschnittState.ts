@@ -1,7 +1,8 @@
-import { inject, type InjectionKey } from "vue";
+import { type InjectionKey } from "vue";
 import type { Schuljahresabschnitt } from "../../../core/src/asd/data/schule/Schuljahresabschnitt";
 import { DeveloperNotificationException } from "../../../core/src/core/exceptions/DeveloperNotificationException";
 import type { List } from "../../../core/src/java/util/List";
+import { AppContext } from "../AppContext";
 
 /**
  * Die Schnittstelle für den Zustand der Schuljahresabschnitte und des aktuell ausgewählten Abschnitts
@@ -88,7 +89,7 @@ export interface AbschnittState {
 export const AbschnittStateKey: InjectionKey<AbschnittState> = Symbol('AbschnittState');
 
 export function useAbschnittState(): AbschnittState {
-	const state = inject(AbschnittStateKey);
+	const state = AppContext.instance.inject(AbschnittStateKey);
 	if (state === undefined) {
 		throw new DeveloperNotificationException("Es wurde keine Instanz des AbschnittState über provide in der main.ts eingebunden");
 	}

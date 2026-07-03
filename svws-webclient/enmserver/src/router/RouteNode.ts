@@ -1,7 +1,6 @@
 import type { ComputedRef, Ref } from "vue";
 import { computed, defineComponent, ref } from "vue";
 import type { RouteComponent, RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric, RouteRecordName, RouteRecordRaw } from "vue-router";
-import { routerManager } from "./RouteManager";
 import type { RouteData } from "./RouteData";
 import type { Schulform } from "@core/asd/types/schule/Schulform";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
@@ -11,6 +10,7 @@ import type { TabData } from "@ui/ui/nav/TabData";
 import { TabManager } from "@ui/ui/nav/TabManager";
 import { ViewType } from "@ui/ui/nav/ViewType";
 import { authStateImpl } from "~/states/AuthStateImpl";
+import { RouteManager } from "./RouteManager";
 
 /**
  * Diese abstrakte Klasse ist die Basisklasse aller Knoten für
@@ -420,7 +420,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @returns ein Array mit der
 	 */
 	public children_hidden(): ComputedRef<boolean[]> {
-		return computed(() => this.children.map(c => c.hidden(routerManager.getRouteParams()) !== false));
+		return computed(() => this.children.map(c => c.hidden(RouteManager.instance.getRouteParams()) !== false));
 	}
 
 	/**
@@ -467,7 +467,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @returns ein Array mit der
 	 */
 	public menu_hidden(): ComputedRef<boolean[]> {
-		return computed(() => this.menu.map(c => c.hidden(routerManager.getRouteParams()) !== false));
+		return computed(() => this.menu.map(c => c.hidden(RouteManager.instance.getRouteParams()) !== false));
 	}
 
 	/**
@@ -669,8 +669,8 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 		try {
 			return await this.beforeEach(to, to_params, from, from_params);
 		} catch (e) {
-			routerManager.errorcode = undefined;
-			routerManager.error = e instanceof Error ? e : new DeveloperNotificationException("Fehler beim Routing in doBeforeEach(" + to.name + ", " + from?.name + ")");
+			RouteManager.instance.errorcode = undefined;
+			RouteManager.instance.error = e instanceof Error ? e : new DeveloperNotificationException("Fehler beim Routing in doBeforeEach(" + to.name + ", " + from?.name + ")");
 			return { name: "error" };
 		}
 	}
@@ -800,8 +800,8 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 			}
 			return await this.update(to, to_params, from, from_params, this.isReallyEntering(isEntering, redirected), redirected);
 		} catch (e) {
-			routerManager.errorcode = undefined;
-			routerManager.error = e instanceof Error ? e : new DeveloperNotificationException("Fehler beim Routing in doUpdate(" + to.name + ")");
+			RouteManager.instance.errorcode = undefined;
+			RouteManager.instance.error = e instanceof Error ? e : new DeveloperNotificationException("Fehler beim Routing in doUpdate(" + to.name + ")");
 			return { name: "error" };
 		}
 	}
@@ -827,8 +827,8 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 		try {
 			return await this.leaveBefore(from, from_params);
 		} catch (e) {
-			routerManager.errorcode = undefined;
-			routerManager.error = e instanceof Error ? e : new DeveloperNotificationException("Fehler beim Routing in doLeaveBefore(" + from.name + ")");
+			RouteManager.instance.errorcode = undefined;
+			RouteManager.instance.error = e instanceof Error ? e : new DeveloperNotificationException("Fehler beim Routing in doLeaveBefore(" + from.name + ")");
 			return { name: "error" };
 		}
 	}

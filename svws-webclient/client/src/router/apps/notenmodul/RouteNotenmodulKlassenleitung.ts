@@ -7,13 +7,13 @@ import { RouteNotenmodulMenuGroup } from "./RouteNotenmodulMenuGroup";
 import type { EnmKlassenleitungAuswahlListeManager } from "@ui";
 import { RouteDataNotenmodulKlassenleitung } from "./RouteDataNotenmodulKlassenleitung";
 import { ConfigElement } from "@ui";
-import { api } from "~/router/Api";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import type { RouteApp } from "../RouteApp";
 import type { RouteNode } from "~/router/RouteNode";
 import { routeNotenmodulKlassenleitungData } from "./RouteNotenmodulKlassenleitungData";
 import type { NotenmodulKlassenleitungAuswahlProps } from "~/components/notenmodul/NotenmodulKlassenleitungAuswahlProps";
 import type { NotenmodulKlassenleitungAppProps } from "~/components/notenmodul/NotenmodulKlassenleitungAppProps";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 const NotenmodulKlassenleitungApp = () => import("~/components/notenmodul/NotenmodulKlassenleitungApp.vue");
 const NotenmodulKlassenleitungAuswahl = () => import("~/components/notenmodul/NotenmodulKlassenleitungAuswahl.vue");
@@ -43,7 +43,7 @@ export class RouteNotenmodulKlassenleitung extends RouteAuswahlNode<EnmKlassenle
 		});
 		super.text = "Klassenleitung";
 		// TODO this.isHidden = () => routeNotenmodul.data.manager.listKlassenKlassenlehrer.isEmpty() ? routeNotenmodul.getRouteDefaultChild() : false;
-		api.config.addElements([
+		configStateImpl.config.addElements([
 			new ConfigElement("notenmodul.klassenleitung.table.columns", "user", "null"),
 		]);
 		super.children = [

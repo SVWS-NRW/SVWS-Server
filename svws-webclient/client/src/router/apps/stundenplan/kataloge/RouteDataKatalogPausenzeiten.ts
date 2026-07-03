@@ -103,31 +103,33 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 		this.commit();
 	};
 
-	setKatalogPausenzeitenImportJSON = api.call(async (formData: FormData) => {
-		const jsonFile = formData.get("data");
-		if (!(jsonFile instanceof File)) {
-			return;
-		}
-		const json = await jsonFile.text();
-		const pausenzeiten: Partial<StundenplanPausenzeit>[] = JSON.parse(json);
-		const list = new ArrayList<Partial<StundenplanPausenzeit>>();
-		for (const item of pausenzeiten) {
-			if ((item.wochentag !== undefined) && (item.beginn !== undefined) && (item.ende !== undefined) && !this.stundenplanManager.pausenzeitExistsByWochentagAndBeginnAndEnde(item.wochentag, item.beginn, item.ende)) {
-			// Muss nach JSON umgewandelt werden und zurück nach Pausenzeit, weil das reguläre JSON.parse ein Array als Array einliest.
-				const p = JSON.stringify(item);
-				const pp: Partial<StundenplanPausenzeit> = StundenplanPausenzeit.transpilerFromJSON(p);
-				delete pp.id;
-				delete pp.klassen;
-				list.add(pp);
+	setKatalogPausenzeitenImportJSON = async (formData: FormData) => {
+		await api.call(async (formData: FormData) => {
+			const jsonFile = formData.get("data");
+			if (!(jsonFile instanceof File)) {
+				return;
 			}
-		}
-		if (list.isEmpty()) {
-			return;
-		}
-		const res = await api.server.addPausenzeiten(list, api.schema);
-		this.stundenplanManager.pausenzeitAddAll(res);
-		await routeStundenplan.data.reloadVorlagen();
-		this.setPatchedState({ stundenplanManager: this.stundenplanManager });
-	});
+			const json = await jsonFile.text();
+			const pausenzeiten: Partial<StundenplanPausenzeit>[] = JSON.parse(json);
+			const list = new ArrayList<Partial<StundenplanPausenzeit>>();
+			for (const item of pausenzeiten) {
+				if ((item.wochentag !== undefined) && (item.beginn !== undefined) && (item.ende !== undefined) && !this.stundenplanManager.pausenzeitExistsByWochentagAndBeginnAndEnde(item.wochentag, item.beginn, item.ende)) {
+				// Muss nach JSON umgewandelt werden und zurück nach Pausenzeit, weil das reguläre JSON.parse ein Array als Array einliest.
+					const p = JSON.stringify(item);
+					const pp: Partial<StundenplanPausenzeit> = StundenplanPausenzeit.transpilerFromJSON(p);
+					delete pp.id;
+					delete pp.klassen;
+					list.add(pp);
+				}
+			}
+			if (list.isEmpty()) {
+				return;
+			}
+			const res = await api.server.addPausenzeiten(list, api.schema);
+			this.stundenplanManager.pausenzeitAddAll(res);
+			await routeStundenplan.data.reloadVorlagen();
+			this.setPatchedState({ stundenplanManager: this.stundenplanManager });
+		})(formData);
+	};
 
 }

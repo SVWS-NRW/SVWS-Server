@@ -2,7 +2,6 @@ import type { ENMv2Lerngruppe, List, SimpleOperationResponse } from "@core";
 import { UnsupportedOperationException } from "@core";
 import { EnmLerngruppenAuswahlListeManager, ViewType } from "@ui";
 
-import { api } from "~/router/Api";
 import { routeNotenmodul } from "./RouteNotenmodul";
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
@@ -10,6 +9,7 @@ import type { RouteParamsRawGeneric } from "vue-router";
 import { routeNotenmodulLeistungenData } from "./RouteNotenmodulLeistungenData";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 
 interface RouteStateNotenmodulAnkreuzkompetenzen extends RouteStateAuswahlInterface<EnmLerngruppenAuswahlListeManager> {
@@ -62,7 +62,7 @@ export class RouteDataNotenmodulAnkreuzkompetenzen extends RouteDataAuswahl<EnmL
 	}
 
 	get columnsVisible(): Map<string, boolean | null> {
-		const config = JSON.parse(api.config.getValue("notenmodul.ankreuzkompetenzen.table.columns"));
+		const config = JSON.parse(configStateImpl.config.getValue("notenmodul.ankreuzkompetenzen.table.columns"));
 		if (config === null) {
 			return routeNotenmodul.data.manager.spalten.mapSpaltenLeistungen;
 		}
@@ -70,7 +70,7 @@ export class RouteDataNotenmodulAnkreuzkompetenzen extends RouteDataAuswahl<EnmL
 	}
 
 	setColumnsVisible = async (value: Map<string, boolean | null>) => {
-		await api.config.setValue('notenmodul.ankreuzkompetenzen.table.columns', JSON.stringify([...value]));
+		await configStateImpl.config.setValue('notenmodul.ankreuzkompetenzen.table.columns', JSON.stringify([...value]));
 	};
 
 }

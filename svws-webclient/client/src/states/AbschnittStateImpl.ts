@@ -2,7 +2,7 @@ import type { List, SchuleStammdaten, Schuljahresabschnitt } from "@core";
 import { ArrayList, DeveloperNotificationException } from "@core";
 import type { AbschnittState } from "@ui";
 import { StateManager } from "@ui";
-import { routerManager } from "~/router/RouteManager";
+import { RouteManager } from "~/router/RouteManager";
 import { schuleStateImpl } from "./SchuleStateImpl";
 
 interface AbschnittReactiveState {
@@ -49,7 +49,7 @@ export class AbschnittStateImpl extends StateManager<AbschnittReactiveState> imp
 	public async setAuswahl(id: number): Promise<void> {
 		const auswahl = this.get(id);
 		this.setPatchedState({ auswahl });
-		await routerManager.setAbschnitt(id);
+		await RouteManager.instance.setAbschnitt(id);
 	}
 
 	public getOrNull(id: number): Schuljahresabschnitt | null {

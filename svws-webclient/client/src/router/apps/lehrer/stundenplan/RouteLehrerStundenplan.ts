@@ -7,6 +7,7 @@ import { routeLehrer, type RouteLehrer } from "~/router/apps/lehrer/RouteLehrer"
 import { RouteDataLehrerStundenplan } from "~/router/apps/lehrer/stundenplan/RouteDataLehrerStundenplan";
 import { ConfigElement } from "../../../../../../ui/src/utils/Config";
 import { api } from "~/router/Api";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 const SLehrerStundenplan = () => import("~/components/lehrer/stundenplan/LehrerStundenplan.vue");
 
@@ -18,7 +19,7 @@ export class RouteLehrerStundenplan extends RouteNode<RouteDataLehrerStundenplan
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
 		super.children = [];
-		api.config.addElements([
+		configStateImpl.config.addElements([
 			new ConfigElement("lehrer.stundenplan.ganzerStundenplan", "user", "true"),
 		]);
 	}

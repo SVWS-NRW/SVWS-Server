@@ -4,8 +4,8 @@ import type { RouteComponent, RouteLocationNormalized, RouteLocationRaw, RoutePa
 import { useRoute } from "vue-router";
 
 import { api } from "~/router/Api";
-import { routerManager } from "./RouteManager";
 import { ServerMode } from "@core/core/types/ServerMode";
+import { RouteManager } from "./RouteManager";
 
 /**
  * Diese abstrakte Klasse ist die Basisklasse aller Knoten für
@@ -368,8 +368,8 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 		try {
 			return await this.beforeEach(to, to_params, from, from_params);
 		} catch (e) {
-			routerManager.errorcode = undefined;
-			routerManager.error = e instanceof Error ? e : new Error("Fehler beim Routing in doBeforeEach(" + to.name + ", " + from?.name + ")");
+			RouteManager.instance.errorcode = undefined;
+			RouteManager.instance.error = e instanceof Error ? e : new Error("Fehler beim Routing in doBeforeEach(" + to.name + ", " + from?.name + ")");
 			return { name: "error" };
 		}
 	}
@@ -484,8 +484,8 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 			}
 			return await this.update(to, to_params, from, from_params, isEntering);
 		} catch (e) {
-			routerManager.errorcode = undefined;
-			routerManager.error = e instanceof Error ? e : new Error("Fehler beim Routing in doUpdate(" + to.name + ")");
+			RouteManager.instance.errorcode = undefined;
+			RouteManager.instance.error = e instanceof Error ? e : new Error("Fehler beim Routing in doUpdate(" + to.name + ")");
 			return { name: "error" };
 		}
 	}
@@ -511,8 +511,8 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 		try {
 			return await this.leaveBefore(from, from_params);
 		} catch (e) {
-			routerManager.errorcode = undefined;
-			routerManager.error = e instanceof Error ? e : new Error("Fehler beim Routing in doLeaveBefore(" + from.name + ")");
+			RouteManager.instance.errorcode = undefined;
+			RouteManager.instance.error = e instanceof Error ? e : new Error("Fehler beim Routing in doLeaveBefore(" + from.name + ")");
 			return { name: "error" };
 		}
 	}

@@ -1,4 +1,4 @@
-import { inject, type InjectionKey } from "vue";
+import { type InjectionKey } from "vue";
 import type { SchuleStammdaten } from "../../../core/src/asd/data/schule/SchuleStammdaten";
 import { DeveloperNotificationException } from "../../../core/src/core/exceptions/DeveloperNotificationException";
 import type { ValidatorKontext } from "../../../core/src/asd/validate/ValidatorKontext";
@@ -6,6 +6,7 @@ import type { Schulform } from "../../../core/src/asd/types/schule/Schulform";
 import type { Schulgliederung } from "../../../core/src/asd/types/schule/Schulgliederung";
 import type { List } from "../../../core/src/java/util/List";
 import type { Schuljahresabschnitt } from "../../../core/src/asd/data/schule/Schuljahresabschnitt";
+import { AppContext } from "../AppContext";
 
 /**
  * Die Schnittstelle für den Zustand der Schuljahresabschnitte und des aktuell ausgewählten Abschnitts
@@ -62,7 +63,7 @@ export interface SchuleState {
 export const SchuleStateKey: InjectionKey<SchuleState> = Symbol('SchuleState');
 
 export function useSchuleState(): SchuleState {
-	const state = inject(SchuleStateKey);
+	const state = AppContext.instance.inject(SchuleStateKey);
 	if (state === undefined) {
 		throw new DeveloperNotificationException("Es wurde keine Instanz des SchuleState über provide in der main.ts eingebunden");
 	}

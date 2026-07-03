@@ -7,6 +7,7 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
 import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbahnplanung/RouteSchuelerLaufbahnplanung";
 import { routeSchuelerSprachen } from "../../schueler/sprachen/RouteSchuelerSprachen";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 
 interface RouteStateDataGostLaufbahnfehler extends RouteStateInterface {
@@ -40,35 +41,35 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 	}
 
 	get filterFehler(): boolean {
-		return api.config.getValue('gost.laufbahnfehler.filterFehler') === 'true';
+		return configStateImpl.config.getValue('gost.laufbahnfehler.filterFehler') === 'true';
 	}
 
 	setFilterFehler = async (value: boolean) => {
-		await api.config.setValue('gost.laufbahnfehler.filterFehler', value ? "true" : "false");
+		await configStateImpl.config.setValue('gost.laufbahnfehler.filterFehler', value ? "true" : "false");
 	};
 
 	get filterExterne(): boolean {
-		return api.config.getValue('gost.laufbahnfehler.filterExterne') === 'true';
+		return configStateImpl.config.getValue('gost.laufbahnfehler.filterExterne') === 'true';
 	}
 
 	setFilterExterne = async (value: boolean) => {
-		await api.config.setValue('gost.laufbahnfehler.filterExterne', value ? "true" : "false");
+		await configStateImpl.config.setValue('gost.laufbahnfehler.filterExterne', value ? "true" : "false");
 	};
 
 	get filterNurMitFachwahlen(): boolean {
-		return api.config.getValue('gost.laufbahnfehler.filterNurMitFachwahlen') === 'true';
+		return configStateImpl.config.getValue('gost.laufbahnfehler.filterNurMitFachwahlen') === 'true';
 	}
 
 	setFilterNurMitFachwahlen = async (value: boolean) => {
-		await api.config.setValue('gost.laufbahnfehler.filterNurMitFachwahlen', value ? "true" : "false");
+		await configStateImpl.config.setValue('gost.laufbahnfehler.filterNurMitFachwahlen', value ? "true" : "false");
 	};
 
 	get filterNeuaufnahmen(): boolean {
-		return api.config.getValue('gost.laufbahnfehler.filterNeuaufnahmen') === 'true';
+		return configStateImpl.config.getValue('gost.laufbahnfehler.filterNeuaufnahmen') === 'true';
 	}
 
 	setFilterNeuaufnahmen = async (value: boolean) => {
-		await api.config.setValue('gost.laufbahnfehler.filterNeuaufnahmen', value ? "true" : "false");
+		await configStateImpl.config.setValue('gost.laufbahnfehler.filterNeuaufnahmen', value ? "true" : "false");
 	};
 
 	protected async updateList(abiturjahr: number, gostBelegpruefungsArt: GostBelegpruefungsArt) {

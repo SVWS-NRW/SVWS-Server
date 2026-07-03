@@ -10,6 +10,7 @@ import { api } from "./Api";
 import { routeError } from "./error/RouteError";
 import { ConfigElement } from "../../../ui/src/utils/Config";
 import type { PendingStateManagerRegistry } from "~/router/PendingStateManagerRegistry";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 /**
  * Das Interface für die Properties in Bezug auf das Handling des Listenbereichs, welcher der Komponente,
@@ -88,7 +89,7 @@ export abstract class RouteAuswahlNode<TAuswahlManager extends AuswahlManager<nu
 			gotoGruppenprozessView: this.data.gotoGruppenprozessView,
 			pendingStateManagerRegistry: () => this.data.pendingStateManagerRegistry,
 		}));
-		api.nonPersistentConfig.addElements([
+		configStateImpl.nonPersistentConfig.addElements([
 			new ConfigElement(`${this.name}.auswahl.id`, "user", ""),
 		]);
 	}
@@ -107,7 +108,7 @@ export abstract class RouteAuswahlNode<TAuswahlManager extends AuswahlManager<nu
 			}
 			let id = paramId;
 			if ((paramId === undefined) && isEntering) {
-				const lastId = Number.parseInt(api.nonPersistentConfig.getValue(`${this.name}.auswahl.id`));
+				const lastId = Number.parseInt(configStateImpl.nonPersistentConfig.getValue(`${this.name}.auswahl.id`));
 				if (!Number.isNaN(lastId)) {
 					id = lastId;
 				}
@@ -166,7 +167,7 @@ export abstract class RouteAuswahlNode<TAuswahlManager extends AuswahlManager<nu
 
 		this.data.reset();
 		const { id } = RouteNode.getStringParams(from_params, [this._idParam]);
-		await api.nonPersistentConfig.setValue(`${this.name}.auswahl.id`, id ?? "");
+		await configStateImpl.nonPersistentConfig.setValue(`${this.name}.auswahl.id`, id ?? "");
 	}
 
 	/**

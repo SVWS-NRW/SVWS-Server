@@ -9,6 +9,7 @@ import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { serverStateImpl } from "./ServerStateImpl";
+import { configStateImpl } from "./ConfigStateImpl";
 
 interface GostLaufbahnplanungReactiveState {
 	mode: 'schueler' | 'abiturjahrgang' | undefined;
@@ -57,17 +58,17 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		this.setPatchedDefaultState({});
 	}
 
-	get valid(): boolean {
+	public get valid(): boolean {
 		return (this.mode !== undefined) && (this._state.value.abiturdatenManager !== undefined)
 			&& (((this.mode === 'schueler') && (this._state.value.auswahlSchueler !== undefined))
 				|| ((this.mode === 'abiturjahrgang') && (this._state.value.auswahlAbiturjahrgang !== undefined)));
 	}
 
-	get mode(): 'schueler' | 'abiturjahrgang' | undefined {
+	public get mode(): 'schueler' | 'abiturjahrgang' | undefined {
 		return this._state.value.mode;
 	}
 
-	get schueler(): SchuelerListeEintrag {
+	public get schueler(): SchuelerListeEintrag {
 		if (this.mode !== 'schueler') {
 			throw new DeveloperNotificationException("Die Laufbahnplanung wurde für die Vorlagen bezüglich der Abiturjahrgänge initialisiert. Es stehen keine Schüler-spezifischen Informationen zur Verfügung.");
 		}
@@ -77,7 +78,7 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		return this._state.value.auswahlSchueler;
 	}
 
-	get schuelerOrNull(): SchuelerListeEintrag | null {
+	public get schuelerOrNull(): SchuelerListeEintrag | null {
 		return this._state.value.auswahlSchueler ?? null;
 	}
 
@@ -88,151 +89,163 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		return this._state.value.auswahlAbiturjahrgang;
 	}
 
-	get id(): number | undefined {
+	public get id(): number | undefined {
 		const { typ, typID } = api.benutzerdaten;
 		return BenutzerTyp.getByID(typ) === BenutzerTyp.LEHRER ? typID : undefined;
 	}
 
-	get listeLehrer(): List<LehrerListeEintrag> {
+	public get listeLehrer(): List<LehrerListeEintrag> {
 		return this._state.value.listeLehrer;
 	}
 
-	get mapLehrer(): Map<number, LehrerListeEintrag> {
+	public get mapLehrer(): Map<number, LehrerListeEintrag> {
 		return this._state.value.mapLehrer;
 	}
 
-	get gostJahrgangsdaten(): GostJahrgangsdaten {
+	public get gostJahrgangsdaten(): GostJahrgangsdaten {
 		return this._state.value.gostJahrgangsdaten;
 	}
 
-	get beratungslehrer(): List<GostBeratungslehrer> {
+	public get beratungslehrer(): List<GostBeratungslehrer> {
 		return new ArrayList(this._state.value.gostJahrgangsdaten.beratungslehrer);
 	}
 
-	get gostLaufbahnBeratungsdaten(): GostLaufbahnplanungBeratungsdaten {
+	public get gostLaufbahnBeratungsdaten(): GostLaufbahnplanungBeratungsdaten {
 		return this._state.value.gostLaufbahnBeratungsdaten;
 	}
 
-	get gostBelegpruefungErgebnis(): GostBelegpruefungErgebnis {
+	public get gostBelegpruefungErgebnis(): GostBelegpruefungErgebnis {
 		return this._state.value.gostBelegpruefungErgebnis;
 	}
 
-	get abiturdatenManager(): AbiturdatenManager {
+	public get abiturdatenManager(): AbiturdatenManager {
 		if (this._state.value.abiturdatenManager === undefined) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Abiturdaten-Manager nicht initialisiert");
 		}
 		return this._state.value.abiturdatenManager;
 	}
 
-	get gostBelegpruefungsArt(): GostBelegpruefungsModus {
-		const s = api.config.getValue("app.gost.belegpruefungsart");
+	public get gostBelegpruefungsArt(): GostBelegpruefungsModus {
+		const s = configStateImpl.config.getValue("app.gost.belegpruefungsart");
 		if ((s === 'ef1') || (s === 'gesamt') || (s === 'auto')) {
 			return s;
 		}
-		void api.config.setValue("app.gost.belegpruefungsart", 'auto');
+		void configStateImpl.config.setValue("app.gost.belegpruefungsart", 'auto');
 		throw new DeveloperNotificationException("Es wurde eine fehlerhafte Belegpruefungsart als Standardauswahl hinterlegt");
 	}
 
-	setGostBelegpruefungsArt = async (gostBelegpruefungsArt: GostBelegpruefungsModus) => {
-		await api.config.setValue("app.gost.belegpruefungsart", gostBelegpruefungsArt);
+	public async setGostBelegpruefungsArt(gostBelegpruefungsArt: GostBelegpruefungsModus) {
+		await configStateImpl.config.setValue("app.gost.belegpruefungsart", gostBelegpruefungsArt);
 		await this.setGostBelegpruefungErgebnis();
-	};
+	}
+
+	public async exportLaufbahnplanung(): Promise<ApiFile> {
+		return await api.call(async () => {
+			if (this.mode !== 'schueler') {
+				throw new DeveloperNotificationException("Der Export von Schüler-Laufbahnplanungen steht nur in der Schüleransicht zur Verfügung.");
+			}
+			return await api.server.exportGostSchuelerLaufbahnplanung(api.schema, this.schueler.id);
+		})();
+	}
 
 
-	exportLaufbahnplanung = api.call(async (): Promise<ApiFile> => {
-		if (this.mode !== 'schueler') {
-			throw new DeveloperNotificationException("Der Export von Schüler-Laufbahnplanungen steht nur in der Schüleransicht zur Verfügung.");
-		}
-		return await api.server.exportGostSchuelerLaufbahnplanung(api.schema, this.schueler.id);
-	});
+	public async importLaufbahnplanung(data: FormData): Promise<void> {
+		await api.call(async (data: FormData) => {
+			if (this.mode !== 'schueler') {
+				throw new DeveloperNotificationException("Der Import von Schüler-Laufbahnplanungen steht nur in der Schüleransicht zur Verfügung.");
+			}
+			await api.server.importGostSchuelerLaufbahnplanung(data, api.schema, this.schueler.id);
+			const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.schueler.id);
+			const abiturdatenManager = this.createAbiturdatenmanager(abiturdaten);
+			if (abiturdatenManager === undefined) {
+				return;
+			}
+			const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
+			this.setPatchedState({ abiturdaten, abiturdatenManager, gostBelegpruefungErgebnis });
+		})(data);
+	}
 
 
-	importLaufbahnplanung = api.call(async (data: FormData): Promise<void> => {
-		if (this.mode !== 'schueler') {
-			throw new DeveloperNotificationException("Der Import von Schüler-Laufbahnplanungen steht nur in der Schüleransicht zur Verfügung.");
-		}
-		await api.server.importGostSchuelerLaufbahnplanung(data, api.schema, this.schueler.id);
-		const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.schueler.id);
-		const abiturdatenManager = this.createAbiturdatenmanager(abiturdaten);
-		if (abiturdatenManager === undefined) {
-			return;
-		}
-		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
-		this.setPatchedState({ abiturdaten, abiturdatenManager, gostBelegpruefungErgebnis });
-	});
+	public async setWahl(idFach: number, wahl: GostSchuelerFachwahl) {
+		await api.call(async (idFach: number, wahl: GostSchuelerFachwahl) => {
+			let abiturdaten;
+			if (this.mode === 'schueler') {
+				await api.server.patchGostSchuelerFachwahl(wahl, api.schema, this.schueler.id, idFach);
+				abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.schueler.id);
+			} else if (this.mode === 'abiturjahrgang') {
+				await api.server.patchGostAbiturjahrgangFachwahl(wahl, api.schema, this.auswahlAbiturjahrgang, idFach);
+				abiturdaten = await api.server.getGostAbiturjahrgangLaufbahnplanung(api.schema, this.auswahlAbiturjahrgang);
+			}
+			this._state.value.abiturdaten = abiturdaten;
+			await this.setGostBelegpruefungErgebnis();
+		})(idFach, wahl);
+	}
+
+	public async patchBeratungsdaten(data: Partial<GostLaufbahnplanungBeratungsdaten>) {
+		await api.call(async (data: Partial<GostLaufbahnplanungBeratungsdaten>) => {
+			if (this.mode !== 'schueler') {
+				throw new DeveloperNotificationException("Anpassungen an Beratungsdaten sind nur in der Schüleransicht möglich.");
+			}
+			await api.server.patchGostSchuelerLaufbahnplanungBeratungsdaten(data, api.schema, this.schueler.id);
+			const gostLaufbahnBeratungsdaten = this.gostLaufbahnBeratungsdaten;
+			this.setPatchedState({ gostLaufbahnBeratungsdaten: Object.assign(gostLaufbahnBeratungsdaten, data) });
+		})(data);
+	}
 
 
-	setWahl = api.call(async (idFach: number, wahl: GostSchuelerFachwahl) => {
-		let abiturdaten;
-		if (this.mode === 'schueler') {
-			await api.server.patchGostSchuelerFachwahl(wahl, api.schema, this.schueler.id, idFach);
-			abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.schueler.id);
-		} else if (this.mode === 'abiturjahrgang') {
-			await api.server.patchGostAbiturjahrgangFachwahl(wahl, api.schema, this.auswahlAbiturjahrgang, idFach);
-			abiturdaten = await api.server.getGostAbiturjahrgangLaufbahnplanung(api.schema, this.auswahlAbiturjahrgang);
-		}
-		this._state.value.abiturdaten = abiturdaten;
-		await this.setGostBelegpruefungErgebnis();
-	});
-
-	patchBeratungsdaten = api.call(async (data: Partial<GostLaufbahnplanungBeratungsdaten>) => {
-		if (this.mode !== 'schueler') {
-			throw new DeveloperNotificationException("Anpassungen an Beratungsdaten sind nur in der Schüleransicht möglich.");
-		}
-		await api.server.patchGostSchuelerLaufbahnplanungBeratungsdaten(data, api.schema, this.schueler.id);
-		const gostLaufbahnBeratungsdaten = this.gostLaufbahnBeratungsdaten;
-		this.setPatchedState({ gostLaufbahnBeratungsdaten: Object.assign(gostLaufbahnBeratungsdaten, data) });
-	});
-
-
-	get hatZwischenspeicher(): boolean {
+	public get hatZwischenspeicher(): boolean {
 		return (this.zwischenspeicher !== undefined);
 	}
 
 
-	saveLaufbahnplanung = api.call(async (): Promise<void> => {
-		if (this.mode !== 'schueler') {
-			throw new DeveloperNotificationException("Das Zwischenspeichern der aktuellen Planungsdaten ist nur in der Schüleransicht möglich.");
-		}
-		const zwischenspeicher = await api.server.exportGostSchuelerLaufbahnplanungsdaten(api.schema, this.schueler.id);
-		this.setPatchedState({ zwischenspeicher });
-	});
-
-	restoreLaufbahnplanung = api.call(async (): Promise<void> => {
-		if (this.mode !== 'schueler') {
-			throw new DeveloperNotificationException("Das Zwischenspeichern der aktuellen Planungsdaten ist nur in der Schüleransicht möglich.");
-		}
-		if (this._state.value.zwischenspeicher === undefined) {
-			return;
-		}
-		await api.server.importGostSchuelerLaufbahnplanungsdaten(this._state.value.zwischenspeicher, api.schema, this.schueler.id);
-		const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.schueler.id);
-		const abiturdatenManager = this.createAbiturdatenmanager(abiturdaten);
-		if (abiturdatenManager === undefined) {
-			return;
-		}
-		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
-		this.setPatchedState({ zwischenspeicher: undefined, abiturdaten, abiturdatenManager, gostBelegpruefungErgebnis });
-	});
-
-
-	resetFachwahlen = api.call(async (forceDelete: boolean) => {
-		if (this.mode === 'schueler') {
-			if (forceDelete) {
-				await api.server.deleteGostSchuelerFachwahlen(api.schema, this.schueler.id);
-			} else {
-				await api.server.resetGostSchuelerFachwahlen(api.schema, this.schueler.id);
+	public async saveLaufbahnplanung(): Promise<void> {
+		await api.call(async (): Promise<void> => {
+			if (this.mode !== 'schueler') {
+				throw new DeveloperNotificationException("Das Zwischenspeichern der aktuellen Planungsdaten ist nur in der Schüleransicht möglich.");
 			}
+			const zwischenspeicher = await api.server.exportGostSchuelerLaufbahnplanungsdaten(api.schema, this.schueler.id);
+			this.setPatchedState({ zwischenspeicher });
+		})();
+	}
+
+	public async restoreLaufbahnplanung(): Promise<void> {
+		await api.call(async (): Promise<void> => {
+			if (this.mode !== 'schueler') {
+				throw new DeveloperNotificationException("Das Zwischenspeichern der aktuellen Planungsdaten ist nur in der Schüleransicht möglich.");
+			}
+			if (this._state.value.zwischenspeicher === undefined) {
+				return;
+			}
+			await api.server.importGostSchuelerLaufbahnplanungsdaten(this._state.value.zwischenspeicher, api.schema, this.schueler.id);
 			const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.schueler.id);
-			this._state.value.abiturdaten = abiturdaten;
-			await this.setGostBelegpruefungErgebnis();
-		} else if (this.mode === 'abiturjahrgang') {
-			await api.server.resetGostAbiturjahrgangFachwahlen(api.schema, this.auswahlAbiturjahrgang);
-			const abiturdaten = await api.server.getGostAbiturjahrgangLaufbahnplanung(api.schema, this.auswahlAbiturjahrgang);
-			this._state.value.abiturdaten = abiturdaten;
-			await this.setGostBelegpruefungErgebnis();
-		}
-	});
+			const abiturdatenManager = this.createAbiturdatenmanager(abiturdaten);
+			if (abiturdatenManager === undefined) {
+				return;
+			}
+			const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
+			this.setPatchedState({ zwischenspeicher: undefined, abiturdaten, abiturdatenManager, gostBelegpruefungErgebnis });
+		})();
+	}
+
+	public async resetFachwahlen(forceDelete: boolean) {
+		await api.call(async (forceDelete: boolean) => {
+			if (this.mode === 'schueler') {
+				if (forceDelete) {
+					await api.server.deleteGostSchuelerFachwahlen(api.schema, this.schueler.id);
+				} else {
+					await api.server.resetGostSchuelerFachwahlen(api.schema, this.schueler.id);
+				}
+				const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.schueler.id);
+				this._state.value.abiturdaten = abiturdaten;
+				await this.setGostBelegpruefungErgebnis();
+			} else if (this.mode === 'abiturjahrgang') {
+				await api.server.resetGostAbiturjahrgangFachwahlen(api.schema, this.auswahlAbiturjahrgang);
+				const abiturdaten = await api.server.getGostAbiturjahrgangLaufbahnplanung(api.schema, this.auswahlAbiturjahrgang);
+				this._state.value.abiturdaten = abiturdaten;
+				await this.setGostBelegpruefungErgebnis();
+			}
+		})(forceDelete);
+	}
 
 	private async gotoKursplanungMode(halbjahr: GostHalbjahr, idschueler: number | null): Promise<void> {
 		// Bestimme die Liste der Blockungen
@@ -283,16 +296,18 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		await RouteManager.doRoute(route);
 	}
 
-	gotoKursplanung = api.call(async (halbjahr: GostHalbjahr): Promise<void> => {
-		if (this.mode === 'schueler') {
-			await this.gotoKursplanungMode(halbjahr, this.schueler.id);
-		} else if (this.mode === 'abiturjahrgang') {
-			await this.gotoKursplanungMode(halbjahr, null);
-		}
-	});
+	public async gotoKursplanung(halbjahr: GostHalbjahr): Promise<void> {
+		await api.call(async (halbjahr: GostHalbjahr): Promise<void> => {
+			if (this.mode === 'schueler') {
+				await this.gotoKursplanungMode(halbjahr, this.schueler.id);
+			} else if (this.mode === 'abiturjahrgang') {
+				await this.gotoKursplanungMode(halbjahr, null);
+			}
+		})(halbjahr);
+	}
 
 
-	createAbiturdatenmanager = (daten?: Abiturdaten): AbiturdatenManager | undefined => {
+	private createAbiturdatenmanager(daten?: Abiturdaten): AbiturdatenManager | undefined {
 		const abiturdaten = daten || this._state.value.abiturdaten;
 		if (abiturdaten === undefined) {
 			return;
@@ -309,26 +324,26 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 			return abiturdatenManager;
 		}
 		return new AbiturdatenManager(this.serverState.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.EF1);
-	};
+	}
 
-	setGostBelegpruefungErgebnis = async () => {
+	private async setGostBelegpruefungErgebnis() {
 		const abiturdatenManager = this.createAbiturdatenmanager();
 		if (abiturdatenManager === undefined) {
 			return;
 		}
 		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
 		this.setPatchedState({ abiturdatenManager, gostBelegpruefungErgebnis });
-	};
+	}
 
-	get zwischenspeicher(): GostLaufbahnplanungExportV1 | undefined {
+	public get zwischenspeicher(): GostLaufbahnplanungExportV1 | undefined {
 		return this._state.value.zwischenspeicher;
 	}
 
-	get faechermanager(): GostFaecherManager {
+	public get faechermanager(): GostFaecherManager {
 		return this._state.value.faecherManager;
 	}
 
-	set faecherManager(faecherManager: GostFaecherManager | undefined) {
+	public set faecherManager(faecherManager: GostFaecherManager | undefined) {
 		this.setPatchedState({ faecherManager });
 	}
 

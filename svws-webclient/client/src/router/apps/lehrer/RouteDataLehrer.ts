@@ -13,6 +13,7 @@ import { routeLehrerAllgemeinesGruppenprozesse } from "./allgemeines/RouteLehrer
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { serverStateImpl } from "~/states/ServerStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 interface RouteStateLehrer extends RouteStateAuswahlInterface<LehrerListeManager> {
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
@@ -52,19 +53,19 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 	}
 
 	get filterNurSichtbar(): boolean {
-		return api.config.getValue("lehrer.auswahl.filterNurSichtbar") === 'true';
+		return configStateImpl.config.getValue("lehrer.auswahl.filterNurSichtbar") === 'true';
 	}
 
 	setFilterNurSichtbar = async (value: boolean) => {
-		await api.config.setValue('lehrer.auswahl.filterNurSichtbar', value ? "true" : "false");
+		await configStateImpl.config.setValue('lehrer.auswahl.filterNurSichtbar', value ? "true" : "false");
 	};
 
 	get filterNurStatistikrelevant(): boolean {
-		return api.config.getValue("lehrer.auswahl.filterNurStatistikrelevant") === 'true';
+		return configStateImpl.config.getValue("lehrer.auswahl.filterNurStatistikrelevant") === 'true';
 	}
 
 	setFilterNurStatistikrelevant = async (value: boolean) => {
-		await api.config.setValue('lehrer.auswahl.filterNurStatistikrelevant', value ? "true" : "false");
+		await configStateImpl.config.setValue('lehrer.auswahl.filterNurStatistikrelevant', value ? "true" : "false");
 	};
 
 	get mapStundenplaene(): Map<number, StundenplanListeEintrag> {

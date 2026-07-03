@@ -11,6 +11,7 @@ import { api } from "~/router/Api";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { ConfigElement } from "@ui";
 import { gostLaufbahnplanungStateImpl } from "~/states/GostLaufbahnplanungStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 const SGostBeratung = () => import("~/components/gost/beratung/SGostBeratung.vue");
 
@@ -24,8 +25,8 @@ export class RouteGostBeratung extends RouteNode<any, RouteGost> {
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Beratung";
-		api.config.addElements([new ConfigElement("app.gost.beratung.modus", "user", "normal")]);
-		api.config.addElements([new ConfigElement("app.gost.beratung.faecher.anzeigen", "user", "alle")]);
+		configStateImpl.config.addElements([new ConfigElement("app.gost.beratung.modus", "user", "normal")]);
+		configStateImpl.config.addElements([new ConfigElement("app.gost.beratung.faecher.anzeigen", "user", "alle")]);
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
@@ -51,7 +52,7 @@ export class RouteGostBeratung extends RouteNode<any, RouteGost> {
 		return {
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			benutzerdaten: api.benutzerdaten,
-			config: () => api.config,
+			config: () => configStateImpl.config,
 			patchJahrgangsdaten: routeGost.data.patchJahrgangsdaten,
 		};
 	}

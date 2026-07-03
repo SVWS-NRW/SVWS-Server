@@ -17,6 +17,7 @@ import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/Rout
 import type { RouteParamsRawGeneric } from "vue-router";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 interface RouteStateStundenplan extends RouteStateAuswahlInterface<StundenplanListeManager> {
 	stundenplanUnterrichtListeManager: StundenplanUnterrichtListeManager | undefined;
@@ -197,21 +198,21 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 	}
 
 	get settingsDefaults(): StundenplanKonfiguration {
-		const json = api.config.getValue("stundenplan.settings.defaults");
+		const json = configStateImpl.config.getValue("stundenplan.settings.defaults");
 		return StundenplanKonfiguration.transpilerFromJSON(json);
 	}
 
 	setSettingsDefaults = async (value: StundenplanKonfiguration) => {
 		const json = StundenplanKonfiguration.transpilerToJSON(value);
-		await api.config.setValue('stundenplan.settings.defaults', json);
+		await configStateImpl.config.setValue('stundenplan.settings.defaults', json);
 	};
 
 	get doppelstundenmodus(): boolean {
-		return api.config.getValue("stundenplan.klassen.doppelstundenmodus") === 'true';
+		return configStateImpl.config.getValue("stundenplan.klassen.doppelstundenmodus") === 'true';
 	}
 
 	setDoppelstundenmodus = async (value: boolean) => {
-		await api.config.setValue('stundenplan.klassen.doppelstundenmodus', value ? 'true' : 'false');
+		await configStateImpl.config.setValue('stundenplan.klassen.doppelstundenmodus', value ? 'true' : 'false');
 	};
 
 	public setSelection = (selected: Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined) => {
@@ -791,11 +792,11 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 	};
 
 	get ganzerStundenplanRaum(): boolean {
-		return api.config.getValue("stundenplan.raeume.ganzerStundenplan") === 'true';
+		return configStateImpl.config.getValue("stundenplan.raeume.ganzerStundenplan") === 'true';
 	}
 
 	setGanzerStundenplanRaum = async (value: boolean) => {
-		await api.config.setValue("stundenplan.raeume.ganzerStundenplan", value ? "true" : "false");
+		await configStateImpl.config.setValue("stundenplan.raeume.ganzerStundenplan", value ? "true" : "false");
 	};
 
 	gotoEintrag = async (eintrag?: StundenplanListeEintrag) => await RouteManager.doRoute(routeStundenplan.getRoute({ id: eintrag?.id }));

@@ -7,6 +7,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { RouteStundenplan, routeStundenplan } from "./RouteStundenplan";
 import { api } from "~/router/Api";
 import { ConfigElement } from "../../../../../ui/src/utils/Config";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 const SStundenplanRaum = () => import("~/components/stundenplan/raum/SStundenplanRaum.vue");
 
@@ -20,7 +21,7 @@ export class RouteStundenplanRaum extends RouteNode<any, RouteStundenplan> {
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Räume";
 		this.isHidden = (params?: RouteParams) => RouteStundenplan.katalogeCheckHidden(false, this, params);
-		api.config.addElements([
+		configStateImpl.config.addElements([
 			new ConfigElement("stundenplan.raeume.ganzerStundenplan", "user", "true"),
 		]);
 	}

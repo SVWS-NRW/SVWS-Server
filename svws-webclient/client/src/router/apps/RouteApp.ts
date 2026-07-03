@@ -3,7 +3,7 @@ import type { AppProps } from "~/components/SAppProps";
 import { AppMenuManager, ViewType, type TabData, type TabManager } from "@ui";
 import { Schulform, BenutzerKompetenz, ServerMode, DeveloperNotificationException } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteManager, routerManager } from "~/router/RouteManager";
+import { RouteManager } from "~/router/RouteManager";
 import { RoutingStatus } from "~/router/RoutingStatus";
 import { RouteDataApp } from "~/router/apps/RouteDataApp";
 import { AppCache } from "~/cache/AppCache";
@@ -78,7 +78,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	private readonly _cache = new AppCache();
 
 	public menuHidden(): boolean[] {
-		return super.menu.map(c => c.hidden(routerManager.getRouteParams()) !== false);
+		return super.menu.map(c => c.hidden(RouteManager.instance.getRouteParams()) !== false);
 	}
 
 	/** Die Knoten, welche im Menu Einstellungen zur Verfügung gestellt werden */
@@ -95,7 +95,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		return result;
 	}
 	public menuEinstellungenHidden(): boolean[] {
-		return this.menuEinstellungen.map(c => c.hidden(routerManager.getRouteParams()) !== false);
+		return this.menuEinstellungen.map(c => c.hidden(RouteManager.instance.getRouteParams()) !== false);
 	}
 
 	/** Die Knoten, welche im Menu Benutzerprofil zur Verfügung gestellt werden */
@@ -112,7 +112,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		return result;
 	}
 	public menuBenutzerprofilHidden(): boolean[] {
-		return this.menuBenutzerprofil.map(c => c.hidden(routerManager.getRouteParams()) !== false);
+		return this.menuBenutzerprofil.map(c => c.hidden(RouteManager.instance.getRouteParams()) !== false);
 	}
 
 	/** Die Knoten, welche im Menu Schule zur Verfügung gestellt werden */
@@ -129,7 +129,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		return result;
 	}
 	public menuSchuleHidden(): boolean[] {
-		return this.menuSchule.map(c => c.hidden(routerManager.getRouteParams()) !== false);
+		return this.menuSchule.map(c => c.hidden(RouteManager.instance.getRouteParams()) !== false);
 	}
 
 	/** Die Knoten, welche im Menu Notenmodul zur Verfügung gestellt werden */
@@ -146,7 +146,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		return result;
 	}
 	public menuNotenmodulHidden(): boolean[] {
-		return this.menuNotenmodul.map(c => c.hidden(routerManager.getRouteParams()) !== false);
+		return this.menuNotenmodul.map(c => c.hidden(RouteManager.instance.getRouteParams()) !== false);
 	}
 
 	public constructor() {

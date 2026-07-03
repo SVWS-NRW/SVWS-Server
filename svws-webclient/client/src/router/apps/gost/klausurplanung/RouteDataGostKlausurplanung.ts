@@ -18,6 +18,7 @@ import type { RouteParams } from "vue-router";
 import { routeStundenplan } from "../../stundenplan/RouteStundenplan";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 interface RouteStateGostKlausurplanung extends RouteStateInterface {
 	// Daten nur abhängig von dem Abiturjahrgang
@@ -50,7 +51,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 
 	public getParams(abiturjahr: number) {
 		const strAbiturjahr = (abiturjahr < 0) ? "vorlage" : ("abi" + abiturjahr);
-		const paramsJson = api.config.getValue("gost.klausurplan.routeparams." + strAbiturjahr);
+		const paramsJson = configStateImpl.config.getValue("gost.klausurplan.routeparams." + strAbiturjahr);
 		if (paramsJson.length === 0) {
 			return undefined;
 		}
@@ -64,7 +65,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		}
 		const strAbiturjahr = (abiturjahr < 0) ? "vorlage" : ("abi" + abiturjahr);
 		params.view = this._state.value.view.name;
-		void api.config.setValue("gost.klausurplan.routeparams." + strAbiturjahr, JSON.stringify(params));
+		void configStateImpl.config.setValue("gost.klausurplan.routeparams." + strAbiturjahr, JSON.stringify(params));
 	}
 
 	public get hatAbiturjahr(): boolean {
@@ -215,14 +216,14 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		this._state.value.manager = new GostKlausurplanManager();
 	}
 
-	getConfigValue = (key: string) => api.config.getValue("gost.klausurplan." + key);
-	getConfigNumberValue = (key: string) => api.config.getNumberValue("gost.klausurplan." + key);
+	getConfigValue = (key: string) => configStateImpl.config.getValue("gost.klausurplan." + key);
+	getConfigNumberValue = (key: string) => configStateImpl.config.getNumberValue("gost.klausurplan." + key);
 
 	setConfigValue = async (key: string, value: string | number) => {
 		if (typeof value === 'number') {
-			await api.config.setNumberValue('gost.klausurplan.' + key, value);
+			await configStateImpl.config.setNumberValue('gost.klausurplan.' + key, value);
 		} else {
-			await api.config.setValue('gost.klausurplan.' + key, value);
+			await configStateImpl.config.setValue('gost.klausurplan.' + key, value);
 		}
 	};
 

@@ -4,7 +4,6 @@ import { routeNotenmodul } from "./RouteNotenmodul";
 import { RouteNotenmodulMenuGroup } from "./RouteNotenmodulMenuGroup";
 import type { EnmLerngruppenAuswahlListeManager } from "@ui";
 import { ConfigElement } from "@ui";
-import { api } from "~/router/Api";
 import type { RouteApp } from "../RouteApp";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import { RouteDataNotenmodulLeistungen } from "./RouteDataNotenmodulLeistungen";
@@ -13,6 +12,7 @@ import type { NotenmodulLeistungenAuswahlProps } from "~/components/notenmodul/N
 import { routeNotenmodulLeistungenData } from "./RouteNotenmodulLeistungenData";
 import type { RouteNode } from "~/router/RouteNode";
 import type { RouteLocationRaw, RouteParams } from "vue-router";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 const NotenmodulLeistungenApp = () => import("~/components/notenmodul/NotenmodulLeistungenApp.vue");
 const NotenmodulLeistungenAuswahl = () => import("~/components/notenmodul/NotenmodulLeistungenAuswahl.vue");
@@ -41,7 +41,7 @@ export class RouteNotenmodulLeistungen extends RouteAuswahlNode<EnmLerngruppenAu
 			enmManager: () => routeNotenmodul.data.manager,
 		});
 		super.text = "Leistungsdaten";
-		api.config.addElements([
+		configStateImpl.config.addElements([
 			new ConfigElement("notenmodul.leistungen.table.columns", "user", "null"),
 		]);
 		super.children = [

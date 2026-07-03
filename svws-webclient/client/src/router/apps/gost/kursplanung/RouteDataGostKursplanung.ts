@@ -11,6 +11,7 @@ import { routeGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKu
 import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/RouteGostKursplanungSchueler";
 import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 type BlockungstabelleStates = 'nichts' | 'alles' | 'schienen';
 
@@ -143,70 +144,70 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	}
 
 	get zuletztBesucht(): Map<number, { halbjahrId: number, idBlockung: number, idErgebnis: number }> {
-		const text = api.config.getValue("gost.kursplanung.route.zuletztBesucht");
+		const text = configStateImpl.config.getValue("gost.kursplanung.route.zuletztBesucht");
 		const arr = JSON.parse(text);
 		return new Map(arr);
 	}
 
 	setZuletztBesucht = async (value: Map<number, { halbjahrId: number, idBlockung: number, idErgebnis: number }>) => {
 		const text = JSON.stringify([...value.entries()]);
-		await api.config.setValue('gost.kursplanung.route.zuletztBesucht', text);
+		await configStateImpl.config.setValue('gost.kursplanung.route.zuletztBesucht', text);
 	};
 
 	get blockungstabelleHidden(): BlockungstabelleStates {
-		return api.config.getValue("gost.kursplanung.kursansicht.ausgeblendet") as BlockungstabelleStates;
+		return configStateImpl.config.getValue("gost.kursplanung.kursansicht.ausgeblendet") as BlockungstabelleStates;
 	}
 
 	setBlockungstabelleHidden = async (value: BlockungstabelleStates) => {
-		await api.config.setValue('gost.kursplanung.kursansicht.ausgeblendet', value);
+		await configStateImpl.config.setValue('gost.kursplanung.kursansicht.ausgeblendet', value);
 	};
 
 	get zeigeSchienenbezeichnungen(): boolean {
-		return api.config.getValue("gost.kursplanung.kursansicht.zeigeSchienenbezeichnung") === 'true';
+		return configStateImpl.config.getValue("gost.kursplanung.kursansicht.zeigeSchienenbezeichnung") === 'true';
 	}
 
 	setZeigeSchienenbezeichnungen = async (value: boolean) => {
-		await api.config.setValue('gost.kursplanung.kursansicht.zeigeSchienenbezeichnung', value ? "true" : "false");
+		await configStateImpl.config.setValue('gost.kursplanung.kursansicht.zeigeSchienenbezeichnung', value ? "true" : "false");
 	};
 
 	get isSchuelerFilterOpen(): boolean {
-		return api.config.getValue("gost.kursplanung.schueler.auswahl.filterOpen") === 'true';
+		return configStateImpl.config.getValue("gost.kursplanung.schueler.auswahl.filterOpen") === 'true';
 	}
 
 	setIsSchuelerFilterOpen = async (value: boolean) => {
-		await api.config.setValue('gost.kursplanung.schueler.auswahl.filterOpen', value ? "true" : "false");
+		await configStateImpl.config.setValue('gost.kursplanung.schueler.auswahl.filterOpen', value ? "true" : "false");
 	};
 
 	get showGeschlecht(): boolean {
-		return api.config.getValue("gost.kursplanung.schueler.auswahl.geschlecht") === 'true';
+		return configStateImpl.config.getValue("gost.kursplanung.schueler.auswahl.geschlecht") === 'true';
 	}
 
 	setShowGeschlecht = async (value: boolean) => {
-		await api.config.setValue('gost.kursplanung.schueler.auswahl.geschlecht', value ? "true" : "false");
+		await configStateImpl.config.setValue('gost.kursplanung.schueler.auswahl.geschlecht', value ? "true" : "false");
 	};
 
 	get fixierteVerschieben(): boolean {
-		return api.config.getValue("gost.kursplanung.umkursen.fixierteVerschieben") === 'true';
+		return configStateImpl.config.getValue("gost.kursplanung.umkursen.fixierteVerschieben") === 'true';
 	}
 
 	setFixierteVerschieben = async (value: boolean) => {
-		await api.config.setValue('gost.kursplanung.umkursen.fixierteVerschieben', value ? "true" : "false");
+		await configStateImpl.config.setValue('gost.kursplanung.umkursen.fixierteVerschieben', value ? "true" : "false");
 	};
 
 	get inZielkursFixieren(): boolean {
-		return api.config.getValue("gost.kursplanung.umkursen.inZielkursFixieren") === 'true';
+		return configStateImpl.config.getValue("gost.kursplanung.umkursen.inZielkursFixieren") === 'true';
 	}
 
 	setInZielkursFixieren = async (value: boolean) => {
-		await api.config.setValue('gost.kursplanung.umkursen.inZielkursFixieren', value ? "true" : "false");
+		await configStateImpl.config.setValue('gost.kursplanung.umkursen.inZielkursFixieren', value ? "true" : "false");
 	};
 
 	get ausfuehrlicheDarstellungKursdifferenz(): boolean {
-		return api.config.getValue("gost.kursplanung.berechnung.ausfuehrlicheDarstellungKursdifferenz") === 'true';
+		return configStateImpl.config.getValue("gost.kursplanung.berechnung.ausfuehrlicheDarstellungKursdifferenz") === 'true';
 	}
 
 	setAusfuehrlicheDarstellungKursdifferenz = async (value: boolean) => {
-		await api.config.setValue('gost.kursplanung.berechnung.ausfuehrlicheDarstellungKursdifferenz', value ? "true" : "false");
+		await configStateImpl.config.setValue('gost.kursplanung.berechnung.ausfuehrlicheDarstellungKursdifferenz', value ? "true" : "false");
 	};
 
 	public setHalbjahr = async (halbjahr: GostHalbjahr): Promise<boolean> => {
@@ -435,39 +436,45 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		this.setPatchedState({ auswahlSchueler });
 	}
 
-	addBlockung = api.call(async () => {
-		if ((this._state.value.abiturjahr === undefined) || (this._state.value.abiturjahr === -1)) {
-			return;
-		}
-		const result = await api.server.createGostAbiturjahrgangBlockung(api.schema, this.jahrgangsdaten.abiturjahr, this.halbjahr.id);
-		this.mapBlockungen.set(result.id, result);
-		this.setPatchedState({ mapBlockungen: this.mapBlockungen });
-		await this.gotoBlockung(result);
-	});
+	addBlockung = async () => {
+		await api.call(async () => {
+			if ((this._state.value.abiturjahr === undefined) || (this._state.value.abiturjahr === -1)) {
+				return;
+			}
+			const result = await api.server.createGostAbiturjahrgangBlockung(api.schema, this.jahrgangsdaten.abiturjahr, this.halbjahr.id);
+			this.mapBlockungen.set(result.id, result);
+			this.setPatchedState({ mapBlockungen: this.mapBlockungen });
+			await this.gotoBlockung(result);
+		})();
+	};
 
-	restoreBlockung = api.call(async () => {
-		const result = await api.server.restauriereGostBlockung(api.schema, this.jahrgangsdaten.abiturjahr, this.halbjahr.id);
-		this.mapBlockungen.set(result.id, result);
-		// Lade die Fächer des Abiturjahrgangs auch neu, da diese eventuell beim Wiederherstellen der Blockung angepasst wurden.
-		const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, this.jahrgangsdaten.abiturjahr);
-		const faecherManager = new GostFaecherManager(this.jahrgangsdaten.abiturjahr - 1, listFaecher);
-		// Aktualisiere den State
-		this.setPatchedState({
-			faecherManager,
-			mapBlockungen: this.mapBlockungen,
-		});
-		await this.gotoBlockung(result);
-	});
+	restoreBlockung = async () => {
+		await api.call(async () => {
+			const result = await api.server.restauriereGostBlockung(api.schema, this.jahrgangsdaten.abiturjahr, this.halbjahr.id);
+			this.mapBlockungen.set(result.id, result);
+			// Lade die Fächer des Abiturjahrgangs auch neu, da diese eventuell beim Wiederherstellen der Blockung angepasst wurden.
+			const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, this.jahrgangsdaten.abiturjahr);
+			const faecherManager = new GostFaecherManager(this.jahrgangsdaten.abiturjahr - 1, listFaecher);
+			// Aktualisiere den State
+			this.setPatchedState({
+				faecherManager,
+				mapBlockungen: this.mapBlockungen,
+			});
+			await this.gotoBlockung(result);
+		})();
+	};
 
-	removeBlockung = api.call(async () => {
-		if (!this.hatBlockung) {
-			return;
-		}
-		await api.server.deleteGostBlockung(api.schema, this.auswahlBlockung.id);
-		this._state.value.mapBlockungen.delete(this.auswahlBlockung.id);
-		await this.setAuswahlBlockung(undefined);
-		await this.gotoHalbjahr(this.halbjahr);
-	});
+	removeBlockung = async () => {
+		await api.call(async () => {
+			if (!this.hatBlockung) {
+				return;
+			}
+			await api.server.deleteGostBlockung(api.schema, this.auswahlBlockung.id);
+			this._state.value.mapBlockungen.delete(this.auswahlBlockung.id);
+			await this.setAuswahlBlockung(undefined);
+			await this.gotoHalbjahr(this.halbjahr);
+		})();
+	};
 
 	patchBlockung = async (data: Partial<GostBlockungsdaten>, idBlockung: number): Promise<boolean> => {
 		if (this._state.value.datenmanager === undefined) {
@@ -515,272 +522,316 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		return true;
 	};
 
-	patchKurs = api.call(async (data: Partial<GostBlockungKurs>, kurs_id: number) => {
-		if ((!this.hatBlockung) || (!this.hatErgebnis)) {
-			return;
-		}
-		await api.server.patchGostBlockungKurs(data, api.schema, kurs_id);
-		if (data.suffix !== undefined) {
-			this.datenmanager.kursSetSuffix(kurs_id, data.suffix);
-		}
-		if (data.istKoopKurs !== undefined) {
-			this.datenmanager.kursGet(kurs_id).istKoopKurs = data.istKoopKurs;
-		}
-		this.setPatchedState({ datenmanager: this.datenmanager, ergebnismanager: this.ergebnismanager });
-	});
-
-	addKurs = api.call(async (fach_id: number, kursart_id: number): Promise<GostBlockungKurs | undefined> => {
-		if ((!this.hatBlockung) || (!this.hatErgebnis)) {
-			return;
-		}
-		const kurs = await api.server.addGostBlockungKurs(api.schema, this.auswahlBlockung.id, fach_id, kursart_id);
-		this.datenmanager.kursAdd(kurs);
-		this.ergebnismanager.setAddKursByID(kurs.id);
-		this.commit();
-		return kurs;
-	});
-
-	removeKurse = api.call(async (ids: Iterable<number>) => {
-		if ((!this.hatBlockung) || (!this.hatErgebnis)) {
-			return;
-		}
-		const list = new ArrayList<number>();
-		for (const id of ids) {
-			list.add(id);
-		}
-		// prüfe, ob der Schülerfilter noch eine Referenz zum Kurs hat
-		if ((this.schuelerFilter.kurs?.id !== undefined) && list.contains(this.schuelerFilter.kurs.id)) {
-			this.schuelerFilter.reset();
-		} else if (this.schuelerFilter.fach !== undefined) {
-			// Prüfe, ob der Schülerfilter noch eine Referenz zum Fach des Kurses hat
-			const listFachIDs = this.ergebnismanager.getOfFachKursmenge(this.schuelerFilter.fach);
-			for (const k of list) {
-				if (listFachIDs.contains(k)) {
-					this.schuelerFilter.reset();
-					break;
-				}
+	patchKurs = async (data: Partial<GostBlockungKurs>, kurs_id: number) => {
+		await api.call(async (data: Partial<GostBlockungKurs>, kurs_id: number) => {
+			if ((!this.hatBlockung) || (!this.hatErgebnis)) {
+				return;
 			}
-		}
-		await api.server.deleteGostBlockungKurse(list, api.schema);
-		this.datenmanager.kurseRemoveByID(list);
-		this.ergebnismanager.setRemoveKurseByID(list);
-		this.kursAuswahl.removeAll(list);
-		this.commit();
-	});
-
-	combineKurs = api.call(async (kurs1: GostBlockungKurs, kurs2: GostBlockungKurs | GostBlockungsergebnisKurs | undefined | null) => {
-		if ((kurs2 === undefined) || (kurs2 === null)) {
-			return;
-		}
-		await api.server.combineGostBlockungKurs(api.schema, kurs1.id, kurs2.id);
-		this.ergebnismanager.setMergeKurseByID(kurs1.id, kurs2.id);
-		this.commit();
-	});
-
-	splitKurs = api.call(async (kurs: GostBlockungKurs) => {
-		const { kurs1, kurs2, schueler2 } = await api.server.splitGostBlockungKurs(api.schema, kurs.id);
-		this.ergebnismanager.setSplitKurs(kurs1, kurs2, <number[]>schueler2.toArray());
-		this.commit();
-	});
-
-	addSchieneKurs = api.call(async (kurs: GostBlockungKurs) => {
-		if ((!this.hatBlockung) || (!this.hatErgebnis) || (kurs.anzahlSchienen >= this.datenmanager.schieneGetAnzahl())) {
-			return;
-		}
-		this.ergebnismanager.patchOfKursSchienenAnzahl(kurs.id, kurs.anzahlSchienen + 1);
-		const k = this.ergebnismanager.getKursE(kurs.id);
-		await this.patchKurs(k, k.id);
-	});
-
-	removeSchieneKurs = api.call(async (kurs: GostBlockungKurs) => {
-		if ((!this.hatBlockung) || (!this.hatErgebnis) || (kurs.anzahlSchienen <= 1)) {
-			return;
-		}
-		this.ergebnismanager.patchOfKursSchienenAnzahl(kurs.id, kurs.anzahlSchienen - 1);
-		const k = this.ergebnismanager.getKursE(kurs.id);
-		await this.patchKurs(k, k.id);
-	});
-
-	addKursLehrer = api.call(async (kurs_id: number, lehrer_id: number): Promise<GostBlockungKursLehrer | undefined> => {
-		if ((!this.hatBlockung) || (!this.hatErgebnis)) {
-			return;
-		}
-		const lehrer = await api.server.addGostBlockungKurslehrer(api.schema, kurs_id, lehrer_id);
-		this.datenmanager.kursAddLehrkraft(kurs_id, lehrer);
-		this.ergebnismanager.patchOfKursLehrkaefteChanged();
-		this.commit();
-		return lehrer;
-	});
-
-	removeKursLehrer = api.call(async (kurs_id: number, lehrer_id: number): Promise<void> => {
-		if ((!this.hatBlockung) || (!this.hatErgebnis)) {
-			return;
-		}
-		await api.server.deleteGostBlockungKurslehrer(api.schema, kurs_id, lehrer_id);
-		this.datenmanager.kursRemoveLehrkraft(kurs_id, lehrer_id);
-		this.ergebnismanager.patchOfKursLehrkaefteChanged();
-		this.commit();
-	});
-
-	patchSchiene = api.call(async (data: Partial<GostBlockungSchiene>, id: number) => {
-		await api.server.patchGostBlockungSchiene(data, api.schema, id);
-		const bezeichnung = data.bezeichnung;
-		if (bezeichnung === undefined) {
-			return;
-		}
-		const datenmanager = this.datenmanager;
-		datenmanager.schienePatchBezeichnung(id, bezeichnung);
-		this.setPatchedState({ datenmanager });
-	});
-
-	addSchiene = api.call(async (): Promise<GostBlockungSchiene | undefined> => {
-		if ((!this.hatBlockung) || (!this.hatErgebnis)) {
-			return;
-		}
-		const schiene = await api.server.addGostBlockungSchiene(api.schema, this.auswahlBlockung.id);
-		this.datenmanager.schieneAdd(schiene);
-		this.ergebnismanager.setAddSchieneByID(schiene.id);
-		this.commit();
-		return schiene;
-	});
-
-	removeSchiene = api.call(async (schiene: GostBlockungSchiene) => {
-		if ((!this.hatBlockung) || (!this.hatErgebnis)) {
-			return;
-		}
-		const result = await api.server.deleteGostBlockungSchieneByID(api.schema, schiene.id);
-		this.datenmanager.schieneRemoveByID(result.id);
-		this.ergebnismanager.setRemoveSchieneByID(result.id);
-		this.commit();
-		return result;
-	});
-
-	updateKursSchienenZuordnung = api.call(async (idKurs: number, idSchieneAlt: number, idSchieneNeu: number): Promise<boolean> => {
-		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined)) {
-			return false;
-		}
-		await api.server.updateGostBlockungsergebnisKursSchieneZuordnung(api.schema, this._state.value.auswahlErgebnis.id, idSchieneAlt, idKurs, idSchieneNeu);
-		const update = this.ergebnismanager.kursSchienenUpdate_02a_VERSCHIEBE_KURS_VON_SCHIENE_NACH_SCHIENE(idKurs, idSchieneAlt, idSchieneNeu);
-		this.ergebnismanager.kursSchienenUpdateExecute(update);
-		this.commit();
-		return true;
-	});
-
-	updateKursSchuelerZuordnungen = api.call(async (update: GostBlockungsergebnisKursSchuelerZuordnungUpdate): Promise<boolean> => {
-		if (update.listEntfernen.isEmpty() && update.listHinzuzufuegen.isEmpty()) {
-			return true;
-		}
-		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined)) {
-			return false;
-		}
-		const ergebnisid = this._state.value.auswahlErgebnis.id;
-		// Aktualisiere die Zuordnungen ...
-		const regelUpdates = await api.server.updateGostBlockungsergebnisKursSchuelerZuordnungen(update, api.schema, ergebnisid);
-		update.regelUpdates.listHinzuzufuegen = regelUpdates;
-		this.ergebnismanager.kursSchuelerUpdateExecute(update);
-		this.commit();
-		return true;
-	});
-
-	autoKursSchuelerZuordnung = api.call(async (idSchueler: number) => {
-		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined)) {
-			return;
-		}
-		const ergebnisid = this._state.value.auswahlErgebnis.id;
-		const update = this.ergebnismanager.getOfSchuelerNeuzuordnung(idSchueler, false);
-		if (update.listEntfernen.isEmpty() && update.listHinzuzufuegen.isEmpty()) {
-			return;
-		}
-		const regelUpdates = await api.server.updateGostBlockungsergebnisKursSchuelerZuordnungen(update, api.schema, ergebnisid);
-		update.regelUpdates.listHinzuzufuegen = regelUpdates;
-		this.ergebnismanager.kursSchuelerUpdateExecute(update);
-		this.commit();
-	});
-
-	addErgebnisse = api.call(async (ergebnisse: List<GostBlockungsergebnis>): Promise<void> => {
-		if ((ergebnisse.isEmpty()) || (!this.hatBlockung)) {
-			return;
-		}
-		const idBlockung = this.datenmanager.daten().id;
-		const ergebnisseMitIDs = await api.server.addGostBlockungErgebnisse(ergebnisse, api.schema, idBlockung);
-		this.datenmanager.ergebnisAddListe(ergebnisseMitIDs);
-		this.auswahlBlockung.anzahlErgebnisse = this.datenmanager.ergebnisGetListeSortiertNachBewertung().size();
-		this.commit();
-	});
-
-	removeErgebnisse = api.call(async (ergebnisse: Iterable<GostBlockungsergebnis>): Promise<void> => {
-		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined)) {
-			return;
-		}
-		const liste = new ArrayList<number>();
-		const set = new HashSet<number>();
-		const ergebnisid = this._state.value.auswahlErgebnis.id;
-		for (const ergebnis of ergebnisse) {
-			set.add(ergebnis.id);
-			liste.add(ergebnis.id);
-		}
-		const reselect = liste.contains(ergebnisid);
-		await api.server.deleteGostBlockungsergebnisse(liste, api.schema);
-		this.datenmanager.ergebnisRemoveListeByIDs(set);
-		this.auswahlBlockung.anzahlErgebnisse = this.datenmanager.ergebnisGetListeSortiertNachBewertung().size();
-		if (reselect) {
-			for (const e of this.ergebnisse) {
-				if (!set.contains(e.id)) {
-					await this.gotoErgebnis(e);
-					break;
-				}
+			await api.server.patchGostBlockungKurs(data, api.schema, kurs_id);
+			if (data.suffix !== undefined) {
+				this.datenmanager.kursSetSuffix(kurs_id, data.suffix);
 			}
-		} else {
+			if (data.istKoopKurs !== undefined) {
+				this.datenmanager.kursGet(kurs_id).istKoopKurs = data.istKoopKurs;
+			}
+			this.setPatchedState({ datenmanager: this.datenmanager, ergebnismanager: this.ergebnismanager });
+		})(data, kurs_id);
+	};
+
+	addKurs = async (fach_id: number, kursart_id: number): Promise<GostBlockungKurs | undefined> => {
+		return await api.call(async (fach_id: number, kursart_id: number): Promise<GostBlockungKurs | undefined> => {
+			if ((!this.hatBlockung) || (!this.hatErgebnis)) {
+				return;
+			}
+			const kurs = await api.server.addGostBlockungKurs(api.schema, this.auswahlBlockung.id, fach_id, kursart_id);
+			this.datenmanager.kursAdd(kurs);
+			this.ergebnismanager.setAddKursByID(kurs.id);
 			this.commit();
-		}
-	});
+			return kurs;
+		})(fach_id, kursart_id);
+	};
 
-	ergebnisAbleiten = api.call(async () => {
-		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined)) {
-			return;
-		}
-		const result = await api.server.dupliziereGostBlockungMitErgebnis(api.schema, this.auswahlErgebnis.id);
-		this.mapBlockungen.set(result.id, result);
-		this.setPatchedState({ mapBlockungen: this.mapBlockungen });
-		await this.gotoBlockung(result);
-	});
+	removeKurse = async (ids: Iterable<number>) => {
+		await api.call(async (ids: Iterable<number>) => {
+			if ((!this.hatBlockung) || (!this.hatErgebnis)) {
+				return;
+			}
+			const list = new ArrayList<number>();
+			for (const id of ids) {
+				list.add(id);
+			}
+			// prüfe, ob der Schülerfilter noch eine Referenz zum Kurs hat
+			if ((this.schuelerFilter.kurs?.id !== undefined) && list.contains(this.schuelerFilter.kurs.id)) {
+				this.schuelerFilter.reset();
+			} else if (this.schuelerFilter.fach !== undefined) {
+				// Prüfe, ob der Schülerfilter noch eine Referenz zum Fach des Kurses hat
+				const listFachIDs = this.ergebnismanager.getOfFachKursmenge(this.schuelerFilter.fach);
+				for (const k of list) {
+					if (listFachIDs.contains(k)) {
+						this.schuelerFilter.reset();
+						break;
+					}
+				}
+			}
+			await api.server.deleteGostBlockungKurse(list, api.schema);
+			this.datenmanager.kurseRemoveByID(list);
+			this.ergebnismanager.setRemoveKurseByID(list);
+			this.kursAuswahl.removeAll(list);
+			this.commit();
+		})(ids);
+	};
 
-	ergebnisHochschreiben = api.call(async () => {
-		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined)) {
-			return;
-		}
-		const abiturjahr = this.abiturjahr;
-		const halbjahr = this.halbjahr.next()?.id ?? this.halbjahr.id;
-		const result = await api.server.schreibeGostBlockungsErgebnisHoch(api.schema, this.auswahlErgebnis.id);
-		await RouteManager.doRoute(routeGostKursplanung.getRouteBlockung(abiturjahr, halbjahr, result.id));
-	});
+	combineKurs = async (kurs1: GostBlockungKurs, kurs2: GostBlockungKurs | GostBlockungsergebnisKurs | undefined | null) => {
+		await api.call(async (kurs1: GostBlockungKurs, kurs2: GostBlockungKurs | GostBlockungsergebnisKurs | undefined | null) => {
+			if ((kurs2 === undefined) || (kurs2 === null)) {
+				return;
+			}
+			await api.server.combineGostBlockungKurs(api.schema, kurs1.id, kurs2.id);
+			this.ergebnismanager.setMergeKurseByID(kurs1.id, kurs2.id);
+			this.commit();
+		})(kurs1, kurs2);
+	};
 
-	ergebnisAktivieren = api.call(async (): Promise<boolean> => {
-		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined)) {
-			return false;
-		}
-		await api.server.activateGostBlockungsergebnis(api.schema, this.auswahlErgebnis.id);
-		this.jahrgangsdaten.istBlockungFestgelegt[this.halbjahr.id] = true;
-		this.auswahlBlockung.istAktiv = true;
-		this.datenmanager.daten().istAktiv = true;
-		this.ergebnismanager.getErgebnis().istAktiv = true;
-		this.auswahlErgebnis.istAktiv = true;
-		this.commit();
-		return true;
-	});
+	splitKurs = async (kurs: GostBlockungKurs) => {
+		await api.call(async (kurs: GostBlockungKurs) => {
+			const { kurs1, kurs2, schueler2 } = await api.server.splitGostBlockungKurs(api.schema, kurs.id);
+			this.ergebnismanager.setSplitKurs(kurs1, kurs2, <number[]>schueler2.toArray());
+			this.commit();
+		})(kurs);
+	};
 
-	revertBlockung = api.call(async () => {
-		await api.server.revertActivateGostBlockungsergebnis(api.schema, this.jahrgangsdaten.abiturjahr, this.halbjahr.id);
-		this.jahrgangsdaten.istBlockungFestgelegt[this.halbjahr.id] = false;
-		this.setPatchedState({ jahrgangsdaten: this.jahrgangsdaten });
-	});
+	addSchieneKurs = async (kurs: GostBlockungKurs) => {
+		await api.call(async (kurs: GostBlockungKurs) => {
+			if ((!this.hatBlockung) || (!this.hatErgebnis) || (kurs.anzahlSchienen >= this.datenmanager.schieneGetAnzahl())) {
+				return;
+			}
+			this.ergebnismanager.patchOfKursSchienenAnzahl(kurs.id, kurs.anzahlSchienen + 1);
+			const k = this.ergebnismanager.getKursE(kurs.id);
+			await this.patchKurs(k, k.id);
+		})(kurs);
+	};
 
-	ergebnisSynchronisieren = api.call(async (): Promise<void> => {
-		if ((!this.hatBlockung && !this.jahrgangsdaten.istBlockungFestgelegt[this.halbjahr.id]) || (this._state.value.auswahlErgebnis === undefined)) {
-			return;
-		}
-		await api.server.syncGostBlockungsergebnis(api.schema, this.auswahlErgebnis.id);
-	});
+	removeSchieneKurs = async (kurs: GostBlockungKurs) => {
+		await api.call(async (kurs: GostBlockungKurs) => {
+			if ((!this.hatBlockung) || (!this.hatErgebnis) || (kurs.anzahlSchienen <= 1)) {
+				return;
+			}
+			this.ergebnismanager.patchOfKursSchienenAnzahl(kurs.id, kurs.anzahlSchienen - 1);
+			const k = this.ergebnismanager.getKursE(kurs.id);
+			await this.patchKurs(k, k.id);
+		})(kurs);
+	};
+
+	addKursLehrer = async (kurs_id: number, lehrer_id: number): Promise<GostBlockungKursLehrer | undefined> => {
+		return await api.call(async (kurs_id: number, lehrer_id: number): Promise<GostBlockungKursLehrer | undefined> => {
+			if ((!this.hatBlockung) || (!this.hatErgebnis)) {
+				return;
+			}
+			const lehrer = await api.server.addGostBlockungKurslehrer(api.schema, kurs_id, lehrer_id);
+			this.datenmanager.kursAddLehrkraft(kurs_id, lehrer);
+			this.ergebnismanager.patchOfKursLehrkaefteChanged();
+			this.commit();
+			return lehrer;
+		})(kurs_id, lehrer_id);
+	};
+
+	removeKursLehrer = async (kurs_id: number, lehrer_id: number): Promise<void> => {
+		await api.call(async (kurs_id: number, lehrer_id: number): Promise<void> => {
+			if ((!this.hatBlockung) || (!this.hatErgebnis)) {
+				return;
+			}
+			await api.server.deleteGostBlockungKurslehrer(api.schema, kurs_id, lehrer_id);
+			this.datenmanager.kursRemoveLehrkraft(kurs_id, lehrer_id);
+			this.ergebnismanager.patchOfKursLehrkaefteChanged();
+			this.commit();
+		})(kurs_id, lehrer_id);
+	};
+
+	patchSchiene = async (data: Partial<GostBlockungSchiene>, id: number) => {
+		await api.call(async (data: Partial<GostBlockungSchiene>, id: number) => {
+			await api.server.patchGostBlockungSchiene(data, api.schema, id);
+			const bezeichnung = data.bezeichnung;
+			if (bezeichnung === undefined) {
+				return;
+			}
+			const datenmanager = this.datenmanager;
+			datenmanager.schienePatchBezeichnung(id, bezeichnung);
+			this.setPatchedState({ datenmanager });
+		})(data, id);
+	};
+
+	addSchiene = async (): Promise<GostBlockungSchiene | undefined> => {
+		return await api.call(async (): Promise<GostBlockungSchiene | undefined> => {
+			if ((!this.hatBlockung) || (!this.hatErgebnis)) {
+				return;
+			}
+			const schiene = await api.server.addGostBlockungSchiene(api.schema, this.auswahlBlockung.id);
+			this.datenmanager.schieneAdd(schiene);
+			this.ergebnismanager.setAddSchieneByID(schiene.id);
+			this.commit();
+			return schiene;
+		})();
+	};
+
+	removeSchiene = async (schiene: GostBlockungSchiene) => {
+		return await api.call(async (schiene: GostBlockungSchiene) => {
+			if ((!this.hatBlockung) || (!this.hatErgebnis)) {
+				return;
+			}
+			const result = await api.server.deleteGostBlockungSchieneByID(api.schema, schiene.id);
+			this.datenmanager.schieneRemoveByID(result.id);
+			this.ergebnismanager.setRemoveSchieneByID(result.id);
+			this.commit();
+			return result;
+		})(schiene);
+	};
+
+	updateKursSchienenZuordnung = async (idKurs: number, idSchieneAlt: number, idSchieneNeu: number): Promise<boolean> => {
+		return await api.call(async (idKurs: number, idSchieneAlt: number, idSchieneNeu: number): Promise<boolean> => {
+			if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined)) {
+				return false;
+			}
+			await api.server.updateGostBlockungsergebnisKursSchieneZuordnung(api.schema, this._state.value.auswahlErgebnis.id, idSchieneAlt, idKurs, idSchieneNeu);
+			const update = this.ergebnismanager.kursSchienenUpdate_02a_VERSCHIEBE_KURS_VON_SCHIENE_NACH_SCHIENE(idKurs, idSchieneAlt, idSchieneNeu);
+			this.ergebnismanager.kursSchienenUpdateExecute(update);
+			this.commit();
+			return true;
+		})(idKurs, idSchieneAlt, idSchieneNeu);
+	};
+
+	updateKursSchuelerZuordnungen = async (update: GostBlockungsergebnisKursSchuelerZuordnungUpdate): Promise<boolean> => {
+		return await api.call(async (update: GostBlockungsergebnisKursSchuelerZuordnungUpdate): Promise<boolean> => {
+			if (update.listEntfernen.isEmpty() && update.listHinzuzufuegen.isEmpty()) {
+				return true;
+			}
+			if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined)) {
+				return false;
+			}
+			const ergebnisid = this._state.value.auswahlErgebnis.id;
+			// Aktualisiere die Zuordnungen ...
+			const regelUpdates = await api.server.updateGostBlockungsergebnisKursSchuelerZuordnungen(update, api.schema, ergebnisid);
+			update.regelUpdates.listHinzuzufuegen = regelUpdates;
+			this.ergebnismanager.kursSchuelerUpdateExecute(update);
+			this.commit();
+			return true;
+		})(update);
+	};
+
+	autoKursSchuelerZuordnung = async (idSchueler: number) => {
+		await api.call(async (idSchueler: number) => {
+			if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined)) {
+				return;
+			}
+			const ergebnisid = this._state.value.auswahlErgebnis.id;
+			const update = this.ergebnismanager.getOfSchuelerNeuzuordnung(idSchueler, false);
+			if (update.listEntfernen.isEmpty() && update.listHinzuzufuegen.isEmpty()) {
+				return;
+			}
+			const regelUpdates = await api.server.updateGostBlockungsergebnisKursSchuelerZuordnungen(update, api.schema, ergebnisid);
+			update.regelUpdates.listHinzuzufuegen = regelUpdates;
+			this.ergebnismanager.kursSchuelerUpdateExecute(update);
+			this.commit();
+		})(idSchueler);
+	};
+
+	addErgebnisse = async (ergebnisse: List<GostBlockungsergebnis>): Promise<void> => {
+		await api.call(async (ergebnisse: List<GostBlockungsergebnis>): Promise<void> => {
+			if ((ergebnisse.isEmpty()) || (!this.hatBlockung)) {
+				return;
+			}
+			const idBlockung = this.datenmanager.daten().id;
+			const ergebnisseMitIDs = await api.server.addGostBlockungErgebnisse(ergebnisse, api.schema, idBlockung);
+			this.datenmanager.ergebnisAddListe(ergebnisseMitIDs);
+			this.auswahlBlockung.anzahlErgebnisse = this.datenmanager.ergebnisGetListeSortiertNachBewertung().size();
+			this.commit();
+		})(ergebnisse);
+	};
+
+	removeErgebnisse = async (ergebnisse: Iterable<GostBlockungsergebnis>): Promise<void> => {
+		await api.call(async (ergebnisse: Iterable<GostBlockungsergebnis>): Promise<void> => {
+			if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined)) {
+				return;
+			}
+			const liste = new ArrayList<number>();
+			const set = new HashSet<number>();
+			const ergebnisid = this._state.value.auswahlErgebnis.id;
+			for (const ergebnis of ergebnisse) {
+				set.add(ergebnis.id);
+				liste.add(ergebnis.id);
+			}
+			const reselect = liste.contains(ergebnisid);
+			await api.server.deleteGostBlockungsergebnisse(liste, api.schema);
+			this.datenmanager.ergebnisRemoveListeByIDs(set);
+			this.auswahlBlockung.anzahlErgebnisse = this.datenmanager.ergebnisGetListeSortiertNachBewertung().size();
+			if (reselect) {
+				for (const e of this.ergebnisse) {
+					if (!set.contains(e.id)) {
+						await this.gotoErgebnis(e);
+						break;
+					}
+				}
+			} else {
+				this.commit();
+			}
+		})(ergebnisse);
+	};
+
+	ergebnisAbleiten = async () => {
+		await api.call(async () => {
+			if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined)) {
+				return;
+			}
+			const result = await api.server.dupliziereGostBlockungMitErgebnis(api.schema, this.auswahlErgebnis.id);
+			this.mapBlockungen.set(result.id, result);
+			this.setPatchedState({ mapBlockungen: this.mapBlockungen });
+			await this.gotoBlockung(result);
+		})();
+	};
+
+	ergebnisHochschreiben = async () => {
+		await api.call(async () => {
+			if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined)) {
+				return;
+			}
+			const abiturjahr = this.abiturjahr;
+			const halbjahr = this.halbjahr.next()?.id ?? this.halbjahr.id;
+			const result = await api.server.schreibeGostBlockungsErgebnisHoch(api.schema, this.auswahlErgebnis.id);
+			await RouteManager.doRoute(routeGostKursplanung.getRouteBlockung(abiturjahr, halbjahr, result.id));
+		})();
+	};
+
+	ergebnisAktivieren = async (): Promise<boolean> => {
+		return await api.call(async (): Promise<boolean> => {
+			if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined)) {
+				return false;
+			}
+			await api.server.activateGostBlockungsergebnis(api.schema, this.auswahlErgebnis.id);
+			this.jahrgangsdaten.istBlockungFestgelegt[this.halbjahr.id] = true;
+			this.auswahlBlockung.istAktiv = true;
+			this.datenmanager.daten().istAktiv = true;
+			this.ergebnismanager.getErgebnis().istAktiv = true;
+			this.auswahlErgebnis.istAktiv = true;
+			this.commit();
+			return true;
+		})();
+	};
+
+	revertBlockung = async () => {
+		await api.call(async () => {
+			await api.server.revertActivateGostBlockungsergebnis(api.schema, this.jahrgangsdaten.abiturjahr, this.halbjahr.id);
+			this.jahrgangsdaten.istBlockungFestgelegt[this.halbjahr.id] = false;
+			this.setPatchedState({ jahrgangsdaten: this.jahrgangsdaten });
+		})();
+	};
+
+	ergebnisSynchronisieren = async (): Promise<void> => {
+		await api.call(async (): Promise<void> => {
+			if ((!this.hatBlockung && !this.jahrgangsdaten.istBlockungFestgelegt[this.halbjahr.id]) || (this._state.value.auswahlErgebnis === undefined)) {
+				return;
+			}
+			await api.server.syncGostBlockungsergebnis(api.schema, this.auswahlErgebnis.id);
+		})();
+	};
 
 	gotoHalbjahr = async (value: GostHalbjahr) => {
 		await RouteManager.doRoute(routeGostKursplanung.getRouteHalbjahr(this.abiturjahr, value.id));
@@ -828,14 +879,14 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 
 	public kurssortierung = computed<'fach' | 'kursart'>({
 		get: () => {
-			const value = api.config.getValue('gost.kursplanung.kursansicht.sortierung');
+			const value = configStateImpl.config.getValue('gost.kursplanung.kursansicht.sortierung');
 			if (((value !== 'kursart') && (value !== 'fach'))) {
 				return 'kursart';
 			}
 			return value;
 		},
 		set: (value) => {
-			void api.config.setValue('gost.kursplanung.kursansicht.sortierung', value);
+			void configStateImpl.config.setValue('gost.kursplanung.kursansicht.sortierung', value);
 			if (this._state.value.ergebnismanager !== undefined) {
 				if (value === 'kursart') {
 					this.ergebnismanager.kursSetSortierungKursartFachNummer();
@@ -855,15 +906,17 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		return result;
 	}
 
-	regelnUpdate = api.call(async (update: GostBlockungRegelUpdate) => {
-		if (update.listEntfernen.isEmpty() && update.listHinzuzufuegen.isEmpty()) {
-			return;
-		}
-		const listAdd = await api.server.updateGostBlockungRegeln(update, api.schema, this.auswahlBlockung.id);
-		update.listHinzuzufuegen = listAdd;
-		this.ergebnismanager.regelupdateExecute(update);
-		this.commit();
-	}, { name: 'gost.regelnUpdate' });
+	regelnUpdate = async (update: GostBlockungRegelUpdate) => {
+		await api.call(async (update: GostBlockungRegelUpdate) => {
+			if (update.listEntfernen.isEmpty() && update.listHinzuzufuegen.isEmpty()) {
+				return;
+			}
+			const listAdd = await api.server.updateGostBlockungRegeln(update, api.schema, this.auswahlBlockung.id);
+			update.listHinzuzufuegen = listAdd;
+			this.ergebnismanager.regelupdateExecute(update);
+			this.commit();
+		}, { name: 'gost.regelnUpdate' })(update);
+	};
 
 	setKursAuswahl = (kursauswahl: JavaSet<number>) => {
 		this.setPatchedState({ kursauswahl });

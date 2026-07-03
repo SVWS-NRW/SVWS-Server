@@ -15,6 +15,7 @@ import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbahnpla
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
 import { routeError } from "~/router/error/RouteError";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 const SGostKursplanungUmwahlansicht = () => import("~/components/gost/kursplanung/SGostKursplanungUmwahlansicht.vue");
 const SGostKursplanungSchuelerAuswahl = () => import("~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahl.vue");
@@ -33,7 +34,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<any, RouteGostKurspl
 		this.isHidden = (params?: RouteParams) => {
 			return this.checkHidden(params);
 		};
-		api.config.addElements([
+		configStateImpl.config.addElements([
 			new ConfigElement("gost.kursplanung.schueler.auswahl.geschlecht", "user", "true"),
 			new ConfigElement("gost.kursplanung.schueler.auswahl.filterOpen", "user", "true"),
 		]);

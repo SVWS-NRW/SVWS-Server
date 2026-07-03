@@ -7,6 +7,7 @@ import { RouteDataFaecherStundenplan } from "~/router/apps/schule/kataloge/faech
 import { api } from "~/router/Api";
 import type { FaecherStundenplanProps } from "~/components/schule/kataloge/faecher/stundenplan/FaecherStundenplanProps";
 import { ConfigElement } from "@ui";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 const SFaecherStundenplan = () => import("~/components/schule/kataloge/faecher/stundenplan/FaecherStundenplan.vue");
 
@@ -18,7 +19,7 @@ export class RouteFaecherStundenplan extends RouteNode<RouteDataFaecherStundenpl
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
 		super.children = [];
-		api.config.addElements([
+		configStateImpl.config.addElements([
 			new ConfigElement("schule.faecher.stundenplan.ganzerStundenplan", "user", "true"),
 		]);
 	}
