@@ -1,4 +1,4 @@
-import type { BenutzerDaten, ServerMode, WiedervorlageEintrag } from "@core";
+import type { BenutzerDaten, WiedervorlageEintrag } from "@core";
 
 export interface WiedervorlagenAppProps {
 	benutzer: () => BenutzerDaten;

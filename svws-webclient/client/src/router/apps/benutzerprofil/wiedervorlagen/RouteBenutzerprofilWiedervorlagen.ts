@@ -1,16 +1,15 @@
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import { type RouteApp } from "~/router/apps/RouteApp";
+import type { RouteApp } from "~/router/apps/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteBenutzerprofilMenuGroup } from "~/router/apps/benutzerprofil/RouteBenutzerprofilMenuGroup";
 import { RouteDataBenutzerprofilWiedervorlagen } from "~/router/apps/benutzerprofil/wiedervorlagen/RouteDataBenutzerprofilWiedervorlagen";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { WiedervorlagenAppProps } from "~/components/benutzerprofil/wiedervorlagen/WiedervorlagenAppProps";
-import { serverStateImpl } from "~/states/ServerStateImpl";
 import { wiedervorlageStateImpl } from "~/states/WiedervorlageStateImpl";
 
 const App = () => import("~/components/benutzerprofil/wiedervorlagen/WiedervorlagenApp.vue");
 
-export class RouteBenutzerprofilWiedervorlagen extends RouteNode<any, RouteApp> {
+export class RouteBenutzerprofilWiedervorlagen extends RouteNode<RouteDataBenutzerprofilWiedervorlagen, RouteApp> {
 
 	public constructor() {
 		super(Schulform.values(),

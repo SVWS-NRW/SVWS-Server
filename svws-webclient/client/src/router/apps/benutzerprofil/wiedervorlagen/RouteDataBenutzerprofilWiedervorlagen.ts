@@ -4,8 +4,17 @@ import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
+import { type RouteStateInterface, RouteData } from "~/router/RouteData";
 
-export class RouteDataBenutzerprofilWiedervorlagen {
+interface RouteStateWiedervorlagen extends RouteStateInterface {};
+
+const defaultState = <RouteStateWiedervorlagen> {};
+
+export class RouteDataBenutzerprofilWiedervorlagen extends RouteData<RouteStateInterface> {
+
+	public constructor() {
+		super(defaultState);
+	}
 
 	public get benutzer(): BenutzerDaten {
 		return api.benutzerdaten;
