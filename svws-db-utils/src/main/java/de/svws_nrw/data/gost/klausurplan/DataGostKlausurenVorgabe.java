@@ -1,44 +1,36 @@
 package de.svws_nrw.data.gost.klausurplan;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
-import de.svws_nrw.data.DataManagerRevised;
-import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.gost.DataGostFaecher;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
-import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenKursklausuren;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben;
-import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
-import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für den Core-DTO
- * {@link GostKlausurvorgabe}.
+ * Diese Klasse bündelt verbliebene Hilfsoperationen für GOSt-Klausurvorgaben, die noch nicht
+ * auf die Repository/Service/Controller-Architektur umgestellt wurden.
  */
-public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTOGostKlausurenVorgaben, GostKlausurvorgabe> {
+public final class DataGostKlausurenVorgabe {
 
+	private final DBEntityManager conn;
 	private final int _abiturjahr;
 
 	/**
-	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO
-	 * {@link GostKlausurvorgabe}.
+	 * Erstellt eine neue Hilfsklasse für GOSt-Klausurvorgaben.
 	 *
 	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
 	 * @param abiturjahr das Jahr, in welchem der Jahrgang Abitur machen wird
@@ -46,9 +38,7 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public DataGostKlausurenVorgabe(final DBEntityManager conn, final int abiturjahr) throws ApiOperationException {
-		super(conn);
-		super.setAttributesNotPatchable("id", "abiJahrgang", "halbjahr", "quartal", "idFach", "kursart");
-		super.setAttributesRequiredOnCreation("abiJahrgang", "halbjahr", "quartal", "idFach", "kursart");
+		this.conn = conn;
 		_abiturjahr = abiturjahr;
 		if ((abiturjahr != -1) && (conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr) == null)) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Jahrgang nicht gefunden, ID: " + abiturjahr);
@@ -56,8 +46,7 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 	}
 
 	/**
-	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO
-	 * {@link GostKlausurvorgabe}.
+	 * Erstellt eine neue Hilfsklasse für GOSt-Klausurvorgaben.
 	 *
 	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
 	 *
@@ -68,50 +57,7 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 	}
 
 
-	/**
-	 * Gibt die Daten einer {@link GostKlausurvorgabe} zu deren ID zurück.
-	 *
-	 * @param id   Die ID der {@link GostKlausurvorgabe}.
-	 *
-	 * @return die Daten der {@link GostKlausurvorgabe} zur ID.
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	@Override
-	public GostKlausurvorgabe getById(final Long id) throws ApiOperationException {
-		final DTOGostKlausurenVorgaben klasseDto = getDTO(id);
-		return map(klasseDto);
-	}
-
-	/**
-	 * Die Methode ermittelt das entsprechende {@link DTOGostKlausurenVorgaben} Objekt zur angegebenen Klassen ID.
-	 *
-	 * @param id ID der {@link DTOGostKlausurenVorgaben}
-	 *
-	 * @return Ein {@link DTOGostKlausurenVorgaben} Objekt.
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public DTOGostKlausurenVorgaben getDTO(final Long id) throws ApiOperationException {
-		if (id == null) {
-			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für die GostKlausurvorgabe darf nicht null sein.");
-		}
-
-		final DTOGostKlausurenVorgaben klasseDto = conn.queryByKey(DTOGostKlausurenVorgaben.class, id);
-		if (klasseDto == null) {
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine GostKlausurvorgabe zur ID " + id + " gefunden.");
-		}
-
-		return klasseDto;
-	}
-
-	@Override
-	protected void initDTO(final DTOGostKlausurenVorgaben dto, final Long id, final Map<String, Object> initAttributes) {
-		dto.ID = id;
-	}
-
-	@Override
-	protected GostKlausurvorgabe map(final DTOGostKlausurenVorgaben dto) throws ApiOperationException {
+	private static GostKlausurvorgabe map(final DTOGostKlausurenVorgaben dto) {
 		final GostKlausurvorgabe daten = new GostKlausurvorgabe();
 		daten.id = dto.ID;
 		daten.abiJahrgang = dto.Abi_Jahrgang;
@@ -129,41 +75,8 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 		return daten;
 	}
 
-	@Override
-	protected void mapAttribute(final DTOGostKlausurenVorgaben dto, final String name, final Object value, final Map<String, Object> map)
-			throws ApiOperationException {
-		switch (name) {
-			case "idVorgabe" -> {
-				final Long patch_id = JSONMapper.convertToLong(value, true, name);
-				if ((patch_id == null) || (patch_id != dto.ID)) {
-					throw new ApiOperationException(Status.BAD_REQUEST);
-				}
-			}
-			case "abiJahrgang" -> {
-				dto.Abi_Jahrgang = JSONMapper.convertToInteger(value, false, name);
-				if (conn.queryByKey(DTOGostJahrgangsdaten.class, dto.Abi_Jahrgang) == null) {
-					throw new ApiOperationException(Status.BAD_REQUEST, "Jahrgang nicht gefunden, ID: " + dto.Abi_Jahrgang);
-				}
-			}
-			case "halbjahr" -> dto.Halbjahr = checkHalbjahr(JSONMapper.convertToInteger(value, false, name));
-			case "quartal" -> dto.Quartal = checkQuartal(JSONMapper.convertToInteger(value, false, name));
-			case "idFach" -> {
-				dto.Fach_ID = JSONMapper.convertToLong(value, false, name);
-				if (conn.queryByKey(DTOFach.class, dto.Fach_ID) == null) {
-					throw new ApiOperationException(Status.BAD_REQUEST, "Fach nicht gefunden, ID: " + dto.Fach_ID);
-				}
-			}
-			case "kursart" -> dto.Kursart = checkKursart(JSONMapper.convertToString(value, false, false, null));
-			case "dauer" -> dto.Dauer = JSONMapper.convertToInteger(value, false, name);
-			case "auswahlzeit" -> dto.Auswahlzeit = JSONMapper.convertToInteger(value, false, name);
-			case "istGklMoeglich" -> dto.IstGklMoeglich = JSONMapper.convertToBoolean(value, false, name);
-			case "istMdlPruefung" -> dto.IstMdlPruefung = JSONMapper.convertToBoolean(value, false, name);
-			case "istAudioNotwendig" -> dto.IstAudioNotwendig = JSONMapper.convertToBoolean(value, false, name);
-			case "istVideoNotwendig" -> dto.IstVideoNotwendig = JSONMapper.convertToBoolean(value, false, name);
-			case "bemerkungVorgabe" -> dto.Bemerkungen =
-					DataGostKlausuren.convertEmptyStringToNull(JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Vorgaben.col_Bemerkungen.datenlaenge(), name));
-			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s wird nicht unterstützt.".formatted(name));
-		}
+	private static List<GostKlausurvorgabe> mapList(final List<DTOGostKlausurenVorgaben> dtos) {
+		return dtos.stream().map(DataGostKlausurenVorgabe::map).toList();
 	}
 
 	/**
@@ -198,121 +111,6 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 		}
 		return quartal;
 	}
-
-	private static GostKursart checkKursart(final String kursart) throws ApiOperationException {
-		final GostKursart ka = GostKursart.fromKuerzel(kursart);
-		if (ka == null) {
-			throw new ApiOperationException(Status.BAD_REQUEST, "Keine gültige Kursart angegeben: " + kursart);
-		}
-		return ka;
-	}
-
-	/**
-	 * Gibt die Liste der Klausurvorgaben einer Jahrgangsstufe im übergebenen
-	 * Gost-Halbjahr zurück.
-	 *
-	 * @param abiturjahr das Jahr, in welchem der Jahrgang Abitur machen wird
-	 * @param halbjahr das Gost-Halbjahr
-	 * @param ganzesSchuljahr true, um Vorgaben für das gesamte Schuljahr zu erhalten, false nur für das übergeben Halbjahr
-	 *
-	 * @return die Liste der Kursklausuren
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public List<GostKlausurvorgabe> getKlausurvorgaben(final int abiturjahr, final int halbjahr,
-			final boolean ganzesSchuljahr) throws ApiOperationException {
-		final List<DTOGostKlausurenVorgaben> vorgaben = (halbjahr < 0)
-				? conn.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid", DTOGostKlausurenVorgaben.class)
-						.setParameter("jgid", abiturjahr)
-						.getResultList()
-				: conn.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid AND v.Halbjahr IN :hj", DTOGostKlausurenVorgaben.class)
-						.setParameter("jgid", abiturjahr)
-						.setParameter("hj",
-								Arrays.asList(ganzesSchuljahr ? GostHalbjahr.fromIDorException(halbjahr).getSchuljahr()
-										: new GostHalbjahr[] { GostHalbjahr.fromIDorException(halbjahr) }))
-						.getResultList();
-		return mapList(vorgaben);
-	}
-
-	/**
-	 * Gibt die Liste der Klausurvorgaben zu einer Menge von IDs zurück.
-	 *
-	 * @param vids die IDs der Kursklausuren, zu denen die Vorgaben gesucht werden.
-	 *
-	 * @return die Liste der Klausurvorgaben
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public List<GostKlausurvorgabe> getKlausurvorgabenZuIds(final List<Long> vids) throws ApiOperationException {
-		final List<DTOGostKlausurenVorgaben> vorgaben = getKlausurvorgabDTOsZuIds(conn, vids);
-		return mapList(vorgaben);
-	}
-
-	/**
-	 * Gibt die Liste der Klausurvorgaben-DTOs zu den übergebenen IDs zurück.
-	 *
-	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
-	 * @param vids die IDs der Kursklausuren, zu denen die Vorgaben gesucht werden.
-	 *
-	 * @return die Liste der Klausurvorgaben
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public static List<DTOGostKlausurenVorgaben> getKlausurvorgabDTOsZuIds(final DBEntityManager conn, final List<Long> vids) throws ApiOperationException {
-		if (vids.isEmpty()) {
-			return new ArrayList<>();
-		}
-		final List<DTOGostKlausurenVorgaben> vorgaben = conn.queryByKeyList(DTOGostKlausurenVorgaben.class, vids);
-		if (vorgaben.isEmpty()) {
-			throw new ApiOperationException(Status.NOT_FOUND, "Klausurvorgabe-DTOs zu angegebenen IDs nicht gefunden.");
-		}
-		return vorgaben;
-	}
-
-	/**
-	 * Gibt die Liste der Klausurvorgaben-DTOs zu den übergebenen IDs zurück.
-	 *
-	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
-	 * @param kks die Kursklausur-DTOs, zu denen die Vorgaben gesucht werden.
-	 *
-	 * @return die Liste der Klausurvorgaben
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public static List<DTOGostKlausurenVorgaben> getKlausurvorgabeDTOsZuKursklausurDTOs(final DBEntityManager conn,
-			final List<DTOGostKlausurenKursklausuren> kks) throws ApiOperationException {
-		return getKlausurvorgabDTOsZuIds(conn, kks.stream().map(kk -> kk.Vorgabe_ID).toList());
-	}
-
-	/**
-	 * Gibt die Liste der Klausurvorgaben-DTOs zu den übergebenen IDs zurück.
-	 *
-	 * @param kks die Kursklausur-DTOs, zu denen die Vorgaben gesucht werden.
-	 *
-	 * @return die Liste der Klausurvorgaben
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public List<GostKlausurvorgabe> getKlausurvorgabenZuKursklausurDTOs(final List<DTOGostKlausurenKursklausuren> kks)
-			throws ApiOperationException {
-		final List<DTOGostKlausurenVorgaben> vorgaben = getKlausurvorgabeDTOsZuKursklausurDTOs(conn, kks);
-		return mapList(vorgaben);
-	}
-
-	/**
-	 * Gibt die Liste der Klausurvorgaben zu einer Menge von Kursklausuren zurück.
-	 *
-	 * @param kks die Kursklausuren, zu denen die Vorgaben gesucht werden.
-	 *
-	 * @return die Liste der Klausurvorgaben
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public List<GostKlausurvorgabe> getKlausurvorgabenZuKursklausuren(final List<GostKursklausur> kks)
-			throws ApiOperationException {
-		return getKlausurvorgabenZuIds(kks.stream().map(kk -> kk.idVorgabe).toList());
-	}
-
 
 	/**
 	 * Kopiert die Klausurvorgaben in einen Abiturjahrgang

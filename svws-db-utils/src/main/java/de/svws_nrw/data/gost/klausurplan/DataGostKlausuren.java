@@ -36,6 +36,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.gost.klausurplan.GostKlausurenServiceFactoryBuilder;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -133,7 +134,8 @@ public final class DataGostKlausuren {
 	public GostKlausurenCollectionData createKlausuren(final int hj, final int quartal) throws ApiOperationException {
 		final GostHalbjahr halbjahr = GostHalbjahr.fromID(hj);
 
-		final List<GostKlausurvorgabe> vorgaben = new DataGostKlausurenVorgabe(conn).getKlausurvorgaben(_abiturjahr, hj, false);
+		final List<GostKlausurvorgabe> vorgaben = GostKlausurenServiceFactoryBuilder.getGostKlausurenServiceFactory().getGostKlausurenVorgabeService()
+				.getListByAbiturjahr(_abiturjahr, hj, false);
 		if (vorgaben.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Klausurvorgaben für dieses Halbjahr definiert.");
 		}

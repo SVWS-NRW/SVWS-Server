@@ -34,6 +34,7 @@ import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.gost.klausurplan.GostKlausurenServiceFactoryBuilder;
 import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -356,7 +357,8 @@ public final class DataGostKlausurenSchuelerklausurTermin
 		final List<GostSchuelerklausur> listSks = new DataGostKlausurenSchuelerklausur(conn).getSchuelerklausurenZuSchuelerklausurterminen(listSktsManager);
 		final List<GostKursklausur> listKks = new DataGostKlausurenKursklausur(conn).getKursklausurenZuSchuelerklausuren(listSks);
 
-		final GostKlausurplanManager kMan = new GostKlausurplanManager(new DataGostKlausurenVorgabe(conn).getKlausurvorgabenZuKursklausuren(listKks), listKks, config.termine, listSks, listSktsManager);
+		final GostKlausurplanManager kMan = new GostKlausurplanManager(GostKlausurenServiceFactoryBuilder.getGostKlausurenServiceFactory().getGostKlausurenVorgabeService()
+				.getListByIds(listKks.stream().map(k -> k.idVorgabe).toList()), listKks, config.termine, listSks, listSktsManager);
 
 		final KlausurblockungNachschreiberAlgorithmus blockAlgo = new KlausurblockungNachschreiberAlgorithmus();
 

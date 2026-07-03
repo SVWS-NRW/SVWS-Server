@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.jboss.resteasy.annotations.GZIP;
 
+import de.svws_nrw.controller.gost.klausurplan.GostKlausurenControllerFactory;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionData;
@@ -35,6 +36,8 @@ import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenTermin;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenVorgabe;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermine;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
+import de.svws_nrw.service.gost.klausurplan.GostKlausurenVorgabeCreateRequest;
+import de.svws_nrw.service.gost.klausurplan.GostKlausurenVorgabePatchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -43,6 +46,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -96,13 +100,8 @@ public class APIGostKlausuren {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response getGostKlausurenVorgabenJahrgang(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON)
-						.entity(new DataGostKlausurenVorgabe(conn).getKlausurvorgaben(abiturjahr, -1, false)).build(),
-				request,
-				ServerMode.STABLE,
-				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION);
+		return GostKlausurenControllerFactory.withReadAccess(request)
+				.getGostKlausurenVorgabeController().getListByAbiturjahr(abiturjahr);
 	}
 
 	/**
@@ -110,7 +109,7 @@ public class APIGostKlausuren {
 	 *
 	 * @param schema     das Datenbankschema, in welchem die {@link GostKlausurvorgabe} erstellt wird
 	 * @param request    die Informationen zur HTTP-Anfrage
-	 * @param is         JSON-Objekt mit den Daten
+	 * @param createRequest JSON-Objekt mit den Daten
 	 *
 	 * @return 			 die HTTP-Antwort mit der neuen {@link GostKlausurvorgabe}
 	 */
@@ -127,12 +126,10 @@ public class APIGostKlausuren {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response createGostKlausurenVorgabe(@PathParam("schema") final String schema,
 			@RequestBody(description = "Der Post für die Klausurvorgabe-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = GostKlausurvorgabe.class))) final InputStream is,
+					schema = @Schema(implementation = GostKlausurvorgabe.class))) @Valid final GostKlausurenVorgabeCreateRequest createRequest,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenVorgabe(conn).addAsResponse(is),
-				request,
-				ServerMode.STABLE,
-				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
+		return GostKlausurenControllerFactory.withWriteAccess(request)
+				.getGostKlausurenVorgabeController().create(createRequest);
 	}
 
 	/**
@@ -140,13 +137,12 @@ public class APIGostKlausuren {
 	 *
 	 * @param schema     das Datenbankschema, auf welchem der Patch ausgeführt werden soll
 	 * @param request    die Informationen zur HTTP-Anfrage
-	 * @param id		 die ID der {@link GostKlausurvorgabe}
-	 * @param is         JSON-Objekt mit den Daten
+	 * @param patch      JSON-Objekt mit den Patch-Daten
 	 *
 	 * @return die HTTP-Antwort
 	 */
 	@PATCH
-	@Path("/vorgaben/{id : \\d+}")
+	@Path("/vorgaben")
 	@Operation(summary = "Patcht eine Gost-Klausurvorgabe.", description = "Patcht eine Gost-Klausurvorgabe."
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen eines Gost-Klausurtermins besitzt.")
 	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Klausurvorgabe integriert.")
@@ -156,13 +152,12 @@ public class APIGostKlausuren {
 	@ApiResponse(responseCode = "409",
 			description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response patchGostKlausurenVorgabe(@PathParam("schema") final String schema, @PathParam("id") final long id,
+	public Response patchGostKlausurenVorgabe(@PathParam("schema") final String schema,
 			@RequestBody(description = "Der Patch für die Klausurvorgabe-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = GostKlausurvorgabe.class))) final InputStream is,
+					schema = @Schema(implementation = GostKlausurvorgabe.class))) @Valid final GostKlausurenVorgabePatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenVorgabe(conn).patchAsResponse(id, is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
+		return GostKlausurenControllerFactory.withWriteAccess(request)
+				.getGostKlausurenVorgabeController().patch(patch);
 	}
 
 	/**
@@ -184,10 +179,8 @@ public class APIGostKlausuren {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteGostKlausurenVorgabe(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenVorgabe(conn).deleteAsResponse(id),
-				request,
-				ServerMode.STABLE,
-				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
+		return GostKlausurenControllerFactory.withWriteAccess(request)
+				.getGostKlausurenVorgabeController().delete(id);
 	}
 
 	/**
@@ -215,10 +208,8 @@ public class APIGostKlausuren {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenVorgabe(conn).deleteMultipleAsResponse(ids),
-				request,
-				ServerMode.STABLE,
-				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
+		return GostKlausurenControllerFactory.withWriteAccess(request)
+				.getGostKlausurenVorgabeController().deleteMultiple(ids);
 	}
 
 	/**

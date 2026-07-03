@@ -28,6 +28,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.gost.klausurplan.GostKlausurenServiceFactoryBuilder;
 import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -350,7 +351,8 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 	    final List<GostKursklausur> kursklausuren = new DataGostKlausurenKursklausur(conn).getKursklausurenZuSchuelerklausuren(schuelerKlausuren);
 
 	    final GostKlausurplanManager manager = new GostKlausurplanManager(
-	        new DataGostKlausurenVorgabe(conn).getKlausurvorgabenZuKursklausuren(kursklausuren),
+	        GostKlausurenServiceFactoryBuilder.getGostKlausurenServiceFactory().getGostKlausurenVorgabeService()
+				.getListByIds(kursklausuren.stream().map(k -> k.idVorgabe).toList()),
 	        kursklausuren,
 	        termineAmGleichenDatum,
 	        schuelerKlausuren,

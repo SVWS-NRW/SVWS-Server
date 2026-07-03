@@ -7091,7 +7091,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der PATCH-Methode patchGostKlausurenVorgabe für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/vorgaben/{id : \d+}
+	 * Implementierung der PATCH-Methode patchGostKlausurenVorgabe für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/vorgaben
 	 *
 	 * Patcht eine Gost-Klausurvorgabe.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen eines Gost-Klausurtermins besitzt.
 	 *
@@ -7105,12 +7105,10 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @param {Partial<GostKlausurvorgabe>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchGostKlausurenVorgabe(data : Partial<GostKlausurvorgabe>, schema : string, id : number) : Promise<void> {
-		const path = "/db/{schema}/gost/klausuren/vorgaben/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+	public async patchGostKlausurenVorgabe(data : Partial<GostKlausurvorgabe>, schema : string) : Promise<void> {
+		const path = "/db/{schema}/gost/klausuren/vorgaben"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = GostKlausurvorgabe.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}

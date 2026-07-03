@@ -33,6 +33,7 @@ import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.gost.klausurplan.GostKlausurenServiceFactoryBuilder;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -178,7 +179,8 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 	 */
 	public List<GostKursklausur> getKursKlausuren(final int abiturjahr, final int halbjahr, final boolean ganzesSchuljahr)
 			throws ApiOperationException {
-		return getKursklausurenZuVorgaben(new DataGostKlausurenVorgabe(conn).getKlausurvorgaben(abiturjahr, halbjahr, ganzesSchuljahr));
+		return getKursklausurenZuVorgaben(GostKlausurenServiceFactoryBuilder.getGostKlausurenServiceFactory().getGostKlausurenVorgabeService()
+				.getListByAbiturjahr(abiturjahr, halbjahr, ganzesSchuljahr));
 	}
 
 	/**
@@ -301,7 +303,8 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 	public GostKlausurenCollectionData getKlausurDataCollection(final int abiturjahr, final int halbjahr,
 			final boolean ganzesSchuljahr) throws ApiOperationException {
 		final GostKlausurenCollectionData data = new GostKlausurenCollectionData();
-		data.vorgaben = new DataGostKlausurenVorgabe(conn).getKlausurvorgaben(abiturjahr, halbjahr, ganzesSchuljahr);
+		data.vorgaben = GostKlausurenServiceFactoryBuilder.getGostKlausurenServiceFactory().getGostKlausurenVorgabeService()
+				.getListByAbiturjahr(abiturjahr, halbjahr, ganzesSchuljahr);
 		data.kursklausuren = getKursklausurenZuVorgaben(data.vorgaben);
 		data.schuelerklausuren = new DataGostKlausurenSchuelerklausur(conn).getSchuelerKlausurenZuKursklausuren(data.kursklausuren);
 		data.schuelerklausurtermine = new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuSchuelerklausuren(data.schuelerklausuren);
@@ -337,7 +340,8 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 			final GostKlausurenCollectionData blockung) throws ApiOperationException {
 		DTOGostKlausurenTermine termin = null;
 		final List<DTOGostKlausurenKursklausuren> listKlausuren = getKursklausurenDTOsZuIds(conn, ergebnisTermin.kursklausuren);
-		final List<GostKlausurvorgabe> listVorgaben = new DataGostKlausurenVorgabe(conn).getKlausurvorgabenZuKursklausurDTOs(listKlausuren);
+		final List<GostKlausurvorgabe> listVorgaben = GostKlausurenServiceFactoryBuilder.getGostKlausurenServiceFactory().getGostKlausurenVorgabeService()
+				.getListByIds(listKlausuren.stream().map(k -> k.Vorgabe_ID).toList());
 		final GostKlausurplanManager manager = new GostKlausurplanManager(listVorgaben);
 		for (final DTOGostKlausurenKursklausuren klausur : listKlausuren) {
 			final GostKlausurvorgabe vorgabe = manager.vorgabeGetByIdOrException(klausur.Vorgabe_ID);
@@ -386,7 +390,8 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 			return richKlausuren;
 		}
 
-		final List<GostKlausurvorgabe> listVorgaben = new DataGostKlausurenVorgabe(conn).getKlausurvorgabenZuKursklausuren(kursklausuren);
+		final List<GostKlausurvorgabe> listVorgaben = GostKlausurenServiceFactoryBuilder.getGostKlausurenServiceFactory().getGostKlausurenVorgabeService()
+				.getListByIds(kursklausuren.stream().map(k -> k.idVorgabe).toList());
 		if (listVorgaben.isEmpty()) {
 			return new ArrayList<>();
 		}

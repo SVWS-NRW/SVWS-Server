@@ -437,7 +437,8 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 
 	patchKlausurvorgabe = async (vorgabe: Partial<GostKlausurvorgabe>, id: number) => {
 		api.status.start();
-		await api.server.patchGostKlausurenVorgabe(vorgabe, api.schema, id);
+		vorgabe.id = id;
+		await api.server.patchGostKlausurenVorgabe(vorgabe, api.schema);
 		this.manager.vorgabePatchAttributes(Object.assign(this.manager.vorgabeGetByIdOrException(id), vorgabe));
 		this.commit();
 		api.status.stop();

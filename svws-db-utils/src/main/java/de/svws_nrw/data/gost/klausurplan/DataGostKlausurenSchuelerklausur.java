@@ -19,6 +19,7 @@ import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerkl
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermine;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.gost.klausurplan.GostKlausurenServiceFactoryBuilder;
 import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -200,7 +201,8 @@ public final class DataGostKlausurenSchuelerklausur extends DataManagerRevised<L
 		if (!result.schuelerklausuren.isEmpty()) {
 			result.schuelerklausurtermine = new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuSchuelerklausuren(result.schuelerklausuren);
 			result.kursklausuren = new DataGostKlausurenKursklausur(conn).getKursklausurenZuSchuelerklausuren(result.schuelerklausuren);
-			result.vorgaben = new DataGostKlausurenVorgabe(conn).getKlausurvorgabenZuKursklausuren(result.kursklausuren);
+			result.vorgaben = GostKlausurenServiceFactoryBuilder.getGostKlausurenServiceFactory().getGostKlausurenVorgabeService()
+					.getListByIds(result.kursklausuren.stream().map(k -> k.idVorgabe).toList());
 			final List<Long> terminIds = new ArrayList<>();
 			terminIds.addAll(result.schuelerklausurtermine.stream().filter(skt -> skt.idTermin != null).map(skt -> skt.idTermin).toList());
 			terminIds.addAll(result.kursklausuren.stream().filter(kk -> kk.idTermin != null).map(kk -> kk.idTermin).toList());
