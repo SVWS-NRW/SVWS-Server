@@ -965,7 +965,14 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 				if (leistung.Kursart == null) { // Ignoriere fehlerhafte Zuordnungen, welche nicht den Fachwahlen entsprechen
 					continue;
 				}
-				leistung.KursartAllg = GostKursart.fromID(kurs.kursart).kuerzel;
+				final GostKursart kursart = GostKursart.fromID(kurs.kursart);
+				leistung.KursartAllg = kursart.kuerzel;
+
+				// Anpassen der speziellen Kursart im Falle eines Vertiefungs- oder Projektkurses
+				if ((kursart == GostKursart.VTF) || ((kursart == GostKursart.PJK) && (!"AB5".equals(leistung.Kursart)))) {
+					leistung.Kursart = kursart.kuerzel;
+				}
+
 				leistung.Kurs_ID = mapKursIDs.get(kurs.id);
 				leistung.NotenKrz = switch (halbjahr) {
 					case EF1 -> switch (fachwahl.EF1_Kursart) {
