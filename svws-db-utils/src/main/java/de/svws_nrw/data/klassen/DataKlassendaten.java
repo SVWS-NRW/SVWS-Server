@@ -946,7 +946,7 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 		klassenDaten.idSchulgliederung = getSchulgliederungIdByKlasseAndSchulform(dto, schulform);
 		klassenDaten.idJahrgang = dto.Jahrgang_ID;
 		klassenDaten.parallelitaet = ((dto.ASDKlasse == null) || (dto.ASDKlasse.length() < 3)) ? null : dto.ASDKlasse.substring(2);
-		klassenDaten.sortierung = dto.Sortierung;
+		klassenDaten.sortierung = (dto.Sortierung == null) ? 32000 : dto.Sortierung;
 		klassenDaten.teilstandort = Objects.toString(dto.AdrMerkmal, "");
 		klassenDaten.beschreibung = Objects.toString(dto.Bezeichnung, "");
 
