@@ -3,7 +3,6 @@ package de.svws_nrw.service.signature;
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +20,7 @@ import de.svws_nrw.service.utils.HashUtils;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.bouncycastle.util.encoders.Base64;
 
 /**
  * Dieser Service stellt Funktionalität bereit, um Daten/Dokumente von einer externen API signieren zu lassen.
@@ -140,10 +140,11 @@ public final class SignatureServiceImpl implements SignatureService {
 	}
 
 	private static Signature createSignature(final SignResponse signResponse) {
-		final byte[] content = signResponse.cms().getBytes(StandardCharsets.UTF_8);
 		final SignatureStatus status = SignatureStatus.getByText(signResponse.status()).orElse(SignatureStatus.UNKNOWN);
-		final String errorMessage = (status == SignatureStatus.ERROR) ? signResponse.cms() : "";
-		return new Signature(content, status, errorMessage);
+		if (status == SignatureStatus.ERROR) {
+			return new Signature(null, SignatureStatus.ERROR, signResponse.cms());
+		}
+		return new Signature(Base64.decode(signResponse.cms()), status, null);
 	}
 
 	private HttpRequest createRequest(final Map<Long, byte[]> payloadById) {

@@ -1,6 +1,7 @@
 package de.svws_nrw.service.signature;
 
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.service.benutzer.BenutzerKompetenzService;
 import de.svws_nrw.service.schule.SchuleService;
 import jakarta.ws.rs.core.Response;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -39,6 +41,13 @@ class SignatureServiceImplTest {
 	@Mock
 	private BenutzerKompetenzService benutzerKompetenzService;
 
+	private static final Map<Long, Pair<String, String>> BASE64_ENCODINGS = Map.of(
+			1L, Pair.of("Y21zLW9r", "cms-ok"),
+			2L, Pair.of("Y21zMi1vaw==", "cms2-ok"),
+			3L, Pair.of("Y21zw7bDpMO8LW9r", "cmsöäü-ok"),
+			4L, Pair.of("Y21zLWVycm9y", "cms-error")
+	);
+
 	private static final URI SIGNATURE_SERVICE_URI = URI.create("https://test.signature-service.de/sign");
 
 	@BeforeEach
@@ -60,8 +69,8 @@ class SignatureServiceImplTest {
 		@DisplayName("sign() gibt korrekte Signaturen zurück bei Status 200")
 		void sign_shouldReturnSignatures_whenResponseIsSuccessful() {
 			httpClient.respondWithSuccess(successResponse(List.of(
-					okResponse(1L, "cms-content-1"),
-					okResponse(2L, "cms-content-2")
+					okResponse(1L, BASE64_ENCODINGS.get(1L).getLeft()),
+					okResponse(2L, BASE64_ENCODINGS.get(2L).getLeft())
 			)));
 
 			final Map<Object, Signature> result = cut.sign(Map.of(
@@ -71,7 +80,10 @@ class SignatureServiceImplTest {
 
 			assertThat(result)
 					.hasSize(2)
-					.containsOnlyKeys(1L, 2L);
+					.containsValues(
+							new Signature(BASE64_ENCODINGS.get(1L).getRight().getBytes(StandardCharsets.UTF_8), SignatureStatus.OK, null),
+							new Signature(BASE64_ENCODINGS.get(2L).getRight().getBytes(StandardCharsets.UTF_8), SignatureStatus.OK, null)
+					);
 		}
 
 		@Test
@@ -87,7 +99,7 @@ class SignatureServiceImplTest {
 		@Test
 		@DisplayName("sign() setzt Status OK korrekt")
 		void sign_shouldSetStatusOk() {
-			httpClient.respondWithSuccess(successResponse(List.of(okResponse(1L, "cms"))));
+			httpClient.respondWithSuccess(successResponse(List.of(okResponse(1L, BASE64_ENCODINGS.get(1L).getLeft()))));
 
 			final Signature signature = cut.sign(Map.of(1L, "payload".getBytes())).get(1L);
 
@@ -95,13 +107,13 @@ class SignatureServiceImplTest {
 		}
 
 		@Test
-		@DisplayName("sign() setzt leere errorMessage bei Status OK")
+		@DisplayName("sign() setzt errorMessage=null bei Status OK")
 		void sign_shouldSetEmptyErrorMessage_whenStatusIsOk() {
-			httpClient.respondWithSuccess(successResponse(List.of(okResponse(1L, "cms"))));
+			httpClient.respondWithSuccess(successResponse(List.of(okResponse(1L, BASE64_ENCODINGS.get(1L).getLeft()))));
 
 			final Signature signature = cut.sign(Map.of(1L, "payload".getBytes())).get(1L);
 
-			assertThat(signature.errorMessage()).isEmpty();
+			assertThat(signature.errorMessage()).isNull();
 		}
 
 		@Test
@@ -111,15 +123,15 @@ class SignatureServiceImplTest {
 
 			final Signature signature = cut.sign(Map.of(1L, "payload".getBytes())).get(1L);
 
-			assertThat(signature.status()).isEqualTo(SignatureStatus.ERROR);
-			assertThat(signature.errorMessage()).isEqualTo("Signatur fehlgeschlagen");
+			assertThat(signature).extracting(Signature::content, Signature::status, Signature::errorMessage)
+							.containsExactly(null, SignatureStatus.ERROR, "Fehler");
 		}
 
 		@Test
 		@DisplayName("sign() setzt Status UNKNOWN bei unbekanntem Signaturstatus")
 		void sign_shouldSetUnknownStatus_whenStatusIsUnrecognized() {
 			httpClient.respondWithSuccess(successResponse(List.of(
-					new SignResponse(1L, "hash", "cms", "INVALID_STATUS")
+					new SignResponse(1L, "hash", BASE64_ENCODINGS.get(1L).getLeft(), "INVALID_STATUS")
 			)));
 
 			final Signature signature = cut.sign(Map.of(1L, "payload".getBytes())).get(1L);
@@ -130,13 +142,12 @@ class SignatureServiceImplTest {
 		@Test
 		@DisplayName("sign() kodiert CMS-Content korrekt als UTF-8")
 		void sign_shouldEncodeContentAsUtf8() {
-			final String cms = "Sonderzeichen: äöüß";
-			httpClient.respondWithSuccess(successResponse(List.of(okResponse(1L, cms))));
+			httpClient.respondWithSuccess(successResponse(List.of(okResponse(1L, BASE64_ENCODINGS.get(3L).getLeft()))));
 
 			final Signature signature = cut.sign(Map.of(1L, "payload".getBytes())).get(1L);
 
 			assertThat(signature.content())
-					.isEqualTo(cms.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+					.isEqualTo(BASE64_ENCODINGS.get(3L).getRight().getBytes(StandardCharsets.UTF_8));
 		}
 
 		@Test
@@ -144,9 +155,9 @@ class SignatureServiceImplTest {
 		void sign_shouldHandleMixedStatuses() {
 			cut = spy(cut);
 			httpClient.respondWithSuccess(successResponse(List.of(
-					okResponse(1L, "cms-ok"),
+					okResponse(1L, BASE64_ENCODINGS.get(1L).getLeft()),
 					errorResponse(2L),
-					new SignResponse(3L, "hash", "cms", "INVALID_STATUS")
+					new SignResponse(3L, "hash", BASE64_ENCODINGS.get(2L).getLeft(), "INVALID_STATUS")
 			)));
 
 			final Map<Object, Signature> result = cut.sign(Map.of(
@@ -290,7 +301,7 @@ class SignatureServiceImplTest {
 		@DisplayName("String-IDs werden korrekt auf Signaturen zurückgemappt")
 		void sign_shouldMapBackToStringIds() {
 			httpClient.respondWithSuccess(successResponse(List.of(
-					okResponse(1L, "cms-string")
+					okResponse(1L, BASE64_ENCODINGS.get(1L).getLeft())
 			)));
 
 			final Map<Object, Signature> result = cut.sign(Map.of(
@@ -305,7 +316,7 @@ class SignatureServiceImplTest {
 		void sign_shouldMapBackToArbitraryObjectIds() {
 			final Object arbitraryId = java.util.UUID.randomUUID();
 			httpClient.respondWithSuccess(successResponse(List.of(
-					okResponse(1L, "cms")
+					okResponse(1L, BASE64_ENCODINGS.get(1L).getLeft())
 			)));
 
 			final Map<Object, Signature> result = cut.sign(Map.of(
@@ -320,7 +331,7 @@ class SignatureServiceImplTest {
 		void sign_resultShouldNotContainInternalMaskIds() {
 			final Object originalId = "my-original-id";
 			httpClient.respondWithSuccess(successResponse(List.of(
-					okResponse(1L, "cms")
+					okResponse(1L, BASE64_ENCODINGS.get(1L).getLeft())
 			)));
 
 			final Map<Object, Signature> result = cut.sign(Map.of(
@@ -340,25 +351,25 @@ class SignatureServiceImplTest {
 			payloadById.put("second", "payload-second".getBytes());
 
 			httpClient.respondWithSuccess(successResponse(List.of(
-					okResponse(1L, "cms-for-first"),
-					okResponse(2L, "cms-for-second")
+					okResponse(1L, BASE64_ENCODINGS.get(1L).getLeft()),
+					okResponse(2L, BASE64_ENCODINGS.get(2L).getLeft())
 			)));
 
 			final Map<Object, Signature> result = cut.sign(payloadById);
 
-			assertThat(new String(result.get("first").content(), java.nio.charset.StandardCharsets.UTF_8))
-					.isEqualTo("cms-for-first");
-			assertThat(new String(result.get("second").content(), java.nio.charset.StandardCharsets.UTF_8))
-					.isEqualTo("cms-for-second");
+			assertThat(new String(result.get("first").content(), StandardCharsets.UTF_8))
+					.isEqualTo(BASE64_ENCODINGS.get(1L).getRight());
+			assertThat(new String(result.get("second").content(), StandardCharsets.UTF_8))
+					.isEqualTo(BASE64_ENCODINGS.get(2L).getRight());
 		}
 
 		@Test
 		@DisplayName("Anzahl der Einträge im Ergebnis entspricht der Anzahl der Eingabe-Payloads")
 		void sign_resultSizeShouldMatchInputSize() {
 			httpClient.respondWithSuccess(successResponse(List.of(
-					okResponse(1L, "cms-1"),
-					okResponse(2L, "cms-2"),
-					okResponse(3L, "cms-3")
+					okResponse(1L, BASE64_ENCODINGS.get(1L).getLeft()),
+					okResponse(2L, BASE64_ENCODINGS.get(1L).getLeft()),
+					okResponse(3L, BASE64_ENCODINGS.get(1L).getLeft())
 			)));
 
 			final Map<Object, Signature> result = cut.sign(Map.of(
@@ -375,8 +386,8 @@ class SignatureServiceImplTest {
 		void sign_samePayloadDifferentIds_producesDistinctEntries() {
 			final byte[] sharedPayload = "same-content".getBytes();
 			httpClient.respondWithSuccess(successResponse(List.of(
-					okResponse(1L, "cms-1"),
-					okResponse(2L, "cms-2")
+					okResponse(1L, BASE64_ENCODINGS.get(1L).getLeft()),
+					okResponse(2L, BASE64_ENCODINGS.get(2L).getLeft())
 			)));
 
 			final java.util.Map<Object, byte[]> payloadById = new java.util.LinkedHashMap<>();
@@ -405,7 +416,7 @@ class SignatureServiceImplTest {
 	}
 
 	private static SignResponse errorResponse(final long id) {
-		return new SignResponse(id, "hash-" + id, "Signatur fehlgeschlagen", "ERROR");
+		return new SignResponse(id, "hash-" + id, "Fehler", "ERROR");
 	}
 
 }
