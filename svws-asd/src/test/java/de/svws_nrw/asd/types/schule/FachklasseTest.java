@@ -58,7 +58,7 @@ class FachklasseTest {
 						"101",
 						"00",
 						10,
-						4,
+						"DQR_NIVEAU_4",
 						false,
 						"T",
 						"MT",

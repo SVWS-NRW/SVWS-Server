@@ -29,7 +29,7 @@ public class FachklasseKatalogEintrag extends CoreTypeData {
 
 	/** ID des DQRNiveaus im CoreType DQRNiveau. */
 	@Schema(description = "ID des DQRNiveaus", example = "1")
-	public Integer dqrNiveau;
+	public String dqrNiveau;
 
 	/** Gibt an, ob die Fachklassen ausgelaufen ist oder nicht */
 	@Schema(description = "gibt an, ob die Fachklassen ausgelaufen ist oder nicht", example = "false")

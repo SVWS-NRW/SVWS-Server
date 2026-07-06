@@ -14,9 +14,9 @@ export class Schild3FachklasseDQRNiveauZuordnung extends JavaObject {
 	public FKS: string | null = null;
 
 	/**
-	 * DQR-Niveau als Nummer
+	 * DQR-Niveau als Bezeichner
 	 */
-	public DQR_Niveau: number | null = null;
+	public DQR_Niveau: string | null = null;
 
 	/**
 	 * Gültig ab Schuljahr
@@ -58,7 +58,7 @@ export class Schild3FachklasseDQRNiveauZuordnung extends JavaObject {
 		let result = '{';
 		result += '"Gliederung" : ' + ((obj.Gliederung === null) ? 'null' : JSON.stringify(obj.Gliederung)) + ',';
 		result += '"FKS" : ' + ((obj.FKS === null) ? 'null' : JSON.stringify(obj.FKS)) + ',';
-		result += '"DQR_Niveau" : ' + ((obj.DQR_Niveau === null) ? 'null' : obj.DQR_Niveau.toString()) + ',';
+		result += '"DQR_Niveau" : ' + ((obj.DQR_Niveau === null) ? 'null' : JSON.stringify(obj.DQR_Niveau)) + ',';
 		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
@@ -75,7 +75,7 @@ export class Schild3FachklasseDQRNiveauZuordnung extends JavaObject {
 			result += '"FKS" : ' + ((obj.FKS === null) ? 'null' : JSON.stringify(obj.FKS)) + ',';
 		}
 		if (obj.DQR_Niveau !== undefined) {
-			result += '"DQR_Niveau" : ' + ((obj.DQR_Niveau === null) ? 'null' : obj.DQR_Niveau.toString()) + ',';
+			result += '"DQR_Niveau" : ' + ((obj.DQR_Niveau === null) ? 'null' : JSON.stringify(obj.DQR_Niveau)) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
 			result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';

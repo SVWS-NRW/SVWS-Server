@@ -20,9 +20,9 @@ public class Schild3FachklasseDQRNiveauZuordnung {
 	@Schema(description = "DQR-Niveau für die Fachklasse")
 	public String FKS;
 
-	/** DQR-Niveau als Nummer */
+	/** DQR-Niveau als Bezeichner */
 	@Schema(description = "DQR-Niveau als Nummer")
-	public Integer DQR_Niveau;
+	public String DQR_Niveau;
 
 	/** Gültig ab Schuljahr */
 	@Schema(description = "Gültig ab Schuljahr")

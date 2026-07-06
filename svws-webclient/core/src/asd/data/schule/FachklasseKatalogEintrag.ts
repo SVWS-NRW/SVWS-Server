@@ -21,7 +21,7 @@ export class FachklasseKatalogEintrag extends CoreTypeData {
 	/**
 	 * ID des DQRNiveaus im CoreType DQRNiveau.
 	 */
-	public dqrNiveau: number | null = null;
+	public dqrNiveau: string | null = null;
 
 	/**
 	 * Gibt an, ob die Fachklassen ausgelaufen ist oder nicht
@@ -133,7 +133,7 @@ export class FachklasseKatalogEintrag extends CoreTypeData {
 		result += '"fkSchluessel" : ' + ((obj.fkSchluessel === null) ? 'null' : JSON.stringify(obj.fkSchluessel)) + ',';
 		result += '"fkSchluessel2" : ' + ((obj.fkSchluessel2 === null) ? 'null' : JSON.stringify(obj.fkSchluessel2)) + ',';
 		result += '"bkIndex" : ' + obj.bkIndex + ',';
-		result += '"dqrNiveau" : ' + ((obj.dqrNiveau === null) ? 'null' : obj.dqrNiveau.toString()) + ',';
+		result += '"dqrNiveau" : ' + ((obj.dqrNiveau === null) ? 'null' : JSON.stringify(obj.dqrNiveau)) + ',';
 		result += '"istAusgelaufen" : ' + obj.istAusgelaufen.toString() + ',';
 		result += '"berufsfeldGruppe" : ' + ((obj.berufsfeldGruppe === null) ? 'null' : JSON.stringify(obj.berufsfeldGruppe)) + ',';
 		result += '"berufsfeld" : ' + ((obj.berufsfeld === null) ? 'null' : JSON.stringify(obj.berufsfeld)) + ',';
@@ -180,7 +180,7 @@ export class FachklasseKatalogEintrag extends CoreTypeData {
 			result += '"bkIndex" : ' + obj.bkIndex + ',';
 		}
 		if (obj.dqrNiveau !== undefined) {
-			result += '"dqrNiveau" : ' + ((obj.dqrNiveau === null) ? 'null' : obj.dqrNiveau.toString()) + ',';
+			result += '"dqrNiveau" : ' + ((obj.dqrNiveau === null) ? 'null' : JSON.stringify(obj.dqrNiveau)) + ',';
 		}
 		if (obj.istAusgelaufen !== undefined) {
 			result += '"istAusgelaufen" : ' + obj.istAusgelaufen.toString() + ',';
