@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.lang.model.element.ExecutableElement;
@@ -44,6 +45,10 @@ import de.svws_nrw.transpiler.TranspilerException;
  * This class is used to handle java type information and transpiles it.
  */
 public class TypeNode {
+
+	/** a set with the full qualified names of number wrapper classes  */
+	private static final Set<String> setOfNumberWrapperClasses =
+			Set.of("java.lang.Long", "java.lang.Integer", "java.lang.Short", "java.lang.Byte", "java.lang.Float", "java.lang.Double", "java.lang.Number");
 
 	/** the {@link TranspilerTypeScriptPlugin} used */
 	private final TranspilerTypeScriptPlugin plugin;
@@ -585,6 +590,8 @@ public class TypeNode {
 		if (dt.asElement() instanceof final TypeElement te) {
 			if ("java.lang.String".equals(te.getQualifiedName().toString())) {
 				typeString = "string";
+			} else if (setOfNumberWrapperClasses.contains(te.getQualifiedName().toString())) {
+				typeString = "number";
 			} else {
 				typeString = te.getSimpleName().toString();
 			}
@@ -641,8 +648,7 @@ public class TypeNode {
 		if ("java.lang".equals(packagename)) {
 			final String result = switch (classname) {
 				case "Object" -> "object" + ((decl && !notNull) ? " | null" : "");
-				case "Byte", "Short", "Integer", "Long", "Float", "Double"
-					-> "number" + ((decl && !notNull) ? " | null" : "");
+				case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "number" + ((decl && !notNull) ? " | null" : "");
 				case "String" -> "string" + ((decl && !notNull) ? " | null" : "");
 				default -> null;
 			};
