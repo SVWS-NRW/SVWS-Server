@@ -41,7 +41,7 @@
 				<svws-ui-input-wrapper v-if="manager().auswahl().serverTLSCertIsTrusted">
 					<div v-if="manager().getAuswahlConnectionResponse()?.success === false" class="bg-ui-warning rounded-md p-2">
 						Um Daten mit dem ENM-Server austauschen zu können, muss das auf dem Webspace abgelegte Secret ausgelesen und in das unten angegebene Feld eingefügt werden.
-						<br>Standardmäßig befindet sich das Secret in der Datei <span class="font-mono">php/db/client.sec</span> ihres Webspace.
+						<br>Standardmäßig befindet sich das Secret in der Datei <span class="font-mono">db/client.sec</span> ihres Webspace.
 					</div>
 					<svws-ui-text-input v-if="manager().getAuswahlSetupResponse() !== null" :model-value="manager().auswahl().clientSecret" type="password" placeholder="Secret" @change="clientSecret => (clientSecret !== null) && updateServerConnection({ clientSecret })" required />
 					<svws-ui-text-input :model-value="manager().auswahl().bezeichnung" type="text" placeholder="Bezeichnung" @change="bezeichnung => updateServerConnection({ bezeichnung: bezeichnung ?? null })" />
