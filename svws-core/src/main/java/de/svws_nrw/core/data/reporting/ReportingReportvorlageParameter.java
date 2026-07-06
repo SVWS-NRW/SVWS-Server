@@ -1,5 +1,8 @@
 package de.svws_nrw.core.data.reporting;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.svws_nrw.core.types.reporting.ReportingReportvorlageParameterTyp;
 import de.svws_nrw.core.types.reporting.ReportingUIKomponentenTyp;
 import de.svws_nrw.transpiler.TranspilerDTO;
@@ -46,6 +49,14 @@ public class ReportingReportvorlageParameter {
 	/** Die Anzahl der Grid-Spalten, die der Parameter in der UI einnehmen soll. */
 	@Schema(description = "Die Anzahl der Grid-Spalten, die der Parameter in der UI einnehmen soll.")
 	public int uiAnzahlSpalten = 1;
+
+	/** Der mindestens erforderliche ServerMode (stable|beta|alpha|dev), damit der Parameter in der UI verfügbar ist. Leer = in allen Modi verfügbar. */
+	@Schema(description = "Der mindestens erforderliche ServerMode (stable|beta|alpha|dev), damit der Parameter in der UI verfügbar ist. Leer = in allen Modi verfügbar.")
+	public @NotNull String uiErforderlicherServerMode = "";
+
+	/** Die IDs der Benutzerkompetenzen (OR-verknüpft), die zur Nutzung des Parameters erforderlich sind. Leer = keine Kompetenz erforderlich. */
+	@Schema(description = "Die IDs der Benutzerkompetenzen (OR-verknüpft), die zur Nutzung des Parameters erforderlich sind. Leer = keine Kompetenz erforderlich.")
+	public @NotNull List<Long> uiErforderlicheKompetenzen = new ArrayList<>();
 
 	/**
 	 * Konstruktor für die Klasse.

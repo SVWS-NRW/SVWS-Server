@@ -2,16 +2,22 @@ package de.svws_nrw.module.reporting.factories;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
+import de.svws_nrw.core.data.reporting.ReportingFilterDefinitionGruppe;
 import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameter;
 import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameterGruppe;
+import de.svws_nrw.core.data.reporting.ReportingSortierungDefinitionGruppe;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.core.types.ServerMode;
+import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.reporting.ReportingAusgabeformat;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
 import de.svws_nrw.db.DBEntityManager;
@@ -135,6 +141,11 @@ public final class ReportingFactory {
 			this.logger.logLn(LogLevel.DEBUG, 4, "Erzeugung des Reporting-Context");
 			this.reportingContext = new ReportingContext(conn, this.reportingParameter, this.logger, this.log);
 
+			// Setze über die API übergebene Einstellungen zurück, die der aktuelle ServerMode oder die Benutzerkompetenzen nicht zulassen. Dies verhindert,
+			// dass eine im Client deaktivierte (und damit nicht einstellbare) Option über einen manipulierten Request gesetzt werden kann.
+			this.logger.logLn(LogLevel.DEBUG, 4, "Prüfe ServerMode und Benutzerkompetenzen der übergebenen Einstellungen.");
+			setzeUnerlaubteEinstellungenZurueck(reportvorlage);
+
 			this.logger.logLn(LogLevel.DEBUG, 0, "<<< Ende des Initialisierens der Reporting-Factory und des Validierens übergebener Daten.");
 		} catch (final ApiOperationException aoe) {
 			// Die ApiOperationException wird unverändert weitergereicht, damit der ursprüngliche Status-Code nach außen erhalten bleibt.
@@ -242,6 +253,8 @@ public final class ReportingFactory {
 			kombinierteGruppe.beschreibung = definierteGruppe.beschreibung;
 			kombinierteGruppe.uiIstSichtbar = definierteGruppe.uiIstSichtbar;
 			kombinierteGruppe.uiAnzahlSpalten = definierteGruppe.uiAnzahlSpalten;
+			kombinierteGruppe.uiErforderlicherServerMode = definierteGruppe.uiErforderlicherServerMode;
+			kombinierteGruppe.uiErforderlicheKompetenzen = new ArrayList<>(definierteGruppe.uiErforderlicheKompetenzen);
 
 			final List<ReportingReportvorlageParameter> kombinierteReportvorlageParameter = new ArrayList<>();
 			if (definierteGruppe.reportvorlageParameter != null) {
@@ -259,6 +272,9 @@ public final class ReportingFactory {
 					kombinierterReportvorlageParameter.uiIstSichtbar = definierterReportvorlageParameter.uiIstSichtbar;
 					kombinierterReportvorlageParameter.uiKomponentenTyp = definierterReportvorlageParameter.uiKomponentenTyp;
 					kombinierterReportvorlageParameter.uiAnzahlSpalten = definierterReportvorlageParameter.uiAnzahlSpalten;
+					kombinierterReportvorlageParameter.uiErforderlicherServerMode = definierterReportvorlageParameter.uiErforderlicherServerMode;
+					kombinierterReportvorlageParameter.uiErforderlicheKompetenzen =
+							new ArrayList<>(definierterReportvorlageParameter.uiErforderlicheKompetenzen);
 
 					// ... und wenn ein gültiger Wert ungleich null übergeben wurde, so wird dieser gesetzt.
 					final ReportingReportvorlageParameter uebergebenerReportvorlageParameter =
@@ -275,6 +291,132 @@ public final class ReportingFactory {
 			kombinierteGruppen.add(kombinierteGruppe);
 		}
 		return kombinierteGruppen;
+	}
+
+
+	/**
+	 * Setzt die Werte von Vorlage-Parametern sowie die Auswahl von Sortier- und Filtergruppen auf ihre Standardwerte zurück, wenn der aktuelle ServerMode oder
+	 * die Kompetenzen des angemeldeten Benutzers die übergebenen Einstellungen nicht zulassen. So kann eine im Client ausgeblendete (und damit nicht
+	 * einstellbare) Einstellung nicht über einen manipulierten Request gesetzt werden.
+	 *
+	 * @param reportvorlage die Reportvorlage mit den SOLL-Definitionen (Standardwerte und Anforderungen)
+	 */
+	private void setzeUnerlaubteEinstellungenZurueck(final ReportingReportvorlage reportvorlage) {
+		// Vorlage-Parameter je Gruppe prüfen und ggf. auf den Standardwert der Vorlage zurücksetzen.
+		for (final ReportingReportvorlageParameterGruppe gruppe : this.reportingParameter.reportvorlageParameterGruppen) {
+			setzeUnerlaubteParameterZurueck(reportvorlage, gruppe);
+		}
+
+		// Sortier- und Filtergruppen: Die Anforderungen werden aus den SOLL-Definitionen gelesen, damit manipulierte Anforderungswerte keine Wirkung haben.
+		final ReportingParameter sollParameter = reportvorlage.getReportingParameter();
+		setzeUnerlaubteSortierungZurueck(sollParameter);
+		setzeUnerlaubteFilterungZurueck(sollParameter);
+	}
+
+
+	/**
+	 * Setzt die Werte der Parameter einer Parametergruppe auf den Standardwert der Vorlage zurück, wenn die Gruppe oder der jeweilige Parameter im aktuellen
+	 * ServerMode oder mit den Kompetenzen des angemeldeten Benutzers nicht erlaubt ist.
+	 *
+	 * @param reportvorlage die Reportvorlage mit den Standardwerten
+	 * @param gruppe        die zu prüfende Parametergruppe
+	 */
+	private void setzeUnerlaubteParameterZurueck(final ReportingReportvorlage reportvorlage, final ReportingReportvorlageParameterGruppe gruppe) {
+		if ((gruppe == null) || (gruppe.reportvorlageParameter == null)) {
+			return;
+		}
+		final boolean gruppeErlaubt = istEinstellungErlaubt(gruppe.uiErforderlicherServerMode, gruppe.uiErforderlicheKompetenzen);
+		for (final ReportingReportvorlageParameter parameter : gruppe.reportvorlageParameter) {
+			if ((parameter == null) || (parameter.name == null)
+					|| (gruppeErlaubt && istEinstellungErlaubt(parameter.uiErforderlicherServerMode, parameter.uiErforderlicheKompetenzen))) {
+				continue;
+			}
+			final ReportingReportvorlageParameter standard = reportvorlage.getDefaultVorlageparameter(parameter.name);
+			if (standard != null) {
+				parameter.wert = standard.wert;
+			}
+		}
+	}
+
+
+	/**
+	 * Setzt die übergebene Auswahl einer Sortiergruppe auf die SOLL-Auswahl der Vorlage zurück, wenn die Gruppe im aktuellen ServerMode oder mit den Kompetenzen
+	 * des Benutzers nicht erlaubt ist.
+	 *
+	 * @param sollParameter die SOLL-Definition der Reportvorlage mit den Anforderungen der Sortiergruppen
+	 */
+	private void setzeUnerlaubteSortierungZurueck(final ReportingParameter sollParameter) {
+		final HashMap<String, ReportingSortierungDefinitionGruppe> sollGruppen = new HashMap<>();
+		for (final ReportingSortierungDefinitionGruppe sollGruppe : sollParameter.sortierungDefinitionenGruppen) {
+			if ((sollGruppe != null) && (sollGruppe.bezeichnung != null)) {
+				sollGruppen.put(sollGruppe.bezeichnung, sollGruppe);
+			}
+		}
+		for (final ReportingSortierungDefinitionGruppe gruppe : this.reportingParameter.sortierungDefinitionenGruppen) {
+			if ((gruppe == null) || (gruppe.bezeichnung == null)) {
+				continue;
+			}
+			final ReportingSortierungDefinitionGruppe sollGruppe = sollGruppen.get(gruppe.bezeichnung);
+			if ((sollGruppe != null) && !istEinstellungErlaubt(sollGruppe.uiErforderlicherServerMode, sollGruppe.uiErforderlicheKompetenzen)) {
+				gruppe.sortierungDefinitionen = new ArrayList<>(sollGruppe.sortierungDefinitionen);
+			}
+		}
+	}
+
+
+	/**
+	 * Setzt die übergebene Auswahl einer Filtergruppe auf die SOLL-Auswahl der Vorlage zurück, wenn die Gruppe im aktuellen ServerMode oder mit den Kompetenzen
+	 * des Benutzers nicht erlaubt ist.
+	 *
+	 * @param sollParameter die SOLL-Definition der Reportvorlage mit den Anforderungen der Filtergruppen
+	 */
+	private void setzeUnerlaubteFilterungZurueck(final ReportingParameter sollParameter) {
+		final HashMap<String, ReportingFilterDefinitionGruppe> sollGruppen = new HashMap<>();
+		for (final ReportingFilterDefinitionGruppe sollGruppe : sollParameter.filterDefinitionenGruppen) {
+			if ((sollGruppe != null) && (sollGruppe.bezeichnung != null)) {
+				sollGruppen.put(sollGruppe.bezeichnung, sollGruppe);
+			}
+		}
+		for (final ReportingFilterDefinitionGruppe gruppe : this.reportingParameter.filterDefinitionenGruppen) {
+			if ((gruppe == null) || (gruppe.bezeichnung == null)) {
+				continue;
+			}
+			final ReportingFilterDefinitionGruppe sollGruppe = sollGruppen.get(gruppe.bezeichnung);
+			if ((sollGruppe != null) && !istEinstellungErlaubt(sollGruppe.uiErforderlicherServerMode, sollGruppe.uiErforderlicheKompetenzen)) {
+				gruppe.filterDefinitionen = new ArrayList<>(sollGruppe.filterDefinitionen);
+			}
+		}
+	}
+
+
+	/**
+	 * Prüft, ob eine Einstellung (Parameter oder Gruppe) mit den angegebenen Anforderungen im aktuellen ServerMode und mit den Kompetenzen des angemeldeten
+	 * Benutzers erlaubt ist.
+	 *
+	 * @param uiErforderlicherServerMode der mindestens erforderliche ServerMode als Text (leer = in allen Modi erlaubt)
+	 * @param uiErforderlicheKompetenzen die IDs der erforderlichen Benutzerkompetenzen (OR-verknüpft; leer = keine Kompetenz erforderlich)
+	 *
+	 * @return true, wenn die Einstellung erlaubt ist, ansonsten false
+	 */
+	private boolean istEinstellungErlaubt(final String uiErforderlicherServerMode, final List<Long> uiErforderlicheKompetenzen) {
+		// ServerMode: Ein leerer Text wird von getByText als STABLE interpretiert, was in allen Modi erlaubt ist.
+		if (!ServerMode.getByText(uiErforderlicherServerMode).checkServerMode(this.reportingContext.serverMode())) {
+			return false;
+		}
+		// Kompetenzen: Ohne Anforderung ist die Einstellung für alle erlaubt.
+		if ((uiErforderlicheKompetenzen == null) || uiErforderlicheKompetenzen.isEmpty()) {
+			return true;
+		}
+		final Set<BenutzerKompetenz> kompetenzen = new HashSet<>();
+		for (final Long id : uiErforderlicheKompetenzen) {
+			if (id != null) {
+				final BenutzerKompetenz kompetenz = BenutzerKompetenz.getByID(id);
+				if (kompetenz != null) {
+					kompetenzen.add(kompetenz);
+				}
+			}
+		}
+		return this.reportingContext.benutzer().pruefeKompetenz(kompetenzen);
 	}
 
 

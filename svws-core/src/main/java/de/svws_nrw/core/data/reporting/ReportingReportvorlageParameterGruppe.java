@@ -32,6 +32,14 @@ public class ReportingReportvorlageParameterGruppe {
 	@Schema(description = "Die Anzahl der Grid-Spalten, die für die Gruppe zur Verfügung stehen.")
 	public int uiAnzahlSpalten = 1;
 
+	/** Der mindestens erforderliche ServerMode (stable|beta|alpha|dev), damit die Gruppe in der UI verfügbar ist. Leer = in allen Modi verfügbar. */
+	@Schema(description = "Der mindestens erforderliche ServerMode (stable|beta|alpha|dev), damit die Gruppe in der UI verfügbar ist. Leer = in allen Modi verfügbar.")
+	public @NotNull String uiErforderlicherServerMode = "";
+
+	/** Die IDs der Benutzerkompetenzen (OR-verknüpft), die zur Nutzung der Gruppe erforderlich sind. Leer = keine Kompetenz erforderlich. */
+	@Schema(description = "Die IDs der Benutzerkompetenzen (OR-verknüpft), die zur Nutzung der Gruppe erforderlich sind. Leer = keine Kompetenz erforderlich.")
+	public @NotNull List<Long> uiErforderlicheKompetenzen = new ArrayList<>();
+
 	/** Die Liste der ReportingVorlageParameter, die zu dieser Gruppe gehören. */
 	@Schema(description = "Die Liste der ReportingVorlageParameter, die zu dieser Gruppe gehören.")
 	public @NotNull List<ReportingReportvorlageParameter> reportvorlageParameter = new ArrayList<>();

@@ -1,33 +1,67 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { ReportingFilterDefinitionFactory } from '../../../core/utils/reporting/ReportingFilterDefinitionFactory';
-import { ReportingFilterVerknuepfung, cast_de_svws_nrw_core_types_reporting_ReportingFilterVerknuepfung } from '../../../core/types/reporting/ReportingFilterVerknuepfung';
-import { ReportingFilterDefinition } from '../../../core/data/reporting/ReportingFilterDefinition';
 import { ReportingReportvorlageParameter } from '../../../core/data/reporting/ReportingReportvorlageParameter';
 import { ReportingSortierungDefinitionGruppe } from '../../../core/data/reporting/ReportingSortierungDefinitionGruppe';
-import { ReportingReportvorlageParameterTyp } from '../../../core/types/reporting/ReportingReportvorlageParameterTyp';
 import { ReportingEMailDaten } from '../../../core/data/reporting/ReportingEMailDaten';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { ReportingUIKomponentenTyp } from '../../../core/types/reporting/ReportingUIKomponentenTyp';
 import { JavaString } from '../../../java/lang/JavaString';
 import { ReportingFilterKriterium } from '../../../core/data/reporting/ReportingFilterKriterium';
 import { SchuelerStatus } from '../../../asd/types/schueler/SchuelerStatus';
 import { ReportingParameter } from '../../../core/data/reporting/ReportingParameter';
 import { ReportingSortierungDefinition } from '../../../core/data/reporting/ReportingSortierungDefinition';
 import { ReportingEMailEmpfaengerTyp } from '../../../core/types/reporting/ReportingEMailEmpfaengerTyp';
+import { BenutzerKompetenz } from '../../../core/types/benutzer/BenutzerKompetenz';
 import { ReportingFilterDefinitionGruppe } from '../../../core/data/reporting/ReportingFilterDefinitionGruppe';
-import { ReportingFilterEintrag } from '../../../core/data/reporting/ReportingFilterEintrag';
-import { ReportingReportvorlageParameterGruppe } from '../../../core/data/reporting/ReportingReportvorlageParameterGruppe';
 import type { List } from '../../../java/util/List';
 import { cast_java_util_List } from '../../../java/util/List';
+import { ReportingAusgabeformat } from '../../../core/types/reporting/ReportingAusgabeformat';
+import { ServerMode, cast_de_svws_nrw_core_types_ServerMode } from '../../../core/types/ServerMode';
+import { ReportingFilterDefinitionFactory } from '../../../core/utils/reporting/ReportingFilterDefinitionFactory';
+import { ReportingFilterVerknuepfung, cast_de_svws_nrw_core_types_reporting_ReportingFilterVerknuepfung } from '../../../core/types/reporting/ReportingFilterVerknuepfung';
+import { ReportingFilterDefinition } from '../../../core/data/reporting/ReportingFilterDefinition';
+import { ReportingReportvorlageParameterTyp, cast_de_svws_nrw_core_types_reporting_ReportingReportvorlageParameterTyp } from '../../../core/types/reporting/ReportingReportvorlageParameterTyp';
+import { ReportingUIKomponentenTyp, cast_de_svws_nrw_core_types_reporting_ReportingUIKomponentenTyp } from '../../../core/types/reporting/ReportingUIKomponentenTyp';
+import { ReportingFilterEintrag } from '../../../core/data/reporting/ReportingFilterEintrag';
+import { ReportingReportvorlageParameterGruppe } from '../../../core/data/reporting/ReportingReportvorlageParameterGruppe';
 import { Class } from '../../../java/lang/Class';
 import { Arrays } from '../../../java/util/Arrays';
-import { ReportingAusgabeformat } from '../../../core/types/reporting/ReportingAusgabeformat';
 
 export class ReportingReportvorlageUtils extends JavaObject {
 
 
 	private constructor() {
 		super();
+	}
+
+	/**
+	 * Wandelt einen {@link ServerMode} in den zu speichernden Text-Wert um. Der Modus {@link ServerMode#STABLE} (und null) wird als leerer String abgebildet,
+	 * da er semantisch identisch zu "in allen Modi verfügbar" ist.
+	 *
+	 * @param serverMode der ServerMode
+	 *
+	 * @return der Text-Wert des ServerMode oder ein leerer String bei STABLE
+	 */
+	private static serverModeText(serverMode: ServerMode | null): string {
+		return ((serverMode === null) || (serverMode as unknown === ServerMode.STABLE as unknown)) ? "" : serverMode.text;
+	}
+
+	/**
+	 * Wandelt eine Liste von {@link BenutzerKompetenz} in eine Liste ihrer IDs um. Ein null-Wert wird als leere Liste (= keine Kompetenz erforderlich)
+	 * interpretiert.
+	 *
+	 * @param kompetenzen die Liste der Benutzerkompetenzen oder null
+	 *
+	 * @return die Liste der Kompetenz-IDs (ggf. leer)
+	 */
+	private static kompetenzIds(kompetenzen: List<BenutzerKompetenz> | null): List<number> {
+		const ids: List<number> | null = new ArrayList<number>();
+		if (kompetenzen !== null) {
+			for (const kompetenz of kompetenzen) {
+				if (kompetenz !== null) {
+					ids.add(kompetenz.daten.id);
+				}
+			}
+		}
+		return ids;
 	}
 
 	/**
@@ -71,14 +105,53 @@ export class ReportingReportvorlageUtils extends JavaObject {
 	 *
 	 * @return Ein ReportingReportvorlageParameterGruppe-Objekt mit den angegebenen Eigenschaften
 	 */
-	public static erzeugeReportingvorlageParameterGruppe(name: string, beschreibung: string, uiIstSichtbar: boolean, uiAnzahlSpalten: number, reportingReportvorlageParameter: List<ReportingReportvorlageParameter>): ReportingReportvorlageParameterGruppe {
-		const gruppe: ReportingReportvorlageParameterGruppe | null = new ReportingReportvorlageParameterGruppe();
-		gruppe.name = name;
-		gruppe.beschreibung = beschreibung;
-		gruppe.uiIstSichtbar = uiIstSichtbar;
-		gruppe.uiAnzahlSpalten = uiAnzahlSpalten;
-		gruppe.reportvorlageParameter = reportingReportvorlageParameter;
-		return gruppe;
+	public static erzeugeReportingvorlageParameterGruppe(name: string, beschreibung: string, uiIstSichtbar: boolean, uiAnzahlSpalten: number, reportingReportvorlageParameter: List<ReportingReportvorlageParameter>) : ReportingReportvorlageParameterGruppe;
+
+	/**
+	 * Erstellt ein ReportingReportvorlageParameterGruppe-Objekt basierend auf den angegebenen Parametern, inklusive der Angaben zu erforderlichem ServerMode und
+	 * erforderlichen Benutzerkompetenzen.
+	 *
+	 * @param name                            Name der Parametergruppe
+	 * @param beschreibung                    Beschreibung der Parametergruppe
+	 * @param uiIstSichtbar                   Gibt an, ob die Parametergruppe in der UI sichtbar sein soll
+	 * @param uiAnzahlSpalten                 Anzahl der Spalten für die Parametergruppe in der UI
+	 * @param uiErforderlicherServerMode      Der mindestens erforderliche ServerMode, damit die Gruppe verfügbar ist (STABLE = in allen Modi verfügbar)
+	 * @param uiErforderlicheKompetenzen      Die erforderlichen Benutzerkompetenzen (OR-verknüpft; leer = keine Kompetenz erforderlich)
+	 * @param reportingReportvorlageParameter Liste der ReportingReportvorlageParameter, die in der Parametergruppe enthalten sind
+	 *
+	 * @return Ein ReportingReportvorlageParameterGruppe-Objekt mit den angegebenen Eigenschaften
+	 */
+	public static erzeugeReportingvorlageParameterGruppe(name: string, beschreibung: string, uiIstSichtbar: boolean, uiAnzahlSpalten: number, uiErforderlicherServerMode: ServerMode, uiErforderlicheKompetenzen: List<BenutzerKompetenz>, reportingReportvorlageParameter: List<ReportingReportvorlageParameter>) : ReportingReportvorlageParameterGruppe;
+
+	/**
+	 * Implementation for method overloads of 'erzeugeReportingvorlageParameterGruppe'
+	 */
+	public static erzeugeReportingvorlageParameterGruppe(__param0: string, __param1: string, __param2: boolean, __param3: number, __param4: List<ReportingReportvorlageParameter> | ServerMode, __param5?: List<BenutzerKompetenz>, __param6?: List<ReportingReportvorlageParameter>): ReportingReportvorlageParameterGruppe {
+		if (((__param0 !== undefined) && (typeof __param0 === "string")) && ((__param1 !== undefined) && (typeof __param1 === "string")) && ((__param2 !== undefined) && typeof __param2 === "boolean") && ((__param3 !== undefined) && typeof __param3 === "number") && ((__param4 !== undefined) && ((__param4 instanceof JavaObject) && (__param4.isTranspiledInstanceOf('java.util.List'))) || (__param4 === null)) && (__param5 === undefined) && (__param6 === undefined)) {
+			const name: string = __param0;
+			const beschreibung: string = __param1;
+			const uiIstSichtbar: boolean = __param2 as boolean;
+			const uiAnzahlSpalten: number = __param3 as number;
+			const reportingReportvorlageParameter: List<ReportingReportvorlageParameter> = cast_java_util_List(__param4);
+			return ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe(name, beschreibung, uiIstSichtbar, uiAnzahlSpalten, ServerMode.STABLE, ArrayList.of(), reportingReportvorlageParameter);
+		} else if (((__param0 !== undefined) && (typeof __param0 === "string")) && ((__param1 !== undefined) && (typeof __param1 === "string")) && ((__param2 !== undefined) && typeof __param2 === "boolean") && ((__param3 !== undefined) && typeof __param3 === "number") && ((__param4 !== undefined) && ((__param4 instanceof JavaObject) && (__param4.isTranspiledInstanceOf('de.svws_nrw.core.types.ServerMode')))) && ((__param5 !== undefined) && ((__param5 instanceof JavaObject) && (__param5.isTranspiledInstanceOf('java.util.List'))) || (__param5 === null)) && ((__param6 !== undefined) && ((__param6 instanceof JavaObject) && (__param6.isTranspiledInstanceOf('java.util.List'))) || (__param6 === null))) {
+			const name: string = __param0;
+			const beschreibung: string = __param1;
+			const uiIstSichtbar: boolean = __param2 as boolean;
+			const uiAnzahlSpalten: number = __param3 as number;
+			const uiErforderlicherServerMode: ServerMode = cast_de_svws_nrw_core_types_ServerMode(__param4);
+			const uiErforderlicheKompetenzen: List<BenutzerKompetenz> = cast_java_util_List(__param5);
+			const reportingReportvorlageParameter: List<ReportingReportvorlageParameter> = cast_java_util_List(__param6);
+			const gruppe: ReportingReportvorlageParameterGruppe | null = new ReportingReportvorlageParameterGruppe();
+			gruppe.name = name;
+			gruppe.beschreibung = beschreibung;
+			gruppe.uiIstSichtbar = uiIstSichtbar;
+			gruppe.uiAnzahlSpalten = uiAnzahlSpalten;
+			gruppe.reportvorlageParameter = reportingReportvorlageParameter;
+			gruppe.uiErforderlicherServerMode = ReportingReportvorlageUtils.serverModeText(uiErforderlicherServerMode);
+			gruppe.uiErforderlicheKompetenzen = ReportingReportvorlageUtils.kompetenzIds(uiErforderlicheKompetenzen);
+			return gruppe;
+		} else throw new Error('invalid method overload');
 	}
 
 	/**
@@ -94,16 +167,61 @@ export class ReportingReportvorlageUtils extends JavaObject {
 	 *
 	 * @return Ein ReportingReportvorlageParameter-Objekt mit den angegebenen Eigenschaften
 	 */
-	public static erzeugeVorlageParameter(name: string, bezeichnung: string, typ: ReportingReportvorlageParameterTyp, wert: string, uiIstSichtbar: boolean, uiKomponentenTyp: ReportingUIKomponentenTyp, uiAnzahlSpalten: number): ReportingReportvorlageParameter {
-		const parameter: ReportingReportvorlageParameter | null = new ReportingReportvorlageParameter();
-		parameter.name = name;
-		parameter.bezeichnung = bezeichnung;
-		parameter.typ = typ.getId();
-		parameter.wert = wert;
-		parameter.uiIstSichtbar = uiIstSichtbar;
-		parameter.uiKomponentenTyp = uiKomponentenTyp.getId();
-		parameter.uiAnzahlSpalten = uiAnzahlSpalten;
-		return parameter;
+	public static erzeugeVorlageParameter(name: string, bezeichnung: string, typ: ReportingReportvorlageParameterTyp, wert: string, uiIstSichtbar: boolean, uiKomponentenTyp: ReportingUIKomponentenTyp, uiAnzahlSpalten: number) : ReportingReportvorlageParameter;
+
+	/**
+	 * Erstellt ein ReportingReportvorlageParameter-Objekt basierend auf den angegebenen Parametern, inklusive der Angaben zu erforderlichem ServerMode und
+	 * erforderlichen Benutzerkompetenzen.
+	 *
+	 * @param name                        Name des Parameters
+	 * @param bezeichnung                 Bezeichnung des Parameters
+	 * @param typ                         Typ des Parameters
+	 * @param wert                        Wert des Parameters
+	 * @param uiIstSichtbar               Gibt an, ob der Parameter in der UI sichtbar sein soll
+	 * @param uiKomponentenTyp            Typ der UI-Komponente für den Parameter
+	 * @param uiAnzahlSpalten             Anzahl der Spalten für die UI-Komponente
+	 * @param uiErforderlicherServerMode  Der mindestens erforderliche ServerMode, damit der Parameter verfügbar ist (STABLE = in allen Modi verfügbar)
+	 * @param uiErforderlicheKompetenzen  Die erforderlichen Benutzerkompetenzen (OR-verknüpft; leer = keine Kompetenz erforderlich)
+	 *
+	 * @return Ein ReportingReportvorlageParameter-Objekt mit den angegebenen Eigenschaften
+	 */
+	public static erzeugeVorlageParameter(name: string, bezeichnung: string, typ: ReportingReportvorlageParameterTyp, wert: string, uiIstSichtbar: boolean, uiKomponentenTyp: ReportingUIKomponentenTyp, uiAnzahlSpalten: number, uiErforderlicherServerMode: ServerMode, uiErforderlicheKompetenzen: List<BenutzerKompetenz>) : ReportingReportvorlageParameter;
+
+	/**
+	 * Implementation for method overloads of 'erzeugeVorlageParameter'
+	 */
+	public static erzeugeVorlageParameter(__param0: string, __param1: string, __param2: ReportingReportvorlageParameterTyp, __param3: string, __param4: boolean, __param5: ReportingUIKomponentenTyp, __param6: number, __param7?: ServerMode, __param8?: List<BenutzerKompetenz>): ReportingReportvorlageParameter {
+		if (((__param0 !== undefined) && (typeof __param0 === "string")) && ((__param1 !== undefined) && (typeof __param1 === "string")) && ((__param2 !== undefined) && ((__param2 instanceof JavaObject) && (__param2.isTranspiledInstanceOf('de.svws_nrw.core.types.reporting.ReportingReportvorlageParameterTyp')))) && ((__param3 !== undefined) && (typeof __param3 === "string")) && ((__param4 !== undefined) && typeof __param4 === "boolean") && ((__param5 !== undefined) && ((__param5 instanceof JavaObject) && (__param5.isTranspiledInstanceOf('de.svws_nrw.core.types.reporting.ReportingUIKomponentenTyp')))) && ((__param6 !== undefined) && typeof __param6 === "number") && (__param7 === undefined) && (__param8 === undefined)) {
+			const name: string = __param0;
+			const bezeichnung: string = __param1;
+			const typ: ReportingReportvorlageParameterTyp = cast_de_svws_nrw_core_types_reporting_ReportingReportvorlageParameterTyp(__param2);
+			const wert: string = __param3;
+			const uiIstSichtbar: boolean = __param4 as boolean;
+			const uiKomponentenTyp: ReportingUIKomponentenTyp = cast_de_svws_nrw_core_types_reporting_ReportingUIKomponentenTyp(__param5);
+			const uiAnzahlSpalten: number = __param6 as number;
+			return ReportingReportvorlageUtils.erzeugeVorlageParameter(name, bezeichnung, typ, wert, uiIstSichtbar, uiKomponentenTyp, uiAnzahlSpalten, ServerMode.STABLE, ArrayList.of());
+		} else if (((__param0 !== undefined) && (typeof __param0 === "string")) && ((__param1 !== undefined) && (typeof __param1 === "string")) && ((__param2 !== undefined) && ((__param2 instanceof JavaObject) && (__param2.isTranspiledInstanceOf('de.svws_nrw.core.types.reporting.ReportingReportvorlageParameterTyp')))) && ((__param3 !== undefined) && (typeof __param3 === "string")) && ((__param4 !== undefined) && typeof __param4 === "boolean") && ((__param5 !== undefined) && ((__param5 instanceof JavaObject) && (__param5.isTranspiledInstanceOf('de.svws_nrw.core.types.reporting.ReportingUIKomponentenTyp')))) && ((__param6 !== undefined) && typeof __param6 === "number") && ((__param7 !== undefined) && ((__param7 instanceof JavaObject) && (__param7.isTranspiledInstanceOf('de.svws_nrw.core.types.ServerMode')))) && ((__param8 !== undefined) && ((__param8 instanceof JavaObject) && (__param8.isTranspiledInstanceOf('java.util.List'))) || (__param8 === null))) {
+			const name: string = __param0;
+			const bezeichnung: string = __param1;
+			const typ: ReportingReportvorlageParameterTyp = cast_de_svws_nrw_core_types_reporting_ReportingReportvorlageParameterTyp(__param2);
+			const wert: string = __param3;
+			const uiIstSichtbar: boolean = __param4 as boolean;
+			const uiKomponentenTyp: ReportingUIKomponentenTyp = cast_de_svws_nrw_core_types_reporting_ReportingUIKomponentenTyp(__param5);
+			const uiAnzahlSpalten: number = __param6 as number;
+			const uiErforderlicherServerMode: ServerMode = cast_de_svws_nrw_core_types_ServerMode(__param7);
+			const uiErforderlicheKompetenzen: List<BenutzerKompetenz> = cast_java_util_List(__param8);
+			const parameter: ReportingReportvorlageParameter | null = new ReportingReportvorlageParameter();
+			parameter.name = name;
+			parameter.bezeichnung = bezeichnung;
+			parameter.typ = typ.getId();
+			parameter.wert = wert;
+			parameter.uiIstSichtbar = uiIstSichtbar;
+			parameter.uiKomponentenTyp = uiKomponentenTyp.getId();
+			parameter.uiAnzahlSpalten = uiAnzahlSpalten;
+			parameter.uiErforderlicherServerMode = ReportingReportvorlageUtils.serverModeText(uiErforderlicherServerMode);
+			parameter.uiErforderlicheKompetenzen = ReportingReportvorlageUtils.kompetenzIds(uiErforderlicheKompetenzen);
+			return parameter;
+		} else throw new Error('invalid method overload');
 	}
 
 	/**
@@ -135,28 +253,81 @@ export class ReportingReportvorlageUtils extends JavaObject {
 	 *
 	 * @return Ein ReportingSortierungDefinitionGruppe-Objekt mit den angegebenen Eigenschaften
 	 */
-	public static erzeugeSortierungDefinitionGruppe(bezeichnung: string, typ: string, uiIstSichtbar: boolean, sortierungDefinitionenOptionen: List<ReportingSortierungDefinition>): ReportingSortierungDefinitionGruppe {
-		const gruppe: ReportingSortierungDefinitionGruppe | null = new ReportingSortierungDefinitionGruppe();
-		gruppe.bezeichnung = bezeichnung;
-		gruppe.typ = typ;
-		gruppe.uiIstSichtbar = uiIstSichtbar;
-		gruppe.sortierungDefinitionenOptionen = new ArrayList(sortierungDefinitionenOptionen);
-		return gruppe;
+	public static erzeugeSortierungDefinitionGruppe(bezeichnung: string, typ: string, uiIstSichtbar: boolean, sortierungDefinitionenOptionen: List<ReportingSortierungDefinition>) : ReportingSortierungDefinitionGruppe;
+
+	/**
+	 * Erstellt ein ReportingSortierungDefinitionGruppe-Objekt basierend auf den angegebenen Parametern, inklusive der Angaben zu erforderlichem ServerMode und
+	 * erforderlichen Benutzerkompetenzen.
+	 *
+	 * @param bezeichnung                    Bezeichnung der Sortierung-Definition-Gruppe
+	 * @param typ                            Typ der Sortierung-Definition-Gruppe
+	 * @param uiIstSichtbar                  Gibt an, ob die Sortierung-Definition-Gruppe in der UI sichtbar sein soll
+	 * @param uiErforderlicherServerMode     Der mindestens erforderliche ServerMode, damit die Gruppe verfügbar ist (STABLE = in allen Modi verfügbar)
+	 * @param uiErforderlicheKompetenzen     Die erforderlichen Benutzerkompetenzen (OR-verknüpft; leer = keine Kompetenz erforderlich)
+	 * @param sortierungDefinitionenOptionen Liste der ReportingSortierungDefinition-Objekte, die in der Sortierung-Definition-Gruppe enthalten sind
+	 *
+	 * @return Ein ReportingSortierungDefinitionGruppe-Objekt mit den angegebenen Eigenschaften
+	 */
+	public static erzeugeSortierungDefinitionGruppe(bezeichnung: string, typ: string, uiIstSichtbar: boolean, uiErforderlicherServerMode: ServerMode, uiErforderlicheKompetenzen: List<BenutzerKompetenz>, sortierungDefinitionenOptionen: List<ReportingSortierungDefinition>) : ReportingSortierungDefinitionGruppe;
+
+	/**
+	 * Implementation for method overloads of 'erzeugeSortierungDefinitionGruppe'
+	 */
+	public static erzeugeSortierungDefinitionGruppe(__param0: string, __param1: string, __param2: boolean, __param3: List<ReportingSortierungDefinition> | ServerMode, __param4?: List<BenutzerKompetenz>, __param5?: List<ReportingSortierungDefinition>): ReportingSortierungDefinitionGruppe {
+		if (((__param0 !== undefined) && (typeof __param0 === "string")) && ((__param1 !== undefined) && (typeof __param1 === "string")) && ((__param2 !== undefined) && typeof __param2 === "boolean") && ((__param3 !== undefined) && ((__param3 instanceof JavaObject) && (__param3.isTranspiledInstanceOf('java.util.List'))) || (__param3 === null)) && (__param4 === undefined) && (__param5 === undefined)) {
+			const bezeichnung: string = __param0;
+			const typ: string = __param1;
+			const uiIstSichtbar: boolean = __param2 as boolean;
+			const sortierungDefinitionenOptionen: List<ReportingSortierungDefinition> = cast_java_util_List(__param3);
+			return ReportingReportvorlageUtils.erzeugeSortierungDefinitionGruppe(bezeichnung, typ, uiIstSichtbar, ServerMode.STABLE, ArrayList.of(), sortierungDefinitionenOptionen);
+		} else if (((__param0 !== undefined) && (typeof __param0 === "string")) && ((__param1 !== undefined) && (typeof __param1 === "string")) && ((__param2 !== undefined) && typeof __param2 === "boolean") && ((__param3 !== undefined) && ((__param3 instanceof JavaObject) && (__param3.isTranspiledInstanceOf('de.svws_nrw.core.types.ServerMode')))) && ((__param4 !== undefined) && ((__param4 instanceof JavaObject) && (__param4.isTranspiledInstanceOf('java.util.List'))) || (__param4 === null)) && ((__param5 !== undefined) && ((__param5 instanceof JavaObject) && (__param5.isTranspiledInstanceOf('java.util.List'))) || (__param5 === null))) {
+			const bezeichnung: string = __param0;
+			const typ: string = __param1;
+			const uiIstSichtbar: boolean = __param2 as boolean;
+			const uiErforderlicherServerMode: ServerMode = cast_de_svws_nrw_core_types_ServerMode(__param3);
+			const uiErforderlicheKompetenzen: List<BenutzerKompetenz> = cast_java_util_List(__param4);
+			const sortierungDefinitionenOptionen: List<ReportingSortierungDefinition> = cast_java_util_List(__param5);
+			const gruppe: ReportingSortierungDefinitionGruppe | null = new ReportingSortierungDefinitionGruppe();
+			gruppe.bezeichnung = bezeichnung;
+			gruppe.typ = typ;
+			gruppe.uiIstSichtbar = uiIstSichtbar;
+			gruppe.sortierungDefinitionenOptionen = new ArrayList(sortierungDefinitionenOptionen);
+			gruppe.uiErforderlicherServerMode = ReportingReportvorlageUtils.serverModeText(uiErforderlicherServerMode);
+			gruppe.uiErforderlicheKompetenzen = ReportingReportvorlageUtils.kompetenzIds(uiErforderlicheKompetenzen);
+			return gruppe;
+		} else throw new Error('invalid method overload');
 	}
 
 	/**
 	 * Erstellt ein ReportingFilterDefinitionGruppe-Objekt basierend auf den angegebenen Parametern.
 	 *
-	 * @param bezeichnung                    Bezeichnung der Filter-Definition-Gruppe
-	 * @param typ                            Typ der Filter-Definition-Gruppe
-	 * @param uiIstSichtbar                  Gibt an, ob die Filter-Definition-Gruppe in der UI sichtbar sein soll
-	 * @param uiIstMultiselect               Gibt an, ob die Filter-Definition-Gruppe als Multiselect in der UI angezeigt werden soll
-	 * @param multiselectVerknuepfung        Verknüpfung für Multiselect-Filter-Definitionen
-	 * @param filterDefinitionenOptionen     Liste der ReportingFilterDefinition-Objekte, die in der Filter-Definition-Gruppe enthalten sind
+	 * @param bezeichnung                     Bezeichnung der Filter-Definition-Gruppe
+	 * @param typ                             Typ der Filter-Definition-Gruppe
+	 * @param uiIstSichtbar                   Gibt an, ob die Filter-Definition-Gruppe in der UI sichtbar sein soll
+	 * @param uiIstFilterMultiselect          Gibt an, ob die Filter-Definition-Gruppe als Multiselect in der UI angezeigt werden soll
+	 * @param uiFilterMultiselectVerknuepfung Verknüpfung für Multiselect-Filter-Definitionen
+	 * @param filterDefinitionenOptionen      Liste der ReportingFilterDefinition-Objekte, die in der Filter-Definition-Gruppe enthalten sind
 	 *
 	 * @return Ein ReportingFilterDefinitionGruppe-Objekt mit den angegebenen Eigenschaften
 	 */
-	public static erzeugeFilterDefinitionGruppe(bezeichnung: string, typ: string, uiIstSichtbar: boolean, uiIstMultiselect: boolean, multiselectVerknuepfung: ReportingFilterVerknuepfung, filterDefinitionenOptionen: List<ReportingFilterDefinition>) : ReportingFilterDefinitionGruppe;
+	public static erzeugeFilterDefinitionGruppe(bezeichnung: string, typ: string, uiIstSichtbar: boolean, uiIstFilterMultiselect: boolean, uiFilterMultiselectVerknuepfung: ReportingFilterVerknuepfung, filterDefinitionenOptionen: List<ReportingFilterDefinition>) : ReportingFilterDefinitionGruppe;
+
+	/**
+	 * Erstellt ein ReportingFilterDefinitionGruppe-Objekt basierend auf den angegebenen Parametern, inklusive der Angaben zu erforderlichem ServerMode und
+	 * erforderlichen Benutzerkompetenzen.
+	 *
+	 * @param bezeichnung                     Bezeichnung der Filter-Definition-Gruppe
+	 * @param typ                             Typ der Filter-Definition-Gruppe
+	 * @param uiIstSichtbar                   Gibt an, ob die Filter-Definition-Gruppe in der UI sichtbar sein soll
+	 * @param uiIstFilterMultiselect          Gibt an, ob die Filter-Definition-Gruppe als Multiselect in der UI angezeigt werden soll
+	 * @param uiFilterMultiselectVerknuepfung Verknüpfung für Multiselect-Filter-Definitionen
+	 * @param uiErforderlicherServerMode      Der mindestens erforderliche ServerMode, damit die Gruppe verfügbar ist (STABLE = in allen Modi verfügbar)
+	 * @param uiErforderlicheKompetenzen      Die erforderlichen Benutzerkompetenzen (OR-verknüpft; leer = keine Kompetenz erforderlich)
+	 * @param filterDefinitionenOptionen      Liste der ReportingFilterDefinition-Objekte, die in der Filter-Definition-Gruppe enthalten sind
+	 *
+	 * @return Ein ReportingFilterDefinitionGruppe-Objekt mit den angegebenen Eigenschaften
+	 */
+	public static erzeugeFilterDefinitionGruppe(bezeichnung: string, typ: string, uiIstSichtbar: boolean, uiIstFilterMultiselect: boolean, uiFilterMultiselectVerknuepfung: ReportingFilterVerknuepfung, uiErforderlicherServerMode: ServerMode, uiErforderlicheKompetenzen: List<BenutzerKompetenz>, filterDefinitionenOptionen: List<ReportingFilterDefinition>) : ReportingFilterDefinitionGruppe;
 
 	/**
 	 * Erstellt ein ReportingFilterDefinitionGruppe-Objekt mit einer Vorauswahl an Filterdefinitionen.
@@ -167,43 +338,87 @@ export class ReportingReportvorlageUtils extends JavaObject {
 	 * @param bezeichnung                    Bezeichnung der Filter-Definition-Gruppe
 	 * @param typ                            Typ der Filter-Definition-Gruppe
 	 * @param uiIstSichtbar                  Gibt an, ob die Filter-Definition-Gruppe in der UI sichtbar sein soll
-	 * @param uiIstMultiselect               Gibt an, ob die Filter-Definition-Gruppe als Multiselect in der UI angezeigt werden soll
-	 * @param multiselectVerknuepfung        Verknüpfung für Multiselect-Filter-Definitionen
-	 * @param filterDefinitionenOptionen     Liste der ReportingFilterDefinition-Objekte, die in der Filter-Definition-Gruppe zur Verfügung stehen
-	 * @param filterDefinitionenVorauswahl   Liste der ReportingFilterDefinition-Objekte, die in der Gruppe vorausgewählt sein sollen
+	 * @param uiIstFilterMultiselect          Gibt an, ob die Filter-Definition-Gruppe als Multiselect in der UI angezeigt werden soll
+	 * @param uiFilterMultiselectVerknuepfung Verknüpfung für Multiselect-Filter-Definitionen
+	 * @param filterDefinitionenOptionen      Liste der ReportingFilterDefinition-Objekte, die in der Filter-Definition-Gruppe zur Verfügung stehen
+	 * @param filterDefinitionenVorauswahl    Liste der ReportingFilterDefinition-Objekte, die in der Gruppe vorausgewählt sein sollen
 	 *
 	 * @return Ein ReportingFilterDefinitionGruppe-Objekt mit den angegebenen Eigenschaften
 	 */
-	public static erzeugeFilterDefinitionGruppe(bezeichnung: string, typ: string, uiIstSichtbar: boolean, uiIstMultiselect: boolean, multiselectVerknuepfung: ReportingFilterVerknuepfung, filterDefinitionenOptionen: List<ReportingFilterDefinition>, filterDefinitionenVorauswahl: List<ReportingFilterDefinition>) : ReportingFilterDefinitionGruppe;
+	public static erzeugeFilterDefinitionGruppe(bezeichnung: string, typ: string, uiIstSichtbar: boolean, uiIstFilterMultiselect: boolean, uiFilterMultiselectVerknuepfung: ReportingFilterVerknuepfung, filterDefinitionenOptionen: List<ReportingFilterDefinition>, filterDefinitionenVorauswahl: List<ReportingFilterDefinition>) : ReportingFilterDefinitionGruppe;
+
+	/**
+	 * Erstellt ein ReportingFilterDefinitionGruppe-Objekt mit einer Vorauswahl an Filterdefinitionen, inklusive der Angaben zu erforderlichem ServerMode und
+	 * erforderlichen Benutzerkompetenzen.
+	 *
+	 * <p>Wichtig: Die Einträge in {@code filterDefinitionenVorauswahl} müssen dieselben Objektinstanzen sein wie die entsprechenden Einträge in
+	 * {@code filterDefinitionenOptionen}, da die UI die Vorauswahl über die Objektidentität ermittelt.</p>
+	 *
+	 * @param bezeichnung                     Bezeichnung der Filter-Definition-Gruppe
+	 * @param typ                             Typ der Filter-Definition-Gruppe
+	 * @param uiIstSichtbar                   Gibt an, ob die Filter-Definition-Gruppe in der UI sichtbar sein soll
+	 * @param uiIstFilterMultiselect          Gibt an, ob die Filter-Definition-Gruppe als Multiselect in der UI angezeigt werden soll
+	 * @param uiFilterMultiselectVerknuepfung Verknüpfung für Multiselect-Filter-Definitionen
+	 * @param uiErforderlicherServerMode      Der mindestens erforderliche ServerMode, damit die Gruppe verfügbar ist (STABLE = in allen Modi verfügbar)
+	 * @param uiErforderlicheKompetenzen      Die erforderlichen Benutzerkompetenzen (OR-verknüpft; leer = keine Kompetenz erforderlich)
+	 * @param filterDefinitionenOptionen      Liste der ReportingFilterDefinition-Objekte, die in der Filter-Definition-Gruppe zur Verfügung stehen
+	 * @param filterDefinitionenVorauswahl    Liste der ReportingFilterDefinition-Objekte, die in der Gruppe vorausgewählt sein sollen
+	 *
+	 * @return Ein ReportingFilterDefinitionGruppe-Objekt mit den angegebenen Eigenschaften
+	 */
+	public static erzeugeFilterDefinitionGruppe(bezeichnung: string, typ: string, uiIstSichtbar: boolean, uiIstFilterMultiselect: boolean, uiFilterMultiselectVerknuepfung: ReportingFilterVerknuepfung, uiErforderlicherServerMode: ServerMode, uiErforderlicheKompetenzen: List<BenutzerKompetenz>, filterDefinitionenOptionen: List<ReportingFilterDefinition>, filterDefinitionenVorauswahl: List<ReportingFilterDefinition>) : ReportingFilterDefinitionGruppe;
 
 	/**
 	 * Implementation for method overloads of 'erzeugeFilterDefinitionGruppe'
 	 */
-	public static erzeugeFilterDefinitionGruppe(__param0: string, __param1: string, __param2: boolean, __param3: boolean, __param4: ReportingFilterVerknuepfung, __param5: List<ReportingFilterDefinition>, __param6?: List<ReportingFilterDefinition>): ReportingFilterDefinitionGruppe {
-		if (((__param0 !== undefined) && (typeof __param0 === "string")) && ((__param1 !== undefined) && (typeof __param1 === "string")) && ((__param2 !== undefined) && typeof __param2 === "boolean") && ((__param3 !== undefined) && typeof __param3 === "boolean") && ((__param4 !== undefined) && ((__param4 instanceof JavaObject) && (__param4.isTranspiledInstanceOf('de.svws_nrw.core.types.reporting.ReportingFilterVerknuepfung')))) && ((__param5 !== undefined) && ((__param5 instanceof JavaObject) && (__param5.isTranspiledInstanceOf('java.util.List'))) || (__param5 === null)) && (__param6 === undefined)) {
+	public static erzeugeFilterDefinitionGruppe(__param0: string, __param1: string, __param2: boolean, __param3: boolean, __param4: ReportingFilterVerknuepfung, __param5: List<ReportingFilterDefinition> | ServerMode, __param6?: List<BenutzerKompetenz> | List<ReportingFilterDefinition>, __param7?: List<ReportingFilterDefinition>, __param8?: List<ReportingFilterDefinition>): ReportingFilterDefinitionGruppe {
+		if (((__param0 !== undefined) && (typeof __param0 === "string")) && ((__param1 !== undefined) && (typeof __param1 === "string")) && ((__param2 !== undefined) && typeof __param2 === "boolean") && ((__param3 !== undefined) && typeof __param3 === "boolean") && ((__param4 !== undefined) && ((__param4 instanceof JavaObject) && (__param4.isTranspiledInstanceOf('de.svws_nrw.core.types.reporting.ReportingFilterVerknuepfung')))) && ((__param5 !== undefined) && ((__param5 instanceof JavaObject) && (__param5.isTranspiledInstanceOf('java.util.List'))) || (__param5 === null)) && (__param6 === undefined) && (__param7 === undefined) && (__param8 === undefined)) {
 			const bezeichnung: string = __param0;
 			const typ: string = __param1;
 			const uiIstSichtbar: boolean = __param2 as boolean;
-			const uiIstMultiselect: boolean = __param3 as boolean;
-			const multiselectVerknuepfung: ReportingFilterVerknuepfung = cast_de_svws_nrw_core_types_reporting_ReportingFilterVerknuepfung(__param4);
+			const uiIstFilterMultiselect: boolean = __param3 as boolean;
+			const uiFilterMultiselectVerknuepfung: ReportingFilterVerknuepfung = cast_de_svws_nrw_core_types_reporting_ReportingFilterVerknuepfung(__param4);
 			const filterDefinitionenOptionen: List<ReportingFilterDefinition> = cast_java_util_List(__param5);
+			return ReportingReportvorlageUtils.erzeugeFilterDefinitionGruppe(bezeichnung, typ, uiIstSichtbar, uiIstFilterMultiselect, uiFilterMultiselectVerknuepfung, ServerMode.STABLE, ArrayList.of(), filterDefinitionenOptionen);
+		} else if (((__param0 !== undefined) && (typeof __param0 === "string")) && ((__param1 !== undefined) && (typeof __param1 === "string")) && ((__param2 !== undefined) && typeof __param2 === "boolean") && ((__param3 !== undefined) && typeof __param3 === "boolean") && ((__param4 !== undefined) && ((__param4 instanceof JavaObject) && (__param4.isTranspiledInstanceOf('de.svws_nrw.core.types.reporting.ReportingFilterVerknuepfung')))) && ((__param5 !== undefined) && ((__param5 instanceof JavaObject) && (__param5.isTranspiledInstanceOf('de.svws_nrw.core.types.ServerMode')))) && ((__param6 !== undefined) && ((__param6 instanceof JavaObject) && (__param6.isTranspiledInstanceOf('java.util.List'))) || (__param6 === null)) && ((__param7 !== undefined) && ((__param7 instanceof JavaObject) && (__param7.isTranspiledInstanceOf('java.util.List'))) || (__param7 === null)) && (__param8 === undefined)) {
+			const bezeichnung: string = __param0;
+			const typ: string = __param1;
+			const uiIstSichtbar: boolean = __param2 as boolean;
+			const uiIstFilterMultiselect: boolean = __param3 as boolean;
+			const uiFilterMultiselectVerknuepfung: ReportingFilterVerknuepfung = cast_de_svws_nrw_core_types_reporting_ReportingFilterVerknuepfung(__param4);
+			const uiErforderlicherServerMode: ServerMode = cast_de_svws_nrw_core_types_ServerMode(__param5);
+			const uiErforderlicheKompetenzen: List<BenutzerKompetenz> = cast_java_util_List(__param6);
+			const filterDefinitionenOptionen: List<ReportingFilterDefinition> = cast_java_util_List(__param7);
 			const gruppe: ReportingFilterDefinitionGruppe | null = new ReportingFilterDefinitionGruppe();
 			gruppe.bezeichnung = bezeichnung;
 			gruppe.typ = typ;
 			gruppe.uiIstSichtbar = uiIstSichtbar;
-			gruppe.uiIstMultiselect = uiIstMultiselect;
-			gruppe.multiselectVerknuepfung = multiselectVerknuepfung.getId();
+			gruppe.uiIstFilterMultiselect = uiIstFilterMultiselect;
+			gruppe.uiFilterMultiselectVerknuepfung = uiFilterMultiselectVerknuepfung.getId();
 			gruppe.filterDefinitionenOptionen = new ArrayList(filterDefinitionenOptionen);
+			gruppe.uiErforderlicherServerMode = ReportingReportvorlageUtils.serverModeText(uiErforderlicherServerMode);
+			gruppe.uiErforderlicheKompetenzen = ReportingReportvorlageUtils.kompetenzIds(uiErforderlicheKompetenzen);
 			return gruppe;
-		} else if (((__param0 !== undefined) && (typeof __param0 === "string")) && ((__param1 !== undefined) && (typeof __param1 === "string")) && ((__param2 !== undefined) && typeof __param2 === "boolean") && ((__param3 !== undefined) && typeof __param3 === "boolean") && ((__param4 !== undefined) && ((__param4 instanceof JavaObject) && (__param4.isTranspiledInstanceOf('de.svws_nrw.core.types.reporting.ReportingFilterVerknuepfung')))) && ((__param5 !== undefined) && ((__param5 instanceof JavaObject) && (__param5.isTranspiledInstanceOf('java.util.List'))) || (__param5 === null)) && ((__param6 !== undefined) && ((__param6 instanceof JavaObject) && (__param6.isTranspiledInstanceOf('java.util.List'))) || (__param6 === null))) {
+		} else if (((__param0 !== undefined) && (typeof __param0 === "string")) && ((__param1 !== undefined) && (typeof __param1 === "string")) && ((__param2 !== undefined) && typeof __param2 === "boolean") && ((__param3 !== undefined) && typeof __param3 === "boolean") && ((__param4 !== undefined) && ((__param4 instanceof JavaObject) && (__param4.isTranspiledInstanceOf('de.svws_nrw.core.types.reporting.ReportingFilterVerknuepfung')))) && ((__param5 !== undefined) && ((__param5 instanceof JavaObject) && (__param5.isTranspiledInstanceOf('java.util.List'))) || (__param5 === null)) && ((__param6 !== undefined) && ((__param6 instanceof JavaObject) && (__param6.isTranspiledInstanceOf('java.util.List'))) || (__param6 === null)) && (__param7 === undefined) && (__param8 === undefined)) {
 			const bezeichnung: string = __param0;
 			const typ: string = __param1;
 			const uiIstSichtbar: boolean = __param2 as boolean;
-			const uiIstMultiselect: boolean = __param3 as boolean;
-			const multiselectVerknuepfung: ReportingFilterVerknuepfung = cast_de_svws_nrw_core_types_reporting_ReportingFilterVerknuepfung(__param4);
+			const uiIstFilterMultiselect: boolean = __param3 as boolean;
+			const uiFilterMultiselectVerknuepfung: ReportingFilterVerknuepfung = cast_de_svws_nrw_core_types_reporting_ReportingFilterVerknuepfung(__param4);
 			const filterDefinitionenOptionen: List<ReportingFilterDefinition> = cast_java_util_List(__param5);
 			const filterDefinitionenVorauswahl: List<ReportingFilterDefinition> = cast_java_util_List(__param6);
-			const gruppe: ReportingFilterDefinitionGruppe | null = ReportingReportvorlageUtils.erzeugeFilterDefinitionGruppe(bezeichnung, typ, uiIstSichtbar, uiIstMultiselect, multiselectVerknuepfung, filterDefinitionenOptionen);
+			return ReportingReportvorlageUtils.erzeugeFilterDefinitionGruppe(bezeichnung, typ, uiIstSichtbar, uiIstFilterMultiselect, uiFilterMultiselectVerknuepfung, ServerMode.STABLE, ArrayList.of(), filterDefinitionenOptionen, filterDefinitionenVorauswahl);
+		} else if (((__param0 !== undefined) && (typeof __param0 === "string")) && ((__param1 !== undefined) && (typeof __param1 === "string")) && ((__param2 !== undefined) && typeof __param2 === "boolean") && ((__param3 !== undefined) && typeof __param3 === "boolean") && ((__param4 !== undefined) && ((__param4 instanceof JavaObject) && (__param4.isTranspiledInstanceOf('de.svws_nrw.core.types.reporting.ReportingFilterVerknuepfung')))) && ((__param5 !== undefined) && ((__param5 instanceof JavaObject) && (__param5.isTranspiledInstanceOf('de.svws_nrw.core.types.ServerMode')))) && ((__param6 !== undefined) && ((__param6 instanceof JavaObject) && (__param6.isTranspiledInstanceOf('java.util.List'))) || (__param6 === null)) && ((__param7 !== undefined) && ((__param7 instanceof JavaObject) && (__param7.isTranspiledInstanceOf('java.util.List'))) || (__param7 === null)) && ((__param8 !== undefined) && ((__param8 instanceof JavaObject) && (__param8.isTranspiledInstanceOf('java.util.List'))) || (__param8 === null))) {
+			const bezeichnung: string = __param0;
+			const typ: string = __param1;
+			const uiIstSichtbar: boolean = __param2 as boolean;
+			const uiIstFilterMultiselect: boolean = __param3 as boolean;
+			const uiFilterMultiselectVerknuepfung: ReportingFilterVerknuepfung = cast_de_svws_nrw_core_types_reporting_ReportingFilterVerknuepfung(__param4);
+			const uiErforderlicherServerMode: ServerMode = cast_de_svws_nrw_core_types_ServerMode(__param5);
+			const uiErforderlicheKompetenzen: List<BenutzerKompetenz> = cast_java_util_List(__param6);
+			const filterDefinitionenOptionen: List<ReportingFilterDefinition> = cast_java_util_List(__param7);
+			const filterDefinitionenVorauswahl: List<ReportingFilterDefinition> = cast_java_util_List(__param8);
+			const gruppe: ReportingFilterDefinitionGruppe | null = ReportingReportvorlageUtils.erzeugeFilterDefinitionGruppe(bezeichnung, typ, uiIstSichtbar, uiIstFilterMultiselect, uiFilterMultiselectVerknuepfung, uiErforderlicherServerMode, uiErforderlicheKompetenzen, filterDefinitionenOptionen);
 			gruppe.filterDefinitionen = new ArrayList(filterDefinitionenVorauswahl);
 			return gruppe;
 		} else throw new Error('invalid method overload');
@@ -215,17 +430,40 @@ export class ReportingReportvorlageUtils extends JavaObject {
 	 *
 	 * @return Ein ReportingFilterDefinitionGruppe-Objekt für die Filterung nach dem Schülerstatus
 	 */
-	public static erzeugeSchuelerStatusfilterGruppe(): ReportingFilterDefinitionGruppe {
-		const optionen: List<ReportingFilterDefinition> | null = new ArrayList<ReportingFilterDefinition>();
-		const vorauswahl: List<ReportingFilterDefinition> | null = new ArrayList<ReportingFilterDefinition>();
-		for (const status of SchuelerStatus.values()) {
-			const definition: ReportingFilterDefinition | null = ReportingFilterDefinitionFactory.definition(ReportingReportvorlageUtils.normalisiereSchuelerStatusBezeichnung(status.name()), "ReportingSchueler", ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("status", status.name())));
-			optionen.add(definition);
-			if ((status as unknown === SchuelerStatus.AKTIV as unknown) || (status as unknown === SchuelerStatus.EXTERN as unknown)) {
-				vorauswahl.add(definition);
+	public static erzeugeSchuelerStatusfilterGruppe() : ReportingFilterDefinitionGruppe;
+
+	/**
+	 * Erstellt die Filter-Definition-Gruppe "Statusfilter" für den Reporting-Typ "ReportingSchueler", inklusive der Angaben zu erforderlichem ServerMode und
+	 * erforderlichen Benutzerkompetenzen. Als Optionen werden alle Werte des {@link SchuelerStatus} angeboten (Multiselect, OR-Verknüpfung); vorausgewählt sind
+	 * die Status AKTIV und EXTERN.
+	 *
+	 * @param uiErforderlicherServerMode Der mindestens erforderliche ServerMode, damit die Gruppe verfügbar ist (STABLE = in allen Modi verfügbar)
+	 * @param uiErforderlicheKompetenzen Die erforderlichen Benutzerkompetenzen (OR-verknüpft; leer = keine Kompetenz erforderlich)
+	 *
+	 * @return Ein ReportingFilterDefinitionGruppe-Objekt für die Filterung nach dem Schülerstatus
+	 */
+	public static erzeugeSchuelerStatusfilterGruppe(uiErforderlicherServerMode: ServerMode, uiErforderlicheKompetenzen: List<BenutzerKompetenz>) : ReportingFilterDefinitionGruppe;
+
+	/**
+	 * Implementation for method overloads of 'erzeugeSchuelerStatusfilterGruppe'
+	 */
+	public static erzeugeSchuelerStatusfilterGruppe(__param0?: ServerMode, __param1?: List<BenutzerKompetenz>): ReportingFilterDefinitionGruppe {
+		if ((__param0 === undefined) && (__param1 === undefined)) {
+			return ReportingReportvorlageUtils.erzeugeSchuelerStatusfilterGruppe(ServerMode.STABLE, ArrayList.of());
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.types.ServerMode')))) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('java.util.List'))) || (__param1 === null))) {
+			const uiErforderlicherServerMode: ServerMode = cast_de_svws_nrw_core_types_ServerMode(__param0);
+			const uiErforderlicheKompetenzen: List<BenutzerKompetenz> = cast_java_util_List(__param1);
+			const optionen: List<ReportingFilterDefinition> | null = new ArrayList<ReportingFilterDefinition>();
+			const vorauswahl: List<ReportingFilterDefinition> | null = new ArrayList<ReportingFilterDefinition>();
+			for (const status of SchuelerStatus.values()) {
+				const definition: ReportingFilterDefinition | null = ReportingFilterDefinitionFactory.definition(ReportingReportvorlageUtils.normalisiereSchuelerStatusBezeichnung(status.name()), "ReportingSchueler", ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("status", status.name())));
+				optionen.add(definition);
+				if ((status as unknown === SchuelerStatus.AKTIV as unknown) || (status as unknown === SchuelerStatus.EXTERN as unknown)) {
+					vorauswahl.add(definition);
+				}
 			}
-		}
-		return ReportingReportvorlageUtils.erzeugeFilterDefinitionGruppe("Schülerstatus", "ReportingSchueler", true, true, ReportingFilterVerknuepfung.OR, optionen, vorauswahl);
+			return ReportingReportvorlageUtils.erzeugeFilterDefinitionGruppe("Schülerstatus", "ReportingSchueler", true, true, ReportingFilterVerknuepfung.OR, uiErforderlicherServerMode, uiErforderlicheKompetenzen, optionen, vorauswahl);
+		} else throw new Error('invalid method overload');
 	}
 
 	/**
@@ -299,6 +537,10 @@ export class ReportingReportvorlageUtils extends JavaObject {
 			vpgCopy.beschreibung = vpg.beschreibung;
 			vpgCopy.uiIstSichtbar = vpg.uiIstSichtbar;
 			vpgCopy.uiAnzahlSpalten = vpg.uiAnzahlSpalten;
+			vpgCopy.uiErforderlicherServerMode = vpg.uiErforderlicherServerMode;
+			if (vpg.uiErforderlicheKompetenzen !== null) {
+				vpgCopy.uiErforderlicheKompetenzen = new ArrayList(vpg.uiErforderlicheKompetenzen);
+			}
 			if (vpg.reportvorlageParameter !== null) {
 				vpgCopy.reportvorlageParameter.addAll(ReportingReportvorlageUtils.cloneVorlageParameter(vpg.reportvorlageParameter));
 			}
@@ -324,6 +566,10 @@ export class ReportingReportvorlageUtils extends JavaObject {
 			vpCopy.uiIstSichtbar = vp.uiIstSichtbar;
 			vpCopy.uiKomponentenTyp = vp.uiKomponentenTyp;
 			vpCopy.uiAnzahlSpalten = vp.uiAnzahlSpalten;
+			vpCopy.uiErforderlicherServerMode = vp.uiErforderlicherServerMode;
+			if (vp.uiErforderlicheKompetenzen !== null) {
+				vpCopy.uiErforderlicheKompetenzen = new ArrayList(vp.uiErforderlicheKompetenzen);
+			}
 			result.add(vpCopy);
 		}
 		return result;
@@ -342,6 +588,10 @@ export class ReportingReportvorlageUtils extends JavaObject {
 			sdgCopy.bezeichnung = sdg.bezeichnung;
 			sdgCopy.typ = sdg.typ;
 			sdgCopy.uiIstSichtbar = sdg.uiIstSichtbar;
+			sdgCopy.uiErforderlicherServerMode = sdg.uiErforderlicherServerMode;
+			if (sdg.uiErforderlicheKompetenzen !== null) {
+				sdgCopy.uiErforderlicheKompetenzen = new ArrayList(sdg.uiErforderlicheKompetenzen);
+			}
 			if (sdg.sortierungDefinitionenOptionen !== null) {
 				sdgCopy.sortierungDefinitionenOptionen.addAll(ReportingReportvorlageUtils.cloneSortierungDefinitionen(sdg.sortierungDefinitionenOptionen));
 			}
@@ -382,8 +632,12 @@ export class ReportingReportvorlageUtils extends JavaObject {
 			fdgCopy.bezeichnung = fdg.bezeichnung;
 			fdgCopy.typ = fdg.typ;
 			fdgCopy.uiIstSichtbar = fdg.uiIstSichtbar;
-			fdgCopy.uiIstMultiselect = fdg.uiIstMultiselect;
-			fdgCopy.multiselectVerknuepfung = fdg.multiselectVerknuepfung;
+			fdgCopy.uiIstFilterMultiselect = fdg.uiIstFilterMultiselect;
+			fdgCopy.uiFilterMultiselectVerknuepfung = fdg.uiFilterMultiselectVerknuepfung;
+			fdgCopy.uiErforderlicherServerMode = fdg.uiErforderlicherServerMode;
+			if (fdg.uiErforderlicheKompetenzen !== null) {
+				fdgCopy.uiErforderlicheKompetenzen = new ArrayList(fdg.uiErforderlicheKompetenzen);
+			}
 			if (fdg.filterDefinitionenOptionen !== null) {
 				const optionenKopie: List<ReportingFilterDefinition> | null = ReportingReportvorlageUtils.cloneFilterDefinitionen(fdg.filterDefinitionenOptionen);
 				fdgCopy.filterDefinitionenOptionen.addAll(optionenKopie);

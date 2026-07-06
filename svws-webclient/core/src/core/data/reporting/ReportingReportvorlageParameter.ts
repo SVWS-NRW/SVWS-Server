@@ -1,6 +1,8 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ReportingReportvorlageParameterTyp } from '../../../core/types/reporting/ReportingReportvorlageParameterTyp';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { ReportingUIKomponentenTyp } from '../../../core/types/reporting/ReportingUIKomponentenTyp';
+import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 
 export class ReportingReportvorlageParameter extends JavaObject {
@@ -39,6 +41,16 @@ export class ReportingReportvorlageParameter extends JavaObject {
 	 * Die Anzahl der Grid-Spalten, die der Parameter in der UI einnehmen soll.
 	 */
 	public uiAnzahlSpalten: number = 1;
+
+	/**
+	 * Der mindestens erforderliche ServerMode (stable|beta|alpha|dev), damit der Parameter in der UI verfügbar ist. Leer = in allen Modi verfügbar.
+	 */
+	public uiErforderlicherServerMode: string = "";
+
+	/**
+	 * Die IDs der Benutzerkompetenzen (OR-verknüpft), die zur Nutzung des Parameters erforderlich sind. Leer = keine Kompetenz erforderlich.
+	 */
+	public uiErforderlicheKompetenzen: List<number> = new ArrayList<number>();
 
 
 	/**
@@ -82,6 +94,14 @@ export class ReportingReportvorlageParameter extends JavaObject {
 		if (obj.uiAnzahlSpalten === undefined)
 			throw new Error('invalid json format, missing attribute uiAnzahlSpalten');
 		result.uiAnzahlSpalten = obj.uiAnzahlSpalten;
+		if (obj.uiErforderlicherServerMode === undefined)
+			throw new Error('invalid json format, missing attribute uiErforderlicherServerMode');
+		result.uiErforderlicherServerMode = obj.uiErforderlicherServerMode;
+		if (obj.uiErforderlicheKompetenzen !== undefined) {
+			for (const elem of obj.uiErforderlicheKompetenzen) {
+				result.uiErforderlicheKompetenzen.add(elem);
+			}
+		}
 		return result;
 	}
 
@@ -94,6 +114,15 @@ export class ReportingReportvorlageParameter extends JavaObject {
 		result += '"uiIstSichtbar" : ' + obj.uiIstSichtbar.toString() + ',';
 		result += '"uiKomponentenTyp" : ' + obj.uiKomponentenTyp.toString() + ',';
 		result += '"uiAnzahlSpalten" : ' + obj.uiAnzahlSpalten.toString() + ',';
+		result += '"uiErforderlicherServerMode" : ' + JSON.stringify(obj.uiErforderlicherServerMode) + ',';
+		result += '"uiErforderlicheKompetenzen" : [ ';
+		for (let i = 0; i < obj.uiErforderlicheKompetenzen.size(); i++) {
+			const elem = obj.uiErforderlicheKompetenzen.get(i);
+			result += elem.toString();
+			if (i < obj.uiErforderlicheKompetenzen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -121,6 +150,19 @@ export class ReportingReportvorlageParameter extends JavaObject {
 		}
 		if (obj.uiAnzahlSpalten !== undefined) {
 			result += '"uiAnzahlSpalten" : ' + obj.uiAnzahlSpalten.toString() + ',';
+		}
+		if (obj.uiErforderlicherServerMode !== undefined) {
+			result += '"uiErforderlicherServerMode" : ' + JSON.stringify(obj.uiErforderlicherServerMode) + ',';
+		}
+		if (obj.uiErforderlicheKompetenzen !== undefined) {
+			result += '"uiErforderlicheKompetenzen" : [ ';
+			for (let i = 0; i < obj.uiErforderlicheKompetenzen.size(); i++) {
+				const elem = obj.uiErforderlicheKompetenzen.get(i);
+				result += elem.toString();
+				if (i < obj.uiErforderlicheKompetenzen.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

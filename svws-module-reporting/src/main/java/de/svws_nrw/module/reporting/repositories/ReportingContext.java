@@ -2,11 +2,13 @@ package de.svws_nrw.module.reporting.repositories;
 
 import de.svws_nrw.base.email.EmailJobManager;
 import de.svws_nrw.base.email.EmailJobManagerFactory;
+import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.benutzer.BenutzerEMailDaten;
 import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.data.benutzer.DataBenutzerEMailDaten;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
@@ -24,6 +26,9 @@ public class ReportingContext {
 
 	/** Die Verbindung zur Datenbank. */
 	private final DBEntityManager conn;
+
+	/** Der Modus, in dem der Server betrieben wird (STABLE, BETA, ALPHA, DEV). */
+	private final ServerMode serverMode;
 
 	/** Einstellungen und Daten zum Steuern der Report-Generierung. */
 	private final ReportingParameterTypisiert reportingParameterTypisiert;
@@ -93,6 +98,7 @@ public class ReportingContext {
 
 		// Die Validierung von conn und reportingParameter erfolgt in der ReportingFactory.
 		this.conn = conn;
+		this.serverMode = SVWSKonfiguration.get().getServerMode();
 		this.reportingParameterTypisiert = new ReportingParameterTypisiert(this, reportingParameter);
 
 		// Erzeuge die Services für Sortierung und Filterung und die Domänen-Repositories.
@@ -216,6 +222,15 @@ public class ReportingContext {
 	 */
 	public ReportingFilterService filterService() {
 		return filterService;
+	}
+
+	/**
+	 * Gibt den Modus zurück, in dem der Server betrieben wird.
+	 *
+	 * @return Der ServerMode.
+	 */
+	public ServerMode serverMode() {
+		return serverMode;
 	}
 
 

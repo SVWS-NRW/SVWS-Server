@@ -32,11 +32,19 @@ public class ReportingFilterDefinitionGruppe {
 
 	/** Gibt an, ob mehrere Filterdefinitionen ausgewählt werden können. */
 	@Schema(description = "Gibt an, ob mehrere Filterdefinitionen ausgewählt werden können.", example = "false")
-	public boolean uiIstMultiselect = false;
+	public boolean uiIstFilterMultiselect = false;
 
 	/** Gibt an, wie bei Mehrfachauswahl die verschiedenen Definitionen miteinander verknüpft werden sollen. */
 	@Schema(description = "Gibt an, wie bei Mehrfachauswahl die verschiedenen Definitionen miteinander verknüpft werden sollen.", example = "1 = AND, 2 = OR")
-	public int multiselectVerknuepfung = ReportingFilterVerknuepfung.AND.getId();
+	public int uiFilterMultiselectVerknuepfung = ReportingFilterVerknuepfung.AND.getId();
+
+	/** Der mindestens erforderliche ServerMode (stable|beta|alpha|dev), damit die Gruppe in der UI verfügbar ist. Leer = in allen Modi verfügbar. */
+	@Schema(description = "Der mindestens erforderliche ServerMode (stable|beta|alpha|dev), damit die Gruppe in der UI verfügbar ist. Leer = in allen Modi verfügbar.")
+	public @NotNull String uiErforderlicherServerMode = "";
+
+	/** Die IDs der Benutzerkompetenzen (OR-verknüpft), die zur Nutzung der Gruppe erforderlich sind. Leer = keine Kompetenz erforderlich. */
+	@Schema(description = "Die IDs der Benutzerkompetenzen (OR-verknüpft), die zur Nutzung der Gruppe erforderlich sind. Leer = keine Kompetenz erforderlich.")
+	public @NotNull List<Long> uiErforderlicheKompetenzen = new ArrayList<>();
 
 	/** Eine Liste von Filterdefinitionen, die in dieser Gruppe zur Verfügung stehen. */
 	@Schema(description = "Eine Liste von Filterdefinitionen, die in dieser Gruppe zur Verfügung stehen.", example = "[]")

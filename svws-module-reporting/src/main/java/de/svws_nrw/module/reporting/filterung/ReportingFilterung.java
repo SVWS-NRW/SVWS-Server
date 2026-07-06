@@ -39,7 +39,7 @@ public final class ReportingFilterung<T> {
 	/**
 	 * Liefert ein {@link Predicate} für die übergebene Filtergruppe. Ist {@code gruppe == null} oder enthält sie keine
 	 * Filterdefinitionen, wird ein Predicate zurückgegeben, das alle Objekte akzeptiert — die Daten bleiben damit
-	 * ungefiltert. Mehrere Definitionen innerhalb der Gruppe werden gemäß {@link ReportingFilterDefinitionGruppe#multiselectVerknuepfung}
+	 * ungefiltert. Mehrere Definitionen innerhalb der Gruppe werden gemäß {@link ReportingFilterDefinitionGruppe#uiFilterMultiselectVerknuepfung}
 	 * mit OR oder AND kombiniert.
 	 *
 	 * @param gruppe Die Filtergruppe aus den ReportParametern. Darf {@code null} sein.
@@ -54,7 +54,7 @@ public final class ReportingFilterung<T> {
 		if (gruppe.filterDefinitionen.size() == 1) {
 			return registry.erstelleFilter(gruppe.filterDefinitionen.getFirst(), validierungsfehler);
 		}
-		final boolean istOr = ReportingFilterVerknuepfung.getByID(gruppe.multiselectVerknuepfung) == ReportingFilterVerknuepfung.OR;
+		final boolean istOr = ReportingFilterVerknuepfung.getByID(gruppe.uiFilterMultiselectVerknuepfung) == ReportingFilterVerknuepfung.OR;
 		Predicate<T> result = istOr ? (t -> false) : (t -> true);
 		for (final ReportingFilterDefinition def : gruppe.filterDefinitionen) {
 			final Predicate<T> p = registry.erstelleFilter(def, validierungsfehler);

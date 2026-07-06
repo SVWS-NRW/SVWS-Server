@@ -6,6 +6,8 @@ import java.util.List;
 
 import de.svws_nrw.core.data.reporting.ReportingEMailDaten;
 import de.svws_nrw.core.data.reporting.ReportingParameter;
+import de.svws_nrw.core.types.ServerMode;
+import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.reporting.ReportingAusgabeformat;
 import de.svws_nrw.core.types.reporting.ReportingEMailEmpfaengerTyp;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlageParameterTyp;
@@ -171,7 +173,8 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitDigitaleSignatur", "mit digitaler Signatur",
 										ReportingReportvorlageParameterTyp.BOOLEAN,
-										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1,
+										ServerMode.DEV, List.of(BenutzerKompetenz.EXTRAS_DIGITALE_SIGNATUREN_AUSSTELLEN)),
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("qrCodeBreite", "QR-Code-Breite (mm)",
 										ReportingReportvorlageParameterTyp.INTEGER,
 										"" + 40, false, ReportingUIKomponentenTyp.INPUT, 1),

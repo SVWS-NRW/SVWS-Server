@@ -15,6 +15,8 @@ import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameterGruppe;
 import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameter;
 import de.svws_nrw.core.data.reporting.ReportingSortierungDefinition;
 import de.svws_nrw.core.data.reporting.ReportingSortierungDefinitionGruppe;
+import de.svws_nrw.core.types.ServerMode;
+import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.reporting.ReportingAusgabeformat;
 import de.svws_nrw.core.types.reporting.ReportingEMailEmpfaengerTyp;
 import de.svws_nrw.core.types.reporting.ReportingFilterVerknuepfung;
@@ -26,6 +28,38 @@ public final class ReportingReportvorlageUtils {
 
 	private ReportingReportvorlageUtils() {
 		// Utility-Klasse
+	}
+
+	/**
+	 * Wandelt einen {@link ServerMode} in den zu speichernden Text-Wert um. Der Modus {@link ServerMode#STABLE} (und null) wird als leerer String abgebildet,
+	 * da er semantisch identisch zu "in allen Modi verfügbar" ist.
+	 *
+	 * @param serverMode der ServerMode
+	 *
+	 * @return der Text-Wert des ServerMode oder ein leerer String bei STABLE
+	 */
+	private static @NotNull String serverModeText(final ServerMode serverMode) {
+		return ((serverMode == null) || (serverMode == ServerMode.STABLE)) ? "" : serverMode.text;
+	}
+
+	/**
+	 * Wandelt eine Liste von {@link BenutzerKompetenz} in eine Liste ihrer IDs um. Ein null-Wert wird als leere Liste (= keine Kompetenz erforderlich)
+	 * interpretiert.
+	 *
+	 * @param kompetenzen die Liste der Benutzerkompetenzen oder null
+	 *
+	 * @return die Liste der Kompetenz-IDs (ggf. leer)
+	 */
+	private static @NotNull List<Long> kompetenzIds(final List<BenutzerKompetenz> kompetenzen) {
+		final List<Long> ids = new ArrayList<>();
+		if (kompetenzen != null) {
+			for (final BenutzerKompetenz kompetenz : kompetenzen) {
+				if (kompetenz != null) {
+					ids.add(kompetenz.daten.id);
+				}
+			}
+		}
+		return ids;
 	}
 
 	/**
@@ -104,12 +138,36 @@ public final class ReportingReportvorlageUtils {
 	public static @NotNull ReportingReportvorlageParameterGruppe erzeugeReportingvorlageParameterGruppe(
 			final @NotNull String name, final @NotNull String beschreibung, final @NotNull boolean uiIstSichtbar, final int uiAnzahlSpalten,
 			final @NotNull List<ReportingReportvorlageParameter> reportingReportvorlageParameter) {
+		return erzeugeReportingvorlageParameterGruppe(name, beschreibung, uiIstSichtbar, uiAnzahlSpalten, ServerMode.STABLE, List.of(),
+				reportingReportvorlageParameter);
+	}
+
+	/**
+	 * Erstellt ein ReportingReportvorlageParameterGruppe-Objekt basierend auf den angegebenen Parametern, inklusive der Angaben zu erforderlichem ServerMode und
+	 * erforderlichen Benutzerkompetenzen.
+	 *
+	 * @param name                            Name der Parametergruppe
+	 * @param beschreibung                    Beschreibung der Parametergruppe
+	 * @param uiIstSichtbar                   Gibt an, ob die Parametergruppe in der UI sichtbar sein soll
+	 * @param uiAnzahlSpalten                 Anzahl der Spalten für die Parametergruppe in der UI
+	 * @param uiErforderlicherServerMode      Der mindestens erforderliche ServerMode, damit die Gruppe verfügbar ist (STABLE = in allen Modi verfügbar)
+	 * @param uiErforderlicheKompetenzen      Die erforderlichen Benutzerkompetenzen (OR-verknüpft; leer = keine Kompetenz erforderlich)
+	 * @param reportingReportvorlageParameter Liste der ReportingReportvorlageParameter, die in der Parametergruppe enthalten sind
+	 *
+	 * @return Ein ReportingReportvorlageParameterGruppe-Objekt mit den angegebenen Eigenschaften
+	 */
+	public static @NotNull ReportingReportvorlageParameterGruppe erzeugeReportingvorlageParameterGruppe(
+			final @NotNull String name, final @NotNull String beschreibung, final @NotNull boolean uiIstSichtbar, final int uiAnzahlSpalten,
+			final @NotNull ServerMode uiErforderlicherServerMode, final @NotNull List<BenutzerKompetenz> uiErforderlicheKompetenzen,
+			final @NotNull List<ReportingReportvorlageParameter> reportingReportvorlageParameter) {
 		final ReportingReportvorlageParameterGruppe gruppe = new ReportingReportvorlageParameterGruppe();
 		gruppe.name = name;
 		gruppe.beschreibung = beschreibung;
 		gruppe.uiIstSichtbar = uiIstSichtbar;
 		gruppe.uiAnzahlSpalten = uiAnzahlSpalten;
 		gruppe.reportvorlageParameter = reportingReportvorlageParameter;
+		gruppe.uiErforderlicherServerMode = serverModeText(uiErforderlicherServerMode);
+		gruppe.uiErforderlicheKompetenzen = kompetenzIds(uiErforderlicheKompetenzen);
 		return gruppe;
 	}
 
@@ -130,6 +188,32 @@ public final class ReportingReportvorlageUtils {
 			final @NotNull String name, final @NotNull String bezeichnung, final @NotNull ReportingReportvorlageParameterTyp typ,
 			final @NotNull String wert, final @NotNull boolean uiIstSichtbar, final @NotNull ReportingUIKomponentenTyp uiKomponentenTyp,
 			final int uiAnzahlSpalten) {
+		return erzeugeVorlageParameter(name, bezeichnung, typ, wert, uiIstSichtbar, uiKomponentenTyp, uiAnzahlSpalten, ServerMode.STABLE, List.of());
+	}
+
+	/**
+	 * Erstellt ein ReportingReportvorlageParameter-Objekt basierend auf den angegebenen Parametern, inklusive der Angaben zu erforderlichem ServerMode und
+	 * erforderlichen Benutzerkompetenzen.
+	 *
+	 * @param name                        Name des Parameters
+	 * @param bezeichnung                 Bezeichnung des Parameters
+	 * @param typ                         Typ des Parameters
+	 * @param wert                        Wert des Parameters
+	 * @param uiIstSichtbar               Gibt an, ob der Parameter in der UI sichtbar sein soll
+	 * @param uiKomponentenTyp            Typ der UI-Komponente für den Parameter
+	 * @param uiAnzahlSpalten             Anzahl der Spalten für die UI-Komponente
+	 * @param uiErforderlicherServerMode  Der mindestens erforderliche ServerMode, damit der Parameter verfügbar ist (STABLE = in allen Modi verfügbar)
+	 * @param uiErforderlicheKompetenzen  Die erforderlichen Benutzerkompetenzen (OR-verknüpft; leer = keine Kompetenz erforderlich)
+	 *
+	 * @return Ein ReportingReportvorlageParameter-Objekt mit den angegebenen Eigenschaften
+	 */
+	// SONARQUBE WARNUNG: Es sollen max. 7 Parameter an eine Methode übergeben werden. Hier sind es neun, sie sind aber alle gut nachvollziehbar.
+	@SuppressWarnings("java:S107")
+	public static @NotNull ReportingReportvorlageParameter erzeugeVorlageParameter(
+			final @NotNull String name, final @NotNull String bezeichnung, final @NotNull ReportingReportvorlageParameterTyp typ,
+			final @NotNull String wert, final @NotNull boolean uiIstSichtbar, final @NotNull ReportingUIKomponentenTyp uiKomponentenTyp,
+			final int uiAnzahlSpalten, final @NotNull ServerMode uiErforderlicherServerMode,
+			final @NotNull List<BenutzerKompetenz> uiErforderlicheKompetenzen) {
 		final ReportingReportvorlageParameter parameter = new ReportingReportvorlageParameter();
 		parameter.name = name;
 		parameter.bezeichnung = bezeichnung;
@@ -138,6 +222,8 @@ public final class ReportingReportvorlageUtils {
 		parameter.uiIstSichtbar = uiIstSichtbar;
 		parameter.uiKomponentenTyp = uiKomponentenTyp.getId();
 		parameter.uiAnzahlSpalten = uiAnzahlSpalten;
+		parameter.uiErforderlicherServerMode = serverModeText(uiErforderlicherServerMode);
+		parameter.uiErforderlicheKompetenzen = kompetenzIds(uiErforderlicheKompetenzen);
 		return parameter;
 	}
 
@@ -175,37 +261,87 @@ public final class ReportingReportvorlageUtils {
 	public static @NotNull ReportingSortierungDefinitionGruppe erzeugeSortierungDefinitionGruppe(
 			final @NotNull String bezeichnung, final @NotNull String typ, final boolean uiIstSichtbar,
 			final @NotNull List<ReportingSortierungDefinition> sortierungDefinitionenOptionen) {
+		return erzeugeSortierungDefinitionGruppe(bezeichnung, typ, uiIstSichtbar, ServerMode.STABLE, List.of(), sortierungDefinitionenOptionen);
+	}
+
+	/**
+	 * Erstellt ein ReportingSortierungDefinitionGruppe-Objekt basierend auf den angegebenen Parametern, inklusive der Angaben zu erforderlichem ServerMode und
+	 * erforderlichen Benutzerkompetenzen.
+	 *
+	 * @param bezeichnung                    Bezeichnung der Sortierung-Definition-Gruppe
+	 * @param typ                            Typ der Sortierung-Definition-Gruppe
+	 * @param uiIstSichtbar                  Gibt an, ob die Sortierung-Definition-Gruppe in der UI sichtbar sein soll
+	 * @param uiErforderlicherServerMode     Der mindestens erforderliche ServerMode, damit die Gruppe verfügbar ist (STABLE = in allen Modi verfügbar)
+	 * @param uiErforderlicheKompetenzen     Die erforderlichen Benutzerkompetenzen (OR-verknüpft; leer = keine Kompetenz erforderlich)
+	 * @param sortierungDefinitionenOptionen Liste der ReportingSortierungDefinition-Objekte, die in der Sortierung-Definition-Gruppe enthalten sind
+	 *
+	 * @return Ein ReportingSortierungDefinitionGruppe-Objekt mit den angegebenen Eigenschaften
+	 */
+	public static @NotNull ReportingSortierungDefinitionGruppe erzeugeSortierungDefinitionGruppe(
+			final @NotNull String bezeichnung, final @NotNull String typ, final boolean uiIstSichtbar,
+			final @NotNull ServerMode uiErforderlicherServerMode, final @NotNull List<BenutzerKompetenz> uiErforderlicheKompetenzen,
+			final @NotNull List<ReportingSortierungDefinition> sortierungDefinitionenOptionen) {
 		final ReportingSortierungDefinitionGruppe gruppe = new ReportingSortierungDefinitionGruppe();
 		gruppe.bezeichnung = bezeichnung;
 		gruppe.typ = typ;
 		gruppe.uiIstSichtbar = uiIstSichtbar;
 		gruppe.sortierungDefinitionenOptionen = new ArrayList<>(sortierungDefinitionenOptionen);
+		gruppe.uiErforderlicherServerMode = serverModeText(uiErforderlicherServerMode);
+		gruppe.uiErforderlicheKompetenzen = kompetenzIds(uiErforderlicheKompetenzen);
 		return gruppe;
 	}
 
 	/**
 	 * Erstellt ein ReportingFilterDefinitionGruppe-Objekt basierend auf den angegebenen Parametern.
 	 *
-	 * @param bezeichnung                    Bezeichnung der Filter-Definition-Gruppe
-	 * @param typ                            Typ der Filter-Definition-Gruppe
-	 * @param uiIstSichtbar                  Gibt an, ob die Filter-Definition-Gruppe in der UI sichtbar sein soll
-	 * @param uiIstMultiselect               Gibt an, ob die Filter-Definition-Gruppe als Multiselect in der UI angezeigt werden soll
-	 * @param multiselectVerknuepfung        Verknüpfung für Multiselect-Filter-Definitionen
-	 * @param filterDefinitionenOptionen     Liste der ReportingFilterDefinition-Objekte, die in der Filter-Definition-Gruppe enthalten sind
+	 * @param bezeichnung                     Bezeichnung der Filter-Definition-Gruppe
+	 * @param typ                             Typ der Filter-Definition-Gruppe
+	 * @param uiIstSichtbar                   Gibt an, ob die Filter-Definition-Gruppe in der UI sichtbar sein soll
+	 * @param uiIstFilterMultiselect          Gibt an, ob die Filter-Definition-Gruppe als Multiselect in der UI angezeigt werden soll
+	 * @param uiFilterMultiselectVerknuepfung Verknüpfung für Multiselect-Filter-Definitionen
+	 * @param filterDefinitionenOptionen      Liste der ReportingFilterDefinition-Objekte, die in der Filter-Definition-Gruppe enthalten sind
 	 *
 	 * @return Ein ReportingFilterDefinitionGruppe-Objekt mit den angegebenen Eigenschaften
 	 */
 	public static @NotNull ReportingFilterDefinitionGruppe erzeugeFilterDefinitionGruppe(
-			final @NotNull String bezeichnung, final @NotNull String typ, final boolean uiIstSichtbar, final boolean uiIstMultiselect,
-			final @NotNull ReportingFilterVerknuepfung multiselectVerknuepfung,
+			final @NotNull String bezeichnung, final @NotNull String typ, final boolean uiIstSichtbar, final boolean uiIstFilterMultiselect,
+			final @NotNull ReportingFilterVerknuepfung uiFilterMultiselectVerknuepfung,
+			final @NotNull List<ReportingFilterDefinition> filterDefinitionenOptionen) {
+		return erzeugeFilterDefinitionGruppe(bezeichnung, typ, uiIstSichtbar, uiIstFilterMultiselect, uiFilterMultiselectVerknuepfung, ServerMode.STABLE,
+				List.of(), filterDefinitionenOptionen);
+	}
+
+	/**
+	 * Erstellt ein ReportingFilterDefinitionGruppe-Objekt basierend auf den angegebenen Parametern, inklusive der Angaben zu erforderlichem ServerMode und
+	 * erforderlichen Benutzerkompetenzen.
+	 *
+	 * @param bezeichnung                     Bezeichnung der Filter-Definition-Gruppe
+	 * @param typ                             Typ der Filter-Definition-Gruppe
+	 * @param uiIstSichtbar                   Gibt an, ob die Filter-Definition-Gruppe in der UI sichtbar sein soll
+	 * @param uiIstFilterMultiselect          Gibt an, ob die Filter-Definition-Gruppe als Multiselect in der UI angezeigt werden soll
+	 * @param uiFilterMultiselectVerknuepfung Verknüpfung für Multiselect-Filter-Definitionen
+	 * @param uiErforderlicherServerMode      Der mindestens erforderliche ServerMode, damit die Gruppe verfügbar ist (STABLE = in allen Modi verfügbar)
+	 * @param uiErforderlicheKompetenzen      Die erforderlichen Benutzerkompetenzen (OR-verknüpft; leer = keine Kompetenz erforderlich)
+	 * @param filterDefinitionenOptionen      Liste der ReportingFilterDefinition-Objekte, die in der Filter-Definition-Gruppe enthalten sind
+	 *
+	 * @return Ein ReportingFilterDefinitionGruppe-Objekt mit den angegebenen Eigenschaften
+	 */
+	// SONARQUBE WARNUNG: Es sollen max. 7 Parameter an eine Methode übergeben werden. Hier sind es acht, sie sind aber alle gut nachvollziehbar.
+	@SuppressWarnings("java:S107")
+	public static @NotNull ReportingFilterDefinitionGruppe erzeugeFilterDefinitionGruppe(
+			final @NotNull String bezeichnung, final @NotNull String typ, final boolean uiIstSichtbar, final boolean uiIstFilterMultiselect,
+			final @NotNull ReportingFilterVerknuepfung uiFilterMultiselectVerknuepfung,
+			final @NotNull ServerMode uiErforderlicherServerMode, final @NotNull List<BenutzerKompetenz> uiErforderlicheKompetenzen,
 			final @NotNull List<ReportingFilterDefinition> filterDefinitionenOptionen) {
 		final ReportingFilterDefinitionGruppe gruppe = new ReportingFilterDefinitionGruppe();
 		gruppe.bezeichnung = bezeichnung;
 		gruppe.typ = typ;
 		gruppe.uiIstSichtbar = uiIstSichtbar;
-		gruppe.uiIstMultiselect = uiIstMultiselect;
-		gruppe.multiselectVerknuepfung = multiselectVerknuepfung.getId();
+		gruppe.uiIstFilterMultiselect = uiIstFilterMultiselect;
+		gruppe.uiFilterMultiselectVerknuepfung = uiFilterMultiselectVerknuepfung.getId();
 		gruppe.filterDefinitionenOptionen = new ArrayList<>(filterDefinitionenOptionen);
+		gruppe.uiErforderlicherServerMode = serverModeText(uiErforderlicherServerMode);
+		gruppe.uiErforderlicheKompetenzen = kompetenzIds(uiErforderlicheKompetenzen);
 		return gruppe;
 	}
 
@@ -218,20 +354,51 @@ public final class ReportingReportvorlageUtils {
 	 * @param bezeichnung                    Bezeichnung der Filter-Definition-Gruppe
 	 * @param typ                            Typ der Filter-Definition-Gruppe
 	 * @param uiIstSichtbar                  Gibt an, ob die Filter-Definition-Gruppe in der UI sichtbar sein soll
-	 * @param uiIstMultiselect               Gibt an, ob die Filter-Definition-Gruppe als Multiselect in der UI angezeigt werden soll
-	 * @param multiselectVerknuepfung        Verknüpfung für Multiselect-Filter-Definitionen
-	 * @param filterDefinitionenOptionen     Liste der ReportingFilterDefinition-Objekte, die in der Filter-Definition-Gruppe zur Verfügung stehen
-	 * @param filterDefinitionenVorauswahl   Liste der ReportingFilterDefinition-Objekte, die in der Gruppe vorausgewählt sein sollen
+	 * @param uiIstFilterMultiselect          Gibt an, ob die Filter-Definition-Gruppe als Multiselect in der UI angezeigt werden soll
+	 * @param uiFilterMultiselectVerknuepfung Verknüpfung für Multiselect-Filter-Definitionen
+	 * @param filterDefinitionenOptionen      Liste der ReportingFilterDefinition-Objekte, die in der Filter-Definition-Gruppe zur Verfügung stehen
+	 * @param filterDefinitionenVorauswahl    Liste der ReportingFilterDefinition-Objekte, die in der Gruppe vorausgewählt sein sollen
 	 *
 	 * @return Ein ReportingFilterDefinitionGruppe-Objekt mit den angegebenen Eigenschaften
 	 */
 	public static @NotNull ReportingFilterDefinitionGruppe erzeugeFilterDefinitionGruppe(
-			final @NotNull String bezeichnung, final @NotNull String typ, final boolean uiIstSichtbar, final boolean uiIstMultiselect,
-			final @NotNull ReportingFilterVerknuepfung multiselectVerknuepfung,
+			final @NotNull String bezeichnung, final @NotNull String typ, final boolean uiIstSichtbar, final boolean uiIstFilterMultiselect,
+			final @NotNull ReportingFilterVerknuepfung uiFilterMultiselectVerknuepfung,
 			final @NotNull List<ReportingFilterDefinition> filterDefinitionenOptionen,
 			final @NotNull List<ReportingFilterDefinition> filterDefinitionenVorauswahl) {
-		final ReportingFilterDefinitionGruppe gruppe = erzeugeFilterDefinitionGruppe(bezeichnung, typ, uiIstSichtbar, uiIstMultiselect,
-				multiselectVerknuepfung, filterDefinitionenOptionen);
+		return erzeugeFilterDefinitionGruppe(bezeichnung, typ, uiIstSichtbar, uiIstFilterMultiselect, uiFilterMultiselectVerknuepfung, ServerMode.STABLE,
+				List.of(), filterDefinitionenOptionen, filterDefinitionenVorauswahl);
+	}
+
+	/**
+	 * Erstellt ein ReportingFilterDefinitionGruppe-Objekt mit einer Vorauswahl an Filterdefinitionen, inklusive der Angaben zu erforderlichem ServerMode und
+	 * erforderlichen Benutzerkompetenzen.
+	 *
+	 * <p>Wichtig: Die Einträge in {@code filterDefinitionenVorauswahl} müssen dieselben Objektinstanzen sein wie die entsprechenden Einträge in
+	 * {@code filterDefinitionenOptionen}, da die UI die Vorauswahl über die Objektidentität ermittelt.</p>
+	 *
+	 * @param bezeichnung                     Bezeichnung der Filter-Definition-Gruppe
+	 * @param typ                             Typ der Filter-Definition-Gruppe
+	 * @param uiIstSichtbar                   Gibt an, ob die Filter-Definition-Gruppe in der UI sichtbar sein soll
+	 * @param uiIstFilterMultiselect          Gibt an, ob die Filter-Definition-Gruppe als Multiselect in der UI angezeigt werden soll
+	 * @param uiFilterMultiselectVerknuepfung Verknüpfung für Multiselect-Filter-Definitionen
+	 * @param uiErforderlicherServerMode      Der mindestens erforderliche ServerMode, damit die Gruppe verfügbar ist (STABLE = in allen Modi verfügbar)
+	 * @param uiErforderlicheKompetenzen      Die erforderlichen Benutzerkompetenzen (OR-verknüpft; leer = keine Kompetenz erforderlich)
+	 * @param filterDefinitionenOptionen      Liste der ReportingFilterDefinition-Objekte, die in der Filter-Definition-Gruppe zur Verfügung stehen
+	 * @param filterDefinitionenVorauswahl    Liste der ReportingFilterDefinition-Objekte, die in der Gruppe vorausgewählt sein sollen
+	 *
+	 * @return Ein ReportingFilterDefinitionGruppe-Objekt mit den angegebenen Eigenschaften
+	 */
+	// SONARQUBE WARNUNG: Es sollen max. 7 Parameter an eine Methode übergeben werden. Hier sind es neun, sie sind aber alle gut nachvollziehbar.
+	@SuppressWarnings("java:S107")
+	public static @NotNull ReportingFilterDefinitionGruppe erzeugeFilterDefinitionGruppe(
+			final @NotNull String bezeichnung, final @NotNull String typ, final boolean uiIstSichtbar, final boolean uiIstFilterMultiselect,
+			final @NotNull ReportingFilterVerknuepfung uiFilterMultiselectVerknuepfung,
+			final @NotNull ServerMode uiErforderlicherServerMode, final @NotNull List<BenutzerKompetenz> uiErforderlicheKompetenzen,
+			final @NotNull List<ReportingFilterDefinition> filterDefinitionenOptionen,
+			final @NotNull List<ReportingFilterDefinition> filterDefinitionenVorauswahl) {
+		final ReportingFilterDefinitionGruppe gruppe = erzeugeFilterDefinitionGruppe(bezeichnung, typ, uiIstSichtbar, uiIstFilterMultiselect,
+				uiFilterMultiselectVerknuepfung, uiErforderlicherServerMode, uiErforderlicheKompetenzen, filterDefinitionenOptionen);
 		gruppe.filterDefinitionen = new ArrayList<>(filterDefinitionenVorauswahl);
 		return gruppe;
 	}
@@ -243,6 +410,21 @@ public final class ReportingReportvorlageUtils {
 	 * @return Ein ReportingFilterDefinitionGruppe-Objekt für die Filterung nach dem Schülerstatus
 	 */
 	public static @NotNull ReportingFilterDefinitionGruppe erzeugeSchuelerStatusfilterGruppe() {
+		return erzeugeSchuelerStatusfilterGruppe(ServerMode.STABLE, List.of());
+	}
+
+	/**
+	 * Erstellt die Filter-Definition-Gruppe "Statusfilter" für den Reporting-Typ "ReportingSchueler", inklusive der Angaben zu erforderlichem ServerMode und
+	 * erforderlichen Benutzerkompetenzen. Als Optionen werden alle Werte des {@link SchuelerStatus} angeboten (Multiselect, OR-Verknüpfung); vorausgewählt sind
+	 * die Status AKTIV und EXTERN.
+	 *
+	 * @param uiErforderlicherServerMode Der mindestens erforderliche ServerMode, damit die Gruppe verfügbar ist (STABLE = in allen Modi verfügbar)
+	 * @param uiErforderlicheKompetenzen Die erforderlichen Benutzerkompetenzen (OR-verknüpft; leer = keine Kompetenz erforderlich)
+	 *
+	 * @return Ein ReportingFilterDefinitionGruppe-Objekt für die Filterung nach dem Schülerstatus
+	 */
+	public static @NotNull ReportingFilterDefinitionGruppe erzeugeSchuelerStatusfilterGruppe(
+			final @NotNull ServerMode uiErforderlicherServerMode, final @NotNull List<BenutzerKompetenz> uiErforderlicheKompetenzen) {
 		final List<ReportingFilterDefinition> optionen = new ArrayList<>();
 		final List<ReportingFilterDefinition> vorauswahl = new ArrayList<>();
 		for (final SchuelerStatus status : SchuelerStatus.values()) {
@@ -254,7 +436,8 @@ public final class ReportingReportvorlageUtils {
 				vorauswahl.add(definition);
 			}
 		}
-		return erzeugeFilterDefinitionGruppe("Schülerstatus", "ReportingSchueler", true, true, ReportingFilterVerknuepfung.OR, optionen, vorauswahl);
+		return erzeugeFilterDefinitionGruppe("Schülerstatus", "ReportingSchueler", true, true, ReportingFilterVerknuepfung.OR,
+				uiErforderlicherServerMode, uiErforderlicheKompetenzen, optionen, vorauswahl);
 	}
 
 	/**
@@ -332,6 +515,10 @@ public final class ReportingReportvorlageUtils {
 			vpgCopy.beschreibung = vpg.beschreibung;
 			vpgCopy.uiIstSichtbar = vpg.uiIstSichtbar;
 			vpgCopy.uiAnzahlSpalten = vpg.uiAnzahlSpalten;
+			vpgCopy.uiErforderlicherServerMode = vpg.uiErforderlicherServerMode;
+			if (vpg.uiErforderlicheKompetenzen != null) {
+				vpgCopy.uiErforderlicheKompetenzen = new ArrayList<>(vpg.uiErforderlicheKompetenzen);
+			}
 			if (vpg.reportvorlageParameter != null) {
 				vpgCopy.reportvorlageParameter.addAll(cloneVorlageParameter(vpg.reportvorlageParameter));
 			}
@@ -357,6 +544,10 @@ public final class ReportingReportvorlageUtils {
 			vpCopy.uiIstSichtbar = vp.uiIstSichtbar;
 			vpCopy.uiKomponentenTyp = vp.uiKomponentenTyp;
 			vpCopy.uiAnzahlSpalten = vp.uiAnzahlSpalten;
+			vpCopy.uiErforderlicherServerMode = vp.uiErforderlicherServerMode;
+			if (vp.uiErforderlicheKompetenzen != null) {
+				vpCopy.uiErforderlicheKompetenzen = new ArrayList<>(vp.uiErforderlicheKompetenzen);
+			}
 			result.add(vpCopy);
 		}
 		return result;
@@ -375,6 +566,10 @@ public final class ReportingReportvorlageUtils {
 			sdgCopy.bezeichnung = sdg.bezeichnung;
 			sdgCopy.typ = sdg.typ;
 			sdgCopy.uiIstSichtbar = sdg.uiIstSichtbar;
+			sdgCopy.uiErforderlicherServerMode = sdg.uiErforderlicherServerMode;
+			if (sdg.uiErforderlicheKompetenzen != null) {
+				sdgCopy.uiErforderlicheKompetenzen = new ArrayList<>(sdg.uiErforderlicheKompetenzen);
+			}
 			if (sdg.sortierungDefinitionenOptionen != null) {
 				sdgCopy.sortierungDefinitionenOptionen.addAll(cloneSortierungDefinitionen(sdg.sortierungDefinitionenOptionen));
 			}
@@ -415,8 +610,12 @@ public final class ReportingReportvorlageUtils {
 			fdgCopy.bezeichnung = fdg.bezeichnung;
 			fdgCopy.typ = fdg.typ;
 			fdgCopy.uiIstSichtbar = fdg.uiIstSichtbar;
-			fdgCopy.uiIstMultiselect = fdg.uiIstMultiselect;
-			fdgCopy.multiselectVerknuepfung = fdg.multiselectVerknuepfung;
+			fdgCopy.uiIstFilterMultiselect = fdg.uiIstFilterMultiselect;
+			fdgCopy.uiFilterMultiselectVerknuepfung = fdg.uiFilterMultiselectVerknuepfung;
+			fdgCopy.uiErforderlicherServerMode = fdg.uiErforderlicherServerMode;
+			if (fdg.uiErforderlicheKompetenzen != null) {
+				fdgCopy.uiErforderlicheKompetenzen = new ArrayList<>(fdg.uiErforderlicheKompetenzen);
+			}
 			if (fdg.filterDefinitionenOptionen != null) {
 				final List<ReportingFilterDefinition> optionenKopie = cloneFilterDefinitionen(fdg.filterDefinitionenOptionen);
 				fdgCopy.filterDefinitionenOptionen.addAll(optionenKopie);

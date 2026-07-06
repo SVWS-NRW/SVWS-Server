@@ -27,6 +27,16 @@ export class ReportingReportvorlageParameterGruppe extends JavaObject {
 	public uiAnzahlSpalten: number = 1;
 
 	/**
+	 * Der mindestens erforderliche ServerMode (stable|beta|alpha|dev), damit die Gruppe in der UI verfügbar ist. Leer = in allen Modi verfügbar.
+	 */
+	public uiErforderlicherServerMode: string = "";
+
+	/**
+	 * Die IDs der Benutzerkompetenzen (OR-verknüpft), die zur Nutzung der Gruppe erforderlich sind. Leer = keine Kompetenz erforderlich.
+	 */
+	public uiErforderlicheKompetenzen: List<number> = new ArrayList<number>();
+
+	/**
 	 * Die Liste der ReportingVorlageParameter, die zu dieser Gruppe gehören.
 	 */
 	public reportvorlageParameter: List<ReportingReportvorlageParameter> = new ArrayList<ReportingReportvorlageParameter>();
@@ -64,6 +74,14 @@ export class ReportingReportvorlageParameterGruppe extends JavaObject {
 		if (obj.uiAnzahlSpalten === undefined)
 			throw new Error('invalid json format, missing attribute uiAnzahlSpalten');
 		result.uiAnzahlSpalten = obj.uiAnzahlSpalten;
+		if (obj.uiErforderlicherServerMode === undefined)
+			throw new Error('invalid json format, missing attribute uiErforderlicherServerMode');
+		result.uiErforderlicherServerMode = obj.uiErforderlicherServerMode;
+		if (obj.uiErforderlicheKompetenzen !== undefined) {
+			for (const elem of obj.uiErforderlicheKompetenzen) {
+				result.uiErforderlicheKompetenzen.add(elem);
+			}
+		}
 		if (obj.reportvorlageParameter !== undefined) {
 			for (const elem of obj.reportvorlageParameter) {
 				result.reportvorlageParameter.add(ReportingReportvorlageParameter.transpilerFromJSON(JSON.stringify(elem)));
@@ -78,6 +96,15 @@ export class ReportingReportvorlageParameterGruppe extends JavaObject {
 		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
 		result += '"uiIstSichtbar" : ' + obj.uiIstSichtbar.toString() + ',';
 		result += '"uiAnzahlSpalten" : ' + obj.uiAnzahlSpalten.toString() + ',';
+		result += '"uiErforderlicherServerMode" : ' + JSON.stringify(obj.uiErforderlicherServerMode) + ',';
+		result += '"uiErforderlicheKompetenzen" : [ ';
+		for (let i = 0; i < obj.uiErforderlicheKompetenzen.size(); i++) {
+			const elem = obj.uiErforderlicheKompetenzen.get(i);
+			result += elem.toString();
+			if (i < obj.uiErforderlicheKompetenzen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
 		result += '"reportvorlageParameter" : [ ';
 		for (let i = 0; i < obj.reportvorlageParameter.size(); i++) {
 			const elem = obj.reportvorlageParameter.get(i);
@@ -104,6 +131,19 @@ export class ReportingReportvorlageParameterGruppe extends JavaObject {
 		}
 		if (obj.uiAnzahlSpalten !== undefined) {
 			result += '"uiAnzahlSpalten" : ' + obj.uiAnzahlSpalten.toString() + ',';
+		}
+		if (obj.uiErforderlicherServerMode !== undefined) {
+			result += '"uiErforderlicherServerMode" : ' + JSON.stringify(obj.uiErforderlicherServerMode) + ',';
+		}
+		if (obj.uiErforderlicheKompetenzen !== undefined) {
+			result += '"uiErforderlicheKompetenzen" : [ ';
+			for (let i = 0; i < obj.uiErforderlicheKompetenzen.size(); i++) {
+				const elem = obj.uiErforderlicheKompetenzen.get(i);
+				result += elem.toString();
+				if (i < obj.uiErforderlicheKompetenzen.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
 		}
 		if (obj.reportvorlageParameter !== undefined) {
 			result += '"reportvorlageParameter" : [ ';

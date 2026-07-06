@@ -25,12 +25,22 @@ export class ReportingFilterDefinitionGruppe extends JavaObject {
 	/**
 	 * Gibt an, ob mehrere Filterdefinitionen ausgewählt werden können.
 	 */
-	public uiIstMultiselect: boolean = false;
+	public uiIstFilterMultiselect: boolean = false;
 
 	/**
 	 * Gibt an, wie bei Mehrfachauswahl die verschiedenen Definitionen miteinander verknüpft werden sollen.
 	 */
-	public multiselectVerknuepfung: number = ReportingFilterVerknuepfung.AND.getId();
+	public uiFilterMultiselectVerknuepfung: number = ReportingFilterVerknuepfung.AND.getId();
+
+	/**
+	 * Der mindestens erforderliche ServerMode (stable|beta|alpha|dev), damit die Gruppe in der UI verfügbar ist. Leer = in allen Modi verfügbar.
+	 */
+	public uiErforderlicherServerMode: string = "";
+
+	/**
+	 * Die IDs der Benutzerkompetenzen (OR-verknüpft), die zur Nutzung der Gruppe erforderlich sind. Leer = keine Kompetenz erforderlich.
+	 */
+	public uiErforderlicheKompetenzen: List<number> = new ArrayList<number>();
 
 	/**
 	 * Eine Liste von Filterdefinitionen, die in dieser Gruppe zur Verfügung stehen.
@@ -69,12 +79,20 @@ export class ReportingFilterDefinitionGruppe extends JavaObject {
 		if (obj.uiIstSichtbar === undefined)
 			throw new Error('invalid json format, missing attribute uiIstSichtbar');
 		result.uiIstSichtbar = obj.uiIstSichtbar;
-		if (obj.uiIstMultiselect === undefined)
-			throw new Error('invalid json format, missing attribute uiIstMultiselect');
-		result.uiIstMultiselect = obj.uiIstMultiselect;
-		if (obj.multiselectVerknuepfung === undefined)
-			throw new Error('invalid json format, missing attribute multiselectVerknuepfung');
-		result.multiselectVerknuepfung = obj.multiselectVerknuepfung;
+		if (obj.uiIstFilterMultiselect === undefined)
+			throw new Error('invalid json format, missing attribute uiIstFilterMultiselect');
+		result.uiIstFilterMultiselect = obj.uiIstFilterMultiselect;
+		if (obj.uiFilterMultiselectVerknuepfung === undefined)
+			throw new Error('invalid json format, missing attribute uiFilterMultiselectVerknuepfung');
+		result.uiFilterMultiselectVerknuepfung = obj.uiFilterMultiselectVerknuepfung;
+		if (obj.uiErforderlicherServerMode === undefined)
+			throw new Error('invalid json format, missing attribute uiErforderlicherServerMode');
+		result.uiErforderlicherServerMode = obj.uiErforderlicherServerMode;
+		if (obj.uiErforderlicheKompetenzen !== undefined) {
+			for (const elem of obj.uiErforderlicheKompetenzen) {
+				result.uiErforderlicheKompetenzen.add(elem);
+			}
+		}
 		if (obj.filterDefinitionenOptionen !== undefined) {
 			for (const elem of obj.filterDefinitionenOptionen) {
 				result.filterDefinitionenOptionen.add(ReportingFilterDefinition.transpilerFromJSON(JSON.stringify(elem)));
@@ -93,8 +111,17 @@ export class ReportingFilterDefinitionGruppe extends JavaObject {
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"typ" : ' + JSON.stringify(obj.typ) + ',';
 		result += '"uiIstSichtbar" : ' + obj.uiIstSichtbar.toString() + ',';
-		result += '"uiIstMultiselect" : ' + obj.uiIstMultiselect.toString() + ',';
-		result += '"multiselectVerknuepfung" : ' + obj.multiselectVerknuepfung.toString() + ',';
+		result += '"uiIstFilterMultiselect" : ' + obj.uiIstFilterMultiselect.toString() + ',';
+		result += '"uiFilterMultiselectVerknuepfung" : ' + obj.uiFilterMultiselectVerknuepfung.toString() + ',';
+		result += '"uiErforderlicherServerMode" : ' + JSON.stringify(obj.uiErforderlicherServerMode) + ',';
+		result += '"uiErforderlicheKompetenzen" : [ ';
+		for (let i = 0; i < obj.uiErforderlicheKompetenzen.size(); i++) {
+			const elem = obj.uiErforderlicheKompetenzen.get(i);
+			result += elem.toString();
+			if (i < obj.uiErforderlicheKompetenzen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
 		result += '"filterDefinitionenOptionen" : [ ';
 		for (let i = 0; i < obj.filterDefinitionenOptionen.size(); i++) {
 			const elem = obj.filterDefinitionenOptionen.get(i);
@@ -127,11 +154,24 @@ export class ReportingFilterDefinitionGruppe extends JavaObject {
 		if (obj.uiIstSichtbar !== undefined) {
 			result += '"uiIstSichtbar" : ' + obj.uiIstSichtbar.toString() + ',';
 		}
-		if (obj.uiIstMultiselect !== undefined) {
-			result += '"uiIstMultiselect" : ' + obj.uiIstMultiselect.toString() + ',';
+		if (obj.uiIstFilterMultiselect !== undefined) {
+			result += '"uiIstFilterMultiselect" : ' + obj.uiIstFilterMultiselect.toString() + ',';
 		}
-		if (obj.multiselectVerknuepfung !== undefined) {
-			result += '"multiselectVerknuepfung" : ' + obj.multiselectVerknuepfung.toString() + ',';
+		if (obj.uiFilterMultiselectVerknuepfung !== undefined) {
+			result += '"uiFilterMultiselectVerknuepfung" : ' + obj.uiFilterMultiselectVerknuepfung.toString() + ',';
+		}
+		if (obj.uiErforderlicherServerMode !== undefined) {
+			result += '"uiErforderlicherServerMode" : ' + JSON.stringify(obj.uiErforderlicherServerMode) + ',';
+		}
+		if (obj.uiErforderlicheKompetenzen !== undefined) {
+			result += '"uiErforderlicheKompetenzen" : [ ';
+			for (let i = 0; i < obj.uiErforderlicheKompetenzen.size(); i++) {
+				const elem = obj.uiErforderlicheKompetenzen.get(i);
+				result += elem.toString();
+				if (i < obj.uiErforderlicheKompetenzen.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
 		}
 		if (obj.filterDefinitionenOptionen !== undefined) {
 			result += '"filterDefinitionenOptionen" : [ ';

@@ -22,6 +22,16 @@ export class ReportingSortierungDefinitionGruppe extends JavaObject {
 	public uiIstSichtbar: boolean = true;
 
 	/**
+	 * Der mindestens erforderliche ServerMode (stable|beta|alpha|dev), damit die Gruppe in der UI verfügbar ist. Leer = in allen Modi verfügbar.
+	 */
+	public uiErforderlicherServerMode: string = "";
+
+	/**
+	 * Die IDs der Benutzerkompetenzen (OR-verknüpft), die zur Nutzung der Gruppe erforderlich sind. Leer = keine Kompetenz erforderlich.
+	 */
+	public uiErforderlicheKompetenzen: List<number> = new ArrayList<number>();
+
+	/**
 	 * Eine Liste von Sortierdefinitionen, die in dieser Gruppe zur Verfügung stehen.
 	 */
 	public sortierungDefinitionenOptionen: List<ReportingSortierungDefinition> = new ArrayList<ReportingSortierungDefinition>();
@@ -58,6 +68,14 @@ export class ReportingSortierungDefinitionGruppe extends JavaObject {
 		if (obj.uiIstSichtbar === undefined)
 			throw new Error('invalid json format, missing attribute uiIstSichtbar');
 		result.uiIstSichtbar = obj.uiIstSichtbar;
+		if (obj.uiErforderlicherServerMode === undefined)
+			throw new Error('invalid json format, missing attribute uiErforderlicherServerMode');
+		result.uiErforderlicherServerMode = obj.uiErforderlicherServerMode;
+		if (obj.uiErforderlicheKompetenzen !== undefined) {
+			for (const elem of obj.uiErforderlicheKompetenzen) {
+				result.uiErforderlicheKompetenzen.add(elem);
+			}
+		}
 		if (obj.sortierungDefinitionenOptionen !== undefined) {
 			for (const elem of obj.sortierungDefinitionenOptionen) {
 				result.sortierungDefinitionenOptionen.add(ReportingSortierungDefinition.transpilerFromJSON(JSON.stringify(elem)));
@@ -76,6 +94,15 @@ export class ReportingSortierungDefinitionGruppe extends JavaObject {
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"typ" : ' + JSON.stringify(obj.typ) + ',';
 		result += '"uiIstSichtbar" : ' + obj.uiIstSichtbar.toString() + ',';
+		result += '"uiErforderlicherServerMode" : ' + JSON.stringify(obj.uiErforderlicherServerMode) + ',';
+		result += '"uiErforderlicheKompetenzen" : [ ';
+		for (let i = 0; i < obj.uiErforderlicheKompetenzen.size(); i++) {
+			const elem = obj.uiErforderlicheKompetenzen.get(i);
+			result += elem.toString();
+			if (i < obj.uiErforderlicheKompetenzen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
 		result += '"sortierungDefinitionenOptionen" : [ ';
 		for (let i = 0; i < obj.sortierungDefinitionenOptionen.size(); i++) {
 			const elem = obj.sortierungDefinitionenOptionen.get(i);
@@ -107,6 +134,19 @@ export class ReportingSortierungDefinitionGruppe extends JavaObject {
 		}
 		if (obj.uiIstSichtbar !== undefined) {
 			result += '"uiIstSichtbar" : ' + obj.uiIstSichtbar.toString() + ',';
+		}
+		if (obj.uiErforderlicherServerMode !== undefined) {
+			result += '"uiErforderlicherServerMode" : ' + JSON.stringify(obj.uiErforderlicherServerMode) + ',';
+		}
+		if (obj.uiErforderlicheKompetenzen !== undefined) {
+			result += '"uiErforderlicheKompetenzen" : [ ';
+			for (let i = 0; i < obj.uiErforderlicheKompetenzen.size(); i++) {
+				const elem = obj.uiErforderlicheKompetenzen.get(i);
+				result += elem.toString();
+				if (i < obj.uiErforderlicheKompetenzen.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
 		}
 		if (obj.sortierungDefinitionenOptionen !== undefined) {
 			result += '"sortierungDefinitionenOptionen" : [ ';

@@ -17,7 +17,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class ReportingSortierungDefinitionGruppe {
 
 	/** Die Bezeichnung der Sortierdefinition, die auch zur Anzeige in der UI verwendet werden kann. */
-	@Schema(description = "Die Bezeichnung der Gruppe von Sortierdefinitionen, die auch zur Anzeige in der UI verwendet werden kann.", example = "Schülersortierung")
+	@Schema(description = "Die Bezeichnung der Gruppe von Sortierdefinitionen, die auch zur Anzeige in der UI verwendet werden kann.",
+			example = "Schülersortierung")
 	public @NotNull String bezeichnung = "";
 
 	/** Der Typname des zu sortierenden Reporting-Datentyps dieser Gruppe, z. B. 'ReportingSchueler' oder 'ReportingKlasse'. */
@@ -27,6 +28,14 @@ public class ReportingSortierungDefinitionGruppe {
 	/** Gibt an, ob die Gruppe in der UI sichtbar sein soll. */
 	@Schema(description = "Gibt an, ob die Gruppe in der UI sichtbar sein soll.", example = "true")
 	public boolean uiIstSichtbar = true;
+
+	/** Der mindestens erforderliche ServerMode (stable|beta|alpha|dev), damit die Gruppe in der UI verfügbar ist. Leer = in allen Modi verfügbar. */
+	@Schema(description = "Der mindestens erforderliche ServerMode (stable|beta|alpha|dev), damit die Gruppe in der UI verfügbar ist. Leer = in allen Modi verfügbar.")
+	public @NotNull String uiErforderlicherServerMode = "";
+
+	/** Die IDs der Benutzerkompetenzen (OR-verknüpft), die zur Nutzung der Gruppe erforderlich sind. Leer = keine Kompetenz erforderlich. */
+	@Schema(description = "Die IDs der Benutzerkompetenzen (OR-verknüpft), die zur Nutzung der Gruppe erforderlich sind. Leer = keine Kompetenz erforderlich.")
+	public @NotNull List<Long> uiErforderlicheKompetenzen = new ArrayList<>();
 
 	/** Eine Liste von Sortierdefinitionen, die in dieser Gruppe zur Verfügung stehen. */
 	@Schema(description = "Eine Liste von Sortierdefinitionen, die in dieser Gruppe zur Verfügung stehen.", example = "[]")
