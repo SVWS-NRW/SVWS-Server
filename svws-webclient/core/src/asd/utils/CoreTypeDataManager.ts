@@ -550,6 +550,29 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	}
 
 	/**
+	 * Prüft, ob zu der übergebenen ID ein im Schuljahr gültiger Eintrag existiert
+	 * unter Berücksichtigung der auslaufdauer
+	 *
+	 * @param id
+	 * @param schuljahr
+	 * @return  gültig oder nicht
+	 */
+	public isGueltigMitAuslaufdauer(id: number | null, schuljahr: number): boolean {
+		const eintrag: T | null = this._mapIDToEintrag.get(id);
+		if ((eintrag === null) || ((eintrag.gueltigVon !== null) && (eintrag.gueltigVon > schuljahr))) {
+			return false;
+		}
+		let bis: number;
+		if (eintrag.gueltigBis === null) {
+			bis = JavaInteger.MAX_VALUE;
+		} else {
+			bis = eintrag.gueltigBis;
+			bis += eintrag.auslaufdauer;
+		}
+		return (schuljahr <= bis);
+	}
+
+	/**
 	 * Gibt den Core-Type-Wert für den angegebene numerischen Schlüssel zurück.
 	 *
 	 * @param schluessel   der numerische Schlüssel
