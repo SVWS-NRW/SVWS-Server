@@ -12,7 +12,7 @@
 					:manager="hoechsterAbschlussManager"
 					v-model="model.hoechsterSchulabschluss.value"
 					:readonly />
-				<svws-ui-checkbox title="Berufsabschluss vorhanden" v-if="schuleIstBKoderWBK"
+				<svws-ui-checkbox title="Berufsabschluss vorhanden" v-if="eigeneSchuleIstBKOderWBK"
 					v-model="model.proxy.berufsabschlussVorhanden"
 					:readonly>
 					Berufsabschluss vorhanden
@@ -99,11 +99,11 @@
 					:manager="vorherigerEntlassgrundManager"
 					v-model="model.idEntlassgrundVorherigeSchule.value"
 					:readonly />
-				<ui-select label="Schulgliederung" v-if="selectedSchuleIstBK"
+				<ui-select label="Schulgliederung" v-if="vorherigeSchuleIstBKOderWBK"
 					:manager="schulgliederungManager"
 					v-model="model.schulgliederungVorherigeSchule.value"
 					:readonly />
-				<ui-select label="Fachklasse" v-if="selectedSchuleIstBK"
+				<ui-select label="Fachklasse" v-if="vorherigeSchuleIstBK"
 					:manager="fachklasseManager"
 					v-model="model.fachklasseVorherigeSchule.value"
 					:readonly />
@@ -275,13 +275,17 @@
 		(data) => props.patch(props.manager().daten.id, data)
 	);
 	const schuljahr = computed(() => props.manager().schuljahr);
-	const selectedSchuleIstBK = computed(() => {
+	const vorherigeSchuleIstBK = computed(() => {
 		return model.vorherigeSchulform.value !== null &&
 			[Schulform.BK, Schulform.SB].includes(model.vorherigeSchulform.value);
 	});
+	const vorherigeSchuleIstBKOderWBK = computed(() => {
+		return model.vorherigeSchulform.value !== null &&
+			[Schulform.BK, Schulform.SB, Schulform.WB].includes(model.vorherigeSchulform.value);
+	});
 	const schuleHatPrimarstufe = computed(
 		() => [Schulform.G, Schulform.FW, Schulform.WF, Schulform.GM, Schulform.KS, Schulform.S, Schulform.GE, Schulform.V].includes(schuleState.schulform));
-	const schuleIstBKoderWBK = computed(
+	const eigeneSchuleIstBKOderWBK = computed(
 		() => [Schulform.SB, Schulform.BK, Schulform.WB].includes(schuleState.schulform));
 
 	const wechselBevorstehend = ref<boolean>(false);
