@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "ST",
 		"idStatistik": "1",
@@ -9,7 +9,8 @@
 			"kuerzel": "ST",
 			"text": "Zweite Staatsprüfung für ein Lehramt",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "AL",
@@ -20,7 +21,8 @@
 			"kuerzel": "AL",
 			"text": "Anerkennung Lehramt",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "AP",
@@ -31,7 +33,8 @@
 			"kuerzel": "AP",
 			"text": "Anerkennung geeignete Prüfung",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "BT",
@@ -42,7 +45,8 @@
 			"kuerzel": "BT",
 			"text": "Förderliche Berufstätigkeit",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "OH",
@@ -53,7 +57,8 @@
 			"kuerzel": "OH",
 			"text": "ohne",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

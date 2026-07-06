@@ -1,47 +1,40 @@
 {
-    "version": 1,
-    "daten": [
-        {
-            "bezeichner": "EIGENE_SCHULE",
-            "idStatistik": "1",
-            "historie": [
-                {
-                    "id": 1,
-                    "schluessel": "0",
-                    "kuerzel": "0",
-                    "text": "an der eigenen Schule wahrgenommen (ggf. an anderer Einrichtung)",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "ANDERE_SCHULE",
-            "idStatistik": "2",
-            "historie": [
-                {
-                    "id": 2,
-                    "schluessel": "1",
-                    "kuerzel": "1",
-                    "text": "vollständig an einer anderen Schule",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "NICHT_ANGEBOTEN",
-            "idStatistik": "3",
-            "historie": [
-                {
-                    "id": 3,
-                    "schluessel": "2",
-                    "kuerzel": "2",
-                    "text": "nicht angeboten",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        }
-    ]
+	"version": 2,
+	"daten": [ {
+		"bezeichner": "EIGENE_SCHULE",
+		"idStatistik": "1",
+		"historie": [ {
+			"id": 1,
+			"schluessel": "0",
+			"kuerzel": "0",
+			"text": "an der eigenen Schule wahrgenommen (ggf. an anderer Einrichtung)",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "ANDERE_SCHULE",
+		"idStatistik": "2",
+		"historie": [ {
+			"id": 2,
+			"schluessel": "1",
+			"kuerzel": "1",
+			"text": "vollständig an einer anderen Schule",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "NICHT_ANGEBOTEN",
+		"idStatistik": "3",
+		"historie": [ {
+			"id": 3,
+			"schluessel": "2",
+			"kuerzel": "2",
+			"text": "nicht angeboten",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	} ]
 }

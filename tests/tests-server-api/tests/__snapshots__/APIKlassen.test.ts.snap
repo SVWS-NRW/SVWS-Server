@@ -50,6 +50,7 @@ ArrayList {
   "addLast": [Function],
   "elementData": [
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2023,
       "gueltigVon": null,
       "id": 0,
@@ -73,6 +74,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2010,
       "gueltigVon": null,
       "id": 1000,
@@ -104,6 +106,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2011,
       "gueltigVon": 2011,
       "id": 1001,
@@ -139,6 +142,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2022,
       "gueltigVon": 2012,
       "id": 1002,
@@ -178,6 +182,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2023,
       "gueltigVon": 2023,
       "id": 1003,
@@ -213,6 +218,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2010,
       "gueltigVon": null,
       "id": 2000,
@@ -244,6 +250,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2011,
       "gueltigVon": 2011,
       "id": 2001,
@@ -279,6 +286,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2021,
       "gueltigVon": 2012,
       "id": 2002,
@@ -318,6 +326,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2022,
       "gueltigVon": 2022,
       "id": 2003,
@@ -353,6 +362,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2023,
       "gueltigVon": 2023,
       "id": 2004,
@@ -384,6 +394,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2010,
       "gueltigVon": null,
       "id": 3000,
@@ -415,6 +426,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2011,
       "gueltigVon": 2011,
       "id": 3001,
@@ -450,6 +462,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2021,
       "gueltigVon": 2012,
       "id": 3002,
@@ -489,6 +502,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2022,
       "gueltigVon": 2022,
       "id": 3003,
@@ -524,6 +538,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2023,
       "gueltigVon": 2023,
       "id": 3004,
@@ -555,6 +570,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2010,
       "gueltigVon": null,
       "id": 10000,
@@ -594,6 +610,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2011,
       "gueltigVon": 2011,
       "id": 10001,
@@ -637,6 +654,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2012,
       "gueltigVon": 2012,
       "id": 10002,
@@ -684,6 +702,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2016,
       "gueltigVon": 2013,
       "id": 10003,
@@ -735,6 +754,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": null,
       "gueltigVon": null,
       "id": 4000,
@@ -762,6 +782,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2011,
       "gueltigVon": null,
       "id": 11000,
@@ -797,6 +818,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2012,
       "gueltigVon": 2012,
       "id": 11001,
@@ -840,6 +862,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2014,
       "gueltigVon": 2013,
       "id": 11002,
@@ -887,6 +910,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": null,
       "gueltigVon": 2024,
       "id": 9000,
@@ -958,6 +982,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2009,
       "gueltigVon": null,
       "id": 12000,
@@ -997,6 +1022,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2010,
       "gueltigVon": 2010,
       "id": 12001,
@@ -1032,6 +1058,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2011,
       "gueltigVon": 2011,
       "id": 12002,
@@ -1071,6 +1098,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2012,
       "gueltigVon": 2012,
       "id": 12003,
@@ -1114,6 +1142,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2014,
       "gueltigVon": 2013,
       "id": 12004,
@@ -1161,6 +1190,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2018,
       "gueltigVon": 2015,
       "id": 12005,
@@ -1216,6 +1246,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2010,
       "gueltigVon": 2009,
       "id": 13000,
@@ -1251,6 +1282,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2011,
       "gueltigVon": 2011,
       "id": 13001,
@@ -1290,6 +1322,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2013,
       "gueltigVon": 2012,
       "id": 13002,
@@ -1329,6 +1362,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": null,
       "gueltigVon": null,
       "id": 5000,
@@ -1356,6 +1390,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2023,
       "gueltigVon": null,
       "id": 6000,
@@ -1387,6 +1422,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": null,
       "gueltigVon": 2024,
       "id": 6001,
@@ -1410,6 +1446,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2022,
       "gueltigVon": null,
       "id": 7000,
@@ -1493,6 +1530,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2023,
       "gueltigVon": 2023,
       "id": 7001,
@@ -1572,6 +1610,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": null,
       "gueltigVon": 2024,
       "id": 7002,
@@ -1655,6 +1694,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2022,
       "gueltigVon": null,
       "id": 8000,
@@ -1726,6 +1766,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2023,
       "gueltigVon": 2023,
       "id": 8001,
@@ -1793,6 +1834,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2010,
       "gueltigVon": null,
       "id": 14000,
@@ -1836,6 +1878,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2011,
       "gueltigVon": 2011,
       "id": 14001,
@@ -1883,6 +1926,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2012,
       "gueltigVon": 2012,
       "id": 14002,
@@ -1934,6 +1978,7 @@ ArrayList {
       },
     },
     KlassenartKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": 2016,
       "gueltigVon": 2013,
       "id": 14003,

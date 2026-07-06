@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "NEUAUFNAHME",
 		"idStatistik": "1",
@@ -9,7 +9,8 @@
 			"kuerzel": "0",
 			"text": "Aufnahme",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "WARTELISTE",
@@ -20,7 +21,8 @@
 			"kuerzel": "1",
 			"text": "Warteliste",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "AKTIV",
@@ -31,7 +33,8 @@
 			"kuerzel": "2",
 			"text": "Aktiv",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "BEURLAUBT",
@@ -42,7 +45,8 @@
 			"kuerzel": "3",
 			"text": "Beurlaubt",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "EXTERN",
@@ -53,7 +57,8 @@
 			"kuerzel": "6",
 			"text": "Extern",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ABSCHLUSS",
@@ -64,7 +69,8 @@
 			"kuerzel": "8",
 			"text": "Abschluss",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ABGANG",
@@ -75,7 +81,8 @@
 			"kuerzel": "9",
 			"text": "Abgang (ohne Abschluss)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "EHEMALIGE",
@@ -86,7 +93,8 @@
 			"kuerzel": "10",
 			"text": "Ehemalige",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

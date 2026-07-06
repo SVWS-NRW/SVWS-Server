@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "ID4",
 		"idStatistik": "1",
@@ -9,7 +9,8 @@
 			"kuerzel": "1",
 			"text": "erworben durch LABG/OVP bzw. Laufbahnverordnung",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID5",
@@ -20,7 +21,8 @@
 			"kuerzel": "2",
 			"text": "Unterrichtserlaubnis (z. B. Zertifikatskurs)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID6",
@@ -31,7 +33,8 @@
 			"kuerzel": "3",
 			"text": "mehrjähriger Unterricht ohne Lehramtsprüfung oder Unterrichtserlaubnis",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID7",
@@ -42,7 +45,8 @@
 			"kuerzel": "9",
 			"text": "Sonstige",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

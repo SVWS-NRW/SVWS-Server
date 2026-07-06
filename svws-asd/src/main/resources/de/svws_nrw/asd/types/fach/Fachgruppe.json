@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {	
 		"bezeichner": "FG_D",
 		"idStatistik": "1",
@@ -14,7 +14,8 @@
 			"sortierung": 0,
 			"fuerZeugnis": true,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_AL",
@@ -30,7 +31,8 @@
 			"sortierung": 12,
 			"fuerZeugnis": true,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_FS",
@@ -46,7 +48,8 @@
 			"sortierung": 9,
 			"fuerZeugnis": true,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_MS",
@@ -62,7 +65,8 @@
 			"sortierung": 13,
 			"fuerZeugnis": true,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_ME",
@@ -78,7 +82,8 @@
 			"sortierung": 13,
 			"fuerZeugnis": false,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_GS",
@@ -94,7 +99,8 @@
 			"sortierung": 11,
 			"fuerZeugnis": true,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_PL",
@@ -110,7 +116,8 @@
 			"sortierung": 11,
 			"fuerZeugnis": false,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_RE",
@@ -126,7 +133,8 @@
 			"sortierung": 6,
 			"fuerZeugnis": true,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_M",
@@ -142,7 +150,8 @@
 			"sortierung": 15,
 			"fuerZeugnis": true,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_NW",
@@ -158,7 +167,8 @@
 			"sortierung": 10,
 			"fuerZeugnis": true,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_WN",
@@ -174,7 +184,8 @@
 			"sortierung": 10,
 			"fuerZeugnis": false,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_SP",
@@ -190,7 +201,8 @@
 			"sortierung": 14,
 			"fuerZeugnis": true,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_VX",
@@ -206,7 +218,8 @@
 			"sortierung": 0,
 			"fuerZeugnis": false,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_PX",
@@ -222,7 +235,8 @@
 			"sortierung": 0,
 			"fuerZeugnis": false,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_BUE",
@@ -238,7 +252,8 @@
 			"sortierung": 1,
 			"fuerZeugnis": false,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_BBS",
@@ -254,7 +269,8 @@
 			"sortierung": 2,
 			"fuerZeugnis": false,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_BBS_SCHWERPUNKT",
@@ -270,7 +286,8 @@
 			"sortierung": 0,
 			"fuerZeugnis": false,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_DF",
@@ -286,7 +303,8 @@
 			"sortierung": 3,
 			"fuerZeugnis": false,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_BP",
@@ -302,7 +320,8 @@
 			"sortierung": 4,
 			"fuerZeugnis": false,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_BLL",
@@ -318,7 +337,8 @@
 			"sortierung": 8,
 			"fuerZeugnis": false,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_WP",
@@ -334,7 +354,8 @@
 			"sortierung": 16,
 			"fuerZeugnis": false,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_ZUV",
@@ -350,7 +371,8 @@
 			"sortierung": 0,
 			"fuerZeugnis": false,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_ANG",
@@ -366,7 +388,8 @@
 			"sortierung": 0,
 			"fuerZeugnis": false,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_D_SP",
@@ -382,7 +405,8 @@
 			"sortierung": 0,
 			"fuerZeugnis": true,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_SU",
@@ -398,7 +422,8 @@
 			"sortierung": 0,
 			"fuerZeugnis": true,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_FOE",
@@ -414,7 +439,8 @@
 			"sortierung": 0,
 			"fuerZeugnis": true,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_ABA",
@@ -430,7 +456,8 @@
 			"sortierung": 0,
 			"fuerZeugnis": false,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_PA",
@@ -446,7 +473,8 @@
 			"sortierung": 0,
 			"fuerZeugnis": false,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FG_IF",
@@ -462,7 +490,8 @@
 			"sortierung": 10,
 			"fuerZeugnis": true,
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

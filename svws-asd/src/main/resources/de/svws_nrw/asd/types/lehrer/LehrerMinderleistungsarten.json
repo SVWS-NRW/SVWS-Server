@@ -1,5 +1,5 @@
 {
-	"version": 4,
+	"version": 5,
 	"daten": [ {
 		"bezeichner": "ID_200",
 		"idStatistik": "1",
@@ -10,7 +10,8 @@
 			"text": "Pflichtstundenermäßigung aus Altersgründen",
 			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	},{
 		"bezeichner": "ID_210",
@@ -22,7 +23,8 @@
 			"text": "Pflichtstundenermäßigung wegen Schwerbehinderung (Regelanrechnung)",
 			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	},{
 		"bezeichner": "ID_220",
@@ -34,7 +36,8 @@
 			"text": "Pflichtstundenermäßigung wegen Schwerbehinderung (Erhöhung auf Antrag)",
 			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	},{
 		"bezeichner": "ID_230",
@@ -46,7 +49,8 @@
 			"text": "Beurlaubung (auch Elternzeit), Rückkehr im Laufe des Schuljahres",
 			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	},{
 		"bezeichner": "ID_240",
@@ -58,7 +62,8 @@
 			"text": "Langfristige Erkrankung",
 			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	},{
 		"bezeichner": "ID_250",
@@ -70,7 +75,8 @@
 			"text": "Abwesend wegen Beschäftigungsverbot gem. § 3 MuSchG",
 			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	},{
 		"bezeichner": "ID_255",
@@ -82,7 +88,8 @@
 			"text": "Abwesend wegen Teilbeschäftigungsverbot gem. § 3 MuSchG",
 			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	},{
 		"bezeichner": "ID_260",
@@ -94,7 +101,8 @@
 			"text": "Wiedereingliederungsmaßnahme",
 			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	},{
 		"bezeichner": "ID_270",
@@ -106,7 +114,8 @@
 			"text": "Rückgabe vorgeleisteter Stunden wegen Nichtinanspruchnahme von Altersteilzeit",
 			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	},{
 		"bezeichner": "ID_275",
@@ -118,7 +127,8 @@
 			"text": "Rückgabe der Vorgriffsstunden",
 			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	},{
 		"bezeichner": "ID_280",
@@ -130,7 +140,8 @@
 			"text": "Seiteneinsteigerentlastung",
 			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
 			"gueltigVon": null,
-			"gueltigBis": 2009
+			"gueltigBis": 2009,
+			"auslaufdauer": 0
 		} ]
 	},{
 		"bezeichner": "ID_290",
@@ -142,7 +153,8 @@
 			"text": "Ermäßigungs-/Freistellungsphase \"Teilzeitbeschäftigung im Blockmodell\" (§ 65 LBG) (vormals Sabbatjahr)",
 			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	},{
 		"bezeichner": "ID_300",
@@ -154,7 +166,8 @@
 			"text": "Sonstige Ermäßigungen aus besonderen persönlichen Gründen",
 			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	},{
 		"bezeichner": "ID_350",
@@ -166,7 +179,8 @@
 			"text": "Abrundung der Pflichtstundenzahl aufgrund von § 2 Abs. 1 AVO-RL",
 			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	},{
 		"bezeichner": "ID_360",
@@ -178,7 +192,8 @@
 			"text": "Unterschreitung der Pflichtstundenzahl aus organisatorischen Gründen (z. B. Epochenunterricht)",
 			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	},{
 		"bezeichner": "ID_365",
@@ -190,7 +205,8 @@
 			"text": "Unterschreitung der Pflichtstundenzahl wegen COVID-19",
 			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
 		} ]
 	},{
 		"bezeichner": "ID_370",
@@ -202,7 +218,8 @@
 			"text": "Unterschreitung der Pflichtstundenzahl wegen Pflichstunden-Bandbreite",
 			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	},{
 		"bezeichner": "ID_380",
@@ -214,7 +231,8 @@
 			"text": "Fortbildung: Nachträglicher Erwerb des sonderpädagogischen Lehramtes",
 			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

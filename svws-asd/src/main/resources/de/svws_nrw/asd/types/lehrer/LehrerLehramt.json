@@ -1,5 +1,5 @@
 {
-	"version": 4,
+	"version": 5,
 	"daten": [ {
 		"bezeichner": "ID_00",
 		"idStatistik": "1",
@@ -9,7 +9,8 @@
 			"kuerzel": "00",
 			"text": "Primarstufe",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_01",
@@ -20,7 +21,8 @@
 			"kuerzel": "01",
 			"text": "Grund- und Hauptschule (Stufenschwerpunkt I) (altes Lehramt)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_02",
@@ -31,7 +33,8 @@
 			"kuerzel": "02",
 			"text": "Grund- und Hauptschule (Stufenschwerpunkt II) (altes Lehramt)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_03",
@@ -42,7 +45,8 @@
 			"kuerzel": "03",
 			"text": "Volksschule (altes Lehramt)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_09",
@@ -53,7 +57,8 @@
 			"kuerzel": "09",
 			"text": "Sonderpädagogik",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_10",
@@ -64,7 +69,8 @@
 			"kuerzel": "10",
 			"text": "Sonderschulen (altes Lehramt)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_11",
@@ -75,7 +81,8 @@
 			"kuerzel": "11",
 			"text": "Sonderpädagogik und die Primarstufe",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_12",
@@ -86,7 +93,8 @@
 			"kuerzel": "12",
 			"text": "Sonderpädagogik und die Sekundarstufe I",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_14",
@@ -97,7 +105,8 @@
 			"kuerzel": "14",
 			"text": "Sonderpädagogik LPO 03",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_15",
@@ -108,7 +117,8 @@
 			"kuerzel": "15",
 			"text": "Grund-, Haupt- u. Realschule u. entspr. Jahrgangsstufen der Gesamtschule - Schwerpunkt Grundschule",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_16",
@@ -119,7 +129,8 @@
 			"kuerzel": "16",
 			"text": "Grund-, Haupt- u. Realschule u. entspr. Jahrgangsstufen der Gesamtschule - Schwerpunkt Haupt-/Real-/Gesamtschule",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_19",
@@ -130,7 +141,8 @@
 			"kuerzel": "19",
 			"text": "Sekundarstufe I und die Primarstufe",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_20",
@@ -141,7 +153,8 @@
 			"kuerzel": "20",
 			"text": "Sekundarstufe I",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_21",
@@ -152,7 +165,8 @@
 			"kuerzel": "21",
 			"text": "Realschule - altes Lehramt -",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_24",
@@ -163,7 +177,8 @@
 			"kuerzel": "24",
 			"text": "Sekundarstufe II und Sekundarstufe I",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_25",
@@ -174,7 +189,8 @@
 			"kuerzel": "25",
 			"text": "Gymnasium - altes Lehramt -",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_27",
@@ -185,7 +201,8 @@
 			"kuerzel": "27",
 			"text": "Gymnasium und Gesamtschule",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_29",
@@ -196,7 +213,8 @@
 			"kuerzel": "29",
 			"text": "Sekundarstufe II (ohne berufliche Fachrichtung)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_30",
@@ -207,7 +225,8 @@
 			"kuerzel": "30",
 			"text": "Berufsbildenden Schulen - altes Lehramt -",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_31",
@@ -218,7 +237,8 @@
 			"kuerzel": "31",
 			"text": "Sekundarstufe II und Sonderpädagogik (mit sonderpädagogischer Fachrichtung - ohne berufliche Fachrichtung)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_32",
@@ -229,7 +249,8 @@
 			"kuerzel": "32",
 			"text": "Sekundarstufe II (mit beruflicher Fachrichtung)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_35",
@@ -240,7 +261,8 @@
 			"kuerzel": "35",
 			"text": "Berufskolleg",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_40",
@@ -251,7 +273,8 @@
 			"kuerzel": "40",
 			"text": "Fachhochschullehrer/-in",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_50",
@@ -262,7 +285,8 @@
 			"kuerzel": "50",
 			"text": "Fachlehrer/-in an Förderschulen",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_51",
@@ -273,7 +297,8 @@
 			"kuerzel": "51",
 			"text": "Religionslehrer/-in, Geistliche/-r, Katechet/-in",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_52",
@@ -284,14 +309,16 @@
 			"kuerzel": "52",
 			"text": "Fachlehrer/-in in der Laufbahn des Werkstattlehrers (§ 36 LVO)",
 			"gueltigVon": null,
-			"gueltigBis": 2025
+			"gueltigBis": 2025,
+			"auslaufdauer": 0
 		}, {
 			"id": 132,
 			"schluessel": "52",
 			"kuerzel": "52",
 			"text": "Fachlehrer/-in in der Laufbahn des Werkstattlehrers (§ 34 LVO)",
 			"gueltigVon": 2026,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_53",
@@ -302,7 +329,8 @@
 			"kuerzel": "53",
 			"text": "Fachlehrer/-in",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_54",
@@ -313,7 +341,8 @@
 			"kuerzel": "54",
 			"text": "Fachlehrer/-in für Kurzschrift und Maschinenschreiben",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_55",
@@ -324,7 +353,8 @@
 			"kuerzel": "55",
 			"text": "Fachlehrer/-in mit der Befähigung für die Laufbahn des technischen Lehrers an beruflichen Schulen",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_56",
@@ -335,7 +365,8 @@
 			"kuerzel": "56",
 			"text": "Schulkindergärtner/-in",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_57",
@@ -346,7 +377,8 @@
 			"kuerzel": "57",
 			"text": "Sozialarbeiter/-in, Sozialpädagoge/-in, Diplom-Pädagoge/-in (ohne sonderpädagogische Zusatzausbildung)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_58",
@@ -357,7 +389,8 @@
 			"kuerzel": "58",
 			"text": "Erzieher/-in (ohne sonderpädagogische Zusatzausbildung)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_59",
@@ -368,7 +401,8 @@
 			"kuerzel": "59",
 			"text": "Sonstige pädagogische Unterrichtshilfe ohne sonderpädagogische Zusatzausbildung",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_60",
@@ -379,7 +413,8 @@
 			"kuerzel": "60",
 			"text": "Sozialarbeiter/-in, Sozialpädagoge/-in, Diplom-Pädagoge/-in (mit sonderpädagogischer Zusatzausbildung)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_61",
@@ -390,7 +425,8 @@
 			"kuerzel": "61",
 			"text": "Erzieher/-in (mit sonderpädagogischer Zusatzausbildung)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_62",
@@ -401,7 +437,8 @@
 			"kuerzel": "62",
 			"text": "Sonstige pädagogische Unterrichtshilfe mit sonderpädagogischer Zusatzausbildung",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_96",
@@ -412,7 +449,8 @@
 			"kuerzel": "96",
 			"text": "Qualifikation mit Hochschulabschluss ohne 2. Staatsprüfung",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_97",
@@ -423,7 +461,8 @@
 			"kuerzel": "97",
 			"text": "Qualifikation, die außerhalb des Geltungsbereichs des Grundgesetzes erworben wurde",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_98",
@@ -434,7 +473,8 @@
 			"kuerzel": "98",
 			"text": "Lehramtsanwärter/-in / Studienreferendar/-in",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_99",
@@ -445,7 +485,8 @@
 			"kuerzel": "99",
 			"text": "Sonstige (z.B. Gymnastik-, Werk-, Hauswirtschaftslehrer/-in, Übungsleiter/-in)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_70",
@@ -456,7 +497,8 @@
 			"kuerzel": "70",
 			"text": "Schulverwaltungsassistent/-in",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_04",
@@ -467,7 +509,8 @@
 			"kuerzel": "04",
 			"text": "Grundschule",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_17",
@@ -478,7 +521,8 @@
 			"kuerzel": "17",
 			"text": "Haupt-, Real- und  Gesamtschule",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_08",
@@ -489,7 +533,8 @@
 			"kuerzel": "08",
 			"text": "Sonderpädagogische Förderung",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_18",
@@ -500,7 +545,8 @@
 			"kuerzel": "18",
 			"text": "Haupt-, Real-, Sekundar- und Gesamtschule",
 			"gueltigVon": 2019,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_49",
@@ -511,7 +557,8 @@
 			"kuerzel": "49",
 			"text": "Berufskolleg mit einer beruflichen Fachrichtung (§ 40 LVO)",
 			"gueltigVon": 2019,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_63",
@@ -522,7 +569,8 @@
 			"kuerzel": "63",
 			"text": "Heilpädagoge/-in",
 			"gueltigVon": 2023,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_64",
@@ -533,7 +581,8 @@
 			"kuerzel": "64",
 			"text": "Handwerksmeister/-in",
 			"gueltigVon": 2023,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_65",
@@ -544,7 +593,8 @@
 			"kuerzel": "65",
 			"text": "Alltagshelfer/-in",
 			"gueltigVon": 2023,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_90",
@@ -555,7 +605,8 @@
 			"kuerzel": "90",
 			"text": "Studierende",
 			"gueltigVon": 2024,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

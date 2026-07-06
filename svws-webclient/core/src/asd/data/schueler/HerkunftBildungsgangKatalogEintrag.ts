@@ -44,6 +44,9 @@ export class HerkunftBildungsgangKatalogEintrag extends CoreTypeDataNurSchulform
 		result.text = obj.text;
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
 		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		if (obj.auslaufdauer === undefined)
+			throw new Error('invalid json format, missing attribute auslaufdauer');
+		result.auslaufdauer = obj.auslaufdauer;
 		return result;
 	}
 
@@ -63,6 +66,7 @@ export class HerkunftBildungsgangKatalogEintrag extends CoreTypeDataNurSchulform
 		result += '"text" : ' + JSON.stringify(obj.text) + ',';
 		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"auslaufdauer" : ' + obj.auslaufdauer.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -97,6 +101,9 @@ export class HerkunftBildungsgangKatalogEintrag extends CoreTypeDataNurSchulform
 		}
 		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
+		}
+		if (obj.auslaufdauer !== undefined) {
+			result += '"auslaufdauer" : ' + obj.auslaufdauer.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

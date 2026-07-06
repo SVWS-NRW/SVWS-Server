@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "AH",
 		"idStatistik": "1",
@@ -9,7 +9,8 @@
 			"kuerzel": "AH",
 			"text": "Arbeitslehre / Schwerpunkt Hauswirtschaft",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "AL",
@@ -20,7 +21,8 @@
 			"kuerzel": "AL",
 			"text": "Arbeitslehre",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "AM",
@@ -31,7 +33,8 @@
 			"kuerzel": "AM",
 			"text": "Arabisch (Herkunftssprache)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "AT",
@@ -42,7 +45,8 @@
 			"kuerzel": "AT",
 			"text": "Arbeitslehre / Schwerpunkt Technik",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "AW",
@@ -53,7 +57,8 @@
 			"kuerzel": "AW",
 			"text": "Arbeitslehre / Wirtschaft",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "BE",
@@ -64,7 +69,8 @@
 			"kuerzel": "BE",
 			"text": "Betreuung",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "BI",
@@ -75,7 +81,8 @@
 			"kuerzel": "BI",
 			"text": "Biologie",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "BM",
@@ -86,7 +93,8 @@
 			"kuerzel": "BM",
 			"text": "Bosnisch (Herkunftssprache)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "C",
@@ -97,7 +105,8 @@
 			"kuerzel": "C",
 			"text": "Chinesisch",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "CH",
@@ -108,7 +117,8 @@
 			"kuerzel": "CH",
 			"text": "Chemie",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "CM",
@@ -119,7 +129,8 @@
 			"kuerzel": "CM",
 			"text": "Kroatisch (Herkunftssprache)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D",
@@ -130,7 +141,8 @@
 			"kuerzel": "D",
 			"text": "Deutsch",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "E",
@@ -141,7 +153,8 @@
 			"kuerzel": "E",
 			"text": "Englisch",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "EK",
@@ -152,7 +165,8 @@
 			"kuerzel": "EK",
 			"text": "Erdkunde / Geographie",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "EM",
@@ -163,7 +177,8 @@
 			"kuerzel": "EM",
 			"text": "Serbisch (Herkunftssprache)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ER",
@@ -174,7 +189,8 @@
 			"kuerzel": "ER",
 			"text": "Evangelische Religionslehre",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "F",
@@ -185,7 +201,8 @@
 			"kuerzel": "F",
 			"text": "Französisch",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FP",
@@ -196,7 +213,8 @@
 			"kuerzel": "FP",
 			"text": "Fachpraxis",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "G",
@@ -207,7 +225,8 @@
 			"kuerzel": "G",
 			"text": "Griechisch",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "GE",
@@ -218,7 +237,8 @@
 			"kuerzel": "GE",
 			"text": "Geschichte",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "GM",
@@ -229,7 +249,8 @@
 			"kuerzel": "GM",
 			"text": "Neugriechisch (Herkunftssprache)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "GP",
@@ -240,7 +261,8 @@
 			"kuerzel": "GP",
 			"text": "Geschichte / Politische Bildung",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "GS",
@@ -251,7 +273,8 @@
 			"kuerzel": "GS",
 			"text": "Gestaltung mit Kunst und Textilgestaltung",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "GU",
@@ -262,7 +285,8 @@
 			"kuerzel": "GU",
 			"text": "Gesamtunterricht",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "H",
@@ -273,7 +297,8 @@
 			"kuerzel": "H",
 			"text": "Hebräisch",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "HA",
@@ -284,7 +309,8 @@
 			"kuerzel": "HA",
 			"text": "Hauswirtschaft",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "HR",
@@ -295,7 +321,8 @@
 			"kuerzel": "HR",
 			"text": "Jüdische Religionslehre",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "HW",
@@ -306,7 +333,8 @@
 			"kuerzel": "HW",
 			"text": "Hauswirtschaft(-swissenschaft)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "I",
@@ -317,7 +345,8 @@
 			"kuerzel": "I",
 			"text": "Italienisch",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "IF",
@@ -328,7 +357,8 @@
 			"kuerzel": "IF",
 			"text": "Informatik",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "IM",
@@ -339,7 +369,8 @@
 			"kuerzel": "IM",
 			"text": "Italienisch (Herkunftssprache)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "IR",
@@ -350,7 +381,8 @@
 			"kuerzel": "IR",
 			"text": "Islamkunde",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "K",
@@ -361,7 +393,8 @@
 			"kuerzel": "K",
 			"text": "Japanisch",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "KG",
@@ -372,7 +405,8 @@
 			"kuerzel": "KG",
 			"text": "Kunst / Gestalten",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "KR",
@@ -383,7 +417,8 @@
 			"kuerzel": "KR",
 			"text": "Katholische Religionslehre",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "KS",
@@ -394,7 +429,8 @@
 			"kuerzel": "KS",
 			"text": "Kurzschrift",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "KU",
@@ -405,7 +441,8 @@
 			"kuerzel": "KU",
 			"text": "Kunst",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "KW",
@@ -416,7 +453,8 @@
 			"kuerzel": "KW",
 			"text": "Kunstwissenschaft",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "L",
@@ -427,7 +465,8 @@
 			"kuerzel": "L",
 			"text": "Lateinisch",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "LI",
@@ -438,7 +477,8 @@
 			"kuerzel": "LI",
 			"text": "Literaturwissenschaft",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "LM",
@@ -449,7 +489,8 @@
 			"kuerzel": "LM",
 			"text": "Albanisch (Herkunftssprache)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "LN",
@@ -460,7 +501,8 @@
 			"kuerzel": "LN",
 			"text": "Linguistik",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "M",
@@ -471,7 +513,8 @@
 			"kuerzel": "M",
 			"text": "Mathematik",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "MM",
@@ -482,7 +525,8 @@
 			"kuerzel": "MM",
 			"text": "Mazedonisch (Herkunftssprache)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "MS",
@@ -493,7 +537,8 @@
 			"kuerzel": "MS",
 			"text": "Maschinenschreiben",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "MU",
@@ -504,7 +549,8 @@
 			"kuerzel": "MU",
 			"text": "Musik",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "N",
@@ -515,7 +561,8 @@
 			"kuerzel": "N",
 			"text": "Niederländisch",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "O",
@@ -526,7 +573,8 @@
 			"kuerzel": "O",
 			"text": "Portugiesisch",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "OA",
@@ -537,7 +585,8 @@
 			"kuerzel": "OA",
 			"text": "Ohne Angabe",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "OM",
@@ -548,7 +597,8 @@
 			"kuerzel": "OM",
 			"text": "Portugiesisch (Herkunftssprache)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "OR",
@@ -559,7 +609,8 @@
 			"kuerzel": "OR",
 			"text": "Orthodoxe Religionslehre",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "PA",
@@ -570,7 +621,8 @@
 			"kuerzel": "PA",
 			"text": "Pädagogik",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "PH",
@@ -581,7 +633,8 @@
 			"kuerzel": "PH",
 			"text": "Physik (Astronomie)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "PI",
@@ -592,7 +645,8 @@
 			"kuerzel": "PI",
 			"text": "Philosophie / Praktische Philosophie",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "PK",
@@ -603,7 +657,8 @@
 			"kuerzel": "PK",
 			"text": "Politik",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "PL",
@@ -614,7 +669,8 @@
 			"kuerzel": "PL",
 			"text": "Philosophie",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "PM",
@@ -625,7 +681,8 @@
 			"kuerzel": "PM",
 			"text": "Polnisch (Herkunftssprache)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "PP",
@@ -636,7 +693,8 @@
 			"kuerzel": "PP",
 			"text": "Praktische Philosophie",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "PS",
@@ -647,7 +705,8 @@
 			"kuerzel": "PS",
 			"text": "Psychologie",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "R",
@@ -658,7 +717,8 @@
 			"kuerzel": "R",
 			"text": "Russisch",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "RM",
@@ -669,7 +729,8 @@
 			"kuerzel": "RM",
 			"text": "Russisch (Herkunftssprache)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "RW",
@@ -680,7 +741,8 @@
 			"kuerzel": "RW",
 			"text": "Rechtswissenschaft",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "S",
@@ -691,7 +753,8 @@
 			"kuerzel": "S",
 			"text": "Spanisch",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SE",
@@ -702,7 +765,8 @@
 			"kuerzel": "SE",
 			"text": "Sozial- und Erziehungswissenschaft",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SF",
@@ -713,7 +777,8 @@
 			"kuerzel": "SF",
 			"text": "Sozialpflege",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SM",
@@ -724,7 +789,8 @@
 			"kuerzel": "SM",
 			"text": "Spanisch (Herkunftssprache)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SN",
@@ -735,7 +801,8 @@
 			"kuerzel": "SN",
 			"text": "Sonderpädagogik",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SO",
@@ -746,7 +813,8 @@
 			"kuerzel": "SO",
 			"text": "Sozialpädagogik",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SP",
@@ -757,7 +825,8 @@
 			"kuerzel": "SP",
 			"text": "Sport",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SR",
@@ -768,7 +837,8 @@
 			"kuerzel": "SR",
 			"text": "sonstige Sprachen",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SU",
@@ -779,7 +849,8 @@
 			"kuerzel": "SU",
 			"text": "Sachunterricht",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SW",
@@ -790,7 +861,8 @@
 			"kuerzel": "SW",
 			"text": "Sozialwissenschaften",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "T",
@@ -801,7 +873,8 @@
 			"kuerzel": "T",
 			"text": "Türkisch",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "TC",
@@ -812,7 +885,8 @@
 			"kuerzel": "TC",
 			"text": "Technik",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "TE",
@@ -823,7 +897,8 @@
 			"kuerzel": "TE",
 			"text": "Technologie",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "TM",
@@ -834,7 +909,8 @@
 			"kuerzel": "TM",
 			"text": "Türkisch (Herkunftssprache)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "TX",
@@ -845,7 +921,8 @@
 			"kuerzel": "TX",
 			"text": "Textilgestaltung",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "UW",
@@ -856,7 +933,8 @@
 			"kuerzel": "UW",
 			"text": "Unterweisung",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "W",
@@ -867,7 +945,8 @@
 			"kuerzel": "W",
 			"text": "Werken / Musisches Werken",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "WM",
@@ -878,7 +957,8 @@
 			"kuerzel": "WM",
 			"text": "Slowenisch (Herkunftssprache)",
 			"gueltigVon": null,
-			"gueltigBis": 2017
+			"gueltigBis": 2017,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "WP",
@@ -889,7 +969,8 @@
 			"kuerzel": "WP",
 			"text": "Wirtschaftslehre/Politik",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "WT",
@@ -900,7 +981,8 @@
 			"kuerzel": "WT",
 			"text": "Technisches Werken",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "WW",
@@ -911,7 +993,8 @@
 			"kuerzel": "WW",
 			"text": "Wirtschafts- und Arbeitslehre / Wirtschaftswissenschaften",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "XM",
@@ -922,7 +1005,8 @@
 			"kuerzel": "XM",
 			"text": "sonstige Herkunftssprache",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "YR",
@@ -933,7 +1017,8 @@
 			"kuerzel": "YR",
 			"text": "Syrisch-orthodoxe Religionslehre",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "Z",
@@ -944,7 +1029,8 @@
 			"kuerzel": "Z",
 			"text": "Neugriechisch",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "AR",
@@ -955,7 +1041,8 @@
 			"kuerzel": "AR",
 			"text": "Alevitische Religionslehre nach den Grundsätzen des AABF",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "AE",
@@ -966,7 +1053,8 @@
 			"kuerzel": "AE",
 			"text": "Ästhetische Erziehung",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "DZ",
@@ -977,7 +1065,8 @@
 			"kuerzel": "DZ",
 			"text": "Deutsch für Schülerinnen und Schüler mit Zuwanderungsgeschichte",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "MG",
@@ -988,7 +1077,8 @@
 			"kuerzel": "MG",
 			"text": "Mathematische Grundbildung",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "NG",
@@ -999,7 +1089,8 @@
 			"kuerzel": "NG",
 			"text": "Natur- und Gesellschaftswissenschaften",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SB",
@@ -1010,7 +1101,8 @@
 			"kuerzel": "SB",
 			"text": "Sprachliche Grundbildung",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "MB",
@@ -1021,7 +1113,8 @@
 			"kuerzel": "MB",
 			"text": "Religionslehre der mennonitischen Brüdergemeinden in NRW (Lehrerlaubnis)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "VM",
@@ -1032,7 +1125,8 @@
 			"kuerzel": "VM",
 			"text": "Bulgarisch (Herkunftssprache)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "QM",
@@ -1043,7 +1137,8 @@
 			"kuerzel": "QM",
 			"text": "Farsi (Herkunftssprache)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "YM",
@@ -1054,7 +1149,8 @@
 			"kuerzel": "YM",
 			"text": "Koreanisch (Herkunftssprache)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ZM",
@@ -1065,7 +1161,8 @@
 			"kuerzel": "ZM",
 			"text": "Kurdische Sprachen (Herkunftssprache) (Sorani, Komaci, Zaza)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "NM",
@@ -1076,7 +1173,8 @@
 			"kuerzel": "NM",
 			"text": "Niederländisch (Herkunftssprache)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "UM",
@@ -1087,7 +1185,8 @@
 			"kuerzel": "UM",
 			"text": "Rumänisch (Herkunftssprache)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "IL",
@@ -1098,7 +1197,8 @@
 			"kuerzel": "IL",
 			"text": "Islamische Religionslehre",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "A",
@@ -1109,7 +1209,8 @@
 			"kuerzel": "A",
 			"text": "Arabisch",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "BN",
@@ -1120,7 +1221,8 @@
 			"kuerzel": "BN",
 			"text": "Braille´sche Punktschrift",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "DS",
@@ -1131,7 +1233,8 @@
 			"kuerzel": "DS",
 			"text": "Darstellen und Gestalten",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "EL",
@@ -1142,7 +1245,8 @@
 			"kuerzel": "EL",
 			"text": "Hauswirtschaft (Konsum / Ernährung / Gesundheit)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "DF",
@@ -1153,7 +1257,8 @@
 			"kuerzel": "DF",
 			"text": "Design / Fotografie",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "GW",
@@ -1164,7 +1269,8 @@
 			"kuerzel": "GW",
 			"text": "Gesellschaftswissenschaften",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "MJ",
@@ -1175,7 +1281,8 @@
 			"kuerzel": "MJ",
 			"text": "Malerei / Grafik / Gestaltung",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "NW",
@@ -1186,7 +1293,8 @@
 			"kuerzel": "NW",
 			"text": "Naturwissenschaften",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SI",
@@ -1197,7 +1305,8 @@
 			"kuerzel": "SI",
 			"text": "Sozialwesen",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ZB",
@@ -1208,7 +1317,8 @@
 			"kuerzel": "ZB",
 			"text": "Zusatzqualifikation Bilinguales Lernen",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "AN",
@@ -1219,7 +1329,8 @@
 			"kuerzel": "AN",
 			"text": "Aramäisch (Herkunftssprache)",
 			"gueltigVon": 2024,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "CN",
@@ -1230,7 +1341,8 @@
 			"kuerzel": "CN",
 			"text": "Chinesisch (Herkunftssprache)",
 			"gueltigVon": 2024,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FM",
@@ -1241,7 +1353,8 @@
 			"kuerzel": "FM",
 			"text": "Französisch (Herkunftssprache)",
 			"gueltigVon": 2024,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "JM",
@@ -1252,7 +1365,8 @@
 			"kuerzel": "JM",
 			"text": "Japanisch (Herkunftssprache)",
 			"gueltigVon": 2024,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "MN",
@@ -1263,7 +1377,8 @@
 			"kuerzel": "MN",
 			"text": "Ungarisch (Herkunftssprache)",
 			"gueltigVon": 2024,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "RN",
@@ -1274,7 +1389,8 @@
 			"kuerzel": "RN",
 			"text": "Romanes (Herkunftssprache)",
 			"gueltigVon": 2024,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "TN",
@@ -1285,7 +1401,8 @@
 			"kuerzel": "TN",
 			"text": "Thai (Herkunftssprache)",
 			"gueltigVon": 2024,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "UN",
@@ -1296,7 +1413,8 @@
 			"kuerzel": "UN",
 			"text": "Ukrainisch (Herkunftssprache)",
 			"gueltigVon": 2024,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "DG",
@@ -1307,7 +1425,8 @@
 			"kuerzel": "DG",
 			"text": "Deutsche Gebärdensprache",
 			"gueltigVon": 2022,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "IG",
@@ -1318,7 +1437,8 @@
 			"kuerzel": "IG",
 			"text": "Ingenieurwissenschaft und Ingenieurtechnik",
 			"gueltigVon": 2022,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "WK",
@@ -1329,7 +1449,8 @@
 			"kuerzel": "WK",
 			"text": "Wirtschaft-Politik",
 			"gueltigVon": 2022,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

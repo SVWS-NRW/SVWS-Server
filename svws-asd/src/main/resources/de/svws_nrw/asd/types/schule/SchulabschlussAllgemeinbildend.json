@@ -1,5 +1,5 @@
 {
-	"version": 2,
+	"version": 3,
 	"daten": [ {
 		"bezeichner": "OA",
 		"idStatistik": "1",
@@ -9,7 +9,8 @@
 			"kuerzel": "OA",
 			"text": "Ohne Abschluss",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "HA9A",
@@ -20,14 +21,16 @@
 			"text": "Hauptschulabschluss nach Klasse 9 (ohne Berechtigung zum Besuch der Klasse 10 Typ B)",
 			"schluessel": "B",
 			"gueltigVon": null,
-			"gueltigBis": 2021
+			"gueltigBis": 2021,
+			"auslaufdauer": 0
 			}, {
 			"id": 1001,
 			"schluessel": "B",
 			"kuerzel": "ESAA",
 			"text": "Erster Schulabschluss (ohne Berechtigung zum Besuch der Klasse 10 Typ B)",
 			"gueltigVon": 2022,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "HA9",
@@ -38,14 +41,16 @@
 			"kuerzel": "HA9",
 			"text": "Hauptschulabschluss nach Klasse 9 (mit Berechtigung zum Besuch der Klasse 10 Typ B)",
 			"gueltigVon": null,
-			"gueltigBis": 2021
+			"gueltigBis": 2021,
+			"auslaufdauer": 0
 		}, {
 			"id": 2001,
 			"schluessel": "C",
 			"kuerzel": "ESA",
 			"text": "Erster Schulabschluss (mit Berechtigung zum Besuch der Klasse 10 Typ B)",
 			"gueltigVon": 2022,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "HA9_FOE",
@@ -56,14 +61,16 @@
 			"kuerzel": "HA9_FOE",
 			"text": "Hauptschulabschluss nach Klasse 9 (ggf. mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs am Berufskolleg bei internationalen Förderklassen)",
 			"gueltigVon": 2015,
-			"gueltigBis": 2021
+			"gueltigBis": 2021,
+			"auslaufdauer": 0
 		}, {	
 			"id": 3001,
 			"schluessel": "S",
 			"kuerzel": "ESA_FOE",
 			"text": "Ersten Schulabschluss, mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs im Berufskolleg (nur für Internationale Förderklassen)",
 			"gueltigVon": 2022,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "HA9_Q",
@@ -74,14 +81,16 @@
 			"kuerzel": "HA9_Q",
 			"text": "Hauptschulabschluss nach Klasse 9 (mit der Berechtigung zum Besuch der Gymnasialen Oberstufe)",
 			"gueltigVon": 2012,
-			"gueltigBis": 2021
+			"gueltigBis": 2021,
+			"auslaufdauer": 0
 		}, {
 			"id": 4001,
 			"schluessel": "O",
 			"kuerzel": "ESA_Q",
 			"text": "Erster Schulabschluss (mit der Berechtigung zum Besuch der Gymnasialen Oberstufe)",
 			"gueltigVon": 2022,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "HA10",
@@ -92,14 +101,16 @@
 			"kuerzel": "HA10",
 			"text": "Hauptschulabschluss nach Klasse 10",
 			"gueltigVon": null,
-			"gueltigBis": 2021
+			"gueltigBis": 2021,
+			"auslaufdauer": 0
 		}, {
 			"id": 5001,
 			"schluessel": "D",
 			"kuerzel": "EESA",
 			"text": "Erweiterter Erster Schulabschluss",
 			"gueltigVon": 2022,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "HA10_Q",
@@ -110,14 +121,16 @@
 			"kuerzel": "HA10_Q",
 			"text": "Hauptschulabschluss nach Klasse 10 (mit der Berechtigung zum Besuch der Gymnasialen Oberstufe)",
 			"gueltigVon": 2012,
-			"gueltigBis": 2021
+			"gueltigBis": 2021,
+			"auslaufdauer": 0
 		}, {
 			"id": 6001,
 			"schluessel": "U",
 			"kuerzel": "EESA_Q",
 			"text": "Erweiterter Erster Schulabschluss (mit der Berechtigung zum Besuch der Gymnasialen Oberstufe)",
 			"gueltigVon": 2022,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "MSA",
@@ -128,7 +141,8 @@
 			"kuerzel": "MSA",
 			"text": "Mittlerer Schulabschluss - Fachoberschulreife ohne Berechtigung zum Besuch der gymnasialen Oberstufe",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "MSA_Q",
@@ -139,7 +153,8 @@
 			"kuerzel": "MSA_Q",
 			"text": "Mittlerer Schulabschluss - Fachoberschulreife mit Berechtigung zum Besuch der gymnasialen Oberstufe",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "MSA_Q1",
@@ -150,7 +165,8 @@
 			"kuerzel": "MSA_Q1",
 			"text": "Mittlerer Schulabschluss – Fachoberschulreife mit Berechtigung zum Besuch der Qualifikationsphase 1",
 			"gueltigVon": 2010,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "VS_11",
@@ -161,7 +177,8 @@
 			"kuerzel": "VS_11",
 			"text": "Versetzungszeugnis der Klasse 11 Fachoberschule",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FHR_S",
@@ -172,7 +189,8 @@
 			"kuerzel": "FHR_S",
 			"text": "Fachhochschulreife (nur schulischer Teil)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FHR",
@@ -183,7 +201,8 @@
 			"kuerzel": "FHR",
 			"text": "Fachhochschulreife",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FGHR",
@@ -194,7 +213,8 @@
 			"kuerzel": "FGHR",
 			"text": "fachgebundene Hochschulreife",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ABITUR",
@@ -205,7 +225,8 @@
 			"kuerzel": "ABITUR",
 			"text": "Abitur / Allgemeine Hochschulreife",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FOEG",
@@ -216,7 +237,8 @@
 			"kuerzel": "FOEG",
 			"text": "Abschlusszeugnis im zieldifferenten Bildungsgang Geistige Entwicklung",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FOEL",
@@ -227,7 +249,8 @@
 			"kuerzel": "FOEL",
 			"text": "Abschluss des zieldifferenten Bildungsgangs Lernen",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "WALD",
@@ -238,7 +261,8 @@
 			"kuerzel": "WALD",
 			"text": "Zeugnis der Waldorfschule",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "DFR",
@@ -249,7 +273,8 @@
 			"kuerzel": "DFR",
 			"text": "Ohne Abschluss, kommt aus der Deutschförderung",
 			"gueltigVon": 2024,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

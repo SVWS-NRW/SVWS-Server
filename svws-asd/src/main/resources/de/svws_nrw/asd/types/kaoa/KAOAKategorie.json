@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "SBO_2",
 		"idStatistik": "1",
@@ -10,7 +10,8 @@
 			"schluessel": "SBO 2",
 			"jahrgaenge": ["JAHRGANG_08", "JAHRGANG_09", "JAHRGANG_10", "EF", "Q1", "Q2"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_3",
@@ -22,7 +23,8 @@
 			"schluessel": "SBO 3",
 			"jahrgaenge": ["JAHRGANG_00"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_4",
@@ -34,7 +36,8 @@
 			"schluessel": "SBO 4",
 			"jahrgaenge": ["JAHRGANG_08", "JAHRGANG_09"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_5",
@@ -46,7 +49,8 @@
 			"schluessel": "SBO 5",
 			"jahrgaenge": ["JAHRGANG_08", "JAHRGANG_09"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_6",
@@ -58,7 +62,8 @@
 			"schluessel": "SBO 6",
 			"jahrgaenge": ["JAHRGANG_08", "JAHRGANG_09", "JAHRGANG_10"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_7",
@@ -70,7 +75,8 @@
 			"schluessel": "SBO 7",
 			"jahrgaenge": ["JAHRGANG_10"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_8",
@@ -82,7 +88,8 @@
 			"schluessel": "SBO 8",
 			"jahrgaenge": ["EF", "Q1", "Q2"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_9",
@@ -94,7 +101,8 @@
 			"schluessel": "SBO 9",
 			"jahrgaenge": ["EF", "Q1", "Q2"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_10",
@@ -106,7 +114,8 @@
 			"schluessel": "SBO 10",
 			"jahrgaenge": ["JAHRGANG_09", "JAHRGANG_10", "EF", "Q1", "Q2"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

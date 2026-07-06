@@ -1,5 +1,5 @@
 {
-	"version": 2,
+	"version": 3,
 	"daten": [ {
 		"bezeichner": "A",
 		"idStatistik": "1",
@@ -9,7 +9,8 @@
 			"kuerzel": "A",
 			"text": "Stammschule, ganz oder teilweise auch an anderen Schulen tätig",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "B",
@@ -20,7 +21,8 @@
 			"kuerzel": "B",
 			"text": "nicht Stammschule, aber auch hier tätig",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "DEFAULT",
@@ -31,7 +33,8 @@
 			"kuerzel": "*",
 			"text": "Stammschule, nur hier tätig",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

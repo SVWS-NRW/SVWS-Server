@@ -1,5 +1,5 @@
 {
-	"version": 2,
+	"version": 3,
 	"daten": [ {
 		"bezeichner": "V",
 		"idStatistik": "1",
@@ -9,7 +9,8 @@
 			"kuerzel": "V",
 			"text": "Vollzeit",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "T",
@@ -20,7 +21,8 @@
 			"kuerzel": "T",
 			"text": "Teilzeit",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "AT",
@@ -31,7 +33,8 @@
 			"kuerzel": "AT",
 			"text": "Altersteilzeit (Beschäftigungsphase)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "TA",
@@ -42,7 +45,8 @@
 			"kuerzel": "TA",
 			"text": "Altersteilzeit, vorm. teilzeitbeschäftigt (Verzichtsphase Altersermäßigung)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "VA",
@@ -53,7 +57,8 @@
 			"kuerzel": "VA",
 			"text": "Altersteilzeit, vorm. vollzeitbeschäftigt (Verzichtsphase Altersermäßigung)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "TS",
@@ -64,7 +69,8 @@
 			"kuerzel": "TS",
 			"text": "Teilzeitbeschäftigung im Blockmodell (§ 65 LBG), ehemals Sabbatjahr",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SB",
@@ -75,7 +81,8 @@
 			"kuerzel": "SB",
 			"text": "Angestellte, nebenberuflich",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "GB",
@@ -86,7 +93,8 @@
 			"kuerzel": "GB",
 			"text": "Geringfügige Beschäftigung",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ST",
@@ -97,7 +105,8 @@
 			"kuerzel": "ST",
 			"text": "Studierende",
 			"gueltigVon": null,
-			"gueltigBis": 2023
+			"gueltigBis": 2023,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "NA",
@@ -108,7 +117,8 @@
 			"kuerzel": "NA",
 			"text": "Beamte, nebenamtlich (nicht hauptamtlich im Schuldienst)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "G",
@@ -119,7 +129,8 @@
 			"kuerzel": "G",
 			"text": "Gestellungsvertrag",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "X",
@@ -130,7 +141,8 @@
 			"kuerzel": "X",
 			"text": "Unentgeltlich Beschäftigte",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "WT",
@@ -141,7 +153,8 @@
 			"kuerzel": "WT",
 			"text": "Beamte auf Widerruf (LAA) in Teilzeit",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "WV",
@@ -152,7 +165,8 @@
 			"kuerzel": "WV",
 			"text": "Beamte auf Widerruf (LAA) in Vollzeit",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

@@ -95,6 +95,9 @@ export class FachklasseKatalogEintrag extends CoreTypeData {
 		result.text = obj.text;
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
 		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		if (obj.auslaufdauer === undefined)
+			throw new Error('invalid json format, missing attribute auslaufdauer');
+		result.auslaufdauer = obj.auslaufdauer;
 		result.fkSchluessel = (obj.fkSchluessel === undefined) ? null : obj.fkSchluessel === null ? null : obj.fkSchluessel;
 		result.fkSchluessel2 = (obj.fkSchluessel2 === undefined) ? null : obj.fkSchluessel2 === null ? null : obj.fkSchluessel2;
 		if (obj.bkIndex === undefined)
@@ -126,6 +129,7 @@ export class FachklasseKatalogEintrag extends CoreTypeData {
 		result += '"text" : ' + JSON.stringify(obj.text) + ',';
 		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"auslaufdauer" : ' + obj.auslaufdauer.toString() + ',';
 		result += '"fkSchluessel" : ' + ((obj.fkSchluessel === null) ? 'null' : JSON.stringify(obj.fkSchluessel)) + ',';
 		result += '"fkSchluessel2" : ' + ((obj.fkSchluessel2 === null) ? 'null' : JSON.stringify(obj.fkSchluessel2)) + ',';
 		result += '"bkIndex" : ' + obj.bkIndex + ',';
@@ -162,6 +166,9 @@ export class FachklasseKatalogEintrag extends CoreTypeData {
 		}
 		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
+		}
+		if (obj.auslaufdauer !== undefined) {
+			result += '"auslaufdauer" : ' + obj.auslaufdauer.toString() + ',';
 		}
 		if (obj.fkSchluessel !== undefined) {
 			result += '"fkSchluessel" : ' + ((obj.fkSchluessel === null) ? 'null' : JSON.stringify(obj.fkSchluessel)) + ',';

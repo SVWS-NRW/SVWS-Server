@@ -1,5 +1,5 @@
 {
-	"version": 2,
+	"version": 3,
 	"daten": [ {
 		"bezeichner": "TEILZEIT",
 		"idStatistik": "1",
@@ -12,7 +12,8 @@
 				"WB"
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {	
 		"bezeichner": "VOLLZEIT",
@@ -26,7 +27,8 @@
 				"WB"
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

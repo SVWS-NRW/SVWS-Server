@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "SL",
 		"idStatistik": "1",
@@ -9,7 +9,8 @@
 			"kuerzel": "SL",
 			"text": "Schulleitung",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SL_STV",
@@ -20,7 +21,8 @@
 			"kuerzel": "Stv. SL",
 			"text": "Stellvertretende Schulleitung",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

@@ -1,275 +1,238 @@
 {
-    "version": 2,
-    "daten": [
-        {
-            "bezeichner": "AW",
-            "idStatistik": "1",
-            "historie": [
-                {
-                    "id": 100001000,
-                    "schluessel": "AW",
-                    "kuerzel": "AW",
-                    "ebene": "1",
-                    "text": "Agrarwirtschaft",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "AB",
-            "idStatistik": "2",
-            "historie": [
-                {
-                    "id": 100002000,
-                    "schluessel": "AB",
-                    "kuerzel": "AB",
-                    "ebene": "1",
-                    "text": "Agrarwirtschaft, Bio- und Umwelttechnologie",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "ER",
-            "idStatistik": "3",
-            "historie": [
-                {
-                    "id": 100003000,
-                    "schluessel": "ER",
-                    "kuerzel": "ER",
-                    "ebene": "1",
-                    "text": "Ernährung",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "EU",
-            "idStatistik": "4",
-            "historie": [
-                {
-                    "id": 100004000,
-                    "schluessel": "EU",
-                    "kuerzel": "EU",
-                    "ebene": "1",
-                    "text": "Ernährung und Hauswirtschaft",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "EH",
-            "idStatistik": "5",
-            "historie": [
-                {
-                    "id": 100005000,
-                    "schluessel": "EH",
-                    "kuerzel": "EH",
-                    "ebene": "1",
-                    "text": "Ernährung/Hauswirtschaft",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "EV",
-            "idStatistik": "6",
-            "historie": [
-                {
-                    "id": 100006000,
-                    "schluessel": "EV",
-                    "kuerzel": "EV",
-                    "ebene": "1",
-                    "text": "Ernährungs- und Versorgungsmanagement",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "GT",
-            "idStatistik": "7",
-            "historie": [
-                {
-                    "id": 100007000,
-                    "schluessel": "GT",
-                    "kuerzel": "GT",
-                    "ebene": "1",
-                    "text": "Gestaltung",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "GU",
-            "idStatistik": "8",
-            "historie": [
-                {
-                    "id": 100008000,
-                    "schluessel": "GU",
-                    "kuerzel": "GU",
-                    "ebene": "1",
-                    "text": "Gesundheit und Soziales",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "GE",
-            "idStatistik": "9",
-            "historie": [
-                {
-                    "id": 100009000,
-                    "schluessel": "GE",
-                    "kuerzel": "GE",
-                    "ebene": "1",
-                    "text": "Gesundheit/Erziehung und Soziales",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "GS",
-            "idStatistik": "10",
-            "historie": [
-                {
-                    "id": 100010000,
-                    "schluessel": "GS",
-                    "kuerzel": "GS",
-                    "ebene": "1",
-                    "text": "Gesundheit/Soziales",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "IF",
-            "idStatistik": "11",
-            "historie": [
-                {
-                    "id": 100011000,
-                    "schluessel": "IF",
-                    "kuerzel": "IF",
-                    "ebene": "1",
-                    "text": "Informatik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "OZ",
-            "idStatistik": "12",
-            "historie": [
-                {
-                    "id": 100012000,
-                    "schluessel": "OZ",
-                    "kuerzel": "OZ",
-                    "ebene": "1",
-                    "text": "ohne besondere Zuordnung",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "SV",
-            "idStatistik": "13",
-            "historie": [
-                {
-                    "id": 100013000,
-                    "schluessel": "SV",
-                    "kuerzel": "SV",
-                    "ebene": "1",
-                    "text": "ohne Fachbereich / Schulversuch",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "SW",
-            "idStatistik": "14",
-            "historie": [
-                {
-                    "id": 100014000,
-                    "schluessel": "SW",
-                    "kuerzel": "SW",
-                    "ebene": "1",
-                    "text": "Sozialwesen",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "TE",
-            "idStatistik": "15",
-            "historie": [
-                {
-                    "id": 100015000,
-                    "schluessel": "TE",
-                    "kuerzel": "TE",
-                    "ebene": "1",
-                    "text": "Technik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "TN",
-            "idStatistik": "16",
-            "historie": [
-                {
-                    "id": 100016000,
-                    "schluessel": "TN",
-                    "kuerzel": "TN",
-                    "ebene": "1",
-                    "text": "Technik/Naturwissenschaften",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "WI",
-            "idStatistik": "17",
-            "historie": [
-                {
-                    "id": 100017000,
-                    "schluessel": "WI",
-                    "kuerzel": "WI",
-                    "ebene": "1",
-                    "text": "Wirtschaft",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "WV",
-            "idStatistik": "18",
-            "historie": [
-                {
-                    "id": 100018000,
-                    "schluessel": "WV",
-                    "kuerzel": "WV",
-                    "ebene": "1",
-                    "text": "Wirtschaft und Verwaltung",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        }
-    ]
+	"version": 3,
+	"daten": [ {
+		"bezeichner": "AW",
+		"idStatistik": "1",
+		"historie": [ {
+			"id": 100001000,
+			"schluessel": "AW",
+			"kuerzel": "AW",
+			"ebene": "1",
+			"text": "Agrarwirtschaft",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "AB",
+		"idStatistik": "2",
+		"historie": [ {
+			"id": 100002000,
+			"schluessel": "AB",
+			"kuerzel": "AB",
+			"ebene": "1",
+			"text": "Agrarwirtschaft, Bio- und Umwelttechnologie",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "ER",
+		"idStatistik": "3",
+		"historie": [ {
+			"id": 100003000,
+			"schluessel": "ER",
+			"kuerzel": "ER",
+			"ebene": "1",
+			"text": "Ernährung",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "EU",
+		"idStatistik": "4",
+		"historie": [ {
+			"id": 100004000,
+			"schluessel": "EU",
+			"kuerzel": "EU",
+			"ebene": "1",
+			"text": "Ernährung und Hauswirtschaft",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "EH",
+		"idStatistik": "5",
+		"historie": [ {
+			"id": 100005000,
+			"schluessel": "EH",
+			"kuerzel": "EH",
+			"ebene": "1",
+			"text": "Ernährung/Hauswirtschaft",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "EV",
+		"idStatistik": "6",
+		"historie": [ {
+			"id": 100006000,
+			"schluessel": "EV",
+			"kuerzel": "EV",
+			"ebene": "1",
+			"text": "Ernährungs- und Versorgungsmanagement",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "GT",
+		"idStatistik": "7",
+		"historie": [ {
+			"id": 100007000,
+			"schluessel": "GT",
+			"kuerzel": "GT",
+			"ebene": "1",
+			"text": "Gestaltung",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "GU",
+		"idStatistik": "8",
+		"historie": [ {
+			"id": 100008000,
+			"schluessel": "GU",
+			"kuerzel": "GU",
+			"ebene": "1",
+			"text": "Gesundheit und Soziales",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "GE",
+		"idStatistik": "9",
+		"historie": [ {
+			"id": 100009000,
+			"schluessel": "GE",
+			"kuerzel": "GE",
+			"ebene": "1",
+			"text": "Gesundheit/Erziehung und Soziales",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "GS",
+		"idStatistik": "10",
+		"historie": [ {
+			"id": 100010000,
+			"schluessel": "GS",
+			"kuerzel": "GS",
+			"ebene": "1",
+			"text": "Gesundheit/Soziales",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "IF",
+		"idStatistik": "11",
+		"historie": [ {
+			"id": 100011000,
+			"schluessel": "IF",
+			"kuerzel": "IF",
+			"ebene": "1",
+			"text": "Informatik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "OZ",
+		"idStatistik": "12",
+		"historie": [ {
+			"id": 100012000,
+			"schluessel": "OZ",
+			"kuerzel": "OZ",
+			"ebene": "1",
+			"text": "ohne besondere Zuordnung",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "SV",
+		"idStatistik": "13",
+		"historie": [ {
+			"id": 100013000,
+			"schluessel": "SV",
+			"kuerzel": "SV",
+			"ebene": "1",
+			"text": "ohne Fachbereich / Schulversuch",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "SW",
+		"idStatistik": "14",
+		"historie": [ {
+			"id": 100014000,
+			"schluessel": "SW",
+			"kuerzel": "SW",
+			"ebene": "1",
+			"text": "Sozialwesen",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "TE",
+		"idStatistik": "15",
+		"historie": [ {
+			"id": 100015000,
+			"schluessel": "TE",
+			"kuerzel": "TE",
+			"ebene": "1",
+			"text": "Technik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "TN",
+		"idStatistik": "16",
+		"historie": [ {
+			"id": 100016000,
+			"schluessel": "TN",
+			"kuerzel": "TN",
+			"ebene": "1",
+			"text": "Technik/Naturwissenschaften",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "WI",
+		"idStatistik": "17",
+		"historie": [ {
+			"id": 100017000,
+			"schluessel": "WI",
+			"kuerzel": "WI",
+			"ebene": "1",
+			"text": "Wirtschaft",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "WV",
+		"idStatistik": "18",
+		"historie": [ {
+			"id": 100018000,
+			"schluessel": "WV",
+			"kuerzel": "WV",
+			"ebene": "1",
+			"text": "Wirtschaft und Verwaltung",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	} ]
 }

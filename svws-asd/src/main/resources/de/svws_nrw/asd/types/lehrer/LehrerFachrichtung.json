@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "ID_03",
 		"idStatistik": "1",
@@ -10,7 +10,8 @@
 			"text": "Kraftfahrzeugtechnik",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_52","ID_55","ID_27","ID_24","ID_25","ID_29","ID_40", "ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_04",
@@ -22,7 +23,8 @@
 			"text": "Maschinentechnik, Metalltechnik, Maschinenbau (außer Kfz), Verfahrens-, Fertigungstechnik",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_52","ID_55","ID_27","ID_24","ID_25","ID_29","ID_40", "ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_05",
@@ -34,7 +36,8 @@
 			"text": "Sanitär-, Heizungs-, Klima-, Lüftungstechnik",
 			"lehraemter" : ["ID_30","ID_32","ID_52","ID_55","ID_27","ID_24","ID_25","ID_29","ID_40", "ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_96","ID_97","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_08",
@@ -46,7 +49,8 @@
 			"text": "Bergtechnik, Bergbau",
 			"lehraemter" : ["ID_30","ID_32","ID_52","ID_55","ID_27","ID_24","ID_25","ID_29","ID_40", "ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_96","ID_97","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_09",
@@ -58,7 +62,8 @@
 			"text": "Hütten-, Gießereiwesen",
 			"lehraemter" : ["ID_30","ID_32","ID_52","ID_55","ID_27","ID_24","ID_25","ID_29","ID_40", "ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_96","ID_97","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_11",
@@ -70,7 +75,8 @@
 			"text": "Elektrotechnik: Energietechnik",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_52","ID_55","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_12",
@@ -82,7 +88,8 @@
 			"text": "Elektrotechnik: Nachrichtentechnik",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_52","ID_55","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_21",
@@ -94,7 +101,8 @@
 			"text": "Bautechnik, Bauingenieurwesen",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_52","ID_55","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_22",
@@ -106,7 +114,8 @@
 			"text": "Holztechnik",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_52","ID_55","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_23",
@@ -118,7 +127,8 @@
 			"text": "Architektur",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_52","ID_55","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_31",
@@ -130,7 +140,8 @@
 			"text": "Textil-, Bekleidungstechnik, Textilgestaltung",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_52","ID_55","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_35",
@@ -142,7 +153,8 @@
 			"text": "Informatik",
 			"lehraemter" : ["ID_30","ID_32","ID_52","ID_55","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_96","ID_97","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_41",
@@ -154,7 +166,8 @@
 			"text": "Chemie- / Verfahrens- / Chemotechnik",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_52","ID_55","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_42",
@@ -166,7 +179,8 @@
 			"text": "Lebensmittelchemie",
 			"lehraemter" : ["ID_30","ID_32","ID_52","ID_55","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_96","ID_97","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_55",
@@ -178,7 +192,8 @@
 			"text": "Farb- u. Raumgestaltung, Gestaltungstechnik, Malerei, Graphik, Design, Fotografie, Glas- und Keramiktechnik",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_52","ID_55","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_60",
@@ -190,7 +205,8 @@
 			"text": "Wirtschaftswissenschaft in kaufmännischen Berufen",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_52","ID_55","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_65",
@@ -202,7 +218,8 @@
 			"text": "Hauswirtschaftswissenschaft",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_52","ID_55","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_66", 
@@ -214,7 +231,8 @@
 			"text": "Ernährungswissenschaft",
 			"lehraemter" : ["ID_30","ID_32","ID_52","ID_55","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_96","ID_97","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_70",
@@ -226,7 +244,8 @@
 			"text": "Sozialwesen, Sozialpädagogik, Sozialpflege, Sozialwissenschaft",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_52","ID_55","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_71",
@@ -238,7 +257,8 @@
 			"text": "Psychologie",
 			"lehraemter" : ["ID_30","ID_32","ID_52","ID_55","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_96","ID_97","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_80",
@@ -250,7 +270,8 @@
 			"text": "Körperpflege / Biotechnik",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_52","ID_55","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_91", 
@@ -262,7 +283,8 @@
 			"text": "Landbauwissenschaft, Agrarwissenschaft, Agrarwirtschaft",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_52","ID_55","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_92",
@@ -274,7 +296,8 @@
 			"text": "Gartenbauwissenschaft",
 			"lehraemter" : ["ID_30","ID_32","ID_52","ID_55","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_96","ID_97","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_BL",
@@ -286,7 +309,8 @@
 			"text": "Sondererziehung und Rehabilitation der Blinden",
 			"lehraemter" : ["ID_09","ID_10","ID_11","ID_12","ID_31"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_EZ",
@@ -298,7 +322,8 @@
 			"text": "Sondererziehung und Rehabilitation der Erziehungsschwierigen",
 			"lehraemter" : ["ID_09","ID_10","ID_11","ID_12","ID_31"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_GB",
@@ -310,7 +335,8 @@
 			"text": "Sondererziehung und Rehabilitation der Geistigbehinderten",
 			"lehraemter" : ["ID_09","ID_10","ID_11","ID_12","ID_31"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_GH",
@@ -322,7 +348,8 @@
 			"text": "Sondererziehung und Rehabilitation der Gehörlosen",
 			"lehraemter" : ["ID_09","ID_10","ID_11","ID_12","ID_31"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_KB",
@@ -334,7 +361,8 @@
 			"text": "Sondererziehung und Rehabilitation der Körperbehinderten",
 			"lehraemter" : ["ID_09","ID_10","ID_11","ID_12","ID_31"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_LB",
@@ -346,7 +374,8 @@
 			"text": "Sondererziehung und Rehabilitation der Lernbehinderten",
 			"lehraemter" : ["ID_09","ID_10","ID_11","ID_12","ID_31"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_SB",
@@ -358,7 +387,8 @@
 			"text": "Sondererziehung und Rehabilitation der Sprachbehinderten",
 			"lehraemter" : ["ID_09","ID_10","ID_11","ID_12","ID_31"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_SG",
@@ -370,7 +400,8 @@
 			"text": "Sondererziehung und Rehabilitation der Schwerhörigen",
 			"lehraemter" : ["ID_09","ID_10","ID_11","ID_12","ID_31"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_SH",
@@ -382,7 +413,8 @@
 			"text": "Sondererziehung und Rehabilitation der Sehbehinderten",
 			"lehraemter" : ["ID_09","ID_10","ID_11","ID_12","ID_31"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_51",
@@ -394,7 +426,8 @@
 			"text": "Drucktechnik, Reproduktionstechnik",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_52","ID_55","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_FT",
@@ -406,7 +439,8 @@
 			"text": "Fertigungstechnik",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_KT",
@@ -418,7 +452,8 @@
 			"text": "Fahrzeugtechnik",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_VT",
@@ -430,7 +465,8 @@
 			"text": "Versorgungstechnik",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_TI",
@@ -442,7 +478,8 @@
 			"text": "Technische Informatik",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_ET",
@@ -454,7 +491,8 @@
 			"text": "Energietechnik",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_NT",
@@ -466,7 +504,8 @@
 			"text": "Nachrichtentechnik",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_HC",
@@ -478,7 +517,8 @@
 			"text": "Hochbau",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_HT",
@@ -490,7 +530,8 @@
 			"text": "Holztechnik",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_TB",
@@ -502,7 +543,8 @@
 			"text": "Tiefbau",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_BK",
@@ -514,7 +556,8 @@
 			"text": "Banken, Bankbetriebslehre / Finanzwirtschaft",
 			"lehraemter" : ["ID_30","ID_32","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_96","ID_97","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_HB",
@@ -526,7 +569,8 @@
 			"text": "Handel, Handelsbetriebslehre / Absatzwirtschaft",
 			"lehraemter" : ["ID_30","ID_32","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_96","ID_97","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_IB",
@@ -538,7 +582,8 @@
 			"text": "Industrie, Industriebetriebslehre / Produktionswirtschaft",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_52","ID_55","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_VR",
@@ -550,7 +595,8 @@
 			"text": "Verkehr",
 			"lehraemter" : ["ID_30","ID_32","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_96","ID_97","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_VL",
@@ -562,7 +608,8 @@
 			"text": "Versicherung",
 			"lehraemter" : ["ID_30","ID_32","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_96","ID_97","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_OL",
@@ -574,7 +621,8 @@
 			"text": "Organisation und Bürokommunikation / Datenverarbeitung / Organisationslehre / Betriebsinformatik",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_ST",
@@ -586,7 +634,8 @@
 			"text": "Betriebswirtschaftliche Steuerlehre / Revisions- und Treuhandwesen",
 			"lehraemter" : ["ID_30","ID_32","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_96","ID_97","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_WL",
@@ -598,7 +647,8 @@
 			"text": "Wirtschaftliche Warenlehre",
 			"lehraemter" : ["ID_30","ID_32","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_96","ID_97","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_WG",
@@ -610,7 +660,8 @@
 			"text": "Wirtschaftsgeographie",
 			"lehraemter" : ["ID_30","ID_32","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_96","ID_97","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_WI",
@@ -622,7 +673,8 @@
 			"text": "Wirtschaftsinformatik",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_LT",
@@ -634,7 +686,8 @@
 			"text": "Lebensmitteltechnologie",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_27","ID_24","ID_25","ID_29","ID_40","ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_99",
@@ -646,7 +699,8 @@
 			"text": "Sonstige Fachrichtung",
 			"lehraemter" : ["ID_35","ID_49","ID_00","ID_01","ID_02","ID_03","ID_04","ID_15","ID_16","ID_17","ID_18","ID_19","ID_20","ID_21","ID_70","ID_27","ID_24","ID_25","ID_29","ID_40", "ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_99","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_AS",
@@ -658,7 +712,8 @@
 			"text": "Absatz und Marketing",
 			"lehraemter" : ["ID_30","ID_32","ID_27","ID_24","ID_25","ID_29","ID_40", "ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_96","ID_97","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_BS",
@@ -670,7 +725,8 @@
 			"text": "Betriebswirtschaftliche Finanzierungslehre",
 			"lehraemter" : ["ID_30","ID_32","ID_27","ID_24","ID_25","ID_29","ID_40", "ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_96","ID_97","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_UR",
@@ -682,7 +738,8 @@
 			"text": "Unternehmensrechnung",
 			"lehraemter" : ["ID_30","ID_32","ID_27","ID_24","ID_25","ID_29","ID_40", "ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_96","ID_97","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_81", 
@@ -694,7 +751,8 @@
 			"text": "Gesundheit",
 			"lehraemter" : ["ID_30","ID_32","ID_35","ID_49","ID_52","ID_55","ID_27","ID_24","ID_25","ID_29","ID_40", "ID_40", "ID_50", "ID_51", "ID_53","ID_54","ID_56","ID_57","ID_58","ID_59","ID_60","ID_61","ID_62","ID_63","ID_64","ID_65","ID_90","ID_96","ID_97","ID_98","ID_99"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_02",
@@ -706,7 +764,8 @@
 			"text": "Maschinenbautechnik",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_06",
@@ -718,7 +777,8 @@
 			"text": "Fertigungstechnik",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_07",
@@ -730,7 +790,8 @@
 			"text": "Versorgungstechnik",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_13",
@@ -742,7 +803,8 @@
 			"text": "Energietechnik",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_24",
@@ -754,7 +816,8 @@
 			"text": "Hochbautechnik",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_25",
@@ -766,7 +829,8 @@
 			"text": "Tiefbautechnik",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_36",
@@ -778,7 +842,8 @@
 			"text": "Technische Informatik",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_67",
@@ -790,7 +855,8 @@
 			"text": "Lebensmitteltechnologie",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_BB",
@@ -802,7 +868,8 @@
 			"text": "Bankbetriebslehre",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_BW",
@@ -814,7 +881,8 @@
 			"text": "Betriebswirtschaftliche Steuerlehre",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_PW",
@@ -826,7 +894,8 @@
 			"text": "Personalwirtschaft",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_VB",
@@ -838,7 +907,8 @@
 			"text": "Versicherungsbetriebslehre",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_ES",
@@ -850,7 +920,8 @@
 			"text": "Emotionale und soziale Entwicklung",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_GG",
@@ -862,7 +933,8 @@
 			"text": "Geistige Entwicklung",
 			"lehraemter" : ["ID_08","ID_14","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_HK",
@@ -874,7 +946,8 @@
 			"text": "Hören und Kommunikation",
 			"lehraemter" : ["ID_08","ID_14","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_KM",
@@ -886,7 +959,8 @@
 			"text": "Körperliche und motorische Entwicklung",
 			"lehraemter" : ["ID_08","ID_14","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_LE",
@@ -898,7 +972,8 @@
 			"text": "Lernen",
 			"lehraemter" : ["ID_08","ID_14","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_SQ",
@@ -910,7 +985,8 @@
 			"text": "Sprache",
 			"lehraemter" : ["ID_08","ID_14","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_SE",
@@ -922,7 +998,8 @@
 			"text": "Sehen",
 			"lehraemter" : ["ID_08","ID_14","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_32",
@@ -934,7 +1011,8 @@
 			"text": "Textiltechnik",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_57",
@@ -946,7 +1024,8 @@
 			"text": "Mediendesign und Designtechnik",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_58",
@@ -958,7 +1037,8 @@
 			"text": "Druck- und Medientechnik",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_59",
@@ -970,7 +1050,8 @@
 			"text": "Farbtechnik / Raumgestaltung / Oberflächentechnik",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_68",
@@ -982,7 +1063,8 @@
 			"text": "Lebensmitteltechnik",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_86", 
@@ -994,7 +1076,8 @@
 			"text": "Gesundheitswissenschaft / Pflege",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_93",
@@ -1006,7 +1089,8 @@
 			"text": "Agrarwissenschaft",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_IT",
@@ -1018,7 +1102,8 @@
 			"text": "Informationstechnik",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_AU",
@@ -1030,7 +1115,8 @@
 			"text": "Automatisierungstechnik",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_VE",
@@ -1042,7 +1128,8 @@
 			"text": "Vermessungstechnik",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_6A",
@@ -1054,7 +1141,8 @@
 			"text": "Sektorales Management mit dem Profil: Verwaltung und Rechtswesen",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_6B",
@@ -1066,7 +1154,8 @@
 			"text": "Sektorales Management mit dem Profil: Medien",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_6C",
@@ -1078,7 +1167,8 @@
 			"text": "Sektorales Management mit dem Profil: Gesundheitsökonomie",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_6D",
@@ -1090,7 +1180,8 @@
 			"text": "Sektorales Management mit dem Profil: Freizeitökonomie",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_6E",
@@ -1102,7 +1193,8 @@
 			"text": "Sektorales Management mit dem Profil: Tourismus und Gastronomie",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_6F",
@@ -1114,7 +1206,8 @@
 			"text": "Produktion, Logistik, Absatz mit dem Profil: Produktionswirtschaft",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_6G",
@@ -1126,7 +1219,8 @@
 			"text": "Produktion, Logistik, Absatz mit dem Profil: Verkehr und Logistik",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_6H",
@@ -1138,7 +1232,8 @@
 			"text": "Produktion, Logistik, Absatz mit dem Profil: Marketing / Handel",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_6I",
@@ -1150,7 +1245,8 @@
 			"text": "Finanz- und Rechnungswesen mit dem Profil: Steuerung und Dokumentation",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_6J",
@@ -1162,7 +1258,8 @@
 			"text": "Finanz- und Rechnungswesen mit dem Profil: Finanzdienstleistungen",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_6K",
@@ -1174,7 +1271,8 @@
 			"text": "Finanz- und Rechnungswesen mit dem Profil: Steuern",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_PK",
@@ -1186,7 +1284,8 @@
 			"text": "Politik",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_GZ",
@@ -1198,7 +1297,8 @@
 			"text": "Gastronomie",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_GA",
@@ -1210,7 +1310,8 @@
 			"text": "Gartenbau",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_GL",
@@ -1222,7 +1323,8 @@
 			"text": "Garten- und Landschaftsbau",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_PB",
@@ -1234,7 +1336,8 @@
 			"text": "Pflanzenbau",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_TH",
@@ -1246,7 +1349,8 @@
 			"text": "Tierhaltung",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_NU",
@@ -1258,7 +1362,8 @@
 			"text": "Natur- und Umweltschutz",
 			"lehraemter" : ["ID_35","ID_49","ID_90","ID_98"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_82",
@@ -1270,7 +1375,8 @@
 			"text": "Medizintechnik",
 			"lehraemter" : ["ID_35","ID_49"],
 			"gueltigVon": 2022,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_AO",
@@ -1282,7 +1388,8 @@
 			"text": "Augenoptik",
 			"lehraemter" : ["ID_35","ID_49"],
 			"gueltigVon": 2022,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_OT",
@@ -1294,7 +1401,8 @@
 			"text": "Orthopädietechnik",
 			"lehraemter" : ["ID_35","ID_49"],
 			"gueltigVon": 2022,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_ZT",
@@ -1306,7 +1414,8 @@
 			"text": "Zahntechnik",
 			"lehraemter" : ["ID_35","ID_49"],
 			"gueltigVon": 2022,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_IG",
@@ -1318,7 +1427,8 @@
 			"text": "Ingenieurtechnik",
 			"lehraemter" : ["ID_35","ID_49"],
 			"gueltigVon": 2022,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ID_HA",
@@ -1330,7 +1440,8 @@
 			"text": "Hörakustik",
 			"lehraemter" : ["ID_35","ID_49"],
 			"gueltigVon": 2022,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

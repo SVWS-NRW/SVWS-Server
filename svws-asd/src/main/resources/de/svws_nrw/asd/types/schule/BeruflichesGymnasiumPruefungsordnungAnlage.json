@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "D1",
 		"idStatistik": "1",
@@ -160,7 +160,8 @@
 				"5) gemäß § 32 APO-BK Anlage D aus der Abiturprüfung angerechnet."
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D2",
@@ -322,7 +323,8 @@
 				"5) gemäß § 32 APO-BK Anlage D aus der Abiturprüfung angerechnet."
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D3",
@@ -619,7 +621,8 @@
 				"10)soweit nicht bereits als 2. Prüfungsfach in der Berufsabschlussprüfung gewählt"
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D3a",
@@ -767,7 +770,8 @@
 				"5) gemäß § 32 APO-BK Anlage D aus der Abiturprüfung angerechnet."
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D4",
@@ -924,7 +928,8 @@
 				"6) gemäß § 32 APO-BK Anlage D aus der Abiturprüfung angerechnet"
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D6",
@@ -1072,7 +1077,8 @@
 				"5) gemäß § 32 APO-BK Anlage D aus der Abiturprüfung angerechnet."
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D7",
@@ -1229,7 +1235,8 @@
 				"6) gemäß § 32 APO-BK Anlage D aus der Abiturprüfung angerechnet"
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D8",
@@ -1386,7 +1393,8 @@
 				"6) gemäß § 32 APO-BK Anlage D aus der Abiturprüfung angerechnet"
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D9",
@@ -1529,7 +1537,8 @@
 				"6) gemäß § 32 APO-BK Anlage D aus der Abiturprüfung angerechnet"
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D10",
@@ -1806,7 +1815,8 @@
 				"7) gemäß § 32 APO-BK Anlage D aus der Abiturprüfung angerechnet"
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D12",
@@ -2332,7 +2342,8 @@
 				"10) soweit nicht bereits als schriftliches Fach der Berufsabschlussprüfung gewählt"
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D13",
@@ -2642,7 +2653,8 @@
 				"9) soweit nicht bereits als schriftliches Fach der Berufsabschlussprüfung gewählt"
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D14",
@@ -2775,7 +2787,8 @@
 				"3) Die in § 4 Absatz 6 genannten Schülerinnen und Schüler haben im Beruflichen Gymnasium mindestens 102 Gesamtwochenstunden Pflichtunterricht"
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D15",
@@ -2901,7 +2914,8 @@
 				"3) Die in § 4 Absatz 6 genannten Schülerinnen und Schüler haben im Beruflichen Gymnasium mindestens 102 Gesamtwochenstunden Pflichtunterricht."
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D15a",
@@ -3027,7 +3041,8 @@
 				"3) Die in § 4 Absatz 6 genannten Schülerinnen und Schüler haben im Beruflichen Gymnasium mindestens 102 Gesamtwochenstunden Pflichtunterricht."
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D16",
@@ -3589,7 +3604,8 @@
 				"8) Die zweite Fremdsprache kann nur Prüfungsfach sein, wenn es sich um eine fortgeführte Fremdsprache handelt oder wenn sie in den Jahrgangsstufen 11 bis 13 mit insgesamt mindestens 12 Jahreswochenstunden unterrichtet wurde."
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D17",
@@ -3725,7 +3741,8 @@
 				"9) Die Prüfung entfällt, wenn das Fach im Rahmen der Abiturprüfung geprüft wurde."
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D17a",
@@ -3863,7 +3880,8 @@
 				"4) Auf dem Zeugnis der allgemeinen Hochschulreife (Anlage D 41 - Seite 1 -) ist folgender Spiegelstrich aufzunehmen: „Schulversuch des Landes Nordrhein-Westfalen gemäß der Vereinbarung zur Durchführung von Schulversuchen und der gegenseitigen Anerkennung der entsprechenden Abschlüsse (Beschluss der Kultusministerkonferenz vom 16. Februar 1990 in der jeweils gültigen Fassung)"
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D18",
@@ -4005,7 +4023,8 @@
 				"4) Auf dem Zeugnis der allgemeinen Hochschulreife (Anlage D 41 - Seite 1 -) ist folgender Spiegelstrich aufzunehmen: „Schulversuch des Landes Nordrhein-Westfalen gemäß der Vereinbarung zur Durchführung von Schulversuchen und der gegenseitigen Anerkennung der entsprechenden Abschlüsse (Beschluss der Kultusministerkonferenz vom 16. Februar 1990 in der jeweils gültigen Fassung)"
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D19",
@@ -4132,7 +4151,8 @@
 				"4) Auf dem Zeugnis der allgemeinen Hochschulreife (Anlage D 41 - Seite 1 -) ist folgender Spiegelstrich aufzunehmen: „Schulversuch des Landes Nordrhein-Westfalen gemäß der Vereinbarung zur Durchführung von Schulversuchen und der gegenseitigen Anerkennung der entsprechenden Abschlüsse (Beschluss der Kultusministerkonferenz vom 16. Februar 1990 in der jeweils gültigen Fassung)“"
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D20",
@@ -4258,7 +4278,8 @@
 				"3) Die in § 4 Absatz 6 genannten Schülerinnen und Schüler haben im Beruflichen Gymnasium mindestens 102 Gesamtwochenstunden Pflichtunterricht."
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D21",
@@ -4408,7 +4429,8 @@
 				"4) Die in § 4 Absatz 6 genannten Schülerinnen und Schüler haben im Beruflichen Gymnasium mindestens 102 Gesamtwochenstunden Pflichtunterricht."
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D22",
@@ -4535,7 +4557,8 @@
 				"4) Auf dem Zeugnis der allgemeinen Hochschulreife (Anlage D 41 - Seite 1 -) ist folgender Spiegelstrich aufzunehmen: „Schulversuch des Landes Nordrhein-Westfalen gemäß der Vereinbarung zur Durchführung von Schulversuchen und der gegenseitigen Anerkennung der entsprechenden Abschlüsse (Beschluss der Kultusministerkonferenz vom 16. Februar 1990 in der jeweils gültigen Fassung)“"
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D23",
@@ -4662,7 +4685,8 @@
 				"4) Auf dem Zeugnis der allgemeinen Hochschulreife (Anlage D 41 - Seite 1 -) ist folgender Spiegelstrich aufzunehmen: „Schulversuch des Landes Nordrhein-Westfalen gemäß der Vereinbarung zur Durchführung von Schulversuchen und der gegenseitigen Anerkennung der entsprechenden Abschlüsse (Beschluss der Kultusministerkonferenz vom 16. Februar 1990 in der jeweils gültigen Fassung)“"
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D25",
@@ -4781,7 +4805,8 @@
 				"3) Die in § 4 Absatz 6 genannten Schülerinnen und Schüler haben im Beruflichen Gymnasium mindestens 102 Gesamtwochenstunden Pflichtunterricht."
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D27",
@@ -5225,7 +5250,8 @@
 				"6) soweit nicht bereits als 3. Prüfungsfach gewählt"
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "D28",
@@ -5535,7 +5561,8 @@
 				"4) Die zweite Fremdsprache kann nur Prüfungsfach sein, wenn es sich um eine fortgeführte Fremdsprache handelt oder wenn sie in den Jahrgangsstufen 11 bis 13 mit insgesamt mindestens 12 Jahreswochenstunden unterrichtet wurde."
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2024
+			"gueltigBis": 2024,
+			"auslaufdauer": 0
 		}, {
 			"id": 27000010,
 			"schluessel": "D28",
@@ -5696,7 +5723,8 @@
 				"4) Die zweite Fremdsprache kann nur Prüfungsfach sein, wenn es sich um eine fortgeführte Fremdsprache handelt oder wenn sie in den Jahrgangsstufen 11 bis 13 mit insgesamt mindestens 12 Jahreswochenstunden unterrichtet wurde."
 			],
 			"gueltigVon": 2025,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

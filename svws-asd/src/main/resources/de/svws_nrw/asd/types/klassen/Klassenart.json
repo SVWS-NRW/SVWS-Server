@@ -1,5 +1,5 @@
 {
-	"version": 4,
+	"version": 5,
 	"daten": [ {
 		"bezeichner": "UNDEFINIERT",
 		"idStatistik": "1",
@@ -12,7 +12,8 @@
 				{ "schulform": "WB", "gliederung": null }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2023
+			"gueltigBis": 2023,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "HA_1A",
@@ -24,13 +25,12 @@
 			"schluessel": "1A",
 			"zulaessig": [
 				{ "schulform": "H", "gliederung": null },
-											 
 				{ "schulform": "R", "gliederung": "H" },
-											 
 				{ "schulform": "V", "gliederung": null }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2010
+			"gueltigBis": 2010,
+			"auslaufdauer": 0
 		}, {
 			"id": 1001,
 			"kuerzel": "1A",
@@ -43,7 +43,8 @@
 				{ "schulform": "V",	"gliederung": null }
 			],
 			"gueltigVon": 2011,
-			"gueltigBis": 2011
+			"gueltigBis": 2011,
+			"auslaufdauer": 0
 		}, {
 			"id": 1002,
 			"kuerzel": "1A",
@@ -57,7 +58,8 @@
 				{ "schulform": "V",	"gliederung": null }
 			],
 			"gueltigVon": 2012,
-			"gueltigBis": 2022
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
 		}, {
 			"id": 1003,
 			"kuerzel": "1A",
@@ -70,7 +72,8 @@
 				{ "schulform": "V",	"gliederung": null }
 			],
 			"gueltigVon": 2023,
-			"gueltigBis": 2023
+			"gueltigBis": 2023,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "HA_1B",
@@ -82,12 +85,12 @@
 			"schluessel": "1B",
 			"zulaessig": [
 				{ "schulform": "H", "gliederung": null },
-											 
 				{ "schulform": "R", "gliederung": "H" },
 				{ "schulform": "V", "gliederung": null }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2010
+			"gueltigBis": 2010,
+			"auslaufdauer": 0
 		}, {
 			"id": 2001,
 			"kuerzel": "1B",
@@ -100,7 +103,8 @@
 				{ "schulform": "V",	"gliederung": null }
 			],
 			"gueltigVon": 2011,
-			"gueltigBis": 2011
+			"gueltigBis": 2011,
+			"auslaufdauer": 0
 		}, {
 			"id": 2002,
 			"kuerzel": "1B",
@@ -114,7 +118,8 @@
 				{ "schulform": "V",	"gliederung": null }
 			],
 			"gueltigVon": 2012,
-			"gueltigBis": 2021
+			"gueltigBis": 2021,
+			"auslaufdauer": 0
 		}, {
 			"id": 2003,
 			"kuerzel": "1B",
@@ -127,7 +132,8 @@
 				{ "schulform": "V",	"gliederung": null }
 			],
 			"gueltigVon": 2022,
-			"gueltigBis": 2022
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
 		}, {
 			"id": 2004,
 			"kuerzel": "1B",
@@ -139,7 +145,8 @@
 				{ "schulform": "V", "gliederung": null }
 			],
 			"gueltigVon": 2023,
-			"gueltigBis": 2023
+			"gueltigBis": 2023,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "HA_AB",
@@ -155,7 +162,8 @@
 				{ "schulform": "V", "gliederung": null }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2010
+			"gueltigBis": 2010,
+			"auslaufdauer": 0
 		}, {
 			"id": 3001,
 			"kuerzel": "AB",
@@ -168,7 +176,8 @@
 				{ "schulform": "V", "gliederung": null }
 			],
 			"gueltigVon": 2011,
-			"gueltigBis": 2011
+			"gueltigBis": 2011,
+			"auslaufdauer": 0
 		}, {
 			"id": 3002,
 			"kuerzel": "AB",
@@ -182,7 +191,8 @@
 				{ "schulform": "V", "gliederung": null }
 			],
 			"gueltigVon": 2012,
-			"gueltigBis": 2021
+			"gueltigBis": 2021,
+			"auslaufdauer": 0
 		}, {
 			"id": 3003,
 			"kuerzel": "AB",
@@ -195,7 +205,8 @@
 				{ "schulform": "V", "gliederung": null }
 			],
 			"gueltigVon": 2022,
-			"gueltigBis": 2022
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
 		}, {
 			"id": 3004,
 			"kuerzel": "AB",
@@ -207,7 +218,8 @@
 				{ "schulform": "V", "gliederung": null }
 			],
 			"gueltigVon": 2023,
-			"gueltigBis": 2023
+			"gueltigBis": 2023,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "AK",
@@ -225,7 +237,8 @@
 				{ "schulform": "R", "gliederung": null }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2010
+			"gueltigBis": 2010,
+			"auslaufdauer": 0
 		}, {
 			"id": 10001,
 			"kuerzel": "AK",
@@ -240,7 +253,8 @@
 				{ "schulform": "R", "gliederung": null }
 			],
 			"gueltigVon": 2011,
-			"gueltigBis": 2011
+			"gueltigBis": 2011,
+			"auslaufdauer": 0
 		}, {
 			"id": 10002,
 			"kuerzel": "AK",
@@ -256,7 +270,8 @@
 				{ "schulform": "SK", "gliederung": null	}
 			],
 			"gueltigVon": 2012,
-			"gueltigBis": 2012
+			"gueltigBis": 2012,
+			"auslaufdauer": 0
 		}, {
 			"id": 10003,
 			"kuerzel": "AK",
@@ -273,7 +288,8 @@
 				{ "schulform": "SK", "gliederung": null }
 			],
 			"gueltigVon": 2013,
-			"gueltigBis": 2016
+			"gueltigBis": 2016,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "AM",
@@ -288,7 +304,8 @@
 				{ "schulform": "S", "gliederung": null }
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "BP",
@@ -305,7 +322,8 @@
 				{ "schulform": "S", "gliederung": null }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2011
+			"gueltigBis": 2011,
+			"auslaufdauer": 0
 		}, {
 			"id": 11001,
 			"kuerzel": "BP",
@@ -320,7 +338,8 @@
 				{ "schulform": "SK", "gliederung": null }
 			],
 			"gueltigVon": 2012,
-			"gueltigBis": 2012
+			"gueltigBis": 2012,
+			"auslaufdauer": 0
 		}, {
 			"id": 11002,
 			"kuerzel": "BP",
@@ -336,7 +355,8 @@
 				{ "schulform": "SK", "gliederung": null }
 			],
 			"gueltigVon": 2013,
-			"gueltigBis": 2014
+			"gueltigBis": 2014,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "IL",
@@ -354,7 +374,8 @@
 				{ "schulform": "R", "gliederung": null }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2009
+			"gueltigBis": 2009,
+			"auslaufdauer": 0
 		}, {
 			"id": 12001,
 			"kuerzel": "IL",
@@ -367,7 +388,8 @@
 				{ "schulform": "R", "gliederung": null }
 			],
 			"gueltigVon": 2010,
-			"gueltigBis": 2010
+			"gueltigBis": 2010,
+			"auslaufdauer": 0
 		}, {
 			"id": 12002,
 			"kuerzel": "IL",
@@ -381,7 +403,8 @@
 				{ "schulform": "R", "gliederung": null }
 			],
 			"gueltigVon": 2011,
-			"gueltigBis": 2011
+			"gueltigBis": 2011,
+			"auslaufdauer": 0
 		}, {
 			"id": 12003,
 			"kuerzel": "IL",
@@ -396,7 +419,8 @@
 				{ "schulform": "SK", "gliederung": null }
 			],
 			"gueltigVon": 2012,
-			"gueltigBis": 2012
+			"gueltigBis": 2012,
+			"auslaufdauer": 0
 		}, {
 			"id": 12004,
 			"kuerzel": "IL",
@@ -412,7 +436,8 @@
 				{ "schulform": "SK", "gliederung": null }
 			],
 			"gueltigVon": 2013,
-			"gueltigBis": 2014
+			"gueltigBis": 2014,
+			"auslaufdauer": 0
 		}, {
 			"id": 12005,
 			"kuerzel": "IL",
@@ -430,7 +455,8 @@
 				{ "schulform": "SK", "gliederung": null }
 			],
 			"gueltigVon": 2015,
-			"gueltigBis": 2018
+			"gueltigBis": 2018,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "KK",
@@ -447,7 +473,8 @@
 				{ "schulform": "S", "gliederung": null }
 			],
 			"gueltigVon": 2009,
-			"gueltigBis": 2010
+			"gueltigBis": 2010,
+			"auslaufdauer": 0
 		}, {
 			"id": 13001,
 			"kuerzel": "KK",
@@ -461,7 +488,8 @@
 				{ "schulform": "S", "gliederung": null }
 			],
 			"gueltigVon": 2011,
-			"gueltigBis": 2011
+			"gueltigBis": 2011,
+			"auslaufdauer": 0
 		}, {
 			"id": 13002,
 			"kuerzel": "KK",
@@ -475,7 +503,8 @@
 				{ "schulform": "S", "gliederung": null }
 			],
 			"gueltigVon": 2012,
-			"gueltigBis": 2013
+			"gueltigBis": 2013,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "PG",
@@ -490,7 +519,8 @@
 				{ "schulform": "S", "gliederung": null }
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "PK",
@@ -506,7 +536,8 @@
 				{ "schulform": "SK", "gliederung": "GY" }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2023
+			"gueltigBis": 2023,
+			"auslaufdauer": 0
 		}, {	
 			"id": 6001,
 			"kuerzel": "PK",
@@ -516,7 +547,8 @@
 				{ "schulform": "GY", "gliederung": null }
 			],
 			"gueltigVon": 2024,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "RK",
@@ -545,32 +577,34 @@
 				{ "schulform": "V", "gliederung": null }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2022
-			}, {
-				"id": 7001,
-				"kuerzel": "RK",
-				"text": "Regelklasse",
-				"schluessel": "RK",
-				"zulaessig": [
-					{ "schulform": "FW", "gliederung": null },
-					{ "schulform": "HI", "gliederung": null },
-					{ "schulform": "WF", "gliederung": null },
-					{ "schulform": "G", "gliederung": null },
-					{ "schulform": "GE", "gliederung": null },
-					{ "schulform": "GY", "gliederung": null },
-					{ "schulform": "H", "gliederung": null },
-					{ "schulform": "PS", "gliederung": null },
-					{ "schulform": "R", "gliederung": null },
-					{ "schulform": "S", "gliederung": null },
-					{ "schulform": "KS", "gliederung": null },
-					{ "schulform": "SG", "gliederung": null },
-					{ "schulform": "SK", "gliederung": null },
-					{ "schulform": "SR", "gliederung": null },
-					{ "schulform": "V", "gliederung": null }
-				],
-				"gueltigVon": 2023,
-				"gueltigBis": 2023
-			}, {
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
+		}, {
+			"id": 7001,
+			"kuerzel": "RK",
+			"text": "Regelklasse",
+			"schluessel": "RK",
+			"zulaessig": [
+				{ "schulform": "FW", "gliederung": null },
+				{ "schulform": "HI", "gliederung": null },
+				{ "schulform": "WF", "gliederung": null },
+				{ "schulform": "G", "gliederung": null },
+				{ "schulform": "GE", "gliederung": null },
+				{ "schulform": "GY", "gliederung": null },
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "PS", "gliederung": null },
+				{ "schulform": "R", "gliederung": null },
+				{ "schulform": "S", "gliederung": null },
+				{ "schulform": "KS", "gliederung": null },
+				{ "schulform": "SG", "gliederung": null },
+				{ "schulform": "SK", "gliederung": null },
+				{ "schulform": "SR", "gliederung": null },
+				{ "schulform": "V", "gliederung": null }
+			],
+			"gueltigVon": 2023,
+			"gueltigBis": 2023,
+			"auslaufdauer": 0
+		}, {
 			"id": 7002,
 			"kuerzel": "RK",
 			"text": "Regelklasse",
@@ -594,7 +628,8 @@
 				{ "schulform": "WB", "gliederung": null }
 			],
 			"gueltigVon": 2024,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SG",
@@ -620,7 +655,8 @@
 				{ "schulform": "V", "gliederung": null }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
 		}, {	
 			"id": 8001,
 			"kuerzel": "SG",
@@ -641,7 +677,8 @@
 				{ "schulform": "V", "gliederung": null }
 			],
 			"gueltigVon": 2023,
-			"gueltigBis": 2023
+			"gueltigBis": 2023,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "DF",
@@ -667,7 +704,8 @@
 				{ "schulform": "WB", "gliederung": null }
 			],
 			"gueltigVon": 2024,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "VK",
@@ -686,7 +724,8 @@
 				{ "schulform": "V", "gliederung": null }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2010
+			"gueltigBis": 2010,
+			"auslaufdauer": 0
 		}, {
 			"id": 14001,
 			"kuerzel": "VK",
@@ -702,7 +741,8 @@
 				{ "schulform": "V", "gliederung": null }
 			],
 			"gueltigVon": 2011,
-			"gueltigBis": 2011
+			"gueltigBis": 2011,
+			"auslaufdauer": 0
 		}, {
 			"id": 14002,
 			"kuerzel": "VK",
@@ -719,7 +759,8 @@
 				{ "schulform": "V", "gliederung": null }
 			],
 			"gueltigVon": 2012,
-			"gueltigBis": 2012
+			"gueltigBis": 2012,
+			"auslaufdauer": 0
 		}, {
 			"id": 14003,
 			"kuerzel": "VK",
@@ -737,7 +778,8 @@
 				{ "schulform": "V", "gliederung": null }
 			],
 			"gueltigVon": 2013,
-			"gueltigBis": 2016
+			"gueltigBis": 2016,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

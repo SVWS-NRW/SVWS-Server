@@ -31,9 +31,14 @@ export class CoreTypeData extends JavaObject {
 	public gueltigVon: number | null = null;
 
 	/**
-	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
+	 * Gibt an, bis zu welchem Schuljahr der Eintrag in der Eingangsstufe gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public gueltigBis: number | null = null;
+
+	/**
+	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
+	 */
+	public auslaufdauer: number = 0;
 
 
 	/**
@@ -79,6 +84,9 @@ export class CoreTypeData extends JavaObject {
 		result.text = obj.text;
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
 		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		if (obj.auslaufdauer === undefined)
+			throw new Error('invalid json format, missing attribute auslaufdauer');
+		result.auslaufdauer = obj.auslaufdauer;
 		return result;
 	}
 
@@ -90,6 +98,7 @@ export class CoreTypeData extends JavaObject {
 		result += '"text" : ' + JSON.stringify(obj.text) + ',';
 		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"auslaufdauer" : ' + obj.auslaufdauer.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -114,6 +123,9 @@ export class CoreTypeData extends JavaObject {
 		}
 		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
+		}
+		if (obj.auslaufdauer !== undefined) {
+			result += '"auslaufdauer" : ' + obj.auslaufdauer.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

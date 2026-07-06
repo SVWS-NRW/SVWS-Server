@@ -43,6 +43,9 @@ export class BerufskollegBerufsebeneKatalogEintrag extends CoreTypeData {
 		result.text = obj.text;
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
 		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		if (obj.auslaufdauer === undefined)
+			throw new Error('invalid json format, missing attribute auslaufdauer');
+		result.auslaufdauer = obj.auslaufdauer;
 		if (obj.ebene === undefined)
 			throw new Error('invalid json format, missing attribute ebene');
 		result.ebene = obj.ebene;
@@ -57,6 +60,7 @@ export class BerufskollegBerufsebeneKatalogEintrag extends CoreTypeData {
 		result += '"text" : ' + JSON.stringify(obj.text) + ',';
 		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"auslaufdauer" : ' + obj.auslaufdauer.toString() + ',';
 		result += '"ebene" : ' + obj.ebene.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -82,6 +86,9 @@ export class BerufskollegBerufsebeneKatalogEintrag extends CoreTypeData {
 		}
 		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
+		}
+		if (obj.auslaufdauer !== undefined) {
+			result += '"auslaufdauer" : ' + obj.auslaufdauer.toString() + ',';
 		}
 		if (obj.ebene !== undefined) {
 			result += '"ebene" : ' + obj.ebene.toString() + ',';

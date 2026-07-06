@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "SBO_2_1",
 		"idStatistik": "1",
@@ -12,7 +12,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_2_2",
@@ -26,7 +27,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_2_3",
@@ -40,7 +42,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_2_4",
@@ -54,7 +57,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": [],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_2_5",
@@ -68,7 +72,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_2_6",
@@ -82,7 +87,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": [],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_3_4",
@@ -96,7 +102,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_4_1",
@@ -110,7 +117,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": [],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_4_2",
@@ -124,7 +132,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": [],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_4_3",
@@ -138,7 +147,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": [],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_4_4",
@@ -152,7 +162,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": [],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_4_5",
@@ -166,7 +177,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": [],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_5_1",
@@ -180,7 +192,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": [],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_5_2",
@@ -194,7 +207,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": [],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_5_3",
@@ -208,7 +222,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": [],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_5_4",
@@ -222,7 +237,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": [],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_6_1",
@@ -236,7 +252,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": [],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_6_2",
@@ -250,7 +267,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": [],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_6_3",
@@ -264,7 +282,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": [],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_6_4",
@@ -278,7 +297,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": [],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_6_5",
@@ -292,7 +312,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": [],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_6_6",
@@ -306,7 +327,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": [],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_7_1",
@@ -320,7 +342,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": ["A12", "B06", "B07"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_8_1",
@@ -334,7 +357,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_8_2",
@@ -348,7 +372,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_9_1",
@@ -362,7 +387,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_9_2",
@@ -376,7 +402,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": ["C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_9_3",
@@ -390,7 +417,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_10_1",
@@ -404,7 +432,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_10_2",
@@ -418,7 +447,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": [],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_10_3",
@@ -432,7 +462,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": [],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_10_4",
@@ -446,7 +477,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_10_5",
@@ -460,7 +492,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": [],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_10_6",
@@ -474,7 +507,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SBO_10_7",
@@ -488,7 +522,8 @@
 			"optionsart": "KEINE",
 			"bkGliederungen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

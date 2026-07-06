@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "FOTO",
 		"idStatistik": "0",
@@ -9,7 +9,8 @@
 			"text": "FOTO",
 			"schluessel": "FOTO",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}]
 }

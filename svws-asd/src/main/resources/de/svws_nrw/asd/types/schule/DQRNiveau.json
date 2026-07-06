@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [
 		{
 			"bezeichner": "DQR_NIVEAU_1",
@@ -10,7 +10,8 @@
 				"text": "Niveau 1 des Deutschen Qualifikationsrahmens (DQR)",
 				"kuerzel": "DQR Niveau 1",
 				"gueltigVon": null,
-				"gueltigBis": null
+				"gueltigBis": null,
+			"auslaufdauer": 0
 			} ]
 		}, {
 			"bezeichner": "DQR_NIVEAU_2",
@@ -21,7 +22,8 @@
 				"text": "Niveau 2 des Deutschen Qualifikationsrahmens (DQR)",
 				"kuerzel": "DQR Niveau 2",
 				"gueltigVon": null,
-				"gueltigBis": null
+				"gueltigBis": null,
+			"auslaufdauer": 0
 			} ]
 		}, {
 			"bezeichner": "DQR_NIVEAU_3",
@@ -32,7 +34,8 @@
 				"text": "Niveau 3 des Deutschen Qualifikationsrahmens (DQR)",
 				"kuerzel": "DQR Niveau 3",
 				"gueltigVon": null,
-				"gueltigBis": null
+				"gueltigBis": null,
+			"auslaufdauer": 0
 			} ]
 		}, {
 			"bezeichner": "DQR_NIVEAU_4",
@@ -43,7 +46,8 @@
 				"text": "Niveau 4 des Deutschen Qualifikationsrahmens (DQR)",
 				"kuerzel": "DQR Niveau 4",
 				"gueltigVon": null,
-				"gueltigBis": null
+				"gueltigBis": null,
+			"auslaufdauer": 0
 			} ]
 		}, {
 			"bezeichner": "DQR_NIVEAU_5",
@@ -54,7 +58,8 @@
 				"text": "Niveau 5 des Deutschen Qualifikationsrahmens (DQR)",
 				"kuerzel": "DQR Niveau 5",
 				"gueltigVon": null,
-				"gueltigBis": null
+				"gueltigBis": null,
+			"auslaufdauer": 0
 			} ]
 		}, {
 			"bezeichner": "DQR_NIVEAU_6",
@@ -65,7 +70,8 @@
 				"text": "Niveau 6 des Deutschen Qualifikationsrahmens (DQR)",
 				"kuerzel": "DQR Niveau 6",
 				"gueltigVon": null,
-				"gueltigBis": null
+				"gueltigBis": null,
+			"auslaufdauer": 0
 			} ]
 		}, {
 			"bezeichner": "DQR_NIVEAU_7",
@@ -76,7 +82,8 @@
 				"text": "Niveau 7 des Deutschen Qualifikationsrahmens (DQR)",
 				"kuerzel": "DQR Niveau 7",
 				"gueltigVon": null,
-				"gueltigBis": null
+				"gueltigBis": null,
+			"auslaufdauer": 0
 			} ]
 		}, {
 			"bezeichner": "DQR_NIVEAU_8",
@@ -87,7 +94,8 @@
 				"text": "Niveau 8 des Deutschen Qualifikationsrahmens (DQR)",
 				"kuerzel": "DQR Niveau 8",
 				"gueltigVon": null,
-				"gueltigBis": null
+				"gueltigBis": null,
+			"auslaufdauer": 0
 			} ]
 		}
 	]

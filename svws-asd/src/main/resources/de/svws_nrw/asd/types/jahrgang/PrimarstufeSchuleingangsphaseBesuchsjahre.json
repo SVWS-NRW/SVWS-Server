@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "E1",
 		"idStatistik": "1",
@@ -9,7 +9,8 @@
 			"kuerzel": "E1", 
 			"text": "Schuleingangsphase, 1. Schulbesuchsjahr", 
 			"gueltigVon": null, 
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {	
 		"bezeichner": "E2",
@@ -20,7 +21,8 @@
 			"kuerzel": "E2",
 			"text": "Schuleingangsphase, 2. Schulbesuchsjahr",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "E3",
@@ -31,7 +33,8 @@
 			"kuerzel": "E3",
 			"text": "Schuleingangsphase, 3. Schulbesuchsjahr",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

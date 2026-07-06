@@ -6,6 +6,7 @@ ArrayList {
   "addLast": [Function],
   "elementData": [
     LehrerLeitungsfunktionKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": null,
       "gueltigVon": null,
       "id": 1,
@@ -14,6 +15,7 @@ ArrayList {
       "text": "Schulleitung",
     },
     LehrerLeitungsfunktionKatalogEintrag {
+      "auslaufdauer": 0,
       "gueltigBis": null,
       "gueltigVon": null,
       "id": 2,

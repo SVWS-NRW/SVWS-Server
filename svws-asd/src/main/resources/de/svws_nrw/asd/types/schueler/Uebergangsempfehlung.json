@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "HAUPTSCHULE",
 		"idStatistik": "1",
@@ -9,7 +9,8 @@
 			"text": "Hauptschule",
 			"schluessel": "04XX",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "HAUPTSCHULE_REALSCHULE",
@@ -20,7 +21,8 @@
 			"text": "Hauptschule / Realschule (eingeschränkt)",
 			"schluessel": "0410",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "REALSCHULE",
@@ -31,7 +33,8 @@
 			"text": "Realschule",
 			"schluessel": "10XX",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "REALSCHULE_GYMNASIUM",
@@ -42,7 +45,8 @@
 			"text": "Realschule / Gymnasium (eingeschränkt)",
 			"schluessel": "1020",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "GYMNASIUM",
@@ -53,7 +57,8 @@
 			"text": "Gymnasium",
 			"schluessel": "20XX",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "KEINE",
@@ -64,7 +69,8 @@
 			"text": "Keine Empfehlung",
 			"schluessel": "****",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

@@ -1,5 +1,5 @@
 {
-	"version": 2,
+	"version": 3,
 	"daten": [ {
 		"bezeichner": "BE",
 		"idStatistik": "1",
@@ -11,7 +11,8 @@
 			"stufen": ["SEKUNDARSTUFE_I", "SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_1", "SBO_10_7_3"],
 			"gueltigVon": null,
-			"gueltigBis": 2024
+			"gueltigBis": 2024,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "GY",
@@ -24,7 +25,8 @@
 			"stufen": ["SEKUNDARSTUFE_I", "SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_8"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "AV",
@@ -37,7 +39,8 @@
 			"stufen": ["SEKUNDARSTUFE_I", "SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_1", "SBO_10_7_2", "SBO_10_7_3", "SBO_10_7_4", "SBO_10_7_5"],
 			"gueltigVon": null,
-			"gueltigBis": 2024
+			"gueltigBis": 2024,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "BFSI",
@@ -50,7 +53,8 @@
 			"stufen": ["SEKUNDARSTUFE_I", "SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_5"],
 			"gueltigVon": null,
-			"gueltigBis": 2024
+			"gueltigBis": 2024,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "BFSII",
@@ -63,7 +67,8 @@
 			"stufen": ["SEKUNDARSTUFE_I", "SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_6", "SBO_10_7_7", "SBO_10_7_8", "SBO_10_7_9", "SBO_10_7_10"],
 			"gueltigVon": null,
-			"gueltigBis": 2024
+			"gueltigBis": 2024,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "HOEBFS",
@@ -76,7 +81,8 @@
 			"stufen": ["SEKUNDARSTUFE_I", "SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_7", "SBO_10_7_8", "SBO_10_7_9", "SBO_10_7_10"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FOS",
@@ -89,7 +95,8 @@
 			"stufen": ["SEKUNDARSTUFE_I", "SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_7", "SBO_10_7_8", "SBO_10_7_9", "SBO_10_7_10"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "BERUFGY",
@@ -102,7 +109,8 @@
 			"stufen": ["SEKUNDARSTUFE_I", "SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_8", "SBO_10_7_9", "SBO_10_7_10", "SBO_10_7_11", "SBO_10_7_12"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "DUAL",
@@ -129,7 +137,8 @@
 				"SBO_10_7_13"
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2024
+			"gueltigBis": 2024,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SCHUAUS",
@@ -152,7 +161,8 @@
 				"SBO_10_7_13"
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2024
+			"gueltigBis": 2024,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SCHUGA",
@@ -175,7 +185,8 @@
 				"SBO_10_7_13"
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2024
+			"gueltigBis": 2024,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "BAE",
@@ -188,7 +199,8 @@
 			"stufen": ["SEKUNDARSTUFE_I", "SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_4", "SBO_10_7_5"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FACHAUS",
@@ -201,7 +213,8 @@
 			"stufen": ["SEKUNDARSTUFE_I", "SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_1", "SBO_10_7_3", "SBO_10_7_4"],
 			"gueltigVon": null,
-			"gueltigBis": 2024
+			"gueltigBis": 2024,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "BVB",
@@ -225,7 +238,8 @@
 				"SBO_10_7_10"
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2024
+			"gueltigBis": 2024,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "EQ",
@@ -250,7 +264,8 @@
 				"SBO_10_7_11"
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2024
+			"gueltigBis": 2024,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "WERK",
@@ -274,7 +289,8 @@
 				"SBO_10_7_10"
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2024
+			"gueltigBis": 2024,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "JUWERK",
@@ -298,7 +314,8 @@
 				"SBO_10_7_10"
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "MASS",
@@ -322,7 +339,8 @@
 				"SBO_10_7_10"
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "VHS",
@@ -335,7 +353,8 @@
 			"stufen": ["SEKUNDARSTUFE_I", "SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_1", "SBO_10_7_2", "SBO_10_7_4", "SBO_10_7_5", "SBO_10_7_6"],
 			"gueltigVon": null,
-			"gueltigBis": 2024
+			"gueltigBis": 2024,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "PRAKT",
@@ -362,7 +381,8 @@
 				"SBO_10_7_13"
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FREI",
@@ -389,7 +409,8 @@
 				"SBO_10_7_13"
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2024
+			"gueltigBis": 2024,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SVP",
@@ -416,7 +437,8 @@
 				"SBO_10_7_13"
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "BBW",
@@ -429,7 +451,8 @@
 			"stufen": ["SEKUNDARSTUFE_I", "SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_1", "SBO_10_7_3", "SBO_10_7_4"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "BBA",
@@ -442,7 +465,8 @@
 			"stufen": ["SEKUNDARSTUFE_I", "SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_1", "SBO_10_7_3", "SBO_10_7_4"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "UB",
@@ -455,7 +479,8 @@
 			"stufen": ["SEKUNDARSTUFE_I", "SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_1", "SBO_10_7_3", "SBO_10_7_4"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "DIAAM",
@@ -468,7 +493,8 @@
 			"stufen": ["SEKUNDARSTUFE_I", "SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_1", "SBO_10_7_3", "SBO_10_7_4"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "WFBM",
@@ -481,7 +507,8 @@
 			"stufen": ["SEKUNDARSTUFE_I", "SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_1", "SBO_10_7_3", "SBO_10_7_4"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "TAG",
@@ -494,7 +521,8 @@
 			"stufen": ["SEKUNDARSTUFE_I", "SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_1", "SBO_10_7_3"],
 			"gueltigVon": null,
-			"gueltigBis": 2024
+			"gueltigBis": 2024,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "HAUSE",
@@ -507,7 +535,8 @@
 			"stufen": ["SEKUNDARSTUFE_I", "SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_1", "SBO_10_7_3"],
 			"gueltigVon": null,
-			"gueltigBis": 2024
+			"gueltigBis": 2024,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "REHA",
@@ -520,7 +549,8 @@
 			"stufen": ["SEKUNDARSTUFE_I", "SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_1", "SBO_10_7_3"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "MINI",
@@ -545,7 +575,8 @@
 				"SBO_10_7_11"
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SCHWAN",
@@ -570,7 +601,8 @@
 				"SBO_10_7_11"
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2024
+			"gueltigBis": 2024,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ABSENZ",
@@ -595,7 +627,8 @@
 				"SBO_10_7_11"
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "UNBE",
@@ -622,7 +655,8 @@
 				"SBO_10_7_13"
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2024
+			"gueltigBis": 2024,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "NOKEAN",
@@ -649,7 +683,8 @@
 				"SBO_10_7_13"
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2024
+			"gueltigBis": 2024,
+			"auslaufdauer": 0
 			}, {
 			"id": 81,
 			"kuerzel": "NOKEAN",
@@ -672,7 +707,8 @@
 				"SBO_10_7_13"
 			],
 			"gueltigVon": 2025,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "DUASTUD",
@@ -685,7 +721,8 @@
 			"stufen": ["SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_12", "SBO_10_7_13"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "STUD",
@@ -698,7 +735,8 @@
 			"stufen": ["SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_12", "SBO_10_7_13"],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "WIED",
@@ -719,7 +757,8 @@
 				"SBO_10_7_7"
 			],
 			"gueltigVon": 2025,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "BEF",
@@ -732,7 +771,8 @@
 			"stufen": ["SEKUNDARSTUFE_I", "SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_1", "SBO_10_7_3"],
 			"gueltigVon": 2025,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "AVVZ",
@@ -751,7 +791,8 @@
 				"SBO_10_7_5"
 			],
 			"gueltigVon": 2025,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "BFSIB",
@@ -764,7 +805,8 @@
 			"stufen": ["SEKUNDARSTUFE_I", "SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_5"],
 			"gueltigVon": 2025,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "BFSIIB",
@@ -783,7 +825,8 @@
 				"SBO_10_7_10"
 			],
 			"gueltigVon": 2025,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "DUALBB",
@@ -810,7 +853,8 @@
 				"SBO_10_7_13"
 			],
 			"gueltigVon": 2025,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FACHWERK",
@@ -827,7 +871,8 @@
 				"SBO_10_7_4"
 			],
 			"gueltigVon": 2025,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "BAED",
@@ -840,7 +885,8 @@
 			"stufen": ["SEKUNDARSTUFE_I", "SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_5", "SBO_10_7_6"],
 			"gueltigVon": 2025,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "BAMD",
@@ -853,7 +899,8 @@
 			"stufen": ["SEKUNDARSTUFE_I", "SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_7", "SBO_10_7_8"],
 			"gueltigVon": 2025,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "BAGD",
@@ -866,7 +913,8 @@
 			"stufen": ["SEKUNDARSTUFE_I", "SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_12", "SBO_10_7_13"],
 			"gueltigVon": 2025,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SCHUPGA",
@@ -889,7 +937,8 @@
 				"SBO_10_7_13"
 			],
 			"gueltigVon": 2025,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	},{
 		"bezeichner": "BKAUSZW",
@@ -912,7 +961,8 @@
 				"SBO_10_7_13"
 			],
 			"gueltigVon": 2025,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "BKAUSDR",
@@ -933,7 +983,8 @@
 				"SBO_10_7_13"
 			],
 			"gueltigVon": 2025,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "EINQUA",
@@ -958,7 +1009,8 @@
 				"SBO_10_7_11"
 			],
 			"gueltigVon": 2025,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "BVBR",
@@ -982,7 +1034,8 @@
 				"SBO_10_7_10"
 			],
 			"gueltigVon": 2025,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "WSJ",
@@ -1006,7 +1059,8 @@
 				"SBO_10_7_10"
 			],
 			"gueltigVon": 2025,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ABEND",
@@ -1025,7 +1079,8 @@
 				"SBO_10_7_6"
 			],
 			"gueltigVon": 2025,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FREIBUND",
@@ -1052,7 +1107,8 @@
 				"SBO_10_7_13"
 			],
 			"gueltigVon": 2025,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SU",
@@ -1078,7 +1134,8 @@
 				"SBO_10_7_13"
 			],
 			"gueltigVon": 2025,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "AUSSON",
@@ -1105,7 +1162,8 @@
 				"SBO_10_7_13"
 			],
 			"gueltigVon": 2025,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	},{
 		"bezeichner": "ELTERN",
@@ -1132,7 +1190,8 @@
 				"SBO_10_7_13"
 			],
 			"gueltigVon": 2025,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "HAUS",
@@ -1145,7 +1204,8 @@
 			"stufen": ["SEKUNDARSTUFE_I", "SEKUNDARSTUFE_II"],
 			"anzeigeZusatzmerkmal": ["SBO_10_7_1", "SBO_10_7_3"],
 			"gueltigVon": 2025,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "VERUN",
@@ -1172,7 +1232,8 @@
 				"SBO_10_7_13"
 			],
 			"gueltigVon": 2025,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

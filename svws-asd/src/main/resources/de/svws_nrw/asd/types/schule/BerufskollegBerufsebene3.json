@@ -1,1145 +1,992 @@
 {
-    "version": 2,
-    "daten": [
-        {
-            "bezeichner": "AB",
-            "idStatistik": "1",
-            "historie": [
-                {
-                    "id": 300001000,
-                    "schluessel": "AB",
-                    "kuerzel": "AB",
-                    "ebene": "3",
-                    "text": "Absatzwirtschaft",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "AS",
-            "idStatistik": "2",
-            "historie": [
-                {
-                    "id": 300002000,
-                    "schluessel": "AS",
-                    "kuerzel": "AS",
-                    "ebene": "3",
-                    "text": "Agrarservice",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "BH",
-            "idStatistik": "3",
-            "historie": [
-                {
-                    "id": 300003000,
-                    "schluessel": "BH",
-                    "kuerzel": "BH",
-                    "ebene": "3",
-                    "text": "Allgemeine Hochschulreife / Bautechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "BW",
-            "idStatistik": "4",
-            "historie": [
-                {
-                    "id": 300004000,
-                    "schluessel": "BW",
-                    "kuerzel": "BW",
-                    "ebene": "3",
-                    "text": "Allgemeine Hochschulreife / Betriebswirtschaftslehre",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "BC",
-            "idStatistik": "5",
-            "historie": [
-                {
-                    "id": 300005000,
-                    "schluessel": "BC",
-                    "kuerzel": "BC",
-                    "ebene": "3",
-                    "text": "Allgemeine Hochschulreife / Biologie, Chemie",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "CC",
-            "idStatistik": "6",
-            "historie": [
-                {
-                    "id": 300006000,
-                    "schluessel": "CC",
-                    "kuerzel": "CC",
-                    "ebene": "3",
-                    "text": "Allgemeine Hochschulreife / Chemie, Chemietechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "DE",
-            "idStatistik": "7",
-            "historie": [
-                {
-                    "id": 300007000,
-                    "schluessel": "DE",
-                    "kuerzel": "DE",
-                    "ebene": "3",
-                    "text": "Allgemeine Hochschulreife / Deutsch, Englisch",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "ET",
-            "idStatistik": "8",
-            "historie": [
-                {
-                    "id": 300008000,
-                    "schluessel": "ET",
-                    "kuerzel": "ET",
-                    "ebene": "3",
-                    "text": "Allgemeine Hochschulreife / Elektrotechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "ER",
-            "idStatistik": "9",
-            "historie": [
-                {
-                    "id": 300009000,
-                    "schluessel": "ER",
-                    "kuerzel": "ER",
-                    "ebene": "3",
-                    "text": "Allgemeine Hochschulreife / Ernährung",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "EW",
-            "idStatistik": "10",
-            "historie": [
-                {
-                    "id": 300010000,
-                    "schluessel": "EW",
-                    "kuerzel": "EW",
-                    "ebene": "3",
-                    "text": "Allgemeine Hochschulreife / Erziehungswissenschaften",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "FL",
-            "idStatistik": "11",
-            "historie": [
-                {
-                    "id": 300011000,
-                    "schluessel": "FL",
-                    "kuerzel": "FL",
-                    "ebene": "3",
-                    "text": "Allgemeine Hochschulreife / Freizeitsportleiter (Sport/Gesundheitsförderung/Biologie)",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "FK",
-            "idStatistik": "12",
-            "historie": [
-                {
-                    "id": 300012000,
-                    "schluessel": "FK",
-                    "kuerzel": "FK",
-                    "ebene": "3",
-                    "text": "Allgemeine Hochschulreife / Fremdsprachenkorrespondent",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "GE",
-            "idStatistik": "13",
-            "historie": [
-                {
-                    "id": 300013000,
-                    "schluessel": "GE",
-                    "kuerzel": "GE",
-                    "ebene": "3",
-                    "text": "Allgemeine Hochschulreife / Gesundheit",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "IW",
-            "idStatistik": "14",
-            "historie": [
-                {
-                    "id": 300014000,
-                    "schluessel": "IW",
-                    "kuerzel": "IW",
-                    "ebene": "3",
-                    "text": "Allgemeine Hochschulreife / Ingenieurwissenschaften",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "KE",
-            "idStatistik": "15",
-            "historie": [
-                {
-                    "id": 300015000,
-                    "schluessel": "KE",
-                    "kuerzel": "KE",
-                    "ebene": "3",
-                    "text": "Allgemeine Hochschulreife / Kunst/Englisch",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "MT",
-            "idStatistik": "16",
-            "historie": [
-                {
-                    "id": 300016000,
-                    "schluessel": "MT",
-                    "kuerzel": "MT",
-                    "ebene": "3",
-                    "text": "Allgemeine Hochschulreife / Maschinenbautechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "MI",
-            "idStatistik": "17",
-            "historie": [
-                {
-                    "id": 300017000,
-                    "schluessel": "MI",
-                    "kuerzel": "MI",
-                    "ebene": "3",
-                    "text": "Allgemeine Hochschulreife / Mathematik, Informatik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "BP",
-            "idStatistik": "18",
-            "historie": [
-                {
-                    "id": 300018000,
-                    "schluessel": "BP",
-                    "kuerzel": "BP",
-                    "ebene": "3",
-                    "text": "angewandte Baudenkmalpflege",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "AK",
-            "idStatistik": "19",
-            "historie": [
-                {
-                    "id": 300019000,
-                    "schluessel": "AK",
-                    "kuerzel": "AK",
-                    "ebene": "3",
-                    "text": "Assistent(in) für Konstruktions- und Fertigungstechnik / AHR",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "AU",
-            "idStatistik": "20",
-            "historie": [
-                {
-                    "id": 300020000,
-                    "schluessel": "AU",
-                    "kuerzel": "AU",
-                    "ebene": "3",
-                    "text": "Ausbau",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "AH",
-            "idStatistik": "21",
-            "historie": [
-                {
-                    "id": 300021000,
-                    "schluessel": "AH",
-                    "kuerzel": "AH",
-                    "ebene": "3",
-                    "text": "Außenhandel",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "AI",
-            "idStatistik": "22",
-            "historie": [
-                {
-                    "id": 300022000,
-                    "schluessel": "AI",
-                    "kuerzel": "AI",
-                    "ebene": "3",
-                    "text": "Avionik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "BA",
-            "idStatistik": "23",
-            "historie": [
-                {
-                    "id": 300023000,
-                    "schluessel": "BA",
-                    "kuerzel": "BA",
-                    "ebene": "3",
-                    "text": "Bautechnischer Assistent / AHR",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "BT",
-            "idStatistik": "24",
-            "historie": [
-                {
-                    "id": 300024000,
-                    "schluessel": "BT",
-                    "kuerzel": "BT",
-                    "ebene": "3",
-                    "text": "Betriebstechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "BS",
-            "idStatistik": "25",
-            "historie": [
-                {
-                    "id": 300025000,
-                    "schluessel": "BS",
-                    "kuerzel": "BS",
-                    "ebene": "3",
-                    "text": "Biologisch-technische(r) Assistent(in) / AHR",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "CA",
-            "idStatistik": "26",
-            "historie": [
-                {
-                    "id": 300026000,
-                    "schluessel": "CA",
-                    "kuerzel": "CA",
-                    "ebene": "3",
-                    "text": "Chemisch-technische(r) Assistent(in) / AHR",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "CS",
-            "idStatistik": "27",
-            "historie": [
-                {
-                    "id": 300027000,
-                    "schluessel": "CS",
-                    "kuerzel": "CS",
-                    "ebene": "3",
-                    "text": "CNC-Systemtechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "CK",
-            "idStatistik": "28",
-            "historie": [
-                {
-                    "id": 300028000,
-                    "schluessel": "CK",
-                    "kuerzel": "CK",
-                    "ebene": "3",
-                    "text": "Computer- und Kommunikationst.",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "DG",
-            "idStatistik": "29",
-            "historie": [
-                {
-                    "id": 300029000,
-                    "schluessel": "DG",
-                    "kuerzel": "DG",
-                    "ebene": "3",
-                    "text": "Dienstleistungsgartenbau",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "EA",
-            "idStatistik": "30",
-            "historie": [
-                {
-                    "id": 300030000,
-                    "schluessel": "EA",
-                    "kuerzel": "EA",
-                    "ebene": "3",
-                    "text": "Elektrotechnische(r) Assistent(in) / AHR",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "AE",
-            "idStatistik": "31",
-            "historie": [
-                {
-                    "id": 300031000,
-                    "schluessel": "AE",
-                    "kuerzel": "AE",
-                    "ebene": "3",
-                    "text": "energieeffiziente-ökologische Altbauerneuerung",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "EZ",
-            "idStatistik": "32",
-            "historie": [
-                {
-                    "id": 300032000,
-                    "schluessel": "EZ",
-                    "kuerzel": "EZ",
-                    "ebene": "3",
-                    "text": "Erzieher/Erzieherin / AHR",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "FD",
-            "idStatistik": "33",
-            "historie": [
-                {
-                    "id": 300033000,
-                    "schluessel": "FD",
-                    "kuerzel": "FD",
-                    "ebene": "3",
-                    "text": "Finanzdienstleistungen",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "FW",
-            "idStatistik": "34",
-            "historie": [
-                {
-                    "id": 300034000,
-                    "schluessel": "FW",
-                    "kuerzel": "FW",
-                    "ebene": "3",
-                    "text": "Finanzwirtschaft",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "FT",
-            "idStatistik": "35",
-            "historie": [
-                {
-                    "id": 300035000,
-                    "schluessel": "FT",
-                    "kuerzel": "FT",
-                    "ebene": "3",
-                    "text": "Flugwerk/Triebwerk",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "FS",
-            "idStatistik": "36",
-            "historie": [
-                {
-                    "id": 300036000,
-                    "schluessel": "FS",
-                    "kuerzel": "FS",
-                    "ebene": "3",
-                    "text": "Fremdsprachen",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "GA",
-            "idStatistik": "37",
-            "historie": [
-                {
-                    "id": 300037000,
-                    "schluessel": "GA",
-                    "kuerzel": "GA",
-                    "ebene": "3",
-                    "text": "Gestaltungstechnische(r) Assistent(in)/AHR",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "GM",
-            "idStatistik": "38",
-            "historie": [
-                {
-                    "id": 300038000,
-                    "schluessel": "GM",
-                    "kuerzel": "GM",
-                    "ebene": "3",
-                    "text": "Gesundheitsökonomie und -management",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "GD",
-            "idStatistik": "39",
-            "historie": [
-                {
-                    "id": 300039000,
-                    "schluessel": "GD",
-                    "kuerzel": "GD",
-                    "ebene": "3",
-                    "text": "Grafik-Design",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "HM",
-            "idStatistik": "40",
-            "historie": [
-                {
-                    "id": 300040000,
-                    "schluessel": "HM",
-                    "kuerzel": "HM",
-                    "ebene": "3",
-                    "text": "Handelsmanagement (Schulversuch)",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "HE",
-            "idStatistik": "41",
-            "historie": [
-                {
-                    "id": 300041000,
-                    "schluessel": "HE",
-                    "kuerzel": "HE",
-                    "ebene": "3",
-                    "text": "Heilerziehung",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "HB",
-            "idStatistik": "42",
-            "historie": [
-                {
-                    "id": 300042000,
-                    "schluessel": "HB",
-                    "kuerzel": "HB",
-                    "ebene": "3",
-                    "text": "Hochbau",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "IA",
-            "idStatistik": "43",
-            "historie": [
-                {
-                    "id": 300043000,
-                    "schluessel": "IA",
-                    "kuerzel": "IA",
-                    "ebene": "3",
-                    "text": "Informationstechnische(r) Assistent(in) / AHR",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "KA",
-            "idStatistik": "44",
-            "historie": [
-                {
-                    "id": 300044000,
-                    "schluessel": "KA",
-                    "kuerzel": "KA",
-                    "ebene": "3",
-                    "text": "Kaufmännische(r) Assistent(in) / AHR",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "KO",
-            "idStatistik": "45",
-            "historie": [
-                {
-                    "id": 300045000,
-                    "schluessel": "KO",
-                    "kuerzel": "KO",
-                    "ebene": "3",
-                    "text": "Kokerei/Aufbereitungstechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "LT",
-            "idStatistik": "46",
-            "historie": [
-                {
-                    "id": 300046000,
-                    "schluessel": "LT",
-                    "kuerzel": "LT",
-                    "ebene": "3",
-                    "text": "Labortechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "LO",
-            "idStatistik": "47",
-            "historie": [
-                {
-                    "id": 300047000,
-                    "schluessel": "LO",
-                    "kuerzel": "LO",
-                    "ebene": "3",
-                    "text": "Logistik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "MK",
-            "idStatistik": "48",
-            "historie": [
-                {
-                    "id": 300048000,
-                    "schluessel": "MK",
-                    "kuerzel": "MK",
-                    "ebene": "3",
-                    "text": "Marketing-Kommunikation",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "ME",
-            "idStatistik": "49",
-            "historie": [
-                {
-                    "id": 300049000,
-                    "schluessel": "ME",
-                    "kuerzel": "ME",
-                    "ebene": "3",
-                    "text": "Medien- und Eventmanagement",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "MV",
-            "idStatistik": "50",
-            "historie": [
-                {
-                    "id": 300050000,
-                    "schluessel": "MV",
-                    "kuerzel": "MV",
-                    "ebene": "3",
-                    "text": "Medizinische Verwaltung",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "OL",
-            "idStatistik": "51",
-            "historie": [
-                {
-                    "id": 300051000,
-                    "schluessel": "OL",
-                    "kuerzel": "OL",
-                    "ebene": "3",
-                    "text": "Ökologischer Landbau",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "PE",
-            "idStatistik": "52",
-            "historie": [
-                {
-                    "id": 300052000,
-                    "schluessel": "PE",
-                    "kuerzel": "PE",
-                    "ebene": "3",
-                    "text": "Personalwirtschaft",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "PT",
-            "idStatistik": "53",
-            "historie": [
-                {
-                    "id": 300053000,
-                    "schluessel": "PT",
-                    "kuerzel": "PT",
-                    "ebene": "3",
-                    "text": "Physikalisch-technische(r) Assistent(in) / AHR",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "PF",
-            "idStatistik": "54",
-            "historie": [
-                {
-                    "id": 300054000,
-                    "schluessel": "PF",
-                    "kuerzel": "PF",
-                    "ebene": "3",
-                    "text": "Praktikanten mit Förderverträgen",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "PV",
-            "idStatistik": "55",
-            "historie": [
-                {
-                    "id": 300055000,
-                    "schluessel": "PV",
-                    "kuerzel": "PV",
-                    "ebene": "3",
-                    "text": "Produktion u. Vermarktung",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "PW",
-            "idStatistik": "56",
-            "historie": [
-                {
-                    "id": 300056000,
-                    "schluessel": "PW",
-                    "kuerzel": "PW",
-                    "ebene": "3",
-                    "text": "Produktionswirtschaft",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "RW",
-            "idStatistik": "57",
-            "historie": [
-                {
-                    "id": 300057000,
-                    "schluessel": "RW",
-                    "kuerzel": "RW",
-                    "ebene": "3",
-                    "text": "Rechnungswesen",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "RE",
-            "idStatistik": "58",
-            "historie": [
-                {
-                    "id": 300058000,
-                    "schluessel": "RE",
-                    "kuerzel": "RE",
-                    "ebene": "3",
-                    "text": "Recht",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "RT",
-            "idStatistik": "59",
-            "historie": [
-                {
-                    "id": 300059000,
-                    "schluessel": "RT",
-                    "kuerzel": "RT",
-                    "ebene": "3",
-                    "text": "Reiseverkehr/Touristik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "AV",
-            "idStatistik": "60",
-            "historie": [
-                {
-                    "id": 300060000,
-                    "schluessel": "AV",
-                    "kuerzel": "AV",
-                    "ebene": "3",
-                    "text": "Schüler/-innen in berufsvorb. Maßn. der AV u. fr. Träger",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "AP",
-            "idStatistik": "61",
-            "historie": [
-                {
-                    "id": 300061000,
-                    "schluessel": "AP",
-                    "kuerzel": "AP",
-                    "ebene": "3",
-                    "text": "Schüler/-innen m. Arbeitsverh. u. Praktikant.",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "OA",
-            "idStatistik": "62",
-            "historie": [
-                {
-                    "id": 300062000,
-                    "schluessel": "OA",
-                    "kuerzel": "OA",
-                    "ebene": "3",
-                    "text": "Schüler/-innen ohne Arbeitsverhältnis",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "SV",
-            "idStatistik": "63",
-            "historie": [
-                {
-                    "id": 300063000,
-                    "schluessel": "SV",
-                    "kuerzel": "SV",
-                    "ebene": "3",
-                    "text": "Service",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "SF",
-            "idStatistik": "64",
-            "historie": [
-                {
-                    "id": 300064000,
-                    "schluessel": "SF",
-                    "kuerzel": "SF",
-                    "ebene": "3",
-                    "text": "Sport und Freizeit (Schulversuch)",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "ST",
-            "idStatistik": "65",
-            "historie": [
-                {
-                    "id": 300065000,
-                    "schluessel": "ST",
-                    "kuerzel": "ST",
-                    "ebene": "3",
-                    "text": "Steuern",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "TG",
-            "idStatistik": "66",
-            "historie": [
-                {
-                    "id": 300066000,
-                    "schluessel": "TG",
-                    "kuerzel": "TG",
-                    "ebene": "3",
-                    "text": "Tagebautechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "TA",
-            "idStatistik": "67",
-            "historie": [
-                {
-                    "id": 300067000,
-                    "schluessel": "TA",
-                    "kuerzel": "TA",
-                    "ebene": "3",
-                    "text": "Technische(r) Assistent(in) für Betriebsinformatik / AHR",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "TB",
-            "idStatistik": "68",
-            "historie": [
-                {
-                    "id": 300068000,
-                    "schluessel": "TB",
-                    "kuerzel": "TB",
-                    "ebene": "3",
-                    "text": "Tiefbau",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "TT",
-            "idStatistik": "69",
-            "historie": [
-                {
-                    "id": 300069000,
-                    "schluessel": "TT",
-                    "kuerzel": "TT",
-                    "ebene": "3",
-                    "text": "Tiefbautechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "UA",
-            "idStatistik": "70",
-            "historie": [
-                {
-                    "id": 300070000,
-                    "schluessel": "UA",
-                    "kuerzel": "UA",
-                    "ebene": "3",
-                    "text": "Umwelttechnische(r) Assistent(in) / AHR",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "WJ",
-            "idStatistik": "71",
-            "historie": [
-                {
-                    "id": 300071000,
-                    "schluessel": "WJ",
-                    "kuerzel": "WJ",
-                    "ebene": "3",
-                    "text": "Werkstattjahr",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "WI",
-            "idStatistik": "72",
-            "historie": [
-                {
-                    "id": 300072000,
-                    "schluessel": "WI",
-                    "kuerzel": "WI",
-                    "ebene": "3",
-                    "text": "Wirtschaftsinformatik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "A2",
-            "idStatistik": "73",
-            "historie": [
-                {
-                    "id": 300073000,
-                    "schluessel": "A2",
-                    "kuerzel": "A2",
-                    "ebene": "3",
-                    "text": "Anerkannter Ausbildungsberuf (2-jährig)",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "A3",
-            "idStatistik": "74",
-            "historie": [
-                {
-                    "id": 300074000,
-                    "schluessel": "A3",
-                    "kuerzel": "A3",
-                    "ebene": "3",
-                    "text": "Anerkannter Ausbildungsberuf (3-jährig)",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "A4",
-            "idStatistik": "75",
-            "historie": [
-                {
-                    "id": 300075000,
-                    "schluessel": "A4",
-                    "kuerzel": "A4",
-                    "ebene": "3",
-                    "text": "Anerkannter Ausbildungsberuf (3 1/2-jährig)",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "MB",
-            "idStatistik": "76",
-            "historie": [
-                {
-                    "id": 300076000,
-                    "schluessel": "MB",
-                    "kuerzel": "MB",
-                    "ebene": "3",
-                    "text": "Ausbildungsberuf für Menschen mit Behinderungen",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        }
-    ]
+	"version": 3,
+	"daten": [ {
+		"bezeichner": "AB",
+		"idStatistik": "1",
+		"historie": [ {
+			"id": 300001000,
+			"schluessel": "AB",
+			"kuerzel": "AB",
+			"ebene": "3",
+			"text": "Absatzwirtschaft",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "AS",
+		"idStatistik": "2",
+		"historie": [ {
+			"id": 300002000,
+			"schluessel": "AS",
+			"kuerzel": "AS",
+			"ebene": "3",
+			"text": "Agrarservice",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "BH",
+		"idStatistik": "3",
+		"historie": [ {
+			"id": 300003000,
+			"schluessel": "BH",
+			"kuerzel": "BH",
+			"ebene": "3",
+			"text": "Allgemeine Hochschulreife / Bautechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "BW",
+		"idStatistik": "4",
+		"historie": [ {
+			"id": 300004000,
+			"schluessel": "BW",
+			"kuerzel": "BW",
+			"ebene": "3",
+			"text": "Allgemeine Hochschulreife / Betriebswirtschaftslehre",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "BC",
+		"idStatistik": "5",
+		"historie": [ {
+			"id": 300005000,
+			"schluessel": "BC",
+			"kuerzel": "BC",
+			"ebene": "3",
+			"text": "Allgemeine Hochschulreife / Biologie, Chemie",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "CC",
+		"idStatistik": "6",
+		"historie": [ {
+			"id": 300006000,
+			"schluessel": "CC",
+			"kuerzel": "CC",
+			"ebene": "3",
+			"text": "Allgemeine Hochschulreife / Chemie, Chemietechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "DE",
+		"idStatistik": "7",
+		"historie": [ {
+			"id": 300007000,
+			"schluessel": "DE",
+			"kuerzel": "DE",
+			"ebene": "3",
+			"text": "Allgemeine Hochschulreife / Deutsch, Englisch",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "ET",
+		"idStatistik": "8",
+		"historie": [ {
+			"id": 300008000,
+			"schluessel": "ET",
+			"kuerzel": "ET",
+			"ebene": "3",
+			"text": "Allgemeine Hochschulreife / Elektrotechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "ER",
+		"idStatistik": "9",
+		"historie": [ {
+			"id": 300009000,
+			"schluessel": "ER",
+			"kuerzel": "ER",
+			"ebene": "3",
+			"text": "Allgemeine Hochschulreife / Ernährung",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "EW",
+		"idStatistik": "10",
+		"historie": [ {
+			"id": 300010000,
+			"schluessel": "EW",
+			"kuerzel": "EW",
+			"ebene": "3",
+			"text": "Allgemeine Hochschulreife / Erziehungswissenschaften",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "FL",
+		"idStatistik": "11",
+		"historie": [ {
+			"id": 300011000,
+			"schluessel": "FL",
+			"kuerzel": "FL",
+			"ebene": "3",
+			"text": "Allgemeine Hochschulreife / Freizeitsportleiter (Sport/Gesundheitsförderung/Biologie)",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "FK",
+		"idStatistik": "12",
+		"historie": [ {
+			"id": 300012000,
+			"schluessel": "FK",
+			"kuerzel": "FK",
+			"ebene": "3",
+			"text": "Allgemeine Hochschulreife / Fremdsprachenkorrespondent",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "GE",
+		"idStatistik": "13",
+		"historie": [ {
+			"id": 300013000,
+			"schluessel": "GE",
+			"kuerzel": "GE",
+			"ebene": "3",
+			"text": "Allgemeine Hochschulreife / Gesundheit",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "IW",
+		"idStatistik": "14",
+		"historie": [ {
+			"id": 300014000,
+			"schluessel": "IW",
+			"kuerzel": "IW",
+			"ebene": "3",
+			"text": "Allgemeine Hochschulreife / Ingenieurwissenschaften",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "KE",
+		"idStatistik": "15",
+		"historie": [ {
+			"id": 300015000,
+			"schluessel": "KE",
+			"kuerzel": "KE",
+			"ebene": "3",
+			"text": "Allgemeine Hochschulreife / Kunst/Englisch",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "MT",
+		"idStatistik": "16",
+		"historie": [ {
+			"id": 300016000,
+			"schluessel": "MT",
+			"kuerzel": "MT",
+			"ebene": "3",
+			"text": "Allgemeine Hochschulreife / Maschinenbautechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "MI",
+		"idStatistik": "17",
+		"historie": [ {
+			"id": 300017000,
+			"schluessel": "MI",
+			"kuerzel": "MI",
+			"ebene": "3",
+			"text": "Allgemeine Hochschulreife / Mathematik, Informatik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "BP",
+		"idStatistik": "18",
+		"historie": [ {
+			"id": 300018000,
+			"schluessel": "BP",
+			"kuerzel": "BP",
+			"ebene": "3",
+			"text": "angewandte Baudenkmalpflege",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "AK",
+		"idStatistik": "19",
+		"historie": [ {
+			"id": 300019000,
+			"schluessel": "AK",
+			"kuerzel": "AK",
+			"ebene": "3",
+			"text": "Assistent(in) für Konstruktions- und Fertigungstechnik / AHR",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "AU",
+		"idStatistik": "20",
+		"historie": [ {
+			"id": 300020000,
+			"schluessel": "AU",
+			"kuerzel": "AU",
+			"ebene": "3",
+			"text": "Ausbau",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "AH",
+		"idStatistik": "21",
+		"historie": [ {
+			"id": 300021000,
+			"schluessel": "AH",
+			"kuerzel": "AH",
+			"ebene": "3",
+			"text": "Außenhandel",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "AI",
+		"idStatistik": "22",
+		"historie": [ {
+			"id": 300022000,
+			"schluessel": "AI",
+			"kuerzel": "AI",
+			"ebene": "3",
+			"text": "Avionik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "BA",
+		"idStatistik": "23",
+		"historie": [ {
+			"id": 300023000,
+			"schluessel": "BA",
+			"kuerzel": "BA",
+			"ebene": "3",
+			"text": "Bautechnischer Assistent / AHR",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "BT",
+		"idStatistik": "24",
+		"historie": [ {
+			"id": 300024000,
+			"schluessel": "BT",
+			"kuerzel": "BT",
+			"ebene": "3",
+			"text": "Betriebstechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "BS",
+		"idStatistik": "25",
+		"historie": [ {
+			"id": 300025000,
+			"schluessel": "BS",
+			"kuerzel": "BS",
+			"ebene": "3",
+			"text": "Biologisch-technische(r) Assistent(in) / AHR",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "CA",
+		"idStatistik": "26",
+		"historie": [ {
+			"id": 300026000,
+			"schluessel": "CA",
+			"kuerzel": "CA",
+			"ebene": "3",
+			"text": "Chemisch-technische(r) Assistent(in) / AHR",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "CS",
+		"idStatistik": "27",
+		"historie": [ {
+			"id": 300027000,
+			"schluessel": "CS",
+			"kuerzel": "CS",
+			"ebene": "3",
+			"text": "CNC-Systemtechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "CK",
+		"idStatistik": "28",
+		"historie": [ {
+			"id": 300028000,
+			"schluessel": "CK",
+			"kuerzel": "CK",
+			"ebene": "3",
+			"text": "Computer- und Kommunikationst.",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "DG",
+		"idStatistik": "29",
+		"historie": [ {
+			"id": 300029000,
+			"schluessel": "DG",
+			"kuerzel": "DG",
+			"ebene": "3",
+			"text": "Dienstleistungsgartenbau",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "EA",
+		"idStatistik": "30",
+		"historie": [ {
+			"id": 300030000,
+			"schluessel": "EA",
+			"kuerzel": "EA",
+			"ebene": "3",
+			"text": "Elektrotechnische(r) Assistent(in) / AHR",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "AE",
+		"idStatistik": "31",
+		"historie": [ {
+			"id": 300031000,
+			"schluessel": "AE",
+			"kuerzel": "AE",
+			"ebene": "3",
+			"text": "energieeffiziente-ökologische Altbauerneuerung",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "EZ",
+		"idStatistik": "32",
+		"historie": [ {
+			"id": 300032000,
+			"schluessel": "EZ",
+			"kuerzel": "EZ",
+			"ebene": "3",
+			"text": "Erzieher/Erzieherin / AHR",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "FD",
+		"idStatistik": "33",
+		"historie": [ {
+			"id": 300033000,
+			"schluessel": "FD",
+			"kuerzel": "FD",
+			"ebene": "3",
+			"text": "Finanzdienstleistungen",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "FW",
+		"idStatistik": "34",
+		"historie": [ {
+			"id": 300034000,
+			"schluessel": "FW",
+			"kuerzel": "FW",
+			"ebene": "3",
+			"text": "Finanzwirtschaft",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "FT",
+		"idStatistik": "35",
+		"historie": [ {
+			"id": 300035000,
+			"schluessel": "FT",
+			"kuerzel": "FT",
+			"ebene": "3",
+			"text": "Flugwerk/Triebwerk",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "FS",
+		"idStatistik": "36",
+		"historie": [ {
+			"id": 300036000,
+			"schluessel": "FS",
+			"kuerzel": "FS",
+			"ebene": "3",
+			"text": "Fremdsprachen",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "GA",
+		"idStatistik": "37",
+		"historie": [ {
+			"id": 300037000,
+			"schluessel": "GA",
+			"kuerzel": "GA",
+			"ebene": "3",
+			"text": "Gestaltungstechnische(r) Assistent(in)/AHR",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "GM",
+		"idStatistik": "38",
+		"historie": [ {
+			"id": 300038000,
+			"schluessel": "GM",
+			"kuerzel": "GM",
+			"ebene": "3",
+			"text": "Gesundheitsökonomie und -management",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "GD",
+		"idStatistik": "39",
+		"historie": [ {
+			"id": 300039000,
+			"schluessel": "GD",
+			"kuerzel": "GD",
+			"ebene": "3",
+			"text": "Grafik-Design",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "HM",
+		"idStatistik": "40",
+		"historie": [ {
+			"id": 300040000,
+			"schluessel": "HM",
+			"kuerzel": "HM",
+			"ebene": "3",
+			"text": "Handelsmanagement (Schulversuch)",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "HE",
+		"idStatistik": "41",
+		"historie": [ {
+			"id": 300041000,
+			"schluessel": "HE",
+			"kuerzel": "HE",
+			"ebene": "3",
+			"text": "Heilerziehung",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "HB",
+		"idStatistik": "42",
+		"historie": [ {
+			"id": 300042000,
+			"schluessel": "HB",
+			"kuerzel": "HB",
+			"ebene": "3",
+			"text": "Hochbau",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "IA",
+		"idStatistik": "43",
+		"historie": [ {
+			"id": 300043000,
+			"schluessel": "IA",
+			"kuerzel": "IA",
+			"ebene": "3",
+			"text": "Informationstechnische(r) Assistent(in) / AHR",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "KA",
+		"idStatistik": "44",
+		"historie": [ {
+			"id": 300044000,
+			"schluessel": "KA",
+			"kuerzel": "KA",
+			"ebene": "3",
+			"text": "Kaufmännische(r) Assistent(in) / AHR",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "KO",
+		"idStatistik": "45",
+		"historie": [ {
+			"id": 300045000,
+			"schluessel": "KO",
+			"kuerzel": "KO",
+			"ebene": "3",
+			"text": "Kokerei/Aufbereitungstechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "LT",
+		"idStatistik": "46",
+		"historie": [ {
+			"id": 300046000,
+			"schluessel": "LT",
+			"kuerzel": "LT",
+			"ebene": "3",
+			"text": "Labortechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "LO",
+		"idStatistik": "47",
+		"historie": [ {
+			"id": 300047000,
+			"schluessel": "LO",
+			"kuerzel": "LO",
+			"ebene": "3",
+			"text": "Logistik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "MK",
+		"idStatistik": "48",
+		"historie": [ {
+			"id": 300048000,
+			"schluessel": "MK",
+			"kuerzel": "MK",
+			"ebene": "3",
+			"text": "Marketing-Kommunikation",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "ME",
+		"idStatistik": "49",
+		"historie": [ {
+			"id": 300049000,
+			"schluessel": "ME",
+			"kuerzel": "ME",
+			"ebene": "3",
+			"text": "Medien- und Eventmanagement",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "MV",
+		"idStatistik": "50",
+		"historie": [ {
+			"id": 300050000,
+			"schluessel": "MV",
+			"kuerzel": "MV",
+			"ebene": "3",
+			"text": "Medizinische Verwaltung",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "OL",
+		"idStatistik": "51",
+		"historie": [ {
+			"id": 300051000,
+			"schluessel": "OL",
+			"kuerzel": "OL",
+			"ebene": "3",
+			"text": "Ökologischer Landbau",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "PE",
+		"idStatistik": "52",
+		"historie": [ {
+			"id": 300052000,
+			"schluessel": "PE",
+			"kuerzel": "PE",
+			"ebene": "3",
+			"text": "Personalwirtschaft",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "PT",
+		"idStatistik": "53",
+		"historie": [ {
+			"id": 300053000,
+			"schluessel": "PT",
+			"kuerzel": "PT",
+			"ebene": "3",
+			"text": "Physikalisch-technische(r) Assistent(in) / AHR",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "PF",
+		"idStatistik": "54",
+		"historie": [ {
+			"id": 300054000,
+			"schluessel": "PF",
+			"kuerzel": "PF",
+			"ebene": "3",
+			"text": "Praktikanten mit Förderverträgen",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "PV",
+		"idStatistik": "55",
+		"historie": [ {
+			"id": 300055000,
+			"schluessel": "PV",
+			"kuerzel": "PV",
+			"ebene": "3",
+			"text": "Produktion u. Vermarktung",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "PW",
+		"idStatistik": "56",
+		"historie": [ {
+			"id": 300056000,
+			"schluessel": "PW",
+			"kuerzel": "PW",
+			"ebene": "3",
+			"text": "Produktionswirtschaft",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "RW",
+		"idStatistik": "57",
+		"historie": [ {
+			"id": 300057000,
+			"schluessel": "RW",
+			"kuerzel": "RW",
+			"ebene": "3",
+			"text": "Rechnungswesen",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "RE",
+		"idStatistik": "58",
+		"historie": [ {
+			"id": 300058000,
+			"schluessel": "RE",
+			"kuerzel": "RE",
+			"ebene": "3",
+			"text": "Recht",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "RT",
+		"idStatistik": "59",
+		"historie": [ {
+			"id": 300059000,
+			"schluessel": "RT",
+			"kuerzel": "RT",
+			"ebene": "3",
+			"text": "Reiseverkehr/Touristik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "AV",
+		"idStatistik": "60",
+		"historie": [ {
+			"id": 300060000,
+			"schluessel": "AV",
+			"kuerzel": "AV",
+			"ebene": "3",
+			"text": "Schüler/-innen in berufsvorb. Maßn. der AV u. fr. Träger",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "AP",
+		"idStatistik": "61",
+		"historie": [ {
+			"id": 300061000,
+			"schluessel": "AP",
+			"kuerzel": "AP",
+			"ebene": "3",
+			"text": "Schüler/-innen m. Arbeitsverh. u. Praktikant.",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "OA",
+		"idStatistik": "62",
+		"historie": [ {
+			"id": 300062000,
+			"schluessel": "OA",
+			"kuerzel": "OA",
+			"ebene": "3",
+			"text": "Schüler/-innen ohne Arbeitsverhältnis",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "SV",
+		"idStatistik": "63",
+		"historie": [ {
+			"id": 300063000,
+			"schluessel": "SV",
+			"kuerzel": "SV",
+			"ebene": "3",
+			"text": "Service",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "SF",
+		"idStatistik": "64",
+		"historie": [ {
+			"id": 300064000,
+			"schluessel": "SF",
+			"kuerzel": "SF",
+			"ebene": "3",
+			"text": "Sport und Freizeit (Schulversuch)",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "ST",
+		"idStatistik": "65",
+		"historie": [ {
+			"id": 300065000,
+			"schluessel": "ST",
+			"kuerzel": "ST",
+			"ebene": "3",
+			"text": "Steuern",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "TG",
+		"idStatistik": "66",
+		"historie": [ {
+			"id": 300066000,
+			"schluessel": "TG",
+			"kuerzel": "TG",
+			"ebene": "3",
+			"text": "Tagebautechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "TA",
+		"idStatistik": "67",
+		"historie": [ {
+			"id": 300067000,
+			"schluessel": "TA",
+			"kuerzel": "TA",
+			"ebene": "3",
+			"text": "Technische(r) Assistent(in) für Betriebsinformatik / AHR",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "TB",
+		"idStatistik": "68",
+		"historie": [ {
+			"id": 300068000,
+			"schluessel": "TB",
+			"kuerzel": "TB",
+			"ebene": "3",
+			"text": "Tiefbau",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "TT",
+		"idStatistik": "69",
+		"historie": [ {
+			"id": 300069000,
+			"schluessel": "TT",
+			"kuerzel": "TT",
+			"ebene": "3",
+			"text": "Tiefbautechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "UA",
+		"idStatistik": "70",
+		"historie": [ {
+			"id": 300070000,
+			"schluessel": "UA",
+			"kuerzel": "UA",
+			"ebene": "3",
+			"text": "Umwelttechnische(r) Assistent(in) / AHR",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "WJ",
+		"idStatistik": "71",
+		"historie": [ {
+			"id": 300071000,
+			"schluessel": "WJ",
+			"kuerzel": "WJ",
+			"ebene": "3",
+			"text": "Werkstattjahr",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "WI",
+		"idStatistik": "72",
+		"historie": [ {
+			"id": 300072000,
+			"schluessel": "WI",
+			"kuerzel": "WI",
+			"ebene": "3",
+			"text": "Wirtschaftsinformatik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "A2",
+		"idStatistik": "73",
+		"historie": [ {
+			"id": 300073000,
+			"schluessel": "A2",
+			"kuerzel": "A2",
+			"ebene": "3",
+			"text": "Anerkannter Ausbildungsberuf (2-jährig)",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "A3",
+		"idStatistik": "74",
+		"historie": [ {
+			"id": 300074000,
+			"schluessel": "A3",
+			"kuerzel": "A3",
+			"ebene": "3",
+			"text": "Anerkannter Ausbildungsberuf (3-jährig)",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "A4",
+		"idStatistik": "75",
+		"historie": [ {
+			"id": 300075000,
+			"schluessel": "A4",
+			"kuerzel": "A4",
+			"ebene": "3",
+			"text": "Anerkannter Ausbildungsberuf (3 1/2-jährig)",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "MB",
+		"idStatistik": "76",
+		"historie": [ {
+			"id": 300076000,
+			"schluessel": "MB",
+			"kuerzel": "MB",
+			"ebene": "3",
+			"text": "Ausbildungsberuf für Menschen mit Behinderungen",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	} ]
 }

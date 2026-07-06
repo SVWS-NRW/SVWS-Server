@@ -1,1460 +1,1265 @@
 {
-    "version": 2,
-    "daten": [
-        {
-            "bezeichner": "EV",
-            "idStatistik": "1",
-            "historie": [
-                {
-                    "id": 200001000,
-                    "schluessel": "EV",
-                    "kuerzel": "EV",
-                    "ebene": "2",
-                    "text": "Assistent/-in für Ernährung und Versorgung",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "AA",
-            "idStatistik": "2",
-            "historie": [
-                {
-                    "id": 200002000,
-                    "schluessel": "AA",
-                    "kuerzel": "AA",
-                    "ebene": "2",
-                    "text": "Aufbaubildungsgang Augenoptik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "AB",
-            "idStatistik": "3",
-            "historie": [
-                {
-                    "id": 200003000,
-                    "schluessel": "AB",
-                    "kuerzel": "AB",
-                    "ebene": "2",
-                    "text": "Aufbaubildungsgang Betriebswirtschaft",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "BG",
-            "idStatistik": "4",
-            "historie": [
-                {
-                    "id": 200004000,
-                    "schluessel": "BG",
-                    "kuerzel": "BG",
-                    "ebene": "2",
-                    "text": "Aufbaubildungsgang Bewegung und Gesundheit",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "BS",
-            "idStatistik": "5",
-            "historie": [
-                {
-                    "id": 200005000,
-                    "schluessel": "BS",
-                    "kuerzel": "BS",
-                    "ebene": "2",
-                    "text": "Aufbaubildungsgang Bildung und Schulvorbereitung in Tageseinrichtungen f. Kinder",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "BE",
-            "idStatistik": "6",
-            "historie": [
-                {
-                    "id": 200006000,
-                    "schluessel": "BE",
-                    "kuerzel": "BE",
-                    "ebene": "2",
-                    "text": "Aufbaubildungsgang Bildung, Erziehung u. Betreuung von Kindern unter drei Jahren",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "CO",
-            "idStatistik": "7",
-            "historie": [
-                {
-                    "id": 200007000,
-                    "schluessel": "CO",
-                    "kuerzel": "CO",
-                    "ebene": "2",
-                    "text": "Aufbaubildungsgang Controlling",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "XT",
-            "idStatistik": "8",
-            "historie": [
-                {
-                    "id": 200008000,
-                    "schluessel": "XT",
-                    "kuerzel": "XT",
-                    "ebene": "2",
-                    "text": "Aufbaubildungsgang Existenzgründung",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "XS",
-            "idStatistik": "9",
-            "historie": [
-                {
-                    "id": 200009000,
-                    "schluessel": "XS",
-                    "kuerzel": "XS",
-                    "ebene": "2",
-                    "text": "Aufbaubildungsgang Existenzgründung (Schulversuch)",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "BA",
-            "idStatistik": "10",
-            "historie": [
-                {
-                    "id": 200010000,
-                    "schluessel": "BA",
-                    "kuerzel": "BA",
-                    "ebene": "2",
-                    "text": "Aufbaubildungsgang Fachkraft für Beratung und Anleitung in der Pflege",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "HF",
-            "idStatistik": "11",
-            "historie": [
-                {
-                    "id": 200011000,
-                    "schluessel": "HF",
-                    "kuerzel": "HF",
-                    "ebene": "2",
-                    "text": "Aufbaubildungsgang Fachkraft für heilpädagogische Förderung mit dem Pferd",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "IP",
-            "idStatistik": "12",
-            "historie": [
-                {
-                    "id": 200012000,
-                    "schluessel": "IP",
-                    "kuerzel": "IP",
-                    "ebene": "2",
-                    "text": "Aufbaubildungsgang Inklusive Pädagogik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "MK",
-            "idStatistik": "13",
-            "historie": [
-                {
-                    "id": 200013000,
-                    "schluessel": "MK",
-                    "kuerzel": "MK",
-                    "ebene": "2",
-                    "text": "Aufbaubildungsgang Medienkompetenz in der Kinder- und Jugendhilfe",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "MF",
-            "idStatistik": "14",
-            "historie": [
-                {
-                    "id": 200014000,
-                    "schluessel": "MF",
-                    "kuerzel": "MF",
-                    "ebene": "2",
-                    "text": "Aufbaubildungsgang Musikalische Förderung im sozialpädagogischen Arbeitsfeld",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "NF",
-            "idStatistik": "15",
-            "historie": [
-                {
-                    "id": 200015000,
-                    "schluessel": "NF",
-                    "kuerzel": "NF",
-                    "ebene": "2",
-                    "text": "Aufbaubildungsgang Naturwissenschaftlich-technische Früherziehung",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "OG",
-            "idStatistik": "16",
-            "historie": [
-                {
-                    "id": 200016000,
-                    "schluessel": "OG",
-                    "kuerzel": "OG",
-                    "ebene": "2",
-                    "text": "Aufbaubildungsgang Offene Ganztagsschule",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "PA",
-            "idStatistik": "17",
-            "historie": [
-                {
-                    "id": 200017000,
-                    "schluessel": "PA",
-                    "kuerzel": "PA",
-                    "ebene": "2",
-                    "text": "Aufbaubildungsgang Praxisanleitung",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "PL",
-            "idStatistik": "18",
-            "historie": [
-                {
-                    "id": 200018000,
-                    "schluessel": "PL",
-                    "kuerzel": "PL",
-                    "ebene": "2",
-                    "text": "Aufbaubildungsgang Produktionslogistik (Schulversuch)",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "SM",
-            "idStatistik": "19",
-            "historie": [
-                {
-                    "id": 200019000,
-                    "schluessel": "SM",
-                    "kuerzel": "SM",
-                    "ebene": "2",
-                    "text": "Aufbaubildungsgang Sozialmanagement",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "SF",
-            "idStatistik": "20",
-            "historie": [
-                {
-                    "id": 200020000,
-                    "schluessel": "SF",
-                    "kuerzel": "SF",
-                    "ebene": "2",
-                    "text": "Aufbaubildungsgang Sprachförderung",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "TU",
-            "idStatistik": "21",
-            "historie": [
-                {
-                    "id": 200021000,
-                    "schluessel": "TU",
-                    "kuerzel": "TU",
-                    "ebene": "2",
-                    "text": "Aufbaubildungsgang Technischer Umweltschutz",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "UM",
-            "idStatistik": "22",
-            "historie": [
-                {
-                    "id": 200022000,
-                    "schluessel": "UM",
-                    "kuerzel": "UM",
-                    "ebene": "2",
-                    "text": "Aufbaubildungsgang Unternehmensmanagement",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "AU",
-            "idStatistik": "23",
-            "historie": [
-                {
-                    "id": 200023000,
-                    "schluessel": "AU",
-                    "kuerzel": "AU",
-                    "ebene": "2",
-                    "text": "Augenoptik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "BH",
-            "idStatistik": "24",
-            "historie": [
-                {
-                    "id": 200024000,
-                    "schluessel": "BH",
-                    "kuerzel": "BH",
-                    "ebene": "2",
-                    "text": "Bau und Holztechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "BP",
-            "idStatistik": "25",
-            "historie": [
-                {
-                    "id": 200025000,
-                    "schluessel": "BP",
-                    "kuerzel": "BP",
-                    "ebene": "2",
-                    "text": "Baudenkmalpflege u. Altbau.",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "BT",
-            "idStatistik": "26",
-            "historie": [
-                {
-                    "id": 200026000,
-                    "schluessel": "BT",
-                    "kuerzel": "BT",
-                    "ebene": "2",
-                    "text": "Bautechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "BK",
-            "idStatistik": "27",
-            "historie": [
-                {
-                    "id": 200027000,
-                    "schluessel": "BK",
-                    "kuerzel": "BK",
-                    "ebene": "2",
-                    "text": "Bekleidungstechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "BB",
-            "idStatistik": "28",
-            "historie": [
-                {
-                    "id": 200028000,
-                    "schluessel": "BB",
-                    "kuerzel": "BB",
-                    "ebene": "2",
-                    "text": "Bergbautechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "BW",
-            "idStatistik": "29",
-            "historie": [
-                {
-                    "id": 200029000,
-                    "schluessel": "BW",
-                    "kuerzel": "BW",
-                    "ebene": "2",
-                    "text": "Betriebswirtschaft",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "BO",
-            "idStatistik": "30",
-            "historie": [
-                {
-                    "id": 200030000,
-                    "schluessel": "BO",
-                    "kuerzel": "BO",
-                    "ebene": "2",
-                    "text": "Biogentechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "BI",
-            "idStatistik": "31",
-            "historie": [
-                {
-                    "id": 200031000,
-                    "schluessel": "BI",
-                    "kuerzel": "BI",
-                    "ebene": "2",
-                    "text": "Biologietechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "CT",
-            "idStatistik": "32",
-            "historie": [
-                {
-                    "id": 200032000,
-                    "schluessel": "CT",
-                    "kuerzel": "CT",
-                    "ebene": "2",
-                    "text": "Chemietechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "DM",
-            "idStatistik": "33",
-            "historie": [
-                {
-                    "id": 200033000,
-                    "schluessel": "DM",
-                    "kuerzel": "DM",
-                    "ebene": "2",
-                    "text": "Druck- und Medientechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "DT",
-            "idStatistik": "34",
-            "historie": [
-                {
-                    "id": 200034000,
-                    "schluessel": "DT",
-                    "kuerzel": "DT",
-                    "ebene": "2",
-                    "text": "Drucktechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "EM",
-            "idStatistik": "35",
-            "historie": [
-                {
-                    "id": 200035000,
-                    "schluessel": "EM",
-                    "kuerzel": "EM",
-                    "ebene": "2",
-                    "text": "Edelmetallgestaltung",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "ET",
-            "idStatistik": "36",
-            "historie": [
-                {
-                    "id": 200036000,
-                    "schluessel": "ET",
-                    "kuerzel": "ET",
-                    "ebene": "2",
-                    "text": "Elektrotechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "FT",
-            "idStatistik": "37",
-            "historie": [
-                {
-                    "id": 200037000,
-                    "schluessel": "FT",
-                    "kuerzel": "FT",
-                    "ebene": "2",
-                    "text": "Fahrzeugtechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "FL",
-            "idStatistik": "38",
-            "historie": [
-                {
-                    "id": 200038000,
-                    "schluessel": "FL",
-                    "kuerzel": "FL",
-                    "ebene": "2",
-                    "text": "Farb- und Lacktechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "FG",
-            "idStatistik": "39",
-            "historie": [
-                {
-                    "id": 200039000,
-                    "schluessel": "FG",
-                    "kuerzel": "FG",
-                    "ebene": "2",
-                    "text": "Farbe, Gestaltung, Werbung",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "FR",
-            "idStatistik": "40",
-            "historie": [
-                {
-                    "id": 200040000,
-                    "schluessel": "FR",
-                    "kuerzel": "FR",
-                    "ebene": "2",
-                    "text": "Farbtechnik und Raumgestaltung",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "GT",
-            "idStatistik": "41",
-            "historie": [
-                {
-                    "id": 200041000,
-                    "schluessel": "GT",
-                    "kuerzel": "GT",
-                    "ebene": "2",
-                    "text": "Galvanotechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "GB",
-            "idStatistik": "42",
-            "historie": [
-                {
-                    "id": 200042000,
-                    "schluessel": "GB",
-                    "kuerzel": "GB",
-                    "ebene": "2",
-                    "text": "Gartenbau",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "GD",
-            "idStatistik": "43",
-            "historie": [
-                {
-                    "id": 200043000,
-                    "schluessel": "GD",
-                    "kuerzel": "GD",
-                    "ebene": "2",
-                    "text": "Gebäudesystemtechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "GS",
-            "idStatistik": "44",
-            "historie": [
-                {
-                    "id": 200044000,
-                    "schluessel": "GS",
-                    "kuerzel": "GS",
-                    "ebene": "2",
-                    "text": "Gesundheit",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "GW",
-            "idStatistik": "45",
-            "historie": [
-                {
-                    "id": 200045000,
-                    "schluessel": "GW",
-                    "kuerzel": "GW",
-                    "ebene": "2",
-                    "text": "Gesundheitswesen",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "GR",
-            "idStatistik": "46",
-            "historie": [
-                {
-                    "id": 200046000,
-                    "schluessel": "GR",
-                    "kuerzel": "GR",
-                    "ebene": "2",
-                    "text": "Gießereitechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "GL",
-            "idStatistik": "47",
-            "historie": [
-                {
-                    "id": 200047000,
-                    "schluessel": "GL",
-                    "kuerzel": "GL",
-                    "ebene": "2",
-                    "text": "Glastechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "GO",
-            "idStatistik": "48",
-            "historie": [
-                {
-                    "id": 200048000,
-                    "schluessel": "GO",
-                    "kuerzel": "GO",
-                    "ebene": "2",
-                    "text": "Großhaushalt",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "HP",
-            "idStatistik": "49",
-            "historie": [
-                {
-                    "id": 200049000,
-                    "schluessel": "HP",
-                    "kuerzel": "HP",
-                    "ebene": "2",
-                    "text": "Heilerziehungspflege",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "HD",
-            "idStatistik": "50",
-            "historie": [
-                {
-                    "id": 200050000,
-                    "schluessel": "HD",
-                    "kuerzel": "HD",
-                    "ebene": "2",
-                    "text": "Heilpädagogik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "HL",
-            "idStatistik": "51",
-            "historie": [
-                {
-                    "id": 200051000,
-                    "schluessel": "HL",
-                    "kuerzel": "HL",
-                    "ebene": "2",
-                    "text": "Heizungs-, Lüftungs-, Klimatechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "HT",
-            "idStatistik": "52",
-            "historie": [
-                {
-                    "id": 200052000,
-                    "schluessel": "HT",
-                    "kuerzel": "HT",
-                    "ebene": "2",
-                    "text": "Holztechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "HG",
-            "idStatistik": "53",
-            "historie": [
-                {
-                    "id": 200053000,
-                    "schluessel": "HG",
-                    "kuerzel": "HG",
-                    "ebene": "2",
-                    "text": "Hotel und Gaststätten",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "HB",
-            "idStatistik": "54",
-            "historie": [
-                {
-                    "id": 200054000,
-                    "schluessel": "HB",
-                    "kuerzel": "HB",
-                    "ebene": "2",
-                    "text": "Hotel- und Gaststättengewerbe",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "IF",
-            "idStatistik": "55",
-            "historie": [
-                {
-                    "id": 200055000,
-                    "schluessel": "IF",
-                    "kuerzel": "IF",
-                    "ebene": "2",
-                    "text": "Informatik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "IT",
-            "idStatistik": "56",
-            "historie": [
-                {
-                    "id": 200056000,
-                    "schluessel": "IT",
-                    "kuerzel": "IT",
-                    "ebene": "2",
-                    "text": "Informations- und Telekommunikationstechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "KT",
-            "idStatistik": "57",
-            "historie": [
-                {
-                    "id": 200057000,
-                    "schluessel": "KT",
-                    "kuerzel": "KT",
-                    "ebene": "2",
-                    "text": "Kältetechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "KF",
-            "idStatistik": "58",
-            "historie": [
-                {
-                    "id": 200058000,
-                    "schluessel": "KF",
-                    "kuerzel": "KF",
-                    "ebene": "2",
-                    "text": "Karosserie- und Fahrzeugbautechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "KI",
-            "idStatistik": "59",
-            "historie": [
-                {
-                    "id": 200059000,
-                    "schluessel": "KI",
-                    "kuerzel": "KI",
-                    "ebene": "2",
-                    "text": "Kinderpfleger/-in",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "KP",
-            "idStatistik": "60",
-            "historie": [
-                {
-                    "id": 200060000,
-                    "schluessel": "KP",
-                    "kuerzel": "KP",
-                    "ebene": "2",
-                    "text": "Körperpflege",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "KO",
-            "idStatistik": "61",
-            "historie": [
-                {
-                    "id": 200061000,
-                    "schluessel": "KO",
-                    "kuerzel": "KO",
-                    "ebene": "2",
-                    "text": "Korrosionsschutztechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "KK",
-            "idStatistik": "62",
-            "historie": [
-                {
-                    "id": 200062000,
-                    "schluessel": "KK",
-                    "kuerzel": "KK",
-                    "ebene": "2",
-                    "text": "Kunststoff- und Kautschuktechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "LV",
-            "idStatistik": "63",
-            "historie": [
-                {
-                    "id": 200063000,
-                    "schluessel": "LV",
-                    "kuerzel": "LV",
-                    "ebene": "2",
-                    "text": "Labor- und Verfahrentechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "LW",
-            "idStatistik": "64",
-            "historie": [
-                {
-                    "id": 200064000,
-                    "schluessel": "LW",
-                    "kuerzel": "LW",
-                    "ebene": "2",
-                    "text": "Landwirtschaft",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "LT",
-            "idStatistik": "65",
-            "historie": [
-                {
-                    "id": 200065000,
-                    "schluessel": "LT",
-                    "kuerzel": "LT",
-                    "ebene": "2",
-                    "text": "Lebensmitteltechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "LF",
-            "idStatistik": "66",
-            "historie": [
-                {
-                    "id": 200066000,
-                    "schluessel": "LF",
-                    "kuerzel": "LF",
-                    "ebene": "2",
-                    "text": "Luftfahrttechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "MG",
-            "idStatistik": "67",
-            "historie": [
-                {
-                    "id": 200067000,
-                    "schluessel": "MG",
-                    "kuerzel": "MG",
-                    "ebene": "2",
-                    "text": "Marketing",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "MB",
-            "idStatistik": "68",
-            "historie": [
-                {
-                    "id": 200068000,
-                    "schluessel": "MB",
-                    "kuerzel": "MB",
-                    "ebene": "2",
-                    "text": "Maschinenbautechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "MT",
-            "idStatistik": "69",
-            "historie": [
-                {
-                    "id": 200069000,
-                    "schluessel": "MT",
-                    "kuerzel": "MT",
-                    "ebene": "2",
-                    "text": "Mechatronik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "MN",
-            "idStatistik": "70",
-            "historie": [
-                {
-                    "id": 200070000,
-                    "schluessel": "MN",
-                    "kuerzel": "MN",
-                    "ebene": "2",
-                    "text": "Medien",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "MM",
-            "idStatistik": "71",
-            "historie": [
-                {
-                    "id": 200071000,
-                    "schluessel": "MM",
-                    "kuerzel": "MM",
-                    "ebene": "2",
-                    "text": "Medien/Medientechnologie",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "MD",
-            "idStatistik": "72",
-            "historie": [
-                {
-                    "id": 200072000,
-                    "schluessel": "MD",
-                    "kuerzel": "MD",
-                    "ebene": "2",
-                    "text": "Medizintechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "ML",
-            "idStatistik": "73",
-            "historie": [
-                {
-                    "id": 200073000,
-                    "schluessel": "ML",
-                    "kuerzel": "ML",
-                    "ebene": "2",
-                    "text": "Metallbautechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "ME",
-            "idStatistik": "74",
-            "historie": [
-                {
-                    "id": 200074000,
-                    "schluessel": "ME",
-                    "kuerzel": "ME",
-                    "ebene": "2",
-                    "text": "Metalltechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "MH",
-            "idStatistik": "75",
-            "historie": [
-                {
-                    "id": 200075000,
-                    "schluessel": "MH",
-                    "kuerzel": "MH",
-                    "ebene": "2",
-                    "text": "Möbelhandel",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "MO",
-            "idStatistik": "76",
-            "historie": [
-                {
-                    "id": 200076000,
-                    "schluessel": "MO",
-                    "kuerzel": "MO",
-                    "ebene": "2",
-                    "text": "Mode",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "MI",
-            "idStatistik": "77",
-            "historie": [
-                {
-                    "id": 200077000,
-                    "schluessel": "MI",
-                    "kuerzel": "MI",
-                    "ebene": "2",
-                    "text": "Motopädie",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "PG",
-            "idStatistik": "78",
-            "historie": [
-                {
-                    "id": 200078000,
-                    "schluessel": "PG",
-                    "kuerzel": "PG",
-                    "ebene": "2",
-                    "text": "Pädagogik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "PU",
-            "idStatistik": "79",
-            "historie": [
-                {
-                    "id": 200079000,
-                    "schluessel": "PU",
-                    "kuerzel": "PU",
-                    "ebene": "2",
-                    "text": "Physik, Chemie und Biologie",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "PB",
-            "idStatistik": "80",
-            "historie": [
-                {
-                    "id": 200080000,
-                    "schluessel": "PB",
-                    "kuerzel": "PB",
-                    "ebene": "2",
-                    "text": "Physik, Chemie, Biologie",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "PC",
-            "idStatistik": "81",
-            "historie": [
-                {
-                    "id": 200081000,
-                    "schluessel": "PC",
-                    "kuerzel": "PC",
-                    "ebene": "2",
-                    "text": "Physik/Chemie/Biologie",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "PT",
-            "idStatistik": "82",
-            "historie": [
-                {
-                    "id": 200082000,
-                    "schluessel": "PT",
-                    "kuerzel": "PT",
-                    "ebene": "2",
-                    "text": "Physiktechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "SA",
-            "idStatistik": "83",
-            "historie": [
-                {
-                    "id": 200083000,
-                    "schluessel": "SA",
-                    "kuerzel": "SA",
-                    "ebene": "2",
-                    "text": "Sozialassistent/-in",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "SH",
-            "idStatistik": "84",
-            "historie": [
-                {
-                    "id": 200084000,
-                    "schluessel": "SH",
-                    "kuerzel": "SH",
-                    "ebene": "2",
-                    "text": "Sozialassistent/-in - Heilerziehung",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "SP",
-            "idStatistik": "85",
-            "historie": [
-                {
-                    "id": 200085000,
-                    "schluessel": "SP",
-                    "kuerzel": "SP",
-                    "ebene": "2",
-                    "text": "Sozialpädagogik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "SW",
-            "idStatistik": "86",
-            "historie": [
-                {
-                    "id": 200086000,
-                    "schluessel": "SW",
-                    "kuerzel": "SW",
-                    "ebene": "2",
-                    "text": "Sozialwesen",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "SI",
-            "idStatistik": "87",
-            "historie": [
-                {
-                    "id": 200087000,
-                    "schluessel": "SI",
-                    "kuerzel": "SI",
-                    "ebene": "2",
-                    "text": "Spreng- und Sicherheitstechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "TI",
-            "idStatistik": "88",
-            "historie": [
-                {
-                    "id": 200088000,
-                    "schluessel": "TI",
-                    "kuerzel": "TI",
-                    "ebene": "2",
-                    "text": "Technische Informatik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "TT",
-            "idStatistik": "89",
-            "historie": [
-                {
-                    "id": 200089000,
-                    "schluessel": "TT",
-                    "kuerzel": "TT",
-                    "ebene": "2",
-                    "text": "Textiltechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "TB",
-            "idStatistik": "90",
-            "historie": [
-                {
-                    "id": 200090000,
-                    "schluessel": "TB",
-                    "kuerzel": "TB",
-                    "ebene": "2",
-                    "text": "Textiltechnik und Bekleidung",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "TO",
-            "idStatistik": "91",
-            "historie": [
-                {
-                    "id": 200091000,
-                    "schluessel": "TO",
-                    "kuerzel": "TO",
-                    "ebene": "2",
-                    "text": "Tourismus",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "US",
-            "idStatistik": "92",
-            "historie": [
-                {
-                    "id": 200092000,
-                    "schluessel": "US",
-                    "kuerzel": "US",
-                    "ebene": "2",
-                    "text": "Umweltschutztechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "UT",
-            "idStatistik": "93",
-            "historie": [
-                {
-                    "id": 200093000,
-                    "schluessel": "UT",
-                    "kuerzel": "UT",
-                    "ebene": "2",
-                    "text": "Umwelttechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "VT",
-            "idStatistik": "94",
-            "historie": [
-                {
-                    "id": 200094000,
-                    "schluessel": "VT",
-                    "kuerzel": "VT",
-                    "ebene": "2",
-                    "text": "Vermessungstechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "WT",
-            "idStatistik": "95",
-            "historie": [
-                {
-                    "id": 200095000,
-                    "schluessel": "WT",
-                    "kuerzel": "WT",
-                    "ebene": "2",
-                    "text": "Werkstofftechnik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "WI",
-            "idStatistik": "96",
-            "historie": [
-                {
-                    "id": 200096000,
-                    "schluessel": "WI",
-                    "kuerzel": "WI",
-                    "ebene": "2",
-                    "text": "Wirtschaftsinformatik",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "WR",
-            "idStatistik": "97",
-            "historie": [
-                {
-                    "id": 200097000,
-                    "schluessel": "WR",
-                    "kuerzel": "WR",
-                    "ebene": "2",
-                    "text": "Wohnungswirtschaft und Realkredit",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        }
-    ]
+	"version": 3,
+	"daten": [ {
+		"bezeichner": "EV",
+		"idStatistik": "1",
+		"historie": [ {
+			"id": 200001000,
+			"schluessel": "EV",
+			"kuerzel": "EV",
+			"ebene": "2",
+			"text": "Assistent/-in für Ernährung und Versorgung",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "AA",
+		"idStatistik": "2",
+		"historie": [ {
+			"id": 200002000,
+			"schluessel": "AA",
+			"kuerzel": "AA",
+			"ebene": "2",
+			"text": "Aufbaubildungsgang Augenoptik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "AB",
+		"idStatistik": "3",
+		"historie": [ {
+			"id": 200003000,
+			"schluessel": "AB",
+			"kuerzel": "AB",
+			"ebene": "2",
+			"text": "Aufbaubildungsgang Betriebswirtschaft",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "BG",
+		"idStatistik": "4",
+		"historie": [ {
+			"id": 200004000,
+			"schluessel": "BG",
+			"kuerzel": "BG",
+			"ebene": "2",
+			"text": "Aufbaubildungsgang Bewegung und Gesundheit",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "BS",
+		"idStatistik": "5",
+		"historie": [ {
+			"id": 200005000,
+			"schluessel": "BS",
+			"kuerzel": "BS",
+			"ebene": "2",
+			"text": "Aufbaubildungsgang Bildung und Schulvorbereitung in Tageseinrichtungen f. Kinder",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "BE",
+		"idStatistik": "6",
+		"historie": [ {
+			"id": 200006000,
+			"schluessel": "BE",
+			"kuerzel": "BE",
+			"ebene": "2",
+			"text": "Aufbaubildungsgang Bildung, Erziehung u. Betreuung von Kindern unter drei Jahren",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "CO",
+		"idStatistik": "7",
+		"historie": [ {
+			"id": 200007000,
+			"schluessel": "CO",
+			"kuerzel": "CO",
+			"ebene": "2",
+			"text": "Aufbaubildungsgang Controlling",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "XT",
+		"idStatistik": "8",
+		"historie": [ {
+			"id": 200008000,
+			"schluessel": "XT",
+			"kuerzel": "XT",
+			"ebene": "2",
+			"text": "Aufbaubildungsgang Existenzgründung",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "XS",
+		"idStatistik": "9",
+		"historie": [ {
+			"id": 200009000,
+			"schluessel": "XS",
+			"kuerzel": "XS",
+			"ebene": "2",
+			"text": "Aufbaubildungsgang Existenzgründung (Schulversuch)",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "BA",
+		"idStatistik": "10",
+		"historie": [ {
+			"id": 200010000,
+			"schluessel": "BA",
+			"kuerzel": "BA",
+			"ebene": "2",
+			"text": "Aufbaubildungsgang Fachkraft für Beratung und Anleitung in der Pflege",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "HF",
+		"idStatistik": "11",
+		"historie": [ {
+			"id": 200011000,
+			"schluessel": "HF",
+			"kuerzel": "HF",
+			"ebene": "2",
+			"text": "Aufbaubildungsgang Fachkraft für heilpädagogische Förderung mit dem Pferd",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "IP",
+		"idStatistik": "12",
+		"historie": [ {
+			"id": 200012000,
+			"schluessel": "IP",
+			"kuerzel": "IP",
+			"ebene": "2",
+			"text": "Aufbaubildungsgang Inklusive Pädagogik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "MK",
+		"idStatistik": "13",
+		"historie": [ {
+			"id": 200013000,
+			"schluessel": "MK",
+			"kuerzel": "MK",
+			"ebene": "2",
+			"text": "Aufbaubildungsgang Medienkompetenz in der Kinder- und Jugendhilfe",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "MF",
+		"idStatistik": "14",
+		"historie": [ {
+			"id": 200014000,
+			"schluessel": "MF",
+			"kuerzel": "MF",
+			"ebene": "2",
+			"text": "Aufbaubildungsgang Musikalische Förderung im sozialpädagogischen Arbeitsfeld",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "NF",
+		"idStatistik": "15",
+		"historie": [ {
+			"id": 200015000,
+			"schluessel": "NF",
+			"kuerzel": "NF",
+			"ebene": "2",
+			"text": "Aufbaubildungsgang Naturwissenschaftlich-technische Früherziehung",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "OG",
+		"idStatistik": "16",
+		"historie": [ {
+			"id": 200016000,
+			"schluessel": "OG",
+			"kuerzel": "OG",
+			"ebene": "2",
+			"text": "Aufbaubildungsgang Offene Ganztagsschule",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "PA",
+		"idStatistik": "17",
+		"historie": [ {
+			"id": 200017000,
+			"schluessel": "PA",
+			"kuerzel": "PA",
+			"ebene": "2",
+			"text": "Aufbaubildungsgang Praxisanleitung",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "PL",
+		"idStatistik": "18",
+		"historie": [ {
+			"id": 200018000,
+			"schluessel": "PL",
+			"kuerzel": "PL",
+			"ebene": "2",
+			"text": "Aufbaubildungsgang Produktionslogistik (Schulversuch)",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "SM",
+		"idStatistik": "19",
+		"historie": [ {
+			"id": 200019000,
+			"schluessel": "SM",
+			"kuerzel": "SM",
+			"ebene": "2",
+			"text": "Aufbaubildungsgang Sozialmanagement",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "SF",
+		"idStatistik": "20",
+		"historie": [ {
+			"id": 200020000,
+			"schluessel": "SF",
+			"kuerzel": "SF",
+			"ebene": "2",
+			"text": "Aufbaubildungsgang Sprachförderung",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "TU",
+		"idStatistik": "21",
+		"historie": [ {
+			"id": 200021000,
+			"schluessel": "TU",
+			"kuerzel": "TU",
+			"ebene": "2",
+			"text": "Aufbaubildungsgang Technischer Umweltschutz",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "UM",
+		"idStatistik": "22",
+		"historie": [ {
+			"id": 200022000,
+			"schluessel": "UM",
+			"kuerzel": "UM",
+			"ebene": "2",
+			"text": "Aufbaubildungsgang Unternehmensmanagement",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "AU",
+		"idStatistik": "23",
+		"historie": [ {
+			"id": 200023000,
+			"schluessel": "AU",
+			"kuerzel": "AU",
+			"ebene": "2",
+			"text": "Augenoptik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "BH",
+		"idStatistik": "24",
+		"historie": [ {
+			"id": 200024000,
+			"schluessel": "BH",
+			"kuerzel": "BH",
+			"ebene": "2",
+			"text": "Bau und Holztechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "BP",
+		"idStatistik": "25",
+		"historie": [ {
+			"id": 200025000,
+			"schluessel": "BP",
+			"kuerzel": "BP",
+			"ebene": "2",
+			"text": "Baudenkmalpflege u. Altbau.",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "BT",
+		"idStatistik": "26",
+		"historie": [ {
+			"id": 200026000,
+			"schluessel": "BT",
+			"kuerzel": "BT",
+			"ebene": "2",
+			"text": "Bautechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "BK",
+		"idStatistik": "27",
+		"historie": [ {
+			"id": 200027000,
+			"schluessel": "BK",
+			"kuerzel": "BK",
+			"ebene": "2",
+			"text": "Bekleidungstechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "BB",
+		"idStatistik": "28",
+		"historie": [ {
+			"id": 200028000,
+			"schluessel": "BB",
+			"kuerzel": "BB",
+			"ebene": "2",
+			"text": "Bergbautechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "BW",
+		"idStatistik": "29",
+		"historie": [ {
+			"id": 200029000,
+			"schluessel": "BW",
+			"kuerzel": "BW",
+			"ebene": "2",
+			"text": "Betriebswirtschaft",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "BO",
+		"idStatistik": "30",
+		"historie": [ {
+			"id": 200030000,
+			"schluessel": "BO",
+			"kuerzel": "BO",
+			"ebene": "2",
+			"text": "Biogentechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "BI",
+		"idStatistik": "31",
+		"historie": [ {
+			"id": 200031000,
+			"schluessel": "BI",
+			"kuerzel": "BI",
+			"ebene": "2",
+			"text": "Biologietechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "CT",
+		"idStatistik": "32",
+		"historie": [ {
+			"id": 200032000,
+			"schluessel": "CT",
+			"kuerzel": "CT",
+			"ebene": "2",
+			"text": "Chemietechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "DM",
+		"idStatistik": "33",
+		"historie": [ {
+			"id": 200033000,
+			"schluessel": "DM",
+			"kuerzel": "DM",
+			"ebene": "2",
+			"text": "Druck- und Medientechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "DT",
+		"idStatistik": "34",
+		"historie": [ {
+			"id": 200034000,
+			"schluessel": "DT",
+			"kuerzel": "DT",
+			"ebene": "2",
+			"text": "Drucktechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "EM",
+		"idStatistik": "35",
+		"historie": [ {
+			"id": 200035000,
+			"schluessel": "EM",
+			"kuerzel": "EM",
+			"ebene": "2",
+			"text": "Edelmetallgestaltung",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "ET",
+		"idStatistik": "36",
+		"historie": [ {
+			"id": 200036000,
+			"schluessel": "ET",
+			"kuerzel": "ET",
+			"ebene": "2",
+			"text": "Elektrotechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "FT",
+		"idStatistik": "37",
+		"historie": [ {
+			"id": 200037000,
+			"schluessel": "FT",
+			"kuerzel": "FT",
+			"ebene": "2",
+			"text": "Fahrzeugtechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "FL",
+		"idStatistik": "38",
+		"historie": [ {
+			"id": 200038000,
+			"schluessel": "FL",
+			"kuerzel": "FL",
+			"ebene": "2",
+			"text": "Farb- und Lacktechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "FG",
+		"idStatistik": "39",
+		"historie": [ {
+			"id": 200039000,
+			"schluessel": "FG",
+			"kuerzel": "FG",
+			"ebene": "2",
+			"text": "Farbe, Gestaltung, Werbung",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "FR",
+		"idStatistik": "40",
+		"historie": [ {
+			"id": 200040000,
+			"schluessel": "FR",
+			"kuerzel": "FR",
+			"ebene": "2",
+			"text": "Farbtechnik und Raumgestaltung",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "GT",
+		"idStatistik": "41",
+		"historie": [ {
+			"id": 200041000,
+			"schluessel": "GT",
+			"kuerzel": "GT",
+			"ebene": "2",
+			"text": "Galvanotechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "GB",
+		"idStatistik": "42",
+		"historie": [ {
+			"id": 200042000,
+			"schluessel": "GB",
+			"kuerzel": "GB",
+			"ebene": "2",
+			"text": "Gartenbau",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "GD",
+		"idStatistik": "43",
+		"historie": [ {
+			"id": 200043000,
+			"schluessel": "GD",
+			"kuerzel": "GD",
+			"ebene": "2",
+			"text": "Gebäudesystemtechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "GS",
+		"idStatistik": "44",
+		"historie": [ {
+			"id": 200044000,
+			"schluessel": "GS",
+			"kuerzel": "GS",
+			"ebene": "2",
+			"text": "Gesundheit",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "GW",
+		"idStatistik": "45",
+		"historie": [ {
+			"id": 200045000,
+			"schluessel": "GW",
+			"kuerzel": "GW",
+			"ebene": "2",
+			"text": "Gesundheitswesen",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "GR",
+		"idStatistik": "46",
+		"historie": [ {
+			"id": 200046000,
+			"schluessel": "GR",
+			"kuerzel": "GR",
+			"ebene": "2",
+			"text": "Gießereitechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "GL",
+		"idStatistik": "47",
+		"historie": [ {
+			"id": 200047000,
+			"schluessel": "GL",
+			"kuerzel": "GL",
+			"ebene": "2",
+			"text": "Glastechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "GO",
+		"idStatistik": "48",
+		"historie": [ {
+			"id": 200048000,
+			"schluessel": "GO",
+			"kuerzel": "GO",
+			"ebene": "2",
+			"text": "Großhaushalt",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "HP",
+		"idStatistik": "49",
+		"historie": [ {
+			"id": 200049000,
+			"schluessel": "HP",
+			"kuerzel": "HP",
+			"ebene": "2",
+			"text": "Heilerziehungspflege",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "HD",
+		"idStatistik": "50",
+		"historie": [ {
+			"id": 200050000,
+			"schluessel": "HD",
+			"kuerzel": "HD",
+			"ebene": "2",
+			"text": "Heilpädagogik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "HL",
+		"idStatistik": "51",
+		"historie": [ {
+			"id": 200051000,
+			"schluessel": "HL",
+			"kuerzel": "HL",
+			"ebene": "2",
+			"text": "Heizungs-, Lüftungs-, Klimatechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "HT",
+		"idStatistik": "52",
+		"historie": [ {
+			"id": 200052000,
+			"schluessel": "HT",
+			"kuerzel": "HT",
+			"ebene": "2",
+			"text": "Holztechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "HG",
+		"idStatistik": "53",
+		"historie": [ {
+			"id": 200053000,
+			"schluessel": "HG",
+			"kuerzel": "HG",
+			"ebene": "2",
+			"text": "Hotel und Gaststätten",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "HB",
+		"idStatistik": "54",
+		"historie": [ {
+			"id": 200054000,
+			"schluessel": "HB",
+			"kuerzel": "HB",
+			"ebene": "2",
+			"text": "Hotel- und Gaststättengewerbe",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "IF",
+		"idStatistik": "55",
+		"historie": [ {
+			"id": 200055000,
+			"schluessel": "IF",
+			"kuerzel": "IF",
+			"ebene": "2",
+			"text": "Informatik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "IT",
+		"idStatistik": "56",
+		"historie": [ {
+			"id": 200056000,
+			"schluessel": "IT",
+			"kuerzel": "IT",
+			"ebene": "2",
+			"text": "Informations- und Telekommunikationstechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "KT",
+		"idStatistik": "57",
+		"historie": [ {
+			"id": 200057000,
+			"schluessel": "KT",
+			"kuerzel": "KT",
+			"ebene": "2",
+			"text": "Kältetechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "KF",
+		"idStatistik": "58",
+		"historie": [ {
+			"id": 200058000,
+			"schluessel": "KF",
+			"kuerzel": "KF",
+			"ebene": "2",
+			"text": "Karosserie- und Fahrzeugbautechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "KI",
+		"idStatistik": "59",
+		"historie": [ {
+			"id": 200059000,
+			"schluessel": "KI",
+			"kuerzel": "KI",
+			"ebene": "2",
+			"text": "Kinderpfleger/-in",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "KP",
+		"idStatistik": "60",
+		"historie": [ {
+			"id": 200060000,
+			"schluessel": "KP",
+			"kuerzel": "KP",
+			"ebene": "2",
+			"text": "Körperpflege",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "KO",
+		"idStatistik": "61",
+		"historie": [ {
+			"id": 200061000,
+			"schluessel": "KO",
+			"kuerzel": "KO",
+			"ebene": "2",
+			"text": "Korrosionsschutztechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "KK",
+		"idStatistik": "62",
+		"historie": [ {
+			"id": 200062000,
+			"schluessel": "KK",
+			"kuerzel": "KK",
+			"ebene": "2",
+			"text": "Kunststoff- und Kautschuktechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "LV",
+		"idStatistik": "63",
+		"historie": [ {
+			"id": 200063000,
+			"schluessel": "LV",
+			"kuerzel": "LV",
+			"ebene": "2",
+			"text": "Labor- und Verfahrentechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "LW",
+		"idStatistik": "64",
+		"historie": [ {
+			"id": 200064000,
+			"schluessel": "LW",
+			"kuerzel": "LW",
+			"ebene": "2",
+			"text": "Landwirtschaft",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "LT",
+		"idStatistik": "65",
+		"historie": [ {
+			"id": 200065000,
+			"schluessel": "LT",
+			"kuerzel": "LT",
+			"ebene": "2",
+			"text": "Lebensmitteltechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "LF",
+		"idStatistik": "66",
+		"historie": [ {
+			"id": 200066000,
+			"schluessel": "LF",
+			"kuerzel": "LF",
+			"ebene": "2",
+			"text": "Luftfahrttechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "MG",
+		"idStatistik": "67",
+		"historie": [ {
+			"id": 200067000,
+			"schluessel": "MG",
+			"kuerzel": "MG",
+			"ebene": "2",
+			"text": "Marketing",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "MB",
+		"idStatistik": "68",
+		"historie": [ {
+			"id": 200068000,
+			"schluessel": "MB",
+			"kuerzel": "MB",
+			"ebene": "2",
+			"text": "Maschinenbautechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "MT",
+		"idStatistik": "69",
+		"historie": [ {
+			"id": 200069000,
+			"schluessel": "MT",
+			"kuerzel": "MT",
+			"ebene": "2",
+			"text": "Mechatronik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "MN",
+		"idStatistik": "70",
+		"historie": [ {
+			"id": 200070000,
+			"schluessel": "MN",
+			"kuerzel": "MN",
+			"ebene": "2",
+			"text": "Medien",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "MM",
+		"idStatistik": "71",
+		"historie": [ {
+			"id": 200071000,
+			"schluessel": "MM",
+			"kuerzel": "MM",
+			"ebene": "2",
+			"text": "Medien/Medientechnologie",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "MD",
+		"idStatistik": "72",
+		"historie": [ {
+			"id": 200072000,
+			"schluessel": "MD",
+			"kuerzel": "MD",
+			"ebene": "2",
+			"text": "Medizintechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "ML",
+		"idStatistik": "73",
+		"historie": [ {
+			"id": 200073000,
+			"schluessel": "ML",
+			"kuerzel": "ML",
+			"ebene": "2",
+			"text": "Metallbautechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "ME",
+		"idStatistik": "74",
+		"historie": [ {
+			"id": 200074000,
+			"schluessel": "ME",
+			"kuerzel": "ME",
+			"ebene": "2",
+			"text": "Metalltechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "MH",
+		"idStatistik": "75",
+		"historie": [ {
+			"id": 200075000,
+			"schluessel": "MH",
+			"kuerzel": "MH",
+			"ebene": "2",
+			"text": "Möbelhandel",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "MO",
+		"idStatistik": "76",
+		"historie": [ {
+			"id": 200076000,
+			"schluessel": "MO",
+			"kuerzel": "MO",
+			"ebene": "2",
+			"text": "Mode",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "MI",
+		"idStatistik": "77",
+		"historie": [ {
+			"id": 200077000,
+			"schluessel": "MI",
+			"kuerzel": "MI",
+			"ebene": "2",
+			"text": "Motopädie",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "PG",
+		"idStatistik": "78",
+		"historie": [ {
+			"id": 200078000,
+			"schluessel": "PG",
+			"kuerzel": "PG",
+			"ebene": "2",
+			"text": "Pädagogik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "PU",
+		"idStatistik": "79",
+		"historie": [ {
+			"id": 200079000,
+			"schluessel": "PU",
+			"kuerzel": "PU",
+			"ebene": "2",
+			"text": "Physik, Chemie und Biologie",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "PB",
+		"idStatistik": "80",
+		"historie": [ {
+			"id": 200080000,
+			"schluessel": "PB",
+			"kuerzel": "PB",
+			"ebene": "2",
+			"text": "Physik, Chemie, Biologie",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "PC",
+		"idStatistik": "81",
+		"historie": [ {
+			"id": 200081000,
+			"schluessel": "PC",
+			"kuerzel": "PC",
+			"ebene": "2",
+			"text": "Physik/Chemie/Biologie",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "PT",
+		"idStatistik": "82",
+		"historie": [ {
+			"id": 200082000,
+			"schluessel": "PT",
+			"kuerzel": "PT",
+			"ebene": "2",
+			"text": "Physiktechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "SA",
+		"idStatistik": "83",
+		"historie": [ {
+			"id": 200083000,
+			"schluessel": "SA",
+			"kuerzel": "SA",
+			"ebene": "2",
+			"text": "Sozialassistent/-in",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "SH",
+		"idStatistik": "84",
+		"historie": [ {
+			"id": 200084000,
+			"schluessel": "SH",
+			"kuerzel": "SH",
+			"ebene": "2",
+			"text": "Sozialassistent/-in - Heilerziehung",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "SP",
+		"idStatistik": "85",
+		"historie": [ {
+			"id": 200085000,
+			"schluessel": "SP",
+			"kuerzel": "SP",
+			"ebene": "2",
+			"text": "Sozialpädagogik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "SW",
+		"idStatistik": "86",
+		"historie": [ {
+			"id": 200086000,
+			"schluessel": "SW",
+			"kuerzel": "SW",
+			"ebene": "2",
+			"text": "Sozialwesen",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "SI",
+		"idStatistik": "87",
+		"historie": [ {
+			"id": 200087000,
+			"schluessel": "SI",
+			"kuerzel": "SI",
+			"ebene": "2",
+			"text": "Spreng- und Sicherheitstechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "TI",
+		"idStatistik": "88",
+		"historie": [ {
+			"id": 200088000,
+			"schluessel": "TI",
+			"kuerzel": "TI",
+			"ebene": "2",
+			"text": "Technische Informatik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "TT",
+		"idStatistik": "89",
+		"historie": [ {
+			"id": 200089000,
+			"schluessel": "TT",
+			"kuerzel": "TT",
+			"ebene": "2",
+			"text": "Textiltechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "TB",
+		"idStatistik": "90",
+		"historie": [ {
+			"id": 200090000,
+			"schluessel": "TB",
+			"kuerzel": "TB",
+			"ebene": "2",
+			"text": "Textiltechnik und Bekleidung",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "TO",
+		"idStatistik": "91",
+		"historie": [ {
+			"id": 200091000,
+			"schluessel": "TO",
+			"kuerzel": "TO",
+			"ebene": "2",
+			"text": "Tourismus",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "US",
+		"idStatistik": "92",
+		"historie": [ {
+			"id": 200092000,
+			"schluessel": "US",
+			"kuerzel": "US",
+			"ebene": "2",
+			"text": "Umweltschutztechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "UT",
+		"idStatistik": "93",
+		"historie": [ {
+			"id": 200093000,
+			"schluessel": "UT",
+			"kuerzel": "UT",
+			"ebene": "2",
+			"text": "Umwelttechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "VT",
+		"idStatistik": "94",
+		"historie": [ {
+			"id": 200094000,
+			"schluessel": "VT",
+			"kuerzel": "VT",
+			"ebene": "2",
+			"text": "Vermessungstechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "WT",
+		"idStatistik": "95",
+		"historie": [ {
+			"id": 200095000,
+			"schluessel": "WT",
+			"kuerzel": "WT",
+			"ebene": "2",
+			"text": "Werkstofftechnik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "WI",
+		"idStatistik": "96",
+		"historie": [ {
+			"id": 200096000,
+			"schluessel": "WI",
+			"kuerzel": "WI",
+			"ebene": "2",
+			"text": "Wirtschaftsinformatik",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "WR",
+		"idStatistik": "97",
+		"historie": [ {
+			"id": 200097000,
+			"schluessel": "WR",
+			"kuerzel": "WR",
+			"ebene": "2",
+			"text": "Wohnungswirtschaft und Realkredit",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	} ]
 }

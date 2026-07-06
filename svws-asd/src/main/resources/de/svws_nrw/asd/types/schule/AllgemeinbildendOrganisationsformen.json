@@ -1,5 +1,5 @@
 {
-	"version": 3,
+	"version": 4,
 	"daten": [ {
 		"bezeichner": "NICHT_ZUGEORDNET",
 		"idStatistik": "1",
@@ -13,7 +13,8 @@
 				"KS" 
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {	
 		"bezeichner": "HALBTAG",
@@ -42,7 +43,8 @@
 				"V"
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
 		}, {
 			"id": 3001001,
 			"schluessel": "1",
@@ -66,7 +68,8 @@
 				"V"
 			],
 			"gueltigVon": 2023,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {	
 		"bezeichner": "GANZTAG",
@@ -95,7 +98,8 @@
 				"V"
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
 		}, {
 			"id": 3002001,
 			"schluessel": "2",
@@ -119,7 +123,8 @@
 				"V"
 			],
 			"gueltigVon": 2023,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {	
 		"bezeichner": "GANZTAG_ERWEITERT",
@@ -140,7 +145,8 @@
 				"SK"
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2021
+			"gueltigBis": 2021,
+			"auslaufdauer": 0
 		}, {	
 			"id": 3003001,
 			"schluessel": "3",
@@ -156,7 +162,8 @@
 				"SK"
 			],
 			"gueltigVon": 2022,
-			"gueltigBis": null	
+			"gueltigBis": null,
+			"auslaufdauer": 0	
 		} ]
 	}, {	
 		"bezeichner": "GANZTAG_OFFEN",
@@ -176,7 +183,8 @@
 				"KS"
 			],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }			

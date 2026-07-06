@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "ABENDGYMNASIUM",
 		"idStatistik": "1",
@@ -9,7 +9,8 @@
 			"kuerzel": "AG",
 			"text": "Abendgymnasium",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ABENDREALSCHULE",
@@ -20,7 +21,8 @@
 			"kuerzel": "AR",
 			"text": "Abendrealschule",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "KOLLEG",
@@ -31,7 +33,8 @@
 			"kuerzel": "KL",
 			"text": "Kolleg",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

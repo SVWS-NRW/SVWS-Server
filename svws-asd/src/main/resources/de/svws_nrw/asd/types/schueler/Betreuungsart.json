@@ -1,168 +1,82 @@
 {
-    "version": 1,
-    "daten": [
-        {
-            "bezeichner": "KEINE",
-            "idStatistik": "1",
-            "historie": [
-                {
-                    "id": 1,
-                    "schluessel": "0",
-                    "kuerzel": "0",
-                    "text": "keine Teilnahme an Ganztagsangeboten und/oder Übermittagbetreuung",
-                    "schulformen": [
-                        "FW",
-                        "HI",
-                        "G",
-                        "GE",
-                        "GY",
-                        "H",
-                        "PS",
-                        "R",
-                        "S",
-                        "KS",
-                        "SG",
-                        "SK",
-                        "SR",
-                        "WF",
-                        "V"
-                    ],
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "UEBERMITTAG_PRIMARSTUFE",
-            "idStatistik": "2",
-            "historie": [
-                {
-                    "id": 2,
-                    "schluessel": "5",
-                    "kuerzel": "5",
-                    "text": "Übermittagbetreuung (Primarstufe)",
-                    "schulformen": [
-                        "FW",
-                        "HI",
-                        "WF",
-                        "G",
-                        "PS",
-                        "S",
-                        "KS",
-                        "V"
-                    ],
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "UEBERMITTAG_SEKUNDARSTUFE",
-            "idStatistik": "3",
-            "historie": [
-                {
-                    "id": 3,
-                    "schluessel": "6",
-                    "kuerzel": "6",
-                    "text": "Übermittagbetreuung (Sekundarstufe)",
-                    "schulformen": [
-                        "FW",
-                        "HI",
-                        "GE",
-                        "GY",
-                        "H",
-                        "PS",
-                        "R",
-                        "S",
-                        "KS",
-                        "SG",
-                        "SK",
-                        "SR",
-                        "WF",
-                        "V"
-                    ],
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "UEBERMITTAG_UND_GANZTAG",
-            "idStatistik": "4",
-            "historie": [
-                {
-                    "id": 4,
-                    "schluessel": "7",
-                    "kuerzel": "7",
-                    "text": "Übermittagbetreuung und zusätzliches Ganztagsangebot",
-                    "schulformen": [
-                        "FW",
-                        "HI",
-                        "GE",
-                        "GY",
-                        "H",
-                        "PS",
-                        "R",
-                        "S",
-                        "KS",
-                        "SG",
-                        "SK",
-                        "SR",
-                        "WF",
-                        "V"
-                    ],
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "NUR_ACHT_BIS_EINS",
-            "idStatistik": "5",
-            "historie": [
-                {
-                    "id": 5,
-                    "schluessel": "8",
-                    "kuerzel": "8",
-                    "text": "ausschließlich Schule von acht bis eins",
-                    "schulformen": [
-                        "FW",
-                        "HI",
-                        "WF",
-                        "G",
-                        "PS",
-                        "S",
-                        "KS",
-                        "V"
-                    ],
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "ACHT_BIS_EINS_UND_DREIZEHN_PLUS",
-            "idStatistik": "6",
-            "historie": [
-                {
-                    "id": 6,
-                    "schluessel": "9",
-                    "kuerzel": "9",
-                    "text": "Schule von acht bis eins und Dreizehn Plus",
-                    "schulformen": [
-                        "FW",
-                        "HI",
-                        "WF",
-                        "G",
-                        "PS",
-                        "S",
-                        "KS",
-                        "V"
-                    ],
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        }
-    ]
+	"version": 3,
+	"daten": [ {
+		"bezeichner": "KEINE",
+		"idStatistik": "1",
+		"historie": [ {
+			"id": 1,
+			"schluessel": "0",
+			"kuerzel": "0",
+			"text": "keine Teilnahme an Ganztagsangeboten und/oder Übermittagbetreuung",
+			"schulformen": ["FW", "HI", "G", "GE", "GY", "H", "PS", "R", "S", "KS", "SG", "SK", "SR", "WF", "V"],
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "UEBERMITTAG_PRIMARSTUFE",
+		"idStatistik": "2",
+		"historie": [ {
+			"id": 2,
+			"schluessel": "5",
+			"kuerzel": "5",
+			"text": "Übermittagbetreuung (Primarstufe)",
+			"schulformen": ["FW", "HI", "WF", "G", "PS", "S", "KS", "V"],
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "UEBERMITTAG_SEKUNDARSTUFE",
+		"idStatistik": "3",
+		"historie": [ {
+			"id": 3,
+			"schluessel": "6",
+			"kuerzel": "6",
+			"text": "Übermittagbetreuung (Sekundarstufe)",
+			"schulformen": ["FW", "HI", "GE", "GY", "H", "PS", "R", "S", "KS", "SG", "SK", "SR", "WF", "V"],
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "UEBERMITTAG_UND_GANZTAG",
+		"idStatistik": "4",
+		"historie": [ {
+			"id": 4,
+			"schluessel": "7",
+			"kuerzel": "7",
+			"text": "Übermittagbetreuung und zusätzliches Ganztagsangebot",
+			"schulformen": ["FW", "HI", "GE", "GY", "H", "PS", "R", "S", "KS", "SG", "SK", "SR", "WF", "V"],
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "NUR_ACHT_BIS_EINS",
+		"idStatistik": "5",
+		"historie": [ {
+			"id": 5,
+			"schluessel": "8",
+			"kuerzel": "8",
+			"text": "ausschließlich Schule von acht bis eins",
+			"schulformen": ["FW", "HI", "WF", "G", "PS", "S", "KS", "V"],
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "ACHT_BIS_EINS_UND_DREIZEHN_PLUS",
+		"idStatistik": "6",
+		"historie": [ {
+			"id": 6,
+			"schluessel": "9",
+			"kuerzel": "9",
+			"text": "Schule von acht bis eins und Dreizehn Plus",
+			"schulformen": ["FW", "HI", "WF", "G", "PS", "S", "KS", "V"],
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	} ]
 }

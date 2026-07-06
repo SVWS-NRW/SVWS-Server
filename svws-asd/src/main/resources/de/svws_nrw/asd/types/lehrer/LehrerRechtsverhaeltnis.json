@@ -1,5 +1,5 @@
 {
-	"version": 2,
+	"version": 3,
 	"daten": [ {
 		"bezeichner": "L",
 		"idStatistik": "1",
@@ -9,7 +9,8 @@
 			"kuerzel": "L",
 			"text": "Beamte auf Lebenszeit",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "P",
@@ -20,7 +21,8 @@
 			"kuerzel": "P",
 			"text": "Beamte auf Probe",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "A",
@@ -31,7 +33,8 @@
 			"kuerzel": "A",
 			"text": "Beamter auf Probe zur Anstellung",
 			"gueltigVon": null,
-			"gueltigBis": 2009
+			"gueltigBis": 2009,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "N",
@@ -42,7 +45,8 @@
 			"kuerzel": "N",
 			"text": "Beamte, nebenamtlich (nicht hauptamtlich im Schuldienst)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "W",
@@ -53,7 +57,8 @@
 			"kuerzel": "W",
 			"text": "Beamte auf Widerruf (LAA)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "U",
@@ -64,7 +69,8 @@
 			"kuerzel": "U",
 			"text": "Angestellte, unbefristet (TVL-Vertrag)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "B",
@@ -75,7 +81,8 @@
 			"kuerzel": "B",
 			"text": "Angestellte, befristet (TVL-Vertrag)",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "J",
@@ -86,7 +93,8 @@
 			"kuerzel": "J",
 			"text": "Angestellte, nicht TVL-Vertrag",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "S",
@@ -97,7 +105,8 @@
 			"kuerzel": "S",
 			"text": "Gestellungsvertrag",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "X",
@@ -108,7 +117,8 @@
 			"kuerzel": "X",
 			"text": "Unentgeltlich Beschäftigte",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

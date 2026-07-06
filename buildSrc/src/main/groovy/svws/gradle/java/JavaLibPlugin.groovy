@@ -7,7 +7,7 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.tasks.Exec
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.JavaExec
-
+import org.gradle.api.tasks.testing.Test
 
 /**
  * Dieses Plugin fasst die grundlegende Konfiguration für die
@@ -195,6 +195,16 @@ class JavaLibPlugin implements Plugin<Project> {
 		project.tasks.withType(JavaExec.class, {
 			jvmArgs '-Dfile.encoding=UTF-8', '-Dline.separator=\n'
 		})
+
+		project.tasks.withType(Test).configureEach {
+			doFirst {
+				def mockitoCoreJar = classpath.files.find { it.name ==~ /mockito-core-.*\.jar/ }
+				if (mockitoCoreJar == null) {
+					throw new GradleException("Die Mockito-Core-JAR konnte für den Testtask '${path}' nicht ermittelt werden.")
+				}
+				jvmArgs "-javaagent:${mockitoCoreJar.absolutePath}"
+			}
+		}
 
 		this.addCrypto();
 		this.addDatabase();

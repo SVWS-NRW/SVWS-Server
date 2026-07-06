@@ -94,6 +94,9 @@ export class FachKatalogEintrag extends CoreTypeDataNurSchulformenUndSchulgliede
 		result.text = obj.text;
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
 		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		if (obj.auslaufdauer === undefined)
+			throw new Error('invalid json format, missing attribute auslaufdauer');
+		result.auslaufdauer = obj.auslaufdauer;
 		result.aufgabenfeld = (obj.aufgabenfeld === undefined) ? null : obj.aufgabenfeld === null ? null : obj.aufgabenfeld;
 		result.fachgruppe = (obj.fachgruppe === undefined) ? null : obj.fachgruppe === null ? null : obj.fachgruppe;
 		result.abJahrgang = (obj.abJahrgang === undefined) ? null : obj.abJahrgang === null ? null : obj.abJahrgang;
@@ -137,6 +140,7 @@ export class FachKatalogEintrag extends CoreTypeDataNurSchulformenUndSchulgliede
 		result += '"text" : ' + JSON.stringify(obj.text) + ',';
 		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"auslaufdauer" : ' + obj.auslaufdauer.toString() + ',';
 		result += '"aufgabenfeld" : ' + ((obj.aufgabenfeld === null) ? 'null' : obj.aufgabenfeld.toString()) + ',';
 		result += '"fachgruppe" : ' + ((obj.fachgruppe === null) ? 'null' : JSON.stringify(obj.fachgruppe)) + ',';
 		result += '"abJahrgang" : ' + ((obj.abJahrgang === null) ? 'null' : JSON.stringify(obj.abJahrgang)) + ',';
@@ -181,6 +185,9 @@ export class FachKatalogEintrag extends CoreTypeDataNurSchulformenUndSchulgliede
 		}
 		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
+		}
+		if (obj.auslaufdauer !== undefined) {
+			result += '"auslaufdauer" : ' + obj.auslaufdauer.toString() + ',';
 		}
 		if (obj.aufgabenfeld !== undefined) {
 			result += '"aufgabenfeld" : ' + ((obj.aufgabenfeld === null) ? 'null' : obj.aufgabenfeld.toString()) + ',';

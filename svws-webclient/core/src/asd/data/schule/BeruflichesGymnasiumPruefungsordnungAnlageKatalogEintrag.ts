@@ -66,6 +66,9 @@ export class BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag extends Co
 		result.text = obj.text;
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
 		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		if (obj.auslaufdauer === undefined)
+			throw new Error('invalid json format, missing attribute auslaufdauer');
+		result.auslaufdauer = obj.auslaufdauer;
 		if (obj.abschlussAllgemeinbildend === undefined)
 			throw new Error('invalid json format, missing attribute abschlussAllgemeinbildend');
 		result.abschlussAllgemeinbildend = obj.abschlussAllgemeinbildend;
@@ -96,6 +99,7 @@ export class BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag extends Co
 		result += '"text" : ' + JSON.stringify(obj.text) + ',';
 		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"auslaufdauer" : ' + obj.auslaufdauer.toString() + ',';
 		result += '"abschlussAllgemeinbildend" : ' + JSON.stringify(obj.abschlussAllgemeinbildend) + ',';
 		result += '"gliederung" : ' + JSON.stringify(obj.gliederung) + ',';
 		result += '"fachklassenschluessel" : ' + JSON.stringify(obj.fachklassenschluessel) + ',';
@@ -139,6 +143,9 @@ export class BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag extends Co
 		}
 		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
+		}
+		if (obj.auslaufdauer !== undefined) {
+			result += '"auslaufdauer" : ' + obj.auslaufdauer.toString() + ',';
 		}
 		if (obj.abschlussAllgemeinbildend !== undefined) {
 			result += '"abschlussAllgemeinbildend" : ' + JSON.stringify(obj.abschlussAllgemeinbildend) + ',';

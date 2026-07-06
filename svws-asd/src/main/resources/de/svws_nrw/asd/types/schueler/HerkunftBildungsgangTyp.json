@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "AG",
 		"idStatistik": "1",
@@ -10,7 +10,8 @@
 			"text": "Weiterbildungskolleg: Abendgymnasium",
 			"zulaessig": [ {"schulform": "WB", "gliederung": null} ], 
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "AR",
@@ -22,7 +23,8 @@
 			"text": "Weiterbildungskolleg: Abendrealschule",
 			"zulaessig": [ {"schulform": "WB", "gliederung": null} ], 
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "KL",
@@ -34,7 +36,8 @@
 			"text": "Weiterbildungskolleg: Kolleg",
 			"zulaessig": [ {"schulform": "WB", "gliederung": null} ], 
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "BF",
@@ -46,7 +49,8 @@
 			"text": "Berufskolleg: Berufsfachschule",
 			"zulaessig": [ {"schulform": "WB", "gliederung": null} ], 
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "BS",
@@ -58,7 +62,8 @@
 			"text": "Berufskolleg: Berufsschule",
 			"zulaessig": [ {"schulform": "WB", "gliederung": null} ], 
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "BY",
@@ -70,7 +75,8 @@
 			"text": "Berufskolleg: Berufliches Gymnasium",
 			"zulaessig": [ {"schulform": "WB", "gliederung": null} ], 
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FO",
@@ -82,7 +88,8 @@
 			"text": "Berufskolleg: Fachoberschule",
 			"zulaessig": [ {"schulform": "WB", "gliederung": null} ], 
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FS",
@@ -94,7 +101,8 @@
 			"text": "Berufskolleg: Fachschule",
 			"zulaessig": [ {"schulform": "WB", "gliederung": null} ], 
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

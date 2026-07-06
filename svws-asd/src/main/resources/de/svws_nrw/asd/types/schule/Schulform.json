@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "BK",
 		"idStatistik": "1",
@@ -10,7 +10,8 @@
 			"text": "Berufskolleg", 
 			"hatGymOb": false, 
 			"gueltigVon": null, 
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FW",
@@ -22,211 +23,229 @@
 			"text": "Freie Waldorfschule", 
 			"hatGymOb": true, 
 			"gueltigVon": null, 
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
-		"bezeichner":  "G",
+		"bezeichner": "G",
 		"idStatistik": "3",
 		"historie": [ {
 			"id": 3000,
-			"schluessel":  "02",
-			"kuerzel":  "G",
-			"text":  "Grundschule",
-			"hatGymOb":  false,
-			"gueltigVon":  null,
-			"gueltigBis":  null
+			"schluessel": "02",
+			"kuerzel": "G",
+			"text": "Grundschule",
+			"hatGymOb": false,
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
-		"bezeichner":  "GE",
+		"bezeichner": "GE",
 		"idStatistik": "4",
 		"historie": [ {
 			"id": 4000,
-			"schluessel":  "15",
-			"kuerzel":  "GE",
-			"text":  "Gesamtschule",
-			"hatGymOb":  true,
-			"gueltigVon":  null,
-			"gueltigBis":  null
+			"schluessel": "15",
+			"kuerzel": "GE",
+			"text": "Gesamtschule",
+			"hatGymOb": true,
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
-		"bezeichner":  "GM",
+		"bezeichner": "GM",
 		"idStatistik": "5",
 		"historie": [ {
 			"id": 5000,
-			"schluessel":  "16",
-			"kuerzel":  "GM",
-			"text":  "Gemeinschaftsschule",
-			"hatGymOb":  false,
-			"gueltigVon":  null,
-			"gueltigBis":  2022
+			"schluessel": "16",
+			"kuerzel": "GM",
+			"text": "Gemeinschaftsschule",
+			"hatGymOb": false,
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
 		} ]
 	}, {
-		"bezeichner":  "GY",
+		"bezeichner": "GY",
 		"idStatistik": "6",
 		"historie": [ {
 			"id": 6000,
-			"schluessel":  "20",
-			"kuerzel":  "GY",
-			"text":  "Gymnasium",
-			"hatGymOb":  true,
-			"gueltigVon":  null,
-			"gueltigBis":  null
+			"schluessel": "20",
+			"kuerzel": "GY",
+			"text": "Gymnasium",
+			"hatGymOb": true,
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
-		"bezeichner":  "H",
+		"bezeichner": "H",
 		"idStatistik": "7",
 		"historie": [ {
 			"id": 7000,
-			"schluessel":  "04",
-			"kuerzel":  "H",
-			"text":  "Hauptschule",
-			"hatGymOb":  false,
-			"gueltigVon":  null,
-			"gueltigBis":  null
+			"schluessel": "04",
+			"kuerzel": "H",
+			"text": "Hauptschule",
+			"hatGymOb": false,
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
-		"bezeichner":  "HI",
+		"bezeichner": "HI",
 		"idStatistik": "8",
 		"historie": [ {
 			"id": 8000,
-			"schluessel":  "18",
-			"kuerzel":  "HI",
-			"text":  "Hibernia",
-			"hatGymOb":  false,
-			"gueltigVon":  null,
-			"gueltigBis":  null
+			"schluessel": "18",
+			"kuerzel": "HI",
+			"text": "Hibernia",
+			"hatGymOb": false,
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
-		"bezeichner":  "PS",
+		"bezeichner": "PS",
 		"idStatistik": "9",
 		"historie": [ {
 			"id": 9000,
-			"schluessel":  "13",
-			"kuerzel":  "PS",
-			"text":  "Schulversuch PRIMUS",
-			"hatGymOb":  false,
-			"gueltigVon":  null,
-			"gueltigBis":  null
+			"schluessel": "13",
+			"kuerzel": "PS",
+			"text": "Schulversuch PRIMUS",
+			"hatGymOb": false,
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
-		"bezeichner":  "R",
+		"bezeichner": "R",
 		"idStatistik": "10",
 		"historie": [ {
 			"id": 10000,
-			"schluessel":  "10",
-			"kuerzel":  "R",
-			"text":  "Realschule",
-			"hatGymOb":  false,
-			"gueltigVon":  null,
-			"gueltigBis":  null
+			"schluessel": "10",
+			"kuerzel": "R",
+			"text": "Realschule",
+			"hatGymOb": false,
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
-		"bezeichner":  "S",
+		"bezeichner": "S",
 		"idStatistik": "11",
 		"historie": [ {
 			"id": 11000,
-			"schluessel":  "08",
-			"kuerzel":  "S",
-			"text":  "Förderschule im Bereich Grund-/Hauptschule",
-			"hatGymOb":  false,
-			"gueltigVon":  null,
-			"gueltigBis":  null
+			"schluessel": "08",
+			"kuerzel": "S",
+			"text": "Förderschule im Bereich Grund-/Hauptschule",
+			"hatGymOb": false,
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
-		"bezeichner":  "KS",
+		"bezeichner": "KS",
 		"idStatistik": "12",
 		"historie": [ {
 			"id": 12000,
-			"schluessel":  "83",
-			"kuerzel":  "KS",
-			"text":  "Klinikschule",
-			"hatGymOb":  false,
-			"gueltigVon":  null,
-			"gueltigBis":  null
+			"schluessel": "83",
+			"kuerzel": "KS",
+			"text": "Klinikschule",
+			"hatGymOb": false,
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
-		"bezeichner":  "SB",
+		"bezeichner": "SB",
 		"idStatistik": "13",
 		"historie": [ {
 			"id": 13000,
-			"schluessel":  "88",
-			"kuerzel":  "SB",
-			"text":  "Förderschule im Bereich Berufskolleg",
-			"hatGymOb":  false,
-			"gueltigVon":  null,
-			"gueltigBis":  null
+			"schluessel": "88",
+			"kuerzel": "SB",
+			"text": "Förderschule im Bereich Berufskolleg",
+			"hatGymOb": false,
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
-		"bezeichner":  "SG",
+		"bezeichner": "SG",
 		"idStatistik": "14",
 		"historie": [ {
 			"id": 14000,
-			"schluessel":  "87",
-			"kuerzel":  "SG",
-			"text":  "Förderschule im Bereich Gymnasium",
-			"hatGymOb":  true,
-			"gueltigVon":  null,
-			"gueltigBis":  null
+			"schluessel": "87",
+			"kuerzel": "SG",
+			"text": "Förderschule im Bereich Gymnasium",
+			"hatGymOb": true,
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
-		"bezeichner":  "SK",
+		"bezeichner": "SK",
 		"idStatistik": "15",
 		"historie": [ {
 			"id": 15000,
-			"schluessel":  "14",
-			"kuerzel":  "SK",
-			"text":  "Sekundarschule",
-			"hatGymOb":  false,
-			"gueltigVon":  null,
-			"gueltigBis":  null
+			"schluessel": "14",
+			"kuerzel": "SK",
+			"text": "Sekundarschule",
+			"hatGymOb": false,
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
-		"bezeichner":  "SR",
+		"bezeichner": "SR",
 		"idStatistik": "16",
 		"historie": [ {
 			"id": 16000,
-			"schluessel":  "85",
-			"kuerzel":  "SR",
-			"text":  "Förderschule im Bereich Realschule",
-			"hatGymOb":  false,
-			"gueltigVon":  null,
-			"gueltigBis":  null
+			"schluessel": "85",
+			"kuerzel": "SR",
+			"text": "Förderschule im Bereich Realschule",
+			"hatGymOb": false,
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
-		"bezeichner":  "V",
+		"bezeichner": "V",
 		"idStatistik": "17",
 		"historie": [ {
 			"id": 17000,
-			"schluessel":  "06",
-			"kuerzel":  "V",
-			"text":  "Volksschule",
-			"hatGymOb":  false,
-			"gueltigVon":  null,
-			"gueltigBis":  null
+			"schluessel": "06",
+			"kuerzel": "V",
+			"text": "Volksschule",
+			"hatGymOb": false,
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
-		"bezeichner":  "WB",
+		"bezeichner": "WB",
 		"idStatistik": "18",
 		"historie": [ {
 			"id": 18000,
-			"schluessel":  "25",
-			"kuerzel":  "WB",
-			"text":  "Weiterbildungskolleg",
-			"hatGymOb":  false,
-			"gueltigVon":  null,
-			"gueltigBis":  null
+			"schluessel": "25",
+			"kuerzel": "WB",
+			"text": "Weiterbildungskolleg",
+			"hatGymOb": false,
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
-		"bezeichner":  "WF",
+		"bezeichner": "WF",
 		"idStatistik": "19",
 		"historie": [ {
 			"id": 19000,
-			"schluessel":  "19",
-			"kuerzel":  "WF",
-			"text":  "Freie Waldorfförderschule",
-			"hatGymOb":  true,
-			"gueltigVon":  null,
-			"gueltigBis":  null
+			"schluessel": "19",
+			"kuerzel": "WF",
+			"text": "Freie Waldorfförderschule",
+			"hatGymOb": true,
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

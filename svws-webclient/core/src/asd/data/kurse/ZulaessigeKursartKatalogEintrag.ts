@@ -69,6 +69,9 @@ export class ZulaessigeKursartKatalogEintrag extends CoreTypeDataNurSchulformenU
 		result.text = obj.text;
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
 		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		if (obj.auslaufdauer === undefined)
+			throw new Error('invalid json format, missing attribute auslaufdauer');
+		result.auslaufdauer = obj.auslaufdauer;
 		if (obj.nummer === undefined)
 			throw new Error('invalid json format, missing attribute nummer');
 		result.nummer = obj.nummer;
@@ -97,6 +100,7 @@ export class ZulaessigeKursartKatalogEintrag extends CoreTypeDataNurSchulformenU
 		result += '"text" : ' + JSON.stringify(obj.text) + ',';
 		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"auslaufdauer" : ' + obj.auslaufdauer.toString() + ',';
 		result += '"nummer" : ' + JSON.stringify(obj.nummer) + ',';
 		result += '"bemerkungen" : ' + ((obj.bemerkungen === null) ? 'null' : JSON.stringify(obj.bemerkungen)) + ',';
 		result += '"kuerzelAllg" : ' + ((obj.kuerzelAllg === null) ? 'null' : JSON.stringify(obj.kuerzelAllg)) + ',';
@@ -136,6 +140,9 @@ export class ZulaessigeKursartKatalogEintrag extends CoreTypeDataNurSchulformenU
 		}
 		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
+		}
+		if (obj.auslaufdauer !== undefined) {
+			result += '"auslaufdauer" : ' + obj.auslaufdauer.toString() + ',';
 		}
 		if (obj.nummer !== undefined) {
 			result += '"nummer" : ' + JSON.stringify(obj.nummer) + ',';

@@ -43,6 +43,9 @@ export class VerkehrsspracheKatalogEintrag extends CoreTypeData {
 		result.text = obj.text;
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
 		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		if (obj.auslaufdauer === undefined)
+			throw new Error('invalid json format, missing attribute auslaufdauer');
+		result.auslaufdauer = obj.auslaufdauer;
 		if (obj.iso3 === undefined)
 			throw new Error('invalid json format, missing attribute iso3');
 		result.iso3 = obj.iso3;
@@ -57,6 +60,7 @@ export class VerkehrsspracheKatalogEintrag extends CoreTypeData {
 		result += '"text" : ' + JSON.stringify(obj.text) + ',';
 		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"auslaufdauer" : ' + obj.auslaufdauer.toString() + ',';
 		result += '"iso3" : ' + JSON.stringify(obj.iso3) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -82,6 +86,9 @@ export class VerkehrsspracheKatalogEintrag extends CoreTypeData {
 		}
 		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
+		}
+		if (obj.auslaufdauer !== undefined) {
+			result += '"auslaufdauer" : ' + obj.auslaufdauer.toString() + ',';
 		}
 		if (obj.iso3 !== undefined) {
 			result += '"iso3" : ' + JSON.stringify(obj.iso3) + ',';

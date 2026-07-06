@@ -44,9 +44,13 @@ public class CoreTypeData {
 	@Schema(description = "gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
 	public Integer gueltigVon = null;
 
-	/** Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
+	/** Gibt an, bis zu welchem Schuljahr der Eintrag in der Eingangsstufe gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
+	@Schema(description = "gibt an, bis zu welchem Schuljahr der Eintrag in der Eingangsstufe gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
 	public Integer gueltigBis = null;
+
+	/** Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
+	@Schema(description = "gibt an, bis um wieviel Jahre gueltigBis maximal verlängert wird.", example = "0")
+	public int auslaufdauer = 0;
 
 	/**
 	 * Leerer Standardkonstruktor.

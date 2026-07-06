@@ -1,5 +1,5 @@
 {
-	"version": 4,
+	"version": 5,
 	"daten": [ {
 		"bezeichner": "AB3",
 		"idStatistik": "1",
@@ -10,6 +10,7 @@
 			"text": "3. Abiturfach",
 			"gueltigVon": null,
 			"gueltigBis": 2022,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -47,6 +48,7 @@
 			"text": "3. Abiturfach",
 			"gueltigVon": 2023,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -82,6 +84,7 @@
 			"text": "4. Abiturfach",
 			"gueltigVon": null,
 			"gueltigBis": 2022,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -119,6 +122,7 @@
 			"text": "4. Abiturfach",
 			"gueltigVon": 2023,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -154,6 +158,7 @@
 			"text": "Arbeitsgemeinschaft gemäß APO SI",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": "GY"
@@ -207,6 +212,7 @@
 			"text": "Arbeitsgemeinschaft im Ganztagsbereich",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": null
@@ -263,6 +269,7 @@
 			"text": "Stütz- und Angleichungskurs / Förderunterricht",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "WB",
 				"gliederung": null
@@ -283,6 +290,7 @@
 			"text": "Angleichungskurs",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -306,6 +314,7 @@
 			"text": "Arbeits- bzw. Übungsstunde ",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": null
@@ -362,6 +371,7 @@
 			"text": "Begegnung mit Sprachen in der Primarstufe",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "FW",
 				"gliederung": null
@@ -388,6 +398,7 @@
 			"text": "Unterricht im Rahmen von KAOA einschl. Schule trifft Arbeitswelt",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": null
@@ -441,6 +452,7 @@
 			"text": "Erweiterungsebene/-kurs",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": null
@@ -473,6 +485,7 @@
 			"text": "Erweiterungskurs – Bildungsgang Hauptschule",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GM",
 				"gliederung": "H"
@@ -511,6 +524,7 @@
 			"text": "Erweitertes Bildungsangebot",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GM",
 				"gliederung": "H"
@@ -543,6 +557,7 @@
 			"text": "Einführung in die 2. Fremdsprache oder Ersatzfach",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "WB",
 				"gliederung": null
@@ -563,6 +578,7 @@
 			"text": "Ersatzfach für Sport als 4. Abiturfach",
 			"gueltigVon": null,
 			"gueltigBis": 2022,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -600,6 +616,7 @@
 			"text": "Ersatzfach für Sport als 4. Abiturfach",
 			"gueltigVon": 2023,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -635,6 +652,7 @@
 			"text": "Ergänzungsstunden",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": null
@@ -682,6 +700,7 @@
 			"text": "Ergänzungsstunden mit Benotung",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": null
@@ -705,6 +724,7 @@
 			"text": "Ergänzungs- oder Vertiefungskurs",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -728,6 +748,7 @@
 			"text": "Erweiterungsunterricht Wahlbereich - berufsbezogen, fachübergreifend",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -751,6 +772,7 @@
 			"text": "Erweiterungsunterricht Wahlbereich - fach-, jedoch nicht abschlussbezogen",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -774,6 +796,7 @@
 			"text": "Erweiterungsunterricht Wahlbereich - fach- und abschlussbezogen",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -797,6 +820,7 @@
 			"text": "Wahlplflichtunterricht: Einzelfach im math.-naturw., techn., gesellschaftsw., künstlerischen Schwerpunkt",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": "GY"
@@ -829,6 +853,7 @@
 			"text": "freiwillige Arbeitsgemeinschaft",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "WB",
 				"gliederung": null
@@ -849,6 +874,7 @@
 			"text": "Fachbezogener Förderunterricht",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": null
@@ -881,6 +907,7 @@
 			"text": "Förderangebot Ganztagsschule",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": null
@@ -937,6 +964,7 @@
 			"text": "Förderung neu zugewanderter Schüler in Deutschfördergruppen (teilweise äußere und innere Differenzierung)",
 			"gueltigVon": null,
 			"gueltigBis": 2025,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": null
@@ -993,6 +1021,7 @@
 			"text": "Wahlpflichtbereich II (Kl. 09 und 10, bei G8: 08 und 09): 3. Fremdsprache",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": "GY"
@@ -1025,6 +1054,7 @@
 			"text": "Förderung neu zugewanderter Schüler in Deutschförderklassen (vollständige äußere Differenzierung)",
 			"gueltigVon": null,
 			"gueltigBis": 2025,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": null
@@ -1081,6 +1111,7 @@
 			"text": "Förderunterricht",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "KS",
 				"gliederung": null
@@ -1104,6 +1135,7 @@
 			"text": "Stützunterricht Wahlbereich - Förderunterricht für ausländische u. ausgesiedelte Schüler",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -1127,6 +1159,7 @@
 			"text": "Fachunabhängiger Förderunterricht",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": null
@@ -1159,6 +1192,7 @@
 			"text": "Förderunterricht im Klassenverband",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "G",
 				"gliederung": null
@@ -1179,6 +1213,7 @@
 			"text": "Förderunterricht für Teile von Klassen",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "G",
 				"gliederung": null
@@ -1199,6 +1234,7 @@
 			"text": "fächerübergreifender Kurs",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "WB",
 				"gliederung": null
@@ -1219,6 +1255,7 @@
 			"text": "Grundebene/-kurs",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": null
@@ -1251,6 +1288,7 @@
 			"text": "Grundkurs – Bildungsgang Hauptschule",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GM",
 				"gliederung": "H"
@@ -1289,6 +1327,7 @@
 			"text": "Grundkurs mündlich",
 			"gueltigVon": null,
 			"gueltigBis": 2022,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -1326,6 +1365,7 @@
 			"text": "Grundkurs mündlich",
 			"gueltigVon": 2023,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -1361,6 +1401,7 @@
 			"text": "Grundkurs schriftlich",
 			"gueltigVon": null,
 			"gueltigBis": 2022,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -1398,6 +1439,7 @@
 			"text": "Grundkurs schriftlich",
 			"gueltigVon": 2023,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -1433,6 +1475,7 @@
 			"text": "Hausunterricht",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": null
@@ -1489,6 +1532,7 @@
 			"text": "Zusätzlicher Förderunterricht im Rahmen der Initiative Komm mit",
 			"gueltigVon": null,
 			"gueltigBis": 2021,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": null
@@ -1536,6 +1580,7 @@
 			"text": "Leistungskurs I",
 			"gueltigVon": null,
 			"gueltigBis": 2022,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -1573,6 +1618,7 @@
 			"text": "Leistungskurs I",
 			"gueltigVon": 2023,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -1608,6 +1654,7 @@
 			"text": "Leistungskurs II",
 			"gueltigVon": null,
 			"gueltigBis": 2022,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -1645,6 +1692,7 @@
 			"text": "Leistungskurs II",
 			"gueltigVon": 2023,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -1680,6 +1728,7 @@
 			"text": "Schülerinnen und Schüler mit besonderen Schwierigkeiten im Erlernen des Lesens und Rechtschreibens (LRS)",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": null
@@ -1736,6 +1785,7 @@
 			"text": "Unterricht in der Herkunftssprache",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": null
@@ -1792,6 +1842,7 @@
 			"text": "Förderung in der deutschen Sprache außerhalb von Sprachfördermaßnahmen",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": null
@@ -1848,6 +1899,7 @@
 			"text": "Neigungs- und Projektgruppe",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -1871,6 +1923,7 @@
 			"text": "Projektkurs",
 			"gueltigVon": null,
 			"gueltigBis": 2022,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -1905,6 +1958,7 @@
 			"text": "Projektkurs",
 			"gueltigVon": 2023,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -1937,6 +1991,7 @@
 			"text": "Profilklasse",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": null
@@ -1963,6 +2018,7 @@
 			"text": "Unterricht im Klassenverband",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -2025,6 +2081,7 @@
 			"text": "Pflichtunterricht für Teile von Klassen",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "FW",
 				"gliederung": null
@@ -2093,6 +2150,7 @@
 			"text": "Stütz- oder Förderkurs",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -2116,6 +2174,7 @@
 			"text": "Selbstlernphase",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -2139,6 +2198,7 @@
 			"text": "Wahlpflichtunterricht: Schwerpunktübergreifende Angebote",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": "GY"
@@ -2168,6 +2228,7 @@
 			"text": "Sportförderunterricht",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": null
@@ -2224,6 +2285,7 @@
 			"text": "sonderpädagogische Förderung",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "KS",
 				"gliederung": null
@@ -2247,6 +2309,7 @@
 			"text": "Stützunterricht Wahlbereich - fachbezogen",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -2270,6 +2333,7 @@
 			"text": "Stützunterricht Wahlbereich - fachübergreifend",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -2293,6 +2357,7 @@
 			"text": "Unterricht im Rahmen des Schulversuchs Talentschule",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": null
@@ -2328,6 +2393,7 @@
 			"text": "Unterricht in der Herkunftssprache anstelle einer Pflichtfremdsprache oder eines Wahlpflichtfaches",
 			"gueltigVon": null,
 			"gueltigBis": 2022,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": null
@@ -2381,6 +2447,7 @@
 			"text": "Förderunterricht",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "H",
 				"gliederung": null
@@ -2410,6 +2477,7 @@
 			"text": "Vertiefungsfach",
 			"gueltigVon": null,
 			"gueltigBis": 2022,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -2447,6 +2515,7 @@
 			"text": "Vertiefungsfach",
 			"gueltigVon": 2023,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -2482,6 +2551,7 @@
 			"text": "Vertiefungsunterricht Wahlbereich - berufsfeld- / berufsbezogener fachpraxisorientierter Kurs",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -2505,6 +2575,7 @@
 			"text": "Wahlpflichtbereich",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "WB",
 				"gliederung": null
@@ -2525,6 +2596,7 @@
 			"text": "Wahlpflichtbereich: Fremdsprachlich",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": "GY"
@@ -2575,6 +2647,7 @@
 			"text": "Wahlpflichtbereich: Musisch-künstlerisch",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GM",
 				"gliederung": "R"
@@ -2613,6 +2686,7 @@
 			"text": "Wahlpflichtbereich: Naturwissenschaftlich - technisch",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GM",
 				"gliederung": "R"
@@ -2651,6 +2725,7 @@
 			"text": "Wahlpflichtbereich: Sozialwissenschaftlich",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": "GY"
@@ -2692,6 +2767,7 @@
 			"text": "Wahlpflichtbereich: Wirtschaftlich",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GM",
 				"gliederung": "R"
@@ -2730,6 +2806,7 @@
 			"text": "Wahlpflichtbereich: Sportlich",
 			"gueltigVon": 2026,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GM",
 				"gliederung": "R"
@@ -2768,6 +2845,7 @@
 			"text": "Wahlpflichtfach",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "H",
 				"gliederung": null
@@ -2803,6 +2881,7 @@
 			"text": "Wahlpflichtbereich I",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": null
@@ -2835,6 +2914,7 @@
 			"text": "Wahlpflichtbereich I: 2. Fremdsprache",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GY",
 				"gliederung": null
@@ -2855,6 +2935,7 @@
 			"text": "Wahlpflichtbereich II - Fächerkombination im math.-naturwiss, gesellschaftswiss. oder künstlerischen Schwerpunkt",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GM",
 				"gliederung": "GY"
@@ -2887,6 +2968,7 @@
 			"text": "Wahlpflichtunterricht",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GM",
 				"gliederung": "H"
@@ -2925,6 +3007,7 @@
 			"text": "Zusatzkurs",
 			"gueltigVon": null,
 			"gueltigBis": 2022,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -2959,6 +3042,7 @@
 			"text": "Zusatzkurs",
 			"gueltigVon": 2023,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "BK",
 				"gliederung": null
@@ -2991,6 +3075,7 @@
 			"text": "zusätzliche Unterrichtsveranstaltung",
 			"gueltigVon": null,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": null
@@ -3048,6 +3133,7 @@
 			"text": "Förderung neu zugewanderter Schülerinnen und Schüler in Deutschfördergruppen",
 			"gueltigVon": 2026,
 			"gueltigBis": null,
+			"auslaufdauer": 0,
 			"zulaessig": [ {
 				"schulform": "GE",
 				"gliederung": null

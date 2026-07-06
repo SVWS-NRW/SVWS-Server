@@ -1,5 +1,5 @@
 {
-	"version": 2,
+	"version": 3,
 	"daten": [ {
 		"bezeichner": "HALBJAHR_LETZTER_UNTERRICHTSTAG",
 		"idStatistik": "1",
@@ -12,7 +12,8 @@
 			"von": "2010-01-29",
 			"bis": "2010-01-29",
 			"gueltigVon": 2009,
-			"gueltigBis": 2009
+			"gueltigBis": 2009,
+			"auslaufdauer": 0
 		}, {
 			"id": 12010,
 			"kuerzel": "Ende 1. Halbjahr",
@@ -22,7 +23,8 @@
 			"von": "2011-02-11",
 			"bis": "2011-02-11",
 			"gueltigVon": 2010,
-			"gueltigBis": 2010
+			"gueltigBis": 2010,
+			"auslaufdauer": 0
 		}, {
 			"id": 12011,
 			"kuerzel": "Ende 1. Halbjahr",
@@ -32,7 +34,8 @@
 			"von": "2012-02-10",
 			"bis": "2012-02-10",
 			"gueltigVon": 2011,
-			"gueltigBis": 2011
+			"gueltigBis": 2011,
+			"auslaufdauer": 0
 		}, {
 			"id": 12012,
 			"kuerzel": "Ende 1. Halbjahr",
@@ -42,7 +45,8 @@
 			"von": "2013-02-01",
 			"bis": "2013-02-01",
 			"gueltigVon": 2012,
-			"gueltigBis": 2012
+			"gueltigBis": 2012,
+			"auslaufdauer": 0
 		}, {
 			"id": 12013,
 			"kuerzel": "Ende 1. Halbjahr",
@@ -52,7 +56,8 @@
 			"von": "2014-02-07",
 			"bis": "2014-02-07",
 			"gueltigVon": 2013,
-			"gueltigBis": 2013
+			"gueltigBis": 2013,
+			"auslaufdauer": 0
 		}, {
 			"id": 12014,
 			"kuerzel": "Ende 1. Halbjahr",
@@ -62,7 +67,8 @@
 			"von": "2015-01-30",
 			"bis": "2015-01-30",
 			"gueltigVon": 2014,
-			"gueltigBis": 2014
+			"gueltigBis": 2014,
+			"auslaufdauer": 0
 		}, {
 			"id": 12015,
 			"kuerzel": "Ende 1. Halbjahr",
@@ -72,7 +78,8 @@
 			"von": "2016-01-29",
 			"bis": "2016-01-29",
 			"gueltigVon": 2015,
-			"gueltigBis": 2015
+			"gueltigBis": 2015,
+			"auslaufdauer": 0
 		}, {
 			"id": 12016,
 			"kuerzel": "Ende 1. Halbjahr",
@@ -82,7 +89,8 @@
 			"von": "2017-02-03",
 			"bis": "2017-02-03",
 			"gueltigVon": 2016,
-			"gueltigBis": 2016
+			"gueltigBis": 2016,
+			"auslaufdauer": 0
 		}, {
 			"id": 12017,
 			"kuerzel": "Ende 1. Halbjahr",
@@ -92,7 +100,8 @@
 			"von": "2018-02-02",
 			"bis": "2018-02-02",
 			"gueltigVon": 2017,
-			"gueltigBis": 2017
+			"gueltigBis": 2017,
+			"auslaufdauer": 0
 		}, {
 			"id": 12018,
 			"kuerzel": "Ende 1. Halbjahr",
@@ -102,7 +111,8 @@
 			"von": "2019-02-08",
 			"bis": "2019-02-08",
 			"gueltigVon": 2018,
-			"gueltigBis": 2018
+			"gueltigBis": 2018,
+			"auslaufdauer": 0
 		}, {
 			"id": 12019,
 			"kuerzel": "Ende 1. Halbjahr",
@@ -112,7 +122,8 @@
 			"von": "2020-01-31",
 			"bis": "2020-01-31",
 			"gueltigVon": 2019,
-			"gueltigBis": 2019
+			"gueltigBis": 2019,
+			"auslaufdauer": 0
 		}, {
 			"id": 12020,
 			"kuerzel": "Ende 1. Halbjahr",
@@ -122,7 +133,8 @@
 			"von": "2021-01-29",
 			"bis": "2021-01-29",
 			"gueltigVon": 2020,
-			"gueltigBis": 2020
+			"gueltigBis": 2020,
+			"auslaufdauer": 0
 		}, {
 			"id": 12021,
 			"kuerzel": "Ende 1. Halbjahr",
@@ -132,7 +144,8 @@
 			"von": "2022-01-28",
 			"bis": "2022-01-28",
 			"gueltigVon": 2021,
-			"gueltigBis": 2021
+			"gueltigBis": 2021,
+			"auslaufdauer": 0
 		}, {
 			"id": 12022,
 			"kuerzel": "Ende 1. Halbjahr",
@@ -142,7 +155,8 @@
 			"von": "2023-01-20",
 			"bis": "2023-01-20",
 			"gueltigVon": 2022,
-			"gueltigBis": 2022
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
 		}, {
 			"id": 12023,
 			"kuerzel": "Ende 1. Halbjahr",
@@ -152,7 +166,8 @@
 			"von": "2024-01-26",
 			"bis": "2024-01-26",
 			"gueltigVon": 2023,
-			"gueltigBis": 2023
+			"gueltigBis": 2023,
+			"auslaufdauer": 0
 		}, {
 			"id": 12024,
 			"kuerzel": "Ende 1. Halbjahr",
@@ -162,7 +177,8 @@
 			"von": "2025-02-07",
 			"bis": "2025-02-07",
 			"gueltigVon": 2024,
-			"gueltigBis": 2024
+			"gueltigBis": 2024,
+			"auslaufdauer": 0
 		}, {
 			"id": 12025,
 			"kuerzel": "Ende 1. Halbjahr",
@@ -172,7 +188,8 @@
 			"von": "2026-02-06",
 			"bis": "2026-02-06",
 			"gueltigVon": 2025,
-			"gueltigBis": 2025
+			"gueltigBis": 2025,
+			"auslaufdauer": 0
 		}, {
 			"id": 12026,
 			"kuerzel": "Ende 1. Halbjahr",
@@ -182,7 +199,8 @@
 			"von": "2027-02-12",
 			"bis": "2027-02-12",
 			"gueltigVon": 2026,
-			"gueltigBis": 2026
+			"gueltigBis": 2026,
+			"auslaufdauer": 0
 		}, {
 			"id": 12027,
 			"kuerzel": "Ende 1. Halbjahr",
@@ -192,7 +210,8 @@
 			"von": "2028-02-04",
 			"bis": "2028-02-04",
 			"gueltigVon": 2027,
-			"gueltigBis": 2027
+			"gueltigBis": 2027,
+			"auslaufdauer": 0
 		}, {
 			"id": 12028,
 			"kuerzel": "Ende 1. Halbjahr",
@@ -202,7 +221,8 @@
 			"von": "2029-01-26",
 			"bis": "2029-01-26",
 			"gueltigVon": 2028,
-			"gueltigBis": 2028
+			"gueltigBis": 2028,
+			"auslaufdauer": 0
 		}, {
 			"id": 12029,
 			"kuerzel": "Ende 1. Halbjahr",
@@ -212,7 +232,8 @@
 			"von": "2030-01-25",
 			"bis": "2030-01-25",
 			"gueltigVon": 2029,
-			"gueltigBis": 2029
+			"gueltigBis": 2029,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "GOST_HALBJAHR_LETZTER_UNTERRICHTSTAG_Q2",
@@ -226,7 +247,8 @@
 			"von": "2023-12-20",
 			"bis": "2023-12-20",
 			"gueltigVon": 2023,
-			"gueltigBis": 2023
+			"gueltigBis": 2023,
+			"auslaufdauer": 0
 		}, {
 			"id": 22024,
 			"kuerzel": "Q2 Ende 1. Halbjahr",
@@ -236,7 +258,8 @@
 			"von": "2024-12-20",
 			"bis": "2024-12-20",
 			"gueltigVon": 2024,
-			"gueltigBis": 2024
+			"gueltigBis": 2024,
+			"auslaufdauer": 0
 		}, {
 			"id": 22025,
 			"kuerzel": "Q2 Ende 1. Halbjahr",
@@ -246,7 +269,8 @@
 			"von": "2025-12-19",
 			"bis": "2025-12-19",
 			"gueltigVon": 2025,
-			"gueltigBis": 2025
+			"gueltigBis": 2025,
+			"auslaufdauer": 0
 		}, {
 			"id": 22026,
 			"kuerzel": "Q2 Ende 1. Halbjahr",
@@ -256,7 +280,8 @@
 			"von": "2026-12-22",
 			"bis": "2026-12-22",
 			"gueltigVon": 2026,
-			"gueltigBis": 2026
+			"gueltigBis": 2026,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "SCHULJAHR_LETZTER_UNTERRICHTSTAG",
@@ -270,7 +295,8 @@
 			"von": "2010-07-12",
 			"bis": "2010-07-12",
 			"gueltigVon": 2009,
-			"gueltigBis": 2009
+			"gueltigBis": 2009,
+			"auslaufdauer": 0
 		}, {
 			"id": 32010,
 			"kuerzel": "Letzter Unterrichtstag",
@@ -280,7 +306,8 @@
 			"von": "2011-07-22",
 			"bis": "2011-07-22",
 			"gueltigVon": 2010,
-			"gueltigBis": 2010
+			"gueltigBis": 2010,
+			"auslaufdauer": 0
 		}, {
 			"id": 32011,
 			"kuerzel": "Letzter Unterrichtstag",
@@ -290,7 +317,8 @@
 			"von": "2012-07-06",
 			"bis": "2012-07-06",
 			"gueltigVon": 2011,
-			"gueltigBis": 2011
+			"gueltigBis": 2011,
+			"auslaufdauer": 0
 		}, {
 			"id": 32012,
 			"kuerzel": "Letzter Unterrichtstag",
@@ -300,7 +328,8 @@
 			"von": "2013-07-19",
 			"bis": "2013-07-19",
 			"gueltigVon": 2012,
-			"gueltigBis": 2012
+			"gueltigBis": 2012,
+			"auslaufdauer": 0
 		}, {
 			"id": 32013,
 			"kuerzel": "Letzter Unterrichtstag",
@@ -310,7 +339,8 @@
 			"von": "2014-07-04",
 			"bis": "2014-07-04",
 			"gueltigVon": 2013,
-			"gueltigBis": 2013
+			"gueltigBis": 2013,
+			"auslaufdauer": 0
 		}, {
 			"id": 32014,
 			"kuerzel": "Letzter Unterrichtstag",
@@ -320,7 +350,8 @@
 			"von": "2015-06-26",
 			"bis": "2015-06-26",
 			"gueltigVon": 2014,
-			"gueltigBis": 2014
+			"gueltigBis": 2014,
+			"auslaufdauer": 0
 		}, {
 			"id": 32015,
 			"kuerzel": "Letzter Unterrichtstag",
@@ -330,7 +361,8 @@
 			"von": "2016-07-08",
 			"bis": "2016-07-08",
 			"gueltigVon": 2015,
-			"gueltigBis": 2015
+			"gueltigBis": 2015,
+			"auslaufdauer": 0
 		}, {
 			"id": 32016,
 			"kuerzel": "Letzter Unterrichtstag",
@@ -340,7 +372,8 @@
 			"von": "2017-07-14",
 			"bis": "2017-07-14",
 			"gueltigVon": 2016,
-			"gueltigBis": 2016
+			"gueltigBis": 2016,
+			"auslaufdauer": 0
 		}, {
 			"id": 32017,
 			"kuerzel": "Letzter Unterrichtstag",
@@ -350,7 +383,8 @@
 			"von": "2018-07-13",
 			"bis": "2018-07-13",
 			"gueltigVon": 2017,
-			"gueltigBis": 2017
+			"gueltigBis": 2017,
+			"auslaufdauer": 0
 		}, {
 			"id": 32018,
 			"kuerzel": "Letzter Unterrichtstag",
@@ -360,7 +394,8 @@
 			"von": "2019-07-12",
 			"bis": "2019-07-12",
 			"gueltigVon": 2018,
-			"gueltigBis": 2018
+			"gueltigBis": 2018,
+			"auslaufdauer": 0
 		}, {
 			"id": 32019,
 			"kuerzel": "Letzter Unterrichtstag",
@@ -370,7 +405,8 @@
 			"von": "2020-06-26",
 			"bis": "2020-06-26",
 			"gueltigVon": 2019,
-			"gueltigBis": 2019
+			"gueltigBis": 2019,
+			"auslaufdauer": 0
 		}, {
 			"id": 32020,
 			"kuerzel": "Letzter Unterrichtstag",
@@ -380,7 +416,8 @@
 			"von": "2021-07-02",
 			"bis": "2021-07-02",
 			"gueltigVon": 2020,
-			"gueltigBis": 2020
+			"gueltigBis": 2020,
+			"auslaufdauer": 0
 		}, {
 			"id": 32021,
 			"kuerzel": "Letzter Unterrichtstag",
@@ -390,7 +427,8 @@
 			"von": "2022-06-24",
 			"bis": "2022-06-24",
 			"gueltigVon": 2021,
-			"gueltigBis": 2021
+			"gueltigBis": 2021,
+			"auslaufdauer": 0
 		}, {
 			"id": 32022,
 			"kuerzel": "Letzter Unterrichtstag",
@@ -400,7 +438,8 @@
 			"von": "2023-06-21",
 			"bis": "2023-06-21",
 			"gueltigVon": 2022,
-			"gueltigBis": 2022
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
 		}, {
 			"id": 32023,
 			"kuerzel": "Letzter Unterrichtstag",
@@ -410,7 +449,8 @@
 			"von": "2024-07-05",
 			"bis": "2024-07-05",
 			"gueltigVon": 2023,
-			"gueltigBis": 2023
+			"gueltigBis": 2023,
+			"auslaufdauer": 0
 		}, {
 			"id": 32024,
 			"kuerzel": "Letzter Unterrichtstag",
@@ -420,7 +460,8 @@
 			"von": "2025-07-11",
 			"bis": "2025-07-11",
 			"gueltigVon": 2024,
-			"gueltigBis": 2024
+			"gueltigBis": 2024,
+			"auslaufdauer": 0
 		}, {
 			"id": 32025,
 			"kuerzel": "Letzter Unterrichtstag",
@@ -430,7 +471,8 @@
 			"von": "2026-07-17",
 			"bis": "2026-07-17",
 			"gueltigVon": 2025,
-			"gueltigBis": 2025
+			"gueltigBis": 2025,
+			"auslaufdauer": 0
 		}, {
 			"id": 32026,
 			"kuerzel": "Letzter Unterrichtstag",
@@ -440,7 +482,8 @@
 			"von": "2027-07-16",
 			"bis": "2027-07-16",
 			"gueltigVon": 2026,
-			"gueltigBis": 2026
+			"gueltigBis": 2026,
+			"auslaufdauer": 0
 		}, {
 			"id": 32027,
 			"kuerzel": "Letzter Unterrichtstag",
@@ -450,7 +493,8 @@
 			"von": "2028-07-07",
 			"bis": "2028-07-07",
 			"gueltigVon": 2027,
-			"gueltigBis": 2027
+			"gueltigBis": 2027,
+			"auslaufdauer": 0
 		}, {
 			"id": 32028,
 			"kuerzel": "Letzter Unterrichtstag",
@@ -460,7 +504,8 @@
 			"von": "2029-06-29",
 			"bis": "2029-06-29",
 			"gueltigVon": 2028,
-			"gueltigBis": 2028
+			"gueltigBis": 2028,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "GOST_SCHULJAHR_LETZTER_UNTERRICHTSTAG_Q2",
@@ -474,7 +519,8 @@
 			"von": "2024-04-15",
 			"bis": "2024-04-15",
 			"gueltigVon": 2023,
-			"gueltigBis": 2023
+			"gueltigBis": 2023,
+			"auslaufdauer": 0
 		}, {
 			"id": 42024,
 			"kuerzel": "Q2 Letzter Unterrichtstag",
@@ -484,7 +530,8 @@
 			"von": "2025-04-11",
 			"bis": "2025-04-11",
 			"gueltigVon": 2024,
-			"gueltigBis": 2024
+			"gueltigBis": 2024,
+			"auslaufdauer": 0
 		}, {
 			"id": 42025,
 			"kuerzel": "Q2 Letzter Unterrichtstag",
@@ -494,7 +541,8 @@
 			"von": "2026-03-27",
 			"bis": "2026-03-27",
 			"gueltigVon": 2025,
-			"gueltigBis": 2025
+			"gueltigBis": 2025,
+			"auslaufdauer": 0
 		}, {
 			"id": 42026,
 			"kuerzel": "Q2 Letzter Unterrichtstag",
@@ -504,7 +552,8 @@
 			"von": "2027-03-19",
 			"bis": "2027-03-19",
 			"gueltigVon": 2026,
-			"gueltigBis": 2026
+			"gueltigBis": 2026,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

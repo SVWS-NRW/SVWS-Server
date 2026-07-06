@@ -1,5 +1,5 @@
 {
-	"version": 2,
+	"version": 3,
 	"daten": [ {
 		"bezeichner": "A1M",
 		"idStatistik": "14",
@@ -9,7 +9,8 @@
 			"kuerzel": "Pre-A1",
 			"text": "Pre-A1",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "A1",
@@ -20,7 +21,8 @@
 			"kuerzel": "A1",
 			"text": "A1",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "A1P",
@@ -31,7 +33,8 @@
 			"kuerzel": "A1+",
 			"text": "A1+",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "A1A2",
@@ -42,7 +45,8 @@
 			"kuerzel": "A1/A2",
 			"text": "A1/A2",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "A2",
@@ -53,7 +57,8 @@
 			"kuerzel": "A2",
 			"text": "A2",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "A2P",
@@ -64,7 +69,8 @@
 			"kuerzel": "A2+",
 			"text": "A2+",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "A2B1",
@@ -75,7 +81,8 @@
 			"kuerzel": "A2/B1",
 			"text": "A2/B1",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "B1",
@@ -86,7 +93,8 @@
 			"kuerzel": "B1",
 			"text": "B1",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "B1P",
@@ -97,7 +105,8 @@
 			"kuerzel": "B1+",
 			"text": "B1+",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "B1B2",
@@ -108,7 +117,8 @@
 			"kuerzel": "B1/B2",
 			"text": "B1/B2",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "B2",
@@ -119,7 +129,8 @@
 			"kuerzel": "B2",
 			"text": "B2",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "B2C1",
@@ -130,7 +141,8 @@
 			"kuerzel": "B2/C1",
 			"text": "B2/C1",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "C1",
@@ -141,7 +153,8 @@
 			"kuerzel": "C1",
 			"text": "C1",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "C2",
@@ -152,7 +165,8 @@
 			"kuerzel": "C2",
 			"text": "C2",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

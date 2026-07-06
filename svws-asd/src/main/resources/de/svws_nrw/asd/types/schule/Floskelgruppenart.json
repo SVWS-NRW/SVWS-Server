@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "ALLG",
 		"idStatistik": "0",
@@ -9,7 +9,8 @@
 			"text": "Allgemeine Floskeln",
 			"schluessel": "ALLG",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "ASV",
@@ -20,7 +21,8 @@
 			"text": "Floskeln für Arbeits- und Sozialverhalten",
 			"schluessel": "ASV",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "AUE",
@@ -31,7 +33,8 @@
 			"text": "Flosken für außerunterrichtliches Engagement",
 			"schluessel": "AUE",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FACH",
@@ -42,7 +45,8 @@
 			"text": "Fachbezogene Floskeln",
 			"schluessel": "FACH",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FSP",
@@ -53,7 +57,8 @@
 			"text": "Bemerkungen zum Förderschwerpunkt",
 			"schluessel": "FSP",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "FOERD",
@@ -64,7 +69,8 @@
 			"text": "Flosken für Fördermaßnahmen",
 			"schluessel": "FOERD",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "VERM",
@@ -75,7 +81,8 @@
 			"text": "Floskeln für Vermerke",
 			"schluessel": "VERM",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	},{
 		"bezeichner": "VERS",
@@ -86,7 +93,8 @@
 			"text": "Bemerkung zur Versetzung",
 			"schluessel": "VERS",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	},{
 		"bezeichner": "ZB",
@@ -97,7 +105,8 @@
 			"text": "Floskeln für Zeugnisbemerkungen",
 			"schluessel": "ZB",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	},{
 		"bezeichner": "LELS",
@@ -108,7 +117,8 @@
 			"text": "Floskeln für allgemeine Lernentwicklung und Leistungsstand",
 			"schluessel": "LELS",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	},{
 		"bezeichner": "UEG45",
@@ -119,7 +129,8 @@
 			"text": "Floskeln für die Übergangsempfehlung 4 nach 5",
 			"schluessel": "ÜG45",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]
 }

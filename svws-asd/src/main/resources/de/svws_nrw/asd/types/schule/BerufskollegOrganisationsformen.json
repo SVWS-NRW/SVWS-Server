@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "TEILZEIT",
 		"idStatistik": "1",
@@ -10,7 +10,8 @@
 			"text": "Teilzeitunterricht (außerhalb der TZ-Berufsschule)",
 			"schulformen": [ "BK", "SB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "TEILZEIT_NORMALKLASSE",
@@ -22,7 +23,8 @@
 			"text": "Teilzeitunterricht ohne Blockunterricht (Normalklasse) TZ-Berufsschule",
 			"schulformen": [ "BK", "SB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "TEILZEIT_BEZIRKSFACHKLASSE",
@@ -34,7 +36,8 @@
 			"text": "Teilzeitunterricht ohne Blockunterricht (Bezirksfachklasse) TZ-Berufsschule",
 			"schulformen": [ "BK", "SB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "TEILZEIT_LANDESFACHKLASSE",
@@ -46,7 +49,8 @@
 			"text": "Teilzeitunterricht ohne Blockunterricht (Landesfachklasse) TZ-Berufsschule",
 			"schulformen": [ "BK", "SB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "VOLLZEIT",
@@ -58,7 +62,8 @@
 			"text": "Vollzeitunterricht",
 			"schulformen": [ "BK", "SB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "DUAL_BLOCK_IM_UNTERRICHT",
@@ -70,7 +75,8 @@
 			"text": "Blockunterricht z.Zt. im Unterricht (Normalklasse) im dualen System",
 			"schulformen": [ "BK", "SB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "DUAL_BLOCK_NICHT_IM_UNTERRICHT",
@@ -82,7 +88,8 @@
 			"text": "Blockunterricht z.Zt. nicht im Unterricht (Normalklasse) im dualen System",
 			"schulformen": [ "BK", "SB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "DUAL_BLOCK_TEILZEIT_IM_UNTERRICHT",
@@ -94,7 +101,8 @@
 			"text": "Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Normalklasse) im dualen System",
 			"schulformen": [ "BK", "SB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "DUAL_GANZTAG",
@@ -106,7 +114,8 @@
 			"text": "Ganztagsunterricht (Normalklasse) im dualen System",
 			"schulformen": [ "BK", "SB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "DUAL_BLOCK_IM_UNTERRICHT_BEZIRKSFACHKLASSE",
@@ -118,7 +127,8 @@
 			"text": "Blockunterricht z.Zt. im Unterricht (Bezirksfachklasse) im dualen System",
 			"schulformen": [ "BK", "SB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "DUAL_BLOCK_NICHT_IM_UNTERRICHT_BEZIRKSFACHKLASSE",
@@ -130,7 +140,8 @@
 			"text": "Blockunterricht z.Zt. nicht im Unterricht (Bezirksfachklasse) im dualen System",
 			"schulformen": [ "BK", "SB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "DUAL_BLOCK_TEILZEIT_IM_UNTERRICHT_BEZIRKSFACHKLASSE",
@@ -142,7 +153,8 @@
 			"text": "Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Bezirksfachklasse) im dualen System",
 			"schulformen": [ "BK", "SB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "DUAL_GANZTAG_BEZIRKSFACHKLASSE",
@@ -154,7 +166,8 @@
 			"text": "Ganztagsunterricht (Bezirksfachklasse) im dualen System",
 			"schulformen": [ "BK", "SB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 	"bezeichner": "DUAL_BLOCK_IM_UNTERRICHT_LANDESFACHKLASSE",
@@ -166,7 +179,8 @@
 			"text": "Blockunterricht z.Zt. im Unterricht (Landesfachklasse) im dualen System",
 			"schulformen": [ "BK", "SB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "DUAL_BLOCK_NICHT_IM_UNTERRICHT_LANDESFACHKLASSE",
@@ -178,7 +192,8 @@
 			"text": "Blockunterricht z.Zt. nicht im Unterricht (Landesfachklasse) im dualen System",
 			"schulformen": [ "BK", "SB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "DUAL_BLOCK_TEILZEIT_IM_UNTERRICHT_LANDESFACHKLASSE",
@@ -190,7 +205,8 @@
 			"text": "Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Landesfachklasse) im dualen System",
 			"schulformen": [ "BK", "SB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	}, {
 		"bezeichner": "DUAL_GANZTAG_LANDESFACHKLASSE",
@@ -202,7 +218,8 @@
 			"text": "Ganztagsunterricht (Landesfachklasse) im dualen System",
 			"schulformen": [ "BK", "SB" ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": null,
+			"auslaufdauer": 0
 		} ]
 	} ]	
 }

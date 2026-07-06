@@ -1,61 +1,52 @@
 {
-    "version": 1,
-    "daten": [
-        {
-            "bezeichner": "OHNE",
-            "idStatistik": "1",
-            "historie": [
-                {
-                    "id": 1,
-                    "schluessel": "0",
-                    "kuerzel": "0",
-                    "text": "Ohne",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "6_MONATE",
-            "idStatistik": "2",
-            "historie": [
-                {
-                    "id": 2,
-                    "schluessel": "1",
-                    "kuerzel": "1",
-                    "text": "6 Monate",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "12_MONATE",
-            "idStatistik": "3",
-            "historie": [
-                {
-                    "id": 3,
-                    "schluessel": "2",
-                    "kuerzel": "2",
-                    "text": "12 Monate",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        },
-        {
-            "bezeichner": "18_MONATE",
-            "idStatistik": "4",
-            "historie": [
-                {
-                    "id": 4,
-                    "schluessel": "3",
-                    "kuerzel": "3",
-                    "text": "18 Monate",
-                    "gueltigVon": null,
-                    "gueltigBis": null
-                }
-            ]
-        }
-    ]
+	"version": 2,
+	"daten": [ {
+		"bezeichner": "OHNE",
+		"idStatistik": "1",
+		"historie": [ {
+			"id": 1,
+			"schluessel": "0",
+			"kuerzel": "0",
+			"text": "Ohne",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "6_MONATE",
+		"idStatistik": "2",
+		"historie": [ {
+			"id": 2,
+			"schluessel": "1",
+			"kuerzel": "1",
+			"text": "6 Monate",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "12_MONATE",
+		"idStatistik": "3",
+		"historie": [ {
+			"id": 3,
+			"schluessel": "2",
+			"kuerzel": "2",
+			"text": "12 Monate",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "18_MONATE",
+		"idStatistik": "4",
+		"historie": [ {
+			"id": 4,
+			"schluessel": "3",
+			"kuerzel": "3",
+			"text": "18 Monate",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	} ]
 }

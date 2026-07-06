@@ -1,162 +1,82 @@
 {
-    "version": 1,
-    "daten": [
-      {
-        "bezeichner": "OE",
-        "idStatistik": "1",
-        "historie": [
-          {
-            "id": 0,
-            "schluessel": "*",
-            "kuerzel": "*",
-            "text": "ohne Eintrag",
-            "schulformen": [
-              "FW",
-              "HI",
-              "WF",
-              "G",
-              "GE",
-              "GY",
-              "H",
-              "PS",
-              "R",
-              "S",
-              "KS",
-              "SG",
-              "SK",
-              "SR",
-              "V"
-            ],
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      },
-      {
-        "bezeichner": "C",
-        "idStatistik": "2",
-        "historie": [
-          {
-            "id": 1000,
-            "schluessel": "C",
-            "kuerzel": "C",
-            "text": "Celestin Freinet",
-            "schulformen": [
-              "G",
-              "GY",
-              "PS"
-            ],
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      },
-      {
-        "bezeichner": "J",
-        "idStatistik": "3",
-        "historie": [
-          {
-            "id": 2000,
-            "schluessel": "J",
-            "kuerzel": "J",
-            "text": "Janusz Korczak (Pädagogik der Achtung)",
-            "schulformen": [
-              "G",
-              "GE",
-              "GY",
-              "H",
-              "PS",
-              "R",
-              "S",
-              "KS",
-              "SG",
-              "SK",
-              "SR",
-              "V"
-            ],
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      },
-      {
-        "bezeichner": "M",
-        "idStatistik": "4",
-        "historie": [
-          {
-            "id": 3000,
-            "schluessel": "M",
-            "kuerzel": "M",
-            "text": "Montessori",
-            "schulformen": [
-              "G",
-              "GE",
-              "GY",
-              "H",
-              "PS",
-              "R",
-              "S",
-              "KS",
-              "SG",
-              "SK",
-              "SR",
-              "V"
-            ],
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      },{
-        "bezeichner": "P",
-        "idStatistik": "5",
-        "historie": [
-          {
-            "id": 4000,
-            "schluessel": "P",
-            "kuerzel": "P",
-            "text": "Peter Petersen/Jena-Plan",
-            "schulformen": [
-              "G",
-              "GY",
-              "PS",
-              "S",
-              "KS",
-              "SG",
-              "SR"
-            ],
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      },
-      {
-        "bezeichner": "S",
-        "idStatistik": "6",
-        "historie": [
-          {
-            "id": 5000,
-            "schluessel": "S",
-            "kuerzel": "S",
-            "text": "sonstige",
-            "schulformen": [
-              "G",
-              "GE",
-              "GY",
-              "H",
-              "PS",
-              "R",
-              "S",
-              "KS",
-              "SG",
-              "SK",
-              "SR",
-              "V"
-            ],
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      }
-    ]
-  }
-  
+	"version": 2,
+	"daten": [ {
+		"bezeichner": "OE",
+		"idStatistik": "1",
+		"historie": [ {
+			"id": 0,
+			"schluessel": "*",
+			"kuerzel": "*",
+			"text": "ohne Eintrag",
+			"schulformen": ["FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "S", "KS", "SG", "SK", "SR", "V"],
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "C",
+		"idStatistik": "2",
+		"historie": [ {
+			"id": 1000,
+			"schluessel": "C",
+			"kuerzel": "C",
+			"text": "Celestin Freinet",
+			"schulformen": ["G", "GY", "PS"],
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "J",
+		"idStatistik": "3",
+		"historie": [ {
+			"id": 2000,
+			"schluessel": "J",
+			"kuerzel": "J",
+			"text": "Janusz Korczak (Pädagogik der Achtung)",
+			"schulformen": ["G", "GE", "GY", "H", "PS", "R", "S", "KS", "SG", "SK", "SR", "V"],
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "M",
+		"idStatistik": "4",
+		"historie": [ {
+			"id": 3000,
+			"schluessel": "M",
+			"kuerzel": "M",
+			"text": "Montessori",
+			"schulformen": ["G", "GE", "GY", "H", "PS", "R", "S", "KS", "SG", "SK", "SR", "V"],
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	},{
+		"bezeichner": "P",
+		"idStatistik": "5",
+		"historie": [ {
+			"id": 4000,
+			"schluessel": "P",
+			"kuerzel": "P",
+			"text": "Peter Petersen/Jena-Plan",
+			"schulformen": ["G", "GY", "PS", "S", "KS", "SG", "SR"],
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "S",
+		"idStatistik": "6",
+		"historie": [ {
+			"id": 5000,
+			"schluessel": "S",
+			"kuerzel": "S",
+			"text": "sonstige",
+			"schulformen": ["G", "GE", "GY", "H", "PS", "R", "S", "KS", "SG", "SK", "SR", "V"],
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	} ]
+}

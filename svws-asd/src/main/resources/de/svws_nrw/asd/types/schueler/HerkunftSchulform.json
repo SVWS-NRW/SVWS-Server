@@ -1,1087 +1,408 @@
 {
-  "version": 5,
-  "daten": [
-    {
-      "bezeichner": "BK",
-      "idStatistik": "1",
-      "historie": [
-        {
-          "id": 1000,
-          "schluessel": "BK",
-          "kuerzel": "BK",
-          "text": "Berufskolleg",
-          "schulformen": [
-            "FW",
-            "HI",
-            "GE",
-            "GY",
-            "SG"
-          ],
-          "gueltigVon": null,
-          "gueltigBis": null
-        }
-      ]
-    },
-    {
-      "bezeichner": "FW",
-      "idStatistik": "2",
-      "historie": [
-        {
-          "id": 2000,
-          "schluessel": "FW",
-          "kuerzel": "FW",
-          "text": "Freie Waldorfschule",
-          "schulformen": [
-            "BK",
-            "SB",
-            "FW",
-            "HI",
-            "WF",
-            "G",
-            "GE",
-            "GM",
-            "GY",
-            "H",
-            "PS",
-            "R",
-            "KS",
-            "S",
-            "SG",
-            "SK",
-            "SR",
-            "V",
-            "WB"
-          ],
-          "gueltigVon": null,
-          "gueltigBis": 2022
-        },
-        {
-          "id": 2001,
-          "schluessel": "FW",
-          "kuerzel": "FW",
-          "text": "Freie Waldorfschule",
-          "schulformen": [
-            "BK",
-            "SB",
-            "FW",
-            "HI",
-            "WF",
-            "G",
-            "GE",
-            "GY",
-            "H",
-            "PS",
-            "R",
-            "KS",
-            "S",
-            "SG",
-            "SK",
-            "SR",
-            "V",
-            "WB"
-          ],
-          "gueltigVon": 2023,
-          "gueltigBis": null
-        }
-      ]
-    },
-    {
-      "bezeichner": "G",
-      "idStatistik": "3",
-      "historie": [
-        {
-          "id": 3000,
-          "schluessel": "G",
-          "kuerzel": "G",
-          "text": "Grundschule",
-          "schulformen": [
-            "FW",
-            "HI",
-            "WF",
-            "G",
-            "GE",
-            "GM",
-            "GY",
-            "H",
-            "PS",
-            "R",
-            "KS",
-            "S",
-            "SG",
-            "SK",
-            "SR",
-            "V"
-          ],
-          "gueltigVon": null,
-          "gueltigBis": 2022
-        },
-        {
-          "id": 3001,
-          "schluessel": "G",
-          "kuerzel": "G",
-          "text": "Grundschule",
-          "schulformen": [
-            "FW",
-            "HI",
-            "WF",
-            "G",
-            "GE",
-            "GY",
-            "H",
-            "PS",
-            "R",
-            "KS",
-            "S",
-            "SG",
-            "SK",
-            "SR",
-            "V"
-          ],
-          "gueltigVon": 2023,
-          "gueltigBis": null
-        }
-      ]
-    },
-    {
-      "bezeichner": "GE",
-      "idStatistik": "4",
-      "historie": [
-        {
-          "id": 4000,
-          "schluessel": "GE",
-          "kuerzel": "GE",
-          "text": "Gesamtschule",
-          "schulformen": [
-            "BK",
-            "SB",
-            "FW",
-            "HI",
-            "WF",
-            "GE",
-            "GM",
-            "GY",
-            "H",
-            "PS",
-            "R",
-            "KS",
-            "S",
-            "SG",
-            "SK",
-            "SR",
-            "V",
-            "WB"
-          ],
-          "gueltigVon": null,
-          "gueltigBis": 2022
-        },
-        {
-          "id": 4001,
-          "schluessel": "GE",
-          "kuerzel": "GE",
-          "text": "Gesamtschule",
-          "schulformen": [
-            "BK",
-            "SB",
-            "FW",
-            "HI",
-            "WF",
-            "GE",
-            "GY",
-            "H",
-            "PS",
-            "R",
-            "KS",
-            "S",
-            "SG",
-            "SK",
-            "SR",
-            "V",
-            "WB"
-          ],
-          "gueltigVon": 2023,
-          "gueltigBis": null
-        }
-      ]
-    },
-    {
-      "bezeichner": "GM",
-      "idStatistik": "5",
-      "historie": [
-        {
-          "id": 5000,
-          "schluessel": "GM",
-          "kuerzel": "GM",
-          "text": "Gemeinschaftsschule",
-          "schulformen": [
-            "BK",
-            "SB",
-            "FW",
-            "HI",
-            "WF",
-            "GE",
-            "GM",
-            "GY",
-            "H",
-            "PS",
-            "R",
-            "KS",
-            "S",
-            "SG",
-            "SK",
-            "SR",
-            "V",
-            "WB"
-          ],
-          "gueltigVon": null,
-          "gueltigBis": 2022
-        }
-      ]
-    },
-    {
-      "bezeichner": "GY",
-      "idStatistik": "6",
-      "historie": [
-        {
-          "id": 6000,
-          "schluessel": "GY",
-          "kuerzel": "GY",
-          "text": "Gymnasium",
-          "schulformen": [
-            "BK",
-            "SB",
-            "FW",
-            "HI",
-            "WF",
-            "GE",
-            "GM",
-            "GY",
-            "H",
-            "PS",
-            "R",
-            "KS",
-            "S",
-            "SG",
-            "SK",
-            "SR",
-            "V",
-            "WB"
-          ],
-          "gueltigVon": null,
-          "gueltigBis": 2022
-        },
-        {
-          "id": 6001,
-          "schluessel": "GY",
-          "kuerzel": "GY",
-          "text": "Gymnasium",
-          "schulformen": [
-            "BK",
-            "SB",
-            "FW",
-            "HI",
-            "WF",
-            "GE",
-            "GY",
-            "H",
-            "PS",
-            "R",
-            "KS",
-            "S",
-            "SG",
-            "SK",
-            "SR",
-            "V",
-            "WB"
-          ],
-          "gueltigVon": 2023,
-          "gueltigBis": null
-        }
-      ]
-    },
-    {
-      "bezeichner": "H",
-      "idStatistik": "7",
-      "historie": [
-        {
-          "id": 7000,
-          "schluessel": "H",
-          "kuerzel": "H",
-          "text": "Hauptschule",
-          "schulformen": [
-            "BK",
-            "SB",
-            "FW",
-            "HI",
-            "WF",
-            "GE",
-            "GM",
-            "GY",
-            "H",
-            "PS",
-            "R",
-            "KS",
-            "S",
-            "SG",
-            "SK",
-            "SR",
-            "V",
-            "WB"
-          ],
-          "gueltigVon": null,
-          "gueltigBis": 2022
-        },
-        {
-          "id": 7001,
-          "schluessel": "H",
-          "kuerzel": "H",
-          "text": "Hauptschule",
-          "schulformen": [
-            "BK",
-            "SB",
-            "FW",
-            "HI",
-            "WF",
-            "GE",
-            "GY",
-            "H",
-            "PS",
-            "R",
-            "KS",
-            "S",
-            "SG",
-            "SK",
-            "SR",
-            "V",
-            "WB"
-          ],
-          "gueltigVon": 2023,
-          "gueltigBis": null
-        }
-      ]
-    },
-    {
-      "bezeichner": "HI",
-      "idStatistik": "8",
-      "historie": [
-        {
-          "id": 8000,
-          "schluessel": "HI",
-          "kuerzel": "HI",
-          "text": "Hiberniaschule",
-          "schulformen": [
-            "BK",
-            "SB",
-            "FW",
-            "HI",
-            "WF",
-            "G",
-            "GE",
-            "GM",
-            "GY",
-            "H",
-            "PS",
-            "R",
-            "KS",
-            "S",
-            "SG",
-            "SK",
-            "SR",
-            "V",
-            "WB"
-          ],
-          "gueltigVon": null,
-          "gueltigBis": 2022
-        },
-        {
-          "id": 8001,
-          "schluessel": "HI",
-          "kuerzel": "HI",
-          "text": "Hiberniaschule",
-          "schulformen": [
-            "BK",
-            "SB",
-            "FW",
-            "HI",
-            "WF",
-            "G",
-            "GE",
-            "GY",
-            "H",
-            "PS",
-            "R",
-            "KS",
-            "S",
-            "SG",
-            "SK",
-            "SR",
-            "V",
-            "WB"
-          ],
-          "gueltigVon": 2023,
-          "gueltigBis": null
-        }
-      ]
-    },
-    {
-      "bezeichner": "PS",
-      "idStatistik": "9",
-      "historie": [
-        {
-          "id": 9000,
-          "schluessel": "PS",
-          "kuerzel": "PS",
-          "text": "Schulversuch PRIMUS",
-          "schulformen": [
-            "BK",
-            "SB",
-            "FW",
-            "HI",
-            "WF",
-            "G",
-            "GE",
-            "GM",
-            "GY",
-            "H",
-            "PS",
-            "R",
-            "KS",
-            "S",
-            "SG",
-            "SK",
-            "SR",
-            "V",
-            "WB"
-          ],
-          "gueltigVon": null,
-          "gueltigBis": 2022
-        },
-        {
-          "id": 9001,
-          "schluessel": "PS",
-          "kuerzel": "PS",
-          "text": "Schulversuch PRIMUS",
-          "schulformen": [
-            "BK",
-            "SB",
-            "FW",
-            "HI",
-            "WF",
-            "G",
-            "GE",
-            "GY",
-            "H",
-            "PS",
-            "R",
-            "KS",
-            "S",
-            "SG",
-            "SK",
-            "SR",
-            "V",
-            "WB"
-          ],
-          "gueltigVon": 2023,
-          "gueltigBis": null
-        }
-      ]
-    },
-    {
-      "bezeichner": "R",
-      "idStatistik": "10",
-      "historie": [
-        {
-          "id": 10000,
-          "schluessel": "R",
-          "kuerzel": "R",
-          "text": "Realschule",
-          "schulformen": [
-            "BK",
-            "SB",
-            "FW",
-            "HI",
-            "WF",
-            "GE",
-            "GM",
-            "GY",
-            "H",
-            "PS",
-            "R",
-            "KS",
-            "S",
-            "SG",
-            "SK",
-            "SR",
-            "V",
-            "WB"
-          ],
-          "gueltigVon": null,
-          "gueltigBis": 2022
-        },
-        {
-          "id": 10001,
-          "schluessel": "R",
-          "kuerzel": "R",
-          "text": "Realschule",
-          "schulformen": [
-            "BK",
-            "SB",
-            "FW",
-            "HI",
-            "WF",
-            "GE",
-            "GY",
-            "H",
-            "PS",
-            "R",
-            "KS",
-            "S",
-            "SG",
-            "SK",
-            "SR",
-            "V",
-            "WB"
-          ],
-          "gueltigVon": 2023,
-          "gueltigBis": null
-        }
-      ]
-    },
-    {
-      "bezeichner": "S",
-      "idStatistik": "11",
-      "historie": [
-        {
-          "id": 11000,
-          "schluessel": "S",
-          "kuerzel": "S",
-          "text": "Förderschule im Bereich Grund-/Hauptschule",
-          "schulformen": [
-            "BK",
-            "SB",
-            "FW",
-            "HI",
-            "WF",
-            "G",
-            "GE",
-            "GM",
-            "GY",
-            "H",
-            "PS",
-            "R",
-            "KS",
-            "S",
-            "SG",
-            "SK",
-            "SR",
-            "V",
-            "WB"
-          ],
-          "gueltigVon": null,
-          "gueltigBis": 2022
-        },
-        {
-          "id": 11001,
-          "schluessel": "S",
-          "kuerzel": "S",
-          "text": "Förderschule im Bereich Grund-/Hauptschule",
-          "schulformen": [
-            "BK",
-            "SB",
-            "FW",
-            "HI",
-            "WF",
-            "G",
-            "GE",
-            "GY",
-            "H",
-            "PS",
-            "R",
-            "KS",
-            "S",
-            "SG",
-            "SK",
-            "SR",
-            "V",
-            "WB"
-          ],
-          "gueltigVon": 2023,
-          "gueltigBis": null
-        }
-      ]
-    },
-    {
-      "bezeichner": "SK",
-      "idStatistik": "15",
-      "historie": [
-        {
-          "id": 15000,
-          "schluessel": "SK",
-          "kuerzel": "SK",
-          "text": "Sekundarschule",
-          "schulformen": [
-            "BK",
-            "SB",
-            "FW",
-            "HI",
-            "WF",
-            "GE",
-            "GM",
-            "GY",
-            "H",
-            "PS",
-            "R",
-            "KS",
-            "S",
-            "SG",
-            "SK",
-            "SR",
-            "V",
-            "WB"
-          ],
-          "gueltigVon": null,
-          "gueltigBis": 2022
-        },
-        {
-          "id": 15001,
-          "schluessel": "SK",
-          "kuerzel": "SK",
-          "text": "Sekundarschule",
-          "schulformen": [
-            "BK",
-            "SB",
-            "FW",
-            "HI",
-            "WF",
-            "GE",
-            "GY",
-            "H",
-            "PS",
-            "R",
-            "KS",
-            "S",
-            "SG",
-            "SK",
-            "SR",
-            "V",
-            "WB"
-          ],
-          "gueltigVon": 2023,
-          "gueltigBis": null
-        }
-      ]
-    },
-    {
-      "bezeichner": "WB",
-      "idStatistik": "18",
-      "historie": [
-        {
-          "id": 18000,
-          "schluessel": "WB",
-          "kuerzel": "WB",
-          "text": "Weiterbildungskolleg",
-          "schulformen": [
-            "BK",
-            "SB",
-            "FW",
-            "HI",
-            "WF",
-            "GE",
-            "GY",
-            "PS",
-            "SG"
-          ],
-          "gueltigVon": null,
-          "gueltigBis": null
-        }
-      ]
-    },
-    {
-      "bezeichner": "WF",
-      "idStatistik": "19",
-      "historie": [
-        {
-          "id": 19000,
-          "schluessel": "WF",
-          "kuerzel": "WF",
-          "text": "Freie Waldorfförderschule",
-          "schulformen": [
-            "BK",
-            "SB",
-            "FW",
-            "HI",
-            "WF",
-            "G",
-            "GE",
-            "GM",
-            "GY",
-            "H",
-            "PS",
-            "R",
-            "KS",
-            "S",
-            "SG",
-            "SK",
-            "SR",
-            "V",
-            "WB"
-          ],
-          "gueltigVon": null,
-          "gueltigBis": 2022
-        },
-        {
-          "id": 19001,
-          "schluessel": "WF",
-          "kuerzel": "WF",
-          "text": "Freie Waldorfförderschule",
-          "schulformen": [
-            "BK",
-            "SB",
-            "FW",
-            "HI",
-            "WF",
-            "G",
-            "GE",
-            "GY",
-            "H",
-            "PS",
-            "R",
-            "KS",
-            "S",
-            "SG",
-            "SK",
-            "SR",
-            "V",
-            "WB"
-          ],
-          "gueltigVon": 2023,
-          "gueltigBis": null
-        }
-      ]},
-      {
-        "bezeichner": "V",
-        "idStatistik": "20",
-        "historie": [
-          {
-            "id": 20000,
-            "schluessel": "V",
-            "kuerzel": "V",
-            "text": "Volksschule",
-            "schulformen": [
-              "BK",
-              "SB",
-              "FW",
-              "HI",
-              "WF",
-              "G",
-              "GE",
-              "GM",
-              "GY",
-              "H",
-              "PS",
-              "R",
-              "KS",
-              "S",
-              "SG",
-              "SK",
-              "SR",
-              "V",
-              "WB"
-            ],
-            "gueltigVon": null,
-            "gueltigBis": 2022
-          },
-          {
-            "id": 20001,
-            "schluessel": "V",
-            "kuerzel": "V",
-            "text": "Volksschule",
-            "schulformen": [
-              "BK",
-              "SB",
-              "FW",
-              "HI",
-              "WF",
-              "G",
-              "GE",
-              "GY",
-              "H",
-              "PS",
-              "R",
-              "KS",
-              "S",
-              "SG",
-              "SK",
-              "SR",
-              "V",
-              "WB"
-            ],
-            "gueltigVon": 2023,
-            "gueltigBis": null
-          }
-        ]},
-        {
-          "bezeichner": "KS",
-          "idStatistik": "21",
-          "historie": [
-            {
-              "id": 21000,
-              "schluessel": "KS",
-              "kuerzel": "KS",
-              "text": "Klinikschule",
-              "schulformen": [
-                "BK",
-                "SB",
-                "FW",
-                "HI",
-                "WF",
-                "G",
-                "GE",
-                "GM",
-                "GY",
-                "H",
-                "PS",
-                "R",
-                "KS",
-                "S",
-                "SG",
-                "SK",
-                "SR",
-                "V",
-                "WB"
-              ],
-              "gueltigVon": null,
-              "gueltigBis": 2022
-            },
-            {
-              "id": 21001,
-              "schluessel": "KS",
-              "kuerzel": "KS",
-              "text": "Klinikschule",
-              "schulformen": [
-                "BK",
-                "SB",
-                "FW",
-                "HI",
-                "WF",
-                "G",
-                "GE",
-                "GY",
-                "H",
-                "PS",
-                "R",
-                "KS",
-                "S",
-                "SG",
-                "SK",
-                "SR",
-                "V",
-                "WB"
-              ],
-              "gueltigVon": 2023,
-              "gueltigBis": null
-            }
-          ]},
-          {
-            "bezeichner": "SB",
-            "idStatistik": "22",
-            "historie": [
-              {
-                "id": 22000,
-                "schluessel": "SB",
-                "kuerzel": "SB",
-                "text": "Förderschule im Bereich Berufskolleg",
-                "schulformen": [
-                  "FW",
-                  "HI",
-                  "GE",
-                  "GY",
-                  "SG"
-                ],
-                "gueltigVon": null,
-                "gueltigBis": null
-              }
-            ]},
-            {
-              "bezeichner": "SR",
-              "idStatistik": "23",
-              "historie": [
-                {
-                  "id": 23000,
-                  "schluessel": "SR",
-                  "kuerzel": "SR",
-                  "text": "Förderschule im Bereich Realschule",
-                  "schulformen": [
-                    "BK",
-                    "SB",
-                    "FW",
-                    "HI",
-                    "WF",
-                    "GE",
-                    "GM",
-                    "GY",
-                    "H",
-                    "PS",
-                    "R",
-                    "KS",
-                    "S",
-                    "SG",
-                    "SK",
-                    "SR",
-                    "V",
-                    "WB"
-                  ],
-                  "gueltigVon": null,
-                  "gueltigBis": 2022
-                },
-                {
-                  "id": 23001,
-                  "schluessel": "SR",
-                  "kuerzel": "SR",
-                  "text": "Förderschule im Bereich Realschule",
-                  "schulformen": [
-                    "BK",
-                    "SB",
-                    "FW",
-                    "HI",
-                    "WF",                   
-                    "GE",
-                    "GY",
-                    "H",
-                    "PS",
-                    "R",
-                    "KS",
-                    "S",
-                    "SG",
-                    "SK",
-                    "SR",
-                    "V",
-                    "WB"
-                  ],
-                  "gueltigVon": 2023,
-                  "gueltigBis": null
-                }
-              ]},
-            {
-              "bezeichner": "SG",
-              "idStatistik": "24",
-              "historie": [
-                {
-                  "id": 24000,
-                  "schluessel": "SG",
-                  "kuerzel": "SG",
-                  "text": "Förderschule im Bereich Gymnasium",
-                  "schulformen": [
-                    "BK",
-                    "SB",
-                    "FW",
-                    "HI",
-                    "WF",
-                    "GE",
-                    "GM",
-                    "GY",
-                    "H",
-                    "PS",
-                    "R",
-                    "KS",
-                    "S",
-                    "SG",
-                    "SK",
-                    "SR",
-                    "V",
-                    "WB"
-                  ],
-                  "gueltigVon": null,
-                  "gueltigBis": 2022
-                },
-                {
-                  "id": 24001,
-                  "schluessel": "SG",
-                  "kuerzel": "SG",
-                  "text": "Förderschule im Bereich Gymnasium",
-                  "schulformen": [
-                    "BK",
-                    "SB",
-                    "FW",
-                    "HI",
-                    "WF",                   
-                    "GE",
-                    "GY",
-                    "H",
-                    "PS",
-                    "R",
-                    "KS",
-                    "S",
-                    "SG",
-                    "SK",
-                    "SR",
-                    "V",
-                    "WB"
-                  ],
-                  "gueltigVon": 2023,
-                  "gueltigBis": null
-                }
-              ]},
-            {
-              "bezeichner": "SF",
-              "idStatistik": "25",
-              "historie": [
-                {
-                  "id": 25000,
-                  "schluessel": "SF",
-                  "kuerzel": "SF",
-                  "text": "Sonstige Schulform",
-                  "schulformen": [
-                    "BK",
-                    "SB",
-                    "FW",
-                    "HI",
-                    "WF",
-                    "G",
-                    "GE",
-                    "GM",
-                    "GY",
-                    "H",
-                    "PS",
-                    "R",
-                    "KS",
-                    "S",
-                    "SG",
-                    "SK",
-                    "SR",
-                    "V",
-                    "WB"
-                  ],
-                  "gueltigVon": null,
-                  "gueltigBis": 2022
-                },
-                {
-                  "id": 25001,
-                  "schluessel": "SF",
-                  "kuerzel": "SF",
-                  "text": "Sonstige Schulform",
-                  "schulformen": [
-                    "BK",
-                    "SB",
-                    "FW",
-                    "HI",
-                    "WF",
-                    "G",                   
-                    "GE",
-                    "GY",
-                    "H",
-                    "PS",
-                    "R",
-                    "KS",
-                    "S",
-                    "SG",
-                    "SK",
-                    "SR",
-                    "V",
-                    "WB"
-                  ],
-                  "gueltigVon": 2023,
-                  "gueltigBis": null
-                }
-              ]}
-  ]
+	"version": 6,
+	"daten": [ {
+		"bezeichner": "BK",
+		"idStatistik": "1",
+		"historie": [ {
+			"id": 1000,
+			"schluessel": "BK",
+			"kuerzel": "BK",
+			"text": "Berufskolleg",
+			"schulformen": ["FW", "HI", "GE", "GY", "SG"],
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "FW",
+		"idStatistik": "2",
+		"historie": [ {
+			"id": 2000,
+			"schluessel": "FW",
+			"kuerzel": "FW",
+			"text": "Freie Waldorfschule",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
+		}, {
+			"id": 2001,
+			"schluessel": "FW",
+			"kuerzel": "FW",
+			"text": "Freie Waldorfschule",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "G",
+		"idStatistik": "3",
+		"historie": [ {
+			"id": 3000,
+			"schluessel": "G",
+			"kuerzel": "G",
+			"text": "Grundschule",
+			"schulformen": ["FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V"],
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
+		}, {
+			"id": 3001,
+			"schluessel": "G",
+			"kuerzel": "G",
+			"text": "Grundschule",
+			"schulformen": ["FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V"],
+			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "GE",
+		"idStatistik": "4",
+		"historie": [ {
+			"id": 4000,
+			"schluessel": "GE",
+			"kuerzel": "GE",
+			"text": "Gesamtschule",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
+		}, {
+			"id": 4001,
+			"schluessel": "GE",
+			"kuerzel": "GE",
+			"text": "Gesamtschule",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "GM",
+		"idStatistik": "5",
+		"historie": [ {
+			"id": 5000,
+			"schluessel": "GM",
+			"kuerzel": "GM",
+			"text": "Gemeinschaftsschule",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "GY",
+		"idStatistik": "6",
+		"historie": [ {
+			"id": 6000,
+			"schluessel": "GY",
+			"kuerzel": "GY",
+			"text": "Gymnasium",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
+		}, {
+			"id": 6001,
+			"schluessel": "GY",
+			"kuerzel": "GY",
+			"text": "Gymnasium",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "H",
+		"idStatistik": "7",
+		"historie": [ {
+			"id": 7000,
+			"schluessel": "H",
+			"kuerzel": "H",
+			"text": "Hauptschule",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
+		}, {
+			"id": 7001,
+			"schluessel": "H",
+			"kuerzel": "H",
+			"text": "Hauptschule",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "HI",
+		"idStatistik": "8",
+		"historie": [ {
+			"id": 8000,
+			"schluessel": "HI",
+			"kuerzel": "HI",
+			"text": "Hiberniaschule",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
+		}, {
+			"id": 8001,
+			"schluessel": "HI",
+			"kuerzel": "HI",
+			"text": "Hiberniaschule",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "PS",
+		"idStatistik": "9",
+		"historie": [ {
+			"id": 9000,
+			"schluessel": "PS",
+			"kuerzel": "PS",
+			"text": "Schulversuch PRIMUS",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
+		}, {
+			"id": 9001,
+			"schluessel": "PS",
+			"kuerzel": "PS",
+			"text": "Schulversuch PRIMUS",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "R",
+		"idStatistik": "10",
+		"historie": [ {
+			"id": 10000,
+			"schluessel": "R",
+			"kuerzel": "R",
+			"text": "Realschule",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
+		}, {
+			"id": 10001,
+			"schluessel": "R",
+			"kuerzel": "R",
+			"text": "Realschule",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "S",
+		"idStatistik": "11",
+		"historie": [ {
+			"id": 11000,
+			"schluessel": "S",
+			"kuerzel": "S",
+			"text": "Förderschule im Bereich Grund-/Hauptschule",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
+		}, {
+			"id": 11001,
+			"schluessel": "S",
+			"kuerzel": "S",
+			"text": "Förderschule im Bereich Grund-/Hauptschule",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "SK",
+		"idStatistik": "15",
+		"historie": [ {
+			"id": 15000,
+			"schluessel": "SK",
+			"kuerzel": "SK",
+			"text": "Sekundarschule",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
+		}, {
+			"id": 15001,
+			"schluessel": "SK",
+			"kuerzel": "SK",
+			"text": "Sekundarschule",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "WB",
+		"idStatistik": "18",
+		"historie": [ {
+			"id": 18000,
+			"schluessel": "WB",
+			"kuerzel": "WB",
+			"text": "Weiterbildungskolleg",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "GE", "GY", "PS", "SG"],
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "WF",
+		"idStatistik": "19",
+		"historie": [ {
+			"id": 19000,
+			"schluessel": "WF",
+			"kuerzel": "WF",
+			"text": "Freie Waldorfförderschule",
+			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
+		}, {
+			"id": 19001,
+			"schluessel": "WF",
+			"kuerzel": "WF",
+			"text": "Freie Waldorfförderschule",
+			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "V",
+		"idStatistik": "20",
+		"historie": [ {
+			"id": 20000,
+			"schluessel": "V",
+			"kuerzel": "V",
+			"text": "Volksschule",
+			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
+		}, {
+			"id": 20001,
+			"schluessel": "V",
+			"kuerzel": "V",
+			"text": "Volksschule",
+			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "KS",
+		"idStatistik": "21",
+		"historie": [ {
+			"id": 21000,
+			"schluessel": "KS",
+			"kuerzel": "KS",
+			"text": "Klinikschule",
+			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
+		}, {
+			"id": 21001,
+			"schluessel": "KS",
+			"kuerzel": "KS",
+			"text": "Klinikschule",
+			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "SB",
+		"idStatistik": "22",
+		"historie": [ {
+			"id": 22000,
+			"schluessel": "SB",
+			"kuerzel": "SB",
+			"text": "Förderschule im Bereich Berufskolleg",
+			"schulformen": [ "FW", "HI", "GE", "GY", "SG"],
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "SR",
+		"idStatistik": "23",
+		"historie": [ {
+			"id": 23000,
+			"schluessel": "SR",
+			"kuerzel": "SR",
+			"text": "Förderschule im Bereich Realschule",
+			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
+		}, {
+			"id": 23001,
+			"schluessel": "SR",
+			"kuerzel": "SR",
+			"text": "Förderschule im Bereich Realschule",
+			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "SG",
+		"idStatistik": "24",
+		"historie": [ {
+			"id": 24000,
+			"schluessel": "SG",
+			"kuerzel": "SG",
+			"text": "Förderschule im Bereich Gymnasium",
+			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
+		}, {
+			"id": 24001,
+			"schluessel": "SG",
+			"kuerzel": "SG",
+			"text": "Förderschule im Bereich Gymnasium",
+			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "SF",
+		"idStatistik": "25",
+		"historie": [ {
+			"id": 25000,
+			"schluessel": "SF",
+			"kuerzel": "SF",
+			"text": "Sonstige Schulform",
+			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": null,
+			"gueltigBis": 2022,
+			"auslaufdauer": 0
+		}, {
+			"id": 25001,
+			"schluessel": "SF",
+			"kuerzel": "SF",
+			"text": "Sonstige Schulform",
+			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "G",				"GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	} ]
 }
