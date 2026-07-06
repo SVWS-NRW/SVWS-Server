@@ -1,5 +1,5 @@
 <template>
-	<td class="select-text text-uistatic">
+	<td class="select-text">
 		<div class="text-left whitespace-nowrap min-w-fit">
 			{{ fach.kuerzelAnzeige }}
 		</div>
@@ -436,6 +436,7 @@
 
 	td {
 		background-color: v-bind(bgColor);
+		color: var(--color-text-uistatic);
 	}
 
 	.cell-disabled {
