@@ -142,4 +142,30 @@ class LehrerRepositoryImplTest {
 		verify(conn).transactionRemove(testLehrer1);
 	}
 
+	@Test
+	@DisplayName("existsById | true wenn Lehrer existiert")
+	void testExistsById_true() {
+		final Long id = 42L;
+
+		when(conn.existsBy(DTOLehrer.QUERY_BY_ID, DTOLehrer.class, id)).thenReturn(true);
+
+		final var result = repository.existsById(id);
+
+		assertTrue(result);
+		verify(conn).existsBy(DTOLehrer.QUERY_BY_ID, DTOLehrer.class, id);
+	}
+
+	@Test
+	@DisplayName("existsById | false wenn Lehrer nicht existiert")
+	void testExistsById_false() {
+		final Long id = 999L;
+
+		when(conn.existsBy(DTOLehrer.QUERY_BY_ID, DTOLehrer.class, id)).thenReturn(false);
+
+		final var result = repository.existsById(id);
+
+		assertFalse(result);
+		verify(conn).existsBy(DTOLehrer.QUERY_BY_ID, DTOLehrer.class, id);
+	}
+
 }

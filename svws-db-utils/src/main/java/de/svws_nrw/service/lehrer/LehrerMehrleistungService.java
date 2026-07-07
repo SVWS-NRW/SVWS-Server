@@ -3,6 +3,8 @@ package de.svws_nrw.service.lehrer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstunden;
 import de.svws_nrw.asd.types.lehrer.LehrerMehrleistungsarten;
@@ -82,6 +84,21 @@ public final class LehrerMehrleistungService {
 	public List<LehrerPersonalabschnittsdatenAnrechnungsstunden> getListByLehrerabschnittsdatenId(final long idLehrerabschnittsdaten) {
 		final List<DTOLehrerMehrleistung> entities = kontext.fetchByLehrerabschnittsdatenId(idLehrerabschnittsdaten);
 		return entities.stream().map(this::toApi).toList();
+	}
+
+	/**
+	 * Ermittelt die Mehrleistungs-Einträge gruppiert nach den IDs der Lehrerabschnittsdaten.
+	 *
+	 * @param idsLehrerAbschnittsdaten die IDs der Lehrerabschnittsdaten
+	 * @return Map von Lehrerabschnittsdaten-ID auf Liste der zugehörigen Mehrleistungen
+	 */
+	public Map<Long, List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> getListByIdLehrerAbschnittsdaten(
+			final Collection<Long> idsLehrerAbschnittsdaten) {
+		return kontext.fetchMapByAbschnittIds(idsLehrerAbschnittsdaten).entrySet().stream()
+				.collect(Collectors.toMap(
+						Map.Entry::getKey,
+						entry -> entry.getValue().stream().map(this::toApi).toList()
+				));
 	}
 
 	/**

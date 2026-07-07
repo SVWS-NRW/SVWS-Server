@@ -10070,21 +10070,48 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getLehrerPersonalabschnittsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/{id : \d+}
+	 * Implementierung der POST-Methode createLehrerPersonalabschnittsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten
 	 *
-	 * Liest die Personalabschnittsdaten zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.
+	 * Erstellt neue LehrerPersonalabschnittsdaten und speichert diese in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrerdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Personalabschnittsdaten
+	 *   Code 201: Die erstellten LehrerPersonalabschnittsdaten
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: LehrerPersonalabschnittsdaten
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten anzusehen.
-	 *   Code 404: Keine Lehrer-Personalabschnittsdaten mit der angegebenen ID gefunden
+	 *   Code 400: Die Eingabedaten sind fehlerhaft.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten zu ändern.
+	 *
+	 * @param {Partial<LehrerPersonalabschnittsdaten>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die erstellten LehrerPersonalabschnittsdaten
+	 */
+	public async createLehrerPersonalabschnittsdaten(data : Partial<LehrerPersonalabschnittsdaten>, schema : string) : Promise<LehrerPersonalabschnittsdaten> {
+		const path = "/db/{schema}/lehrer/personalabschnittsdaten"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = LehrerPersonalabschnittsdaten.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return LehrerPersonalabschnittsdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getLehrerPersonalabschnittsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/{id : \d+}
+	 *
+	 * Liest die LehrerPersonalabschnittsdaten mit der angegebenen ID aus der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die LehrerPersonalabschnittsdaten
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerPersonalabschnittsdaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.
+	 *   Code 404: Keine LehrerPersonalabschnittsdaten mit der angegebenen ID gefunden.
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 *
-	 * @returns Die Personalabschnittsdaten
+	 * @returns Die LehrerPersonalabschnittsdaten
 	 */
 	public async getLehrerPersonalabschnittsdaten(schema : string, id : number) : Promise<LehrerPersonalabschnittsdaten> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/{id : \\d+}"
@@ -10099,26 +10126,57 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der PATCH-Methode patchLehrerPersonalabschnittsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/{id : \d+}
 	 *
-	 * Passt die Lehrer-Personalabschnittsdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personalabschnittsdaten besitzt.
+	 * Aktualisiert die LehrerPersonalabschnittsdaten mit der angegebenen ID. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrerdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich in die Lehrer-Personalabschnittsdaten integriert.
-	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten zu ändern.
-	 *   Code 404: Keine Personalabschnittsdaten mit der angegebenen ID gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *   Code 200: Die aktualisierten LehrerPersonalabschnittsdaten
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerPersonalabschnittsdaten
+	 *   Code 400: Die Eingabedaten sind fehlerhaft.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten zu ändern.
+	 *   Code 404: Keine LehrerPersonalabschnittsdaten mit der angegebenen ID gefunden.
 	 *
 	 * @param {Partial<LehrerPersonalabschnittsdaten>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die aktualisierten LehrerPersonalabschnittsdaten
 	 */
-	public async patchLehrerPersonalabschnittsdaten(data : Partial<LehrerPersonalabschnittsdaten>, schema : string, id : number) : Promise<void> {
+	public async patchLehrerPersonalabschnittsdaten(data : Partial<LehrerPersonalabschnittsdaten>, schema : string, id : number) : Promise<LehrerPersonalabschnittsdaten> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = LehrerPersonalabschnittsdaten.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
+		const result : string = await super.patchJSONWithResponse(path, body);
+		const text = result;
+		return LehrerPersonalabschnittsdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteLehrerPersonalabschnittsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/{id : \d+}
+	 *
+	 * Löscht die LehrerPersonalabschnittsdaten mit der angegebenen ID. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Das Ergebnis der Löschoperation
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten zu ändern.
+	 *   Code 404: Keine LehrerPersonalabschnittsdaten mit der angegebenen ID gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Das Ergebnis der Löschoperation
+	 */
+	public async deleteLehrerPersonalabschnittsdaten(schema : string, id : number) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/lehrer/personalabschnittsdaten/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
 
 
@@ -10539,6 +10597,121 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode getLehrerPersonalabschnittsdatenMultiple für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/multiple
+	 *
+	 * Liest die LehrerPersonalabschnittsdaten zu den angegebenen IDs aus der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Liste der LehrerPersonalabschnittsdaten
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<LehrerPersonalabschnittsdaten>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Liste der LehrerPersonalabschnittsdaten
+	 */
+	public async getLehrerPersonalabschnittsdatenMultiple(data : List<number>, schema : string) : Promise<List<LehrerPersonalabschnittsdaten>> {
+		const path = "/db/{schema}/lehrer/personalabschnittsdaten/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<LehrerPersonalabschnittsdaten>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerPersonalabschnittsdaten.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode createLehrerPersonalabschnittsdatenMultiple für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/multiple
+	 *
+	 * Erstellt mehrere neue LehrerPersonalabschnittsdaten und speichert diese in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die erstellten LehrerPersonalabschnittsdaten
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<LehrerPersonalabschnittsdaten>
+	 *   Code 400: Die Eingabedaten sind fehlerhaft.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten zu ändern.
+	 *
+	 * @param {List<Partial<LehrerPersonalabschnittsdaten>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die erstellten LehrerPersonalabschnittsdaten
+	 */
+	public async createLehrerPersonalabschnittsdatenMultiple(data : List<Partial<LehrerPersonalabschnittsdaten>>, schema : string) : Promise<List<LehrerPersonalabschnittsdaten>> {
+		const path = "/db/{schema}/lehrer/personalabschnittsdaten/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<LehrerPersonalabschnittsdaten>).map(d => LehrerPersonalabschnittsdaten.transpilerToJSONPatch(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<LehrerPersonalabschnittsdaten>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerPersonalabschnittsdaten.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchLehrerPersonalabschnittsdatenMultiple für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/multiple
+	 *
+	 * Aktualisiert die LehrerPersonalabschnittsdaten mit den angegebenen IDs. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die aktualisierten LehrerPersonalabschnittsdaten
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<LehrerPersonalabschnittsdaten>
+	 *   Code 400: Die Eingabedaten sind fehlerhaft.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten zu ändern.
+	 *   Code 404: Eine LehrerPersonalabschnittsdaten mit einer angegebenen ID wurde nicht gefunden.
+	 *
+	 * @param {List<Partial<LehrerPersonalabschnittsdaten>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die aktualisierten LehrerPersonalabschnittsdaten
+	 */
+	public async patchLehrerPersonalabschnittsdatenMultiple(data : List<Partial<LehrerPersonalabschnittsdaten>>, schema : string) : Promise<List<LehrerPersonalabschnittsdaten>> {
+		const path = "/db/{schema}/lehrer/personalabschnittsdaten/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<LehrerPersonalabschnittsdaten>).map(d => LehrerPersonalabschnittsdaten.transpilerToJSONPatch(d)).join() + "]";
+		const result : string = await super.patchJSONWithResponse(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<LehrerPersonalabschnittsdaten>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerPersonalabschnittsdaten.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteLehrerPersonalabschnittsdatenMultiple für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/multiple
+	 *
+	 * Löscht die LehrerPersonalabschnittsdaten mit den angegebenen IDs. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Ergebnisse der Löschoperationen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten zu ändern.
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Ergebnisse der Löschoperationen
+	 */
+	public async deleteLehrerPersonalabschnittsdatenMultiple(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/lehrer/personalabschnittsdaten/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

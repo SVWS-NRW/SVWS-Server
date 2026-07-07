@@ -1,6 +1,7 @@
 package de.svws_nrw.service.lehrer;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import de.svws_nrw.asd.types.lehrer.LehrerMehrleistungsarten;
@@ -137,7 +138,6 @@ class LehrerMehrleistungServiceTest {
 	@DisplayName("Validierung von getListByLehrerabschnittsdatenId")
 	class GetListByLehrerabschnittsdatenIdTests {
 		private final long idAbschnitt = 100L;
-		private final long idSchuljahresabschnitt = 200L;
 
 		@Test
 		@DisplayName("Erfolg: Lädt alle Einträge zu einem Abschnitt")
@@ -149,17 +149,47 @@ class LehrerMehrleistungServiceTest {
 
 			when(kontext.fetchByLehrerabschnittsdatenId(idAbschnitt)).thenReturn(List.of(dto1, dto2));
 
-			final var abschnitt = new DTOLehrerAbschnittsdaten(idAbschnitt, 10L, idSchuljahresabschnitt);
-			final var schuljahr = new DTOSchuljahresabschnitte(idSchuljahresabschnitt, 2024, 1);
+			final var abschnitt = new DTOLehrerAbschnittsdaten(idAbschnitt, 10L, 200L);
+			final var schuljahr = new DTOSchuljahresabschnitte(200L, 2024, 1);
 
 			when(kontext.getLehrerAbschnitt(idAbschnitt)).thenReturn(abschnitt);
-			when(kontext.getSchuljahresabschnitt(idSchuljahresabschnitt)).thenReturn(schuljahr);
+			when(kontext.getSchuljahresabschnitt(200L)).thenReturn(schuljahr);
 
 			final var result = service.getListByLehrerabschnittsdatenId(idAbschnitt);
 
 			assertThat(result).hasSize(2);
 			assertThat(result.stream().map(r -> r.id)).containsExactlyInAnyOrder(1L, 2L);
 			verify(kontext).fetchByLehrerabschnittsdatenId(idAbschnitt);
+		}
+
+		@Test
+		@DisplayName("getListByIdLehrerAbschnittsdaten: gruppiert und mappt je Abschnitt")
+		void getListByIdLehrerAbschnittsdaten_success() {
+			final var ids = List.of(100L, 200L);
+			final long sj1 = 300L;
+			final long sj2 = 301L;
+
+			final var dtoA1 = new DTOLehrerMehrleistung(1L, 100L, "110");
+			final var dtoA2 = new DTOLehrerMehrleistung(2L, 100L, "150");
+			final var dtoB1 = new DTOLehrerMehrleistung(3L, 200L, "110");
+
+			when(kontext.fetchMapByAbschnittIds(ids)).thenReturn(Map.of(
+					100L, List.of(dtoA1, dtoA2),
+					200L, List.of(dtoB1)
+			));
+
+			when(kontext.getLehrerAbschnitt(100L)).thenReturn(new DTOLehrerAbschnittsdaten(100L, 10L, sj1));
+			when(kontext.getLehrerAbschnitt(200L)).thenReturn(new DTOLehrerAbschnittsdaten(200L, 10L, sj2));
+			when(kontext.getSchuljahresabschnitt(sj1)).thenReturn(new DTOSchuljahresabschnitte(sj1, 2024, 1));
+			when(kontext.getSchuljahresabschnitt(sj2)).thenReturn(new DTOSchuljahresabschnitte(sj2, 2024, 1));
+
+			final var result = service.getListByIdLehrerAbschnittsdaten(ids);
+
+			assertThat(result).hasSize(2);
+			assertThat(result.get(100L)).hasSize(2);
+			assertThat(result.get(200L)).hasSize(1);
+			assertThat(result.get(100L).stream().map(r -> r.id)).containsExactly(1L, 2L);
+			assertThat(result.get(200L).stream().map(r -> r.id)).containsExactly(3L);
 		}
 
 		@Test
@@ -355,7 +385,7 @@ class LehrerMehrleistungServiceTest {
 			final var result = service.createMultiple(List.of(patch));
 
 			assertThat(result).hasSize(1);
-			assertThat(result.get(0).id).isEqualTo(neueId);
+			assertThat(result.getFirst().id).isEqualTo(neueId);
 			assertThat(neueEntity.anzahl).isEqualTo(2.5);
 			assertThat(neueEntity.idGrund).isEqualTo("110");
 
@@ -457,7 +487,7 @@ class LehrerMehrleistungServiceTest {
 			final var result = service.deleteMultiple(List.of(id));
 
 			assertThat(result).hasSize(1);
-			assertThat(result.get(0).id).isEqualTo(id);
+			assertThat(result.getFirst().id).isEqualTo(id);
 			verify(kontext).fetch(List.of(id));
 			verify(kontext).delete(List.of(entity));
 		}

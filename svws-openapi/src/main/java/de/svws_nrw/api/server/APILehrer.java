@@ -27,6 +27,7 @@ import de.svws_nrw.asd.data.lehrer.LehrerRechtsverhaeltnisKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.asd.data.lehrer.LehrerZugangsgrundKatalogEintrag;
 import de.svws_nrw.asd.data.schule.Schulleitung;
+import de.svws_nrw.controller.lehrer.LehrerPersonalabschnittsdatenControllerFactory;
 import de.svws_nrw.controller.lehrer.LehrerPersonaldatenControllerFactory;
 import de.svws_nrw.controller.lehrer.LehrerFunktionControllerFactory;
 import de.svws_nrw.controller.schule.schulleitung.SchulleitungControllerFactory;
@@ -59,7 +60,6 @@ import de.svws_nrw.data.lehrer.DataLehrerFachrichtungen;
 import de.svws_nrw.data.lehrer.DataLehrerLehramt;
 import de.svws_nrw.data.lehrer.DataLehrerLehrbefaehigung;
 import de.svws_nrw.data.lehrer.DataLehrerLernplattformen;
-import de.svws_nrw.data.lehrer.DataLehrerPersonalabschnittsdaten;
 import de.svws_nrw.data.lehrer.DataLehrerPersonaldaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.lehrer.DataLehrerliste;
@@ -77,6 +77,9 @@ import de.svws_nrw.service.lehrer.LehrerUnterrichtsfachPatchRequest;
 import de.svws_nrw.service.lehrer.funktion.LehrerFunktionBatchPatchRequest;
 import de.svws_nrw.service.lehrer.funktion.LehrerFunktionCreateRequest;
 import de.svws_nrw.service.lehrer.funktion.LehrerFunktionPatchRequest;
+import de.svws_nrw.service.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenBatchPatchRequest;
+import de.svws_nrw.service.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenCreateRequest;
+import de.svws_nrw.service.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenPatchRequest;
 import de.svws_nrw.service.schule.schulleitung.SchulleitungCreateRequest;
 import de.svws_nrw.service.schule.schulleitung.SchulleitungPatchRequest;
 import io.swagger.v3.oas.annotations.Operation;
@@ -816,63 +819,234 @@ public class APILehrer {
 				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
 	}
 
-
 	/**
-	 * Die OpenAPI-Methode für die Abfrage der Personalabschnittsdaten eines Lehrers.
+	 * Die OpenAPI-Methode für die Abfrage einer LehrerPersonalabschnittsdaten anhand ihrer ID.
 	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id        die Datenbank-ID zur Identifikation der Abschnittsdaten
-	 * @param request   die Informationen zur HTTP-Anfrage
+	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id      die Datenbank-ID der LehrerPersonalabschnittsdaten
+	 * @param request die Informationen zur HTTP-Anfrage
 	 *
-	 * @return die Personalabschnittsdaten eines Lehrers zu einem Schuljahresabschnitt
+	 * @return die LehrerPersonalabschnittsdaten
 	 */
 	@GET
 	@Path("/personalabschnittsdaten/{id : \\d+}")
-	@Operation(summary = "Liefert zu der ID des Abschnittes die zugehörigen Personalabschnittsdaten.",
-			description = "Liest die Personalabschnittsdaten zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Personalabschnittsdaten", content = @Content(mediaType = "application/json",
+	@Operation(summary = "Liefert die LehrerPersonalabschnittsdaten mit der angegebenen ID.",
+			description = "Liest die LehrerPersonalabschnittsdaten mit der angegebenen ID aus der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die LehrerPersonalabschnittsdaten", content = @Content(mediaType = "application/json",
 			schema = @Schema(implementation = LehrerPersonalabschnittsdaten.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Lehrer-Personalabschnittsdaten mit der angegebenen ID gefunden")
-	public Response getLehrerPersonalabschnittsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine LehrerPersonalabschnittsdaten mit der angegebenen ID gefunden.")
+	public Response getLehrerPersonalabschnittsdaten(@PathParam("schema") final String schema,
+			@PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonalabschnittsdaten(conn).getByIdAsResponse(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN);
+		return LehrerPersonalabschnittsdatenControllerFactory
+				.withReadAccess(request)
+				.getController()
+				.get(id);
 	}
 
+	/**
+	 * Die OpenAPI-Methode für die Abfrage mehrerer LehrerPersonalabschnittsdaten anhand ihrer IDs.
+	 *
+	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param ids     die Datenbank-IDs der LehrerPersonalabschnittsdaten
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste der LehrerPersonalabschnittsdaten
+	 */
+	@POST
+	@Path("/personalabschnittsdaten/multiple")
+	@Operation(summary = "Liefert die LehrerPersonalabschnittsdaten zu den angegebenen IDs.",
+			description = "Liest die LehrerPersonalabschnittsdaten zu den angegebenen IDs aus der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Liste der LehrerPersonalabschnittsdaten", content = @Content(mediaType = "application/json",
+			array = @ArraySchema(schema = @Schema(implementation = LehrerPersonalabschnittsdaten.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.")
+	public Response getLehrerPersonalabschnittsdatenMultiple(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der LehrerPersonalabschnittsdaten", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
+			@Context final HttpServletRequest request) {
+		return LehrerPersonalabschnittsdatenControllerFactory
+				.withReadAccess(request)
+				.getController()
+				.getList(ids);
+	}
 
 	/**
-	 * Die OpenAPI-Methode für das Patchen der Personalabschnittsdaten eines Lehrers.
+	 * Die OpenAPI-Methode für das Erstellen einer neuen LehrerPersonalabschnittsdaten.
 	 *
-	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
-	 * @param id        die Datenbank-ID zur Identifikation der Abschnittsdaten
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
-	 * @param request   die Informationen zur HTTP-Anfrage
+	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param dto     die Daten der neuen LehrerPersonalabschnittsdaten
+	 * @param request die Informationen zur HTTP-Anfrage
 	 *
-	 * @return das Ergebnis der Patch-Operation
+	 * @return die erstellten LehrerPersonalabschnittsdaten
+	 */
+	@POST
+	@Path("/personalabschnittsdaten")
+	@Operation(summary = "Erstellt neue LehrerPersonalabschnittsdaten.",
+			description = "Erstellt neue LehrerPersonalabschnittsdaten und speichert diese in der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrerdaten besitzt.")
+	@ApiResponse(responseCode = "201", description = "Die erstellten LehrerPersonalabschnittsdaten", content = @Content(mediaType = "application/json",
+			schema = @Schema(implementation = LehrerPersonalabschnittsdaten.class)))
+	@ApiResponse(responseCode = "400", description = "Die Eingabedaten sind fehlerhaft.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten zu ändern.")
+	public Response createLehrerPersonalabschnittsdaten(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten der neuen LehrerPersonalabschnittsdaten", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = LehrerPersonalabschnittsdaten.class))) final LehrerPersonalabschnittsdatenCreateRequest dto,
+			@Context final HttpServletRequest request) {
+		return LehrerPersonalabschnittsdatenControllerFactory
+				.withWriteAccess(request)
+				.getController()
+				.create(dto);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Erstellen mehrerer neuer LehrerPersonalabschnittsdaten.
+	 *
+	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param dtos    die Daten der neuen LehrerPersonalabschnittsdaten
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die erstellten LehrerPersonalabschnittsdaten
+	 */
+	@POST
+	@Path("/personalabschnittsdaten/multiple")
+	@Operation(summary = "Erstellt mehrere neue LehrerPersonalabschnittsdaten.",
+			description = "Erstellt mehrere neue LehrerPersonalabschnittsdaten und speichert diese in der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrerdaten besitzt.")
+	@ApiResponse(responseCode = "201", description = "Die erstellten LehrerPersonalabschnittsdaten", content = @Content(mediaType = "application/json",
+			array = @ArraySchema(schema = @Schema(implementation = LehrerPersonalabschnittsdaten.class))))
+	@ApiResponse(responseCode = "400", description = "Die Eingabedaten sind fehlerhaft.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten zu ändern.")
+	public Response createLehrerPersonalabschnittsdatenMultiple(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten der neuen LehrerPersonalabschnittsdaten", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = LehrerPersonalabschnittsdaten.class)))) final List<LehrerPersonalabschnittsdatenCreateRequest> dtos,
+			@Context final HttpServletRequest request) {
+		return LehrerPersonalabschnittsdatenControllerFactory
+				.withWriteAccess(request)
+				.getController()
+				.createMultiple(dtos);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das teilweise Aktualisieren einer LehrerPersonalabschnittsdaten.
+	 *
+	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id      die Datenbank-ID der zu aktualisierenden LehrerPersonalabschnittsdaten
+	 * @param dto     die zu aktualisierenden Felder
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die aktualisierten LehrerPersonalabschnittsdaten
 	 */
 	@PATCH
 	@Path("/personalabschnittsdaten/{id : \\d+}")
-	@Operation(summary = "Passt die Lehrer-Personalabschnittsdaten zu der angegebenen ID an.",
-			description = "Passt die Lehrer-Personalabschnittsdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personalabschnittsdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Lehrer-Personalabschnittsdaten integriert.")
-	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten zu ändern.")
-	@ApiResponse(responseCode = "404", description = "Keine Personalabschnittsdaten mit der angegebenen ID gefunden")
-	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
-			+ " (z.B. eine negative ID)")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response patchLehrerPersonalabschnittsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@RequestBody(description = "Der Patch für die Lehrer-Personalabschnittsdaten", required = true,
+	@Operation(summary = "Aktualisiert bestehende LehrerPersonalabschnittsdaten.",
+			description = "Aktualisiert die LehrerPersonalabschnittsdaten mit der angegebenen ID. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die aktualisierten LehrerPersonalabschnittsdaten", content = @Content(mediaType = "application/json",
+			schema = @Schema(implementation = LehrerPersonalabschnittsdaten.class)))
+	@ApiResponse(responseCode = "400", description = "Die Eingabedaten sind fehlerhaft.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Keine LehrerPersonalabschnittsdaten mit der angegebenen ID gefunden.")
+	public Response patchLehrerPersonalabschnittsdaten(@PathParam("schema") final String schema,
+			@PathParam("id") final long id,
+			@RequestBody(description = "Die zu aktualisierenden Felder der LehrerPersonalabschnittsdaten", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							schema = @Schema(implementation = LehrerPersonalabschnittsdaten.class))) final InputStream is,
+							schema = @Schema(implementation = LehrerPersonalabschnittsdaten.class))) final LehrerPersonalabschnittsdatenPatchRequest dto,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonalabschnittsdaten(conn).patchAsResponse(id, is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
+		return LehrerPersonalabschnittsdatenControllerFactory
+				.withWriteAccess(request)
+				.getController()
+				.patch(id, dto);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das teilweise Aktualisieren mehrerer LehrerPersonalabschnittsdaten.
+	 *
+	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param dtos    die zu aktualisierenden LehrerPersonalabschnittsdaten
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die aktualisierten LehrerPersonalabschnittsdaten
+	 */
+	@PATCH
+	@Path("/personalabschnittsdaten/multiple")
+	@Operation(summary = "Aktualisiert mehrere bestehende LehrerPersonalabschnittsdaten.",
+			description = "Aktualisiert die LehrerPersonalabschnittsdaten mit den angegebenen IDs. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die aktualisierten LehrerPersonalabschnittsdaten", content = @Content(mediaType = "application/json",
+			array = @ArraySchema(schema = @Schema(implementation = LehrerPersonalabschnittsdaten.class))))
+	@ApiResponse(responseCode = "400", description = "Die Eingabedaten sind fehlerhaft.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Eine LehrerPersonalabschnittsdaten mit einer angegebenen ID wurde nicht gefunden.")
+	public Response patchLehrerPersonalabschnittsdatenMultiple(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die zu aktualisierenden LehrerPersonalabschnittsdaten", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = LehrerPersonalabschnittsdaten.class)))) final List<LehrerPersonalabschnittsdatenBatchPatchRequest> dtos,
+			@Context final HttpServletRequest request) {
+		return LehrerPersonalabschnittsdatenControllerFactory
+				.withWriteAccess(request)
+				.getController()
+				.patchMultiple(dtos);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Löschen einer LehrerPersonalabschnittsdaten.
+	 *
+	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id      die Datenbank-ID der zu löschenden LehrerPersonalabschnittsdaten
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Löschoperation
+	 */
+	@DELETE
+	@Path("/personalabschnittsdaten/{id : \\d+}")
+	@Operation(summary = "Löscht eine LehrerPersonalabschnittsdaten.",
+			description = "Löscht die LehrerPersonalabschnittsdaten mit der angegebenen ID. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Das Ergebnis der Löschoperation", content = @Content(mediaType = "application/json",
+			schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Keine LehrerPersonalabschnittsdaten mit der angegebenen ID gefunden.")
+	public Response deleteLehrerPersonalabschnittsdaten(@PathParam("schema") final String schema,
+			@PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
+		return LehrerPersonalabschnittsdatenControllerFactory
+				.withWriteAccess(request)
+				.getController()
+				.delete(id);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Löschen mehrerer LehrerPersonalabschnittsdaten.
+	 *
+	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param ids     die Datenbank-IDs der zu löschenden LehrerPersonalabschnittsdaten
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Ergebnisse der Löschoperationen
+	 */
+	@DELETE
+	@Path("/personalabschnittsdaten/multiple")
+	@Operation(summary = "Löscht mehrere LehrerPersonalabschnittsdaten.",
+			description = "Löscht die LehrerPersonalabschnittsdaten mit den angegebenen IDs. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Ergebnisse der Löschoperationen", content = @Content(mediaType = "application/json",
+			array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten zu ändern.")
+	public Response deleteLehrerPersonalabschnittsdatenMultiple(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der zu löschenden LehrerPersonalabschnittsdaten", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
+			@Context final HttpServletRequest request) {
+		return LehrerPersonalabschnittsdatenControllerFactory
+				.withWriteAccess(request)
+				.getController()
+				.deleteMultiple(ids);
 	}
 
 

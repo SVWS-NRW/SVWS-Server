@@ -5,7 +5,9 @@ import static de.svws_nrw.data.TransactionSupport.transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstunden;
 import de.svws_nrw.asd.types.lehrer.LehrerAnrechnungsgrund;
@@ -61,7 +63,7 @@ public final class LehrerAnrechnungsstundenService {
 		if (list.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Eintrag mit der ID %d gefunden.".formatted(id));
 		}
-		return list.get(0);
+		return list.getFirst();
 	}
 
 
@@ -77,6 +79,20 @@ public final class LehrerAnrechnungsstundenService {
 		return anrechnungen.stream().map(this::toApi).toList();
 	}
 
+	/**
+	 * Ermittelt die Anrechnungsstunden-Einträge gruppiert nach den IDs der Lehrerabschnittsdaten.
+	 *
+	 * @param idsLehrerAbschnittsdaten die IDs der Lehrerabschnittsdaten
+	 * @return Map von Lehrerabschnittsdaten-ID auf Liste der zugehörigen Anrechnungsstunden
+	 */
+	public Map<Long, List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> getListByIdLehrerAbschnittsdaten(
+			final Collection<Long> idsLehrerAbschnittsdaten) {
+		return kontext.fetchMapByAbschnittIds(idsLehrerAbschnittsdaten).entrySet().stream()
+				.collect(Collectors.toMap(
+						Map.Entry::getKey,
+						entry -> entry.getValue().stream().map(this::toApi).toList()
+				));
+	}
 
 	/**
 	 * Bestimmt die Liste der Einträge von Anrechungsstunden für die Lernabschnittsdaten mit der übergebenen ID.

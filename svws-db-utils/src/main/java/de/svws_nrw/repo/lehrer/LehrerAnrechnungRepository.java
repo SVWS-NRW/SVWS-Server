@@ -21,4 +21,12 @@ public interface LehrerAnrechnungRepository extends Repository<DTOLehrerAnrechnu
 	 */
 	Map<Long, List<DTOLehrerAnrechnungsstunde>> getMapByAbschnitt(Collection<Long> idsAbschnitte);
 
+	/**
+	 * Gibt eine Map von Abschnittsdaten-IDs auf die zugehörigen {@link DTOLehrerAnrechnungsstunde}-Einträge zurück.
+	 *
+	 * @param idsLehrerPersonalabschnittsdaten die IDs der Lehrerabschnittsdaten
+	 * @return Map von Abschnittsdaten-ID auf Liste der zugehörigen Anrechnungsstunden
+	 */
+	Map<Long, List<DTOLehrerAnrechnungsstunde>> getListByIdLehrerAbschnittsdaten(Collection<Long> idsLehrerPersonalabschnittsdaten);
+
 }

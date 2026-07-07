@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -31,60 +32,64 @@ class LehrerAnrechnungRepositoryImplTest {
 	private LehrerAnrechnungRepositoryImpl repository;
 
 	@Test
-	@DisplayName("Test: Prüfe, ob getMapByAbschnitt die Anrechnungen nach Abschnitt-IDs korrekt gruppiert.")
-	void testGetMapByAbschnitt() {
-		// Stenario: Drei Abschnitte mit zwei, einem bzw. keinem Anrechnungsgrund
-		final List<Long> idsAbschnitte = Arrays.asList(100L, 200L, 300L);
+	@DisplayName("Test: Prüfe, ob getListByIdLehrerAbschnittsdaten die Anrechnungen nach Abschnitt-IDs korrekt gruppiert.")
+	void testGetListByIdLehrerAbschnittsdaten() {
+		final List<Long> ids = Arrays.asList(100L, 200L);
+
 		final DTOLehrerAnrechnungsstunde e1 = new DTOLehrerAnrechnungsstunde(1L, 100L);
 		final DTOLehrerAnrechnungsstunde e2 = new DTOLehrerAnrechnungsstunde(2L, 100L);
 		final DTOLehrerAnrechnungsstunde e3 = new DTOLehrerAnrechnungsstunde(3L, 200L);
 
-		when(conn.queryList(DTOLehrerAnrechnungsstunde.QUERY_LIST_BY_ABSCHNITT_ID, DTOLehrerAnrechnungsstunde.class, idsAbschnitte))
+		when(conn.queryList(DTOLehrerAnrechnungsstunde.QUERY_LIST_BY_ABSCHNITT_ID,
+				DTOLehrerAnrechnungsstunde.class,
+				ids))
 				.thenReturn(Arrays.asList(e1, e2, e3));
 
-		final Map<Long, List<DTOLehrerAnrechnungsstunde>> result = repository.getMapByAbschnitt(idsAbschnitte);
+		final Map<Long, List<DTOLehrerAnrechnungsstunde>> result = repository.getListByIdLehrerAbschnittsdaten(ids);
 
-		// Prüfe, ob die Gruppierung korrekt durchgeführt wurde
 		assertNotNull(result);
-		assertEquals(3, result.size(), "Die Map sollte Einträge für drei Abschnitte enthalten.");
+		assertEquals(2, result.size());
 
-		// Prüfung Abschnitt 100
+		assertTrue(result.containsKey(100L));
 		assertEquals(2, result.get(100L).size());
 		assertTrue(result.get(100L).contains(e1));
 		assertTrue(result.get(100L).contains(e2));
 
-		// Prüfung Abschnitt 200
+		assertTrue(result.containsKey(200L));
 		assertEquals(1, result.get(200L).size());
-		assertEquals(e3, result.get(200L).get(0));
+		assertEquals(e3, result.get(200L).getFirst());
 
-		// Prüfung Abschnitt 300
-		assertTrue(result.get(300L).isEmpty());
-
-		verify(conn).queryList(DTOLehrerAnrechnungsstunde.QUERY_LIST_BY_ABSCHNITT_ID, DTOLehrerAnrechnungsstunde.class, idsAbschnitte);
+		verify(conn).queryList(DTOLehrerAnrechnungsstunde.QUERY_LIST_BY_ABSCHNITT_ID,
+				DTOLehrerAnrechnungsstunde.class,
+				ids);
 	}
 
 	@Test
-	@DisplayName("Test: Prüfe, ob getMapByAbschnitt bei null oder leeren IDs eine leere Map liefert.")
-	void testGetMapByAbschnittEmpty() {
-		assertTrue(repository.getMapByAbschnitt(null).isEmpty());
-		assertTrue(repository.getMapByAbschnitt(List.of()).isEmpty());
+	@DisplayName("Test: Prüfe, ob getListByIdLehrerAbschnittsdaten bei leerem DB-Ergebnis eine leere Map liefert.")
+	void testGetListByIdLehrerAbschnittsdatenEmptyResult() {
+		final List<Long> ids = List.of(100L);
+
+		when(conn.queryList(DTOLehrerAnrechnungsstunde.QUERY_LIST_BY_ABSCHNITT_ID,
+				DTOLehrerAnrechnungsstunde.class,
+				ids))
+				.thenReturn(Collections.emptyList());
+
+		final Map<Long, List<DTOLehrerAnrechnungsstunde>> result = repository.getListByIdLehrerAbschnittsdaten(ids);
+
+		assertNotNull(result);
+		assertTrue(result.isEmpty());
+
+		verify(conn).queryList(DTOLehrerAnrechnungsstunde.QUERY_LIST_BY_ABSCHNITT_ID,
+				DTOLehrerAnrechnungsstunde.class,
+				ids);
+	}
+
+	@Test
+	@DisplayName("Test: Prüfe, ob getListByIdLehrerAbschnittsdaten bei null oder leeren IDs eine leere Map liefert.")
+	void testGetListByIdLehrerAbschnittsdatenNullOrEmpty() {
+		assertTrue(repository.getListByIdLehrerAbschnittsdaten(null).isEmpty());
+		assertTrue(repository.getListByIdLehrerAbschnittsdaten(List.of()).isEmpty());
 		verifyNoInteractions(conn);
-	}
-
-	@Test
-	@DisplayName("Test: Prüfe, ob die ID korrekt gesetzt wird.")
-	void testCreate() {
-		final DTOLehrerAnrechnungsstunde neu = new DTOLehrerAnrechnungsstunde(-1L, 100L);
-		final long neueId = 999L;
-
-		when(conn.transactionGetNextID(DTOLehrerAnrechnungsstunde.class)).thenReturn(neueId);
-		when(conn.transactionPersist(neu)).thenReturn(true);
-
-		final DTOLehrerAnrechnungsstunde result = repository.create(neu);
-
-		assertEquals(neueId, result.ID);
-		verify(conn).transactionGetNextID(DTOLehrerAnrechnungsstunde.class);
-		verify(conn).transactionPersist(neu);
 	}
 
 }

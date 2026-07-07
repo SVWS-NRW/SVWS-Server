@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.lehrer.LehrerFunktion;
 import de.svws_nrw.core.data.SimpleOperationResponse;
@@ -82,6 +83,20 @@ public final class LehrerFunktionService {
 		return this.repo.findAllByIdAbschnitt(idAbschnitt).stream()
 				.map(this.mapper::toApi)
 				.toList();
+	}
+
+	/**
+	 * Ermittelt die LehrerFunktion-Einträge gruppiert nach den IDs der Lehrerabschnittsdaten.
+	 *
+	 * @param idsLehrerAbschnittsdaten die IDs der Lehrerabschnittsdaten
+	 * @return Map von Lehrerabschnittsdaten-ID auf Liste der zugehörigen LehrerFunktion
+	 */
+	public Map<Long, List<LehrerFunktion>> getListByIdLehrerAbschnittsdaten(final Collection<Long> idsLehrerAbschnittsdaten) {
+		return repo.getListByIdLehrerAbschnittsdaten(idsLehrerAbschnittsdaten).entrySet().stream()
+				.collect(Collectors.toMap(
+						Map.Entry::getKey,
+						entry -> entry.getValue().stream().map(this.mapper::toApi).toList()
+				));
 	}
 
 	/**

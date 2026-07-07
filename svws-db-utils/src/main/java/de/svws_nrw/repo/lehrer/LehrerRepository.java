@@ -17,4 +17,10 @@ public interface LehrerRepository extends Repository<DTOLehrer> {
 	 */
 	List<DTOLehrer> getAllStatistikRelevant();
 
+	/**
+	 * @param idLehrer {@link Long}
+	 * @return {@code true}, wenn ein Eintrag gefunden wurde, sonst {@code false}
+	 */
+	boolean existsById(Long idLehrer);
+
 }

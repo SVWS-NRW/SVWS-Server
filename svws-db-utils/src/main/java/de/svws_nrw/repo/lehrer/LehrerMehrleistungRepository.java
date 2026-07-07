@@ -21,4 +21,13 @@ public interface LehrerMehrleistungRepository extends Repository<DTOLehrerMehrle
 	 */
 	Map<Long, List<DTOLehrerMehrleistung>> getMapByIdsLehrerAbschnittsdaten(Collection<Long> idsAbschnitte);
 
+	/**
+	 * Gibt eine Map von Abschnittsdaten-IDs auf die zugehörigen {@link DTOLehrerMehrleistung}-Einträge zurück.
+	 *
+	 * @param idsLehrerPersonalabschnittsdaten die IDs der Lehrerabschnittsdaten
+	 * @return Map von Abschnittsdaten-ID auf Liste der zugehörigen Mehrleistungen
+	 */
+	Map<Long, List<DTOLehrerMehrleistung>> getListByIdLehrerAbschnittsdaten(Collection<Long> idsLehrerPersonalabschnittsdaten);
+
+
 }

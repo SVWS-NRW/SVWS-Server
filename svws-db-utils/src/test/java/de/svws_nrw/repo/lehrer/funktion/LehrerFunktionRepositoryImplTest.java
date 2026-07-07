@@ -8,7 +8,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
@@ -123,6 +125,11 @@ class LehrerFunktionRepositoryImplTest {
 		final long idFunktion = 34L;
 		final long excludeId = 56L;
 
+		when(conn.existsBy(
+				QUERY_WITH_ID_EXCLUDE,
+				DTOLehrerFunktion.class, idAbschnitt, idFunktion, excludeId
+		)).thenReturn(false);
+
 		assertThat(repository.existsByIdAbschnittAndIdFunktionExcludingId(idAbschnitt, idFunktion, excludeId)).isFalse();
 
 		verify(conn).existsBy(
@@ -130,4 +137,43 @@ class LehrerFunktionRepositoryImplTest {
 				DTOLehrerFunktion.class, idAbschnitt, idFunktion, excludeId
 		);
 	}
+
+	@Test
+	@DisplayName("getListByIdLehrerAbschnittsdaten | gruppiert nach idAbschnittsdaten")
+	void getListByIdLehrerAbschnittsdaten_groupsByAbschnitt() {
+		final var repository = new LehrerFunktionRepositoryImpl(conn);
+		final Collection<Long> ids = List.of(10L, 20L, 30L);
+
+		final var f1 = new DTOLehrerFunktion(1L, 10L, 100L);
+		final var f2 = new DTOLehrerFunktion(2L, 10L, 101L);
+		final var f3 = new DTOLehrerFunktion(3L, 20L, 200L);
+
+		when(conn.queryList(DTOLehrerFunktion.QUERY_LIST_BY_IDABSCHNITTSDATEN, DTOLehrerFunktion.class, ids))
+				.thenReturn(List.of(f1, f2, f3));
+
+		final Map<Long, List<DTOLehrerFunktion>> result = repository.getListByIdLehrerAbschnittsdaten(ids);
+
+		assertThat(result).hasSize(2);
+		assertThat(result.get(10L)).containsExactly(f1, f2);
+		assertThat(result.get(20L)).containsExactly(f3);
+		assertThat(result).doesNotContainKey(30L);
+
+		verify(conn).queryList(DTOLehrerFunktion.QUERY_LIST_BY_IDABSCHNITTSDATEN, DTOLehrerFunktion.class, ids);
+	}
+
+	@Test
+	@DisplayName("getListByIdLehrerAbschnittsdaten | leeres Ergebnis -> leere Map")
+	void getListByIdLehrerAbschnittsdaten_emptyResult() {
+		final var repository = new LehrerFunktionRepositoryImpl(conn);
+		final var ids = List.of(10L);
+
+		when(conn.queryList(DTOLehrerFunktion.QUERY_LIST_BY_IDABSCHNITTSDATEN, DTOLehrerFunktion.class, ids))
+				.thenReturn(List.of());
+
+		final var result = repository.getListByIdLehrerAbschnittsdaten(ids);
+
+		assertThat(result).isEmpty();
+		verify(conn).queryList(DTOLehrerFunktion.QUERY_LIST_BY_IDABSCHNITTSDATEN, DTOLehrerFunktion.class, ids);
+	}
+
 }

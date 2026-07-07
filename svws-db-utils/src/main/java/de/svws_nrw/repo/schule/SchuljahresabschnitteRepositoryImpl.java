@@ -18,4 +18,8 @@ public final class SchuljahresabschnitteRepositoryImpl extends RepositoryImpl<DT
 		super(conn, DTOSchuljahresabschnitte.class, o -> o.ID, (o, id) -> o.ID = id);
 	}
 
+	@Override
+	public boolean existsById(final Long idSchuljahresabschnitt) {
+		return conn.existsBy(DTOSchuljahresabschnitte.QUERY_BY_ID, DTOSchuljahresabschnitte.class, idSchuljahresabschnitt);
+	}
 }

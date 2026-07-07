@@ -44,4 +44,10 @@ public final class LehrerMinderleistungRepositoryImpl extends RepositoryImpl<DTO
 		return conn.queryList(DTOLehrerEntlastungsstunde.QUERY_BY_IDABSCHNITTSDATEN, DTOLehrerEntlastungsstunde.class, idAbschnitt);
 	}
 
+	@Override
+	public Map<Long, List<DTOLehrerEntlastungsstunde>> getListByIdLehrerAbschnittsdaten(final Collection<Long> idsLehrerPersonalabschnittsdaten) {
+		final var result = conn.queryList(DTOLehrerEntlastungsstunde.QUERY_LIST_BY_IDABSCHNITTSDATEN, DTOLehrerEntlastungsstunde.class, idsLehrerPersonalabschnittsdaten);
+		return result.stream().collect(Collectors.groupingBy(entity -> entity.idAbschnittsdaten));
+	}
+
 }

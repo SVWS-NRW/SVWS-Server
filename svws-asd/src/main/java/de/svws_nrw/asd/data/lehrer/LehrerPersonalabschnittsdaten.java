@@ -18,65 +18,56 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class LehrerPersonalabschnittsdaten {
 
-	/** Die ID des Abschnitts für den Lehrer in der Datenbank. */
-	@Schema(description = "die ID des Lernabschnitts in der Datenbank", example = "126784")
+	/** ID der LehrerPersonalabschnittsdaten. */
+	@Schema(description = "ID der LehrerPersonalabschnittsdaten.", example = "126784")
 	public long id;
 
-	/** Die ID des Lehrers. */
-	@Schema(description = "Die ID des Lehrers.", example = "4711")
+	/** ID des Lehrers. */
+	@Schema(description = "ID des Lehrers.", example = "4711")
 	public long idLehrer;
 
-	/** Die ID des Schuljahresabschnitts, zu welchem diese Abschnittdaten gehören. */
-	@Schema(description = "die ID des Schuljahresabschnitts, zu welchem diese Abschnittdaten gehören", example = "42")
+	/** ID des Schuljahresabschnitts zu diesen Abschnittsdaten. */
+	@Schema(description = "ID des Schuljahresabschnitts zu diesen Abschnittsdaten.", example = "1")
 	public long idSchuljahresabschnitt;
 
-	/** Das Pflichtstundensoll des Lehrers. */
-	@Schema(description = "Das Pflichtstundensoll des Lehrers.", example = "18.5")
+	/** Pflichtstundensoll des Lehrers. */
+	@Schema(description = "Pflichtstundensoll des Lehrers.", example = "18.5")
 	public Double pflichtstundensoll;
 
-	/** Das Rechtsverhältnis unter welchem der Lehrer beschäftigt ist (z.B. Beamter auf Lebenszeit) - siehe Statistik-Katalog. */
-	@Schema(description = "Das Rechtsverhältnis unter welchem der Lehrer beschäftigt ist (z.B. Beamter auf Lebenszeit) - siehe Statistik-Katalog.",
-			example = "L")
+	/** ID des Rechtsverhältnisses des Lehrers (z.B. Beamter auf Lebenszeit). */
+	@Schema(description = "ID des Rechtsverhältnisses des Lehrers (z.B. Beamter auf Lebenszeit).", example = "1")
 	public Long idRechtsverhaeltnis;
 
-	/** Die Art der Beschäftigung (Vollzeit, Teilzeit, etc.) - siehe Statistik-Katalog. */
-	@Schema(description = "Die Art der Beschäftigung (Vollzeit, Teilzeit, etc.) - siehe Statistik-Katalog.", example = "T")
+	/** ID der Beschäftigungsart (z.B. Vollzeit, Teilzeit). */
+	@Schema(description = "ID der Beschäftigungsart (z.B. Vollzeit, Teilzeit).", example = "1")
 	public Long idBeschaeftigungsart;
 
-	/** [ASD] Der Einsatzstatus (z.B. Stammschule, nur hier tätig) */
-	@Schema(description = "[ASD] Der Einsatzstatus (z.B. Stammschule, nur hier tätig) - siehe Statistik-Katalog. Ein leerer Eintrag wird als DEFAULT interpretiert, und bedeutet \"Nur an Stammschule tätig.\"",
-			example = "A")
+	/** ID des Einsatzstatus (z.B. Stammschule, nur hier tätig). */
+	@Schema(description = "ID des Einsatzstatus (z.B. Stammschule, nur hier tätig).", example = "1")
 	public Long idEinsatzstatus;
 
-	/** Die Schulnummer der Stammschule, sofern diese abweicht. */
-	@Schema(description = "Die Schulnummer der Stammschule, sofern diese abweicht.", example = "168890")
+	/** Schulnummer der Stammschule, falls abweichend. */
+	@Schema(description = "Schulnummer der Stammschule, falls abweichend.", example = "168890")
 	public String stammschulnummer;
 
-	/** Die allgemeinen Anrechnungsstunden, die den Abschnittsdaten des Lehrers zugeordnet sind. */
+	/** Allgemeine Anrechnungsstunden zu den Abschnittsdaten des Lehrers. */
 	@ArraySchema(schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class,
-			description = "Ein Array mit den allgemeinen Anrechnungsstunden, die den Abschnittsdaten des Lehrers zugeordnet sind."))
+			description = "Allgemeine Anrechnungsstunden zu den Abschnittsdaten des Lehrers."))
 	public final @NotNull List<LehrerPersonalabschnittsdatenAnrechnungsstunden> anrechnungen = new ArrayList<>();
 
-	/** Die Stunden, welche Mehrarbeitsgründe haben, dem Pflichtstundensoll hinzuzufügen sind und die den Abschnittsdaten des Lehrers zugeordnet sind. */
+	/** Mehrleistungsstunden (Mehrarbeit) zum Pflichtstundensoll in den Abschnittsdaten des Lehrers. */
 	@ArraySchema(schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class,
-			description = "Ein Array mit den Stunden, welche Mehrarbeitsgründe haben, dem Pflichtstundensoll hinzuzufügen sind und die den Abschnittsdaten des Lehrers zugeordnet sind."))
+			description = "Mehrleistungsstunden (Mehrarbeit) zum Pflichtstundensoll in den Abschnittsdaten des Lehrers."))
 	public final @NotNull List<LehrerPersonalabschnittsdatenAnrechnungsstunden> mehrleistung = new ArrayList<>();
 
-	/** Die Stunden, welche Minderarbeitsgründe haben, dem Pflichtstundensoll wegzunehmen sind und die den Abschnittsdaten des Lehrers zugeordnet sind. */
+	/** Minderleistungsstunden (Minderarbeit) vom Pflichtstundensoll in den Abschnittsdaten des Lehrers. */
 	@ArraySchema(schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class,
-			description = "Ein Array mit den Stunden, welche Minderarbeitsgründe haben, dem Pflichtstundensoll wegzunehmen sind und die den Abschnittsdaten des Lehrers zugeordnet sind."))
+			description = "Minderleistungsstunden (Minderarbeit) vom Pflichtstundensoll in den Abschnittsdaten des Lehrers."))
 	public final @NotNull List<LehrerPersonalabschnittsdatenAnrechnungsstunden> minderleistung = new ArrayList<>();
 
-	/** Die schulspezifischen-Funktionen, die einem Lehrer in dem Abschnitt der Abschnittsdaten zugeordnet sind. */
-	@ArraySchema(schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class,
-			description = "Ein Array mit schulspezifischen-Funktionen, die einem Lehrer in dem Abschnitt der Abschnittsdaten zugeordnet sind."))
+	/** Schulspezifische Funktionen des Lehrers in diesem Abschnitt. */
+	@ArraySchema(schema = @Schema(implementation = LehrerFunktion.class,
+			description = "Schulspezifische Funktionen des Lehrers in diesem Abschnitt."))
 	public final @NotNull List<LehrerFunktion> funktionen = new ArrayList<>();
-
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
-	public LehrerPersonalabschnittsdaten() {
-		// leer
-	}
 
 }

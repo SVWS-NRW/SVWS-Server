@@ -1,6 +1,8 @@
 package de.svws_nrw.repo.lehrer.funktion;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFunktion;
 import de.svws_nrw.repo.Repository;
@@ -38,5 +40,14 @@ public interface LehrerFunktionRepository extends Repository<DTOLehrerFunktion> 
 	 *         dessen ID ungleich {@code excludeId} ist, sonst {@code false}
 	 */
 	boolean existsByIdAbschnittAndIdFunktionExcludingId(long idAbschnitt, long idFunktion, long excludeId);
+
+	/**
+	 * Gibt eine Map von Abschnittsdaten-IDs auf die zugehörigen {@link DTOLehrerFunktion}-Einträge zurück.
+	 *
+	 * @param idsLehrerPersonalabschnittsdaten die IDs der Lehrerabschnittsdaten
+	 * @return Map von Abschnittsdaten-ID auf Liste der zugehörigen DTOLehrerFunktion
+	 */
+	Map<Long, List<DTOLehrerFunktion>> getListByIdLehrerAbschnittsdaten(Collection<Long> idsLehrerPersonalabschnittsdaten);
+
 
 }

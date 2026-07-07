@@ -108,6 +108,30 @@ public final class LehrerAnrechnungsstundenServiceKontext {
 		mapSchuljahresabschnitte = schuljahresabschnitteRepository.getAll().stream().collect(Collectors.toMap(e -> e.ID, e -> e));
 	}
 
+	/**
+	 * Lädt alle für das Mapping benötigten Daten anhand der übergebenen Abschnitt-IDs in den Cache.
+	 *
+	 * @param idsAbschnitte die IDs der Lehrerabschnittsdaten
+	 */
+	public void preFetchByAbschnittIds(final Collection<Long> idsAbschnitte) {
+		final var listAbschnitte = lehrerAbschnittsdatenRepository.findListByIds(idsAbschnitte);
+		mapAbschnittsdaten = listAbschnitte.stream().collect(Collectors.toMap(e -> e.ID, e -> e));
+		mapSchuljahresabschnitte = schuljahresabschnitteRepository.getAll().stream()
+				.collect(Collectors.toMap(e -> e.ID, e -> e));
+	}
+
+	/**
+	 * Lädt alle Anrechnungsstunden gruppiert nach Abschnittsdaten-ID.
+	 *
+	 * @param idsAbschnitte die IDs der Lehrerabschnittsdaten
+	 * @return Map von Abschnittsdaten-ID auf Liste der zugehörigen DTOs
+	 */
+	public Map<Long, List<DTOLehrerAnrechnungsstunde>> fetchMapByAbschnittIds(final Collection<Long> idsAbschnitte) {
+		final var result = lehrerAnrechnungRepository.getListByIdLehrerAbschnittsdaten(idsAbschnitte);
+		preFetchByAbschnittIds(idsAbschnitte);
+		return result;
+	}
+
 
 	/**
 	 * Führt eine Anfrage auf das Repository der Lehrer-Anrechnungsstunden mit den übergebenen IDs aus.

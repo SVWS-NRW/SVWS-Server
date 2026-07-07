@@ -8,69 +8,66 @@ import { Class } from '../../../java/lang/Class';
 export class LehrerPersonalabschnittsdaten extends JavaObject {
 
 	/**
-	 * Die ID des Abschnitts für den Lehrer in der Datenbank.
+	 * ID der LehrerPersonalabschnittsdaten.
 	 */
 	public id: number = 0;
 
 	/**
-	 * Die ID des Lehrers.
+	 * ID des Lehrers.
 	 */
 	public idLehrer: number = 0;
 
 	/**
-	 * Die ID des Schuljahresabschnitts, zu welchem diese Abschnittdaten gehören.
+	 * ID des Schuljahresabschnitts zu diesen Abschnittsdaten.
 	 */
 	public idSchuljahresabschnitt: number = 0;
 
 	/**
-	 * Das Pflichtstundensoll des Lehrers.
+	 * Pflichtstundensoll des Lehrers.
 	 */
 	public pflichtstundensoll: number | null = null;
 
 	/**
-	 * Das Rechtsverhältnis unter welchem der Lehrer beschäftigt ist (z.B. Beamter auf Lebenszeit) - siehe Statistik-Katalog.
+	 * ID des Rechtsverhältnisses des Lehrers (z.B. Beamter auf Lebenszeit).
 	 */
 	public idRechtsverhaeltnis: number | null = null;
 
 	/**
-	 * Die Art der Beschäftigung (Vollzeit, Teilzeit, etc.) - siehe Statistik-Katalog.
+	 * ID der Beschäftigungsart (z.B. Vollzeit, Teilzeit).
 	 */
 	public idBeschaeftigungsart: number | null = null;
 
 	/**
-	 * [ASD] Der Einsatzstatus (z.B. Stammschule, nur hier tätig)
+	 * ID des Einsatzstatus (z.B. Stammschule, nur hier tätig).
 	 */
 	public idEinsatzstatus: number | null = null;
 
 	/**
-	 * Die Schulnummer der Stammschule, sofern diese abweicht.
+	 * Schulnummer der Stammschule, falls abweichend.
 	 */
 	public stammschulnummer: string | null = null;
 
 	/**
-	 * Die allgemeinen Anrechnungsstunden, die den Abschnittsdaten des Lehrers zugeordnet sind.
+	 * Allgemeine Anrechnungsstunden zu den Abschnittsdaten des Lehrers.
 	 */
 	public readonly anrechnungen: List<LehrerPersonalabschnittsdatenAnrechnungsstunden> = new ArrayList<LehrerPersonalabschnittsdatenAnrechnungsstunden>();
 
 	/**
-	 * Die Stunden, welche Mehrarbeitsgründe haben, dem Pflichtstundensoll hinzuzufügen sind und die den Abschnittsdaten des Lehrers zugeordnet sind.
+	 * Mehrleistungsstunden (Mehrarbeit) zum Pflichtstundensoll in den Abschnittsdaten des Lehrers.
 	 */
 	public readonly mehrleistung: List<LehrerPersonalabschnittsdatenAnrechnungsstunden> = new ArrayList<LehrerPersonalabschnittsdatenAnrechnungsstunden>();
 
 	/**
-	 * Die Stunden, welche Minderarbeitsgründe haben, dem Pflichtstundensoll wegzunehmen sind und die den Abschnittsdaten des Lehrers zugeordnet sind.
+	 * Minderleistungsstunden (Minderarbeit) vom Pflichtstundensoll in den Abschnittsdaten des Lehrers.
 	 */
 	public readonly minderleistung: List<LehrerPersonalabschnittsdatenAnrechnungsstunden> = new ArrayList<LehrerPersonalabschnittsdatenAnrechnungsstunden>();
 
 	/**
-	 * Die schulspezifischen-Funktionen, die einem Lehrer in dem Abschnitt der Abschnittsdaten zugeordnet sind.
+	 * Schulspezifische Funktionen des Lehrers in diesem Abschnitt.
 	 */
 	public readonly funktionen: List<LehrerFunktion> = new ArrayList<LehrerFunktion>();
 
 
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
 	public constructor() {
 		super();
 	}

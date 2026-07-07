@@ -32,6 +32,7 @@ public final class LehrerMehrleistungRepositoryImpl extends RepositoryImpl<DTOLe
 	 *
 	 * @return die Zuordnung
 	 */
+	@Override
 	public Map<Long, List<DTOLehrerMehrleistung>> getMapByIdsLehrerAbschnittsdaten(final Collection<Long> idsAbschnitte) {
 		if ((idsAbschnitte == null) || (idsAbschnitte.isEmpty())) {
 			return Collections.emptyMap();
@@ -42,6 +43,12 @@ public final class LehrerMehrleistungRepositoryImpl extends RepositoryImpl<DTOLe
 			map.computeIfAbsent(idAbschnitt, id -> new ArrayList<>());
 		}
 		return map;
+	}
+
+	@Override
+	public Map<Long, List<DTOLehrerMehrleistung>> getListByIdLehrerAbschnittsdaten(final Collection<Long> idsLehrerPersonalabschnittsdaten) {
+		final var result = conn.queryList(DTOLehrerMehrleistung.QUERY_LIST_BY_IDABSCHNITTSDATEN, DTOLehrerMehrleistung.class, idsLehrerPersonalabschnittsdaten);
+		return result.stream().collect(Collectors.groupingBy(entity -> entity.idAbschnittsdaten));
 	}
 
 }

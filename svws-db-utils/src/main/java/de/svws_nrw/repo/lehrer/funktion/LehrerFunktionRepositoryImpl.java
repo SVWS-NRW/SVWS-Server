@@ -1,6 +1,9 @@
 package de.svws_nrw.repo.lehrer.funktion;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFunktion;
@@ -43,6 +46,12 @@ public final class LehrerFunktionRepositoryImpl extends RepositoryImpl<DTOLehrer
 				idFunktion,
 				excludeId
 		);
+	}
+
+	@Override
+	public Map<Long, List<DTOLehrerFunktion>> getListByIdLehrerAbschnittsdaten(final Collection<Long> idsLehrerPersonalabschnittsdaten) {
+		final var result = conn.queryList(DTOLehrerFunktion.QUERY_LIST_BY_IDABSCHNITTSDATEN, DTOLehrerFunktion.class, idsLehrerPersonalabschnittsdaten);
+		return result.stream().collect(Collectors.groupingBy(entity -> entity.idAbschnittsdaten));
 	}
 
 }

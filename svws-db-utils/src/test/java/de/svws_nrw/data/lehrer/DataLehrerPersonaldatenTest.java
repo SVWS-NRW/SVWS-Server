@@ -19,6 +19,8 @@ import de.svws_nrw.repo.DbConnectionProvider;
 import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenService;
 import de.svws_nrw.service.lehrer.LehrerMehrleistungService;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
+import de.svws_nrw.service.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenService;
+import de.svws_nrw.service.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenServiceFactory;
 import jakarta.ws.rs.core.Response;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -41,6 +43,7 @@ import static org.assertj.core.api.Assertions.assertThatException;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
@@ -66,8 +69,16 @@ class DataLehrerPersonaldatenTest {
 	@Mock
 	private LehrerServiceFactory serviceFactory;
 
+	@Mock
+	private LehrerPersonalabschnittsdatenService personalabschnittsdatenService;
+
+	@Mock
+	private LehrerPersonalabschnittsdatenServiceFactory personalabschnittsdatenServiceFactory;
+
 	@InjectMocks
 	private DataLehrerPersonaldaten data;
+
+	private MockedStatic<LehrerPersonalabschnittsdatenServiceFactory> mockedPersonalabschnittsdatenFactory;
 
 	private MockedStatic<LehrerServiceFactory> mockedFactory;
 
@@ -84,6 +95,14 @@ class DataLehrerPersonaldatenTest {
 		mockedFactory.when(LehrerServiceFactory::getNewInstance).thenReturn(serviceFactory);
 		lenient().when(serviceFactory.getLehrerAnrechnungsstundenService()).thenReturn(anrechnungsService);
 		lenient().when(serviceFactory.getLehrerMehrleistungService()).thenReturn(mehrleistungService);
+
+		mockedPersonalabschnittsdatenFactory = mockStatic(LehrerPersonalabschnittsdatenServiceFactory.class);
+		mockedPersonalabschnittsdatenFactory.when(LehrerPersonalabschnittsdatenServiceFactory::getNewInstance)
+				.thenReturn(personalabschnittsdatenServiceFactory);
+		lenient().when(personalabschnittsdatenServiceFactory.getLehrerPersonalabschnittsdatenService())
+				.thenReturn(personalabschnittsdatenService);
+		lenient().when(personalabschnittsdatenService.getByIdLehrer(anyLong())).thenReturn(List.of());
+
 		dbConnectionProviderMock = mockStatic(DbConnectionProvider.class);
 		dbConnectionProviderMock.when(DbConnectionProvider::getConnection).thenReturn(mock(DBEntityManager.class));
 	}
@@ -91,6 +110,7 @@ class DataLehrerPersonaldatenTest {
 	@AfterEach
 	void tearDown() {
 		mockedFactory.close();
+		mockedPersonalabschnittsdatenFactory.close();
 		dbConnectionProviderMock.close();
 	}
 
@@ -169,14 +189,10 @@ class DataLehrerPersonaldatenTest {
 		final var mockAbschnittsdaten = List.of(new LehrerPersonalabschnittsdaten());
 		final var mockLehraemter = List.of(new LehrerLehramtEintrag());
 
-		try (var mockedAbschnittsdaten = mockStatic(DataLehrerPersonalabschnittsdaten.class);
-				var mockedLehraemter = mockStatic(DataLehrerLehramt.class)) {
+		when(personalabschnittsdatenService.getByIdLehrer(dto.ID)).thenReturn(mockAbschnittsdaten);
 
-			mockedAbschnittsdaten
-					.when(() -> DataLehrerPersonalabschnittsdaten.getByLehrerId(conn, dto.ID))
-					.thenReturn(mockAbschnittsdaten);
-			mockedLehraemter
-					.when(() -> DataLehrerLehramt.getListByLehrerId(conn, dto.ID))
+		try (var mockedLehraemter = mockStatic(DataLehrerLehramt.class)) {
+			mockedLehraemter.when(() -> DataLehrerLehramt.getListByLehrerId(conn, dto.ID))
 					.thenReturn(mockLehraemter);
 
 			final var result = this.data.map(dto);

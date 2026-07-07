@@ -918,4 +918,5 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 		}
 		return liste.getLast();
 	}
+
 }

@@ -31,4 +31,9 @@ public final class LehrerRepositoryImpl extends RepositoryImpl<DTOLehrer> implem
 		return conn.queryList(DTOLehrer.QUERY_BY_STATISTIKRELEVANT, DTOLehrer.class, true);
 	}
 
+	@Override
+	public boolean existsById(final Long idLehrer) {
+		return conn.existsBy(DTOLehrer.QUERY_BY_ID, DTOLehrer.class, idLehrer);
+	}
+
 }

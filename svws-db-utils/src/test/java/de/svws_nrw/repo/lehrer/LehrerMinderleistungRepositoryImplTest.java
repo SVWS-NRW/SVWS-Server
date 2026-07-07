@@ -1,6 +1,7 @@
 package de.svws_nrw.repo.lehrer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -85,6 +86,73 @@ class LehrerMinderleistungRepositoryImplTest {
 		assertEquals(neueId, result.id);
 		verify(conn).transactionGetNextID(DTOLehrerEntlastungsstunde.class);
 		verify(conn).transactionPersist(neu);
+	}
+
+	@Test
+	@DisplayName("getAllByLehrerAbschnittId: Delegiert korrekt an DBEntityManager.queryList")
+	void testGetAllByLehrerAbschnittId() {
+		final long idAbschnitt = 100L;
+
+		final var e1 = new DTOLehrerEntlastungsstunde(1L, idAbschnitt);
+		final var e2 = new DTOLehrerEntlastungsstunde(2L, idAbschnitt);
+
+		when(conn.queryList(DTOLehrerEntlastungsstunde.QUERY_BY_IDABSCHNITTSDATEN, DTOLehrerEntlastungsstunde.class, idAbschnitt))
+				.thenReturn(Arrays.asList(e1, e2));
+
+		final var result = repository.getAllByLehrerAbschnittId(idAbschnitt);
+
+		assertNotNull(result);
+		assertEquals(2, result.size());
+		assertTrue(result.contains(e1));
+		assertTrue(result.contains(e2));
+
+		verify(conn).queryList(DTOLehrerEntlastungsstunde.QUERY_BY_IDABSCHNITTSDATEN, DTOLehrerEntlastungsstunde.class, idAbschnitt);
+	}
+
+	@Test
+	@DisplayName("getListByIdLehrerAbschnittsdaten: Gruppiert korrekt nach Abschnittsdaten-ID (ohne Auffüllen fehlender Keys)")
+	void testGetListByIdLehrerAbschnittsdaten() {
+		final List<Long> idsAbschnitte = Arrays.asList(100L, 200L, 300L);
+
+		final var e1 = new DTOLehrerEntlastungsstunde(1L, 100L);
+		final var e2 = new DTOLehrerEntlastungsstunde(2L, 100L);
+		final var e3 = new DTOLehrerEntlastungsstunde(3L, 200L);
+
+		when(conn.queryList(DTOLehrerEntlastungsstunde.QUERY_LIST_BY_IDABSCHNITTSDATEN, DTOLehrerEntlastungsstunde.class, idsAbschnitte))
+				.thenReturn(Arrays.asList(e1, e2, e3));
+
+		final Map<Long, List<DTOLehrerEntlastungsstunde>> result = repository.getListByIdLehrerAbschnittsdaten(idsAbschnitte);
+
+		assertNotNull(result);
+		assertEquals(2, result.size());
+
+		assertEquals(2, result.get(100L).size());
+		assertTrue(result.get(100L).contains(e1));
+		assertTrue(result.get(100L).contains(e2));
+
+		assertEquals(1, result.get(200L).size());
+		assertEquals(e3, result.get(200L).getFirst());
+
+		// wichtig: im Gegensatz zu getMapByAbschnittIds wird 300 NICHT automatisch ergänzt
+		assertFalse(result.containsKey(300L));
+
+		verify(conn).queryList(DTOLehrerEntlastungsstunde.QUERY_LIST_BY_IDABSCHNITTSDATEN, DTOLehrerEntlastungsstunde.class, idsAbschnitte);
+	}
+
+	@Test
+	@DisplayName("getListByIdLehrerAbschnittsdaten: Leeres DB-Ergebnis -> leere Map")
+	void testGetListByIdLehrerAbschnittsdatenEmptyResult() {
+		final List<Long> idsAbschnitte = List.of(100L);
+
+		when(conn.queryList(DTOLehrerEntlastungsstunde.QUERY_LIST_BY_IDABSCHNITTSDATEN, DTOLehrerEntlastungsstunde.class, idsAbschnitte))
+				.thenReturn(List.of());
+
+		final var result = repository.getListByIdLehrerAbschnittsdaten(idsAbschnitte);
+
+		assertNotNull(result);
+		assertTrue(result.isEmpty());
+
+		verify(conn).queryList(DTOLehrerEntlastungsstunde.QUERY_LIST_BY_IDABSCHNITTSDATEN, DTOLehrerEntlastungsstunde.class, idsAbschnitte);
 	}
 
 }

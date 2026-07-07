@@ -161,6 +161,38 @@ class LehrerFunktionServiceTest {
 	}
 
 	// -------------------------------------------------------------------------
+	// getListByIdLehrerAbschnittsdaten
+	// -------------------------------------------------------------------------
+
+	@Test
+	@DisplayName("getListByIdLehrerAbschnittsdaten - mappt gruppiert und konvertiert per Mapper")
+	void getListByIdLehrerAbschnittsdaten() {
+		final var dto1 = new DTOLehrerFunktion(1L, 10L, 20L);
+		final var dto2 = new DTOLehrerFunktion(2L, 10L, 21L);
+		final var dto3 = new DTOLehrerFunktion(3L, 11L, 22L);
+
+		final var api1 = new LehrerFunktion(); api1.id = 1L;
+		final var api2 = new LehrerFunktion(); api2.id = 2L;
+		final var api3 = new LehrerFunktion(); api3.id = 3L;
+
+		when(repo.getListByIdLehrerAbschnittsdaten(List.of(10L, 11L)))
+				.thenReturn(Map.of(
+						10L, List.of(dto1, dto2),
+						11L, List.of(dto3)
+				));
+
+		when(mapper.toApi(dto1)).thenReturn(api1);
+		when(mapper.toApi(dto2)).thenReturn(api2);
+		when(mapper.toApi(dto3)).thenReturn(api3);
+
+		final var result = service.getListByIdLehrerAbschnittsdaten(List.of(10L, 11L));
+
+		assertThat(result).hasSize(2);
+		assertThat(result.get(10L)).containsExactly(api1, api2);
+		assertThat(result.get(11L)).containsExactly(api3);
+	}
+
+	// -------------------------------------------------------------------------
 	// create
 	// -------------------------------------------------------------------------
 

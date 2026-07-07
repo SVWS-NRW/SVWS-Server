@@ -38,4 +38,13 @@ public final class LehrerAnrechnungRepositoryImpl extends RepositoryImpl<DTOLehr
 		return map;
 	}
 
+	@Override
+	public Map<Long, List<DTOLehrerAnrechnungsstunde>> getListByIdLehrerAbschnittsdaten(final Collection<Long> idsLehrerPersonalabschnittsdaten) {
+		if ((idsLehrerPersonalabschnittsdaten == null) || idsLehrerPersonalabschnittsdaten.isEmpty()) {
+			return Collections.emptyMap();
+		}
+		final var result = conn.queryList(DTOLehrerAnrechnungsstunde.QUERY_LIST_BY_ABSCHNITT_ID, DTOLehrerAnrechnungsstunde.class, idsLehrerPersonalabschnittsdaten);
+		return result.stream().collect(Collectors.groupingBy(entity -> entity.Abschnitt_ID));
+	}
+
 }

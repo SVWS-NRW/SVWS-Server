@@ -1,6 +1,7 @@
 package de.svws_nrw.service.lehrer;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -99,7 +100,7 @@ class LehrerMinderleistungServiceTest {
 		final var second = createEntity(2L, 10L, 3.5, "210");
 
 		when(lehrerMinderleistungRepository.findListByIds(List.of(1L, 2L))).thenReturn(List.of(first, second));
-		stubSchuljahrAbschnitt(10L, 20L, 2024);
+		stubSchuljahrAbschnitt(10L, 20L);
 
 		final var result = cut.getList(List.of(1L, 2L));
 
@@ -123,7 +124,7 @@ class LehrerMinderleistungServiceTest {
 		final var dto = createEntity(42L, 10L, 1.5, "200");
 
 		when(lehrerMinderleistungRepository.findById(42L)).thenReturn(Optional.of(dto));
-		stubSchuljahrAbschnitt(10L, 20L, 2024);
+		stubSchuljahrAbschnitt(10L, 20L);
 
 		final var result = cut.get(42L);
 
@@ -150,7 +151,7 @@ class LehrerMinderleistungServiceTest {
 		final var entity = createEntity(1L, 10L, 2.0, "200");
 
 		when(lehrerMinderleistungRepository.getAllByLehrerAbschnittId(10L)).thenReturn(List.of(entity));
-		stubSchuljahrAbschnitt(10L, 20L, 2024);
+		stubSchuljahrAbschnitt(10L, 20L);
 
 		final var result = cut.getListByLehrerabschnittsdatenId(10L);
 
@@ -176,7 +177,7 @@ class LehrerMinderleistungServiceTest {
 	@DisplayName("create | Success - daten werden korrekt gemappt")
 	void testCreateSuccess() {
 		final long nextId = 7L;
-		final var request = createRequest(10L, 37, 2.5);
+		final var request = createRequest(37, 2.5);
 		final var persisted = createEntity(nextId, 10L, 2.5, "200");
 
 		when(lehrerMinderleistungRepository.getNextID()).thenReturn(nextId);
@@ -194,15 +195,15 @@ class LehrerMinderleistungServiceTest {
 	@Test
 	@DisplayName("createMultiple | Success - daten werden korrekt gemappt")
 	void testCreateMultipleSuccess() {
-		final var firstRequest = createRequest(10L, 37L, 1.0);
-		final var secondRequest = createRequest(10L, 38L, 2.0);
+		final var firstRequest = createRequest(37L, 1.0);
+		final var secondRequest = createRequest(38L, 2.0);
 		final var firstPersisted = createEntity(1L, 10L, 1.0, "200");
 		final var secondPersisted = createEntity(2L, 10L, 2.0, "210");
 		final List<DTOLehrerEntlastungsstunde> entities = List.of(firstPersisted, secondPersisted);
 
 		when(lehrerMinderleistungRepository.getNextID()).thenReturn(1L);
 		when(lehrerMinderleistungRepository.create(entities)).thenReturn(entities);
-		stubSchuljahrAbschnitt(10L, 20L, 2024);
+		stubSchuljahrAbschnitt(10L, 20L);
 
 		final var result = cut.createMultiple(List.of(firstRequest, secondRequest));
 
@@ -226,7 +227,7 @@ class LehrerMinderleistungServiceTest {
 		final var request = patchRequest(5L, 3.0, 38L);
 
 		when(lehrerMinderleistungRepository.getById(5L)).thenReturn(existing);
-		stubSchuljahrAbschnitt(10L, 20L, 2024);
+		stubSchuljahrAbschnitt(10L, 20L);
 
 		final var result = cut.patch(request, 5L);
 
@@ -242,7 +243,7 @@ class LehrerMinderleistungServiceTest {
 		final var request = patchRequest(5L, null, null);
 
 		when(lehrerMinderleistungRepository.getById(5L)).thenReturn(existing);
-		stubSchuljahrAbschnitt(10L, 20L, 2024);
+		stubSchuljahrAbschnitt(10L, 20L);
 
 		final var result = cut.patch(request, 5L);
 
@@ -261,7 +262,7 @@ class LehrerMinderleistungServiceTest {
 
 		when(lehrerMinderleistungRepository.getById(1L)).thenReturn(firstPersisted);
 		when(lehrerMinderleistungRepository.getById(2L)).thenReturn(secondPersisted);
-		stubSchuljahrAbschnitt(10L, 20L, 2024);
+		stubSchuljahrAbschnitt(10L, 20L);
 
 		final var result = cut.patchMultiple(List.of(firstPatch, secondPatch));
 
@@ -350,6 +351,65 @@ class LehrerMinderleistungServiceTest {
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
+	@Test
+	@DisplayName("getListByIdLehrerAbschnittsdaten | Success - Map wird korrekt gemappt")
+	void testGetListByIdLehrerAbschnittsdatenSuccess() {
+		final var e1 = createEntity(1L, 10L, 2.0, "200");
+		final var e2 = createEntity(2L, 10L, 3.0, "210");
+		final var e3 = createEntity(3L, 11L, 1.5, "200");
+
+		when(lehrerMinderleistungRepository.getListByIdLehrerAbschnittsdaten(List.of(10L, 11L)))
+				.thenReturn(Map.of(
+						10L, List.of(e1, e2),
+						11L, List.of(e3)
+				));
+
+		// Abschnitt 10 und 11 liegen in (ggf. unterschiedlichen) Schuljahren – hier beide 2024
+		stubSchuljahrAbschnitt(10L, 20L);
+		stubSchuljahrAbschnitt(11L, 21L);
+
+		final var result = cut.getListByIdLehrerAbschnittsdaten(List.of(10L, 11L));
+
+		assertThat(result).hasSize(2);
+		assertThat(result.get(10L)).hasSize(2);
+		assertThat(result.get(11L)).hasSize(1);
+		assertThat(result.get(10L).stream().map(r -> r.id)).containsExactly(1L, 2L);
+		assertThat(result.get(11L).stream().map(r -> r.id)).containsExactly(3L);
+	}
+
+	@Test
+	@DisplayName("create | Bad Request - Minderleistungsgrund nicht resolvable")
+	void testCreateBadRequestGrundNotResolvable() {
+		final long nextId = 7L;
+
+		final var request = createRequest(999999L, 2.5);
+
+		when(lehrerMinderleistungRepository.getNextID()).thenReturn(nextId);
+
+		assertThatThrownBy(() -> cut.create(request))
+				.isInstanceOf(ApiOperationException.class)
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST)
+				.hasMessageContaining("Der Minderleistungsgrund kann nicht aufgelöst werden");
+	}
+
+	@Test
+	@DisplayName("patch | Bad Request - Minderleistungsgrund nicht resolvable")
+	void testPatchBadRequestGrundNotResolvable() {
+		final var existing = createEntity(5L, 10L, 1.0, "200");
+
+		final var request = new LehrerMinderleistungPatchRequest();
+		request.anzahl = JsonNullable.undefined();
+		request.idGrund = JsonNullable.of(999999L);
+
+		when(lehrerMinderleistungRepository.getById(5L)).thenReturn(existing);
+
+		assertThatThrownBy(() -> cut.patch(request, 5L))
+				.isInstanceOf(ApiOperationException.class)
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST)
+				.hasMessageContaining("Der Minderleistungsgrund kann nicht aufgelöst werden");
+	}
+
+
 	private DTOLehrerEntlastungsstunde createEntity(final long id, final long abschnittId, final Double stunden, final String kuerzel) {
 		final var dto = new DTOLehrerEntlastungsstunde(id, abschnittId);
 		dto.anzahl = stunden;
@@ -357,16 +417,16 @@ class LehrerMinderleistungServiceTest {
 		return dto;
 	}
 
-	private void stubSchuljahrAbschnitt(final long abschnittId, final long schuljahresabschnittsId, final int schuljahr) {
+	private void stubSchuljahrAbschnitt(final long abschnittId, final long schuljahresabschnittsId) {
 		final var lehrerAbschnitt = new DTOLehrerAbschnittsdaten(abschnittId, 0L, schuljahresabschnittsId);
-		final var schuljahrAbschnitt = new DTOSchuljahresabschnitte(schuljahresabschnittsId, schuljahr, 1);
+		final var schuljahrAbschnitt = new DTOSchuljahresabschnitte(schuljahresabschnittsId, 2024, 1);
 		when(lehrerAbschnittsdatenRepository.findById(abschnittId)).thenReturn(Optional.of(lehrerAbschnitt));
 		when(schuljahresabschnitteRepository.findById(schuljahresabschnittsId)).thenReturn(Optional.of(schuljahrAbschnitt));
 	}
 
-	private LehrerMinderleistungCreateRequest createRequest(final long idAbschnittsdaten, final long idGrund, final double anzahl) {
+	private LehrerMinderleistungCreateRequest createRequest(final long idGrund, final double anzahl) {
 		final var request = new LehrerMinderleistungCreateRequest();
-		request.idAbschnittsdaten = idAbschnittsdaten;
+		request.idAbschnittsdaten = 10L;
 		request.idGrund = idGrund;
 		request.anzahl = anzahl;
 		return request;
@@ -379,4 +439,5 @@ class LehrerMinderleistungServiceTest {
 		request.idGrund = (idGrund != null) ? JsonNullable.of(idGrund) : JsonNullable.undefined();
 		return request;
 	}
+
 }

@@ -1,6 +1,7 @@
 package de.svws_nrw.repo.lehrer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -55,7 +56,7 @@ class LehrerMehrleistungRepositoryImplTest {
 
 		// Prüfung Abschnitt 200
 		assertEquals(1, result.get(200L).size());
-		assertEquals(e3, result.get(200L).get(0));
+		assertEquals(e3, result.get(200L).getFirst());
 
 		// Prüfung Abschnitt 300
 		assertTrue(result.get(300L).isEmpty());
@@ -85,6 +86,52 @@ class LehrerMehrleistungRepositoryImplTest {
 		assertEquals(neueId, result.id);
 		verify(conn).transactionGetNextID(DTOLehrerMehrleistung.class);
 		verify(conn).transactionPersist(neu);
+	}
+
+	@Test
+	@DisplayName("Test: Prüfe, ob getListByIdLehrerAbschnittsdaten die Mehrleistungen korrekt nach Abschnitt-IDs gruppiert.")
+	void testGetListByIdLehrerAbschnittsdaten() {
+		final List<Long> idsAbschnitte = Arrays.asList(100L, 200L, 300L);
+
+		final DTOLehrerMehrleistung e1 = new DTOLehrerMehrleistung(1L, 100L, "160");
+		final DTOLehrerMehrleistung e2 = new DTOLehrerMehrleistung(2L, 100L, "150");
+		final DTOLehrerMehrleistung e3 = new DTOLehrerMehrleistung(3L, 200L, "160");
+
+		when(conn.queryList(DTOLehrerMehrleistung.QUERY_LIST_BY_IDABSCHNITTSDATEN, DTOLehrerMehrleistung.class, idsAbschnitte))
+				.thenReturn(Arrays.asList(e1, e2, e3));
+
+		final Map<Long, List<DTOLehrerMehrleistung>> result = repository.getListByIdLehrerAbschnittsdaten(idsAbschnitte);
+
+		assertNotNull(result);
+		assertEquals(2, result.size(), "Die Map sollte Einträge für die Abschnitte 100 und 200 enthalten.");
+
+		assertEquals(2, result.get(100L).size());
+		assertTrue(result.get(100L).contains(e1));
+		assertTrue(result.get(100L).contains(e2));
+
+		assertEquals(1, result.get(200L).size());
+		assertEquals(e3, result.get(200L).getFirst());
+
+		// wichtig: im Gegensatz zu getMapByIdsLehrerAbschnittsdaten wird 300 NICHT automatisch ergänzt
+		assertFalse(result.containsKey(300L));
+
+		verify(conn).queryList(DTOLehrerMehrleistung.QUERY_LIST_BY_IDABSCHNITTSDATEN, DTOLehrerMehrleistung.class, idsAbschnitte);
+	}
+
+	@Test
+	@DisplayName("Test: Prüfe, ob getListByIdLehrerAbschnittsdaten bei leerem DB-Ergebnis eine leere Map liefert.")
+	void testGetListByIdLehrerAbschnittsdatenEmptyResult() {
+		final List<Long> idsAbschnitte = List.of(100L);
+
+		when(conn.queryList(DTOLehrerMehrleistung.QUERY_LIST_BY_IDABSCHNITTSDATEN, DTOLehrerMehrleistung.class, idsAbschnitte))
+				.thenReturn(List.of());
+
+		final Map<Long, List<DTOLehrerMehrleistung>> result = repository.getListByIdLehrerAbschnittsdaten(idsAbschnitte);
+
+		assertNotNull(result);
+		assertTrue(result.isEmpty());
+
+		verify(conn).queryList(DTOLehrerMehrleistung.QUERY_LIST_BY_IDABSCHNITTSDATEN, DTOLehrerMehrleistung.class, idsAbschnitte);
 	}
 
 }
