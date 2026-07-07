@@ -1,5 +1,7 @@
 package de.svws_nrw.service.schueler.schulbesuch;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -9,6 +11,8 @@ import java.util.stream.Collectors;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
 import de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre;
 import de.svws_nrw.asd.types.schueler.Einschulungsart;
+import de.svws_nrw.asd.types.schueler.HerkunftSchulform;
+import de.svws_nrw.asd.types.schueler.HerkunftSonstige;
 import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
 import de.svws_nrw.asd.types.schule.Fachklasse;
 import de.svws_nrw.asd.types.schule.Kindergartenbesuch;
@@ -26,6 +30,7 @@ import de.svws_nrw.mapper.schueler.schulbesuch.SchulbesuchMapper;
 import de.svws_nrw.mapper.schueler.schulbesuch.SchulbesuchMappingContext;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
 import jakarta.ws.rs.core.Response.Status;
+import org.apache.commons.lang3.StringUtils;
 
 public final class SchulbesuchService {
 
@@ -128,7 +133,37 @@ public final class SchulbesuchService {
 		patchRequest.schluesselHoechsterSchulabschluss.ifPresent(schluessel -> patchHoechsterSchulabschluss(entity, schluessel));
 		patchRequest.schluesselSchulgliederungVorherigeSchule.ifPresent(this::validateSchulgliederung);
 		patchRequest.schluesselCoreTypeFachklasseVorherigeSchule.ifPresent(schluessel -> patchFachklasse(entity, schluessel));
+		patchRequest.idHerkunftSchulformVorherigeSchule.ifPresent(id -> patchIdHerkunftSchulformVorherigeSchule(entity, id));
+		patchRequest.idHerkunftSonstigeVorherigeSchule.ifPresent(id -> patchIdHerkunftSonstigeVorherigeSchule(entity, id));
 		patchAbschlussartVorherigeSchule(entity, patchRequest);
+	}
+
+	private void patchIdHerkunftSchulformVorherigeSchule(final DTOSchueler entity, final Long id) {
+		if (id == null) {
+			entity.LSSchulform = null;
+			entity.LSSchulformSIM = null;
+			return;
+		}
+		final var schulform = HerkunftSchulform.data().getEintragByID(id);
+		if (schulform == null) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Keine HerkunftSchulform mit der ID %d gefunden.".formatted(id));
+		}
+		entity.LSSchulform = schulform.schluessel;
+		entity.LSSchulformSIM = schulform.schluessel;
+	}
+
+	private void patchIdHerkunftSonstigeVorherigeSchule(final DTOSchueler entity, final Long id) {
+		if (id == null) {
+			entity.LSSchulform = null;
+			entity.LSSchulformSIM = null;
+			return;
+		}
+		final var schulform = HerkunftSonstige.data().getEintragByID(id);
+		if (schulform == null) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Keine HerkunftSonstige mit der ID %d gefunden.".formatted(id));
+		}
+		entity.LSSchulform = schulform.schluessel;
+		entity.LSSchulformSIM = schulform.schluessel;
 	}
 
 	private void patchFachklasse(final DTOSchueler entity, final String schluessel) {
@@ -342,14 +377,26 @@ public final class SchulbesuchService {
 			final Map<String, DTOEntlassarten> entlassartenByBezeichnung) {
 		final var merkmale = this.schuelerMerkmalService.getAllByIdSchueler(schueler.ID);
 		final var bisherigeSchulen = this.bisherigeSchuleService.getAllByIdSchueler(schueler.ID);
-
+		final var schuljahr = extractYearOrNull(schueler.LSSchulEntlassDatum);
 		final var ctx = new SchulbesuchMappingContext(
 				entlassartenByBezeichnung,
 				schulenBySchulnummer,
 				merkmale,
-				bisherigeSchulen
+				bisherigeSchulen,
+				schuljahr
 		);
 		return mapper.toApi(schueler, ctx);
+	}
+
+	private static Integer extractYearOrNull(final String isoDate) {
+		if (StringUtils.isBlank(isoDate)) {
+			return null;
+		}
+		try {
+			return LocalDate.parse(isoDate).getYear();
+		} catch (final DateTimeParseException ex) {
+			return null;
+		}
 	}
 
 

@@ -59,7 +59,7 @@
 			</div>
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Schulform" v-if="!keinSchulbesuch"
-					:model-value="model.schulformVorherigeSchule.value"
+					:model-value="model.bezeichnungSchulformVorherigeSchule.value"
 					statistics readonly />
 				<ui-select label="vorherige Tätigkeit / Herkunft" v-if="currentMode === Schulauswahl.NONE"
 					:manager="schulformVorherigKeinAbschlussManager"

@@ -18,12 +18,13 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 		patch?: (data: Partial<SchuelerSchulbesuchsdaten>) => Promise<boolean>) {
 		const listOfAutopatchProps: Iterable<keyof SchuelerSchulbesuchsdaten> =
 			["idVorherigeSchule", "entlassdatumVorherigeSchule", "kuerzelEntlassjahrgangVorherigeSchule", "idEntlassgrundVorherigeSchule",
-				"idHerkunftsartVersetzungVorherigeSchule", "entlassdatumDieseSchule", "idEntlassjahrgangDieseSchule", "schulformVorherigeSchule",
+				"idHerkunftsartVersetzungVorherigeSchule", "entlassdatumDieseSchule", "idEntlassjahrgangDieseSchule",
 				"idEntlassgrundDieseSchule", "idAbschlussartDieseSchule", "idKindergarten", "idDauerKindergartenbesuch", "verpflichtungSprachfoerderkurs",
 				"teilnahmeSprachfoerderkurs", "wechselBestaetigtAufnehmendeSchule", "idAufnehmendeSchule", "wechseldatumAufnehmendeSchule",
 				"idEinschulungsartGrundschule", "idEingangsphaseGrundschule", "idUebergangsempfehlungGrundschule", "kuerzelErsteSchulformSek1",
 				"berufsabschlussVorhanden", "schluesselHoechsterSchulabschluss", "schluesselAbschlussartAllgemeinbildendVorherigeSchule",
-				"schluesselAbschlussartBerufsbildendVorherigeSchule", "schluesselSchulgliederungVorherigeSchule", "schluesselCoreTypeFachklasseVorherigeSchule"];
+				"schluesselAbschlussartBerufsbildendVorherigeSchule", "schluesselSchulgliederungVorherigeSchule", "schluesselCoreTypeFachklasseVorherigeSchule",
+				"idHerkunftSchulformVorherigeSchule", "idHerkunftSonstigeVorherigeSchule"];
 		super({ data, patch, listOfAutopatchProps });
 		this.manager = manager;
 		this.addValidatoren();
@@ -41,15 +42,16 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 		get: () => this.manager().schulenById.get(this.proxy.idVorherigeSchule ?? -1) ?? null,
 		set: (v: SchulEintrag | null) => {
 			this.proxy.idVorherigeSchule = v?.id ?? null;
-			this.proxy.schulformVorherigeSchule = HerkunftSchulform.data().getEintragByID(v?.idSchulform ?? -1)?.schluessel ?? null;
+			const schulform = Schulform.data().getEintragByID(v?.idSchulform ?? -1) ?? null;
+			this.proxy.idHerkunftSchulformVorherigeSchule = HerkunftSchulform.data().getWertBySchluessel(schulform?.kuerzel ?? '')?.historie().getLast().id ?? null;
 		},
 	});
 
 	vorherigeSchulform = computed<Schulform | null>(() => Schulform.data().getWertByIDOrNull(this.vorherigeSchule.value?.idSchulform ?? -1));
 
 	schulformVorherigeSchuleKeinAbschluss = computed<HerkunftSonstigeKatalogEintrag | null>({
-		get: () => HerkunftSonstige.data().getEintragBySchuljahrUndSchluessel(this.manager().schuljahr, this.proxy.schulformVorherigeSchule ?? '') ?? null,
-		set: (v: HerkunftSonstigeKatalogEintrag | null) => this.proxy.schulformVorherigeSchule = v?.schluessel ?? null,
+		get: () => HerkunftSonstige.data().getEintragByID(this.proxy.idHerkunftSonstigeVorherigeSchule ?? -1) ?? null,
+		set: (v: HerkunftSonstigeKatalogEintrag | null) => this.proxy.idHerkunftSonstigeVorherigeSchule = v?.id ?? null,
 	});
 
 	schulgliederungVorherigeSchule = computed<SchulgliederungKatalogEintrag | null>({
@@ -62,8 +64,8 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 		set: (v: FachklasseKatalogEintrag | null) => this.proxy.schluesselCoreTypeFachklasseVorherigeSchule = v?.schluessel ?? null,
 	});
 
-	schulformVorherigeSchule = computed<string | null>(
-		() => HerkunftSchulform.data().getEintragBySchuljahrUndSchluessel(this.manager().schuljahr, this.proxy.schulformVorherigeSchule ?? "")?.text ?? null);
+	bezeichnungSchulformVorherigeSchule = computed<string | null>(
+		() => HerkunftSchulform.data().getEintragByID(this.proxy.idHerkunftSchulformVorherigeSchule ?? -1)?.text ?? null);
 
 	schulnummerStatistik = computed<string | null>(() => this.vorherigeSchule.value?.schulnummerStatistik ?? null);
 

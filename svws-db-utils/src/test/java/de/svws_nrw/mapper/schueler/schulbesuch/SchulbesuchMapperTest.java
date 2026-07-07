@@ -1,11 +1,16 @@
 package de.svws_nrw.mapper.schueler.schulbesuch;
 
+import java.util.List;
+import java.util.Map;
+
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchMerkmal;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchSchule;
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOEntlassarten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.service.schueler.schulbesuch.SchulbesuchPatchRequest;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -14,14 +19,16 @@ import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openapitools.jackson.nullable.JsonNullable;
 
-import java.util.List;
-import java.util.Map;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SchulbesuchMapperTest {
 
 	private final SchulbesuchMapper mapper = SchulbesuchMapper.INSTANCE;
+
+	@BeforeAll
+	static void setUp() {
+		ASDCoreTypeUtils.initAll();
+	}
 
 	// -------------------------------------------------------------------------
 	// Hilfsmethoden
@@ -32,7 +39,7 @@ class SchulbesuchMapperTest {
 	}
 
 	private SchulbesuchMappingContext emptyContext() {
-		return new SchulbesuchMappingContext(Map.of(), Map.of(), List.of(), List.of());
+		return new SchulbesuchMappingContext(Map.of(), Map.of(), List.of(), List.of(), 2020);
 	}
 
 	// -------------------------------------------------------------------------
@@ -97,7 +104,6 @@ class SchulbesuchMapperTest {
 		@DisplayName("Mappt einfache String-Felder der letzten Schule korrekt")
 		void toApi_mapptLsStringFelder() {
 			final var entity = createEntity(1L);
-			entity.LSSchulform = "GY";
 			entity.LSSchulEntlassDatum = "2020-06-30";
 			entity.LSJahrgang = "10";
 			entity.LSVersetzung = "V";
@@ -106,7 +112,6 @@ class SchulbesuchMapperTest {
 
 			final var result = mapper.toApi(entity, emptyContext());
 
-			assertThat(result.schulformVorherigeSchule).isEqualTo("GY");
 			assertThat(result.entlassdatumVorherigeSchule).isEqualTo("2020-06-30");
 			assertThat(result.kuerzelEntlassjahrgangVorherigeSchule).isEqualTo("10");
 			assertThat(result.idHerkunftsartVersetzungVorherigeSchule).isEqualTo("V");
@@ -125,6 +130,41 @@ class SchulbesuchMapperTest {
 
 			assertThat(result.entlassdatumDieseSchule).isEqualTo("2023-07-01");
 			assertThat(result.idEntlassjahrgangDieseSchule).isEqualTo(5L);
+		}
+
+		@Test
+		@DisplayName("map | idHerkunftSchulformVorherigeschule")
+		void toApi_idHerkunftSchulformVorherigeschule() {
+			final var entity = createEntity(1L);
+			entity.LSSchulform = "BK";
+			entity.LSSchulEntlassDatum = "2020-06-30";
+
+			final var result = mapper.toApi(entity, emptyContext());
+
+			assertThat(result.idHerkunftSchulformVorherigeSchule).isEqualTo(1000);
+		}
+
+		@Test
+		@DisplayName("map | idSchulformVorherigeschule")
+		void toApi_idSchulformVorherigeSchule() {
+			final var entity = createEntity(1L);
+			entity.LSSchulform = "AS";
+			entity.LSSchulEntlassDatum = "2020-06-30";
+
+			final var result = mapper.toApi(entity, emptyContext());
+
+			assertThat(result.idHerkunftSonstigeVorherigeSchule).isEqualTo(1000);
+		}
+
+		@Test
+		@DisplayName("map | idSchulformVorherigeschule null")
+		void toApi_idHerkunftSchulformVorherigeschuleNull() {
+			final var entity = createEntity(1L);
+			entity.LSSchulform = "YYY";
+
+			final var result = mapper.toApi(entity, emptyContext());
+
+			assertThat(result.idHerkunftSchulformVorherigeSchule).isNull();
 		}
 
 		@Test
@@ -178,7 +218,7 @@ class SchulbesuchMapperTest {
 			final var entity = createEntity(1L);
 			final var merkmal = new SchuelerSchulbesuchMerkmal();
 			final var schule = new SchuelerSchulbesuchSchule();
-			final var ctx = new SchulbesuchMappingContext(Map.of(), Map.of(), List.of(merkmal), List.of(schule));
+			final var ctx = new SchulbesuchMappingContext(Map.of(), Map.of(), List.of(merkmal), List.of(schule), 2020);
 
 			final var result = mapper.toApi(entity, ctx);
 
@@ -194,7 +234,7 @@ class SchulbesuchMapperTest {
 			final var schule = new DTOSchuleNRW(99L, "012345");
 			final var entity = createEntity(1L);
 			entity.LSSchulNr = "012345";
-			final var ctx = new SchulbesuchMappingContext(Map.of(), Map.of("012345", schule), List.of(), List.of());
+			final var ctx = new SchulbesuchMappingContext(Map.of(), Map.of("012345", schule), List.of(), List.of(), 2020);
 
 			final var result = mapper.toApi(entity, ctx);
 
@@ -229,7 +269,7 @@ class SchulbesuchMapperTest {
 			final var schule = new DTOSchuleNRW(77L, "054321");
 			final var entity = createEntity(1L);
 			entity.SchulwechselNr = "054321";
-			final var ctx = new SchulbesuchMappingContext(Map.of(), Map.of("054321", schule), List.of(), List.of());
+			final var ctx = new SchulbesuchMappingContext(Map.of(), Map.of("054321", schule), List.of(), List.of(), 2020);
 
 			final var result = mapper.toApi(entity, ctx);
 
@@ -244,7 +284,7 @@ class SchulbesuchMapperTest {
 			final var entlassart = new DTOEntlassarten(3L, "Schulwechsel");
 			final var entity = createEntity(1L);
 			entity.LSEntlassgrund = "Schulwechsel";
-			final var ctx = new SchulbesuchMappingContext(Map.of("Schulwechsel", entlassart), Map.of(), List.of(), List.of());
+			final var ctx = new SchulbesuchMappingContext(Map.of("Schulwechsel", entlassart), Map.of(), List.of(), List.of(), 2020);
 
 			final var result = mapper.toApi(entity, ctx);
 
@@ -257,7 +297,7 @@ class SchulbesuchMapperTest {
 			final var entlassart = new DTOEntlassarten(5L, "Abschluss");
 			final var entity = createEntity(1L);
 			entity.Entlassgrund = "Abschluss";
-			final var ctx = new SchulbesuchMappingContext(Map.of("Abschluss", entlassart), Map.of(), List.of(), List.of());
+			final var ctx = new SchulbesuchMappingContext(Map.of("Abschluss", entlassart), Map.of(), List.of(), List.of(), 2020);
 
 			final var result = mapper.toApi(entity, ctx);
 
@@ -297,17 +337,6 @@ class SchulbesuchMapperTest {
 			final var result = mapper.toApi(entity, emptyContext());
 
 			assertThat(result.idEinschulungsartGrundschule).isNull();
-		}
-
-		@Test
-		@DisplayName("mapIdEingangsphase | Liefert null bei unbekanntem Wert")
-		void toApi_mapptUnbekannteEingangsphaseZuNull() {
-			final var entity = createEntity(1L);
-			entity.EPJahre = Integer.MAX_VALUE;
-
-			final var result = mapper.toApi(entity, emptyContext());
-
-			assertThat(result.idEingangsphaseGrundschule).isNull();
 		}
 
 		@Test
@@ -430,7 +459,6 @@ class SchulbesuchMapperTest {
 			request.idKindergarten = JsonNullable.of(7L);
 			request.verpflichtungSprachfoerderkurs = JsonNullable.of(true);
 			request.teilnahmeSprachfoerderkurs = JsonNullable.of(false);
-			request.schulformVorherigeSchule = JsonNullable.of("AS");
 			request.schluesselSchulgliederungVorherigeSchule = JsonNullable.of("A12");
 			final var entity = createEntity(1L);
 
@@ -453,7 +481,6 @@ class SchulbesuchMapperTest {
 						assertThat(e.Kindergarten_ID).isEqualTo(7L);
 						assertThat(e.VerpflichtungSprachfoerderkurs).isTrue();
 						assertThat(e.TeilnahmeSprachfoerderkurs).isFalse();
-						assertThat(e.LSSchulform).isEqualTo("AS");
 						assertThat(e.LSSGL).isEqualTo("A12");
 						assertThat(e.LSSGL_SIM).isEqualTo("A12");
 					});

@@ -13,5 +13,6 @@ public record SchulbesuchMappingContext(
 		Map<String, DTOEntlassarten> entlassartenByBezeichnung,
 		Map<String, DTOSchuleNRW> schulenBySchulnummer,
 		List<SchuelerSchulbesuchMerkmal> merkmale,
-		List<SchuelerSchulbesuchSchule> bisherigeSchulen
+		List<SchuelerSchulbesuchSchule> bisherigeSchulen,
+		Integer jahrEntlassungVorherigeSchule
 ) { }

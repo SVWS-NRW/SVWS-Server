@@ -901,6 +901,21 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 		return mapBySchluessel.get(schluessel);
 	}
 
-
-
+	/**
+	 * Liefert den letzten Eintrag für den übergebenen Schlüssel oder null, falls kein Eintrag gefunden wurde.
+	 *
+	 * @param schluessel der Schlüssel für den Core-Type-Wert
+	 * @return der letzte Eintrag für den Schlüssel oder null
+	 */
+	public T getLastEintragBySchluesselOrNull(final @NotNull String schluessel) {
+		final var wert = this.getWertBySchluessel(schluessel);
+		if (wert == null) {
+			return null;
+		}
+		final var liste = this.getHistorieByWert(wert);
+		if (liste.isEmpty()) {
+			return null;
+		}
+		return liste.getLast();
+	}
 }
