@@ -9,13 +9,12 @@ import type { Comparator } from '../../../../../core/src/java/util/Comparator';
 import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
 import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
-import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
 import { HashSet } from "../../../../../core/src/java/util/HashSet";
 
 
 export class OrtsteileListeManager extends AuswahlManager<number, OrtsteilKatalogEintrag, OrtsteilKatalogEintrag> {
 
-	private static readonly _ortsteileToId: JavaFunction<OrtsteilKatalogEintrag, number> = { apply: (a: OrtsteilKatalogEintrag) => a.id };
+	private static readonly _ortsteileToId = (a: OrtsteilKatalogEintrag) => a.id;
 	private readonly _idsOfReferencedOrtsteile: HashSet<number> = new HashSet<number>();
 	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
@@ -105,7 +104,7 @@ export class OrtsteileListeManager extends AuswahlManager<number, OrtsteilKatalo
 
 	set filterNurSichtbar(value: boolean) {
 		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get filterNurSichtbar(): boolean {
@@ -118,7 +117,7 @@ export class OrtsteileListeManager extends AuswahlManager<number, OrtsteilKatalo
 
 	set searchTerm(value: string) {
 		this._searchTerm = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get orteById(): Map<number, OrtKatalogEintrag> {

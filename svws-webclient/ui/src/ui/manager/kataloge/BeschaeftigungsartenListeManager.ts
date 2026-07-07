@@ -1,6 +1,5 @@
 import { AuswahlManager } from '../../AuswahlManager';
 import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
-import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
 import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
@@ -13,7 +12,7 @@ import type { Beschaeftigungsart, JavaSet } from "../../../../../core/src";
 
 export class BeschaeftigungsartenListeManager extends AuswahlManager<number, Beschaeftigungsart, Beschaeftigungsart> {
 
-	private static readonly _beschaeftigungsartToId: JavaFunction<Beschaeftigungsart, number> = { apply: (a: Beschaeftigungsart) => a.id };
+	private static readonly _beschaeftigungsartToId = (a: Beschaeftigungsart) => a.id;
 	private readonly _idsReferencedBeschaeftigungsarten: HashSet<number> = new HashSet<number>();
 	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
@@ -83,7 +82,7 @@ export class BeschaeftigungsartenListeManager extends AuswahlManager<number, Bes
 
 	set filterNurSichtbar(value: boolean) {
 		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get searchTerm(): string {
@@ -92,7 +91,7 @@ export class BeschaeftigungsartenListeManager extends AuswahlManager<number, Bes
 
 	set searchTerm(value: string) {
 		this._searchTerm = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get idsReferencedBeschaeftigungsarten(): JavaSet<number> {

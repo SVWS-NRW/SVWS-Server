@@ -1,6 +1,6 @@
 import { AuswahlManager } from '../../AuswahlManager';
 import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
-import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
+
 import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
@@ -14,7 +14,7 @@ import type { JavaSet } from "../../../../../core/src/java/util/JavaSet";
 
 export class EntlassgruendeListeManager extends AuswahlManager<number, KatalogEntlassgrund, KatalogEntlassgrund> {
 
-	private static readonly _entlassgrundToId: JavaFunction<KatalogEntlassgrund, number> = { apply: (a: KatalogEntlassgrund) => a.id };
+	private static readonly _entlassgrundToId = (a: KatalogEntlassgrund) => a.id;
 
 	private readonly idsReferencedEntlassgruende: HashSet<number> = new HashSet<number>();
 
@@ -88,7 +88,7 @@ export class EntlassgruendeListeManager extends AuswahlManager<number, KatalogEn
 	 */
 	public setFilterNurSichtbar(value: boolean): void {
 		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	/**

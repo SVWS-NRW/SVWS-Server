@@ -2,7 +2,7 @@ import type { RouteParamsRawGeneric } from "vue-router";
 import type { Teilleistungsart, List, SimpleOperationResponse } from "@core";
 import { ArrayList, BenutzerKompetenz } from "@core";
 import { ViewType } from "@ui";
-import { TeilleistungsartenListeManager } from "~/components/schule/kataloge/teilleistungsarten/manager/TeilleistungsartenListeManager";
+import { TeilleistungsartenListeManager } from "~/states/teilleistungsarten/TeilleistungsartenListeManager";
 import { api } from "~/router/Api";
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";

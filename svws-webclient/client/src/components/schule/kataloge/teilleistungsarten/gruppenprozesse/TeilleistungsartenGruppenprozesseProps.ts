@@ -1,5 +1,5 @@
 import type { BenutzerKompetenz, List } from "@core";
-import type { TeilleistungsartenListeManager } from "../manager/TeilleistungsartenListeManager";
+import type { TeilleistungsartenListeManager } from "../../../../../states/teilleistungsarten/TeilleistungsartenListeManager";
 
 export interface TeilleistungsartenGruppenprozesseProps {
 	benutzerKompetenzen: Set<BenutzerKompetenz>;

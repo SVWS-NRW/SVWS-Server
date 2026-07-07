@@ -3,7 +3,6 @@ import type { Schulform } from "../../../../../core/src/asd/types/schule/Schulfo
 import type { Floskel } from "../../../../../core/src/core/data/schule/Floskel";
 import type { Floskelgruppe } from "../../../../../core/src/core/data/schule/Floskelgruppe";
 import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
-import type { JavaFunction } from "../../../../../core/src/java/util/function/JavaFunction";
 import type { List } from "../../../../../core/src/java/util/List";
 import { AuswahlManager } from "../../AuswahlManager";
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
@@ -14,7 +13,7 @@ import type { FachDaten } from '../../../../../core/src/core/data/fach/FachDaten
 
 export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floskel> {
 
-	private static readonly toId: JavaFunction<Floskel, number> = { apply: (f: Floskel) => f.id };
+	private static readonly toId = (f: Floskel) => f.id;
 	private static readonly _NIVEAUS: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 	private readonly _floskelgruppenById: Map<number, Floskelgruppe> = new Map();
 	private readonly _jahrgaengeById: Map<number, JahrgangsDaten> = new Map();
@@ -155,7 +154,7 @@ export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floske
 
 	set searchTerm(value: string) {
 		this._searchTerm = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get filterJahrgaenge(): JahrgangsDaten[] {
@@ -164,7 +163,7 @@ export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floske
 
 	set filterJahrgaenge(value: JahrgangsDaten[]) {
 		this._filterJahrgaenge = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get filterFloskelgruppen(): Floskelgruppe[] {
@@ -173,7 +172,7 @@ export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floske
 
 	set filterFloskelgruppen(value: Floskelgruppe[]) {
 		this._filterFloskelgruppen = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get filterFaecher(): FachDaten[] {
@@ -182,7 +181,7 @@ export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floske
 
 	set filterFaecher(value: FachDaten[]) {
 		this._filterFaecher = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get filterNiveaus(): number[] {
@@ -191,7 +190,7 @@ export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floske
 
 	set filterNiveaus(value: number[]) {
 		this._filterNiveaus = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get niveaus(): number[] {

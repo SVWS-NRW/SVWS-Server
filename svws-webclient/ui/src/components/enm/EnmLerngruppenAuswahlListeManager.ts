@@ -3,7 +3,6 @@ import type { Schulform } from '../../../../core/src/asd/types/schule/Schulform'
 import { JavaString } from '../../../../core/src/java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../../core/src/core/exceptions/DeveloperNotificationException';
 import { AuswahlManager } from '../../ui/AuswahlManager';
-import type { JavaFunction } from '../../../../core/src/java/util/function/JavaFunction';
 import type { List } from '../../../../core/src/java/util/List';
 import { Arrays } from '../../../../core/src/java/util/Arrays';
 import type { Schuljahresabschnitt } from '../../../../core/src/asd/data/schule/Schuljahresabschnitt';
@@ -21,7 +20,7 @@ export class EnmLerngruppenAuswahlListeManager extends AuswahlManager<number, EN
 	/**
 	 * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
 	 */
-	private static readonly _lerngruppeToId: JavaFunction<ENMv2Lerngruppe, number> = { apply: (l: ENMv2Lerngruppe) => l.id };
+	private static readonly _lerngruppeToId = (l: ENMv2Lerngruppe) => l.id;
 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten

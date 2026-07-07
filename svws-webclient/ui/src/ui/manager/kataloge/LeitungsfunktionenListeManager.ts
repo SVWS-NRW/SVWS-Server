@@ -1,6 +1,5 @@
 import { AuswahlManager } from "../../AuswahlManager";
 import type { Leitungsfunktion } from "../../../../../core/src/core/data/schule/Leitungsfunktion";
-import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
 import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
 import { type JavaSet, HashSet } from "../../../../../core/src";
@@ -12,7 +11,7 @@ import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulfo
 import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
 
 export class LeitungsfunktionenListeManager extends AuswahlManager<number, Leitungsfunktion, Leitungsfunktion> {
-	private static readonly _leitungsfunktionToId: JavaFunction<Leitungsfunktion, number> = { apply: (lf: Leitungsfunktion) => lf.id };
+	private static readonly _leitungsfunktionToId = (lf: Leitungsfunktion) => lf.id;
 	private readonly _idsReferencedLeitungsfunktionen: HashSet<number> = new HashSet<number>();
 	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
@@ -83,7 +82,7 @@ export class LeitungsfunktionenListeManager extends AuswahlManager<number, Leitu
 
 	set filterNurSichtbar(value: boolean) {
 		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get searchTerm(): string {
@@ -92,7 +91,7 @@ export class LeitungsfunktionenListeManager extends AuswahlManager<number, Leitu
 
 	set searchTerm(value: string) {
 		this._searchTerm = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get idsReferencedLeitungsfunktionen(): JavaSet<number> {

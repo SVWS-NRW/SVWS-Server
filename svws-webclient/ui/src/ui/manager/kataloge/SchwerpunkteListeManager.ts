@@ -1,5 +1,5 @@
 import { AuswahlManager } from "../../AuswahlManager";
-import type { Comparator, JavaFunction, List, Schulform, Schuljahresabschnitt, SchuelerSchwerpunkt } from "../../../../../core/src";
+import type { Comparator, List, Schulform, Schuljahresabschnitt, SchuelerSchwerpunkt } from "../../../../../core/src";
 import { JavaInteger, Arrays, HashSet, JavaLong, JavaString } from "../../../../../core/src";
 
 export class SchwerpunkteListeManager extends AuswahlManager<number, SchuelerSchwerpunkt, SchuelerSchwerpunkt> {
@@ -7,7 +7,7 @@ export class SchwerpunkteListeManager extends AuswahlManager<number, SchuelerSch
 	/**
      * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
      */
-	private static readonly _schwerpunkteToId: JavaFunction<SchuelerSchwerpunkt, number> = { apply: (ba: SchuelerSchwerpunkt) => ba.id };
+	private static readonly _schwerpunkteToId = (ba: SchuelerSchwerpunkt) => ba.id;
 	private readonly _idsOfReferencedSchwerpunkte: HashSet<number> = new HashSet<number>();
 	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
@@ -49,7 +49,7 @@ export class SchwerpunkteListeManager extends AuswahlManager<number, SchuelerSch
 
 	set filterNurSichtbar(value: boolean) {
 		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	protected compareAuswahl(a: SchuelerSchwerpunkt, b: SchuelerSchwerpunkt): number {
@@ -93,7 +93,7 @@ export class SchwerpunkteListeManager extends AuswahlManager<number, SchuelerSch
 
 	set searchTerm(value: string) {
 		this._searchTerm = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 }

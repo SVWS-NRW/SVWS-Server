@@ -3,7 +3,6 @@ import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
 import { AuswahlManager } from '../../AuswahlManager';
 import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
-import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
 import type { FachDaten } from '../../../../../core/src/core/data/fach/FachDaten';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
@@ -15,7 +14,7 @@ import type { StundenplanListeEintrag } from "../../../../../core/src/core/data/
 
 export class FaecherListeManager extends AuswahlManager<number, FachDaten, FachDaten> {
 
-	private static readonly _faecherToId: JavaFunction<FachDaten, number> = { apply: (ea: FachDaten) => ea.id };
+	private static readonly _faecherToId = (ea: FachDaten) => ea.id;
 	private readonly _idsReferencedFaecher: HashSet<number> = new HashSet<number>();
 	private readonly _stundenplaeneById: Map<number, StundenplanListeEintrag> = new Map();
 	private _filterNurSichtbar: boolean = true;
@@ -95,7 +94,7 @@ export class FaecherListeManager extends AuswahlManager<number, FachDaten, FachD
 
 	set filterNurSichtbar(value: boolean) {
 		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get filterNurSichtbar(): boolean {
@@ -112,7 +111,7 @@ export class FaecherListeManager extends AuswahlManager<number, FachDaten, FachD
 
 	set searchTerm(value: string) {
 		this._searchTerm = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get stundenplaeneById(): Map<number, StundenplanListeEintrag> {

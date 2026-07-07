@@ -4,7 +4,6 @@ import type { Schuljahresabschnitt } from '../../../../core/src/asd/data/schule/
 import type { Schulform } from '../../../../core/src/asd/types/schule/Schulform';
 import type { Comparator } from '../../../../core/src/java/util/Comparator';
 import { Arrays } from '../../../../core/src/java/util/Arrays';
-import type { JavaFunction } from '../../../../core/src/java/util/function/JavaFunction';
 import { JavaLong } from '../../../../core/src/java/lang/JavaLong';
 import { ENMServerConnection } from '../../../../core/src/core/data/enm/ENMServerConnection';
 import type { SimpleOperationResponse } from '../../../../core/src/core/data/SimpleOperationResponse';
@@ -15,7 +14,7 @@ import type { SimpleOperationResponse } from '../../../../core/src/core/data/Sim
 export class WenomAuswahlListeManager extends AuswahlManager<number, ENMServerConnection, ENMServerConnection> {
 
 
-	private static readonly _eintragToId: JavaFunction<ENMServerConnection, number> = { apply: (l: ENMServerConnection) => l.id };
+	private static readonly _eintragToId = (l: ENMServerConnection) => l.id;
 	private readonly _mapAvailability = new Map<number, SimpleOperationResponse | null>();
 	private readonly _mapSetupResponse = new Map<number, boolean | null>();
 

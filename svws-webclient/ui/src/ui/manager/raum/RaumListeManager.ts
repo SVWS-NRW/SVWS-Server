@@ -6,7 +6,6 @@ import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../../../core/src/core/exceptions/DeveloperNotificationException';
 import { AuswahlManager } from '../../AuswahlManager';
 import { RaumUtils } from '../../../../../core/src/core/utils/raum/RaumUtils';
-import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
 import { Class } from '../../../../../core/src/java/lang/Class';
@@ -18,7 +17,7 @@ export class RaumListeManager extends AuswahlManager<number, Raum, Raum> {
 	/**
 	 * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
 	 */
-	private static readonly _raumToId: JavaFunction<Raum, number> = { apply: (f: Raum) => f.id };
+	private static readonly _raumToId = (f: Raum) => f.id;
 
 	/**
 	 * Zusätzliche Maps, welche zum schnellen Zugriff auf Teilmengen der Liste verwendet werden können

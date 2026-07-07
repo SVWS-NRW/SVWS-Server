@@ -3,7 +3,6 @@ import type { JahrgangsDaten } from '../../../../../core/src/core/data/jahrgang/
 import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
 import { AuswahlManager } from '../../AuswahlManager';
-import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
 import { Arrays } from '../../../../../core/src/java/util/Arrays';
@@ -16,7 +15,7 @@ import { JavaInteger } from "../../../../../core/src/java/lang/JavaInteger";
 
 export class JahrgaengeListeManager extends AuswahlManager<number, JahrgangsDaten, JahrgangsDaten> {
 
-	private static readonly _jahrgangToId: JavaFunction<JahrgangsDaten, number> = { apply: (j: JahrgangsDaten) => j.id };
+	private static readonly _jahrgangToId = (j: JahrgangsDaten) => j.id;
 	private readonly idsReferencedJahrgaenge: HashSet<number> = new HashSet<number>();
 	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
@@ -113,7 +112,7 @@ export class JahrgaengeListeManager extends AuswahlManager<number, JahrgangsDate
 	 */
 	public setFilterNurSichtbar(value: boolean): void {
 		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	/**
@@ -131,7 +130,7 @@ export class JahrgaengeListeManager extends AuswahlManager<number, JahrgangsDate
 
 	set searchTerm(value: string) {
 		this._searchTerm = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 }
 

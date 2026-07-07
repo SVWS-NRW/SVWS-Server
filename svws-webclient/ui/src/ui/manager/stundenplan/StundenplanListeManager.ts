@@ -8,7 +8,6 @@ import { DateUtils } from '../../../../../core/src/core/utils/DateUtils';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
 import { AuswahlManager } from '../../AuswahlManager';
 import { StundenplanListeEintrag } from '../../../../../core/src/core/data/stundenplan/StundenplanListeEintrag';
-import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
 import { Class } from '../../../../../core/src/java/lang/Class';
@@ -40,9 +39,9 @@ export class StundenplanListeManager extends AuswahlManager<number, StundenplanL
 	/**
 	 * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
 	 */
-	private static readonly _listeEintragToId: JavaFunction<StundenplanListeEintrag, number> = { apply: (s: StundenplanListeEintrag) => s.id };
+	private static readonly _listeEintragToId = (s: StundenplanListeEintrag) => s.id;
 
-	private static readonly _stundenplanToId: JavaFunction<StundenplanManager, number> = { apply: (s: StundenplanManager) => s.stundenplanGetID() };
+	private static readonly _stundenplanToId = (s: StundenplanManager) => s.stundenplanGetID();
 
 	/**
 	 * Das Filter-Attribut auf nur aktive Stundenpläne
@@ -347,7 +346,7 @@ export class StundenplanListeManager extends AuswahlManager<number, StundenplanL
 	 */
 	public setFilterNurAktiv(value: boolean): void {
 		this._filterNurAktiv = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	protected onSetDaten(eintrag: StundenplanListeEintrag, daten: StundenplanManager): boolean {

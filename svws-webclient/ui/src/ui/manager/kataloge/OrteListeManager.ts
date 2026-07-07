@@ -3,7 +3,6 @@ import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
 import { AuswahlManager } from '../../AuswahlManager';
 import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
-import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
 import type { OrtKatalogEintrag } from '../../../../../core/src/core/data/kataloge/OrtKatalogEintrag';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
@@ -14,7 +13,7 @@ import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
 
 export class OrteListeManager extends AuswahlManager<number, OrtKatalogEintrag, OrtKatalogEintrag> {
 
-	private static readonly _ortToId: JavaFunction<OrtKatalogEintrag, number> = { apply: (ea: OrtKatalogEintrag) => ea.id };
+	private static readonly _ortToId = (ea: OrtKatalogEintrag) => ea.id;
 	private readonly _idsReferencedOrte: HashSet<number> = new HashSet<number>();
 	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
@@ -83,7 +82,7 @@ export class OrteListeManager extends AuswahlManager<number, OrtKatalogEintrag, 
 
 	set filterNurSichtbar(value: boolean) {
 		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get filterNurSichtbar(): boolean {
@@ -100,6 +99,6 @@ export class OrteListeManager extends AuswahlManager<number, OrtKatalogEintrag, 
 
 	set searchTerm(value: string) {
 		this._searchTerm = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 }

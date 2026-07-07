@@ -4,7 +4,6 @@ import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import type { SchuelerVermerkartZusammenfassung } from '../../../../../core/src/core/data/schueler/SchuelerVermerkartZusammenfassung';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
 import { AuswahlManager } from '../../AuswahlManager';
-import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
 import { Arrays } from '../../../../../core/src/java/util/Arrays';
@@ -16,7 +15,7 @@ import { JavaInteger } from "../../../../../core/src/java/lang/JavaInteger";
 
 export class VermerkartenListeManager extends AuswahlManager<number, VermerkartEintrag, VermerkartEintrag> {
 
-	private static readonly _vermerkartToId: JavaFunction<VermerkartEintrag, number> = { apply: (v: VermerkartEintrag) => v.id };
+	private static readonly _vermerkartToId = (v: VermerkartEintrag) => v.id;
 	private readonly _idsReferencedEinwilligungsarten: HashSet<number> = new HashSet<number>();
 	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
@@ -81,7 +80,7 @@ export class VermerkartenListeManager extends AuswahlManager<number, VermerkartE
 	 */
 	public setFilterNurSichtbar(value: boolean): void {
 		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	/**
@@ -99,7 +98,7 @@ export class VermerkartenListeManager extends AuswahlManager<number, VermerkartE
 
 	set searchTerm(value: string) {
 		this._searchTerm = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get schuelerVermerkartZusammenfassungen(): List<SchuelerVermerkartZusammenfassung> {

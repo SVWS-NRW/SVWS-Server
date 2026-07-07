@@ -8,7 +8,6 @@ import type { Comparator } from '../../../../../core/src/java/util/Comparator';
 import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
 import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
-import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
 import { HashSet } from "../../../../../core/src/java/util/HashSet";
 import type { BetriebeAnsprechpartner } from "../../../../../core/src/core/data/schule/BetriebeAnsprechpartner";
 import type { Betriebsart } from "../../../../../core/src/core/data/schule/Betriebsart";
@@ -18,7 +17,7 @@ import type { OrtKatalogEintrag } from "../../../../../core/src/core/data/katalo
 
 export class BetriebeListeManager extends AuswahlManager<number, Betrieb, Betrieb> {
 
-	private static readonly _betriebToId: JavaFunction<Betrieb, number> = { apply: (a: Betrieb) => a.id };
+	private static readonly _betriebToId = (a: Betrieb) => a.id;
 	private readonly _idsOfReferencedBetriebe: HashSet<number> = new HashSet<number>();
 	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
@@ -117,7 +116,7 @@ export class BetriebeListeManager extends AuswahlManager<number, Betrieb, Betrie
 
 	set filterNurSichtbar(value: boolean) {
 		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get filterNurSichtbar(): boolean {
@@ -130,7 +129,7 @@ export class BetriebeListeManager extends AuswahlManager<number, Betrieb, Betrie
 
 	set searchTerm(value: string) {
 		this._searchTerm = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	// --- ansprechpartner ---

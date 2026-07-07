@@ -1,6 +1,5 @@
 import { AuswahlManager } from '../../AuswahlManager';
 import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
-import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
 import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
@@ -17,7 +16,7 @@ import { HashMap, HashSet } from '../../../../../core/src';
 
 export class AnkreuzkompetenzenListeManager extends AuswahlManager<number, Ankreuzkompetenz, Ankreuzkompetenz> {
 
-	private static readonly _ankreuzkompetenzToId: JavaFunction<Ankreuzkompetenz, number> = { apply: (a: Ankreuzkompetenz) => a.id };
+	private static readonly _ankreuzkompetenzToId = (a: Ankreuzkompetenz) => a.id;
 	private readonly _idsReferencedAnkreuzkompetenzen: HashSet<number> = new HashSet<number>();
 	private readonly _faecherById: Map<number, FachDaten> = new Map();
 	private _filterNurSichtbar: boolean = true;
@@ -281,7 +280,7 @@ export class AnkreuzkompetenzenListeManager extends AuswahlManager<number, Ankre
 
 	set filterNurSichtbar(value: boolean) {
 		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get filterFaecher(): FachDaten[] {
@@ -290,7 +289,7 @@ export class AnkreuzkompetenzenListeManager extends AuswahlManager<number, Ankre
 
 	set filterFaecher(value: FachDaten[]) {
 		this._filterFaecher = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get filterSchulgliederungen(): Schulgliederung[] {
@@ -298,7 +297,7 @@ export class AnkreuzkompetenzenListeManager extends AuswahlManager<number, Ankre
 	}
 	set filterSchulgliederungen(value: Schulgliederung[]) {
 		this._filterSchulgliederungen = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get filterJahrgaenge(): JahrgangsDaten[] {
@@ -307,7 +306,7 @@ export class AnkreuzkompetenzenListeManager extends AuswahlManager<number, Ankre
 
 	set filterJahrgaenge(value: JahrgangsDaten[]) {
 		this._filterJahrgaenge = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get searchTerm(): string {
@@ -316,7 +315,7 @@ export class AnkreuzkompetenzenListeManager extends AuswahlManager<number, Ankre
 
 	set searchTerm(value: string) {
 		this._searchTerm = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get idsReferencedAnkreuzkompetenzen(): HashSet<number> {

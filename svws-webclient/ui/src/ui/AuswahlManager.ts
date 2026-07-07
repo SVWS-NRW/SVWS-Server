@@ -1,15 +1,11 @@
-import { JavaObject } from '../../../core/src/java/lang/JavaObject';
 import { HashMap } from '../../../core/src/java/util/HashMap';
 import type { Schulform } from '../../../core/src/asd/types/schule/Schulform';
 import { ArrayList } from '../../../core/src/java/util/ArrayList';
 import { SchuljahresabschnittsUtils } from '../../../core/src/core/utils/schule/SchuljahresabschnittsUtils';
 import { DeveloperNotificationException } from '../../../core/src/core/exceptions/DeveloperNotificationException';
 import type { Comparator } from '../../../core/src/java/util/Comparator';
-import type { JavaFunction } from '../../../core/src/java/util/function/JavaFunction';
-import type { Runnable } from '../../../core/src/java/lang/Runnable';
 import type { Collection } from '../../../core/src/java/util/Collection';
 import type { List } from '../../../core/src/java/util/List';
-import { Class } from '../../../core/src/java/lang/Class';
 import type { Schuljahresabschnitt } from '../../../core/src/asd/data/schule/Schuljahresabschnitt';
 import type { JavaMap } from '../../../core/src/java/util/JavaMap';
 import { Pair } from '../../../core/src/asd/adt/Pair';
@@ -19,96 +15,65 @@ import { AttributMitAuswahl } from './AttributMitAuswahl';
 /**
  * Ein abstrakter Auswahl-Manager, welcher für die Auswahllisten im Client verwendet wird
  *
- * @param <TID>        der Typ der ID des Auswahl-Elemente
+ * @param <TID>        der primitve Typ (number|string) der ID des Auswahl-Elemente
  * @param <TAuswahl>   der Typ der Auswahl-Einträge
  * @param <TDaten>     der Typ der mit der aktuellen Auswahl verknüpften Daten
  */
-export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
+export abstract class AuswahlManager<TID extends number | string, TAuswahl, TDaten> {
 
-	/**
-	 * Ein Auswahl-Attribut für die Auswahliste. Dieses wird nicht für eine Filterung verwendet,
-	 * sondern für eine Mehrfachauswahl
-	 */
+	/** Ein Auswahl-Attribut für die Auswahliste. Dieses wird nicht für eine Filterung verwendet,
+	 * sondern für eine Mehrfachauswahl */
 	public readonly liste: AttributMitAuswahl<TID, TAuswahl>;
 
-	/**
-	 * Ein Lambda-Ausdruck für das Mapping von einem Auswahl-Objekt auf dessen ID
-	 */
-	private readonly _listeToId: JavaFunction<TAuswahl, TID>;
+	/** Funktion für das Mapping von einem Auswahl-Objekt auf dessen ID */
+	private readonly _listeToId: (eintrag: TAuswahl) => TID;
 
-	/**
-	 * Ein Lambda-Ausdruck für das Mapping von einem Daten-Objekt auf dessen ID
-	 */
-	private readonly _datenToId: JavaFunction<TDaten, TID>;
+	/** Funktion für das Mapping von einem Daten-Objekt auf dessen ID */
+	private readonly _datenToId: (daten: TDaten) => TID;
 
-	/**
-	 * Die Schulform der Schule
-	 */
+	/** Die Schulform der Schule */
 	protected readonly _schulform: Schulform | null;
 
-	/**
-	 * Der Schuljahresabschnitt, welcher für die Auswahl genutzt wird
-	 */
+	/** Der Schuljahresabschnitt, welcher für die Auswahl genutzt wird */
 	protected readonly _schuljahresabschnitt: number;
 
-	/**
-	 * Der Schuljahresabschnitt, in dem sich die Schule befindet
-	 */
+	/** Der Schuljahresabschnitt, in dem sich die Schule befindet */
 	protected readonly _schuljahresabschnittSchule: number;
 
-	/**
-	 * Das Filter-Attribut für die Schuljahresabschnitte - die Filterfunktion wird zur Zeit noch nicht genutzt
-	 */
+	/** Das Filter-Attribut für die Schuljahresabschnitte -
+	 * die Filterfunktion wird zur Zeit noch nicht genutzt */
 	public readonly schuljahresabschnitte: AttributMitAuswahl<number, Schuljahresabschnitt>;
 
-	private static readonly _schuljahresabschnittToId: JavaFunction<Schuljahresabschnitt, number> = { apply: (sja: Schuljahresabschnitt) => sja.id };
+	private static readonly _schuljahresabschnittToId = (sja: Schuljahresabschnitt) => sja.id;
 
-	/**
-	 * Die gefilterte Liste, sofern sie schon berechnet wurde
-	 */
+	/** Die gefilterte Liste, sofern sie schon berechnet wurde */
 	protected _filtered: List<TAuswahl> | null = null;
 
-	/**
-	 * Die Daten, sofern eine Auswahl vorhanden ist.
-	 */
+	/** Die Daten, sofern eine Auswahl vorhanden ist */
 	protected _daten: TDaten | null = null;
 
-	/**
-	 * Ein Handler für das Ereignis, dass der Filter angepasst wurde
-	 */
-	protected readonly _eventHandlerFilterChanged: Runnable = { run: () => {
+	/** Ein Handler für das Ereignis, dass der Filter angepasst wurde */
+	protected readonly _eventHandlerFilterChanged = () => {
 		this.onFilterChanged();
 		this._filtered = null;
-	} };
+	};
 
-	/**
-	 * Ein Handler für das Ereignis, dass die Mehrfachauswahl angepasst wurde
-	 */
-	private readonly _eventHandlerMehrfachauswahlChanged: Runnable = { run: () => this.onMehrfachauswahlChanged() };
+	/** Ein Handler für das Ereignis, dass die Mehrfachauswahl angepasst wurde */
+	private readonly _eventHandlerMehrfachauswahlChanged = () => this.onMehrfachauswahlChanged();
 
-	/**
-	 * Ein Handler für das Ereignis, dass die Liste mit der Mehrfachauswahl angepasst wurde
-	 */
-	private readonly _eventHandlerListeChanged: Runnable = { run: () => this.onListeChangedInternal() };
+	/** Ein Handler für das Ereignis, dass die Liste mit der Mehrfachauswahl angepasst wurde */
+	private readonly _eventHandlerListeChanged = () => this.onListeChangedInternal();
 
-	/**
-	 * Die Sortier-Ordnung, welche vom Comparator verwendet wird.
-	 */
+	/** Die Sortier-Ordnung, welche vom Comparator verwendet wird */
 	protected _order: List<Pair<string, boolean>>;
 
-	/**
-	 * Gibt an, ob die aktuelle Einzel-Auswahl auch bei dem Filter erlaubt wird oder nicht.
-	 */
+	/** Gibt an, ob die aktuelle Einzel-Auswahl auch bei dem Filter erlaubt wird oder nicht */
 	protected _filterPermitAuswahl: boolean = false;
 
-	/**
-	 * Die Daten aus der vorherigen Auswahl.
-	 */
+	/** Die Daten aus der vorherigen Auswahl */
 	protected _vorherigeAuswahl: TDaten | null = null;
 
-	/**
-	 * Map mit allen selektierten Gruppenprozess CoreDto Objekten
-	 */
+	/** Map mit allen selektierten Gruppenprozess CoreDto Objekten */
 	protected _listeDaten: JavaMap<TID, TDaten> = new HashMap<TID, TDaten>();
 
 
@@ -125,8 +90,17 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	 * @param datenToId                    eine Funktion für das Mappen eines Daten-Objektes auf seine ID
 	 * @param order                        die Default-Sortierung für die Auswahl-Liste
 	 */
-	protected constructor(schuljahresabschnitt: number, schuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>, schulform: Schulform | null, values: Collection<TAuswahl>, listComparator: Comparator<TAuswahl>, listeToId: JavaFunction<TAuswahl, TID>, datenToId: JavaFunction<TDaten, TID>, order: List<Pair<string, boolean>>) {
-		super();
+	protected constructor(
+		schuljahresabschnitt: number,
+		schuljahresabschnittSchule: number,
+		schuljahresabschnitte: List<Schuljahresabschnitt>,
+		schulform: Schulform | null,
+		values: Collection<TAuswahl>,
+		listComparator: Comparator<TAuswahl>,
+		listeToId: (eintrag: TAuswahl) => TID,
+		datenToId: (daten: TDaten) => TID,
+		order: List<Pair<string, boolean>>
+	) {
 		this._schuljahresabschnitt = schuljahresabschnitt;
 		this._schuljahresabschnittSchule = schuljahresabschnittSchule;
 		this.schuljahresabschnitte = new AttributMitAuswahl(schuljahresabschnitte, AuswahlManager._schuljahresabschnittToId, SchuljahresabschnittsUtils.comparator, this._eventHandlerFilterChanged);
@@ -270,7 +244,7 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 		if (order === null) {
 			for (let i: number = 0; i < this._order.size(); i++) {
 				const eintrag: Pair<string, boolean> = this._order.get(i);
-				if (JavaObject.equalsTranspiler(eintrag.a, (field))) {
+				if (eintrag.a === field) {
 					this._order.remove(eintrag);
 					this._filtered = null;
 					return;
@@ -280,8 +254,8 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 		}
 		for (let i: number = 0; i < this._order.size(); i++) {
 			const eintrag: Pair<string, boolean> = this._order.get(i);
-			if (JavaObject.equalsTranspiler(eintrag.a, (field))) {
-				if (JavaObject.equalsTranspiler(eintrag.b, (order))) {
+			if (eintrag.a === field) {
+				if (eintrag.b === order) {
 					return;
 				}
 				this._order.remove(eintrag);
@@ -341,7 +315,7 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 		if (daten === null) {
 			this._daten = null;
 		} else {
-			const eintrag: TAuswahl = this.liste.getOrException(this._datenToId.apply(daten));
+			const eintrag: TAuswahl = this.liste.getOrException(this._datenToId(daten));
 			const updateEintrag: boolean = this.onSetDaten(eintrag, daten);
 			this._daten = daten;
 			if (updateEintrag) {
@@ -372,7 +346,7 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	 * @return die ID oder null
 	 */
 	public auswahlID(): TID | null {
-		return (this._daten === null) ? null : this._datenToId.apply(this._daten);
+		return (this._daten === null) ? null : this._datenToId(this._daten);
 	}
 
 	/**
@@ -387,7 +361,7 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 		if (this._daten === null) {
 			throw new DeveloperNotificationException("Für den Aufruf dieser Methode muss zuvor eine Auswahl vorliegen.");
 		}
-		return this.liste.getOrException(this._datenToId.apply(this._daten));
+		return this.liste.getOrException(this._datenToId(this._daten));
 	}
 
 	/**
@@ -425,7 +399,7 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	 * @return die zugehörige ID
 	 */
 	public getIdByEintrag(eintrag: TAuswahl): TID {
-		return this._listeToId.apply(eintrag);
+		return this._listeToId(eintrag);
 	}
 
 	/**
@@ -436,7 +410,7 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	 * @return die zugehörige ID
 	 */
 	public getIdByDaten(daten: TDaten): TID {
-		return this._datenToId.apply(daten);
+		return this._datenToId(daten);
 	}
 
 	/**
@@ -471,19 +445,4 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	public getListeDaten(): JavaMap<TID, TDaten> {
 		return this._listeDaten;
 	}
-
-	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.utils.AuswahlManager';
-	}
-
-	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.core.utils.AuswahlManager'].includes(name);
-	}
-
-	public static class = new Class<AuswahlManager<any, any, any>>('de.svws_nrw.core.utils.AuswahlManager');
-
-}
-
-export function cast_de_svws_nrw_core_utils_AuswahlManager<TID, TAuswahl, TDaten>(obj: unknown): AuswahlManager<TID, TAuswahl, TDaten> {
-	return obj as AuswahlManager<TID, TAuswahl, TDaten>;
 }

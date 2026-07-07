@@ -1,6 +1,6 @@
 import { AuswahlManager } from '../../AuswahlManager';
 import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
-import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
+
 import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
@@ -14,7 +14,7 @@ import type { Comparator } from '../../../../../core/src/java/util/Comparator';
 
 export class KindergaertenListeManager extends AuswahlManager<number, Kindergarten, Kindergarten> {
 
-	private static readonly _kindergartenToId: JavaFunction<Kindergarten, number> = { apply: (k: Kindergarten) => k.id };
+	private static readonly _kindergartenToId = (k: Kindergarten) => k.id;
 	private readonly _idsOfReferencedKindergaerten: HashSet<number> = new HashSet();
 	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
@@ -84,7 +84,7 @@ export class KindergaertenListeManager extends AuswahlManager<number, Kindergart
 
 	set filterNurSichtbar(value: boolean) {
 		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get searchTerm(): string {
@@ -93,7 +93,7 @@ export class KindergaertenListeManager extends AuswahlManager<number, Kindergart
 
 	set searchTerm(value: string) {
 		this._searchTerm = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get idsOfReferencedKindergaerten(): HashSet<number> {

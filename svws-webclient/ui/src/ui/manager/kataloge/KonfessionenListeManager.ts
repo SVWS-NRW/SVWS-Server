@@ -6,14 +6,13 @@ import { JavaString } from "../../../../../core/src/java/lang/JavaString";
 import { Arrays } from "../../../../../core/src/java/util/Arrays";
 import { HashSet } from "../../../../../core/src/java/util/HashSet";
 import type { Comparator } from "../../../../../core/src/java/util/Comparator";
-import type { JavaFunction } from "../../../../../core/src/java/util/function/JavaFunction";
 import type { List } from "../../../../../core/src/java/util/List";
 import { AuswahlManager } from "../../AuswahlManager";
 
 
 export class KonfessionenListeManager extends AuswahlManager<number, ReligionEintrag, ReligionEintrag> {
 
-	private static readonly _konfessionToId: JavaFunction<ReligionEintrag, number> = { apply: (r: ReligionEintrag) => r.id };
+	private static readonly _konfessionToId = (r: ReligionEintrag) => r.id;
 	private readonly _idsOfReferencedKonfessionen: HashSet<number> = new HashSet<number>();
 	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
@@ -61,7 +60,7 @@ export class KonfessionenListeManager extends AuswahlManager<number, ReligionEin
 
 	set filterNurSichtbar(value: boolean) {
 		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	protected compareAuswahl(a: ReligionEintrag, b: ReligionEintrag): number {
@@ -96,7 +95,7 @@ export class KonfessionenListeManager extends AuswahlManager<number, ReligionEin
 
 	set searchTerm(value: string) {
 		this._searchTerm = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get idsReferencedKonfessionen(): HashSet<number> {

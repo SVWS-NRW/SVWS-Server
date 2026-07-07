@@ -6,7 +6,6 @@ import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulfo
 import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../../../core/src/core/exceptions/DeveloperNotificationException';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
-import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
 import type { LehrerListeEintrag } from '../../../../../core/src/core/data/lehrer/LehrerListeEintrag';
 import type { LehrerPersonalabschnittsdaten } from '../../../../../core/src/asd/data/lehrer/LehrerPersonalabschnittsdaten';
 import type { List } from '../../../../../core/src/java/util/List';
@@ -28,9 +27,9 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 	/**
 	 * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
 	 */
-	private static readonly _lehrerToId: JavaFunction<LehrerListeEintrag, number> = { apply: (k: LehrerListeEintrag) => k.id };
+	private static readonly _lehrerToId = (k: LehrerListeEintrag) => k.id;
 
-	private static readonly _lehrerDatenToId: JavaFunction<LehrerStammdaten, number> = { apply: (k: LehrerStammdaten) => k.id };
+	private static readonly _lehrerDatenToId = (k: LehrerStammdaten) => k.id;
 
 	/**
 	 * Zusätzliche Maps, welche zum schnellen Zugriff auf Teilmengen der Liste verwendet werden können
@@ -51,7 +50,7 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 	 */
 	public readonly personaltypen: AttributMitAuswahl<number, PersonalTyp>;
 
-	private static readonly _personaltypToId: JavaFunction<PersonalTyp, number> = { apply: (pt: PersonalTyp) => pt.id };
+	private static readonly _personaltypToId = (pt: PersonalTyp) => pt.id;
 
 	private static readonly _comparatorPersonaltypen: Comparator<PersonalTyp> = { compare: (a: PersonalTyp, b: PersonalTyp) => a.ordinal() - b.ordinal() };
 
@@ -165,7 +164,7 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 	 */
 	public setFilterNurSichtbar(value: boolean): void {
 		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	/**
@@ -184,7 +183,7 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 	 */
 	public setFilterNurStatistikRelevant(value: boolean): void {
 		this._filterNurStatistikrelevant = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	/**

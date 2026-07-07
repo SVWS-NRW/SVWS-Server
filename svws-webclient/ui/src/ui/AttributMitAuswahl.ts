@@ -1,11 +1,7 @@
-import { JavaObject } from '../../../core/src/java/lang/JavaObject';
-import type { JavaFunction } from '../../../core/src/java/util/function/JavaFunction';
 import { HashMap } from '../../../core/src/java/util/HashMap';
-import type { Runnable } from '../../../core/src/java/lang/Runnable';
 import { ArrayList } from '../../../core/src/java/util/ArrayList';
 import type { Collection } from '../../../core/src/java/util/Collection';
 import type { List } from '../../../core/src/java/util/List';
-import { Class } from '../../../core/src/java/lang/Class';
 import { DeveloperNotificationException } from '../../../core/src/core/exceptions/DeveloperNotificationException';
 import type { JavaMap } from '../../../core/src/java/util/JavaMap';
 import type { Comparator } from '../../../core/src/java/util/Comparator';
@@ -14,45 +10,31 @@ import type { Comparator } from '../../../core/src/java/util/Comparator';
  * Eine Klasse für den Zugriff auf Attribute mit eingebauter Auswahl-Funktion,
  * welche u.a. für Filter genutzt werden kann.
  *
- * @param <K> der Typ des eindeutigen Schlüsselwertes für ein enthaltenes Objekt
+ * @param <K> der primitive Typ (number | string) des Schlüssels für das enthaltene Objekt
  * @param <V> der Typ der enthaltenen Objekte
  */
-export class AttributMitAuswahl<K, V> extends JavaObject {
+export class AttributMitAuswahl<K extends number | string, V> {
 
-	/**
-	 * Die Menge der zulässigen Werte
-	 */
+	/** Die Menge der zulässigen Werte */
 	private _values: List<V> = new ArrayList<V>();
 
-	/**
-	 * Eine Map mit der Menge der zulässigen Werte
-	 */
+	/** Eine Map mit der Menge der zulässigen Werte */
 	private readonly _mapValuesByKey: JavaMap<K, V> = new HashMap<K, V>();
 
-	/**
-	 * Eine Map mit der Menge der Werte in der Auswahl
-	 */
+	/** Eine Map mit der Menge der Werte in der Auswahl */
 	private readonly _mapAuswahlValuesByKey: JavaMap<K, V> = new HashMap<K, V>();
 
-	/**
-	 * Eine Funktion, um aus einem Wert den zugehörigen Schlüssel zu extrahieren.
-	 */
-	private readonly _toID: JavaFunction<V, K>;
+	/** Eine Funktion, um aus einem Wert den zugehörigen Schlüssel zu extrahieren. */
+	private readonly _toID: (v: V) => K;
 
-	/**
-	 * Ein Comparator für das Sortieren der enthaltenen Objekte
-	 */
+	/** Eine Comparator Funktion für das Sortieren der enthaltenen Objekte */
 	private readonly _comparator: Comparator<V>;
 
-	/**
-	 * Ein Handler für das Ereignis, dass die Auswahl verändert wurde
-	 */
-	private readonly _eventHandlerAuswahlGeandert: Runnable | null;
+	/** Ein Handler für das Ereignis, dass die Auswahl verändert wurde */
+	private readonly _eventHandlerAuswahlGeandert: (() => void) | null;
 
-	/**
-	 * Ein Handler für das Ereignis, dass die zugrundeliegende Liste verändert wurde
-	 */
-	private _eventHandlerListeGeaendert: Runnable | null = null;
+	/** Ein Handler für das Ereignis, dass die zugrundeliegende Liste verändert wurde */
+	private _eventHandlerListeGeaendert: (() => void) | null = null;
 
 
 	/**
@@ -61,10 +43,14 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 	 * @param values        die Menge der erlaubten Werte
 	 * @param toId          eine Funktion zum Ermitteln des Schlüssels eines Objektes
 	 * @param comparator    eine Vergleichsmethode zum Vergleichen von zwei enthaltenen Objekten
-	 * @param eventHandler  ein Runnable, welches aufgerufen wird, wenn der Status der Auswahl sich ändert
+	 * @param eventHandler  ein Callback, welches aufgerufen wird, wenn der Status der Auswahl sich ändert
 	 */
-	public constructor(values: Collection<V>, toId: JavaFunction<V, K>, comparator: Comparator<V>, eventHandler: Runnable | null) {
-		super();
+	public constructor(
+		values: Collection<V>,
+		toId: (v: V) => K,
+		comparator: Comparator<V>,
+		eventHandler: (() => void) | null
+	) {
 		this._toID = toId;
 		this._comparator = comparator;
 		this._values.clear();
@@ -72,18 +58,17 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 		this._values.sort(this._comparator);
 		this._mapValuesByKey.clear();
 		for (const v of this._values) {
-			this._mapValuesByKey.put(toId.apply(v), v);
+			this._mapValuesByKey.put(toId(v), v);
 		}
 		this._eventHandlerAuswahlGeandert = eventHandler;
 	}
 
 	/**
-	 * Setzt den Event-Handler für das Ereignis, dass die zugrundeliegende Liste verändert
-	 * wurde.
+	 * Setzt den Event-Handler für das Ereignis, dass die zugrundeliegende Liste verändert wurde.
 	 *
 	 * @param eventHandler   der Event-Handler
 	 */
-	setEventHandlerListeGeaendert(eventHandler: Runnable | null): void {
+	public setEventHandlerListeGeaendert(eventHandler: (() => void) | null): void {
 		this._eventHandlerListeGeaendert = eventHandler;
 	}
 
@@ -154,7 +139,7 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 	 * @return true, falls der Wert vorhanden ist
 	 */
 	public hasValue(value: V): boolean {
-		return this._mapValuesByKey.containsKey(this._toID.apply(value));
+		return this._mapValuesByKey.containsKey(this._toID(value));
 	}
 
 	/**
@@ -165,7 +150,7 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 	 * @return true, wenn ein Wert entfernt wurde
 	 */
 	private addInternal(value: V): boolean {
-		const key: K = this._toID.apply(value);
+		const key: K = this._toID(value);
 		if (this._mapValuesByKey.containsKey(key)) {
 			return false;
 		}
@@ -185,7 +170,7 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 	 */
 	public add(value: V): void {
 		if ((this.addInternal(value)) && (this._eventHandlerListeGeaendert !== null)) {
-			this._eventHandlerListeGeaendert.run();
+			this._eventHandlerListeGeaendert();
 		}
 	}
 
@@ -200,7 +185,7 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 			added = this.addInternal(value) || added;
 		}
 		if ((added) && (this._eventHandlerListeGeaendert !== null)) {
-			this._eventHandlerListeGeaendert.run();
+			this._eventHandlerListeGeaendert();
 		}
 	}
 
@@ -214,10 +199,10 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 	 * @return true, falls der Wert entfernt wurde
 	 */
 	private removeInternal(value: V): boolean {
-		const key: K = this._toID.apply(value);
+		const key: K = this._toID(value);
 		const values: List<V> = new ArrayList<V>();
 		for (const v of this._values) {
-			if (JavaObject.equalsTranspiler(key, (this._toID.apply(v)))) {
+			if (key === this._toID(v)) {
 				continue;
 			}
 			values.add(v);
@@ -243,10 +228,10 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 			return;
 		}
 		if (this._eventHandlerListeGeaendert !== null) {
-			this._eventHandlerListeGeaendert.run();
+			this._eventHandlerListeGeaendert();
 		}
 		if (this._eventHandlerAuswahlGeandert !== null) {
-			this._eventHandlerAuswahlGeandert.run();
+			this._eventHandlerAuswahlGeandert();
 		}
 	}
 
@@ -266,10 +251,10 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 			return;
 		}
 		if (this._eventHandlerListeGeaendert !== null) {
-			this._eventHandlerListeGeaendert.run();
+			this._eventHandlerListeGeaendert();
 		}
 		if (this._eventHandlerAuswahlGeandert !== null) {
-			this._eventHandlerAuswahlGeandert.run();
+			this._eventHandlerAuswahlGeandert();
 		}
 	}
 
@@ -336,7 +321,7 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 		if (!this.hasValue(value)) {
 			throw new DeveloperNotificationException("Der Wert existiert nicht für dieses Attribut und kann daher nicht für die Auswahl verwendet werden.");
 		}
-		const key: K = this._toID.apply(value);
+		const key: K = this._toID(value);
 		return this._mapAuswahlValuesByKey.containsKey(key);
 	}
 
@@ -362,7 +347,7 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 	public auswahlClear(): void {
 		this._mapAuswahlValuesByKey.clear();
 		if (this._eventHandlerAuswahlGeandert !== null) {
-			this._eventHandlerAuswahlGeandert.run();
+			this._eventHandlerAuswahlGeandert();
 		}
 	}
 
@@ -377,9 +362,9 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 		if (!this.hasValue(value)) {
 			throw new DeveloperNotificationException("Der Wert existiert nicht für dieses Attribut und kann daher nicht für die Auswahl verwendet werden.");
 		}
-		this._mapAuswahlValuesByKey.put(this._toID.apply(value), value);
+		this._mapAuswahlValuesByKey.put(this._toID(value), value);
 		if (this._eventHandlerAuswahlGeandert !== null) {
-			this._eventHandlerAuswahlGeandert.run();
+			this._eventHandlerAuswahlGeandert();
 		}
 	}
 
@@ -389,9 +374,9 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 	 * @param value   der Wert der aus der Auswahl entfernt wird
 	 */
 	public auswahlRemove(value: V): void {
-		this._mapAuswahlValuesByKey.remove(this._toID.apply(value));
+		this._mapAuswahlValuesByKey.remove(this._toID(value));
 		if (this._eventHandlerAuswahlGeandert !== null) {
-			this._eventHandlerAuswahlGeandert.run();
+			this._eventHandlerAuswahlGeandert();
 		}
 	}
 
@@ -406,7 +391,7 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 	 * @throws DeveloperNotificationException falls der Wert für das Setzen bei der Auswahl nicht zulässig ist
 	 */
 	public auswahlToggle(value: V): boolean {
-		const key: K = this._toID.apply(value);
+		const key: K = this._toID(value);
 		if (this._mapAuswahlValuesByKey.containsKey(key)) {
 			this.auswahlRemove(value);
 			return false;
@@ -428,7 +413,7 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 		}
 		this._mapAuswahlValuesByKey.put(key, this.getOrException(key));
 		if (this._eventHandlerAuswahlGeandert !== null) {
-			this._eventHandlerAuswahlGeandert.run();
+			this._eventHandlerAuswahlGeandert();
 		}
 	}
 
@@ -440,7 +425,7 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 	public auswahlRemoveByKey(key: K): void {
 		this._mapAuswahlValuesByKey.remove(key);
 		if (this._eventHandlerAuswahlGeandert !== null) {
-			this._eventHandlerAuswahlGeandert.run();
+			this._eventHandlerAuswahlGeandert();
 		}
 	}
 
@@ -475,19 +460,4 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 			}
 		}
 	}
-
-	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.utils.AttributMitAuswahl';
-	}
-
-	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.core.utils.AttributMitAuswahl'].includes(name);
-	}
-
-	public static class = new Class<AttributMitAuswahl<any, any>>('de.svws_nrw.core.utils.AttributMitAuswahl');
-
-}
-
-export function cast_de_svws_nrw_core_utils_AttributMitAuswahl<K, V>(obj: unknown): AttributMitAuswahl<K, V> {
-	return obj as AttributMitAuswahl<K, V>;
 }

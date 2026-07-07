@@ -1,6 +1,6 @@
 import type { RouteParams } from "vue-router";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import type { TeilleistungsartenListeManager } from "~/components/schule/kataloge/teilleistungsarten/manager/TeilleistungsartenListeManager";
+import type { TeilleistungsartenListeManager } from "~/states/teilleistungsarten/TeilleistungsartenListeManager";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import type { RouteNode } from "~/router/RouteNode";

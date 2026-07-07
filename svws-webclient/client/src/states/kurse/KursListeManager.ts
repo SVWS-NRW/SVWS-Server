@@ -1,5 +1,5 @@
-import type { Comparator, List, Runnable, FachDaten, Schueler, Schuljahresabschnitt, SchuelerListeEintrag, SchuelerStatusKatalogEintrag,
-	Schulform, JahrgangsDaten, KursDaten, JavaFunction, LehrerListeEintrag, SchulgliederungKatalogEintrag } from "@core";
+import type { Comparator, List, FachDaten, Schueler, Schuljahresabschnitt, SchuelerListeEintrag, SchuelerStatusKatalogEintrag,
+	Schulform, JahrgangsDaten, KursDaten, LehrerListeEintrag, SchulgliederungKatalogEintrag } from "@core";
 import { ArrayList, Arrays, Pair, Class, JavaObject, JavaString, JavaLong, JavaInteger, DeveloperNotificationException, IllegalArgumentException,
 	HashMap2D, SchuelerUtils, Schulgliederung, SchuelerStatus, KursUtils, LehrerUtils } from "@core";
 import { AuswahlManager, AttributMitAuswahl, JahrgaengeListeManager } from '@ui';
@@ -12,7 +12,7 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 	/**
 	 * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
 	 */
-	private static readonly _kursToId: JavaFunction<KursDaten, number> = { apply: (k: KursDaten) => k.id };
+	private static readonly _kursToId = (k: KursDaten) => k.id;
 
 	/**
 	 * Zusätzliche Maps, welche zum schnellen Zugriff auf Teilmengen der Liste verwendet werden können
@@ -36,28 +36,28 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 	 */
 	public readonly jahrgaenge: AttributMitAuswahl<number, JahrgangsDaten>;
 
-	private static readonly _jahrgangToId: JavaFunction<JahrgangsDaten, number> = { apply: (jg: JahrgangsDaten) => jg.id };
+	private static readonly _jahrgangToId = (jg: JahrgangsDaten) => jg.id;
 
 	/**
 	 * Das Filter-Attribut für die Lehrer
 	 */
 	public readonly lehrer: AttributMitAuswahl<number, LehrerListeEintrag>;
 
-	private static readonly _lehrerToId: JavaFunction<LehrerListeEintrag, number> = { apply: (l: LehrerListeEintrag) => l.id };
+	private static readonly _lehrerToId = (l: LehrerListeEintrag) => l.id;
 
 	/**
 	 * Das Filter-Attribut für die Fächer
 	 */
 	public readonly faecher: AttributMitAuswahl<number, FachDaten>;
 
-	private static readonly _fachToId: JavaFunction<FachDaten, number> = { apply: (f: FachDaten) => f.id };
+	private static readonly _fachToId = (f: FachDaten) => f.id;
 
 	/**
 	 * Das Filter-Attribut für die Schüler
 	 */
 	public readonly schueler: AttributMitAuswahl<number, SchuelerListeEintrag>;
 
-	private static readonly _schuelerToId: JavaFunction<SchuelerListeEintrag, number> = { apply: (s: SchuelerListeEintrag) => s.id };
+	private static readonly _schuelerToId = (s: SchuelerListeEintrag) => s.id;
 
 	private _filteredSchuelerListe: List<Schueler> | null = null;
 
@@ -66,13 +66,13 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 	 */
 	public readonly schulgliederungen: AttributMitAuswahl<string, Schulgliederung>;
 
-	private readonly _schulgliederungToId: JavaFunction<Schulgliederung, string> = { apply: (sg: Schulgliederung) => {
+	private readonly _schulgliederungToId = (sg: Schulgliederung) => {
 		const sglke: SchulgliederungKatalogEintrag | null = sg.daten(schuleStateImpl.schuljahr);
 		if (sglke === null) {
 			throw new IllegalArgumentException(JavaString.format("Die Schulgliederung %s ist in dem Schuljahr %d nicht gültig.", sg.name(), schuleStateImpl.schuljahr));
 		}
 		return sglke.kuerzel;
-	} };
+	};
 
 	private static readonly _comparatorSchulgliederung: Comparator<Schulgliederung> = { compare: (a: Schulgliederung, b: Schulgliederung) => a.ordinal() - b.ordinal() };
 
@@ -81,13 +81,13 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 	 */
 	public readonly schuelerstatus: AttributMitAuswahl<number, SchuelerStatus>;
 
-	private readonly _schuelerstatusToId: JavaFunction<SchuelerStatus, number> = { apply: (s: SchuelerStatus) => {
+	private readonly _schuelerstatusToId = (s: SchuelerStatus) => {
 		const sske: SchuelerStatusKatalogEintrag | null = s.daten(schuleStateImpl.schuljahr);
 		if (sske === null) {
 			throw new IllegalArgumentException(JavaString.format("Der Schülerstatus %s ist in dem Schuljahr %d nicht gültig.", s.name(), schuleStateImpl.schuljahr));
 		}
 		return JavaInteger.parseInt(sske.kuerzel);
-	} };
+	};
 
 	private static readonly _comparatorSchuelerStatus: Comparator<SchuelerStatus> = { compare: (a: SchuelerStatus, b: SchuelerStatus) => a.ordinal() - b.ordinal() };
 
@@ -111,9 +111,9 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 	/**
 	 *  Trigger, wenn eine Checkbox zum Hinzufügen von Schülern zu einem Kurs verwendet wird.
 	 */
-	protected readonly _eventSchuelerAuswahlChanged: Runnable = { run: () => {
+	protected readonly _eventSchuelerAuswahlChanged = () => {
 		// empty block
-	} };
+	};
 
 
 	/**
@@ -223,7 +223,7 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 	 */
 	public setFilterNurSichtbar(value: boolean): void {
 		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	/**

@@ -7,7 +7,6 @@ import type { StundenplanZeitraster } from '../../../../../core/src/core/data/st
 import { StundenplanUnterrichtUtils } from '../../../../../core/src/core/utils/stundenplan/StundenplanUnterrichtUtils';
 import { AuswahlManager } from '../../AuswahlManager';
 import { AttributMitAuswahl } from '../../AttributMitAuswahl';
-import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
 import type { StundenplanSchueler } from '../../../../../core/src/core/data/stundenplan/StundenplanSchueler';
 import type { StundenplanRaum } from '../../../../../core/src/core/data/stundenplan/StundenplanRaum';
 import type { StundenplanLehrer } from '../../../../../core/src/core/data/stundenplan/StundenplanLehrer';
@@ -30,84 +29,84 @@ export class StundenplanUnterrichtListeManager extends AuswahlManager<number, St
 	/**
 	 * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
 	 */
-	private static readonly _unterrichtToId: JavaFunction<StundenplanUnterricht, number> = { apply: (s: StundenplanUnterricht) => s.id };
+	private static readonly _unterrichtToId = (s: StundenplanUnterricht) => s.id;
 
 	/**
 	 * Das Filter-Attribut für die Lehrer
 	 */
 	public readonly lehrer: AttributMitAuswahl<number, StundenplanLehrer>;
 
-	private static readonly _lehrerToId: JavaFunction<StundenplanLehrer, number> = { apply: (l: StundenplanLehrer) => l.id };
+	private static readonly _lehrerToId = (l: StundenplanLehrer) => l.id;
 
 	/**
 	 * Das Filter-Attribut für die Schüler
 	 */
 	public readonly schueler: AttributMitAuswahl<number, StundenplanSchueler>;
 
-	private static readonly _schuelerToId: JavaFunction<StundenplanSchueler, number> = { apply: (s: StundenplanSchueler) => s.id };
+	private static readonly _schuelerToId = (s: StundenplanSchueler) => s.id;
 
 	/**
 	 * Das Filter-Attribut für die Klassen
 	 */
 	public readonly klassen: AttributMitAuswahl<number, StundenplanKlasse>;
 
-	private static readonly _klasseToId: JavaFunction<StundenplanKlasse, number> = { apply: (k: StundenplanKlasse) => k.id };
+	private static readonly _klasseToId = (k: StundenplanKlasse) => k.id;
 
 	/**
 	 * Das Filter-Attribut für die Kurse
 	 */
 	public readonly kurse: AttributMitAuswahl<number, StundenplanKurs>;
 
-	private static readonly _kursToId: JavaFunction<StundenplanKurs, number> = { apply: (k: StundenplanKurs) => k.id };
+	private static readonly _kursToId = (k: StundenplanKurs) => k.id;
 
 	/**
 	 * Das Filter-Attribut für die Räume
 	 */
 	public readonly raeume: AttributMitAuswahl<number, StundenplanRaum>;
 
-	private static readonly _raumToId: JavaFunction<StundenplanRaum, number> = { apply: (r: StundenplanRaum) => r.id };
+	private static readonly _raumToId = (r: StundenplanRaum) => r.id;
 
 	/**
 	 * Das Filter-Attribut für die Schienen
 	 */
 	public readonly schienen: AttributMitAuswahl<number, StundenplanSchiene>;
 
-	private static readonly _schieneToId: JavaFunction<StundenplanSchiene, number> = { apply: (s: StundenplanSchiene) => s.id };
+	private static readonly _schieneToId = (s: StundenplanSchiene) => s.id;
 
 	/**
 	 * Das Filter-Attribut für die Fächer
 	 */
 	public readonly faecher: AttributMitAuswahl<number, StundenplanFach>;
 
-	private static readonly _fachToId: JavaFunction<StundenplanFach, number> = { apply: (f: StundenplanFach) => f.id };
+	private static readonly _fachToId = (f: StundenplanFach) => f.id;
 
 	/**
 	 * Das Filter-Attribut für die Wochentage
 	 */
 	public readonly wochentage: AttributMitAuswahl<number, Wochentag>;
 
-	private static readonly _wochentagToId: JavaFunction<Wochentag, number> = { apply: (w: Wochentag) => w.id };
+	private static readonly _wochentagToId = (w: Wochentag) => w.id;
 
 	/**
 	 * Das Filter-Attribut für die Zeitraster
 	 */
 	public readonly zeitraster: AttributMitAuswahl<number, StundenplanZeitraster>;
 
-	private static readonly _zeitrasterToId: JavaFunction<StundenplanZeitraster, number> = { apply: (z: StundenplanZeitraster) => z.id };
+	private static readonly _zeitrasterToId = (z: StundenplanZeitraster) => z.id;
 
 	/**
 	 * Das Filter-Attribut für die Stunden
 	 */
 	public readonly stunden: AttributMitAuswahl<number, number>;
 
-	private static readonly _stundeToStunde: JavaFunction<number, number> = { apply: (s: number) => s };
+	private static readonly _stundeToStunde = (s: number) => s;
 
 	/**
 	 * Das Filter-Attribut für die Wochentypen
 	 */
 	public readonly wochentypen: AttributMitAuswahl<number, number>;
 
-	private static readonly _wochentypToWochentyp: JavaFunction<number, number> = { apply: (w: number) => w };
+	private static readonly _wochentypToWochentyp = (w: number) => w;
 
 
 	/**

@@ -1,6 +1,5 @@
 import { AuswahlManager } from '../../AuswahlManager';
 import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
-import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
 import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
 import type { Haltestelle } from '../../../../../core/src/core/data/schule/Haltestelle';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
@@ -13,7 +12,7 @@ import { HashSet, type JavaSet } from "../../../../../core/src";
 
 export class HaltestellenListeManager extends AuswahlManager<number, Haltestelle, Haltestelle> {
 
-	private static readonly _haltestelleToId: JavaFunction<Haltestelle, number> = { apply: (h: Haltestelle) => h.id };
+	private static readonly _haltestelleToId = (h: Haltestelle) => h.id;
 	private readonly _idsReferencedHaltestellen: HashSet<number> = new HashSet<number>();
 	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
@@ -82,7 +81,7 @@ export class HaltestellenListeManager extends AuswahlManager<number, Haltestelle
 
 	set filterNurSichtbar(value: boolean) {
 		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get searchTerm(): string {
@@ -91,7 +90,7 @@ export class HaltestellenListeManager extends AuswahlManager<number, Haltestelle
 
 	set searchTerm(value: string) {
 		this._searchTerm = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get idsReferencedHaltestellen(): JavaSet<number> {

@@ -1,5 +1,5 @@
 import { AuswahlManager } from "@ui";
-import type { Comparator, JavaFunction, List, Schulform, Schuljahresabschnitt, Teilleistungsart } from "@core";
+import type { Comparator, List, Schulform, Schuljahresabschnitt, Teilleistungsart } from "@core";
 import { Arrays, HashSet, JavaInteger, JavaLong, JavaString } from "@core";
 
 export class TeilleistungsartenListeManager extends AuswahlManager<number, Teilleistungsart, Teilleistungsart> {
@@ -7,7 +7,7 @@ export class TeilleistungsartenListeManager extends AuswahlManager<number, Teill
 	/**
      * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
      */
-	private static readonly _TeilleistungsartenToId: JavaFunction<Teilleistungsart, number> = { apply: (ba: Teilleistungsart) => ba.id };
+	private static readonly _TeilleistungsartenToId = (ba: Teilleistungsart) => ba.id;
 	private readonly _idsOfReferencedTeilleistungsarten: HashSet<number> = new HashSet<number>();
 	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
@@ -51,7 +51,7 @@ export class TeilleistungsartenListeManager extends AuswahlManager<number, Teill
 
 	set filterNurSichtbar(value: boolean) {
 		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	protected compareAuswahl(a: Teilleistungsart, b: Teilleistungsart): number {
@@ -95,7 +95,7 @@ export class TeilleistungsartenListeManager extends AuswahlManager<number, Teill
 
 	set searchTerm(value: string) {
 		this._searchTerm = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 }

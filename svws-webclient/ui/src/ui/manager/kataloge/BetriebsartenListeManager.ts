@@ -1,6 +1,6 @@
 import { AuswahlManager } from "../../AuswahlManager";
 import type { Betriebsart } from "../../../../../core/src/core/data/schule/Betriebsart";
-import type { Comparator, JavaFunction, List, Schulform, Schuljahresabschnitt } from "../../../../../core/src";
+import type { Comparator, List, Schulform, Schuljahresabschnitt } from "../../../../../core/src";
 import { Arrays, HashSet, JavaLong, JavaString } from "../../../../../core/src";
 
 export class BetriebsartenListeManager extends AuswahlManager<number, Betriebsart, Betriebsart> {
@@ -8,7 +8,7 @@ export class BetriebsartenListeManager extends AuswahlManager<number, Betriebsar
 	/**
      * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
      */
-	private static readonly _betriebsartenToId: JavaFunction<Betriebsart, number> = { apply: (ba: Betriebsart) => ba.id };
+	private static readonly _betriebsartenToId = (ba: Betriebsart) => ba.id;
 	private readonly _idsOfReferencedBetriebsarten: HashSet<number> = new HashSet<number>();
 	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
@@ -49,7 +49,7 @@ export class BetriebsartenListeManager extends AuswahlManager<number, Betriebsar
 
 	set filterNurSichtbar(value: boolean) {
 		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	protected compareAuswahl(a: Betriebsart, b: Betriebsart): number {
@@ -87,7 +87,7 @@ export class BetriebsartenListeManager extends AuswahlManager<number, Betriebsar
 
 	set searchTerm(value: string) {
 		this._searchTerm = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 }

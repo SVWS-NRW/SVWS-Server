@@ -4,7 +4,6 @@ import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
 import { AuswahlManager } from '../../AuswahlManager';
 import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
-import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
 import type { Einwilligungsart } from '../../../../../core/src/core/data/schule/Einwilligungsart';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
@@ -14,7 +13,7 @@ import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
 
 export class EinwilligungsartenListeManager extends AuswahlManager<number, Einwilligungsart, Einwilligungsart> {
 
-	private static readonly _einwilligungsArtToId: JavaFunction<Einwilligungsart, number> = { apply: (ea: Einwilligungsart) => ea.id };
+	private static readonly _einwilligungsArtToId = (ea: Einwilligungsart) => ea.id;
 	private readonly idsReferencedEinwilligungsarten: HashSet<number> = new HashSet<number>();
 	private _filterNurSichtbar: boolean = true;
 
@@ -86,7 +85,7 @@ export class EinwilligungsartenListeManager extends AuswahlManager<number, Einwi
 	 */
 	public setFilterNurSichtbar(value: boolean): void {
 		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	/**

@@ -3,7 +3,6 @@ import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
 import { AuswahlManager } from '../../AuswahlManager';
 import type { SchulenKatalogEintrag } from '../../../../../core/src/core/data/schule/SchulenKatalogEintrag';
-import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
 import type { SchulEintrag } from '../../../../../core/src/core/data/kataloge/SchulEintrag';
@@ -16,7 +15,7 @@ export class SchulenListeManager extends AuswahlManager<number, SchulEintrag, Sc
 	/**
 	 * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
 	 */
-	private static readonly _schuleToId: JavaFunction<SchulEintrag, number> = { apply: (schulEintrag: SchulEintrag) => schulEintrag.id };
+	private static readonly _schuleToId = (schulEintrag: SchulEintrag) => schulEintrag.id;
 	private readonly _idsReferencedSchulen: HashSet<number> = new HashSet<number>();
 	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
@@ -115,7 +114,7 @@ export class SchulenListeManager extends AuswahlManager<number, SchulEintrag, Sc
 
 	set filterNurSichtbar(value: boolean) {
 		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get searchTerm(): string {
@@ -124,7 +123,7 @@ export class SchulenListeManager extends AuswahlManager<number, SchulEintrag, Sc
 
 	set searchTerm(value: string) {
 		this._searchTerm = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get idsReferencedSchulen(): HashSet<number> {

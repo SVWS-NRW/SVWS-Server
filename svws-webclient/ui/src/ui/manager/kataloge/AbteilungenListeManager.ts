@@ -7,7 +7,6 @@ import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
 import { AuswahlManager } from '../../AuswahlManager';
 import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
-import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
 import type { LehrerListeEintrag } from '../../../../../core/src/core/data/lehrer/LehrerListeEintrag';
 import type { AbteilungKlassenzuordnung } from '../../../../../core/src/core/data/schule/AbteilungKlassenzuordnung';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
@@ -29,7 +28,7 @@ export interface AbteilungenLookups {
 
 export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, Abteilung> {
 
-	private static readonly _abteilungToId: JavaFunction<Abteilung, number> = { apply: (a: Abteilung) => a.id };
+	private static readonly _abteilungToId = (a: Abteilung) => a.id;
 
 	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
@@ -257,7 +256,7 @@ export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, A
 
 	set searchTerm(value: string) {
 		this._searchTerm = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get filterNurSichtbar(): boolean {
@@ -266,7 +265,7 @@ export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, A
 
 	set filterNurSichtbar(value: boolean) {
 		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get abteilungenFolgeAbschnittByBezeichnung(): JavaMap<string, Abteilung> {

@@ -4,7 +4,6 @@ import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
 import { AuswahlManager } from '../../AuswahlManager';
 import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
-import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { FoerderschwerpunktEintrag } from '../../../../../core/src/core/data/schule/FoerderschwerpunktEintrag';
 import type { List } from '../../../../../core/src/java/util/List';
@@ -13,7 +12,7 @@ import { HashSet, type JavaSet } from "../../../../../core/src";
 
 export class FoerderschwerpunkteListeManager extends AuswahlManager<number, FoerderschwerpunktEintrag, FoerderschwerpunktEintrag> {
 
-	private static readonly _foerderschwerpunktToId: JavaFunction<FoerderschwerpunktEintrag, number> = { apply: (a: FoerderschwerpunktEintrag) => a.id };
+	private static readonly _foerderschwerpunktToId = (a: FoerderschwerpunktEintrag) => a.id;
 
 	private readonly idsReferencedFoerderschwerpunkte: HashSet<number> = new HashSet<number>();
 
@@ -88,7 +87,7 @@ export class FoerderschwerpunkteListeManager extends AuswahlManager<number, Foer
 	 */
 	public setFilterNurSichtbar(value: boolean): void {
 		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	/**

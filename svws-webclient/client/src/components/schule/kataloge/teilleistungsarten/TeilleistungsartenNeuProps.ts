@@ -1,7 +1,7 @@
 import type { BenutzerKompetenz, Teilleistungsart } from "@core";
 import type { Checkpoint } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
-import type { TeilleistungsartenListeManager } from "./manager/TeilleistungsartenListeManager";
+import type { TeilleistungsartenListeManager } from "../../../../states/teilleistungsarten/TeilleistungsartenListeManager";
 
 export interface TeilleistungsartenNeuProps {
 	manager: () => TeilleistungsartenListeManager;

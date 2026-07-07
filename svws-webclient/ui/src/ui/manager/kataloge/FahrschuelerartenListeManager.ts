@@ -1,7 +1,6 @@
 import { AuswahlManager } from '../../AuswahlManager';
 import type { Fahrschuelerart } from '../../../../../core/src/core/data/schule/Fahrschuelerart';
 import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
-import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
 import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
@@ -13,7 +12,7 @@ import { HashSet, type JavaSet } from "../../../../../core/src";
 
 export class FahrschuelerartenListeManager extends AuswahlManager<number, Fahrschuelerart, Fahrschuelerart> {
 
-	private static readonly _fahrschuelerartToId: JavaFunction<Fahrschuelerart, number> = { apply: (m: Fahrschuelerart) => m.id };
+	private static readonly _fahrschuelerartToId = (m: Fahrschuelerart) => m.id;
 	private readonly _idsReferencedFahrschuelerarten: HashSet<number> = new HashSet<number>();
 	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
@@ -82,7 +81,7 @@ export class FahrschuelerartenListeManager extends AuswahlManager<number, Fahrsc
 
 	set filterNurSichtbar(value: boolean) {
 		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get searchTerm(): string {
@@ -91,7 +90,7 @@ export class FahrschuelerartenListeManager extends AuswahlManager<number, Fahrsc
 
 	set searchTerm(value: string) {
 		this._searchTerm = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get idsReferencedFahrschuelerarten(): JavaSet<number> {

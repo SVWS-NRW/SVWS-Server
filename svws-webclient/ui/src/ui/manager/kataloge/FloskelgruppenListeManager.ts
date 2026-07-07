@@ -1,7 +1,6 @@
 import type { Schuljahresabschnitt } from "../../../../../core/src/asd/data/schule/Schuljahresabschnitt";
 import type { Schulform } from "../../../../../core/src/asd/types/schule/Schulform";
 import type { Floskelgruppe } from "../../../../../core/src/core/data/schule/Floskelgruppe";
-import type { JavaFunction } from "../../../../../core/src/java/util/function/JavaFunction";
 import type { List } from "../../../../../core/src/java/util/List";
 import { AuswahlManager } from "../../AuswahlManager";
 import { Arrays, HashSet, JavaLong } from "../../../../../core/src";
@@ -9,7 +8,7 @@ import { Arrays, HashSet, JavaLong } from "../../../../../core/src";
 
 export class FloskelgruppenListeManager extends AuswahlManager<number, Floskelgruppe, Floskelgruppe> {
 
-	private static readonly toId: JavaFunction<Floskelgruppe, number> = { apply: (f: Floskelgruppe) => f.id };
+	private static readonly toId = (f: Floskelgruppe) => f.id;
 	private readonly _idsOfReferencedFloskelgruppen: HashSet<number> = new HashSet<number>();
 	private _searchTerm: string = "";
 
@@ -73,7 +72,7 @@ export class FloskelgruppenListeManager extends AuswahlManager<number, Floskelgr
 
 	set searchTerm(value: string) {
 		this._searchTerm = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 }

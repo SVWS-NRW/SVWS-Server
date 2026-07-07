@@ -2,7 +2,6 @@ import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulfo
 import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
 import { AuswahlManager } from '../../AuswahlManager';
-import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
 import type { Erzieherart } from '../../../../../core/src/core/data/erzieher/Erzieherart';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
@@ -13,7 +12,7 @@ import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
 
 export class ErzieherartListeManager extends AuswahlManager<number, Erzieherart, Erzieherart> {
 
-	private static readonly _erzieherartenToId: JavaFunction<Erzieherart, number> = { apply: (ea: Erzieherart) => ea.id };
+	private static readonly _erzieherartenToId = (ea: Erzieherart) => ea.id;
 	private readonly _idsReferencedErzieherarten: HashSet<number> = new HashSet<number>();
 	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
@@ -84,7 +83,7 @@ export class ErzieherartListeManager extends AuswahlManager<number, Erzieherart,
 
 	set filterNurSichtbar(value: boolean) {
 		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get searchTerm(): string {
@@ -93,7 +92,7 @@ export class ErzieherartListeManager extends AuswahlManager<number, Erzieherart,
 
 	set searchTerm(value: string) {
 		this._searchTerm = value;
-		this._eventHandlerFilterChanged.run();
+		this._eventHandlerFilterChanged();
 	}
 
 	get idsReferencedErzieherarten(): HashSet<number> {
