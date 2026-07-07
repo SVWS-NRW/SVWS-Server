@@ -12,8 +12,8 @@
 					:manager="jahrgangManager"
 					:validation="() => model.getFehler('jahrgangID')"
 					:disabled="!hatUpdateKompetenz" statistics required :removable="false" />
-				<ui-select label="EP-Jahr"
-					v-model="model.epJahr.value"
+				<ui-select v-if="istPrimarSchulform" label="EP-Jahre"
+					v-model="model.epJahre.value"
 					:manager="epJahrManager"
 					:validation="() => model.getFehler('idEpJahre')"
 					:disabled="!hatUpdateKompetenz" statistics required :removable="false" />
@@ -95,9 +95,8 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import type { FoerderschwerpunktEintrag, JahrgangsDaten, KlassenDaten, LehrerListeEintrag, OrganisationsformKatalogEintrag } from
-	"@core";
-	import { BilingualeSprache, Foerderschwerpunkt, Klassenart, Schulgliederung, BenutzerKompetenz, PrimarstufeSchuleingangsphaseBesuchsjahre } from "@core";
+	import type { FoerderschwerpunktEintrag, JahrgangsDaten, KlassenDaten, LehrerListeEintrag, OrganisationsformKatalogEintrag, SchuelerLernabschnittsdaten } from "@core";
+	import { BilingualeSprache, Foerderschwerpunkt, Klassenart, Schulgliederung, BenutzerKompetenz, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform } from "@core";
 	import { CoreTypeSelectManager, SelectManager, useSchuleState } from '@ui';
 	import type { SchuelerLernabschnittAllgemeinProps } from "./SchuelerLernabschnittAllgemeinProps";
 	import { SchuelerLernabschnittAllgemeinModelProxy } from "./modelproxy/SchuelerLernabschnittAllgemeinModelProxy";
@@ -105,26 +104,52 @@
 	const props = defineProps<SchuelerLernabschnittAllgemeinProps>();
 	const schuleState = useSchuleState();
 
-	const schuljahr = computed<number>(() => props.manager().schuljahrGet());
+	const primarschulformen = new Set<Schulform>([
+		Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.S, Schulform.KS, Schulform.V,
+	]);
+
+	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN)
+		|| ((props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN))
+			&& props.benutzerKompetenzenKlassen.has(props.manager().schuelerGet().idKlasse))
+	);
+	const schulform = computed<Schulform>(() => schuleState.schulform);
+	const istPrimarSchulform = computed<boolean>(() => primarschulformen.has(schulform.value));
+	const schuljahr = computed<number>(() => schuleState.abschnitt.schuljahr);
+	const klassen = computed<Iterable<KlassenDaten>>(() => props.manager().klasseGetMenge());
+	const jahrgaenge = computed<Iterable<JahrgangsDaten>>(() => props.manager().jahrgangGetMenge());
+	const lehrer = computed<Iterable<LehrerListeEintrag>>(() => props.manager().lehrerGetMenge());
+	const foerderschwerpunkte = computed<Iterable<FoerderschwerpunktEintrag>>(() => props.manager().foerderschwerpunktGetMenge());
+
+	const klassenlehrer = computed<LehrerListeEintrag[]>(() => {
+		if (model.klasse.value === null) {
+			return [];
+		}
+		const klassenleitungen: LehrerListeEintrag[] = [];
+		for (const idLehrer of model.klasse.value.klassenLeitungen) {
+			klassenleitungen.push(props.manager().lehrerGetByIdOrException(idLehrer));
+		}
+		return klassenleitungen;
+	});
 
 	const model = new SchuelerLernabschnittAllgemeinModelProxy(
 		() => props.manager().lernabschnittGet(),
 		props.manager,
-		() => schuleState.schulform,
-		async (data) => {
+		() => schulform.value,
+		() => schuljahr.value,
+		async (data: Partial<SchuelerLernabschnittsdaten>) => {
 			await props.patch(data);
 			return true;
 		}
 	);
 
 	const klasseManager = new SelectManager<KlassenDaten>({
-		options: computed(() => props.manager().klasseGetMenge()),
+		options: klassen,
 		optionDisplayText: i => i.kuerzel ?? '—',
 		selectionDisplayText: i => i.kuerzel ?? '—',
 	});
 
 	const jahrgangManager = new SelectManager<JahrgangsDaten>({
-		options: computed(() => props.manager().jahrgangGetMenge()),
+		options: jahrgaenge,
 		optionDisplayText: i => i.kuerzel ?? '—',
 		selectionDisplayText: i => i.kuerzel ?? '—',
 	});
@@ -132,31 +157,31 @@
 	const epJahrManager = new CoreTypeSelectManager({
 		clazz: PrimarstufeSchuleingangsphaseBesuchsjahre.class,
 		schuljahr,
-		schulformen: computed(() => schuleState.schulform),
+		schulformen: schulform,
 		optionDisplayText: "kuerzel",
 		selectionDisplayText: "kuerzel",
 	});
 
 	const tutorManager = new SelectManager<LehrerListeEintrag>({
-		options: computed(() => props.manager().lehrerGetMenge()),
+		options: lehrer,
 		optionDisplayText: getLehrerText,
 		selectionDisplayText: getLehrerText,
 	});
 
 	const sonderpaedagogeManager = new SelectManager<LehrerListeEintrag>({
-		options: computed(() => props.manager().lehrerGetMenge()),
+		options: lehrer,
 		optionDisplayText: getLehrerText,
 		selectionDisplayText: getLehrerText,
 	});
 
 	const organisationsformManager = new SelectManager<OrganisationsformKatalogEintrag>({
-		options: computed(() => model.organisationsformen.value),
+		options: model.organisationsformen,
 		optionDisplayText: i => i.text,
 		selectionDisplayText: i => i.text,
 	});
 
 	const foerderschwerpunktManager = new SelectManager<FoerderschwerpunktEintrag>({
-		options: computed(() => props.manager().foerderschwerpunktGetMenge()),
+		options: foerderschwerpunkte,
 		optionDisplayText: textFoerderschwerpunkt,
 		selectionDisplayText: textFoerderschwerpunkt,
 	});
@@ -164,7 +189,7 @@
 	const gliederungManager = new CoreTypeSelectManager({
 		clazz: Schulgliederung.class,
 		schuljahr,
-		schulformen: computed(() => schuleState.schulform),
+		schulformen: schulform,
 		optionDisplayText: "kuerzelText",
 		selectionDisplayText: "kuerzelText",
 	});
@@ -172,7 +197,7 @@
 	const klassenartManager = new CoreTypeSelectManager({
 		clazz: Klassenart.class,
 		schuljahr,
-		schulformen: computed(() => schuleState.schulform),
+		schulformen: schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
 	});
@@ -180,40 +205,20 @@
 	const bilingualerZweigManager = new CoreTypeSelectManager({
 		clazz: BilingualeSprache.class,
 		schuljahr,
-		schulformen: computed(() => schuleState.schulform),
+		schulformen: schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
-	});
-
-	const hatUpdateKompetenz = computed<boolean>(() => {
-		return (props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN))
-			|| ((props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN))
-				&& props.benutzerKompetenzenKlassen.has(props.schuelerListeManager().auswahl().idKlasse));
 	});
 
 	function getLehrerText(lehrer: LehrerListeEintrag): string {
 		return `${lehrer.nachname}, ${lehrer.vorname} (${lehrer.kuerzel})`;
 	}
 
-	const klassenlehrer = computed<LehrerListeEintrag[]>(() => {
-		const k = model.klasse.value;
-		if (k === null) {
-			return [];
-		}
-		const result: LehrerListeEintrag[] = [];
-		for (const lid of k.klassenLeitungen) {
-			result.push(props.manager().lehrerGetByIdOrException(lid));
-		}
-		return result;
-	});
-
 	function textFoerderschwerpunkt(value: FoerderschwerpunktEintrag | null): string {
-		if (!value) {
+		if (value === null) {
 			return "";
 		}
-		const wert = Foerderschwerpunkt.data().getWertBySchluessel(value.kuerzelStatistik);
-		return wert?.daten(schuljahr.value)?.text ?? "";
-
+		return Foerderschwerpunkt.data().getEintragBySchuljahrUndSchluessel(schuljahr.value, value.kuerzelStatistik)?.text ?? "";
 	}
 
 </script>

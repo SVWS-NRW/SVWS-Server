@@ -1,23 +1,26 @@
 import { computed } from "vue";
 import { ModelProxy, StringPattern, ValidatorInputRequired, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
-import type { BilingualeSpracheKatalogEintrag, FoerderschwerpunktEintrag, JahrgangsDaten, KlassenartKatalogEintrag, KlassenDaten, LehrerListeEintrag, List, OrganisationsformKatalogEintrag, PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag, SchuelerLernabschnittsdaten, SchulgliederungKatalogEintrag } from "@core";
-import { AllgemeinbildendOrganisationsformen, ArrayList, BerufskollegOrganisationsformen, BilingualeSprache, Klassenart, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, Schulgliederung, WeiterbildungskollegOrganisationsformen } from "@core";
+import type { BilingualeSpracheKatalogEintrag, FoerderschwerpunktEintrag, JahrgangsDaten, KlassenartKatalogEintrag, KlassenDaten, LehrerListeEintrag, OrganisationsformKatalogEintrag, PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag, SchuelerLernabschnittsdaten, SchulgliederungKatalogEintrag } from "@core";
+import { AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, BilingualeSprache, Klassenart, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, Schulgliederung, WeiterbildungskollegOrganisationsformen } from "@core";
 import type { SchuelerLernabschnittManager } from "~/components/schueler/lernabschnitte/SchuelerLernabschnittManager";
+import { ValidatorSchuelerLernabschnittKlasseUndJahrgang } from "~/components/schueler/lernabschnitte/allgemein/modelproxy/validation/ValidatorSchuelerLernabschnittKlasseUndJahrgang";
 
 export class SchuelerLernabschnittAllgemeinModelProxy extends ModelProxy<SchuelerLernabschnittsdaten> {
 
 	private readonly manager: () => SchuelerLernabschnittManager;
 	private readonly schulform: () => Schulform;
+	private readonly schuljahr: () => number;
 
 	constructor(
 		data: () => SchuelerLernabschnittsdaten,
 		manager: () => SchuelerLernabschnittManager,
 		schulform: () => Schulform,
+		schuljahr: () => number,
 		patch?: (data: Partial<SchuelerLernabschnittsdaten>) => Promise<boolean>
 	) {
 		const listOfAutopatchProps: Iterable<keyof SchuelerLernabschnittsdaten> = [
 			"klassenID", "jahrgangID", "tutorID", "sonderpaedagogeID",
-			"idSchulgliederung", "pruefungsOrdnung", "idOrganisationsform", "idKlassenart",
+			"idSchulgliederung", "idOrganisationsform", "idKlassenart",
 			"bilingualerZweig", "foerderschwerpunkt1ID", "foerderschwerpunkt2ID",
 			"hatAOSF", "hatAutismus", "hatSchwerbehinderungsNachweis",
 			"hatZieldifferentenUnterricht", "datumAnfang", "datumEnde", "idEpJahre",
@@ -25,10 +28,16 @@ export class SchuelerLernabschnittAllgemeinModelProxy extends ModelProxy<Schuele
 		super({ data, patch, listOfAutopatchProps });
 		this.manager = manager;
 		this.schulform = schulform;
+		this.schuljahr = schuljahr;
 
-		// Pflichtfelder
-		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.klassenID), "klassenID");
-		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.jahrgangID), "jahrgangID");
+		this.addBlockingValidator(new ValidatorSchuelerLernabschnittKlasseUndJahrgang(
+			() => this.manager().klasseGetByIdOrNull(this.proxy.klassenID ?? -1),
+			() => this.manager().jahrgangGetByIdOrNull(this.proxy.jahrgangID ?? -1)),
+		"klassenID", "jahrgangID");
+		this.addBlockingValidator(new ValidatorSchuelerLernabschnittKlasseUndJahrgang(
+			() => this.manager().klasseGetByIdOrNull(this.proxy.klassenID ?? -1),
+			() => this.manager().jahrgangGetByIdOrNull(this.proxy.jahrgangID ?? -1)),
+		"jahrgangID", "klassenID");
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idEpJahre), "idEpJahre");
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idSchulgliederung), "idSchulgliederung");
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.pruefungsOrdnung), "pruefungsOrdnung");
@@ -41,74 +50,58 @@ export class SchuelerLernabschnittAllgemeinModelProxy extends ModelProxy<Schuele
 	}
 
 	klasse = computed<KlassenDaten | null>({
-		get: () => this.proxy.klassenID === null ? null : this.manager().klasseGetByIdOrException(this.proxy.klassenID),
+		get: () => (this.proxy.klassenID === null) ? null : this.manager().klasseGetByIdOrNull(this.proxy.klassenID),
 		set: (v: KlassenDaten | null) => this.proxy.klassenID = v?.id ?? null,
 	});
 
 	jahrgang = computed<JahrgangsDaten | null>({
-		get: () => this.proxy.jahrgangID === null ? null : this.manager().jahrgangGetByIdOrException(this.proxy.jahrgangID),
+		get: () => (this.proxy.jahrgangID === null) ? null : this.manager().jahrgangGetByIdOrNull(this.proxy.jahrgangID),
 		set: (v: JahrgangsDaten | null) => this.proxy.jahrgangID = v?.id ?? null,
 	});
 
-	private static readonly primarschulformen = new Set<Schulform>([
-		Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.S, Schulform.KS, Schulform.V,
-	]);
-
-	// TODO Hier gibt es Probleme und muss grundlegend angepasst werden.
-	epJahr = computed<PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag | null>({
-		get: () => {
-			if (!SchuelerLernabschnittAllgemeinModelProxy.primarschulformen.has(this.schulform())) {
-				return null;
-			}
-			const ep = this.proxy.idEpJahre ?? null;
-			if (ep === null) {
-				return null;
-			}
-			return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertByIDOrNull(ep)?.daten(this.manager().schuljahrGet()) ?? null;
-		},
+	epJahre = computed<PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag | null>({
+		get: () => (this.proxy.idEpJahre === null) ? null : PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertByIDOrNull(this.proxy.idEpJahre)?.daten(this.schuljahr()) ?? null,
 		set: (v: PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag | null) => this.proxy.idEpJahre = v?.id ?? null,
 	});
 
 	tutor = computed<LehrerListeEintrag | null>({
-		get: () => this.proxy.tutorID === null ? null : this.manager().lehrerGetByIdOrException(this.proxy.tutorID),
+		get: () => (this.proxy.tutorID === null) ? null : this.manager().lehrerGetByIdOrException(this.proxy.tutorID),
 		set: (v: LehrerListeEintrag | null) => this.proxy.tutorID = v?.id ?? null,
 	});
 
 	sonderpaedagoge = computed<LehrerListeEintrag | null>({
-		get: () => this.proxy.sonderpaedagogeID === null ? null : this.manager().lehrerGetByIdOrException(this.proxy.sonderpaedagogeID),
+		get: () => (this.proxy.sonderpaedagogeID === null) ? null : this.manager().lehrerGetByIdOrException(this.proxy.sonderpaedagogeID),
 		set: (v: LehrerListeEintrag | null) => this.proxy.sonderpaedagogeID = v?.id ?? null,
 	});
 
 	foerderschwerpunkt = computed<FoerderschwerpunktEintrag | null>({
-		get: () => this.proxy.foerderschwerpunkt1ID === null ? null : this.manager().foerderschwerpunktGetByIdOrException(this.proxy.foerderschwerpunkt1ID),
+		get: () => (this.proxy.foerderschwerpunkt1ID === null) ? null : this.manager().foerderschwerpunktGetByIdOrException(this.proxy.foerderschwerpunkt1ID),
 		set: (v: FoerderschwerpunktEintrag | null) => this.proxy.foerderschwerpunkt1ID = v?.id ?? null,
 	});
 
 	foerderschwerpunkt2 = computed<FoerderschwerpunktEintrag | null>({
-		get: () => this.proxy.foerderschwerpunkt2ID === null ? null : this.manager().foerderschwerpunktGetByIdOrException(this.proxy.foerderschwerpunkt2ID),
+		get: () => (this.proxy.foerderschwerpunkt2ID === null) ? null : this.manager().foerderschwerpunktGetByIdOrException(this.proxy.foerderschwerpunkt2ID),
 		set: (v: FoerderschwerpunktEintrag | null) => this.proxy.foerderschwerpunkt2ID = v?.id ?? null,
 	});
 
 	klassenart = computed<KlassenartKatalogEintrag | null>({
 		get: () => {
-			const schuljahr = this.manager().schuljahrGet();
-			const wert = Klassenart.data().getWertByIDOrNull(this.proxy.idKlassenart);
-			if ((wert === null) || !wert.hatSchulform(schuljahr, this.schulform())) {
+			const klassenart = Klassenart.data().getWertByIDOrNull(this.proxy.idKlassenart);
+			if (klassenart?.hatSchulform(this.schuljahr(), this.schulform()) !== true) {
 				return null;
 			}
-			return Klassenart.data().getEintragBySchuljahrUndWert(schuljahr, wert);
+			return Klassenart.data().getEintragBySchuljahrUndWert(this.schuljahr(), klassenart);
 		},
 		set: (v: KlassenartKatalogEintrag | null) => this.proxy.idKlassenart = v?.id ?? null,
 	});
 
 	gliederung = computed<SchulgliederungKatalogEintrag | null>({
 		get: () => {
-			const schuljahr = this.manager().schuljahrGet();
-			const wert = Schulgliederung.data().getWertByIDOrNull(this.proxy.idSchulgliederung);
-			if ((wert === null) || !wert.hatSchulform(schuljahr, this.schulform())) {
+			const schulgliederung = Schulgliederung.data().getWertByIDOrNull(this.proxy.idSchulgliederung);
+			if (schulgliederung?.hatSchulform(this.schuljahr(), this.schulform()) !== true) {
 				return null;
 			}
-			return Schulgliederung.data().getEintragBySchuljahrUndWert(schuljahr, wert);
+			return Schulgliederung.data().getEintragBySchuljahrUndWert(this.schuljahr(), schulgliederung);
 		},
 		set: (v: SchulgliederungKatalogEintrag | null) => this.proxy.idSchulgliederung = v?.id ?? null,
 	});
@@ -119,47 +112,44 @@ export class SchuelerLernabschnittAllgemeinModelProxy extends ModelProxy<Schuele
 			if (idOrga === null) {
 				return null;
 			}
-			const schuljahr = this.manager().schuljahrGet();
 			if (this.schulform() === Schulform.WB) {
-				return WeiterbildungskollegOrganisationsformen.data().getWertByIDOrNull(idOrga)?.daten(schuljahr) ?? null;
+				return WeiterbildungskollegOrganisationsformen.data().getWertByIDOrNull(idOrga)?.daten(this.schuljahr()) ?? null;
 			}
 			if ((this.schulform() === Schulform.BK) || (this.schulform() === Schulform.SB)) {
-				return BerufskollegOrganisationsformen.data().getWertByIDOrNull(idOrga)?.daten(schuljahr) ?? null;
+				return BerufskollegOrganisationsformen.data().getWertByIDOrNull(idOrga)?.daten(this.schuljahr()) ?? null;
 			}
-			return AllgemeinbildendOrganisationsformen.data().getWertByIDOrNull(idOrga)?.daten(schuljahr) ?? null;
+			return AllgemeinbildendOrganisationsformen.data().getWertByIDOrNull(idOrga)?.daten(this.schuljahr()) ?? null;
 		},
 		set: (v: OrganisationsformKatalogEintrag | null) => this.proxy.idOrganisationsform = v?.id ?? null,
 	});
 
 	bilingualerZweig = computed<BilingualeSpracheKatalogEintrag | null>({
 		get: () => {
-			const schuljahr = this.manager().schuljahrGet();
-			const wert = BilingualeSprache.data().getWertByKuerzel(this.proxy.bilingualerZweig ?? "");
-			if ((wert === null) || !wert.hatSchulform(schuljahr, this.schulform())) {
+			const sprache = BilingualeSprache.data().getWertByKuerzel(this.proxy.bilingualerZweig ?? "");
+			if (sprache?.hatSchulform(this.schuljahr(), this.schulform()) !== true) {
 				return null;
 			}
-			return BilingualeSprache.data().getEintragBySchuljahrUndWert(schuljahr, wert);
+			return BilingualeSprache.data().getEintragBySchuljahrUndWert(this.schuljahr(), sprache);
 		},
 		set: (v: BilingualeSpracheKatalogEintrag | null) => this.proxy.bilingualerZweig = v?.kuerzel ?? null,
 	});
 
-	organisationsformen = computed<List<OrganisationsformKatalogEintrag>>(() => {
-		const schuljahr = this.manager().schuljahrGet();
-		const result = new ArrayList<OrganisationsformKatalogEintrag>();
+	organisationsformen = computed<Iterable<OrganisationsformKatalogEintrag>>(() => {
 		if (this.schulform() === Schulform.WB) {
-			for (const orgform of WeiterbildungskollegOrganisationsformen.values()) {
-				result.add(orgform.daten(schuljahr));
-			}
-		} else if ((this.schulform() === Schulform.BK) || (this.schulform() === Schulform.SB)) {
-			for (const orgform of BerufskollegOrganisationsformen.values()) {
-				result.add(orgform.daten(schuljahr));
-			}
-		} else {
-			for (const orgform of AllgemeinbildendOrganisationsformen.values()) {
-				result.add(orgform.daten(schuljahr));
-			}
+			return [...WeiterbildungskollegOrganisationsformen.data().getWerteBySchulform(this.schulform())]
+				.map(e => e.daten(this.schuljahr()))
+				.filter(e => e !== null);
 		}
-		return result;
+
+		if ((this.schulform() === Schulform.BK) || (this.schulform() === Schulform.SB)) {
+			return [...BerufskollegOrganisationsformen.data().getWerteBySchulform(this.schulform())]
+				.map(e => e.daten(this.schuljahr()))
+				.filter(e => e !== null);
+		}
+
+		return [...AllgemeinbildendOrganisationsformen.data().getWerteBySchulform(this.schulform())]
+			.map(e => e.daten(this.schuljahr()))
+			.filter(e => e !== null);
 	});
 
 }
