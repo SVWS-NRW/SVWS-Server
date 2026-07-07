@@ -16,14 +16,14 @@ tasks.register('copyENMServerBuildArtefacts') {
 	description = 'Kopiert die ENM-Server-Build-Artefakte'
 	dependsOn ':svws-webclient:enmserver:doZip'
 	mustRunAfter(':svws-webclient:enmserver:doZip')
-	inputs.file("${rootProjectPath}/svws-webclient/enmserver/build/WeNoM-${svwsArtifactVersion}.zip")
+	inputs.file("${rootProjectPath}/svws-webclient/enmserver/build/SVWS-ENMServer-${svwsArtifactVersion}.zip")
 
 	doLast {
 		copy {
-			from "${rootProjectPath}/svws-webclient/enmserver/build/WeNoM-${svwsArtifactVersion}.zip"
+			from "${rootProjectPath}/svws-webclient/enmserver/build/SVWS-ENMServer-${svwsArtifactVersion}.zip"
 			into "./build"
 		}
-		println("${rootProjectPath}/svws-webclient/enmserver/build/WeNoM-${svwsArtifactVersion}.zip")
+		println("${rootProjectPath}/svws-webclient/enmserver/build/SVWS-ENMServer-${svwsArtifactVersion}.zip")
 	}
 }
 
@@ -41,7 +41,7 @@ tasks.register('unzipENMBuildArtefact') {
 		mkdir file("./build/tempdocker/enm/dist")
 	}
 	doLast {
-		def zipFile = file("build/WeNoM-${svwsArtifactVersion}.zip")
+		def zipFile = file("build/SVWS-ENMServer-${svwsArtifactVersion}.zip")
 		copy {
 			from(zipTree(zipFile))
 			into(outputDir)
