@@ -1,14 +1,10 @@
+import type { RouteApp } from "~/router/apps/RouteApp";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
-
-import { type RouteApp } from "~/router/apps/RouteApp";
-
-import { RouteDataNotenmodul } from "~/router/apps/notenmodul/RouteDataNotenmodul";
 import { AppMenuGroup } from "@ui";
 
 
-export class RouteNotenmodul extends RouteNode<RouteDataNotenmodul, RouteApp> {
+export class RouteNotenmodul extends RouteNode<never, RouteApp> {
 
 	public constructor() {
 		super(Schulform.values(), [
@@ -17,7 +13,7 @@ export class RouteNotenmodul extends RouteNode<RouteDataNotenmodul, RouteApp> {
 			BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_FUNKTION,
 			BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN,
 			BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_FUNKTION,
-		], "notenmodul", "notenmodul", undefined, new RouteDataNotenmodul());
+		], "notenmodul", "notenmodul");
 		super.text = "Noten";
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getNoProps(route);

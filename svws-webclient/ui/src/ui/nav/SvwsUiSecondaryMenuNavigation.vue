@@ -1,28 +1,32 @@
 <template>
 	<div class="secondary-menu--navigation">
 		<template v-for="tabgroup of tabManager().tabgroups" :key="tabgroup">
-			<table class="svws-ui-table" role="table" aria-label="Tabelle">
-				<thead class="svws-ui-thead cursor-pointer mb-1" role="rowgroup" aria-label="Tabellenkopf">
-					<tr class="svws-ui-tr" role="row" @click="toggle(tabgroup)">
-						<td class="svws-ui-td" role="columnheader">
-							<span v-if="isCollapsed.has(tabgroup)" class="icon i-ri-arrow-right-s-line" />
-							<span v-else class="icon i-ri-arrow-down-s-line" />
-							{{ tabgroup }}
-						</td>
-					</tr>
-				</thead>
-				<tbody v-if="!isCollapsed.has(tabgroup)" class="svws-ui-tbody" role="rowgroup" aria-label="Tabelleninhalt">
-					<template v-for="tab of tabManager().getTabsOfGroup(tabgroup)" :key="tab.name">
-						<tr class="svws-ui-tr" role="row">
-							<td class="svws-ui-td border-none ml-4" role="cell">
-								<svws-ui-menu-item @click="setTab(tab)" :active="isCurrent(tab)" :focus="isCurrent(tab)" secondary>
-									<template #label><span>{{ tab.text }}</span></template>
-								</svws-ui-menu-item>
+			<template v-if="tabManager().isGroupVisible(tabgroup)">
+				<table class="svws-ui-table" role="table" aria-label="Tabelle">
+					<thead class="svws-ui-thead cursor-pointer mb-1" role="rowgroup" aria-label="Tabellenkopf">
+						<tr class="svws-ui-tr" role="row" @click="toggle(tabgroup)">
+							<td class="svws-ui-td" role="columnheader">
+								<span v-if="setCollapsed.has(tabgroup)" class="icon i-ri-arrow-right-s-line" />
+								<span v-else class="icon i-ri-arrow-down-s-line" />
+								{{ tabgroup }}
 							</td>
 						</tr>
-					</template>
-				</tbody>
-			</table>
+					</thead>
+					<tbody v-if="!isCollapsed(tabgroup)" class="svws-ui-tbody" role="rowgroup" aria-label="Tabelleninhalt">
+						<template v-for="tab of tabManager().getTabsOfGroup(tabgroup)" :key="tab.name">
+							<template v-if="tabManager().isVisible(tab.name)">
+								<tr class="svws-ui-tr" role="row">
+									<td class="svws-ui-td border-none ml-4" role="cell">
+										<svws-ui-menu-item @click="setTab(tab)" :active="isCurrent(tab)" :focus="isCurrent(tab)" secondary>
+											<template #label><span>{{ tab.text }}</span></template>
+										</svws-ui-menu-item>
+									</td>
+								</tr>
+							</template>
+						</template>
+					</tbody>
+				</table>
+			</template>
 		</template>
 	</div>
 </template>
@@ -39,7 +43,11 @@
 
 	// Eine Map, welche für die Tab-Gruppen festlegt, ob diese zusammengeklappt sind oder nicht.
 	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
-	const isCollapsed = ref<Set<string>>(new Set<string>(props.tabManager().tabgroups));
+	const setCollapsed = ref<Set<string>>(new Set<string>(props.tabManager().tabgroups));
+
+	function isCollapsed(tabgroup: string) {
+		return (props.tabManager().tab.tabgroup !== tabgroup) && setCollapsed.value.has(tabgroup);
+	}
 
 
 	onMounted(() => {
@@ -53,10 +61,10 @@
 	}
 
 	function toggle(tabgroup: string) {
-		if (isCollapsed.value.has(tabgroup)) {
-			isCollapsed.value.delete(tabgroup);
+		if (setCollapsed.value.has(tabgroup)) {
+			setCollapsed.value.delete(tabgroup);
 		} else {
-			isCollapsed.value.add(tabgroup);
+			setCollapsed.value.add(tabgroup);
 		}
 	}
 

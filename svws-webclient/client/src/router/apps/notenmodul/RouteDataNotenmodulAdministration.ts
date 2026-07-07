@@ -7,12 +7,12 @@ import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/Rout
 import { routeNotenmodulKonfiguration } from "./RouteNotenmodulKonfiguration";
 import { routeNotenmodulVerbindungNeu } from "./RouteNotenmodulVerbindungNeu";
 import { routeNotenmodulVerbindungGruppenprozesse } from "./RouteNotenmodulGruppenprozesse";
-import { routeNotenmodul } from "./RouteNotenmodul";
 import { NotenmodulConfigManagerSperrungen, type NotenmodulConfigManagerSperrungenGruppierung } from "./NotenmodulConfigManagerSperrungen";
 import { NotenmodulConfigManagerSichtbareSpalten } from "./NotenmodulConfigManagerSichtbareSpalten";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
 
 
 interface RouteStateNotenmodulAdministration extends RouteStateAuswahlInterface<WenomAuswahlListeManager> {
@@ -61,7 +61,7 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 	}
 
 	protected async createManager(): Promise<Partial<RouteStateNotenmodulAdministration>> {
-		await routeNotenmodul.data.ladeDaten();
+		await notenmodulStateImpl.ladeDaten();
 		const list = await api.server.getENMServerConnections(api.schema);
 		const manager = new WenomAuswahlListeManager(schuleStateImpl.abschnitt.id,
 			schuleStateImpl.abschnitt.id, abschnittStateImpl.alle, schuleStateImpl.schulform, list);
@@ -94,7 +94,7 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 				liste.add(spalte);
 			}
 		}
-		const mapTeilleistungsarten = routeNotenmodul.data.manager.mapTeilleistungsarten;
+		const mapTeilleistungsarten = notenmodulStateImpl.manager.mapTeilleistungsarten;
 		return new NotenmodulConfigManagerSichtbareSpalten(liste, mapTeilleistungsarten, this.writeConfigSichtbareSpalten);
 	}
 
@@ -109,7 +109,7 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 				liste.add(klasse);
 			}
 		}
-		const { mapKlassen, mapTeilleistungsarten, mapJahrgaenge, mapAbteilungen } = routeNotenmodul.data.manager;
+		const { mapKlassen, mapTeilleistungsarten, mapJahrgaenge, mapAbteilungen } = notenmodulStateImpl.manager;
 		return new NotenmodulConfigManagerSperrungen(liste, mapKlassen, mapTeilleistungsarten, mapJahrgaenge, mapAbteilungen,
 			this.writeConfigSperrungen, this.gruppierungAuswahl, this.setGruppierungAuswahl);
 	}
@@ -221,7 +221,7 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		element.type = "global";
 		if (this.manager.auswahlIsKonfigurationLokal()) {
 			await this.notenmodulSetLocalConfigElement(element);
-			routeNotenmodul.data.manager.sperrungen = new EnmSperrManager(element.value);
+			notenmodulStateImpl.manager.sperrungen = new EnmSperrManager(element.value);
 		} else {
 			await this.wenomSetServerConfigElement(element);
 		}
@@ -437,8 +437,7 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		return await api.call(async (): Promise<SimpleOperationResponse> => {
 			try {
 				const res = await api.server.synchronizeENMDaten(api.schema, this.manager.auswahl().id);
-				await routeNotenmodul.data.entferneDaten();
-				await routeNotenmodul.data.ladeDaten();
+				await notenmodulStateImpl.ladeDaten(true);
 				return res;
 			} catch (e) {
 				if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
@@ -459,8 +458,7 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		return await api.call(async (): Promise<SimpleOperationResponse> => {
 			try {
 				const res = await api.server.downloadENMDaten(api.schema, this.manager.auswahl().id);
-				await routeNotenmodul.data.entferneDaten();
-				await routeNotenmodul.data.ladeDaten();
+				await notenmodulStateImpl.ladeDaten(true);
 				return res;
 			} catch (e) {
 				if ((e instanceof OpenApiError) && (e.response instanceof Response)) {

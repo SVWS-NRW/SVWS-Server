@@ -60,11 +60,11 @@
 				<template #version>
 					<div class="flex gap-1">
 						<div class="mt-1">{{ version }} <a :href="`https://github.com/SVWS-NRW/SVWS-Server/commit/${githash}`" v-if="version.includes('SNAPSHOT')">{{ githash.substring(0, 8) }}</a></div>
-						<svws-ui-button type="transparent" @click="copyToClipboard">
-							<span class="icon i-ri-file-copy-line" v-if="copied === null" />
-							<span class="icon i-ri-error-warning-fill" v-else-if="copied === false" />
-							<span class="icon i-ri-check-line icon-ui-brand" v-else />
-						</svws-ui-button>
+						<div type="transparent" class="cursor-pointer icon" @click="copyToClipboard" :class="{
+							'i-ri-file-copy-line': copied === null,
+							'i-ri-error-warning-fill': copied === false,
+							'i-ri-check-line icon-ui-brand': copied === true,
+						}" />
 					</div>
 				</template>
 				<template #metaNavigation>

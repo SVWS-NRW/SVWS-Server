@@ -2,13 +2,13 @@ import { EnmLerngruppenAuswahlListeManager, ViewType } from "@ui";
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import { routeNotenmodulTeilleistungenData } from "./RouteNotenmodulTeilleistungenData";
-import { routeNotenmodul } from "./RouteNotenmodul";
 import type { RouteParamsRawGeneric } from "vue-router";
 import type { ENMv2Lerngruppe, List, SimpleOperationResponse } from "@core";
 import { UnsupportedOperationException } from "@core";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
 
 
 interface RouteStateNotenmodulTeilleistungen extends RouteStateAuswahlInterface<EnmLerngruppenAuswahlListeManager> {
@@ -18,7 +18,7 @@ interface RouteStateNotenmodulTeilleistungen extends RouteStateAuswahlInterface<
 export class RouteDataNotenmodulTeilleistungen extends RouteDataAuswahl<EnmLerngruppenAuswahlListeManager, RouteStateNotenmodulTeilleistungen> {
 
 	public constructor() {
-		super(<RouteStateNotenmodulTeilleistungen>{
+		super({
 			idSchuljahresabschnitt: -1,
 			manager: undefined,
 			view: routeNotenmodulTeilleistungenData,
@@ -34,7 +34,7 @@ export class RouteDataNotenmodulTeilleistungen extends RouteDataAuswahl<EnmLerng
 	}
 
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateNotenmodulTeilleistungen>> {
-		const manager = new EnmLerngruppenAuswahlListeManager(routeNotenmodul.data.manager, schuleStateImpl.abschnitt.id,
+		const manager = new EnmLerngruppenAuswahlListeManager(notenmodulStateImpl.manager, schuleStateImpl.abschnitt.id,
 			schuleStateImpl.abschnitt.id, abschnittStateImpl.alle, schuleStateImpl.schulform);
 		return { manager };
 	}
@@ -62,7 +62,7 @@ export class RouteDataNotenmodulTeilleistungen extends RouteDataAuswahl<EnmLerng
 	get columnsVisible(): Map<string, boolean | null> {
 		const config = JSON.parse(configStateImpl.config.getValue("notenmodul.teilleistungen.table.columns"));
 		if (config === null) {
-			return routeNotenmodul.data.manager.spalten.mapSpaltenTeilleistungen;
+			return notenmodulStateImpl.manager.spalten.mapSpaltenTeilleistungen;
 		}
 		return new Map<string, boolean | null>(config);
 	}

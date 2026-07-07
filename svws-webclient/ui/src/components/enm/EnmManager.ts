@@ -149,9 +149,9 @@ export class EnmManager {
 	 * @param daten      die ENM-Daten
 	 * @param idLehrer   die ID des Lehrers, für welchen die ENM-Daten verwaltet werden
 	 */
-	public constructor(daten: ENMv2Daten, idLehrer: number | null) {
+	public constructor(daten: ENMv2Daten) {
 		this.daten = daten;
-		this.idLehrer = idLehrer;
+		this.idLehrer = daten.lehrerID;
 		this.schuljahr = daten.schuljahr;
 		this.halbjahr = daten.aktuellerAbschnitt;
 		this.listFloskelgruppen = daten.floskelgruppen;
@@ -265,7 +265,7 @@ export class EnmManager {
 		daten.lerngruppen.sort(this.comparatorLerngruppen);
 		for (const l of daten.lerngruppen) {
 			if ((this.idLehrer === null) || l.idsLehrer.contains(this.idLehrer)) {
-				this.mapLerngruppenAuswahl.put(l.id, <EnmLerngruppenAuswahlEintrag>{
+				this.mapLerngruppenAuswahl.put(l.id, {
 					id: l.id,
 					bezeichnung: this.lerngruppeGetBezeichnung(l.id),
 					klassen: this.lerngruppeGetKlassenAsString(l.id),

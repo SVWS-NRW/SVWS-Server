@@ -1,8 +1,5 @@
 import type { RouteLocationRaw, RouteParams } from "vue-router";
-
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
-import { routeNotenmodul } from "./RouteNotenmodul";
 import { RouteNotenmodulMenuGroup } from "./RouteNotenmodulMenuGroup";
 import type { EnmKlassenleitungAuswahlListeManager } from "@ui";
 import { RouteDataNotenmodulKlassenleitung } from "./RouteDataNotenmodulKlassenleitung";
@@ -11,9 +8,8 @@ import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import type { RouteApp } from "../RouteApp";
 import type { RouteNode } from "~/router/RouteNode";
 import { routeNotenmodulKlassenleitungData } from "./RouteNotenmodulKlassenleitungData";
-import type { NotenmodulKlassenleitungAuswahlProps } from "~/components/notenmodul/NotenmodulKlassenleitungAuswahlProps";
-import type { NotenmodulKlassenleitungAppProps } from "~/components/notenmodul/NotenmodulKlassenleitungAppProps";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
 
 const NotenmodulKlassenleitungApp = () => import("~/components/notenmodul/NotenmodulKlassenleitungApp.vue");
 const NotenmodulKlassenleitungAuswahl = () => import("~/components/notenmodul/NotenmodulKlassenleitungAuswahl.vue");
@@ -29,20 +25,20 @@ export class RouteNotenmodulKlassenleitung extends RouteAuswahlNode<EnmKlassenle
 			BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_FUNKTION,
 		], "notenmodul.klassenleitung", "klassenleitung", NotenmodulKlassenleitungApp, NotenmodulKlassenleitungAuswahl, new RouteDataNotenmodulKlassenleitung());
 		super.mode = ServerMode.STABLE;
-		super.getAuswahlListProps = (props) => (<NotenmodulKlassenleitungAuswahlProps>{
+		super.getAuswahlListProps = (props) => ({
 			...props,
-			enmManager: () => routeNotenmodul.data.manager,
-			setAuswahlEinzel: routeNotenmodul.data.setAuswahlKlasse,
-			auswahlEinzel: () => routeNotenmodul.data.auswahlKlasse,
-			setAuswahlMehrfach: routeNotenmodul.data.setAuswahlKlassen,
-			auswahlMehrfach: () => routeNotenmodul.data.auswahlKlassenNurMehrfachauswahl,
+			enmManager: () => notenmodulStateImpl.manager,
+			setAuswahlEinzel: notenmodulStateImpl.setAuswahlKlasse,
+			auswahlEinzel: () => notenmodulStateImpl.auswahlKlasse,
+			setAuswahlMehrfach: notenmodulStateImpl.setAuswahlKlassen,
+			auswahlMehrfach: () => notenmodulStateImpl.auswahlKlassenNurMehrfachauswahl,
 		});
-		super.getAuswahlProps = props => (<NotenmodulKlassenleitungAppProps>{
+		super.getAuswahlProps = props => ({
 			...props,
-			enmManager: () => routeNotenmodul.data.manager,
+			enmManager: () => notenmodulStateImpl.manager,
 		});
 		super.text = "Klassenleitung";
-		// TODO this.isHidden = () => routeNotenmodul.data.manager.listKlassenKlassenlehrer.isEmpty() ? routeNotenmodul.getRouteDefaultChild() : false;
+		// TODO this.isHidden = () => notenmodulStateImpl.manager.listKlassenKlassenlehrer.isEmpty() ? routeNotenmodul.getRouteDefaultChild() : false;
 		configStateImpl.config.addElements([
 			new ConfigElement("notenmodul.klassenleitung.table.columns", "user", "null"),
 		]);
@@ -55,7 +51,7 @@ export class RouteNotenmodulKlassenleitung extends RouteAuswahlNode<EnmKlassenle
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
 		if (isEntering) {
-			await routeNotenmodul.data.ladeDaten();
+			await notenmodulStateImpl.ladeDaten();
 		}
 		if (to.name === this.name) {
 			return routeNotenmodulKlassenleitungData.getRoute();
@@ -63,12 +59,12 @@ export class RouteNotenmodulKlassenleitung extends RouteAuswahlNode<EnmKlassenle
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams, to: RouteNode<any, any>, to_params: RouteParams): Promise<void> {
-		if (routeNotenmodul.data.manager.listKlassenMitAnkreuzkompetenzen.size() > 0) {
-			routeNotenmodul.data.setAuswahlKlassen([]);
+		if (notenmodulStateImpl.manager.listKlassenMitAnkreuzkompetenzen.size() > 0) {
+			notenmodulStateImpl.setAuswahlKlassen([]);
 		}
 		await this.data.entferneDaten();
 		if (!(to.name.startsWith("notenmodul"))) {
-			await routeNotenmodul.data.entferneDaten();
+			notenmodulStateImpl.reset();
 		}
 		await super.leave(from, from_params, to, to_params);
 	}

@@ -169,6 +169,20 @@ export class TabManager {
 	}
 
 	/**
+	 * Gibt zurück, ob die Tabgruppe mit dem übergenenen Namen sichtbar ist oder nicht.
+	 *
+	 * @param groupname   der Name der Tabgruppe
+	 */
+	public isGroupVisible(groupname: string): boolean {
+		for (const tab of this.getTabsOfGroup(groupname)) {
+			if ((tab.hide === false) || (tab.hide === undefined)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Gibt das Bild als String zurück, welches mit den Tab-Daten des angegebenen Tabs
 	 * verknüpft ist.
 	 *

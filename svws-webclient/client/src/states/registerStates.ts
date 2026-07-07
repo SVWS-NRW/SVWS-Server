@@ -15,6 +15,8 @@ import { reportingStateImpl } from "./ReportingStateImpl";
 import { schuleStateImpl } from "./SchuleStateImpl";
 import { serverStateImpl } from "./ServerStateImpl";
 import { wiedervorlageStateImpl } from "./WiedervorlageStateImpl";
+import { NotenmodulStateKey } from "../../../ui/src/states/NotenmodulState";
+import { notenmodulStateImpl } from "./NotenmodulStateImpl";
 
 
 export function registerStates(): void {
@@ -28,4 +30,5 @@ export function registerStates(): void {
 	context.provide(WiedervorlageStateKey, wiedervorlageStateImpl);
 	context.provide(AuskunftStateKey, auskunftStateImpl);
 	context.provide(GostLaufbahnplanungStateKey, gostLaufbahnplanungStateImpl);
+	context.provide(NotenmodulStateKey, notenmodulStateImpl);
 }

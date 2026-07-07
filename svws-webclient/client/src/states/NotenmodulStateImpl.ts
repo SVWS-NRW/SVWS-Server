@@ -1,13 +1,9 @@
-import type { ENMv2Klasse, ENMv2Leistung, ENMv2LeistungBemerkungen, ENMv2Lernabschnitt, ENMv2SchuelerAnkreuzkompetenz, ENMv2Teilleistung, List } from "@core";
-import { ArrayList, BenutzerKompetenz, BenutzerTyp, DeveloperNotificationException, ENMv2Daten, OpenApiError } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, ENMv2Daten, type ENMv2Klasse, BenutzerTyp, OpenApiError, type List, ArrayList, type ENMv2Leistung, type ENMv2Teilleistung, type ENMv2LeistungBemerkungen, type ENMv2Lernabschnitt, type ENMv2SchuelerAnkreuzkompetenz } from "@core";
+import { EnmManager, EnmSpaltenManager, EnmSperrManager, StateManager, type EnmLerngruppenAuswahlEintrag, type NotenmodulState } from "@ui";
 import { api } from "~/router/Api";
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { routeNotenmodulLeistungen } from "./RouteNotenmodulLeistungen";
-import type { EnmLerngruppenAuswahlEintrag } from "@ui";
-import { EnmManager, EnmSperrManager, EnmSpaltenManager } from "@ui";
+import { RouteManager } from "~/router/RouteManager";
 
-
-interface RouteStateNotenmodul extends RouteStateInterface {
+interface NotenmodulReactiveState {
 	// Die ENM-Daten, welche für den angemeldeten Lehrer-Benutzer über die API geladen werden
 	daten: ENMv2Daten | null;
 
@@ -25,28 +21,37 @@ interface RouteStateNotenmodul extends RouteStateInterface {
 
 	// Die aktuell ausgewählte Klasse bei der Ansicht für die Klassenleitung (bei Einzelauswahl)
 	auswahlKlasse: ENMv2Klasse | null;
+
+	// Dia aktuell ausgewählte Ansicht, admin oder lehrer, null, wenn der Nutzer nicht wechseln darf
+	istAdminLehrer: boolean | null;
 }
 
-
-export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
+/**
+ * Die Schnittstelle für den Zustand des Servers
+ */
+export class NotenmodulStateImpl extends StateManager<NotenmodulReactiveState> implements NotenmodulState {
 
 	public constructor() {
 		super({
 			daten: null,
 			manager: null,
-			view: routeNotenmodulLeistungen,
 			auswahlLerngruppen: [],
 			auswahlLerngruppe: null,
 			auswahlKlassen: [],
 			auswahlKlasse: null,
+			istAdminLehrer: null,
 		});
 	}
 
-	public async ladeDaten() {
-		if (this._state.value.daten !== null) {
+	public async ladeDaten(reload = false) {
+		if ((this._state.value.daten !== null) && !reload) {
 			return;
 		}
-		const patchedState = <Partial<RouteStateNotenmodul>>{ daten: null, manager: null, auswahlKlassen: [], auswahlLerngruppen: [] };
+		api.status.start();
+		const patchedState = <Partial<NotenmodulReactiveState>>{ daten: null, manager: null, auswahlKlassen: [], auswahlLerngruppen: [], istAdminLehrer: this.istAdminLehrer };
+		if ((patchedState.istAdminLehrer === null) && (api.benutzertyp === BenutzerTyp.LEHRER) && api.benutzerHatEineKompetenz([BenutzerKompetenz.NOTENMODUL_ADMINISTRATION])) {
+			patchedState.istAdminLehrer = true;
+		}
 		try {
 			if (!api.benutzerIstAdmin && !api.benutzerHatEineKompetenz([
 				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION,
@@ -56,12 +61,12 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 				BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_FUNKTION])) {
 				throw new DeveloperNotificationException("Der Benutzer hat keine Berechtigung, um auf das Notenmodul zuzugreifen. Diese Stelle sollte daher nicht erreichbar sein und es handelt sich um einen Programmierfehler.");
 			}
-			if (api.benutzertyp === BenutzerTyp.LEHRER) {
+			if ((api.benutzertyp === BenutzerTyp.LEHRER) && (patchedState.istAdminLehrer !== true)) {
 				patchedState.daten = await api.server.getLehrerENMv2Daten(api.schema, api.benutzerIDLehrer);
 			} else {
 				patchedState.daten = await api.server.getENMv2Daten(api.schema);
 			}
-			patchedState.manager = new EnmManager(patchedState.daten, patchedState.daten.lehrerID);
+			patchedState.manager = new EnmManager(patchedState.daten);
 			const lerngruppen = patchedState.manager.mapLerngruppenAuswahl.values();
 			patchedState.auswahlLerngruppe = lerngruppen.isEmpty() ? null : lerngruppen.iterator().next();
 			const klassen = patchedState.manager.listKlassenKlassenlehrer;
@@ -83,19 +88,34 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 		} catch (error) {
 			if ((error instanceof OpenApiError) && (error.response instanceof Response) && (error.response.status === 404)) {
 				patchedState.daten = new ENMv2Daten();
-				patchedState.manager = new EnmManager(patchedState.daten, patchedState.daten.lehrerID);
+				patchedState.manager = new EnmManager(patchedState.daten);
 			}
+		} finally {
+			this.setPatchedState(patchedState);
+			api.status.stop();
 		}
-		this.setPatchedState(patchedState);
 	}
 
-	public async entferneDaten() {
-		this.setPatchedState({
-			daten: null,
-			manager: null,
-			auswahlKlassen: [],
-			auswahlKlasse: null,
-		});
+
+	public async toggleAdmin() {
+		let istAdminLehrer = this.istAdminLehrer;
+		if ((istAdminLehrer === false) && api.benutzerHatEineKompetenz([BenutzerKompetenz.NOTENMODUL_ADMINISTRATION])) {
+			istAdminLehrer = true;
+		} else if (istAdminLehrer === true) {
+			istAdminLehrer = false;
+		} else {
+			istAdminLehrer = null;
+		}
+		this.setPatchedState({ istAdminLehrer });
+		const routeName = RouteManager.instance.getRouteNode()?.name ?? "";
+		if (routeName.startsWith("notenmodul.administration") || routeName.startsWith("notenmodul.zugangsdaten")) {
+			await RouteManager.doRoute({ name: "notenmodul.leistungen" });
+		}
+		await this.ladeDaten(true);
+	}
+
+	public get istAdminLehrer(): boolean | null {
+		return this._state.value.istAdminLehrer;
 	}
 
 	public get manager(): EnmManager {
@@ -296,3 +316,5 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	};
 
 }
+
+export const notenmodulStateImpl = new NotenmodulStateImpl();

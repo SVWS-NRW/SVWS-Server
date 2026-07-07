@@ -1,4 +1,4 @@
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode, type DeveloperNotificationException } from "@core";
 import type { WenomAuswahlListeManager } from "@ui";
 import { RouteNotenmodulMenuGroup } from "./RouteNotenmodulMenuGroup";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
@@ -10,6 +10,9 @@ import { routeNotenmodulVerbindungNeu } from "./RouteNotenmodulVerbindungNeu";
 import { routeNotenmodulVerbindungGruppenprozesse } from "./RouteNotenmodulGruppenprozesse";
 import { routeNotenmodulVerbindung } from "./RouteNotenmodulVerbindung";
 import { routeNotenmodulMail } from "./RouteNotenmodulMail";
+import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
+import { routeNotenmodulLeistungen } from "./RouteNotenmodulLeistungen";
+import { routeError } from "~/router/error/RouteError";
 
 const NotenmodulAdministrationApp = () => import("~/components/notenmodul/NotenmodulAdministrationApp.vue");
 const NotenmodulAdministrationAuswahl = () => import("~/components/notenmodul/NotenmodulAdministrationAuswahl.vue");
@@ -37,6 +40,18 @@ export class RouteNotenmodulAdministration extends RouteAuswahlNode<WenomAuswahl
 		super.defaultChild = routeNotenmodulVerbindung;
 		super.menugroup = RouteNotenmodulMenuGroup.ADMINISTRATION;
 		super.updateIfTarget = this.doUpdateIfTarget;
+		this.isHidden = () => this.checkHidden();
+	}
+
+	protected checkHidden() {
+		try {
+			if (notenmodulStateImpl.istAdminLehrer === false) {
+				return routeNotenmodulLeistungen.getRouteDefaultChild();
+			}
+			return false;
+		} catch (e) {
+			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
+		}
 	}
 
 	protected doUpdateIfTarget = async () => {

@@ -1,8 +1,6 @@
 import type { ENMv2Lerngruppe, List, SimpleOperationResponse } from "@core";
 import { UnsupportedOperationException } from "@core";
 import { EnmLerngruppenAuswahlListeManager, ViewType } from "@ui";
-
-import { routeNotenmodul } from "./RouteNotenmodul";
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
@@ -10,6 +8,7 @@ import { routeNotenmodulLeistungenData } from "./RouteNotenmodulLeistungenData";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
 
 
 interface RouteStateNotenmodulAnkreuzkompetenzen extends RouteStateAuswahlInterface<EnmLerngruppenAuswahlListeManager> {
@@ -36,7 +35,7 @@ export class RouteDataNotenmodulAnkreuzkompetenzen extends RouteDataAuswahl<EnmL
 	}
 
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateNotenmodulAnkreuzkompetenzen>> {
-		const manager = new EnmLerngruppenAuswahlListeManager(routeNotenmodul.data.manager, schuleStateImpl.abschnitt.id,
+		const manager = new EnmLerngruppenAuswahlListeManager(notenmodulStateImpl.manager, schuleStateImpl.abschnitt.id,
 			schuleStateImpl.abschnitt.id, abschnittStateImpl.alle, schuleStateImpl.schulform);
 		return { manager };
 	}
@@ -64,7 +63,7 @@ export class RouteDataNotenmodulAnkreuzkompetenzen extends RouteDataAuswahl<EnmL
 	get columnsVisible(): Map<string, boolean | null> {
 		const config = JSON.parse(configStateImpl.config.getValue("notenmodul.ankreuzkompetenzen.table.columns"));
 		if (config === null) {
-			return routeNotenmodul.data.manager.spalten.mapSpaltenLeistungen;
+			return notenmodulStateImpl.manager.spalten.mapSpaltenLeistungen;
 		}
 		return new Map<string, boolean | null>(config);
 	}

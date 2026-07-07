@@ -1,14 +1,13 @@
 import type { SimpleOperationResponse, ENMv2Klasse, List } from "@core";
 import { UnsupportedOperationException } from "@core";
 import { EnmKlassenleitungAuswahlListeManager, ViewType } from "@ui";
-import { api } from "~/router/Api";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { routeNotenmodulKlassenleitungData } from "./RouteNotenmodulKlassenleitungData";
-import { routeNotenmodul } from "./RouteNotenmodul";
 import type { RouteParamsRawGeneric } from "vue-router";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
 
 
 interface RouteStateNotenmodulKlassenleitung extends RouteStateAuswahlInterface<EnmKlassenleitungAuswahlListeManager> {
@@ -18,7 +17,7 @@ interface RouteStateNotenmodulKlassenleitung extends RouteStateAuswahlInterface<
 export class RouteDataNotenmodulKlassenleitung extends RouteDataAuswahl<EnmKlassenleitungAuswahlListeManager, RouteStateNotenmodulKlassenleitung> {
 
 	public constructor() {
-		super(<RouteStateNotenmodulKlassenleitung>{
+		super({
 			idSchuljahresabschnitt: -1,
 			manager: undefined,
 			view: routeNotenmodulKlassenleitungData,
@@ -34,7 +33,7 @@ export class RouteDataNotenmodulKlassenleitung extends RouteDataAuswahl<EnmKlass
 	}
 
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateNotenmodulKlassenleitung>> {
-		const manager = new EnmKlassenleitungAuswahlListeManager(routeNotenmodul.data.manager, schuleStateImpl.abschnitt.id,
+		const manager = new EnmKlassenleitungAuswahlListeManager(notenmodulStateImpl.manager, schuleStateImpl.abschnitt.id,
 			schuleStateImpl.abschnitt.id, abschnittStateImpl.alle, schuleStateImpl.schulform);
 		return { manager };
 	}
@@ -62,7 +61,7 @@ export class RouteDataNotenmodulKlassenleitung extends RouteDataAuswahl<EnmKlass
 	get columnsVisible(): Map<string, boolean | null> {
 		const config = JSON.parse(configStateImpl.config.getValue("notenmodul.klassenleitung.table.columns"));
 		if (config === null) {
-			return routeNotenmodul.data.manager.spalten.mapSpaltenKlassenleitung;
+			return notenmodulStateImpl.manager.spalten.mapSpaltenKlassenleitung;
 		}
 		return new Map<string, boolean | null>(config);
 	}

@@ -131,7 +131,7 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 			newState.daten = await authStateImpl.api.getLehrerENMDaten();
 
 			// Erstellen des Enm-Managers
-			newState.manager = new EnmManager(newState.daten, newState.daten.lehrerID ?? -1);
+			newState.manager = new EnmManager(newState.daten);
 
 			// Laden der persistenten Konfiguration
 			newState.config = await this.ladeConfig();

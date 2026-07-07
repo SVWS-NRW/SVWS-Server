@@ -1,10 +1,9 @@
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
-import { routeNotenmodul } from "./RouteNotenmodul";
 import { RouteNode } from "~/router/RouteNode";
 import { routeNotenmodulTeilleistungen, type RouteNotenmodulTeilleistungen } from "./RouteNotenmodulTeilleistungen";
 import type { RouteLocationNormalized } from "vue-router";
 import type { NotenmodulTeilleistungenProps } from "~/components/notenmodul/NotenmodulTeilleistungenProps";
+import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
 
 const NotenmodulTeilleistungen = () => import("~/components/notenmodul/NotenmodulTeilleistungen.vue");
 
@@ -25,10 +24,10 @@ export class RouteNotenmodulTeilleistungenData extends RouteNode<any, RouteNoten
 
 	public getProps(to: RouteLocationNormalized): NotenmodulTeilleistungenProps {
 		return {
-			enmManager: () => routeNotenmodul.data.manager,
-			auswahl: () => routeNotenmodul.data.auswahlLerngruppen,
-			patchLeistung: routeNotenmodul.data.patchLeistung,
-			patchTeilleistung: routeNotenmodul.data.patchTeilleistung,
+			enmManager: () => notenmodulStateImpl.manager,
+			auswahl: () => notenmodulStateImpl.auswahlLerngruppen,
+			patchLeistung: notenmodulStateImpl.patchLeistung,
+			patchTeilleistung: notenmodulStateImpl.patchTeilleistung,
 			columnsVisible: () => routeNotenmodulTeilleistungen.data.columnsVisible,
 			setColumnsVisible: routeNotenmodulTeilleistungen.data.setColumnsVisible,
 		};

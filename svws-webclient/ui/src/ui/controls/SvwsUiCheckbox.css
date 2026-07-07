@@ -1,6 +1,6 @@
 .svws-ui-checkbox,
 input[type="checkbox"] {
-	@apply text-inherit accent-ui p-1 m-[0.2em];
+	@apply text-inherit accent-ui;
 
 	&[color="success"] {
 		@apply accent-ui-success text-ui-success;
@@ -36,7 +36,7 @@ input[type="checkbox"] {
 }
 
 .svws-ui-checkbox {
-	@apply inline-flex items-start text-base leading-tight my-0.5;
+	@apply inline-flex items-center text-base leading-tight my-0.5;
 
 	.svws-ui-checkbox--statistic-icon {
 			@apply icon-ui-statistic;
