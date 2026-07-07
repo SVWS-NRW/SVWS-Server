@@ -323,27 +323,6 @@ publish:all:release:
         - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft in Release Pipeline
         - when: never # läuft sonst nicht
 
-publish:maven:release:
-    stage: publish
-    needs:
-        - build
-        - sign:jars-and-installer:release
-    variables:
-        SECURE_FILES_DOWNLOAD_PATH: '/'
-    before_script:
-        - chmod +x ./deployment/setupVersion.sh
-        - ./deployment/setupVersion.sh
-
-        - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-        - cat gradle_secure.properties >> gradle.properties
-    script:
-        - ./gradlew publishAllPublicationsToSonatypeRepository closeAndReleaseSonatypeStagingRepository
-    rules:
-        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
-          when: never
-        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft in Release Pipeline
-        - when: never # läuft sonst nicht
-
 publish:dockerhub:release:
     stage: publish
     needs:
