@@ -91,9 +91,11 @@ import { GostKlausurvorgabe } from '../core/data/gost/klausurplanung/GostKlausur
 import { GostKursklausur } from '../core/data/gost/klausurplanung/GostKursklausur';
 import { GostLaufbahnplanungBeratungsdaten } from '../core/data/gost/GostLaufbahnplanungBeratungsdaten';
 import { GostLaufbahnplanungExportV1 } from '../core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1';
+import { GostLaufbahnplanungExportV2 } from '../core/data/gost/laufbahnplanung/v2/GostLaufbahnplanungExportV2';
 import { GostLeistungen } from '../core/data/gost/GostLeistungen';
 import { GostNachschreibterminblockungKonfiguration } from '../core/data/gost/klausurplanung/GostNachschreibterminblockungKonfiguration';
 import { GostSchuelerFachwahl } from '../core/data/gost/GostSchuelerFachwahl';
+import { GostSchuelerGKLWahl } from '../core/data/gost/GostSchuelerGKLWahl';
 import { GostSchuelerklausur } from '../core/data/gost/klausurplanung/GostSchuelerklausur';
 import { GostSchuelerklausurTermin } from '../core/data/gost/klausurplanung/GostSchuelerklausurTermin';
 import { GostStatistikFachwahl } from '../core/data/gost/GostStatistikFachwahl';
@@ -7293,7 +7295,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode exportGostSchuelerLaufbahnplanungen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/laufbahnplanung/export
+	 * Implementierung der POST-Methode exportGostSchuelerLaufbahnplanungen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/laufbahnplanung/v2/export
 	 *
 	 * Liest die Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebenen Schüler aus der Datenbank und liefert diese GZip-komprimiert zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Daten besitzt.
 	 *
@@ -7310,7 +7312,7 @@ export class ApiServer extends BaseApi {
 	 * @returns Die GZip-komprimierten Laufbahndaten der gymnasialen Obertufe
 	 */
 	public async exportGostSchuelerLaufbahnplanungen(data : List<number>, schema : string) : Promise<ApiFile> {
-		const path = "/db/{schema}/gost/laufbahnplanung/export"
+		const path = "/db/{schema}/gost/laufbahnplanung/v2/export"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : ApiFile = await super.postJSONtoZIP(path, body);
@@ -7319,7 +7321,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode importGostSchuelerLaufbahnplanungen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/laufbahnplanung/import
+	 * Implementierung der POST-Methode importGostSchuelerLaufbahnplanungen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/laufbahnplanung/v2/import
 	 *
 	 * Importiert die Laufbahndaten aus den übergebenen Laufbahnplanungsdatein
 	 *
@@ -7338,7 +7340,7 @@ export class ApiServer extends BaseApi {
 	 * @returns Der Log vom Import der Laufbahndaten
 	 */
 	public async importGostSchuelerLaufbahnplanungen(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
-		const path = "/db/{schema}/gost/laufbahnplanung/import"
+		const path = "/db/{schema}/gost/laufbahnplanung/v2/import"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.postMultipart(path, data);
 		const text = result;
@@ -7480,34 +7482,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode exportGostSchuelerLaufbahnplanungsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{id : \d+}/laufbahnplanung/daten
-	 *
-	 * Liest die Laufbahnplanungsdaten der gymnasialen Oberstufe für den angegebenen Schüler aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Daten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Laufbahndaten der gymnasialen Oberstufe
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostLaufbahnplanungExportV1
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Laufbahndaten auszulesen.
-	 *   Code 404: Es wurden nicht alle benötigten Daten für das Erstellen der Laufbahn-Daten gefunden.
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die Laufbahndaten der gymnasialen Oberstufe
-	 */
-	public async exportGostSchuelerLaufbahnplanungsdaten(schema : string, id : number) : Promise<GostLaufbahnplanungExportV1> {
-		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/daten"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return GostLaufbahnplanungExportV1.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode importGostSchuelerLaufbahnplanungsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{id : \d+}/laufbahnplanung/daten
+	 * Implementierung der POST-Methode importGostSchuelerLaufbahnplanungsdatenV1 für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{id : \d+}/laufbahnplanung/v1/daten
 	 *
 	 * Importiert die Laufbahndaten aus den übergebenen Laufbahnplanungsdaten
 	 *
@@ -7526,8 +7501,8 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Log vom Import der Laufbahndaten
 	 */
-	public async importGostSchuelerLaufbahnplanungsdaten(data : GostLaufbahnplanungExportV1, schema : string, id : number) : Promise<SimpleOperationResponse> {
-		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/daten"
+	public async importGostSchuelerLaufbahnplanungsdatenV1(data : GostLaufbahnplanungExportV1, schema : string, id : number) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/v1/daten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = GostLaufbahnplanungExportV1.transpilerToJSON(data);
@@ -7538,7 +7513,65 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode exportGostSchuelerLaufbahnplanung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{id : \d+}/laufbahnplanung/export
+	 * Implementierung der GET-Methode exportGostSchuelerLaufbahnplanungsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{id : \d+}/laufbahnplanung/v2/daten
+	 *
+	 * Liest die Laufbahnplanungsdaten der gymnasialen Oberstufe für den angegebenen Schüler aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Daten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Laufbahndaten der gymnasialen Oberstufe
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostLaufbahnplanungExportV2
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Laufbahndaten auszulesen.
+	 *   Code 404: Es wurden nicht alle benötigten Daten für das Erstellen der Laufbahn-Daten gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Laufbahndaten der gymnasialen Oberstufe
+	 */
+	public async exportGostSchuelerLaufbahnplanungsdaten(schema : string, id : number) : Promise<GostLaufbahnplanungExportV2> {
+		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/v2/daten"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return GostLaufbahnplanungExportV2.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode importGostSchuelerLaufbahnplanungsdatenV2 für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{id : \d+}/laufbahnplanung/v2/daten
+	 *
+	 * Importiert die Laufbahndaten aus den übergebenen Laufbahnplanungsdaten
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Log vom Import der Laufbahndaten
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der Benutzer hat keine Berechtigung, um die Laufbahndaten zu importieren.
+	 *   Code 409: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {GostLaufbahnplanungExportV2} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Log vom Import der Laufbahndaten
+	 */
+	public async importGostSchuelerLaufbahnplanungsdatenV2(data : GostLaufbahnplanungExportV2, schema : string, id : number) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/v2/daten"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = GostLaufbahnplanungExportV2.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode exportGostSchuelerLaufbahnplanung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{id : \d+}/laufbahnplanung/v2/export
 	 *
 	 * Liest die Laufbahnplanungsdaten der gymnasialen Oberstufe für den angegebenen Schüler aus der Datenbank und liefert diese GZip-komprimiert zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Daten besitzt.
 	 *
@@ -7555,7 +7588,7 @@ export class ApiServer extends BaseApi {
 	 * @returns Die GZip-komprimierten Laufbahndaten der gymnasialen Obertufe
 	 */
 	public async exportGostSchuelerLaufbahnplanung(schema : string, id : number) : Promise<ApiFile> {
-		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/export"
+		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/v2/export"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const data : ApiFile = await super.getOctetStream(path);
@@ -7564,7 +7597,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode importGostSchuelerLaufbahnplanung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{id : \d+}/laufbahnplanung/import
+	 * Implementierung der POST-Methode importGostSchuelerLaufbahnplanung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{id : \d+}/laufbahnplanung/v2/import
 	 *
 	 * Importiert die Laufbahndaten aus der übergebenen Laufbahnplanungsdatei
 	 *
@@ -7584,7 +7617,7 @@ export class ApiServer extends BaseApi {
 	 * @returns Der Log vom Import der Laufbahndaten
 	 */
 	public async importGostSchuelerLaufbahnplanung(data : FormData, schema : string, id : number) : Promise<SimpleOperationResponse> {
-		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/import"
+		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/v2/import"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.postMultipart(path, data);
@@ -7725,6 +7758,33 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getGostSchuelerGKLWahl für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{schuelerid : \d+}/gklwahl
+	 *
+	 * Liest für die gymnasiale Oberstufe die Wahlen zu den Gleichwertig Komplexen Lernleistungen von dem angegebenen Schüler aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Wahlen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Wahlen zu den Gleichwertig Komplexen Lernleistungen der gymnasialen Oberstufe für den angegebenen Schüler
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostSchuelerGKLWahl
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Wahlen zu den Gleichwertig Komplexen Lernleistungender Gymnasialen Oberstufe eines Schülers auszulesen.
+	 *   Code 404: Kein Eintrag für einen Schüler mit Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebene ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
+	 *
+	 * @returns Die Wahlen zu den Gleichwertig Komplexen Lernleistungen der gymnasialen Oberstufe für den angegebenen Schüler
+	 */
+	public async getGostSchuelerGKLWahl(schema : string, schuelerid : number) : Promise<GostSchuelerGKLWahl> {
+		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/gklwahl"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return GostSchuelerGKLWahl.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der PATCH-Methode patchGostSchuelerLaufbahnplanungBeratungsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{schuelerid : \d+}/laufbahnplanung/beratungsdaten
 	 *
 	 * Passt die Beratungsdaten für die Laufbahnplanung der gymnasiale Oberstufe zu dem Schüler mit der angegebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Beratungsdaten besitzt.
@@ -7747,6 +7807,28 @@ export class ApiServer extends BaseApi {
 			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString());
 		const body : string = GostLaufbahnplanungBeratungsdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der PUT-Methode putGostSchuelerGKLWahl für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/fachwahl
+	 *
+	 * Passt die Wahl eines Schüler in Bezug die Gleichwertig Komplexen Lernleistungen der Gymnasiale Oberstufe an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Wahlen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Die Wahlen wurden erfolgreich übernommen.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Wahlen zu ändern.
+	 *   Code 404: Kein Schüler mit der ID gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {GostSchuelerGKLWahl} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 */
+	public async putGostSchuelerGKLWahl(data : GostSchuelerGKLWahl, schema : string) : Promise<void> {
+		const path = "/db/{schema}/gost/schueler/fachwahl"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = GostSchuelerGKLWahl.transpilerToJSON(data);
+		return super.putJSON(path, body);
 	}
 
 

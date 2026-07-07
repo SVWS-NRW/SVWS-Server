@@ -1,7 +1,11 @@
 package de.svws_nrw.repo.gost.klausurplan;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.db.DBEntityManager;
@@ -36,5 +40,21 @@ public final class GostKlausurenVorgabeRepositoryImpl extends RepositoryImpl<DTO
 				.setParameter("hj", halbjahre)
 				.getResultList();
 	}
+
+
+	@Override
+	public List<DTOGostKlausurenVorgaben> getListByAbiturjahrgaenge(final Collection<Integer> abiturjahrgaenge) {
+		final List<Integer> tmp = abiturjahrgaenge.stream().filter(Objects::nonNull).distinct().toList();
+		if (tmp.isEmpty()) {
+			return new ArrayList<>();
+		}
+		return conn.queryList(DTOGostKlausurenVorgaben.QUERY_LIST_BY_ABI_JAHRGANG, DTOGostKlausurenVorgaben.class, tmp);
+	}
+
+	@Override
+	public Map<Integer, List<DTOGostKlausurenVorgaben>> getMapByAbiturjahrgaenge(final Collection<Integer> abiturjahrgaenge) {
+		return this.getListByAbiturjahrgaenge(abiturjahrgaenge).stream().collect(Collectors.groupingBy(kv -> kv.Abi_Jahrgang));
+	}
+
 
 }

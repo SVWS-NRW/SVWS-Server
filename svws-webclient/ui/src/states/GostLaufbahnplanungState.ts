@@ -12,8 +12,14 @@ import type { GostHalbjahr } from "../../../core/src/core/types/gost/GostHalbjah
 import type { List } from "../../../core/src/java/util/List";
 import type { GostBeratungslehrer } from "../../../core/src/core/data/gost/GostBeratungslehrer";
 import { AppContext } from "../AppContext";
+import type { GostKlausurvorgabe } from "../../../core/src/core/data/gost/klausurplanung/GostKlausurvorgabe";
+import type { GostSchuelerGKLWahl } from "../../../core/src/core/data/gost/GostSchuelerGKLWahl";
+import type { GostFach } from "../../../core/src/core/data/gost/GostFach";
 
 export type GostBelegpruefungsModus = 'ef1' | 'gesamt' | 'auto';
+
+export type GostKlausurvorgabeEintrag = { fach: GostFach, halbjahr: GostHalbjahr, vorgabe: GostKlausurvorgabe };
+
 
 /**
  * Die Schnittstelle für den Zustand der Laufbahnplanung der Gymnasialen Oberstufe
@@ -112,6 +118,48 @@ export interface GostLaufbahnplanungState {
 	 * @param wahl     die zu setzende Fachwahl
 	 */
 	setWahl(idFach: number, wahl: GostSchuelerFachwahl): Promise<void>;
+
+
+	/**
+	 * Gibt die Klausurvorgabe für die übergebene ID zurück.
+	 *
+	 * @param id   die ID der Klausurvorgabe
+	 */
+	getKlausurvorgabe(id: number | null): GostKlausurvorgabeEintrag | null;
+
+	/**
+	 * Gibt zurück, ob ein Gleichwertig Komplexer Leistungsnachweis in dem übergebenen Fach in dem übergebenen Halbjahr
+	 * möglich ist oder nicht.
+	 *
+	 * @param idFach     die ID des Faches
+	 * @param halbjahr   das Halbjahr der Gymnasialen Oberstufe
+	 *
+	 * @returns false, falls kein GKL möglich ist, 0 wenn ein GKL in beiden Quartalen möglich ist und ansonsten das Quartal 1 oder 2
+	 */
+	istGKLMoeglich(idFach: number, halbjahr: GostHalbjahr): List<GostKlausurvorgabeEintrag>;
+
+	/**
+	 * Gibt zurück, ob bei dem angegebenen Fach in dem angegebenen Halbjahr eine Gleichwertig Komplexe Lernleistung (GKL)
+	 * gewählt wurde oder nicht.
+	 *
+	 * @param idFach     die ID des Faches
+	 * @param halbjahr   das Halbjahr der Gymnasialen Oberstufe
+	 *
+	 * return true, falls hier eine GKL gewählt wurde, und ansonsten false
+	 */
+	istGKLGewaehlt(idFach: number, halbjahr: GostHalbjahr): boolean;
+
+	/**
+	 * Gibt die Wahlen zu den Gleichwertig Komplexen Lernleistungen (GKL) zurück.
+	 */
+	get gklWahlen(): GostSchuelerGKLWahl;
+
+	/**
+	 * Führt einen Patch auf die Wahlen zu den Gleichwertig Komplexen Lernleistungen (GKL) aus.
+	 *
+	 * @param patch   der Patch
+	 */
+	patchGKLWahlen(patch: Partial<GostSchuelerGKLWahl>): Promise<void>;
 
 	/**
 	 * Führt einen Patch auf den Beratungsdaten aus.

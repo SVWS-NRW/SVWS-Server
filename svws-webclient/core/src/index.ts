@@ -733,6 +733,7 @@ export { GostLeistungen } from './core/data/gost/GostLeistungen';
 export { GostLeistungenFachbelegung } from './core/data/gost/GostLeistungenFachbelegung';
 export { GostLeistungenFachwahl } from './core/data/gost/GostLeistungenFachwahl';
 export { GostSchuelerFachwahl } from './core/data/gost/GostSchuelerFachwahl';
+export { GostSchuelerGKLWahl } from './core/data/gost/GostSchuelerGKLWahl';
 export { GostStatistikFachwahl } from './core/data/gost/GostStatistikFachwahl';
 export { GostStatistikFachwahlHalbjahr } from './core/data/gost/GostStatistikFachwahlHalbjahr';
 export { GostKlausurenCollectionAllData } from './core/data/gost/klausurplanung/GostKlausurenCollectionAllData';

@@ -16,6 +16,10 @@ import type { GostSchuelerFachwahl } from "@core/core/data/gost/GostSchuelerFach
 import { GostLaufbahnplanungExportV1 } from "@core/core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1";
 import { GostLaufbahnplanungExportV1Fachbelegung } from "@core/core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1Fachbelegung";
 import { GostLaufbahnplanungExportV1Schueler } from "@core/core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1Schueler";
+import { GostLaufbahnplanungExportV2 } from "@core/core/data/gost/laufbahnplanung/v2/GostLaufbahnplanungExportV2";
+import { GostLaufbahnplanungExportV2Fach } from "@core/core/data/gost/laufbahnplanung/v2/GostLaufbahnplanungExportV2Fach";
+import { GostLaufbahnplanungExportV2Schueler } from "@core/core/data/gost/laufbahnplanung/v2/GostLaufbahnplanungExportV2Schueler";
+import { GostLaufbahnplanungExportV2SchuelerFachbelegung } from "@core/core/data/gost/laufbahnplanung/v2/GostLaufbahnplanungExportV2SchuelerFachbelegung";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 import { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
@@ -25,11 +29,20 @@ import { GostKursart } from "@core/core/types/gost/GostKursart";
 import { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
-import type { GostBelegpruefungsModus, GostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
+import type { GostBelegpruefungsModus, GostKlausurvorgabeEintrag, GostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
 import { StateManager } from "@ui/ui/StateManager";
 import { Config, ConfigElement } from "@ui/utils/Config";
 import { RouteManager } from "~/router/RouteManager";
 import { serverStateImpl } from "./ServerStateImpl";
+import { HashMap2D } from "@core/core/adt/map/HashMap2D";
+import { GostSchuelerGKLWahl } from "@core/core/data/gost/GostSchuelerGKLWahl";
+import { HashMap } from "@core/java/util/HashMap";
+import type { JavaMap } from "@core/java/util/JavaMap";
+import { GostFach } from "@core/core/data/gost/GostFach";
+import { GostLaufbahnplanungExportV2GKL } from "@core/core/data/gost/laufbahnplanung/v2/GostLaufbahnplanungExportV2GKL";
+import { GostKlausurvorgabe } from "@core/core/data/gost/klausurplanung/GostKlausurvorgabe";
+import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
+
 
 interface GostLaufbahnplanungReactiveState {
 	schuleStammdaten: SchuleStammdaten;
@@ -43,11 +56,13 @@ interface GostLaufbahnplanungReactiveState {
 	faecherManager: GostFaecherManager | undefined;
 	gostBelegpruefungsArt: GostBelegpruefungsModus;
 	gostBelegpruefungErgebnis: GostBelegpruefungErgebnis;
+	mapKlausurvorgaben: JavaMap<number, GostKlausurvorgabeEintrag>;
+	gklMoeglich: HashMap2D<number, GostHalbjahr, List<GostKlausurvorgabeEintrag>>,
+	gklWahlen: GostSchuelerGKLWahl,
 	gostJahrgang: GostJahrgang;
 	gostJahrgangsdaten: GostJahrgangsdaten;
 	zwischenspeicher: Abiturdaten | undefined;
 };
-
 
 
 /**
@@ -70,6 +85,9 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 			faecherManager: undefined,
 			gostBelegpruefungsArt: 'gesamt',
 			gostBelegpruefungErgebnis: new GostBelegpruefungErgebnis(),
+			mapKlausurvorgaben: new HashMap<number, GostKlausurvorgabeEintrag>(),
+			gklMoeglich: new HashMap2D<number, GostHalbjahr, List<GostKlausurvorgabeEintrag>>(),
+			gklWahlen: new GostSchuelerGKLWahl(),
 			gostJahrgang: new GostJahrgang(),
 			gostJahrgangsdaten: new GostJahrgangsdaten(),
 			zwischenspeicher: undefined,
@@ -205,8 +223,58 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		this.setPatchedState({ dirty: true });
 	};
 
+
+	public getKlausurvorgabe(id: number | null): GostKlausurvorgabeEintrag | null {
+		if (id === null) {
+			return null;
+		}
+		return this._state.value.mapKlausurvorgaben.get(id);
+	}
+
+
+	public istGKLMoeglich(idFach: number, halbjahr: GostHalbjahr): List<GostKlausurvorgabeEintrag> {
+		return this._state.value.gklMoeglich.getOrException(idFach, halbjahr);
+	}
+
+
+	private pruefeGKLWahl(idVorgabe: number | null, idFach: number, halbjahr: GostHalbjahr): boolean {
+		if (idVorgabe === null) {
+			return false;
+		}
+		const vorgabe = this.getKlausurvorgabe(idVorgabe);
+		if ((vorgabe !== null) && (vorgabe.fach.id === idFach) && (vorgabe.halbjahr === halbjahr)) {
+			return true;
+		}
+		return false;
+	}
+
+
+	public istGKLGewaehlt(idFach: number, halbjahr: GostHalbjahr): boolean {
+		const result = ((halbjahr.istEinfuehrungsphase()
+				&& (this.pruefeGKLWahl(this.gklWahlen.idKlausurvorgabeEF_Sprachen, idFach, halbjahr)
+					|| this.pruefeGKLWahl(this.gklWahlen.idKlausurvorgabeEF_GW, idFach, halbjahr)
+					|| this.pruefeGKLWahl(this.gklWahlen.idKlausurvorgabeEF_NW, idFach, halbjahr)))
+			|| (halbjahr.istQualifikationsphase()
+				&& (this.pruefeGKLWahl(this.gklWahlen.idKlausurvorgabeQ_Sprachen, idFach, halbjahr)
+					|| this.pruefeGKLWahl(this.gklWahlen.idKlausurvorgabeQ_GW, idFach, halbjahr)
+					|| this.pruefeGKLWahl(this.gklWahlen.idKlausurvorgabeQ_NW, idFach, halbjahr))));
+		return result;
+	}
+
+
+	public get gklWahlen(): GostSchuelerGKLWahl {
+		return this._state.value.gklWahlen;
+	}
+
+
+	public async patchGKLWahlen(patch: Partial<GostSchuelerGKLWahl>) {
+		const neu = Object.assign(new GostSchuelerGKLWahl(), this._state.value.gklWahlen, patch);
+		this.setPatchedState({ gklWahlen: neu });
+	}
+
+
 	exportLaufbahnplanung = async (): Promise<ApiFile> => {
-		const json = GostLaufbahnplanungExportV1.transpilerToJSON(await this.schreibeDaten());
+		const json = GostLaufbahnplanungExportV2.transpilerToJSON(await this.schreibeV2Daten());
 		const rawData = new Response(json).body;
 		if (rawData === null) {
 			throw new UserNotificationException("Unerwarteter Fehler beim Erstellen der Export-Daten aufgetreten.");
@@ -225,12 +293,22 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		}
 		const ds = new DecompressionStream("gzip");
 		const rawData = await (new Response(gzData.stream().pipeThrough(ds))).text();
-		const laufbahnplanungsdaten = GostLaufbahnplanungExportV1.transpilerFromJSON(rawData);
-		const revRequired = 1;
-		if (laufbahnplanungsdaten.lpRevision !== revRequired) {
-			throw new UserNotificationException("Die Revision der Laufbahnplanungsdatei (" + laufbahnplanungsdaten.lpRevision + ") entspricht nicht der unterstützen Revision " + revRequired);
+		const revision: number = JSON.parse(rawData).lpRevision;
+		switch (revision) {
+			case 1: {
+				const laufbahnplanungsdaten = GostLaufbahnplanungExportV1.transpilerFromJSON(rawData);
+				await this.ladeV1Daten(laufbahnplanungsdaten);
+				break;
+			}
+			case 2: {
+				const laufbahnplanungsdaten = GostLaufbahnplanungExportV2.transpilerFromJSON(rawData);
+				await this.ladeV2Daten(laufbahnplanungsdaten);
+				break;
+			}
+			default: {
+				throw new UserNotificationException(`Die Revision der Laufbahnplanungsdatei (${revision}) entspricht nicht den unterstützen Revisionen 1 und 2`);
+			}
 		}
-		await this.ladeDaten(laufbahnplanungsdaten);
 		await RouteManager.doRoute("laufbahnplanung");
 	};
 
@@ -268,7 +346,150 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		await this.setGostBelegpruefungErgebnis();
 	};
 
-	public async ladeDaten(daten: GostLaufbahnplanungExportV1) {
+	private ladeV2Sprachdaten(planungsdaten: GostLaufbahnplanungExportV2Schueler, abiturdaten: Abiturdaten): void {
+		for (const bel of planungsdaten.sprachbelegungen) {
+			const mappedBel = new Sprachbelegung();
+			mappedBel.sprache = bel.sprache;
+			mappedBel.istNachweis = bel.istNachweis;
+			mappedBel.reihenfolge = bel.reihenfolge;
+			mappedBel.belegungVonJahrgang = bel.belegungVonJahrgang;
+			mappedBel.belegungVonAbschnitt = bel.belegungVonAbschnitt;
+			mappedBel.belegungBisJahrgang = bel.belegungBisJahrgang;
+			mappedBel.belegungBisAbschnitt = bel.belegungBisAbschnitt;
+			mappedBel.referenzniveau = bel.referenzniveau;
+			mappedBel.hatKleinesLatinum = bel.hatKleinesLatinum;
+			mappedBel.hatLatinum = bel.hatLatinum;
+			mappedBel.hatGraecum = bel.hatGraecum;
+			mappedBel.hatHebraicum = bel.hatHebraicum;
+			abiturdaten.sprachendaten.belegungen.add(mappedBel);
+		}
+		for (const pruef of planungsdaten.sprachpruefungen) {
+			const mappedPruef = new Sprachpruefung();
+			mappedPruef.sprache = pruef.sprache;
+			mappedPruef.jahrgang = pruef.jahrgang;
+			mappedPruef.anspruchsniveauId = pruef.anspruchsniveauId;
+			mappedPruef.pruefungsdatum = pruef.pruefungsdatum;
+			mappedPruef.ersetzteSprache = pruef.ersetzteSprache;
+			mappedPruef.istHSUPruefung = pruef.istHSUPruefung;
+			mappedPruef.istFeststellungspruefung = pruef.istFeststellungspruefung;
+			mappedPruef.kannErstePflichtfremdspracheErsetzen = pruef.kannErstePflichtfremdspracheErsetzen;
+			mappedPruef.kannZweitePflichtfremdspracheErsetzen = pruef.kannZweitePflichtfremdspracheErsetzen;
+			mappedPruef.kannWahlpflichtfremdspracheErsetzen = pruef.kannWahlpflichtfremdspracheErsetzen;
+			mappedPruef.kannBelegungAlsFortgefuehrteSpracheErlauben = pruef.kannBelegungAlsFortgefuehrteSpracheErlauben;
+			mappedPruef.referenzniveau = pruef.referenzniveau;
+			mappedPruef.note = pruef.note;
+			mappedPruef.zeugnisbezeichnung = pruef.zeugnisbezeichnung;
+			abiturdaten.sprachendaten.pruefungen.add(mappedPruef);
+		}
+		abiturdaten.bilingualeSprache = planungsdaten.bilingualeSprache;
+	}
+
+	private ladeV2Belegungen(planungsdaten: GostLaufbahnplanungExportV2Schueler, abiturdaten: Abiturdaten, faecherManager: GostFaecherManager): void {
+		for (const hj of GostHalbjahr.values()) {
+			abiturdaten.bewertetesHalbjahr[hj.id] = planungsdaten.bewertetesHalbjahr[hj.id];
+		}
+		for (let i = 0; i < planungsdaten.fachbelegungen.size() ; i++) {
+			const belegung = new AbiturFachbelegung();
+			const fb = planungsdaten.fachbelegungen.get(i);
+			const fach = faecherManager.get(fb.fachID);
+			if (fach === null) {
+				continue;
+			}
+			belegung.fachID = fb.fachID;
+			belegung.abiturFach = fb.abiturFach;
+			belegung.idReferenzfach = fb.idReferenzfach;
+			belegung.istFSNeu = fach.istFremdSpracheNeuEinsetzend;
+			for (const hj of GostHalbjahr.values()) {
+				const kursart = fb.kursart[hj.id];
+				if (kursart === null) {
+					continue;
+				}
+				const hjBelegung = new AbiturFachbelegungHalbjahr();
+				hjBelegung.halbjahrKuerzel = hj.kuerzel;
+				hjBelegung.kursartKuerzel = kursart;
+				hjBelegung.schriftlich = fb.schriftlich[hj.id];
+				hjBelegung.biliSprache = fach.biliSprache;
+				if (fach.kuerzel === "PX") {
+					hjBelegung.wochenstunden = fach.wochenstundenQualifikationsphase;
+				}
+				if (kursart === "AT") {
+					hjBelegung.notenkuerzel = "AT";
+				}
+				belegung.belegungen[hj.id] = hjBelegung;
+				belegung.letzteKursart = kursart;
+			}
+			abiturdaten.fachbelegungen.add(belegung);
+		}
+	}
+
+	private ladeV2Faecher(faecher: List<GostLaufbahnplanungExportV2Fach>): List<GostFach> {
+		const result = new ArrayList<GostFach>();
+		for (const fach of faecher) {
+			const f = new GostFach();
+			f.id = fach.id;
+			f.kuerzel = fach.kuerzel;
+			f.kuerzelAnzeige = fach.kuerzelAnzeige;
+			f.bezeichnung = fach.bezeichnung;
+			f.sortierung = fach.sortierung;
+			f.istPruefungsordnungsRelevant = fach.istPruefungsordnungsRelevant;
+			f.istFremdsprache = fach.istFremdsprache;
+			f.istFremdSpracheNeuEinsetzend = fach.istFremdSpracheNeuEinsetzend;
+			f.biliSprache = fach.biliSprache;
+			f.istMoeglichAbiLK = fach.istMoeglichAbiLK;
+			f.istMoeglichAbiGK = fach.istMoeglichAbiGK;
+			f.istMoeglichEF1 = fach.istMoeglich[0];
+			f.istMoeglichEF2 = fach.istMoeglich[1];
+			f.istMoeglichQ11 = fach.istMoeglich[2];
+			f.istMoeglichQ12 = fach.istMoeglich[3];
+			f.istMoeglichQ21 = fach.istMoeglich[4];
+			f.istMoeglichQ22 = fach.istMoeglich[5];
+			f.wochenstundenQualifikationsphase = fach.wochenstundenQualifikationsphase;
+			f.projektKursLeitfach1ID = fach.referenzfach1ID;
+			f.projektKursLeitfach2ID = fach.referenzfach2ID;
+			result.add(f);
+		}
+		return result;
+	}
+
+	private ladeV2GKL(planungsdaten: GostLaufbahnplanungExportV2Schueler, listMoeglich: List<GostLaufbahnplanungExportV2GKL>, faecherManager: GostFaecherManager) {
+		const gklMoeglich = new HashMap2D<number, GostHalbjahr, List<GostKlausurvorgabeEintrag>>();
+		for (const fach of faecherManager.faecher()) {
+			for (const halbjahr of GostHalbjahr.values()) {
+				gklMoeglich.put(fach.id, halbjahr, new ArrayList<GostKlausurvorgabeEintrag>());
+			}
+		}
+
+		const mapKlausurvorgaben = new HashMap<number, GostKlausurvorgabeEintrag>();
+		for (const moeglich of listMoeglich) {
+			const vorgabe = new GostKlausurvorgabe();
+			vorgabe.id = moeglich.id;
+			vorgabe.idFach = moeglich.idFach;
+			vorgabe.halbjahr = moeglich.idHalbjahr;
+			vorgabe.quartal = moeglich.quartal;
+			const halbjahr = GostHalbjahr.fromIDorException(vorgabe.halbjahr);
+			const fach = faecherManager.get(vorgabe.idFach);
+			if (fach === null) {
+				continue;
+			}
+			const eintrag: GostKlausurvorgabeEintrag = { fach, halbjahr, vorgabe };
+			mapKlausurvorgaben.put(vorgabe.id, eintrag);
+
+			gklMoeglich.getOrException(vorgabe.idFach, halbjahr).add(eintrag);
+		}
+
+		const gklWahlen = new GostSchuelerGKLWahl();
+		gklWahlen.idKlausurvorgabeEF_Sprachen = planungsdaten.gkl[0];
+		gklWahlen.idKlausurvorgabeEF_GW = planungsdaten.gkl[1];
+		gklWahlen.idKlausurvorgabeEF_NW = planungsdaten.gkl[2];
+		gklWahlen.idKlausurvorgabeQ_Sprachen = planungsdaten.gkl[3];
+		gklWahlen.idKlausurvorgabeQ_GW = planungsdaten.gkl[4];
+		gklWahlen.idKlausurvorgabeQ_NW = planungsdaten.gkl[5];
+
+		return { mapKlausurvorgaben, gklMoeglich, gklWahlen };
+	}
+
+
+	public async ladeV2Daten(daten: GostLaufbahnplanungExportV2) {
 		// Lade die Informationen zur Schule
 		const schuleStammdaten = new SchuleStammdaten();
 		schuleStammdaten.schulNr = daten.schulNr;
@@ -293,7 +514,8 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		gostJahrgangsdaten.textBeratungsbogen = daten.textBeratungsbogen;
 		gostJahrgangsdaten.textMailversand = null;
 		// Initialisiere den Fächer-Manager mit den Fächerdaten
-		const faecherManager = new GostFaecherManager(daten.abiturjahr - 1, daten.faecher);
+		const faecher = this.ladeV2Faecher(daten.faecher);
+		const faecherManager = new GostFaecherManager(daten.abiturjahr - 1, faecher);
 		faecherManager.addFachkombinationenAll(daten.fachkombinationen);
 		// Bestimme die importierten Laufbahnplanungsdaten für den Schüler
 		const planungsdaten = daten.schueler.get(0);
@@ -304,9 +526,45 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		schueler.nachname = planungsdaten.nachname;
 		schueler.geschlecht = planungsdaten.geschlecht;
 		schueler.abiturjahrgang = gostJahrgang.abiturjahr;
-		// Erstelle das Abiturdaten-Objekt mit den Fachbelegungen
+
+		schueler.idSchulgliederung = planungsdaten.istG8
+			? Schulgliederung.GY8.historie().getLast().id
+			: Schulgliederung.GY9.historie().getLast().id;
+
+		// Erstelle das Abiturdaten-Objekt und lade die Sprachinformationen und die Fachbelegungen
 		const abiturdaten = new Abiturdaten();
 		abiturdaten.abiturjahr = daten.abiturjahr;
+		this.ladeV2Sprachdaten(planungsdaten, abiturdaten);
+		this.ladeV2Belegungen(planungsdaten, abiturdaten, faecherManager);
+
+		const { mapKlausurvorgaben, gklMoeglich, gklWahlen } = this.ladeV2GKL(planungsdaten, daten.gkl, faecherManager);
+
+		// Erstelle den Abiturdaten-Manager
+		const abiturdatenManager = this.createAbiturdatenmanager(faecherManager, abiturdaten);
+		if (abiturdatenManager === undefined) {
+			throw new UserNotificationException("Belegprüfungsergebnis konnte nicht berechnet werden.");
+		}
+		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
+		gostJahrgangsdaten.istBlockungFestgelegt = abiturdaten.bewertetesHalbjahr;
+		this.setPatchedDefaultState({
+			schuleStammdaten,
+			auswahl: schueler,
+			schuelerIDEncrypted: planungsdaten.idEnc,
+			beratungslehrer: daten.beratungslehrer,
+			gostJahrgang,
+			gostJahrgangsdaten,
+			faecherManager,
+			abiturdaten,
+			abiturdatenManager: abiturdatenManager,
+			gostBelegpruefungErgebnis,
+			mapKlausurvorgaben,
+			gklMoeglich,
+			gklWahlen,
+		});
+	}
+
+
+	private ladeV1Sprachdaten(planungsdaten: GostLaufbahnplanungExportV1Schueler, abiturdaten: Abiturdaten): void {
 		for (const bel of planungsdaten.sprachendaten.belegungen) {
 			const mappedBel = new Sprachbelegung();
 			mappedBel.sprache = bel.sprache;
@@ -342,6 +600,9 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 			abiturdaten.sprachendaten.pruefungen.add(mappedPruef);
 		}
 		abiturdaten.bilingualeSprache = planungsdaten.bilingualeSprache;
+	}
+
+	private ladeV1Belegungen(planungsdaten: GostLaufbahnplanungExportV1Schueler, abiturdaten: Abiturdaten, faecherManager: GostFaecherManager): void {
 		for (const hj of GostHalbjahr.values()) {
 			abiturdaten.bewertetesHalbjahr[hj.id] = planungsdaten.bewertetesHalbjahr[hj.id];
 		}
@@ -376,6 +637,51 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 			}
 			abiturdaten.fachbelegungen.add(belegung);
 		}
+	}
+
+	public async ladeV1Daten(daten: GostLaufbahnplanungExportV1) {
+		// Lade die Informationen zur Schule
+		const schuleStammdaten = new SchuleStammdaten();
+		schuleStammdaten.schulNr = daten.schulNr;
+		schuleStammdaten.bezeichnung1 = daten.schulBezeichnung1;
+		schuleStammdaten.bezeichnung2 = daten.schulBezeichnung2;
+		schuleStammdaten.bezeichnung3 = daten.schulBezeichnung3;
+		// Lade die Jahrgangsinformationen
+		const gostJahrgang = new GostJahrgang();
+		gostJahrgang.abiturjahr = daten.abiturjahr;
+		gostJahrgang.jahrgang = daten.jahrgang;
+		gostJahrgang.bezeichnung = "Abiturjahr " + daten.abiturjahr;
+		gostJahrgang.istAbgeschlossen = false;
+		const gostJahrgangsdaten = new GostJahrgangsdaten();
+		gostJahrgangsdaten.abiturjahr = gostJahrgang.abiturjahr;
+		gostJahrgangsdaten.jahrgang = gostJahrgang.jahrgang;
+		gostJahrgangsdaten.bezeichnung = gostJahrgang.bezeichnung;
+		gostJahrgangsdaten.istAbgeschlossen = gostJahrgang.istAbgeschlossen;
+		gostJahrgangsdaten.hatZusatzkursGE = daten.hatZusatzkursGE;
+		gostJahrgangsdaten.beginnZusatzkursGE = daten.beginnZusatzkursGE;
+		gostJahrgangsdaten.hatZusatzkursSW = daten.hatZusatzkursSW;
+		gostJahrgangsdaten.beginnZusatzkursSW = daten.beginnZusatzkursSW;
+		gostJahrgangsdaten.textBeratungsbogen = daten.textBeratungsbogen;
+		gostJahrgangsdaten.textMailversand = null;
+		// Initialisiere den Fächer-Manager mit den Fächerdaten
+		const faecherManager = new GostFaecherManager(daten.abiturjahr - 1, daten.faecher);
+		faecherManager.addFachkombinationenAll(daten.fachkombinationen);
+		// Bestimme die importierten Laufbahnplanungsdaten für den Schüler
+		const planungsdaten = daten.schueler.get(0);
+		// Erstelle das Schüler-Objekt für die Anzeige
+		const schueler = new SchuelerListeEintrag();
+		schueler.id = planungsdaten.id;
+		schueler.vorname = planungsdaten.vorname;
+		schueler.nachname = planungsdaten.nachname;
+		schueler.geschlecht = planungsdaten.geschlecht;
+		schueler.abiturjahrgang = gostJahrgang.abiturjahr;
+
+		// Erstelle das Abiturdaten-Objekt und lade die Sprachinformationen und die Fachbelegungen
+		const abiturdaten = new Abiturdaten();
+		abiturdaten.abiturjahr = daten.abiturjahr;
+		this.ladeV1Sprachdaten(planungsdaten, abiturdaten);
+		this.ladeV1Belegungen(planungsdaten, abiturdaten, faecherManager);
+
 		// Erstelle den Abiturdaten-Manager
 		const abiturdatenManager = this.createAbiturdatenmanager(faecherManager, abiturdaten);
 		if (abiturdatenManager === undefined) {
@@ -397,7 +703,117 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		});
 	}
 
-	public async schreibeDaten(): Promise<GostLaufbahnplanungExportV1> {
+
+	private schreibeV2Faecher(from: List<GostFach>, to: List<GostLaufbahnplanungExportV2Fach>): void {
+		for (const fach of from) {
+			const f = new GostLaufbahnplanungExportV2Fach();
+			f.id = fach.id;
+			f.kuerzel = fach.kuerzel;
+			f.kuerzelAnzeige = fach.kuerzelAnzeige;
+			f.bezeichnung = fach.bezeichnung;
+			f.sortierung = fach.sortierung;
+			f.istPruefungsordnungsRelevant = fach.istPruefungsordnungsRelevant;
+			f.istFremdsprache = fach.istFremdsprache;
+			f.istFremdSpracheNeuEinsetzend = fach.istFremdSpracheNeuEinsetzend;
+			f.biliSprache = fach.biliSprache;
+			f.istMoeglichAbiLK = fach.istMoeglichAbiLK;
+			f.istMoeglichAbiGK = fach.istMoeglichAbiGK;
+			f.istMoeglich[0] = fach.istMoeglichEF1;
+			f.istMoeglich[1] = fach.istMoeglichEF2;
+			f.istMoeglich[2] = fach.istMoeglichQ11;
+			f.istMoeglich[3] = fach.istMoeglichQ12;
+			f.istMoeglich[4] = fach.istMoeglichQ21;
+			f.istMoeglich[5] = fach.istMoeglichQ22;
+			f.wochenstundenQualifikationsphase = fach.wochenstundenQualifikationsphase;
+			f.referenzfach1ID = fach.projektKursLeitfach1ID;
+			f.referenzfach2ID = fach.projektKursLeitfach2ID;
+			to.add(f);
+		}
+	}
+
+
+	private schreibeV2GKL(daten: GostLaufbahnplanungExportV2, schueler: GostLaufbahnplanungExportV2Schueler): void {
+		for (const eintrag of this._state.value.mapKlausurvorgaben.values()) {
+			const vorgabe = eintrag.vorgabe;
+			const gkl = new GostLaufbahnplanungExportV2GKL();
+			gkl.id = vorgabe.id;
+			gkl.idFach = vorgabe.idFach;
+			gkl.idHalbjahr = vorgabe.halbjahr;
+			gkl.quartal = vorgabe.halbjahr;
+			daten.gkl.add(gkl);
+		}
+		const wahlen = this._state.value.gklWahlen;
+		schueler.gkl[0] = wahlen.idKlausurvorgabeEF_Sprachen;
+		schueler.gkl[1] = wahlen.idKlausurvorgabeEF_GW;
+		schueler.gkl[2] = wahlen.idKlausurvorgabeEF_NW;
+		schueler.gkl[3] = wahlen.idKlausurvorgabeQ_Sprachen;
+		schueler.gkl[4] = wahlen.idKlausurvorgabeQ_GW;
+		schueler.gkl[5] = wahlen.idKlausurvorgabeQ_NW;
+	}
+
+
+	public async schreibeV2Daten(): Promise<GostLaufbahnplanungExportV2> {
+		const abiturdaten = this._state.value.abiturdaten;
+		const faecherManager = this._state.value.faecherManager;
+		const auswahl = this._state.value.auswahl;
+		if ((faecherManager === undefined) || (abiturdaten === undefined) || (auswahl === undefined)) {
+			throw new UserNotificationException("Es müssen Abiturdaten geladen sein.");
+		}
+
+		const daten = new GostLaufbahnplanungExportV2();
+		daten.schulNr = this._state.value.schuleStammdaten.schulNr;
+		daten.schulBezeichnung1 = this._state.value.schuleStammdaten.bezeichnung1;
+		daten.schulBezeichnung2 = this._state.value.schuleStammdaten.bezeichnung2 ?? "";
+		daten.schulBezeichnung3 = this._state.value.schuleStammdaten.bezeichnung3 ?? "";
+		daten.anmerkungen = "Letzte Änderung am " + (new Date()).toLocaleDateString("de-DE", { dateStyle: "short" });
+		daten.abiturjahr = abiturdaten.abiturjahr;
+		daten.jahrgang = this._state.value.gostJahrgang.jahrgang;
+		daten.hatZusatzkursGE = this._state.value.gostJahrgangsdaten.hatZusatzkursGE;
+		daten.beginnZusatzkursGE = this._state.value.gostJahrgangsdaten.beginnZusatzkursGE;
+		daten.hatZusatzkursSW = this._state.value.gostJahrgangsdaten.hatZusatzkursSW;
+		daten.beginnZusatzkursSW = this._state.value.gostJahrgangsdaten.beginnZusatzkursSW;
+		daten.beratungslehrer.addAll(this._state.value.beratungslehrer);
+		daten.textBeratungsbogen = this._state.value.gostJahrgangsdaten.textBeratungsbogen;
+		for (const fk of faecherManager.getFachkombinationen()) {
+			daten.fachkombinationen.add(fk);
+		}
+		this.schreibeV2Faecher(faecherManager.faecher(), daten.faecher);
+		const s = new GostLaufbahnplanungExportV2Schueler();
+		s.id = auswahl.id;
+		s.idEnc = this._state.value.schuelerIDEncrypted;
+		s.vorname = auswahl.vorname;
+		s.nachname = auswahl.nachname;
+		s.geschlecht = auswahl.geschlecht;
+		s.bilingualeSprache = abiturdaten.bilingualeSprache;
+		s.sprachbelegungen = abiturdaten.sprachendaten.belegungen;
+		s.sprachpruefungen = abiturdaten.sprachendaten.pruefungen;
+		for (const hj of GostHalbjahr.values()) {
+			s.bewertetesHalbjahr[hj.id] = abiturdaten.bewertetesHalbjahr[hj.id];
+		}
+		s.istG8 = (Schulgliederung.data().getWertByIDOrNull(auswahl.idSchulgliederung) === Schulgliederung.GY8);
+		for (let i = 0; i < abiturdaten.fachbelegungen.size() ; i++) {
+			const belegung = abiturdaten.fachbelegungen.get(i);
+			const fb = new GostLaufbahnplanungExportV2SchuelerFachbelegung();
+			fb.fachID = belegung.fachID;
+			fb.abiturFach = belegung.abiturFach;
+			fb.idReferenzfach = belegung.idReferenzfach;
+			for (const hj of GostHalbjahr.values()) {
+				const hjBelegung = belegung.belegungen[hj.id];
+				if (hjBelegung === null) {
+					continue;
+				}
+				fb.kursart[hj.id] = hjBelegung.kursartKuerzel;
+				fb.schriftlich[hj.id] = hjBelegung.schriftlich;
+			}
+			s.fachbelegungen.add(fb);
+		}
+		daten.schueler.add(s);
+		this.schreibeV2GKL(daten, s);
+		return daten;
+	}
+
+
+	public async schreibeV1Daten(): Promise<GostLaufbahnplanungExportV1> {
 		if ((this._state.value.faecherManager === undefined) || (this._state.value.abiturdaten === undefined) || (this._state.value.auswahl === undefined)) {
 			throw new UserNotificationException("Es müssen Abiturdaten geladen sein.");
 		}

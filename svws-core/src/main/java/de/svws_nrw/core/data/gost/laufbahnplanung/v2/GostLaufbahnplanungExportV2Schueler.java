@@ -68,12 +68,12 @@ public class GostLaufbahnplanungExportV2Schueler {
 	/** Die Liste der Sprachbelegungen. */
 	@ArraySchema(schema = @Schema(implementation = GostLaufbahnplanungExportV2SchuelerSprachbelegung.class,
 			description = "Ein Array mit den Sprachbelegungen des Schülers."))
-	public @NotNull List<GostLaufbahnplanungExportV2SchuelerSprachbelegung> belegungen = new ArrayList<>();
+	public @NotNull List<GostLaufbahnplanungExportV2SchuelerSprachbelegung> sprachbelegungen = new ArrayList<>();
 
 	/** Die Liste der Sprachprüfungen. */
 	@ArraySchema(schema = @Schema(implementation = GostLaufbahnplanungExportV2SchuelerSprachpruefung.class,
 			description = "Ein Array mit den Sprachprüfungen des Schülers."))
-	public @NotNull List<GostLaufbahnplanungExportV2SchuelerSprachpruefung> pruefungen = new ArrayList<>();
+	public @NotNull List<GostLaufbahnplanungExportV2SchuelerSprachpruefung> sprachpruefungen = new ArrayList<>();
 
 
 	/**

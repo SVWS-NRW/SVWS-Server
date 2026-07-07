@@ -1,8 +1,8 @@
-import type { Abiturdaten, ApiFile, GostBeratungslehrer, GostBlockungListeneintrag, GostBlockungsergebnis, GostLaufbahnplanungExportV1,
-	GostSchuelerFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag } from "@core";
+import type { Abiturdaten, ApiFile, GostBeratungslehrer, GostBlockungListeneintrag, GostBlockungsergebnis, GostLaufbahnplanungExportV2,
+	GostSchuelerFachwahl, JavaMap, LehrerListeEintrag, List, SchuelerListeEintrag } from "@core";
 import { AbiturdatenManager, ArrayList, BenutzerTyp, DeveloperNotificationException, GostBelegpruefungErgebnis,
 	GostBelegpruefungsArt, GostFaecherManager, GostHalbjahr, GostJahrgang, GostJahrgangsdaten,
-	GostLaufbahnplanungBeratungsdaten } from "@core";
+	GostLaufbahnplanungBeratungsdaten, GostSchuelerGKLWahl, HashMap, HashMap2D } from "@core";
 import type { GostLaufbahnplanungState, GostBelegpruefungsModus } from "@ui";
 import { StateManager } from "@ui";
 import { api } from "~/router/Api";
@@ -10,6 +10,8 @@ import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { serverStateImpl } from "./ServerStateImpl";
 import { configStateImpl } from "./ConfigStateImpl";
+import type { GostKlausurvorgabeEintrag } from "../../../ui/src/states/GostLaufbahnplanungState";
+
 
 interface GostLaufbahnplanungReactiveState {
 	mode: 'schueler' | 'abiturjahrgang' | undefined;
@@ -22,9 +24,12 @@ interface GostLaufbahnplanungReactiveState {
 	gostJahrgang: GostJahrgang;
 	gostJahrgangsdaten: GostJahrgangsdaten;
 	gostLaufbahnBeratungsdaten: GostLaufbahnplanungBeratungsdaten;
+	mapKlausurvorgaben: JavaMap<number, GostKlausurvorgabeEintrag>;
+	gklMoeglich: HashMap2D<number, GostHalbjahr, List<GostKlausurvorgabeEintrag>>,
+	gklWahlen: GostSchuelerGKLWahl,
 	listeLehrer: List<LehrerListeEintrag>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
-	zwischenspeicher: GostLaufbahnplanungExportV1 | undefined;
+	zwischenspeicher: GostLaufbahnplanungExportV2 | undefined;
 };
 
 /**
@@ -47,6 +52,9 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 			gostJahrgang: new GostJahrgang(),
 			gostJahrgangsdaten: new GostJahrgangsdaten(),
 			gostLaufbahnBeratungsdaten: new GostLaufbahnplanungBeratungsdaten(),
+			mapKlausurvorgaben: new HashMap<number, GostKlausurvorgabeEintrag>(),
+			gklMoeglich: new HashMap2D<number, GostHalbjahr, List<GostKlausurvorgabeEintrag>>(),
+			gklWahlen: new GostSchuelerGKLWahl(),
 			listeLehrer: new ArrayList<LehrerListeEintrag>(),
 			mapLehrer: new Map<number, LehrerListeEintrag>(),
 			zwischenspeicher: undefined,
@@ -181,6 +189,57 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		})(idFach, wahl);
 	}
 
+
+	public getKlausurvorgabe(id: number | null): GostKlausurvorgabeEintrag | null {
+		if (id === null) {
+			return null;
+		}
+		return this._state.value.mapKlausurvorgaben.get(id);
+	}
+
+
+	public istGKLMoeglich(idFach: number, halbjahr: GostHalbjahr): List<GostKlausurvorgabeEintrag> {
+		return this._state.value.gklMoeglich.getOrException(idFach, halbjahr);
+	}
+
+
+	private pruefeGKLWahl(idVorgabe: number | null, idFach: number, halbjahr: GostHalbjahr): boolean {
+		if (idVorgabe === null) {
+			return false;
+		}
+		const vorgabe = this.getKlausurvorgabe(idVorgabe);
+		if ((vorgabe !== null) && (vorgabe.fach.id === idFach) && (vorgabe.halbjahr === halbjahr)) {
+			return true;
+		}
+		return false;
+	}
+
+
+	public istGKLGewaehlt(idFach: number, halbjahr: GostHalbjahr): boolean {
+		const result = ((halbjahr.istEinfuehrungsphase()
+				&& (this.pruefeGKLWahl(this.gklWahlen.idKlausurvorgabeEF_Sprachen, idFach, halbjahr)
+					|| this.pruefeGKLWahl(this.gklWahlen.idKlausurvorgabeEF_GW, idFach, halbjahr)
+					|| this.pruefeGKLWahl(this.gklWahlen.idKlausurvorgabeEF_NW, idFach, halbjahr)))
+			|| (halbjahr.istQualifikationsphase()
+				&& (this.pruefeGKLWahl(this.gklWahlen.idKlausurvorgabeQ_Sprachen, idFach, halbjahr)
+					|| this.pruefeGKLWahl(this.gklWahlen.idKlausurvorgabeQ_GW, idFach, halbjahr)
+					|| this.pruefeGKLWahl(this.gklWahlen.idKlausurvorgabeQ_NW, idFach, halbjahr))));
+		return result;
+	}
+
+
+	public get gklWahlen(): GostSchuelerGKLWahl {
+		return this._state.value.gklWahlen;
+	}
+
+
+	public async patchGKLWahlen(patch: Partial<GostSchuelerGKLWahl>) {
+		const neu = Object.assign(new GostSchuelerGKLWahl(), this._state.value.gklWahlen, patch);
+		await api.server.putGostSchuelerGKLWahl(neu, api.schema);
+		this.setPatchedState({ gklWahlen: neu });
+	}
+
+
 	public async patchBeratungsdaten(data: Partial<GostLaufbahnplanungBeratungsdaten>) {
 		await api.call(async (data: Partial<GostLaufbahnplanungBeratungsdaten>) => {
 			if (this.mode !== 'schueler') {
@@ -216,7 +275,7 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 			if (this._state.value.zwischenspeicher === undefined) {
 				return;
 			}
-			await api.server.importGostSchuelerLaufbahnplanungsdaten(this._state.value.zwischenspeicher, api.schema, this.schueler.id);
+			await api.server.importGostSchuelerLaufbahnplanungsdatenV2(this._state.value.zwischenspeicher, api.schema, this.schueler.id);
 			const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.schueler.id);
 			const abiturdatenManager = this.createAbiturdatenmanager(abiturdaten);
 			if (abiturdatenManager === undefined) {
@@ -335,7 +394,7 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		this.setPatchedState({ abiturdatenManager, gostBelegpruefungErgebnis });
 	}
 
-	public get zwischenspeicher(): GostLaufbahnplanungExportV1 | undefined {
+	public get zwischenspeicher(): GostLaufbahnplanungExportV2 | undefined {
 		return this._state.value.zwischenspeicher;
 	}
 
@@ -376,6 +435,38 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		api.status.stop();
 	}
 
+
+	private async ladeGKL(abiturjahr: number, faecherManager: GostFaecherManager): Promise<{
+		gklMoeglich: HashMap2D<number, GostHalbjahr, List<GostKlausurvorgabeEintrag>>,
+		mapKlausurvorgaben: JavaMap<number, GostKlausurvorgabeEintrag>
+	}> {
+		const vorgaben = await api.server.getGostKlausurenVorgabenJahrgang(api.schema, abiturjahr);
+
+		const gklMoeglich = new HashMap2D<number, GostHalbjahr, List<GostKlausurvorgabeEintrag>>();
+		for (const fach of faecherManager.faecher()) {
+			for (const halbjahr of GostHalbjahr.values()) {
+				gklMoeglich.put(fach.id, halbjahr, new ArrayList<GostKlausurvorgabeEintrag>());
+			}
+		}
+
+		const mapKlausurvorgaben = new HashMap<number, GostKlausurvorgabeEintrag>();
+		for (const vorgabe of vorgaben) {
+			const halbjahr = GostHalbjahr.fromIDorException(vorgabe.halbjahr);
+			const fach = faecherManager.get(vorgabe.idFach);
+			if (fach === null) {
+				continue;
+			}
+			const eintrag = { fach, halbjahr, vorgabe };
+			mapKlausurvorgaben.put(vorgabe.id, eintrag);
+			if ((!vorgabe.istGklMoeglich) || !gklMoeglich.containsKey1(vorgabe.idFach)) {
+				continue;
+			}
+			gklMoeglich.getOrException(vorgabe.idFach, halbjahr).add(eintrag);
+		}
+		return { gklMoeglich, mapKlausurvorgaben };
+	}
+
+
 	public async ladeSchuelerDaten(auswahlSchueler: SchuelerListeEintrag | null) {
 		if ((this._state.value.mode === 'schueler') && (auswahlSchueler === this._state.value.auswahlSchueler)) {
 			return;
@@ -396,13 +487,16 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 				const faecherManager = new GostFaecherManager(abiturdaten.schuljahrAbitur, listGostFaecher);
 				const listFachkombinationen	= await api.server.getGostAbiturjahrgangFachkombinationen(api.schema, gostJahrgang.abiturjahr);
 				faecherManager.addFachkombinationenAll(listFachkombinationen);
+				const { gklMoeglich, mapKlausurvorgaben } = await this.ladeGKL(gostJahrgang.abiturjahr, faecherManager);
+				const gklWahlen = await api.server.getGostSchuelerGKLWahl(api.schema, auswahlSchueler.id);
 				const listeLehrer = await api.server.getLehrer(api.schema);
 				const mapLehrer = new Map<number, LehrerListeEintrag>();
 				for (const l of listeLehrer) {
 					mapLehrer.set(l.id, l);
 				}
 				const mode = 'schueler';
-				this.setPatchedState({ mode, auswahlSchueler, abiturdaten, gostJahrgang, gostJahrgangsdaten, gostLaufbahnBeratungsdaten, faecherManager, listeLehrer, mapLehrer, zwischenspeicher: undefined });
+				this.setPatchedState({ mode, auswahlSchueler, abiturdaten, gostJahrgang, gostJahrgangsdaten, gostLaufbahnBeratungsdaten, faecherManager,
+					mapKlausurvorgaben, gklMoeglich, gklWahlen, listeLehrer, mapLehrer, zwischenspeicher: undefined });
 				await this.setGostBelegpruefungErgebnis();
 			} catch {
 				throw new DeveloperNotificationException("Die Laufbahndaten konnten nicht eingeholt werden, sind für diesen Schüler Laufbahndaten möglich?");
@@ -424,13 +518,15 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 				const faecherManager = new GostFaecherManager(gostJahrgang.abiturjahr - 1, listGostFaecher);
 				const listFachkombinationen	= await api.server.getGostAbiturjahrgangFachkombinationen(api.schema, gostJahrgang.abiturjahr);
 				faecherManager.addFachkombinationenAll(listFachkombinationen);
+				const { gklMoeglich, mapKlausurvorgaben } = await this.ladeGKL(gostJahrgang.abiturjahr, faecherManager);
 				const listeLehrer = await api.server.getLehrer(api.schema);
 				const mapLehrer = new Map<number, LehrerListeEintrag>();
 				for (const l of listeLehrer) {
 					mapLehrer.set(l.id, l);
 				}
 				const mode = 'abiturjahrgang';
-				this.setPatchedState({ mode, auswahlAbiturjahrgang, abiturdaten, gostJahrgang, gostJahrgangsdaten, faecherManager, listeLehrer, mapLehrer });
+				this.setPatchedState({ mode, auswahlAbiturjahrgang, abiturdaten, gostJahrgang, gostJahrgangsdaten, faecherManager,
+					mapKlausurvorgaben, gklMoeglich, listeLehrer, mapLehrer });
 				await this.setGostBelegpruefungErgebnis();
 			} catch {
 				throw new DeveloperNotificationException("Die Laufbahndaten konnten nicht eingeholt werden, sind für diesen Abiturjahrgang Laufbahndaten möglich?");

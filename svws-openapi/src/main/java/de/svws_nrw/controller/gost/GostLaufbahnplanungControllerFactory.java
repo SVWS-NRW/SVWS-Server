@@ -6,17 +6,12 @@ import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
 import de.svws_nrw.repo.gost.GostRepositoryFactory;
+import de.svws_nrw.repo.gost.klausurplan.GostKlausurenRepositoryFactory;
 import de.svws_nrw.repo.kataloge.KatalogeRepositoryFactory;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
-import de.svws_nrw.service.benutzer.BenutzerKompetenzService;
 import de.svws_nrw.service.benutzer.BenutzerServiceFactory;
 import de.svws_nrw.service.crypto.CryptoServiceFactory;
-import de.svws_nrw.service.gost.GostAbiturdatenService;
-import de.svws_nrw.service.gost.GostFachwahlService;
-import de.svws_nrw.service.gost.GostJahrgangFachwahlService;
-import de.svws_nrw.service.gost.GostLaufbahnplanungExportV1Service;
-import de.svws_nrw.service.gost.GostLaufbahnplanungImportV1Service;
 import de.svws_nrw.service.gost.GostServiceFactory;
 import de.svws_nrw.service.schueler.SchuelerServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,18 +35,21 @@ public final class GostLaufbahnplanungControllerFactory {
 	private GostLaufbahnplanungControllerFactory() {
 		final BenutzerRepositoryFactory benutzerRepositoryFactory = BenutzerRepositoryFactory.getNewInstance();
 		final SchuelerRepositoryFactory schuelerRepositoryFactory = SchuelerRepositoryFactory.getNewInstance();
+		final GostRepositoryFactory gostRepositoryFactory = GostRepositoryFactory.getNewInstance();
+		final KatalogeRepositoryFactory katalogeRepositoryFactory = KatalogeRepositoryFactory.getNewInstance();
 
 		this.benutzerServiceFactory = BenutzerServiceFactory.getNewInstance(benutzerRepositoryFactory);
 
 		this.gostServiceFactory = GostServiceFactory.getNewInstance(
-				GostRepositoryFactory.getNewInstance(),
+				gostRepositoryFactory,
 				schuelerRepositoryFactory,
 				LehrerRepositoryFactory.getNewInstance(),
 				benutzerRepositoryFactory,
-				KatalogeRepositoryFactory.getNewInstance(),
+				katalogeRepositoryFactory,
 				benutzerServiceFactory,
 				CryptoServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory),
-				SchuelerServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory));
+				SchuelerServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory),
+				GostKlausurenRepositoryFactory.getNewInstance());
 	}
 
 
@@ -142,14 +140,15 @@ public final class GostLaufbahnplanungControllerFactory {
 	 * @throws ApiOperationException wenn ein Fehler bei der Überprüfung der Berechtigung auftritt
 	 */
 	public GostLaufbahnplanungController getGostLaufbahnplanungController() throws ApiOperationException {
-		final GostAbiturdatenService gostAbiturdatenService = gostServiceFactory.getGostAbiturdatenService();
-		final GostFachwahlService gostFachwahlService = gostServiceFactory.getGostFachwahlService();
-		final GostLaufbahnplanungExportV1Service gostLaufbahnplanungExportV1Service = gostServiceFactory.getGostLaufbahnplanungExportV1Service();
-		final GostLaufbahnplanungImportV1Service gostLaufbahnplanungImportV1Service = gostServiceFactory.getGostLaufbahnplanungImportV1Service();
-		final GostJahrgangFachwahlService gostJahrgangFachwahlService = gostServiceFactory.getGostJahrgangFachwahlService();
-		final BenutzerKompetenzService benutzerKompetenzService = benutzerServiceFactory.getBenutzerKompetenzService();
-		return new GostLaufbahnplanungControllerImpl(benutzerKompetenzService, gostAbiturdatenService, gostFachwahlService,
-				gostJahrgangFachwahlService, gostLaufbahnplanungExportV1Service, gostLaufbahnplanungImportV1Service);
+		return new GostLaufbahnplanungControllerImpl(
+				benutzerServiceFactory.getBenutzerKompetenzService(),
+				gostServiceFactory.getGostAbiturdatenService(),
+				gostServiceFactory.getGostFachwahlService(),
+				gostServiceFactory.getGostSchuelerGKLWahlService(),
+				gostServiceFactory.getGostJahrgangFachwahlService(),
+				gostServiceFactory.getGostLaufbahnplanungImportV1Service(),
+				gostServiceFactory.getGostLaufbahnplanungExportV2Service(),
+				gostServiceFactory.getGostLaufbahnplanungImportV2Service());
 	}
 
 }

@@ -25,8 +25,10 @@ import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.core.data.gost.GostLeistungen;
 import de.svws_nrw.core.data.gost.GostSchuelerFachwahl;
+import de.svws_nrw.core.data.gost.GostSchuelerGKLWahl;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.core.data.gost.laufbahnplanung.v1.GostLaufbahnplanungExportV1;
+import de.svws_nrw.core.data.gost.laufbahnplanung.v2.GostLaufbahnplanungExportV2;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
@@ -62,6 +64,7 @@ import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -1055,6 +1058,63 @@ public class APIGost {
 	}
 
 
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Wahlen zu Gleichwertig Komplexen Lernleistungen der gymnasialen Oberstufe eines Schülers.
+	 *
+	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param schueler_id   die ID des Schülers
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Fachwahlen des Schülers zu dem Fach
+	 */
+	@GET
+	@Path("/schueler/{schuelerid : \\d+}/gklwahl")
+	@Operation(summary = "Liest für die gymnasiale Oberstufe die Wahlen zu den Gleichwertig Komplexen Lernleistungen von dem angegebenen Schüler aus.",
+			description = "Liest für die gymnasiale Oberstufe die Wahlen zu den Gleichwertig Komplexen Lernleistungen von dem angegebenen Schüler aus. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Wahlen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Wahlen zu den Gleichwertig Komplexen Lernleistungen der gymnasialen Oberstufe für den angegebenen Schüler",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostSchuelerGKLWahl.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Wahlen zu den Gleichwertig Komplexen Lernleistungen"
+			+ "der Gymnasialen Oberstufe eines Schülers auszulesen.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag für einen Schüler mit Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebene "
+			+ "ID gefunden")
+	public Response getGostSchuelerGKLWahl(@PathParam("schema") final String schema, @PathParam("schuelerid") final long schueler_id,
+			@Context final HttpServletRequest request) {
+		return GostLaufbahnplanungControllerFactory.withAccessForKursplanungOrLaufbahnplanung(request)
+				.getGostLaufbahnplanungController().getGKLWahl(schueler_id);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Setzen der Wahlen zu Gleichwertig Komplexen Lernleistungen eines Schülers
+	 * der gymnasialen Oberstufe.
+	 *
+	 * @param schema        das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param wahl          die Wahlen zu den Gleichwertig Komplexen Lernleistungen
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort
+	 */
+	@PUT
+	@Path("/schueler/fachwahl")
+	@Operation(summary = "Passt die Wahl eines Schüler in Bezug die Gleichwertig Komplexen Lernleistungen der Gymnasiale Oberstufe an.",
+			description = "Passt die Wahl eines Schüler in Bezug die Gleichwertig Komplexen Lernleistungen der Gymnasiale Oberstufe an. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Wahlen besitzt.")
+	@ApiResponse(responseCode = "204", description = "Die Wahlen wurden erfolgreich übernommen.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Wahlen zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler mit der ID gefunden")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response putGostSchuelerGKLWahl(
+			@PathParam("schema") final String schema,
+			@RequestBody(description = "Die zu setzenden Wahlen", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = GostSchuelerGKLWahl.class))) final GostSchuelerGKLWahl wahl,
+			@Context final HttpServletRequest request) {
+		return GostLaufbahnplanungControllerFactory.withAccessForKursplanungOrLaufbahnplanung(request)
+				.getGostLaufbahnplanungController().putGKLWahl(wahl);
+	}
+
+
 	/**
 	 * Liest die Leistungsdaten in Bezug auf die gymnasiale Oberstufe des Schülers mit der angegebene ID aus der Datenbank und liefert diese zurück.
 	 * Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Leistungsdaten besitzt.
@@ -1448,7 +1508,7 @@ public class APIGost {
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	@Path("/schueler/{id : \\d+}/laufbahnplanung/export")
+	@Path("/schueler/{id : \\d+}/laufbahnplanung/v2/export")
 	@Operation(summary = "Liefert die Laufbahnplanungsdaten der gymnasialen Oberstufe für den angegebenen Schüler (GZip-komprimiert).",
 			description = "Liest die Laufbahnplanungsdaten der gymnasialen Oberstufe für den angegebenen Schüler aus der Datenbank "
 					+ "und liefert diese GZip-komprimiert zurück. Dabei wird geprüft, ob der SVWS-Benutzer die "
@@ -1478,7 +1538,7 @@ public class APIGost {
 	 */
 	@POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	@Path("/schueler/{id : \\d+}/laufbahnplanung/import")
+	@Path("/schueler/{id : \\d+}/laufbahnplanung/v2/import")
 	@Operation(summary = "Importiert die Laufbahndaten aus der übergebenen Laufbahnplanungsdatei.",
 			description = "Importiert die Laufbahndaten aus der übergebenen Laufbahnplanungsdatei")
 	@ApiResponse(responseCode = "200", description = "Der Log vom Import der Laufbahndaten",
@@ -1507,14 +1567,14 @@ public class APIGost {
 	 * @return die Laufbahnplanungsdaten
 	 */
 	@GET
-	@Path("/schueler/{id : \\d+}/laufbahnplanung/daten")
+	@Path("/schueler/{id : \\d+}/laufbahnplanung/v2/daten")
 	@Operation(summary = "Liefert die Laufbahnplanungsdaten der gymnasialen Oberstufe für den angegebenen Schüler.",
 			description = "Liest die Laufbahnplanungsdaten der gymnasialen Oberstufe für den angegebenen Schüler aus der Datenbank "
 					+ "und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die "
 					+ "notwendige Berechtigung zum Auslesen der Daten besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die Laufbahndaten der gymnasialen Oberstufe",
 			content = @Content(mediaType = "application/json",
-					schema = @Schema(implementation = GostLaufbahnplanungExportV1.class)))
+					schema = @Schema(implementation = GostLaufbahnplanungExportV2.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Laufbahndaten auszulesen.")
 	@ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für das Erstellen der Laufbahn-Daten gefunden.")
 	public Response exportGostSchuelerLaufbahnplanungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
@@ -1536,7 +1596,7 @@ public class APIGost {
 	 * @return Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation
 	 */
 	@POST
-	@Path("/schueler/{id : \\d+}/laufbahnplanung/daten")
+	@Path("/schueler/{id : \\d+}/laufbahnplanung/v1/daten")
 	@Operation(summary = "Importiert die Laufbahndaten aus den übergebenen Laufbahnplanungsdaten.",
 			description = "Importiert die Laufbahndaten aus den übergebenen Laufbahnplanungsdaten")
 	@ApiResponse(responseCode = "200", description = "Der Log vom Import der Laufbahndaten",
@@ -1544,13 +1604,43 @@ public class APIGost {
 	@ApiResponse(responseCode = "409", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "403", description = "Der Benutzer hat keine Berechtigung, um die Laufbahndaten zu importieren.")
-	public Response importGostSchuelerLaufbahnplanungsdaten(@PathParam("schema") final String schema,
+	public Response importGostSchuelerLaufbahnplanungsdatenV1(@PathParam("schema") final String schema,
 			@PathParam("id") final long id,
 			@RequestBody(description = "Die Laufbahnplanungsdaten", required = false, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					schema = @Schema(implementation = GostLaufbahnplanungExportV1.class))) final GostLaufbahnplanungExportV1 daten,
 			@Context final HttpServletRequest request) {
 		return GostLaufbahnplanungControllerFactory.withAccessForLaufbahnplanungAllgemein(request)
-				.getGostLaufbahnplanungController().importGostLaufbahnplanung(daten);
+				.getGostLaufbahnplanungController().importGostLaufbahnplanungV1(daten);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für den Import von Laufbahnplanungsdaten eines Schülers der gymnasialen Oberstufe
+	 * mit der angegebenen ID.
+	 *
+	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id            die ID des Schülers
+	 * @param daten         die Laufbahnplanungsdaten
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation
+	 */
+	@POST
+	@Path("/schueler/{id : \\d+}/laufbahnplanung/v2/daten")
+	@Operation(summary = "Importiert die Laufbahndaten aus den übergebenen Laufbahnplanungsdaten.",
+			description = "Importiert die Laufbahndaten aus den übergebenen Laufbahnplanungsdaten")
+	@ApiResponse(responseCode = "200", description = "Der Log vom Import der Laufbahndaten",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "409", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "403", description = "Der Benutzer hat keine Berechtigung, um die Laufbahndaten zu importieren.")
+	public Response importGostSchuelerLaufbahnplanungsdatenV2(@PathParam("schema") final String schema,
+			@PathParam("id") final long id,
+			@RequestBody(description = "Die Laufbahnplanungsdaten", required = false, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = GostLaufbahnplanungExportV2.class))) final GostLaufbahnplanungExportV2 daten,
+			@Context final HttpServletRequest request) {
+		return GostLaufbahnplanungControllerFactory.withAccessForLaufbahnplanungAllgemein(request)
+				.getGostLaufbahnplanungController().importGostLaufbahnplanungV2(daten);
 	}
 
 
@@ -1565,7 +1655,7 @@ public class APIGost {
 	 */
 	@POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	@Path("/laufbahnplanung/import")
+	@Path("/laufbahnplanung/v2/import")
 	@Operation(summary = "Importiert die Laufbahndaten aus den übergebenen Laufbahnplanungsdatein.",
 			description = "Importiert die Laufbahndaten aus den übergebenen Laufbahnplanungsdatein")
 	@ApiResponse(responseCode = "200", description = "Der Log vom Import der Laufbahndaten",
@@ -1594,7 +1684,7 @@ public class APIGost {
 	 */
 	@POST
 	@Produces("application/zip")
-	@Path("/laufbahnplanung/export")
+	@Path("/laufbahnplanung/v2/export")
 	@Operation(summary = "Liefert die Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebenen Schüler (GZip-komprimiert).",
 			description = "Liest die Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebenen Schüler aus der Datenbank "
 					+ "und liefert diese GZip-komprimiert zurück. Dabei wird geprüft, ob der SVWS-Benutzer die "

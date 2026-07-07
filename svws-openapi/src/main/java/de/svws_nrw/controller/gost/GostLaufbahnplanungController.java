@@ -6,7 +6,9 @@ import java.util.List;
 
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
+import de.svws_nrw.core.data.gost.GostSchuelerGKLWahl;
 import de.svws_nrw.core.data.gost.laufbahnplanung.v1.GostLaufbahnplanungExportV1;
+import de.svws_nrw.core.data.gost.laufbahnplanung.v2.GostLaufbahnplanungExportV2;
 import jakarta.ws.rs.core.Response;
 
 /**
@@ -42,6 +44,7 @@ public interface GostLaufbahnplanungController {
 	 */
 	Response getFachwahl(long idSchueler, long idFach);
 
+
 	/**
 	 * Führt einen Patch auf die Fachwahlen des angegebenen Schülers für das angebene Fach durch.
 	 *
@@ -52,6 +55,24 @@ public interface GostLaufbahnplanungController {
 	 * @return die Response
 	 */
 	Response patchFachwahl(Long idSchueler, Long idFach, InputStream is);
+
+	/**
+	 * Gibt die Wahlen des angegebenen Schülers zu den Gleichwertig Komplexen Lernleistunen zurück.
+	 *
+	 * @param idSchueler   die ID des Schülers
+	 *
+	 * @return die Wahlen des Schülers zu den Gleichwertig Komplexen Lernleistunen
+	 */
+	Response getGKLWahl(long idSchueler);
+
+	/**
+	 * Setzt die Wahlen eines Schülers zu den Gleichwertig Komplexen Lernleistunen (GKL).
+	 *
+	 * @param wahl         die Wahl des Schülers zu den GKLs
+	 *
+	 * @return die Response
+	 */
+	Response putGKLWahl(GostSchuelerGKLWahl wahl);
 
 	/**
 	 * Setzt die Fachwahlen für den angegebenen Schüler zurück.
@@ -130,13 +151,24 @@ public interface GostLaufbahnplanungController {
 
 	/**
 	 * Importiert die Daten des Schülers mit der angegebenen ID aus den übergebenen
-	 * Laufbahnplanungsdaten.
+	 * Laufbahnplanungsdaten in der Version 1.
 	 *
 	 * @param laufbahnplanungsdaten   die Laufbahnplanungsdaten
 	 *
 	 * @return die HTTP-Response mit dem Log
 	 */
-	Response importGostLaufbahnplanung(GostLaufbahnplanungExportV1 laufbahnplanungsdaten);
+	Response importGostLaufbahnplanungV1(GostLaufbahnplanungExportV1 laufbahnplanungsdaten);
+
+
+	/**
+	 * Importiert die Daten des Schülers mit der angegebenen ID aus den übergebenen
+	 * Laufbahnplanungsdaten in der Version 2.
+	 *
+	 * @param laufbahnplanungsdaten   die Laufbahnplanungsdaten
+	 *
+	 * @return die HTTP-Response mit dem Log
+	 */
+	Response importGostLaufbahnplanungV2(GostLaufbahnplanungExportV2 laufbahnplanungsdaten);
 
 
 	/**

@@ -2,6 +2,7 @@ package de.svws_nrw.service.gost;
 
 import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
 import de.svws_nrw.repo.gost.GostRepositoryFactory;
+import de.svws_nrw.repo.gost.klausurplan.GostKlausurenRepositoryFactory;
 import de.svws_nrw.repo.kataloge.KatalogeRepositoryFactory;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
@@ -38,18 +39,22 @@ public final class GostServiceFactory {
 	/** die Factory für die Schüler-Services */
 	private final SchuelerServiceFactory schuelerServiceFactory;
 
+	/** die Factory für die Repositories für die Klausurplanung für die gymnasiale Oberstufe */
+	private final GostKlausurenRepositoryFactory gostKlausurenRepositoryFactory;
+
 
 	/**
 	 * Erstellt eine neue Service-Factory
 	 *
-	 * @param gostRepositoryFactory       die Factory für die Repositories für die gymnasiale Oberstufe
-	 * @param schuelerRepositoryFactory   die Factory für Schüler-Repositories
-	 * @param lehrerRepositoryFactory     die Factory für Lehrer-Repositories
-	 * @param benutzerRepositoryFactory   die Factory für Benutzer-Repositories
-	 * @param katalogeRepositoryFactory   die Factory für die Katalog-Repositories
-	 * @param benutzerServiceFactory      die Factory für die Benutzer-Services
-	 * @param cryptoServiceFactory        die Factory für die kryptographischen Services
-	 * @param schuelerServiceFactory      die Factory für die Schüler-Services
+	 * @param gostRepositoryFactory            die Factory für die Repositories für die gymnasiale Oberstufe
+	 * @param schuelerRepositoryFactory        die Factory für Schüler-Repositories
+	 * @param lehrerRepositoryFactory          die Factory für Lehrer-Repositories
+	 * @param benutzerRepositoryFactory        die Factory für Benutzer-Repositories
+	 * @param katalogeRepositoryFactory        die Factory für die Katalog-Repositories
+	 * @param benutzerServiceFactory           die Factory für die Benutzer-Services
+	 * @param cryptoServiceFactory             die Factory für die kryptographischen Services
+	 * @param schuelerServiceFactory           die Factory für die Schüler-Services
+	 * @param gostKlausurenRepositoryFactory   die Factory für die Klausuren in der gymnasialen Oberstufe
 	 */
 	private GostServiceFactory(final GostRepositoryFactory gostRepositoryFactory,
 			final SchuelerRepositoryFactory schuelerRepositoryFactory,
@@ -58,7 +63,8 @@ public final class GostServiceFactory {
 			final KatalogeRepositoryFactory katalogeRepositoryFactory,
 			final BenutzerServiceFactory benutzerServiceFactory,
 			final CryptoServiceFactory cryptoServiceFactory,
-			final SchuelerServiceFactory schuelerServiceFactory) {
+			final SchuelerServiceFactory schuelerServiceFactory,
+			final GostKlausurenRepositoryFactory gostKlausurenRepositoryFactory) {
 		this.gostRepositoryFactory = gostRepositoryFactory;
 		this.schuelerRepositoryFactory = schuelerRepositoryFactory;
 		this.lehrerRepositoryFactory = lehrerRepositoryFactory;
@@ -67,6 +73,7 @@ public final class GostServiceFactory {
 		this.benutzerServiceFactory = benutzerServiceFactory;
 		this.cryptoServiceFactory = cryptoServiceFactory;
 		this.schuelerServiceFactory = schuelerServiceFactory;
+		this.gostKlausurenRepositoryFactory = gostKlausurenRepositoryFactory;
 	}
 
 
@@ -81,6 +88,7 @@ public final class GostServiceFactory {
 	 * @param benutzerServiceFactory      die Factory für die Benutzer-Services
 	 * @param cryptoServiceFactory        die Factory für die kryptographischen Services
 	 * @param schuelerServiceFactory      die Factory für die Schüler-Services
+	 * @param gostKlausurenRepositoryFactory   die Factory für die Klausuren in der gymnasialen Oberstufe
 	 *
 	 * @return die Factory
 	 */
@@ -91,9 +99,10 @@ public final class GostServiceFactory {
 			final KatalogeRepositoryFactory katalogeRepositoryFactory,
 			final BenutzerServiceFactory benutzerServiceFactory,
 			final CryptoServiceFactory cryptoServiceFactory,
-			final SchuelerServiceFactory schuelerServiceFactory) {
+			final SchuelerServiceFactory schuelerServiceFactory,
+			final GostKlausurenRepositoryFactory gostKlausurenRepositoryFactory) {
 		return new GostServiceFactory(gostRepositoryFactory, schuelerRepositoryFactory, lehrerRepositoryFactory, benutzerRepositoryFactory,
-				katalogeRepositoryFactory, benutzerServiceFactory, cryptoServiceFactory, schuelerServiceFactory);
+				katalogeRepositoryFactory, benutzerServiceFactory, cryptoServiceFactory, schuelerServiceFactory, gostKlausurenRepositoryFactory);
 	}
 
 
@@ -173,7 +182,7 @@ public final class GostServiceFactory {
 
 
 	/**
-	 * Erstellt einen neuen Service für die aggregierten Fachwahlen eines Abiturjahrgangs der der gymnasialen Oberstufe
+	 * Erstellt einen neuen Service für die aggregierten Fachwahlen eines Abiturjahrgangs der gymnasialen Oberstufe
 	 *
 	 * @return der Service
 	 */
@@ -182,6 +191,19 @@ public final class GostServiceFactory {
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				katalogeRepositoryFactory.getFachRepository(),
 				this.getGostAbiturdatenService());
+	}
+
+
+	/**
+	 * Erstellt einen neuen Service für die Wahlen zu Gleichwertig Komplexen Lernleistungen in der gymnasialen Oberstufe
+	 *
+	 * @return der Service
+	 */
+	public GostSchuelerGKLWahlService getGostSchuelerGKLWahlService() {
+		return new GostSchuelerGKLWahlService(benutzerRepositoryFactory.getBenutzerRepository(),
+				schuelerRepositoryFactory.getSchuelerRepository(),
+				gostRepositoryFactory.getGostSchuelerRepository(),
+				gostKlausurenRepositoryFactory.getGostKlausurenVorgabeRepository());
 	}
 
 
@@ -209,6 +231,40 @@ public final class GostServiceFactory {
 	 */
 	public GostLaufbahnplanungImportV1Service getGostLaufbahnplanungImportV1Service() {
 		return new GostLaufbahnplanungImportV1Service(benutzerRepositoryFactory.getBenutzerRepository(),
+				schuelerRepositoryFactory.getSchuelerRepository(),
+				gostRepositoryFactory.getGostSchuelerRepository(),
+				gostRepositoryFactory.getGostSchuelerFachbelegungenRepository(),
+				cryptoServiceFactory.getSchuelerCredentialsService(),
+				this.getGostAbiturdatenService(),
+				this.getGostFaecherService());
+	}
+
+	/**
+	 * Erstellt einen neuen Export-Service für die Laufbahnplanung der gymnasialen Oberstufe (Datenformat - Version 1)
+	 *
+	 * @return der Service
+	 */
+	public GostLaufbahnplanungExportV2Service getGostLaufbahnplanungExportV2Service() {
+		return new GostLaufbahnplanungExportV2Service(benutzerRepositoryFactory.getBenutzerRepository(),
+				schuelerRepositoryFactory.getSchuelerRepository(),
+				gostRepositoryFactory.getGostSchuelerRepository(),
+				gostRepositoryFactory.getGostJahrgangFachkombinationenRepository(),
+				gostRepositoryFactory.getGostJahrgangsdatenRepository(),
+				gostKlausurenRepositoryFactory.getGostKlausurenVorgabeRepository(),
+				cryptoServiceFactory.getSchuelerCredentialsService(),
+				this.getGostAbiturdatenService(),
+				this.getGostFaecherService(),
+				this.getGostBeratungslehrerService());
+	}
+
+
+	/**
+	 * Erstellt einen neuen Import-Service für die Laufbahnplanung der gymnasialen Oberstufe (Datenformat - Version 1)
+	 *
+	 * @return der Service
+	 */
+	public GostLaufbahnplanungImportV2Service getGostLaufbahnplanungImportV2Service() {
+		return new GostLaufbahnplanungImportV2Service(benutzerRepositoryFactory.getBenutzerRepository(),
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				gostRepositoryFactory.getGostSchuelerRepository(),
 				gostRepositoryFactory.getGostSchuelerFachbelegungenRepository(),

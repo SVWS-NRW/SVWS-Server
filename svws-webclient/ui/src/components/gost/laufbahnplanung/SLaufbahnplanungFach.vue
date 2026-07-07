@@ -77,7 +77,8 @@
 			</span>
 			<span class="relative">
 				<template v-if="wahlen[halbjahr.id] !== '' && wahlen[halbjahr.id] === '6'">0</template>
-				<template v-else>{{ wahlen[halbjahr.id] }}&#8203;</template>
+				<template v-else>{{ wahlen[halbjahr.id] }}</template>
+				<template v-if="manager.zeigeGKLWahlen() && gostLaufbahnplanungState.istGKLGewaehlt(fach.id, halbjahr)">+</template>
 			</span>
 			<span class="absolute flex items-center">
 				<template v-if="!manager.istMoeglich(fach, halbjahr) && (wahlen[halbjahr.id] !== '') && hatUpdateKompetenz">

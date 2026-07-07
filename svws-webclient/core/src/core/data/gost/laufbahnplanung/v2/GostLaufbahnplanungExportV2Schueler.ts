@@ -61,12 +61,12 @@ export class GostLaufbahnplanungExportV2Schueler extends JavaObject {
 	/**
 	 * Die Liste der Sprachbelegungen.
 	 */
-	public belegungen: List<GostLaufbahnplanungExportV2SchuelerSprachbelegung> = new ArrayList<GostLaufbahnplanungExportV2SchuelerSprachbelegung>();
+	public sprachbelegungen: List<GostLaufbahnplanungExportV2SchuelerSprachbelegung> = new ArrayList<GostLaufbahnplanungExportV2SchuelerSprachbelegung>();
 
 	/**
 	 * Die Liste der Sprachprüfungen.
 	 */
-	public pruefungen: List<GostLaufbahnplanungExportV2SchuelerSprachpruefung> = new ArrayList<GostLaufbahnplanungExportV2SchuelerSprachpruefung>();
+	public sprachpruefungen: List<GostLaufbahnplanungExportV2SchuelerSprachpruefung> = new ArrayList<GostLaufbahnplanungExportV2SchuelerSprachpruefung>();
 
 
 	/**
@@ -123,14 +123,14 @@ export class GostLaufbahnplanungExportV2Schueler extends JavaObject {
 				result.fachbelegungen.add(GostLaufbahnplanungExportV2SchuelerFachbelegung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (obj.belegungen !== undefined) {
-			for (const elem of obj.belegungen) {
-				result.belegungen.add(GostLaufbahnplanungExportV2SchuelerSprachbelegung.transpilerFromJSON(JSON.stringify(elem)));
+		if (obj.sprachbelegungen !== undefined) {
+			for (const elem of obj.sprachbelegungen) {
+				result.sprachbelegungen.add(GostLaufbahnplanungExportV2SchuelerSprachbelegung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (obj.pruefungen !== undefined) {
-			for (const elem of obj.pruefungen) {
-				result.pruefungen.add(GostLaufbahnplanungExportV2SchuelerSprachpruefung.transpilerFromJSON(JSON.stringify(elem)));
+		if (obj.sprachpruefungen !== undefined) {
+			for (const elem of obj.sprachpruefungen) {
+				result.sprachpruefungen.add(GostLaufbahnplanungExportV2SchuelerSprachpruefung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -169,19 +169,19 @@ export class GostLaufbahnplanungExportV2Schueler extends JavaObject {
 				result += ',';
 		}
 		result += ' ]' + ',';
-		result += '"belegungen" : [ ';
-		for (let i = 0; i < obj.belegungen.size(); i++) {
-			const elem = obj.belegungen.get(i);
+		result += '"sprachbelegungen" : [ ';
+		for (let i = 0; i < obj.sprachbelegungen.size(); i++) {
+			const elem = obj.sprachbelegungen.get(i);
 			result += GostLaufbahnplanungExportV2SchuelerSprachbelegung.transpilerToJSON(elem);
-			if (i < obj.belegungen.size() - 1)
+			if (i < obj.sprachbelegungen.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
-		result += '"pruefungen" : [ ';
-		for (let i = 0; i < obj.pruefungen.size(); i++) {
-			const elem = obj.pruefungen.get(i);
+		result += '"sprachpruefungen" : [ ';
+		for (let i = 0; i < obj.sprachpruefungen.size(); i++) {
+			const elem = obj.sprachpruefungen.get(i);
 			result += GostLaufbahnplanungExportV2SchuelerSprachpruefung.transpilerToJSON(elem);
-			if (i < obj.pruefungen.size() - 1)
+			if (i < obj.sprachpruefungen.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
@@ -245,22 +245,22 @@ export class GostLaufbahnplanungExportV2Schueler extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (obj.belegungen !== undefined) {
-			result += '"belegungen" : [ ';
-			for (let i = 0; i < obj.belegungen.size(); i++) {
-				const elem = obj.belegungen.get(i);
+		if (obj.sprachbelegungen !== undefined) {
+			result += '"sprachbelegungen" : [ ';
+			for (let i = 0; i < obj.sprachbelegungen.size(); i++) {
+				const elem = obj.sprachbelegungen.get(i);
 				result += GostLaufbahnplanungExportV2SchuelerSprachbelegung.transpilerToJSON(elem);
-				if (i < obj.belegungen.size() - 1)
+				if (i < obj.sprachbelegungen.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
 		}
-		if (obj.pruefungen !== undefined) {
-			result += '"pruefungen" : [ ';
-			for (let i = 0; i < obj.pruefungen.size(); i++) {
-				const elem = obj.pruefungen.get(i);
+		if (obj.sprachpruefungen !== undefined) {
+			result += '"sprachpruefungen" : [ ';
+			for (let i = 0; i < obj.sprachpruefungen.size(); i++) {
+				const elem = obj.sprachpruefungen.get(i);
 				result += GostLaufbahnplanungExportV2SchuelerSprachpruefung.transpilerToJSON(elem);
-				if (i < obj.pruefungen.size() - 1)
+				if (i < obj.sprachpruefungen.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';

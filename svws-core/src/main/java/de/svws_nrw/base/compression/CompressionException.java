@@ -9,6 +9,15 @@ public class CompressionException extends Exception {
 	private static final long serialVersionUID = 4561281049023715781L;
 
 	/**
+	 * Erzeugt eine neue CompressionException mit der angegebenen Nachricht.
+	 *
+	 * @param message   die Fehlernachricht
+	 */
+	public CompressionException(final String message) {
+		super(message);
+	}
+
+	/**
 	 * Erzeugt eine neue CompressionException mit der angegebenen Nachricht
 	 * und dem angegebenen Grund.
 	 *

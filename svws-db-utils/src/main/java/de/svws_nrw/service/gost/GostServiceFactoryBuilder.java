@@ -2,6 +2,7 @@ package de.svws_nrw.service.gost;
 
 import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
 import de.svws_nrw.repo.gost.GostRepositoryFactory;
+import de.svws_nrw.repo.gost.klausurplan.GostKlausurenRepositoryFactory;
 import de.svws_nrw.repo.kataloge.KatalogeRepositoryFactory;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
@@ -38,7 +39,8 @@ public final class GostServiceFactoryBuilder {
 				KatalogeRepositoryFactory.getNewInstance(),
 				benutzerServiceFactory,
 				CryptoServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory),
-				SchuelerServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory));
+				SchuelerServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory),
+				GostKlausurenRepositoryFactory.getNewInstance());
 	}
 
 }
