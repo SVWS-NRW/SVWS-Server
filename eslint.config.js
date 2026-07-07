@@ -181,6 +181,7 @@ export default defineConfig(
 			"vue/html-closing-bracket-spacing": "warn",
 			"vue/no-required-prop-with-default": "error",
 			"vue/no-setup-props-reactivity-loss": "error",
+			"vue/no-unused-vars": ["error", { "ignorePattern": "^_" }],
 			"vue/script-indent": ["error", "tab", { "baseIndent": 1, "switchCase": 1 }],
 			"vue/v-bind-style": ["error", "shorthand", { "sameNameShorthand": "always" }],
 			"vue/max-attributes-per-line": ["error", { "singleline": 10, "multiline": 10, } ],

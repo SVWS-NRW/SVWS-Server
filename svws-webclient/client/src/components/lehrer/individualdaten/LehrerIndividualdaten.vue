@@ -1,5 +1,5 @@
 <template>
-	<Teleport to=".svws-ui-header--actions" defer>
+	<Teleport v-if="zeigeAlles" to=".svws-ui-header--actions" defer>
 		<wiedervorlage-modal type="lehrkraft" mode="create"
 			:person-id="lehrerListeManager().daten().id"
 			:person-name="`${lehrerListeManager().daten().vorname} ${lehrerListeManager().daten().nachname}`">
@@ -14,7 +14,7 @@
 
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
-			<template #actions>
+			<template v-if="zeigeAlles" #actions>
 				<svws-ui-checkbox :readonly v-model="modelProxy.proxy.istSichtbar" focus-class-content>
 					Ist sichtbar
 				</svws-ui-checkbox>

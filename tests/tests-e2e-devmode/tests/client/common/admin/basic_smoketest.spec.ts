@@ -31,7 +31,7 @@ test('Smoke-Test - Basic', async ({ page }) => {
 	await page.getByRole('link', { name: 'Oberstufe' }).click();
 	await expect(page.locator('header')).toContainText('Abiturjahrgang 2019');
 	await page.getByRole('link', { name: 'Statistik' }).click();
-	await expect(page.locator('.page--header').nth(1)).toContainText('Albert Zweistein Gymnasium');
+	await expect(page.locator('header')).toContainText('Albert Zweistein Gymnasium');
 	await page.getByRole('link', { name: 'Stundenplan' }).click();
 	await expect(page.locator('header')).toContainText('Stundenplan 2. Halbjahr ID: 1');
 	await page.getByRole('link', { name: 'Einstellungen' }).click();

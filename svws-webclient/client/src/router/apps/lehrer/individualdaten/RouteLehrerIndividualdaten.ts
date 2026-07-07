@@ -38,6 +38,7 @@ export class RouteLehrerIndividualdaten extends RouteNode<any, RouteLehrer> {
 			orteById: routeApp.cache.kataloge.orteById,
 			ortsteileById: routeApp.cache.kataloge.ortsteileById,
 			mapLeitungsfunktionen: routeApp.cache.kataloge.leitungsfunktionenById,
+			zeigeAlles: true,
 		};
 	}
 

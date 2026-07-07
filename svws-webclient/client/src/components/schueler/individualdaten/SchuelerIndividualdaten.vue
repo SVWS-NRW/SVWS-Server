@@ -1,5 +1,5 @@
 <template>
-	<Teleport to=".svws-ui-header--actions" defer>
+	<Teleport v-if="zeigeAlles" to=".svws-ui-header--actions" defer>
 		<wiedervorlage-modal v-if="!readonly"
 			type="schueler" mode="create"
 			:person-id="model.proxy.id"
@@ -62,7 +62,7 @@
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Statusdaten" v-if="hatKompetenzAnsehen">
-			<template #actions v-if="schulform === Schulform.BK || schulform === Schulform.SB">
+			<template #actions v-if="schuleState.schulform === Schulform.BK || schuleState.schulform === Schulform.SB">
 				<svws-ui-checkbox :readonly v-model="model.proxy.istDuplikat">
 					Ist Duplikat
 				</svws-ui-checkbox>
@@ -79,7 +79,7 @@
 					:removable="model.proxy.externeSchulNr !== null"
 					:readonly searchable />
 				<div v-else />
-				<template v-if="serverMode === ServerMode.DEV">
+				<template v-if="serverState.hasDev">
 					<svws-ui-text-input placeholder="Schülerausweis-Nummer"
 						v-model="model.proxy.idSchuelerausweis"
 						:validation="() => model.getFehler('idSchuelerausweis')"
@@ -88,7 +88,7 @@
 						:readonly />
 					<div v-if="!istSchulformBerufskolleg" />
 				</template>
-				<div v-if="serverMode !== ServerMode.DEV" />
+				<div v-if="!serverState.hasDev" />
 				<svws-ui-text-input v-if="istSchulformBerufskolleg" placeholder="Beruf"
 					v-model="model.proxy.beruf"
 					:validation="() => model.getFehler('beruf')"
@@ -213,7 +213,7 @@
 					type="date" removable statistics />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
-		<schueler-telefonnummern v-if="serverMode === ServerMode.DEV && hatKompetenzAnsehen"
+		<schueler-telefonnummern v-if="serverState.hasDev && hatKompetenzAnsehen && zeigeAlles"
 			:readonly
 			:id-schueler="model.proxy.id"
 			:map-telefon-arten="props.mapTelefonArten"
@@ -267,7 +267,7 @@
 	import type { JavaSet, NationalitaetenKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, Fahrschuelerart, Haltestelle, SchuelerStatusKatalogEintrag, VerkehrsspracheKatalogEintrag } from "@core";
 	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, Verkehrssprache, BenutzerKompetenz, ServerMode, ArrayList, ReportingReportvorlage, HashSet } from "@core";
 	import { orte_sort, ortsteilSort } from "~/utils/helfer";
-	import { CoreTypeSelectManager, SelectManager, useReportingState, useSchuleState } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useReportingState, useSchuleState, useServerState } from "@ui";
 	import { SchuelerIndividualdatenModel } from "~/components/schueler/individualdaten/modelproxy/SchuelerIndividualdatenModelProxy";
 	import WiedervorlageModal from "~/components/wiedervorlage/WiedervorlageModal.vue";
 	import SchuelerTelefonnummern from "~/components/schueler/individualdaten/telefonnummern/SchuelerTelefonnummern.vue";
@@ -277,12 +277,13 @@
 	const props = defineProps<SchuelerIndividualdatenProps>();
 	const reportingState = useReportingState();
 	const schuleState = useSchuleState();
+	const serverState = useServerState();
 
 	const schuljahr = computed<number>(() => props.schuelerListeManager().schuelerGetSchuljahrOrException());
 
 	const model = new SchuelerIndividualdatenModel(
 		() => props.schuelerListeManager().daten(),
-		props.validatorKontext,
+		() => schuleState.validatorKontext,
 		() => schuljahr.value,
 		() => props.religionenById,
 		() => props.fahrschuelerartenById,
@@ -309,7 +310,7 @@
 
 	// --- Karte "Statusdaten" ---
 
-	const istSchulformBerufskolleg = computed(() => [Schulform.BK, Schulform.SB, Schulform.WB].includes(props.schulform));
+	const istSchulformBerufskolleg = computed(() => [Schulform.BK, Schulform.SB, Schulform.WB].includes(schuleState.schulform));
 
 	const statusManager = new CoreTypeSelectManager<SchuelerStatusKatalogEintrag, SchuelerStatus>({
 		clazz: SchuelerStatus.class,

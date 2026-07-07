@@ -8,8 +8,6 @@ import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteS
 import { RouteDataSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteDataSchuelerIndividualdaten";
 import type { SchuelerIndividualdatenProps } from "~/components/schueler/individualdaten/SchuelerIndividualdatenProps";
 import { api } from "~/router/Api";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
-import { serverStateImpl } from "~/states/ServerStateImpl";
 import { wiedervorlageStateImpl } from "~/states/WiedervorlageStateImpl";
 
 const SSchuelerIndividualdaten = () => import("~/components/schueler/individualdaten/SchuelerIndividualdaten.vue");
@@ -36,7 +34,6 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 	public getProps(to: RouteLocationNormalized): SchuelerIndividualdatenProps {
 		return {
 			patch: routeSchueler.data.patch,
-			validatorKontext: () => schuleStateImpl.validatorKontext,
 			schuelerListeManager: () => routeSchueler.data.manager,
 			orteById: routeApp.cache.kataloge.orteById,
 			ortsteileById: routeApp.cache.kataloge.ortsteileById,
@@ -50,10 +47,9 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 			patchSchuelerTelefoneintrag: routeSchueler.data.patchSchuelerTelefoneintrag,
 			deleteSchuelerTelefoneintrage: routeSchueler.data.deleteSchuelerTelefoneintrage,
 			mapSchulen: this.data.mapSchulen,
-			schulform: schuleStateImpl.schulform,
-			serverMode: serverStateImpl.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			autofocus: routeSchueler.data.autofocus,
+			zeigeAlles: true,
 		};
 	}
 

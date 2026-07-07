@@ -1,4 +1,4 @@
-import { shallowRef, type ShallowRef } from "vue";
+import { shallowRef, triggerRef, type ShallowRef } from "vue";
 import type { TabData } from "./TabData";
 
 /**
@@ -121,6 +121,7 @@ export class TabManager {
 	public async setTab(value: TabData) {
 		await this._setTab(value);
 		this._tab.value = value;
+		triggerRef(this._tab);
 	}
 
 	/**

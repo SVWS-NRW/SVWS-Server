@@ -1,8 +1,7 @@
 import type { ValidatorKontext, LehrerLehramtEintrag, LehrerRechtsverhaeltnisKatalogEintrag, LehrerEinsatzstatusKatalogEintrag, LehrerBeschaeftigungsartKatalogEintrag } from "@core";
-import { LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerPersonalabschnittsdaten, LehrerRechtsverhaeltnis, ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart, ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten, ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll } from "@core";
+import { ArrayList, LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerPersonalabschnittsdaten, LehrerRechtsverhaeltnis, ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart, ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten, ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll } from "@core";
 import { ModelProxy, type LehrerListeManager } from "@ui";
 import { computed } from "vue";
-import { ArrayList } from '@core';
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 

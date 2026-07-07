@@ -6,7 +6,7 @@ export interface LehrerPersonaldatenProps {
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	lehrerListeManager: () => LehrerListeManager;
 	mapSchulen: () => Map<string, SchulEintrag>;
-	patch: (data: Partial<LehrerPersonaldaten>) => Promise<boolean>;
+	patchPersonaldaten: (data: Partial<LehrerPersonaldaten>) => Promise<boolean>;
 	patchAbschnittsdaten: (data: Partial<LehrerPersonalabschnittsdaten>, id: number) => Promise<void>;
 	patchLehramt: (eintrag: LehrerLehramtEintrag, patch: Partial<LehrerLehramtEintrag>) => Promise<void>;
 	addLehramt: (eintrag: Partial<LehrerLehramtEintrag>) => Promise<void>;

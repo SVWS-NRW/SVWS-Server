@@ -1,48 +1,41 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
-import type { DeveloperNotificationException } from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
-import { routeLehrer, type RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
-
-import type { LehrerPersonaldatenProps } from "~/components/lehrer/personaldaten/LehrerPersonaldatenProps";
-import { routeError } from "~/router/error/RouteError";
+import type { RouteLocationNormalized } from "vue-router";
+import type { StatistikLehrerProps } from "~/components/statistik/StatistikLehrerProps";
+import { routeStatistik, type RouteStatistik } from "./RouteStatistik";
 import { api } from "~/router/Api";
+import { routeLehrer } from "../lehrer/RouteLehrer";
+import { routeApp } from "../RouteApp";
 
-const LehrerPersonaldaten = () => import("~/components/lehrer/personaldaten/LehrerPersonaldaten.vue");
-
-export class RouteLehrerPersonaldaten extends RouteNode<any, RouteLehrer> {
+const StatistikLehrer = () => import("~/components/statistik/StatistikLehrer.vue");
+export class RouteStatistikLehrer extends RouteNode<any, RouteStatistik> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN], "lehrer.personaldaten", "personaldaten", LehrerPersonaldaten);
-		super.mode = ServerMode.ALPHA;
+		super(Schulform.values(), [BenutzerKompetenz.ADMIN], "statistik.lehrer", "lehrer", StatistikLehrer);
+		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Personaldaten";
+		super.text = "Lehrer";
 	}
 
-	public async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
-		try {
-			if (!routeLehrer.data.manager.hasDaten()) {
-				return routeLehrer.getRoute();
-			}
-			const { id } = RouteNode.getIntParams(to_params, ["id"]);
-			if ((!routeLehrer.data.manager.hasPersonalDaten()) || (id !== routeLehrer.data.manager.personalDaten().id)) {
-				await routeLehrer.data.loadPersonaldaten();
-			}
-		} catch (e) {
-			return await routeError.getErrorRoute(e as DeveloperNotificationException);
-		}
-	}
-
-	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
-		await routeLehrer.data.unloadPersonaldaten();
-	}
-
-	public getProps(_: RouteLocationNormalized): LehrerPersonaldatenProps {
+	public getProps(to: RouteLocationNormalized): StatistikLehrerProps {
 		return {
+			zeigeAlles: false,
+			statistikGesamt: routeStatistik.data.statistikGesamt,
+			mapLehrer: routeStatistik.data.mapLehrer,
+			lehrerListeManager: () => routeStatistik.data.managerLehrer,
+			setAuswahl: routeStatistik.data.updateDatenLehrer,
+			gotoLehrer: routeStatistik.data.gotoLehrer,
+
 			benutzerKompetenzen: api.benutzerKompetenzen,
-			lehrerListeManager: () => routeLehrer.data.manager,
+			patch: routeLehrer.data.patch,
+			orteById: routeApp.cache.kataloge.orteById,
+			ortsteileById: routeApp.cache.kataloge.ortsteileById,
+			mapLeitungsfunktionen: routeApp.cache.kataloge.leitungsfunktionenById,
+			getListLeitungsfunktionen: () => routeLehrer.data.getListLeitungsfunktionen,
+			addLeitungsfunktion: routeLehrer.data.addLeitungsfunktion,
+			patchLeitungsfunktion: routeLehrer.data.patchLeitungsfunktion,
+			deleteLeitungsfunktionen: routeLehrer.data.deleteLeitungsfunktionen,
+
 			mapSchulen: () => routeLehrer.data.mapSchulen,
 			patchPersonaldaten: routeLehrer.data.patchPersonaldaten,
 			patchAbschnittsdaten: routeLehrer.data.patchPersonalAbschnittsdaten,
@@ -71,7 +64,6 @@ export class RouteLehrerPersonaldaten extends RouteNode<any, RouteLehrer> {
 			removeLehrerUnterrichtsfach: routeLehrer.data.removeLehrerUnterrichtsfach,
 		};
 	}
-
 }
 
-export const routeLehrerPersonaldaten = new RouteLehrerPersonaldaten();
+export const routeStatistikLehrer = new RouteStatistikLehrer();

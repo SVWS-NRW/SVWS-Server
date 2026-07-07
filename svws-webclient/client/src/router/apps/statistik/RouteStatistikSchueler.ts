@@ -1,0 +1,49 @@
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import { RouteNode } from "~/router/RouteNode";
+import type { RouteLocationNormalized } from "vue-router";
+import type { StatistikSchuelerProps } from "~/components/statistik/StatistikSchuelerProps";
+import { routeStatistik, type RouteStatistik } from "./RouteStatistik";
+import { routeSchueler } from "../schueler/RouteSchueler";
+import { routeApp } from "../RouteApp";
+import { api } from "~/router/Api";
+import { routeSchuelerIndividualdaten } from "../schueler/individualdaten/RouteSchuelerIndividualdaten";
+const StatistikSchueler = () => import("~/components/statistik/StatistikSchueler.vue");
+
+export class RouteStatistikSchueler extends RouteNode<any, RouteStatistik> {
+
+	public constructor() {
+		super(Schulform.values(), [BenutzerKompetenz.ADMIN], "statistik.schueler", "schueler", StatistikSchueler);
+		super.mode = ServerMode.DEV;
+		super.propHandler = (route) => this.getProps(route);
+		super.text = "Schüler";
+	}
+
+	public getProps(to: RouteLocationNormalized): StatistikSchuelerProps {
+		return {
+			statistikGesamt: routeStatistik.data.statistikGesamt,
+			mapSchueler: routeStatistik.data.mapSchueler,
+			schuelerListeManager: () => routeStatistik.data.managerSchueler,
+			setAuswahl: routeStatistik.data.updateDatenSchueler,
+			gotoSchueler: routeStatistik.data.gotoSchueler,
+			zeigeAlles: false,
+
+			patch: routeSchueler.data.patch,
+			orteById: routeApp.cache.kataloge.orteById,
+			ortsteileById: routeApp.cache.kataloge.ortsteileById,
+			fahrschuelerartenById: routeApp.cache.kataloge.fahrschuelerartenById,
+			foerderschwerpunkteById: routeApp.cache.kataloge.foerderschwerpunkteById,
+			haltestellenById: routeApp.cache.kataloge.haltestellenById,
+			religionenById: routeApp.cache.kataloge.religionenById,
+			mapTelefonArten: routeApp.cache.kataloge.telefonartenById,
+			getListSchuelerTelefoneintraege: () => routeSchueler.data.getListSchuelerTelefoneintraege,
+			addSchuelerTelefoneintrag: routeSchueler.data.addSchuelerTelefoneintrag,
+			patchSchuelerTelefoneintrag: routeSchueler.data.patchSchuelerTelefoneintrag,
+			deleteSchuelerTelefoneintrage: routeSchueler.data.deleteSchuelerTelefoneintrage,
+			mapSchulen: routeSchuelerIndividualdaten.data.mapSchulen,
+			benutzerKompetenzen: api.benutzerKompetenzen,
+			autofocus: routeSchueler.data.autofocus,
+		};
+	}
+}
+
+export const routeStatistikSchueler = new RouteStatistikSchueler();
