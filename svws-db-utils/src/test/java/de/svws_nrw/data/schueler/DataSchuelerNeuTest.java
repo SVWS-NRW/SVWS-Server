@@ -72,14 +72,13 @@ class DataSchuelerNeuTest {
 	}
 
 	@Test
-	@DisplayName("add | Schüler wird vollständig angelegt")
-	void add() {
+	@DisplayName("add | Schüler wird mit allen Pflichtfeldern angelegt")
+	void add_withRequiredFields() {
 		final var schuelerNeu = new HashMap<String, Object>();
 		schuelerNeu.put("nachname", "Test");
 		schuelerNeu.put("vorname", "Max");
 		schuelerNeu.put("idSchuljahresabschnitt", 8L);
 		schuelerNeu.put("idJahrgang", 5L);
-		schuelerNeu.put("idKlasse", 10L);
 		schuelerNeu.put("idGrundschuleEinschulungsart", 51L);
 
 		final var created = new SchuelerStammdaten();
@@ -99,7 +98,6 @@ class DataSchuelerNeuTest {
 				map.get("schuelerID").equals(100L)
 						&& (((Number) map.get("schuljahresabschnitt")).longValue() == 8L)
 						&& (((Number) map.get("jahrgangID")).longValue() == 5L)
-						&& (((Number) map.get("klassenID")).longValue() == 10L)
 		));
 		verify(schulbesuchService, times(1)).patch(anyLong(), any());
 		verify(dataSchuelerLernplattformen, times(2)).add(argThat(map -> map.get("idSchueler").equals(100L)));

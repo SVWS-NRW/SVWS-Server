@@ -956,12 +956,14 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 			idKlasse = dto.Klassen_ID;
 		}
 
-		final DTOKlassen klasse = this.conn.queryByKey(DTOKlassen.class, idKlasse);
-		if (klasse == null) {
-			throw new ApiOperationException(Status.NOT_FOUND, "Es konnte keine zugehörige Klasse mit der ID %d gefunden werden.".formatted(dto.Klassen_ID));
-		}
+		if (idKlasse != null) {
+			final DTOKlassen klasse = this.conn.queryByKey(DTOKlassen.class, idKlasse);
+			if (klasse == null) {
+				throw new ApiOperationException(Status.NOT_FOUND, "Es konnte keine zugehörige Klasse mit der ID %d gefunden werden.".formatted(dto.Klassen_ID));
+			}
 
-		pruefeKompatibilitaetKlasseUndJahrgang(klasse, jahrgang);
+			pruefeKompatibilitaetKlasseUndJahrgang(klasse, jahrgang);
+		}
 
 		dto.Jahrgang_ID = idJahrgang;
 		dto.ASDJahrgang = jahrgang.ASDJahrgang;
