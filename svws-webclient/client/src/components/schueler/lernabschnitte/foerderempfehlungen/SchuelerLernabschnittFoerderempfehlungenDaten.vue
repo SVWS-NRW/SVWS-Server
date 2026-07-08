@@ -8,7 +8,7 @@
 				required readonly />
 			<svws-ui-text-input placeholder="Betroffene Fächer"
 				v-model="model.proxy.faecher"
-				@commit="model.patch"
+				@change="model.patch"
 				:validation="() => model.getFehler('faecher')"
 				required :max-len="255" />
 		</div>

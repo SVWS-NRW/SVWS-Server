@@ -36,32 +36,32 @@
 					<svws-ui-text-input placeholder="Anrede"
 						v-model="data.proxy.anrede"
 						:validation="() => data.getFehler('anrede')"
-						@commit="data.patch"
+						@change="data.patch"
 						skip-default-validation
 						:max-len="10" :readonly />
 					<svws-ui-spacing />
 					<svws-ui-text-input placeholder="Rufname"
 						v-model="data.proxy.rufname"
 						:validation="() => data.getFehler('rufname')"
-						@commit="data.patch"
+						@change="data.patch"
 						skip-default-validation
 						:max-len="80" :readonly />
 					<svws-ui-text-input placeholder="Name"
 						v-model="data.proxy.name"
 						:validation="() => data.getFehler('name')"
-						@commit="data.patch"
+						@change="data.patch"
 						skip-default-validation
 						:max-len="120" :readonly required />
 					<svws-ui-text-input placeholder="Telefon" type="tel"
 						v-model="data.proxy.telefon"
 						:validation="() => data.getFehler('telefon')"
-						@commit="data.patch"
+						@change="data.patch"
 						skip-default-validation
 						:max-len="20" :readonly />
 					<svws-ui-text-input placeholder="Email" type="email"
 						v-model="data.proxy.eMail"
 						:validation="() => data.getFehler('eMail')"
-						@commit="data.patch"
+						@change="data.patch"
 						skip-default-validation
 						:max-len="100" :readonly />
 				</svws-ui-input-wrapper>

@@ -29,6 +29,7 @@
 			:readonly
 			:aria-labelledby="labelId"
 			:placeholder="headless ? placeholder : ''"
+			@focus="onFocus"
 			@input="onInput"
 			@keyup.enter="onKeyEnter"
 			@blur="onBlur">
@@ -70,7 +71,7 @@
 
 <script setup lang="ts">
 
-	import { ref, computed, watch, type ComputedRef, type Ref, useId, onMounted } from "vue";
+	import { ref, computed, watch, useId, onBeforeMount, useTemplateRef } from "vue";
 	import type { List } from "../../../../core/src/java/util/List";
 	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
 	import type { ValidatorFehler } from "../../../../core/src/asd/validate/ValidatorFehler";
@@ -83,11 +84,6 @@
 	defineOptions({
 		inheritAttrs: false,
 	});
-
-	const input = ref<null | HTMLInputElement>(null);
-	const btnPlus = ref<null | HTMLButtonElement>(null);
-	const btnMinus = ref<null | HTMLButtonElement>(null);
-	const id = useId();
 
 	const props = withDefaults(defineProps<{
 		modelValue: number | null;
@@ -124,10 +120,12 @@
 	});
 
 	const emit = defineEmits<{
+		/* Emit value when the value changes. */
 		"update:modelValue": [value: number | null];
+		/* Emit value on blur and keyDown event when the value changes */
 		"change": [value: number | null];
+		/* Emit value on blur event */
 		"blur": [value: number | null];
-		"commit": [value: number | null];
 	}>();
 
 	const vFocus = {
@@ -138,27 +136,18 @@
 		},
 	};
 
-	onMounted(() => {
-		if (typeof props.steps === "number") {
-			warnIfStepsNotCompatible(props.steps);
-		}
-		syncVisualData();
-	});
-
-	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
-	const data = ref<number | null>(props.modelValue);
-
-	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
-	const visualData = ref<string | null>(props.modelValue === null ? null : String(props.modelValue).replaceAll(".", ","));
-
+	const inputRef = useTemplateRef('input');
+	const btnPlusRef = useTemplateRef('btnPlus');
+	const btnMinusRef = useTemplateRef('btnMinus');
+	const id = useId();
 	const labelId = useId();
 
-	watch(() => props.modelValue, (value: number | null) => {
-		if (value !== data.value) {
-			updateData(value);
-			syncVisualData();
-		}
-	}, { immediate: true });
+	// Synchronisierter lokaler Wert, für One-/Two-Way-Data Binding
+	const data = ref<number | null>(null);
+
+	let valueOnFocus: number | null = null;
+
+	const visualData = ref<string | null>(null);
 
 	const disablePlusButton = computed(() => {
 		if ((data.value === null) || (props.max === undefined)) {
@@ -247,15 +236,15 @@
 	}
 
 	function onInput() {
-		if ((input.value === null) || (visualData.value === null)) {
+		if ((inputRef.value === null) || (visualData.value === null)) {
 			return;
 		}
 
-		const cursorPositionBeforeParse = input.value.selectionStart ?? 0;
-		const inputLengthBeforeParse = input.value.value.length;
+		const cursorPositionBeforeParse = inputRef.value.selectionStart ?? 0;
+		const inputLengthBeforeParse = inputRef.value.value.length;
 
 		visualData.value = parseInput(visualData.value);
-		input.value.value = visualData.value ?? ""; // Synchronisation mit der Anzeige im Input
+		inputRef.value.value = visualData.value ?? ""; // Synchronisation mit der Anzeige im Input
 		setCursorPosition(inputLengthBeforeParse, cursorPositionBeforeParse);
 
 		const value = (visualData.value === null) ? null : Number(visualData.value.replaceAll(",", "."));
@@ -314,26 +303,30 @@
 		}
 		const newDown = Math.round((newValue - steps) * 1e10) / 1e10;
 		return (props.min === undefined) ? newDown : Math.max(newDown, props.min);
+	}
 
+	function onFocus() {
+		valueOnFocus = data.value;
 	}
 
 	function onBlur(event: Event) {
 		// prevent firing change/blur event, if the user only switches between input and button elements inside the SVWSUiInputNumber component itself
-		if (event instanceof FocusEvent && ([input.value, btnPlus.value, btnMinus.value] as Array<HTMLElement>).includes(event.relatedTarget as HTMLElement)) {
+		if (event instanceof FocusEvent && ([inputRef.value, btnPlusRef.value, btnMinusRef.value] as Array<HTMLElement>).includes(event.relatedTarget as HTMLElement)) {
 			return;
 		}
 		syncVisualData();
-		emit("commit", data.value);
-		if (props.modelValue !== data.value) {
+
+		if (data.value !== valueOnFocus) {
 			emit("change", data.value);
 		}
 		emit("blur", data.value);
 	}
 
 	function onKeyEnter() {
-		emit("commit", data.value);
-		if (props.modelValue !== data.value) {
+		if (data.value !== valueOnFocus) {
 			emit("change", data.value);
+			// valueOnFocus aktualisieren, damit ein zweites Enter kein doppeltes "change" auslöst
+			valueOnFocus = data.value;
 		}
 	}
 
@@ -411,12 +404,12 @@
 	}
 
 	function setCursorPosition(inputLengthBeforeParse: any, cursorPosition: any) {
-		if ((visualData.value !== null) && (input.value !== null)) {
+		if ((visualData.value !== null) && (inputRef.value !== null)) {
 			const inputLengthAfterParse = visualData.value.length;
 			const diff = inputLengthBeforeParse - inputLengthAfterParse;
 
 			// zurücksetzen der Cursorposition, da diese beim Neusetzen des Inputs nach dem Parsen automatisch verschoben wird
-			input.value.setSelectionRange(cursorPosition - diff, cursorPosition - diff);
+			inputRef.value.setSelectionRange(cursorPosition - diff, cursorPosition - diff);
 		}
 	}
 
@@ -435,16 +428,30 @@
 		}
 	}
 
+	onBeforeMount(() => {
+		data.value = props.modelValue;
+
+		if (typeof props.steps === "number") {
+			warnIfStepsNotCompatible(props.steps);
+		}
+		syncVisualData();
+	});
+
+	// Synchronisiere eine modelValue Änderung mit data & sync visual data
+	watch(
+		() => props.modelValue,
+		(value: number | null) => {
+			if (value !== data.value) {
+				data.value = value;
+				syncVisualData();
+			}
+		}
+	);
+
 	/**
 	 * Expose
 	 */
 
-	const content = computed<number | null>(() => data.value);
-
-	defineExpose<{
-		content: ComputedRef<number | null>,
-		input: Ref<HTMLInputElement | null>,
-		reset: () => void;
-	}>({ content, input, reset });
+	defineExpose({ content: computed(() => data.value), input: inputRef, reset });
 
 </script>

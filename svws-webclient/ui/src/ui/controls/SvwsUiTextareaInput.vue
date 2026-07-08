@@ -2,7 +2,7 @@
 	<label :id="idComponent" class="textarea-input"
 		:class="{
 			'textarea-input--filled': !isEmpty,
-			'textarea-input--muss': ((validationResult.fehlerart === ValidatorFehlerart.MUSS) || !valid(localValue)),
+			'textarea-input--muss': ((validationResult.fehlerart === ValidatorFehlerart.MUSS) || !valid(data)),
 			'textarea-input--kann': (validationResult.fehlerart === ValidatorFehlerart.KANN),
 			'textarea-input--hinweis': (validationResult.fehlerart === ValidatorFehlerart.HINWEIS),
 			'textarea-input--disabled': disabled,
@@ -18,7 +18,7 @@
 		<textarea class="textarea-input--control"
 			:class="{ 'contentFocusField': isContentFocusField, 'textarea-input--auto-grow': autoresize }"
 			ref="textarea"
-			:value="localValue ?? ''"
+			:value="data ?? ''"
 			:rows
 			:cols
 			:required
@@ -39,8 +39,8 @@
 				</svws-ui-tooltip>
 			</span>
 			<span>{{ placeholder }}</span>
-			<span v-if="!headless && localValue !== null && (maxLen !== undefined) && (maxLen > 0)" class="inline-flex gap-1">
-				{{ `(${localValue.length > 0 ? localValue.length + '/' : 'maximal '}${maxLen} Zeichen)` }}
+			<span v-if="!headless && data !== null && (maxLen !== undefined) && (maxLen > 0)" class="inline-flex gap-1">
+				{{ `(${data.length > 0 ? data.length + '/' : 'maximal '}${maxLen} Zeichen)` }}
 			</span>
 			<span v-if="required" class="icon-xs i-ri-asterisk textarea-input--placeholder--required textarea-input--state-icon" aria-hidden="true" />
 			<span v-if="required" class="sr-only">erforderlich</span>
@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, useId, useTemplateRef, onMounted, nextTick, onUnmounted, watch, ref } from 'vue';
+	import { computed, useId, useTemplateRef, onBeforeMount, nextTick, onUnmounted, watch, ref } from 'vue';
 	import type { List } from "../../../../core/src/java/util/List";
 	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
 	import type { ValidatorFehler } from "../../../../core/src/asd/validate/ValidatorFehler";
@@ -111,30 +111,28 @@
 	defineOptions({ inheritAttrs: false });
 
 	const textareaRef = useTemplateRef('textarea');
-
 	const idComponent = useId();
 	const idPlaceholder = useId();
 	const idStatistics = useId();
 
-	// Tracks the value at the time of focus to implement correct "change" semantics
+	// Synchronisierter lokaler Wert, für One-/Two-Way-Data Binding
+	const data = ref<string | null>(null);
+
 	let valueOnFocus: string | null = null;
 
-	// Store value as localValue - to enable controlled (v-model) as well as uncontrolles (modelValue only) usage
-	const localValue = ref<string | null>(null);
-
-	const isEmpty = computed<boolean>(() => localValue.value === null);
+	const isEmpty = computed<boolean>(() => data.value === null);
 
 	const validationResult = computed(() => new ValidationResult(validierungFehler.value));
 
 	const validatorRequired = computed<ValidatorInputRequired<string> | null>(() =>
 		props.required && props.validation === undefined
-			? new ValidatorInputRequired(() => localValue.value)
+			? new ValidatorInputRequired(() => data.value)
 			: null
 	);
 
 	const validatorLength = computed<ValidatorStringLength | null>(() =>
 		props.maxLen !== undefined && props.validation === undefined
-			? new ValidatorStringLength(() => localValue.value, null, props.maxLen)
+			? new ValidatorStringLength(() => data.value, null, props.maxLen)
 			: null
 	);
 
@@ -153,6 +151,7 @@
 		return fehler;
 	});
 
+	// Leere Strings auf `null` setzen
 	function normalize(value: string): string | null {
 		return value === '' ? null : value;
 	}
@@ -164,16 +163,16 @@
 	async function onInput(event: Event) {
 		const value = normalize((event.target as HTMLTextAreaElement).value);
 
-		// Immer lokal setzen – funktioniert auch ohne Two-Way-Binding
-		localValue.value = value;
+		// Immer lokal setzen – für One-Way-Binding Unterstützung
+		data.value = value;
 
-		// Weiterhin emitten – damit v-model funktioniert (controlled)
 		emit("update:modelValue", value);
 		emit("input", value);
 	}
 
 	function onBlur(event: Event) {
 		const value = normalize((event.target as HTMLTextAreaElement).value);
+
 		emit("blur", value);
 
 		if (value !== valueOnFocus) {
@@ -189,17 +188,18 @@
 		textareaRef.value.style.height = `${textareaRef.value.scrollHeight}px`;
 	}
 
-	onMounted(async () => {
-		// set inital localValue
-		localValue.value = (props.modelValue !== null) ? normalize(props.modelValue) : null;
-
-		if (!props.autoresize) {
-			return;
-		}
-		window.addEventListener("resize", onResize);
-
+	async	function animateResize() {
 		await nextTick();
 		requestAnimationFrame(onResize);
+	}
+
+	onBeforeMount(async () => {
+		data.value = (props.modelValue !== null) ? normalize(props.modelValue) : null;
+
+		if (props.autoresize) {
+			window.addEventListener("resize", onResize);
+			await animateResize();
+		}
 	});
 
 	onUnmounted(() => {
@@ -208,26 +208,24 @@
 		}
 	});
 
-	// Sync modelValue changes to localValue
+	// Synchronisiere eine modelValue Änderung mit data
 	watch(
 		() => props.modelValue,
 		(v) => {
-			localValue.value = v ?? null;
+			data.value = v ?? null;
 		}
 	);
 
-	// Trigger onResize when relevant props or localValue changes
+	// Führe onResize aus, wenn sich relevante props or data geändert haben
 	watch(
-		() => [localValue.value, props.cols, props.rows, props.disabled, props.autoresize],
+		() => [data.value, props.cols, props.rows, props.disabled, props.autoresize],
 		async () => {
-			if (!props.autoresize) {
-				return;
+			if (props.autoresize) {
+				await animateResize();
 			}
-			await nextTick();
-			requestAnimationFrame(onResize);
 		}
 	);
 
-	defineExpose({ content: computed(() => localValue.value), localValue });
+	defineExpose({ content: computed(() => data.value), data });
 
 </script>

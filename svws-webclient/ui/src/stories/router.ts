@@ -38,7 +38,6 @@ const routes = [
 	{ path: '/navigation/MenuItem', component: () => import('../ui/nav/SvwsUiMenuItem.story.vue') },
 	{ path: '/navigation/TabBar', component: () => import('../ui/nav/SvwsUiTabBar.story.vue') },
 	{ path: '/navigation/AppLayout', component: () => import('../ui/nav/SvwsUiMenu.story.vue') },
-	{ path: '/gost/laufbahnplanungInfos', component: () => import('../components/gost/laufbahnplanung/SLaufbahnplanungInformationen.story.vue') },
 	{ path: '/composables/usePaneSplitter', component: () => import('../ui/composables/usePaneSplitter.story.vue') },
 	{ path: '/components/QrCode', component: () => import('../components/qr/QrCode.story.vue') },
 ];

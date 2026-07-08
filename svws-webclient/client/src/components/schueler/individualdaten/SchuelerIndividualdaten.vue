@@ -26,18 +26,18 @@
 					:validation="() => model.getFehler('nachname')"
 					:min-len="1" :max-len="120"
 					required :readonly v-autofocus
-					@commit="model.patch" />
+					@change="model.patch" />
 				<svws-ui-text-input placeholder="Rufname"
 					v-model="model.proxy.vorname"
 					:validation="() => model.getFehler('vorname')"
 					:min-len="1" :max-len="80"
 					required :readonly
-					@commit="model.patch" />
+					@change="model.patch" />
 				<svws-ui-text-input placeholder="Alle Vornamen"
 					v-model="model.proxy.alleVornamen"
 					:validation="() => model.getFehler('alleVornamen')"
 					:max-len="255" :readonly
-					@commit="model.patch" />
+					@change="model.patch" />
 				<svws-ui-spacing />
 				<ui-select label="Geschlecht"
 					v-model="model.geschlecht.value"
@@ -46,18 +46,18 @@
 				<svws-ui-text-input placeholder="Geburtsdatum" :readonly
 					v-model="model.proxy.geburtsdatum"
 					:validation="() => model.getFehler('geburtsdatum')"
-					@commit="model.patch"
+					@change="model.patch"
 					type="date" required statistics />
 				<svws-ui-text-input placeholder="Geburtsort" :readonly
 					v-model="model.proxy.geburtsort"
 					:validation="() => model.getFehler('geburtsort')"
 					:max-len="100"
-					@commit="model.patch" />
+					@change="model.patch" />
 				<svws-ui-text-input placeholder="Geburtsname" :readonly
 					v-model="model.proxy.geburtsname"
 					:validation="() => model.getFehler('geburtsname')"
 					:max-len="120"
-					@commit="model.patch" />
+					@change="model.patch" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Statusdaten" v-if="hatKompetenzAnsehen">
@@ -82,7 +82,7 @@
 					<svws-ui-text-input placeholder="Schülerausweis-Nummer"
 						v-model="model.proxy.idSchuelerausweis"
 						:validation="() => model.getFehler('idSchuelerausweis')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="30"
 						:readonly />
 					<div v-if="!istSchulformBerufskolleg" />
@@ -91,7 +91,7 @@
 				<svws-ui-text-input v-if="istSchulformBerufskolleg" placeholder="Beruf"
 					v-model="model.proxy.beruf"
 					:validation="() => model.getFehler('beruf')"
-					@commit="model.patch"
+					@change="model.patch"
 					:readonly :max-len="100" />
 				<ui-select label="Fahrschüler"
 					v-model="model.fahrschuelerArtID.value"
@@ -103,11 +103,11 @@
 					:removable="model.haltestelleID.value !== null" :readonly />
 				<svws-ui-text-input placeholder="Anmeldedatum" :readonly
 					v-model="model.proxy.anmeldedatum"
-					@commit="model.patch"
+					@change="model.patch"
 					type="date" removable />
 				<svws-ui-text-input placeholder="Aufnahmedatum" :readonly
 					v-model="model.proxy.aufnahmedatum"
-					@commit="model.patch"
+					@change="model.patch"
 					type="date" removable statistics />
 				<svws-ui-spacing />
 				<svws-ui-input-wrapper :grid="2" class="input-wrapper--checkboxes">
@@ -144,7 +144,7 @@
 				<svws-ui-text-input class="contentFocusField" placeholder="Straße" :readonly
 					v-model="model.adresse.value"
 					:validation="() => model.getFehler('strassenname')"
-					@commit="model.patch"
+					@change="model.patch"
 					span="full" />
 				<ui-select label="Wohnort"
 					v-model="model.selectedOrt.value"
@@ -161,23 +161,23 @@
 				<svws-ui-text-input placeholder="Telefon" :readonly
 					v-model="model.proxy.telefon"
 					:validation="() => model.getFehler('telefon')"
-					@commit="model.patch"
+					@change="model.patch"
 					type="tel" :max-len="20" />
 				<svws-ui-text-input placeholder="Mobil oder Fax" :readonly
 					v-model="model.proxy.telefonMobil"
 					:validation="() => model.getFehler('telefonMobil')"
-					@commit="model.patch"
+					@change="model.patch"
 					type="tel" :max-len="20" />
 				<svws-ui-text-input placeholder="Private E-Mail-Adresse" :readonly
 					v-model="model.proxy.emailPrivat"
 					:validation="() => model.getFehler('emailPrivat')"
-					@commit="model.patch"
+					@change="model.patch"
 					:max-len="100"
 					type="email" />
 				<svws-ui-text-input placeholder="Schulische E-Mail-Adresse" :readonly
 					v-model="model.proxy.emailSchule"
 					:validation="() => model.getFehler('emailSchule')"
-					@commit="model.patch"
+					@change="model.patch"
 					:max-len="100"
 					type="email" />
 			</svws-ui-input-wrapper>
@@ -204,11 +204,11 @@
 				</div>
 				<svws-ui-text-input placeholder="Abmeldung vom Religionsunterricht" :readonly
 					v-model="model.proxy.religionabmeldung"
-					@commit="model.patch"
+					@change="model.patch"
 					type="date" removable statistics />
 				<svws-ui-text-input placeholder="Wiederanmeldung" :readonly
 					v-model="model.proxy.religionanmeldung"
-					@commit="model.patch"
+					@change="model.patch"
 					type="date" removable statistics />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
@@ -233,7 +233,7 @@
 					:disabled="!model.proxy.hatMigrationshintergrund"
 					:readonly="model.proxy.hatMigrationshintergrund && readonly"
 					statistics :steps="false" :min :max
-					@commit="model.patch" />
+					@change="model.patch" />
 				<ui-select label="Geburtsland"
 					v-model="model.geburtsland.value"
 					:manager="geburtslandManager"

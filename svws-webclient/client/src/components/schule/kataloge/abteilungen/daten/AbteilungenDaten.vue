@@ -4,25 +4,25 @@
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField"
 					v-model="modelProxy.proxy.bezeichnung"
-					@commit="modelProxy.patch"
+					@change="modelProxy.patch"
 					:validation="() => modelProxy.getFehler('bezeichnung')"
 					required :max-len="50"
 					:readonly="readonly || isAbteilungImZukuenftigenAbschnitt" />
 				<svws-ui-text-input placeholder="Raum"
 					v-model="modelProxy.proxy.raum"
-					@commit="modelProxy.patch"
+					@change="modelProxy.patch"
 					:validation="() => modelProxy.getFehler('raum')"
 					:max-len="20"
 					:readonly />
 				<svws-ui-text-input placeholder="E-Mail-Adresse" type="email"
 					v-model="modelProxy.proxy.email"
-					@commit="modelProxy.patch"
+					@change="modelProxy.patch"
 					:validation="() => modelProxy.getFehler('email')"
 					:max-len="100"
 					:readonly />
 				<svws-ui-text-input placeholder="Durchwahl" type="tel"
 					v-model="modelProxy.proxy.durchwahl"
-					@commit="modelProxy.patch"
+					@change="modelProxy.patch"
 					:validation="() => modelProxy.getFehler('durchwahl')"
 					:max-len="20"
 					:readonly />
@@ -41,7 +41,7 @@
 				<svws-ui-content-card title="Ansicht & Sortierung">
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="modelProxy.proxy.sortierung"
-						@commit="modelProxy.patch"
+						@change="modelProxy.patch"
 						:validation="() => modelProxy.getFehler('sortierung')"
 						:min="0" :max="32000"
 						:readonly

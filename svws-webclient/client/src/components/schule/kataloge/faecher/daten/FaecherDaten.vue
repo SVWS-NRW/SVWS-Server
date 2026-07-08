@@ -5,12 +5,12 @@
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input placeholder="Kürzel" class="contentFocusField"
 						v-model="model.proxy.kuerzel"
-						@commit="model.patch"
+						@change="model.patch"
 						:validation="() => model.getFehler('kuerzel')"
 						:max-len="20" required :readonly="!hatKompetenzUpdate" />
 					<svws-ui-text-input placeholder="Bezeichnung"
 						v-model="model.proxy.bezeichnung"
-						@commit="model.patch"
+						@change="model.patch"
 						:validation="() => model.getFehler('bezeichnung')"
 						:max-len="255" required :readonly="!hatKompetenzUpdate" />
 					<ui-select label="Fach ASD-Schlüssel"
@@ -44,12 +44,12 @@
 					<svws-ui-spacing />
 					<svws-ui-text-input placeholder="Bezeichnung (Zeugnis)"
 						v-model="model.proxy.bezeichnungZeugnis"
-						@commit="model.patch"
+						@change="model.patch"
 						:validation="() => model.getFehler('bezeichnungZeugnis')"
 						:max-len="255" :readonly="!hatKompetenzUpdate" />
 					<svws-ui-text-input placeholder="Bezeichnung (Überweisungszeugnis)"
 						v-model="model.proxy.bezeichnungUeberweisungszeugnis"
-						@commit="model.patch"
+						@change="model.patch"
 						:validation="() => model.getFehler('bezeichnungUeberweisungszeugnis')"
 						:max-len="255" :readonly="!hatKompetenzUpdate" />
 				</svws-ui-input-wrapper>
@@ -85,7 +85,7 @@
 					<svws-ui-input-wrapper :grid="2">
 						<svws-ui-input-number placeholder="maximale Zeichenanzahl in Fachbemerkungen"
 							v-model="model.proxy.maxZeichenInFachbemerkungen"
-							@commit="model.patch"
+							@change="model.patch"
 							:validation="() => model.getFehler('maxZeichenInFachbemerkungen')"
 							:max="JavaInteger.MAX_VALUE" :readonly="!hatKompetenzUpdate" />
 					</svws-ui-input-wrapper>
@@ -97,7 +97,7 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
-						@commit="model.patch"
+						@change="model.patch"
 						:min="0" :max="32000"
 						:readonly
 						:removable="false" required />

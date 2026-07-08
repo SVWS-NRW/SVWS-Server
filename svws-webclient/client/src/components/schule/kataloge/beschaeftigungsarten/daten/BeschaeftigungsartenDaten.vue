@@ -6,7 +6,7 @@
 					<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField" span="2"
 						v-model="data.proxy.bezeichnung"
 						:validation="() => data.getFehler('bezeichnung')"
-						@commit="data.patch"
+						@change="data.patch"
 						:max-len="50" :readonly />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
@@ -16,7 +16,7 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="data.proxy.sortierung"
 						:validation="() => data.getFehler('sortierung')"
-						@commit="data.patch"
+						@change="data.patch"
 						:min="0" :max="32000" :readonly />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="data.proxy.istSichtbar" :readonly>

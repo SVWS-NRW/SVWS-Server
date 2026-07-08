@@ -25,7 +25,7 @@
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Kürzel"
 					v-model="modelProxy.proxy.kuerzel"
-					@commit="modelProxy.patch"
+					@change="modelProxy.patch"
 					:validation="() => modelProxy.getFehler('kuerzel')"
 					:max-len="10"
 					:readonly statistics required focus />
@@ -36,13 +36,13 @@
 					:readonly required searchable :removable="false" />
 				<svws-ui-text-input placeholder="Nachname"
 					v-model="modelProxy.proxy.nachname"
-					@commit="modelProxy.patch"
+					@change="modelProxy.patch"
 					:validation="() => modelProxy.getFehler('nachname')"
 					:max-len="120"
 					:readonly required statistics />
 				<svws-ui-text-input placeholder="Rufname"
 					v-model="modelProxy.proxy.vorname"
-					@commit="modelProxy.patch"
+					@change="modelProxy.patch"
 					:validation="() => modelProxy.getFehler('vorname')"
 					:max-len="80"
 					:readonly required statistics />
@@ -55,7 +55,7 @@
 				<svws-ui-text-input placeholder="Geburtsdatum"
 					v-model="modelProxy.proxy.geburtsdatum"
 					type="date"
-					@commit="modelProxy.patch"
+					@change="modelProxy.patch"
 					:validation="() => modelProxy.getFehler('geburtsdatum')"
 					:readonly required statistics />
 				<ui-select label="Staatsangehörigkeit"
@@ -66,13 +66,13 @@
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Akademischer Grad"
 					v-model="modelProxy.proxy.titel"
-					@commit="modelProxy.patch"
+					@change="modelProxy.patch"
 					:validation="() => modelProxy.getFehler('titel')"
 					:max-len="20"
 					:readonly />
 				<svws-ui-text-input placeholder="Amtsbezeichnung"
 					v-model="modelProxy.proxy.amtsbezeichnung"
-					@commit="modelProxy.patch"
+					@change="modelProxy.patch"
 					:validation="() => modelProxy.getFehler('amtsbezeichnung')"
 					:max-len="15"
 					:readonly />
@@ -82,7 +82,7 @@
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Straße"
 					v-model="modelProxy.adresse.value"
-					@commit="modelProxy.patch"
+					@change="modelProxy.patch"
 					:validation="() => modelProxy.getFehler('strassenname')"
 					:max-len="55"
 					span="full"
@@ -102,28 +102,28 @@
 				<svws-ui-text-input placeholder="Telefon"
 					type="tel"
 					v-model="modelProxy.proxy.telefon"
-					@commit="modelProxy.patch"
+					@change="modelProxy.patch"
 					:validation="() => modelProxy.getFehler('telefon')"
 					:max-len="20"
 					:readonly />
 				<svws-ui-text-input placeholder="Mobil oder Fax"
 					type="tel"
 					v-model="modelProxy.proxy.telefonMobil"
-					@commit="modelProxy.patch"
+					@change="modelProxy.patch"
 					:validation="() => modelProxy.getFehler('telefonMobil')"
 					:max-len="20"
 					:readonly />
 				<svws-ui-text-input placeholder="Private E-Mail-Adresse"
 					type="email"
 					v-model="modelProxy.proxy.emailPrivat"
-					@commit="modelProxy.patch"
+					@change="modelProxy.patch"
 					:validation="() => modelProxy.getFehler('emailPrivat')"
 					:max-len="100"
 					:readonly />
 				<svws-ui-text-input placeholder="Schulische E-Mail-Adresse"
 					type="email"
 					v-model="modelProxy.proxy.emailDienstlich"
-					@commit="modelProxy.patch"
+					@change="modelProxy.patch"
 					:validation="() => modelProxy.getFehler('emailDienstlich')"
 					:max-len="100"
 					:readonly />

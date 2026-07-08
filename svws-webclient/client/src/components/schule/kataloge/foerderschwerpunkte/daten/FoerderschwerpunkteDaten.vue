@@ -16,7 +16,7 @@
 					<svws-ui-text-input placeholder="Interne Bezeichnung" span="2"
 						v-model="model.proxy.kuerzel"
 						:validation="() => model.getFehler('kuerzel')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="50" required />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
@@ -26,7 +26,7 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
-						@commit="model.patch"
+						@change="model.patch"
 						:min="0" :max="32000"
 						:readonly
 						:removable="false" required />

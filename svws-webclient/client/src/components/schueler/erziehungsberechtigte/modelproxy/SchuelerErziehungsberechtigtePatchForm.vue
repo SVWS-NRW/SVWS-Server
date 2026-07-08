@@ -19,28 +19,28 @@
 			<svws-ui-text-input placeholder="Anrede"
 				v-model="model.proxy.anrede"
 				:validation="() => model.getFehler('anrede')"
-				@commit="model.patch"
+				@change="model.patch"
 				:max-len="20" :readonly />
 			<svws-ui-text-input placeholder="Titel"
 				v-model="model.proxy.titel"
 				:validation="() => model.getFehler('titel')"
-				@commit="model.patch"
+				@change="model.patch"
 				:max-len="10" :readonly />
 			<svws-ui-spacing />
 			<svws-ui-text-input placeholder="Name"
 				v-model="model.proxy.nachname"
 				:validation="() => model.getFehler('nachname')"
-				@commit="model.patch"
+				@change="model.patch"
 				:max-len="120" :readonly required />
 			<svws-ui-text-input placeholder="Rufname"
 				v-model="model.proxy.vorname"
 				:validation="() => model.getFehler('vorname')"
-				@commit="model.patch"
+				@change="model.patch"
 				:max-len="80" :readonly required />
 			<svws-ui-text-input placeholder="E-Mail Adresse" type="email"
 				v-model="model.proxy.eMail"
 				:validation="() => model.getFehler('eMail')"
-				@commit="model.patch"
+				@change="model.patch"
 				:max-len="100" :readonly />
 			<svws-ui-spacing />
 			<ui-select label="Staatsangehörigkeit"
@@ -50,7 +50,7 @@
 			<svws-ui-text-input placeholder="Straße und Hausnummer"
 				v-model="model.adresse.value"
 				:validation="() => model.getFehler('strassenname')"
-				@commit="model.patch"
+				@change="model.patch"
 				:readonly />
 			<ui-select label="Wohnort"
 				v-model="model.wohnort.value"
@@ -65,7 +65,7 @@
 			<svws-ui-textarea-input placeholder="Bemerkungen"
 				v-model="model.proxy.bemerkungen"
 				:validation="() => model.getFehler('bemerkungen')"
-				@commit="model.patch"
+				@change="model.patch"
 				:readonly
 				span="full" autoresize />
 		</svws-ui-input-wrapper>

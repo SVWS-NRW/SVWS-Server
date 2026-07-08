@@ -74,7 +74,7 @@
 				<svws-ui-text-input placeholder="Bemerkung" span="full"
 					v-model="model.proxy.bemerkungVorherigeSchule"
 					:validation="() => model.getFehler('bemerkungVorherigeSchule')"
-					@commit="model.patch"
+					@change="model.patch"
 					:max-len="255" :readonly />
 				<ui-select label="Höchster allgemeinbildender Abschluss" v-if="abschlussartAllgemeinbildendSelectable"
 					:manager="abschlussartAllgemeinbildendVorherigeSchuleManager"
@@ -199,7 +199,7 @@
 				<svws-ui-input-number placeholder="Einschulung" class="contentFocusField"
 					v-model="model.proxy.einschulungsjahrGrundschule"
 					:validation="() => model.getFehler('einschulungsjahrGrundschule')"
-					@commit="model.patch"
+					@change="model.patch"
 					:min="1900" :max="2100"
 					statistics :readonly />
 				<ui-select label="Einschulungsart"
@@ -223,7 +223,7 @@
 				<svws-ui-input-number placeholder="Jahr Wechsel Sek I" class="contentFocusField"
 					v-model="model.proxy.wechseljahrSekI"
 					:validation="() => model.getFehler('wechseljahrSekI')"
-					@commit="model.patch"
+					@change="model.patch"
 					:min="1900" :max="2100"
 					statistics :readonly />
 				<ui-select label="Erste Schulform Sek I"
@@ -233,7 +233,7 @@
 				<svws-ui-input-number placeholder="Jahr Wechsel Sek II"
 					v-model="model.proxy.wechseljahrSekII"
 					:validation="() => model.getFehler('wechseljahrSekII')"
-					@commit="model.patch"
+					@change="model.patch"
 					:min="1900" :max="2100"
 					statistics :readonly />
 			</svws-ui-input-wrapper>

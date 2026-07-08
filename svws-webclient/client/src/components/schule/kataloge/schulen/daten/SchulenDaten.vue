@@ -16,52 +16,52 @@
 					<svws-ui-text-input placeholder="Kürzel"
 						v-model="model.proxy.kuerzel"
 						:validation="() => model.getFehler('kuerzel')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="10" :readonly />
 					<svws-ui-text-input placeholder="Schulname"
 						v-model="model.proxy.name"
 						:validation="() => model.getFehler('name')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="120" :readonly required />
 					<svws-ui-text-input placeholder="Kurzbezeichnung"
 						v-model="model.proxy.kurzbezeichnung"
 						:validation="() => model.getFehler('kurzbezeichnung')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="40" :readonly required />
 					<svws-ui-text-input placeholder="Schulleitung"
 						v-model="model.proxy.schulleiter"
 						:validation="() => model.getFehler('schulleiter')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="40" :readonly />
 					<svws-ui-text-input placeholder="Straße"
 						v-model="model.adresse.value"
 						:validation="() => model.getFehler('strassenname')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="55" :readonly />
 					<svws-ui-text-input placeholder="PLZ"
 						v-model="model.proxy.plz"
 						:validation="() => model.getFehler('plz')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="10" :readonly />
 					<svws-ui-text-input placeholder="Ort"
 						v-model="model.proxy.ort"
 						:validation="() => model.getFehler('ort')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="50" :readonly />
 					<svws-ui-text-input placeholder="Telefon" type="tel"
 						v-model="model.proxy.telefon"
 						:validation="() => model.getFehler('telefon')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="20" :readonly />
 					<svws-ui-text-input placeholder="Fax" type="tel"
 						v-model="model.proxy.fax"
 						:validation="() => model.getFehler('fax')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="20" :readonly />
 					<svws-ui-text-input placeholder="E-Mail-Adresse" type="email"
 						v-model="model.proxy.email"
 						:validation="() => model.getFehler('email')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="40" :readonly />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
@@ -71,7 +71,7 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
-						@commit="model.patch"
+						@change="model.patch"
 						:min="0" :max="32000" :readonly :removable="false" required />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="model.proxy.istSichtbar" :readonly>

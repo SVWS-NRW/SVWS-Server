@@ -5,7 +5,7 @@
 				<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField"
 					v-model="model.proxy.bezeichnung"
 					:validation="() => model.getFehler('bezeichnung')"
-					@commit="model.patch"
+					@change="model.patch"
 					:max-len="255" required />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>

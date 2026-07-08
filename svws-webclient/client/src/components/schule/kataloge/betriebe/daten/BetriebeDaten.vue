@@ -7,12 +7,12 @@
 					<svws-ui-text-input placeholder="Name" class="contentFocusField"
 						v-model="model.proxy.name"
 						:validation="() => model.getFehler('name')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="50" :readonly required />
 					<svws-ui-text-input placeholder="Namensergänzung"
 						v-model="model.proxy.nameZusatz"
 						:validation="() => model.getFehler('nameZusatz')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="50" :readonly />
 					<ui-select label="Betriebsart"
 						v-model="model.betriebsart.value"
@@ -21,7 +21,7 @@
 					<svws-ui-text-input placeholder="Branche"
 						v-model="model.proxy.branche"
 						:validation="() => model.getFehler('branche')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="50" :readonly />
 					<svws-ui-textarea-input placeholder="Bemerkungen"
 						v-model="model.proxy.bemerkungen"
@@ -62,7 +62,7 @@
 					<svws-ui-text-input placeholder="Straße"
 						v-model="model.adresse.value"
 						:validation="() => model.getFehler('strasse')"
-						@commit="model.patch"
+						@change="model.patch"
 						:readonly />
 					<ui-select label="Wohnort"
 						v-model="model.wohnort.value"
@@ -71,22 +71,22 @@
 					<svws-ui-text-input placeholder="Telefon" type="tel"
 						v-model="model.proxy.telefon1"
 						:validation="() => model.getFehler('telefon1')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="20" :readonly />
 					<svws-ui-text-input placeholder="2. Telefon" type="tel"
 						v-model="model.proxy.telefon2"
 						:validation="() => model.getFehler('telefon2')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="20" :readonly />
 					<svws-ui-text-input placeholder="E-Mail-Adresse" type="email"
 						v-model="model.proxy.eMail"
 						:validation="() => model.getFehler('eMail')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="100" :readonly />
 					<svws-ui-text-input placeholder="Fax" type="tel"
 						v-model="model.proxy.fax"
 						:validation="() => model.getFehler('fax')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="20" :readonly />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
@@ -100,7 +100,7 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
-						@commit="model.patch"
+						@change="model.patch"
 						:min="0" :max="32000"
 						:readonly
 						:removable="false" required />

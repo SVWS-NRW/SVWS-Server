@@ -7,22 +7,22 @@
 					<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField" span="full"
 						v-model="model.proxy.bezeichnung"
 						:validation="() => model.getFehler('bezeichnung')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="100" :readonly="!hatKompetenzUpdate" required />
 					<svws-ui-text-input placeholder="Bemerkung" span="full"
 						v-model="model.proxy.bemerkung"
 						:validation="() => model.getFehler('bemerkung')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="50" :readonly="!hatKompetenzUpdate" />
 					<svws-ui-text-input placeholder="Telefon" type="tel"
 						v-model="model.proxy.tel"
 						:validation="() => model.getFehler('tel')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="20" :readonly="!hatKompetenzUpdate" />
 					<svws-ui-text-input placeholder="E-Mail-Adresse" type="email"
 						v-model="model.proxy.email"
 						:validation="() => model.getFehler('email')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="40" :readonly="!hatKompetenzUpdate" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
@@ -33,17 +33,17 @@
 					<svws-ui-text-input placeholder="Straße" span="full"
 						v-model="model.adresse.value"
 						:validation="() => model.getFehler('strassenname')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="55" :readonly="!hatKompetenzUpdate" />
 					<svws-ui-text-input placeholder="PLZ"
 						v-model="model.proxy.plz"
 						:validation="() => model.getFehler('plz')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="10" :readonly="!hatKompetenzUpdate" />
 					<svws-ui-text-input placeholder="Wohnort"
 						v-model="model.proxy.ort"
 						:validation="() => model.getFehler('ort')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="30" :readonly="!hatKompetenzUpdate" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
@@ -54,7 +54,7 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
-						@commit="model.patch"
+						@change="model.patch"
 						:min="0" :max="32000" :readonly="!hatKompetenzUpdate" :removable="false" required />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="model.proxy.istSichtbar" :readonly="!hatKompetenzUpdate">

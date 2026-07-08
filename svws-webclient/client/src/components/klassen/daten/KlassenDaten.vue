@@ -6,9 +6,9 @@
 		<div class="flex flex-col gap-y-16 lg:gap-y-20">
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-text-input placeholder="Kürzel" :disabled="!hatKompetenzUpdate" :required="true" :max-len="15" v-model="modelProxy.proxy.kuerzel" @commit="modelProxy.patch"
+					<svws-ui-text-input placeholder="Kürzel" :disabled="!hatKompetenzUpdate" :required="true" :max-len="15" v-model="modelProxy.proxy.kuerzel" @change="modelProxy.patch"
 						:validation="() => modelProxy.getFehler('kuerzel')" focus />
-					<svws-ui-text-input placeholder="Beschreibung" :disabled="!hatKompetenzUpdate" :max-len="150" v-model="modelProxy.proxy.beschreibung" @commit="modelProxy.patch"
+					<svws-ui-text-input placeholder="Beschreibung" :disabled="!hatKompetenzUpdate" :max-len="150" v-model="modelProxy.proxy.beschreibung" @change="modelProxy.patch"
 						:validation="() => modelProxy.getFehler('beschreibung')" />
 					<svws-ui-spacing />
 
@@ -19,10 +19,10 @@
 					<svws-ui-spacing />
 
 					<!-- TODO Select mit der Liste der Teilstandorte für diese Schule (:disabled="!hatKompetenzUpdate" ) -->
-					<svws-ui-text-input placeholder="Teilstandort" disabled v-model="modelProxy.proxy.teilstandort" @commit="modelProxy.patch" />
+					<svws-ui-text-input placeholder="Teilstandort" disabled v-model="modelProxy.proxy.teilstandort" @change="modelProxy.patch" />
 					<div class="flex flex-row">
 						<svws-ui-input-number placeholder="Sortierung" :disabled="!hatKompetenzUpdate" :required="true" :min="0"
-							v-model="modelProxy.proxy.sortierung" @commit="modelProxy.patch" />
+							v-model="modelProxy.proxy.sortierung" @change="modelProxy.patch" />
 					</div>
 					<svws-ui-spacing />
 
@@ -35,7 +35,7 @@
 					<svws-ui-spacing />
 
 					<svws-ui-select title="Schulgliederung" v-model="modelProxy.schulgliederung.value" :disabled="!hatKompetenzUpdate" :items="modelProxy.schulgliederungen.value" :item-text="getSelectText" />
-					<svws-ui-text-input placeholder="Prüfungsordnung" :model-value="modelProxy.proxy.pruefungsordnung ?? '—'" @commit="modelProxy.patch" disabled />
+					<svws-ui-text-input placeholder="Prüfungsordnung" :model-value="modelProxy.proxy.pruefungsordnung ?? '—'" @change="modelProxy.patch" disabled />
 					<svws-ui-select v-if="schuleState.schulform.istAllgemeinbildend() || schuleState.schulform.istWeiterbildung()" title="Klassenart" v-model="modelProxy.klassenart.value" :disabled="!hatKompetenzUpdate" :items="modelProxy.klassenarten.value" :item-text="getSelectText" />
 					<svws-ui-select v-if="schuleState.schulform.istAllgemeinbildend()" title="Organisationsform" v-model="modelProxy.organisationsformAllgemeinbildend.value" :disabled="!hatKompetenzUpdate" :items="modelProxy.organisationsformenAllgemeinbildend.value" :item-text="getSelectText" />
 					<svws-ui-select v-if="schuleState.schulform.istBerufsbildend()" title="Organisationsform" v-model="modelProxy.organisationsformBerufsbildend.value" :disabled="!hatKompetenzUpdate" :items="modelProxy.organisationsformenBerufsbildend.value" :item-text="getSelectText" />

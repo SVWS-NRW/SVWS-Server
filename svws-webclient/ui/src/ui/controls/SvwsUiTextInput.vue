@@ -40,6 +40,7 @@
 			title=""
 			:aria-labelledby="labelId"
 			:placeholder="headless || type === 'search' ? placeholder : ''"
+			@focus="onFocus"
 			@input="onInput"
 			@keyup.enter="onKeyEnter"
 			@blur="onBlur">
@@ -74,7 +75,7 @@
 			<span v-if="readonly && !isSelectInput" class="icon-xs i-ri-lock-line" />
 		</span>
 		<span v-if="removable && (type === 'date' || type === 'datetime-local') && (!readonly)" @keydown.enter="updateData('')" @click.stop="updateData('')" class="svws-icon--remove icon i-ri-close-line" tabindex="0" />
-		<span v-if="(type === 'date') && !firefox()" class="svws-icon icon i-ri-calendar-2-line" />
+		<span v-if="(type === 'date') && !isFirefox" class="svws-icon icon i-ri-calendar-2-line" />
 		<span v-if="type === 'email'" class="svws-icon icon i-ri-at-line" />
 		<span v-if="type === 'tel'" class="svws-icon icon i-ri-phone-line" />
 	</label>
@@ -83,7 +84,7 @@
 
 <script setup lang="ts">
 
-	import { computed, type InputTypeHTMLAttribute, onBeforeMount, onBeforeUnmount, onMounted, ref, useId, watch } from "vue";
+	import { computed, type InputTypeHTMLAttribute, onBeforeMount, onBeforeUnmount, onMounted, ref, useId, useTemplateRef, watch } from "vue";
 	import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
 	import type { List } from "../../../../core/src/java/util/List";
 	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
@@ -98,19 +99,14 @@
 		inheritAttrs: false,
 	});
 
-	function firefox() {
-		return globalThis.navigator.userAgent.includes('Firefox/');
-	}
-	const input = ref<null | HTMLInputElement>(null);
-
 	const props = withDefaults(defineProps<{
 		type?: InputTypeHTMLAttribute
 		minDate?: string;
 		maxDate?: string;
 		modelValue?: string | null;
-		modelModifiers?: { trim: boolean };
 		placeholder?: string;
 		statistics?: boolean;
+		/** @deprecated Nutze prop "validation" */
 		valid?: (value: string | null) => boolean;
 		validation?: () => List<ValidatorFehler>;
 		disabled?: boolean;
@@ -130,7 +126,6 @@
 		minDate: undefined,
 		maxDate: undefined,
 		modelValue: null,
-		modelModifiers: () => ({ trim: false }),
 		placeholder: "",
 		statistics: false,
 		valid: (value: string | null) => true,
@@ -156,8 +151,6 @@
 		"change": [value: string | null];
 		/* Emit value on blur event */
 		"blur": [value: string | null];
-		/* Emit value on blur and keyDown event */
-		"commit": [value: string | null];
 		/* Emit methods in onMounted and onBeforeUnmounted hooks */
 		"methods": [ methods: { focus: () => void } | undefined ];
 	}>();
@@ -170,14 +163,17 @@
 		},
 	};
 
+	const inputRef = useTemplateRef('input');
+	const labelId = useId();
+
+	// Synchronisierter lokaler Wert, für One-/Two-Way-Data Binding
 	const data = ref<string | null>(null);
-	onBeforeMount(() => data.value = props.modelValue);
+
+	let valueOnFocus: string | null = null;
 
 	const methods = { focus: () => doFocus() };
-	onMounted(() => emit("methods", methods));
-	onBeforeUnmount(() => emit("methods", undefined));
 
-	watch(() => props.modelValue, (value: string | null) => updateData(value), { immediate: false });
+	const isFirefox = globalThis.navigator.userAgent.includes('Firefox/');
 
 	const validationResult = computed(() => new ValidationResult(validierungFehler.value));
 
@@ -246,25 +242,27 @@
 		}
 	}
 
+	function onFocus() {
+		valueOnFocus = data.value;
+	}
+
 	function onInput(event: Event) {
 		const value = (event.target as HTMLInputElement).value;
-		if (value !== data.value) {
-			updateData(value);
-		}
+		updateData(value);
 	}
 
 	function onBlur() {
-		emit("commit", data.value);
-		if (props.modelValue !== data.value) {
+		if (data.value !== valueOnFocus) {
 			emit("change", data.value);
 		}
 		emit("blur", data.value);
 	}
 
 	function onKeyEnter() {
-		emit("commit", data.value);
-		if (props.modelValue !== data.value) {
+		if (data.value !== valueOnFocus) {
 			emit("change", data.value);
+			// valueOnFocus aktualisieren, damit ein zweites Enter kein doppeltes "change" auslöst
+			valueOnFocus = data.value;
 		}
 	}
 
@@ -273,13 +271,29 @@
 	}
 
 	function doFocus() {
-		input.value?.focus();
+		inputRef.value?.focus();
 	}
 
-	const labelId = useId();
+	onBeforeMount(() => {
+		data.value = props.modelValue;
+	});
 
-	const content = computed<string | null>(() => data.value);
+	onMounted(() => emit("methods", methods));
 
-	defineExpose({ content, input, reset, doFocus });
+	onBeforeUnmount(() => emit("methods", undefined));
+
+	// Synchronisiere eine modelValue Änderung mit data
+	watch(
+		() => props.modelValue,
+		(value: string | null) => {
+			updateData(value);
+		}
+	);
+
+	/**
+	 * Expose
+	 */
+
+	defineExpose({ content: computed(() => data.value), input: inputRef, reset, doFocus });
 
 </script>

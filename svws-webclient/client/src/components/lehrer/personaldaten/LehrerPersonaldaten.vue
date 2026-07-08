@@ -3,20 +3,20 @@
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Identnummer" span="full" class="contentFocusField"
-					v-model="personaldatenModelProxy.proxy.identNrTeil1" @commit="personaldatenModelProxy.patch" :readonly focus statistics :max-len="10" />
+					v-model="personaldatenModelProxy.proxy.identNrTeil1" @change="personaldatenModelProxy.patch" :readonly focus statistics :max-len="10" />
 				<svws-ui-text-input placeholder="Seriennummer"
-					v-model="personaldatenModelProxy.proxy.identNrTeil2SerNr" @commit="personaldatenModelProxy.patch" :readonly statistics :max-len="5" />
+					v-model="personaldatenModelProxy.proxy.identNrTeil2SerNr" @change="personaldatenModelProxy.patch" :readonly statistics :max-len="5" />
 				<svws-ui-text-input placeholder="Vergütungsschlüssel"
-					v-model="personaldatenModelProxy.proxy.lbvVerguetungsschluessel" @commit="personaldatenModelProxy.patch" :readonly :max-len="1" />
+					v-model="personaldatenModelProxy.proxy.lbvVerguetungsschluessel" @change="personaldatenModelProxy.patch" :readonly :max-len="1" />
 				<svws-ui-text-input placeholder="PA-Nummer"
-					v-model="personaldatenModelProxy.proxy.personalaktennummer" @commit="personaldatenModelProxy.patch" :readonly :max-len="20" />
+					v-model="personaldatenModelProxy.proxy.personalaktennummer" @change="personaldatenModelProxy.patch" :readonly :max-len="20" />
 				<svws-ui-text-input placeholder="LBV-Personalnummer"
-					v-model="personaldatenModelProxy.proxy.lbvPersonalnummer" @commit="personaldatenModelProxy.patch" :readonly :max-len="15" />
+					v-model="personaldatenModelProxy.proxy.lbvPersonalnummer" @change="personaldatenModelProxy.patch" :readonly :max-len="15" />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Zugangsdatum" type="date"
-					v-model="personaldatenModelProxy.proxy.zugangsdatum" @commit="personaldatenModelProxy.patch" :readonly />
+					v-model="personaldatenModelProxy.proxy.zugangsdatum" @change="personaldatenModelProxy.patch" :readonly />
 				<svws-ui-text-input placeholder="Abgangsdatum" type="date"
-					v-model="personaldatenModelProxy.proxy.abgangsdatum" @commit="personaldatenModelProxy.patch" :readonly />
+					v-model="personaldatenModelProxy.proxy.abgangsdatum" @change="personaldatenModelProxy.patch" :readonly />
 				<ui-select label="Zugangsgrund" v-model="personaldatenModelProxy.zugangsgrund.value" :manager="zugangsgrundManager" :readonly />
 				<ui-select label="Abgangsgrund" v-model="personaldatenModelProxy.abgangsgrund.value" :manager="abgangsgrundManager" :readonly />
 			</svws-ui-input-wrapper>
@@ -30,7 +30,7 @@
 					v-model="personalabschnittsdatenModelProxy.beschaeftigungsart.value" :validation="() => personalabschnittsdatenModelProxy.getFehler('idBeschaeftigungsart')"
 					:manager="beschaeftigungsartSelectManager" :removable="false" required :readonly statistics />
 				<svws-ui-input-number placeholder="Pflichtstundensoll"
-					v-model="personalabschnittsdatenModelProxy.proxy.pflichtstundensoll" @commit="personalabschnittsdatenModelProxy.patch"
+					v-model="personalabschnittsdatenModelProxy.proxy.pflichtstundensoll" @change="personalabschnittsdatenModelProxy.patch"
 					:decimal-places="1" :steps="0.5" :readonly statistics />
 				<ui-select label="Einsatzstatus"
 					v-model="personalabschnittsdatenModelProxy.einsatzstatus.value" :validation="() => personalabschnittsdatenModelProxy.getFehler('idEinsatzstatus')"

@@ -33,7 +33,7 @@
 						:readonly="!hatKompetenzUpdate" :removable="false" required />
 					<svws-ui-checkbox v-model="model.proxy.istAktiv"
 						:validation="() => model.getFehler('istAktiv')"
-						@commit="model.patch"
+						@change="model.patch"
 						:readonly="!hatKompetenzUpdate">
 						Aktiv
 					</svws-ui-checkbox>
@@ -45,7 +45,7 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
-						@commit="model.patch"
+						@change="model.patch"
 						:min="0" :max="32000"
 						:readonly="!hatKompetenzUpdate"
 						:removeable="false" required />

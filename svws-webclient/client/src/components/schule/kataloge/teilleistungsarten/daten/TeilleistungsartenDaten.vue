@@ -10,7 +10,7 @@
 						:validation="() => modelProxy.getFehler('bezeichnung')"
 						:readonly
 						required :max-len="50"
-						@commit="modelProxy.patch" />
+						@change="modelProxy.patch" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />
@@ -19,7 +19,7 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="modelProxy.proxy.sortierung"
 						:validation="() => modelProxy.getFehler('sortierung')"
-						@commit="modelProxy.patch"
+						@change="modelProxy.patch"
 						:min="0" :max="32000"
 						:readonly
 						:removable="false" required />

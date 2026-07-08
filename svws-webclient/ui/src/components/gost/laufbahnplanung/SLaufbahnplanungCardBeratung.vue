@@ -42,7 +42,7 @@
 			return;
 		}
 		refBeratungsdatum.value.input.value = beratungsdatum.value;
-		refKommentar.value.localValue = gostLaufbahnplanungState.gostLaufbahnBeratungsdaten.kommentar;
+		refKommentar.value.data = gostLaufbahnplanungState.gostLaufbahnBeratungsdaten.kommentar;
 	});
 
 	watch(() => props.updated, (neu) => {

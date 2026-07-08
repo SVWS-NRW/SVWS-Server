@@ -23,7 +23,7 @@
 			</td>
 			<td class="text-left">
 				<svws-ui-text-input v-if="hatUpdateKompetenz" :model-value="row.data.bemerkung ?? ''"
-					@commit="value => patchLehrerUnterrichtsfach(row.data, { bemerkung: value || null })" headless />
+					@change="value => patchLehrerUnterrichtsfach(row.data, { bemerkung: value || null })" headless />
 				<span v-else>{{ row.data.bemerkung ?? '' }}</span>
 			</td>
 			<td>

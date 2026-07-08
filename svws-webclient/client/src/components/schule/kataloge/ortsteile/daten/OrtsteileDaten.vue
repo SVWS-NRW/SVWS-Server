@@ -6,7 +6,7 @@
 					<svws-ui-text-input placeholder="Ortsteil"
 						v-model="model.proxy.ortsteil"
 						:validation="() => model.getFehler('ortsteil')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="30" required :readonly />
 					<ui-select label="Ort"
 						v-model="model.ort.value"
@@ -21,7 +21,7 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
-						@commit="model.patch"
+						@change="model.patch"
 						:min="0" :max="32000"
 						:readonly
 						:removable="false" required />

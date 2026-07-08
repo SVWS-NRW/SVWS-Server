@@ -5,12 +5,12 @@
 				<svws-ui-text-input placeholder="Kürzel" class="contentFocusField"
 					v-model="model.proxy.kuerzel"
 					:validation="() => model.getFehler('kuerzel')"
-					@commit="model.patch"
+					@change="model.patch"
 					:max-len="10" required :readonly />
 				<svws-ui-text-input placeholder="Bezeichnung"
 					v-model="model.proxy.bezeichnung"
 					:validation="() => model.getFehler('bezeichnung')"
-					@commit="model.patch"
+					@change="model.patch"
 					:max-len="50" required :readonly />
 				<ui-select label="Floskelgruppenart"
 					v-model="model.selectedFloskelgruppenart.value"

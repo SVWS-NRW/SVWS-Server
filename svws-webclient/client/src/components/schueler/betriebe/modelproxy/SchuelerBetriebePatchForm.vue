@@ -13,7 +13,7 @@
 					:readonly="!hatKompetenzBearbeiten" />
 				<svws-ui-text-input placeholder="Betreuer/Ausbilder"
 					v-model="model.proxy.nameAusbilder"
-					@commit="model.patch"
+					@change="model.patch"
 					:validation="() => model.getFehler('nameAusbilder')"
 					:max-len="30" :readonly="!hatKompetenzBearbeiten" />
 				<ui-select label="Beschäftigungsart" v-if="istBK"

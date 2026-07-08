@@ -36,7 +36,7 @@
 					<svws-ui-checkbox v-model="row.proxy.istNachweis" headless :readonly />
 				</td>
 				<td class="ui-divider">
-					<svws-ui-input-number v-if="!readonly" title="Reihenfolge" headless v-model="row.proxy.reihenfolge" @commit="row.patch" :min="1" :max="8" />
+					<svws-ui-input-number v-if="!readonly" title="Reihenfolge" headless v-model="row.proxy.reihenfolge" @change="row.patch" :min="1" :max="8" />
 					<span v-else> {{ row.proxy.reihenfolge ?? "-" }} </span>
 				</td>
 				<template v-if="hatSpaltenZeitraum">

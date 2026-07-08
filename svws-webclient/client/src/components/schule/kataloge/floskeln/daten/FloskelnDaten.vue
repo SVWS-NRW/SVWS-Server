@@ -6,7 +6,7 @@
 					<svws-ui-text-input placeholder="Kürzel" class="contentFocusField"
 						v-model="model.proxy.kuerzel"
 						:validation="() => model.getFehler('kuerzel')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="10" :readonly="!hatKompetenzUpdate" required />
 					<svws-ui-textarea-input placeholder="Text" span="full"
 						v-model="model.proxy.text"
@@ -41,7 +41,7 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
-						@commit="model.patch"
+						@change="model.patch"
 						:min="0" :max="32000" required />
 					<svws-ui-spacing />
 				</svws-ui-input-wrapper>

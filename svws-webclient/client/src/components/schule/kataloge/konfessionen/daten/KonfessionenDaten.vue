@@ -15,13 +15,13 @@
 						searchable statistics :readonly="!hatKompetenzUpdate" :removable="false" required />
 					<svws-ui-text-input placeholder="Interne Bezeichnung"
 						v-model="model.proxy.bezeichnung"
-						@commit="model.patch"
+						@change="model.patch"
 						:validation="() => model.getFehler('bezeichnung')"
 						:max-len="30" :readonly="!hatKompetenzUpdate"
 						required />
 					<svws-ui-text-input placeholder="Zeugnisbezeichnung"
 						v-model="model.proxy.bezeichnungZeugnis"
-						@commit="model.patch"
+						@change="model.patch"
 						:validation="() => model.getFehler('bezeichnungZeugnis')"
 						:max-len="50" :readonly="!hatKompetenzUpdate" />
 				</svws-ui-input-wrapper>
@@ -31,7 +31,7 @@
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="model.proxy.sortierung"
-						@commit="model.patch"
+						@change="model.patch"
 						:validation="() => model.getFehler('sortierung')"
 						:readonly="!hatKompetenzUpdate"
 						:min="0" :max="32000"

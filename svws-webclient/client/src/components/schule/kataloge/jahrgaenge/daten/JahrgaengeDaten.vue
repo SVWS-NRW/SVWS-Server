@@ -6,17 +6,17 @@
 					<svws-ui-text-input placeholder="Kürzel" class="contentFocusField"
 						v-model="model.proxy.kuerzel"
 						:validation="() => model.getFehler('kuerzel')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="20" required :readonly />
 					<svws-ui-text-input placeholder="Bezeichnung"
 						v-model="model.proxy.bezeichnung"
 						:validation="() => model.getFehler('bezeichnung')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="100" required :readonly />
 					<svws-ui-text-input placeholder="Kurzbezeichnung"
 						v-model="model.proxy.kurzbezeichnung"
 						:validation="() => model.getFehler('kurzbezeichnung')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="2" :readonly />
 					<ui-select label="Folgejahrgang"
 						v-model="model.folgejahrgang.value"
@@ -43,7 +43,7 @@
 					<svws-ui-input-number placeholder="Anzahl der Restabschnitte"
 						v-model="model.proxy.anzahlRestabschnitte"
 						:validation="() => model.getFehler('anzahlRestabschnitte')"
-						@commit="model.patch"
+						@change="model.patch"
 						:min="0" :max="40" :readonly />
 					<ui-select label="Bildungsstufe"
 						:manager="bildungsstufeSelectManager"
@@ -57,7 +57,7 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
-						@commit="model.patch"
+						@change="model.patch"
 						:min="0" :max="32000"
 						:readonly
 						:removable="false" required />

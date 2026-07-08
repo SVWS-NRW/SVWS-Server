@@ -33,7 +33,7 @@
 				</td>
 				<td class="text-left p-1"> {{ getTextBySprache(row.proxy.sprache) }} </td>
 				<td class="ui-divider">
-					<svws-ui-text-input v-if="!readonly" title="Zeugnisbezeichnung" headless v-model="row.proxy.zeugnisbezeichnung" @commit="row.patch" />
+					<svws-ui-text-input v-if="!readonly" title="Zeugnisbezeichnung" headless v-model="row.proxy.zeugnisbezeichnung" @change="row.patch" />
 					<div v-else>{{ row.proxy.zeugnisbezeichnung }}</div>
 				</td>
 				<td>
@@ -59,7 +59,7 @@
 					<div v-else> {{ row.referenzniveau }} </div>
 				</td>
 				<td>
-					<svws-ui-text-input :disabled="readonly" placeholder="Prüfungsdatum" v-model="row.proxy.pruefungsdatum" @commit="row.patch" type="date" headless />
+					<svws-ui-text-input :disabled="readonly" placeholder="Prüfungsdatum" v-model="row.proxy.pruefungsdatum" @change="row.patch" type="date" headless />
 				</td>
 			</template>
 			<template #footer>

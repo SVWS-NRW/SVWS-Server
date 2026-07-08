@@ -6,7 +6,7 @@
 					<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField" span="2"
 						v-model="model.proxy.bezeichnung"
 						:validation="() => model.getFehler('bezeichnung')"
-						@commit="model.patch"
+						@change="model.patch"
 						:max-len="250" required :readonly="!hatKompetenzUpdate" />
 					<ui-select label="Einwilligungsschlüssel" class="col-span-full"
 						v-model="model.einwilligungsschluessel.value"
@@ -26,7 +26,7 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
-						@commit="model.patch"
+						@change="model.patch"
 						:min="0" :max="32000"
 						:readonly
 						:removable="false" required />
