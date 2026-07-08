@@ -66,8 +66,10 @@ import de.svws_nrw.asd.data.schule.FormBilingualerUnterrichtKatalogEintrag;
 import de.svws_nrw.asd.data.schule.FormOffenerGanztagKatalogEintrag;
 import de.svws_nrw.asd.data.schule.HerkunftsschulnummerKatalogEintrag;
 import de.svws_nrw.asd.data.schule.KindergartenbesuchKatalogEintrag;
+import de.svws_nrw.asd.data.schule.LaenderKatalogEintrag;
 import de.svws_nrw.asd.data.schule.NationalitaetenKatalogEintrag;
 import de.svws_nrw.asd.data.schule.OrganisationsformKatalogEintrag;
+import de.svws_nrw.asd.data.schule.OrteKatalogEintrag;
 import de.svws_nrw.asd.data.schule.ReformpaedagogikKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulabschlussAllgemeinbildendKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulabschlussBerufsbildendKatalogEintrag;
@@ -138,7 +140,9 @@ import de.svws_nrw.asd.types.schule.FormBilingualerUnterricht;
 import de.svws_nrw.asd.types.schule.FormOffenerGanztag;
 import de.svws_nrw.asd.types.schule.Herkunftsschulnummer;
 import de.svws_nrw.asd.types.schule.Kindergartenbesuch;
+import de.svws_nrw.asd.types.schule.Laender;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
+import de.svws_nrw.asd.types.schule.Orte;
 import de.svws_nrw.asd.types.schule.Reformpaedagogik;
 import de.svws_nrw.asd.types.schule.Religion;
 import de.svws_nrw.asd.types.schule.SchulabschlussAllgemeinbildend;
@@ -518,6 +522,8 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 				"de/svws_nrw/asd/types/schueler/Betreuungsart.json");
 		add(FormOffenerGanztag.class, FormOffenerGanztagKatalogEintrag.class, FormOffenerGanztag.values(),
 				"de/svws_nrw/asd/types/schule/FormOffenerGanztag.json");
+		add(Laender.class, LaenderKatalogEintrag.class, Laender.values(),
+				"de/svws_nrw/asd/types/schule/Laender.json");
 		addSimple(Einschulungsart.class, EinschulungsartKatalogEintrag.class,
 				"de/svws_nrw/asd/types/schueler/Einschulungsart.json");
 		addSimple(LehrerAnrechnungsgrund.class, LehrerAnrechnungsgrundKatalogEintrag.class,
@@ -560,6 +566,8 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 				"de/svws_nrw/asd/types/schule/Fachklasse.json");
 		addSimple(FormBilingualerUnterricht.class, FormBilingualerUnterrichtKatalogEintrag.class,
 				"de/svws_nrw/asd/types/schule/FormBilingualerUnterricht.json");
+		addSimple(Orte.class, OrteKatalogEintrag.class,
+				"de/svws_nrw/asd/types/schule/Orte.json");
 		addSimple(AnrechnungsantragBKAZVO.class, AnrechnungsantragBKAZVOKatalogEintrag.class,
 				"de/svws_nrw/asd/types/schueler/AnrechnungsantragBKAZVO.json");
 

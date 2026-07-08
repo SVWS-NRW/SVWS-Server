@@ -203,8 +203,10 @@ export { FormBilingualerUnterrichtKatalogEintrag } from './asd/data/schule/FormB
 export { FormOffenerGanztagKatalogEintrag } from './asd/data/schule/FormOffenerGanztagKatalogEintrag';
 export { HerkunftsschulnummerKatalogEintrag } from './asd/data/schule/HerkunftsschulnummerKatalogEintrag';
 export { KindergartenbesuchKatalogEintrag } from './asd/data/schule/KindergartenbesuchKatalogEintrag';
+export { LaenderKatalogEintrag } from './asd/data/schule/LaenderKatalogEintrag';
 export { NationalitaetenKatalogEintrag } from './asd/data/schule/NationalitaetenKatalogEintrag';
 export { OrganisationsformKatalogEintrag } from './asd/data/schule/OrganisationsformKatalogEintrag';
+export { OrteKatalogEintrag } from './asd/data/schule/OrteKatalogEintrag';
 export { ReformpaedagogikKatalogEintrag } from './asd/data/schule/ReformpaedagogikKatalogEintrag';
 export { SchulabschlussAllgemeinbildendKatalogEintrag } from './asd/data/schule/SchulabschlussAllgemeinbildendKatalogEintrag';
 export { SchulabschlussBerufsbildendKatalogEintrag } from './asd/data/schule/SchulabschlussBerufsbildendKatalogEintrag';
@@ -298,7 +300,9 @@ export { FormBilingualerUnterricht } from './asd/types/schule/FormBilingualerUnt
 export { FormOffenerGanztag } from './asd/types/schule/FormOffenerGanztag';
 export { Herkunftsschulnummer } from './asd/types/schule/Herkunftsschulnummer';
 export { Kindergartenbesuch } from './asd/types/schule/Kindergartenbesuch';
+export { Laender } from './asd/types/schule/Laender';
 export { Nationalitaeten } from './asd/types/schule/Nationalitaeten';
+export { Orte } from './asd/types/schule/Orte';
 export { Reformpaedagogik } from './asd/types/schule/Reformpaedagogik';
 export { Religion } from './asd/types/schule/Religion';
 export { SchulabschlussAllgemeinbildend } from './asd/types/schule/SchulabschlussAllgemeinbildend';
