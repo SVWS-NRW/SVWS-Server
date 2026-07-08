@@ -1,7 +1,6 @@
 <template>
 	<Teleport v-if="zeigeAlles" to=".svws-ui-header--actions" defer>
-		<wiedervorlage-modal v-if="!readonly"
-			type="schueler" mode="create"
+		<wiedervorlage-modal type="schueler" mode="create"
 			:person-id="model.proxy.id"
 			:person-name="`${model.proxy.vorname} ${model.proxy.nachname}`">
 			<template #default="{openModal}">
@@ -265,7 +264,7 @@
 	import { computed, ref } from "vue";
 	import type { SchuelerIndividualdatenProps } from "./SchuelerIndividualdatenProps";
 	import type { JavaSet, NationalitaetenKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, Fahrschuelerart, Haltestelle, SchuelerStatusKatalogEintrag, VerkehrsspracheKatalogEintrag } from "@core";
-	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, Verkehrssprache, BenutzerKompetenz, ServerMode, ArrayList, ReportingReportvorlage, HashSet } from "@core";
+	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, Verkehrssprache, BenutzerKompetenz, ArrayList, ReportingReportvorlage, HashSet } from "@core";
 	import { orte_sort, ortsteilSort } from "~/utils/helfer";
 	import { CoreTypeSelectManager, SelectManager, useReportingState, useSchuleState, useServerState } from "@ui";
 	import { SchuelerIndividualdatenModel } from "~/components/schueler/individualdaten/modelproxy/SchuelerIndividualdatenModelProxy";
