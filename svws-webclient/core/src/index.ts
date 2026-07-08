@@ -462,6 +462,10 @@ export { ValidatorSsSchuelerStammdaten } from './asd/validate/schueler/Validator
 export { ValidatorSsd00SchuelerStammdatenGeburtsdatum } from './asd/validate/schueler/ValidatorSsd00SchuelerStammdatenGeburtsdatum';
 export { ValidatorSsd01SchuelerStammdatenGeburtsdatum } from './asd/validate/schueler/ValidatorSsd01SchuelerStammdatenGeburtsdatum';
 export { ValidatorSsdSchuelerStammdatenGeburtsdatum } from './asd/validate/schueler/ValidatorSsdSchuelerStammdatenGeburtsdatum';
+export { ValidatorSses00SchuelerStammdatenErsteStaatsangehoerigkeit } from './asd/validate/schueler/ValidatorSses00SchuelerStammdatenErsteStaatsangehoerigkeit';
+export { ValidatorSses01SchuelerStammdatenErsteStaatsangehoerigkeit } from './asd/validate/schueler/ValidatorSses01SchuelerStammdatenErsteStaatsangehoerigkeit';
+export { ValidatorSses02SchuelerStammdatenErsteStaatsangehoerigkeit } from './asd/validate/schueler/ValidatorSses02SchuelerStammdatenErsteStaatsangehoerigkeit';
+export { ValidatorSsesSchuelerStammdatenErsteStaatsangehoerigkeit } from './asd/validate/schueler/ValidatorSsesSchuelerStammdatenErsteStaatsangehoerigkeit';
 export { ValidatorSsg00SchuelerStammdatenGeschlecht } from './asd/validate/schueler/ValidatorSsg00SchuelerStammdatenGeschlecht';
 export { ValidatorSsg01SchuelerStammdatenGeschlecht } from './asd/validate/schueler/ValidatorSsg01SchuelerStammdatenGeschlecht';
 export { ValidatorSsgSchuelerStammdatenGeschlecht } from './asd/validate/schueler/ValidatorSsgSchuelerStammdatenGeschlecht';
@@ -477,6 +481,10 @@ export { ValidatorSsnSchuelerStammdatenNachname } from './asd/validate/schueler/
 export { ValidatorSsv00SchuelerStammdatenVorname } from './asd/validate/schueler/ValidatorSsv00SchuelerStammdatenVorname';
 export { ValidatorSsv10SchuelerStammdatenVorname } from './asd/validate/schueler/ValidatorSsv10SchuelerStammdatenVorname';
 export { ValidatorSsvSchuelerStammdatenVorname } from './asd/validate/schueler/ValidatorSsvSchuelerStammdatenVorname';
+export { ValidatorSszs00SchuelerStammdatenZweiteStaatsangehoerigkeit } from './asd/validate/schueler/ValidatorSszs00SchuelerStammdatenZweiteStaatsangehoerigkeit';
+export { ValidatorSszs01SchuelerStammdatenZweiteStaatsangehoerigkeit } from './asd/validate/schueler/ValidatorSszs01SchuelerStammdatenZweiteStaatsangehoerigkeit';
+export { ValidatorSszs02SchuelerStammdatenZweiteStaatsangehoerigkeit } from './asd/validate/schueler/ValidatorSszs02SchuelerStammdatenZweiteStaatsangehoerigkeit';
+export { ValidatorSszsSchuelerStammdatenZweiteStaatsangehoerigkeit } from './asd/validate/schueler/ValidatorSszsSchuelerStammdatenZweiteStaatsangehoerigkeit';
 export { ValidatorSss00SchuleStammdatenSchulform } from './asd/validate/schule/ValidatorSss00SchuleStammdatenSchulform';
 export { ValidatorSss01SchuleStammdatenSchulform } from './asd/validate/schule/ValidatorSss01SchuleStammdatenSchulform';
 export { ValidatorSssSchuleStammdatenSchulform } from './asd/validate/schule/ValidatorSssSchuleStammdatenSchulform';

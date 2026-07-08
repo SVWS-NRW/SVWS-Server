@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSses00SchuelerStammdatenErsteStaatsangehoerigkeit",
+    "historie" : [ {
+      "praefix" : "SSES00",
+      "zweig" : "Schueler-Stammdaten-Erste-Staatsangehoerigkeit",
+      "dtos" : "SchuelerStammdaten",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Individualdaten'",
+      "anzeigebereich_ui" : "Feld '1. Staatsangehörigkeit'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "1. Staatsangehörigkeit des Schülers: Kein Wert vorhanden.",
+      "erlaeuterung" : "",
+      "bedingung" : "SchuelerStammdaten.staatsangehoerigkeitID = @",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }

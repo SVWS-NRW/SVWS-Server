@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSszs02SchuelerStammdatenZweiteStaatsangehoerigkeit",
+    "historie" : [ {
+      "praefix" : "SSZS02",
+      "zweig" : "Schueler-Stammdaten-Zweite-Staatsangehoerigkeit",
+      "dtos" : "SchuelerStammdaten",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Individualdaten'",
+      "anzeigebereich_ui" : "Feld '2. Staatsangehörigkeit'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["SSZS01"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "2. Staatsangehörigkeit des Schülers: Kein Wert vorhanden.",
+      "erlaeuterung" : "Hier soll geprüft werden, ob der ausgewählte Katalogeintrag zum Zeitpunkt der Prüfung zeitlich gültig ist, über gueltigVon und gueltigBis im Katalog",
+      "bedingung" : "SchuelerStammdaten.staatsangehoerigkeit2ID ≠ einem zeitlich gültigen Historieneintrag in Nationalitaeten.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }

@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSszs00SchuelerStammdatenZweiteStaatsangehoerigkeit",
+    "historie" : [ {
+      "praefix" : "SSZS00",
+      "zweig" : "Schueler-Stammdaten-Zweite-Staatsangehoerigkeit",
+      "dtos" : "SchuelerStammdaten",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Individualdaten'",
+      "anzeigebereich_ui" : "Feld '2. Staatsangehörigkeit'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "2. Staatsangehörigkeit des Schülers: Das Feld '2. Staatsangehörigkeit' darf nur ausgefüllt sein, wenn das Feld '1. Staatsangehörigkeit' ausgefüllt ist",
+      "erlaeuterung" : "",
+      "bedingung" : "SchuelerStammdaten.staatsangehoerigkeitID = @ ∧ SchuelerStammdaten.staatsangehoerigkeit2ID ≠ @",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }

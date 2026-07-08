@@ -1,0 +1,19 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSsesSchuelerStammdatenErsteStaatsangehoerigkeit",
+    "historie" : [ {
+      "praefix" : "SSES",
+      "zweig" : "Schueler-Stammdaten-Erste-Staatsangehoerigkeit",
+      "dtos" : "SchuelerStammdaten",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Individualdaten'",
+      "anzeigebereich_ui" : "Feld '1. Staatsangehörigkeit'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
