@@ -1,10 +1,8 @@
 package de.svws_nrw.asd.validate.lehrer;
 
-import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 
-import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
-import de.svws_nrw.asd.data.lehrer.LehrerLehrbefaehigungEintrag;
 import de.svws_nrw.asd.types.lehrer.LehrerLehramt;
 import de.svws_nrw.asd.types.lehrer.LehrerLehrbefaehigung;
 import de.svws_nrw.asd.validate.Validator;
@@ -17,46 +15,39 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorLpla11LehrerPersonaldatenLehramtLehrbefaehigung extends Validator {
 
-	/** Die Liste der Lehrämter. */
-	private final @NotNull Supplier<@AllowNull List<LehrerLehramtEintrag>> lehraemter;
+	/** Lehrbefähigung */
+	private final @NotNull Supplier<@NotNull LehrerLehrbefaehigung> _Lehrbefaehigung;
+
+	/** Lehramt */
+	private final @NotNull Supplier<@AllowNull LehrerLehramt> _lehrerLehramt;
+
+	private static final @NotNull Set<LehrerLehramt> zulaessigeLehraemter = Set.of(LehrerLehramt.ID_63, LehrerLehramt.ID_64, LehrerLehramt.ID_65);
 
 	/**
 	 * Erstellt einen neuen Validator zur Überprüfung der Lehrbefähigungseinträge.
 	 *
-	 * @param lehraemter         die Liste der Lehrämter
-	 * @param kontext            der Kontext des Validators
+	 * @param lehrbefaehigung     eine Lehrbefaehigung des Lehrers
+	 * @param lehrerLehramt       das Lehramt des Lehrers
+	 * @param kontext             der Kontext des Validators
 	 */
 	public ValidatorLpla11LehrerPersonaldatenLehramtLehrbefaehigung(
-			final @NotNull Supplier<@AllowNull List<LehrerLehramtEintrag>> lehraemter,
+			final @NotNull Supplier<@NotNull LehrerLehrbefaehigung> lehrbefaehigung,
+			final @NotNull Supplier<@AllowNull LehrerLehramt> lehrerLehramt,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this.lehraemter = lehraemter;
+		_Lehrbefaehigung = lehrbefaehigung;
+		_lehrerLehramt = lehrerLehramt;
 	}
 
 	@Override
 	protected boolean pruefe() {
 
-		final List<LehrerLehramtEintrag> liste = this.lehraemter.get();
+		if (zulaessigeLehraemter.contains(_lehrerLehramt.get())) {
 
-		if (liste != null) {
-
-			for (final LehrerLehramtEintrag lehrerLehramtEintrag : liste) {
-
-				final LehrerLehramt zuueberpruefendesLehramt = LehrerLehramt.data().getWertByIDOrNull(lehrerLehramtEintrag.idKatalogLehramt);
-
-				if (LehrerLehramt.ID_63.equals(zuueberpruefendesLehramt) || LehrerLehramt.ID_64.equals(zuueberpruefendesLehramt) || LehrerLehramt.ID_65.equals(zuueberpruefendesLehramt)) {
-
-					for (final LehrerLehrbefaehigungEintrag lehrerLehrbefaehigungEintrag : lehrerLehramtEintrag.lehrbefaehigungen) {
-
-						LehrerLehrbefaehigung zuueberprufendeLehrbefaehigunhg = LehrerLehrbefaehigung.data().getWertByID(lehrerLehrbefaehigungEintrag.idLehrbefaehigung);
-
-						if (!LehrerLehrbefaehigung.BE.equals(zuueberprufendeLehrbefaehigunhg)) {
-							addFehler(0,
-									"Für die Lehrämter 'Alltagshelfer/-in', 'Handwerksmeister/-in' und 'Heilpädagoge/-in' ist nur die Lehrbefähigung 'Betreuung' zulässig.");
-							return false;
-						}
-					}
-				}
+			if (!LehrerLehrbefaehigung.BE.equals(_Lehrbefaehigung.get())) {
+				addFehler(0,
+						"Für die Lehrämter 'Alltagshelfer/-in', 'Handwerksmeister/-in' und 'Heilpädagoge/-in' ist nur die Lehrbefähigung 'Betreuung' zulässig.");
+				return false;
 			}
 		}
 		return true;

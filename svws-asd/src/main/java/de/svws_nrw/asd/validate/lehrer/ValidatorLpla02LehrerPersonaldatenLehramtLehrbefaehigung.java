@@ -1,10 +1,8 @@
 package de.svws_nrw.asd.validate.lehrer;
 
-import java.util.List;
 import java.util.function.Supplier;
 
-import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
-import de.svws_nrw.asd.data.lehrer.LehrerLehrbefaehigungEintrag;
+import de.svws_nrw.asd.types.lehrer.LehrerLehramt;
 import de.svws_nrw.asd.types.lehrer.LehrerLehrbefaehigung;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
@@ -16,54 +14,42 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorLpla02LehrerPersonaldatenLehramtLehrbefaehigung extends Validator {
 
-	/** Die Liste der Lehrämter. */
-	private final @NotNull Supplier<@AllowNull List<LehrerLehramtEintrag>> lehraemter;
+	/** IDLehrbefähigung */
+	private final @NotNull Supplier<@NotNull Long> _idLehrbefaehigung;
+
+	/** Lehrbefähigung */
+	private final @NotNull Supplier<@NotNull LehrerLehrbefaehigung> _lehrbefaehigung;
 
 	/**
 	 * Erstellt einen neuen Validator zur Überprüfung der Lehrbefähigungseinträge.
 	 *
-	 * @param lehraemter         die Liste der Lehrämter
-	 * @param kontext            der Kontext des Validators
+	 * @param idLehrbefaehigung   eine idLehrbefaehigung des Lehrers
+	 * @param lehrerLehramt       das Lehramt des Lehrers
+	 * @param kontext             der Kontext des Validators
 	 */
 	public ValidatorLpla02LehrerPersonaldatenLehramtLehrbefaehigung(
-			final @NotNull Supplier<@AllowNull List<LehrerLehramtEintrag>> lehraemter,
+			final @NotNull Supplier<@NotNull Long> idLehrbefaehigung,
+			final @NotNull Supplier<@AllowNull LehrerLehramt> lehrerLehramt,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this.lehraemter = lehraemter;
+		_idLehrbefaehigung = idLehrbefaehigung;
+		_lehrbefaehigung = () -> LehrerLehrbefaehigung.data().getWertByID(idLehrbefaehigung.get());
 
-		_validatoren.add(new ValidatorLpla10LehrerPersonaldatenLehramtLehrbefaehigung(lehraemter, kontext));
-		_validatoren.add(new ValidatorLpla11LehrerPersonaldatenLehramtLehrbefaehigung(lehraemter, kontext));
-		_validatoren.add(new ValidatorLpla12LehrerPersonaldatenLehramtLehrbefaehigung(lehraemter, kontext));
-		_validatoren.add(new ValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung(lehraemter, kontext));
+		_validatoren.add(new ValidatorLpla10LehrerPersonaldatenLehramtLehrbefaehigung(_lehrbefaehigung, lehrerLehramt, kontext));
+		_validatoren.add(new ValidatorLpla11LehrerPersonaldatenLehramtLehrbefaehigung(_lehrbefaehigung, lehrerLehramt, kontext));
+		_validatoren.add(new ValidatorLpla12LehrerPersonaldatenLehramtLehrbefaehigung(_lehrbefaehigung, lehrerLehramt, kontext));
+		_validatoren.add(new ValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung(_lehrbefaehigung, lehrerLehramt, kontext));
 	}
 
 	@Override
 	protected boolean pruefe() {
 
-		boolean fehlerVorhanden = false;
-
-		final List<LehrerLehramtEintrag> lehrerLehramtEintragList = lehraemter.get();
-
-		if (lehrerLehramtEintragList != null) {
-
-			for (final @NotNull LehrerLehramtEintrag lehrerLehramtEintrag : lehrerLehramtEintragList) {
-
-				for (final LehrerLehrbefaehigungEintrag lehrerLehrbefaehigungEintrag : lehrerLehramtEintrag.lehrbefaehigungen) {
-
-
-					if (!LehrerLehrbefaehigung.data().isGueltig(lehrerLehrbefaehigungEintrag.idLehrbefaehigung, kontext().getSchuljahr())) {
-
-						fehlerVorhanden = true;
-						addFehler(0, "Der eingetragene Wert für das Feld 'Lehrbefähigungen' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.");
-					}
-				}
-
-				if (fehlerVorhanden) {
-					return false;
-				}
-
-			}
+		if (!LehrerLehrbefaehigung.data().isGueltig(_idLehrbefaehigung.get(), kontext().getSchuljahr())) {
+			addFehler(0, "Der eingetragene Wert für das Feld 'Lehrbefähigungen' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.");
+		return false;
 		}
+
+
 		return true;
 	}
 }

@@ -1,8 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { LehrerLehramtEintrag } from '../../../asd/data/lehrer/LehrerLehramtEintrag';
 import { LehrerLehramt } from '../../../asd/types/lehrer/LehrerLehramt';
 import type { Supplier } from '../../../java/util/function/Supplier';
-import type { List } from '../../../java/util/List';
 import { LehrerLehrbefaehigung } from '../../../asd/types/lehrer/LehrerLehrbefaehigung';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
@@ -11,35 +9,34 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorLpla10LehrerPersonaldatenLehramtLehrbefaehigung extends Validator {
 
 	/**
-	 * Die Liste der Lehrämter.
+	 * Lehrbefähigung
 	 */
-	private readonly lehraemter: Supplier<List<LehrerLehramtEintrag> | null>;
+	private readonly _Lehrbefaehigung: Supplier<LehrerLehrbefaehigung>;
+
+	/**
+	 * Lehramt
+	 */
+	private readonly _lehrerLehramt: Supplier<LehrerLehramt | null>;
 
 
 	/**
 	 * Erstellt einen neuen Validator zur Überprüfung der Lehrbefähigungseinträge.
 	 *
-	 * @param lehraemter         die Liste der Lehrämter
-	 * @param kontext            der Kontext des Validators
+	 * @param _lehrbefaehigung    eine Lehrbefaehigung des Lehrers
+	 * @param lehrerLehramt       das Lehramt des Lehrers
+	 * @param kontext             der Kontext des Validators
 	 */
-	public constructor(lehraemter: Supplier<List<LehrerLehramtEintrag> | null>, kontext: ValidatorKontext) {
+	public constructor(_lehrbefaehigung: Supplier<LehrerLehrbefaehigung>, lehrerLehramt: Supplier<LehrerLehramt | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.lehraemter = lehraemter;
+		this._Lehrbefaehigung = _lehrbefaehigung;
+		this._lehrerLehramt = lehrerLehramt;
 	}
 
 	protected pruefe(): boolean {
-		let lehrerLehramtEintragList: List<LehrerLehramtEintrag> | null = this.lehraemter.get();
-		if (lehrerLehramtEintragList !== null) {
-			for (const lehrerLehramtEintrag of lehrerLehramtEintragList) {
-				let lehrerLehramt: LehrerLehramt | null = LehrerLehramt.data().getWertByID(lehrerLehramtEintrag.idKatalogLehramt);
-				if (JavaObject.equalsTranspiler(LehrerLehramt.ID_70, (lehrerLehramt))) {
-					for (const lehrerLehrbefaehigungEintrag of lehrerLehramtEintrag.lehrbefaehigungen) {
-						if (!JavaObject.equalsTranspiler(LehrerLehrbefaehigung.OA, (LehrerLehrbefaehigung.data().getWertByID(lehrerLehrbefaehigungEintrag.idLehrbefaehigung)))) {
-							this.addFehler(0, "Für das Lehramt 'Schulverwaltungsassistent/-in' ist nur die Lehrbefähigung 'ohne Angabe' zulässig.");
-							return false;
-						}
-					}
-				}
+		if (JavaObject.equalsTranspiler(LehrerLehramt.ID_70, (this._lehrerLehramt.get()))) {
+			if (!JavaObject.equalsTranspiler(LehrerLehrbefaehigung.OA, (this._Lehrbefaehigung.get()))) {
+				this.addFehler(0, "Für das Lehramt 'Schulverwaltungsassistent/-in' ist nur die Lehrbefähigung 'ohne Angabe' zulässig.");
+				return false;
 			}
 		}
 		return true;

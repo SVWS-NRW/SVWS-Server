@@ -23,8 +23,8 @@ export class ValidatorLplLehrerPersonaldatenLehramt extends Validator {
 	public constructor(lehraemter: Supplier<List<LehrerLehramtEintrag>>, lehrerId: Supplier<number>, geburtsdatum: Supplier<DateManager | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._validatoren.add(new ValidatorLpl00LehrerPersonaldatenLehramt(lehraemter, lehrerId, geburtsdatum, kontext));
-		this._validatoren.add(new ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung(lehraemter, kontext));
 		this._validatoren.add(new ValidatorLplkLehrerPersonaldatenLehramtKombination(lehraemter, kontext));
+		this._validatoren.add(new ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung({ get: () => null }, { get: () => null }, kontext));
 	}
 
 	protected pruefe(): boolean {

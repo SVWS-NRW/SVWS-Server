@@ -1,8 +1,7 @@
-import { LehrerLehramtEintrag } from '../../../asd/data/lehrer/LehrerLehramtEintrag';
 import { ValidatorLpla10LehrerPersonaldatenLehramtLehrbefaehigung } from '../../../asd/validate/lehrer/ValidatorLpla10LehrerPersonaldatenLehramtLehrbefaehigung';
+import { LehrerLehramt } from '../../../asd/types/lehrer/LehrerLehramt';
 import { ValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung } from '../../../asd/validate/lehrer/ValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung';
 import type { Supplier } from '../../../java/util/function/Supplier';
-import type { List } from '../../../java/util/List';
 import { LehrerLehrbefaehigung } from '../../../asd/types/lehrer/LehrerLehrbefaehigung';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
@@ -13,41 +12,37 @@ import { ValidatorLpla11LehrerPersonaldatenLehramtLehrbefaehigung } from '../../
 export class ValidatorLpla02LehrerPersonaldatenLehramtLehrbefaehigung extends Validator {
 
 	/**
-	 * Die Liste der Lehrämter.
+	 * IDLehrbefähigung
 	 */
-	private readonly lehraemter: Supplier<List<LehrerLehramtEintrag> | null>;
+	private readonly _idLehrbefaehigung: Supplier<number>;
+
+	/**
+	 * Lehrbefähigung
+	 */
+	private readonly _lehrbefaehigung: Supplier<LehrerLehrbefaehigung>;
 
 
 	/**
 	 * Erstellt einen neuen Validator zur Überprüfung der Lehrbefähigungseinträge.
 	 *
-	 * @param lehraemter         die Liste der Lehrämter
-	 * @param kontext            der Kontext des Validators
+	 * @param idLehrbefaehigung   eine idLehrbefaehigung des Lehrers
+	 * @param lehrerLehramt       das Lehramt des Lehrers
+	 * @param kontext             der Kontext des Validators
 	 */
-	public constructor(lehraemter: Supplier<List<LehrerLehramtEintrag> | null>, kontext: ValidatorKontext) {
+	public constructor(idLehrbefaehigung: Supplier<number>, lehrerLehramt: Supplier<LehrerLehramt | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.lehraemter = lehraemter;
-		this._validatoren.add(new ValidatorLpla10LehrerPersonaldatenLehramtLehrbefaehigung(lehraemter, kontext));
-		this._validatoren.add(new ValidatorLpla11LehrerPersonaldatenLehramtLehrbefaehigung(lehraemter, kontext));
-		this._validatoren.add(new ValidatorLpla12LehrerPersonaldatenLehramtLehrbefaehigung(lehraemter, kontext));
-		this._validatoren.add(new ValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung(lehraemter, kontext));
+		this._idLehrbefaehigung = idLehrbefaehigung;
+		this._lehrbefaehigung = { get: () => LehrerLehrbefaehigung.data().getWertByID(idLehrbefaehigung.get()) };
+		this._validatoren.add(new ValidatorLpla10LehrerPersonaldatenLehramtLehrbefaehigung(this._lehrbefaehigung, lehrerLehramt, kontext));
+		this._validatoren.add(new ValidatorLpla11LehrerPersonaldatenLehramtLehrbefaehigung(this._lehrbefaehigung, lehrerLehramt, kontext));
+		this._validatoren.add(new ValidatorLpla12LehrerPersonaldatenLehramtLehrbefaehigung(this._lehrbefaehigung, lehrerLehramt, kontext));
+		this._validatoren.add(new ValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung(this._lehrbefaehigung, lehrerLehramt, kontext));
 	}
 
 	protected pruefe(): boolean {
-		let fehlerVorhanden: boolean = false;
-		const lehrerLehramtEintragList: List<LehrerLehramtEintrag> | null = this.lehraemter.get();
-		if (lehrerLehramtEintragList !== null) {
-			for (const lehrerLehramtEintrag of lehrerLehramtEintragList) {
-				for (const lehrerLehrbefaehigungEintrag of lehrerLehramtEintrag.lehrbefaehigungen) {
-					if (!LehrerLehrbefaehigung.data().isGueltig(lehrerLehrbefaehigungEintrag.idLehrbefaehigung, this.kontext().getSchuljahr())) {
-						fehlerVorhanden = true;
-						this.addFehler(0, "Der eingetragene Wert für das Feld 'Lehrbefähigungen' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.");
-					}
-				}
-				if (fehlerVorhanden) {
-					return false;
-				}
-			}
+		if (!LehrerLehrbefaehigung.data().isGueltig(this._idLehrbefaehigung.get(), this.kontext().getSchuljahr())) {
+			this.addFehler(0, "Der eingetragene Wert für das Feld 'Lehrbefähigungen' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.");
+			return false;
 		}
 		return true;
 	}

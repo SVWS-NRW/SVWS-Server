@@ -1,6 +1,5 @@
-import { LehrerLehramtEintrag } from '../../../asd/data/lehrer/LehrerLehramtEintrag';
+import { LehrerLehramt } from '../../../asd/types/lehrer/LehrerLehramt';
 import type { Supplier } from '../../../java/util/function/Supplier';
-import type { List } from '../../../java/util/List';
 import { LehrerLehrbefaehigung } from '../../../asd/types/lehrer/LehrerLehrbefaehigung';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
@@ -10,36 +9,29 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorLpla01LehrerPersonaldatenLehramtLehrbefaehigung extends Validator {
 
 	/**
-	 * Die Liste der Lehrämter.
+	 * Lehrbefähigung
 	 */
-	private readonly lehraemter: Supplier<List<LehrerLehramtEintrag> | null>;
+	private readonly _idLehrbefaehigung: Supplier<number>;
 
 
 	/**
 	 * Erstellt einen neuen Validator zur Überprüfung der Lehrbefähigungseinträge.
 	 *
-	 * @param lehraemter         die Liste der Lehrämter
-	 * @param kontext            der Kontext des Validators
+	 * @param idLehrbefaehigung   eine idLehrbefaehigung des Lehrers
+	 * @param lehrerLehramt       das Lehramt des Lehrers
+	 * @param kontext             der Kontext des Validators
 	 */
-	public constructor(lehraemter: Supplier<List<LehrerLehramtEintrag> | null>, kontext: ValidatorKontext) {
+	public constructor(idLehrbefaehigung: Supplier<number>, lehrerLehramt: Supplier<LehrerLehramt | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.lehraemter = lehraemter;
-		this._validatoren.add(new ValidatorLpla02LehrerPersonaldatenLehramtLehrbefaehigung(lehraemter, kontext));
+		this._idLehrbefaehigung = idLehrbefaehigung;
+		this._validatoren.add(new ValidatorLpla02LehrerPersonaldatenLehramtLehrbefaehigung(idLehrbefaehigung, lehrerLehramt, kontext));
 	}
 
 	protected pruefe(): boolean {
-		const liste: List<LehrerLehramtEintrag> | null = this.lehraemter.get();
-		if (liste === null) {
+		const lehrbefaehigungSchluessel: string | null = LehrerLehrbefaehigung.data().getSchluesselByIDOrNull(this._idLehrbefaehigung.get());
+		if (lehrbefaehigungSchluessel === null) {
 			this.addFehler(0, "Das Feld 'Lehrbefaehigung' muss zulässig sein. ");
 			return false;
-		}
-		for (const lehrerLehramtEintrag of liste) {
-			for (const lehrerLehrbefaehigungEintrag of lehrerLehramtEintrag.lehrbefaehigungen) {
-				if (!LehrerLehrbefaehigung.data().isGueltig(lehrerLehrbefaehigungEintrag.idLehrbefaehigung, this.kontext().getSchuljahr())) {
-					this.addFehler(0, "Das Feld 'Lehrbefaehigung' muss zulässig sein. ");
-					return false;
-				}
-			}
 		}
 		return true;
 	}

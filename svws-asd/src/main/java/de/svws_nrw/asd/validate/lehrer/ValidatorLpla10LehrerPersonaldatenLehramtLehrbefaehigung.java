@@ -1,10 +1,7 @@
 package de.svws_nrw.asd.validate.lehrer;
 
-import java.util.List;
 import java.util.function.Supplier;
 
-import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
-import de.svws_nrw.asd.data.lehrer.LehrerLehrbefaehigungEintrag;
 import de.svws_nrw.asd.types.lehrer.LehrerLehramt;
 import de.svws_nrw.asd.types.lehrer.LehrerLehrbefaehigung;
 import de.svws_nrw.asd.validate.Validator;
@@ -17,41 +14,38 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorLpla10LehrerPersonaldatenLehramtLehrbefaehigung extends Validator {
 
-	/** Die Liste der Lehrämter. */
-	private final @NotNull Supplier<@AllowNull List<LehrerLehramtEintrag>> lehraemter;
+	/** Lehrbefähigung */
+	private final @NotNull Supplier<@NotNull LehrerLehrbefaehigung> _Lehrbefaehigung;
+
+	/** Lehramt */
+	private final @NotNull Supplier<@AllowNull LehrerLehramt> _lehrerLehramt;
 
 	/**
 	 * Erstellt einen neuen Validator zur Überprüfung der Lehrbefähigungseinträge.
 	 *
-	 * @param lehraemter         die Liste der Lehrämter
-	 * @param kontext            der Kontext des Validators
+	 * @param _lehrbefaehigung    eine Lehrbefaehigung des Lehrers
+	 * @param lehrerLehramt       das Lehramt des Lehrers
+	 * @param kontext             der Kontext des Validators
 	 */
 	public ValidatorLpla10LehrerPersonaldatenLehramtLehrbefaehigung(
-			final @NotNull Supplier<@AllowNull List<LehrerLehramtEintrag>> lehraemter,
+			final @NotNull @NotNull Supplier<@NotNull LehrerLehrbefaehigung> _lehrbefaehigung,
+			final @NotNull Supplier<@AllowNull LehrerLehramt> lehrerLehramt,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this.lehraemter = lehraemter;
+		_Lehrbefaehigung = _lehrbefaehigung;
+		_lehrerLehramt = lehrerLehramt;
 	}
 
 	@Override
 	protected boolean pruefe() {
-
-		List<LehrerLehramtEintrag> lehrerLehramtEintragList = lehraemter.get();
-
-		if (lehrerLehramtEintragList != null) {
-			for (final LehrerLehramtEintrag lehrerLehramtEintrag : lehrerLehramtEintragList) {
-
-				LehrerLehramt lehrerLehramt = LehrerLehramt.data().getWertByID(lehrerLehramtEintrag.idKatalogLehramt);
-
-				if (LehrerLehramt.ID_70.equals(lehrerLehramt)) {
-
-					for (final LehrerLehrbefaehigungEintrag lehrerLehrbefaehigungEintrag : lehrerLehramtEintrag.lehrbefaehigungen) {
-						if (!LehrerLehrbefaehigung.OA.equals(LehrerLehrbefaehigung.data().getWertByID(lehrerLehrbefaehigungEintrag.idLehrbefaehigung))) {
-							addFehler(0, "Für das Lehramt 'Schulverwaltungsassistent/-in' ist nur die Lehrbefähigung 'ohne Angabe' zulässig.");
-							return false;
-						}
-					}
-				}
+//TODO ===========================================================
+//		für übergeordnete Klasse ==> z.B. gesamtValidator.java, dann runterreichen
+//		LehrerLehramt lehrerLehramt = LehrerLehramt.data().getWertByIDOrNull(lehrerLehramtEintrag.idKatalogLehramt);
+//==============================================================
+		if (LehrerLehramt.ID_70.equals(_lehrerLehramt.get())) {
+			if (!LehrerLehrbefaehigung.OA.equals(_Lehrbefaehigung.get())) {
+				addFehler(0, "Für das Lehramt 'Schulverwaltungsassistent/-in' ist nur die Lehrbefähigung 'ohne Angabe' zulässig.");
+				return false;
 			}
 		}
 		return true;

@@ -1,8 +1,7 @@
-import { LehrerLehramtEintrag } from '../../../asd/data/lehrer/LehrerLehramtEintrag';
+import { LehrerLehramt } from '../../../asd/types/lehrer/LehrerLehramt';
+import { ValidatorLpla00LehrerPersonaldatenLehramtLehrbefaehigung } from '../../../asd/validate/lehrer/ValidatorLpla00LehrerPersonaldatenLehramtLehrbefaehigung';
 import type { Supplier } from '../../../java/util/function/Supplier';
-import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
-import { ValidatorLpla01LehrerPersonaldatenLehramtLehrbefaehigung } from '../../../asd/validate/lehrer/ValidatorLpla01LehrerPersonaldatenLehramtLehrbefaehigung';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 
@@ -12,12 +11,13 @@ export class ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung extends Vali
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param lehraemter            die Lehrämter, die geprüft werden sollen
-	 * @param kontext               der Kontext des Validators
+	 * @param idLehrbefaehigung   eine idLehrbefaehigung des Lehrers
+	 * @param lehrerLehramt       das Lehramt des Lehrers
+	 * @param kontext             der Kontext des Validators
 	 */
-	public constructor(lehraemter: Supplier<List<LehrerLehramtEintrag>>, kontext: ValidatorKontext) {
+	public constructor(idLehrbefaehigung: Supplier<number | null>, lehrerLehramt: Supplier<LehrerLehramt | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._validatoren.add(new ValidatorLpla01LehrerPersonaldatenLehramtLehrbefaehigung(lehraemter, kontext));
+		this._validatoren.add(new ValidatorLpla00LehrerPersonaldatenLehramtLehrbefaehigung(idLehrbefaehigung, { get: () => null }, kontext));
 	}
 
 	protected pruefe(): boolean {

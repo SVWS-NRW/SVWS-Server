@@ -356,6 +356,7 @@ export { ValidatorLpl01LehrerPersonaldatenLehramt } from './asd/validate/lehrer/
 export { ValidatorLpl10LehrerPersonaldatenLehramt } from './asd/validate/lehrer/ValidatorLpl10LehrerPersonaldatenLehramt';
 export { ValidatorLpl11LehrerPersonaldatenLehramt } from './asd/validate/lehrer/ValidatorLpl11LehrerPersonaldatenLehramt';
 export { ValidatorLplLehrerPersonaldatenLehramt } from './asd/validate/lehrer/ValidatorLplLehrerPersonaldatenLehramt';
+export { ValidatorLpla00LehrerPersonaldatenLehramtLehrbefaehigung } from './asd/validate/lehrer/ValidatorLpla00LehrerPersonaldatenLehramtLehrbefaehigung';
 export { ValidatorLpla01LehrerPersonaldatenLehramtLehrbefaehigung } from './asd/validate/lehrer/ValidatorLpla01LehrerPersonaldatenLehramtLehrbefaehigung';
 export { ValidatorLpla02LehrerPersonaldatenLehramtLehrbefaehigung } from './asd/validate/lehrer/ValidatorLpla02LehrerPersonaldatenLehramtLehrbefaehigung';
 export { ValidatorLpla10LehrerPersonaldatenLehramtLehrbefaehigung } from './asd/validate/lehrer/ValidatorLpla10LehrerPersonaldatenLehramtLehrbefaehigung';

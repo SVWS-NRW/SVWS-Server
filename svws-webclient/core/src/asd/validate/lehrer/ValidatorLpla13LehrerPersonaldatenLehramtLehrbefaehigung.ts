@@ -1,9 +1,7 @@
-import { LehrerLehramtEintrag } from '../../../asd/data/lehrer/LehrerLehramtEintrag';
 import type { JavaSet } from '../../../java/util/JavaSet';
 import { java_util_Set_of } from '../../../java/util/JavaSet';
 import { LehrerLehramt } from '../../../asd/types/lehrer/LehrerLehramt';
 import type { Supplier } from '../../../java/util/function/Supplier';
-import type { List } from '../../../java/util/List';
 import { LehrerLehrbefaehigung } from '../../../asd/types/lehrer/LehrerLehrbefaehigung';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
@@ -12,9 +10,14 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung extends Validator {
 
 	/**
-	 * Die Liste der Lehrämter.
+	 * Lehrbefähigung
 	 */
-	private readonly lehraemter: Supplier<List<LehrerLehramtEintrag> | null>;
+	private readonly _lehrbefaehigung: Supplier<LehrerLehrbefaehigung>;
+
+	/**
+	 * Lehramt
+	 */
+	private readonly _lehrerLehramt: Supplier<LehrerLehramt | null>;
 
 	private static readonly zulaessigeLehraemter: JavaSet<LehrerLehramt> = java_util_Set_of(LehrerLehramt.ID_04, LehrerLehramt.ID_08, LehrerLehramt.ID_90, LehrerLehramt.ID_98);
 
@@ -24,27 +27,21 @@ export class ValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung extends Va
 	/**
 	 * Erstellt einen neuen Validator zur Überprüfung der Lehrbefähigungseinträge.
 	 *
-	 * @param lehraemter         die Liste der Lehrämter
-	 * @param kontext            der Kontext des Validators
+	 * @param lehrbefaehigung     eine Lehrbefaehigung des Lehrers
+	 * @param lehrerLehramt       das Lehramt des Lehrers
+	 * @param kontext             der Kontext des Validators
 	 */
-	public constructor(lehraemter: Supplier<List<LehrerLehramtEintrag> | null>, kontext: ValidatorKontext) {
+	public constructor(lehrbefaehigung: Supplier<LehrerLehrbefaehigung>, lehrerLehramt: Supplier<LehrerLehramt | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.lehraemter = lehraemter;
+		this._lehrbefaehigung = lehrbefaehigung;
+		this._lehrerLehramt = lehrerLehramt;
 	}
 
 	protected pruefe(): boolean {
-		const liste: List<LehrerLehramtEintrag> | null = this.lehraemter.get();
-		if (liste !== null) {
-			for (const lehrerLehramtEintrag of liste) {
-				const zuueberpruefendesLehramt: LehrerLehramt | null = LehrerLehramt.data().getWertByIDOrNull(lehrerLehramtEintrag.idKatalogLehramt);
-				if (!ValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung.zulaessigeLehraemter.contains(zuueberpruefendesLehramt)) {
-					for (const lehrerLehrbefaehigungEintrag of lehrerLehramtEintrag.lehrbefaehigungen) {
-						if (ValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung.zuPruefendeLehrbefaehigungen.contains((LehrerLehrbefaehigung.data().getWertByIDOrNull(lehrerLehrbefaehigungEintrag.idLehrbefaehigung)))) {
-							this.addFehler(0, "Bei den Lehrbefähigungen 'AE - Ästhetische Erziehung', 'MG - Mathematische Grundbildung', 'NG - Natur- und Gesellschaftswissenschaften' und 'SB - Sprachliche Grundbildung' muss das Lehramt 'Grundschule' oder 'Sonderpädagogische Förderung' bzw. die Lehramtseinträge 'Studierende' oder 'Lehramtsanwärter/-in / Studienreferendar/-in' angegeben werden.");
-							return false;
-						}
-					}
-				}
+		if (ValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung.zulaessigeLehraemter.contains(this._lehrerLehramt.get())) {
+			if (!ValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung.zuPruefendeLehrbefaehigungen.contains(this._lehrbefaehigung.get())) {
+				this.addFehler(0, "Bei den Lehrbefähigungen 'AE - Ästhetische Erziehung', 'MG - Mathematische Grundbildung', 'NG - Natur- und Gesellschaftswissenschaften' und 'SB - Sprachliche Grundbildung' muss das Lehramt 'Grundschule' oder 'Sonderpädagogische Förderung' bzw. die Lehramtseinträge 'Studierende' oder 'Lehramtsanwärter/-in / Studienreferendar/-in' angegeben werden.");
+				return false;
 			}
 		}
 		return true;

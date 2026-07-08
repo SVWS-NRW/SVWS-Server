@@ -30,11 +30,15 @@ public final class ValidatorLplLehrerPersonaldatenLehramt extends Validator {
 			final @NotNull Supplier<@AllowNull DateManager> geburtsdatum,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
+
+//		gesamtprüfungen über alle Lehrämter ==> woanders in den Baum!!!!!!!!!!!!!!!!!!! (vor die Schleife über die Lehrämter)
 		_validatoren.add(new ValidatorLpl00LehrerPersonaldatenLehramt(lehraemter, lehrerId, geburtsdatum, kontext));
-
-		_validatoren.add(new ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung(lehraemter, kontext));
-
 		_validatoren.add(new ValidatorLplkLehrerPersonaldatenLehramtKombination(lehraemter, kontext));
+
+//TODO vernünftige Werte übergeben
+// einzelprüfung über ein Lehramt
+		_validatoren.add(new ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung(() -> null, () -> null, kontext));
+
 	}
 
 	@Override

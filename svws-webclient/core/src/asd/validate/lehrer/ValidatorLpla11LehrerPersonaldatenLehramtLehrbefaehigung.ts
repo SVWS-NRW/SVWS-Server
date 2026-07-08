@@ -1,8 +1,8 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { LehrerLehramtEintrag } from '../../../asd/data/lehrer/LehrerLehramtEintrag';
+import type { JavaSet } from '../../../java/util/JavaSet';
+import { java_util_Set_of } from '../../../java/util/JavaSet';
 import { LehrerLehramt } from '../../../asd/types/lehrer/LehrerLehramt';
 import type { Supplier } from '../../../java/util/function/Supplier';
-import type { List } from '../../../java/util/List';
 import { LehrerLehrbefaehigung } from '../../../asd/types/lehrer/LehrerLehrbefaehigung';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
@@ -11,36 +11,36 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorLpla11LehrerPersonaldatenLehramtLehrbefaehigung extends Validator {
 
 	/**
-	 * Die Liste der Lehrämter.
+	 * Lehrbefähigung
 	 */
-	private readonly lehraemter: Supplier<List<LehrerLehramtEintrag> | null>;
+	private readonly _Lehrbefaehigung: Supplier<LehrerLehrbefaehigung>;
+
+	/**
+	 * Lehramt
+	 */
+	private readonly _lehrerLehramt: Supplier<LehrerLehramt | null>;
+
+	private static readonly zulaessigeLehraemter: JavaSet<LehrerLehramt> = java_util_Set_of(LehrerLehramt.ID_63, LehrerLehramt.ID_64, LehrerLehramt.ID_65);
 
 
 	/**
 	 * Erstellt einen neuen Validator zur Überprüfung der Lehrbefähigungseinträge.
 	 *
-	 * @param lehraemter         die Liste der Lehrämter
-	 * @param kontext            der Kontext des Validators
+	 * @param lehrbefaehigung     eine Lehrbefaehigung des Lehrers
+	 * @param lehrerLehramt       das Lehramt des Lehrers
+	 * @param kontext             der Kontext des Validators
 	 */
-	public constructor(lehraemter: Supplier<List<LehrerLehramtEintrag> | null>, kontext: ValidatorKontext) {
+	public constructor(lehrbefaehigung: Supplier<LehrerLehrbefaehigung>, lehrerLehramt: Supplier<LehrerLehramt | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.lehraemter = lehraemter;
+		this._Lehrbefaehigung = lehrbefaehigung;
+		this._lehrerLehramt = lehrerLehramt;
 	}
 
 	protected pruefe(): boolean {
-		const liste: List<LehrerLehramtEintrag> | null = this.lehraemter.get();
-		if (liste !== null) {
-			for (const lehrerLehramtEintrag of liste) {
-				const zuueberpruefendesLehramt: LehrerLehramt | null = LehrerLehramt.data().getWertByIDOrNull(lehrerLehramtEintrag.idKatalogLehramt);
-				if (JavaObject.equalsTranspiler(LehrerLehramt.ID_63, (zuueberpruefendesLehramt)) || JavaObject.equalsTranspiler(LehrerLehramt.ID_64, (zuueberpruefendesLehramt)) || JavaObject.equalsTranspiler(LehrerLehramt.ID_65, (zuueberpruefendesLehramt))) {
-					for (const lehrerLehrbefaehigungEintrag of lehrerLehramtEintrag.lehrbefaehigungen) {
-						let zuueberprufendeLehrbefaehigunhg: LehrerLehrbefaehigung | null = LehrerLehrbefaehigung.data().getWertByID(lehrerLehrbefaehigungEintrag.idLehrbefaehigung);
-						if (!JavaObject.equalsTranspiler(LehrerLehrbefaehigung.BE, (zuueberprufendeLehrbefaehigunhg))) {
-							this.addFehler(0, "Für die Lehrämter 'Alltagshelfer/-in', 'Handwerksmeister/-in' und 'Heilpädagoge/-in' ist nur die Lehrbefähigung 'Betreuung' zulässig.");
-							return false;
-						}
-					}
-				}
+		if (ValidatorLpla11LehrerPersonaldatenLehramtLehrbefaehigung.zulaessigeLehraemter.contains(this._lehrerLehramt.get())) {
+			if (!JavaObject.equalsTranspiler(LehrerLehrbefaehigung.BE, (this._Lehrbefaehigung.get()))) {
+				this.addFehler(0, "Für die Lehrämter 'Alltagshelfer/-in', 'Handwerksmeister/-in' und 'Heilpädagoge/-in' ist nur die Lehrbefähigung 'Betreuung' zulässig.");
+				return false;
 			}
 		}
 		return true;
