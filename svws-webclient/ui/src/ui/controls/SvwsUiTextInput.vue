@@ -24,11 +24,11 @@
 				'text-input--rounded': rounded,
 				'text-input--prefix': url
 			}">
-			{{ data }}
+			{{ readonlyData }}
 		</span>
 		<input v-else ref="input"
 			v-focus
-			:class="{ 'text-input--control': !headless, 'text-input--headless': headless, 'text-input--rounded': rounded, 'text-input--prefix': url, }"
+			:class="{ 'text-input--control': !headless, 'text-input--headless': headless, 'text-input--rounded': rounded, 'text-input--prefix': url }"
 			v-bind="{ ...$attrs }"
 			:type
 			:min="minDate"
@@ -174,6 +174,27 @@
 	const methods = { focus: () => doFocus() };
 
 	const isFirefox = globalThis.navigator.userAgent.includes('Firefox/');
+
+	const readonlyData = computed(() => {
+		if (props.readonly && data.value !== null) {
+			if (props.type === "date") {
+				return new Date(data.value).toLocaleDateString("de-DE", {
+					month: "2-digit",
+					day: "2-digit",
+					year: "numeric",
+				});
+			} else if (props.type === "datetime-local") {
+				return new Date(data.value).toLocaleDateString("de-DE", {
+					month: "2-digit",
+					day: "2-digit",
+					year: "numeric",
+					hour: "2-digit",
+					minute: "2-digit",
+				});
+			}
+		}
+		return data;
+	});
 
 	const validationResult = computed(() => new ValidationResult(validierungFehler.value));
 
