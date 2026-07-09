@@ -294,7 +294,12 @@ public final class DataGostKlausuren {
 	}
 
 	private static GostKlausurenCollectionHjData ermittleFehlendeKlausuren(final DBEntityManager conn, final int abijahr,
-		    final GostHalbjahr halbjahr, final Schuljahresabschnitt sja, final GostKlausurenCollectionData alleDaten) {
+		    final GostHalbjahr halbjahr, final Schuljahresabschnitt sja, final GostKlausurenCollectionData alleDaten) throws ApiOperationException {
+		  if (sja == null) {
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Noch kein Schuljahresabschnitt für den Abiturjahrgang %d und das Halbjahr %s definiert."
+							.formatted(abijahr, halbjahr.kuerzel));
+		  }
 
 		  final GostKlausurenCollectionHjData fehlend = new GostKlausurenCollectionHjData(abijahr, halbjahr.id);
 		  final List<DTOKurs> kurse = conn

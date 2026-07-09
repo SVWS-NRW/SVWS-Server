@@ -23,7 +23,7 @@
 							<div class="svws-ui-td" role="cell">
 								<svws-ui-checkbox :title="kMan().schuelerklausurterminNtGetMengeByTermin(termin).size() > 0 ? 'Termin enthält Nachschreiber' : ''"
 									:disabled="kMan().schuelerklausurterminNtGetMengeByTermin(termin).size() > 0" v-model="termin.nachschreiberZugelassen"
-									@update:model-value="patchKlausurtermin(termin.id, { 'nachschreiberZugelassen': termin.nachschreiberZugelassen } )" />
+									@update:model-value="nachschreiberZugelassen => patchKlausurtermin(termin.id, { nachschreiberZugelassen } )" />
 							</div>
 							<div class="svws-ui-td" role="cell">
 								{{ termin.datum !== null ? DateUtils.gibDatumGermanFormat(termin.datum) : "N.N." }}

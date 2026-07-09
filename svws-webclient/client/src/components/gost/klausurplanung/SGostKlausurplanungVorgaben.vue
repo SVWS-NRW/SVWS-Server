@@ -72,7 +72,7 @@
 							<svws-ui-radio-option v-for="kursart in formKursarten" v-model="activeVorgabe.kursart" :key="kursart" :value="kursart" name="formKursarten" :label="kursart" :disabled="activeVorgabe.id !== 0" />
 						</svws-ui-radio-group>
 						<svws-ui-radio-group id="rbgQuartal" :row="true">
-							<svws-ui-radio-option v-for="quartal in formQuartale" :key="quartal" :value="quartal+''" name="formQuartale" :label="quartal+'. Quartal'" :model-value="activeVorgabe.quartal+''" @click="activeVorgabe.quartal = quartal" :disabled="activeVorgabe.id !== 0" />
+							<svws-ui-radio-option v-for="quartal in formQuartale" :key="quartal" :value="quartal" name="formQuartale" :label="quartal+'. Quartal'" v-model="activeVorgabe.quartal" :disabled="activeVorgabe.id !== 0" />
 						</svws-ui-radio-group>
 						<svws-ui-spacing />
 						<svws-ui-input-number placeholder="Dauer (Minuten)" :model-value="activeVorgabe.dauer" @change="dauer => activeVorgabe.id !== 0 ? patchKlausurvorgabe({dauer: dauer!}, activeVorgabe.id) : activeVorgabe.dauer = dauer!" :disabled="activeVorgabe.id < 0" />
@@ -81,14 +81,14 @@
 						<div v-if="(activeVorgabe.abiJahrgang === -1 || activeVorgabe.abiJahrgang >= 2030) && activeVorgabe.kursart === 'GK' && activeVorgabe.halbjahr !== GostHalbjahr.Q22.id">
 							<label class="block font-bold mb-1" for="rbgGklMoeglich">Gleichwertiger komplexer Leistungsnachweis</label>
 							<svws-ui-radio-group id="rbgGklMoeglich" :row="true">
-								<svws-ui-radio-option v-for="value in formMoeglichNichtMoeglich" :class="value.key ? 'order-1' : 'order-0'" :key="value.label" :value="value.label" name="formGklMoeglich" :label="value.label" :model-value="activeVorgabe.istGklMoeglich ? 'möglich' : 'nicht möglich'" @click="activeVorgabe.id !== 0 ? patchKlausurvorgabe({istGklMoeglich: value.key}, activeVorgabe.id) : activeVorgabe.istGklMoeglich = value.key" :disabled="activeVorgabe.id < 0" />
+								<svws-ui-radio-option v-for="value in formMoeglichNichtMoeglich" :class="value.key ? 'order-1' : 'order-0'" :key="value.label" :value="value.key" name="formGklMoeglich" :label="value.label" v-model="istGklMoeglich" :disabled="activeVorgabe.id < 0" />
 							</svws-ui-radio-group>
 						</div>
 						<div class="border-t border-ui-25 pt-4 font-bold">Klausurdetails</div>
 						<div>
 							<label class="sr-only" for="rbgMdlPruefung">Mündliche Prüfung: </label>
 							<svws-ui-radio-group id="rbgMdlPruefung" :row="true">
-								<svws-ui-radio-option v-for="value in formJaNein" :class="value.name === 'Ja' ? 'order-1' : 'order-0'" :key="value.name" :value="value.name" name="formMdlPruefung" :label="value.name === 'Ja' ? 'Mündliche Prüfung' : 'Schriftlich'" :model-value="activeVorgabe.istMdlPruefung ? 'Ja' : 'Nein'" @click="activeVorgabe.id !== 0 ? patchKlausurvorgabe({istMdlPruefung: value.key}, activeVorgabe.id) : activeVorgabe.istMdlPruefung = value.key" :disabled="activeVorgabe.id < 0">
+								<svws-ui-radio-option v-for="value in formJaNein" :class="value.name === 'Ja' ? 'order-1' : 'order-0'" :key="value.name" :value="value.key" name="formMdlPruefung" :label="value.name === 'Ja' ? 'Mündliche Prüfung' : 'Schriftlich'" v-model="istMdlPruefung" :disabled="activeVorgabe.id < 0">
 									<span class="icon i-ri-chat-1-line -my-1 -mx-0.5" v-if="value.name === 'Ja'" />
 								</svws-ui-radio-option>
 							</svws-ui-radio-group>
@@ -96,7 +96,7 @@
 						<div>
 							<label class="sr-only" for="rbgAudioNotwendig">Audio notwendig: </label>
 							<svws-ui-radio-group id="rbgAudioNotwendig" :row="true">
-								<svws-ui-radio-option v-for="value in formJaNein" :class="value.name === 'Ja' ? 'order-1' : 'order-0'" :key="value.name" :value="value.name" name="formAudioNotwendig" :label="value.name === 'Ja' ? 'Mit Audioteil' : 'Ohne Audio'" :model-value="activeVorgabe.istAudioNotwendig ? 'Ja' : 'Nein'" @click="activeVorgabe.id !== 0 ? patchKlausurvorgabe({istAudioNotwendig: value.key}, activeVorgabe.id) : activeVorgabe.istAudioNotwendig = value.key" :disabled="activeVorgabe.id < 0">
+								<svws-ui-radio-option v-for="value in formJaNein" :class="value.name === 'Ja' ? 'order-1' : 'order-0'" :key="value.name" :value="value.key" name="formAudioNotwendig" :label="value.name === 'Ja' ? 'Mit Audioteil' : 'Ohne Audio'" v-model="istAudioNotwendig" :disabled="activeVorgabe.id < 0">
 									<span class="icon i-ri-headphone-line -my-1 -mx-0.5" v-if="value.name === 'Ja'" />
 								</svws-ui-radio-option>
 							</svws-ui-radio-group>
@@ -104,7 +104,7 @@
 						<div>
 							<label class="sr-only" for="rbgVideoNotwendig">Video notwendig: </label>
 							<svws-ui-radio-group id="rbgVideoNotwendig" :row="true">
-								<svws-ui-radio-option v-for="value in formJaNein" :class="value.name === 'Ja' ? 'order-1' : 'order-0'" :key="value.name" :value="value.name" name="formVideoNotwendig" :label="value.name === 'Ja' ? 'Mit Videoteil' : 'Ohne Video'" :model-value="activeVorgabe.istVideoNotwendig ? 'Ja' : 'Nein'" @click="activeVorgabe.id !== 0 ? patchKlausurvorgabe({istVideoNotwendig: value.key}, activeVorgabe.id) : activeVorgabe.istVideoNotwendig = value.key" :disabled="activeVorgabe.id < 0">
+								<svws-ui-radio-option v-for="value in formJaNein" :class="value.name === 'Ja' ? 'order-1' : 'order-0'" :key="value.name" :value="value.key" name="formVideoNotwendig" :label="value.name === 'Ja' ? 'Mit Videoteil' : 'Ohne Video'" v-model="istVideoNotwendig" :disabled="activeVorgabe.id < 0">
 									<span class="icon i-ri-vidicon-line -my-1 -mx-0.5" v-if="value.name === 'Ja'" />
 								</svws-ui-radio-option>
 							</svws-ui-radio-group>
@@ -129,8 +129,7 @@
 	import { watch, computed, ref, onMounted, onUnmounted } from 'vue';
 	import type { DataTableColumn } from "@ui";
 	import type { GostFach } from "@core";
-	import { GostHalbjahr } from "@core";
-	import { BenutzerKompetenz, ArrayList, GostKlausurvorgabe, Fach, ListUtils } from "@core";
+	import { GostHalbjahr, BenutzerKompetenz, ArrayList, GostKlausurvorgabe, Fach, ListUtils } from "@core";
 	import type { GostKlausurplanungVorgabenProps } from "./SGostKlausurplanungVorgabenProps";
 
 	const props = defineProps<GostKlausurplanungVorgabenProps>();
@@ -165,6 +164,46 @@
 
 	const faecherSortiert = computed(() => {
 		return new ArrayList(props.kMan().getFaecherManager(props.jahrgangsdaten!.abiturjahr).faecher());
+	});
+
+	const istGklMoeglich = computed<boolean>({
+		get: () => activeVorgabe.value.istGklMoeglich,
+		set: (value) => {
+			activeVorgabe.value.istGklMoeglich = value;
+			if (activeVorgabe.value.id !== 0) {
+				void props.patchKlausurvorgabe({ istGklMoeglich: value }, activeVorgabe.value.id);
+			}
+		},
+	});
+
+	const istMdlPruefung = computed<boolean>({
+		get: () => activeVorgabe.value.istMdlPruefung,
+		set: (value) => {
+			activeVorgabe.value.istMdlPruefung = value;
+			if (activeVorgabe.value.id !== 0) {
+				void props.patchKlausurvorgabe({ istMdlPruefung: value }, activeVorgabe.value.id);
+			}
+		},
+	});
+
+	const istAudioNotwendig = computed<boolean>({
+		get: () => activeVorgabe.value.istAudioNotwendig,
+		set: (value) => {
+			activeVorgabe.value.istAudioNotwendig = value;
+			if (activeVorgabe.value.id !== 0) {
+				void props.patchKlausurvorgabe({ istAudioNotwendig: value }, activeVorgabe.value.id);
+			}
+		},
+	});
+
+	const istVideoNotwendig = computed<boolean>({
+		get: () => activeVorgabe.value.istVideoNotwendig,
+		set: (value) => {
+			activeVorgabe.value.istVideoNotwendig = value;
+			if (activeVorgabe.value.id !== 0) {
+				void props.patchKlausurvorgabe({ istVideoNotwendig: value }, activeVorgabe.value.id);
+			}
+		},
 	});
 
 	const neueVorgabe = () => {

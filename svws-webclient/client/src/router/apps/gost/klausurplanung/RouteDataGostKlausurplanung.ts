@@ -1,6 +1,6 @@
 
-import type { GostJahrgangsdaten, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, GostKlausurterminblockungDaten, GostNachschreibterminblockungKonfiguration, GostKlausurenUpdate, List, GostKlausurraumRich, ApiFile, GostSchuelerklausur } from "@core";
-import { GostKlausurtermin, ArrayList, StundenplanManager, GostFaecherManager, GostHalbjahr, GostKlausurplanManager, DeveloperNotificationException, GostSchuelerklausurTermin, GostKlausurenCollectionAllData, GostKlausurenCollectionHjData, ReportingReportvorlage, GostKursklausur } from "@core";
+import type { GostJahrgangsdaten, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, GostKlausurterminblockungDaten, GostNachschreibterminblockungKonfiguration, GostKlausurenUpdate, List, GostKlausurraumRich, GostSchuelerklausur } from "@core";
+import { GostKlausurtermin, ArrayList, StundenplanManager, GostFaecherManager, GostHalbjahr, GostKlausurplanManager, DeveloperNotificationException, GostSchuelerklausurTermin, GostKlausurenCollectionAllData, GostKlausurenCollectionHjData, GostKursklausur } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 import { computed } from "vue";
 
@@ -11,7 +11,6 @@ import { RouteManager } from "~/router/RouteManager";
 import { routeGostKlausurplanungKalender } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKalender";
 import { routeGostKlausurplanungVorgaben } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungVorgaben";
 import { routeGostKlausurplanungRaumzeit } from "./RouteGostKlausurplanungRaumzeit";
-import type { DownloadPDFTypen } from "~/components/gost/klausurplanung/DownloadPDFTypen";
 import { routeGostKlausurplanungSchienen } from "./RouteGostKlausurplanungSchienen";
 import { routeGostKlausurplanungNachschreiber } from "./RouteGostKlausurplanungNachschreiber";
 import type { RouteParams } from "vue-router";
@@ -248,7 +247,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	});
 
 	reloadFehlendData = async () => {
-		if (this.abiturjahr !== -1) {
+		if ((this.abiturjahr !== -1) && (this._state.value.abschnitt !== undefined)) {
 			const fehlendDataGzip = await api.server.getGostKlausurenCollectionAllIssuesGZip(api.schema, this.abiturjahr, this._state.value.halbjahr.id);
 			const fehlendDataBlob = await new Response(fehlendDataGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
 			const fehlendData = GostKlausurenCollectionHjData.transpilerFromJSON(await fehlendDataBlob.text());
@@ -487,11 +486,14 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 
 	erzeugeVorgabenAusVorlage = async (quartal: number) => {
 		api.status.start();
-		const listKlausurvorgaben = await api.server.copyGostKlausurenVorgaben(api.schema, this.abiturjahr, this.halbjahr.id, quartal);
-		this.manager.vorgabeAddAll(listKlausurvorgaben);
-		await this.reloadFehlendData();
-		this.commit();
-		api.status.stop();
+		try {
+			const listKlausurvorgaben = await api.server.copyGostKlausurenVorgaben(api.schema, this.abiturjahr, this.halbjahr.id, quartal);
+			this.manager.vorgabeAddAll(listKlausurvorgaben);
+			await this.reloadFehlendData();
+		} finally {
+			this.commit();
+			api.status.stop();
+		}
 	};
 
 	createKlausurraum = async (raum: Partial<GostKlausurraum>) => {
