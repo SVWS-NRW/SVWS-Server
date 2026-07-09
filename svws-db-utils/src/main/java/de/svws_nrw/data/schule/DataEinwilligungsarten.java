@@ -99,12 +99,14 @@ public final class DataEinwilligungsarten extends DataManagerRevised<Long, DTOKa
 
 	@Override
 	public Einwilligungsart getById(final Long id) {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID der Einwilligungsart darf nicht null sein.");
+		}
 
 		final DTOKatalogEinwilligungsart einwilligungsart = conn.queryByKey(DTOKatalogEinwilligungsart.class, id);
-		if (einwilligungsart == null)
+		if (einwilligungsart == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Einwilligungsart mit der ID %d wurde nicht gefunden.".formatted(id));
+		}
 
 		return map(einwilligungsart);
 	}
@@ -119,10 +121,11 @@ public final class DataEinwilligungsarten extends DataManagerRevised<Long, DTOKa
 	protected Einwilligungsart addBasic(final Long newID, final Map<String, Object> initAttributes) {
 		final Einwilligungsart ea = super.addBasic(newID, initAttributes);
 
-		if (ea.idPersonTyp == PersonTyp.LEHRER.id)
+		if (ea.idPersonTyp == PersonTyp.LEHRER.id) {
 			persistEinwilligungen("SELECT e.ID FROM DTOLehrer e", id -> new DTOLehrerDatenschutz(id, ea.id, false, false));
-		else if (ea.idPersonTyp == PersonTyp.SCHUELER.id)
+		} else if (ea.idPersonTyp == PersonTyp.SCHUELER.id) {
 			persistEinwilligungen("SELECT e.ID FROM DTOSchueler e", id -> new DTOSchuelerDatenschutz(id, ea.id, false, false));
+		}
 
 		return ea;
 	}
@@ -151,8 +154,9 @@ public final class DataEinwilligungsarten extends DataManagerRevised<Long, DTOKa
 	private void validateBezeichnungisUniqueForThisPersonTypOnCreation(final Long newID, final Map<String, Object> initAttributes) {
 		final Integer idPersonTyp = JSONMapper.convertToInteger(initAttributes.get(ID_PERSON_TYP), false, ID_PERSON_TYP);
 		final PersonTyp personTyp = PersonTyp.getByID(idPersonTyp);
-		if (personTyp == null)
+		if (personTyp == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Für die idPersonTyp %d existiert kein PersonTyp".formatted(idPersonTyp));
+		}
 
 		final String bezeichnung =
 				JSONMapper.convertToString(initAttributes.get(BEZEICHNUNG), false, false, Schema.tab_K_Datenschutz.col_Bezeichnung.datenlaenge(), BEZEICHNUNG);
@@ -165,8 +169,9 @@ public final class DataEinwilligungsarten extends DataManagerRevised<Long, DTOKa
 
 	private void updateBezeichnung(final DTOKatalogEinwilligungsart dto, final Object value, final String name) {
 		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Datenschutz.col_Bezeichnung.datenlaenge(), name);
-		if (valueIsBlankOrHasNotChanged(dto.Bezeichnung, bezeichnung))
+		if (valueIsBlankOrHasNotChanged(dto.Bezeichnung, bezeichnung)) {
 			return;
+		}
 
 		validateBezeichnung(dto.ID, dto.personTyp, bezeichnung);
 
@@ -180,15 +185,18 @@ public final class DataEinwilligungsarten extends DataManagerRevised<Long, DTOKa
 			return;
 		}
 
-		if (valueIsBlankOrHasNotChanged(dto.Schluessel, schluessel))
+		if (valueIsBlankOrHasNotChanged(dto.Schluessel, schluessel)) {
 			return;
+		}
 
-		if (schluesselIsAlreadyUsed(dto.ID, idPersonTyp, schluessel))
+		if (schluesselIsAlreadyUsed(dto.ID, idPersonTyp, schluessel)) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Der Schlüssel %s wird bereits verwendet.".formatted(schluessel));
+		}
 
-		if (noMatchingCoreTypeFound(schluessel))
+		if (noMatchingCoreTypeFound(schluessel)) {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Zum angegebenen Schlüssel %s wurde keine passende Einwilligungsart gefunden.".formatted(schluessel));
+		}
 
 		dto.Schluessel = schluessel;
 	}
@@ -196,10 +204,12 @@ public final class DataEinwilligungsarten extends DataManagerRevised<Long, DTOKa
 	private void updatePersonTyp(final DTOKatalogEinwilligungsart dto, final Object value, final String name) {
 		final int id = JSONMapper.convertToInteger(value, false, name);
 		final PersonTyp personTyp = PersonTyp.getByID(id);
-		if (personTyp == null)
+		if (personTyp == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein PersonTyp zur ID %d gefunden.".formatted(id));
-		if (personTyp == PersonTyp.ERZIEHER)
+		}
+		if (personTyp == PersonTyp.ERZIEHER) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Der PersonTyp Erzieher wird derzeit nicht unterstützt.");
+		}
 
 		dto.personTyp = personTyp;
 	}
@@ -207,8 +217,9 @@ public final class DataEinwilligungsarten extends DataManagerRevised<Long, DTOKa
 	private void validateBezeichnung(final Long id, final PersonTyp personTyp, final String bezeichnung) {
 		final boolean isAlreadyUsed = this.conn.queryAll(DTOKatalogEinwilligungsart.class).stream()
 				.anyMatch(e -> (e.ID != id) && (e.personTyp == personTyp) && bezeichnung.equalsIgnoreCase(e.Bezeichnung));
-		if (isAlreadyUsed)
+		if (isAlreadyUsed) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(bezeichnung));
+		}
 	}
 
 	private static boolean noMatchingCoreTypeFound(final String schluessel) {
@@ -239,8 +250,9 @@ public final class DataEinwilligungsarten extends DataManagerRevised<Long, DTOKa
 	}
 
 	private Set<Long> getIdsOfReferencedEinwilligungsarten(final Set<Long> ids) {
-		if ((ids == null) || ids.isEmpty())
+		if ((ids == null) || ids.isEmpty()) {
 			return Collections.emptySet();
+		}
 
 		final String query1 = "SELECT DISTINCT a.Datenschutz_ID FROM DTOSchuelerDatenschutz a WHERE a.Datenschutz_ID IN :ids";
 		final String query2 = "SELECT DISTINCT b.DatenschutzID FROM DTOLehrerDatenschutz b WHERE b.DatenschutzID IN :ids";
@@ -251,8 +263,9 @@ public final class DataEinwilligungsarten extends DataManagerRevised<Long, DTOKa
 	}
 
 	private boolean schluesselIsAlreadyUsed(final Long id, final Object idPersonTyp, final String schluessel) {
-		if (idPersonTyp == null)
+		if (idPersonTyp == null) {
 			return false;
+		}
 
 		final int personTyp = JSONMapper.convertToInteger(idPersonTyp, false);
 		return this.conn.queryAll(DTOKatalogEinwilligungsart.class).stream()

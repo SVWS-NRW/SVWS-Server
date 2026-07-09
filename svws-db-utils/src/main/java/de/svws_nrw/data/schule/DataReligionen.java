@@ -64,12 +64,14 @@ public final class DataReligionen extends DataManagerRevised<Long, DTOKonfession
 
 	@Override
 	public ReligionEintrag getById(final Long id) throws ApiOperationException {
-		if (id == null)
-			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Eine Anfrage mit der ID null ist unzulässig.");
+		if (id == null) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage mit der ID null ist unzulässig.");
+		}
 
 		final DTOKonfession religion = conn.queryByKey(DTOKonfession.class, id);
-		if (religion == null)
+		if (religion == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Eintrag im Katalog der Religionen mit der ID %d gefunden.".formatted(id));
+		}
 
 		return map(religion);
 	}
@@ -112,8 +114,9 @@ public final class DataReligionen extends DataManagerRevised<Long, DTOKonfession
 
 	private void updateBezeichnung(final DTOKonfession dto, final String name, final Object value) throws ApiOperationException {
 		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Religion.col_Bezeichnung.datenlaenge(), name);
-		if (ValidationUtils.isBlankOrUnchanged(dto.Bezeichnung, bezeichnung))
+		if (ValidationUtils.isBlankOrUnchanged(dto.Bezeichnung, bezeichnung)) {
 			return;
+		}
 
 		validateBezeichnung(dto.ID, bezeichnung);
 
@@ -129,8 +132,9 @@ public final class DataReligionen extends DataManagerRevised<Long, DTOKonfession
 	}
 
 	private Set<Long> getIdsOfReferencedKonfessionen(final Set<Long> ids) {
-		if ((ids == null) || ids.isEmpty())
+		if ((ids == null) || ids.isEmpty()) {
 			return Collections.emptySet();
+		}
 
 		final String query = "SELECT DISTINCT s.Religion_ID FROM DTOSchueler s WHERE s.Religion_ID IN :ids";
 		final List<Long> results = this.conn.query(query, Long.class).setParameter("ids", ids).getResultList();
@@ -147,7 +151,8 @@ public final class DataReligionen extends DataManagerRevised<Long, DTOKonfession
 				.queryAll(DTOKonfession.class).stream()
 				.anyMatch(k -> (k.ID != id) && bezeichnung.equalsIgnoreCase(k.Bezeichnung));
 
-		if (bezeichnungAlreadyUsed)
-			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(bezeichnung));
+		if (bezeichnungAlreadyUsed) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(bezeichnung));
+		}
 	}
 }

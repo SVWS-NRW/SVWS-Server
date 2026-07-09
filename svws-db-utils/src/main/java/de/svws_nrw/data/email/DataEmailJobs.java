@@ -51,8 +51,9 @@ public class DataEmailJobs {
 	 */
 	private static @NotNull EmailJobManager getJobManager(final @NotNull DBEntityManager conn) throws ApiOperationException {
 		final EmailJobManager manager = EmailJobManagerFactory.getInstance().getManagerByUser(conn.getDBSchema(), conn.getUser().getId());
-		if (manager == null)
+		if (manager == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Email-Job-Manager für den aktuellen Benutzer gefunden werden.");
+		}
 		return manager;
 	}
 
@@ -69,9 +70,10 @@ public class DataEmailJobs {
 	 */
 	private static EmailJob getJobByID(final @NotNull DBEntityManager conn, final long id) throws ApiOperationException {
 		final EmailJob job = getJobManager(conn).getJob(id);
-		if (job == null)
+		if (job == null) {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Es konnte kein Email-Job mit der Job-ID %d beim aktuellen Benutzer gefunden werden.".formatted(id));
+		}
 		return job;
 	}
 

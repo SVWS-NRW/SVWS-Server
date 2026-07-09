@@ -54,11 +54,13 @@ public final class DBBenutzerUtils {
 			// Bestimme den Benutzer in der Datenbank
 			final DTOViewBenutzerdetails dbBenutzer = conn.queryList(DTOViewBenutzerdetails.QUERY_BY_BENUTZERNAME, DTOViewBenutzerdetails.class,
 					user.getUsername()).stream().findFirst().orElse(null);
-			if (dbBenutzer == null)
+			if (dbBenutzer == null) {
 				return;
+			}
 			// Ordne dem Benutzer die Kompetenzen zu
-			if (Boolean.TRUE.equals(dbBenutzer.IstAdmin))
+			if (Boolean.TRUE.equals(dbBenutzer.IstAdmin)) {
 				user.getKompetenzen().add(BenutzerKompetenz.ADMIN);
+			}
 			conn.queryList(DTOViewBenutzerKompetenz.QUERY_BY_BENUTZER_ID, DTOViewBenutzerKompetenz.class, dbBenutzer.ID).stream()
 					.map(komp -> BenutzerKompetenz.getByID((int) (long) komp.Kompetenz_ID))
 					.filter(komp -> (komp != null) && (komp != BenutzerKompetenz.KEINE))
@@ -87,30 +89,36 @@ public final class DBBenutzerUtils {
 	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
 	public static String pruefePasswort(final Benutzer user, final String password) throws DBException {
-		if (user.getUsername() == null)
+		if (user.getUsername() == null) {
 			return null;
+		}
 		try (DBEntityManager conn = user.getEntityManager()) {
-			if (conn.useDBLogin())
+			if (conn.useDBLogin()) {
 				return user.getUsername();
+			}
 			// Bestimme den Benutzer
 			final Map<String, DTOViewBenutzerdetails> mapBenutzerdetails = conn.queryAll(DTOViewBenutzerdetails.class).stream()
 					.collect(Collectors.toMap(b -> b.Benutzername.toLowerCase(Locale.GERMAN), b -> b));
 			final DTOViewBenutzerdetails dbBenutzer = mapBenutzerdetails.get(user.getUsername().toLowerCase(Locale.GERMAN));
-			if (dbBenutzer == null)
+			if (dbBenutzer == null) {
 				return null;
+			}
 			// Überprüfe das Benutzerkennwort
 			final String pwHash = dbBenutzer.PasswordHash;
 			user.setId(dbBenutzer.ID);
 			user.setIdLehrer((dbBenutzer.Typ == BenutzerTyp.LEHRER) ? dbBenutzer.TypID : null);
 			if ((password == null) || ("".equals(password))) {
-				if ((pwHash == null) || ("".equals(pwHash)))
+				if ((pwHash == null) || ("".equals(pwHash))) {
 					return dbBenutzer.Benutzername;
+				}
 				return null;
 			}
-			if ((pwHash == null) || ("".equals(pwHash)))
+			if ((pwHash == null) || ("".equals(pwHash))) {
 				return null;
-			if (BCrypt.checkpw(password, pwHash))
+			}
+			if (BCrypt.checkpw(password, pwHash)) {
 				return dbBenutzer.Benutzername;
+			}
 			return null;
 		} catch (final PersistenceException e) {
 			throw new DBException("Fehler beim Lesen der Benutzertabelle: " + e.getMessage(), e);
@@ -130,27 +138,33 @@ public final class DBBenutzerUtils {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	private static Benutzer getSVWSUser(final HttpServletRequest request, final ServerMode mode) throws ApiOperationException {
-		if (!mode.checkServerMode(SVWSKonfiguration.get().getServerMode()))
+		if (!mode.checkServerMode(SVWSKonfiguration.get().getServerMode())) {
 			throw new ApiOperationException(Status.SERVICE_UNAVAILABLE,
 					"Der Dienst ist noch nicht verfügbar, da er sich zur Zeit noch in der Entwicklung befindet (Stand: %s).".formatted(mode.name()));
+		}
 		if (request.getUserPrincipal() instanceof final BenutzerApiPrincipal openAPIPrincipal) {
 			final Benutzer user = openAPIPrincipal.getUser();
-			if (user == null)
+			if (user == null) {
 				return null;
+			}
 			final DBConfig config = user.getConfig();
-			if ((config == null) || (config.getDBSchema() == null))
+			if ((config == null) || (config.getDBSchema() == null)) {
 				return user;
+			}
 			final String path = request.getRequestURI();
-			if (path == null)
+			if (path == null) {
 				throw new ApiOperationException(Status.SERVICE_UNAVAILABLE, "Der Dienst ist noch nicht verfügbar, da kein gültiger Pfad angegeben wurde.");
+			}
 			final boolean allowDeactivatedSchema = path.matches("/api/schema/import/.*") || path.matches("/api/schema/migrate/.*")
 					|| path.matches("/api/schema/create/.*");
-			if (SVWSKonfiguration.get().isDeactivatedSchema(config.getDBSchema()) && !allowDeactivatedSchema)
+			if (SVWSKonfiguration.get().isDeactivatedSchema(config.getDBSchema()) && !allowDeactivatedSchema) {
 				throw new ApiOperationException(Status.SERVICE_UNAVAILABLE,
 						"Datenbank-Schema ist zur Zeit deaktviert, da es fehlerhaft ist. Bitte wenden Sie sich an Ihren System-Administrator.");
-			if (SVWSKonfiguration.get().isLockedSchema(config.getDBSchema()))
+			}
+			if (SVWSKonfiguration.get().isLockedSchema(config.getDBSchema())) {
 				throw new ApiOperationException(Status.SERVICE_UNAVAILABLE,
 						"Datenbank-Schema ist zur Zeit aufgrund von internen Operationen gesperrt. Der Zugriff kann später nochmals versucht werden.");
+			}
 			return user;
 		}
 		return null;
@@ -173,8 +187,9 @@ public final class DBBenutzerUtils {
 			throws ApiOperationException {
 		final Benutzer user = getSVWSUser(request, mode);
 		final Set<BenutzerKompetenz> setKompetenzen = new HashSet<>(Arrays.asList(kompetenzen));
-		if ((user == null) || ((!setKompetenzen.contains(BenutzerKompetenz.KEINE)) && (!user.pruefeKompetenz(setKompetenzen))))
+		if ((user == null) || ((!setKompetenzen.contains(BenutzerKompetenz.KEINE)) && (!user.pruefeKompetenz(setKompetenzen)))) {
 			throw new ApiOperationException(Status.FORBIDDEN);
+		}
 		return user;
 	}
 
@@ -197,8 +212,9 @@ public final class DBBenutzerUtils {
 			final BenutzerKompetenz... kompetenzen) throws ApiOperationException {
 		final Benutzer user = getSVWSUser(request, mode);
 		final Set<BenutzerKompetenz> setKompetenzen = new HashSet<>(Arrays.asList(kompetenzen));
-		if ((user == null) || ((!setKompetenzen.contains(BenutzerKompetenz.KEINE)) && (!user.pruefeKompetenz(setKompetenzen)) && (user.getId() != user_id)))
+		if ((user == null) || ((!setKompetenzen.contains(BenutzerKompetenz.KEINE)) && (!user.pruefeKompetenz(setKompetenzen)) && (user.getId() != user_id))) {
 			throw new ApiOperationException(Status.FORBIDDEN);
+		}
 		return user;
 	}
 
@@ -223,8 +239,9 @@ public final class DBBenutzerUtils {
 		final Benutzer user = getSVWSUser(request, mode);
 		final Set<BenutzerKompetenz> setKompetenzen = new HashSet<>(Arrays.asList(kompetenzen));
 		if ((user == null)
-				|| ((!setKompetenzen.contains(BenutzerKompetenz.KEINE)) && (!user.pruefeKompetenz(setKompetenzen)) && (user.getIdLehrer() != idLehrer)))
+				|| ((!setKompetenzen.contains(BenutzerKompetenz.KEINE)) && (!user.pruefeKompetenz(setKompetenzen)) && (user.getIdLehrer() != idLehrer))) {
 			throw new ApiOperationException(Status.FORBIDDEN);
+		}
 		return user;
 	}
 
@@ -348,8 +365,9 @@ public final class DBBenutzerUtils {
 			getSVWSUser(request, mode, kompetenzen);
 			return task.call();
 		} catch (final Exception e) {
-			if (e instanceof final ApiOperationException apiOperationException)
+			if (e instanceof final ApiOperationException apiOperationException) {
 				return apiOperationException.getResponse();
+			}
 			return new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e).getResponse();
 		}
 	}
@@ -375,8 +393,9 @@ public final class DBBenutzerUtils {
 		try (DBEntityManager conn = getDBConnection(request, mode, kompetenzen)) {
 			return task.applyThrows(conn);
 		} catch (final Exception e) {
-			if (e instanceof final ApiOperationException aoe)
+			if (e instanceof final ApiOperationException aoe) {
 				return aoe.getResponse();
+			}
 			return new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e).getResponse();
 		}
 	}
@@ -400,8 +419,9 @@ public final class DBBenutzerUtils {
 			conn.transactionCommitOrThrow();
 			return response;
 		} catch (final Exception e) {
-			if (e instanceof final ApiOperationException apiOperationException)
+			if (e instanceof final ApiOperationException apiOperationException) {
 				return apiOperationException.getResponse();
+			}
 			return new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e).getResponse();
 		} finally {
 			// Perform a rollback if necessary

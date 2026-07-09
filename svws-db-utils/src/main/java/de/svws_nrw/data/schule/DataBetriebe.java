@@ -54,12 +54,14 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOBetrieb, Bet
 
 	@Override
 	public Betrieb getById(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Betriebs darf nicht null sein.");
+		}
 
 		final DTOBetrieb dto = this.conn.queryByKey(DTOBetrieb.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Betrieb mit der ID %d gefunden.".formatted(id));
+		}
 
 		return map(dto);
 	}
@@ -154,12 +156,14 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOBetrieb, Bet
 			return;
 		}
 
-		if (id.equals(dto.ort_id))
+		if (id.equals(dto.ort_id)) {
 			return;
+		}
 
 		final DTOOrt ort = this.conn.queryByKey(DTOOrt.class, id);
-		if (ort == null)
+		if (ort == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Kein Ort zur id %d gefunden.".formatted(id));
+		}
 
 		dto.ort_id = id;
 	}
@@ -171,20 +175,23 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOBetrieb, Bet
 			return;
 		}
 
-		if (id.equals(dto.adressArt))
+		if (id.equals(dto.adressArt)) {
 			return;
+		}
 
 		final DTOBetriebsart betriebsart = this.conn.queryByKey(DTOBetriebsart.class, id);
-		if (betriebsart == null)
+		if (betriebsart == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Keine Betriebsart zur id %d gefunden.".formatted(id));
+		}
 
 		dto.adressArt = id;
 	}
 
 	private void updateName(final DTOBetrieb dto, final String name, final Object value) throws ApiOperationException {
 		final String newName = JSONMapper.convertToString(value, false, false, tab_K_AllgAdresse.col_AllgAdrName1.datenlaenge(), name);
-		if (ValidationUtils.isBlankOrUnchanged(dto.name1, newName))
+		if (ValidationUtils.isBlankOrUnchanged(dto.name1, newName)) {
 			return;
+		}
 
 		validateNameIsUnique(dto.ID, newName);
 
@@ -194,8 +201,9 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOBetrieb, Bet
 	private void validateNameIsUnique(final Long id, final String name) throws ApiOperationException {
 		final boolean isAlreadyUsed = this.conn.queryAll(DTOBetrieb.class).stream()
 				.anyMatch(b -> (b.ID != id) && name.equalsIgnoreCase(b.name1));
-		if (isAlreadyUsed)
+		if (isAlreadyUsed) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Der Name %s ist bereits vorhanden.".formatted(name));
+		}
 	}
 
 	private static Set<Long> mapToIds(final List<DTOBetrieb> betriebe) {
@@ -205,8 +213,9 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOBetrieb, Bet
 	}
 
 	private Set<Long> getIdsOfReferencedBetriebe(final Set<Long> ids) {
-		if ((ids == null) || ids.isEmpty())
+		if ((ids == null) || ids.isEmpty()) {
 			return Collections.emptySet();
+		}
 
 		final String query = "SELECT DISTINCT a.idBetrieb FROM DTOSchuelerBetrieb a WHERE a.idBetrieb IN :ids";
 		final List<Long> results = this.conn.query(query, Long.class).setParameter("ids", ids).getResultList();
@@ -220,8 +229,9 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOBetrieb, Bet
 
 	private Betrieb addAnsprechpartner(final Betrieb betrieb, final Map<Long, List<BetriebeAnsprechpartner>> ansprechpartnerByIdBetrieb) {
 		final List<BetriebeAnsprechpartner> result = ansprechpartnerByIdBetrieb.get(betrieb.id);
-		if (result != null)
+		if (result != null) {
 			betrieb.ansprechpartner = result;
+		}
 		return betrieb;
 	}
 

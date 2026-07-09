@@ -184,8 +184,9 @@ public final class DataUntis {
 		DataStundenplanSchienen.updateSchienenFromKursliste(conn, idStundenplan, kurse);
 		final List<StundenplanSchiene> schienen = DataStundenplanSchienen.getSchienen(conn, idStundenplan);
 		final HashMap2D<Long, Integer, StundenplanSchiene> mapSchienen = new HashMap2D<>();
-		for (final StundenplanSchiene schiene : schienen)
+		for (final StundenplanSchiene schiene : schienen) {
 			mapSchienen.put(schiene.idJahrgang, schiene.nummer, schiene);
+		}
 		// Erzeuge die nötigen Einträge für den Stundenplan
 		long next_uid = conn.transactionGetNextID(DTOStundenplanUnterricht.class);
 		long next_lid = conn.transactionGetNextID(DTOStundenplanUnterrichtLehrer.class);
@@ -240,8 +241,9 @@ public final class DataUntis {
 				if ((u.wochentyp != null) && !u.wochentyp.isBlank()) {
 					try {
 						wt = Integer.valueOf(u.wochentyp);
-						if ((wt < 0) || (wt > 4))
+						if ((wt < 0) || (wt > 4)) {
 							wt = 0;
+						}
 					} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
 						wt = 0;
 					}
@@ -284,22 +286,25 @@ public final class DataUntis {
 				mapUnterrichte.put(key, uid);
 				conn.transactionFlush();
 				// ... Lehrer ...
-				if (lehrer != null)
+				if (lehrer != null) {
 					conn.transactionPersist(new DTOStundenplanUnterrichtLehrer(next_lid++, uid, lehrer.id));
+				}
 				// ... Klasse ...
 				conn.transactionPersist(new DTOStundenplanUnterrichtKlasse(next_kid++, uid, klasse.ID));
 				// ... Raum
-				if (u.raumKuerzel != null)
+				if (u.raumKuerzel != null) {
 					conn.transactionPersist(new DTOStundenplanUnterrichtRaum(next_rid++, uid,
 							DataStundenplanRaeume.getOrCreateRaum(conn, idStundenplan, u.raumKuerzel).id));
+				}
 			} else {
 				// Prüfe, ob der Kursunterricht schon mit einem früheren Datensatz bearbeitet wurde
 				int wt = 0;
 				if ((u.wochentyp != null) && !u.wochentyp.isBlank()) {
 					try {
 						wt = Integer.valueOf(u.wochentyp);
-						if ((wt < 0) || (wt > 4))
+						if ((wt < 0) || (wt > 4)) {
 							wt = 0;
+						}
 					} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
 						wt = 0;
 					}
@@ -339,22 +344,25 @@ public final class DataUntis {
 				mapUnterrichte.put(key, uid);
 				conn.transactionFlush();
 				// ... Lehrer ...
-				if (lehrer != null)
+				if (lehrer != null) {
 					conn.transactionPersist(new DTOStundenplanUnterrichtLehrer(next_lid++, uid, lehrer.id));
+				}
 				// ... Schiene ...
 				for (final long idJahrgang : kurs.idJahrgaenge) {
 					for (final int schiene : kurs.schienen) {
 						final StundenplanSchiene s = mapSchienen.getOrNull(idJahrgang, schiene);
-						if (s == null)
+						if (s == null) {
 							throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
 									"Interner Fehler beim Anlegen der Schienen für den Kursunterricht des Stundenplans.");
+						}
 						conn.transactionPersist(new DTOStundenplanUnterrichtSchiene(next_sid++, uid, s.id));
 					}
 				}
 				// ... Raum
-				if (u.raumKuerzel != null)
+				if (u.raumKuerzel != null) {
 					conn.transactionPersist(new DTOStundenplanUnterrichtRaum(next_rid++, uid,
 							DataStundenplanRaeume.getOrCreateRaum(conn, idStundenplan, u.raumKuerzel).id));
+				}
 			}
 			conn.transactionFlush();
 		}
@@ -576,8 +584,9 @@ public final class DataUntis {
 	 * @return die Schulstufe
 	 */
 	private static String getSchulstufeByASDJahrgang(final Jahrgaenge jg) {
-		if (jg == null)
+		if (jg == null) {
 			return null;
+		}
 		return switch (jg) {
 			case JAHRGANG_00, VORKURS_SEMESTER_1, VORKURS_SEMESTER_2 -> "00";
 			case JAHRGANG_01, SEMESTER_01 -> "01";
@@ -607,8 +616,9 @@ public final class DataUntis {
 	 */
 	private static HashMap2D<String, String, List<UntisGPU002>> getMapUntisGPU002ByKlasseAndFach(final List<UntisGPU002> gpu002List) {
 		final HashMap2D<String, String, List<UntisGPU002>> result = new HashMap2D<>();
-		for (final UntisGPU002 entry : gpu002List)
+		for (final UntisGPU002 entry : gpu002List) {
 			Map2DUtils.addToList(result, entry.klasseKuerzel, entry.fachKuerzel, entry);
+		}
 		return result;
 	}
 
@@ -763,8 +773,9 @@ public final class DataUntis {
 				if (rv != null) {
 					dto.statistik1 = a.Rechtsverhaeltnis;
 					final LehrerBeschaeftigungsart ba = LehrerBeschaeftigungsart.data().getWertBySchluessel(a.Beschaeftigungsart);
-					if ((ba == LehrerBeschaeftigungsart.T) || (ba == LehrerBeschaeftigungsart.WT) || (ba == LehrerBeschaeftigungsart.TA))
+					if ((ba == LehrerBeschaeftigungsart.T) || (ba == LehrerBeschaeftigungsart.WT) || (ba == LehrerBeschaeftigungsart.TA)) {
 						dto.statistik1 += ",T";
+					}
 				}
 				dto.stammschule = a.StammschulNr;
 				dto.wochenSoll = a.PflichtstdSoll;
@@ -841,13 +852,15 @@ public final class DataUntis {
 				if (l.DatumZugang != null) {
 					final LocalDate date = LocalDate.parse(l.DatumZugang);
 					if ((date.getYear() > schuljahresabschnitt.schuljahr + 1)
-							|| ((date.getYear() == schuljahresabschnitt.schuljahr + 1) && (date.getMonthValue() > 7)))
+							|| ((date.getYear() == schuljahresabschnitt.schuljahr + 1) && (date.getMonthValue() > 7))) {
 						continue;
+					}
 				}
 				if (l.DatumAbgang != null) {
 					final LocalDate date = LocalDate.parse(l.DatumAbgang);
-					if ((date.getYear() < schuljahresabschnitt.schuljahr) || ((date.getYear() == schuljahresabschnitt.schuljahr) && (date.getMonthValue() < 8)))
+					if ((date.getYear() < schuljahresabschnitt.schuljahr) || ((date.getYear() == schuljahresabschnitt.schuljahr) && (date.getMonthValue() < 8))) {
 						continue;
+					}
 				}
 			} catch (@SuppressWarnings("unused") final @NotNull DateTimeParseException dtpe) {
 				// do nothing...
@@ -983,22 +996,27 @@ public final class DataUntis {
 		}
 		final @NotNull Map<String, FachgruppeKatalogEintrag> mapFachgruppeByStatistikKuerzel = new HashMap<>();
 		for (final @NotNull DTOFach fach : faecher) {
-			if (fach.StatistikKuerzel == null)
+			if (fach.StatistikKuerzel == null) {
 				continue;
+			}
 			final Fach f = Fach.data().getWertBySchluessel(fach.StatistikKuerzel);
-			if (f == null)
+			if (f == null) {
 				continue;
+			}
 			final Fachgruppe fg = f.getFachgruppe(schuljahresabschnitt.schuljahr);
-			if (fg == null)
+			if (fg == null) {
 				continue;
+			}
 			final FachgruppeKatalogEintrag fgke = fg.daten(schuljahresabschnitt.schuljahr);
-			if (fgke != null)
+			if (fgke != null) {
 				mapFachgruppeByStatistikKuerzel.put(fach.StatistikKuerzel, fgke);
+			}
 		}
 		final List<DTOKurs> kurse = conn.queryList(DTOKurs.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKurs.class, idSchuljahresabschnitt);
-		if (kurse.isEmpty())
+		if (kurse.isEmpty()) {
 			logger.logLn("-> keine Kurse in dem Schuljahresabschnitt %d.%d gefunden. Es werden nur die Fächer exportiert."
 					.formatted(schuljahresabschnitt.schuljahr, schuljahresabschnitt.abschnitt));
+		}
 		return getGPU006(logger, faecher, kurse, mapFachgruppeByStatistikKuerzel);
 	}
 
@@ -1171,27 +1189,34 @@ public final class DataUntis {
 		final List<UntisGPU015> result = new ArrayList<>();
 		final Map<Long, DTOFach> mapFaecher = faecher.stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 		for (final KursDaten kurs : kurse) {
-			if (kurs.schueler.isEmpty())
+			if (kurs.schueler.isEmpty()) {
 				continue;
+			}
 			final DTOFach fach = mapFaecher.get(kurs.idFach);
-			if (fach == null)
+			if (fach == null) {
 				continue;
+			}
 			for (final Schueler schueler : kurs.schueler) {
 				final DTOSchuelerLernabschnittsdaten la = mapLernabschnitte.get(schueler.id);
-				if (la == null)
+				if (la == null) {
 					continue;
+				}
 				final DTOSchuelerLeistungsdaten ld = mapLeistungsdaten.getOrNull(la.ID, kurs.id);
-				if (ld == null)
+				if (ld == null) {
 					continue;
+				}
 				final ZulaessigeKursart kursart = ZulaessigeKursart.data().getWertBySchluessel(ld.Kursart);
-				if (kursart == null)
+				if (kursart == null) {
 					continue;
+				}
 				final DTOKlassen kl = mapKlassen.get(la.Klassen_ID);
-				if (kl == null)
+				if (kl == null) {
 					continue;
+				}
 				final List<UntisGPU002> unterrichte = mapUnterrichte.getOrNull(kl.Klasse, kurs.kuerzel);
-				if ((unterrichte == null) || (unterrichte.isEmpty()))
+				if ((unterrichte == null) || (unterrichte.isEmpty())) {
 					continue;
+				}
 				final String schuelerName = UntisSchuelerBezeichner.getBezeichner(idVariante, schueler.id, schueler.nachname,
 						schueler.vorname, (idVariante == 1) ? "" : mapSchueler.get(schueler.id).Geburtsdatum);
 				for (final UntisGPU002 unterricht : unterrichte) {
@@ -1302,8 +1327,9 @@ public final class DataUntis {
 			throw new ApiOperationException(Status.NOT_FOUND, error);
 		}
 		final UntisSchuelerBezeichner variante = UntisSchuelerBezeichner.getByID(idVariante);
-		if (variante != UntisSchuelerBezeichner.SCHUELER_IDS)
+		if (variante != UntisSchuelerBezeichner.SCHUELER_IDS) {
 			mapSchueler = conn.queryByKeyList(DTOSchueler.class, idsSchueler).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+		}
 		// Bestimme die aktuellen Schüler-Lernabschnittsdaten der Kurs-Schüler
 		final Map<Long, DTOSchuelerLernabschnittsdaten> mapLernabschnitte =
 				conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_LIST_BY_SCHUELER_ID + " AND e.Schuljahresabschnitts_ID = ?2 AND e.WechselNr = 0",
@@ -1325,8 +1351,9 @@ public final class DataUntis {
 		}
 		final HashMap2D<Long, Long, DTOSchuelerLeistungsdaten> mapLeistungsdaten = new HashMap2D<>();
 		for (final DTOSchuelerLeistungsdaten ld : leistungsdaten) {
-			if (ld.Kurs_ID == null)
+			if (ld.Kurs_ID == null) {
 				continue;
+			}
 			mapLeistungsdaten.put(ld.Abschnitt_ID, ld.Kurs_ID, ld);
 		}
 		// Bestimme die Klassen
@@ -1417,8 +1444,9 @@ public final class DataUntis {
 				}
 
 				final StundenplanRaum stundenplanraum = manager.stundenplanraumGetByKlausurraumOrNull(raum);
-				if (stundenplanraum != null)
+				if (stundenplanraum != null) {
 					klausur.raeume = stunden.stream().map(s -> stundenplanraum.kuerzel).collect(Collectors.joining(" - "));
+				}
 				processKlausurenAndSchueler(klausur, manager, unterrichte, idVariante, manager.kursklausurGetMengeByRaum(raum, true),
 						manager.schuelerklausurGetMengeByRaum(raum));
 				result.add(klausur);
@@ -1426,8 +1454,9 @@ public final class DataUntis {
 		}
 		// Füge dann alle Termine hinzu, die noch keine Raumzuordnung haben
 		for (final GostKlausurtermin termin : manager.terminGetMengeAsList()) {
-			if (!manager.raumGetMengeByTermin(termin).isEmpty())
+			if (!manager.raumGetMengeByTermin(termin).isEmpty()) {
 				continue;
+			}
 			final UntisGPU017 klausur = new UntisGPU017();
 			klausur.id = termin.id;
 			klausur.datum = getUntisDate(termin.datum);
@@ -1450,8 +1479,9 @@ public final class DataUntis {
 						.getOrNull(GostHalbjahr.fromIDorException(manager.vorgabeByKursklausur(k).halbjahr).jahrgang,
 								manager.kursKurzbezeichnungByKursklausur(k)))
 						.map(uKlausuren -> uKlausuren.stream().filter(uKlausur -> {
-							if (klausur.datum == null)
+							if (klausur.datum == null) {
 								return true;
+							}
 							final long gueltigAb = Long.parseLong(uKlausur.datumVon);
 							final long gueltigBis = Long.parseLong(uKlausur.datumBis);
 							final long klausurDatum = Long.parseLong(klausur.datum);
@@ -1595,11 +1625,13 @@ public final class DataUntis {
 		final Map<Long, DTOFach> mapFaecher = faecher.stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 		final Map<Long, List<DTOKlassen>> mapKlassenByJahrgang = klassen.stream().collect(Collectors.groupingBy(k -> k.Jahrgang_ID));
 		for (final KursDaten kurs : kurse) {
-			if (kurs.schienen.isEmpty())
+			if (kurs.schienen.isEmpty()) {
 				continue;
+			}
 			final DTOFach fach = mapFaecher.get(kurs.idFach);
-			if (fach == null)
+			if (fach == null) {
 				continue;
+			}
 			if (kurs.idJahrgaenge.isEmpty()) {
 				// Fall 1: Schulweiter Kurs
 				for (final long unterricht : mapUnterrichte.getEntrySet().stream().flatMap(m -> m.getValue().entrySet().stream())
@@ -1795,8 +1827,9 @@ public final class DataUntis {
 			final List<UntisGPU015> gpu015, final @NotNull Map<@NotNull Long, @NotNull Long> mapKursZuUnterricht) {
 		final GostBlockungsdatenManager datenManager = ergebnisManager.getParent();
 		for (final DTOSchueler dtoSchueler : dtosSchueler) {
-			if (datenManager.schuelerGetListeOfFachwahlen(dtoSchueler.ID).isEmpty())
+			if (datenManager.schuelerGetListeOfFachwahlen(dtoSchueler.ID).isEmpty()) {
 				continue;
+			}
 			final String schuelerName = UntisSchuelerBezeichner.getBezeichner(idVariante, dtoSchueler.ID, dtoSchueler.Nachname,
 					dtoSchueler.Vorname, dtoSchueler.Geburtsdatum);
 
@@ -1807,8 +1840,9 @@ public final class DataUntis {
 				dto.fach = datenManager.kursGetName(k.id);
 				dto.klasse = datenManager.getHalbjahr().jahrgang;
 				final GostFachwahl fw = datenManager.schuelerGetOfFachFachwahlOrNull(dtoSchueler.ID, k.fachID);
-				if (fw == null)
+				if (fw == null) {
 					continue; // TODO Loggen, dass für die Kurszuordnung keine Fachwahl hinterlegt ist
+				}
 				final GostKursart kursart = GostKursart.fromIDorNull(fw.kursartID);
 				dto.statistikKennzeichen = switch (kursart) {
 					case LK -> "" + fw.abiturfach;
@@ -1827,8 +1861,9 @@ public final class DataUntis {
 					dto.idsUnterrichteAlternativkurse += tilde + idUnterrichtAlternativ;
 					dto.kuerzelAlternativkurse += tilde + datenManager.kursGetName(ak.id);
 					dto.prioAlternativkurse += tilde + "1";
-					if ("".equals(tilde))
+					if ("".equals(tilde)) {
 						tilde = "~";
+					}
 				}
 				gpu015.add(dto);
 			}

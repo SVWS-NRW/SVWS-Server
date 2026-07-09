@@ -161,8 +161,9 @@ public final class DataSQLite {
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
 		try {
-			if (SVWSKonfiguration.get().isLoggingEnabled())
+			if (SVWSKonfiguration.get().isLoggingEnabled()) {
 				logger.addConsumer(new LogConsumerLogfile("svws_schema_" + schemaname + ".log", true, true));
+			}
 		} catch (final IOException e) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen einer Log-Datei für das Schema");
 		}
@@ -171,8 +172,9 @@ public final class DataSQLite {
 		try (APITempDBFile sqlite = new APITempDBFile(DBDriver.SQLITE, conn.getDBSchema(), logger, log, null, false)) {
 			// Erzeuge einen Schema-Manager, der den Export des DB-Schema durchführt
 			final DBSchemaManager srcManager = DBSchemaManager.create(conn, true, logger);
-			if (srcManager == null)
+			if (srcManager == null) {
 				throw new ApiOperationException(Status.FORBIDDEN);
+			}
 
 			// Führe den Export mithilfe des Schema-Managers durch.
 			logger.modifyIndent(2);
@@ -180,8 +182,9 @@ public final class DataSQLite {
 			logger.modifyIndent(-2);
 
 			final Response response = exportTask.apply(logger, sqlite);
-			if (!response.hasEntity())
+			if (!response.hasEntity()) {
 				logger.logLn(2, "[FEHLER]");
+			}
 			logger.logLn(successMessage);
 			return response;
 		} catch (final DBException e) {
@@ -281,8 +284,9 @@ public final class DataSQLite {
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
 		try {
-			if (SVWSKonfiguration.get().isLoggingEnabled())
+			if (SVWSKonfiguration.get().isLoggingEnabled()) {
 				logger.addConsumer(new LogConsumerLogfile("svws_schema_" + conn.getDBSchema() + ".log", true, true));
+			}
 		} catch (final IOException e) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen einer Log-Datei für das Schema");
 		}
@@ -300,9 +304,10 @@ public final class DataSQLite {
 			DBConfig tgtConfig = SVWSKonfiguration.get().getDBConfig(conn.getDBSchema());
 			final boolean hatSchemaConfig = (tgtConfig != null);
 			// Falls das Schema ist in der SVWS-Konfiguration nicht als SVWS-Schema angelegt wurde, dann verwende die Informationen aus der aktuellen Datenbank-Verbindung.
-			if (tgtConfig == null)
+			if (tgtConfig == null) {
 				tgtConfig = SVWSKonfiguration.get().getRootDBConfig(conn.getUser().getUsername(), conn.getUser().getPassword())
 						.switchSchema(PersistenceUnits.SVWS_ROOT, conn.getDBSchema());
+			}
 
 			try {
 				final Benutzer srcUser = Benutzer.create(srcConfig);
@@ -315,8 +320,9 @@ public final class DataSQLite {
 
 					final DBSchemaManager srcManager = DBSchemaManager.create(srcConn, true, logger);
 					logger.modifyIndent(2);
-					if (!srcManager.backup.importDBInto(tgtConfig, -1, false, logger))
+					if (!srcManager.backup.importDBInto(tgtConfig, -1, false, logger)) {
 						throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, simpleResponse(false, log));
+					}
 					logger.modifyIndent(-2);
 				}
 			} catch (@SuppressWarnings("unused") final DBException e) {
@@ -325,8 +331,9 @@ public final class DataSQLite {
 
 			// Schreibe die Verbindungsinformation für das neu angelegte SVWS-Schema in die SVWS-Konfiguration
 			try {
-				if (!hatSchemaConfig)
+				if (!hatSchemaConfig) {
 					SVWSKonfiguration.get().createOrUpdateSchema(conn.getDBSchema(), conn.getUser().getUsername(), conn.getUser().getPassword(), false);
+				}
 			} catch (final SVWSKonfigurationException e) {
 				logger.logLn(LogLevel.ERROR, 2, "Fehler bei dem Erstellen bzw. Anpassen der SVWS-Konfiguration (" + e.getMessage() + ")");
 				final SimpleOperationResponse daten = simpleResponse(false, log);

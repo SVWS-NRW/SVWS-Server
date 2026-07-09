@@ -66,8 +66,9 @@ class TestJSONMapper {
 			assertEquals(original.abiturjahrgang, decoded.abiturjahrgang);
 			assertEquals(original.idSchulgliederung, decoded.idSchulgliederung);
 			assertEquals(original.kurse.size(), decoded.kurse.size());
-			for (int i = 0; i < original.kurse.size(); i++)
+			for (int i = 0; i < original.kurse.size(); i++) {
 				assertEquals(original.kurse.get(i), decoded.kurse.get(i));
+			}
 		} catch (final CompressionException e) {
 			fail(e);
 		}

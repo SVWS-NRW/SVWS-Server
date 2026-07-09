@@ -130,8 +130,9 @@ public class DataLernplattformenV1 {
 
 		// Lese Daten zum angefragten Schuljahresabschnitt aus der Datenbank
 		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
-		if (schuljahresabschnitt == null)
+		if (schuljahresabschnitt == null) {
 			throw new ApiOperationException(Response.Status.NOT_FOUND, "Schuljahresabschnitt mit ID %d nicht vorhanden.".formatted(idSchuljahresabschnitt));
+		}
 		final Map<Long, DTOSchueler> schuelerById = getSchuelerById();
 		final Map<Long, DTOCredentialsLernplattformen> mapLernplattformenCredentials = getLernplattformenCredentialsMap(idLernplattform);
 		final Map<Long, DTOSchuelerLernplattform> lernplattformByIdSchueler = getLernplattformByIdSchueler(idLernplattform);
@@ -172,11 +173,13 @@ public class DataLernplattformenV1 {
 		addLehrerToExport(lehrerToExport, lernplattformByIdLehrer, mapLernplattformenCredentials);
 
 		for (final DTOSchuelerLernabschnittsdaten schuelerLernabschnitt : schuelerLernabschnitte) {
-			if ((schuelerLernabschnitt.Klassen_ID == null) || (schuelerLernabschnitt.Jahrgang_ID == null))
+			if ((schuelerLernabschnitt.Klassen_ID == null) || (schuelerLernabschnitt.Jahrgang_ID == null)) {
 				continue;
+			}
 
-			if (zustimmungSchuelerIstVorhanden(lernplattformByIdSchueler, schuelerLernabschnitt.Schueler_ID))
+			if (zustimmungSchuelerIstVorhanden(lernplattformByIdSchueler, schuelerLernabschnitt.Schueler_ID)) {
 				addSchuelerToExport(schuelerToExport, schuelerLernabschnitt, schuelerById, lernplattformByIdSchueler, mapLernplattformenCredentials);
+			}
 			addFaecherAndLerngruppenToExport(lerngruppenToExport, schuelerToExport, faecherToExport, schuelerLernabschnitt, mapSchuelerLeistungsdaten,
 					mapFaecher, schuelerById, schuljahresabschnitt, lerngruppenIDZaehler, mapKurse);
 			addKlasseToExport(klassenToExport, schuelerLernabschnitt, mapKlassen, mapKlassenleitungen);
@@ -244,35 +247,40 @@ public class DataLernplattformenV1 {
 			final Map<Long, DTOFach> mapFaecher, final Map<Long, DTOSchueler> mapSchueler, final Schuljahresabschnitt abschnitt,
 			final AtomicInteger lerngruppenIDZaehler, final Map<Long, DTOKurs> mapKurse) throws ApiOperationException {
 		final DTOSchueler schuelerDto = mapSchueler.get(schuelerLernabschnittsdaten.Schueler_ID);
-		if (schuelerDto == null)
+		if (schuelerDto == null) {
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR,
 					"Schueler mit ID %d nicht vorhanden.".formatted(schuelerLernabschnittsdaten.Schueler_ID));
+		}
 
 		final List<DTOSchuelerLeistungsdaten> schuelerLeistungsdatenList =
 				mapSchuelerLeistungsdaten.getOrDefault(schuelerLernabschnittsdaten.ID, Collections.emptyList());
 		for (final DTOSchuelerLeistungsdaten schuelerLeistungsdaten : schuelerLeistungsdatenList) {
-			if (schuelerLeistungsdaten.Fachlehrer_ID == null)
+			if (schuelerLeistungsdaten.Fachlehrer_ID == null) {
 				continue;
+			}
 
 			final DTOFach fachDto = mapFaecher.get(schuelerLeistungsdaten.Fach_ID);
-			if (fachDto == null)
+			if (fachDto == null) {
 				throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR,
 						"Fach mit ID %d nicht vorhanden.".formatted(schuelerLeistungsdaten.Fach_ID));
+			}
 
 			addFachToExport(faecherToExport, fachDto);
 			final LernplattformV1Lerngruppe lernplattformLerngruppe = addLerngruppeToExport(lerngruppenToExport, abschnitt, lerngruppenIDZaehler, mapKurse,
 					schuelerLeistungsdaten, fachDto, schuelerLernabschnittsdaten.Klassen_ID);
 
 			final LernplattformV1Schueler lernplattformSchueler = schuelerToExport.get(schuelerDto.ID);
-			if (lernplattformSchueler != null)
+			if (lernplattformSchueler != null) {
 				lernplattformSchueler.idsLerngruppen.add(lernplattformLerngruppe.id);
+			}
 		}
 	}
 
 	private void addFachToExport(final Map<Long, LernplattformV1Fach> faecherToExport, final DTOFach fachDto) {
 		// Prüfen, ob Fach bereits im Export enthalten ist
-		if (faecherToExport.containsKey(fachDto.ID))
+		if (faecherToExport.containsKey(fachDto.ID)) {
 			return;
+		}
 
 		final LernplattformV1Fach lernplattformFach = new LernplattformV1Fach();
 		lernplattformFach.id = fachDto.ID;
@@ -293,8 +301,9 @@ public class DataLernplattformenV1 {
 				: ("Kurs:" + schuelerLeistungsdaten.Kurs_ID);
 
 		// Prüfen, ob Lerngruppe bereits im Export enthalten ist
-		if (lerngruppenToExport.containsKey(lerngruppenID))
+		if (lerngruppenToExport.containsKey(lerngruppenID)) {
 			return lerngruppenToExport.get(lerngruppenID);
+		}
 
 		final ZulaessigeKursart kursart = getKursart(schuelerLeistungsdaten);
 		final String kursartAllg = getKursartAllg(abschnitt, kursart);
@@ -313,9 +322,10 @@ public class DataLernplattformenV1 {
 			lernplattformLerngruppe.idsLehrer.add(schuelerLeistungsdaten.Fachlehrer_ID);
 		} else {
 			final DTOKurs kurs = mapKurse.get(schuelerLeistungsdaten.Kurs_ID);
-			if (kurs == null)
+			if (kurs == null) {
 				throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR,
 						"Kurs mit ID %d nicht vorhanden.".formatted(schuelerLeistungsdaten.Kurs_ID));
+			}
 			lernplattformLerngruppe.id = lerngruppenIDZaehler.getAndIncrement();
 			lernplattformLerngruppe.idIntern = schuelerLeistungsdaten.Kurs_ID;
 			lernplattformLerngruppe.idFach = schuelerLeistungsdaten.Fach_ID;
@@ -333,8 +343,9 @@ public class DataLernplattformenV1 {
 	}
 
 	private String getKursartAllg(final Schuljahresabschnitt abschnitt, final ZulaessigeKursart kursart) {
-		if (kursart == null)
+		if (kursart == null) {
 			return null;
+		}
 
 		final ZulaessigeKursartKatalogEintrag kursartEintrag = kursart.daten(abschnitt.schuljahr);
 		return ((kursartEintrag.kuerzelAllg == null) || kursartEintrag.kuerzelAllg.isEmpty()) ? kursartEintrag.kuerzel : kursartEintrag.kuerzelAllg;
@@ -374,13 +385,15 @@ public class DataLernplattformenV1 {
 	private void addJahrgangToExport(final Map<Long, LernplattformV1Jahrgang> jahrgaengeToExport, final DTOSchuelerLernabschnittsdaten lernabschnittsdaten,
 			final Map<Long, DTOJahrgang> mapJahrgaenge) throws ApiOperationException {
 		// Prüfen, ob Jahrgang bereits im Export enthalten ist
-		if (jahrgaengeToExport.containsKey(lernabschnittsdaten.Jahrgang_ID))
+		if (jahrgaengeToExport.containsKey(lernabschnittsdaten.Jahrgang_ID)) {
 			return;
+		}
 
 		final DTOJahrgang jahrgang = mapJahrgaenge.get(lernabschnittsdaten.Jahrgang_ID);
-		if (jahrgang == null)
+		if (jahrgang == null) {
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR,
 					"Jahrgang mit ID %d nicht vorhanden.".formatted(lernabschnittsdaten.Jahrgang_ID));
+		}
 
 		final LernplattformV1Jahrgang lernplattformJahrgang = new LernplattformV1Jahrgang();
 		lernplattformJahrgang.id = jahrgang.ID;
@@ -396,13 +409,15 @@ public class DataLernplattformenV1 {
 			final Map<Long, List<DTOKlassenLeitung>> mapKlassenleitungen)
 			throws ApiOperationException {
 		// Prüfen, ob Klasse bereits im Export enthalten ist
-		if (klassenToExport.containsKey(lernabschnittsdaten.Klassen_ID))
+		if (klassenToExport.containsKey(lernabschnittsdaten.Klassen_ID)) {
 			return;
+		}
 
 		final DTOKlassen dtoKlasse = mapKlassen.get(lernabschnittsdaten.Klassen_ID);
-		if (dtoKlasse == null)
+		if (dtoKlasse == null) {
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR,
 					"Klasse mit ID %d nicht vorhanden.".formatted(lernabschnittsdaten.Klassen_ID));
+		}
 
 		final LernplattformV1Klasse lernplattformKlasse = new LernplattformV1Klasse();
 		lernplattformKlasse.id = dtoKlasse.ID;
@@ -452,8 +467,9 @@ public class DataLernplattformenV1 {
 	private static Predicate<DTOLehrer> zustimmungLehrerIstVorhanden(final Map<Long, DTOLehrerLernplattform> lernplattformByLehrerId) {
 		return lehrer -> {
 			final DTOLehrerLernplattform dto = lernplattformByLehrerId.get(lehrer.ID);
-			if (dto == null)
+			if (dto == null) {
 				return false;
+			}
 
 			return Boolean.TRUE.equals(dto.EinwilligungNutzung);
 		};
@@ -461,8 +477,9 @@ public class DataLernplattformenV1 {
 
 	private static boolean zustimmungSchuelerIstVorhanden(final Map<Long, DTOSchuelerLernplattform> lernplattformBySchuelerId, final Long idSchueler) {
 		final DTOSchuelerLernplattform dto = lernplattformBySchuelerId.get(idSchueler);
-		if (dto == null)
+		if (dto == null) {
 			return false;
+		}
 
 		return Boolean.TRUE.equals(dto.EinwilligungNutzung);
 	}
@@ -470,8 +487,9 @@ public class DataLernplattformenV1 {
 
 	private DTOLernplattformen getLernplattform(final Long idLernplattform) throws ApiOperationException {
 		final DTOLernplattformen dtoLernplattform = conn.queryByKey(DTOLernplattformen.class, idLernplattform);
-		if (dtoLernplattform == null)
+		if (dtoLernplattform == null) {
 			throw new ApiOperationException(Response.Status.NOT_FOUND, "Lernplattform mit ID %d nicht vorhanden.".formatted(idLernplattform));
+		}
 		return dtoLernplattform;
 	}
 
@@ -481,8 +499,9 @@ public class DataLernplattformenV1 {
 	}
 
 	private Map<Long, List<DTOKlassenLeitung>> getKlassenleitungenMap(final Map<Long, DTOKlassen> mapKlassen) {
-		if (mapKlassen.isEmpty())
+		if (mapKlassen.isEmpty()) {
 			return new HashMap<>();
+		}
 		return conn.queryList(DTOKlassenLeitung.QUERY_LIST_BY_KLASSEN_ID, DTOKlassenLeitung.class, mapKlassen.keySet()).stream()
 				.collect(Collectors.groupingBy(kl -> kl.Klassen_ID));
 	}

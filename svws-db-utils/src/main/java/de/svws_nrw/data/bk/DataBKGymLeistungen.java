@@ -65,8 +65,9 @@ public final class DataBKGymLeistungen {
 	 * @return das voraussichtliche Jahr des Abiturs
 	 */
 	public static Integer getBkAbiturjahr(final Schulgliederung schulgliederung, final int schuljahr, final Jahrgaenge jahrgang) {
-		if ((schulgliederung == null) || (jahrgang == null))
+		if ((schulgliederung == null) || (jahrgang == null)) {
 			return null;
+		}
 		return switch (jahrgang) {
 			case JAHRGANG_01 -> schuljahr + 3;
 			case JAHRGANG_02 -> schuljahr + 2;
@@ -112,8 +113,9 @@ public final class DataBKGymLeistungen {
 	 */
 	private static @NotNull BKGymFaecherManager getFaecherManager(final int schuljahr, final DBEntityManager conn) throws ApiOperationException {
 		final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
-		if (faecher == null)
+		if (faecher == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		final @NotNull List<BKGymFach> tmpFaecher = faecher.values().stream()
 				.map(fach -> mapFromDTOFach(fach)).filter(Objects::nonNull).toList();
 		return new BKGymFaecherManager(schuljahr, tmpFaecher);
@@ -126,8 +128,9 @@ public final class DataBKGymLeistungen {
 			final BKGymFaecherManager fachManager, final Map<String, BKGymLeistungenFach> faecher) {
 		// Prüfe, ob die Kursart eine Kursart der Oberstufe ist.
 		final GostKursart kursart = GostKursart.fromKuerzel(leistung.KursartAllg);
-		if (kursart == null)
+		if (kursart == null) {
 			return;
+		}
 		// Prüfe, ob das Fach ein Fach des beruflichen Gymnasiums ist
 		final BKGymFach bkGymFach = fachManager.get(leistung.Fach_ID);
 		if (bkGymFach == null)
@@ -141,8 +144,9 @@ public final class DataBKGymLeistungen {
 		}
 		// Prüfe ggf., ob eine Sprache fortgeführt wurde oder nicht
 		final String fremdsprache = BKGymFaecherManager.getFremdsprache(bkGymFach);
-		if (fremdsprache != null)
+		if (fremdsprache != null) {
 			fach.istFSNeu = (SprachendatenUtils.istNeueinsetzbareSpracheInGOSt(sprachendaten, fremdsprache)); // TODO Prüfung auch zu BK kompatibel ?
+		}
 
 		final GostAbiturFach tmpAbiFach = GostAbiturFach.fromIDString(leistung.AbiFach);
 		fach.abiturfach = (tmpAbiFach == null) ? null : tmpAbiFach.id;
@@ -190,8 +194,9 @@ public final class DataBKGymLeistungen {
 
 		// Prüfe die Schulform
 		final Schulform schulform = conn.getUser().schuleGetSchulform();
-		if ((schulform != Schulform.BK) && (schulform != Schulform.SB))
+		if ((schulform != Schulform.BK) && (schulform != Schulform.SB)) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die Schulform der Schule erlaubt kein berufliches Gymnasium.");
+		}
 
 		// Bestimme den Schüler und seinen aktuellen Schuljahresabschnitt
 		final DTOSchueler schueler = schuelerRepository.findById(id).orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Kein Schüler mit der ID %d gefunden.".formatted(id)));
@@ -222,17 +227,20 @@ public final class DataBKGymLeistungen {
 		final Jahrgaenge aktJahrgang =
 				((dtoAktJahrgang == null) || (dtoAktJahrgang.ASDJahrgang == null)) ? null : Jahrgaenge.data().getWertBySchluessel(dtoAktJahrgang.ASDJahrgang);
 		final Integer abiturjahr = getBkAbiturjahr(schulgliederung, schuljahresabschnitt.Jahr, aktJahrgang); // TODO Spezialfall JAHRGANG_04 mit Wiederholung ggf. berücksichtigen
-		if (abiturjahr == null)
+		if (abiturjahr == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Für den Schüler mit der ID %d konnte das Abiturjahr nicht ermittelt werden.".formatted(schueler.ID));
-		if (aktLernabschnitt.Fachklasse_ID == null)
+		}
+		if (aktLernabschnitt.Fachklasse_ID == null) {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Konnte die Fachklasse des aktuellen Lernabschnittes des Schülers mit der ID %d nicht bestimmen.".formatted(schueler.ID));
+		}
 		final DTOFachklassen fachklasse = conn.queryByKey(DTOFachklassen.class, aktLernabschnitt.Fachklasse_ID);
-		if ((fachklasse == null) || (fachklasse.FKS_AP_SIM == null))
+		if ((fachklasse == null) || (fachklasse.FKS_AP_SIM == null)) {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Konnte die Fachklasse mit der ID %d des aktuellen Lernabschnittes des Schülers mit der ID %d nicht bestimmen."
 							.formatted(aktLernabschnitt.Fachklasse_ID, schueler.ID));
+		}
 		final BKGymFaecherManager fachManager = getFaecherManager(abiturjahr - 1, conn);
 
 		// Prüfe, ob die Schulgliederung den Abschluss Abitur erlaubt, um festzustellen, ob der Schüler in einem Bildungsgang des beruflichen Gymnasiums ist
@@ -246,32 +254,39 @@ public final class DataBKGymLeistungen {
 		daten.aktuellerJahrgang = (aktJahrgang == null) ? null : aktJahrgang.daten(schuljahresabschnitt.Jahr).kuerzel;
 		daten.sprachendaten = sprachendaten;
 		final String biliZweig = aktLernabschnitt.BilingualerZweig;
-		if ((biliZweig != null) && (!"".equals(biliZweig)))
+		if ((biliZweig != null) && (!"".equals(biliZweig))) {
 			daten.bilingualeSprache = biliZweig.toUpperCase().substring(0, 1);
+		}
 		// eine Map zur temporären Speicherung der Fächer -> muss später noch sortiert werden
 		final Map<String, BKGymLeistungenFach> faecher = new HashMap<>();
 		for (final DTOSchuelerLernabschnittsdaten lernabschnitt : lernabschnitte) {
 			final Schuljahresabschnitt abschnittLeistungsdaten = conn.getUser().schuleGetAbschnittById(lernabschnitt.Schuljahresabschnitts_ID);
-			if (abschnittLeistungsdaten == null)
+			if (abschnittLeistungsdaten == null) {
 				continue;
+			}
 
 			final DTOJahrgang dtoJahrgang = mapJahrgaenge.get(lernabschnitt.Jahrgang_ID);
 			final Jahrgaenge jahrgang =
 					((dtoJahrgang == null) || (dtoJahrgang.ASDJahrgang == null)) ? null : Jahrgaenge.data().getWertBySchluessel(dtoJahrgang.ASDJahrgang);
-			if (jahrgang == null)
+			if (jahrgang == null) {
 				continue;
+			}
 			final GostHalbjahr halbjahr =
 					GostHalbjahr.fromBkJahrgangUndHalbjahr(jahrgang.daten(schuljahresabschnitt.Jahr).kuerzel, abschnittLeistungsdaten.abschnitt);
-			if (halbjahr == null)
+			if (halbjahr == null) {
 				continue;
-			if (Boolean.TRUE.equals(lernabschnitt.SemesterWertung))
+			}
+			if (Boolean.TRUE.equals(lernabschnitt.SemesterWertung)) {
 				daten.bewertetesHalbjahr[halbjahr.id] = true;
+			}
 			final List<DTOSchuelerLeistungsdaten> leistungen = conn.queryList(DTOSchuelerLeistungsdaten.QUERY_BY_ABSCHNITT_ID,
 					DTOSchuelerLeistungsdaten.class, lernabschnitt.ID);
-			if (leistungen.isEmpty())
+			if (leistungen.isEmpty()) {
 				daten.bewertetesHalbjahr[halbjahr.id] = false;
-			for (final DTOSchuelerLeistungsdaten leistung : leistungen)
+			}
+			for (final DTOSchuelerLeistungsdaten leistung : leistungen) {
 				getLeistung(daten, lernabschnitt, leistung, abschnittLeistungsdaten, jahrgang, halbjahr, sprachendaten, fachManager, faecher);
+			}
 		}
 		// Sortiere Fächer anhand der SII-Sortierung der Fächer
 		faecher.values().stream()
@@ -295,17 +310,20 @@ public final class DataBKGymLeistungen {
 	public static BKGymAbiturdaten getAbiturdatenFromLeistungsdaten(final DBEntityManager conn, final long id) throws ApiOperationException {
 		// Prüfe die Schulform
 		final Schulform schulform = conn.getUser().schuleGetSchulform();
-		if ((schulform != Schulform.BK) && (schulform != Schulform.SB))
+		if ((schulform != Schulform.BK) && (schulform != Schulform.SB)) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die Schulform der Schule erlaubt kein berufliches Gymnasium.");
+		}
 
 		// Ermittle den Schüler
 		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, id);
-		if (dtoSchueler == null)
+		if (dtoSchueler == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein Schüler mit der ID %d gefunden.".formatted(id));
+		}
 		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(dtoSchueler.Schuljahresabschnitts_ID);
-		if (schuljahresabschnitt == null)
+		if (schuljahresabschnitt == null) {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Fehlerhafter Schuljahresabschnitt bei dem Schüler mit der ID %d.".formatted(id));
+		}
 
 		// Bestimme den aktuellen Lernabschnitt des Schülers
 		final TypedQuery<DTOSchuelerLernabschnittsdaten> queryAktAbschnitt = conn.query(
@@ -315,14 +333,16 @@ public final class DataBKGymLeistungen {
 				.setParameter("schueler_id", id)
 				.setParameter("abschnitt_id", dtoSchueler.Schuljahresabschnitts_ID)
 				.getResultList().stream().findFirst().orElse(null);
-		if (aktLernabschnitt == null)
+		if (aktLernabschnitt == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Konnte keinen aktuellen Lernabschnitt für den Schüler mit der ID %d ermitteln.".formatted(id));
+		}
 
 		// Lese die Abiturdaten anhand der ID aus der Datenbank
 		final DTOSchuelerAbitur dtoSchuelerAbitur = getDatabaseDTOByID(conn, schuljahresabschnitt, id);
-		if (dtoSchuelerAbitur == null)
+		if (dtoSchuelerAbitur == null) {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Es wurden keine Abiturdaten für den Schüler mit der ID %d in der Datenbank gefunden.".formatted(id));
+		}
 
 		// Bestimme die Jahrgänge der Schule
 		final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
@@ -334,27 +354,32 @@ public final class DataBKGymLeistungen {
 		final Jahrgaenge aktJahrgang =
 				((dtoJahrgang == null) || (dtoJahrgang.ASDJahrgang == null)) ? null : Jahrgaenge.data().getWertBySchluessel(dtoJahrgang.ASDJahrgang);
 		final Integer abiturjahr = getBkAbiturjahr(schulgliederung, schuljahresabschnitt.schuljahr, aktJahrgang); // TODO Spezialfall JAHRGANG_04 mit Wiederholung ggf. berücksichtigen
-		if (abiturjahr == null)
+		if (abiturjahr == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Für den Schüler mit der ID %d konnte das Abiturjahr nicht ermittelt werden.".formatted(id));
+		}
 		final SchulgliederungKatalogEintrag schulgliederungEintrag = schulgliederung.daten(abiturjahr - 1);
-		if (schulgliederungEintrag == null)
+		if (schulgliederungEintrag == null) {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Konnte die Schulgliederung des aktuellen Lernabschnittes des Schülers mit der ID %d nicht bestimmen.".formatted(id));
-		if (aktLernabschnitt.Fachklasse_ID == null)
+		}
+		if (aktLernabschnitt.Fachklasse_ID == null) {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Konnte die Fachklasse des aktuellen Lernabschnittes des Schülers mit der ID %d nicht bestimmen.".formatted(id));
+		}
 		final DTOFachklassen fachklasse = conn.queryByKey(DTOFachklassen.class, aktLernabschnitt.Fachklasse_ID);
-		if ((fachklasse == null) || (fachklasse.FKS_AP_SIM == null))
+		if ((fachklasse == null) || (fachklasse.FKS_AP_SIM == null)) {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Konnte die Fachklasse mit der ID %d des aktuellen Lernabschnittes des Schülers mit der ID %d nicht bestimmen."
 							.formatted(aktLernabschnitt.Fachklasse_ID, id));
+		}
 		final BKGymFaecherManager fachManager = getFaecherManager(abiturjahr - 1, conn);
 
 		// Bestimme die bereits vorhandenen Leistungsdaten für die weitere Laufbahnplanung
 		final BKGymLeistungen leistungen = getLeistungsdaten(conn, id);
-		if (leistungen == null)
+		if (leistungen == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 
 		final BKGymAbiturdaten abidaten = new BKGymAbiturdaten();
 		abidaten.schuelerID = id;
@@ -371,8 +396,9 @@ public final class DataBKGymLeistungen {
 		abidaten.facharbeitNotenpunkte = dtoSchuelerAbitur.FacharbeitNotenpunkte;
 		abidaten.facharbeitThema = dtoSchuelerAbitur.ProjektkursThema; //ja, da steht das drin.
 
-		for (final GostHalbjahr hj : GostHalbjahr.values())
+		for (final GostHalbjahr hj : GostHalbjahr.values()) {
 			abidaten.bewertetesHalbjahr[hj.id] = leistungen.bewertetesHalbjahr[hj.id];
+		}
 
 		for (final BKGymLeistungenFach leistungenFach : leistungen.faecher) {
 			GostHalbjahr letzteBelegungHalbjahr = null;   // das Halbjahr der letzten Belegung
@@ -452,14 +478,15 @@ public final class DataBKGymLeistungen {
 		// Lese die Abiturdaten anhand der ID aus der Datenbank
 		final List<DTOSchuelerAbitur> dtosSchuelerAbitur = conn.queryList(DTOSchuelerAbitur.QUERY_BY_SCHUELER_ID,
 				DTOSchuelerAbitur.class, schueler_id);
-		if ((dtosSchuelerAbitur == null) || (dtosSchuelerAbitur.isEmpty()))
+		if ((dtosSchuelerAbitur == null) || (dtosSchuelerAbitur.isEmpty())) {
 			return null;
+		}
 		// Abiturjahr wurde nicht angegeben - ggf. auswählen
 		if (schuljahresabschnitt == null) {
 			DTOSchuelerAbitur current = null;
 			Schuljahresabschnitt currentSja = null;
 			for (final DTOSchuelerAbitur dtoSchuelerAbitur : dtosSchuelerAbitur) {
-				final Schuljahresabschnitt dtoSja = (dtoSchuelerAbitur.Schuljahresabschnitts_ID) == null ? null
+				final Schuljahresabschnitt dtoSja = ((dtoSchuelerAbitur.Schuljahresabschnitts_ID) == null) ? null
 						: conn.getUser().schuleGetAbschnittById(dtoSchuelerAbitur.Schuljahresabschnitts_ID);
 				if ((currentSja == null) || ((dtoSja != null) && ((dtoSja.schuljahr > currentSja.schuljahr)
 						|| ((dtoSja.schuljahr == currentSja.schuljahr) && (dtoSja.abschnitt > currentSja.abschnitt))))) {
@@ -470,11 +497,13 @@ public final class DataBKGymLeistungen {
 			return current;
 		}
 		for (final DTOSchuelerAbitur dtoSchuelerAbitur : dtosSchuelerAbitur) {
-			if (dtoSchuelerAbitur.Schuljahresabschnitts_ID == null)
+			if (dtoSchuelerAbitur.Schuljahresabschnitts_ID == null) {
 				throw new ApiOperationException(Status.NOT_FOUND,
 					"Es wurden kein Schuljahr im Datensatz der Tabelle SchuelerAbitur für den Schüler mit der ID %d in der Datenbank gefunden.".formatted(schueler_id));
-			if (dtoSchuelerAbitur.Schuljahresabschnitts_ID == schuljahresabschnitt.id)
+			}
+			if (dtoSchuelerAbitur.Schuljahresabschnitts_ID == schuljahresabschnitt.id) {
 				return dtoSchuelerAbitur;
+			}
 		}
 		return null;
 	}
