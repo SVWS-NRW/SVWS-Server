@@ -86,6 +86,10 @@ span.textarea-input--control {
 	@apply transform;
 	@apply flex items-center font-medium;
 
+	/* Nach Zeilenende abschneiden */
+	@apply overflow-hidden;
+	max-width: calc(100% - 0.7em);
+
 	top: 0.5em;
 	left: 0.7em;
 	line-height: 1.33;
@@ -102,6 +106,13 @@ span.textarea-input--control {
 .textarea-input--placeholder--required {
 	@apply inline-block font-normal relative;
 	top: -0.2em;
+}
+
+.textarea-input:focus-within .textarea-input--placeholder,
+.textarea-input--filled .textarea-input--placeholder {
+	/* Placeholder nicht beschneiden */
+	@apply overflow-visible;
+	max-width: none;
 }
 
 .textarea-input--focus:not(.textarea-input--headless) .textarea-input--placeholder,

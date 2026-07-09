@@ -203,14 +203,18 @@ describe("Bedingtes Rendern der HTML-Elemente", () => {
 			expect(wrapper.find("span.inline-flex.gap-1").exists()).toBeFalsy();
 		});
 
-		test("maxLen-Warnung wird gerendert, wenn maxLen gesetzt und modelValue nicht null", async () => {
-			await wrapper.setProps({ placeholder: "Placeholder", maxLen: 12, modelValue: "Test" });
-			expect(wrapper.find("span.inline-flex.gap-1").exists()).toBeTruthy();
+		test("maxLen-Warnung wird gerendert, wenn maxLen gesetzt und modelValue null ist", async () => {
+			await wrapper.setProps({ placeholder: "Placeholder", maxLen: 12, modelValue: null });
+			const span = wrapper.find("span.inline-flex.gap-1");
+			expect(span.exists()).toBeTruthy();
+			expect(span.text()).toBe("(max. 12 Zeichen)");
 		});
 
-		test("maxLen-Warnung wird nicht gerendert, wenn modelValue null ist", async () => {
-			await wrapper.setProps({ placeholder: "Placeholder", maxLen: 12, modelValue: null });
-			expect(wrapper.find("span.inline-flex.gap-1").exists()).toBeFalsy();
+		test("maxLen-Warnung mit aktueller Zeichenlänge wird gerendert, wenn maxLen gesetzt und modelValue nicht null", async () => {
+			await wrapper.setProps({ placeholder: "Placeholder", maxLen: 12, modelValue: "Test" });
+			const span = wrapper.find("span.inline-flex.gap-1");
+			expect(span.exists()).toBeTruthy();
+			expect(span.text()).toBe("(4/12 Zeichen)");
 		});
 
 		test("span-statistics wird nicht gerendert, wenn statistics false ist", async () => {

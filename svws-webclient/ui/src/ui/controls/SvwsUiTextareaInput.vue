@@ -39,8 +39,12 @@
 				</svws-ui-tooltip>
 			</span>
 			<span>{{ placeholder }}</span>
-			<span v-if="!headless && data !== null && (maxLen !== undefined) && (maxLen > 0)" class="inline-flex gap-1">
-				{{ `(${data.length > 0 ? data.length + '/' : 'maximal '}${maxLen} Zeichen)` }}
+			<span v-if="showMaxLen"
+				class="inline-flex gap-1 whitespace-nowrap"
+				:class="{
+					'opacity-50': (validatorLength === null) || (validatorLength.getFehlerart() === ValidatorFehlerart.UNGENUTZT)
+				}">
+				{{ `(${(data !== null) && (data.length > 0) ? data.length + '/' : 'max. '}${maxLen} Zeichen)` }}
 			</span>
 			<span v-if="required" class="icon-xs i-ri-asterisk textarea-input--placeholder--required textarea-input--state-icon" aria-hidden="true" />
 			<span v-if="required" class="sr-only">erforderlich</span>
@@ -121,6 +125,10 @@
 	let valueOnFocus: string | null = null;
 
 	const isEmpty = computed<boolean>(() => data.value === null);
+
+	const showMaxLen = computed<boolean>(() => {
+		return !props.headless && (props.maxLen !== undefined) && (props.maxLen > 0);
+	});
 
 	const validationResult = computed(() => new ValidationResult(validierungFehler.value));
 
