@@ -1,7 +1,28 @@
 import { setupDevtoolsPlugin } from '@vue/devtools-api';
-import { type App, watch } from 'vue';
+import type { App, ShallowRef } from 'vue';
+import { watch } from 'vue';
+import type { JavaIterator } from '../../../core/src/java/util/JavaIterator';
 
 const INSPECTOR_ID = 'svws-state-inspector';
+
+// Der Typ der API-Instanz wird aus den Parametern des Callbacks extrahiert...
+type DevToolsApiInstance = Parameters<Parameters<typeof setupDevtoolsPlugin>[1]>[0];
+
+/** Struktur eines SVWS-State-Objekts mit internem reaktiven Zustand */
+interface SVWSState {
+	_state: ShallowRef<any>;
+	[key: string]: any;
+}
+
+/** Zentrale Registry für alle ermittelten States im vue-Kontext */
+const stateRegistry = new Map<string, Record<string, SVWSState>>();
+
+/** Map zur Verwaltung aktiver Watcher für die States */
+const activeStateWatchers = new Map<string, () => void>();
+
+/** Globale Referenz auf die DevTools-API */
+let stateDevtoolsApi: DevToolsApiInstance | null = null;
+
 
 interface VueAppInternal {
 	_context?: {
@@ -44,6 +65,29 @@ function getFilteredStates(app: App): Record<string, unknown> {
 	return filtered;
 }
 
+/**
+ * Wandelt eine Java-Liste rekursiv in ein JavaScript-Array um.
+ *
+ * @param javaList   die Java-Liste
+ * @param visited    ein Set um festzustellen, wenn ein Knoten bereits besucht wurde - nötig zur Schleifenvermeidung
+ *
+ * @returns das JavaScript-Array mit den verarbeiteten Unterelementen
+ */
+function convertJavaListToArray(javaList: any, visited: WeakSet<object>): any[] {
+	const listAsArray: any[] = [];
+	try {
+		const iterator = javaList.iterator() as JavaIterator<any> | null | undefined;
+		if ((iterator !== null) && (iterator !== undefined) && (typeof iterator.hasNext === 'function')
+			&& (typeof iterator.next === 'function')) {
+			while (iterator.hasNext() === true) {
+				listAsArray.push(prepareData(iterator.next(), visited));
+			}
+		}
+	} catch {
+		// Fallback bei Fehlern während der Iteration
+	}
+	return listAsArray;
+}
 
 /**
  * Bereitet die Datenstrukturen der States rekursiv für die Darstellung vor.
@@ -51,18 +95,45 @@ function getFilteredStates(app: App): Record<string, unknown> {
  * Java-Datenstrukturen vorbereitet. Außerdem werden Objekttypen für die typisierte Anzeige
  * ermittelt.
  *
- * @param value   der Wert, welcher für die Anzeige vorbereitet wird
+ * @param value     der Wert, welcher für die Anzeige vorbereitet wird
+ * @param visited   ein Set um festzustellen, wenn ein Knoten bereits besucht wurde - nötig zur Schleifenvermeidung
  *
  * @returns die vorbereiteten Daten für die Anzeige
  */
-function prepareData(value: unknown): unknown {
+function prepareData(value: unknown, visited = new WeakSet<object>()): unknown {
 	if ((value === null) || (value === undefined)) {
 		return value;
 	}
 
+	// Vermeide Schleifen und beende die Traveriserung an diesem Zweig
+	if (typeof value === 'object') {
+		if (visited.has(value)) {
+			// Gebe in den DevTools eine Rückmeldung, dass ein Zyklus vorliegt und daher die Darstellung abgebrochen wird
+			return {
+				_custom: {
+					type: 'object',
+					display: '↻ [Zirkuläre Referenz]',
+					value: 'Bereits verarbeitet',
+					readOnly: true,
+				},
+			};
+		}
+		visited.add(value);
+	}
+
+	// Falls es sich um eine reaktive Vue-Ref handelt, packen wir den inneren Wert aus
+	if ((typeof value === 'object') && ('value' in value) && (((value as any).__v_isRef === true) || (typeof (value as any).effect === 'object'))) {
+		return prepareData(value.value, visited);
+	}
+
+	// Prüfe, ob es sich um eine Java-Liste mit iterator handelt
+	if (typeof (value as any).iterator === 'function') {
+		return convertJavaListToArray(value, visited);
+	}
+
 	// Bei einem Array werden die einzelnen Elemente vorbereitet...
 	if (Array.isArray(value)) {
-		return value.map(item => prepareData(item));
+		return value.map(item => prepareData(item, visited));
 	}
 
 	// Bei Objekten werden die einzelnen Attribute vorbereitet...
@@ -72,7 +143,6 @@ function prepareData(value: unknown): unknown {
 		}
 
 		const obj = value as Record<string, unknown>;
-
 		if ((obj.elementData !== undefined) && Array.isArray(obj.elementData)) {
 			let itemType = 'Unknown';
 			if (obj.elementData.length === 0) {
@@ -82,11 +152,7 @@ function prepareData(value: unknown): unknown {
 				if ((firstItem !== undefined) && (firstItem !== null)) {
 					if (typeof firstItem === 'object') {
 						const cName = firstItem.constructor?.name;
-						if ((typeof cName === 'string') && (cName !== '') && (cName !== 'Object')) {
-							itemType = cName;
-						} else {
-							itemType = 'Object';
-						}
+						itemType = ((typeof cName === 'string') && (cName !== '') && (cName !== 'Object')) ? cName : 'Object';
 					} else {
 						const tName = typeof firstItem;
 						itemType = tName.charAt(0).toUpperCase() + tName.slice(1);
@@ -95,14 +161,12 @@ function prepareData(value: unknown): unknown {
 			}
 
 			const cNameParent = value.constructor.name;
-			const collectionName = ((typeof cNameParent === 'string') && (cNameParent !== '') && (cNameParent !== 'Object'))
-				? cNameParent
-				: 'List';
+			const collectionName = ((typeof cNameParent === 'string') && (cNameParent !== '') && (cNameParent !== 'Object')) ? cNameParent : 'List';
 			return {
 				_custom: {
 					type: 'object',
 					display: `${collectionName}⟨${itemType}⟩[${obj.elementData.length}]`,
-					value: obj.elementData.map(item => prepareData(item)),
+					value: obj.elementData.map(item => prepareData(item, visited)),
 					readOnly: true,
 				},
 			};
@@ -114,7 +178,7 @@ function prepareData(value: unknown): unknown {
 			if ((typeof propValue === 'function') || key.startsWith('_')) {
 				continue;
 			}
-			cleanedObj[key] = prepareData(propValue);
+			cleanedObj[key] = prepareData(propValue, visited);
 		}
 
 		const constructorName = value.constructor.name;
@@ -136,6 +200,33 @@ function prepareData(value: unknown): unknown {
 }
 
 
+/** Timer-Referenz für das Debouncing der DevTools-Updates */
+let stateUpdateTimer: ReturnType<typeof setTimeout> | null = null;
+
+/**
+ * Fordert eine Aktualisierung des State-Inspector-Baums an. Nutze Debouncing, um bei massenhaften
+ * Lifecycle-Events (z.B. Routing) die Performance zu schonen.
+ */
+function requestStateUpdate(): void {
+	if (stateDevtoolsApi === null) {
+		return;
+	}
+
+	// Breche einen ggf. noch laufenden Timer ab
+	if (stateUpdateTimer !== null) {
+		clearTimeout(stateUpdateTimer);
+	}
+
+	// Warte eine kurze Zeit bis der State aktualisiert wird. Falls in der Zwischenzeit weitere Anpassungen erfolgen
+	// wird die Ansicht nicht unnötig oft aktualisiert.
+	stateUpdateTimer = setTimeout(() => {
+		stateDevtoolsApi?.sendInspectorTree(INSPECTOR_ID);
+		stateDevtoolsApi?.sendInspectorState(INSPECTOR_ID);
+		stateUpdateTimer = null;
+	}, 150);
+}
+
+
 /**
  * Ermittelt die Attribute des States und gibt diese für die Anzeige in den DevTools
  * zurück.
@@ -147,6 +238,9 @@ function prepareData(value: unknown): unknown {
 function retrieveStateAttributes(stateObj: Record<string, unknown>): Record<string, unknown>[] {
 	const stateProps: Record<string, unknown>[] = [];
 
+	const visited = new WeakSet<object>();
+	visited.add(stateObj);
+
 	// Prüfe, auf die reaktiven Daten und füge diese zu den Properties hinzu
 	if (stateObj.data !== undefined) {
 		const dataProp = stateObj.data as Record<string, unknown>;
@@ -155,7 +249,7 @@ function retrieveStateAttributes(stateObj: Record<string, unknown>): Record<stri
 
 		stateProps.push({
 			key: 'Daten (shallowRef.value)',
-			value: prepareData(rawData),
+			value: prepareData(rawData, visited),
 			editable: false,
 			revive: true,
 		});
@@ -177,21 +271,154 @@ function retrieveStateAttributes(stateObj: Record<string, unknown>): Record<stri
 			if (typeof val === 'function') {
 				continue;
 			}
+
+			let isGetter = false;
+			const desc = Object.getOwnPropertyDescriptor(proto, prop);
+			if ((desc !== undefined) && (typeof desc.get === 'function') && (typeof desc.set !== 'function')) {
+				isGetter = true;
+			}
+
 			stateProps.push({
 				key: prop,
-				value: prepareData(val),
-				editable: false,
+				value: prepareData(val, visited),
+				editable: !isGetter,
 				revive: true,
 			});
-		} catch {
+		} catch (e) {
+			const errorMsg = (e instanceof Error) ? e.message : String(e);
 			stateProps.push({
 				key: prop,
-				value: 'Error: Wert konnte nicht gelesen werden',
+				value: `Error: ${errorMsg}`,
 				editable: false,
 			});
 		}
 	}
 	return stateProps;
+}
+
+
+/**
+ * Ersetzt einen Wert tief innerhalb einer Objektstruktur anhand eines Pfad-Arrays.
+ * Erzwingt durch eine Neu-Zuweisung auf der Root-Ebene das Feuern des Proxy-Handlers.
+ *
+ * @param rootObj   das reaktive Proxy-Objekt der obersten Ebene
+ * @param path      der vollständige Mutationspfad aus den DevTools (z.B. ['adresse', 'strasse'])
+ * @param value     der neu zu setzende Wert
+ */
+function setDeepValue(rootObj: any, path: string[], value: any): void {
+	if (path.length === 0) {
+		return;
+	}
+
+	const topKey = path[0];
+
+	if (path.length === 1) {
+		if ((rootObj[topKey] !== undefined) && (rootObj[topKey] !== null) && ((rootObj[topKey].__v_isRef === true) || ('value' in rootObj[topKey]))) {
+			rootObj[topKey].value = value;
+		} else {
+			rootObj[topKey] = value;
+		}
+		return;
+	}
+
+	let current = rootObj[topKey];
+	if ((current !== undefined) && (current !== null) && ((current.__v_isRef === true) || ('value' in current))) {
+		current = current.value;
+	}
+
+	for (let i = 1; i < path.length - 1; i++) {
+		current = current[path[i]];
+		if ((current !== undefined) && (current !== null) && ((current.__v_isRef === true) || ('value' in current))) {
+			current = current.value;
+		}
+		if ((current === null) || (current === undefined) || (typeof current !== 'object')) {
+			return;
+		}
+	}
+
+	const lastKey = path.at(-1);
+	if (lastKey !== undefined) {
+		if ((current[lastKey] !== undefined) && (current[lastKey] !== null) && ((current[lastKey].__v_isRef === true) || ('value' in current[lastKey]))) {
+			current[lastKey].value = value;
+		} else {
+			current[lastKey] = value;
+		}
+	}
+
+	const topValue: unknown = rootObj[topKey];
+	if (Array.isArray(topValue)) {
+		rootObj[topKey] = [...topValue];
+	} else if ((topValue !== null) && (topValue !== undefined) && (typeof topValue === 'object') && (topValue.constructor.name === 'Object')) {
+		rootObj[topKey] = { ...topValue };
+	}
+}
+
+
+/**
+ * Diese Methode wird von den vue-Dev-Tools getriggert, wenn der Baum des Inspektors aktualisiert werden soll.
+ *
+ * @param payload   die Daten für das Ereignis
+ */
+function onGetInspectorTree(payload: any): void {
+	if (payload.inspectorId !== INSPECTOR_ID) {
+		return;
+	}
+	payload.rootNodes = Array.from(stateRegistry.keys()).map(key => ({ id: key, label: key }));
+}
+
+/**
+ * Diese Methode wird von den vue-Dev-Tools getriggert, wenn der allgemeine Zustand des Inspektors abgefragt wird.
+ *
+ * @param payload   die Daten für das Ereignis
+ */
+function onGetInspectorState(payload: any): void {
+	if (payload.inspectorId !== INSPECTOR_ID) {
+		return;
+	}
+
+	const stateObj = stateRegistry.get(payload.nodeId);
+	if (!stateObj) {
+		payload.state = {
+			'Fehler': [{ key: 'Status', value: 'State-Instanz nicht mehr im Kontext verfügbar.', editable: false }],
+		};
+		return;
+	}
+
+	const className = ((typeof stateObj.constructor.name === 'string') && (stateObj.constructor.name !== ''))
+		? stateObj.constructor.name : 'Unbekannt';
+	payload.state = {
+		'State': retrieveStateAttributes(stateObj) as any,
+		'Metadaten': [{ key: 'Klasse', value: className, editable: false }],
+	};
+
+	if (!activeStateWatchers.has(payload.nodeId)) {
+		const stopWatch = watch(
+			() => stateObj._state.value,
+			() => {
+				requestStateUpdate();
+			},
+			{ deep: true, flush: 'post' }
+		);
+		activeStateWatchers.set(payload.nodeId, stopWatch);
+	}
+}
+
+
+/**
+ * Diese Methode wird von den vue-Dev-Tools getriggert, wenn dort Daten verändert werden.
+ *
+ * @param payload   die Daten für das Ereignis
+ */
+function onEditInspectorState(payload: any): void {
+	if (payload.inspectorId !== INSPECTOR_ID) {
+		return;
+	}
+	const entry = stateRegistry.get(payload.nodeId);
+	if (!entry) {
+		return;
+	}
+	setDeepValue(entry, payload.path, payload.state.value);
+	stateDevtoolsApi?.sendInspectorState(INSPECTOR_ID);
 }
 
 
@@ -212,54 +439,25 @@ export function registerSVWSDevTools(app: App): void {
 		homepage: 'https://github.com/SVWS-NRW/SVWS-Server',
 		app,
 	}, (api) => {
-
-		// Erstellen des Inspectors
+		console.info("SVWS State Inspector wird geladen...");
+		stateDevtoolsApi = api;
 		api.addInspector({
 			id: INSPECTOR_ID,
 			label: 'SVWS States',
 			icon: 'storage',
 		});
 
-		// Erzeuge die Baumstruktur mit einem Knoten im linken Panel für jeden gefundenen State
-		api.on.getInspectorTree((payload) => {
-			if (payload.inspectorId === INSPECTOR_ID) {
-				const states = getFilteredStates(app);
-				payload.rootNodes = Object.keys(states).map(key => ({ id: key, label: key }));
+		// Synchronisiere initial die States in die Registry
+		const initialStates = getFilteredStates(app);
+		for (const [key, value] of Object.entries(initialStates)) {
+			if ((value !== undefined) && (value !== null) && (typeof value === 'object') && ('_state' in value)) {
+				stateRegistry.set(key, value as Record<string, SVWSState>);
 			}
-		});
+		}
 
-		// Ermittle die Werte für den ausgewählten State-Knoten und verwende Watcher für die Aktualisierung der Ansicht
-		const watchers = new Map<string, () => void>();
-		api.on.getInspectorState((payload) => {
-			if (payload.inspectorId === INSPECTOR_ID) {
-				const states = getFilteredStates(app);
-				const selectedState = states[payload.nodeId];
-				if ((selectedState === undefined) || (selectedState === null) || (typeof selectedState !== 'object')) {
-					payload.state = {
-						'Fehler': [{ key: 'Status', value: 'State-Instanz nicht mehr im Kontext verfügbar.', editable: false }],
-					};
-					return;
-				}
-
-				const stateObj = selectedState as Record<string, any>;
-				const className = ((typeof stateObj.constructor.name === 'string') && (stateObj.constructor.name !== ''))
-					? stateObj.constructor.name : 'Unbekannt';
-				payload.state = {
-					'State': retrieveStateAttributes(stateObj) as any,
-					'Metadaten': [{ key: 'Klasse', value: className, editable: false }],
-				};
-
-				if (!watchers.has(payload.nodeId) && (stateObj._state !== undefined)) {
-					const stopWatch = watch(
-						() => stateObj._state.value,
-						() => {
-							api.sendInspectorState(INSPECTOR_ID);
-						},
-						{ deep: true, flush: 'post' }
-					);
-					watchers.set(payload.nodeId, stopWatch);
-				}
-			}
-		});
+		api.on.getInspectorTree(onGetInspectorTree);
+		api.on.getInspectorState(onGetInspectorState);
+		api.on.editInspectorState(onEditInspectorState);
+		requestStateUpdate();
 	});
 }

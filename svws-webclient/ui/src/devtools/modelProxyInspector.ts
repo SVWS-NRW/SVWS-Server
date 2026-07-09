@@ -1,6 +1,7 @@
 import { setupDevtoolsPlugin } from '@vue/devtools-api';
 import { type App, watch, unref, nextTick } from 'vue';
 import type { JavaIterator } from '../../../core/src/java/util/JavaIterator';
+import type { ValidatorFehler } from '../../../core/src/asd/validate/ValidatorFehler';
 
 /** ID für den eindeutigen Zugriff auf diesen Inspector in den Vue DevTools */
 const INSPECTOR_ID = 'svws-model-proxy-inspector';
@@ -61,17 +62,18 @@ function isModelProxy(obj: unknown): boolean {
  * Wandelt eine Java-Liste rekursiv in ein JavaScript-Array um.
  *
  * @param javaList  die Java-Liste
+ * @param visited    ein Set um festzustellen, wenn ein Knoten bereits besucht wurde - nötig zur Schleifenvermeidung
  *
  * @returns das JavaScript-Array mit den verarbeiteten Unterelementen
  */
-function convertJavaListToArray(javaList: any): any[] {
+function convertJavaListToArray(javaList: any, visited: WeakSet<object>): any[] {
 	const listAsArray: any[] = [];
 	try {
 		const iterator = javaList.iterator() as JavaIterator<any> | null | undefined;
 		if ((iterator !== null) && (iterator !== undefined) && (typeof iterator.hasNext === 'function')
-			&& (typeof iterator.next === 'function') && (typeof iterator.remove === 'function')) {
+			&& (typeof iterator.next === 'function')) {
 			while (iterator.hasNext() === true) {
-				listAsArray.push(prepareData(iterator.next()));
+				listAsArray.push(prepareData(iterator.next(), visited));
 			}
 		}
 	} catch {
@@ -84,34 +86,49 @@ function convertJavaListToArray(javaList: any): any[] {
  * Bereitet einen beliebigen Wert für die Darstellung in der Detailansicht der vue-dev-tools vor.
  * Dabei werden auch verschachtelte Datenstrukturen berücksichtigt
  *
- * @param value die aufzubereitenden Daten
+ * @param value     die aufzubereitenden Daten
+ * @param visited   ein Set um festzustellen, wenn ein Knoten bereits besucht wurde - nötig zur Schleifenvermeidung
  *
  * @returns der vorbereitete Wert als nativer JavaScript-Wert (primitive, array oder plain object)
  */
-function prepareData(value: unknown): any {
+function prepareData(value: unknown, visited = new WeakSet<object>()): any {
 	if ((value === null) || (typeof value !== 'object')) {
 		return value;
 	}
 
+	// Vermeide Schleifen und beende die Traveriserung an diesem Zweig
+	if (visited.has(value)) {
+		// Gebe in den DevTools eine Rückmeldung, dass ein Zyklus vorliegt und daher die Darstellung abgebrochen wird
+		return {
+			_custom: {
+				type: 'object',
+				display: '↻ [Zirkuläre Referenz]',
+				value: 'Bereits verarbeitet',
+				readOnly: true,
+			},
+		};
+	}
+	visited.add(value);
+
 	// Falls es sich um eine reaktive Vue-Ref handelt, packen wir den inneren Wert aus
 	if (('value' in value) && (((value as any).__v_isRef === true) || (typeof (value as any).effect === 'object'))) {
-		return prepareData(value.value);
+		return prepareData(value.value, visited);
 	}
 
 	// Prüfe, ob es sich um eine Java-Liste mit iterator handelt
 	if (typeof (value as any).iterator === 'function') {
-		return convertJavaListToArray(value);
+		return convertJavaListToArray(value, visited);
 	}
 
 	// Bearbeite die Inhalte von Arrays rekursiv
 	if (Array.isArray(value)) {
-		return value.map(item => prepareData(item));
+		return value.map(item => prepareData(item, visited));
 	}
 
 	// Bearbeite sonstige Objekte rekursiv
 	const cleanObj: Record<string, any> = {};
 	for (const key of Object.keys(value)) {
-		cleanObj[key] = prepareData((value as Record<string, any>)[key]);
+		cleanObj[key] = prepareData((value as Record<string, any>)[key], visited);
 	}
 	return cleanObj;
 }
@@ -133,9 +150,13 @@ function mapObjectToInspectorState(source: any, editable: boolean): CustomState[
 	if (keys.length === 0) {
 		return [{ key: '---', value: '(Leer)', editable: false }];
 	}
+
+	const visited = new WeakSet<object>();
+	visited.add(source);
+
 	return keys.map(key => ({
 		key,
-		value: prepareData(source[key]),
+		value: prepareData(source[key], visited),
 		editable,
 	}));
 }
@@ -176,7 +197,7 @@ function setDeepValue(rootObj: any, path: string[], value: any): void {
 	const topValue: unknown = rootObj[topKey];
 	if (Array.isArray(topValue)) {
 		rootObj[topKey] = [...topValue];
-	} else if ((topValue !== null) && (topValue !== undefined) && (typeof topValue === 'object')) {
+	} else if ((topValue !== null) && (topValue !== undefined) && (typeof topValue === 'object') && (topValue.constructor.name === 'Object')) {
 		rootObj[topKey] = { ...topValue };
 	}
 }
@@ -294,31 +315,63 @@ function unregisterModelProxiesFromComponent(instance: any): void {
  * @returns ein Array mit den Fehlerdaten für die Anzeige
  */
 function formatValidationErrors(modelProxy: any): CustomState[] {
-	const errors = modelProxy.getAlleFehler();
-	if ((errors === undefined) || (errors === null) || (typeof errors.isEmpty !== 'function') || (errors.isEmpty() === true)) {
+	let errors;
+	try {
+		errors = modelProxy.getAlleFehler();
+	} catch (e) {
+		return [{ key: 'Status', value: `Fehler beim Abruf der Liste: ${(e as Error).message}`, editable: false }];
+	}
+
+	if ((errors === undefined) || (errors === null)) {
+		return [{ key: 'Status', value: 'Keine Fehlerliste verfügbar', editable: false }];
+	}
+
+	if ((typeof errors.isEmpty !== 'function') || (errors.isEmpty() === true)) {
 		return [{ key: 'Status', value: 'Keine Fehler', editable: false }];
 	}
 
 	const formattedErrors: CustomState[] = [];
 	try {
-		const iterator = errors.iterator() as JavaIterator<any> | null | undefined;
-		let index = 0;
-		if ((iterator !== null) && (iterator !== undefined) && (typeof iterator.hasNext === 'function') && (typeof iterator.next === 'function')) {
-			while (iterator.hasNext() === true) {
-				const errorItem = iterator.next();
+		if (typeof errors.toArray === 'function') {
+			const fehler = errors.toArray() as Array<ValidatorFehler>;
+			for (let i = 0; i < fehler.length; i++) {
+				const code = fehler[i].getFehlercode();
+				const meldung = fehler[i].getFehlermeldung();
+				const art = fehler[i].getFehlerart().name();
+				const blocking = fehler[i].isBlocking();
+				const classname = fehler[i].getValidatorClassname();
+				const display = (fehler[i].getFehlercode() === "") ? meldung : `${code} - ${meldung}`;
 				formattedErrors.push({
-					key: `Fehler [${index++}]`,
-					value: errorItem.text ?? errorItem.toString(),
+					key: `Fehler ${i + 1}`,
+					value: {
+						_custom: {
+							type: 'object',
+							display,
+							value: { code, meldung, art, blocking, classname },
+							readOnly: true,
+						},
+					},
 					editable: false,
 				});
 			}
 		}
-	} catch {
-		formattedErrors.push({ key: 'Fehler', value: 'Fehlerliste konnte nicht gelesen werden', editable: false });
+	} catch (e) {
+		return [{
+			key: 'Fehler',
+			value: `Fehlerliste konnte nicht gelesen werden: ${(e as Error).message}`,
+			editable: false,
+		}];
 	}
 
-	return formattedErrors;
+	return (formattedErrors.length > 0)
+		? formattedErrors
+		: [{
+			key: 'Status',
+			value: 'Keine Fehler',
+			editable: false,
+		}];
 }
+
 
 /**
  * Konfiguriert die reaktive Überwachung für eine ModelProxy-Instanz für die ausstehenden Daten,
