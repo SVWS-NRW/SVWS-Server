@@ -521,6 +521,39 @@ export class ApiPrivileged extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode migrateMDBIntoPayload für den Zugriff auf die URL https://{hostname}/api/schema/migrate/{schema}/mdb/v2
+	 *
+	 * Migriert die übergebene Datenbank in das angegebene Schema. Das Schema wird dabei geleert und vorhanden Daten gehen dabei verloren. Es wird ein Octet-Stream verwendet.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Log vom Migrieren der Access-MDB-Datenbank
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Das Schema darf nicht migriert werden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 413: Die hochgeladene Datei ist zu groß und überschreitet das Limit.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {ApiFile} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Log vom Migrieren der Access-MDB-Datenbank
+	 */
+	public async migrateMDBIntoPayload(data : ApiFile, schema : string) : Promise<SimpleOperationResponse> {
+		const path = "/api/schema/migrate/{schema}/mdb/v2"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.postOctetStreamToJSON(path, data);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode migrateMsSqlServerInto für den Zugriff auf die URL https://{hostname}/api/schema/migrate/{schema}/mssql
 	 *
 	 * Migriert die übergebene Datenbank in das Schema mit dem angegebenen Namen. Die Daten in diesem Schema werden ersetzt.
@@ -880,6 +913,39 @@ export class ApiPrivileged extends BaseApi {
 		const path = "/api/schema/root/migrate/mdb/{schema}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.postMultipart(path, data);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode migrateMDB2SchemaFramedPayload für den Zugriff auf die URL https://{hostname}/api/schema/root/migrate/mdb/{schema}/v2
+	 *
+	 * Migriert die übergebene Datenbank in das Schema mit dem angegebenen Namen. Sollte ein Schema mit dem Namen bereits bestehen, so wird es ersetzt. Es wird ein Framed Octet-Stream mit Metadaten bestehend aus einem 4 Byte Längenpräfix (BigEndian) und eine JSON-String dieser Länge verwendet.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Log vom Migrieren der Access-MDB-Datenbank
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Das Schema darf nicht migriert werden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 413: Die hochgeladene Datei ist zu groß und überschreitet das Limit.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {ApiFile} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Log vom Migrieren der Access-MDB-Datenbank
+	 */
+	public async migrateMDB2SchemaFramedPayload(data : ApiFile, schema : string) : Promise<SimpleOperationResponse> {
+		const path = "/api/schema/root/migrate/mdb/{schema}/v2"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.postOctetStreamToJSON(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}

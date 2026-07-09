@@ -188,6 +188,31 @@ export class BaseApi {
 		return this.postTextBased(path, 'application/json', 'application/json', body);
 	}
 
+	protected async postBinaryToTextBased(path: string, mimetype_send: string, mimetype_receive: string, body: ApiFile): Promise<string> {
+		const requestInit: RequestInit = { ...this.requestinit };
+		requestInit.headers = { ...this.headers };
+		requestInit.headers["Content-Type"] = mimetype_send;
+		requestInit.headers.Accept = mimetype_receive;
+		requestInit.body = body.data;
+		requestInit.method = 'POST';
+		try {
+			const response = await fetch(this.getURL(path), requestInit);
+			if (!response.ok) {
+				throw new OpenApiError(response, 'Fetch failed for POST: ' + path);
+			}
+			return await response.text();
+		} catch (e) {
+			if (e instanceof Error) {
+				throw (e instanceof OpenApiError) ? e : new OpenApiError(e, 'Fetch failed for POST: ' + path);
+			}
+			throw new Error("POST failed for: " + path, { cause: e });
+		}
+	}
+
+	public async postOctetStreamToJSON(path: string, body: ApiFile): Promise<string> {
+		return this.postBinaryToTextBased(path, 'application/octet-stream', 'application/json', body);
+	}
+
 	protected async postTextBasedToBinary(path: string, mimetype_send: string, mimetype_receive: string, body: string | null): Promise<ApiFile> {
 		const requestInit: RequestInit = { ...this.requestinit };
 		requestInit.headers = { ...this.headers };

@@ -1,10 +1,13 @@
 package de.svws_nrw.api.privileged;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
+import de.svws_nrw.api.utils.FramedPayload;
+import de.svws_nrw.api.utils.FramedStreamParser;
 import de.svws_nrw.asd.data.schule.SchuleStammdaten;
 import de.svws_nrw.config.LogConsumerLogfile;
 import de.svws_nrw.config.SVWSKonfiguration;
@@ -565,6 +568,73 @@ public class APIPrivilegedSchema {
 
 
 	/**
+	 * Die OpenAPI-Methode für das Migrieren einer MDB in ein Schema mit angegebenen Namen mithilfe eines Framed Streams.
+	 *
+	 * @param is            die Daten der MDB, MDB-Datenbankkennwort, DB-Username und Passwort
+	 * @param schemaname    Name des Schemas, in das hinein migriert werden soll
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return              Rückmeldung, ob die Operation erfolgreich war
+	 */
+	@POST
+	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
+	@Path("/api/schema/root/migrate/mdb/{schema}/v2")
+	@Operation(summary = "Migriert die übergebene Datenbank in das Schema mit dem angegebenen Namen.",
+			description = "Migriert die übergebene Datenbank in das Schema mit dem angegebenen Namen. Sollte "
+					+ "ein Schema mit dem Namen bereits bestehen, so wird es ersetzt. Es wird ein Framed Octet-Stream mit Metadaten bestehend aus einem 4 Byte Längenpräfix (BigEndian) und eine JSON-String dieser Länge verwendet.")
+	@ApiResponse(responseCode = "200", description = "Der Log vom Migrieren der Access-MDB-Datenbank",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "500", description = "Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "403", description = "Das Schema darf nicht migriert werden.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "413", description = "Die hochgeladene Datei ist zu groß und überschreitet das Limit.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	public Response migrateMDB2SchemaFramedPayload(@PathParam("schema") final String schemaname,
+			@RequestBody(description = "Die MDB-Datei", required = true, content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM,
+					schema = @Schema(type = "string", format = "binary"))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithoutTransaction(conn -> {
+			final Logger logger = new Logger();
+			logger.copyConsumer(Logger.global());
+			final LogConsumerList log = new LogConsumerList();
+			logger.addConsumer(log);
+			try {
+				if (SVWSKonfiguration.get().isLoggingEnabled()) {
+					logger.addConsumer(new LogConsumerLogfile("svws_schema_" + schemaname + ".log", true, true));
+				}
+			} catch (final IOException e) {
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen einer Log-Datei für das Schema");
+			}
+
+			// die maximale Größe einer Datenbank (1GB)
+			final long maxSize = 1024L * 1024 * 1024;
+			logger.logLn("Migriere in die " + conn.getDBDriver() + "-Datenbank unter " + conn.getDBLocation() + ":");
+			logger.logLn(2, "- verwende den root-benutzer: " + conn.getUser().getUsername());
+			try (FramedPayload<BenutzerKennwort> payload =
+					FramedStreamParser.parse(logger, log, is, BenutzerKennwort.class, maxSize, conn.getDBSchema(), DBDriver.MDB.getFileSuffix())) {
+				logger.logLn(2, "- erstelle das DB-Schema: " + schemaname);
+				logger.logLn(2, "- erstelle den Benutzer \"" + payload.metadata().user + "\" für den administrativen Zugriff auf das DB-Schema.");
+
+
+				final DBConfig srcConfig =
+						new DBConfig(PersistenceUnits.SVWS_DB, DBDriver.MDB, payload.path().toString(), "PUBLIC", false, "admin", null, true, false);
+				final DBConfig tgtConfig = new DBConfig(PersistenceUnits.SVWS_DB, conn.getDBDriver(), conn.getDBLocation(), schemaname, false,
+						payload.metadata().user, payload.metadata().password, true, true);
+				if (!DBMigrationManager.migrate(srcConfig, tgtConfig, conn.getUser().getUsername(), conn.getUser().getPassword(), -1, false, null, logger)) {
+					logger.logLn(LogLevel.ERROR, 2, "Fehler bei der Migration (driver='" + tgtConfig.getDBDriver() + "', location='" + tgtConfig.getDBLocation()
+							+ "', user='" + tgtConfig.getUsername() + "')");
+					return simpleResponse(Status.INTERNAL_SERVER_ERROR, false, log);
+				}
+			}
+			logger.logLn("Migration abgeschlossen.");
+			return simpleResponse(Status.OK, true, log);
+		},
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KEINE);
+	}
+
+	/**
 	 * Die OpenAPI-Methode für den Import einer SQLite-Datenbank in ein Schema mit dem angegebenen Namen.
 	 *
 	 * @param multipart     SQLite-Datenbank im Binärformat, DB-Username und Passwort für das neue Schema
@@ -924,15 +994,15 @@ public class APIPrivilegedSchema {
 	@Produces("application/zip")
 	@Path("/api/schema/export/{schema}/zip")
 	@Operation(summary = "Exportiert das angegebene Schema in eine ZIP-Datei.",
-	    description = "Exportiert das angegebene Schema in eine ZIP-Datei. Der Aufruf erfordert "
-	        + "einen Datenbank-Benutzer mit den entsprechenden Rechten.")
+			description = "Exportiert das angegebene Schema in eine ZIP-Datei. Der Aufruf erfordert "
+					+ "einen Datenbank-Benutzer mit den entsprechenden Rechten.")
 	@ApiResponse(responseCode = "200", description = "Der Export der ZIP-Datei der SQLite-Datenbank",
-	    content = @Content(mediaType = "application/zip", schema = @Schema(type = "string", format = "binary", description = "Die ZIP-Datei")))
+			content = @Content(mediaType = "application/zip", schema = @Schema(type = "string", format = "binary", description = "Die ZIP-Datei")))
 	@ApiResponse(responseCode = "403", description = "Das Schema darf nicht exportiert werden.")
 	public Response exportZipFrom(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
-	    return DBBenutzerUtils.runWithoutTransaction(conn -> DataSQLite.exportZip(conn, schemaname), request,
-	        ServerMode.STABLE,
-	        BenutzerKompetenz.KEINE);
+		return DBBenutzerUtils.runWithoutTransaction(conn -> DataSQLite.exportZip(conn, schemaname), request,
+				ServerMode.STABLE,
+				BenutzerKompetenz.KEINE);
 	}
 
 
@@ -997,6 +1067,42 @@ public class APIPrivilegedSchema {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithoutTransaction(conn -> {
 			return DataMigration.migrateMDB(conn, multipart.database);
+		},
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KEINE);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Migrieren einer MDB in das angegebene Schema. Die existierenden Daten in diesem Schema
+	 * werden dabei entfernt. Der Aufruf erfordert einen Datenbank-Benutzer mit den entsprechenden Rechten.
+	 *
+	 * @param schemaname    Name des Schemas, auf welches die Abfrage ausgeführt wird und in das hinein migriert werden soll
+	 * @param data          die MDB-Datei
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation
+	 */
+	@POST
+	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
+	@Path("/api/schema/migrate/{schema}/mdb/v2")
+	@Operation(summary = "Migriert die übergebene Datenbank in das angegebene Schema.",
+			description = "Migriert die übergebene Datenbank in das angegebene Schema. Das "
+					+ "Schema wird dabei geleert und vorhanden Daten gehen dabei verloren. Es wird ein Octet-Stream verwendet.")
+	@ApiResponse(responseCode = "200", description = "Der Log vom Migrieren der Access-MDB-Datenbank",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "500", description = "Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "403", description = "Das Schema darf nicht migriert werden.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "413", description = "Die hochgeladene Datei ist zu groß und überschreitet das Limit.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	public Response migrateMDBIntoPayload(@PathParam("schema") final String schemaname,
+			@RequestBody(description = "Die MDB-Datei", required = true, content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM,
+			schema = @Schema(type = "string", format = "binary"))) final byte[] data,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithoutTransaction(conn -> {
+			return DataMigration.migrateMDB(conn, data);
 		},
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);

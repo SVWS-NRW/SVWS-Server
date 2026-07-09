@@ -243,6 +243,28 @@ export class RouteDataSchema {
 		}
 	};
 
+
+	/**
+	 * Erstellt einen Framed Payload und den zugrhörigen Blob dazu.
+	 * Zu Beginn steht eine 4-Byte Big-Endian Längenangabe gefolgt von einem serialisierten JSON-Metadaten-Objekt
+	 * mit dieser Länge. Im Anschluss daran befindet sich dann Binärdaten.
+	 *
+	 * @param file       die hochzuladende Binärdatei (z.B. SQLite oder MDB).
+	 * @param metadata   das Metadaten-Objekt
+	 *
+	 * @returns der Blob vom Typ 'application/octet-stream'.
+	 */
+	private createFramedPayload(file: File, metadata: unknown): Blob {
+		const metaJson = JSON.stringify(metadata);
+		const metaBytes = new TextEncoder().encode(metaJson);
+
+		const lengthBuffer = new ArrayBuffer(4);
+		const view = new DataView(lengthBuffer);
+		view.setInt32(0, metaBytes.length, false);
+
+		return new Blob([lengthBuffer, metaBytes, file], { type: 'application/octet-stream' });
+	}
+
 	upgradeSchema = async () => {
 		if (this.auswahl === undefined) {
 			throw new DeveloperNotificationException("Es soll ein Backup angelegt werden, aber es ist kein Schema ausgewählt.");
@@ -435,9 +457,14 @@ export class RouteDataSchema {
 					break;
 				case 'mdb':
 					if (schema === currSchema) {
-						result = await api.privileged.migrateMDBInto(formData, schema);
+						const file = formData.get('database') as File;
+						const data = new Blob([file], { type: 'application/octet-stream' });
+						result = await api.privileged.migrateMDBIntoPayload({ name: "Daten", data }, schema);
 					} else {
-						result = await api.privileged.migrateMDB2Schema(formData, schema);
+						const file = formData.get('database') as File;
+						const metadata = { user: formData.get('schemaUsername'), password: formData.get('schemaUserPassword') };
+						const data = this.createFramedPayload(file, metadata);
+						result = await api.privileged.migrateMDB2SchemaFramedPayload({ name: "Daten", data }, schema);
 					}
 					break;
 				default:
