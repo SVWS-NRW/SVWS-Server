@@ -249,17 +249,17 @@ final class HttpENMServerConnection {
 			throws ApiOperationException {
 		logger.logLn("Bereite die HTTP-Anfrage vor...");
 		final URI uri = URI.create(dto.url + path);
-		final String actualBoundary = UUID.randomUUID().toString() + "--";
+		final String actualBoundary = UUID.randomUUID().toString();
 		final String boundary = "--" + actualBoundary;
-		final byte[] boundaryBytes = ("\r\n" + boundary).getBytes();
 		final byte[] contentDisposition = (boundary + "\r\nContent-Disposition: form-data; name=\"file\"; filename=\"" + filename + "\"\r\n\r\n").getBytes();
+		final byte[] boundaryBytes = ("\r\n" + boundary + "--\r\n").getBytes();
 		final byte[] c = new byte[contentDisposition.length + bytes.length + boundaryBytes.length];
 		System.arraycopy(contentDisposition, 0, c, 0, contentDisposition.length);
 		System.arraycopy(bytes, 0, c, contentDisposition.length, bytes.length);
 		System.arraycopy(boundaryBytes, 0, c, contentDisposition.length + bytes.length, boundaryBytes.length);
 		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2))
 				.POST(BodyPublishers.ofByteArray(c))
-				.header("Content-Type", "multipart/form-data;boundary=" + actualBoundary)
+				.header("Content-Type", "multipart/form-data; boundary=" + actualBoundary)
 				.header("Accept", "*/*")
 				.header("Authorization", "Bearer " + dto.token).header("file", "file").build();
 		logger.logLn("Sende die HTTP-Anfrage...");
