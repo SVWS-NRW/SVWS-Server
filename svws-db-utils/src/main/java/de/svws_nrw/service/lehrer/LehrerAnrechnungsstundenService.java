@@ -43,8 +43,7 @@ public final class LehrerAnrechnungsstundenService {
 
 		// Ermittle die Art des Grundes. Ist dieser nicht gültig für das Halbjahr, so wird keine Fehlermeldung ausgegeben, sondern der Grund auf null gesetzt.
 		final var art = LehrerAnrechnungsgrund.data().getWertByKuerzel(dto.AnrechnungsgrundKrz);
-		final var artEintrag = (art == null) ? null : art.daten(schuljahresabschnitt.Jahr);
-		daten.idGrund = (artEintrag == null) ? null : artEintrag.id;
+		daten.idGrund = LehrerAnrechnungsgrund.data().getIDByWertAndSchuljahr(art, schuljahresabschnitt.Jahr);
 
 		daten.anzahl = Objects.requireNonNullElse(dto.AnrechnungStd, 0.0);
 		return daten;

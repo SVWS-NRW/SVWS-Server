@@ -40,6 +40,17 @@ public interface CoreType<T extends CoreTypeData, U extends CoreType<T, U>> exte
 		return this.getManager().getEintragBySchuljahrUndWert(schuljahr, (@NotNull U) this);
 	}
 
+	/**
+	 * Gibt die ID aus der Historie zu diesem Core-Type zurück.
+	 *
+	 * @param schuljahr   das zu prüfende Schuljahr
+	 *
+	 * @return die ID aus der Historie
+	 */
+	@SuppressWarnings("unchecked")
+	default @AllowNull Long id(final int schuljahr) {
+		return this.getManager().getIDByWertAndSchuljahr((@NotNull U) this, schuljahr);
+	}
 
 	/**
 	 * Gibt die Statistik-ID zu diesem Core-Type zurück.

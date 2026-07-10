@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.asd.data.schule.NationalitaetenKatalogEintrag;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.data.statistik.AbiturStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.SchuelerLeistungsdatenStatistikGesamt;
@@ -15,12 +14,13 @@ import de.svws_nrw.asd.data.statistik.SchuelerLernabschnittStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.SchuelerStatistikGesamt;
 import de.svws_nrw.asd.types.klassen.Klassenart;
 import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
-import de.svws_nrw.asd.types.schueler.Einschulungsart;
 import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
 import de.svws_nrw.asd.types.schule.AllgemeinbildendOrganisationsformen;
 import de.svws_nrw.asd.types.schule.BerufskollegOrganisationsformen;
+import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
+import de.svws_nrw.asd.types.schule.Verkehrssprache;
 import de.svws_nrw.asd.types.schule.WeiterbildungskollegOrganisationsformen;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
@@ -129,27 +129,29 @@ public final class SchuelerStatistikService {
 	}
 
 	private static SchuelerLernabschnittStatistikGesamt mapLernabschnittsdaten(final DTOSchuelerLernabschnittsdaten dto,
-			final List<DTOSchuelerLeistungsdaten> dtosLeistungen, final DTOEigeneSchule dtoEigeneSchule) {
+			final List<DTOSchuelerLeistungsdaten> dtosLeistungen, final DTOEigeneSchule dtoEigeneSchule, final int schuljahr) {
 		final var daten = new SchuelerLernabschnittStatistikGesamt();
 		daten.id = dto.ID;
 		daten.idSchuljahresabschnitt = dto.Schuljahresabschnitts_ID;
 		daten.idKlasse = dto.Klassen_ID;
-		// TODO Nachfragen, ob String-werte den Schluesseln entsprechen
-		daten.idSchulgliederung = Schulgliederung.data().getWertBySchluesselOrException(dto.Schulgliederung).historie().getLast().id;
+		daten.idSchulgliederung = Schulgliederung.data().getIDByWertAndSchuljahr(Schulgliederung.data().getWertBySchluesselOrException(dto.Schulgliederung),
+				schuljahr);
 		daten.idJahrgang = dto.Jahrgang_ID;
 		daten.epJahre = dto.EPJahre;
 		daten.idFachklasse = dto.Fachklasse_ID;
-		// TODO Nachfragen, ob String-werte den Schluesseln entsprechen
+
 		if (Schulform.WB == Schulform.valueOf(dtoEigeneSchule.SchulformKuerzel)) {
-			daten.idOrganisationsform = WeiterbildungskollegOrganisationsformen.data().getWertBySchluesselOrException(dto.OrgFormKrz).historie().getLast().id;
+			daten.idOrganisationsform = WeiterbildungskollegOrganisationsformen.data().getIDByWertAndSchuljahr(
+					WeiterbildungskollegOrganisationsformen.data().getWertBySchluesselOrException(dto.OrgFormKrz), schuljahr);
 		} else if ((Schulform.BK == Schulform.valueOf(dtoEigeneSchule.SchulformKuerzel))
 				|| (Schulform.SB == Schulform.valueOf(dtoEigeneSchule.SchulformKuerzel))) {
-			daten.idOrganisationsform = BerufskollegOrganisationsformen.data().getWertBySchluesselOrException(dto.OrgFormKrz).historie().getLast().id;
+			daten.idOrganisationsform = BerufskollegOrganisationsformen.data().getIDByWertAndSchuljahr(
+					BerufskollegOrganisationsformen.data().getWertBySchluesselOrException(dto.OrgFormKrz), schuljahr);
 		} else {
-			daten.idOrganisationsform = AllgemeinbildendOrganisationsformen.data().getWertBySchluesselOrException(dto.OrgFormKrz).historie().getLast().id;
+			daten.idOrganisationsform = AllgemeinbildendOrganisationsformen.data()
+					.getIDByWertAndSchuljahr(AllgemeinbildendOrganisationsformen.data().getWertBySchluesselOrException(dto.OrgFormKrz), schuljahr);
 		}
-
-		daten.idKlassenart = Klassenart.data().getWertBySchluesselOrException(dto.Klassenart).historie().getLast().id;
+		daten.idKlassenart = Klassenart.data().getIDByWertAndSchuljahr(Klassenart.data().getWertBySchluessel(dto.Klassenart), schuljahr);
 		daten.hatSchwerbehinderungsNachweis = (dto.Schwerbehinderung != null) && dto.Schwerbehinderung;
 		daten.idFoerderschwerpunkt1 = dto.Foerderschwerpunkt_ID;
 		daten.idFoerderschwerpunkt2 = dto.Foerderschwerpunkt2_ID;
@@ -163,19 +165,18 @@ public final class SchuelerStatistikService {
 			final List<DTOSchuelerLeistungsdaten> dtosLeistungen, final DTOSchuelerAbitur dtoAbitur, final List<String> abiturfaecher,
 			final DTOEigeneSchule dtoEigeneSchule) {
 		final Schuljahresabschnitt schuljahresabschnitt =
-				this.benutzerRepository.getAktuellerBenutzer().schuleGetSchuljahresabschnittByIdOrDefault(dtoSchueler.Schuljahresabschnitts_ID);
+				benutzerRepository.getAktuellerBenutzer().schuleGetSchuljahresabschnittByIdOrDefault(dtoSchueler.Schuljahresabschnitts_ID);
 		if (schuljahresabschnitt == null) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Konnte keinen Schuljahresabschnitt für den Schüler bestimmen.");
 		}
+		final int schuljahr = schuljahresabschnitt.schuljahr;
 		final var daten = new SchuelerStatistikGesamt();
 		daten.id = dtoSchueler.ID;
 		daten.geschlecht = dtoSchueler.Geschlecht.id;
 		daten.geburtsdatum = dtoSchueler.Geburtsdatum;
 		daten.wohnortID = dtoSchueler.Ort_ID;
-		final NationalitaetenKatalogEintrag staatsangehoerigkeit =
-				(dtoSchueler.StaatKrz == null) ? null : dtoSchueler.StaatKrz.daten(schuljahresabschnitt.schuljahr);
-		daten.idStaatsangehoerigkeit = (staatsangehoerigkeit == null) ? null : staatsangehoerigkeit.id;
-		daten.idStaatsangehoerigkeit2 = (dtoSchueler.StaatKrz2 == null) ? null : dtoSchueler.StaatKrz2.historie().getLast().id;
+		daten.idStaatsangehoerigkeit = Nationalitaeten.data().getIDByWertAndSchuljahr(dtoSchueler.StaatKrz, schuljahr);
+		daten.idStaatsangehoerigkeit2 = Nationalitaeten.data().getIDByWertAndSchuljahr(dtoSchueler.StaatKrz2, schuljahr);
 		daten.religionID = dtoSchueler.Religion_ID;
 		daten.status = dtoSchueler.idStatus;
 		daten.religionabmeldung = dtoSchueler.Religionsabmeldung;
@@ -184,10 +185,10 @@ public final class SchuelerStatistikService {
 
 		daten.hatMigrationshintergrund = Boolean.TRUE.equals(dtoSchueler.Migrationshintergrund);
 		daten.zuzugsjahr = dtoSchueler.JahrZuzug;
-		daten.idGeburtsland = (dtoSchueler.GeburtslandSchueler == null) ? null : dtoSchueler.GeburtslandSchueler.historie().getLast().id;
-		daten.idVerkehrspracheFamilie = (dtoSchueler.VerkehrsspracheFamilie == null) ? null : dtoSchueler.VerkehrsspracheFamilie.historie().getLast().id;
-		daten.idGeburtslandVater = (dtoSchueler.GeburtslandVater == null) ? null : dtoSchueler.GeburtslandVater.historie().getLast().id;
-		daten.idGeburtslandMutter = (dtoSchueler.GeburtslandMutter == null) ? null : dtoSchueler.GeburtslandMutter.historie().getLast().id;
+		daten.idGeburtsland = Nationalitaeten.data().getIDByWertAndSchuljahr(dtoSchueler.GeburtslandSchueler, schuljahr);
+		daten.idVerkehrspracheFamilie = Verkehrssprache.data().getIDByWertAndSchuljahr(dtoSchueler.VerkehrsspracheFamilie, schuljahr);
+		daten.idGeburtslandVater = Nationalitaeten.data().getIDByWertAndSchuljahr(dtoSchueler.GeburtslandVater, schuljahr);
+		daten.idGeburtslandMutter = Nationalitaeten.data().getIDByWertAndSchuljahr(dtoSchueler.GeburtslandMutter, schuljahr);
 
 		daten.vorherigeSchuleNr = dtoSchueler.LSSchulNr;
 		daten.vorigeAllgHerkunft = dtoSchueler.LSSchulform;
@@ -201,12 +202,12 @@ public final class SchuelerStatistikService {
 		daten.beginnBildungsgang = dtoSchueler.BeginnBildungsgang;
 		daten.istJvaSchueler = (dtoSchueler.JVA != null) && dtoSchueler.JVA;
 
-		final Einschulungsart einschulungsart = Einschulungsart.data().getWertBySchluessel(dtoSchueler.EinschulungsartASD);
-		daten.idGrundschuleEinschulungsart = (einschulungsart == null) ? null : einschulungsart.getLetzterEintrag().id;
+		daten.idGrundschuleEinschulungsart = dtoSchueler.Einschulungsart_ID;
 		final Uebergangsempfehlung uebergangsempfehlung = Uebergangsempfehlung.data().getWertBySchluessel(dtoSchueler.Uebergangsempfehlung_JG5);
-		daten.idKuerzelGrundschuleUebergangsempfehlung = (uebergangsempfehlung == null) ? null : uebergangsempfehlung.historie().getLast().id;
+		daten.idKuerzelGrundschuleUebergangsempfehlung =
+				Uebergangsempfehlung.data().getIDByWertAndSchuljahr(uebergangsempfehlung, schuljahr);
 		// Füge die Daten zum Lernabschnitt hinzu
-		daten.lernabschnitte.add(mapLernabschnittsdaten(dtoLernabschnitt, dtosLeistungen, dtoEigeneSchule));
+		daten.lernabschnitte.add(mapLernabschnittsdaten(dtoLernabschnitt, dtosLeistungen, dtoEigeneSchule, schuljahr));
 
 		// Ergänze die Daten aus der Abiturtabelle, sofern für den Schüler welche vorliegen
 		if ((dtoAbitur == null) || (abiturfaecher == null) || (abiturfaecher.isEmpty())) {
@@ -218,7 +219,6 @@ public final class SchuelerStatistikService {
 		return daten;
 	}
 
-
 	/**
 	 * Bestimme für die amtliche Schulstatistik die Liste mit den Schülerdaten und gebe diese als Liste
 	 * von SchuelerStatistikGesamt-Objekten zurück.
@@ -227,25 +227,25 @@ public final class SchuelerStatistikService {
 	 */
 	public List<SchuelerStatistikGesamt> getList() {
 		// Bestimme zunächst den aktuellen Schuljahresabschnitt der Schule
-		final long idSchuljahresabschnitt = this.schuleRepository.getIdSchuljahresabschnitt();
+		final long idSchuljahresabschnitt = schuleRepository.getIdSchuljahresabschnitt();
 
 		// Bestimme dann die aktiven Schüler aus diesem Schuljahresabschnitt
-		final var mapSchueler = this.schuelerRepository.getMapAktiveBySchuljahresabschnitt(idSchuljahresabschnitt);
+		final var mapSchueler = schuelerRepository.getMapAktiveBySchuljahresabschnitt(idSchuljahresabschnitt);
 
 		// Bestimme dann die aktuellen Lernabschnitte zu diesen Schülern
 		final var mapLernabschnitte =
-				this.schuelerLernabschnittRepository.getMapBySchuelerIDsAndSchuljahreabschnitt(mapSchueler.keySet(), idSchuljahresabschnitt);
+				schuelerLernabschnittRepository.getMapBySchuelerIDsAndSchuljahreabschnitt(mapSchueler.keySet(), idSchuljahresabschnitt);
 		final var idsAbschnitte = mapLernabschnitte.values().stream().map(a -> a.ID).toList();
 
 		// Bestimme die Leistungsdaten zu den Lernabschnitten
-		final var mapLeistungsdaten = this.schuelerLeistungsdatenRepository.getMapListByLernabschnittsIds(idsAbschnitte);
+		final var mapLeistungsdaten = schuelerLeistungsdatenRepository.getMapListByLernabschnittsIds(idsAbschnitte);
 
 		// Bestimme dann die Prüfungsfächer im Abiturbereich zu den übergebenen Schülern
-		final var dtosSchuelerAbitur = this.schuelerAbiturRepository.getListBySchuelerIds(mapSchueler.keySet());
+		final var dtosSchuelerAbitur = schuelerAbiturRepository.getListBySchuelerIds(mapSchueler.keySet());
 		final var mapSchuelerAbitur = dtosSchuelerAbitur.stream().collect(Collectors.toMap(sa -> sa.Schueler_ID, sa -> sa));
-		final var dtosSchuelerAbiturFach = this.schuelerAbiturFachRepository.getListBySchuelerIdsNurPruefungsfaecher(mapSchueler.keySet());
+		final var dtosSchuelerAbiturFach = schuelerAbiturFachRepository.getListBySchuelerIdsNurPruefungsfaecher(mapSchueler.keySet());
 		final var idsFaecher = dtosSchuelerAbiturFach.stream().map(f -> f.Fach_ID).distinct().toList();
-		final var mapFaecher = this.fachRepository.findListByIds(idsFaecher).stream().collect(Collectors.toMap(f -> f.ID, f -> f.StatistikKuerzel));
+		final var mapFaecher = fachRepository.findListByIds(idsFaecher).stream().collect(Collectors.toMap(f -> f.ID, f -> f.StatistikKuerzel));
 		final Map<Long, List<String>> mapSchuelerAbiturFach =
 				dtosSchuelerAbiturFach.stream().collect(Collectors.groupingBy(f -> f.Schueler_ID, Collectors.collectingAndThen(
 						Collectors.toList(), list -> {
@@ -272,7 +272,7 @@ public final class SchuelerStatistikService {
 		// Gebe alle Schülerinformationen zurück, wo ein Lernabschnitt im aktuellen Schuljahresabschnitt vorliegt
 		return mapLernabschnitte.keySet().stream().map(
 				id -> map(mapSchueler.get(id), mapLernabschnitte.get(id), mapLeistungsdaten.get(mapLernabschnitte.get(id).ID), mapSchuelerAbitur.get(id),
-						mapSchuelerAbiturFach.get(id), this.schuleRepository.getFirst()))
+						mapSchuelerAbiturFach.get(id), schuleRepository.getFirst()))
 				.toList();
 	}
 

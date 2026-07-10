@@ -42,9 +42,8 @@ public final class FoerderschwerpunkteStatistikService {
 	private static FoerderschwerpunktStatistikGesamt map(final DTOFoerderschwerpunkt dto, final int schuljahr) {
 		final var daten = new FoerderschwerpunktStatistikGesamt();
 		daten.id = dto.ID;
-		final var wert = (dto.StatistikKrz == null) ? null : Foerderschwerpunkt.data().getWertBySchluessel(dto.StatistikKrz);
-		final var eintrag = (wert == null) ? null : wert.daten(schuljahr);
-		daten.idKatalog = (eintrag == null) ? Foerderschwerpunkt.KEINER.daten(schuljahr).id : eintrag.id;
+		final var eintrag = Foerderschwerpunkt.data().getIDByWertAndSchuljahr(Foerderschwerpunkt.data().getWertBySchluessel(dto.StatistikKrz), schuljahr);
+		daten.idKatalog = (eintrag == null) ? Foerderschwerpunkt.KEINER.daten(schuljahr).id : eintrag;
 		return daten;
 	}
 

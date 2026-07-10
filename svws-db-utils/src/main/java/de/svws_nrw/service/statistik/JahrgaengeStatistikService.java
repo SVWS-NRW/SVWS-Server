@@ -44,9 +44,7 @@ public final class JahrgaengeStatistikService {
 		final var daten = new JahrgaengeStatistikGesamt();
 		daten.id = dto.ID;
 		daten.kuerzel = dto.InternKrz;
-		final var wert = (dto.ASDJahrgang == null) ? null : Jahrgaenge.data().getWertBySchluessel(dto.ASDJahrgang);
-		final var eintrag = (wert == null) ? null : wert.daten(schuljahr);
-		daten.idKatalog = (eintrag == null) ? null : eintrag.id;
+		daten.idKatalog = Jahrgaenge.data().getIDByWertAndSchuljahr(Jahrgaenge.data().getWertBySchluessel(dto.ASDJahrgang), schuljahr);
 		daten.sortierung = Objects.requireNonNullElse(dto.Sortierung, 32000);
 		return daten;
 	}

@@ -1,5 +1,7 @@
 package de.svws_nrw.service.lehrer;
 
+import static de.svws_nrw.data.TransactionSupport.transactional;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -13,8 +15,6 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerMehrleistung;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.lehrer.LehrerMehrleistungMapper;
 import jakarta.ws.rs.core.Response;
-
-import static de.svws_nrw.data.TransactionSupport.transactional;
 
 /**
  * Ein Service für den Zugriff auf die Mehrleistungen bei Lehrern
@@ -41,8 +41,7 @@ public final class LehrerMehrleistungService {
 
 		// Ermittle die Art des Grundes. Ist dieser nicht gültig für das Halbjahr, so wird keine Fehlermeldung ausgegeben, sondern der Grund auf null gesetzt.
 		final LehrerMehrleistungsarten art = LehrerMehrleistungsarten.data().getWertByKuerzel(dto.idGrund);
-		final var artEintrag = (art == null) ? null : art.daten(schuljahresabschnitt.Jahr);
-		final Long idGrund = (artEintrag == null) ? null : artEintrag.id;
+		final Long idGrund = LehrerMehrleistungsarten.data().getIDByWertAndSchuljahr(art, schuljahresabschnitt.Jahr);
 
 		return mapper.toApi(dto, idGrund);
 	}

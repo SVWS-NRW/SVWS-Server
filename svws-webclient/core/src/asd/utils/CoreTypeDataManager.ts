@@ -459,6 +459,23 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	}
 
 	/**
+	 * Gibt die ID des CoreType-Wertes in dem angegebenen Schuljahr zurück. Wenn kein Eintrag vorhanden ist,
+	 * dann wird NULL zurück gegeben.
+	 *
+	 * @param value       der Wert des CoreTypes
+	 * @param schuljahr   das Schuljahr anhand welchem der Eintrag bestimmt wird
+	 *
+	 * @return die ID oder NULL
+	 */
+	public getIDByWertAndSchuljahr(value: U | null, schuljahr: number): number | null {
+		if (value === null) {
+			return null;
+		}
+		const eintrag: T | null = this.getEintragBySchuljahrUndWert(schuljahr, value);
+		return (eintrag === null) ? null : eintrag.id;
+	}
+
+	/**
 	 * Gibt den Namen des Core-Type-Wert für die angegebene ID zurück.
 	 *
 	 * @param id   die ID

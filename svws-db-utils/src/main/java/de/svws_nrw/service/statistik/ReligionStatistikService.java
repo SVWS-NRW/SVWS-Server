@@ -42,9 +42,8 @@ public final class ReligionStatistikService {
 	private static ReligionStatistikGesamt map(final DTOKonfession dto, final int schuljahr) {
 		final var daten = new ReligionStatistikGesamt();
 		daten.id = dto.ID;
-		final var wert = Religion.data().getWertBySchluessel(dto.StatistikKrz);
-		final var eintrag = (wert == null) ? null : wert.daten(schuljahr);
-		daten.idKatalog = (eintrag == null) ? Religion.OH.daten(schuljahr).id : eintrag.id;
+		final var eintrag = Religion.data().getIDByWertAndSchuljahr(Religion.data().getWertBySchluessel(dto.StatistikKrz), schuljahr);
+		daten.idKatalog = (eintrag == null) ? Religion.OH.daten(schuljahr).id : eintrag;
 		return daten;
 	}
 

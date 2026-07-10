@@ -10,7 +10,7 @@ import { Jahrgaenge } from '../../../asd/types/jahrgang/Jahrgaenge';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import type { CoreType } from '../../../asd/types/CoreType';
-import { de_svws_nrw_asd_types_CoreType_getManager, de_svws_nrw_asd_types_CoreType_daten, de_svws_nrw_asd_types_CoreType_statistikId, de_svws_nrw_asd_types_CoreType_historie } from '../../../asd/types/CoreType';
+import { de_svws_nrw_asd_types_CoreType_getManager, de_svws_nrw_asd_types_CoreType_daten, de_svws_nrw_asd_types_CoreType_id, de_svws_nrw_asd_types_CoreType_statistikId, de_svws_nrw_asd_types_CoreType_historie } from '../../../asd/types/CoreType';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { FachKatalogEintrag } from '../../../asd/data/fach/FachKatalogEintrag';
 
@@ -1698,6 +1698,10 @@ export class Fach extends JavaEnum<Fach> implements CoreType<FachKatalogEintrag,
 
 	public daten(schuljahr: number): FachKatalogEintrag | null {
 		return de_svws_nrw_asd_types_CoreType_daten(this, schuljahr);
+	}
+
+	public id(schuljahr: number): number | null {
+		return de_svws_nrw_asd_types_CoreType_id(this, schuljahr);
 	}
 
 	public statistikId(): string | null {

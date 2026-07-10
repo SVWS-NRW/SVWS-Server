@@ -7,7 +7,7 @@ import { Class } from '../../java/lang/Class';
 import { JavaObject } from '../../java/lang/JavaObject';
 import type { List } from '../../java/util/List';
 import type { CoreType } from '../../asd/types/CoreType';
-import { cast_de_svws_nrw_asd_types_CoreType, de_svws_nrw_asd_types_CoreType_getManager, de_svws_nrw_asd_types_CoreType_daten, de_svws_nrw_asd_types_CoreType_statistikId, de_svws_nrw_asd_types_CoreType_historie } from '../../asd/types/CoreType';
+import { cast_de_svws_nrw_asd_types_CoreType, de_svws_nrw_asd_types_CoreType_getManager, de_svws_nrw_asd_types_CoreType_daten, de_svws_nrw_asd_types_CoreType_id, de_svws_nrw_asd_types_CoreType_statistikId, de_svws_nrw_asd_types_CoreType_historie } from '../../asd/types/CoreType';
 import { CoreTypeData } from '../../asd/data/CoreTypeData';
 import type { JavaMap } from '../../java/util/JavaMap';
 import { CoreTypeException } from '../../asd/data/CoreTypeException';
@@ -163,6 +163,10 @@ export abstract class CoreTypeSimple<T extends CoreTypeData, U extends CoreTypeS
 
 	public daten(schuljahr: number): T | null {
 		return de_svws_nrw_asd_types_CoreType_daten(this, schuljahr);
+	}
+
+	public id(schuljahr: number): number | null {
+		return de_svws_nrw_asd_types_CoreType_id(this, schuljahr);
 	}
 
 	public statistikId(): string | null {

@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.asd.data.lehrer.LehrerAnrechnungsgrundKatalogEintrag;
-import de.svws_nrw.asd.data.lehrer.LehrerMehrleistungsartKatalogEintrag;
-import de.svws_nrw.asd.data.lehrer.LehrerMinderleistungsartKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstunden;
 import de.svws_nrw.asd.types.lehrer.LehrerAnrechnungsgrund;
 import de.svws_nrw.asd.types.lehrer.LehrerMehrleistungsarten;
@@ -55,7 +52,7 @@ public final class LehrerPersonalabschnittsdatenAnrechnungsstundenService {
 			final LehrerMehrleistungRepository lehrerMehrleistungenRepository,
 			final LehrerMinderleistungRepository lehrerMinderleistungenRepository,
 			final LehrerAnrechnungRepository lehrerAnrechnungRepository) {
-		this.repoSchuljahresabschnitte = schuljahresabschnitteRepository;
+		repoSchuljahresabschnitte = schuljahresabschnitteRepository;
 		this.lehrerMehrleistungenRepository = lehrerMehrleistungenRepository;
 		this.lehrerMinderleistungenRepository = lehrerMinderleistungenRepository;
 		this.lehrerAnrechnungRepository = lehrerAnrechnungRepository;
@@ -71,8 +68,7 @@ public final class LehrerPersonalabschnittsdatenAnrechnungsstundenService {
 
 		// Ermittle die Art des Grundes. Ist dieser nicht gültig für das Halbjahr, so wird keine Fehlermeldung ausgegeben, sondern der Grund auf null gesetzt.
 		final LehrerMehrleistungsarten art = LehrerMehrleistungsarten.data().getWertByKuerzel(dto.idGrund);
-		final LehrerMehrleistungsartKatalogEintrag artEintrag = (art == null) ? null : art.daten(abschnitt.Jahr);
-		daten.idGrund = (artEintrag == null) ? null : artEintrag.id;
+		daten.idGrund = LehrerMehrleistungsarten.data().getIDByWertAndSchuljahr(art, abschnitt.Jahr);
 
 		daten.anzahl = (dto.anzahl == null) ? 0.0 : dto.anzahl;
 		return daten;
@@ -88,8 +84,7 @@ public final class LehrerPersonalabschnittsdatenAnrechnungsstundenService {
 
 		// Ermittle die Art des Grundes. Ist dieser nicht gültig für das Halbjahr, so wird keine Fehlermeldung ausgegeben, sondern der Grund auf null gesetzt.
 		final LehrerMinderleistungsarten art = LehrerMinderleistungsarten.data().getWertByKuerzel(dto.entlastungsgrundKrz);
-		final LehrerMinderleistungsartKatalogEintrag artEintrag = (art == null) ? null : art.daten(abschnitt.Jahr);
-		daten.idGrund = (artEintrag == null) ? null : artEintrag.id;
+		daten.idGrund = LehrerMinderleistungsarten.data().getIDByWertAndSchuljahr(art, abschnitt.Jahr);
 
 		daten.anzahl = (dto.anzahl == null) ? 0.0 : dto.anzahl;
 		return daten;
@@ -104,8 +99,7 @@ public final class LehrerPersonalabschnittsdatenAnrechnungsstundenService {
 
 		// Ermittle die Art des Grundes. Ist dieser nicht gültig für das Halbjahr, so wird keine Fehlermeldung ausgegeben, sondern der Grund auf null gesetzt.
 		final LehrerAnrechnungsgrund art = LehrerAnrechnungsgrund.data().getWertByKuerzel(dto.AnrechnungsgrundKrz);
-		final LehrerAnrechnungsgrundKatalogEintrag artEintrag = (art == null) ? null : art.daten(abschnitt.Jahr);
-		daten.idGrund = (artEintrag == null) ? null : artEintrag.id;
+		daten.idGrund = LehrerAnrechnungsgrund.data().getIDByWertAndSchuljahr(art, abschnitt.Jahr);
 
 		daten.anzahl = (dto.AnrechnungStd == null) ? 0.0 : dto.AnrechnungStd;
 		return daten;

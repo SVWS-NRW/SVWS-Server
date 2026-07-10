@@ -51,6 +51,17 @@ export function de_svws_nrw_asd_types_CoreType_daten<T extends CoreTypeData, U e
 }
 
 /**
+ * Gibt die ID aus der Historie zu diesem Core-Type zurück.
+ *
+ * @param schuljahr   das zu prüfende Schuljahr
+ *
+ * @return die ID aus der Historie
+ */
+export function de_svws_nrw_asd_types_CoreType_id<T extends CoreTypeData, U extends CoreType<T, U>>(transpiledThis: any, schuljahr: number): number | null {
+	return transpiledThis.getManager().getIDByWertAndSchuljahr(transpiledThis as unknown as U, schuljahr);
+}
+
+/**
  * Gibt die Statistik-ID zu diesem Core-Type zurück.
  *
  * @return die Statistik ID

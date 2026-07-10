@@ -11,6 +11,7 @@ import de.svws_nrw.asd.data.statistik.LehrerStatistikGesamt;
 import de.svws_nrw.asd.types.lehrer.LehrerBeschaeftigungsart;
 import de.svws_nrw.asd.types.lehrer.LehrerEinsatzstatus;
 import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
+import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
 import de.svws_nrw.repo.lehrer.LehrerAbschnittsdatenRepository;
@@ -82,20 +83,16 @@ public final class LehrerStatistikService {
 		daten.nachname = (dtoLehrer.Nachname == null) ? "" : dtoLehrer.Nachname;
 		daten.geburtsdatum = dtoLehrer.Geburtsdatum;
 		daten.geschlecht = (dtoLehrer.Geschlecht == null) ? -1 : dtoLehrer.Geschlecht.id;
-		daten.idStaatsangehoerigkeit = (dtoLehrer.staatsangehoerigkeit == null) ? null : dtoLehrer.staatsangehoerigkeit.historie().getLast().id;
+		daten.idStaatsangehoerigkeit = Nationalitaeten.data().getIDByWertAndSchuljahr(dtoLehrer.staatsangehoerigkeit, schuljahr);
 		daten.lehraemter.addAll(lehraemter);
 
 		// Hänge die abschnittsrelevanten Lehrer-Daten an
 		final var rechtsverhaeltnis = LehrerRechtsverhaeltnis.data().getWertBySchluessel(dtoAbschnittsdaten.Rechtsverhaeltnis);
-		final var rechtsverhaeltnisEintrag = (rechtsverhaeltnis == null) ? null : rechtsverhaeltnis.daten(schuljahr);
-		daten.idRechtsverhaeltnis = (rechtsverhaeltnisEintrag == null) ? null : rechtsverhaeltnisEintrag.id;
+		daten.idRechtsverhaeltnis = LehrerRechtsverhaeltnis.data().getIDByWertAndSchuljahr(rechtsverhaeltnis, schuljahr);
 		final var beschaeftigungsart = LehrerBeschaeftigungsart.data().getWertBySchluessel(dtoAbschnittsdaten.Beschaeftigungsart);
-		final var beschaeftigungsartEintrag = (beschaeftigungsart == null) ? null : beschaeftigungsart.daten(schuljahr);
-		daten.idBeschaeftigungsart = (beschaeftigungsartEintrag == null) ? null : beschaeftigungsartEintrag.id;
+		daten.idBeschaeftigungsart = LehrerBeschaeftigungsart.data().getIDByWertAndSchuljahr(beschaeftigungsart, schuljahr);
 		final var einsatzstatus = LehrerEinsatzstatus.data().getWertBySchluessel(dtoAbschnittsdaten.Einsatzstatus);
-		final var einsatzstatusEintrag = (einsatzstatus == null) ? null : einsatzstatus.daten(schuljahr);
-		daten.idEinsatzstatus = (einsatzstatusEintrag == null) ? null : einsatzstatusEintrag.id;
-
+		daten.idEinsatzstatus = LehrerEinsatzstatus.data().getIDByWertAndSchuljahr(einsatzstatus, schuljahr);
 
 		daten.pflichtstundensoll = dtoAbschnittsdaten.PflichtstdSoll;
 		daten.anrechnungen.addAll(anrechnungen);
