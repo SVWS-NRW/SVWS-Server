@@ -27,7 +27,10 @@
 				<template #body>
 					<div role="row" class="svws-ui-tr gruppen-tr" v-for="row in listBenutzergruppen" :key="row.id">
 						<div class="svws-ui-td svws-align-center" role="cell">
-							<svws-ui-checkbox type="toggle" :model-value="getBenutzerManager().istInGruppe(row.id)" @update:model-value="val => val ? addBenutzerToBenutzergruppe(row.id) : removeBenutzerFromBenutzergruppe(row.id)" />
+							<svws-ui-checkbox type="toggle"
+								:model-value="getBenutzerManager().istInGruppe(row.id)"
+								@update:model-value="val => val ? addBenutzerToBenutzergruppe(row.id) : removeBenutzerFromBenutzergruppe(row.id)"
+								:disabled="readonly" />
 						</div>
 						<div class="svws-ui-td" role="cell">
 							<div class="flex items-center gap-0.5">

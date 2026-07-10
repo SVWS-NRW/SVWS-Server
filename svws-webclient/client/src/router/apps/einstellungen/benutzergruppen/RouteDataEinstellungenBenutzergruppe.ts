@@ -1,5 +1,5 @@
 import type { BenutzerKompetenzGruppe, BenutzerListeEintrag, List } from "@core";
-import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenz, ArrayList, DeveloperNotificationException } from "@core";
+import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenz, ArrayList, DeveloperNotificationException, Arrays } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -13,20 +13,20 @@ import { RouteNode } from "~/router/RouteNode";
 interface RoutStateEinstellungenBenutzergruppe extends RouteStateInterface {
 	auswahl: BenutzergruppeListeEintrag | undefined;
 	mapBenutzergruppe: Map<number, BenutzergruppeListeEintrag>;
-	benutzergruppenManager: BenutzergruppenManager;
-	listBenutzergruppe: List<BenutzergruppeListeEintrag>;
+	manager: BenutzergruppenManager;
+	benutzergruppen: List<BenutzergruppeListeEintrag>;
 	daten: BenutzergruppeDaten | undefined;
-	listBenutzerAlle: List<BenutzerListeEintrag>;
-	listBenutzergruppenBenutzer: List<BenutzerListeEintrag>;
+	alleBenutzer: List<BenutzerListeEintrag>;
+	benutzerInBenutzergruppe: List<BenutzerListeEintrag>;
 }
 
 const defaultState = <RoutStateEinstellungenBenutzergruppe> {
 	auswahl: undefined,
-	listBenutzergruppe: new ArrayList(),
+	benutzergruppen: new ArrayList(),
 	mapBenutzergruppe: new Map<number, BenutzergruppeListeEintrag>,
-	benutzergruppenManager: new BenutzergruppenManager(new BenutzergruppeDaten()),
-	listBenutzerAlle: new ArrayList(),
-	listBenutzergruppenBenutzer: new ArrayList(),
+	manager: new BenutzergruppenManager(new BenutzergruppeDaten()),
+	alleBenutzer: new ArrayList(),
+	benutzerInBenutzergruppe: new ArrayList(),
 	daten: undefined,
 	view: routeEinstellungenBenutzergruppeDaten,
 };
@@ -44,27 +44,25 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 		return mapBenutzergruppe.values().next().value;
 	}
 
-	private async ladeBenutzergruppenDaten(eintrag: BenutzergruppeListeEintrag | undefined): Promise<BenutzergruppeDaten | undefined> {
+	private async ladeBenutzergruppen(eintrag: BenutzergruppeListeEintrag | undefined): Promise<BenutzergruppeDaten | undefined> {
 		if (eintrag === undefined) {
 			return undefined;
 		}
-		const result = await api.server.getBenutzergruppeDaten(api.schema, eintrag.id);
-		return result;
+		return await api.server.getBenutzergruppeDaten(api.schema, eintrag.id);
 	}
 
 	public async ladeListe() {
-		const listBenutzergruppe = await api.server.getBenutzergruppenliste(api.schema);
+		const benutzergruppen = await api.server.getBenutzergruppenliste(api.schema);
+		const alleBenutzer = await api.server.getBenutzerliste(api.schema);
+
 		const mapBenutzergruppe = new Map<number, BenutzergruppeListeEintrag>();
-		for (const l of listBenutzergruppe) {
-			mapBenutzergruppe.set(l.id, l);
+		for (const benutzergruppe of benutzergruppen) {
+			mapBenutzergruppe.set(benutzergruppe.id, benutzergruppe);
 		}
-		const listBenutzerAlle = await api.server.getBenutzerliste(api.schema);
-		this.setPatchedState({
-			listBenutzergruppe: listBenutzergruppe,
-			mapBenutzergruppe: mapBenutzergruppe,
-			listBenutzerAlle: listBenutzerAlle,
-		});
+
+		this.setPatchedState({ benutzergruppen, mapBenutzergruppe, alleBenutzer });
 	}
+
 	public async setBenutzergruppe(benutzerGruppe: BenutzergruppeListeEintrag | undefined) {
 		if (benutzerGruppe?.id === this._state.value.auswahl?.id && this.hatDaten) {
 			return;
@@ -72,31 +70,30 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 		if ((benutzerGruppe === undefined) || (this.mapBenutzergruppe.size === 0)) {
 			this.setPatchedDefaultState({
 				auswahl: undefined,
-				listBenutzergruppe: new ArrayList(),
+				benutzergruppen: new ArrayList(),
 				mapBenutzergruppe: new Map(),
-				benutzergruppenManager: new BenutzergruppenManager(new BenutzergruppeDaten()),
-				listBenutzerAlle: new ArrayList(),
+				manager: new BenutzergruppenManager(new BenutzergruppeDaten()),
+				alleBenutzer: new ArrayList(),
 				daten: undefined,
-
 			});
 			await this.ladeListe();
 		}
 		const neueAuswahl = benutzerGruppe ?? this.firstBenutzer(this.mapBenutzergruppe);
-		const daten = await this.ladeBenutzergruppenDaten(neueAuswahl);
-		const benutzergruppenManager = daten === undefined ? undefined : new BenutzergruppenManager(daten);
-		const listBenutzergruppenBenutzer = neueAuswahl === undefined ? undefined : await api.server.getBenutzerMitGruppenID(api.schema, neueAuswahl.id);
+		const daten = await this.ladeBenutzergruppen(neueAuswahl);
+		const benutzergruppenManager = (daten === undefined) ? undefined : new BenutzergruppenManager(daten);
+		const listBenutzergruppenBenutzer = (neueAuswahl === undefined) ? undefined : await api.server.getBenutzerMitGruppenID(api.schema, neueAuswahl.id);
 		this.setPatchedState({
 			auswahl: neueAuswahl,
-			benutzergruppenManager: benutzergruppenManager,
-			listBenutzergruppenBenutzer: listBenutzergruppenBenutzer,
+			manager: benutzergruppenManager,
+			benutzerInBenutzergruppe: listBenutzergruppenBenutzer,
 			daten: daten,
 		});
 	}
 
-	gotoBenutzer = async (b_id: number) => {
+	gotoBenutzer = async (idBenutzer: number) => {
 		const node = RouteNode.getNodeByName("einstellungen.benutzer.daten");
 		if (node !== undefined) {
-			await RouteManager.doRoute(node.getRoute({ id: b_id }));
+			await RouteManager.doRoute(node.getRoute({ id: idBenutzer }));
 		}
 	};
 
@@ -105,16 +102,12 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 		await RouteManager.doRoute(route);
 	};
 
-	getBenutzergruppenManager = () => {
-		return this._state.value.benutzergruppenManager;
-	};
-
-	get benutzergruppenManager(): BenutzergruppenManager {
-		return this._state.value.benutzergruppenManager;
+	get manager(): BenutzergruppenManager {
+		return this._state.value.manager;
 	}
 
-	set benutzergruppenManager(value: BenutzergruppenManager) {
-		this._state.value.benutzergruppenManager = value;
+	set manager(value: BenutzergruppenManager) {
+		this._state.value.manager = value;
 	}
 
 	get auswahl(): BenutzergruppeListeEintrag | undefined {
@@ -125,30 +118,29 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 		this._state.value.auswahl = value;
 	}
 
-	get listBenutzergruppe(): List<BenutzergruppeListeEintrag> {
-		return this._state.value.listBenutzergruppe;
+	get benutzergruppen(): List<BenutzergruppeListeEintrag> {
+		return this._state.value.benutzergruppen;
 	}
 
-	set listBenutzergruppe(value: List<BenutzergruppeListeEintrag>) {
-		this._state.value.listBenutzergruppe = value;
+	set benutzergruppen(value: List<BenutzergruppeListeEintrag>) {
+		this._state.value.benutzergruppen = value;
 	}
 
-	get listBenutzerAlle(): List<BenutzerListeEintrag> {
-		return this._state.value.listBenutzerAlle;
+	get alleBenutzer(): List<BenutzerListeEintrag> {
+		return this._state.value.alleBenutzer;
 	}
 
-	set listBenutzerAlle(value: List<BenutzerListeEintrag>) {
-		this._state.value.listBenutzerAlle = value;
+	set alleBenutzer(value: List<BenutzerListeEintrag>) {
+		this._state.value.alleBenutzer = value;
 	}
 
-	get listBenutzergruppenBenutzer(): List<BenutzerListeEintrag> {
-		return this._state.value.listBenutzergruppenBenutzer;
+	get benutzerInBenutzergruppe(): List<BenutzerListeEintrag> {
+		return this._state.value.benutzerInBenutzergruppe;
 	}
 
-	set listBenutzergruppenBenutzer(value: List<BenutzerListeEintrag>) {
-		this._state.value.listBenutzergruppenBenutzer = value;
+	set benutzerInBenutzergruppe(value: List<BenutzerListeEintrag>) {
+		this._state.value.benutzerInBenutzergruppe = value;
 	}
-
 
 	get hatDaten(): boolean {
 		return this._state.value.daten !== undefined;
@@ -185,14 +177,14 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 		if (bezeichnung === null) {
 			return;
 		}
-		await api.server.setBenutzergruppeBezeichnung(bezeichnung, api.schema, this.benutzergruppenManager.getID());
-		this.benutzergruppenManager.setBezeichnung(bezeichnung);
+		await api.server.setBenutzergruppeBezeichnung(bezeichnung, api.schema, this.manager.getID());
+		this.manager.setBezeichnung(bezeichnung);
 		const neueAuswahl = this.mapBenutzergruppe.get(this.daten.id);
 		this.mapBenutzergruppe.set(this.daten.id, this.daten);
 		this.setPatchedState({
 			auswahl: neueAuswahl,
 			mapBenutzergruppe: this.mapBenutzergruppe,
-			benutzergruppenManager: this.benutzergruppenManager,
+			manager: this.manager,
 		});
 	};
 
@@ -205,13 +197,13 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 	 */
 	setIstAdmin = async (istAdmin: boolean) => {
 		if (istAdmin) {
-			await api.server.addBenutzergruppeAdmin(api.schema, this.benutzergruppenManager.getID());
+			await api.server.addBenutzergruppeAdmin(api.schema, this.manager.getID());
 		} else {
-			await api.server.removeBenutzergruppeAdmin(api.schema, this.benutzergruppenManager.getID());
+			await api.server.removeBenutzergruppeAdmin(api.schema, this.manager.getID());
 		}
-		this.benutzergruppenManager.setAdmin(istAdmin);
+		this.manager.setAdmin(istAdmin);
 		this.setPatchedState({
-			benutzergruppenManager: this.benutzergruppenManager,
+			manager: this.manager,
 		});
 	};
 
@@ -222,15 +214,18 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 	 * @param kompetenz   die hinzuzufügende Kompetenz
 	 */
 	addKompetenz = async (kompetenz: BenutzerKompetenz) => {
-		const kid = new ArrayList<number>();
-		kid.add(kompetenz.daten.id);
-		if (this.benutzergruppenManager.hatKompetenz(kompetenz)) {
+		if (this.manager.hatKompetenz(kompetenz)) {
 			return false;
 		}
-		await api.server.addBenutzergruppeKompetenzen(kid, api.schema, this.benutzergruppenManager.getID());
-		this.benutzergruppenManager.addKompetenz(kompetenz);
+
+		const idsKompetenzen = new ArrayList<number>();
+		idsKompetenzen.add(kompetenz.daten.id);
+
+		await api.server.addBenutzergruppeKompetenzen(idsKompetenzen, api.schema, this.manager.getID());
+
+		this.manager.addKompetenz(kompetenz);
 		this.setPatchedState({
-			benutzergruppenManager: this.benutzergruppenManager,
+			manager: this.manager,
 		});
 		return true;
 	};
@@ -243,13 +238,13 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 	removeKompetenz = async (kompetenz: BenutzerKompetenz) => {
 		const kid = new ArrayList<number>();
 		kid.add(kompetenz.daten.id);
-		if (!this.benutzergruppenManager.hatKompetenz(kompetenz)) {
+		if (!this.manager.hatKompetenz(kompetenz)) {
 			return false;
 		}
-		await api.server.removeBenutzergruppeKompetenzen(kid, api.schema, this.benutzergruppenManager.getID());
-		this.benutzergruppenManager.removeKompetenz(kompetenz);
+		await api.server.removeBenutzergruppeKompetenzen(kid, api.schema, this.manager.getID());
+		this.manager.removeKompetenz(kompetenz);
 		this.setPatchedState({
-			benutzergruppenManager: this.benutzergruppenManager,
+			manager: this.manager,
 		});
 		return true;
 	};
@@ -261,19 +256,19 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 	 */
 	addBenutzerKompetenzGruppe = async (kompetenzgruppe: BenutzerKompetenzGruppe) => {
 		const kids = new ArrayList<number>();
-		if (!this.benutzergruppenManager.istAdmin()) {
+		if (!this.manager.istAdmin()) {
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
 				kids.add(komp.daten.id);
 			}
-			await api.server.addBenutzergruppeKompetenzen(kids, api.schema, this.benutzergruppenManager.getID());
+			await api.server.addBenutzergruppeKompetenzen(kids, api.schema, this.manager.getID());
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
-				if (!this.benutzergruppenManager.hatKompetenz(komp)) {
-					this.benutzergruppenManager.addKompetenz(komp);
+				if (!this.manager.hatKompetenz(komp)) {
+					this.manager.addKompetenz(komp);
 				}
 			}
 		}
 		this.setPatchedState({
-			benutzergruppenManager: this.benutzergruppenManager,
+			manager: this.manager,
 		});
 		return true;
 	};
@@ -285,27 +280,28 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 	 */
 	removeBenutzerKompetenzGruppe = async (kompetenzgruppe: BenutzerKompetenzGruppe) => {
 		const kids = new ArrayList<number>();
-		if (!this.benutzergruppenManager.istAdmin()) {
+		if (!this.manager.istAdmin()) {
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
 				kids.add(komp.daten.id);
 			}
-			await api.server.removeBenutzergruppeKompetenzen(kids, api.schema, this.benutzergruppenManager.getID());
+			await api.server.removeBenutzergruppeKompetenzen(kids, api.schema, this.manager.getID());
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
-				if (this.benutzergruppenManager.hatKompetenz(komp)) {
-					this.benutzergruppenManager.removeKompetenz(komp);
+				if (this.manager.hatKompetenz(komp)) {
+					this.manager.removeKompetenz(komp);
 				}
 			}
 		}
 		this.setPatchedState({
-			benutzergruppenManager: this.benutzergruppenManager,
+			manager: this.manager,
 		});
 		return true;
 	};
 
 	/**
 	 * Erstellt eine neue Benutzergruppe
-	 * @param bezeichnung die Bezichnung der neuen Benutzergruppe
-	 * @param istAdmin    True, wenn die neue Benutzrgruppe administrativ ist.
+	 *
+	 * @param bezeichnung die Bezeichnung der neuen Benutzergruppe
+	 * @param istAdmin    True, wenn die neue Benutzergruppe administrativ ist.
 	 */
 	create = async (bezeichnung: string, istAdmin: boolean) => {
 		const bg = new BenutzergruppeDaten();
@@ -316,99 +312,71 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 		bgle.id = result.id;
 		bgle.bezeichnung = result.bezeichnung;
 		bgle.istAdmin = result.istAdmin;
-		this.listBenutzergruppe.add(bgle);
+		this.benutzergruppen.add(bgle);
 		this.mapBenutzergruppe.set(bgle.id, bgle);
 		this.setPatchedState({
-			benutzergruppenManager: this.benutzergruppenManager,
-			listBenutzergruppe: this.listBenutzergruppe,
+			manager: this.manager,
+			benutzergruppen: this.benutzergruppen,
 			mapBenutzergruppe: this.mapBenutzergruppe,
-
 		});
 		await this.gotoBenutzergruppe(bgle);
 	};
 
 	/**
 	 * Entfernt die ausgewählten Benutzergruppen
+	 *
+	 * @param {BenutzergruppeListeEintrag[]} benutzergruppenToDelete
 	 */
-	deleteBenutzergruppen = async (selectedItems: BenutzergruppeListeEintrag[]) => {
-		const bids = new ArrayList<number>();
-		for (const b of selectedItems) {
-			bids.add(b.id);
-		}
-		let auswahl_gewaehlt = false;
-		if (this.auswahl !== undefined) {
-			auswahl_gewaehlt = selectedItems.includes(this.auswahl);
-		}
-		await api.server.removeBenutzerGruppe(bids, api.schema);
-		for (const i of bids) {
-			this.mapBenutzergruppe.delete(i);
-		}
-		for (const b of selectedItems) {
-			this.listBenutzergruppe.remove(b);
-		}
-		alert("Benutzergruppe gelöscht.");
-		if (auswahl_gewaehlt) {
-			await this.gotoBenutzergruppe(this.listBenutzergruppe.get(0));
-		}
-		this.setPatchedState({
-			listBenutzergruppe: this.listBenutzergruppe,
-			mapBenutzergruppe: this.mapBenutzergruppe,
+	deleteBenutzergruppen = async (benutzergruppenToDelete: BenutzergruppeListeEintrag[]) => {
+		const idsToDelete = benutzergruppenToDelete.map(e => e.id);
+		await api.server.removeBenutzerGruppe(Arrays.asList(idsToDelete), api.schema);
 
+		for (const benutzergruppe of benutzergruppenToDelete) {
+			this.mapBenutzergruppe.delete(benutzergruppe.id);
+			this.benutzergruppen.remove(benutzergruppe);
+		}
+
+		alert("Benutzergruppe gelöscht.");
+
+		const auswahlDeleted = benutzergruppenToDelete.some(gruppe => gruppe.id === this.auswahl?.id);
+		if (auswahlDeleted) {
+			await this.gotoBenutzergruppe(this.benutzergruppen.get(0));
+		}
+
+		this.setPatchedState({
+			benutzergruppen: this.benutzergruppen,
+			mapBenutzergruppe: this.mapBenutzergruppe,
 		});
 	};
 
 	/**
-	 * Fügt den Benutzer in die Benutzergruppe ein
+	 * Fügt den Benutzer in die ausgewählte Benutzergruppe ein
 	 *
-	 * @param {BenutzerListeEintrag} benutzer
+	 * @param {BenutzerListeEintrag} benutzerToAdd
 	 *
 	 * @returns {Promise<void>}
 	 */
-	addBenutzerToBenutzergruppe = async (benutzer: BenutzerListeEintrag): Promise<void> => {
-		const b_ids = new ArrayList<number>();
-		b_ids.add(benutzer.id);
-		await api.server.addBenutzergruppeBenutzer(b_ids, api.schema, this.benutzergruppenManager.getID());
-		this._state.value.listBenutzergruppenBenutzer.add(benutzer);
-		const temp = this.listBenutzergruppenBenutzer;
-		const liste_benutzer_ids = new Set();
-		const temp_listBenutzerAlle = new ArrayList<BenutzerListeEintrag>();
+	addBenutzerToBenutzergruppe = async (benutzerToAdd: BenutzerListeEintrag): Promise<void> => {
+		await api.server.addBenutzergruppeBenutzer(Arrays.asList([benutzerToAdd.id]), api.schema, this.manager.getID());
 
-		for (const b of this.listBenutzergruppenBenutzer) {
-			liste_benutzer_ids.add(b.id);
-		}
-		for (const b of this.listBenutzerAlle) {
-			if (!liste_benutzer_ids.has(b.id)) {
-				temp_listBenutzerAlle.add(b);
-			}
-		}
-		this.setPatchedState({
-			listBenutzergruppenBenutzer: temp,
-			listBenutzerAlle: temp_listBenutzerAlle,
-		});
+		this.benutzerInBenutzergruppe.add(benutzerToAdd);
 
+		this.commit();
 	};
 
 	/**
 	 * Entfernt einen Benutzer aus der Gruppe
 	 *
-	 * @param {BenutzerListeEintrag} benutzer
+	 * @param {BenutzerListeEintrag} benutzerToRemove
 	 *
 	 * @returns {Promise<void>}
 	 */
-	removeBenutzerFromBenutzergruppe = async (benutzer: BenutzerListeEintrag): Promise<void> => {
-		const bg_ids = new ArrayList<number>();
-		bg_ids.add(benutzer.id);
-		await api.server.removeBenutzergruppeBenutzer(bg_ids, api.schema, this.benutzergruppenManager.getID());
-		this.listBenutzergruppenBenutzer.remove(benutzer);
-		this.listBenutzerAlle.add(benutzer);
-		this.setPatchedState({
-			listBenutzergruppe: this.listBenutzergruppe,
-			mapBenutzergruppe: this.mapBenutzergruppe,
-		});
-	};
+	removeBenutzerFromBenutzergruppe = async (benutzerToRemove: BenutzerListeEintrag): Promise<void> => {
+		await api.server.removeBenutzergruppeBenutzer(Arrays.asList([benutzerToRemove.id]), api.schema, this.manager.getID());
 
-	aktualisiereListeBenutzerGruppenBenutzer = async (benutzer: BenutzerListeEintrag) => {
-		this.listBenutzergruppenBenutzer.add(benutzer);
+		this.benutzerInBenutzergruppe.remove(benutzerToRemove);
+
+		this.commit();
 	};
 
 }

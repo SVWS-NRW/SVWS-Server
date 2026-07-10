@@ -1,6 +1,6 @@
 <template>
-	<div class="svws-ui-tr" role="row">
-		<div class="svws-ui-td" role="cell">
+	<tr class="svws-ui-tr">
+		<td class="svws-ui-td">
 			<div class="flex items-center gap-1">
 				<div type="icon" size="small" @click="collapsed = !collapsed" :class="hatSubKompetenzen ? 'cursor-pointer' : 'pointer-events-none'" :tabindex="!hatSubKompetenzen ? -1 : ''">
 					<template v-if="hatSubKompetenzen">
@@ -12,14 +12,14 @@
 					{{ kompetenzgruppe.daten.bezeichnung }}
 				</svws-ui-checkbox>
 			</div>
-		</div>
-		<div class="svws-ui-td" role="cell" />
+		</td>
+		<td class="svws-ui-td" />
 		<template v-if="hatSubKompetenzen">
 			<div v-for="kompetenz in benutzerKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id" class="svws-ui-tr" v-show="!collapsed">
-				<s-benutzergruppe-kompetenz :kompetenz :show-info :ist-admin :get-benutzergruppen-manager :add-kompetenz :remove-kompetenz />
+				<s-benutzergruppe-kompetenz :kompetenz :show-info :ist-admin :manager :add-kompetenz :remove-kompetenz />
 			</div>
 		</template>
-	</div>
+	</tr>
 </template>
 
 <script setup lang="ts">
@@ -29,7 +29,7 @@
 	import { BenutzerKompetenz } from "@core";
 
 	const props = defineProps<{
-		getBenutzergruppenManager: () => BenutzergruppenManager;
+		manager: () => BenutzergruppenManager;
 		showInfo: boolean;
 		kompetenzgruppe: BenutzerKompetenzGruppe;
 		istAdmin: boolean;
@@ -44,8 +44,8 @@
 
 	const hatSubKompetenzen = computed<number>(() => props.benutzerKompetenzen(props.kompetenzgruppe).size());
 
-	const selectedHatAlle = computed<boolean>(() => props.getBenutzergruppenManager().hatKompetenzen(BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe)));
-	const selectedMindestensEine = computed<boolean>(() => props.getBenutzergruppenManager().hatKompetenzenMindestensEine(BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe)));
+	const selectedHatAlle = computed<boolean>(() => props.manager().hatKompetenzen(BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe)));
+	const selectedMindestensEine = computed<boolean>(() => props.manager().hatKompetenzenMindestensEine(BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe)));
 	const indeterminate = computed<boolean>(() => !selectedHatAlle.value && selectedMindestensEine.value);
 
 	const selected = computed<boolean>({

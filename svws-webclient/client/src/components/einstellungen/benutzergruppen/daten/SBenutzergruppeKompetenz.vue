@@ -1,10 +1,10 @@
 <template>
-	<div class="svws-ui-td ml-9" role="cell">
+	<td class="svws-ui-td ml-9">
 		<svws-ui-checkbox v-model="selected" :disabled="aktiviert" class="leading-tight">
 			{{ kompetenz.daten.bezeichnung }}
 		</svws-ui-checkbox>
-	</div>
-	<div class="svws-ui-td" role="cell">
+	</td>
+	<td class="svws-ui-td">
 		<template v-if="showInfo">
 			<svws-ui-tooltip>
 				<span class="icon i-ri-information-line" />
@@ -13,7 +13,7 @@
 				</template>
 			</svws-ui-tooltip>
 		</template>
-	</div>
+	</td>
 </template>
 
 <script setup lang="ts">
@@ -22,7 +22,7 @@
 	import type { BenutzergruppenManager, BenutzerKompetenz } from "@core";
 
 	const props = defineProps<{
-		getBenutzergruppenManager: () => BenutzergruppenManager;
+		manager: () => BenutzergruppenManager;
 		showInfo: boolean;
 		kompetenz: BenutzerKompetenz;
 		istAdmin: boolean;
@@ -33,9 +33,9 @@
 	const aktiviert = computed(() => props.istAdmin);
 
 	const selected = computed<boolean>({
-		get: () => props.getBenutzergruppenManager().hatKompetenz(props.kompetenz),
+		get: () => props.manager().hatKompetenz(props.kompetenz),
 		set: (value) => {
-			const alt = props.getBenutzergruppenManager().hatKompetenz(props.kompetenz);
+			const alt = props.manager().hatKompetenz(props.kompetenz);
 			if (alt === value) {
 				return;
 			}

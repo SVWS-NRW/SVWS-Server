@@ -12,7 +12,11 @@
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
 				<template #actions>
-					<s-modal-benutzer-neu :show-delete-icon="selectedItems.length > 0" :create-benutzer-allgemein :delete-benutzer-allgemein :has-focus="rowsFiltered.size === 0" :map-benutzer />
+					<s-modal-benutzer-neu :show-delete-icon="selectedItems.length > 0"
+						:create-benutzer-allgemein
+						:delete-benutzer-allgemein
+						:has-focus="rowsFiltered.size === 0"
+						:map-benutzer />
 				</template>
 			</svws-ui-table>
 		</div>
@@ -43,10 +47,10 @@
 			return props.mapBenutzer;
 		}
 		const result = new Map<number, BenutzerListeEintrag>();
-		for (const l of props.mapBenutzer.values()) {
-			if (l.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()) ||
-				l.anzeigename.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
-				result.set(l.id, l);
+		for (const benutzer of props.mapBenutzer.values()) {
+			if (benutzer.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()) ||
+				benutzer.anzeigename.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
+				result.set(benutzer.id, benutzer);
 			}
 		}
 		return result;

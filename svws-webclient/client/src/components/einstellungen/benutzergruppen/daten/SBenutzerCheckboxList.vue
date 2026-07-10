@@ -1,18 +1,22 @@
 <template>
-	<svws-ui-table :items="[]" :no-data="listBenutzer().size() === 0" no-data-text="Keine Benutzer zugewiesen." :columns="cols" scroll>
+	<svws-ui-table :items="[]" :no-data="benutzerList().isEmpty()" no-data-text="Keine Benutzer zugewiesen." :columns="cols" scroll>
 		<template #header>
 			<div class="svws-ui-tr" style="grid-template-columns: 2fr 1fr;">
 				<div class="svws-ui-td">
-					<template v-if="spalteLinks">{{ listBenutzer().size() }} insgesamt</template>
-					<template v-else>{{ listBenutzer().size() }} aktiv zugewiesen</template>
+					<template v-if="spalteLinks">{{ benutzerList().size() }} insgesamt</template>
+					<template v-else>{{ benutzerList().size() }} aktiv zugewiesen</template>
 				</div>
 				<div class="svws-ui-td" />
 			</div>
 		</template>
 		<template #body>
-			<template v-for="benutzer in listBenutzer()" :key="benutzer.id">
-				<s-benutzer-checkbox :benutzer v-model="aktiv" :spalte-links :add-benutzer-to-benutzergruppe
-					:remove-benutzer-from-benutzergruppe :goto-benutzer />
+			<template v-for="benutzer in benutzerList()" :key="benutzer.id">
+				<s-benutzer-checkbox :benutzer
+					:spalte-links
+					:add-benutzer-to-benutzergruppe
+					:remove-benutzer-from-benutzergruppe
+					:goto-benutzer
+					:disabled="benutzer.id === aktuellerBenutzer.id" />
 			</template>
 		</template>
 	</svws-ui-table>
@@ -21,25 +25,17 @@
 
 <script setup lang="ts">
 
-	import { computed } from "vue";
-	import type { List, BenutzerListeEintrag } from "@core";
+	import type { List, BenutzerListeEintrag, BenutzerDaten } from "@core";
 
-	const props = defineProps<{
-		listBenutzer: () => List<BenutzerListeEintrag>;
+	defineProps<{
 		title: string;
 		spalteLinks: boolean;
+		benutzerList: () => List<BenutzerListeEintrag>;
 		addBenutzerToBenutzergruppe: (benutzer: BenutzerListeEintrag) => Promise<void>;
 		removeBenutzerFromBenutzergruppe: (benutzer: BenutzerListeEintrag) => Promise<void>;
-		gotoBenutzer: (b_id: number) => Promise<void>;
-		listBenutzerInGruppe: () => List<BenutzerListeEintrag>;
+		gotoBenutzer: (idBenutzer: number) => Promise<void>;
+		aktuellerBenutzer: BenutzerDaten;
 	}>();
-
-	const aktiv = computed({
-		get: () => true,
-		set: (value) => {
-			// TODO
-		},
-	});
 
 	const cols = [
 		{ key: 'anzeigename', label: 'Anzeigename', span: 2 },

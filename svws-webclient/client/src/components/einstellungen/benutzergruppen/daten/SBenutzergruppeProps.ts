@@ -1,11 +1,10 @@
-import type { BenutzergruppeListeEintrag, List, BenutzerListeEintrag, BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe } from "@core";
+import type { BenutzergruppeListeEintrag, List, BenutzerListeEintrag, BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerDaten } from "@core";
 
 export interface BenutzergruppeProps {
 	auswahl: () => BenutzergruppeListeEintrag | undefined;
-	listBenutzerAlle: () => List<BenutzerListeEintrag>;
-	listBenutzergruppenBenutzer: () => List<BenutzerListeEintrag> ;
-	aktualisiereListeBenutzerGruppenBenutzer: (benutzer: BenutzerListeEintrag) => Promise<void>;
-	getBenutzergruppenManager: () => BenutzergruppenManager;
+	alleBenutzer: () => List<BenutzerListeEintrag>;
+	benutzerInBenutzergruppe: () => List<BenutzerListeEintrag>;
+	manager: () => BenutzergruppenManager;
 	setBezeichnung: (anzeigename: string | null) => Promise<void>;
 	setIstAdmin: (istAdmin: boolean) => Promise<void>;
 	addBenutzerToBenutzergruppe: (benutzer: BenutzerListeEintrag) => Promise<void>;
@@ -15,6 +14,8 @@ export interface BenutzergruppeProps {
 	create: (bezeichnung: string, istAdmin: boolean) => Promise<void>;
 	addBenutzerKompetenzGruppe: (kompetenzgruppe: BenutzerKompetenzGruppe) => Promise<boolean>;
 	removeBenutzerKompetenzGruppe: (kompetenzgruppe: BenutzerKompetenzGruppe) => Promise<boolean>
-	gotoBenutzer: (b_id: number) => Promise<void>;
+	gotoBenutzer: (idBenutzer: number) => Promise<void>;
 	benutzerKompetenzen: (kompetenzgruppe: BenutzerKompetenzGruppe) => List<BenutzerKompetenz>;
+	aktuellerBenutzer: BenutzerDaten;
+	mapBenutzergruppen: Map<number, BenutzergruppeListeEintrag>
 }

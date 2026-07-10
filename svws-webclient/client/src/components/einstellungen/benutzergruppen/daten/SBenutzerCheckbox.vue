@@ -1,41 +1,65 @@
 <template>
-	<div class="svws-ui-tr" role="row" @click.prevent="spalteLinks ? add() : void 0"
-		style="grid-template-columns: 2fr 1fr;"
-		:class="spalteLinks ? 'text-ui-50 hover:text-ui-100 cursor-copy' : ''"
-		:title="spalteLinks ? 'Benutzer zur Gruppe hinzufügen' : 'Benutzer aus Gruppe entfernen'">
-		<div class="svws-ui-td" role="cell">
+	<tr class="svws-ui-tr" @click.prevent="add"
+		style="grid-template-columns: 2fr 1fr;" :class="styleClasses" :title>
+		<td class="svws-ui-td">
 			<svws-ui-button type="icon" size="small" title="Benutzer anzeigen" @click.stop="gotoBenutzer(benutzer.id)">
 				<span class="icon i-ri-link" />
 			</svws-ui-button>
 			{{ benutzer.anzeigename }}
-		</div>
-		<div class="svws-ui-td" role="cell">
+		</td>
+		<td class="svws-ui-td">
 			{{ benutzer.name }}
-			<svws-ui-button v-if="!spalteLinks" type="icon" class="ml-auto" @click.prevent="add()">
+			<svws-ui-button v-if="!spalteLinks" type="icon" class="ml-auto" @click.prevent="remove" :disabled>
 				<span class="icon i-ri-delete-bin-line" />
 			</svws-ui-button>
-		</div>
-	</div>
+		</td>
+	</tr>
 </template>
 
 <script setup lang="ts">
 
 	import type { BenutzerListeEintrag } from "@core";
+	import { computed } from "vue";
 
 	const props = defineProps<{
 		benutzer: BenutzerListeEintrag;
 		spalteLinks: boolean;
 		addBenutzerToBenutzergruppe: (benutzer: BenutzerListeEintrag) => Promise<void>;
 		removeBenutzerFromBenutzergruppe: (benutzer: BenutzerListeEintrag) => Promise<void>;
-		gotoBenutzer: (b_id: number) => Promise<void>;
+		gotoBenutzer: (idBenutzer: number) => Promise<void>;
+		disabled: boolean;
 	}>();
 
-	async function add() {
+	const title = computed(() => {
 		if (props.spalteLinks) {
-			await props.addBenutzerToBenutzergruppe(props.benutzer);
+			return props.disabled ? 'Sie können sich selbst zu keiner Gruppe hinzufügen' : 'Benutzer zur Gruppe hinzufügen';
 		} else {
+			return props.disabled ? 'Sie können sich selbst aus keiner Gruppe entfernen' : 'Benutzer aus Gruppe entfernen';
+		}
+	});
+
+	const styleClasses = computed(() => {
+		let classes = '';
+		if (props.spalteLinks) {
+			classes += 'text-ui-50 hover:text-ui-100 cursor-copy';
+		}
+
+		if (props.disabled) {
+			classes += ' cursor-not-allowed';
+		}
+		return classes;
+	});
+
+	const add = async () => {
+		if (props.spalteLinks && !props.disabled) {
+			await props.addBenutzerToBenutzergruppe(props.benutzer);
+		}
+	};
+
+	const remove = async () => {
+		if (!props.spalteLinks && !props.disabled) {
 			await props.removeBenutzerFromBenutzergruppe(props.benutzer);
 		}
-	}
+	};
 
 </script>

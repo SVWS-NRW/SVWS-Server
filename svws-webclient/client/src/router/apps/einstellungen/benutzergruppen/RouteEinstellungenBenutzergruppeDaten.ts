@@ -7,6 +7,7 @@ import { routeEinstellungen } from "~/router/apps/einstellungen/RouteEinstellung
 import { routeEinstellungenBenutzergruppe, type RouteEinstellungenBenutzergruppe } from "~/router/apps/einstellungen/benutzergruppen/RouteEinstellungenBenutzergruppe";
 
 import type { BenutzergruppeProps } from "~/components/einstellungen/benutzergruppen/daten/SBenutzergruppeProps";
+import { api } from "~/router/Api";
 
 const SBenutzergruppe = () => import("~/components/einstellungen/benutzergruppen/daten/SBenutzergruppe.vue");
 
@@ -28,10 +29,9 @@ export class RouteEinstellungenBenutzergruppeDaten extends RouteNode<any, RouteE
 	public getProps(to: RouteLocationNormalized): BenutzergruppeProps {
 		return {
 			auswahl: () => routeEinstellungenBenutzergruppe.data.auswahl,
-			listBenutzerAlle: () => routeEinstellungenBenutzergruppe.data.listBenutzerAlle,
-			listBenutzergruppenBenutzer: () => routeEinstellungenBenutzergruppe.data.listBenutzergruppenBenutzer,
-			aktualisiereListeBenutzerGruppenBenutzer: routeEinstellungenBenutzergruppe.data.aktualisiereListeBenutzerGruppenBenutzer,
-			getBenutzergruppenManager: routeEinstellungenBenutzergruppe.data.getBenutzergruppenManager,
+			alleBenutzer: () => routeEinstellungenBenutzergruppe.data.alleBenutzer,
+			benutzerInBenutzergruppe: () => routeEinstellungenBenutzergruppe.data.benutzerInBenutzergruppe,
+			manager: () => routeEinstellungenBenutzergruppe.data.manager,
 			setBezeichnung: routeEinstellungenBenutzergruppe.data.setBezeichnung,
 			setIstAdmin: routeEinstellungenBenutzergruppe.data.setIstAdmin,
 			addKompetenz: routeEinstellungenBenutzergruppe.data.addKompetenz,
@@ -43,6 +43,8 @@ export class RouteEinstellungenBenutzergruppeDaten extends RouteNode<any, RouteE
 			removeBenutzerFromBenutzergruppe: routeEinstellungenBenutzergruppe.data.removeBenutzerFromBenutzergruppe,
 			gotoBenutzer: routeEinstellungenBenutzergruppe.data.gotoBenutzer,
 			benutzerKompetenzen: routeEinstellungen.benutzerKompetenzen,
+			aktuellerBenutzer: api.benutzerdaten,
+			mapBenutzergruppen: routeEinstellungenBenutzergruppe.data.mapBenutzergruppe,
 		};
 	}
 
