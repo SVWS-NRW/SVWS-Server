@@ -42,7 +42,7 @@ class Schild3FachklasseDQRNiveauZuordnungServiceTest {
 		schuljahresabschnitt.id = 1L;
 		schuljahresabschnitt.schuljahr = 2025;
 
-		when(schuleRepository.getSchuljahresabschnitt()).thenReturn(1L);
+		when(schuleRepository.getIdSchuljahresabschnitt()).thenReturn(1L);
 		when(schuljahresabschnittService.getById(1L)).thenReturn(schuljahresabschnitt);
 
 		final var result = cut.getAll();

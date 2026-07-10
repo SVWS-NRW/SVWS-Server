@@ -227,7 +227,7 @@ public final class SchuelerStatistikService {
 	 */
 	public List<SchuelerStatistikGesamt> getList() {
 		// Bestimme zunächst den aktuellen Schuljahresabschnitt der Schule
-		final long idSchuljahresabschnitt = this.schuleRepository.getSchuljahresabschnitt();
+		final long idSchuljahresabschnitt = this.schuleRepository.getIdSchuljahresabschnitt();
 
 		// Bestimme dann die aktiven Schüler aus diesem Schuljahresabschnitt
 		final var mapSchueler = this.schuelerRepository.getMapAktiveBySchuljahresabschnitt(idSchuljahresabschnitt);

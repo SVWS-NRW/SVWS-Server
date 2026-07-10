@@ -89,7 +89,7 @@ public final class KurseStatistikService {
 	 */
 	public @NotNull List<KursStatistikGesamt> getList() {
 		// Bestimme den aktuellen Schuljahresabschnitt der Schule
-		final long idSchuljahresabschnitt = schuleRepository.getSchuljahresabschnitt();
+		final long idSchuljahresabschnitt = schuleRepository.getIdSchuljahresabschnitt();
 
 		// Bestimme zunächst die Statistik-Relevanten Lehrkräfte und deren IDs
 		final List<DTOKurs> listKurse = kurseRepository.getListBySchuljahresabschnitt(idSchuljahresabschnitt);

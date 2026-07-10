@@ -112,7 +112,7 @@ public final class LehrerStatistikService {
 	 */
 	public @NotNull List<LehrerStatistikGesamt> getList() {
 		// Bestimme den aktuellen Schuljahresabschnitt der Schule
-		final long idSchuljahresabschnitt = schuleRepository.getSchuljahresabschnitt();
+		final long idSchuljahresabschnitt = schuleRepository.getIdSchuljahresabschnitt();
 		final var schuljahresabschnitt = schuljahresabschnitteRepository.getById(idSchuljahresabschnitt);
 
 		// Bestimme zunächst die Statistik-Relevanten Lehrkräfte und deren IDs

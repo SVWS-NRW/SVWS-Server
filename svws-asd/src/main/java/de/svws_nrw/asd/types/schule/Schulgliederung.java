@@ -730,12 +730,12 @@ public enum Schulgliederung implements @NotNull CoreType<SchulgliederungKatalogE
 	 *
 	 * @return Liste von {@link Schulgliederung}
 	 */
-	public static List<Schulgliederung> getBySchuljahrAndBKIndex(final int schuljahr, final int bkIndex) {
-		final List<Schulgliederung> schulgliederungenOfBKIndex = new ArrayList<>();
+	public static List<SchulgliederungKatalogEintrag> getBySchuljahrAndBKIndex(final int schuljahr, final int bkIndex) {
+		final List<SchulgliederungKatalogEintrag> schulgliederungenOfBKIndex = new ArrayList<>();
 		for (final Schulgliederung schulgliederung : data().getWerte()) {
 			final SchulgliederungKatalogEintrag schulgliederungEintrag = schulgliederung.daten(schuljahr);
 			if ((schulgliederungEintrag != null) && (schulgliederungEintrag.bkIndex != null) && (schulgliederungEintrag.bkIndex == bkIndex)) {
-				schulgliederungenOfBKIndex.add(schulgliederung);
+				schulgliederungenOfBKIndex.add(schulgliederungEintrag);
 			}
 		}
 		return schulgliederungenOfBKIndex;

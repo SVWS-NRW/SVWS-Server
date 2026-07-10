@@ -40,7 +40,10 @@ public final class SchuleServiceFactory {
 	 * @return der Service für die Schuldaten
 	 */
 	public SchuleService getSchuleService() {
-		return new SchuleService(schuleRepositoryFactory.getSchuleRepository());
+		return new SchuleService(
+				schuleRepositoryFactory.getSchuleRepository(),
+				schuleRepositoryFactory.getSchuljahresabschnitteRepository()
+		);
 	}
 
 	/**

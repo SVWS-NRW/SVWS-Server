@@ -58,7 +58,7 @@ public final class JahrgaengeStatistikService {
 	 * @return die Liste aller Jahrgänge
 	 */
 	public @NotNull List<JahrgaengeStatistikGesamt> getList() {
-		final var idSchuljahresabschnitt = schuleRepository.getSchuljahresabschnitt();
+		final var idSchuljahresabschnitt = schuleRepository.getIdSchuljahresabschnitt();
 		final var schuljahresabschnitt = schuljahresabschnitteService.getById(idSchuljahresabschnitt);
 		return jahrgaengeRepository.getAll().stream().map(f -> map(f, schuljahresabschnitt.schuljahr)).toList();
 	}

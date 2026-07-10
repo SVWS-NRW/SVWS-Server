@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import de.svws_nrw.controller.schule.kataloge.fachklasse.FachklasseControllerFactory;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.kataloge.KatalogEintragStrassen;
 import de.svws_nrw.core.data.kataloge.KatalogEntlassgrund;
@@ -12,6 +13,7 @@ import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.SchuelerSchwerpunkt;
 import de.svws_nrw.core.data.kataloge.Teilleistungsart;
 import de.svws_nrw.core.data.schule.Beschaeftigungsart;
+import de.svws_nrw.core.data.schule.FachklasseEintrag;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.core.data.schule.Haltestelle;
 import de.svws_nrw.core.data.schule.Kindergarten;
@@ -33,6 +35,8 @@ import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
 import de.svws_nrw.data.schule.DataBeschaeftigungsarten;
 import de.svws_nrw.data.schule.DataKindergaerten;
 import de.svws_nrw.controller.schule.merkmale.MerkmalControllerFactory;
+import de.svws_nrw.service.schule.kataloge.fachklasse.FachklasseEintragCreateRequest;
+import de.svws_nrw.service.schule.kataloge.fachklasse.FachklasseEintragPatchRequest;
 import de.svws_nrw.service.schule.merkmale.MerkmalCreateRequest;
 import de.svws_nrw.service.schule.merkmale.MerkmalPatchRequest;
 import io.swagger.v3.oas.annotations.Operation;
@@ -1198,6 +1202,115 @@ public class APIKataloge {
 			@Context final HttpServletRequest request) {
 		return TeilleistungsartControllerFactory.withDeleteAccess(request)
 				.getTeilLeistungsartenController()
+				.delete(ids);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Fachklassen.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste der Fachklassen
+	 */
+	@GET
+	@Path("/fachklassen")
+	@Operation(summary = "Gibt eine Übersicht der Fachklassen im Katalog zurück.",
+			description = "Gibt die Fachklassen zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Fachklassen.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = FachklasseEintrag.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Fachklassen gefunden")
+	public Response getFachklassen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return FachklasseControllerFactory
+				.withReadAccess(request)
+				.getController()
+				.getAll();
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen einer Fachklasse.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation der Fachklasse
+	 * @param patch     das partielle Update als {@link FachklasseEintragPatchRequest}
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/fachklassen/{id : \\d+}")
+	@Operation(summary = "Patched die Fachklasse mit der angegebenen ID.",
+			description = "Patched die Fachklasse mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
+	public Response patchFachklasse(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch einer Fachklasse", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = FachklasseEintrag.class))) final FachklasseEintragPatchRequest patch,
+			@Context final HttpServletRequest request) {
+		return FachklasseControllerFactory
+				.withWriteAccess(request)
+				.getController()
+				.patch(id, patch);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Hinzufügen einer Fachklasse.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param input     {@link FachklasseEintrag}
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit der erstellten Fachklasse
+	 */
+	@POST
+	@Path("/fachklassen/create")
+	@Operation(summary = "Erstellt eine neue Fachklasse und gibt das erstellte Objekt zurück.",
+			description = "Erstellt eine neue Fachklasse, insofern die notwendigen Berechtigungen vorliegen.")
+	@ApiResponse(responseCode = "201", description = "Die Fachklasse wurde erfolgreich hinzugefügt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = FachklasseEintrag.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Fachklassen anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addFachklasse(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten der zu erstellenden Fachklasse ohne ID, da diese automatisch generiert wird", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = FachklasseEintrag.class))) final FachklasseEintragCreateRequest input,
+			@Context final HttpServletRequest request) {
+		return FachklasseControllerFactory
+				.withWriteAccess(request)
+				.getController()
+				.create(input);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Fachklassen.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param ids       der InputStream, mit der Liste der zu löschenden IDs
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/fachklassen/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Fachklassen.", description = "Entfernt mehrere Fachklassen, insofern die notwendigen Berechtigungen vorhanden sind.")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Fachklassen zu entfernen.")
+	@ApiResponse(responseCode = "404", description = "Fachklassen nicht vorhanden")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteFachklassen(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der zu löschenden Fachklassen", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
+			@Context final HttpServletRequest request) {
+		return FachklasseControllerFactory
+				.withDeleteAccess(request)
+				.getController()
 				.delete(ids);
 	}
 }

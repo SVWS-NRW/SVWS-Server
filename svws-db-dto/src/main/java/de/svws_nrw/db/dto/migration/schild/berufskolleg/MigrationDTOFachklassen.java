@@ -26,26 +26,26 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Fachklassen")
-@JsonPropertyOrder({"ID", "BKIndex", "FKS", "AP", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar", "Kennung", "FKS_AP_SIM", "BKIndexTyp", "Beschreibung_W", "Status", "SchulnrEigner", "Lernfelder", "DQR_Niveau", "Ebene1Klartext", "Ebene2Klartext", "Ebene3Klartext"})
+@JsonPropertyOrder({"id", "BKIndex", "FKS", "AP", "bezeichnung", "sortierung", "istSichtbar", "Aenderbar", "Kennung", "FKS_AP_SIM", "BKIndexTyp", "Beschreibung_W", "Status", "SchulnrEigner", "Lernfelder", "DQR_Niveau", "Ebene1Klartext", "Ebene2Klartext", "Ebene3Klartext"})
 public final class MigrationDTOFachklassen {
 
 	/** Die Datenbankabfrage für alle DTOs */
 	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOFachklassen e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM MigrationDTOFachklassen e WHERE e.ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOFachklassen e WHERE e.id = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOFachklassen e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOFachklassen e WHERE e.id IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOFachklassen e WHERE e.ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOFachklassen e WHERE e.id IS NOT NULL";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
-	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOFachklassen e WHERE e.ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes id */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOFachklassen e WHERE e.id = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
-	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOFachklassen e WHERE e.ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes id */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOFachklassen e WHERE e.id IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes BKIndex */
 	public static final String QUERY_BY_BKINDEX = "SELECT e FROM MigrationDTOFachklassen e WHERE e.BKIndex = ?1";
@@ -65,23 +65,23 @@ public final class MigrationDTOFachklassen {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AP */
 	public static final String QUERY_LIST_BY_AP = "SELECT e FROM MigrationDTOFachklassen e WHERE e.AP IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
-	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOFachklassen e WHERE e.Bezeichnung = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOFachklassen e WHERE e.bezeichnung = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
-	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOFachklassen e WHERE e.Bezeichnung IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOFachklassen e WHERE e.bezeichnung IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
-	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM MigrationDTOFachklassen e WHERE e.Sortierung = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM MigrationDTOFachklassen e WHERE e.sortierung = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
-	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM MigrationDTOFachklassen e WHERE e.Sortierung IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM MigrationDTOFachklassen e WHERE e.sortierung IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
-	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM MigrationDTOFachklassen e WHERE e.Sichtbar = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes istSichtbar */
+	public static final String QUERY_BY_ISTSICHTBAR = "SELECT e FROM MigrationDTOFachklassen e WHERE e.istSichtbar = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
-	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM MigrationDTOFachklassen e WHERE e.Sichtbar IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes istSichtbar */
+	public static final String QUERY_LIST_BY_ISTSICHTBAR = "SELECT e FROM MigrationDTOFachklassen e WHERE e.istSichtbar IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Aenderbar */
 	public static final String QUERY_BY_AENDERBAR = "SELECT e FROM MigrationDTOFachklassen e WHERE e.Aenderbar = ?1";
@@ -159,7 +159,7 @@ public final class MigrationDTOFachklassen {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public Long id;
 
 	/** BKIndex aus der Statkue bildet mit FKS und AP eine eindeutige Kombination IT.NRW */
 	@Column(name = "BKIndex")
@@ -179,12 +179,12 @@ public final class MigrationDTOFachklassen {
 	/** Bezeichnung der Fachklasse Text */
 	@Column(name = "Bezeichnung")
 	@JsonProperty
-	public String Bezeichnung;
+	public String bezeichnung;
 
 	/** Sortiernummer der Fachklasse */
 	@Column(name = "Sortierung")
 	@JsonProperty
-	public Integer Sortierung;
+	public Integer sortierung;
 
 	/** steuert die Sichtbarkeit der Fachklasse */
 	@Column(name = "Sichtbar")
@@ -192,7 +192,7 @@ public final class MigrationDTOFachklassen {
 	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
 	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
 	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
-	public Boolean Sichtbar;
+	public Boolean istSichtbar;
 
 	/** Gibt an ob die Fachklasse änderbar ist */
 	@Column(name = "Aenderbar")
@@ -266,13 +266,13 @@ public final class MigrationDTOFachklassen {
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse MigrationDTOFachklassen ohne eine Initialisierung der Attribute.
-	 * @param ID   der Wert für das Attribut ID
+	 * @param id   der Wert für das Attribut id
 	 */
-	public MigrationDTOFachklassen(final Long ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
+	public MigrationDTOFachklassen(final Long id) {
+		if (id == null) {
+			throw new NullPointerException("id must not be null");
 		}
-		this.ID = ID;
+		this.id = id;
 	}
 
 
@@ -288,11 +288,11 @@ public final class MigrationDTOFachklassen {
 			return false;
 		}
 		MigrationDTOFachklassen other = (MigrationDTOFachklassen) obj;
-		if (ID == null) {
-			if (other.ID != null) {
+		if (id == null) {
+			if (other.id != null) {
 				return false;
 			}
-		} else if (!ID.equals(other.ID)) {
+		} else if (!id.equals(other.id)) {
 			return false;
 		}
 		return true;
@@ -302,7 +302,7 @@ public final class MigrationDTOFachklassen {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -314,7 +314,7 @@ public final class MigrationDTOFachklassen {
 	 */
 	@Override
 	public String toString() {
-		return "MigrationDTOFachklassen(ID=" + this.ID + ", BKIndex=" + this.BKIndex + ", FKS=" + this.FKS + ", AP=" + this.AP + ", Bezeichnung=" + this.Bezeichnung + ", Sortierung=" + this.Sortierung + ", Sichtbar=" + this.Sichtbar + ", Aenderbar=" + this.Aenderbar + ", Kennung=" + this.Kennung + ", FKS_AP_SIM=" + this.FKS_AP_SIM + ", BKIndexTyp=" + this.BKIndexTyp + ", Beschreibung_W=" + this.Beschreibung_W + ", Status=" + this.Status + ", SchulnrEigner=" + this.SchulnrEigner + ", Lernfelder=" + this.Lernfelder + ", DQR_Niveau=" + this.DQR_Niveau + ", Ebene1Klartext=" + this.Ebene1Klartext + ", Ebene2Klartext=" + this.Ebene2Klartext + ", Ebene3Klartext=" + this.Ebene3Klartext + ")";
+		return "MigrationDTOFachklassen(id=" + this.id + ", BKIndex=" + this.BKIndex + ", FKS=" + this.FKS + ", AP=" + this.AP + ", bezeichnung=" + this.bezeichnung + ", sortierung=" + this.sortierung + ", istSichtbar=" + this.istSichtbar + ", Aenderbar=" + this.Aenderbar + ", Kennung=" + this.Kennung + ", FKS_AP_SIM=" + this.FKS_AP_SIM + ", BKIndexTyp=" + this.BKIndexTyp + ", Beschreibung_W=" + this.Beschreibung_W + ", Status=" + this.Status + ", SchulnrEigner=" + this.SchulnrEigner + ", Lernfelder=" + this.Lernfelder + ", DQR_Niveau=" + this.DQR_Niveau + ", Ebene1Klartext=" + this.Ebene1Klartext + ", Ebene2Klartext=" + this.Ebene2Klartext + ", Ebene3Klartext=" + this.Ebene3Klartext + ")";
 	}
 
 }

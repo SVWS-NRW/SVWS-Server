@@ -51,6 +51,7 @@ import { ErzieherStammdaten } from '../core/data/erzieher/ErzieherStammdaten';
 import { FachDaten } from '../core/data/fach/FachDaten';
 import { FachgruppeKatalogEintrag } from '../asd/data/fach/FachgruppeKatalogEintrag';
 import { FachKatalogEintrag } from '../asd/data/fach/FachKatalogEintrag';
+import { FachklasseEintrag } from '../core/data/schule/FachklasseEintrag';
 import { Fahrschuelerart } from '../core/data/schule/Fahrschuelerart';
 import { Floskel } from '../core/data/schule/Floskel';
 import { Floskelgruppe } from '../core/data/schule/Floskelgruppe';
@@ -3410,6 +3411,116 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const data : ApiFile = await super.getSQLite(path);
 		return data;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getFachklassen für den Zugriff auf die URL https://{hostname}/db/{schema}/fachklassen
+	 *
+	 * Gibt die Fachklassen zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste von Fachklassen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<FachklasseEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Fachklassen gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste von Fachklassen.
+	 */
+	public async getFachklassen(schema : string) : Promise<List<FachklasseEintrag>> {
+		const path = "/db/{schema}/fachklassen"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<FachklasseEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(FachklasseEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchFachklasse für den Zugriff auf die URL https://{hostname}/db/{schema}/fachklassen/{id : \d+}
+	 *
+	 * Patched die Fachklasse mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<FachklasseEintrag>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchFachklasse(data : Partial<FachklasseEintrag>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/fachklassen/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = FachklasseEintrag.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addFachklasse für den Zugriff auf die URL https://{hostname}/db/{schema}/fachklassen/create
+	 *
+	 * Erstellt eine neue Fachklasse, insofern die notwendigen Berechtigungen vorliegen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Fachklasse wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: FachklasseEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Fachklassen anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<FachklasseEintrag>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Fachklasse wurde erfolgreich hinzugefügt.
+	 */
+	public async addFachklasse(data : Partial<FachklasseEintrag>, schema : string) : Promise<FachklasseEintrag> {
+		const path = "/db/{schema}/fachklassen/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = FachklasseEintrag.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return FachklasseEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteFachklassen für den Zugriff auf die URL https://{hostname}/db/{schema}/fachklassen/delete/multiple
+	 *
+	 * Entfernt mehrere Fachklassen, insofern die notwendigen Berechtigungen vorhanden sind.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Fachklassen zu entfernen.
+	 *   Code 404: Fachklassen nicht vorhanden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
+	 */
+	public async deleteFachklassen(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/fachklassen/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

@@ -877,6 +877,7 @@ export { Betrieb } from './core/data/schule/Betrieb';
 export { BetriebeAnsprechpartner } from './core/data/schule/BetriebeAnsprechpartner';
 export { Betriebsart } from './core/data/schule/Betriebsart';
 export { Einwilligungsart } from './core/data/schule/Einwilligungsart';
+export { FachklasseEintrag } from './core/data/schule/FachklasseEintrag';
 export { Fahrschuelerart } from './core/data/schule/Fahrschuelerart';
 export { Floskel } from './core/data/schule/Floskel';
 export { FloskelJahrgangZuordnung } from './core/data/schule/FloskelJahrgangZuordnung';

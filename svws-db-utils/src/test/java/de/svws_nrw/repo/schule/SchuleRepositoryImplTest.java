@@ -59,14 +59,14 @@ class SchuleRepositoryImplTest {
 
 	@Test
 	@DisplayName("Test: Bestimme den aktuellen Schuljahresabschnitt über den Schuleintrag.")
-	void testGetSchuljahresabschnitt() {
+	void testGetIdSchuljahresabschnitt() {
 		// Szenario: Die Schule befindet sich in dem Schuljahresabschnitt mit der ID 42
 		final long idSchuljahresabschnitt = 42L;
 		final DTOEigeneSchule schule = new DTOEigeneSchule(1L);
 		schule.Schuljahresabschnitts_ID = idSchuljahresabschnitt;
 
 		when(conn.querySingle(DTOEigeneSchule.class)).thenReturn(schule);
-		final long result = repository.getSchuljahresabschnitt();
+		final long result = repository.getIdSchuljahresabschnitt();
 
 		assertEquals(idSchuljahresabschnitt, result, "Die ID des Schuljahresabschnitts wurde nicht korrekt ausgelesen.");
 		verify(conn).querySingle(DTOEigeneSchule.class);

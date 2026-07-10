@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -48,6 +49,8 @@ class MerkmalServiceTest {
 	void setUp() {
 		service = new MerkmalService(repository, mapper);
 		transactionSupportMock = mockStatic(TransactionSupport.class);
+		transactionSupportMock.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<Object>>any()))
+				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 	}
 
 	@AfterEach
@@ -95,9 +98,6 @@ class MerkmalServiceTest {
 		when(mapper.toDomain(any())).thenReturn(entity);
 		when(mapper.toApi(nullable(DTOMerkmale.class))).thenReturn(apiMerkmal);
 
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
-				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
-
 		final var result = service.create(dto);
 
 		assertThat(result).isEqualTo(apiMerkmal);
@@ -114,9 +114,6 @@ class MerkmalServiceTest {
 		dto.istSchuelermerkmal = false;
 
 		when(repository.bezeichnungIsAlreadyUsedCreate(dto.bezeichnung)).thenReturn(true);
-
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
-				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		assertThatThrownBy(() -> service.create(dto))
 				.isInstanceOf(ApiOperationException.class)
@@ -137,9 +134,6 @@ class MerkmalServiceTest {
 		when(repository.bezeichnungIsAlreadyUsedCreate(dto.bezeichnung)).thenReturn(false);
 		when(repository.kuerzelIsAlreadyUsedCreate(dto.kuerzel)).thenReturn(true);
 
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
-				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
-
 		assertThatThrownBy(() -> service.create(dto))
 				.isInstanceOf(ApiOperationException.class)
 				.hasMessageContaining("Das Kürzel EXIST wird bereits verwendet")
@@ -155,9 +149,6 @@ class MerkmalServiceTest {
 		dto.bezeichnung = "Test";
 		dto.istSchulmerkmal = false;
 		dto.istSchuelermerkmal = false;
-
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
-				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		assertThatThrownBy(() -> service.create(dto))
 				.isInstanceOf(ApiOperationException.class)
@@ -187,9 +178,6 @@ class MerkmalServiceTest {
 		when(repository.bezeichnungIsAlreadyUsedPatch("Neue Bezeichnung", id)).thenReturn(false);
 		when(mapper.toApi(entity)).thenReturn(apiMerkmal);
 
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
-				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
-
 		final var result = service.patch(id, dto);
 
 		assertThat(result)
@@ -216,9 +204,6 @@ class MerkmalServiceTest {
 		when(repository.getById(id)).thenReturn(entity);
 		when(repository.bezeichnungIsAlreadyUsedPatch("Existiert", id)).thenReturn(true);
 
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
-				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
-
 		assertThatThrownBy(() -> service.patch(id, dto))
 				.isInstanceOf(ApiOperationException.class)
 				.hasMessageContaining("Die Bezeichnung Existiert wird bereits verwendet");
@@ -236,9 +221,6 @@ class MerkmalServiceTest {
 
 		when(repository.findListByIds(ids)).thenReturn(entities);
 		when(repository.delete(entities)).thenReturn(entities);
-
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
-				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		final var result = service.delete(ids);
 
@@ -260,18 +242,13 @@ class MerkmalServiceTest {
 	@DisplayName("delete | Leere Liste")
 	void delete_emptyList() {
 		final var ids = List.<Long>of();
-
 		when(repository.findListByIds(ids)).thenReturn(List.of());
-
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
-				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		final var result = service.delete(ids);
 
 		assertThat(result)
 				.isNotNull()
 				.isEmpty();
-
 		verify(repository, times(1)).findListByIds(ids);
 	}
 }

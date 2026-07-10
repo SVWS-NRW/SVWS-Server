@@ -1,0 +1,158 @@
+package de.svws_nrw.service.schule.kataloge.fachklasse;
+
+import java.util.Comparator;
+import java.util.List;
+
+import de.svws_nrw.asd.types.schule.Fachklasse;
+import de.svws_nrw.core.data.SimpleOperationResponse;
+import de.svws_nrw.core.data.schule.FachklasseEintrag;
+import de.svws_nrw.data.TransactionSupport;
+import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.mapper.schule.kataloge.fachklasse.FachklasseMapper;
+import de.svws_nrw.repo.schule.kataloge.fachklasse.FachklasseRepository;
+import de.svws_nrw.service.schule.SchuleService;
+import jakarta.ws.rs.core.Response;
+
+/**
+ * Service Klasse für die Verwaltung von Fachklassen
+ */
+public final class FachklasseService {
+
+	private static final String BEZEICHNUNG_WIRD_BEREITS_VERWENDET = "Die Bezeichnung %s wird bereits verwendet.";
+	private static final String KUERZEL_WIRD_BEREITS_VERWENDET = "Das Kürzel %s wird bereits verwendet.";
+
+	private final FachklasseRepository repo;
+	private final FachklasseMapper mapper;
+	private final SchuleService schuleService;
+
+
+	/**
+	 * @param repo {@link FachklasseRepository}
+	 * @param mapper {@link FachklasseMapper}
+	 * @param schuleService {@link SchuleService}
+	 */
+	public FachklasseService(final FachklasseRepository repo, final FachklasseMapper mapper, final SchuleService schuleService) {
+		this.repo = repo;
+		this.mapper = mapper;
+		this.schuleService = schuleService;
+	}
+
+	/**
+	 * Gibt alle Fachklassen des schulinternen Katalogs zurück.
+	 *
+	 * @return Liste aller {@link FachklasseEintrag}-DTOs, sortiert nach Datenbankreihenfolge
+	 */
+	public List<FachklasseEintrag> getAll() {
+		return this.repo.getAll().stream()
+				.map(mapper::toApi)
+				.toList();
+	}
+
+	/**
+	 * Legt eine neue Fachklasse im schulinternen Katalog an.
+	 * Validiert vor dem Anlegen die Eindeutigkeit von Bezeichnung und Kürzel
+	 * sowie die Existenz der referenzierten {@code idFachklasse} im CoreType-Katalog.
+	 *
+	 * @param dto der {@link FachklasseEintragCreateRequest} mit den Pflichtfeldern
+	 * @return der {@link FachklasseEintrag} der neu angelegten Fachklasse
+	 * @throws ApiOperationException mit {@code 400 BAD_REQUEST} wenn Bezeichnung oder Kürzel
+	 *                               bereits vergeben sind oder die {@code idFachklasse} unbekannt ist
+	 */
+	public FachklasseEintrag create(final FachklasseEintragCreateRequest dto) {
+		return TransactionSupport.transactional(() -> {
+			this.validateCreate(dto);
+			final var schuljahr = schuleService.getSchuljahr();
+			final var fachklasse = mapper.toDomain(dto, schuljahr);
+			final var created = repo.create(fachklasse);
+			return mapper.toApi(created);
+		});
+	}
+
+	/**
+	 * Aktualisiert eine bestehende Fachklasse partiell anhand der im {@link FachklasseEintragPatchRequest}
+	 * gesetzten Felder. Felder mit {@code undefined}-Wert bleiben unverändert.
+	 * Ist {@code idFachklasse} gesetzt, werden die CoreType-abhängigen Felder neu aufgelöst.
+	 *
+	 * @param id  die ID der zu aktualisierenden Fachklasse
+	 * @param dto der {@link FachklasseEintragPatchRequest} mit den zu ändernden Feldern
+	 * @return der aktualisierte {@link FachklasseEintrag}
+	 * @throws ApiOperationException mit {@code 404 NOT_FOUND} wenn keine Fachklasse zur {@code id} existiert,
+	 *                               mit {@code 400 BAD_REQUEST} wenn Bezeichnung oder Kürzel bereits vergeben sind
+	 *                               oder die {@code idFachklasse} unbekannt ist
+	 */
+	public FachklasseEintrag patch(final long id, final FachklasseEintragPatchRequest dto) {
+		return TransactionSupport.transactional(() -> {
+			final var entity = repo.getById(id);
+			validatePatch(dto, id);
+			final var schuljahr = schuleService.getSchuljahr();
+			mapper.patch(dto, schuljahr, entity);
+			return this.mapper.toApi(entity);
+		});
+	}
+
+	/**
+	 * Löscht die Fachklassen mit den angegebenen IDs.
+	 * Nicht gefundene IDs werden stillschweigend ignoriert.
+	 * Jeder Eintrag in der Rückgabeliste enthält die ID und ob die Löschung erfolgreich war.
+	 *
+	 * @param idsToDelete Liste der zu löschenden Fachklassen-IDs
+	 * @return Liste von {@link SimpleOperationResponse}-Einträgen, aufsteigend nach ID sortiert
+	 */
+	public List<SimpleOperationResponse> delete(final List<Long> idsToDelete) {
+		return TransactionSupport.transactional(() -> {
+			final var entitiesToDelete = repo.findListByIds(idsToDelete);
+
+			return repo.delete(entitiesToDelete)
+					.stream()
+					.map(merkmal -> createResponseLog(merkmal.id))
+					.sorted(Comparator.comparingLong(response -> response.id))
+					.toList();
+		});
+	}
+
+	private void validateCreate(final FachklasseEintragCreateRequest dto) {
+		validateUniqueBezeichnung(dto.bezeichnung, null);
+		validateUniqueKuerzel(dto.kuerzel, null);
+		validateIdFachklasse(dto.idFachklasse);
+	}
+
+	private void validatePatch(final FachklasseEintragPatchRequest dto, final long id) {
+		dto.bezeichnung.ifPresent(bezeichnung -> validateUniqueBezeichnung(bezeichnung, id));
+		dto.kuerzel.ifPresent(kuerzel -> validateUniqueKuerzel(kuerzel, id));
+		dto.idFachklasse.ifPresent(this::validateIdFachklasse);
+	}
+
+	private void validateIdFachklasse(final Long idFachklasse) {
+		if (Fachklasse.data().getEintragByID(idFachklasse) == null) {
+			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Keine Fachklasse für die id %d gefunden".formatted(idFachklasse));
+		}
+	}
+
+	private void validateUniqueBezeichnung(final String bezeichnung, final Long idToExclude) {
+		final var exists = (idToExclude == null)
+				? repo.bezeichnungIsAlreadyUsedCreate(bezeichnung)
+				: repo.bezeichnungIsAlreadyUsedPatch(bezeichnung, idToExclude);
+
+		if (exists) {
+			throw new ApiOperationException(Response.Status.BAD_REQUEST, BEZEICHNUNG_WIRD_BEREITS_VERWENDET.formatted(bezeichnung));
+		}
+	}
+
+	private void validateUniqueKuerzel(final String kuerzel, final Long idToExclude) {
+		final var exists = (idToExclude == null)
+				? repo.kuerzelIsAlreadyUsedCreate(kuerzel)
+				: repo.kuerzelIsAlreadyUsedPatch(kuerzel, idToExclude);
+
+		if (exists) {
+			throw new ApiOperationException(Response.Status.BAD_REQUEST, KUERZEL_WIRD_BEREITS_VERWENDET.formatted(kuerzel));
+		}
+	}
+
+	private static SimpleOperationResponse createResponseLog(final long id) {
+		final var log = new SimpleOperationResponse();
+		log.id = id;
+		log.success = true;
+		return log;
+	}
+
+}

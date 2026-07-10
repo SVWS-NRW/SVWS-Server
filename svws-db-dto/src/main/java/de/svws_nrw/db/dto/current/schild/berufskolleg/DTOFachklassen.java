@@ -26,26 +26,26 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Fachklassen")
-@JsonPropertyOrder({"ID", "BKIndex", "FKS", "AP", "kuerzel", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar", "Kennung", "FKS_AP_SIM", "BKIndexTyp", "Beschreibung_W", "Status", "Lernfelder", "DQR_Niveau", "Ebene1Klartext", "Ebene2Klartext", "Ebene3Klartext"})
+@JsonPropertyOrder({"id", "BKIndex", "FKS", "AP", "kuerzel", "bezeichnung", "sortierung", "istSichtbar", "Aenderbar", "Kennung", "FKS_AP_SIM", "BKIndexTyp", "Beschreibung_W", "Status", "Lernfelder", "DQR_Niveau", "Ebene1Klartext", "Ebene2Klartext", "Ebene3Klartext"})
 public final class DTOFachklassen {
 
 	/** Die Datenbankabfrage für alle DTOs */
 	public static final String QUERY_ALL = "SELECT e FROM DTOFachklassen e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM DTOFachklassen e WHERE e.ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM DTOFachklassen e WHERE e.id = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM DTOFachklassen e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOFachklassen e WHERE e.id IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOFachklassen e WHERE e.ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOFachklassen e WHERE e.id IS NOT NULL";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
-	public static final String QUERY_BY_ID = "SELECT e FROM DTOFachklassen e WHERE e.ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes id */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOFachklassen e WHERE e.id = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
-	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOFachklassen e WHERE e.ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes id */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOFachklassen e WHERE e.id IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes BKIndex */
 	public static final String QUERY_BY_BKINDEX = "SELECT e FROM DTOFachklassen e WHERE e.BKIndex = ?1";
@@ -71,23 +71,23 @@ public final class DTOFachklassen {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes kuerzel */
 	public static final String QUERY_LIST_BY_KUERZEL = "SELECT e FROM DTOFachklassen e WHERE e.kuerzel IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
-	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOFachklassen e WHERE e.Bezeichnung = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes bezeichnung */
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOFachklassen e WHERE e.bezeichnung = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
-	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOFachklassen e WHERE e.Bezeichnung IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes bezeichnung */
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOFachklassen e WHERE e.bezeichnung IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
-	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOFachklassen e WHERE e.Sortierung = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOFachklassen e WHERE e.sortierung = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
-	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOFachklassen e WHERE e.Sortierung IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOFachklassen e WHERE e.sortierung IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
-	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM DTOFachklassen e WHERE e.Sichtbar = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes istSichtbar */
+	public static final String QUERY_BY_ISTSICHTBAR = "SELECT e FROM DTOFachklassen e WHERE e.istSichtbar = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
-	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM DTOFachklassen e WHERE e.Sichtbar IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes istSichtbar */
+	public static final String QUERY_LIST_BY_ISTSICHTBAR = "SELECT e FROM DTOFachklassen e WHERE e.istSichtbar IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Aenderbar */
 	public static final String QUERY_BY_AENDERBAR = "SELECT e FROM DTOFachklassen e WHERE e.Aenderbar = ?1";
@@ -159,7 +159,7 @@ public final class DTOFachklassen {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public long ID;
+	public long id;
 
 	/** BKIndex aus der Statkue bildet mit FKS und AP eine eindeutige Kombination IT.NRW */
 	@Column(name = "BKIndex")
@@ -184,12 +184,12 @@ public final class DTOFachklassen {
 	/** Bezeichnung der Fachklasse Text */
 	@Column(name = "Bezeichnung")
 	@JsonProperty
-	public String Bezeichnung;
+	public String bezeichnung;
 
 	/** Sortiernummer der Fachklasse */
 	@Column(name = "Sortierung")
 	@JsonProperty
-	public Integer Sortierung;
+	public Integer sortierung;
 
 	/** steuert die Sichtbarkeit der Fachklasse */
 	@Column(name = "Sichtbar")
@@ -197,7 +197,7 @@ public final class DTOFachklassen {
 	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
 	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
 	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
-	public Boolean Sichtbar;
+	public Boolean istSichtbar;
 
 	/** Gibt an ob die Fachklasse änderbar ist */
 	@Column(name = "Aenderbar")
@@ -266,10 +266,10 @@ public final class DTOFachklassen {
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOFachklassen ohne eine Initialisierung der Attribute.
-	 * @param ID   der Wert für das Attribut ID
+	 * @param id   der Wert für das Attribut id
 	 */
-	public DTOFachklassen(final long ID) {
-		this.ID = ID;
+	public DTOFachklassen(final long id) {
+		this.id = id;
 	}
 
 
@@ -285,14 +285,14 @@ public final class DTOFachklassen {
 			return false;
 		}
 		DTOFachklassen other = (DTOFachklassen) obj;
-		return ID == other.ID;
+		return id == other.id;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Long.hashCode(ID);
+		result = prime * result + Long.hashCode(id);
 		return result;
 	}
 
@@ -304,7 +304,7 @@ public final class DTOFachklassen {
 	 */
 	@Override
 	public String toString() {
-		return "DTOFachklassen(ID=" + this.ID + ", BKIndex=" + this.BKIndex + ", FKS=" + this.FKS + ", AP=" + this.AP + ", kuerzel=" + this.kuerzel + ", Bezeichnung=" + this.Bezeichnung + ", Sortierung=" + this.Sortierung + ", Sichtbar=" + this.Sichtbar + ", Aenderbar=" + this.Aenderbar + ", Kennung=" + this.Kennung + ", FKS_AP_SIM=" + this.FKS_AP_SIM + ", BKIndexTyp=" + this.BKIndexTyp + ", Beschreibung_W=" + this.Beschreibung_W + ", Status=" + this.Status + ", Lernfelder=" + this.Lernfelder + ", DQR_Niveau=" + this.DQR_Niveau + ", Ebene1Klartext=" + this.Ebene1Klartext + ", Ebene2Klartext=" + this.Ebene2Klartext + ", Ebene3Klartext=" + this.Ebene3Klartext + ")";
+		return "DTOFachklassen(id=" + this.id + ", BKIndex=" + this.BKIndex + ", FKS=" + this.FKS + ", AP=" + this.AP + ", kuerzel=" + this.kuerzel + ", bezeichnung=" + this.bezeichnung + ", sortierung=" + this.sortierung + ", istSichtbar=" + this.istSichtbar + ", Aenderbar=" + this.Aenderbar + ", Kennung=" + this.Kennung + ", FKS_AP_SIM=" + this.FKS_AP_SIM + ", BKIndexTyp=" + this.BKIndexTyp + ", Beschreibung_W=" + this.Beschreibung_W + ", Status=" + this.Status + ", Lernfelder=" + this.Lernfelder + ", DQR_Niveau=" + this.DQR_Niveau + ", Ebene1Klartext=" + this.Ebene1Klartext + ", Ebene2Klartext=" + this.Ebene2Klartext + ", Ebene3Klartext=" + this.Ebene3Klartext + ")";
 	}
 
 }

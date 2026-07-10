@@ -54,7 +54,7 @@ public final class FachStatistikService {
 	 * @return die Liste zu allen statistik-Relevanten Daten der Fächer
 	 */
 	public @NotNull List<FachStatistikGesamt> getList() {
-		final var idSchuljahresabschnitt = schuleRepository.getSchuljahresabschnitt();
+		final var idSchuljahresabschnitt = schuleRepository.getIdSchuljahresabschnitt();
 		final var schuljahresabschnitt = schuljahresabschnitteService.getById(idSchuljahresabschnitt);
 		return fachRepository.getAll().stream().map(f -> map(f, schuljahresabschnitt.schuljahr)).toList();
 	}

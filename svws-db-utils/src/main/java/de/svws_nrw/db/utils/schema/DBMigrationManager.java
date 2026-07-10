@@ -1115,7 +1115,7 @@ public final class DBMigrationManager {
 	private boolean checkEigeneSchuleFachklassen(final List<MigrationDTOFachklassen> entities) {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOFachklassen daten = entities.get(i);
-			fachklassenIDs.add(daten.ID);
+			fachklassenIDs.add(daten.id);
 		}
 		return true;
 	}

@@ -13,7 +13,7 @@ public interface SchuleRepository extends Repository<DTOEigeneSchule> {
 	 *
 	 * @return der aktuelle Schuljahresabschnitt der Schule
 	 */
-	long getSchuljahresabschnitt();
+	long getIdSchuljahresabschnitt();
 
 	/**
 	 * Gibt die Schulnummer der Schule zurück.

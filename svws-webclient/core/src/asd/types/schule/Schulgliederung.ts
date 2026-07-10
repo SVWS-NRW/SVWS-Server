@@ -728,12 +728,12 @@ export class Schulgliederung extends JavaEnum<Schulgliederung> implements CoreTy
 	 *
 	 * @return Liste von {@link Schulgliederung}
 	 */
-	public static getBySchuljahrAndBKIndex(schuljahr: number, bkIndex: number): List<Schulgliederung> | null {
-		const schulgliederungenOfBKIndex: List<Schulgliederung> | null = new ArrayList<Schulgliederung>();
+	public static getBySchuljahrAndBKIndex(schuljahr: number, bkIndex: number): List<SchulgliederungKatalogEintrag> | null {
+		const schulgliederungenOfBKIndex: List<SchulgliederungKatalogEintrag> | null = new ArrayList<SchulgliederungKatalogEintrag>();
 		for (const schulgliederung of Schulgliederung.data().getWerte()) {
 			const schulgliederungEintrag: SchulgliederungKatalogEintrag | null = schulgliederung.daten(schuljahr);
 			if ((schulgliederungEintrag !== null) && (schulgliederungEintrag.bkIndex !== null) && (schulgliederungEintrag.bkIndex === bkIndex)) {
-				schulgliederungenOfBKIndex.add(schulgliederung);
+				schulgliederungenOfBKIndex.add(schulgliederungEintrag);
 			}
 		}
 		return schulgliederungenOfBKIndex;

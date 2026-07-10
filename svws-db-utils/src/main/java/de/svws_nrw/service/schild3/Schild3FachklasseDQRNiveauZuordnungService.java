@@ -41,7 +41,7 @@ public final class Schild3FachklasseDQRNiveauZuordnungService {
 	 * @return Liste von DTO's
 	 */
 	public List<Schild3FachklasseDQRNiveauZuordnung> getAll() {
-		final var aktuellerSchuljahresabschnitt = schuljahresabschnittService.getById(schuleRepository.getSchuljahresabschnitt());
+		final var aktuellerSchuljahresabschnitt = schuljahresabschnittService.getById(schuleRepository.getIdSchuljahresabschnitt());
 		final var fachklassenWerte = Fachklasse.data().getWerte();
 		return fachklassenWerte.stream()
 				.map(e -> e.daten(aktuellerSchuljahresabschnitt.schuljahr))
@@ -61,7 +61,7 @@ public final class Schild3FachklasseDQRNiveauZuordnungService {
 	private Stream<Schild3FachklasseDQRNiveauZuordnung> mapFachklasseToSchild3DQRNiveauZuordnungenAsStream(final FachklasseKatalogEintrag fachklasse,
 			final Schuljahresabschnitt aktuellerSchuljahresabschnitt) {
 		final var schulgliederungenByBkIndex = Schulgliederung.getBySchuljahrAndBKIndex(aktuellerSchuljahresabschnitt.schuljahr, fachklasse.bkIndex);
-		return schulgliederungenByBkIndex.stream().map(sg -> mapper.toApi(fachklasse, sg.daten(aktuellerSchuljahresabschnitt.schuljahr).kuerzel));
+		return schulgliederungenByBkIndex.stream().map(sg -> mapper.toApi(fachklasse, sg.kuerzel));
 	}
 
 }

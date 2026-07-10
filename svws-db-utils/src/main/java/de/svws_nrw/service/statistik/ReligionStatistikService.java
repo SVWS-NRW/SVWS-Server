@@ -55,7 +55,7 @@ public final class ReligionStatistikService {
 	 * @return die Liste zu allen statistik-Relevanten Daten der Religionen
 	 */
 	public @NotNull List<ReligionStatistikGesamt> getList() {
-		final var idSchuljahresabschnitt = schuleRepository.getSchuljahresabschnitt();
+		final var idSchuljahresabschnitt = schuleRepository.getIdSchuljahresabschnitt();
 		final var schuljahresabschnitt = schuljahresabschnitteService.getById(idSchuljahresabschnitt);
 		return religionRepository.getAll().stream().map(f -> map(f, schuljahresabschnitt.schuljahr)).toList();
 	}

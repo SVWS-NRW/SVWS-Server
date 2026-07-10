@@ -55,7 +55,7 @@ public final class FoerderschwerpunkteStatistikService {
 	 * @return die Liste aller Förderschwerpunkte
 	 */
 	public @NotNull List<FoerderschwerpunktStatistikGesamt> getList() {
-		final var idSchuljahresabschnitt = schuleRepository.getSchuljahresabschnitt();
+		final var idSchuljahresabschnitt = schuleRepository.getIdSchuljahresabschnitt();
 		final var schuljahresabschnitt = schuljahresabschnitteService.getById(idSchuljahresabschnitt);
 		return foerderschwerpunkteRepository.getAll().stream().map(f -> map(f, schuljahresabschnitt.schuljahr)).toList();
 	}

@@ -13,6 +13,7 @@ import de.svws_nrw.asd.types.schule.Kindergartenbesuch;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.mapper.JsonNullableMapper;
 import de.svws_nrw.service.schueler.schulbesuch.SchulbesuchPatchRequest;
+import org.apache.poi.util.StringUtil;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Context;
@@ -69,6 +70,7 @@ public interface SchulbesuchMapper {
 	@Mapping(source = "entity.DauerKindergartenbesuch",   		target = "idDauerKindergartenbesuch", 					qualifiedByName = "mapIdKindergartenbesuch")
 	@Mapping(source = "entity.LSSchulform",   					target = "idHerkunftSchulformVorherigeSchule", 			qualifiedByName = "mapIdHerkunftSchulformVorherigeSchule")
 	@Mapping(source = "entity.LSSchulform",   					target = "idHerkunftSonstigeVorherigeSchule", 			qualifiedByName = "mapIdHerkunftSonstigeVorherigeSchule")
+	@Mapping(source = "entity.LSFachklKennung",   				target = "schluesselCoreTypeFachklasseVorherigeSchule", qualifiedByName = "mapSchluesselFachklasse")
 	SchuelerSchulbesuchsdaten toApi(
 			DTOSchueler entity,
 			@Context SchulbesuchMappingContext ctx);
@@ -100,25 +102,6 @@ public interface SchulbesuchMapper {
 	}
 
 	/**
-	 * Rekonstruiert den ursprünglichen Fachklassen-Schlüssel (z.B. '10-17902')
-	 * aus dem gespeicherten Feld {@link DTOSchueler#LSFachklKennung} (z.B. '10-179-02')
-	 * und setzt ihn auf das Zielobjekt.
-	 *
-	 * @param entity die Schüler-Entity mit dem Quellfeld
-	 * @param target das Zielobjekt der Mapping-Operation
-	 */
-	@AfterMapping
-	default void mapFachklasse(final DTOSchueler entity, @MappingTarget final SchuelerSchulbesuchsdaten target) {
-		final var kennung = entity.LSFachklKennung;
-		if ((kennung == null) || kennung.isBlank()) {
-			return;
-		}
-		// "10-179-02" -> letzten Bindestrich entfernen -> "10-17902"
-		final int lastDash = kennung.lastIndexOf("-");
-		target.schluesselCoreTypeFachklasseVorherigeSchule = kennung.substring(0, lastDash) + kennung.substring(lastDash + 1);
-	}
-
-	/**
 	 * Setzt nach dem Mapping die Merkmale und bisherigen Schulen aus dem {@link SchulbesuchMappingContext}.
 	 *
 	 * @param ctx    der Kontext mit den Listen
@@ -132,6 +115,22 @@ public interface SchulbesuchMapper {
 		target.bisherBesuchteSchulen = ctx.bisherigeSchulen();
 	}
 
+	/**
+	 * Rekonstruiert den ursprünglichen Fachklassen-Schlüssel (z.B. '10-17902')
+	 * aus dem gespeicherten Feld {@link DTOSchueler#LSFachklKennung} (z.B. '10-179-02')
+	 *
+	 * @param kennung die Kennung der Fachklasse
+	 * @return der schluessel der Fachklasse
+	 */
+	@Named("mapSchluesselFachklasse")
+	default String mapSchluesselFachklasse(final String kennung) {
+		if (StringUtil.isBlank(kennung)) {
+			return null;
+		}
+		// "10-179-02" -> letzten Bindestrich entfernen -> "10-17902"
+		final int lastDash = kennung.lastIndexOf("-");
+		return kennung.substring(0, lastDash) + kennung.substring(lastDash + 1);
+	}
 
 	/**
 	 * Löst eine Schulnummer auf die interne Schul-ID auf.

@@ -21,7 +21,7 @@ public final class SchuleRepositoryImpl extends RepositoryImpl<DTOEigeneSchule> 
 
 
 	@Override
-	public long getSchuljahresabschnitt() {
+	public long getIdSchuljahresabschnitt() {
 		return super.getFirst().Schuljahresabschnitts_ID;
 	}
 

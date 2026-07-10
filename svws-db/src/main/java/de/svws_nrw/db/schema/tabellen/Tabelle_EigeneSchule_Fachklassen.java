@@ -13,6 +13,7 @@ public class Tabelle_EigeneSchule_Fachklassen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public final SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
+			.setJavaName("id")
 			.setNotNull()
 			.setJavaComment("ID der Fachklasse im schulinternen Katalog der Fachklassen nur BK und SBK");
 
@@ -39,16 +40,19 @@ public class Tabelle_EigeneSchule_Fachklassen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Bezeichnung */
 	public final SchemaTabelleSpalte col_Bezeichnung = add("Bezeichnung", SchemaDatentypen.VARCHAR, false)
+			.setJavaName("bezeichnung")
 			.setDatenlaenge(100)
 			.setJavaComment("Bezeichnung der Fachklasse Text");
 
 	/** Die Definition der Tabellenspalte Sortierung */
 	public final SchemaTabelleSpalte col_Sortierung = add("Sortierung", SchemaDatentypen.INT, false)
+			.setJavaName("sortierung")
 			.setDefault("32000")
 			.setJavaComment("Sortiernummer der Fachklasse");
 
 	/** Die Definition der Tabellenspalte Sichtbar */
 	public final SchemaTabelleSpalte col_Sichtbar = add("Sichtbar", SchemaDatentypen.VARCHAR, false)
+			.setJavaName("istSichtbar")
 			.setDatenlaenge(1)
 			.setDefault("+")
 			.setConverter(BooleanPlusMinusDefaultPlusConverter.class)

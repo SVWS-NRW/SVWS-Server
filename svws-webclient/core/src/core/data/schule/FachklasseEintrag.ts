@@ -1,0 +1,115 @@
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
+
+export class FachklasseEintrag extends JavaObject {
+
+	/**
+	 * Die ID
+	 */
+	public id: number = 0;
+
+	/**
+	 * Die Bezeichnung
+	 */
+	public bezeichnung: string = "";
+
+	/**
+	 * Das Kürzel
+	 */
+	public kuerzel: string = "";
+
+	/**
+	 * Die ID der Fachklasse (CoreType)
+	 */
+	public idFachklasse: number | null = null;
+
+	/**
+	 * Die Sichtbarkeit
+	 */
+	public istSichtbar: boolean = false;
+
+	/**
+	 * Die Sortierung
+	 */
+	public sortierung: number = 0;
+
+
+	public constructor() {
+		super();
+	}
+
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schule.FachklasseEintrag';
+	}
+
+	isTranspiledInstanceOf(name: string): boolean {
+		return ['de.svws_nrw.core.data.schule.FachklasseEintrag'].includes(name);
+	}
+
+	public static readonly class = new Class<FachklasseEintrag>('de.svws_nrw.core.data.schule.FachklasseEintrag');
+
+	public static transpilerFromJSON(json: string): FachklasseEintrag {
+		const obj = JSON.parse(json) as Partial<FachklasseEintrag>;
+		const result = new FachklasseEintrag();
+		if (obj.id === undefined)
+			throw new Error('invalid json format, missing attribute id');
+		result.id = obj.id;
+		if (obj.bezeichnung === undefined)
+			throw new Error('invalid json format, missing attribute bezeichnung');
+		result.bezeichnung = obj.bezeichnung;
+		if (obj.kuerzel === undefined)
+			throw new Error('invalid json format, missing attribute kuerzel');
+		result.kuerzel = obj.kuerzel;
+		result.idFachklasse = (obj.idFachklasse === undefined) ? null : obj.idFachklasse === null ? null : obj.idFachklasse;
+		if (obj.istSichtbar === undefined)
+			throw new Error('invalid json format, missing attribute istSichtbar');
+		result.istSichtbar = obj.istSichtbar;
+		if (obj.sortierung === undefined)
+			throw new Error('invalid json format, missing attribute sortierung');
+		result.sortierung = obj.sortierung;
+		return result;
+	}
+
+	public static transpilerToJSON(obj: FachklasseEintrag): string {
+		let result = '{';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"idFachklasse" : ' + ((obj.idFachklasse === null) ? 'null' : obj.idFachklasse.toString()) + ',';
+		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
+		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj: Partial<FachklasseEintrag>): string {
+		let result = '{';
+		if (obj.id !== undefined) {
+			result += '"id" : ' + obj.id.toString() + ',';
+		}
+		if (obj.bezeichnung !== undefined) {
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		}
+		if (obj.kuerzel !== undefined) {
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		}
+		if (obj.idFachklasse !== undefined) {
+			result += '"idFachklasse" : ' + ((obj.idFachklasse === null) ? 'null' : obj.idFachklasse.toString()) + ',';
+		}
+		if (obj.istSichtbar !== undefined) {
+			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
+		}
+		if (obj.sortierung !== undefined) {
+			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		}
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+}
+
+export function cast_de_svws_nrw_core_data_schule_FachklasseEintrag(obj: unknown): FachklasseEintrag {
+	return obj as FachklasseEintrag;
+}
