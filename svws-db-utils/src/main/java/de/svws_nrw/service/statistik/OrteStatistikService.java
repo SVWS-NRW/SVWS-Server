@@ -30,6 +30,7 @@ public final class OrteStatistikService {
 		daten.id = dto.ID;
 		daten.plz = dto.PLZ;
 		daten.ortsname = dto.Bezeichnung;
+		daten.land = dto.Land;
 		return daten;
 	}
 

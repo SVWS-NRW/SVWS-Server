@@ -24,4 +24,8 @@ public class OrteStatistikGesamt {
 	/** Der Name des Ortes. */
 	@Schema(description = "der Name des Ortes", example = "Troisdorf")
 	public String ortsname;
+
+	/** Der Name des Landes. */
+	@Schema(description = "der Name des Landes", example = "NW")
+	public String land;
 }
