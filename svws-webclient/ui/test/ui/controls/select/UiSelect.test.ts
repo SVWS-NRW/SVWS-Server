@@ -2,11 +2,21 @@ import { DOMWrapper, mount } from "@vue/test-utils";
 import UiSelect from "../../../../src/ui/controls/select/UiSelect.vue";
 import { describe, test, expect, vi, beforeAll } from "vitest";
 import { SelectManager } from "../../../../src/ui/controls/select/manager/SelectManager";
+import { CoreTypeSelectManager } from "../../../../src/ui/controls/select/manager/CoreTypeSelectManager";
 import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
 import { BasicValidator } from "../../../../../core/src/asd/validate/BasicValidator";
 import type { ValidatorFehler } from "../../../../../core/src/asd/validate/ValidatorFehler";
 import { ValidatorFehlerart } from "../../../../../core/src/asd/validate/ValidatorFehlerart";
 import type { List } from "../../../../../core/src/java/util/List";
+import { JsonCoreTypeReaderStatic } from "../../../../../core/src/asd/utils/JsonCoreTypeReaderStatic";
+import { Klassenart } from "../../../../../core/src/asd/types/klassen/Klassenart";
+import { Schulform } from "../../../../../core/src/asd/types/schule/Schulform";
+import type { KlassenartKatalogEintrag } from "../../../../../core/src/asd/data/klassen/KlassenartKatalogEintrag";
+
+const reader = new JsonCoreTypeReaderStatic();
+vi.mock("../../../../../../svws-asd/src/main/resources/de/svws_nrw/asd/types/klassen/Klassenart.json", async () => ({
+	default: (await import("./manager/Klassenart.mock.json")).default,
+}));
 
 beforeAll(() => {
 	HTMLElement.prototype.showPopover = vi.fn(function(this: HTMLElement) {
@@ -15,6 +25,8 @@ beforeAll(() => {
 	HTMLElement.prototype.hidePopover = vi.fn(function(this: HTMLElement) {
 		delete this.dataset.popoverOpen;
 	});
+
+	reader.readAll();
 });
 
 describe.concurrent("Komponente kann gemounted werden", () => {
@@ -100,7 +112,7 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 
 	test("Mit Prop 'deepSearchAttributes' werden bei einer Suche auch Treffer in den Attributen angezeigt", async () => {
 		const { manager } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager: manager, searchable: true, deepSearchAttributes: ['color'] } });
+		const wrapper = mount(UiSelect<Car>, { props: { manager: manager, searchable: true, deepSearchAttributes: ['color'] } });
 		const input = wrapper.find('input.ui-select--search');
 		await input.setValue('red');
 		await wrapper.vm.$nextTick();
@@ -112,7 +124,7 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 
 	test("Mit Prop 'required = false' wird die Komponente ohne Stern-Icon angezeigt", () => {
 		const { manager } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager: manager, required: false } });
+		const wrapper = mount(UiSelect<Car>, { props: { manager: manager, required: false } });
 		const labelSpan = wrapper.find('[id^="uiSelectLabel_"]');
 		const labelWrapper = new DOMWrapper(labelSpan.element.parentElement);
 
@@ -123,7 +135,7 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 
 		test("wird die Komponente mit Stern-Icon angezeigt", () => {
 			const { manager } = createTestData();
-			const wrapper = mount(UiSelect<cars>, { props: { manager: manager, required: true } });
+			const wrapper = mount(UiSelect<Car>, { props: { manager: manager, required: true } });
 			const labelSpan = wrapper.find('[id^="uiSelectLabel_"]');
 			const labelWrapper = new DOMWrapper(labelSpan.element.parentElement);
 
@@ -133,62 +145,62 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 
 	describe.concurrent("Mit Prop 'readonly = false'", () => {
 		test("wird kein readonly-Icon angezeigt", () => {
-			const wrapper = mount(UiSelect<cars>, { props: { manager: createTestData().manager, readonly: false } });
+			const wrapper = mount(UiSelect<Car>, { props: { manager: createTestData().manager, readonly: false } });
 			expect(wrapper.find('.ui-select--label--readonly').exists()).toBeFalsy();
 		});
 
 		test("und 'headless = false' werden Lösch- und Aufklapp-Icons rechts angezeigt", () => {
-			const wrapper = mount(UiSelect<cars>, { props: { manager: createTestData().manager, headless: false, readonly: false } });
+			const wrapper = mount(UiSelect<Car>, { props: { manager: createTestData().manager, headless: false, readonly: false } });
 			const iconsRight = wrapper.find('.ui-select--icons-right');
 			expect(iconsRight.find('span.i-ri-expand-up-down-line').exists()).toBeTruthy();
 			expect(iconsRight.find('button span.i-ri-close-line').exists()).toBeTruthy();
 		});
 
 		test("und 'headless = true' werden Lösch- und Aufklapp-Icons links angezeigt", () => {
-			const wrapper = mount(UiSelect<cars>, { props: { manager: createTestData().manager, headless: true, readonly: false } });
+			const wrapper = mount(UiSelect<Car>, { props: { manager: createTestData().manager, headless: true, readonly: false } });
 			const iconsLeft = wrapper.find('.ui-select--icons-left');
 			expect(iconsLeft.find('span.i-ri-expand-up-down-line').exists()).toBeTruthy();
 			expect(iconsLeft.find('button span.i-ri-close-line').exists()).toBeTruthy();
 		});
 
 		test("und 'searchable = true' wird das Suchfeld angezeigt", () => {
-			const wrapper = mount(UiSelect<cars>, { props: { manager: createTestData().manager, searchable: true, readonly: false } });
+			const wrapper = mount(UiSelect<Car>, { props: { manager: createTestData().manager, searchable: true, readonly: false } });
 			expect(wrapper.find('input.ui-select--search').exists()).toBeTruthy();
 		});
 
 		test("existiert das Dropdown", () => {
-			const wrapper = mount(UiSelect<cars>, { props: { manager: createTestData().manager, readonly: false } });
+			const wrapper = mount(UiSelect<Car>, { props: { manager: createTestData().manager, readonly: false } });
 			expect(wrapper.find('.ui-select--dropdown').exists()).toBeTruthy();
 		});
 	});
 
 	describe.concurrent("Mit Prop 'readonly = true'", () => {
 		test("wird das readonly-Icon angezeigt", () => {
-			const wrapper = mount(UiSelect<cars>, { props: { manager: createTestData().manager, readonly: true } });
+			const wrapper = mount(UiSelect<Car>, { props: { manager: createTestData().manager, readonly: true } });
 			const readonly = wrapper.find('.ui-select--label--readonly');
 			expect(readonly.exists()).toBeTruthy();
 			expect(readonly.find('span.i-ri-lock-line').exists()).toBeTruthy();
 		});
 
 		test("und 'headless = false' werden Lösch- und Aufklapp-Icons rechts nicht angezeigt", () => {
-			const wrapper = mount(UiSelect<cars>, { props: { manager: createTestData().manager, headless: false, readonly: true } });
+			const wrapper = mount(UiSelect<Car>, { props: { manager: createTestData().manager, headless: false, readonly: true } });
 			const iconsRight = wrapper.find('.ui-select--icons-right');
 			expect(iconsRight.exists()).toBeFalsy();
 		});
 
 		test("und 'headless = true' werden Lösch- und Aufklapp-Icons links nicht angezeigt", () => {
-			const wrapper = mount(UiSelect<cars>, { props: { manager: createTestData().manager, headless: true, readonly: true } });
+			const wrapper = mount(UiSelect<Car>, { props: { manager: createTestData().manager, headless: true, readonly: true } });
 			const iconsLeft = wrapper.find('.ui-select--icons-left');
 			expect(iconsLeft.exists()).toBeFalsy();
 		});
 
 		test("und 'searchable = true' wird das Suchfeld nicht angezeigt", () => {
-			const wrapper = mount(UiSelect<cars>, { props: { manager: createTestData().manager, readonly: true } });
+			const wrapper = mount(UiSelect<Car>, { props: { manager: createTestData().manager, readonly: true } });
 			expect(wrapper.find('input.ui-select--search').exists()).toBeFalsy();
 		});
 
 		test("existiert das Dropdown nicht", () => {
-			const wrapper = mount(UiSelect<cars>, { props: { manager: createTestData().manager, readonly: true } });
+			const wrapper = mount(UiSelect<Car>, { props: { manager: createTestData().manager, readonly: true } });
 			expect(wrapper.find('.ui-select--dropdown').exists()).toBeFalsy();
 		});
 	});
@@ -197,21 +209,21 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 		const { manager, selection } = createTestData();
 
 		test("und 'headless = false' wird kein Löschenbutton im Input rechts angezeigt", () => {
-			const wrapper = mount(UiSelect<cars>, { props: { manager, headless: false, removable: false,
+			const wrapper = mount(UiSelect<Car>, { props: { manager, headless: false, removable: false,
 				modelValue: selection } });
 			const iconsRight = wrapper.find('.ui-select--icons-right');
 			expect(iconsRight.find('span.i-ri-close-line').exists()).toBeFalsy();
 		});
 
 		test("und 'headless = true' wird kein Löschenbutton im Input links angezeigt", () => {
-			const wrapper = mount(UiSelect<cars>, { props: { manager, headless: true, removable: false,
+			const wrapper = mount(UiSelect<Car>, { props: { manager, headless: true, removable: false,
 				modelValue: selection } });
 			const iconsLeft = wrapper.find('.ui-select--icons-left');
 			expect(iconsLeft.find('span.i-ri-close-line').exists()).toBeFalsy();
 		});
 
 		test("bei einem selektierten Element ist dieses nicht löschbar", async () => {
-			const wrapper = mount(UiSelect<cars>, { props: { manager, removable: false, modelValue: selection } });
+			const wrapper = mount(UiSelect<Car>, { props: { manager, removable: false, modelValue: selection } });
 
 			const firstOption = wrapper.find('.ui-select--dropdown li');
 
@@ -226,21 +238,21 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 		const { manager, selection } = createTestData();
 
 		test("und 'headless = false' wird ein Löschenbutton im Input rechts angezeigt", () => {
-			const wrapper = mount(UiSelect<cars>, { props: { manager, headless: false, removable: true,
+			const wrapper = mount(UiSelect<Car>, { props: { manager, headless: false, removable: true,
 				modelValue: selection } });
 			const iconsRight = wrapper.find('.ui-select--icons-right');
 			expect(iconsRight.find('span.i-ri-close-line').exists()).toBeTruthy();
 		});
 
 		test("und 'headless = true' wird ein Löschenbutton in Input links angezeigt", () => {
-			const wrapper = mount(UiSelect<cars>, { props: { manager, headless: true, removable: true,
+			const wrapper = mount(UiSelect<Car>, { props: { manager, headless: true, removable: true,
 				modelValue: selection } });
 			const iconsLeft = wrapper.find('.ui-select--icons-left');
 			expect(iconsLeft.find('span.i-ri-close-line').exists()).toBeTruthy();
 		});
 
 		test("bei einem selektierten Element ist dieses löschbar", async () => {
-			const wrapper = mount(UiSelect<cars>, { props: { manager, removable: true,
+			const wrapper = mount(UiSelect<Car>, { props: { manager, removable: true,
 				modelValue: selection } });
 
 			const firstOption = wrapper.find('.ui-select--dropdown li');
@@ -257,7 +269,7 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 	test("Mit Prop 'nullable = false' wird in der Komponente kein null als v-model zugelassen", () => {
 		const { manager } = createTestData();
 
-		expect(() => mount(UiSelect<cars>, {
+		expect(() => mount(UiSelect<Car>, {
 			props: { manager, nullable: false, modelValue: null },
 		})).toThrow("Ungültiges v-model: null oder undefined bei nullable = false");
 	});
@@ -265,7 +277,7 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 	test("Mit Prop 'nullable = false' wird in der Komponente kein undefined als v-model zugelassen", () => {
 		const { manager } = createTestData();
 
-		expect(() => mount(UiSelect<cars>, {
+		expect(() => mount(UiSelect<Car>, {
 			props: { manager, nullable: false, modelValue: undefined },
 		})).toThrow("Ungültiges v-model: null oder undefined bei nullable = false");
 	});
@@ -273,14 +285,14 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 	test("Mit Prop 'nullable = true' wird in der Komponente null als v-model zugelassen", () => {
 		const { manager } = createTestData();
 
-		expect(() => mount(UiSelect<cars>, {
+		expect(() => mount(UiSelect<Car>, {
 			props: { manager, nullable: true, modelValue: null },
 		})).not.toThrow("Ungültiges v-model: null oder undefined bei nullable = false");
 	});
 	test("Mit Prop 'nullable = true' wird in der Komponente undefined als v-model zugelassen", () => {
 		const { manager } = createTestData();
 
-		expect(() => mount(UiSelect<cars>, {
+		expect(() => mount(UiSelect<Car>, {
 			props: { manager, nullable: true, modelValue: undefined },
 		})).not.toThrow("Ungültiges v-model: null oder undefined bei nullable = false");
 	});
@@ -289,7 +301,7 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 		const { manager } = createTestData();
 
 		test("wird kein Button disabled dargestellt", () => {
-			const wrapper = mount(UiSelect<cars>, { props: { manager, disabled: false } });
+			const wrapper = mount(UiSelect<Car>, { props: { manager, disabled: false } });
 			const buttons = wrapper.findAll('button');
 			for (const button of buttons) {
 				expect(button.attributes('disabled')).toBeUndefined();
@@ -297,12 +309,12 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 		});
 
 		test("und 'searchable = true' ist das Suchfeld sichtbar", () => {
-			const wrapper = mount(UiSelect<cars>, { props: { manager, searchable: true, disabled: false } });
+			const wrapper = mount(UiSelect<Car>, { props: { manager, searchable: true, disabled: false } });
 			expect(wrapper.find('input.ui-select--search').exists()).toBeTruthy();
 		});
 
 		test("ist das Dropdown sichtbar", () => {
-			const wrapper = mount(UiSelect<cars>, { props: { manager, disabled: false } });
+			const wrapper = mount(UiSelect<Car>, { props: { manager, disabled: false } });
 			expect(wrapper.find('.ui-select--dropdown').exists()).toBeTruthy();
 		});
 	});
@@ -311,7 +323,7 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 		const { manager } = createTestData();
 
 		test("werden alle Buttons disabled dargestellt", () => {
-			const wrapper = mount(UiSelect<cars>, { props: { manager, disabled: true } });
+			const wrapper = mount(UiSelect<Car>, { props: { manager, disabled: true } });
 			const buttons = wrapper.findAll('button');
 			for (const button of buttons) {
 				expect(button.attributes('disabled')).toBeDefined();
@@ -319,19 +331,19 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 		});
 
 		test("und 'searchable = true' ist das Suchfeld nicht sichtbar", () => {
-			const wrapper = mount(UiSelect<cars>, { props: { manager, searchable: true, disabled: true } });
+			const wrapper = mount(UiSelect<Car>, { props: { manager, searchable: true, disabled: true } });
 			expect(wrapper.find('input.ui-select--search').exists()).toBeFalsy();
 		});
 
 		test("ist das Dropdown nicht sichtbar", () => {
-			const wrapper = mount(UiSelect<cars>, { props: { manager, disabled: true } });
+			const wrapper = mount(UiSelect<Car>, { props: { manager, disabled: true } });
 			expect(wrapper.find('.ui-select--dropdown').exists()).toBeFalsy();
 		});
 	});
 
 	test("Mit Prop 'statistics = false' wird in der Komponente kein Statistik-Icon angezeigt", () => {
 		const { manager } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager: manager, statistics: false } });
+		const wrapper = mount(UiSelect<Car>, { props: { manager: manager, statistics: false } });
 		const statistics = wrapper.find('.ui-select--label--statistics');
 
 		expect(statistics.exists()).toBeFalsy();
@@ -339,7 +351,7 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 
 	test("Mit Prop 'statistics = true' wird in der Komponente ein Statistik-Icon angezeigt", () => {
 		const { manager } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager: manager, statistics: true } });
+		const wrapper = mount(UiSelect<Car>, { props: { manager: manager, statistics: true } });
 		const statistics = wrapper.find('.ui-select--label--statistics');
 
 		expect(statistics.find('span.i-ri-bar-chart-2-line').exists()).toBeTruthy();
@@ -347,7 +359,7 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 
 	describe.concurrent("Mit Prop 'headless = false'", () => {
 		const { manager, selection } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager, label: "Mein Label", headless: false } });
+		const wrapper = mount(UiSelect<Car>, { props: { manager, label: "Mein Label", headless: false } });
 
 		test("werden die Icons nicht links angezeigt", () => {
 			const iconsLeft = wrapper.find('.ui-select--icons-left');
@@ -387,7 +399,7 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 
 	describe.concurrent("Mit Prop 'headless = true'", () => {
 		const { manager, selection } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager, label: "Mein Label", headless: true } });
+		const wrapper = mount(UiSelect<Car>, { props: { manager, label: "Mein Label", headless: true } });
 
 		test("werden die Icons links angezeigt", () => {
 			const iconsLeft = wrapper.find('.ui-select--icons-left');
@@ -417,7 +429,7 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 		});
 
 		test("und mit Selektion wird das Label nicht angezeigt", () => {
-			const wrapper = mount(UiSelect<cars>, { props: { manager, label: "Mein Label",
+			const wrapper = mount(UiSelect<Car>, { props: { manager, label: "Mein Label",
 				modelValue: selection, headless: true } });
 			const label = wrapper.find('.ui-select--label');
 			expect(label.exists()).toBeFalsy();
@@ -428,7 +440,7 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 describe.concurrent("Validierung", () => {
 	test("Mit Prop 'validation' wird eine Validierung von außen ausgeführt", () => {
 		const { manager } = createTestData();
-		const wrapper = mount(UiSelect<cars>, {
+		const wrapper = mount(UiSelect<Car>, {
 			props: { manager, validation: () => getValidatorFehler() },
 		});
 		const validatorResult = wrapper.findComponent({ name: "UiSelect" }).vm.validationResult;
@@ -439,7 +451,7 @@ describe.concurrent("Validierung", () => {
 
 	test("Bei Validierungsfehlern wird ein Validation-Icon angezeigt", () => {
 		const { manager } = createTestData();
-		const wrapper = mount(UiSelect<cars>, {
+		const wrapper = mount(UiSelect<Car>, {
 			props: { manager, placeholder: "Enter Number", validation: () => getValidatorFehler() },
 		});
 		expect(wrapper.find(".validation-tooltip-icon").exists()).toBeTruthy();
@@ -453,7 +465,7 @@ describe.concurrent("Validierung", () => {
 		"Mit Prop 'required = %s' und %s wird kein Required-Validator hinzugefügt",
 		(required, _vString, validation) => {
 			const { manager } = createTestData();
-			const wrapper = mount(UiSelect<cars>, { props: { manager, required, validation } });
+			const wrapper = mount(UiSelect<Car>, { props: { manager, required, validation } });
 			const validatorRequired = wrapper.findComponent({ name: "UiSelect" }).vm.validatorRequired;
 
 			expect(validatorRequired).toBeNull();
@@ -462,7 +474,7 @@ describe.concurrent("Validierung", () => {
 
 	test("Mit Prop 'required = true' wird ein Required-Validator hinzugefügt", () => {
 		const { manager } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager: manager, required: true } });
+		const wrapper = mount(UiSelect<Car>, { props: { manager: manager, required: true } });
 		const validatorRequired = wrapper.findComponent({ name: "UiSelect" }).vm.validatorRequired;
 
 		expect(validatorRequired).not.toBeNull();
@@ -471,7 +483,7 @@ describe.concurrent("Validierung", () => {
 
 	test("Mit Prop 'required = true' ohne Selektion wird ein Fehler für die Required-Validierung generiert", () => {
 		const { manager } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager: manager, required: true } });
+		const wrapper = mount(UiSelect<Car>, { props: { manager: manager, required: true } });
 		const validatorResult = wrapper.findComponent({ name: "UiSelect" }).vm.validationResult;
 
 		expect(validatorResult.fehler.size()).toBe(1);
@@ -480,11 +492,169 @@ describe.concurrent("Validierung", () => {
 
 	test("Mit Prop 'required = true' und Selektion ergibt die Validierung keine Fehler", () => {
 		const { manager, selection } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager: manager, required: true, modelValue: selection } });
+		const wrapper = mount(UiSelect<Car>, { props: { manager: manager, required: true, modelValue: selection } });
 		const validatorResult = wrapper.findComponent({ name: "UiSelect" }).vm.validationResult;
 
 		expect(validatorResult.fehler.size()).toBe(0);
 	});
+
+	describe.concurrent("Selektionsvalidierung", () => {
+
+
+		test("SelectManager: Bei einer bestehenden Selektion, die nicht mehr gültig ist, wird ein Validatorfehler angezeigt.", () => {
+			const { manager } = createTestData();
+			const wrapper = mount(UiSelect<Car>, { props: { manager: manager, required: true, modelValue: { marke: 'Opel', color: 'blau', baujahr: 2000 } } });
+			const validatorResult = wrapper.findComponent({ name: "UiSelect" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(1);
+			expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Der ausgewählte Wert ist nicht mehr gültig.");
+		});
+
+		test("Kein SelectManager: Bei einer bestehenden Selektion, die nicht mehr gültig ist, wird ein entsprechender Validatorfehler angezeigt.", () => {
+			const { selection } = createTestData();
+			const wrapper = mount(UiSelect<Car>, { props:	{ modelValue: selection } });
+			const validatorResult = wrapper.findComponent({ name: "UiSelect" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(1);
+			expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Der ausgewählte Wert ist nicht mehr gültig.");
+		});
+
+		test("CoreTypeSelectManager: Kein CoreTypeDataManager: Bei einer bestehenden Selektion, die nicht mehr gültig ist, wird ein entsprechender Validatorfehler angezeigt.", () => {
+			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>();
+			const wrapper = mount(UiSelect<KlassenartKatalogEintrag>, { props:
+				{
+					manager: manager,
+					modelValue: Klassenart.data().getEintragBySchuljahrUndWert(2010, Klassenart.HA_AB),
+				},
+			});
+			const validatorResult = wrapper.findComponent({ name: "UiSelect" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(1);
+			expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Der ausgewählte Wert ist nicht mehr gültig.");
+		});
+
+		test("CoreTypeSelectManager: Bei einer bestehenden Selektion, die wegen des Schuljahrs nicht mehr gültig ist, wird ein entsprechender Validatorfehler angezeigt.", () => {
+			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>(
+				{
+					clazz: Klassenart.class,
+					schuljahr: 2011,
+				});
+			const wrapper = mount(UiSelect<KlassenartKatalogEintrag>, { props:
+				{
+					manager: manager,
+					modelValue: Klassenart.data().getEintragBySchuljahrUndWert(2010, Klassenart.HA_AB),
+				},
+			});
+			const validatorResult = wrapper.findComponent({ name: "UiSelect" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(1);
+			expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Der ausgewählte Wert ist nur bis zum Schuljahr 2010 gültig.");
+		});
+
+		test("CoreTypeSelectManager: Bei einer bestehenden Selektion, die wegen des Schuljahrs noch nicht gültig ist, wird ein entsprechender Validatorfehler angezeigt.", () => {
+			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>(
+				{
+					clazz: Klassenart.class,
+					schuljahr: 2009,
+				});
+			const wrapper = mount(UiSelect<KlassenartKatalogEintrag>, { props:
+				{
+					manager: manager,
+					modelValue: Klassenart.data().getEintragBySchuljahrUndWert(2015, Klassenart.HA_AB),
+				},
+			});
+			const validatorResult = wrapper.findComponent({ name: "UiSelect" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(1);
+			expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Der ausgewählte Wert ist erst ab dem Schuljahr 2011 gültig.");
+		});
+
+		test("CoreTypeSelectManager: Bei einer bestehenden Selektion, die wegen des Schuljahrs nicht mehr gültig ist, wird ein entsprechender Validatorfehler angezeigt (manager ohne Schuljahr).", () => {
+			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>({ clazz: Klassenart.class });
+
+			const wrapper = mount(UiSelect<KlassenartKatalogEintrag>, { props:
+				{
+					manager: manager,
+					modelValue: Klassenart.data().getEintragBySchuljahrUndWert(2000, Klassenart.HA_AB),
+				},
+			});
+			const validatorResult = wrapper.findComponent({ name: "UiSelect" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(1);
+			expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Der ausgewählte Wert ist nur bis zum Schuljahr 2010 gültig.");
+		});
+
+		test.each([
+			{ label: "einzelne Schulform", schulformen: Schulform.GY },
+			{ label: "Array aus Schulformen", schulformen: [Schulform.GY] },
+		])("CoreTypeSelectManager: Bei einer bestehenden Selektion, die wegen der Schulform nicht mehr gültig ist, wird ein entsprechender Validatorfehler angezeigt. ($label)", ({ schulformen }) => {
+			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>(
+				{
+					clazz: Klassenart.class,
+					schulformen,
+				});
+			const wrapper = mount(UiSelect<KlassenartKatalogEintrag>, { props:
+				{
+					manager: manager,
+					modelValue: Klassenart.data().getEintragBySchuljahrUndWert(2020, Klassenart.HA_AB),
+				},
+			});
+			const validatorResult = wrapper.findComponent({ name: "UiSelect" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(1);
+			expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Der ausgewählte Wert ist für die Schulform ihrer Schule nicht mehr gültig.");
+		});
+
+		test.each([
+			{
+				label: "keine Selektion",
+				managerConfig: { clazz: Klassenart.class, schuljahr: 2020 },
+				getModelValue: () => null,
+			},
+			{
+				label: "Selektion ist im Manager-Schuljahr gültig",
+				managerConfig: { clazz: Klassenart.class, schuljahr: 2020 },
+				getModelValue: () => Klassenart.data().getEintragBySchuljahrUndWert(2020, Klassenart.HA_AB),
+			},
+			{
+				label: "Manager ohne Schuljahr, Selektion ist der aktuellste Eintrag",
+				managerConfig: { clazz: Klassenart.class },
+				getModelValue: () => Klassenart.data().getEintragBySchuljahrUndWert(2020, Klassenart.HA_AB),
+			},
+			{
+				label: "Manager ohne Schulformen, Schulformprüfung entfällt",
+				managerConfig: { clazz: Klassenart.class, schuljahr: 2020 },
+				getModelValue: () => Klassenart.data().getEintragBySchuljahrUndWert(2020, Klassenart.HA_AB),
+			},
+			{
+				label: "Schulform passt – einzelne Schulform",
+				managerConfig: { clazz: Klassenart.class, schuljahr: 2020, schulformen: Schulform.H },
+				getModelValue: () => Klassenart.data().getEintragBySchuljahrUndWert(2020, Klassenart.HA_AB),
+			},
+			{
+				label: "Schulform passt – Array aus Schulformen",
+				managerConfig: { clazz: Klassenart.class, schuljahr: 2020, schulformen: [Schulform.H] },
+				getModelValue: () => Klassenart.data().getEintragBySchuljahrUndWert(2020, Klassenart.HA_AB),
+			},
+			{
+				label: "Eintrag ist für alle Schulformen gültig (keine Schulformeinschränkung im Eintrag selbst)",
+				managerConfig: { clazz: Klassenart.class, schuljahr: 2020, schulformen: Schulform.GY },
+				getModelValue: () => Klassenart.data().getEintragBySchuljahrUndWert(2020, Klassenart.RK),
+			},
+		])("CoreTypeSelectManager: Kein Validatorfehler bei gültiger Selektion: $label", ({ managerConfig, getModelValue }) => {
+			const manager = new CoreTypeSelectManager<KlassenartKatalogEintrag, Klassenart>(managerConfig);
+			const wrapper = mount(UiSelect<KlassenartKatalogEintrag>, { props:
+				{
+					manager,
+					modelValue: getModelValue(),
+				},
+			});
+			const validatorResult = wrapper.findComponent({ name: "UiSelect" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(0);
+		});
+	});
+
 });
 
 describe.concurrent("Teste Watcher und Computeds", () => {
@@ -493,7 +663,7 @@ describe.concurrent("Teste Watcher und Computeds", () => {
 		test("Exception, wenn model.value null bei 'nullable=false' enthält", () => {
 			const { manager } = createTestData();
 
-			expect(() => mount(UiSelect<cars>, {
+			expect(() => mount(UiSelect<Car>, {
 				props: { manager, nullable: false, modelValue: null },
 			})).toThrow('Ungültiges v-model: null oder undefined bei nullable = false');
 		});
@@ -501,7 +671,7 @@ describe.concurrent("Teste Watcher und Computeds", () => {
 		test("Exception, wenn model.value undefined bei 'nullable=false' enthält", () => {
 			const { manager } = createTestData();
 
-			expect(() => mount(UiSelect<cars>, {
+			expect(() => mount(UiSelect<Car>, {
 				props: { manager, nullable: false, modelValue: undefined },
 			})).toThrow('Ungültiges v-model: null oder undefined bei nullable = false');
 		});
@@ -509,7 +679,7 @@ describe.concurrent("Teste Watcher und Computeds", () => {
 		test("Keine Exception, wenn model.value null bei 'nullable=true' enthält", () => {
 			const { manager } = createTestData();
 
-			expect(() => mount(UiSelect<cars>, {
+			expect(() => mount(UiSelect<Car>, {
 				props: { manager, nullable: true, modelValue: null },
 			})).not.toThrow('Ungültiges v-model: null oder undefined bei nullable = false');
 		});
@@ -517,76 +687,29 @@ describe.concurrent("Teste Watcher und Computeds", () => {
 		test("Keine Exception, wenn model.value undefined bei 'nullable=true' enthält", () => {
 			const { manager } = createTestData();
 
-			expect(() => mount(UiSelect<cars>, {
+			expect(() => mount(UiSelect<Car>, {
 				props: { manager, nullable: true, modelValue: undefined },
 			})).not.toThrow('Ungültiges v-model: null oder undefined bei nullable = false');
-		});
-
-		test("Keine Exception, wenn Selektion in manager.filteredOptions enthalten ist", async () => {
-			const { manager, selection } = createTestData();
-			expect(() => mount(UiSelect<cars>, {
-				props: { manager, modelValue: selection },
-			})).not.toThrow('Ungültiges v-model: {"marke":"VW","color":"schwarz","baujahr":2012} ist keine gültige Selektion');
-		});
-
-		test("Exception, wenn Selektion nicht in manager.filteredOptions enthalten ist", async () => {
-			const { manager, nonExistingOption } = createTestData();
-
-			expect(() => mount(UiSelect<cars>, {
-				props: { manager, modelValue: nonExistingOption },
-			})).toThrow('Ungültiges v-model: {"marke":"VW","color":"schwarz","baujahr":2012} ist keine gültige Selektion');
-		});
-	});
-
-	describe.concurrent("Watcher auf props.manager.filteredOptions:", () => {
-		test("Die Selektion wird nicht angepasst, wenn sie im neuen manager.filteredOptions enthalten ist", async () => {
-			const { manager, selection } = createTestData();
-			const wrapper = mount(UiSelect<cars>, { props: { manager, modelValue: selection } });
-
-			const newFilteredOptions = new ArrayList<cars>();
-			newFilteredOptions.add(selection);
-			manager.unfilteredOptions = newFilteredOptions;
-
-			await wrapper.vm.$nextTick();
-
-			const emits = wrapper.emitted("update:modelValue");
-			expect(emits).toBeUndefined();
-
-		});
-
-		test("Die Selektion wird angepasst, wenn sie nicht im neuen manager.filteredOptions enthalten ist", async () => {
-			const { manager, selection, nonExistingOption } = createTestData();
-			const wrapper = mount(UiSelect<cars>, { props: { manager, modelValue: selection } });
-
-			const newFilteredOptions = new ArrayList<cars>();
-			newFilteredOptions.add(nonExistingOption);
-			manager.unfilteredOptions = newFilteredOptions;
-
-			await wrapper.vm.$nextTick();
-
-			const emits = wrapper.emitted("update:modelValue");
-			expect(emits).toBeDefined();
-			expect(emits![0][0]).toBeUndefined();
 		});
 	});
 
 	test("computed->showSelection ist true, wenn eine Auswahl vorhanden ist und search leer", () => {
 		const { manager, selection } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager, searchable: true, modelValue: selection } });
+		const wrapper = mount(UiSelect<Car>, { props: { manager, searchable: true, modelValue: selection } });
 
 		expect(wrapper.findComponent({ name: "UiSelect" }).vm.showSelection).toBe(true);
 	});
 
 	test("computed->showSelection ist false, wenn keine Auswahl vorhanden ist, search leer", () => {
 		const { manager } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager, searchable: true } });
+		const wrapper = mount(UiSelect<Car>, { props: { manager, searchable: true } });
 
 		expect(wrapper.findComponent({ name: "UiSelect" }).vm.showSelection).toBe(false);
 	});
 
 	test("computed->showSelection ist false, wenn Auswahl vorhanden, aber search nicht leer", async () => {
 		const { manager, selection } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager, searchable: true, modelValue: selection } });
+		const wrapper = mount(UiSelect<Car>, { props: { manager, searchable: true, modelValue: selection } });
 
 		const input = wrapper.find('input.ui-select--search');
 		await input.setValue('BMW');
@@ -595,7 +718,7 @@ describe.concurrent("Teste Watcher und Computeds", () => {
 
 	test("computed->showSelection ist false, wenn keine Auswahl vorhanden und search nicht leer", async () => {
 		const { manager } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager, searchable: true } });
+		const wrapper = mount(UiSelect<Car>, { props: { manager, searchable: true } });
 
 		const input = wrapper.find('input.ui-select--search');
 		await input.setValue('BMW');
@@ -604,7 +727,7 @@ describe.concurrent("Teste Watcher und Computeds", () => {
 
 	test("computed->selectionTextColor gibt 'text-ui-secondary' zurück, wenn searchable = true und Input fokussiert", async () => {
 		const { manager } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager, searchable: true } });
+		const wrapper = mount(UiSelect<Car>, { props: { manager, searchable: true } });
 		const vm = wrapper.findComponent({ name: "UiSelect" }).vm;
 
 		const input = wrapper.find('input.ui-select--search');
@@ -614,7 +737,7 @@ describe.concurrent("Teste Watcher und Computeds", () => {
 
 	test("computed->selectionTextColor gibt 'text-ui' zurück, wenn searchable = true und Input nicht fokussiert", () => {
 		const { manager } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager, searchable: true } });
+		const wrapper = mount(UiSelect<Car>, { props: { manager, searchable: true } });
 		const vm = wrapper.findComponent({ name: "UiSelect" }).vm;
 
 		expect(vm.selectionTextColor).toBe('text-ui');
@@ -622,7 +745,7 @@ describe.concurrent("Teste Watcher und Computeds", () => {
 
 	test("computed->selectionTextColor gibt 'text-ui' zurück, wenn searchable = false ist", () => {
 		const { manager } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager, searchable: false } });
+		const wrapper = mount(UiSelect<Car>, { props: { manager, searchable: false } });
 		const vm = wrapper.findComponent({ name: "UiSelect" }).vm;
 
 		expect(vm.selectionTextColor).toBe('text-ui');
@@ -630,7 +753,7 @@ describe.concurrent("Teste Watcher und Computeds", () => {
 
 	describe.concurrent("computed->state bildet alle relevanten Eigenschaften korrekt ab", () => {
 		const { manager, selection } = createTestData();
-		const wrapper = mount(UiSelect<cars>, {
+		const wrapper = mount(UiSelect<Car>, {
 			props: {
 				manager,
 				searchable: true,
@@ -715,7 +838,7 @@ describe.concurrent("Teste Funktionen", () => {
 
 	test("function->isSelected(option) ist false, wenn model.value = null ist", () => {
 		const { manager, selection } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager: manager, modelValue: null } });
+		const wrapper = mount(UiSelect<Car>, { props: { manager: manager, modelValue: null } });
 
 		const isSelected = wrapper.findComponent({ name: "UiSelect" }).vm.isSelected;
 		expect(isSelected(selection)).toBe(false);
@@ -723,7 +846,7 @@ describe.concurrent("Teste Funktionen", () => {
 
 	test("function->isSelected(option) ist false, wenn model.value nicht option entspricht", () => {
 		const { manager, selection } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager: manager, modelValue: selection } });
+		const wrapper = mount(UiSelect<Car>, { props: { manager: manager, modelValue: selection } });
 
 		const isSelected = wrapper.findComponent({ name: "UiSelect" }).vm.isSelected;
 		expect(isSelected(manager.filteredOptions.get(1))).toBe(false);
@@ -731,7 +854,7 @@ describe.concurrent("Teste Funktionen", () => {
 
 	test("function->isSelected(option) ist true, wenn model.value option entspricht", () => {
 		const { manager, selection } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager: manager, modelValue: selection } });
+		const wrapper = mount(UiSelect<Car>, { props: { manager: manager, modelValue: selection } });
 
 		const isSelected = wrapper.findComponent({ name: "UiSelect" }).vm.isSelected;
 		expect(isSelected(selection)).toBe(true);
@@ -739,7 +862,7 @@ describe.concurrent("Teste Funktionen", () => {
 
 	test("function->selectOption(option) setzt model.value wenn noch nichts selektiert ist und setzt die Suche zurück", async () => {
 		const { manager, selection } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager: manager, searchable: true } });
+		const wrapper = mount(UiSelect<Car>, { props: { manager: manager, searchable: true } });
 		const vm = wrapper.findComponent({ name: "UiSelect" }).vm;
 
 		vm.selectOption(selection);
@@ -752,7 +875,7 @@ describe.concurrent("Teste Funktionen", () => {
 
 	test("function->selectOption(option) wenn die Option schon selektiert ist erzeugt eine Fehlermeldung", () => {
 		const { manager, selection } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager: manager, modelValue: selection } });
+		const wrapper = mount(UiSelect<Car>, { props: { manager: manager, modelValue: selection } });
 
 		const selectOption = wrapper.findComponent({ name: "UiSelect" }).vm.selectOption;
 		expect(() => selectOption(selection)).toThrow("Die Option BMW ist bereits selektiert.");
@@ -762,7 +885,7 @@ describe.concurrent("Teste Funktionen", () => {
 
 		test("wirft Exception, wenn removable=false", () => {
 			const { manager, selection } = createTestData();
-			const wrapper = mount(UiSelect<cars>, { props: { manager, removable: false, modelValue: selection } });
+			const wrapper = mount(UiSelect<Car>, { props: { manager, removable: false, modelValue: selection } });
 
 			const clearSelection = wrapper.findComponent({ name: "UiSelect" }).vm.clearSelection;
 			expect(() => clearSelection()).toThrow("Das Select ist auf removable=false gesetzt, daher kann der Eintrag nicht deselektiert werden");
@@ -770,7 +893,7 @@ describe.concurrent("Teste Funktionen", () => {
 
 		test("setzt model.value auf undefined, wenn 'removable=true'", async () => {
 			const { manager, selection } = createTestData();
-			const wrapper = mount(UiSelect<cars>, { props: { manager, removable: true, modelValue: selection } });
+			const wrapper = mount(UiSelect<Car>, { props: { manager, removable: true, modelValue: selection } });
 
 			const clearSelection = wrapper.findComponent({ name: "UiSelect" }).vm.clearSelection;
 			clearSelection();
@@ -783,7 +906,7 @@ describe.concurrent("Teste Funktionen", () => {
 
 		test("setzt search zurück, wenn 'removable=true'", async () => {
 			const { manager, selection } = createTestData();
-			const wrapper = mount(UiSelect<cars>, { props: { manager, removable: true, searchable: true, modelValue: selection } });
+			const wrapper = mount(UiSelect<Car>, { props: { manager, removable: true, searchable: true, modelValue: selection } });
 
 			const vm = wrapper.findComponent({ name: "UiSelect" }).vm;
 
@@ -800,7 +923,7 @@ describe.concurrent("Teste Funktionen", () => {
 
 		test("schließt das Dropdown", async () => {
 			const { manager } = createTestData();
-			const wrapper = mount(UiSelect<cars>, { props: { manager } });
+			const wrapper = mount(UiSelect<Car>, { props: { manager } });
 
 			const dropdown = wrapper.find('.ui-select--dropdown');
 			const combobox = wrapper.find('.ui-select--combobox');
@@ -818,7 +941,7 @@ describe.concurrent("Teste Funktionen", () => {
 
 	test("function->deselectAllowed() ist true wenn 'removable=true'", () => {
 		const { manager } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager: manager, removable: true } });
+		const wrapper = mount(UiSelect<Car>, { props: { manager: manager, removable: true } });
 
 		const deselectAllowed = wrapper.findComponent({ name: "UiSelect" }).vm.deselectAllowed;
 		expect(deselectAllowed()).toBe(true);
@@ -826,7 +949,7 @@ describe.concurrent("Teste Funktionen", () => {
 
 	test("function->deselectAllowed() ist false wenn 'removable=false'", () => {
 		const { manager } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager: manager, removable: false } });
+		const wrapper = mount(UiSelect<Car>, { props: { manager: manager, removable: false } });
 
 		const deselectAllowed = wrapper.findComponent({ name: "UiSelect" }).vm.deselectAllowed;
 		expect(deselectAllowed()).toBe(false);
@@ -835,7 +958,7 @@ describe.concurrent("Teste Funktionen", () => {
 	describe.concurrent("function->hasSelection()", () => {
 		test("ist true, wenn model.value gesetzt ist", () => {
 			const { manager, selection } = createTestData();
-			const wrapper = mount(UiSelect<cars>, { props: { manager: manager, modelValue: selection } });
+			const wrapper = mount(UiSelect<Car>, { props: { manager: manager, modelValue: selection } });
 
 			const hasSelection = wrapper.findComponent({ name: "UiSelect" }).vm.hasSelection;
 			expect(hasSelection()).toBe(true);
@@ -843,7 +966,7 @@ describe.concurrent("Teste Funktionen", () => {
 
 		test("ist false, wenn model.value nicht definiert ist", () => {
 			const { manager } = createTestData();
-			const wrapper = mount(UiSelect<cars>, { props: { manager: manager } });
+			const wrapper = mount(UiSelect<Car>, { props: { manager: manager } });
 
 			const hasSelection = wrapper.findComponent({ name: "UiSelect" }).vm.hasSelection;
 			expect(hasSelection()).toBe(false);
@@ -851,7 +974,7 @@ describe.concurrent("Teste Funktionen", () => {
 
 		test("ist false, wenn model.value=null ist", () => {
 			const { manager } = createTestData();
-			const wrapper = mount(UiSelect<cars>, { props: { manager: manager, modelValue: null } });
+			const wrapper = mount(UiSelect<Car>, { props: { manager: manager, modelValue: null } });
 
 			const hasSelection = wrapper.findComponent({ name: "UiSelect" }).vm.hasSelection;
 			expect(hasSelection()).toBe(false);
@@ -865,17 +988,17 @@ describe.concurrent("Teste Funktionen", () => {
  * @returns die testdaten
  */
 function createTestData() {
-	const options: cars[] = [{ marke: "BMW", color: "blue", baujahr: 2006 },
+	const options: Car[] = [{ marke: "BMW", color: "blue", baujahr: 2006 },
 		{ marke: "Audi", color: "red", baujahr: 2008 }, { marke: "Opel", color: "schwarz", baujahr: 2006 }];
-	const optionDisplayText = (option: cars) => option.marke;
-	const selectionDisplayText = (option: cars) => option.marke;
+	const optionDisplayText = (option: Car) => option.marke;
+	const selectionDisplayText = (option: Car) => option.marke;
 	const manager = new SelectManager<{ marke: string, color: string, baujahr: number }>({ options: options, optionDisplayText: optionDisplayText, selectionDisplayText: selectionDisplayText });
 	const selection = manager.filteredOptions.get(0);
 	const nonExistingOption = { marke: "VW", color: "schwarz", baujahr: 2012 };
 	return { manager, selection, nonExistingOption };
 }
 
-type cars = { marke: string, color: string, baujahr: number };
+type Car = { marke: string, color: string, baujahr: number };
 
 class CustomValidatorRequired extends BasicValidator {
 

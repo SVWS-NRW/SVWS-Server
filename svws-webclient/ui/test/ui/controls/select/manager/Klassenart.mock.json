@@ -113,7 +113,7 @@
 						{ "schulform": "SK", "gliederung": null }
 					],
 					"gueltigVon": null,
-					"gueltigBis": null,
+					"gueltigBis": 2010,
 					"auslaufdauer": 0
 				}
 			]

@@ -1,4 +1,4 @@
-import { watch, toValue, triggerRef, shallowRef, type MaybeRef, isRef } from "vue";
+import { watch, toValue, triggerRef, shallowRef, type MaybeRef, isRef, toRaw } from "vue";
 import type { Class } from "../../../../../../core/src/java/lang/Class";
 import type { CoreType } from "../../../../../../core/src/asd/types/CoreType";
 import type { CoreTypeData } from "../../../../../../core/src/asd/data/CoreTypeData";
@@ -225,7 +225,7 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 	 *
 	 * @return der Manager
 	 */
-	private get manager(): CoreTypeDataManager<T, U> | null {
+	public get manager(): CoreTypeDataManager<T, U> | null {
 		return this._manager;
 	}
 
@@ -281,7 +281,7 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 		if (value === this.schuljahr) {
 			return;
 		}
-		this._schuljahr.value = value;
+		this._schuljahr.value = toRaw(value);
 		triggerRef(this._schuljahr);
 		this.updateOptions();
 	}
@@ -304,7 +304,7 @@ export class CoreTypeSelectManager<T extends CoreTypeData, U extends CoreType<T,
 		if (value === this.schulformen) {
 			return;
 		}
-		this._schulformen.value = value;
+		this._schulformen.value = toRaw(value);
 		triggerRef(this._schulformen);
 		this.updateOptions();
 	}

@@ -310,12 +310,11 @@ export abstract class BaseSelectManager<T> {
 	 * @param newFilter   der neue Filter
 	 */
 	public addFilter(newFilter: SelectFilter<T>): void {
-		for (const filter of this.filters) {
-			if (filter.key === newFilter.key) {
-				this.removeFilter(newFilter);
-				break;
-			}
+		const existing = this.getFilterByKey(newFilter.key);
+		if (existing !== null) {
+			this._filters.value.remove(existing);
 		}
+
 		this._filters.value.add(newFilter);
 		triggerRef(this._filters);
 		this.updateFilteredOptions(newFilter);
@@ -363,15 +362,34 @@ export abstract class BaseSelectManager<T> {
 	 */
 	private intersect(list1: List<T>, list2: List<T>): List<T> {
 		const result = new ArrayList<T>();
-		const set1 = new Set(list1);
-		const set2 = new Set(list2);
-
-		const intersection = set1.intersection(set2);
-		for (const value of intersection) {
-			result.add(value);
+		const set2 = new Set<T>(list2);
+		for (const item of list1) {
+			if (set2.has(toRaw(item))) {
+				result.add(item);
+			}
 		}
-
 		return result;
+	}
+
+	/**
+	 * Vergleicht zwei Elemente strukturell.
+	 * Bevorzugt equals(), falls vorhanden. Fallback: JSON-Vergleich mit sortierten Keys.
+	 *
+	 * @param a   erstes Element
+	 * @param b   zweites Element
+	 *
+	 * @returns true, wenn die Elemente strukturell gleich sind
+	 */
+	public areEqual(a: T, b: T): boolean {
+		if (a === b) {
+			return true;
+		}
+		if (typeof (a as { equals?: unknown }).equals === "function") {
+			return (a as { equals: (o: unknown) => boolean }).equals(b);
+		}
+		// Fallback: struktureller Vergleich zweier Objekte über sortierte, vereinigte Keys
+		const keys = [...new Set([...Object.keys(a as object), ...Object.keys(b as object)])].sort();
+		return JSON.stringify(a, keys) === JSON.stringify(b, keys);
 	}
 
 	/**

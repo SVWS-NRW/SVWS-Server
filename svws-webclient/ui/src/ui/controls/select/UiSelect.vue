@@ -102,14 +102,16 @@
 
 	import { computed, ref, toRaw, toRefs, useAttrs, watch } from 'vue';
 	import { useUiSelectUtils } from './utils/useUiSelectUtils';
-	import type { UiSelectHTMLElements, UiSelectSelectionMethods, UiSelectSingleProps, UiSelectState } from './manager/UiSelectTypes';
-	import { SelectManager } from './manager/SelectManager';
 	import { DeveloperNotificationException } from '../../../../../core/src/core/exceptions/DeveloperNotificationException';
-	import type { List } from '../../../../../core/src/java/util/List';
-	import type { ValidatorFehler } from '../../../../../core/src/asd/validate/ValidatorFehler';
 	import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
-	import { ValidationResult } from "../../../validation/ValidationResult";
+	import type { List } from '../../../../../core/src/java/util/List';
+	import type { BasicValidator } from "../../../../../core/src/asd/validate/BasicValidator";
+	import type { ValidatorFehler } from '../../../../../core/src/asd/validate/ValidatorFehler';
 	import { ValidatorInputRequired } from "../../../validation/common/ValidatorInputRequired";
+	import { ValidatorSelectOptionsValid } from "../../../validation/common/ValidatorSelectOptionsValid";
+	import { ValidationResult } from "../../../validation/ValidationResult";
+	import { SelectManager } from './manager/SelectManager';
+	import type { UiSelectHTMLElements, UiSelectSelectionMethods, UiSelectSingleProps, UiSelectState } from './manager/UiSelectTypes';
 
 	const props = withDefaults(defineProps<UiSelectSingleProps<T>>(), {
 		label: '',
@@ -130,37 +132,11 @@
 	type MaybeNull<T> = T | null;
 	const model = defineModel<MaybeNull<T>>();
 
-	/**
-	 * Watcher auf die aktuelle Selektion über das model.
-	 * Bei nicht validen Selektionen wird diese korrigiert oder ein Fehler geworfen.
-	 */
 	watch(
 		() => model.value,
 		(newSelection) => {
-			if ((newSelection === undefined) || (newSelection === null)) {
-				if (!props.nullable) {
-					throw new DeveloperNotificationException("Ungültiges v-model: null oder undefined bei nullable = false");
-				}
-				return;
-			}
-			if (!props.manager.filteredOptions.contains(toRaw(newSelection))) {
-				throw new DeveloperNotificationException(`Ungültiges v-model: ${JSON.stringify(newSelection)} ist keine gültige Selektion`);
-			}
-		}, { immediate: true }
-	);
-
-	/**
-	 * Watcher auf die gefilterten Optionen.
-	 * Falls diese sich ändern muss geprüft werden, ob die Selektion noch valide ist. Falls nicht, wird diese angepasst.
-	 */
-	watch(
-		() => props.manager.filteredOptions,
-		(newOptions) => {
-			if ((model.value === undefined) || (model.value === null)) {
-				return;
-			}
-			if (!newOptions.contains(toRaw(model.value))) {
-				model.value = undefined;
+			if (!props.nullable && ((newSelection === undefined) || (newSelection === null))) {
+				throw new DeveloperNotificationException("Ungültiges v-model: null oder undefined bei nullable = false");
 			}
 		}, { immediate: true }
 	);
@@ -187,17 +163,29 @@
 		return null;
 	});
 
-	const validierungFehler = computed<List<ValidatorFehler>>(() => {
-		if (props.validation === undefined) {
-			return getDefaultValidatorErrors();
-		}
-		return props.validation();
+	const validatorValidSelection = computed(() => {
+		return new ValidatorSelectOptionsValid(
+			() => (model.value === null) || (model.value === undefined) ? [] : [model.value],
+			props.manager
+		);
 	});
 
-	function getDefaultValidatorErrors() {
-		const fehler = new ArrayList<ValidatorFehler>();
-		const defaultValidators = [validatorRequired.value];
-		for (const validator of defaultValidators) {
+	const validierungFehler = computed<List<ValidatorFehler>>(() => {
+		const externeFehler = new ArrayList<ValidatorFehler>();
+		if (props.validation !== undefined) {
+			externeFehler.addAll(props.validation());
+		}
+		return collectValidatorFehler(externeFehler, [validatorRequired.value, validatorValidSelection.value]);
+	});
+
+	/**
+	 * Fügt einer vorhandenen Fehlerliste die Fehler weiterer, übergebener Validatoren hinzu.
+	 *
+	 * @param fehler       Fehler, die von außen an die Komponente weitergereicht wurden zum Beispiel von einem ModelProxy.
+	 * @param validators   Zusätzliche Validatoren, die ausgeführt und deren Fehler hinzugefügt werden sollen. Diese Fehler verhindern kein Patch!
+	 */
+	function collectValidatorFehler(fehler: List<ValidatorFehler>, validators: Array<BasicValidator | null>): List<ValidatorFehler> {
+		for (const validator of validators) {
 			if (validator !== null) {
 				validator.run();
 				fehler.addAll(validator.getFehler());
@@ -219,10 +207,10 @@
 	 * @param option
 	 */
 	function isSelected(option: T): boolean {
-		if (model.value === undefined) {
+		if ((model.value === undefined) || (model.value === null)) {
 			return false;
 		}
-		return toRaw(model.value) === option;
+		return props.manager.areEqual(toRaw(model.value), toRaw(option));
 	}
 
 	/**

@@ -1065,8 +1065,8 @@ describe("UiSelect CoreTypeSelectManager Tests", () => {
 
 			manager.schuljahr = 2025;
 			expect(manager.schuljahr).toBe(2025);
-			expect(manager.unfilteredOptions.size()).toBe(14);
-			expect(manager.filteredOptions.size()).toBe(14);
+			expect(manager.unfilteredOptions.size()).toBe(13);
+			expect(manager.filteredOptions.size()).toBe(13);
 		});
 
 		test('set schuljahr(null) -> setzt das Schuljahr auf null und aktualisiert die Optionen', () => {

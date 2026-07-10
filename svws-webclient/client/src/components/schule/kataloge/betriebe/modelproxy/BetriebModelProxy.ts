@@ -1,16 +1,15 @@
+import { computed } from "vue";
 import type { BetriebeListeManager } from "@ui";
 import { ModelProxy, ValidatorNumberRange, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
+import type { Betrieb, Betriebsart, OrtKatalogEintrag } from "@core";
+import { AdressenUtils } from "@core";
 import { ValidatorBetriebName } from "~/components/schule/kataloge/betriebe/modelproxy/validation/ValidatorBetriebName";
 import { StringPattern } from "../../../../../../../ui/src/validation/common/ValidatorStringMatchesPattern";
-import { computed } from "vue";
-import type { Betriebsart, OrtKatalogEintrag, Betrieb } from "@core";
-import { AdressenUtils } from "@core";
 import { ValidatorStrasse } from "../../../../../../../ui/src/validation/common/ValidatorStrasse";
 
 export class BetriebModelProxy extends ModelProxy<Betrieb> {
 
-	private readonly betriebsartenById: Map<number, Betriebsart>;
-	private readonly orteById: Map<number, OrtKatalogEintrag>;
+	private readonly manager: () => BetriebeListeManager;
 
 	constructor(
 		data: () => Betrieb,
@@ -21,8 +20,7 @@ export class BetriebModelProxy extends ModelProxy<Betrieb> {
 			"idBetriebsart", "istAusbildungsbetrieb", "istMassnahmentraeger", "belehrungNachISGErforderlich", "bietetPraktikumsplaetzeAn",
 			"erweitertesFuehrungszeugnisErforderlich", "idOrt", "istSichtbar"];
 		super({ data, patch, listOfAutopatchProps });
-		this.betriebsartenById = manager().betriebsartenById;
-		this.orteById = manager().orteById;
+		this.manager = manager;
 		this.addValidatoren(() => manager().liste.list());
 		this.validate();
 	}
@@ -61,12 +59,12 @@ export class BetriebModelProxy extends ModelProxy<Betrieb> {
 	}
 
 	betriebsart = computed<Betriebsart | null>({
-		get: () => this.betriebsartenById.get(this.proxy.idBetriebsart ?? -1) ?? null,
+		get: () => this.manager().betriebsartenById.get(this.proxy.idBetriebsart ?? -1) ?? null,
 		set: (v: Betriebsart | null) => this.proxy.idBetriebsart = v?.id ?? null,
 	});
 
 	wohnort = computed<OrtKatalogEintrag | null>({
-		get: () => this.orteById.get(this.proxy.idOrt ?? -1) ?? null,
+		get: () => this.manager().orteById.get(this.proxy.idOrt ?? -1) ?? null,
 		set: (v: OrtKatalogEintrag | null) => this.proxy.idOrt = v?.id ?? null,
 	});
 
