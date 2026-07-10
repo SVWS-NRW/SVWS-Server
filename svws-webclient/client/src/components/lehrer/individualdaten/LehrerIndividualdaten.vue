@@ -30,10 +30,10 @@
 					:max-len="10"
 					:readonly statistics required focus />
 				<ui-select label="Personal-Typ"
-					v-model="modelProxy.selectedPersonalTyp.value"
+					v-model="modelProxy.personalTyp.value"
 					:manager="personaltypManger"
 					:validation="() => modelProxy.getFehler('personalTyp')"
-					:readonly required searchable :removable="false" />
+					:readonly required :removable="false" />
 				<svws-ui-text-input placeholder="Nachname"
 					v-model="modelProxy.proxy.nachname"
 					@change="modelProxy.patch"
@@ -48,10 +48,10 @@
 					:readonly required statistics />
 				<svws-ui-spacing />
 				<ui-select label="Geschlecht"
-					v-model="modelProxy.selectedGeschlecht.value"
+					v-model="modelProxy.geschlecht.value"
 					:manager="geschlechtManager"
 					:validation="() => modelProxy.getFehler('geschlecht')"
-					:readonly required searchable :removable="false" />
+					:readonly required :removable="false" />
 				<svws-ui-text-input placeholder="Geburtsdatum"
 					v-model="modelProxy.proxy.geburtsdatum"
 					type="date"
@@ -59,10 +59,10 @@
 					:validation="() => modelProxy.getFehler('geburtsdatum')"
 					:readonly required statistics />
 				<ui-select label="Staatsangehörigkeit"
-					v-model="modelProxy.selectedStaatsangehoerigkeit.value"
+					v-model="modelProxy.staatsangehoerigkeit.value"
 					:manager="staatsangehoerigkeitManager"
 					:validation="() => modelProxy.getFehler('idStaatsangehoerigkeit')"
-					:readonly required searchable statistics :removable="false" />
+					:readonly required statistics :removable="false" />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Akademischer Grad"
 					v-model="modelProxy.proxy.titel"
@@ -89,15 +89,15 @@
 					class="contentFocusField"
 					:readonly />
 				<ui-select label="Wohnort"
-					v-model="modelProxy.selectedWohnort.value"
+					v-model="modelProxy.wohnort.value"
 					:manager="wohnortManager"
 					:validation="() => modelProxy.getFehler('wohnortID')"
-					:readonly searchable />
+					:readonly />
 				<ui-select label="Ortsteil"
-					v-model="modelProxy.selectedOrtsteil.value"
+					v-model="modelProxy.ortsteil.value"
 					:manager="ortsteilManager"
 					:validation="() => modelProxy.getFehler('ortsteilID')"
-					:readonly searchable />
+					:readonly />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Telefon"
 					type="tel"
@@ -171,7 +171,7 @@
 							class="col-span-full"
 							v-model="selectedFunktion"
 							:manager="leitungsfunktionManager"
-							searchable required :removable="false" />
+							required :removable="false" />
 						<svws-ui-text-input placeholder="Bezeichnung" type="text" class="col-span-full"
 							v-model="leitungsfunktionEntry.bezeichnung"
 							:max-len="255" required />

@@ -5,7 +5,7 @@
 				<template v-if="activeViewType === ViewType.DEFAULT">
 					<svws-ui-avatar :src="foto ? `data:image/png;base64, ${foto}` : undefined"
 						:alt="foto !== null ? `Foto von ${manager().daten().vorname} ${manager().daten().nachname}` : ''" upload capture
-						@image:base64="foto => patch({ foto })" />
+						@image:base64="val => patch({ val })" />
 					<div class="svws-headline-wrapper">
 						<h2 class="svws-headline">
 							{{ manager().daten().titel }} {{ manager().daten().vorname }} {{ manager().daten().nachname }}
@@ -18,7 +18,7 @@
 				</template>
 				<template v-else-if="activeViewType === ViewType.HINZUFUEGEN">
 					<div class="svws-headline-wrapper">
-						<h2 class="svws-headline">Anlegen eines neuen Lehrers...</h2>
+						<h2 class="svws-headline">Anlegen einer neuen Lehrkraft...</h2>
 					</div>
 				</template>
 				<template v-else-if="activeViewType === ViewType.GRUPPENPROZESSE">

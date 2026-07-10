@@ -1,5 +1,5 @@
 import type { LehrerStammdaten, NationalitaetenKatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag, ValidatorKontext } from "@core";
-import { AdressenUtils, Geschlecht, Nationalitaeten, PersonalTyp, ValidatorLsdLehrerStammdatenGeburtsdatum, ValidatorLsnLehrerStammdatenNachname } from "@core";
+import { AdressenUtils, Geschlecht, Nationalitaeten, PersonalTyp, ValidatorLsdLehrerStammdatenGeburtsdatum, ValidatorLsnLehrerStammdatenNachname, ValidatorLsvLehrerStammdatenVorname } from "@core";
 import type { LehrerListeManager } from "@ui";
 import { ModelProxy, StringPattern, ValidatorInputRequired, ValidatorStrasse, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
 import { computed } from "vue";
@@ -19,7 +19,7 @@ export class LehrerIndividualdatenModelProxy extends ModelProxy<LehrerStammdaten
 	protected readonly ortsteileById: Map<number, OrtsteilKatalogEintrag>;
 
 	/**
-	 * Erstellt einen ModelProxy für das Core-DTO LehrerIndividualdaten.
+	 * Erstellt einen ModelProxy für das Core-DTO LehrerStammdaten.
 	 *
 	 * @param data               ein Lambda für den Zugriff auf die "Original"-Daten
 	 * @param validatorKontext   der Validator-Kontext für die Nutzung in den ASD-Validatoren
@@ -29,15 +29,20 @@ export class LehrerIndividualdatenModelProxy extends ModelProxy<LehrerStammdaten
 	 * @param patch              ggf. die Methode zum Patchen der einzelnen Attribute, sofern das automatische Patchen
 	 *                           bei Änderungen gewünscht ist
 	 */
-	constructor(data: () => LehrerStammdaten, validatorKontext: () => ValidatorKontext, manager: () => LehrerListeManager, orteById: Map<number, OrtKatalogEintrag>, ortsteileById: Map<number, OrtsteilKatalogEintrag>, patch?: (data: Partial<LehrerStammdaten>) => Promise<boolean>) {
-		const listOfAutopatchProps: Iterable<keyof LehrerStammdaten> = ["istSichtbar", "istRelevantFuerStatistik", "personalTyp", "geschlecht",
-			"idStaatsangehoerigkeit", "wohnortID", "ortsteilID"];
+	constructor(data: () => LehrerStammdaten,
+		validatorKontext: () => ValidatorKontext,
+		manager: () => LehrerListeManager,
+		orteById: Map<number, OrtKatalogEintrag>,
+		ortsteileById: Map<number, OrtsteilKatalogEintrag>,
+		patch?: (data: Partial<LehrerStammdaten>) => Promise<boolean>
+	) {
+		const listOfAutopatchProps: Iterable<keyof LehrerStammdaten> =
+			["istSichtbar", "istRelevantFuerStatistik", "personalTyp", "geschlecht", "idStaatsangehoerigkeit", "wohnortID", "ortsteilID"];
 		super({ data, patch, listOfAutopatchProps });
 		this.schuljahr = validatorKontext().getSchuljahr();
 		this.manager = manager;
 		this.orteById = orteById;
 		this.ortsteileById = ortsteileById;
-
 
 		// Kürzel
 		this.addBlockingValidator(new ValidatorLehrerIndividualdatenKuerzel(() => this.proxy, () => this.manager().liste.list()), "kuerzel");
@@ -50,10 +55,11 @@ export class LehrerIndividualdatenModelProxy extends ModelProxy<LehrerStammdaten
 		this.addValidator(new ValidatorLsnLehrerStammdatenNachname({ get: () => this.proxy.nachname }, validatorKontext()), "nachname");
 
 		// Vorname
-		this.addBlockingValidator(new ValidatorLehrerIndividualdatenVorname(() => this.proxy.vorname, validatorKontext), "vorname");
+		this.addBlockingValidator(new ValidatorLehrerIndividualdatenVorname(() => this.proxy.vorname), "vorname");
+		this.addValidator(new ValidatorLsvLehrerStammdatenVorname({ get: () => this.proxy.vorname }, validatorKontext()), "vorname");
 
 		// Geschlecht
-		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.geschlecht), "geschlecht");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.geschlecht.value), "geschlecht");
 
 		// Geburtsdatum
 		this.addValidator(new ValidatorLsdLehrerStammdatenGeburtsdatum({ get: () => this.proxy.geburtsdatum }, validatorKontext()), "geburtsdatum");
@@ -91,35 +97,35 @@ export class LehrerIndividualdatenModelProxy extends ModelProxy<LehrerStammdaten
 		this.validate();
 	}
 
-	selectedPersonalTyp = computed<PersonalTyp>({
-		get: () => PersonalTyp.fromKuerzel(this.proxy.personalTyp) ?? PersonalTyp.SONSTIGE,
-		set: (value) => this.proxy.personalTyp = value.kuerzel,
+	personalTyp = computed<PersonalTyp | null>({
+		get: () => PersonalTyp.fromKuerzel(this.proxy.personalTyp) ?? null,
+		set: (value) => this.proxy.personalTyp = value?.kuerzel ?? '',
 	});
 
-	selectedGeschlecht = computed<Geschlecht>({
-		get: () => Geschlecht.fromValue(this.proxy.geschlecht) ?? Geschlecht.X,
-		set: (value) => this.proxy.geschlecht = value.id,
+	geschlecht = computed<Geschlecht | null>({
+		get: () => Geschlecht.fromValue(this.proxy.geschlecht) ?? null,
+		set: (value) => this.proxy.geschlecht = value?.id ?? -1,
 	});
 
-	selectedStaatsangehoerigkeit = computed<NationalitaetenKatalogEintrag | null>({
+	staatsangehoerigkeit = computed<NationalitaetenKatalogEintrag | null>({
 		get: () => {
-			const wert = Nationalitaeten.data().getWertByIDOrNull(this.proxy.idStaatsangehoerigkeit) ?? Nationalitaeten.getDEU();
-			return Nationalitaeten.data().getEintragBySchuljahrUndWert(this.schuljahr, wert);
+			const nationalitaet = Nationalitaeten.data().getWertByIDOrNull(this.proxy.idStaatsangehoerigkeit);
+			return (nationalitaet === null) ? null : Nationalitaeten.data().getEintragBySchuljahrUndWert(this.schuljahr, nationalitaet);
 		},
 		set: (value: NationalitaetenKatalogEintrag | null) => this.proxy.idStaatsangehoerigkeit = value?.id ?? null,
 	});
 
-	selectedWohnort = computed<OrtKatalogEintrag | null>({
+	wohnort = computed<OrtKatalogEintrag | null>({
 		get: () => this.orteById.get(this.proxy.wohnortID ?? -1) ?? null,
 		set: (val) => this.proxy.wohnortID = val?.id ?? null,
 	});
 
-	selectedOrtsteil = computed<OrtsteilKatalogEintrag | null>({
+	ortsteil = computed<OrtsteilKatalogEintrag | null>({
 		get: () => this.ortsteileById.get(this.proxy.ortsteilID ?? -1) ?? null,
 		set: (val) => this.proxy.ortsteilID = val?.id ?? null,
 	});
 
-	adresse = computed({
+	adresse = computed<string | null>({
 		get: () => AdressenUtils.combineStrasse(this.proxy.strassenname, this.proxy.hausnummer, this.proxy.hausnummerZusatz),
 		set: (adresse: string | null) => {
 			const [strassenname, hausnummer, hausnummerZusatz] = AdressenUtils.splitStrasse(adresse);

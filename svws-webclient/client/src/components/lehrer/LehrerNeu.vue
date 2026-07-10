@@ -3,50 +3,114 @@
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-input-wrapper>
-					<svws-ui-checkbox v-model="data.istSichtbar" :disabled>Ist Sichtbar</svws-ui-checkbox>
-					<svws-ui-checkbox v-model="data.istRelevantFuerStatistik" :disabled>Ist relevant für Statistik</svws-ui-checkbox>
+					<svws-ui-checkbox v-model="model.proxy.istSichtbar" :disabled>
+						Ist Sichtbar
+					</svws-ui-checkbox>
+					<svws-ui-checkbox v-model="model.proxy.istRelevantFuerStatistik" :disabled>
+						Ist relevant für Statistik
+					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
-				<svws-ui-text-input placeholder="Kürzel" required :max-len="10" :valid="fieldIsValid('kuerzel')" v-model="data.kuerzel" statistics :disabled />
-				<svws-ui-select title="Personal-Typ" required :items="PersonalTyp.values()" :item-text="i => i.bezeichnung" :disabled
-					:model-value="PersonalTyp.fromKuerzel(data.kuerzel) ?? PersonalTyp.LEHRKRAFT" @update:model-value="v => data.personalTyp = v?.kuerzel ?? '' " />
-				<svws-ui-text-input placeholder="Nachname" required :max-len="120" :valid="fieldIsValid('nachname')" :disabled
-					v-model="data.nachname" statistics />
-				<svws-ui-text-input placeholder="Rufname" required :max-len="80" v-model="data.vorname" :valid="fieldIsValid('vorname')" statistics :disabled />
+				<svws-ui-text-input placeholder="Kürzel"
+					v-model="model.proxy.kuerzel"
+					:validation="() => model.getFehler('kuerzel')"
+					:max-len="10" required
+					statistics focus :disabled />
+				<ui-select label="Personal-Typ"
+					v-model="model.personalTyp.value"
+					:manager="personaltypManger"
+					:validation="() => model.getFehler('personalTyp')"
+					required :removable="false" :disabled />
+				<svws-ui-text-input placeholder="Nachname"
+					v-model="model.proxy.nachname"
+					:validation="() => model.getFehler('nachname')"
+					:max-len="120" required
+					statistics :disabled />
+				<svws-ui-text-input placeholder="Rufname"
+					v-model="model.proxy.vorname"
+					:validation="() => model.getFehler('vorname')"
+					:max-len="80" required
+					statistics :disabled />
 				<svws-ui-spacing />
-				<svws-ui-select title="Geschlecht" required :items="Geschlecht.values()" :item-text="i => i.text" statistics :disabled
-					:model-value="Geschlecht.fromValue(data.geschlecht)" @update:model-value="v => data.geschlecht = v?.id ?? -1" />
-				<svws-ui-text-input placeholder="Geburtsdatum" type="date" v-model="data.geburtsdatum" statistics :disabled />
-				<svws-ui-select title="Staatsangehörigkeit" :items="Nationalitaeten.values()" :item-text="i => i.historie().getLast().staatsangehoerigkeit"
-					:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" autocomplete statistics
-					:model-value="Nationalitaeten.data().getWertByIDOrNull(data.idStaatsangehoerigkeit)" :valid="fieldIsValid('idStaatsangehoerigkeit')"
-					@update:model-value="v => data.idStaatsangehoerigkeit = v?.historie().getLast().id ?? null" :disabled />
+				<ui-select label="Geschlecht"
+					v-model="model.geschlecht.value"
+					:manager="geschlechtManager"
+					:validation="() => model.getFehler('geschlecht')"
+					required
+					:removable="false" :disabled />
+				<svws-ui-text-input placeholder="Geburtsdatum"
+					type="date"
+					v-model="model.proxy.geburtsdatum"
+					:validation="() => model.getFehler('geburtsdatum')"
+					statistics :disabled />
+				<ui-select label="Staatsangehörigkeit"
+					v-model="model.staatsangehoerigkeit.value"
+					:manager="staatsangehoerigkeitManager"
+					:validation="() => model.getFehler('idStaatsangehoerigkeit')"
+					required
+					statistics :removable="false" :disabled />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Akademischer Grad" v-model="data.titel" :valid="fieldIsValid('titel')" :max-len="20" :disabled />
-				<svws-ui-text-input placeholder="Amtsbezeichnung" v-model="data.amtsbezeichnung" :valid="fieldIsValid('amtsbezeichnung')" :max-len="15"
+				<svws-ui-text-input placeholder="Akademischer Grad"
+					v-model="model.proxy.titel"
+					:validation="() => model.getFehler('titel')"
+					:max-len="20"
+					:disabled />
+				<svws-ui-text-input placeholder="Amtsbezeichnung"
+					v-model="model.proxy.amtsbezeichnung"
+					:validation="() => model.getFehler('amtsbezeichnung')"
+					:max-len="15"
 					:disabled />
 			</svws-ui-input-wrapper>
 			<div class="mt-7 flex flex-row gap-4 justify-end">
 				<svws-ui-button type="secondary" @click="cancel">Abbrechen</svws-ui-button>
-				<svws-ui-button @click="addLehrerStammdaten" :disabled="!formIsValid || !hatKompetenzAdd">Speichern</svws-ui-button>
+				<svws-ui-button @click="addLehrer"
+					:disabled="!model.getAlleBlockierendenFehler().isEmpty() || !hatKompetenzAdd">
+					Speichern
+				</svws-ui-button>
 			</div>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Wohnort und Kontaktdaten">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Straße" v-model="adresse" :valid="fieldIsValid('strassenname')" span="full" :max-len="55" :disabled />
-				<svws-ui-select title="Wohnort" :items="orteById" :item-filter="orte_filter" :item-sort="orte_sort" :item-text="i => `${i.plz} ${i.ortsname}`"
-					:model-value="orteById.get(data.wohnortID ?? -1)" @update:model-value="v => data.wohnortID = v?.id ?? null" autocomplete removable
-					:valid="fieldIsValid('wohnortID')" :disabled />
-				<svws-ui-select title="Ortsteil" :items="ortsteile" :item-sort="ortsteilSort" :item-text="i => i.ortsteil ?? ''"
-					:model-value="ortsteileById.get(data.ortsteilID ?? -1)" @update:model-value="v => data.ortsteilID = v?.id ?? null" removable
-					:disabled="(data.wohnortID === null) || !hatKompetenzAdd" :valid="fieldIsValid('ortsteilID')" />
-				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Telefon" type="tel" v-model="data.telefon" :valid="fieldIsValid('telefon')" :max-len="20" :disabled />
-				<svws-ui-text-input placeholder="Mobil oder Fax" type="tel" v-model="data.telefonMobil" :valid="fieldIsValid('telefonMobil')" :max-len="20"
+				<svws-ui-text-input placeholder="Straße"
+					span="full"
+					v-model="model.adresse.value"
+					:validation="() => model.getFehler('strassenname')"
+					:max-len="55"
 					:disabled />
-				<svws-ui-text-input placeholder="Private E-Mail-Adresse" type="email" v-model="data.emailPrivat" :valid="fieldIsValid('emailPrivat')"
-					:max-len="100" :disabled />
-				<svws-ui-text-input placeholder="Schulische E-Mail-Adresse" type="email" v-model="data.emailDienstlich" :valid="fieldIsValid('emailDienstlich')"
-					:max-len="100" :disabled />
+				<ui-select label="Wohnort"
+					v-model="model.wohnort.value"
+					:manager="wohnortManager"
+					:validation="() => model.getFehler('wohnortID')"
+					:disabled />
+				<ui-select label="Ortsteil"
+					v-model="model.ortsteil.value"
+					:manager="ortsteilManager"
+					:validation="() => model.getFehler('ortsteilID')"
+					:disabled />
+				<svws-ui-spacing />
+				<svws-ui-text-input placeholder="Telefon"
+					type="tel"
+					v-model="model.proxy.telefon"
+					:validation="() => model.getFehler('telefon')"
+					:max-len="20"
+					:disabled />
+				<svws-ui-text-input placeholder="Mobil oder Fax"
+					type="tel"
+					v-model="model.proxy.telefonMobil"
+					:validation="() => model.getFehler('telefonMobil')"
+					:max-len="20"
+					:disabled />
+				<svws-ui-text-input placeholder="Private E-Mail-Adresse"
+					type="email"
+					v-model="model.proxy.emailPrivat"
+					:validation="() => model.getFehler('emailPrivat')"
+					:max-len="100"
+					:disabled />
+				<svws-ui-text-input placeholder="Schulische E-Mail-Adresse"
+					type="email"
+					v-model="model.proxy.emailDienstlich"
+					:validation="() => model.getFehler('emailDienstlich')"
+					:max-len="100"
+					:disabled />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-checkpoint-modal :checkpoint :continue-routing="props.continueRoutingAfterCheckpoint" />
@@ -54,146 +118,133 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ref, watch } from "vue";
+
 	import type { LehrerNeuProps } from './LehrerNeuProps';
-	import { BenutzerKompetenz, type OrtsteilKatalogEintrag } from "@core";
-	import { Geschlecht, JavaObject, JavaString, LehrerStammdaten, Nationalitaeten, PersonalTyp, AdressenUtils } from "@core";
-	import { orte_filter, orte_sort, ortsteilSort, staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort } from "~/utils/helfer";
+	import { computed, ref, watch } from "vue";
+	import { CoreTypeSelectManager, SelectManager, useSchuleState } from "@ui";
+	import type { OrtKatalogEintrag, NationalitaetenKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
+	import { ArrayList, BenutzerKompetenz, Geschlecht, LehrerStammdaten, Nationalitaeten, PersonalTyp } from "@core";
+	import { LehrerIndividualdatenModelProxy } from "~/components/lehrer/individualdaten/modelproxy/LehrerIndividualdatenModelProxy";
 
 	const props = defineProps<LehrerNeuProps>();
+
+	const schuleState = useSchuleState();
+
+	const isLoading = ref<boolean>(false);
+
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRERDATEN_AENDERN));
-	const disabled = computed(() => !hatKompetenzAdd.value);
-	const data = ref<LehrerStammdaten>(
-		Object.assign(new LehrerStammdaten(), { personalTyp: "LEHRKRAFT" })
-	);
-	const ortsteile = computed<Array<OrtsteilKatalogEintrag>>(() => {
-		const result: Array<OrtsteilKatalogEintrag> = [];
+	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
+	const orte = computed<Iterable<OrtKatalogEintrag>>(() => props.orteById.values());
+	const ortsteile = computed<Iterable<OrtsteilKatalogEintrag>>(() => {
+		const result = new ArrayList<OrtsteilKatalogEintrag>();
+		if (model.proxy.wohnortID === null) {
+			return result;
+		}
+
 		for (const ortsteil of props.ortsteileById.values()) {
-			if (ortsteil.idOrt === data.value.wohnortID) {
-				result.push(ortsteil);
+			if (ortsteil.idOrt === model.proxy.wohnortID) {
+				result.add(ortsteil);
 			}
 		}
 		return result;
 	});
-	const adresse = computed({
-		get: () => AdressenUtils.combineStrasse(data.value.strassenname, data.value.hausnummer, data.value.hausnummerZusatz),
-		set: (adresse: string) => {
-			const vals = AdressenUtils.splitStrasse(adresse);
-			data.value.strassenname = vals[0];
-			data.value.hausnummer = vals[1];
-			data.value.hausnummerZusatz = vals[2];
-		},
+
+	const model = new LehrerIndividualdatenModelProxy(
+		() => Object.assign(new LehrerStammdaten(),
+			{
+				personalTyp: PersonalTyp.LEHRKRAFT.kuerzel,
+				istSichtbar: true,
+				istRelevantFuerStatistik: true,
+			} as Partial<LehrerStammdaten>
+		),
+		() => schuleState.validatorKontext,
+		props.lehrerListeManager,
+		props.orteById,
+		props.ortsteileById
+	);
+
+	const personaltypManger = new SelectManager({
+		options: PersonalTyp.values(),
+		optionDisplayText: typ => typ.bezeichnung,
+		selectionDisplayText: typ => typ.bezeichnung,
 	});
 
-	// validation logic
-	function fieldIsValid(field: keyof LehrerStammdaten | null): (v: string | null) => boolean {
-		return (v: string | null) => {
-			switch (field) {
-				case 'kuerzel':
-					return kuerzelIsValid(data.value.kuerzel);
-				case 'personalTyp':
-					return !JavaString.isBlank(data.value.personalTyp);
-				case 'nachname':
-					return stringIsValid(data.value.nachname, true, 120);
-				case 'geschlecht':
-					return Geschlecht.fromValue(data.value.geschlecht) !== null;
-				case 'vorname':
-					return stringIsValid(data.value.vorname, true, 80);
-				case 'idStaatsangehoerigkeit':
-					return (data.value.idStaatsangehoerigkeit === null) || (Nationalitaeten.data().getWertByIDOrNull(data.value.idStaatsangehoerigkeit) !== null);
-				case 'titel':
-					return stringIsValid(data.value.titel, false, 20);
-				case 'amtsbezeichnung':
-					return stringIsValid(data.value.amtsbezeichnung, false, 15);
-				case 'strassenname':
-					return adresseIsValid();
-				case 'wohnortID':
-					return (data.value.wohnortID === null) || (props.orteById.get(data.value.wohnortID) !== undefined);
-				case 'ortsteilID':
-					return (data.value.ortsteilID === null) || (props.ortsteileById.get(data.value.ortsteilID) !== undefined);
-				case 'telefon':
-					return phoneNumberIsValid(data.value.telefon, false, 20);
-				case 'telefonMobil':
-					return phoneNumberIsValid(data.value.telefonMobil, false, 20);
-				case 'emailPrivat':
-					return stringIsValid(data.value.emailPrivat, false, 100);
-				case 'emailDienstlich':
-					return stringIsValid(data.value.emailDienstlich, false, 100);
-				default:
-					return true;
-			}
-		};
-	}
-
-	const formIsValid = computed(() => {
-		return Object.keys(data.value).every(field => {
-			const validateField = fieldIsValid(field as keyof LehrerStammdaten);
-			const fieldValue = data.value[field as keyof LehrerStammdaten] as string | null;
-			return validateField(fieldValue);
-		});
+	const geschlechtManager = new SelectManager({
+		options: Geschlecht.values(),
+		optionDisplayText: geschlecht => geschlecht.text,
+		selectionDisplayText: geschlecht => geschlecht.text,
 	});
 
-	function adresseIsValid() {
-		return stringIsValid(data.value.strassenname, false, 55) &&
-			stringIsValid(data.value.hausnummer, false, 10) &&
-			stringIsValid(data.value.hausnummerZusatz, false, 30);
+	const staatsangehoerigkeitManager = new CoreTypeSelectManager({
+		clazz: Nationalitaeten.class,
+		optionDisplayText: nationalitaet => nationalitaet.staatsangehoerigkeit,
+		selectionDisplayText: nationalitaet => nationalitaet.staatsangehoerigkeit,
+		sort: staatsangehoerigkeitSort,
+	});
+
+	function staatsangehoerigkeitSort(a: NationalitaetenKatalogEintrag, b: NationalitaetenKatalogEintrag): number {
+		const va = a.staatsangehoerigkeit;
+		const vb = b.staatsangehoerigkeit;
+		if ((va.length > 0) && (vb.length > 0)) {
+			return va.localeCompare(vb);
+		} else if ((va.length > 0) && (vb.length === 0)) {
+			return -1;
+		} else if ((va.length === 0) && (vb.length > 0)) {
+			return 1;
+		}
+		return 0;
 	}
 
-	function kuerzelIsValid(kuerzel: string | null) {
-		if ((kuerzel === null) || JavaString.isBlank(kuerzel) || (kuerzel.length > 10)) {
-			return false;
+	const wohnortManager = new SelectManager({
+		options: orte,
+		optionDisplayText: ort => `${ort.plz ?? '—'} ${ort.ortsname ?? '—'}`,
+		selectionDisplayText: ort => `${ort.plz ?? '—'} ${ort.ortsname ?? '—'}`,
+	});
+
+	const ortsteilManager = new SelectManager({
+		options: ortsteile,
+		optionDisplayText: ortsteil => ortsteil.ortsteil ?? '—',
+		selectionDisplayText: ortsteil => ortsteil.ortsteil ?? '—',
+		sort: ortsteilSort,
+	});
+
+	function ortsteilSort(a: OrtsteilKatalogEintrag, b: OrtsteilKatalogEintrag): number {
+		if ((a.ortsteil !== null) && (b.ortsteil !== null)) {
+			return a.ortsteil.localeCompare(b.ortsteil);
+		} else if ((a.ortsteil !== null) && (b.ortsteil === null)) {
+			return -1;
+		} else if ((a.ortsteil === null) && (b.ortsteil !== null)) {
+			return 1;
 		}
-		for (const lehrerStammdaten of props.lehrerListeManager().liste.list()) {
-			if (JavaObject.equalsTranspiler(lehrerStammdaten.kuerzel, kuerzel)) {
-				return false;
-			}
-		}
-		return true;
+		return 0;
 	}
 
-	function phoneNumberIsValid(input: string | null, mandatory: boolean, maxLength: number) {
-		if ((input === null) || (JavaString.isBlank(input))) {
-			return !mandatory;
-		}
-		// folgende Formate sind erlaubt: 0151123456, 0151/123456, 0151-123456, +49/176-456456 -> Buchstaben sind nicht erlaubt
-		return /^\+?\d+([-/]?\d+)*$/.test(input) && input.length <= maxLength;
-	}
-
-	function stringIsValid(input: string | null, mandatory: boolean, maxLength: number) {
-		if (mandatory) {
-			return (input !== null) && (!JavaString.isBlank(input)) && (input.length <= maxLength);
-		}
-		return (input === null) || (input.length <= maxLength);
-	}
-
-	const isLoading = ref<boolean>(false);
-
-	watch(() => data.value, async () => {
-		if (isLoading.value) {
-			return;
-		}
-
-		props.checkpoint.active = true;
-	}, { immediate: false, deep: true });
-
-
-	// api call
-	async function addLehrerStammdaten() {
+	async function addLehrer() {
 		if (isLoading.value) {
 			return;
 		}
 
 		isLoading.value = true;
 		props.checkpoint.active = false;
-		const { id, ...partialData } = data.value;
+		const { id, ...partialData } = model.proxy;
 		await props.add(partialData);
 		isLoading.value = false;
 	}
 
-	// other
 	async function cancel() {
 		props.checkpoint.active = false;
 		await props.gotoDefaultView(null);
 	}
+
+	watch(() => model.pending, () => {
+		if (isLoading.value) {
+			return;
+		}
+
+		if (Object.keys(model.pending).length > 0) {
+			props.checkpoint.active = true;
+		}
+
+	}, { immediate: false, deep: true });
 
 </script>
