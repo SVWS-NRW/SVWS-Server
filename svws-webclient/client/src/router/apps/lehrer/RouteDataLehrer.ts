@@ -1,4 +1,6 @@
-import type { FachDaten, LehrerUnterrichtsfach, LehrerFachrichtungEintrag, LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdaten, LehrerPersonalabschnittsdatenAnrechnungsstunden, LehrerPersonaldaten, LehrerStammdaten, List, SchulEintrag, SimpleOperationResponse, StundenplanListeEintrag, Schulleitung } from "@core";
+import type { FachDaten, LehrerUnterrichtsfach, LehrerFachrichtungEintrag, LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag, LehrerListeEintrag,
+	LehrerPersonalabschnittsdaten, LehrerPersonalabschnittsdatenAnrechnungsstunden, LehrerPersonaldaten, LehrerStammdaten, List, SchulEintrag,
+	SimpleOperationResponse, StundenplanListeEintrag, Schulleitung } from "@core";
 import { ArrayList, BenutzerKompetenz, DeveloperNotificationException } from "@core";
 import { api } from "~/router/Api";
 import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/individualdaten/RouteLehrerIndividualdaten";
@@ -188,6 +190,10 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 			}
 		}
 		const personaldaten = await api.server.getLehrerPersonaldaten(api.schema, this.manager.auswahl().id);
+		if (personaldaten.abschnittsdaten.isEmpty()) {
+			const result = await this.createPersonalabschnittsdaten(personaldaten.id);
+			personaldaten.abschnittsdaten.add(result);
+		}
 		this.manager.setPersonalDaten(personaldaten);
 		const faecher = await api.server.getFaecher(api.schema);
 		const mapFaecher = new Map<number, FachDaten>();
@@ -517,9 +523,15 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 
 	add = async (data: Partial<LehrerStammdaten>): Promise<void> => {
 		const lehrerStammdaten = await api.server.addLehrerStammdaten(data, api.schema);
+		await this.createPersonalabschnittsdaten(lehrerStammdaten.id);
 		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
 		await this.gotoDefaultView(lehrerStammdaten.id);
 	};
+
+	private async createPersonalabschnittsdaten(idLehrer: number): Promise<LehrerPersonalabschnittsdaten> {
+		const idSchuljahresabschnitt = this._state.value.idSchuljahresabschnitt;
+		return await api.server.createLehrerPersonalabschnittsdaten({ idLehrer, idSchuljahresabschnitt }, api.schema);
+	}
 
 	patchMultiple = async (pendingStateManager: PendingStateManager<any>): Promise<void> => {
 		api.status.start();
