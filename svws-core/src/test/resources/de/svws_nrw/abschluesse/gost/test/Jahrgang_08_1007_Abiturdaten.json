@@ -2,6 +2,7 @@
   "schuelerID": 1007,
   "abiturjahr": 2025,
   "schuljahrAbitur": 2024,
+  "schuljahrEintrittOberstufe" : 2015,
   "fachbelegungen": [
     {
       "fachID": 17,

@@ -1658,7 +1658,10 @@ export class AbiturdatenManager extends JavaObject {
 	 *
 	 * @return die Fachbelegung oder null, falls keine vorhanden ist
 	 */
-	public getFachbelegungByID(fachID: number): AbiturFachbelegung | null {
+	public getFachbelegungByID(fachID: number | null): AbiturFachbelegung | null {
+		if (fachID === null) {
+			return null;
+		}
 		return this.mapFachbelegungByFachID.get(fachID);
 	}
 
@@ -2168,11 +2171,11 @@ export class AbiturdatenManager extends JavaObject {
 			if (!this.pruefeBelegungMitKursart(belegung, kursart, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
 				return null;
 			}
-			const referenzfach1: AbiturFachbelegung | null = this.getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
+			const referenzfach1: AbiturFachbelegung | null = this.getFachbelegungByID(fach.projektKursLeitfach1ID);
 			if ((referenzfach1 !== null) && this.pruefeBelegungMitKursart(referenzfach1, GostKursart.GK, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12) && this.pruefeBelegungMitSchriftlichkeit(referenzfach1, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
 				return kursart;
 			}
-			const referenzfach2: AbiturFachbelegung | null = this.getFachbelegungByKuerzel(fach.projektKursLeitfach2Kuerzel);
+			const referenzfach2: AbiturFachbelegung | null = this.getFachbelegungByID(fach.projektKursLeitfach2ID);
 			if ((referenzfach2 !== null) && this.pruefeBelegungMitKursart(referenzfach2, GostKursart.GK, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12) && this.pruefeBelegungMitSchriftlichkeit(referenzfach2, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
 				return kursart;
 			}

@@ -291,7 +291,7 @@ export class GostBelegungsfehler extends JavaEnum<GostBelegungsfehler> {
 	/**
 	 * BelegungsfehlerArt KU_MU_10
 	 */
-	public static readonly GOST30_KU_MU_10: GostBelegungsfehler = new GostBelegungsfehler("GOST30_KU_MU_10", 55, "KU_MU_10", GostBelegungsfehlerArt.BELEGUNG, "Mindestens eines der Fächer Kunst oder Musik muss von EF.1 bis wenigstens Q1.2 durchgehend belegt werden. In der Qualifikationsphase kann auch alternativ Literatur mit zwei Kursen belegt werden.", "Mindestens eines der Fächer Kunst oder Musik muss in EF.1 belegt werden");
+	public static readonly GOST30_KU_MU_10: GostBelegungsfehler = new GostBelegungsfehler("GOST30_KU_MU_10", 55, "KU_MU_10", GostBelegungsfehlerArt.BELEGUNG, "Mindestens eines der Fächer Kunst oder Musik muss von EF.1 bis wenigstens Q1.2 durchgehend belegt werden. In der Qualifikationsphase kann auch alternativ Literatur mit zwei aufeinander folgenden Kursen belegt werden.", "Mindestens eines der Fächer Kunst oder Musik muss in EF.1 belegt werden");
 
 	/**
 	 * BelegungsfehlerArt L_10_INFO
@@ -431,7 +431,7 @@ export class GostBelegungsfehler extends JavaEnum<GostBelegungsfehler> {
 	/**
 	 * BelegungsfehlerArt PF_28
 	 */
-	public static readonly GOST30_PF_28: GostBelegungsfehler = new GostBelegungsfehler("GOST30_PF_28", 83, "PF_28", GostBelegungsfehlerArt.BELEGUNG, "Das aktuell gewählte Referenzfach ist Abiturfach und der Projektkurs wurde als 5. Abiturfach gewählt. Beides zusammen ist nicht möglich.", null);
+	public static readonly GOST30_PF_28: GostBelegungsfehler = new GostBelegungsfehler("GOST30_PF_28", 83, "PF_28", GostBelegungsfehlerArt.BELEGUNG, "Der Projektkurs wurde als 5. Abiturfach gewählt, obwohl das aktuell gewählte Referenzfach bereits als Abiturfach gewählt ist. Beides zusammen ist nicht möglich.", null);
 
 	/**
 	 * BelegungsfehlerArt RE_10

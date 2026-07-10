@@ -19,6 +19,11 @@ export class GostLaufbahnplanungExportV2Schueler extends JavaObject {
 	public idEnc: string = "";
 
 	/**
+	 * Das Jahr, in welchem der Schüler in die Gymnasiale Oberstufe in Bezug auf die Prüfungsordnung eingetreten ist
+	 */
+	public schuljahrEintrittOberstufe: number = -1;
+
+	/**
 	 * Der Vorname des Schülers
 	 */
 	public vorname: string = "";
@@ -95,6 +100,9 @@ export class GostLaufbahnplanungExportV2Schueler extends JavaObject {
 		if (obj.idEnc === undefined)
 			throw new Error('invalid json format, missing attribute idEnc');
 		result.idEnc = obj.idEnc;
+		if (obj.schuljahrEintrittOberstufe === undefined)
+			throw new Error('invalid json format, missing attribute schuljahrEintrittOberstufe');
+		result.schuljahrEintrittOberstufe = obj.schuljahrEintrittOberstufe;
 		if (obj.vorname === undefined)
 			throw new Error('invalid json format, missing attribute vorname');
 		result.vorname = obj.vorname;
@@ -140,6 +148,7 @@ export class GostLaufbahnplanungExportV2Schueler extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"idEnc" : ' + JSON.stringify(obj.idEnc) + ',';
+		result += '"schuljahrEintrittOberstufe" : ' + obj.schuljahrEintrittOberstufe.toString() + ',';
 		result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
 		result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';
 		result += '"geschlecht" : ' + JSON.stringify(obj.geschlecht) + ',';
@@ -197,6 +206,9 @@ export class GostLaufbahnplanungExportV2Schueler extends JavaObject {
 		}
 		if (obj.idEnc !== undefined) {
 			result += '"idEnc" : ' + JSON.stringify(obj.idEnc) + ',';
+		}
+		if (obj.schuljahrEintrittOberstufe !== undefined) {
+			result += '"schuljahrEintrittOberstufe" : ' + obj.schuljahrEintrittOberstufe.toString() + ',';
 		}
 		if (obj.vorname !== undefined) {
 			result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';

@@ -1,30 +1,70 @@
 <template>
 	<div class="flex flex-col gap-4">
-		<div class="text-headline-md">Gleichwertige komplexe Lernleistungen definieren</div>
-		<div class="flex flex-col gap-6">
-			<div class="flex flex-col gap-3">
-				<div class="font-bold">Einführungsphase</div>
-				<div class="grid grid-cols-3 gap-4">
-					<ui-select label="Sprachen" v-model="gklEFSprachlich" :manager="managerEFSprachlich" :removable="false" />
-					<ui-select label="GWs" v-model="gklEF_GW" :manager="managerEFGesellschaftswissenschaftlich" :removable="false" />
-					<ui-select label="NWs" v-model="gklEF_NW" :manager="managerEFNaturwissenschaftlich" :removable="false" />
-				</div>
-			</div>
-			<div class="flex flex-col gap-3">
-				<div class="font-bold">Qualifikationsphase</div>
-				<div class="grid grid-cols-3 gap-4">
-					<ui-select label="Sprachen" v-model="gklQSprachlich" :manager="managerQSprachlich" :removable="false" />
-					<ui-select label="GWs" v-model="gklQ_GW" :manager="managerQGesellschaftswissenschaftlich" :removable="false" />
-					<ui-select label="NWs" v-model="gklQ_NW" :manager="managerQNaturwissenschaftlich" :removable="false" />
-				</div>
-			</div>
-		</div>
+		<div class="text-headline-md">Gleichwertige komplexe Lernleistungen</div>
+		<ui-table-grid name="Gleichwertige komplexe Lernleistungen" :manager="() => gridManager">
+			<template #header>
+				<td class="ui-divider" />
+				<td class="text-center ui-divider">Einführungsphase</td>
+				<td class="text-center">Qualifikationsphase</td>
+			</template>
+			<template #default="{ row }">
+				<template v-if="row === 1">
+					<td class="aufgabenfeld1 ui-divider text-uistatic text-left pt-1">
+						<svws-ui-tooltip>
+							Aufgabenfeld I
+							<template #content>
+								Sprachlich-Literarisch-Künstlerisch
+							</template>
+						</svws-ui-tooltip>
+					</td>
+					<td class="ui-divider">
+						<ui-select v-model="gklEFSprachlich" :manager="managerEFSprachlich" :removable="false" headless />
+					</td>
+					<td>
+						<ui-select v-model="gklQSprachlich" :manager="managerQSprachlich" :removable="false" headless />
+					</td>
+				</template>
+				<template v-else-if="row === 2">
+					<td class="aufgabenfeld2 ui-divider text-uistatic text-left pt-1">
+						<svws-ui-tooltip>
+							Aufgabenfeld II
+							<template #content>
+								Gesellschaftswissenschaftlich
+							</template>
+						</svws-ui-tooltip>
+					</td>
+					<td class="ui-divider">
+						<ui-select v-model="gklEF_GW" :manager="managerEFGesellschaftswissenschaftlich" :removable="false" headless />
+					</td>
+					<td>
+						<ui-select v-model="gklQ_GW" :manager="managerQGesellschaftswissenschaftlich" :removable="false" headless />
+					</td>
+				</template>
+				<template v-else-if="row === 3">
+					<td class="aufgabenfeld3 ui-divider text-uistatic text-left pt-1">
+						<svws-ui-tooltip>
+							Aufgabenfeld III
+							<template #content>
+								Mathematisch-Naturwissenschaftlich-Technisch
+							</template>
+						</svws-ui-tooltip>
+					</td>
+					<td class="ui-divider">
+						<ui-select v-model="gklEF_NW" :manager="managerEFNaturwissenschaftlich" :removable="false" headless />
+					</td>
+					<td>
+						<ui-select v-model="gklQ_NW" :manager="managerQNaturwissenschaftlich" :removable="false" headless />
+					</td>
+				</template>
+			</template>
+		</ui-table-grid>
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { computed, type ComputedRef } from "vue";
+	import type { ComputedRef } from "vue";
+	import { computed } from "vue";
 	import type { GostFach } from "../../../../../core/src/core/data/gost/GostFach";
 	import { GostFachbereich } from "../../../../../core/src/core/types/gost/GostFachbereich";
 	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
@@ -37,6 +77,8 @@
 	import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
 	import type { Comparator } from "../../../../../core/src/java/util/Comparator";
 	import { JavaInteger } from "../../../../../core/src/java/lang/JavaInteger";
+	import { Fach } from "../../../../../core/src/asd/types/fach/Fach";
+	import { GridManager } from "../../../ui/controls/tablegrid/GridManager";
 
 	const gostLaufbahnplanungState = useGostLaufbahnplanungState();
 
@@ -70,8 +112,6 @@
 		set: (value) => void gostLaufbahnplanungState.patchGKLWahlen({ idKlausurvorgabeQ_NW: value?.vorgabe.id ?? null }),
 	});
 
-
-
 	const faecherEFSprachlich = computed(() => getFaecher(GostFachbereich.SPRACHLICH_LITERARISCH_KUENSTLERISCH, GostHalbjahr.getEinfuehrungsphase()));
 	const faecherEFGesellschaftswissenschaftlich = computed(() => getFaecher(GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_MIT_RELIGION, GostHalbjahr.getEinfuehrungsphase()));
 	const faecherEFNaturwissenschaftlich = computed(() => getFaecher(GostFachbereich.MATHEMATISCH_NATURWISSENSCHAFTLICH, GostHalbjahr.getEinfuehrungsphase()));
@@ -85,6 +125,16 @@
 	const managerQSprachlich = getSelectManager(faecherQSprachlich);
 	const managerQGesellschaftswissenschaftlich = getSelectManager(faecherQGesellschaftswissenschaftlich);
 	const managerQNaturwissenschaftlich = getSelectManager(faecherQNaturwissenschaftlich);
+
+	const gridManager = new GridManager<string, number, Array<number>>({
+		daten: computed<Array<number>>(() => [1, 2, 3]),
+		getRowKey: row => `Aufgabenfeld ${row}`,
+		columns: [
+			{ kuerzel: "Aufgabenfeld", name: "Aufgabenfeld", width: "9rem", hideable: false },
+			{ kuerzel: "Einführungsphase", name: "Einführungsphase", width: "1fr", hideable: false },
+			{ kuerzel: "Qualifikationsphase", name: "Qualifikationsphase", width: "1fr", hideable: false },
+		],
+	});
 
 	function getFaecher(bereich: GostFachbereich, halbjahre: GostHalbjahr[]): List<GostKlausurvorgabeEintrag> {
 		const result = new ArrayList<GostKlausurvorgabeEintrag>;
@@ -130,7 +180,7 @@
 	}
 
 	function textAuswahl(auswahl: GostKlausurvorgabeEintrag): string {
-		return `${auswahl.halbjahr.kuerzel}.${auswahl.vorgabe.quartal} ${textFach(auswahl.fach)}`;
+		return `${auswahl.halbjahr.kuerzel}-${auswahl.vorgabe.quartal} ${textFach(auswahl.fach)}`;
 	}
 
 	function textFach(fach: GostFach): string {
@@ -138,7 +188,31 @@
 		if ((bezeichnung === null) || (bezeichnung.length === 0)) {
 			return fach.kuerzel;
 		}
-		return bezeichnung.length <= 15 ? bezeichnung : `${bezeichnung.substring(0, 15)}...`;
+		return bezeichnung.length <= 20 ? bezeichnung : `${bezeichnung.substring(0, 20)}...`;
 	}
 
+	const bgColorAufgabenfeld1 = Fach.D.getHMTLFarbeRGBA(2030, 1);
+	const bgColorAufgabenfeld2 = Fach.GE.getHMTLFarbeRGBA(2030, 1);
+	const bgColorAufgabenfeld3 = Fach.M.getHMTLFarbeRGBA(2030, 1);
+
+
 </script>
+
+<style scoped>
+
+	td.aufgabenfeld1 {
+		background-color: v-bind(bgColorAufgabenfeld1);
+		color: var(--color-text-uistatic);
+	}
+
+	td.aufgabenfeld2 {
+		background-color: v-bind(bgColorAufgabenfeld2);
+		color: var(--color-text-uistatic);
+	}
+
+	td.aufgabenfeld3 {
+		background-color: v-bind(bgColorAufgabenfeld3);
+		color: var(--color-text-uistatic);
+	}
+
+</style>

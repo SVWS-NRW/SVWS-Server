@@ -42,6 +42,10 @@ public class Abiturdaten {
 	@Schema(description = "Das Schuljahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird.", example = "2024")
 	public int schuljahrAbitur;
 
+	/** Das Jahr, in welchem der Schüler in die Gymnasiale Oberstufe in Bezug auf die Prüfungsordnung eingetreten ist */
+	@Schema(description = "Das Jahr, in welchem der Schüler in die Gymnasiale Oberstufe in Bezug auf die Prüfungsordnung eingetreten ist.", example = "4711")
+	public int schuljahrEintrittOberstufe = -1;
+
 	/** Die aktuelle Jahrgangsstufe, welche dem Schüler in den Abiturdaten derzeit zugeordnet ist. */
 	@Schema(description = "die aktuelle Jahrgangstufe, welche dem Schüler in den Abiturdaten derzeit zugeordnet ist", example = "Q1")
 	public String jahrgang;

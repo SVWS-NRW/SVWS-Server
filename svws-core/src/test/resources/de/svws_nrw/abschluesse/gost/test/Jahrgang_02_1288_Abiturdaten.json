@@ -2,6 +2,7 @@
   "schuelerID" : 1288,
   "abiturjahr" : 2020,
   "schuljahrAbitur" : 2019,
+  "schuljahrEintrittOberstufe" : 2015,
   "fachbelegungen" : [ {
     "fachID" : 16,
     "letzteKursart" : "GK",

@@ -20,4 +20,9 @@ registerStates();
 // Lese die Daten für die Core-Types ein
 new JsonCoreTypeReaderStatic().readAll();
 
+if (process.env.NODE_ENV === 'development') {
+	const { registerSVWSDevTools } = await import("../../ui/src/devtools/stateInspector");
+	registerSVWSDevTools(context.app);
+}
+
 await context.mount();

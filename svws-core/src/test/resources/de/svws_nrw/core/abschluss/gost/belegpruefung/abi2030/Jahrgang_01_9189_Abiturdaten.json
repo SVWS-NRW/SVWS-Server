@@ -2,6 +2,7 @@
   "schuelerID" : 9189,
   "abiturjahr" : 2030,
   "schuljahrAbitur" : 2029,
+  "schuljahrEintrittOberstufe" : 2027,
   "fachbelegungen" : [ {
     "fachID" : 192,
     "letzteKursart" : "LK",

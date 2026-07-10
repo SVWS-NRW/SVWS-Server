@@ -1752,7 +1752,10 @@ public class AbiturdatenManager {
 	 *
 	 * @return die Fachbelegung oder null, falls keine vorhanden ist
 	 */
-	public AbiturFachbelegung getFachbelegungByID(final long fachID) {
+	public AbiturFachbelegung getFachbelegungByID(final Long fachID) {
+		if (fachID == null) {
+			return null;
+		}
 		return mapFachbelegungByFachID.get(fachID);
 	}
 
@@ -2315,12 +2318,12 @@ public class AbiturdatenManager {
 				return null;
 			}
 			// Prüfe die Belegungen der Referenzfächer und deren Schriftlichkeit
-			final AbiturFachbelegung referenzfach1 = getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
+			final AbiturFachbelegung referenzfach1 = getFachbelegungByID(fach.projektKursLeitfach1ID);
 			if ((referenzfach1 != null) && pruefeBelegungMitKursart(referenzfach1, GostKursart.GK, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12)
 					&& pruefeBelegungMitSchriftlichkeit(referenzfach1, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
 				return kursart;
 			}
-			final AbiturFachbelegung referenzfach2 = getFachbelegungByKuerzel(fach.projektKursLeitfach2Kuerzel);
+			final AbiturFachbelegung referenzfach2 = getFachbelegungByID(fach.projektKursLeitfach2ID);
 			if ((referenzfach2 != null) && pruefeBelegungMitKursart(referenzfach2, GostKursart.GK, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12)
 					&& pruefeBelegungMitSchriftlichkeit(referenzfach2, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
 				return kursart;

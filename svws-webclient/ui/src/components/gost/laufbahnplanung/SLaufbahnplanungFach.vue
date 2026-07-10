@@ -122,7 +122,7 @@
 			</span>
 		</td>
 	</template>
-	<td v-if="hatUpdateKompetenz" class="ui-table-grid-button text-center select-none font-medium"
+	<td v-if="hatUpdateKompetenz" class="ui-table-grid-button text-center select-none font-medium relative"
 		:class="{
 			'cursor-pointer': manager.istMoeglichAbi(fach) && !istBewertet(GostHalbjahr.Q22), '': manager.istMoeglichAbi(fach),
 			'cursor-not-allowed': !manager.istMoeglichAbi(fach),
@@ -132,7 +132,7 @@
 		:ref="inputAbitur(fach, rowIndex)">
 		<template v-if="abi_wahl !== ''">
 			<span class="relative">{{ abi_wahl }}</span>
-			<span v-if="(abi_wahl !== '') && !manager.istMoeglichAbi(fach) && hatUpdateKompetenz" class="absolute right-3">
+			<span v-if="(abi_wahl !== '') && !manager.istMoeglichAbi(fach) && hatUpdateKompetenz" class="absolute right-1">
 				<svws-ui-tooltip :color="'danger'">
 					<svws-ui-button type="icon" size="small" @click="manager.deleteFachwahlAbitur(fach)"
 						@keydown.enter.prevent="manager.deleteFachwahlAbitur(fach)" @keydown.space.prevent="manager.deleteFachwahlAbitur(fach)">

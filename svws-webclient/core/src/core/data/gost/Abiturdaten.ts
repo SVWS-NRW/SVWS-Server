@@ -24,6 +24,11 @@ export class Abiturdaten extends JavaObject {
 	public schuljahrAbitur: number = 0;
 
 	/**
+	 * Das Jahr, in welchem der Schüler in die Gymnasiale Oberstufe in Bezug auf die Prüfungsordnung eingetreten ist
+	 */
+	public schuljahrEintrittOberstufe: number = -1;
+
+	/**
 	 * Die aktuelle Jahrgangsstufe, welche dem Schüler in den Abiturdaten derzeit zugeordnet ist.
 	 */
 	public jahrgang: string | null = null;
@@ -223,6 +228,9 @@ export class Abiturdaten extends JavaObject {
 		if (obj.schuljahrAbitur === undefined)
 			throw new Error('invalid json format, missing attribute schuljahrAbitur');
 		result.schuljahrAbitur = obj.schuljahrAbitur;
+		if (obj.schuljahrEintrittOberstufe === undefined)
+			throw new Error('invalid json format, missing attribute schuljahrEintrittOberstufe');
+		result.schuljahrEintrittOberstufe = obj.schuljahrEintrittOberstufe;
 		result.jahrgang = (obj.jahrgang === undefined) ? null : obj.jahrgang === null ? null : obj.jahrgang;
 		if (obj.bewertetesHalbjahr !== undefined) {
 			for (let i = 0; i < obj.bewertetesHalbjahr.length; i++) {
@@ -289,6 +297,7 @@ export class Abiturdaten extends JavaObject {
 		result += '"schuelerID" : ' + obj.schuelerID.toString() + ',';
 		result += '"abiturjahr" : ' + obj.abiturjahr.toString() + ',';
 		result += '"schuljahrAbitur" : ' + obj.schuljahrAbitur.toString() + ',';
+		result += '"schuljahrEintrittOberstufe" : ' + obj.schuljahrEintrittOberstufe.toString() + ',';
 		result += '"jahrgang" : ' + ((obj.jahrgang === null) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
 		result += '"bewertetesHalbjahr" : [ ';
 		for (let i = 0; i < obj.bewertetesHalbjahr.length; i++) {
@@ -352,6 +361,9 @@ export class Abiturdaten extends JavaObject {
 		}
 		if (obj.schuljahrAbitur !== undefined) {
 			result += '"schuljahrAbitur" : ' + obj.schuljahrAbitur.toString() + ',';
+		}
+		if (obj.schuljahrEintrittOberstufe !== undefined) {
+			result += '"schuljahrEintrittOberstufe" : ' + obj.schuljahrEintrittOberstufe.toString() + ',';
 		}
 		if (obj.jahrgang !== undefined) {
 			result += '"jahrgang" : ' + ((obj.jahrgang === null) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';

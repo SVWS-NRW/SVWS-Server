@@ -2,7 +2,7 @@
 	<svws-ui-content-card title="Beratung">
 		<svws-ui-input-wrapper :grid="2">
 			<div class="col-span-full">
-				Letzer Import mit Änderungen:&nbsp;&nbsp;
+				Letzter Import mit Änderungen:&nbsp;&nbsp;
 				<template v-if="gostLaufbahnplanungState.gostLaufbahnBeratungsdaten.ruecklaufdatum === null">'—'</template>
 				<template v-else> {{ new Date(gostLaufbahnplanungState.gostLaufbahnBeratungsdaten.ruecklaufdatum!).toLocaleDateString("de-DE", { year: "numeric", month: "2-digit", day: "2-digit" }) }} </template>
 			</div>

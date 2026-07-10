@@ -29,6 +29,10 @@ public class GostLaufbahnplanungExportV2Schueler {
 	@Schema(description = "Die ID des Schüler verschlüsselt.", example = "4711")
 	public @NotNull String idEnc = "";
 
+	/** Das Jahr, in welchem der Schüler in die Gymnasiale Oberstufe in Bezug auf die Prüfungsordnung eingetreten ist */
+	@Schema(description = "Das Jahr, in welchem der Schüler in die Gymnasiale Oberstufe in Bezug auf die Prüfungsordnung eingetreten ist.", example = "4711")
+	public int schuljahrEintrittOberstufe = -1;
+
 	/** Der Vorname des Schülers */
 	@Schema(description = "Der Vorname des Schülers.", example = "Max")
 	public @NotNull String vorname = "";

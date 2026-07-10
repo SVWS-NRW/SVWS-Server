@@ -2,6 +2,7 @@
   "schuelerID": 1022,
   "abiturjahr": 2022,
   "schuljahrAbitur": 2021,
+  "schuljahrEintrittOberstufe" : 2015,
   "fachbelegungen": [
     {
       "fachID": 128,

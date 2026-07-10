@@ -799,7 +799,7 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 			fb.idReferenzfach = belegung.idReferenzfach;
 			for (const hj of GostHalbjahr.values()) {
 				const hjBelegung = belegung.belegungen[hj.id];
-				if (hjBelegung === null) {
+				if ((hjBelegung === null) || (hjBelegung.kursartKuerzel === "")) {
 					continue;
 				}
 				fb.kursart[hj.id] = hjBelegung.kursartKuerzel;
@@ -918,6 +918,7 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		}
 		belegung.fachID = fachID;
 		belegung.abiturFach = wahl.abiturFach;
+		belegung.idReferenzfach = wahl.idReferenzfach;
 		belegung.istFSNeu = fach.istFremdSpracheNeuEinsetzend;
 		for (const hj of GostHalbjahr.values()) {
 			const w = wahl.halbjahre[hj.id];
@@ -940,8 +941,13 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 				hjBelegung.kursartKuerzel = GostKursart.ZK.kuerzel;
 				hjBelegung.schriftlich = false;
 			} else if (w === "S") {
-				hjBelegung.kursartKuerzel = GostKursart.GK.kuerzel;
 				hjBelegung.schriftlich = true;
+				if (fach.kuerzel === "PX") {
+					hjBelegung.kursartKuerzel = GostKursart.PJK.kuerzel;
+					hjBelegung.wochenstunden = fach.wochenstundenQualifikationsphase;
+				} else {
+					hjBelegung.kursartKuerzel = GostKursart.GK.kuerzel;
+				}
 			} else if (w === "LK") {
 				hjBelegung.kursartKuerzel = GostKursart.LK.kuerzel;
 				hjBelegung.schriftlich = true;
