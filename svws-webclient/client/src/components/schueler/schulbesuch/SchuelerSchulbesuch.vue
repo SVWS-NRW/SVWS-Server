@@ -84,10 +84,10 @@
 					:manager="abschlussartBerufsbildendVorherigeSchuleManager"
 					v-model="model.abschlussartBerufsbildendVorherigeSchule.value"
 					:readonly />
-				<!-- TODO: durch Ui-Select ersetzen: siehe Issue#3495-->
-				<svws-ui-text-input placeholder="Versetzung" span="full" v-if="!keinSchulbesuch"
-					:model-value="model.idHerkunftsartVersetzungVorherigeSchule.value?.text ?? ''"
-					readonly statistics />
+				<ui-select label="Versetzung" class="col-span-full"
+					:manager="herkunftsartenManager"
+					v-model="model.idHerkunftsartVersetzungVorherigeSchule.value"
+					statistics :readonly />
 				<ui-select label="Entlassjahrgang"
 					:class="{ 'invisible pointer-events-none': currentMode === Schulauswahl.NONE }"
 					:manager="vorherigeEntlassjahrgaengeManager"
@@ -256,7 +256,7 @@
 <script setup lang="ts">
 
 	import type { JahrgangsDaten, KatalogEntlassgrund, Kindergarten, List, SchulEintrag } from "@core";
-	import { ArrayList, BenutzerKompetenz, Einschulungsart, Jahrgaenge, Kindergartenbesuch, PrimarstufeSchuleingangsphaseBesuchsjahre,
+	import { ArrayList, BenutzerKompetenz, Einschulungsart, Jahrgaenge, Kindergartenbesuch, PrimarstufeSchuleingangsphaseBesuchsjahre, Herkunftsarten,
 		SchulabschlussAllgemeinbildend, Schulform, Uebergangsempfehlung, SchulabschlussBerufsbildend, HerkunftSonstige, Schulgliederung, Fachklasse } from "@core";
 	import type { SchuelerSchulbesuchProps } from './SchuelerSchulbesuchProps';
 	import { CoreTypeSelectManager, SelectManager, useSchuleState, useServerState } from "@ui";
@@ -513,6 +513,14 @@
 	const fachklasseManager = new CoreTypeSelectManager({
 		clazz: Fachklasse.class,
 		schuljahr: schuljahr,
+		optionDisplayText: "kuerzelText",
+		selectionDisplayText: "kuerzelText",
+	});
+
+	const herkunftsartenManager = new CoreTypeSelectManager({
+		clazz: Herkunftsarten.class,
+		schuljahr: schuljahr,
+		schulformen: model.vorherigeSchulform,
 		optionDisplayText: "kuerzelText",
 		selectionDisplayText: "kuerzelText",
 	});
