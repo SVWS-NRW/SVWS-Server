@@ -158,9 +158,7 @@ public final class ReportingReportvorlageKonfigurationStundenplanung {
 										ReportingReportvorlageUtils.erzeugeVorlageParameter("mitFachkuerzelStattFachbezeichnung",
 												"Fachkürzel statt Fachbezeichnung",
 												ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-										ReportingReportvorlageUtils.erzeugeVorlageParameter("mitExternerSchuleKuerzel", "mit Schulkürzel bei externen Schülern",
-													ReportingReportvorlageParameterTyp.BOOLEAN, "" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-											ReportingReportvorlageUtils.erzeugeVorlageParameter("mitIndividuelleKursart", "mit individueller Kursart",
+										ReportingReportvorlageUtils.erzeugeVorlageParameter("mitIndividuelleKursart", "mit individueller Kursart",
 												ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
 								))),
 				ReportingReportvorlageUtils.erzeugeEmailParameter(

@@ -84,11 +84,27 @@ public class ReportingVorlageParameterTypisiert<T> {
 	 *
 	 * @throws ApiOperationException Wenn die Konvertierung fehlschlägt oder ein ungültiger Typ angegeben wurde
 	 */
-	@SuppressWarnings("unchecked")
 	private static <T> T getTypisiertenWert(final ReportingReportvorlageParameter reportingReportVorlageParameter) throws ApiOperationException {
-		final String s = (reportingReportVorlageParameter.wert == null) ? "" : reportingReportVorlageParameter.wert.trim();
+		return getTypisiertenWert(reportingReportVorlageParameter.typ, reportingReportVorlageParameter.wert, reportingReportVorlageParameter.name);
+	}
+
+	/**
+	 * Konvertiert den übergebenen Wert in den entsprechenden Zieltyp T basierend auf dem übergebenen Parameter-Typ.
+	 *
+	 * @param <T>   Der Zieltyp, in den der Wert konvertiert werden soll
+	 * @param typ   Der Typ des Parameters gemäß {@link ReportingReportvorlageParameterTyp}
+	 * @param wert  Der zu konvertierende Wert als Zeichenkette
+	 * @param name  Der Name des Parameters für die Fehlermeldung
+	 *
+	 * @return Der in den Zieltyp T konvertierte Wert
+	 *
+	 * @throws ApiOperationException Wenn die Konvertierung fehlschlägt oder ein ungültiger Typ angegeben wurde
+	 */
+	@SuppressWarnings("unchecked")
+	private static <T> T getTypisiertenWert(final int typ, final String wert, final String name) throws ApiOperationException {
+		final String s = (wert == null) ? "" : wert.trim();
 		try {
-			return switch (ReportingReportvorlageParameterTyp.getByID(reportingReportVorlageParameter.typ)) {
+			return switch (ReportingReportvorlageParameterTyp.getByID(typ)) {
 				case BOOLEAN -> (T) Boolean.valueOf(Boolean.parseBoolean(s));
 				case INTEGER -> (T) Integer.valueOf(s.isEmpty() ? -1 : Integer.parseInt(s));
 				case LONG -> (T) Long.valueOf(s.isEmpty() ? -1L : Long.parseLong(s));
@@ -97,7 +113,31 @@ public class ReportingVorlageParameterTypisiert<T> {
 			};
 		} catch (final Exception e) {
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, e,
-					"Konvertierung des Werts " + s + " für die Vorlagenparameter " + reportingReportVorlageParameter.name + " fehlgeschlagen.");
+					"Konvertierung des Werts " + s + " für die Vorlagenparameter " + name + " fehlgeschlagen.");
+		}
+	}
+
+	/**
+	 * Prüft vorab, ob der übergebene Wert für den angegebenen Parameter-Typ gültig ist und somit ohne Fehler und ohne stillen Bedeutungsverlust
+	 * konvertiert werden kann. Für BOOLEAN sind nur "true" und "false" (unabhängig von Groß-/Kleinschreibung) gültig, da Boolean.parseBoolean alle
+	 * anderen Zeichenketten still als false interpretiert. Für die Zahlentypen wird die zentrale Konvertierung selbst als Prüfung verwendet, wobei
+	 * der leere String gültig ist und bei der Konvertierung als -1 interpretiert wird. Zeichenketten-Typen sind immer gültig.
+	 *
+	 * @param typ   Der Typ des Parameters gemäß {@link ReportingReportvorlageParameterTyp}
+	 * @param wert  Der zu prüfende Wert als Zeichenkette
+	 *
+	 * @return true, wenn der Wert typkonform konvertiert werden kann, ansonsten false
+	 */
+	public static boolean istWertTypkonform(final int typ, final String wert) {
+		final String s = (wert == null) ? "" : wert.trim();
+		if (ReportingReportvorlageParameterTyp.getByID(typ) == ReportingReportvorlageParameterTyp.BOOLEAN) {
+			return "true".equalsIgnoreCase(s) || "false".equalsIgnoreCase(s);
+		}
+		try {
+			getTypisiertenWert(typ, s, "");
+			return true;
+		} catch (final ApiOperationException e) {
+			return false;
 		}
 	}
 

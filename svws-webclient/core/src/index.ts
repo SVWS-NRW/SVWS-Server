@@ -823,6 +823,10 @@ export { LernplattformV1Schueler } from './core/data/lernplattform/v1/Lernplattf
 export { OAuth2ClientConnection } from './core/data/oauth2/OAuth2ClientConnection';
 export { OAuthCredentials } from './core/data/oauth2/OAuthCredentials';
 export { ReportingEMailDaten } from './core/data/reporting/ReportingEMailDaten';
+export { ReportingEinstellungenBenutzerVorlage } from './core/data/reporting/ReportingEinstellungenBenutzerVorlage';
+export { ReportingEinstellungenBenutzerVorlageGruppe } from './core/data/reporting/ReportingEinstellungenBenutzerVorlageGruppe';
+export { ReportingEinstellungenBenutzerVorlagen } from './core/data/reporting/ReportingEinstellungenBenutzerVorlagen';
+export { ReportingEinstellungenBenutzerVorlagenParameterWert } from './core/data/reporting/ReportingEinstellungenBenutzerVorlagenParameterWert';
 export { ReportingFilterDefinition } from './core/data/reporting/ReportingFilterDefinition';
 export { ReportingFilterDefinitionGruppe } from './core/data/reporting/ReportingFilterDefinitionGruppe';
 export { ReportingFilterEintrag } from './core/data/reporting/ReportingFilterEintrag';
@@ -1039,6 +1043,7 @@ export { ReportingReportvorlage } from './core/types/reporting/ReportingReportvo
 export { ReportingReportvorlageDatenContext } from './core/types/reporting/ReportingReportvorlageDatenContext';
 export { ReportingReportvorlageParameterTyp } from './core/types/reporting/ReportingReportvorlageParameterTyp';
 export { ReportingUIKomponentenTyp } from './core/types/reporting/ReportingUIKomponentenTyp';
+export { ReportingReportvorlageKonfigurationBenutzerweit } from './core/types/reporting/reportvorlagekonfiguration/ReportingReportvorlageKonfigurationBenutzerweit';
 export { ReportingReportvorlageKonfigurationGost } from './core/types/reporting/reportvorlagekonfiguration/ReportingReportvorlageKonfigurationGost';
 export { ReportingReportvorlageKonfigurationKlassen } from './core/types/reporting/reportvorlagekonfiguration/ReportingReportvorlageKonfigurationKlassen';
 export { ReportingReportvorlageKonfigurationKurse } from './core/types/reporting/reportvorlagekonfiguration/ReportingReportvorlageKonfigurationKurse';

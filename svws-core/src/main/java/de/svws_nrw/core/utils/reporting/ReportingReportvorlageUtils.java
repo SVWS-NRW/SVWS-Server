@@ -3,6 +3,7 @@ package de.svws_nrw.core.utils.reporting;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.data.reporting.ReportingEMailDaten;
@@ -453,6 +454,37 @@ public final class ReportingReportvorlageUtils {
 			return name;
 		}
 		return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+	}
+
+	/**
+	 * Wählt aus den Katalog-Optionen einer Sortier- oder Filtergruppe genau die Einträge aus, deren Bezeichnung in der Liste der gespeicherten Bezeichnungen
+	 * enthalten ist. Für jede gespeicherte Bezeichnung wird die passende Options-Instanz herausgesucht (nicht kopiert), damit die UI die Auswahl über die
+	 * Objektidentität erkennt. Unbekannte Bezeichnungen (z. B. weil sich der Katalog geändert hat) werden übersprungen; die Reihenfolge der gespeicherten
+	 * Bezeichnungen bleibt erhalten. Die Methode wird sowohl serverseitig (Anwenden der gespeicherten Einstellungen im ReportingParameterBuilder) als auch
+	 * clientseitig (Vorbefüllen der Auswahl-Komponenten aus den gespeicherten Einstellungen) verwendet.
+	 *
+	 * @param <T>                       der Options-Typ, z. B. {@link ReportingSortierungDefinition} oder {@link ReportingFilterDefinition}
+	 * @param optionen                  die Katalog-Optionen der Gruppe
+	 * @param bezeichnungExtractor      Funktion, die die Bezeichnung eines Options-Objekts liefert
+	 * @param gespeicherteBezeichnungen die gespeicherten Bezeichnungen in Auswahlreihenfolge
+	 *
+	 * @return die ausgewählten Options-Instanzen (dieselben Instanzen wie in {@code optionen}), ggf. leer
+	 */
+	public static <T> @NotNull List<T> waehleGespeicherteAuswahl(final @NotNull List<T> optionen,
+			final @NotNull Function<T, String> bezeichnungExtractor, final @NotNull List<String> gespeicherteBezeichnungen) {
+		final List<T> ergebnis = new ArrayList<>();
+		for (final String bezeichnung : gespeicherteBezeichnungen) {
+			if (bezeichnung == null) {
+				continue;
+			}
+			for (final T option : optionen) {
+				if ((option != null) && bezeichnung.equals(bezeichnungExtractor.apply(option))) {
+					ergebnis.add(option);
+					break;
+				}
+			}
+		}
+		return ergebnis;
 	}
 
 	/**

@@ -1,13 +1,7 @@
-[# th:if="${Klassen.isEmpty()}"]
-	Klasse-Liste-Schueler-Kontaktdaten-Erzieher
+[# th:with="klassen = ${Klassen}, anzahl = ${#lists.size(klassen)}"]
+    Klasse-Liste-Schueler-Kontaktdaten-Erzieher
+    [# th:if="${anzahl == 1}"]
+        _[(${ #strings.replace(klassen[0].kuerzel(), ' ', '_') })]
+    [/]
 [/]
-[# th:if="${!Klassen.isEmpty()}"]
-	[# th:each="klasse,iterState : ${Klassen}"]
-		[# th:if="${iterState.first && (Klassen.size() == 1)}"]
-			Klasse-Liste-Schueler-Kontaktdaten-Erzieher_[(${#strings.replace(klasse.kuerzel(), ' ', '_')})]
-		[/]
-		[# th:if="${iterState.first && (Klassen.size() > 1)}"]
-			Klasse-Liste-Schueler-Kontaktdaten-Erzieher
-		[/]
-	[/]
-[/]
+[# th:if="${VorlageParameter.get('dateinameMitZeitstempel')}"]_[(${ #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm') })][/]

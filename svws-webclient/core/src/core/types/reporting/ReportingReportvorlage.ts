@@ -225,6 +225,12 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	private static readonly MAP_NAMENSBESTANDTEILE_REPORTVORLAGEN: JavaMap<string, List<ReportingReportvorlage>> = new HashMap<string, List<ReportingReportvorlage>>();
 
 	/**
+	 *  Der Präfix des Config-Schlüssels, unter dem die benutzerspezifischen Einstellungen einer Report-Vorlage in der Client-Konfiguration gespeichert werden.
+	 *  Vervollständigt wird der Schlüssel je Report-Vorlage um deren {@link #bezeichnung} (siehe {@link #getConfigKeyBenutzerVorlage()}).
+	 */
+	private static readonly CONFIG_KEY_PREFIX_BENUTZER_VORLAGE: string = "reporting.einstellungen.benutzer.vorlage.";
+
+	/**
 	 * Gibt an, ob die internen Indexstrukturen bereits initialisiert wurden.
 	 */
 	private static mapsInitialisiert: boolean = false;
@@ -263,6 +269,17 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	 */
 	public getBezeichnung(): string {
 		return (this.bezeichnung !== null) ? this.bezeichnung : "";
+	}
+
+	/**
+	 * Gibt den Schlüssel zurück, unter dem die benutzerspezifischen Einstellungen dieser Report-Vorlage in der Client-Konfiguration gespeichert werden
+	 * (Schema {@code reporting.einstellungen.benutzer.vorlage.<bezeichnung>}). Die Client-Anwendung, unter der dieser Schlüssel abgelegt wird,
+	 * ist stets {@link de.svws_nrw.core.types.reporting.reportvorlagekonfiguration.ReportingReportvorlageKonfigurationBenutzerweit#CONFIG_APP_NAME}.
+	 *
+	 * @return der Config-Schlüssel für die benutzerspezifischen Einstellungen dieser Report-Vorlage
+	 */
+	public getConfigKeyBenutzerVorlage(): string {
+		return ReportingReportvorlage.CONFIG_KEY_PREFIX_BENUTZER_VORLAGE + this.bezeichnung;
 	}
 
 	/**

@@ -108,10 +108,7 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitHinweisen", "mit Hinweisen", ReportingReportvorlageParameterTyp.BOOLEAN,
 										"" + false,
-										true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitExternerSchuleKuerzel", "mit Schulkürzel bei externen Schülern",
-										ReportingReportvorlageParameterTyp.BOOLEAN,
-										"" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
+										true, ReportingUIKomponentenTyp.CHECKBOX, 1)
 						))),
 				new ReportingEMailDaten(),
 				new ArrayList<>(), new ArrayList<>(), true, true);
@@ -130,10 +127,7 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 						List.of(
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("nurBelegteFaecher", "nur belegte Fächer",
 										ReportingReportvorlageParameterTyp.BOOLEAN,
-										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitExternerSchuleKuerzel", "mit Schulkürzel bei externen Schülern",
-										ReportingReportvorlageParameterTyp.BOOLEAN,
-										"" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
+										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
 						))),
 				ReportingReportvorlageUtils.erzeugeEmailParameter(
 						ReportingEMailEmpfaengerTyp.SCHUELER,
@@ -221,10 +215,7 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitSchuelerStaat", "mit Staatsangehörigkeit",
 										ReportingReportvorlageParameterTyp.BOOLEAN,
-										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitExternerSchuleKuerzel", "mit Schulkürzel bei externen Schülern",
-										ReportingReportvorlageParameterTyp.BOOLEAN,
-										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 2),
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitSchuelerAnschrift", "mit Anschrift",
 										ReportingReportvorlageParameterTyp.BOOLEAN,
 										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),

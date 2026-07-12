@@ -1,13 +1,7 @@
-[# th:if="${Kurse.isEmpty()}"]
-	Kurs-Liste-Schueler-Fotos-Namen
+[# th:with="kurse = ${Kurse}, anzahl = ${#lists.size(kurse)}"]
+    Kurs-Liste-Schueler-Fotos-Namen
+    [# th:if="${anzahl == 1}"]
+        _[(${ #strings.replace(kurse[0].kuerzel(), ' ', '_') })]
+    [/]
 [/]
-[# th:if="${!Kurse.isEmpty()}"]
-	[# th:each="kurs,iterState : ${Kurse}"]
-		[# th:if="${iterState.first && (Kurse.size() == 1)}"]
-			Kurs-Liste-Schueler-Fotos-Namen_[(${#strings.replace(kurs.kuerzel(), ' ', '_')})]
-		[/]
-		[# th:if="${iterState.first && (Kurse.size() > 1)}"]
-			Kurs-Liste-Schueler-Fotos-Namen
-		[/]
-	[/]
-[/]
+[# th:if="${VorlageParameter.get('dateinameMitZeitstempel')}"]_[(${ #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm') })][/]

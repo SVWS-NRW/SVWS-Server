@@ -1,28 +1,21 @@
 package de.svws_nrw.module.reporting.factories;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
-import de.svws_nrw.core.data.reporting.ReportingFilterDefinitionGruppe;
 import de.svws_nrw.core.data.reporting.ReportingParameter;
-import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameter;
-import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameterGruppe;
-import de.svws_nrw.core.data.reporting.ReportingSortierungDefinitionGruppe;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
-import de.svws_nrw.core.types.ServerMode;
-import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.reporting.ReportingAusgabeformat;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
+import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.builders.ReportBuilderHtml;
+import de.svws_nrw.module.reporting.parameter.ReportingParameterBuilder;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import jakarta.ws.rs.core.MediaType;
@@ -133,18 +126,20 @@ public final class ReportingFactory {
 						new ArrayList<>(reportingParameter.idsDetaildaten.stream().filter(Objects::nonNull).distinct().toList());
 			}
 
-			// Validiere die Liste mit den Vorlage-Parametern. Lade dazu die definierten Vorlagen aus der ReportingReportvorlage-Klasse und weise diesen
-			// definierten Parametern evtl. übergebene Werte zu. So ist sichergestellt, dass imm die richtigen Vorlagen-Parameter vorhanden sind.
-			this.logger.logLn(LogLevel.DEBUG, 4, "Validiere Vorlage-Parameter.");
-			validiereVorlageParameter(reportingParameter);
+			// Baue die Vorlage-Parameter über den ReportingParameterBuilder auf: Er kombiniert die Parameter aus dem Vorlagen-Katalog und dem benutzerweiten
+			// Katalog mit den gespeicherten und übermittelten Werten (Katalog-Default < gespeicherter Wert < übermittelt). Als gespeicherter Wert gilt je
+			// Katalog eine eigene Config-Ebene: für den Vorlagen-Katalog das gespeicherte Vorlagen-Preset des Benutzers zu dieser Reportvorlage, für den
+			// benutzerweiten Katalog dessen benutzerweite Einstellungen. Der Builder prüft alle überlagernden Werte auf Typkonformität und setzt
+			// Einstellungen zurück, die der aktuelle ServerMode oder die Benutzerkompetenzen nicht zulassen. Dies geschieht vor der Erzeugung des
+			// Reporting-Context, damit dessen flache Parameter-Liste den vollständigen und bereinigten Parameter-Satz enthält und fehlende Boolean-Parameter
+			// nicht still wie false wirken.
+			this.logger.logLn(LogLevel.DEBUG, 4, "Baue und prüfe die Vorlage-Parameter und die benutzerweiten Parameter.");
+			final ReportingParameterBuilder parameterBuilder =
+					new ReportingParameterBuilder(this.logger, SVWSKonfiguration.get().getServerMode(), conn.getUser());
+			parameterBuilder.baue(this.reportingParameter, reportvorlage, conn);
 
 			this.logger.logLn(LogLevel.DEBUG, 4, "Erzeugung des Reporting-Context");
 			this.reportingContext = new ReportingContext(conn, this.reportingParameter, this.logger, this.log);
-
-			// Setze über die API übergebene Einstellungen zurück, die der aktuelle ServerMode oder die Benutzerkompetenzen nicht zulassen. Dies verhindert,
-			// dass eine im Client deaktivierte (und damit nicht einstellbare) Option über einen manipulierten Request gesetzt werden kann.
-			this.logger.logLn(LogLevel.DEBUG, 4, "Prüfe ServerMode und Benutzerkompetenzen der übergebenen Einstellungen.");
-			setzeUnerlaubteEinstellungenZurueck(reportvorlage);
 
 			this.logger.logLn(LogLevel.DEBUG, 0, "<<< Ende des Initialisierens der Reporting-Factory und des Validierens übergebener Daten.");
 		} catch (final ApiOperationException aoe) {
@@ -167,256 +162,6 @@ public final class ReportingFactory {
 			sop.log.forEach(Logger.global()::logLn);
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, sop, MediaType.APPLICATION_JSON);
 		}
-	}
-
-	/**
-	 * Validiert die übergebenen Vorlage-Parameter und deren Gruppen gegen die definierte Vorlage und kombiniert diese bei Übereinstimmung.
-	 * Fehlende oder ungültige Parameter werden ignoriert. Die kombinierten Parameter und Gruppen werden anschließend zurückgeschrieben.
-	 *
-	 * @param reportingParameter Das ReportingParameter-Objekt, welches die zu validierenden und kombinierten Vorlage-Parameter beinhaltet.
-	 */
-	private void validiereVorlageParameter(final ReportingParameter reportingParameter) {
-		final ReportingReportvorlage reportvorlage = ReportingReportvorlage.getByBezeichnung(this.reportingParameter.reportvorlage);
-		if (reportvorlage == null) {
-			// Sollte durch die vorherige Validierung im Konstruktor eigentlich nicht passieren.
-			this.reportingParameter.reportvorlageParameterGruppen = new ArrayList<>();
-			return;
-		}
-
-		// Übergebene Parameter-Werte (IST-Werte) aus den übergebenen Gruppen als Map ablegen: Key = gruppenname#parametername
-		final List<ReportingReportvorlageParameterGruppe> uebergebeneParameterGruppen =
-				(reportingParameter.reportvorlageParameterGruppen == null)
-						? new ArrayList<>()
-						: reportingParameter.reportvorlageParameterGruppen.stream().filter(Objects::nonNull).toList();
-
-		final HashMap<String, ReportingReportvorlageParameter> mapUebergebeneReportvorlageParameter = new HashMap<>();
-		for (final ReportingReportvorlageParameterGruppe g : uebergebeneParameterGruppen) {
-			if ((g.name == null) || g.name.isBlank() || (g.reportvorlageParameter == null)) {
-				continue;
-			}
-			validiereParameterDerGruppe(reportingParameter, g, mapUebergebeneReportvorlageParameter);
-		}
-
-		// Definierte Struktur aus der Reportvorlage laden (SOLL-Werte) und Ergebnisliste nach Vorlage mit den evtl. übergebenen Werten kombinieren.
-		// Das Ergebnis wird in das Reporting-Parameter-Gruppen-Objekt zurückgeschrieben.
-		this.reportingParameter.reportvorlageParameterGruppen = getKombinierteReportvorlageParameter(reportvorlage, mapUebergebeneReportvorlageParameter);
-	}
-
-	/**
-	 * Validiert die Parameter der übergebenen Parametergruppe und überprüft, ob sie mit den übergebenen Werten übereinstimmen.
-	 * Hierbei wird für die HTML-Ausgabe die Einzelausgabe deaktiviert, während beim E-Mail-Versand aus Datenschutzgründen die Einzelausgabe der Daten
-	 * automatisch aktiviert wird.
-	 *
-	 * @param reportingParameter                    das Reporting-Parameter-Objekt
-	 * @param reportingReportvorlageParameterGruppe die Parametergruppe
-	 * @param mapUebergebeneReportvorlageParameter  die Map mit den übergebenen Reportvorlage-Parametern
-	 */
-	private static void validiereParameterDerGruppe(final ReportingParameter reportingParameter,
-			final ReportingReportvorlageParameterGruppe reportingReportvorlageParameterGruppe,
-			final HashMap<String, ReportingReportvorlageParameter> mapUebergebeneReportvorlageParameter) {
-		for (final ReportingReportvorlageParameter p : reportingReportvorlageParameterGruppe.reportvorlageParameter) {
-			if ((p == null) || (p.name == null) || p.name.isBlank()) {
-				continue;
-			}
-			// Die HTML-Ausgabe erfolgt im Browser und kann daher keine Einzeldateien anzeigen. Es darf daher keine Einzelausgabe angefordert werden.
-			// Stelle dies hier sicher.
-			if ((reportingParameter.ausgabeformat == ReportingAusgabeformat.HTML.getId()) && p.name.equalsIgnoreCase("einzelausgabeDaten")) {
-				p.wert = "false";
-			}
-			// Um Datenschutz zu gewährleisten, wird beim E-Mail-Versand nur die Einzelausgabe von Daten unterstützt (ein einzelnes PDF pro Datenelement).
-			// Stelle dies hier sicher.
-			if ((reportingParameter.ausgabeformat == ReportingAusgabeformat.EMAIL.getId()) && p.name.equalsIgnoreCase("einzelausgabeDaten")) {
-				p.wert = "true";
-			}
-			mapUebergebeneReportvorlageParameter.put(reportingReportvorlageParameterGruppe.name + "#" + p.name, p);
-		}
-	}
-
-	/**
-	 * Kombiniert die Reportvorlage-Parametergruppen aus der Reportvorlage mit den evtl. übergebenen Werten der Parameter.
-	 * Dazu wird die definierte Struktur aus der Reportvorlage geladen (SOLL-Werte) und die Ergebnisliste nach Vorlage aufgebaut.
-	 *
-	 * @param reportvorlage die Reportvorlage, aus der die Reportvorlage-Parametergruppen geladen werden sollen
-	 * @param mapUebergebeneReportvorlageParameter die übergebenen Parameter-Werte mit Keys in der Form gruppenname#parametername
-	 *
-	 * @return die Reportvorlage-Parametergruppen aus der Reportvorlage kombiniert mit den evtl. übergebenen Werten der Parameter.
-	 */
-	private List<ReportingReportvorlageParameterGruppe> getKombinierteReportvorlageParameter(final ReportingReportvorlage reportvorlage,
-			final HashMap<String, ReportingReportvorlageParameter> mapUebergebeneReportvorlageParameter) {
-		final List<ReportingReportvorlageParameterGruppe> definierteGruppen =
-				reportvorlage.getReportingParameter().reportvorlageParameterGruppen.stream().filter(Objects::nonNull).toList();
-		final List<ReportingReportvorlageParameterGruppe> kombinierteGruppen = new ArrayList<>();
-
-		for (final ReportingReportvorlageParameterGruppe definierteGruppe : definierteGruppen) {
-			final ReportingReportvorlageParameterGruppe kombinierteGruppe = new ReportingReportvorlageParameterGruppe();
-			kombinierteGruppe.name = definierteGruppe.name;
-			kombinierteGruppe.beschreibung = definierteGruppe.beschreibung;
-			kombinierteGruppe.uiIstSichtbar = definierteGruppe.uiIstSichtbar;
-			kombinierteGruppe.uiAnzahlSpalten = definierteGruppe.uiAnzahlSpalten;
-			kombinierteGruppe.uiErforderlicherServerMode = definierteGruppe.uiErforderlicherServerMode;
-			kombinierteGruppe.uiErforderlicheKompetenzen = new ArrayList<>(definierteGruppe.uiErforderlicheKompetenzen);
-
-			final List<ReportingReportvorlageParameter> kombinierteReportvorlageParameter = new ArrayList<>();
-			if (definierteGruppe.reportvorlageParameter != null) {
-				for (final ReportingReportvorlageParameter definierterReportvorlageParameter : definierteGruppe.reportvorlageParameter) {
-					if (definierterReportvorlageParameter == null) {
-						continue;
-					}
-
-					final ReportingReportvorlageParameter kombinierterReportvorlageParameter = new ReportingReportvorlageParameter();
-					// Daten zunächst aus der Vorlage übernehmen ...
-					kombinierterReportvorlageParameter.name = definierterReportvorlageParameter.name;
-					kombinierterReportvorlageParameter.bezeichnung = definierterReportvorlageParameter.bezeichnung;
-					kombinierterReportvorlageParameter.typ = definierterReportvorlageParameter.typ;
-					kombinierterReportvorlageParameter.wert = definierterReportvorlageParameter.wert;
-					kombinierterReportvorlageParameter.uiIstSichtbar = definierterReportvorlageParameter.uiIstSichtbar;
-					kombinierterReportvorlageParameter.uiKomponentenTyp = definierterReportvorlageParameter.uiKomponentenTyp;
-					kombinierterReportvorlageParameter.uiAnzahlSpalten = definierterReportvorlageParameter.uiAnzahlSpalten;
-					kombinierterReportvorlageParameter.uiErforderlicherServerMode = definierterReportvorlageParameter.uiErforderlicherServerMode;
-					kombinierterReportvorlageParameter.uiErforderlicheKompetenzen =
-							new ArrayList<>(definierterReportvorlageParameter.uiErforderlicheKompetenzen);
-
-					// ... und wenn ein gültiger Wert ungleich null übergeben wurde, so wird dieser gesetzt.
-					final ReportingReportvorlageParameter uebergebenerReportvorlageParameter =
-							mapUebergebeneReportvorlageParameter.get(definierteGruppe.name + "#" + definierterReportvorlageParameter.name);
-					if ((uebergebenerReportvorlageParameter != null) && (uebergebenerReportvorlageParameter.wert != null)) {
-						kombinierterReportvorlageParameter.wert = uebergebenerReportvorlageParameter.wert;
-					}
-
-					kombinierteReportvorlageParameter.add(kombinierterReportvorlageParameter);
-				}
-			}
-
-			kombinierteGruppe.reportvorlageParameter = kombinierteReportvorlageParameter;
-			kombinierteGruppen.add(kombinierteGruppe);
-		}
-		return kombinierteGruppen;
-	}
-
-
-	/**
-	 * Setzt die Werte von Vorlage-Parametern sowie die Auswahl von Sortier- und Filtergruppen auf ihre Standardwerte zurück, wenn der aktuelle ServerMode oder
-	 * die Kompetenzen des angemeldeten Benutzers die übergebenen Einstellungen nicht zulassen. So kann eine im Client ausgeblendete (und damit nicht
-	 * einstellbare) Einstellung nicht über einen manipulierten Request gesetzt werden.
-	 *
-	 * @param reportvorlage die Reportvorlage mit den SOLL-Definitionen (Standardwerte und Anforderungen)
-	 */
-	private void setzeUnerlaubteEinstellungenZurueck(final ReportingReportvorlage reportvorlage) {
-		// Vorlage-Parameter je Gruppe prüfen und ggf. auf den Standardwert der Vorlage zurücksetzen.
-		for (final ReportingReportvorlageParameterGruppe gruppe : this.reportingParameter.reportvorlageParameterGruppen) {
-			setzeUnerlaubteParameterZurueck(reportvorlage, gruppe);
-		}
-
-		// Sortier- und Filtergruppen: Die Anforderungen werden aus den SOLL-Definitionen gelesen, damit manipulierte Anforderungswerte keine Wirkung haben.
-		final ReportingParameter sollParameter = reportvorlage.getReportingParameter();
-		setzeUnerlaubteSortierungZurueck(sollParameter);
-		setzeUnerlaubteFilterungZurueck(sollParameter);
-	}
-
-
-	/**
-	 * Setzt die Werte der Parameter einer Parametergruppe auf den Standardwert der Vorlage zurück, wenn die Gruppe oder der jeweilige Parameter im aktuellen
-	 * ServerMode oder mit den Kompetenzen des angemeldeten Benutzers nicht erlaubt ist.
-	 *
-	 * @param reportvorlage die Reportvorlage mit den Standardwerten
-	 * @param gruppe        die zu prüfende Parametergruppe
-	 */
-	private void setzeUnerlaubteParameterZurueck(final ReportingReportvorlage reportvorlage, final ReportingReportvorlageParameterGruppe gruppe) {
-		if ((gruppe == null) || (gruppe.reportvorlageParameter == null)) {
-			return;
-		}
-		final boolean gruppeErlaubt = istEinstellungErlaubt(gruppe.uiErforderlicherServerMode, gruppe.uiErforderlicheKompetenzen);
-		for (final ReportingReportvorlageParameter parameter : gruppe.reportvorlageParameter) {
-			if ((parameter == null) || (parameter.name == null)
-					|| (gruppeErlaubt && istEinstellungErlaubt(parameter.uiErforderlicherServerMode, parameter.uiErforderlicheKompetenzen))) {
-				continue;
-			}
-			final ReportingReportvorlageParameter standard = reportvorlage.getDefaultVorlageparameter(parameter.name);
-			if (standard != null) {
-				parameter.wert = standard.wert;
-			}
-		}
-	}
-
-
-	/**
-	 * Setzt die übergebene Auswahl einer Sortiergruppe auf die SOLL-Auswahl der Vorlage zurück, wenn die Gruppe im aktuellen ServerMode oder mit den Kompetenzen
-	 * des Benutzers nicht erlaubt ist.
-	 *
-	 * @param sollParameter die SOLL-Definition der Reportvorlage mit den Anforderungen der Sortiergruppen
-	 */
-	private void setzeUnerlaubteSortierungZurueck(final ReportingParameter sollParameter) {
-		final HashMap<String, ReportingSortierungDefinitionGruppe> sollGruppen = new HashMap<>();
-		for (final ReportingSortierungDefinitionGruppe sollGruppe : sollParameter.sortierungDefinitionenGruppen) {
-			if ((sollGruppe != null) && (sollGruppe.bezeichnung != null)) {
-				sollGruppen.put(sollGruppe.bezeichnung, sollGruppe);
-			}
-		}
-		for (final ReportingSortierungDefinitionGruppe gruppe : this.reportingParameter.sortierungDefinitionenGruppen) {
-			if ((gruppe == null) || (gruppe.bezeichnung == null)) {
-				continue;
-			}
-			final ReportingSortierungDefinitionGruppe sollGruppe = sollGruppen.get(gruppe.bezeichnung);
-			if ((sollGruppe != null) && !istEinstellungErlaubt(sollGruppe.uiErforderlicherServerMode, sollGruppe.uiErforderlicheKompetenzen)) {
-				gruppe.sortierungDefinitionen = new ArrayList<>(sollGruppe.sortierungDefinitionen);
-			}
-		}
-	}
-
-
-	/**
-	 * Setzt die übergebene Auswahl einer Filtergruppe auf die SOLL-Auswahl der Vorlage zurück, wenn die Gruppe im aktuellen ServerMode oder mit den Kompetenzen
-	 * des Benutzers nicht erlaubt ist.
-	 *
-	 * @param sollParameter die SOLL-Definition der Reportvorlage mit den Anforderungen der Filtergruppen
-	 */
-	private void setzeUnerlaubteFilterungZurueck(final ReportingParameter sollParameter) {
-		final HashMap<String, ReportingFilterDefinitionGruppe> sollGruppen = new HashMap<>();
-		for (final ReportingFilterDefinitionGruppe sollGruppe : sollParameter.filterDefinitionenGruppen) {
-			if ((sollGruppe != null) && (sollGruppe.bezeichnung != null)) {
-				sollGruppen.put(sollGruppe.bezeichnung, sollGruppe);
-			}
-		}
-		for (final ReportingFilterDefinitionGruppe gruppe : this.reportingParameter.filterDefinitionenGruppen) {
-			if ((gruppe == null) || (gruppe.bezeichnung == null)) {
-				continue;
-			}
-			final ReportingFilterDefinitionGruppe sollGruppe = sollGruppen.get(gruppe.bezeichnung);
-			if ((sollGruppe != null) && !istEinstellungErlaubt(sollGruppe.uiErforderlicherServerMode, sollGruppe.uiErforderlicheKompetenzen)) {
-				gruppe.filterDefinitionen = new ArrayList<>(sollGruppe.filterDefinitionen);
-			}
-		}
-	}
-
-
-	/**
-	 * Prüft, ob eine Einstellung (Parameter oder Gruppe) mit den angegebenen Anforderungen im aktuellen ServerMode und mit den Kompetenzen des angemeldeten
-	 * Benutzers erlaubt ist.
-	 *
-	 * @param uiErforderlicherServerMode der mindestens erforderliche ServerMode als Text (leer = in allen Modi erlaubt)
-	 * @param uiErforderlicheKompetenzen die IDs der erforderlichen Benutzerkompetenzen (OR-verknüpft; leer = keine Kompetenz erforderlich)
-	 *
-	 * @return true, wenn die Einstellung erlaubt ist, ansonsten false
-	 */
-	private boolean istEinstellungErlaubt(final String uiErforderlicherServerMode, final List<Long> uiErforderlicheKompetenzen) {
-		// ServerMode: Ein leerer Text wird von getByText als STABLE interpretiert, was in allen Modi erlaubt ist.
-		if (!ServerMode.getByText(uiErforderlicherServerMode).checkServerMode(this.reportingContext.serverMode())) {
-			return false;
-		}
-		// Kompetenzen: Ohne Anforderung ist die Einstellung für alle erlaubt.
-		if ((uiErforderlicheKompetenzen == null) || uiErforderlicheKompetenzen.isEmpty()) {
-			return true;
-		}
-		final Set<BenutzerKompetenz> kompetenzen = new HashSet<>();
-		for (final Long id : uiErforderlicheKompetenzen) {
-			if (id != null) {
-				final BenutzerKompetenz kompetenz = BenutzerKompetenz.getByID(id);
-				if (kompetenz != null) {
-					kompetenzen.add(kompetenz);
-				}
-			}
-		}
-		return this.reportingContext.benutzer().pruefeKompetenz(kompetenzen);
 	}
 
 

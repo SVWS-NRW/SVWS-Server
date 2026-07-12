@@ -1,19 +1,7 @@
-[# th:with="schueler = ${GostKlausurplan.schueler()}, anzahlSchueler = ${#lists.size(schueler)}"]
-    [# th:if="${anzahlSchueler == 0}"]
-        GOSt-Klausurplanung-Schueler-Klausuren_[(${#strings.replace(#strings.replace(Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-')})]
-    [/]
-
-    [# th:if="${anzahlSchueler != 0}"]
-        [# th:each="schueler,iterState : ${schueler}"]
-            [# th:if="${iterState.first && (anzahlSchueler == 1)}"]
-                GOSt-Klausurplanung-Schueler-Klausuren_[(${#strings.replace(#strings.replace(Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-')})]_
-                [(${#strings.replace(schueler.nachname(), ' ', '_')})]__
-                [(${#strings.replace(schueler.vorname(), ' ', '_')})]_([(${schueler.id()})])_
-                [(${#dates.format(#dates.createNow(), 'yyyyMMdd-HHmm')})]
-            [/]
-            [# th:if="${iterState.first && (anzahlSchueler > 1)}"]
-                GOSt-Klausurplanung-Schueler-Klausuren_[(${#strings.replace(#strings.replace(Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-')})]
-            [/]
-        [/]
+[# th:with="schueler = ${GostKlausurplan.schueler()}, anzahlSchueler = ${#lists.size(schueler)}, schuljahresabschnitt = ${#strings.replace(#strings.replace(Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-')}"]
+    GOSt-Klausurplanung-Schueler-Klausuren_[(${schuljahresabschnitt})]
+    [# th:if="${anzahlSchueler == 1}"]
+        _[(${#strings.replace(schueler[0].nachname(), ' ', '_')})]__[(${#strings.replace(schueler[0].vorname(), ' ', '_')})]_([(${schueler[0].id()})])
     [/]
 [/]
+[# th:if="${VorlageParameter.get('dateinameMitZeitstempel')}"]_[(${ #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm') })][/]
