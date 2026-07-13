@@ -70,6 +70,7 @@ export class RouteDataSchuelerVermerke extends RouteData<RouteStateSchuelerVerme
 		}
 		this.commit();
 		api.status.stop();
+		return true;
 	};
 
 	add = async () => {

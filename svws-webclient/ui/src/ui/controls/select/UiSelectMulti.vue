@@ -254,7 +254,6 @@
 			return lower === upper ? `${lower} Option${lower > 1 ? "en" : ""}` : `${lower} - ${upper} Optionen`;
 		}
 
-
 		return (min === null) ? `max. ${max}` : `min. ${min}`;
 	});
 
