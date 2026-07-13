@@ -53,7 +53,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addJacksonConfiguration() {
-		def version = "2.22.0";
+		def version = "2.22.1";
 		def version_annotations = "2.22";
 		project.configurations.create('jackson');
 		project.dependencies.add('jackson', 'com.fasterxml.jackson.core:jackson-annotations:' + version_annotations);
