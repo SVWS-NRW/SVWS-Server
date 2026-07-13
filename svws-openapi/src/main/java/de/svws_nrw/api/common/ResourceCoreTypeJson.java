@@ -94,7 +94,11 @@ public final class ResourceCoreTypeJson {
 			Map.entry("Herkunftsschulnummer", "de/svws_nrw/asd/types/schule/Herkunftsschulnummer.json"),
 			Map.entry("Reformpaedagogik", "de/svws_nrw/asd/types/schule/Reformpaedagogik.json"),
 			Map.entry("DQRNiveau", "de/svws_nrw/asd/types/schule/DQRNiveau.json"),
-			Map.entry("Fachklasse", "de/svws_nrw/asd/types/schule/Fachklasse.json")
+			Map.entry("Fachklasse", "de/svws_nrw/asd/types/schule/Fachklasse.json"),
+			Map.entry("FormBilingualerUnterricht", "de/svws_nrw/asd/types/schule/FormBilingualerUnterricht.json"),
+			Map.entry("AnrechnungsantragBKAZVO", "de/svws_nrw/asd/types/schueler/AnrechnungsantragBKAZVO.json"),
+			Map.entry("Laender", "de/svws_nrw/asd/types/schule/Laender.json"),
+			Map.entry("Orte", "de/svws_nrw/asd/types/schule/Orte.json")
 	);
 
 

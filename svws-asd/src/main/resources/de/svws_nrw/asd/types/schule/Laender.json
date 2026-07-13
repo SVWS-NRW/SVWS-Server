@@ -1,345 +1,365 @@
 {
-    "version": 1,
-    "daten": [
-      {
-        "bezeichner": "SH",
-        "idStatistik": "1",
-        "historie": [
-          {
-            "id": 1010,
-            "schluessel": "SH",
-            "plz": "01000",
-            "ags": "01000000",
-            "text": "Schleswig-Holstein",
-            "kuerzel": "SH",
-            "sortierung": "2",
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      },
-      {
-        "bezeichner": "HH",
-        "idStatistik": "2",
-        "historie": [
-          {
-            "id": 1020,
-            "schluessel": "HH",
-            "plz": "02000",
-            "ags": "02000000",
-            "text": "Hamburg",
-            "kuerzel": "HH",
-            "sortierung": "2",
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      },
-      {
-        "bezeichner": "NI",
-        "idStatistik": "3",
-        "historie": [
-          {
-            "id": 1030,
-            "schluessel": "NI",
-            "plz": "03000",
-            "ags": "03000000",
-            "text": "Niedersachsen",
-            "kuerzel": "NI",
-            "sortierung": "2",
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      },
-      {
-        "bezeichner": "HB",
-        "idStatistik": "4",
-        "historie": [
-          {
-            "id": 1040,
-            "schluessel": "HB",
-            "plz": "04000",
-            "ags": "04000000",
-            "text": "Bremen",
-            "kuerzel": "HB",
-            "sortierung": "2",
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      },
-      {
-        "bezeichner": "NW",
-        "idStatistik": "5",
-        "historie": [
-          {
-            "id": 1050,
-            "schluessel": "NW",
-            "plz": "05000",
-            "ags": "05000000",
-            "text": "Nordrhein-Westfalen",
-            "kuerzel": "NW",
-            "sortierung": "2",
-            "gueltigVon": null,
-            "gueltigBis": null        
-          }
-        ]
-      },
-      {
-        "bezeichner": "HE",
-        "idStatistik": "6",
-        "historie": [
-          {
-            "id": 1060,
-            "schluessel": "HE",
-            "plz": "06000",
-            "ags": "06000000",
-            "text": "Hessen",
-            "kuerzel": "HE",
-            "sortierung": "2",
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      },
-      {
-        "bezeichner": "RP",
-        "idStatistik": "7",
-        "historie": [
-          {
-            "id": 1070,
-            "schluessel": "RP",
-            "plz": "07000",
-            "ags": "07000000",
-            "text": "Rheinland-Pfalz",
-            "kuerzel": "RP",
-            "sortierung": "2",
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      },
-      {
-        "bezeichner": "BW",
-        "idStatistik": "8",
-        "historie": [
-          {
-            "id": 1080,
-            "schluessel": "BW",
-            "plz": "08000",
-            "ags": "08000000",
-            "text": "Baden-Württemberg",
-            "kuerzel": "BW",
-            "sortierung": "2",
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      },
-      {
-        "bezeichner": "BY",
-        "idStatistik": "9",
-        "historie": [
-          {
-            "id": 1090,
-            "schluessel": "BY",
-            "plz": "09000",
-            "ags": "09000000",
-            "text": "Bayern",
-            "kuerzel": "BY",
-            "sortierung": "2",
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      },
-      {
-        "bezeichner": "SL",
-        "idStatistik": "10",
-        "historie": [
-          {
-            "id": 1100,
-            "schluessel": "SL",
-            "plz": "10000",
-            "ags": "10000000",
-            "text": "Saarland",
-            "kuerzel": "SL",
-            "sortierung": "2",
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      },
-      {
-        "bezeichner": "BE",
-        "idStatistik": "11",
-        "historie": [
-          {
-            "id": 1110,
-            "schluessel": "BE",
-            "plz": "11000",
-            "ags": "11000000",
-            "text": "Berlin",
-            "kuerzel": "BE",
-            "sortierung": "2",
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      },
-      {
-        "bezeichner": "BB",
-        "idStatistik": "12",
-        "historie": [
-          {
-            "id": 1120,
-            "schluessel": "BB",
-            "plz": "12000",
-            "ags": "12000000",
-            "text": "Brandenburg",
-            "kuerzel": "BB",
-            "sortierung": "2",
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      },
-      {
-        "bezeichner": "MV",
-        "idStatistik": "13",
-        "historie": [
-          {
-            "id": 1130,
-            "schluessel": "MV",
-            "plz": "13000",
-            "ags": "13000000",
-            "text": "Mecklenburg-Vorpommern",
-            "kuerzel": "MV",
-            "sortierung": "2",
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      },
-      {
-        "bezeichner": "SN",
-        "idStatistik": "14",
-        "historie": [
-          {
-            "id": 1140,
-            "schluessel": "SN",
-            "plz": "14000",
-            "ags": "14000000",
-            "text": "Sachsen",
-            "kuerzel": "SN",
-            "sortierung": "2",
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      },
-      {
-        "bezeichner": "ST",
-        "idStatistik": "15",
-        "historie": [
-          {
-            "id": 1150,
-            "schluessel": "ST",
-            "plz": "15000",
-            "ags": "15000000",
-            "text": "Sachsen-Anhalt",
-            "kuerzel": "ST",
-            "sortierung": "2",
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      },
-      {
-        "bezeichner": "TH",
-        "idStatistik": "16",
-        "historie": [
-          {
-            "id": 1160,
-            "schluessel": "TH",
-            "plz": "16000",
-            "ags": "16000000",
-            "text": "Thüringen",
-            "kuerzel": "TH",
-            "sortierung": "2",
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      },
-      {
-        "bezeichner": "B",
-        "idStatistik": "91",
-        "historie": [
-          {
-            "id": 1910,
-            "schluessel": "B",
-            "plz": "91000",
-            "ags": "91000000",
-            "text": "Belgien",
-            "kuerzel": "B",
-            "sortierung": "3",
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      },
-      {
-        "bezeichner": "L",
-        "idStatistik": "92",
-        "historie": [
-          {
-            "id": 1920,
-            "schluessel": "L",
-            "plz": "92000",
-            "ags": "92000000",
-            "text": "Luxemburg",
-            "kuerzel": "L",
-            "sortierung": "3",
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      },
-      {
-        "bezeichner": "NL",
-        "idStatistik": "93",
-        "historie": [
-          {
-            "id": 1930,
-            "schluessel": "NL",
-            "plz": "93000",
-            "ags": "93000000",
-            "text": "Niederlande",
-            "kuerzel": "NL",
-            "sortierung": "3",
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      },
-      {
-        "bezeichner": "AL",
-        "idStatistik": "99",
-        "historie": [
-          {
-            "id": 1990,
-            "schluessel": "AL",
-            "plz": "99000",
-            "ags": "99000000",
-            "text": "Übriges Ausland",
-            "kuerzel": "AL",
-            "sortierung": "3",
-            "gueltigVon": null,
-            "gueltigBis": null
-          }
-        ]
-      }
-    ]
-  }
+	"version": 1,
+	"daten": [
+		{
+			"bezeichner": "SH",
+			"idStatistik": "1",
+			"historie": [
+				{
+					"id": 1010,
+					"schluessel": "SH",
+					"plz": "01000",
+					"ags": "01000000",
+					"text": "Schleswig-Holstein",
+					"kuerzel": "SH",
+					"sortierung": "2",
+					"gueltigVon": null,
+					"gueltigBis": null,
+					"auslaufdauer": 0
+				}
+			]
+		},
+		{
+			"bezeichner": "HH",
+			"idStatistik": "2",
+			"historie": [
+				{
+					"id": 1020,
+					"schluessel": "HH",
+					"plz": "02000",
+					"ags": "02000000",
+					"text": "Hamburg",
+					"kuerzel": "HH",
+					"sortierung": "2",
+					"gueltigVon": null,
+					"gueltigBis": null,
+					"auslaufdauer": 0
+				}
+			]
+		},
+		{
+			"bezeichner": "NI",
+			"idStatistik": "3",
+			"historie": [
+				{
+					"id": 1030,
+					"schluessel": "NI",
+					"plz": "03000",
+					"ags": "03000000",
+					"text": "Niedersachsen",
+					"kuerzel": "NI",
+					"sortierung": "2",
+					"gueltigVon": null,
+					"gueltigBis": null,
+					"auslaufdauer": 0
+				}
+			]
+		},
+		{
+			"bezeichner": "HB",
+			"idStatistik": "4",
+			"historie": [
+				{
+					"id": 1040,
+					"schluessel": "HB",
+					"plz": "04000",
+					"ags": "04000000",
+					"text": "Bremen",
+					"kuerzel": "HB",
+					"sortierung": "2",
+					"gueltigVon": null,
+					"gueltigBis": null,
+					"auslaufdauer": 0
+				}
+			]
+		},
+		{
+			"bezeichner": "NW",
+			"idStatistik": "5",
+			"historie": [
+				{
+					"id": 1050,
+					"schluessel": "NW",
+					"plz": "05000",
+					"ags": "05000000",
+					"text": "Nordrhein-Westfalen",
+					"kuerzel": "NW",
+					"sortierung": "2",
+					"gueltigVon": null,
+					"gueltigBis": null,
+					"auslaufdauer": 0				
+				}
+			]
+		},
+		{
+			"bezeichner": "HE",
+			"idStatistik": "6",
+			"historie": [
+				{
+					"id": 1060,
+					"schluessel": "HE",
+					"plz": "06000",
+					"ags": "06000000",
+					"text": "Hessen",
+					"kuerzel": "HE",
+					"sortierung": "2",
+					"gueltigVon": null,
+					"gueltigBis": null,
+					"auslaufdauer": 0
+				}
+			]
+		},
+		{
+			"bezeichner": "RP",
+			"idStatistik": "7",
+			"historie": [
+				{
+					"id": 1070,
+					"schluessel": "RP",
+					"plz": "07000",
+					"ags": "07000000",
+					"text": "Rheinland-Pfalz",
+					"kuerzel": "RP",
+					"sortierung": "2",
+					"gueltigVon": null,
+					"gueltigBis": null,
+					"auslaufdauer": 0
+				}
+			]
+		},
+		{
+			"bezeichner": "BW",
+			"idStatistik": "8",
+			"historie": [
+				{
+					"id": 1080,
+					"schluessel": "BW",
+					"plz": "08000",
+					"ags": "08000000",
+					"text": "Baden-Württemberg",
+					"kuerzel": "BW",
+					"sortierung": "2",
+					"gueltigVon": null,
+					"gueltigBis": null,
+					"auslaufdauer": 0
+				}
+			]
+		},
+		{
+			"bezeichner": "BY",
+			"idStatistik": "9",
+			"historie": [
+				{
+					"id": 1090,
+					"schluessel": "BY",
+					"plz": "09000",
+					"ags": "09000000",
+					"text": "Bayern",
+					"kuerzel": "BY",
+					"sortierung": "2",
+					"gueltigVon": null,
+					"gueltigBis": null,
+					"auslaufdauer": 0
+				}
+			]
+		},
+		{
+			"bezeichner": "SL",
+			"idStatistik": "10",
+			"historie": [
+				{
+					"id": 1100,
+					"schluessel": "SL",
+					"plz": "10000",
+					"ags": "10000000",
+					"text": "Saarland",
+					"kuerzel": "SL",
+					"sortierung": "2",
+					"gueltigVon": null,
+					"gueltigBis": null,
+					"auslaufdauer": 0
+				}
+			]
+		},
+		{
+			"bezeichner": "BE",
+			"idStatistik": "11",
+			"historie": [
+				{
+					"id": 1110,
+					"schluessel": "BE",
+					"plz": "11000",
+					"ags": "11000000",
+					"text": "Berlin",
+					"kuerzel": "BE",
+					"sortierung": "2",
+					"gueltigVon": null,
+					"gueltigBis": null,
+					"auslaufdauer": 0
+				}
+			]
+		},
+		{
+			"bezeichner": "BB",
+			"idStatistik": "12",
+			"historie": [
+				{
+					"id": 1120,
+					"schluessel": "BB",
+					"plz": "12000",
+					"ags": "12000000",
+					"text": "Brandenburg",
+					"kuerzel": "BB",
+					"sortierung": "2",
+					"gueltigVon": null,
+					"gueltigBis": null,
+					"auslaufdauer": 0
+				}
+			]
+		},
+		{
+			"bezeichner": "MV",
+			"idStatistik": "13",
+			"historie": [
+				{
+					"id": 1130,
+					"schluessel": "MV",
+					"plz": "13000",
+					"ags": "13000000",
+					"text": "Mecklenburg-Vorpommern",
+					"kuerzel": "MV",
+					"sortierung": "2",
+					"gueltigVon": null,
+					"gueltigBis": null,
+					"auslaufdauer": 0
+				}
+			]
+		},
+		{
+			"bezeichner": "SN",
+			"idStatistik": "14",
+			"historie": [
+				{
+					"id": 1140,
+					"schluessel": "SN",
+					"plz": "14000",
+					"ags": "14000000",
+					"text": "Sachsen",
+					"kuerzel": "SN",
+					"sortierung": "2",
+					"gueltigVon": null,
+					"gueltigBis": null,
+					"auslaufdauer": 0
+				}
+			]
+		},
+		{
+			"bezeichner": "ST",
+			"idStatistik": "15",
+			"historie": [
+				{
+					"id": 1150,
+					"schluessel": "ST",
+					"plz": "15000",
+					"ags": "15000000",
+					"text": "Sachsen-Anhalt",
+					"kuerzel": "ST",
+					"sortierung": "2",
+					"gueltigVon": null,
+					"gueltigBis": null,
+					"auslaufdauer": 0
+				}
+			]
+		},
+		{
+			"bezeichner": "TH",
+			"idStatistik": "16",
+			"historie": [
+				{
+					"id": 1160,
+					"schluessel": "TH",
+					"plz": "16000",
+					"ags": "16000000",
+					"text": "Thüringen",
+					"kuerzel": "TH",
+					"sortierung": "2",
+					"gueltigVon": null,
+					"gueltigBis": null,
+					"auslaufdauer": 0
+				}
+			]
+		},
+		{
+			"bezeichner": "B",
+			"idStatistik": "91",
+			"historie": [
+				{
+					"id": 1910,
+					"schluessel": "B",
+					"plz": "91000",
+					"ags": "91000000",
+					"text": "Belgien",
+					"kuerzel": "B",
+					"sortierung": "3",
+					"gueltigVon": null,
+					"gueltigBis": null,
+					"auslaufdauer": 0
+				}
+			]
+		},
+		{
+			"bezeichner": "L",
+			"idStatistik": "92",
+			"historie": [
+				{
+					"id": 1920,
+					"schluessel": "L",
+					"plz": "92000",
+					"ags": "92000000",
+					"text": "Luxemburg",
+					"kuerzel": "L",
+					"sortierung": "3",
+					"gueltigVon": null,
+					"gueltigBis": null,
+					"auslaufdauer": 0
+				}
+			]
+		},
+		{
+			"bezeichner": "NL",
+			"idStatistik": "93",
+			"historie": [
+				{
+					"id": 1930,
+					"schluessel": "NL",
+					"plz": "93000",
+					"ags": "93000000",
+					"text": "Niederlande",
+					"kuerzel": "NL",
+					"sortierung": "3",
+					"gueltigVon": null,
+					"gueltigBis": null,
+					"auslaufdauer": 0
+				}
+			]
+		},
+		{
+			"bezeichner": "AL",
+			"idStatistik": "99",
+			"historie": [
+				{
+					"id": 1990,
+					"schluessel": "AL",
+					"plz": "99000",
+					"ags": "99000000",
+					"text": "Übriges Ausland",
+					"kuerzel": "AL",
+					"sortierung": "3",
+					"gueltigVon": null,
+					"gueltigBis": null,
+					"auslaufdauer": 0
+				}
+			]
+		}
+	]
+}

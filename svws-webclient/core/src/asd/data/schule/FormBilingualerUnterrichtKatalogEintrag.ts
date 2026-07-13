@@ -3,11 +3,6 @@ import { CoreTypeData } from '../../../asd/data/CoreTypeData';
 
 export class FormBilingualerUnterrichtKatalogEintrag extends CoreTypeData {
 
-	/**
-	 * Eine zusätzliche längere Beschreibung der Einschulungsart.
-	 */
-	public beschreibung: string = "";
-
 
 	/**
 	 * Erstellt einen Eintrag mit Standardwerten
@@ -46,9 +41,6 @@ export class FormBilingualerUnterrichtKatalogEintrag extends CoreTypeData {
 		if (obj.auslaufdauer === undefined)
 			throw new Error('invalid json format, missing attribute auslaufdauer');
 		result.auslaufdauer = obj.auslaufdauer;
-		if (obj.beschreibung === undefined)
-			throw new Error('invalid json format, missing attribute beschreibung');
-		result.beschreibung = obj.beschreibung;
 		return result;
 	}
 
@@ -61,7 +53,6 @@ export class FormBilingualerUnterrichtKatalogEintrag extends CoreTypeData {
 		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result += '"auslaufdauer" : ' + obj.auslaufdauer.toString() + ',';
-		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -89,9 +80,6 @@ export class FormBilingualerUnterrichtKatalogEintrag extends CoreTypeData {
 		}
 		if (obj.auslaufdauer !== undefined) {
 			result += '"auslaufdauer" : ' + obj.auslaufdauer.toString() + ',';
-		}
-		if (obj.beschreibung !== undefined) {
-			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

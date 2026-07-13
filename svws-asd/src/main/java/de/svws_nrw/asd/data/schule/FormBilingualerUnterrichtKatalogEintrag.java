@@ -1,10 +1,9 @@
 package de.svws_nrw.asd.data.schule;
 
-import jakarta.xml.bind.annotation.XmlRootElement;
 import de.svws_nrw.asd.data.CoreTypeData;
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
@@ -15,11 +14,7 @@ import jakarta.validation.constraints.NotNull;
 @TranspilerDTO
 public class FormBilingualerUnterrichtKatalogEintrag extends CoreTypeData {
 
-	/** Eine zusätzliche längere Beschreibung der Einschulungsart. */
-	@Schema(description = "die textuelle Beschreibung von FormBilingualerUnterricht",
-			example = "nur innerhalb eines Bildungsgangs erteilt")
-	public @NotNull String beschreibung = "";
-
+	// keine weiteren Attribute vorhanden
 
 	/**
 	 * Erstellt einen Eintrag mit Standardwerten

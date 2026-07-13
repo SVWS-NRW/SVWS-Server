@@ -139,6 +139,14 @@ import { DQRNiveauKatalogEintrag } from "../data/schule/DQRNiveauKatalogEintrag"
 import { DQRNiveau } from "../types/schule/DQRNiveau";
 import { FachklasseKatalogEintrag } from "../data/schule/FachklasseKatalogEintrag";
 import { Fachklasse } from "../types/schule/Fachklasse";
+import { FormBilingualerUnterrichtKatalogEintrag } from "../data/schule/FormBilingualerUnterrichtKatalogEintrag";
+import { FormBilingualerUnterricht } from "../types/schule/FormBilingualerUnterricht";
+import { AnrechnungsantragBKAZVOKatalogEintrag } from "../data/schueler/AnrechnungsantragBKAZVOKatalogEintrag";
+import { AnrechnungsantragBKAZVO } from "../types/schueler/AnrechnungsantragBKAZVO";
+import { LaenderKatalogEintrag } from "../data/schule/LaenderKatalogEintrag";
+import { Laender } from "../types/schule/Laender";
+import { OrteKatalogEintrag } from "../data/schule/OrteKatalogEintrag";
+import { Orte } from "../types/schule/Orte";
 
 /**
  * Die Klasse dient dem Einlesen der Daten für Core-Types und der Fehlerart-Kontexte von Validatoren.
@@ -221,6 +229,10 @@ export class JsonCoreTypeReader {
 		{ key: "Reformpaedagogik", entry: ReformpaedagogikKatalogEintrag, type: Reformpaedagogik, simple: true },
 		{ key: "DQRNiveau", entry: DQRNiveauKatalogEintrag, type: DQRNiveau, simple: true },
 		{ key: "Fachklasse", entry: FachklasseKatalogEintrag, type: Fachklasse, simple: true },
+		{ key: "FormBilingualerUnterricht", entry: FormBilingualerUnterrichtKatalogEintrag, type: FormBilingualerUnterricht, simple: true },
+		{ key: "AnrechnungsantragBKAZVO", entry: AnrechnungsantragBKAZVOKatalogEintrag, type: AnrechnungsantragBKAZVO, simple: true },
+		{ key: "Laender", entry: LaenderKatalogEintrag, type: Laender },
+		{ key: "Orte", entry: OrteKatalogEintrag, type: Orte, simple: true },
 	];
 
 	/**
