@@ -39,4 +39,11 @@ public class FachklasseEintrag {
 	@Schema(description = "Die Sortierung", example = "32000")
 	public int sortierung;
 
+	/**
+	 * Gibt an, ob die Fachklasse in anderen Datenbanktabellen referenziert ist oder nicht.
+	 */
+	@Schema(description = "Gibt an, ob die Fachklasse in anderen Datenbanktabellen referenziert ist oder nicht.", example = "true",
+			accessMode = Schema.AccessMode.READ_ONLY)
+	public boolean referenziertInAnderenTabellen;
+
 }

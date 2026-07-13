@@ -65,6 +65,7 @@ import { routeEmailServer } from "~/router/apps/einstellungen/emailserver/RouteE
 import { routeSchwerpunkte } from "~/router/apps/schule/kataloge/schwerpunkte/RouteSchwerpunkte";
 import { routeAnkreuzkompetenzen } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteAnkreuzkompetenzen";
 import { routeTeilleistungsarten } from "~/router/apps/schule/kataloge/teilleistungsarten/RouteTeilleistungsarten";
+import { routeFachklassen } from "~/router/apps/schule/kataloge/fachklassen/RouteFachklassen";
 import { routeNotenmodulAnkreuzkompetenzen } from "./notenmodul/RouteNotenmodulAnkreuzkompetenzen";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { serverStateImpl } from "~/states/ServerStateImpl";
@@ -190,6 +191,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeEinwilligungsarten,
 			routeEntlassgruende,
 			routeErzieherarten,
+			routeFachklassen,
 			routeFaecher,
 			routeFahrschuelerarten,
 			routeFloskelgruppen,

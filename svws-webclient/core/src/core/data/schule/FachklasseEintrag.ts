@@ -33,6 +33,11 @@ export class FachklasseEintrag extends JavaObject {
 	 */
 	public sortierung: number = 0;
 
+	/**
+	 *  Gibt an, ob die Fachklasse in anderen Datenbanktabellen referenziert ist oder nicht.
+	 */
+	public referenziertInAnderenTabellen: boolean = false;
+
 
 	public constructor() {
 		super();
@@ -67,6 +72,9 @@ export class FachklasseEintrag extends JavaObject {
 		if (obj.sortierung === undefined)
 			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
+		if (obj.referenziertInAnderenTabellen === undefined)
+			throw new Error('invalid json format, missing attribute referenziertInAnderenTabellen');
+		result.referenziertInAnderenTabellen = obj.referenziertInAnderenTabellen;
 		return result;
 	}
 
@@ -78,6 +86,7 @@ export class FachklasseEintrag extends JavaObject {
 		result += '"idFachklasse" : ' + ((obj.idFachklasse === null) ? 'null' : obj.idFachklasse.toString()) + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -102,6 +111,9 @@ export class FachklasseEintrag extends JavaObject {
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		}
+		if (obj.referenziertInAnderenTabellen !== undefined) {
+			result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

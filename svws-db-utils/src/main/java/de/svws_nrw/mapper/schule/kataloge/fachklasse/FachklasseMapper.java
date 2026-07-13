@@ -41,6 +41,7 @@ public interface FachklasseMapper {
 	 * @return das befüllte DTO
 	 */
 	@Mapping(source = "entity.Kennung", target = "idFachklasse", qualifiedByName = "mapIdFachklasseToApi")
+	@Mapping(target = "referenziertInAnderenTabellen", ignore = true)
 	FachklasseEintrag toApi(DTOFachklassen entity);
 
 	/**

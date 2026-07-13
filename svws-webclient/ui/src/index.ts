@@ -204,3 +204,4 @@ export { SchuelerSchnelleingabeManager } from './ui/manager/schueler/SchuelerSch
 export { SchuelerNeuManager } from './ui/manager/schueler/SchuelerNeuManager';
 export { AnkreuzkompetenzenListeManager } from './ui/manager/kataloge/AnkreuzkompetenzenListeManager';
 export { SchuelerSchulbesuchManager } from './ui/manager/schueler/SchuelerSchulbesuchManager';
+export { FachklassenListeManager } from './ui/manager/kataloge/FachklassenListeManager';
