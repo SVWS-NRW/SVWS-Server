@@ -132,7 +132,7 @@
 		:ref="inputAbitur(fach, rowIndex)">
 		<template v-if="abi_wahl !== ''">
 			<span class="relative">{{ abi_wahl }}</span>
-			<span v-if="(abi_wahl !== '') && !manager.istMoeglichAbi(fach) && hatUpdateKompetenz" class="absolute right-1">
+			<span v-if="(abi_wahl !== '') && (!abi_wahl_pjk) && !manager.istMoeglichAbi(fach) && hatUpdateKompetenz" class="absolute right-1">
 				<svws-ui-tooltip :color="'danger'">
 					<svws-ui-button type="icon" size="small" @click="manager.deleteFachwahlAbitur(fach)"
 						@keydown.enter.prevent="manager.deleteFachwahlAbitur(fach)" @keydown.space.prevent="manager.deleteFachwahlAbitur(fach)">
@@ -269,6 +269,17 @@
 			return (props.manager.istAbi30ProjektkursAbiturfach5(fachbelegung)) ? "(5)" : "";
 		}
 		return fachbelegung.abiturFach.toString();
+	});
+
+	const abi_wahl_pjk = computed<boolean>(() => {
+		if (!gostLaufbahnplanungState.valid) {
+			return false;
+		}
+		const fachbelegung = gostLaufbahnplanungState.abiturdatenManager.getFachbelegungByID(props.fach.id);
+		if (fachbelegung === null) {
+			return false;
+		}
+		return (fachbelegung.abiturFach === null) && (props.manager.istAbi30ProjektkursAbiturfach5(fachbelegung));
 	});
 
 	const wahlen = computed<string[]>(() => {

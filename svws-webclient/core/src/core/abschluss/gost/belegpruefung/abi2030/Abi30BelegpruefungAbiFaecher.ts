@@ -83,7 +83,10 @@ export class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 			}
 			this.mapAbiturFachbelegungen.put(abiturFach, fachbelegung);
 			this.anzahlAbiFaecher++;
-			const fach: GostFach | null = this.manager.getFach(fachbelegung);
+			let fach: GostFach | null = this.manager.getFach(fachbelegung);
+			if ((fach !== null) && GostFachbereich.PROJEKTKURSE.hat(fach)) {
+				fach = (fachbelegung.idReferenzfach === null) ? null : this.manager.faecher().get(fachbelegung.idReferenzfach);
+			}
 			if (fach === null) {
 				continue;
 			}

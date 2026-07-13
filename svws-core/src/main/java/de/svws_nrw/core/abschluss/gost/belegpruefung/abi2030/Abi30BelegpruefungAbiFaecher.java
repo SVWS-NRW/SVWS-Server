@@ -91,11 +91,17 @@ public final class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 			}
 			mapAbiturFachbelegungen.put(abiturFach, fachbelegung);
 			anzahlAbiFaecher++;
-			// Bestimme Aufgabenfelder
-			final GostFach fach = manager.getFach(fachbelegung);
+
+			// Bestimme das Fach des Abiturfaches, bei einem Projektkurs das Fach des Referenzfaches
+			GostFach fach = manager.getFach(fachbelegung);
+			if ((fach != null) && GostFachbereich.PROJEKTKURSE.hat(fach)) {
+				fach = (fachbelegung.idReferenzfach == null) ? null : manager.faecher().get(fachbelegung.idReferenzfach);
+			}
 			if (fach == null) {
 				continue;
 			}
+
+			// Bestimme Aufgabenfelder
 			if (GostFachbereich.FREMDSPRACHE.hat(fach) || GostFachbereich.DEUTSCH.hat(fach)) {
 				hatAufgabenfeldI = true;
 			}
