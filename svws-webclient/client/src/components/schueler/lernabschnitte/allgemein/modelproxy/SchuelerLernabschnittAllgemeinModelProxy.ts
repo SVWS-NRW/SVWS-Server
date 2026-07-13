@@ -31,12 +31,14 @@ export class SchuelerLernabschnittAllgemeinModelProxy extends ModelProxy<Schuele
 		this.schuljahr = schuljahr;
 
 		this.addBlockingValidator(new ValidatorSchuelerLernabschnittKlasseUndJahrgang(
-			() => this.manager().klasseGetByIdOrNull(this.proxy.klassenID ?? -1),
-			() => this.manager().jahrgangGetByIdOrNull(this.proxy.jahrgangID ?? -1)),
+			() => this.proxy.klassenID,
+			() => this.proxy.jahrgangID,
+			this.manager),
 		"klassenID", "jahrgangID");
 		this.addBlockingValidator(new ValidatorSchuelerLernabschnittKlasseUndJahrgang(
-			() => this.manager().klasseGetByIdOrNull(this.proxy.klassenID ?? -1),
-			() => this.manager().jahrgangGetByIdOrNull(this.proxy.jahrgangID ?? -1)),
+			() => this.proxy.klassenID,
+			() => this.proxy.jahrgangID,
+			this.manager),
 		"jahrgangID", "klassenID");
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idEpJahre), "idEpJahre");
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idSchulgliederung), "idSchulgliederung");

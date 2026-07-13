@@ -923,16 +923,20 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 			idJahrgang = dto.Jahrgang_ID;
 		}
 
-		final DTOJahrgang jahrgang = this.conn.queryByKey(DTOJahrgang.class, idJahrgang);
-		if (jahrgang == null) {
-			throw new ApiOperationException(Status.NOT_FOUND, "Es existiert kein Jahrgang mit der ID %d.".formatted(idJahrgang));
-		}
-
+		final DTOJahrgang jahrgang = getJahrgangById(idJahrgang);
 		pruefeKompatibilitaetKlasseUndJahrgang(klasse, jahrgang);
 
 		checkFunktionsbezogeneKompetenzAufKlasse(List.of(idKlasse));
 
 		dto.Klassen_ID = idKlasse;
+	}
+
+	private DTOJahrgang getJahrgangById(final Long idJahrgang) {
+		final DTOJahrgang jahrgang = this.conn.queryByKey(DTOJahrgang.class, idJahrgang);
+		if (jahrgang == null) {
+			throw new ApiOperationException(Status.NOT_FOUND, "Es existiert kein Jahrgang mit der ID %d.".formatted(idJahrgang));
+		}
+		return jahrgang;
 	}
 
 	private void updateIdJahrgang(final Object value, final DTOSchuelerLernabschnittsdaten dto, final Map<String, Object> patchAttributes) {
@@ -943,10 +947,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 			return;
 		}
 
-		final DTOJahrgang jahrgang = this.conn.queryByKey(DTOJahrgang.class, idJahrgang);
-		if (jahrgang == null) {
-			throw new ApiOperationException(Status.NOT_FOUND, "Es existiert kein Jahrgang mit der ID %d.".formatted(idJahrgang));
-		}
+		final DTOJahrgang jahrgang = getJahrgangById(idJahrgang);
 
 		final Long idKlasse;
 		final Object klassePatch = patchAttributes.get(KLASSEN_ID);
@@ -970,7 +971,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 	}
 
 	private void pruefeKompatibilitaetKlasseUndJahrgang(final DTOKlassen klasse, final DTOJahrgang jahrgang) {
-		if ((klasse == null) || (jahrgang == null)) {
+		if ((klasse == null) || (klasse.Jahrgang_ID == null) || (jahrgang == null)) {
 			return;
 		}
 
@@ -979,7 +980,9 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 			return;
 		}
 
-		if (!Objects.equals(klasse.Jahrgang_ID, jahrgang.ID)) {
+		final DTOJahrgang klasseJahrgang = getJahrgangById(klasse.Jahrgang_ID);
+
+		if (!Objects.equals(klasseJahrgang.ASDJahrgang, jahrgang.ASDJahrgang)) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Der ausgewählte Jahrgang ist für die Klasse nicht zulässig.");
 		}
 	}

@@ -1,21 +1,29 @@
 import type { JahrgangsDaten, KlassenDaten } from "@core";
 import { BasicValidator, ValidatorFehlerart } from "@core";
 import { ValidatorInputRequired } from "@ui";
+import type { SchuelerLernabschnittManager } from "~/components/schueler/lernabschnitte/SchuelerLernabschnittManager";
 
 export class ValidatorSchuelerLernabschnittKlasseUndJahrgang extends BasicValidator {
 
+	private readonly getManager: () => SchuelerLernabschnittManager;
 	private readonly getKlasse: () => KlassenDaten | null;
 	private readonly getJahrgang: () => JahrgangsDaten | null;
 
-	constructor(getKlasse: () => KlassenDaten | null, getJahrgang: () => JahrgangsDaten | null) {
+	constructor(idKlasse: () => number | null, idJahrgang: () => number | null, manager: () => SchuelerLernabschnittManager) {
 		super(ValidatorFehlerart.MUSS);
-		this.getKlasse = getKlasse;
-		this.getJahrgang = getJahrgang;
-		this._validatoren.add(new ValidatorInputRequired(() => getKlasse()?.id));
+		this.getManager = manager;
+		this.getKlasse = () => this.getManager().klasseGetByIdOrNull(idKlasse() ?? -1);
+		this.getJahrgang = () => this.getManager().jahrgangGetByIdOrNull(idJahrgang() ?? -1);
+
+		this._validatoren.add(new ValidatorInputRequired(() => idKlasse()));
 	}
 
 	protected pruefe(): boolean	{
-		if ((this.getKlasse() === null) || (this.getJahrgang() === null)) {
+		const manager = this.getManager();
+		const klasse = this.getKlasse();
+		const jahrgang = this.getJahrgang();
+
+		if ((klasse === null) || (jahrgang === null)) {
 			return true;
 		}
 
@@ -24,7 +32,8 @@ export class ValidatorSchuelerLernabschnittKlasseUndJahrgang extends BasicValida
 			return true;
 		}
 
-		if (this.getKlasse()?.idJahrgang !== this.getJahrgang()?.id) {
+		const klasseJahrgang = manager.jahrgangGetByIdOrNull(klasse.idJahrgang ?? -1);
+		if (klasseJahrgang?.kuerzelStatistik !== jahrgang.kuerzelStatistik) {
 			this.addFehler(1, "Die Kombination aus Klasse und Jahrgang ist nicht gültig.");
 		}
 
