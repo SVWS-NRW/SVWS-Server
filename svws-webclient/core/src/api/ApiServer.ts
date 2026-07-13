@@ -7340,6 +7340,38 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der PATCH-Methode patchGostKlausurenVorgabenMultiple für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/vorgaben/patch/multiple
+	 *
+	 * Patcht mehrere Gost-Klausurvorgaben.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen von Gost-Klausurvorgaben besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Patches wurden erfolgreich in die Klausurvorgaben integriert.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostKlausurvorgabe>
+	 *   Code 400: Die Patches sind fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Klausurvorgaben zu ändern.
+	 *   Code 404: Mindestens ein Klausurvorgabe-Eintrag mit der angegebenen ID wurde nicht gefunden
+	 *   Code 409: Ein Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<Partial<GostKlausurvorgabe>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Patches wurden erfolgreich in die Klausurvorgaben integriert.
+	 */
+	public async patchGostKlausurenVorgabenMultiple(data : List<Partial<GostKlausurvorgabe>>, schema : string) : Promise<List<GostKlausurvorgabe>> {
+		const path = "/db/{schema}/gost/klausuren/vorgaben/patch/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<GostKlausurvorgabe>).map(d => GostKlausurvorgabe.transpilerToJSONPatch(d)).join() + "]";
+		const result : string = await super.patchJSONWithResponse(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<GostKlausurvorgabe>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKlausurvorgabe.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode copyGostKlausurenVorgaben für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/vorgaben/vorlagen/copyto/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : -?\d+}/quartal/{quartal : -?\d+}
 	 *
 	 * Kopiert die Klausurvorgabe-Vorlagen in einen konkreten Abiturjahrgang und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anlegen der Gost-Klausurvorgaben besitzt.

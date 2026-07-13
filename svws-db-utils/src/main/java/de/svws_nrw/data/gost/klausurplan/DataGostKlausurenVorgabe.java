@@ -6,12 +6,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
-import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
+import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.data.gost.DataGostFaecher;
 import de.svws_nrw.db.DBEntityManager;
@@ -197,10 +196,13 @@ public final class DataGostKlausurenVorgabe {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 		}
 		final EnumMap<GostHalbjahr, GostKlausurplanManager> manager = new EnumMap<>(GostHalbjahr.class);
+		final GostFaecherManager facherManager = DataGostFaecher.getFaecherManager(conn, -1);
 		for (final GostHalbjahr hj : GostHalbjahr.values()) {
-			manager.put(hj, new GostKlausurplanManager(mapList(vorgabenVorlage.stream().filter(v -> v.Halbjahr == hj).toList())));
+			final GostKlausurplanManager man = new GostKlausurplanManager(mapList(vorgabenVorlage.stream().filter(v -> v.Halbjahr == hj).toList()));
+			manager.put(hj, man);
+			man.setFaecherManager(-1, facherManager);
 		}
-		final List<GostFach> faecher = DataGostFaecher.getFaecherManager(conn, -1).getFaecherSchriftlichMoeglich();
+		final List<GostFach> faecher = facherManager.getFaecherSchriftlichMoeglich();
 		final List<DTOGostKlausurenVorgaben> neueVorgaben = new ArrayList<>();
 		// Bestimme die ID, für welche der Datensatz eingefügt wird
 		long idNMK = conn.transactionGetNextID(DTOGostKlausurenVorgaben.class);
@@ -215,12 +217,13 @@ public final class DataGostKlausurenVorgabe {
 				halbjahr.istEinfuehrungsphase() ? new GostKursart[] { GostKursart.GK } : new GostKursart[] { GostKursart.GK, GostKursart.LK };
 		for (final GostFach fach : faecher) {
 			for (final GostKursart ka : arten) {
-				if (((ka == GostKursart.LK) && !fach.istMoeglichAbiLK) || ((halbjahr == GostHalbjahr.Q22) && !(fach.istMoeglichAbiGK || fach.istMoeglichAbiLK))) {
+				if (((ka == GostKursart.LK) && !fach.istMoeglichAbiLK)
+						|| ((halbjahr == GostHalbjahr.Q22) && !(fach.istMoeglichAbiGK || fach.istMoeglichAbiLK))) {
 					continue;
 				}
 				for (final int q : quartale) {
 					final DTOGostKlausurenVorgaben vorgabeNeu = new DTOGostKlausurenVorgaben(idNMK++, -1, halbjahr, q, fach.id, ka,
-							berechneApoKlausurdauer(halbjahr, ka, fach), 0, false, false, false, false);
+							GostKlausurplanManager.berechneGostKlausurdauerByHalbjahrAndKursartAndFach(halbjahr, ka, fach, -1), 0, false, false, false, false);
 					if (manager.get(vorgabeNeu.Halbjahr).vorgabeGetByHalbjahrAndQuartalAndKursartallgAndFachid(-1, halbjahr, vorgabeNeu.Quartal,
 							vorgabeNeu.Kursart, vorgabeNeu.Fach_ID) == null) {
 						neueVorgaben.add(vorgabeNeu);
@@ -232,61 +235,6 @@ public final class DataGostKlausurenVorgabe {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren der Gost-Klausurvorgaben.");
 		}
 		return mapList(neueVorgaben);
-	}
-
-	private static int berechneApoKlausurdauer(final GostHalbjahr halbjahr, final GostKursart kursart, final GostFach fach) {
-	    if (halbjahr.istEinfuehrungsphase()) {
-			return 90;
-		}
-	    if (halbjahr.id <= 3) {
-			return (kursart == GostKursart.LK) ? 180 : 135;
-		}
-	    if (halbjahr.id == 4) {
-			return (kursart == GostKursart.LK) ? 225 : 180;
-		}
-	    if (halbjahr.id == 5) { // Abiturhalbjahr
-			return berechneAbiturKlausurdauer(kursart, fach);
-		}
-	    throw new DeveloperNotificationException("Berechnung Klausurdauer fehlgeschlagen.");
-	}
-
-	private static int berechneAbiturKlausurdauer(final GostKursart kursart, final GostFach fach) {
-		// Alte Sprachen
-		if (fach.kuerzel.matches("^[GLH]\\d?$")) {
-			if (!fach.istFremdSpracheNeuEinsetzend) {
-				return (kursart == GostKursart.LK) ? 300 : 240; // fortgeführt
-			}
-		    return 210; // GK neu einsetzend
-		}
-
-		// Moderne Fremdsprachen
-		if (fach.istFremdsprache) {
-			if (!fach.istFremdSpracheNeuEinsetzend) {
-				return (kursart == GostKursart.LK) ? 315 : 285; // fortgeführt
-			}
-			return 255; // GK neu einsetzend
-		}
-
-		// Naturwissenschaften
-		if (List.of(Fach.BI.toString(), Fach.CH.toString(), Fach.PH.toString()).contains(fach.kuerzel)) {
-			return (kursart == GostKursart.LK) ? 300 : 255;
-		}
-
-		if (Fach.D.toString().equals(fach.kuerzel)) {
-			return (kursart == GostKursart.LK) ? 315 : 255;
-		}
-
-		if (Fach.M.toString().equals(fach.kuerzel)) {
-			return (kursart == GostKursart.LK) ? 300 : 255;
-		}
-
-		// Informatik, Ernährungslehre, Technik
-		if (List.of(Fach.IF.toString(), Fach.EL.toString(), Fach.TC.toString()).contains(fach.kuerzel)) {
-			return (kursart == GostKursart.LK) ? 270 : 225;
-		}
-
-		// alle anderen Fächer
-		return (kursart == GostKursart.LK) ? 300 : 240;
 	}
 
 }

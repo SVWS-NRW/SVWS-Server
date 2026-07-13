@@ -161,6 +161,36 @@ public class APIGostKlausuren {
 	}
 
 	/**
+	 * Patcht die Daten mehrerer {@link GostKlausurvorgabe}n.
+	 *
+	 * @param schema     das Datenbankschema, auf welchem der Patch ausgeführt werden soll
+	 * @param patches    JSON-Array mit den Patch-Daten
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort
+	 */
+	@PATCH
+	@Path("/vorgaben/patch/multiple")
+	@Operation(summary = "Patcht mehrere Gost-Klausurvorgaben.", description = "Patcht mehrere Gost-Klausurvorgaben."
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen von Gost-Klausurvorgaben besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Patches wurden erfolgreich in die Klausurvorgaben integriert.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = GostKlausurvorgabe.class))))
+	@ApiResponse(responseCode = "400", description = "Die Patches sind fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Klausurvorgaben zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Mindestens ein Klausurvorgabe-Eintrag mit der angegebenen ID wurde nicht gefunden")
+	@ApiResponse(responseCode = "409",
+			description = "Ein Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchGostKlausurenVorgabenMultiple(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Patches für die Klausurvorgabe-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = GostKlausurvorgabe.class)))) @Valid final List<GostKlausurenVorgabePatchRequest> patches,
+			@Context final HttpServletRequest request) {
+		return GostKlausurenControllerFactory.withWriteAccess(request)
+				.getGostKlausurenVorgabeController().patchMultiple(patches);
+	}
+
+	/**
 	 * Die OpenAPI-Methode für das Löschen einer {@link GostKlausurvorgabe}.
 	 *
 	 * @param schema     das Datenbankschema, in welchem die {@link GostKlausurvorgabe} gelöscht wird

@@ -1,5 +1,6 @@
 package de.svws_nrw.service.gost.klausurplan;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -152,6 +153,33 @@ public final class GostKlausurenVorgabeService {
 			repository.update(dto);
 			repository.flush();
 			return get(dto.ID);
+		});
+	}
+
+	/**
+	 * Führt mehrere Patches auf Klausurvorgaben aus.
+	 *
+	 * @param patches die Patches
+	 *
+	 * @return die gepatchten Klausurvorgaben
+	 */
+	public List<GostKlausurvorgabe> patchMultiple(final Collection<GostKlausurenVorgabePatchRequest> patches) {
+		if (patches == null) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Für das Patchen müssen Daten angegeben werden. Null ist nicht zulässig.");
+		}
+		return transactional(() -> {
+			final List<GostKlausurvorgabe> result = new ArrayList<>();
+			for (final GostKlausurenVorgabePatchRequest patch : patches) {
+				if ((patch == null) || (patch.id == null)) {
+					throw new ApiOperationException(Status.BAD_REQUEST, "Jeder Patch muss eine ID der Klausurvorgabe enthalten.");
+				}
+				final DTOGostKlausurenVorgaben dto = repository.getById(patch.id);
+				applyPatch(dto, patch);
+				repository.update(dto);
+				result.add(toApi(dto));
+			}
+			repository.flush();
+			return result;
 		});
 	}
 

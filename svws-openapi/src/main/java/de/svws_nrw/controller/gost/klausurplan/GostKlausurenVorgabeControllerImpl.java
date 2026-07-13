@@ -40,6 +40,11 @@ public final class GostKlausurenVorgabeControllerImpl implements GostKlausurenVo
 	}
 
 	@Override
+	public Response patchMultiple(final Collection<GostKlausurenVorgabePatchRequest> patches) {
+		return Responses.ok(gostKlausurenVorgabeService.patchMultiple(patches));
+	}
+
+	@Override
 	public Response delete(final long id) {
 		return Responses.ok(gostKlausurenVorgabeService.delete(id));
 	}

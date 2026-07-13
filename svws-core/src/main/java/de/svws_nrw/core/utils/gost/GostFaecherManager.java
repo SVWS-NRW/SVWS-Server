@@ -432,6 +432,24 @@ public class GostFaecherManager {
 	}
 
 	/**
+	 * Gibt an, ob es sich bei dem Fach mit der übergebenen ID um eine moderne Fremdsprache handelt oder nicht.
+	 * Alte Sprachen wie Latein, Griechisch/Altgriechisch und Hebräisch zählen nicht als moderne Fremdsprachen.
+	 *
+	 * @param id   die ID des Faches
+	 *
+	 * @return true, wenn es sich um eine moderne Fremdsprache handelt und ansonsten false.
+	 */
+	public boolean fachIstModerneFremdsprache(final long id) {
+		final GostFach fach = mapIdFachNachFach.get(id);
+		if ((fach == null) || !fach.istFremdsprache) {
+			return false;
+		}
+		final Fach zf = Fach.getBySchluesselOrDefault(fach.kuerzel);
+		final FachKatalogEintrag fke = zf.daten(schuljahr);
+		return (fke != null) && !"G".equals(fke.kuerzel) && !"H".equals(fke.kuerzel) && !"L".equals(fke.kuerzel);
+	}
+
+	/**
 	 * Gibt an, ob es sich bei dem Fach mit der übergebenen ID um Kunst handelt oder nicht.
 	 *
 	 * @param id   die ID des Faches

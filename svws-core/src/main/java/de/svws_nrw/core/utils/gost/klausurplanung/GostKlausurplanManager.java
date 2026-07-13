@@ -4723,8 +4723,19 @@ public class GostKlausurplanManager {
 	 */
 	public @NotNull GostFach fachByKursklausur(final @NotNull GostKursklausur k) {
 		final GostKlausurvorgabe vorgabe = vorgabeByKursklausur(k);
-		return DeveloperNotificationException.ifNull("Fach mit ID " + vorgabeByKursklausur(k).idFach + " nicht in GostFaecherManager vorhanden.",
-				getFaecherManager(vorgabe.abiJahrgang).get(vorgabe.idFach));
+		return fachByVorgabe(vorgabe);
+	}
+
+	/**
+	 * Liefert das {@link GostFach} zur übergebenen {@link GostKlausurvorgabe}.
+	 *
+	 * @param v die {@link GostKlausurvorgabe}
+	 *
+	 * @return das {@link GostFach} zur übergebenen {@link GostKlausurvorgabe}.
+	 */
+	public @NotNull GostFach fachByVorgabe(final @NotNull GostKlausurvorgabe v) {
+		return DeveloperNotificationException.ifNull("Fach mit ID " + v.idFach + " nicht in GostFaecherManager vorhanden.",
+				getFaecherManager(v.abiJahrgang).get(v.idFach));
 	}
 
 	/**
@@ -5981,6 +5992,96 @@ public class GostKlausurplanManager {
 		final List<GostSchuelerklausur> sorted = new ArrayList<>(_schuelerklausurmenge);
 		sorted.sort(_compSchuelerklausurByDatumHT);
 		return sorted;
+	}
+
+	/**
+	 * Berechnet die Klausurdauer laut APO-GOSt basierend auf der übergebenen Vorgabe.
+	 *
+	 * @param vorgabe  die {@link GostKlausurvorgabe}, die die notwendigen Informationen wie
+	 *                 Halbjahr, Kursart und Abiturjahrgang für die Berechnung liefert.
+	 * @return die berechnete Klausurdauer in Minuten als {@code int}.
+	 */
+	public int berechneGostKlausurdauerByVorgabe(final @NotNull GostKlausurvorgabe vorgabe) {
+		final GostHalbjahr halbjahr = GostHalbjahr.fromIDorException(vorgabe.halbjahr);
+		final GostKursart kursart = GostKursart.fromKuerzelOrException(vorgabe.kursart);
+		final GostFach fach = fachByVorgabe(vorgabe);
+		return berechneGostKlausurdauerByHalbjahrAndKursartAndFach(halbjahr, kursart, fach, vorgabe.abiJahrgang);
+	}
+
+	/**
+	 * Berechnet die Klausurdauer gemäß Halbjahr, Kursart, Fach und Abiturjahrgang.
+	 * Die Klausurdauer richtet sich nach den APO-GOSt-Vorgaben, abhängig vom Halbjahr und
+	 * dem Abiturjahrgang (alte oder neue Verordnung).
+	 *
+	 * @param halbjahr das {@link GostHalbjahr}
+	 * @param kursart die {@link GostKursart}
+	 * @param fach das {@link GostFach}
+	 * @param abiJahrgang der Abiturjahrgang
+	 * @return die berechnete Klausurdauer in Minuten
+	 */
+	public static int berechneGostKlausurdauerByHalbjahrAndKursartAndFach(final @NotNull GostHalbjahr halbjahr, final @NotNull GostKursart kursart, final @NotNull GostFach fach,
+			final int abiJahrgang) {
+		if (halbjahr.istEinfuehrungsphase()) {
+			return 90;
+		}
+		if (halbjahr.id == 5) { // Abiturhalbjahr
+			return berechneAbiturKlausurdauer(kursart, fach);
+		}
+		if (abiJahrgang < 2030) { // Alte APO-GOSt
+			if (halbjahr.id <= 3) {
+				return (kursart == GostKursart.LK) ? 180 : 135;
+			}
+			if (halbjahr.id == 4) {
+				return (kursart == GostKursart.LK) ? 225 : 180;
+			}
+		} else { // Neue APO-GOSt
+			if (halbjahr.id <= 3) {
+				return (kursart == GostKursart.LK) ? 135 : 90;
+			}
+			if (halbjahr.id == 4) {
+				return (kursart == GostKursart.LK) ? 180 : 135;
+			}
+		}
+		throw new DeveloperNotificationException("Berechnung Klausurdauer fehlgeschlagen.");
+	}
+
+	private static int berechneAbiturKlausurdauer(final @NotNull GostKursart kursart, final @NotNull GostFach fach) {
+		// Alte Sprachen
+		if (fach.kuerzel.matches("^[GLH]\\d?$")) {
+			if (!fach.istFremdSpracheNeuEinsetzend) {
+				return (kursart == GostKursart.LK) ? 300 : 240; // fortgeführt
+			}
+			return 210; // GK neu einsetzend
+		}
+
+		// Moderne Fremdsprachen
+		if (fach.istFremdsprache) {
+			if (!fach.istFremdSpracheNeuEinsetzend) {
+				return (kursart == GostKursart.LK) ? 315 : 285; // fortgeführt
+			}
+			return 255; // GK neu einsetzend
+		}
+
+		// Naturwissenschaften
+		if (List.of(Fach.BI.toString(), Fach.CH.toString(), Fach.PH.toString()).contains(fach.kuerzel)) {
+			return (kursart == GostKursart.LK) ? 300 : 255;
+		}
+
+		if (Fach.D.toString().equals(fach.kuerzel)) {
+			return (kursart == GostKursart.LK) ? 315 : 255;
+		}
+
+		if (Fach.M.toString().equals(fach.kuerzel)) {
+			return (kursart == GostKursart.LK) ? 300 : 255;
+		}
+
+		// Informatik, Ernährungslehre, Technik
+		if (List.of(Fach.IF.toString(), Fach.EL.toString(), Fach.TC.toString()).contains(fach.kuerzel)) {
+			return (kursart == GostKursart.LK) ? 270 : 225;
+		}
+
+		// alle anderen Fächer
+		return (kursart == GostKursart.LK) ? 300 : 240;
 	}
 
 }

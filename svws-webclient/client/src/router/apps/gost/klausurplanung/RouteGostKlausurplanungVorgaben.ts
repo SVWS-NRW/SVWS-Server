@@ -31,6 +31,7 @@ export class RouteGostKlausurplanungVorgaben extends RouteNode<any, RouteGostKla
 			kMan: () => routeGostKlausurplanung.data.manager,
 			erzeugeKlausurvorgabe: routeGostKlausurplanung.data.erzeugeKlausurvorgabe,
 			patchKlausurvorgabe: routeGostKlausurplanung.data.patchKlausurvorgabe,
+			patchKlausurvorgaben: routeGostKlausurplanung.data.patchKlausurvorgaben,
 			loescheKlausurvorgaben: routeGostKlausurplanung.data.loescheKlausurvorgaben,
 			erzeugeVorgabenAusVorlage: routeGostKlausurplanung.data.erzeugeVorgabenAusVorlage,
 			erzeugeDefaultKlausurvorgaben: routeGostKlausurplanung.data.erzeugeDefaultKlausurvorgaben,
@@ -41,4 +42,3 @@ export class RouteGostKlausurplanungVorgaben extends RouteNode<any, RouteGostKla
 }
 
 export const routeGostKlausurplanungVorgaben = new RouteGostKlausurplanungVorgaben();
-

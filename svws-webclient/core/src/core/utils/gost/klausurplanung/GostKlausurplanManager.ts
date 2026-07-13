@@ -4407,7 +4407,18 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public fachByKursklausur(k: GostKursklausur): GostFach {
 		const vorgabe: GostKlausurvorgabe | null = this.vorgabeByKursklausur(k);
-		return DeveloperNotificationException.ifNull("Fach mit ID " + this.vorgabeByKursklausur(k).idFach + " nicht in GostFaecherManager vorhanden.", this.getFaecherManager(vorgabe.abiJahrgang).get(vorgabe.idFach));
+		return this.fachByVorgabe(vorgabe);
+	}
+
+	/**
+	 * Liefert das {@link GostFach} zur übergebenen {@link GostKlausurvorgabe}.
+	 *
+	 * @param v die {@link GostKlausurvorgabe}
+	 *
+	 * @return das {@link GostFach} zur übergebenen {@link GostKlausurvorgabe}.
+	 */
+	public fachByVorgabe(v: GostKlausurvorgabe): GostFach {
+		return DeveloperNotificationException.ifNull("Fach mit ID " + v.idFach + " nicht in GostFaecherManager vorhanden.", this.getFaecherManager(v.abiJahrgang).get(v.idFach));
 	}
 
 	/**
@@ -5622,6 +5633,84 @@ export class GostKlausurplanManager extends JavaObject {
 		const sorted: List<GostSchuelerklausur> | null = new ArrayList<GostSchuelerklausur>(this._schuelerklausurmenge);
 		sorted.sort(this._compSchuelerklausurByDatumHT);
 		return sorted;
+	}
+
+	/**
+	 * Berechnet die Klausurdauer laut APO-GOSt basierend auf der übergebenen Vorgabe.
+	 *
+	 * @param vorgabe  die {@link GostKlausurvorgabe}, die die notwendigen Informationen wie
+	 *                 Halbjahr, Kursart und Abiturjahrgang für die Berechnung liefert.
+	 * @return die berechnete Klausurdauer in Minuten als {@code int}.
+	 */
+	public berechneGostKlausurdauerByVorgabe(vorgabe: GostKlausurvorgabe): number {
+		const halbjahr: GostHalbjahr | null = GostHalbjahr.fromIDorException(vorgabe.halbjahr);
+		const kursart: GostKursart | null = GostKursart.fromKuerzelOrException(vorgabe.kursart);
+		const fach: GostFach | null = this.fachByVorgabe(vorgabe);
+		return GostKlausurplanManager.berechneGostKlausurdauerByHalbjahrAndKursartAndFach(halbjahr, kursart, fach, vorgabe.abiJahrgang);
+	}
+
+	/**
+	 * Berechnet die Klausurdauer gemäß Halbjahr, Kursart, Fach und Abiturjahrgang.
+	 * Die Klausurdauer richtet sich nach den APO-GOSt-Vorgaben, abhängig vom Halbjahr und
+	 * dem Abiturjahrgang (alte oder neue Verordnung).
+	 *
+	 * @param halbjahr das {@link GostHalbjahr}
+	 * @param kursart die {@link GostKursart}
+	 * @param fach das {@link GostFach}
+	 * @param abiJahrgang der Abiturjahrgang
+	 * @return die berechnete Klausurdauer in Minuten
+	 */
+	public static berechneGostKlausurdauerByHalbjahrAndKursartAndFach(halbjahr: GostHalbjahr, kursart: GostKursart, fach: GostFach, abiJahrgang: number): number {
+		if (halbjahr.istEinfuehrungsphase()) {
+			return 90;
+		}
+		if (halbjahr.id === 5) {
+			return GostKlausurplanManager.berechneAbiturKlausurdauer(kursart, fach);
+		}
+		if (abiJahrgang < 2030) {
+			if (halbjahr.id <= 3) {
+				return (kursart as unknown === GostKursart.LK as unknown) ? 180 : 135;
+			}
+			if (halbjahr.id === 4) {
+				return (kursart as unknown === GostKursart.LK as unknown) ? 225 : 180;
+			}
+		} else {
+			if (halbjahr.id <= 3) {
+				return (kursart as unknown === GostKursart.LK as unknown) ? 135 : 90;
+			}
+			if (halbjahr.id === 4) {
+				return (kursart as unknown === GostKursart.LK as unknown) ? 180 : 135;
+			}
+		}
+		throw new DeveloperNotificationException("Berechnung Klausurdauer fehlgeschlagen.")
+	}
+
+	private static berechneAbiturKlausurdauer(kursart: GostKursart, fach: GostFach): number {
+		if (JavaString.matches(fach.kuerzel, "^[GLH]\\d?$")) {
+			if (!fach.istFremdSpracheNeuEinsetzend) {
+				return (kursart as unknown === GostKursart.LK as unknown) ? 300 : 240;
+			}
+			return 210;
+		}
+		if (fach.istFremdsprache) {
+			if (!fach.istFremdSpracheNeuEinsetzend) {
+				return (kursart as unknown === GostKursart.LK as unknown) ? 315 : 285;
+			}
+			return 255;
+		}
+		if (ArrayList.of(Fach.BI.toString(), Fach.CH.toString(), Fach.PH.toString()).contains(fach.kuerzel)) {
+			return (kursart as unknown === GostKursart.LK as unknown) ? 300 : 255;
+		}
+		if (JavaObject.equalsTranspiler(Fach.D.toString(), (fach.kuerzel))) {
+			return (kursart as unknown === GostKursart.LK as unknown) ? 315 : 255;
+		}
+		if (JavaObject.equalsTranspiler(Fach.M.toString(), (fach.kuerzel))) {
+			return (kursart as unknown === GostKursart.LK as unknown) ? 300 : 255;
+		}
+		if (ArrayList.of(Fach.IF.toString(), Fach.EL.toString(), Fach.TC.toString()).contains(fach.kuerzel)) {
+			return (kursart as unknown === GostKursart.LK as unknown) ? 270 : 225;
+		}
+		return (kursart as unknown === GostKursart.LK as unknown) ? 300 : 240;
 	}
 
 	transpilerCanonicalName(): string {

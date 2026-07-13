@@ -39,6 +39,15 @@ public interface GostKlausurenVorgabeController {
 	Response patch(GostKlausurenVorgabePatchRequest patch);
 
 	/**
+	 * Patcht mehrere Klausurvorgaben.
+	 *
+	 * @param patches die Patches
+	 *
+	 * @return die Response
+	 */
+	Response patchMultiple(Collection<GostKlausurenVorgabePatchRequest> patches);
+
+	/**
 	 * Löscht eine Klausurvorgabe.
 	 *
 	 * @param id die ID

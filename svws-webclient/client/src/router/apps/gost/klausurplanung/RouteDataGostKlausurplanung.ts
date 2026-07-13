@@ -1,6 +1,16 @@
 
-import type { GostJahrgangsdaten, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, GostKlausurterminblockungDaten, GostNachschreibterminblockungKonfiguration, GostKlausurenUpdate, List, GostKlausurraumRich, GostSchuelerklausur } from "@core";
-import { GostKlausurtermin, ArrayList, StundenplanManager, GostFaecherManager, GostHalbjahr, GostKlausurplanManager, DeveloperNotificationException, GostSchuelerklausurTermin, GostKlausurenCollectionAllData, GostKlausurenCollectionHjData, GostKursklausur } from "@core";
+import type {
+	GostJahrgangsdaten,
+	GostKlausurvorgabe,
+	GostKlausurraum,
+	Schuljahresabschnitt,
+	GostKlausurterminblockungDaten,
+	GostNachschreibterminblockungKonfiguration,
+	GostKlausurenUpdate,
+	List,
+	GostKlausurraumRich,
+	GostSchuelerklausur } from "@core";
+import { ListUtils, GostKlausurtermin, ArrayList, StundenplanManager, GostFaecherManager, GostHalbjahr, GostKlausurplanManager, DeveloperNotificationException, GostSchuelerklausurTermin, GostKlausurenCollectionAllData, GostKlausurenCollectionHjData, GostKursklausur } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 import { computed } from "vue";
 
@@ -165,11 +175,9 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 			}
 			const schuljahr = halbjahr.getSchuljahrFromAbiturjahr(this._state.value.abiturjahr);
 			const abschnitt = abschnittStateImpl.getBySchuljahrUndHalbjahr(schuljahr, halbjahr.halbjahr);
-			if (abschnitt === null) {
-				this.setPatchedState(result);
-				return true;
+			if (abschnitt !== null) {
+				Object.assign(result, { abschnitt });
 			}
-			Object.assign(result, { abschnitt });
 			this.setPatchedState(result);
 			const missingKlausurData = this.manager.getMissingHjKlausurdata(this.abiturjahr, halbjahr.id);
 			if (!missingKlausurData.isEmpty()) {
@@ -178,6 +186,9 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 				const klausurdaten = GostKlausurenCollectionAllData.transpilerFromJSON(await klausurdatenBlob.text());
 				this.manager.addAllData(klausurdaten);
 				this.setPatchedState(result);
+			}
+			if (abschnitt === null) {
+				return true;
 			}
 			if (!this.manager.stundenplanManagerGeladenByAbschnitt(abschnitt.id)) {
 				const listStundenplaene = await api.server.getStundenplanlisteAktivFuerAbschnitt(api.schema, abschnitt.id);
@@ -435,12 +446,24 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	};
 
 	patchKlausurvorgabe = async (vorgabe: Partial<GostKlausurvorgabe>, id: number) => {
-		api.status.start();
 		vorgabe.id = id;
-		await api.server.patchGostKlausurenVorgabe(vorgabe, api.schema);
-		this.manager.vorgabePatchAttributes(Object.assign(this.manager.vorgabeGetByIdOrException(id), vorgabe));
-		this.commit();
-		api.status.stop();
+		await this.patchKlausurvorgaben(ListUtils.create1(vorgabe));
+	};
+
+	patchKlausurvorgaben = async (vorgaben: List<Partial<GostKlausurvorgabe>>) => {
+		if (vorgaben.isEmpty()) {
+			return;
+		}
+		api.status.start();
+		try {
+			await api.server.patchGostKlausurenVorgabenMultiple(vorgaben, api.schema);
+			for (const vorgabe of vorgaben) {
+				this.manager.vorgabePatchAttributes(Object.assign(this.manager.vorgabeGetByIdOrException(vorgabe.id!), vorgabe));
+			}
+			this.commit();
+		} finally {
+			api.status.stop();
+		}
 	};
 
 	loescheKlausurvorgaben = async (vorgaben: List<GostKlausurvorgabe>) => {
