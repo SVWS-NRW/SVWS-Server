@@ -568,7 +568,7 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		for (const bel of planungsdaten.sprachendaten.belegungen) {
 			const mappedBel = new Sprachbelegung();
 			mappedBel.sprache = bel.sprache;
-			mappedBel.istNachweis = bel.istNachweis;
+			mappedBel.istNachweis = bel.istNachweis ?? false;
 			mappedBel.reihenfolge = bel.reihenfolge;
 			mappedBel.belegungVonJahrgang = bel.belegungVonJahrgang;
 			mappedBel.belegungVonAbschnitt = bel.belegungVonAbschnitt;
