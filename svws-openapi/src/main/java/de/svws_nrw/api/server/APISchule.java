@@ -3581,7 +3581,7 @@ public class APISchule {
 	@Operation(summary = "Fügt ein neues Logos inklusive der zugehörigen Daten hinzu.",
 			description = "Fügt ein neues Logo inklusive Base64-kodiertem Bild sowie der zugehörigen Daten hinzu."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schuldaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Das neu hinzugefügte Logo",
+	@ApiResponse(responseCode = "201", description = "Das neu hinzugefügte Logo",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Logo.class)))
 	@ApiResponse(responseCode = "400", description = "Die Anfrage enthält ungültige oder fehlende Daten.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schuldaten zu ändern.")
@@ -3609,8 +3609,7 @@ public class APISchule {
 	@Operation(summary = "Aktualisiert das Bild und die zugehörigen Daten eines Logos.",
 			description = "Aktualisiert das Base64-kodierte Bild sowie die zugehörigen Daten des Logos mit der angegebenen ID. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schuldaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Das aktualisierte Logo",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Logo.class)))
+	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich integriert.")
 	@ApiResponse(responseCode = "400", description = "Die Anfrage enthält ungültige oder fehlende Daten.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schuldaten zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Kein Logo mit der angegebenen ID gefunden.")

@@ -26,16 +26,15 @@ export class RouteDataSchuleLogoverwaltung extends RouteData<RouteStateSchuleLog
 		return this._state.value.logos;
 	}
 
-	patchLogo = async (data: Partial<Logo>): Promise<Logo> => {
+	patchLogo = async (data: Partial<Logo>, id: number): Promise<void> => {
 		const logo = await api.server.patchLogo(data, api.schema, data.id ?? -1);
 		for (const tmpLogo of this.logos) {
-			if (tmpLogo.id === logo.id) {
+			if (tmpLogo.id === id) {
 				Object.assign(tmpLogo, logo);
 				break;
 			}
 		}
 		this.commit();
-		return logo;
 	};
 
 	addLogo = async (data: Logo): Promise<Logo> => {

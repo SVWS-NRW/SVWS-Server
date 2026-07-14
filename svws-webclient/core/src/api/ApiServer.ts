@@ -17336,21 +17336,21 @@ export class ApiServer extends BaseApi {
 	 * Fügt ein neues Logo inklusive Base64-kodiertem Bild sowie der zugehörigen Daten hinzu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schuldaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Das neu hinzugefügte Logo
+	 *   Code 201: Das neu hinzugefügte Logo
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: Logo
 	 *   Code 400: Die Anfrage enthält ungültige oder fehlende Daten.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schuldaten zu ändern.
 	 *
-	 * @param {Logo} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<Logo>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
 	 * @returns Das neu hinzugefügte Logo
 	 */
-	public async addLogo(data : Logo, schema : string) : Promise<Logo> {
+	public async addLogo(data : Partial<Logo>, schema : string) : Promise<Logo> {
 		const path = "/db/{schema}/schule/logoverwaltung/logos"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Logo.transpilerToJSON(data);
+		const body : string = Logo.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return Logo.transpilerFromJSON(text);
@@ -17393,9 +17393,7 @@ export class ApiServer extends BaseApi {
 	 * Aktualisiert das Base64-kodierte Bild sowie die zugehörigen Daten des Logos mit der angegebenen ID. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schuldaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Das aktualisierte Logo
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Logo
+	 *   Code 204: Der Patch wurde erfolgreich integriert.
 	 *   Code 400: Die Anfrage enthält ungültige oder fehlende Daten.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schuldaten zu ändern.
 	 *   Code 404: Kein Logo mit der angegebenen ID gefunden.
@@ -17403,17 +17401,13 @@ export class ApiServer extends BaseApi {
 	 * @param {Partial<Logo>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Das aktualisierte Logo
 	 */
-	public async patchLogo(data : Partial<Logo>, schema : string, id : number) : Promise<Logo> {
+	public async patchLogo(data : Partial<Logo>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/schule/logoverwaltung/logos/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = Logo.transpilerToJSONPatch(data);
-		const result : string = await super.patchJSONWithResponse(path, body);
-		const text = result;
-		return Logo.transpilerFromJSON(text);
+		return super.patchJSON(path, body);
 	}
 
 
