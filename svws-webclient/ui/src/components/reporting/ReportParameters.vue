@@ -16,7 +16,7 @@
 				</div>
 				<div>
 					<template v-for="gruppe in parameter.reportvorlageParameterGruppen" :key="gruppe.name">
-						<div v-if="istSichtbar(gruppe) && gruppe.reportvorlageParameter.size() > 0" class="border-2 border-ui-25 rounded-md p-2 my-2">
+						<div v-if="reportingState.istSichtbar(gruppe) && gruppe.reportvorlageParameter.size() > 0" class="border-2 border-ui-25 rounded-md p-2 my-2">
 							<div class="flex flex-col mb-2">
 								<div class="flex justify-between items-center">
 									<div class="font-bold">{{ gruppe.name }}</div>
@@ -35,11 +35,11 @@
 							</div>
 							<div :class="['grid gap-2', gruppe.uiAnzahlSpalten === 0 ? 'grid-cols-1' : gruppe.uiAnzahlSpalten > 6 ? 'grid-cols-6' : `grid-cols-${gruppe.uiAnzahlSpalten}`]">
 								<template v-for="vp in gruppe.reportvorlageParameter" :key="vp.name">
-									<div v-if="istParameterSichtbar(gruppe, vp)"
-										:class="[vp.uiAnzahlSpalten === 0 ? 'col-span-1' : vp.uiAnzahlSpalten > 6 ? 'col-span-6' : `col-span-${vp.uiAnzahlSpalten}`, { 'opacity-50': !istParameterAktiv(gruppe, vp) }]">
-										<component :is="inputComponent(vp)" v-model="parameterWert(vp).value" :name="vp.name" :disabled="!istParameterAktiv(gruppe, vp)">
+									<div v-if="reportingState.istParameterSichtbar(gruppe, vp)"
+										:class="[vp.uiAnzahlSpalten === 0 ? 'col-span-1' : vp.uiAnzahlSpalten > 6 ? 'col-span-6' : `col-span-${vp.uiAnzahlSpalten}`, { 'opacity-50': !reportingState.istParameterAktiv(gruppe, vp) }]">
+										<component :is="inputComponent(vp)" v-model="parameterWert(vp).value" :name="vp.name" :disabled="!reportingState.istParameterAktiv(gruppe, vp)" :placeholder="vp.bezeichnung">
 											<label :for="vp.name"> {{ vp.bezeichnung }} </label>
-											<svws-ui-tooltip v-if="!istParameterAktiv(gruppe, vp)">
+											<svws-ui-tooltip v-if="!reportingState.istParameterAktiv(gruppe, vp)">
 												<span class="icon i-ri-information-line" />
 												<template #content>
 													{{ parameterBerechtigungText(gruppe, vp) }}
@@ -56,12 +56,12 @@
 						<div class="font-bold mb-2">Sortierung</div>
 						<div class="flex items-center gap-x-4 gap-y-2">
 							<template v-for="gruppe of parameter.sortierungDefinitionenGruppen" :key="gruppe.bezeichnung">
-								<template v-if="istSichtbar(gruppe) && !gruppe.sortierungDefinitionenOptionen.isEmpty()">
+								<template v-if="reportingState.istSichtbar(gruppe) && !gruppe.sortierungDefinitionenOptionen.isEmpty()">
 									<span>{{ gruppe.bezeichnung }}</span>
-									<ui-select :manager="mapSelectManagerSortierung.get(gruppe.bezeichnung)" :disabled="!istAktiv(gruppe)"
+									<ui-select :manager="mapSelectManagerSortierung.get(gruppe.bezeichnung)" :disabled="!reportingState.istAktiv(gruppe)"
 										:model-value="gruppe.sortierungDefinitionen.isEmpty() ? undefined : gruppe.sortierungDefinitionen.get(0)"
 										@update:model-value="v => v instanceof ReportingSortierungDefinition ? gruppe.sortierungDefinitionen = ListUtils.create1(v) : gruppe.sortierungDefinitionen.clear()" />
-									<svws-ui-tooltip v-if="!istAktiv(gruppe)">
+									<svws-ui-tooltip v-if="!reportingState.istAktiv(gruppe)">
 										<span class="icon i-ri-information-line" />
 										<template #content>
 											{{ gruppeBerechtigungText(gruppe) }}
@@ -75,14 +75,14 @@
 						<div class="font-bold mb-2">Filterung</div>
 						<div class="flex items-center gap-x-4 gap-y-2">
 							<template v-for="gruppe of parameter.filterDefinitionenGruppen" :key="gruppe.bezeichnung">
-								<template v-if="istSichtbar(gruppe) && !gruppe.filterDefinitionenOptionen.isEmpty()">
+								<template v-if="reportingState.istSichtbar(gruppe) && !gruppe.filterDefinitionenOptionen.isEmpty()">
 									<span>{{ gruppe.bezeichnung }}</span>
-									<ui-select-multi v-if="gruppe.uiIstFilterMultiselect" :manager="mapSelectManagerFilter.get(gruppe.bezeichnung)" :disabled="!istAktiv(gruppe)" :model-value="gruppe.filterDefinitionen"
+									<ui-select-multi v-if="gruppe.uiIstFilterMultiselect" :manager="mapSelectManagerFilter.get(gruppe.bezeichnung)" :disabled="!reportingState.istAktiv(gruppe)" :model-value="gruppe.filterDefinitionen"
 										@update:model-value="v => filterUpdate(v, gruppe.filterDefinitionen)" />
-									<ui-select v-else :manager="mapSelectManagerFilter.get(gruppe.bezeichnung)" :disabled="!istAktiv(gruppe)"
+									<ui-select v-else :manager="mapSelectManagerFilter.get(gruppe.bezeichnung)" :disabled="!reportingState.istAktiv(gruppe)"
 										:model-value="gruppe.filterDefinitionen.isEmpty() ? undefined : gruppe.filterDefinitionen.get(0)"
 										@update:model-value="v => v instanceof ReportingFilterDefinition ? gruppe.filterDefinitionen = ListUtils.create1(v) : gruppe.filterDefinitionen.clear()" />
-									<svws-ui-tooltip v-if="!istAktiv(gruppe)">
+									<svws-ui-tooltip v-if="!reportingState.istAktiv(gruppe)">
 										<span class="icon i-ri-information-line" />
 										<template #content>
 											{{ gruppeBerechtigungText(gruppe) }}
@@ -201,21 +201,19 @@
 	import { ReportingUIKomponentenTyp } from "../../../../core/src/core/types/reporting/ReportingUIKomponentenTyp";
 	import type { ReportingReportvorlageParameter } from "../../../../core/src/core/data/reporting/ReportingReportvorlageParameter";
 	import type { ReportingReportvorlageParameterGruppe } from "../../../../core/src/core/data/reporting/ReportingReportvorlageParameterGruppe";
-	import { ServerMode } from "../../../../core/src/core/types/ServerMode";
-	import { BenutzerKompetenz } from "../../../../core/src/core/types/benutzer/BenutzerKompetenz";
 	import type { List } from "../../../../core/src/java/util/List";
 	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
+	import { ListUtils } from "../../../../core/src/core/utils/ListUtils";
 	import { ReportingAusgabeformat } from "../../../../core/src/core/types/reporting/ReportingAusgabeformat";
 	import { ReportingReportvorlageParameterTyp } from "../../../../core/src/core/types/reporting/ReportingReportvorlageParameterTyp";
 	import { SelectManager } from "../../../../ui/src/ui/controls/select/manager/SelectManager";
 	import { ReportingSortierungDefinition } from "../../../../core/src/core/data/reporting/ReportingSortierungDefinition";
 	import { ReportingFilterDefinition } from "../../../../core/src/core/data/reporting/ReportingFilterDefinition";
-	import { ListUtils } from "../../../../core/src";
 	import type { TabData } from "../../ui/nav/TabData";
 	import { TabManager } from "../../ui/nav/TabManager";
 
 	import { useServerState } from "../../states/ServerState";
-	import { useReportingState } from "../../states/ReportingState.js";
+	import { useReportingState, type ElementMitAnforderung } from "../../states/ReportingState";
 
 	const props = defineProps<{
 		showJson?: boolean;
@@ -227,77 +225,19 @@
 		createHtmlPreview?: boolean;
 	}>();
 
-	const serverState = useServerState();
 	const reportingState = useReportingState();
+	const serverState = useServerState();
 
-	/** Ein Element (Parameter oder Gruppe) mit Anforderungen an ServerMode und Benutzerkompetenzen. */
-	type ElementMitAnforderung = { uiIstSichtbar: boolean; uiErforderlicherServerMode: string; uiErforderlicheKompetenzen: List<number> };
-
-	/** Prüft, ob der erforderliche ServerMode vom aktuellen Servermodus erfüllt wird (leerer Text ⇒ STABLE ⇒ alle Modi). */
-	function istServerModeErfuellt(erforderlicherServerMode: string): boolean {
-		return ServerMode.getByText(erforderlicherServerMode).checkServerMode(serverState.mode);
-	}
-
-	/** Prüft, ob der Benutzer mindestens eine der erforderlichen Kompetenzen besitzt (leere übergebene Liste liefert true).
-	 *  AKTUELL: Die Funktion liefert immer true für jede korrekt übergebene Kompetenz, da BenutzerState für Kompetenz-Prüfung noch nicht implementiert ist. */
-	function hatKompetenz(erforderlicheKompetenzen: List<number>): boolean {
-		if (erforderlicheKompetenzen.isEmpty()) {
-			return true;
-		}
-		for (const id of erforderlicheKompetenzen) {
-			const kompetenz = BenutzerKompetenz.getByID(id);
-			// TODO: Wenn BenutzerState implementiert wurde, dann mittels '(kompetenz !== null) && benutzerState.benutzerKompetenzen.has(kompetenz)' prüfen.
-			if (kompetenz !== null) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/** Liefert die Bezeichnungen der Kompetenzen, die dem Benutzer für diese Anforderung fehlen (leer, wenn die Anforderung erfüllt ist). */
-	function fehlendeKompetenzNamen(erforderlicheKompetenzen: List<number>): string[] {
-		if (hatKompetenz(erforderlicheKompetenzen)) {
-			return [];
-		}
-		const namen: string[] = [];
-		for (const id of erforderlicheKompetenzen) {
-			const kompetenz = BenutzerKompetenz.getByID(id);
-			if (kompetenz !== null) {
-				namen.push(kompetenz.daten.bezeichnung);
-			}
-		}
-		return namen;
-	}
-
-	/** Ein Element ist sichtbar, wenn es als sichtbar markiert ist und der ServerMode passt (sonst wird es ausgeblendet). */
-	function istSichtbar(element: ElementMitAnforderung): boolean {
-		return (element.uiIstSichtbar === true) && istServerModeErfuellt(element.uiErforderlicherServerMode);
-	}
-
-	/** Ein Element ist aktiv (bedienbar), wenn der Benutzer die erforderlichen Kompetenzen besitzt (sonst wird es deaktiviert dargestellt). */
-	function istAktiv(element: ElementMitAnforderung): boolean {
-		return hatKompetenz(element.uiErforderlicheKompetenzen);
-	}
-
-	/** Ein Parameter ist sichtbar, wenn seine Gruppe und er selbst sichtbar sind. */
-	function istParameterSichtbar(gruppe: ReportingReportvorlageParameterGruppe, vp: ReportingReportvorlageParameter): boolean {
-		return istSichtbar(gruppe) && istSichtbar(vp);
-	}
-
-	/** Ein Parameter ist aktiv, wenn seine Gruppe und er selbst die Kompetenzanforderungen erfüllen. */
-	function istParameterAktiv(gruppe: ReportingReportvorlageParameterGruppe, vp: ReportingReportvorlageParameter): boolean {
-		return istAktiv(gruppe) && istAktiv(vp);
-	}
 
 	/** Der Berechtigungs-Hinweis für einen wegen fehlender Kompetenz deaktivierten Parameter. */
 	function parameterBerechtigungText(gruppe: ReportingReportvorlageParameterGruppe, vp: ReportingReportvorlageParameter): string {
-		const namen = [...fehlendeKompetenzNamen(gruppe.uiErforderlicheKompetenzen), ...fehlendeKompetenzNamen(vp.uiErforderlicheKompetenzen)];
+		const namen = [...reportingState.fehlendeKompetenzNamen(gruppe.uiErforderlicheKompetenzen), ...reportingState.fehlendeKompetenzNamen(vp.uiErforderlicheKompetenzen)];
 		return "Es fehlt die Berechtigung: " + namen.join(" oder ");
 	}
 
 	/** Der Berechtigungs-Hinweis für eine wegen fehlender Kompetenz deaktivierte Sortier- oder Filtergruppe. */
 	function gruppeBerechtigungText(gruppe: ElementMitAnforderung): string {
-		return "Es fehlt die Berechtigung: " + fehlendeKompetenzNamen(gruppe.uiErforderlicheKompetenzen).join(" oder ");
+		return "Es fehlt die Berechtigung: " + reportingState.fehlendeKompetenzNamen(gruppe.uiErforderlicheKompetenzen).join(" oder ");
 	}
 
 	/** Setzt alle aktiven und sichtbaren Checkboxen einer Gruppe auf den angegebenen Wert (deaktivierte/ausgeblendete werden übersprungen). */
@@ -307,7 +247,7 @@
 			return;
 		}
 		for (const vp of params) {
-			if (istParameterSichtbar(gruppe, vp) && istParameterAktiv(gruppe, vp)) {
+			if (reportingState.istParameterSichtbar(gruppe, vp) && reportingState.istParameterAktiv(gruppe, vp)) {
 				parameterWert(vp).value = wert;
 			}
 		}
@@ -343,7 +283,16 @@
 			}
 		},
 		{ immediate: true });
-	watchEffect(() => parameter.value = localReportvorlage.value?.getReportingParameter() ?? new ReportingParameter());
+
+	watchEffect(() => {
+		const vorlage = localReportvorlage.value;
+		if (vorlage === undefined) {
+			parameter.value = new ReportingParameter();
+		} else {
+			parameter.value = reportingState.createParameter(vorlage);
+		}
+	});
+
 
 	const mapSelectManagerSortierung = computed<Map<string, SelectManager<ReportingSortierungDefinition>>>(() => {
 		const map = new Map<string, SelectManager<ReportingSortierungDefinition>>();

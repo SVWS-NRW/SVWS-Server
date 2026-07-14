@@ -1,8 +1,15 @@
 import { type InjectionKey } from "vue";
-import { DeveloperNotificationException } from "../../../core/src/core/exceptions/DeveloperNotificationException";
+import { AppContext } from "../AppContext";
+import type { List } from "../../../core/src/java/util/List";
 import type { ReportingParameter } from "../../../core/src/core/data/reporting/ReportingParameter";
 import type { SimpleOperationResponse } from "../../../core/src/core/data/SimpleOperationResponse";
-import { AppContext } from "../AppContext";
+import type { ReportingReportvorlageParameterGruppe } from "../../../core/src/core/data/reporting/ReportingReportvorlageParameterGruppe";
+import type { ReportingReportvorlageParameter } from "../../../core/src/core/data/reporting/ReportingReportvorlageParameter";
+import { DeveloperNotificationException } from "../../../core/src/core/exceptions/DeveloperNotificationException";
+import type { ReportingReportvorlage } from "../../../core/src/core/types/reporting/ReportingReportvorlage";
+
+/** Ein Element (Parameter oder Gruppe) mit Anforderungen an ServerMode und Benutzerkompetenzen. */
+export type ElementMitAnforderung = { uiIstSichtbar: boolean; uiErforderlicherServerMode: string; uiErforderlicheKompetenzen: List<number> };
 
 /**
  * Die Schnittstelle für den Zustand des Reportings
@@ -58,7 +65,64 @@ export interface ReportingState {
 	 *
 	 * @returns eine SimpleOperationResponse mit den Angaben zum EMail-Job
 	 */
+
 	fetchEMailJobLog(jobId: number): Promise<SimpleOperationResponse>;
+	/**
+	 * Ein Element ist sichtbar, wenn es als sichtbar markiert ist und der ServerMode passt (sonst wird es ausgeblendet).
+	 *
+	 * @param element   das Element, das geprüft werden soll
+	 *
+	 * @returns true, wenn sichtbar
+	 */
+
+	istSichtbar(element: ElementMitAnforderung): boolean;
+	/**
+	 * Ein Element ist aktiv (bedienbar), wenn der Benutzer die erforderlichen Kompetenzen besitzt (sonst wird es deaktiviert dargestellt).
+	 *
+	 * @param element   das Element, das geprüft werden soll
+	 *
+	 * @returns true, wenn aktiv
+	 */
+	istAktiv(element: ElementMitAnforderung): boolean;
+
+	/**
+	 * Ein Parameter ist sichtbar, wenn seine Gruppe und er selbst sichtbar sind.
+	 *
+	 * @param gruppe   die reportvorlageParameterGruppen
+	 * @param vp       der Vorlageparameter
+	 *
+	 * @returns true, wenn der Parameter sichtbar sein soll
+	 */
+	istParameterSichtbar(gruppe: ReportingReportvorlageParameterGruppe, vp: ReportingReportvorlageParameter): boolean;
+
+	/**
+	 * Ein Parameter ist aktiv, wenn seine Gruppe und er selbst die Kompetenzanforderungen erfüllen.
+	 *
+	 * @param gruppe   die reportvorlageParameterGruppen
+	 * @param vp       der Vorlageparameter
+	 *
+	 * @returns true, wenn der Parameter aktiv ist
+	 */
+	istParameterAktiv(gruppe: ReportingReportvorlageParameterGruppe, vp: ReportingReportvorlageParameter): boolean;
+
+	/**
+	 * Liefert die Bezeichnungen der Kompetenzen, die dem Benutzer für diese Anforderung fehlen (leer, wenn die Anforderung erfüllt ist).
+	 *
+	 * @param erforderlicheKompetenzen   eine Liste mit den IDs der benötigten Kompetenzen
+	 *
+	 * @returns ein String mit den erforderlichen Kompetenzen
+	 */
+	fehlendeKompetenzNamen(erforderlicheKompetenzen: List<number>): string[];
+
+	/**
+	 * Erzeuge die Parameter für die übergebene Vorlage, zusammengestellt aus neuen und gespeicherten Daten
+	 *
+	 * @param vorlage   die Vorlage, für die die Parameter erzeugt werden sollen
+	 *
+	 * @returns die Parameter
+	 */
+	createParameter(vorlage: ReportingReportvorlage): ReportingParameter;
+
 }
 
 export const ReportingStateKey: InjectionKey<ReportingState> = Symbol('ReportingState');

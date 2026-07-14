@@ -99,11 +99,12 @@ export { usePaneSplitter } from "./ui/composables/usePaneSplitter";
 export { useAbschnittState, type AbschnittState } from "./states/AbschnittState";
 export { useAuskunftState, type AuskunftState } from "./states/AuskunftState";
 export { useGostLaufbahnplanungState, type GostLaufbahnplanungState, type GostBelegpruefungsModus } from "./states/GostLaufbahnplanungState";
-export { useReportingState, type ReportingState } from "./states/ReportingState";
+export { useReportingState, type ReportingState, type ElementMitAnforderung } from "./states/ReportingState";
 export { useSchuleState, type SchuleState } from "./states/SchuleState";
 export { useServerState, type ServerState } from "./states/ServerState";
 export { useWiedervorlageState, type WiedervorlageState } from "./states/WiedervorlageState";
 export { useNotenmodulState, type NotenmodulState } from "./states/NotenmodulState";
+export { useConfigState, type ConfigState } from "./states/ConfigState";
 
 // Type exports
 export type { DataTableColumn, SortByAndOrder } from "./types";

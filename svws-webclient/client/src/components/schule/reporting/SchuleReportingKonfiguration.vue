@@ -4,21 +4,21 @@
 			<div class="svws-ui-header--title">
 				<div class="svws-headline-wrapper">
 					<h2 class="svws-headline">
-						<span>Reporting</span>
+						<span>Reporting - Einstellungen</span>
 					</h2>
 				</div>
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
 		<div class="page page-flex-row">
-			<report-parameters :id-hauptdaten-objekt="-1" create-html-preview show-json />
+			<svws-ui-todo>Einstellungen für das Reporting</svws-ui-todo>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import type { SchuleReportingProps } from "./SSchuleReportingProps";
+	import type { SchuleReportingProps } from "./SchuleReportingProps";
 
 	const props = defineProps<SchuleReportingProps>();
 

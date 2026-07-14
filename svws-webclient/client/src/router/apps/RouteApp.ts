@@ -70,6 +70,7 @@ import { routeNotenmodulAnkreuzkompetenzen } from "./notenmodul/RouteNotenmodulA
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { serverStateImpl } from "~/states/ServerStateImpl";
 import SApp from "~/components/SApp.vue";
+import { routeSchuleReportingKonfiguration } from "./schule/reporting/RouteSchuleReportingKonfiguration";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {
@@ -219,6 +220,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeSchuleDatenaustauschLernplattformen,
 			// Reporting
 			routeSchuleReporting,
+			routeSchuleReportingKonfiguration,
 		];
 		this._menuNotenmodul = [
 			routeNotenmodulAdministration,
