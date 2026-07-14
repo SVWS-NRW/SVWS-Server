@@ -6,11 +6,7 @@
 					<span class="icon i-ri-chat-new-line" />
 					<span class="ml-2">Neuen Vermerk hinzufügen</span>
 				</svws-ui-button>
-				<svws-ui-checkbox class="self-center"
-					:model-value="filterNurSichtbare"
-					@update:model-value="value => setFilterNurSichtbare(value)">
-					Nur <b>sichtbare</b> Vermerkarten anzeigen
-				</svws-ui-checkbox>
+				<svws-ui-checkbox class="self-center" :model-value="filterNurSichtbare" @update:model-value="value => setFilterNurSichtbare(value)">Nur <span class="font-bold">sichtbare</span> Vermerkarten anzeigen</svws-ui-checkbox>
 			</div>
 			<div class="flex flex-col gap-4 mt-4">
 				<ui-card v-for="vermerkModel of vermerkeModels" :key="vermerkModel.proxy.id"

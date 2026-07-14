@@ -17,8 +17,9 @@
 				:class="[klausurCssClasses === undefined ? '' : klausurCssClasses(schuelertermin, termin)]">
 				<div class="svws-ui-td" role="cell">
 					<span v-if="draggable(schuelertermin, termin!)" class="icon i-ri-draggable" />
-					<svws-ui-checkbox v-if="selectedItems !== undefined" :model-value="selectedItems.contains(schuelertermin)" @update:model-value="selectedItems.contains(schuelertermin) ? selectedItems.remove(schuelertermin) : selectedItems.add(schuelertermin)" />
-					{{ kMan().schuelerGetByIdOrException(kMan().schuelerklausurGetByIdOrException(schuelertermin.idSchuelerklausur).idSchueler)?.nachname }}
+					<svws-ui-checkbox v-if="selectedItems !== undefined" :model-value="selectedItems.contains(schuelertermin)" @update:model-value="selectedItems.contains(schuelertermin) ? selectedItems.remove(schuelertermin) : selectedItems.add(schuelertermin)">
+						{{ kMan().schuelerGetByIdOrException(kMan().schuelerklausurGetByIdOrException(schuelertermin.idSchuelerklausur).idSchueler)?.nachname }}
+					</svws-ui-checkbox>
 				</div>
 				<div class="svws-ui-td" role="cell">{{ kMan().schuelerGetByIdOrException(kMan().schuelerklausurGetByIdOrException(schuelertermin.idSchuelerklausur).idSchueler)?.vorname }}</div>
 				<div class="svws-ui-td" role="cell">

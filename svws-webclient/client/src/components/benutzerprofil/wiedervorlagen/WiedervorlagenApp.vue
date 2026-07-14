@@ -28,7 +28,7 @@
 					<svws-ui-text-input type="date" placeholder="Wiedervorlage bis" v-model="filter.tsWiedervorlage" removable class="max-w-[30em]" />
 				</div>
 				<div class="flex md:basis-full lg:basis-auto md:mt-[0.6em]">
-					<svws-ui-checkbox type="toggle" v-model="filter.toggleUnerledigt" title="Nur unerledigte">
+					<svws-ui-checkbox type="toggle" v-model="filter.toggleUnerledigt">
 						Nur unerledigte
 					</svws-ui-checkbox>
 				</div>

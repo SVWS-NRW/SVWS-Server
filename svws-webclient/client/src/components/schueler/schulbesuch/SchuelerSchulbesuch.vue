@@ -12,7 +12,7 @@
 					:manager="hoechsterAbschlussManager"
 					v-model="model.hoechsterSchulabschluss.value"
 					:readonly />
-				<svws-ui-checkbox title="Berufsabschluss vorhanden" v-if="eigeneSchuleIstBKOderWBK"
+				<svws-ui-checkbox v-if="eigeneSchuleIstBKOderWBK"
 					v-model="model.proxy.berufsabschlussVorhanden"
 					:readonly>
 					Berufsabschluss vorhanden
@@ -133,15 +133,14 @@
 		<!-- Wechsel zu aufnehmender Schule !-->
 		<svws-ui-content-card title="Wechsel zu aufnehmender Schule">
 			<template #actions>
-				<svws-ui-checkbox title="Wechsel bevorstehend" v-if="serverState.hasDev"
+				<svws-ui-checkbox v-if="serverState.hasDev"
 					v-model="wechselBevorstehend"
 					:indeterminate="manager().daten.wechselBestaetigtAufnehmendeSchule === null"
 					disabled :readonly>
 					<!-- Disabled, solange keine Backend-Funktionalität für den Schulwechsel implementiert ist. -->
 					Wechsel bevorstehend
 				</svws-ui-checkbox>
-				<svws-ui-checkbox title="Aufnahme bestätigt"
-					v-model="model.proxy.wechselBestaetigtAufnehmendeSchule"
+				<svws-ui-checkbox v-model="model.proxy.wechselBestaetigtAufnehmendeSchule"
 					:indeterminate="manager().daten.wechselBestaetigtAufnehmendeSchule === null"
 					focus-class-content :readonly>
 					Aufnahme bestätigt
@@ -179,14 +178,10 @@
 					:manager="dauerKindergartenbesuchManager"
 					v-model="model.idDauerKindergartenbesuch.value"
 					:readonly />
-				<svws-ui-checkbox title="Verpflichtung f. Sprachförderkurs"
-					v-model="model.proxy.verpflichtungSprachfoerderkurs"
-					:readonly>
+				<svws-ui-checkbox v-model="model.proxy.verpflichtungSprachfoerderkurs" :readonly>
 					Verpflichtung für Sprachförderkurs
 				</svws-ui-checkbox>
-				<svws-ui-checkbox title="Teilnahme an Sprachförderkurs"
-					v-model="model.proxy.teilnahmeSprachfoerderkurs"
-					:readonly>
+				<svws-ui-checkbox v-model="model.proxy.teilnahmeSprachfoerderkurs" :readonly>
 					Teilnahme an Sprachförderkurs
 				</svws-ui-checkbox>
 			</svws-ui-input-wrapper>

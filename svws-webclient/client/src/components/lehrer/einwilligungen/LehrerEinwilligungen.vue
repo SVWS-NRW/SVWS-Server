@@ -12,11 +12,11 @@
 								<div class="w-1/5">
 									<p class="text-headline-md mb-1"> Status </p>
 								</div>
-								<svws-ui-checkbox class="w-2/5" :model-value="einwilligung.istAbgefragt" type="checkbox" title="Abgefragt"
+								<svws-ui-checkbox class="w-2/5" :model-value="einwilligung.istAbgefragt"
 									@update:model-value="istAbgefragt => patch({ istAbgefragt }, einwilligung.idEinwilligungsart)" :readonly>
 									Abgefragt
 								</svws-ui-checkbox>
-								<svws-ui-checkbox class="w-2/5" :model-value="einwilligung.istZugestimmt" type="checkbox" title="Zugestimmt"
+								<svws-ui-checkbox class="w-2/5" :model-value="einwilligung.istZugestimmt"
 									@update:model-value="istZugestimmt => patch({ istZugestimmt }, einwilligung.idEinwilligungsart)" :readonly>
 									Zugestimmt
 								</svws-ui-checkbox>
@@ -33,11 +33,11 @@
 								<div class="w-1/5">
 									<p class="text-headline-md mb-1"> Status </p>
 								</div>
-								<svws-ui-checkbox class="w-2/5" :model-value="einwilligung.istAbgefragt" type="checkbox" title="Abgefragt"
+								<svws-ui-checkbox class="w-2/5" :model-value="einwilligung.istAbgefragt"
 									@update:model-value="istAbgefragt => patch({ istAbgefragt }, einwilligung.idEinwilligungsart)" :readonly>
 									Abgefragt
 								</svws-ui-checkbox>
-								<svws-ui-checkbox class="w-2/5" :model-value="einwilligung.istZugestimmt" type="checkbox" title="Zugestimmt"
+								<svws-ui-checkbox class="w-2/5" :model-value="einwilligung.istZugestimmt"
 									@update:model-value="istZugestimmt => updateEinwilligungStatus(einwilligung, istZugestimmt)" :readonly>
 									Zugestimmt
 								</svws-ui-checkbox>

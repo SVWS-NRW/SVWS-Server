@@ -3,7 +3,11 @@
 		<div class="flex flex-col gap-y-16 lg:gap-y-20">
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper>
-					<div class="flex gap-1"><svws-ui-checkbox type="toggle" v-model="data.aktiv" :disabled="(data.aktiv === false && !manager().istKonfliktfreiZuAktivenStundenplaenen(data.gueltigAb, data.gueltigBis))" />Stundenplan aktiv <span v-if="manager().validateGueltigAb(data.gueltigAb, data.gueltigBis, data.aktiv, true, true) && manager().validateGueltigBis(data.gueltigAb, data.gueltigBis, data.aktiv, true, true) && !manager().istKonfliktfreiZuAktivenStundenplaenen(data.gueltigAb, data.gueltigBis, false)" class="text-ui-caution"><span class="icon icon-ui-caution i-ri-alert-line" /> Konflikt mit anderem Stundenplan</span></div>
+					<div class="flex gap-1">
+						<svws-ui-checkbox type="toggle" v-model="data.aktiv" :disabled="(data.aktiv === false && !manager().istKonfliktfreiZuAktivenStundenplaenen(data.gueltigAb, data.gueltigBis))">
+							Stundenplan aktiv <span v-if="manager().validateGueltigAb(data.gueltigAb, data.gueltigBis, data.aktiv, true, true) && manager().validateGueltigBis(data.gueltigAb, data.gueltigBis, data.aktiv, true, true) && !manager().istKonfliktfreiZuAktivenStundenplaenen(data.gueltigAb, data.gueltigBis, false)" class="text-ui-caution"><span class="icon icon-ui-caution i-ri-alert-line" /> Konflikt mit anderem Stundenplan</span>
+						</svws-ui-checkbox>
+					</div>
 					<svws-ui-text-input class="contentFocusField" :disabled="!hatUpdateKompetenz" placeholder="Bezeichnung" :required="true" :max-len="150" :valid="StundenplanListeManager.validateBezeichnung" v-model="data.bezeichnungStundenplan" type="text" />
 					<svws-ui-select title="Datenübernahme aus Stundenplan"
 						:items="alleStundenplaene"

@@ -70,12 +70,12 @@
 				</template>
 				<td>
 					<template v-if="row.proxy.sprache === 'G'">
-						<svws-ui-checkbox v-if="!readonly" v-model="hatGraecum" headless title="Graecum">Graecum</svws-ui-checkbox>
+						<svws-ui-checkbox v-if="!readonly" v-model="hatGraecum" headless>Graecum</svws-ui-checkbox>
 						<div v-else-if="hatGraecum">Graecum</div>
 						<div v-else>-</div>
 					</template>
 					<template v-else-if="row.proxy.sprache === 'H'">
-						<svws-ui-checkbox v-if="!readonly" v-model="hatHebraicum" headless title="Hebraicum">Hebraicum</svws-ui-checkbox>
+						<svws-ui-checkbox v-if="!readonly" v-model="hatHebraicum" headless>Hebraicum</svws-ui-checkbox>
 						<div v-else-if="hatHebraicum">Hebraicum</div>
 						<div v-else>-</div>
 					</template>

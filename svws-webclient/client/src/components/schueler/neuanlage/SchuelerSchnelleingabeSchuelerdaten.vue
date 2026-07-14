@@ -78,9 +78,7 @@
 				:model-value="manager().stammdaten.religionabmeldung"
 				@change="patchReligionAbmeldung"
 				type="date" :readonly />
-			<svws-ui-checkbox type="checkbox" title="Migrationshintergrund"
-				v-model="hatMigrationshintergrund"
-				:readonly>
+			<svws-ui-checkbox v-model="hatMigrationshintergrund" :readonly>
 				Migrationshintergrund vorhanden
 			</svws-ui-checkbox>
 			<svws-ui-input-number placeholder="Zuzugsjahr"

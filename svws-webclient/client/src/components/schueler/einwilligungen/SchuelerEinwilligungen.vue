@@ -9,10 +9,10 @@
 								<div class="w-1/5">
 									<p class="text-headline-md mb-1"> Status </p>
 								</div>
-								<svws-ui-checkbox class="w-2/5" v-model="einwilligung.currentAbgefragt.value" type="checkbox" title="Abgefragt" :readonly>
+								<svws-ui-checkbox class="w-2/5" v-model="einwilligung.currentAbgefragt.value" :readonly>
 									Abgefragt
 								</svws-ui-checkbox>
-								<svws-ui-checkbox class="w-2/5" v-model="einwilligung.currentStatus.value" type="checkbox" title="Zugestimmt" :readonly>
+								<svws-ui-checkbox class="w-2/5" v-model="einwilligung.currentStatus.value" :readonly>
 									Zugestimmt
 								</svws-ui-checkbox>
 							</ui-card>
@@ -28,10 +28,10 @@
 								<div class="w-1/5">
 									<p class="text-headline-md mb-1"> Status </p>
 								</div>
-								<svws-ui-checkbox class="w-2/5" v-model="einwilligung.currentAbgefragt.value" type="checkbox" title="Abgefragt" :readonly>
+								<svws-ui-checkbox class="w-2/5" v-model="einwilligung.currentAbgefragt.value" :readonly>
 									Abgefragt
 								</svws-ui-checkbox>
-								<svws-ui-checkbox class="w-2/5" v-model="einwilligung.currentStatus.value" type="checkbox" title="Zugestimmt" :readonly>
+								<svws-ui-checkbox class="w-2/5" v-model="einwilligung.currentStatus.value" :readonly>
 									Zugestimmt
 								</svws-ui-checkbox>
 							</ui-card>

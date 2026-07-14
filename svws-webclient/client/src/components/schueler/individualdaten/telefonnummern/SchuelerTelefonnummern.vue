@@ -38,7 +38,7 @@
 						</template>
 					</svws-ui-tooltip>
 					<svws-ui-spacing />
-					<svws-ui-checkbox v-model="telefonnummernEntry.istGesperrt" type="checkbox" title="Für Weitergabe gesperrt" class="col-span-full">
+					<svws-ui-checkbox v-model="telefonnummernEntry.istGesperrt" class="col-span-full">
 						Für Weitergabe gesperrt
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>

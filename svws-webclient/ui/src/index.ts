@@ -85,7 +85,6 @@ export { default as UiTableActions } from "./ui/controls/tablegrid/UiTableAction
 export { default as SvwsUiTextareaInput } from "./ui/controls/SvwsUiTextareaInput.vue";
 export { default as SvwsUiTextInput } from "./ui/controls/SvwsUiTextInput.vue";
 export { default as SvwsUiTodo } from "./ui/SvwsUiTodo.vue";
-export { default as SvwsUiToggle } from "./ui/controls/SvwsUiToggle.vue";
 export { default as SvwsUiTooltip } from "./ui/SvwsUiTooltip.vue";
 export { default as UiValidationTooltip } from "./ui/UiValidationTooltip.vue";
 

@@ -10,12 +10,10 @@
 				:manager="dauerManager"
 				searchable />
 			<svws-ui-spacing />
-			<svws-ui-checkbox title="Verpflichtung f. Sprachförderkurss"
-				v-model="verpflichtungSprachfoerderkurs">
-				Verpflichtung f. Sprachförderkurs
+			<svws-ui-checkbox v-model="verpflichtungSprachfoerderkurs">
+				Verpflichtung für Sprachförderkurs
 			</svws-ui-checkbox>
-			<svws-ui-checkbox title="Teilnahme an Sprachförderkurs"
-				v-model="teilnahmeSprachfoerderkurs">
+			<svws-ui-checkbox v-model="teilnahmeSprachfoerderkurs">
 				Teilnahme an Sprachförderkurs
 			</svws-ui-checkbox>
 		</svws-ui-input-wrapper>

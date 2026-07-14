@@ -50,8 +50,7 @@
 						</template>
 					</svws-ui-tooltip>
 					<svws-ui-spacing />
-					<svws-ui-checkbox title="Für Weitergabe gesperrt" type="checkbox" class="col-span-full"
-						v-model="data.istGesperrt">
+					<svws-ui-checkbox class="col-span-full" v-model="data.istGesperrt">
 						Für Weitergabe gesperrt
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>

@@ -6,8 +6,9 @@
 				<div class="content-card--content input-wrapper grid-cols-2">
 					<div class="flex gap-1">
 						<svws-ui-checkbox autofocus :readonly type="toggle" :disabled="(!manager().auswahl().aktiv && (!validAb || !validBis || !manager().istKonfliktfreiZuAktivenStundenplaenen(gueltigData.gueltigAb, gueltigData.gueltigBis)))"
-							:model-value="manager().daten().isAktiv()" @update:model-value="handleChangeAktiv" />
-						Stundenplan aktiv
+							:model-value="manager().daten().isAktiv()" @update:model-value="handleChangeAktiv">
+							Stundenplan aktiv
+						</svws-ui-checkbox>
 						<span v-if="validateGueltigAb(gueltigData.gueltigAb) && validateGueltigBis(gueltigData.gueltigBis) && !manager().istKonfliktfreiZuAktivenStundenplaenen(gueltigData.gueltigAb, gueltigData.gueltigBis, false)" class="text-ui-caution">
 							<span class="icon icon-ui-caution i-ri-alert-line" /> Konflikt mit anderem Stundenplan
 						</span>

@@ -19,7 +19,7 @@
 			</svws-ui-radio-group>
 			<svws-ui-spacing :size="2" />
 			<svws-ui-checkbox type="toggle" v-model="blockeGleicheLehrkraft" v-if="algMode.__ordinal === KlausurterminblockungAlgorithmen.NORMAL.__ordinal" class="text-left">
-				Gleicher Termin falls gleiche Lehrkraft, Fach und Kursart
+				Gleicher Termin, falls gleiche Lehrkraft, Fach und Kursart
 			</svws-ui-checkbox>
 		</template>
 		<template #modalActions>

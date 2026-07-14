@@ -37,14 +37,15 @@
 								<template v-for="vp in gruppe.reportvorlageParameter" :key="vp.name">
 									<div v-if="istParameterSichtbar(gruppe, vp)"
 										:class="[vp.uiAnzahlSpalten === 0 ? 'col-span-1' : vp.uiAnzahlSpalten > 6 ? 'col-span-6' : `col-span-${vp.uiAnzahlSpalten}`, { 'opacity-50': !istParameterAktiv(gruppe, vp) }]">
-										<component :is="inputComponent(vp)" v-model="parameterWert(vp).value" :name="vp.name" :disabled="!istParameterAktiv(gruppe, vp)" />
-										<label :for="vp.name"> {{ vp.bezeichnung }} </label>
-										<svws-ui-tooltip v-if="!istParameterAktiv(gruppe, vp)">
-											<span class="icon i-ri-information-line" />
-											<template #content>
-												{{ parameterBerechtigungText(gruppe, vp) }}
-											</template>
-										</svws-ui-tooltip>
+										<component :is="inputComponent(vp)" v-model="parameterWert(vp).value" :name="vp.name" :disabled="!istParameterAktiv(gruppe, vp)">
+											<label :for="vp.name"> {{ vp.bezeichnung }} </label>
+											<svws-ui-tooltip v-if="!istParameterAktiv(gruppe, vp)">
+												<span class="icon i-ri-information-line" />
+												<template #content>
+													{{ parameterBerechtigungText(gruppe, vp) }}
+												</template>
+											</svws-ui-tooltip>
+										</component>
 									</div>
 								</template>
 							</div>
