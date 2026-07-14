@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
-import type { LehrerListeEintrag } from '../../../core/data/lehrer/LehrerListeEintrag';
+import { LehrerListeEintrag } from '../../../core/data/lehrer/LehrerListeEintrag';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import { Class } from '../../../java/lang/Class';
 import { JavaString } from '../../../java/lang/JavaString';
@@ -35,7 +35,7 @@ export class LehrerUtils extends JavaObject {
 
 	private constructor() {
 		super();
-		throw new IllegalStateException("Instantiation not allowed");
+		throw new IllegalStateException("Instantiation not allowed")
 	}
 
 	transpilerCanonicalName(): string {
