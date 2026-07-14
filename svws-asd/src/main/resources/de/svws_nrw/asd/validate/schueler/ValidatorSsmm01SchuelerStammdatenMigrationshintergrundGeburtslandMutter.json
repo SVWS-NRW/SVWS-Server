@@ -1,0 +1,24 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSsmm01SchuelerStammdatenMigrationshintergrundGeburtslandMutter",
+    "historie" : [ {
+      "praefix" : "SSMM01",
+      "altes_kuerzel" : "",
+      "zweig" : "Schueler-Stammdaten-Migrationshintergrund-GeburtslandMutter",
+      "dtos" : "SchuelerStammdaten",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Individualdaten'",
+      "anzeigebereich_ui" : "Feld 'Geburtsland Mutter'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["SSMM00"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Geburtsland der Mutter: Das Feld muss zulässig sein.",
+      "erlaeuterung" : "",
+      "bedingung" : "SchuelerStammdaten.idGeburtslandMutter ≠ einer ID eines Eintrags in Nationalitaeten.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
+  
