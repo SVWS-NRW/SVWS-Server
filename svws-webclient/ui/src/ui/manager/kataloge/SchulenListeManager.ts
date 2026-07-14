@@ -1,14 +1,13 @@
 import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
 import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
-import { AuswahlManager } from '../../AuswahlManager';
 import type { SchulenKatalogEintrag } from '../../../../../core/src/core/data/schule/SchulenKatalogEintrag';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
 import type { SchulEintrag } from '../../../../../core/src/core/data/kataloge/SchulEintrag';
-import { Arrays } from '../../../../../core/src/java/util/Arrays';
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
 import { HashSet } from "../../../../../core/src";
+import { AuswahlManager } from '../AuswahlManager';
 
 export class SchulenListeManager extends AuswahlManager<number, SchulEintrag, SchulEintrag> {
 

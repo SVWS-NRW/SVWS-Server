@@ -13,13 +13,13 @@ import { HashSet } from '../../../../../core/src/java/util/HashSet';
 import type { LehrerPersonaldaten } from '../../../../../core/src/asd/data/lehrer/LehrerPersonaldaten';
 import type { LehrerStammdaten } from '../../../../../core/src/asd/data/lehrer/LehrerStammdaten';
 import { PersonalTyp } from '../../../../../core/src/core/types/PersonalTyp';
-import { AuswahlManager } from '../../AuswahlManager';
-import { AttributMitAuswahl } from '../../AttributMitAuswahl';
 import { LehrerUtils } from '../../../../../core/src/core/utils/lehrer/LehrerUtils';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import { Arrays } from '../../../../../core/src/java/util/Arrays';
 import type { JavaMap } from '../../../../../core/src/java/util/JavaMap';
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
+import { AuswahlManager } from '../AuswahlManager';
+import { ListeMitAuswahl } from '../ListeMitAuswahl';
 
 export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintrag, LehrerStammdaten> {
 
@@ -47,7 +47,7 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 	/**
 	 * Das Filter-Attribut für die Personal-Typen
 	 */
-	public readonly personaltypen: AttributMitAuswahl<number, PersonalTyp>;
+	public readonly personaltypen: ListeMitAuswahl<number, PersonalTyp>;
 
 	private static readonly _personaltypToId = (pt: PersonalTyp) => pt.id;
 
@@ -98,7 +98,7 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 				{ field: "kuerzel", ascending: true },
 			]
 		);
-		this.personaltypen = new AttributMitAuswahl(Arrays.asList(...PersonalTyp.values()), LehrerListeManager._personaltypToId, LehrerListeManager._comparatorPersonaltypen, this._eventHandlerFilterChanged);
+		this.personaltypen = new ListeMitAuswahl(Arrays.asList(...PersonalTyp.values()), LehrerListeManager._personaltypToId, LehrerListeManager._comparatorPersonaltypen, this._eventHandlerFilterChanged);
 		this.initLehrer();
 	}
 

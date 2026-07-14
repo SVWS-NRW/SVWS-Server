@@ -1,9 +1,6 @@
-import { AuswahlManager } from '../../AuswahlManager';
 import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
-
 import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
-import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
 import type { KatalogEntlassgrund } from '../../../../../core/src/core/data/kataloge/KatalogEntlassgrund';
 import type { List } from '../../../../../core/src/java/util/List';
 import { JavaString } from '../../../../../core/src/java/lang/JavaString';
@@ -11,6 +8,7 @@ import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schu
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
 import { HashSet } from "../../../../../core/src/java/util/HashSet";
 import type { JavaSet } from "../../../../../core/src/java/util/JavaSet";
+import { AuswahlManager } from '../AuswahlManager';
 
 export class EntlassgruendeListeManager extends AuswahlManager<number, KatalogEntlassgrund, KatalogEntlassgrund> {
 

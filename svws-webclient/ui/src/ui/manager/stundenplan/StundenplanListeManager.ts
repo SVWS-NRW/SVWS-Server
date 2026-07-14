@@ -5,12 +5,12 @@ import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../../../core/src/core/exceptions/DeveloperNotificationException';
 import { DateUtils } from '../../../../../core/src/core/utils/DateUtils';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
-import { AuswahlManager } from '../../AuswahlManager';
 import { StundenplanListeEintrag } from '../../../../../core/src/core/data/stundenplan/StundenplanListeEintrag';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
 import { Class } from '../../../../../core/src/java/lang/Class';
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
+import { AuswahlManager } from '../AuswahlManager';
 
 export class StundenplanListeManager extends AuswahlManager<number, StundenplanListeEintrag, StundenplanManager> {
 

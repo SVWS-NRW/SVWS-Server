@@ -1,19 +1,19 @@
-import { HashMap } from '../../../core/src/java/util/HashMap';
-import { ArrayList } from '../../../core/src/java/util/ArrayList';
-import type { Collection } from '../../../core/src/java/util/Collection';
-import type { List } from '../../../core/src/java/util/List';
-import { DeveloperNotificationException } from '../../../core/src/core/exceptions/DeveloperNotificationException';
-import type { JavaMap } from '../../../core/src/java/util/JavaMap';
-import type { Comparator } from '../../../core/src/java/util/Comparator';
+import { HashMap } from '../../../../core/src/java/util/HashMap';
+import { ArrayList } from '../../../../core/src/java/util/ArrayList';
+import type { Collection } from '../../../../core/src/java/util/Collection';
+import type { List } from '../../../../core/src/java/util/List';
+import { DeveloperNotificationException } from '../../../../core/src/core/exceptions/DeveloperNotificationException';
+import type { JavaMap } from '../../../../core/src/java/util/JavaMap';
+import type { Comparator } from '../../../../core/src/java/util/Comparator';
 
 /**
- * Eine Klasse für den Zugriff auf Attribute mit eingebauter Auswahl-Funktion,
+ * Eine Klasse für den Zugriff auf eine Liste von Attributen mit eingebauter Auswahl-Funktion,
  * welche u.a. für Filter genutzt werden kann.
  *
  * @param <K> der primitive Typ (number | string) des Schlüssels für das enthaltene Objekt
  * @param <V> der Typ der enthaltenen Objekte
  */
-export class AttributMitAuswahl<K extends number | string, V> {
+export class ListeMitAuswahl<K extends number | string, V> {
 
 	/** Die Menge der zulässigen Werte */
 	private _values: List<V> = new ArrayList<V>();
@@ -449,11 +449,11 @@ export class AttributMitAuswahl<K extends number | string, V> {
 	}
 
 	/**
-	 * Diese Methode übernimmt die Auswahl des übergebenen {@link AttributMitAuswahl}.
+	 * Diese Methode übernimmt die Auswahl des übergebenen {@link ListeMitAuswahl}.
 	 *
-	 * @param srcAuswahl   Die Auswahl des AttributMitAuswahl, die übernommen wird.
+	 * @param srcAuswahl   Die Auswahl der ListeMitAuswahl, die übernommen wird.
 	 */
-	public setAuswahl(srcAuswahl: AttributMitAuswahl<K, V>): void {
+	public setAuswahl(srcAuswahl: ListeMitAuswahl<K, V>): void {
 		let added = false;
 		for (const key of srcAuswahl.auswahlKeyList()) {
 			if (this.has(key) && !this._mapAuswahlValuesByKey.containsKey(key)) {

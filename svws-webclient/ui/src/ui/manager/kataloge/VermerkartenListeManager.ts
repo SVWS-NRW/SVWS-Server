@@ -3,14 +3,12 @@ import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulfo
 import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import type { SchuelerVermerkartZusammenfassung } from '../../../../../core/src/core/data/schueler/SchuelerVermerkartZusammenfassung';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
-import { AuswahlManager } from '../../AuswahlManager';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
-import { Arrays } from '../../../../../core/src/java/util/Arrays';
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
 import { HashSet } from '../../../../../core/src/java/util/HashSet';
 import { JavaInteger } from "../../../../../core/src/java/lang/JavaInteger";
-
+import { AuswahlManager } from '../AuswahlManager';
 
 
 export class VermerkartenListeManager extends AuswahlManager<number, VermerkartEintrag, VermerkartEintrag> {

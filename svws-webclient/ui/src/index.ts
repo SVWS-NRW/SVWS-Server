@@ -166,8 +166,8 @@ export { ValidatorNumberRange } from "./validation/common/ValidatorNumberRange";
 export { ValidatorSelectMultiOptionsRange } from "./validation/common/ValidatorSelectMultiOptionsRange";
 
 // Manager
-export { AuswahlManager } from "./ui/AuswahlManager";
-export { AttributMitAuswahl } from "./ui/AttributMitAuswahl";
+export { AuswahlManager } from "./ui/manager/AuswahlManager";
+export { ListeMitAuswahl } from "./ui/manager/ListeMitAuswahl";
 export { TelefonartenListeManager } from "./ui/manager/kataloge/TelefonartenListeManager";
 export { StundenplanListeManager } from "./ui/manager/stundenplan/StundenplanListeManager";
 export { StundenplanUnterrichtListeManager } from "./ui/manager/stundenplan/StundenplanUnterrichtListeManager";

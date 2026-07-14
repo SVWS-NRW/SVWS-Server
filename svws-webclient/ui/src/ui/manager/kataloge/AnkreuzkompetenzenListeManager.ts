@@ -1,4 +1,3 @@
-import { AuswahlManager } from '../../AuswahlManager';
 import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
 import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
@@ -13,6 +12,7 @@ import type { Schulgliederung } from "../../../../../core/src/asd/types/schule/S
 import type { JahrgangsDaten } from '../../../../../core/src/core/data/jahrgang/JahrgangsDaten';
 import type { AnkreuzkompetenzJahrgangszuordnung } from "../../../../../core/src/core/data/schule//AnkreuzkompetenzJahrgangszuordnung";
 import { HashMap, HashSet } from '../../../../../core/src';
+import { AuswahlManager } from '../AuswahlManager';
 
 export class AnkreuzkompetenzenListeManager extends AuswahlManager<number, Ankreuzkompetenz, Ankreuzkompetenz> {
 

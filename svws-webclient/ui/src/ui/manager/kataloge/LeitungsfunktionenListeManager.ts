@@ -1,4 +1,3 @@
-import { AuswahlManager } from "../../AuswahlManager";
 import type { Leitungsfunktion } from "../../../../../core/src/core/data/schule/Leitungsfunktion";
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
 import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
@@ -8,7 +7,7 @@ import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
 import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
-import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
+import { AuswahlManager } from "../AuswahlManager";
 
 export class LeitungsfunktionenListeManager extends AuswahlManager<number, Leitungsfunktion, Leitungsfunktion> {
 	private static readonly _leitungsfunktionToId = (lf: Leitungsfunktion) => lf.id;

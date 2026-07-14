@@ -1,10 +1,10 @@
 import type { Schulform } from '../../../../core/src/asd/types/schule/Schulform';
 import { JavaString } from '../../../../core/src/java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../../core/src/core/exceptions/DeveloperNotificationException';
-import { AuswahlManager } from '../../ui/AuswahlManager';
 import type { List } from '../../../../core/src/java/util/List';
 import type { Schuljahresabschnitt } from '../../../../core/src/asd/data/schule/Schuljahresabschnitt';
 import type { ENMv2Lerngruppe } from '../../../../core/src/core/data/enm/v2/ENMv2Lerngruppe';
+import { AuswahlManager } from '../../ui/manager/AuswahlManager';
 import type { EnmManager } from './EnmManager';
 
 /**

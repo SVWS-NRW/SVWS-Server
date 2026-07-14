@@ -4,12 +4,12 @@ import { HashMap } from '../../../../../core/src/java/util/HashMap';
 import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
 import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../../../core/src/core/exceptions/DeveloperNotificationException';
-import { AuswahlManager } from '../../AuswahlManager';
 import { RaumUtils } from '../../../../../core/src/core/utils/raum/RaumUtils';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
 import { Class } from '../../../../../core/src/java/lang/Class';
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
+import { AuswahlManager } from '../AuswahlManager';
 
 export class RaumListeManager extends AuswahlManager<number, Raum, Raum> {
 

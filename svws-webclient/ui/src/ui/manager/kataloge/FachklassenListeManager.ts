@@ -1,6 +1,6 @@
-import { AuswahlManager } from "../../AuswahlManager";
 import type { Collection, Comparator, FachklasseEintrag, List, Schulform, Schuljahresabschnitt } from "../../../../../core/src";
 import { HashSet, JavaInteger, JavaLong, JavaString } from "../../../../../core/src";
+import { AuswahlManager } from "../AuswahlManager";
 
 export class FachklassenListeManager extends AuswahlManager<number, FachklasseEintrag, FachklasseEintrag> {
 

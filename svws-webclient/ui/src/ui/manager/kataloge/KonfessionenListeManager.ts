@@ -3,11 +3,10 @@ import type { Schulform } from "../../../../../core/src/asd/types/schule/Schulfo
 import type { ReligionEintrag } from "../../../../../core/src/core/data/schule/ReligionEintrag";
 import { JavaLong } from "../../../../../core/src/java/lang/JavaLong";
 import { JavaString } from "../../../../../core/src/java/lang/JavaString";
-import { Arrays } from "../../../../../core/src/java/util/Arrays";
 import { HashSet } from "../../../../../core/src/java/util/HashSet";
 import type { Comparator } from "../../../../../core/src/java/util/Comparator";
 import type { List } from "../../../../../core/src/java/util/List";
-import { AuswahlManager } from "../../AuswahlManager";
+import { AuswahlManager } from "../AuswahlManager";
 
 
 export class KonfessionenListeManager extends AuswahlManager<number, ReligionEintrag, ReligionEintrag> {

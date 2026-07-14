@@ -1,9 +1,7 @@
-import { AuswahlManager } from "../../AuswahlManager";
 import type { Betrieb } from '../../../../../core/src/core/data/schule/Betrieb';
 import type { List } from '../../../../../core/src/java/util/List';
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
 import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
-import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
 import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
 import { JavaString } from '../../../../../core/src/java/lang/JavaString';
@@ -12,8 +10,7 @@ import { HashSet } from "../../../../../core/src/java/util/HashSet";
 import type { BetriebeAnsprechpartner } from "../../../../../core/src/core/data/schule/BetriebeAnsprechpartner";
 import type { Betriebsart } from "../../../../../core/src/core/data/schule/Betriebsart";
 import type { OrtKatalogEintrag } from "../../../../../core/src/core/data/kataloge/OrtKatalogEintrag";
-
-
+import { AuswahlManager } from "../AuswahlManager";
 
 export class BetriebeListeManager extends AuswahlManager<number, Betrieb, Betrieb> {
 

@@ -1,16 +1,16 @@
-import { HashMap } from '../../../core/src/java/util/HashMap';
-import type { Schulform } from '../../../core/src/asd/types/schule/Schulform';
-import { ArrayList } from '../../../core/src/java/util/ArrayList';
-import { SchuljahresabschnittsUtils } from '../../../core/src/core/utils/schule/SchuljahresabschnittsUtils';
-import { DeveloperNotificationException } from '../../../core/src/core/exceptions/DeveloperNotificationException';
-import type { Comparator } from '../../../core/src/java/util/Comparator';
-import type { Collection } from '../../../core/src/java/util/Collection';
-import type { List } from '../../../core/src/java/util/List';
-import type { Schuljahresabschnitt } from '../../../core/src/asd/data/schule/Schuljahresabschnitt';
-import type { JavaMap } from '../../../core/src/java/util/JavaMap';
+import { HashMap } from '../../../../core/src/java/util/HashMap';
+import type { Schulform } from '../../../../core/src/asd/types/schule/Schulform';
+import { ArrayList } from '../../../../core/src/java/util/ArrayList';
+import { SchuljahresabschnittsUtils } from '../../../../core/src/core/utils/schule/SchuljahresabschnittsUtils';
+import { DeveloperNotificationException } from '../../../../core/src/core/exceptions/DeveloperNotificationException';
+import type { Comparator } from '../../../../core/src/java/util/Comparator';
+import type { Collection } from '../../../../core/src/java/util/Collection';
+import type { List } from '../../../../core/src/java/util/List';
+import type { Schuljahresabschnitt } from '../../../../core/src/asd/data/schule/Schuljahresabschnitt';
+import type { JavaMap } from '../../../../core/src/java/util/JavaMap';
 
-import type { AuswahlManagerSortierOrdnung as SortierOrdnung } from "./manager/AuswahlManagerSortierOrdnung";
-import { AttributMitAuswahl } from './AttributMitAuswahl';
+import type { AuswahlManagerSortierOrdnung as SortierOrdnung } from "./AuswahlManagerSortierOrdnung";
+import { ListeMitAuswahl } from './ListeMitAuswahl';
 
 /**
  * Ein abstrakter Auswahl-Manager, welcher für die Auswahllisten im Client verwendet wird
@@ -21,9 +21,8 @@ import { AttributMitAuswahl } from './AttributMitAuswahl';
  */
 export abstract class AuswahlManager<TID extends number | string, TAuswahl, TDaten> {
 
-	/** Ein Auswahl-Attribut für die Auswahliste. Dieses wird nicht für eine Filterung verwendet,
-	 * sondern für eine Mehrfachauswahl */
-	public readonly liste: AttributMitAuswahl<TID, TAuswahl>;
+	/** Ein Liste (z.B. eines Attributs) für Mehrfachauswahl - nicht für eine Filterung verwendet */
+	public readonly liste: ListeMitAuswahl<TID, TAuswahl>;
 
 	/** Funktion für das Mapping von einem Auswahl-Objekt auf dessen ID */
 	private readonly _listeToId: (eintrag: TAuswahl) => TID;
@@ -42,7 +41,7 @@ export abstract class AuswahlManager<TID extends number | string, TAuswahl, TDat
 
 	/** Das Filter-Attribut für die Schuljahresabschnitte -
 	 * die Filterfunktion wird zur Zeit noch nicht genutzt */
-	public readonly schuljahresabschnitte: AttributMitAuswahl<number, Schuljahresabschnitt>;
+	public readonly schuljahresabschnitte: ListeMitAuswahl<number, Schuljahresabschnitt>;
 
 	/** Funktion für das Mapping von Schuljahresabschnitt zu ID */
 	private static readonly _schuljahresabschnittToId = (sja: Schuljahresabschnitt) => sja.id;
@@ -104,12 +103,12 @@ export abstract class AuswahlManager<TID extends number | string, TAuswahl, TDat
 	) {
 		this._schuljahresabschnitt = schuljahresabschnitt;
 		this._schuljahresabschnittSchule = schuljahresabschnittSchule;
-		this.schuljahresabschnitte = new AttributMitAuswahl(schuljahresabschnitte, AuswahlManager._schuljahresabschnittToId, SchuljahresabschnittsUtils.comparator, this._eventHandlerFilterChanged);
+		this.schuljahresabschnitte = new ListeMitAuswahl(schuljahresabschnitte, AuswahlManager._schuljahresabschnittToId, SchuljahresabschnittsUtils.comparator, this._eventHandlerFilterChanged);
 		this._schulform = schulform;
 		this._order = order;
 		this._listeToId = listeToId;
 		this._datenToId = datenToId;
-		this.liste = new AttributMitAuswahl(values, this._listeToId, listComparator, this._eventHandlerMehrfachauswahlChanged);
+		this.liste = new ListeMitAuswahl(values, this._listeToId, listComparator, this._eventHandlerMehrfachauswahlChanged);
 		this.liste.setEventHandlerListeGeaendert(this._eventHandlerListeChanged);
 		this._filterPermitAuswahl = true;
 	}

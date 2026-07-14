@@ -2,14 +2,13 @@ import type { Schuljahresabschnitt } from "../../../../../core/src/asd/data/schu
 import type { Schulform } from "../../../../../core/src/asd/types/schule/Schulform";
 import type { Floskel } from "../../../../../core/src/core/data/schule/Floskel";
 import type { Floskelgruppe } from "../../../../../core/src/core/data/schule/Floskelgruppe";
-import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
 import type { List } from "../../../../../core/src/java/util/List";
-import { AuswahlManager } from "../../AuswahlManager";
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
 import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import type { JahrgangsDaten } from '../../../../../core/src/core/data/jahrgang/JahrgangsDaten';
 import type { FachDaten } from '../../../../../core/src/core/data/fach/FachDaten';
+import { AuswahlManager } from "../AuswahlManager";
 
 export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floskel> {
 

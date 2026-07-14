@@ -2,7 +2,7 @@ import type { Comparator, List, FachDaten, Schueler, Schuljahresabschnitt, Schue
 	Schulform, JahrgangsDaten, KursDaten, LehrerListeEintrag, SchulgliederungKatalogEintrag } from "@core";
 import { ArrayList, Arrays, Class, JavaObject, JavaString, JavaLong, JavaInteger, DeveloperNotificationException, IllegalArgumentException,
 	HashMap2D, SchuelerUtils, Schulgliederung, SchuelerStatus, KursUtils, LehrerUtils } from "@core";
-import { AuswahlManager, AttributMitAuswahl, JahrgaengeListeManager } from '@ui';
+import { AuswahlManager, ListeMitAuswahl, JahrgaengeListeManager } from '@ui';
 
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
@@ -34,28 +34,28 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 	/**
 	 * Das Filter-Attribut für die Jahrgänge
 	 */
-	public readonly jahrgaenge: AttributMitAuswahl<number, JahrgangsDaten>;
+	public readonly jahrgaenge: ListeMitAuswahl<number, JahrgangsDaten>;
 
 	private static readonly _jahrgangToId = (jg: JahrgangsDaten) => jg.id;
 
 	/**
 	 * Das Filter-Attribut für die Lehrer
 	 */
-	public readonly lehrer: AttributMitAuswahl<number, LehrerListeEintrag>;
+	public readonly lehrer: ListeMitAuswahl<number, LehrerListeEintrag>;
 
 	private static readonly _lehrerToId = (l: LehrerListeEintrag) => l.id;
 
 	/**
 	 * Das Filter-Attribut für die Fächer
 	 */
-	public readonly faecher: AttributMitAuswahl<number, FachDaten>;
+	public readonly faecher: ListeMitAuswahl<number, FachDaten>;
 
 	private static readonly _fachToId = (f: FachDaten) => f.id;
 
 	/**
 	 * Das Filter-Attribut für die Schüler
 	 */
-	public readonly schueler: AttributMitAuswahl<number, SchuelerListeEintrag>;
+	public readonly schueler: ListeMitAuswahl<number, SchuelerListeEintrag>;
 
 	private static readonly _schuelerToId = (s: SchuelerListeEintrag) => s.id;
 
@@ -64,7 +64,7 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 	/**
 	 * Das Filter-Attribut für die Schulgliederungen
 	 */
-	public readonly schulgliederungen: AttributMitAuswahl<string, Schulgliederung>;
+	public readonly schulgliederungen: ListeMitAuswahl<string, Schulgliederung>;
 
 	private readonly _schulgliederungToId = (sg: Schulgliederung) => {
 		const sglke: SchulgliederungKatalogEintrag | null = sg.daten(schuleStateImpl.schuljahr);
@@ -79,7 +79,7 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 	/**
 	 * Das Filter-Attribut für den Schüler-Status
 	 */
-	public readonly schuelerstatus: AttributMitAuswahl<number, SchuelerStatus>;
+	public readonly schuelerstatus: ListeMitAuswahl<number, SchuelerStatus>;
 
 	private readonly _schuelerstatusToId = (s: SchuelerStatus) => {
 		const sske: SchuelerStatusKatalogEintrag | null = s.daten(schuleStateImpl.schuljahr);
@@ -141,13 +141,13 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 			KursListeManager._kursToId,
 			[{ field: "idJahrgaenge", ascending: true }, { field: "kuerzel", ascending: true }]
 		);
-		this.schuelerstatus = new AttributMitAuswahl(Arrays.asList(...SchuelerStatus.values()), this._schuelerstatusToId, KursListeManager._comparatorSchuelerStatus, this._eventHandlerFilterChanged);
-		this.schueler = new AttributMitAuswahl(schueler, KursListeManager._schuelerToId, SchuelerUtils.comparator, this._eventHandlerFilterChanged);
-		this.jahrgaenge = new AttributMitAuswahl(jahrgaenge, KursListeManager._jahrgangToId, JahrgaengeListeManager.comparator, this._eventHandlerFilterChanged);
-		this.lehrer = new AttributMitAuswahl(lehrer, KursListeManager._lehrerToId, LehrerUtils.comparatorKuerzel, this._eventHandlerFilterChanged);
-		this.faecher = new AttributMitAuswahl(faecher, KursListeManager._fachToId, KursListeManager.comparatorFaecherListe, this._eventHandlerFilterChanged);
+		this.schuelerstatus = new ListeMitAuswahl(Arrays.asList(...SchuelerStatus.values()), this._schuelerstatusToId, KursListeManager._comparatorSchuelerStatus, this._eventHandlerFilterChanged);
+		this.schueler = new ListeMitAuswahl(schueler, KursListeManager._schuelerToId, SchuelerUtils.comparator, this._eventHandlerFilterChanged);
+		this.jahrgaenge = new ListeMitAuswahl(jahrgaenge, KursListeManager._jahrgangToId, JahrgaengeListeManager.comparator, this._eventHandlerFilterChanged);
+		this.lehrer = new ListeMitAuswahl(lehrer, KursListeManager._lehrerToId, LehrerUtils.comparatorKuerzel, this._eventHandlerFilterChanged);
+		this.faecher = new ListeMitAuswahl(faecher, KursListeManager._fachToId, KursListeManager.comparatorFaecherListe, this._eventHandlerFilterChanged);
 		const gliederungen: List<Schulgliederung> = (schulform === null) ? Arrays.asList(...Schulgliederung.values()) : Schulgliederung.getBySchuljahrAndSchulform(schuleStateImpl.schuljahr, schulform);
-		this.schulgliederungen = new AttributMitAuswahl(gliederungen, this._schulgliederungToId, KursListeManager._comparatorSchulgliederung, this._eventHandlerFilterChanged);
+		this.schulgliederungen = new ListeMitAuswahl(gliederungen, this._schulgliederungToId, KursListeManager._comparatorSchulgliederung, this._eventHandlerFilterChanged);
 		this.initKurse();
 		this.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
 		this.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);

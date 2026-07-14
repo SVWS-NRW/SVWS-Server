@@ -1,7 +1,7 @@
-import { AuswahlManager } from "../../AuswahlManager";
 import type { Betriebsart } from "../../../../../core/src/core/data/schule/Betriebsart";
 import type { Comparator, List, Schulform, Schuljahresabschnitt } from "../../../../../core/src";
-import { Arrays, HashSet, JavaLong, JavaString } from "../../../../../core/src";
+import { HashSet, JavaLong, JavaString } from "../../../../../core/src";
+import { AuswahlManager } from "../AuswahlManager";
 
 export class BetriebsartenListeManager extends AuswahlManager<number, Betriebsart, Betriebsart> {
 

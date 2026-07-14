@@ -2,16 +2,13 @@ import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulfo
 import type { JahrgangsDaten } from '../../../../../core/src/core/data/jahrgang/JahrgangsDaten';
 import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
-import { AuswahlManager } from '../../AuswahlManager';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
-import { Arrays } from '../../../../../core/src/java/util/Arrays';
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
 import { HashSet } from '../../../../../core/src/java/util/HashSet';
 import type { JavaSet } from '../../../../../core/src/java/util/JavaSet';
 import { JavaInteger } from "../../../../../core/src/java/lang/JavaInteger";
-
-
+import { AuswahlManager } from '../AuswahlManager';
 
 export class JahrgaengeListeManager extends AuswahlManager<number, JahrgangsDaten, JahrgangsDaten> {
 

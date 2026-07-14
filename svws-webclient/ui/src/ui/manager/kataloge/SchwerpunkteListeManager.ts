@@ -1,6 +1,6 @@
-import { AuswahlManager } from "../../AuswahlManager";
 import type { Comparator, List, Schulform, Schuljahresabschnitt, SchuelerSchwerpunkt } from "../../../../../core/src";
-import { JavaInteger, Arrays, HashSet, JavaLong, JavaString } from "../../../../../core/src";
+import { JavaInteger, HashSet, JavaLong, JavaString } from "../../../../../core/src";
+import { AuswahlManager } from "../AuswahlManager";
 
 export class SchwerpunkteListeManager extends AuswahlManager<number, SchuelerSchwerpunkt, SchuelerSchwerpunkt> {
 
