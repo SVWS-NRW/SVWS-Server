@@ -46,7 +46,7 @@ export class HaltestellenListeManager extends AuswahlManager<number, Haltestelle
 	 */
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>, schulform: Schulform | null, haltestellen: List<Haltestelle>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, haltestellen, HaltestellenListeManager.comparator,
-			HaltestellenListeManager._haltestelleToId, HaltestellenListeManager._haltestelleToId, ArrayList.of());
+			HaltestellenListeManager._haltestelleToId, HaltestellenListeManager._haltestelleToId, []);
 	}
 
 	protected compareAuswahl(a: Haltestelle, b: Haltestelle): number {

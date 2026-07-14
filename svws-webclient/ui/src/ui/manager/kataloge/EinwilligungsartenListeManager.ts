@@ -45,7 +45,7 @@ export class EinwilligungsartenListeManager extends AuswahlManager<number, Einwi
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
 		schulform: Schulform | null, einwilligungsarten: List<Einwilligungsart>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, einwilligungsarten, EinwilligungsartenListeManager.comparator,
-			EinwilligungsartenListeManager._einwilligungsArtToId, EinwilligungsartenListeManager._einwilligungsArtToId, ArrayList.of());
+			EinwilligungsartenListeManager._einwilligungsArtToId, EinwilligungsartenListeManager._einwilligungsArtToId, []);
 	}
 
 	/**

@@ -9,7 +9,6 @@ import { RaumUtils } from '../../../../../core/src/core/utils/raum/RaumUtils';
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
 import { Class } from '../../../../../core/src/java/lang/Class';
-import { Arrays } from '../../../../../core/src/java/util/Arrays';
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
 
 export class RaumListeManager extends AuswahlManager<number, Raum, Raum> {
@@ -35,7 +34,7 @@ export class RaumListeManager extends AuswahlManager<number, Raum, Raum> {
 	 * @param raeume						die Liste der Raum
 	 */
 	public constructor(schuljahresabschnitt: number, schuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>, schulform: Schulform | null, raeume: List<Raum>) {
-		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, raeume, RaumUtils.comparator, RaumListeManager._raumToId, RaumListeManager._raumToId, Arrays.asList());
+		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, raeume, RaumUtils.comparator, RaumListeManager._raumToId, RaumListeManager._raumToId, []);
 		this.onMehrfachauswahlChanged();
 	}
 
@@ -74,26 +73,26 @@ export class RaumListeManager extends AuswahlManager<number, Raum, Raum> {
 	 * @return das Ergebnis des Vergleichs (-1 kleine, 0 gleich und 1 größer)
 	 */
 	protected compareAuswahl(a: Raum, b: Raum): number {
-		for (const criteria of this._order) {
-			const field: string | null = criteria.a;
-			const asc: boolean = (criteria.b === null) || criteria.b;
+		for (const { field, ascending } of this._order) {
 			let cmp: number;
-			if (JavaObject.equalsTranspiler("kuerzel", (field))) {
+
+			if (field === "kuerzel") {
 				cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
-			} else
-				if (JavaObject.equalsTranspiler("beschreibung", (field))) {
-					cmp = JavaString.compareTo(a.beschreibung, b.beschreibung);
-				} else
-					if (JavaObject.equalsTranspiler("groesse", (field))) {
-						cmp = JavaLong.compare(a.groesse, b.groesse);
-					} else {
-						throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
-					}
+			} else if (field === "beschreibung") {
+				cmp = JavaString.compareTo(a.beschreibung, b.beschreibung);
+			} else if (field === "groesse") {
+				cmp = JavaLong.compare(a.groesse, b.groesse);
+			} else {
+				throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
+			}
+
 			if (cmp === 0) {
 				continue;
 			}
-			return asc ? cmp : -cmp;
+
+			return ascending ? cmp : -cmp;
 		}
+
 		return RaumUtils.comparator.compare(a, b);
 	}
 

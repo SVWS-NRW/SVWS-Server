@@ -48,7 +48,7 @@ export class VermerkartenListeManager extends AuswahlManager<number, VermerkartE
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
 		schulform: Schulform | null, vermerkarten: List<VermerkartEintrag>, schuelerVermerkartZusammenfassungen: List<SchuelerVermerkartZusammenfassung>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, vermerkarten, VermerkartenListeManager.comparator,
-			VermerkartenListeManager._vermerkartToId, VermerkartenListeManager._vermerkartToId, Arrays.asList());
+			VermerkartenListeManager._vermerkartToId, VermerkartenListeManager._vermerkartToId, []);
 		this._schuelerVermerkartZusammenfassungen = schuelerVermerkartZusammenfassungen;
 	}
 

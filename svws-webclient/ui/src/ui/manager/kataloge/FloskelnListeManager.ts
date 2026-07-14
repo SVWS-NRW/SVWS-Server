@@ -70,7 +70,7 @@ export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floske
 			FloskelnListeManager.comparator,
 			FloskelnListeManager.toId,
 			FloskelnListeManager.toId,
-			ArrayList.of()
+			[]
 		);
 		this.mapFloskelgruppen(floskelgruppen);
 		this.mapJahrgaenge(jahrgaenge);

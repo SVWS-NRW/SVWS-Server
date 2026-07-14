@@ -1,10 +1,8 @@
-import { JavaObject } from '../../../../core/src/java/lang/JavaObject';
 import type { Schulform } from '../../../../core/src/asd/types/schule/Schulform';
 import { JavaString } from '../../../../core/src/java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../../core/src/core/exceptions/DeveloperNotificationException';
 import { AuswahlManager } from '../../ui/AuswahlManager';
 import type { List } from '../../../../core/src/java/util/List';
-import { Arrays } from '../../../../core/src/java/util/Arrays';
 import type { Schuljahresabschnitt } from '../../../../core/src/asd/data/schule/Schuljahresabschnitt';
 import type { ENMv2Klasse } from '../../../../core/src/core/data/enm/v2/ENMv2Klasse';
 import type { EnmManager } from './EnmManager';
@@ -33,7 +31,7 @@ export class EnmKlassenleitungAuswahlListeManager extends AuswahlManager<number,
 	 */
 	public constructor(enmManager: EnmManager, schuljahresabschnitt: number, schuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>, schulform: Schulform | null) {
 		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, enmManager.listKlassenKlassenlehrer, enmManager.comparatorKlassen,
-			EnmKlassenleitungAuswahlListeManager._klasseToId, EnmKlassenleitungAuswahlListeManager._klasseToId, Arrays.asList());
+			EnmKlassenleitungAuswahlListeManager._klasseToId, EnmKlassenleitungAuswahlListeManager._klasseToId, []);
 		this.enmManager = enmManager;
 	}
 
@@ -46,20 +44,22 @@ export class EnmKlassenleitungAuswahlListeManager extends AuswahlManager<number,
 	 * @return das Ergebnis des Vergleichs (-1 kleine, 0 gleich und 1 größer)
 	 */
 	protected compareAuswahl(a: ENMv2Klasse, b: ENMv2Klasse): number {
-		for (const criteria of this._order) {
-			const field: string | null = criteria.a;
-			const asc: boolean = (criteria.b === null) || criteria.b;
+		for (const { field, ascending } of this._order) {
 			let cmp: number;
-			if (JavaObject.equalsTranspiler("kuerzelAnzeige", (field))) {
+
+			if (field === "kuerzelAnzeige") {
 				cmp = JavaString.compareTo(a.kuerzelAnzeige ?? "", b.kuerzelAnzeige);
 			} else {
 				throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
 			}
+
 			if (cmp === 0) {
 				continue;
 			}
-			return asc ? cmp : -cmp;
+
+			return ascending ? cmp : -cmp;
 		}
+
 		return this.enmManager.comparatorKlassen.compare(a, b);
 	}
 

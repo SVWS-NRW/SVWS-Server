@@ -46,7 +46,7 @@ export class FahrschuelerartenListeManager extends AuswahlManager<number, Fahrsc
 	 */
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, abschnitte: List<Schuljahresabschnitt>, schulform: Schulform | null, fahrschuelerarten: List<Fahrschuelerart>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, abschnitte, schulform, fahrschuelerarten, FahrschuelerartenListeManager.comparator,
-			FahrschuelerartenListeManager._fahrschuelerartToId, FahrschuelerartenListeManager._fahrschuelerartToId, ArrayList.of());
+			FahrschuelerartenListeManager._fahrschuelerartToId, FahrschuelerartenListeManager._fahrschuelerartToId, []);
 	}
 
 	protected compareAuswahl(a: Fahrschuelerart, b: Fahrschuelerart): number {

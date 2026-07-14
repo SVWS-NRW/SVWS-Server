@@ -1,6 +1,6 @@
 import { AuswahlManager } from "../../AuswahlManager";
 import type { Collection, Comparator, FachklasseEintrag, List, Schulform, Schuljahresabschnitt } from "../../../../../core/src";
-import { Arrays, HashSet, JavaInteger, JavaLong, JavaString } from "../../../../../core/src";
+import { HashSet, JavaInteger, JavaLong, JavaString } from "../../../../../core/src";
 
 export class FachklassenListeManager extends AuswahlManager<number, FachklasseEintrag, FachklasseEintrag> {
 
@@ -34,7 +34,7 @@ export class FachklassenListeManager extends AuswahlManager<number, FachklasseEi
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
 		schulform: Schulform | null, fachklassen: Collection<FachklasseEintrag>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, fachklassen, FachklassenListeManager.comparator,
-			FachklassenListeManager._fachklasseToId, FachklassenListeManager._fachklasseToId, Arrays.asList());
+			FachklassenListeManager._fachklasseToId, FachklassenListeManager._fachklasseToId, []);
 	}
 
 	protected checkFilter(eintrag: FachklasseEintrag): boolean {

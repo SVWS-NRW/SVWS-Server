@@ -1,10 +1,8 @@
 import { JavaObject, HashMap2D, HashMap, KlassenUtils, SchuelerUtils, ArrayList, JavaString, DeveloperNotificationException, SchuelerStatus, Schulgliederung,
-	IllegalArgumentException, Pair, GostAbiturjahrUtils, JavaInteger, LehrerUtils, JavaLong, Class, KursUtils, Arrays } from '@core';
+	IllegalArgumentException, GostAbiturjahrUtils, JavaInteger, LehrerUtils, JavaLong, Class, KursUtils, Arrays } from '@core';
 import type { KlassenDaten, SchuelerListeEintrag, SchuelerStatusKatalogEintrag, Schulform, JahrgangsDaten, KursDaten, LehrerListeEintrag,
 	Schuljahresabschnitt, SchuelerListe, SchulgliederungKatalogEintrag, List, SchuelerStammdaten, Comparator, GostJahrgang, JavaMap } from '@core';
-import { JahrgaengeListeManager } from '@ui';
-import { AuswahlManager } from '@ui';
-import { AttributMitAuswahl } from '@ui';
+import { AuswahlManager, AttributMitAuswahl, JahrgaengeListeManager } from '@ui';
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
@@ -119,7 +117,16 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	 * @param schuljahresabschnittSchule   der Schuljahresabschnitt, in dem sich die Schule aktuell befindet
 	 */
 	public constructor(schulform: Schulform | null, daten: SchuelerListe, lehrer: List<LehrerListeEintrag>, schuljahresabschnitte: List<Schuljahresabschnitt>, schuljahresabschnittSchule: number) {
-		super(daten.idSchuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, daten.schueler, SchuelerUtils.comparator, SchuelerListeManager._schuelerToId, SchuelerListeManager._stammdatenToId, Arrays.asList(new Pair("klassen", true), new Pair("nachname", true), new Pair("vorname", true)));
+		super(daten.idSchuljahresabschnitt,
+			schuljahresabschnittSchule,
+			schuljahresabschnitte,
+			schulform,
+			daten.schueler,
+			SchuelerUtils.comparator,
+			SchuelerListeManager._schuelerToId,
+			SchuelerListeManager._stammdatenToId,
+			[{ field: "klassen", ascending: true }, { field: "nachname", ascending: true }]
+		);
 		const aktuelleKlassen: List<KlassenDaten> = new ArrayList<KlassenDaten>();
 		for (const klasse of daten.klassen) {
 			this._mapKlassenAlle.put(klasse.id, klasse);
@@ -242,38 +249,36 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	 * @return das Ergebnis des Vergleichs (-1 kleine, 0 gleich und 1 größer)
 	 */
 	protected compareAuswahl(a: SchuelerListeEintrag, b: SchuelerListeEintrag): number {
-		for (const criteria of this._order) {
-			const field: string | null = criteria.a;
-			const asc: boolean = (criteria.b === null) || criteria.b;
+		for (const { field, ascending } of this._order) {
 			let cmp: number;
-			if (JavaObject.equalsTranspiler("klassen", (field))) {
+
+			if (field === "klassen") {
 				const aKlasse: KlassenDaten | null = this.klasseGetOrNull(a.idKlasse);
 				const bKlasse: KlassenDaten | null = this.klasseGetOrNull(b.idKlasse);
 				if ((aKlasse === null) && (bKlasse === null)) {
 					cmp = 0;
-				} else
-					if (aKlasse === null) {
-						cmp = -1;
-					} else
-						if (bKlasse === null) {
-							cmp = 1;
-						} else {
-							cmp = KlassenUtils.comparator.compare(aKlasse, bKlasse);
-						}
-			} else
-				if (JavaObject.equalsTranspiler("nachname", (field))) {
-					cmp = JavaString.compareTo(a.nachname, b.nachname);
-				} else
-					if (JavaObject.equalsTranspiler("vorname", (field))) {
-						cmp = JavaString.compareTo(a.vorname, b.vorname);
-					} else {
-						throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
-					}
+				} else if (aKlasse === null) {
+					cmp = -1;
+				} else if (bKlasse === null) {
+					cmp = 1;
+				} else {
+					cmp = KlassenUtils.comparator.compare(aKlasse, bKlasse);
+				}
+			} else if (field === "nachname") {
+				cmp = JavaString.compareTo(a.nachname, b.nachname);
+			} else if (field === "vorname") {
+				cmp = JavaString.compareTo(a.vorname, b.vorname);
+			} else {
+				throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
+			}
+
 			if (cmp === 0) {
 				continue;
 			}
-			return asc ? cmp : -cmp;
+
+			return ascending ? cmp : -cmp;
 		}
+
 		return JavaLong.compare(a.id, b.id);
 	}
 

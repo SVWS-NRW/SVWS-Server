@@ -50,7 +50,7 @@ export class OrteListeManager extends AuswahlManager<number, OrtKatalogEintrag, 
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
 		schulform: Schulform | null, orte: List<OrtKatalogEintrag>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, orte, OrteListeManager.comparator,
-			OrteListeManager._ortToId, OrteListeManager._ortToId, ArrayList.of());
+			OrteListeManager._ortToId, OrteListeManager._ortToId, []);
 	}
 
 	protected onMehrfachauswahlChanged(): void {

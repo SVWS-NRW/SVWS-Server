@@ -48,7 +48,7 @@ export class ErzieherartListeManager extends AuswahlManager<number, Erzieherart,
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
 		schulform: Schulform | null, erzieherarten: List<Erzieherart>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, erzieherarten,
-			ErzieherartListeManager.comparator, ErzieherartListeManager._erzieherartenToId, ErzieherartListeManager._erzieherartenToId, Arrays.asList());
+			ErzieherartListeManager.comparator, ErzieherartListeManager._erzieherartenToId, ErzieherartListeManager._erzieherartenToId, []);
 	}
 
 	protected onMehrfachauswahlChanged(): void {

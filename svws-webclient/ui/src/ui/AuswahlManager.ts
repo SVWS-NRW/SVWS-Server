@@ -8,8 +8,8 @@ import type { Collection } from '../../../core/src/java/util/Collection';
 import type { List } from '../../../core/src/java/util/List';
 import type { Schuljahresabschnitt } from '../../../core/src/asd/data/schule/Schuljahresabschnitt';
 import type { JavaMap } from '../../../core/src/java/util/JavaMap';
-import { Pair } from '../../../core/src/asd/adt/Pair';
 
+import type { AuswahlManagerSortierOrdnung as SortierOrdnung } from "./manager/AuswahlManagerSortierOrdnung";
 import { AttributMitAuswahl } from './AttributMitAuswahl';
 
 /**
@@ -44,6 +44,7 @@ export abstract class AuswahlManager<TID extends number | string, TAuswahl, TDat
 	 * die Filterfunktion wird zur Zeit noch nicht genutzt */
 	public readonly schuljahresabschnitte: AttributMitAuswahl<number, Schuljahresabschnitt>;
 
+	/** Funktion für das Mapping von Schuljahresabschnitt zu ID */
 	private static readonly _schuljahresabschnittToId = (sja: Schuljahresabschnitt) => sja.id;
 
 	/** Die gefilterte Liste, sofern sie schon berechnet wurde */
@@ -64,8 +65,8 @@ export abstract class AuswahlManager<TID extends number | string, TAuswahl, TDat
 	/** Ein Handler für das Ereignis, dass die Liste mit der Mehrfachauswahl angepasst wurde */
 	private readonly _eventHandlerListeChanged = () => this.onListeChangedInternal();
 
-	/** Die Sortier-Ordnung, welche vom Comparator verwendet wird */
-	protected _order: List<Pair<string, boolean>>;
+	/** Die Sortier-Ordnung, welche vom {@link Comparator} verwendet wird */
+	protected _order: Array<SortierOrdnung>;
 
 	/** Gibt an, ob die aktuelle Einzel-Auswahl auch bei dem Filter erlaubt wird oder nicht */
 	protected _filterPermitAuswahl: boolean = false;
@@ -99,7 +100,7 @@ export abstract class AuswahlManager<TID extends number | string, TAuswahl, TDat
 		listComparator: Comparator<TAuswahl>,
 		listeToId: (eintrag: TAuswahl) => TID,
 		datenToId: (daten: TDaten) => TID,
-		order: List<Pair<string, boolean>>
+		order: Array<SortierOrdnung>
 	) {
 		this._schuljahresabschnitt = schuljahresabschnitt;
 		this._schuljahresabschnittSchule = schuljahresabschnittSchule;
@@ -135,8 +136,8 @@ export abstract class AuswahlManager<TID extends number | string, TAuswahl, TDat
 				this._filtered.add(eintrag);
 			}
 		}
-		const comparator: Comparator<TAuswahl> = { compare: (a: TAuswahl, b: TAuswahl) => this.compareAuswahl(a, b) };
-		this._filtered.sort(comparator);
+
+		this._filtered.sort({ compare: (a: TAuswahl, b: TAuswahl) => this.compareAuswahl(a, b) });
 		return this._filtered;
 	}
 
@@ -216,8 +217,8 @@ export abstract class AuswahlManager<TID extends number | string, TAuswahl, TDat
 	 *
 	 * @param order   die Sortier-Ordnung
 	 */
-	public orderSet(order: List<Pair<string, boolean>>): void {
-		this._order = order;
+	public orderSet(order: Array<SortierOrdnung>): void {
+		this._order = [...order];
 		this._filtered = null;
 	}
 
@@ -228,45 +229,38 @@ export abstract class AuswahlManager<TID extends number | string, TAuswahl, TDat
 	 *
 	 * @return die Sortier-Ordnung
 	 */
-	public orderGet(): List<Pair<string, boolean>> {
-		return new ArrayList<Pair<string, boolean>>(this._order);
+	public orderGet(): Array<SortierOrdnung> {
+		return [...this._order];
 	}
 
 	/**
-	 * Aktualisiert die Reihenfolge bei der Sortierung für das angegebene Feld. Dabei
-	 * werden vorhande Feld-Eintrage angepasst oder bei null entfernt. Nicht vorhande
-	 * Feld-Einträge werden ergänzt, sofern eine Reihenfolge definiert wird.
+	 * Aktualisiert die Reihenfolge bei der Sortierung für das angegebene Feld.
+	 * Vorhandene Feld-Einträge werden angepasst oder bei null entfernt.
+	 * Nicht vorhandene Feld-Einträge werden ergänzt, sofern eine Reihenfolge definiert wird.
+	 * Geänderte oder neue Einträge werden an den Anfang der Sortier-Ordnung gesetzt.
 	 *
 	 * @param field   das Feld
 	 * @param order   die Reihenfolge für dieses Feld (ascending: true, descending: false, deaktivieren: null)
 	 */
 	public orderUpdate(field: string, order: boolean | null): void {
+		const index = this._order.findIndex(e => e.field === field);
+
 		if (order === null) {
-			for (let i: number = 0; i < this._order.size(); i++) {
-				const eintrag: Pair<string, boolean> = this._order.get(i);
-				if (eintrag.a === field) {
-					this._order.remove(eintrag);
-					this._filtered = null;
-					return;
-				}
+			if (index !== -1) {
+				this._order.splice(index, 1);
+				this._filtered = null;
 			}
 			return;
 		}
-		for (let i: number = 0; i < this._order.size(); i++) {
-			const eintrag: Pair<string, boolean> = this._order.get(i);
-			if (eintrag.a === field) {
-				if (eintrag.b === order) {
-					return;
-				}
-				this._order.remove(eintrag);
-				eintrag.b = order;
-				this._order.add(0, eintrag);
-				this._filtered = null;
+
+		if (index !== -1) {
+			if (this._order[index].ascending === order) {
 				return;
 			}
+			this._order.splice(index, 1);
 		}
-		const eintrag: Pair<string, boolean> = new Pair<string, boolean>(field, order);
-		this._order.add(0, eintrag);
+
+		this._order.unshift({ field, ascending: order });
 		this._filtered = null;
 	}
 
@@ -298,7 +292,7 @@ export abstract class AuswahlManager<TID extends number | string, TAuswahl, TDat
 	 */
 	public daten(): TDaten {
 		if (this._daten === null) {
-			throw new DeveloperNotificationException("Es exitsiert derzeit keine Auswahl und damit auch keine Daten");
+			throw new DeveloperNotificationException("Es exisiert derzeit keine Auswahl und damit auch keine Daten");
 		}
 		return this._daten;
 	}

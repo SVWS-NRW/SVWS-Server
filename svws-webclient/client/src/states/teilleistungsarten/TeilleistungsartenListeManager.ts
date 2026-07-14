@@ -42,7 +42,7 @@ export class TeilleistungsartenListeManager extends AuswahlManager<number, Teill
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
 		schulform: Schulform | null, Teilleistungsarten: List<Teilleistungsart>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, Teilleistungsarten, TeilleistungsartenListeManager.comparator,
-			TeilleistungsartenListeManager._TeilleistungsartenToId, TeilleistungsartenListeManager._TeilleistungsartenToId, Arrays.asList());
+			TeilleistungsartenListeManager._TeilleistungsartenToId, TeilleistungsartenListeManager._TeilleistungsartenToId, []);
 	}
 
 	get filterNurSichtbar(): boolean {

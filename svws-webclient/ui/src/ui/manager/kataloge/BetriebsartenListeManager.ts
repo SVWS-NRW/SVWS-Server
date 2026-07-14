@@ -40,7 +40,7 @@ export class BetriebsartenListeManager extends AuswahlManager<number, Betriebsar
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
 		schulform: Schulform | null, betriebsarten: List<Betriebsart>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, betriebsarten, BetriebsartenListeManager.comparator,
-			BetriebsartenListeManager._betriebsartenToId, BetriebsartenListeManager._betriebsartenToId, Arrays.asList());
+			BetriebsartenListeManager._betriebsartenToId, BetriebsartenListeManager._betriebsartenToId, []);
 	}
 
 	get filterNurSichtbar(): boolean {

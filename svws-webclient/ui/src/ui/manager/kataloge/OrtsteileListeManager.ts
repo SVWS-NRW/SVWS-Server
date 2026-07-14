@@ -51,7 +51,7 @@ export class OrtsteileListeManager extends AuswahlManager<number, OrtsteilKatalo
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
 		schulform: Schulform | null, ortsteile: List<OrtsteilKatalogEintrag>, orte: List<OrtKatalogEintrag>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, ortsteile,
-			OrtsteileListeManager.comparator, OrtsteileListeManager._ortsteileToId, OrtsteileListeManager._ortsteileToId, ArrayList.of());
+			OrtsteileListeManager.comparator, OrtsteileListeManager._ortsteileToId, OrtsteileListeManager._ortsteileToId, []);
 		this.mapOrte(orte);
 	}
 

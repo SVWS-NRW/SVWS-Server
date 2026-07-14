@@ -50,7 +50,7 @@ export class TelefonartenListeManager extends AuswahlManager<number, Telefonart,
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
 		schulform: Schulform | null, telefonarten: List<Telefonart>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, telefonarten, TelefonartenListeManager.comparator,
-			TelefonartenListeManager._telefonArtenToId, TelefonartenListeManager._telefonArtenToId, Arrays.asList());
+			TelefonartenListeManager._telefonArtenToId, TelefonartenListeManager._telefonArtenToId, []);
 	}
 
 	get filterNurSichtbar(): boolean {

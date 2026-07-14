@@ -58,7 +58,7 @@ export class BetriebeListeManager extends AuswahlManager<number, Betrieb, Betrie
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
 		schulform: Schulform | null, betriebe: List<Betrieb>, betriebsarten: List<Betriebsart>, orte: List<OrtKatalogEintrag>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, betriebe,
-			BetriebeListeManager.comparator, BetriebeListeManager._betriebToId, BetriebeListeManager._betriebToId, ArrayList.of());
+			BetriebeListeManager.comparator, BetriebeListeManager._betriebToId, BetriebeListeManager._betriebToId, []);
 		this.mapBetriebsarten(betriebsarten);
 		this.mapOrte(orte);
 	}

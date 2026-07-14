@@ -36,7 +36,7 @@ export class FloskelgruppenListeManager extends AuswahlManager<number, Floskelgr
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
 		schulform: Schulform | null, values: List<Floskelgruppe>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, values, FloskelgruppenListeManager.comparator,
-			FloskelgruppenListeManager.toId, FloskelgruppenListeManager.toId, Arrays.asList());
+			FloskelgruppenListeManager.toId, FloskelgruppenListeManager.toId, []);
 	}
 
 	protected compareAuswahl(a: Floskelgruppe, b: Floskelgruppe): number {

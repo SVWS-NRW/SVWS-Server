@@ -1,6 +1,6 @@
 import type { Comparator, List, FachDaten, Schueler, Schuljahresabschnitt, SchuelerListeEintrag, SchuelerStatusKatalogEintrag,
 	Schulform, JahrgangsDaten, KursDaten, LehrerListeEintrag, SchulgliederungKatalogEintrag } from "@core";
-import { ArrayList, Arrays, Pair, Class, JavaObject, JavaString, JavaLong, JavaInteger, DeveloperNotificationException, IllegalArgumentException,
+import { ArrayList, Arrays, Class, JavaObject, JavaString, JavaLong, JavaInteger, DeveloperNotificationException, IllegalArgumentException,
 	HashMap2D, SchuelerUtils, Schulgliederung, SchuelerStatus, KursUtils, LehrerUtils } from "@core";
 import { AuswahlManager, AttributMitAuswahl, JahrgaengeListeManager } from '@ui';
 
@@ -130,7 +130,17 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 	 * @param faecher       die Liste der Fächer
 	 */
 	public constructor(schuljahresabschnitt: number, schuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>, schulform: Schulform | null, kurse: List<KursDaten>, schueler: List<SchuelerListeEintrag>, jahrgaenge: List<JahrgangsDaten>, lehrer: List<LehrerListeEintrag>, faecher: List<FachDaten>) {
-		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, kurse, KursUtils.comparator, KursListeManager._kursToId, KursListeManager._kursToId, Arrays.asList(new Pair("idJahrgaenge", true), new Pair("kuerzel", true)));
+		super(
+			schuljahresabschnitt,
+			schuljahresabschnittSchule,
+			schuljahresabschnitte,
+			schulform,
+			kurse,
+			KursUtils.comparator,
+			KursListeManager._kursToId,
+			KursListeManager._kursToId,
+			[{ field: "idJahrgaenge", ascending: true }, { field: "kuerzel", ascending: true }]
+		);
 		this.schuelerstatus = new AttributMitAuswahl(Arrays.asList(...SchuelerStatus.values()), this._schuelerstatusToId, KursListeManager._comparatorSchuelerStatus, this._eventHandlerFilterChanged);
 		this.schueler = new AttributMitAuswahl(schueler, KursListeManager._schuelerToId, SchuelerUtils.comparator, this._eventHandlerFilterChanged);
 		this.jahrgaenge = new AttributMitAuswahl(jahrgaenge, KursListeManager._jahrgangToId, JahrgaengeListeManager.comparator, this._eventHandlerFilterChanged);
@@ -235,73 +245,64 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 	 * @return das Ergebnis des Vergleichs (-1 kleine, 0 gleich und 1 größer)
 	 */
 	protected compareAuswahl(a: KursDaten, b: KursDaten): number {
-		for (const criteria of this._order) {
-			const field: string | null = criteria.a;
-			const asc: boolean = (criteria.b === null) || criteria.b;
+		for (const { field, ascending } of this._order) {
 			let cmp: number;
-			if (JavaObject.equalsTranspiler("kuerzel", (field))) {
+
+			if (field === "kuerzel") {
 				cmp = KursUtils.comparator.compare(a, b);
-			} else
-				if (JavaObject.equalsTranspiler("lehrer", (field))) {
-					if ((a.lehrer === null) && (b.lehrer === null)) {
+			} else if (field === "lehrer") {
+				if ((a.lehrer === null) && (b.lehrer === null)) {
+					cmp = 0;
+				} else if (a.lehrer === null) {
+					cmp = -1;
+				} else if (b.lehrer === null) {
+					cmp = 1;
+				} else {
+					const la: LehrerListeEintrag | null = this.lehrer.get(a.lehrer);
+					const lb: LehrerListeEintrag | null = this.lehrer.get(b.lehrer);
+					if ((la === null) && (lb === null)) {
 						cmp = 0;
-					} else
-						if (a.lehrer === null) {
-							cmp = -1;
-						} else
-							if (b.lehrer === null) {
-								cmp = 1;
-							} else {
-								const la: LehrerListeEintrag | null = this.lehrer.get(a.lehrer);
-								const lb: LehrerListeEintrag | null = this.lehrer.get(b.lehrer);
-								if ((la === null) && (lb === null)) {
-									cmp = 0;
-								} else
-									if (la === null) {
-										cmp = -1;
-									} else
-										if (lb === null) {
-											cmp = 1;
-										} else {
-											cmp = LehrerUtils.comparator.compare(la, lb);
-										}
-							}
-				} else
-					if (JavaObject.equalsTranspiler("idJahrgaenge", (field))) {
-						if ((a.idJahrgaenge.isEmpty()) && (b.idJahrgaenge.isEmpty())) {
-							cmp = 0;
-						} else
-							if (a.idJahrgaenge.isEmpty()) {
-								cmp = -1;
-							} else
-								if (b.idJahrgaenge.isEmpty()) {
-									cmp = 1;
-								} else {
-									const ja: JahrgangsDaten | null = this.jahrgaenge.get(a.idJahrgaenge.get(0));
-									const jb: JahrgangsDaten | null = this.jahrgaenge.get(b.idJahrgaenge.get(0));
-									if ((ja === null) && (jb === null)) {
-										cmp = 0;
-									} else
-										if (ja === null) {
-											cmp = -1;
-										} else
-											if (jb === null) {
-												cmp = 1;
-											} else {
-												cmp = JahrgaengeListeManager.comparator.compare(ja, jb);
-											}
-								}
-					} else
-						if (JavaObject.equalsTranspiler("schueler", (field))) {
-							cmp = JavaInteger.compare(a.schueler.size(), b.schueler.size());
-						} else {
-							throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
-						}
+					} else if (la === null) {
+						cmp = -1;
+					} else if (lb === null) {
+						cmp = 1;
+					} else {
+						cmp = LehrerUtils.comparator.compare(la, lb);
+					}
+				}
+			} else if (field === "idJahrgaenge") {
+				if (a.idJahrgaenge.isEmpty() && b.idJahrgaenge.isEmpty()) {
+					cmp = 0;
+				} else if (a.idJahrgaenge.isEmpty()) {
+					cmp = -1;
+				} else if (b.idJahrgaenge.isEmpty()) {
+					cmp = 1;
+				} else {
+					const ja: JahrgangsDaten | null = this.jahrgaenge.get(a.idJahrgaenge.get(0));
+					const jb: JahrgangsDaten | null = this.jahrgaenge.get(b.idJahrgaenge.get(0));
+					if ((ja === null) && (jb === null)) {
+						cmp = 0;
+					} else if (ja === null) {
+						cmp = -1;
+					} else if (jb === null) {
+						cmp = 1;
+					} else {
+						cmp = JahrgaengeListeManager.comparator.compare(ja, jb);
+					}
+				}
+			} else if (field === "schueler") {
+				cmp = JavaInteger.compare(a.schueler.size(), b.schueler.size());
+			} else {
+				throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
+			}
+
 			if (cmp === 0) {
 				continue;
 			}
-			return asc ? cmp : -cmp;
+
+			return ascending ? cmp : -cmp;
 		}
+
 		return JavaLong.compare(a.id, b.id);
 	}
 

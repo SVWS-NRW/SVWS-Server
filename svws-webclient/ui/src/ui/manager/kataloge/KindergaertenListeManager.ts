@@ -49,7 +49,7 @@ export class KindergaertenListeManager extends AuswahlManager<number, Kindergart
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
 		schulform: Schulform | null, kindergaerten: List<Kindergarten>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, kindergaerten,
-			KindergaertenListeManager.comparator, KindergaertenListeManager._kindergartenToId, KindergaertenListeManager._kindergartenToId, ArrayList.of());
+			KindergaertenListeManager.comparator, KindergaertenListeManager._kindergartenToId, KindergaertenListeManager._kindergartenToId, []);
 	}
 
 	protected onMehrfachauswahlChanged(): void {

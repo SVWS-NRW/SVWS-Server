@@ -136,10 +136,8 @@
 
 	const sortByMulti = computed<Map<string, boolean>>(() => {
 		const map = new Map<string, boolean>();
-		for (const pair of props.manager().orderGet()) {
-			if (pair.b !== null) {
-				map.set(pair.a === "klassen" ? "idKlasse" : pair.a, pair.b);
-			}
+		for (const { field, ascending } of props.manager().orderGet()) {
+			map.set(field === "klassen" ? "idKlasse" : field, ascending);
 		}
 		return map;
 	});
@@ -147,10 +145,10 @@
 	const sortByAndOrder = computed<SortByAndOrder | undefined>({
 		get: () => {
 			const list = props.manager().orderGet();
-			if (list.isEmpty()) {
+			if (list.length === 0) {
 				return undefined;
 			} else {
-				const { a: key, b: order } = list.get(0);
+				const { field: key, ascending: order } = list[0];
 				return { key: key === 'klassen' ? 'idKlasse' : key, order };
 			}
 		},

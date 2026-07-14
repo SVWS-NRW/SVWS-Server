@@ -136,10 +136,10 @@
 	const sortByAndOrder = computed<SortByAndOrder | undefined>({
 		get: () => {
 			const list = props.manager().orderGet();
-			if (list.isEmpty()) {
+			if (list.length === 0) {
 				return undefined;
 			} else {
-				const { a: key, b: order } = list.get(0);
+				const { field: key, ascending: order } = list[0];
 				return { key, order };
 			}
 		},

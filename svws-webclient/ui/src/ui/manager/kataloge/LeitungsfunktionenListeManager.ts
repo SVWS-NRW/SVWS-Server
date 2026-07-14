@@ -43,7 +43,7 @@ export class LeitungsfunktionenListeManager extends AuswahlManager<number, Leitu
 	 * @param leitungsfunktionen				die Liste der Leitungsfunktionen
 	 */
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>, schulform: Schulform | null, leitungsfunktionen: List<Leitungsfunktion>) {
-		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, leitungsfunktionen, LeitungsfunktionenListeManager.comparator, LeitungsfunktionenListeManager._leitungsfunktionToId, LeitungsfunktionenListeManager._leitungsfunktionToId, ArrayList.of());
+		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, leitungsfunktionen, LeitungsfunktionenListeManager.comparator, LeitungsfunktionenListeManager._leitungsfunktionToId, LeitungsfunktionenListeManager._leitungsfunktionToId, []);
 	}
 
 	protected compareAuswahl(a: Leitungsfunktion, b: Leitungsfunktion): number {

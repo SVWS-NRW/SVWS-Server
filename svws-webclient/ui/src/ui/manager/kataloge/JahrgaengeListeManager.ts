@@ -57,7 +57,7 @@ export class JahrgaengeListeManager extends AuswahlManager<number, JahrgangsDate
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
 		schulform: Schulform | null, jahrgaenge: List<JahrgangsDaten>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, jahrgaenge, JahrgaengeListeManager.comparator,
-			JahrgaengeListeManager._jahrgangToId, JahrgaengeListeManager._jahrgangToId, Arrays.asList());
+			JahrgaengeListeManager._jahrgangToId, JahrgaengeListeManager._jahrgangToId, []);
 	}
 
 	/**

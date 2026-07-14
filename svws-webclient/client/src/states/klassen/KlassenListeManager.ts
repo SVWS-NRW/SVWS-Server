@@ -1,5 +1,5 @@
 import { JavaObject, HashMap, SchuelerUtils, ArrayList, JavaString, DeveloperNotificationException, SchuelerStatus, Schulgliederung,
-	IllegalArgumentException, HashSet, Pair, JavaInteger, LehrerUtils, JavaLong, Arrays } from '@core';
+	IllegalArgumentException, HashSet, JavaInteger, LehrerUtils, JavaLong, Arrays } from '@core';
 import type { KlassenDaten, SchuelerListeEintrag, SchuelerStatusKatalogEintrag, JavaSet, Schulform, JahrgangsDaten, Comparator,
 	LehrerListeEintrag, SchulgliederungKatalogEintrag, List, Schueler, Schuljahresabschnitt, JavaMap,
 	KlassenListeEintrag, KlassenDatenMinimal } from '@core';
@@ -135,8 +135,7 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenListeEint
 			KlassenListeManager.comparator,
 			KlassenListeManager._klassenListeToId,
 			KlassenListeManager._klassenDatenToId,
-			Arrays.asList(new Pair("klassen", true),
-				new Pair("schueleranzahl", true))
+			[{ field: "klassen", ascending: true }, { field: "schueleranzahl", ascending: true }]
 		);
 		this.schuelerstatus = new AttributMitAuswahl(Arrays.asList(...SchuelerStatus.values()), this._schuelerstatusToId, KlassenListeManager._comparatorSchuelerStatus, this._eventHandlerFilterChanged);
 		this.schueler = new AttributMitAuswahl(lookups.schueler, KlassenListeManager._schuelerToId, SchuelerUtils.comparator, this._eventSchuelerAuswahlChanged);
@@ -197,23 +196,24 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenListeEint
 	 * @return das Ergebnis des Vergleichs (-1 kleiner, 0 gleich und 1 größer)
 	 */
 	protected compareAuswahl(a: KlassenListeEintrag, b: KlassenListeEintrag): number {
-		for (const criteria of this._order) {
-			const field: string | null = criteria.a;
-			const asc: boolean = (criteria.b === null) || criteria.b;
+		for (const { field, ascending } of this._order) {
 			let cmp: number;
-			if (JavaObject.equalsTranspiler("klassen", (field))) {
+
+			if (field === "klassen") {
 				cmp = KlassenListeManager.comparator.compare(a, b);
-			} else
-				if (JavaObject.equalsTranspiler("schueleranzahl", (field))) {
-					cmp = JavaInteger.compare(a.anzahlZugeordneteSchueler, b.anzahlZugeordneteSchueler);
-				} else {
-					throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
-				}
+			} else if (field === "schueleranzahl") {
+				cmp = JavaInteger.compare(a.anzahlZugeordneteSchueler, b.anzahlZugeordneteSchueler);
+			} else {
+				throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
+			}
+
 			if (cmp === 0) {
 				continue;
 			}
-			return asc ? cmp : -cmp;
+
+			return ascending ? cmp : -cmp;
 		}
+
 		return JavaLong.compare(a.id, b.id);
 	}
 

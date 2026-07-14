@@ -10,7 +10,6 @@ import type { LehrerListeEintrag } from '../../../../../core/src/core/data/lehre
 import type { LehrerPersonalabschnittsdaten } from '../../../../../core/src/asd/data/lehrer/LehrerPersonalabschnittsdaten';
 import type { List } from '../../../../../core/src/java/util/List';
 import { HashSet } from '../../../../../core/src/java/util/HashSet';
-import { Pair } from '../../../../../core/src/asd/adt/Pair';
 import type { LehrerPersonaldaten } from '../../../../../core/src/asd/data/lehrer/LehrerPersonaldaten';
 import type { LehrerStammdaten } from '../../../../../core/src/asd/data/lehrer/LehrerStammdaten';
 import { PersonalTyp } from '../../../../../core/src/core/types/PersonalTyp';
@@ -84,7 +83,21 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 	 * @param lehrer                       die Liste der Lehrer
 	 */
 	public constructor(schuljahresabschnitt: number, schuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>, schulform: Schulform | null, lehrer: List<LehrerListeEintrag>) {
-		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, lehrer, LehrerUtils.comparator, LehrerListeManager._lehrerToId, LehrerListeManager._lehrerDatenToId, Arrays.asList(new Pair("nachname", true), new Pair("vorname", true), new Pair("kuerzel", true)));
+		super(
+			schuljahresabschnitt,
+			schuljahresabschnittSchule,
+			schuljahresabschnitte,
+			schulform,
+			lehrer,
+			LehrerUtils.comparator,
+			LehrerListeManager._lehrerToId,
+			LehrerListeManager._lehrerDatenToId,
+			[
+				{ field: "nachname", ascending: true },
+				{ field: "vorname", ascending: true },
+				{ field: "kuerzel", ascending: true },
+			]
+		);
 		this.personaltypen = new AttributMitAuswahl(Arrays.asList(...PersonalTyp.values()), LehrerListeManager._personaltypToId, LehrerListeManager._comparatorPersonaltypen, this._eventHandlerFilterChanged);
 		this.initLehrer();
 	}
@@ -195,26 +208,26 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 	 * @return das Ergebnis des Vergleichs (-1 kleine, 0 gleich und 1 größer)
 	 */
 	protected compareAuswahl(a: LehrerListeEintrag, b: LehrerListeEintrag): number {
-		for (const criteria of this._order) {
-			const field: string | null = criteria.a;
-			const asc: boolean = (criteria.b === null) || criteria.b;
+		for (const { field, ascending } of this._order) {
 			let cmp: number;
-			if (JavaObject.equalsTranspiler("kuerzel", (field))) {
+
+			if (field === "kuerzel") {
 				cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
-			} else
-				if (JavaObject.equalsTranspiler("nachname", (field))) {
-					cmp = JavaString.compareTo(a.nachname, b.nachname);
-				} else
-					if (JavaObject.equalsTranspiler("vorname", (field))) {
-						cmp = JavaString.compareTo(a.vorname, b.vorname);
-					} else {
-						throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
-					}
+			} else if (field === "nachname") {
+				cmp = JavaString.compareTo(a.nachname, b.nachname);
+			} else if (field === "vorname") {
+				cmp = JavaString.compareTo(a.vorname, b.vorname);
+			} else {
+				throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
+			}
+
 			if (cmp === 0) {
 				continue;
 			}
-			return asc ? cmp : -cmp;
+
+			return ascending ? cmp : -cmp;
 		}
+
 		return JavaLong.compare(a.id, b.id);
 	}
 

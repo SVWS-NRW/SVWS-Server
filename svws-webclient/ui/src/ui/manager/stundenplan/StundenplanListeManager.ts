@@ -1,4 +1,3 @@
-import { JavaObject } from '../../../../../core/src/java/lang/JavaObject';
 import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
 import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
 import type { StundenplanManager } from '../../../../../core/src/core/utils/stundenplan/StundenplanManager';
@@ -11,7 +10,6 @@ import { StundenplanListeEintrag } from '../../../../../core/src/core/data/stund
 import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
 import { Class } from '../../../../../core/src/java/lang/Class';
-import { Arrays } from '../../../../../core/src/java/util/Arrays';
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
 
 export class StundenplanListeManager extends AuswahlManager<number, StundenplanListeEintrag, StundenplanManager> {
@@ -67,7 +65,7 @@ export class StundenplanListeManager extends AuswahlManager<number, StundenplanL
 	 * @param createVorlage ob eine Vorlage erstellt werden soll
 	 */
 	public constructor(schuljahresabschnitt: number, schuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>, schulform: Schulform | null, stundenplanListe: List<StundenplanListeEintrag>, createVorlage: boolean) {
-		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, stundenplanListe, StundenplanListeManager.comparator, StundenplanListeManager._listeEintragToId, StundenplanListeManager._stundenplanToId, Arrays.asList());
+		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, stundenplanListe, StundenplanListeManager.comparator, StundenplanListeManager._listeEintragToId, StundenplanListeManager._stundenplanToId, []);
 		if (createVorlage) {
 			this.addStundenplanVorlage();
 		}
@@ -99,21 +97,18 @@ export class StundenplanListeManager extends AuswahlManager<number, StundenplanL
 		if (cmp !== 0) {
 			return cmp;
 		}
-		for (const criteria of this._order) {
-			const field: string | null = criteria.a;
-			const asc: boolean = (criteria.b === null) || criteria.b;
-			if (JavaObject.equalsTranspiler("gueltigAb", (field))) {
+		for (const { field, ascending } of this._order) {
+			if (field === "gueltigAb") {
 				cmp = JavaString.compareTo(a.gueltigAb, b.gueltigAb);
-			} else
-				if (JavaObject.equalsTranspiler("bezeichnung", (field))) {
-					cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
-				} else {
-					throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
-				}
+			} else if (field === "bezeichnung") {
+				cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
+			} else {
+				throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
+			}
 			if (cmp === 0) {
 				continue;
 			}
-			return asc ? cmp : -cmp;
+			return ascending ? cmp : -cmp;
 		}
 		return JavaLong.compare(a.id, b.id);
 	}

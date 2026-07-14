@@ -81,7 +81,7 @@ export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, A
 			AbteilungenListeManager.COMPARATOR_ABTEILUNGEN_DEFAULT,
 			AbteilungenListeManager._abteilungToId,
 			AbteilungenListeManager._abteilungToId,
-			Arrays.asList());
+			[]);
 		this.mapAbteilungenFolgeAbschnitt(lookups.abteilungenFolgeAbschnitt);
 		this._lehrerById = this.mapLehrer(lookups.lehrer);
 		this._klassenByIdAktAbschnitt = this.mapKlassen(lookups.klassenAktAbschnitt);

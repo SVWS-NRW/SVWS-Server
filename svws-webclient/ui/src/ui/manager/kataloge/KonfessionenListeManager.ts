@@ -50,7 +50,7 @@ export class KonfessionenListeManager extends AuswahlManager<number, ReligionEin
 	public constructor(schuljahresabschnitt: number, schuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
 		schulform: Schulform | null, konfessionen: List<ReligionEintrag>) {
 		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, konfessionen, KonfessionenListeManager.comparator,
-			KonfessionenListeManager._konfessionToId, KonfessionenListeManager._konfessionToId, Arrays.asList());
+			KonfessionenListeManager._konfessionToId, KonfessionenListeManager._konfessionToId, []);
 	}
 
 	get filterNurSichtbar(): boolean {

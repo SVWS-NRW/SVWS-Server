@@ -67,7 +67,7 @@ export class SchulenListeManager extends AuswahlManager<number, SchulEintrag, Sc
 	 */
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, idSchuljahresabschnitte: List<Schuljahresabschnitt>, schulform: Schulform | null, schulen: List<SchulEintrag>, schulenKatalogEintraege: List<SchulenKatalogEintrag>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, idSchuljahresabschnitte, schulform, schulen, SchulenListeManager.comparator,
-			SchulenListeManager._schuleToId, SchulenListeManager._schuleToId, Arrays.asList());
+			SchulenListeManager._schuleToId, SchulenListeManager._schuleToId, []);
 		this._schulenKatalogEintraege = schulenKatalogEintraege;
 	}
 

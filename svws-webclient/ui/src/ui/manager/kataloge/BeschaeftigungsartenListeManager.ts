@@ -47,7 +47,7 @@ export class BeschaeftigungsartenListeManager extends AuswahlManager<number, Bes
 	 * @param beschaeftigungsarten				die Liste der Beschäftigungsarten
 	 */
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>, schulform: Schulform | null, beschaeftigungsarten: List<Beschaeftigungsart>) {
-		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, beschaeftigungsarten, BeschaeftigungsartenListeManager.comparator, BeschaeftigungsartenListeManager._beschaeftigungsartToId, BeschaeftigungsartenListeManager._beschaeftigungsartToId, ArrayList.of());
+		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, beschaeftigungsarten, BeschaeftigungsartenListeManager.comparator, BeschaeftigungsartenListeManager._beschaeftigungsartToId, BeschaeftigungsartenListeManager._beschaeftigungsartToId, []);
 	}
 
 	protected compareAuswahl(a: Beschaeftigungsart, b: Beschaeftigungsart): number {

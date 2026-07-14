@@ -27,7 +27,7 @@ export class AttributMitAuswahl<K extends number | string, V> {
 	/** Eine Funktion, um aus einem Wert den zugehörigen Schlüssel zu extrahieren. */
 	private readonly _toID: (v: V) => K;
 
-	/** Eine Comparator Funktion für das Sortieren der enthaltenen Objekte */
+	/** Eine {@link Comparator} Instanz für das Sortieren der enthaltenen Objekte */
 	private readonly _comparator: Comparator<V>;
 
 	/** Ein Handler für das Ereignis, dass die Auswahl verändert wurde */
@@ -147,7 +147,7 @@ export class AttributMitAuswahl<K extends number | string, V> {
 	 *
 	 * @param value  der hinzuzufügende Wert
 	 *
-	 * @return true, wenn ein Wert entfernt wurde
+	 * @return true, wenn ein Wert hinzugefügt wurde
 	 */
 	private addInternal(value: V): boolean {
 		const key: K = this._toID(value);
@@ -194,7 +194,7 @@ export class AttributMitAuswahl<K extends number | string, V> {
 	 * Sollte der Wert zusätzlich zu der Auswahl gehören, so
 	 * wird dieser aus der Auswahl entfernt.
 	 *
-	 * @param value   der zu entferndende Wert
+	 * @param value   der zu entfernende Wert
 	 *
 	 * @return true, falls der Wert entfernt wurde
 	 */
@@ -221,7 +221,7 @@ export class AttributMitAuswahl<K extends number | string, V> {
 	 * Sollte der Wert zusätzlich zu der Auswahl gehören, so
 	 * wird dieser aus der Auswahl entfernt.
 	 *
-	 * @param value   der zu entferndende Wert
+	 * @param value   der zu entfernende Wert
 	 */
 	public remove(value: V): void {
 		if (!this.removeInternal(value)) {
@@ -369,7 +369,7 @@ export class AttributMitAuswahl<K extends number | string, V> {
 	}
 
 	/**
-	 * Erntfernt den Wert aus der Auswahl, sofern er vorhanden ist.
+	 * Entfernt den Wert aus der Auswahl, sofern er vorhanden ist.
 	 *
 	 * @param value   der Wert der aus der Auswahl entfernt wird
 	 */
@@ -418,7 +418,7 @@ export class AttributMitAuswahl<K extends number | string, V> {
 	}
 
 	/**
-	 * Erntfernt den Wert für den Schlüssel aus der Auswahl, sofern er vorhanden ist.
+	 * Entfernt den Wert für den Schlüssel aus der Auswahl, sofern er vorhanden ist.
 	 *
 	 * @param key   der Schlüssel für den Wert der aus der Auswahl entfernt wird
 	 */
@@ -454,10 +454,15 @@ export class AttributMitAuswahl<K extends number | string, V> {
 	 * @param srcAuswahl   Die Auswahl des AttributMitAuswahl, die übernommen wird.
 	 */
 	public setAuswahl(srcAuswahl: AttributMitAuswahl<K, V>): void {
+		let added = false;
 		for (const key of srcAuswahl.auswahlKeyList()) {
-			if (this.has(key)) {
-				this.auswahlAddByKey(key);
+			if (this.has(key) && !this._mapAuswahlValuesByKey.containsKey(key)) {
+				this._mapAuswahlValuesByKey.put(key, this.getOrException(key));
+				added = true;
 			}
+		}
+		if (added && this._eventHandlerAuswahlGeandert !== null) {
+			this._eventHandlerAuswahlGeandert();
 		}
 	}
 }

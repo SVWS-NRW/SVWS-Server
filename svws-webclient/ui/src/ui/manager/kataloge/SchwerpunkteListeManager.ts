@@ -40,7 +40,7 @@ export class SchwerpunkteListeManager extends AuswahlManager<number, SchuelerSch
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
 		schulform: Schulform | null, schwerpunkte: List<SchuelerSchwerpunkt>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, schwerpunkte, SchwerpunkteListeManager.comparator,
-			SchwerpunkteListeManager._schwerpunkteToId, SchwerpunkteListeManager._schwerpunkteToId, Arrays.asList());
+			SchwerpunkteListeManager._schwerpunkteToId, SchwerpunkteListeManager._schwerpunkteToId, []);
 	}
 
 	get filterNurSichtbar(): boolean {

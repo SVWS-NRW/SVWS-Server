@@ -55,7 +55,7 @@ export class FaecherListeManager extends AuswahlManager<number, FachDaten, FachD
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
 		schulform: Schulform | null, faecher: List<FachDaten>, stundenplaene: List<StundenplanListeEintrag>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, faecher, FaecherListeManager.comparator,
-			FaecherListeManager._faecherToId, FaecherListeManager._faecherToId, ArrayList.of());
+			FaecherListeManager._faecherToId, FaecherListeManager._faecherToId, []);
 		this.mapStundenplaene(stundenplaene);
 	}
 

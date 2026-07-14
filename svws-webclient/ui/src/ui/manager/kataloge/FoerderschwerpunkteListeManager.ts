@@ -47,7 +47,7 @@ export class FoerderschwerpunkteListeManager extends AuswahlManager<number, Foer
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
 		schulform: Schulform | null, foerderschwerpunkte: List<FoerderschwerpunktEintrag>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, foerderschwerpunkte, FoerderschwerpunkteListeManager.comparator,
-			FoerderschwerpunkteListeManager._foerderschwerpunktToId, FoerderschwerpunkteListeManager._foerderschwerpunktToId, ArrayList.of());
+			FoerderschwerpunkteListeManager._foerderschwerpunktToId, FoerderschwerpunkteListeManager._foerderschwerpunktToId, []);
 	}
 
 	/**

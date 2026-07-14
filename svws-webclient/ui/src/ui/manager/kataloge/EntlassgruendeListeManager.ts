@@ -48,7 +48,7 @@ export class EntlassgruendeListeManager extends AuswahlManager<number, KatalogEn
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
 		schulform: Schulform | null, entlassgruende: List<KatalogEntlassgrund>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, entlassgruende, EntlassgruendeListeManager.comparator,
-			EntlassgruendeListeManager._entlassgrundToId, EntlassgruendeListeManager._entlassgrundToId, ArrayList.of());
+			EntlassgruendeListeManager._entlassgrundToId, EntlassgruendeListeManager._entlassgrundToId, []);
 	}
 
 	/**

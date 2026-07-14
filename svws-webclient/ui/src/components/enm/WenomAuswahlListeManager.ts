@@ -25,7 +25,7 @@ export class WenomAuswahlListeManager extends AuswahlManager<number, ENMServerCo
 
 	public constructor(schuljahresabschnitt: number, schuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>, schulform: Schulform | null, connections: List<ENMServerConnection>) {
 		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, connections, WenomAuswahlListeManager.comparator,
-			WenomAuswahlListeManager._eintragToId, WenomAuswahlListeManager._eintragToId, Arrays.asList());
+			WenomAuswahlListeManager._eintragToId, WenomAuswahlListeManager._eintragToId, []);
 		this._konfigurationLokal = new ENMServerConnection();
 		this._konfigurationLokal.id = -1;
 		this._konfigurationLokal.bezeichnung = "Lokales Notenmodul";

@@ -72,7 +72,7 @@ export class AnkreuzkompetenzenListeManager extends AuswahlManager<number, Ankre
 			AnkreuzkompetenzenListeManager.comparator,
 			AnkreuzkompetenzenListeManager._ankreuzkompetenzToId,
 			AnkreuzkompetenzenListeManager._ankreuzkompetenzToId,
-			ArrayList.of()
+			[]
 		);
 		this.mapFaecher(faecher);
 		this.mapJahrgaenge(jahrgaenge);

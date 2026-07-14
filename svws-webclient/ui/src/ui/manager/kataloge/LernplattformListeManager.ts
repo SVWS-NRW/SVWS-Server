@@ -39,7 +39,7 @@ export class LernplattformListeManager extends AuswahlManager<number, Lernplattf
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
 		schulform: Schulform | null, lernplattformen: List<Lernplattform>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, lernplattformen, LernplattformListeManager.comparator,
-			LernplattformListeManager._lernplattformenToId, LernplattformListeManager._lernplattformenToId, ArrayList.of());
+			LernplattformListeManager._lernplattformenToId, LernplattformListeManager._lernplattformenToId, []);
 	}
 
 	/**
