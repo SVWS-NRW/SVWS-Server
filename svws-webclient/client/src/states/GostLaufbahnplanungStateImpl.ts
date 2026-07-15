@@ -37,7 +37,6 @@ interface GostLaufbahnplanungReactiveState {
  */
 export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanungReactiveState> implements GostLaufbahnplanungState {
 
-	// TODO evtl später noch auf userServerState umstellen?
 	private readonly serverState = serverStateImpl;
 
 	public constructor() {
