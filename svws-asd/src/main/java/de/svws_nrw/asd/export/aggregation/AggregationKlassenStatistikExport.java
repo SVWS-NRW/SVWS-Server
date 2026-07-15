@@ -329,7 +329,7 @@ public class AggregationKlassenStatistikExport {
 		final Map<AltersstrukturKey, List<SchuelerStatistikGesamt>> map = schuelerStatistikGesamt.stream()
 				.collect(Collectors
 						.groupingBy(s -> {
-							final String iso3 = getNationalitaetIso3(s.idStaatsangehoerigkeit);
+							final String iso3 = getNationalitaetIso3(ermittleStaatsangehoerigkeit(s.idStaatsangehoerigkeit, s.idStaatsangehoerigkeit2));
 							try {
 								return new AltersstrukturKey(iso3, String.valueOf(DateManager.from(s.geburtsdatum).getJahr()));
 							} catch (final InvalidDateException e) {
@@ -354,6 +354,24 @@ public class AggregationKlassenStatistikExport {
 
 	/**
 	 * @param idStaatsangehoerigkeit
+	 * @param idStaatsangehoerigkeit2
+	 * @return die gültige ID zu den übergebenen Staatsangehörigkeiten des Schülers
+	 *
+	 * Wenn die 2.Staatsangehörigkeit Deutsch ist, ist der Schüler als Deutscher zu werten
+	 *
+	 */
+	private Long ermittleStaatsangehoerigkeit(final Long idStaatsangehoerigkeit, final Long idStaatsangehoerigkeit2) {
+
+		if (idStaatsangehoerigkeit2 != null && "DEU".equalsIgnoreCase(getNationalitaetIso3(idStaatsangehoerigkeit2))) {
+			return idStaatsangehoerigkeit2;
+		}
+
+		return idStaatsangehoerigkeit;
+
+	}
+
+	/**
+	 * @param idStaatsangehoerigkeit
 	 * @return der ISO3-Wert zur übergebenen ID
 	 */
 	private String getNationalitaetIso3(final Long idStaatsangehoerigkeit) {
@@ -368,7 +386,9 @@ public class AggregationKlassenStatistikExport {
 						this.fehlermeldungen.add("Der SchuelerStatistikGesamt-Satz mit folgender ID hat eine StaatsangehoerigkeitID von Null: " + s.id);
 						return "";
 					}
-					return Nationalitaeten.data().getWertByID(s.idStaatsangehoerigkeit).daten(this.aktuellesSchuljahr).schluessel;
+					final long gueltigeIdStaatsangehoerigkeit = ermittleStaatsangehoerigkeit(s.idStaatsangehoerigkeit, s.idStaatsangehoerigkeit2);
+
+					return Nationalitaeten.data().getWertByID(gueltigeIdStaatsangehoerigkeit).daten(this.aktuellesSchuljahr).schluessel;
 				}));
 
 		map.entrySet().stream().filter(f -> !f.getKey().equalsIgnoreCase(Nationalitaeten.getDEU().daten(this.aktuellesSchuljahr).schluessel)).forEach(t -> {

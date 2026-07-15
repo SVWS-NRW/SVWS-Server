@@ -57,4 +57,27 @@ public interface SchuelerRepository extends Repository<DTOSchueler> {
 	 */
 	Map<Long, DTOSchueler> getMapByStatusAndSchuljahresabschnitt(long idSchuljahresabschnitt, Collection<Long> status);
 
+	/**
+	 * Gibt die Liste aller nicht gelöschten Schüler mit einem angegebenen Status zurück,
+	 * welche in einem der übergebenen Schuljahresabschnitte sind.
+	 *
+	 * @param idsSchuljahresabschnitte   die IDs der Lernabschnitte
+	 * @param status                     eine Menge mit den erlaubten Status-Ids
+	 *
+	 * @return die Liste der Schüler
+	 */
+	List<DTOSchueler> getListByStatusAndSchuljahresabschnitte(Collection<Long> idsSchuljahresabschnitte, Collection<Long> status);
+
+
+	/**
+	 * Gibt die Map aller nicht gelöschten Schüler mit einem angegebenen Status zugeordnet
+	 * zu ihrer ID zurück, welche in einem der übergebenen Schuljahresabschnitte sind.
+	 *
+	 * @param idsSchuljahresabschnitte   die IDs der Lernabschnitte
+	 * @param status                     eine Menge mit den erlaubten Status-Ids
+	 *
+	 * @return die Map mit den Schülern zugeordnet zu ihrer ID
+	 */
+	Map<Long, DTOSchueler> getMapByStatusAndSchuljahresabschnitte(Collection<Long> idsSchuljahresabschnitte, Collection<Long> status);
+
 }

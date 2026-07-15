@@ -60,87 +60,86 @@ class StatistikServiceFactoryTest {
 	@Test
 	@DisplayName("Test: getSchuleStatistikService nutzt das Repository für Schuldaten und den Service für die Schuljahresabschnitte")
 	void testGetSchuleStatistikService() {
-		final var service = this.factory.getSchuleStatistikService();
+		final var service = factory.getSchuleStatistikService();
 		assertNotNull(service);
-		verify(this.repoSchuleFactory).getSchuleRepository();
-		verify(this.serviceFactorySchule).getSchuljahresabschnittService();
+		verify(repoSchuleFactory).getSchuleRepository();
+		verify(serviceFactorySchule).getSchuljahresabschnittService();
 	}
 
 	@Test
 	@DisplayName("Test: getLehrerStatistikService nutzt das Repository für Schuldaten, für Lehrerdaten und Lehrerabschnittsdaten und die Services für die Lehrämter und die Anrechnungsstunden")
 	void testGetLehrerStatistikService() {
-		final var service = this.factory.getLehrerStatistikService();
+		final var service = factory.getLehrerStatistikService();
 		assertNotNull(service);
-		verify(this.repoSchuleFactory, atLeastOnce()).getSchuleRepository();
-		verify(this.repoLehrerFactory).getLehrerRepository();
-		verify(this.repoLehrerFactory).getLehrerAbschnittsdatenRepository();
-		verify(this.serviceFactoryLehrer).getLehrerLehramtService();
-		verify(this.serviceFactoryLehrer).getLehrerPersonalabschnittsdatenAnrechnungsstundenService();
+		verify(repoSchuleFactory, atLeastOnce()).getSchuleRepository();
+		verify(repoLehrerFactory).getLehrerRepository();
+		verify(repoLehrerFactory).getLehrerAbschnittsdatenRepository();
+		verify(serviceFactoryLehrer).getLehrerLehramtService();
+		verify(serviceFactoryLehrer).getLehrerPersonalabschnittsdatenAnrechnungsstundenService();
 	}
 
 	@Test
-	@DisplayName("Test: getSchuelerStatistikService nutzt das Repository für Schuldaten, Schüler, Schülerlernabschnitte, Abiturdaten und deren Fächer sowie das allgemeine Fächer-Repository")
+	@DisplayName("Test: getSchuelerStatistikService nutzt das Repository für Schüler, Schülerlernabschnitte, Abiturdaten und deren Fächer sowie das allgemeine Fächer-Repository")
 	void testGetSchuelerStatistikService() {
-		final var service = this.factory.getSchuelerStatistikService();
+		final var service = factory.getSchuelerStatistikService();
 		assertNotNull(service);
-		verify(this.repoSchuleFactory, atLeastOnce()).getSchuleRepository();
-		verify(this.repoSchuelerFactory).getSchuelerRepository();
-		verify(this.repoSchuelerFactory).getSchuelerLernabschnittRepository();
-		verify(this.repoSchuelerFactory).getSchuelerAbiturRepository();
-		verify(this.repoSchuelerFactory).getSchuelerAbiturFachRepository();
-		verify(this.repoKatalogeFactory).getFachRepository();
+		verify(repoSchuelerFactory).getSchuelerRepository();
+		verify(repoSchuelerFactory).getSchuelerLernabschnittRepository();
+		verify(repoSchuelerFactory).getSchuelerAbiturRepository();
+		verify(repoSchuelerFactory).getSchuelerAbiturFachRepository();
+		verify(repoKatalogeFactory).getFachRepository();
 	}
 
 	@Test
 	@DisplayName("Test: getKlassenStatistikService nutzt das Repository für Schuldaten, Klassen, Klassenleitungen und SchülerLernabschnitte")
 	void testGetKlassenStatistikService() {
-		final var service = this.factory.getKlassenStatistikService();
+		final var service = factory.getKlassenStatistikService();
 		assertNotNull(service);
-		verify(this.repoSchuleFactory, atLeastOnce()).getSchuleRepository();
-		verify(this.repoKlassenFactory).getKlassenRepository();
-		verify(this.repoKlassenFactory).getKlassenleitungenRepository();
-		verify(this.repoSchuelerFactory, atLeastOnce()).getSchuelerLernabschnittRepository();
+		verify(repoSchuleFactory, atLeastOnce()).getSchuleRepository();
+		verify(repoKlassenFactory).getKlassenRepository();
+		verify(repoKlassenFactory).getKlassenleitungenRepository();
+		verify(repoSchuelerFactory, atLeastOnce()).getSchuelerLernabschnittRepository();
 	}
 
 	@Test
 	@DisplayName("Test: getReligionStatistikService nutzt das Repository zu Religionen")
 	void testGetReligionStatistikService() {
-		assertNotNull(this.factory.getReligionStatistikService());
-		verify(this.repoKatalogeFactory).getReligionRepository();
+		assertNotNull(factory.getReligionStatistikService());
+		verify(repoKatalogeFactory).getReligionRepository();
 	}
 
 	@Test
 	@DisplayName("Test: getOrteStatistikService nutzt das Repository zu Orten")
 	void testGetOrteStatistikService() {
-		assertNotNull(this.factory.getOrteStatistikService());
-		verify(this.repoKatalogeFactory).getOrteRepository();
+		assertNotNull(factory.getOrteStatistikService());
+		verify(repoKatalogeFactory).getOrteRepository();
 	}
 
 	@Test
 	@DisplayName("Test: getJahrgaengeStatistikService nutzt das Repository zu Jahrgängen")
 	void testGetJahrgaengeStatistikService() {
-		assertNotNull(this.factory.getJahrgaengeStatistikService());
-		verify(this.repoKatalogeFactory).getJahrgaengeRepository();
+		assertNotNull(factory.getJahrgaengeStatistikService());
+		verify(repoKatalogeFactory).getJahrgaengeRepository();
 	}
 
 	@Test
 	@DisplayName("Test: getFoerderschwerpunkteStatistikService nutzt das Repository zu Förderschwerpunkten")
 	void testGetFoerderschwerpunkteStatistikService() {
-		assertNotNull(this.factory.getFoerderschwerpunkteStatistikService());
-		verify(this.repoKatalogeFactory).getFoerderschwerpunkteRepository();
+		assertNotNull(factory.getFoerderschwerpunkteStatistikService());
+		verify(repoKatalogeFactory).getFoerderschwerpunkteRepository();
 	}
 
 	@Test
 	@DisplayName("Test: getStatistikService aggregiert alle Unter-Statistik-Services")
 	void testGetStatistikService() {
-		final var service = this.factory.getStatistikService();
+		final var service = factory.getStatistikService();
 		assertNotNull(service);
 
 		// Prüft, ob für den Statistik-Service auf die benötigten Factories zugegriffen wird
-		verify(this.repoSchuleFactory, atLeastOnce()).getSchuleRepository();
-		verify(this.repoLehrerFactory, atLeastOnce()).getLehrerRepository();
-		verify(this.repoSchuelerFactory, atLeastOnce()).getSchuelerRepository();
-		verify(this.repoKatalogeFactory, atLeastOnce()).getReligionRepository();
+		verify(repoSchuleFactory, atLeastOnce()).getSchuleRepository();
+		verify(repoLehrerFactory, atLeastOnce()).getLehrerRepository();
+		verify(repoSchuelerFactory, atLeastOnce()).getSchuelerRepository();
+		verify(repoKatalogeFactory, atLeastOnce()).getReligionRepository();
 	}
 
 }

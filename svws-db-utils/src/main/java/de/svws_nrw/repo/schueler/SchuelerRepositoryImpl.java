@@ -34,7 +34,7 @@ public final class SchuelerRepositoryImpl extends RepositoryImpl<DTOSchueler> im
 
 	@Override
 	public Map<Long, DTOSchueler> getMapAktiveBySchuljahresabschnitt(final long idSchuljahresabschnitt) {
-		return this.getListAktiveBySchuljahresabschnitt(idSchuljahresabschnitt).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+		return getListAktiveBySchuljahresabschnitt(idSchuljahresabschnitt).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 	}
 
 	@Override
@@ -48,7 +48,21 @@ public final class SchuelerRepositoryImpl extends RepositoryImpl<DTOSchueler> im
 
 	@Override
 	public Map<Long, DTOSchueler> getMapByStatusAndSchuljahresabschnitt(final long idSchuljahresabschnitt, final Collection<Long> status) {
-		return this.getListByStatusAndSchuljahresabschnitt(idSchuljahresabschnitt, status).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+		return getListByStatusAndSchuljahresabschnitt(idSchuljahresabschnitt, status).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+	}
+
+	@Override
+	public List<DTOSchueler> getListByStatusAndSchuljahresabschnitte(final Collection<Long> idsSchuljahresabschnitte, final Collection<Long> status) {
+		if (status.isEmpty() || idsSchuljahresabschnitte.isEmpty()) {
+			return Collections.emptyList();
+		}
+		return conn.queryList("SELECT e FROM DTOSchueler e WHERE e.Schuljahresabschnitts_ID IN ?1 AND e.idStatus IN ?2 AND e.Geloescht = ?3",
+				DTOSchueler.class, idsSchuljahresabschnitte, status, false);
+	}
+
+	@Override
+	public Map<Long, DTOSchueler> getMapByStatusAndSchuljahresabschnitte(final Collection<Long> idsSchuljahresabschnitte, final Collection<Long> status) {
+		return getListByStatusAndSchuljahresabschnitte(idsSchuljahresabschnitte, status).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 	}
 
 }
