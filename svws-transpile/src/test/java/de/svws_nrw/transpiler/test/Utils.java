@@ -48,10 +48,12 @@ public class Utils {
 		final long a = 5;
 		final int b = runTask(input -> input.intValue(), a);
 		final int c = runTask(Number::intValue, a);
-		if (a != b)
+		if (a != b) {
 			System.out.println("Fehler: Die Werte sind nicht gleich!");
-		if (a != c)
+		}
+		if (a != c) {
 			System.out.println("Fehler: Die Werte sind nicht gleich!");
+		}
 	}
 
 //	/**

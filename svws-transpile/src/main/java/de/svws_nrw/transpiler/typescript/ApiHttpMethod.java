@@ -45,30 +45,36 @@ public enum ApiHttpMethod {
 		final AnnotationTree annotationPUT = transpiler.getAnnotation("jakarta.ws.rs.PUT", method);
 		final AnnotationTree annotationDELETE = transpiler.getAnnotation("jakarta.ws.rs.DELETE", method);
 		ApiHttpMethod result = null;
-		if (annotationGET != null)
+		if (annotationGET != null) {
 			result = GET;
+		}
 		if (annotationPATCH != null) {
-			if (result != null)
+			if (result != null) {
 				throw new TranspilerException("Transpiler Error: Multiple HTTP method annotations are not allowed.");
+			}
 			result = PATCH;
 		}
 		if (annotationPOST != null) {
-			if (result != null)
+			if (result != null) {
 				throw new TranspilerException("Transpiler Error: Multiple HTTP method annotations are not allowed.");
+			}
 			result = POST;
 		}
 		if (annotationPUT != null) {
-			if (result != null)
+			if (result != null) {
 				throw new TranspilerException("Transpiler Error: Multiple HTTP method annotations are not allowed.");
+			}
 			result = PUT;
 		}
 		if (annotationDELETE != null) {
-			if (result != null)
+			if (result != null) {
 				throw new TranspilerException("Transpiler Error: Multiple HTTP method annotations are not allowed.");
+			}
 			result = DELETE;
 		}
-		if (result == null)
+		if (result == null) {
 			throw new TranspilerException("Transpiler Error: No supported HTTP method specified.");
+		}
 		return result;
 	}
 

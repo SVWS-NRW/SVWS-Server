@@ -58,10 +58,12 @@ public final class ExpressionTypeLambda extends ExpressionType {
 	public static ExpressionTypeLambda getExpressionTypeLambda(final Transpiler transpiler, final LambdaExpressionTree tree) {
 		final ExpressionTypeLambda result = new ExpressionTypeLambda();
 		result.tree = tree;
-		for (final VariableTree varTree : tree.getParameters())
+		for (final VariableTree varTree : tree.getParameters()) {
 			result.paramTypes.add(ExpressionType.getExpressionType(transpiler, varTree.getType()));
-		if (tree.getBody() instanceof final ExpressionTree body)
+		}
+		if (tree.getBody() instanceof final ExpressionTree body) {
 			result.resultType = transpiler.getExpressionType(body);
+		}
 		return result;
 	}
 
@@ -100,21 +102,25 @@ public final class ExpressionTypeLambda extends ExpressionType {
 			final Tree varType = vt.getType();
 			if (varType instanceof final ParameterizedTypeTree ptt) {
 				Tree baseType = ptt.getType();
-				if (baseType instanceof final AnnotatedTypeTree att)
+				if (baseType instanceof final AnnotatedTypeTree att) {
 					baseType = att.getUnderlyingType();
+				}
 				if (baseType instanceof final IdentifierTree ident) {
 					final ExpressionType type = transpiler.getExpressionType(ident);
-					if (type == null)
+					if (type == null) {
 						throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier "
 								+ ident.getName().toString());
-					if (type instanceof final ExpressionClassType classType)
+					}
+					if (type instanceof final ExpressionClassType classType) {
 						return classType.getFullQualifiedName();
+					}
 				}
 			}
 			if (varType instanceof final IdentifierTree it) {
 				final Element e = transpiler.getElement(it);
-				if (e instanceof final TypeElement te)
+				if (e instanceof final TypeElement te) {
 					return te.toString();
+				}
 				throw new TranspilerException("Transpiler Error: Unhandled functional interface : " + it.toString());
 			}
 			throw new TranspilerException("Transpiler Error: Unhandled type for functional interfaces : " + vt.getType());
@@ -122,45 +128,54 @@ public final class ExpressionTypeLambda extends ExpressionType {
 		if (parent instanceof final MethodInvocationTree mit) {
 			// determine the index in the parameter list where the lambda is used as parameter
 			final int index = mit.getArguments().indexOf(tree);
-			if (index < 0)
+			if (index < 0) {
 				throw new TranspilerException("Transpiler Error: Lambda Expression is expected to be in the method invocation argument list.");
+			}
 			final ExecutableElement ee = transpiler.findExecutableElement(mit);
-			if ((ee == null) || (index >= ee.getParameters().size()))
+			if ((ee == null) || (index >= ee.getParameters().size())) {
 				throw new TranspilerException("Transpiler Error: Unexpected internal error.");
+			}
 			final VariableElement ve = ee.getParameters().get(index);
 			final Element type = ((DeclaredType) ve.asType()).asElement();
 			return type.toString();
 		}
 		if (parent instanceof final AssignmentTree at) {
 			final ExpressionType type = transpiler.getExpressionType(at.getVariable());
-			if (type == null)
+			if (type == null) {
 				throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + at.getVariable().toString());
-			if (type instanceof final ExpressionClassType classType)
+			}
+			if (type instanceof final ExpressionClassType classType) {
 				return classType.getFullQualifiedName();
+			}
 		}
 		if (parent instanceof final ReturnTree rt) {
 			Tree cur = rt;
-			while ((!(cur instanceof ClassTree)) && (!(cur instanceof MethodTree)))
+			while ((!(cur instanceof ClassTree)) && (!(cur instanceof MethodTree))) {
 				cur = transpiler.getParent(cur);
+			}
 			if (cur instanceof final MethodTree mt) {
 				final Tree varType = mt.getReturnType();
 				if (varType instanceof final ParameterizedTypeTree ptt) {
 					Tree baseType = ptt.getType();
-					if (baseType instanceof final AnnotatedTypeTree att)
+					if (baseType instanceof final AnnotatedTypeTree att) {
 						baseType = att.getUnderlyingType();
+					}
 					if (baseType instanceof final IdentifierTree ident) {
 						final ExpressionType type = transpiler.getExpressionType(ident);
-						if (type == null)
+						if (type == null) {
 							throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier "
 									+ ident.getName().toString());
-						if (type instanceof final ExpressionClassType classType)
+						}
+						if (type instanceof final ExpressionClassType classType) {
 							return classType.getFullQualifiedName();
+						}
 					}
 				}
 				if (varType instanceof final IdentifierTree it) {
 					final Element e = transpiler.getElement(it);
-					if (e instanceof final TypeElement te)
+					if (e instanceof final TypeElement te) {
 						return te.toString();
+					}
 					throw new TranspilerException("Transpiler Error: Unhandled functional interface : " + it.toString());
 				}
 			}
@@ -168,11 +183,13 @@ public final class ExpressionTypeLambda extends ExpressionType {
 		if (parent instanceof final NewClassTree nct) {
 			// determine the index in the parameter list where the lambda is used as parameter
 			final int index = nct.getArguments().indexOf(tree);
-			if (index < 0)
+			if (index < 0) {
 				throw new TranspilerException("Transpiler Error: Lambda Expression is expected to be in the method invocation argument list.");
+			}
 			final ExecutableElement ee = transpiler.findExecutableElement(nct);
-			if ((ee == null) || (index >= ee.getParameters().size()))
+			if ((ee == null) || (index >= ee.getParameters().size())) {
 				throw new TranspilerException("Transpiler Error: Unexpected internal error.");
+			}
 			final VariableElement ve = ee.getParameters().get(index);
 			final Element type = ((DeclaredType) ve.asType()).asElement();
 			return type.toString();
@@ -226,22 +243,29 @@ public final class ExpressionTypeLambda extends ExpressionType {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final ExpressionTypeLambda other = (ExpressionTypeLambda) obj;
-		if (getKind() != other.getKind())
+		if (getKind() != other.getKind()) {
 			return false;
-		if (!paramTypes.equals(other.paramTypes))
+		}
+		if (!paramTypes.equals(other.paramTypes)) {
 			return false;
+		}
 		if (resultType == null) {
-			if (other.resultType != null)
+			if (other.resultType != null) {
 				return false;
-		} else if (!resultType.equals(other.resultType))
+			}
+		} else if (!resultType.equals(other.resultType)) {
 			return false;
+		}
 		return true;
 	}
 

@@ -31,12 +31,14 @@ public final class Utils {
 		final ArrayList<Boolean> outputsTypeOnly = new ArrayList<>();
 		outputs.addAll(typescriptPlugin.getOutputFiles());
 		outputsTypeOnly.addAll(typescriptPlugin.getOutputFilesTypeOnly());
-		if (outputs.size() != outputsTypeOnly.size())
+		if (outputs.size() != outputsTypeOnly.size()) {
 			throw new TranspilerException("Transpiler Error: output arrays do not have the same size");
+		}
 
 		final Map<String, Boolean> mapTypeOnly = new HashMap<>();
-		for (int i = 0; i < outputs.size(); i++)
+		for (int i = 0; i < outputs.size(); i++) {
 			mapTypeOnly.put(outputs.get(i), outputsTypeOnly.get(i));
+		}
 
 		final StringBuilder sbExports = new StringBuilder();
 		for (final String filename : outputs.stream().sorted().toList()) {
@@ -44,15 +46,18 @@ public final class Utils {
 			final String fullclassname = importName.replace('/', '.');
 			final String classname = importName.replaceFirst(".*/", "");
 			boolean isTypeOnly = mapTypeOnly.get(filename);
-			if (TranspilerTypeScriptPlugin.renamedInterfaces.contains(fullclassname))
+			if (TranspilerTypeScriptPlugin.renamedInterfaces.contains(fullclassname)) {
 				isTypeOnly = true;
+			}
 			sbExports.append("export ");
-			if (isTypeOnly)
+			if (isTypeOnly) {
 				sbExports.append("type ");
-			if ("BaseApi".equals(classname))
+			}
+			if ("BaseApi".equals(classname)) {
 				sbExports.append("{ ").append(classname).append(", type ApiFile } from './").append(importName).append("';").append("\n");
-			else
+			} else {
 				sbExports.append("{ ").append(classname).append(" } from './").append(importName).append("';").append("\n");
+			}
 		}
 		return sbExports.toString();
 	}

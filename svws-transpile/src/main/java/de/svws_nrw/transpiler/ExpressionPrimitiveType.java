@@ -23,8 +23,9 @@ public final class ExpressionPrimitiveType extends ExpressionType implements Pri
 	 */
 	public ExpressionPrimitiveType(final TypeKind typeKind) throws TranspilerException {
 		super(Kind.PRIMITIVE_TYPE);
-		if (!typeKind.isPrimitive())
+		if (!typeKind.isPrimitive()) {
 			throw new TranspilerException(strExceptionNotPrimitive.formatted(typeKind));
+		}
 		this.typeKind = typeKind;
 	}
 
@@ -89,8 +90,9 @@ public final class ExpressionPrimitiveType extends ExpressionType implements Pri
 	public int isAssignable(final Transpiler transpiler, final ExpressionType other) {
 		if (other instanceof final ExpressionClassType o) {
 			final ExpressionPrimitiveType op = getUnboxed(o);
-			if (op == null)
+			if (op == null) {
 				return -1;
+			}
 			return 1 + isAssignable(transpiler, op);
 		}
 		if (other instanceof final ExpressionPrimitiveType o) {
@@ -142,15 +144,19 @@ public final class ExpressionPrimitiveType extends ExpressionType implements Pri
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final ExpressionPrimitiveType other = (ExpressionPrimitiveType) obj;
-		if (getKind() != other.getKind())
+		if (getKind() != other.getKind()) {
 			return false;
+		}
 		return typeKind == other.typeKind;
 	}
 
@@ -187,10 +193,12 @@ public final class ExpressionPrimitiveType extends ExpressionType implements Pri
 	 * @return the primitive type or null
 	 */
 	public static ExpressionPrimitiveType getPrimitiveType(final ExpressionType type) {
-		if (type instanceof ExpressionPrimitiveType)
+		if (type instanceof ExpressionPrimitiveType) {
 			return new ExpressionPrimitiveType(type.toString());
-		if (type instanceof final ExpressionClassType ect)
+		}
+		if (type instanceof final ExpressionClassType ect) {
 			return ExpressionPrimitiveType.getUnboxed(ect);
+		}
 		return null;
 	}
 
@@ -206,20 +214,27 @@ public final class ExpressionPrimitiveType extends ExpressionType implements Pri
 	public static ExpressionPrimitiveType getPromotedType(final ExpressionType type1, final ExpressionType type2) {
 		final ExpressionPrimitiveType et1 = ExpressionPrimitiveType.getPrimitiveType(type1);
 		final ExpressionPrimitiveType et2 = ExpressionPrimitiveType.getPrimitiveType(type2);
-		if ((et1 == null) || (et2 == null))
+		if ((et1 == null) || (et2 == null)) {
 			return null;
-		if ((et1.typeKind == TypeKind.DOUBLE) || (et2.typeKind == TypeKind.DOUBLE))
+		}
+		if ((et1.typeKind == TypeKind.DOUBLE) || (et2.typeKind == TypeKind.DOUBLE)) {
 			return new ExpressionPrimitiveType(TypeKind.DOUBLE);
-		if ((et1.typeKind == TypeKind.FLOAT) || (et2.typeKind == TypeKind.FLOAT))
+		}
+		if ((et1.typeKind == TypeKind.FLOAT) || (et2.typeKind == TypeKind.FLOAT)) {
 			return new ExpressionPrimitiveType(TypeKind.FLOAT);
-		if ((et1.typeKind == TypeKind.LONG) || (et2.typeKind == TypeKind.LONG))
+		}
+		if ((et1.typeKind == TypeKind.LONG) || (et2.typeKind == TypeKind.LONG)) {
 			return new ExpressionPrimitiveType(TypeKind.FLOAT);
-		if ((et1.typeKind == TypeKind.INT) || (et2.typeKind == TypeKind.INT))
+		}
+		if ((et1.typeKind == TypeKind.INT) || (et2.typeKind == TypeKind.INT)) {
 			return new ExpressionPrimitiveType(TypeKind.FLOAT);
-		if ((et1.typeKind == TypeKind.SHORT) || (et2.typeKind == TypeKind.SHORT))
+		}
+		if ((et1.typeKind == TypeKind.SHORT) || (et2.typeKind == TypeKind.SHORT)) {
 			return new ExpressionPrimitiveType(TypeKind.FLOAT);
-		if ((et1.typeKind == TypeKind.BYTE) || (et2.typeKind == TypeKind.BYTE))
+		}
+		if ((et1.typeKind == TypeKind.BYTE) || (et2.typeKind == TypeKind.BYTE)) {
 			return new ExpressionPrimitiveType(TypeKind.FLOAT);
+		}
 		throw new TranspilerException("Transpiler Error: invalid primitive type kind");
 	}
 

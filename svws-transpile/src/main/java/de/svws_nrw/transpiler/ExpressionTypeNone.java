@@ -22,8 +22,9 @@ public final class ExpressionTypeNone extends ExpressionType implements Primitiv
 	 */
 	protected ExpressionTypeNone(final TypeKind typeKind) throws TranspilerException {
 		super(Kind.PRIMITIVE_TYPE);
-		if (!isNone(typeKind))
+		if (!isNone(typeKind)) {
 			throw new TranspilerException("Transpiler Error: TypeKind " + typeKind + " not valid for the expression type none or void.");
+		}
 		this.typeKind = typeKind;
 	}
 
@@ -69,15 +70,19 @@ public final class ExpressionTypeNone extends ExpressionType implements Primitiv
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final ExpressionTypeNone other = (ExpressionTypeNone) obj;
-		if (getKind() != other.getKind())
+		if (getKind() != other.getKind()) {
 			return false;
+		}
 		return typeKind == other.typeKind;
 	}
 

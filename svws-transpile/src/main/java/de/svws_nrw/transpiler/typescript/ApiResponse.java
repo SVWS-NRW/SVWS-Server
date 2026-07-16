@@ -42,29 +42,35 @@ public class ApiResponse {
 
 	private static int determineResponseCode(final Map<String, ExpressionTree> args) {
 		final ExpressionTree value = args.get("responseCode");
-		if (value == null)
+		if (value == null) {
 			throw new TranspilerException("Transpiler Exception: Missing responseCode value for @Response annotation.");
-		if ((value.getKind() == Kind.STRING_LITERAL) && (value instanceof final LiteralTree literal) && (literal.getValue() instanceof final String str))
+		}
+		if ((value.getKind() == Kind.STRING_LITERAL) && (value instanceof final LiteralTree literal) && (literal.getValue() instanceof final String str)) {
 			return Integer.parseInt(str);
+		}
 		throw new TranspilerException("Transpiler Exception: Unhandled responseCode argument for ApiResponse annotation.");
 	}
 
 	private static String determineDescription(final Map<String, ExpressionTree> args) {
 		final ExpressionTree value = args.get("description");
-		if (value == null)
+		if (value == null) {
 			throw new TranspilerException("Transpiler Exception: Missing description value for @Response annotation.");
-		if ((value.getKind() == Kind.STRING_LITERAL) && (value instanceof final LiteralTree literal) && (literal.getValue() instanceof final String str))
+		}
+		if ((value.getKind() == Kind.STRING_LITERAL) && (value instanceof final LiteralTree literal) && (literal.getValue() instanceof final String str)) {
 			return str;
+		}
 		throw new TranspilerException("Transpiler Exception: Unhandled description argument for ApiResponse annotation.");
 	}
 
 	private static AnnotationTree determineContentAnnotation(final Transpiler transpiler, final Map<String, ExpressionTree> args) {
 		final ExpressionTree value = args.get("content");
-		if (value == null)
+		if (value == null) {
 			return null;
+		}
 		if (value instanceof final AnnotationTree att) {
-			if (!transpiler.isAnnotationType("io.swagger.v3.oas.annotations.media.Content", att))
+			if (!transpiler.isAnnotationType("io.swagger.v3.oas.annotations.media.Content", att)) {
 				throw new TranspilerException("Transpiler Exception: Unhandled annotation type used in ApiResponse annotation.");
+			}
 			return att;
 		}
 		throw new TranspilerException("Transpiler Exception: Unhandled description argument for ApiResponse annotation.");

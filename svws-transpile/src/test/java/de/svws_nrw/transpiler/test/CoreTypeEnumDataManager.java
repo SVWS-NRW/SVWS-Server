@@ -32,9 +32,10 @@ public class CoreTypeEnumDataManager<T extends CoreTypeData, U extends Enum<U> &
 	 */
 	public static <T extends CoreTypeData, U extends Enum<U> & CoreType<T, U>> void putManager(
 			final @NotNull Class<U> clazz, final @NotNull CoreTypeEnumDataManager<T, U> manager) {
-		if (_data.containsKey(clazz.getCanonicalName()))
+		if (_data.containsKey(clazz.getCanonicalName())) {
 			throw new RuntimeException("Der Core-Type %s wurde bereits initialisiert. Der erneute Aufruf der Initialisierung ist ein Programmierfehler."
 					.formatted(clazz.getCanonicalName()));
+		}
 		_data.put(clazz.getCanonicalName(), manager);
 	}
 
@@ -53,8 +54,9 @@ public class CoreTypeEnumDataManager<T extends CoreTypeData, U extends Enum<U> &
 			final @NotNull Class<U> clazz) {
 		final CoreTypeEnumDataManager<T, U> manager =
 				(CoreTypeEnumDataManager<T, U>) _data.get(clazz.getCanonicalName());
-		if (manager == null)
+		if (manager == null) {
 			throw new RuntimeException("Der Core-Type " + clazz.getSimpleName() + " wurde noch nicht initialisiert.");
+		}
 		return manager;
 	}
 
@@ -114,9 +116,10 @@ public class CoreTypeEnumDataManager<T extends CoreTypeData, U extends Enum<U> &
 			final @NotNull Map<String, List<T>> data) {
 		_name = clazz.getSimpleName();
 		// Prüfe und setze die Version des Core-Types
-		if (version <= 0)
+		if (version <= 0) {
 			throw new RuntimeException(
 					_name + ": Der Core-Type soll mit einer ungültigen Version (kleiner oder gleich 0) initialisiert werden. Die Daten sind fehlerhaft.");
+		}
 		_version = version;
 		// Erstelle die Map von den Bezeichnern zu den einzelnen Werte des Core-Types
 		this._listWerte = Arrays.asList(values);
@@ -124,17 +127,19 @@ public class CoreTypeEnumDataManager<T extends CoreTypeData, U extends Enum<U> &
 		for (final @NotNull U coreTypeValue : values) {
 			_mapBezeichnerToEnum.put(coreTypeValue.name(), coreTypeValue);
 			final List<T> historie = _mapBezeichnerToHistorie.get(coreTypeValue.name());
-			if (historie == null)
+			if (historie == null) {
 				throw new RuntimeException(_name + ": Der Core-Type-Bezeichner " + coreTypeValue.name()
 						+ "hat keine Daten zugeordnet. Der Core-Type konnte nicht vollständig initialisiert werden.");
+			}
 			_mapEnumToHistorie.put(coreTypeValue, historie);
 		}
 		// Prüfe, ob alle Daten auch als Core-Type-Werte existieren
 		for (final @NotNull String bezeichner : _mapBezeichnerToHistorie.keySet()) {
 			final U coreTypeValue = _mapBezeichnerToEnum.get(bezeichner);
-			if (coreTypeValue == null)
+			if (coreTypeValue == null) {
 				throw new RuntimeException(_name + ": Der Bezeichner " + bezeichner
 						+ " kann keinem Core-Type-Wert zugeordnet werden. Der Core-Type konnte nicht vollständig initialisiert werden.");
+			}
 		}
 		// Prüfe alle Historien-Einträge auf Plausibilität und erzeugen jeweils eine Zuordnung des Core-Type-Wertes bzw. des Historieneintrages zu der ID des Eintrags
 		final Set<Long> setIDs = new HashSet<>();
@@ -145,14 +150,16 @@ public class CoreTypeEnumDataManager<T extends CoreTypeData, U extends Enum<U> &
 			for (final @NotNull T eintrag : historie) {
 				// Prüfe zunächst die Historie auf plausible Einträge ...
 				if ((schuljahr != null) && ((eintrag.gueltigVon == null) || (eintrag.gueltigVon < 2000) || (Integer.compare(eintrag.gueltigVon, schuljahr) <= 0)
-						|| ((eintrag.gueltigBis != null) && (eintrag.gueltigBis > 3000))))
+						|| ((eintrag.gueltigBis != null) && (eintrag.gueltigBis > 3000)))) {
 					throw new RuntimeException(_name + ": Die Historie ist fehlerhaft beim Eintrag für " + coreTypeEntry.name()
 							+ ". Neuere Historieneinträge müssen weiter unten in der Liste stehen.");
+				}
 				schuljahr = (eintrag.gueltigBis == null) ? Integer.MAX_VALUE : eintrag.gueltigBis;
 				// ... dann prüfe, ob die ID doppelt vorkommt ...
-				if (setIDs.contains(eintrag.id))
+				if (setIDs.contains(eintrag.id)) {
 					throw new RuntimeException(_name + ": Die Historie ist fehlerhaft beim Eintrag für " + coreTypeEntry.name() + ". Die ID " + eintrag.id
 							+ " kommt mehrfach vor.");
+				}
 				setIDs.add(eintrag.id);
 				// ... und befülle dann die beiden Maps
 				_mapIDToEintrag.put(eintrag.id, eintrag);
@@ -204,8 +211,9 @@ public class CoreTypeEnumDataManager<T extends CoreTypeData, U extends Enum<U> &
 	 */
 	public @NotNull List<T> getHistorieByBezeichner(final String bezeichner) {
 		final List<T> tmp = _mapBezeichnerToHistorie.get(bezeichner);
-		if (tmp == null)
+		if (tmp == null) {
 			throw new RuntimeException(_name + ": Kein Historien-Eintrag für den Bezeichner " + bezeichner + " gefunden.");
+		}
 		return tmp;
 	}
 
@@ -219,8 +227,9 @@ public class CoreTypeEnumDataManager<T extends CoreTypeData, U extends Enum<U> &
 	 */
 	public @NotNull U getWertByBezeichner(final @NotNull String bezeichner) {
 		final U tmp = _mapBezeichnerToEnum.get(bezeichner);
-		if (tmp == null)
+		if (tmp == null) {
 			throw new RuntimeException(_name + ": Kein Core-Type-Wert für den Bezeichner " + bezeichner + " gefunden.");
+		}
 		return tmp;
 	}
 
@@ -234,8 +243,9 @@ public class CoreTypeEnumDataManager<T extends CoreTypeData, U extends Enum<U> &
 	 */
 	public @NotNull List<U> getWerteByBezeichner(final @NotNull List<String> bezeichner) {
 		final @NotNull List<U> result = new ArrayList<>();
-		for (final @NotNull String b : bezeichner)
+		for (final @NotNull String b : bezeichner) {
 			result.add(getWertByBezeichner(b));
+		}
 		return result;
 	}
 
@@ -249,8 +259,9 @@ public class CoreTypeEnumDataManager<T extends CoreTypeData, U extends Enum<U> &
 	 */
 	public @NotNull Set<U> getWerteByBezeichnerAsSet(final @NotNull List<String> bezeichner) {
 		final @NotNull Set<U> result = new HashSet<>();
-		for (final @NotNull String b : bezeichner)
+		for (final @NotNull String b : bezeichner) {
 			result.add(getWertByBezeichner(b));
+		}
 		return result;
 	}
 
@@ -263,11 +274,13 @@ public class CoreTypeEnumDataManager<T extends CoreTypeData, U extends Enum<U> &
 	 * @return das nicht-leeres Set der Core-Type-Werte
 	 */
 	public @NotNull Set<U> getWerteByBezeichnerAsNonEmptySet(final @NotNull List<String> bezeichner) {
-		if (bezeichner.isEmpty())
+		if (bezeichner.isEmpty()) {
 			throw new RuntimeException(_name + ": Die Liste der Bezeichner " + bezeichner + " ist leer.");
+		}
 		final @NotNull Set<U> result = new HashSet<>();
-		for (final @NotNull String b : bezeichner)
+		for (final @NotNull String b : bezeichner) {
 			result.add(getWertByBezeichner(b));
+		}
 		return result;
 	}
 
@@ -280,11 +293,13 @@ public class CoreTypeEnumDataManager<T extends CoreTypeData, U extends Enum<U> &
 	 * @return die Historie
 	 */
 	public @NotNull List<T> getHistorieByWert(final @NotNull U value) {
-		if (value == null)
+		if (value == null) {
 			throw new RuntimeException("Ein Zugriff auf eine Historie ist mit null nicht möglich.");
+		}
 		final List<T> tmp = _mapEnumToHistorie.get(value);
-		if (tmp == null)
+		if (tmp == null) {
 			throw new RuntimeException(_name + ": Kein Historien-Eintrag für den Bezeichner " + value.name() + " gefunden.");
+		}
 		return tmp;
 	}
 
@@ -298,8 +313,9 @@ public class CoreTypeEnumDataManager<T extends CoreTypeData, U extends Enum<U> &
 	 */
 	public @NotNull T getHistorieByBezeichner(final long id) {
 		final T tmp = _mapIDToEintrag.get(id);
-		if (tmp == null)
+		if (tmp == null) {
 			throw new RuntimeException(_name + ": Kein Historien-Eintrag für die ID " + id + " gefunden.");
+		}
 		return tmp;
 	}
 
@@ -313,8 +329,9 @@ public class CoreTypeEnumDataManager<T extends CoreTypeData, U extends Enum<U> &
 	 */
 	public U getWertByID(final long id) {
 		final U tmp = _mapIDToEnum.get(id);
-		if (tmp == null)
+		if (tmp == null) {
 			throw new RuntimeException(_name + ": Kein Core-Type-Wert für die ID " + id + " gefunden.");
+		}
 		return tmp;
 	}
 
@@ -328,8 +345,9 @@ public class CoreTypeEnumDataManager<T extends CoreTypeData, U extends Enum<U> &
 	 */
 	public U getWertBySchluessel(final @NotNull String schluessel) {
 		final U tmp = _mapSchluesselToEnum.get(schluessel);
-		if (tmp == null)
+		if (tmp == null) {
 			throw new RuntimeException(_name + ": Kein Core-Type-Wert für den Schlüssel \"" + schluessel + "\" gefunden.");
+		}
 		return tmp;
 	}
 
@@ -345,8 +363,9 @@ public class CoreTypeEnumDataManager<T extends CoreTypeData, U extends Enum<U> &
 	 */
 	public U getWertByKuerzel(final @NotNull String kuerzel) {
 		final U tmp = _mapKuerzelToEnum.get(kuerzel);
-		if (tmp == null)
+		if (tmp == null) {
 			throw new RuntimeException(_name + ": Kein Core-Type-Wert für das Kürzel " + kuerzel + " gefunden.");
+		}
 		return tmp;
 	}
 
@@ -393,9 +412,11 @@ public class CoreTypeEnumDataManager<T extends CoreTypeData, U extends Enum<U> &
 		List<U> result = _mapSchuljahrToWerte.get(schuljahr);
 		if (result == null) {
 			result = new ArrayList<>();
-			for (final @NotNull U wert : _listWerte)
-				if (getEintragBySchuljahrUndWert(schuljahr, wert) != null)
+			for (final @NotNull U wert : _listWerte) {
+				if (getEintragBySchuljahrUndWert(schuljahr, wert) != null) {
 					result.add(wert);
+				}
+			}
 			_mapSchuljahrToWerte.put(schuljahr, result);
 		}
 		return new ArrayList<>(result);

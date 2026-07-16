@@ -22,12 +22,15 @@ public final class ExpressionTypeNull extends ExpressionType {
 
 	@Override
 	public int isAssignable(final Transpiler transpiler, final ExpressionType other) {
-		if (other instanceof ExpressionClassType)
+		if (other instanceof ExpressionClassType) {
 			return 1;
-		if (other instanceof ExpressionArrayType)
+		}
+		if (other instanceof ExpressionArrayType) {
 			return 1;
-		if (other instanceof ExpressionTypeVar)
+		}
+		if (other instanceof ExpressionTypeVar) {
 			return 2;
+		}
 		return -1;
 	}
 
@@ -40,12 +43,15 @@ public final class ExpressionTypeNull extends ExpressionType {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final ExpressionTypeNull other = (ExpressionTypeNull) obj;
 		return getKind() == other.getKind();
 	}

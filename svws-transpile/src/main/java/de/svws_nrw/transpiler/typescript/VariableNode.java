@@ -48,8 +48,9 @@ public class VariableNode {
 		this.isFinal = plugin.getTranspiler().hasFinalModifier(variable);
 		final boolean isNotNull = isVarArg || plugin.getTranspiler().hasNotNullAnnotation(variable);
 		this.typeNode = new TypeNode(plugin, variable.getType(), true, isNotNull);
-		if (this.isVarArg)
+		if (this.isVarArg) {
 			this.typeNode.setIsVarArg();
+		}
 	}
 
 
@@ -70,8 +71,9 @@ public class VariableNode {
 		this.isFinal = varElem.getModifiers().contains(Modifier.FINAL);
 		final boolean isNotNull = isVarArg || Transpiler.hasNotNullAnnotation(varElem);
 		this.typeNode = new TypeNode(plugin, varElem.asType(), true, isNotNull, resolved);
-		if (this.isVarArg)
+		if (this.isVarArg) {
 			this.typeNode.setIsVarArg();
+		}
 	}
 
 
@@ -158,8 +160,9 @@ public class VariableNode {
 	 * @return the transpiled code
 	 */
 	public String transpile() {
-		if ((variable != null) && (Transpiler.isDeclaredUsingVar(variable)))
+		if ((variable != null) && (Transpiler.isDeclaredUsingVar(variable))) {
 			return "" + this.getName();
+		}
 		return "%s%s: %s".formatted(this.isVarArg ? "..." : "", "" + this.getName(), this.transpileType());
 	}
 

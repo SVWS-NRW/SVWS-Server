@@ -116,8 +116,9 @@ public final class ElementUtils {
 	 */
 	public static TypeMirror getArrayComponentType(final VariableElement ve) {
 		TypeMirror type = getArrayType(ve);
-		while (type instanceof final ArrayType at)
+		while (type instanceof final ArrayType at) {
 			type = at.getComponentType();
+		}
 		return type;
 	}
 
@@ -169,8 +170,9 @@ public final class ElementUtils {
 	 * @return der einfache Typ als String
 	 */
 	public static String getSimpleTypeName(final VariableElement ve) {
-		if (!(ve.asType() instanceof DeclaredType))
+		if (!(ve.asType() instanceof DeclaredType)) {
 			return "" + ve.asType().toString();
+		}
 		final var type = getTypeElement(ve);
 		return (type == null) ? "" : ("" + type.getSimpleName());
 	}
@@ -197,8 +199,9 @@ public final class ElementUtils {
 	 * @return der qualifizierte Typ als String
 	 */
 	public static String getQualifiedTypeName(final VariableElement ve) {
-		if (!(ve.asType() instanceof DeclaredType))
+		if (!(ve.asType() instanceof DeclaredType)) {
 			return "" + ve.asType().toString();
+		}
 		final var type = getTypeElement(ve);
 		return (type == null) ? "" : ("" + type.getQualifiedName());
 	}
@@ -328,13 +331,16 @@ public final class ElementUtils {
 		var tmp = te;
 		while (tmp != null) {
 			final String className = "" + tmp.getQualifiedName();
-			if ("java.lang.Object".equals(className))
+			if ("java.lang.Object".equals(className)) {
 				return false;
+			}
 			// Prüfe, ob dieser Typ das Collection-Interface implementiert
-			for (final var type : tmp.getInterfaces())
+			for (final var type : tmp.getInterfaces()) {
 				if ((type instanceof final DeclaredType dt) && (dt.asElement() instanceof final TypeElement typeInterface)
-						&& ("java.util.Collection".equals("" + typeInterface.getQualifiedName())))
+						&& ("java.util.Collection".equals("" + typeInterface.getQualifiedName()))) {
 					return true;
+				}
+			}
 			tmp = ((te.getSuperclass() instanceof final DeclaredType dt) && (dt.asElement() instanceof final TypeElement superClass))
 					? superClass : null;
 		}
@@ -351,8 +357,9 @@ public final class ElementUtils {
 	 * @return das Type-Parameter-Element oder null
 	 */
 	public static TypeParameterElement getTypeParameter(final TypeElement te, final int index) {
-		if (index >= te.getTypeParameters().size())
+		if (index >= te.getTypeParameters().size()) {
 			return null;
+		}
 		return te.getTypeParameters().get(index);
 	}
 
@@ -366,8 +373,9 @@ public final class ElementUtils {
 	 * @return das Type-Parameter-Element oder null
 	 */
 	public static TypeElement getTypeOfTypeParameter(final TypeElement te, final int index) {
-		if (index >= te.getTypeParameters().size())
+		if (index >= te.getTypeParameters().size()) {
 			return null;
+		}
 		final var e = te.getTypeParameters().get(index).getGenericElement();
 		return (e instanceof final TypeElement type) ? type : null;
 	}
@@ -433,10 +441,12 @@ public final class ElementUtils {
 	public static DeclaredType getDirectAncestorType(final TypeElement cur, final TypeElement ancestor) {
 		final List<TypeMirror> ancTypes = new ArrayList<>(cur.getInterfaces());
 		ancTypes.add(cur.getSuperclass());
-		for (final TypeMirror ifType : ancTypes)
+		for (final TypeMirror ifType : ancTypes) {
 			if ((ifType instanceof final DeclaredType dt) && (dt.asElement() instanceof final TypeElement anc)
-					&& (anc.getQualifiedName().equals(ancestor.getQualifiedName())))
+					&& (anc.getQualifiedName().equals(ancestor.getQualifiedName()))) {
 				return dt;
+			}
+		}
 		return null;
 	}
 
@@ -452,35 +462,41 @@ public final class ElementUtils {
 	 * @return eine Map von dem Typ-Parameter zu dem TypeMirror-Objekt (z.B. TypeVariable oder DeclaredType)
 	 */
 	public static Map<String, TypeMirror> resolveTypeVariables(final List<TypeElement> path, final TypeElement elem) {
-		if ((elem == null) && ((path == null) || (path.isEmpty())))
+		if ((elem == null) && ((path == null) || (path.isEmpty()))) {
 			throw new TranspilerException("Transpiler Error: Fehlerhafter Aufruf der Methode.");
+		}
 		// Ist der Pfad leer so erfolgt keine weitere Auflösung und die Typ-Variablen werden selbst als Ergebnis zurückgegeben
 		if (path.isEmpty()) {
 			final Map<String, TypeMirror> resolved = new LinkedHashMap<>();
-			if (elem != null)
-				for (final TypeParameterElement typeParam : elem.getTypeParameters())
+			if (elem != null) {
+				for (final TypeParameterElement typeParam : elem.getTypeParameters()) {
 					resolved.put(typeParam.getSimpleName().toString(), typeParam.asType());
+				}
+			}
 			return resolved;
 		}
 		// Führe zunächst den rekursiven Aufruf entlang des Pfades aus und benutze das Ergebnis für das Auflösen der typ-Variablen von elem
 		final List<TypeElement> tmpList = new ArrayList<>(path);
 		tmpList.removeLast();
 		final Map<String, TypeMirror> lastResolved = resolveTypeVariables(tmpList, path.getLast());
-		if (elem == null)
+		if (elem == null) {
 			return lastResolved;
+		}
 		// Benutze die Auflösung der Typ-Variablen des vorigen Element (rekursiver Aufruf) für das Auflösen der TypVariablen des aktuellen Elements
 		final Map<String, TypeMirror> resolved = new LinkedHashMap<>();
 		final DeclaredType ancestor = ElementUtils.getDirectAncestorType(path.getLast(), elem);
-		if ((ancestor == null) || (ancestor.getTypeArguments().size() != elem.getTypeParameters().size()))
+		if ((ancestor == null) || (ancestor.getTypeArguments().size() != elem.getTypeParameters().size())) {
 			throw new TranspilerException("Transpiler Error: Invalid size of type parameter list.");
+		}
 		for (int i = 0; i < elem.getTypeParameters().size(); i++) {
 			final String typeVarName = elem.getTypeParameters().get(i).getSimpleName().toString();
-			if (ancestor.getTypeArguments().get(i) instanceof final DeclaredType dt)
+			if (ancestor.getTypeArguments().get(i) instanceof final DeclaredType dt) {
 				resolved.put(typeVarName, dt);
-			else if (ancestor.getTypeArguments().get(i) instanceof final TypeVariable tv)
+			} else if (ancestor.getTypeArguments().get(i) instanceof final TypeVariable tv) {
 				resolved.put(typeVarName, lastResolved.get(tv.asElement().getSimpleName().toString()));
-			else
+			} else {
 				throw new TranspilerException("Transpiler Error: Unhandled Type argument of type kind " + ancestor.getTypeArguments().get(i).getKind());
+			}
 		}
 		return resolved;
 	}

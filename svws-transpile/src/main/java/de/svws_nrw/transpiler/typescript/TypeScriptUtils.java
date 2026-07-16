@@ -44,16 +44,18 @@ public final class TypeScriptUtils {
 				sb.append("<");
 				boolean first = true;
 				for (final TypeMirror ta : targs) {
-					if (first)
+					if (first) {
 						first = false;
-					else
+					} else {
 						sb.append(", ");
+					}
 					sb.append(transpileTypeParamTypeMirror(ta));
 				}
 				sb.append(">");
 			}
-			if (!hasNotNull)
+			if (!hasNotNull) {
 				sb.append(" | null");
+			}
 			return sb.toString();
 		}
 		throw new TranspilerException("Transpiler Error: Type Kind " + type.getKind() + " not yet supported");

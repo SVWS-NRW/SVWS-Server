@@ -32,16 +32,20 @@ public final class ExpressionTypeVar extends ExpressionType {
 
 	@Override
 	public int isAssignable(final Transpiler transpiler, final ExpressionType other) {
-		if ("?".equals(this.name))
+		if ("?".equals(this.name)) {
 			return 1;
+		}
 		if (other instanceof final ExpressionTypeVar otherETV) {
-			if ("?".equals(otherETV.name) && (otherETV.extendsBound != null))
+			if ("?".equals(otherETV.name) && (otherETV.extendsBound != null)) {
 				return isAssignable(transpiler, otherETV.extendsBound);
-			if (this.name.equals("?"))
+			}
+			if (this.name.equals("?")) {
 				return 1;
+			}
 			// TODO check bounds
-			if (this.name.equals(otherETV.name))
+			if (this.name.equals(otherETV.name)) {
 				return 1;
+			}
 		}
 		if (other instanceof ExpressionTypeNull) {
 			// TODO check not null annotations
@@ -111,14 +115,17 @@ public final class ExpressionTypeVar extends ExpressionType {
 	 * @throws TranspilerException   an exception if analyzing the type arguments fails
 	 */
 	public static ExpressionTypeVar getExpressionTypeVariable(final Transpiler transpiler, final TypeMirror type) throws TranspilerException {
-		if (type instanceof final TypeVariable tv)
+		if (type instanceof final TypeVariable tv) {
 			return new ExpressionTypeVar(tv);
+		}
 		if (type instanceof final WildcardType wt) {
 			final ExpressionTypeVar result = new ExpressionTypeVar(null);
-			if (wt.getSuperBound() != null)
+			if (wt.getSuperBound() != null) {
 				result.superBound = ExpressionType.getExpressionType(transpiler, wt.getSuperBound());
-			if (wt.getExtendsBound() != null)
+			}
+			if (wt.getExtendsBound() != null) {
 				result.extendsBound = ExpressionType.getExpressionType(transpiler, wt.getExtendsBound());
+			}
 			return result;
 		}
 		throw new TranspilerException("Transpiler Error: Type Variable of kind " + type.getKind() + " not supported.");
@@ -187,30 +194,40 @@ public final class ExpressionTypeVar extends ExpressionType {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final ExpressionTypeVar other = (ExpressionTypeVar) obj;
-		if (getKind() != other.getKind())
+		if (getKind() != other.getKind()) {
 			return false;
+		}
 		if (extendsBound == null) {
-			if (other.extendsBound != null)
+			if (other.extendsBound != null) {
 				return false;
-		} else if (!extendsBound.equals(other.extendsBound))
+			}
+		} else if (!extendsBound.equals(other.extendsBound)) {
 			return false;
+		}
 		if (name == null) {
-			if (other.name != null)
+			if (other.name != null) {
 				return false;
-		} else if (!name.equals(other.name))
+			}
+		} else if (!name.equals(other.name)) {
 			return false;
+		}
 		if (superBound == null) {
-			if (other.superBound != null)
+			if (other.superBound != null) {
 				return false;
-		} else if (!superBound.equals(other.superBound))
+			}
+		} else if (!superBound.equals(other.superBound)) {
 			return false;
+		}
 		return true;
 	}
 

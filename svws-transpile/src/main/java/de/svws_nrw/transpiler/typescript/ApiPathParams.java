@@ -69,10 +69,12 @@ public class ApiPathParams {
 	private static String determineValue(final AnnotationTree annotation) {
 		final Map<String, ExpressionTree> args = Transpiler.getArguments(annotation);
 		final ExpressionTree value = args.get("value");
-		if (value == null)
+		if (value == null) {
 			throw new TranspilerException("Transpiler Exception: Missing value value for @PathParam annotation.");
-		if ((value.getKind() == Kind.STRING_LITERAL) && (value instanceof final LiteralTree literal) && (literal.getValue() instanceof final String str))
+		}
+		if ((value.getKind() == Kind.STRING_LITERAL) && (value instanceof final LiteralTree literal) && (literal.getValue() instanceof final String str)) {
 			return str;
+		}
 		throw new TranspilerException("Transpiler Exception: Unhandled value argument for PathParam annotation.");
 	}
 

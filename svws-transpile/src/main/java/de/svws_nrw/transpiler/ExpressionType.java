@@ -94,8 +94,9 @@ public abstract class ExpressionType implements Tree {
 	 * @return true if it a string and false otherwise.
 	 */
 	public boolean isString() {
-		if (this instanceof final ExpressionClassType ect)
+		if (this instanceof final ExpressionClassType ect) {
 			return "java.lang.String".equals(ect.getFullQualifiedName());
+		}
 		return false;
 	}
 
@@ -139,8 +140,9 @@ public abstract class ExpressionType implements Tree {
 		if (type instanceof final ArrayType at) {
 			TypeMirror componentType = at.getComponentType();
 			final int dim = ExpressionArrayType.getDimension(at.toString());
-			while (componentType instanceof ArrayType)
+			while (componentType instanceof ArrayType) {
 				componentType = ((ArrayType) (componentType)).getComponentType();
+			}
 			if (componentType.getKind().isPrimitive()) {
 				return new ExpressionArrayType(new ExpressionPrimitiveType(componentType.getKind()), dim);
 			}
@@ -149,12 +151,15 @@ public abstract class ExpressionType implements Tree {
 			}
 			return new ExpressionArrayType(ExpressionClassType.getExpressionClassType(transpiler, componentType), dim);
 		}
-		if (type.getKind().isPrimitive())
+		if (type.getKind().isPrimitive()) {
 			return new ExpressionPrimitiveType(type.getKind());
-		if (type.getKind() == TypeKind.TYPEVAR)
+		}
+		if (type.getKind() == TypeKind.TYPEVAR) {
 			return ExpressionTypeVar.getExpressionTypeVariable(transpiler, type);
-		if (type.getKind() == TypeKind.VOID)
+		}
+		if (type.getKind() == TypeKind.VOID) {
 			return new ExpressionTypeNone(type.getKind());
+		}
 		return ExpressionClassType.getExpressionClassType(transpiler, type);
 	}
 
@@ -171,8 +176,9 @@ public abstract class ExpressionType implements Tree {
 	 * @throws TranspilerException   an exception if the expression type cannot be determined
 	 */
 	public static ExpressionType getExpressionType(final Transpiler transpiler, final Tree type) throws TranspilerException {
-		if (type instanceof final ExpressionType et)
+		if (type instanceof final ExpressionType et) {
 			return et;
+		}
 		if (type instanceof final SwitchExpressionTree set) {
 			final ExpressionType et = getExpressionType(transpiler, set.getExpression());
 			return et;
@@ -190,16 +196,20 @@ public abstract class ExpressionType implements Tree {
 				default -> throw new IllegalArgumentException("Transpiler Error: Unexpected literal type kind: " + literal.getKind());
 			};
 		}
-		if (type instanceof final ClassTree ct)
+		if (type instanceof final ClassTree ct) {
 			return ExpressionClassType.getExpressionClassType(transpiler, (TypeElement) transpiler.getElement(ct));
-		if (type instanceof final MemberSelectTree mst) // occurs when using lambda expressions and contains class type information
+		}
+		if (type instanceof final MemberSelectTree mst) { // occurs when using lambda expressions and contains class type information
 			return ExpressionClassType.getExpressionClassType(transpiler, mst);
-		if (type instanceof final ParameterizedTypeTree parameterizedType)
+		}
+		if (type instanceof final ParameterizedTypeTree parameterizedType) {
 			return ExpressionClassType.getExpressionClassType(transpiler, parameterizedType);
+		}
 		if (type instanceof final PrimitiveTypeTree primitiveType) {
 			final TypeKind kind = primitiveType.getPrimitiveTypeKind();
-			if (ExpressionTypeNone.isNone(kind))
+			if (ExpressionTypeNone.isNone(kind)) {
 				return new ExpressionTypeNone(kind);
+			}
 			return new ExpressionPrimitiveType(kind);
 		}
 		if (type instanceof final IdentifierTree identifier) {
@@ -230,13 +240,15 @@ public abstract class ExpressionType implements Tree {
 			throw new TranspilerException("Transpiler Error: Unexpected variable expression type " + type.toString() + " for element kind " + e.getKind()
 					+ ".");
 		}
-		if (type instanceof final ArrayTypeTree arrayType)
+		if (type instanceof final ArrayTypeTree arrayType) {
 			return new ExpressionArrayType(getExpressionType(transpiler, arrayType.getType()), 1);
+		}
 		if (type instanceof final NewArrayTree newArray) {
 			Tree baseType = newArray.getType();
 			if (baseType != null) {
-				while (baseType instanceof final ArrayTypeTree at)
+				while (baseType instanceof final ArrayTypeTree at) {
 					baseType = at.getType();
+				}
 				long dim = newArray.getDimensions().size();
 				if (dim == 0) {
 					// TODO analyze newArray.getInitializers() with multiple dimensions
@@ -245,40 +257,49 @@ public abstract class ExpressionType implements Tree {
 				return new ExpressionArrayType(ExpressionType.getExpressionType(transpiler, baseType), dim);
 			}
 			final List<? extends ExpressionTree> tmp = newArray.getInitializers();
-			if (tmp.isEmpty())
+			if (tmp.isEmpty()) {
 				return new ExpressionTypeNone(TypeKind.NONE);
+			}
 			// TODO improve array initializer analysis - check all list elements and determine a common type
 			return new ExpressionArrayType(transpiler.getExpressionType(tmp.get(0)), 1);
 		}
-		if (type instanceof final WildcardTree wt)
+		if (type instanceof final WildcardTree wt) {
 			return ExpressionTypeVar.getExpressionTypeVariable(transpiler, wt);
-		if (type instanceof final AnnotatedTypeTree att)
+		}
+		if (type instanceof final AnnotatedTypeTree att) {
 			return ExpressionType.getExpressionType(transpiler, att.getUnderlyingType());
+		}
 		if (type instanceof final BinaryTree bt) {
 			final ExpressionType typeLeft = transpiler.getExpressionType(bt.getLeftOperand());
 			final ExpressionType typeRight = transpiler.getExpressionType(bt.getRightOperand());
 			switch (bt.getKind()) {
 				case PLUS -> {
-					if (typeLeft.isString())
+					if (typeLeft.isString()) {
 						return typeLeft;
-					if (typeRight.isString())
+					}
+					if (typeRight.isString()) {
 						return typeRight;
+					}
 					final ExpressionPrimitiveType resultType = ExpressionPrimitiveType.getPromotedType(typeLeft, typeRight);
-					if (resultType == null)
+					if (resultType == null) {
 						throw new TranspilerException("Transpiler Error: Cannot determine the unboxed numeric promotion type");
+					}
 					return resultType;
 				}
 				case MINUS, MULTIPLY, DIVIDE, REMAINDER -> {
 					final ExpressionPrimitiveType resultType = ExpressionPrimitiveType.getPromotedType(typeLeft, typeRight);
-					if (resultType == null)
+					if (resultType == null) {
 						throw new TranspilerException("Transpiler Error: Cannot determine the unboxed numeric promotion type");
+					}
 					return resultType;
 				}
 				case LEFT_SHIFT, RIGHT_SHIFT, UNSIGNED_RIGHT_SHIFT -> {
-					if (typeLeft instanceof final ExpressionClassType ect)
+					if (typeLeft instanceof final ExpressionClassType ect) {
 						return ExpressionPrimitiveType.getUnboxed(ect);
-					if (typeLeft instanceof final ExpressionPrimitiveType ept)
+					}
+					if (typeLeft instanceof final ExpressionPrimitiveType ept) {
 						return ept;
+					}
 					throw new TranspilerException("Transpiler Error: Unhandled type for left operand of shift operator");
 				}
 				case LESS_THAN, GREATER_THAN, LESS_THAN_EQUAL, GREATER_THAN_EQUAL, EQUAL_TO, NOT_EQUAL_TO -> {
@@ -288,8 +309,9 @@ public abstract class ExpressionType implements Tree {
 					// check whether both operands are numeric types, then return the binary numeric promotion type
 					if (typeLeft.isNumberType() && typeRight.isNumberType()) {
 						final ExpressionPrimitiveType resultType = ExpressionPrimitiveType.getPromotedType(typeLeft, typeRight);
-						if (resultType == null)
+						if (resultType == null) {
 							throw new TranspilerException("Transpiler Error: Cannot determine the unboxed numeric promotion type");
+						}
 						return resultType;
 					}
 					return ExpressionPrimitiveType.get("boolean");
@@ -303,11 +325,13 @@ public abstract class ExpressionType implements Tree {
 		}
 		if (type instanceof final ExpressionTree et) {
 			final ExpressionType resultType = transpiler.getExpressionType(et);
-			if (resultType != null)
+			if (resultType != null) {
 				return resultType;
+			}
 		}
-		if (type instanceof final MemberReferenceTree mrt)
+		if (type instanceof final MemberReferenceTree mrt) {
 			return getExpressionType(transpiler, transpiler.getTypeMirror(mrt));
+		}
 		throw new TranspilerException("Transpiler Error: Unexpected expression type " + type.toString() + " of kind " + type.getKind() + ".");
 	}
 

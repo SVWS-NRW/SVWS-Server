@@ -47,12 +47,14 @@ public final class ExpressionArrayType extends ExpressionType implements ArrayTy
 	@Override
 	public int isAssignable(final Transpiler transpiler, final ExpressionType other) {
 		if (other instanceof final ExpressionArrayType otherArray) {
-			if (this.dim != otherArray.dim)
+			if (this.dim != otherArray.dim) {
 				return -1;
+			}
 			return this.type.isAssignable(transpiler, otherArray.type);
 		}
-		if (other instanceof ExpressionTypeNull)
+		if (other instanceof ExpressionTypeNull) {
 			return 1;
+		}
 		return -1;
 	}
 
@@ -80,8 +82,9 @@ public final class ExpressionArrayType extends ExpressionType implements ArrayTy
 	public ExpressionType getAccessed() {
 		long tmpDim = this.dim;
 		tmpDim--;
-		if (tmpDim == 0)
+		if (tmpDim == 0) {
 			return this.type;
+		}
 		return new ExpressionArrayType(this.type, tmpDim);
 	}
 
@@ -104,8 +107,9 @@ public final class ExpressionArrayType extends ExpressionType implements ArrayTy
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder(type.toString());
-		for (int i = 0; i < dim; i++)
+		for (int i = 0; i < dim; i++) {
 			sb.append("[]");
+		}
 		return sb.toString();
 	}
 
@@ -124,22 +128,29 @@ public final class ExpressionArrayType extends ExpressionType implements ArrayTy
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final ExpressionArrayType other = (ExpressionArrayType) obj;
-		if (getKind() != other.getKind())
+		if (getKind() != other.getKind()) {
 			return false;
-		if (dim != other.dim)
+		}
+		if (dim != other.dim) {
 			return false;
+		}
 		if (type == null) {
-			if (other.type != null)
+			if (other.type != null) {
 				return false;
-		} else if (!type.equals(other.type))
+			}
+		} else if (!type.equals(other.type)) {
 			return false;
+		}
 		return true;
 	}
 

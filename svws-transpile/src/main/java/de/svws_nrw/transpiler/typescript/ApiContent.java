@@ -67,10 +67,12 @@ public class ApiContent {
 		if (value == null) {
 			throw new TranspilerException("Transpiler Exception: Missing mediaType value for @Content annotation.");
 		}
-		if ((value.getKind() == Kind.STRING_LITERAL) && (value instanceof final LiteralTree literal) && (literal.getValue() instanceof final String str))
+		if ((value.getKind() == Kind.STRING_LITERAL) && (value instanceof final LiteralTree literal) && (literal.getValue() instanceof final String str)) {
 			return ApiMimeType.get(str);
-		if (value.getKind() == Kind.MEMBER_SELECT)
+		}
+		if (value.getKind() == Kind.MEMBER_SELECT) {
 			return ApiMimeType.get(value.toString());
+		}
 		throw new TranspilerException("Transpiler Exception: Unhandled mediaType argument for Content annotation.");
 	}
 
@@ -78,8 +80,9 @@ public class ApiContent {
 		ExpressionTree value = args.get("array");
 		if (value != null) {
 			if (value instanceof final AnnotationTree att) {
-				if (!transpiler.isAnnotationType("io.swagger.v3.oas.annotations.media.ArraySchema", att))
+				if (!transpiler.isAnnotationType("io.swagger.v3.oas.annotations.media.ArraySchema", att)) {
 					throw new TranspilerException("Transpiler Exception: Unhandled annotation type used in Content annotation.");
+				}
 				final Map<String, ExpressionTree> arrayArgs = Transpiler.getArguments(att);
 				importsRequired.put("List", "java.util");
 				importsRequired.put("ArrayList", "java.util");
@@ -92,15 +95,17 @@ public class ApiContent {
 		value = args.get("schema");
 		if (value != null) {
 			if (value instanceof final AnnotationTree att) {
-				if (!transpiler.isAnnotationType("io.swagger.v3.oas.annotations.media.Schema", att))
+				if (!transpiler.isAnnotationType("io.swagger.v3.oas.annotations.media.Schema", att)) {
 					throw new TranspilerException("Transpiler Exception: Unhandled annotation type used in Content annotation.");
+				}
 				final Map<String, ExpressionTree> schemaArgs = Transpiler.getArguments(att);
 				ExpressionTree expr = schemaArgs.get("implementation");
-				ExpressionTree exprNullable = schemaArgs.get("nullable");
+				final ExpressionTree exprNullable = schemaArgs.get("nullable");
 				this.isNotNull = (exprNullable == null) || ("false".equals(exprNullable.toString()));
 				if (expr instanceof final MemberSelectTree mst) {
-					if (!"class".equals(mst.getIdentifier().toString()))
+					if (!"class".equals(mst.getIdentifier().toString())) {
 						throw new TranspilerException("Transpiler Exception: Unhandled member select for implementation argument of Schema annotation.");
+					}
 					final String implType = mst.getExpression().toString();
 					final TranspilerUnit tu = transpiler.getTranspilerUnit(mst);
 					importsRequired.put(implType, tu.imports.get(implType));
@@ -108,8 +113,9 @@ public class ApiContent {
 				}
 				expr = schemaArgs.get("format");
 				if (expr instanceof final LiteralTree lt) {
-					if ((lt.getKind() == Kind.STRING_LITERAL) && "binary".equals(lt.getValue()))
+					if ((lt.getKind() == Kind.STRING_LITERAL) && "binary".equals(lt.getValue())) {
 						return "ApiFile";
+					}
 				}
 				throw new TranspilerException("Transpiler Exception: Unhandled implementation argument for Schema annotation.");
 			}

@@ -25,8 +25,9 @@ public abstract class TranspilerLanguagePlugin {
 	 * @param transpiler   the transpiler using this plugin instance
 	 */
 	protected TranspilerLanguagePlugin(final Transpiler transpiler) {
-		if (transpiler == null)
+		if (transpiler == null) {
 			throw new TranspilerException("Transpiler Error: A transpiler using the transpiler language plugin is required.");
+		}
 		this.transpiler = transpiler;
 		this.transpiler.addLanguagePlugin(this);
 	}

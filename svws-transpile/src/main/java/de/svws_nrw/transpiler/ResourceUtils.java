@@ -48,8 +48,9 @@ public class ResourceUtils {
 	private static List<TranspilerResource> getFilesInPath(final FileSystem fs, final String path, final String packagePath, final String fileextension) {
 		final List<TranspilerResource> classes = new ArrayList<>();
 		final Path fullPath = fs.getPath(path + (path.endsWith("/") ? "" : "/") + packagePath);
-		if (!Files.isDirectory(fullPath))
+		if (!Files.isDirectory(fullPath)) {
 			return classes;
+		}
 		try {
 			try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(fullPath)) {
 				dirStream.forEach(p -> {
@@ -130,15 +131,17 @@ public class ResourceUtils {
 						final String[] array = uri.toString().split("!");
 						path = fs.getPath(array[1]);
 						final int j = "".equals(packagePath) ? 0 : Paths.get(packagePath).getNameCount();
-						for (int i = 0; i < j; i++)
+						for (int i = 0; i < j; i++) {
 							path = path.getParent();
+						}
 						result.addAll(getFilesInPath(fs, path.toString(), packagePath, fileextension));
 					}
 				} else {
 					path = Paths.get(uri);
 					final int j = "".equals(packagePath) ? 0 : Paths.get(packagePath).getNameCount();
-					for (int i = 0; i < j; i++)
+					for (int i = 0; i < j; i++) {
 						path = path.getParent();
+					}
 					final FileSystem fs = FileSystems.getDefault();
 					result.addAll(getFilesInPath(fs, path.toString(), packagePath, fileextension));
 				}

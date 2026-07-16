@@ -81,8 +81,9 @@ public final class MethodNode {
 	 * @param indent   the indent to be used for formatting the method comment
 	 */
 	public MethodNode(final TranspilerTypeScriptPlugin plugin, final ClassTree clazz, final MethodTree method, final String indent) {
-		if (method == null)
+		if (method == null) {
 			throw new TranspilerException("Transpiler Error: MethodTree should not be null");
+		}
 		MethodNode.methodNodes.put(method, this);
 		this.plugin = plugin;
 		this._class = clazz;
@@ -205,18 +206,22 @@ public final class MethodNode {
 	 *         a super constructor call and null otherwise
 	 */
 	private StatementTree getConstructorSuperCall() {
-		if (!isConstructor())
+		if (!isConstructor()) {
 			return null;
+		}
 		final BlockTree block = this.method.getBody();
-		if (block == null)
+		if (block == null) {
 			return null;
+		}
 		final List<? extends StatementTree> statements = block.getStatements();
-		if ((statements == null) || (statements.isEmpty()))
+		if ((statements == null) || (statements.isEmpty())) {
 			return null;
+		}
 		final StatementTree firstStatement = statements.get(0);
 		final String stmt = firstStatement.toString();
-		if ((stmt == null) || ("".equals(stmt)))
+		if ((stmt == null) || ("".equals(stmt))) {
 			return null;  // this should be unreachable code
+		}
 		return stmt.startsWith("super") ? firstStatement : null;
 	}
 
@@ -259,8 +264,9 @@ public final class MethodNode {
 		}
 
 		// the static modifier
-		if (isStatic)
+		if (isStatic) {
 			sb.append("static ");
+		}
 
 		// the methods name
 		sb.append(name);
@@ -273,13 +279,15 @@ public final class MethodNode {
 		final boolean isEnumConstructor = isEnum && isConstructor();
 		if (isEnumConstructor) {
 			sb.append("name : string, ordinal : number");
-			if (!parameters.isEmpty())
+			if (!parameters.isEmpty()) {
 				sb.append(", ");
+			}
 		}
 		for (int i = 0; i < parameters.size(); i++) {
 			sb.append(parameters.get(i).transpile());
-			if (i < (parameters.size() - 1))
+			if (i < (parameters.size() - 1)) {
 				sb.append(", ");
+			}
 		}
 		sb.append(")");
 
@@ -311,8 +319,9 @@ public final class MethodNode {
 	 * @return the name of the parameter specified by the index i.
 	 */
 	public VariableNode getParameter(final int i) {
-		if (i >= parameters.size())
+		if (i >= parameters.size()) {
 			return null;
+		}
 		return parameters.get(i);
 	}
 
@@ -325,8 +334,9 @@ public final class MethodNode {
 	 */
 	public static void setCommonAccessModifier(final List<MethodNode> methods) {
 		final String commonAccessModifier = getCommonAccessModifier(methods);
-		for (final MethodNode method : methods)
+		for (final MethodNode method : methods) {
 			method.accessModifier = commonAccessModifier;
+		}
 	}
 
 	/**
@@ -341,10 +351,11 @@ public final class MethodNode {
 		String result = methods.get(0).getAccessModifier();
 		for (int i = 1; i < methods.size(); i++) {
 			final String current = methods.get(i).getAccessModifier();
-			if ("public".equals(current) || "".equals(current))
+			if ("public".equals(current) || "".equals(current)) {
 				result = "public";
-			else if ("protected".equals(current) && "private".equals(result))
+			} else if ("protected".equals(current) && "private".equals(result)) {
 				result = "protected";
+			}
 		}
 		return result;
 	}
@@ -361,8 +372,9 @@ public final class MethodNode {
 	private static boolean areStatic(final List<MethodNode> methods) {
 		final boolean result = methods.get(0).isStatic;
 		for (int i = 1; i < methods.size(); i++) {
-			if (methods.get(0).isStatic != result)
+			if (methods.get(0).isStatic != result) {
 				throw new TranspilerException("Methods with the same name must either all be static or none of them.");
+			}
 		}
 		return result;
 	}
@@ -379,8 +391,9 @@ public final class MethodNode {
 	 */
 	private static boolean isOptionalParameter(final List<MethodNode> methods, final int i) {
 		for (final MethodNode m : methods) {
-			if (i >= m.getParameterCount())
+			if (i >= m.getParameterCount()) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -458,11 +471,13 @@ public final class MethodNode {
 	 * @return the type script code to check the type of a methods parameter at index i
 	 */
 	private String getTypeCheck(final int i) {
-		if (i >= parameters.size())
+		if (i >= parameters.size()) {
 			return "(__param" + i + " === undefined)";
+		}
 		final VariableNode vNode = getParameter(i);
-		if (vNode == null)
+		if (vNode == null) {
 			throw new TranspilerException("Null value not expected here");
+		}
 		return "((__param" + i + " !== undefined) && " + vNode.getTypeCheck("__param" + i) + ")";
 	}
 
@@ -491,34 +506,39 @@ public final class MethodNode {
 			sb.append(" ");
 		}
 
-		if (areStatic(methods))
+		if (areStatic(methods)) {
 			sb.append("static ");
+		}
 
 		// the methods name
 		sb.append(methods.get(0).getName());
 
 		// the type parameter list
 		final ArrayList<TypeParameterTree> typeParams = new ArrayList<>();
-		for (final MethodNode current : methods)
+		for (final MethodNode current : methods) {
 			typeParams.addAll(current.method.getTypeParameters());
+		}
 		sb.append(methods.get(0).plugin.convertTypeParameters(typeParams, true));
 
 		// the parameter List
 		sb.append("(");
 		final boolean isEnumConstructor = methods.get(0).isEnum && methods.get(0).isConstructor();
-		if (isEnumConstructor)
+		if (isEnumConstructor) {
 			sb.append("name: string, ordinal: number, ");
+		}
 		final int maxParams = methods.stream().mapToInt(m -> m.getParameterCount()).max().orElse(0);
 		for (int i = 0; i < maxParams; i++) {
 			sb.append("__param" + i);
-			if (isOptionalParameter(methods, i))
+			if (isOptionalParameter(methods, i)) {
 				sb.append("?");
+			}
 			sb.append(": ");
 
 			sb.append(getUnionParamType(methods, i));
 
-			if (i < (maxParams - 1))
+			if (i < (maxParams - 1)) {
 				sb.append(", ");
+			}
 		}
 		sb.append(")");
 
@@ -543,10 +563,11 @@ public final class MethodNode {
 			} else {
 				sb.append(blockIndent);
 				final StatementTree superConstructorCall = methods.get(0).superConstructorCall;
-				if (superConstructorCall == null)
+				if (superConstructorCall == null) {
 					sb.append("super();");
-				else
+				} else {
 					sb.append(methods.get(0).plugin.convertStatement(methods.get(0).superConstructorCall, true));
+				}
 				// TODO combine statement of all constructors if possible...
 				sb.append(System.lineSeparator());
 			}
@@ -574,12 +595,14 @@ public final class MethodNode {
 			}
 			for (int i = 0; i < maxParams; i++) {
 				final VariableNode param = method.getParameter(i);
-				if (param == null)
+				if (param == null) {
 					sb.append("(__param" + i + " === undefined)");
-				else
+				} else {
 					sb.append(method.getTypeCheck(i));
-				if (i < (maxParams - 1))
+				}
+				if (i < (maxParams - 1)) {
 					sb.append(" && ");
+				}
 			}
 			sb.append(") {");
 			sb.append(System.lineSeparator());
@@ -589,8 +612,9 @@ public final class MethodNode {
 				sb.append(blockIndent);
 				sb.append("\t");
 				final VariableNode param = method.getParameter(i);
-				if (param == null)
+				if (param == null) {
 					throw new TranspilerException("Null value not expected here");
+				}
 				sb.append(param.isFinal() ? "const " : "let ");
 				sb.append(param.transpile() + " = " + param.getTypeCast("__param" + i) + ";");
 				sb.append(System.lineSeparator());
@@ -643,12 +667,14 @@ public final class MethodNode {
 			}
 
 			// the abstract modifier
-			if ((body == null) && (this._class.getKind() != Kind.INTERFACE))
+			if ((body == null) && (this._class.getKind() != Kind.INTERFACE)) {
 				sb.append("abstract ");
+			}
 
 			// the static modifier
-			if (isStatic)
+			if (isStatic) {
 				sb.append("static ");
+			}
 
 			// the methods name
 			sb.append(name);
@@ -662,18 +688,21 @@ public final class MethodNode {
 		final boolean isEnumConstructor = isEnum && isConstructor();
 		if (isEnumConstructor) {
 			sb.append("name: string, ordinal: number");
-			if (!parameters.isEmpty())
+			if (!parameters.isEmpty()) {
 				sb.append(", ");
+			}
 		}
 		if (isDefault) {
 			sb.append("transpiledThis: any");
-			if (!parameters.isEmpty())
+			if (!parameters.isEmpty()) {
 				sb.append(", ");
+			}
 		}
 		for (int i = 0; i < parameters.size(); i++) {
 			sb.append(parameters.get(i).transpile());
-			if (i < (parameters.size() - 1))
+			if (i < (parameters.size() - 1)) {
 				sb.append(", ");
+			}
 		}
 		sb.append(")");
 
@@ -711,10 +740,11 @@ public final class MethodNode {
 				sb.append(className).append(".all_values_by_name.set(name, this);");
 				sb.append(System.lineSeparator());
 			}
-			if (isDefault)
+			if (isDefault) {
 				sb.append(body.replace("this", "transpiledThis"));
-			else
+			} else {
 				sb.append(body);
+			}
 			sb.append(indent);
 			sb.append("}");
 		}

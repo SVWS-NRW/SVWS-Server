@@ -121,8 +121,9 @@ public final class ExpressionClassType extends ExpressionType {
 					result.typeArguments.add(ExpressionTypeVar.getExpressionTypeVariable(transpiler, typeArg));
 					continue;
 				}
-				if (typeArg instanceof PrimitiveType)
+				if (typeArg instanceof PrimitiveType) {
 					throw new TranspilerException("Transpiler Error: Primitive Types cannot be used as type argument");
+				}
 				if (typeArg instanceof final ArrayType at) {
 					int dim = 1;
 					TypeMirror elemType = at.getComponentType();
@@ -168,11 +169,13 @@ public final class ExpressionClassType extends ExpressionType {
 	 * @return the new expression class type instance
 	 */
 	public static ExpressionClassType getExpressionClassType(final Transpiler transpiler, final TypeElement elem) {
-		if ((transpiler == null) || (elem == null))
+		if ((transpiler == null) || (elem == null)) {
 			throw new NullPointerException();
+		}
 		Kind kind = Kind.PARAMETERIZED_TYPE;
-		if (elem.getTypeParameters().isEmpty())
+		if (elem.getTypeParameters().isEmpty()) {
 			kind = ((elem.getKind() == ElementKind.ENUM) ? Kind.ENUM : Kind.CLASS);
+		}
 		final ExpressionClassType result = new ExpressionClassType(kind, elem.getSimpleName().toString(), getPackageName(elem.getQualifiedName().toString()));
 		for (final TypeParameterElement tpe : elem.getTypeParameters()) {
 			result.typeVariables.add(ExpressionTypeVar.getWildcardExpressionTypeVariable());
@@ -193,8 +196,9 @@ public final class ExpressionClassType extends ExpressionType {
 	public static ExpressionClassType getExpressionClassType(final Transpiler transpiler, final ParameterizedTypeTree tree) {
 		final ExpressionClassType temp = (ExpressionClassType) getExpressionType(transpiler, tree.getType());
 		final TypeMirror type = transpiler.getTypeMirror(tree);
-		if (type != null)
+		if (type != null) {
 			return getExpressionClassType(transpiler, type);
+		}
 		final ExpressionClassType result = new ExpressionClassType(
 				Kind.PARAMETERIZED_TYPE,
 				temp.toString(),
@@ -239,8 +243,9 @@ public final class ExpressionClassType extends ExpressionType {
 				return new ExpressionClassType(Kind.ENUM, tree.getIdentifier().toString(), tree.getExpression().toString());
 			} else if (elementKind == ElementKind.INTERFACE) {
 				return new ExpressionClassType(Kind.INTERFACE, tree.getIdentifier().toString(), tree.getExpression().toString());
-			} else
+			} else {
 				throw new TranspilerException("Transpiler Error: ElementKind %s not yet supported here.".formatted(elementKind));
+			}
 		}
 		return new ExpressionClassType(Kind.PARAMETERIZED_TYPE, tree.getIdentifier().toString(), tree.getExpression().toString());
 	}
@@ -273,8 +278,9 @@ public final class ExpressionClassType extends ExpressionType {
 	public static ExpressionClassType getExpressionClassType(final Transpiler transpiler, final IdentifierTree node) {
 		final TranspilerUnit transpilerUnit = transpiler.getTranspilerUnit(node);
 		TreePath curPath = transpilerUnit.mapTreePath.get(node).getParentPath();
-		while (curPath.getLeaf() instanceof MemberSelectTree)
+		while (curPath.getLeaf() instanceof MemberSelectTree) {
 			curPath = curPath.getParentPath();
+		}
 		final Tree curNode = curPath.getLeaf();
 		if (curNode instanceof final VariableTree vt) {
 			final String strType = vt.getType().toString();
@@ -367,11 +373,13 @@ public final class ExpressionClassType extends ExpressionType {
 	public boolean resolveTypeVariables(final Map<String, ExpressionType> knownTypeVars) {
 		// TODO improvement: allow mixed generic parameters with type variables and fixed types
 		// TODO improvement: replace type variables recursively - see comment in Transpiler
-		if (typeVariables.isEmpty())
+		if (typeVariables.isEmpty()) {
 			return true;
+		}
 		for (int i = 0; i < typeVariables.size(); i++) {
-			if (typeVariables.get(i) != typeArguments.get(i))
+			if (typeVariables.get(i) != typeArguments.get(i)) {
 				continue;
+			}
 			final String tvName = typeVariables.get(i).getName();
 			final ExpressionType t = knownTypeVars.get(tvName);
 			if ((t == null) && (!isWildcardType(tvName))) {
@@ -419,8 +427,9 @@ public final class ExpressionClassType extends ExpressionType {
 
 	@Override
 	public boolean isNumberType() {
-		if (!"java.lang".equals(packageName))
+		if (!"java.lang".equals(packageName)) {
 			return false;
+		}
 		return switch (className) {
 			case "Byte", "Short", "Integer", "Long" -> true;
 			case "Float", "Double" -> true;
@@ -431,8 +440,9 @@ public final class ExpressionClassType extends ExpressionType {
 
 	@Override
 	public boolean isIntegerType() {
-		if (!"java.lang".equals(packageName))
+		if (!"java.lang".equals(packageName)) {
 			return false;
+		}
 		return switch (className) {
 			case "Byte", "Short", "Integer", "Long" -> true;
 			default -> false;
@@ -443,71 +453,89 @@ public final class ExpressionClassType extends ExpressionType {
 	@Override
 	public int isAssignable(final Transpiler transpiler, final ExpressionType other) {
 		if (other instanceof final ExpressionPrimitiveType otherPrimitive) {
-			if ("Object".equals(this.className) && "java.lang".equals(this.packageName))
+			if ("Object".equals(this.className) && "java.lang".equals(this.packageName)) {
 				return 2;  // unboxed and assigned to a super type
+			}
 			final ExpressionPrimitiveType thisPrimitive = ExpressionPrimitiveType.getUnboxed(this);
-			if (thisPrimitive == null)
+			if (thisPrimitive == null) {
 				return -1;
+			}
 			return (thisPrimitive.isAssignable(transpiler, otherPrimitive) == -1) ? -1 : 1; // if it is assignable increase by one
 		}
 		if (other instanceof final ExpressionClassType otherClass) {
 			return transpiler.checkForSuperclass(otherClass, this);
 		}
-		if ((other instanceof ExpressionArrayType) && ("Object".equals(this.className)) && ("java.lang".equals(this.packageName)))
+		if ((other instanceof ExpressionArrayType) && ("Object".equals(this.className)) && ("java.lang".equals(this.packageName))) {
 			return 1;
+		}
 		if (other instanceof final ExpressionTypeLambda otherLambda) {
 			final List<? extends ExpressionType> paramTypes = otherLambda.getParamTypes();
 			final ExpressionType resultType = otherLambda.getResultType();
 			return switch (getFullQualifiedName()) {
 				case "java.util.function.Consumer" -> ((resultType == null) && (paramTypes.size() == 1)) ? 1 : -1;
 				case "java.util.Comparator" -> {
-					if (!"int".equals(resultType.toString()))
+					if (!"int".equals(resultType.toString())) {
 						yield -1;
-					if (paramTypes.size() != 2)
+					}
+					if (paramTypes.size() != 2) {
 						yield -1;
+					}
 					yield paramTypes.get(0).equals(paramTypes.get(1)) ? 1 : -1;
 				}
 				case "java.util.function.Supplier" -> {
-					if (resultType == null)
+					if (resultType == null) {
 						yield -1;
-					if (!paramTypes.isEmpty())
+					}
+					if (!paramTypes.isEmpty()) {
 						yield -1;
-					if (this.typeArguments.size() != 1)
+					}
+					if (this.typeArguments.size() != 1) {
 						yield -1;
-					if (this.typeArguments.get(0).isAssignable(transpiler, resultType) < 0)
+					}
+					if (this.typeArguments.get(0).isAssignable(transpiler, resultType) < 0) {
 						yield -1;
+					}
 					yield 1;
 				}
 				case "java.util.function.Function" -> {
-					if (resultType == null)
+					if (resultType == null) {
 						yield -1;
-					if (paramTypes.size() != 1)
+					}
+					if (paramTypes.size() != 1) {
 						yield -1;
-					if (this.typeArguments.size() != 2)
+					}
+					if (this.typeArguments.size() != 2) {
 						yield -1;
-					if (this.typeArguments.get(1).isAssignable(transpiler, resultType) < 0)
+					}
+					if (this.typeArguments.get(1).isAssignable(transpiler, resultType) < 0) {
 						yield -1;
-					if (this.typeArguments.get(0).isAssignable(transpiler, paramTypes.get(0)) < 0)
+					}
+					if (this.typeArguments.get(0).isAssignable(transpiler, paramTypes.get(0)) < 0) {
 						yield -1;
+					}
 					yield 1;
 				}
 				case "java.util.function.Predicate" -> {
-					if (!"boolean".equals(resultType.toString()))
+					if (!"boolean".equals(resultType.toString())) {
 						yield -1;
-					if (paramTypes.size() != 1)
+					}
+					if (paramTypes.size() != 1) {
 						yield -1;
+					}
 					yield 1;
 				}
 				default -> throw new TranspilerException("Transpiler Error: Lambda expression type checking for type " + getFullQualifiedName()
 						+ " not yet supported.");
 			};
 		}
-		if (other instanceof ExpressionTypeNull)
+		if (other instanceof ExpressionTypeNull) {
 			return 1;
+		}
 		if (other instanceof ExpressionTypeVar) {
-			if ("Object".equals(this.className) && "java.lang".equals(this.packageName))
+			if ("Object".equals(this.className) && "java.lang".equals(this.packageName)) {
 				return 1;
-			// TODO
+				// TODO
+			}
 		}
 		return -1;
 	}
@@ -533,27 +561,36 @@ public final class ExpressionClassType extends ExpressionType {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final ExpressionClassType other = (ExpressionClassType) obj;
-		if (getKind() != other.getKind())
+		if (getKind() != other.getKind()) {
 			return false;
+		}
 		if (className == null) {
-			if (other.className != null)
+			if (other.className != null) {
 				return false;
-		} else if (!className.equals(other.className))
+			}
+		} else if (!className.equals(other.className)) {
 			return false;
+		}
 		if (packageName == null) {
-			if (other.packageName != null)
+			if (other.packageName != null) {
 				return false;
-		} else if (!packageName.equals(other.packageName))
+			}
+		} else if (!packageName.equals(other.packageName)) {
 			return false;
-		if (!typeArguments.equals(other.typeArguments))
+		}
+		if (!typeArguments.equals(other.typeArguments)) {
 			return false;
+		}
 		return (typeVariables.equals(other.typeVariables));
 	}
 
