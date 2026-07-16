@@ -262,6 +262,9 @@
 
 	const mapSchienen = computed<HashMap3D<number, number, number, List<StundenplanSchiene>>>(() => {
 		const result = new HashMap3D<number, number, number, List<StundenplanSchiene>>();
+		if (props.showSchienen === false) {
+			return result;
+		}
 		for (const wochentag of wochentagRange.value) {
 			for (const stunde of zeitrasterRange.value) {
 				for (let wt = 0; wt <= props.manager().getWochenTypModell(); wt++) {
@@ -289,6 +292,9 @@
 
 	const mapPausenzeitenListeByWochentag = computed<HashMap<number, List<StundenplanPausenzeit>>>(() => {
 		const result = new HashMap<number, List<StundenplanPausenzeit>>();
+		if (props.modePausenaufsichten === 'aus') {
+			return result;
+		}
 		for (const wochentag of wochentagRange.value) {
 			result.put(wochentag.id, props.getPausenzeitenWochentag(wochentag.id));
 		}
@@ -302,6 +308,9 @@
 
 	const mapPausenaufsichtenByPausenzeitId = computed<HashMap<number, List<StundenplanPausenaufsicht>>>(() => {
 		const result = new HashMap<number, List<StundenplanPausenaufsicht>>();
+		if (props.modePausenaufsichten === 'aus') {
+			return result;
+		}
 		for (const wochentag of wochentagRange.value) {
 			for (const pausenzeit of getPausenzeitenListeByWochentag(wochentag.id)) {
 				result.put(pausenzeit.id, props.getPausenaufsichtenPausenzeit(pausenzeit.id));
@@ -460,6 +469,9 @@
 
 	const mapPauseGridPos = computed<HashMap<number, string>>(() => {
 		const result = new HashMap<number, string>();
+		if (props.modePausenaufsichten === 'aus') {
+			return result;
+		}
 		for (const pausenzeit of props.getPausenzeiten()) {
 			result.put(pausenzeit.id, posPauseInternal(pausenzeit.id));
 		}
