@@ -20,7 +20,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatException;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.assertj.core.api.InstanceOfAssertFactories.LIST;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -72,6 +76,7 @@ class DataKlassenlisteTest {
 
 		final Response result = cut.getListBySchuljahresabschnittIDAsResponse(1L);
 
+		verify(conn, never()).queryList(eq(DTOKlassenLeitung.QUERY_LIST_BY_KLASSEN_ID), eq(DTOKlassenLeitung.class), any());
 		assertThat(result.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
 		assertThat(result.getEntity()).isNotNull().asInstanceOf(LIST).isEmpty();
 	}

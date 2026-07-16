@@ -265,6 +265,10 @@ public final class SchuelerStatistikService {
 
 	private List<SchuelerStatistikGesamt> getAndereSchueler(final Schuljahresabschnitt schuljahresabschnitt,
 			final Schuljahresabschnitt schuljahresabschnittLetzteVersetzung) {
+		if (schuljahresabschnitt.idVorigerAbschnitt == null) {
+			return Collections.emptyList();
+		}
+
 		// Bestimme dann die beurlaubten und abgegangenen Schüler aus den Schuljahresabschnitten von diesem und dem vorherigen Schuljahr
 		final var listSchuljahresabschnitte = new ArrayList<Long>();
 		Schuljahresabschnitt current = schuljahresabschnitt;

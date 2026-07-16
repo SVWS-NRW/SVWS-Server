@@ -1,5 +1,6 @@
 package de.svws_nrw.data.klassen;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -9,11 +10,11 @@ import java.util.stream.Collectors;
 import de.svws_nrw.asd.data.klassen.KlassenDatenMinimal;
 import de.svws_nrw.asd.data.klassen.KlassenListeEintrag;
 import de.svws_nrw.data.DataManagerRevised;
+import de.svws_nrw.data.Responses;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassenLeitung;
 import de.svws_nrw.db.utils.ApiOperationException;
-import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -39,23 +40,19 @@ public final class DataKlassenliste extends DataManagerRevised<Long, DTOKlassen,
 	 * @return Liste von KlassenListeEintrag Objekten
 	 */
 	public Response getListBySchuljahresabschnittIDAsResponse(final Long idSchuljahresabschnitt) {
+		List<KlassenListeEintrag> klassenListe = new ArrayList<>();
+
 		final Map<Long, Integer> anzahlSchuelerByIdKlasse = getAnzahlSchuelerByIdKlasse(idSchuljahresabschnitt);
 		final List<DTOKlassen> klassen = getKlassenByIdSchuljahresabschnitt(idSchuljahresabschnitt);
 		final var idsKlassen = klassen.stream()
 				.map(k -> k.ID)
 				.toList();
-		final Map<Long, List<Long>> idsLehrerByIdKlasse = conn
-				.queryList(DTOKlassenLeitung.QUERY_LIST_BY_KLASSEN_ID, DTOKlassenLeitung.class, idsKlassen).stream()
-				.collect(Collectors.groupingBy(
-						dto -> dto.Klassen_ID,
-						Collectors.mapping(dto -> dto.Lehrer_ID, Collectors.toList())
-				));
 
-		final List<KlassenListeEintrag> klassenliste = klassen.stream()
-				.map(k -> mapWithAnzahlSchueler(k, anzahlSchuelerByIdKlasse, idsLehrerByIdKlasse))
-				.toList();
+		if (!idsKlassen.isEmpty()) {
+			klassenListe = getKlassenListen(idsKlassen, klassen, anzahlSchuelerByIdKlasse);
+		}
 
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(klassenliste).build();
+		return Responses.ok(klassenListe);
 	}
 
 	/**
@@ -70,7 +67,7 @@ public final class DataKlassenliste extends DataManagerRevised<Long, DTOKlassen,
 		final List<KlassenDatenMinimal> klassenliste = klassen.stream()
 				.map(this::mapKlassenDatenMinimal)
 				.toList();
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(klassenliste).build();
+		return Responses.ok(klassenliste);
 	}
 
 	@Override
@@ -86,6 +83,20 @@ public final class DataKlassenliste extends DataManagerRevised<Long, DTOKlassen,
 		return dto;
 	}
 
+
+	private List<KlassenListeEintrag> getKlassenListen(final List<Long> idsKlassen, final List<DTOKlassen> klassen,
+			final Map<Long, Integer> anzahlSchuelerByIdKlasse) {
+		final Map<Long, List<Long>> idsLehrerByIdKlasse = conn
+				.queryList(DTOKlassenLeitung.QUERY_LIST_BY_KLASSEN_ID, DTOKlassenLeitung.class, idsKlassen).stream()
+				.collect(Collectors.groupingBy(
+						dto -> dto.Klassen_ID,
+						Collectors.mapping(dto -> dto.Lehrer_ID, Collectors.toList())
+				));
+
+		return klassen.stream()
+				.map(k -> mapWithAnzahlSchueler(k, anzahlSchuelerByIdKlasse, idsLehrerByIdKlasse))
+				.toList();
+	}
 
 	private KlassenDatenMinimal mapKlassenDatenMinimal(final DTOKlassen entity) {
 		final var dto = new KlassenDatenMinimal();
@@ -117,7 +128,8 @@ public final class DataKlassenliste extends DataManagerRevised<Long, DTOKlassen,
 				));
 	}
 
-	private KlassenListeEintrag mapWithAnzahlSchueler(final DTOKlassen dto, final Map<Long, Integer> anzahlZugehoerigerSchuelerByIdKlasse, final Map<Long, List<Long>> idsLehrerByIdKlasse) {
+	private KlassenListeEintrag mapWithAnzahlSchueler(final DTOKlassen dto, final Map<Long, Integer> anzahlZugehoerigerSchuelerByIdKlasse,
+			final Map<Long, List<Long>> idsLehrerByIdKlasse) {
 		final KlassenListeEintrag klassenListeEintrag = map(dto);
 		klassenListeEintrag.anzahlZugeordneteSchueler = anzahlZugehoerigerSchuelerByIdKlasse.getOrDefault(dto.ID, 0);
 		klassenListeEintrag.idsKlassenleitungen = idsLehrerByIdKlasse.getOrDefault(dto.ID, Collections.emptyList());
