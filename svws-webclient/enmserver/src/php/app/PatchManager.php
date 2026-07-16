@@ -397,7 +397,7 @@ class PatchManager {
         }
         if (property_exists($patch, 'fehlstundenFach') && ($patch->fehlstundenFach !== $daten->fehlstundenFach) && ($ts > $daten->tsFehlstundenFach)) {
             $this->pruefeSperrungSpalteFehlstunden($idKlasse, false);
-            if (!is_int($patch->fehlstundenFach) || ($patch->fehlstundenFach < 0)) {
+            if (!is_null($patch->fehlstundenFach) && (!is_int($patch->fehlstundenFach) || ($patch->fehlstundenFach < 0))) {
                 Http::exit400BadRequest("Es wurde eine fehlerhafter Wert für die Fehlstunden angegeben.");
             }
             $update .= "tsFehlstundenFach='$ts',";
@@ -406,7 +406,7 @@ class PatchManager {
         }
         if (property_exists($patch, 'fehlstundenUnentschuldigtFach') && ($patch->fehlstundenUnentschuldigtFach !== $daten->fehlstundenUnentschuldigtFach) && ($ts > $daten->tsFehlstundenUnentschuldigtFach)) {
             $this->pruefeSperrungSpalteFehlstunden($idKlasse, false);
-            if (!is_int($patch->fehlstundenUnentschuldigtFach) || ($patch->fehlstundenUnentschuldigtFach < 0)) {
+            if (!is_null($patch->fehlstundenUnentschuldigtFach) && (!is_int($patch->fehlstundenUnentschuldigtFach) || ($patch->fehlstundenUnentschuldigtFach < 0))) {
                 Http::exit400BadRequest("Es wurde eine fehlerhafter Wert für die unentschuldigten Fehlstunden angegeben.");
             }
             $update .= "tsFehlstundenUnentschuldigtFach='$ts',";
@@ -459,7 +459,7 @@ class PatchManager {
         if (property_exists($patch, 'fehlstundenGesamt') && ($ts > $daten->lernabschnitt->tsFehlstundenGesamt)
                 && ($patch->fehlstundenGesamt !== $daten->lernabschnitt->fehlstundenGesamt)) {
             $this->pruefeSperrungSpalteFehlstunden($idKlasse, true);
-            if (!is_int($patch->fehlstundenGesamt) || ($patch->fehlstundenGesamt < 0)) {
+            if (!is_null($patch->fehlstundenGesamt) && (!is_int($patch->fehlstundenGesamt) || ($patch->fehlstundenGesamt < 0))) {
                 Http::exit400BadRequest("Es wurde eine fehlerhafter Wert für Gesamt-Fehlstunden angegeben.");
             }
             $update .= "tsFehlstundenGesamt='$ts',";
@@ -469,7 +469,7 @@ class PatchManager {
         if (property_exists($patch, 'fehlstundenGesamtUnentschuldigt') && ($ts > $daten->lernabschnitt->tsFehlstundenGesamtUnentschuldigt)
                 && ($patch->fehlstundenGesamtUnentschuldigt !== $daten->lernabschnitt->fehlstundenGesamtUnentschuldigt)) {
             $this->pruefeSperrungSpalteFehlstunden($idKlasse, true);
-            if (!is_int($patch->fehlstundenGesamtUnentschuldigt) || ($patch->fehlstundenGesamtUnentschuldigt < 0)) {
+            if (!is_null($patch->fehlstundenGesamtUnentschuldigt) && (!is_int($patch->fehlstundenGesamtUnentschuldigt) || ($patch->fehlstundenGesamtUnentschuldigt < 0))) {
                 Http::exit400BadRequest("Es wurde eine fehlerhafter Wert für unentschuldigten Gesamt-Fehlstunden angegeben.");
             }
             $update .= "tsFehlstundenGesamtUnentschuldigt='$ts',";
