@@ -68,8 +68,7 @@
 	));
 
 	const hatUpdateKompetenz = computed<boolean>(() => {
-		if ((benutzerState.kompetenzen.size === 0) || (benutzerState.kompetenzenAbiturjahrgaenge.size === 0)
-			|| (gostLaufbahnplanungState.schuelerOrNull === null) || (gostLaufbahnplanungState.schuelerOrNull.abiturjahrgang === null)) {
+		if ((gostLaufbahnplanungState.schuelerOrNull === null) || (gostLaufbahnplanungState.schuelerOrNull.abiturjahrgang === null)) {
 			return false;
 		}
 		return benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
