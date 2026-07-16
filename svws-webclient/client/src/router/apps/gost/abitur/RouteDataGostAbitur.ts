@@ -4,7 +4,6 @@ import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeGostAbiturZulassung } from "~/router/apps/gost/abitur/RouteGostAbiturZulassung";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
-import { serverStateImpl } from "~/states/ServerStateImpl";
 
 interface RouteStateDataGostAbitur extends RouteStateInterface {
 	// Daten, die in Abhängigkeit des ausgewählten Schülers geladen werden
@@ -116,7 +115,7 @@ export class RouteDataGostAbitur extends RouteData<RouteStateDataGostAbitur> {
 			// TODO API-Endpunkt zum Auslesen aller Laufbahnplanungsdaten des Jahrgangs ergänzen und hier verwenden - getGostAbiturjahrgangLaufbahndaten
 			const abiturdatenListe = await api.server.getGostAbiturjahrgangLaufbahndaten(api.schema, abiJahrgang.abiturjahr);
 			for (const abiturdaten of abiturdatenListe) {
-				const manager = new AbiturdatenManager(serverStateImpl.mode, abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
+				const manager = new AbiturdatenManager(abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
 				newState.managerLaufbahnplanungMap.put(abiturdaten.schuelerID, manager);
 				newState.ergebnisBelegpruefungMap.put(abiturdaten.schuelerID, manager.getBelegpruefungErgebnis());
 				manager.applyErgebnisMarkierungsalgorithmus();
@@ -128,7 +127,7 @@ export class RouteDataGostAbitur extends RouteData<RouteStateDataGostAbitur> {
 			// TODO hole Abiturdaten für das spezielle Abiturjahr
 			const abiturdatenListe = await api.server.getGostAbiturjahrgangAbiturdaten(api.schema, abiJahrgang.abiturjahr);
 			for (const abiturdaten of abiturdatenListe) {
-				newState.managerAbiturMap.put(abiturdaten.schuelerID, new AbiturdatenManager(serverStateImpl.mode, abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT));
+				newState.managerAbiturMap.put(abiturdaten.schuelerID, new AbiturdatenManager(abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT));
 			}
 		} catch {
 			// do nothing
@@ -145,7 +144,7 @@ export class RouteDataGostAbitur extends RouteData<RouteStateDataGostAbitur> {
 		await api.server.copyGostSchuelerAbiturdatenAusLeistungsdaten(api.schema, idSchueler);
 		// ... und lade diese dann vom Server
 		const abiturdaten = await api.server.getGostSchuelerAbiturdaten(api.schema, idSchueler);
-		this.managerAbiturMap.put(idSchueler, new AbiturdatenManager(serverStateImpl.mode, abiturdaten, managerLaufbahnplanung.jahrgangsdaten(), managerLaufbahnplanung.faecher(), GostBelegpruefungsArt.GESAMT));
+		this.managerAbiturMap.put(idSchueler, new AbiturdatenManager(abiturdaten, managerLaufbahnplanung.jahrgangsdaten(), managerLaufbahnplanung.faecher(), GostBelegpruefungsArt.GESAMT));
 		this.commit();
 	};
 
@@ -168,7 +167,7 @@ export class RouteDataGostAbitur extends RouteData<RouteStateDataGostAbitur> {
 			throw new DeveloperNotificationException("Die FachID ist in den Abiturdaten nicht als Belegung vorhanden.");
 		}
 		// Berechnen des Prüfungsergebnisses und Senden an den Server
-		AbiturdatenManager.berechnePruefungsergebnis(serverStateImpl.mode, clone, berechnePflichtpruefungenNeu);
+		AbiturdatenManager.berechnePruefungsergebnis(clone, berechnePflichtpruefungenNeu);
 		await api.server.patchGostSchuelerAbiturdaten(clone, api.schema, clone.schuelerID);
 		// Patchen der Originaldaten und dortige Berechnung des Prüfungsergebnisses nach erfolgreichem Senden an den Server
 		for (const tmpBelegung of orig.fachbelegungen) {
@@ -178,7 +177,7 @@ export class RouteDataGostAbitur extends RouteData<RouteStateDataGostAbitur> {
 			}
 		}
 		manager().pruefeZulassung();
-		AbiturdatenManager.berechnePruefungsergebnis(serverStateImpl.mode, orig, berechnePflichtpruefungenNeu);
+		AbiturdatenManager.berechnePruefungsergebnis(orig, berechnePflichtpruefungenNeu);
 		this.commit();
 	};
 

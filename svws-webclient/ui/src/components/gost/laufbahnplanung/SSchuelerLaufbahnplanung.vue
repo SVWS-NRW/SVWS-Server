@@ -5,8 +5,8 @@
 				<svws-ui-button type="transparent" @click="export_laufbahnplanung"><span class="icon-sm i-ri-upload-2-line" />Exportieren</svws-ui-button>
 				<svws-ui-button type="transparent" @click="show = true"><span class="icon-sm i-ri-download-2-line" /> Importieren…</svws-ui-button>
 				<s-laufbahnplanung-import-modal v-model:show="show" />
-				<svws-ui-button :type="gostLaufbahnplanungState.hatZwischenspeicher ? 'error' : 'transparent'" @click="gostLaufbahnplanungState.saveLaufbahnplanung">Planung merken</svws-ui-button>
-				<svws-ui-button type="danger" @click="gostLaufbahnplanungState.restoreLaufbahnplanung" v-if="gostLaufbahnplanungState.hatZwischenspeicher">Planung wiederherstellen</svws-ui-button>
+				<svws-ui-button :type="gostLaufbahnplanungState.hatZwischenspeicher ? 'error' : 'transparent'" @click="gostLaufbahnplanungState.saveLaufbahnplanung()">Planung merken</svws-ui-button>
+				<svws-ui-button type="danger" @click="gostLaufbahnplanungState.restoreLaufbahnplanung()" v-if="gostLaufbahnplanungState.hatZwischenspeicher">Planung wiederherstellen</svws-ui-button>
 				<svws-ui-button :type="manager.modus === 'normal' ? 'transparent' : 'danger'" @click="manager.switchModus()" title="Modus wechseln">
 					<span class="icon-sm i-ri-loop-right-line" /> Modus: <span>{{ manager.modus }}</span>
 				</svws-ui-button>
@@ -20,7 +20,11 @@
 			</svws-ui-button-select>
 			<svws-ui-modal-hilfe> <hilfe-laufbahnplanung /> </svws-ui-modal-hilfe>
 		</Teleport>
-		<div class="grow overflow-y-auto overflow-x-hidden min-w-fit">
+		<div class="grow overflow-y-auto overflow-x-hidden min-w-fit grid content-center auto-cols-min gap-2">
+			<div v-if="manager.istAbiturAb2030" class="p-2 rounded-md bg-ui-caution text-ui-oncaution min-w-fit font-bold flex flex-row items-center gap-2">
+				<span class="icon-lg i-ri-error-warning-fill icon-ui-oncaution" />
+				Sie verwenden den experimentellen Belegprüfungsalgorithmus für das Abitur 2030. Dieser kann noch Fehler enthalten, so dass zur Zeit noch alle Ergebnisse manuell geprüft werden müssen.
+			</div>
 			<s-laufbahnplanung-card-planung v-if="visible" :manager />
 		</div>
 		<div class="w-2/5 3xl:w-1/2 min-w-xl overflow-y-auto overflow-x-hidden pr-4">

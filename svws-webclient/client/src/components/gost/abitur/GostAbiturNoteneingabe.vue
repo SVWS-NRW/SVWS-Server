@@ -113,10 +113,8 @@
 
 	import { computed, shallowRef, watchEffect, type ComponentPublicInstance } from "vue";
 	import type { List, AbiturFachbelegung, Comparator, Fachgruppe, NoteKatalogEintrag, SchuelerListeEintrag, KursDaten, LehrerListeEintrag, JavaMap } from "@core";
-	import { AbiturdatenManager } from "@core";
-	import { GostHalbjahr, ArrayList, Fach, GostBesondereLernleistung, Note, RGBFarbe, DeveloperNotificationException, HashMap, GostAbiturFach } from "@core";
-	import { SelectManager, useServerState } from "@ui";
-	import { GridManager } from "@ui";
+	import { GostHalbjahr, ArrayList, Fach, GostBesondereLernleistung, Note, RGBFarbe, DeveloperNotificationException, HashMap, GostAbiturFach, AbiturdatenManager } from "@core";
+	import { SelectManager, GridManager, useServerState } from "@ui";
 
 	import type { GostAbiturNoteneingabeProps } from "./GostAbiturNoteneingabeProps";
 
@@ -202,7 +200,7 @@
 	const abiturfachSelectManager = computed<SelectManager<GostAbiturFach>>(() => {
 		const abiManager = props.managerMap().isEmpty() ? null : props.managerMap().values().iterator().next();
 		const values = [GostAbiturFach.LK1, GostAbiturFach.LK2, GostAbiturFach.AB3, GostAbiturFach.AB4];
-		if ((abiManager !== null) && AbiturdatenManager.nutzeExperimentellenCode(serverState.mode, abiManager.daten().abiturjahr)) {
+		if ((abiManager !== null) && AbiturdatenManager.istAbitur2030(abiManager.daten().abiturjahr)) {
 			values.push(GostAbiturFach.AB5);
 		}
 		return new SelectManager({ options: values, optionDisplayText: f => f.kuerzel, selectionDisplayText: f => f.kuerzel	});

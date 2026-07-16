@@ -54,7 +54,6 @@ import de.svws_nrw.core.data.gost.GostJahrgangFachkombination;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.gost.GostSchuelerFachwahl;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
-import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.gost.AbiturBelegungsart;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.types.gost.GostBesondereLernleistung;
@@ -84,9 +83,6 @@ import jakarta.validation.constraints.NotNull;
  * erlaubt.
  */
 public class AbiturdatenManager {
-
-	/** der Modus, in welchem der Server betrieben wird, um einen experimentellen Modus zu unterstützen. */
-	private final @NotNull ServerMode servermode;
 
 	/** Das Abiturdaten-Objekt, welches mithilfe dieses Managers bearbeitet wird */
 	private final @NotNull Abiturdaten abidaten;
@@ -146,15 +142,13 @@ public class AbiturdatenManager {
 	/**
 	 * Erstellt ein neues Manager-Objekt, welches mit den übergebenen Abiturdaten verknüpft wird.
 	 *
-	 * @param servermode     der Modus, in welchem der Server betrieben wird, um einen experimentellen Modus zu unterstützen
 	 * @param abidaten       die Abiturdaten
 	 * @param gostJahrgang   die Informationen zu dem Abiturjahrgang
 	 * @param faecherManager der Manager für die Fächer und Fachkombinationen der Gymnasialen Oberstufe
 	 * @param pruefungsArt   die Art der Belegpruefung (z.B. EF1 oder GESAMT)
 	 */
-	public AbiturdatenManager(final @NotNull ServerMode servermode, final @NotNull Abiturdaten abidaten, final GostJahrgangsdaten gostJahrgang,
+	public AbiturdatenManager(final @NotNull Abiturdaten abidaten, final GostJahrgangsdaten gostJahrgang,
 			final @NotNull GostFaecherManager faecherManager, final @NotNull GostBelegpruefungsArt pruefungsArt) {
-		this.servermode = servermode;
 		this.abidaten = abidaten;
 		this._jahrgangsdaten = gostJahrgang;
 		this.faecherManager = faecherManager;
@@ -245,7 +239,7 @@ public class AbiturdatenManager {
 	 * @return eine Liste mit den durchgefuehrten Belegpruefungen
 	 */
 	public @NotNull List<GostBelegpruefung> getPruefungen(final @NotNull GostBelegpruefungsArt pruefungsArt) {
-		if (nutzeExperimentellenCode(this.servermode, abidaten.abiturjahr)) { // Führe ggf. den experimentellen Code aus
+		if (istAbitur2030(abidaten.abiturjahr)) { // Führe ggf. den experimentellen Code aus
 			return this.getPruefungenAbi2030(pruefungsArt);
 		}
 		return this.getPruefungenDefault(pruefungsArt);
@@ -270,7 +264,7 @@ public class AbiturdatenManager {
 		belegpruefungErfolgreich = GostBelegpruefung.istErfolgreich(belegpruefungsfehler);
 		// Führe ggf. den Markierungsalgorithmus durch...
 		if (istBewertetQualifikationsPhase()) {
-			if (nutzeExperimentellenCode(this.servermode, abidaten.abiturjahr)) {
+			if (istAbitur2030(abidaten.abiturjahr)) {
 				// Führe ggf. den experimentellen Code aus
 				markierungsErgebnis = Abi30GostAbiturMarkierungsalgorithmus.berechne(this, belegpruefungen);
 			} else {
@@ -283,16 +277,14 @@ public class AbiturdatenManager {
 
 
 	/**
-	 * Prüft ob, bei dem übergeben Servermode und dem übergebenen Abiturjahr der experimentelle Code
-	 * für das Abitur ab 2030 eingesetzt werden soll.
+	 * Prüft ob, bei dem übergeben Abiturjahr der Code für das Abitur ab 2030 eingesetzt werden soll.
 	 *
-	 * @param servermode   der Server-Mode
 	 * @param abiturjahr   das Abiturjahr
 	 *
-	 * @return true, wenn der experimentelle Code genutzt werden soll, und ansonsten false
+	 * @return true, wenn der Abi2030-Code genutzt werden soll, und ansonsten false
 	 */
-	public static boolean nutzeExperimentellenCode(final ServerMode servermode, final int abiturjahr) {
-		return ((abiturjahr >= 2030) && (servermode == ServerMode.DEV));
+	public static boolean istAbitur2030(final int abiturjahr) {
+		return abiturjahr >= 2030;
 	}
 
 
@@ -2330,7 +2322,7 @@ public class AbiturdatenManager {
 	 *         ausgewählt werden kann.
 	 */
 	public GostKursart getMoeglicheKursartAlsAbiturfach(final long id) {
-		if (nutzeExperimentellenCode(this.servermode, abidaten.abiturjahr)) { // Führe ggf. den experimentellen Code aus
+		if (istAbitur2030(abidaten.abiturjahr)) { // Führe ggf. den experimentellen Code aus
 			return _getAbi30MoeglicheKursartAlsAbiturfach(id);
 		}
 		final GostFach fach = faecherManager.get(id);
@@ -2748,7 +2740,7 @@ public class AbiturdatenManager {
 	 * @return ein Array mit den Wochenstunden für die sechs Halbjahre
 	 */
 	public @NotNull int[] getWochenstunden() {
-		if (nutzeExperimentellenCode(this.servermode, abidaten.abiturjahr)) { // Führe ggf. den experimentellen Code aus
+		if (istAbitur2030(abidaten.abiturjahr)) { // Führe ggf. den experimentellen Code aus
 			final @NotNull Abi30BelegpruefungKurszahlenUndWochenstunden kuw = getAbi30KurszahlenUndWochenstunden();
 			final @NotNull int[] stunden = new int[] { 0, 0, 0, 0, 0, 0 };
 			for (final GostHalbjahr hj : GostHalbjahr.values()) {
@@ -2771,7 +2763,7 @@ public class AbiturdatenManager {
 	 * @return die Anzahl der Wochenstunden
 	 */
 	public int getWochenstundenEinfuehrungsphase() {
-		if (nutzeExperimentellenCode(this.servermode, abidaten.abiturjahr)) { // Führe ggf. den experimentellen Code aus
+		if (istAbitur2030(abidaten.abiturjahr)) { // Führe ggf. den experimentellen Code aus
 			final @NotNull Abi30BelegpruefungKurszahlenUndWochenstunden kuw = getAbi30KurszahlenUndWochenstunden();
 			return kuw.getWochenstundenEinfuehrungsphase();
 		}
@@ -2786,7 +2778,7 @@ public class AbiturdatenManager {
 	 * @return die Anzahl der Wochenstunden
 	 */
 	public int getWochenstundenQualifikationsphase() {
-		if (nutzeExperimentellenCode(this.servermode, abidaten.abiturjahr)) { // Führe ggf. den experimentellen Code aus
+		if (istAbitur2030(abidaten.abiturjahr)) { // Führe ggf. den experimentellen Code aus
 			final @NotNull Abi30BelegpruefungKurszahlenUndWochenstunden kuw = getAbi30KurszahlenUndWochenstunden();
 			return kuw.getWochenstundenQualifikationsphase();
 		}
@@ -2802,7 +2794,7 @@ public class AbiturdatenManager {
 	 * @return ein Array mit den anrechenbaren Kursen für die sechs Halbjahre
 	 */
 	public @NotNull int[] getAnrechenbareKurse() {
-		if (nutzeExperimentellenCode(this.servermode, abidaten.abiturjahr)) { // Führe ggf. den experimentellen Code aus
+		if (istAbitur2030(abidaten.abiturjahr)) { // Führe ggf. den experimentellen Code aus
 			final @NotNull Abi30BelegpruefungKurszahlenUndWochenstunden kuw = getAbi30KurszahlenUndWochenstunden();
 			final @NotNull int[] anzahl = new int[] { 0, 0, 0, 0, 0, 0 };
 			for (final GostHalbjahr hj : GostHalbjahr.values()) {
@@ -2826,7 +2818,7 @@ public class AbiturdatenManager {
 	 * @return die anrechenbaren Kursen für Block I des Abiturs
 	 */
 	public int getAnrechenbareKurseBlockI() {
-		if (nutzeExperimentellenCode(this.servermode, abidaten.abiturjahr)) { // Führe ggf. den experimentellen Code aus
+		if (istAbitur2030(abidaten.abiturjahr)) { // Führe ggf. den experimentellen Code aus
 			final @NotNull Abi30BelegpruefungKurszahlenUndWochenstunden kuw = getAbi30KurszahlenUndWochenstunden();
 			return kuw.getBlockIAnzahlAnrechenbar();
 		}
@@ -3206,7 +3198,7 @@ public class AbiturdatenManager {
 			markierpruefungsergebnis.log.add("Es liegen noch nicht Bewertungen für alle Halbjahre des Qualifikationsphase vor.");
 			return;
 		}
-		if (nutzeExperimentellenCode(this.servermode, abidaten.abiturjahr)) {
+		if (istAbitur2030(abidaten.abiturjahr)) {
 			// Führe ggf. den experimentellen Code aus
 			markierpruefungsergebnis = Abi30GostAbiturMarkierungspruefung.pruefe(this, belegpruefungen);
 		} else {
@@ -3410,13 +3402,12 @@ public class AbiturdatenManager {
 	 * sofern die Daten vollständig vorliegen. Ist dies nicht der Fall, so wird das Ergebnis soweit
 	 * wie möglich berechnet. Diese Methode setzt die vorherige Berechnung der Zulassung voraus.
 	 *
-	 * @param servermode                     der Mode, in welchem der Server betrieben wird
 	 * @param abidaten                       die Abiturdaten, welche zur Berechnung verwendet werden
 	 * @param berechnePflichtpruefungenNeu   gibt an, ob die Pflichtprüfungen neu berechnet/gesetzt werden sollen oder nicht
 	 *
 	 * @return true, wenn die Berechnung vollständig durchgeführt werden konnte
 	 */
-	public static boolean berechnePruefungsergebnis(final @NotNull ServerMode servermode, final @NotNull Abiturdaten abidaten, final boolean berechnePflichtpruefungenNeu) {
+	public static boolean berechnePruefungsergebnis(final @NotNull Abiturdaten abidaten, final boolean berechnePflichtpruefungenNeu) {
 		// Bestimme die Fachbelegungen der Abiturfächer und sortiere diese
 		final @NotNull List<AbiturFachbelegung> abiBelegungen = new ArrayList<>();
 		for (final @NotNull AbiturFachbelegung fachbelegung : abidaten.fachbelegungen) {
@@ -3425,7 +3416,7 @@ public class AbiturdatenManager {
 			}
 		}
 
-		final boolean istAbi30ff = nutzeExperimentellenCode(servermode, abidaten.abiturjahr);
+		final boolean istAbi30ff = istAbitur2030(abidaten.abiturjahr);
 
 		// Bestimme die Anzahl der Abiturfächer (BLL zählt ggf. als 5. Abiturfach), um die Punkte pro Notenpunkt festzulegen
 		final boolean hatBLL = !"K".equals(abidaten.besondereLernleistung);

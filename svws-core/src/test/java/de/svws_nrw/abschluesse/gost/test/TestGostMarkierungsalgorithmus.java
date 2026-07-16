@@ -28,7 +28,6 @@ import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostJahrgangFachkombination;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
-import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 
@@ -168,7 +167,7 @@ class TestGostMarkierungsalgorithmus {
 							final GostFaecherManager faecherManager =
 									new GostFaecherManager(gostJahrgangsdaten.abiturjahr - 1, gostFaecher, gostFachkombinationen);
 							final AbiturdatenManager manager =
-									new AbiturdatenManager(ServerMode.DEV, abidaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
+									new AbiturdatenManager(abidaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
 							final GostAbiturMarkierungsalgorithmusErgebnis ergebnis = manager.getErgebnisMarkierungsalgorithmus();
 							if (!ergebnis.log.isEmpty()) {
 								System.out.println("  Log:");

@@ -33,7 +33,6 @@ import type { GostBelegpruefungsModus, GostKlausurvorgabeEintrag, GostLaufbahnpl
 import { StateManager } from "@ui/ui/StateManager";
 import { Config, ConfigElement } from "@ui/utils/Config";
 import { RouteManager } from "~/router/RouteManager";
-import { serverStateImpl } from "./ServerStateImpl";
 import { HashMap2D } from "@core/core/adt/map/HashMap2D";
 import { GostSchuelerGKLWahl } from "@core/core/data/gost/GostSchuelerGKLWahl";
 import { HashMap } from "@core/java/util/HashMap";
@@ -69,8 +68,6 @@ interface GostLaufbahnplanungReactiveState {
  * Der Zustand der Laufbahnplanung der Gymnasialen Oberstufe
  */
 export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanungReactiveState> implements GostLaufbahnplanungState {
-
-	private readonly serverState = serverStateImpl;
 
 	public constructor() {
 		super({
@@ -182,16 +179,16 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		const jahrgangsdaten = this._state.value.gostJahrgangsdaten;
 		const art = this.gostBelegpruefungsArt;
 		if (art === 'ef1') {
-			return new AbiturdatenManager(this.serverState.mode, abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.EF1);
+			return new AbiturdatenManager(abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.EF1);
 		}
 		if (art === 'gesamt') {
-			return new AbiturdatenManager(this.serverState.mode, abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.GESAMT);
+			return new AbiturdatenManager(abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.GESAMT);
 		}
-		const abiturdatenManager = new AbiturdatenManager(this.serverState.mode, abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.GESAMT);
+		const abiturdatenManager = new AbiturdatenManager(abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.GESAMT);
 		if (abiturdatenManager.pruefeBelegungExistiert(abiturdatenManager.getFachbelegungen(), GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
 			return abiturdatenManager;
 		}
-		return new AbiturdatenManager(this.serverState.mode, abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.EF1);
+		return new AbiturdatenManager(abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.EF1);
 	}
 
 	setGostBelegpruefungErgebnis = async () => {

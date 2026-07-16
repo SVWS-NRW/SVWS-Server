@@ -59,7 +59,6 @@ import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import { GostSchriftlichkeit } from '../../../core/types/gost/GostSchriftlichkeit';
 import { Abi30BelegpruefungGesellschaftswissenschaftenUndReligion } from '../../../core/abschluss/gost/belegpruefung/abi2030/Abi30BelegpruefungGesellschaftswissenschaftenUndReligion';
 import { GesellschaftswissenschaftenUndReligion } from '../../../core/abschluss/gost/belegpruefung/GesellschaftswissenschaftenUndReligion';
-import { ServerMode } from '../../../core/types/ServerMode';
 import { GostBelegungsfehler } from '../../../core/abschluss/gost/GostBelegungsfehler';
 import { Abi30GostAbiturMarkierungspruefung } from '../../../core/abschluss/gost/Abi30GostAbiturMarkierungspruefung';
 import { GostFach } from '../../../core/data/gost/GostFach';
@@ -79,11 +78,6 @@ import { GostBelegpruefungErgebnisFehler } from '../../../core/abschluss/gost/Go
 import { Mathematik } from '../../../core/abschluss/gost/belegpruefung/Mathematik';
 
 export class AbiturdatenManager extends JavaObject {
-
-	/**
-	 * der Modus, in welchem der Server betrieben wird, um einen experimentellen Modus zu unterstützen.
-	 */
-	private readonly servermode: ServerMode;
 
 	/**
 	 * Das Abiturdaten-Objekt, welches mithilfe dieses Managers bearbeitet wird
@@ -174,15 +168,13 @@ export class AbiturdatenManager extends JavaObject {
 	/**
 	 * Erstellt ein neues Manager-Objekt, welches mit den übergebenen Abiturdaten verknüpft wird.
 	 *
-	 * @param servermode     der Modus, in welchem der Server betrieben wird, um einen experimentellen Modus zu unterstützen
 	 * @param abidaten       die Abiturdaten
 	 * @param gostJahrgang   die Informationen zu dem Abiturjahrgang
 	 * @param faecherManager der Manager für die Fächer und Fachkombinationen der Gymnasialen Oberstufe
 	 * @param pruefungsArt   die Art der Belegpruefung (z.B. EF1 oder GESAMT)
 	 */
-	public constructor(servermode: ServerMode, abidaten: Abiturdaten, gostJahrgang: GostJahrgangsdaten | null, faecherManager: GostFaecherManager, pruefungsArt: GostBelegpruefungsArt) {
+	public constructor(abidaten: Abiturdaten, gostJahrgang: GostJahrgangsdaten | null, faecherManager: GostFaecherManager, pruefungsArt: GostBelegpruefungsArt) {
 		super();
-		this.servermode = servermode;
 		this.abidaten = abidaten;
 		this._jahrgangsdaten = gostJahrgang;
 		this.faecherManager = faecherManager;
@@ -264,7 +256,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return eine Liste mit den durchgefuehrten Belegpruefungen
 	 */
 	public getPruefungen(pruefungsArt: GostBelegpruefungsArt): List<GostBelegpruefung> {
-		if (AbiturdatenManager.nutzeExperimentellenCode(this.servermode, this.abidaten.abiturjahr)) {
+		if (AbiturdatenManager.istAbitur2030(this.abidaten.abiturjahr)) {
 			return this.getPruefungenAbi2030(pruefungsArt);
 		}
 		return this.getPruefungenDefault(pruefungsArt);
@@ -286,7 +278,7 @@ export class AbiturdatenManager extends JavaObject {
 		this.belegpruefungsfehler = GostBelegpruefung.getBelegungsfehlerAlle(this.belegpruefungen);
 		this.belegpruefungErfolgreich = GostBelegpruefung.istErfolgreich(this.belegpruefungsfehler);
 		if (this.istBewertetQualifikationsPhase()) {
-			if (AbiturdatenManager.nutzeExperimentellenCode(this.servermode, this.abidaten.abiturjahr)) {
+			if (AbiturdatenManager.istAbitur2030(this.abidaten.abiturjahr)) {
 				this.markierungsErgebnis = Abi30GostAbiturMarkierungsalgorithmus.berechne(this, this.belegpruefungen);
 			} else {
 				this.markierungsErgebnis = GostAbiturMarkierungsalgorithmus.berechne(this, this.belegpruefungen);
@@ -296,16 +288,14 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Prüft ob, bei dem übergeben Servermode und dem übergebenen Abiturjahr der experimentelle Code
-	 * für das Abitur ab 2030 eingesetzt werden soll.
+	 * Prüft ob, bei dem übergeben Abiturjahr der Code für das Abitur ab 2030 eingesetzt werden soll.
 	 *
-	 * @param servermode   der Server-Mode
 	 * @param abiturjahr   das Abiturjahr
 	 *
-	 * @return true, wenn der experimentelle Code genutzt werden soll, und ansonsten false
+	 * @return true, wenn der Abi2030-Code genutzt werden soll, und ansonsten false
 	 */
-	public static nutzeExperimentellenCode(servermode: ServerMode | null, abiturjahr: number): boolean {
-		return ((abiturjahr >= 2030) && (servermode as unknown === ServerMode.DEV as unknown));
+	public static istAbitur2030(abiturjahr: number): boolean {
+		return abiturjahr >= 2030;
 	}
 
 	/**
@@ -2197,7 +2187,7 @@ export class AbiturdatenManager extends JavaObject {
 	 *         ausgewählt werden kann.
 	 */
 	public getMoeglicheKursartAlsAbiturfach(id: number): GostKursart | null {
-		if (AbiturdatenManager.nutzeExperimentellenCode(this.servermode, this.abidaten.abiturjahr)) {
+		if (AbiturdatenManager.istAbitur2030(this.abidaten.abiturjahr)) {
 			return this._getAbi30MoeglicheKursartAlsAbiturfach(id);
 		}
 		const fach: GostFach | null = this.faecherManager.get(id);
@@ -2570,7 +2560,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return ein Array mit den Wochenstunden für die sechs Halbjahre
 	 */
 	public getWochenstunden(): Array<number> {
-		if (AbiturdatenManager.nutzeExperimentellenCode(this.servermode, this.abidaten.abiturjahr)) {
+		if (AbiturdatenManager.istAbitur2030(this.abidaten.abiturjahr)) {
 			const kuw: Abi30BelegpruefungKurszahlenUndWochenstunden = this.getAbi30KurszahlenUndWochenstunden();
 			const stunden: Array<number> = [0, 0, 0, 0, 0, 0];
 			for (const hj of GostHalbjahr.values()) {
@@ -2592,7 +2582,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Anzahl der Wochenstunden
 	 */
 	public getWochenstundenEinfuehrungsphase(): number {
-		if (AbiturdatenManager.nutzeExperimentellenCode(this.servermode, this.abidaten.abiturjahr)) {
+		if (AbiturdatenManager.istAbitur2030(this.abidaten.abiturjahr)) {
 			const kuw: Abi30BelegpruefungKurszahlenUndWochenstunden = this.getAbi30KurszahlenUndWochenstunden();
 			return kuw.getWochenstundenEinfuehrungsphase();
 		}
@@ -2606,7 +2596,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Anzahl der Wochenstunden
 	 */
 	public getWochenstundenQualifikationsphase(): number {
-		if (AbiturdatenManager.nutzeExperimentellenCode(this.servermode, this.abidaten.abiturjahr)) {
+		if (AbiturdatenManager.istAbitur2030(this.abidaten.abiturjahr)) {
 			const kuw: Abi30BelegpruefungKurszahlenUndWochenstunden = this.getAbi30KurszahlenUndWochenstunden();
 			return kuw.getWochenstundenQualifikationsphase();
 		}
@@ -2621,7 +2611,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return ein Array mit den anrechenbaren Kursen für die sechs Halbjahre
 	 */
 	public getAnrechenbareKurse(): Array<number> {
-		if (AbiturdatenManager.nutzeExperimentellenCode(this.servermode, this.abidaten.abiturjahr)) {
+		if (AbiturdatenManager.istAbitur2030(this.abidaten.abiturjahr)) {
 			const kuw: Abi30BelegpruefungKurszahlenUndWochenstunden = this.getAbi30KurszahlenUndWochenstunden();
 			const anzahl: Array<number> = [0, 0, 0, 0, 0, 0];
 			for (const hj of GostHalbjahr.values()) {
@@ -2644,7 +2634,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die anrechenbaren Kursen für Block I des Abiturs
 	 */
 	public getAnrechenbareKurseBlockI(): number {
-		if (AbiturdatenManager.nutzeExperimentellenCode(this.servermode, this.abidaten.abiturjahr)) {
+		if (AbiturdatenManager.istAbitur2030(this.abidaten.abiturjahr)) {
 			const kuw: Abi30BelegpruefungKurszahlenUndWochenstunden = this.getAbi30KurszahlenUndWochenstunden();
 			return kuw.getBlockIAnzahlAnrechenbar();
 		}
@@ -3008,7 +2998,7 @@ export class AbiturdatenManager extends JavaObject {
 			this.markierpruefungsergebnis.log.add("Es liegen noch nicht Bewertungen für alle Halbjahre des Qualifikationsphase vor.");
 			return;
 		}
-		if (AbiturdatenManager.nutzeExperimentellenCode(this.servermode, this.abidaten.abiturjahr)) {
+		if (AbiturdatenManager.istAbitur2030(this.abidaten.abiturjahr)) {
 			this.markierpruefungsergebnis = Abi30GostAbiturMarkierungspruefung.pruefe(this, this.belegpruefungen);
 		} else {
 			this.markierpruefungsergebnis = GostAbiturMarkierungspruefung.pruefe(this, this.belegpruefungen);
@@ -3203,14 +3193,14 @@ export class AbiturdatenManager extends JavaObject {
 	 *
 	 * @return true, wenn die Berechnung vollständig durchgeführt werden konnte
 	 */
-	public static berechnePruefungsergebnis(servermode: ServerMode, abidaten: Abiturdaten, berechnePflichtpruefungenNeu: boolean): boolean {
+	public static berechnePruefungsergebnis(abidaten: Abiturdaten, berechnePflichtpruefungenNeu: boolean): boolean {
 		const abiBelegungen: List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 		for (const fachbelegung of abidaten.fachbelegungen) {
 			if (fachbelegung.abiturFach !== null) {
 				abiBelegungen.add(fachbelegung);
 			}
 		}
-		const istAbi30ff: boolean = AbiturdatenManager.nutzeExperimentellenCode(servermode, abidaten.abiturjahr);
+		const istAbi30ff: boolean = AbiturdatenManager.istAbitur2030(abidaten.abiturjahr);
 		const hatBLL: boolean = !JavaObject.equalsTranspiler("K", (abidaten.besondereLernleistung));
 		const faktor: number = (istAbi30ff || hatBLL) ? 4 : 5;
 		let summe: number = 0;

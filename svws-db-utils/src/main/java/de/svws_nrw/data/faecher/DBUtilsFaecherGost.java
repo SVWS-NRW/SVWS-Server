@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.asd.types.fach.Fachgruppe;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
-import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
@@ -61,7 +60,7 @@ public final class DBUtilsFaecherGost {
 			return defaultWochenstundenQ_GK;
 		}
 		// Projekt kurse
-		if (AbiturdatenManager.nutzeExperimentellenCode(SVWSKonfiguration.get().getServerMode(), schuljahr + 1)) { // Experimenteller Code
+		if (AbiturdatenManager.istAbitur2030(schuljahr + 1)) {
 			return 3;
 		}
 		return 2;
@@ -83,7 +82,7 @@ public final class DBUtilsFaecherGost {
 		}
 
 		// Experimenteller Code
-		if (AbiturdatenManager.nutzeExperimentellenCode(SVWSKonfiguration.get().getServerMode(), schuljahr + 1)
+		if (AbiturdatenManager.istAbitur2030(schuljahr + 1)
 				&& (tmpFach.getFachgruppe(schuljahr) == Fachgruppe.FG_PX)) {
 			return 3;
 		}
@@ -108,7 +107,7 @@ public final class DBUtilsFaecherGost {
 
 		// Experimenteller Code
 		final Fach tmpFach = Fach.getBySchluesselOrDefault(fach.StatistikKuerzel);
-		if (AbiturdatenManager.nutzeExperimentellenCode(SVWSKonfiguration.get().getServerMode(), schuljahr + 1)
+		if (AbiturdatenManager.istAbitur2030(schuljahr + 1)
 				&& (tmpFach.getFachgruppe(schuljahr) == Fachgruppe.FG_PX)) {
 			return 3;
 		}
@@ -149,7 +148,7 @@ public final class DBUtilsFaecherGost {
 		eintrag.istMoeglichQ12 = fach.IstMoeglichQ12;
 		eintrag.istMoeglichQ21 = fach.IstMoeglichQ21;
 		eintrag.istMoeglichQ22 = fach.IstMoeglichQ22;
-		if (AbiturdatenManager.nutzeExperimentellenCode(SVWSKonfiguration.get().getServerMode(), schuljahr + 1)) { // Experimenteller Code
+		if (AbiturdatenManager.istAbitur2030(schuljahr + 1)) {
 			final Fach tmpFach = Fach.getBySchluesselOrDefault(fach.StatistikKuerzel);
 			if (tmpFach.getFachgruppe(schuljahr) == Fachgruppe.FG_PX) {
 				eintrag.istMoeglichQ11 = false;
@@ -204,7 +203,7 @@ public final class DBUtilsFaecherGost {
 		eintrag.bezeichnung = fach.Bezeichnung;
 		eintrag.sortierung = fach.SortierungAllg;
 		eintrag.istPruefungsordnungsRelevant = fach.IstPruefungsordnungsRelevant;
-		if (AbiturdatenManager.nutzeExperimentellenCode(SVWSKonfiguration.get().getServerMode(), schuljahr + 1)) { // Experimenteller Code
+		if (AbiturdatenManager.istAbitur2030(schuljahr + 1)) {
 			eintrag.istPruefungsordnungsRelevant = eintrag.istPruefungsordnungsRelevant && ((f != Fach.IN) && (f != Fach.VO));
 		}
 		eintrag.istFremdsprache = fach.IstFremdsprache;
@@ -220,7 +219,7 @@ public final class DBUtilsFaecherGost {
 			eintrag.istMoeglichQ12 = jf.WaehlbarQ12;
 			eintrag.istMoeglichQ21 = jf.WaehlbarQ21;
 			eintrag.istMoeglichQ22 = jf.WaehlbarQ22;
-			if (AbiturdatenManager.nutzeExperimentellenCode(SVWSKonfiguration.get().getServerMode(), schuljahr + 1)) { // Experimenteller Code
+			if (AbiturdatenManager.istAbitur2030(schuljahr + 1)) {
 				final Fach tmpFach = Fach.getBySchluesselOrDefault(fach.StatistikKuerzel);
 				if (tmpFach.getFachgruppe(schuljahr) == Fachgruppe.FG_PX) {
 					eintrag.istMoeglichQ11 = false;

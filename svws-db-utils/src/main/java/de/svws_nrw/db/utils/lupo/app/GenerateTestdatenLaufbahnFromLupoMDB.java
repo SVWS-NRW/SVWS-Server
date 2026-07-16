@@ -30,7 +30,6 @@ import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.Logger;
-import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.db.utils.lupo.mdb.LupoMDB;
 import jakarta.validation.constraints.NotNull;
@@ -131,9 +130,9 @@ public class GenerateTestdatenLaufbahnFromLupoMDB {
 				logger.logLn("Generiere Daten für " + strSchuelerID + " des Jahrgangs " + strJahrgangID);
 
 				final GostFaecherManager faecherManager = new GostFaecherManager(schuljahr, gostFaecher, gostFaecherkombinationen);
-				AbiturdatenManager manager = new AbiturdatenManager(ServerMode.STABLE, abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.EF1);
+				AbiturdatenManager manager = new AbiturdatenManager(abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.EF1);
 				final GostBelegpruefungErgebnis ergebnisEF1 = manager.getBelegpruefungErgebnis();
-				manager = new AbiturdatenManager(ServerMode.STABLE, abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
+				manager = new AbiturdatenManager(abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
 				final GostBelegpruefungErgebnis ergebnisGesamt = manager.getBelegpruefungErgebnis();
 
 				writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_" + strSchuelerID + "_Abiturdaten.json", mapper.writeValueAsString(abiturdaten));

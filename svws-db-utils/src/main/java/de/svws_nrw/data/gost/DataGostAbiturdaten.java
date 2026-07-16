@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.asd.types.fach.Fach;
-import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
@@ -923,7 +922,7 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 		final @NotNull GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(abidaten.schuljahrAbitur, conn, abidaten.abiturjahr);
 		final @NotNull GostJahrgangsdaten jahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, abidaten.abiturjahr);
 		final @NotNull AbiturdatenManager manager =
-				new AbiturdatenManager(SVWSKonfiguration.get().getServerMode(), abidaten, jahrgangsdaten, gostFaecher, GostBelegpruefungsArt.GESAMT);
+				new AbiturdatenManager(abidaten, jahrgangsdaten, gostFaecher, GostBelegpruefungsArt.GESAMT);
 		// Fasse die Belegungen Fächern zusammen, die inhaltsgleich sind - z.B. von bilingualen und nicht blingualen Sachfächern
 		manager.kombiniereFachbelegungenEinesFaches();
 		// Führe dann die Markierungsberechnung durch

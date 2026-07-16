@@ -15,7 +15,6 @@ import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
-import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostLeistungen;
@@ -395,7 +394,7 @@ public final class DBUtilsGost {
 				|| ((kursart == GostKursart.GK) && (("GKS".equals(leistung.Kursart))
 						|| ("AB3".equals(leistung.Kursart))
 						|| ("AB4".equals(leistung.Kursart) && (halbjahr != GostHalbjahr.Q22))))
-				|| (AbiturdatenManager.nutzeExperimentellenCode(SVWSKonfiguration.get().getServerMode(), abiturjahr) && (kursart == GostKursart.PJK));
+				|| (AbiturdatenManager.istAbitur2030(abiturjahr) && (kursart == GostKursart.PJK));
 		belegung.bilingualeSprache = gostFach.biliSprache;
 		belegung.wochenstunden = (leistung.Wochenstunden == null)
 				? kursart.getWochenstunden(fach.istFSNeu)

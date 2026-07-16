@@ -165,7 +165,7 @@ export class LaufbahnplanungUiManager implements LaufbahnplanungUiStepper {
 
 	/** Gibt an, ob der experimentelle Code ab Abitur 2030 genutzt werden soll */
 	private readonly isAbi30ff = computed<boolean>(() => this.gostLaufbahnplanungState.valid &&
-		 AbiturdatenManager.nutzeExperimentellenCode(this.serverMode, this.manager.getAbiturjahr()));
+		 AbiturdatenManager.istAbitur2030(this.manager.getAbiturjahr()));
 
 	/** Gibt zurück, ob es sich um einen Ui-Manager für die Abiturberechnung ab dem Jahr 2030 handelt oder nicht */
 	public get istAbiturAb2030(): boolean {

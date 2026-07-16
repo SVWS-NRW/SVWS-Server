@@ -1,6 +1,14 @@
 <template>
 	<div class="flex flex-col gap-4">
-		<div class="text-headline-md">Gleichwertige komplexe Lernleistungen</div>
+		<div class="text-headline-md flex items-center gap-2">
+			Gleichwertige komplexe Lernleistungen
+			<svws-ui-tooltip>
+				<span class="icon i-ri-question-line" />
+				<template #content>
+					Die Wahlmöglichkeiten richten sich nach den Klausurvorgaben der Schule
+				</template>
+			</svws-ui-tooltip>
+		</div>
 		<ui-table-grid name="Gleichwertige komplexe Lernleistungen" :manager="() => gridManager">
 			<template #header>
 				<td class="ui-divider" />

@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
-import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.data.gost.Abiturdaten;
@@ -106,7 +105,7 @@ public final class DataGostSchuelerLaufbahnplanung {
 
 			// Führe die Belegprüfung für den Schüler durch
 			final AbiturdatenManager abiManager =
-					new AbiturdatenManager(SVWSKonfiguration.get().getServerMode(), abidaten, jahrgangsdaten, faecherManager, pruefungsArt);
+					new AbiturdatenManager(abidaten, jahrgangsdaten, faecherManager, pruefungsArt);
 			ergebnisse.ergebnis = abiManager.getBelegpruefungErgebnis();
 			ergebnisse.hatFachwahlen = abiManager.existsFachbelegung();
 			ergebnisse.beratungsDatum = (gostSchueler == null) ? null : gostSchueler.DatumBeratung;

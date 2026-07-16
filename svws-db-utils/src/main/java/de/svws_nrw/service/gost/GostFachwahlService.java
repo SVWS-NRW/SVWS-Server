@@ -15,7 +15,6 @@ import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
-import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostSchuelerFachwahl;
@@ -289,15 +288,15 @@ public class GostFachwahlService {
 					schuelerLeistungsdatenRepository.findListByLernabschnittAndFach(List.of(lernabschnitt.ID), List.of(fach.ID));
 			if (leistungen.isEmpty()) {
 				final boolean valid = (fw == null)
-						|| (fw.equals("M")) || (fw.equals("S"))
-						|| (((fw.equals("LK")) || (fw.equals("ZK"))) && (!halbjahr.istEinfuehrungsphase()))
-						|| ((fw.equals("AT")) && ("SP".equals(fach.StatistikKuerzel)));
+						|| ("M".equals(fw)) || ("S".equals(fw))
+						|| ((("LK".equals(fw)) || ("ZK".equals(fw))) && (!halbjahr.istEinfuehrungsphase()))
+						|| (("AT".equals(fw)) && ("SP".equals(fach.StatistikKuerzel)));
 				if (!valid) {
 					throw new ApiOperationException(Status.CONFLICT);
 				}
 				return;
 			}
-			if (AbiturdatenManager.nutzeExperimentellenCode(SVWSKonfiguration.get().getServerMode(), abiturjahr)) {
+			if (AbiturdatenManager.istAbitur2030(abiturjahr)) {
 				patchFachwahlHalbjahrCheckLeistungenAbi2030(leistungen, halbjahr, "SP".equals(fach.StatistikKuerzel), fw);
 			} else {
 				patchFachwahlHalbjahrCheckLeistungen(leistungen, halbjahr, "SP".equals(fach.StatistikKuerzel), fw);
@@ -337,11 +336,11 @@ public class GostFachwahlService {
 			return fwDB;
 		}
 		final boolean valid = (fw == null)
-				|| (fw.equals("M")) || (fw.equals("S"))
-				|| (fw.equals("LK") && !halbjahr.istEinfuehrungsphase()
+				|| ("M".equals(fw)) || ("S".equals(fw))
+				|| ("LK".equals(fw) && !halbjahr.istEinfuehrungsphase()
 						&& !GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hatKuerzel(fach.StatistikKuerzel))
-				|| (fw.equals("ZK") && !halbjahr.istEinfuehrungsphase())
-				|| (fw.equals("AT") && "SP".equals(fach.StatistikKuerzel));
+				|| ("ZK".equals(fw) && !halbjahr.istEinfuehrungsphase())
+				|| ("AT".equals(fw) && "SP".equals(fach.StatistikKuerzel));
 		if (!valid) {
 			throw new ApiOperationException(Status.CONFLICT, "Die angegebene Fachwahl ist ungültig.");
 		}
@@ -441,7 +440,7 @@ public class GostFachwahlService {
 					}
 					case "abiturFach" -> {
 						// experimenteller Code für das 5. Abiturfach
-						final int maxAbifach = AbiturdatenManager.nutzeExperimentellenCode(SVWSKonfiguration.get().getServerMode(), abiturjahr)
+						final int maxAbifach = AbiturdatenManager.istAbitur2030(abiturjahr)
 								? 5 : 4;
 						fachbelegung.AbiturFach = JSONMapper.convertToIntegerInRange(value, true, 1, maxAbifach + 1);
 					}

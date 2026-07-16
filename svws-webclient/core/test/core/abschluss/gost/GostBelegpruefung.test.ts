@@ -2,7 +2,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { resolve, basename } from "node:path";
 import { describe, test, expect } from "vitest";
 import type { GostBelegpruefungErgebnisFehler } from "../../../../src";
-import { Abiturdaten, AbiturdatenManager, GostJahrgangFachkombination, GostFaecherManager, GostJahrgangsdaten, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFach, ArrayList, ServerMode } from "../../../../src";
+import { Abiturdaten, AbiturdatenManager, GostJahrgangFachkombination, GostFaecherManager, GostJahrgangsdaten, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFach, ArrayList } from "../../../../src";
 
 
 const test_dir = resolve(__dirname, "../../../../../../svws-core/src/test/resources/de/svws_nrw/abschluesse/gost/test");
@@ -81,7 +81,7 @@ describe.each(Object.entries(abiturdaten))(
 		describe.each(Object.entries(schueler!))("Testfall %s", (id, abitur) => {
 			test("EF1", () => {
 				const faecherManager = new GostFaecherManager(1, list, listKombis);
-				const manager = new AbiturdatenManager(ServerMode.DEV, abitur, jahrgangsdaten, faecherManager, GostBelegpruefungsArt.EF1);
+				const manager = new AbiturdatenManager(abitur, jahrgangsdaten, faecherManager, GostBelegpruefungsArt.EF1);
 				const ergebnis = manager.getBelegpruefungErgebnis();
 				const expected: GostBelegpruefungErgebnis = belegpruefungsergebnisse_ef1[jahrgang][id];
 				expect(expected.erfolgreich).toBe(ergebnis.erfolgreich);
@@ -97,7 +97,7 @@ describe.each(Object.entries(abiturdaten))(
 			});
 			test("Gesamt", () => {
 				const faecherManager = new GostFaecherManager(1, list, listKombis);
-				const manager = new AbiturdatenManager(ServerMode.DEV, abitur, jahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
+				const manager = new AbiturdatenManager(abitur, jahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
 				const ergebnis = manager.getBelegpruefungErgebnis();
 				const expected: GostBelegpruefungErgebnis = belegpruefungsergebnisse_gesamt[jahrgang][id];
 				expect(expected.erfolgreich).toBe(ergebnis.erfolgreich);
