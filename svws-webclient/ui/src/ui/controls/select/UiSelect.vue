@@ -105,6 +105,7 @@
 	import { DeveloperNotificationException } from '../../../../../core/src/core/exceptions/DeveloperNotificationException';
 	import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
 	import type { List } from '../../../../../core/src/java/util/List';
+	import { JavaObject } from '../../../../../core/src/java/lang/JavaObject';
 	import type { BasicValidator } from "../../../../../core/src/asd/validate/BasicValidator";
 	import type { ValidatorFehler } from '../../../../../core/src/asd/validate/ValidatorFehler';
 	import { ValidatorInputRequired } from "../../../validation/common/ValidatorInputRequired";
@@ -210,7 +211,7 @@
 		if ((model.value === undefined) || (model.value === null)) {
 			return false;
 		}
-		return props.manager.areEqual(toRaw(model.value), toRaw(option));
+		return JavaObject.equalsTranspiler(toRaw(model.value), toRaw(option));
 	}
 
 	/**

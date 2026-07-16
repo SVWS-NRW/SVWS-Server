@@ -115,6 +115,7 @@
 	import { DeveloperNotificationException } from '../../../../../core/src/core/exceptions/DeveloperNotificationException';
 	import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
 	import type { List } from '../../../../../core/src/java/util/List';
+	import { JavaObject } from '../../../../../core/src/java/lang/JavaObject';
 	import type { BasicValidator } from "../../../../../core/src/asd/validate/BasicValidator";
 	import type { ValidatorFehler } from '../../../../../core/src/asd/validate/ValidatorFehler';
 	import { ValidatorInputRequired } from "../../../validation/common/ValidatorInputRequired";
@@ -263,7 +264,7 @@
 	 * @param option
 	 */
 	function isSelected(option: T): boolean {
-		return modelArray.value.some(selected => props.manager.areEqual(toRaw(selected), toRaw(option)));
+		return modelArray.value.some(selected => JavaObject.equalsTranspiler(toRaw(selected), toRaw(option)));
 	}
 
 	/**

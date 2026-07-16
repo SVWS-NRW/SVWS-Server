@@ -9,6 +9,7 @@ import { CoreTypeDataNurSchulformenUndSchulgliederungen } from "../../../../core
 import { Schulform } from "../../../../core/src/asd/types/schule/Schulform";
 import type { BaseSelectManager } from "../../ui/controls/select/manager/BaseSelectManager";
 import { CoreTypeSelectManager } from "../../ui/controls/select/manager/CoreTypeSelectManager";
+import { JavaObject } from "../../../../core/src";
 
 /**
  * Ein Validator, welcher prüft, ob die Selektion eine Selects noch gültig ist.
@@ -68,7 +69,7 @@ export class ValidatorSelectOptionsValid<T> extends BasicValidator {
 	 */
 	private isInList(element: T, list: List<T>): boolean {
 		for (const option of list) {
-			if (this.manager.areEqual(toRaw(option), element)) {
+			if (JavaObject.equalsTranspiler(toRaw(option), element)) {
 				return true;
 			}
 		}

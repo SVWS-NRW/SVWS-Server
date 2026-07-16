@@ -361,35 +361,9 @@ export abstract class BaseSelectManager<T> {
 	 * @returns eine Liste mit Elementen, die in beiden Listen enthalten sind.
 	 */
 	private intersect(list1: List<T>, list2: List<T>): List<T> {
-		const result = new ArrayList<T>();
-		const set2 = new Set<T>(list2);
-		for (const item of list1) {
-			if (set2.has(toRaw(item))) {
-				result.add(item);
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * Vergleicht zwei Elemente strukturell.
-	 * Bevorzugt equals(), falls vorhanden. Fallback: JSON-Vergleich mit sortierten Keys.
-	 *
-	 * @param a   erstes Element
-	 * @param b   zweites Element
-	 *
-	 * @returns true, wenn die Elemente strukturell gleich sind
-	 */
-	public areEqual(a: T, b: T): boolean {
-		if (a === b) {
-			return true;
-		}
-		if (typeof (a as { equals?: unknown }).equals === "function") {
-			return (a as { equals: (o: unknown) => boolean }).equals(b);
-		}
-		// Fallback: struktureller Vergleich zweier Objekte über sortierte, vereinigte Keys
-		const keys = [...new Set([...Object.keys(a as object), ...Object.keys(b as object)])].sort();
-		return JSON.stringify(a, keys) === JSON.stringify(b, keys);
+		const copy = new ArrayList<T>(list1);
+		copy.retainAll(list2);
+		return copy;
 	}
 
 	/**
@@ -398,6 +372,7 @@ export abstract class BaseSelectManager<T> {
 	 * @return Darstellungskonfiguration für die Selektion
 	 */
 	public abstract get selectionDisplayText(): unknown;
+
 	/**
 	 * Setter für die Konfiguration der Darstellung der Selektion.
 	 *
