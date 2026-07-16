@@ -46,5 +46,4 @@ public final class DataKatalogBerufskollegFachklassen extends DataManager<Long> 
 	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
-
 }
