@@ -1,7 +1,7 @@
 <template>
 	<div class="page page-grid-cards">
 		<svws-ui-input-wrapper>
-			<svws-ui-text-input class="contentFocusField" v-model.trim="data.url" type="text" placeholder="URL" url />
+			<svws-ui-text-input class="contentFocusField" v-model.trim="data.url" type="text" placeholder="URL" />
 			<svws-ui-text-input v-model.trim="data.bezeichnung" type="text" placeholder="Bezeichnung" />
 			<div class="mt-7 flex flex-row gap-4 justify-end">
 				<svws-ui-button type="secondary" @click="cancel">Abbrechen</svws-ui-button>
@@ -45,11 +45,25 @@
 		if (isLoading.value) {
 			return;
 		}
-		props.checkpoint.active = false;
-		isLoading.value = true;
-		const { url, bezeichnung } = data.value;
-		await props.addCredentials({ url: `https://${url}`, bezeichnung: bezeichnung === "" ? null : bezeichnung, clientID: "1", clientSecret: "" });
-		isLoading.value = false;
+		try {
+			props.checkpoint.active = false;
+			isLoading.value = true;
+			const { url, bezeichnung } = data.value;
+			let address: URL;
+			if (url.startsWith("https://")) {
+				address = new URL(url);
+			} else if (url.startsWith("http://")) {
+				isValid.value = false;
+				return;
+			} else {
+				address = new URL(`https://${url}`);
+			}
+			await props.addCredentials({ url: address.href, bezeichnung: bezeichnung === "" ? null : bezeichnung, clientID: "1", clientSecret: "" });
+		} catch {
+			isValid.value = false;
+		} finally {
+			isLoading.value = false;
+		}
 	}
 
 </script>
