@@ -251,10 +251,10 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	private initialisiereMapKlausuren(pInput: List<GostKursklausurRich>): void {
 		for (const gostKursklausur of pInput) {
 			if (gostKursklausur.id < 0) {
-				throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist negativ!")
+				throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist negativ!");
 			}
 			if (this._mapKlausurZuNummer.containsKey(gostKursklausur.id)) {
-				throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist doppelt!")
+				throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist doppelt!");
 			}
 			const klausurNummer: number = this._mapKlausurZuNummer.size();
 			this._mapKlausurZuNummer.put(gostKursklausur.id, klausurNummer);
@@ -406,7 +406,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 			}
 		}
 		if (gruppeMin === null) {
-			throw new DeveloperNotificationException("Das darf nicht passieren!")
+			throw new DeveloperNotificationException("Das darf nicht passieren!");
 		}
 		return gruppeMin;
 	}
@@ -468,10 +468,10 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 */
 	aktionSetzeKlausurgruppeInTermin(pGruppe: List<number>, pTermin: number): boolean {
 		if (pTermin < 0) {
-			throw new DeveloperNotificationException("aktionSetzeKlausurGruppeInTermin(" + pGruppe + ", " + pTermin + ") --> Termin zu klein!")
+			throw new DeveloperNotificationException("aktionSetzeKlausurGruppeInTermin(" + pGruppe + ", " + pTermin + ") --> Termin zu klein!");
 		}
 		if (pTermin >= this._terminAnzahl) {
-			throw new DeveloperNotificationException("aktionSetzeKlausurGruppeInTermin(" + pGruppe + ", " + pTermin + ") --> Termin zu groß!")
+			throw new DeveloperNotificationException("aktionSetzeKlausurGruppeInTermin(" + pGruppe + ", " + pTermin + ") --> Termin zu groß!");
 		}
 		for (let nr2: number = 0; nr2 < this._klausurenAnzahl; nr2++) {
 			if (this._klausurZuTermin[nr2] === pTermin) {
@@ -495,14 +495,14 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 */
 	aktionEntferneKlausurgruppeAusTermin(pGruppe: List<number>, pTermin: number): void {
 		if (pTermin < 0) {
-			throw new DeveloperNotificationException("aktionEntferneKlausurgruppeAusTermin(" + pGruppe + ", " + pTermin + ") --> Termin zu klein!")
+			throw new DeveloperNotificationException("aktionEntferneKlausurgruppeAusTermin(" + pGruppe + ", " + pTermin + ") --> Termin zu klein!");
 		}
 		if (pTermin >= this._terminAnzahl) {
-			throw new DeveloperNotificationException("aktionEntferneKlausurgruppeAusTermin(" + pGruppe + ", " + pTermin + ") --> Termin zu groß!")
+			throw new DeveloperNotificationException("aktionEntferneKlausurgruppeAusTermin(" + pGruppe + ", " + pTermin + ") --> Termin zu groß!");
 		}
 		for (const nr of pGruppe) {
 			if (this._klausurZuTermin[nr] !== pTermin) {
-				throw new DeveloperNotificationException("aktionEntferneKlausurgruppeAusTermin: Die Gruppe war gar nicht im Termin " + pTermin + "!")
+				throw new DeveloperNotificationException("aktionEntferneKlausurgruppeAusTermin: Die Gruppe war gar nicht im Termin " + pTermin + "!");
 			}
 			this._klausurZuTermin[nr] = -1;
 		}
@@ -516,7 +516,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	aktionSetzeKlausurgruppeInNeuenTermin(pGruppe: List<number>): void {
 		for (const klausurNr of pGruppe) {
 			if (this._klausurZuTermin[klausurNr] >= 0) {
-				throw new DeveloperNotificationException("aktionSetzeKlausurGruppeInNeuenTermin(" + klausurNr + ") --> Die Klausur ist bereits einem Termin zugeordnet!")
+				throw new DeveloperNotificationException("aktionSetzeKlausurGruppeInNeuenTermin(" + klausurNr + ") --> Die Klausur ist bereits einem Termin zugeordnet!");
 			}
 		}
 		for (const klausurNr of pGruppe) {

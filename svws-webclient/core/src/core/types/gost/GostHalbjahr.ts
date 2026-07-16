@@ -182,7 +182,7 @@ export class GostHalbjahr extends JavaEnum<GostHalbjahr> {
 	public nextOrException(): GostHalbjahr {
 		const hj: GostHalbjahr | null = GostHalbjahr.getMapByID().get(this.id + 1);
 		if (hj === null) {
-			throw new NullPointerException()
+			throw new NullPointerException();
 		}
 		return hj;
 	}
@@ -206,7 +206,7 @@ export class GostHalbjahr extends JavaEnum<GostHalbjahr> {
 	public previousOrException(): GostHalbjahr {
 		const hj: GostHalbjahr | null = GostHalbjahr.getMapByID().get(this.id - 1);
 		if (hj === null) {
-			throw new NullPointerException()
+			throw new NullPointerException();
 		}
 		return hj;
 	}
@@ -279,7 +279,7 @@ export class GostHalbjahr extends JavaEnum<GostHalbjahr> {
 				return q22;
 			}
 			default: {
-				throw new IllegalArgumentException("Der angegebene Jahrgang ist kein gültiger Jahrgang der gymnasialen Oberstufe")
+				throw new IllegalArgumentException("Der angegebene Jahrgang ist kein gültiger Jahrgang der gymnasialen Oberstufe");
 			}
 		}
 	}
@@ -306,7 +306,7 @@ export class GostHalbjahr extends JavaEnum<GostHalbjahr> {
 				return q2;
 			}
 			default: {
-				throw new IllegalArgumentException("Der angegebene Jahrgang ist kein gültiger Jahrgang der gymnasialen Oberstufe")
+				throw new IllegalArgumentException("Der angegebene Jahrgang ist kein gültiger Jahrgang der gymnasialen Oberstufe");
 			}
 		}
 	}
@@ -375,7 +375,7 @@ export class GostHalbjahr extends JavaEnum<GostHalbjahr> {
 				return GostHalbjahr.Q22.kuerzel;
 			}
 			default: {
-				throw new DeveloperNotificationException("Für die angegebene ID " + id + " existiert kein entsprechendes Halbjahr.")
+				throw new DeveloperNotificationException("Für die angegebene ID " + id + " existiert kein entsprechendes Halbjahr.");
 			}
 		}
 	}
@@ -392,7 +392,7 @@ export class GostHalbjahr extends JavaEnum<GostHalbjahr> {
 	public static fromIDorException(pGostHalbjahID: number): GostHalbjahr {
 		const halbjahr: GostHalbjahr | null = GostHalbjahr.fromID(pGostHalbjahID);
 		if (halbjahr === null) {
-			throw new NullPointerException("GostHalbjahr nicht gefunden!")
+			throw new NullPointerException("GostHalbjahr nicht gefunden!");
 		}
 		return halbjahr;
 	}

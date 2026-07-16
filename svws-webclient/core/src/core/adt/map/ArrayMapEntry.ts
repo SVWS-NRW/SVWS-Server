@@ -57,7 +57,7 @@ export class ArrayMapEntry<K, V> extends JavaObject implements JavaMapEntry<K, V
 	}
 
 	public setValue(value: V): V {
-		throw new UnsupportedOperationException()
+		throw new UnsupportedOperationException();
 	}
 
 	transpilerCanonicalName(): string {

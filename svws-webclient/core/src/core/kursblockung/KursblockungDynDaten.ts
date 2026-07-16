@@ -296,7 +296,7 @@ export class KursblockungDynDaten extends JavaObject {
 					break;
 				}
 				default: {
-					throw new DeveloperNotificationException("Unbekannter Regeltyp!")
+					throw new DeveloperNotificationException("Unbekannter Regeltyp!");
 				}
 			}
 		}

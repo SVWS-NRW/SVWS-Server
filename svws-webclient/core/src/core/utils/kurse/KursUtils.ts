@@ -23,7 +23,7 @@ export class KursUtils extends JavaObject {
 
 	private constructor() {
 		super();
-		throw new IllegalStateException("Instantiation not allowed")
+		throw new IllegalStateException("Instantiation not allowed");
 	}
 
 	transpilerCanonicalName(): string {

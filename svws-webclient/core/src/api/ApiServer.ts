@@ -264,7 +264,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} username - der Benutzername für den API-Zugriff
 	 * @param {string} password - das Kennwort des Benutzers für den API-Zugriff
 	 */
-	public constructor(url : string, username : string, password : string) {
+	public constructor(url: string, username: string, password: string) {
 		super(url, username, password);
 	}
 
@@ -281,9 +281,9 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Das Zertifikat des Servers
 	 */
-	public async getConfigCertificate() : Promise<string> {
+	public async getConfigCertificate(): Promise<string> {
 		const path = "/config/certificate";
-		const text : string = await super.getText(path);
+		const text: string = await super.getText(path);
 		return text;
 	}
 
@@ -301,9 +301,9 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Das Base-64-kodierte Zertifikat des Servers
 	 */
-	public async getConfigCertificateBase64() : Promise<ApiFile> {
+	public async getConfigCertificateBase64(): Promise<ApiFile> {
 		const path = "/config/certificate_base64";
-		const data : ApiFile = await super.getOctetStream(path);
+		const data: ApiFile = await super.getOctetStream(path);
 		return data;
 	}
 
@@ -322,9 +322,9 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Zertifikatsdatei des Servers
 	 */
-	public async getConfigCertificateFile() : Promise<ApiFile> {
+	public async getConfigCertificateFile(): Promise<ApiFile> {
 		const path = "/config/certificate_file";
-		const data : ApiFile = await super.getOctetStream(path);
+		const data: ApiFile = await super.getOctetStream(path);
 		return data;
 	}
 
@@ -341,12 +341,15 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von DB-Schema-Listen-Einträgen
 	 */
-	public async getConfigDBSchemata() : Promise<List<DBSchemaListeEintrag>> {
+	public async getConfigDBSchemata(): Promise<List<DBSchemaListeEintrag>> {
 		const path = "/config/db/schemata";
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<DBSchemaListeEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(DBSchemaListeEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(DBSchemaListeEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -364,9 +367,9 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Base-64-kodierte, öffentliche Schlüssel des Servers
 	 */
-	public async getConfigPublicKeyBase64() : Promise<string> {
+	public async getConfigPublicKeyBase64(): Promise<string> {
 		const path = "/config/publickey_base64";
-		const text : string = await super.getText(path);
+		const text: string = await super.getText(path);
 		return text;
 	}
 
@@ -388,11 +391,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchKatalogFoerderschwerpunkt(data : Partial<FoerderschwerpunktEintrag>, schema : string, id : number) : Promise<void> {
+	public async patchKatalogFoerderschwerpunkt(data: Partial<FoerderschwerpunktEintrag>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/{id : \\d+}/foerderschwerpunkte"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = FoerderschwerpunktEintrag.transpilerToJSONPatch(data);
+		const body: string = FoerderschwerpunktEintrag.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -413,13 +416,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Straßen-Katalog-Einträgen
 	 */
-	public async getKatalogStrassen(schema : string) : Promise<List<KatalogEintragStrassen>> {
+	public async getKatalogStrassen(schema: string): Promise<List<KatalogEintragStrassen>> {
 		const path = "/db/{schema}/allgemein/strassen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KatalogEintragStrassen>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEintragStrassen.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(KatalogEintragStrassen.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -440,13 +446,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Benutzer-Einträgen
 	 */
-	public async getBenutzerliste(schema : string) : Promise<List<BenutzerListeEintrag>> {
+	public async getBenutzerliste(schema: string): Promise<List<BenutzerListeEintrag>> {
 		const path = "/db/{schema}/benutzer/"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<BenutzerListeEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BenutzerListeEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(BenutzerListeEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -468,11 +477,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten des Benutzers
 	 */
-	public async getBenutzerDaten(schema : string, id : number) : Promise<BenutzerDaten> {
+	public async getBenutzerDaten(schema: string, id: number): Promise<BenutzerDaten> {
 		const path = "/db/{schema}/benutzer/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return BenutzerDaten.transpilerFromJSON(text);
 	}
@@ -493,7 +502,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async addBenutzerAdmin(schema : string, id : number) : Promise<void> {
+	public async addBenutzerAdmin(schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/benutzer/{id : \\d+}/addAdmin"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -518,11 +527,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async setBenutzername(data : string | null, schema : string, id : number) : Promise<void> {
+	public async setBenutzername(data: string | null, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/benutzer/{id : \\d+}/anmeldename"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = JSON.stringify(data);
+		const body: string = JSON.stringify(data);
 		await super.postJSON(path, body);
 		return;
 	}
@@ -544,11 +553,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async setAnzeigename(data : string | null, schema : string, id : number) : Promise<void> {
+	public async setAnzeigename(data: string | null, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/benutzer/{id : \\d+}/anzeigename"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = JSON.stringify(data);
+		const body: string = JSON.stringify(data);
 		await super.postJSON(path, body);
 		return;
 	}
@@ -570,11 +579,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async addBenutzerKompetenzen(data : List<number>, schema : string, id : number) : Promise<void> {
+	public async addBenutzerKompetenzen(data: List<number>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/benutzer/{id : \\d+}/kompetenz/add"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		await super.postJSON(path, body);
 		return;
 	}
@@ -596,11 +605,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async removeBenutzerKompetenzen(data : List<number>, schema : string, id : number) : Promise<void> {
+	public async removeBenutzerKompetenzen(data: List<number>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/benutzer/{id : \\d+}/kompetenz/remove"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		await super.deleteJSON(path, body);
 		return;
 	}
@@ -622,11 +631,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async setPassword(data : string | null, schema : string, id : number) : Promise<void> {
+	public async setPassword(data: string | null, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/benutzer/{id : \\d+}/password"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = JSON.stringify(data);
+		const body: string = JSON.stringify(data);
 		await super.postJSON(path, body);
 		return;
 	}
@@ -647,7 +656,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async removeBenutzerAdmin(schema : string, id : number) : Promise<void> {
+	public async removeBenutzerAdmin(schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/benutzer/{id : \\d+}/removeAdmin"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -671,13 +680,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Katalog der Benutzerkompetenzen
 	 */
-	public async getKatalogBenutzerkompetenzen(schema : string) : Promise<List<BenutzerKompetenzKatalogEintrag>> {
+	public async getKatalogBenutzerkompetenzen(schema: string): Promise<List<BenutzerKompetenzKatalogEintrag>> {
 		const path = "/db/{schema}/benutzer/allgemein/kompetenzen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<BenutzerKompetenzKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BenutzerKompetenzKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(BenutzerKompetenzKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -697,13 +709,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Katalog der Benutzerkompetenzgruppen
 	 */
-	public async getKatalogBenutzerkompetenzgruppen(schema : string) : Promise<List<BenutzerKompetenzGruppenKatalogEintrag>> {
+	public async getKatalogBenutzerkompetenzgruppen(schema: string): Promise<List<BenutzerKompetenzGruppenKatalogEintrag>> {
 		const path = "/db/{schema}/benutzer/allgemein/kompetenzgruppen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<BenutzerKompetenzGruppenKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BenutzerKompetenzGruppenKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(BenutzerKompetenzGruppenKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -724,10 +739,10 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten des Benutzers
 	 */
-	public async getBenutzerDatenEigene(schema : string) : Promise<BenutzerDaten> {
+	public async getBenutzerDatenEigene(schema: string): Promise<BenutzerDaten> {
 		const path = "/db/{schema}/benutzer/angemeldet/daten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return BenutzerDaten.transpilerFromJSON(text);
 	}
@@ -750,10 +765,10 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die EMail-Daten des Benutzers
 	 */
-	public async getBenutzerEmailDaten(schema : string) : Promise<BenutzerEMailDaten> {
+	public async getBenutzerEmailDaten(schema: string): Promise<BenutzerEMailDaten> {
 		const path = "/db/{schema}/benutzer/angemeldet/daten/email"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return BenutzerEMailDaten.transpilerFromJSON(text);
 	}
@@ -775,10 +790,10 @@ export class ApiServer extends BaseApi {
 	 * @param {Partial<BenutzerEMailDaten>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchBenutzerEmailDaten(data : Partial<BenutzerEMailDaten>, schema : string) : Promise<void> {
+	public async patchBenutzerEmailDaten(data: Partial<BenutzerEMailDaten>, schema: string): Promise<void> {
 		const path = "/db/{schema}/benutzer/angemeldet/daten/email"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = BenutzerEMailDaten.transpilerToJSONPatch(data);
+		const body: string = BenutzerEMailDaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -801,11 +816,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Benutzergruppe wurde erfolgreich angelegt.
 	 */
-	public async createBenutzergruppe(data : BenutzergruppeDaten, schema : string) : Promise<BenutzergruppeDaten> {
+	public async createBenutzergruppe(data: BenutzergruppeDaten, schema: string): Promise<BenutzergruppeDaten> {
 		const path = "/db/{schema}/benutzer/benutzergruppe/new"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = BenutzergruppeDaten.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = BenutzergruppeDaten.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return BenutzergruppeDaten.transpilerFromJSON(text);
 	}
@@ -827,13 +842,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Benutzergruppen-Einträgen
 	 */
-	public async getBenutzergruppenliste(schema : string) : Promise<List<BenutzergruppeListeEintrag>> {
+	public async getBenutzergruppenliste(schema: string): Promise<List<BenutzergruppeListeEintrag>> {
 		const path = "/db/{schema}/benutzer/gruppe"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<BenutzergruppeListeEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BenutzergruppeListeEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(BenutzergruppeListeEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -855,11 +873,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten der Benutzergruppe
 	 */
-	public async getBenutzergruppeDaten(schema : string, id : number) : Promise<BenutzergruppeDaten> {
+	public async getBenutzergruppeDaten(schema: string, id: number): Promise<BenutzergruppeDaten> {
 		const path = "/db/{schema}/benutzer/gruppe/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return BenutzergruppeDaten.transpilerFromJSON(text);
 	}
@@ -880,7 +898,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async addBenutzergruppeAdmin(schema : string, id : number) : Promise<void> {
+	public async addBenutzergruppeAdmin(schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/benutzer/gruppe/{id : \\d+}/addAdmin"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -906,14 +924,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Benutzer der Benutzergruppe
 	 */
-	public async getBenutzerMitGruppenID(schema : string, id : number) : Promise<List<BenutzerListeEintrag>> {
+	public async getBenutzerMitGruppenID(schema: string, id: number): Promise<List<BenutzerListeEintrag>> {
 		const path = "/db/{schema}/benutzer/gruppe/{id : \\d+}/benutzer"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<BenutzerListeEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BenutzerListeEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(BenutzerListeEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -938,12 +959,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Benutzer wurden erfolgreich hinzugefügt.
 	 */
-	public async addBenutzergruppeBenutzer(data : List<number>, schema : string, id : number) : Promise<BenutzergruppeDaten> {
+	public async addBenutzergruppeBenutzer(data: List<number>, schema: string, id: number): Promise<BenutzergruppeDaten> {
 		const path = "/db/{schema}/benutzer/gruppe/{id : \\d+}/benutzer/add"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return BenutzergruppeDaten.transpilerFromJSON(text);
 	}
@@ -969,12 +990,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Benutzer wurden erfolgreich hinzugefügt.
 	 */
-	public async removeBenutzergruppeBenutzer(data : List<number>, schema : string, id : number) : Promise<BenutzergruppeDaten> {
+	public async removeBenutzergruppeBenutzer(data: List<number>, schema: string, id: number): Promise<BenutzergruppeDaten> {
 		const path = "/db/{schema}/benutzer/gruppe/{id : \\d+}/benutzer/remove"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const text = result;
 		return BenutzergruppeDaten.transpilerFromJSON(text);
 	}
@@ -996,11 +1017,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async setBenutzergruppeBezeichnung(data : string | null, schema : string, id : number) : Promise<void> {
+	public async setBenutzergruppeBezeichnung(data: string | null, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/benutzer/gruppe/{id : \\d+}/bezeichnung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = JSON.stringify(data);
+		const body: string = JSON.stringify(data);
 		await super.postJSON(path, body);
 		return;
 	}
@@ -1022,11 +1043,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async addBenutzergruppeKompetenzen(data : List<number>, schema : string, id : number) : Promise<void> {
+	public async addBenutzergruppeKompetenzen(data: List<number>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/benutzer/gruppe/{id : \\d+}/kompetenz/add"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		await super.postJSON(path, body);
 		return;
 	}
@@ -1048,11 +1069,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async removeBenutzergruppeKompetenzen(data : List<number>, schema : string, id : number) : Promise<void> {
+	public async removeBenutzergruppeKompetenzen(data: List<number>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/benutzer/gruppe/{id : \\d+}/kompetenz/remove"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		await super.deleteJSON(path, body);
 		return;
 	}
@@ -1073,7 +1094,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async removeBenutzergruppeAdmin(schema : string, id : number) : Promise<void> {
+	public async removeBenutzergruppeAdmin(schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/benutzer/gruppe/{id : \\d+}/removeAdmin"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -1097,10 +1118,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async removeBenutzerGruppe(data : List<number>, schema : string) : Promise<void> {
+	public async removeBenutzerGruppe(data: List<number>, schema: string): Promise<void> {
 		const path = "/db/{schema}/benutzer/guppe/remove"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		await super.deleteJSON(path, body);
 		return;
 	}
@@ -1124,11 +1145,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Benutzer wurde erfolgreich angelegt.
 	 */
-	public async createBenutzerAllgemein(data : BenutzerAllgemeinCredentials, schema : string) : Promise<BenutzerDaten> {
+	public async createBenutzerAllgemein(data: BenutzerAllgemeinCredentials, schema: string): Promise<BenutzerDaten> {
 		const path = "/db/{schema}/benutzer/new"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = BenutzerAllgemeinCredentials.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = BenutzerAllgemeinCredentials.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return BenutzerDaten.transpilerFromJSON(text);
 	}
@@ -1152,11 +1173,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Benutzer wurde erfolgreich angelegt.
 	 */
-	public async createBenutzerLehrer(data : BenutzerLehrerCredentials, schema : string) : Promise<BenutzerDaten> {
+	public async createBenutzerLehrer(data: BenutzerLehrerCredentials, schema: string): Promise<BenutzerDaten> {
 		const path = "/db/{schema}/benutzer/new/lehrer"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = BenutzerLehrerCredentials.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = BenutzerLehrerCredentials.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return BenutzerDaten.transpilerFromJSON(text);
 	}
@@ -1177,10 +1198,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async removeBenutzerMenge(data : List<number>, schema : string) : Promise<void> {
+	public async removeBenutzerMenge(data: List<number>, schema: string): Promise<void> {
 		const path = "/db/{schema}/benutzer/remove"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		await super.deleteJSON(path, body);
 		return;
 	}
@@ -1202,13 +1223,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste der Beschäftigungsarten.
 	 */
-	public async getBeschaeftigungsarten(schema : string) : Promise<List<Beschaeftigungsart>> {
+	public async getBeschaeftigungsarten(schema: string): Promise<List<Beschaeftigungsart>> {
 		const path = "/db/{schema}/beschaeftigungsarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Beschaeftigungsart>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Beschaeftigungsart.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Beschaeftigungsart.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -1230,11 +1254,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchBeschaeftigungsart(data : Partial<Beschaeftigungsart>, schema : string, id : number) : Promise<void> {
+	public async patchBeschaeftigungsart(data: Partial<Beschaeftigungsart>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/beschaeftigungsarten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Beschaeftigungsart.transpilerToJSONPatch(data);
+		const body: string = Beschaeftigungsart.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -1256,11 +1280,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Beschäftigungsart wurde erfolgreich hinzugefügt.
 	 */
-	public async addBeschaeftigungsart(data : Partial<Beschaeftigungsart>, schema : string) : Promise<Beschaeftigungsart> {
+	public async addBeschaeftigungsart(data: Partial<Beschaeftigungsart>, schema: string): Promise<Beschaeftigungsart> {
 		const path = "/db/{schema}/beschaeftigungsarten/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Beschaeftigungsart.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Beschaeftigungsart.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return Beschaeftigungsart.transpilerFromJSON(text);
 	}
@@ -1284,14 +1308,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteBeschaeftigungsarten(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteBeschaeftigungsarten(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/beschaeftigungsarten/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -1313,11 +1340,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Abiturdaten aus der Laufbahn des angegebenen Schülers
 	 */
-	public async getBKGymSchuelerAbiturdatenAusLeistungsdaten(schema : string, id : number) : Promise<BKGymAbiturdaten> {
+	public async getBKGymSchuelerAbiturdatenAusLeistungsdaten(schema: string, id: number): Promise<BKGymAbiturdaten> {
 		const path = "/db/{schema}/bk/gym/schueler/{id : \\d+}/laufbahn"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return BKGymAbiturdaten.transpilerFromJSON(text);
 	}
@@ -1340,11 +1367,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Leistungsdaten des Schülers
 	 */
-	public async getBKGymSchuelerLeistungsdaten(schema : string, id : number) : Promise<BKGymLeistungen> {
+	public async getBKGymSchuelerLeistungsdaten(schema: string, id: number): Promise<BKGymLeistungen> {
 		const path = "/db/{schema}/bk/gym/schueler/{id : \\d+}/leistungsdaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return BKGymLeistungen.transpilerFromJSON(text);
 	}
@@ -1365,11 +1392,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Key-Value-Paare der Konfigurationseinträge als Liste
 	 */
-	public async getClientConfig(schema : string, app : string) : Promise<BenutzerConfig> {
+	public async getClientConfig(schema: string, app: string): Promise<BenutzerConfig> {
 		const path = "/db/{schema}/client/config/{app}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{app\s*(:[^{}]+({[^{}]+})*)?}/g, app);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return BenutzerConfig.transpilerFromJSON(text);
 	}
@@ -1388,12 +1415,12 @@ export class ApiServer extends BaseApi {
 	 * @param {string} app - der Pfad-Parameter app
 	 * @param {string} key - der Pfad-Parameter key
 	 */
-	public async setClientConfigGlobalKey(data : string | null, schema : string, app : string, key : string) : Promise<void> {
+	public async setClientConfigGlobalKey(data: string | null, schema: string, app: string, key: string): Promise<void> {
 		const path = "/db/{schema}/client/config/{app}/global/{key}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{app\s*(:[^{}]+({[^{}]+})*)?}/g, app)
 			.replace(/{key\s*(:[^{}]+({[^{}]+})*)?}/g, key);
-		const body : string = JSON.stringify(data);
+		const body: string = JSON.stringify(data);
 		return super.putJSON(path, body);
 	}
 
@@ -1414,12 +1441,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Wert des Konfigurationseintrags
 	 */
-	public async getClientConfigUserKey(schema : string, app : string, key : string) : Promise<string> {
+	public async getClientConfigUserKey(schema: string, app: string, key: string): Promise<string> {
 		const path = "/db/{schema}/client/config/{app}/user/{key}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{app\s*(:[^{}]+({[^{}]+})*)?}/g, app)
 			.replace(/{key\s*(:[^{}]+({[^{}]+})*)?}/g, key);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return JSON.parse(text).toString();
 	}
@@ -1438,12 +1465,12 @@ export class ApiServer extends BaseApi {
 	 * @param {string} app - der Pfad-Parameter app
 	 * @param {string} key - der Pfad-Parameter key
 	 */
-	public async setClientConfigUserKey(data : string | null, schema : string, app : string, key : string) : Promise<void> {
+	public async setClientConfigUserKey(data: string | null, schema: string, app: string, key: string): Promise<void> {
 		const path = "/db/{schema}/client/config/{app}/user/{key}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{app\s*(:[^{}]+({[^{}]+})*)?}/g, app)
 			.replace(/{key\s*(:[^{}]+({[^{}]+})*)?}/g, key);
-		const body : string = JSON.stringify(data);
+		const body: string = JSON.stringify(data);
 		return super.putJSON(path, body);
 	}
 
@@ -1476,10 +1503,10 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Log vom Import der Räume aus Kurs 42
 	 */
-	public async importKurs42Raeume(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
+	public async importKurs42Raeume(data: FormData, schema: string): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/datenaustausch/gost/kurs42/import/raeume"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.postMultipart(path, data);
+		const result: string = await super.postMultipart(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -1513,10 +1540,10 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Log vom Import der Kurs 42-Blockung
 	 */
-	public async importKurs42Blockung(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
+	public async importKurs42Blockung(data: FormData, schema: string): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/datenaustausch/gost/kurs42/import/zip"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.postMultipart(path, data);
+		const result: string = await super.postMultipart(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -1539,11 +1566,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die LuPO-Lehrerdatei
 	 */
-	public async getGostLupoExportMDBFuerJahrgang(schema : string, jahrgang : string) : Promise<ApiFile> {
+	public async getGostLupoExportMDBFuerJahrgang(schema: string, jahrgang: string): Promise<ApiFile> {
 		const path = "/db/{schema}/datenaustausch/gost/lupo/export/mdb/jahrgang/{jahrgang}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{jahrgang\s*(:[^{}]+({[^{}]+})*)?}/g, jahrgang);
-		const data : ApiFile = await super.getOctetStream(path);
+		const data: ApiFile = await super.getOctetStream(path);
 		return data;
 	}
 
@@ -1571,11 +1598,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Log vom Import der Laufbahndaten
 	 */
-	public async setGostLupoImportMDBFuerJahrgang(data : FormData, schema : string, mode : string) : Promise<SimpleOperationResponse> {
+	public async setGostLupoImportMDBFuerJahrgang(data: FormData, schema: string, mode: string): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/datenaustausch/gost/lupo/import/mdb/jahrgang/replace/{mode}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{mode\s*(:[^{}]+({[^{}]+})*)?}/g, mode);
-		const result : string = await super.postMultipart(path, data);
+		const result: string = await super.postMultipart(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -1604,16 +1631,19 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Liste mit den Daten der drei GPUs
 	 */
-	public async exportUntisBlockungGPU002GPU015GPU019(data : LongAndStringLists, schema : string, id : number, sidvariante : number) : Promise<List<string>> {
+	public async exportUntisBlockungGPU002GPU015GPU019(data: LongAndStringLists, schema: string, id: number, sidvariante: number): Promise<List<string>> {
 		const path = "/db/{schema}/datenaustausch/untis/export/blockung/{id : \\d+}/{sidvariante : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{sidvariante\s*(:[^{}]+({[^{}]+})*)?}/g, sidvariante.toString());
-		const body : string = LongAndStringLists.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = LongAndStringLists.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<string>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JSON.parse(text).toString()); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(JSON.parse(text).toString());
+		});
 		return ret;
 	}
 
@@ -1641,13 +1671,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die GPU015.txt
 	 */
-	public async exportUntisFachwahlenGPU015(data : string | null, schema : string, id : number, sidvariante : number) : Promise<ApiFile> {
+	public async exportUntisFachwahlenGPU015(data: string | null, schema: string, id: number, sidvariante: number): Promise<ApiFile> {
 		const path = "/db/{schema}/datenaustausch/untis/export/fachwahlen/{id : \\d+}/{sidvariante : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{sidvariante\s*(:[^{}]+({[^{}]+})*)?}/g, sidvariante.toString());
-		const body : string = JSON.stringify(data);
-		const result : ApiFile = await super.postJSONtoOctetStream(path, body);
+		const body: string = JSON.stringify(data);
+		const result: ApiFile = await super.postJSONtoOctetStream(path, body);
 		return result;
 	}
 
@@ -1673,11 +1703,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die GPU006.txt
 	 */
-	public async exportUntisFaecherGPU006(schema : string, id : number) : Promise<ApiFile> {
+	public async exportUntisFaecherGPU006(schema: string, id: number): Promise<ApiFile> {
 		const path = "/db/{schema}/datenaustausch/untis/export/faecher/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : ApiFile = await super.postJSONtoOctetStream(path, null);
+		const result: ApiFile = await super.postJSONtoOctetStream(path, null);
 		return result;
 	}
 
@@ -1703,11 +1733,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die GPU003.txt
 	 */
-	public async exportUntisKlassenGPU003(schema : string, id : number) : Promise<ApiFile> {
+	public async exportUntisKlassenGPU003(schema: string, id: number): Promise<ApiFile> {
 		const path = "/db/{schema}/datenaustausch/untis/export/klassen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : ApiFile = await super.postJSONtoOctetStream(path, null);
+		const result: ApiFile = await super.postJSONtoOctetStream(path, null);
 		return result;
 	}
 
@@ -1735,13 +1765,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die GPU017.txt
 	 */
-	public async exportUntisKlausurenGPU017(data : string | null, schema : string, id : number, sidvariante : number) : Promise<ApiFile> {
+	public async exportUntisKlausurenGPU017(data: string | null, schema: string, id: number, sidvariante: number): Promise<ApiFile> {
 		const path = "/db/{schema}/datenaustausch/untis/export/klausuren/{id : \\d+}/{sidvariante : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{sidvariante\s*(:[^{}]+({[^{}]+})*)?}/g, sidvariante.toString());
-		const body : string = JSON.stringify(data);
-		const result : ApiFile = await super.postJSONtoOctetStream(path, body);
+		const body: string = JSON.stringify(data);
+		const result: ApiFile = await super.postJSONtoOctetStream(path, body);
 		return result;
 	}
 
@@ -1767,11 +1797,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die GPU004.txt
 	 */
-	public async exportUntisLehrerGPU004(schema : string, id : number) : Promise<ApiFile> {
+	public async exportUntisLehrerGPU004(schema: string, id: number): Promise<ApiFile> {
 		const path = "/db/{schema}/datenaustausch/untis/export/lehrer/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : ApiFile = await super.postJSONtoOctetStream(path, null);
+		const result: ApiFile = await super.postJSONtoOctetStream(path, null);
 		return result;
 	}
 
@@ -1798,12 +1828,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die GPU019.txt
 	 */
-	public async exportUntisSchienenGPU019(data : string | null, schema : string, id : number) : Promise<ApiFile> {
+	public async exportUntisSchienenGPU019(data: string | null, schema: string, id: number): Promise<ApiFile> {
 		const path = "/db/{schema}/datenaustausch/untis/export/schienen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = JSON.stringify(data);
-		const result : ApiFile = await super.postJSONtoOctetStream(path, body);
+		const body: string = JSON.stringify(data);
+		const result: ApiFile = await super.postJSONtoOctetStream(path, body);
 		return result;
 	}
 
@@ -1830,12 +1860,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die GPU010.txt
 	 */
-	public async exportUntisSchuelerGPU010(schema : string, id : number, sidvariante : number) : Promise<ApiFile> {
+	public async exportUntisSchuelerGPU010(schema: string, id: number, sidvariante: number): Promise<ApiFile> {
 		const path = "/db/{schema}/datenaustausch/untis/export/schueler/{id : \\d+}/{sidvariante : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{sidvariante\s*(:[^{}]+({[^{}]+})*)?}/g, sidvariante.toString());
-		const result : ApiFile = await super.postJSONtoOctetStream(path, null);
+		const result: ApiFile = await super.postJSONtoOctetStream(path, null);
 		return result;
 	}
 
@@ -1866,11 +1896,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Log vom Import des Untis-Stundenplans
 	 */
-	public async importStundenplanUntisGPU001(data : FormData, schema : string, ingore_missing : number) : Promise<SimpleOperationResponse> {
+	public async importStundenplanUntisGPU001(data: FormData, schema: string, ingore_missing: number): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/datenaustausch/untis/import/gpu001/{ingore_missing:[01]}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{ingore_missing\s*(:[^{}]+({[^{}]+})*)?}/g, ingore_missing.toString());
-		const result : string = await super.postMultipart(path, data);
+		const result: string = await super.postMultipart(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -1904,10 +1934,10 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Log vom Import der Räume aus der Untis-Datei GPU005.txt
 	 */
-	public async importUntisRaeumeGPU005(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
+	public async importUntisRaeumeGPU005(data: FormData, schema: string): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/datenaustausch/untis/import/gpu005"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.postMultipart(path, data);
+		const result: string = await super.postMultipart(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -1929,11 +1959,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Log wurde ermittelt.
 	 */
-	public async getEmailJobLog(schema : string, jobId : number) : Promise<SimpleOperationResponse> {
+	public async getEmailJobLog(schema: string, jobId: number): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/email/email-jobs/{jobId}/log"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{jobId\s*(:[^{}]+({[^{}]+})*)?}/g, jobId.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -1955,11 +1985,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Status wurde ermittelt.
 	 */
-	public async getEmailJobStatus(schema : string, jobId : number) : Promise<SimpleOperationResponse> {
+	public async getEmailJobStatus(schema: string, jobId: number): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/email/email-jobs/{jobId}/status"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{jobId\s*(:[^{}]+({[^{}]+})*)?}/g, jobId.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -1980,10 +2010,10 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die SMTP-Server-Konfiguration
 	 */
-	public async getSMTPServerKonfiguration(schema : string) : Promise<SMTPServerKonfiguration> {
+	public async getSMTPServerKonfiguration(schema: string): Promise<SMTPServerKonfiguration> {
 		const path = "/db/{schema}/email/smtp/server/konfiguration"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return SMTPServerKonfiguration.transpilerFromJSON(text);
 	}
@@ -2004,10 +2034,10 @@ export class ApiServer extends BaseApi {
 	 * @param {Partial<SMTPServerKonfiguration>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchSMTPServerKonfiguration(data : Partial<SMTPServerKonfiguration>, schema : string) : Promise<void> {
+	public async patchSMTPServerKonfiguration(data: Partial<SMTPServerKonfiguration>, schema: string): Promise<void> {
 		const path = "/db/{schema}/email/smtp/server/konfiguration"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = SMTPServerKonfiguration.transpilerToJSONPatch(data);
+		const body: string = SMTPServerKonfiguration.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -2027,13 +2057,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Liste mit den Initialkennwörtern
 	 */
-	public async getENMLehrerInitialKennwoerter(schema : string) : Promise<List<ENMLehrerInitialKennwort>> {
+	public async getENMLehrerInitialKennwoerter(schema: string): Promise<List<ENMLehrerInitialKennwort>> {
 		const path = "/db/{schema}/enm/alle/initial_kennwoerter"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<ENMLehrerInitialKennwort>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(ENMLehrerInitialKennwort.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(ENMLehrerInitialKennwort.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -2054,10 +2087,10 @@ export class ApiServer extends BaseApi {
 	 * @param {Partial<ENMv1SchuelerAnkreuzkompetenz>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchENMSchuelerAnkreuzkompetenz(data : Partial<ENMv1SchuelerAnkreuzkompetenz>, schema : string) : Promise<void> {
+	public async patchENMSchuelerAnkreuzkompetenz(data: Partial<ENMv1SchuelerAnkreuzkompetenz>, schema: string): Promise<void> {
 		const path = "/db/{schema}/enm/ankreuzkompetenz"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = ENMv1SchuelerAnkreuzkompetenz.transpilerToJSONPatch(data);
+		const body: string = ENMv1SchuelerAnkreuzkompetenz.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -2079,11 +2112,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchENMSchuelerBemerkungen(data : Partial<ENMv1LeistungBemerkungen>, schema : string, id : number) : Promise<void> {
+	public async patchENMSchuelerBemerkungen(data: Partial<ENMv1LeistungBemerkungen>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/enm/bemerkungen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = ENMv1LeistungBemerkungen.transpilerToJSONPatch(data);
+		const body: string = ENMv1LeistungBemerkungen.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -2105,11 +2138,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchENMServerConnection(data : Partial<ENMServerConnection>, schema : string, id : number) : Promise<void> {
+	public async patchENMServerConnection(data: Partial<ENMServerConnection>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/enm/connection/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = ENMServerConnection.transpilerToJSONPatch(data);
+		const body: string = ENMServerConnection.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -2133,11 +2166,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Verbindung zu einem Web-Notenmodul-Server wurde erfolgreich entfernt.
 	 */
-	public async deleteENMServerConnection(schema : string, id : number) : Promise<ENMServerConnection> {
+	public async deleteENMServerConnection(schema: string, id: number): Promise<ENMServerConnection> {
 		const path = "/db/{schema}/enm/connection/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return ENMServerConnection.transpilerFromJSON(text);
 	}
@@ -2160,11 +2193,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Verbindung zu einem Web-Notenmodul-Server
 	 */
-	public async getENMServerConnection(schema : string, id : number) : Promise<ENMServerConnection> {
+	public async getENMServerConnection(schema: string, id: number): Promise<ENMServerConnection> {
 		const path = "/db/{schema}/enm/connection/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return ENMServerConnection.transpilerFromJSON(text);
 	}
@@ -2198,11 +2231,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der ENM-Server ist erreichbar.
 	 */
-	public async checkENMServer(schema : string, idVerbindung : number) : Promise<SimpleOperationResponse> {
+	public async checkENMServer(schema: string, idVerbindung: number): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/enm/connection/{idVerbindung : \\d+}/check"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idVerbindung\s*(:[^{}]+({[^{}]+})*)?}/g, idVerbindung.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -2236,11 +2269,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Konfiguration konnte erfolgreich abgerufen werden.
 	 */
-	public async getENMServerConfig(schema : string, idVerbindung : number) : Promise<ENMConfigResponse> {
+	public async getENMServerConfig(schema: string, idVerbindung: number): Promise<ENMConfigResponse> {
 		const path = "/db/{schema}/enm/connection/{idVerbindung : \\d+}/config"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idVerbindung\s*(:[^{}]+({[^{}]+})*)?}/g, idVerbindung.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return ENMConfigResponse.transpilerFromJSON(text);
 	}
@@ -2275,12 +2308,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Konfigurationseintrag wurde erfolgreich geschrieben
 	 */
-	public async setENMServerConfigElement(data : ENMServerConfigElement, schema : string, idVerbindung : number) : Promise<SimpleOperationResponse> {
+	public async setENMServerConfigElement(data: ENMServerConfigElement, schema: string, idVerbindung: number): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/enm/connection/{idVerbindung : \\d+}/config"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idVerbindung\s*(:[^{}]+({[^{}]+})*)?}/g, idVerbindung.toString());
-		const body : string = ENMServerConfigElement.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = ENMServerConfigElement.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -2314,11 +2347,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten des Externen Notenmoduls (ENM) wurden heruntergeladen
 	 */
-	public async downloadENMDaten(schema : string, idVerbindung : number) : Promise<SimpleOperationResponse> {
+	public async downloadENMDaten(schema: string, idVerbindung: number): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/enm/connection/{idVerbindung : \\d+}/download"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idVerbindung\s*(:[^{}]+({[^{}]+})*)?}/g, idVerbindung.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -2352,11 +2385,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten des Externen Notenmoduls (ENM) wurden geleert.
 	 */
-	public async resetENMServer(schema : string, idVerbindung : number) : Promise<SimpleOperationResponse> {
+	public async resetENMServer(schema: string, idVerbindung: number): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/enm/connection/{idVerbindung : \\d+}/reset"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idVerbindung\s*(:[^{}]+({[^{}]+})*)?}/g, idVerbindung.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -2393,11 +2426,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Stand des Setups, true, wurde initialisiert, false ist bereits initialisiert
 	 */
-	public async setupENMServer(schema : string, idVerbindung : number) : Promise<boolean> {
+	public async setupENMServer(schema: string, idVerbindung: number): Promise<boolean> {
 		const path = "/db/{schema}/enm/connection/{idVerbindung : \\d+}/setup"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idVerbindung\s*(:[^{}]+({[^{}]+})*)?}/g, idVerbindung.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return (text === "true");
 	}
@@ -2431,11 +2464,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten des Externen Notenmoduls (ENM) wurden synchronisiert
 	 */
-	public async synchronizeENMDaten(schema : string, idVerbindung : number) : Promise<SimpleOperationResponse> {
+	public async synchronizeENMDaten(schema: string, idVerbindung: number): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/enm/connection/{idVerbindung : \\d+}/synchronize"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idVerbindung\s*(:[^{}]+({[^{}]+})*)?}/g, idVerbindung.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -2469,11 +2502,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten des Externen Notenmoduls (ENM) wurden geleert.
 	 */
-	public async truncateENMServer(schema : string, idVerbindung : number) : Promise<SimpleOperationResponse> {
+	public async truncateENMServer(schema: string, idVerbindung: number): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/enm/connection/{idVerbindung : \\d+}/truncate"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idVerbindung\s*(:[^{}]+({[^{}]+})*)?}/g, idVerbindung.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -2507,11 +2540,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten des Externen Notenmoduls (ENM) wurden hochgeladen
 	 */
-	public async uploadENMDaten(schema : string, idVerbindung : number) : Promise<SimpleOperationResponse> {
+	public async uploadENMDaten(schema: string, idVerbindung: number): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/enm/connection/{idVerbindung : \\d+}/upload"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idVerbindung\s*(:[^{}]+({[^{}]+})*)?}/g, idVerbindung.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -2535,11 +2568,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Eintrag wurde erfolgreich hinzugefügt.
 	 */
-	public async addENMServerConnection(data : Partial<ENMServerConnection>, schema : string) : Promise<ENMServerConnection> {
+	public async addENMServerConnection(data: Partial<ENMServerConnection>, schema: string): Promise<ENMServerConnection> {
 		const path = "/db/{schema}/enm/connection/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = ENMServerConnection.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = ENMServerConnection.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return ENMServerConnection.transpilerFromJSON(text);
 	}
@@ -2560,13 +2593,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste der Verbindungen zu Web-Notenmodul-Servern der Schule.
 	 */
-	public async getENMServerConnections(schema : string) : Promise<List<ENMServerConnection>> {
+	public async getENMServerConnections(schema: string): Promise<List<ENMServerConnection>> {
 		const path = "/db/{schema}/enm/connections"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<ENMServerConnection>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(ENMServerConnection.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(ENMServerConnection.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -2583,7 +2619,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async generateENMLehrerCredentials(schema : string) : Promise<void> {
+	public async generateENMLehrerCredentials(schema: string): Promise<void> {
 		const path = "/db/{schema}/enm/credentials/generate"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		await super.postJSON(path, null);
@@ -2605,7 +2641,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async resetENMLehrerPasswordToInitial(schema : string, id : number) : Promise<void> {
+	public async resetENMLehrerPasswordToInitial(schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/enm/credentials/reset/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -2633,11 +2669,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Das Kennwort wurde erzeugt.
 	 */
-	public async generateENMLehrerInitialPassword(schema : string, id : number) : Promise<string> {
+	public async generateENMLehrerInitialPassword(schema: string, id: number): Promise<string> {
 		const path = "/db/{schema}/enm/credentials/set/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.postJSON(path, null);
+		const result: string = await super.postJSON(path, null);
 		const text = result;
 		return JSON.parse(text).toString();
 	}
@@ -2659,11 +2695,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async setENMLehrerArt2FA(data : number | null, schema : string, id : number) : Promise<void> {
+	public async setENMLehrerArt2FA(data: number | null, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/enm/credentials/set2fa/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = JSON.stringify(data);
+		const body: string = JSON.stringify(data);
 		await super.postJSON(path, body);
 		return;
 	}
@@ -2683,7 +2719,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async resetENMLehrerTotpSecret(schema : string, id : number) : Promise<void> {
+	public async resetENMLehrerTotpSecret(schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/enm/credentials/totp/reset/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -2708,14 +2744,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Liste mit den Initialkennwörtern
 	 */
-	public async getENMLehrerInitialKennwoerterByIds(data : List<number>, schema : string) : Promise<List<ENMLehrerInitialKennwort>> {
+	public async getENMLehrerInitialKennwoerterByIds(data: List<number>, schema: string): Promise<List<ENMLehrerInitialKennwort>> {
 		const path = "/db/{schema}/enm/initialkennwoerter"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<ENMLehrerInitialKennwort>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(ENMLehrerInitialKennwort.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(ENMLehrerInitialKennwort.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -2738,11 +2777,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Das Initialkennwort.
 	 */
-	public async getENMLehrerInitialKennwort(schema : string, id : number) : Promise<string> {
+	public async getENMLehrerInitialKennwort(schema: string, id: number): Promise<string> {
 		const path = "/db/{schema}/enm/initialkennwort/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.postJSON(path, null);
+		const result: string = await super.postJSON(path, null);
 		const text = result;
 		return JSON.parse(text).toString();
 	}
@@ -2764,10 +2803,10 @@ export class ApiServer extends BaseApi {
 	 * @param {Partial<ENMv1Leistung>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchENMLeistung(data : Partial<ENMv1Leistung>, schema : string) : Promise<void> {
+	public async patchENMLeistung(data: Partial<ENMv1Leistung>, schema: string): Promise<void> {
 		const path = "/db/{schema}/enm/leistung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = ENMv1Leistung.transpilerToJSONPatch(data);
+		const body: string = ENMv1Leistung.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -2788,10 +2827,10 @@ export class ApiServer extends BaseApi {
 	 * @param {Partial<ENMv1Lernabschnitt>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchENMSchuelerLernabschnitt(data : Partial<ENMv1Lernabschnitt>, schema : string) : Promise<void> {
+	public async patchENMSchuelerLernabschnitt(data: Partial<ENMv1Lernabschnitt>, schema: string): Promise<void> {
 		const path = "/db/{schema}/enm/lernabschnitt"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = ENMv1Lernabschnitt.transpilerToJSONPatch(data);
+		const body: string = ENMv1Lernabschnitt.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -2810,10 +2849,10 @@ export class ApiServer extends BaseApi {
 	 * @param {ENMServerConfigElement} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async setNotenmodulLocalConfig(data : ENMServerConfigElement, schema : string) : Promise<void> {
+	public async setNotenmodulLocalConfig(data: ENMServerConfigElement, schema: string): Promise<void> {
 		const path = "/db/{schema}/enm/local/config"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = ENMServerConfigElement.transpilerToJSON(data);
+		const body: string = ENMServerConfigElement.transpilerToJSON(data);
 		return super.putJSON(path, body);
 	}
 
@@ -2835,10 +2874,10 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Konfiguration konnte erfolgreich abgerufen werden.
 	 */
-	public async getNotenmodulLocalConfig(schema : string) : Promise<ENMServerConfig> {
+	public async getNotenmodulLocalConfig(schema: string): Promise<ENMServerConfig> {
 		const path = "/db/{schema}/enm/local/config/"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return ENMServerConfig.transpilerFromJSON(text);
 	}
@@ -2861,13 +2900,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Konfiguration konnte erfolgreich abgerufen werden.
 	 */
-	public async getNotenmodulLocalClientConfig(schema : string) : Promise<List<BenutzerConfigElement>> {
+	public async getNotenmodulLocalClientConfig(schema: string): Promise<List<BenutzerConfigElement>> {
 		const path = "/db/{schema}/enm/local/config/client/"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<BenutzerConfigElement>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BenutzerConfigElement.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(BenutzerConfigElement.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -2888,10 +2930,10 @@ export class ApiServer extends BaseApi {
 	 * @param {Partial<ENMv1Teilleistung>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchENMTeilleistung(data : Partial<ENMv1Teilleistung>, schema : string) : Promise<void> {
+	public async patchENMTeilleistung(data: Partial<ENMv1Teilleistung>, schema: string): Promise<void> {
 		const path = "/db/{schema}/enm/teilleistung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = ENMv1Teilleistung.transpilerToJSONPatch(data);
+		const body: string = ENMv1Teilleistung.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -2912,10 +2954,10 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten des Externen Notenmoduls (ENM)
 	 */
-	public async getENMDaten(schema : string) : Promise<ENMv1Daten> {
+	public async getENMDaten(schema: string): Promise<ENMv1Daten> {
 		const path = "/db/{schema}/enm/v1/alle"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return ENMv1Daten.transpilerFromJSON(text);
 	}
@@ -2937,10 +2979,10 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die GZip-komprimierte ENM-JSON-Datei
 	 */
-	public async getENMDatenGZip(schema : string) : Promise<ApiFile> {
+	public async getENMDatenGZip(schema: string): Promise<ApiFile> {
 		const path = "/db/{schema}/enm/v1/alle/gzip"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const data : ApiFile = await super.getOctetStream(path);
+		const data: ApiFile = await super.getOctetStream(path);
 		return data;
 	}
 
@@ -2959,10 +3001,10 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten des Externen Notenmoduls (ENM)
 	 */
-	public async getENMDatenLeer(schema : string) : Promise<ENMv1Daten> {
+	public async getENMDatenLeer(schema: string): Promise<ENMv1Daten> {
 		const path = "/db/{schema}/enm/v1/empty"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return ENMv1Daten.transpilerFromJSON(text);
 	}
@@ -2983,10 +3025,10 @@ export class ApiServer extends BaseApi {
 	 * @param {ENMv1Daten} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async importENMDaten(data : ENMv1Daten, schema : string) : Promise<void> {
+	public async importENMDaten(data: ENMv1Daten, schema: string): Promise<void> {
 		const path = "/db/{schema}/enm/v1/import"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = ENMv1Daten.transpilerToJSON(data);
+		const body: string = ENMv1Daten.transpilerToJSON(data);
 		await super.postJSON(path, body);
 		return;
 	}
@@ -3009,11 +3051,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten des Externen Notenmoduls (ENM) des Lehrers
 	 */
-	public async getLehrerENMDaten(schema : string, id : number) : Promise<ENMv1Daten> {
+	public async getLehrerENMDaten(schema: string, id: number): Promise<ENMv1Daten> {
 		const path = "/db/{schema}/enm/v1/lehrer/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return ENMv1Daten.transpilerFromJSON(text);
 	}
@@ -3035,10 +3077,10 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten des Externen Notenmoduls (ENM)
 	 */
-	public async getENMv2Daten(schema : string) : Promise<ENMv2Daten> {
+	public async getENMv2Daten(schema: string): Promise<ENMv2Daten> {
 		const path = "/db/{schema}/enm/v2/alle"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return ENMv2Daten.transpilerFromJSON(text);
 	}
@@ -3060,10 +3102,10 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die GZip-komprimierte ENM-JSON-Datei
 	 */
-	public async getENMv2DatenGZip(schema : string) : Promise<ApiFile> {
+	public async getENMv2DatenGZip(schema: string): Promise<ApiFile> {
 		const path = "/db/{schema}/enm/v2/alle/gzip"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const data : ApiFile = await super.getOctetStream(path);
+		const data: ApiFile = await super.getOctetStream(path);
 		return data;
 	}
 
@@ -3083,10 +3125,10 @@ export class ApiServer extends BaseApi {
 	 * @param {ENMv2Daten} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async importENMv2Daten(data : ENMv2Daten, schema : string) : Promise<void> {
+	public async importENMv2Daten(data: ENMv2Daten, schema: string): Promise<void> {
 		const path = "/db/{schema}/enm/v2/import"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = ENMv2Daten.transpilerToJSON(data);
+		const body: string = ENMv2Daten.transpilerToJSON(data);
 		await super.postJSON(path, body);
 		return;
 	}
@@ -3107,7 +3149,7 @@ export class ApiServer extends BaseApi {
 	 * @param {FormData} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async importENMv2DatenGZip(data : FormData, schema : string) : Promise<void> {
+	public async importENMv2DatenGZip(data: FormData, schema: string): Promise<void> {
 		const path = "/db/{schema}/enm/v2/import/gzip"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		await super.postMultipart(path, data);
@@ -3132,11 +3174,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten des Externen Notenmoduls (ENM) des Lehrers
 	 */
-	public async getLehrerENMv2Daten(schema : string, id : number) : Promise<ENMv2Daten> {
+	public async getLehrerENMv2Daten(schema: string, id: number): Promise<ENMv2Daten> {
 		const path = "/db/{schema}/enm/v2/lehrer/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return ENMv2Daten.transpilerFromJSON(text);
 	}
@@ -3158,13 +3200,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste der Entlassgründe.
 	 */
-	public async getEntlassgruende(schema : string) : Promise<List<KatalogEntlassgrund>> {
+	public async getEntlassgruende(schema: string): Promise<List<KatalogEntlassgrund>> {
 		const path = "/db/{schema}/entlassgruende"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KatalogEntlassgrund>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEntlassgrund.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(KatalogEntlassgrund.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -3186,11 +3231,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchEntlassgrund(data : Partial<KatalogEntlassgrund>, schema : string, id : number) : Promise<void> {
+	public async patchEntlassgrund(data: Partial<KatalogEntlassgrund>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/entlassgruende/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = KatalogEntlassgrund.transpilerToJSONPatch(data);
+		const body: string = KatalogEntlassgrund.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -3212,11 +3257,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Entlassgrund wurde erfolgreich hinzugefügt.
 	 */
-	public async addEntlassgrund(data : Partial<KatalogEntlassgrund>, schema : string) : Promise<KatalogEntlassgrund> {
+	public async addEntlassgrund(data: Partial<KatalogEntlassgrund>, schema: string): Promise<KatalogEntlassgrund> {
 		const path = "/db/{schema}/entlassgruende/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = KatalogEntlassgrund.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = KatalogEntlassgrund.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return KatalogEntlassgrund.transpilerFromJSON(text);
 	}
@@ -3240,14 +3285,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteEntlassgruende(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteEntlassgruende(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/entlassgruende/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -3268,13 +3316,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Erzieher-Listen-Einträgen
 	 */
-	public async getErzieher(schema : string) : Promise<List<ErzieherListeEintrag>> {
+	public async getErzieher(schema: string): Promise<List<ErzieherListeEintrag>> {
 		const path = "/db/{schema}/erzieher/"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<ErzieherListeEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(ErzieherListeEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(ErzieherListeEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -3296,11 +3347,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Stammdaten des Erziehers
 	 */
-	public async getErzieherStammdaten(schema : string, id : number) : Promise<ErzieherStammdaten> {
+	public async getErzieherStammdaten(schema: string, id: number): Promise<ErzieherStammdaten> {
 		const path = "/db/{schema}/erzieher/{id : \\d+}/stammdaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return ErzieherStammdaten.transpilerFromJSON(text);
 	}
@@ -3323,11 +3374,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchErzieherStammdaten(data : Partial<ErzieherStammdaten>, schema : string, id : number) : Promise<void> {
+	public async patchErzieherStammdaten(data: Partial<ErzieherStammdaten>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/erzieher/{id : \\d+}/stammdaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = ErzieherStammdaten.transpilerToJSONPatch(data);
+		const body: string = ErzieherStammdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -3350,12 +3401,12 @@ export class ApiServer extends BaseApi {
 	 * @param {number} id - der Pfad-Parameter id
 	 * @param {number} pos - der Pfad-Parameter pos
 	 */
-	public async patchErzieherStammdatenZweitePosition(data : Partial<ErzieherStammdaten>, schema : string, id : number, pos : number) : Promise<void> {
+	public async patchErzieherStammdatenZweitePosition(data: Partial<ErzieherStammdaten>, schema: string, id: number, pos: number): Promise<void> {
 		const path = "/db/{schema}/erzieher/{id : \\d+}/stammdaten/{pos : [12]}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{pos\s*(:[^{}]+({[^{}]+})*)?}/g, pos.toString());
-		const body : string = ErzieherStammdaten.transpilerToJSONPatch(data);
+		const body: string = ErzieherStammdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -3379,14 +3430,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Erziehungsberechtigte wurden erfolgreich entfernt.
 	 */
-	public async deleteErzieherStammdaten(data : List<number>, schema : string) : Promise<List<number>> {
+	public async deleteErzieherStammdaten(data: List<number>, schema: string): Promise<List<number>> {
 		const path = "/db/{schema}/erzieher/stammdaten/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Number.parseFloat(JSON.parse(text)));
+		});
 		return ret;
 	}
 
@@ -3406,10 +3460,10 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Export der SQLite-Datenbank
 	 */
-	public async exportSQLite(schema : string) : Promise<ApiFile> {
+	public async exportSQLite(schema: string): Promise<ApiFile> {
 		const path = "/db/{schema}/export/sqlite"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const data : ApiFile = await super.getSQLite(path);
+		const data: ApiFile = await super.getSQLite(path);
 		return data;
 	}
 
@@ -3430,13 +3484,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Fachklassen.
 	 */
-	public async getFachklassen(schema : string) : Promise<List<FachklasseEintrag>> {
+	public async getFachklassen(schema: string): Promise<List<FachklasseEintrag>> {
 		const path = "/db/{schema}/fachklassen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<FachklasseEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(FachklasseEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(FachklasseEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -3458,11 +3515,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchFachklasse(data : Partial<FachklasseEintrag>, schema : string, id : number) : Promise<void> {
+	public async patchFachklasse(data: Partial<FachklasseEintrag>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/fachklassen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = FachklasseEintrag.transpilerToJSONPatch(data);
+		const body: string = FachklasseEintrag.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -3484,11 +3541,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Fachklasse wurde erfolgreich hinzugefügt.
 	 */
-	public async addFachklasse(data : Partial<FachklasseEintrag>, schema : string) : Promise<FachklasseEintrag> {
+	public async addFachklasse(data: Partial<FachklasseEintrag>, schema: string): Promise<FachklasseEintrag> {
 		const path = "/db/{schema}/fachklassen/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = FachklasseEintrag.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = FachklasseEintrag.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return FachklasseEintrag.transpilerFromJSON(text);
 	}
@@ -3512,14 +3569,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteFachklassen(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteFachklassen(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/fachklassen/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -3540,13 +3600,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Fächer-Listen-Einträgen
 	 */
-	public async getFaecher(schema : string) : Promise<List<FachDaten>> {
+	public async getFaecher(schema: string): Promise<List<FachDaten>> {
 		const path = "/db/{schema}/faecher/"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<FachDaten>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(FachDaten.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(FachDaten.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -3568,11 +3631,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten des Faches
 	 */
-	public async getFach(schema : string, id : number) : Promise<FachDaten> {
+	public async getFach(schema: string, id: number): Promise<FachDaten> {
 		const path = "/db/{schema}/faecher/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return FachDaten.transpilerFromJSON(text);
 	}
@@ -3595,11 +3658,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchFach(data : Partial<FachDaten>, schema : string, id : number) : Promise<void> {
+	public async patchFach(data: Partial<FachDaten>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/faecher/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = FachDaten.transpilerToJSONPatch(data);
+		const body: string = FachDaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -3623,11 +3686,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Das Fach wurde erfolgreich entfernt.
 	 */
-	public async deleteFach(schema : string, id : number) : Promise<FachDaten> {
+	public async deleteFach(schema: string, id: number): Promise<FachDaten> {
 		const path = "/db/{schema}/faecher/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return FachDaten.transpilerFromJSON(text);
 	}
@@ -3650,11 +3713,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Fachgruppen-Katalog-Eintrag für die angegebene ID.
 	 */
-	public async getKatalogFachgruppenEintrag(schema : string, id : number) : Promise<FachgruppeKatalogEintrag> {
+	public async getKatalogFachgruppenEintrag(schema: string, id: number): Promise<FachgruppeKatalogEintrag> {
 		const path = "/db/{schema}/faecher/allgemein/fachgruppe/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return FachgruppeKatalogEintrag.transpilerFromJSON(text);
 	}
@@ -3676,13 +3739,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Katalog aller Fachgruppen aller Schulformen.
 	 */
-	public async getKatalogFachgruppen(schema : string) : Promise<List<FachgruppeKatalogEintrag>> {
+	public async getKatalogFachgruppen(schema: string): Promise<List<FachgruppeKatalogEintrag>> {
 		const path = "/db/{schema}/faecher/allgemein/fachgruppen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<FachgruppeKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(FachgruppeKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(FachgruppeKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -3703,13 +3769,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Fächer-Katalog-Einträgen
 	 */
-	public async getKatalogFaecher(schema : string) : Promise<List<FachKatalogEintrag>> {
+	public async getKatalogFaecher(schema: string): Promise<List<FachKatalogEintrag>> {
 		const path = "/db/{schema}/faecher/allgemein/faecher"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<FachKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(FachKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(FachKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -3730,13 +3799,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Katalog der bilingualen Sprachen für die Schulform dieser Schule.
 	 */
-	public async getKatalogBilingualeSprachen(schema : string) : Promise<List<BilingualeSpracheKatalogEintrag>> {
+	public async getKatalogBilingualeSprachen(schema: string): Promise<List<BilingualeSpracheKatalogEintrag>> {
 		const path = "/db/{schema}/faecher/allgemein/sprachen/bilingual"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<BilingualeSpracheKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BilingualeSpracheKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(BilingualeSpracheKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -3758,11 +3830,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Katalog-Eintrag einer bilingualen Sprache für die angegebene ID.
 	 */
-	public async getKatalogBilingualeSprachenEintrag(schema : string, id : number) : Promise<BilingualeSpracheKatalogEintrag> {
+	public async getKatalogBilingualeSprachenEintrag(schema: string, id: number): Promise<BilingualeSpracheKatalogEintrag> {
 		const path = "/db/{schema}/faecher/allgemein/sprachen/bilingual/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return BilingualeSpracheKatalogEintrag.transpilerFromJSON(text);
 	}
@@ -3784,13 +3856,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Katalog aller bilingualen Sprachen aller Schulformen.
 	 */
-	public async getKatalogBilingualeSprachenAlle(schema : string) : Promise<List<BilingualeSpracheKatalogEintrag>> {
+	public async getKatalogBilingualeSprachenAlle(schema: string): Promise<List<BilingualeSpracheKatalogEintrag>> {
 		const path = "/db/{schema}/faecher/allgemein/sprachen/bilingual/alle"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<BilingualeSpracheKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BilingualeSpracheKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(BilingualeSpracheKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -3811,13 +3886,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Katalog der Sprachprüfungsniveaus.
 	 */
-	public async getKatalogSprachpruefungsniveaus(schema : string) : Promise<List<SprachpruefungsniveauKatalogEintrag>> {
+	public async getKatalogSprachpruefungsniveaus(schema: string): Promise<List<SprachpruefungsniveauKatalogEintrag>> {
 		const path = "/db/{schema}/faecher/allgemein/sprachen/pruefungsniveaus"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SprachpruefungsniveauKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SprachpruefungsniveauKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SprachpruefungsniveauKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -3838,13 +3916,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Katalog der Sprachreferenzniveaus.
 	 */
-	public async getKatalogSprachreferenzniveaus(schema : string) : Promise<List<SprachreferenzniveauKatalogEintrag>> {
+	public async getKatalogSprachreferenzniveaus(schema: string): Promise<List<SprachreferenzniveauKatalogEintrag>> {
 		const path = "/db/{schema}/faecher/allgemein/sprachen/referenzniveaus"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SprachreferenzniveauKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SprachreferenzniveauKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SprachreferenzniveauKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -3866,11 +3947,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Das Fach wurde erfolgreich hinzugefügt.
 	 */
-	public async addFach(data : Partial<FachDaten>, schema : string) : Promise<FachDaten> {
+	public async addFach(data: Partial<FachDaten>, schema: string): Promise<FachDaten> {
 		const path = "/db/{schema}/faecher/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = FachDaten.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = FachDaten.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return FachDaten.transpilerFromJSON(text);
 	}
@@ -3893,14 +3974,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteFaecher(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteFaecher(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/faecher/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -3921,13 +4005,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Katalog der Fachgruppen für die Schulform dieser Schule.
 	 */
-	public async getFachgruppen(schema : string) : Promise<List<FachgruppeKatalogEintrag>> {
+	public async getFachgruppen(schema: string): Promise<List<FachgruppeKatalogEintrag>> {
 		const path = "/db/{schema}/faecher/fachgruppen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<FachgruppeKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(FachgruppeKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(FachgruppeKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -3944,7 +4031,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async setFaecherSortierungSekII(schema : string) : Promise<void> {
+	public async setFaecherSortierungSekII(schema: string): Promise<void> {
 		const path = "/db/{schema}/faecher/sortierung/setSekII"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		await super.postJSON(path, null);
@@ -3967,13 +4054,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Förderschwerpunkte-Katalog-Einträgen
 	 */
-	public async getKatalogFoerderschwerpunkte(schema : string) : Promise<List<FoerderschwerpunktEintrag>> {
+	public async getKatalogFoerderschwerpunkte(schema: string): Promise<List<FoerderschwerpunktEintrag>> {
 		const path = "/db/{schema}/foerderschwerpunkte"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<FoerderschwerpunktEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(FoerderschwerpunktEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(FoerderschwerpunktEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -3995,11 +4085,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten des Förderschwerpunktes
 	 */
-	public async getKatalogFoerderschwerpunkt(schema : string, id : number) : Promise<FoerderschwerpunktEintrag> {
+	public async getKatalogFoerderschwerpunkt(schema: string, id: number): Promise<FoerderschwerpunktEintrag> {
 		const path = "/db/{schema}/foerderschwerpunkte/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return FoerderschwerpunktEintrag.transpilerFromJSON(text);
 	}
@@ -4022,11 +4112,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Förderschwerpunkt wurde erfolgreich hinzugefügt.
 	 */
-	public async addKatalogFoerderschwerpunkt(data : Partial<FoerderschwerpunktEintrag>, schema : string) : Promise<FoerderschwerpunktEintrag> {
+	public async addKatalogFoerderschwerpunkt(data: Partial<FoerderschwerpunktEintrag>, schema: string): Promise<FoerderschwerpunktEintrag> {
 		const path = "/db/{schema}/foerderschwerpunkte/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = FoerderschwerpunktEintrag.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = FoerderschwerpunktEintrag.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return FoerderschwerpunktEintrag.transpilerFromJSON(text);
 	}
@@ -4050,14 +4140,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Förderschwerpunkte wurden erfolgreich entfernt.
 	 */
-	public async deleteKatalogFoerderschwerpunkte(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteKatalogFoerderschwerpunkte(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/foerderschwerpunkte/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -4079,11 +4172,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Leistungsdaten des Schülers
 	 */
-	public async getGesamtschuleSchuelerPrognoseLeistungsdaten(schema : string, id : number) : Promise<GEAbschlussFaecher> {
+	public async getGesamtschuleSchuelerPrognoseLeistungsdaten(schema: string, id: number): Promise<GEAbschlussFaecher> {
 		const path = "/db/{schema}/gesamtschule/schueler/{id : \\d+}/prognose_leistungsdaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return GEAbschlussFaecher.transpilerFromJSON(text);
 	}
@@ -4107,12 +4200,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Leistungsdaten des Schülers
 	 */
-	public async getGesamtschuleSchuelerPrognosLeistungsdatenFuerAbschnitt(schema : string, id : number, abschnittID : number) : Promise<GEAbschlussFaecher> {
+	public async getGesamtschuleSchuelerPrognosLeistungsdatenFuerAbschnitt(schema: string, id: number, abschnittID: number): Promise<GEAbschlussFaecher> {
 		const path = "/db/{schema}/gesamtschule/schueler/{id : \\d+}/prognose_leistungsdaten/abschnitt/{abschnittID : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{abschnittID\s*(:[^{}]+({[^{}]+})*)?}/g, abschnittID.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return GEAbschlussFaecher.transpilerFromJSON(text);
 	}
@@ -4135,11 +4228,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Leistungsdaten des Schülers
 	 */
-	public async getGesamtschuleSchuelerPrognoseLeistungsdatenQuartal(schema : string, id : number) : Promise<GEAbschlussFaecher> {
+	public async getGesamtschuleSchuelerPrognoseLeistungsdatenQuartal(schema: string, id: number): Promise<GEAbschlussFaecher> {
 		const path = "/db/{schema}/gesamtschule/schueler/{id : \\d+}/prognose_leistungsdaten/quartal"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return GEAbschlussFaecher.transpilerFromJSON(text);
 	}
@@ -4163,12 +4256,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Leistungsdaten des Schülers
 	 */
-	public async getGesamtschuleSchuelerPrognosLeistungsdatenQuartalFuerAbschnitt(schema : string, id : number, abschnittID : number) : Promise<GEAbschlussFaecher> {
+	public async getGesamtschuleSchuelerPrognosLeistungsdatenQuartalFuerAbschnitt(schema: string, id: number, abschnittID: number): Promise<GEAbschlussFaecher> {
 		const path = "/db/{schema}/gesamtschule/schueler/{id : \\d+}/prognose_leistungsdaten/quartal/abschnitt/{abschnittID : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{abschnittID\s*(:[^{}]+({[^{}]+})*)?}/g, abschnittID.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return GEAbschlussFaecher.transpilerFromJSON(text);
 	}
@@ -4191,11 +4284,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Das Ergebnis der Belegprüfung, ggf. mit Belegungsfehlern
 	 */
-	public async getGostAbiturBelegpruefungEF1(data : Abiturdaten, schema : string) : Promise<GostBelegpruefungErgebnis> {
+	public async getGostAbiturBelegpruefungEF1(data: Abiturdaten, schema: string): Promise<GostBelegpruefungErgebnis> {
 		const path = "/db/{schema}/gost/abitur/belegpruefung/EF1"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Abiturdaten.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Abiturdaten.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return GostBelegpruefungErgebnis.transpilerFromJSON(text);
 	}
@@ -4218,11 +4311,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Das Ergebnis der Belegprüfung, ggf. mit Belegungsfehlern
 	 */
-	public async getGostAbiturBelegpruefungGesamt(data : Abiturdaten, schema : string) : Promise<GostBelegpruefungErgebnis> {
+	public async getGostAbiturBelegpruefungGesamt(data: Abiturdaten, schema: string): Promise<GostBelegpruefungErgebnis> {
 		const path = "/db/{schema}/gost/abitur/belegpruefung/gesamt"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Abiturdaten.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Abiturdaten.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return GostBelegpruefungErgebnis.transpilerFromJSON(text);
 	}
@@ -4244,13 +4337,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Liste der Abiturjahrgänge.
 	 */
-	public async getGostAbiturjahrgaenge(schema : string) : Promise<List<GostJahrgang>> {
+	public async getGostAbiturjahrgaenge(schema: string): Promise<List<GostJahrgang>> {
 		const path = "/db/{schema}/gost/abiturjahrgaenge"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostJahrgang>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostJahrgang.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(GostJahrgang.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -4272,14 +4368,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Liste der Abiturjahrgänge.
 	 */
-	public async getGostAbiturjahrgaengeFuerAbschnitt(schema : string, idAbschnitt : number) : Promise<List<GostJahrgang>> {
+	public async getGostAbiturjahrgaengeFuerAbschnitt(schema: string, idAbschnitt: number): Promise<List<GostJahrgang>> {
 		const path = "/db/{schema}/gost/abiturjahrgaenge/{idAbschnitt : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idAbschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idAbschnitt.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostJahrgang>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostJahrgang.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(GostJahrgang.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -4301,11 +4400,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Grunddaten des Jahrgangs der gymnasialen Oberstufe
 	 */
-	public async getGostAbiturjahrgang(schema : string, abiturjahr : number) : Promise<GostJahrgangsdaten> {
+	public async getGostAbiturjahrgang(schema: string, abiturjahr: number): Promise<GostJahrgangsdaten> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return GostJahrgangsdaten.transpilerFromJSON(text);
 	}
@@ -4328,11 +4427,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
 	 */
-	public async patchGostAbiturjahrgang(data : Partial<GostJahrgangsdaten>, schema : string, abiturjahr : number) : Promise<void> {
+	public async patchGostAbiturjahrgang(data: Partial<GostJahrgangsdaten>, schema: string, abiturjahr: number): Promise<void> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
-		const body : string = GostJahrgangsdaten.transpilerToJSONPatch(data);
+		const body: string = GostJahrgangsdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -4356,14 +4455,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Abiturdaten des Schülers
 	 */
-	public async getGostAbiturjahrgangAbiturdaten(schema : string, abiturjahr : number) : Promise<List<Abiturdaten>> {
+	public async getGostAbiturjahrgangAbiturdaten(schema: string, abiturjahr: number): Promise<List<Abiturdaten>> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/abiturdaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Abiturdaten>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Abiturdaten.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Abiturdaten.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -4385,14 +4487,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste mit den Schülern und den zugehörigen Belegprüfungsfehlern.
 	 */
-	public async getGostAbiturjahrgangBelegpruefungsergebnisseEF1(schema : string, abiturjahr : number) : Promise<List<GostBelegpruefungsErgebnisse>> {
+	public async getGostAbiturjahrgangBelegpruefungsergebnisseEF1(schema: string, abiturjahr: number): Promise<List<GostBelegpruefungsErgebnisse>> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/belegpruefung/EF1"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostBelegpruefungsErgebnisse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostBelegpruefungsErgebnisse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(GostBelegpruefungsErgebnisse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -4414,14 +4519,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste mit den Schülern und den zugehörigen Belegprüfungsfehlern.
 	 */
-	public async getGostAbiturjahrgangBelegpruefungsergebnisseGesamt(schema : string, abiturjahr : number) : Promise<List<GostBelegpruefungsErgebnisse>> {
+	public async getGostAbiturjahrgangBelegpruefungsergebnisseGesamt(schema: string, abiturjahr: number): Promise<List<GostBelegpruefungsErgebnisse>> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/belegpruefung/gesamt"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostBelegpruefungsErgebnisse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostBelegpruefungsErgebnisse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(GostBelegpruefungsErgebnisse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -4446,12 +4554,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der hinzugefügte Beratungslehrer
 	 */
-	public async addGostAbiturjahrgangBeratungslehrer(data : number | null, schema : string, abiturjahr : number) : Promise<GostBeratungslehrer> {
+	public async addGostAbiturjahrgangBeratungslehrer(data: number | null, schema: string, abiturjahr: number): Promise<GostBeratungslehrer> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/beratungslehrer/add"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
-		const body : string = JSON.stringify(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = JSON.stringify(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return GostBeratungslehrer.transpilerFromJSON(text);
 	}
@@ -4477,12 +4585,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der entfernte Beratungslehrer
 	 */
-	public async removeGostAbiturjahrgangBeratungslehrer(data : number | null, schema : string, abiturjahr : number) : Promise<GostBeratungslehrer> {
+	public async removeGostAbiturjahrgangBeratungslehrer(data: number | null, schema: string, abiturjahr: number): Promise<GostBeratungslehrer> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/beratungslehrer/remove"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
-		const body : string = JSON.stringify(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = JSON.stringify(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return GostBeratungslehrer.transpilerFromJSON(text);
 	}
@@ -4506,12 +4614,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten des Faches bezüglich eines Abiturjahrgangs der gymnasialen Oberstufe
 	 */
-	public async getGostAbiturjahrgangFach(schema : string, abiturjahr : number, id : number) : Promise<GostFach> {
+	public async getGostAbiturjahrgangFach(schema: string, abiturjahr: number, id: number): Promise<GostFach> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/fach/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return GostFach.transpilerFromJSON(text);
 	}
@@ -4535,12 +4643,12 @@ export class ApiServer extends BaseApi {
 	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchGostAbiturjahrgangFach(data : Partial<GostFach>, schema : string, abiturjahr : number, id : number) : Promise<void> {
+	public async patchGostAbiturjahrgangFach(data: Partial<GostFach>, schema: string, abiturjahr: number, id: number): Promise<void> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/fach/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = GostFach.transpilerToJSONPatch(data);
+		const body: string = GostFach.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -4562,14 +4670,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Liste der Fachkombinationen
 	 */
-	public async getGostAbiturjahrgangFachkombinationen(schema : string, abiturjahr : number) : Promise<List<GostJahrgangFachkombination>> {
+	public async getGostAbiturjahrgangFachkombinationen(schema: string, abiturjahr: number): Promise<List<GostJahrgangFachkombination>> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/fachkombinationen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostJahrgangFachkombination>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostJahrgangFachkombination.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(GostJahrgangFachkombination.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -4594,12 +4705,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Regel zur Fachkombination bezüglich der gymnasialen Oberstufe wurde erstellt
 	 */
-	public async addGostAbiturjahrgangFachkombination(schema : string, abiturjahr : number, typ : number) : Promise<GostJahrgangFachkombination> {
+	public async addGostAbiturjahrgangFachkombination(schema: string, abiturjahr: number, typ: number): Promise<GostJahrgangFachkombination> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/fachkombinationen/add/{typ : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
 			.replace(/{typ\s*(:[^{}]+({[^{}]+})*)?}/g, typ.toString());
-		const result : string = await super.postJSON(path, null);
+		const result: string = await super.postJSON(path, null);
 		const text = result;
 		return GostJahrgangFachkombination.transpilerFromJSON(text);
 	}
@@ -4623,12 +4734,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Fachwahlen der gymnasialen Oberstufe für das angegebene Fach und den angegebenen Abiturjahrgang
 	 */
-	public async getGostAbiturjahrgangFachwahl(schema : string, abiturjahr : number, fachid : number) : Promise<GostSchuelerFachwahl> {
+	public async getGostAbiturjahrgangFachwahl(schema: string, abiturjahr: number, fachid: number): Promise<GostSchuelerFachwahl> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/fachwahl/{fachid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
 			.replace(/{fachid\s*(:[^{}]+({[^{}]+})*)?}/g, fachid.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return GostSchuelerFachwahl.transpilerFromJSON(text);
 	}
@@ -4652,12 +4763,12 @@ export class ApiServer extends BaseApi {
 	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
 	 * @param {number} fachid - der Pfad-Parameter fachid
 	 */
-	public async patchGostAbiturjahrgangFachwahl(data : Partial<GostSchuelerFachwahl>, schema : string, abiturjahr : number, fachid : number) : Promise<void> {
+	public async patchGostAbiturjahrgangFachwahl(data: Partial<GostSchuelerFachwahl>, schema: string, abiturjahr: number, fachid: number): Promise<void> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/fachwahl/{fachid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
 			.replace(/{fachid\s*(:[^{}]+({[^{}]+})*)?}/g, fachid.toString());
-		const body : string = GostSchuelerFachwahl.transpilerToJSONPatch(data);
+		const body: string = GostSchuelerFachwahl.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -4676,7 +4787,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
 	 */
-	public async resetGostAbiturjahrgangFachwahlen(schema : string, abiturjahr : number) : Promise<void> {
+	public async resetGostAbiturjahrgangFachwahlen(schema: string, abiturjahr: number): Promise<void> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/fachwahl/reset"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
@@ -4699,7 +4810,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
 	 */
-	public async resetGostAbiturjahrgangSchuelerFachwahlen(schema : string, abiturjahr : number) : Promise<void> {
+	public async resetGostAbiturjahrgangSchuelerFachwahlen(schema: string, abiturjahr: number): Promise<void> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/fachwahl/schueler/reset"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
@@ -4725,11 +4836,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste der Fachwahlen
 	 */
-	public async getGostAbiturjahrgangFachwahlen(schema : string, abiturjahr : number) : Promise<GostJahrgangFachwahlen> {
+	public async getGostAbiturjahrgangFachwahlen(schema: string, abiturjahr: number): Promise<GostJahrgangFachwahlen> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/fachwahlen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return GostJahrgangFachwahlen.transpilerFromJSON(text);
 	}
@@ -4752,14 +4863,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Fachwahlstatistik
 	 */
-	public async getGostAbiturjahrgangFachwahlstatistik(schema : string, abiturjahr : number) : Promise<List<GostStatistikFachwahl>> {
+	public async getGostAbiturjahrgangFachwahlstatistik(schema: string, abiturjahr: number): Promise<List<GostStatistikFachwahl>> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/fachwahlstatistik"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostStatistikFachwahl>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostStatistikFachwahl.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(GostStatistikFachwahl.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -4781,14 +4895,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Fächer-Listen-Einträgen
 	 */
-	public async getGostAbiturjahrgangFaecher(schema : string, abiturjahr : number) : Promise<List<GostFach>> {
+	public async getGostAbiturjahrgangFaecher(schema: string, abiturjahr: number): Promise<List<GostFach>> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/faecher"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostFach>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostFach.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(GostFach.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -4811,12 +4928,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste der Fachwahlen
 	 */
-	public async getGostAbiturjahrgangHalbjahrFachwahlen(schema : string, abiturjahr : number, halbjahr : number) : Promise<GostJahrgangFachwahlenHalbjahr> {
+	public async getGostAbiturjahrgangHalbjahrFachwahlen(schema: string, abiturjahr: number, halbjahr: number): Promise<GostJahrgangFachwahlenHalbjahr> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}/fachwahlen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
 			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return GostJahrgangFachwahlenHalbjahr.transpilerFromJSON(text);
 	}
@@ -4841,14 +4958,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Laufbahndaten des Schülers
 	 */
-	public async getGostAbiturjahrgangLaufbahndaten(schema : string, abiturjahr : number) : Promise<List<Abiturdaten>> {
+	public async getGostAbiturjahrgangLaufbahndaten(schema: string, abiturjahr: number): Promise<List<Abiturdaten>> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/laufbahndaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Abiturdaten>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Abiturdaten.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Abiturdaten.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -4870,11 +4990,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Laufbahnplanungsdaten der gymnasialen Oberstufe des angegebenen Abiturjahrgangs
 	 */
-	public async getGostAbiturjahrgangLaufbahnplanung(schema : string, abiturjahr : number) : Promise<Abiturdaten> {
+	public async getGostAbiturjahrgangLaufbahnplanung(schema: string, abiturjahr: number): Promise<Abiturdaten> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/laufbahnplanung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return Abiturdaten.transpilerFromJSON(text);
 	}
@@ -4897,14 +5017,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Schüler-Listen-Einträgen
 	 */
-	public async getGostAbiturjahrgangSchueler(schema : string, abiturjahr : number) : Promise<List<SchuelerListeEintrag>> {
+	public async getGostAbiturjahrgangSchueler(schema: string, abiturjahr: number): Promise<List<SchuelerListeEintrag>> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/schueler"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuelerListeEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerListeEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchuelerListeEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -4923,7 +5046,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
 	 */
-	public async deleteGostAbiturjahrgang(schema : string, abiturjahr : number) : Promise<void> {
+	public async deleteGostAbiturjahrgang(schema: string, abiturjahr: number): Promise<void> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
@@ -4950,15 +5073,18 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Blockungs-Listen-Einträgen
 	 */
-	public async getGostAbiturjahrgangBlockungsliste(schema : string, abiturjahr : number, halbjahr : number) : Promise<List<GostBlockungListeneintrag>> {
+	public async getGostAbiturjahrgangBlockungsliste(schema: string, abiturjahr: number, halbjahr: number): Promise<List<GostBlockungListeneintrag>> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : \\d+}/{halbjahr : \\d+}/blockungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
 			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostBlockungListeneintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostBlockungListeneintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(GostBlockungListeneintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -4983,12 +5109,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Blockung wurde erfolgreich angelegt.
 	 */
-	public async createGostAbiturjahrgangBlockung(schema : string, abiturjahr : number, halbjahr : number) : Promise<GostBlockungListeneintrag> {
+	public async createGostAbiturjahrgangBlockung(schema: string, abiturjahr: number, halbjahr: number): Promise<GostBlockungListeneintrag> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : \\d+}/{halbjahr : \\d+}/blockungen/new"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
 			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
-		const result : string = await super.postJSON(path, null);
+		const result: string = await super.postJSON(path, null);
 		const text = result;
 		return GostBlockungListeneintrag.transpilerFromJSON(text);
 	}
@@ -5014,14 +5140,14 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Abiturjahrgang wurde erfolgreich angelegt.
 	 */
-	public async createGostAbiturjahrgang(schema : string, schuljahresabschnittsid : number, jahrgangid : number) : Promise<number> {
+	public async createGostAbiturjahrgang(schema: string, schuljahresabschnittsid: number, jahrgangid: number): Promise<number> {
 		const path = "/db/{schema}/gost/abiturjahrgang/new/{schuljahresabschnittsid}/{jahrgangid}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{schuljahresabschnittsid\s*(:[^{}]+({[^{}]+})*)?}/g, schuljahresabschnittsid.toString())
 			.replace(/{jahrgangid\s*(:[^{}]+({[^{}]+})*)?}/g, jahrgangid.toString());
-		const result : string = await super.postJSON(path, null);
+		const result: string = await super.postJSON(path, null);
 		const text = result;
-		return parseInt(JSON.parse(text));
+		return Number.parseInt(JSON.parse(text));
 	}
 
 
@@ -5043,12 +5169,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Listeneintrag zu der restaurierten Blockung
 	 */
-	public async restauriereGostBlockung(schema : string, abiturjahr : number, halbjahr : number) : Promise<GostBlockungListeneintrag> {
+	public async restauriereGostBlockung(schema: string, abiturjahr: number, halbjahr: number): Promise<GostBlockungListeneintrag> {
 		const path = "/db/{schema}/gost/blockungen/{abiturjahr : \\d+}/{halbjahr : \\d+}/restore"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
 			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return GostBlockungListeneintrag.transpilerFromJSON(text);
 	}
@@ -5070,7 +5196,7 @@ export class ApiServer extends BaseApi {
 	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
 	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
 	 */
-	public async revertActivateGostBlockungsergebnis(schema : string, abiturjahr : number, halbjahr : number) : Promise<void> {
+	public async revertActivateGostBlockungsergebnis(schema: string, abiturjahr: number, halbjahr: number): Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/{abiturjahr : \\d+}/{halbjahr : \\d+}/revertactivate"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
@@ -5097,13 +5223,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Blockungsdaten der gymnasialen Oberstfue für die angegebene ID wurden erfolgreich gelöscht.
 	 */
-	public async deleteGostBlockung(schema : string, blockungsid : number) : Promise<number> {
+	public async deleteGostBlockung(schema: string, blockungsid: number): Promise<number> {
 		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
-		return parseFloat(JSON.parse(text));
+		return Number.parseFloat(JSON.parse(text));
 	}
 
 
@@ -5124,11 +5250,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Blockungsdaten der gymnasialen Oberstfue für die angegebene ID
 	 */
-	public async getGostBlockung(schema : string, blockungsid : number) : Promise<GostBlockungsdaten> {
+	public async getGostBlockung(schema: string, blockungsid: number): Promise<GostBlockungsdaten> {
 		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return GostBlockungsdaten.transpilerFromJSON(text);
 	}
@@ -5151,11 +5277,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} blockungsid - der Pfad-Parameter blockungsid
 	 */
-	public async patchGostBlockung(data : Partial<GostBlockungsdaten>, schema : string, blockungsid : number) : Promise<void> {
+	public async patchGostBlockung(data: Partial<GostBlockungsdaten>, schema: string, blockungsid: number): Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString());
-		const body : string = GostBlockungsdaten.transpilerToJSONPatch(data);
+		const body: string = GostBlockungsdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -5181,12 +5307,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Das Ergebnis wurde erfolgreich der Blockung hinzugefügt
 	 */
-	public async addGostBlockungErgebnis(data : GostBlockungsergebnis, schema : string, blockungsid : number) : Promise<GostBlockungsergebnis> {
+	public async addGostBlockungErgebnis(data: GostBlockungsergebnis, schema: string, blockungsid: number): Promise<GostBlockungsergebnis> {
 		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}/addergebnis"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString());
-		const body : string = GostBlockungsergebnis.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = GostBlockungsergebnis.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return GostBlockungsergebnis.transpilerFromJSON(text);
 	}
@@ -5213,15 +5339,18 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Ergebnisse wurden erfolgreich der Blockung hinzugefügt
 	 */
-	public async addGostBlockungErgebnisse(data : List<GostBlockungsergebnis>, schema : string, blockungsid : number) : Promise<List<GostBlockungsergebnis>> {
+	public async addGostBlockungErgebnisse(data: List<GostBlockungsergebnis>, schema: string, blockungsid: number): Promise<List<GostBlockungsergebnis>> {
 		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}/addergebnisse"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString());
-		const body : string = "[" + (data.toArray() as Array<GostBlockungsergebnis>).map(d => GostBlockungsergebnis.transpilerToJSON(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<GostBlockungsergebnis>).map(d => GostBlockungsergebnis.transpilerToJSON(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostBlockungsergebnis>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostBlockungsergebnis.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(GostBlockungsergebnis.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -5247,13 +5376,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Regel der Blockung der gymnasialen Oberstufe
 	 */
-	public async addGostBlockungRegel(data : List<number>, schema : string, blockungsid : number, regeltyp : number) : Promise<GostBlockungRegel> {
+	public async addGostBlockungRegel(data: List<number>, schema: string, blockungsid: number, regeltyp: number): Promise<GostBlockungRegel> {
 		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}/addregel/{regeltyp : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString())
 			.replace(/{regeltyp\s*(:[^{}]+({[^{}]+})*)?}/g, regeltyp.toString());
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return GostBlockungRegel.transpilerFromJSON(text);
 	}
@@ -5279,15 +5408,18 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Regeln wurden erfolgreich der Blockung hinzugefügt
 	 */
-	public async addGostBlockungRegeln(data : List<GostBlockungRegel>, schema : string, blockungsid : number) : Promise<List<GostBlockungRegel>> {
+	public async addGostBlockungRegeln(data: List<GostBlockungRegel>, schema: string, blockungsid: number): Promise<List<GostBlockungRegel>> {
 		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}/addregeln"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString());
-		const body : string = "[" + (data.toArray() as Array<GostBlockungRegel>).map(d => GostBlockungRegel.transpilerToJSON(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<GostBlockungRegel>).map(d => GostBlockungRegel.transpilerToJSON(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostBlockungRegel>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostBlockungRegel.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(GostBlockungRegel.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -5311,11 +5443,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Schiene der Blockung der gymnasialen Oberstufe
 	 */
-	public async addGostBlockungSchiene(schema : string, blockungsid : number) : Promise<GostBlockungSchiene> {
+	public async addGostBlockungSchiene(schema: string, blockungsid: number): Promise<GostBlockungSchiene> {
 		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}/addschiene"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString());
-		const result : string = await super.postJSON(path, null);
+		const result: string = await super.postJSON(path, null);
 		const text = result;
 		return GostBlockungSchiene.transpilerFromJSON(text);
 	}
@@ -5340,11 +5472,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Schiene wurde wurde erfolgreich entfernt.
 	 */
-	public async deleteGostBlockungSchiene(schema : string, blockungsid : number) : Promise<GostBlockungSchiene> {
+	public async deleteGostBlockungSchiene(schema: string, blockungsid: number): Promise<GostBlockungSchiene> {
 		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}/deleteschiene"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return GostBlockungSchiene.transpilerFromJSON(text);
 	}
@@ -5371,13 +5503,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Kurs der Blockung der gymnasialen Oberstufe
 	 */
-	public async addGostBlockungKurs(schema : string, blockungsid : number, fachid : number, kursartid : number) : Promise<GostBlockungKurs> {
+	public async addGostBlockungKurs(schema: string, blockungsid: number, fachid: number, kursartid: number): Promise<GostBlockungKurs> {
 		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}/fach/{fachid : \\d+}/kursart/{kursartid : \\d+}/add"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString())
 			.replace(/{fachid\s*(:[^{}]+({[^{}]+})*)?}/g, fachid.toString())
 			.replace(/{kursartid\s*(:[^{}]+({[^{}]+})*)?}/g, kursartid.toString());
-		const result : string = await super.postJSON(path, null);
+		const result: string = await super.postJSON(path, null);
 		const text = result;
 		return GostBlockungKurs.transpilerFromJSON(text);
 	}
@@ -5404,13 +5536,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Kurs wurde wurde erfolgreich entfernt.
 	 */
-	public async deleteGostBlockungKurs(schema : string, blockungsid : number, fachid : number, kursartid : number) : Promise<GostBlockungKurs> {
+	public async deleteGostBlockungKurs(schema: string, blockungsid: number, fachid: number, kursartid: number): Promise<GostBlockungKurs> {
 		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}/fach/{fachid : \\d+}/kursart/{kursartid : \\d+}/delete"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString())
 			.replace(/{fachid\s*(:[^{}]+({[^{}]+})*)?}/g, fachid.toString())
 			.replace(/{kursartid\s*(:[^{}]+({[^{}]+})*)?}/g, kursartid.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return GostBlockungKurs.transpilerFromJSON(text);
 	}
@@ -5443,11 +5575,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die GZip-komprimierten Blockungsdaten der gymnasialen Oberstfue für die angegebene ID
 	 */
-	public async getGostBlockungGZip(schema : string, blockungsid : number) : Promise<ApiFile> {
+	public async getGostBlockungGZip(schema: string, blockungsid: number): Promise<ApiFile> {
 		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}/gzip"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString());
-		const data : ApiFile = await super.getOctetStream(path);
+		const data: ApiFile = await super.getOctetStream(path);
 		return data;
 	}
 
@@ -5473,15 +5605,18 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste der IDs der Zwischenergebnisse
 	 */
-	public async rechneGostBlockung(schema : string, blockungsid : number, zeit : number) : Promise<List<number>> {
+	public async rechneGostBlockung(schema: string, blockungsid: number, zeit: number): Promise<List<number>> {
 		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}/rechne/{zeit : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString())
 			.replace(/{zeit\s*(:[^{}]+({[^{}]+})*)?}/g, zeit.toString());
-		const result : string = await super.postJSON(path, null);
+		const result: string = await super.postJSON(path, null);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Number.parseFloat(JSON.parse(text)));
+		});
 		return ret;
 	}
 
@@ -5504,15 +5639,18 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Regeln wurden erfolgreich gelöscht bzw. hinzugefügt. Das Ergebnis beinhaltet die erstellten Regeln
 	 */
-	public async updateGostBlockungRegeln(data : GostBlockungRegelUpdate, schema : string, blockungsid : number) : Promise<List<GostBlockungRegel>> {
+	public async updateGostBlockungRegeln(data: GostBlockungRegelUpdate, schema: string, blockungsid: number): Promise<List<GostBlockungRegel>> {
 		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}/regeln/update"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString());
-		const body : string = GostBlockungRegelUpdate.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = GostBlockungRegelUpdate.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostBlockungRegel>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostBlockungRegel.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(GostBlockungRegel.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -5534,11 +5672,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Kurs der Blockung der gymnasialen Oberstufe für die angegebene ID
 	 */
-	public async getGostBlockungKurs(schema : string, kursid : number) : Promise<GostBlockungKurs> {
+	public async getGostBlockungKurs(schema: string, kursid: number): Promise<GostBlockungKurs> {
 		const path = "/db/{schema}/gost/blockungen/kurse/{kursid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{kursid\s*(:[^{}]+({[^{}]+})*)?}/g, kursid.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return GostBlockungKurs.transpilerFromJSON(text);
 	}
@@ -5561,11 +5699,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} kursid - der Pfad-Parameter kursid
 	 */
-	public async patchGostBlockungKurs(data : Partial<GostBlockungKurs>, schema : string, kursid : number) : Promise<void> {
+	public async patchGostBlockungKurs(data: Partial<GostBlockungKurs>, schema: string, kursid: number): Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/kurse/{kursid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{kursid\s*(:[^{}]+({[^{}]+})*)?}/g, kursid.toString());
-		const body : string = GostBlockungKurs.transpilerToJSONPatch(data);
+		const body: string = GostBlockungKurs.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -5587,11 +5725,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Kurs wurde wurde erfolgreich gelöscht.
 	 */
-	public async deleteGostBlockungKursByID(schema : string, kursid : number) : Promise<GostBlockungKurs> {
+	public async deleteGostBlockungKursByID(schema: string, kursid: number): Promise<GostBlockungKurs> {
 		const path = "/db/{schema}/gost/blockungen/kurse/{kursid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{kursid\s*(:[^{}]+({[^{}]+})*)?}/g, kursid.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return GostBlockungKurs.transpilerFromJSON(text);
 	}
@@ -5615,12 +5753,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten zu dem Kurs-Lehrer.
 	 */
-	public async getGostBlockungKurslehrer(schema : string, kursid : number, lehrerid : number) : Promise<GostBlockungKursLehrer> {
+	public async getGostBlockungKurslehrer(schema: string, kursid: number, lehrerid: number): Promise<GostBlockungKursLehrer> {
 		const path = "/db/{schema}/gost/blockungen/kurse/{kursid : \\d+}/lehrer/{lehrerid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{kursid\s*(:[^{}]+({[^{}]+})*)?}/g, kursid.toString())
 			.replace(/{lehrerid\s*(:[^{}]+({[^{}]+})*)?}/g, lehrerid.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return GostBlockungKursLehrer.transpilerFromJSON(text);
 	}
@@ -5641,12 +5779,12 @@ export class ApiServer extends BaseApi {
 	 * @param {number} kursid - der Pfad-Parameter kursid
 	 * @param {number} lehrerid - der Pfad-Parameter lehrerid
 	 */
-	public async patchGostBlockungKurslehrer(data : Partial<GostBlockungKursLehrer>, schema : string, kursid : number, lehrerid : number) : Promise<void> {
+	public async patchGostBlockungKurslehrer(data: Partial<GostBlockungKursLehrer>, schema: string, kursid: number, lehrerid: number): Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/kurse/{kursid : \\d+}/lehrer/{lehrerid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{kursid\s*(:[^{}]+({[^{}]+})*)?}/g, kursid.toString())
 			.replace(/{lehrerid\s*(:[^{}]+({[^{}]+})*)?}/g, lehrerid.toString());
-		const body : string = GostBlockungKursLehrer.transpilerToJSONPatch(data);
+		const body: string = GostBlockungKursLehrer.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -5665,7 +5803,7 @@ export class ApiServer extends BaseApi {
 	 * @param {number} kursid - der Pfad-Parameter kursid
 	 * @param {number} lehrerid - der Pfad-Parameter lehrerid
 	 */
-	public async deleteGostBlockungKurslehrer(schema : string, kursid : number, lehrerid : number) : Promise<void> {
+	public async deleteGostBlockungKurslehrer(schema: string, kursid: number, lehrerid: number): Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/kurse/{kursid : \\d+}/lehrer/{lehrerid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{kursid\s*(:[^{}]+({[^{}]+})*)?}/g, kursid.toString())
@@ -5693,12 +5831,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten zu dem hinzugefügten Kurs-Lehrer.
 	 */
-	public async addGostBlockungKurslehrer(schema : string, kursid : number, lehrerid : number) : Promise<GostBlockungKursLehrer> {
+	public async addGostBlockungKurslehrer(schema: string, kursid: number, lehrerid: number): Promise<GostBlockungKursLehrer> {
 		const path = "/db/{schema}/gost/blockungen/kurse/{kursid : \\d+}/lehrer/{lehrerid : \\d+}/add"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{kursid\s*(:[^{}]+({[^{}]+})*)?}/g, kursid.toString())
 			.replace(/{lehrerid\s*(:[^{}]+({[^{}]+})*)?}/g, lehrerid.toString());
-		const result : string = await super.postJSON(path, null);
+		const result: string = await super.postJSON(path, null);
 		const text = result;
 		return GostBlockungKursLehrer.transpilerFromJSON(text);
 	}
@@ -5723,11 +5861,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der zusätzliche Kurs der Blockung der gymnasialen Oberstufe
 	 */
-	public async splitGostBlockungKurs(schema : string, kursid : number) : Promise<GostBlockungKursAufteilung> {
+	public async splitGostBlockungKurs(schema: string, kursid: number): Promise<GostBlockungKursAufteilung> {
 		const path = "/db/{schema}/gost/blockungen/kurse/{kursid : \\d+}/split"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{kursid\s*(:[^{}]+({[^{}]+})*)?}/g, kursid.toString());
-		const result : string = await super.postJSON(path, null);
+		const result: string = await super.postJSON(path, null);
 		const text = result;
 		return GostBlockungKursAufteilung.transpilerFromJSON(text);
 	}
@@ -5753,12 +5891,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der zusammengeführte Kurs der Blockung der gymnasialen Oberstufe
 	 */
-	public async combineGostBlockungKurs(schema : string, kursid1 : number, kursid2 : number) : Promise<GostBlockungKurs> {
+	public async combineGostBlockungKurs(schema: string, kursid1: number, kursid2: number): Promise<GostBlockungKurs> {
 		const path = "/db/{schema}/gost/blockungen/kurse/{kursid1 : \\d+}/combine/{kursid2 : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{kursid1\s*(:[^{}]+({[^{}]+})*)?}/g, kursid1.toString())
 			.replace(/{kursid2\s*(:[^{}]+({[^{}]+})*)?}/g, kursid2.toString());
-		const result : string = await super.postJSON(path, null);
+		const result: string = await super.postJSON(path, null);
 		const text = result;
 		return GostBlockungKurs.transpilerFromJSON(text);
 	}
@@ -5783,14 +5921,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Kurse wurde erfolgreich entfernt.
 	 */
-	public async deleteGostBlockungKurse(data : List<number>, schema : string) : Promise<List<GostBlockungKurs>> {
+	public async deleteGostBlockungKurse(data: List<number>, schema: string): Promise<List<GostBlockungKurs>> {
 		const path = "/db/{schema}/gost/blockungen/kurse/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostBlockungKurs>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostBlockungKurs.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(GostBlockungKurs.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -5808,10 +5949,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async deleteGostBlockungRegelnByID(data : List<number>, schema : string) : Promise<void> {
+	public async deleteGostBlockungRegelnByID(data: List<number>, schema: string): Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/regeln"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		await super.deleteJSON(path, body);
 		return;
 	}
@@ -5834,11 +5975,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Regel der Blockung der gymnasialen Oberstufe für die angegebene ID
 	 */
-	public async getGostBlockungRegel(schema : string, regelid : number) : Promise<GostBlockungRegel> {
+	public async getGostBlockungRegel(schema: string, regelid: number): Promise<GostBlockungRegel> {
 		const path = "/db/{schema}/gost/blockungen/regeln/{regelid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{regelid\s*(:[^{}]+({[^{}]+})*)?}/g, regelid.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return GostBlockungRegel.transpilerFromJSON(text);
 	}
@@ -5861,11 +6002,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} regelid - der Pfad-Parameter regelid
 	 */
-	public async patchGostBlockungRegel(data : Partial<GostBlockungRegel>, schema : string, regelid : number) : Promise<void> {
+	public async patchGostBlockungRegel(data: Partial<GostBlockungRegel>, schema: string, regelid: number): Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/regeln/{regelid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{regelid\s*(:[^{}]+({[^{}]+})*)?}/g, regelid.toString());
-		const body : string = GostBlockungRegel.transpilerToJSONPatch(data);
+		const body: string = GostBlockungRegel.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -5887,11 +6028,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Regel wurde wurde erfolgreich gelöscht.
 	 */
-	public async deleteGostBlockungRegelByID(schema : string, regelid : number) : Promise<GostBlockungRegel> {
+	public async deleteGostBlockungRegelByID(schema: string, regelid: number): Promise<GostBlockungRegel> {
 		const path = "/db/{schema}/gost/blockungen/regeln/{regelid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{regelid\s*(:[^{}]+({[^{}]+})*)?}/g, regelid.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return GostBlockungRegel.transpilerFromJSON(text);
 	}
@@ -5914,11 +6055,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Schiene der Blockung der gymnasialen Oberstfue für die angegebene ID
 	 */
-	public async getGostBlockungSchiene(schema : string, schienenid : number) : Promise<GostBlockungSchiene> {
+	public async getGostBlockungSchiene(schema: string, schienenid: number): Promise<GostBlockungSchiene> {
 		const path = "/db/{schema}/gost/blockungen/schiene/{schienenid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{schienenid\s*(:[^{}]+({[^{}]+})*)?}/g, schienenid.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return GostBlockungSchiene.transpilerFromJSON(text);
 	}
@@ -5941,11 +6082,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} schienenid - der Pfad-Parameter schienenid
 	 */
-	public async patchGostBlockungSchiene(data : Partial<GostBlockungSchiene>, schema : string, schienenid : number) : Promise<void> {
+	public async patchGostBlockungSchiene(data: Partial<GostBlockungSchiene>, schema: string, schienenid: number): Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/schiene/{schienenid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{schienenid\s*(:[^{}]+({[^{}]+})*)?}/g, schienenid.toString());
-		const body : string = GostBlockungSchiene.transpilerToJSONPatch(data);
+		const body: string = GostBlockungSchiene.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -5967,11 +6108,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Schiene wurde wurde erfolgreich gelöscht.
 	 */
-	public async deleteGostBlockungSchieneByID(schema : string, schienenid : number) : Promise<GostBlockungSchiene> {
+	public async deleteGostBlockungSchieneByID(schema: string, schienenid: number): Promise<GostBlockungSchiene> {
 		const path = "/db/{schema}/gost/blockungen/schiene/{schienenid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{schienenid\s*(:[^{}]+({[^{}]+})*)?}/g, schienenid.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return GostBlockungSchiene.transpilerFromJSON(text);
 	}
@@ -5994,11 +6135,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Blockungsergebnisse der gymnasialen Oberstufe für die angegebene ID
 	 */
-	public async getGostBlockungsergebnis(schema : string, ergebnisid : number) : Promise<GostBlockungsergebnis> {
+	public async getGostBlockungsergebnis(schema: string, ergebnisid: number): Promise<GostBlockungsergebnis> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return GostBlockungsergebnis.transpilerFromJSON(text);
 	}
@@ -6021,11 +6162,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
 	 */
-	public async patchGostBlockungsergebnis(data : Partial<GostBlockungsergebnis>, schema : string, ergebnisid : number) : Promise<void> {
+	public async patchGostBlockungsergebnis(data: Partial<GostBlockungsergebnis>, schema: string, ergebnisid: number): Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString());
-		const body : string = GostBlockungsergebnis.transpilerToJSONPatch(data);
+		const body: string = GostBlockungsergebnis.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -6047,13 +6188,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Das Zwischenergebnis einer Blockung der gymnasialen Oberstufe für die angegebene ID wurde erfolgreich gelöscht.
 	 */
-	public async deleteGostBlockungsergebnis(schema : string, ergebnisid : number) : Promise<number> {
+	public async deleteGostBlockungsergebnis(schema: string, ergebnisid: number): Promise<number> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
-		return parseFloat(JSON.parse(text));
+		return Number.parseFloat(JSON.parse(text));
 	}
 
 
@@ -6072,7 +6213,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
 	 */
-	public async activateGostBlockungsergebnis(schema : string, ergebnisid : number) : Promise<void> {
+	public async activateGostBlockungsergebnis(schema: string, ergebnisid: number): Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/activate"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString());
@@ -6098,11 +6239,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Blockungslisteneintrag des Duplikats
 	 */
-	public async dupliziereGostBlockungMitErgebnis(schema : string, ergebnisid : number) : Promise<GostBlockungListeneintrag> {
+	public async dupliziereGostBlockungMitErgebnis(schema: string, ergebnisid: number): Promise<GostBlockungListeneintrag> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/dupliziere"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return GostBlockungListeneintrag.transpilerFromJSON(text);
 	}
@@ -6125,11 +6266,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Blockung und das Ergebnis wurde erfolgreich hochgeschrieben.
 	 */
-	public async schreibeGostBlockungsErgebnisHoch(schema : string, ergebnisid : number) : Promise<GostBlockungsdaten> {
+	public async schreibeGostBlockungsErgebnisHoch(schema: string, ergebnisid: number): Promise<GostBlockungsdaten> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/hochschreiben"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return GostBlockungsdaten.transpilerFromJSON(text);
 	}
@@ -6149,11 +6290,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
 	 */
-	public async deleteGostBlockungsergebnisKursSchieneZuordnungen(data : List<GostBlockungsergebnisKursSchienenZuordnung>, schema : string, ergebnisid : number) : Promise<void> {
+	public async deleteGostBlockungsergebnisKursSchieneZuordnungen(data: List<GostBlockungsergebnisKursSchienenZuordnung>, schema: string, ergebnisid: number): Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/removeKursSchienenZuordnungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString());
-		const body : string = "[" + (data.toArray() as Array<GostBlockungsergebnisKursSchienenZuordnung>).map(d => GostBlockungsergebnisKursSchienenZuordnung.transpilerToJSON(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<GostBlockungsergebnisKursSchienenZuordnung>).map(d => GostBlockungsergebnisKursSchienenZuordnung.transpilerToJSON(d)).join() + "]";
 		await super.deleteJSON(path, body);
 		return;
 	}
@@ -6173,11 +6314,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
 	 */
-	public async deleteGostBlockungsergebnisKursSchuelerZuordnungen(data : List<GostBlockungsergebnisKursSchuelerZuordnung>, schema : string, ergebnisid : number) : Promise<void> {
+	public async deleteGostBlockungsergebnisKursSchuelerZuordnungen(data: List<GostBlockungsergebnisKursSchuelerZuordnung>, schema: string, ergebnisid: number): Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/removeKursSchuelerZuordnungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString());
-		const body : string = "[" + (data.toArray() as Array<GostBlockungsergebnisKursSchuelerZuordnung>).map(d => GostBlockungsergebnisKursSchuelerZuordnung.transpilerToJSON(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<GostBlockungsergebnisKursSchuelerZuordnung>).map(d => GostBlockungsergebnisKursSchuelerZuordnung.transpilerToJSON(d)).join() + "]";
 		await super.deleteJSON(path, body);
 		return;
 	}
@@ -6200,7 +6341,7 @@ export class ApiServer extends BaseApi {
 	 * @param {number} schienenid - der Pfad-Parameter schienenid
 	 * @param {number} kursid - der Pfad-Parameter kursid
 	 */
-	public async createGostBlockungsergebnisKursSchieneZuordnung(schema : string, ergebnisid : number, schienenid : number, kursid : number) : Promise<void> {
+	public async createGostBlockungsergebnisKursSchieneZuordnung(schema: string, ergebnisid: number, schienenid: number, kursid: number): Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/schiene/{schienenid : \\d+}/kurs/{kursid: \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString())
@@ -6226,7 +6367,7 @@ export class ApiServer extends BaseApi {
 	 * @param {number} schienenid - der Pfad-Parameter schienenid
 	 * @param {number} kursid - der Pfad-Parameter kursid
 	 */
-	public async deleteGostBlockungsergebnisKursSchieneZuordnung(schema : string, ergebnisid : number, schienenid : number, kursid : number) : Promise<void> {
+	public async deleteGostBlockungsergebnisKursSchieneZuordnung(schema: string, ergebnisid: number, schienenid: number, kursid: number): Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/schiene/{schienenid : \\d+}/kurs/{kursid: \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString())
@@ -6255,7 +6396,7 @@ export class ApiServer extends BaseApi {
 	 * @param {number} kursid - der Pfad-Parameter kursid
 	 * @param {number} schienenidneu - der Pfad-Parameter schienenidneu
 	 */
-	public async updateGostBlockungsergebnisKursSchieneZuordnung(schema : string, ergebnisid : number, schienenid : number, kursid : number, schienenidneu : number) : Promise<void> {
+	public async updateGostBlockungsergebnisKursSchieneZuordnung(schema: string, ergebnisid: number, schienenid: number, kursid: number, schienenidneu: number): Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/schiene/{schienenid: \\d+}/kurs/{kursid: \\d+}/zu/{schienenidneu: \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString())
@@ -6284,7 +6425,7 @@ export class ApiServer extends BaseApi {
 	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
 	 * @param {number} kursid - der Pfad-Parameter kursid
 	 */
-	public async createGostBlockungsergebnisKursSchuelerZuordnung(schema : string, ergebnisid : number, schuelerid : number, kursid : number) : Promise<void> {
+	public async createGostBlockungsergebnisKursSchuelerZuordnung(schema: string, ergebnisid: number, schuelerid: number, kursid: number): Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/schueler/{schuelerid : \\d+}/kurs/{kursid: \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString())
@@ -6310,7 +6451,7 @@ export class ApiServer extends BaseApi {
 	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
 	 * @param {number} kursid - der Pfad-Parameter kursid
 	 */
-	public async deleteGostBlockungsergebnisKursSchuelerZuordnung(schema : string, ergebnisid : number, schuelerid : number, kursid : number) : Promise<void> {
+	public async deleteGostBlockungsergebnisKursSchuelerZuordnung(schema: string, ergebnisid: number, schuelerid: number, kursid: number): Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/schueler/{schuelerid : \\d+}/kurs/{kursid: \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString())
@@ -6339,7 +6480,7 @@ export class ApiServer extends BaseApi {
 	 * @param {number} kursid - der Pfad-Parameter kursid
 	 * @param {number} kursidneu - der Pfad-Parameter kursidneu
 	 */
-	public async updateGostBlockungsergebnisKursSchuelerZuordnung(schema : string, ergebnisid : number, schuelerid : number, kursid : number, kursidneu : number) : Promise<void> {
+	public async updateGostBlockungsergebnisKursSchuelerZuordnung(schema: string, ergebnisid: number, schuelerid: number, kursid: number, kursidneu: number): Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/schueler/{schuelerid : \\d+}/kurs/{kursid: \\d+}/zu/{kursidneu: \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString())
@@ -6367,7 +6508,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
 	 */
-	public async syncGostBlockungsergebnis(schema : string, ergebnisid : number) : Promise<void> {
+	public async syncGostBlockungsergebnis(schema: string, ergebnisid: number): Promise<void> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/synchronize"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString());
@@ -6394,15 +6535,18 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Zuordnungen wurden erfolgreich gelöscht bzw. hinzugefügt. Das Ergebnis beinhaltet die erstellten Regeln, falls Regeln angepasst wurden, oder eine leere Liste, falls keine angepasst wurden.
 	 */
-	public async updateGostBlockungsergebnisKursSchuelerZuordnungen(data : GostBlockungsergebnisKursSchuelerZuordnungUpdate, schema : string, ergebnisid : number) : Promise<List<GostBlockungRegel>> {
+	public async updateGostBlockungsergebnisKursSchuelerZuordnungen(data: GostBlockungsergebnisKursSchuelerZuordnungUpdate, schema: string, ergebnisid: number): Promise<List<GostBlockungRegel>> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/updateKursSchuelerZuordnungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{ergebnisid\s*(:[^{}]+({[^{}]+})*)?}/g, ergebnisid.toString());
-		const body : string = GostBlockungsergebnisKursSchuelerZuordnungUpdate.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = GostBlockungsergebnisKursSchuelerZuordnungUpdate.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostBlockungRegel>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostBlockungRegel.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(GostBlockungRegel.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -6425,13 +6569,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Zwischenergebnisse einer Blockung der gymnasialen Oberstufe für die angegebene ID wurden erfolgreich gelöscht.
 	 */
-	public async deleteGostBlockungsergebnisse(data : List<number>, schema : string) : Promise<number> {
+	public async deleteGostBlockungsergebnisse(data: List<number>, schema: string): Promise<number> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const text = result;
-		return parseFloat(JSON.parse(text));
+		return Number.parseFloat(JSON.parse(text));
 	}
 
 
@@ -6452,11 +6596,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchGostFachkombination(data : Partial<GostJahrgangFachkombination>, schema : string, id : number) : Promise<void> {
+	public async patchGostFachkombination(data: Partial<GostJahrgangFachkombination>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/gost/fachkombination/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = GostJahrgangFachkombination.transpilerToJSONPatch(data);
+		const body: string = GostJahrgangFachkombination.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -6478,11 +6622,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Regel wurde wurde erfolgreich gelöscht.
 	 */
-	public async deleteGostFachkombination(schema : string, id : number) : Promise<GostJahrgangFachkombination> {
+	public async deleteGostFachkombination(schema: string, id: number): Promise<GostJahrgangFachkombination> {
 		const path = "/db/{schema}/gost/fachkombination/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return GostJahrgangFachkombination.transpilerFromJSON(text);
 	}
@@ -6506,11 +6650,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Das GostKlausurenCollectionAllData-Objekt mit den Daten der Klausurplanung für den angegebenen Abiturjahrgang und das Halbjahr.
 	 */
-	public async getGostKlausurenCollectionAlldata(data : List<GostKlausurenCollectionHjData>, schema : string) : Promise<GostKlausurenCollectionAllData> {
+	public async getGostKlausurenCollectionAlldata(data: List<GostKlausurenCollectionHjData>, schema: string): Promise<GostKlausurenCollectionAllData> {
 		const path = "/db/{schema}/gost/klausuren/collections/alldata"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<GostKlausurenCollectionHjData>).map(d => GostKlausurenCollectionHjData.transpilerToJSON(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<GostKlausurenCollectionHjData>).map(d => GostKlausurenCollectionHjData.transpilerToJSON(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return GostKlausurenCollectionAllData.transpilerFromJSON(text);
 	}
@@ -6537,11 +6681,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die GZip-komprimierten Daten der Klausurplanung für den angegebenen Abiturjahrgang und das Halbjahr.
 	 */
-	public async getGostKlausurenCollectionAlldataGZip(data : List<GostKlausurenCollectionHjData>, schema : string) : Promise<ApiFile> {
+	public async getGostKlausurenCollectionAlldataGZip(data: List<GostKlausurenCollectionHjData>, schema: string): Promise<ApiFile> {
 		const path = "/db/{schema}/gost/klausuren/collections/alldata/gzip"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<GostKlausurenCollectionHjData>).map(d => GostKlausurenCollectionHjData.transpilerToJSON(d)).join() + "]";
-		const result : ApiFile = await super.postJSONtoOctetStream(path, body);
+		const body: string = "[" + (data.toArray() as Array<GostKlausurenCollectionHjData>).map(d => GostKlausurenCollectionHjData.transpilerToJSON(d)).join() + "]";
+		const result: ApiFile = await super.postJSONtoOctetStream(path, body);
 		return result;
 	}
 
@@ -6564,12 +6708,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Das GostKlausurenCollectionAllData-Objekt mit den Fehlern und Problemen der Klausurplanung für den angegebenen Abiturjahrgang und das Halbjahr.
 	 */
-	public async getGostKlausurenCollectionAllIssues(schema : string, abiturjahr : number, halbjahr : number) : Promise<GostKlausurenCollectionHjData> {
+	public async getGostKlausurenCollectionAllIssues(schema: string, abiturjahr: number, halbjahr: number): Promise<GostKlausurenCollectionHjData> {
 		const path = "/db/{schema}/gost/klausuren/collections/issues/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
 			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return GostKlausurenCollectionHjData.transpilerFromJSON(text);
 	}
@@ -6597,12 +6741,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Das komprimierte GostKlausurenCollectionHjData-Objekt mit den Fehlern und Problemen der Klausurplanung für den angegebenen Abiturjahrgang und das Halbjahr.
 	 */
-	public async getGostKlausurenCollectionAllIssuesGZip(schema : string, abiturjahr : number, halbjahr : number) : Promise<ApiFile> {
+	public async getGostKlausurenCollectionAllIssuesGZip(schema: string, abiturjahr: number, halbjahr: number): Promise<ApiFile> {
 		const path = "/db/{schema}/gost/klausuren/collections/issues/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}/gzip"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
 			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
-		const data : ApiFile = await super.getOctetStream(path);
+		const data: ApiFile = await super.getOctetStream(path);
 		return data;
 	}
 
@@ -6628,12 +6772,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Patch wurde erfolgreich in die Kursklausur integriert.
 	 */
-	public async patchGostKlausurenKursklausur(data : Partial<GostKursklausur>, schema : string, id : number) : Promise<GostKlausurenCollectionSkrsKrsData> {
+	public async patchGostKlausurenKursklausur(data: Partial<GostKursklausur>, schema: string, id: number): Promise<GostKlausurenCollectionSkrsKrsData> {
 		const path = "/db/{schema}/gost/klausuren/kursklausuren/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = GostKursklausur.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = GostKursklausur.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return GostKlausurenCollectionSkrsKrsData.transpilerFromJSON(text);
 	}
@@ -6658,11 +6802,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Klausurblockung wurde erfolgreich angelegt.
 	 */
-	public async blockenGostKursklausuren(data : GostKlausurterminblockungDaten, schema : string) : Promise<GostKlausurenCollectionData> {
+	public async blockenGostKursklausuren(data: GostKlausurterminblockungDaten, schema: string): Promise<GostKlausurenCollectionData> {
 		const path = "/db/{schema}/gost/klausuren/kursklausuren/blocken"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = GostKlausurterminblockungDaten.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = GostKlausurterminblockungDaten.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return GostKlausurenCollectionData.transpilerFromJSON(text);
 	}
@@ -6688,13 +6832,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Liste der Kursklausuren.
 	 */
-	public async createGostKlausurenKursklausurenJahrgangHalbjahrQuartal(schema : string, abiturjahr : number, halbjahr : number, quartal : number) : Promise<GostKlausurenCollectionData> {
+	public async createGostKlausurenKursklausurenJahrgangHalbjahrQuartal(schema: string, abiturjahr: number, halbjahr: number, quartal: number): Promise<GostKlausurenCollectionData> {
 		const path = "/db/{schema}/gost/klausuren/kursklausuren/create/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}/quartal/{quartal : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
 			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString())
 			.replace(/{quartal\s*(:[^{}]+({[^{}]+})*)?}/g, quartal.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return GostKlausurenCollectionData.transpilerFromJSON(text);
 	}
@@ -6717,14 +6861,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Kursklausuren für die angegebenen IDs wurden erfolgreich gelöscht.
 	 */
-	public async deleteGostKlausurenKursklausuren(data : List<number>, schema : string) : Promise<List<number>> {
+	public async deleteGostKlausurenKursklausuren(data: List<number>, schema: string): Promise<List<number>> {
 		const path = "/db/{schema}/gost/klausuren/kursklausuren/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Number.parseFloat(JSON.parse(text)));
+		});
 		return ret;
 	}
 
@@ -6745,11 +6892,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchGostKlausurenRaum(data : Partial<GostKlausurraum>, schema : string, id : number) : Promise<void> {
+	public async patchGostKlausurenRaum(data: Partial<GostKlausurraum>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/gost/klausuren/raeume/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = GostKlausurraum.transpilerToJSONPatch(data);
+		const body: string = GostKlausurraum.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -6772,11 +6919,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns GostKlausurraum wurde erfolgreich angelegt.
 	 */
-	public async createGostKlausurenRaum(data : Partial<GostKlausurraum>, schema : string) : Promise<GostKlausurraum> {
+	public async createGostKlausurenRaum(data: Partial<GostKlausurraum>, schema: string): Promise<GostKlausurraum> {
 		const path = "/db/{schema}/gost/klausuren/raeume/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = GostKlausurraum.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = GostKlausurraum.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return GostKlausurraum.transpilerFromJSON(text);
 	}
@@ -6799,11 +6946,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Klausurraum für die angegebene ID wurden erfolgreich gelöscht.
 	 */
-	public async deleteGostKlausurenRaum(schema : string, id : number) : Promise<boolean> {
+	public async deleteGostKlausurenRaum(schema: string, id: number): Promise<boolean> {
 		const path = "/db/{schema}/gost/klausuren/raeume/delete/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return (text === "true");
 	}
@@ -6829,13 +6976,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Abfrage war erfolgreich.
 	 */
-	public async getGostKlausurenCollectionBySchuelerid(schema : string, sid : number, abiturjahr : number, halbjahr : number) : Promise<GostKlausurenCollectionData> {
+	public async getGostKlausurenCollectionBySchuelerid(schema: string, sid: number, abiturjahr: number, halbjahr: number): Promise<GostKlausurenCollectionData> {
 		const path = "/db/{schema}/gost/klausuren/schueler/{sid : -?\\d+}/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{sid\s*(:[^{}]+({[^{}]+})*)?}/g, sid.toString())
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
 			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return GostKlausurenCollectionData.transpilerFromJSON(text);
 	}
@@ -6858,11 +7005,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchGostKlausurenSchuelerklausur(data : Partial<GostSchuelerklausur>, schema : string, id : number) : Promise<void> {
+	public async patchGostKlausurenSchuelerklausur(data: Partial<GostSchuelerklausur>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = GostSchuelerklausur.transpilerToJSONPatch(data);
+		const body: string = GostSchuelerklausur.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -6885,11 +7032,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Daten wurde erfolgreich angelegt.
 	 */
-	public async createGostKlausurenSchuelerklausuren(data : List<Partial<GostSchuelerklausur>>, schema : string) : Promise<GostKlausurenCollectionData> {
+	public async createGostKlausurenSchuelerklausuren(data: List<Partial<GostSchuelerklausur>>, schema: string): Promise<GostKlausurenCollectionData> {
 		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/create/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<GostSchuelerklausur>).map(d => GostSchuelerklausur.transpilerToJSONPatch(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<GostSchuelerklausur>).map(d => GostSchuelerklausur.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return GostKlausurenCollectionData.transpilerFromJSON(text);
 	}
@@ -6912,14 +7059,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Schülerklausuren für die angegebenen IDs wurden erfolgreich gelöscht.
 	 */
-	public async deleteGostKlausurenSchuelerklausuren(data : List<number>, schema : string) : Promise<List<number>> {
+	public async deleteGostKlausurenSchuelerklausuren(data: List<number>, schema: string): Promise<List<number>> {
 		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Number.parseFloat(JSON.parse(text)));
+		});
 		return ret;
 	}
 
@@ -6941,11 +7091,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns GostSchuelerklausurTermin wurde erfolgreich gelöscht.
 	 */
-	public async deleteGostKlausurenSchuelerklausurtermin(schema : string, id : number) : Promise<boolean> {
+	public async deleteGostKlausurenSchuelerklausurtermin(schema: string, id: number): Promise<boolean> {
 		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/termine/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return (text === "true");
 	}
@@ -6972,12 +7122,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Patch wurde erfolgreich in den GostKlausurtermin integriert.
 	 */
-	public async patchGostKlausurenSchuelerklausurtermin(data : Partial<GostSchuelerklausurTermin>, schema : string, id : number) : Promise<GostKlausurenCollectionSkrsKrsData> {
+	public async patchGostKlausurenSchuelerklausurtermin(data: Partial<GostSchuelerklausurTermin>, schema: string, id: number): Promise<GostKlausurenCollectionSkrsKrsData> {
 		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/termine/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = GostSchuelerklausurTermin.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = GostSchuelerklausurTermin.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return GostKlausurenCollectionSkrsKrsData.transpilerFromJSON(text);
 	}
@@ -7000,11 +7150,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Klausurblockung wurde erfolgreich angelegt.
 	 */
-	public async blockenGostSchuelerklausurtermine(data : GostNachschreibterminblockungKonfiguration, schema : string) : Promise<GostKlausurenCollectionData> {
+	public async blockenGostSchuelerklausurtermine(data: GostNachschreibterminblockungKonfiguration, schema: string): Promise<GostKlausurenCollectionData> {
 		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/termine/blocken"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = GostNachschreibterminblockungKonfiguration.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = GostNachschreibterminblockungKonfiguration.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return GostKlausurenCollectionData.transpilerFromJSON(text);
 	}
@@ -7028,11 +7178,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns GostSchuelerklausurTermin wurde erfolgreich angelegt.
 	 */
-	public async createGostKlausurenSchuelerklausurtermin(data : Partial<GostSchuelerklausurTermin>, schema : string) : Promise<GostSchuelerklausurTermin> {
+	public async createGostKlausurenSchuelerklausurtermin(data: Partial<GostSchuelerklausurTermin>, schema: string): Promise<GostSchuelerklausurTermin> {
 		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/termine/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = GostSchuelerklausurTermin.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = GostSchuelerklausurTermin.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return GostSchuelerklausurTermin.transpilerFromJSON(text);
 	}
@@ -7055,11 +7205,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Raumzuweisungen wurde erfolgreich gelöscht.
 	 */
-	public async loescheGostSchuelerklausurtermineAusRaum(data : List<number>, schema : string) : Promise<GostKlausurenCollectionSkrsKrsData> {
+	public async loescheGostSchuelerklausurtermineAusRaum(data: List<number>, schema: string): Promise<GostKlausurenCollectionSkrsKrsData> {
 		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/termine/loescheraum"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return GostKlausurenCollectionSkrsKrsData.transpilerFromJSON(text);
 	}
@@ -7082,11 +7232,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Raumzuweisungen wurden erfolgreich übernommen.
 	 */
-	public async setzeGostSchuelerklausurtermineZuRaum(data : List<GostKlausurraumRich>, schema : string) : Promise<GostKlausurenCollectionSkrsKrsData> {
+	public async setzeGostSchuelerklausurtermineZuRaum(data: List<GostKlausurraumRich>, schema: string): Promise<GostKlausurenCollectionSkrsKrsData> {
 		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/termine/zuraum"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<GostKlausurraumRich>).map(d => GostKlausurraumRich.transpilerToJSON(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<GostKlausurraumRich>).map(d => GostKlausurraumRich.transpilerToJSON(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return GostKlausurenCollectionSkrsKrsData.transpilerFromJSON(text);
 	}
@@ -7113,12 +7263,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Patch wurde erfolgreich in den GostKlausurtermin integriert.
 	 */
-	public async patchGostKlausurenKlausurtermin(data : Partial<GostKlausurtermin>, schema : string, id : number) : Promise<GostKlausurenCollectionSkrsKrsData> {
+	public async patchGostKlausurenKlausurtermin(data: Partial<GostKlausurtermin>, schema: string, id: number): Promise<GostKlausurenCollectionSkrsKrsData> {
 		const path = "/db/{schema}/gost/klausuren/termine/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = GostKlausurtermin.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = GostKlausurtermin.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return GostKlausurenCollectionSkrsKrsData.transpilerFromJSON(text);
 	}
@@ -7142,11 +7292,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Gost-Klausurtermin wurde erfolgreich angelegt.
 	 */
-	public async createGostKlausurenKlausurtermin(data : Partial<GostKlausurtermin>, schema : string) : Promise<GostKlausurtermin> {
+	public async createGostKlausurenKlausurtermin(data: Partial<GostKlausurtermin>, schema: string): Promise<GostKlausurtermin> {
 		const path = "/db/{schema}/gost/klausuren/termine/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = GostKlausurtermin.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = GostKlausurtermin.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return GostKlausurtermin.transpilerFromJSON(text);
 	}
@@ -7169,14 +7319,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Klausurtermine für die angegebenen IDs wurden erfolgreich gelöscht.
 	 */
-	public async deleteGostKlausurenKlausurtermine(data : List<number>, schema : string) : Promise<List<number>> {
+	public async deleteGostKlausurenKlausurtermine(data: List<number>, schema: string): Promise<List<number>> {
 		const path = "/db/{schema}/gost/klausuren/termine/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Number.parseFloat(JSON.parse(text)));
+		});
 		return ret;
 	}
 
@@ -7194,10 +7347,10 @@ export class ApiServer extends BaseApi {
 	 * @param {GostKlausurenUpdate} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async updateGostKlausuren(data : GostKlausurenUpdate, schema : string) : Promise<void> {
+	public async updateGostKlausuren(data: GostKlausurenUpdate, schema: string): Promise<void> {
 		const path = "/db/{schema}/gost/klausuren/update"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = GostKlausurenUpdate.transpilerToJSON(data);
+		const body: string = GostKlausurenUpdate.transpilerToJSON(data);
 		await super.postJSON(path, body);
 		return;
 	}
@@ -7219,10 +7372,10 @@ export class ApiServer extends BaseApi {
 	 * @param {Partial<GostKlausurvorgabe>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchGostKlausurenVorgabe(data : Partial<GostKlausurvorgabe>, schema : string) : Promise<void> {
+	public async patchGostKlausurenVorgabe(data: Partial<GostKlausurvorgabe>, schema: string): Promise<void> {
 		const path = "/db/{schema}/gost/klausuren/vorgaben"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = GostKlausurvorgabe.transpilerToJSONPatch(data);
+		const body: string = GostKlausurvorgabe.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -7241,7 +7394,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async deleteGostKlausurenVorgabe(schema : string, id : number) : Promise<void> {
+	public async deleteGostKlausurenVorgabe(schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/gost/klausuren/vorgaben/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -7268,14 +7421,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Liste der Klausurvorgaben.
 	 */
-	public async getGostKlausurenVorgabenJahrgang(schema : string, abiturjahr : number) : Promise<List<GostKlausurvorgabe>> {
+	public async getGostKlausurenVorgabenJahrgang(schema: string, abiturjahr: number): Promise<List<GostKlausurvorgabe>> {
 		const path = "/db/{schema}/gost/klausuren/vorgaben/abiturjahrgang/{abiturjahr : -?\\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostKlausurvorgabe>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKlausurvorgabe.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(GostKlausurvorgabe.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -7299,11 +7455,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Gost-Klausurvorgabe wurde erfolgreich angelegt.
 	 */
-	public async createGostKlausurenVorgabe(data : Partial<GostKlausurvorgabe>, schema : string) : Promise<GostKlausurvorgabe> {
+	public async createGostKlausurenVorgabe(data: Partial<GostKlausurvorgabe>, schema: string): Promise<GostKlausurvorgabe> {
 		const path = "/db/{schema}/gost/klausuren/vorgaben/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = GostKlausurvorgabe.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = GostKlausurvorgabe.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return GostKlausurvorgabe.transpilerFromJSON(text);
 	}
@@ -7327,14 +7483,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Einträge wurden erfolgreich gelöscht.
 	 */
-	public async deleteGostKlausurenVorgabenMultiple(data : List<number>, schema : string) : Promise<List<number>> {
+	public async deleteGostKlausurenVorgabenMultiple(data: List<number>, schema: string): Promise<List<number>> {
 		const path = "/db/{schema}/gost/klausuren/vorgaben/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Number.parseFloat(JSON.parse(text)));
+		});
 		return ret;
 	}
 
@@ -7359,14 +7518,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Patches wurden erfolgreich in die Klausurvorgaben integriert.
 	 */
-	public async patchGostKlausurenVorgabenMultiple(data : List<Partial<GostKlausurvorgabe>>, schema : string) : Promise<List<GostKlausurvorgabe>> {
+	public async patchGostKlausurenVorgabenMultiple(data: List<Partial<GostKlausurvorgabe>>, schema: string): Promise<List<GostKlausurvorgabe>> {
 		const path = "/db/{schema}/gost/klausuren/vorgaben/patch/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<GostKlausurvorgabe>).map(d => GostKlausurvorgabe.transpilerToJSONPatch(d)).join() + "]";
-		const result : string = await super.patchJSONWithResponse(path, body);
+		const body: string = "[" + (data.toArray() as Array<GostKlausurvorgabe>).map(d => GostKlausurvorgabe.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.patchJSONWithResponse(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostKlausurvorgabe>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKlausurvorgabe.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(GostKlausurvorgabe.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -7391,16 +7553,19 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Liste der neuen Klausurvorgaben.
 	 */
-	public async copyGostKlausurenVorgaben(schema : string, abiturjahr : number, halbjahr : number, quartal : number) : Promise<List<GostKlausurvorgabe>> {
+	public async copyGostKlausurenVorgaben(schema: string, abiturjahr: number, halbjahr: number, quartal: number): Promise<List<GostKlausurvorgabe>> {
 		const path = "/db/{schema}/gost/klausuren/vorgaben/vorlagen/copyto/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : -?\\d+}/quartal/{quartal : -?\\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
 			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString())
 			.replace(/{quartal\s*(:[^{}]+({[^{}]+})*)?}/g, quartal.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostKlausurvorgabe>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKlausurvorgabe.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(GostKlausurvorgabe.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -7424,15 +7589,18 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Liste der neuen Klausurvorgaben.
 	 */
-	public async createGostKlausurenDefaultVorgaben(schema : string, halbjahr : number, quartal : number) : Promise<List<GostKlausurvorgabe>> {
+	public async createGostKlausurenDefaultVorgaben(schema: string, halbjahr: number, quartal: number): Promise<List<GostKlausurvorgabe>> {
 		const path = "/db/{schema}/gost/klausuren/vorgaben/vorlagen/create/halbjahr/{halbjahr : -?\\d+}/quartal/{quartal : -?\\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString())
 			.replace(/{quartal\s*(:[^{}]+({[^{}]+})*)?}/g, quartal.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostKlausurvorgabe>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKlausurvorgabe.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(GostKlausurvorgabe.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -7454,11 +7622,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die GZip-komprimierten Laufbahndaten der gymnasialen Obertufe
 	 */
-	public async exportGostSchuelerLaufbahnplanungen(data : List<number>, schema : string) : Promise<ApiFile> {
+	public async exportGostSchuelerLaufbahnplanungen(data: List<number>, schema: string): Promise<ApiFile> {
 		const path = "/db/{schema}/gost/laufbahnplanung/v2/export"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : ApiFile = await super.postJSONtoZIP(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: ApiFile = await super.postJSONtoZIP(path, body);
 		return result;
 	}
 
@@ -7482,10 +7650,10 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Log vom Import der Laufbahndaten
 	 */
-	public async importGostSchuelerLaufbahnplanungen(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
+	public async importGostSchuelerLaufbahnplanungen(data: FormData, schema: string): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/gost/laufbahnplanung/v2/import"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.postMultipart(path, data);
+		const result: string = await super.postMultipart(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -7510,11 +7678,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Abiturdaten des Schülers
 	 */
-	public async getGostSchuelerAbiturdaten(schema : string, id : number) : Promise<Abiturdaten> {
+	public async getGostSchuelerAbiturdaten(schema: string, id: number): Promise<Abiturdaten> {
 		const path = "/db/{schema}/gost/schueler/{id : \\d+}/abiturdaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return Abiturdaten.transpilerFromJSON(text);
 	}
@@ -7537,11 +7705,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchGostSchuelerAbiturdaten(data : Partial<Abiturdaten>, schema : string, id : number) : Promise<void> {
+	public async patchGostSchuelerAbiturdaten(data: Partial<Abiturdaten>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/gost/schueler/{id : \\d+}/abiturdaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Abiturdaten.transpilerToJSONPatch(data);
+		const body: string = Abiturdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -7561,7 +7729,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async copyGostSchuelerAbiturdatenAusLeistungsdaten(schema : string, id : number) : Promise<void> {
+	public async copyGostSchuelerAbiturdatenAusLeistungsdaten(schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/gost/schueler/{id : \\d+}/abiturdaten/uebertragen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -7587,11 +7755,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Laufbahnplanungsdaten der gymnasialen Oberstufe des angegebenen Schülers
 	 */
-	public async getGostSchuelerLaufbahnplanung(schema : string, id : number) : Promise<Abiturdaten> {
+	public async getGostSchuelerLaufbahnplanung(schema: string, id: number): Promise<Abiturdaten> {
 		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return Abiturdaten.transpilerFromJSON(text);
 	}
@@ -7614,11 +7782,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Beratungsdaten der gymnasialen Oberstufe des angegebenen Schülers
 	 */
-	public async getGostSchuelerLaufbahnplanungBeratungsdaten(schema : string, id : number) : Promise<GostLaufbahnplanungBeratungsdaten> {
+	public async getGostSchuelerLaufbahnplanungBeratungsdaten(schema: string, id: number): Promise<GostLaufbahnplanungBeratungsdaten> {
 		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/beratungsdaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return GostLaufbahnplanungBeratungsdaten.transpilerFromJSON(text);
 	}
@@ -7644,12 +7812,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Log vom Import der Laufbahndaten
 	 */
-	public async importGostSchuelerLaufbahnplanungsdatenV1(data : GostLaufbahnplanungExportV1, schema : string, id : number) : Promise<SimpleOperationResponse> {
+	public async importGostSchuelerLaufbahnplanungsdatenV1(data: GostLaufbahnplanungExportV1, schema: string, id: number): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/v1/daten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = GostLaufbahnplanungExportV1.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = GostLaufbahnplanungExportV1.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -7672,11 +7840,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Laufbahndaten der gymnasialen Oberstufe
 	 */
-	public async exportGostSchuelerLaufbahnplanungsdaten(schema : string, id : number) : Promise<GostLaufbahnplanungExportV2> {
+	public async exportGostSchuelerLaufbahnplanungsdaten(schema: string, id: number): Promise<GostLaufbahnplanungExportV2> {
 		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/v2/daten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return GostLaufbahnplanungExportV2.transpilerFromJSON(text);
 	}
@@ -7702,12 +7870,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Log vom Import der Laufbahndaten
 	 */
-	public async importGostSchuelerLaufbahnplanungsdatenV2(data : GostLaufbahnplanungExportV2, schema : string, id : number) : Promise<SimpleOperationResponse> {
+	public async importGostSchuelerLaufbahnplanungsdatenV2(data: GostLaufbahnplanungExportV2, schema: string, id: number): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/v2/daten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = GostLaufbahnplanungExportV2.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = GostLaufbahnplanungExportV2.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -7730,11 +7898,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die GZip-komprimierten Laufbahndaten der gymnasialen Obertufe
 	 */
-	public async exportGostSchuelerLaufbahnplanung(schema : string, id : number) : Promise<ApiFile> {
+	public async exportGostSchuelerLaufbahnplanung(schema: string, id: number): Promise<ApiFile> {
 		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/v2/export"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const data : ApiFile = await super.getOctetStream(path);
+		const data: ApiFile = await super.getOctetStream(path);
 		return data;
 	}
 
@@ -7759,11 +7927,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Log vom Import der Laufbahndaten
 	 */
-	public async importGostSchuelerLaufbahnplanung(data : FormData, schema : string, id : number) : Promise<SimpleOperationResponse> {
+	public async importGostSchuelerLaufbahnplanung(data: FormData, schema: string, id: number): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/v2/import"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.postMultipart(path, data);
+		const result: string = await super.postMultipart(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -7786,11 +7954,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Leistungsdaten des Schülers
 	 */
-	public async getGostSchuelerLeistungsdaten(schema : string, id : number) : Promise<GostLeistungen> {
+	public async getGostSchuelerLeistungsdaten(schema: string, id: number): Promise<GostLeistungen> {
 		const path = "/db/{schema}/gost/schueler/{id : \\d+}/leistungsdaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return GostLeistungen.transpilerFromJSON(text);
 	}
@@ -7814,12 +7982,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Fachwahlen der gymnasialen Oberstufe für das angegebene Fach und den angegebenen Schüler
 	 */
-	public async getGostSchuelerFachwahl(schema : string, schuelerid : number, fachid : number) : Promise<GostSchuelerFachwahl> {
+	public async getGostSchuelerFachwahl(schema: string, schuelerid: number, fachid: number): Promise<GostSchuelerFachwahl> {
 		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/fachwahl/{fachid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString())
 			.replace(/{fachid\s*(:[^{}]+({[^{}]+})*)?}/g, fachid.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return GostSchuelerFachwahl.transpilerFromJSON(text);
 	}
@@ -7843,12 +8011,12 @@ export class ApiServer extends BaseApi {
 	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
 	 * @param {number} fachid - der Pfad-Parameter fachid
 	 */
-	public async patchGostSchuelerFachwahl(data : Partial<GostSchuelerFachwahl>, schema : string, schuelerid : number, fachid : number) : Promise<void> {
+	public async patchGostSchuelerFachwahl(data: Partial<GostSchuelerFachwahl>, schema: string, schuelerid: number, fachid: number): Promise<void> {
 		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/fachwahl/{fachid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString())
 			.replace(/{fachid\s*(:[^{}]+({[^{}]+})*)?}/g, fachid.toString());
-		const body : string = GostSchuelerFachwahl.transpilerToJSONPatch(data);
+		const body: string = GostSchuelerFachwahl.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -7868,7 +8036,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
 	 */
-	public async deleteGostSchuelerFachwahlen(schema : string, schuelerid : number) : Promise<void> {
+	public async deleteGostSchuelerFachwahlen(schema: string, schuelerid: number): Promise<void> {
 		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/fachwahl/delete"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString());
@@ -7891,7 +8059,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
 	 */
-	public async resetGostSchuelerFachwahlen(schema : string, schuelerid : number) : Promise<void> {
+	public async resetGostSchuelerFachwahlen(schema: string, schuelerid: number): Promise<void> {
 		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/fachwahl/reset"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString());
@@ -7917,11 +8085,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Wahlen zu den Gleichwertig Komplexen Lernleistungen der gymnasialen Oberstufe für den angegebenen Schüler
 	 */
-	public async getGostSchuelerGKLWahl(schema : string, schuelerid : number) : Promise<GostSchuelerGKLWahl> {
+	public async getGostSchuelerGKLWahl(schema: string, schuelerid: number): Promise<GostSchuelerGKLWahl> {
 		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/gklwahl"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return GostSchuelerGKLWahl.transpilerFromJSON(text);
 	}
@@ -7944,11 +8112,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
 	 */
-	public async patchGostSchuelerLaufbahnplanungBeratungsdaten(data : Partial<GostLaufbahnplanungBeratungsdaten>, schema : string, schuelerid : number) : Promise<void> {
+	public async patchGostSchuelerLaufbahnplanungBeratungsdaten(data: Partial<GostLaufbahnplanungBeratungsdaten>, schema: string, schuelerid: number): Promise<void> {
 		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/laufbahnplanung/beratungsdaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{schuelerid\s*(:[^{}]+({[^{}]+})*)?}/g, schuelerid.toString());
-		const body : string = GostLaufbahnplanungBeratungsdaten.transpilerToJSONPatch(data);
+		const body: string = GostLaufbahnplanungBeratungsdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -7967,10 +8135,10 @@ export class ApiServer extends BaseApi {
 	 * @param {GostSchuelerGKLWahl} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async putGostSchuelerGKLWahl(data : GostSchuelerGKLWahl, schema : string) : Promise<void> {
+	public async putGostSchuelerGKLWahl(data: GostSchuelerGKLWahl, schema: string): Promise<void> {
 		const path = "/db/{schema}/gost/schueler/fachwahl"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = GostSchuelerGKLWahl.transpilerToJSON(data);
+		const body: string = GostSchuelerGKLWahl.transpilerToJSON(data);
 		return super.putJSON(path, body);
 	}
 
@@ -7989,10 +8157,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async deleteGostSchuelerFachwahlenMultiple(data : List<number>, schema : string) : Promise<void> {
+	public async deleteGostSchuelerFachwahlenMultiple(data: List<number>, schema: string): Promise<void> {
 		const path = "/db/{schema}/gost/schueler/fachwahlen/deleteMultiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		await super.postJSON(path, body);
 		return;
 	}
@@ -8014,13 +8182,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste der Haltestellen.
 	 */
-	public async getHaltestellen(schema : string) : Promise<List<Haltestelle>> {
+	public async getHaltestellen(schema: string): Promise<List<Haltestelle>> {
 		const path = "/db/{schema}/haltestellen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Haltestelle>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Haltestelle.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Haltestelle.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -8042,11 +8213,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchHaltestelle(data : Partial<Haltestelle>, schema : string, id : number) : Promise<void> {
+	public async patchHaltestelle(data: Partial<Haltestelle>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/haltestellen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Haltestelle.transpilerToJSONPatch(data);
+		const body: string = Haltestelle.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -8068,11 +8239,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Haltestelle wurde erfolgreich hinzugefügt.
 	 */
-	public async addHaltestelle(data : Partial<Haltestelle>, schema : string) : Promise<Haltestelle> {
+	public async addHaltestelle(data: Partial<Haltestelle>, schema: string): Promise<Haltestelle> {
 		const path = "/db/{schema}/haltestellen/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Haltestelle.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Haltestelle.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return Haltestelle.transpilerFromJSON(text);
 	}
@@ -8096,14 +8267,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteHaltestellen(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteHaltestellen(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/haltestellen/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -8127,10 +8301,10 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Log vom Importieren der SQLite-Datenbank
 	 */
-	public async importSQLite(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
+	public async importSQLite(data: FormData, schema: string): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/import/sqlite"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.postMultipart(path, data);
+		const result: string = await super.postMultipart(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -8152,13 +8326,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Jahrgangs-Listen-Einträgen
 	 */
-	public async getJahrgaenge(schema : string) : Promise<List<JahrgangsDaten>> {
+	public async getJahrgaenge(schema: string): Promise<List<JahrgangsDaten>> {
 		const path = "/db/{schema}/jahrgaenge/"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<JahrgangsDaten>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JahrgangsDaten.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(JahrgangsDaten.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -8180,11 +8357,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten des Jahrgangs
 	 */
-	public async getJahrgang(schema : string, id : number) : Promise<JahrgangsDaten> {
+	public async getJahrgang(schema: string, id: number): Promise<JahrgangsDaten> {
 		const path = "/db/{schema}/jahrgaenge/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return JahrgangsDaten.transpilerFromJSON(text);
 	}
@@ -8207,11 +8384,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchJahrgang(data : Partial<JahrgangsDaten>, schema : string, id : number) : Promise<void> {
+	public async patchJahrgang(data: Partial<JahrgangsDaten>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/jahrgaenge/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = JahrgangsDaten.transpilerToJSONPatch(data);
+		const body: string = JahrgangsDaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -8235,11 +8412,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Jahrgang wurde erfolgreich entfernt.
 	 */
-	public async deleteJahrgang(schema : string, id : number) : Promise<JahrgangsDaten> {
+	public async deleteJahrgang(schema: string, id: number): Promise<JahrgangsDaten> {
 		const path = "/db/{schema}/jahrgaenge/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return JahrgangsDaten.transpilerFromJSON(text);
 	}
@@ -8261,13 +8438,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Jahrgangs-Katalog-Einträgen
 	 */
-	public async getKatalogJahrgaenge(schema : string) : Promise<List<JahrgaengeKatalogEintrag>> {
+	public async getKatalogJahrgaenge(schema: string): Promise<List<JahrgaengeKatalogEintrag>> {
 		const path = "/db/{schema}/jahrgaenge/allgemein/jahrgaenge"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<JahrgaengeKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JahrgaengeKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(JahrgaengeKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -8290,11 +8470,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Jahrgang wurde erfolgreich hinzugefügt.
 	 */
-	public async addJahrgang(data : Partial<JahrgangsDaten>, schema : string) : Promise<JahrgangsDaten> {
+	public async addJahrgang(data: Partial<JahrgangsDaten>, schema: string): Promise<JahrgangsDaten> {
 		const path = "/db/{schema}/jahrgaenge/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = JahrgangsDaten.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = JahrgangsDaten.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return JahrgangsDaten.transpilerFromJSON(text);
 	}
@@ -8319,14 +8499,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Jahrgänge wurde erfolgreich entfernt.
 	 */
-	public async deleteJahrgaenge(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteJahrgaenge(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/jahrgaenge/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -8347,13 +8530,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Jahrgangs-Listen-Einträgen
 	 */
-	public async getJahrgangsdaten(schema : string) : Promise<List<JahrgangsDaten>> {
+	public async getJahrgangsdaten(schema: string): Promise<List<JahrgangsDaten>> {
 		const path = "/db/{schema}/jahrgaenge/jahrgangsdaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<JahrgangsDaten>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JahrgangsDaten.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(JahrgangsDaten.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -8374,13 +8560,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den KAoA-Katalog Anschlussoptionen
 	 */
-	public async getKatalogKAoAAnschlussoptionen(schema : string) : Promise<List<KAOAAnschlussoptionenKatalogEintrag>> {
+	public async getKatalogKAoAAnschlussoptionen(schema: string): Promise<List<KAOAAnschlussoptionenKatalogEintrag>> {
 		const path = "/db/{schema}/kaoa/allgemein/anschlussoptionen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KAOAAnschlussoptionenKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAAnschlussoptionenKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(KAOAAnschlussoptionenKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -8401,13 +8590,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den KAoA-Katalog Berufsfelder
 	 */
-	public async getKatalogKAoABerufsfelder(schema : string) : Promise<List<KAOABerufsfeldKatalogEintrag>> {
+	public async getKatalogKAoABerufsfelder(schema: string): Promise<List<KAOABerufsfeldKatalogEintrag>> {
 		const path = "/db/{schema}/kaoa/allgemein/berufsfelder"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KAOABerufsfeldKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOABerufsfeldKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(KAOABerufsfeldKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -8428,13 +8620,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den KAoA-Katalog Einträge der SBO Ebene 4
 	 */
-	public async getKatalogKAoAEbene4(schema : string) : Promise<List<KAOAEbene4KatalogEintrag>> {
+	public async getKatalogKAoAEbene4(schema: string): Promise<List<KAOAEbene4KatalogEintrag>> {
 		const path = "/db/{schema}/kaoa/allgemein/ebene4"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KAOAEbene4KatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAEbene4KatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(KAOAEbene4KatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -8455,13 +8650,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den KAoA-Katalog Kategorien
 	 */
-	public async getKatalogKAoAKategorien(schema : string) : Promise<List<KAOAKategorieKatalogEintrag>> {
+	public async getKatalogKAoAKategorien(schema: string): Promise<List<KAOAKategorieKatalogEintrag>> {
 		const path = "/db/{schema}/kaoa/allgemein/kategorien"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KAOAKategorieKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAKategorieKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(KAOAKategorieKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -8482,13 +8680,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den KAoA-Katalog Merkmale
 	 */
-	public async getKatalogKAoAMerkmale(schema : string) : Promise<List<KAOAMerkmalKatalogEintrag>> {
+	public async getKatalogKAoAMerkmale(schema: string): Promise<List<KAOAMerkmalKatalogEintrag>> {
 		const path = "/db/{schema}/kaoa/allgemein/merkmale"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KAOAMerkmalKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAMerkmalKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(KAOAMerkmalKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -8509,13 +8710,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den KAoA-Katalog Zusatzmerkmale
 	 */
-	public async getKatalogKAoAZusatzmerkmale(schema : string) : Promise<List<KAOAZusatzmerkmalKatalogEintrag>> {
+	public async getKatalogKAoAZusatzmerkmale(schema: string): Promise<List<KAOAZusatzmerkmalKatalogEintrag>> {
 		const path = "/db/{schema}/kaoa/allgemein/zusatzmerkmale"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KAOAZusatzmerkmalKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAZusatzmerkmalKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(KAOAZusatzmerkmalKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -8536,13 +8740,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen
 	 */
-	public async getKindergaerten(schema : string) : Promise<List<Kindergarten>> {
+	public async getKindergaerten(schema: string): Promise<List<Kindergarten>> {
 		const path = "/db/{schema}/kindergaerten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Kindergarten>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Kindergarten.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Kindergarten.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -8565,14 +8772,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Kindergärten wurden erfolgreich entfernt.
 	 */
-	public async deleteKindergaerten(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteKindergaerten(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/kindergaerten/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -8594,11 +8804,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchKindergarten(data : Partial<Kindergarten>, schema : string, id : number) : Promise<void> {
+	public async patchKindergarten(data: Partial<Kindergarten>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/kindergarten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Kindergarten.transpilerToJSONPatch(data);
+		const body: string = Kindergarten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -8620,11 +8830,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Kindergarten wurde erfolgreich angelegt.
 	 */
-	public async addKindergarten(data : Partial<Kindergarten>, schema : string) : Promise<Kindergarten> {
+	public async addKindergarten(data: Partial<Kindergarten>, schema: string): Promise<Kindergarten> {
 		const path = "/db/{schema}/kindergarten/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Kindergarten.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Kindergarten.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return Kindergarten.transpilerFromJSON(text);
 	}
@@ -8647,11 +8857,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten der Klasse
 	 */
-	public async getKlasse(schema : string, id : number) : Promise<KlassenDaten> {
+	public async getKlasse(schema: string, id: number): Promise<KlassenDaten> {
 		const path = "/db/{schema}/klassen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return KlassenDaten.transpilerFromJSON(text);
 	}
@@ -8674,11 +8884,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchKlasse(data : Partial<KlassenDaten>, schema : string, id : number) : Promise<void> {
+	public async patchKlasse(data: Partial<KlassenDaten>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/klassen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = KlassenDaten.transpilerToJSONPatch(data);
+		const body: string = KlassenDaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -8696,7 +8906,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} abschnitt - der Pfad-Parameter abschnitt
 	 */
-	public async setKlassenSortierungFuerAbschnitt(schema : string, abschnitt : number) : Promise<void> {
+	public async setKlassenSortierungFuerAbschnitt(schema: string, abschnitt: number): Promise<void> {
 		const path = "/db/{schema}/klassen/abschnitt/{abschnitt : \\d+}/sortierung/setdefault"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
@@ -8721,13 +8931,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Klassenart-Katalog-Einträgen
 	 */
-	public async getKatalogKlassenarten(schema : string) : Promise<List<KlassenartKatalogEintrag>> {
+	public async getKatalogKlassenarten(schema: string): Promise<List<KlassenartKatalogEintrag>> {
 		const path = "/db/{schema}/klassen/allgemein/klassenarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KlassenartKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KlassenartKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(KlassenartKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -8750,11 +8963,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Klasse wurde erfolgreich erstellt.
 	 */
-	public async addKlasse(data : Partial<KlassenDaten>, schema : string) : Promise<KlassenDaten> {
+	public async addKlasse(data: Partial<KlassenDaten>, schema: string): Promise<KlassenDaten> {
 		const path = "/db/{schema}/klassen/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = KlassenDaten.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = KlassenDaten.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return KlassenDaten.transpilerFromJSON(text);
 	}
@@ -8777,14 +8990,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteKlassen(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteKlassen(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/klassen/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -8806,14 +9022,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Klassen-Listen-Einträgen
 	 */
-	public async getListKlassenDatenBySchuljahresabschnitt(schema : string, idSchuljahresabschnitt : number) : Promise<List<KlassenDaten>> {
+	public async getListKlassenDatenBySchuljahresabschnitt(schema: string, idSchuljahresabschnitt: number): Promise<List<KlassenDaten>> {
 		const path = "/db/{schema}/klassen/details/abschnitt/{idSchuljahresabschnitt : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idSchuljahresabschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitt.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KlassenDaten>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KlassenDaten.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(KlassenDaten.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -8835,14 +9054,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Klassen-Listen-Einträgen
 	 */
-	public async getListKlassenListeEintragBySchuljahresabschnitt(schema : string, idSchuljahresabschnitt : number) : Promise<List<KlassenListeEintrag>> {
+	public async getListKlassenListeEintragBySchuljahresabschnitt(schema: string, idSchuljahresabschnitt: number): Promise<List<KlassenListeEintrag>> {
 		const path = "/db/{schema}/klassen/list-item/abschnitt/{idSchuljahresabschnitt : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idSchuljahresabschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitt.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KlassenListeEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KlassenListeEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(KlassenListeEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -8864,14 +9086,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von KlassenDatenMinimal-Einträgen
 	 */
-	public async getKlassenDatenMinimalBySchuljahresabschnitt(schema : string, idSchuljahresabschnitt : number) : Promise<List<KlassenDatenMinimal>> {
+	public async getKlassenDatenMinimalBySchuljahresabschnitt(schema: string, idSchuljahresabschnitt: number): Promise<List<KlassenDatenMinimal>> {
 		const path = "/db/{schema}/klassen/minimal/abschnitt/{idSchuljahresabschnitt : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idSchuljahresabschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitt.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KlassenDatenMinimal>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KlassenDatenMinimal.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(KlassenDatenMinimal.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -8892,13 +9117,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Kurs-Listen-Einträgen
 	 */
-	public async getKurse(schema : string) : Promise<List<KursDaten>> {
+	public async getKurse(schema: string): Promise<List<KursDaten>> {
 		const path = "/db/{schema}/kurse/"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KursDaten>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KursDaten.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(KursDaten.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -8920,11 +9148,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten des Kurses
 	 */
-	public async getKurs(schema : string, id : number) : Promise<KursDaten> {
+	public async getKurs(schema: string, id: number): Promise<KursDaten> {
 		const path = "/db/{schema}/kurse/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return KursDaten.transpilerFromJSON(text);
 	}
@@ -8947,11 +9175,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchKurs(data : Partial<KursDaten>, schema : string, id : number) : Promise<void> {
+	public async patchKurs(data: Partial<KursDaten>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/kurse/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = KursDaten.transpilerToJSONPatch(data);
+		const body: string = KursDaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -8973,14 +9201,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Kurslehrer des Kurses
 	 */
-	public async getKursLehrer(schema : string, idKurs : number) : Promise<List<KursLehrer>> {
+	public async getKursLehrer(schema: string, idKurs: number): Promise<List<KursLehrer>> {
 		const path = "/db/{schema}/kurse/{idKurs : \\d+}/kursLehrer"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idKurs\s*(:[^{}]+({[^{}]+})*)?}/g, idKurs.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KursLehrer>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KursLehrer.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(KursLehrer.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9003,12 +9234,12 @@ export class ApiServer extends BaseApi {
 	 * @param {number} idKurs - der Pfad-Parameter idKurs
 	 * @param {number} idLehrer - der Pfad-Parameter idLehrer
 	 */
-	public async patchKursLehrer(data : Partial<KursLehrer>, schema : string, idKurs : number, idLehrer : number) : Promise<void> {
+	public async patchKursLehrer(data: Partial<KursLehrer>, schema: string, idKurs: number, idLehrer: number): Promise<void> {
 		const path = "/db/{schema}/kurse/{idKurs: \\d+}/kursLehrer/{idLehrer: \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idKurs\s*(:[^{}]+({[^{}]+})*)?}/g, idKurs.toString())
 			.replace(/{idLehrer\s*(:[^{}]+({[^{}]+})*)?}/g, idLehrer.toString());
-		const body : string = KursLehrer.transpilerToJSONPatch(data);
+		const body: string = KursLehrer.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -9031,12 +9262,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der KursLehrer wurde erfolgreich hinzugefügt.
 	 */
-	public async addKursLehrer(data : Partial<KursLehrer>, schema : string, idKurs : number) : Promise<KursLehrer> {
+	public async addKursLehrer(data: Partial<KursLehrer>, schema: string, idKurs: number): Promise<KursLehrer> {
 		const path = "/db/{schema}/kurse/{idKurs: \\d+}/kursLehrer/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idKurs\s*(:[^{}]+({[^{}]+})*)?}/g, idKurs.toString());
-		const body : string = KursLehrer.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = KursLehrer.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return KursLehrer.transpilerFromJSON(text);
 	}
@@ -9061,15 +9292,18 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteKursLehrer(data : List<number>, schema : string, idKurs : number) : Promise<List<SimpleOperationResponse>> {
+	public async deleteKursLehrer(data: List<number>, schema: string, idKurs: number): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/kurse/{idKurs: \\d+}/kursLehrer/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idKurs\s*(:[^{}]+({[^{}]+})*)?}/g, idKurs.toString());
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9091,14 +9325,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Kurs-Listen-Einträgen
 	 */
-	public async getKurseFuerAbschnitt(schema : string, abschnitt : number) : Promise<List<KursDaten>> {
+	public async getKurseFuerAbschnitt(schema: string, abschnitt: number): Promise<List<KursDaten>> {
 		const path = "/db/{schema}/kurse/abschnitt/{abschnitt : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KursDaten>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KursDaten.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(KursDaten.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9119,13 +9356,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Kursart-Katalog-Einträgen
 	 */
-	public async getKatalogKursarten(schema : string) : Promise<List<ZulaessigeKursartKatalogEintrag>> {
+	public async getKatalogKursarten(schema: string): Promise<List<ZulaessigeKursartKatalogEintrag>> {
 		const path = "/db/{schema}/kurse/allgemein/kursarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<ZulaessigeKursartKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(ZulaessigeKursartKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(ZulaessigeKursartKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9148,11 +9388,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Kurs wurde erfolgreich erstellt.
 	 */
-	public async addKurs(data : Partial<KursDaten>, schema : string) : Promise<KursDaten> {
+	public async addKurs(data: Partial<KursDaten>, schema: string): Promise<KursDaten> {
 		const path = "/db/{schema}/kurse/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = KursDaten.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = KursDaten.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return KursDaten.transpilerFromJSON(text);
 	}
@@ -9175,14 +9415,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteKurse(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteKurse(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/kurse/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9203,13 +9446,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Lehrer-Listen-Einträgen
 	 */
-	public async getLehrer(schema : string) : Promise<List<LehrerListeEintrag>> {
+	public async getLehrer(schema: string): Promise<List<LehrerListeEintrag>> {
 		const path = "/db/{schema}/lehrer/"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerListeEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerListeEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerListeEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9232,15 +9478,18 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Liste der Lehrerfunktionen
 	 */
-	public async getLehrerFunktionenByAbschnitt(schema : string, id : number, idAbschnitt : number) : Promise<List<LehrerFunktion>> {
+	public async getLehrerFunktionenByAbschnitt(schema: string, id: number, idAbschnitt: number): Promise<List<LehrerFunktion>> {
 		const path = "/db/{schema}/lehrer/{id : \\d+}/abschnittsdaten/{idAbschnitt : \\d+}/funktionen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{idAbschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idAbschnitt.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerFunktion>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerFunktion.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerFunktion.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9262,14 +9511,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lernplattformen des Lehrers
 	 */
-	public async getLehrerLernplattformen(schema : string, id : number) : Promise<List<LehrerLernplattform>> {
+	public async getLehrerLernplattformen(schema: string, id: number): Promise<List<LehrerLernplattform>> {
 		const path = "/db/{schema}/lehrer/{id : \\d+}/lernplattformen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerLernplattform>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerLernplattform.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerLernplattform.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9292,12 +9544,12 @@ export class ApiServer extends BaseApi {
 	 * @param {number} id - der Pfad-Parameter id
 	 * @param {number} idLernplattform - der Pfad-Parameter idLernplattform
 	 */
-	public async patchLehrerLernplattform(data : Partial<LehrerLernplattform>, schema : string, id : number, idLernplattform : number) : Promise<void> {
+	public async patchLehrerLernplattform(data: Partial<LehrerLernplattform>, schema: string, id: number, idLernplattform: number): Promise<void> {
 		const path = "/db/{schema}/lehrer/{id : \\d+}/lernplattformen/{idLernplattform : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{idLernplattform\s*(:[^{}]+({[^{}]+})*)?}/g, idLernplattform.toString());
-		const body : string = LehrerLernplattform.transpilerToJSONPatch(data);
+		const body: string = LehrerLernplattform.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -9319,11 +9571,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Personaldaten des Lehrers
 	 */
-	public async getLehrerPersonaldaten(schema : string, id : number) : Promise<LehrerPersonaldaten> {
+	public async getLehrerPersonaldaten(schema: string, id: number): Promise<LehrerPersonaldaten> {
 		const path = "/db/{schema}/lehrer/{id : \\d+}/personaldaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return LehrerPersonaldaten.transpilerFromJSON(text);
 	}
@@ -9346,11 +9598,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchLehrerPersonaldaten(data : Partial<LehrerPersonaldaten>, schema : string, id : number) : Promise<void> {
+	public async patchLehrerPersonaldaten(data: Partial<LehrerPersonaldaten>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/lehrer/{id : \\d+}/personaldaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = LehrerPersonaldaten.transpilerToJSONPatch(data);
+		const body: string = LehrerPersonaldaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -9372,14 +9624,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die zugehörigen Daten zu den Lehrämtern des Lehrers
 	 */
-	public async getLehrerLehraemter(schema : string, id : number) : Promise<List<LehrerLehramtEintrag>> {
+	public async getLehrerLehraemter(schema: string, id: number): Promise<List<LehrerLehramtEintrag>> {
 		const path = "/db/{schema}/lehrer/{id : \\d+}/personaldaten/lehraemter"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerLehramtEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerLehramtEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerLehramtEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9401,14 +9656,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die zugehörigen Daten zu den Fachrichtungen
 	 */
-	public async getLehrerLehramtFachrichtungen(schema : string, id : number) : Promise<List<LehrerFachrichtungEintrag>> {
+	public async getLehrerLehramtFachrichtungen(schema: string, id: number): Promise<List<LehrerFachrichtungEintrag>> {
 		const path = "/db/{schema}/lehrer/{id : \\d+}/personaldaten/lehramt/fachrichtungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerFachrichtungEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerFachrichtungEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerFachrichtungEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9430,14 +9688,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die zugehörigen Daten zu den Lehrbefähigungen
 	 */
-	public async getLehrerLehramtLehrbefaehigungen(schema : string, id : number) : Promise<List<LehrerLehrbefaehigungEintrag>> {
+	public async getLehrerLehramtLehrbefaehigungen(schema: string, id: number): Promise<List<LehrerLehrbefaehigungEintrag>> {
 		const path = "/db/{schema}/lehrer/{id : \\d+}/personaldaten/lehramt/lehrbefaehigungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerLehrbefaehigungEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerLehrbefaehigungEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerLehrbefaehigungEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9459,14 +9720,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Unterrichtsfächer des Lehrers
 	 */
-	public async getLehrerUnterrichtsfaecher(schema : string, id : number) : Promise<List<LehrerUnterrichtsfach>> {
+	public async getLehrerUnterrichtsfaecher(schema: string, id: number): Promise<List<LehrerUnterrichtsfach>> {
 		const path = "/db/{schema}/lehrer/{id : \\d+}/personaldaten/unterrichtsfach"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerUnterrichtsfach>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerUnterrichtsfach.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerUnterrichtsfach.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9488,11 +9752,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Stammdaten des Lehrers
 	 */
-	public async getLehrerStammdaten(schema : string, id : number) : Promise<LehrerStammdaten> {
+	public async getLehrerStammdaten(schema: string, id: number): Promise<LehrerStammdaten> {
 		const path = "/db/{schema}/lehrer/{id : \\d+}/stammdaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return LehrerStammdaten.transpilerFromJSON(text);
 	}
@@ -9515,11 +9779,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchLehrerStammdaten(data : Partial<LehrerStammdaten>, schema : string, id : number) : Promise<void> {
+	public async patchLehrerStammdaten(data: Partial<LehrerStammdaten>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/lehrer/{id : \\d+}/stammdaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = LehrerStammdaten.transpilerToJSONPatch(data);
+		const body: string = LehrerStammdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -9541,14 +9805,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Einwilligungen des Lehrers
 	 */
-	public async getLehrerEinwilligungen(schema : string, idLehrer : number) : Promise<List<LehrerEinwilligung>> {
+	public async getLehrerEinwilligungen(schema: string, idLehrer: number): Promise<List<LehrerEinwilligung>> {
 		const path = "/db/{schema}/lehrer/{idLehrer : \\d+}/einwilligungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idLehrer\s*(:[^{}]+({[^{}]+})*)?}/g, idLehrer.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerEinwilligung>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerEinwilligung.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerEinwilligung.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9571,12 +9838,12 @@ export class ApiServer extends BaseApi {
 	 * @param {number} idLehrer - der Pfad-Parameter idLehrer
 	 * @param {number} idEinwilligungsart - der Pfad-Parameter idEinwilligungsart
 	 */
-	public async patchLehrerEinwilligung(data : Partial<LehrerEinwilligung>, schema : string, idLehrer : number, idEinwilligungsart : number) : Promise<void> {
+	public async patchLehrerEinwilligung(data: Partial<LehrerEinwilligung>, schema: string, idLehrer: number, idEinwilligungsart: number): Promise<void> {
 		const path = "/db/{schema}/lehrer/{idLehrer : \\d+}/einwilligungen/{idEinwilligungsart : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idLehrer\s*(:[^{}]+({[^{}]+})*)?}/g, idLehrer.toString())
 			.replace(/{idEinwilligungsart\s*(:[^{}]+({[^{}]+})*)?}/g, idEinwilligungsart.toString());
-		const body : string = LehrerEinwilligung.transpilerToJSONPatch(data);
+		const body: string = LehrerEinwilligung.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -9598,14 +9865,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Lehrer-Listen-Einträgen
 	 */
-	public async getLehrerFuerAbschnitt(schema : string, abschnitt : number) : Promise<List<LehrerListeEintrag>> {
+	public async getLehrerFuerAbschnitt(schema: string, abschnitt: number): Promise<List<LehrerListeEintrag>> {
 		const path = "/db/{schema}/lehrer/abschnitt/{abschnitt : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerListeEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerListeEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerListeEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9626,13 +9896,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Lehrerabgangsgrund-Katalog-Einträgen
 	 */
-	public async getKatalogLehrerAbgangsgruende(schema : string) : Promise<List<LehrerAbgangsgrundKatalogEintrag>> {
+	public async getKatalogLehrerAbgangsgruende(schema: string): Promise<List<LehrerAbgangsgrundKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/abgangsgruende"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerAbgangsgrundKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerAbgangsgrundKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerAbgangsgrundKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9653,13 +9926,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Einträgen für Gründe von Anrechnungsstunden von Lehrern
 	 */
-	public async getKatalogLehrerAnrechnungsgruende(schema : string) : Promise<List<LehrerAnrechnungsgrundKatalogEintrag>> {
+	public async getKatalogLehrerAnrechnungsgruende(schema: string): Promise<List<LehrerAnrechnungsgrundKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/anrechnungsgruende"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerAnrechnungsgrundKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerAnrechnungsgrundKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerAnrechnungsgrundKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9680,13 +9956,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Beschäftigungsart-Katalog-Einträgen
 	 */
-	public async getKatalogLehrerBeschaeftigungsarten(schema : string) : Promise<List<LehrerBeschaeftigungsartKatalogEintrag>> {
+	public async getKatalogLehrerBeschaeftigungsarten(schema: string): Promise<List<LehrerBeschaeftigungsartKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/beschaeftigungsarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerBeschaeftigungsartKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerBeschaeftigungsartKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerBeschaeftigungsartKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9707,13 +9986,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Einsatzstatus-Katalog-Einträgen
 	 */
-	public async getKatalogLehrerEinsatzstatus(schema : string) : Promise<List<LehrerEinsatzstatusKatalogEintrag>> {
+	public async getKatalogLehrerEinsatzstatus(schema: string): Promise<List<LehrerEinsatzstatusKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/einsatzstatus"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerEinsatzstatusKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerEinsatzstatusKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerEinsatzstatusKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9734,13 +10016,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Fachrichtungens-Katalog-Einträgen
 	 */
-	public async getKatalogLehrerFachrichtungen(schema : string) : Promise<List<LehrerFachrichtungKatalogEintrag>> {
+	public async getKatalogLehrerFachrichtungen(schema: string): Promise<List<LehrerFachrichtungKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/fachrichtungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerFachrichtungKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerFachrichtungKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerFachrichtungKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9761,13 +10046,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Anerkennungs-Katalog-Einträgen
 	 */
-	public async getKatalogLehrerFachrichtungAnerkennungen(schema : string) : Promise<List<LehrerFachrichtungAnerkennungKatalogEintrag>> {
+	public async getKatalogLehrerFachrichtungAnerkennungen(schema: string): Promise<List<LehrerFachrichtungAnerkennungKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/fachrichtungen_anerkennungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerFachrichtungAnerkennungKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerFachrichtungAnerkennungKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerFachrichtungAnerkennungKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9788,13 +10076,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Lehramt-Katalog-Einträgen
 	 */
-	public async getKatalogLehrerLehraemter(schema : string) : Promise<List<LehrerLehramtKatalogEintrag>> {
+	public async getKatalogLehrerLehraemter(schema: string): Promise<List<LehrerLehramtKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/lehraemter"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerLehramtKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerLehramtKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerLehramtKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9815,13 +10106,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Anerkennungs-Katalog-Einträgen
 	 */
-	public async getKatalogLehrerLehramtAnerkennungen(schema : string) : Promise<List<LehrerLehramtAnerkennungKatalogEintrag>> {
+	public async getKatalogLehrerLehramtAnerkennungen(schema: string): Promise<List<LehrerLehramtAnerkennungKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/lehraemter_anerkennungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerLehramtAnerkennungKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerLehramtAnerkennungKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerLehramtAnerkennungKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9842,13 +10136,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Lehrbefähigung-Katalog-Einträgen
 	 */
-	public async getKatalogLehrerLehrbefaehigungen(schema : string) : Promise<List<LehrerLehrbefaehigungKatalogEintrag>> {
+	public async getKatalogLehrerLehrbefaehigungen(schema: string): Promise<List<LehrerLehrbefaehigungKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/lehrbefaehigungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerLehrbefaehigungKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerLehrbefaehigungKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerLehrbefaehigungKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9869,13 +10166,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Einsatzstatus-Katalog-Einträgen
 	 */
-	public async getKatalogLehrerLehrbefaehigungenAnerkennungen(schema : string) : Promise<List<LehrerLehrbefaehigungAnerkennungKatalogEintrag>> {
+	public async getKatalogLehrerLehrbefaehigungenAnerkennungen(schema: string): Promise<List<LehrerLehrbefaehigungAnerkennungKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/lehrbefaehigungen_anerkennungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerLehrbefaehigungAnerkennungKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerLehrbefaehigungAnerkennungKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerLehrbefaehigungAnerkennungKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9896,13 +10196,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Mehrleistungsart-Katalog-Einträgen
 	 */
-	public async getKatalogLehrerMehrleistungsarten(schema : string) : Promise<List<LehrerMehrleistungsartKatalogEintrag>> {
+	public async getKatalogLehrerMehrleistungsarten(schema: string): Promise<List<LehrerMehrleistungsartKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/mehrleistungsarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerMehrleistungsartKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerMehrleistungsartKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerMehrleistungsartKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9923,13 +10226,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Minderleistungsart-Katalog-Einträgen
 	 */
-	public async getKatalogLehrerMinderleistungsarten(schema : string) : Promise<List<LehrerMinderleistungsartKatalogEintrag>> {
+	public async getKatalogLehrerMinderleistungsarten(schema: string): Promise<List<LehrerMinderleistungsartKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/minderleistungsarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerMinderleistungsartKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerMinderleistungsartKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerMinderleistungsartKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9950,13 +10256,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Rechtsverhältnis-Katalog-Einträgen
 	 */
-	public async getKatalogLehrerRechtsverhaeltnisse(schema : string) : Promise<List<LehrerRechtsverhaeltnisKatalogEintrag>> {
+	public async getKatalogLehrerRechtsverhaeltnisse(schema: string): Promise<List<LehrerRechtsverhaeltnisKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/rechtsverhaeltnisse"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerRechtsverhaeltnisKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerRechtsverhaeltnisKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerRechtsverhaeltnisKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -9977,13 +10286,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Lehrerzugangsgrund-Katalog-Einträgen
 	 */
-	public async getKatalogLehrerZugangsgruende(schema : string) : Promise<List<LehrerZugangsgrundKatalogEintrag>> {
+	public async getKatalogLehrerZugangsgruende(schema: string): Promise<List<LehrerZugangsgrundKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/zugangsgruende"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerZugangsgrundKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerZugangsgrundKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerZugangsgrundKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -10005,11 +10317,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die LehrerStammdaten wurden erfolgreich hinzugefügt.
 	 */
-	public async addLehrerStammdaten(data : Partial<LehrerStammdaten>, schema : string) : Promise<LehrerStammdaten> {
+	public async addLehrerStammdaten(data: Partial<LehrerStammdaten>, schema: string): Promise<LehrerStammdaten> {
 		const path = "/db/{schema}/lehrer/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = LehrerStammdaten.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = LehrerStammdaten.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return LehrerStammdaten.transpilerFromJSON(text);
 	}
@@ -10032,14 +10344,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteLehrer(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteLehrer(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/lehrer/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -10059,13 +10374,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Liste der Lehrerfunktionen
 	 */
-	public async getLehrerFunktionen(schema : string) : Promise<List<LehrerFunktion>> {
+	public async getLehrerFunktionen(schema: string): Promise<List<LehrerFunktion>> {
 		const path = "/db/{schema}/lehrer/funktionen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerFunktion>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerFunktion.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerFunktion.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -10087,11 +10405,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die erstellte Lehrerfunktion
 	 */
-	public async createLehrerFunktion(data : Partial<LehrerFunktion>, schema : string) : Promise<LehrerFunktion> {
+	public async createLehrerFunktion(data: Partial<LehrerFunktion>, schema: string): Promise<LehrerFunktion> {
 		const path = "/db/{schema}/lehrer/funktionen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = LehrerFunktion.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = LehrerFunktion.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return LehrerFunktion.transpilerFromJSON(text);
 	}
@@ -10114,11 +10432,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lehrerfunktion
 	 */
-	public async getLehrerFunktion(schema : string, id : number) : Promise<LehrerFunktion> {
+	public async getLehrerFunktion(schema: string, id: number): Promise<LehrerFunktion> {
 		const path = "/db/{schema}/lehrer/funktionen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return LehrerFunktion.transpilerFromJSON(text);
 	}
@@ -10143,12 +10461,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die aktualisierte Lehrerfunktion
 	 */
-	public async patchLehrerFunktion(data : Partial<LehrerFunktion>, schema : string, id : number) : Promise<LehrerFunktion> {
+	public async patchLehrerFunktion(data: Partial<LehrerFunktion>, schema: string, id: number): Promise<LehrerFunktion> {
 		const path = "/db/{schema}/lehrer/funktionen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = LehrerFunktion.transpilerToJSONPatch(data);
-		const result : string = await super.patchJSONWithResponse(path, body);
+		const body: string = LehrerFunktion.transpilerToJSONPatch(data);
+		const result: string = await super.patchJSONWithResponse(path, body);
 		const text = result;
 		return LehrerFunktion.transpilerFromJSON(text);
 	}
@@ -10170,11 +10488,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Das Ergebnis der Löschoperation
 	 */
-	public async deleteLehrerFunktion(schema : string, id : number) : Promise<SimpleOperationResponse> {
+	public async deleteLehrerFunktion(schema: string, id: number): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/lehrer/funktionen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -10197,14 +10515,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die erstellten Lehrerfunktionen
 	 */
-	public async createLehrerFunktionen(data : List<Partial<LehrerFunktion>>, schema : string) : Promise<List<LehrerFunktion>> {
+	public async createLehrerFunktionen(data: List<Partial<LehrerFunktion>>, schema: string): Promise<List<LehrerFunktion>> {
 		const path = "/db/{schema}/lehrer/funktionen/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<LehrerFunktion>).map(d => LehrerFunktion.transpilerToJSONPatch(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<LehrerFunktion>).map(d => LehrerFunktion.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerFunktion>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerFunktion.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerFunktion.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -10227,14 +10548,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die aktualisierten Lehrerfunktionen
 	 */
-	public async patchLehrerFunktionen(data : List<Partial<LehrerFunktion>>, schema : string) : Promise<List<LehrerFunktion>> {
+	public async patchLehrerFunktionen(data: List<Partial<LehrerFunktion>>, schema: string): Promise<List<LehrerFunktion>> {
 		const path = "/db/{schema}/lehrer/funktionen/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<LehrerFunktion>).map(d => LehrerFunktion.transpilerToJSONPatch(d)).join() + "]";
-		const result : string = await super.patchJSONWithResponse(path, body);
+		const body: string = "[" + (data.toArray() as Array<LehrerFunktion>).map(d => LehrerFunktion.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.patchJSONWithResponse(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerFunktion>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerFunktion.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerFunktion.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -10255,14 +10579,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Ergebnisse der Löschoperationen
 	 */
-	public async deleteLehrerFunktionen(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteLehrerFunktionen(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/lehrer/funktionen/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -10283,13 +10610,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Lehrerleitungsfunktion-Katalog-Einträgen
 	 */
-	public async getLehrerLeitungsfunktionen(schema : string) : Promise<List<LehrerLeitungsfunktionKatalogEintrag>> {
+	public async getLehrerLeitungsfunktionen(schema: string): Promise<List<LehrerLeitungsfunktionKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/leitungsfunktionen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerLeitungsfunktionKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerLeitungsfunktionKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerLeitungsfunktionKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -10311,11 +10641,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die erstellten LehrerPersonalabschnittsdaten
 	 */
-	public async createLehrerPersonalabschnittsdaten(data : Partial<LehrerPersonalabschnittsdaten>, schema : string) : Promise<LehrerPersonalabschnittsdaten> {
+	public async createLehrerPersonalabschnittsdaten(data: Partial<LehrerPersonalabschnittsdaten>, schema: string): Promise<LehrerPersonalabschnittsdaten> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = LehrerPersonalabschnittsdaten.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = LehrerPersonalabschnittsdaten.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return LehrerPersonalabschnittsdaten.transpilerFromJSON(text);
 	}
@@ -10338,11 +10668,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die LehrerPersonalabschnittsdaten
 	 */
-	public async getLehrerPersonalabschnittsdaten(schema : string, id : number) : Promise<LehrerPersonalabschnittsdaten> {
+	public async getLehrerPersonalabschnittsdaten(schema: string, id: number): Promise<LehrerPersonalabschnittsdaten> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return LehrerPersonalabschnittsdaten.transpilerFromJSON(text);
 	}
@@ -10367,12 +10697,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die aktualisierten LehrerPersonalabschnittsdaten
 	 */
-	public async patchLehrerPersonalabschnittsdaten(data : Partial<LehrerPersonalabschnittsdaten>, schema : string, id : number) : Promise<LehrerPersonalabschnittsdaten> {
+	public async patchLehrerPersonalabschnittsdaten(data: Partial<LehrerPersonalabschnittsdaten>, schema: string, id: number): Promise<LehrerPersonalabschnittsdaten> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = LehrerPersonalabschnittsdaten.transpilerToJSONPatch(data);
-		const result : string = await super.patchJSONWithResponse(path, body);
+		const body: string = LehrerPersonalabschnittsdaten.transpilerToJSONPatch(data);
+		const result: string = await super.patchJSONWithResponse(path, body);
 		const text = result;
 		return LehrerPersonalabschnittsdaten.transpilerFromJSON(text);
 	}
@@ -10395,11 +10725,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Das Ergebnis der Löschoperation
 	 */
-	public async deleteLehrerPersonalabschnittsdaten(schema : string, id : number) : Promise<SimpleOperationResponse> {
+	public async deleteLehrerPersonalabschnittsdaten(schema: string, id: number): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -10422,11 +10752,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die allgemeine Anrechnung
 	 */
-	public async getLehrerPersonalabschnittsdatenAllgemeineAnrechnung(schema : string, id : number) : Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
+	public async getLehrerPersonalabschnittsdatenAllgemeineAnrechnung(schema: string, id: number): Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/anrechnung/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text);
 	}
@@ -10451,11 +10781,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die allgemeine Anrechnung wurde erfolgreich entfernt.
 	 */
-	public async deleteLehrerPersonalabschnittsdatenAllgemeineAnrechnung(schema : string, id : number) : Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
+	public async deleteLehrerPersonalabschnittsdatenAllgemeineAnrechnung(schema: string, id: number): Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/anrechnung/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text);
 	}
@@ -10482,12 +10812,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Patch wurde erfolgreich in die allgemeine Anrechnung integriert.
 	 */
-	public async patchLehrerPersonalabschnittsdatenAllgemeineAnrechnung(data : Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, schema : string, id : number) : Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
+	public async patchLehrerPersonalabschnittsdatenAllgemeineAnrechnung(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, schema: string, id: number): Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/anrechnung/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(data);
-		const result : string = await super.patchJSONWithResponse(path, body);
+		const body: string = LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(data);
+		const result: string = await super.patchJSONWithResponse(path, body);
 		const text = result;
 		return LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text);
 	}
@@ -10510,11 +10840,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die allgemeine Anrechnung wurde erfolgreich hinzugefügt.
 	 */
-	public async addLehrerPersonalabschnittsdatenAllgemeineAnrechnung(data : Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, schema : string) : Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
+	public async addLehrerPersonalabschnittsdatenAllgemeineAnrechnung(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, schema: string): Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/anrechnung/add"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text);
 	}
@@ -10540,14 +10870,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Patches wurden erfolgreich in die allgemeinen Anrechnungsstunden integriert.
 	 */
-	public async patchLehrerPersonalabschnittsdatenAllgemeineAnrechnungen(data : List<Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, schema : string) : Promise<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> {
+	public async patchLehrerPersonalabschnittsdatenAllgemeineAnrechnungen(data: List<Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, schema: string): Promise<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/anrechnungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<LehrerPersonalabschnittsdatenAnrechnungsstunden>).map(d => LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(d)).join() + "]";
-		const result : string = await super.patchJSONWithResponse(path, body);
+		const body: string = "[" + (data.toArray() as Array<LehrerPersonalabschnittsdatenAnrechnungsstunden>).map(d => LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.patchJSONWithResponse(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerPersonalabschnittsdatenAnrechnungsstunden>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -10569,11 +10902,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Mehrleistung
 	 */
-	public async getLehrerPersonalabschnittsdatenMehrleistung(schema : string, id : number) : Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
+	public async getLehrerPersonalabschnittsdatenMehrleistung(schema: string, id: number): Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/mehrleistung/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text);
 	}
@@ -10598,11 +10931,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Mehrleistung wurde erfolgreich entfernt.
 	 */
-	public async deleteLehrerPersonalabschnittsdatenMehrleistung(schema : string, id : number) : Promise<SimpleOperationResponse> {
+	public async deleteLehrerPersonalabschnittsdatenMehrleistung(schema: string, id: number): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/mehrleistung/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -10625,11 +10958,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchLehrerPersonalabschnittsdatenMehrleistung(data : Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, schema : string, id : number) : Promise<void> {
+	public async patchLehrerPersonalabschnittsdatenMehrleistung(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/mehrleistung/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(data);
+		const body: string = LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -10651,11 +10984,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Mehrleistung wurde erfolgreich hinzugefügt.
 	 */
-	public async addLehrerPersonalabschnittsdatenMehrleistung(data : Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, schema : string) : Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
+	public async addLehrerPersonalabschnittsdatenMehrleistung(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, schema: string): Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/mehrleistung/add"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text);
 	}
@@ -10681,14 +11014,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Patches wurden erfolgreich in die allgemeinen Anrechnungsstunden integriert.
 	 */
-	public async patchLehrerPersonalabschnittsdatenMehrleistungen(data : List<Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, schema : string) : Promise<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> {
+	public async patchLehrerPersonalabschnittsdatenMehrleistungen(data: List<Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, schema: string): Promise<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/mehrleistungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<LehrerPersonalabschnittsdatenAnrechnungsstunden>).map(d => LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(d)).join() + "]";
-		const result : string = await super.patchJSONWithResponse(path, body);
+		const body: string = "[" + (data.toArray() as Array<LehrerPersonalabschnittsdatenAnrechnungsstunden>).map(d => LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.patchJSONWithResponse(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerPersonalabschnittsdatenAnrechnungsstunden>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -10708,10 +11044,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchLehrerPersonalabschnittsdatenMinderleistungen(data : List<Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, schema : string) : Promise<void> {
+	public async patchLehrerPersonalabschnittsdatenMinderleistungen(data: List<Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, schema: string): Promise<void> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/minderleistung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<LehrerPersonalabschnittsdatenAnrechnungsstunden>).map(d => LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<LehrerPersonalabschnittsdatenAnrechnungsstunden>).map(d => LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}
 
@@ -10733,11 +11069,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Minderleistung
 	 */
-	public async getLehrerPersonalabschnittsdatenMinderleistung(schema : string, id : number) : Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
+	public async getLehrerPersonalabschnittsdatenMinderleistung(schema: string, id: number): Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/minderleistung/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text);
 	}
@@ -10762,11 +11098,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Minderleistung wurde erfolgreich entfernt.
 	 */
-	public async deleteLehrerPersonalabschnittsdatenMinderleistung(schema : string, id : number) : Promise<SimpleOperationResponse> {
+	public async deleteLehrerPersonalabschnittsdatenMinderleistung(schema: string, id: number): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/minderleistung/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -10789,11 +11125,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchLehrerPersonalabschnittsdatenMinderleistung(data : Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, schema : string, id : number) : Promise<void> {
+	public async patchLehrerPersonalabschnittsdatenMinderleistung(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/minderleistung/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(data);
+		const body: string = LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -10815,11 +11151,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Minderleistung wurde erfolgreich hinzugefügt.
 	 */
-	public async addLehrerPersonalabschnittsdatenMinderleistung(data : Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, schema : string) : Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
+	public async addLehrerPersonalabschnittsdatenMinderleistung(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, schema: string): Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/minderleistung/add"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text);
 	}
@@ -10841,14 +11177,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Liste der LehrerPersonalabschnittsdaten
 	 */
-	public async getLehrerPersonalabschnittsdatenMultiple(data : List<number>, schema : string) : Promise<List<LehrerPersonalabschnittsdaten>> {
+	public async getLehrerPersonalabschnittsdatenMultiple(data: List<number>, schema: string): Promise<List<LehrerPersonalabschnittsdaten>> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerPersonalabschnittsdaten>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerPersonalabschnittsdaten.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerPersonalabschnittsdaten.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -10870,14 +11209,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die erstellten LehrerPersonalabschnittsdaten
 	 */
-	public async createLehrerPersonalabschnittsdatenMultiple(data : List<Partial<LehrerPersonalabschnittsdaten>>, schema : string) : Promise<List<LehrerPersonalabschnittsdaten>> {
+	public async createLehrerPersonalabschnittsdatenMultiple(data: List<Partial<LehrerPersonalabschnittsdaten>>, schema: string): Promise<List<LehrerPersonalabschnittsdaten>> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<LehrerPersonalabschnittsdaten>).map(d => LehrerPersonalabschnittsdaten.transpilerToJSONPatch(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<LehrerPersonalabschnittsdaten>).map(d => LehrerPersonalabschnittsdaten.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerPersonalabschnittsdaten>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerPersonalabschnittsdaten.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerPersonalabschnittsdaten.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -10900,14 +11242,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die aktualisierten LehrerPersonalabschnittsdaten
 	 */
-	public async patchLehrerPersonalabschnittsdatenMultiple(data : List<Partial<LehrerPersonalabschnittsdaten>>, schema : string) : Promise<List<LehrerPersonalabschnittsdaten>> {
+	public async patchLehrerPersonalabschnittsdatenMultiple(data: List<Partial<LehrerPersonalabschnittsdaten>>, schema: string): Promise<List<LehrerPersonalabschnittsdaten>> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<LehrerPersonalabschnittsdaten>).map(d => LehrerPersonalabschnittsdaten.transpilerToJSONPatch(d)).join() + "]";
-		const result : string = await super.patchJSONWithResponse(path, body);
+		const body: string = "[" + (data.toArray() as Array<LehrerPersonalabschnittsdaten>).map(d => LehrerPersonalabschnittsdaten.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.patchJSONWithResponse(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerPersonalabschnittsdaten>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerPersonalabschnittsdaten.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerPersonalabschnittsdaten.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -10928,14 +11273,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Ergebnisse der Löschoperationen
 	 */
-	public async deleteLehrerPersonalabschnittsdatenMultiple(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteLehrerPersonalabschnittsdatenMultiple(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -10957,11 +11305,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Das Lehramt wurde erfolgreich hinzugefügt.
 	 */
-	public async addLehrerLehramt(data : Partial<LehrerLehramtEintrag>, schema : string) : Promise<LehrerLehramtEintrag> {
+	public async addLehrerLehramt(data: Partial<LehrerLehramtEintrag>, schema: string): Promise<LehrerLehramtEintrag> {
 		const path = "/db/{schema}/lehrer/personaldaten/lehramt"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = LehrerLehramtEintrag.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = LehrerLehramtEintrag.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return LehrerLehramtEintrag.transpilerFromJSON(text);
 	}
@@ -10986,11 +11334,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten zu dem Lehramt
 	 */
-	public async getLehrerLehramt(schema : string, idLehramt : number) : Promise<LehrerLehramtEintrag> {
+	public async getLehrerLehramt(schema: string, idLehramt: number): Promise<LehrerLehramtEintrag> {
 		const path = "/db/{schema}/lehrer/personaldaten/lehramt/{idLehramt : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idLehramt\s*(:[^{}]+({[^{}]+})*)?}/g, idLehramt.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return LehrerLehramtEintrag.transpilerFromJSON(text);
 	}
@@ -11013,11 +11361,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} idLehramt - der Pfad-Parameter idLehramt
 	 */
-	public async patchLehrerLehramt(data : Partial<LehrerLehramtEintrag>, schema : string, idLehramt : number) : Promise<void> {
+	public async patchLehrerLehramt(data: Partial<LehrerLehramtEintrag>, schema: string, idLehramt: number): Promise<void> {
 		const path = "/db/{schema}/lehrer/personaldaten/lehramt/{idLehramt : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idLehramt\s*(:[^{}]+({[^{}]+})*)?}/g, idLehramt.toString());
-		const body : string = LehrerLehramtEintrag.transpilerToJSONPatch(data);
+		const body: string = LehrerLehramtEintrag.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -11041,11 +11389,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Datensatz wurde erfolgreich entfernt.
 	 */
-	public async deleteLehrerLehramt(schema : string, idLehramt : number) : Promise<LehrerLehramtEintrag> {
+	public async deleteLehrerLehramt(schema: string, idLehramt: number): Promise<LehrerLehramtEintrag> {
 		const path = "/db/{schema}/lehrer/personaldaten/lehramt/{idLehramt : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idLehramt\s*(:[^{}]+({[^{}]+})*)?}/g, idLehramt.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return LehrerLehramtEintrag.transpilerFromJSON(text);
 	}
@@ -11068,11 +11416,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Fachrichtung wurde erfolgreich hinzugefügt.
 	 */
-	public async addLehrerFachrichtung(data : Partial<LehrerFachrichtungEintrag>, schema : string) : Promise<LehrerFachrichtungEintrag> {
+	public async addLehrerFachrichtung(data: Partial<LehrerFachrichtungEintrag>, schema: string): Promise<LehrerFachrichtungEintrag> {
 		const path = "/db/{schema}/lehrer/personaldaten/lehramt/fachrichtung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = LehrerFachrichtungEintrag.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = LehrerFachrichtungEintrag.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return LehrerFachrichtungEintrag.transpilerFromJSON(text);
 	}
@@ -11097,11 +11445,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten zu dem Fachrichtungseintrag
 	 */
-	public async getLehrerFachrichtung(schema : string, id : number) : Promise<LehrerFachrichtungEintrag> {
+	public async getLehrerFachrichtung(schema: string, id: number): Promise<LehrerFachrichtungEintrag> {
 		const path = "/db/{schema}/lehrer/personaldaten/lehramt/fachrichtung/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return LehrerFachrichtungEintrag.transpilerFromJSON(text);
 	}
@@ -11124,11 +11472,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchLehrerFachrichtung(data : Partial<LehrerFachrichtungEintrag>, schema : string, id : number) : Promise<void> {
+	public async patchLehrerFachrichtung(data: Partial<LehrerFachrichtungEintrag>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/lehrer/personaldaten/lehramt/fachrichtung/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = LehrerFachrichtungEintrag.transpilerToJSONPatch(data);
+		const body: string = LehrerFachrichtungEintrag.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -11152,11 +11500,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Datensatz wurde erfolgreich entfernt.
 	 */
-	public async deleteLehrerFachrichtung(schema : string, id : number) : Promise<LehrerFachrichtungEintrag> {
+	public async deleteLehrerFachrichtung(schema: string, id: number): Promise<LehrerFachrichtungEintrag> {
 		const path = "/db/{schema}/lehrer/personaldaten/lehramt/fachrichtung/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return LehrerFachrichtungEintrag.transpilerFromJSON(text);
 	}
@@ -11179,11 +11527,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lehrbefähigung wurde erfolgreich hinzugefügt.
 	 */
-	public async addLehrerLehrbefaehigung(data : Partial<LehrerLehrbefaehigungEintrag>, schema : string) : Promise<LehrerLehrbefaehigungEintrag> {
+	public async addLehrerLehrbefaehigung(data: Partial<LehrerLehrbefaehigungEintrag>, schema: string): Promise<LehrerLehrbefaehigungEintrag> {
 		const path = "/db/{schema}/lehrer/personaldaten/lehramt/lehrbefaehigung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = LehrerLehrbefaehigungEintrag.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = LehrerLehrbefaehigungEintrag.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return LehrerLehrbefaehigungEintrag.transpilerFromJSON(text);
 	}
@@ -11208,11 +11556,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten zu dem Lehrbefähigungseintrag
 	 */
-	public async getLehrerLehrbefaehigung(schema : string, id : number) : Promise<LehrerLehrbefaehigungEintrag> {
+	public async getLehrerLehrbefaehigung(schema: string, id: number): Promise<LehrerLehrbefaehigungEintrag> {
 		const path = "/db/{schema}/lehrer/personaldaten/lehramt/lehrbefaehigung/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return LehrerLehrbefaehigungEintrag.transpilerFromJSON(text);
 	}
@@ -11235,11 +11583,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchLehrerLehrbefaehigung(data : Partial<LehrerLehrbefaehigungEintrag>, schema : string, id : number) : Promise<void> {
+	public async patchLehrerLehrbefaehigung(data: Partial<LehrerLehrbefaehigungEintrag>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/lehrer/personaldaten/lehramt/lehrbefaehigung/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = LehrerLehrbefaehigungEintrag.transpilerToJSONPatch(data);
+		const body: string = LehrerLehrbefaehigungEintrag.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -11263,11 +11611,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Datensatz wurde erfolgreich entfernt.
 	 */
-	public async deleteLehrerLehrbefaehigung(schema : string, id : number) : Promise<LehrerLehrbefaehigungEintrag> {
+	public async deleteLehrerLehrbefaehigung(schema: string, id: number): Promise<LehrerLehrbefaehigungEintrag> {
 		const path = "/db/{schema}/lehrer/personaldaten/lehramt/lehrbefaehigung/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return LehrerLehrbefaehigungEintrag.transpilerFromJSON(text);
 	}
@@ -11290,11 +11638,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Das Unterrichtsfach wurde erfolgreich hinzugefügt.
 	 */
-	public async addLehrerUnterrichtsfach(data : Partial<LehrerUnterrichtsfach>, schema : string) : Promise<LehrerUnterrichtsfach> {
+	public async addLehrerUnterrichtsfach(data: Partial<LehrerUnterrichtsfach>, schema: string): Promise<LehrerUnterrichtsfach> {
 		const path = "/db/{schema}/lehrer/personaldaten/unterrichtsfach"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = LehrerUnterrichtsfach.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = LehrerUnterrichtsfach.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return LehrerUnterrichtsfach.transpilerFromJSON(text);
 	}
@@ -11320,12 +11668,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Patch wurde erfolgreich integriert.
 	 */
-	public async patchLehrerUnterrichtsfach(data : Partial<LehrerUnterrichtsfach>, schema : string, id : number) : Promise<LehrerUnterrichtsfach> {
+	public async patchLehrerUnterrichtsfach(data: Partial<LehrerUnterrichtsfach>, schema: string, id: number): Promise<LehrerUnterrichtsfach> {
 		const path = "/db/{schema}/lehrer/personaldaten/unterrichtsfach/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = LehrerUnterrichtsfach.transpilerToJSONPatch(data);
-		const result : string = await super.patchJSONWithResponse(path, body);
+		const body: string = LehrerUnterrichtsfach.transpilerToJSONPatch(data);
+		const result: string = await super.patchJSONWithResponse(path, body);
 		const text = result;
 		return LehrerUnterrichtsfach.transpilerFromJSON(text);
 	}
@@ -11349,11 +11697,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Datensatz wurde erfolgreich entfernt.
 	 */
-	public async deleteLehrerUnterrichtsfach(schema : string, id : number) : Promise<LehrerUnterrichtsfach> {
+	public async deleteLehrerUnterrichtsfach(schema: string, id: number): Promise<LehrerUnterrichtsfach> {
 		const path = "/db/{schema}/lehrer/personaldaten/unterrichtsfach/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return LehrerUnterrichtsfach.transpilerFromJSON(text);
 	}
@@ -11375,13 +11723,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Schulleitungseinträge wurden erfolgreich abgerufen.
 	 */
-	public async getAllSchulleitungen(schema : string) : Promise<List<Schulleitung>> {
+	public async getAllSchulleitungen(schema: string): Promise<List<Schulleitung>> {
 		const path = "/db/{schema}/lehrer/schulleitung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schulleitung>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schulleitung.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Schulleitung.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -11404,11 +11755,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Schulleitungseintrag wurde erfolgreich hinzugefügt.
 	 */
-	public async addSchulleitung(data : Partial<Schulleitung>, schema : string) : Promise<Schulleitung> {
+	public async addSchulleitung(data: Partial<Schulleitung>, schema: string): Promise<Schulleitung> {
 		const path = "/db/{schema}/lehrer/schulleitung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Schulleitung.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Schulleitung.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return Schulleitung.transpilerFromJSON(text);
 	}
@@ -11435,12 +11786,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Patch wurde erfolgreich ausgeführt.
 	 */
-	public async patchSchulleitung(data : Partial<Schulleitung>, schema : string, id : number) : Promise<Schulleitung> {
+	public async patchSchulleitung(data: Partial<Schulleitung>, schema: string, id: number): Promise<Schulleitung> {
 		const path = "/db/{schema}/lehrer/schulleitung/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Schulleitung.transpilerToJSONPatch(data);
-		const result : string = await super.patchJSONWithResponse(path, body);
+		const body: string = Schulleitung.transpilerToJSONPatch(data);
+		const result: string = await super.patchJSONWithResponse(path, body);
 		const text = result;
 		return Schulleitung.transpilerFromJSON(text);
 	}
@@ -11463,14 +11814,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Schulleitungseinträge des Lehrers wurden erfolgreich abgerufen.
 	 */
-	public async getAllSchulleitungenByLehrer(schema : string, idLehrer : number) : Promise<List<Schulleitung>> {
+	public async getAllSchulleitungenByLehrer(schema: string, idLehrer: number): Promise<List<Schulleitung>> {
 		const path = "/db/{schema}/lehrer/schulleitung/{idLehrer : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idLehrer\s*(:[^{}]+({[^{}]+})*)?}/g, idLehrer.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schulleitung>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schulleitung.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Schulleitung.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -11494,14 +11848,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Schulleitungseinträge wurden erfolgreich entfernt.
 	 */
-	public async deleteSchulleitungen(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteSchulleitungen(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/lehrer/schulleitung/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -11523,14 +11880,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Stammdaten der Lehrer
 	 */
-	public async getLehrerStammdatenMultiple(data : List<number>, schema : string) : Promise<List<LehrerStammdaten>> {
+	public async getLehrerStammdatenMultiple(data: List<number>, schema: string): Promise<List<LehrerStammdaten>> {
 		const path = "/db/{schema}/lehrer/stammdaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LehrerStammdaten>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerStammdaten.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerStammdaten.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -11551,13 +11911,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Merkmalen.
 	 */
-	public async getMerkmale(schema : string) : Promise<List<Merkmal>> {
+	public async getMerkmale(schema: string): Promise<List<Merkmal>> {
 		const path = "/db/{schema}/merkmale"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Merkmal>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Merkmal.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Merkmal.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -11579,11 +11942,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchMerkmal(data : Partial<Merkmal>, schema : string, id : number) : Promise<void> {
+	public async patchMerkmal(data: Partial<Merkmal>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/merkmale/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Merkmal.transpilerToJSONPatch(data);
+		const body: string = Merkmal.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -11605,11 +11968,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Das Merkmal wurden erfolgreich hinzugefügt.
 	 */
-	public async addMerkmal(data : Partial<Merkmal>, schema : string) : Promise<Merkmal> {
+	public async addMerkmal(data: Partial<Merkmal>, schema: string): Promise<Merkmal> {
 		const path = "/db/{schema}/merkmale/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Merkmal.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Merkmal.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return Merkmal.transpilerFromJSON(text);
 	}
@@ -11633,14 +11996,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteMerkmale(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteMerkmale(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/merkmale/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -11664,11 +12030,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Log vom Migrieren der MariaDB-Datenbank
 	 */
-	public async migrateMariaDB(data : DatenbankVerbindungsdaten, schema : string) : Promise<SimpleOperationResponse> {
+	public async migrateMariaDB(data: DatenbankVerbindungsdaten, schema: string): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/migrate/mariadb"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = DatenbankVerbindungsdaten.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = DatenbankVerbindungsdaten.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -11694,12 +12060,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Log vom Migrieren der MariaDB-Datenbank
 	 */
-	public async migrateMariaDBSchulnummer(data : DatenbankVerbindungsdaten, schema : string, schulnummer : number) : Promise<SimpleOperationResponse> {
+	public async migrateMariaDBSchulnummer(data: DatenbankVerbindungsdaten, schema: string, schulnummer: number): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/migrate/mariadb/{schulnummer:\\d{6}}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{schulnummer\s*(:[^{}]+({[^{}]+})*)?}/g, schulnummer.toString());
-		const body : string = DatenbankVerbindungsdaten.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = DatenbankVerbindungsdaten.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -11724,10 +12090,10 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Log vom Migrieren der Access-MDB-Datenbank
 	 */
-	public async migrateMDB(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
+	public async migrateMDB(data: FormData, schema: string): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/migrate/mdb"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.postMultipart(path, data);
+		const result: string = await super.postMultipart(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -11752,11 +12118,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Log vom Migrieren der SQL-Server-Datenbank
 	 */
-	public async migrateMsSqlServer(data : DatenbankVerbindungsdaten, schema : string) : Promise<SimpleOperationResponse> {
+	public async migrateMsSqlServer(data: DatenbankVerbindungsdaten, schema: string): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/migrate/mssql"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = DatenbankVerbindungsdaten.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = DatenbankVerbindungsdaten.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -11782,12 +12148,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Log vom Migrieren der SQL-Server-Datenbank
 	 */
-	public async migrateMsSqlServerSchulnummer(data : DatenbankVerbindungsdaten, schema : string, schulnummer : number) : Promise<SimpleOperationResponse> {
+	public async migrateMsSqlServerSchulnummer(data: DatenbankVerbindungsdaten, schema: string, schulnummer: number): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/migrate/mssql/{schulnummer:\\d{6}}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{schulnummer\s*(:[^{}]+({[^{}]+})*)?}/g, schulnummer.toString());
-		const body : string = DatenbankVerbindungsdaten.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = DatenbankVerbindungsdaten.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -11812,11 +12178,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Log vom Migrieren der MySQL-Datenbank
 	 */
-	public async migrateMySql(data : DatenbankVerbindungsdaten, schema : string) : Promise<SimpleOperationResponse> {
+	public async migrateMySql(data: DatenbankVerbindungsdaten, schema: string): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/migrate/mysql"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = DatenbankVerbindungsdaten.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = DatenbankVerbindungsdaten.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -11842,12 +12208,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Log vom Migrieren der MySQL-Datenbank
 	 */
-	public async migrateMySqlSchulnummer(data : DatenbankVerbindungsdaten, schema : string, schulnummer : number) : Promise<SimpleOperationResponse> {
+	public async migrateMySqlSchulnummer(data: DatenbankVerbindungsdaten, schema: string, schulnummer: number): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/migrate/mysql/{schulnummer:\\d{6}}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{schulnummer\s*(:[^{}]+({[^{}]+})*)?}/g, schulnummer.toString());
-		const body : string = DatenbankVerbindungsdaten.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = DatenbankVerbindungsdaten.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -11868,13 +12234,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste der OAuth2-Client-Secrets der Schule.
 	 */
-	public async getOAuthClientSecrets(schema : string) : Promise<List<OAuth2ClientConnection>> {
+	public async getOAuthClientSecrets(schema: string): Promise<List<OAuth2ClientConnection>> {
 		const path = "/db/{schema}/oauth/secrets"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<OAuth2ClientConnection>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(OAuth2ClientConnection.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(OAuth2ClientConnection.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -11896,11 +12265,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchOAuthSecret(data : Partial<OAuth2ClientConnection>, schema : string, id : number) : Promise<void> {
+	public async patchOAuthSecret(data: Partial<OAuth2ClientConnection>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/oauth/secrets/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = OAuth2ClientConnection.transpilerToJSONPatch(data);
+		const body: string = OAuth2ClientConnection.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -11924,11 +12293,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Das OAuth2-Client-Secrets wurde erfolgreich entfernt.
 	 */
-	public async deleteOAuthSecret(schema : string, id : number) : Promise<OAuth2ClientConnection> {
+	public async deleteOAuthSecret(schema: string, id: number): Promise<OAuth2ClientConnection> {
 		const path = "/db/{schema}/oauth/secrets/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return OAuth2ClientConnection.transpilerFromJSON(text);
 	}
@@ -11951,11 +12320,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Das OAuth2-Client-Secrets der Schule
 	 */
-	public async getOAuthClientSecret(schema : string, id : number) : Promise<OAuth2ClientConnection> {
+	public async getOAuthClientSecret(schema: string, id: number): Promise<OAuth2ClientConnection> {
 		const path = "/db/{schema}/oauth/secrets/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return OAuth2ClientConnection.transpilerFromJSON(text);
 	}
@@ -11980,11 +12349,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Eintrag wurde erfolgreich hinzugefügt.
 	 */
-	public async addOAuthClientSecret(data : Partial<OAuth2ClientConnection>, schema : string) : Promise<OAuth2ClientConnection> {
+	public async addOAuthClientSecret(data: Partial<OAuth2ClientConnection>, schema: string): Promise<OAuth2ClientConnection> {
 		const path = "/db/{schema}/oauth/secrets/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = OAuth2ClientConnection.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = OAuth2ClientConnection.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return OAuth2ClientConnection.transpilerFromJSON(text);
 	}
@@ -12006,13 +12375,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Orts-Katalog-Einträgen
 	 */
-	public async getOrte(schema : string) : Promise<List<OrtKatalogEintrag>> {
+	public async getOrte(schema: string): Promise<List<OrtKatalogEintrag>> {
 		const path = "/db/{schema}/orte"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<OrtKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(OrtKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(OrtKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -12034,11 +12406,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchOrt(data : Partial<OrtKatalogEintrag>, schema : string, id : number) : Promise<void> {
+	public async patchOrt(data: Partial<OrtKatalogEintrag>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/orte/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = OrtKatalogEintrag.transpilerToJSONPatch(data);
+		const body: string = OrtKatalogEintrag.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -12060,11 +12432,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Ort wurde erfolgreich hinzugefügt.
 	 */
-	public async addOrt(data : Partial<OrtKatalogEintrag>, schema : string) : Promise<OrtKatalogEintrag> {
+	public async addOrt(data: Partial<OrtKatalogEintrag>, schema: string): Promise<OrtKatalogEintrag> {
 		const path = "/db/{schema}/orte/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = OrtKatalogEintrag.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = OrtKatalogEintrag.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return OrtKatalogEintrag.transpilerFromJSON(text);
 	}
@@ -12088,14 +12460,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteOrte(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteOrte(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/orte/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -12116,13 +12491,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Ortsteile
 	 */
-	public async getOrtsteile(schema : string) : Promise<List<OrtsteilKatalogEintrag>> {
+	public async getOrtsteile(schema: string): Promise<List<OrtsteilKatalogEintrag>> {
 		const path = "/db/{schema}/ortsteile"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<OrtsteilKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(OrtsteilKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(OrtsteilKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -12144,11 +12522,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchOrtsteil(data : Partial<OrtsteilKatalogEintrag>, schema : string, id : number) : Promise<void> {
+	public async patchOrtsteil(data: Partial<OrtsteilKatalogEintrag>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/ortsteile/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = OrtsteilKatalogEintrag.transpilerToJSONPatch(data);
+		const body: string = OrtsteilKatalogEintrag.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -12170,11 +12548,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Ortsteil wurde erfolgreich hinzugefügt.
 	 */
-	public async addOrtsteil(data : Partial<OrtsteilKatalogEintrag>, schema : string) : Promise<OrtsteilKatalogEintrag> {
+	public async addOrtsteil(data: Partial<OrtsteilKatalogEintrag>, schema: string): Promise<OrtsteilKatalogEintrag> {
 		const path = "/db/{schema}/ortsteile/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = OrtsteilKatalogEintrag.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = OrtsteilKatalogEintrag.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return OrtsteilKatalogEintrag.transpilerFromJSON(text);
 	}
@@ -12198,14 +12576,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteOrtsteile(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteOrtsteile(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/ortsteile/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -12233,11 +12614,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Report mit den übergebenen Daten wurde erfolgreich erstellt.
 	 */
-	public async pdfReport(data : ReportingParameter, schema : string) : Promise<ApiFile> {
+	public async pdfReport(data: ReportingParameter, schema: string): Promise<ApiFile> {
 		const path = "/db/{schema}/reporting/ausgabe"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = ReportingParameter.transpilerToJSON(data);
-		const result : ApiFile = await super.postJSONtoPDF(path, body);
+		const body: string = ReportingParameter.transpilerToJSON(data);
+		const result: ApiFile = await super.postJSONtoPDF(path, body);
 		return result;
 	}
 
@@ -12265,11 +12646,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Report mit den übergebenen Daten wurde erfolgreich erstellt und als E-Mail versendet.
 	 */
-	public async emailReport(data : ReportingParameter, schema : string) : Promise<SimpleOperationResponse> {
+	public async emailReport(data: ReportingParameter, schema: string): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/reporting/email"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = ReportingParameter.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = ReportingParameter.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -12298,11 +12679,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Report wurde erfolgreich als HTML erzeugt.
 	 */
-	public async htmlReport(data : ReportingParameter, schema : string) : Promise<string> {
+	public async htmlReport(data: ReportingParameter, schema: string): Promise<string> {
 		const path = "/db/{schema}/reporting/html"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = ReportingParameter.transpilerToJSON(data);
-		const result : string = await super.postTextBased(path, 'application/json', 'text/html', body);
+		const body: string = ReportingParameter.transpilerToJSON(data);
+		const result: string = await super.postTextBased(path, 'application/json', 'text/html', body);
 		return result;
 	}
 
@@ -12323,13 +12704,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog AbiturInfos
 	 */
-	public async getKatalogSchild3AbiturInfos(schema : string) : Promise<List<Schild3KatalogEintragAbiturInfos>> {
+	public async getKatalogSchild3AbiturInfos(schema: string): Promise<List<Schild3KatalogEintragAbiturInfos>> {
 		const path = "/db/{schema}/schild3/abiturinfos"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schild3KatalogEintragAbiturInfos>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragAbiturInfos.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Schild3KatalogEintragAbiturInfos.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -12350,13 +12734,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog Datenart
 	 */
-	public async getKatalogSchild3Datenarten(schema : string) : Promise<List<Schild3KatalogEintragDatenart>> {
+	public async getKatalogSchild3Datenarten(schema: string): Promise<List<Schild3KatalogEintragDatenart>> {
 		const path = "/db/{schema}/schild3/datenarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schild3KatalogEintragDatenart>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragDatenart.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Schild3KatalogEintragDatenart.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -12377,13 +12764,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog DQR-Niveaus
 	 */
-	public async getSchild3FachklasseDQRNiveauZuordnungen(schema : string) : Promise<List<Schild3FachklasseDQRNiveauZuordnung>> {
+	public async getSchild3FachklasseDQRNiveauZuordnungen(schema: string): Promise<List<Schild3FachklasseDQRNiveauZuordnung>> {
 		const path = "/db/{schema}/schild3/dqr_niveaus"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schild3FachklasseDQRNiveauZuordnung>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schild3FachklasseDQRNiveauZuordnung.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Schild3FachklasseDQRNiveauZuordnung.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -12404,13 +12794,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog zur Konfiguration des CSV-Exportes von Schild
 	 */
-	public async getKatalogSchild3ExportCSV(schema : string) : Promise<List<Schild3KatalogEintragExportCSV>> {
+	public async getKatalogSchild3ExportCSV(schema: string): Promise<List<Schild3KatalogEintragExportCSV>> {
 		const path = "/db/{schema}/schild3/export/csv"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schild3KatalogEintragExportCSV>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragExportCSV.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Schild3KatalogEintragExportCSV.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -12431,13 +12824,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog Filter Fehlende Einträge
 	 */
-	public async getKatalogSchild3FilterFehlendeEintraege(schema : string) : Promise<List<Schild3KatalogEintragFilterFehlendeEintraege>> {
+	public async getKatalogSchild3FilterFehlendeEintraege(schema: string): Promise<List<Schild3KatalogEintragFilterFehlendeEintraege>> {
 		const path = "/db/{schema}/schild3/filter/fehlende_eintraege"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schild3KatalogEintragFilterFehlendeEintraege>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragFilterFehlendeEintraege.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Schild3KatalogEintragFilterFehlendeEintraege.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -12458,13 +12854,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog Bundesländer/Nachbarländer
 	 */
-	public async getKatalogSchild3Laender(schema : string) : Promise<List<Schild3KatalogEintragLaender>> {
+	public async getKatalogSchild3Laender(schema: string): Promise<List<Schild3KatalogEintragLaender>> {
 		const path = "/db/{schema}/schild3/laender"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schild3KatalogEintragLaender>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragLaender.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Schild3KatalogEintragLaender.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -12485,13 +12884,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog Prüfungsordnungen
 	 */
-	public async getKatalogSchild3Pruefungsordnungen(schema : string) : Promise<List<Schild3KatalogEintragPruefungsordnung>> {
+	public async getKatalogSchild3Pruefungsordnungen(schema: string): Promise<List<Schild3KatalogEintragPruefungsordnung>> {
 		const path = "/db/{schema}/schild3/pruefungsordnungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schild3KatalogEintragPruefungsordnung>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragPruefungsordnung.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Schild3KatalogEintragPruefungsordnung.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -12512,13 +12914,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog Prüfungsordnung-Optionen
 	 */
-	public async getKatalogSchild3PruefungsordnungOptionen(schema : string) : Promise<List<Schild3KatalogEintragPruefungsordnungOption>> {
+	public async getKatalogSchild3PruefungsordnungOptionen(schema: string): Promise<List<Schild3KatalogEintragPruefungsordnungOption>> {
 		const path = "/db/{schema}/schild3/pruefungsordnungen/optionen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schild3KatalogEintragPruefungsordnungOption>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragPruefungsordnungOption.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Schild3KatalogEintragPruefungsordnungOption.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -12539,13 +12944,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen der Einträge im SVWS-Server definierten Schild3-Datenquellen für das Reporting
 	 */
-	public async getSchild3ReportingDatenquellen(schema : string) : Promise<List<Schild3KatalogEintragVersetzungsvermerke>> {
+	public async getSchild3ReportingDatenquellen(schema: string): Promise<List<Schild3KatalogEintragVersetzungsvermerke>> {
 		const path = "/db/{schema}/schild3/reporting/"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schild3KatalogEintragVersetzungsvermerke>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragVersetzungsvermerke.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Schild3KatalogEintragVersetzungsvermerke.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -12569,13 +12977,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog für die Unicode-Umwandlung
 	 */
-	public async getKatalogSchild3UnicodeUmwandlung(schema : string) : Promise<List<Schild3KatalogEintragUnicodeUmwandlung>> {
+	public async getKatalogSchild3UnicodeUmwandlung(schema: string): Promise<List<Schild3KatalogEintragUnicodeUmwandlung>> {
 		const path = "/db/{schema}/schild3/unicode/umwandlung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schild3KatalogEintragUnicodeUmwandlung>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragUnicodeUmwandlung.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Schild3KatalogEintragUnicodeUmwandlung.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -12596,13 +13007,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog Versetzungsvermerke / PrfSemAbschl
 	 */
-	public async getKatalogSchild3Versetzungsvermerke(schema : string) : Promise<List<Schild3KatalogEintragVersetzungsvermerke>> {
+	public async getKatalogSchild3Versetzungsvermerke(schema: string): Promise<List<Schild3KatalogEintragVersetzungsvermerke>> {
 		const path = "/db/{schema}/schild3/versetzungsvermerke"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schild3KatalogEintragVersetzungsvermerke>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragVersetzungsvermerke.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Schild3KatalogEintragVersetzungsvermerke.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -12625,12 +13039,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lernabschnittsdaten des Schülers
 	 */
-	public async getSchuelerLernabschnittsdaten(schema : string, id : number, abschnitt : number) : Promise<SchuelerLernabschnittsdaten> {
+	public async getSchuelerLernabschnittsdaten(schema: string, id: number, abschnitt: number): Promise<SchuelerLernabschnittsdaten> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/abschnitt/{abschnitt : \\d+}/lernabschnittsdaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return SchuelerLernabschnittsdaten.transpilerFromJSON(text);
 	}
@@ -12653,14 +13067,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Erzieherstammdaten
 	 */
-	public async getSchuelerErzieher(schema : string, id : number) : Promise<List<ErzieherStammdaten>> {
+	public async getSchuelerErzieher(schema: string, id: number): Promise<List<ErzieherStammdaten>> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/erzieher"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<ErzieherStammdaten>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(ErzieherStammdaten.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(ErzieherStammdaten.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -12682,11 +13099,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchFahrschuelerart(data : Partial<Fahrschuelerart>, schema : string, id : number) : Promise<void> {
+	public async patchFahrschuelerart(data: Partial<Fahrschuelerart>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/fahrschuelerarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Fahrschuelerart.transpilerToJSONPatch(data);
+		const body: string = Fahrschuelerart.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -12708,14 +13125,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die KAOADaten des Schülers
 	 */
-	public async getKAoAdaten(schema : string, id : number) : Promise<List<SchuelerKAoADaten>> {
+	public async getKAoAdaten(schema: string, id: number): Promise<List<SchuelerKAoADaten>> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/kaoa"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuelerKAoADaten>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerKAoADaten.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchuelerKAoADaten.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -12738,12 +13158,12 @@ export class ApiServer extends BaseApi {
 	 * @param {number} id - der Pfad-Parameter id
 	 * @param {number} skid - der Pfad-Parameter skid
 	 */
-	public async patchKAoADaten(data : Partial<SchuelerKAoADaten>, schema : string, id : number, skid : number) : Promise<void> {
+	public async patchKAoADaten(data: Partial<SchuelerKAoADaten>, schema: string, id: number, skid: number): Promise<void> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/kaoa/{skid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{skid\s*(:[^{}]+({[^{}]+})*)?}/g, skid.toString());
-		const body : string = SchuelerKAoADaten.transpilerToJSONPatch(data);
+		const body: string = SchuelerKAoADaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -12762,7 +13182,7 @@ export class ApiServer extends BaseApi {
 	 * @param {number} id - der Pfad-Parameter id
 	 * @param {number} skid - der Pfad-Parameter skid
 	 */
-	public async deleteKAoAdaten(schema : string, id : number, skid : number) : Promise<void> {
+	public async deleteKAoAdaten(schema: string, id: number, skid: number): Promise<void> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/kaoa/{skid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
@@ -12790,12 +13210,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die KAOADaten des Schülers
 	 */
-	public async addKAoAdaten(data : Partial<SchuelerKAoADaten>, schema : string, id : number) : Promise<SchuelerKAoADaten> {
+	public async addKAoAdaten(data: Partial<SchuelerKAoADaten>, schema: string, id: number): Promise<SchuelerKAoADaten> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/kaoa/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = SchuelerKAoADaten.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = SchuelerKAoADaten.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SchuelerKAoADaten.transpilerFromJSON(text);
 	}
@@ -12818,14 +13238,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Schüler-Lernabschnitt-Listeneinträgen
 	 */
-	public async getSchuelerLernabschnittsliste(schema : string, id : number) : Promise<List<SchuelerLernabschnittListeEintrag>> {
+	public async getSchuelerLernabschnittsliste(schema: string, id: number): Promise<List<SchuelerLernabschnittListeEintrag>> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/lernabschnitte"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuelerLernabschnittListeEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerLernabschnittListeEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchuelerLernabschnittListeEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -12847,14 +13270,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lernplattformen des Schülers
 	 */
-	public async getSchuelerLernplattformen(schema : string, id : number) : Promise<List<SchuelerLernplattform>> {
+	public async getSchuelerLernplattformen(schema: string, id: number): Promise<List<SchuelerLernplattform>> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/lernplattformen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuelerLernplattform>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerLernplattform.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchuelerLernplattform.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -12877,12 +13303,12 @@ export class ApiServer extends BaseApi {
 	 * @param {number} id - der Pfad-Parameter id
 	 * @param {number} idLernplattform - der Pfad-Parameter idLernplattform
 	 */
-	public async patchSchuelerLernplattform(data : Partial<SchuelerLernplattform>, schema : string, id : number, idLernplattform : number) : Promise<void> {
+	public async patchSchuelerLernplattform(data: Partial<SchuelerLernplattform>, schema: string, id: number, idLernplattform: number): Promise<void> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/lernplattformen/{idLernplattform : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{idLernplattform\s*(:[^{}]+({[^{}]+})*)?}/g, idLernplattform.toString());
-		const body : string = SchuelerLernplattform.transpilerToJSONPatch(data);
+		const body: string = SchuelerLernplattform.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -12904,11 +13330,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Schulbesuchsdaten des Schülers
 	 */
-	public async getSchuelerSchulbesuch(schema : string, id : number) : Promise<SchuelerSchulbesuchsdaten> {
+	public async getSchuelerSchulbesuch(schema: string, id: number): Promise<SchuelerSchulbesuchsdaten> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/schulbesuch"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return SchuelerSchulbesuchsdaten.transpilerFromJSON(text);
 	}
@@ -12931,11 +13357,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchSchuelerSchulbesuch(data : Partial<SchuelerSchulbesuchsdaten>, schema : string, id : number) : Promise<void> {
+	public async patchSchuelerSchulbesuch(data: Partial<SchuelerSchulbesuchsdaten>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/schulbesuch"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = SchuelerSchulbesuchsdaten.transpilerToJSONPatch(data);
+		const body: string = SchuelerSchulbesuchsdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -12958,12 +13384,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Sprachprüfung des Schülers
 	 */
-	public async getSchuelerSprachpruefung(schema : string, id : number, idEintrag : number) : Promise<Sprachpruefung> {
+	public async getSchuelerSprachpruefung(schema: string, id: number, idEintrag: number): Promise<Sprachpruefung> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/sprache/{idEintrag : \\d+}/pruefung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{idEintrag\s*(:[^{}]+({[^{}]+})*)?}/g, idEintrag.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return Sprachpruefung.transpilerFromJSON(text);
 	}
@@ -12987,12 +13413,12 @@ export class ApiServer extends BaseApi {
 	 * @param {number} id - der Pfad-Parameter id
 	 * @param {number} idEintrag - der Pfad-Parameter idEintrag
 	 */
-	public async patchSchuelerSprachpruefung(data : Partial<Sprachpruefung>, schema : string, id : number, idEintrag : number) : Promise<void> {
+	public async patchSchuelerSprachpruefung(data: Partial<Sprachpruefung>, schema: string, id: number, idEintrag: number): Promise<void> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/sprache/{idEintrag : \\d+}/pruefung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{idEintrag\s*(:[^{}]+({[^{}]+})*)?}/g, idEintrag.toString());
-		const body : string = Sprachpruefung.transpilerToJSONPatch(data);
+		const body: string = Sprachpruefung.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -13017,12 +13443,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Sprachprüfung wurde erfolgreich entfernt.
 	 */
-	public async deleteSchuelerSprachpruefung(schema : string, id : number, idEintrag : number) : Promise<Sprachpruefung> {
+	public async deleteSchuelerSprachpruefung(schema: string, id: number, idEintrag: number): Promise<Sprachpruefung> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/sprache/{idEintrag : \\d+}/pruefung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{idEintrag\s*(:[^{}]+({[^{}]+})*)?}/g, idEintrag.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return Sprachpruefung.transpilerFromJSON(text);
 	}
@@ -13046,12 +13472,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Spachbelegung des Schülers
 	 */
-	public async getSchuelerSprachbelegung(schema : string, id : number, sprache : string) : Promise<Sprachbelegung> {
+	public async getSchuelerSprachbelegung(schema: string, id: number, sprache: string): Promise<Sprachbelegung> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/sprache/{sprache : [A-Z]+}/belegung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{sprache\s*(:[^{}]+({[^{}]+})*)?}/g, sprache);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return Sprachbelegung.transpilerFromJSON(text);
 	}
@@ -13075,12 +13501,12 @@ export class ApiServer extends BaseApi {
 	 * @param {number} id - der Pfad-Parameter id
 	 * @param {string} sprache - der Pfad-Parameter sprache
 	 */
-	public async patchSchuelerSprachbelegung(data : Partial<Sprachbelegung>, schema : string, id : number, sprache : string) : Promise<void> {
+	public async patchSchuelerSprachbelegung(data: Partial<Sprachbelegung>, schema: string, id: number, sprache: string): Promise<void> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/sprache/{sprache : [A-Z]+}/belegung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{sprache\s*(:[^{}]+({[^{}]+})*)?}/g, sprache);
-		const body : string = Sprachbelegung.transpilerToJSONPatch(data);
+		const body: string = Sprachbelegung.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -13105,12 +13531,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Sprachbelegung wurde erfolgreich entfernt.
 	 */
-	public async deleteSchuelerSprachbelegung(schema : string, id : number, sprache : string) : Promise<Sprachbelegung> {
+	public async deleteSchuelerSprachbelegung(schema: string, id: number, sprache: string): Promise<Sprachbelegung> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/sprache/{sprache : [A-Z]+}/belegung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{sprache\s*(:[^{}]+({[^{}]+})*)?}/g, sprache);
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return Sprachbelegung.transpilerFromJSON(text);
 	}
@@ -13133,14 +13559,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Spachbelegungen des Schülers
 	 */
-	public async getSchuelerSprachbelegungen(schema : string, id : number) : Promise<List<Sprachbelegung>> {
+	public async getSchuelerSprachbelegungen(schema: string, id: number): Promise<List<Sprachbelegung>> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/sprachen/belegungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Sprachbelegung>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Sprachbelegung.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Sprachbelegung.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -13164,12 +13593,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Sprachbelegung des Schülers
 	 */
-	public async addSchuelerSprachbelegung(data : Partial<Sprachbelegung>, schema : string, id : number) : Promise<Sprachbelegung> {
+	public async addSchuelerSprachbelegung(data: Partial<Sprachbelegung>, schema: string, id: number): Promise<Sprachbelegung> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/sprachen/belegungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Sprachbelegung.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Sprachbelegung.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return Sprachbelegung.transpilerFromJSON(text);
 	}
@@ -13192,14 +13621,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Sprachprüfungen des Schülers
 	 */
-	public async getSchuelerSprachpruefungen(schema : string, id : number) : Promise<List<Sprachpruefung>> {
+	public async getSchuelerSprachpruefungen(schema: string, id: number): Promise<List<Sprachpruefung>> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/sprachen/pruefungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Sprachpruefung>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Sprachpruefung.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Sprachpruefung.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -13223,12 +13655,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Sprachprüfung des Schülers
 	 */
-	public async addSchuelerSprachpruefung(data : Partial<Sprachpruefung>, schema : string, id : number) : Promise<Sprachpruefung> {
+	public async addSchuelerSprachpruefung(data: Partial<Sprachpruefung>, schema: string, id: number): Promise<Sprachpruefung> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/sprachen/pruefungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Sprachpruefung.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Sprachpruefung.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return Sprachpruefung.transpilerFromJSON(text);
 	}
@@ -13251,11 +13683,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Stammdaten des Schülers
 	 */
-	public async getSchuelerStammdaten(schema : string, id : number) : Promise<SchuelerStammdaten> {
+	public async getSchuelerStammdaten(schema: string, id: number): Promise<SchuelerStammdaten> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/stammdaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return SchuelerStammdaten.transpilerFromJSON(text);
 	}
@@ -13278,11 +13710,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchSchuelerStammdaten(data : Partial<SchuelerStammdaten>, schema : string, id : number) : Promise<void> {
+	public async patchSchuelerStammdaten(data: Partial<SchuelerStammdaten>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/stammdaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = SchuelerStammdaten.transpilerToJSONPatch(data);
+		const body: string = SchuelerStammdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -13304,14 +13736,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Telefoneinträge des Schülers
 	 */
-	public async getSchuelerTelefone(schema : string, id : number) : Promise<List<SchuelerTelefon>> {
+	public async getSchuelerTelefone(schema: string, id: number): Promise<List<SchuelerTelefon>> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/telefone"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuelerTelefon>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerTelefon.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchuelerTelefon.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -13333,14 +13768,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Vermerkdaten des Schülers
 	 */
-	public async getVermerkdaten(schema : string, id : number) : Promise<List<SchuelerVermerke>> {
+	public async getVermerkdaten(schema: string, id: number): Promise<List<SchuelerVermerke>> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/vermerke"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuelerVermerke>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerVermerke.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchuelerVermerke.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -13359,7 +13797,7 @@ export class ApiServer extends BaseApi {
 	 * @param {number} id - der Pfad-Parameter id
 	 * @param {number} idVermerk - der Pfad-Parameter idVermerk
 	 */
-	public async deleteSchuelerVermerk(schema : string, id : number, idVermerk : number) : Promise<void> {
+	public async deleteSchuelerVermerk(schema: string, id: number, idVermerk: number): Promise<void> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/vermerke/{idVermerk : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
@@ -13386,14 +13824,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Einwilligungen des Schülers
 	 */
-	public async getSchuelerEinwilligungen(schema : string, idSchueler : number) : Promise<List<SchuelerEinwilligung>> {
+	public async getSchuelerEinwilligungen(schema: string, idSchueler: number): Promise<List<SchuelerEinwilligung>> {
 		const path = "/db/{schema}/schueler/{idSchueler : \\d+}/einwilligungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idSchueler\s*(:[^{}]+({[^{}]+})*)?}/g, idSchueler.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuelerEinwilligung>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerEinwilligung.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchuelerEinwilligung.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -13416,12 +13857,12 @@ export class ApiServer extends BaseApi {
 	 * @param {number} idSchueler - der Pfad-Parameter idSchueler
 	 * @param {number} idEinwilligungsart - der Pfad-Parameter idEinwilligungsart
 	 */
-	public async patchSchuelerEinwilligung(data : Partial<SchuelerEinwilligung>, schema : string, idSchueler : number, idEinwilligungsart : number) : Promise<void> {
+	public async patchSchuelerEinwilligung(data: Partial<SchuelerEinwilligung>, schema: string, idSchueler: number, idEinwilligungsart: number): Promise<void> {
 		const path = "/db/{schema}/schueler/{idSchueler : \\d+}/einwilligungen/{idEinwilligungsart : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idSchueler\s*(:[^{}]+({[^{}]+})*)?}/g, idSchueler.toString())
 			.replace(/{idEinwilligungsart\s*(:[^{}]+({[^{}]+})*)?}/g, idEinwilligungsart.toString());
-		const body : string = SchuelerEinwilligung.transpilerToJSONPatch(data);
+		const body: string = SchuelerEinwilligung.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -13443,12 +13884,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der neue Telefoneintrag für den Schüler
 	 */
-	public async addSchuelerTelefon(data : Partial<SchuelerTelefon>, schema : string, idSchueler : number) : Promise<SchuelerTelefon> {
+	public async addSchuelerTelefon(data: Partial<SchuelerTelefon>, schema: string, idSchueler: number): Promise<SchuelerTelefon> {
 		const path = "/db/{schema}/schueler/{idSchueler : \\d+}/telefon"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idSchueler\s*(:[^{}]+({[^{}]+})*)?}/g, idSchueler.toString());
-		const body : string = SchuelerTelefon.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = SchuelerTelefon.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SchuelerTelefon.transpilerFromJSON(text);
 	}
@@ -13471,14 +13912,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Schüler-Listen-Einträgen
 	 */
-	public async getSchuelerFuerAbschnitt(schema : string, abschnitt : number) : Promise<List<SchuelerListeEintrag>> {
+	public async getSchuelerFuerAbschnitt(schema: string, abschnitt: number): Promise<List<SchuelerListeEintrag>> {
 		const path = "/db/{schema}/schueler/abschnitt/{abschnitt : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuelerListeEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerListeEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchuelerListeEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -13500,11 +13944,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Schüler-Listen-Einträgen
 	 */
-	public async getSchuelerAuswahllisteFuerAbschnitt(schema : string, abschnitt : number) : Promise<SchuelerListe> {
+	public async getSchuelerAuswahllisteFuerAbschnitt(schema: string, abschnitt: number): Promise<SchuelerListe> {
 		const path = "/db/{schema}/schueler/abschnitt/{abschnitt : \\d+}/auswahlliste"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return SchuelerListe.transpilerFromJSON(text);
 	}
@@ -13526,13 +13970,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Schüler-Listen-Einträgen
 	 */
-	public async getSchuelerAktuell(schema : string) : Promise<List<SchuelerListeEintrag>> {
+	public async getSchuelerAktuell(schema: string): Promise<List<SchuelerListeEintrag>> {
 		const path = "/db/{schema}/schueler/aktuell"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuelerListeEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerListeEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchuelerListeEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -13553,13 +14000,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen
 	 */
-	public async getKatalogHerkuenfte(schema : string) : Promise<List<HerkunftKatalogEintrag>> {
+	public async getKatalogHerkuenfte(schema: string): Promise<List<HerkunftKatalogEintrag>> {
 		const path = "/db/{schema}/schueler/allgemein/herkuenfte"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<HerkunftKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(HerkunftKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(HerkunftKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -13580,13 +14030,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen
 	 */
-	public async getKatalogHerkunftsarten(schema : string) : Promise<List<HerkunftsartenKatalogEintrag>> {
+	public async getKatalogHerkunftsarten(schema: string): Promise<List<HerkunftsartenKatalogEintrag>> {
 		const path = "/db/{schema}/schueler/allgemein/herkunftsarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<HerkunftsartenKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(HerkunftsartenKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(HerkunftsartenKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -13607,13 +14060,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen
 	 */
-	public async getKatalogUebergangsempfehlung(schema : string) : Promise<List<UebergangsempfehlungKatalogEintrag>> {
+	public async getKatalogUebergangsempfehlung(schema: string): Promise<List<UebergangsempfehlungKatalogEintrag>> {
 		const path = "/db/{schema}/schueler/allgemein/uebergangsempfehlung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<UebergangsempfehlungKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(UebergangsempfehlungKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(UebergangsempfehlungKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -13635,11 +14091,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die bisher besuchte Schule wurde erfolgreich hinzugefügt.
 	 */
-	public async addBisherigeSchule(data : Partial<SchuelerSchulbesuchSchule>, schema : string) : Promise<SchuelerSchulbesuchSchule> {
+	public async addBisherigeSchule(data: Partial<SchuelerSchulbesuchSchule>, schema: string): Promise<SchuelerSchulbesuchSchule> {
 		const path = "/db/{schema}/schueler/bisherigeSchule"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = SchuelerSchulbesuchSchule.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = SchuelerSchulbesuchSchule.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SchuelerSchulbesuchSchule.transpilerFromJSON(text);
 	}
@@ -13662,11 +14118,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchBisherigeSchule(data : Partial<SchuelerSchulbesuchSchule>, schema : string, id : number) : Promise<void> {
+	public async patchBisherigeSchule(data: Partial<SchuelerSchulbesuchSchule>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schueler/bisherigeSchule/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = SchuelerSchulbesuchSchule.transpilerToJSONPatch(data);
+		const body: string = SchuelerSchulbesuchSchule.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -13690,14 +14146,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine bisher besuchte Schule wurde erfolgreich entfernt.
 	 */
-	public async deleteBisherigeSchulen(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteBisherigeSchulen(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schueler/bisherigeSchule/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -13720,11 +14179,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Schüler und Lernabschnitt wurden erfolgreich hinzugefügt.
 	 */
-	public async addSchueler(data : Partial<SchuelerNeu>, schema : string) : Promise<SchuelerStammdaten> {
+	public async addSchueler(data: Partial<SchuelerNeu>, schema: string): Promise<SchuelerStammdaten> {
 		const path = "/db/{schema}/schueler/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = SchuelerNeu.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = SchuelerNeu.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SchuelerStammdaten.transpilerFromJSON(text);
 	}
@@ -13747,14 +14206,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteSchueler(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteSchueler(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schueler/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -13778,13 +14240,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Erzieherdaten des Schülers
 	 */
-	public async addSchuelerErzieher(data : Partial<ErzieherStammdaten>, schema : string, idSchueler : number, pos : number) : Promise<ErzieherStammdaten> {
+	public async addSchuelerErzieher(data: Partial<ErzieherStammdaten>, schema: string, idSchueler: number, pos: number): Promise<ErzieherStammdaten> {
 		const path = "/db/{schema}/schueler/erzieher/new/{idSchueler : \\d+}/{pos : [12]}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idSchueler\s*(:[^{}]+({[^{}]+})*)?}/g, idSchueler.toString())
 			.replace(/{pos\s*(:[^{}]+({[^{}]+})*)?}/g, pos.toString());
-		const body : string = ErzieherStammdaten.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = ErzieherStammdaten.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return ErzieherStammdaten.transpilerFromJSON(text);
 	}
@@ -13806,13 +14268,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Fahrschülerarten-Katalog-Einträgen
 	 */
-	public async getFahrschuelerarten(schema : string) : Promise<List<Fahrschuelerart>> {
+	public async getFahrschuelerarten(schema: string): Promise<List<Fahrschuelerart>> {
 		const path = "/db/{schema}/schueler/fahrschuelerarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Fahrschuelerart>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Fahrschuelerart.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Fahrschuelerart.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -13834,11 +14299,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Fahrschülerart wurde erfolgreich hinzugefügt.
 	 */
-	public async addFahrschuelerart(data : Partial<Fahrschuelerart>, schema : string) : Promise<Fahrschuelerart> {
+	public async addFahrschuelerart(data: Partial<Fahrschuelerart>, schema: string): Promise<Fahrschuelerart> {
 		const path = "/db/{schema}/schueler/fahrschuelerarten/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Fahrschuelerart.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Fahrschuelerart.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return Fahrschuelerart.transpilerFromJSON(text);
 	}
@@ -13862,14 +14327,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Fahrschülerarten wurden erfolgreich entfernt.
 	 */
-	public async deleteFahrschuelerarten(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteFahrschuelerarten(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schueler/fahrschuelerarten/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -13891,11 +14359,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Förderempfehlung
 	 */
-	public async getFoerderempfehlungById(schema : string, guid : string) : Promise<SchuelerFoerderempfehlung> {
+	public async getFoerderempfehlungById(schema: string, guid: string): Promise<SchuelerFoerderempfehlung> {
 		const path = "/db/{schema}/schueler/foerderempfehlung/{guid}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{guid\s*(:[^{}]+({[^{}]+})*)?}/g, guid);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return SchuelerFoerderempfehlung.transpilerFromJSON(text);
 	}
@@ -13918,11 +14386,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {string} guid - der Pfad-Parameter guid
 	 */
-	public async patchFoerderempfehlung(data : Partial<SchuelerFoerderempfehlung>, schema : string, guid : string) : Promise<void> {
+	public async patchFoerderempfehlung(data: Partial<SchuelerFoerderempfehlung>, schema: string, guid: string): Promise<void> {
 		const path = "/db/{schema}/schueler/foerderempfehlung/{guid}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{guid\s*(:[^{}]+({[^{}]+})*)?}/g, guid);
-		const body : string = SchuelerFoerderempfehlung.transpilerToJSONPatch(data);
+		const body: string = SchuelerFoerderempfehlung.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -13946,11 +14414,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Förderempfehlung wurde erfolgreich entfernt.
 	 */
-	public async deleteFoerderempfehlung(schema : string, guid : string) : Promise<SchuelerFoerderempfehlung> {
+	public async deleteFoerderempfehlung(schema: string, guid: string): Promise<SchuelerFoerderempfehlung> {
 		const path = "/db/{schema}/schueler/foerderempfehlung/{guid}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{guid\s*(:[^{}]+({[^{}]+})*)?}/g, guid);
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return SchuelerFoerderempfehlung.transpilerFromJSON(text);
 	}
@@ -13973,11 +14441,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Leistungsdaten des Schülers
 	 */
-	public async getSchuelerLeistungsdatenByID(schema : string, id : number) : Promise<SchuelerLeistungsdaten> {
+	public async getSchuelerLeistungsdatenByID(schema: string, id: number): Promise<SchuelerLeistungsdaten> {
 		const path = "/db/{schema}/schueler/leistungsdaten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return SchuelerLeistungsdaten.transpilerFromJSON(text);
 	}
@@ -14000,11 +14468,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchSchuelerLeistungsdaten(data : Partial<SchuelerLeistungsdaten>, schema : string, id : number) : Promise<void> {
+	public async patchSchuelerLeistungsdaten(data: Partial<SchuelerLeistungsdaten>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schueler/leistungsdaten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = SchuelerLeistungsdaten.transpilerToJSONPatch(data);
+		const body: string = SchuelerLeistungsdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -14028,11 +14496,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Leistungsdaten wurde erfolgreich entfernt.
 	 */
-	public async deleteSchuelerLeistungsdaten(schema : string, id : number) : Promise<SchuelerLeistungsdaten> {
+	public async deleteSchuelerLeistungsdaten(schema: string, id: number): Promise<SchuelerLeistungsdaten> {
 		const path = "/db/{schema}/schueler/leistungsdaten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return SchuelerLeistungsdaten.transpilerFromJSON(text);
 	}
@@ -14056,11 +14524,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Leistungsdaten wurden erfolgreich hinzugefügt.
 	 */
-	public async addSchuelerLeistungsdaten(data : Partial<SchuelerLeistungsdaten>, schema : string) : Promise<SchuelerLeistungsdaten> {
+	public async addSchuelerLeistungsdaten(data: Partial<SchuelerLeistungsdaten>, schema: string): Promise<SchuelerLeistungsdaten> {
 		const path = "/db/{schema}/schueler/leistungsdaten/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = SchuelerLeistungsdaten.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = SchuelerLeistungsdaten.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SchuelerLeistungsdaten.transpilerFromJSON(text);
 	}
@@ -14084,14 +14552,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Leistungsdaten wurden erfolgreich hinzugefügt.
 	 */
-	public async addSchuelerLeistungsdatenMultiple(data : List<Partial<SchuelerLeistungsdaten>>, schema : string) : Promise<List<SchuelerLeistungsdaten>> {
+	public async addSchuelerLeistungsdatenMultiple(data: List<Partial<SchuelerLeistungsdaten>>, schema: string): Promise<List<SchuelerLeistungsdaten>> {
 		const path = "/db/{schema}/schueler/leistungsdaten/create/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<SchuelerLeistungsdaten>).map(d => SchuelerLeistungsdaten.transpilerToJSONPatch(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<SchuelerLeistungsdaten>).map(d => SchuelerLeistungsdaten.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuelerLeistungsdaten>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerLeistungsdaten.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchuelerLeistungsdaten.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -14115,14 +14586,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Leistungsdaten wurden erfolgreich entfernt.
 	 */
-	public async deleteSchuelerLeistungsdatenMultiple(data : List<number>, schema : string) : Promise<List<SchuelerLeistungsdaten>> {
+	public async deleteSchuelerLeistungsdatenMultiple(data: List<number>, schema: string): Promise<List<SchuelerLeistungsdaten>> {
 		const path = "/db/{schema}/schueler/leistungsdaten/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuelerLeistungsdaten>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerLeistungsdaten.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchuelerLeistungsdaten.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -14144,11 +14618,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lernabschnittsdaten des Schülers
 	 */
-	public async getSchuelerLernabschnittsdatenByID(schema : string, abschnitt : number) : Promise<SchuelerLernabschnittsdaten> {
+	public async getSchuelerLernabschnittsdatenByID(schema: string, abschnitt: number): Promise<SchuelerLernabschnittsdaten> {
 		const path = "/db/{schema}/schueler/lernabschnittsdaten/{abschnitt : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return SchuelerLernabschnittsdaten.transpilerFromJSON(text);
 	}
@@ -14171,11 +14645,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} abschnitt - der Pfad-Parameter abschnitt
 	 */
-	public async patchSchuelerLernabschnittsdaten(data : Partial<SchuelerLernabschnittsdaten>, schema : string, abschnitt : number) : Promise<void> {
+	public async patchSchuelerLernabschnittsdaten(data: Partial<SchuelerLernabschnittsdaten>, schema: string, abschnitt: number): Promise<void> {
 		const path = "/db/{schema}/schueler/lernabschnittsdaten/{abschnitt : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
-		const body : string = SchuelerLernabschnittsdaten.transpilerToJSONPatch(data);
+		const body: string = SchuelerLernabschnittsdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -14197,11 +14671,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} abschnitt - der Pfad-Parameter abschnitt
 	 */
-	public async patchSchuelerLernabschnittsdatenBemerkungen(data : Partial<SchuelerLernabschnittBemerkungen>, schema : string, abschnitt : number) : Promise<void> {
+	public async patchSchuelerLernabschnittsdatenBemerkungen(data: Partial<SchuelerLernabschnittBemerkungen>, schema: string, abschnitt: number): Promise<void> {
 		const path = "/db/{schema}/schueler/lernabschnittsdaten/{abschnitt : \\d+}/bemerkungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
-		const body : string = SchuelerLernabschnittBemerkungen.transpilerToJSONPatch(data);
+		const body: string = SchuelerLernabschnittBemerkungen.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -14223,14 +14697,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Förderempfehlung des Schüler-Lernabschnitts
 	 */
-	public async getFoerderempfehlungenByLernabschnittsdatenID(schema : string, abschnitt : number) : Promise<List<SchuelerFoerderempfehlung>> {
+	public async getFoerderempfehlungenByLernabschnittsdatenID(schema: string, abschnitt: number): Promise<List<SchuelerFoerderempfehlung>> {
 		const path = "/db/{schema}/schueler/lernabschnittsdaten/{abschnitt : \\d+}/foerderempfehlungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuelerFoerderempfehlung>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerFoerderempfehlung.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchuelerFoerderempfehlung.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -14253,15 +14730,18 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lernabschnittsdaten des Schülers
 	 */
-	public async getSchuelerLernabschnittsdatenByIdSchuelerAndIdJahresabschnitt(schema : string, idSchueler : number, idSchuljahresabschnitt : number) : Promise<List<SchuelerLernabschnittsdaten>> {
+	public async getSchuelerLernabschnittsdatenByIdSchuelerAndIdJahresabschnitt(schema: string, idSchueler: number, idSchuljahresabschnitt: number): Promise<List<SchuelerLernabschnittsdaten>> {
 		const path = "/db/{schema}/schueler/lernabschnittsdaten/{idSchueler : \\d+}/{idSchuljahresabschnitt : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idSchueler\s*(:[^{}]+({[^{}]+})*)?}/g, idSchueler.toString())
 			.replace(/{idSchuljahresabschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitt.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuelerLernabschnittsdaten>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerLernabschnittsdaten.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchuelerLernabschnittsdaten.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -14284,11 +14764,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Förderempfehlung wurde erfolgreich hinzugefügt.
 	 */
-	public async addFoerderempfehlung(data : Partial<SchuelerFoerderempfehlung>, schema : string) : Promise<SchuelerFoerderempfehlung> {
+	public async addFoerderempfehlung(data: Partial<SchuelerFoerderempfehlung>, schema: string): Promise<SchuelerFoerderempfehlung> {
 		const path = "/db/{schema}/schueler/lernabschnittsdaten/foerderempfehlung/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = SchuelerFoerderempfehlung.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = SchuelerFoerderempfehlung.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SchuelerFoerderempfehlung.transpilerFromJSON(text);
 	}
@@ -14311,11 +14791,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Das SchuelerMerkmal wurde erfolgreich hinzugefügt.
 	 */
-	public async addSchuelerMerkmal(data : Partial<SchuelerSchulbesuchMerkmal>, schema : string) : Promise<SchuelerSchulbesuchMerkmal> {
+	public async addSchuelerMerkmal(data: Partial<SchuelerSchulbesuchMerkmal>, schema: string): Promise<SchuelerSchulbesuchMerkmal> {
 		const path = "/db/{schema}/schueler/merkmal"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = SchuelerSchulbesuchMerkmal.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = SchuelerSchulbesuchMerkmal.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SchuelerSchulbesuchMerkmal.transpilerFromJSON(text);
 	}
@@ -14338,11 +14818,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchSchuelerMerkmal(data : Partial<SchuelerSchulbesuchMerkmal>, schema : string, id : number) : Promise<void> {
+	public async patchSchuelerMerkmal(data: Partial<SchuelerSchulbesuchMerkmal>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schueler/merkmal/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = SchuelerSchulbesuchMerkmal.transpilerToJSONPatch(data);
+		const body: string = SchuelerSchulbesuchMerkmal.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -14366,14 +14846,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Ein SchuelerMerkmal wurde erfolgreich entfernt.
 	 */
-	public async deleteSchuelerMerkmale(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteSchuelerMerkmale(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schueler/merkmal/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -14395,11 +14878,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchSchuelerBetrieb(data : Partial<SchuelerBetrieb>, schema : string, id : number) : Promise<void> {
+	public async patchSchuelerBetrieb(data: Partial<SchuelerBetrieb>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schueler/schueler-betriebe/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = SchuelerBetrieb.transpilerToJSONPatch(data);
+		const body: string = SchuelerBetrieb.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -14421,14 +14904,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste der SchuelerBetriebe.
 	 */
-	public async getSchuelerBetriebe(schema : string, idSchueler : number) : Promise<List<SchuelerBetrieb>> {
+	public async getSchuelerBetriebe(schema: string, idSchueler: number): Promise<List<SchuelerBetrieb>> {
 		const path = "/db/{schema}/schueler/schueler-betriebe/{idSchueler: \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idSchueler\s*(:[^{}]+({[^{}]+})*)?}/g, idSchueler.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuelerBetrieb>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerBetrieb.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchuelerBetrieb.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -14450,11 +14936,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der SchuelerBetrieb wurde erfolgreich hinzugefügt.
 	 */
-	public async addSchuelerBetrieb(data : Partial<SchuelerBetrieb>, schema : string) : Promise<SchuelerBetrieb> {
+	public async addSchuelerBetrieb(data: Partial<SchuelerBetrieb>, schema: string): Promise<SchuelerBetrieb> {
 		const path = "/db/{schema}/schueler/schueler-betriebe/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = SchuelerBetrieb.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = SchuelerBetrieb.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SchuelerBetrieb.transpilerFromJSON(text);
 	}
@@ -14478,14 +14964,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteSchuelerBetriebe(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteSchuelerBetriebe(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schueler/schueler-betriebe/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -14507,14 +14996,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Stammdaten des Schülers
 	 */
-	public async getSchuelerStammdatenMultiple(data : List<number>, schema : string) : Promise<List<SchuelerStammdaten>> {
+	public async getSchuelerStammdatenMultiple(data: List<number>, schema: string): Promise<List<SchuelerStammdaten>> {
 		const path = "/db/{schema}/schueler/stammdaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuelerStammdaten>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerStammdaten.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchuelerStammdaten.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -14535,10 +15027,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Partial<SchuelerStammdaten>>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchSchuelerStammdatenMultiple(data : List<Partial<SchuelerStammdaten>>, schema : string) : Promise<void> {
+	public async patchSchuelerStammdatenMultiple(data: List<Partial<SchuelerStammdaten>>, schema: string): Promise<void> {
 		const path = "/db/{schema}/schueler/stammdaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<SchuelerStammdaten>).map(d => SchuelerStammdaten.transpilerToJSONPatch(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<SchuelerStammdaten>).map(d => SchuelerStammdaten.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}
 
@@ -14560,11 +15052,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten des Schülertelefons
 	 */
-	public async getSchuelerTelefon(schema : string, id : number) : Promise<SchuelerTelefon> {
+	public async getSchuelerTelefon(schema: string, id: number): Promise<SchuelerTelefon> {
 		const path = "/db/{schema}/schueler/telefon/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return SchuelerTelefon.transpilerFromJSON(text);
 	}
@@ -14587,11 +15079,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchSchuelerTelefon(data : Partial<SchuelerTelefon>, schema : string, id : number) : Promise<void> {
+	public async patchSchuelerTelefon(data: Partial<SchuelerTelefon>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schueler/telefon/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = SchuelerTelefon.transpilerToJSONPatch(data);
+		const body: string = SchuelerTelefon.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -14615,14 +15107,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Telefoneinträge wurden erfolgreich entfernt.
 	 */
-	public async deleteSchuelerTelefone(data : List<number>, schema : string) : Promise<List<number>> {
+	public async deleteSchuelerTelefone(data: List<number>, schema: string): Promise<List<number>> {
 		const path = "/db/{schema}/schueler/telefon/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Number.parseFloat(JSON.parse(text)));
+		});
 		return ret;
 	}
 
@@ -14646,14 +15141,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Vermerkeinträge wurden erfolgreich entfernt.
 	 */
-	public async deleteSchuelerVermerke(data : List<number>, schema : string) : Promise<List<number>> {
+	public async deleteSchuelerVermerke(data: List<number>, schema: string): Promise<List<number>> {
 		const path = "/db/{schema}/schueler/vermerk/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Number.parseFloat(JSON.parse(text)));
+		});
 		return ret;
 	}
 
@@ -14674,11 +15172,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Vermerke des Schülers
 	 */
-	public async addVermerk(data : Partial<SchuelerVermerke>, schema : string) : Promise<SchuelerVermerke> {
+	public async addVermerk(data: Partial<SchuelerVermerke>, schema: string): Promise<SchuelerVermerke> {
 		const path = "/db/{schema}/schueler/vermerke"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = SchuelerVermerke.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = SchuelerVermerke.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SchuelerVermerke.transpilerFromJSON(text);
 	}
@@ -14701,11 +15199,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} vid - der Pfad-Parameter vid
 	 */
-	public async patchSchuelerVermerke(data : Partial<SchuelerVermerke>, schema : string, vid : number) : Promise<void> {
+	public async patchSchuelerVermerke(data: Partial<SchuelerVermerke>, schema: string, vid: number): Promise<void> {
 		const path = "/db/{schema}/schueler/vermerke/{vid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{vid\s*(:[^{}]+({[^{}]+})*)?}/g, vid.toString());
-		const body : string = SchuelerVermerke.transpilerToJSONPatch(data);
+		const body: string = SchuelerVermerke.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -14727,14 +15225,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Vermerkdaten des Schülers
 	 */
-	public async getVermerkdatenByVermerkArt(schema : string, vermerkArt : number) : Promise<List<SchuelerVermerke>> {
+	public async getVermerkdatenByVermerkArt(schema: string, vermerkArt: number): Promise<List<SchuelerVermerke>> {
 		const path = "/db/{schema}/schueler/vermerke/vermerkart/{vermerkArt : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{vermerkArt\s*(:[^{}]+({[^{}]+})*)?}/g, vermerkArt.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuelerVermerke>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerVermerke.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchuelerVermerke.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -14756,11 +15257,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Schwerpunkt wurde erfolgreich erstellt.
 	 */
-	public async addSchuelerSchwerpunkt(data : Partial<SchuelerSchwerpunkt>, schema : string) : Promise<SchuelerSchwerpunkt> {
+	public async addSchuelerSchwerpunkt(data: Partial<SchuelerSchwerpunkt>, schema: string): Promise<SchuelerSchwerpunkt> {
 		const path = "/db/{schema}/schuelerschwerpunkte"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = SchuelerSchwerpunkt.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = SchuelerSchwerpunkt.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SchuelerSchwerpunkt.transpilerFromJSON(text);
 	}
@@ -14783,13 +15284,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lese Operation wurde erfolgreich ausgeführt.
 	 */
-	public async getSchuelerSchwerpunkte(schema : string) : Promise<List<SchuelerSchwerpunkt>> {
+	public async getSchuelerSchwerpunkte(schema: string): Promise<List<SchuelerSchwerpunkt>> {
 		const path = "/db/{schema}/schuelerschwerpunkte"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuelerSchwerpunkt>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerSchwerpunkt.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchuelerSchwerpunkt.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -14812,14 +15316,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteSchuelerSchwerpunkte(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteSchuelerSchwerpunkte(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schuelerschwerpunkte"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -14842,11 +15349,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lese Operation wurde erfolgreich ausgeführt.
 	 */
-	public async getSchuelerSchwerpunkt(schema : string, id : number) : Promise<SchuelerSchwerpunkt> {
+	public async getSchuelerSchwerpunkt(schema: string, id: number): Promise<SchuelerSchwerpunkt> {
 		const path = "/db/{schema}/schuelerschwerpunkte/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return SchuelerSchwerpunkt.transpilerFromJSON(text);
 	}
@@ -14866,11 +15373,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchSchuelerSchwerpunkt(data : Partial<SchuelerSchwerpunkt>, schema : string, id : number) : Promise<void> {
+	public async patchSchuelerSchwerpunkt(data: Partial<SchuelerSchwerpunkt>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schuelerschwerpunkte/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = SchuelerSchwerpunkt.transpilerToJSONPatch(data);
+		const body: string = SchuelerSchwerpunkt.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -14892,11 +15399,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchAbteilung(data : Partial<Abteilung>, schema : string, id : number) : Promise<void> {
+	public async patchAbteilung(data: Partial<Abteilung>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schule/abteilungen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Abteilung.transpilerToJSONPatch(data);
+		const body: string = Abteilung.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -14918,14 +15425,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Abteilung-Listen-Einträgen
 	 */
-	public async getAbteilungenByIdJahresAbschnitt(schema : string, idSchuljahresabschnitt : number) : Promise<List<Abteilung>> {
+	public async getAbteilungenByIdJahresAbschnitt(schema: string, idSchuljahresabschnitt: number): Promise<List<Abteilung>> {
 		const path = "/db/{schema}/schule/abteilungen/{idSchuljahresabschnitt : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idSchuljahresabschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitt.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Abteilung>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Abteilung.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Abteilung.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -14948,12 +15458,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Abteilung wurde erfolgreich hinzugefügt.
 	 */
-	public async addAbteilung(data : Partial<Abteilung>, schema : string, idSchuljahresabschnitt : number) : Promise<Abteilung> {
+	public async addAbteilung(data: Partial<Abteilung>, schema: string, idSchuljahresabschnitt: number): Promise<Abteilung> {
 		const path = "/db/{schema}/schule/abteilungen/{idSchuljahresabschnitt : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idSchuljahresabschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitt.toString());
-		const body : string = Abteilung.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Abteilung.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return Abteilung.transpilerFromJSON(text);
 	}
@@ -14978,14 +15488,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Abteilungen wurden erfolgreich entfernt.
 	 */
-	public async deleteAbteilungen(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteAbteilungen(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/abteilungen/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15007,14 +15520,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die AbteilungenKlassenzuordnungen wurde erfolgreich hinzugefügt.
 	 */
-	public async addAbteilungKlassenzuordnung(data : List<Partial<AbteilungKlassenzuordnung>>, schema : string) : Promise<List<AbteilungKlassenzuordnung>> {
+	public async addAbteilungKlassenzuordnung(data: List<Partial<AbteilungKlassenzuordnung>>, schema: string): Promise<List<AbteilungKlassenzuordnung>> {
 		const path = "/db/{schema}/schule/abteilungen/klassenzuordnung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<AbteilungKlassenzuordnung>).map(d => AbteilungKlassenzuordnung.transpilerToJSONPatch(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<AbteilungKlassenzuordnung>).map(d => AbteilungKlassenzuordnung.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<AbteilungKlassenzuordnung>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(AbteilungKlassenzuordnung.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(AbteilungKlassenzuordnung.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15038,14 +15554,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die AbteilungenKlassenzuordnung wurde erfolgreich entfernt.
 	 */
-	public async deleteAbteilungKlassenzuordnung(data : List<number>, schema : string) : Promise<List<AbteilungKlassenzuordnung>> {
+	public async deleteAbteilungKlassenzuordnung(data: List<number>, schema: string): Promise<List<AbteilungKlassenzuordnung>> {
 		const path = "/db/{schema}/schule/abteilungen/klassenzuordnung/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<AbteilungKlassenzuordnung>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(AbteilungKlassenzuordnung.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(AbteilungKlassenzuordnung.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15066,10 +15585,10 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Katalog
 	 */
-	public async getKatalogAbgangsartenAllgemeinbildend(schema : string) : Promise<AbgangsartKatalog> {
+	public async getKatalogAbgangsartenAllgemeinbildend(schema: string): Promise<AbgangsartKatalog> {
 		const path = "/db/{schema}/schule/allgemein/abgangsarten/allgemeinbildend"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return AbgangsartKatalog.transpilerFromJSON(text);
 	}
@@ -15091,10 +15610,10 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Katalog
 	 */
-	public async getKatalogAbgangsartenBerufsbildend(schema : string) : Promise<AbgangsartKatalog> {
+	public async getKatalogAbgangsartenBerufsbildend(schema: string): Promise<AbgangsartKatalog> {
 		const path = "/db/{schema}/schule/allgemein/abgangsarten/berufsbildend"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return AbgangsartKatalog.transpilerFromJSON(text);
 	}
@@ -15116,13 +15635,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Allgemeinen-Merkmal-Katalog-Einträgen
 	 */
-	public async getAllgemeineMerkmale(schema : string) : Promise<List<AllgemeineMerkmaleKatalogEintrag>> {
+	public async getAllgemeineMerkmale(schema: string): Promise<List<AllgemeineMerkmaleKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/allgemeine_merkmale"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<AllgemeineMerkmaleKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(AllgemeineMerkmaleKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(AllgemeineMerkmaleKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15143,13 +15665,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Berufskolleg-Anlagen-Katalog-Einträgen
 	 */
-	public async getBerufskollegAnlagen(schema : string) : Promise<List<BerufskollegAnlageKatalogEintrag>> {
+	public async getBerufskollegAnlagen(schema: string): Promise<List<BerufskollegAnlageKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/berufskolleg/anlagen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<BerufskollegAnlageKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BerufskollegAnlageKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(BerufskollegAnlageKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15170,13 +15695,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Berufskolleg-Berufsebenen-Katalog-Einträgen
 	 */
-	public async getBerufskollegBerufsebenen(schema : string) : Promise<List<BerufskollegBerufsebeneKatalogEintrag>> {
+	public async getBerufskollegBerufsebenen(schema: string): Promise<List<BerufskollegBerufsebeneKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/berufskolleg/berufsebenen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<BerufskollegBerufsebeneKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BerufskollegBerufsebeneKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(BerufskollegBerufsebeneKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15197,10 +15725,10 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Fachklassen-Katalog für berufsbildende Schulen
 	 */
-	public async getBerufskollegFachklassen(schema : string) : Promise<BerufskollegFachklassenKatalog> {
+	public async getBerufskollegFachklassen(schema: string): Promise<BerufskollegFachklassenKatalog> {
 		const path = "/db/{schema}/schule/allgemein/berufskolleg/fachklassen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return BerufskollegFachklassenKatalog.transpilerFromJSON(text);
 	}
@@ -15222,13 +15750,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Einschulungsart-Katalog-Einträgen
 	 */
-	public async getEinschulungsarten(schema : string) : Promise<List<EinschulungsartKatalogEintrag>> {
+	public async getEinschulungsarten(schema: string): Promise<List<EinschulungsartKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/einschulungsarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<EinschulungsartKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(EinschulungsartKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(EinschulungsartKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15249,13 +15780,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Förderschwerpunkt-Katalog-Einträgen
 	 */
-	public async getFoerderschwerpunkte(schema : string) : Promise<List<FoerderschwerpunktKatalogEintrag>> {
+	public async getFoerderschwerpunkte(schema: string): Promise<List<FoerderschwerpunktKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/foerderschwerpunkte"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<FoerderschwerpunktKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(FoerderschwerpunktKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(FoerderschwerpunktKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15276,13 +15810,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen
 	 */
-	public async getKatalogKindergartenbesuchsdauer(schema : string) : Promise<List<KindergartenbesuchKatalogEintrag>> {
+	public async getKatalogKindergartenbesuchsdauer(schema: string): Promise<List<KindergartenbesuchKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/kindergartenbesuch"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<KindergartenbesuchKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KindergartenbesuchKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(KindergartenbesuchKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15303,13 +15840,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Nationalitäten-Katalog-Einträgen
 	 */
-	public async getNationaelitaeten(schema : string) : Promise<List<NationalitaetenKatalogEintrag>> {
+	public async getNationaelitaeten(schema: string): Promise<List<NationalitaetenKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/nationalitaeten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<NationalitaetenKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(NationalitaetenKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(NationalitaetenKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15330,13 +15870,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Noten-Katalog.
 	 */
-	public async getKatalogNoten(schema : string) : Promise<List<NoteKatalogEintrag>> {
+	public async getKatalogNoten(schema: string): Promise<List<NoteKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/noten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<NoteKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(NoteKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(NoteKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15357,13 +15900,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Organisationsform-Katalog-Einträgen
 	 */
-	public async getKatalogOrganisationsformen(schema : string) : Promise<List<OrganisationsformKatalogEintrag>> {
+	public async getKatalogOrganisationsformen(schema: string): Promise<List<OrganisationsformKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/organisationsformen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<OrganisationsformKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(OrganisationsformKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(OrganisationsformKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15384,13 +15930,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen
 	 */
-	public async getPruefungsordnungen(schema : string) : Promise<List<PruefungsordnungKatalogEintrag>> {
+	public async getPruefungsordnungen(schema: string): Promise<List<PruefungsordnungKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/pruefungsordnungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<PruefungsordnungKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(PruefungsordnungKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(PruefungsordnungKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15411,13 +15960,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von allgemeinbildenden Abschlussart-Katalog-Einträgen
 	 */
-	public async getSchulabschluesseAllgemeinbildend(schema : string) : Promise<List<SchulabschlussAllgemeinbildendKatalogEintrag>> {
+	public async getSchulabschluesseAllgemeinbildend(schema: string): Promise<List<SchulabschlussAllgemeinbildendKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/schulabschluesse/allgemeinbildend"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchulabschlussAllgemeinbildendKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchulabschlussAllgemeinbildendKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchulabschlussAllgemeinbildendKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15438,13 +15990,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von berufsbildenden Abschlussart-Katalog-Einträgen
 	 */
-	public async getSchulabschluesseBerufsbildend(schema : string) : Promise<List<SchulabschlussBerufsbildendKatalogEintrag>> {
+	public async getSchulabschluesseBerufsbildend(schema: string): Promise<List<SchulabschlussBerufsbildendKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/schulabschluesse/berufsbildend"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchulabschlussBerufsbildendKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchulabschlussBerufsbildendKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchulabschlussBerufsbildendKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15465,13 +16020,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Schulen-Katalog-Einträgen
 	 */
-	public async getKatalogSchulen(schema : string) : Promise<List<SchulenKatalogEintrag>> {
+	public async getKatalogSchulen(schema: string): Promise<List<SchulenKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/schulen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchulenKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchulenKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchulenKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15492,13 +16050,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Schulform-Katalog-Einträgen
 	 */
-	public async getSchulformen(schema : string) : Promise<List<SchulformKatalogEintrag>> {
+	public async getSchulformen(schema: string): Promise<List<SchulformKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/schulformen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchulformKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchulformKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchulformKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15519,13 +16080,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Schulgliederung-Katalog-Einträgen
 	 */
-	public async getSchulgliederungen(schema : string) : Promise<List<SchulgliederungKatalogEintrag>> {
+	public async getSchulgliederungen(schema: string): Promise<List<SchulgliederungKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/schulgliederungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchulgliederungKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchulgliederungKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchulgliederungKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15546,13 +16110,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Schulträger-Katalog-Einträgen
 	 */
-	public async getKatalogSchultraeger(schema : string) : Promise<List<SchultraegerKatalogEintrag>> {
+	public async getKatalogSchultraeger(schema: string): Promise<List<SchultraegerKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/schultraeger"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchultraegerKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchultraegerKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchultraegerKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15573,13 +16140,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen
 	 */
-	public async getVerkehrssprachen(schema : string) : Promise<List<VerkehrsspracheKatalogEintrag>> {
+	public async getVerkehrssprachen(schema: string): Promise<List<VerkehrsspracheKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/verkehrssprachen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<VerkehrsspracheKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(VerkehrsspracheKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(VerkehrsspracheKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15600,13 +16170,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Ankreuzkompetenz-Listen-Einträgen
 	 */
-	public async getAnkreuzkompetenzen(schema : string) : Promise<List<Ankreuzkompetenz>> {
+	public async getAnkreuzkompetenzen(schema: string): Promise<List<Ankreuzkompetenz>> {
 		const path = "/db/{schema}/schule/ankreuzkompetenzen/"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Ankreuzkompetenz>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Ankreuzkompetenz.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Ankreuzkompetenz.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15628,11 +16201,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchAnkreuzkompetenz(data : Partial<Ankreuzkompetenz>, schema : string, id : number) : Promise<void> {
+	public async patchAnkreuzkompetenz(data: Partial<Ankreuzkompetenz>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schule/ankreuzkompetenzen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Ankreuzkompetenz.transpilerToJSONPatch(data);
+		const body: string = Ankreuzkompetenz.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -15654,11 +16227,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Ankreuzkompetenz wurde erfolgreich hinzugefügt.
 	 */
-	public async addAnkreuzkompetenz(data : Partial<Ankreuzkompetenz>, schema : string) : Promise<Ankreuzkompetenz> {
+	public async addAnkreuzkompetenz(data: Partial<Ankreuzkompetenz>, schema: string): Promise<Ankreuzkompetenz> {
 		const path = "/db/{schema}/schule/ankreuzkompetenzen/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Ankreuzkompetenz.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Ankreuzkompetenz.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return Ankreuzkompetenz.transpilerFromJSON(text);
 	}
@@ -15683,14 +16256,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Ankreuzkompetenzen wurden erfolgreich entfernt.
 	 */
-	public async deleteAnkreuzkompetenzen(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteAnkreuzkompetenzen(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/ankreuzkompetenzen/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15712,14 +16288,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die AnkreuzkompetenzJahrgangszuordnungen wurde erfolgreich hinzugefügt.
 	 */
-	public async addAnkreuzkompetenzJahrgangszuordnung(data : List<Partial<AnkreuzkompetenzJahrgangszuordnung>>, schema : string) : Promise<List<AnkreuzkompetenzJahrgangszuordnung>> {
+	public async addAnkreuzkompetenzJahrgangszuordnung(data: List<Partial<AnkreuzkompetenzJahrgangszuordnung>>, schema: string): Promise<List<AnkreuzkompetenzJahrgangszuordnung>> {
 		const path = "/db/{schema}/schule/ankreuzkompetenzen/jahrgangzuordnung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<AnkreuzkompetenzJahrgangszuordnung>).map(d => AnkreuzkompetenzJahrgangszuordnung.transpilerToJSONPatch(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<AnkreuzkompetenzJahrgangszuordnung>).map(d => AnkreuzkompetenzJahrgangszuordnung.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<AnkreuzkompetenzJahrgangszuordnung>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(AnkreuzkompetenzJahrgangszuordnung.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(AnkreuzkompetenzJahrgangszuordnung.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15743,14 +16322,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die AnkreuzkompetenzJahrgangszuordnungen wurde erfolgreich entfernt.
 	 */
-	public async deleteAnkreuzkompetenzJahrgangszuordnungen(data : List<number>, schema : string) : Promise<List<AnkreuzkompetenzJahrgangszuordnung>> {
+	public async deleteAnkreuzkompetenzJahrgangszuordnungen(data: List<number>, schema: string): Promise<List<AnkreuzkompetenzJahrgangszuordnung>> {
 		const path = "/db/{schema}/schule/ankreuzkompetenzen/jahrgangzuordnung/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<AnkreuzkompetenzJahrgangszuordnung>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(AnkreuzkompetenzJahrgangszuordnung.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(AnkreuzkompetenzJahrgangszuordnung.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15771,13 +16353,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Katalog der Aufsichtsbereiche der Schule.
 	 */
-	public async getAufsichtsbereiche(schema : string) : Promise<List<Aufsichtsbereich>> {
+	public async getAufsichtsbereiche(schema: string): Promise<List<Aufsichtsbereich>> {
 		const path = "/db/{schema}/schule/aufsichtsbereiche"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Aufsichtsbereich>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Aufsichtsbereich.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Aufsichtsbereich.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15799,11 +16384,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Aufsichtsbereich der Schule
 	 */
-	public async getAufsichtsbereich(schema : string, id : number) : Promise<Aufsichtsbereich> {
+	public async getAufsichtsbereich(schema: string, id: number): Promise<Aufsichtsbereich> {
 		const path = "/db/{schema}/schule/aufsichtsbereiche/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return Aufsichtsbereich.transpilerFromJSON(text);
 	}
@@ -15826,11 +16411,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchAufsichtsbereich(data : Partial<Aufsichtsbereich>, schema : string, id : number) : Promise<void> {
+	public async patchAufsichtsbereich(data: Partial<Aufsichtsbereich>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schule/aufsichtsbereiche/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Aufsichtsbereich.transpilerToJSONPatch(data);
+		const body: string = Aufsichtsbereich.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -15854,11 +16439,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Aufsichtsbereich wurde erfolgreich entfernt.
 	 */
-	public async deleteAufsichtsbereich(schema : string, id : number) : Promise<Aufsichtsbereich> {
+	public async deleteAufsichtsbereich(schema: string, id: number): Promise<Aufsichtsbereich> {
 		const path = "/db/{schema}/schule/aufsichtsbereiche/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return Aufsichtsbereich.transpilerFromJSON(text);
 	}
@@ -15882,11 +16467,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Aufsichtsbereich wurde erfolgreich hinzugefügt.
 	 */
-	public async addAufsichtsbereich(data : Partial<Aufsichtsbereich>, schema : string) : Promise<Aufsichtsbereich> {
+	public async addAufsichtsbereich(data: Partial<Aufsichtsbereich>, schema: string): Promise<Aufsichtsbereich> {
 		const path = "/db/{schema}/schule/aufsichtsbereiche/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Aufsichtsbereich.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Aufsichtsbereich.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return Aufsichtsbereich.transpilerFromJSON(text);
 	}
@@ -15910,14 +16495,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Aufsichtsbereiche wurden erfolgreich hinzugefügt.
 	 */
-	public async addAufsichtsbereiche(data : List<Partial<Aufsichtsbereich>>, schema : string) : Promise<List<Aufsichtsbereich>> {
+	public async addAufsichtsbereiche(data: List<Partial<Aufsichtsbereich>>, schema: string): Promise<List<Aufsichtsbereich>> {
 		const path = "/db/{schema}/schule/aufsichtsbereiche/create/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<Aufsichtsbereich>).map(d => Aufsichtsbereich.transpilerToJSONPatch(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<Aufsichtsbereich>).map(d => Aufsichtsbereich.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Aufsichtsbereich>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Aufsichtsbereich.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Aufsichtsbereich.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15941,14 +16529,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Aufsichtsbereiche wurde erfolgreich entfernt.
 	 */
-	public async deleteAufsichtsbereiche(data : List<number>, schema : string) : Promise<List<Aufsichtsbereich>> {
+	public async deleteAufsichtsbereiche(data: List<number>, schema: string): Promise<List<Aufsichtsbereich>> {
 		const path = "/db/{schema}/schule/aufsichtsbereiche/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Aufsichtsbereich>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Aufsichtsbereich.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Aufsichtsbereich.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15969,13 +16560,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste der Betriebe.
 	 */
-	public async getBetriebe(schema : string) : Promise<List<Betrieb>> {
+	public async getBetriebe(schema: string): Promise<List<Betrieb>> {
 		const path = "/db/{schema}/schule/betriebe"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Betrieb>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Betrieb.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Betrieb.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -15997,11 +16591,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchBetrieb(data : Partial<Betrieb>, schema : string, id : number) : Promise<void> {
+	public async patchBetrieb(data: Partial<Betrieb>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schule/betriebe/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Betrieb.transpilerToJSONPatch(data);
+		const body: string = Betrieb.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -16023,11 +16617,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Betrieb wurde erfolgreich hinzugefügt.
 	 */
-	public async addBetrieb(data : Partial<Betrieb>, schema : string) : Promise<Betrieb> {
+	public async addBetrieb(data: Partial<Betrieb>, schema: string): Promise<Betrieb> {
 		const path = "/db/{schema}/schule/betriebe/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Betrieb.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Betrieb.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return Betrieb.transpilerFromJSON(text);
 	}
@@ -16051,14 +16645,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteBetriebe(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteBetriebe(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/betriebe/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -16079,13 +16676,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste der Ansprechpartner.
 	 */
-	public async getBetriebAnsprechpartner(schema : string) : Promise<List<BetriebeAnsprechpartner>> {
+	public async getBetriebAnsprechpartner(schema: string): Promise<List<BetriebeAnsprechpartner>> {
 		const path = "/db/{schema}/schule/betriebe-ansprechpartner"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<BetriebeAnsprechpartner>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BetriebeAnsprechpartner.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(BetriebeAnsprechpartner.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -16107,11 +16707,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchBetriebAnsprechpartner(data : Partial<BetriebeAnsprechpartner>, schema : string, id : number) : Promise<void> {
+	public async patchBetriebAnsprechpartner(data: Partial<BetriebeAnsprechpartner>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schule/betriebe-ansprechpartner/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = BetriebeAnsprechpartner.transpilerToJSONPatch(data);
+		const body: string = BetriebeAnsprechpartner.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -16133,11 +16733,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Betrieb wurde erfolgreich hinzugefügt.
 	 */
-	public async addBetriebAnsprechpartner(data : Partial<BetriebeAnsprechpartner>, schema : string) : Promise<BetriebeAnsprechpartner> {
+	public async addBetriebAnsprechpartner(data: Partial<BetriebeAnsprechpartner>, schema: string): Promise<BetriebeAnsprechpartner> {
 		const path = "/db/{schema}/schule/betriebe-ansprechpartner/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = BetriebeAnsprechpartner.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = BetriebeAnsprechpartner.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return BetriebeAnsprechpartner.transpilerFromJSON(text);
 	}
@@ -16161,14 +16761,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteBetriebAnsprechpartner(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteBetriebAnsprechpartner(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/betriebe-ansprechpartner/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -16189,13 +16792,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste der Betriebsarten.
 	 */
-	public async getBetriebsarten(schema : string) : Promise<List<Betriebsart>> {
+	public async getBetriebsarten(schema: string): Promise<List<Betriebsart>> {
 		const path = "/db/{schema}/schule/betriebsarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Betriebsart>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Betriebsart.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Betriebsart.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -16217,11 +16823,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchBetriebsart(data : Partial<Betriebsart>, schema : string, id : number) : Promise<void> {
+	public async patchBetriebsart(data: Partial<Betriebsart>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schule/betriebsarten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Betriebsart.transpilerToJSONPatch(data);
+		const body: string = Betriebsart.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -16243,11 +16849,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Betriebsart wurde erfolgreich hinzugefügt.
 	 */
-	public async addBetriebsart(data : Partial<Betriebsart>, schema : string) : Promise<Betriebsart> {
+	public async addBetriebsart(data: Partial<Betriebsart>, schema: string): Promise<Betriebsart> {
 		const path = "/db/{schema}/schule/betriebsarten/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Betriebsart.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Betriebsart.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return Betriebsart.transpilerFromJSON(text);
 	}
@@ -16271,14 +16877,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteBetriebsarten(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteBetriebsarten(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/betriebsarten/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -16299,13 +16908,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen
 	 */
-	public async getEinwilligungsarten(schema : string) : Promise<List<Einwilligungsart>> {
+	public async getEinwilligungsarten(schema: string): Promise<List<Einwilligungsart>> {
 		const path = "/db/{schema}/schule/einwilligungsarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Einwilligungsart>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Einwilligungsart.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Einwilligungsart.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -16327,11 +16939,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten der Einwilligungsart
 	 */
-	public async getEinwilligungsart(schema : string, id : number) : Promise<Einwilligungsart> {
+	public async getEinwilligungsart(schema: string, id: number): Promise<Einwilligungsart> {
 		const path = "/db/{schema}/schule/einwilligungsarten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return Einwilligungsart.transpilerFromJSON(text);
 	}
@@ -16354,11 +16966,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchEinwilligungsart(data : Partial<Einwilligungsart>, schema : string, id : number) : Promise<void> {
+	public async patchEinwilligungsart(data: Partial<Einwilligungsart>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schule/einwilligungsarten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Einwilligungsart.transpilerToJSONPatch(data);
+		const body: string = Einwilligungsart.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -16382,11 +16994,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Einwilligungsart wurde erfolgreich entfernt.
 	 */
-	public async deleteEinwilligungsart(schema : string, id : number) : Promise<Einwilligungsart> {
+	public async deleteEinwilligungsart(schema: string, id: number): Promise<Einwilligungsart> {
 		const path = "/db/{schema}/schule/einwilligungsarten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return Einwilligungsart.transpilerFromJSON(text);
 	}
@@ -16411,14 +17023,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Einwilligungsarten wurden erfolgreich entfernt.
 	 */
-	public async deleteEinwilligungsarten(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteEinwilligungsarten(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/einwilligungsarten/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -16441,11 +17056,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Einwilligungsart wurde erfolgreich angelegt.
 	 */
-	public async createEinwilligungsart(data : Partial<Einwilligungsart>, schema : string) : Promise<Einwilligungsart> {
+	public async createEinwilligungsart(data: Partial<Einwilligungsart>, schema: string): Promise<Einwilligungsart> {
 		const path = "/db/{schema}/schule/einwilligungsarten/new"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Einwilligungsart.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Einwilligungsart.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return Einwilligungsart.transpilerFromJSON(text);
 	}
@@ -16468,11 +17083,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten der Erzieherart
 	 */
-	public async getErzieherart(schema : string, id : number) : Promise<Erzieherart> {
+	public async getErzieherart(schema: string, id: number): Promise<Erzieherart> {
 		const path = "/db/{schema}/schule/erzieherart/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return Erzieherart.transpilerFromJSON(text);
 	}
@@ -16495,11 +17110,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchErzieherart(data : Partial<Erzieherart>, schema : string, id : number) : Promise<void> {
+	public async patchErzieherart(data: Partial<Erzieherart>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schule/erzieherart/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Erzieherart.transpilerToJSONPatch(data);
+		const body: string = Erzieherart.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -16522,11 +17137,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Telefonart wurde erfolgreich angelegt.
 	 */
-	public async addErzieherart(data : Partial<Erzieherart>, schema : string) : Promise<Erzieherart> {
+	public async addErzieherart(data: Partial<Erzieherart>, schema: string): Promise<Erzieherart> {
 		const path = "/db/{schema}/schule/erzieherart/new"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Erzieherart.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Erzieherart.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return Erzieherart.transpilerFromJSON(text);
 	}
@@ -16548,13 +17163,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Erzieherarten
 	 */
-	public async getErzieherArten(schema : string) : Promise<List<Erzieherart>> {
+	public async getErzieherArten(schema: string): Promise<List<Erzieherart>> {
 		const path = "/db/{schema}/schule/erzieherarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Erzieherart>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Erzieherart.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Erzieherart.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -16578,14 +17196,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Erzieherarten wurden erfolgreich entfernt.
 	 */
-	public async deleteErzieherarten(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteErzieherarten(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/erzieherarten/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -16606,13 +17227,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste der Floskelgruppen.
 	 */
-	public async getFloskelgruppen(schema : string) : Promise<List<Floskelgruppe>> {
+	public async getFloskelgruppen(schema: string): Promise<List<Floskelgruppe>> {
 		const path = "/db/{schema}/schule/floskelgruppen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Floskelgruppe>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Floskelgruppe.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Floskelgruppe.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -16634,11 +17258,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchFloskelgruppe(data : Partial<Floskelgruppe>, schema : string, id : number) : Promise<void> {
+	public async patchFloskelgruppe(data: Partial<Floskelgruppe>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schule/floskelgruppen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Floskelgruppe.transpilerToJSONPatch(data);
+		const body: string = Floskelgruppe.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -16660,11 +17284,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Floskelgruppe wurde erfolgreich hinzugefügt.
 	 */
-	public async addFloskelgruppe(data : Partial<Floskelgruppe>, schema : string) : Promise<Floskelgruppe> {
+	public async addFloskelgruppe(data: Partial<Floskelgruppe>, schema: string): Promise<Floskelgruppe> {
 		const path = "/db/{schema}/schule/floskelgruppen/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Floskelgruppe.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Floskelgruppe.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return Floskelgruppe.transpilerFromJSON(text);
 	}
@@ -16688,14 +17312,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteFloskelgruppen(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteFloskelgruppen(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/floskelgruppen/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -16716,13 +17343,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste der Floskeln.
 	 */
-	public async getFloskeln(schema : string) : Promise<List<Floskel>> {
+	public async getFloskeln(schema: string): Promise<List<Floskel>> {
 		const path = "/db/{schema}/schule/floskeln"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Floskel>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Floskel.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Floskel.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -16744,11 +17374,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchFloskeln(data : Partial<Floskel>, schema : string, id : number) : Promise<void> {
+	public async patchFloskeln(data: Partial<Floskel>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schule/floskeln/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Floskel.transpilerToJSONPatch(data);
+		const body: string = Floskel.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -16770,11 +17400,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Floskel wurde erfolgreich hinzugefügt.
 	 */
-	public async addFloskel(data : Partial<Floskel>, schema : string) : Promise<Floskel> {
+	public async addFloskel(data: Partial<Floskel>, schema: string): Promise<Floskel> {
 		const path = "/db/{schema}/schule/floskeln/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Floskel.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Floskel.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return Floskel.transpilerFromJSON(text);
 	}
@@ -16798,14 +17428,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteFloskeln(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteFloskeln(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/floskeln/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -16829,11 +17462,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Schule wurde erfolgreich angelegt.
 	 */
-	public async initSchule(schema : string, schulnummer : number) : Promise<SchuleStammdaten> {
+	public async initSchule(schema: string, schulnummer: number): Promise<SchuleStammdaten> {
 		const path = "/db/{schema}/schule/init/{schulnummer : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{schulnummer\s*(:[^{}]+({[^{}]+})*)?}/g, schulnummer.toString());
-		const result : string = await super.postJSON(path, null);
+		const result: string = await super.postJSON(path, null);
 		const text = result;
 		return SchuleStammdaten.transpilerFromJSON(text);
 	}
@@ -16856,11 +17489,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Leitungsfunktion
 	 */
-	public async getSchulleitungsfunktion(schema : string, id : number) : Promise<Schulleitung> {
+	public async getSchulleitungsfunktion(schema: string, id: number): Promise<Schulleitung> {
 		const path = "/db/{schema}/schule/leitungsfunktion/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return Schulleitung.transpilerFromJSON(text);
 	}
@@ -16883,11 +17516,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchSchulleitungsfunktion(data : Partial<Schulleitung>, schema : string, id : number) : Promise<void> {
+	public async patchSchulleitungsfunktion(data: Partial<Schulleitung>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schule/leitungsfunktion/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Schulleitung.transpilerToJSONPatch(data);
+		const body: string = Schulleitung.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -16911,11 +17544,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Leitungsfunktion der Schule wurde erfolgreich entfernt.
 	 */
-	public async deleteSchulleitungsfunktion(schema : string, id : number) : Promise<Schulleitung> {
+	public async deleteSchulleitungsfunktion(schema: string, id: number): Promise<Schulleitung> {
 		const path = "/db/{schema}/schule/leitungsfunktion/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return Schulleitung.transpilerFromJSON(text);
 	}
@@ -16936,13 +17569,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Leitungsfunktionen
 	 */
-	public async getSchulleitungsfunktionen(schema : string) : Promise<List<Schulleitung>> {
+	public async getSchulleitungsfunktionen(schema: string): Promise<List<Schulleitung>> {
 		const path = "/db/{schema}/schule/leitungsfunktion/alle"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schulleitung>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schulleitung.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Schulleitung.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -16965,11 +17601,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Leitungsfunktion der Schule wurde erfolgreich hinzugefügt.
 	 */
-	public async addSchulleitungsfunktion(data : Partial<Schulleitung>, schema : string) : Promise<Schulleitung> {
+	public async addSchulleitungsfunktion(data: Partial<Schulleitung>, schema: string): Promise<Schulleitung> {
 		const path = "/db/{schema}/schule/leitungsfunktion/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Schulleitung.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Schulleitung.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return Schulleitung.transpilerFromJSON(text);
 	}
@@ -16992,14 +17628,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Leitungsfunktionen wurden erfolgreich hinzugefügt.
 	 */
-	public async addSchulleitungsfunktionen(data : List<Partial<Schulleitung>>, schema : string) : Promise<List<Schulleitung>> {
+	public async addSchulleitungsfunktionen(data: List<Partial<Schulleitung>>, schema: string): Promise<List<Schulleitung>> {
 		const path = "/db/{schema}/schule/leitungsfunktion/create/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<Schulleitung>).map(d => Schulleitung.transpilerToJSONPatch(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<Schulleitung>).map(d => Schulleitung.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schulleitung>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schulleitung.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Schulleitung.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -17023,14 +17662,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Leitungsfunktionen der Schule wurde erfolgreich entfernt.
 	 */
-	public async deleteSchulleitungsfunktionen(data : List<number>, schema : string) : Promise<List<Schulleitung>> {
+	public async deleteSchulleitungsfunktionen(data: List<number>, schema: string): Promise<List<Schulleitung>> {
 		const path = "/db/{schema}/schule/leitungsfunktion/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Schulleitung>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schulleitung.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Schulleitung.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -17051,13 +17693,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste der Leitungsfunktionen.
 	 */
-	public async getLeitungsfunktionen(schema : string) : Promise<List<Leitungsfunktion>> {
+	public async getLeitungsfunktionen(schema: string): Promise<List<Leitungsfunktion>> {
 		const path = "/db/{schema}/schule/leitungsfunktionen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Leitungsfunktion>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Leitungsfunktion.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Leitungsfunktion.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -17079,11 +17724,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchLeitungsfunktion(data : Partial<Leitungsfunktion>, schema : string, id : number) : Promise<void> {
+	public async patchLeitungsfunktion(data: Partial<Leitungsfunktion>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schule/leitungsfunktionen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Leitungsfunktion.transpilerToJSONPatch(data);
+		const body: string = Leitungsfunktion.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -17105,11 +17750,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Leitungsfunktion wurde erfolgreich hinzugefügt.
 	 */
-	public async addLeitungsfunktion(data : Partial<Leitungsfunktion>, schema : string) : Promise<Leitungsfunktion> {
+	public async addLeitungsfunktion(data: Partial<Leitungsfunktion>, schema: string): Promise<Leitungsfunktion> {
 		const path = "/db/{schema}/schule/leitungsfunktionen/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Leitungsfunktion.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Leitungsfunktion.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return Leitungsfunktion.transpilerFromJSON(text);
 	}
@@ -17133,14 +17778,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteLeitungsfunktionen(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteLeitungsfunktionen(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/leitungsfunktionen/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -17161,13 +17809,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen
 	 */
-	public async getLernplattformen(schema : string) : Promise<List<Lernplattform>> {
+	public async getLernplattformen(schema: string): Promise<List<Lernplattform>> {
 		const path = "/db/{schema}/schule/lernplattformen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Lernplattform>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Lernplattform.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Lernplattform.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -17189,11 +17840,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchLernplattform(data : Partial<Lernplattform>, schema : string, id : number) : Promise<void> {
+	public async patchLernplattform(data: Partial<Lernplattform>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schule/lernplattformen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Lernplattform.transpilerToJSONPatch(data);
+		const body: string = Lernplattform.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -17216,11 +17867,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Lernplattform wurde erfolgreich angelegt.
 	 */
-	public async addLernplattform(data : Partial<Lernplattform>, schema : string) : Promise<Lernplattform> {
+	public async addLernplattform(data: Partial<Lernplattform>, schema: string): Promise<Lernplattform> {
 		const path = "/db/{schema}/schule/lernplattformen/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Lernplattform.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Lernplattform.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return Lernplattform.transpilerFromJSON(text);
 	}
@@ -17245,14 +17896,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lernplattformen wurden erfolgreich entfernt.
 	 */
-	public async deleteLernplattformen(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteLernplattformen(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/lernplattformen/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -17273,10 +17927,10 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Das Logo der Schule
 	 */
-	public async getSchullogo(schema : string) : Promise<string> {
+	public async getSchullogo(schema: string): Promise<string> {
 		const path = "/db/{schema}/schule/logo"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return JSON.parse(text).toString();
 	}
@@ -17295,10 +17949,10 @@ export class ApiServer extends BaseApi {
 	 * @param {string | null} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async putSchullogo(data : string | null, schema : string) : Promise<void> {
+	public async putSchullogo(data: string | null, schema: string): Promise<void> {
 		const path = "/db/{schema}/schule/logo"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = JSON.stringify(data);
+		const body: string = JSON.stringify(data);
 		return super.putJSON(path, body);
 	}
 
@@ -17319,13 +17973,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen
 	 */
-	public async getLogos(schema : string) : Promise<List<Logo>> {
+	public async getLogos(schema: string): Promise<List<Logo>> {
 		const path = "/db/{schema}/schule/logoverwaltung/logos"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Logo>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Logo.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Logo.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -17347,11 +18004,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Das neu hinzugefügte Logo
 	 */
-	public async addLogo(data : Partial<Logo>, schema : string) : Promise<Logo> {
+	public async addLogo(data: Partial<Logo>, schema: string): Promise<Logo> {
 		const path = "/db/{schema}/schule/logoverwaltung/logos"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Logo.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Logo.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return Logo.transpilerFromJSON(text);
 	}
@@ -17375,14 +18032,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteLogos(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteLogos(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/logoverwaltung/logos"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -17402,11 +18062,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchLogo(data : Partial<Logo>, schema : string, id : number) : Promise<void> {
+	public async patchLogo(data: Partial<Logo>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schule/logoverwaltung/logos/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Logo.transpilerToJSONPatch(data);
+		const body: string = Logo.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -17428,11 +18088,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Löschoperation wurde ausgeführt
 	 */
-	public async deleteLogo(schema : string, id : number) : Promise<SimpleOperationResponse> {
+	public async deleteLogo(schema: string, id: number): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/schule/logoverwaltung/logos/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -17454,12 +18114,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Schulnummer
 	 */
-	public async getSchuleNummer(schema : string) : Promise<number> {
+	public async getSchuleNummer(schema: string): Promise<number> {
 		const path = "/db/{schema}/schule/nummer"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
-		return parseInt(JSON.parse(text));
+		return Number.parseInt(JSON.parse(text));
 	}
 
 
@@ -17479,13 +18139,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Katalog der Pausenzeiten der Schule.
 	 */
-	public async getPausenzeiten(schema : string) : Promise<List<StundenplanPausenzeit>> {
+	public async getPausenzeiten(schema: string): Promise<List<StundenplanPausenzeit>> {
 		const path = "/db/{schema}/schule/pausenzeiten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanPausenzeit>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanPausenzeit.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanPausenzeit.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -17507,11 +18170,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Pausenzeit der Schule
 	 */
-	public async getPausenzeit(schema : string, id : number) : Promise<StundenplanPausenzeit> {
+	public async getPausenzeit(schema: string, id: number): Promise<StundenplanPausenzeit> {
 		const path = "/db/{schema}/schule/pausenzeiten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return StundenplanPausenzeit.transpilerFromJSON(text);
 	}
@@ -17534,11 +18197,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchPausenzeit(data : Partial<StundenplanPausenzeit>, schema : string, id : number) : Promise<void> {
+	public async patchPausenzeit(data: Partial<StundenplanPausenzeit>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schule/pausenzeiten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = StundenplanPausenzeit.transpilerToJSONPatch(data);
+		const body: string = StundenplanPausenzeit.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -17562,11 +18225,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Pausenzeit wurde erfolgreich entfernt.
 	 */
-	public async deletePausenzeit(schema : string, id : number) : Promise<StundenplanPausenzeit> {
+	public async deletePausenzeit(schema: string, id: number): Promise<StundenplanPausenzeit> {
 		const path = "/db/{schema}/schule/pausenzeiten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return StundenplanPausenzeit.transpilerFromJSON(text);
 	}
@@ -17590,11 +18253,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Pausenzeit wurde erfolgreich hinzugefügt.
 	 */
-	public async addPausenzeit(data : Partial<StundenplanPausenzeit>, schema : string) : Promise<StundenplanPausenzeit> {
+	public async addPausenzeit(data: Partial<StundenplanPausenzeit>, schema: string): Promise<StundenplanPausenzeit> {
 		const path = "/db/{schema}/schule/pausenzeiten/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = StundenplanPausenzeit.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = StundenplanPausenzeit.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return StundenplanPausenzeit.transpilerFromJSON(text);
 	}
@@ -17618,14 +18281,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Pausenzeiten wurden erfolgreich hinzugefügt.
 	 */
-	public async addPausenzeiten(data : List<Partial<StundenplanPausenzeit>>, schema : string) : Promise<List<StundenplanPausenzeit>> {
+	public async addPausenzeiten(data: List<Partial<StundenplanPausenzeit>>, schema: string): Promise<List<StundenplanPausenzeit>> {
 		const path = "/db/{schema}/schule/pausenzeiten/create/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<StundenplanPausenzeit>).map(d => StundenplanPausenzeit.transpilerToJSONPatch(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<StundenplanPausenzeit>).map(d => StundenplanPausenzeit.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanPausenzeit>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanPausenzeit.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanPausenzeit.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -17649,14 +18315,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Pausenzeiten wurde erfolgreich entfernt.
 	 */
-	public async deletePausenzeiten(data : List<number>, schema : string) : Promise<List<StundenplanPausenzeit>> {
+	public async deletePausenzeiten(data: List<number>, schema: string): Promise<List<StundenplanPausenzeit>> {
 		const path = "/db/{schema}/schule/pausenzeiten/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanPausenzeit>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanPausenzeit.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanPausenzeit.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -17677,13 +18346,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Katalog der Räume der Schule.
 	 */
-	public async getRaeume(schema : string) : Promise<List<Raum>> {
+	public async getRaeume(schema: string): Promise<List<Raum>> {
 		const path = "/db/{schema}/schule/raeume"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Raum>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Raum.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Raum.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -17705,11 +18377,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Raum der Schule
 	 */
-	public async getRaum(schema : string, id : number) : Promise<Raum> {
+	public async getRaum(schema: string, id: number): Promise<Raum> {
 		const path = "/db/{schema}/schule/raeume/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return Raum.transpilerFromJSON(text);
 	}
@@ -17732,11 +18404,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchRaum(data : Partial<Raum>, schema : string, id : number) : Promise<void> {
+	public async patchRaum(data: Partial<Raum>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schule/raeume/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Raum.transpilerToJSONPatch(data);
+		const body: string = Raum.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -17760,11 +18432,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Raum wurde erfolgreich entfernt.
 	 */
-	public async deleteRaum(schema : string, id : number) : Promise<Raum> {
+	public async deleteRaum(schema: string, id: number): Promise<Raum> {
 		const path = "/db/{schema}/schule/raeume/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return Raum.transpilerFromJSON(text);
 	}
@@ -17788,11 +18460,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Raum wurde erfolgreich hinzugefügt.
 	 */
-	public async addRaum(data : Partial<Raum>, schema : string) : Promise<Raum> {
+	public async addRaum(data: Partial<Raum>, schema: string): Promise<Raum> {
 		const path = "/db/{schema}/schule/raeume/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Raum.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Raum.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return Raum.transpilerFromJSON(text);
 	}
@@ -17816,14 +18488,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Räume wurden erfolgreich hinzugefügt.
 	 */
-	public async addRaeume(data : List<Partial<Raum>>, schema : string) : Promise<List<Raum>> {
+	public async addRaeume(data: List<Partial<Raum>>, schema: string): Promise<List<Raum>> {
 		const path = "/db/{schema}/schule/raeume/create/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<Raum>).map(d => Raum.transpilerToJSONPatch(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<Raum>).map(d => Raum.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Raum>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Raum.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Raum.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -17847,14 +18522,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Räume wurde erfolgreich entfernt.
 	 */
-	public async deleteRaeume(data : List<number>, schema : string) : Promise<List<Raum>> {
+	public async deleteRaeume(data: List<number>, schema: string): Promise<List<Raum>> {
 		const path = "/db/{schema}/schule/raeume/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Raum>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Raum.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Raum.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -17875,13 +18553,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen
 	 */
-	public async getReligionen(schema : string) : Promise<List<ReligionEintrag>> {
+	public async getReligionen(schema: string): Promise<List<ReligionEintrag>> {
 		const path = "/db/{schema}/schule/religionen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<ReligionEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(ReligionEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(ReligionEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -17903,11 +18584,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchReligion(data : Partial<ReligionEintrag>, schema : string, id : number) : Promise<void> {
+	public async patchReligion(data: Partial<ReligionEintrag>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schule/religionen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = ReligionEintrag.transpilerToJSONPatch(data);
+		const body: string = ReligionEintrag.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -17931,11 +18612,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Religion wurde erfolgreich angelegt.
 	 */
-	public async addReligion(data : Partial<ReligionEintrag>, schema : string) : Promise<ReligionEintrag> {
+	public async addReligion(data: Partial<ReligionEintrag>, schema: string): Promise<ReligionEintrag> {
 		const path = "/db/{schema}/schule/religionen/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = ReligionEintrag.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = ReligionEintrag.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return ReligionEintrag.transpilerFromJSON(text);
 	}
@@ -17960,14 +18641,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Religion-Katalog-Einträge wurde erfolgreich entfernt.
 	 */
-	public async deleteReligionen(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteReligionen(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/religionen/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -17988,13 +18672,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den Katalog Schüler-Status
 	 */
-	public async getKatalogSchuelerStatus(schema : string) : Promise<List<SchuelerStatusKatalogEintrag>> {
+	public async getKatalogSchuelerStatus(schema: string): Promise<List<SchuelerStatusKatalogEintrag>> {
 		const path = "/db/{schema}/schule/schueler/status"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuelerStatusKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerStatusKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchuelerStatusKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -18015,13 +18702,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen
 	 */
-	public async getSchulen(schema : string) : Promise<List<SchulEintrag>> {
+	public async getSchulen(schema: string): Promise<List<SchulEintrag>> {
 		const path = "/db/{schema}/schule/schulen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchulEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchulEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchulEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -18043,11 +18733,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Eintrag im schulspezifischen Katalog der Schulen
 	 */
-	public async getSchuleAusKatalog(schema : string, id : number) : Promise<SchulEintrag> {
+	public async getSchuleAusKatalog(schema: string, id: number): Promise<SchulEintrag> {
 		const path = "/db/{schema}/schule/schulen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return SchulEintrag.transpilerFromJSON(text);
 	}
@@ -18070,11 +18760,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchSchuleAusKatalog(data : Partial<SchulEintrag>, schema : string, id : number) : Promise<void> {
+	public async patchSchuleAusKatalog(data: Partial<SchulEintrag>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schule/schulen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = SchulEintrag.transpilerToJSONPatch(data);
+		const body: string = SchulEintrag.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -18098,11 +18788,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Eintrag wurde erfolgreich entfernt.
 	 */
-	public async deleteSchuleVonKatalog(schema : string, id : number) : Promise<SchulEintrag> {
+	public async deleteSchuleVonKatalog(schema: string, id: number): Promise<SchulEintrag> {
 		const path = "/db/{schema}/schule/schulen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return SchulEintrag.transpilerFromJSON(text);
 	}
@@ -18126,11 +18816,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Eintrag wurde erfolgreich hinzugefügt.
 	 */
-	public async addSchuleZuKatalog(data : Partial<SchulEintrag>, schema : string) : Promise<SchulEintrag> {
+	public async addSchuleZuKatalog(data: Partial<SchulEintrag>, schema: string): Promise<SchulEintrag> {
 		const path = "/db/{schema}/schule/schulen/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = SchulEintrag.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = SchulEintrag.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SchulEintrag.transpilerFromJSON(text);
 	}
@@ -18155,14 +18845,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Einträge wurde erfolgreich entfernt.
 	 */
-	public async deleteSchulenVonKatalog(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteSchulenVonKatalog(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/schulen/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -18183,13 +18876,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen
 	 */
-	public async getSchulenMitKuerzel(schema : string) : Promise<List<SchulEintrag>> {
+	public async getSchulenMitKuerzel(schema: string): Promise<List<SchulEintrag>> {
 		const path = "/db/{schema}/schule/schulen/kuerzel"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchulEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchulEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchulEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -18210,10 +18906,10 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Stammdaten der Schule
 	 */
-	public async getSchuleStammdaten(schema : string) : Promise<SchuleStammdaten> {
+	public async getSchuleStammdaten(schema: string): Promise<SchuleStammdaten> {
 		const path = "/db/{schema}/schule/stammdaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return SchuleStammdaten.transpilerFromJSON(text);
 	}
@@ -18235,10 +18931,10 @@ export class ApiServer extends BaseApi {
 	 * @param {Partial<SchuleStammdaten>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchSchuleStammdaten(data : Partial<SchuleStammdaten>, schema : string) : Promise<void> {
+	public async patchSchuleStammdaten(data: Partial<SchuleStammdaten>, schema: string): Promise<void> {
 		const path = "/db/{schema}/schule/stammdaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = SchuleStammdaten.transpilerToJSONPatch(data);
+		const body: string = SchuleStammdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -18260,11 +18956,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {string} id - der Pfad-Parameter id
 	 */
-	public async patchTeilstandort(data : Partial<Teilstandort>, schema : string, id : string) : Promise<void> {
+	public async patchTeilstandort(data: Partial<Teilstandort>, schema: string, id: string): Promise<void> {
 		const path = "/db/{schema}/schule/teilstandort/{id}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id);
-		const body : string = Teilstandort.transpilerToJSONPatch(data);
+		const body: string = Teilstandort.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -18286,11 +18982,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Teilstandort wurde erfolgreich hinzugefügt.
 	 */
-	public async addTeilstandort(data : Partial<Teilstandort>, schema : string) : Promise<Teilstandort> {
+	public async addTeilstandort(data: Partial<Teilstandort>, schema: string): Promise<Teilstandort> {
 		const path = "/db/{schema}/schule/teilstandort/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Teilstandort.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Teilstandort.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return Teilstandort.transpilerFromJSON(text);
 	}
@@ -18312,13 +19008,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste der Teilstandorte.
 	 */
-	public async getTeilstandorte(schema : string) : Promise<List<Teilstandort>> {
+	public async getTeilstandorte(schema: string): Promise<List<Teilstandort>> {
 		const path = "/db/{schema}/schule/teilstandorte"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Teilstandort>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Teilstandort.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Teilstandort.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -18341,14 +19040,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteTeilstandorte(data : List<string>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteTeilstandorte(data: List<string>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/teilstandorte/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<string>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<string>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -18369,13 +19071,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen
 	 */
-	public async getTelefonarten(schema : string) : Promise<List<Telefonart>> {
+	public async getTelefonarten(schema: string): Promise<List<Telefonart>> {
 		const path = "/db/{schema}/schule/telefonarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Telefonart>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Telefonart.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Telefonart.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -18397,11 +19102,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchTelefonart(data : Partial<Telefonart>, schema : string, id : number) : Promise<void> {
+	public async patchTelefonart(data: Partial<Telefonart>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schule/telefonarten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Telefonart.transpilerToJSONPatch(data);
+		const body: string = Telefonart.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -18424,11 +19129,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Telefonart wurde erfolgreich angelegt.
 	 */
-	public async addTelefonart(data : Partial<Telefonart>, schema : string) : Promise<Telefonart> {
+	public async addTelefonart(data: Partial<Telefonart>, schema: string): Promise<Telefonart> {
 		const path = "/db/{schema}/schule/telefonarten/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Telefonart.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Telefonart.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return Telefonart.transpilerFromJSON(text);
 	}
@@ -18453,14 +19158,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Telefonarten wurden erfolgreich entfernt.
 	 */
-	public async deleteTelefonarten(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteTelefonarten(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/telefonarten/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -18482,14 +19190,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Schüler-Listen-Einträgen
 	 */
-	public async getSchuelerByVermerkartID(schema : string, vermerkart : number) : Promise<List<SchuelerVermerkartZusammenfassung>> {
+	public async getSchuelerByVermerkartID(schema: string, vermerkart: number): Promise<List<SchuelerVermerkartZusammenfassung>> {
 		const path = "/db/{schema}/schule/vermerkart/{vermerkart : \\d+}/schuelerinfos"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{vermerkart\s*(:[^{}]+({[^{}]+})*)?}/g, vermerkart.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuelerVermerkartZusammenfassung>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerVermerkartZusammenfassung.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchuelerVermerkartZusammenfassung.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -18510,13 +19221,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen
 	 */
-	public async getVermerkarten(schema : string) : Promise<List<VermerkartEintrag>> {
+	public async getVermerkarten(schema: string): Promise<List<VermerkartEintrag>> {
 		const path = "/db/{schema}/schule/vermerkarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<VermerkartEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(VermerkartEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(VermerkartEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -18538,11 +19252,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchVermerkart(data : Partial<VermerkartEintrag>, schema : string, id : number) : Promise<void> {
+	public async patchVermerkart(data: Partial<VermerkartEintrag>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schule/vermerkarten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = VermerkartEintrag.transpilerToJSONPatch(data);
+		const body: string = VermerkartEintrag.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -18566,14 +19280,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteVermerkartEintraege(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteVermerkartEintraege(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/vermerkarten/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -18597,11 +19314,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Vermerkart wurde erfolgreich angelegt.
 	 */
-	public async createVermerkart(data : Partial<VermerkartEintrag>, schema : string) : Promise<VermerkartEintrag> {
+	public async createVermerkart(data: Partial<VermerkartEintrag>, schema: string): Promise<VermerkartEintrag> {
 		const path = "/db/{schema}/schule/vermerkarten/new"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = VermerkartEintrag.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = VermerkartEintrag.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return VermerkartEintrag.transpilerFromJSON(text);
 	}
@@ -18623,13 +19340,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Zeitraster-Katalog der Schule.
 	 */
-	public async getZeitraster(schema : string) : Promise<List<StundenplanZeitraster>> {
+	public async getZeitraster(schema: string): Promise<List<StundenplanZeitraster>> {
 		const path = "/db/{schema}/schule/zeitraster"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanZeitraster>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanZeitraster.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanZeitraster.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -18651,11 +19371,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Zeitraster-Eintrag der Schule
 	 */
-	public async getZeitrasterEintrag(schema : string, id : number) : Promise<StundenplanZeitraster> {
+	public async getZeitrasterEintrag(schema: string, id: number): Promise<StundenplanZeitraster> {
 		const path = "/db/{schema}/schule/zeitraster/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return StundenplanZeitraster.transpilerFromJSON(text);
 	}
@@ -18678,11 +19398,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchZeitrasterEintrag(data : Partial<StundenplanZeitraster>, schema : string, id : number) : Promise<void> {
+	public async patchZeitrasterEintrag(data: Partial<StundenplanZeitraster>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/schule/zeitraster/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = StundenplanZeitraster.transpilerToJSONPatch(data);
+		const body: string = StundenplanZeitraster.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -18706,11 +19426,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Zeitraster-Eintrag wurde erfolgreich entfernt.
 	 */
-	public async deleteZeitrasterEintrag(schema : string, id : number) : Promise<StundenplanZeitraster> {
+	public async deleteZeitrasterEintrag(schema: string, id: number): Promise<StundenplanZeitraster> {
 		const path = "/db/{schema}/schule/zeitraster/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return StundenplanZeitraster.transpilerFromJSON(text);
 	}
@@ -18734,11 +19454,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Zeitraster-Eintrag wurde erfolgreich hinzugefügt.
 	 */
-	public async addZeitrasterEintrag(data : Partial<StundenplanZeitraster>, schema : string) : Promise<StundenplanZeitraster> {
+	public async addZeitrasterEintrag(data: Partial<StundenplanZeitraster>, schema: string): Promise<StundenplanZeitraster> {
 		const path = "/db/{schema}/schule/zeitraster/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = StundenplanZeitraster.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = StundenplanZeitraster.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return StundenplanZeitraster.transpilerFromJSON(text);
 	}
@@ -18762,14 +19482,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Pausenzeiten wurden erfolgreich hinzugefügt.
 	 */
-	public async addZeitrasterEintraege(data : List<Partial<StundenplanZeitraster>>, schema : string) : Promise<List<StundenplanZeitraster>> {
+	public async addZeitrasterEintraege(data: List<Partial<StundenplanZeitraster>>, schema: string): Promise<List<StundenplanZeitraster>> {
 		const path = "/db/{schema}/schule/zeitraster/create/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<StundenplanZeitraster>).map(d => StundenplanZeitraster.transpilerToJSONPatch(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<StundenplanZeitraster>).map(d => StundenplanZeitraster.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanZeitraster>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanZeitraster.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanZeitraster.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -18793,14 +19516,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Zeitraster-Einträge wurde erfolgreich entfernt.
 	 */
-	public async deleteZeitrasterEintraege(data : List<number>, schema : string) : Promise<List<StundenplanZeitraster>> {
+	public async deleteZeitrasterEintraege(data: List<number>, schema: string): Promise<List<StundenplanZeitraster>> {
 		const path = "/db/{schema}/schule/zeitraster/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanZeitraster>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanZeitraster.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanZeitraster.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -18821,10 +19547,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Partial<StundenplanZeitraster>>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchZeitrasterEintraege(data : List<Partial<StundenplanZeitraster>>, schema : string) : Promise<void> {
+	public async patchZeitrasterEintraege(data: List<Partial<StundenplanZeitraster>>, schema: string): Promise<void> {
 		const path = "/db/{schema}/schule/zeitraster/patch/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<StundenplanZeitraster>).map(d => StundenplanZeitraster.transpilerToJSONPatch(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<StundenplanZeitraster>).map(d => StundenplanZeitraster.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}
 
@@ -18847,10 +19573,10 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Statistikdaten
 	 */
-	public async getStatistikGesamt(schema : string) : Promise<StatistikGesamt> {
+	public async getStatistikGesamt(schema: string): Promise<StatistikGesamt> {
 		const path = "/db/{schema}/statistik/gesamt"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return StatistikGesamt.transpilerFromJSON(text);
 	}
@@ -18873,11 +19599,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten des Stundenplans
 	 */
-	public async getStundenplan(schema : string, id : number) : Promise<Stundenplan> {
+	public async getStundenplan(schema: string, id: number): Promise<Stundenplan> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return Stundenplan.transpilerFromJSON(text);
 	}
@@ -18900,11 +19626,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchStundenplan(data : Partial<Stundenplan>, schema : string, id : number) : Promise<void> {
+	public async patchStundenplan(data: Partial<Stundenplan>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Stundenplan.transpilerToJSONPatch(data);
+		const body: string = Stundenplan.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -18924,7 +19650,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async deleteStundenplan(schema : string, id : number) : Promise<void> {
+	public async deleteStundenplan(schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -18952,12 +19678,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Aufsichtsbereich wurde erfolgreich hinzugefügt.
 	 */
-	public async addStundenplanAufsichtsbereich(data : Partial<StundenplanAufsichtsbereich>, schema : string, id : number) : Promise<StundenplanAufsichtsbereich> {
+	public async addStundenplanAufsichtsbereich(data: Partial<StundenplanAufsichtsbereich>, schema: string, id: number): Promise<StundenplanAufsichtsbereich> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/aufsichtsbereiche/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = StundenplanAufsichtsbereich.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = StundenplanAufsichtsbereich.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return StundenplanAufsichtsbereich.transpilerFromJSON(text);
 	}
@@ -18982,15 +19708,18 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Aufsichtsbereiche wurden erfolgreich hinzugefügt.
 	 */
-	public async addStundenplanAufsichtsbereiche(data : List<Partial<StundenplanAufsichtsbereich>>, schema : string, id : number) : Promise<List<StundenplanAufsichtsbereich>> {
+	public async addStundenplanAufsichtsbereiche(data: List<Partial<StundenplanAufsichtsbereich>>, schema: string, id: number): Promise<List<StundenplanAufsichtsbereich>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/aufsichtsbereiche/create/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = "[" + (data.toArray() as Array<StundenplanAufsichtsbereich>).map(d => StundenplanAufsichtsbereich.transpilerToJSONPatch(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<StundenplanAufsichtsbereich>).map(d => StundenplanAufsichtsbereich.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanAufsichtsbereich>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanAufsichtsbereich.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanAufsichtsbereich.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -19015,15 +19744,18 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Aufsichtsbereiche wurde erfolgreich entfernt.
 	 */
-	public async deleteStundenplanAufsichtsbereiche(data : List<number>, schema : string, id : number) : Promise<List<StundenplanAufsichtsbereich>> {
+	public async deleteStundenplanAufsichtsbereiche(data: List<number>, schema: string, id: number): Promise<List<StundenplanAufsichtsbereich>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/aufsichtsbereiche/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanAufsichtsbereich>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanAufsichtsbereich.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanAufsichtsbereich.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -19047,12 +19779,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Kalenderwochenzuordnung wurde erfolgreich hinzugefügt.
 	 */
-	public async addStundenplanKalenderwochenzuordnung(data : Partial<StundenplanKalenderwochenzuordnung>, schema : string, id : number) : Promise<StundenplanKalenderwochenzuordnung> {
+	public async addStundenplanKalenderwochenzuordnung(data: Partial<StundenplanKalenderwochenzuordnung>, schema: string, id: number): Promise<StundenplanKalenderwochenzuordnung> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/kalenderwochen/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = StundenplanKalenderwochenzuordnung.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = StundenplanKalenderwochenzuordnung.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return StundenplanKalenderwochenzuordnung.transpilerFromJSON(text);
 	}
@@ -19077,15 +19809,18 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Kalenderwochenzuordnungen wurden erfolgreich hinzugefügt.
 	 */
-	public async addStundenplanKalenderwochenzuordnungen(data : List<Partial<StundenplanKalenderwochenzuordnung>>, schema : string, id : number) : Promise<List<StundenplanKalenderwochenzuordnung>> {
+	public async addStundenplanKalenderwochenzuordnungen(data: List<Partial<StundenplanKalenderwochenzuordnung>>, schema: string, id: number): Promise<List<StundenplanKalenderwochenzuordnung>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/kalenderwochen/create/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = "[" + (data.toArray() as Array<StundenplanKalenderwochenzuordnung>).map(d => StundenplanKalenderwochenzuordnung.transpilerToJSONPatch(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<StundenplanKalenderwochenzuordnung>).map(d => StundenplanKalenderwochenzuordnung.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanKalenderwochenzuordnung>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanKalenderwochenzuordnung.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanKalenderwochenzuordnung.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -19110,15 +19845,18 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Kalenderwochenzuordnungen wurde erfolgreich entfernt.
 	 */
-	public async deleteStundenplanKalenderwochenzuordnungen(data : List<number>, schema : string, id : number) : Promise<List<StundenplanKalenderwochenzuordnung>> {
+	public async deleteStundenplanKalenderwochenzuordnungen(data: List<number>, schema: string, id: number): Promise<List<StundenplanKalenderwochenzuordnung>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/kalenderwochen/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanKalenderwochenzuordnung>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanKalenderwochenzuordnung.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanKalenderwochenzuordnung.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -19140,11 +19878,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchStundenplanKalenderwochenzuordnungen(data : List<Partial<StundenplanKalenderwochenzuordnung>>, schema : string, id : number) : Promise<void> {
+	public async patchStundenplanKalenderwochenzuordnungen(data: List<Partial<StundenplanKalenderwochenzuordnung>>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/kalenderwochen/patch/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = "[" + (data.toArray() as Array<StundenplanKalenderwochenzuordnung>).map(d => StundenplanKalenderwochenzuordnung.transpilerToJSONPatch(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<StundenplanKalenderwochenzuordnung>).map(d => StundenplanKalenderwochenzuordnung.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}
 
@@ -19168,12 +19906,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Pausenaufsicht wurde erfolgreich hinzugefügt.
 	 */
-	public async addStundenplanPausenaufsicht(data : Partial<StundenplanPausenaufsicht>, schema : string, id : number) : Promise<StundenplanPausenaufsicht> {
+	public async addStundenplanPausenaufsicht(data: Partial<StundenplanPausenaufsicht>, schema: string, id: number): Promise<StundenplanPausenaufsicht> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/pausenaufsicht/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = StundenplanPausenaufsicht.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = StundenplanPausenaufsicht.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return StundenplanPausenaufsicht.transpilerFromJSON(text);
 	}
@@ -19198,15 +19936,18 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Pausenaufsichten wurden erfolgreich hinzugefügt.
 	 */
-	public async addStundenplanPausenaufsichten(data : List<Partial<StundenplanPausenaufsicht>>, schema : string, id : number) : Promise<List<StundenplanPausenaufsicht>> {
+	public async addStundenplanPausenaufsichten(data: List<Partial<StundenplanPausenaufsicht>>, schema: string, id: number): Promise<List<StundenplanPausenaufsicht>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/pausenaufsicht/create/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = "[" + (data.toArray() as Array<StundenplanPausenaufsicht>).map(d => StundenplanPausenaufsicht.transpilerToJSONPatch(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<StundenplanPausenaufsicht>).map(d => StundenplanPausenaufsicht.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanPausenaufsicht>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanPausenaufsicht.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanPausenaufsicht.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -19231,15 +19972,18 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Pausenaufsichten wurde erfolgreich entfernt.
 	 */
-	public async deleteStundenplanPausenaufsichten(data : List<number>, schema : string, id : number) : Promise<List<StundenplanPausenaufsicht>> {
+	public async deleteStundenplanPausenaufsichten(data: List<number>, schema: string, id: number): Promise<List<StundenplanPausenaufsicht>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/pausenaufsicht/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanPausenaufsicht>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanPausenaufsicht.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanPausenaufsicht.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -19261,14 +20005,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Pausenaufsichten des Stundenplans
 	 */
-	public async getStundenplanPausenaufsichten(schema : string, id : number) : Promise<List<StundenplanPausenaufsicht>> {
+	public async getStundenplanPausenaufsichten(schema: string, id: number): Promise<List<StundenplanPausenaufsicht>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/pausenaufsichten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanPausenaufsicht>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanPausenaufsicht.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanPausenaufsicht.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -19291,15 +20038,18 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Zuordnungen wurden erfolgreich gelöscht bzw. hinzugefügt. Das Ergebnis beinhaltet die erstellten Zuordnungen
 	 */
-	public async updateStundenplanPausenaufsichtenBereiche(data : StundenplanPausenaufsichtBereichUpdate, schema : string, id : number) : Promise<List<StundenplanPausenaufsichtBereich>> {
+	public async updateStundenplanPausenaufsichtenBereiche(data: StundenplanPausenaufsichtBereichUpdate, schema: string, id: number): Promise<List<StundenplanPausenaufsichtBereich>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/pausenaufsichtenbereiche/update"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = StundenplanPausenaufsichtBereichUpdate.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = StundenplanPausenaufsichtBereichUpdate.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanPausenaufsichtBereich>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanPausenaufsichtBereich.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanPausenaufsichtBereich.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -19323,12 +20073,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Pausenzeit wurde erfolgreich hinzugefügt.
 	 */
-	public async addStundenplanPausenzeit(data : Partial<StundenplanPausenzeit>, schema : string, id : number) : Promise<StundenplanPausenzeit> {
+	public async addStundenplanPausenzeit(data: Partial<StundenplanPausenzeit>, schema: string, id: number): Promise<StundenplanPausenzeit> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/pausenzeiten/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = StundenplanPausenzeit.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = StundenplanPausenzeit.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return StundenplanPausenzeit.transpilerFromJSON(text);
 	}
@@ -19353,15 +20103,18 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Pausenzeiten wurden erfolgreich hinzugefügt.
 	 */
-	public async addStundenplanPausenzeiten(data : List<Partial<StundenplanPausenzeit>>, schema : string, id : number) : Promise<List<StundenplanPausenzeit>> {
+	public async addStundenplanPausenzeiten(data: List<Partial<StundenplanPausenzeit>>, schema: string, id: number): Promise<List<StundenplanPausenzeit>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/pausenzeiten/create/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = "[" + (data.toArray() as Array<StundenplanPausenzeit>).map(d => StundenplanPausenzeit.transpilerToJSONPatch(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<StundenplanPausenzeit>).map(d => StundenplanPausenzeit.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanPausenzeit>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanPausenzeit.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanPausenzeit.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -19386,15 +20139,18 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Pausenzeiten wurde erfolgreich entfernt.
 	 */
-	public async deleteStundenplanPausenzeiten(data : List<number>, schema : string, id : number) : Promise<List<StundenplanPausenzeit>> {
+	public async deleteStundenplanPausenzeiten(data: List<number>, schema: string, id: number): Promise<List<StundenplanPausenzeit>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/pausenzeiten/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanPausenzeit>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanPausenzeit.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanPausenzeit.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -19418,12 +20174,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Raum wurde erfolgreich hinzugefügt.
 	 */
-	public async addStundenplanRaum(data : Partial<StundenplanRaum>, schema : string, id : number) : Promise<StundenplanRaum> {
+	public async addStundenplanRaum(data: Partial<StundenplanRaum>, schema: string, id: number): Promise<StundenplanRaum> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/raeume/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = StundenplanRaum.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = StundenplanRaum.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return StundenplanRaum.transpilerFromJSON(text);
 	}
@@ -19448,15 +20204,18 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Räume wurden erfolgreich hinzugefügt.
 	 */
-	public async addStundenplanRaeume(data : List<Partial<StundenplanRaum>>, schema : string, id : number) : Promise<List<StundenplanRaum>> {
+	public async addStundenplanRaeume(data: List<Partial<StundenplanRaum>>, schema: string, id: number): Promise<List<StundenplanRaum>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/raeume/create/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = "[" + (data.toArray() as Array<StundenplanRaum>).map(d => StundenplanRaum.transpilerToJSONPatch(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<StundenplanRaum>).map(d => StundenplanRaum.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanRaum>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanRaum.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanRaum.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -19481,15 +20240,18 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Räume wurde erfolgreich entfernt.
 	 */
-	public async deleteStundenplanRaeume(data : List<number>, schema : string, id : number) : Promise<List<StundenplanRaum>> {
+	public async deleteStundenplanRaeume(data: List<number>, schema: string, id: number): Promise<List<StundenplanRaum>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/raeume/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanRaum>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanRaum.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanRaum.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -19514,15 +20276,18 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Unterrichte wurde erfolgreich entfernt.
 	 */
-	public async deleteStundenplanUnterrichte(data : List<number>, schema : string, id : number) : Promise<List<StundenplanUnterricht>> {
+	public async deleteStundenplanUnterrichte(data: List<number>, schema: string, id: number): Promise<List<StundenplanUnterricht>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/unterricht/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanUnterricht>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanUnterricht.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanUnterricht.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -19544,14 +20309,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Unterrichte des Stundenplans
 	 */
-	public async getStundenplanUnterrichte(schema : string, id : number) : Promise<List<StundenplanUnterricht>> {
+	public async getStundenplanUnterrichte(schema: string, id: number): Promise<List<StundenplanUnterricht>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/unterrichte"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanUnterricht>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanUnterricht.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanUnterricht.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -19573,11 +20341,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten zur Unterrichtsverteilung des Stundenplans
 	 */
-	public async getStundenplanUnterrichtsverteilung(schema : string, id : number) : Promise<StundenplanUnterrichtsverteilung> {
+	public async getStundenplanUnterrichtsverteilung(schema: string, id: number): Promise<StundenplanUnterrichtsverteilung> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/unterrichtsverteilung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return StundenplanUnterrichtsverteilung.transpilerFromJSON(text);
 	}
@@ -19600,14 +20368,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Zeitraster-Einträgen
 	 */
-	public async getStundenplanZeitraster(schema : string, id : number) : Promise<List<StundenplanZeitraster>> {
+	public async getStundenplanZeitraster(schema: string, id: number): Promise<List<StundenplanZeitraster>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/zeitraster"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanZeitraster>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanZeitraster.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanZeitraster.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -19631,12 +20402,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Zeitrastereintrag wurde erfolgreich hinzugefügt.
 	 */
-	public async addStundenplanZeitrasterEintrag(data : Partial<StundenplanZeitraster>, schema : string, id : number) : Promise<StundenplanZeitraster> {
+	public async addStundenplanZeitrasterEintrag(data: Partial<StundenplanZeitraster>, schema: string, id: number): Promise<StundenplanZeitraster> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/zeitraster/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = StundenplanZeitraster.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = StundenplanZeitraster.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return StundenplanZeitraster.transpilerFromJSON(text);
 	}
@@ -19661,15 +20432,18 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Zeitrastereinträge wurden erfolgreich hinzugefügt.
 	 */
-	public async addStundenplanZeitrasterEintraege(data : List<Partial<StundenplanZeitraster>>, schema : string, id : number) : Promise<List<StundenplanZeitraster>> {
+	public async addStundenplanZeitrasterEintraege(data: List<Partial<StundenplanZeitraster>>, schema: string, id: number): Promise<List<StundenplanZeitraster>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/zeitraster/create/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = "[" + (data.toArray() as Array<StundenplanZeitraster>).map(d => StundenplanZeitraster.transpilerToJSONPatch(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<StundenplanZeitraster>).map(d => StundenplanZeitraster.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanZeitraster>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanZeitraster.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanZeitraster.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -19694,15 +20468,18 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Zeitrastereinträge wurde erfolgreich entfernt.
 	 */
-	public async deleteStundenplanZeitrasterEintraege(data : List<number>, schema : string, id : number) : Promise<List<StundenplanZeitraster>> {
+	public async deleteStundenplanZeitrasterEintraege(data: List<number>, schema: string, id: number): Promise<List<StundenplanZeitraster>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/zeitraster/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanZeitraster>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanZeitraster.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanZeitraster.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -19725,12 +20502,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Lehrer
 	 */
-	public async getStundenplanLehrer(schema : string, idStundenplan : number, id : number) : Promise<StundenplanLehrer> {
+	public async getStundenplanLehrer(schema: string, idStundenplan: number, id: number): Promise<StundenplanLehrer> {
 		const path = "/db/{schema}/stundenplan/{idStundenplan : \\d+}/lehrer/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idStundenplan\s*(:[^{}]+({[^{}]+})*)?}/g, idStundenplan.toString())
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return StundenplanLehrer.transpilerFromJSON(text);
 	}
@@ -19754,12 +20531,12 @@ export class ApiServer extends BaseApi {
 	 * @param {number} idStundenplan - der Pfad-Parameter idStundenplan
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchStundenplanPausenaufsicht(data : Partial<StundenplanPausenaufsicht>, schema : string, idStundenplan : number, id : number) : Promise<void> {
+	public async patchStundenplanPausenaufsicht(data: Partial<StundenplanPausenaufsicht>, schema: string, idStundenplan: number, id: number): Promise<void> {
 		const path = "/db/{schema}/stundenplan/{idStundenplan : \\d+}/pausenaufsicht/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idStundenplan\s*(:[^{}]+({[^{}]+})*)?}/g, idStundenplan.toString())
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = StundenplanPausenaufsicht.transpilerToJSONPatch(data);
+		const body: string = StundenplanPausenaufsicht.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -19781,14 +20558,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste der aktiven Stundenpläne
 	 */
-	public async getStundenplanlisteAktivFuerAbschnitt(schema : string, abschnitt : number) : Promise<List<StundenplanListeEintrag>> {
+	public async getStundenplanlisteAktivFuerAbschnitt(schema: string, abschnitt: number): Promise<List<StundenplanListeEintrag>> {
 		const path = "/db/{schema}/stundenplan/aktiv/liste/{abschnitt : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanListeEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanListeEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanListeEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -19810,11 +20590,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Raum
 	 */
-	public async getStundenplanAufsichtsbereich(schema : string, id : number) : Promise<StundenplanAufsichtsbereich> {
+	public async getStundenplanAufsichtsbereich(schema: string, id: number): Promise<StundenplanAufsichtsbereich> {
 		const path = "/db/{schema}/stundenplan/aufsichtsbereich/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return StundenplanAufsichtsbereich.transpilerFromJSON(text);
 	}
@@ -19837,11 +20617,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchStundenplanAufsichtsbereich(data : Partial<StundenplanAufsichtsbereich>, schema : string, id : number) : Promise<void> {
+	public async patchStundenplanAufsichtsbereich(data: Partial<StundenplanAufsichtsbereich>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/stundenplan/aufsichtsbereich/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = StundenplanAufsichtsbereich.transpilerToJSONPatch(data);
+		const body: string = StundenplanAufsichtsbereich.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -19865,11 +20645,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Aufsichtsbereich wurde erfolgreich entfernt.
 	 */
-	public async deleteStundenplanAufsichtsbereich(schema : string, id : number) : Promise<StundenplanAufsichtsbereich> {
+	public async deleteStundenplanAufsichtsbereich(schema: string, id: number): Promise<StundenplanAufsichtsbereich> {
 		const path = "/db/{schema}/stundenplan/aufsichtsbereiche/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return StundenplanAufsichtsbereich.transpilerFromJSON(text);
 	}
@@ -19893,11 +20673,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Stundenplan wurde erfolgreich erstellt.
 	 */
-	public async addStundenplan(data : Partial<Stundenplan>, schema : string) : Promise<Stundenplan> {
+	public async addStundenplan(data: Partial<Stundenplan>, schema: string): Promise<Stundenplan> {
 		const path = "/db/{schema}/stundenplan/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Stundenplan.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Stundenplan.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return Stundenplan.transpilerFromJSON(text);
 	}
@@ -19922,12 +20702,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Stundenplan wurde erfolgreich erstellt.
 	 */
-	public async addStundenplanAsCopy(data : Partial<Stundenplan>, schema : string, copyof : number) : Promise<SimpleOperationResponse> {
+	public async addStundenplanAsCopy(data: Partial<Stundenplan>, schema: string, copyof: number): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/stundenplan/create/from/{copyof : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{copyof\s*(:[^{}]+({[^{}]+})*)?}/g, copyof.toString());
-		const body : string = Stundenplan.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Stundenplan.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -19950,14 +20730,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteStundenplaene(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteStundenplaene(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/stundenplan/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -19979,11 +20762,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Kalenderwochen-Zuordnung
 	 */
-	public async getStundenplanKalenderwochenzuordnung(schema : string, id : number) : Promise<StundenplanKalenderwochenzuordnung> {
+	public async getStundenplanKalenderwochenzuordnung(schema: string, id: number): Promise<StundenplanKalenderwochenzuordnung> {
 		const path = "/db/{schema}/stundenplan/kalenderwochen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return StundenplanKalenderwochenzuordnung.transpilerFromJSON(text);
 	}
@@ -20006,11 +20789,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchStundenplanKalenderwochenzuordnung(data : Partial<StundenplanKalenderwochenzuordnung>, schema : string, id : number) : Promise<void> {
+	public async patchStundenplanKalenderwochenzuordnung(data: Partial<StundenplanKalenderwochenzuordnung>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/stundenplan/kalenderwochen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = StundenplanKalenderwochenzuordnung.transpilerToJSONPatch(data);
+		const body: string = StundenplanKalenderwochenzuordnung.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -20034,11 +20817,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Kalenderwochenzuordnung wurde erfolgreich entfernt.
 	 */
-	public async deleteStundenplanKalenderwochenzuordnung(schema : string, id : number) : Promise<StundenplanKalenderwochenzuordnung> {
+	public async deleteStundenplanKalenderwochenzuordnung(schema: string, id: number): Promise<StundenplanKalenderwochenzuordnung> {
 		const path = "/db/{schema}/stundenplan/kalenderwochen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return StundenplanKalenderwochenzuordnung.transpilerFromJSON(text);
 	}
@@ -20062,13 +20845,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste der Stundenpläne
 	 */
-	public async getStundenplanliste(schema : string) : Promise<List<StundenplanListeEintrag>> {
+	public async getStundenplanliste(schema: string): Promise<List<StundenplanListeEintrag>> {
 		const path = "/db/{schema}/stundenplan/liste"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanListeEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanListeEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanListeEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -20090,14 +20876,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste der Stundenpläne
 	 */
-	public async getStundenplanlisteFuerAbschnitt(schema : string, abschnitt : number) : Promise<List<StundenplanListeEintrag>> {
+	public async getStundenplanlisteFuerAbschnitt(schema: string, abschnitt: number): Promise<List<StundenplanListeEintrag>> {
 		const path = "/db/{schema}/stundenplan/liste/{abschnitt : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanListeEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanListeEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanListeEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -20119,11 +20908,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Pausenaufsicht
 	 */
-	public async getStundenplanPausenaufsicht(schema : string, id : number) : Promise<StundenplanPausenaufsicht> {
+	public async getStundenplanPausenaufsicht(schema: string, id: number): Promise<StundenplanPausenaufsicht> {
 		const path = "/db/{schema}/stundenplan/pausenaufsicht/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return StundenplanPausenaufsicht.transpilerFromJSON(text);
 	}
@@ -20148,11 +20937,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Pausenaufsicht wurde erfolgreich entfernt.
 	 */
-	public async deleteStundenplanPausenaufsicht(schema : string, id : number) : Promise<StundenplanPausenaufsicht> {
+	public async deleteStundenplanPausenaufsicht(schema: string, id: number): Promise<StundenplanPausenaufsicht> {
 		const path = "/db/{schema}/stundenplan/pausenaufsicht/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return StundenplanPausenaufsicht.transpilerFromJSON(text);
 	}
@@ -20175,11 +20964,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Pausenzeit
 	 */
-	public async getStundenplanPausenzeit(schema : string, id : number) : Promise<StundenplanPausenzeit> {
+	public async getStundenplanPausenzeit(schema: string, id: number): Promise<StundenplanPausenzeit> {
 		const path = "/db/{schema}/stundenplan/pausenzeiten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return StundenplanPausenzeit.transpilerFromJSON(text);
 	}
@@ -20202,11 +20991,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchStundenplanPausenzeit(data : Partial<StundenplanPausenzeit>, schema : string, id : number) : Promise<void> {
+	public async patchStundenplanPausenzeit(data: Partial<StundenplanPausenzeit>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/stundenplan/pausenzeiten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = StundenplanPausenzeit.transpilerToJSONPatch(data);
+		const body: string = StundenplanPausenzeit.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -20230,11 +21019,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Pausenzeit wurde erfolgreich entfernt.
 	 */
-	public async deleteStundenplanPausenzeit(schema : string, id : number) : Promise<StundenplanPausenzeit> {
+	public async deleteStundenplanPausenzeit(schema: string, id: number): Promise<StundenplanPausenzeit> {
 		const path = "/db/{schema}/stundenplan/pausenzeiten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return StundenplanPausenzeit.transpilerFromJSON(text);
 	}
@@ -20258,12 +21047,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Klassen-Stundenplan
 	 */
-	public async getKlassenStundenplan(schema : string, id : number, klasse_id : number) : Promise<StundenplanKomplett> {
+	public async getKlassenStundenplan(schema: string, id: number, klasse_id: number): Promise<StundenplanKomplett> {
 		const path = "/db/{schema}/stundenplan/plaene/{id : \\d+}/klasse/{klasse_id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{klasse_id\s*(:[^{}]+({[^{}]+})*)?}/g, klasse_id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return StundenplanKomplett.transpilerFromJSON(text);
 	}
@@ -20287,12 +21076,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Lehrer-Stundenplan
 	 */
-	public async getLehrerStundenplan(schema : string, id : number, lehrer_id : number) : Promise<StundenplanKomplett> {
+	public async getLehrerStundenplan(schema: string, id: number, lehrer_id: number): Promise<StundenplanKomplett> {
 		const path = "/db/{schema}/stundenplan/plaene/{id : \\d+}/lehrer/{lehrer_id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{lehrer_id\s*(:[^{}]+({[^{}]+})*)?}/g, lehrer_id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return StundenplanKomplett.transpilerFromJSON(text);
 	}
@@ -20316,12 +21105,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Schüler-Stundenplan
 	 */
-	public async getSchuelerStundenplan(schema : string, id : number, schueler_id : number) : Promise<StundenplanKomplett> {
+	public async getSchuelerStundenplan(schema: string, id: number, schueler_id: number): Promise<StundenplanKomplett> {
 		const path = "/db/{schema}/stundenplan/plaene/{id : \\d+}/schueler/{schueler_id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{schueler_id\s*(:[^{}]+({[^{}]+})*)?}/g, schueler_id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return StundenplanKomplett.transpilerFromJSON(text);
 	}
@@ -20344,11 +21133,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Raum
 	 */
-	public async getStundenplanRaum(schema : string, id : number) : Promise<StundenplanRaum> {
+	public async getStundenplanRaum(schema: string, id: number): Promise<StundenplanRaum> {
 		const path = "/db/{schema}/stundenplan/raeume/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return StundenplanRaum.transpilerFromJSON(text);
 	}
@@ -20371,11 +21160,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchStundenplanRaum(data : Partial<StundenplanRaum>, schema : string, id : number) : Promise<void> {
+	public async patchStundenplanRaum(data: Partial<StundenplanRaum>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/stundenplan/raeume/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = StundenplanRaum.transpilerToJSONPatch(data);
+		const body: string = StundenplanRaum.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -20399,11 +21188,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Raum wurde erfolgreich entfernt.
 	 */
-	public async deleteStundenplanRaum(schema : string, id : number) : Promise<StundenplanRaum> {
+	public async deleteStundenplanRaum(schema: string, id: number): Promise<StundenplanRaum> {
 		const path = "/db/{schema}/stundenplan/raeume/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return StundenplanRaum.transpilerFromJSON(text);
 	}
@@ -20426,11 +21215,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Schiene
 	 */
-	public async getStundenplanSchiene(schema : string, id : number) : Promise<StundenplanSchiene> {
+	public async getStundenplanSchiene(schema: string, id: number): Promise<StundenplanSchiene> {
 		const path = "/db/{schema}/stundenplan/schienen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return StundenplanSchiene.transpilerFromJSON(text);
 	}
@@ -20453,11 +21242,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchStundenplanSchiene(data : Partial<StundenplanSchiene>, schema : string, id : number) : Promise<void> {
+	public async patchStundenplanSchiene(data: Partial<StundenplanSchiene>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/stundenplan/schienen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = StundenplanSchiene.transpilerToJSONPatch(data);
+		const body: string = StundenplanSchiene.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -20479,11 +21268,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Unterricht
 	 */
-	public async getStundenplanUnterricht(schema : string, id : number) : Promise<StundenplanUnterricht> {
+	public async getStundenplanUnterricht(schema: string, id: number): Promise<StundenplanUnterricht> {
 		const path = "/db/{schema}/stundenplan/unterricht/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return StundenplanUnterricht.transpilerFromJSON(text);
 	}
@@ -20506,11 +21295,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchStundenplanUnterricht(data : Partial<StundenplanUnterricht>, schema : string, id : number) : Promise<void> {
+	public async patchStundenplanUnterricht(data: Partial<StundenplanUnterricht>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/stundenplan/unterricht/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = StundenplanUnterricht.transpilerToJSONPatch(data);
+		const body: string = StundenplanUnterricht.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -20534,11 +21323,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Unterricht wurde erfolgreich entfernt.
 	 */
-	public async deleteStundenplanUnterricht(schema : string, id : number) : Promise<StundenplanUnterricht> {
+	public async deleteStundenplanUnterricht(schema: string, id: number): Promise<StundenplanUnterricht> {
 		const path = "/db/{schema}/stundenplan/unterricht/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return StundenplanUnterricht.transpilerFromJSON(text);
 	}
@@ -20562,11 +21351,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Unterricht wurde erfolgreich hinzugefügt.
 	 */
-	public async addStundenplanUnterricht(data : Partial<StundenplanUnterricht>, schema : string) : Promise<StundenplanUnterricht> {
+	public async addStundenplanUnterricht(data: Partial<StundenplanUnterricht>, schema: string): Promise<StundenplanUnterricht> {
 		const path = "/db/{schema}/stundenplan/unterricht/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = StundenplanUnterricht.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = StundenplanUnterricht.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return StundenplanUnterricht.transpilerFromJSON(text);
 	}
@@ -20590,14 +21379,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Unterrichte wurden erfolgreich hinzugefügt.
 	 */
-	public async addStundenplanUnterrichte(data : List<Partial<StundenplanUnterricht>>, schema : string) : Promise<List<StundenplanUnterricht>> {
+	public async addStundenplanUnterrichte(data: List<Partial<StundenplanUnterricht>>, schema: string): Promise<List<StundenplanUnterricht>> {
 		const path = "/db/{schema}/stundenplan/unterricht/create/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<StundenplanUnterricht>).map(d => StundenplanUnterricht.transpilerToJSONPatch(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<StundenplanUnterricht>).map(d => StundenplanUnterricht.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanUnterricht>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanUnterricht.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(StundenplanUnterricht.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -20618,10 +21410,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Partial<StundenplanUnterricht>>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchStundenplanUnterrichte(data : List<Partial<StundenplanUnterricht>>, schema : string) : Promise<void> {
+	public async patchStundenplanUnterrichte(data: List<Partial<StundenplanUnterricht>>, schema: string): Promise<void> {
 		const path = "/db/{schema}/stundenplan/unterricht/patch/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<StundenplanUnterricht>).map(d => StundenplanUnterricht.transpilerToJSONPatch(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<StundenplanUnterricht>).map(d => StundenplanUnterricht.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}
 
@@ -20643,11 +21435,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Zeitraster-Eintrag
 	 */
-	public async getStundenplanZeitrasterEintrag(schema : string, id : number) : Promise<StundenplanZeitraster> {
+	public async getStundenplanZeitrasterEintrag(schema: string, id: number): Promise<StundenplanZeitraster> {
 		const path = "/db/{schema}/stundenplan/zeitraster/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return StundenplanZeitraster.transpilerFromJSON(text);
 	}
@@ -20670,11 +21462,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchStundenplanZeitrasterEintrag(data : Partial<StundenplanZeitraster>, schema : string, id : number) : Promise<void> {
+	public async patchStundenplanZeitrasterEintrag(data: Partial<StundenplanZeitraster>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/stundenplan/zeitraster/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = StundenplanZeitraster.transpilerToJSONPatch(data);
+		const body: string = StundenplanZeitraster.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -20698,11 +21490,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Zeitrastereintrag wurde erfolgreich entfernt.
 	 */
-	public async deleteStundenplanZeitrasterEintrag(schema : string, id : number) : Promise<StundenplanZeitraster> {
+	public async deleteStundenplanZeitrasterEintrag(schema: string, id: number): Promise<StundenplanZeitraster> {
 		const path = "/db/{schema}/stundenplan/zeitraster/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return StundenplanZeitraster.transpilerFromJSON(text);
 	}
@@ -20724,10 +21516,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Partial<StundenplanZeitraster>>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchStundenplanZeitrasterEintraege(data : List<Partial<StundenplanZeitraster>>, schema : string) : Promise<void> {
+	public async patchStundenplanZeitrasterEintraege(data: List<Partial<StundenplanZeitraster>>, schema: string): Promise<void> {
 		const path = "/db/{schema}/stundenplan/zeitraster/patch/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<StundenplanZeitraster>).map(d => StundenplanZeitraster.transpilerToJSONPatch(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<StundenplanZeitraster>).map(d => StundenplanZeitraster.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}
 
@@ -20747,13 +21539,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste der Teilleistungsarten.
 	 */
-	public async getTeilleistungsarten(schema : string) : Promise<List<Teilleistungsart>> {
+	public async getTeilleistungsarten(schema: string): Promise<List<Teilleistungsart>> {
 		const path = "/db/{schema}/teilleistungsarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Teilleistungsart>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Teilleistungsart.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Teilleistungsart.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -20775,11 +21570,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Teilleistungsart wurde erfolgreich hinzugefügt.
 	 */
-	public async addTeilleistungsart(data : Partial<Teilleistungsart>, schema : string) : Promise<Teilleistungsart> {
+	public async addTeilleistungsart(data: Partial<Teilleistungsart>, schema: string): Promise<Teilleistungsart> {
 		const path = "/db/{schema}/teilleistungsarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Teilleistungsart.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = Teilleistungsart.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return Teilleistungsart.transpilerFromJSON(text);
 	}
@@ -20803,14 +21598,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteTeilleistungsarten(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteTeilleistungsarten(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/teilleistungsarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -20829,11 +21627,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchTeilleistungsart(data : Partial<Teilleistungsart>, schema : string, id : number) : Promise<void> {
+	public async patchTeilleistungsart(data: Partial<Teilleistungsart>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/teilleistungsarten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Teilleistungsart.transpilerToJSONPatch(data);
+		const body: string = Teilleistungsart.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -20853,11 +21651,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchUvFach(data : Partial<UvFach>, schema : string, id : number) : Promise<void> {
+	public async patchUvFach(data: Partial<UvFach>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/faecher/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = UvFach.transpilerToJSONPatch(data);
+		const body: string = UvFach.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -20875,7 +21673,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async deleteUvFach(schema : string, id : number) : Promise<void> {
+	public async deleteUvFach(schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/faecher/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -20901,11 +21699,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns UvFach wurde erfolgreich angelegt.
 	 */
-	public async createUvFach(data : Partial<UvFach>, schema : string) : Promise<UvFach> {
+	public async createUvFach(data: Partial<UvFach>, schema: string): Promise<UvFach> {
 		const path = "/db/{schema}/unterrichtsverteilung/faecher/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = UvFach.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = UvFach.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return UvFach.transpilerFromJSON(text);
 	}
@@ -20928,14 +21726,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die UV-Fächer für die angegebenen IDs wurden erfolgreich gelöscht.
 	 */
-	public async deleteUvFaecherMultiple(data : List<number>, schema : string) : Promise<List<number>> {
+	public async deleteUvFaecherMultiple(data: List<number>, schema: string): Promise<List<number>> {
 		const path = "/db/{schema}/unterrichtsverteilung/faecher/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Number.parseFloat(JSON.parse(text)));
+		});
 		return ret;
 	}
 
@@ -20954,10 +21755,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Partial<UvFach>>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchUvFaecherMultiple(data : List<Partial<UvFach>>, schema : string) : Promise<void> {
+	public async patchUvFaecherMultiple(data: List<Partial<UvFach>>, schema: string): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/faecher/patch/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<UvFach>).map(d => UvFach.transpilerToJSONPatch(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<UvFach>).map(d => UvFach.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}
 
@@ -20977,11 +21778,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchUvKlasse(data : Partial<UvKlasse>, schema : string, id : number) : Promise<void> {
+	public async patchUvKlasse(data: Partial<UvKlasse>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/klassen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = UvKlasse.transpilerToJSONPatch(data);
+		const body: string = UvKlasse.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -20999,7 +21800,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async deleteUvKlasse(schema : string, id : number) : Promise<void> {
+	public async deleteUvKlasse(schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/klassen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -21025,11 +21826,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns UvKlasse wurde erfolgreich angelegt.
 	 */
-	public async createUvKlasse(data : Partial<UvKlasse>, schema : string) : Promise<UvKlasse> {
+	public async createUvKlasse(data: Partial<UvKlasse>, schema: string): Promise<UvKlasse> {
 		const path = "/db/{schema}/unterrichtsverteilung/klassen/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = UvKlasse.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = UvKlasse.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return UvKlasse.transpilerFromJSON(text);
 	}
@@ -21052,14 +21853,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die UvKlassen für die angegebenen IDs wurden erfolgreich gelöscht.
 	 */
-	public async deleteUvKlassenMultiple(data : List<number>, schema : string) : Promise<List<number>> {
+	public async deleteUvKlassenMultiple(data: List<number>, schema: string): Promise<List<number>> {
 		const path = "/db/{schema}/unterrichtsverteilung/klassen/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Number.parseFloat(JSON.parse(text)));
+		});
 		return ret;
 	}
 
@@ -21078,10 +21882,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Partial<UvKlasse>>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchUvKlassenMultiple(data : List<Partial<UvKlasse>>, schema : string) : Promise<void> {
+	public async patchUvKlassenMultiple(data: List<Partial<UvKlasse>>, schema: string): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/klassen/patch/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<UvKlasse>).map(d => UvKlasse.transpilerToJSONPatch(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<UvKlasse>).map(d => UvKlasse.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}
 
@@ -21101,11 +21905,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchUvKurs(data : Partial<UvKurs>, schema : string, id : number) : Promise<void> {
+	public async patchUvKurs(data: Partial<UvKurs>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/kurse/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = UvKurs.transpilerToJSONPatch(data);
+		const body: string = UvKurs.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -21123,7 +21927,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async deleteUvKurs(schema : string, id : number) : Promise<void> {
+	public async deleteUvKurs(schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/kurse/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -21149,11 +21953,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns UvKurs wurde erfolgreich angelegt.
 	 */
-	public async createUvKurs(data : Partial<UvKurs>, schema : string) : Promise<UvKurs> {
+	public async createUvKurs(data: Partial<UvKurs>, schema: string): Promise<UvKurs> {
 		const path = "/db/{schema}/unterrichtsverteilung/kurse/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = UvKurs.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = UvKurs.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return UvKurs.transpilerFromJSON(text);
 	}
@@ -21176,14 +21980,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die UV-Kurse für die angegebenen IDs wurden erfolgreich gelöscht.
 	 */
-	public async deleteUvKurseMultiple(data : List<number>, schema : string) : Promise<List<number>> {
+	public async deleteUvKurseMultiple(data: List<number>, schema: string): Promise<List<number>> {
 		const path = "/db/{schema}/unterrichtsverteilung/kurse/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Number.parseFloat(JSON.parse(text)));
+		});
 		return ret;
 	}
 
@@ -21202,10 +22009,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Partial<UvKurs>>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchUvKurseMultiple(data : List<Partial<UvKurs>>, schema : string) : Promise<void> {
+	public async patchUvKurseMultiple(data: List<Partial<UvKurs>>, schema: string): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/kurse/patch/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<UvKurs>).map(d => UvKurs.transpilerToJSONPatch(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<UvKurs>).map(d => UvKurs.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}
 
@@ -21225,11 +22032,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchUvLehrer(data : Partial<UvLehrer>, schema : string, id : number) : Promise<void> {
+	public async patchUvLehrer(data: Partial<UvLehrer>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/lehrer/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = UvLehrer.transpilerToJSONPatch(data);
+		const body: string = UvLehrer.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -21247,7 +22054,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async deleteUvLehrer(schema : string, id : number) : Promise<void> {
+	public async deleteUvLehrer(schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/lehrer/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -21271,11 +22078,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchUvLehrerAnrechnungsstunde(data : Partial<UvLehrerAnrechnungsstunden>, schema : string, id : number) : Promise<void> {
+	public async patchUvLehrerAnrechnungsstunde(data: Partial<UvLehrerAnrechnungsstunden>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/lehrer/anrechnungsstunden/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = UvLehrerAnrechnungsstunden.transpilerToJSONPatch(data);
+		const body: string = UvLehrerAnrechnungsstunden.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -21293,7 +22100,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async deleteUvLehrerAnrechnungsstunde(schema : string, id : number) : Promise<void> {
+	public async deleteUvLehrerAnrechnungsstunde(schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/lehrer/anrechnungsstunden/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -21319,11 +22126,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns UvLehrerAnrechnungsstunden-Zuordnung wurde erfolgreich angelegt.
 	 */
-	public async createUvLehrerAnrechnungsstunde(data : Partial<UvLehrerAnrechnungsstunden>, schema : string) : Promise<UvLehrerAnrechnungsstunden> {
+	public async createUvLehrerAnrechnungsstunde(data: Partial<UvLehrerAnrechnungsstunden>, schema: string): Promise<UvLehrerAnrechnungsstunden> {
 		const path = "/db/{schema}/unterrichtsverteilung/lehrer/anrechnungsstunden/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = UvLehrerAnrechnungsstunden.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = UvLehrerAnrechnungsstunden.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return UvLehrerAnrechnungsstunden.transpilerFromJSON(text);
 	}
@@ -21346,14 +22153,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Zuordnungen wurden erfolgreich gelöscht.
 	 */
-	public async deleteUvLehrerAnrechnungsstundenMultiple(data : List<number>, schema : string) : Promise<List<number>> {
+	public async deleteUvLehrerAnrechnungsstundenMultiple(data: List<number>, schema: string): Promise<List<number>> {
 		const path = "/db/{schema}/unterrichtsverteilung/lehrer/anrechnungsstunden/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Number.parseFloat(JSON.parse(text)));
+		});
 		return ret;
 	}
 
@@ -21372,10 +22182,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Partial<UvLehrerAnrechnungsstunden>>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchUvLehrerAnrechnungsstundenMultiple(data : List<Partial<UvLehrerAnrechnungsstunden>>, schema : string) : Promise<void> {
+	public async patchUvLehrerAnrechnungsstundenMultiple(data: List<Partial<UvLehrerAnrechnungsstunden>>, schema: string): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/lehrer/anrechnungsstunden/patch/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<UvLehrerAnrechnungsstunden>).map(d => UvLehrerAnrechnungsstunden.transpilerToJSONPatch(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<UvLehrerAnrechnungsstunden>).map(d => UvLehrerAnrechnungsstunden.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}
 
@@ -21397,11 +22207,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns UvLehrer wurde erfolgreich angelegt.
 	 */
-	public async createUvLehrer(data : Partial<UvLehrer>, schema : string) : Promise<UvLehrer> {
+	public async createUvLehrer(data: Partial<UvLehrer>, schema: string): Promise<UvLehrer> {
 		const path = "/db/{schema}/unterrichtsverteilung/lehrer/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = UvLehrer.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = UvLehrer.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return UvLehrer.transpilerFromJSON(text);
 	}
@@ -21424,14 +22234,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die UvLehrer wurden erfolgreich gelöscht.
 	 */
-	public async deleteUvLehrerMultiple(data : List<number>, schema : string) : Promise<List<number>> {
+	public async deleteUvLehrerMultiple(data: List<number>, schema: string): Promise<List<number>> {
 		const path = "/db/{schema}/unterrichtsverteilung/lehrer/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Number.parseFloat(JSON.parse(text)));
+		});
 		return ret;
 	}
 
@@ -21450,10 +22263,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Partial<UvLehrer>>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchUvLehrerMultiple(data : List<Partial<UvLehrer>>, schema : string) : Promise<void> {
+	public async patchUvLehrerMultiple(data: List<Partial<UvLehrer>>, schema: string): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/lehrer/patch/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<UvLehrer>).map(d => UvLehrer.transpilerToJSONPatch(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<UvLehrer>).map(d => UvLehrer.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}
 
@@ -21473,11 +22286,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchUvLehrerPflichtstundensoll(data : Partial<UvLehrerPflichtstundensoll>, schema : string, id : number) : Promise<void> {
+	public async patchUvLehrerPflichtstundensoll(data: Partial<UvLehrerPflichtstundensoll>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/lehrer/pflichtstundensoll/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = UvLehrerPflichtstundensoll.transpilerToJSONPatch(data);
+		const body: string = UvLehrerPflichtstundensoll.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -21495,7 +22308,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async deleteUvLehrerPflichtstundensoll(schema : string, id : number) : Promise<void> {
+	public async deleteUvLehrerPflichtstundensoll(schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/lehrer/pflichtstundensoll/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -21521,11 +22334,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns UvLehrerPflichtstundensoll wurde erfolgreich angelegt.
 	 */
-	public async createUvLehrerPflichtstundensoll(data : Partial<UvLehrerPflichtstundensoll>, schema : string) : Promise<UvLehrerPflichtstundensoll> {
+	public async createUvLehrerPflichtstundensoll(data: Partial<UvLehrerPflichtstundensoll>, schema: string): Promise<UvLehrerPflichtstundensoll> {
 		const path = "/db/{schema}/unterrichtsverteilung/lehrer/pflichtstundensoll/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = UvLehrerPflichtstundensoll.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = UvLehrerPflichtstundensoll.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return UvLehrerPflichtstundensoll.transpilerFromJSON(text);
 	}
@@ -21548,14 +22361,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Einträge wurden erfolgreich gelöscht.
 	 */
-	public async deleteUvLehrerPflichtstundensollMultiple(data : List<number>, schema : string) : Promise<List<number>> {
+	public async deleteUvLehrerPflichtstundensollMultiple(data: List<number>, schema: string): Promise<List<number>> {
 		const path = "/db/{schema}/unterrichtsverteilung/lehrer/pflichtstundensoll/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Number.parseFloat(JSON.parse(text)));
+		});
 		return ret;
 	}
 
@@ -21574,10 +22390,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Partial<UvLehrerPflichtstundensoll>>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchUvLehrerPflichtstundensollMultiple(data : List<Partial<UvLehrerPflichtstundensoll>>, schema : string) : Promise<void> {
+	public async patchUvLehrerPflichtstundensollMultiple(data: List<Partial<UvLehrerPflichtstundensoll>>, schema: string): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/lehrer/pflichtstundensoll/patch/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<UvLehrerPflichtstundensoll>).map(d => UvLehrerPflichtstundensoll.transpilerToJSONPatch(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<UvLehrerPflichtstundensoll>).map(d => UvLehrerPflichtstundensoll.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}
 
@@ -21597,11 +22413,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchUvLerngruppe(data : Partial<UvLerngruppe>, schema : string, id : number) : Promise<void> {
+	public async patchUvLerngruppe(data: Partial<UvLerngruppe>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/lerngruppen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = UvLerngruppe.transpilerToJSONPatch(data);
+		const body: string = UvLerngruppe.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -21619,7 +22435,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async deleteUvLerngruppe(schema : string, id : number) : Promise<void> {
+	public async deleteUvLerngruppe(schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/lerngruppen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -21645,11 +22461,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns UvLerngruppe wurde erfolgreich angelegt.
 	 */
-	public async createUvLerngruppe(data : Partial<UvLerngruppe>, schema : string) : Promise<UvLerngruppe> {
+	public async createUvLerngruppe(data: Partial<UvLerngruppe>, schema: string): Promise<UvLerngruppe> {
 		const path = "/db/{schema}/unterrichtsverteilung/lerngruppen/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = UvLerngruppe.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = UvLerngruppe.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return UvLerngruppe.transpilerFromJSON(text);
 	}
@@ -21672,14 +22488,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die UvLerngruppen wurden erfolgreich gelöscht.
 	 */
-	public async deleteUvLerngruppenMultiple(data : List<number>, schema : string) : Promise<List<number>> {
+	public async deleteUvLerngruppenMultiple(data: List<number>, schema: string): Promise<List<number>> {
 		const path = "/db/{schema}/unterrichtsverteilung/lerngruppen/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Number.parseFloat(JSON.parse(text)));
+		});
 		return ret;
 	}
 
@@ -21699,11 +22518,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchUvLerngruppenLehrer(data : Partial<UvLerngruppenLehrer>, schema : string, id : number) : Promise<void> {
+	public async patchUvLerngruppenLehrer(data: Partial<UvLerngruppenLehrer>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/lerngruppen/lehrer/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = UvLerngruppenLehrer.transpilerToJSONPatch(data);
+		const body: string = UvLerngruppenLehrer.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -21721,7 +22540,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async deleteUvLerngruppenLehrer(schema : string, id : number) : Promise<void> {
+	public async deleteUvLerngruppenLehrer(schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/lerngruppen/lehrer/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -21747,11 +22566,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns UvLerngruppenLehrer-Zuordnung wurde erfolgreich angelegt.
 	 */
-	public async createUvLerngruppenLehrer(data : Partial<UvLerngruppenLehrer>, schema : string) : Promise<UvLerngruppenLehrer> {
+	public async createUvLerngruppenLehrer(data: Partial<UvLerngruppenLehrer>, schema: string): Promise<UvLerngruppenLehrer> {
 		const path = "/db/{schema}/unterrichtsverteilung/lerngruppen/lehrer/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = UvLerngruppenLehrer.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = UvLerngruppenLehrer.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return UvLerngruppenLehrer.transpilerFromJSON(text);
 	}
@@ -21774,14 +22593,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Zuordnungen wurden erfolgreich gelöscht.
 	 */
-	public async deleteUvLerngruppenLehrerMultiple(data : List<number>, schema : string) : Promise<List<number>> {
+	public async deleteUvLerngruppenLehrerMultiple(data: List<number>, schema: string): Promise<List<number>> {
 		const path = "/db/{schema}/unterrichtsverteilung/lerngruppen/lehrer/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Number.parseFloat(JSON.parse(text)));
+		});
 		return ret;
 	}
 
@@ -21800,10 +22622,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Partial<UvLerngruppenLehrer>>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchUvLerngruppenLehrerMultiple(data : List<Partial<UvLerngruppenLehrer>>, schema : string) : Promise<void> {
+	public async patchUvLerngruppenLehrerMultiple(data: List<Partial<UvLerngruppenLehrer>>, schema: string): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/lerngruppen/lehrer/patch/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<UvLerngruppenLehrer>).map(d => UvLerngruppenLehrer.transpilerToJSONPatch(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<UvLerngruppenLehrer>).map(d => UvLerngruppenLehrer.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}
 
@@ -21822,10 +22644,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Partial<UvLerngruppe>>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchUvLerngruppenMultiple(data : List<Partial<UvLerngruppe>>, schema : string) : Promise<void> {
+	public async patchUvLerngruppenMultiple(data: List<Partial<UvLerngruppe>>, schema: string): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/lerngruppen/patch/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<UvLerngruppe>).map(d => UvLerngruppe.transpilerToJSONPatch(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<UvLerngruppe>).map(d => UvLerngruppe.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}
 
@@ -21845,11 +22667,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchUvPlanungsabschnitt(data : Partial<UvPlanungsabschnitt>, schema : string, id : number) : Promise<void> {
+	public async patchUvPlanungsabschnitt(data: Partial<UvPlanungsabschnitt>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/planungsabschnitte/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = UvPlanungsabschnitt.transpilerToJSONPatch(data);
+		const body: string = UvPlanungsabschnitt.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -21867,7 +22689,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async deleteUvPlanungsabschnitt(schema : string, id : number) : Promise<void> {
+	public async deleteUvPlanungsabschnitt(schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/planungsabschnitte/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -21895,11 +22717,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns UvPlanungsabschnitt wurde erfolgreich angelegt.
 	 */
-	public async createUvPlanungsabschnitt(data : Partial<UvPlanungsabschnitt>, schema : string) : Promise<UvPlanungsabschnitt> {
+	public async createUvPlanungsabschnitt(data: Partial<UvPlanungsabschnitt>, schema: string): Promise<UvPlanungsabschnitt> {
 		const path = "/db/{schema}/unterrichtsverteilung/planungsabschnitte/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = UvPlanungsabschnitt.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = UvPlanungsabschnitt.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return UvPlanungsabschnitt.transpilerFromJSON(text);
 	}
@@ -21922,14 +22744,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die UvPlanungsabschnitte für die angegebenen IDs wurden erfolgreich gelöscht.
 	 */
-	public async deleteUvPlanungsabschnitteMultiple(data : List<number>, schema : string) : Promise<List<number>> {
+	public async deleteUvPlanungsabschnitteMultiple(data: List<number>, schema: string): Promise<List<number>> {
 		const path = "/db/{schema}/unterrichtsverteilung/planungsabschnitte/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Number.parseFloat(JSON.parse(text)));
+		});
 		return ret;
 	}
 
@@ -21948,10 +22773,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Partial<UvPlanungsabschnitt>>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchUvPlanungsabschnitteMultiple(data : List<Partial<UvPlanungsabschnitt>>, schema : string) : Promise<void> {
+	public async patchUvPlanungsabschnitteMultiple(data: List<Partial<UvPlanungsabschnitt>>, schema: string): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/planungsabschnitte/patch/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<UvPlanungsabschnitt>).map(d => UvPlanungsabschnitt.transpilerToJSONPatch(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<UvPlanungsabschnitt>).map(d => UvPlanungsabschnitt.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}
 
@@ -21973,14 +22798,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste der Stundenpläne
 	 */
-	public async getUvPlanungsabschnitte(schema : string, schuljahr : number) : Promise<List<UvPlanungsabschnitt>> {
+	public async getUvPlanungsabschnitte(schema: string, schuljahr: number): Promise<List<UvPlanungsabschnitt>> {
 		const path = "/db/{schema}/unterrichtsverteilung/planungsabschnitte/schuljahr/{schuljahr : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{schuljahr\s*(:[^{}]+({[^{}]+})*)?}/g, schuljahr.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<UvPlanungsabschnitt>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(UvPlanungsabschnitt.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(UvPlanungsabschnitt.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -22000,11 +22828,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchUvRaum(data : Partial<UvRaum>, schema : string, id : number) : Promise<void> {
+	public async patchUvRaum(data: Partial<UvRaum>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/raeume/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = UvRaum.transpilerToJSONPatch(data);
+		const body: string = UvRaum.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -22022,7 +22850,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async deleteUvRaum(schema : string, id : number) : Promise<void> {
+	public async deleteUvRaum(schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/raeume/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -22048,11 +22876,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns UvRaum wurde erfolgreich angelegt.
 	 */
-	public async createUvRaum(data : Partial<UvRaum>, schema : string) : Promise<UvRaum> {
+	public async createUvRaum(data: Partial<UvRaum>, schema: string): Promise<UvRaum> {
 		const path = "/db/{schema}/unterrichtsverteilung/raeume/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = UvRaum.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = UvRaum.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return UvRaum.transpilerFromJSON(text);
 	}
@@ -22075,14 +22903,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die UvRaeume wurden erfolgreich gelöscht.
 	 */
-	public async deleteUvRaeumeMultiple(data : List<number>, schema : string) : Promise<List<number>> {
+	public async deleteUvRaeumeMultiple(data: List<number>, schema: string): Promise<List<number>> {
 		const path = "/db/{schema}/unterrichtsverteilung/raeume/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Number.parseFloat(JSON.parse(text)));
+		});
 		return ret;
 	}
 
@@ -22101,10 +22932,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Partial<UvRaum>>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchUvRaeumeMultiple(data : List<Partial<UvRaum>>, schema : string) : Promise<void> {
+	public async patchUvRaeumeMultiple(data: List<Partial<UvRaum>>, schema: string): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/raeume/patch/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<UvRaum>).map(d => UvRaum.transpilerToJSONPatch(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<UvRaum>).map(d => UvRaum.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}
 
@@ -22124,11 +22955,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchUvSchiene(data : Partial<UvSchiene>, schema : string, id : number) : Promise<void> {
+	public async patchUvSchiene(data: Partial<UvSchiene>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/schienen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = UvSchiene.transpilerToJSONPatch(data);
+		const body: string = UvSchiene.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -22146,7 +22977,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async deleteUvSchiene(schema : string, id : number) : Promise<void> {
+	public async deleteUvSchiene(schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/schienen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -22172,11 +23003,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns UvSchiene wurde erfolgreich angelegt.
 	 */
-	public async createUvSchiene(data : Partial<UvSchiene>, schema : string) : Promise<UvSchiene> {
+	public async createUvSchiene(data: Partial<UvSchiene>, schema: string): Promise<UvSchiene> {
 		const path = "/db/{schema}/unterrichtsverteilung/schienen/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = UvSchiene.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = UvSchiene.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return UvSchiene.transpilerFromJSON(text);
 	}
@@ -22199,14 +23030,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die UvSchienen wurden erfolgreich gelöscht.
 	 */
-	public async deleteUvSchienenMultiple(data : List<number>, schema : string) : Promise<List<number>> {
+	public async deleteUvSchienenMultiple(data: List<number>, schema: string): Promise<List<number>> {
 		const path = "/db/{schema}/unterrichtsverteilung/schienen/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Number.parseFloat(JSON.parse(text)));
+		});
 		return ret;
 	}
 
@@ -22225,10 +23059,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Partial<UvSchiene>>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchUvSchienenMultiple(data : List<Partial<UvSchiene>>, schema : string) : Promise<void> {
+	public async patchUvSchienenMultiple(data: List<Partial<UvSchiene>>, schema: string): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/schienen/patch/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<UvSchiene>).map(d => UvSchiene.transpilerToJSONPatch(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<UvSchiene>).map(d => UvSchiene.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}
 
@@ -22249,12 +23083,12 @@ export class ApiServer extends BaseApi {
 	 * @param {number} idPlanungsabschnitt - der Pfad-Parameter idPlanungsabschnitt
 	 * @param {number} idSchueler - der Pfad-Parameter idSchueler
 	 */
-	public async patchUvSchueler(data : Partial<UvSchueler>, schema : string, idPlanungsabschnitt : number, idSchueler : number) : Promise<void> {
+	public async patchUvSchueler(data: Partial<UvSchueler>, schema: string, idPlanungsabschnitt: number, idSchueler: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/schueler/{idPlanungsabschnitt : \\d+}/{idSchueler : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idPlanungsabschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idPlanungsabschnitt.toString())
 			.replace(/{idSchueler\s*(:[^{}]+({[^{}]+})*)?}/g, idSchueler.toString());
-		const body : string = UvSchueler.transpilerToJSONPatch(data);
+		const body: string = UvSchueler.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -22273,7 +23107,7 @@ export class ApiServer extends BaseApi {
 	 * @param {number} idPlanungsabschnitt - der Pfad-Parameter idPlanungsabschnitt
 	 * @param {number} idSchueler - der Pfad-Parameter idSchueler
 	 */
-	public async deleteUvSchueler(schema : string, idPlanungsabschnitt : number, idSchueler : number) : Promise<void> {
+	public async deleteUvSchueler(schema: string, idPlanungsabschnitt: number, idSchueler: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/schueler/{idPlanungsabschnitt : \\d+}/{idSchueler : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idPlanungsabschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idPlanungsabschnitt.toString())
@@ -22300,11 +23134,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns UvSchueler wurde erfolgreich angelegt.
 	 */
-	public async createUvSchueler(data : Partial<UvSchueler>, schema : string) : Promise<UvSchueler> {
+	public async createUvSchueler(data: Partial<UvSchueler>, schema: string): Promise<UvSchueler> {
 		const path = "/db/{schema}/unterrichtsverteilung/schueler/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = UvSchueler.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = UvSchueler.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return UvSchueler.transpilerFromJSON(text);
 	}
@@ -22325,11 +23159,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchUvSchuelergruppe(data : Partial<UvSchuelergruppe>, schema : string, id : number) : Promise<void> {
+	public async patchUvSchuelergruppe(data: Partial<UvSchuelergruppe>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/schueler/gruppen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = UvSchuelergruppe.transpilerToJSONPatch(data);
+		const body: string = UvSchuelergruppe.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -22347,7 +23181,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async deleteUvSchuelergruppe(schema : string, id : number) : Promise<void> {
+	public async deleteUvSchuelergruppe(schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/schueler/gruppen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -22373,11 +23207,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns UvSchuelergruppe wurde erfolgreich angelegt.
 	 */
-	public async createUvSchuelergruppe(data : Partial<UvSchuelergruppe>, schema : string) : Promise<UvSchuelergruppe> {
+	public async createUvSchuelergruppe(data: Partial<UvSchuelergruppe>, schema: string): Promise<UvSchuelergruppe> {
 		const path = "/db/{schema}/unterrichtsverteilung/schueler/gruppen/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = UvSchuelergruppe.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = UvSchuelergruppe.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return UvSchuelergruppe.transpilerFromJSON(text);
 	}
@@ -22400,14 +23234,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die UvSchuelergruppen für die angegebenen IDs wurden erfolgreich gelöscht.
 	 */
-	public async deleteUvSchuelergruppenMultiple(data : List<number>, schema : string) : Promise<List<number>> {
+	public async deleteUvSchuelergruppenMultiple(data: List<number>, schema: string): Promise<List<number>> {
 		const path = "/db/{schema}/unterrichtsverteilung/schueler/gruppen/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Number.parseFloat(JSON.parse(text)));
+		});
 		return ret;
 	}
 
@@ -22426,10 +23263,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Partial<UvSchuelergruppe>>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchUvSchuelergruppenMultiple(data : List<Partial<UvSchuelergruppe>>, schema : string) : Promise<void> {
+	public async patchUvSchuelergruppenMultiple(data: List<Partial<UvSchuelergruppe>>, schema: string): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/schueler/gruppen/patch/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<UvSchuelergruppe>).map(d => UvSchuelergruppe.transpilerToJSONPatch(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<UvSchuelergruppe>).map(d => UvSchuelergruppe.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}
 
@@ -22451,14 +23288,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die UvSchueler für die angegebenen IDs wurden erfolgreich gelöscht.
 	 */
-	public async deleteUvSchuelerMultiple(data : List<LongPair>, schema : string) : Promise<List<number>> {
+	public async deleteUvSchuelerMultiple(data: List<LongPair>, schema: string): Promise<List<number>> {
 		const path = "/db/{schema}/unterrichtsverteilung/schueler/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<LongPair>).map(d => LongPair.transpilerToJSON(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<LongPair>).map(d => LongPair.transpilerToJSON(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Number.parseFloat(JSON.parse(text)));
+		});
 		return ret;
 	}
 
@@ -22477,10 +23317,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Partial<UvSchueler>>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchUvSchuelerMultiple(data : List<Partial<UvSchueler>>, schema : string) : Promise<void> {
+	public async patchUvSchuelerMultiple(data: List<Partial<UvSchueler>>, schema: string): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/schueler/patch/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<UvSchueler>).map(d => UvSchueler.transpilerToJSONPatch(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<UvSchueler>).map(d => UvSchueler.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}
 
@@ -22500,11 +23340,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchUvStundentafel(data : Partial<UvStundentafel>, schema : string, id : number) : Promise<void> {
+	public async patchUvStundentafel(data: Partial<UvStundentafel>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/stundentafeln/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = UvStundentafel.transpilerToJSONPatch(data);
+		const body: string = UvStundentafel.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -22522,7 +23362,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async deleteUvStundentafel(schema : string, id : number) : Promise<void> {
+	public async deleteUvStundentafel(schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/stundentafeln/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -22548,11 +23388,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns UvStundentafel wurde erfolgreich angelegt.
 	 */
-	public async createUvStundentafel(data : Partial<UvStundentafel>, schema : string) : Promise<UvStundentafel> {
+	public async createUvStundentafel(data: Partial<UvStundentafel>, schema: string): Promise<UvStundentafel> {
 		const path = "/db/{schema}/unterrichtsverteilung/stundentafeln/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = UvStundentafel.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = UvStundentafel.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return UvStundentafel.transpilerFromJSON(text);
 	}
@@ -22573,11 +23413,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchUvStundentafelFach(data : Partial<UvStundentafelFach>, schema : string, id : number) : Promise<void> {
+	public async patchUvStundentafelFach(data: Partial<UvStundentafelFach>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/stundentafeln/faecher/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = UvStundentafelFach.transpilerToJSONPatch(data);
+		const body: string = UvStundentafelFach.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -22595,7 +23435,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async deleteUvStundentafelFach(schema : string, id : number) : Promise<void> {
+	public async deleteUvStundentafelFach(schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/stundentafeln/faecher/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -22621,11 +23461,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns UvStundentafelFach wurde erfolgreich angelegt.
 	 */
-	public async createUvStundentafelFach(data : Partial<UvStundentafelFach>, schema : string) : Promise<UvStundentafelFach> {
+	public async createUvStundentafelFach(data: Partial<UvStundentafelFach>, schema: string): Promise<UvStundentafelFach> {
 		const path = "/db/{schema}/unterrichtsverteilung/stundentafeln/faecher/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = UvStundentafelFach.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = UvStundentafelFach.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return UvStundentafelFach.transpilerFromJSON(text);
 	}
@@ -22648,14 +23488,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Einträge wurden erfolgreich gelöscht.
 	 */
-	public async deleteUvStundentafelFaecherMultiple(data : List<number>, schema : string) : Promise<List<number>> {
+	public async deleteUvStundentafelFaecherMultiple(data: List<number>, schema: string): Promise<List<number>> {
 		const path = "/db/{schema}/unterrichtsverteilung/stundentafeln/faecher/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Number.parseFloat(JSON.parse(text)));
+		});
 		return ret;
 	}
 
@@ -22674,10 +23517,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Partial<UvStundentafelFach>>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchUvStundentafelFaecherMultiple(data : List<Partial<UvStundentafelFach>>, schema : string) : Promise<void> {
+	public async patchUvStundentafelFaecherMultiple(data: List<Partial<UvStundentafelFach>>, schema: string): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/stundentafeln/faecher/patch/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<UvStundentafelFach>).map(d => UvStundentafelFach.transpilerToJSONPatch(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<UvStundentafelFach>).map(d => UvStundentafelFach.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}
 
@@ -22699,14 +23542,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die UvStundentafeln für die angegebenen IDs wurden erfolgreich gelöscht.
 	 */
-	public async deleteUvStundentafelnMultiple(data : List<number>, schema : string) : Promise<List<number>> {
+	public async deleteUvStundentafelnMultiple(data: List<number>, schema: string): Promise<List<number>> {
 		const path = "/db/{schema}/unterrichtsverteilung/stundentafeln/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Number.parseFloat(JSON.parse(text)));
+		});
 		return ret;
 	}
 
@@ -22725,10 +23571,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Partial<UvStundentafel>>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchUvStundentafelnMultiple(data : List<Partial<UvStundentafel>>, schema : string) : Promise<void> {
+	public async patchUvStundentafelnMultiple(data: List<Partial<UvStundentafel>>, schema: string): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/stundentafeln/patch/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<UvStundentafel>).map(d => UvStundentafel.transpilerToJSONPatch(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<UvStundentafel>).map(d => UvStundentafel.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}
 
@@ -22745,11 +23591,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchUvUnterricht(data : Partial<UvUnterricht>, schema : string, id : number) : Promise<void> {
+	public async patchUvUnterricht(data: Partial<UvUnterricht>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/unterrichte/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = UvUnterricht.transpilerToJSONPatch(data);
+		const body: string = UvUnterricht.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -22765,7 +23611,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async deleteUvUnterricht(schema : string, id : number) : Promise<void> {
+	public async deleteUvUnterricht(schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/unterrichte/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -22789,11 +23635,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Unterricht erfolgreich erstellt.
 	 */
-	public async createUvUnterricht(data : Partial<UvUnterricht>, schema : string) : Promise<UvUnterricht> {
+	public async createUvUnterricht(data: Partial<UvUnterricht>, schema: string): Promise<UvUnterricht> {
 		const path = "/db/{schema}/unterrichtsverteilung/unterrichte/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = UvUnterricht.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = UvUnterricht.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return UvUnterricht.transpilerFromJSON(text);
 	}
@@ -22810,10 +23656,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async deleteUvUnterrichteMultiple(data : List<number>, schema : string) : Promise<void> {
+	public async deleteUvUnterrichteMultiple(data: List<number>, schema: string): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/unterrichte/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		await super.deleteJSON(path, body);
 		return;
 	}
@@ -22830,10 +23676,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Partial<UvUnterricht>>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchUvUnterrichteMultiple(data : List<Partial<UvUnterricht>>, schema : string) : Promise<void> {
+	public async patchUvUnterrichteMultiple(data: List<Partial<UvUnterricht>>, schema: string): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/unterrichte/patch/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<UvUnterricht>).map(d => UvUnterricht.transpilerToJSONPatch(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<UvUnterricht>).map(d => UvUnterricht.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}
 
@@ -22853,11 +23699,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchUvZeitraster(data : Partial<UvZeitraster>, schema : string, id : number) : Promise<void> {
+	public async patchUvZeitraster(data: Partial<UvZeitraster>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/zeitraster/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = UvZeitraster.transpilerToJSONPatch(data);
+		const body: string = UvZeitraster.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -22875,7 +23721,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async deleteUvZeitraster(schema : string, id : number) : Promise<void> {
+	public async deleteUvZeitraster(schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/zeitraster/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -22901,11 +23747,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Zeit­raster wurde erfolgreich angelegt.
 	 */
-	public async createUvZeitraster(data : Partial<UvZeitraster>, schema : string) : Promise<UvZeitraster> {
+	public async createUvZeitraster(data: Partial<UvZeitraster>, schema: string): Promise<UvZeitraster> {
 		const path = "/db/{schema}/unterrichtsverteilung/zeitraster/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = UvZeitraster.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = UvZeitraster.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return UvZeitraster.transpilerFromJSON(text);
 	}
@@ -22928,14 +23774,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Löschung erfolgreich.
 	 */
-	public async deleteUvZeitrasterMultiple(data : List<number>, schema : string) : Promise<List<number>> {
+	public async deleteUvZeitrasterMultiple(data: List<number>, schema: string): Promise<List<number>> {
 		const path = "/db/{schema}/unterrichtsverteilung/zeitraster/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Number.parseFloat(JSON.parse(text)));
+		});
 		return ret;
 	}
 
@@ -22954,10 +23803,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Partial<UvZeitraster>>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchUvZeitrasterMultiple(data : List<Partial<UvZeitraster>>, schema : string) : Promise<void> {
+	public async patchUvZeitrasterMultiple(data: List<Partial<UvZeitraster>>, schema: string): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/zeitraster/patch/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<UvZeitraster>).map(d => UvZeitraster.transpilerToJSONPatch(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<UvZeitraster>).map(d => UvZeitraster.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}
 
@@ -22977,11 +23826,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchUvZeitrasterEintrag(data : Partial<UvZeitrasterEintrag>, schema : string, id : number) : Promise<void> {
+	public async patchUvZeitrasterEintrag(data: Partial<UvZeitrasterEintrag>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/zeitrastereintraege/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = UvZeitrasterEintrag.transpilerToJSONPatch(data);
+		const body: string = UvZeitrasterEintrag.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -22999,7 +23848,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async deleteUvZeitrasterEintrag(schema : string, id : number) : Promise<void> {
+	public async deleteUvZeitrasterEintrag(schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/zeitrastereintraege/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -23024,11 +23873,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Zeit­rastereintrag erfolgreich erstellt.
 	 */
-	public async createUvZeitrasterEintrag(data : Partial<UvZeitrasterEintrag>, schema : string) : Promise<UvZeitrasterEintrag> {
+	public async createUvZeitrasterEintrag(data: Partial<UvZeitrasterEintrag>, schema: string): Promise<UvZeitrasterEintrag> {
 		const path = "/db/{schema}/unterrichtsverteilung/zeitrastereintraege/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = UvZeitrasterEintrag.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = UvZeitrasterEintrag.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return UvZeitrasterEintrag.transpilerFromJSON(text);
 	}
@@ -23051,14 +23900,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Löschung erfolgreich.
 	 */
-	public async deleteUvZeitrasterEintraegeMultiple(data : List<number>, schema : string) : Promise<List<number>> {
+	public async deleteUvZeitrasterEintraegeMultiple(data: List<number>, schema: string): Promise<List<number>> {
 		const path = "/db/{schema}/unterrichtsverteilung/zeitrastereintraege/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<number>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(Number.parseFloat(JSON.parse(text)));
+		});
 		return ret;
 	}
 
@@ -23077,10 +23929,10 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Partial<UvZeitrasterEintrag>>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchUvZeitrasterEintraegeMultiple(data : List<Partial<UvZeitrasterEintrag>>, schema : string) : Promise<void> {
+	public async patchUvZeitrasterEintraegeMultiple(data: List<Partial<UvZeitrasterEintrag>>, schema: string): Promise<void> {
 		const path = "/db/{schema}/unterrichtsverteilung/zeitrastereintraege/patch/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<UvZeitrasterEintrag>).map(d => UvZeitrasterEintrag.transpilerToJSONPatch(d)).join() + "]";
+		const body: string = "[" + (data.toArray() as Array<UvZeitrasterEintrag>).map(d => UvZeitrasterEintrag.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
 	}
 
@@ -23102,11 +23954,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Wiedervorlage-Eintrag
 	 */
-	public async getWiedervorlageEintrag(schema : string, id : number) : Promise<WiedervorlageEintrag> {
+	public async getWiedervorlageEintrag(schema: string, id: number): Promise<WiedervorlageEintrag> {
 		const path = "/db/{schema}/wiedervorlage/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return WiedervorlageEintrag.transpilerFromJSON(text);
 	}
@@ -23129,11 +23981,11 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchWiedervorlageEintrag(data : Partial<WiedervorlageEintrag>, schema : string, id : number) : Promise<void> {
+	public async patchWiedervorlageEintrag(data: Partial<WiedervorlageEintrag>, schema: string, id: number): Promise<void> {
 		const path = "/db/{schema}/wiedervorlage/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = WiedervorlageEintrag.transpilerToJSONPatch(data);
+		const body: string = WiedervorlageEintrag.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -23156,11 +24008,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operation wurde ausgeführt.
 	 */
-	public async deleteWiedervorlageEintrag(schema : string, id : number) : Promise<SimpleOperationResponse> {
+	public async deleteWiedervorlageEintrag(schema: string, id: number): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/wiedervorlage/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
+		const result: string = await super.deleteJSON(path, null);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -23183,11 +24035,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Wiedervorlage-Eintrag
 	 */
-	public async setWiedervorlageEintragErledigt(schema : string, id : number) : Promise<WiedervorlageEintrag> {
+	public async setWiedervorlageEintragErledigt(schema: string, id: number): Promise<WiedervorlageEintrag> {
 		const path = "/db/{schema}/wiedervorlage/{id : \\d+}/erledigt"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.postJSON(path, null);
+		const result: string = await super.postJSON(path, null);
 		const text = result;
 		return WiedervorlageEintrag.transpilerFromJSON(text);
 	}
@@ -23211,14 +24063,17 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteWiedervorlageEintraege(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteWiedervorlageEintraege(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/wiedervorlage/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -23237,13 +24092,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste mit den Einträgen der Wiedervorlage.
 	 */
-	public async getWiedervorlageListe(schema : string) : Promise<List<WiedervorlageEintrag>> {
+	public async getWiedervorlageListe(schema: string): Promise<List<WiedervorlageEintrag>> {
 		const path = "/db/{schema}/wiedervorlage/liste"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<WiedervorlageEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(WiedervorlageEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(WiedervorlageEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -23262,12 +24120,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Anzahl offener Wiedervorlagen des heutigen Tages.
 	 */
-	public async getAnzahlOffeneWiedervorlagen(schema : string) : Promise<number> {
+	public async getAnzahlOffeneWiedervorlagen(schema: string): Promise<number> {
 		const path = "/db/{schema}/wiedervorlage/liste/anzahl"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
-		return parseFloat(JSON.parse(text));
+		return Number.parseFloat(JSON.parse(text));
 	}
 
 
@@ -23288,11 +24146,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Wiedervorlage-Eintrag
 	 */
-	public async addWiedervorlageEintrag(data : Partial<WiedervorlageEintrag>, schema : string) : Promise<WiedervorlageEintrag> {
+	public async addWiedervorlageEintrag(data: Partial<WiedervorlageEintrag>, schema: string): Promise<WiedervorlageEintrag> {
 		const path = "/db/{schema}/wiedervorlage/neu"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = WiedervorlageEintrag.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = WiedervorlageEintrag.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return WiedervorlageEintrag.transpilerFromJSON(text);
 	}
@@ -23310,9 +24168,9 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Server ist erreichbar!
 	 */
-	public async isAlive() : Promise<string> {
+	public async isAlive(): Promise<string> {
 		const path = "/status/alive";
-		const text : string = await super.getText(path);
+		const text: string = await super.getText(path);
 		return text;
 	}
 
@@ -23329,9 +24187,9 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Server ist über die Privileged API erreichbar!
 	 */
-	public async isAlivePrivileged() : Promise<boolean> {
+	public async isAlivePrivileged(): Promise<boolean> {
 		const path = "/status/alive/privileged";
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return (text === "true");
 	}
@@ -23349,11 +24207,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Datenbank-Revision
 	 */
-	public async getServerDBRevision() : Promise<number> {
+	public async getServerDBRevision(): Promise<number> {
 		const path = "/status/db/revision";
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
-		return parseFloat(JSON.parse(text));
+		return Number.parseFloat(JSON.parse(text));
 	}
 
 
@@ -23369,9 +24227,9 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Betriebsmodus (stable, alpha, beta oder dev)
 	 */
-	public async getServerModus() : Promise<string> {
+	public async getServerModus(): Promise<string> {
 		const path = "/status/mode";
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return JSON.parse(text).toString();
 	}
@@ -23389,9 +24247,9 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die erste kompatible Schild-Version
 	 */
-	public async getSchildMinVersion() : Promise<string> {
+	public async getSchildMinVersion(): Promise<string> {
 		const path = "/status/schild/minversion";
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return JSON.parse(text).toString();
 	}
@@ -23409,9 +24267,9 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die SVWS-Server-Version
 	 */
-	public async getServerVersion() : Promise<string> {
+	public async getServerVersion(): Promise<string> {
 		const path = "/status/version";
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return JSON.parse(text).toString();
 	}

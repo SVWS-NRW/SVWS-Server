@@ -57,7 +57,7 @@ export class KursManager extends JavaObject {
 	 */
 	private addInternal(kurs: KursDaten): boolean {
 		if (kurs.id < 0) {
-			throw new DeveloperNotificationException("Die Kurs-ID darf nicht negativ sein!")
+			throw new DeveloperNotificationException("Die Kurs-ID darf nicht negativ sein!");
 		}
 		const old: KursDaten | null = this._map.put(kurs.id, kurs);
 		if (old !== null) {
@@ -128,7 +128,7 @@ export class KursManager extends JavaObject {
 	public getOrException(pKursID: number): KursDaten {
 		const kurs: KursDaten | null = this._map.get(pKursID);
 		if (kurs === null) {
-			throw new DeveloperNotificationException("KursDaten mit id=" + pKursID + " gibt es nicht.")
+			throw new DeveloperNotificationException("KursDaten mit id=" + pKursID + " gibt es nicht.");
 		}
 		return kurs;
 	}

@@ -73,7 +73,7 @@ export class ArrayMapKeySet<K, V> extends JavaObject implements JavaSet<K> {
 	}
 
 	public add(e: K): boolean {
-		throw new UnsupportedOperationException("add: Es kann kein Schlüsselwert ohne zugeordnetem Wert hinzugefügt werden (null ist nicht erlaubt).")
+		throw new UnsupportedOperationException("add: Es kann kein Schlüsselwert ohne zugeordnetem Wert hinzugefügt werden (null ist nicht erlaubt).");
 	}
 
 	public remove(obj: unknown | null): boolean {
@@ -93,12 +93,12 @@ export class ArrayMapKeySet<K, V> extends JavaObject implements JavaSet<K> {
 	}
 
 	public addAll(c: Collection<K> | null): boolean {
-		throw new UnsupportedOperationException("addAll: Es kann kein Schlüsselwert ohne zugeordnetem Wert hinzugefügt werden (null ist nicht erlaubt).")
+		throw new UnsupportedOperationException("addAll: Es kann kein Schlüsselwert ohne zugeordnetem Wert hinzugefügt werden (null ist nicht erlaubt).");
 	}
 
 	public retainAll(collection: Collection<any> | null): boolean {
 		if (collection === null) {
-			throw new NullPointerException()
+			throw new NullPointerException();
 		}
 		let changed: boolean = false;
 		for (let i: number = 0; i < this._map.getNumberOfKeys(); i++) {
@@ -116,7 +116,7 @@ export class ArrayMapKeySet<K, V> extends JavaObject implements JavaSet<K> {
 
 	public removeAll(collection: Collection<any> | null): boolean {
 		if (collection === null) {
-			throw new NullPointerException()
+			throw new NullPointerException();
 		}
 		let removed: boolean = false;
 		for (const obj of collection) {

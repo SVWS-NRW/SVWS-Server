@@ -61,7 +61,7 @@ export abstract class CoreTypeSimple<T extends CoreTypeData, U extends CoreTypeS
 				}
 			}
 		} catch(e : any) {
-			throw new CoreTypeException(e)
+			throw new CoreTypeException(e);
 		}
 	}
 
@@ -118,7 +118,7 @@ export abstract class CoreTypeSimple<T extends CoreTypeData, U extends CoreTypeS
 	 */
 	public compareTo(other: U | null): number {
 		if (other === null) {
-			throw new NullPointerException()
+			throw new NullPointerException();
 		}
 		return JavaInteger.compare(this.ordinal(), other.ordinal());
 	}

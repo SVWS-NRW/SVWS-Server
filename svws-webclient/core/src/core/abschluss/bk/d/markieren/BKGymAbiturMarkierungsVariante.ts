@@ -421,7 +421,7 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 				break;
 			}
 			default: {
-				throw new DeveloperNotificationException("Der Indent " + indent + " ist nicht vorgesehen.")
+				throw new DeveloperNotificationException("Der Indent " + indent + " ist nicht vorgesehen.");
 				break;
 			}
 		}

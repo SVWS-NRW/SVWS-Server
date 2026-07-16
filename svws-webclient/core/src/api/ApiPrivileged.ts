@@ -22,7 +22,7 @@ export class ApiPrivileged extends BaseApi {
 	 * @param {string} username - der Benutzername für den API-Zugriff
 	 * @param {string} password - das Kennwort des Benutzers für den API-Zugriff
 	 */
-	public constructor(url : string, username : string, password : string) {
+	public constructor(url: string, username: string, password: string) {
 		super(url, username, password);
 	}
 
@@ -36,7 +36,7 @@ export class ApiPrivileged extends BaseApi {
 	 *   Code 403: Das Default-Schema darf nicht zurückgesetzt werden.
 	 *   Code 404: Die Konfiguration wurde nicht gefunden.
 	 */
-	public async unsetDefaultSchemaInConfig() : Promise<void> {
+	public async unsetDefaultSchemaInConfig(): Promise<void> {
 		const path = "/api/privileged/config/default/schema/";
 		await super.postJSON(path, null);
 		return;
@@ -56,7 +56,7 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async setDefaultSchemaInConfig(schema : string) : Promise<void> {
+	public async setDefaultSchemaInConfig(schema: string): Promise<void> {
 		const path = "/api/privileged/config/default/schema/{schema}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		await super.postJSON(path, null);
@@ -77,7 +77,7 @@ export class ApiPrivileged extends BaseApi {
 	 * @param {FormData} data - der Request-Body für die HTTP-Methode
 	 * @param {string} alias - der Pfad-Parameter alias
 	 */
-	public async setConfigPrivateKeyCertificateBase64(data : FormData, alias : string) : Promise<void> {
+	public async setConfigPrivateKeyCertificateBase64(data: FormData, alias: string): Promise<void> {
 		const path = "/api/privileged/config/privatekey_cert_base64/{alias}"
 			.replace(/{alias\s*(:[^{}]+({[^{}]+})*)?}/g, alias);
 		await super.postMultipart(path, data);
@@ -98,10 +98,10 @@ export class ApiPrivileged extends BaseApi {
 	 * @param {TLSCertificateInfo} data - der Request-Body für die HTTP-Methode
 	 * @param {string} alias - der Pfad-Parameter alias
 	 */
-	public async createConfigPrivateKeySelfSignedCertificate(data : TLSCertificateInfo, alias : string) : Promise<void> {
+	public async createConfigPrivateKeySelfSignedCertificate(data: TLSCertificateInfo, alias: string): Promise<void> {
 		const path = "/api/privileged/config/privatekey_cert_base64/{alias}/create"
 			.replace(/{alias\s*(:[^{}]+({[^{}]+})*)?}/g, alias);
-		const body : string = TLSCertificateInfo.transpilerToJSON(data);
+		const body: string = TLSCertificateInfo.transpilerToJSON(data);
 		await super.postJSON(path, body);
 		return;
 	}
@@ -120,7 +120,7 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async removeSchemaFromConfig(schema : string) : Promise<void> {
+	public async removeSchemaFromConfig(schema: string): Promise<void> {
 		const path = "/api/privileged/config/schema/{schema}/remove"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		await super.postJSON(path, null);
@@ -141,9 +141,9 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns true, wenn der Benutzer die Rechte hat
 	 */
-	public async isPrivilegedUser() : Promise<boolean> {
+	public async isPrivilegedUser(): Promise<boolean> {
 		const path = "/api/privileged/user/isprivileged";
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return (text === "true");
 	}
@@ -166,10 +166,10 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Der Log vom Anlegen des Schemas
 	 */
-	public async createSchemaCurrentInto(schema : string) : Promise<SimpleOperationResponse> {
+	public async createSchemaCurrentInto(schema: string): Promise<SimpleOperationResponse> {
 		const path = "/api/schema/create/{schema}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.postJSON(path, null);
+		const result: string = await super.postJSON(path, null);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -196,11 +196,11 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Der Log vom Anlegen des Schemas
 	 */
-	public async createSchemaInto(schema : string, revision : number) : Promise<SimpleOperationResponse> {
+	public async createSchemaInto(schema: string, revision: number): Promise<SimpleOperationResponse> {
 		const path = "/api/schema/create/{schema}/{revision : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{revision\s*(:[^{}]+({[^{}]+})*)?}/g, revision.toString());
-		const result : string = await super.postJSON(path, null);
+		const result: string = await super.postJSON(path, null);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -225,11 +225,11 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Die Schule wurde erfolgreich angelegt.
 	 */
-	public async initSchemaMitSchule(schema : string, schulnummer : number) : Promise<SchuleStammdaten> {
+	public async initSchemaMitSchule(schema: string, schulnummer: number): Promise<SchuleStammdaten> {
 		const path = "/api/schema/create/{schema}/init/{schulnummer : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{schulnummer\s*(:[^{}]+({[^{}]+})*)?}/g, schulnummer.toString());
-		const result : string = await super.postJSON(path, null);
+		const result: string = await super.postJSON(path, null);
 		const text = result;
 		return SchuleStammdaten.transpilerFromJSON(text);
 	}
@@ -250,10 +250,10 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Der Export der SQLite-Datenbank
 	 */
-	public async exportSQLiteFrom(schema : string) : Promise<ApiFile> {
+	public async exportSQLiteFrom(schema: string): Promise<ApiFile> {
 		const path = "/api/schema/export/{schema}/sqlite"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const data : ApiFile = await super.getSQLite(path);
+		const data: ApiFile = await super.getSQLite(path);
 		return data;
 	}
 
@@ -273,10 +273,10 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Der Export der ZIP-Datei der SQLite-Datenbank
 	 */
-	public async exportZipFrom(schema : string) : Promise<ApiFile> {
+	public async exportZipFrom(schema: string): Promise<ApiFile> {
 		const path = "/api/schema/export/{schema}/zip"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const data : ApiFile = await super.getZip(path);
+		const data: ApiFile = await super.getZip(path);
 		return data;
 	}
 
@@ -300,10 +300,10 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Der Log vom Importieren der SQLite-Datenbank
 	 */
-	public async importSQLiteInto(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
+	public async importSQLiteInto(data: FormData, schema: string): Promise<SimpleOperationResponse> {
 		const path = "/api/schema/import/{schema}/sqlite"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.postMultipart(path, data);
+		const result: string = await super.postMultipart(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -322,12 +322,15 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Die Liste mit allen sichtbaren Schemas in der Datenbank
 	 */
-	public async getSchemaListe() : Promise<List<SchemaListeEintrag>> {
+	public async getSchemaListe(): Promise<List<SchemaListeEintrag>> {
 		const path = "/api/schema/liste/alle";
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchemaListeEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchemaListeEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchemaListeEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -348,13 +351,16 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Die Informationen zu den administrativen Benutzern
 	 */
-	public async getSchemaAdmins(schema : string) : Promise<List<BenutzerListeEintrag>> {
+	public async getSchemaAdmins(schema: string): Promise<List<BenutzerListeEintrag>> {
 		const path = "/api/schema/liste/info/{schema}/admins"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<BenutzerListeEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BenutzerListeEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(BenutzerListeEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -376,10 +382,10 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Die Informationen zur Schule
 	 */
-	public async getSchuleInfo(schema : string) : Promise<SchuleInfo> {
+	public async getSchuleInfo(schema: string): Promise<SchuleInfo> {
 		const path = "/api/schema/liste/info/{schema}/schule"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return SchuleInfo.transpilerFromJSON(text);
 	}
@@ -399,12 +405,15 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Eine Liste von Schulen-Katalog-Einträgen
 	 */
-	public async getAllgemeinenKatalogSchulen() : Promise<List<SchulenKatalogEintrag>> {
+	public async getAllgemeinenKatalogSchulen(): Promise<List<SchulenKatalogEintrag>> {
 		const path = "/api/schema/liste/kataloge/schulen";
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchulenKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchulenKatalogEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchulenKatalogEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -422,12 +431,15 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Die Schema-Liste mit den Namen und den Versionsinformationen der Schemata
 	 */
-	public async getSVWSSchemaListe() : Promise<List<SchemaListeEintrag>> {
+	public async getSVWSSchemaListe(): Promise<List<SchemaListeEintrag>> {
 		const path = "/api/schema/liste/svws";
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchemaListeEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchemaListeEintrag.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchemaListeEintrag.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -451,11 +463,11 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Der Log vom Migrieren der MariaDB-Datenbank
 	 */
-	public async migrateMariaDBInto(data : DatenbankVerbindungsdaten, schema : string) : Promise<SimpleOperationResponse> {
+	public async migrateMariaDBInto(data: DatenbankVerbindungsdaten, schema: string): Promise<SimpleOperationResponse> {
 		const path = "/api/schema/migrate/{schema}/mariadb"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = DatenbankVerbindungsdaten.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = DatenbankVerbindungsdaten.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -481,12 +493,12 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Der Log vom Migrieren der MariaDB-Datenbank
 	 */
-	public async migrateMariaDBSchulnummerInto(data : DatenbankVerbindungsdaten, schema : string, schulnummer : number) : Promise<SimpleOperationResponse> {
+	public async migrateMariaDBSchulnummerInto(data: DatenbankVerbindungsdaten, schema: string, schulnummer: number): Promise<SimpleOperationResponse> {
 		const path = "/api/schema/migrate/{schema}/mariadb/{schulnummer:\\d{6}}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{schulnummer\s*(:[^{}]+({[^{}]+})*)?}/g, schulnummer.toString());
-		const body : string = DatenbankVerbindungsdaten.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = DatenbankVerbindungsdaten.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -511,10 +523,10 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Der Log vom Migrieren der Access-MDB-Datenbank
 	 */
-	public async migrateMDBInto(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
+	public async migrateMDBInto(data: FormData, schema: string): Promise<SimpleOperationResponse> {
 		const path = "/api/schema/migrate/{schema}/mdb"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.postMultipart(path, data);
+		const result: string = await super.postMultipart(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -544,10 +556,10 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Der Log vom Migrieren der Access-MDB-Datenbank
 	 */
-	public async migrateMDBIntoPayload(data : ApiFile, schema : string) : Promise<SimpleOperationResponse> {
+	public async migrateMDBIntoPayload(data: ApiFile, schema: string): Promise<SimpleOperationResponse> {
 		const path = "/api/schema/migrate/{schema}/mdb/v2"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.postOctetStreamToJSON(path, data);
+		const result: string = await super.postOctetStreamToJSON(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -572,11 +584,11 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Der Log vom Migrieren der SQL-Server-Datenbank
 	 */
-	public async migrateMsSqlServerInto(data : DatenbankVerbindungsdaten, schema : string) : Promise<SimpleOperationResponse> {
+	public async migrateMsSqlServerInto(data: DatenbankVerbindungsdaten, schema: string): Promise<SimpleOperationResponse> {
 		const path = "/api/schema/migrate/{schema}/mssql"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = DatenbankVerbindungsdaten.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = DatenbankVerbindungsdaten.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -602,12 +614,12 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Der Log vom Migrieren der SQL-Server-Datenbank
 	 */
-	public async migrateMsSqlServerSchulnummerInto(data : DatenbankVerbindungsdaten, schema : string, schulnummer : number) : Promise<SimpleOperationResponse> {
+	public async migrateMsSqlServerSchulnummerInto(data: DatenbankVerbindungsdaten, schema: string, schulnummer: number): Promise<SimpleOperationResponse> {
 		const path = "/api/schema/migrate/{schema}/mssql/{schulnummer:\\d{6}}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{schulnummer\s*(:[^{}]+({[^{}]+})*)?}/g, schulnummer.toString());
-		const body : string = DatenbankVerbindungsdaten.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = DatenbankVerbindungsdaten.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -632,11 +644,11 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Der Log vom Migrieren der MySQL-Datenbank
 	 */
-	public async migrateMySqlInto(data : DatenbankVerbindungsdaten, schema : string) : Promise<SimpleOperationResponse> {
+	public async migrateMySqlInto(data: DatenbankVerbindungsdaten, schema: string): Promise<SimpleOperationResponse> {
 		const path = "/api/schema/migrate/{schema}/mysql"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = DatenbankVerbindungsdaten.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = DatenbankVerbindungsdaten.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -662,12 +674,12 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Der Log vom Migrieren der MySQL-Datenbank
 	 */
-	public async migrateMySqlSchulnummerInto(data : DatenbankVerbindungsdaten, schema : string, schulnummer : number) : Promise<SimpleOperationResponse> {
+	public async migrateMySqlSchulnummerInto(data: DatenbankVerbindungsdaten, schema: string, schulnummer: number): Promise<SimpleOperationResponse> {
 		const path = "/api/schema/migrate/{schema}/mysql/{schulnummer:\\d{6}}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{schulnummer\s*(:[^{}]+({[^{}]+})*)?}/g, schulnummer.toString());
-		const body : string = DatenbankVerbindungsdaten.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = DatenbankVerbindungsdaten.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -692,11 +704,11 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Der Log vom Anlegen des Schemas
 	 */
-	public async createSchemaCurrent(data : BenutzerKennwort, schema : string) : Promise<SimpleOperationResponse> {
+	public async createSchemaCurrent(data: BenutzerKennwort, schema: string): Promise<SimpleOperationResponse> {
 		const path = "/api/schema/root/create/{schema}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = BenutzerKennwort.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = BenutzerKennwort.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -724,12 +736,12 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Der Log vom Anlegen des Schemas
 	 */
-	public async createSchema(data : BenutzerKennwort, schema : string, revision : number) : Promise<SimpleOperationResponse> {
+	public async createSchema(data: BenutzerKennwort, schema: string, revision: number): Promise<SimpleOperationResponse> {
 		const path = "/api/schema/root/create/{schema}/{revision : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{revision\s*(:[^{}]+({[^{}]+})*)?}/g, revision.toString());
-		const body : string = BenutzerKennwort.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = BenutzerKennwort.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -747,7 +759,7 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async destroySchema(schema : string) : Promise<void> {
+	public async destroySchema(schema: string): Promise<void> {
 		const path = "/api/schema/root/destroy/{schema}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		await super.postJSON(path, null);
@@ -770,10 +782,10 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns true, wenn das Schema existiert
 	 */
-	public async existsSchema(schema : string) : Promise<boolean> {
+	public async existsSchema(schema: string): Promise<boolean> {
 		const path = "/api/schema/root/exists/{schema}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return (text === "true");
 	}
@@ -793,10 +805,10 @@ export class ApiPrivileged extends BaseApi {
 	 * @param {BenutzerKennwort} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async importExistingSchema(data : BenutzerKennwort, schema : string) : Promise<void> {
+	public async importExistingSchema(data: BenutzerKennwort, schema: string): Promise<void> {
 		const path = "/api/schema/root/import/existing/{schema}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = BenutzerKennwort.transpilerToJSON(data);
+		const body: string = BenutzerKennwort.transpilerToJSON(data);
 		await super.postJSON(path, body);
 		return;
 	}
@@ -821,10 +833,10 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Der Log vom Import der SQLite-Datenbank
 	 */
-	public async importSQLite2Schema(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
+	public async importSQLite2Schema(data: FormData, schema: string): Promise<SimpleOperationResponse> {
 		const path = "/api/schema/root/import/sqlite/{schema}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.postMultipart(path, data);
+		const result: string = await super.postMultipart(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -849,11 +861,11 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Der Log vom Migrieren der MariaDB-Datenbank
 	 */
-	public async migrateMariaDB2Schema(data : MigrateBody, schema : string) : Promise<SimpleOperationResponse> {
+	public async migrateMariaDB2Schema(data: MigrateBody, schema: string): Promise<SimpleOperationResponse> {
 		const path = "/api/schema/root/migrate/mariadb/{schema}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = MigrateBody.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = MigrateBody.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -879,12 +891,12 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Der Log vom Migrieren der MariaDB-Datenbank
 	 */
-	public async migrateMariaDB2SchemaSchulnummer(data : MigrateBody, schema : string, schulnummer : number) : Promise<SimpleOperationResponse> {
+	public async migrateMariaDB2SchemaSchulnummer(data: MigrateBody, schema: string, schulnummer: number): Promise<SimpleOperationResponse> {
 		const path = "/api/schema/root/migrate/mariadb/{schema}/{schulnummer:\\d{6}}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{schulnummer\s*(:[^{}]+({[^{}]+})*)?}/g, schulnummer.toString());
-		const body : string = MigrateBody.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = MigrateBody.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -909,10 +921,10 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Der Log vom Migrieren der Access-MDB-Datenbank
 	 */
-	public async migrateMDB2Schema(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
+	public async migrateMDB2Schema(data: FormData, schema: string): Promise<SimpleOperationResponse> {
 		const path = "/api/schema/root/migrate/mdb/{schema}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.postMultipart(path, data);
+		const result: string = await super.postMultipart(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -942,10 +954,10 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Der Log vom Migrieren der Access-MDB-Datenbank
 	 */
-	public async migrateMDB2SchemaFramedPayload(data : ApiFile, schema : string) : Promise<SimpleOperationResponse> {
+	public async migrateMDB2SchemaFramedPayload(data: ApiFile, schema: string): Promise<SimpleOperationResponse> {
 		const path = "/api/schema/root/migrate/mdb/{schema}/v2"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.postOctetStreamToJSON(path, data);
+		const result: string = await super.postOctetStreamToJSON(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -970,11 +982,11 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Der Log vom Migrieren der MS-SQL-Server-Datenbank
 	 */
-	public async migrateMSSQL2Schema(data : MigrateBody, schema : string) : Promise<SimpleOperationResponse> {
+	public async migrateMSSQL2Schema(data: MigrateBody, schema: string): Promise<SimpleOperationResponse> {
 		const path = "/api/schema/root/migrate/mssql/{schema}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = MigrateBody.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = MigrateBody.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -1000,12 +1012,12 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Der Log vom Migrieren der MS-SQL-Server-Datenbank
 	 */
-	public async migrateMSSQL2SchemaSchulnummer(data : MigrateBody, schema : string, schulnummer : number) : Promise<SimpleOperationResponse> {
+	public async migrateMSSQL2SchemaSchulnummer(data: MigrateBody, schema: string, schulnummer: number): Promise<SimpleOperationResponse> {
 		const path = "/api/schema/root/migrate/mssql/{schema}/{schulnummer:\\d{6}}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{schulnummer\s*(:[^{}]+({[^{}]+})*)?}/g, schulnummer.toString());
-		const body : string = MigrateBody.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = MigrateBody.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -1030,11 +1042,11 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Der Log vom Migrieren der MySQL-Datenbank
 	 */
-	public async migrateMySQL2Schema(data : MigrateBody, schema : string) : Promise<SimpleOperationResponse> {
+	public async migrateMySQL2Schema(data: MigrateBody, schema: string): Promise<SimpleOperationResponse> {
 		const path = "/api/schema/root/migrate/mysql/{schema}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = MigrateBody.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = MigrateBody.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -1060,12 +1072,12 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Der Log vom Migrieren der MySQL-Datenbank
 	 */
-	public async migrateMySQL2SchemaSchulnummer(data : MigrateBody, schema : string, schulnummer : number) : Promise<SimpleOperationResponse> {
+	public async migrateMySQL2SchemaSchulnummer(data: MigrateBody, schema: string, schulnummer: number): Promise<SimpleOperationResponse> {
 		const path = "/api/schema/root/migrate/mysql/{schema}/{schulnummer:\\d{6}}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{schulnummer\s*(:[^{}]+({[^{}]+})*)?}/g, schulnummer.toString());
-		const body : string = MigrateBody.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = MigrateBody.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -1084,7 +1096,7 @@ export class ApiPrivileged extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} state - der Pfad-Parameter state
 	 */
-	public async deactivateSchema(schema : string, state : number) : Promise<void> {
+	public async deactivateSchema(schema: string, state: number): Promise<void> {
 		const path = "/api/schema/root/schema/{schema}/deactivated/{state: [0-1]}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{state\s*(:[^{}]+({[^{}]+})*)?}/g, state.toString());
@@ -1108,10 +1120,10 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns true, wenn der Benutzer existiert
 	 */
-	public async existsUser(user : string) : Promise<boolean> {
+	public async existsUser(user: string): Promise<boolean> {
 		const path = "/api/schema/root/user/{user}/exists"
 			.replace(/{user\s*(:[^{}]+({[^{}]+})*)?}/g, user);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return (text === "true");
 	}
@@ -1132,10 +1144,10 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns true, wenn das Kennwort und der Benutzername korrekt sind und den Zugriff auf die Datenbankschema erlauben.
 	 */
-	public async checkDBPassword(data : BenutzerKennwort) : Promise<boolean> {
+	public async checkDBPassword(data: BenutzerKennwort): Promise<boolean> {
 		const path = "/api/schema/root/user/checkpwd";
-		const body : string = BenutzerKennwort.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = BenutzerKennwort.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return (text === "true");
 	}
@@ -1156,10 +1168,10 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns true, wenn das Kennwort und der Benutzername korrekt sind und der priviligierte Zugriff auf die Datenbank erlaubt.
 	 */
-	public async checkDBPrivPassword(data : BenutzerKennwort) : Promise<boolean> {
+	public async checkDBPrivPassword(data: BenutzerKennwort): Promise<boolean> {
 		const path = "/api/schema/root/user/checkrootprivs";
-		const body : string = BenutzerKennwort.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = BenutzerKennwort.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return (text === "true");
 	}
@@ -1188,10 +1200,10 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Der Log vom Verlauf des Updates
 	 */
-	public async updateSchemaToCurrent(schema : string) : Promise<SimpleOperationResponse> {
+	public async updateSchemaToCurrent(schema: string): Promise<SimpleOperationResponse> {
 		const path = "/api/schema/update/{schema}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.postJSON(path, null);
+		const result: string = await super.postJSON(path, null);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
@@ -1221,11 +1233,11 @@ export class ApiPrivileged extends BaseApi {
 	 *
 	 * @returns Der Log vom Verlauf des Updates
 	 */
-	public async updateSchema(schema : string, revision : number) : Promise<SimpleOperationResponse> {
+	public async updateSchema(schema: string, revision: number): Promise<SimpleOperationResponse> {
 		const path = "/api/schema/update/{schema}/{revision : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{revision\s*(:[^{}]+({[^{}]+})*)?}/g, revision.toString());
-		const result : string = await super.postJSON(path, null);
+		const result: string = await super.postJSON(path, null);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}

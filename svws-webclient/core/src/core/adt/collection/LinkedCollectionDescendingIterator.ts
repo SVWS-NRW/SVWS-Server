@@ -42,17 +42,17 @@ export class LinkedCollectionDescendingIterator<E> extends JavaObject implements
 
 	public hasNext(): boolean {
 		if (this._collection._modCount !== this._expModCount) {
-			throw new ConcurrentModificationException()
+			throw new ConcurrentModificationException();
 		}
 		return (this._current !== null);
 	}
 
 	public next(): E {
 		if (this._collection._modCount !== this._expModCount) {
-			throw new ConcurrentModificationException()
+			throw new ConcurrentModificationException();
 		}
 		if (this._current === null) {
-			throw new NoSuchElementException()
+			throw new NoSuchElementException();
 		}
 		const result: E = this._current.getValue();
 		this._current = this._current.getPrev();
@@ -60,7 +60,7 @@ export class LinkedCollectionDescendingIterator<E> extends JavaObject implements
 	}
 
 	public remove(): void {
-		throw new UnsupportedOperationException("remove")
+		throw new UnsupportedOperationException("remove");
 	}
 
 	transpilerCanonicalName(): string {

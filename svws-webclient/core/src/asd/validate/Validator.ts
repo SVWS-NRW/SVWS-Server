@@ -42,7 +42,7 @@ export abstract class Validator extends BasicValidator {
 		return { get: () => {
 			const value: T | null = supplier.get();
 			if (value === null) {
-				throw new NullPointerException()
+				throw new NullPointerException();
 			}
 			return value;
 		} };

@@ -158,7 +158,7 @@ export class ServiceBerechtigungMSAQ extends Service {
 				if ((fg1Defizite.size() === 2) && (wpDefizit !== null) && (!fg1Ausgleichsfaecher.isEmpty()) && (!nachpruefungGenutzt)) {
 					const defizitFach: GEAbschlussFach | null = faecher.fg1.getFach(ServiceBerechtigungMSAQ.filterDefizitNichtWP);
 					if (defizitFach === null) {
-						throw new NullPointerException()
+						throw new NullPointerException();
 					}
 					const ausgleichsFach: GEAbschlussFach = fg1Ausgleichsfaecher.get(0);
 					defizitFach.ausgeglichen = true;
@@ -179,7 +179,7 @@ export class ServiceBerechtigungMSAQ extends Service {
 		if ((fg1Defizite.size() === 1) && (wpDefizit === null)) {
 			const defizitFach: GEAbschlussFach | null = faecher.fg1.getFach(ServiceBerechtigungMSAQ.filterDefizitNichtWP);
 			if (defizitFach === null) {
-				throw new NullPointerException()
+				throw new NullPointerException();
 			}
 			const ausgleichsFach: GEAbschlussFach = fg1Ausgleichsfaecher.get(0);
 			defizitFach.ausgeglichen = true;

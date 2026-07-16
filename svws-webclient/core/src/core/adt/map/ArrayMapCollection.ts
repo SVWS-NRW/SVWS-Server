@@ -70,11 +70,11 @@ export class ArrayMapCollection<K, V> extends JavaObject implements Collection<V
 	}
 
 	public add(e: V): boolean {
-		throw new UnsupportedOperationException("add: Werte können nicht ohne Schlüsselwerte hinzugefügt werden.")
+		throw new UnsupportedOperationException("add: Werte können nicht ohne Schlüsselwerte hinzugefügt werden.");
 	}
 
 	public remove(o: unknown | null): boolean {
-		throw new UnsupportedOperationException("remove: Werte können nicht ohne einen Schlüsselwert entfernt werden.")
+		throw new UnsupportedOperationException("remove: Werte können nicht ohne einen Schlüsselwert entfernt werden.");
 	}
 
 	public containsAll(collection: Collection<any> | null): boolean {
@@ -90,15 +90,15 @@ export class ArrayMapCollection<K, V> extends JavaObject implements Collection<V
 	}
 
 	public addAll(c: Collection<V> | null): boolean {
-		throw new UnsupportedOperationException("addAll: Werte können nicht ohne Schlüsselwerte hinzugefügt werden.")
+		throw new UnsupportedOperationException("addAll: Werte können nicht ohne Schlüsselwerte hinzugefügt werden.");
 	}
 
 	public removeAll(c: Collection<any> | null): boolean {
-		throw new UnsupportedOperationException("removeAll: Werte können nicht ohne einen Schlüsselwert entfernt werden.")
+		throw new UnsupportedOperationException("removeAll: Werte können nicht ohne einen Schlüsselwert entfernt werden.");
 	}
 
 	public retainAll(c: Collection<any> | null): boolean {
-		throw new UnsupportedOperationException("retainAll: Werte können nicht ohne einen Schlüsselwert entfernt werden.")
+		throw new UnsupportedOperationException("retainAll: Werte können nicht ohne einen Schlüsselwert entfernt werden.");
 	}
 
 	public clear(): void {

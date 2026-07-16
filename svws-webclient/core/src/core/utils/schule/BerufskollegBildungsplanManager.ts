@@ -70,11 +70,11 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 			this._values.addAll(eintrag.historie);
 			for (const bildungsplan of eintrag.historie) {
 				if (!JavaObject.equalsTranspiler(bildungsplan.fachklasse.index, (eintrag.index)) || !JavaObject.equalsTranspiler(bildungsplan.fachklasse.schluessel, (eintrag.schluessel))) {
-					throw new DeveloperNotificationException("Fehlerhafter Katalog: Fachklasse in Historie mit ID '" + bildungsplan.id + "' ungleich Fachklasse des Bildungsplans")
+					throw new DeveloperNotificationException("Fehlerhafter Katalog: Fachklasse in Historie mit ID '" + bildungsplan.id + "' ungleich Fachklasse des Bildungsplans");
 				}
 				const alt: BKBildungsplan | null = this._mapByID.put(bildungsplan.id, bildungsplan);
 				if (alt !== null) {
-					throw new DeveloperNotificationException("Fehlerhafter Katalog: Doppelte ID '" + bildungsplan.id)
+					throw new DeveloperNotificationException("Fehlerhafter Katalog: Doppelte ID '" + bildungsplan.id);
 				}
 				Map3DUtils.getOrCreateArrayList(this._mapBildungsplanByFachklasse, eintrag.index, eintrag.schluessel, bildungsplan.id).add(bildungsplan);
 				for (const fach of bildungsplan.fbFaecher) {
@@ -152,10 +152,10 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	public getLehrplaeneBySchulgliederungSchuljahr(gliederung: Schulgliederung, schuljahr: number): List<BKBildungsplan> | null {
 		const sglke: SchulgliederungKatalogEintrag | null = gliederung.daten(schuljahr);
 		if (sglke === null) {
-			throw new IllegalArgumentException(JavaString.format("Die Schulgliederung %s ist in dem Schuljahr %d nicht gültig.", gliederung.name(), schuljahr))
+			throw new IllegalArgumentException(JavaString.format("Die Schulgliederung %s ist in dem Schuljahr %d nicht gültig.", gliederung.name(), schuljahr));
 		}
 		if (sglke.bkIndex === null) {
-			throw new IllegalArgumentException("Die Schulgliederung " + sglke.kuerzel + " hat keinen Schulgliederungs-Index.")
+			throw new IllegalArgumentException("Die Schulgliederung " + sglke.kuerzel + " hat keinen Schulgliederungs-Index.");
 		}
 		return this.getLehrplaeneByIndexSchuljahr(sglke.bkIndex, schuljahr);
 	}
@@ -193,10 +193,10 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	public getLehrplaeneBySchulgliederungSchuljahrAll(gliederung: Schulgliederung, schuljahr: number): List<BKBildungsplan> | null {
 		const sglke: SchulgliederungKatalogEintrag | null = gliederung.daten(schuljahr);
 		if (sglke === null) {
-			throw new IllegalArgumentException(JavaString.format("Die Schulgliederung %s ist in dem Schuljahr %d nicht gültig.", gliederung.name(), schuljahr))
+			throw new IllegalArgumentException(JavaString.format("Die Schulgliederung %s ist in dem Schuljahr %d nicht gültig.", gliederung.name(), schuljahr));
 		}
 		if (sglke.bkIndex === null) {
-			throw new IllegalArgumentException("Die Schulgliederung " + sglke.kuerzel + " hat keinen Schulgliederungs-Index.")
+			throw new IllegalArgumentException("Die Schulgliederung " + sglke.kuerzel + " hat keinen Schulgliederungs-Index.");
 		}
 		return this.getLehrplaeneByIndexSchuljahrAll(sglke.bkIndex, schuljahr);
 	}
@@ -281,7 +281,7 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 			return null;
 		}
 		if ((Math.trunc((bildungsplan.dauer + 1) / 2)) < jahrgang) {
-			throw new UserNotificationException("Fehlerhafter Jahrgang: Der Jahrgang " + jahrgang + " ist zu groß für den Bildungsgang mit einer Dauer von " + bildungsplan.dauer + " Monaten!")
+			throw new UserNotificationException("Fehlerhafter Jahrgang: Der Jahrgang " + jahrgang + " ist zu groß für den Bildungsgang mit einer Dauer von " + bildungsplan.dauer + " Monaten!");
 		}
 		return bildungsplan;
 	}

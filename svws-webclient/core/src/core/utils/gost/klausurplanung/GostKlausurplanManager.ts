@@ -234,7 +234,7 @@ export class GostKlausurplanManager extends JavaObject {
 					}
 				} else
 					if (((sA !== null) && (sB === null)) || ((sA === null) && (sB !== null))) {
-						throw new DeveloperNotificationException("Schüler nicht gefunden: " + kA.idSchueler + " oder " + kB.idSchueler)
+						throw new DeveloperNotificationException("Schüler nicht gefunden: " + kA.idSchueler + " oder " + kB.idSchueler);
 					}
 			}
 		}
@@ -690,7 +690,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public stundenplanManagerExistsByAbschnitt(idSchuljahresabschnitt: number): boolean {
 		if (!this.stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt)) {
-			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.")
+			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.");
 		}
 		const liste: List<StundenplanManager> | null = this._stundenplanmanagermenge_by_schuljahresabschnitt.get(idSchuljahresabschnitt);
 		return (liste !== null) && !liste.isEmpty();
@@ -717,7 +717,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public stundenplanManagerExistsByAbschnittAndDatum(idSchuljahresabschnitt: number, datum: string): boolean {
 		if (!this.stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt)) {
-			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.")
+			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.");
 		}
 		return this._stundenplanmanager_by_schuljahresabschnitt_and_datum.contains(idSchuljahresabschnitt, datum);
 	}
@@ -740,7 +740,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public stundenplanManagerExistsByAbschnittAndJahrAndKw(idSchuljahresabschnitt: number, jahr: number, kw: number): boolean {
 		if (!this.stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt)) {
-			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.")
+			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.");
 		}
 		return this._stundenplanmanager_by_schuljahresabschnitt_and_kw.contains(idSchuljahresabschnitt, GostKlausurplanManager.gibIntkeyJahrUndKw(jahr, kw));
 	}
@@ -754,7 +754,7 @@ export class GostKlausurplanManager extends JavaObject {
 	public stundenplanManagerAddAllBySchuljahresabschnittsid(idSchuljahresabschnitt: number, stundenplanManagerList: List<StundenplanManager>): void {
 		for (const stundenplanManager of stundenplanManagerList) {
 			if (stundenplanManager.getIDSchuljahresabschnitt() !== idSchuljahresabschnitt) {
-				throw new DeveloperNotificationException("ID des Schuljahresabschnitts stimmt nicht überein.")
+				throw new DeveloperNotificationException("ID des Schuljahresabschnitts stimmt nicht überein.");
 			}
 			this.stundenplanManagerAdd(stundenplanManager);
 		}
@@ -834,7 +834,7 @@ export class GostKlausurplanManager extends JavaObject {
 		}
 		const stundenplanManagerList: List<StundenplanManager> | null = this._stundenplanmanagermenge_by_schuljahresabschnitt.get(idSchuljahresabschnitt);
 		if ((stundenplanManagerList === null) || stundenplanManagerList.isEmpty()) {
-			throw new DeveloperNotificationException(JavaString.format("Kein Stundenplanmanager zu Abschnitt %d gefunden.", idSchuljahresabschnitt))
+			throw new DeveloperNotificationException(JavaString.format("Kein Stundenplanmanager zu Abschnitt %d gefunden.", idSchuljahresabschnitt));
 		}
 		if ((stundenplanManagerList.size() === 1) || (JavaString.compareTo(stundenplanManagerList.getFirst().getGueltigAb(), datum) > 0)) {
 			return stundenplanManagerList.getFirst();
@@ -847,7 +847,7 @@ export class GostKlausurplanManager extends JavaObject {
 				return manager;
 			}
 		}
-		throw new DeveloperNotificationException("Kein StundenplanManager passend zu Suchkriterien.")
+		throw new DeveloperNotificationException("Kein StundenplanManager passend zu Suchkriterien.");
 	}
 
 	/**
@@ -889,7 +889,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public stundenplanManagerKalenderwochenzuordnungenGetMengeByAbschnitt(idSchuljahresabschnitt: number): List<StundenplanKalenderwochenzuordnung> {
 		if (!this.stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt)) {
-			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.")
+			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.");
 		}
 		const kwzAll: List<StundenplanKalenderwochenzuordnung> = new ArrayList<StundenplanKalenderwochenzuordnung>();
 		for (const manager of DeveloperNotificationException.ifNull(JavaString.format("_stundenplanmanagermenge_by_schuljahresabschnitt null für Abschnitt %d", idSchuljahresabschnitt), this._stundenplanmanagermenge_by_schuljahresabschnitt.get(idSchuljahresabschnitt))) {
@@ -979,7 +979,7 @@ export class GostKlausurplanManager extends JavaObject {
 				return stundenplanManager;
 			}
 		}
-		throw new DeveloperNotificationException(JavaString.format("Kein Stundenplan zu Datum %s gefunden.", datum))
+		throw new DeveloperNotificationException(JavaString.format("Kein Stundenplan zu Datum %s gefunden.", datum));
 	}
 
 	/**
@@ -1070,7 +1070,7 @@ export class GostKlausurplanManager extends JavaObject {
 				break;
 			}
 			default: {
-				throw new DeveloperNotificationException(JavaString.format("Ungültiges GostHalbjahr %d.", halbjahr))
+				throw new DeveloperNotificationException(JavaString.format("Ungültiges GostHalbjahr %d.", halbjahr));
 				break;
 			}
 		}
@@ -1356,7 +1356,7 @@ export class GostKlausurplanManager extends JavaObject {
 				const kr: GostKlausurraum = DeveloperNotificationException.ifMapGetIsNull(this._raum_by_id, krs.idRaum);
 				const krAlt: GostKlausurraum | null = this._klausurraum_by_idSchuelerklausurtermin.put(skrs.idSchuelerklausurtermin, kr);
 				if ((krAlt !== null) && (krAlt as unknown !== kr as unknown)) {
-					throw new DeveloperNotificationException("Schülerklausur " + skrs.idSchuelerklausurtermin + " ist zwei Klausurräumen zugeordnet.")
+					throw new DeveloperNotificationException("Schülerklausur " + skrs.idSchuelerklausurtermin + " ist zwei Klausurräumen zugeordnet.");
 				}
 			}
 		}
@@ -3200,7 +3200,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public minKlausurstartzeitBySchuelerklausurterminMenge(skts: List<GostSchuelerklausurTermin>, includeNachschreiber: boolean): number {
 		if (skts.isEmpty()) {
-			throw new DeveloperNotificationException("Keine Schülerklausurtermine zur Ermittlung der minimalen Klausurstartzeit gefunden.")
+			throw new DeveloperNotificationException("Keine Schülerklausurtermine zur Ermittlung der minimalen Klausurstartzeit gefunden.");
 		}
 		return DeveloperNotificationException.ifNull("Fehler bei der Ermittlung der minimalen Klausurstartzeit.", this.minKlausurstartzeitBySchuelerklausurterminMengeIntern(skts, includeNachschreiber, true));
 	}
@@ -3263,7 +3263,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public maxKlausurendzeitBySchuelerklausurterminMenge(skts: List<GostSchuelerklausurTermin>, includeNachschreiber: boolean): number {
 		if (skts.isEmpty()) {
-			throw new DeveloperNotificationException("Keine Schülerklausurtermine zur Ermittlung der maximalen Klausurendzeit gefunden.")
+			throw new DeveloperNotificationException("Keine Schülerklausurtermine zur Ermittlung der maximalen Klausurendzeit gefunden.");
 		}
 		return DeveloperNotificationException.ifNull("Fehler bei der Ermittlung der maximalen Klausurendzeit.", this.maxKlausurendzeitBySchuelerklausurterminMengeIntern(skts, includeNachschreiber, true));
 	}
@@ -3914,7 +3914,7 @@ export class GostKlausurplanManager extends JavaObject {
 			const kKurs: KursDaten | null = this.getKursManager().get(k.idKurs);
 			const klausurKurs: KursDaten | null = this.getKursManager().get(klausur.idKurs);
 			if ((kKurs === null) || (klausurKurs === null)) {
-				throw new DeveloperNotificationException("Keine Kurszuordnung im kursManager zu Kurs-ID")
+				throw new DeveloperNotificationException("Keine Kurszuordnung im kursManager zu Kurs-ID");
 			}
 			if (JavaObject.equalsTranspiler(kKurs.kuerzel, (klausurKurs.kuerzel))) {
 				return k;
@@ -5682,7 +5682,7 @@ export class GostKlausurplanManager extends JavaObject {
 				return (kursart as unknown === GostKursart.LK as unknown) ? 180 : 135;
 			}
 		}
-		throw new DeveloperNotificationException("Berechnung Klausurdauer fehlgeschlagen.")
+		throw new DeveloperNotificationException("Berechnung Klausurdauer fehlgeschlagen.");
 	}
 
 	private static berechneAbiturKlausurdauer(kursart: GostKursart, fach: GostFach): number {

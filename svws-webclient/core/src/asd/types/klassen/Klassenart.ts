@@ -153,7 +153,7 @@ export class Klassenart extends JavaEnum<Klassenart> implements CoreType<Klassen
 		if (ke !== null) {
 			const result: JavaSet<Schulform> | null = Klassenart._mapSchulformenByID.get(ke.id);
 			if (result === null) {
-				throw new CoreTypeException(JavaString.format("Fehler beim Prüfen der Schulform. Der Core-Type %s ist nicht korrekt initialisiert.", this.getClass().getSimpleName()))
+				throw new CoreTypeException(JavaString.format("Fehler beim Prüfen der Schulform. Der Core-Type %s ist nicht korrekt initialisiert.", this.getClass().getSimpleName()));
 			}
 			return result.contains(sf);
 		}
@@ -171,7 +171,7 @@ export class Klassenart extends JavaEnum<Klassenart> implements CoreType<Klassen
 	public static getBySchuljahrAndSchulform(schuljahr: number, schulform: Schulform): List<Klassenart> {
 		const mapBySchulform: JavaMap<Schulform, List<Klassenart>> | null = Klassenart._mapBySchuljahrAndSchulform.computeIfAbsent(schuljahr, { apply: (k: number | null) => new HashMap<Schulform, List<Klassenart>>() });
 		if (mapBySchulform === null) {
-			throw new NullPointerException("computeIfAbsent darf nicht null liefern")
+			throw new NullPointerException("computeIfAbsent darf nicht null liefern");
 		}
 		let result: List<Klassenart> | null = mapBySchulform.get(schulform);
 		if (result === null) {

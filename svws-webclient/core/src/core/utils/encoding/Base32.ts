@@ -24,7 +24,7 @@ export class Base32 extends JavaObject {
 	 */
 	private constructor() {
 		super();
-		throw new IllegalStateException("Utility-Klasse")
+		throw new IllegalStateException("Utility-Klasse");
 	}
 
 	/**
@@ -81,7 +81,7 @@ export class Base32 extends JavaObject {
 		for (let i: number = 0; i < len; i++) {
 			const c: number = bytes[i] & 255;
 			if ((c >= Base32.DECODE_TABLE.length) || (Base32.DECODE_TABLE[c] === -1)) {
-				throw new IllegalArgumentException("Ungültiges Zeichen im Base32-String: " + c)
+				throw new IllegalArgumentException("Ungültiges Zeichen im Base32-String: " + c);
 			}
 			buffer = (buffer << 5) | Base32.DECODE_TABLE[c];
 			bitsLeft += 5;

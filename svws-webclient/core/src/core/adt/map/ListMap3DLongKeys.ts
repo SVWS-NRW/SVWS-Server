@@ -180,7 +180,7 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 	 */
 	public addSingle(key1: number, key2: number, key3: number, value: V): void {
 		if (!this.get123(key1, key2, key3).isEmpty()) {
-			throw new DeveloperNotificationException(JavaString.format("Es gibt schon ein Element mit (%d, %d, %d).", key1, key2, key3))
+			throw new DeveloperNotificationException(JavaString.format("Es gibt schon ein Element mit (%d, %d, %d).", key1, key2, key3));
 		}
 		this.add(key1, key2, key3, value);
 	}

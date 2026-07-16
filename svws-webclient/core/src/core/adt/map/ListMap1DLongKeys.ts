@@ -39,7 +39,7 @@ export class ListMap1DLongKeys<V> extends JavaObject {
 	 */
 	public addSingle(key: number, value: V): void {
 		if (!this.get(key).isEmpty()) {
-			throw new DeveloperNotificationException(JavaString.format("Es gibt schon ein Element mit (%d).", key))
+			throw new DeveloperNotificationException(JavaString.format("Es gibt schon ein Element mit (%d).", key));
 		}
 		this.add(key, value);
 	}

@@ -60,7 +60,7 @@ export class PairIterator<T> extends JavaObject implements JavaIterator<PairNN<T
 	 * @throws UnsupportedOperationException immer
 	 */
 	public remove(): void {
-		throw new UnsupportedOperationException()
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -79,7 +79,7 @@ export class PairIterator<T> extends JavaObject implements JavaIterator<PairNN<T
 	 */
 	public next(): PairNN<T, T> {
 		if (this.nextElement === null) {
-			throw new NoSuchElementException()
+			throw new NoSuchElementException();
 		}
 		const result: PairNN<T, T> | null = this.nextElement;
 		this.calculateNextElement();

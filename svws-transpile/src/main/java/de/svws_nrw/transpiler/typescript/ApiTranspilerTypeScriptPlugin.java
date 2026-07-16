@@ -129,7 +129,7 @@ public final class ApiTranspilerTypeScriptPlugin extends TranspilerLanguagePlugi
 						\t * @param {string} username - der Benutzername für den API-Zugriff
 						\t * @param {string} password - das Kennwort des Benutzers für den API-Zugriff
 						\t */
-						\tpublic constructor(url : string, username : string, password : string) {
+						\tpublic constructor(url: string, username: string, password: string) {
 						\t\tsuper(url, username, password);
 						\t}
 

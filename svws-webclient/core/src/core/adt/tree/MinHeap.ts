@@ -76,7 +76,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 			const comparator: Comparator<T> = cast_java_util_Comparator(__param0);
 			const initialCapacity: number = __param1 as number;
 			if (initialCapacity <= 0) {
-				throw new IllegalArgumentException("Die initiale Kapazität muss größer als 0 sein.")
+				throw new IllegalArgumentException("Die initiale Kapazität muss größer als 0 sein.");
 			}
 			this._comparator = comparator;
 			this._initialCapacity = initialCapacity;
@@ -114,7 +114,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 
 	public element(): T {
 		if ((this._size === 0) || (this._nodes[0] === null)) {
-			throw new NoSuchElementException()
+			throw new NoSuchElementException();
 		}
 		return this._nodes[0];
 	}
@@ -150,7 +150,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 		if ((__param0 === undefined)) {
 			const result: T | null = this.poll();
 			if (result === null) {
-				throw new NoSuchElementException()
+				throw new NoSuchElementException();
 			}
 			return result;
 		} else if (((__param0 !== undefined) && ((__param0 instanceof Object) || ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.lang.Object')))) || (__param0 === null))) {
@@ -469,7 +469,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 		const nodeCurrent: T | null = this._nodes[i];
 		const nodeChild: T | null = this._nodes[child];
 		if ((nodeCurrent === null) || (nodeChild === null)) {
-			throw new NullPointerException()
+			throw new NullPointerException();
 		}
 		if (this._comparator.compare(nodeCurrent, nodeChild) <= 0) {
 			return;
@@ -534,7 +534,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	 */
 	private grow(): void {
 		if (this._nodes.length === JavaInteger.MAX_VALUE) {
-			throw new IllegalStateException("Der Minimum-Heap kann nicht mehr als " + JavaInteger.MAX_VALUE + " Elemente beinhalten.")
+			throw new IllegalStateException("Der Minimum-Heap kann nicht mehr als " + JavaInteger.MAX_VALUE + " Elemente beinhalten.");
 		}
 		let newLength: number = (this._nodes.length * 2) + 1;
 		if (newLength < 0) {

@@ -368,7 +368,7 @@ export class KursblockungDynFachart extends JavaObject {
 				return;
 			}
 		}
-		throw new DeveloperNotificationException("aktionZufaelligerKursWandertNachSchiene(" + schiene + ")")
+		throw new DeveloperNotificationException("aktionZufaelligerKursWandertNachSchiene(" + schiene + ")");
 	}
 
 	/**

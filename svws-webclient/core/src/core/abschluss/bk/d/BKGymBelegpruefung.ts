@@ -48,7 +48,7 @@ export class BKGymBelegpruefung extends JavaObject {
 	 */
 	private static readonly fehlerliste_comparator: Comparator<List<BKGymBelegungsfehler>> = { compare: (l1: List<BKGymBelegungsfehler> | null, l2: List<BKGymBelegungsfehler> | null) => {
 		if (l1 === null || l2 === null) {
-			throw new DeveloperNotificationException("Die Belegungsfehlerliste darf nicht null sein.")
+			throw new DeveloperNotificationException("Die Belegungsfehlerliste darf nicht null sein.");
 		}
 		let sum1: number = 0;
 		for (const f of l1) {
@@ -272,7 +272,7 @@ export class BKGymBelegpruefung extends JavaObject {
 		const stManager: BKGymStundentafelManager = this.abidatenManager.getStundentafelManager();
 		const fachZweiteFremdsprache: BeruflichesGymnasiumStundentafelFach | null = stManager.getFachByTafelAndBezeichnung(tafel, BKGymStundentafelManager.ZWEITE_FREMDSPRACHE);
 		if (fachZweiteFremdsprache === null) {
-			throw new DeveloperNotificationException("Das Fach \"Zweite Fremdsprache\" fehlt in der Stundentafel.")
+			throw new DeveloperNotificationException("Das Fach \"Zweite Fremdsprache\" fehlt in der Stundentafel.");
 		}
 		for (const ersatzfachBezeichnung of fb2TafelManager.getFachbezeichnungenFreierBelegungen()) {
 			const ersatzfach: BeruflichesGymnasiumStundentafelFach = BKGymBelegpruefung.copyStundentafelFach(fachZweiteFremdsprache, ersatzfachBezeichnung);
@@ -307,7 +307,7 @@ export class BKGymBelegpruefung extends JavaObject {
 		const stManager: BKGymStundentafelManager = this.abidatenManager.getStundentafelManager();
 		const fachReligion: BeruflichesGymnasiumStundentafelFach | null = stManager.getFachByTafelAndBezeichnung(tafel, BKGymStundentafelManager.RELIGION);
 		if (fachReligion === null) {
-			throw new DeveloperNotificationException("Das Fach " + BKGymStundentafelManager.RELIGION + " fehlt in der Stundentafel.")
+			throw new DeveloperNotificationException("Das Fach " + BKGymStundentafelManager.RELIGION + " fehlt in der Stundentafel.");
 		}
 		for (const ersatzfachBezeichnung of BKGymStundentafelManager.ERSATZ_FUER_RELIGION) {
 			const ersatzfach: BeruflichesGymnasiumStundentafelFach = BKGymBelegpruefung.copyStundentafelFach(fachReligion, ersatzfachBezeichnung);
@@ -426,7 +426,7 @@ export class BKGymBelegpruefung extends JavaObject {
 				break;
 			}
 			default: {
-				throw new DeveloperNotificationException("Ungültige Kursart '" + fach.kursart + "' in der Stundentafel.")
+				throw new DeveloperNotificationException("Ungültige Kursart '" + fach.kursart + "' in der Stundentafel.");
 				break;
 			}
 		}

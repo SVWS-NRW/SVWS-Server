@@ -376,7 +376,7 @@ public final class ApiMethod {
 		boolean notFirstParam = false;
 		final String requestBodyType = getRequestBodyType();
 		if (requestBodyType != null) {
-			sb.append("data : " + requestBodyType);
+			sb.append("data: " + requestBodyType);
 			notFirstParam = true;
 		}
 		for (final Map.Entry<String, String> pathParam : this.pathParams.params) {
@@ -385,9 +385,9 @@ public final class ApiMethod {
 			} else {
 				notFirstParam = true;
 			}
-			sb.append(pathParam.getKey() + " : " + pathParam.getValue());
+			sb.append(pathParam.getKey() + ": " + pathParam.getValue());
 		}
-		sb.append(") : " + this.getReturnType());
+		sb.append("): " + this.getReturnType());
 		return sb.toString();
 	}
 
@@ -401,25 +401,25 @@ public final class ApiMethod {
 		if (requestBody.content.mimetype == ApiMimeType.APPLICATION_JSON) {
 			if (requestBody.content.isArrayType) {
 				if (isTSPrimitive(getTSArrayElementType(requestBody.content))) {
-					sb.append("\t\tconst body : string = \"[\" + (data.toArray() as Array<" + getTSArrayElementType(requestBody.content)
+					sb.append("\t\tconst body: string = \"[\" + (data.toArray() as Array<" + getTSArrayElementType(requestBody.content)
 							+ ">).map(d => JSON.stringify(d)).join() + \"]\";" + System.lineSeparator());
 				} else {
 					if ((httpMethod == ApiHttpMethod.PATCH) || ((httpMethod == ApiHttpMethod.POST) && (returnResponse.responseCode == 201))) {
-						sb.append("\t\tconst body : string = \"[\" + (data.toArray() as Array<" + requestBody.content.arrayElementType + ">).map(d => "
+						sb.append("\t\tconst body: string = \"[\" + (data.toArray() as Array<" + requestBody.content.arrayElementType + ">).map(d => "
 								+ requestBody.content.arrayElementType + ".transpilerToJSONPatch(d)).join() + \"]\";" + System.lineSeparator());
 					} else {
-						sb.append("\t\tconst body : string = \"[\" + (data.toArray() as Array<" + requestBody.content.arrayElementType + ">).map(d => "
+						sb.append("\t\tconst body: string = \"[\" + (data.toArray() as Array<" + requestBody.content.arrayElementType + ">).map(d => "
 								+ requestBody.content.arrayElementType + ".transpilerToJSON(d)).join() + \"]\";" + System.lineSeparator());
 					}
 				}
 			} else {
 				if (isTSPrimitive(getTSType(requestBody.content, false))) {
-					sb.append("\t\tconst body : string = JSON.stringify(data);" + System.lineSeparator());
+					sb.append("\t\tconst body: string = JSON.stringify(data);" + System.lineSeparator());
 				} else {
 					if ((httpMethod == ApiHttpMethod.PATCH) || ((httpMethod == ApiHttpMethod.POST) && (returnResponse.responseCode == 201))) {
-						sb.append("\t\tconst body : string = " + requestBody.content.datatype + ".transpilerToJSONPatch(data);" + System.lineSeparator());
+						sb.append("\t\tconst body: string = " + requestBody.content.datatype + ".transpilerToJSONPatch(data);" + System.lineSeparator());
 					} else {
-						sb.append("\t\tconst body : string = " + requestBody.content.datatype + ".transpilerToJSON(data);" + System.lineSeparator());
+						sb.append("\t\tconst body: string = " + requestBody.content.datatype + ".transpilerToJSON(data);" + System.lineSeparator());
 					}
 				}
 			}
@@ -429,8 +429,8 @@ public final class ApiMethod {
 
 	private static String transpileResultDatatypeConversion(final String datatype) {
 		return switch (datatype) {
-			case "Long", "Float", "Double" -> "parseFloat(JSON.parse(text))";
-			case "Byte", "Short", "Integer" -> "parseInt(JSON.parse(text))";
+			case "Long", "Float", "Double" -> "Number.parseFloat(JSON.parse(text))";
+			case "Byte", "Short", "Integer" -> "Number.parseInt(JSON.parse(text))";
 			case "Character", "String" -> "JSON.parse(text).toString()";
 			case "Boolean" -> "(text === \"true\")";
 			default -> datatype + ".transpilerFromJSON(text)";
@@ -455,8 +455,10 @@ public final class ApiMethod {
 		if (returnResponse.content.isArrayType) {
 			sb.append("\t\tconst obj = JSON.parse(result);" + System.lineSeparator());
 			sb.append("\t\tconst ret = new ArrayList<" + resultDatatype + ">();" + System.lineSeparator());
-			sb.append("\t\tobj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(" + conversion + "); });"
-					+ System.lineSeparator());
+			sb.append("\t\tobj.forEach((elem: any) => {" + System.lineSeparator());
+			sb.append("\t\t\tconst text: string = JSON.stringify(elem);" + System.lineSeparator());
+			sb.append("\t\t\tret.add(" + conversion + ");" + System.lineSeparator());
+			sb.append("\t\t});" + System.lineSeparator());
 			sb.append("\t\treturn ret;" + System.lineSeparator());
 		} else {
 			sb.append("\t\tconst text = result;" + System.lineSeparator());
@@ -482,34 +484,34 @@ public final class ApiMethod {
 		}
 		final ApiMimeType producesType = (returnResponse.content == null) ? this.producesFirst : returnResponse.content.mimetype;
 		if ((producesType == ApiMimeType.APPLICATION_JSON) && (this.consumesFirst == ApiMimeType.APPLICATION_JSON)) {
-			sb.append("\t\tconst result : string = await super.postJSON(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
+			sb.append("\t\tconst result: string = await super.postJSON(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
 			transpileCodeForJsonResult(sb);
 			return;
 		} else if ((producesType == ApiMimeType.TEXT_HTML) && (this.consumesFirst == ApiMimeType.APPLICATION_JSON)) {
-			sb.append("\t\tconst result : string = await super.postTextBased(path, 'application/json', 'text/html', " + (requestBody.exists ? "body" : null)
+			sb.append("\t\tconst result: string = await super.postTextBased(path, 'application/json', 'text/html', " + (requestBody.exists ? "body" : null)
 					+ ");" + System.lineSeparator());
 			sb.append("\t\treturn result;" + System.lineSeparator());
 			return;
 		} else if ((producesType == ApiMimeType.PDF) && (this.consumesFirst == ApiMimeType.APPLICATION_JSON)) {
-			sb.append("\t\tconst result : ApiFile = await super.postJSONtoPDF(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
+			sb.append("\t\tconst result: ApiFile = await super.postJSONtoPDF(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
 			sb.append("\t\treturn result;" + System.lineSeparator());
 			return;
 		} else if ((producesType == ApiMimeType.ZIP) && (this.consumesFirst == ApiMimeType.APPLICATION_JSON)) {
-			sb.append("\t\tconst result : ApiFile = await super.postJSONtoZIP(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
+			sb.append("\t\tconst result: ApiFile = await super.postJSONtoZIP(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
 			sb.append("\t\treturn result;" + System.lineSeparator());
 			return;
 		} else if ((producesType == ApiMimeType.APPLICATION_OCTET_STREAM) && (this.consumesFirst == ApiMimeType.APPLICATION_JSON)) {
-			sb.append("\t\tconst result : ApiFile = await super.postJSONtoOctetStream(path, " + (requestBody.exists ? "body" : null) + ");"
+			sb.append("\t\tconst result: ApiFile = await super.postJSONtoOctetStream(path, " + (requestBody.exists ? "body" : null) + ");"
 					+ System.lineSeparator());
 			sb.append("\t\treturn result;" + System.lineSeparator());
 			return;
 		} else if ((producesType == ApiMimeType.APPLICATION_JSON) && (this.consumesFirst == ApiMimeType.APPLICATION_OCTET_STREAM)) {
-			sb.append("\t\tconst result : string = await super.postOctetStreamToJSON(path, " + (requestBody.exists ? "data" : null) + ");"
+			sb.append("\t\tconst result: string = await super.postOctetStreamToJSON(path, " + (requestBody.exists ? "data" : null) + ");"
 					+ System.lineSeparator());
 			transpileCodeForJsonResult(sb);
 			return;
 		} else if ((producesType == ApiMimeType.APPLICATION_JSON) && (this.consumesFirst == ApiMimeType.MULTIPART_FORM_DATA)) {
-			sb.append("\t\tconst result : string = await super.postMultipart(path, " + (requestBody.exists ? "data" : null) + ");"
+			sb.append("\t\tconst result: string = await super.postMultipart(path, " + (requestBody.exists ? "data" : null) + ");"
 					+ System.lineSeparator());
 			transpileCodeForJsonResult(sb);
 			return;
@@ -523,27 +525,27 @@ public final class ApiMethod {
 		final ApiMimeType producesType = (returnResponse.content == null) ? this.producesFirst : returnResponse.content.mimetype;
 		switch (producesType) {
 			case ApiMimeType.APPLICATION_JSON -> {
-				sb.append("\t\tconst result : string = await super.getJSON(path);" + System.lineSeparator());
+				sb.append("\t\tconst result: string = await super.getJSON(path);" + System.lineSeparator());
 				transpileCodeForJsonResult(sb);
 			}
 			case ApiMimeType.TEXT_PLAIN -> {
-				sb.append("\t\tconst text : string = await super.getText(path);" + System.lineSeparator());
+				sb.append("\t\tconst text: string = await super.getText(path);" + System.lineSeparator());
 				sb.append("\t\treturn text;" + System.lineSeparator());
 			}
 			case ApiMimeType.PDF -> {
-				sb.append("\t\tconst data : ApiFile = await super.getPDF(path);" + System.lineSeparator());
+				sb.append("\t\tconst data: ApiFile = await super.getPDF(path);" + System.lineSeparator());
 				sb.append("\t\treturn data;" + System.lineSeparator());
 			}
 			case ApiMimeType.APPLICATION_OCTET_STREAM -> {
-				sb.append("\t\tconst data : ApiFile = await super.getOctetStream(path);" + System.lineSeparator());
+				sb.append("\t\tconst data: ApiFile = await super.getOctetStream(path);" + System.lineSeparator());
 				sb.append("\t\treturn data;" + System.lineSeparator());
 			}
 			case ApiMimeType.SQLITE -> {
-				sb.append("\t\tconst data : ApiFile = await super.getSQLite(path);" + System.lineSeparator());
+				sb.append("\t\tconst data: ApiFile = await super.getSQLite(path);" + System.lineSeparator());
 				sb.append("\t\treturn data;" + System.lineSeparator());
 			}
 			case ApiMimeType.ZIP -> {
-				sb.append("\t\tconst data : ApiFile = await super.getZip(path);" + System.lineSeparator());
+				sb.append("\t\tconst data: ApiFile = await super.getZip(path);" + System.lineSeparator());
 				sb.append("\t\treturn data;" + System.lineSeparator());
 			}
 			default -> throw new TranspilerException("Transpiler Error: GET which produces " + producesType + " not yet implemented in the transpiler.");
@@ -565,7 +567,7 @@ public final class ApiMethod {
 		}
 		final ApiMimeType producesType = (returnResponse.content == null) ? this.producesFirst : returnResponse.content.mimetype;
 		if ((producesType == ApiMimeType.APPLICATION_JSON) && (this.consumesFirst == ApiMimeType.APPLICATION_JSON)) {
-			sb.append("\t\tconst result : string = await super.patchJSONWithResponse(path, " + (requestBody.exists ? "body" : null) + ");"
+			sb.append("\t\tconst result: string = await super.patchJSONWithResponse(path, " + (requestBody.exists ? "body" : null) + ");"
 					+ System.lineSeparator());
 			transpileCodeForJsonResult(sb);
 			return;
@@ -594,7 +596,7 @@ public final class ApiMethod {
 				sb.append("\t\tawait super.deleteJSON(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
 				sb.append("\t\treturn;" + System.lineSeparator());
 			} else {
-				sb.append("\t\tconst result : string = await super.deleteJSON(path, " + (requestBody.exists ? "body" : null) + ");"
+				sb.append("\t\tconst result: string = await super.deleteJSON(path, " + (requestBody.exists ? "body" : null) + ");"
 						+ System.lineSeparator());
 				transpileCodeForJsonResult(sb);
 			}

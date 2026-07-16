@@ -138,7 +138,7 @@ export class ArrayMapEntrySet<K, V> extends JavaObject implements JavaSet<JavaMa
 
 	public addAll(collection: Collection<JavaMapEntry<K, V>> | null): boolean {
 		if (collection === null) {
-			throw new NullPointerException()
+			throw new NullPointerException();
 		}
 		if (this as unknown === collection as unknown) {
 			return true;
@@ -153,7 +153,7 @@ export class ArrayMapEntrySet<K, V> extends JavaObject implements JavaSet<JavaMa
 
 	public retainAll(collection: Collection<any> | null): boolean {
 		if (collection === null) {
-			throw new NullPointerException()
+			throw new NullPointerException();
 		}
 		let changed: boolean = false;
 		for (let i: number = 0; i < this._map.getNumberOfKeys(); i++) {
@@ -171,7 +171,7 @@ export class ArrayMapEntrySet<K, V> extends JavaObject implements JavaSet<JavaMa
 
 	public removeAll(collection: Collection<any> | null): boolean {
 		if (collection === null) {
-			throw new NullPointerException()
+			throw new NullPointerException();
 		}
 		let changed: boolean = false;
 		for (const obj of collection) {

@@ -187,7 +187,7 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 		const fachbelegung: AbiturFachbelegung | null = fachbelegungenZK.get(0);
 		const fach: GostFach | null = this.manager.getFach(fachbelegung);
 		if (fach === null) {
-			throw new NullPointerException()
+			throw new NullPointerException();
 		}
 		if (GostFachUtils.istBilingual(fach)) {
 			this.addFehler(GostBelegungsfehler.ZK_13);

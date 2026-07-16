@@ -235,11 +235,11 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 				}
 			}
 			if (tmpBelegpruefungProjektkurse === null) {
-				throw new DeveloperNotificationException("Die Projektkursprüfung muss als Belegprüfung vorhanden sein.")
+				throw new DeveloperNotificationException("Die Projektkursprüfung muss als Belegprüfung vorhanden sein.");
 			}
 			this.belegpruefungProjektkurse = tmpBelegpruefungProjektkurse;
 			if (tmpBelegpruefungAbiturfaecher === null) {
-				throw new DeveloperNotificationException("Die Abiturfächerprüfung muss als Belegprüfung vorhanden sein.")
+				throw new DeveloperNotificationException("Die Abiturfächerprüfung muss als Belegprüfung vorhanden sein.");
 			}
 			this.belegpruefungAbiturfaecher = tmpBelegpruefungAbiturfaecher;
 		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.abschluss.gost.GostAbiturMarkierungsalgorithmus')))) && (__param1 === undefined)) {

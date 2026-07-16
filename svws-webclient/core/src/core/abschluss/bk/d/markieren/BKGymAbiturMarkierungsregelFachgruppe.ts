@@ -51,7 +51,7 @@ export class BKGymAbiturMarkierungsregelFachgruppe extends BKGymAbiturMarkierung
 	public markiere(variante: BKGymAbiturMarkierungsVariante): void {
 		const gruppe: BKGymAufgabenfeld | null = BKGymAufgabenfeld.getAufgabenfeldFromKuerzel(this.fachgruppe);
 		if (gruppe === null) {
-			throw new DeveloperNotificationException("Die Prüfbedingung spezifiziert eine nicht vorhandene Fachgruppe.")
+			throw new DeveloperNotificationException("Die Prüfbedingung spezifiziert eine nicht vorhandene Fachgruppe.");
 		}
 		const faecher: ArrayList<number> = BKGymAbiturMarkierungsregelFachgruppe.moeglicheFaecherAusFachgruppe(gruppe, this.belegtSeit, variante);
 		if (this.pruefeBereitsMarkiert(faecher, variante)) {
@@ -129,7 +129,7 @@ export class BKGymAbiturMarkierungsregelFachgruppe extends BKGymAbiturMarkierung
 		}
 		const hj: GostHalbjahr | null = GostHalbjahr.fromKuerzel(seitHalbjahr);
 		if (hj === null) {
-			throw new DeveloperNotificationException("Die Prüfbedingung enthält ein ungültiges GostHalbjahr '" + seitHalbjahr + "'.")
+			throw new DeveloperNotificationException("Die Prüfbedingung enthält ein ungültiges GostHalbjahr '" + seitHalbjahr + "'.");
 		}
 		const hje: Array<GostHalbjahr> = GostHalbjahr.getHalbjahreAbHalbjahr(hj);
 		const leereHje: ArrayList<GostHalbjahr> = new ArrayList<GostHalbjahr>();

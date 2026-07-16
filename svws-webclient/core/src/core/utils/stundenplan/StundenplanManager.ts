@@ -645,10 +645,10 @@ export class StundenplanManager extends JavaObject {
 
 	private setStundenplanOhneUpdate(daten: Stundenplan): void {
 		if (daten.id !== this._stundenplanID) {
-			throw new DeveloperNotificationException("Die ID des Stundenplans passt nicht zur ID des Managers.")
+			throw new DeveloperNotificationException("Die ID des Stundenplans passt nicht zur ID des Managers.");
 		}
 		if (daten.idSchuljahresabschnitt !== this._stundenplanSchuljahresAbschnittID) {
-			throw new DeveloperNotificationException("Die ID des Schuljahresabschnitts darf nicht geändert werden.")
+			throw new DeveloperNotificationException("Die ID des Schuljahresabschnitts darf nicht geändert werden.");
 		}
 		this._stundenplan = daten;
 		this._stundenplanWochenTypModell = daten.wochenTypModell;
@@ -2406,10 +2406,10 @@ export class StundenplanManager extends JavaObject {
 		const setOfIDs: JavaSet<number> = new HashSet<number>();
 		for (const aufsichtsbereich of listAufsichtsbereich) {
 			if (!this._aufsichtsbereich_by_id.containsKey(aufsichtsbereich.id)) {
-				throw new DeveloperNotificationException("Es soll ein Aufsichtsbereich gelöscht werden, aber die ID existiert nicht!")
+				throw new DeveloperNotificationException("Es soll ein Aufsichtsbereich gelöscht werden, aber die ID existiert nicht!");
 			}
 			if (!setOfIDs.add(aufsichtsbereich.id)) {
-				throw new DeveloperNotificationException("In der Liste aller zu löschenden Aufsichtsbereiche ist eine ID doppelt!")
+				throw new DeveloperNotificationException("In der Liste aller zu löschenden Aufsichtsbereiche ist eine ID doppelt!");
 			}
 		}
 		for (const aufsichtsbereich of listAufsichtsbereich) {
@@ -4223,10 +4223,10 @@ export class StundenplanManager extends JavaObject {
 		const setOfIDs: JavaSet<number> = new HashSet<number>();
 		for (const lehrer of listLehrer) {
 			if (!this._lehrer_by_id.containsKey(lehrer.id)) {
-				throw new DeveloperNotificationException("lehrerRemoveAll: Lehrer-ID existiert nicht!")
+				throw new DeveloperNotificationException("lehrerRemoveAll: Lehrer-ID existiert nicht!");
 			}
 			if (!setOfIDs.add(lehrer.id)) {
-				throw new DeveloperNotificationException("lehrerRemoveAll: Doppelte Lehrer-ID in der Liste!")
+				throw new DeveloperNotificationException("lehrerRemoveAll: Doppelte Lehrer-ID in der Liste!");
 			}
 		}
 		for (const lehrer of listLehrer) {
@@ -5537,10 +5537,10 @@ export class StundenplanManager extends JavaObject {
 		const setOfIDs: JavaSet<number> = new HashSet<number>();
 		for (const raum of listRaum) {
 			if (!this._raum_by_id.containsKey(raum.id)) {
-				throw new DeveloperNotificationException("raumRemoveAll: Raum-ID existiert nicht!")
+				throw new DeveloperNotificationException("raumRemoveAll: Raum-ID existiert nicht!");
 			}
 			if (!setOfIDs.add(raum.id)) {
-				throw new DeveloperNotificationException("raumRemoveAll: Doppelte Raum-ID in der Liste!")
+				throw new DeveloperNotificationException("raumRemoveAll: Doppelte Raum-ID in der Liste!");
 			}
 		}
 		for (const raum of listRaum) {

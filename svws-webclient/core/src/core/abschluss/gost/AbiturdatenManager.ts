@@ -435,7 +435,7 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	public jahrgangsdaten(): GostJahrgangsdaten {
 		if (this._jahrgangsdaten === null) {
-			throw new DeveloperNotificationException("Es liegen keine Jahrgangsdaten vor.")
+			throw new DeveloperNotificationException("Es liegen keine Jahrgangsdaten vor.");
 		}
 		return this._jahrgangsdaten;
 	}
@@ -2534,7 +2534,7 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	private getKurszahlenUndWochenstunden(): KurszahlenUndWochenstunden {
 		if (this.belegpruefungKurszahlenUndWochenstunden === null) {
-			throw new NullPointerException("Die Belegprüfung zu Kurszahlen und Wochenstunden wurde noch nicht erstellt und durchgeführt.")
+			throw new NullPointerException("Die Belegprüfung zu Kurszahlen und Wochenstunden wurde noch nicht erstellt und durchgeführt.");
 		}
 		return this.belegpruefungKurszahlenUndWochenstunden;
 	}
@@ -2548,7 +2548,7 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	private getAbi30KurszahlenUndWochenstunden(): Abi30BelegpruefungKurszahlenUndWochenstunden {
 		if (this.abi30BelegpruefungKurszahlenUndWochenstunden === null) {
-			throw new NullPointerException("Die Belegprüfung zu Kurszahlen und Wochenstunden wurde noch nicht erstellt und durchgeführt.")
+			throw new NullPointerException("Die Belegprüfung zu Kurszahlen und Wochenstunden wurde noch nicht erstellt und durchgeführt.");
 		}
 		return this.abi30BelegpruefungKurszahlenUndWochenstunden;
 	}

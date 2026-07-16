@@ -164,7 +164,7 @@ export class ListUtils extends JavaObject {
 	public static getNonNullElementAtOrException<E>(list: List<E>, i: number): E {
 		const element: E | null = list.get(i);
 		if (element === null) {
-			throw new DeveloperNotificationException("Kein Element bei Index " + i + "!")
+			throw new DeveloperNotificationException("Kein Element bei Index " + i + "!");
 		}
 		return element;
 	}
@@ -180,7 +180,7 @@ export class ListUtils extends JavaObject {
 	public static getNonNullLast<E>(list: List<E>): E {
 		const element: E | null = list.get(list.size() - 1);
 		if (element === null) {
-			throw new DeveloperNotificationException("Kein letztes Element in der Liste vorhanden!")
+			throw new DeveloperNotificationException("Kein letztes Element in der Liste vorhanden!");
 		}
 		return element;
 	}

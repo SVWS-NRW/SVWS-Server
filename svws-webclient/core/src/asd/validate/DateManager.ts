@@ -94,7 +94,7 @@ export class DateManager extends JavaObject implements Comparable<DateManager> {
 		} else if (_seexpr_670811900 === 12) {
 			this.tagImJahr = tag + 334 + schalttag;
 		} else {
-			throw new InvalidDateException("Der Monat muss zwischen 1 und 12 liegen.");
+			throw new InvalidDateException("Der Monat muss zwischen 1 und 12 liegen.");;
 		}
 		;
 		this.wochentag = DateManager.getWochentagOfTagImJahr(jahr, this.tagImJahr);
@@ -128,20 +128,20 @@ export class DateManager extends JavaObject implements Comparable<DateManager> {
 	 */
 	private initPruefeTagMonatUndJahr(): void {
 		if (this.jahr < 0) {
-			throw new InvalidDateException("Die Jahresangabe muss positiv sein.")
+			throw new InvalidDateException("Die Jahresangabe muss positiv sein.");
 		}
 		if (this.jahr > 9999) {
-			throw new InvalidDateException("Die Jahresangabe ist größer als 9999.")
+			throw new InvalidDateException("Die Jahresangabe ist größer als 9999.");
 		}
 		const schalttageBisVorjahr: number = DateManager.getSchalttageBisJahr(this.jahr - 1);
 		const schalttageBisJahr: number = DateManager.getSchalttageBisJahr(this.jahr);
 		const schalttag: number = (schalttageBisJahr - schalttageBisVorjahr);
 		this.istSchaltjahr = (schalttag === 1);
 		if ((this.monat < 1) || (this.monat > 12)) {
-			throw new InvalidDateException("Der Monat muss zwischen 1 und 12 liegen.")
+			throw new InvalidDateException("Der Monat muss zwischen 1 und 12 liegen.");
 		}
 		if (this.tag < 1) {
-			throw new InvalidDateException("Der Tag im Monat muss größer als 0 sein.")
+			throw new InvalidDateException("Der Tag im Monat muss größer als 0 sein.");
 		}
 		const _seexpr_1558458123 = (this.monat);
 		if (_seexpr_1558458123 === 1) {
@@ -173,7 +173,7 @@ export class DateManager extends JavaObject implements Comparable<DateManager> {
 		}
 		;
 		if (this.tag > this.maxTageImMonat) {
-			throw new InvalidDateException("Im Monat " + this.monat + " muss der Tag im Bereicht von 1 bis " + this.maxTageImMonat + " liegen.")
+			throw new InvalidDateException("Im Monat " + this.monat + " muss der Tag im Bereicht von 1 bis " + this.maxTageImMonat + " liegen.");
 		}
 	}
 
@@ -235,30 +235,30 @@ export class DateManager extends JavaObject implements Comparable<DateManager> {
 	 */
 	public static from(isoDate: string | null): DateManager {
 		if (isoDate === null) {
-			throw new InvalidDateException("Es muss ein Datum angegeben werden. null ist nicht zulässig.")
+			throw new InvalidDateException("Es muss ein Datum angegeben werden. null ist nicht zulässig.");
 		}
 		const d: Array<string | null> = isoDate.split("-");
 		const strError: string = "Das Datumsformat '" + isoDate + "' ist nicht konform zu ISO8601";
 		if (d.length !== 3) {
-			throw new InvalidDateException(strError + ": Es ist nicht durch zwei Bindestriche unterteilt.")
+			throw new InvalidDateException(strError + ": Es ist nicht durch zwei Bindestriche unterteilt.");
 		}
 		let jahr: number;
 		try {
 			jahr = JavaInteger.parseInt(d[0]);
 		} catch(e : any) {
-			throw new InvalidDateException(strError + ": Der Teil vor dem ersten Bindestrich muss eine Zahl sein und sollte das Jahr angeben", e)
+			throw new InvalidDateException(strError + ": Der Teil vor dem ersten Bindestrich muss eine Zahl sein und sollte das Jahr angeben", e);
 		}
 		let monat: number;
 		try {
 			monat = JavaInteger.parseInt(d[1]);
 		} catch(e : any) {
-			throw new InvalidDateException(strError + ": Der mittlere Teil zwischen den Bindestrichen muss eine Zahl sein und sollte den Monat angeben", e)
+			throw new InvalidDateException(strError + ": Der mittlere Teil zwischen den Bindestrichen muss eine Zahl sein und sollte den Monat angeben", e);
 		}
 		let tag: number;
 		try {
 			tag = JavaInteger.parseInt(d[2]);
 		} catch(e : any) {
-			throw new InvalidDateException(strError + ": Der letzte Teil hinter dem zweiten Bindestrich muss eine Zahl sein und sollte den Tag angeben", e)
+			throw new InvalidDateException(strError + ": Der letzte Teil hinter dem zweiten Bindestrich muss eine Zahl sein und sollte den Tag angeben", e);
 		}
 		return new DateManager(tag, monat, jahr);
 	}
@@ -392,7 +392,7 @@ export class DateManager extends JavaObject implements Comparable<DateManager> {
 	public getAlter(other: DateManager): number {
 		const cmp: number = other.compareTo(this);
 		if (cmp < 0) {
-			throw new InvalidDateException("Das angegebene Datum ist vor dem Geburtsdatum. Eine Altersbestimmung ist so nicht möglich.")
+			throw new InvalidDateException("Das angegebene Datum ist vor dem Geburtsdatum. Eine Altersbestimmung ist so nicht möglich.");
 		}
 		const tmp: number = other.jahr - this.jahr;
 		if ((other.monat < this.monat) || ((other.monat === this.monat) && (other.tag < this.tag))) {

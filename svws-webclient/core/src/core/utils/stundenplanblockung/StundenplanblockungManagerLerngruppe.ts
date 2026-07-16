@@ -72,7 +72,7 @@ export class StundenplanblockungManagerLerngruppe extends JavaObject {
 	 */
 	public addLehrkraftOrException(pLe: StundenplanblockungManagerLehrkraft): void {
 		if (this._menge_le.contains(pLe)) {
-			throw new NullPointerException("Lerngruppe " + this._id + " hat bereits Lehrkraft " + pLe._kuerzel + " (" + pLe._id + ")!")
+			throw new NullPointerException("Lerngruppe " + this._id + " hat bereits Lehrkraft " + pLe._kuerzel + " (" + pLe._id + ")!");
 		}
 		this._menge_le.add(pLe);
 		pLe._menge_gr.add(this);
@@ -85,7 +85,7 @@ export class StundenplanblockungManagerLerngruppe extends JavaObject {
 	 */
 	public addKlasseOrException(pKl: StundenplanblockungManagerKlasse): void {
 		if (this._menge_kl.contains(pKl)) {
-			throw new NullPointerException("Lerngruppe " + this._id + " hat bereits Klasse " + pKl._kuerzel + " (" + pKl._id + ")!")
+			throw new NullPointerException("Lerngruppe " + this._id + " hat bereits Klasse " + pKl._kuerzel + " (" + pKl._id + ")!");
 		}
 		this._menge_kl.add(pKl);
 		pKl._menge_gr.add(this);
@@ -98,7 +98,7 @@ export class StundenplanblockungManagerLerngruppe extends JavaObject {
 	 */
 	public addFachOrException(pFa: StundenplanblockungManagerFach): void {
 		if (this._menge_fa.contains(pFa)) {
-			throw new NullPointerException("Lerngruppe " + this._id + " hat bereits Fach " + pFa._kuerzel + " (" + pFa._id + ")!")
+			throw new NullPointerException("Lerngruppe " + this._id + " hat bereits Fach " + pFa._kuerzel + " (" + pFa._id + ")!");
 		}
 		this._menge_fa.add(pFa);
 		pFa._menge_gr.add(this);
@@ -141,7 +141,7 @@ export class StundenplanblockungManagerLerngruppe extends JavaObject {
 	 */
 	public removeLehrkraftOrException(pLe: StundenplanblockungManagerLehrkraft): void {
 		if (!this._menge_le.contains(pLe)) {
-			throw new NullPointerException("Lerngruppe " + this._id + " hat nicht Lehrkraft " + pLe._kuerzel + " (" + pLe._id + ")!")
+			throw new NullPointerException("Lerngruppe " + this._id + " hat nicht Lehrkraft " + pLe._kuerzel + " (" + pLe._id + ")!");
 		}
 		this._menge_le.remove(pLe);
 		pLe._menge_gr.remove(this);
@@ -154,7 +154,7 @@ export class StundenplanblockungManagerLerngruppe extends JavaObject {
 	 */
 	public removeKlasseOrException(pKl: StundenplanblockungManagerKlasse): void {
 		if (!this._menge_kl.contains(pKl)) {
-			throw new NullPointerException("Lerngruppe " + this._id + " hat nicht Klasse " + pKl._kuerzel + " (" + pKl._id + ")!")
+			throw new NullPointerException("Lerngruppe " + this._id + " hat nicht Klasse " + pKl._kuerzel + " (" + pKl._id + ")!");
 		}
 		this._menge_kl.remove(pKl);
 		pKl._menge_gr.remove(this);
@@ -167,7 +167,7 @@ export class StundenplanblockungManagerLerngruppe extends JavaObject {
 	 */
 	public removeFachOrException(pFa: StundenplanblockungManagerFach): void {
 		if (!this._menge_fa.contains(pFa)) {
-			throw new NullPointerException("Lerngruppe " + this._id + " hat nicht Fach " + pFa._kuerzel + " (" + pFa._id + ")!")
+			throw new NullPointerException("Lerngruppe " + this._id + " hat nicht Fach " + pFa._kuerzel + " (" + pFa._id + ")!");
 		}
 		this._menge_fa.remove(pFa);
 		pFa._menge_gr.remove(this);

@@ -12,7 +12,7 @@ export class ApiSchema extends BaseApi {
 	 * @param {string} username - der Benutzername für den API-Zugriff
 	 * @param {string} password - das Kennwort des Benutzers für den API-Zugriff
 	 */
-	public constructor(url : string, username : string, password : string) {
+	public constructor(url: string, username: string, password: string) {
 		super(url, username, password);
 	}
 
@@ -31,10 +31,10 @@ export class ApiSchema extends BaseApi {
 	 *
 	 * @returns true, falls es sich um ein "verdorbenes" Schema handelt und ansonsten false
 	 */
-	public async isTainted(schema : string) : Promise<boolean> {
+	public async isTainted(schema: string): Promise<boolean> {
 		const path = "/db/{schema}/api/isTainted"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return (text === "true");
 	}
@@ -55,12 +55,12 @@ export class ApiSchema extends BaseApi {
 	 *
 	 * @returns Die Revision des Schemas
 	 */
-	public async revision(schema : string) : Promise<number> {
+	public async revision(schema: string): Promise<number> {
 		const path = "/db/{schema}/api/revision"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
-		return parseFloat(JSON.parse(text));
+		return Number.parseFloat(JSON.parse(text));
 	}
 
 
@@ -80,13 +80,16 @@ export class ApiSchema extends BaseApi {
 	 *
 	 * @returns Der Log vom Verlauf des Updates
 	 */
-	public async updateSchemaToCurrent(schema : string) : Promise<List<string>> {
+	public async updateSchemaToCurrent(schema: string): Promise<List<string>> {
 		const path = "/db/{schema}/api/update"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.postJSON(path, null);
+		const result: string = await super.postJSON(path, null);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<string>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JSON.parse(text).toString()); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(JSON.parse(text).toString());
+		});
 		return ret;
 	}
 
@@ -108,14 +111,17 @@ export class ApiSchema extends BaseApi {
 	 *
 	 * @returns Der Log vom Verlauf des Updates
 	 */
-	public async updateSchema(schema : string, revision : number) : Promise<List<string>> {
+	public async updateSchema(schema: string, revision: number): Promise<List<string>> {
 		const path = "/db/{schema}/api/update/{revision : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{revision\s*(:[^{}]+({[^{}]+})*)?}/g, revision.toString());
-		const result : string = await super.postJSON(path, null);
+		const result: string = await super.postJSON(path, null);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<string>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JSON.parse(text).toString()); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(JSON.parse(text).toString());
+		});
 		return ret;
 	}
 

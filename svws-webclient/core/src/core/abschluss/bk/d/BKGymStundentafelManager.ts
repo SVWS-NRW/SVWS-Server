@@ -356,7 +356,7 @@ export class BKGymStundentafelManager extends JavaObject {
 		const single: JavaSet<number> = new HashSet<number>();
 		for (const fach of t.faecher) {
 			if (single.contains(fach.sortierung)) {
-				throw new DeveloperNotificationException("In der Belegprüfung ist ein interner Fehler aufgetreten: In der Stundentafel sind noch Wahlmöglichkeiten enthalten.")
+				throw new DeveloperNotificationException("In der Belegprüfung ist ein interner Fehler aufgetreten: In der Stundentafel sind noch Wahlmöglichkeiten enthalten.");
 			}
 			single.add(fach.sortierung);
 		}

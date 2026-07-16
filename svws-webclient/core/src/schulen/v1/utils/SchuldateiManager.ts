@@ -178,7 +178,7 @@ export class SchuldateiManager extends JavaObject {
 		this.katalogArtDerTraegerschaft.validate();
 		for (const organisationseinheit of schuldatei.organisationseinheiten) {
 			if (this._mapOrganisationseinheitManagerBySchulnummer.containsKey(organisationseinheit.schulnummer)) {
-				throw new IllegalArgumentException("Die Liste mit den Organisationseinheiten enthält mindestens einen doppelten Eintrag (Schulnummer " + organisationseinheit.schulnummer + ")")
+				throw new IllegalArgumentException("Die Liste mit den Organisationseinheiten enthält mindestens einen doppelten Eintrag (Schulnummer " + organisationseinheit.schulnummer + ")");
 			}
 			this._mapOrganisationseinheitManagerBySchulnummer.put(organisationseinheit.schulnummer, new SchuldateiOrganisationseinheitManager(this, organisationseinheit));
 		}
@@ -199,7 +199,7 @@ export class SchuldateiManager extends JavaObject {
 	private getKatalogFromMap(nameKatalog: string): SchuldateiKatalogManager {
 		const katalog: SchuldateiKatalogManager | null = this._mapKataloge.get(nameKatalog);
 		if (katalog === null) {
-			throw new IllegalArgumentException("Die Kataloge enthält keine Einträge für den Katalog mit dem Namen '" + nameKatalog + "'")
+			throw new IllegalArgumentException("Die Kataloge enthält keine Einträge für den Katalog mit dem Namen '" + nameKatalog + "'");
 		}
 		return katalog;
 	}

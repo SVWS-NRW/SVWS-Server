@@ -96,11 +96,11 @@ export class GostAbiturMarkierungspruefung extends JavaObject {
 			}
 		}
 		if (tmpBelegpruefungProjektkurse === null) {
-			throw new DeveloperNotificationException("Die Projektkursprüfung muss als Belegprüfung vorhanden sein.")
+			throw new DeveloperNotificationException("Die Projektkursprüfung muss als Belegprüfung vorhanden sein.");
 		}
 		this.belegpruefungProjektkurse = tmpBelegpruefungProjektkurse;
 		if (tmpBelegpruefungAbiturfaecher === null) {
-			throw new DeveloperNotificationException("Die Abiturfächerprüfung muss als Belegprüfung vorhanden sein.")
+			throw new DeveloperNotificationException("Die Abiturfächerprüfung muss als Belegprüfung vorhanden sein.");
 		}
 		this.belegpruefungAbiturfaecher = tmpBelegpruefungAbiturfaecher;
 		this.abi[0] = this.belegpruefungAbiturfaecher.getAbiturfach(GostAbiturFach.LK1);

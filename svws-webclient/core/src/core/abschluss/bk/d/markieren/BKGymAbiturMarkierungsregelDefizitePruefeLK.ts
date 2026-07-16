@@ -56,7 +56,7 @@ export class BKGymAbiturMarkierungsregelDefizitePruefeLK extends BKGymAbiturMark
 	private anzahlDefizite(kursart: string, variante: BKGymAbiturMarkierungsVariante): number {
 		const abifach: GostAbiturFach | null = GostAbiturFach.fromKuerzel(kursart);
 		if (abifach === null) {
-			throw new DeveloperNotificationException("Die Prüfbedingung " + this.kuerzel + " enthält die unzulässige Kursart '" + kursart + "'.")
+			throw new DeveloperNotificationException("Die Prüfbedingung " + this.kuerzel + " enthält die unzulässige Kursart '" + kursart + "'.");
 		}
 		const abiFachID: number | null = variante.varianten.abiturdatenManager.getFachbelegungManager().getAbiFachID(abifach);
 		if (abiFachID === null) {

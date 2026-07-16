@@ -36,7 +36,7 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	public put(key1: K1, key2: K2, key3: K3, key4: K4, key5: K5, value: V): void {
 		const map2: HashMap4D<K2, K3, K4, K5, V> | null = this._map.computeIfAbsent(key1, { apply: (k: K1 | null) => new HashMap4D() });
 		if (map2 === null) {
-			throw new NullPointerException()
+			throw new NullPointerException();
 		}
 		map2.put(key2, key3, key4, key5, value);
 	}
@@ -58,7 +58,7 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	public getOrException(key1: K1, key2: K2, key3: K3, key4: K4, key5: K5): V | null {
 		const map2: HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
 		if (map2 === null) {
-			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!")
+			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!");
 		}
 		return map2.getOrException(key2, key3, key4, key5);
 	}
@@ -162,7 +162,7 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	public getNonNullOrException(key1: K1, key2: K2, key3: K3, key4: K4, key5: K5): V {
 		const value: V | null = this.getOrException(key1, key2, key3, key4, key5);
 		if (value === null) {
-			throw new DeveloperNotificationException("value is NULL!")
+			throw new DeveloperNotificationException("value is NULL!");
 		}
 		return value;
 	}
@@ -209,7 +209,7 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	public removeOrException(key1: K1, key2: K2, key3: K3, key4: K4, key5: K5): V {
 		const map2: HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
 		if (map2 === null) {
-			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!")
+			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!");
 		}
 		return map2.removeOrException(key2, key3, key4, key5);
 	}

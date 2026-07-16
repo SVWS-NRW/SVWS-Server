@@ -337,7 +337,7 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 */
 	public addSingle(key1: number, key2: number, key3: number, key4: number, value: V): void {
 		if (!this.get1234(key1, key2, key3, key4).isEmpty()) {
-			throw new DeveloperNotificationException(JavaString.format("Es gibt schon ein Element mit (%d, %d, %d, %d).", key1, key2, key3, key4))
+			throw new DeveloperNotificationException(JavaString.format("Es gibt schon ein Element mit (%d, %d, %d, %d).", key1, key2, key3, key4));
 		}
 		this.add(key1, key2, key3, key4, value);
 	}

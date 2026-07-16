@@ -101,7 +101,7 @@ export class ValidatorManager extends JavaObject {
 					l.addAll(sf.historie());
 				}
 				if (!ValidatorManager.pruefeAufZeitraumueberdeckung(validatorName, ValidatorManager.createSchulformZeitraumListe(l), zeitraeume.getValue())) {
-					throw new CoreTypeException(JavaString.format("Fehler beim Prüfen der Schulform. Der Validator %s hat ungültige Schulform-Zeitraum-Kombinationen.", validatorName))
+					throw new CoreTypeException(JavaString.format("Fehler beim Prüfen der Schulform. Der Validator %s hat ungültige Schulform-Zeitraum-Kombinationen.", validatorName));
 				}
 			}
 		}
@@ -144,7 +144,7 @@ export class ValidatorManager extends JavaObject {
 	public static getVersion<T>(validator: Class<T>): number {
 		const version: number | null = ValidatorManager._versions.get(validator.getCanonicalName());
 		if (version === null) {
-			throw new ValidatorException(JavaString.format("Für den Validator %s konnte keine Version bestimmt werden.", validator.getSimpleName()))
+			throw new ValidatorException(JavaString.format("Für den Validator %s konnte keine Version bestimmt werden.", validator.getSimpleName()));
 		}
 		return version;
 	}
@@ -168,7 +168,7 @@ export class ValidatorManager extends JavaObject {
 	public static getValidatorHistorie(validator: string): List<ValidatorFehlerartKontext> {
 		const tmp: List<ValidatorFehlerartKontext> | null = ValidatorManager._data.get(validator);
 		if (tmp === null) {
-			throw new CoreTypeException("Der Validator " + validator + " existiert nicht in 'validatoren.json'.")
+			throw new CoreTypeException("Der Validator " + validator + " existiert nicht in 'validatoren.json'.");
 		}
 		return tmp;
 	}
@@ -289,12 +289,12 @@ export class ValidatorManager extends JavaObject {
 				const hasMuss: boolean = eintrag.kann.contains(this._schulform.name());
 				const hasHinweis: boolean = eintrag.hinweis.contains(this._schulform.name());
 				if ((hasHart && hasMuss) || (hasMuss && hasHinweis) || (hasHart && hasHinweis)) {
-					throw new CoreTypeException("Ein Validator kann bei einer Schulform nicht bei einem Prüfschritt gleichzeitig bei mehreren Fehlerarten aktiv sein.")
+					throw new CoreTypeException("Ein Validator kann bei einer Schulform nicht bei einem Prüfschritt gleichzeitig bei mehreren Fehlerarten aktiv sein.");
 				}
 				const validatorAktivInUmgebungUndSchuljahr: boolean = (this._isZebras ? eintrag.zebras : eintrag.svws) && ((eintrag.gueltigVon === null) || (eintrag.gueltigVon <= schuljahr)) && ((eintrag.gueltigBis === null) || (schuljahr <= eintrag.gueltigBis));
 				if (validatorAktivInUmgebungUndSchuljahr) {
 					if (praefixe.contains(eintrag.praefix)) {
-						throw new CoreTypeException(JavaString.format("Das Fehlercode-Präfix eines Validators muss eindeutig sein. Das Präfix %s wurde mehrfach verwendet.", eintrag.praefix))
+						throw new CoreTypeException(JavaString.format("Das Fehlercode-Präfix eines Validators muss eindeutig sein. Das Präfix %s wurde mehrfach verwendet.", eintrag.praefix));
 					}
 					praefixe.add(eintrag.praefix);
 					mapValidatorToFehlercodePraefix.put(validatorName, eintrag.praefix);
@@ -365,7 +365,7 @@ export class ValidatorManager extends JavaObject {
 	public getFehlercodePraefixBySchuljahrAndValidatorName(schuljahr: number, validator: string): string {
 		const code: string | null = this.getValidatornameToFehlercodePraefixCache(schuljahr).get(validator);
 		if (code === null) {
-			throw new ValidatorException(JavaString.format("Fehler beim Zugriff auf den Fehlercode-Präfix für den Validator %s im Schuljahr %d.", validator, schuljahr))
+			throw new ValidatorException(JavaString.format("Fehler beim Zugriff auf den Fehlercode-Präfix für den Validator %s im Schuljahr %d.", validator, schuljahr));
 		}
 		return code;
 	}
@@ -488,7 +488,7 @@ export class ValidatorManager extends JavaObject {
 		list.add(vbs.get(0).a);
 		while (i + 1 < vbs.size()) {
 			if (vbs.get(i).b > vbs.get(i + 1).a) {
-				throw new CoreTypeException(JavaString.format("Fehler beim prüfen der Zeiträume bei dem Validator '%s'. Die Zeiträume von %s sind überlappend definiert.", validatorName, vbs.get(0).getClass().getSimpleName()))
+				throw new CoreTypeException(JavaString.format("Fehler beim prüfen der Zeiträume bei dem Validator '%s'. Die Zeiträume von %s sind überlappend definiert.", validatorName, vbs.get(0).getClass().getSimpleName()));
 			}
 			if (vbs.get(i).b < vbs.get(i + 1).a) {
 				list.add(vbs.get(i).b);

@@ -66,7 +66,7 @@ export class BKGymBelegungsfehlerArt extends JavaEnum<BKGymBelegungsfehlerArt> {
 		} else if (_seexpr_2055730872 === "HINWEIS") {
 			_sevar_2055730872 = BKGymBelegungsfehlerArt.HINWEIS;
 		} else {
-			throw new DeveloperNotificationException("Die Belegungsfehlerart " + kuerzel + " gibt es nicht.");
+			throw new DeveloperNotificationException("Die Belegungsfehlerart " + kuerzel + " gibt es nicht.");;
 		}
 		return _sevar_2055730872;
 	}

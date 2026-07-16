@@ -23,7 +23,7 @@ export class UserNotificationException extends RuntimeException {
 	 */
 	public static ifTrue(pBeschreibung: string, pErfuellt: boolean): void {
 		if (pErfuellt) {
-			throw new UserNotificationException(pBeschreibung)
+			throw new UserNotificationException(pBeschreibung);
 		}
 	}
 

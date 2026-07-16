@@ -178,7 +178,7 @@ export class Projektkurse extends GostBelegpruefung {
 			if ((leitfach1 !== null) && this.pruefeBelegungLeitfachbelegung(fachbelegung, leitfach1)) {
 				const lf: GostFach | null = this.manager.getFach(leitfach1);
 				if (lf === null) {
-					throw new DeveloperNotificationException("Interner Fehler: Das Leitfach mit der angegebenen ID existiert nicht als Fach der gymnasialen Oberstufe in diesem Jahrgang.")
+					throw new DeveloperNotificationException("Interner Fehler: Das Leitfach mit der angegebenen ID existiert nicht als Fach der gymnasialen Oberstufe in diesem Jahrgang.");
 				}
 				const zf: Fach | null = Fach.getBySchluesselOrDefault(lf.kuerzel);
 				if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf as unknown === Fach.PX as unknown) || (zf as unknown === Fach.VX as unknown))) {

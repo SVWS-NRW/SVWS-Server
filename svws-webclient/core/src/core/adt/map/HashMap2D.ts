@@ -38,20 +38,20 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 			for (const entry1 of other._map.entrySet()) {
 				const key1: K1 | null = entry1.getKey();
 				if (key1 === null) {
-					throw new NullPointerException()
+					throw new NullPointerException();
 				}
 				const map2: JavaMap<K2, V> | null = this._map.computeIfAbsent(key1, { apply: (k: K1 | null) => new HashMap() });
 				if (map2 === null) {
-					throw new NullPointerException()
+					throw new NullPointerException();
 				}
 				const otherMap2: JavaMap<K2, V> | null = entry1.getValue();
 				if (otherMap2 === null) {
-					throw new NullPointerException()
+					throw new NullPointerException();
 				}
 				for (const entry2 of otherMap2.entrySet()) {
 					const key2: K2 | null = entry2.getKey();
 					if (key2 === null) {
-						throw new NullPointerException()
+						throw new NullPointerException();
 					}
 					const value: V | null = entry2.getValue();
 					map2.put(key2, value);
@@ -71,7 +71,7 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	public put(key1: K1, key2: K2, value: V): void {
 		const map2: JavaMap<K2, V> | null = this._map.computeIfAbsent(key1, { apply: (k: K1 | null) => new HashMap() });
 		if (map2 === null) {
-			throw new NullPointerException()
+			throw new NullPointerException();
 		}
 		map2.put(key2, value);
 	}
@@ -105,11 +105,11 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	public getOrException(key1: K1, key2: K2): V {
 		const map2: JavaMap<K2, V> = this.getSubMapOrException(key1);
 		if (!map2.containsKey(key2)) {
-			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!")
+			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!");
 		}
 		const value: V | null = map2.get(key2);
 		if (value === null) {
-			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!")
+			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!");
 		}
 		return value;
 	}
@@ -124,7 +124,7 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	public getSubMapOrException(key1: K1): JavaMap<K2, V> {
 		const map2: JavaMap<K2, V> | null = this._map.get(key1);
 		if (map2 === null) {
-			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!")
+			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!");
 		}
 		return map2;
 	}
@@ -185,14 +185,14 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	public removeOrException(key1: K1, key2: K2): V {
 		const map2: JavaMap<K2, V> = this.getSubMapOrException(key1);
 		if (!map2.containsKey(key2)) {
-			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!")
+			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!");
 		}
 		const value: V | null = map2.remove(key2);
 		if (map2.isEmpty()) {
 			this._map.remove(key1);
 		}
 		if (value === null) {
-			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!")
+			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!");
 		}
 		return value;
 	}
@@ -218,7 +218,7 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	public removeSubMapOrException(key1: K1): JavaMap<K2, V> {
 		const map2: JavaMap<K2, V> | null = this._map.remove(key1);
 		if (map2 === null) {
-			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") existiert nicht!")
+			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") existiert nicht!");
 		}
 		return map2;
 	}

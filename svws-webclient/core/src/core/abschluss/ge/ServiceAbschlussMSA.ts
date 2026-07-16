@@ -216,12 +216,12 @@ export class ServiceAbschlussMSA extends Service {
 			ausgleichGenutzt = true;
 			const defizitFach: GEAbschlussFach | null = faecher.fg1.getFach(ServiceAbschlussMSA.filterDefizitNichtWP);
 			if (defizitFach === null) {
-				throw new NullPointerException()
+				throw new NullPointerException();
 			}
 			defizitFach.ausgeglichen = true;
 			const ausgleichsFach: GEAbschlussFach | null = faecher.fg1.getFach(ServiceAbschlussMSA.filterAusgleiche);
 			if (ausgleichsFach === null) {
-				throw new NullPointerException()
+				throw new NullPointerException();
 			}
 			ausgleichsFach.ausgleich = true;
 			this.logger.logLn(LogLevel.DEBUG, logIndent + " -> Gleiche das Defizit (FG1) in " + defizitFach.kuerzel + " mit " + ausgleichsFach.kuerzel + " (FG1) aus.");

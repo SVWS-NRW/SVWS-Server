@@ -135,7 +135,7 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 				break;
 			}
 			default: {
-				throw new DeveloperNotificationException("Der LK-GK-Modus ist unbekannt!")
+				throw new DeveloperNotificationException("Der LK-GK-Modus ist unbekannt!");
 			}
 		}
 	}

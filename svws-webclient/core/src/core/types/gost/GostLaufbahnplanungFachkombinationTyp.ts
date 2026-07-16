@@ -58,7 +58,7 @@ export class GostLaufbahnplanungFachkombinationTyp extends JavaEnum<GostLaufbahn
 	 */
 	public static fromValue(value: number): GostLaufbahnplanungFachkombinationTyp {
 		if ((value < 0) || (value > 1)) {
-			throw new IllegalArgumentException("Der Parameter value " + value + "ist für den Typ einer Fachkombination ungültig.")
+			throw new IllegalArgumentException("Der Parameter value " + value + "ist für den Typ einer Fachkombination ungültig.");
 		}
 		return (value === 0) ? GostLaufbahnplanungFachkombinationTyp.VERBOTEN : GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH;
 	}

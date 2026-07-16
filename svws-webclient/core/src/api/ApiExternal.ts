@@ -15,7 +15,7 @@ export class ApiExternal extends BaseApi {
 	 * @param {string} username - der Benutzername für den API-Zugriff
 	 * @param {string} password - das Kennwort des Benutzers für den API-Zugriff
 	 */
-	public constructor(url : string, username : string, password : string) {
+	public constructor(url: string, username: string, password: string) {
 		super(url, username, password);
 	}
 
@@ -35,13 +35,16 @@ export class ApiExternal extends BaseApi {
 	 *
 	 * @returns Eine Liste von Lernplattformen
 	 */
-	public async getLernplattformen(schema : string) : Promise<List<LernplattformV1>> {
+	public async getLernplattformen(schema: string): Promise<List<LernplattformV1>> {
 		const path = "/api/external/{schema}/v1/lernplattformen/"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<LernplattformV1>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LernplattformV1.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LernplattformV1.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 
@@ -64,12 +67,12 @@ export class ApiExternal extends BaseApi {
 	 *
 	 * @returns Die Daten für den Lernplattformen Datenexport
 	 */
-	public async getLernplattformenExport(schema : string, idLernplattform : number, idSchuljahresabschnitt : number) : Promise<LernplattformV1Export> {
+	public async getLernplattformenExport(schema: string, idLernplattform: number, idSchuljahresabschnitt: number): Promise<LernplattformV1Export> {
 		const path = "/api/external/{schema}/v1/lernplattformen/{idLernplattform : \\d+}/{idSchuljahresabschnitt : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idLernplattform\s*(:[^{}]+({[^{}]+})*)?}/g, idLernplattform.toString())
 			.replace(/{idSchuljahresabschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitt.toString());
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const text = result;
 		return LernplattformV1Export.transpilerFromJSON(text);
 	}
@@ -93,12 +96,12 @@ export class ApiExternal extends BaseApi {
 	 *
 	 * @returns Die Daten für den Lernplattformen Datenexport
 	 */
-	public async getLernplattformenExportAsGzip(schema : string, idLernplattform : number, idSchuljahresabschnitt : number) : Promise<ApiFile> {
+	public async getLernplattformenExportAsGzip(schema: string, idLernplattform: number, idSchuljahresabschnitt: number): Promise<ApiFile> {
 		const path = "/api/external/{schema}/v1/lernplattformen/{idLernplattform : \\d+}/{idSchuljahresabschnitt : \\d+}/gzip"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idLernplattform\s*(:[^{}]+({[^{}]+})*)?}/g, idLernplattform.toString())
 			.replace(/{idSchuljahresabschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitt.toString());
-		const data : ApiFile = await super.getOctetStream(path);
+		const data: ApiFile = await super.getOctetStream(path);
 		return data;
 	}
 
@@ -119,13 +122,16 @@ export class ApiExternal extends BaseApi {
 	 *
 	 * @returns Eine Liste von Schuljahresabschnitten
 	 */
-	public async getSchuljahresabschnitte(schema : string) : Promise<List<SchuljahresabschnittV1>> {
+	public async getSchuljahresabschnitte(schema: string): Promise<List<SchuljahresabschnittV1>> {
 		const path = "/api/external/{schema}/v1/schuljahresabschnitte/"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
+		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuljahresabschnittV1>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuljahresabschnittV1.transpilerFromJSON(text)); });
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchuljahresabschnittV1.transpilerFromJSON(text));
+		});
 		return ret;
 	}
 

@@ -52,10 +52,10 @@ export class BenutzergruppenManager extends JavaObject {
 			this._daten = pDaten;
 			for (const kID of pDaten.kompetenzen) {
 				if (kID === null) {
-					throw new NullPointerException("Fehlerhafte Daten: Die Liste der Kompetenzen darf keine Null-Werte enthalten.")
+					throw new NullPointerException("Fehlerhafte Daten: Die Liste der Kompetenzen darf keine Null-Werte enthalten.");
 				}
 				if (this._setKompetenzen.contains(kID)) {
-					throw new IllegalArgumentException("Die Kompetenz mit der ID " + kID + " wurde mehrfach bei der Gruppe eingetragen.")
+					throw new IllegalArgumentException("Die Kompetenz mit der ID " + kID + " wurde mehrfach bei der Gruppe eingetragen.");
 				}
 				this._setKompetenzen.add(kID);
 			}
@@ -96,7 +96,7 @@ export class BenutzergruppenManager extends JavaObject {
 	 */
 	public setBezeichnung(bezeichnung: string): void {
 		if (JavaObject.equalsTranspiler("", (bezeichnung))) {
-			throw new IllegalArgumentException("Die Bezeichnung einer Benutzergruppe darf nicht leer sein.")
+			throw new IllegalArgumentException("Die Bezeichnung einer Benutzergruppe darf nicht leer sein.");
 		}
 		this._daten.bezeichnung = bezeichnung;
 	}
@@ -180,10 +180,10 @@ export class BenutzergruppenManager extends JavaObject {
 	 */
 	public addKompetenz(kompetenz: BenutzerKompetenz | null): void {
 		if (kompetenz === null) {
-			throw new NullPointerException("Die übergenene Kompetenz darf nicht null sein.")
+			throw new NullPointerException("Die übergenene Kompetenz darf nicht null sein.");
 		}
 		if (this._setKompetenzen.contains(kompetenz.daten.id)) {
-			throw new IllegalArgumentException("Die Kompetenz mit der ID " + kompetenz.daten.id + " wurde bereits zuvor zu der Gruppe hinzugefügt.")
+			throw new IllegalArgumentException("Die Kompetenz mit der ID " + kompetenz.daten.id + " wurde bereits zuvor zu der Gruppe hinzugefügt.");
 		}
 		this._daten.kompetenzen.add(kompetenz.daten.id);
 		this._setKompetenzen.add(kompetenz.daten.id);
@@ -198,7 +198,7 @@ export class BenutzergruppenManager extends JavaObject {
 	 */
 	public removeKompetenz(kompetenz: BenutzerKompetenz): void {
 		if (!this._setKompetenzen.contains(kompetenz.daten.id)) {
-			throw new IllegalArgumentException("Die Kompetenz mit der ID " + kompetenz.daten.id + " ist in der Gruppe nicht vorhanden.")
+			throw new IllegalArgumentException("Die Kompetenz mit der ID " + kompetenz.daten.id + " ist in der Gruppe nicht vorhanden.");
 		}
 		this._daten.kompetenzen.remove(kompetenz.daten.id);
 		this._setKompetenzen.remove(kompetenz.daten.id);

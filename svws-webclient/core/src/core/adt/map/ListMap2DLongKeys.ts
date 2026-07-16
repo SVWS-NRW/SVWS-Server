@@ -96,7 +96,7 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	 */
 	public addSingle(key1: number, key2: number, value: V): void {
 		if (!this.get12(key1, key2).isEmpty()) {
-			throw new DeveloperNotificationException(JavaString.format("Es gibt schon ein Element mit (%d, %d).", key1, key2))
+			throw new DeveloperNotificationException(JavaString.format("Es gibt schon ein Element mit (%d, %d).", key1, key2));
 		}
 		this.add(key1, key2, value);
 	}

@@ -69,7 +69,7 @@ export class KlausurterminblockungAlgorithmusGreedy3 extends Klausurterminblocku
 		}
 		const terminNr: number = this._dynDaten.gibErzeugeNeuenTermin();
 		if (!this._dynDaten.aktionSetzeKlausurgruppeInTermin(gruppe, terminNr)) {
-			throw new DeveloperNotificationException("Ein Setzen muss hier möglich sein!")
+			throw new DeveloperNotificationException("Ein Setzen muss hier möglich sein!");
 		}
 		this.berechneRekursiv();
 		this._dynDaten.aktionEntferneKlausurgruppeAusTermin(gruppe, terminNr);

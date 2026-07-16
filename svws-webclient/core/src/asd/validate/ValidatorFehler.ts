@@ -61,7 +61,7 @@ export class ValidatorFehler extends JavaObject {
 		if (((this._validator instanceof JavaObject) && (this._validator.isTranspiledInstanceOf('de.svws_nrw.asd.validate.Validator')))) {
 			return (this._validator as unknown as Validator).kontext();
 		}
-		throw new ValidatorException("Der Validator ist nur ein BasicValidator und kein Validator, weshalb er keinen ValidatorKontext hat.")
+		throw new ValidatorException("Der Validator ist nur ein BasicValidator und kein Validator, weshalb er keinen ValidatorKontext hat.");
 	}
 
 	/**

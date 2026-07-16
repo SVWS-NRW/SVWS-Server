@@ -33,7 +33,7 @@ export class SchuldateiUtils extends JavaObject {
 
 	private constructor() {
 		super();
-		throw new IllegalStateException("Instantiation not allowed")
+		throw new IllegalStateException("Instantiation not allowed");
 	}
 
 	/**
@@ -50,22 +50,22 @@ export class SchuldateiUtils extends JavaObject {
 	private static splitDate(date: string): Array<number> {
 		const dmy: Array<string> = date.split("\\.");
 		if (dmy.length !== 3) {
-			throw new IllegalArgumentException("Der Datumswert '" + date + "' ist fehlerhaft.")
+			throw new IllegalArgumentException("Der Datumswert '" + date + "' ist fehlerhaft.");
 		}
 		try {
 			const result: Array<number> = Array(3).fill(0);
 			result[0] = JavaInteger.parseInt(dmy[0]);
 			if ((result[0] < 1) || (result[0] > 31)) {
-				throw new NumberFormatException("Die Angabe des Tages ist fehlerhaft.")
+				throw new NumberFormatException("Die Angabe des Tages ist fehlerhaft.");
 			}
 			result[1] = JavaInteger.parseInt(dmy[1]);
 			if ((result[1] < 1) || (result[1] > 12)) {
-				throw new NumberFormatException("Die Angabe des Monats ist fehlerhaft.")
+				throw new NumberFormatException("Die Angabe des Monats ist fehlerhaft.");
 			}
 			result[2] = JavaInteger.parseInt(dmy[2]);
 			return result;
 		} catch(nfe : any) {
-			throw new IllegalArgumentException("Der Datumswert '" + date + "' ist fehlerhaft.")
+			throw new IllegalArgumentException("Der Datumswert '" + date + "' ist fehlerhaft.");
 		}
 	}
 

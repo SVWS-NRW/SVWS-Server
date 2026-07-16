@@ -5452,7 +5452,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			if (!fachartSet.add(fachartID)) {
 				const sKursQuelle: string | null = this.parent.toStringKursSimple(idQuellKurs);
 				const sFachartZiel: string | null = this.parent.toStringFachartSimpleByFachartID(fachartID);
-				throw new UserNotificationException("Die Kerngruppe des Kurses " + sKursQuelle + " kann nicht auf zwei Kurse der Fachart " + sFachartZiel + " verteilt werden!")
+				throw new UserNotificationException("Die Kerngruppe des Kurses " + sKursQuelle + " kann nicht auf zwei Kurse der Fachart " + sFachartZiel + " verteilt werden!");
 			}
 		}
 		const idSchuelerKerngruppe: JavaSet<number> = this.getOfKursSchuelerIDmenge(idQuellKurs);

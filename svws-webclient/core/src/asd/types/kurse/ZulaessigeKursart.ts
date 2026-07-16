@@ -462,7 +462,7 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> implements Co
 		if (ke !== null) {
 			const result: JavaSet<Schulform> | null = ZulaessigeKursart._mapSchulformenByID.get(ke.id);
 			if (result === null) {
-				throw new CoreTypeException(JavaString.format("Fehler beim Prüfen der Schulform. Der Core-Type %s ist nicht korrekt initialisiert.", this.getClass().getSimpleName()))
+				throw new CoreTypeException(JavaString.format("Fehler beim Prüfen der Schulform. Der Core-Type %s ist nicht korrekt initialisiert.", this.getClass().getSimpleName()));
 			}
 			return result.contains(sf);
 		}
@@ -480,7 +480,7 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> implements Co
 	public static getListBySchuljahrAndSchulform(schuljahr: number, schulform: Schulform): List<ZulaessigeKursart> {
 		const mapBySchulform: JavaMap<Schulform, List<ZulaessigeKursart>> | null = ZulaessigeKursart._mapBySchuljahrAndSchulform.computeIfAbsent(schuljahr, { apply: (k: number | null) => new HashMap<Schulform, List<ZulaessigeKursart>>() });
 		if (mapBySchulform === null) {
-			throw new NullPointerException("computeIfAbsent darf nicht null liefern")
+			throw new NullPointerException("computeIfAbsent darf nicht null liefern");
 		}
 		let result: List<ZulaessigeKursart> | null = mapBySchulform.get(schulform);
 		if (result === null) {
@@ -512,7 +512,7 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> implements Co
 		}
 		const mapByAllgemeinerKursart: JavaMap<string, List<ZulaessigeKursart>> | null = ZulaessigeKursart._mapBySchuljahrAndAllgemeinerKursart.computeIfAbsent(schuljahr, { apply: (k: number | null) => new HashMap<string, List<ZulaessigeKursart>>() });
 		if (mapByAllgemeinerKursart === null) {
-			throw new NullPointerException("computeIfAbsent darf nicht null liefern")
+			throw new NullPointerException("computeIfAbsent darf nicht null liefern");
 		}
 		let result: List<ZulaessigeKursart> | null = mapByAllgemeinerKursart.get(allgKursart);
 		if (result === null) {

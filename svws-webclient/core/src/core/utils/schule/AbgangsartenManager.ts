@@ -67,7 +67,7 @@ export class AbgangsartenManager extends JavaObject {
 			for (const daten of eintrag.historie) {
 				const alt: AbgangsartKatalogEintrag | null = this._mapByID.put(daten.id, eintrag);
 				if (alt !== null) {
-					throw new DeveloperNotificationException("Fehlerhafter Katalog: Doppelte ID '" + daten.id + "' bei den Abgangsarten '" + eintrag.kuerzel + "' und '" + alt.kuerzel + "'")
+					throw new DeveloperNotificationException("Fehlerhafter Katalog: Doppelte ID '" + daten.id + "' bei den Abgangsarten '" + eintrag.kuerzel + "' und '" + alt.kuerzel + "'");
 				}
 				this._mapDatenByID.put(daten.id, daten);
 			}
@@ -187,7 +187,7 @@ export class AbgangsartenManager extends JavaObject {
 	 */
 	public static getAbschlussAllgemeinbildend(abschlussart: AbgangsartKatalogEintrag): SchulabschlussAllgemeinbildend | null {
 		if ((abschlussart.kuerzel.length < 0) || (abschlussart.kuerzel.length > 2)) {
-			throw new DeveloperNotificationException("Fehlerhafter Katalog-Eintrag: Das Kürzel einer Abgangsart muss entweder ein- oder zweistelig sein.")
+			throw new DeveloperNotificationException("Fehlerhafter Katalog-Eintrag: Das Kürzel einer Abgangsart muss entweder ein- oder zweistelig sein.");
 		}
 		const kuerzelAbschluss: string = (abschlussart.kuerzel.length === 1) ? abschlussart.kuerzel : abschlussart.kuerzel.substring(1, 2);
 		return SchulabschlussAllgemeinbildend.data().getWertBySchluessel(kuerzelAbschluss);
@@ -202,7 +202,7 @@ export class AbgangsartenManager extends JavaObject {
 	 */
 	public static getAbschlussBerufsbildend(abschlussart: AbgangsartKatalogEintrag): SchulabschlussBerufsbildend | null {
 		if ((abschlussart.kuerzel.length < 0) || (abschlussart.kuerzel.length > 2)) {
-			throw new DeveloperNotificationException("Fehlerhafter Katalog-Eintrag: Das Kürzel einer Abgangsart muss entweder ein- oder zweistelig sein.")
+			throw new DeveloperNotificationException("Fehlerhafter Katalog-Eintrag: Das Kürzel einer Abgangsart muss entweder ein- oder zweistelig sein.");
 		}
 		if (abschlussart.kuerzel.length === 1) {
 			return null;

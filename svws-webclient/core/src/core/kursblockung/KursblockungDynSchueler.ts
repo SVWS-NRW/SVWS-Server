@@ -236,7 +236,7 @@ export class KursblockungDynSchueler extends JavaObject {
 				return fachart;
 			}
 		}
-		throw new DeveloperNotificationException(this.representation + " hat kein Fach mit ID = " + idFach + "!")
+		throw new DeveloperNotificationException(this.representation + " hat kein Fach mit ID = " + idFach + "!");
 	}
 
 	/**
@@ -327,7 +327,7 @@ export class KursblockungDynSchueler extends JavaObject {
 				if (kurs.gibIstErlaubtFuerSchueler(this)) {
 					this.aktionKursHinzufuegen(i, kurs);
 				} else {
-					throw new DeveloperNotificationException("FEHLER: Schüler " + this.guiID + " darf den Kurs " + kurs.gibDatenbankID() + " nicht wählen.")
+					throw new DeveloperNotificationException("FEHLER: Schüler " + this.guiID + " darf den Kurs " + kurs.gibDatenbankID() + " nicht wählen.");
 				}
 			}
 		}
@@ -614,7 +614,7 @@ export class KursblockungDynSchueler extends JavaObject {
 		const fachart1: KursblockungDynFachart = this.gibFachartZuFachID(idFach);
 		const fachart2: KursblockungDynFachart = that.gibFachartZuFachID(idFach);
 		if (fachart1.gibNr() !== fachart2.gibNr()) {
-			throw new DeveloperNotificationException("Regel 11:" + this.representation + " bei " + fachart1 + " und " + that.representation + " bei " + fachart2 + " haben nicht die selbe Kursart!")
+			throw new DeveloperNotificationException("Regel 11:" + this.representation + " bei " + fachart1 + " und " + that.representation + " bei " + fachart2 + " haben nicht die selbe Kursart!");
 		}
 		fachart1.setzeSchuelerZusammenMitSchueler(this.internalSchuelerID, that.internalSchuelerID);
 	}
@@ -629,7 +629,7 @@ export class KursblockungDynSchueler extends JavaObject {
 		const fachart1: KursblockungDynFachart = this.gibFachartZuFachID(idFach);
 		const fachart2: KursblockungDynFachart = that.gibFachartZuFachID(idFach);
 		if (fachart1.gibNr() !== fachart2.gibNr()) {
-			throw new DeveloperNotificationException("Regel 12:" + this.representation + " bei " + fachart1 + " und " + that.representation + " bei " + fachart2 + " haben nicht die selbe Kursart!")
+			throw new DeveloperNotificationException("Regel 12:" + this.representation + " bei " + fachart1 + " und " + that.representation + " bei " + fachart2 + " haben nicht die selbe Kursart!");
 		}
 		fachart1.setzeSchuelerVerbietenMitSchueler(this.internalSchuelerID, that.internalSchuelerID);
 	}
@@ -682,7 +682,7 @@ export class KursblockungDynSchueler extends JavaObject {
 				if (kurs.gibIstErlaubtFuerSchueler(this)) {
 					this.aktionKursHinzufuegen(i, kurs);
 				} else {
-					throw new DeveloperNotificationException("FEHLER: Schüler " + this.guiID + " darf den Kurs " + kurs.gibDatenbankID() + " nicht wählen.")
+					throw new DeveloperNotificationException("FEHLER: Schüler " + this.guiID + " darf den Kurs " + kurs.gibDatenbankID() + " nicht wählen.");
 				}
 			}
 		}

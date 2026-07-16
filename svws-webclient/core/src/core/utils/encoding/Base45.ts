@@ -21,7 +21,7 @@ export class Base45 extends JavaObject {
 
 	private constructor() {
 		super();
-		throw new IllegalStateException("Utility-Klasse")
+		throw new IllegalStateException("Utility-Klasse");
 	}
 
 	/**
@@ -75,7 +75,7 @@ export class Base45 extends JavaObject {
 			const v3: number = Base45.getVal(bytes[i + 2]);
 			const val: number = v1 + (v2 * 45) + (v3 * 2025);
 			if (val > 65535) {
-				throw new IllegalArgumentException("Base45-Wert außerhalb des gültigen Bereichs.")
+				throw new IllegalArgumentException("Base45-Wert außerhalb des gültigen Bereichs.");
 			}
 			result[index++] = ((val >> 8) & 255) as number;
 			result[index++] = (val & 255) as number;
@@ -87,7 +87,7 @@ export class Base45 extends JavaObject {
 			result[index] = (val & 255) as number;
 		} else
 			if (len % 3 === 1) {
-				throw new IllegalArgumentException("Ungültige Base45-String-Länge.")
+				throw new IllegalArgumentException("Ungültige Base45-String-Länge.");
 			}
 		return result;
 	}
@@ -102,7 +102,7 @@ export class Base45 extends JavaObject {
 	private static getVal(b: number): number {
 		const c: number = b & 255;
 		if (c >= Base45.DECODE_TABLE.length || Base45.DECODE_TABLE[c] === -1) {
-			throw new IllegalArgumentException("Ungültiges Zeichen im Base45-String: " + c)
+			throw new IllegalArgumentException("Ungültiges Zeichen im Base45-String: " + c);
 		}
 		return Base45.DECODE_TABLE[c];
 	}

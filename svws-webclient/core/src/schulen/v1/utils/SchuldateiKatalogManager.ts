@@ -423,22 +423,22 @@ export class SchuldateiKatalogManager extends JavaObject {
 				let schuljahrAb: number = eintrag.gueltigab === null ? SchuldateiUtils._immerGueltigAb : SchuldateiUtils.schuljahrGueltigAb(eintrag.gueltigab);
 				for (let i: number = 1; i < list.size(); i++) {
 					if (schuljahrBis < schuljahrAb) {
-						throw new IllegalArgumentException("Dieser Katalogeintrag Katalog='" + eintrag.katalog + "', Wert='" + eintrag.wert + "' hat einen ungültigen Gültigkeitszeitraum.")
+						throw new IllegalArgumentException("Dieser Katalogeintrag Katalog='" + eintrag.katalog + "', Wert='" + eintrag.wert + "' hat einen ungültigen Gültigkeitszeitraum.");
 					}
 					eintrag = list.get(i);
 					schuljahrBis = eintrag.gueltigbis === null ? SchuldateiUtils._immerGueltigBis : SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigbis);
 					if (schuljahrBis >= schuljahrAb) {
-						throw new IllegalArgumentException("Dieser Katalogeintrag Katalog='" + eintrag.katalog + "', Wert='" + eintrag.wert + "' hat überlappende Gültigkeitszeiträume.")
+						throw new IllegalArgumentException("Dieser Katalogeintrag Katalog='" + eintrag.katalog + "', Wert='" + eintrag.wert + "' hat überlappende Gültigkeitszeiträume.");
 					}
 					schuljahrAb = eintrag.gueltigab === null ? SchuldateiUtils._immerGueltigAb : SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigab);
 				}
 				if (schuljahrBis < schuljahrAb) {
-					throw new IllegalArgumentException("Dieser Katalogeintrag Katalog='" + eintrag.katalog + "', Wert='" + eintrag.wert + "' hat einen ungültigen Gültigkeitszeitraum.")
+					throw new IllegalArgumentException("Dieser Katalogeintrag Katalog='" + eintrag.katalog + "', Wert='" + eintrag.wert + "' hat einen ungültigen Gültigkeitszeitraum.");
 				}
 			} else {
 				eintrag = list.getFirst();
 				if (SchuldateiUtils.istFrueher(eintrag.gueltigbis, eintrag.gueltigab)) {
-					throw new IllegalArgumentException("Dieser Katalogeintrag Katalog='" + eintrag.katalog + "', Wert='" + eintrag.wert + "' hat einen ungültigen Gültigkeitszeitraum.")
+					throw new IllegalArgumentException("Dieser Katalogeintrag Katalog='" + eintrag.katalog + "', Wert='" + eintrag.wert + "' hat einen ungültigen Gültigkeitszeitraum.");
 				}
 			}
 		}

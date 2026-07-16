@@ -147,7 +147,7 @@ export class BKGymAbiturdatenManager extends JavaObject {
 		} else if (_seexpr_1540609204 === Schulgliederung.D02) {
 			_sevar_1540609204 = this.getAnlageD02();
 		} else {
-			throw new DeveloperNotificationException("Die Belegprüfung für die Schulgliederung " + this.gliederung.name() + " wird noch nicht unterstützt.");
+			throw new DeveloperNotificationException("Die Belegprüfung für die Schulgliederung " + this.gliederung.name() + " wird noch nicht unterstützt.");;
 		}
 		return _sevar_1540609204;
 	}
@@ -180,7 +180,7 @@ export class BKGymAbiturdatenManager extends JavaObject {
 		} else if (_seexpr_2040674675 === "11500") {
 			_sevar_2040674675 = BeruflichesGymnasiumPruefungsordnungAnlage.D3a;
 		} else {
-			throw new DeveloperNotificationException("Die Belegprüfung für die Schulgliederung " + this.gliederung.name() + " und den Fachklassenschlüssel " + this.fks + " wird noch nicht unterstützt.");
+			throw new DeveloperNotificationException("Die Belegprüfung für die Schulgliederung " + this.gliederung.name() + " und den Fachklassenschlüssel " + this.fks + " wird noch nicht unterstützt.");;
 		}
 		return _sevar_2040674675;
 	}
@@ -219,7 +219,7 @@ export class BKGymAbiturdatenManager extends JavaObject {
 		} else if (_seexpr_999310226 === "12200") {
 			_sevar_999310226 = BeruflichesGymnasiumPruefungsordnungAnlage.D28;
 		} else {
-			throw new DeveloperNotificationException("Die Belegprüfung für die Schulgliederung " + this.gliederung.name() + " und den Fachklassenschlüssel " + this.fks + " wird noch nicht unterstützt.");
+			throw new DeveloperNotificationException("Die Belegprüfung für die Schulgliederung " + this.gliederung.name() + " und den Fachklassenschlüssel " + this.fks + " wird noch nicht unterstützt.");;
 		}
 		return _sevar_999310226;
 	}

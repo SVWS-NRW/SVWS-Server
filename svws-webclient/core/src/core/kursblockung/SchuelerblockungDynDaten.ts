@@ -85,10 +85,10 @@ export class SchuelerblockungDynDaten extends JavaObject {
 	 */
 	aktionPruefeEingabedaten(pInput: SchuelerblockungInput): void {
 		if (pInput.fachwahlen === null) {
-			throw new DeveloperNotificationException("pInput.fachwahlen == NULL")
+			throw new DeveloperNotificationException("pInput.fachwahlen == NULL");
 		}
 		if (pInput.kurse === null) {
-			throw new DeveloperNotificationException("pInput.kurse == NULL")
+			throw new DeveloperNotificationException("pInput.kurse == NULL");
 		}
 		SchuelerblockungDynDaten.aktionPruefeEingabedatenAnzahlen(pInput);
 		SchuelerblockungDynDaten.aktionPruefeEingabedatenKurse(pInput);
@@ -234,7 +234,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 			if (this.aktionBelegeKurs(iFachwahl, kurs)) {
 				this.aktionVerteileMultikurseRekursiv(iFachwahl + 1);
 				if (!this.aktionBelegeKursUndo(iFachwahl, kurs)) {
-					throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMultikurseRekursiv' ist ein unerwarteter Fehler passiert: Der Kurs (" + kurs.id + ") konnte vom Algorithmus nicht entfernt werden! Diesen Fehler kann nur das Programmier-Team beheben.")
+					throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMultikurseRekursiv' ist ein unerwarteter Fehler passiert: Der Kurs (" + kurs.id + ") konnte vom Algorithmus nicht entfernt werden! Diesen Fehler kann nur das Programmier-Team beheben.");
 				}
 			}
 		}
@@ -298,10 +298,10 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		}
 		const kurs: SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this.fachwahlZuKurse.get(iFachwahl), schiene);
 		if (kurs === null) {
-			throw new DeveloperNotificationException("Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! Diesen Fehler kann nur das Programmier-Team beheben.")
+			throw new DeveloperNotificationException("Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! Diesen Fehler kann nur das Programmier-Team beheben.");
 		}
 		if (!this.aktionBelegeKurs(iFachwahl, kurs)) {
-			throw new DeveloperNotificationException("Der Kurs (" + kurs.id + ") konnte nicht belegt werden! Diesen Fehler kann nur das Programmier-Team beheben.")
+			throw new DeveloperNotificationException("Der Kurs (" + kurs.id + ") konnte nicht belegt werden! Diesen Fehler kann nur das Programmier-Team beheben.");
 		}
 	}
 
@@ -316,10 +316,10 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		}
 		const kurs: SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this.fachwahlZuKurse.get(iFachwahl), schiene);
 		if (kurs === null) {
-			throw new DeveloperNotificationException("Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! Diesen Fehler kann nur das Programmier-Team beheben.")
+			throw new DeveloperNotificationException("Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! Diesen Fehler kann nur das Programmier-Team beheben.");
 		}
 		if (!this.aktionBelegeKursUndo(iFachwahl, kurs)) {
-			throw new DeveloperNotificationException("Der Kurs (" + kurs.id + ") konnte nicht entfernt werden! Diesen Fehler kann nur das Programmier-Team beheben.")
+			throw new DeveloperNotificationException("Der Kurs (" + kurs.id + ") konnte nicht entfernt werden! Diesen Fehler kann nur das Programmier-Team beheben.");
 		}
 	}
 

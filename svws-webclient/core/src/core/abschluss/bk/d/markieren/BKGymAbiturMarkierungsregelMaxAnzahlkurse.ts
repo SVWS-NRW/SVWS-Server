@@ -33,7 +33,7 @@ export class BKGymAbiturMarkierungsregelMaxAnzahlkurse extends BKGymAbiturMarkie
 	public markiere(variante: BKGymAbiturMarkierungsVariante): void {
 		const vorherMarkiert: number = variante.anzahlEingebrachteKurse();
 		if (vorherMarkiert > this.anzahl) {
-			throw new DeveloperNotificationException("Es wurden mehr Kurse markiert als maximal erlaubt ist.")
+			throw new DeveloperNotificationException("Es wurden mehr Kurse markiert als maximal erlaubt ist.");
 		}
 		if (vorherMarkiert === this.anzahl) {
 			variante.addLogEintrag(1, "Es sind bereits " + vorherMarkiert + " Kurse durch die vorherigen Bedingungen markiert.");

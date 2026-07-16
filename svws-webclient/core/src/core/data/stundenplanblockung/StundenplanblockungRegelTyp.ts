@@ -106,7 +106,7 @@ export class StundenplanblockungRegelTyp extends JavaEnum<StundenplanblockungReg
 		if (StundenplanblockungRegelTyp._map_id_regel.isEmpty()) {
 			for (const typ of StundenplanblockungRegelTyp.values()) {
 				if (StundenplanblockungRegelTyp._map_id_regel.put(typ.id, typ) !== null) {
-					throw new NullPointerException("StundenplanblockungRegelTyp.id=" + typ.id + " doppelt!")
+					throw new NullPointerException("StundenplanblockungRegelTyp.id=" + typ.id + " doppelt!");
 				}
 			}
 		}
@@ -169,7 +169,7 @@ export class StundenplanblockungRegelTyp extends JavaEnum<StundenplanblockungReg
 	 */
 	public getParamType(i: number): StundenplanblockungRegelParameterTyp {
 		if ((i < 0) || (i >= this.paramTypes.size())) {
-			throw new IllegalArgumentException("Ein Parameter mit dem Index i existiert nicht für den Regel-Typ " + this.name())
+			throw new IllegalArgumentException("Ein Parameter mit dem Index i existiert nicht für den Regel-Typ " + this.name());
 		}
 		return this.paramTypes.get(i);
 	}

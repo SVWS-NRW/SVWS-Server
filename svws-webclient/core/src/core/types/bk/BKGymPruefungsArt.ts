@@ -71,7 +71,7 @@ export class BKGymPruefungsArt extends JavaEnum<BKGymPruefungsArt> {
 		} else if (_seexpr_1586417265 === "BESTEHEN") {
 			_sevar_1586417265 = BKGymPruefungsArt.BESTEHEN;
 		} else {
-			throw new DeveloperNotificationException("Die Prüfungsart " + kuerzel + " gibt es nicht.");
+			throw new DeveloperNotificationException("Die Prüfungsart " + kuerzel + " gibt es nicht.");;
 		}
 		return _sevar_1586417265;
 	}

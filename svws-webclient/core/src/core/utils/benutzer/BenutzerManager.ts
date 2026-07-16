@@ -86,14 +86,14 @@ export class BenutzerManager extends JavaObject {
 			this._daten = pDaten;
 			for (const kID of pDaten.kompetenzen) {
 				if (kID === null) {
-					throw new NullPointerException("Fehlerhafte Daten: Die Liste der Kompetenzen darf keine Null-Werte enthalten.")
+					throw new NullPointerException("Fehlerhafte Daten: Die Liste der Kompetenzen darf keine Null-Werte enthalten.");
 				}
 				const komp: BenutzerKompetenz | null = BenutzerKompetenz.getByID(kID);
 				if (komp === null) {
-					throw new NullPointerException("Fehlerhafte Daten: Die Kompetenz mit der ID " + kID + " existiert nicht.")
+					throw new NullPointerException("Fehlerhafte Daten: Die Kompetenz mit der ID " + kID + " existiert nicht.");
 				}
 				if (this._setKompetenzen.contains(komp)) {
-					throw new IllegalArgumentException("Die Kompetenz mit der ID " + kID + " wurde mehrfach bei der Gruppe eingetragen.")
+					throw new IllegalArgumentException("Die Kompetenz mit der ID " + kID + " wurde mehrfach bei der Gruppe eingetragen.");
 				}
 				this._setKompetenzen.add(komp);
 				this._setKompetenzenAlle.add(komp);
@@ -118,17 +118,17 @@ export class BenutzerManager extends JavaObject {
 		for (const kid of bgd.kompetenzen) {
 			const komp: BenutzerKompetenz | null = BenutzerKompetenz.getByID(kid);
 			if (komp === null) {
-				throw new NullPointerException("Fehlerhafte Daten: Die Kompetenz mit der ID " + kid + " existiert nicht.")
+				throw new NullPointerException("Fehlerhafte Daten: Die Kompetenz mit der ID " + kid + " existiert nicht.");
 			}
 			this._setKompetenzenAlle.add(komp);
 			const gruppen: ArrayList<BenutzergruppeDaten> | null = this._mapKompetenzenVonGruppe.get(komp);
 			if (gruppen === null) {
-				throw new NullPointerException("ArrayList existiert nicht, müsste aber zuvor initialisiert worden sein.")
+				throw new NullPointerException("ArrayList existiert nicht, müsste aber zuvor initialisiert worden sein.");
 			}
 			gruppen.add(bgd);
 			const benutzergruppen: JavaSet<number> | null = this._mapKompetenzgruppenVonGruppe.get(BenutzerKompetenzGruppe.getByID(komp.daten.gruppe_id));
 			if (benutzergruppen === null) {
-				throw new NullPointerException("Set existiert nicht, müsste aber zuvor initialisiert worden sein.")
+				throw new NullPointerException("Set existiert nicht, müsste aber zuvor initialisiert worden sein.");
 			}
 			benutzergruppen.add(bgd.id);
 		}
@@ -150,7 +150,7 @@ export class BenutzerManager extends JavaObject {
 			if (komp !== null) {
 				const gruppen: ArrayList<BenutzergruppeDaten> | null = this._mapKompetenzenVonGruppe.get(komp);
 				if (gruppen === null) {
-					throw new NullPointerException("ArrayList existiert nicht, müsste aber zuvor initialisiert worden sein.")
+					throw new NullPointerException("ArrayList existiert nicht, müsste aber zuvor initialisiert worden sein.");
 				}
 				for (let i: number = gruppen.size() - 1; i >= 0; i--) {
 					if (gruppen.get(i).id === bgd.id) {
@@ -164,7 +164,7 @@ export class BenutzerManager extends JavaObject {
 				if (komptenenzgruppe !== null) {
 					const benutzergruppen: JavaSet<number> | null = this._mapKompetenzgruppenVonGruppe.get(komptenenzgruppe);
 					if (benutzergruppen === null) {
-						throw new NullPointerException("Set existiert nicht, müsste aber zuvor initialisiert worden sein.")
+						throw new NullPointerException("Set existiert nicht, müsste aber zuvor initialisiert worden sein.");
 					}
 					benutzergruppen.remove(bgd.id);
 				}
@@ -210,7 +210,7 @@ export class BenutzerManager extends JavaObject {
 	public getGruppen(kompetenz: BenutzerKompetenz): List<BenutzergruppeDaten> {
 		const gruppen: ArrayList<BenutzergruppeDaten> | null = this._mapKompetenzenVonGruppe.get(kompetenz);
 		if (gruppen === null) {
-			throw new NullPointerException("Die interne Datenstruktur _mapKompetenzenVonGruppe wurde nich korrekt initialisiert.")
+			throw new NullPointerException("Die interne Datenstruktur _mapKompetenzenVonGruppe wurde nich korrekt initialisiert.");
 		}
 		return gruppen;
 	}
@@ -246,7 +246,7 @@ export class BenutzerManager extends JavaObject {
 	public getBenutzergruppenbyKompetenzgruppe(kompetenzgruppe: BenutzerKompetenzGruppe): List<BenutzergruppeDaten> {
 		const benutzergruppen: JavaSet<number> | null = this._mapKompetenzgruppenVonGruppe.get(kompetenzgruppe);
 		if (benutzergruppen === null) {
-			throw new NullPointerException("Die interne Datenstruktur _mapKompetenzgruppenVonGruppe wurde nich korrekt initialisiert.")
+			throw new NullPointerException("Die interne Datenstruktur _mapKompetenzgruppenVonGruppe wurde nich korrekt initialisiert.");
 		}
 		const result: List<BenutzergruppeDaten> = new ArrayList<BenutzergruppeDaten>();
 		for (const idGruppe of benutzergruppen) {
@@ -321,7 +321,7 @@ export class BenutzerManager extends JavaObject {
 	 */
 	public setAnmeldename(name: string): void {
 		if (JavaObject.equalsTranspiler("", (name))) {
-			throw new IllegalArgumentException("Der Anmeldename eines Benutzers darf nicht leer sein.")
+			throw new IllegalArgumentException("Der Anmeldename eines Benutzers darf nicht leer sein.");
 		}
 		this._daten.name = name;
 	}
@@ -342,7 +342,7 @@ export class BenutzerManager extends JavaObject {
 	 */
 	public setAnzeigename(name: string): void {
 		if (JavaObject.equalsTranspiler("", (name))) {
-			throw new IllegalArgumentException("Der Anmeldename eines Benutzers darf nicht leer sein.")
+			throw new IllegalArgumentException("Der Anmeldename eines Benutzers darf nicht leer sein.");
 		}
 		this._daten.anzeigename = name;
 	}
@@ -433,10 +433,10 @@ export class BenutzerManager extends JavaObject {
 	 */
 	public addKompetenz(kompetenz: BenutzerKompetenz | null): void {
 		if (kompetenz === null) {
-			throw new NullPointerException("Die übergebene Kompetenz darf nicht null sein.")
+			throw new NullPointerException("Die übergebene Kompetenz darf nicht null sein.");
 		}
 		if (this._setKompetenzen.contains(kompetenz)) {
-			throw new IllegalArgumentException("Die Kompetenz mit der ID " + kompetenz.daten.id + " wurde bereits zuvor zu dem Benutzer hinzugefügt.")
+			throw new IllegalArgumentException("Die Kompetenz mit der ID " + kompetenz.daten.id + " wurde bereits zuvor zu dem Benutzer hinzugefügt.");
 		}
 		this._daten.kompetenzen.add(kompetenz.daten.id);
 		this._setKompetenzen.add(kompetenz);
@@ -457,7 +457,7 @@ export class BenutzerManager extends JavaObject {
 	 */
 	public removeKompetenz(kompetenz: BenutzerKompetenz): void {
 		if (!this._setKompetenzen.contains(kompetenz)) {
-			throw new IllegalArgumentException("Die Kompetenz mit der ID " + kompetenz.daten.id + " ist nicht direkt beim Benutzer vorhanden.")
+			throw new IllegalArgumentException("Die Kompetenz mit der ID " + kompetenz.daten.id + " ist nicht direkt beim Benutzer vorhanden.");
 		}
 		this._daten.kompetenzen.remove(kompetenz.daten.id);
 		this._setKompetenzen.remove(kompetenz);
@@ -499,7 +499,7 @@ export class BenutzerManager extends JavaObject {
 		if (bgd !== null) {
 			this.addGruppe(bgd);
 		} else {
-			throw new IllegalArgumentException("Der Benutzer ist bereits in der Gruppe ")
+			throw new IllegalArgumentException("Der Benutzer ist bereits in der Gruppe ");
 		}
 	}
 

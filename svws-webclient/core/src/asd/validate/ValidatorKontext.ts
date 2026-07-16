@@ -78,7 +78,7 @@ export class ValidatorKontext extends JavaObject {
 		if (abschnitt !== null) {
 			return abschnitt.schuljahr;
 		}
-		throw new ValidatorException("Es ist kein gültiger Schuljahresabschnitt in den SchuleStammdaten gesetzt")
+		throw new ValidatorException("Es ist kein gültiger Schuljahresabschnitt in den SchuleStammdaten gesetzt");
 	}
 
 	/**
@@ -110,7 +110,7 @@ export class ValidatorKontext extends JavaObject {
 		try {
 			return DateManager.fromValues(this.getSchuljahr(), 8, 1);
 		} catch(e : any) {
-			throw new ValidatorException("Fehler beim Erstellen des Datums für den Beginn des Schuljahres", e)
+			throw new ValidatorException("Fehler beim Erstellen des Datums für den Beginn des Schuljahres", e);
 		}
 	}
 
@@ -123,7 +123,7 @@ export class ValidatorKontext extends JavaObject {
 		try {
 			return DateManager.fromValues(this.getSchuljahr() + 1, 7, 31);
 		} catch(e : any) {
-			throw new ValidatorException("Fehler beim Erstellen des Datums für das Ende des Schuljahres", e)
+			throw new ValidatorException("Fehler beim Erstellen des Datums für das Ende des Schuljahres", e);
 		}
 	}
 

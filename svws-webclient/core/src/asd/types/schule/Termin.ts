@@ -85,7 +85,7 @@ export class Termin extends JavaEnum<Termin> implements CoreType<TerminKatalogEi
 		try {
 			result = DateManager.from(eintrag.von);
 		} catch(e : any) {
-			throw new CoreTypeException("Fehlerhafter Termin-Eintrag für HALBJAHR_LETZTER_UNTERRICHTSTAG im Schuljahr " + schuljahr, e)
+			throw new CoreTypeException("Fehlerhafter Termin-Eintrag für HALBJAHR_LETZTER_UNTERRICHTSTAG im Schuljahr " + schuljahr, e);
 		}
 		Termin._mapSchuljahrToLetzterUnterrichtstag.put(schuljahr, result);
 		return result;

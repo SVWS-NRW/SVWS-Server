@@ -120,7 +120,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		for (const gostKursklausur of pInput) {
 			for (const schuelerID of gostKursklausur.schuelerIds) {
 				if (schuelerID < 0) {
-					throw new DeveloperNotificationException("Schüler-ID " + schuelerID + " ist negativ!")
+					throw new DeveloperNotificationException("Schüler-ID " + schuelerID + " ist negativ!");
 				}
 				if (setSchueler.add(schuelerID)) {
 					const schuelerNummer: number = this._mapSchuelerZuNummer.size();
@@ -133,10 +133,10 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	private initialisiereMapKlausuren(pInput: List<GostKursklausurRich>): void {
 		for (const gostKursklausur of pInput) {
 			if (gostKursklausur.id < 0) {
-				throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist negativ!")
+				throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist negativ!");
 			}
 			if (this._mapKlausurZuNummer.containsKey(gostKursklausur.id)) {
-				throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist doppelt!")
+				throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist doppelt!");
 			}
 			const klausurNummer: number = this._mapKlausurZuNummer.size();
 			this._mapKlausurZuNummer.put(gostKursklausur.id, klausurNummer);
@@ -175,10 +175,10 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 					const klausurNr1: number | null = this._mapKlausurZuNummer.get(gostKursklausur1.id);
 					const klausurNr2: number | null = this._mapKlausurZuNummer.get(gostKursklausur2.id);
 					if (klausurNr1 === null) {
-						throw new DeveloperNotificationException("NULL-Wert beim Mapping von klausurID1 --> " + gostKursklausur1.id)
+						throw new DeveloperNotificationException("NULL-Wert beim Mapping von klausurID1 --> " + gostKursklausur1.id);
 					}
 					if (klausurNr2 === null) {
-						throw new DeveloperNotificationException("NULL-Wert beim Mapping von klausurID2 --> " + gostKursklausur2.id)
+						throw new DeveloperNotificationException("NULL-Wert beim Mapping von klausurID2 --> " + gostKursklausur2.id);
 					}
 					this._bevorzugt[klausurNr1.valueOf()][klausurNr2.valueOf()]++;
 				}
@@ -630,10 +630,10 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	 */
 	aktionSetzeKlausurInSchiene(nr: number, s: number): boolean {
 		if (s < 0) {
-			throw new DeveloperNotificationException("aktionSetzeKlausurInSchiene(" + nr + ", " + s + ") --> Schiene zu klein!")
+			throw new DeveloperNotificationException("aktionSetzeKlausurInSchiene(" + nr + ", " + s + ") --> Schiene zu klein!");
 		}
 		if (s >= this._schienenAnzahl) {
-			throw new DeveloperNotificationException("aktionSetzeKlausurInSchiene(" + nr + ", " + s + ") --> Schiene zu groß!")
+			throw new DeveloperNotificationException("aktionSetzeKlausurInSchiene(" + nr + ", " + s + ") --> Schiene zu groß!");
 		}
 		for (let nr2: number = 0; nr2 < this._klausurenAnzahl; nr2++) {
 			if ((this._klausurZuSchiene[nr2] === s) && (this._verboten[nr][nr2])) {
@@ -652,7 +652,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	 */
 	aktionEntferneKlausurAusSchiene(klausurNr: number): void {
 		if (this._klausurZuSchiene[klausurNr] < 0) {
-			throw new DeveloperNotificationException("aktionEntferneKlausurAusSchiene(" + klausurNr + ") --> Die Klausur hatte gar keine Schiene!")
+			throw new DeveloperNotificationException("aktionEntferneKlausurAusSchiene(" + klausurNr + ") --> Die Klausur hatte gar keine Schiene!");
 		}
 		this._klausurZuSchiene[klausurNr] = -1;
 	}
@@ -667,7 +667,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	aktionSetzeKlausurInNeueSchiene(klausurNr: number): number {
 		const schiene: number = this._schienenAnzahl;
 		if (this._klausurZuSchiene[klausurNr] >= 0) {
-			throw new DeveloperNotificationException("aktionSetzeKlausurInNeueSchiene(" + klausurNr + ") --> Die Klausur ist bereits in einer Schiene!")
+			throw new DeveloperNotificationException("aktionSetzeKlausurInNeueSchiene(" + klausurNr + ") --> Die Klausur ist bereits in einer Schiene!");
 		}
 		this._klausurZuSchiene[klausurNr] = this._schienenAnzahl;
 		this._schienenAnzahl++;
@@ -748,7 +748,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 				if (this._klausurZuSchiene[nr] === s) {
 					const gostKlausur: GostKursklausurRich | null = this._mapNummerZuKlausur.get(nr);
 					if (gostKlausur === null) {
-						throw new DeveloperNotificationException("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!")
+						throw new DeveloperNotificationException("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!");
 					}
 					this._logger.log(" " + (nr + 1) + "/" + Arrays.toString(gostKlausur.kursSchiene));
 				}

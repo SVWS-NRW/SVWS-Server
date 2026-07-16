@@ -1141,7 +1141,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @return the transpiled expression if the statement was transpiled successfully and null otherwise
 	 */
 	public String convertThrow(final ThrowTree node) {
-		return "throw %s".formatted(convertExpression(node.getExpression()));
+		return "throw %s;".formatted(convertExpression(node.getExpression()));
 	}
 
 

@@ -14,7 +14,7 @@ export class ApiServerAlgorithmen extends BaseApi {
 	 * @param {string} username - der Benutzername für den API-Zugriff
 	 * @param {string} password - das Kennwort des Benutzers für den API-Zugriff
 	 */
-	public constructor(url : string, username : string, password : string) {
+	public constructor(url: string, username: string, password: string) {
 		super(url, username, password);
 	}
 
@@ -32,10 +32,10 @@ export class ApiServerAlgorithmen extends BaseApi {
 	 *
 	 * @returns Das Ergebnis der Abschlussberechnung, ggf. mit Nachprüfungsmöglichkeiten
 	 */
-	public async getGesamtschuleAbschlussHA10(data : GEAbschlussFaecher) : Promise<AbschlussErgebnis> {
+	public async getGesamtschuleAbschlussHA10(data: GEAbschlussFaecher): Promise<AbschlussErgebnis> {
 		const path = "/api/common/gesamtschule/abschluss/ha10";
-		const body : string = GEAbschlussFaecher.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = GEAbschlussFaecher.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return AbschlussErgebnis.transpilerFromJSON(text);
 	}
@@ -56,10 +56,10 @@ export class ApiServerAlgorithmen extends BaseApi {
 	 *
 	 * @returns Das Ergebnis der Abschlussberechnung, ggf. mit Nachprüfungsmöglichkeiten
 	 */
-	public async getGesamtschuleAbschlussHA9(data : GEAbschlussFaecher) : Promise<AbschlussErgebnis> {
+	public async getGesamtschuleAbschlussHA9(data: GEAbschlussFaecher): Promise<AbschlussErgebnis> {
 		const path = "/api/common/gesamtschule/abschluss/ha9";
-		const body : string = GEAbschlussFaecher.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = GEAbschlussFaecher.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return AbschlussErgebnis.transpilerFromJSON(text);
 	}
@@ -79,10 +79,10 @@ export class ApiServerAlgorithmen extends BaseApi {
 	 *
 	 * @returns Das Ergebnis der Abschlussberechnung, ggf. mit Nachprüfungsmöglichkeiten
 	 */
-	public async getGesamtschuleAbschlussMSA(data : GEAbschlussFaecher) : Promise<AbschlussErgebnis> {
+	public async getGesamtschuleAbschlussMSA(data: GEAbschlussFaecher): Promise<AbschlussErgebnis> {
 		const path = "/api/common/gesamtschule/abschluss/msa";
-		const body : string = GEAbschlussFaecher.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = GEAbschlussFaecher.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return AbschlussErgebnis.transpilerFromJSON(text);
 	}
@@ -102,10 +102,10 @@ export class ApiServerAlgorithmen extends BaseApi {
 	 *
 	 * @returns Das Ergebnis der Abschlussberechnung, ggf. mit Nachprüfungsmöglichkeiten
 	 */
-	public async getGesamtschuleAbschlussMSAQ(data : GEAbschlussFaecher) : Promise<AbschlussErgebnis> {
+	public async getGesamtschuleAbschlussMSAQ(data: GEAbschlussFaecher): Promise<AbschlussErgebnis> {
 		const path = "/api/common/gesamtschule/abschluss/msaq";
-		const body : string = GEAbschlussFaecher.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = GEAbschlussFaecher.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return AbschlussErgebnis.transpilerFromJSON(text);
 	}
@@ -125,10 +125,10 @@ export class ApiServerAlgorithmen extends BaseApi {
 	 *
 	 * @returns Das Ergebnis der Prognoseberechnung, ggf. mit Nachprüfungsmöglichkeiten
 	 */
-	public async getGesamtschuleAbschlussPrognose(data : GEAbschlussFaecher) : Promise<AbschlussErgebnis> {
+	public async getGesamtschuleAbschlussPrognose(data: GEAbschlussFaecher): Promise<AbschlussErgebnis> {
 		const path = "/api/common/gesamtschule/abschluss/prognose";
-		const body : string = GEAbschlussFaecher.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = GEAbschlussFaecher.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return AbschlussErgebnis.transpilerFromJSON(text);
 	}
@@ -148,10 +148,10 @@ export class ApiServerAlgorithmen extends BaseApi {
 	 *
 	 * @returns Das Ergebnis der Belegprüfung, ggf. mit Belegungsfehlern
 	 */
-	public async getGostBelegpruefungEF1(data : GostBelegpruefungsdaten) : Promise<GostBelegpruefungErgebnis> {
+	public async getGostBelegpruefungEF1(data: GostBelegpruefungsdaten): Promise<GostBelegpruefungErgebnis> {
 		const path = "/api/common/gost/belegpruefung/EF1";
-		const body : string = GostBelegpruefungsdaten.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = GostBelegpruefungsdaten.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return GostBelegpruefungErgebnis.transpilerFromJSON(text);
 	}
@@ -171,10 +171,10 @@ export class ApiServerAlgorithmen extends BaseApi {
 	 *
 	 * @returns Das Ergebnis der Belegprüfung, ggf. mit Belegungsfehlern
 	 */
-	public async getGostBelegpruefungGesamt(data : GostBelegpruefungsdaten) : Promise<GostBelegpruefungErgebnis> {
+	public async getGostBelegpruefungGesamt(data: GostBelegpruefungsdaten): Promise<GostBelegpruefungErgebnis> {
 		const path = "/api/common/gost/belegpruefung/gesamt";
-		const body : string = GostBelegpruefungsdaten.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
+		const body: string = GostBelegpruefungsdaten.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return GostBelegpruefungErgebnis.transpilerFromJSON(text);
 	}

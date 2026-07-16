@@ -1147,7 +1147,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 				return lehrkraft;
 			}
 		}
-		throw new DeveloperNotificationException("Es gibt im Kurs " + this.toStringKurs(idKurs) + " keine Lehrkraft mit ReihenfolgeNr. " + reihenfolgeNr + "!")
+		throw new DeveloperNotificationException("Es gibt im Kurs " + this.toStringKurs(idKurs) + " keine Lehrkraft mit ReihenfolgeNr. " + reihenfolgeNr + "!");
 	}
 
 	/**
@@ -1165,7 +1165,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 				return lehrkraft;
 			}
 		}
-		throw new DeveloperNotificationException("Es gibt im Kurs " + this.toStringKurs(idKurs) + " keine Lehrkraft mit ID " + idLehrkraft + "!")
+		throw new DeveloperNotificationException("Es gibt im Kurs " + this.toStringKurs(idKurs) + " keine Lehrkraft mit ID " + idLehrkraft + "!");
 	}
 
 	/**
@@ -1253,7 +1253,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 				return;
 			}
 		}
-		throw new DeveloperNotificationException(this.toStringKurs(idKurs) + " enthält nicht " + this.toStringKursLehrkraft(idKurs, idAlteLehrkraft))
+		throw new DeveloperNotificationException(this.toStringKurs(idKurs) + " enthält nicht " + this.toStringKursLehrkraft(idKurs, idAlteLehrkraft));
 	}
 
 	/**

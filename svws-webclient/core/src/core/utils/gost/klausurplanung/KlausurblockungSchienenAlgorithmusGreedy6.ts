@@ -58,7 +58,7 @@ export class KlausurblockungSchienenAlgorithmusGreedy6 extends KlausurblockungSc
 				while (nr2 >= 0) {
 					setS.addLast(nr2);
 					if (!this._dynDaten.aktionSetzeKlausurInSchiene(nr2, s)) {
-						throw new DeveloperNotificationException("Fehler im Algorithmus Greedy6!")
+						throw new DeveloperNotificationException("Fehler im Algorithmus Greedy6!");
 					}
 					nr2 = this._dynDaten.gibKlausurDieFreiIstUndNichtBenachbartZurMengeAberDerenNachbarnMaximalBenachbartSind(setS);
 				}

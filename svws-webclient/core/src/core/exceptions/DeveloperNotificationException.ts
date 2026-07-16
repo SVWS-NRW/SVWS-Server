@@ -34,7 +34,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifTrue(pBeschreibung: string, pErfuellt: boolean): void {
 		if (pErfuellt) {
-			throw new DeveloperNotificationException(pBeschreibung)
+			throw new DeveloperNotificationException(pBeschreibung);
 		}
 	}
 
@@ -48,7 +48,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifInvalidID(pVariablenname: string, pID: number): void {
 		if (pID < 0) {
-			throw new DeveloperNotificationException(pVariablenname + " hat eine ungültige ID=" + pID + "!")
+			throw new DeveloperNotificationException(pVariablenname + " hat eine ungültige ID=" + pID + "!");
 		}
 	}
 
@@ -66,7 +66,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifNull<T>(pBeschreibung: string, pWert: T | null): T {
 		if (pWert === null) {
-			throw new DeveloperNotificationException(pBeschreibung + " sollte nicht NULL sein!")
+			throw new DeveloperNotificationException(pBeschreibung + " sollte nicht NULL sein!");
 		}
 		return pWert;
 	}
@@ -83,7 +83,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifNotInRange(pVariablenname: string, pWert: number, pMinimum: number, pMaximum: number): void {
 		if ((pWert < pMinimum) || (pWert > pMaximum)) {
-			throw new DeveloperNotificationException(pVariablenname + "(" + pWert + ") muss in dem Bereich [ " + pMinimum + ", " + pMaximum + " ] liegen!")
+			throw new DeveloperNotificationException(pVariablenname + "(" + pWert + ") muss in dem Bereich [ " + pMinimum + ", " + pMaximum + " ] liegen!");
 		}
 	}
 
@@ -98,7 +98,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifSmaller(pVariablenname: string, pWert: number, pMinimum: number): void {
 		if (pWert < pMinimum) {
-			throw new DeveloperNotificationException(pVariablenname + "(" + pWert + ") darf nicht kleiner sein als " + pMinimum + "!")
+			throw new DeveloperNotificationException(pVariablenname + "(" + pWert + ") darf nicht kleiner sein als " + pMinimum + "!");
 		}
 	}
 
@@ -113,7 +113,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifGreater(pVariablenname: string, pWert: number, pMaximum: number): void {
 		if (pWert > pMaximum) {
-			throw new DeveloperNotificationException(pVariablenname + "(" + pWert + ") darf nicht größer sein als " + pMaximum + "!")
+			throw new DeveloperNotificationException(pVariablenname + "(" + pWert + ") darf nicht größer sein als " + pMaximum + "!");
 		}
 	}
 
@@ -128,7 +128,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifEqual(pVariablenname: string, pVariable: number, pWert: number): void {
 		if (pVariable === pWert) {
-			throw new DeveloperNotificationException(pVariablenname + "(" + pWert + ") darf nicht gleich " + pWert + " sein!")
+			throw new DeveloperNotificationException(pVariablenname + "(" + pWert + ") darf nicht gleich " + pWert + " sein!");
 		}
 	}
 
@@ -142,7 +142,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifStringIsBlank(nameDerVariablen: string, zeichenkette: string): void {
 		if (JavaString.isBlank(zeichenkette)) {
-			throw new DeveloperNotificationException(nameDerVariablen + " darf nicht 'blank' sein!")
+			throw new DeveloperNotificationException(nameDerVariablen + " darf nicht 'blank' sein!");
 		}
 	}
 
@@ -159,7 +159,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifMapContains<K, V>(pMapName: string, pMap: JavaMap<K, V>, pKey: K): void {
 		if (pMap.containsKey(pKey)) {
-			throw new DeveloperNotificationException(pMapName + " hat bereits den KEY " + pKey + "")
+			throw new DeveloperNotificationException(pMapName + " hat bereits den KEY " + pKey + "");
 		}
 	}
 
@@ -176,7 +176,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifMapNotContains<K, V>(pMapName: string, pMap: JavaMap<K, V>, pKey: K): void {
 		if (!pMap.containsKey(pKey)) {
-			throw new DeveloperNotificationException(pMapName + " hat nicht den KEY " + pKey + "")
+			throw new DeveloperNotificationException(pMapName + " hat nicht den KEY " + pKey + "");
 		}
 	}
 
@@ -194,7 +194,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifMapPutOverwrites<K, V>(map: JavaMap<K, V>, key: K, value: V): void {
 		if (map.containsKey(key)) {
-			throw new DeveloperNotificationException("PUT von " + key + " --> " + value + " fehlgeschlagen, da bereits " + map.get(key) + " zugeordnet ist!")
+			throw new DeveloperNotificationException("PUT von " + key + " --> " + value + " fehlgeschlagen, da bereits " + map.get(key) + " zugeordnet ist!");
 		}
 		map.put(key, value);
 	}
@@ -213,7 +213,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifListMap2DLongKeysPutOverwrites<V>(map: ListMap2DLongKeys<V>, key1: number, key2: number, value: V): void {
 		if (map.getSingle12OrNull(key1, key2) !== null) {
-			throw new DeveloperNotificationException("PUT von (" + key1 + ", " + key2 + ") --> " + value + " fehlgeschlagen, da bereits " + map.get12(key1, key2) + " zugeordnet ist!")
+			throw new DeveloperNotificationException("PUT von (" + key1 + ", " + key2 + ") --> " + value + " fehlgeschlagen, da bereits " + map.get12(key1, key2) + " zugeordnet ist!");
 		}
 		map.add(key1, key2, value);
 	}
@@ -234,7 +234,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifMap2DPutOverwrites<K1, K2, V>(map: HashMap2D<K1, K2, V>, key1: K1, key2: K2, value: V): void {
 		if (map.contains(key1, key2)) {
-			throw new DeveloperNotificationException("PUT von (" + key1 + ", " + key2 + ") --> " + value + " fehlgeschlagen, da bereits " + map.getOrNull(key1, key2) + " zugeordnet ist!")
+			throw new DeveloperNotificationException("PUT von (" + key1 + ", " + key2 + ") --> " + value + " fehlgeschlagen, da bereits " + map.getOrNull(key1, key2) + " zugeordnet ist!");
 		}
 		map.put(key1, key2, value);
 	}
@@ -259,7 +259,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifMap4DPutOverwrites<K1, K2, K3, K4, V>(map: HashMap4D<K1, K2, K3, K4, V>, key1: K1, key2: K2, key3: K3, key4: K4, value: V): void {
 		if (map.contains(key1, key2, key3, key4)) {
-			throw new DeveloperNotificationException("PUT von (" + key1 + ", " + key2 + ", " + key3 + ", " + key4 + ") --> " + value + " fehlgeschlagen, da bereits " + map.getOrException(key1, key2, key3, key4) + " zugeordnet ist!")
+			throw new DeveloperNotificationException("PUT von (" + key1 + ", " + key2 + ", " + key3 + ", " + key4 + ") --> " + value + " fehlgeschlagen, da bereits " + map.getOrException(key1, key2, key3, key4) + " zugeordnet ist!");
 		}
 		map.put(key1, key2, key3, key4, value);
 	}
@@ -286,7 +286,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifMap5DPutOverwrites<K1, K2, K3, K4, K5, V>(map: HashMap5D<K1, K2, K3, K4, K5, V>, key1: K1, key2: K2, key3: K3, key4: K4, key5: K5, value: V): void {
 		if (map.contains(key1, key2, key3, key4, key5)) {
-			throw new DeveloperNotificationException("PUT von (" + key1 + ", " + key2 + ", " + key3 + ", " + key4 + ", " + key5 + ") --> " + value + " fehlgeschlagen, da bereits " + map.getOrException(key1, key2, key3, key4, key5) + " zugeordnet ist!")
+			throw new DeveloperNotificationException("PUT von (" + key1 + ", " + key2 + ", " + key3 + ", " + key4 + ", " + key5 + ") --> " + value + " fehlgeschlagen, da bereits " + map.getOrException(key1, key2, key3, key4, key5) + " zugeordnet ist!");
 		}
 		map.put(key1, key2, key3, key4, key5, value);
 	}
@@ -354,11 +354,11 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifMapGetIsNull<K, V>(map: JavaMap<K, V>, key: K): V {
 		if (!map.containsKey(key)) {
-			throw new DeveloperNotificationException("GET von " + key + " fehlgeschlagen, da kein Mapping existiert!")
+			throw new DeveloperNotificationException("GET von " + key + " fehlgeschlagen, da kein Mapping existiert!");
 		}
 		const value: V | null = map.get(key);
 		if (value === null) {
-			throw new DeveloperNotificationException("GET von " + key + " fehlgeschlagen, da es auf NULL mapped!")
+			throw new DeveloperNotificationException("GET von " + key + " fehlgeschlagen, da es auf NULL mapped!");
 		}
 		return value;
 	}
@@ -378,7 +378,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	public static ifMapRemoveFailes<K, V>(map: JavaMap<K, V>, key: K): V {
 		const value: V | null = map.remove(key);
 		if (value === null) {
-			throw new DeveloperNotificationException("REMOVE von " + key + " fehlgeschlagen, da kein Mapping existiert!")
+			throw new DeveloperNotificationException("REMOVE von " + key + " fehlgeschlagen, da kein Mapping existiert!");
 		}
 		return value;
 	}
@@ -400,7 +400,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifMap2DGetIsNull<K1, K2, V>(map: HashMap2D<K1, K2, V>, key1: K1, key2: K2): V {
 		if (!map.contains(key1, key2)) {
-			throw new DeveloperNotificationException("GET von (" + key1 + ", " + key2 + ") fehlgeschlagen, da kein Mapping existiert!")
+			throw new DeveloperNotificationException("GET von (" + key1 + ", " + key2 + ") fehlgeschlagen, da kein Mapping existiert!");
 		}
 		return map.getOrException(key1, key2);
 	}
@@ -443,7 +443,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifMap3DGetIsNull<K1, K2, K3, V>(map: HashMap3D<K1, K2, K3, V>, key1: K1, key2: K2, key3: K3): V {
 		if (!map.contains(key1, key2, key3)) {
-			throw new DeveloperNotificationException("GET von (" + key1 + ", " + key2 + ", " + key3 + ") fehlgeschlagen, da kein Mapping existiert!")
+			throw new DeveloperNotificationException("GET von (" + key1 + ", " + key2 + ", " + key3 + ") fehlgeschlagen, da kein Mapping existiert!");
 		}
 		return map.getNonNullOrException(key1, key2, key3);
 	}
@@ -460,7 +460,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifListNotContains<E>(listName: string, list: List<E>, value: E): void {
 		if (!list.contains(value)) {
-			throw new DeveloperNotificationException(listName + " hat kein Element " + value + "!")
+			throw new DeveloperNotificationException(listName + " hat kein Element " + value + "!");
 		}
 	}
 
@@ -476,7 +476,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifListAddsDuplicate<E>(listName: string, list: List<E>, value: E): void {
 		if (list.contains(value)) {
-			throw new DeveloperNotificationException(listName + " hat bereits das Element " + value + "!")
+			throw new DeveloperNotificationException(listName + " hat bereits das Element " + value + "!");
 		}
 		list.add(value);
 	}
@@ -493,7 +493,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifListRemoveFailes<E>(listName: string, list: List<E>, value: E): void {
 		if (!list.remove(value)) {
-			throw new DeveloperNotificationException(listName + " konnte Element " + value + " nicht entfernen!")
+			throw new DeveloperNotificationException(listName + " konnte Element " + value + " nicht entfernen!");
 		}
 	}
 
@@ -510,11 +510,11 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifListGetFirstFailes<E>(listName: string, list: List<E>): E {
 		if (list.isEmpty()) {
-			throw new DeveloperNotificationException(listName + " hat kein erstes Element!")
+			throw new DeveloperNotificationException(listName + " hat kein erstes Element!");
 		}
 		const first: E | null = list.get(0);
 		if (first === null) {
-			throw new DeveloperNotificationException(listName + " hat zwar ein erstes Element, aber es ist NULL!")
+			throw new DeveloperNotificationException(listName + " hat zwar ein erstes Element, aber es ist NULL!");
 		}
 		return first;
 	}
@@ -532,11 +532,11 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifListGetLastFailes<E>(listName: string, list: List<E>): E {
 		if (list.isEmpty()) {
-			throw new DeveloperNotificationException(listName + " hat kein letztes Element!")
+			throw new DeveloperNotificationException(listName + " hat kein letztes Element!");
 		}
 		const last: E | null = list.get(list.size() - 1);
 		if (last === null) {
-			throw new DeveloperNotificationException(listName + " hat zwar ein letztes Element, aber es ist NULL!")
+			throw new DeveloperNotificationException(listName + " hat zwar ein letztes Element, aber es ist NULL!");
 		}
 		return last;
 	}
@@ -552,7 +552,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifCollectionIsEmpty<E>(listName: string, collection: Collection<E>): void {
 		if (collection.isEmpty()) {
-			throw new DeveloperNotificationException("Die Liste '" + listName + "' darf nicht leer sein!")
+			throw new DeveloperNotificationException("Die Liste '" + listName + "' darf nicht leer sein!");
 		}
 	}
 
@@ -568,7 +568,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifSetAddsDuplicate<E>(setName: string, set: JavaSet<E>, value: E): void {
 		if (!set.add(value)) {
-			throw new DeveloperNotificationException(setName + " hat bereits das Element " + value + "!")
+			throw new DeveloperNotificationException(setName + " hat bereits das Element " + value + "!");
 		}
 	}
 
@@ -584,7 +584,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifSetRemoveFailes<E>(setName: string, set: JavaSet<E>, value: E): void {
 		if (!set.remove(value)) {
-			throw new DeveloperNotificationException(setName + " konnte Element " + value + " nicht entfernen!")
+			throw new DeveloperNotificationException(setName + " konnte Element " + value + " nicht entfernen!");
 		}
 	}
 
@@ -600,7 +600,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifSetContains<E>(setName: string, set: JavaSet<E>, value: E): void {
 		if (set.contains(value)) {
-			throw new DeveloperNotificationException(setName + " hat darf " + value + " nicht enthalten!")
+			throw new DeveloperNotificationException(setName + " hat darf " + value + " nicht enthalten!");
 		}
 	}
 
@@ -616,7 +616,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifSetNotContains<E>(setName: string, set: JavaSet<E>, value: E): void {
 		if (!set.contains(value)) {
-			throw new DeveloperNotificationException(setName + " muss " + value + " enthalten!")
+			throw new DeveloperNotificationException(setName + " muss " + value + " enthalten!");
 		}
 	}
 
@@ -629,7 +629,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifNotInt(s: string | null): number {
 		if (s === null) {
-			throw new DeveloperNotificationException("NULL-String kann nicht in eine Zahl umgwandelt werden")
+			throw new DeveloperNotificationException("NULL-String kann nicht in eine Zahl umgwandelt werden");
 		}
 		return JavaInteger.parseInt(s);
 	}
@@ -645,7 +645,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifArrayIsEmpty<E>(arrayName: string, values: Array<E | null>): void {
 		if (values.length === 0) {
-			throw new DeveloperNotificationException("Das Array '" + arrayName + "' darf nicht leer sein!")
+			throw new DeveloperNotificationException("Das Array '" + arrayName + "' darf nicht leer sein!");
 		}
 	}
 

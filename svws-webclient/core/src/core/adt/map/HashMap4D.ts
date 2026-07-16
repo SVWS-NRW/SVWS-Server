@@ -43,15 +43,15 @@ export class HashMap4D<K1, K2, K3, K4, V> extends JavaObject {
 	public put(key1: K1, key2: K2, key3: K3, key4: K4, value: V): void {
 		const map2: JavaMap<K2, JavaMap<K3, JavaMap<K4, V>>> | null = this._map1.computeIfAbsent(key1, { apply: (k: K1 | null) => new HashMap() });
 		if (map2 === null) {
-			throw new NullPointerException()
+			throw new NullPointerException();
 		}
 		const map3: JavaMap<K3, JavaMap<K4, V>> | null = map2.computeIfAbsent(key2, { apply: (k: K2 | null) => new HashMap() });
 		if (map3 === null) {
-			throw new NullPointerException()
+			throw new NullPointerException();
 		}
 		const map4: JavaMap<K4, V> | null = map3.computeIfAbsent(key3, { apply: (k: K3 | null) => new HashMap() });
 		if (map4 === null) {
-			throw new NullPointerException()
+			throw new NullPointerException();
 		}
 		map4.put(key4, value);
 	}
@@ -72,18 +72,18 @@ export class HashMap4D<K1, K2, K3, K4, V> extends JavaObject {
 	public getOrException(key1: K1, key2: K2, key3: K3, key4: K4): V | null {
 		const map2: JavaMap<K2, JavaMap<K3, JavaMap<K4, V>>> | null = this._map1.get(key1);
 		if (map2 === null) {
-			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!")
+			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!");
 		}
 		const map3: JavaMap<K3, JavaMap<K4, V>> | null = map2.get(key2);
 		if (map3 === null) {
-			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", " + key2 + ") ungültig!")
+			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", " + key2 + ") ungültig!");
 		}
 		const map4: JavaMap<K4, V> | null = map3.get(key3);
 		if (map4 === null) {
-			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ", key3=" + key3 + ") ungültig!")
+			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ", key3=" + key3 + ") ungültig!");
 		}
 		if (!map4.containsKey(key4)) {
-			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ", key3=" + key3 + ", key4=" + key4 + ") ungültig!")
+			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ", key3=" + key3 + ", key4=" + key4 + ") ungültig!");
 		}
 		return map4.get(key4);
 	}
@@ -175,7 +175,7 @@ export class HashMap4D<K1, K2, K3, K4, V> extends JavaObject {
 	public getNonNullOrException(key1: K1, key2: K2, key3: K3, key4: K4): V {
 		const value: V | null = this.getOrException(key1, key2, key3, key4);
 		if (value === null) {
-			throw new DeveloperNotificationException("value is NULL!")
+			throw new DeveloperNotificationException("value is NULL!");
 		}
 		return value;
 	}
@@ -228,18 +228,18 @@ export class HashMap4D<K1, K2, K3, K4, V> extends JavaObject {
 	public removeOrException(key1: K1, key2: K2, key3: K3, key4: K4): V {
 		const map2: JavaMap<K2, JavaMap<K3, JavaMap<K4, V>>> | null = this._map1.get(key1);
 		if (map2 === null) {
-			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!")
+			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!");
 		}
 		const map3: JavaMap<K3, JavaMap<K4, V>> | null = map2.get(key2);
 		if (map3 === null) {
-			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", " + key2 + ") ungültig!")
+			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", " + key2 + ") ungültig!");
 		}
 		const map4: JavaMap<K4, V> | null = map3.get(key3);
 		if (map4 === null) {
-			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ", key3=" + key3 + ") ungültig!")
+			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ", key3=" + key3 + ") ungültig!");
 		}
 		if (!map4.containsKey(key4)) {
-			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ", key3=" + key3 + ", key4=" + key4 + ") ungültig!")
+			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ", key3=" + key3 + ", key4=" + key4 + ") ungültig!");
 		}
 		const value: V | null = map4.remove(key4);
 		if (map4.isEmpty()) {
