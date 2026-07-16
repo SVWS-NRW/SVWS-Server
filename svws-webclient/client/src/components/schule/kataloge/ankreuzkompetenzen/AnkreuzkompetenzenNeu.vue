@@ -96,9 +96,9 @@
 		{ key: "kuerzel", label: "Jahrgang" },
 	];
 
-	const faecher = computed(() => [...props.manager().faecherById.values()]);
+	const faecherAufZeugnis = computed(() => [...props.manager().faecherById.values()].filter((f => f.aufZeugnis && f.istSichtbar)));
 	const faecherManager = new SelectManager({
-		options: faecher,
+		options: faecherAufZeugnis,
 		optionDisplayText: f => f.bezeichnung,
 		selectionDisplayText: f => f.bezeichnung,
 	});
