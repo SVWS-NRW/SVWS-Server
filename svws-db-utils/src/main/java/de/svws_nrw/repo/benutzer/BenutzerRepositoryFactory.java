@@ -17,12 +17,12 @@ public final class BenutzerRepositoryFactory extends RepositoryFactory {
 	}
 
 	/**
-	 * Erzeugt ein neues {@link BenutzerRepository}.
+	 * Erzeugt ein neues {@link BenutzerAllgemeinRepository}.
 	 *
-	 * @return {@link BenutzerRepository}
+	 * @return {@link BenutzerAllgemeinRepository}
 	 */
-	public BenutzerRepository getBenutzerRepository() {
-		return getOrCreate(BenutzerRepository.class, () -> new BenutzerRepositoryImpl(conn));
+	public BenutzerAllgemeinRepository getBenutzerAllgemeinRepository() {
+		return getOrCreate(BenutzerAllgemeinRepository.class, () -> new BenutzerAllgemeinRepositoryImpl(conn));
 	}
 
 	/**
@@ -41,6 +41,15 @@ public final class BenutzerRepositoryFactory extends RepositoryFactory {
 	 */
 	public BenutzergruppenMitgliedRepository getBenutzergruppenMitgliedRepository() {
 		return getOrCreate(BenutzergruppenMitgliedRepository.class, () -> new BenutzergruppenMitgliedRepositoryImpl(conn));
+	}
+
+	/**
+	 * Erzeugt ein neues {@link ViewBenutzerDetailsRepository}
+	 *
+	 * @return {link {@link ViewBenutzerDetailsRepository}}
+	 */
+	public ViewBenutzerDetailsRepository getViewBenutzerDetailsRepository() {
+		return getOrCreate(ViewBenutzerDetailsRepository.class, () -> new ViewBenutzerDetailsRepositoryImpl(conn));
 	}
 
 	/**

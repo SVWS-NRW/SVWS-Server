@@ -12,7 +12,7 @@ import de.svws_nrw.asd.data.schueler.Sprachendaten;
 import de.svws_nrw.asd.data.schueler.Sprachpruefung;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.repo.benutzer.BenutzerRepository;
+import de.svws_nrw.repo.benutzer.BenutzerAllgemeinRepository;
 import jakarta.ws.rs.core.Response;
 
 
@@ -21,7 +21,7 @@ import jakarta.ws.rs.core.Response;
  */
 public final class SchuelerSprachdatenService {
 
-	private final BenutzerRepository benutzerRepository;
+	private final BenutzerAllgemeinRepository benutzerRepository;
 
 	private final SchuelerSprachenfolgeService schuelerSprachenfolgeService;
 	private final SchuelerSprachpruefungenService schuelerSprachpruefungenService;
@@ -34,7 +34,7 @@ public final class SchuelerSprachdatenService {
 	 * @param schuelerSprachenfolgeService      der Service für die Sprachenfolge
 	 * @param schuelerSprachpruefungenService   der Service für die Sprachprüfungen
 	 */
-	public SchuelerSprachdatenService(final BenutzerRepository benutzerRepository,
+	public SchuelerSprachdatenService(final BenutzerAllgemeinRepository benutzerRepository,
 			final SchuelerSprachenfolgeService schuelerSprachenfolgeService,
 			final SchuelerSprachpruefungenService schuelerSprachpruefungenService) {
 		this.benutzerRepository = benutzerRepository;

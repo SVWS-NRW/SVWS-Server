@@ -13,7 +13,7 @@ import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
-import de.svws_nrw.repo.benutzer.BenutzerRepository;
+import de.svws_nrw.repo.benutzer.BenutzerAllgemeinRepository;
 import de.svws_nrw.repo.jahrgaenge.JahrgaengeRepository;
 import de.svws_nrw.repo.schueler.SchuelerLernabschnittRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
@@ -24,7 +24,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public class GostSchuelerService {
 
-	private final BenutzerRepository benutzerRepository;
+	private final BenutzerAllgemeinRepository benutzerRepository;
 	private final JahrgaengeRepository jahrgaengeRepository;
 	private final SchuelerRepository schuelerRepository;
 	private final SchuelerLernabschnittRepository schuelerLernabschnittRepository;
@@ -37,7 +37,7 @@ public class GostSchuelerService {
 	 * @param schuelerRepository                     das Repository für den Zugriff auf Schülerdaten
 	 * @param schuelerLernabschnittRepository        das Repository für den Zugriff auf die Schüler-Lernabschnittsdaten
 	 */
-	public GostSchuelerService(final BenutzerRepository benutzerRepository,
+	public GostSchuelerService(final BenutzerAllgemeinRepository benutzerRepository,
 			final JahrgaengeRepository jahrgaengeRepository,
 			final SchuelerRepository schuelerRepository,
 			final SchuelerLernabschnittRepository schuelerLernabschnittRepository) {

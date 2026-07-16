@@ -39,7 +39,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.repo.benutzer.BenutzerRepository;
+import de.svws_nrw.repo.benutzer.BenutzerAllgemeinRepository;
 import de.svws_nrw.repo.gost.GostSchuelerFachbelegungenRepository;
 import de.svws_nrw.repo.jahrgaenge.JahrgaengeRepository;
 import de.svws_nrw.repo.schueler.SchuelerLeistungsdatenRepository;
@@ -57,7 +57,7 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class GostAbiturdatenService {
 
-	private final BenutzerRepository benutzerRepository;
+	private final BenutzerAllgemeinRepository benutzerRepository;
 	private final JahrgaengeRepository jahrgaengeRepository;
 	private final SchuelerRepository schuelerRepository;
 	private final SchuelerLernabschnittRepository schuelerLernabschnittRepository;
@@ -84,7 +84,7 @@ public class GostAbiturdatenService {
 	 * @param gostFaecherService                     der Service für den Zugriff auf die Fächer der Oberstufe
 	 * @param gostSchuelerService                    der Service für den Zugriff auf die Schüler der Oberstufe
 	 */
-	public GostAbiturdatenService(final BenutzerRepository benutzerRepository, final JahrgaengeRepository jahrgaengeRepository,
+	public GostAbiturdatenService(final BenutzerAllgemeinRepository benutzerRepository, final JahrgaengeRepository jahrgaengeRepository,
 			final SchuelerRepository schuelerRepository, final SchuelerLernabschnittRepository schuelerLernabschnittRepository,
 			final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository,
 			final GostSchuelerFachbelegungenRepository gostSchuelerFachbelegungenRepository,
@@ -510,7 +510,8 @@ public class GostAbiturdatenService {
 			final DTOSchuelerLernabschnittsdaten aktLernabschnitt, final List<DTOSchuelerLernabschnittsdaten> lernabschnitte,
 			final Map<Long, List<DTOSchuelerLeistungsdaten>> mapAbschnittsLeistungen,
 			final int abiturjahr, final Sprachendaten sprachendaten, final GostFaecherManager gostFaecher) {
-		final Schuljahresabschnitt abschnittSchueler = benutzerRepository.getAktuellerBenutzer().schuleGetAbschnittById(schueler.Schuljahresabschnitts_ID);
+		final Schuljahresabschnitt abschnittSchueler =
+				benutzerRepository.getAktuellerBenutzer().schuleGetAbschnittById(schueler.Schuljahresabschnitts_ID);
 
 		final DTOJahrgang dtoAktJahrgang = mapJahrgaenge.get(aktLernabschnitt.Jahrgang_ID);
 		final Jahrgaenge aktJahrgang =

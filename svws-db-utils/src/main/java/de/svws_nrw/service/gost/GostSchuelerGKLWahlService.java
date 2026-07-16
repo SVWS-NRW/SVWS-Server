@@ -9,7 +9,7 @@ import java.util.Set;
 import de.svws_nrw.core.data.gost.GostSchuelerGKLWahl;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.repo.benutzer.BenutzerRepository;
+import de.svws_nrw.repo.benutzer.BenutzerAllgemeinRepository;
 import de.svws_nrw.repo.gost.GostSchuelerRepository;
 import de.svws_nrw.repo.gost.klausurplan.GostKlausurenVorgabeRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
@@ -20,7 +20,7 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class GostSchuelerGKLWahlService {
 
-	private final BenutzerRepository benutzerRepository;
+	private final BenutzerAllgemeinRepository benutzerRepository;
 	private final SchuelerRepository schuelerRepository;
 	private final GostSchuelerRepository gostSchuelerRepository;
 	private final GostKlausurenVorgabeRepository gostKlausurenVorgabeRepository;
@@ -33,7 +33,7 @@ public class GostSchuelerGKLWahlService {
 	 * @param gostSchuelerRepository           das Repository für den Zugriff auf die Schülerdaten der gymnasialen Oberstufe
 	 * @param gostKlausurenVorgabeRepository   das Repository für den Zugriff auf die Klausurvorgaben der gymnasialen Oberstufe
 	 */
-	public GostSchuelerGKLWahlService(final BenutzerRepository benutzerRepository,
+	public GostSchuelerGKLWahlService(final BenutzerAllgemeinRepository benutzerRepository,
 			final SchuelerRepository schuelerRepository,
 			final GostSchuelerRepository gostSchuelerRepository,
 			final GostKlausurenVorgabeRepository gostKlausurenVorgabeRepository) {

@@ -35,7 +35,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.repo.benutzer.BenutzerRepository;
+import de.svws_nrw.repo.benutzer.BenutzerAllgemeinRepository;
 import de.svws_nrw.repo.faecher.FachRepository;
 import de.svws_nrw.repo.gost.GostJahrgangFachbelegungenRepository;
 import de.svws_nrw.repo.gost.GostJahrgangsdatenRepository;
@@ -51,7 +51,7 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class GostFachwahlService {
 
-	private final BenutzerRepository benutzerRepository;
+	private final BenutzerAllgemeinRepository benutzerRepository;
 	private final SchuelerRepository schuelerRepository;
 	private final SchuelerLernabschnittRepository schuelerLernabschnittRepository;
 	private final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository;
@@ -78,7 +78,7 @@ public class GostFachwahlService {
 	 * @param gostAbiturdatenService                 der Service für den Zugriff auf die Abiturdaten der gymnasialen Oberstufe
 	 * @param gostSchuelerService                    der Service für den Zugriff auf die Schülerdaten der gymnasialen Oberstufe
 	 */
-	public GostFachwahlService(final BenutzerRepository benutzerRepository,
+	public GostFachwahlService(final BenutzerAllgemeinRepository benutzerRepository,
 			final SchuelerRepository schuelerRepository,
 			final SchuelerLernabschnittRepository schuelerLernabschnittRepository,
 			final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository,

@@ -15,7 +15,7 @@ import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFaecher;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.repo.benutzer.BenutzerRepository;
+import de.svws_nrw.repo.benutzer.BenutzerAllgemeinRepository;
 import de.svws_nrw.repo.faecher.FachRepository;
 import de.svws_nrw.repo.gost.GostJahrgangFaecherRepository;
 import jakarta.validation.constraints.NotNull;
@@ -27,7 +27,7 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class GostFaecherService {
 
-	private final BenutzerRepository benutzerRepository;
+	private final BenutzerAllgemeinRepository benutzerRepository;
 	private final FachRepository fachRepository;
 	private final GostJahrgangFaecherRepository gostJahrgangFaecherRepository;
 
@@ -38,7 +38,7 @@ public class GostFaecherService {
 	 * @param fachRepository                  das Repository für den Zugriff auf die Fächer der Schule
 	 * @param gostJahrgangFaecherRepository   das Repository für den Zugriff auf die Fächer der Abiturjahrgänge der Gymnasialen Oberstufe
 	 */
-	public GostFaecherService(final BenutzerRepository benutzerRepository, final FachRepository fachRepository,
+	public GostFaecherService(final BenutzerAllgemeinRepository benutzerRepository, final FachRepository fachRepository,
 			final GostJahrgangFaecherRepository gostJahrgangFaecherRepository) {
 		this.benutzerRepository = benutzerRepository;
 		this.fachRepository = fachRepository;

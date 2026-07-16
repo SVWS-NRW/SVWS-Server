@@ -206,7 +206,7 @@ public final class StatistikServiceFactory {
 	 * @return der Service für den Zugriff auf die Schülerdaten
 	 */
 	public SchuelerStatistikService getSchuelerStatistikService() {
-		return new SchuelerStatistikService(benutzerRepositoryFactory.getBenutzerRepository(),
+		return new SchuelerStatistikService(benutzerRepositoryFactory.getBenutzerAllgemeinRepository(),
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				schuelerRepositoryFactory.getSchuelerLernabschnittRepository(),
 				schuelerRepositoryFactory.getSchuelerLeistungsdatenRepository(),

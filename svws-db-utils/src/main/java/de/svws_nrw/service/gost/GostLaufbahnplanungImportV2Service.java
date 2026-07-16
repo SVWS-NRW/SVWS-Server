@@ -38,7 +38,7 @@ import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchuelerFachbelegungen;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.repo.benutzer.BenutzerRepository;
+import de.svws_nrw.repo.benutzer.BenutzerAllgemeinRepository;
 import de.svws_nrw.repo.gost.GostSchuelerFachbelegungenRepository;
 import de.svws_nrw.repo.gost.GostSchuelerRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
@@ -50,7 +50,7 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class GostLaufbahnplanungImportV2Service {
 
-	private final BenutzerRepository benutzerRepository;
+	private final BenutzerAllgemeinRepository benutzerRepository;
 	private final SchuelerRepository schuelerRepository;
 	private final GostSchuelerRepository gostSchuelerRepository;
 	private final GostSchuelerFachbelegungenRepository gostSchuelerFachbelegungenRepository;
@@ -70,7 +70,7 @@ public class GostLaufbahnplanungImportV2Service {
 	 * @param gostAbiturdatenService                    der Service für den Zugriff auf die Abiturdaten der gymnasialen Oberstufe
 	 * @param gostFaecherService                        der Service für den Zugruff auf die Fächerdaten eines Abiturjahrganges der gymnasialen Oberstufe
 	 */
-	public GostLaufbahnplanungImportV2Service(final BenutzerRepository benutzerRepository,
+	public GostLaufbahnplanungImportV2Service(final BenutzerAllgemeinRepository benutzerRepository,
 			final SchuelerRepository schuelerRepository,
 			final GostSchuelerRepository gostSchuelerRepository,
 			final GostSchuelerFachbelegungenRepository gostSchuelerFachbelegungenRepository,

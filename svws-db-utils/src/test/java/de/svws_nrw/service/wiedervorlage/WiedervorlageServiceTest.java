@@ -7,17 +7,18 @@ import java.util.function.Supplier;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.data.TransactionSupport;
-import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzerAllgemein;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppe;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOSchuelerErzieherAdresse;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schule.DTOWiedervorlage;
+import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.WiedervorlageMapper;
-import de.svws_nrw.repo.benutzer.BenutzerRepository;
+import de.svws_nrw.repo.benutzer.BenutzerAllgemeinRepository;
 import de.svws_nrw.repo.benutzer.BenutzergruppeRepository;
 import de.svws_nrw.repo.benutzer.BenutzergruppenMitgliedRepository;
+import de.svws_nrw.repo.benutzer.ViewBenutzerDetailsRepository;
 import de.svws_nrw.repo.erzieher.ErzieherRepository;
 import de.svws_nrw.repo.lehrer.LehrerRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
@@ -39,6 +40,7 @@ import org.openapitools.jackson.nullable.JsonNullable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -53,7 +55,9 @@ class WiedervorlageServiceTest {
 	@Mock
 	private BenutzergruppenMitgliedRepository benutzergruppenMitgliedRepository;
 	@Mock
-	private BenutzerRepository benutzerRepository;
+	private BenutzerAllgemeinRepository benutzerAllgemeinRepository;
+	@Mock
+	private ViewBenutzerDetailsRepository viewBenutzerDetailsRepository;
 	@Mock
 	private LehrerRepository lehrerRepository;
 	@Mock
@@ -73,7 +77,8 @@ class WiedervorlageServiceTest {
 				wiedervorlageRepository,
 				benutzergruppenMitgliedRepository,
 				benutzergruppeRepository,
-				benutzerRepository,
+				benutzerAllgemeinRepository,
+				viewBenutzerDetailsRepository,
 				lehrerRepository,
 				schuelerRepository,
 				erzieherRepository,
@@ -100,17 +105,17 @@ class WiedervorlageServiceTest {
 	void getSuccessWiedervorlageErledigt() {
 		final long idBenutzerAngelegt = 42L;
 		final String nameBenutzerAngelegt = "Person Angelegt";
-		final DTOBenutzerAllgemein benutzerAngelegt = buildBenutzerAllgemein(idBenutzerAngelegt, nameBenutzerAngelegt);
+		final DTOViewBenutzerdetails benutzerAngelegt = buildBenutzerAllgemein(idBenutzerAngelegt, nameBenutzerAngelegt);
 
 		final long idBenutzerErledigt = 43L;
 		final String nameBenutzerErledigt = "Person Erledigt";
-		final DTOBenutzerAllgemein benutzerErledigt = buildBenutzerAllgemein(idBenutzerErledigt, nameBenutzerErledigt);
+		final DTOViewBenutzerdetails benutzerErledigt = buildBenutzerAllgemein(idBenutzerErledigt, nameBenutzerErledigt);
 
 		final var dto = buildEntity(1L, idBenutzerAngelegt, 43L, null);
 
-		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(idBenutzerAngelegt);
-		when(benutzerRepository.findById(idBenutzerAngelegt)).thenReturn(Optional.of(benutzerAngelegt));
-		when(benutzerRepository.findById(idBenutzerErledigt)).thenReturn(Optional.of(benutzerErledigt));
+		when(benutzerAllgemeinRepository.getAktuellerBenutzerId()).thenReturn(idBenutzerAngelegt);
+		when(viewBenutzerDetailsRepository.findById(idBenutzerAngelegt)).thenReturn(Optional.of(benutzerAngelegt));
+		when(viewBenutzerDetailsRepository.findById(idBenutzerErledigt)).thenReturn(Optional.of(benutzerErledigt));
 		when(wiedervorlageRepository.findByIdAndBenutzerId(1L, idBenutzerAngelegt)).thenReturn(Optional.of(dto));
 
 		final var result = cut.get(1L);
@@ -131,13 +136,13 @@ class WiedervorlageServiceTest {
 	void getSuccessWiedervorlageOffen() {
 		final long idBenutzerAngelegt = 42L;
 		final String nameBenutzerAngelegt = "Person Angelegt";
-		final DTOBenutzerAllgemein benutzerAngelegt = buildBenutzerAllgemein(idBenutzerAngelegt, nameBenutzerAngelegt);
+		final DTOViewBenutzerdetails benutzerAngelegt = buildBenutzerAllgemein(idBenutzerAngelegt, nameBenutzerAngelegt);
 
 
 		final var dto = buildEntity(1L, idBenutzerAngelegt, null, null);
 
-		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(idBenutzerAngelegt);
-		when(benutzerRepository.findById(idBenutzerAngelegt)).thenReturn(Optional.of(benutzerAngelegt));
+		when(benutzerAllgemeinRepository.getAktuellerBenutzerId()).thenReturn(idBenutzerAngelegt);
+		when(viewBenutzerDetailsRepository.findById(idBenutzerAngelegt)).thenReturn(Optional.of(benutzerAngelegt));
 		when(wiedervorlageRepository.findByIdAndBenutzerId(1L, idBenutzerAngelegt)).thenReturn(Optional.of(dto));
 
 		final var result = cut.get(1L);
@@ -151,7 +156,7 @@ class WiedervorlageServiceTest {
 	void getNotFound() {
 		final long benutzerId = 42L;
 
-		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(benutzerId);
+		when(benutzerAllgemeinRepository.getAktuellerBenutzerId()).thenReturn(benutzerId);
 		when(wiedervorlageRepository.findByIdAndBenutzerId(99L, benutzerId)).thenReturn(Optional.empty());
 
 		Assertions.assertThatThrownBy(() -> cut.get(99L))
@@ -166,8 +171,8 @@ class WiedervorlageServiceTest {
 		final var firstEntity = buildEntity(1L, 42L, null, null);
 		final var secondEntity = buildEntity(2L, 42L, null, 5L);
 
-		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(42L);
-		when(benutzerRepository.findById(42L)).thenReturn(Optional.of(buildBenutzerAllgemein(42L, "Benutzername")));
+		when(benutzerAllgemeinRepository.getAktuellerBenutzerId()).thenReturn(42L);
+		when(viewBenutzerDetailsRepository.findById(42L)).thenReturn(Optional.of(buildBenutzerAllgemein(42L, "Benutzername")));
 		when(wiedervorlageRepository.findAllByBenutzerId(42L)).thenReturn(List.of(firstEntity, secondEntity));
 
 		final var result = cut.getAll();
@@ -187,8 +192,8 @@ class WiedervorlageServiceTest {
 	void createSuccess() {
 		final var request = buildCreateRequest();
 
-		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(42L);
-		when(benutzerRepository.findById(42L)).thenReturn(Optional.of(buildBenutzerAllgemein(42L, "Benutzername")));
+		when(benutzerAllgemeinRepository.getAktuellerBenutzerId()).thenReturn(42L);
+		when(viewBenutzerDetailsRepository.findById(42L)).thenReturn(Optional.of(buildBenutzerAllgemein(42L, "Benutzername")));
 
 		final var result = cut.create(request);
 
@@ -212,8 +217,8 @@ class WiedervorlageServiceTest {
 		final var lehrer = new DTOLehrer(2L, "ABC", "Mustermann");
 		lehrer.Vorname = "Max";
 
-		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(42L);
-		when(benutzerRepository.findById(42L)).thenReturn(Optional.of(buildBenutzerAllgemein(42L, "Benutzername")));
+		when(benutzerAllgemeinRepository.getAktuellerBenutzerId()).thenReturn(42L);
+		when(viewBenutzerDetailsRepository.findById(42L)).thenReturn(Optional.of(buildBenutzerAllgemein(42L, "Benutzername")));
 		when(lehrerRepository.findById(2L)).thenReturn(Optional.of(lehrer));
 
 		final var result = cut.create(request);
@@ -242,8 +247,8 @@ class WiedervorlageServiceTest {
 		schueler.Vorname = "Max";
 		schueler.Nachname = "Mustermann";
 
-		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(42L);
-		when(benutzerRepository.findById(42L)).thenReturn(Optional.of(buildBenutzerAllgemein(42L, "Benutzername")));
+		when(benutzerAllgemeinRepository.getAktuellerBenutzerId()).thenReturn(42L);
+		when(viewBenutzerDetailsRepository.findById(42L)).thenReturn(Optional.of(buildBenutzerAllgemein(42L, "Benutzername")));
 		when(schuelerRepository.findById(2L)).thenReturn(Optional.of(schueler));
 
 		final var result = cut.create(request);
@@ -272,8 +277,8 @@ class WiedervorlageServiceTest {
 		erzieher.Vorname1 = "Max";
 		erzieher.Name1 = "Mustermann";
 
-		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(42L);
-		when(benutzerRepository.findById(42L)).thenReturn(Optional.of(buildBenutzerAllgemein(42L, "Benutzername")));
+		when(benutzerAllgemeinRepository.getAktuellerBenutzerId()).thenReturn(42L);
+		when(viewBenutzerDetailsRepository.findById(42L)).thenReturn(Optional.of(buildBenutzerAllgemein(42L, "Benutzername")));
 		when(erzieherRepository.findById(2L)).thenReturn(Optional.of(erzieher));
 
 		final var result = cut.create(request);
@@ -310,7 +315,7 @@ class WiedervorlageServiceTest {
 	void createConflictPersistenceException() {
 		final var request = buildCreateRequest();
 
-		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(42L);
+		when(benutzerAllgemeinRepository.getAktuellerBenutzerId()).thenReturn(42L);
 		doThrow(PersistenceException.class)
 				.when(wiedervorlageRepository).create(ArgumentMatchers.any(DTOWiedervorlage.class));
 
@@ -327,8 +332,8 @@ class WiedervorlageServiceTest {
 		final var dto = buildEntity(1L, idBenutzer, null, 2L);
 		final var request = buildPatchRequest();
 
-		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
-		when(benutzerRepository.findById(42L)).thenReturn(Optional.of(buildBenutzerAllgemein(42L, "Benutzername")));
+		when(benutzerAllgemeinRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
+		when(viewBenutzerDetailsRepository.findById(42L)).thenReturn(Optional.of(buildBenutzerAllgemein(42L, "Benutzername")));
 		when(wiedervorlageRepository.findByIdAndBenutzerId(1L, idBenutzer)).thenReturn(Optional.of(dto));
 		when(benutzergruppeRepository.findById(2L)).thenReturn(Optional.of(new DTOBenutzergruppe(2L, "x", true)));
 
@@ -348,7 +353,7 @@ class WiedervorlageServiceTest {
 		final var dto = buildEntity(1L, idBenutzer, null, 2L);
 		final var request = buildPatchRequest();
 
-		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(43L);
+		when(benutzerAllgemeinRepository.getAktuellerBenutzerId()).thenReturn(43L);
 		when(wiedervorlageRepository.findByIdAndBenutzerId(1L, 43L)).thenReturn(Optional.of(dto));
 		when(benutzergruppeRepository.findById(2L)).thenReturn(Optional.of(new DTOBenutzergruppe(2L, "x", true)));
 		when(benutzergruppenMitgliedRepository.hasGroupRights(43L, 2L)).thenReturn(false);
@@ -365,8 +370,8 @@ class WiedervorlageServiceTest {
 		final long idBenutzer = 42L;
 		final var dto = buildEntity(1L, 42L, null, null);
 
-		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
-		when(benutzerRepository.findById(42L)).thenReturn(Optional.of(buildBenutzerAllgemein(42L, "Benutzername")));
+		when(benutzerAllgemeinRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
+		when(viewBenutzerDetailsRepository.findById(42L)).thenReturn(Optional.of(buildBenutzerAllgemein(42L, "Benutzername")));
 		when(wiedervorlageRepository.findByIdAndBenutzerId(1L, idBenutzer)).thenReturn(Optional.of(dto));
 
 		final var result = cut.patch(new WiedervorlagePatchRequest(), 1L);
@@ -383,7 +388,7 @@ class WiedervorlageServiceTest {
 		final long idBenutzer = 42L;
 		final var request = new WiedervorlagePatchRequest();
 
-		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
+		when(benutzerAllgemeinRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
 		when(wiedervorlageRepository.findByIdAndBenutzerId(99L, idBenutzer)).thenReturn(Optional.empty());
 
 		Assertions.assertThatThrownBy(() -> cut.patch(request, 99L))
@@ -398,7 +403,7 @@ class WiedervorlageServiceTest {
 		final long idBenutzer = 42L;
 		final long idWiederVorlage = 1L;
 
-		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
+		when(benutzerAllgemeinRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
 
 		final var result = cut.delete(idWiederVorlage);
 
@@ -414,7 +419,7 @@ class WiedervorlageServiceTest {
 		final var ids = Set.of(successId, notFoundId);
 		final var idBenutzer = 1L;
 
-		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
+		when(benutzerAllgemeinRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
 		when(wiedervorlageRepository.findAllByIdsAndBenutzerId(ids, idBenutzer)).thenReturn(List.of(buildEntity(successId, idBenutzer, null, null)));
 
 		final var logs = cut.delete(ids);
@@ -439,8 +444,8 @@ class WiedervorlageServiceTest {
 		final var dto = buildEntity(1L, idBenutzer, null, null);
 
 		when(wiedervorlageRepository.findByIdAndBenutzerId(1L, idBenutzer)).thenReturn(Optional.of(dto));
-		when(benutzerRepository.findById(42L)).thenReturn(Optional.of(buildBenutzerAllgemein(42L, "Benutzername")));
-		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
+		when(viewBenutzerDetailsRepository.findById(42L)).thenReturn(Optional.of(buildBenutzerAllgemein(42L, "Benutzername")));
+		when(benutzerAllgemeinRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
 
 		final var result = cut.markiereAlsErledigt(1L);
 
@@ -468,7 +473,7 @@ class WiedervorlageServiceTest {
 	@Test
 	@DisplayName("getAnzahlOffeneWiedervorlagen | 3 offene Wiedervorlagen | Success")
 	void getAnzahlOffeneWiedervorlagenSuccess() {
-		when(benutzerRepository.getAktuellerBenutzerId()).thenReturn(1L);
+		when(benutzerAllgemeinRepository.getAktuellerBenutzerId()).thenReturn(1L);
 		when(wiedervorlageRepository.getAnzahlOffeneWiedervorlagen(1L)).thenReturn(3L);
 
 		final long result = cut.getAnzahlOffeneWiedervorlagen();
@@ -513,8 +518,9 @@ class WiedervorlageServiceTest {
 		return request;
 	}
 
-	private DTOBenutzerAllgemein buildBenutzerAllgemein(final long benutzerId, final String anzeigeName) {
-		final DTOBenutzerAllgemein benutzer = new DTOBenutzerAllgemein(benutzerId);
+	private DTOViewBenutzerdetails buildBenutzerAllgemein(final long benutzerId, final String anzeigeName) {
+		final DTOViewBenutzerdetails benutzer = mock(DTOViewBenutzerdetails.class);
+		benutzer.ID = benutzerId;
 		benutzer.AnzeigeName = anzeigeName;
 
 		return benutzer;

@@ -67,7 +67,7 @@ public final class SchuelerServiceFactory {
 	 * @return der Service
 	 */
 	public SchuelerSprachdatenService getSchuelerSprachdatenService() {
-		return new SchuelerSprachdatenService(benutzerRepositoryFactory.getBenutzerRepository(),
+		return new SchuelerSprachdatenService(benutzerRepositoryFactory.getBenutzerAllgemeinRepository(),
 				this.getSchuelerSprachenfolgeService(),
 				this.getSchuelerSprachpruefungenService());
 	}

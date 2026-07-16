@@ -38,7 +38,7 @@ public final class BenutzerServiceFactory {
 	 * @return der Service
 	 */
 	public BenutzerKompetenzService getBenutzerKompetenzService() {
-		return new BenutzerKompetenzService(benutzerRepositoryFactory.getBenutzerRepository());
+		return new BenutzerKompetenzService(benutzerRepositoryFactory.getBenutzerAllgemeinRepository());
 	}
 
 }

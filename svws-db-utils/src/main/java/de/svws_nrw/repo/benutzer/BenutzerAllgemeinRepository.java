@@ -7,7 +7,7 @@ import de.svws_nrw.repo.Repository;
 /**
  * Repository für allgemeine Benutzer Informationen.
  */
-public interface BenutzerRepository extends Repository<DTOBenutzerAllgemein> {
+public interface BenutzerAllgemeinRepository extends Repository<DTOBenutzerAllgemein> {
 
 	/**
 	 * Gibt die ID des aktuell angemeldeten Benutzers zurück.

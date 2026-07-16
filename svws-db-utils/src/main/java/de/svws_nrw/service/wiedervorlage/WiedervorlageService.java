@@ -14,7 +14,8 @@ import de.svws_nrw.data.TransactionSupport;
 import de.svws_nrw.db.dto.current.schule.DTOWiedervorlage;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.WiedervorlageMapper;
-import de.svws_nrw.repo.benutzer.BenutzerRepository;
+import de.svws_nrw.repo.benutzer.BenutzerAllgemeinRepository;
+import de.svws_nrw.repo.benutzer.ViewBenutzerDetailsRepository;
 import de.svws_nrw.repo.benutzer.BenutzergruppeRepository;
 import de.svws_nrw.repo.benutzer.BenutzergruppenMitgliedRepository;
 import de.svws_nrw.repo.erzieher.ErzieherRepository;
@@ -38,7 +39,8 @@ public final class WiedervorlageService {
 	private final WiedervorlageRepository wiedervorlageRepository;
 	private final BenutzergruppenMitgliedRepository benutzergruppenMitgliedRepository;
 	private final BenutzergruppeRepository benutzergruppeRepository;
-	private final BenutzerRepository benutzerRepository;
+	private final BenutzerAllgemeinRepository benutzerAllgemeinRepository;
+	private final ViewBenutzerDetailsRepository viewBenutzerDetailsRepository;
 	private final LehrerRepository lehrerRepository;
 	private final SchuelerRepository schuelerRepository;
 	private final ErzieherRepository erzieherRepository;
@@ -51,7 +53,8 @@ public final class WiedervorlageService {
 	 * @param wiedervorlageRepository Repository für Wiedervorlage-Entitäten
 	 * @param benutzergruppenMitgliedRepository Repository für Benutzergruppen
 	 * @param benutzergruppeRepository Repository für Benutzergruppen
-	 * @param benutzerRepository Repository für Benutzer Zugriff
+	 * @param benutzerAllgemeinRepository Repository für Benutzer Zugriff
+	 * @param viewBenutzerDetailsRepository Repository für BenutzerDetails
 	 * @param lehrerRepository Repository für Lehrer Zugriff
 	 * @param schuelerRepository Repository für Schüler Zugriff
 	 * @param erzieherRepository Repository für Erzieher Zugriff
@@ -61,7 +64,8 @@ public final class WiedervorlageService {
 	public WiedervorlageService(final WiedervorlageRepository wiedervorlageRepository,
 			final BenutzergruppenMitgliedRepository benutzergruppenMitgliedRepository,
 			final BenutzergruppeRepository benutzergruppeRepository,
-			final BenutzerRepository benutzerRepository,
+			final BenutzerAllgemeinRepository benutzerAllgemeinRepository,
+			final ViewBenutzerDetailsRepository viewBenutzerDetailsRepository,
 			final LehrerRepository lehrerRepository,
 			final SchuelerRepository schuelerRepository,
 			final ErzieherRepository erzieherRepository,
@@ -69,7 +73,8 @@ public final class WiedervorlageService {
 		this.wiedervorlageRepository = wiedervorlageRepository;
 		this.benutzergruppenMitgliedRepository = benutzergruppenMitgliedRepository;
 		this.benutzergruppeRepository = benutzergruppeRepository;
-		this.benutzerRepository = benutzerRepository;
+		this.benutzerAllgemeinRepository = benutzerAllgemeinRepository;
+		this.viewBenutzerDetailsRepository = viewBenutzerDetailsRepository;
 		this.lehrerRepository = lehrerRepository;
 		this.schuelerRepository = schuelerRepository;
 		this.erzieherRepository = erzieherRepository;
@@ -84,7 +89,7 @@ public final class WiedervorlageService {
 	 * @return der zugehörige {@link WiedervorlageEintrag}
 	 */
 	public WiedervorlageEintrag get(final long id) {
-		final long idBenutzer = benutzerRepository.getAktuellerBenutzerId();
+		final long idBenutzer = benutzerAllgemeinRepository.getAktuellerBenutzerId();
 		final DTOWiedervorlage entity = getPersistedEntityByUser(id, idBenutzer);
 
 		return toApi(entity);
@@ -96,7 +101,7 @@ public final class WiedervorlageService {
 	 * @return Liste aller zugänglichen {@link WiedervorlageEintrag}-Objekte
 	 */
 	public List<WiedervorlageEintrag> getAll() {
-		final long idBenutzer = benutzerRepository.getAktuellerBenutzerId();
+		final long idBenutzer = benutzerAllgemeinRepository.getAktuellerBenutzerId();
 
 		return wiedervorlageRepository.findAllByBenutzerId(idBenutzer)
 				.stream()
@@ -141,7 +146,7 @@ public final class WiedervorlageService {
 	 */
 	public WiedervorlageEintrag create(final WiedervorlageCreateRequest request) {
 		return TransactionSupport.transactional(() -> {
-			final long idBenutzer = benutzerRepository.getAktuellerBenutzerId();
+			final long idBenutzer = benutzerAllgemeinRepository.getAktuellerBenutzerId();
 			validateBenutzerGruppe(request.idBenutzergruppe, idBenutzer, idBenutzer);
 
 			final DTOWiedervorlage entity = wiedervorlageMapper.createDomain(request, idBenutzer);
@@ -160,7 +165,7 @@ public final class WiedervorlageService {
 	 */
 	public WiedervorlageEintrag patch(final WiedervorlagePatchRequest request, final long id) {
 		return TransactionSupport.transactional(() -> {
-			final long idBenutzer = benutzerRepository.getAktuellerBenutzerId();
+			final long idBenutzer = benutzerAllgemeinRepository.getAktuellerBenutzerId();
 			final DTOWiedervorlage persisted = getPersistedEntityByUser(id, idBenutzer);
 
 			wiedervorlageMapper.patch(request, persisted);
@@ -195,7 +200,7 @@ public final class WiedervorlageService {
 		if (ids.isEmpty()) {
 			return Collections.emptyList();
 		}
-		final long idBenutzer = benutzerRepository.getAktuellerBenutzerId();
+		final long idBenutzer = benutzerAllgemeinRepository.getAktuellerBenutzerId();
 
 		final List<DTOWiedervorlage> assignedWiedervorlagen = wiedervorlageRepository.findAllByIdsAndBenutzerId(ids, idBenutzer);
 		final List<SimpleOperationResponse> responses = buildLogsForWiedervorlagen(assignedWiedervorlagen, ids);
@@ -244,7 +249,7 @@ public final class WiedervorlageService {
 	 */
 	public WiedervorlageEintrag markiereAlsErledigt(final long id) {
 		return TransactionSupport.transactional(() -> {
-			final long idUser = benutzerRepository.getAktuellerBenutzerId();
+			final long idUser = benutzerAllgemeinRepository.getAktuellerBenutzerId();
 			final DTOWiedervorlage wiedervorlage = getPersistedEntityByUser(id, idUser);
 
 			wiedervorlage.idBenutzerErledigt = idUser;
@@ -260,7 +265,7 @@ public final class WiedervorlageService {
 	 * @return Anzahl offener Wiedervorlagen als Int
 	 */
 	public long getAnzahlOffeneWiedervorlagen() {
-		final var idBenutzer = benutzerRepository.getAktuellerBenutzerId();
+		final var idBenutzer = benutzerAllgemeinRepository.getAktuellerBenutzerId();
 		return wiedervorlageRepository.getAnzahlOffeneWiedervorlagen(idBenutzer);
 	}
 
@@ -330,7 +335,7 @@ public final class WiedervorlageService {
 			return null;
 		}
 
-		return benutzerRepository.findById(idBenutzer)
+		return viewBenutzerDetailsRepository.findById(idBenutzer)
 				.map(b -> b.AnzeigeName)
 				.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, String.format("Es wurde kein Benutzer zur ID %d gefunden.", idBenutzer)));
 	}

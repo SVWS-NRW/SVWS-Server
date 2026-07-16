@@ -34,7 +34,7 @@ import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFachkombinationen;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.repo.benutzer.BenutzerRepository;
+import de.svws_nrw.repo.benutzer.BenutzerAllgemeinRepository;
 import de.svws_nrw.repo.gost.GostJahrgangFachkombinationenRepository;
 import de.svws_nrw.repo.gost.GostJahrgangsdatenRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
@@ -47,7 +47,7 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class GostLaufbahnplanungExportV1Service {
 
-	private final BenutzerRepository benutzerRepository;
+	private final BenutzerAllgemeinRepository benutzerRepository;
 	private final SchuelerRepository schuelerRepository;
 	private final GostJahrgangFachkombinationenRepository gostJahrgangFachkombinationenRepository;
 	private final GostJahrgangsdatenRepository gostJahrgangsdatenRepository;
@@ -69,7 +69,7 @@ public class GostLaufbahnplanungExportV1Service {
 	 * @param gostFaecherService                        der Service für den Zugruff auf die Fächerdaten eines Abiturjahrganges der gymnasialen Oberstufe
 	 * @param gostBeratungslehrerService                der Service für den Zugruff auf die Beratungslehrer eines Abiturjahrganges der gymnasialen Oberstufe
 	 */
-	public GostLaufbahnplanungExportV1Service(final BenutzerRepository benutzerRepository,
+	public GostLaufbahnplanungExportV1Service(final BenutzerAllgemeinRepository benutzerRepository,
 			final SchuelerRepository schuelerRepository,
 			final GostJahrgangFachkombinationenRepository gostJahrgangFachkombinationenRepository,
 			final GostJahrgangsdatenRepository gostJahrgangsdatenRepository,

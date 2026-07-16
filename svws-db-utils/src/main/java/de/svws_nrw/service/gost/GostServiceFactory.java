@@ -112,7 +112,7 @@ public final class GostServiceFactory {
 	 * @return der Service
 	 */
 	public GostFaecherService getGostFaecherService() {
-		return new GostFaecherService(benutzerRepositoryFactory.getBenutzerRepository(),
+		return new GostFaecherService(benutzerRepositoryFactory.getBenutzerAllgemeinRepository(),
 				katalogeRepositoryFactory.getFachRepository(),
 				gostRepositoryFactory.getGostJahrgangFaecherRepository());
 	}
@@ -135,7 +135,7 @@ public final class GostServiceFactory {
 	 * @return der Service
 	 */
 	public GostSchuelerService getGostSchuelerService() {
-		return new GostSchuelerService(benutzerRepositoryFactory.getBenutzerRepository(),
+		return new GostSchuelerService(benutzerRepositoryFactory.getBenutzerAllgemeinRepository(),
 				katalogeRepositoryFactory.getJahrgaengeRepository(),
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				schuelerRepositoryFactory.getSchuelerLernabschnittRepository());
@@ -148,7 +148,7 @@ public final class GostServiceFactory {
 	 * @return der Service
 	 */
 	public GostAbiturdatenService getGostAbiturdatenService() {
-		return new GostAbiturdatenService(benutzerRepositoryFactory.getBenutzerRepository(),
+		return new GostAbiturdatenService(benutzerRepositoryFactory.getBenutzerAllgemeinRepository(),
 				katalogeRepositoryFactory.getJahrgaengeRepository(),
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				schuelerRepositoryFactory.getSchuelerLernabschnittRepository(),
@@ -167,7 +167,7 @@ public final class GostServiceFactory {
 	 * @return der Service
 	 */
 	public GostFachwahlService getGostFachwahlService() {
-		return new GostFachwahlService(benutzerRepositoryFactory.getBenutzerRepository(),
+		return new GostFachwahlService(benutzerRepositoryFactory.getBenutzerAllgemeinRepository(),
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				schuelerRepositoryFactory.getSchuelerLernabschnittRepository(),
 				schuelerRepositoryFactory.getSchuelerLeistungsdatenRepository(),
@@ -187,7 +187,7 @@ public final class GostServiceFactory {
 	 * @return der Service
 	 */
 	public GostJahrgangFachwahlService getGostJahrgangFachwahlService() {
-		return new GostJahrgangFachwahlService(benutzerRepositoryFactory.getBenutzerRepository(),
+		return new GostJahrgangFachwahlService(benutzerRepositoryFactory.getBenutzerAllgemeinRepository(),
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				katalogeRepositoryFactory.getFachRepository(),
 				this.getGostAbiturdatenService());
@@ -200,7 +200,7 @@ public final class GostServiceFactory {
 	 * @return der Service
 	 */
 	public GostSchuelerGKLWahlService getGostSchuelerGKLWahlService() {
-		return new GostSchuelerGKLWahlService(benutzerRepositoryFactory.getBenutzerRepository(),
+		return new GostSchuelerGKLWahlService(benutzerRepositoryFactory.getBenutzerAllgemeinRepository(),
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				gostRepositoryFactory.getGostSchuelerRepository(),
 				gostKlausurenRepositoryFactory.getGostKlausurenVorgabeRepository());
@@ -213,7 +213,7 @@ public final class GostServiceFactory {
 	 * @return der Service
 	 */
 	public GostLaufbahnplanungExportV1Service getGostLaufbahnplanungExportV1Service() {
-		return new GostLaufbahnplanungExportV1Service(benutzerRepositoryFactory.getBenutzerRepository(),
+		return new GostLaufbahnplanungExportV1Service(benutzerRepositoryFactory.getBenutzerAllgemeinRepository(),
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				gostRepositoryFactory.getGostJahrgangFachkombinationenRepository(),
 				gostRepositoryFactory.getGostJahrgangsdatenRepository(),
@@ -230,7 +230,7 @@ public final class GostServiceFactory {
 	 * @return der Service
 	 */
 	public GostLaufbahnplanungImportV1Service getGostLaufbahnplanungImportV1Service() {
-		return new GostLaufbahnplanungImportV1Service(benutzerRepositoryFactory.getBenutzerRepository(),
+		return new GostLaufbahnplanungImportV1Service(benutzerRepositoryFactory.getBenutzerAllgemeinRepository(),
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				gostRepositoryFactory.getGostSchuelerRepository(),
 				gostRepositoryFactory.getGostSchuelerFachbelegungenRepository(),
@@ -245,7 +245,7 @@ public final class GostServiceFactory {
 	 * @return der Service
 	 */
 	public GostLaufbahnplanungExportV2Service getGostLaufbahnplanungExportV2Service() {
-		return new GostLaufbahnplanungExportV2Service(benutzerRepositoryFactory.getBenutzerRepository(),
+		return new GostLaufbahnplanungExportV2Service(benutzerRepositoryFactory.getBenutzerAllgemeinRepository(),
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				gostRepositoryFactory.getGostSchuelerRepository(),
 				gostRepositoryFactory.getGostJahrgangFachkombinationenRepository(),
@@ -264,7 +264,7 @@ public final class GostServiceFactory {
 	 * @return der Service
 	 */
 	public GostLaufbahnplanungImportV2Service getGostLaufbahnplanungImportV2Service() {
-		return new GostLaufbahnplanungImportV2Service(benutzerRepositoryFactory.getBenutzerRepository(),
+		return new GostLaufbahnplanungImportV2Service(benutzerRepositoryFactory.getBenutzerAllgemeinRepository(),
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				gostRepositoryFactory.getGostSchuelerRepository(),
 				gostRepositoryFactory.getGostSchuelerFachbelegungenRepository(),

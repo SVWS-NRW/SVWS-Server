@@ -31,7 +31,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.abitur.DTOSchuelerAbitur;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.repo.benutzer.BenutzerRepository;
+import de.svws_nrw.repo.benutzer.BenutzerAllgemeinRepository;
 import de.svws_nrw.repo.faecher.FachRepository;
 import de.svws_nrw.repo.schueler.SchuelerAbiturFachRepository;
 import de.svws_nrw.repo.schueler.SchuelerAbiturRepository;
@@ -46,7 +46,7 @@ import jakarta.ws.rs.core.Response.Status;
 public final class SchuelerStatistikService {
 
 	/** Das Repository für den Zugriff auf die Daten des aktuellen Benutzers */
-	private final BenutzerRepository benutzerRepository;
+	private final BenutzerAllgemeinRepository benutzerRepository;
 
 	/** Das Repository für den Zugriff auf die Schülerdaten */
 	private final SchuelerRepository schuelerRepository;
@@ -78,7 +78,7 @@ public final class SchuelerStatistikService {
 	 * @param schuelerAbiturFachRepository      das Repository für Abiturfachdaten der Schüler
 	 * @param fachRepository                    das Repository für Fächer
 	 */
-	public SchuelerStatistikService(final BenutzerRepository benutzerRepository,
+	public SchuelerStatistikService(final BenutzerAllgemeinRepository benutzerRepository,
 			final SchuelerRepository schuelerRepository,
 			final SchuelerLernabschnittRepository schuelerLernabschnittRepository,
 			final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository,

@@ -24,7 +24,7 @@ import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.repo.benutzer.BenutzerRepository;
+import de.svws_nrw.repo.benutzer.BenutzerAllgemeinRepository;
 import de.svws_nrw.repo.faecher.FachRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
 import jakarta.ws.rs.core.Response.Status;
@@ -34,7 +34,7 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class GostJahrgangFachwahlService {
 
-	private final BenutzerRepository benutzerRepository;
+	private final BenutzerAllgemeinRepository benutzerRepository;
 	private final SchuelerRepository schuelerRepository;
 	private final FachRepository fachRepository;
 	private final GostAbiturdatenService gostAbiturdatenService;
@@ -47,7 +47,7 @@ public class GostJahrgangFachwahlService {
 	 * @param fachRepository                         das Repository für den Zugriff auf Fächerdaten
 	 * @param gostAbiturdatenService                 der Service für den Zugriff auf die Abiturdaten der gymnasialen Oberstufe
 	 */
-	public GostJahrgangFachwahlService(final BenutzerRepository benutzerRepository,
+	public GostJahrgangFachwahlService(final BenutzerAllgemeinRepository benutzerRepository,
 			final SchuelerRepository schuelerRepository,
 			final FachRepository fachRepository,
 			final GostAbiturdatenService gostAbiturdatenService) {

@@ -6,7 +6,7 @@ import java.util.Set;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.repo.benutzer.BenutzerRepository;
+import de.svws_nrw.repo.benutzer.BenutzerAllgemeinRepository;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -15,14 +15,14 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class BenutzerKompetenzService {
 
-	private final BenutzerRepository benutzerRepository;
+	private final BenutzerAllgemeinRepository benutzerRepository;
 
 	/**
 	 * Erstellt einen neuen Service.
 	 *
 	 * @param benutzerRepository   das Repository für den Zugriff auf die Benutzerdaten des angemeldeten Benutzers
 	 */
-	public BenutzerKompetenzService(final BenutzerRepository benutzerRepository) {
+	public BenutzerKompetenzService(final BenutzerAllgemeinRepository benutzerRepository) {
 		this.benutzerRepository = benutzerRepository;
 	}
 
