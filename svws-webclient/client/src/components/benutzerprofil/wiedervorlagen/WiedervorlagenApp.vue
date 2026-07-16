@@ -21,10 +21,10 @@
 		<!--	Filter	-->
 		<div class="bg-ui-neutral rounded-md w-full pt-1 pb-2 px-1 mb-5">
 			<div class="flex flex-col md:flex-row flex-wrap lg:flex-nowrap gap-x-3 gap-y-1">
-				<div class="max-w-[30em] md:max-width-auto md:basis-[30em] shrink-1">
+				<div class="max-w-[30em] md:max-width-auto md:basis-[30em] shrink">
 					<svws-ui-text-input type="search" placeholder="Suche in Bemerkung/Name" v-model="filter.search" removable />
 				</div>
-				<div class="max-w-[30em] md:max-width-auto md:basis-[30em] shrink-1">
+				<div class="max-w-[30em] md:max-width-auto md:basis-[30em] shrink">
 					<svws-ui-text-input type="date" placeholder="Wiedervorlage bis" v-model="filter.tsWiedervorlage" removable class="max-w-[30em]" />
 				</div>
 				<div class="flex md:basis-full lg:basis-auto md:mt-[0.6em]">
@@ -35,81 +35,82 @@
 			</div>
 		</div>
 
-		<!--  Content  -->
+		<!--	Table	-->
+		<ui-table-grid name="Wiedervorlagen" :manager="() => gridManager" class="pb-6">
+			<template #header>
+				<template v-for="column in gridColumns" :key="`header-${column.kuerzel}`">
+					<th v-if="column.kuerzel === 'auswahl'" class="flex items-start justify-center">
+						<svws-ui-checkbox :model-value="bulkChecked" disabled title="Alle Wiedervorlagen an-/abwählen" />
+					</th>
+					<th v-else-if="column.kuerzel === 'rowActions'" />
+					<th v-else class="text-left">{{ column.name }}</th>
+				</template>
+			</template>
+			<template #default="{ row }">
+				<td class="flex items-start justify-center">
+					<svws-ui-checkbox :model-value="selection.includes(row)" disabled title="Wiedervorlage an-/abwählen" />
+				</td>
+				<td class="text-left">
+					<template v-if="row.tsWiedervorlage !== null">
+						{{ formatToLocalDate(getDateFromDateTime(row.tsWiedervorlage) ?? null) }}
+					</template>
+				</td>
+				<td class="text-left">
+					{{ getPerson(row.typPerson) }}
+				</td>
+				<td class="text-left flex flex-row">
+					<template v-if="row.idPerson !== null">
+						<button type="button" @click.stop="goToPerson(row)" class="button button--icon p-0! h-[1.6em]! w-[1.6em]!" title="Schüler ansehen">
+							<span class="icon i-ri-link" />
+						</button>
+						<span>{{ row.namePerson }}</span>
+					</template>
+					<template v-else>—</template>
+				</td>
+				<td class="text-left line-clamp-6">
+					{{ row.bemerkung }}
+				</td>
+				<td class="text-left">
+					{{ row.nameBenutzerAngelegt }}
+				</td>
+				<td class="text-left">
+					<template v-if="row.tsAngelegt !== null">
+						{{ formatToLocalDate(getDateFromDateTime(row.tsAngelegt) ?? null) }}
+					</template>
+				</td>
+				<td class="text-left">
+					{{ row.nameBenutzerErledigt ?? "—" }}
+				</td>
+				<td class="text-left">
+					<template v-if="row.tsErledigt !== null">
+						{{ formatToLocalDate(getDateFromDateTime(row.tsErledigt) ?? null) }}
+					</template>
+					<template v-else>—</template>
+				</td>
+				<td class="text-left">
+					{{ row.automatischErledigt ? 'an' : 'aus' }}
+				</td>
+				<td>
+					<ui-table-actions :actions="rowActions(row)" :items="row" />
+				</td>
+			</template>
+			<template #footer>
+				<td class="col-span-full my-1">
+					<ui-table-actions :actions="bulkActions" :items="selection" always-visible />
+				</td>
+			</template>
+		</ui-table-grid>
+
+		<!--  Texthinweise - leere Tabellen -->
 		<template v-if="!hasWiedervorlagen">
-			<div class="mt-6">Aktuell liegen keine Wiedervorlagen vor.</div>
+			<div class="mb-6">Es liegen noch keine Wiedervorlagen vor.</div>
 		</template>
 		<template v-else-if="gridManager.daten.length === 0">
-			<div class="mt-6">Mit den gesetzten Filter liegen keine Wiedervorlagen vor.</div>
+			<div>Mit den gesetzten Filter liegen keine Wiedervorlagen vor.</div>
 			<div class="mt-2">Filter zurücksetzen, um alle Wiedervorlagen zu sehen.</div>
-			<div class="mt-6"><svws-ui-button @click="resetFilters">Filter zurücksetzen</svws-ui-button></div>
-		</template>
-		<template v-else>
-			<!--	Table	-->
-			<ui-table-grid name="Wiedervorlagen" :manager="() => gridManager" class="pb-25">
-				<template #header>
-					<template v-for="column in gridColumns" :key="`header-${column.kuerzel}`">
-						<th v-if="column.kuerzel === 'auswahl'" class="flex items-start justify-center">
-							<svws-ui-checkbox :model-value="bulkChecked" disabled title="Alle Wiedervorlagen an-/abwählen" />
-						</th>
-						<th v-else-if="column.kuerzel === 'rowActions'" />
-						<th v-else class="text-left">{{ column.name }}</th>
-					</template>
-				</template>
-				<template #default="{ row }">
-					<td class="flex items-start justify-center">
-						<svws-ui-checkbox :model-value="selection.includes(row)" disabled title="Wiedervorlage an-/abwählen" />
-					</td>
-					<td class="text-left">
-						<template v-if="row.tsWiedervorlage !== null">
-							{{ formatToLocalDate(getDateFromDateTime(row.tsWiedervorlage) ?? null) }}
-						</template>
-					</td>
-					<td class="text-left">
-						{{ getPerson(row.typPerson) }}
-					</td>
-					<td class="text-left flex flex-row">
-						<template v-if="row.idPerson !== null">
-							<button type="button" @click.stop="goToPerson(row)" class="button button--icon p-0! h-[1.6em]! w-[1.6em]!" title="Schüler ansehen">
-								<span class="icon i-ri-link" />
-							</button>
-							<span>{{ row.namePerson }}</span>
-						</template>
-						<template v-else>—</template>
-					</td>
-					<td class="text-left line-clamp-6">
-						{{ row.bemerkung }}
-					</td>
-					<td class="text-left">
-						{{ row.nameBenutzerAngelegt }}
-					</td>
-					<td class="text-left">
-						<template v-if="row.tsAngelegt !== null">
-							{{ formatToLocalDate(getDateFromDateTime(row.tsAngelegt) ?? null) }}
-						</template>
-					</td>
-					<td class="text-left">
-						{{ row.nameBenutzerErledigt ?? "—" }}
-					</td>
-					<td class="text-left">
-						<template v-if="row.tsErledigt !== null">
-							{{ formatToLocalDate(getDateFromDateTime(row.tsErledigt) ?? null) }}
-						</template>
-						<template v-else>—</template>
-					</td>
-					<td class="text-left">
-						{{ row.automatischErledigt ? 'an' : 'aus' }}
-					</td>
-					<td>
-						<ui-table-actions :actions="rowActions(row)" :items="row" />
-					</td>
-				</template>
-				<template #footer>
-					<td class="col-span-full my-1">
-						<ui-table-actions :actions="bulkActions" :items="selection" always-visible />
-					</td>
-				</template>
-			</ui-table-grid>
+			<div class="mt-6 mb-8">
+				<svws-ui-button @click="resetFilters">Filter zurücksetzen</svws-ui-button>
+			</div>
 		</template>
 	</div>
 
@@ -168,7 +169,7 @@
 	}
 
 	/** Prüft, ob eine Wiedervorlage bis zu gewähltem Datum vorliegt */
-	function matchesDate(wiedervorlage: WiedervorlageEintrag, tsWiedervorlage: string): boolean {
+	function matchesDate(wiedervorlage: WiedervorlageEintrag): boolean {
 		const dateAsDateTime = formatDateToDateTime(filter.value.tsWiedervorlage);
 		if (dateAsDateTime === undefined || wiedervorlage.tsWiedervorlage === null) {
 			return false;
@@ -188,7 +189,7 @@
 					continue;
 				}
 				// bei Datumseingabe auf Übereinstimmung prüfen
-				if (filter.value.tsWiedervorlage !== "" && !matchesDate(eintrag, filter.value.tsWiedervorlage)) {
+				if (filter.value.tsWiedervorlage !== "" && !matchesDate(eintrag)) {
 					continue;
 				}
 				// bei aktiven Toggle zeige nur unerledigte Wiedervorlagen an - sonst alle
