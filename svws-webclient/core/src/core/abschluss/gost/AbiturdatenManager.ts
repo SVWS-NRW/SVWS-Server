@@ -1147,6 +1147,58 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Prüft, ob die Belegung eines der angegebenen Fächer mit den angegebenen Halbjahren existiert und bei diesen Halbjahren keine Note "AT"
+	 * eingetragen ist..
+	 * Ist keine Fachbelegung gegeben, so schlägt die Prüfung fehl. Wird bei einer gültigen Fachbelegung kein Halbjahr
+	 * angegeben, so ist die Prüfung erfolgreich, da kein Halbjahr geprüft werden muss.
+	 * In dieser Methode wird ggf. auch geprüft, ob weitere Fachbelegungen existieren, welche das gleiche
+	 * Statistik-Kürzel haben und Ersatzweise eine Halbjahres-Belegung ersetzen können. Dies ist z.B. bei bilingualen
+	 * Fächern nötig oder bei der Unterscheidung von Sport-Profilen.
+	 *
+	 * @param fachbelegungen    die zu prüfenden Fachnbelegungen
+	 * @param halbjahre         die zu prüfenden Halbjahre
+	 *
+	 * @return true, falls eine Fachbelegung mit den Halbjahren existiert, welche keinen Noteneintrag "AT" hat, sonst false
+	 */
+	public pruefeBelegungExistiertOhneAT(fachbelegungen: List<AbiturFachbelegung> | null, ...halbjahre: Array<GostHalbjahr>): boolean {
+		if (fachbelegungen === null) {
+			return false;
+		}
+		if ((halbjahre === null) || (halbjahre.length === 0)) {
+			return true;
+		}
+		for (const fachbelegung of fachbelegungen) {
+			const fach: GostFach | null = this.faecherManager.get(fachbelegung.fachID);
+			if (fach === null) {
+				continue;
+			}
+			const alleBelegungen: List<AbiturFachbelegung> | null = this.getFachbelegungByFachkuerzel(fach.kuerzel);
+			if ((alleBelegungen === null) || (alleBelegungen.isEmpty())) {
+				continue;
+			}
+			let hatBelegung: boolean = true;
+			for (const halbjahr of halbjahre) {
+				let hatHalbjahresBelegung: boolean = false;
+				for (const aktFachbelegung of alleBelegungen) {
+					const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = aktFachbelegung.belegungen[halbjahr.id];
+					if ((belegungHalbjahr !== null) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr)) && (!JavaObject.equalsTranspiler("AT", (belegungHalbjahr.kursartKuerzel)))) {
+						hatHalbjahresBelegung = true;
+						break;
+					}
+				}
+				if (!hatHalbjahresBelegung) {
+					hatBelegung = false;
+					break;
+				}
+			}
+			if (hatBelegung) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Prüft, ob die Belegung eines der angegebenen Fächer mit dem angegebenen Halbjahr existiert.
 	 * Ist keine Fachbelegung gegeben, so schlägt die Prüfung fehl.
 	 * In dieser Methode wird ggf. auch geprüft, ob weitere Fachbelegungen existieren, welche das gleiche
@@ -1174,6 +1226,42 @@ export class AbiturdatenManager extends JavaObject {
 			for (const aktFachbelegung of alleBelegungen) {
 				const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = aktFachbelegung.belegungen[halbjahr.id];
 				if ((belegungHalbjahr !== null) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Prüft, ob die Belegung eines der angegebenen Fächer mit dem angegebenen Halbjahr existiert und diese keien Belegung
+	 * mit Sprt-Attest ist.
+	 * Ist keine Fachbelegung gegeben, so schlägt die Prüfung fehl.
+	 * In dieser Methode wird ggf. auch geprüft, ob weitere Fachbelegungen existieren, welche das gleiche
+	 * Statistik-Kürzel haben und Ersatzweise eine Halbjahres-Belegung ersetzen können. Dies ist z.B. bei bilingualen
+	 * Fächern nötig oder bei der Unterscheidung von Sport-Profilen.
+	 *
+	 * @param fachbelegungen    die zu prüfenden Fachnbelegungen
+	 * @param halbjahr          das zu prüfende Halbjahr
+	 *
+	 * @return true, falls eine Fachbelegung mit dem Halbjahr existiert, sonst false
+	 */
+	public pruefeBelegungExistiertEinzelnOhneAT(fachbelegungen: List<AbiturFachbelegung> | null, halbjahr: GostHalbjahr): boolean {
+		if (fachbelegungen === null) {
+			return false;
+		}
+		for (const fachbelegung of fachbelegungen) {
+			const fach: GostFach | null = this.faecherManager.get(fachbelegung.fachID);
+			if (fach === null) {
+				continue;
+			}
+			const alleBelegungen: List<AbiturFachbelegung> | null = this.getFachbelegungByFachkuerzel(fach.kuerzel);
+			if (alleBelegungen.isEmpty()) {
+				continue;
+			}
+			for (const aktFachbelegung of alleBelegungen) {
+				const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = aktFachbelegung.belegungen[halbjahr.id];
+				if ((belegungHalbjahr !== null) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr)) && (!JavaObject.equalsTranspiler("AT", (belegungHalbjahr.kursartKuerzel)))) {
 					return true;
 				}
 			}

@@ -1,6 +1,10 @@
 {
-  "erfolgreich" : true,
+  "erfolgreich" : false,
   "fehlercodes" : [ {
+    "code" : "SP_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Sport muss von EF.1 bis Q2.2 belegt werden."
+  }, {
     "code" : "NW_FS_13_INFO",
     "art" : "HINWEIS",
     "beschreibung" : "Da von EF.1 bis Q2.2 weniger als zwei Fremdsprachen schriftlich belegt wurden, liegt ausschließlich ein naturwissenschaftlich-technischer Schwerpunkt vor."

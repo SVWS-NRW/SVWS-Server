@@ -1199,6 +1199,60 @@ public class AbiturdatenManager {
 
 
 	/**
+	 * Prüft, ob die Belegung eines der angegebenen Fächer mit den angegebenen Halbjahren existiert und bei diesen Halbjahren keine Note "AT"
+	 * eingetragen ist..
+	 * Ist keine Fachbelegung gegeben, so schlägt die Prüfung fehl. Wird bei einer gültigen Fachbelegung kein Halbjahr
+	 * angegeben, so ist die Prüfung erfolgreich, da kein Halbjahr geprüft werden muss.
+	 * In dieser Methode wird ggf. auch geprüft, ob weitere Fachbelegungen existieren, welche das gleiche
+	 * Statistik-Kürzel haben und Ersatzweise eine Halbjahres-Belegung ersetzen können. Dies ist z.B. bei bilingualen
+	 * Fächern nötig oder bei der Unterscheidung von Sport-Profilen.
+	 *
+	 * @param fachbelegungen    die zu prüfenden Fachnbelegungen
+	 * @param halbjahre         die zu prüfenden Halbjahre
+	 *
+	 * @return true, falls eine Fachbelegung mit den Halbjahren existiert, welche keinen Noteneintrag "AT" hat, sonst false
+	 */
+	public boolean pruefeBelegungExistiertOhneAT(final List<AbiturFachbelegung> fachbelegungen, final @NotNull GostHalbjahr... halbjahre) {
+		if (fachbelegungen == null) {
+			return false;
+		}
+		if ((halbjahre == null) || (halbjahre.length == 0)) {
+			return true;
+		}
+		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
+			// Beachte alle Fachbelegungen von Fächern des gleichen Statistik-Faches - dies kann bei bilingualen Fächern wichtig sein
+			final GostFach fach = faecherManager.get(fachbelegung.fachID);
+			if (fach == null) {
+				continue;
+			}
+			final List<AbiturFachbelegung> alleBelegungen = getFachbelegungByFachkuerzel(fach.kuerzel);
+			if ((alleBelegungen == null) || (alleBelegungen.isEmpty())) {
+				continue;
+			}
+			boolean hatBelegung = true;
+			for (final GostHalbjahr halbjahr : halbjahre) {
+				boolean hatHalbjahresBelegung = false;
+				for (final AbiturFachbelegung aktFachbelegung : alleBelegungen) {
+					final AbiturFachbelegungHalbjahr belegungHalbjahr = aktFachbelegung.belegungen[halbjahr.id];
+					if ((belegungHalbjahr != null) && (!istNullPunkteBelegungInQPhase(belegungHalbjahr)) && (!"AT".equals(belegungHalbjahr.kursartKuerzel))) {
+						hatHalbjahresBelegung = true;
+						break;
+					}
+				}
+				if (!hatHalbjahresBelegung) {
+					hatBelegung = false;
+					break;
+				}
+			}
+			if (hatBelegung) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+
+	/**
 	 * Prüft, ob die Belegung eines der angegebenen Fächer mit dem angegebenen Halbjahr existiert.
 	 * Ist keine Fachbelegung gegeben, so schlägt die Prüfung fehl.
 	 * In dieser Methode wird ggf. auch geprüft, ob weitere Fachbelegungen existieren, welche das gleiche
@@ -1227,6 +1281,44 @@ public class AbiturdatenManager {
 			for (final AbiturFachbelegung aktFachbelegung : alleBelegungen) {
 				final AbiturFachbelegungHalbjahr belegungHalbjahr = aktFachbelegung.belegungen[halbjahr.id];
 				if ((belegungHalbjahr != null) && (!istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+
+	/**
+	 * Prüft, ob die Belegung eines der angegebenen Fächer mit dem angegebenen Halbjahr existiert und diese keien Belegung
+	 * mit Sprt-Attest ist.
+	 * Ist keine Fachbelegung gegeben, so schlägt die Prüfung fehl.
+	 * In dieser Methode wird ggf. auch geprüft, ob weitere Fachbelegungen existieren, welche das gleiche
+	 * Statistik-Kürzel haben und Ersatzweise eine Halbjahres-Belegung ersetzen können. Dies ist z.B. bei bilingualen
+	 * Fächern nötig oder bei der Unterscheidung von Sport-Profilen.
+	 *
+	 * @param fachbelegungen    die zu prüfenden Fachnbelegungen
+	 * @param halbjahr          das zu prüfende Halbjahr
+	 *
+	 * @return true, falls eine Fachbelegung mit dem Halbjahr existiert, sonst false
+	 */
+	public boolean pruefeBelegungExistiertEinzelnOhneAT(final List<AbiturFachbelegung> fachbelegungen, final @NotNull GostHalbjahr halbjahr) {
+		if (fachbelegungen == null) {
+			return false;
+		}
+		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
+			// Beachte alle Fachbelegungen von Fächern des gleichen Statistik-Faches - dies kann bei bilingualen Fächern wichtig sein
+			final GostFach fach = faecherManager.get(fachbelegung.fachID);
+			if (fach == null) {
+				continue;
+			}
+			final List<AbiturFachbelegung> alleBelegungen = getFachbelegungByFachkuerzel(fach.kuerzel);
+			if (alleBelegungen.isEmpty()) {
+				continue;
+			}
+			for (final AbiturFachbelegung aktFachbelegung : alleBelegungen) {
+				final AbiturFachbelegungHalbjahr belegungHalbjahr = aktFachbelegung.belegungen[halbjahr.id];
+				if ((belegungHalbjahr != null) && (!istNullPunkteBelegungInQPhase(belegungHalbjahr)) && (!"AT".equals(belegungHalbjahr.kursartKuerzel))) {
 					return true;
 				}
 			}
