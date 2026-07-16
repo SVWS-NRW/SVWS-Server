@@ -2,7 +2,7 @@
 	<template v-if="stundenplan() !== undefined">
 		<Teleport to=".svws-ui-header--actions" defer>
 			<svws-ui-button @click="show = true" type="secondary"><span class="icon i-ri-printer-line" /> Stundenplan drucken</svws-ui-button>
-			<svws-ui-modal-hilfe> <hilfe-lehrer-stundenplan /> </svws-ui-modal-hilfe>
+			<svws-ui-modal-hilfe> <hilfe-faecher-stundenplan /> </svws-ui-modal-hilfe>
 		</Teleport>
 		<div class="page page-flex-col overflow-x-auto">
 			<template v-if="stundenplan() === undefined">

@@ -3,7 +3,7 @@
 		<div v-if="hatkeineErforderlicheKompetenz">
 			Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
 		</div>
-		<div v-if="serverState.hasDev" class="flex flex-col gap-4">
+		<div class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzDrucken && (stundenplaeneById.size > 0)" icon="i-ri-printer-line" title="Stundenplan drucken" subtitle="Drucke die Stundenpläne der ausgewählten Fächer."
 				:is-open="currentAction === 'print'" @update:is-open="isOpen => setCurrentAction('print', isOpen)">
 				<div class="flex flex-col w-full">
@@ -76,11 +76,10 @@
 	import type { FaecherGruppenprozesseProps } from "./FaecherGruppenprozesseProps";
 	import type { List, StundenplanListeEintrag } from "@core";
 	import { BenutzerKompetenz, DateUtils, ReportingReportvorlage, ArrayList } from "@core";
-	import { SelectManager, useBenutzerState, useSchuleState, useServerState } from "@ui";
+	import { SelectManager, useBenutzerState, useSchuleState } from "@ui";
 
 	const props = defineProps<FaecherGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();
-	const serverState = useServerState();
 	const schuleState = useSchuleState();
 
 	const hatKompetenzLoeschen = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));

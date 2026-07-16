@@ -9,9 +9,9 @@
 				<svws-ui-button class="contentFocusField h-9 mt-[0.8rem]!" type="secondary" @click.stop="ganzerStundenplanAuswahl = !ganzerStundenplanAuswahl" title="Ganzen Stundenplan anzeigen, auch leere Stunden" :autofocus>
 					<span class="grow">{{ ganzerStundenplanAuswahl ? 'Keine leeren Stunden':'Alle Stunden' }}</span>
 				</svws-ui-button>
-				<svws-ui-select title="Wochentyp" v-model="wochentypAuswahl" :items="wochentypen()" class="print:!hidden" :disabled="wochentypen().size() <= 0" :item-text="wt => manager().stundenplanGetWochenTypAsString(wt)" />
-				<svws-ui-select title="Kalenderwoche" v-model="kwAuswahl" :items="kalenderwochen()" :class="{'print:!hidden': !kwAuswahl}" removable :disabled="wochentypen().size() <= 0" :item-text="kw => getKalenderwochenString(kw)" />
-				<svws-ui-select title="Stundenplan" v-model="stundenplan_auswahl" :items="mapStundenplaene.values()" :disabled="mapStundenplaene.size <= 1" class="print:!hidden"
+				<svws-ui-select title="Wochentyp" v-model="wochentypAuswahl" :items="wochentypen()" class="print:hidden!" :disabled="wochentypen().size() <= 0" :item-text="wt => manager().stundenplanGetWochenTypAsString(wt)" />
+				<svws-ui-select title="Kalenderwoche" v-model="kwAuswahl" :items="kalenderwochen()" :class="{'print:hidden!': !kwAuswahl}" removable :disabled="wochentypen().size() <= 0" :item-text="kw => getKalenderwochenString(kw)" />
+				<svws-ui-select title="Stundenplan" v-model="stundenplan_auswahl" :items="mapStundenplaene.values()" :disabled="mapStundenplaene.size <= 1" class="print:hidden!"
 					:item-text="s => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '—' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '—' + toKW(s.gueltigBis) + ')'" />
 			</div>
 		</div>

@@ -51,7 +51,7 @@
 	}
 
 	function getSchienen(wochentag: number, stunde: number, wochentyp: number): List<StundenplanSchiene> {
-		throw new DeveloperNotificationException("Die Anzeige von Schienen wird beim der Fachansicht nicht unterstützt.");
+		throw new DeveloperNotificationException("Die Anzeige von Schienen wird bei der Fachansicht nicht unterstützt.");
 	}
 
 	function getUnterricht(wochentag: number, stunde: number, wochentyp: number, schiene: number | null): List<StundenplanUnterricht> {
