@@ -17,7 +17,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public class GostJahrgangsFachwahlenManager {
 
-	/** (Fach-ID, Abifach [1=LK,3,4]) --> ArrayList<Schueler-ID> = Eine Liste der Schüler, welche das angegeben Fach als Abiturfach den entsprechenden Typs (siehe ID von {@link GostAbiturFach}) haben. */
+	/** (Fach-ID, Abifach [1=LK,3,4,5]) --> ArrayList<Schueler-ID> = Eine Liste der Schüler, welche das angegeben Fach als Abiturfach den entsprechenden Typs (siehe ID von {@link GostAbiturFach}) haben. */
 	private final @NotNull HashMap2D<Long, Integer, List<Long>> _map2D_fachID_abifachID_schuelerID = new HashMap2D<>();
 
 	/** (Fach-ID, Halbjahres-ID [0..5]) --> ArrayList<Schueler-ID> = Eine Liste der Schüler, welche das angegeben Fach in dem Halbjahr als Leistungskurs gewählt haben. */
@@ -103,20 +103,22 @@ public class GostJahrgangsFachwahlenManager {
 				}
 			}
 		}
-		// Durchwandere die Fachwahlen bezüglich der Abiturfächer
-		for (final GostFachwahl fw : jgFachwahlen.abitur.fachwahlen) {
-			final GostKursart kursart = GostKursart.fromID(fw.kursartID);
-			GostAbiturFach abiFach = GostAbiturFach.LK1;
-			if (kursart == GostKursart.GK) {
-				abiFach = fw.istSchriftlich ? GostAbiturFach.AB3 : GostAbiturFach.AB4;
+        // Durchwandere die Fachwahlen bezüglich der Abiturfächer
+        for (final GostFachwahl fw : jgFachwahlen.abitur.fachwahlen) {
+			GostAbiturFach abiFach = GostAbiturFach.fromID(fw.abiturfach);
+            if (abiFach == null) {
+                continue;
+            }
+			if (abiFach == GostAbiturFach.LK2) { // fasse beide LKs im 1. LK-Fach zusammen
+				abiFach = GostAbiturFach.LK1;
 			}
-			List<Long> schuelerListe = _map2D_fachID_abifachID_schuelerID.getOrNull(fw.fachID, abiFach.id);
-			if (schuelerListe == null) {
-				schuelerListe = new ArrayList<>();
-				_map2D_fachID_abifachID_schuelerID.put(fw.fachID, abiFach.id, schuelerListe);
-			}
-			schuelerListe.add(fw.schuelerID);
-		}
+            List<Long> schuelerListe = _map2D_fachID_abifachID_schuelerID.getOrNull(fw.fachID, abiFach.id);
+            if (schuelerListe == null) {
+                schuelerListe = new ArrayList<>();
+                _map2D_fachID_abifachID_schuelerID.put(fw.fachID, abiFach.id, schuelerListe);
+            }
+            schuelerListe.add(fw.schuelerID);
+        }
 	}
 
 	/**

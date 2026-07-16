@@ -87,7 +87,7 @@
 									<div class="svws-ui-tr text-ui" role="row" v-if="aktuell.halbjahr?.id === halbjahr.id">
 										<div role="cell" class="svws-ui-td col-span-2 !pl-4 text-ui-50 hover:text-ui-100 focus-within:text-ui-100" />
 										<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight" v-for="col in [1, 2, 3, 4]" :key="col">
-											<div v-for="schueler in getSchuelerListe(fws.id, halbjahr, col)" :key="schueler.id" class="flex gap-1 py-0.5 px-1 -mx-1 -mt-0.5 hover:bg-ui-75 rounded-sm cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
+											<div v-for="schueler in getSchuelerListe(fws.id, halbjahr, col)" :key="schueler.id" class="flex justify-start w-full gap-1 py-0.5 px-1 -mx-1 -mt-0.5 hover:bg-ui-75 rounded-sm cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
 												<span class="icon i-ri-link" />
 												<span class="line-clamp-1 break-all leading-tight -my-0.5" :title="schueler.nachname + ', ' + schueler.vorname">{{ schueler.nachname + ", " + schueler.vorname }}</span>
 											</div>

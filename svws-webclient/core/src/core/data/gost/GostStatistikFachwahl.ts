@@ -40,6 +40,11 @@ export class GostStatistikFachwahl extends JavaObject {
 	public wahlenAB4: number = 0;
 
 	/**
+	 * Die Anzahl der Wahlen als fünftes Abiturfach.
+	 */
+	public wahlenAB5: number = 0;
+
+	/**
 	 * Ein Array mit den Fachwahlen der 6 Halbjahre der gymnasialen Oberstufe
 	 */
 	public fachwahlen: Array<GostStatistikFachwahlHalbjahr> = Array(6).fill(null);
@@ -80,6 +85,9 @@ export class GostStatistikFachwahl extends JavaObject {
 		if (obj.wahlenAB4 === undefined)
 			throw new Error('invalid json format, missing attribute wahlenAB4');
 		result.wahlenAB4 = obj.wahlenAB4;
+		if (obj.wahlenAB5 === undefined)
+			throw new Error('invalid json format, missing attribute wahlenAB5');
+		result.wahlenAB5 = obj.wahlenAB5;
 		if (obj.fachwahlen !== undefined) {
 			for (let i = 0; i < obj.fachwahlen.length; i++) {
 				result.fachwahlen[i] = (GostStatistikFachwahlHalbjahr.transpilerFromJSON(JSON.stringify(obj.fachwahlen[i])));
@@ -97,6 +105,7 @@ export class GostStatistikFachwahl extends JavaObject {
 		result += '"kuerzelStatistik" : ' + ((obj.kuerzelStatistik === null) ? 'null' : JSON.stringify(obj.kuerzelStatistik)) + ',';
 		result += '"wahlenAB3" : ' + obj.wahlenAB3.toString() + ',';
 		result += '"wahlenAB4" : ' + obj.wahlenAB4.toString() + ',';
+		result += '"wahlenAB5" : ' + obj.wahlenAB5.toString() + ',';
 		result += '"fachwahlen" : [ ';
 		for (let i = 0; i < obj.fachwahlen.length; i++) {
 			const elem = obj.fachwahlen[i];
@@ -132,6 +141,9 @@ export class GostStatistikFachwahl extends JavaObject {
 		}
 		if (obj.wahlenAB4 !== undefined) {
 			result += '"wahlenAB4" : ' + obj.wahlenAB4.toString() + ',';
+		}
+		if (obj.wahlenAB5 !== undefined) {
+			result += '"wahlenAB5" : ' + obj.wahlenAB5.toString() + ',';
 		}
 		if (obj.fachwahlen !== undefined) {
 			const a = obj.fachwahlen;

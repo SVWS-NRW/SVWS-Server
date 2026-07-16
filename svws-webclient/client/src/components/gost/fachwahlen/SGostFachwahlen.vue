@@ -79,6 +79,7 @@
 	onMounted(() => isMounted.value = true);
 
 	const schuljahr = computed<number>(() => props.faecherManager.getSchuljahr());
+	const istAbi2030 = computed<boolean>(() => !props.fachwahlstatistik.isEmpty() && (props.fachwahlstatistik.getFirst().abiturjahr >= 2030));
 
 	function getBgColor(fws: GostStatistikFachwahl): string {
 		if (fws.kuerzelStatistik === null) {
@@ -169,6 +170,11 @@
 		if ((bereich === "Abitur") && (item === "4")) {
 			return row.wahlenAB4 > 0 ? row.wahlenAB4 : "";
 		}
+		if (istAbi2030.value) {
+			if ((bereich === "Abitur") && (item === "5")) {
+				return row.wahlenAB5 > 0 ? row.wahlenAB5 : "";
+			}
+		}
 		if ((bereich === "ZK") && (item === "")) {
 			const maxZK = Math.max(row.fachwahlen[2].wahlenZK, row.fachwahlen[3].wahlenZK, row.fachwahlen[4].wahlenZK, row.fachwahlen[5].wahlenZK);
 			return maxZK === 0 ? "" : maxZK;
@@ -192,25 +198,33 @@
 		return "";
 	}
 
-	const colHeadings: Array<{ text: string, cols: Array<{ text: string, center?: boolean }> }> = [
-		{ text: "Fach", cols: [{ text: "Kürzel" }, { text: "Fach" }] },
-		{ text: "EF.1", cols: [{ text: "GK", center: true }, { text: "S", center: true }] },
-		{ text: "EF.2", cols: [{ text: "GK", center: true }, { text: "S", center: true }] },
-		{ text: "Q1.1", cols: [{ text: "GK", center: true }, { text: "S", center: true }] },
-		{ text: "Q1.2", cols: [{ text: "GK", center: true }, { text: "S", center: true }] },
-		{ text: "Q2.1", cols: [{ text: "GK", center: true }, { text: "S", center: true }] },
-		{ text: "Q2.2", cols: [{ text: "GK", center: true }, { text: "S", center: true }] },
-		{ text: "ZK", cols: [{ text: "", center: true }] },
-		{ text: "LK", cols: [{ text: "", center: true }] },
-		{ text: "Abitur", cols: [{ text: "3", center: true }, { text: "4", center: true }] },
-	];
+	const colHeadings = computed<Array<{ text: string, cols: Array<{ text: string, center?: boolean }> }>>(() => {
+		const cols = [
+			{ text: "Fach", cols: [{ text: "Kürzel" }, { text: "Fach" }] },
+			{ text: "EF.1", cols: [{ text: "GK", center: true }, { text: "S", center: true }] },
+			{ text: "EF.2", cols: [{ text: "GK", center: true }, { text: "S", center: true }] },
+			{ text: "Q1.1", cols: [{ text: "GK", center: true }, { text: "S", center: true }] },
+			{ text: "Q1.2", cols: [{ text: "GK", center: true }, { text: "S", center: true }] },
+			{ text: "Q2.1", cols: [{ text: "GK", center: true }, { text: "S", center: true }] },
+			{ text: "Q2.2", cols: [{ text: "GK", center: true }, { text: "S", center: true }] },
+			{ text: "ZK", cols: [{ text: "", center: true }] },
+			{ text: "LK", cols: [{ text: "", center: true }] },
+			{ text: "Abitur", cols: [{ text: "3", center: true }, { text: "4", center: true }] },
+		];
+		if (istAbi2030.value) {
+			cols.at(-1)?.cols.push({ text: "5", center: true });
+		}
+		return cols;
+	});
+
+	const templateColumns = computed(() => `minmax(4rem, 1fr) minmax(12rem, 3fr) repeat(${istAbi2030.value ? '17' : '16'}, 3rem)`);
 
 </script>
 
 <style scoped>
 
 	.svws-ui-tr {
-		grid-template-columns: minmax(4rem, 1fr) minmax(12rem, 3fr) repeat(16, 3rem);
+		grid-template-columns: v-bind(templateColumns);
 	}
 
 	.svws-selectable {

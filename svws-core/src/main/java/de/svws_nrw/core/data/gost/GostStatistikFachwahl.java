@@ -43,6 +43,10 @@ public class GostStatistikFachwahl {
 	@Schema(description = "die Anzahl der Wahlen als viertes Abiturfach", example = "42")
 	public int wahlenAB4 = 0;
 
+	/** Die Anzahl der Wahlen als fünftes Abiturfach. */
+	@Schema(description = "die Anzahl der Wahlen als viertes Abiturfach", example = "42")
+	public int wahlenAB5 = 0;
+
 	/** Ein Array mit den Fachwahlen der 6 Halbjahre der gymnasialen Oberstufe */
 	@ArraySchema(schema = @Schema(implementation = GostStatistikFachwahlHalbjahr.class))
 	public @NotNull GostStatistikFachwahlHalbjahr @NotNull [] fachwahlen = new GostStatistikFachwahlHalbjahr[6];

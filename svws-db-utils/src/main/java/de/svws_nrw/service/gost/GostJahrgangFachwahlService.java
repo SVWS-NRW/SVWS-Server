@@ -264,6 +264,9 @@ public class GostJahrgangFachwahlService {
 				if (wahl.abiturfach == 4) {
 					statfw.wahlenAB4++;
 				}
+				if (wahl.abiturfach == 5) {
+					statfw.wahlenAB5++;
+				}
 			}
 		}
 		return matrixFachwahlen.values().stream()

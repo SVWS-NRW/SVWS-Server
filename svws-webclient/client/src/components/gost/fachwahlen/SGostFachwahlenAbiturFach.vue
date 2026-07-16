@@ -30,10 +30,15 @@
 						<span v-if="fws.wahlenAB4 > 0">4. Abiturfach ({{ fws.wahlenAB4 }})</span>
 						<span v-else class="opacity-25">4. Abiturfach (—)</span>
 					</div>
+					<div v-if="istAbi2030" role="cell" class="svws-ui-td svws-align-center">
+						<span class="icon i-ri-presentation-line -my-0.5" />
+						<span v-if="fws.wahlenAB5 > 0">5. Abiturfach ({{ fws.wahlenAB5 }})</span>
+						<span v-else class="opacity-25">5. Abiturfach (—)</span>
+					</div>
 				</div>
 				<div role="row" class="svws-ui-tr text-ui">
-					<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight" v-for="abifach in [GostAbiturFach.LK1, GostAbiturFach.AB3, GostAbiturFach.AB4]" :key="abifach.id">
-						<div v-for="schueler in getSchuelerListe(fws.id, abifach)" :key="schueler.id" class="flex gap-1 py-0.5 px-1 -mx-1 -mt-0.5 hover:bg-ui-75 rounded-sm cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
+					<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight" v-for="abifach in abifaecher" :key="abifach.id">
+						<div v-for="schueler in getSchuelerListe(fws.id, abifach)" :key="schueler.id" class="flex justify-start w-full gap-1 py-0.5 px-1 -mx-1 -mt-0.5 hover:bg-ui-75 rounded-sm cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
 							<span class="icon i-ri-link" />
 							<span class="line-clamp-1 break-all leading-tight -my-0.5" :title="schueler.nachname + ', ' + schueler.vorname">{{ schueler.nachname + ", " + schueler.vorname }}</span>
 						</div>
@@ -95,18 +100,31 @@
 	function hatAbiFachwahl(fws: GostStatistikFachwahl): boolean {
 		if ((props.fachwahlenManager.schuelerGetMengeByFachAndAbifachAsListOrException(fws.id, GostAbiturFach.LK1).isEmpty())
 			&& (props.fachwahlenManager.schuelerGetMengeByFachAndAbifachAsListOrException(fws.id, GostAbiturFach.AB3).isEmpty())
-			&& (props.fachwahlenManager.schuelerGetMengeByFachAndAbifachAsListOrException(fws.id, GostAbiturFach.AB4).isEmpty())) {
+			&& (props.fachwahlenManager.schuelerGetMengeByFachAndAbifachAsListOrException(fws.id, GostAbiturFach.AB4).isEmpty())
+			&& (props.fachwahlenManager.schuelerGetMengeByFachAndAbifachAsListOrException(fws.id, GostAbiturFach.AB5).isEmpty())) {
 			return false;
 		}
 		return true;
 	}
+
+	const istAbi2030 = computed(() => !props.fachwahlstatistik.isEmpty() && (props.fachwahlstatistik.getFirst().abiturjahr >= 2030));
+
+	const abifaecher = computed(() => {
+		const faecher = [GostAbiturFach.LK1, GostAbiturFach.AB3, GostAbiturFach.AB4];
+		if (istAbi2030.value) {
+			faecher.push(GostAbiturFach.AB5);
+		}
+		return faecher;
+	});
+
+	const templateColumns = computed(() => istAbi2030.value ? "repeat(4, 1fr)" : "repeat(3, 1fr)");
 
 </script>
 
 <style scoped>
 
 	.svws-ui-tr {
-		grid-template-columns: repeat(3, 1fr);
+		grid-template-columns: v-bind(templateColumns);
 	}
 
 </style>

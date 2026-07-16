@@ -12,7 +12,7 @@ import { GostKursart } from '../../../core/types/gost/GostKursart';
 export class GostJahrgangsFachwahlenManager extends JavaObject {
 
 	/**
-	 * (Fach-ID, Abifach [1=LK,3,4]) --> ArrayList<Schueler-ID> = Eine Liste der Schüler, welche das angegeben Fach als Abiturfach den entsprechenden Typs (siehe ID von {@link GostAbiturFach}) haben.
+	 * (Fach-ID, Abifach [1=LK,3,4,5]) --> ArrayList<Schueler-ID> = Eine Liste der Schüler, welche das angegeben Fach als Abiturfach den entsprechenden Typs (siehe ID von {@link GostAbiturFach}) haben.
 	 */
 	private readonly _map2D_fachID_abifachID_schuelerID: HashMap2D<number, number, List<number>> = new HashMap2D<number, number, List<number>>();
 
@@ -106,10 +106,12 @@ export class GostJahrgangsFachwahlenManager extends JavaObject {
 			}
 		}
 		for (const fw of jgFachwahlen.abitur.fachwahlen) {
-			const kursart: GostKursart | null = GostKursart.fromID(fw.kursartID);
-			let abiFach: GostAbiturFach | null = GostAbiturFach.LK1;
-			if (kursart as unknown === GostKursart.GK as unknown) {
-				abiFach = fw.istSchriftlich ? GostAbiturFach.AB3 : GostAbiturFach.AB4;
+			let abiFach: GostAbiturFach | null = GostAbiturFach.fromID(fw.abiturfach);
+			if (abiFach === null) {
+				continue;
+			}
+			if (abiFach as unknown === GostAbiturFach.LK2 as unknown) {
+				abiFach = GostAbiturFach.LK1;
 			}
 			let schuelerListe: List<number> | null = this._map2D_fachID_abifachID_schuelerID.getOrNull(fw.fachID, abiFach.id);
 			if (schuelerListe === null) {
