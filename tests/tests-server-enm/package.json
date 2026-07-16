@@ -11,7 +11,7 @@
 		"test:afterSetup": "vitest run ./tests/afterSetup --mode allowDestructiveTests --outputFile build/test-results/after-setup-test-results.xml",
 		"test:tempDockerEnv": "vitest run ./tests --mode allowDestructiveTests ",
 		"lint": "eslint 'tests/**/*.{ts,vue}' --cache --max-warnings=0",
-		"lint-tsc": "tsc --noEmit",
+		"test:ts": "tsc --noEmit",
 		"lint-fix": "eslint 'tests/**/*.{ts,vue}' --cache --fix"
 	}
 }

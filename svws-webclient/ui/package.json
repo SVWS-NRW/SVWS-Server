@@ -7,14 +7,15 @@
 	"scripts": {
 		"dev": "vite dev --config vite.config.story.ts",
 		"lint": "eslint \"src/**/*.{ts,vue}\" --cache --max-warnings=0",
-		"lint-tsc": "vue-tsc --noEmit",
 		"test": "vitest",
 		"test:coverage": "vitest run --coverage --coverage.include=src/ui/**/*.vue --coverage.include=src/components/**/*.vue --coverage.include=src/model/**/*.ts --coverage.include=src/validation/**/*.ts --coverage.exclude=src/ui/**/*.story.*",
+		"test:ts": "vue-tsc --noEmit",
 		"build": "npm run build-lib && npm run build-dts",
 		"build-lib": "vite build",
 		"build-dts": "vue-tsc --declaration --emitDeclarationOnly -p tsconfig.build.json",
 		"story:build": "vite build --config vite.config.story.ts",
-		"story:preview": "vite preview --config vite.config.story.ts"
+		"story:preview": "vite preview --config vite.config.story.ts",
+		"ci": "npm run lint && npm run test:ts && npm run test"
 	},
 	"files": [
 		"dist"

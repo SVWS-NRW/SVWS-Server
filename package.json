@@ -5,6 +5,18 @@
 	"version": "1.4.0-SNAPSHOT",
 	"license": "BSD-3-Clause",
 	"type": "module",
+	"scripts": {
+		"lint": "npm run lint --workspaces --if-present --workspace=svws-webclient/admin --workspace=svws-webclient/client --workspace=svws-webclient/enmserver --workspace=svws-webclient/laufbahnplanung --workspace=svws-webclient/ui",
+		"test": "npm run test --workspace=svws-webclient/ui",
+		"test:coverage": "npm run test:coverage --workspace=svws-webclient/ui",
+		"test:ts": "npm run test:ts --workspaces --if-present --workspace=svws-webclient/admin --workspace=svws-webclient/client --workspace=svws-webclient/enmserver --workspace=svws-webclient/laufbahnplanung --workspace=svws-webclient/ui",
+		"ci": "npm run lint && npm run test:ts && npm run test:coverage",
+		"admin:ci": "npm run ci --workspace=svws-webclient/admin && npm run ci --workspace=svws-webclient/ui",
+		"client:ci": "npm run ci --workspace=svws-webclient/client && npm run ci --workspace=svws-webclient/ui",
+		"enmserver:ci": "npm run ci --workspace=svws-webclient/enmserver && npm run ci --workspace=svws-webclient/ui",
+		"laufbahnplanung:ci":"npm run ci --workspace=svws-webclient/laufbahnplanung && npm run ci --workspace=svws-webclient/ui",
+		"ui:ci": "npm run ci --workspace=svws-webclient/ui"
+	},
 	"dependencies": {
 		"@floating-ui/vue": "^2.0.0",
 		"@headlessui/vue": "^1.7.7",

@@ -4,7 +4,7 @@ plugins {
 
 task lint(type: NpmRun) {
 	group = "build"
-	args = ["lint-tsc"]
+	args = ["test:ts"]
 }
 
 task assembleUiHistoire(type: NpmRun) {

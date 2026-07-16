@@ -20,7 +20,7 @@ assemble.dependsOn assembleLaufbahnplanung
 task lint(type: NpmRun) {
 	dependsOn assembleLaufbahnplanung
 	group = "build"
-	args = ["lint-tsc"]
+	args = ["test:ts"]
 }
 
 task doZip(type: Zip) {

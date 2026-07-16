@@ -35,7 +35,7 @@ assemble.dependsOn assembleEnmServer
 task lint(type: NpmRun) {
 	dependsOn assembleEnmServer
 	group = "build"
-	args = ["lint-tsc"]
+	args = ["test:ts"]
 }
 
 task doZip(type: Zip) {

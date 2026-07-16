@@ -10,8 +10,9 @@
 	"scripts": {
 		"dev": "vite",
 		"lint": "eslint \"src/**/*.{ts,vue}\" --cache --max-warnings=0",
-		"lint-tsc": "vue-tsc --noEmit",
+		"test:ts": "vue-tsc --noEmit",
 		"build": "vite build",
-		"serve": "vite preview"
+		"serve": "vite preview",
+		"ci": "npm run lint && npm run test:ts"
 	}
 }

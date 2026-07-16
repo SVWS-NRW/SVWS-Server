@@ -18,7 +18,7 @@ assemble.dependsOn assembleAdminClient
 task lint(type: NpmRun) {
 	dependsOn assembleAdminClient
 	group = "build"
-	args = ["lint-tsc"]
+	args = ["test:ts"]
 }
 
 task doZip(type: Zip) {

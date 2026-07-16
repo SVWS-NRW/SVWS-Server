@@ -11,8 +11,9 @@
 	"scripts": {
 		"dev": "vite",
 		"lint": "eslint \"src/**/*.{ts,vue}\" --cache --max-warnings=0",
-		"lint-tsc": "vue-tsc --noEmit",
+		"test:ts": "vue-tsc --noEmit",
 		"serve": "vite preview",
-		"build": "vite build"
+		"build": "vite build",
+		"ci": "npm run lint && npm run test:ts"
 	}
 }
