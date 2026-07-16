@@ -9,7 +9,7 @@
 			{{ fach.bezeichnung || '' }}
 			<template v-if="manager.getFachgruppe(fach) === Fachgruppe.FG_PX">
 				<svws-ui-tooltip>
-					<span class="icon-sm i-ri-information-line" />
+					<span class="icon-sm i-ri-information-line icon-uistatic" />
 					<template #content>
 						<pre>{{ manager.getLeitfaecherTooltipText(fach) }}</pre>
 					</template>
@@ -466,5 +466,15 @@
 			--tw-ring-color: var(--color-ring-neutral);
 		}
 	}
-
+	table.ui-table-grid {
+		& > tbody > tr > th.ui-divider,
+		& > tbody > tr > td.ui-divider {
+			border-right: 1px solid var(--color-border-uistatic-50);
+		}
+		& > tbody > tr > th,
+		& > tbody > tr > td {
+			border-color: var(--color-border-uistatic-50);
+			border-bottom: 1px solid var(--color-border-uistatic-50);
+		}
+	}
 </style>
