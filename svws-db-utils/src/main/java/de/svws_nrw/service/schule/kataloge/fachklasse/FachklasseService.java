@@ -43,8 +43,9 @@ public final class FachklasseService {
 	 * @return Liste aller {@link FachklasseEintrag}-DTOs, sortiert nach Datenbankreihenfolge
 	 */
 	public List<FachklasseEintrag> getAll() {
+		final var schuljahr = schuleService.getSchuljahr();
 		return this.repo.getAll().stream()
-				.map(mapper::toApi)
+				.map(f -> mapper.toApi(f, schuljahr))
 				.toList();
 	}
 
@@ -64,7 +65,7 @@ public final class FachklasseService {
 			final var schuljahr = schuleService.getSchuljahr();
 			final var fachklasse = mapper.toDomain(dto, schuljahr);
 			final var created = repo.create(fachklasse);
-			return mapper.toApi(created);
+			return mapper.toApi(created, schuljahr);
 		});
 	}
 
@@ -86,7 +87,7 @@ public final class FachklasseService {
 			validatePatch(dto, id);
 			final var schuljahr = schuleService.getSchuljahr();
 			mapper.patch(dto, schuljahr, entity);
-			return this.mapper.toApi(entity);
+			return this.mapper.toApi(entity, schuljahr);
 		});
 	}
 

@@ -53,7 +53,7 @@
 	const fachklasseSubline = computed(() => {
 		const list = props.manager().liste.auswahlSorted();
 		if (list.size() > 5) {
-			return `${list.size()} Fachklasse ausgewählt`;
+			return `${list.size()} Fachklassen ausgewählt`;
 		}
 		return [...list].map(k => k.bezeichnung).join(', ');
 	});

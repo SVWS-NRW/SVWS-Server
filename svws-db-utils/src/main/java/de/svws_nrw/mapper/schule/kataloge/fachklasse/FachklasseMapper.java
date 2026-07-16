@@ -6,7 +6,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import de.svws_nrw.asd.data.schule.FachklasseKatalogEintrag;
-import de.svws_nrw.asd.types.CoreType;
 import de.svws_nrw.asd.types.schule.DQRNiveau;
 import de.svws_nrw.asd.types.schule.Fachklasse;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
@@ -24,7 +23,6 @@ import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.Named;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.factory.Mappers;
 
@@ -38,35 +36,59 @@ public interface FachklasseMapper {
 	 * Mappt eine {@link DTOFachklassen}-Entity auf das API-Modell {@link FachklasseEintrag}.
 	 *
 	 * @param entity die Quell-Entity
+	 * @param schuljahr das aktuelle Schuljahr für CoreType-Lookups
 	 * @return das befüllte DTO
 	 */
-	@Mapping(source = "entity.Kennung", target = "idFachklasse", qualifiedByName = "mapIdFachklasseToApi")
+	@Mapping(target = "idFachklasse", ignore = true)
+	@Mapping(target = "schluesselSchulgliederung", ignore = true)
 	@Mapping(target = "referenziertInAnderenTabellen", ignore = true)
-	FachklasseEintrag toApi(DTOFachklassen entity);
+	FachklasseEintrag toApi(DTOFachklassen entity, @Context int schuljahr);
 
 	/**
-	 * Rekonstruiert den ursprünglichen Fachklassen-Schlüssel (z.B. '10-17902')
-	 * aus dem gespeicherten Feld {@link DTOFachklassen#Kennung} (z.B. '10-179-02')
-	 * und gibt die id des entsprechenden CoreTypes zurück
+	 * Rekonstruiert nach dem Basis-Mapping den Fachklassen-Schlüssel aus dem Feld
+	 * {@link DTOFachklassen#Kennung} (z.B. {@code "10-179-02"}) durch Entfernen des letzten
+	 * Bindestrichs (z.B. {@code "10-17902"}) und löst damit den zum Schuljahr passenden
+	 * {@link Fachklasse}-Katalogeintrag auf.
+	 * <p>
+	 * Bei Erfolg werden folgende Felder am {@link FachklasseEintrag} gesetzt:
+	 * <ul>
+	 *   <li>{@link FachklasseEintrag#idFachklasse} – die ID des zum Schuljahr gültigen Katalogeintrags</li>
+	 *   <li>{@link FachklasseEintrag#schluesselSchulgliederung} – der Schlüssel der letzten
+	 *       {@link Schulgliederung}, die zum {@code bkIndex} der Fachklasse im angegebenen
+	 *       Schuljahr gefunden wird; {@code null} wenn keine gefunden wird</li>
+	 * </ul>
+	 * Ist {@link DTOFachklassen#Kennung} {@code null}, leer oder der rekonstruierte Schlüssel
+	 * im angegebenen Schuljahr unbekannt, werden die Felder nicht gesetzt.
 	 *
-	 * @param kennung die Kennung der Fachklasse
-	 * @return die id der Fachklasse
+	 * @param entity    die Quell-Entity mit dem zu rekonstruierenden {@link DTOFachklassen#Kennung}-Feld
+	 * @param schuljahr das aktuelle Schuljahr für den {@link Fachklasse}- und {@link Schulgliederung}-Lookup
+	 * @param dto       das Ziel-DTO, in das {@code idFachklasse} und {@code schluesselSchulgliederung} geschrieben werden
 	 */
-	@Named("mapIdFachklasseToApi")
-	default Long mapIdFachklasseToApi(final String kennung) {
-		if (StringUtil.isBlank(kennung)) {
-			return null;
+	@AfterMapping
+	default void mapKennungToApi(
+			final DTOFachklassen entity,
+			@Context final int schuljahr,
+			@MappingTarget final FachklasseEintrag dto) {
+		if (StringUtil.isBlank(entity.Kennung)) {
+			return;
 		}
 		// "10-179-02" -> letzten Bindestrich entfernen -> "10-17902"
-		final int lastDash = kennung.lastIndexOf("-");
-		final var schluesselFachklasse = kennung.substring(0, lastDash) + kennung.substring(lastDash + 1);
+		final int lastDash = entity.Kennung.lastIndexOf("-");
+		final var schluesselFachklasse = entity.Kennung.substring(0, lastDash) + entity.Kennung.substring(lastDash + 1);
 
-		return Optional.ofNullable(Fachklasse.data().getWertBySchluessel(schluesselFachklasse))
-				.map(CoreType::historie)
-				.filter(list -> !list.isEmpty())
-				.map(List::getLast)
-				.map(s -> s.id)
-				.orElse(null);
+		final var fachklasse = Fachklasse.data().getEintragBySchuljahrUndSchluessel(schuljahr, schluesselFachklasse);
+		if (fachklasse == null) {
+			return;
+		}
+		dto.idFachklasse = fachklasse.id;
+		if (fachklasse.bkIndex == null) {
+			return;
+		}
+		final var schulgliederungen = Schulgliederung.getBySchuljahrAndBKIndex(schuljahr, fachklasse.bkIndex);
+		if (schulgliederungen.isEmpty()) {
+			return;
+		}
+		dto.schluesselSchulgliederung = schulgliederungen.getFirst().schluessel;
 	}
 
 	/**

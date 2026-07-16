@@ -1,6 +1,6 @@
-import type { Collection, Comparator, FachklasseEintrag, List, Schulform, Schuljahresabschnitt } from "../../../../../core/src";
+import { AuswahlManager } from '../AuswahlManager';
+import type { Collection, Comparator, FachklasseEintrag, List, Schulform, Schuljahresabschnitt, SchulgliederungKatalogEintrag } from "../../../../../core/src";
 import { HashSet, JavaInteger, JavaLong, JavaString } from "../../../../../core/src";
-import { AuswahlManager } from "../AuswahlManager";
 
 export class FachklassenListeManager extends AuswahlManager<number, FachklasseEintrag, FachklasseEintrag> {
 
@@ -8,6 +8,7 @@ export class FachklassenListeManager extends AuswahlManager<number, FachklasseEi
 	private readonly _idsOfReferencedFachklassen: HashSet<number> = new HashSet<number>();
 	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
+	private _filterSchulgliederungen: SchulgliederungKatalogEintrag[] = [];
 
 	/**
 	 * Ein Default-Comparator für den Vergleich von Fachklassen.
@@ -19,13 +20,17 @@ export class FachklassenListeManager extends AuswahlManager<number, FachklasseEi
 			if (cmp !== 0) {
 				return cmp;
 			}
-			cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
-			if (cmp !== 0) {
-				return cmp;
+			if (a.kuerzel !== null && b.kuerzel !== null) {
+				cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
+				if (cmp !== 0) {
+					return cmp;
+				}
 			}
-			cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
-			if (cmp !== 0) {
-				return cmp;
+			if (a.bezeichnung !== null && b.bezeichnung !== null) {
+				cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
+				if (cmp !== 0) {
+					return cmp;
+				}
 			}
 			return JavaLong.compare(a.id, b.id);
 		},
@@ -40,6 +45,12 @@ export class FachklassenListeManager extends AuswahlManager<number, FachklasseEi
 	protected checkFilter(eintrag: FachklasseEintrag): boolean {
 		if (this._filterNurSichtbar && !eintrag.istSichtbar) {
 			return false;
+		}
+
+		if (this._filterSchulgliederungen.length > 0) {
+			if ((eintrag.schluesselSchulgliederung === null) || !this._filterSchulgliederungen.some(sg => sg.schluessel === eintrag.schluesselSchulgliederung)) {
+				return false;
+			}
 		}
 
 		if (this.searchTerm !== "") {
@@ -59,8 +70,9 @@ export class FachklassenListeManager extends AuswahlManager<number, FachklasseEi
 	}
 
 	private entryMatchesSearchterm(eintrag: FachklasseEintrag) {
-		const searchTermLower = this.searchTerm.toLocaleLowerCase();
-		return eintrag.bezeichnung.toLocaleLowerCase().includes(searchTermLower);
+		const searchTermLower = this._searchTerm.toLocaleLowerCase();
+		return ((eintrag.bezeichnung?.toLocaleLowerCase().includes(searchTermLower)) === true)
+		|| ((eintrag.kuerzel?.toLocaleLowerCase().includes(searchTermLower)) === true);
 	}
 
 	protected compareAuswahl(a: FachklasseEintrag, b: FachklasseEintrag): number {
@@ -87,6 +99,14 @@ export class FachklassenListeManager extends AuswahlManager<number, FachklasseEi
 
 	get idsOfReferencedFachklassen(): HashSet<number> {
 		return this._idsOfReferencedFachklassen;
+	}
+
+	get filterSchulgliederungen(): SchulgliederungKatalogEintrag[] {
+		return this._filterSchulgliederungen;
+	}
+	set filterSchulgliederungen(value: SchulgliederungKatalogEintrag[]) {
+		this._filterSchulgliederungen = value;
+		this._eventHandlerFilterChanged();
 	}
 
 }

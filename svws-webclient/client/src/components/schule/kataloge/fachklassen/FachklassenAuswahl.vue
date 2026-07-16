@@ -14,6 +14,9 @@
 				</template>
 				<template #filterAdvanced>
 					<svws-ui-checkbox type="toggle" v-model="showOnlyVisible">Nur Sichtbare</svws-ui-checkbox>
+					<ui-select-multi label="Schulgliederung"
+						v-model="filterSchulgliederungen"
+						:manager="schulgliederungManager" />
 				</template>
 				<template #actions v-if="!readonly">
 					<svws-ui-tooltip v-if="serverState.hasDev" position="bottom">
@@ -34,12 +37,18 @@
 </template>
 
 <script setup lang="ts">
-	import type { FachklasseEintrag } from "@core";
-	import { type DataTableColumn, useRegionSwitch, useServerState } from "@ui";
+
+	import type { FachklasseEintrag, SchulgliederungKatalogEintrag } from "@core";
+	import { Schulgliederung } from "@core";
+	import { CoreTypeSelectManager, type DataTableColumn, useRegionSwitch, useSchuleState, useServerState } from "@ui";
 	import { useKatalogAuswahl } from "~/composables/useKatalogAuswahl";
 	import type { FachklassenAuswahlProps } from "~/components/schule/kataloge/fachklassen/FachklassenAuswahlProps";
+	import { computed } from "vue";
+
+	const schuleState = useSchuleState();
 
 	const columns: DataTableColumn[] = [
+		{ key: "schluesselSchulgliederung", label: "SGL", sortable: true, defaultSort: 'asc' },
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: 'asc' },
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 3 },
 	];
@@ -48,6 +57,7 @@
 	const serverState = useServerState();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+	const manager = () => props.manager();
 	const {
 		filteredItems: filteredFachklassen,
 		selectedItems: selectedFachklassen,
@@ -58,5 +68,22 @@
 		showOnlyVisible,
 		noFilteredItems,
 	} = useKatalogAuswahl<FachklasseEintrag>(props);
+
+	const filterSchulgliederungen = computed<SchulgliederungKatalogEintrag[]>({
+		get: () => manager().filterSchulgliederungen,
+		set: (value: SchulgliederungKatalogEintrag[]) => {
+			manager().filterSchulgliederungen = value;
+			void props.setFilter();
+		},
+	});
+
+
+	const schulgliederungManager = new CoreTypeSelectManager({
+		clazz: Schulgliederung.class,
+		schuljahr: schuleState.abschnitt.schuljahr,
+		schulformen: schuleState.schulform,
+		optionDisplayText: "kuerzel",
+		selectionDisplayText: "kuerzel",
+	});
 
 </script>

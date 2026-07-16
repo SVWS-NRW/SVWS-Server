@@ -55,7 +55,7 @@ class FachklasseMapperTest {
 		void toApi_mapptId() {
 			final var entity = createEntity(42L);
 
-			final var result = mapper.toApi(entity);
+			final var result = mapper.toApi(entity, 2024);
 
 			assertThat(result.id).isEqualTo(42L);
 		}
@@ -66,7 +66,7 @@ class FachklasseMapperTest {
 			final var entity = createEntity(1L);
 			entity.kuerzel = "BK-TEST";
 
-			final var result = mapper.toApi(entity);
+			final var result = mapper.toApi(entity, 2024);
 
 			assertThat(result.kuerzel).isEqualTo("BK-TEST");
 		}
@@ -77,7 +77,7 @@ class FachklasseMapperTest {
 			final var entity = createEntity(1L);
 			entity.bezeichnung = "Elektrotechnik";
 
-			final var result = mapper.toApi(entity);
+			final var result = mapper.toApi(entity, 2024);
 
 			assertThat(result.bezeichnung).isEqualTo("Elektrotechnik");
 		}
@@ -88,7 +88,7 @@ class FachklasseMapperTest {
 			final var entity = createEntity(1L);
 			entity.sortierung = 32000;
 
-			final var result = mapper.toApi(entity);
+			final var result = mapper.toApi(entity, 2024);
 
 			assertThat(result.sortierung).isEqualTo(32000);
 		}
@@ -99,7 +99,7 @@ class FachklasseMapperTest {
 			final var entity = createEntity(1L);
 			entity.istSichtbar = true;
 
-			final var result = mapper.toApi(entity);
+			final var result = mapper.toApi(entity, 2024);
 
 			assertThat(result.istSichtbar).isTrue();
 		}
@@ -113,7 +113,7 @@ class FachklasseMapperTest {
 			entity.sortierung = 100;
 			entity.istSichtbar = false;
 
-			final var result = mapper.toApi(entity);
+			final var result = mapper.toApi(entity, 2024);
 
 			assertThat(result)
 					.hasFieldOrPropertyWithValue("id", 7L)
@@ -129,77 +129,66 @@ class FachklasseMapperTest {
 	// -------------------------------------------------------------------------
 
 	@Nested
-	@DisplayName("mapIdFachklasse")
-	class MapIdFachklasse {
+	@DisplayName("mapKennungToApi")
+	class MapKennungToApi {
 
 		@Test
 		@DisplayName("Rekonstruiert Schlüssel korrekt bei zweistelligem Präfix (60-102-00 -> 60-10200)")
-		void mapIdFachklasse_rekonstruiertZweistelligenPraefix() {
+		void mapKennungToApi_rekonstruiertZweistelligenPraefix() {
 			final var entity = createEntity(1L);
 			entity.Kennung = "60-102-00";
 
-			final var result = mapper.toApi(entity);
+			final var result = mapper.toApi(entity, 2000);
 
 			assertThat(result.idFachklasse).isEqualTo(1867000L);
 		}
 
 		@Test
 		@DisplayName("Rekonstruiert Schlüssel korrekt bei dreistelligem Präfix (210-148-18 -> 210-14818)")
-		void mapIdFachklasse_rekonstruiertDreistelligenPraefix() {
+		void mapKennungToApi_rekonstruiertDreistelligenPraefix() {
 			final var entity = createEntity(1L);
 			entity.Kennung = "210-148-18";
 
-			final var result = mapper.toApi(entity);
+			final var result = mapper.toApi(entity, 2024);
 
 			assertThat(result.idFachklasse).isEqualTo(1429000L);
 		}
 
 		@Test
-		@DisplayName("Liefert null bei unbekanntem Schlüssel")
-		void mapIdFachklasse_liefertNullBeiUnbekanntemSchluessel() {
+		@DisplayName("Befüllt schluesselSchulgliederung bei bekanntem Schlüssel und gültigem Schuljahr")
+		void mapKennungToApi_befuelltSchluesselSchulgliederung() {
+			final var entity = createEntity(1L);
+			entity.Kennung = "60-102-00";
+
+			final var result = mapper.toApi(entity, 2000);
+
+			assertThat(result.schluesselSchulgliederung).isNotNull();
+		}
+
+		@Test
+		@DisplayName("Liefert null für beide Felder bei unbekanntem Schlüssel")
+		void mapKennungToApi_liefertNullBeiUnbekanntemSchluessel() {
 			final var entity = createEntity(1L);
 			entity.Kennung = "99-999-99";
 
-			final var result = mapper.toApi(entity);
+			final var result = mapper.toApi(entity, 2024);
 
 			assertThat(result.idFachklasse).isNull();
+			assertThat(result.schluesselSchulgliederung).isNull();
 		}
 
 		@ParameterizedTest
 		@DisplayName("Liefert null bei null oder leerem Kennung-Feld")
 		@NullSource
 		@ValueSource(strings = {" ", "   "})
-		void mapIdFachklasse_liefertNullBeiNullOderBlank(final String kennung) {
+		void mapKennungToApi_liefertNullBeiNullOderBlank(final String kennung) {
 			final var entity = createEntity(1L);
 			entity.Kennung = kennung;
 
-			final var result = mapper.toApi(entity);
+			final var result = mapper.toApi(entity, 2024);
 
 			assertThat(result.idFachklasse).isNull();
-		}
-
-		@Test
-		@DisplayName("Direkt: gibt null zurück bei null")
-		void mapIdFachklasse_direktNull() {
-			assertThat(mapper.mapIdFachklasseToApi(null)).isNull();
-		}
-
-		@Test
-		@DisplayName("Direkt: gibt null zurück bei leerem String")
-		void mapIdFachklasse_direktBlank() {
-			assertThat(mapper.mapIdFachklasseToApi("   ")).isNull();
-		}
-
-		@Test
-		@DisplayName("Direkt: gibt null zurück bei unbekanntem Schlüssel")
-		void mapIdFachklasse_direktUnbekannt() {
-			assertThat(mapper.mapIdFachklasseToApi("99-999-99")).isNull();
-		}
-
-		@Test
-		@DisplayName("Direkt: liefert korrekte ID bei bekanntem Schlüssel")
-		void mapIdFachklasse_direktBekannterSchluessel() {
-			assertThat(mapper.mapIdFachklasseToApi("60-102-00")).isEqualTo(1867000L);
+			assertThat(result.schluesselSchulgliederung).isNull();
 		}
 	}
 

@@ -110,7 +110,7 @@ class FachklasseServiceTest {
 			when(repo.getAll()).thenReturn(List.of());
 
 			assertThat(service.getAll()).isEmpty();
-			verify(mapper, never()).toApi(any());
+			verify(mapper, never()).toApi(any(), anyInt());
 		}
 
 		@Test
@@ -121,8 +121,8 @@ class FachklasseServiceTest {
 			apiModel2.id = 2L;
 
 			when(repo.getAll()).thenReturn(List.of(entity, entity2));
-			when(mapper.toApi(entity)).thenReturn(apiModel);
-			when(mapper.toApi(entity2)).thenReturn(apiModel2);
+			when(mapper.toApi(entity, 0)).thenReturn(apiModel);
+			when(mapper.toApi(entity2, 0)).thenReturn(apiModel2);
 
 			assertThat(service.getAll()).containsExactly(apiModel, apiModel2);
 		}
@@ -146,7 +146,7 @@ class FachklasseServiceTest {
 			when(schuleService.getSchuljahr()).thenReturn(2024);
 			when(mapper.toDomain(dto, 2024)).thenReturn(entity);
 			when(repo.create(entity)).thenReturn(entity);
-			when(mapper.toApi(entity)).thenReturn(apiModel);
+			when(mapper.toApi(entity, 2024)).thenReturn(apiModel);
 
 			final var result = service.create(dto);
 
@@ -223,7 +223,7 @@ class FachklasseServiceTest {
 			when(repo.getById(1L)).thenReturn(entity);
 			when(repo.bezeichnungIsAlreadyUsedPatch("Neue Bezeichnung", 1L)).thenReturn(false);
 			when(schuleService.getSchuljahr()).thenReturn(2024);
-			when(mapper.toApi(entity)).thenReturn(apiModel);
+			when(mapper.toApi(entity, 2024)).thenReturn(apiModel);
 
 			final var result = service.patch(1L, dto);
 
@@ -292,7 +292,7 @@ class FachklasseServiceTest {
 
 			when(repo.getById(1L)).thenReturn(entity);
 			when(schuleService.getSchuljahr()).thenReturn(2024);
-			when(mapper.toApi(entity)).thenReturn(apiModel);
+			when(mapper.toApi(entity, 2024)).thenReturn(apiModel);
 
 			service.patch(1L, dto);
 

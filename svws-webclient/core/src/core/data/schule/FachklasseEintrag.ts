@@ -11,17 +11,22 @@ export class FachklasseEintrag extends JavaObject {
 	/**
 	 * Die Bezeichnung
 	 */
-	public bezeichnung: string = "";
+	public bezeichnung: string | null = null;
 
 	/**
 	 * Das Kürzel
 	 */
-	public kuerzel: string = "";
+	public kuerzel: string | null = null;
 
 	/**
 	 * Die ID der Fachklasse (CoreType)
 	 */
 	public idFachklasse: number | null = null;
+
+	/**
+	 * Der Schlüssel der Schulgliderung der ausgewählten Fachklasse
+	 */
+	public schluesselSchulgliederung: string | null = null;
 
 	/**
 	 * Die Sichtbarkeit
@@ -59,13 +64,10 @@ export class FachklasseEintrag extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (obj.bezeichnung === undefined)
-			throw new Error('invalid json format, missing attribute bezeichnung');
-		result.bezeichnung = obj.bezeichnung;
-		if (obj.kuerzel === undefined)
-			throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = obj.kuerzel;
+		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
+		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
 		result.idFachklasse = (obj.idFachklasse === undefined) ? null : obj.idFachklasse === null ? null : obj.idFachklasse;
+		result.schluesselSchulgliederung = (obj.schluesselSchulgliederung === undefined) ? null : obj.schluesselSchulgliederung === null ? null : obj.schluesselSchulgliederung;
 		if (obj.istSichtbar === undefined)
 			throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
@@ -81,9 +83,10 @@ export class FachklasseEintrag extends JavaObject {
 	public static transpilerToJSON(obj: FachklasseEintrag): string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
-		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
+		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		result += '"idFachklasse" : ' + ((obj.idFachklasse === null) ? 'null' : obj.idFachklasse.toString()) + ',';
+		result += '"schluesselSchulgliederung" : ' + ((obj.schluesselSchulgliederung === null) ? 'null' : JSON.stringify(obj.schluesselSchulgliederung)) + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
@@ -98,13 +101,16 @@ export class FachklasseEintrag extends JavaObject {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+			result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
 		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+			result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
 		if (obj.idFachklasse !== undefined) {
 			result += '"idFachklasse" : ' + ((obj.idFachklasse === null) ? 'null' : obj.idFachklasse.toString()) + ',';
+		}
+		if (obj.schluesselSchulgliederung !== undefined) {
+			result += '"schluesselSchulgliederung" : ' + ((obj.schluesselSchulgliederung === null) ? 'null' : JSON.stringify(obj.schluesselSchulgliederung)) + ',';
 		}
 		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
