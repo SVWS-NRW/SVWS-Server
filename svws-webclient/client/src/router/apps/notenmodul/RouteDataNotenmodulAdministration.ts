@@ -135,11 +135,16 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
+		const list = new ArrayList<SimpleOperationResponse>();
 		for (const id of ids) {
-			await api.server.deleteENMServerConnection(api.schema, id);
+			const res = await api.server.deleteENMServerConnection(api.schema, id);
+			const sor = new SimpleOperationResponse();
+			sor.success = true;
+			sor.log.add(`Verbindung mit der ID ${res.id} und der Bezeichnung '${res.bezeichnung}' für die URL ${res.url} wurde erfolgreich gelöscht.`);
+			list.add(sor);
 		}
 		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
-		return new ArrayList();
+		return list;
 	}
 
 	protected deleteMessage(id: number, eintrag: any): string {
