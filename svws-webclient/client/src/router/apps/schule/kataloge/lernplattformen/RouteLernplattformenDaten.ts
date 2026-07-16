@@ -4,7 +4,6 @@ import { RouteNode } from "~/router/RouteNode";
 import type { RouteLernplattformen } from "~/router/apps/schule/kataloge/lernplattformen/RouteLernplattformen";
 import { routeLernplattformen } from "~/router/apps/schule/kataloge/lernplattformen/RouteLernplattformen";
 import type { LernplattformenDatenProps } from "~/components/schule/kataloge/lernplattformen/daten/LernplattformenDatenProps";
-import { api } from "~/router/Api";
 
 const LernplattformenDaten = () =>
 	import("~/components/schule/kataloge/lernplattformen/daten/LernplattformenDaten.vue");
@@ -23,7 +22,6 @@ export class RouteLernplattformenDaten extends RouteNode<any, RouteLernplattform
 		return {
 			patch: routeLernplattformen.data.patch,
 			manager: () => routeLernplattformen.data.manager,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

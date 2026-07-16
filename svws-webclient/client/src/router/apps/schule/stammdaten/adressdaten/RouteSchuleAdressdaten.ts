@@ -1,15 +1,11 @@
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import type { RouteSchuleStammdaten } from "~/router/apps/schule/stammdaten/RouteSchuleStammdaten";
 import { RouteDataSchuleAdressdaten } from "~/router/apps/schule/stammdaten/adressdaten/RouteDataSchuleAdressdaten";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
 import type { SchuleAdressdatenProps } from "~/components/schule/stammdaten/adressdaten/SchuleAdressdatenProps";
-import { api } from "~/router/Api";
 
-const SchuleAdressdaten =
-	() => import("~/components/schule/stammdaten/adressdaten/SchuleAdressdaten.vue");
+const SchuleAdressdaten = () => import("~/components/schule/stammdaten/adressdaten/SchuleAdressdaten.vue");
 
 export class RouteSchuleAdressdaten extends RouteNode<any, RouteSchuleStammdaten> {
 
@@ -39,8 +35,6 @@ export class RouteSchuleAdressdaten extends RouteNode<any, RouteSchuleStammdaten
 			addTeilstandorteintrag: routeSchuleAdressdaten.data.addTeilstandorteintrag,
 			patchTeilstandorteintrag: routeSchuleAdressdaten.data.patchTeilstandorteintrag,
 			deleteTeilstandorteintraege: routeSchuleAdressdaten.data.deleteTeilstandorteintraege,
-			benutzerIstAdmin: api.benutzerIstAdmin,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

@@ -115,13 +115,14 @@
 	import { computed } from "vue";
 	import { BilingualeSprache, Fach, Schulform, BenutzerKompetenz, JavaInteger } from "@core";
 	import type { FaecherDatenProps } from "./FaecherDatenProps";
-	import { CoreTypeSelectManager, SelectManager, useSchuleState } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import { FachModelProxy } from "~/components/schule/kataloge/faecher/modelproxy/FachModelProxy";
 
 	const props = defineProps<FaecherDatenProps>();
+	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const readonly = computed(() => !hatKompetenzUpdate.value);
 
 	const model = new FachModelProxy(

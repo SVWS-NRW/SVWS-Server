@@ -9,6 +9,7 @@ import { routeSchulenGruppenprozesse } from "~/router/apps/schule/kataloge/schul
 import { routeSchulenNeu } from "~/router/apps/schule/kataloge/schulen/RouteSchulenNeu";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
 
 const defaultState = {
@@ -62,7 +63,7 @@ export class RouteDataSchulen extends RouteDataAuswahl<SchulenListeManager, Rout
 	deleteCheck = (): [boolean, List<string>] => {
 		const errorLog = new ArrayList<string>();
 
-		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
+		if (!benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Schulen vor.');
 		}
 

@@ -7,7 +7,6 @@
 			'border-ui-brand/50 svws-selected': terminSelected,
 		}">
 		<s-gost-klausurplanung-termin :termin="termin()"
-			:benutzer-kompetenzen
 			:k-man
 			:termin-selected="terminSelected || false"
 			:draggable
@@ -50,10 +49,10 @@
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import { BenutzerKompetenz } from "@core";
 	import { type GostKlausurplanManager, GostKursklausur, type GostKlausurtermin, type List, type GostHalbjahr, Arrays, GostSchuelerklausurTermin } from "@core";
+	import { useBenutzerState } from "@ui";
 	import { computed } from 'vue';
 
 	const props = withDefaults(defineProps<{
-		benutzerKompetenzen: Set<BenutzerKompetenz>,
 		termin: () => GostKlausurtermin;
 		kMan: () => GostKlausurplanManager;
 		loescheKlausurtermine?: (termine: List<GostKlausurtermin>) => Promise<void>;
@@ -74,7 +73,9 @@
 		showSchuelerklausuren: false,
 	});
 
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
+	const benutzerState = useBenutzerState();
+
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const klausuren = () => props.kMan().kursklausurGetMengeByTermin(props.termin());
 	const terminTitel = () => kurzBezeichnungenShort;

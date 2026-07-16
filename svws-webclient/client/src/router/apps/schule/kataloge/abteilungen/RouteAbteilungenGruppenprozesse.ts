@@ -5,7 +5,6 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { routeAbteilungen } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungen";
-import { api } from "~/router/Api";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const AbteilungenGruppenprozesse = () => import("~/components/schule/kataloge/abteilungen/gruppenprozesse/AbteilungenGruppenprozesse.vue");
@@ -27,7 +26,6 @@ export class RouteAbteilungenGruppenprozesse extends RouteNode<any, RouteAbteilu
 
 	public getProps(to: RouteLocationNormalized): AbteilungenGruppenprozesseProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeAbteilungen.data.manager,
 			delete: routeAbteilungen.data.delete,
 		};

@@ -39,12 +39,15 @@
 	import type { BeschaeftigungsartenGruppenprozesseProps } from "~/components/schule/kataloge/beschaeftigungsarten/gruppenprozesse/BeschaeftigungsartenGruppenprozesseProps";
 	import { BenutzerKompetenz } from "@core";
 	import { computed, ref } from "vue";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<BeschaeftigungsartenGruppenprozesseProps>();
+	const benutzerState = useBenutzerState();
+
 	const isLoading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
-	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
+	const hatKompetenzLoeschen = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 	const hatKeineErforderlicheKompetenz = computed<boolean>(() => !hatKompetenzLoeschen.value);
 	const deleteCheckErrors = computed<List<string>>(() => props.deleteCheck()[1]);
 	const selectedAllowedToDelete = computed<boolean>(() => props.deleteCheck()[0]);

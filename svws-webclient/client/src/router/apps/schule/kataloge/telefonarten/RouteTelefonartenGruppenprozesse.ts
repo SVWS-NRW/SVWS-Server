@@ -1,6 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import type { RouteTelefonarten } from "~/router/apps/schule/kataloge/telefonarten/RouteTelefonarten";
@@ -27,7 +26,6 @@ export class RouteTelefonartenGruppenprozesse extends RouteNode<any, RouteTelefo
 
 	public getProps(to: RouteLocationNormalized): TelefonartenGruppenprozesseProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeTelefonarten.data.manager,
 			delete: routeTelefonarten.data.delete,
 			deleteCheck: routeTelefonarten.data.deleteCheck,

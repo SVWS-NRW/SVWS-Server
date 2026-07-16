@@ -1,16 +1,12 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-
 import type { StundenplanAufsichtsbereich, DeveloperNotificationException } from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
-
 import type { AufsichtsbereicheProps } from "~/components/stundenplan/kataloge/aufsichtsbereiche/SAufsichtsbereicheProps";
 import type { AufsichtsbereicheAuswahlProps } from "~/components/stundenplan/kataloge/aufsichtsbereiche/SAufsichtsbereicheAuswahlProps";
 import { RouteDataKatalogAufsichtsbereiche } from "./RouteDataKatalogAufsichtsbereiche";
 import { routeError } from "~/router/error/RouteError";
 import { RouteStundenplan } from "../RouteStundenplan";
-import { api } from "~/router/Api";
 
 
 const SAufsichtsbereicheAuswahl = () => import("~/components/stundenplan/kataloge/aufsichtsbereiche/SAufsichtsbereicheAuswahl.vue");
@@ -64,7 +60,6 @@ export class RouteKatalogAufsichtsbereiche extends RouteNode<RouteDataKatalogAuf
 			deleteEintraege: this.data.deleteEintraege,
 			stundenplanManager: () => this.data.stundenplanManager,
 			setKatalogAufsichtsbereicheImportJSON: this.data.setKatalogAufsichtsbereicheImportJSON,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

@@ -43,9 +43,12 @@
 	import { BenutzerKompetenz, Telefonart } from "@core";
 	import { computed, ref, watch } from "vue";
 	import { TelefonartenModelProxy } from "~/components/schule/kataloge/telefonarten/modelproxy/TelefonartenModelProxy";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<TelefonartenNeuProps>();
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const benutzerState = useBenutzerState();
+
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const disabled = computed(() => !hatKompetenzUpdate.value);
 	const initialData = ref<Telefonart>(Object.assign(new Telefonart(), { istSichtbar: true, sortierung: 32000 }));
 	const model = new TelefonartenModelProxy(() => initialData.value, () => props.manager().liste.list());

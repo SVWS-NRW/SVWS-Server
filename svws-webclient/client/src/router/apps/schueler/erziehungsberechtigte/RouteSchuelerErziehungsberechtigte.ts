@@ -1,16 +1,12 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
 import type { DeveloperNotificationException } from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeApp } from "~/router/apps/RouteApp";
 import { type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteDataSchuelerErziehungsberechtigte } from "~/router/apps/schueler/erziehungsberechtigte/RouteDataSchuelerErziehungsberechtigte";
-
 import type { SchuelerErziehungsberechtigteProps } from "~/components/schueler/erziehungsberechtigte/SchuelerErziehungsberechtigteProps";
-import { api } from "~/router/Api";
 
 const SchuelerErziehungsberechtigte = () => import("~/components/schueler/erziehungsberechtigte/SchuelerErziehungsberechtigte.vue");
 
@@ -45,7 +41,6 @@ export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchue
 			erzieherartenById: routeApp.cache.kataloge.erzieherartenById,
 			orteById: routeApp.cache.kataloge.orteById,
 			ortsteileById: routeApp.cache.kataloge.ortsteileById,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

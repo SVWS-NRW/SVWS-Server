@@ -45,15 +45,16 @@
 	import { SchuelerSchwerpunkt, BenutzerKompetenz } from "@core";
 	import type { SchwerpunkteNeuProps } from './SchwerpunkteNeuProps';
 	import { SchwerpunkteModelProxy } from "~/components/schule/kataloge/schwerpunkte/modelproxy/SchwerpunkteModelProxy";
-
-	interface SchwerpunktNeu extends Pick<SchuelerSchwerpunkt, "bezeichnung" | "sortierung" | "istSichtbar"> {}
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<SchwerpunkteNeuProps>();
+	const benutzerState = useBenutzerState();
+
 	const initialData = ref<SchuelerSchwerpunkt>(Object.assign(new SchuelerSchwerpunkt(), { istSichtbar: true, sortierung: 32000 }));
 	const model = new SchwerpunkteModelProxy(() => initialData.value, () => props.manager().liste.list());
 	const isLoading = ref<boolean>(false);
 	const hatKompetenzUpdate = computed<boolean>(() => {
-		return props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	});
 	const disabled = computed(() => !hatKompetenzUpdate.value);
 

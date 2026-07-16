@@ -49,10 +49,12 @@
 	import { ArrayList, BenutzerKompetenz } from "@core";
 	import type { SchuelerEinwilligungenProps } from './SchuelerEinwilligungenProps';
 	import { SchuelerEinwilligungenModelProxy } from "./modelProxy/SchuelerEinwilligungenModelProxy";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<SchuelerEinwilligungenProps>();
+	const benutzerState = useBenutzerState();
 
-	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_EINWILLIGUNGEN_AENDERN));
+	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_EINWILLIGUNGEN_AENDERN));
 	const readonly = computed(() => !hatKompetenzAendern.value);
 	const einwilligungenProxies = computed(() => {
 		const result = new ArrayList<SchuelerEinwilligungenModelProxy>();

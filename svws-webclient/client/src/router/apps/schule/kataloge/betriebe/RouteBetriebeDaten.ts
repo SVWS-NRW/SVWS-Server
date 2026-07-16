@@ -1,9 +1,6 @@
 import type { RouteLocationNormalized } from "vue-router";
-
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
-import { api } from "~/router/Api";
 import type { RouteBetriebe } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebe";
 import { routeBetriebe } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebe";
 import type { BetriebeDatenProps } from "~/components/schule/kataloge/betriebe/daten/BetriebeDatenProps";
@@ -24,7 +21,6 @@ export class RouteBetriebeDaten extends RouteNode<any, RouteBetriebe> {
 		return {
 			manager: () => routeBetriebe.data.manager,
 			patch: routeBetriebe.data.patch,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			addAnsprechpartner: routeBetriebe.data.addAnsprechpartner,
 			deleteAnsprechpartner: routeBetriebe.data.deleteAnsprechpartner,
 			patchAnsprechpartner: routeBetriebe.data.patchAnsprechpartner,

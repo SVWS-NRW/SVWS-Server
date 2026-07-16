@@ -3,7 +3,6 @@ import type { RouteLocationNormalized } from "vue-router";
 import type { RouteBeschaeftigungsarten } from "~/router/apps/schule/kataloge/beschaeftigungsarten/RouteBeschaeftigungsarten";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import { api } from "~/router/Api";
 import { routeBeschaeftigungsarten } from "~/router/apps/schule/kataloge/beschaeftigungsarten/RouteBeschaeftigungsarten";
 
 const BeschaeftigungsartenDaten = () => import("~/components/schule/kataloge/beschaeftigungsarten/daten/BeschaeftigungsartenDaten.vue");
@@ -21,7 +20,6 @@ export class RouteBeschaeftigungsartenDaten extends RouteNode<any, RouteBeschaef
 	public getProps(to: RouteLocationNormalized): BeschaeftigungsartenDatenProps {
 		return {
 			manager: () => routeBeschaeftigungsarten.data.manager,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			patch: routeBeschaeftigungsarten.data.patch,
 		};
 	}

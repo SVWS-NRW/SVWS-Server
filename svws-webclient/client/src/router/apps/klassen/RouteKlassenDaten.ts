@@ -1,8 +1,5 @@
 import type { RouteLocationNormalized } from "vue-router";
-
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
-import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { routeKlassen, type RouteKlassen } from "~/router/apps/klassen/RouteKlassen";
 import type { KlassenDatenProps } from "~/components/klassen/daten/KlassenDatenProps";
@@ -20,7 +17,6 @@ export class RouteKlassenDaten extends RouteNode<any, RouteKlassen> {
 
 	public getProps(to: RouteLocationNormalized): KlassenDatenProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			patch: routeKlassen.data.patch,
 			manager: () => routeKlassen.data.manager,
 			setFilter: routeKlassen.data.setFilter,

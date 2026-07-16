@@ -40,9 +40,11 @@
 	import type { GostAuswahlProps } from "./SGostAuswahlProps";
 	import type { GostJahrgang } from "@core";
 	import { BenutzerKompetenz } from "@core";
-	import { useRegionSwitch } from "@ui";
+	import { useBenutzerState, useRegionSwitch } from "@ui";
 
 	const props = defineProps<GostAuswahlProps>();
+	const benutzerState = useBenutzerState();
+
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const columns = [
@@ -56,7 +58,7 @@
 		return list.filter(a => filtern && !a.istAbgeschlossen).sort((a, b) => (a.bezeichnung ?? "") < (b.bezeichnung ?? "") ? 1 : -1);
 	});
 
-	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_ABITURJAHRGAENGE_VERWALTEN));
+	const hatUpdateKompetenz = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_ABITURJAHRGAENGE_VERWALTEN));
 
 	const unselectable = computed(() => {
 		const set = new Set<GostJahrgang>();

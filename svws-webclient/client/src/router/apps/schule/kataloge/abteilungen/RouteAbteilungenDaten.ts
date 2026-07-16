@@ -4,7 +4,6 @@ import type { RouteAbteilungen } from "~/router/apps/schule/kataloge/abteilungen
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeAbteilungen } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungen";
-import { api } from "~/router/Api";
 
 const AbteilungenDaten = () => import("~/components/schule/kataloge/abteilungen/daten/AbteilungenDaten.vue");
 
@@ -22,7 +21,6 @@ export class RouteAbteilungenDaten extends RouteNode<any, RouteAbteilungen> {
 		return {
 			goToLehrer: routeAbteilungen.data.goToLehrer,
 			manager: () => routeAbteilungen.data.manager,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			isReadonly: routeAbteilungen.data.isReadonly,
 			isAbteilungImZukuenftigenAbschnitt: routeAbteilungen.data.isAbteilungImZukuenftigenAbschnitt,
 			patch: routeAbteilungen.data.patch,

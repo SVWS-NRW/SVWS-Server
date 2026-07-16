@@ -70,17 +70,18 @@
 	import type { LehrerPersonaldatenProps } from './LehrerPersonaldatenProps';
 	import type { JavaSet, LehrerPersonalabschnittsdaten } from "@core";
 	import { LehrerZugangsgrund, LehrerAbgangsgrund, BenutzerKompetenz, HashSet, LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerRechtsverhaeltnis } from "@core";
-	import { CoreTypeSelectManager, SelectManager, useAbschnittState, useSchuleState, useServerState } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useAbschnittState, useBenutzerState, useSchuleState, useServerState } from "@ui";
 	import { LehrerPersonalabschnittsdatenModelProxy } from "./LehrerPersonalabschnittsdatenModelProxy";
 	import { LehrerPersonaldatenModelProxy } from "./LehrerPersonaldatenModelProxy";
 
 	const props = defineProps<LehrerPersonaldatenProps>();
+	const benutzerState = useBenutzerState();
 	const serverState = useServerState();
 
 	const schuleState = useSchuleState();
 	const abschnittState = useAbschnittState();
 
-	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN));
+	const readonly = computed<boolean>(() => !benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN));
 	const eigeneSchulnummer = computed<string>(() => `${schuleState.validatorKontext.getSchulnummer()}`);
 
 	async function patchMethodLehrerPersonalabschnittsdaten(data: Partial<LehrerPersonalabschnittsdaten>): Promise<boolean> {

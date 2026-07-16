@@ -1,9 +1,7 @@
 import type { RouteLocationNormalized, RouteParams } from "vue-router";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { RouteStundenplan, routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
-
 import type { StundenplanPausenProps } from "~/components/stundenplan/pausen/StundenplanPausenProps";
 import { api } from "~/router/Api";
 
@@ -23,7 +21,6 @@ export class RouteStundenplanPausen extends RouteNode<any, RouteStundenplan> {
 
 	public getProps(to: RouteLocationNormalized): StundenplanPausenProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			stundenplanManager: () => routeStundenplan.data.manager.daten(),
 			patchPausenzeit: routeStundenplan.data.patchPausenzeit,
 			removePausenzeiten: routeStundenplan.data.removePausenzeiten,

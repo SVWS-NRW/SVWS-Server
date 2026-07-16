@@ -1,19 +1,7 @@
-import type {
-	GostHalbjahr,
-	GostJahrgangsdaten,
-	GostKlausurraum,
-	GostKlausurraumRich,
-	GostKlausurtermin,
-	GostKursklausur,
-	GostKlausurplanManager,
-	List,
-	BenutzerKompetenz,
-	Schuljahresabschnitt, GostSchuelerklausurTermin,
-} from "@core";
+import type { GostHalbjahr, GostJahrgangsdaten, GostKlausurraum, GostKlausurraumRich, GostKlausurtermin, GostKursklausur, GostKlausurplanManager, List, Schuljahresabschnitt, GostSchuelerklausurTermin } from "@core";
 import type { WritableComputedRef } from "vue";
 
 export interface GostKlausurplanungRaumzeitProps {
-	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	jahrgangsdaten: GostJahrgangsdaten;
 	halbjahr: GostHalbjahr;
 	abschnitt: Schuljahresabschnitt | undefined;

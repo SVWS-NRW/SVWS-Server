@@ -46,12 +46,15 @@
 	import type { LeitungsfunktionenNeuProps } from "~/components/schule/kataloge/leitungsfunktionen/LeitungsfunktionenNeuProps";
 	import { computed, ref, watch } from "vue";
 	import { LeitungsfunktionenModelProxy } from "~/components/schule/kataloge/leitungsfunktionen/modelproxy/LeitungsfunktionenModelProxy";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<LeitungsfunktionenNeuProps>();
+	const benutzerState = useBenutzerState();
+
 	const initialData = ref<Leitungsfunktion>(Object.assign(new Leitungsfunktion(), { istSichtbar: true }));
 	const model = new LeitungsfunktionenModelProxy(() => initialData.value, props.manager);
 	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
-	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const hatKompetenzAdd = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 
 	const isLoading = ref<boolean>(false);

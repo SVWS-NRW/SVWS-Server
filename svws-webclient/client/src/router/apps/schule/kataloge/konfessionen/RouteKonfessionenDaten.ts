@@ -1,11 +1,7 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
-
 import type { KonfessionenDatenProps } from "~/components/schule/kataloge/konfessionen/daten/KonfessionenDatenProps";
-import { api } from "~/router/Api";
 import { routeKonfessionen, type RouteKonfessionen } from "~/router/apps/schule/kataloge/konfessionen/RouteKonfessionen";
 
 const KonfessionenDaten = () => import("~/components/schule/kataloge/konfessionen/daten/KonfessionenDaten.vue");
@@ -30,7 +26,6 @@ export class RouteKonfessionenDaten extends RouteNode<any, RouteKonfessionen> {
 		return {
 			manager: () => routeKonfessionen.data.manager,
 			patch: routeKonfessionen.data.patch,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

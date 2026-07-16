@@ -11,6 +11,7 @@ import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import type { Leitungsfunktion, List, SimpleOperationResponse } from "@core";
 import { ArrayList, BenutzerKompetenz } from "@core";
 import { LeitungsfunktionenListeManager, ViewType } from "@ui";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
@@ -63,7 +64,7 @@ export class RouteDataLeitungsfunktionen extends RouteDataAuswahl<Leitungsfunkti
 	deleteCheck = (): { success: boolean, logs: Iterable<string> } => {
 		const errorLog = new ArrayList<string>();
 
-		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
+		if (!benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Leitungsfunktionen vor.');
 		}
 

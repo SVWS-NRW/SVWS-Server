@@ -1,7 +1,6 @@
 <template>
 	<div class="flex flex-col bg-ui-100 rounded-xl cursor-pointer" @drop="onDrop(termin())" @dragover="checkDropZone($event, termin())" :class="dragData === undefined || isDropZone(termin()) ? '' : 'opacity-35'">
 		<s-gost-klausurplanung-termin :termin="termin()"
-			:benutzer-kompetenzen
 			:k-man
 			:termin-selected="terminSelected || false"
 			:draggable
@@ -46,10 +45,10 @@
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type { GostKlausurenUpdate, GostKlausurplanManager, GostKlausurtermin, List } from "@core";
 	import { GostKursklausur, GostHalbjahr, BenutzerKompetenz, Arrays, GostSchuelerklausurTermin } from "@core";
+	import { useBenutzerState } from "@ui";
 	import { computed } from 'vue';
 
 	const props = withDefaults(defineProps<{
-		benutzerKompetenzen: Set<BenutzerKompetenz>,
 		termin: () => GostKlausurtermin;
 		kMan: () => GostKlausurplanManager;
 		loescheKlausurtermine?: (termine: List<GostKlausurtermin>) => Promise<void>;
@@ -66,13 +65,14 @@
 		gotoKalenderdatum: (datum: string | undefined, termin: GostKlausurtermin | undefined) => Promise<void>;
 		gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
 		zeigeAlleJahrgaenge: () => boolean;
-
 	}>(), {
 		loescheKlausurtermine: undefined,
 		showSchuelerklausuren: false,
 	});
 
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
+	const benutzerState = useBenutzerState();
+
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const klausuren = () => props.kMan().kursklausurGetMengeByTermin(props.termin());
 	const terminTitel = () => kurzBezeichnungenShort;

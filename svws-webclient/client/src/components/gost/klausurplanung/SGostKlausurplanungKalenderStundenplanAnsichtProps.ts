@@ -1,8 +1,7 @@
-import type { StundenplanZeitraster, GostHalbjahr, GostJahrgangsdaten, GostKursklausur, GostKlausurplanManager, List, StundenplanKalenderwochenzuordnung, Wochentag, BenutzerKompetenz, GostKlausurtermin, Schuljahresabschnitt, StundenplanManager } from "@core";
+import type { StundenplanZeitraster, GostHalbjahr, GostJahrgangsdaten, GostKursklausur, GostKlausurplanManager, List, StundenplanKalenderwochenzuordnung, Wochentag, GostKlausurtermin, Schuljahresabschnitt, StundenplanManager } from "@core";
 import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 
 export interface SGostKlausurplanungKalenderStundenplanAnsichtProps {
-	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	mode?: 'schueler' | 'lehrer' | 'klasse';
 	abschnitt: Schuljahresabschnitt | undefined;
 	jahrgangsdaten: GostJahrgangsdaten;

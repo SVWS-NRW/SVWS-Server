@@ -1,10 +1,7 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
-
 import { api } from "~/router/Api";
 import type { RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
@@ -43,7 +40,6 @@ export class RouteLehrerEinwilligungen extends RouteNode<RouteDataLehrerEinwilli
 			einwilligungen: () => this.data.einwilligungen,
 			mapEinwilligungsarten: this.data.mapEinwilligungsarten,
 			patch: this.data.patch,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			apiStatus: api.status,
 		};
 	}

@@ -6,7 +6,6 @@ import { RouteManager } from "~/router/RouteManager";
 import type { RouteTelefonarten } from "~/router/apps/schule/kataloge/telefonarten/RouteTelefonarten";
 import { routeTelefonarten } from "~/router/apps/schule/kataloge/telefonarten/RouteTelefonarten";
 import type { TelefonartenNeuProps } from "~/components/schule/kataloge/telefonarten/TelefonartenNeuProps";
-import { api } from "~/router/Api";
 
 const TelefonartenNeu = () => import("~/components/schule/kataloge/telefonarten/TelefonartenNeu.vue");
 
@@ -26,7 +25,6 @@ export class RouteTelefonartenNeu extends RouteNode<any, RouteTelefonarten> {
 			manager: () => routeTelefonarten.data.manager,
 			add: routeTelefonarten.data.add,
 			gotoDefaultView: routeTelefonarten.data.gotoDefaultView,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};

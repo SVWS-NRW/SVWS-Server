@@ -34,12 +34,15 @@
 
 	import type { BetriebsartenDatenProps } from './BetriebsartenDatenProps';
 	import { BenutzerKompetenz } from "@core";
+	import { useBenutzerState } from '@ui';
 	import { computed } from "vue";
 	import { BetriebsartenModelProxy } from "~/components/schule/kataloge/betriebsarten/modelproxy/BetriebsartenModelProxy";
 
 	const props = defineProps<BetriebsartenDatenProps>();
+	const benutzerState = useBenutzerState();
+
 	const data = new BetriebsartenModelProxy(() => props.manager().auswahl(), () => props.manager().liste.list(), props.patch);
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const readonly = computed(() => !hatKompetenzUpdate.value);
 
 </script>

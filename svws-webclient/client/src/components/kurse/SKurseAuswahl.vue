@@ -43,16 +43,17 @@
 
 	import { ref, computed } from "vue";
 	import type { KurseAuswahlProps } from "./SKurseAuswahlProps";
-	import { useAbschnittState, useServerState, useRegionSwitch, ViewType, type DataTableColumn, type SortByAndOrder } from "@ui";
+	import { useAbschnittState, useServerState, useRegionSwitch, ViewType, type DataTableColumn, type SortByAndOrder, useBenutzerState } from "@ui";
 	import type { FachDaten, JahrgangsDaten, KursDaten, LehrerListeEintrag, List, SchuelerListeEintrag, Schulgliederung } from "@core";
 	import { BenutzerKompetenz } from "@core";
 
 	const props = defineProps<KurseAuswahlProps>();
+	const benutzerState = useBenutzerState();
 	const serverState = useServerState();
 	const abschnittState = useAbschnittState();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
-	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
+	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
 
 	const columns: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },

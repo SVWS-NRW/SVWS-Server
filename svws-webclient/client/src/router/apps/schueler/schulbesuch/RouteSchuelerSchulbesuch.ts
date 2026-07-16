@@ -1,15 +1,11 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
 import type { DeveloperNotificationException } from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteDataSchuelerSchulbesuch } from "~/router/apps/schueler/schulbesuch/RouteDataSchuelerSchulbesuch";
-
 import type { SchuelerSchulbesuchProps } from "~/components/schueler/schulbesuch/SchuelerSchulbesuchProps";
-import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { routeSchulen } from "~/router/apps/schule/kataloge/schulen/RouteSchulen";
 
@@ -42,7 +38,6 @@ export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbe
 	public getProps(to: RouteLocationNormalized): SchuelerSchulbesuchProps {
 		return {
 			manager: () => this.data.manager,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			autofocus: routeSchueler.data.autofocus,
 			patch: routeSchuelerSchulbesuch.data.patch,
 			goToSchule: this.goToSchule,
@@ -57,4 +52,3 @@ export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbe
 }
 
 export const routeSchuelerSchulbesuch = new RouteSchuelerSchulbesuch();
-

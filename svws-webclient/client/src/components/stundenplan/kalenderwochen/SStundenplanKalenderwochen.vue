@@ -26,14 +26,15 @@
 	import { ref, computed } from "vue";
 	import type { StundenplanKalenderwochenzuordnung } from "@core";
 	import { ArrayList, BenutzerKompetenz, DateUtils } from "@core";
-	import { useRegionSwitch } from "@ui";
+	import { useBenutzerState, useRegionSwitch } from "@ui";
 	import type { StundenplanKalenderwochenProps } from "./SStundenplanKalenderwochenProps";
 
 	const props = defineProps<StundenplanKalenderwochenProps>();
+	const benutzerState = useBenutzerState();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
-	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_AENDERN));
+	const hatUpdateKompetenz = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.STUNDENPLAN_AENDERN));
 
 	async function nextWochentyp(kw: StundenplanKalenderwochenzuordnung) {
 		const kalenderwochenZuordnung = new ArrayList<StundenplanKalenderwochenzuordnung>();

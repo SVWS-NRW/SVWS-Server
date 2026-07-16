@@ -1,7 +1,6 @@
 import type { RouteLocationNormalized } from "vue-router";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import { api } from "~/router/Api";
 import type { RouteFloskeln } from "~/router/apps/schule/kataloge/floskeln/RouteFloskeln";
 import { routeFloskeln } from "~/router/apps/schule/kataloge/floskeln/RouteFloskeln";
 import type { FloskelnDatenProps } from "~/components/schule/kataloge/floskeln/daten/FloskelnDatenProps";
@@ -21,7 +20,6 @@ export class RouteFloskelnDaten extends RouteNode<any, RouteFloskeln> {
 	public getProps(to: RouteLocationNormalized): FloskelnDatenProps {
 		return {
 			manager: () => routeFloskeln.data.manager,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			patch: routeFloskeln.data.patch,
 		};
 	}

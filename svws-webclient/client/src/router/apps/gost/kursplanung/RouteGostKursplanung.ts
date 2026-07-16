@@ -1,23 +1,18 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 import type { GostKursplanungAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungAuswahlProps";
 import type { GostKursplanungProps } from "~/components/gost/kursplanung/SGostKursplanungProps";
-
 import type { GostBlockungListeneintrag, GostBlockungsergebnis } from "@core";
 import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, ServerMode } from "@core";
-
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
-
 import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
 import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/RouteGostKursplanungSchueler";
-
 import { RouteDataGostKursplanung } from "~/router/apps/gost/kursplanung/RouteDataGostKursplanung";
-
-import { ConfigElement } from "../../../../../../ui/src/utils/Config";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeError } from "~/router/error/RouteError";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import { ConfigElement } from "@ui";
 
 const SGostKursplanung = () => import("~/components/gost/kursplanung/SGostKursplanung.vue");
 const SGostKursplanungAuswahl = () => import("~/components/gost/kursplanung/SGostKursplanungAuswahl.vue");
@@ -230,8 +225,6 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 
 	public getAuswahlProps(to: RouteLocationNormalized): GostKursplanungAuswahlProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
-			benutzerKompetenzenAbiturjahrgaenge: api.benutzerKompetenzenAbiturjahrgaenge,
 			// Für die Halbjahresauswahl
 			setHalbjahr: this.data.gotoHalbjahr,
 			jahrgangsdaten: () => this.data.jahrgangsdaten,
@@ -263,8 +256,6 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 
 	public getProps(to: RouteLocationNormalized): GostKursplanungProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
-			benutzerKompetenzenAbiturjahrgaenge: api.benutzerKompetenzenAbiturjahrgaenge,
 			jahrgangsdaten: () => this.data.jahrgangsdaten,
 			hatBlockung: this.data.hatBlockung && this.data.hatErgebnis,
 			addBlockung: this.data.addBlockung,

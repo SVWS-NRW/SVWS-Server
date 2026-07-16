@@ -28,8 +28,10 @@
 	import { computed, ref } from "vue";
 	import type { StundenplanGruppenprozesseProps } from "./SStundenplanGruppenprozesseProps";
 	import { BenutzerKompetenz, type List } from "@core";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<StundenplanGruppenprozesseProps>();
+	const benutzerState = useBenutzerState();
 
 	const currentAction = ref<string>('');
 	const oldAction = ref<{ name: string | undefined; open: boolean }>({
@@ -41,7 +43,7 @@
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
 
-	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_AENDERN));
+	const hatKompetenzLoeschen = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.STUNDENPLAN_AENDERN));
 
 	function setCurrentAction(newAction: string, open: boolean) {
 		if (newAction === oldAction.value.name && !open) {

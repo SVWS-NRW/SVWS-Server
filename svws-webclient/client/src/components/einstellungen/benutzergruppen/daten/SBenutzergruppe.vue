@@ -4,7 +4,6 @@
 			<s-card-benutzergruppe-daten :manager
 				:set-bezeichnung
 				:set-ist-admin
-				:aktueller-benutzer
 				:map-benutzergruppen />
 			<s-card-benutzergruppe-kompetenzen :manager
 				:add-kompetenz
@@ -19,7 +18,6 @@
 				:add-benutzer-to-benutzergruppe
 				:remove-benutzer-from-benutzergruppe
 				:goto-benutzer
-				:aktueller-benutzer
 				:map-benutzergruppen />
 		</div>
 	</div>

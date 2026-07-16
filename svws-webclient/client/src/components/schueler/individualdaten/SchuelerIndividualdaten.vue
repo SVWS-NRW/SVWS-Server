@@ -266,7 +266,7 @@
 	import type { JavaSet, NationalitaetenKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, Fahrschuelerart, Haltestelle, SchuelerStatusKatalogEintrag, VerkehrsspracheKatalogEintrag } from "@core";
 	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, Verkehrssprache, BenutzerKompetenz, ArrayList, ReportingReportvorlage, HashSet } from "@core";
 	import { orte_sort, ortsteilSort } from "~/utils/helfer";
-	import { CoreTypeSelectManager, SelectManager, useReportingState, useSchuleState, useServerState } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useReportingState, useSchuleState, useServerState } from "@ui";
 	import { SchuelerIndividualdatenModel } from "~/components/schueler/individualdaten/modelproxy/SchuelerIndividualdatenModelProxy";
 	import WiedervorlageModal from "~/components/wiedervorlage/WiedervorlageModal.vue";
 	import SchuelerTelefonnummern from "~/components/schueler/individualdaten/telefonnummern/SchuelerTelefonnummern.vue";
@@ -291,13 +291,14 @@
 		() => props.ortsteileById,
 		props.patch
 	);
+	const benutzerState = useBenutzerState();
 
 	// --- Benutzerkompetenzen ---
 
-	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
-	const hatKompetenzAnsehen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN));
+	const readonly = computed<boolean>(() => !benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
+	const hatKompetenzAnsehen = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN));
 	const hatKompetenzDrucken = computed(() =>
-		props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN) || props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN));
+		benutzerState.benutzerHatKompetenz(BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN) || benutzerState.benutzerHatKompetenz(BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN));
 
 	// --- Karte "Allgemein" ---
 

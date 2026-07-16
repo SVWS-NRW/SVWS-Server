@@ -1,7 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
 import { BenutzerKompetenz, DeveloperNotificationException, ServerMode } from "@core";
-
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
@@ -9,12 +7,11 @@ import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
 import { routeGostAbiturZulassung } from "~/router/apps/gost/abitur/RouteGostAbiturZulassung";
 import { routeGostAbiturPruefungsuebersicht } from "./RouteGostAbiturPruefungsuebersicht";
 import { RouteDataGostAbitur } from "~/router/apps/gost/abitur/RouteDataGostAbitur";
-
 import type { GostAbiturProps } from "~/components/gost/abitur/GostAbiturProps";
 import type { TabData } from "@ui";
 import { schulformenGymOb } from "~/router/RouteHelper";
-import { api } from "~/router/Api";
 import { routeGostAbiturNoteneingabe } from "./RouteGostAbiturNoteneingabe";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
 const GostAbitur = () => import("~/components/gost/abitur/GostAbitur.vue");
 
@@ -51,8 +48,8 @@ export class RouteGostAbitur extends RouteNode<RouteDataGostAbitur, RouteGost> {
 				return false;
 			}
 			if ((eintrag.abiturjahr !== -1)
-				&& (api.benutzerHatKompetenz(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN)
-					|| (api.benutzerHatKompetenz(BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN) && api.benutzerKompetenzenAbiturjahrgaenge.has(eintrag.abiturjahr)))
+				&& (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN)
+					|| (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN) && benutzerStateImpl.kompetenzenAbiturjahrgaenge.has(eintrag.abiturjahr)))
 				&& ((eintrag.jahrgang === 'Q1') || (eintrag.jahrgang === 'Q2'))) {
 				return false;
 			}

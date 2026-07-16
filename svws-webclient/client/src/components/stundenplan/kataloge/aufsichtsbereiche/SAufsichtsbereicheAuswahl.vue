@@ -22,9 +22,12 @@
 	import { computed, ref } from "vue";
 	import type { AufsichtsbereicheAuswahlProps } from "./SAufsichtsbereicheAuswahlProps";
 	import { BenutzerKompetenz, StundenplanAufsichtsbereich, type Aufsichtsbereich } from "@core";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<AufsichtsbereicheAuswahlProps>();
-	const readonly = computed<boolean>(() => !(props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)));
+	const benutzerState = useBenutzerState();
+
+	const readonly = computed<boolean>(() => !(benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)));
 	const selected = ref<Aufsichtsbereich[]>([]);
 
 	const columns = [

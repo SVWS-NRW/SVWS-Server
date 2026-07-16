@@ -17,7 +17,7 @@
 				</template>
 				<template #actions v-if="!readonly">
 					<svws-ui-tooltip position="bottom">
-						<svws-ui-button type="icon" v-if="benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)"
+						<svws-ui-button type="icon" v-if="benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)"
 							@click="gotoHinzufuegenView(true)"
 							:has-focus="noFilteredEntries" :disabled="isHinzufuegenView">
 							<span class="icon i-ri-add-line" />
@@ -36,13 +36,15 @@
 
 	import type { JahrgaengeAuswahlProps } from "./JahrgaengeAuswahlProps";
 	import { computed } from "vue";
-	import { useRegionSwitch, ViewType } from "@ui";
+	import { useBenutzerState, useRegionSwitch, ViewType } from "@ui";
 	import { BenutzerKompetenz } from "@core";
 	import type { JahrgangsDaten } from "@core";
 
-	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 	const props = defineProps<JahrgaengeAuswahlProps>();
-	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const benutzerState = useBenutzerState();
+
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+	const readonly = computed<boolean>(() => !benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const isHinzufuegenView = computed<boolean>(() => props.activeViewType === ViewType.HINZUFUEGEN);
 	const isGruppenprozesseOrHinzufuegenView = computed<boolean>(() => (props.activeViewType === ViewType.GRUPPENPROZESSE) || isHinzufuegenView.value);
 	const noFilteredEntries = computed<boolean>(() => props.manager().filtered().size() === 0);

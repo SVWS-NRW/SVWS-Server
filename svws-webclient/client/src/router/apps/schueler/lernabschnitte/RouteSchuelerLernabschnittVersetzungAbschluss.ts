@@ -1,12 +1,8 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
+import type { RouteLocationNormalized } from "vue-router";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeSchuelerLernabschnitte, type RouteSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnitte";
-
 import type { SchuelerLernabschnittVersetzungAbschlussProps } from "~/components/schueler/lernabschnitte/versetzung/SchuelerLernabschnittVersetzungAbschlussProps";
-import { api } from "~/router/Api";
 
 const SchuelerLernabschnittAllgemein = () => import("~/components/schueler/lernabschnitte/versetzung/SchuelerLernabschnittVersetzungAbschluss.vue");
 
@@ -21,19 +17,14 @@ export class RouteSchuelerLernabschnittVersetzungAbschluss extends RouteNode<any
 		];
 	}
 
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
-	}
-
 	public getProps(to: RouteLocationNormalized): SchuelerLernabschnittVersetzungAbschlussProps {
 		return {
 			manager: () => routeSchuelerLernabschnitte.data.manager,
 			patch: routeSchuelerLernabschnitte.data.patchLernabschnitt,
 			patchBemerkungen: routeSchuelerLernabschnitte.data.patchBemerkungen,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 
 }
 
 export const routeSchuelerLernabschnittVersetzungAbschluss = new RouteSchuelerLernabschnittVersetzungAbschluss();
-

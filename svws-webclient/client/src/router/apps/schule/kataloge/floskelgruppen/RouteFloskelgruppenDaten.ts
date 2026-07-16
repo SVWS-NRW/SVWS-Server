@@ -1,7 +1,6 @@
 import type { RouteLocationNormalized } from "vue-router";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import { api } from "~/router/Api";
 import type { RouteFloskelgruppen } from "~/router/apps/schule/kataloge/floskelgruppen/RouteFloskelgruppen";
 import { routeFloskelgruppen } from "~/router/apps/schule/kataloge/floskelgruppen/RouteFloskelgruppen";
 import type { FloskelgruppenDatenProps } from "~/components/schule/kataloge/floskelgruppen/daten/FloskelgruppenDatenProps";
@@ -21,7 +20,6 @@ export class RouteFloskelgruppenDaten extends RouteNode<any, RouteFloskelgruppen
 	public getProps(to: RouteLocationNormalized): FloskelgruppenDatenProps {
 		return {
 			manager: () => routeFloskelgruppen.data.manager,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			patch: routeFloskelgruppen.data.patch,
 		};
 	}

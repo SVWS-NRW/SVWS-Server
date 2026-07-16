@@ -43,12 +43,15 @@
 	import { BenutzerKompetenz, KatalogEntlassgrund } from "@core";
 	import { ref, computed, watch } from "vue";
 	import { EntlassgruendeModelProxy } from "~/components/schule/kataloge/entlassgruende/modelproxy/EntlassgruendeModelProxy";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<EntlassgruendeNeuProps>();
+	const benutzerState = useBenutzerState();
+
 	const initialData = ref<KatalogEntlassgrund>(Object.assign(new KatalogEntlassgrund(), { istSichtbar: true, sortierung: 32000 }));
 	const model = new EntlassgruendeModelProxy(() => initialData.value, () => props.manager().liste.list());
 	const isLoading = ref<boolean>(false);
-	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const hatKompetenzAdd = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const disabled = computed(() => !hatKompetenzAdd.value);
 
 	const isValid = computed<boolean>(() => model.getAlleFehler().isEmpty());

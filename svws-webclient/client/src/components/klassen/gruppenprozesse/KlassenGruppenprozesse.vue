@@ -71,19 +71,20 @@
 	import type { KlassenGruppenprozesseProps } from "./KlassenGruppenprozesseProps";
 	import type { StundenplanListeEintrag, List } from "@core";
 	import { ArrayList, BenutzerKompetenz, DateUtils, ReportingReportvorlage } from "@core";
-	import { SelectManager, useServerState } from "@ui";
+	import { SelectManager, useBenutzerState, useServerState } from "@ui";
 
 	type Action = 'druckKlasseListeSchuelerKontaktdatenErzieher' | 'druckKlasseListeSchuelerFotos' | 'druckKlasseListeSchuelerLeistungsdaten' | 'druckKlasseListeSchuelerLeistungsdatenDetailliert' | 'druckKlasseStundenplan' | 'delete' | '';
 
 	const props = defineProps<KlassenGruppenprozesseProps>();
+	const benutzerState = useBenutzerState();
 
 	const serverMode = useServerState().mode;
 
-	const hatKompetenzDrucken = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN) || props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)));
-	const hatKompetenzDruckenStundenplan = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN) && hatKompetenzDrucken.value));
-	const hatKompetenzDruckenSchuelerIndividualdaten = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN) && hatKompetenzDrucken.value));
-	const hatKompetenzDruckenSchuelerLeistungsdaten = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN) && hatKompetenzDrucken.value));
-	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
+	const hatKompetenzDrucken = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN) || benutzerState.benutzerHatKompetenz(BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)));
+	const hatKompetenzDruckenStundenplan = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN) && hatKompetenzDrucken.value));
+	const hatKompetenzDruckenSchuelerIndividualdaten = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN) && hatKompetenzDrucken.value));
+	const hatKompetenzDruckenSchuelerLeistungsdaten = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN) && hatKompetenzDrucken.value));
+	const hatKompetenzLoeschen = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
 
 	const hatIrgendwelcheKompetenzen = computed(() => hatKompetenzDrucken.value || hatKompetenzLoeschen.value || hatKompetenzDruckenStundenplan.value || hatKompetenzDruckenSchuelerIndividualdaten.value || hatKompetenzDruckenSchuelerLeistungsdaten.value);
 

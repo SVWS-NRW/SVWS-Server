@@ -117,16 +117,18 @@
 	import { JavaObject, SchulEintrag, Schulform, Herkunftsschulnummer, BenutzerKompetenz } from "@core";
 	import type { HerkunftsschulnummerKatalogEintrag, SchulenKatalogEintrag } from "@core";
 	import type { SchulenNeuProps } from "./SchulenNeuProps";
-	import { CoreTypeSelectManager, SelectManager, useAbschnittState, useSchuleState } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useAbschnittState, useBenutzerState, useSchuleState } from "@ui";
 	import { SchuleModelProxy } from "~/components/schule/kataloge/schulen/modelproxy/SchuleModelProxy";
 
 	const props = defineProps<SchulenNeuProps>();
+	const benutzerState = useBenutzerState();
 	const abschnittState = useAbschnittState();
 	const schuleState = useSchuleState();
+
 	const initialData = ref<SchulEintrag>(Object.assign(new SchulEintrag(), { sortierung: 32000, istSichtbar: true }));
 	const model = new SchuleModelProxy(() => initialData.value, () => props.manager().liste.list());
 	const isLoading = ref<boolean>(false);
-	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const hatKompetenzAdd = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const isInternal = ref<boolean>(true);
 	const selectedSchulenKatalogEintrag = ref<SchulenKatalogEintrag>();
 	const schuljahr = computed<number>(() => schuleState.schuljahr);

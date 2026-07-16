@@ -166,12 +166,13 @@
 
 	import { computed, ref, shallowRef, toRaw, watch } from "vue";
 	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone, DataTableColumn } from "@ui";
-	import { useRegionSwitch } from "@ui";
+	import { useBenutzerState, useRegionSwitch } from "@ui";
 	import type { StundenplanKlasseProps } from "./SStundenplanKlasseProps";
 	import type { List, StundenplanRaum } from "@core";
 	import { ArrayList, StundenplanKurs, StundenplanKlassenunterricht, Fach, StundenplanUnterricht, StundenplanZeitraster, HashSet, StundenplanSchiene, BenutzerKompetenz, ListUtils, Wochentag, StundenplanKlasse } from "@core";
 
 	const props = defineProps<StundenplanKlasseProps>();
+	const benutzerState = useBenutzerState();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
@@ -180,7 +181,7 @@
 	const schienSortierung = shallowRef<boolean>(true);
 	const auswahl = ref<StundenplanKlassenunterricht | StundenplanUnterricht | StundenplanKurs | undefined>();
 
-	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_AENDERN));
+	const readonly = computed<boolean>(() => !benutzerState.benutzerHatKompetenz(BenutzerKompetenz.STUNDENPLAN_AENDERN));
 
 	const schuljahr = computed<number>(() => props.stundenplanManager().getSchuljahr());
 

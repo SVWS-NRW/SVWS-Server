@@ -1,4 +1,4 @@
-import type { BenutzergruppeListeEintrag, List, BenutzerListeEintrag, BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerDaten } from "@core";
+import type { BenutzergruppeListeEintrag, List, BenutzerListeEintrag, BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe } from "@core";
 
 export interface BenutzergruppeProps {
 	auswahl: () => BenutzergruppeListeEintrag | undefined;
@@ -16,6 +16,5 @@ export interface BenutzergruppeProps {
 	removeBenutzerKompetenzGruppe: (kompetenzgruppe: BenutzerKompetenzGruppe) => Promise<boolean>
 	gotoBenutzer: (idBenutzer: number) => Promise<void>;
 	benutzerKompetenzen: (kompetenzgruppe: BenutzerKompetenzGruppe) => List<BenutzerKompetenz>;
-	aktuellerBenutzer: BenutzerDaten;
 	mapBenutzergruppen: Map<number, BenutzergruppeListeEintrag>
 }

@@ -57,13 +57,16 @@
 	import { ref, computed } from "vue";
 	import { BenutzerKompetenz, type List } from "@core";
 	import type { LernplattformenGruppenprozesseProps } from "~/components/schule/kataloge/lernplattformen/gruppenprozesse/LernplattformenGruppenprozesseProps";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<LernplattformenGruppenprozesseProps>();
+	const benutzerState = useBenutzerState();
+
 	const isLoading = ref<boolean>(false);
 	const warningModalIsShown = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
-	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
+	const hatKompetenzLoeschen = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 	const hatIrgendwelcheKompetenzen = computed<boolean>(() => hatKompetenzLoeschen.value);
 	const preConditionCheck = computed(() => props.deleteCheck());
 	const isPreConditionSectionVisible = computed<boolean>(() => (props.manager().liste.auswahlExists() || (status.value === undefined)));

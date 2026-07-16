@@ -51,9 +51,12 @@
 	import { computed } from "vue";
 	import { BenutzerKompetenz } from "@core";
 	import { OrtModelProxy } from "~/components/schule/kataloge/orte/modelproxy/OrtModelProxy";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<OrteDatenProps>();
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const benutzerState = useBenutzerState();
+
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const readonly = computed(() => !hatKompetenzUpdate.value);
 
 	const model = new OrtModelProxy(() => props.manager().daten(), () => props.manager().liste.list(), props.patch);

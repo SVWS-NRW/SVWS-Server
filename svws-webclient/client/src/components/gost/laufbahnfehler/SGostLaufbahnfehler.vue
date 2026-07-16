@@ -113,11 +113,12 @@
 
 	import { computed, ref, shallowRef } from 'vue';
 	import type { GostLaufbahnfehlerProps } from "./SGostLaufbahnfehlerProps";
-	import { useAbschnittState, useRegionSwitch, useReportingState, useServerState, type DataTableColumn, type SortByAndOrder } from '@ui';
+	import { useAbschnittState, useBenutzerState, useRegionSwitch, useReportingState, useServerState, type DataTableColumn, type SortByAndOrder } from '@ui';
 	import type { List, GostBelegpruefungErgebnisFehler } from '@core';
 	import { ArrayList, GostBelegpruefungsArt, GostBelegungsfehlerArt, SchuelerStatus, GostBelegpruefungsErgebnisse, BenutzerKompetenz, ReportingReportvorlage } from '@core';
 
 	const props = defineProps<GostLaufbahnfehlerProps>();
+	const benutzerState = useBenutzerState();
 	const serverState = useServerState();
 	const reportingState = useReportingState();
 
@@ -128,9 +129,9 @@
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const hatUpdateKompetenz = computed<boolean>(() => {
-		return props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN)
-			|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)
-				&& props.benutzerKompetenzenAbiturjahrgaenge.has(props.jahrgangsdaten().abiturjahr));
+		return benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN)
+			|| (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)
+				&& benutzerState.kompetenzenAbiturjahrgaenge.has(props.jahrgangsdaten().abiturjahr));
 	});
 
 	const columns: DataTableColumn[] = [

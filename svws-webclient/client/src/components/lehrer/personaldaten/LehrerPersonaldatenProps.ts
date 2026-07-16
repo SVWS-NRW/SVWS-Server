@@ -1,9 +1,8 @@
-import type { BenutzerKompetenz, FachDaten, LehrerUnterrichtsfach, LehrerFachrichtungEintrag, LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag, LehrerPersonalabschnittsdaten,
+import type { FachDaten, LehrerUnterrichtsfach, LehrerFachrichtungEintrag, LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag, LehrerPersonalabschnittsdaten,
 	LehrerPersonalabschnittsdatenAnrechnungsstunden, LehrerPersonaldaten, List, SchulEintrag } from "@core";
 import type { LehrerListeManager } from "@ui";
 
 export interface LehrerPersonaldatenProps {
-	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	lehrerListeManager: () => LehrerListeManager;
 	mapSchulen: () => Map<string, SchulEintrag>;
 	patchPersonaldaten: (data: Partial<LehrerPersonaldaten>) => Promise<boolean>;

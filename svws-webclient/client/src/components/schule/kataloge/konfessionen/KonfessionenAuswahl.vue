@@ -38,11 +38,13 @@
 	import { computed } from "vue";
 	import { BenutzerKompetenz, type ReligionEintrag } from "@core";
 	import type { KonfessionenAuswahlProps } from "~/components/schule/kataloge/konfessionen/KonfessionenAuswahlPops";
-	import { useRegionSwitch, ViewType } from "@ui";
+	import { useBenutzerState, useRegionSwitch, ViewType } from "@ui";
+
+	const props = defineProps<KonfessionenAuswahlProps>();
+	const benutzerState = useBenutzerState();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
-	const props = defineProps<KonfessionenAuswahlProps>();
-	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const readonly = computed<boolean>(() => !benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const isHinzufuegenView = computed<boolean>(() => props.activeViewType === ViewType.HINZUFUEGEN);
 	const isGruppenprozesseOrHinzufuegenView = computed<boolean>(() => (props.activeViewType === ViewType.GRUPPENPROZESSE) || isHinzufuegenView.value);
 	const noFilteredEntries = computed<boolean>(() => props.manager().filtered().size() === 0);

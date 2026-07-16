@@ -3,7 +3,6 @@ import type { RouteBeschaeftigungsarten } from "~/router/apps/schule/kataloge/be
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
-import { api } from "~/router/Api";
 import { routeBeschaeftigungsarten } from "~/router/apps/schule/kataloge/beschaeftigungsarten/RouteBeschaeftigungsarten";
 import type { BeschaeftigungsartenGruppenprozesseProps } from "~/components/schule/kataloge/beschaeftigungsarten/gruppenprozesse/BeschaeftigungsartenGruppenprozesseProps";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
@@ -28,7 +27,6 @@ export class RouteBeschaeftigungsartenGruppenprozesse extends RouteNode<any, Rou
 
 	public getProps(to: RouteLocationNormalized): BeschaeftigungsartenGruppenprozesseProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			delete: routeBeschaeftigungsarten.data.delete,
 			deleteCheck: routeBeschaeftigungsarten.data.deleteCheck,
 			manager: () => routeBeschaeftigungsarten.data.manager,

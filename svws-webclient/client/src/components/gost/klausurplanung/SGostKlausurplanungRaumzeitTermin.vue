@@ -80,7 +80,6 @@
 		<div class="w-full overflow-hidden">
 			<div class="h-full w-full grow grid gap-4 overflow-y-auto" style="grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));">
 				<s-gost-klausurplanung-raumzeit-raum v-for="raum in kMan().raumGetMengeByTerminIncludingFremdtermine(termin, zeigeAlleJahrgaenge() || kMan().isKlausurenInFremdraeumenByTermin(termin))"
-					:benutzer-kompetenzen
 					:key="raum.id"
 					:raum
 					:patch-klausurraum
@@ -105,9 +104,9 @@
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
 	import type { GostKlausurplanManager, GostKlausurtermin, GostKursklausur, GostKlausurraum, List, GostSchuelerklausurTermin, GostSchuelerklausurTerminRich } from '@core';
 	import { ArrayList, DateUtils, GostHalbjahr, GostKlausurraumblockungKonfiguration, KlausurraumblockungAlgorithmus, ListUtils, BenutzerKompetenz, GostKlausurraumRich } from '@core';
+	import { useBenutzerState } from '@ui';
 
 	const props = defineProps<{
-		benutzerKompetenzen: Set<BenutzerKompetenz>,
 		termin: GostKlausurtermin;
 		kMan: () => GostKlausurplanManager;
 		createKlausurraum: (raum: Partial<GostKlausurraum>) => Promise<void>;
@@ -124,7 +123,9 @@
 		gotoTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
 	}>();
 
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
+	const benutzerState = useBenutzerState();
+
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const _showModalAutomatischVerteilen = ref<boolean>(false);
 

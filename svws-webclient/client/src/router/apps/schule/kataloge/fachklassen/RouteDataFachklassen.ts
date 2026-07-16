@@ -9,6 +9,7 @@ import { ArrayList, BenutzerKompetenz } from "@core";
 import { routeFachklassenDaten } from "~/router/apps/schule/kataloge/fachklassen/RouteFachklassenDaten";
 import { routeFachklassenGruppenprozesse } from "~/router/apps/schule/kataloge/fachklassen/RouteFachklassenGruppenprozesse";
 import { routeFachklassenNeu } from "~/router/apps/schule/kataloge/fachklassen/RouteFachklassenNeu";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
@@ -60,7 +61,7 @@ export class RouteDataFachklassen extends RouteDataAuswahl<FachklassenListeManag
 	public	deleteCheck = (): { success: boolean, logs: Iterable<string> } => {
 
 		const errorLog = new ArrayList<string>();
-		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
+		if (!benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Fachklassen vor.');
 		}
 		if (!this.manager.liste.auswahlExists()) {

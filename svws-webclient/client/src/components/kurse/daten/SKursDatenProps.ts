@@ -1,8 +1,7 @@
-import type { KursDaten, Schueler, BenutzerKompetenz, KursLehrer, List } from "@core";
+import type { KursDaten, Schueler, KursLehrer, List } from "@core";
 import type { KursListeManager } from "~/states/kurse/KursListeManager";
 
 export interface KursDatenProps {
-	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	patch: (data: Partial<KursDaten>) => Promise<boolean>;
 	manager: () => KursListeManager;
 	setFilter: () => Promise<void>;

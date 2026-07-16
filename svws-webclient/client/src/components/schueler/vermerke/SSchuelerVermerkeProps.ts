@@ -1,4 +1,4 @@
-import type { BenutzerKompetenz, List, SchuelerVermerke, VermerkartEintrag } from "@core";
+import type { List, SchuelerVermerke, VermerkartEintrag } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface SchuelerVermerkeProps {
@@ -10,6 +10,5 @@ export interface SchuelerVermerkeProps {
 	apiStatus: ApiStatus;
 	autofocus: boolean;
 	filterNurSichtbare: boolean,
-	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	setFilterNurSichtbare: (value: boolean) => Promise<void>,
 }

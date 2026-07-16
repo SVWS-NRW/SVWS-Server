@@ -1,5 +1,4 @@
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { ViewType } from "@ui";
@@ -28,7 +27,6 @@ export class RouteSchuelerAllgemeinesGruppenprozesse extends RouteNode<any, Rout
 		return {
 			apiStatus: api.status,
 			mapStundenplaene: routeSchueler.data.mapStundenplaene,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			schuelerListeManager: () => routeSchueler.data.manager,
 			deleteSchueler: routeSchueler.data.delete,
 			deleteSchuelerCheck: routeSchueler.data.deleteSchuelerCheck,

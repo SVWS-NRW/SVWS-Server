@@ -1,8 +1,5 @@
 import type { RouteLocationNormalized, RouteParamsRawGeneric } from "vue-router";
-
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
-import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { routeStundenplan, type RouteStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 import type { StundenplanGruppenprozesseProps } from "~/components/stundenplan/gruppenprozesse/SStundenplanGruppenprozesseProps";
@@ -26,7 +23,6 @@ export class RouteStundenplanGruppenprozesse extends RouteNode<any, RouteStunden
 
 	public getProps(to: RouteLocationNormalized): StundenplanGruppenprozesseProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			stundenplanListeManager: () => routeStundenplan.data.manager,
 			deleteStundenplan: routeStundenplan.data.delete,
 		};

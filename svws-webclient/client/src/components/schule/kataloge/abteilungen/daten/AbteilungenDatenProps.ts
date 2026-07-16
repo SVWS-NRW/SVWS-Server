@@ -1,10 +1,9 @@
-import type { Abteilung, AbteilungKlassenzuordnung, BenutzerKompetenz, List } from "@core";
+import type { Abteilung, AbteilungKlassenzuordnung, List } from "@core";
 import type { AbteilungenListeManager } from "@ui";
 
 export interface AbteilungenDatenProps {
 	goToLehrer: (idAbteilungsleiter: number) => Promise<void>;
 	manager: () => AbteilungenListeManager;
-	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	isReadonly: boolean;
 	isAbteilungImZukuenftigenAbschnitt: boolean;
 	patch: (data: Partial<Abteilung>) => Promise<boolean>;

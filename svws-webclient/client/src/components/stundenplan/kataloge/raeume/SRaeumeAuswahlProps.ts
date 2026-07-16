@@ -1,4 +1,4 @@
-import type { BenutzerKompetenz, Raum } from "@core";
+import type { Raum } from "@core";
 import type { RaumListeManager } from "@ui";
 
 export interface RaeumeAuswahlProps {
@@ -7,5 +7,4 @@ export interface RaeumeAuswahlProps {
 	deleteEintraege: (eintraege: Iterable<Raum>) => Promise<void>;
 	gotoEintrag: (eintrag: Raum) => Promise<void>;
 	setKatalogRaeumeImportJSON: (formData: FormData) => Promise<void>;
-	benutzerKompetenzen: Set<BenutzerKompetenz>;
 }

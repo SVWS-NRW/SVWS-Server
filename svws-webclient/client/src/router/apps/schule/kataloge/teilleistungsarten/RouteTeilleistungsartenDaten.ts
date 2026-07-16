@@ -3,7 +3,6 @@ import { routeTeilleistungsarten, type RouteTeilleistungsarten } from "./RouteTe
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized } from "vue-router";
 import type { TeilleistungsartenDatenProps } from "~/components/schule/kataloge/teilleistungsarten/daten/TeilleistungsartenDatenProps";
-import { api } from "~/router/Api";
 
 const TeilleistungsartenDaten = () =>
 	import("~/components/schule/kataloge/teilleistungsarten/daten/TeilleistungsartenDaten.vue");
@@ -21,7 +20,6 @@ class RouteTeilleistungsartenDaten extends RouteNode<any, RouteTeilleistungsarte
 		return {
 			patch: routeTeilleistungsarten.data.patch,
 			manager: () => routeTeilleistungsarten.data.manager,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 }

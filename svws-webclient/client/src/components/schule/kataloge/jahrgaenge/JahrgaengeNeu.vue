@@ -80,15 +80,17 @@
 	import type { JahrgaengeNeuProps } from "./JahrgaengeNeuProps";
 	import { computed, ref, watch } from "vue";
 	import { BenutzerKompetenz, Bildungsstufe, Jahrgaenge, JahrgangsDaten, Schulgliederung } from "@core";
-	import { CoreTypeSelectManager, SelectManager, useAbschnittState, useSchuleState } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useAbschnittState, useBenutzerState, useSchuleState } from "@ui";
 	import { JahrgangModelProxy } from "~/components/schule/kataloge/jahrgaenge/modelproxy/JahrgangModelProxy";
 
 	const props = defineProps<JahrgaengeNeuProps>();
+	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 	const abschnittState = useAbschnittState();
+
 	const initialData = ref<JahrgangsDaten>(Object.assign(new JahrgangsDaten(), { istSichtbar: true, sortierung: 32000, anzahlRestabschnitte: 0 }));
 	const model = new JahrgangModelProxy(() => initialData.value, () => props.manager().liste.list(), abschnittState.auswahl.schuljahr);
-	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const hatKompetenzAdd = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 	const isLoading = ref<boolean>(false);
 	const jahrgaenge = computed<JahrgangsDaten[]>(() => [...props.manager().liste.list()]);

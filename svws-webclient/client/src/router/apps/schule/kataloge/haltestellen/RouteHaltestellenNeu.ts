@@ -5,7 +5,6 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
-import { api } from "~/router/Api";
 import { routeHaltestellen } from "~/router/apps/schule/kataloge/haltestellen/RouteHaltestellen";
 
 const HaltestellenNeu = () => import("~/components/schule/kataloge/haltestellen/HaltestellenNeu.vue");
@@ -27,7 +26,6 @@ export class RouteHaltestellenNeu extends RouteNode<any, RouteHaltestellen> {
 			add: routeHaltestellen.data.add,
 			goToDefaultView: routeHaltestellen.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};
 	}

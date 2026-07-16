@@ -1,13 +1,9 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
 import { BenutzerKompetenz, GostHalbjahr, ServerMode, DeveloperNotificationException } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
-
 import type { GostKlausurplanungNachschreiberProps } from "~/components/gost/klausurplanung/SGostKlausurplanungNachschreiberProps";
 import { routeError } from "~/router/error/RouteError";
-import { api } from "~/router/Api";
 import { schulformenGymOb } from "~/router/RouteHelper";
 
 const SGostKlausurplanungNachschreiber = () => import("~/components/gost/klausurplanung/SGostKlausurplanungNachschreiber.vue");
@@ -48,7 +44,6 @@ export class RouteGostKlausurplanungNachschreiber extends RouteNode<any, RouteGo
 
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungNachschreiberProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			halbjahr: routeGostKlausurplanung.data.halbjahr,
 			kMan: () => routeGostKlausurplanung.data.manager,

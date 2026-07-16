@@ -1,11 +1,8 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-
 import { BenutzerKompetenz, DeveloperNotificationException, ServerMode } from "@core";
-
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
-
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeGostFachwahlen } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlen";
 import { routeGostFaecher } from "~/router/apps/gost/faecher/RouteGostFaecher";
@@ -14,9 +11,7 @@ import { routeGostKlausurplanung } from "~/router/apps/gost/klausurplanung/Route
 import { routeGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKursplanung";
 import { routeGostLaufbahnfehler } from "~/router/apps/gost/laufbahnfehler/RouteGostLaufbahnfehler";
 import { routeGostAbitur } from "~/router/apps/gost/abitur/RouteGostAbitur";
-
 import { RouteDataGost } from "~/router/apps/gost/RouteDataGost";
-
 import type { TabData } from "@ui";
 import type { GostAppProps } from "~/components/gost/SGostAppProps";
 import type { GostAuswahlProps } from "~/components/gost/SGostAuswahlProps";
@@ -123,7 +118,6 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 
 	public getAuswahlProps(to: RouteLocationNormalized): GostAuswahlProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			auswahl: this.data.auswahl,
 			jahrgangsdaten: () => this.data.auswahl === undefined ? undefined : this.data.jahrgangsdaten,
 			mapAbiturjahrgaenge: () => this.data.mapAbiturjahrgaenge,

@@ -7,7 +7,6 @@ import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeApp } from "~/router/apps/RouteApp";
-import { api } from "~/router/Api";
 
 const LehrerNeu = () => import("~/components/lehrer/LehrerNeu.vue");
 
@@ -35,7 +34,6 @@ export class RouteLehrerNeu extends RouteNode<any, RouteLehrer> {
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 			orteById: routeApp.cache.kataloge.orteById,
 			ortsteileById: routeApp.cache.kataloge.ortsteileById,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

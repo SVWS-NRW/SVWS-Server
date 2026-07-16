@@ -116,13 +116,15 @@
 
 	import type { AbteilungenDatenProps } from "~/components/schule/kataloge/abteilungen/daten/AbteilungenDatenProps";
 	import type { DataTableColumn } from "@ui";
-	import { SelectManager, ViewType } from "@ui";
+	import { SelectManager, useBenutzerState, ViewType } from "@ui";
 	import type { AbteilungKlassenzuordnung, KlassenDatenMinimal, List } from "@core";
 	import { Arrays, BenutzerKompetenz, HashMap } from "@core";
 	import { computed, ref } from "vue";
 	import { AbteilungenModelProxy } from "~/components/schule/kataloge/abteilungen/modelproxy/AbteilungenModelProxy";
 
 	const props = defineProps<AbteilungenDatenProps>();
+	const benutzerState = useBenutzerState();
+
 	const columns: DataTableColumn[] = [{ key: "kuerzel", label: "Kürzel" }, { key: "beschreibung", label: "Beschreibung", span: 3 }];
 
 	const isLoading = ref<boolean>(false);
@@ -130,7 +132,7 @@
 	const klassenToDelete = ref<KlassenDatenMinimal[]>([]);
 	const klassenToAdd = ref<KlassenDatenMinimal[]>([]);
 
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 	const readonly = computed(() => props.isReadonly || !hatKompetenzUpdate.value);
 	const availableKlassenToAdd = computed<List<KlassenDatenMinimal>>(() => props.manager().getAvailableKlassenToAdd());
 

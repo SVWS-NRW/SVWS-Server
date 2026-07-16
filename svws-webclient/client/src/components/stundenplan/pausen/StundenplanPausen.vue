@@ -90,12 +90,13 @@
 	import { computed, ref } from "vue";
 	import type { Wochentag, List, StundenplanPausenzeit, StundenplanKlasse, StundenplanPausenaufsicht, StundenplanLehrer } from "@core";
 	import { StundenplanPausenaufsichtBereich, StundenplanPausenaufsichtBereichUpdate, HashMap3D, ArrayList, BenutzerKompetenz } from "@core";
-	import { useRegionSwitch } from "@ui";
+	import { useBenutzerState, useRegionSwitch } from "@ui";
 	import type { StundenplanPausenProps } from "./StundenplanPausenProps";
 
 	type PausenzeitBereichTyp = { pauseID: number; aufsichtsbereichID: number; typ: number, lehrerID?: number };
 
 	const props = defineProps<StundenplanPausenProps>();
+	const benutzerState = useBenutzerState();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
@@ -105,7 +106,7 @@
 	const dragOverPausenzeit = ref<PausenzeitBereichTyp>();
 	const dropZone = ref<boolean>(false);
 
-	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_AENDERN));
+	const hatUpdateKompetenz = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.STUNDENPLAN_AENDERN));
 
 	function onDrag(data: StundenplanLehrer | undefined, fromPausenzeit?: PausenzeitBereichTyp) {
 		dragLehrer.value = data;

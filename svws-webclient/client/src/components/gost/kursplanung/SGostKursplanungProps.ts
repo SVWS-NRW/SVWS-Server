@@ -1,13 +1,11 @@
 import type { WritableComputedRef } from "vue";
 import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostFaecherManager,
 	GostHalbjahr, LehrerListeEintrag, GostStatistikFachwahl, GostBlockungsergebnisKurs, GostJahrgangsdaten,
-	GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungRegelUpdate, JavaSet, BenutzerKompetenz } from "@core";
+	GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungRegelUpdate, JavaSet } from "@core";
 import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface GostKursplanungProps {
-	benutzerKompetenzen: Set<BenutzerKompetenz>,
-	benutzerKompetenzenAbiturjahrgaenge: Set<number>;
 	getDatenmanager: () => GostBlockungsdatenManager;
 	getKursauswahl: () => JavaSet<number>,
 	setKursauswahl: (value: JavaSet<number>) => void;

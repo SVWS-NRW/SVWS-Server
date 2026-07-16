@@ -39,9 +39,12 @@
 	import type { SchulenGruppenprozesseProps } from "./SchulenGruppenprozesseProps";
 	import type { List } from "@core";
 	import { BenutzerKompetenz } from "@core";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<SchulenGruppenprozesseProps>();
-	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
+	const benutzerState = useBenutzerState();
+
+	const hatKompetenzLoeschen = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 	const hatkeineErforderlicheKompetenz = computed<boolean>(() => !hatKompetenzLoeschen.value);
 	const isLoading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();

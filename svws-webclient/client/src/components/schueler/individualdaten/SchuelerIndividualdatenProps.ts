@@ -1,5 +1,5 @@
 import type { SchuelerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag, FoerderschwerpunktEintrag,
-	ReligionEintrag, SchulEintrag, BenutzerKompetenz, Telefonart, SchuelerTelefon, List, Haltestelle, Fahrschuelerart } from "@core";
+	ReligionEintrag, SchulEintrag, Telefonart, SchuelerTelefon, List, Haltestelle, Fahrschuelerart } from "@core";
 import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 
 export interface SchuelerIndividualdatenProps {
@@ -17,7 +17,6 @@ export interface SchuelerIndividualdatenProps {
 	addSchuelerTelefoneintrag: (data: Partial<SchuelerTelefon>, idSchueler: number) => Promise<void>;
 	patchSchuelerTelefoneintrag: (data: Partial<SchuelerTelefon>, idEintrag: number) => Promise<void>;
 	deleteSchuelerTelefoneintrage: (idsEintraege: List<number>) => Promise<void>;
-	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	autofocus: boolean;
 	zeigeAlles: boolean;
 }

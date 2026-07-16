@@ -47,15 +47,17 @@
 	import { computed, ref, watch } from "vue";
 	import { BenutzerKompetenz, OrtsteilKatalogEintrag } from "@core";
 	import type { OrtsteileNeuProps } from "~/components/schule/kataloge/ortsteile/OrtsteileNeuProps";
-	import { SelectManager } from "@ui";
+	import { SelectManager, useBenutzerState } from "@ui";
 	import { OrtsteilModelProxy } from "~/components/schule/kataloge/ortsteile/modelproxy/OrtsteilModelProxy";
 
 	const props = defineProps<OrtsteileNeuProps>();
+	const benutzerState = useBenutzerState();
+
 	const isLoading = ref<boolean>(false);
 
 	const initialData = ref<OrtsteilKatalogEintrag>(Object.assign(new OrtsteilKatalogEintrag(), { istSichtbar: true, sortierung: 32000 }));
 	const model = new OrtsteilModelProxy(() => initialData.value, props.manager);
-	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const hatKompetenzAdd = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 
 	const ortManager = new SelectManager({

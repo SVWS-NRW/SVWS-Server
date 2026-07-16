@@ -1,7 +1,6 @@
 import type { KlassenDaten, KlassenDatenMinimal, KlassenListeEintrag, LehrerListeEintrag, List, Schueler, Schuljahresabschnitt,
 	SimpleOperationResponse, StundenplanListeEintrag } from "@core";
 import { ArrayList, BenutzerKompetenz, DeveloperNotificationException } from "@core";
-
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { routeKlassenDaten } from "~/router/apps/klassen/RouteKlassenDaten";
@@ -17,6 +16,7 @@ import type { RouteParamsRawGeneric } from "vue-router";
 import { KlassenListeManager } from "~/states/klassen/KlassenListeManager";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
 interface RouteStateKlassen extends RouteStateAuswahlInterface<KlassenListeManager> {
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
@@ -132,7 +132,7 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 
 	public async updateMapStundenplaene() {
 		const mapStundenplaene = new Map<number, StundenplanListeEintrag>();
-		if (api.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN)) {
+		if (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN)) {
 			const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, this.idSchuljahresabschnitt);
 			for (const l of listStundenplaene) {
 				mapStundenplaene.set(l.id, l);

@@ -1,16 +1,13 @@
 import type { RouteLocationNormalized, RouteParams } from "vue-router";
-
 import { BenutzerKompetenz, DeveloperNotificationException, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeSchuelerLernabschnitte, type RouteSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnitte";
-
 import type { SchuelerLernabschnittGostKlausurenProps } from "~/components/schueler/lernabschnitte/gostKlausuren/SchuelerLernabschnittGostKlausurenProps";
-import { api } from "~/router/Api";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeSchuelerLernabschnittAllgemein } from "./RouteSchuelerLernabschnittAllgemein";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
 const SchuelerLernabschnittGostKlausuren = () => import("~/components/schueler/lernabschnitte/gostKlausuren/SchuelerLernabschnittGostKlausuren.vue");
 
@@ -40,8 +37,8 @@ export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<any, Rout
 			if (routeSchueler.data.manager.hasDaten()) {
 				const abiturjahr = routeSchueler.data.manager.auswahl().abiturjahrgang;
 				if (((abiturjahr !== null) && routeSchueler.data.manager.abiturjahrgaenge.get(abiturjahr))
-				&& (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN)
-					|| (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION) && api.benutzerKompetenzenAbiturjahrgaenge.has(abiturjahr)))) {
+				&& (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN)
+					|| (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION) && benutzerStateImpl.kompetenzenAbiturjahrgaenge.has(abiturjahr)))) {
 					if (routeSchuelerLernabschnitte.data.hatGymOb) {
 						return false;
 					}
@@ -69,4 +66,3 @@ export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<any, Rout
 }
 
 export const routeSchuelerLernabschnittGostKlausuren = new RouteSchuelerLernabschnittGostKlausuren();
-

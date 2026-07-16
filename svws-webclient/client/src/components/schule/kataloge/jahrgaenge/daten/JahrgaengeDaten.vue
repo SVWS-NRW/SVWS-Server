@@ -77,14 +77,15 @@
 	import { Schulgliederung, Jahrgaenge, BenutzerKompetenz, Bildungsstufe } from "@core";
 	import type { JahrgangsDaten } from "@core";
 	import type { JahrgaengeDatenProps } from "./JahrgaengeDatenProps";
-	import { CoreTypeSelectManager, SelectManager, useSchuleState } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import { JahrgangModelProxy } from "~/components/schule/kataloge/jahrgaenge/modelproxy/JahrgangModelProxy";
 
 	const props = defineProps<JahrgaengeDatenProps>();
+	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 
 	const model = new JahrgangModelProxy(() => props.manager().daten(), () => props.manager().liste.list(), schuleState.abschnitt.schuljahr, props.patch);
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const readonly = computed(() => !hatKompetenzUpdate.value);
 
 	const availableFolgejahrgaenge = computed<JahrgangsDaten[]>(() => [...props.manager().liste.list()].filter(j => j.id !== props.manager().daten().id));

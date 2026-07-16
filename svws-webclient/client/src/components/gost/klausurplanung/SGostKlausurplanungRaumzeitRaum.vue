@@ -14,8 +14,8 @@
 					headless
 					no-items-text="Keine Räume im Stundenplan gefunden"
 					class="grow"
-					@update:model-value="(value : StundenplanRaum | undefined) => void patchKlausurraum(raum.id, { idStundenplanRaum: value !== undefined ? value.id : null })"
-					:item-text="(item: StundenplanRaum) => item !== null ? (item.kuerzel + ' (' + item.groesse+ ' Plätze, ' + item.beschreibung + ')') : ''"
+					@update:model-value="(value) => void patchKlausurraum(raum.id, { idStundenplanRaum: ((value !== undefined) && (value !== null)) ? value.id : null })"
+					:item-text="(item) => item !== null ? (item.kuerzel + ' (' + item.groesse+ ' Plätze, ' + item.beschreibung + ')') : ''"
 					:items="raeumeVerfuegbar" />
 				<span class="inline-flex items-center shrink-0">
 					<svws-ui-tooltip class="text-ui-danger font-bold text-headline-md" v-if="raumHatFehler()">
@@ -44,7 +44,7 @@
 						<div class="svws-ui-td" role="cell">
 							<svws-ui-tooltip :hover="false" :indicator="false" autosize>
 								<template #content>
-									<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin="kMan().terminOrNullByKursklausur(klausur)!" :benutzer-kompetenzen />
+									<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin="kMan().terminOrNullByKursklausur(klausur)!" />
 								</template>
 								<span class="svws-ui-badge hover:opacity-75" :style="`color: var(--color-text-uistatic); background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 								<svws-ui-tooltip>
@@ -79,7 +79,7 @@
 						<div class="svws-ui-td" role="cell">
 							<svws-ui-tooltip :hover="false" :indicator="false" autosize>
 								<template #content>
-									<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin="kMan().terminOrNullByKursklausur(klausur)!" :benutzer-kompetenzen />
+									<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin="kMan().terminOrNullByKursklausur(klausur)!" />
 								</template>
 								<span class="svws-ui-badge hover:opacity-75" :style="`color: var(--color-text-uistatic); background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 								<svws-ui-tooltip>
@@ -122,14 +122,13 @@
 
 <script setup lang="ts">
 
-	import type { GostKlausurplanManager, GostKlausurraum, GostKlausurtermin, GostSchuelerklausurTermin, StundenplanRaum } from '@core';
+	import type { GostKlausurplanManager, GostKlausurraum, GostKlausurtermin, GostSchuelerklausurTermin } from '@core';
 	import { BenutzerKompetenz, DateUtils, GostHalbjahr, GostKursklausur } from '@core';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
-	import type { DataTableColumn } from "@ui";
+	import { useBenutzerState, type DataTableColumn } from "@ui";
 	import { computed } from 'vue';
 
 	const props = defineProps<{
-		benutzerKompetenzen: Set<BenutzerKompetenz>,
 		raum: GostKlausurraum;
 		kMan: () => GostKlausurplanManager;
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>) => Promise<boolean>;
@@ -144,7 +143,9 @@
 		// terminStartzeit?: string;
 	}>();
 
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
+	const benutzerState = useBenutzerState();
+
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const raumHatFehler = () => (props.raum.idStundenplanRaum !== null && anzahlSuS() > props.kMan().stundenplanraumGetByKlausurraum(props.raum).groesse) || props.raum.idStundenplanRaum === null;
 

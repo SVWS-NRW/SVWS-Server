@@ -4,8 +4,7 @@
 			<schueler-betriebe-table :manager
 				:delete-betriebe
 				v-model:selected-betrieb="selectedBetrieb"
-				@create="openModal()"
-				:benutzer-kompetenzen />
+				@create="openModal()" />
 			<schueler-betriebe-create-form :manager
 				:create-modal-is-open
 				:add
@@ -14,8 +13,7 @@
 				:manager
 				:selected-betrieb
 				:patch
-				:go-to-betrieb
-				:benutzer-kompetenzen />
+				:go-to-betrieb />
 		</svws-ui-content-card>
 	</div>
 </template>

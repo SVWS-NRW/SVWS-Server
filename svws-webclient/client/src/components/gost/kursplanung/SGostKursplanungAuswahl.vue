@@ -30,18 +30,20 @@
 <script setup lang="ts">
 	import { computed } from 'vue';
 	import type { GostKursplanungAuswahlProps } from './SGostKursplanungAuswahlProps';
-	import { useRegionSwitch } from '@ui';
+	import { useBenutzerState, useRegionSwitch } from '@ui';
 	import { BenutzerKompetenz, GostHalbjahr } from "@core";
 
 	const props = defineProps<GostKursplanungAuswahlProps>();
+	const benutzerState = useBenutzerState();
+
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const hatUpdateKompetenz = computed<boolean>(() => {
 		const abiturjahr = props.jahrgangsdaten()?.abiturjahr;
-		return (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN)
-			|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)
+		return (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN)
+			|| (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)
 				&& abiturjahr !== undefined
-				&& props.benutzerKompetenzenAbiturjahrgaenge.has(abiturjahr)));
+				&& benutzerState.kompetenzenAbiturjahrgaenge.has(abiturjahr)));
 	});
 
 	function istBlockungPersistiert(row: GostHalbjahr): boolean {

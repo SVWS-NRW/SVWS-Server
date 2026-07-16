@@ -2,7 +2,6 @@ import { RouteNode } from "~/router/RouteNode";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
-import { api } from "~/router/Api";
 import type { RouteFachklassen } from "~/router/apps/schule/kataloge/fachklassen/RouteFachklassen";
 import { routeFachklassen } from "~/router/apps/schule/kataloge/fachklassen/RouteFachklassen";
 import type { FachklassenNeuProps } from "~/components/schule/kataloge/fachklassen/FachklassenNeuProps";
@@ -29,7 +28,6 @@ export class RouteFachklassenNeu extends RouteNode<any, RouteFachklassen> {
 			manager: () => routeFachklassen.data.manager,
 			add: routeFachklassen.data.add,
 			gotoDefaultView: routeFachklassen.data.gotoDefaultView,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};

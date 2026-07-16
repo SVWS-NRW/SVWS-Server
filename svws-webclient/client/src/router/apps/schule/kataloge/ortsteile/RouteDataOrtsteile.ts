@@ -3,14 +3,14 @@ import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
 import type { JavaSet, List, OrtsteilKatalogEintrag, SimpleOperationResponse } from "@core";
 import { ArrayList, BenutzerKompetenz } from "@core";
-import { ViewType } from "@ui";
+import { OrtsteileListeManager, ViewType } from "@ui";
 import { api } from "~/router/Api";
-import { OrtsteileListeManager } from "../../../../../../../ui/src/ui/manager/kataloge/OrtsteileListeManager";
 import { routeOrtsteileGruppenprozesse } from "~/router/apps/schule/kataloge/ortsteile/RouteOrtsteileGruppenprozesse";
 import { routeOrtsteileNeu } from "~/router/apps/schule/kataloge/ortsteile/RouteOrtsteileNeu";
 import { routeOrtsteileDaten } from "~/router/apps/schule/kataloge/ortsteile/RouteOrtsteileDaten";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
 
 const defaultState = {
@@ -72,7 +72,7 @@ export class RouteDataOrtsteile extends RouteDataAuswahl<OrtsteileListeManager, 
 	deleteCheck = (): { success: boolean, logs: Iterable<string> } => {
 		const errorLog = new ArrayList<string>();
 
-		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
+		if (!benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Ortsteilen vor.');
 		}
 

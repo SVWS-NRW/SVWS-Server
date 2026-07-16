@@ -116,7 +116,6 @@
 				<div class="h-full w-full grow grid gap-4 overflow-y-auto" style="grid-template-columns: repeat(auto-fill, minmax(45rem, 1fr));">
 					<template v-if="termine.size()">
 						<s-gost-klausurplanung-nachschreiber-termin v-for="termin of termine" :key="termin.id"
-							:benutzer-kompetenzen
 							:termin="() => termin"
 							:class="{'is-drop-zone': dragData !== undefined && kMan().konfliktPaarGetMengeTerminAndSchuelerklausurtermin(termin, dragData as GostSchuelerklausurTermin).isEmpty()}"
 							:k-man
@@ -153,7 +152,11 @@
 	import { computed, ref, onMounted } from 'vue';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type { GostKlausurplanungNachschreiberProps } from "./SGostKlausurplanungNachschreiberProps";
-	import type { DataTableColumn } from "@ui";
+	import { useBenutzerState, type DataTableColumn } from "@ui";
+
+	const props = defineProps<GostKlausurplanungNachschreiberProps>();
+
+	const benutzerState = useBenutzerState();
 
 	const showModalTerminGrund = ref<boolean>(false);
 	const showModalAutomatischBlocken = ref<boolean>(false);
@@ -166,9 +169,8 @@
 
 	const loading = ref<boolean>(false);
 
-	const props = defineProps<GostKlausurplanungNachschreiberProps>();
 
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const dragData = ref<GostKlausurplanungDragData>(undefined);
 	const terminSelected = ref<GostKlausurtermin | undefined>(undefined);

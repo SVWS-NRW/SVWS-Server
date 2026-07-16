@@ -1,4 +1,4 @@
-import type { Ankreuzkompetenz, BenutzerKompetenz, List } from "@core";
+import type { Ankreuzkompetenz, List } from "@core";
 import type { AnkreuzkompetenzenListeManager } from "@ui";
 
 export interface AnkreuzkompetenzenDatenProps {
@@ -6,5 +6,4 @@ export interface AnkreuzkompetenzenDatenProps {
 	manager: () => AnkreuzkompetenzenListeManager;
 	addJahrgaengezuordnungen: (idAnkreuzkompetenz: number, idsJahrgaenge: List<number>) => Promise<void>;
 	deleteJahrgaengezuordnungen: (ids: List<number>) => Promise<void>;
-	benutzerKompetenzen: Set<BenutzerKompetenz>;
 }

@@ -1,18 +1,15 @@
 import type { ComputedRef, Ref } from "vue";
 import { computed, defineComponent, ref } from "vue";
 import type { RouteComponent, RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric, RouteRecordName, RouteRecordRaw } from "vue-router";
-
 import type { Schulform } from "@core";
 import { ServerMode, BenutzerKompetenz, DeveloperNotificationException } from "@core";
-
 import type { TabData } from "@ui";
 import { TabManager, Checkpoint, ViewType } from "@ui";
-
-import { api } from "~/router/Api";
 import type { RouteData } from "./RouteData";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { serverStateImpl } from "~/states/ServerStateImpl";
 import { RouteManager } from "./RouteManager";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
 /**
  * Diese abstrakte Klasse ist die Basisklasse aller Knoten für
@@ -369,7 +366,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	public get children(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._children) {
-			if (api.authenticated && (!node.mode.checkServerMode(serverStateImpl.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
+			if (benutzerStateImpl.authenticated && (!node.mode.checkServerMode(serverStateImpl.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
 				continue;
 			}
 			result.push(node);
@@ -396,7 +393,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	public get menu(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._menu) {
-			if (api.authenticated && (!node.mode.checkServerMode(serverStateImpl.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
+			if (benutzerStateImpl.authenticated && (!node.mode.checkServerMode(serverStateImpl.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
 				continue;
 			}
 			result.push(node);
@@ -571,7 +568,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @returns true, falls die Schulform erlaubt ist und ansonsten false
 	 */
 	public hatSchulform(): boolean {
-		return api.authenticated && this._schulformenErlaubt.has(schuleStateImpl.schulform);
+		return benutzerStateImpl.authenticated && this._schulformenErlaubt.has(schuleStateImpl.schulform);
 	}
 
 	/**
@@ -581,16 +578,16 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @returns true, falls der Benutzer eine benötigte Kompetenz hat und ansonsten false
 	 */
 	public hatEineKompetenz(): boolean {
-		if (!api.authenticated) {
+		if (!benutzerStateImpl.authenticated) {
 			return false;
 		}
 		if (this._kompetenzenBenoetigt.has(BenutzerKompetenz.KEINE)) {
 			return true;
 		}
-		if (api.benutzerIstAdmin) {
+		if (benutzerStateImpl.istAdmin) {
 			return true;
 		}
-		return api.benutzerHatEineKompetenz(this._kompetenzenBenoetigt);
+		return benutzerStateImpl.benutzerHatEineKompetenz(this._kompetenzenBenoetigt);
 	}
 
 	/**
@@ -607,7 +604,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 */
 	public hidden(params?: RouteParams): RouteLocationRaw | false {
 		// Prüfen, ob die aktuelle Schulform und die Kompetenzen des angemdelteten Benutzers die Route erlaubt oder nicht
-		if (api.authenticated && (this.name !== "init")) {
+		if (benutzerStateImpl.authenticated && (this.name !== "init")) {
 			if ((!this.hatSchulform()) || (!this.hatEineKompetenz())) {
 				return this.parent?.getRoute() ?? false;
 			}

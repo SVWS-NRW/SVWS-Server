@@ -5,7 +5,6 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
-import { api } from "~/router/Api";
 import { routeKindergaerten } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaerten";
 
 const KindergaertenNeu = () => import("~/components/schule/kataloge/kindergaerten/KindergaertenNeu.vue");
@@ -27,7 +26,6 @@ export class RouteKindergaertenNeu extends RouteNode<any, RouteKindergaerten> {
 			add: routeKindergaerten.data.add,
 			goToDefaultView: routeKindergaerten.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};
 	}

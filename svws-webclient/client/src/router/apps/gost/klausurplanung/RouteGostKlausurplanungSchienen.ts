@@ -1,13 +1,9 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-
 import { BenutzerKompetenz, GostHalbjahr, ServerMode, DeveloperNotificationException } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
-
 import type { GostKlausurplanungSchienenProps } from "~/components/gost/klausurplanung/SGostKlausurplanungSchienenProps";
 import { routeError } from "~/router/error/RouteError";
-import { api } from "~/router/Api";
 import { schulformenGymOb } from "~/router/RouteHelper";
 
 const SGostKlausurplanungSchienen = () => import("~/components/gost/klausurplanung/SGostKlausurplanungSchienen.vue");
@@ -19,7 +15,7 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<any, RouteGostKla
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN,
-		], "gost.klausurplanung.schienen", String.raw`schienen/:idtermin(d+)?`, SGostKlausurplanungSchienen);
+		], "gost.klausurplanung.schienen", "schienen/:idtermin(d+)?", SGostKlausurplanungSchienen);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schienen";
@@ -44,7 +40,6 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<any, RouteGostKla
 
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungSchienenProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			halbjahr: routeGostKlausurplanung.data.halbjahr,
 			kMan: () => routeGostKlausurplanung.data.manager,

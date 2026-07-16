@@ -5,7 +5,6 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
-import { api } from "~/router/Api";
 import { routeFoerderschwerpunkte } from "~/router/apps/schule/kataloge/foerderschwerpunkte/RouteFoerderschwerpunkte";
 
 const FoerderschwerpunkteNeu = () => import("~/components/schule/kataloge/foerderschwerpunkte/FoerderschwerpunkteNeu.vue");
@@ -27,7 +26,6 @@ export class RouteFoerderschwerpunkteNeu extends RouteNode<any, RouteFoerderschw
 			add: routeFoerderschwerpunkte.data.addFoerderschwerpunkt,
 			goToDefaultView: routeFoerderschwerpunkte.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};
 	}

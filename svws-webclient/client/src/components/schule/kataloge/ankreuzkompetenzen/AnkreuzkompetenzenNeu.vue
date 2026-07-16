@@ -77,16 +77,17 @@
 	import type { JahrgangsDaten, List } from "@core";
 	import { Ankreuzkompetenz, Schulgliederung, BenutzerKompetenz, Arrays } from "@core";
 	import type { DataTableColumn } from "@ui";
-	import { CoreTypeSelectManager, SelectManager, useSchuleState } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import { AnkreuzkompetenzenModelProxy } from "~/components/schule/kataloge/ankreuzkompetenzen/modelproxy/AnkreuzkompetenzenModelProxy";
 
 	const props = defineProps<AnkreuzkompetenzenNeuProps>();
+	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 
 	const data = ref<Ankreuzkompetenz>(Object.assign(new Ankreuzkompetenz(), { istSichtbar: true, sortierung: 32000 }));
 	const model = new AnkreuzkompetenzenModelProxy(() => data.value, () => props.manager().liste.list(), () => props.manager().faecherById, schuleState.abschnitt.schuljahr);
 	const isLoading = ref<boolean>(false);
-	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const hatKompetenzAdd = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 	const jahrgaengeToBeAdded = ref<JahrgangsDaten[]>([]);
 	const jahrgaengeIdsToBeAdded = computed<List<number>>(() => Arrays.asList(jahrgaengeToBeAdded.value.map(jahrgang => jahrgang.id)));

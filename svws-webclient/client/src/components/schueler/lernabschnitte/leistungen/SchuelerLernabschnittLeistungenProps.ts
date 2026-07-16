@@ -1,11 +1,8 @@
-import type { BenutzerDaten, BenutzerKompetenz, List, SchuelerLeistungsdaten, SchuelerLernabschnittsdaten } from "@core";
+import type { List, SchuelerLeistungsdaten, SchuelerLernabschnittsdaten } from "@core";
 import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 import type { SchuelerLernabschnittManager } from "../SchuelerLernabschnittManager";
 
 export interface SchuelerLernabschnittLeistungenProps {
-	benutzerdaten: BenutzerDaten;
-	benutzerKompetenzen: Set<BenutzerKompetenz>,
-	benutzerKompetenzenKlassen: Set<number>;
 	schuelerListeManager: () => SchuelerListeManager;
 	manager: () => SchuelerLernabschnittManager;
 	patch: (data: Partial<SchuelerLernabschnittsdaten>) => Promise<void>;

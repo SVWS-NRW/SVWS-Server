@@ -38,12 +38,15 @@
 	import { BenutzerKompetenz } from "@core";
 	import { TeilleistungsartenModelProxy } from "~/components/schule/kataloge/teilleistungsarten/modelproxy/TeilleistungsartenModelProxy";
 	import type { TeilleistungsartenDatenProps } from './TeilleistungsartenDatenProps';
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<TeilleistungsartenDatenProps>();
+	const benutzerState = useBenutzerState();
+
 	const modelProxy = new TeilleistungsartenModelProxy(() => props.manager().daten(), () => props.manager().liste.list(), props.patch);
 
 	const hatKompetenzUpdate = computed<boolean>(() => {
-		return props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	});
 	const readonly = computed(() => !hatKompetenzUpdate.value);
 </script>

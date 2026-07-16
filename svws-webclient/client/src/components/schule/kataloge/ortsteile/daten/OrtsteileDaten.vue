@@ -39,11 +39,13 @@
 	import type { OrtsteileDatenProps } from "~/components/schule/kataloge/ortsteile/daten/OrtsteileDatenProps";
 	import { computed } from "vue";
 	import { BenutzerKompetenz } from "@core";
-	import { SelectManager } from "@ui";
+	import { SelectManager, useBenutzerState } from "@ui";
 	import { OrtsteilModelProxy } from "~/components/schule/kataloge/ortsteile/modelproxy/OrtsteilModelProxy";
 
 	const props = defineProps<OrtsteileDatenProps>();
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const benutzerState = useBenutzerState();
+
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const readonly = computed(() => !hatKompetenzUpdate.value);
 
 	const model = new OrtsteilModelProxy(() => props.manager().auswahl(), props.manager, props.patch);

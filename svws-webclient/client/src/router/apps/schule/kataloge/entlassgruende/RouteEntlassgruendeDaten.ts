@@ -4,7 +4,6 @@ import type { RouteEntlassgruende } from "~/router/apps/schule/kataloge/entlassg
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeEntlassgruende } from "~/router/apps/schule/kataloge/entlassgruende/RouteEntlassgruende";
-import { api } from "~/router/Api";
 
 const EntlassgruendeDaten = () => import("~/components/schule/kataloge/entlassgruende/daten/EntlassgruendeDaten.vue");
 
@@ -21,7 +20,6 @@ export class RouteEntlassgruendeDaten extends RouteNode<any, RouteEntlassgruende
 	public getProps(to: RouteLocationNormalized): EntlassgruendeDatenProps {
 		return {
 			manager: () => routeEntlassgruende.data.manager,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			patch: routeEntlassgruende.data.patch,
 		};
 	}

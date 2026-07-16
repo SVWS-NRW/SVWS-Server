@@ -109,7 +109,6 @@
 									</span>
 									<template #content>
 										<s-gost-klausurplanung-termin :termin
-											:benutzer-kompetenzen
 											in-tooltip
 											:goto-kalenderdatum
 											:goto-raumzeit-termin
@@ -135,7 +134,7 @@
 	import type { SGostKlausurplanungKalenderStundenplanAnsichtProps } from "./SGostKlausurplanungKalenderStundenplanAnsichtProps";
 	import type { GostKlausurtermin, Wochentag, StundenplanPausenaufsicht, List, StundenplanPausenzeit } from "@core";
 	import { DateUtils, Fach, GostHalbjahr, BenutzerKompetenz } from "@core";
-	import { useAbschnittState } from "@ui";
+	import { useAbschnittState, useBenutzerState } from "@ui";
 
 	const wochentage = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
 
@@ -145,11 +144,13 @@
 		useDragAndDrop: false,
 		dragData: () => undefined,
 	});
+
+	const benutzerState = useBenutzerState();
 	const abschnittState = useAbschnittState();
 
 	const stundenplanManager = (datum: string) => props.kMan().stundenplanManagerGetByAbschnittAndDatumOrException(props.abschnitt!.id, datum);
 
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const terminBezeichnung = (termin: GostKlausurtermin) => {
 		if (termin.bezeichnung !== null && termin.bezeichnung.length > 0) {

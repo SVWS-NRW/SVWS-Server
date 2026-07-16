@@ -1,9 +1,8 @@
-import type { BenutzerKompetenz, Betrieb, BetriebeAnsprechpartner, List } from "@core";
+import type { Betrieb, BetriebeAnsprechpartner, List } from "@core";
 import type { BetriebeListeManager } from "@ui";
 
 export interface BetriebeDatenProps {
 	manager: () => BetriebeListeManager,
-	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	patch: (data: Partial<Betrieb>) => Promise<boolean>;
 	addAnsprechpartner: (ansprechpartner: Partial<BetriebeAnsprechpartner>) => Promise<void>;
 	deleteAnsprechpartner: (ids: List<number>) => Promise<void>;

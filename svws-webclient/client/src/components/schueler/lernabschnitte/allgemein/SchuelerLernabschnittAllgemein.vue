@@ -97,20 +97,21 @@
 	import { computed } from 'vue';
 	import type { FoerderschwerpunktEintrag, JahrgangsDaten, KlassenDaten, LehrerListeEintrag, OrganisationsformKatalogEintrag, SchuelerLernabschnittsdaten } from "@core";
 	import { BilingualeSprache, Foerderschwerpunkt, Klassenart, Schulgliederung, BenutzerKompetenz, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform } from "@core";
-	import { CoreTypeSelectManager, SelectManager, useSchuleState } from '@ui';
+	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState } from '@ui';
 	import type { SchuelerLernabschnittAllgemeinProps } from "./SchuelerLernabschnittAllgemeinProps";
 	import { SchuelerLernabschnittAllgemeinModelProxy } from "./modelproxy/SchuelerLernabschnittAllgemeinModelProxy";
 
 	const props = defineProps<SchuelerLernabschnittAllgemeinProps>();
+	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 
 	const primarschulformen = new Set<Schulform>([
 		Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.S, Schulform.KS, Schulform.V,
 	]);
 
-	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN)
-		|| ((props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN))
-			&& props.benutzerKompetenzenKlassen.has(props.manager().schuelerGet().idKlasse))
+	const hatUpdateKompetenz = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN)
+		|| ((benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN))
+			&& benutzerState.kompetenzenKlasse.has(props.manager().schuelerGet().idKlasse))
 	);
 	const schulform = computed<Schulform>(() => schuleState.schulform);
 	const istPrimarSchulform = computed<boolean>(() => primarschulformen.has(schulform.value));

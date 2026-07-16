@@ -6,8 +6,8 @@ import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteS
 import { RouteDataSchuelerVermerke } from "~/router/apps/schueler/vermerke/RouteDataSchuelerVermerke";
 import type { SchuelerVermerkeProps } from "~/components/schueler/vermerke/SSchuelerVermerkeProps";
 import { api } from "~/router/Api";
-import { ConfigElement } from "../../../../../../ui/src/utils/Config";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import { ConfigElement } from "@ui";
 
 
 const SSchuelerVermerke = () => import("~/components/schueler/vermerke/SSchuelerVermerke.vue");
@@ -65,7 +65,6 @@ export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, 
 			apiStatus: api.status,
 			autofocus: routeSchueler.data.autofocus,
 			filterNurSichtbare: this.data.filterNurSichtbare,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			setFilterNurSichtbare: this.data.setFilterNurSichtbare,
 		};
 	}

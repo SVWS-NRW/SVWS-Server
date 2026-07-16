@@ -55,12 +55,15 @@
 	import { computed, ref, watch } from "vue";
 	import { BenutzerKompetenz, OrtKatalogEintrag } from "@core";
 	import { OrtModelProxy } from "~/components/schule/kataloge/orte/modelproxy/OrtModelProxy";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<OrteNeuProps>();
+	const benutzerState = useBenutzerState();
+
 	const initialData = ref<OrtKatalogEintrag>(Object.assign(new OrtKatalogEintrag(), { istSichtbar: true, sortierung: 32000 }));
 	const model = new OrtModelProxy(() => initialData.value, () => props.manager().liste.list());
 	const isLoading = ref<boolean>(false);
-	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const hatKompetenzAdd = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 
 	const formIsValid = computed(() => model.getAlleFehler().isEmpty());

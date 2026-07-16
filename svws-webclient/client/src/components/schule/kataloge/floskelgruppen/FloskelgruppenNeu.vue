@@ -34,10 +34,11 @@
 	import type { FloskelgruppenNeuProps } from "./FloskelgruppenNeuProps";
 	import { computed, ref, watch } from "vue";
 	import { Floskelgruppenart, BenutzerKompetenz, Floskelgruppe } from "@core";
-	import { CoreTypeSelectManager, useSchuleState } from "@ui";
+	import { CoreTypeSelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import { FloskelgruppeModelProxy } from "~/components/schule/kataloge/floskelgruppen/modelproxy/FloskelgruppeModelProxy";
 
 	const props = defineProps<FloskelgruppenNeuProps>();
+	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 
 	const initialData = ref<Floskelgruppe>(new Floskelgruppe());
@@ -47,7 +48,7 @@
 		schuleState.abschnitt.schuljahr
 	);
 	const isLoading = ref<boolean>(false);
-	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const hatKompetenzAdd = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 
 	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
 

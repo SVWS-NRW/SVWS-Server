@@ -1,10 +1,7 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 import type { GostKursplanungUmwahlansichtProps } from "~/components/gost/kursplanung/SGostKursplanungUmwahlansichtProps";
 import type { KursplanungSchuelerAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahlProps";
-
 import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, ServerMode } from "@core";
-import { ConfigElement } from "../../../../../../ui/src/utils/Config";
-
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { schulformenGymOb } from "~/router/RouteHelper";
@@ -16,6 +13,7 @@ import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individuald
 import { routeError } from "~/router/error/RouteError";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import { ConfigElement } from "@ui";
 
 const SGostKursplanungUmwahlansicht = () => import("~/components/gost/kursplanung/SGostKursplanungUmwahlansicht.vue");
 const SGostKursplanungSchuelerAuswahl = () => import("~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahl.vue");
@@ -145,8 +143,6 @@ export class RouteGostKursplanungSchueler extends RouteNode<any, RouteGostKurspl
 
 	public getProps(to: RouteLocationNormalized): GostKursplanungUmwahlansichtProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
-			benutzerKompetenzenAbiturjahrgaenge: api.benutzerKompetenzenAbiturjahrgaenge,
 			hatBlockung: routeGostKursplanung.data.hatBlockung && routeGostKursplanung.data.hatErgebnis,
 			hatErgebnis: routeGostKursplanung.data.hatErgebnis,
 			regelnUpdate: routeGostKursplanung.data.regelnUpdate,

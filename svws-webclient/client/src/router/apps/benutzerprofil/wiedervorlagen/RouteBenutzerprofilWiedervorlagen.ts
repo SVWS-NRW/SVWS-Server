@@ -34,7 +34,6 @@ export class RouteBenutzerprofilWiedervorlagen extends RouteNode<RouteDataBenutz
 	public getProps(to: RouteLocationNormalized): WiedervorlagenAppProps {
 
 		return {
-			benutzer: () => this.data.benutzer,
 			goToPerson: this.data.goToPerson,
 		};
 	}

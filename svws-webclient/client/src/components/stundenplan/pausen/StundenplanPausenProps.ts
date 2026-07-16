@@ -1,9 +1,8 @@
-import type { BenutzerKompetenz, List, StundenplanAufsichtsbereich, StundenplanManager, StundenplanPausenaufsicht, StundenplanPausenaufsichtBereichUpdate, StundenplanPausenzeit } from "@core";
+import type { List, StundenplanAufsichtsbereich, StundenplanManager, StundenplanPausenaufsicht, StundenplanPausenaufsichtBereichUpdate, StundenplanPausenzeit } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface StundenplanPausenProps {
-	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	stundenplanManager: () => StundenplanManager;
 	patchPausenzeit: (daten: Partial<StundenplanPausenzeit>, id: number) => Promise<void>;
 	removePausenzeiten: (pausenzeiten: StundenplanPausenzeit[]) => Promise<void>;

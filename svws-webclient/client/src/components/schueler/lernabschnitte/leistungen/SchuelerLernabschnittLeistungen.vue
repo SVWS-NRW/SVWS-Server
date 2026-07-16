@@ -128,9 +128,10 @@
 	import type { SchuelerLernabschnittLeistungenProps } from "./SchuelerLernabschnittLeistungenProps";
 	import type { SchuelerLeistungsdaten, List, KursDaten, FachDaten, LehrerListeEintrag } from "@core";
 	import { Note, ZulaessigeKursart, ArrayList, Fach, BenutzerKompetenz, BenutzerTyp, Jahrgaenge } from "@core";
-	import { useSchuleState } from "@ui";
+	import { useBenutzerState, useSchuleState } from "@ui";
 
 	const props = defineProps<SchuelerLernabschnittLeistungenProps>();
+	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 
 	const istGymOb = computed<boolean>(() => Jahrgaenge.data().getWertBySchluessel(props.schuelerListeManager().auswahl().jahrgang)?.istGymOb() ?? false);
@@ -140,15 +141,15 @@
 		if (hatUpdateKompetenz.value) {
 			result.push({ key: "auswahl", label: "Auswahl", fixedWidth: 1.5 });
 		}
-		result.push({ key: "fachID", label: "Fach", span: 3, sortable: false, minWidth: 10 });
-		result.push({ key: "kursID", label: "Kurs", span: 1, sortable: false, minWidth: 10 });
-		result.push({ key: "kursart", label: "Kursart", span: 1, sortable: false, fixedWidth: 6 });
+		result.push({ key: "fachID", label: "Fach", span: 3, sortable: false, minWidth: 10 },
+			{ key: "kursID", label: "Kurs", span: 1, sortable: false, minWidth: 10 },
+			{ key: "kursart", label: "Kursart", span: 1, sortable: false, fixedWidth: 6 });
 		if (istGymOb.value) {
 			result.push({ key: "abifach", label: "Abifach", span: 1, sortable: false, fixedWidth: 3 });
 		}
-		result.push({ key: "lehrerID", label: "Lehrer", span: 2, sortable: false, minWidth: 10 });
-		result.push({ key: "noteQuartal", label: "Quartalsnote", tooltip: "Quartalsnote", sortable: false, fixedWidth: 5 });
-		result.push({ key: "note", label: "Note", sortable: false, fixedWidth: 5 });
+		result.push({ key: "lehrerID", label: "Lehrer", span: 2, sortable: false, minWidth: 10 },
+			{ key: "noteQuartal", label: "Quartalsnote", tooltip: "Quartalsnote", sortable: false, fixedWidth: 5 },
+			{ key: "note", label: "Note", sortable: false, fixedWidth: 5 });
 		return result;
 	});
 
@@ -159,15 +160,15 @@
 	 */
 	const hatUpdateKompetenz = computed<boolean>(() => {
 		// Wenn der Benutzer generelle Rechte hat Leistungsdaten zu ändern, dann ist hier keine weitere Prüfung nötig, er hat die allgemeine Update-Kompetenz
-		if (props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN)) {
+		if (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN)) {
 			return true;
 		}
 		// Wenn der Benutzer auch keine funktionsbezogenen Rechte hat, dann hat er keine allgemeine Update-Kompetenz
-		if (!props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN)) {
+		if (!benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN)) {
 			return false;
 		}
 		// Wenn er keine funktionsbezogenen Rechte auf die Klasse hat, dann hat er keine allgemeine Update-Kompetenz
-		if (!props.benutzerKompetenzenKlassen.has(props.schuelerListeManager().auswahl().idKlasse)) {
+		if (!benutzerState.kompetenzenKlasse.has(props.schuelerListeManager().auswahl().idKlasse)) {
 			return false;
 		}
 		// Wenn der Lernabschnitt nicht der aktuelle der Schule ist oder in der Zukunft liegt, dann hat er keine allgemeine Update-Kompetenz
@@ -197,7 +198,7 @@
 			return false;
 		}
 		// Prüfe, ob der aktuelle Benutzer der Fachlehrer mit der übergebenen ID ist
-		return (props.benutzerdaten.typ === BenutzerTyp.LEHRER.id) && (props.benutzerdaten.typID === idFachlehrer);
+		return (benutzerState.benutzerdaten.typ === BenutzerTyp.LEHRER.id) && (benutzerState.benutzerdaten.typID === idFachlehrer);
 	}
 
 	const leistungen = computed<List<SchuelerLeistungsdaten>>(() => {

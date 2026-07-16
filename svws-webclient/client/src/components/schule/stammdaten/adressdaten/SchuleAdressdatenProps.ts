@@ -1,4 +1,4 @@
-import type { BenutzerKompetenz, List, SchuleStammdaten, Teilstandort } from "@core";
+import type { List, SchuleStammdaten, Teilstandort } from "@core";
 
 export interface SchuleAdressdatenProps {
 	patch: (data: Partial<SchuleStammdaten>) => Promise<void>;
@@ -6,6 +6,4 @@ export interface SchuleAdressdatenProps {
 	addTeilstandorteintrag: (data: Partial<Teilstandort>) => Promise<void>;
 	patchTeilstandorteintrag: (data: Partial<Teilstandort>, adrMerkmal: string) => Promise<void>;
 	deleteTeilstandorteintraege: (adrMerkmale: List<string>) => Promise<void>;
-	benutzerKompetenzen: Set<BenutzerKompetenz>;
-	benutzerIstAdmin: boolean;
 }

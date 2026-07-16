@@ -43,9 +43,12 @@
 	import { computed, ref, watch } from "vue";
 	import { BenutzerKompetenz, Erzieherart } from "@core";
 	import { ErzieherartenModelProxy } from "~/components/schule/kataloge/erzieherarten/modelproxy/ErzieherartenModelProxy";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<ErzieherartenNeuProps>();
-	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const benutzerState = useBenutzerState();
+
+	const hatKompetenzAdd = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 	const initialData = ref<Erzieherart>(Object.assign(new Erzieherart(), { istSichtbar: true, sortierung: 32000 }));
 	const model = new ErzieherartenModelProxy(() => initialData.value, () => props.manager());

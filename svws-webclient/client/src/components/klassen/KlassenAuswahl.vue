@@ -57,13 +57,15 @@
 	import type { KlassenAuswahlProps } from "./KlassenAuswahlProps";
 	import type { JahrgangsDaten, KlassenListeEintrag, LehrerListeEintrag, Schulgliederung } from "@core";
 	import { BenutzerKompetenz } from "@core";
-	import { useAbschnittState, useRegionSwitch, ViewType } from "@ui";
+	import { useAbschnittState, useBenutzerState, useRegionSwitch, ViewType } from "@ui";
 
 	const props = defineProps<KlassenAuswahlProps>();
-	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+	const benutzerState = useBenutzerState();
 	const abschnittState = useAbschnittState();
 
-	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+
+	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
 
 	const columns = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc", span: 0.5 },

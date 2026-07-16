@@ -164,15 +164,16 @@
 
 	import type { Ref } from 'vue';
 	import { watch, computed, ref, onMounted, onUnmounted, triggerRef } from 'vue';
-	import type { DataTableColumn } from "@ui";
+	import { useBenutzerState, type DataTableColumn } from "@ui";
 	import type { Comparator, GostFach, List, ValidatorFehler } from "@core";
 	import { GostHalbjahr, BenutzerKompetenz, ArrayList, GostKlausurvorgabe, Fach, ListUtils } from "@core";
 	import type { GostKlausurplanungVorgabenProps } from "./SGostKlausurplanungVorgabenProps";
 	import { ValidatorGostKlausurdauer } from "./validation/ValidatorGostKlausurdauer";
 
 	const props = defineProps<GostKlausurplanungVorgabenProps>();
+	const benutzerState = useBenutzerState();
 
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const vorgaben = () => props.kMan().vorgabeGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
 

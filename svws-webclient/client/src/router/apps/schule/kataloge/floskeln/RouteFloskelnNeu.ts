@@ -3,7 +3,6 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
-import { api } from "~/router/Api";
 import type { RouteFloskeln } from "~/router/apps/schule/kataloge/floskeln/RouteFloskeln";
 import { routeFloskeln } from "~/router/apps/schule/kataloge/floskeln/RouteFloskeln";
 import type { FloskelnNeuProps } from "~/components/schule/kataloge/floskeln/FloskelnNeuProps";
@@ -27,7 +26,6 @@ export class RouteFloskelnNeu extends RouteNode<any, RouteFloskeln> {
 			add: routeFloskeln.data.add,
 			goToDefaultView: routeFloskeln.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};
 	}

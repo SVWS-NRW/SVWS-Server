@@ -7,9 +7,9 @@
 					Wiedervorlagen
 				</h2>
 				<span class="svws-subline inline-flex gap-x-3 gap-y-1 items-center">
-					<span class="mt-1">{{ benutzer().anzeigename }}</span>
+					<span class="mt-1">{{ benutzerState.benutzerdaten.anzeigename }}</span>
 					<svws-ui-badge type="light" title="ID" class="font-mono m-0" size="small">
-						ID: {{ benutzer().id }}
+						ID: {{ benutzerState.benutzerdaten.id }}
 					</svws-ui-badge>
 				</span>
 			</div>
@@ -121,14 +121,13 @@
 
 <script setup lang="ts">
 	import { computed, ref } from "vue";
-	import { GridManager, useWiedervorlageState } from "@ui";
+	import { GridManager, useBenutzerState, useWiedervorlageState, type TableActions } from "@ui";
 	import type { WiedervorlageEintrag } from "@core";
 	import { getDateFromDateTime, formatToLocalDate, formatDateToDateTime } from "~/utils/date";
 	import type { WiedervorlagenAppProps } from "./WiedervorlagenAppProps";
-	import type { TableActions } from "../../../../../ui/src/ui/controls/tablegrid/UiTableActions.vue";
 
 	const props = defineProps<WiedervorlagenAppProps>();
-
+	const benutzerState = useBenutzerState();
 	const wiedervorlageState = useWiedervorlageState();
 
 	const hasWiedervorlagen = computed(() => wiedervorlageState.wiedervorlagenListe.size() > 0);

@@ -28,13 +28,15 @@
 	import type { LehrerIndividualdatenGruppenprozesseProps } from "~/components/lehrer/individualdaten/LehrerIndividualdatenGruppenprozesseProps";
 	import { computed, ref } from "vue";
 	import { BenutzerKompetenz } from "@core";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<LehrerIndividualdatenGruppenprozesseProps>();
+	const benutzerState = useBenutzerState();
 
 	const loading = ref<boolean>(false);
 
-	const hatKompetenzAnsehen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRERDATEN_ANSEHEN));
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRERDATEN_AENDERN));
+	const hatKompetenzAnsehen = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRERDATEN_ANSEHEN));
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRERDATEN_AENDERN));
 
 	async function patchPendingStates() {
 		loading.value = true;

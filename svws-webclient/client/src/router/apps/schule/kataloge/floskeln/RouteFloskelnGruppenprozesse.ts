@@ -2,7 +2,6 @@ import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
-import { api } from "~/router/Api";
 import type { RouteFloskeln } from "~/router/apps/schule/kataloge/floskeln/RouteFloskeln";
 import { routeFloskeln } from "~/router/apps/schule/kataloge/floskeln/RouteFloskeln";
 import type { FloskelnGruppenprozesseProps } from "~/components/schule/kataloge/floskeln/gruppenprozesse/FloskelnGruppenprozesseProps";
@@ -28,7 +27,6 @@ export class RouteFloskelnGruppenprozesse extends RouteNode<any, RouteFloskeln> 
 
 	public getProps(to: RouteLocationNormalized): FloskelnGruppenprozesseProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			delete: routeFloskeln.data.delete,
 			manager: () => routeFloskeln.data.manager,
 		};

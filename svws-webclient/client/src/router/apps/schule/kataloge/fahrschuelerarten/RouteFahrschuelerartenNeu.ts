@@ -5,7 +5,6 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
-import { api } from "~/router/Api";
 import { routeFahrschuelerarten } from "~/router/apps/schule/kataloge/fahrschuelerarten/RouteFahrschuelerarten";
 
 const FahrschuelerartenNeu = () => import("~/components/schule/kataloge/fahrschuelerarten/FahrschuelerartenNeu.vue");
@@ -27,7 +26,6 @@ export class RouteFahrschuelerartenNeu extends RouteNode<any, RouteFahrschuelera
 			add: routeFahrschuelerarten.data.add,
 			goToDefaultView: routeFahrschuelerarten.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};
 	}

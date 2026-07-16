@@ -1,6 +1,4 @@
-import { type BenutzerDaten, type WiedervorlageEintrag } from "@core";
-
-import { api } from "~/router/Api";
+import type { WiedervorlageEintrag } from "@core";
 import { RouteManager } from "~/router/RouteManager";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
@@ -14,10 +12,6 @@ export class RouteDataBenutzerprofilWiedervorlagen extends RouteData<RouteStateI
 
 	public constructor() {
 		super(defaultState);
-	}
-
-	public get benutzer(): BenutzerDaten {
-		return api.benutzerdaten;
 	}
 
 	/**

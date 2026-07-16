@@ -32,15 +32,16 @@
 	import type { AbteilungenGruppenprozesseProps } from "./AbteilungenGruppenprozesseProps";
 	import type { List } from "@core";
 	import { BenutzerKompetenz } from "@core";
-	import { useAbschnittState } from "@ui";
+	import { useAbschnittState, useBenutzerState } from "@ui";
 
 	const abschnittState = useAbschnittState();
 	const props = defineProps<AbteilungenGruppenprozesseProps>();
+	const benutzerState = useBenutzerState();
 
 	const isLoading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
-	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const hatKompetenzLoeschen = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 	const isPreConditionSectionVisible = computed<boolean>(() => (props.manager().liste.auswahlExists() || (status.value === undefined)));
 	const deleteAbteilungenInFolgeAbschnitt = computed({
 		get: () => props.manager().deleteAbteilungenInFolgeAbschnitt,

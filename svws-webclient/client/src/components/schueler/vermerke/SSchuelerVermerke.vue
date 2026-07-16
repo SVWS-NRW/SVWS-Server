@@ -56,17 +56,18 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import { SelectManager } from "@ui";
+	import { SelectManager, useBenutzerState } from "@ui";
 	import type { List, SchuelerVermerke, VermerkartEintrag } from "@core";
 	import { ArrayList, BenutzerKompetenz, DateUtils } from "@core";
 	import type { SchuelerVermerkeProps } from "./SSchuelerVermerkeProps";
 	import { SchuelerVermerkeModelProxy } from "./modelProxy/SchuelerVermerkeModelProxy";
 
 	const props = defineProps<SchuelerVermerkeProps>();
+	const benutzerState = useBenutzerState();
 
 	const lastAddedVermerk = ref<SchuelerVermerke>();
 
-	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_EINWILLIGUNGEN_AENDERN));
+	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_EINWILLIGUNGEN_AENDERN));
 	const readonly = computed<boolean>(() => !hatKompetenzAendern.value);
 	const filteredVermerke = computed<List<SchuelerVermerke>>(() => {
 		if (!props.filterNurSichtbare) {

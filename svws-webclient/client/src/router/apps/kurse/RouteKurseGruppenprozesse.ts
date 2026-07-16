@@ -1,7 +1,5 @@
 import type { RouteLocationNormalized, RouteParamsRawGeneric } from "vue-router";
-
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
@@ -27,7 +25,6 @@ export class RouteKurseGruppenprozesse extends RouteNode<any, RouteKurse> {
 	public getProps(to: RouteLocationNormalized): KurseGruppenprozesseProps {
 		return {
 			apiStatus: api.status,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeKurse.data.manager,
 			deleteKurse: routeKurse.data.delete,
 		};

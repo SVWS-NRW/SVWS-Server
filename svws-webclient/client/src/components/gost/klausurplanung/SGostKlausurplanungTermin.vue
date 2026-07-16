@@ -89,7 +89,7 @@
 									<div class="svws-ui-td" role="cell">
 										<svws-ui-tooltip :hover="false" :indicator="false" :keep-open autosize>
 											<template #content>
-												<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin :patch-klausur :create-schuelerklausur-termin @modal="keepOpen = $event" :benutzer-kompetenzen />
+												<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin :patch-klausur :create-schuelerklausur-termin @modal="keepOpen = $event" />
 											</template>
 											<span class="svws-ui-badge hover:opacity-75" :style="`color: var(--color-text-uistatic); background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 											<svws-ui-tooltip>
@@ -162,9 +162,9 @@
 	import type { GostKlausurplanungDragData } from "./SGostKlausurplanung";
 	import type { GostKlausurplanManager, GostKursklausur, GostKlausurtermin, GostSchuelerklausurTermin } from "@core";
 	import { GostHalbjahr, BenutzerKompetenz, DateUtils } from "@core";
+	import { useBenutzerState } from "@ui";
 
 	const props = withDefaults(defineProps<{
-		benutzerKompetenzen: Set<BenutzerKompetenz>,
 		termin: GostKlausurtermin;
 		kMan: () => GostKlausurplanManager;
 		klausurCssClasses?: (klausur: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => void;
@@ -203,10 +203,12 @@
 		inTooltip: false,
 	});
 
+	const benutzerState = useBenutzerState();
+
 	const stundenplanVorhanden = computed<boolean>(() => props.termin.datum === null || props.kMan().stundenplanManagerGetByTerminOrNull(props.termin) !== null);
 
 	const keepOpen = ref<boolean>(false);
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const kursklausuren = () => props.kMan().kursklausurMitNachschreibernGetMengeByTermin(props.termin, props.showKursklausurenNachschreiber);
 	const schuelerklausurtermine = () => props.kMan().schuelerklausurterminNtGetMengeByTermin(props.termin);

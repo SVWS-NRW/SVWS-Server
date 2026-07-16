@@ -1,10 +1,8 @@
-import type { ApiFile, BenutzerKompetenz, GostBelegpruefungsArt, GostBelegpruefungsErgebnisse, GostJahrgangsdaten, List } from "@core";
+import type { ApiFile, GostBelegpruefungsArt, GostBelegpruefungsErgebnisse, GostJahrgangsdaten, List } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface GostLaufbahnfehlerProps {
-	benutzerKompetenzen: Set<BenutzerKompetenz>,
-	benutzerKompetenzenAbiturjahrgaenge: Set<number>;
 	listBelegpruefungsErgebnisse: () => List<GostBelegpruefungsErgebnisse>;
 	gostBelegpruefungsArt: () => GostBelegpruefungsArt;
 	setGostBelegpruefungsArt: (value: GostBelegpruefungsArt) => Promise<void>;

@@ -1,6 +1,5 @@
 import type { RouteLocationRaw } from "vue-router";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import type { RouteLernplattformen } from "~/router/apps/schule/kataloge/lernplattformen/RouteLernplattformen";
@@ -28,7 +27,6 @@ export class RouteLernplattformenGruppenprozesse extends RouteNode<any, RouteLer
 
 	public getProps(): LernplattformenGruppenprozesseProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeLernplattformen.data.manager,
 			delete: routeLernplattformen.data.delete,
 			deleteCheck: routeLernplattformen.data.deleteCheck,

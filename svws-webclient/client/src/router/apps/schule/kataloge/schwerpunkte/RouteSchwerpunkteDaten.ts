@@ -3,7 +3,6 @@ import { routeSchwerpunkte, type RouteSchwerpunkte } from "./RouteSchwerpunkte";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized } from "vue-router";
 import type { SchwerpunkteDatenProps } from "~/components/schule/kataloge/schwerpunkte/daten/SchwerpunkteDatenProps";
-import { api } from "~/router/Api";
 
 const SchwerpunkteDaten = () => import("~/components/schule/kataloge/schwerpunkte/daten/SchwerpunkteDaten.vue");
 
@@ -20,7 +19,6 @@ class RouteSchwerpunkteDaten extends RouteNode<any, RouteSchwerpunkte> {
 		return {
 			patch: routeSchwerpunkte.data.patch,
 			manager: () => routeSchwerpunkte.data.manager,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 }

@@ -7,6 +7,8 @@ import { ReportingStateKey } from "../../../ui/src/states/ReportingState";
 import { SchuleStateKey } from "../../../ui/src/states/SchuleState";
 import { ServerStateKey } from "../../../ui/src/states/ServerState";
 import { WiedervorlageStateKey } from "../../../ui/src/states/WiedervorlageState";
+import { NotenmodulStateKey } from "../../../ui/src/states/NotenmodulState";
+import { BenutzerStateKey } from "../../../ui/src/states/BenutzerState";
 import { configStateImpl } from "./ConfigStateImpl";
 import { abschnittStateImpl } from "./AbschnittStateImpl";
 import { auskunftStateImpl } from "./AuskunftStateImpl";
@@ -15,13 +17,14 @@ import { reportingStateImpl } from "./ReportingStateImpl";
 import { schuleStateImpl } from "./SchuleStateImpl";
 import { serverStateImpl } from "./ServerStateImpl";
 import { wiedervorlageStateImpl } from "./WiedervorlageStateImpl";
-import { NotenmodulStateKey } from "../../../ui/src/states/NotenmodulState";
 import { notenmodulStateImpl } from "./NotenmodulStateImpl";
+import { benutzerStateImpl } from "./BenutzerStateImpl";
 
 
 export function registerStates(): void {
 	const context = AppContext.instance;
 
+	context.provide(BenutzerStateKey, benutzerStateImpl);
 	context.provide(ConfigStateKey, configStateImpl);
 	context.provide(AbschnittStateKey, abschnittStateImpl);
 	context.provide(SchuleStateKey, schuleStateImpl);

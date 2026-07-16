@@ -10,6 +10,7 @@ import { routeHaltestellenGruppenprozesse } from "~/router/apps/schule/kataloge/
 import { routeHaltestellenNeu } from "~/router/apps/schule/kataloge/haltestellen/RouteHaltestellenNeu";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
@@ -62,7 +63,7 @@ export class RouteDataHaltestellen extends RouteDataAuswahl<HaltestellenListeMan
 
 	deleteCheck = (): { success: boolean, logs: Iterable<string> } => {
 		const errorLog = new ArrayList<string>();
-		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
+		if (!benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Haltestellen vor.');
 		}
 		if (!this.manager.liste.auswahlExists()) {

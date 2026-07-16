@@ -1,5 +1,5 @@
-import type { BenutzerKompetenz, ReligionEintrag } from "@core";
-import type { KonfessionenListeManager, Checkpoint } from "@ui";
+import type { ReligionEintrag } from "@core";
+import type { Checkpoint, KonfessionenListeManager } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface KonfessionenNeuProps {
@@ -8,5 +8,4 @@ export interface KonfessionenNeuProps {
 	gotoDefaultView: (id?: number | null) => Promise<void>;
 	checkpoint: Checkpoint;
 	continueRoutingAfterCheckpoint: () => Promise<RoutingStatus>;
-	benutzerKompetenzen: Set<BenutzerKompetenz>,
 }

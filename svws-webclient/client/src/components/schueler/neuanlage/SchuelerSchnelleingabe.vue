@@ -50,15 +50,16 @@
 
 	import { BenutzerKompetenz, Schulform } from "@core";
 	import { computed } from "vue";
-	import { useAbschnittState, useSchuleState } from "@ui";
+	import { useAbschnittState, useBenutzerState, useSchuleState } from "@ui";
 	import type { SchuelerSchnelleingabeProps } from "~/components/schueler/neuanlage/SchuelerSchnelleingabeProps";
 
 	const props = defineProps<SchuelerSchnelleingabeProps>();
+	const benutzerState = useBenutzerState();
 	const abschnittState = useAbschnittState();
 	const schuleState = useSchuleState();
 
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
-	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
+	const readonly = computed<boolean>(() => !benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const schuljahr = computed<number>(() => abschnittState.auswahl.schuljahr);
 
 	const schulenMitPrimaerstufe = computed(() => {

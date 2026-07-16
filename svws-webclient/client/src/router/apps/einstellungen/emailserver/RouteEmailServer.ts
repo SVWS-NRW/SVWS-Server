@@ -4,7 +4,6 @@ import type { RouteApp } from "~/router/apps/RouteApp";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteEinstellungenMenuGroup } from "~/router/apps/einstellungen/RouteEinstellungenMenuGroup";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { api } from "~/router/Api";
 import type { EmailServerProps } from "~/components/einstellungen/emailserver/EmailServerProps";
 
 export const EmailServer = () => import("~/components/einstellungen/emailserver/EmailServer.vue");
@@ -36,7 +35,6 @@ export class RouteEmailServer extends RouteNode<RouteDataEmailServer, RouteApp> 
 		return {
 			smptServerKonfiguration: () => routeEmailServer.data.smtpServerKonfiguration,
 			patch: routeEmailServer.data.patchSMTServerKonfiguration,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 }

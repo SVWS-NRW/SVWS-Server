@@ -11,11 +11,14 @@
 	import { computed } from 'vue';
 	import type { SchuelerSprachenProps } from './SchuelerSprachenProps';
 	import { BenutzerKompetenz } from '@core';
+	import { useBenutzerState } from '@ui';
 
 	const props = defineProps<SchuelerSprachenProps>();
-	const readonly = computed<boolean>(() => !(props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN)
-		|| (props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN)
-			&& props.benutzerKompetenzenKlassen.has(props.schuelerListeManager().auswahl().idKlasse))
+	const benutzerState = useBenutzerState();
+
+	const readonly = computed<boolean>(() => !(benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN)
+		|| (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN)
+			&& benutzerState.kompetenzenKlasse.has(props.schuelerListeManager().auswahl().idKlasse))
 	));
 
 </script>

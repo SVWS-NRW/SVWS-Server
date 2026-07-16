@@ -41,13 +41,16 @@
 <script setup lang="ts">
 	import type { BetriebsartenNeuProps } from './BetriebsartenNeuProps';
 	import { BenutzerKompetenz, Betriebsart } from "@core";
+	import { useBenutzerState } from '@ui';
 	import { computed, ref, watch } from "vue";
 	import { BetriebsartenModelProxy } from "~/components/schule/kataloge/betriebsarten/modelproxy/BetriebsartenModelProxy";
 
 	const props = defineProps<BetriebsartenNeuProps>();
+	const benutzerState = useBenutzerState();
+
 	const initialData = ref<Betriebsart>(Object.assign(new Betriebsart(), { istSichtbar: true, sortierung: 32000 }));
 	const data = new BetriebsartenModelProxy(() => initialData.value, () => props.manager().liste.list());
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const disabled = computed(() => !hatKompetenzUpdate.value);
 
 	const isLoading = ref<boolean>(false);

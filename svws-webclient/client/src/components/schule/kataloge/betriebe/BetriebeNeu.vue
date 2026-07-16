@@ -106,14 +106,16 @@
 	import { computed, ref, watch } from "vue";
 	import { BenutzerKompetenz, Betrieb, type Betriebsart, type OrtKatalogEintrag } from "@core";
 	import type { BetriebeNeuProps } from "~/components/schule/kataloge/betriebe/BetriebeNeuProps";
-	import { SelectManager } from "@ui";
+	import { SelectManager, useBenutzerState } from "@ui";
 	import { BetriebModelProxy } from "~/components/schule/kataloge/betriebe/modelproxy/BetriebModelProxy";
 
 	const props = defineProps<BetriebeNeuProps>();
+	const benutzerState = useBenutzerState();
+
 	const initialData = ref<Betrieb>(Object.assign(new Betrieb(), { istSichtbar: true, sortierung: 32000, anzahlRestabschnitte: 0 }));
 	const model = new BetriebModelProxy(() => initialData.value, () => props.manager());
 	const isLoading = ref<boolean>(false);
-	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const hatKompetenzAdd = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
 	const betriebsartenById = computed<Map<number, Betriebsart>>(() => props.manager().betriebsartenById);

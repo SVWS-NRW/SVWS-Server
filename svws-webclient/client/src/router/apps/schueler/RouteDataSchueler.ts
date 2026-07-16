@@ -13,6 +13,7 @@ import { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { serverStateImpl } from "~/states/ServerStateImpl";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
 
 interface RouteStateSchueler extends RouteStateAuswahlInterface<SchuelerListeManager> {
@@ -83,7 +84,7 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 			return null;
 		}
 
-		const resolveSchuelerTelefoneOrEmpty = api.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)
+		const resolveSchuelerTelefoneOrEmpty = benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)
 			? api.server.getSchuelerTelefone(api.schema, auswahl.id)
 			: Promise.resolve(new ArrayList<SchuelerTelefon>());
 		const [stammdaten, schuelerTelefone] = await Promise.all([
@@ -114,7 +115,7 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 	}
 	public async updateMapStundenplaene() {
 		const mapStundenplaene = new Map<number, StundenplanListeEintrag>();
-		if (api.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN)) {
+		if (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN)) {
 			const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, this.idSchuljahresabschnitt);
 			for (const l of listStundenplaene) {
 				mapStundenplaene.set(l.id, l);
@@ -186,7 +187,7 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 
 	public deleteSchuelerCheck = (): [boolean, List<string>] => {
 		const errorLog = new ArrayList<string>();
-		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LOESCHEN)) {
+		if (!benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Schülern vor.');
 		}
 

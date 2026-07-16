@@ -50,13 +50,14 @@
 	import { computed } from "vue";
 	import type { KonfessionenDatenProps } from "./KonfessionenDatenProps";
 	import { BenutzerKompetenz, Religion } from "@core";
-	import { CoreTypeSelectManager, useSchuleState } from "@ui";
+	import { CoreTypeSelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import { KonfessionModelProxy } from "~/components/schule/kataloge/konfessionen/modelproxy/KonfessionModelProxy";
 
 	const props = defineProps<KonfessionenDatenProps>();
+	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 
 	const model = new KonfessionModelProxy(
 		() => props.manager().daten(),

@@ -1,6 +1,5 @@
 import { reactive } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, Router, NavigationFailure, RouteParams } from "vue-router";
-
 import { RouteNode } from "~/router/RouteNode";
 import { api } from "~/router/Api";
 import { routeApp } from "~/router/apps/RouteApp";
@@ -10,6 +9,7 @@ import { routeError } from "~/router/error/RouteError";
 import { DeveloperNotificationException, ServerMode } from "@core";
 import { RoutingStatus } from "~/router/RoutingStatus";
 import { serverStateImpl } from "~/states/ServerStateImpl";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
 interface RouteStateError {
 	code: number | undefined;
@@ -199,12 +199,12 @@ export class RouteManager {
 		this.active = true; // Setze, dass ein Routing-Vorgang bearbeitet wird
 		api.status.start();
 		// Ist der Benutzer nicht authentifiziert, so wird er zur Login-Seite weitergeleitet
-		if (!api.authenticated && (to.name !== "login")) {
+		if (!benutzerStateImpl.authenticated && (to.name !== "login")) {
 			routeLogin.routepath = to.fullPath;
 			return { name: "login", query: { redirect: to.fullPath }, params: to.params };
 		}
 		// Aktualisiere ggf. den goto-Parameter
-		if (!api.authenticated && (to.name === "login")) {
+		if (!benutzerStateImpl.authenticated && (to.name === "login")) {
 			let redirect = to.query.redirect;
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 			if ((redirect === undefined) || (redirect === null) || ((!Array.isArray(redirect)) && (redirect.startsWith("/error")))) {
@@ -225,11 +225,11 @@ export class RouteManager {
 		if ((from_node === undefined) && (from.fullPath !== "/")) {
 			return false;
 		}
-		if (api.authenticated && api.benutzerIstAdmin && (to.name?.toString().startsWith("init") ?? false)) {
+		if (benutzerStateImpl.authenticated && benutzerStateImpl.istAdmin && (to.name?.toString().startsWith("init") ?? false)) {
 			return await to_node.doUpdate(to_node, to.params, from_node, from.params, true, nodeRedirected);
 		}
 		// Prüfe zunächst, ob die Ziel-Route für den angemeldeten Benutzer und die Schulform der Schule erlaubt ist oder nicht
-		if (api.authenticated && (!to_node.hatSchulform() || !to_node.hatEineKompetenz())) {
+		if (benutzerStateImpl.authenticated && (!to_node.hatSchulform() || !to_node.hatEineKompetenz())) {
 			return false;
 		}
 		if (serverStateImpl.mode !== ServerMode.STABLE) {
@@ -360,7 +360,7 @@ export class RouteManager {
 				if (serverStateImpl.mode !== ServerMode.STABLE) {
 					console.log("Completed routing '" + from.fullPath + "' --> '" + to.fullPath + "'"); // + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node?.name + " " + JSON.stringify(to.params)
 				}
-				if ((to_node !== undefined) && (from_node !== undefined) && (from.fullPath !== "/") && api.authenticated && (!(to.name?.toString().startsWith("init") ?? false))) {
+				if ((to_node !== undefined) && (from_node !== undefined) && (from.fullPath !== "/") && benutzerStateImpl.authenticated && (!(to.name?.toString().startsWith("init") ?? false))) {
 					// Prüfe, ob die Knoten Nachfolger bzw. Vorgänger voneinander sind
 					const equals = (to_node.name === from_node.name);
 					const to_is_successor = to_node.checkSuccessorOf(from_node);

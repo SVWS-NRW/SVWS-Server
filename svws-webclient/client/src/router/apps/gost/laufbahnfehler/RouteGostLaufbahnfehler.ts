@@ -1,19 +1,15 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { GostLaufbahnfehlerProps } from "~/components/gost/laufbahnfehler/SGostLaufbahnfehlerProps";
-
 import { BenutzerKompetenz, DeveloperNotificationException, ServerMode } from "@core";
-
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
-
 import { RouteDataGostLaufbahnfehler } from "~/router/apps/gost/laufbahnfehler/RouteDataGostLaufbahnfehler";
-
-import { ConfigElement } from "../../../../../../ui/src/utils/Config";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeError } from "~/router/error/RouteError";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import { ConfigElement } from "@ui";
 
 const SGostLaufbahnfehler = () => import("~/components/gost/laufbahnfehler/SGostLaufbahnfehler.vue");
 
@@ -85,8 +81,6 @@ export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehl
 
 	public getProps(to: RouteLocationNormalized): GostLaufbahnfehlerProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
-			benutzerKompetenzenAbiturjahrgaenge: api.benutzerKompetenzenAbiturjahrgaenge,
 			listBelegpruefungsErgebnisse: () => this.data.listBelegpruefungsErgebnisse,
 			gostBelegpruefungsArt: () => this.data.gostBelegpruefungsArt,
 			setGostBelegpruefungsArt: this.data.setGostBelegpruefungsArt,

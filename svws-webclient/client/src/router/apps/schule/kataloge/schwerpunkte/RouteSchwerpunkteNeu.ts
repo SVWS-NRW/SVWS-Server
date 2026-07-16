@@ -5,7 +5,6 @@ import { ViewType } from "@ui";
 import type { RouteLocationNormalized } from "vue-router";
 import type { SchwerpunkteNeuProps } from "~/components/schule/kataloge/schwerpunkte/SchwerpunkteNeuProps";
 import { RouteManager } from "~/router/RouteManager";
-import { api } from "~/router/Api";
 
 
 const SchwerpunkteNeu = () => import("~/components/schule/kataloge/schwerpunkte/SchwerpunkteNeu.vue");
@@ -25,7 +24,6 @@ export class RouteSchwerpunkteNeu extends RouteNode<any, RouteSchwerpunkte> {
 			manager: () => routeSchwerpunkte.data.manager,
 			add: routeSchwerpunkte.data.add,
 			gotoDefaultView: routeSchwerpunkte.data.gotoDefaultView,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};

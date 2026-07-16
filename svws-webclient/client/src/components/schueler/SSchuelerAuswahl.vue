@@ -91,12 +91,13 @@
 
 	import { computed, ref, shallowRef } from "vue";
 	import type { JahrgangsDaten, KlassenDaten, KursDaten, SchuelerListeEintrag, Schulgliederung } from "@core";
-	import { BenutzerKompetenz, SchuelerStatus, ServerMode } from "@core";
+	import { BenutzerKompetenz, SchuelerStatus } from "@core";
 	import type { SortByAndOrder } from "@ui";
-	import { useAbschnittState, useRegionSwitch, useSchuleState, useServerState, ViewType } from "@ui";
+	import { useAbschnittState, useBenutzerState, useRegionSwitch, useSchuleState, useServerState, ViewType } from "@ui";
 	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
 
 	const props = defineProps<SchuelerAuswahlProps>();
+	const benutzerState = useBenutzerState();
 	const serverState = useServerState();
 	const abschnittState = useAbschnittState();
 	const schuleState = useSchuleState();
@@ -113,7 +114,7 @@
 	// 	return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertBySchluesselOrException(ep.toString()).daten(schuljahr)?.kuerzel ?? null;
 	// }
 
-	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
+	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 
 	const showModalGruppenaktionen = ref<boolean>(false);
 

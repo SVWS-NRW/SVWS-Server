@@ -2,6 +2,7 @@ import type { RouteStateInterface } from "~/router/RouteData";
 import { RouteData } from "~/router/RouteData";
 import { BenutzerKompetenz, SMTPServerKonfiguration } from "@core";
 import { api } from "~/router/Api";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
 
 interface RouteStateEmailServer extends RouteStateInterface {
@@ -20,7 +21,7 @@ export class RouteDataEmailServer extends RouteData<RouteStateEmailServer> {
 
 	public async ladeDaten() {
 		let smtpServerKonfiguration = new SMTPServerKonfiguration();
-		if (api.benutzerIstAdmin || api.benutzerHatKompetenz(BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN)) {
+		if (benutzerStateImpl.istAdmin || benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN)) {
 			smtpServerKonfiguration = await api.server.getSMTPServerKonfiguration(api.schema);
 		}
 		this.setPatchedState({ smtpServerKonfiguration });

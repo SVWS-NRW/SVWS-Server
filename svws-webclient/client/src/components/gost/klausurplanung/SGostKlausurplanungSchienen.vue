@@ -55,7 +55,7 @@
 						<span v-if="hatKompetenzUpdate" class="icon i-ri-draggable" />
 						<svws-ui-tooltip :hover="false" :indicator="false">
 							<template #content>
-								<s-gost-klausurplanung-kursliste :k-man :kursklausur="rowData" :patch-klausur :create-schuelerklausur-termin :benutzer-kompetenzen />
+								<s-gost-klausurplanung-kursliste :k-man :kursklausur="rowData" :patch-klausur :create-schuelerklausur-termin />
 							</template>
 							<span class="svws-ui-badge hover:opacity-75" :style="`color: var(--color-text-uistatic); background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(rowData) };`">{{ kMan().kursKurzbezeichnungByKursklausur(rowData) }}</span>
 							<svws-ui-tooltip>
@@ -111,7 +111,7 @@
 							:draggable :on-drag :on-drop :drag-data="() => dragData"
 							@dragover="terminSelected.value=termin" @dragleave="terminSelected.value=undefined"
 							@click="gotoSchienen(props.terminSelected.value?.id===termin.id?undefined:termin);$event.stopPropagation()"
-							:benutzer-kompetenzen :k-man :termin="() => termin" :termin-selected="props.terminSelected.value?.id===termin.id"
+							:k-man :termin="() => termin" :termin-selected="props.terminSelected.value?.id===termin.id"
 							:loesche-klausurtermine :patch-klausurtermin :klausur-css-classes :create-schuelerklausur-termin
 							:patch-klausur :goto-kalenderdatum :goto-raumzeit-termin />
 					</template>
@@ -180,26 +180,17 @@
 <script setup lang="ts">
 
 	import type { GostSchuelerklausurTermin, JavaMapEntry, JavaSet, List } from "@core";
-	import { BenutzerKompetenz,
-		GostKursklausur,
-		GostKlausurtermin,
-		HashSet,
-		KlausurterminblockungAlgorithmen,
-		GostKlausurterminblockungDaten,
-		KlausurterminblockungModusKursarten,
-		KlausurterminblockungModusQuartale,
-		DateUtils,
-	} from "@core";
+	import { BenutzerKompetenz, GostKursklausur, GostKlausurtermin, HashSet, KlausurterminblockungAlgorithmen, GostKlausurterminblockungDaten, KlausurterminblockungModusKursarten, KlausurterminblockungModusQuartale, DateUtils } from "@core";
 	import { computed, ref, onMounted, onUnmounted, shallowRef, watch } from 'vue';
 	import type { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
-	import type { DataTableColumn } from "@ui";
-
-	const showModalAutomatischBlocken = ref<boolean>(false);
+	import { useBenutzerState, type DataTableColumn } from "@ui";
 
 	const props = defineProps<GostKlausurplanungSchienenProps>();
+	const benutzerState = useBenutzerState();
 
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
+	const showModalAutomatischBlocken = ref<boolean>(false);
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const loading = ref<boolean>(false);
 

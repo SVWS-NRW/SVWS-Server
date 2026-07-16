@@ -1,14 +1,9 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
 import { BenutzerKompetenz, DeveloperNotificationException, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
-
 import { RouteDataGostFaecher } from "~/router/apps/gost/faecher/RouteDataGostFaecher";
-
 import type { GostFaecherProps } from "~/components/gost/faecher/SGostFaecherProps";
-import { api } from "~/router/Api";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeError } from "~/router/error/RouteError";
 
@@ -53,8 +48,6 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost>
 
 	public getProps(to: RouteLocationNormalized): GostFaecherProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
-			benutzerKompetenzenAbiturjahrgaenge: api.benutzerKompetenzenAbiturjahrgaenge,
 			faecherManager: () => routeGost.data.faecherManager,
 			patchFach: routeGost.data.patchFach,
 			patchFachkombination: this.data.patchFachkombination,

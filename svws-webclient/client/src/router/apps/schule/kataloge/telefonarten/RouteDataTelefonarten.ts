@@ -10,6 +10,7 @@ import { routeTelefonartenNeu } from "~/router/apps/schule/kataloge/telefonarten
 import { routeTelefonartenDaten } from "~/router/apps/schule/kataloge/telefonarten/RouteTelefonartenDaten";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
@@ -60,7 +61,7 @@ export class RouteDataTelefonarten extends RouteDataAuswahl<TelefonartenListeMan
 
 	public deleteCheck = (): [boolean, List<string>] => {
 		const errorLog = new ArrayList<string>();
-		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
+		if (!benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Telefonarten vor.');
 		}
 		if (!this.manager.liste.auswahlExists()) {

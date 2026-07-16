@@ -1,8 +1,6 @@
 import type { List, SimpleOperationResponse, Lernplattform } from "@core";
 import { BenutzerKompetenz, ArrayList } from "@core";
-
 import { api } from "~/router/Api";
-
 import { ViewType, LernplattformListeManager } from "@ui";
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
@@ -12,6 +10,7 @@ import { routeLernplattformenGruppenprozesse } from "~/router/apps/schule/katalo
 import { routeLernplattformenNeu } from "~/router/apps/schule/kataloge/lernplattformen/RouteLernplattformenNeu";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
@@ -59,7 +58,7 @@ export class RouteDataLernplattformen extends RouteDataAuswahl<LernplattformList
 	deleteCheck = (): { success: boolean, logs: Iterable<string> } => {
 		const errorLog = new ArrayList<string>();
 
-		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
+		if (!benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Lernplattformen vor.');
 		}
 

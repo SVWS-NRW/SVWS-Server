@@ -1,11 +1,8 @@
 import type { RouteLocationNormalized, RouteParams } from "vue-router";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { RouteStundenplan, routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
-
 import type { StundenplanDatenProps } from "~/components/stundenplan/daten/SStundenplanDatenProps";
-import { api } from "~/router/Api";
 
 const SStundenplanDaten = () => import("~/components/stundenplan/daten/SStundenplanDaten.vue");
 
@@ -23,7 +20,6 @@ export class RouteStundenplanDaten extends RouteNode<any, RouteStundenplan> {
 
 	public getProps(to: RouteLocationNormalized): StundenplanDatenProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeStundenplan.data.manager,
 			patch: routeStundenplan.data.patch,
 			patchRaum: routeStundenplan.data.patchRaum,

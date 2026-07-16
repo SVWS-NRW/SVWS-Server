@@ -1,4 +1,4 @@
-import type { BenutzerKompetenz, List, Sprachbelegung, Sprachpruefung } from "@core";
+import type { List, Sprachbelegung, Sprachpruefung } from "@core";
 import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 
 export interface SchuelerSprachenProps {
@@ -11,6 +11,4 @@ export interface SchuelerSprachenProps {
 	addSprachpruefung: (data: Partial<Sprachpruefung>) => Promise<Sprachpruefung | null>;
 	removeSprachpruefung: (data: Sprachpruefung) => Promise<Sprachpruefung>;
 	schuelerListeManager: () => SchuelerListeManager;
-	benutzerKompetenzen: Set<BenutzerKompetenz>,
-	benutzerKompetenzenKlassen: Set<number>;
 }

@@ -10,6 +10,7 @@ import { routeJahrgaengeGruppenprozesse } from "~/router/apps/schule/kataloge/ja
 import { api } from "~/router/Api";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
 
 const defaultState = {
@@ -65,7 +66,7 @@ export class RouteDataJahrgaenge extends RouteDataAuswahl<JahrgaengeListeManager
 	deleteCheck = (): { success: boolean, logs: Iterable<string> } => {
 		const errorLog = new ArrayList<string>();
 
-		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
+		if (!benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Jahrgängen vor.');
 		}
 

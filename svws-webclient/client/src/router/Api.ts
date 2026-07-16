@@ -1,7 +1,4 @@
-import type { AES } from "~/utils/crypto/aes";
-import type { List, DBSchemaListeEintrag, ApiServer, ApiExternal, LehrerListeEintrag, SchuelerListeEintrag, KlassenDaten, KursDaten, JahrgangsDaten, BenutzerDaten, BenutzerKompetenz } from "@core";
-import { BenutzerTyp, DeveloperNotificationException } from "@core";
-
+import type { List, DBSchemaListeEintrag, ApiServer, ApiExternal, LehrerListeEintrag, SchuelerListeEintrag, KlassenDaten, KursDaten, JahrgangsDaten } from "@core";
 import { ApiConnection } from "~/router/ApiConnection";
 import type { ApiPendingData } from "~/components/ApiStatus";
 import { ApiStatus } from "~/components/ApiStatus";
@@ -35,21 +32,6 @@ class Api {
 	/** Gibt den Namen des Schemas beim SVWS-Server zurück, welches mit dieser Verbindung angesprochen wird */
 	get schema(): string {
 		return this.conn.schema;
-	}
-
-	/** Gibt den Status zurück, ob der Benutzer authentifiziert wurde */
-	get authenticated(): boolean {
-		return this.conn.authenticated;
-	}
-
-	/** Gibt den Benutzernamen für die Verbindung zum SVWS-Server zurück **/
-	get username(): string {
-		return this.conn.username;
-	}
-
-	/** Gibt das AES-Objekt zurück */
-	get aes(): AES {
-		return this.conn.aes;
 	}
 
 	/** Gibt die Version des SVWS-Servers zurück */
@@ -96,121 +78,6 @@ class Api {
 	logout = async (): Promise<void> => {
 		await this.conn.logout();
 	};
-
-
-	/// --- Informationen zu dem Benutzer, der angemeldet ist
-
-	/**
-	 * Gibt die Daten des Benutzers zurück.
-	 *
-	 * @throws {Error} falls kein Benutzer angemeldet ist
-	 */
-	public get benutzerdaten(): BenutzerDaten {
-		return this.conn.benutzerdaten;
-	}
-
-	/**
-	 * Gibt an, ob es sich bei dem angemeldeten Benutzer um einen adminstrativen Benutzer
-	 * handelt oder nicht.
-	 *
-	 * @throws {Error} falls kein Benutzer angemeldet ist
-	 */
-	public get benutzerIstAdmin(): boolean {
-		return this.conn.istAdmin;
-	}
-
-	/**
-	 * Die Menge der Benutzerkompetenzen des angemeldeten Benutzers.
-	 *
-	 * @throws {Error} falls kein Benutzer angemeldet ist
-	 */
-	public get benutzerKompetenzen(): Set<BenutzerKompetenz> {
-		return this.conn.kompetenzen;
-	}
-
-	/**
-	 * Prüft, ob der angemeldete Benutzer die angegebene Kompetenz hat oder
-	 * nicht.
-	 *
-	 * @param kompetenz   die zu prüfende Kompetenz.
-	 *
-	 * @returns true, falls der Benutzer die Kompetenz hat und ansonsten false
-	 *
-	 * @throws {Error} falls kein Benutzer angemeldet ist
-	 */
-	public benutzerHatKompetenz(kompetenz: BenutzerKompetenz): boolean {
-		return this.benutzerKompetenzen.has(kompetenz);
-	}
-
-	/**
-	 * Prüft, ob der angemeldete Benutzer eine der angegebenen Kompetenzen
-	 * hat oder nicht.
-	 *
-	 * @param kompetenzen   die zu prüfenden Kompetenzen.
-	 *
-	 * @returns true, falls der Benutzer einer der Kompetenzen hat und ansonsten false
-	 *
-	 * @throws {Error} falls kein Benutzer angemeldet ist
-	 */
-	public benutzerHatEineKompetenz(kompetenzen: Iterable<BenutzerKompetenz>): boolean {
-		const setKompetenzen = this.benutzerKompetenzen;
-		for (const kompetenz of kompetenzen) {
-			if (setKompetenzen.has(kompetenz)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-
-	/**
-	 * Die Menge an Klassen-IDs, auf denen der angemeldete Benutzer aufgrund einer Klassen-
-	 * oder Abteilungsleitung funktionsbezogene Kompetenzen hat.
-	 *
-	 * @throws {Error} falls kein Benutzer angemeldet ist
-	 */
-	public get benutzerKompetenzenKlassen(): Set<number> {
-		return this.conn.kompetenzenKlasse;
-	}
-
-
-	/**
-	 * Die Menge an Abiturjahrgängen, bei denen der angemeldete Benutzer als Beratungslehrer
-	 * funktionsbezogene Kompetenzen hat.
-	 *
-	 * @throws {Error} falls kein Benutzer angemeldet ist
-	 */
-	public get benutzerKompetenzenAbiturjahrgaenge(): Set<number> {
-		return this.conn.kompetenzenAbiturjahrgaenge;
-	}
-
-
-	/**
-	 * Gibt den Typ des Benutzers zurück.
-	 *
-	 * @throws {Error} falls kein Benutzer angemeldet ist oder der Benutzer-Typ ungültig ist
-	 */
-	public get benutzertyp(): BenutzerTyp {
-		const typ = BenutzerTyp.getByID(this.benutzerdaten.typ);
-		if (typ === null) {
-			throw new DeveloperNotificationException("Der Typ des Benutzers ist ungültig.");
-		}
-		return typ;
-	}
-
-
-	/**
-	 * Gibt an, ob es sich bei dem Benutzer um einen Lehrer-Benutzer handelt.
-	 *
-	 * @throws {Error} falls kein Benutzer angemeldet ist oder der Benutzer-Typ ungültig oder kein Lehrer ist
-	 */
-	public get benutzerIDLehrer(): number {
-		if (this.benutzertyp !== BenutzerTyp.LEHRER) {
-			throw new DeveloperNotificationException("Der Benutzer ist kein Lehrer, weshalb keine Lehrer-ID ermittelt werden kann.");
-		}
-		return this.benutzerdaten.typID;
-	}
-
 
 	/// --- Methoden für den einfachen Api-Zugriff
 

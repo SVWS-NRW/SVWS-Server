@@ -254,15 +254,16 @@
 	import { ArrayList, BenutzerKompetenz, Einschulungsart, Jahrgaenge, Kindergartenbesuch, PrimarstufeSchuleingangsphaseBesuchsjahre, Herkunftsarten,
 		SchulabschlussAllgemeinbildend, Schulform, Uebergangsempfehlung, SchulabschlussBerufsbildend, HerkunftSonstige, Schulgliederung, Fachklasse } from "@core";
 	import type { SchuelerSchulbesuchProps } from './SchuelerSchulbesuchProps';
-	import { CoreTypeSelectManager, SelectManager, useSchuleState, useServerState } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState, useServerState } from "@ui";
 	import { computed, ref, watch } from "vue";
 	import { SchuelerSchulbesuchModelProxy } from "~/components/schueler/schulbesuch/modelProxy/SchuelerSchulbesuchModelProxy";
 
 	const props = defineProps<SchuelerSchulbesuchProps>();
+	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 	const serverState = useServerState();
 
-	const updateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
+	const updateKompetenz = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const readonly = computed(() => !updateKompetenz.value);
 	const model = new SchuelerSchulbesuchModelProxy(
 		() => props.manager().daten,

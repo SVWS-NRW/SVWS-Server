@@ -13,6 +13,7 @@ import { ConfigElement, SSchuelerLaufbahnplanung } from "@ui";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { gostLaufbahnplanungStateImpl } from "~/states/GostLaufbahnplanungStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
 export class RouteSchuelerLaufbahnplanung extends RouteNode<any, RouteSchueler> {
 
@@ -42,8 +43,9 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<any, RouteSchueler> 
 			}
 			const abiturjahr = routeSchueler.data.manager.auswahl().abiturjahrgang;
 			if (((abiturjahr !== null) && routeSchueler.data.manager.abiturjahrgaenge.get(abiturjahr))
-				&& (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
-					|| (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN) && api.benutzerKompetenzenAbiturjahrgaenge.has(abiturjahr)))) {
+				&& (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
+					|| (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)
+						&& benutzerStateImpl.kompetenzenAbiturjahrgaenge.has(abiturjahr)))) {
 				return false;
 			}
 			return routeSchueler.getRouteDefaultChild({ id });
@@ -86,11 +88,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<any, RouteSchueler> 
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerLaufbahnplanungProps {
-		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
-			benutzerKompetenzenAbiturjahrgaenge: api.benutzerKompetenzenAbiturjahrgaenge,
-			config: () => configStateImpl.config,
-		};
+		return { };
 	}
 
 }

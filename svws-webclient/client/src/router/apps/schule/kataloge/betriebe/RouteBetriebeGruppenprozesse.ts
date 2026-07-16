@@ -1,7 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import type { RouteBetriebe } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebe";
@@ -31,11 +29,9 @@ export class RouteBetriebeGruppenprozesse extends RouteNode<any, RouteBetriebe> 
 			manager: () => routeBetriebe.data.manager,
 			delete: routeBetriebe.data.delete,
 			deleteCheck: routeBetriebe.data.deleteCheck,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 
 }
 
 export const routeBetriebeGruppenprozesse = new RouteBetriebeGruppenprozesse();
-

@@ -1,12 +1,10 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
 import { BenutzerKompetenz, type DeveloperNotificationException, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteDataSchuelerBetriebe } from "~/router/apps/schueler/betriebe/RouteDataSchuelerBetriebe";
 import { routeError } from "~/router/error/RouteError";
 import type { SchuelerBetriebeProps } from "~/components/schueler/betriebe/SchuelerBetriebeProps";
-import { api } from "~/router/Api";
 
 const SchuelerBetriebe = () => import("~/components/schueler/betriebe/SchuelerBetriebe.vue");
 
@@ -39,7 +37,6 @@ export class RouteSchuelerBetriebe extends RouteNode<RouteDataSchuelerBetriebe, 
 			patch: this.data.patch,
 			deleteBetriebe: this.data.delete,
 			goToBetrieb: routeSchuelerBetriebe.data.goToBetrieb,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

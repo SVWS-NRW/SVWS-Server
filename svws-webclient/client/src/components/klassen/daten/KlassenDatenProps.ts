@@ -1,8 +1,7 @@
-import type { LehrerListeEintrag, KlassenDaten, Schueler, BenutzerKompetenz } from "@core";
+import type { LehrerListeEintrag, KlassenDaten, Schueler } from "@core";
 import type { KlassenListeManager } from "~/states/klassen/KlassenListeManager";
 
 export interface KlassenDatenProps {
-	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	patch: (data: Partial<KlassenDaten>) => Promise<boolean>;
 	manager: () => KlassenListeManager;
 	setFilter: () => Promise<void>;

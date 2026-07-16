@@ -36,14 +36,17 @@
 
 	import type { List } from "@core";
 	import { BenutzerKompetenz } from "@core";
+	import { useBenutzerState } from "@ui";
 	import { computed, ref } from "vue";
 	import type { FahrschuelerartenGruppenprozesseProps } from "~/components/schule/kataloge/fahrschuelerarten/gruppenprozesse/FahrschuelerartenGruppenprozesseProps";
 
 	const props = defineProps<FahrschuelerartenGruppenprozesseProps>();
+	const benutzerState = useBenutzerState();
+
 	const isLoading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
-	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
+	const hatKompetenzLoeschen = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 	const hatIrgendwelcheKompetenzen = computed(() => hatKompetenzLoeschen.value);
 	const preConditionCheck = computed<{ success: boolean, logs: Iterable<string> }>(() => props.deleteCheck());
 	const allEntriesDeletable = computed<boolean>(() => props.manager().idsReferencedFahrschuelerarten.isEmpty());

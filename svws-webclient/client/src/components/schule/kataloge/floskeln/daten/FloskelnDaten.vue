@@ -56,11 +56,13 @@
 	import type { FachDaten, Floskelgruppe, JahrgangsDaten } from "@core";
 	import { BenutzerKompetenz } from "@core";
 	import type { FloskelnDatenProps } from "./FloskelnDatenProps";
-	import { SelectManager } from "@ui";
+	import { SelectManager, useBenutzerState } from "@ui";
 	import { FloskelModelProxy } from "~/components/schule/kataloge/floskeln/modelproxy/FloskelModelProxy";
 
 	const props = defineProps<FloskelnDatenProps>();
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const benutzerState = useBenutzerState();
+
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const model = new FloskelModelProxy(
 		() => props.manager().daten(),
 		() => props.manager().liste.list(),

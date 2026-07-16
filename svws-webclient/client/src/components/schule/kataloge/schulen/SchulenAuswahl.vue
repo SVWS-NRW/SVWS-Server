@@ -42,11 +42,13 @@
 	import type { SchulenAuswahlProps } from "~/components/schule/kataloge/schulen/SchulenAuswahlProps";
 	import { computed } from 'vue';
 	import { BenutzerKompetenz, type SchulEintrag } from "@core";
-	import { useRegionSwitch, ViewType } from "@ui";
+	import { useBenutzerState, useRegionSwitch, ViewType } from "@ui";
+
+	const props = defineProps<SchulenAuswahlProps>();
+	const benutzerState = useBenutzerState();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
-	const props = defineProps<SchulenAuswahlProps>();
-	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const isHinzufuegenView = computed<boolean>(() => props.activeViewType === ViewType.HINZUFUEGEN);
 	const isGruppenprozesseOrHinzufuegenView = computed<boolean>(() => (props.activeViewType === ViewType.GRUPPENPROZESSE) || isHinzufuegenView.value);
 	const noFilteredEntries = computed<boolean>(() => props.manager().filtered().size() === 0);

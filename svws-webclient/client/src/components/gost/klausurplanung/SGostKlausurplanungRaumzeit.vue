@@ -23,7 +23,7 @@
 								'border bg-ui-100 rounded-lg border-ui-10 my-3': terminSelected.value !== undefined && terminSelected.value.id === termin.id,
 								'cursor-pointer hover:bg-ui-75 pb-1 rounded-lg': terminSelected.value !== undefined && terminSelected.value.id !== termin.id,
 							}">
-							<s-gost-klausurplanung-termin :termin :k-man :benutzer-kompetenzen
+							<s-gost-klausurplanung-termin :termin :k-man
 								:on-drag :draggable="isDraggable" drag-icon :klausur-css-classes="calculatCssClassesKlausur"
 								:compact-with-date="terminSelected.value === undefined || terminSelected.value.id !== termin.id"
 								:goto-kalenderdatum :patch-klausurtermin :goto-raumzeit-termin="gotoTermin"
@@ -41,7 +41,7 @@
 			</template>
 			<template v-else>
 				<s-gost-klausurplanung-raumzeit-termin :termin="terminSelected.value" :goto-termin
-					:k-man :benutzer-kompetenzen :create-klausurraum :loesche-klausurraum :patch-klausurraum :patch-klausur
+					:k-man :create-klausurraum :loesche-klausurraum :patch-klausurraum :patch-klausur
 					:drag-data="() => dragData" :on-drag :on-drop
 					:zeige-alle-jahrgaenge :setze-raum-zu-schuelerklausuren
 					:get-config-value :set-config-value />
@@ -58,10 +58,12 @@
 	import { ref, onMounted, computed } from 'vue';
 	import type { GostKlausurplanungRaumzeitProps } from './SGostKlausurplanungRaumzeitProps';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
+	import { useBenutzerState } from '@ui';
 
 	const props = defineProps<GostKlausurplanungRaumzeitProps>();
+	const benutzerState = useBenutzerState();
 
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const chooseTermin = async (termin: GostKlausurtermin) => {
 		props.setRaumTermin(termin);

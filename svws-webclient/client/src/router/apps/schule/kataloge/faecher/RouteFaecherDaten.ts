@@ -3,7 +3,6 @@ import type { FaecherDatenProps } from "~/components/schule/kataloge/faecher/dat
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeFaecher, type RouteFaecher } from "~/router/apps/schule/kataloge/faecher/RouteFaecher";
-import { api } from "~/router/Api";
 
 const FaecherDaten = () => import("~/components/schule/kataloge/faecher/daten/FaecherDaten.vue");
 
@@ -26,7 +25,6 @@ export class RouteFaecherDaten extends RouteNode<any, RouteFaecher> {
 		return {
 			patch: routeFaecher.data.patch,
 			manager: () => routeFaecher.data.manager,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

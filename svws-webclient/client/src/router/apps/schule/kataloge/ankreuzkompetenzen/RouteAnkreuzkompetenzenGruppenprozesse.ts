@@ -2,7 +2,6 @@ import { RouteNode } from "~/router/RouteNode";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { ViewType } from "@ui";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { api } from "~/router/Api";
 import type { RouteAnkreuzkompetenzen } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteAnkreuzkompetenzen";
 import { routeAnkreuzkompetenzen } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteAnkreuzkompetenzen";
 import type { AnkreuzkompetenzenGruppenprozesseProps } from "~/components/schule/kataloge/ankreuzkompetenzen/gruppenprozesse/AnkreuzkompetenzenGruppenprozesseProps";
@@ -26,7 +25,6 @@ class RouteAnkreuzkompetenzenGruppenprozesse extends RouteNode<any, RouteAnkreuz
 
 	public getProps(to: RouteLocationNormalized): AnkreuzkompetenzenGruppenprozesseProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeAnkreuzkompetenzen.data.manager,
 			delete: routeAnkreuzkompetenzen.data.delete,
 			deleteCheck: routeAnkreuzkompetenzen.data.deleteCheck,

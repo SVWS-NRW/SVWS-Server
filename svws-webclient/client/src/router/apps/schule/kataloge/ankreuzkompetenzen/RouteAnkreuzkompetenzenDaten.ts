@@ -1,7 +1,6 @@
 import { RouteNode } from "~/router/RouteNode";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized } from "vue-router";
-import { api } from "~/router/Api";
 import type { RouteAnkreuzkompetenzen } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteAnkreuzkompetenzen";
 import { routeAnkreuzkompetenzen } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteAnkreuzkompetenzen";
 import type { AnkreuzkompetenzenDatenProps } from "~/components/schule/kataloge/ankreuzkompetenzen/daten/AnkreuzkompetenzenDatenProps";
@@ -23,7 +22,6 @@ class RouteAnkreuzkompetenzenDaten extends RouteNode<any, RouteAnkreuzkompetenze
 			manager: () => routeAnkreuzkompetenzen.data.manager,
 			addJahrgaengezuordnungen: routeAnkreuzkompetenzen.data.addJahrgaengezuordnungen,
 			deleteJahrgaengezuordnungen: routeAnkreuzkompetenzen.data.deleteJahrgaengezuordnungen,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 }

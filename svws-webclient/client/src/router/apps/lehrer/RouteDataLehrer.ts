@@ -16,6 +16,7 @@ import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { serverStateImpl } from "~/states/ServerStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
 interface RouteStateLehrer extends RouteStateAuswahlInterface<LehrerListeManager> {
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
@@ -507,7 +508,7 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 
 	deleteCheck = (): { success: boolean, logs: Iterable<string> } => {
 		const errorLog = new ArrayList<string>();
-		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.LEHRERDATEN_LOESCHEN)) {
+		if (!benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.LEHRERDATEN_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Lehrern vor.');
 		}
 

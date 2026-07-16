@@ -1,15 +1,11 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
-
 import type { RaeumeProps } from "~/components/stundenplan/kataloge/raeume/SRaeumeProps";
 import type { RaeumeAuswahlProps } from "~/components/stundenplan/kataloge/raeume/SRaeumeAuswahlProps";
 import { routeError } from "~/router/error/RouteError";
 import { RouteDataKatalogRaeume } from "./RouteDataKatalogRaeume";
 import { RouteStundenplan } from "../RouteStundenplan";
-import { api } from "~/router/Api";
 
 const SRaeumeAuswahl = () => import("~/components/stundenplan/kataloge/raeume/SRaeumeAuswahl.vue");
 const SRaeume = () => import("~/components/stundenplan/kataloge/raeume/SRaeume.vue");
@@ -62,7 +58,6 @@ export class RouteKatalogRaeume extends RouteNode<RouteDataKatalogRaeume, RouteS
 			addEintrag: this.data.addEintrag,
 			deleteEintraege: this.data.deleteEintraege,
 			setKatalogRaeumeImportJSON: this.data.setKatalogRaeumeImportJSON,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

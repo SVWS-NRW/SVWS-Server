@@ -1,6 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import type { RouteEinwilligungsarten } from "~/router/apps/schule/kataloge/einwilligungsarten/RouteEinwilligungsarten";
@@ -27,7 +26,6 @@ export class RouteEinwilligungsartenGruppenprozesse extends RouteNode<any, Route
 
 	public getProps(to: RouteLocationNormalized): EinwilligungsartenGruppenprozesseProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			delete: routeEinwilligungsarten.data.delete,
 			deleteCheck: routeEinwilligungsarten.data.deleteCheck,
 			manager: () => routeEinwilligungsarten.data.manager,

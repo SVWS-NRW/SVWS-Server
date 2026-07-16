@@ -1,15 +1,8 @@
 
-import type {
-	GostHalbjahr,
-	GostJahrgangsdaten,
-	GostKlausurvorgabe,
-	GostKlausurplanManager,
-	BenutzerKompetenz, List,
-} from "@core";
+import type { GostHalbjahr, GostJahrgangsdaten, GostKlausurvorgabe, GostKlausurplanManager, List } from "@core";
 import type { WritableComputedRef } from "vue";
 
 export interface GostKlausurplanungVorgabenProps {
-	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	jahrgangsdaten: GostJahrgangsdaten | undefined;
 	halbjahr: GostHalbjahr;
 	kMan: () => GostKlausurplanManager;

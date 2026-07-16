@@ -1,7 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { routeKonfessionen } from "~/router/apps/schule/kataloge/konfessionen/RouteKonfessionen";
@@ -30,7 +28,6 @@ export class RouteKonfessionenGruppenprozesse extends RouteNode<any, RouteKonfes
 		return {
 			delete: routeKonfessionen.data.delete,
 			deleteCheck: routeKonfessionen.data.deleteCheck,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeKonfessionen.data.manager,
 			gotoDefaultView: routeKonfessionen.data.gotoDefaultView,
 		};

@@ -6,7 +6,6 @@ import { RouteManager } from "~/router/RouteManager";
 import type { RouteEinwilligungsarten } from "~/router/apps/schule/kataloge/einwilligungsarten/RouteEinwilligungsarten";
 import { routeEinwilligungsarten } from "~/router/apps/schule/kataloge/einwilligungsarten/RouteEinwilligungsarten";
 import type { EinwilligungsartenNeuProps } from "~/components/schule/kataloge/einwilligungsarten/EinwilligungsartenNeuProps";
-import { api } from "~/router/Api";
 
 const EinwilligungsartenNeu = () => import("~/components/schule/kataloge/einwilligungsarten/EinwilligungsartenNeu.vue");
 
@@ -25,7 +24,6 @@ export class RouteEinwilligungsartenNeu extends RouteNode<any, RouteEinwilligung
 		return {
 			manager: () => routeEinwilligungsarten.data.manager,
 			add: routeEinwilligungsarten.data.add,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			gotoDefaultView: routeEinwilligungsarten.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),

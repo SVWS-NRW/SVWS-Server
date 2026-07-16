@@ -1,6 +1,5 @@
 import { RouteNode } from "~/router/RouteNode";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import { api } from "~/router/Api";
 import type { RouteFachklassen } from "~/router/apps/schule/kataloge/fachklassen/RouteFachklassen";
 import { routeFachklassen } from "~/router/apps/schule/kataloge/fachklassen/RouteFachklassen";
 import type { FachklassenDatenProps } from "~/components/schule/kataloge/fachklassen/daten/FachklassenDatenProps";
@@ -23,7 +22,6 @@ class RouteFachklassenDaten extends RouteNode<any, RouteFachklassen> {
 		return {
 			patch: routeFachklassen.data.patch,
 			manager: () => routeFachklassen.data.manager,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 }

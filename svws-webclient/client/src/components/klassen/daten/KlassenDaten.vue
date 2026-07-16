@@ -112,13 +112,14 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import { useSchuleState, type DataTableColumn, useAbschnittState } from "@ui";
+	import { useSchuleState, type DataTableColumn, useAbschnittState, useBenutzerState } from "@ui";
 	import type { KlassenDatenProps } from "./KlassenDatenProps";
 	import type { LehrerListeEintrag, KlassenDaten, Klassenart, Schulgliederung, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen, JahrgangsDaten } from "@core";
 	import { SchuelerStatus, Schulform, BenutzerKompetenz, Jahrgaenge } from "@core";
 	import { KlassenDatenModelProxy } from "../KlassenDatenModelProxy";
 
 	const props = defineProps<KlassenDatenProps>();
+	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 	const abschnittState = useAbschnittState();
 
@@ -168,9 +169,9 @@
 	}
 
 	// TODO auch UNTERRICHTSVERTEILUNG_PLANUNG_ANSEHEN verwenden und hier unterscheiden zu UNTERRICHTSVERTEILUNG_ANSEHEN
-	const hatKompetenzAnsehen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN));
+	const hatKompetenzAnsehen = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN));
 	// TODO auch UNTERRICHTSVERTEILUNG_FUNKTIONSBEZOGEN_AENDERN berücksichtigen in Bezug auf Abteilungsleitungen / Koordinationen (API muss dafür noch erweitert werden)
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
 
 	const klassenleitungClicked = ref<LehrerListeEintrag | null>(null);
 

@@ -36,7 +36,6 @@ export class RouteEinstellungenBenutzerDaten extends RouteNode<any, RouteEinstel
 			removeBenutzerKompetenzGruppe: routeEinstellungenBenutzer.data.removeBenutzerKompetenzGruppe,
 			gotoBenutzergruppe: routeEinstellungenBenutzer.data.gotoBenutzergruppe,
 			benutzerKompetenzen: routeEinstellungen.benutzerKompetenzen,
-			benutzerdaten: api.benutzerdaten,
 		};
 	}
 

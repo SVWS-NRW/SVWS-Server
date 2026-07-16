@@ -2,7 +2,6 @@ import { RouteNode } from "~/router/RouteNode";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { ViewType } from "@ui";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { api } from "~/router/Api";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import type { RouteFachklassen } from "~/router/apps/schule/kataloge/fachklassen/RouteFachklassen";
 import { routeFachklassen } from "~/router/apps/schule/kataloge/fachklassen/RouteFachklassen";
@@ -29,7 +28,6 @@ class RouteFachklassenGruppenprozesse extends RouteNode<any, RouteFachklassen> {
 
 	public getProps(to: RouteLocationNormalized): FachklassenGruppenprozesseProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeFachklassen.data.manager,
 			delete: routeFachklassen.data.delete,
 			deleteCheck: routeFachklassen.data.deleteCheck,

@@ -62,16 +62,17 @@
 
 	import { computed } from "vue";
 	import type { DataTableColumn, SortByAndOrder } from "@ui";
-	import { useRegionSwitch, ViewType } from "@ui";
+	import { useBenutzerState, useRegionSwitch, ViewType } from "@ui";
 	import { BenutzerKompetenz, DateUtils } from "@core";
 	import type { StundenplanListeEintrag } from "@core";
 	import type { StundenplanAuswahlProps } from "./SStundenplanAuswahlProps";
 
 	const props = defineProps<StundenplanAuswahlProps>();
+	const benutzerState = useBenutzerState();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
-	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_AENDERN));
+	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.STUNDENPLAN_AENDERN));
 
 	const columns: DataTableColumn[] = [
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, defaultSort: 'asc' },

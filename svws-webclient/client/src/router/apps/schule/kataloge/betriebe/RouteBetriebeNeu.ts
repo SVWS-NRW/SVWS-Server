@@ -1,10 +1,8 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
-import { api } from "~/router/Api";
 import type { RouteBetriebe } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebe";
 import { routeBetriebe } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebe";
 import type { BetriebeNeuProps } from "~/components/schule/kataloge/betriebe/BetriebeNeuProps";
@@ -33,7 +31,6 @@ export class RouteBetriebeNeu extends RouteNode<any, RouteBetriebe> {
 			add: routeBetriebe.data.add,
 			goToDefaultView: routeBetriebe.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};
 	}

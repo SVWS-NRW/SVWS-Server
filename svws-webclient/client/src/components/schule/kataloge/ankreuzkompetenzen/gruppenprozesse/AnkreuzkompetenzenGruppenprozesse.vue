@@ -39,9 +39,12 @@
 	import type { List } from "@core";
 	import { BenutzerKompetenz } from "@core";
 	import type { AnkreuzkompetenzenGruppenprozesseProps } from "~/components/schule/kataloge/ankreuzkompetenzen/gruppenprozesse/AnkreuzkompetenzenGruppenprozesseProps";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<AnkreuzkompetenzenGruppenprozesseProps>();
-	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
+	const benutzerState = useBenutzerState();
+
+	const hatKompetenzLoeschen = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 	const hatKeineErforderlicheKompetenz = computed<boolean>(() => !hatKompetenzLoeschen.value);
 	const isLoading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();

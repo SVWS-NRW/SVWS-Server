@@ -77,14 +77,15 @@
 <script setup lang="ts">
 
 	import type { AbteilungenNeuProps } from "~/components/schule/kataloge/abteilungen/AbteilungenNeuProps";
-	import { type DataTableColumn, ViewType, SelectManager, useAbschnittState } from "@ui";
+	import { type DataTableColumn, ViewType, SelectManager, useAbschnittState, useBenutzerState } from "@ui";
 	import type { KlassenListeEintrag, List } from "@core";
 	import { ValidatorFehlerart, Abteilung, Arrays, BenutzerKompetenz } from "@core";
 	import { computed, ref, watch } from "vue";
 	import { AbteilungenModelProxy } from "~/components/schule/kataloge/abteilungen/modelproxy/AbteilungenModelProxy";
 
-	const abschnittState = useAbschnittState();
 	const props = defineProps<AbteilungenNeuProps>();
+	const benutzerState = useBenutzerState();
+	const abschnittState = useAbschnittState();
 
 	const columns: DataTableColumn[] = [{ key: "kuerzel", label: "Klasse" }];
 
@@ -94,7 +95,7 @@
 
 	const klassenToAdd = ref<KlassenListeEintrag[]>([]);
 	const klassenIdsToAdd = computed<List<number>>(() => Arrays.asList(klassenToAdd.value.map(klasse => klasse.id)));
-	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const hatKompetenzAdd = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 	const availableLehrer = computed(() => props.manager().lehrerById.values());
 	const mussFehlerExists = computed(() => [...modelProxy.getAlleFehler()].some(fehler => fehler.getFehlerart().ordinal() === ValidatorFehlerart.MUSS.ordinal()));

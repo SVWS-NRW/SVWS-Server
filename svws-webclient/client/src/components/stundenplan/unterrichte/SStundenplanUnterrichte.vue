@@ -123,8 +123,11 @@
 	import type { StundenplanUnterrichteProps } from "./SStundenplanUnterrichteProps";
 	import type { List, StundenplanKlasse, StundenplanKurs, StundenplanRaum, StundenplanSchiene, StundenplanSchueler, StundenplanZeitraster, Wochentag, StundenplanLehrer, StundenplanFach, StundenplanUnterricht } from "@core";
 	import { ListUtils, Fach, BenutzerKompetenz } from "@core";
+	import { useBenutzerState } from "@ui";
 
 	type FokusType = { type: 'lehrer' | 'klassen' | 'raeume' | 'schienen' | null, id: number | null };
+
+	const benutzerState = useBenutzerState();
 
 	const focusMultiselect = ref<FokusType>({ type: null, id: null });
 
@@ -138,7 +141,7 @@
 
 	const props = defineProps<StundenplanUnterrichteProps>();
 
-	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_AENDERN));
+	const readonly = computed<boolean>(() => !benutzerState.benutzerHatKompetenz(BenutzerKompetenz.STUNDENPLAN_AENDERN));
 
 	const schuljahr = computed<number>(() => props.stundenplanManager().getSchuljahr());
 

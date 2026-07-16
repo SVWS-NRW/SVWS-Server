@@ -10,6 +10,7 @@ import { routeEinwilligungsartenNeu } from "~/router/apps/schule/kataloge/einwil
 import type { RouteParamsRawGeneric } from "vue-router";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
@@ -58,7 +59,7 @@ export class RouteDataEinwilligungsarten extends RouteDataAuswahl<Einwilligungsa
 	deleteCheck = (): { success: boolean, logs: Iterable<string> } => {
 		const errorLog = new ArrayList<string>();
 
-		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
+		if (!benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Einwilligungsarten vor.');
 		}
 

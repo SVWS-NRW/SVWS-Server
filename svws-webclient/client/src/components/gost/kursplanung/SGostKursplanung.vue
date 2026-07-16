@@ -126,22 +126,23 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ref, onMounted } from "vue";
+	import { computed, ref } from "vue";
 	import type { GostKursplanungProps } from "./SGostKursplanungProps";
 	import type { DownloadPDFTypen } from "./DownloadPDFTypen";
 	import { ArrayList, BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, HashSet, ListUtils, ReportingFilterDefinitionGruppeFactory, ReportingReportvorlage, SetUtils, type ReportingParameter } from "@core";
-	import { useAbschnittState, useRegionSwitch, useReportingState, useServerState } from "@ui";
+	import { useAbschnittState, useBenutzerState, useRegionSwitch, useReportingState, useServerState } from "@ui";
 
 	const props = defineProps<GostKursplanungProps>();
+	const benutzerState = useBenutzerState();
 	const serverState = useServerState();
 	const abschnittState = useAbschnittState();
 	const reportingState = useReportingState();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
-	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN)
-		|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)
-			&& props.benutzerKompetenzenAbiturjahrgaenge.has(props.jahrgangsdaten().abiturjahr)));
+	const hatUpdateKompetenz = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN)
+		|| (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)
+			&& benutzerState.kompetenzenAbiturjahrgaenge.has(props.jahrgangsdaten().abiturjahr)));
 
 	const aktuellesHalbjahr = computed<GostHalbjahr | null>(() => GostHalbjahr.fromJahrgangUndHalbjahr(props.jahrgangsdaten().jahrgang, props.jahrgangsdaten().halbjahr));
 

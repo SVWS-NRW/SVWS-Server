@@ -1,11 +1,9 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import type { RouteFoerderschwerpunkte } from "~/router/apps/schule/kataloge/foerderschwerpunkte/RouteFoerderschwerpunkte";
-import type { FoerderschwerpunkteGruppenprozesseProps }
-	from "~/components/schule/kataloge/foerderschwerpunkte/gruppenprozesse/FoerderschwerpunkteGruppenprozesseProps";
+import type { FoerderschwerpunkteGruppenprozesseProps } from "~/components/schule/kataloge/foerderschwerpunkte/gruppenprozesse/FoerderschwerpunkteGruppenprozesseProps";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
-import { api } from "~/router/Api";
 import { routeFoerderschwerpunkte } from "~/router/apps/schule/kataloge/foerderschwerpunkte/RouteFoerderschwerpunkte";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
@@ -29,7 +27,6 @@ export class RouteFoerderschwerpunkteGruppenprozesse extends RouteNode<any, Rout
 
 	public getProps(to: RouteLocationNormalized): FoerderschwerpunkteGruppenprozesseProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			delete: routeFoerderschwerpunkte.data.delete,
 			deleteCheck: routeFoerderschwerpunkte.data.deleteCheck,
 			manager: () => routeFoerderschwerpunkte.data.manager,

@@ -24,15 +24,16 @@
 
 <script setup lang="ts">
 	import { computed } from "vue";
-	import type { DataTableColumn } from "@ui";
+	import { useBenutzerState, type DataTableColumn } from "@ui";
 	import type { SchuelerLernplattform } from "@core";
 	import { ArrayList, BenutzerKompetenz } from "@core";
 	import type { SchuelerLernplattformenProps } from "./SchuelerLernplattformenProps";
 	import { SchuelerLernplattformenModelProxy } from "./modelProxy/SchuelerLernplattformenModelProxy";
 
 	const props = defineProps<SchuelerLernplattformenProps>();
+	const benutzerState = useBenutzerState();
 
-	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
+	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const readonly = computed(() => !hatKompetenzAendern.value);
 	const lernplattformenProxies = computed(() => {
 		const result = new ArrayList<SchuelerLernplattformenModelProxy>();

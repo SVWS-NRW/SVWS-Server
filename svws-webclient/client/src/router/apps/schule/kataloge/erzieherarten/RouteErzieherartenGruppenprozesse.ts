@@ -1,6 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import type { RouteErzieherarten } from "~/router/apps/schule/kataloge/erzieherarten/RouteErzieherarten";
@@ -27,7 +26,6 @@ export class RouteErzieherartenGruppenprozesse extends RouteNode<any, RouteErzie
 
 	public getProps(to: RouteLocationNormalized): ErzieherartenGruppenprozesseProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeErzieherarten.data.manager,
 			delete: routeErzieherarten.data.delete,
 			deleteCheck: routeErzieherarten.data.deleteCheck,

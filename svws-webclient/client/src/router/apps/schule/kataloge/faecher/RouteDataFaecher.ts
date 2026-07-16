@@ -1,8 +1,6 @@
 import type { FachDaten, JavaSet, List, SimpleOperationResponse } from "@core";
 import { ArrayList, BenutzerKompetenz } from "@core";
-
 import { api } from "~/router/Api";
-
 import { FaecherListeManager, ViewType } from "@ui";
 import type { RouteParamsRawGeneric } from "vue-router";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
@@ -11,6 +9,7 @@ import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { routeFaecherDaten } from "./RouteFaecherDaten";
 import { routeFaecherGruppenprozesse } from "./RouteFaecherGruppenprozesse";
 import { routeFaecherNeu } from "./RouteFaecherNeu";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
@@ -64,7 +63,7 @@ export class RouteDataFaecher extends RouteDataAuswahl<FaecherListeManager, Rout
 	deleteCheck = (): [boolean, List<string>] => {
 		const errorLog = new ArrayList<string>();
 
-		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
+		if (!benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Fächern vor.');
 		}
 

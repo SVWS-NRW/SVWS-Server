@@ -1,11 +1,8 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import type { RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
-import { api } from "~/router/Api";
 import type { SchuelerSchnelleingabeProps } from "~/components/schueler/neuanlage/SchuelerSchnelleingabeProps.js";
 import { ViewType } from "@ui";
 import { RouteDataSchuelerSchnelleingabe } from "~/router/apps/schueler/neu/RouteDataSchuelerSchnelleingabe";
@@ -32,7 +29,6 @@ export class RouteSchuelerSchnelleingabe extends RouteNode<RouteDataSchuelerSchn
 			manager: () => this.data.manager,
 			gotoDefaultView: routeSchueler.data.gotoDefaultView,
 			gotoSchuelerNeuView: routeSchueler.data.gotoHinzufuegenView,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			patchSchueler: routeSchuelerSchnelleingabe.data.patchSchueler,
 			getErzieher: () => routeSchuelerSchnelleingabe.data.getErzieher,
 			addErzieher: routeSchuelerSchnelleingabe.data.addErzieher,

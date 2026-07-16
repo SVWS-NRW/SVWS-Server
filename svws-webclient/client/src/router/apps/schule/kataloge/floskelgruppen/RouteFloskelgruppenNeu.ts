@@ -3,7 +3,6 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
-import { api } from "~/router/Api";
 import type { RouteFloskelgruppen } from "~/router/apps/schule/kataloge/floskelgruppen/RouteFloskelgruppen";
 import { routeFloskelgruppen } from "~/router/apps/schule/kataloge/floskelgruppen/RouteFloskelgruppen";
 import type { FloskelgruppenNeuProps } from "~/components/schule/kataloge/floskelgruppen/FloskelgruppenNeuProps";
@@ -27,7 +26,6 @@ export class RouteFloskelgruppenNeu extends RouteNode<any, RouteFloskelgruppen> 
 			add: routeFloskelgruppen.data.add,
 			goToDefaultView: routeFloskelgruppen.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};
 	}

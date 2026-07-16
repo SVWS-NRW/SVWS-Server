@@ -3,7 +3,6 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeEinwilligungsarten, type RouteEinwilligungsarten } from "~/router/apps/schule/kataloge/einwilligungsarten/RouteEinwilligungsarten";
 import type { EinwilligungsartenDatenProps } from "~/components/schule/kataloge/einwilligungsarten/daten/EinwilligungsartenDatenProps";
-import { api } from "~/router/Api";
 
 const EinwilligungsartenDaten = () => import("~/components/schule/kataloge/einwilligungsarten/daten/EinwilligungsartenDaten.vue");
 
@@ -21,7 +20,6 @@ export class RouteEinwilligungsartenDaten extends RouteNode<any, RouteEinwilligu
 		return {
 			patch: routeEinwilligungsarten.data.patch,
 			manager: () => routeEinwilligungsarten.data.manager,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

@@ -75,7 +75,7 @@
 	import type { SchuelerBetrieb } from "@core";
 	import { AdressenUtils, Schulform, BenutzerKompetenz } from "@core";
 	import type { SchuelerBetriebeManager } from "@ui";
-	import { SelectManager, useSchuleState } from "@ui";
+	import { SelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import { computed } from "vue";
 	import { SchuelerBetriebeModelProxy } from "~/components/schueler/betriebe/modelproxy/SchuelerBetriebeModelProxy";
 
@@ -84,16 +84,16 @@
 		manager: () => SchuelerBetriebeManager;
 		patch: (id: number, data: Partial<SchuelerBetrieb>) => Promise<boolean>;
 		goToBetrieb: (idBetrieb: number) => Promise<void>;
-		benutzerKompetenzen: Set<BenutzerKompetenz>;
 	}>();
+	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 
 	const istBK = computed(() => {
 		const erlaubteSchulformen = [Schulform.BK, Schulform.SB, Schulform.WB];
 		return erlaubteSchulformen.includes(schuleState.schulform);
 	});
-	const hatKatalogeAnsehenKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN));
-	const hatKompetenzBearbeiten = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
+	const hatKatalogeAnsehenKompetenz = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN));
+	const hatKompetenzBearbeiten = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const lehrer = computed(() => props.manager().lehrerById.values());
 	const beschaeftigungsarten = computed(() => props.manager().beschaeftigungsartenById.values());
 	const ansprechpartner = computed(() => props.manager().ansprechpartnerById.values());

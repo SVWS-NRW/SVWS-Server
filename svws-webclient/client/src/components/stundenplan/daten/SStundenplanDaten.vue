@@ -121,11 +121,13 @@
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { StundenplanDatenProps } from "./SStundenplanDatenProps";
 	import type { DataTableColumn, SortByAndOrder } from "@ui";
-	import { SvwsUiSelect, StundenplanListeManager } from "@ui";
+	import { SvwsUiSelect, StundenplanListeManager, useBenutzerState } from "@ui";
 	import type { StundenplanRaum, StundenplanAufsichtsbereich, StundenplanPausenzeit, Stundenplan } from "@core";
 	import { ArrayList, BenutzerKompetenz, DateUtils, Wochentag, ValidatorFehlerart } from "@core";
 
 	const props = defineProps<StundenplanDatenProps>();
+	const benutzerState = useBenutzerState();
+
 	const select = ref<ComponentExposed<typeof SvwsUiSelect<typeof wochenTypModell>>>();
 	const subActionPausenzeiten = ref<boolean>(false);
 
@@ -154,7 +156,7 @@
 	const actionPausenzeiten = ref<boolean>(false);
 	const actionAufsichtsbereiche = ref<boolean>(false);
 
-	const readonly = computed<boolean>(() => !(props.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_AENDERN)));
+	const readonly = computed<boolean>(() => !(benutzerState.benutzerHatKompetenz(BenutzerKompetenz.STUNDENPLAN_AENDERN)));
 
 	const jahrgaenge = computed(() => {
 		const list = props.manager().daten().jahrgangGetMengeAsList();

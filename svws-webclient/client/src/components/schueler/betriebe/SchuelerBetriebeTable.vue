@@ -69,7 +69,7 @@
 
 	import { ref, computed } from 'vue';
 	import { formatToLocalDate } from "~/utils/date";
-	import { useSchuleState, type DataTableColumn, type SchuelerBetriebeManager } from "@ui";
+	import { useBenutzerState, useSchuleState, type DataTableColumn, type SchuelerBetriebeManager } from "@ui";
 	import type { List, SchuelerBetrieb } from "@core";
 	import { Schulform, ArrayList, BenutzerKompetenz } from "@core";
 
@@ -77,8 +77,8 @@
 		manager: () => SchuelerBetriebeManager,
 		selectedBetrieb: SchuelerBetrieb | null,
 		deleteBetriebe: (idsSchuelerBetriebe: List<number>) => Promise<boolean>,
-		benutzerKompetenzen: Set<BenutzerKompetenz>;
 	}>();
+	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 
 	const emit = defineEmits<{
@@ -86,7 +86,7 @@
 		(e: 'create'): void;
 	}>();
 
-	const hatKompetenzBearbeiten = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
+	const hatKompetenzBearbeiten = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const istBK = computed(() => {
 		const erlaubteSchulformen = [Schulform.BK, Schulform.SB, Schulform.WB];
 		return erlaubteSchulformen.includes(schuleState.schulform);

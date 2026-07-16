@@ -1,4 +1,4 @@
-import type { List, ErzieherStammdaten, Erzieherart, OrtKatalogEintrag, OrtsteilKatalogEintrag, BenutzerKompetenz } from "@core";
+import type { List, ErzieherStammdaten, Erzieherart, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
 
 export interface SchuelerErziehungsberechtigteProps {
 	data: () => List<ErzieherStammdaten>;
@@ -9,5 +9,4 @@ export interface SchuelerErziehungsberechtigteProps {
 	erzieherartenById: Map<number, Erzieherart>;
 	orteById: Map<number, OrtKatalogEintrag>;
 	ortsteileById: Map<number, OrtsteilKatalogEintrag>;
-	benutzerKompetenzen: Set<BenutzerKompetenz>,
 }

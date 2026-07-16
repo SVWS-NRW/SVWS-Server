@@ -42,8 +42,11 @@
 	import type { EmailServerProps } from "~/components/einstellungen/emailserver/EmailServerProps";
 	import { computed } from "vue";
 	import { BenutzerKompetenz } from "@core";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<EmailServerProps>();
-	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const benutzerState = useBenutzerState();
+
+	const readonly = computed<boolean>(() => !benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 
 </script>

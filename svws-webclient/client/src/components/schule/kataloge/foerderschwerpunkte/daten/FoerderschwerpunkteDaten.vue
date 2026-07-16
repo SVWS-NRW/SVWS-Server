@@ -44,15 +44,16 @@
 
 	import { BenutzerKompetenz, Foerderschwerpunkt } from "@core";
 	import type { FoerderschwerpunkteDatenProps } from "~/components/schule/kataloge/foerderschwerpunkte/daten/FoerderschwerpunkteDatenProps";
-	import { CoreTypeSelectManager, useSchuleState } from "@ui";
+	import { CoreTypeSelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import { FoerderschwerpunkteModelProxy } from "~/components/schule/kataloge/foerderschwerpunkte/modelproxy/FoerderschwerpunkteModelProxy";
 	import { computed } from "vue";
 
 	const props = defineProps<FoerderschwerpunkteDatenProps>();
+	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 
 	const model = new FoerderschwerpunkteModelProxy(() => props.manager().daten(), props.manager, schuleState.abschnitt.schuljahr, props.patch);
-	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const hatKompetenzAdd = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 	const readonly = computed<boolean>(() => !hatKompetenzAdd.value);
 
 	const foerderschwerpunktKuerzelManager = new CoreTypeSelectManager({

@@ -71,10 +71,13 @@
 	import { computed, ref, watch } from "vue";
 	import type { KindergaertenNeuProps } from "~/components/schule/kataloge/kindergaerten/KindergaertenNeuProps";
 	import { KindergaertenModelProxy } from "./modelproxy/KindergaertenModelProxy";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<KindergaertenNeuProps>();
+	const benutzerState = useBenutzerState();
+
 	const data = ref<Kindergarten>(Object.assign(new Kindergarten(), { istSichtbar: true, sortierung: 32000 }));
-	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const hatKompetenzAdd = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 	const isLoading = ref<boolean>(false);
 	const model = new KindergaertenModelProxy(() => data.value, () => props.manager().liste.list());

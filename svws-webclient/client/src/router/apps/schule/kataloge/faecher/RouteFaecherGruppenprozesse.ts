@@ -1,7 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { routeFaecher, type RouteFaecher } from "./RouteFaecher";
@@ -26,7 +24,6 @@ export class RouteFaecherGruppenprozesse extends RouteNode<any, RouteFaecher> {
 
 	public getProps(_: RouteLocationNormalized): FaecherGruppenprozesseProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeFaecher.data.manager,
 			delete: routeFaecher.data.delete,
 			deleteCheck: routeFaecher.data.deleteCheck,

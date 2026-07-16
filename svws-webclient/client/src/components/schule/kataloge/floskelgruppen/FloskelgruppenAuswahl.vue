@@ -33,15 +33,17 @@
 <script setup lang="ts">
 
 	import type { DataTableColumn } from "@ui";
-	import { useRegionSwitch, ViewType } from "@ui";
+	import { useBenutzerState, useRegionSwitch, ViewType } from "@ui";
 	import type { Floskelgruppe } from "@core";
 	import { BenutzerKompetenz } from "@core";
 	import { computed } from "vue";
 	import type { FloskelgruppenAuswahlProps } from "./FloskelgruppenAuswahlProps";
 
-	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 	const props = defineProps<FloskelgruppenAuswahlProps>();
-	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const benutzerState = useBenutzerState();
+
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+	const readonly = computed<boolean>(() => !benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const isHinzufuegenView = computed<boolean>(() => props.activeViewType === ViewType.HINZUFUEGEN);
 	const isGruppenprozesseorHinhzufuegenView = computed<boolean>(() => (props.activeViewType === ViewType.GRUPPENPROZESSE) || isHinzufuegenView.value);
 	const noFilteredEntries = computed<boolean>(() => props.manager().filtered().size() === 0);

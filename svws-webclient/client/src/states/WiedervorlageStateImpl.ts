@@ -4,6 +4,7 @@ import { StateManager } from "@ui";
 import { api } from "~/router/Api";
 import type { List, BenutzergruppeListeEintrag, WiedervorlageEintrag } from "@core";
 import { ArrayList } from "@core";
+import { benutzerStateImpl } from "./BenutzerStateImpl";
 
 interface State {
 	valid: boolean;
@@ -82,7 +83,7 @@ export class WiedervorlageStateImpl extends StateManager<WiedervorlageReactiveSt
 		if (!this.state.benutzerGruppen.valid) {
 			let data;
 
-			if (api.benutzerIstAdmin) {
+			if (benutzerStateImpl.istAdmin) {
 				// for admin get all benutzergruppen
 				data = await api.server.getBenutzergruppenliste(api.schema);
 			} else {

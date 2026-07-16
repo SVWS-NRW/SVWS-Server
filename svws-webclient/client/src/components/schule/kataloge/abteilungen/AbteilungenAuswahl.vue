@@ -38,15 +38,17 @@
 	import type { DataTableColumn } from "@ui";
 	import type { Abteilung } from "@core";
 	import { BenutzerKompetenz } from "@core";
-	import { useAbschnittState, useRegionSwitch, useSchuleState, ViewType } from "@ui";
+	import { useAbschnittState, useBenutzerState, useRegionSwitch, useSchuleState, ViewType } from "@ui";
 	import { computed } from "vue";
 
 	const props = defineProps<AbteilungenAuswahlProps>();
-	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+	const benutzerState = useBenutzerState();
 	const abschnittState = useAbschnittState();
 	const schuleState = useSchuleState();
 
-	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+
+	const readonly = computed<boolean>(() => !benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 	const isHinzufuegenView = computed<boolean>(() => props.activeViewType === ViewType.HINZUFUEGEN);
 	const isGruppenprozesseOrHinzufuegenView = computed<boolean>(() => (props.activeViewType === ViewType.GRUPPENPROZESSE) || isHinzufuegenView.value);
 	const noFilteredEntries = computed<boolean>(() => props.manager().filtered().size() === 0);

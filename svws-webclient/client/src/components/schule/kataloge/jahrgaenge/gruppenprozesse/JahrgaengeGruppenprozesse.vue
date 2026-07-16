@@ -39,12 +39,15 @@
 	import type { JahrgaengeGruppenprozesseProps } from "./JahrgaengeGruppenprozesseProps";
 	import type { List } from "@core";
 	import { BenutzerKompetenz } from "@core";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<JahrgaengeGruppenprozesseProps>();
+	const benutzerState = useBenutzerState();
+
 	const isLoading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
-	const hatKompetenzLoeschen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
+	const hatKompetenzLoeschen = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 	const hatkeineErforderlicheKompetenz = computed<boolean>(() => !hatKompetenzLoeschen.value);
 	const selectedAllowedToDelete = computed<boolean>(() => props.deleteCheck().success);
 	const deleteCheckErrors = computed<Iterable<string>>(() => props.deleteCheck().logs);

@@ -29,9 +29,10 @@
 	import type { SchuleDatenaustauschLernplattformenProps } from "~/components/schule/datenaustausch/lernplattformenExport/SSchuleDatenaustauschLernplattformenProps";
 	import type { Lernplattform } from "@core";
 	import { BenutzerKompetenz } from "@core";
-	import { SelectManager, useAbschnittState } from "@ui";
+	import { SelectManager, useAbschnittState, useBenutzerState } from "@ui";
 
 	const props = defineProps<SchuleDatenaustauschLernplattformenProps>();
+	const benutzerState = useBenutzerState();
 	const abschnittState = useAbschnittState();
 
 	const loading = ref<boolean>(false);
@@ -45,7 +46,7 @@
 	});
 	const selectManagerDatenformat = new SelectManager<string>({ options: ['JSON', 'GZIP'] });
 
-	const hatKompetenzExport = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.IMPORT_EXPORT_LERNPLATTFORM));
+	const hatKompetenzExport = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.IMPORT_EXPORT_LERNPLATTFORM));
 	const exportDisabled = computed<boolean>(() => (lernplattform.value === undefined) || !hatKompetenzExport.value || loading.value);
 	function textSchuljahresabschnitt() {
 		return `${abschnittState.auswahl.schuljahr}.${abschnittState.auswahl.abschnitt}`;

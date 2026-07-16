@@ -40,10 +40,13 @@
 	import { HaltestellenModelProxy } from "~/components/schule/kataloge/haltestellen/modelproxy/HaltestellenModelProxy";
 	import { BenutzerKompetenz } from "@core";
 	import { computed } from "vue";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<HaltestellenDatenProps>();
+	const benutzerState = useBenutzerState();
+
 	const model = new HaltestellenModelProxy(() => props.manager().daten(), props.manager, props.patch);
-	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const hatKompetenzAdd = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 	const readonly = computed<boolean>(() => !hatKompetenzAdd.value);
 
 

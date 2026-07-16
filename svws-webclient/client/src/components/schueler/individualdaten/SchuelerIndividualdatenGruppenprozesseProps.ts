@@ -1,4 +1,4 @@
-import type { OrtKatalogEintrag, OrtsteilKatalogEintrag, FoerderschwerpunktEintrag, ReligionEintrag, SchulEintrag, BenutzerKompetenz, Haltestelle, Fahrschuelerart } from "@core";
+import type { OrtKatalogEintrag, OrtsteilKatalogEintrag, FoerderschwerpunktEintrag, ReligionEintrag, SchulEintrag, Haltestelle, Fahrschuelerart } from "@core";
 import type { Checkpoint } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 import type { PendingStateManagerSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/PendingStateManagerSchuelerIndividualdaten";
@@ -13,7 +13,6 @@ export interface SchuelerIndividualdatenGruppenprozesseProps {
 	foerderschwerpunkteById: Map<number, FoerderschwerpunktEintrag>;
 	haltestellenById: Map<number, Haltestelle>
 	religionenById: Map<number, ReligionEintrag>;
-	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	autofocus: boolean;
 	patchMultiple: () => Promise<void>;
 	pendingStateManager: () => PendingStateManagerSchuelerIndividualdaten

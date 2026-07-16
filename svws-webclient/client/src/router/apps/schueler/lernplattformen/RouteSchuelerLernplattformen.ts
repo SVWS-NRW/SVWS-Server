@@ -1,10 +1,7 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
-
 import { api } from "~/router/Api";
 import { RouteDataSchuelerLernplattformen } from "~/router/apps/schueler/lernplattformen/RouteDataSchuelerLernplattformen";
 import type { RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
@@ -43,7 +40,6 @@ export class RouteSchuelerLernplattformen extends RouteNode<RouteDataSchuelerLer
 			schuelerLernplattformen: () => this.data.schuelerLernplattformen,
 			mapLernplattformen: this.data.mapLernplattformen,
 			patch: this.data.patch,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			apiStatus: api.status,
 		};
 	}

@@ -88,9 +88,11 @@
 	import { computed, ref, shallowRef } from 'vue';
 	import type { BenutzerProps } from './SBenutzerProps';
 	import { BenutzerKompetenzGruppe, BenutzerTyp } from '@core';
+	import { useBenutzerState } from '@ui';
 
 	const props = defineProps<BenutzerProps>();
-	const readonly = computed<boolean>(() => (props.getBenutzerManager().daten().id === props.benutzerdaten.id));
+	const benutzerState = useBenutzerState();
+	const readonly = computed<boolean>(() => (props.getBenutzerManager().daten().id === benutzerState.benutzerdaten.id));
 
 	const columns = [
 		{ key: 'bezeichnung', label: 'Bezeichnung' },

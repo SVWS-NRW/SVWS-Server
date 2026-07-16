@@ -3,6 +3,7 @@ import type { List } from "@core";
 import { BenutzerKompetenz } from "@core";
 import { type AuswahlManager, ViewType } from "@ui";
 import type { RouteAuswahlListProps } from "~/router/RouteAuswahlNode";
+import { benutzerStateImpl } from '~/states/BenutzerStateImpl';
 
 interface KatalogManager extends AuswahlManager<number, any, any> {
 	searchTerm: string;
@@ -16,7 +17,7 @@ interface Katalog {
 export function useKatalogAuswahl<KType extends Katalog>(props: RouteAuswahlListProps<KatalogManager>) {
 
 	const readonly = computed<boolean>(() => {
-		return !props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return !benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	});
 
 	const isHinzufuegenView = computed<boolean>(() => {

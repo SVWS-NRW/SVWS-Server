@@ -1,10 +1,8 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
-import { api } from "~/router/Api";
 import type { RouteOrte } from "~/router/apps/schule/kataloge/orte/RouteOrte";
 import { routeOrte } from "~/router/apps/schule/kataloge/orte/RouteOrte";
 import type { OrteNeuProps } from "~/components/schule/kataloge/orte/OrteNeuProps";
@@ -33,7 +31,6 @@ export class RouteOrteNeu extends RouteNode<any, RouteOrte> {
 			add: routeOrte.data.add,
 			goToDefaultView: routeOrte.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};
 	}

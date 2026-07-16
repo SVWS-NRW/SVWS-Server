@@ -1,11 +1,8 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
 import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
 import type { GostKlausurplanungRaumzeitProps } from "~/components/gost/klausurplanung/SGostKlausurplanungRaumzeitProps";
-import { api } from "~/router/Api";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeError } from "~/router/error/RouteError";
 
@@ -59,7 +56,6 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<any, RouteGostKla
 
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungRaumzeitProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			halbjahr: routeGostKlausurplanung.data.halbjahr,
 			abschnitt: routeGostKlausurplanung.data.abschnitt,

@@ -41,14 +41,16 @@
 
 	import type { DataTableColumn } from "@ui";
 	import type { FahrschuelerartenAuswahlProps } from "~/components/schule/kataloge/fahrschuelerarten/FahrschuelerartenAuswahlProps";
-	import { useRegionSwitch, ViewType } from "@ui";
+	import { useBenutzerState, useRegionSwitch, ViewType } from "@ui";
 	import type { Fahrschuelerart } from "@core";
 	import { BenutzerKompetenz } from "@core";
 	import { computed } from "vue";
 
-	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 	const props = defineProps<FahrschuelerartenAuswahlProps>();
-	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const benutzerState = useBenutzerState();
+
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const isHinzufuegenView = computed<boolean>(() => props.activeViewType === ViewType.HINZUFUEGEN);
 	const isGruppenprozesseOrHinzufuegenView = computed<boolean>(() => (props.activeViewType === ViewType.GRUPPENPROZESSE) || isHinzufuegenView.value);
 	const noFilteredEntries = computed<boolean>(() => props.manager().filtered().size() === 0);

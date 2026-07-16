@@ -1,8 +1,7 @@
 import { RouteNode } from "~/router/RouteNode";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocation, RouteLocationNormalized, RouteParams } from "vue-router";
-import { api } from "~/router/Api";
-import { type RouteSchuelerLernabschnitte } from "./RouteSchuelerLernabschnitte";
+import type { RouteSchuelerLernabschnitte } from "./RouteSchuelerLernabschnitte";
 import type { SchuelerLernabschnittFoerderempfehlungenProps } from "~/components/schueler/lernabschnitte/foerderempfehlungen/SchuelerLernabschnittFoerderempfehlungenProps";
 import { RouteDataSchuelerLernabschnittFoerderempfehlungen } from "./RouteDataSchuelerLernabschnittFoerderempfehlungen";
 
@@ -23,7 +22,6 @@ class RouteSchuelerLernabschnittFoerderempfehlungen extends RouteNode<RouteDataS
 
 	public getProps(to: RouteLocationNormalized): SchuelerLernabschnittFoerderempfehlungenProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			foerderempfehlungen: () => this.data.listFoerderempfehlungen,
 			add: this.data.addFoerderempfehlung,
 			patch: this.data.patchFoerderempfehlung,

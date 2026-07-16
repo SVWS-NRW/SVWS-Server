@@ -35,12 +35,15 @@
 	import { computed, ref } from "vue";
 	import type { List } from "@core";
 	import { BenutzerKompetenz } from "@core";
+	import { useBenutzerState } from '@ui';
 
 	const props = defineProps<BetriebsartenGruppenprozesseProps>();
+	const benutzerState = useBenutzerState();
+
 	const isLoading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
-	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
+	const hatKompetenzLoeschen = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 	const hatKeineErforderlicheKompetenz = computed(() => !hatKompetenzLoeschen.value);
 	const deleteCheckErrors = computed<List<string>>(() => props.deleteCheck()[1]);
 	const selectedAreNotReferenced = computed<boolean>(() => props.deleteCheck()[0]);

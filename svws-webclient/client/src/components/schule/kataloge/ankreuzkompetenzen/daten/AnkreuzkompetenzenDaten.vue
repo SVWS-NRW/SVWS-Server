@@ -110,15 +110,16 @@
 	import { computed, ref } from "vue";
 	import type { JahrgangsDaten } from "@core";
 	import { ArrayList, BenutzerKompetenz, Schulgliederung, Arrays } from "@core";
-	import { CoreTypeSelectManager, type DataTableColumn, SelectManager, useSchuleState } from "@ui";
+	import { CoreTypeSelectManager, type DataTableColumn, SelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import { AnkreuzkompetenzenModelProxy } from "~/components/schule/kataloge/ankreuzkompetenzen/modelproxy/AnkreuzkompetenzenModelProxy";
 
 	const props = defineProps<AnkreuzkompetenzenDatenProps>();
+	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 
 	const manager = () => props.manager();
 	const model = new AnkreuzkompetenzenModelProxy(() => manager().daten(), () => manager().liste.list(), () => manager().faecherById, schuleState.abschnitt.schuljahr, props.patch);
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 
 	const columns: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Jahrgang" },

@@ -35,7 +35,6 @@
 									'cursor-pointer hover:bg-ui-75 rounded-lg pb-1': terminSelected.value !== undefined && terminSelected.value.id !== termin.id || terminSelected.value === undefined,
 								}">
 								<s-gost-klausurplanung-termin :termin
-									:benutzer-kompetenzen
 									:k-man
 									:compact="terminSelected.value?.id !== termin.id"
 									:quartalsauswahl
@@ -53,8 +52,7 @@
 			</div>
 			<div class="svws-card-stundenplan max-w-480 min-w-320 h-full overflow-auto overflow-y-hidden">
 				<template v-if="kalenderdatum">
-					<s-gost-klausurplanung-kalender-stundenplan-ansicht :benutzer-kompetenzen
-						:id="33"
+					<s-gost-klausurplanung-kalender-stundenplan-ansicht :id="33"
 						:abschnitt
 						:kalenderdatum
 						:jahrgangsdaten
@@ -166,10 +164,12 @@
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type { Wochentag, StundenplanKalenderwochenzuordnung, List, GostKursklausur, JavaMapEntry, JavaSet, GostSchuelerklausurTermin } from "@core";
 	import { GostKlausurtermin, DateUtils, ArrayList, BenutzerKompetenz, StundenplanZeitraster } from "@core";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<GostKlausurplanungKalenderProps>();
+	const benutzerState = useBenutzerState();
 
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const kalenderwoche = (datum?: string) => {
 		if (datum === undefined) {

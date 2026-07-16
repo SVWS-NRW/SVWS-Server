@@ -1,10 +1,8 @@
 import type { RouteLocationNormalized } from "vue-router";
-
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeSchulen, type RouteSchulen } from "~/router/apps/schule/kataloge/schulen/RouteSchulen";
 import type { SchulenDatenProps } from "~/components/schule/kataloge/schulen/daten/SchulenDatenProps";
-import { api } from "~/router/Api";
 
 const SchulenDaten = () => import("~/components/schule/kataloge/schulen/daten/SchulenDaten.vue");
 
@@ -21,7 +19,6 @@ export class RouteSchulenDaten extends RouteNode<any, RouteSchulen> {
 		return {
 			manager: () => routeSchulen.data.manager,
 			patch: routeSchulen.data.patch,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

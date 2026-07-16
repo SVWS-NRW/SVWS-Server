@@ -5,7 +5,6 @@ import type { StatistikSchuelerProps } from "~/components/statistik/StatistikSch
 import { routeStatistik, type RouteStatistik } from "./RouteStatistik";
 import { routeSchueler } from "../schueler/RouteSchueler";
 import { routeApp } from "../RouteApp";
-import { api } from "~/router/Api";
 import { routeSchuelerIndividualdaten } from "../schueler/individualdaten/RouteSchuelerIndividualdaten";
 const StatistikSchueler = () => import("~/components/statistik/StatistikSchueler.vue");
 
@@ -40,7 +39,6 @@ export class RouteStatistikSchueler extends RouteNode<any, RouteStatistik> {
 			patchSchuelerTelefoneintrag: routeSchueler.data.patchSchuelerTelefoneintrag,
 			deleteSchuelerTelefoneintrage: routeSchueler.data.deleteSchuelerTelefoneintrage,
 			mapSchulen: routeSchuelerIndividualdaten.data.mapSchulen,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			autofocus: routeSchueler.data.autofocus,
 		};
 	}

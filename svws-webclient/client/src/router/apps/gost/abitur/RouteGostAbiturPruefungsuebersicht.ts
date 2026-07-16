@@ -11,6 +11,7 @@ import { api } from "~/router/Api";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeGost } from "../RouteGost";
 import { routeError } from "~/router/error/RouteError";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
 const GostAbiturPruefungsuebersicht = () => import("~/components/gost/abitur/GostAbiturPruefungsuebersicht.vue");
 
@@ -42,8 +43,8 @@ export class RouteGostAbiturPruefungsuebersicht extends RouteNode<any, RouteGost
 				return false;
 			}
 			if ((eintrag.abiturjahr !== -1)
-				&& (api.benutzerHatKompetenz(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN)
-					|| (api.benutzerHatKompetenz(BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN) && api.benutzerKompetenzenAbiturjahrgaenge.has(eintrag.abiturjahr)))
+				&& (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN)
+					|| (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN) && benutzerStateImpl.kompetenzenAbiturjahrgaenge.has(eintrag.abiturjahr)))
 				&& (eintrag.jahrgang === 'Q2') && (eintrag.halbjahr === 2)) {
 				return false;
 			}

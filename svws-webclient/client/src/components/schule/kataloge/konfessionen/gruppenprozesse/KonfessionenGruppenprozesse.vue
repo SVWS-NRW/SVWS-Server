@@ -58,13 +58,16 @@
 	import type { List } from "@core";
 	import { computed, ref } from "vue";
 	import { BenutzerKompetenz } from "@core";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<KonfessionenGruppenprozesseProps>();
+	const benutzerState = useBenutzerState();
+
 	const isLoading = ref<boolean>(false);
 	const warningModalIsShown = ref<boolean>(false);
 	const status = ref<boolean | undefined>();
 	const logs = ref<List<string | null> | undefined>();
-	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
+	const hatKompetenzLoeschen = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 	const hatkeineErforderlicheKompetenz = computed(() => !hatKompetenzLoeschen.value);
 	const selectedAllowedToDelete = computed<boolean>(() => props.deleteCheck().success);
 	const deleteCheckErrors = computed<Iterable<string>>(() => props.deleteCheck().logs);

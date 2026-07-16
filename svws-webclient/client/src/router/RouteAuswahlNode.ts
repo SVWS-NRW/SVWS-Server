@@ -6,7 +6,6 @@ import { RouteTabNode } from "./RouteTabNode";
 import type { RouteComponent, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 import type { AuswahlManager } from "@ui";
 import { ViewType } from "@ui";
-import { api } from "./Api";
 import { routeError } from "./error/RouteError";
 import { ConfigElement } from "../../../ui/src/utils/Config";
 import type { PendingStateManagerRegistry } from "~/router/PendingStateManagerRegistry";
@@ -19,7 +18,6 @@ import { configStateImpl } from "~/states/ConfigStateImpl";
 export interface RouteAuswahlListProps<TAuswahlManager extends AuswahlManager<any, any, any>> {
 	manager: () => TAuswahlManager;
 	setFilter: () => Promise<void>;
-	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	activeViewType: ViewType;
 	gotoDefaultView: (id?: number | null) => Promise<void>;
 	gotoHinzufuegenView: (navigate: boolean) => Promise<void>;
@@ -81,7 +79,6 @@ export abstract class RouteAuswahlNode<TAuswahlManager extends AuswahlManager<nu
 		super.setView("liste", componentList, (_route) => this._getAuswahlListProps({
 			manager: () => this.data.manager,
 			setFilter: this.data.setFilter,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			activeViewType: this.data.activeViewType,
 			gotoDefaultView: this.data.gotoDefaultView,
 			gotoHinzufuegenView: this.data.gotoHinzufuegenView,

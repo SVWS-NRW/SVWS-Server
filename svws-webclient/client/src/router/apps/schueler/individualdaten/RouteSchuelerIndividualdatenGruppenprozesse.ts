@@ -1,12 +1,10 @@
 import type { DeveloperNotificationException } from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { routeApp } from "~/router/apps/RouteApp";
-import { api } from "~/router/Api";
 import { type SchuelerIndividualdatenGruppenprozesseProps } from "~/components/schueler/individualdaten/SchuelerIndividualdatenGruppenprozesseProps";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteDataSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteDataSchuelerIndividualdaten";
@@ -32,7 +30,7 @@ export class RouteSchuelerIndividualdatenGruppenprozesse extends RouteNode<Route
 			if (serverStateImpl.hasDev) {
 				return false;
 			}
-			// if (!api.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN))
+			// if (!benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN))
 			//	return false;
 			return this.getRoute(params);
 		} catch (e) {
@@ -52,7 +50,6 @@ export class RouteSchuelerIndividualdatenGruppenprozesse extends RouteNode<Route
 
 	public getProps(_: RouteLocationNormalized): SchuelerIndividualdatenGruppenprozesseProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			schuelerListeManager: () => routeSchueler.data.manager,
 			pendingStateManager: () => this.data.pendingStateManager,
 			orteById: routeApp.cache.kataloge.orteById,

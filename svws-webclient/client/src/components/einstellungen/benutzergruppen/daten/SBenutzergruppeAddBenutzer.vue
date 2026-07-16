@@ -5,20 +5,18 @@
 			:benutzer-list="() => benutzerNichtInBenutzergruppe"
 			:add-benutzer-to-benutzergruppe
 			:remove-benutzer-from-benutzergruppe
-			:goto-benutzer
-			:aktueller-benutzer />
+			:goto-benutzer />
 		<s-benutzer-checkbox-list title="Entfernen" :spalte-links="false"
 			:benutzer-list="benutzerInBenutzergruppe"
 			:add-benutzer-to-benutzergruppe
 			:remove-benutzer-from-benutzergruppe
-			:goto-benutzer
-			:aktueller-benutzer />
+			:goto-benutzer />
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import type { BenutzerDaten, BenutzerListeEintrag, List } from "@core";
+	import type { BenutzerListeEintrag, List } from "@core";
 	import { ArrayList } from "@core";
 	import { computed } from "vue";
 
@@ -28,7 +26,6 @@
 		addBenutzerToBenutzergruppe: (benutzer: BenutzerListeEintrag) => Promise<void>;
 		removeBenutzerFromBenutzergruppe: (benutzer: BenutzerListeEintrag) => Promise<void>;
 		gotoBenutzer: (idBenutzer: number) => Promise<void>;
-		aktuellerBenutzer: BenutzerDaten;
 	}>();
 
 	const benutzerNichtInBenutzergruppe = computed<List<BenutzerListeEintrag>>(() => {

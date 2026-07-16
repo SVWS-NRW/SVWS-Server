@@ -16,13 +16,15 @@
 	import { computed } from "vue";
 	import type { GostFaecherProps } from "./SGostFaecherProps";
 	import { BenutzerKompetenz, GostLaufbahnplanungFachkombinationTyp } from "@core";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<GostFaecherProps>();
+	const benutzerState = useBenutzerState();
 
 	const hatUpdateKompetenz = computed<boolean>(() => {
-		return props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
-			|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)
-				&& props.benutzerKompetenzenAbiturjahrgaenge.has(props.jahrgangsdaten().abiturjahr));
+		return benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
+			|| (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)
+				&& benutzerState.kompetenzenAbiturjahrgaenge.has(props.jahrgangsdaten().abiturjahr));
 	});
 
 </script>

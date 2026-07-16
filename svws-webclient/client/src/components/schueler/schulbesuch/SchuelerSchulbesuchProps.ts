@@ -1,8 +1,7 @@
-import type { BenutzerKompetenz, SchuelerSchulbesuchSchule, List, SchuelerSchulbesuchMerkmal, SchuelerSchulbesuchsdaten } from "@core";
+import type { SchuelerSchulbesuchSchule, List, SchuelerSchulbesuchMerkmal, SchuelerSchulbesuchsdaten } from "@core";
 import type { SchuelerSchulbesuchManager } from "@ui";
 
 export interface SchuelerSchulbesuchProps {
-	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	manager: () => SchuelerSchulbesuchManager;
 	goToSchule: (idSchule: number) => Promise<void>;
 	autofocus: boolean;

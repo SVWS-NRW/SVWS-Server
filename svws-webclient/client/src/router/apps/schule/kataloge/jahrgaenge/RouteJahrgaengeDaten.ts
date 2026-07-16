@@ -1,12 +1,8 @@
 import type { RouteLocationNormalized } from "vue-router";
-
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeJahrgaenge, type RouteJahrgaenge } from "~/router/apps/schule/kataloge/jahrgaenge/RouteJahrgaenge";
-
 import type { JahrgaengeDatenProps } from "~/components/schule/kataloge/jahrgaenge/daten/JahrgaengeDatenProps";
-import { api } from "~/router/Api";
 
 const JahrgaengeDaten = () => import("~/components/schule/kataloge/jahrgaenge/daten/JahrgaengeDaten.vue");
 
@@ -23,11 +19,9 @@ export class RouteJahrgaengeDaten extends RouteNode<any, RouteJahrgaenge> {
 		return {
 			manager: () => routeJahrgaenge.data.manager,
 			patch: routeJahrgaenge.data.patch,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 
 }
 
 export const routeJahrgaengeDaten = new RouteJahrgaengeDaten();
-

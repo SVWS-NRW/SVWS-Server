@@ -54,11 +54,12 @@
 	import type { LoginProps } from "./SLoginProps";
 	import type { DBSchemaListeEintrag, List } from "@core";
 	import { ArrayList, DeveloperNotificationException, UserNotificationException } from "@core";
-	import { SvwsUiTextInput } from "@ui";
+	import { SvwsUiTextInput, useBenutzerState } from "@ui";
 	import { version } from '../../version';
 	import { githash } from '../../githash';
 
 	const props = defineProps<LoginProps>();
+	const benutzerState = useBenutzerState();
 
 	const refUsername = ref<ComponentExposed<typeof SvwsUiTextInput>>();
 	const firstauth = ref(true);
@@ -155,7 +156,7 @@
 		try {
 			await props.login(schema.value.name, username.value, password.value);
 			firstauth.value = false;
-			if (props.authenticated) {
+			if (benutzerState.authenticated) {
 				localStorage.setItem("SVWS-Client Last Used Schema", schema.value.name);
 				// localStorage.setItem(`SVWS-Client Last Used Username for Schema_${schema.value.name}`, username.value);
 			} else {

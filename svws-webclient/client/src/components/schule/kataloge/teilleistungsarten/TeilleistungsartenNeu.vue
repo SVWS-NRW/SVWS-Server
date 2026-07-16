@@ -46,8 +46,10 @@
 	import { BenutzerKompetenz, Teilleistungsart } from "@core";
 	import type { TeilleistungsartenNeuProps } from './TeilleistungsartenNeuProps';
 	import { TeilleistungsartenModelProxy } from "~/components/schule/kataloge/teilleistungsarten/modelproxy/TeilleistungsartenModelProxy";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<TeilleistungsartenNeuProps>();
+	const benutzerState = useBenutzerState();
 
 	const initialData = new Teilleistungsart();
 	initialData.istSichtbar = true;
@@ -58,7 +60,7 @@
 	const isLoading = ref<boolean>(false);
 
 	const hatKompetenzUpdate = computed<boolean>(() => {
-		return props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	});
 
 	const disabled = computed(() => !hatKompetenzUpdate.value);

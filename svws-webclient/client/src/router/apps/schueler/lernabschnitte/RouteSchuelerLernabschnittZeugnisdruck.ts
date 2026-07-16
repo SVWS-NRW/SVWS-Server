@@ -1,12 +1,8 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
+import type { RouteLocationNormalized } from "vue-router";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeSchuelerLernabschnitte, type RouteSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnitte";
-
 import type { SchuelerLernabschnittZeugnisdruckProps } from "~/components/schueler/lernabschnitte/zeugnisdruck/SchuelerLernabschnittZeugnisdruckProps";
-import { api } from "~/router/Api";
 
 const SchuelerLernabschnittAllgemein = () => import("~/components/schueler/lernabschnitte/zeugnisdruck/SchuelerLernabschnittZeugnisdruck.vue");
 
@@ -21,15 +17,11 @@ export class RouteSchuelerLernabschnittZeugnisdruck extends RouteNode<any, Route
 		];
 	}
 
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
-	}
-
 	public getProps(to: RouteLocationNormalized): SchuelerLernabschnittZeugnisdruckProps {
 		return {
 			manager: () => routeSchuelerLernabschnitte.data.manager,
 			patch: routeSchuelerLernabschnitte.data.patchLernabschnitt,
 			patchBemerkungen: routeSchuelerLernabschnitte.data.patchBemerkungen,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

@@ -1,16 +1,8 @@
 
-import type {
-	GostHalbjahr,
-	GostJahrgangsdaten,
-	GostKlausurtermin,
-	GostKlausurplanManager,
-	BenutzerKompetenz,
-	Schuljahresabschnitt,
-} from "@core";
+import type { GostHalbjahr, GostJahrgangsdaten, GostKlausurtermin, GostKlausurplanManager, Schuljahresabschnitt } from "@core";
 import type { WritableComputedRef } from "vue";
 
 export interface GostKlausurplanungKalenderProps {
-	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	jahrgangsdaten: GostJahrgangsdaten;
 	halbjahr: GostHalbjahr;
 	abschnitt: Schuljahresabschnitt | undefined;

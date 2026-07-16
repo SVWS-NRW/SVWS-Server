@@ -39,12 +39,15 @@
 	import type { List } from "@core";
 	import { BenutzerKompetenz } from "@core";
 	import { computed, ref } from "vue";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<EntlassgruendeGruppenprozesseProps>();
+	const benutzerState = useBenutzerState();
+
 	const isLoading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
-	const hatKompetenzLoeschen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
+	const hatKompetenzLoeschen = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 	const hatIrgendwelcheKompetenzen = computed<boolean>(() => hatKompetenzLoeschen.value);
 	const preConditionCheck = computed<{ success: boolean, logs: Iterable<string> }>(() => props.deleteCheck());
 	const allEntriesDeletable = computed<boolean>(() => props.manager().getIdsReferencedEntlassgruende().isEmpty());

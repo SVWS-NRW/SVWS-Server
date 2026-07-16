@@ -125,16 +125,17 @@
 	import { computed, ref, watch } from "vue";
 	import { BenutzerKompetenz, BilingualeSprache, Fach, FachDaten, JavaInteger, Schulform } from "@core";
 	import type { FaecherNeuProps } from "./FaecherNeuProps";
-	import { CoreTypeSelectManager, SelectManager, useSchuleState } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import { FachModelProxy } from "~/components/schule/kataloge/faecher/modelproxy/FachModelProxy";
 
 	const props = defineProps<FaecherNeuProps>();
+	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 
 	const initialData = ref<FachDaten>(Object.assign(new FachDaten(), { sortierung: 32000, istSichtbar: true }));
 	const model = new FachModelProxy(() => initialData.value, () => props.manager().liste.list(), schuleState.abschnitt.schuljahr);
 	const isLoading = ref<boolean>(false);
-	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const hatKompetenzAdd = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const disabled = computed(() => !hatKompetenzAdd.value);
 	const istGrundschule = computed(() => props.manager().schulform() === Schulform.G);
 	const istBerufskolleg = computed(() => props.manager().schulform() === Schulform.BK || props.manager().schulform() === Schulform.SB);

@@ -1,7 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import type { RouteOrtsteile } from "~/router/apps/schule/kataloge/ortsteile/RouteOrtsteile";
@@ -31,7 +29,6 @@ export class RouteOrtsteileGruppenprozesse extends RouteNode<any, RouteOrtsteile
 			manager: () => routeOrtsteile.data.manager,
 			delete: routeOrtsteile.data.delete,
 			deleteCheck: routeOrtsteile.data.deleteCheck,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			goToDefaultView: routeOrtsteile.data.gotoDefaultView,
 		};
 	}

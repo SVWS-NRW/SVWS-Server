@@ -76,15 +76,16 @@
 	import type { FaecherGruppenprozesseProps } from "./FaecherGruppenprozesseProps";
 	import type { List, StundenplanListeEintrag } from "@core";
 	import { BenutzerKompetenz, DateUtils, ReportingReportvorlage, ArrayList } from "@core";
-	import { SelectManager, useSchuleState, useServerState } from "@ui";
+	import { SelectManager, useBenutzerState, useSchuleState, useServerState } from "@ui";
 
 	const props = defineProps<FaecherGruppenprozesseProps>();
+	const benutzerState = useBenutzerState();
 	const serverState = useServerState();
 	const schuleState = useSchuleState();
 
-	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
-	const hatKompetenzUpdate = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-	const hatKompetenzDrucken = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN));
+	const hatKompetenzLoeschen = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
+	const hatKompetenzUpdate = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const hatKompetenzDrucken = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN));
 	const hatGymnasialeOberstufe = computed<boolean>(() => props.manager().schulform().daten(schuleState.abschnitt.schuljahr)?.hatGymOb ?? false);
 	const hasSelection = computed<boolean>(() => props.manager().liste.auswahlExists());
 	const stundenplaeneById = computed<Map<number, StundenplanListeEintrag>>(() => props.manager().stundenplaeneById);

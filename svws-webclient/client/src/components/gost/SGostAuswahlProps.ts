@@ -1,8 +1,7 @@
-import type { BenutzerKompetenz, GostJahrgang, GostJahrgangsdaten, JahrgangsDaten } from "@core";
+import type { GostJahrgang, GostJahrgangsdaten, JahrgangsDaten } from "@core";
 import type { ApiStatus } from "../ApiStatus";
 
 export interface GostAuswahlProps {
-	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	auswahl: GostJahrgang | undefined;
 	jahrgangsdaten: () => GostJahrgangsdaten | undefined;
 	mapAbiturjahrgaenge: () => Map<number, GostJahrgang>;

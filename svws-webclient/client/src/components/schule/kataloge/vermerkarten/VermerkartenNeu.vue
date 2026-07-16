@@ -43,13 +43,16 @@
 	import type { VermerkartenNeuProps } from "./VermerkartenNeuProps";
 	import { BenutzerKompetenz, VermerkartEintrag } from "@core";
 	import { VermerkartenModelProxy } from "~/components/schule/kataloge/vermerkarten/modelproxy/VermerkartenModelProxy";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<VermerkartenNeuProps>();
+	const benutzerState = useBenutzerState();
+
 	const isLoading = ref<boolean>(false);
 	const initialData = ref<VermerkartEintrag>(Object.assign(new VermerkartEintrag(), { istSichtbar: true }));
 	const model = new VermerkartenModelProxy(() => initialData.value, props.manager);
 	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
-	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const hatKompetenzAdd = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 
 

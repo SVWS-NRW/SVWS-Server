@@ -53,14 +53,15 @@
 	import { computed, ref, watch } from "vue";
 	import type { EinwilligungsschluesselKatalogEintrag, List } from "@core";
 	import { BenutzerKompetenz, ArrayList, Einwilligungsart, Einwilligungsschluessel, PersonTyp } from "@core";
-	import { CoreTypeSelectManager, SelectManager, useSchuleState } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import { EinwilligungsartModelProxy } from "~/components/schule/kataloge/einwilligungsarten/modelproxy/EinwilligungsartModelProxy";
 
 	const props = defineProps<EinwilligungsartenNeuProps>();
+	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 
 	const isLoading = ref<boolean>(false);
-	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const hatKompetenzAdd = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 	const initialData = ref<Einwilligungsart>(Object.assign(new Einwilligungsart(), { istSichtbar: true, idPersonTyp: PersonTyp.SCHUELER.id }));
 	const model = new EinwilligungsartModelProxy(() => initialData.value, props.manager, schuleState.abschnitt.schuljahr);

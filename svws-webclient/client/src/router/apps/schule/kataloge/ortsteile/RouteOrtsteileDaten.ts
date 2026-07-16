@@ -1,9 +1,6 @@
 import type { RouteLocationNormalized } from "vue-router";
-
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
-import { api } from "~/router/Api";
 import type { RouteOrtsteile } from "~/router/apps/schule/kataloge/ortsteile/RouteOrtsteile";
 import { routeOrtsteile } from "~/router/apps/schule/kataloge/ortsteile/RouteOrtsteile";
 import type { OrtsteileDatenProps } from "~/components/schule/kataloge/ortsteile/daten/OrtsteileDatenProps";
@@ -24,7 +21,6 @@ export class RouteOrtsteileDaten extends RouteNode<any, RouteOrtsteile> {
 		return {
 			manager: () => routeOrtsteile.data.manager,
 			patch: routeOrtsteile.data.patch,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

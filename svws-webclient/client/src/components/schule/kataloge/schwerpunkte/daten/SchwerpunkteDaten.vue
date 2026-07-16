@@ -36,11 +36,14 @@
 	import { BenutzerKompetenz } from "@core";
 	import type { SchwerpunkteDatenProps } from './SchwerpunkteDatenProps';
 	import { SchwerpunkteModelProxy } from "~/components/schule/kataloge/schwerpunkte/modelproxy/SchwerpunkteModelProxy";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<SchwerpunkteDatenProps>();
+	const benutzerState = useBenutzerState();
+
 	const model = new SchwerpunkteModelProxy(() => props.manager().daten(), () => props.manager().liste.list(), props.patch);
 	const hatKompetenzUpdate = computed<boolean>(() => {
-		return props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	});
 	const readonly = computed(() => !hatKompetenzUpdate.value);
 </script>

@@ -38,14 +38,15 @@
 	import type { JahrgangsDaten, FachDaten, LehrerListeEintrag, List } from "@core";
 	import { ArrayList, BenutzerKompetenz, JavaString, KursDaten, KursFortschreibungsart, ZulaessigeKursart } from "@core";
 	import { computed, ref, watch } from "vue";
-	import { useAbschnittState, useSchuleState } from "@ui";
+	import { useAbschnittState, useBenutzerState, useSchuleState } from "@ui";
 
 	const abschnittState = useAbschnittState();
+	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 
 	const props = defineProps<KurseNeuProps>();
 	const data = ref<KursDaten>(Object.assign(new KursDaten(), { wochenstunden: 0, istSichtbar: true }));
-	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
+	const hatKompetenzAdd = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
 	const schuljahr = computed<number>(() => schuleState.schuljahr);
 	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 	const isLoading = ref<boolean>(false);

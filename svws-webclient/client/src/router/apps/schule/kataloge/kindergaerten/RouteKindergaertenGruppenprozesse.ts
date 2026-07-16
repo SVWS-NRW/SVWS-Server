@@ -4,7 +4,6 @@ import type { RouteKindergaerten } from "~/router/apps/schule/kataloge/kindergae
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
-import { api } from "~/router/Api";
 import { routeKindergaerten } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaerten";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
@@ -27,7 +26,6 @@ export class RouteKindergaertenGruppenprozesse extends RouteNode<any, RouteKinde
 
 	public getProps(to: RouteLocationNormalized): KindergaertenGruppenprozesseProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			delete: routeKindergaerten.data.delete,
 			deleteCheck: routeKindergaerten.data.deleteCheck,
 			manager: () => routeKindergaerten.data.manager,

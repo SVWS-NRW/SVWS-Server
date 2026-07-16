@@ -158,10 +158,11 @@
 	import type { SchuleAdressdatenProps } from "~/components/schule/stammdaten/adressdaten/SchuleAdressdatenProps";
 	import { optionalInputIsValid } from "~/util/validation/Validation";
 	import type { DataTableColumn } from "@ui";
-	import { SelectManager, useSchuleState, useServerState } from "@ui";
+	import { SelectManager, useBenutzerState, useSchuleState, useServerState } from "@ui";
 	import { TeilstandortModelProxy } from "~/components/schule/stammdaten/adressdaten/modelproxy/TeilstandortModelProxy";
 
 	const props = defineProps<SchuleAdressdatenProps>();
+	const benutzerState = useBenutzerState();
 	const serverState = useServerState();
 	const schuleState = useSchuleState();
 
@@ -173,7 +174,7 @@
 	const showModalTeilstandort = ref<boolean>(false);
 
 	const model = new TeilstandortModelProxy(() => teilstandortEntry.value, props.getListTeilstandorte);
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 	const strasse = computed(() => AdressenUtils.combineStrasse(schuleState.stammdaten.strassenname ?? "", schuleState.stammdaten.hausnummer ?? "", schuleState.stammdaten.hausnummerZusatz ?? ""));
 	const adrMerkmaleSelectedEntries = computed<Set<string>>(() =>
 		new Set<string>(selectedTeilstandorte.value.map(e => e.adrMerkmal).filter(m => m !== null))

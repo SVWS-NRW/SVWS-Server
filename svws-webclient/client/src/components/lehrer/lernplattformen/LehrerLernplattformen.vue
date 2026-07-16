@@ -28,14 +28,15 @@
 </template>
 
 <script setup lang="ts">
-	import type { DataTableColumn } from "@ui";
+	import { useBenutzerState, type DataTableColumn } from "@ui";
 	import type { LehrerLernplattformenProps } from "~/components/lehrer/lernplattformen/LehrerLernplattformenProps";
 	import { computed } from "vue";
 	import { BenutzerKompetenz } from "@core";
 
 	const props = defineProps<LehrerLernplattformenProps>();
+	const benutzerState = useBenutzerState();
 
-	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRERDATEN_AENDERN));
+	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRERDATEN_AENDERN));
 	const readonly = computed(() => !hatKompetenzAendern.value);
 
 	const columns: DataTableColumn[] = [

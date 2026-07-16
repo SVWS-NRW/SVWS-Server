@@ -42,15 +42,17 @@
 	import type { List } from "@core";
 	import { BenutzerKompetenz } from "@core";
 	import type { SchwerpunkteGruppenprozesseProps } from './SchwerpunkteGruppenprozesseProps';
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<SchwerpunkteGruppenprozesseProps>();
+	const benutzerState = useBenutzerState();
 
 	const isLoading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
 
 	const hatKompetenzLoeschen = computed(() => {
-		return props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+		return benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	});
 	const hatKeineErforderlicheKompetenz = computed(() => !hatKompetenzLoeschen.value);
 	const selectedAllowedToDelete = computed<boolean>(() => props.deleteCheck().success);

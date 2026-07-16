@@ -2,6 +2,7 @@ import { BenutzerKompetenz, DeveloperNotificationException, ENMv2Daten, type ENM
 import { EnmManager, EnmSpaltenManager, EnmSperrManager, StateManager, type EnmLerngruppenAuswahlEintrag, type NotenmodulState } from "@ui";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
+import { benutzerStateImpl } from "./BenutzerStateImpl";
 
 interface NotenmodulReactiveState {
 	// Die ENM-Daten, welche für den angemeldeten Lehrer-Benutzer über die API geladen werden
@@ -49,11 +50,11 @@ export class NotenmodulStateImpl extends StateManager<NotenmodulReactiveState> i
 		}
 		api.status.start();
 		const patchedState = <Partial<NotenmodulReactiveState>>{ daten: null, manager: null, auswahlKlassen: [], auswahlLerngruppen: [], istAdminLehrer: this.istAdminLehrer };
-		if ((patchedState.istAdminLehrer === null) && (api.benutzertyp === BenutzerTyp.LEHRER) && api.benutzerHatEineKompetenz([BenutzerKompetenz.NOTENMODUL_ADMINISTRATION])) {
+		if ((patchedState.istAdminLehrer === null) && (benutzerStateImpl.benutzertyp === BenutzerTyp.LEHRER) && benutzerStateImpl.benutzerHatEineKompetenz([BenutzerKompetenz.NOTENMODUL_ADMINISTRATION])) {
 			patchedState.istAdminLehrer = true;
 		}
 		try {
-			if (!api.benutzerIstAdmin && !api.benutzerHatEineKompetenz([
+			if (!benutzerStateImpl.istAdmin && !benutzerStateImpl.benutzerHatEineKompetenz([
 				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION,
 				BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN,
 				BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_FUNKTION,
@@ -61,8 +62,8 @@ export class NotenmodulStateImpl extends StateManager<NotenmodulReactiveState> i
 				BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_FUNKTION])) {
 				throw new DeveloperNotificationException("Der Benutzer hat keine Berechtigung, um auf das Notenmodul zuzugreifen. Diese Stelle sollte daher nicht erreichbar sein und es handelt sich um einen Programmierfehler.");
 			}
-			if ((api.benutzertyp === BenutzerTyp.LEHRER) && (patchedState.istAdminLehrer !== true)) {
-				patchedState.daten = await api.server.getLehrerENMv2Daten(api.schema, api.benutzerIDLehrer);
+			if ((benutzerStateImpl.benutzertyp === BenutzerTyp.LEHRER) && (patchedState.istAdminLehrer !== true)) {
+				patchedState.daten = await api.server.getLehrerENMv2Daten(api.schema, benutzerStateImpl.benutzerIDLehrer);
 			} else {
 				patchedState.daten = await api.server.getENMv2Daten(api.schema);
 			}
@@ -99,7 +100,7 @@ export class NotenmodulStateImpl extends StateManager<NotenmodulReactiveState> i
 
 	public async toggleAdmin() {
 		let istAdminLehrer = this.istAdminLehrer;
-		if ((istAdminLehrer === false) && api.benutzerHatEineKompetenz([BenutzerKompetenz.NOTENMODUL_ADMINISTRATION])) {
+		if ((istAdminLehrer === false) && benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.NOTENMODUL_ADMINISTRATION)) {
 			istAdminLehrer = true;
 		} else if (istAdminLehrer === true) {
 			istAdminLehrer = false;

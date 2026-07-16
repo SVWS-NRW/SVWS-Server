@@ -1,8 +1,7 @@
-import type { BenutzerKompetenz, LehrerStammdaten, Leitungsfunktion, List, OrtKatalogEintrag, OrtsteilKatalogEintrag, Schulleitung } from "@core";
+import type { LehrerStammdaten, Leitungsfunktion, List, OrtKatalogEintrag, OrtsteilKatalogEintrag, Schulleitung } from "@core";
 import type { LehrerListeManager } from "@ui";
 
 export interface LehrerIndividualdatenProps {
-	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	patch: (data: Partial<LehrerStammdaten>) => Promise<boolean>;
 	lehrerListeManager: () => LehrerListeManager;
 	orteById: Map<number, OrtKatalogEintrag>;

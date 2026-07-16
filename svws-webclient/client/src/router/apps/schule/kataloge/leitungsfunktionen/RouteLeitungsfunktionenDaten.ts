@@ -3,7 +3,6 @@ import type { RouteLocationNormalized } from "vue-router";
 import type { RouteLeitungsfunktionen } from "./RouteLeitungsfunktionen";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import { api } from "~/router/Api";
 import { routeLeitungsfunktionen } from "./RouteLeitungsfunktionen";
 
 const LeitungsfunktionenDaten = () => import("~/components/schule/kataloge/leitungsfunktionen/daten/LeitungsfunktionenDaten.vue");
@@ -21,7 +20,6 @@ export class RouteLeitungsfunktionenDaten extends RouteNode<any, RouteLeitungsfu
 	public getProps(to: RouteLocationNormalized): LeitungsfunktionenDatenProps {
 		return {
 			manager: () => routeLeitungsfunktionen.data.manager,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			patch: routeLeitungsfunktionen.data.patch,
 		};
 	}

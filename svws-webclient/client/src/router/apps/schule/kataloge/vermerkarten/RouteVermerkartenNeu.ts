@@ -6,7 +6,6 @@ import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
 import { routeVermerkarten } from "./RouteVermerkarten";
-import { api } from "~/router/Api";
 
 const VermerkartenNeu = () => import("~/components/schule/kataloge/vermerkarten/VermerkartenNeu.vue");
 
@@ -28,7 +27,6 @@ export class RouteVermerkartenNeu extends RouteNode<any, RouteVermerkarten> {
 			goToDefaultView: routeVermerkarten.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 }

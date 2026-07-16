@@ -35,14 +35,16 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import { useRegionSwitch, ViewType } from "@ui";
+	import { useBenutzerState, useRegionSwitch, ViewType } from "@ui";
 	import { BenutzerKompetenz } from "@core";
 	import type { Betrieb } from "@core";
 	import type { BetriebeAuswahlProps } from "~/components/schule/kataloge/betriebe/BetriebeAuswahlProps";
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 	const props = defineProps<BetriebeAuswahlProps>();
-	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const benutzerState = useBenutzerState();
+
+	const readonly = computed<boolean>(() => !benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const isHinzufuegenView = computed<boolean>(() => props.activeViewType === ViewType.HINZUFUEGEN);
 	const isGruppenprozesseOrHinzufuegenView = computed<boolean>(() => (props.activeViewType === ViewType.GRUPPENPROZESSE) || isHinzufuegenView.value);
 	const noFilteredEntries = computed<boolean>(() => props.manager().filtered().size() === 0);

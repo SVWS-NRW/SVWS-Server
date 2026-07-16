@@ -121,18 +121,18 @@
 
 	import type { LehrerNeuProps } from './LehrerNeuProps';
 	import { computed, ref, watch } from "vue";
-	import { CoreTypeSelectManager, SelectManager, useSchuleState } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import type { OrtKatalogEintrag, NationalitaetenKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
 	import { ArrayList, BenutzerKompetenz, Geschlecht, LehrerStammdaten, Nationalitaeten, PersonalTyp } from "@core";
 	import { LehrerIndividualdatenModelProxy } from "~/components/lehrer/individualdaten/modelproxy/LehrerIndividualdatenModelProxy";
 
 	const props = defineProps<LehrerNeuProps>();
-
+	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 
 	const isLoading = ref<boolean>(false);
 
-	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRERDATEN_AENDERN));
+	const hatKompetenzAdd = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRERDATEN_AENDERN));
 	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 	const orte = computed<Iterable<OrtKatalogEintrag>>(() => props.orteById.values());
 	const ortsteile = computed<Iterable<OrtsteilKatalogEintrag>>(() => {

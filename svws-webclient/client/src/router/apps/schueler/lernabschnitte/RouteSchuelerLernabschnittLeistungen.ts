@@ -1,11 +1,7 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
+import type { RouteLocationNormalized } from "vue-router";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
-import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { routeSchuelerLernabschnitte, type RouteSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnitte";
-
 import type { SchuelerLernabschnittLeistungenProps } from "~/components/schueler/lernabschnitte/leistungen/SchuelerLernabschnittLeistungenProps";
 import { routeSchueler } from "../RouteSchueler";
 
@@ -22,14 +18,8 @@ export class RouteSchuelerLernabschnittLeistungen extends RouteNode<any, RouteSc
 		];
 	}
 
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
-	}
-
 	public getProps(to: RouteLocationNormalized): SchuelerLernabschnittLeistungenProps {
 		return {
-			benutzerdaten: api.benutzerdaten,
-			benutzerKompetenzen: api.benutzerKompetenzen,
-			benutzerKompetenzenKlassen: api.benutzerKompetenzenKlassen,
 			schuelerListeManager: () => routeSchueler.data.manager,
 			manager: () => routeSchuelerLernabschnitte.data.manager,
 			patch: routeSchuelerLernabschnitte.data.patchLernabschnitt,
@@ -42,4 +32,3 @@ export class RouteSchuelerLernabschnittLeistungen extends RouteNode<any, RouteSc
 }
 
 export const routeSchuelerLernabschnittLeistungen = new RouteSchuelerLernabschnittLeistungen();
-

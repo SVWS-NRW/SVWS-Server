@@ -39,12 +39,15 @@
 	import type { List } from "@core";
 	import { BenutzerKompetenz } from "@core";
 	import type { LeitungsfunktionenGruppenprozesseProps } from "~/components/schule/kataloge/leitungsfunktionen/gruppenprozesse/LeitungsfunktionenGruppenprozesseProps";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<LeitungsfunktionenGruppenprozesseProps>();
+	const benutzerState = useBenutzerState();
+
 	const isLoading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
-	const hatKompetenzLoeschen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
+	const hatKompetenzLoeschen = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 	const hatkeineErforderlicheKompetenz = computed<boolean>(() => !hatKompetenzLoeschen.value);
 	const selectedAllowedToDelete = computed<boolean>(() => props.deleteCheck().success);
 	const deleteCheckErrors = computed<Iterable<string>>(() => props.deleteCheck().logs);

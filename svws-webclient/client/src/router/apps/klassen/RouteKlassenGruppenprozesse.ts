@@ -1,7 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParamsRawGeneric } from "vue-router";
-
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { routeKlassen, type RouteKlassen } from "~/router/apps/klassen/RouteKlassen";
@@ -33,7 +31,6 @@ export class RouteKlasseGruppenprozesse extends RouteNode<any, RouteKlassen> {
 		return {
 			apiStatus: api.status,
 			mapStundenplaene: routeKlassen.data.mapStundenplaene,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeKlassen.data.manager,
 			deleteKlassen: routeKlassen.data.delete,
 		};

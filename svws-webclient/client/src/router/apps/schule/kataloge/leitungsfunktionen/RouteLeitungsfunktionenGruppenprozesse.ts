@@ -3,7 +3,6 @@ import type { RouteLeitungsfunktionen } from "~/router/apps/schule/kataloge/leit
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
-import { api } from "~/router/Api";
 import { routeLeitungsfunktionen } from "~/router/apps/schule/kataloge/leitungsfunktionen/RouteLeitungsfunktionen";
 import type { LeitungsfunktionenGruppenprozesseProps } from "~/components/schule/kataloge/leitungsfunktionen/gruppenprozesse/LeitungsfunktionenGruppenprozesseProps";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
@@ -27,7 +26,6 @@ export class RouteLeitungsfunktionenGruppenprozesse extends RouteNode<any, Route
 
 	public getProps(to: RouteLocationNormalized): LeitungsfunktionenGruppenprozesseProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			delete: routeLeitungsfunktionen.data.delete,
 			deleteCheck: routeLeitungsfunktionen.data.deleteCheck,
 			manager: () => routeLeitungsfunktionen.data.manager,

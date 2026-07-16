@@ -3,7 +3,6 @@ import type { StundenplanKlasseProps } from "~/components/stundenplan/klasse/SSt
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteStundenplan, routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
-import { api } from "~/router/Api";
 import { ConfigElement } from "@ui";
 import { configStateImpl } from "~/states/ConfigStateImpl";
 
@@ -26,7 +25,6 @@ export class RouteStundenplanKlasse extends RouteNode<any, RouteStundenplan> {
 
 	public getProps(to: RouteLocationNormalized): StundenplanKlasseProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			stundenplanManager: () => routeStundenplan.data.manager.daten(),
 			patchUnterrichte: routeStundenplan.data.patchUnterrichte,
 			addUnterrichte: routeStundenplan.data.addUnterrichte,

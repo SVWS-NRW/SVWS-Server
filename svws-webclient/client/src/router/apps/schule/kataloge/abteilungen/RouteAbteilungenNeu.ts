@@ -6,7 +6,6 @@ import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { routeAbteilungen } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungen";
-import { api } from "~/router/Api";
 
 const AbteilungenNeu = () => import("~/components/schule/kataloge/abteilungen/AbteilungenNeu.vue");
 
@@ -28,7 +27,6 @@ export class RouteAbteilungenNeu extends RouteNode<any, RouteAbteilungen> {
 			goToDefaultView: routeAbteilungen.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 }

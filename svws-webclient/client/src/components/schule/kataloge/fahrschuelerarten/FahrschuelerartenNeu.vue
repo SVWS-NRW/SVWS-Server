@@ -43,14 +43,17 @@
 	import { BenutzerKompetenz, Fahrschuelerart } from "@core";
 	import { computed, ref, watch } from "vue";
 	import { FahrschuelerartenModelProxy } from "~/components/schule/kataloge/fahrschuelerarten/modelproxy/FahrschuelerartenModelProxy";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<FahrschuelerartenNeuProps>();
+	const benutzerState = useBenutzerState();
+
 	const isLoading = ref<boolean>(false);
 
 	const initialData = ref<Fahrschuelerart>(Object.assign(new Fahrschuelerart(), { istSichtbar: true }));
 	const model = new FahrschuelerartenModelProxy(() => initialData.value, props.manager);
 	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
-	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const hatKompetenzAdd = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 
 

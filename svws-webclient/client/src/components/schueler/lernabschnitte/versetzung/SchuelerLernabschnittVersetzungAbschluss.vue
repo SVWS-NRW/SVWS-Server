@@ -31,10 +31,13 @@
 	import { computed } from 'vue';
 	import { BenutzerKompetenz, type KlassenDaten } from "@core";
 	import type { SchuelerLernabschnittVersetzungAbschlussProps } from "./SchuelerLernabschnittVersetzungAbschlussProps";
+	import { useBenutzerState } from '@ui';
 
 	const props = defineProps<SchuelerLernabschnittVersetzungAbschlussProps>();
-	const readonly = computed<boolean>(() => !(props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN)
-		|| props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN))
+	const benutzerState = useBenutzerState();
+
+	const readonly = computed<boolean>(() => !(benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN)
+		|| benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN))
 	);
 
 	const folgeklasse = computed<KlassenDaten | undefined>({

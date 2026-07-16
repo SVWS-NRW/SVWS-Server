@@ -1,8 +1,6 @@
-import type { GostFaecherManager, GostFach, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, GostJahrgangsdaten, BenutzerKompetenz } from "@core";
+import type { GostFaecherManager, GostFach, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, GostJahrgangsdaten } from "@core";
 
 export interface GostFaecherProps {
-	benutzerKompetenzen: Set<BenutzerKompetenz>,
-	benutzerKompetenzenAbiturjahrgaenge: Set<number>;
 	faecherManager: () => GostFaecherManager;
 	patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<void>;
 	patchFachkombination: (data: Partial<GostJahrgangFachkombination>, id: number) => Promise<void>;

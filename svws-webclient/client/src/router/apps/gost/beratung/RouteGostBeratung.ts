@@ -1,13 +1,9 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
 import { BenutzerKompetenz, DeveloperNotificationException, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
-
 import type { GostBeratungProps } from "~/components/gost/beratung/SGostBeratungProps";
 import { routeError } from "~/router/error/RouteError";
-import { api } from "~/router/Api";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { ConfigElement } from "@ui";
 import { gostLaufbahnplanungStateImpl } from "~/states/GostLaufbahnplanungStateImpl";
@@ -50,9 +46,6 @@ export class RouteGostBeratung extends RouteNode<any, RouteGost> {
 
 	public getProps(to: RouteLocationNormalized): GostBeratungProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
-			benutzerdaten: api.benutzerdaten,
-			config: () => configStateImpl.config,
 			patchJahrgangsdaten: routeGost.data.patchJahrgangsdaten,
 		};
 	}

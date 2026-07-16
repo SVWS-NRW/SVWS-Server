@@ -200,12 +200,13 @@
 	import type { Leitungsfunktion, NationalitaetenKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
 	import { BenutzerKompetenz, DateUtils, Geschlecht, JavaString, Nationalitaeten, PersonalTyp, Schulleitung, ArrayList, ServerMode } from "@core";
 	import type { DataTableColumn } from "@ui";
-	import { CoreTypeSelectManager, SelectManager, useSchuleState, useServerState } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState, useServerState } from "@ui";
 	import type { LehrerIndividualdatenProps } from "./LehrerIndividualdatenProps";
 	import { LehrerIndividualdatenModelProxy } from "./modelproxy/LehrerIndividualdatenModelProxy";
 	import WiedervorlageModal from "~/components/wiedervorlage/WiedervorlageModal.vue";
 
 	const props = defineProps<LehrerIndividualdatenProps>();
+	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 	const serverState = useServerState();
 
@@ -213,7 +214,7 @@
 	const dataNotPatched = () => props.lehrerListeManager().daten();
 	const modelProxy = new LehrerIndividualdatenModelProxy(dataNotPatched, () => schuleState.validatorKontext, manager, props.orteById, props.ortsteileById, props.patch);
 
-	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRERDATEN_AENDERN));
+	const readonly = computed<boolean>(() => !benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRERDATEN_AENDERN));
 	const selectedLeitungsfunktionen = ref<Schulleitung[]>([]);
 	const clickedLeitungsfunktion = ref<Schulleitung | null>(null);
 	const leitungsfunktionEntry = ref<Schulleitung>(new Schulleitung());

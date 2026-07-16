@@ -41,14 +41,16 @@
 
 	import type { HaltestellenAuswahlProps } from "~/components/schule/kataloge/haltestellen/HaltestellenAuswahlProps";
 	import type { DataTableColumn } from "@ui";
-	import { useRegionSwitch, ViewType } from "@ui";
+	import { useBenutzerState, useRegionSwitch, ViewType } from "@ui";
 	import { BenutzerKompetenz } from "@core";
 	import type { Haltestelle } from "@core";
 	import { computed } from "vue";
 
-	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 	const props = defineProps<HaltestellenAuswahlProps>();
-	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const benutzerState = useBenutzerState();
+
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const isHinzufuegenView = computed<boolean>(() => props.activeViewType === ViewType.HINZUFUEGEN);
 	const isGruppenprozesseOrHinzufuegenView = computed<boolean>(() => (props.activeViewType === ViewType.GRUPPENPROZESSE) || isHinzufuegenView.value);
 	const noFilteredEntries = computed<boolean>(() => props.manager().filtered().size() === 0);

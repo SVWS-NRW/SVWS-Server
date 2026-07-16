@@ -69,6 +69,7 @@ import { routeFachklassen } from "~/router/apps/schule/kataloge/fachklassen/Rout
 import { routeNotenmodulAnkreuzkompetenzen } from "./notenmodul/RouteNotenmodulAnkreuzkompetenzen";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { serverStateImpl } from "~/states/ServerStateImpl";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 import SApp from "~/components/SApp.vue";
 import { routeSchuleReportingKonfiguration } from "./schule/reporting/RouteSchuleReportingKonfiguration";
 
@@ -89,7 +90,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	public get menuEinstellungen(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._menuEinstellungen) {
-			if (api.authenticated && (!node.mode.checkServerMode(serverStateImpl.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
+			if (benutzerStateImpl.authenticated && (!node.mode.checkServerMode(serverStateImpl.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
 				continue;
 			}
 			result.push(node);
@@ -106,7 +107,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	public get menuBenutzerprofil(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._menuBenutzerprofil) {
-			if (api.authenticated && (!node.mode.checkServerMode(serverStateImpl.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
+			if (benutzerStateImpl.authenticated && (!node.mode.checkServerMode(serverStateImpl.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
 				continue;
 			}
 			result.push(node);
@@ -123,7 +124,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	public get menuSchule(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._menuSchule) {
-			if (api.authenticated && (!node.mode.checkServerMode(serverStateImpl.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
+			if (benutzerStateImpl.authenticated && (!node.mode.checkServerMode(serverStateImpl.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
 				continue;
 			}
 			result.push(node);
@@ -140,7 +141,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	public get menuNotenmodul(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._menuNotenmodul) {
-			if (api.authenticated && (!node.mode.checkServerMode(serverStateImpl.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
+			if (benutzerStateImpl.authenticated && (!node.mode.checkServerMode(serverStateImpl.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
 				continue;
 			}
 			result.push(node);
@@ -276,7 +277,6 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	public getProps(): AppProps {
 		return {
 			logout: routeLogin.logout,
-			username: api.username,
 			schemaname: api.schema,
 			// Props für die Navigation
 			menu: this.getMenuManager(),

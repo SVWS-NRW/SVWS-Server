@@ -6,7 +6,6 @@ import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { routeEntlassgruende } from "~/router/apps/schule/kataloge/entlassgruende/RouteEntlassgruende";
-import { api } from "~/router/Api";
 
 const EntlassgruendeNeu = () => import("~/components/schule/kataloge/entlassgruende/EntlassgruendeNeu.vue");
 
@@ -27,7 +26,6 @@ export class RouteEntlassgruendeNeu extends RouteNode<any, RouteEntlassgruende> 
 			add: routeEntlassgruende.data.addEntlassgrund,
 			goToDefaultView: routeEntlassgruende.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};
 	}

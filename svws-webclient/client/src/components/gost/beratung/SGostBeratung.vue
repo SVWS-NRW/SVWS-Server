@@ -47,15 +47,18 @@
 	import { BenutzerKompetenz, BenutzerTyp, type GostBeratungslehrer, type LehrerListeEintrag } from "@core";
 	import { computed, ref } from "vue";
 	import { lehrer_filter } from '~/utils/helfer';
-	import { LaufbahnplanungUiManager, useGostLaufbahnplanungState, useRegionSwitch, useServerState } from "@ui";
+	import { LaufbahnplanungUiManager, useBenutzerState, useGostLaufbahnplanungState, useRegionSwitch, useServerState } from "@ui";
+	import { useConfigState } from "../../../../../ui/src/states/ConfigState";
 
 	const props = defineProps<GostBeratungProps>();
 	const serverState = useServerState();
+	const configState = useConfigState();
+	const benutzerState = useBenutzerState();
 	const gostLaufbahnplanungState = useGostLaufbahnplanungState();
 
 	const manager = computed<LaufbahnplanungUiManager>(() => new LaufbahnplanungUiManager(
 		serverState.mode,
-		props.config,
+		() => configState.config,
 		{ faecherZeigen: "app.gost.beratung.faecher.anzeigen", modus: "app.gost.beratung.modus" },
 		true,
 		true
@@ -68,14 +71,14 @@
 	const hatUpdateKompetenz = computed<boolean>(() => {
 		let beratungslehrer = false;
 		for (const b of gostLaufbahnplanungState.beratungslehrer) {
-			if (b.id === props.benutzerdaten.id) {
+			if (b.id === benutzerState.benutzerdaten.id) {
 				beratungslehrer = true;
 				break;
 			}
 		}
-		return props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
-			|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)
-				&& props.benutzerdaten.typ === BenutzerTyp.LEHRER.id && beratungslehrer);
+		return benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
+			|| (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)
+				&& benutzerState.benutzerdaten.typ === BenutzerTyp.LEHRER.id && beratungslehrer);
 	});
 
 	const istAbiturjahrgang = computed<boolean>(() => (gostLaufbahnplanungState.valid &&

@@ -3,7 +3,6 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
-import { api } from "~/router/Api";
 import type { RouteLeitungsfunktionen } from "./RouteLeitungsfunktionen";
 import { routeLeitungsfunktionen } from "./RouteLeitungsfunktionen";
 import type { LeitungsfunktionenNeuProps } from "~/components/schule/kataloge/leitungsfunktionen/LeitungsfunktionenNeuProps";
@@ -27,7 +26,6 @@ export class RouteLeitungsfunktionenNeu extends RouteNode<any, RouteLeitungsfunk
 			add: routeLeitungsfunktionen.data.add,
 			goToDefaultView: routeLeitungsfunktionen.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};
 	}

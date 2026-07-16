@@ -6,7 +6,6 @@ import { RouteDataSchuelerKAoA } from "~/router/apps/schueler/kaoa/RouteDataSchu
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
-import { api } from "~/router/Api";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 const SchuelerKaoa = () => import("~/components/schueler/kaoa/SchuelerKaoa.vue");
@@ -67,7 +66,6 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 			add: this.data.add,
 			patch: this.data.patch,
 			delete: this.data.delete,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

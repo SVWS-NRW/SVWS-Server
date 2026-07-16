@@ -2,7 +2,6 @@ import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import type { RouteVermerkarten } from "./RouteVermerkarten";
 import type { VermerkartenGruppenprozesseProps } from "~/components/schule/kataloge/vermerkarten/gruppenprozesse/VermerkartenGruppenprozesseProps";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { routeVermerkarten } from "./RouteVermerkarten";
@@ -27,7 +26,6 @@ export class RouteVermerkartenGruppenprozesse extends RouteNode<any, RouteVermer
 
 	public getProps(to: RouteLocationNormalized): VermerkartenGruppenprozesseProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeVermerkarten.data.manager,
 			delete: routeVermerkarten.data.delete,
 			deleteCheck: routeVermerkarten.data.deleteCheck,

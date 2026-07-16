@@ -1,7 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { type RouteJahrgaenge, routeJahrgaenge } from "~/router/apps/schule/kataloge/jahrgaenge/RouteJahrgaenge";
@@ -29,7 +27,6 @@ export class RouteJahrgaengeGruppenprozesse extends RouteNode<any, RouteJahrgaen
 			manager: () => routeJahrgaenge.data.manager,
 			delete: routeJahrgaenge.data.delete,
 			deleteCheck: routeJahrgaenge.data.deleteCheck,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

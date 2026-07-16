@@ -44,17 +44,18 @@
 
 	import { computed, ref } from "vue";
 	import type { SortByAndOrder } from "@ui";
-	import { useRegionSwitch, useServerState, ViewType } from "@ui";
+	import { useBenutzerState, useRegionSwitch, useServerState, ViewType } from "@ui";
 	import type { PersonalTyp, LehrerListeEintrag } from "@core";
 	import { BenutzerKompetenz } from "@core";
 	import type { LehrerAuswahlProps } from "./LehrerAuswahlProps";
 
 	const props = defineProps<LehrerAuswahlProps>();
+	const benutzerState = useBenutzerState();
 	const serverState = useServerState();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
-	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRERDATEN_AENDERN));
+	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRERDATEN_AENDERN));
 
 	const columns = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },

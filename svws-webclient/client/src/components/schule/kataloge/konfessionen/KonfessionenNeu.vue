@@ -54,13 +54,14 @@
 	import type { KonfessionenNeuProps } from "./KonfessionenNeuProps";
 	import { computed, ref, watch } from "vue";
 	import { BenutzerKompetenz, Religion, ReligionEintrag } from "@core";
-	import { CoreTypeSelectManager, useSchuleState } from "@ui";
+	import { CoreTypeSelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import { KonfessionModelProxy } from "~/components/schule/kataloge/konfessionen/modelproxy/KonfessionModelProxy";
 
 	const props = defineProps<KonfessionenNeuProps>();
+	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const isLoading = ref<boolean>(false);
 	const initialData = ref<ReligionEintrag>(Object.assign(new ReligionEintrag(), { istSichtbar: true, sortierung: 32000 }));
 	const model = new KonfessionModelProxy(() => initialData.value, () => props.manager().liste.list(), schuleState.abschnitt.schuljahr);

@@ -45,27 +45,32 @@
 	import { ReportingReportvorlage } from "../../../../../core/src/core/types/reporting/ReportingReportvorlage";
 	import { useAbschnittState } from "../../../states/AbschnittState";
 	import { useGostLaufbahnplanungState } from "../../../states/GostLaufbahnplanungState";
+	import { useBenutzerState } from "../../../states/BenutzerState";
+	import { useConfigState } from "../../../states/ConfigState";
 
 	const props = defineProps<SchuelerLaufbahnplanungProps>();
+	const benutzerState = useBenutzerState();
 	const serverState = useServerState();
 	const abschnittState = useAbschnittState();
 	const reportingState = useReportingState();
+	const configState = useConfigState();
+
 	const gostLaufbahnplanungState = useGostLaufbahnplanungState();
 
 	const manager = computed<LaufbahnplanungUiManager>(() => new LaufbahnplanungUiManager(
 		serverState.mode,
-		props.config,
+		() => configState.config,
 		{ faecherZeigen: "app.schueler.laufbahnplanung.faecher.anzeigen", modus: "app.schueler.laufbahnplanung.modus" }
 	));
 
 	const hatUpdateKompetenz = computed<boolean>(() => {
-		if ((props.benutzerKompetenzen === undefined) || (props.benutzerKompetenzenAbiturjahrgaenge === undefined)
+		if ((benutzerState.kompetenzen.size === 0) || (benutzerState.kompetenzenAbiturjahrgaenge.size === 0)
 			|| (gostLaufbahnplanungState.schuelerOrNull === null) || (gostLaufbahnplanungState.schuelerOrNull.abiturjahrgang === null)) {
 			return false;
 		}
-		return props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
-			|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)
-				&& props.benutzerKompetenzenAbiturjahrgaenge.has(gostLaufbahnplanungState.schuelerOrNull.abiturjahrgang));
+		return benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
+			|| (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)
+				&& benutzerState.kompetenzenAbiturjahrgaenge.has(gostLaufbahnplanungState.schuelerOrNull.abiturjahrgang));
 	});
 
 	const visible = computed<boolean>(() => (gostLaufbahnplanungState.schuelerOrNull !== null)

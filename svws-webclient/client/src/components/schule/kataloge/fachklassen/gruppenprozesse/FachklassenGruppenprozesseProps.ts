@@ -1,8 +1,7 @@
-import type { BenutzerKompetenz, List } from "@core";
+import type { List } from "@core";
 import type { FachklassenListeManager } from "@ui";
 
 export interface FachklassenGruppenprozesseProps {
-	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	manager: () => FachklassenListeManager;
 	deleteCheck: () => { success: boolean, logs: Iterable<string> };
 	delete: () => Promise<[boolean, List<string | null>]>;

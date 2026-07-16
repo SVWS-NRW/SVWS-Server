@@ -4,7 +4,6 @@ import { RouteNode } from "~/router/RouteNode";
 import type { RouteErzieherarten } from "~/router/apps/schule/kataloge/erzieherarten/RouteErzieherarten";
 import { routeErzieherarten } from "~/router/apps/schule/kataloge/erzieherarten/RouteErzieherarten";
 import type { ErzieherartenDatenProps } from "~/components/schule/kataloge/erzieherarten/daten/ErzieherartenDatenProps";
-import { api } from "~/router/Api";
 
 const ErzieherartenDaten = () => import("~/components/schule/kataloge/erzieherarten/daten/ErzieherartenDaten.vue");
 
@@ -21,7 +20,6 @@ export class RouteErzieherartenDaten extends RouteNode<any, RouteErzieherarten> 
 		return {
 			patch: routeErzieherarten.data.patch,
 			manager: () => routeErzieherarten.data.manager,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 }

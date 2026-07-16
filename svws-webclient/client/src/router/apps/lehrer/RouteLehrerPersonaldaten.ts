@@ -1,14 +1,10 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
 import type { DeveloperNotificationException } from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeLehrer, type RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
-
 import type { LehrerPersonaldatenProps } from "~/components/lehrer/personaldaten/LehrerPersonaldatenProps";
 import { routeError } from "~/router/error/RouteError";
-import { api } from "~/router/Api";
 
 const LehrerPersonaldaten = () => import("~/components/lehrer/personaldaten/LehrerPersonaldaten.vue");
 
@@ -41,7 +37,6 @@ export class RouteLehrerPersonaldaten extends RouteNode<any, RouteLehrer> {
 
 	public getProps(_: RouteLocationNormalized): LehrerPersonaldatenProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			lehrerListeManager: () => routeLehrer.data.manager,
 			mapSchulen: () => routeLehrer.data.mapSchulen,
 			patchPersonaldaten: routeLehrer.data.patchPersonaldaten,

@@ -7,20 +7,22 @@
 
 <script setup lang="ts">
 
-	import type { BenutzerDaten, BenutzergruppeListeEintrag, BenutzergruppenManager } from "@core";
+	import type { BenutzergruppeListeEintrag, BenutzergruppenManager } from "@core";
+	import { useBenutzerState } from "@ui";
 	import { computed } from "vue";
 
 	const props = defineProps<{
 		manager: () => BenutzergruppenManager;
 		setBezeichnung: (anzeigename: string | null) => Promise<void>;
 		setIstAdmin: (istAdmin: boolean) => Promise<void>;
-		aktuellerBenutzer: BenutzerDaten;
 		mapBenutzergruppen: Map<number, BenutzergruppeListeEintrag>;
 	}>();
 
+	const benutzerState = useBenutzerState();
+
 	const alleKompetenzenFreigebenDisabled = computed<boolean>(() => {
-		const benutzerIstInAusgewaehlterGruppe = ([...props.aktuellerBenutzer.gruppen].some(g => g.id === props.manager().daten().id));
-		const benutzerIstInMehrerenAdminGruppen = [...props.aktuellerBenutzer.gruppen].filter(e => props.mapBenutzergruppen.get(e.id)?.istAdmin === true).length > 1;
+		const benutzerIstInAusgewaehlterGruppe = ([...benutzerState.benutzerdaten.gruppen].some(g => g.id === props.manager().daten().id));
+		const benutzerIstInMehrerenAdminGruppen = [...benutzerState.benutzerdaten.gruppen].filter(e => props.mapBenutzergruppen.get(e.id)?.istAdmin === true).length > 1;
 		return benutzerIstAdmin.value
 			&& benutzerIstInAusgewaehlterGruppe
 			&& !benutzerIstInMehrerenAdminGruppen;

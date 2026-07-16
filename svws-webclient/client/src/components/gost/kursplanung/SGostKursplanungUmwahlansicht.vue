@@ -153,7 +153,7 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { DataTableColumn } from "@ui";
+	import { useBenutzerState, type DataTableColumn } from "@ui";
 	import type { GostKursplanungUmwahlansichtProps } from "./SGostKursplanungUmwahlansichtProps";
 	import type { GostBlockungRegel, GostBlockungsergebnisKurs, GostFachwahl, GostKursart, List } from "@core";
 	import { BenutzerKompetenz, DTOUtils, GostBlockungRegelUpdate, SetUtils, Fach } from "@core";
@@ -161,15 +161,16 @@
 	type DndData = { id: number | undefined, fachID: number, kursart: number };
 
 	const props = defineProps<GostKursplanungUmwahlansichtProps>();
+	const benutzerState = useBenutzerState();
 
 	const schuljahr = computed<number>(() => props.getDatenmanager().faecherManager().getSchuljahr());
 
 	const idSchueler = computed<number>(() => props.schueler === undefined ? -1 : props.schueler.id);
 
 	const hatUpdateKompetenz = computed<boolean>(() => {
-		return props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN)
-			|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)
-				&& props.benutzerKompetenzenAbiturjahrgaenge.has(props.getDatenmanager().daten().abijahrgang));
+		return benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN)
+			|| (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)
+				&& benutzerState.kompetenzenAbiturjahrgaenge.has(props.getDatenmanager().daten().abijahrgang));
 	});
 
 	const dragAndDropData = ref<DndData | undefined>(undefined);

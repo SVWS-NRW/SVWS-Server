@@ -58,15 +58,17 @@
 	import { computed, ref, watch } from "vue";
 	import type { FachDaten, JahrgangsDaten } from "@core";
 	import { BenutzerKompetenz, Floskel } from "@core";
-	import { SelectManager } from "@ui";
+	import { SelectManager, useBenutzerState } from "@ui";
 	import type { FloskelnNeuProps } from "./FloskelnNeuProps";
 	import { FloskelModelProxy } from "~/components/schule/kataloge/floskeln/modelproxy/FloskelModelProxy";
 
 	const props = defineProps<FloskelnNeuProps>();
+	const benutzerState = useBenutzerState();
+
 	const initialData = ref<Floskel>(Object.assign(new Floskel(), { sortierung: 32000 }));
 	const model = new FloskelModelProxy(() => initialData.value, () => props.manager().liste.list(), props.manager);
 	const isLoading = ref<boolean>(false);
-	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const hatKompetenzAdd = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 
 	const formIsValid = computed(() => model.getAlleFehler().isEmpty());

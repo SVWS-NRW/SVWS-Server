@@ -87,14 +87,15 @@
 	import type { SchulenDatenProps } from "./SchulenDatenProps";
 	import { computed } from "vue";
 	import { BenutzerKompetenz, Schulform } from "@core";
-	import { CoreTypeSelectManager, useSchuleState } from "@ui";
+	import { CoreTypeSelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import { SchuleModelProxy } from "~/components/schule/kataloge/schulen/modelproxy/SchuleModelProxy";
 
 	const props = defineProps<SchulenDatenProps>();
+	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 
 	const model = new SchuleModelProxy(() => props.manager().daten(), () => props.manager().liste.list(), props.patch);
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const readonly = computed(() => !hatKompetenzUpdate.value);
 	const isInternal = computed<boolean>(() => model.proxy.schulnummerStatistik?.charAt(0) === "1");
 

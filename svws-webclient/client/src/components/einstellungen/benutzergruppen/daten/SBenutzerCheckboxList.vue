@@ -16,7 +16,7 @@
 					:add-benutzer-to-benutzergruppe
 					:remove-benutzer-from-benutzergruppe
 					:goto-benutzer
-					:disabled="benutzer.id === aktuellerBenutzer.id" />
+					:disabled="benutzer.id === benutzerState.benutzerdaten.id" />
 			</template>
 		</template>
 	</svws-ui-table>
@@ -25,7 +25,8 @@
 
 <script setup lang="ts">
 
-	import type { List, BenutzerListeEintrag, BenutzerDaten } from "@core";
+	import type { List, BenutzerListeEintrag } from "@core";
+	import { useBenutzerState } from "@ui";
 
 	defineProps<{
 		title: string;
@@ -34,8 +35,9 @@
 		addBenutzerToBenutzergruppe: (benutzer: BenutzerListeEintrag) => Promise<void>;
 		removeBenutzerFromBenutzergruppe: (benutzer: BenutzerListeEintrag) => Promise<void>;
 		gotoBenutzer: (idBenutzer: number) => Promise<void>;
-		aktuellerBenutzer: BenutzerDaten;
 	}>();
+
+	const benutzerState = useBenutzerState();
 
 	const cols = [
 		{ key: 'anzeigename', label: 'Anzeigename', span: 2 },

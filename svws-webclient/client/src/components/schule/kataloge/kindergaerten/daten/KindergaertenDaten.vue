@@ -72,8 +72,11 @@
 	import { BenutzerKompetenz } from "@core";
 	import type { KindergaertenDatenProps } from "~/components/schule/kataloge/kindergaerten/daten/KindergaertenDatenProps";
 	import { KindergaertenModelProxy } from "../modelproxy/KindergaertenModelProxy";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<KindergaertenDatenProps>();
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const benutzerState = useBenutzerState();
+
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const model = new KindergaertenModelProxy(() => props.manager().daten(), () => props.manager().liste.list(), props.patch);
 </script>

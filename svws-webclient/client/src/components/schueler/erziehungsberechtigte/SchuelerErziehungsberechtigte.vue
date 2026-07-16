@@ -37,13 +37,15 @@
 
 <script setup lang="ts">
 	import { computed, ref, watch } from "vue";
-	import { useAbschnittState } from "@ui";
+	import { useAbschnittState, useBenutzerState } from "@ui";
 	import type { SchuelerErziehungsberechtigteProps } from "./SchuelerErziehungsberechtigteProps";
 	import { ErzieherStammdaten, ArrayList, BenutzerKompetenz } from "@core";
 
 	const props = defineProps<SchuelerErziehungsberechtigteProps>();
+	const benutzerState = useBenutzerState();
 	const abschnittState = useAbschnittState();
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
+
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const schuljahr = computed<number>(() => abschnittState.auswahl.schuljahr);
 	const erzieher = ref<ErzieherStammdaten | undefined>();
 	const selectedErz = ref<ErzieherStammdaten[]>([]);

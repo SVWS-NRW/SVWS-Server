@@ -5,7 +5,6 @@ import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
 import { routeFaecher, type RouteFaecher } from "./RouteFaecher";
-import { api } from "~/router/Api";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const FaecherNeu = () => import("~/components/schule/kataloge/faecher/FaecherNeu.vue");
@@ -32,7 +31,6 @@ export class RouteFaecherNeu extends RouteNode<any, RouteFaecher> {
 			gotoDefaultView: routeFaecher.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 }

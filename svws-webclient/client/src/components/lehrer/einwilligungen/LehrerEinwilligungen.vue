@@ -55,10 +55,12 @@
 	import type { LehrerEinwilligungenProps } from './LehrerEinwilligungenProps';
 	import type { LehrerEinwilligung } from "@core";
 	import { BenutzerKompetenz } from "@core";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<LehrerEinwilligungenProps>();
+	const benutzerState = useBenutzerState();
 
-	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN));
+	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN));
 	const readonly = computed(() => !hatKompetenzAendern.value);
 
 	const hasAbgefragteEinwilligungen = computed(() => {

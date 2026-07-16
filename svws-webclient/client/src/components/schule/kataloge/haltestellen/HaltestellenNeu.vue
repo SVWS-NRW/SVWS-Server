@@ -46,10 +46,13 @@
 	import { BenutzerKompetenz, Haltestelle } from "@core";
 	import { computed, ref, watch } from "vue";
 	import { HaltestellenModelProxy } from "~/components/schule/kataloge/haltestellen/modelproxy/HaltestellenModelProxy";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<HaltestellenNeuProps>();
+	const benutzerState = useBenutzerState();
+
 	const isLoading = ref<boolean>(false);
-	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const hatKompetenzAdd = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 
 	const initialData = ref<Haltestelle>(Object.assign(new Haltestelle(), { istSichtbar: true }));

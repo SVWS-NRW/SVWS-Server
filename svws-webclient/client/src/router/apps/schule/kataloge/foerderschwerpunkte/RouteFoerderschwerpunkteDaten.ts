@@ -3,7 +3,6 @@ import type { RouteLocationNormalized } from "vue-router";
 import type { RouteFoerderschwerpunkte } from "~/router/apps/schule/kataloge/foerderschwerpunkte/RouteFoerderschwerpunkte";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import { api } from "~/router/Api";
 import { routeFoerderschwerpunkte } from "~/router/apps/schule/kataloge/foerderschwerpunkte/RouteFoerderschwerpunkte";
 
 const FoerderschwerpunkteDaten = () => import("~/components/schule/kataloge/foerderschwerpunkte/daten/FoerderschwerpunkteDaten.vue");
@@ -21,7 +20,6 @@ export class RouteFoerderschwerpunkteDaten extends RouteNode<any, RouteFoerdersc
 	public getProps(to: RouteLocationNormalized): FoerderschwerpunkteDatenProps {
 		return {
 			manager: () => routeFoerderschwerpunkte.data.manager,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			patch: routeFoerderschwerpunkte.data.patch,
 		};
 	}

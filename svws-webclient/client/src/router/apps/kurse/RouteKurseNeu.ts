@@ -1,8 +1,6 @@
 import type { RouteLocationNormalized, RouteParamsRawGeneric } from "vue-router";
-
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import { api } from "~/router/Api";
 import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
 import type { KurseNeuProps } from "~/components/kurse/SKurseNeuProps";
@@ -33,7 +31,6 @@ export class RouteKurseNeu extends RouteNode<any, RouteKurse> {
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 			goToDefaultView: routeKurse.data.gotoDefaultView,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 }

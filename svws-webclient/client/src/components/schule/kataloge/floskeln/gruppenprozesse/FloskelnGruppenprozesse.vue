@@ -37,10 +37,12 @@
 	import { BenutzerKompetenz } from "@core";
 	import { computed, ref } from "vue";
 	import type { FloskelnGruppenprozesseProps } from "./FloskelnGruppenprozesseProps";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<FloskelnGruppenprozesseProps>();
+	const benutzerState = useBenutzerState();
 
-	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
+	const hatKompetenzLoeschen = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 	const hatIrgendwelcheKompetenzen = computed(() => hatKompetenzLoeschen.value);
 	const isLoading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();

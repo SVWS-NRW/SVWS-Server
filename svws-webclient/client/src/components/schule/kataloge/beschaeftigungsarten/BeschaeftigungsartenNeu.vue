@@ -44,11 +44,14 @@
 	import { BenutzerKompetenz, Beschaeftigungsart } from "@core";
 	import { computed, ref, watch } from "vue";
 	import { BeschaeftigungsartModelProxy } from "~/components/schule/kataloge/beschaeftigungsarten/modelproxy/BeschaeftigungsartModelProxy";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<BeschaeftigungsartenNeuProps>();
+	const benutzerState = useBenutzerState();
+
 	const initialData = ref<Beschaeftigungsart>(Object.assign(new Beschaeftigungsart(), { istSichtbar: true, sortierung: 32000 }));
 	const data = new BeschaeftigungsartModelProxy(() => initialData.value, () => props.manager().liste.list());
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const disabled = computed(() => !hatKompetenzUpdate.value);
 	const isLoading = ref<boolean>(false);
 	const isValid = computed<boolean>(() => data.getAlleFehler().isEmpty());

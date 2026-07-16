@@ -4,7 +4,6 @@ import type { RouteHaltestellen } from "~/router/apps/schule/kataloge/haltestell
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
-import { api } from "~/router/Api";
 import { routeHaltestellen } from "~/router/apps/schule/kataloge/haltestellen/RouteHaltestellen";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
@@ -27,7 +26,6 @@ export class RouteHaltestellenGruppenprozesse extends RouteNode<any, RouteHaltes
 
 	public getProps(to: RouteLocationNormalized): HaltestellenGruppenprozesseProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			delete: routeHaltestellen.data.delete,
 			deleteCheck: routeHaltestellen.data.deleteCheck,
 			manager: () => routeHaltestellen.data.manager,

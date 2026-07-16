@@ -34,12 +34,15 @@
 
 	import type { TelefonartenDatenProps } from "./TelefonartenDatenProps";
 	import { BenutzerKompetenz } from "@core";
+	import { useBenutzerState } from "@ui";
 	import { computed } from "vue";
 	import { TelefonartenModelProxy } from "~/components/schule/kataloge/telefonarten/modelproxy/TelefonartenModelProxy";
 
 	const props = defineProps<TelefonartenDatenProps>();
+	const benutzerState = useBenutzerState();
+
 	const model = new TelefonartenModelProxy(() => props.manager().auswahl(), () => props.manager().liste.list(), props.patch);
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const readonly = computed(() => !hatKompetenzUpdate.value);
 
 </script>

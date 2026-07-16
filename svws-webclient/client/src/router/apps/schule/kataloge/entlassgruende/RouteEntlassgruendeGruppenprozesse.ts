@@ -4,7 +4,6 @@ import type { RouteEntlassgruende } from "~/router/apps/schule/kataloge/entlassg
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
-import { api } from "~/router/Api";
 import { routeEntlassgruende } from "~/router/apps/schule/kataloge/entlassgruende/RouteEntlassgruende";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
@@ -27,7 +26,6 @@ export class RouteEntlassgruendeGruppenprozesse extends RouteNode<any, RouteEntl
 
 	public getProps(to: RouteLocationNormalized): EntlassgruendeGruppenprozesseProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			delete: routeEntlassgruende.data.delete,
 			deleteCheck: routeEntlassgruende.data.deleteCheck,
 			manager: () => routeEntlassgruende.data.manager,

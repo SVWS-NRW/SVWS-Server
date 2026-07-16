@@ -4,7 +4,6 @@ import { RouteNode } from "~/router/RouteNode";
 import type { RouteTelefonarten } from "~/router/apps/schule/kataloge/telefonarten/RouteTelefonarten";
 import { routeTelefonarten } from "~/router/apps/schule/kataloge/telefonarten/RouteTelefonarten";
 import type { TelefonartenDatenProps } from "~/components/schule/kataloge/telefonarten/daten/TelefonartenDatenProps";
-import { api } from "~/router/Api";
 
 const TelefonartenDaten = () => import("~/components/schule/kataloge/telefonarten/daten/TelefonartenDaten.vue");
 
@@ -22,7 +21,6 @@ export class RouteTelefonartenDaten extends RouteNode<any, RouteTelefonarten> {
 		return {
 			patch: routeTelefonarten.data.patch,
 			manager: () => routeTelefonarten.data.manager,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 }

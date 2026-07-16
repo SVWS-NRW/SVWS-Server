@@ -81,7 +81,7 @@ export { default as SvwsUiSubNav } from "./ui/nav/SvwsUiSubNav.vue";
 export { default as SvwsUiTabBar } from "./ui/nav/SvwsUiTabBar.vue";
 export { default as SvwsUiTabBarVertical } from "./ui/nav/SvwsUiTabBarVertical.vue";
 export { default as SvwsUiTable } from "./ui/layout/SvwsUiTable.vue";
-export { default as UiTableActions } from "./ui/controls/tablegrid/UiTableActions.vue";
+export { default as UiTableActions, type TableActions } from "./ui/controls/tablegrid/UiTableActions.vue";
 export { default as SvwsUiTextareaInput } from "./ui/controls/SvwsUiTextareaInput.vue";
 export { default as SvwsUiTextInput } from "./ui/controls/SvwsUiTextInput.vue";
 export { default as SvwsUiTodo } from "./ui/SvwsUiTodo.vue";
@@ -90,6 +90,11 @@ export { default as UiValidationTooltip } from "./ui/UiValidationTooltip.vue";
 
 // AppContext
 export { AppContext } from "./AppContext";
+
+// AES
+export { AES } from "./utils/crypto/aes";
+export { AESAlgo } from "./utils/crypto/aesAlgo";
+export { AESException } from "./utils/crypto/aesException";
 
 // Use exports
 export { useRegionSwitch } from "./ui/composables/useRegionSwitch";
@@ -105,6 +110,7 @@ export { useServerState, type ServerState } from "./states/ServerState";
 export { useWiedervorlageState, type WiedervorlageState } from "./states/WiedervorlageState";
 export { useNotenmodulState, type NotenmodulState } from "./states/NotenmodulState";
 export { useConfigState, type ConfigState } from "./states/ConfigState";
+export { useBenutzerState, type BenutzerState } from "./states/BenutzerState";
 
 // Type exports
 export type { DataTableColumn, SortByAndOrder } from "./types";

@@ -1,32 +1,19 @@
-import { ref, shallowRef } from "vue";
-import type { BenutzerDaten, DBSchemaListeEintrag, List } from "@core";
-import { ApiServer, BenutzerKompetenz, DeveloperNotificationException, UserNotificationException, OpenApiError, JsonCoreTypeReader, ApiExternal } from "@core";
-import { AES } from "~/utils/crypto/aes";
-import { AESAlgo } from "~/utils/crypto/aesAlgo";
+import { ref } from "vue";
+import type { ConfigState } from "@ui";
+import type { DBSchemaListeEintrag, List } from "@core";
+import { ApiServer, DeveloperNotificationException, UserNotificationException, OpenApiError, JsonCoreTypeReader, ApiExternal } from "@core";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { serverStateImpl } from "~/states/ServerStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
-import type { ConfigState } from "../../../ui/src/states/ConfigState";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
 export class ApiConnection {
 
 	// Der State der Konfiguration
 	protected configState: ConfigState = configStateImpl;
 
-	// Gibt an, ob der Client beim Server authentifiziert ist
-	protected _authenticated = ref<boolean>(false);
-
 	// Die URL mit welcher der Server verbunden ist
 	protected _url: string = `https://${globalThis.location.hostname}:${globalThis.location.port}`;
-
-	// Der Benutzername für den Login
-	protected _username = "";
-
-	// Das Kennwort für den Login
-	protected _password = "";
-
-	// Das benutzerspezifische AES-Objekt zur Verschlüsselung
-	protected _aes = shallowRef<AES | undefined>(undefined);
 
 	// Der Name des Schemas auf dem SVWS-Server, bei dem der Login stattfindet
 	protected _schema: string | undefined;
@@ -36,21 +23,6 @@ export class ApiConnection {
 
 	// Die externe Api
 	protected _apiExternal: ApiExternal | undefined;
-
-	// Die Benutzerdaten des angemeldeten Benutzers
-	protected _benutzerdaten = shallowRef<BenutzerDaten | undefined>(undefined);
-
-	// Gibt an, ob der Benutzer Administrator-Rechte hat oder nicht (direkt oder indirekt über eine Gruppen-Zugehörigkeit)
-	protected _istAdmin = shallowRef<boolean | undefined>(undefined);
-
-	// Gibt die Kompetenzen des Benutzer zurück, die der Benutzer direkt oder indirekt über eine Gruppen-Zugehörigkeit besitzt
-	protected _kompetenzen = shallowRef<Set<BenutzerKompetenz> | undefined>(undefined);
-
-	// Enthält die Klassen-IDs, auf denen der Benutzer aufgrund einer Klassen- oder Abteilungsleitung funktionsbezogene Kompetenzen hat
-	protected _kompetenzenKlasse = shallowRef<Set<number> | undefined>(undefined);
-
-	// Enthält die Abiturjahrgänge, bei denen der Benutzer als Beratungslehrer funktionsbezogene Kompetenzen hat
-	protected _kompetenzenAbiturjahrgaenge = shallowRef<Set<number> | undefined>(undefined);
 
 	// Die Map mit den CoreTypeDaten
 	protected _mapCoreTypeData = ref<Map<string, any> | undefined>(undefined);
@@ -78,65 +50,6 @@ export class ApiConnection {
 			throw new DeveloperNotificationException("Es liegt kein DB-Schema für die Api vor");
 		}
 		return this._schema;
-	}
-
-	// Gibt den Status zurück, ob der Benutzer authentifiziert wurde
-	get authenticated(): boolean {
-		return this._authenticated.value;
-	}
-
-	// Gibt den Benutzernamen zurück
-	get username(): string {
-		return this._username;
-	}
-
-	// Gibt die Benutzerdaten des angemeldeten Benutzers zurück, sofern ein Login stattgefunden hat
-	get benutzerdaten(): BenutzerDaten {
-		if (this._benutzerdaten.value === undefined) {
-			throw new DeveloperNotificationException("Ein Benutzer muss angemeldet sein, damit dessen Daten geladen sein können.");
-		}
-		return this._benutzerdaten.value;
-	}
-
-	// Gibt an, sofern ein Login stattgefunden hat, ob es sich bei dem angemeldeten Benutzer um einen Administrator handelt oder nicht
-	get istAdmin(): boolean {
-		if (this._istAdmin.value === undefined) {
-			throw new DeveloperNotificationException("Ein Benutzer muss angemeldet sein, damit ermittelt werden kann, ob es sich um einen Administrator handelt oder nicht.");
-		}
-		return this._istAdmin.value;
-	}
-
-	// Die Kompetenzen des angemeldeten Benutzers, sofern ein Login stattgefunden hat
-	get kompetenzen(): Set<BenutzerKompetenz> {
-		if (this._kompetenzen.value === undefined) {
-			throw new DeveloperNotificationException("Ein Benutzer muss angemeldet sein, damit dessen Kompetenzen ermittelt werden können.");
-		}
-		return this._kompetenzen.value;
-	}
-
-	// Die Klassen-IDs, auf denen der angemeldete Benutzer aufgrund einer Klassen- oder Abteilungsleitung funktionsbezogene Kompetenzen hat
-	get kompetenzenKlasse(): Set<number> {
-		if (this._kompetenzenKlasse.value === undefined) {
-			throw new DeveloperNotificationException("Ein Benutzer muss angemeldet sein, damit dessen funktionsbezogene Kompetenzen ermittelt werden können.");
-		}
-		return this._kompetenzenKlasse.value;
-	}
-
-	// Die Abiturjahrgänge, auf denen der angemeldete Benutzer als Beratungslehrer funktionsbezogene Kompetenzen hat
-	get kompetenzenAbiturjahrgaenge(): Set<number> {
-		if (this._kompetenzenAbiturjahrgaenge.value === undefined) {
-			throw new DeveloperNotificationException("Ein Benutzer muss angemeldet sein, damit dessen funktionsbezogene Kompetenzen ermittelt werden können.");
-		}
-		return this._kompetenzenAbiturjahrgaenge.value;
-	}
-
-	// Gibt ein Promise zurück mit einem AES-Schlüssel
-	get aes(): AES {
-		const aes = this._aes.value;
-		if (aes === undefined) {
-			throw new DeveloperNotificationException("Das AES-Objekt ist nicht definiert");
-		}
-		return aes;
 	}
 
 	// gibt die Map mit den CoreType-Daten zurück
@@ -175,100 +88,6 @@ export class ApiConnection {
 		throw new UserNotificationException('Es konnte keine Verbindung hergestellt werden.');
 	};
 
-	/**
-	 * Ermittelt, ob der Benutzer mit den angebenen Daten ein administrativer
-	 * Benutzer ist oder nicht.
-	 *
-	 * @param daten   die Daten des Benutzers
-	 *
-	 * @returns true, falls der benutzer Administrator-Rechte hat, und ansonsten false
-	 */
-	protected getIstAdmin(daten: BenutzerDaten): boolean {
-		if (daten.istAdmin) {
-			return true;
-		}
-		for (const gruppe of daten.gruppen) {
-			if (gruppe.istAdmin) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Ermittelt, die Menge an Kompetenzen, die der Benutzer mit den angebenen Daten
-	 * entweder direkt oder indirekt über eine Gruppe hat.
-	 *
-	 * @param daten   die Daten des Benutzers
-	 *
-	 * @returns die Menge an Kompetenzen
-	 */
-	protected getKompetenzen(daten: BenutzerDaten): Set<BenutzerKompetenz> {
-		const result: Set<BenutzerKompetenz> = new Set();
-		// Jeder Benutzer hat die Kompetenz auf Teile Der Applikation zuzugreifen, die keine Kompetenz benötigen
-		result.add(BenutzerKompetenz.KEINE);
-		// Ein Admin-Benutzer hat alle Kompetenzen...
-		const istAdmin = this.getIstAdmin(daten);
-		if (istAdmin) {
-			result.add(BenutzerKompetenz.ADMIN);
-			for (const k of BenutzerKompetenz.values()) {
-				result.add(k);
-			}
-			return result;
-		}
-		// Lese die Kompetenzen ein, die der Benutzer direkt hat
-		for (const kid of daten.kompetenzen) {
-			const k = BenutzerKompetenz.getByID(kid);
-			if (k !== null) {
-				result.add(k);
-			}
-		}
-		// Lese die Kompetenzen ein, die der Benutzer indirekt über eine Gruppe hat
-		for (const gruppe of daten.gruppen) {
-			for (const kid of gruppe.kompetenzen) {
-				const k = BenutzerKompetenz.getByID(kid);
-				if (k !== null) {
-					result.add(k);
-				}
-			}
-		}
-		return result;
-	}
-
-
-	/**
-	 * Ermittelt, die Menge an Klassen-IDs, auf denen der Benutzer aufgrund einer Klassen- oder Abteilungsleitung
-	 * funktionsbezogene Kompetenzen hat.
-	 *
-	 * @param daten   die Daten des Benutzers
-	 *
-	 * @returns die Menge an Klassen-IDs
-	 */
-	protected getKompetenzenKlasse(daten: BenutzerDaten): Set<number> {
-		const result = new Set<number>();
-		for (const id of daten.kompetenzenKlassen) {
-			result.add(id);
-		}
-		return result;
-	}
-
-
-	/**
-	 * Ermittelt, die Menge an Abiturjahrgängen, bei denen der Benutzer als Beratungslehrer
-	 * funktionsbezogene Kompetenzen hat.
-	 *
-	 * @param daten   die Daten des Benutzers
-	 *
-	 * @returns die Menge an Abiturjahrgängen
-	 */
-	protected getKompetenzenAbiturjahrgaenge(daten: BenutzerDaten): Set<number> {
-		const result = new Set<number>();
-		for (const id of daten.kompetenzenAbiturjahrgaenge) {
-			result.add(id);
-		}
-		return result;
-	}
-
 
 	/**
 	 * Authentifiziert den angebenen Benutzer mit dem angegebenen Kennwort.
@@ -282,18 +101,10 @@ export class ApiConnection {
 	login = async (schema: string, username: string, password: string): Promise<void> => {
 		try {
 			this._schema = schema;
-			this._username = username;
-			this._password = password;
-			this._api = new ApiServer(this._url, this._username, this._password);
-			this._apiExternal = new ApiExternal(this._url, this._username, this._password);
-			this._authenticated.value = true;
-			this._benutzerdaten.value = await this._api.getBenutzerDatenEigene(this._schema);
-			this._istAdmin.value = this.getIstAdmin(this._benutzerdaten.value);
-			this._kompetenzen.value = this.getKompetenzen(this._benutzerdaten.value);
-			this._kompetenzenKlasse.value = this.getKompetenzenKlasse(this._benutzerdaten.value);
-			this._kompetenzenAbiturjahrgaenge.value = this.getKompetenzenAbiturjahrgaenge(this._benutzerdaten.value);
-			const aesKey = await AES.getKey256(password, username);
-			this._aes.value = new AES(AESAlgo.CBC, aesKey);
+			this._api = new ApiServer(this._url, username, password);
+			this._apiExternal = new ApiExternal(this._url, username, password);
+			await benutzerStateImpl.init(username, password);
+
 			await this.configState.init();
 		} catch (error) {
 			// Wenn Status 404, dann ist das Schema noch nicht initialisiert
@@ -307,16 +118,10 @@ export class ApiConnection {
 			// TODO Anmelde-Fehler wird nur in der App angezeigt. Der konkreten Fehler könnte ggf. geloggt werden...
 			this._api = undefined;
 			this._apiExternal = undefined;
-			this._authenticated.value = false;
-			this._benutzerdaten.value = undefined;
-			this._istAdmin.value = undefined;
-			this._kompetenzen.value = undefined;
-			this._kompetenzenKlasse.value = undefined;
-			this._kompetenzenAbiturjahrgaenge.value = undefined;
+			benutzerStateImpl.reset();
 			this.configState.clear();
 			schuleStateImpl.reset();
 			serverStateImpl.reset();
-			this._aes.value = undefined;
 		}
 	};
 
@@ -325,17 +130,9 @@ export class ApiConnection {
 	 * Trennt die Verbindung für den aktuell angemeldeten Benutzer
 	 */
 	logout = async (): Promise<void> => {
-		this._authenticated.value = false;
+		benutzerStateImpl.reset();
 		schuleStateImpl.reset();
 		serverStateImpl.reset();
-		this._benutzerdaten.value = undefined;
-		this._istAdmin.value = undefined;
-		this._kompetenzen.value = undefined;
-		this._kompetenzenKlasse.value = undefined;
-		this._kompetenzenAbiturjahrgaenge.value = undefined;
-		this._username = "";
-		this._password = "";
-		this._aes.value = undefined;
 		this._api = undefined;
 		this._apiExternal = undefined;
 		this.configState.clear();

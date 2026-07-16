@@ -55,8 +55,7 @@
 	import { computed, ref, watchEffect } from 'vue';
 	import type { GostKlausurplanManager, GostKursklausur, GostKlausurtermin } from '@core';
 	import { BenutzerKompetenz, GostSchuelerklausurTermin } from '@core';
-
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
+	import { useBenutzerState } from '@ui';
 
 	const props = withDefaults(defineProps<{
 		kMan: () => GostKlausurplanManager;
@@ -64,18 +63,21 @@
 		termin?: GostKlausurtermin;
 		createSchuelerklausurTermin?: (skt: Partial<GostSchuelerklausurTermin>) => Promise<void>;
 		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<void>;
-		benutzerKompetenzen: Set<BenutzerKompetenz>,
 	}>(), {
 		termin: undefined,
 		createSchuelerklausurTermin: undefined,
 		patchKlausur: undefined,
 	});
 
+	const benutzerState = useBenutzerState();
+
 	const emit = defineEmits<{
 		'modal': [value: boolean];
 	}>();
 
 	const show = ref<boolean>(false);
+
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	watchEffect(() => {
 		if (show.value) {

@@ -1,16 +1,12 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-
 import type { StundenplanPausenzeit, DeveloperNotificationException } from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
-
 import type { PausenzeitenAuswahlProps } from "~/components/stundenplan/kataloge/pausenzeiten/SPausenzeitenAuswahlProps";
 import type { PausenzeitenProps } from "~/components/stundenplan/kataloge/pausenzeiten/SPausenzeitenProps";
 import { RouteDataKatalogPausenzeiten } from "./RouteDataKatalogPausenzeiten";
 import { routeError } from "~/router/error/RouteError";
 import { RouteStundenplan, routeStundenplan } from "../RouteStundenplan";
-import { api } from "~/router/Api";
 
 const SPausenzeitenAuswahl = () => import("~/components/stundenplan/kataloge/pausenzeiten/SPausenzeitenAuswahl.vue");
 const SPausenzeiten = () => import("~/components/stundenplan/kataloge/pausenzeiten/SPausenzeiten.vue");
@@ -64,7 +60,6 @@ export class RouteKatalogPausenzeiten extends RouteNode<RouteDataKatalogPausenze
 			setKatalogPausenzeitenImportJSON: this.data.setKatalogPausenzeitenImportJSON,
 			stundenplanManager: () => this.data.stundenplanManager,
 			setSettingsDefaults: routeStundenplan.data.setSettingsDefaults,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

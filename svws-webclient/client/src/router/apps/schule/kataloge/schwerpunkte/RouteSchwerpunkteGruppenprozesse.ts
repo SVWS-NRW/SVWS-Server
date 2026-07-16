@@ -4,7 +4,6 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { ViewType } from "@ui";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import type { SchwerpunkteGruppenprozesseProps } from "~/components/schule/kataloge/schwerpunkte/gruppenprozesse/SchwerpunkteGruppenprozesseProps";
-import { api } from "~/router/Api";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const SchwerpunkteGruppenprozesse = () => import(
@@ -25,7 +24,6 @@ class RouteSchwerpunkteGruppenprozesse extends RouteNode<any, RouteSchwerpunkte>
 
 	public getProps(to: RouteLocationNormalized): SchwerpunkteGruppenprozesseProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeSchwerpunkte.data.manager,
 			delete: routeSchwerpunkte.data.delete,
 			deleteCheck: routeSchwerpunkte.data.deleteCheck,

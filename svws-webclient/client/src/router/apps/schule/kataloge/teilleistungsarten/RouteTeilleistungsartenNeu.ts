@@ -5,7 +5,6 @@ import { ViewType } from "@ui";
 import type { RouteLocationNormalized } from "vue-router";
 import type { TeilleistungsartenNeuProps } from "~/components/schule/kataloge/teilleistungsarten/TeilleistungsartenNeuProps";
 import { RouteManager } from "~/router/RouteManager";
-import { api } from "~/router/Api";
 
 
 const TeilleistungsartenNeu = () =>
@@ -26,7 +25,6 @@ export class RouteTeilleistungsartenNeu extends RouteNode<any, RouteTeilleistung
 			manager: () => routeTeilleistungsarten.data.manager,
 			add: routeTeilleistungsarten.data.add,
 			gotoDefaultView: routeTeilleistungsarten.data.gotoDefaultView,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};

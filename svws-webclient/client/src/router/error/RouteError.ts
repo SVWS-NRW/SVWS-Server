@@ -1,9 +1,6 @@
 import type { RouteLocationRaw, RouteParams } from "vue-router";
-
 import { DeveloperNotificationException, OpenApiError, ServerMode, BenutzerKompetenz, Schulform } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
-
 import SError from "~/components/error/SError.vue";
 import type { ErrorProps } from "~/components/error/SErrorProps";
 import { api } from "../Api";
@@ -53,7 +50,6 @@ export class RouteError extends RouteNode<any, any> {
 			error: RouteManager.instance.error,
 			errortext: RouteManager.instance.errortext,
 			api: api,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

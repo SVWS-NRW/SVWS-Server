@@ -1,13 +1,10 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteDataSchuelerSprachen } from "~/router/apps/schueler/sprachen/RouteDataSchuelerSprachen";
 import { type SchuelerSprachenProps } from "~/components/schueler/sprachen/SchuelerSprachenProps";
-import { api } from "~/router/Api";
 
 const SchuelerSprachen = () => import("~/components/schueler/sprachen/SchuelerSprachen.vue");
 
@@ -54,12 +51,9 @@ export class RouteSchuelerSprachen extends RouteNode<RouteDataSchuelerSprachen, 
 			addSprachpruefung: this.data.addSprachpruefung,
 			removeSprachpruefung: this.data.removeSprachpruefung,
 			schuelerListeManager: () => routeSchueler.data.manager,
-			benutzerKompetenzen: api.benutzerKompetenzen,
-			benutzerKompetenzenKlassen: api.benutzerKompetenzenKlassen,
 		};
 	}
 
 }
 
 export const routeSchuelerSprachen = new RouteSchuelerSprachen();
-

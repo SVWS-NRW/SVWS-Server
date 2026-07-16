@@ -83,15 +83,17 @@
 	import type { SchuelerKAoAProps } from './SchuelerKaoaProps';
 	import type { Schuljahresabschnitt } from "@core";
 	import { BenutzerKompetenz, Jahrgaenge, KAOAKategorie, KAOAMerkmal, KAOAZusatzmerkmal, SchuelerKAoADaten } from "@core";
+	import { useBenutzerState } from '@ui';
 	import { computed, ref, watch } from 'vue';
 	import { optionalInputIsValid } from "~/util/validation/Validation";
 
 	const props = defineProps<SchuelerKAoAProps>();
+	const benutzerState = useBenutzerState();
 
 	const data = ref<SchuelerKAoADaten>(new SchuelerKAoADaten());
 	const idPatchObject = ref<number>(-1);
 
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_KAOA_DATEN_AENDERN));
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_KAOA_DATEN_AENDERN));
 	const schuljahr = computed<number>(() => (schuljahresabschnitt.value?.schuljahr === undefined) ? -1 : schuljahresabschnitt.value.schuljahr);
 	const isAddMode = computed<boolean>(() => currentMode.value === Mode.ADD);
 	const schuljahresabschnitt = computed<Schuljahresabschnitt | null>(() => {

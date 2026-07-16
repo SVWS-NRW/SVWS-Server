@@ -11,6 +11,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { serverStateImpl } from "./ServerStateImpl";
 import { configStateImpl } from "./ConfigStateImpl";
 import type { GostKlausurvorgabeEintrag } from "../../../ui/src/states/GostLaufbahnplanungState";
+import { benutzerStateImpl } from "./BenutzerStateImpl";
 
 
 interface GostLaufbahnplanungReactiveState {
@@ -97,7 +98,7 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 	}
 
 	public get id(): number | undefined {
-		const { typ, typID } = api.benutzerdaten;
+		const { typ, typID } = benutzerStateImpl.benutzerdaten;
 		return BenutzerTyp.getByID(typ) === BenutzerTyp.LEHRER ? typID : undefined;
 	}
 

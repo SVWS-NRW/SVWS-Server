@@ -3,7 +3,6 @@ import { RouteNode } from "~/router/RouteNode";
 import type { RouteLocationNormalized } from "vue-router";
 import type { StatistikLehrerProps } from "~/components/statistik/StatistikLehrerProps";
 import { routeStatistik, type RouteStatistik } from "./RouteStatistik";
-import { api } from "~/router/Api";
 import { routeLehrer } from "../lehrer/RouteLehrer";
 import { routeApp } from "../RouteApp";
 
@@ -26,7 +25,6 @@ export class RouteStatistikLehrer extends RouteNode<any, RouteStatistik> {
 			setAuswahl: routeStatistik.data.updateDatenLehrer,
 			gotoLehrer: routeStatistik.data.gotoLehrer,
 
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			patch: routeLehrer.data.patch,
 			orteById: routeApp.cache.kataloge.orteById,
 			ortsteileById: routeApp.cache.kataloge.ortsteileById,

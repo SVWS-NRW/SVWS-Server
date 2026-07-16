@@ -33,9 +33,12 @@
 	import { computed } from "vue";
 	import { BenutzerKompetenz } from "@core";
 	import { ErzieherartenModelProxy } from "~/components/schule/kataloge/erzieherarten/modelproxy/ErzieherartenModelProxy";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<ErzieherartenDatenProps>();
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const benutzerState = useBenutzerState();
+
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const model = new ErzieherartenModelProxy(() => props.manager().daten(), () => props.manager(), props.patch);
 
 </script>

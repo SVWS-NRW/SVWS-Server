@@ -34,9 +34,12 @@
 	import { BenutzerKompetenz } from "@core";
 	import { computed } from "vue";
 	import { EntlassgruendeModelProxy } from "~/components/schule/kataloge/entlassgruende/modelproxy/EntlassgruendeModelProxy";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<EntlassgruendeDatenProps>();
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const benutzerState = useBenutzerState();
+
+	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 
 	const model = new EntlassgruendeModelProxy(() => props.manager().auswahl(), () => props.manager().liste.list(), props.patch);
 	const readonly = computed(() => !hatKompetenzUpdate.value);

@@ -10,6 +10,7 @@ import { routeFloskelgruppenGruppenprozesse } from "~/router/apps/schule/katalog
 import { routeFloskelgruppenNeu } from "~/router/apps/schule/kataloge/floskelgruppen/RouteFloskelgruppenNeu";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
 
 const defaultState = {
@@ -63,7 +64,7 @@ export class RouteDataFloskelgruppen extends RouteDataAuswahl<FloskelgruppenList
 	public deleteCheck = (): [boolean, List<string>] => {
 		const errorLog = new ArrayList<string>();
 
-		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
+		if (!benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Floskelgruppen vor.');
 		}
 

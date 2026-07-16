@@ -22,9 +22,12 @@
 	import { computed, ref } from "vue";
 	import type { RaeumeAuswahlProps } from "./SRaeumeAuswahlProps";
 	import { BenutzerKompetenz, Raum } from "@core";
+	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<RaeumeAuswahlProps>();
-	const readonly = computed<boolean>(() => !(props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)));
+	const benutzerState = useBenutzerState();
+
+	const readonly = computed<boolean>(() => !(benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)));
 	const selected = ref<Raum[]>([]);
 
 	const columns = [

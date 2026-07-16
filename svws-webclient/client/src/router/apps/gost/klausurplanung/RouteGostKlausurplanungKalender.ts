@@ -1,11 +1,8 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-
 import { BenutzerKompetenz, ServerMode, DeveloperNotificationException, GostHalbjahr, DateUtils } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
 import type { GostKlausurplanungKalenderProps } from "~/components/gost/klausurplanung/SGostKlausurplanungKalenderProps";
-import { api } from "~/router/Api";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeError } from "~/router/error/RouteError";
 import { routeGostKlausurplanungVorgaben } from "./RouteGostKlausurplanungVorgaben";
@@ -83,7 +80,6 @@ export class RouteGostKlausurplanungKalender extends RouteNode<any, RouteGostKla
 
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungKalenderProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			halbjahr: routeGostKlausurplanung.data.halbjahr,
 			abschnitt: routeGostKlausurplanung.data.abschnitt,

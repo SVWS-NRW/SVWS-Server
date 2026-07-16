@@ -3,7 +3,7 @@
 		<template #sidebar>
 			<svws-ui-menu :focus-switching-enabled :focus-help-visible>
 				<template #header>
-					<svws-ui-menu-header v-if="menu.benutzerprofil !== null" :user="username" :schule="schulname" :schema="schemaname" @click="startSetApp(menu.benutzerprofil)" class="cursor-pointer" />
+					<svws-ui-menu-header v-if="menu.benutzerprofil !== null" :user="benutzerState.benutzerdaten.anzeigename" :schule="schulname" :schema="schemaname" @click="startSetApp(menu.benutzerprofil)" class="cursor-pointer" />
 				</template>
 				<template #default>
 					<template v-for="item in menu.main" :key="item.name">
@@ -122,12 +122,13 @@
 
 	import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 	import type { TabManager, TabData } from "@ui";
-	import { useRegionSwitch, useServerState, useSchuleState, useNotenmodulState } from "@ui";
+	import { useRegionSwitch, useServerState, useSchuleState, useNotenmodulState, useBenutzerState } from "@ui";
 	import type { AppProps } from './SAppProps';
 	import { githash } from '../../githash';
 	import { version } from '../../version';
 
 	const props = defineProps<AppProps>();
+	const benutzerState = useBenutzerState();
 	const notenmodulState = useNotenmodulState();
 	const serverState = useServerState();
 

@@ -1,4 +1,4 @@
-import type { SchulEintrag, BenutzerKompetenz } from "@core";
+import type { SchulEintrag } from "@core";
 import type { Checkpoint, SchulenListeManager } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
@@ -8,5 +8,4 @@ export interface SchulenNeuProps {
 	gotoDefaultView: (eintragId?: number | null) => Promise<void>;
 	checkpoint: Checkpoint;
 	continueRoutingAfterCheckpoint: () => Promise<RoutingStatus>;
-	benutzerKompetenzen: Set<BenutzerKompetenz>;
 }

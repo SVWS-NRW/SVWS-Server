@@ -3,7 +3,6 @@ import { routeBetriebsarten, type RouteBetriebsarten } from "./RouteBetriebsarte
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized } from "vue-router";
 import type { BetriebsartenDatenProps } from "~/components/schule/kataloge/betriebsarten/daten/BetriebsartenDatenProps";
-import { api } from "~/router/Api";
 
 const BetriebsartenDaten = () => import("~/components/schule/kataloge/betriebsarten/daten/BetriebsartenDaten.vue");
 
@@ -21,7 +20,6 @@ class RouteBetriebsartenDaten extends RouteNode<any, RouteBetriebsarten> {
 		return {
 			patch: routeBetriebsarten.data.patch,
 			manager: () => routeBetriebsarten.data.manager,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 }

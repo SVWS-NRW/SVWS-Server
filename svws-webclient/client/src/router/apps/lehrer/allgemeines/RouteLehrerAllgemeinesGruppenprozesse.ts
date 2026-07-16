@@ -1,5 +1,4 @@
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
@@ -29,7 +28,6 @@ export class RouteLehrerAllgemeinesGruppenprozesse extends RouteNode<any, RouteL
 		return {
 			apiStatus: api.status,
 			mapStundenplaene: routeLehrer.data.mapStundenplaene,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			lehrerListeManager: () => routeLehrer.data.manager,
 			deleteLehrer: routeLehrer.data.delete,
 			deleteCheck: routeLehrer.data.deleteCheck,

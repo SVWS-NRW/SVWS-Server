@@ -1,19 +1,16 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
 import { BenutzerKompetenz, DeveloperNotificationException, ServerMode } from "@core";
-
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeSchuelerAbiturZulassung } from "~/router/apps/schueler/abitur/RouteSchuelerAbiturZulassung";
 import { RouteDataSchuelerAbitur } from "~/router/apps/schueler/abitur/RouteDataSchuelerAbitur";
-
 import type { SchuelerAbiturProps } from "~/components/schueler/abitur/SchuelerAbiturProps";
 import type { TabData } from "@ui";
 import { schulformenGymOb } from "~/router/RouteHelper";
-import { api } from "~/router/Api";
 import { routeSchuelerAbiturPruefungsuebersicht } from "./RouteSchuelerAbiturPruefungsuebersicht";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
 const SchuelerAbitur = () => import("~/components/schueler/abitur/SchuelerAbitur.vue");
 
@@ -46,8 +43,9 @@ export class RouteSchuelerAbitur extends RouteNode<RouteDataSchuelerAbitur, Rout
 			}
 			const auswahl = routeSchueler.data.manager.auswahl();
 			if (((auswahl.abiturjahrgang !== null) && routeSchueler.data.manager.abiturjahrgaenge.get(auswahl.abiturjahrgang))
-				&& (api.benutzerHatKompetenz(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN)
-					|| (api.benutzerHatKompetenz(BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN) && api.benutzerKompetenzenAbiturjahrgaenge.has(auswahl.abiturjahrgang)))
+				&& (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN)
+					|| (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN)
+						&& benutzerStateImpl.kompetenzenAbiturjahrgaenge.has(auswahl.abiturjahrgang)))
 				&& ((auswahl.jahrgang === 'Q1') || (auswahl.jahrgang === 'Q2'))) {
 				return false;
 			}

@@ -2,9 +2,7 @@ import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { ViewType } from "@ui";
 import { RouteNode } from "~/router/RouteNode";
-import { api } from "~/router/Api";
-import type { TeilleistungsartenGruppenprozesseProps } from
-	"~/components/schule/kataloge/teilleistungsarten/gruppenprozesse/TeilleistungsartenGruppenprozesseProps";
+import type { TeilleistungsartenGruppenprozesseProps } from "~/components/schule/kataloge/teilleistungsarten/gruppenprozesse/TeilleistungsartenGruppenprozesseProps";
 import { routeTeilleistungsarten, type RouteTeilleistungsarten } from "./RouteTeilleistungsarten";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
@@ -30,7 +28,6 @@ class RouteTeilleistungsartenGruppenprozesse extends RouteNode<any, RouteTeillei
 
 	public getProps(to: RouteLocationNormalized): TeilleistungsartenGruppenprozesseProps {
 		return {
-			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeTeilleistungsarten.data.manager,
 			delete: routeTeilleistungsarten.data.delete,
 			deleteCheck: routeTeilleistungsarten.data.deleteCheck,
