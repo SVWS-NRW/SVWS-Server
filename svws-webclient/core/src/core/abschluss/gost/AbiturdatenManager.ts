@@ -3187,7 +3187,6 @@ export class AbiturdatenManager extends JavaObject {
 	 * sofern die Daten vollständig vorliegen. Ist dies nicht der Fall, so wird das Ergebnis soweit
 	 * wie möglich berechnet. Diese Methode setzt die vorherige Berechnung der Zulassung voraus.
 	 *
-	 * @param servermode                     der Mode, in welchem der Server betrieben wird
 	 * @param abidaten                       die Abiturdaten, welche zur Berechnung verwendet werden
 	 * @param berechnePflichtpruefungenNeu   gibt an, ob die Pflichtprüfungen neu berechnet/gesetzt werden sollen oder nicht
 	 *
