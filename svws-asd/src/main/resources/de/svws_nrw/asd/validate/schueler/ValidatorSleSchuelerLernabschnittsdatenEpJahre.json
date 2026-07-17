@@ -1,0 +1,18 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSleSchuelerLernabschnittsdatenEpJahre",
+    "historie" : [ {
+      "praefix" : "SLE",
+      "zweig" : "Schueler-Lernabschnittsdaten-EpJahre",
+      "dtos" : "SchuelerLernabschnittsdaten",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Lernabschnitte', 'Allgemein'",
+      "anzeigebereich_ui" : "'Allgemein', Feld 'EP-Jahr'",
+      "svws" : true,
+      "zebras" : true,
+      "muss": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis": [ ],
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }

@@ -15,9 +15,9 @@ export class ValidatorSsmSchuelerStammdatenMigrationshintergrund extends Validat
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param idGeburtsland             die ID des Geburtslands
-	 * @param hatMigrationshintergrund  Migrationshintergrund vorhanden
-	 * @param kontext                   der Kontext des Validators
+	 * @param idGeburtsland              die ID des Geburtslands
+	 * @param hatMigrationshintergrund   Migrationshintergrund vorhanden
+	 * @param kontext                    der Kontext des Validators
 	 */
 	public constructor(idGeburtsland: Supplier<number | null>, hatMigrationshintergrund: Supplier<boolean>, kontext: ValidatorKontext) {
 		super(kontext);

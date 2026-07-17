@@ -454,6 +454,10 @@ export { ValidatorLsv15LehrerStammdatenVorname } from './asd/validate/lehrer/Val
 export { ValidatorLsv16LehrerStammdatenVorname } from './asd/validate/lehrer/ValidatorLsv16LehrerStammdatenVorname';
 export { ValidatorLsv17LehrerStammdatenVorname } from './asd/validate/lehrer/ValidatorLsv17LehrerStammdatenVorname';
 export { ValidatorLsvLehrerStammdatenVorname } from './asd/validate/lehrer/ValidatorLsvLehrerStammdatenVorname';
+export { ValidatorSle00SchuelerLernabschnittsdatenEpJahre } from './asd/validate/schueler/ValidatorSle00SchuelerLernabschnittsdatenEpJahre';
+export { ValidatorSle01SchuelerLernabschnittsdatenEpJahre } from './asd/validate/schueler/ValidatorSle01SchuelerLernabschnittsdatenEpJahre';
+export { ValidatorSle02SchuelerLernabschnittsdatenEpJahre } from './asd/validate/schueler/ValidatorSle02SchuelerLernabschnittsdatenEpJahre';
+export { ValidatorSleSchuelerLernabschnittsdatenEpJahre } from './asd/validate/schueler/ValidatorSleSchuelerLernabschnittsdatenEpJahre';
 export { ValidatorSlk00SchuelerLernabschnittsdatenKlassenart } from './asd/validate/schueler/ValidatorSlk00SchuelerLernabschnittsdatenKlassenart';
 export { ValidatorSlk01SchuelerLernabschnittsdatenKlassenart } from './asd/validate/schueler/ValidatorSlk01SchuelerLernabschnittsdatenKlassenart';
 export { ValidatorSlk02SchuelerLernabschnittsdatenKlassenart } from './asd/validate/schueler/ValidatorSlk02SchuelerLernabschnittsdatenKlassenart';

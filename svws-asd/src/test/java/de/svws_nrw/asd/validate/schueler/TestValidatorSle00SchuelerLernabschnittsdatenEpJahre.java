@@ -1,4 +1,4 @@
-package de.svws_nrw.asd.validate.lehrer;
+package de.svws_nrw.asd.validate.schueler;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -16,7 +16,7 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 /**
  * <p> Testklasse für die Validatoren
  * <ul>
- *   <li> {@link ValidatorLss00LehrerStammdatenStaasangehoerigkeitID}
+ *   <li> {@link ValidatorSle00SchuelerLernabschnittsdatenEpJahre}
  * </ul>
  * </p>
 
@@ -27,13 +27,13 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
  *
  * CoreType: LehrerStammdaten
  */
-@DisplayName("Tests ValidatorLss00LehrerStammdatenStaatsangehoerigkeitID")
-class TestValidatorLss00LehrerStammdatenStaatsangehoerigkeitID {
+@DisplayName("Tests ValidatorSle00SchuelerLernabschnittsdatenEpJahre")
+class TestValidatorSle00SchuelerLernabschnittsdatenEpJahre {
 
-	private static final String TESTDATEN_STAATSANGEOERIGKEITID = """
-			123   , true
-			-1    , true
+	private static final String TESTDATEN_EPJAHREID = """
 			null  , false
+			2     , true
+			-1    , true
 		""";
 
 	/** Stammdaten der Schule */
@@ -51,24 +51,24 @@ class TestValidatorLss00LehrerStammdatenStaatsangehoerigkeitID {
 	}
 
 	/**
-	 * Test von ValidatorLss00LehrerStammdatenStaatsangehoerigkeitID
+	 * Test von ValidatorSle00SchuelerLernabschnittsdatenEpJahre
 	 *
-	 * CoreType: LehrerStammdaten
+	 * CoreType: SchuelerLernabschnittsdaten
 	 *
-	 * @param idStaatsangehoerigkeit   die idStaatsangehoerigkeit, welche bei den eingelesenen Testdaten ersetzt wird
-	 * @param result                   gibt an, welches Ergebnis bei den Testdaten erwartet wird
+	 * @param idEpJahre   die idEpJahre, welche bei den eingelesenen Testdaten ersetzt wird
+	 * @param result      gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
-	@DisplayName("Tests für ValidatorLss00LehrerStammdatenStaatsangehoerigkeitID")
+	@DisplayName("Tests für ValidatorSle00SchuelerLernabschnittsdatenEpJahre")
 	@ParameterizedTest
-	@CsvSource(textBlock = TESTDATEN_STAATSANGEOERIGKEITID, nullValues = { "null" })
-	void testValidatorLss00LehrerStammdatenStaatsangehoerigkeitID(final Long idStaatsangehoerigkeit, final boolean result) {
+	@CsvSource(textBlock = TESTDATEN_EPJAHREID, nullValues = { "null" })
+	void testValidatorSle00SchuelerLernabschnittsdatenEpJahre(final Long idEpJahre, final boolean result) {
 
 		// Erzeuge den Kontext für die Validierung
 		final ValidatorKontext kontext =
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
-		final ValidatorLss00LehrerStammdatenStaatsangehoerigkeitID validator =
-				new ValidatorLss00LehrerStammdatenStaatsangehoerigkeitID(() -> idStaatsangehoerigkeit, () -> null, kontext);
+		final ValidatorSle00SchuelerLernabschnittsdatenEpJahre validator =
+				new ValidatorSle00SchuelerLernabschnittsdatenEpJahre(() -> idEpJahre, kontext);
 		assertEquals(result, validator.pruefe());
 	}
 

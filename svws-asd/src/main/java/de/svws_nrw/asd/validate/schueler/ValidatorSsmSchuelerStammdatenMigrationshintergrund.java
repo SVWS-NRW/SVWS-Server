@@ -19,9 +19,9 @@ public final class ValidatorSsmSchuelerStammdatenMigrationshintergrund extends V
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param idGeburtsland             die ID des Geburtslands
-	 * @param hatMigrationshintergrund  Migrationshintergrund vorhanden
-	 * @param kontext                   der Kontext des Validators
+	 * @param idGeburtsland              die ID des Geburtslands
+	 * @param hatMigrationshintergrund   Migrationshintergrund vorhanden
+	 * @param kontext                    der Kontext des Validators
 	 */
 	public ValidatorSsmSchuelerStammdatenMigrationshintergrund(
 			final @NotNull Supplier<@AllowNull Long> idGeburtsland,
