@@ -1,5 +1,8 @@
 import { CoreTypeSimple } from '../../../asd/types/CoreTypeSimple';
+import type { JavaSet } from '../../../java/util/JavaSet';
 import { CoreTypeDataManager } from '../../../asd/utils/CoreTypeDataManager';
+import { ArrayList } from '../../../java/util/ArrayList';
+import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import { FachklasseKatalogEintrag } from '../../../asd/data/schule/FachklasseKatalogEintrag';
 
@@ -42,6 +45,24 @@ export class Fachklasse extends CoreTypeSimple<FachklasseKatalogEintrag, Fachkla
 	 */
 	public getInstance(): Fachklasse | null {
 		return new Fachklasse();
+	}
+
+	/**
+	 * Liefert die zulässigen Fachklassen für die angegebenen bkIndex in dem angegebenen Schuljahr
+	 *
+	 * @param schuljahr das Schuljahr
+	 * @param bkIndizes die BKIndizes
+	 *
+	 * @return Liste von {@link FachklasseKatalogEintrag}
+	 */
+	public static getBySchuljahrAndBKIndizes(schuljahr: number, bkIndizes: JavaSet<number>): List<FachklasseKatalogEintrag> {
+		const result = new ArrayList<FachklasseKatalogEintrag>();
+		for (const fachklasse of Fachklasse.data().getEintraegeBySchuljahr(schuljahr)) {
+			if ((bkIndizes.contains(fachklasse.bkIndex))) {
+				result.add(fachklasse);
+			}
+		}
+		return result;
 	}
 
 	transpilerCanonicalName(): string {

@@ -16,7 +16,7 @@ public class FachklasseEintragPatchRequest {
 
 	/** Das Kürzel */
 	@Schema(description = "Das Kürzel", example = "AM")
-	public JsonNullable<@Size(max = 100) @NotBlank @NoWhitespaces String> kuerzel = JsonNullable.undefined();
+	public JsonNullable<@Size(max = 100) @NoWhitespaces String> kuerzel = JsonNullable.undefined();
 
 	/** Die ID der Fachklasse (CoreType) */
 	@Schema(description = "Die ID der Fachklasse (CoreType)", example = "7000")

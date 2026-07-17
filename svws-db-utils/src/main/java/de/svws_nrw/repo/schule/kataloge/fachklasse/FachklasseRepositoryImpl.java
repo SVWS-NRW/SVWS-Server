@@ -25,15 +25,4 @@ public final class FachklasseRepositoryImpl extends RepositoryImpl<DTOFachklasse
 		return conn.existsBy(query, DTOFachklassen.class, kuerzel, id);
 	}
 
-	@Override
-	public boolean bezeichnungIsAlreadyUsedCreate(final String bezeichnung) {
-		final String query = "SELECT m FROM DTOFachklassen m WHERE LOWER(m.bezeichnung) = LOWER(?1)";
-		return conn.existsBy(query, DTOFachklassen.class, bezeichnung);
-	}
-
-	@Override
-	public boolean bezeichnungIsAlreadyUsedPatch(final String bezeichnung, final long id) {
-		final String query = "SELECT m FROM DTOFachklassen m WHERE LOWER(m.bezeichnung) = LOWER(?1) AND m.id != ?2";
-		return conn.existsBy(query, DTOFachklassen.class, bezeichnung, id);
-	}
 }

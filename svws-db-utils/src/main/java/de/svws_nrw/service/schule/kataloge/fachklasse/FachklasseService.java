@@ -18,7 +18,6 @@ import jakarta.ws.rs.core.Response;
  */
 public final class FachklasseService {
 
-	private static final String BEZEICHNUNG_WIRD_BEREITS_VERWENDET = "Die Bezeichnung %s wird bereits verwendet.";
 	private static final String KUERZEL_WIRD_BEREITS_VERWENDET = "Das Kürzel %s wird bereits verwendet.";
 
 	private final FachklasseRepository repo;
@@ -112,13 +111,11 @@ public final class FachklasseService {
 	}
 
 	private void validateCreate(final FachklasseEintragCreateRequest dto) {
-		validateUniqueBezeichnung(dto.bezeichnung, null);
 		validateUniqueKuerzel(dto.kuerzel, null);
 		validateIdFachklasse(dto.idFachklasse);
 	}
 
 	private void validatePatch(final FachklasseEintragPatchRequest dto, final long id) {
-		dto.bezeichnung.ifPresent(bezeichnung -> validateUniqueBezeichnung(bezeichnung, id));
 		dto.kuerzel.ifPresent(kuerzel -> validateUniqueKuerzel(kuerzel, id));
 		dto.idFachklasse.ifPresent(this::validateIdFachklasse);
 	}
@@ -126,16 +123,6 @@ public final class FachklasseService {
 	private void validateIdFachklasse(final Long idFachklasse) {
 		if (Fachklasse.data().getEintragByID(idFachklasse) == null) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Keine Fachklasse für die id %d gefunden".formatted(idFachklasse));
-		}
-	}
-
-	private void validateUniqueBezeichnung(final String bezeichnung, final Long idToExclude) {
-		final var exists = (idToExclude == null)
-				? repo.bezeichnungIsAlreadyUsedCreate(bezeichnung)
-				: repo.bezeichnungIsAlreadyUsedPatch(bezeichnung, idToExclude);
-
-		if (exists) {
-			throw new ApiOperationException(Response.Status.BAD_REQUEST, BEZEICHNUNG_WIRD_BEREITS_VERWENDET.formatted(bezeichnung));
 		}
 	}
 

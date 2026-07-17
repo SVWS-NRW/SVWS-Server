@@ -730,15 +730,32 @@ public enum Schulgliederung implements @NotNull CoreType<SchulgliederungKatalogE
 	 *
 	 * @return Liste von {@link Schulgliederung}
 	 */
-	public static List<SchulgliederungKatalogEintrag> getBySchuljahrAndBKIndex(final int schuljahr, final int bkIndex) {
+	public static @NotNull List<SchulgliederungKatalogEintrag> getBySchuljahrAndBKIndex(final int schuljahr, final int bkIndex) {
 		final List<SchulgliederungKatalogEintrag> schulgliederungenOfBKIndex = new ArrayList<>();
-		for (final Schulgliederung schulgliederung : data().getWerte()) {
-			final SchulgliederungKatalogEintrag schulgliederungEintrag = schulgliederung.daten(schuljahr);
-			if ((schulgliederungEintrag != null) && (schulgliederungEintrag.bkIndex != null) && (schulgliederungEintrag.bkIndex == bkIndex)) {
-				schulgliederungenOfBKIndex.add(schulgliederungEintrag);
+		for (final SchulgliederungKatalogEintrag schulgliederung : data().getEintraegeBySchuljahr(schuljahr)) {
+			if ((schulgliederung.bkIndex != null) && (schulgliederung.bkIndex == bkIndex)) {
+				schulgliederungenOfBKIndex.add(schulgliederung);
 			}
 		}
 		return schulgliederungenOfBKIndex;
+	}
+
+	/**
+	 * Liefert die zulässigen Schulgliederungen für das angegebene Schuljahr und die angegebene Schulform
+	 *
+	 * @param schuljahr das Schuljahr
+	 * @param schulform die Schulform
+	 * @return Liste von {@link SchulgliederungKatalogEintrag}
+	 */
+	public static @NotNull List<SchulgliederungKatalogEintrag> getEintraegeBySchuljahrAndSchulform(final int schuljahr, final @NotNull Schulform schulform) {
+		final var result = new ArrayList<SchulgliederungKatalogEintrag>();
+		for (final Schulgliederung schulgliederung: data().getWerteBySchulform(schulform)) {
+			final var eintrag = schulgliederung.daten(schuljahr);
+			if (eintrag != null) {
+				result.add(schulgliederung.daten(schuljahr));
+			}
+		}
+		return result;
 	}
 
 }

@@ -20,7 +20,6 @@ public class FachklasseEintragCreateRequest {
 
 	/** Das Kürzel */
 	@Schema(description = "Das Kürzel", example = "AM")
-	@NotBlank
 	@NoWhitespaces
 	@Size(max = 100)
 	public String kuerzel;

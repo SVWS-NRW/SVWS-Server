@@ -1,5 +1,9 @@
 package de.svws_nrw.asd.types.schule;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import de.svws_nrw.asd.data.schule.FachklasseKatalogEintrag;
 import de.svws_nrw.asd.types.CoreTypeSimple;
 import de.svws_nrw.asd.utils.CoreTypeDataManager;
@@ -44,6 +48,24 @@ public class Fachklasse extends CoreTypeSimple<FachklasseKatalogEintrag, Fachkla
 	@Override
 	public Fachklasse getInstance() {
 		return new Fachklasse();
+	}
+
+	/**
+	 * Liefert die zulässigen Fachklassen für die angegebenen bkIndex in dem angegebenen Schuljahr
+	 *
+	 * @param schuljahr das Schuljahr
+	 * @param bkIndizes die BKIndizes
+	 *
+	 * @return Liste von {@link FachklasseKatalogEintrag}
+	 */
+	public static @NotNull List<FachklasseKatalogEintrag> getBySchuljahrAndBKIndizes(final int schuljahr, final @NotNull Set<Integer> bkIndizes) {
+		final var result = new ArrayList<FachklasseKatalogEintrag>();
+		for (final FachklasseKatalogEintrag fachklasse : data().getEintraegeBySchuljahr(schuljahr)) {
+			if ((bkIndizes.contains(fachklasse.bkIndex))) {
+				result.add(fachklasse);
+			}
+		}
+		return result;
 	}
 
 }

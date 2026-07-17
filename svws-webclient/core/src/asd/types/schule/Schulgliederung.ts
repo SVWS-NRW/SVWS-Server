@@ -728,15 +728,32 @@ export class Schulgliederung extends JavaEnum<Schulgliederung> implements CoreTy
 	 *
 	 * @return Liste von {@link Schulgliederung}
 	 */
-	public static getBySchuljahrAndBKIndex(schuljahr: number, bkIndex: number): List<SchulgliederungKatalogEintrag> | null {
+	public static getBySchuljahrAndBKIndex(schuljahr: number, bkIndex: number): List<SchulgliederungKatalogEintrag> {
 		const schulgliederungenOfBKIndex: List<SchulgliederungKatalogEintrag> | null = new ArrayList<SchulgliederungKatalogEintrag>();
-		for (const schulgliederung of Schulgliederung.data().getWerte()) {
-			const schulgliederungEintrag: SchulgliederungKatalogEintrag | null = schulgliederung.daten(schuljahr);
-			if ((schulgliederungEintrag !== null) && (schulgliederungEintrag.bkIndex !== null) && (schulgliederungEintrag.bkIndex === bkIndex)) {
-				schulgliederungenOfBKIndex.add(schulgliederungEintrag);
+		for (const schulgliederung of Schulgliederung.data().getEintraegeBySchuljahr(schuljahr)) {
+			if ((schulgliederung.bkIndex !== null) && (schulgliederung.bkIndex === bkIndex)) {
+				schulgliederungenOfBKIndex.add(schulgliederung);
 			}
 		}
 		return schulgliederungenOfBKIndex;
+	}
+
+	/**
+	 * Liefert die zulässigen Schulgliederungen für das angegebene Schuljahr und die angegebene Schulform
+	 *
+	 * @param schuljahr das Schuljahr
+	 * @param schulform die Schulform
+	 * @return Liste von {@link SchulgliederungKatalogEintrag}
+	 */
+	public static getEintraegeBySchuljahrAndSchulform(schuljahr: number, schulform: Schulform): List<SchulgliederungKatalogEintrag> {
+		const result = new ArrayList<SchulgliederungKatalogEintrag>();
+		for (const schulgliederung of Schulgliederung.data().getWerteBySchulform(schulform)) {
+			const eintrag = schulgliederung.daten(schuljahr);
+			if (eintrag !== null) {
+				result.add(schulgliederung.daten(schuljahr));
+			}
+		}
+		return result;
 	}
 
 	/**

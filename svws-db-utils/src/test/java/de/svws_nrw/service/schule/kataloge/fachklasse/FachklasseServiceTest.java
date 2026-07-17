@@ -141,7 +141,6 @@ class FachklasseServiceTest {
 		void create() {
 			final var dto = createRequest();
 
-			when(repo.bezeichnungIsAlreadyUsedCreate(dto.bezeichnung)).thenReturn(false);
 			when(repo.kuerzelIsAlreadyUsedCreate(dto.kuerzel)).thenReturn(false);
 			when(schuleService.getSchuljahr()).thenReturn(2024);
 			when(mapper.toDomain(dto, 2024)).thenReturn(entity);
@@ -155,27 +154,10 @@ class FachklasseServiceTest {
 		}
 
 		@Test
-		@DisplayName("Wirft BAD_REQUEST wenn Bezeichnung bereits vergeben")
-		void create_bezeichnungBereitsVergeben() {
-			final var dto = createRequest();
-
-			when(repo.bezeichnungIsAlreadyUsedCreate(dto.bezeichnung)).thenReturn(true);
-
-			assertThatException()
-					.isThrownBy(() -> service.create(dto))
-					.isInstanceOf(ApiOperationException.class)
-					.withMessageContaining(dto.bezeichnung)
-					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-
-			verify(repo, never()).create(any(DTOFachklassen.class));
-		}
-
-		@Test
 		@DisplayName("Wirft BAD_REQUEST wenn Kürzel bereits vergeben")
 		void create_kuerzelBereitsVergeben() {
 			final var dto = createRequest();
 
-			when(repo.bezeichnungIsAlreadyUsedCreate(dto.bezeichnung)).thenReturn(false);
 			when(repo.kuerzelIsAlreadyUsedCreate(dto.kuerzel)).thenReturn(true);
 
 			assertThatException()
@@ -193,7 +175,6 @@ class FachklasseServiceTest {
 			final var dto = createRequest();
 			dto.idFachklasse = -1L;
 
-			when(repo.bezeichnungIsAlreadyUsedCreate(dto.bezeichnung)).thenReturn(false);
 			when(repo.kuerzelIsAlreadyUsedCreate(dto.kuerzel)).thenReturn(false);
 
 			assertThatException()
@@ -221,7 +202,6 @@ class FachklasseServiceTest {
 			dto.bezeichnung = JsonNullable.of("Neue Bezeichnung");
 
 			when(repo.getById(1L)).thenReturn(entity);
-			when(repo.bezeichnungIsAlreadyUsedPatch("Neue Bezeichnung", 1L)).thenReturn(false);
 			when(schuleService.getSchuljahr()).thenReturn(2024);
 			when(mapper.toApi(entity, 2024)).thenReturn(apiModel);
 
@@ -229,24 +209,6 @@ class FachklasseServiceTest {
 
 			assertThat(result).isEqualTo(apiModel);
 			verify(mapper).patch(dto, 2024, entity);
-		}
-
-		@Test
-		@DisplayName("Wirft BAD_REQUEST wenn Bezeichnung bereits bei anderer Fachklasse vergeben")
-		void patch_bezeichnungBereitsVergeben() {
-			final var dto = new FachklasseEintragPatchRequest();
-			dto.bezeichnung = JsonNullable.of("Doppelt");
-
-			when(repo.getById(1L)).thenReturn(entity);
-			when(repo.bezeichnungIsAlreadyUsedPatch("Doppelt", 1L)).thenReturn(true);
-
-			assertThatException()
-					.isThrownBy(() -> service.patch(1L, dto))
-					.isInstanceOf(ApiOperationException.class)
-					.withMessageContaining("Doppelt")
-					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-
-			verify(mapper, never()).patch(any(), anyInt(), any());
 		}
 
 		@Test
@@ -296,7 +258,6 @@ class FachklasseServiceTest {
 
 			service.patch(1L, dto);
 
-			verify(repo, never()).bezeichnungIsAlreadyUsedPatch(any(), anyInt());
 			verify(repo, never()).kuerzelIsAlreadyUsedPatch(any(), anyInt());
 			verify(mapper).patch(dto, 2024, entity);
 		}
