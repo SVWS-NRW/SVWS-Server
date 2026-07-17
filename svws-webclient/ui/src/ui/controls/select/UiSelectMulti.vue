@@ -292,7 +292,10 @@
 			throw new DeveloperNotificationException("Das Select ist auf removable=false gesetzt, daher kann der Eintrag nicht deselektiert werden");
 		}
 
-		const index = modelArray.value.indexOf(option);
+		const index = modelArray.value.findIndex(selected =>
+			JavaObject.equalsTranspiler(toRaw(selected), toRaw(option))
+		);
+
 		if (index !== -1) {
 			modelArray.value.splice(index, 1);
 			model.value = modelArray.value;
