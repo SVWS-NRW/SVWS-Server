@@ -386,7 +386,7 @@
 		})));
 
 	const sortedRows = computed(() => {
-		if (rowsComputed.value.length < 0 || props.sortByMulti !== undefined) {
+		if (rowsComputed.value.length === 0 || props.sortByMulti !== undefined) {
 			return rowsComputed.value;
 		}
 		const columnIndex = columnsComputed.value.findIndex(({ key, sortable }) => (internalSortByAndOrder.value.key === key) && sortable);
@@ -398,9 +398,14 @@
 			if (internalSortByAndOrder.value.order === null) {
 				return a.initialIndex - b.initialIndex;
 			}
-			const firstValue = String(a.cells[columnIndex].value);
-			const secondValue = String(b.cells[columnIndex].value);
-			return sortingOrderRatio * (firstValue.localeCompare(secondValue));
+			const rawA = a.cells[columnIndex].value;
+			const rawB = b.cells[columnIndex].value;
+			const numA = Number(rawA);
+			const numB = Number(rawB);
+			if (!Number.isNaN(numA) && !Number.isNaN(numB)) {
+				return sortingOrderRatio * (numA - numB);
+			}
+			return sortingOrderRatio * String(rawA).localeCompare(String(rawB));
 		});
 	});
 
