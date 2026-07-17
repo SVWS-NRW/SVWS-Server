@@ -1,7 +1,9 @@
 <template>
 	<div class="page page-grid-cards">
 		<svws-ui-content-card class="col-span-full">
-			<svws-ui-table :items="lernplattformenProxies" :columns>
+			<svws-ui-table :items="lernplattformenProxies" :columns
+				no-data-text="Aktuell gibt es keine Einträge im Katalog 'Lernplattformen'."
+				:no-data="noEntries">
 				<template #cell(idLernplattform)="{ rowData }">
 					{{ getBezeichnungLernplattform(rowData.proxy.idLernplattform) }}
 				</template>
@@ -35,6 +37,7 @@
 
 	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const readonly = computed(() => !hatKompetenzAendern.value);
+	const noEntries = computed<boolean>(() => props.schuelerLernplattformen().isEmpty());
 	const lernplattformenProxies = computed(() => {
 		const result = new ArrayList<SchuelerLernplattformenModelProxy>();
 		for (const lernplattform of props.schuelerLernplattformen()) {

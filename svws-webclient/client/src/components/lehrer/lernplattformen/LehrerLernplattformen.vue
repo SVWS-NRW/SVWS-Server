@@ -4,7 +4,9 @@
 	</Teleport>
 	<div class="page page-grid-cards">
 		<svws-ui-content-card class="col-span-full">
-			<svws-ui-table :items="props.lehrerLernplattformen()" :columns>
+			<svws-ui-table :items="props.lehrerLernplattformen()" :columns
+				no-data-text="Aktuell gibt es keine Einträge im Katalog 'Lernplattformen'."
+				:no-data="noEntries">
 				<template #cell(idLernplattform)="{ value }">
 					{{ getBezeichnungLernplattform(value) }}
 				</template>
@@ -35,6 +37,7 @@
 
 	const props = defineProps<LehrerLernplattformenProps>();
 	const benutzerState = useBenutzerState();
+	const noEntries = computed<boolean>(() => props.lehrerLernplattformen().isEmpty());
 
 	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRERDATEN_AENDERN));
 	const readonly = computed(() => !hatKompetenzAendern.value);
