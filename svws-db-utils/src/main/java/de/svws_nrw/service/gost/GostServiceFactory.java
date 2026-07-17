@@ -173,9 +173,11 @@ public final class GostServiceFactory {
 				schuelerRepositoryFactory.getSchuelerLeistungsdatenRepository(),
 				katalogeRepositoryFactory.getJahrgaengeRepository(),
 				katalogeRepositoryFactory.getFachRepository(),
+				gostRepositoryFactory.getGostSchuelerRepository(),
 				gostRepositoryFactory.getGostSchuelerFachbelegungenRepository(),
 				gostRepositoryFactory.getGostJahrgangsdatenRepository(),
 				gostRepositoryFactory.getGostJahrgangFachbelegungenRepository(),
+				gostKlausurenRepositoryFactory.getGostKlausurenVorgabeRepository(),
 				this.getGostAbiturdatenService(),
 				this.getGostSchuelerService());
 	}

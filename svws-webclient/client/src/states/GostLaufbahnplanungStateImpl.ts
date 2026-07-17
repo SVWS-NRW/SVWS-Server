@@ -159,12 +159,13 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 			}
 			await api.server.importGostSchuelerLaufbahnplanung(data, api.schema, this.schueler.id);
 			const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.schueler.id);
+			const gklWahlen = await api.server.getGostSchuelerGKLWahl(api.schema, this.schueler.id);
 			const abiturdatenManager = this.createAbiturdatenmanager(abiturdaten);
 			if (abiturdatenManager === undefined) {
 				return;
 			}
 			const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
-			this.setPatchedState({ abiturdaten, abiturdatenManager, gostBelegpruefungErgebnis });
+			this.setPatchedState({ abiturdaten, gklWahlen, abiturdatenManager, gostBelegpruefungErgebnis });
 		})(data);
 	}
 
@@ -285,6 +286,8 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 				}
 				const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.schueler.id);
 				this._state.value.abiturdaten = abiturdaten;
+				const gklWahlen = await api.server.getGostSchuelerGKLWahl(api.schema, this.schueler.id);
+				this._state.value.gklWahlen = gklWahlen;
 				await this.setGostBelegpruefungErgebnis();
 			} else if (this.mode === 'abiturjahrgang') {
 				await api.server.resetGostAbiturjahrgangFachwahlen(api.schema, this.auswahlAbiturjahrgang);

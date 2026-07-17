@@ -3,6 +3,7 @@ package de.svws_nrw.service.gost;
 import static de.svws_nrw.data.TransactionSupport.transactional;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -26,8 +27,10 @@ import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFachbelegungen;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
+import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchuelerFachbelegungen;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchuelerFachbelegungenPK;
+import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
@@ -39,6 +42,8 @@ import de.svws_nrw.repo.faecher.FachRepository;
 import de.svws_nrw.repo.gost.GostJahrgangFachbelegungenRepository;
 import de.svws_nrw.repo.gost.GostJahrgangsdatenRepository;
 import de.svws_nrw.repo.gost.GostSchuelerFachbelegungenRepository;
+import de.svws_nrw.repo.gost.GostSchuelerRepository;
+import de.svws_nrw.repo.gost.klausurplan.GostKlausurenVorgabeRepository;
 import de.svws_nrw.repo.jahrgaenge.JahrgaengeRepository;
 import de.svws_nrw.repo.schueler.SchuelerLeistungsdatenRepository;
 import de.svws_nrw.repo.schueler.SchuelerLernabschnittRepository;
@@ -56,11 +61,13 @@ public class GostFachwahlService {
 	private final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository;
 	private final JahrgaengeRepository jahrgaengeRepository;
 	private final FachRepository fachRepository;
+	private final GostSchuelerRepository gostSchuelerRepository;
 	private final GostSchuelerFachbelegungenRepository gostSchuelerFachbelegungenRepository;
 	private final GostJahrgangsdatenRepository gostJahrgangsdatenRepository;
 	private final GostJahrgangFachbelegungenRepository gostJahrgangFachbelegungenRepository;
 	private final GostAbiturdatenService gostAbiturdatenService;
 	private final GostSchuelerService gostSchuelerService;
+	private final GostKlausurenVorgabeRepository gostKlausurenVorgabeRepository;
 
 	/**
 	 * Erstellt einen neuen Service.
@@ -71,9 +78,11 @@ public class GostFachwahlService {
 	 * @param schuelerLeistungsdatenRepository       das Repository für den Zugriff auf die Schüler-Leistungsdaten
 	 * @param jahrgaengeRepository                   das Repository für den Zugriff auf Jahrgänge
 	 * @param fachRepository                         das Repository für den Zugriff auf Fächerdaten
+	 * @param gostSchuelerRepository                 das Repository für den Zugriff auf die Schüler-Informationen zur Gymnasialen Oberstufe
 	 * @param gostSchuelerFachbelegungenRepository   das Repository für den Zugriff auf die Schüler-Fachbelegungen
 	 * @param gostJahrgangsdatenRepository           das Repository für den Zugriff auf die Jahrgangsdaten der gymnasialen Oberstufe
 	 * @param gostJahrgangFachbelegungenRepository   das Repository für den Zugriff auf die Vorlage-Fachbelegungen von Abiturjahrgängen
+	 * @param gostKlausurenVorgabeRepository         das Repository für den Zugriff auf die Klausurvorgaben der gymnasialen Oberstufe
 	 * @param gostAbiturdatenService                 der Service für den Zugriff auf die Abiturdaten der gymnasialen Oberstufe
 	 * @param gostSchuelerService                    der Service für den Zugriff auf die Schülerdaten der gymnasialen Oberstufe
 	 */
@@ -83,9 +92,11 @@ public class GostFachwahlService {
 			final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository,
 			final JahrgaengeRepository jahrgaengeRepository,
 			final FachRepository fachRepository,
+			final GostSchuelerRepository gostSchuelerRepository,
 			final GostSchuelerFachbelegungenRepository gostSchuelerFachbelegungenRepository,
 			final GostJahrgangsdatenRepository gostJahrgangsdatenRepository,
 			final GostJahrgangFachbelegungenRepository gostJahrgangFachbelegungenRepository,
+			final GostKlausurenVorgabeRepository gostKlausurenVorgabeRepository,
 			final GostAbiturdatenService gostAbiturdatenService,
 			final GostSchuelerService gostSchuelerService) {
 		this.benutzerRepository = benutzerRepository;
@@ -94,9 +105,11 @@ public class GostFachwahlService {
 		this.schuelerLeistungsdatenRepository = schuelerLeistungsdatenRepository;
 		this.jahrgaengeRepository = jahrgaengeRepository;
 		this.fachRepository = fachRepository;
+		this.gostSchuelerRepository = gostSchuelerRepository;
 		this.gostSchuelerFachbelegungenRepository = gostSchuelerFachbelegungenRepository;
 		this.gostJahrgangsdatenRepository = gostJahrgangsdatenRepository;
 		this.gostJahrgangFachbelegungenRepository = gostJahrgangFachbelegungenRepository;
+		this.gostKlausurenVorgabeRepository = gostKlausurenVorgabeRepository;
 		this.gostAbiturdatenService = gostAbiturdatenService;
 		this.gostSchuelerService = gostSchuelerService;
 	}
@@ -473,6 +486,19 @@ public class GostFachwahlService {
 			return;
 		}
 
+		// Entferne auch die GKLs, sofern sie nicht in bewerteten Abschnitten liegen
+		if (AbiturdatenManager.istAbitur2030(abijahr)) {
+			final Map<Long, Abiturdaten> mapAbidaten = gostAbiturdatenService.getMap(idsSchueler);
+			final Map<Long, DTOGostSchueler> mapGostSchueler = gostSchuelerRepository.findMapByIds(idsSchueler);
+			final Map<Long, DTOGostKlausurenVorgaben> mapKlausurvorgaben = getMapKlausurvorgabenByGKLWahlen(mapGostSchueler.values());
+			for (final long idSchueler : idsSchueler) {
+				final DTOGostSchueler gostSchueler = mapGostSchueler.get(idSchueler);
+				final Abiturdaten abidaten = mapAbidaten.get(idSchueler);
+				loescheGKLsBeiNichtBewertetenHalbjahren(gostSchueler, abidaten.bewertetesHalbjahr, mapKlausurvorgaben);
+			}
+			gostSchuelerRepository.flush();
+		}
+
 		gostSchuelerFachbelegungenRepository.deleteMultipleBySchuelerID(idsSchueler);
 		gostSchuelerFachbelegungenRepository.flush();
 
@@ -509,15 +535,20 @@ public class GostFachwahlService {
 	public void reset(final long idSchueler) {
 		transactional(() -> {
 			pruefeGymOb();
-
 			final Abiturdaten abidaten = gostAbiturdatenService.get(idSchueler);
 			final DTOGostJahrgangsdaten jahrgang = gostJahrgangsdatenRepository.findById(abidaten.abiturjahr)
 					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Der Abiturjahrgang konnte nicht gefunden werden."));
+			final DTOGostSchueler gostSchueler = gostSchuelerRepository.getById(idSchueler);
+			final Map<Long, DTOGostKlausurenVorgaben> mapKlausurvorgaben = getMapKlausurvorgabenByGKLWahlen(List.of(gostSchueler));
 
 			if (!abidaten.bewertetesHalbjahr[GostHalbjahr.EF1.id]) {
 				resetAbijahrgangSchuelerInternal(jahrgang.Abi_Jahrgang, List.of(idSchueler));
 				return;
 			}
+
+			// Entferne auch die Informationen zu den GKL-Wahlen, sofern diese nicht im Bereich eines bewerteten Halbjahres liegen
+			loescheGKLsBeiNichtBewertetenHalbjahren(gostSchueler, abidaten.bewertetesHalbjahr, mapKlausurvorgaben);
+
 			final Map<Long, DTOGostSchuelerFachbelegungen> mapFachwahlen =
 					gostSchuelerFachbelegungenRepository.getMap2DBySchuelerIDAndFachID(List.of(idSchueler)).getSubMapOrNull(idSchueler);
 			for (final DTOGostSchuelerFachbelegungen fw : mapFachwahlen.values()) {
@@ -542,6 +573,8 @@ public class GostFachwahlService {
 				}
 			}
 			gostSchuelerFachbelegungenRepository.update(mapFachwahlen.values());
+
+			gostSchuelerFachbelegungenRepository.flush();
 		});
 	}
 
@@ -567,6 +600,57 @@ public class GostFachwahlService {
 	}
 
 
+	private Map<Long, DTOGostKlausurenVorgaben> getMapKlausurvorgabenByGKLWahlen(final Collection<DTOGostSchueler> gostSchueler) {
+		final List<Long> idsKlausurvorgaben = gostSchueler.stream().flatMap(s -> {
+			final List<Long> result = new ArrayList<>();
+			if (s.GKL_EF_AF1_Klausurvorgabe_ID != null) {
+				result.add(s.GKL_EF_AF1_Klausurvorgabe_ID);
+			}
+			if (s.GKL_EF_AF2_Klausurvorgabe_ID != null) {
+				result.add(s.GKL_EF_AF2_Klausurvorgabe_ID);
+			}
+			if (s.GKL_EF_AF3_Klausurvorgabe_ID != null) {
+				result.add(s.GKL_EF_AF3_Klausurvorgabe_ID);
+			}
+			if (s.GKL_Q_AF1_Klausurvorgabe_ID != null) {
+				result.add(s.GKL_Q_AF1_Klausurvorgabe_ID);
+			}
+			if (s.GKL_Q_AF2_Klausurvorgabe_ID != null) {
+				result.add(s.GKL_Q_AF2_Klausurvorgabe_ID);
+			}
+			if (s.GKL_Q_AF3_Klausurvorgabe_ID != null) {
+				result.add(s.GKL_Q_AF3_Klausurvorgabe_ID);
+			}
+			return result.stream();
+		}).distinct().toList();
+		return gostKlausurenVorgabeRepository.findMapByIds(idsKlausurvorgaben);
+	}
+
+
+	private static Long getGKLNachLoeschenBeiNichtBewertetenHalbjahren(final Long idKlausurvorgabe, final boolean[] bewertetesHalbjahr,
+			final Map<Long, DTOGostKlausurenVorgaben> mapKlausurvorgaben) {
+		if (idKlausurvorgabe == null) {
+			return null;
+		}
+		final DTOGostKlausurenVorgaben vorgabe = mapKlausurvorgaben.get(idKlausurvorgabe);
+		if (vorgabe == null) {
+			return null;
+		}
+		return bewertetesHalbjahr[vorgabe.Halbjahr.id] ? idKlausurvorgabe : null;
+	}
+
+
+	private void loescheGKLsBeiNichtBewertetenHalbjahren(final DTOGostSchueler gostSchueler, final boolean[] bewertetesHalbjahr,
+			final Map<Long, DTOGostKlausurenVorgaben> mapKlausurvorgaben) {
+		gostSchueler.GKL_EF_AF1_Klausurvorgabe_ID = getGKLNachLoeschenBeiNichtBewertetenHalbjahren(gostSchueler.GKL_EF_AF1_Klausurvorgabe_ID, bewertetesHalbjahr, mapKlausurvorgaben);
+		gostSchueler.GKL_EF_AF2_Klausurvorgabe_ID = getGKLNachLoeschenBeiNichtBewertetenHalbjahren(gostSchueler.GKL_EF_AF2_Klausurvorgabe_ID, bewertetesHalbjahr, mapKlausurvorgaben);
+		gostSchueler.GKL_EF_AF3_Klausurvorgabe_ID = getGKLNachLoeschenBeiNichtBewertetenHalbjahren(gostSchueler.GKL_EF_AF3_Klausurvorgabe_ID, bewertetesHalbjahr, mapKlausurvorgaben);
+		gostSchueler.GKL_Q_AF1_Klausurvorgabe_ID = getGKLNachLoeschenBeiNichtBewertetenHalbjahren(gostSchueler.GKL_Q_AF1_Klausurvorgabe_ID, bewertetesHalbjahr, mapKlausurvorgaben);
+		gostSchueler.GKL_Q_AF2_Klausurvorgabe_ID = getGKLNachLoeschenBeiNichtBewertetenHalbjahren(gostSchueler.GKL_Q_AF2_Klausurvorgabe_ID, bewertetesHalbjahr, mapKlausurvorgaben);
+		gostSchueler.GKL_Q_AF3_Klausurvorgabe_ID = getGKLNachLoeschenBeiNichtBewertetenHalbjahren(gostSchueler.GKL_Q_AF3_Klausurvorgabe_ID, bewertetesHalbjahr, mapKlausurvorgaben);
+		gostSchuelerRepository.update(gostSchueler);
+	}
+
 
 	/**
 	 * Löscht die Fachwahlen für die angegebenen Schüler. Liegen bereits bewertete Halbjahre vor, so
@@ -580,10 +664,18 @@ public class GostFachwahlService {
 			pruefeGymOb();
 
 			final Map<Long, Abiturdaten> mapAbidaten = gostAbiturdatenService.getMap(idsSchueler);
-
 			final Map<Long, List<DTOGostSchuelerFachbelegungen>> mapFachwahlen = gostSchuelerFachbelegungenRepository.getMapBySchuelerID(idsSchueler);
 
+			final Map<Long, DTOGostSchueler> mapGostSchueler = gostSchuelerRepository.findMapByIds(idsSchueler);
+			final Map<Long, DTOGostKlausurenVorgaben> mapKlausurvorgaben = getMapKlausurvorgabenByGKLWahlen(mapGostSchueler.values());
+
 			for (final long idSchueler : idsSchueler) {
+				final DTOGostSchueler gostSchueler = mapGostSchueler.get(idSchueler);
+				if (gostSchueler == null) {
+					throw new ApiOperationException(Status.NOT_FOUND,
+							"Die Informationen zur Gymnasialen Oberstufe für den Schüler mit der ID %d konnten nicht bestimmt werden.".formatted(idSchueler));
+				}
+
 				final Abiturdaten abidaten = mapAbidaten.get(idSchueler);
 				if (abidaten == null) {
 					throw new ApiOperationException(Status.NOT_FOUND,
@@ -601,6 +693,10 @@ public class GostFachwahlService {
 						halbjahr = tmpHalbjahr;
 					}
 				}
+
+				// Entferne auch die Informationen zu den GKL-Wahlen, sofern diese nicht im Bereich eines bewerteten Halbjahres liegen
+				loescheGKLsBeiNichtBewertetenHalbjahren(gostSchueler, abidaten.bewertetesHalbjahr, mapKlausurvorgaben);
+
 				// Wenn es keine Bewertung gibt, dann können einfach alle Fachwahlen des Schülers komplett gelöscht werden
 				if (halbjahr == null) {
 					gostSchuelerFachbelegungenRepository.delete(fachwahlen);
