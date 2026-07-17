@@ -8,6 +8,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -189,7 +190,10 @@ public class GostLaufbahnplanungImportV1Service {
 			final DTOGostSchueler gostSchueler = mapGostSchueler.get(idSchueler);
 			final Abiturdaten abidaten = mapAbiturdaten.get(idSchueler);
 			final GostFaecherManager gostFaechermanager = mapGostFaechermanager.get(abidaten.abiturjahr);
-			final Map<Long, DTOGostSchuelerFachbelegungen> mapFachbelegungen = mapSchuelerFachbelegungen.getSubMapOrNull(idSchueler);
+			Map<Long, DTOGostSchuelerFachbelegungen> mapFachbelegungen = mapSchuelerFachbelegungen.getSubMapOrNull(idSchueler);
+			if (mapFachbelegungen == null) {
+				mapFachbelegungen = new HashMap<>();
+			}
 			final boolean success =
 					doImportSingleInternal(laufbahnplanungsdaten, logger, schueler, aes, gostSchueler, abidaten, gostFaechermanager, mapFachbelegungen);
 			if (!success) {
