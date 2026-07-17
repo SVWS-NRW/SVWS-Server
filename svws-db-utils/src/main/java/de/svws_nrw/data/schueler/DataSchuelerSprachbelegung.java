@@ -369,8 +369,9 @@ public final class DataSchuelerSprachbelegung extends DataManagerRevised<Long, D
 	public Response deleteByKuerzelAsResponse(final @NotNull String kuerzel) throws ApiOperationException {
 		// Bestimme das DTO
 		final DTOSchuelerSprachenfolge dto = getDTO(kuerzel);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		return deleteAsResponse(dto.ID);
 	}
 
@@ -385,23 +386,27 @@ public final class DataSchuelerSprachbelegung extends DataManagerRevised<Long, D
 	 * @return die Map der Sprachbelegungen
 	 */
 	public static Map<Long, List<Sprachbelegung>> getMapBySchuelerIDs(final @NotNull DBEntityManager conn, final @NotNull List<Long> idsSchueler) {
-		if (idsSchueler.isEmpty())
+		if (idsSchueler.isEmpty()) {
 			return Collections.emptyMap();
+		}
 		final List<DTOSchueler> listSchueler = conn.queryByKeyList(DTOSchueler.class, idsSchueler.stream().filter(Objects::nonNull).toList());
-		if (listSchueler.isEmpty())
+		if (listSchueler.isEmpty()) {
 			return Collections.emptyMap();
+		}
 		final List<Long> listIdsDtoSchueler = listSchueler.stream().map(s -> s.ID).distinct().toList();
 		final List<DTOSchuelerSprachenfolge> listSprachenfolgen =
 				conn.queryList(DTOSchuelerSprachenfolge.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerSprachenfolge.class, listIdsDtoSchueler);
-		if (listSprachenfolgen.isEmpty())
+		if (listSprachenfolgen.isEmpty()) {
 			return listIdsDtoSchueler.stream().collect(Collectors.toMap(s -> s, s -> new ArrayList<>()));
+		}
 		// Erstelle die Maps der Schüler und der Sprachbelegungen zur Schüler-ID.
 		final Map<Long, DTOSchueler> mapSchueler = listSchueler.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 		final Map<Long, List<Sprachbelegung>> result = listSprachenfolgen.stream().collect(Collectors.groupingBy(sf -> sf.Schueler_ID,
 				Collectors.mapping(sf -> mapInternal(conn, mapSchueler.get(sf.Schueler_ID), sf), Collectors.toList())));
 		// Ergänze leere Liste für Schüler ohne Sprachen in der Sprachenfolge.
-		for (final DTOSchueler dtoSchueler : listSchueler)
+		for (final DTOSchueler dtoSchueler : listSchueler) {
 			result.computeIfAbsent(dtoSchueler.ID, s -> new ArrayList<>());
+		}
 		return result;
 	}
 

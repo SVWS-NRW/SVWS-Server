@@ -153,9 +153,11 @@ public final class DataUntis {
 		// Bestimme die Kurse des Schuljahresabschnitts
 		final List<KursDaten> kurse = DataKurse.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, false);
 		final HashMap2D<String, Long, KursDaten> mapKurseByKuerzelUndJahrgang = new HashMap2D<>();
-		for (final KursDaten kurs : kurse)
-			for (final long idJahrgang : kurs.idJahrgaenge)
+		for (final KursDaten kurs : kurse) {
+			for (final long idJahrgang : kurs.idJahrgaenge) {
 				mapKurseByKuerzelUndJahrgang.put(kurs.kuerzel, idJahrgang, kurs);
+			}
+		}
 		// Prüfe den Beginn des Stundenplan - ist dieser evtl. nach dem Schuljahr des angegebenen Schuljahresabschnitts?
 		final int schuljahr = DateUtils.getSchuljahrFromDateISO8601(beginn);
 		if (schuljahr > schuljahresabschnitt.schuljahr) {

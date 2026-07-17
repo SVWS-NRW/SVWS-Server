@@ -92,12 +92,13 @@ public final class DataSchuelerLernplattformen extends DataManagerRevised<Long[]
 		final Long idSchueler = JSONMapper.convertToLong(initAttributes.get(ID_SCHUELER), false, ID_SCHUELER);
 		final Long idLernplattform = JSONMapper.convertToLong(initAttributes.get(ID_LERNPLATTFORM), false, ID_LERNPLATTFORM);
 		final DTOSchuelerLernplattform existingEntry = conn.queryByKey(DTOSchuelerLernplattform.class, idSchueler, idLernplattform);
-		if (existingEntry != null)
+		if (existingEntry != null) {
 			throw new ApiOperationException(
 					Status.BAD_REQUEST,
 					"Es existiert bereits eine Einwilligung für die Kombination aus Schueler-ID %d und Lernplattform-ID %d.".formatted(idSchueler,
 							idLernplattform)
 			);
+		}
 	}
 
 	@Override

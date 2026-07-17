@@ -133,8 +133,9 @@ public final class DataBKGymLeistungen {
 		}
 		// Prüfe, ob das Fach ein Fach des beruflichen Gymnasiums ist
 		final BKGymFach bkGymFach = fachManager.get(leistung.Fach_ID);
-		if (bkGymFach == null)
+		if (bkGymFach == null) {
 			return;
+		}
 		// Füge die Fächer aus den Leistungsdaten zunächst in die HashMap ein...
 		BKGymLeistungenFach fach = faecher.get(bkGymFach.kuerzelAnzeige);
 		if (fach == null) {
@@ -407,8 +408,9 @@ public final class DataBKGymLeistungen {
 			fach.istFSNeu = leistungenFach.istFSNeu;
 			fach.abiturFach = (GostAbiturFach.fromID(leistungenFach.abiturfach) == null) ? null : leistungenFach.abiturfach;
 			for (final BKGymLeistungenFachHalbjahr leistungenBelegung : leistungenFach.belegungen) {
-				if (!leistungenBelegung.abschnittGewertet)
+				if (!leistungenBelegung.abschnittGewertet) {
 					continue;
+				}
 				// Nehme jeweils die Kursart, welche beim letzten gewerteten Abschnitt eingetragen ist
 				if (((letzteBelegungHalbjahr == null) || (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).compareTo(letzteBelegungHalbjahr) > 0))
 						&& (GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel) != null)) {
@@ -425,8 +427,9 @@ public final class DataBKGymLeistungen {
 						: GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
 				if ("AT".equals(leistungenBelegung.notenKuerzel)) {
 					final BKGymFach bkGymFach = fachManager.get(fach.fachID);
-					if (Fach.SP == Fach.getBySchluesselOrDefault(bkGymFach.kuerzel))
+					if (Fach.SP == Fach.getBySchluesselOrDefault(bkGymFach.kuerzel)) {
 						belegung.kursartKuerzel = "AT";
+					}
 				}
 				belegung.schriftlich = leistungenBelegung.istSchriftlich;
 				belegung.biliSprache = leistungenBelegung.bilingualeSprache;
@@ -439,8 +442,9 @@ public final class DataBKGymLeistungen {
 				fach.belegungen[GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).id] = belegung;
 			}
 			// Prüfe, ob das Fach in einem gewerteten Abschnitt belegt wurde. Wenn ja, dann füge es zu es den Fachbelegungen hinzu
-			if (letzteBelegungHalbjahr != null)
+			if (letzteBelegungHalbjahr != null) {
 				abidaten.fachbelegungen.add(fach);
+			}
 		}
 
 		// Bestimmt die Fehlstunden-Summe für den Block I (Qualifikationsphase) anhand der Fehlstunden bei den einzelnen Kurs-Belegungen.
@@ -448,8 +452,9 @@ public final class DataBKGymLeistungen {
 		int block1FehlstundenUnentschuldigt = 0;
 		for (final BKGymAbiturFachbelegung fach : abidaten.fachbelegungen) {
 			for (final BKGymAbiturFachbelegungHalbjahr belegung : fach.belegungen) {
-				if ((belegung == null) || !GostHalbjahr.fromKuerzel(belegung.halbjahrKuerzel).istQualifikationsphase())
+				if ((belegung == null) || !GostHalbjahr.fromKuerzel(belegung.halbjahrKuerzel).istQualifikationsphase()) {
 					continue;
+				}
 				block1FehlstundenGesamt += belegung.fehlstundenGesamt;
 				block1FehlstundenUnentschuldigt += belegung.fehlstundenUnentschuldigt;
 			}

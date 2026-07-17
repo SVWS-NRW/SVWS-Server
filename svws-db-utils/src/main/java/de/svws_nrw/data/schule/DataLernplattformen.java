@@ -50,12 +50,14 @@ public final class DataLernplattformen extends DataManagerRevised<Long, DTOLernp
 
 	@Override
 	public Lernplattform getById(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID der Lernplattform darf nicht null sein.");
+		}
 
 		final DTOLernplattformen lernplattform = conn.queryByKey(DTOLernplattformen.class, id);
-		if (lernplattform == null)
+		if (lernplattform == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Lernplattform mit der ID %d wurde nicht gefunden.".formatted(id));
+		}
 
 		return map(lernplattform);
 	}
@@ -129,8 +131,9 @@ public final class DataLernplattformen extends DataManagerRevised<Long, DTOLernp
 	}
 
 	private Set<Long> getIdsOfReferencedLernplattformen(final Set<Long> ids) {
-		if ((ids == null) || ids.isEmpty())
+		if ((ids == null) || ids.isEmpty()) {
 			return Collections.emptySet();
+		}
 
 		final String query1 = "SELECT DISTINCT a.LernplattformID FROM DTOSchuelerLernplattform a WHERE a.LernplattformID in :ids";
 		final String query2 = "SELECT DISTINCT b.LernplattformID FROM DTOLehrerLernplattform b WHERE b.LernplattformID in :ids";
@@ -149,11 +152,13 @@ public final class DataLernplattformen extends DataManagerRevised<Long, DTOLernp
 	private void validateBezeichnung(final DTOLernplattformen dto, final Object value, final String name) throws ApiOperationException {
 		final String bezeichnung = JSONMapper.convertToString(
 				value, false, false, Schema.tab_Lernplattformen.col_Bezeichnung.datenlaenge(), name);
-		if (ValidationUtils.isBlankOrUnchanged(dto.Bezeichnung, bezeichnung))
+		if (ValidationUtils.isBlankOrUnchanged(dto.Bezeichnung, bezeichnung)) {
 			return;
+		}
 
-		if (bezeichnungIsAlreadyUsed(dto.ID, bezeichnung))
+		if (bezeichnungIsAlreadyUsed(dto.ID, bezeichnung)) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(bezeichnung));
+		}
 
 		dto.Bezeichnung = bezeichnung;
 	}
