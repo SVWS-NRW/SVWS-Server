@@ -323,7 +323,7 @@ public class HtmlFactory {
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für ein Gost-Blockungsergebnis für die HTML-Generierung.");
 		validiereSchuleMitGost();
 		if (reportingParameter.idHauptdatenObjekt() < 0) {
-			reportingContext.logger().logLn(LogLevel.DEBUG, 4, "FEHLER: Es wurde keine ID für ein Blockungsergebnis übergeben.");
+			reportingContext.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurde keine ID für ein Blockungsergebnis übergeben.");
 			throw new ApiOperationException(Status.BAD_REQUEST, "FEHLER: Es wurde keine ID für ein Blockungsergebnis übergeben.");
 		}
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4,

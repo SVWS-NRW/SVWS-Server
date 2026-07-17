@@ -54,7 +54,7 @@ public class PdfFactory {
 		// Validiere die HTML-Builder
 		if ((htmlBuilders == null) || htmlBuilders.isEmpty()) {
 			this.reportingContext.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die Html-Dateiinhalte für die PDF-Erzeugung sind nicht vorhanden.");
-			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Die Html-Dateiinhalte für die PDF-Erzeugung sind nicht vorhanden.");
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Die Html-Dateiinhalte für die PDF-Erzeugung sind nicht vorhanden.");
 		}
 		this.htmlBuilders = htmlBuilders;
 

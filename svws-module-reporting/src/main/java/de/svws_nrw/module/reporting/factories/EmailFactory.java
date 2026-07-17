@@ -113,6 +113,9 @@ public final class EmailFactory {
 			reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< Job für den asynchronen E-Mail-Versand wurde gestartet. Job-ID: %d".formatted(jobId));
 
 			return Response.status(Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(simple).build();
+		} catch (final ApiOperationException aoe) {
+			// Validierungs-Statuscodes (z. B. BAD_REQUEST aus pruefeParameter/ermittleAbsenderEmail) unverändert durchreichen.
+			throw aoe;
 		} catch (final Exception e) {
 			reportingContext.logger().logLn(LogLevel.ERROR, 4, "### FEHLER: Der E-Mail-Versand konnte nicht als Job gestartet werden.");
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "### FEHLER: Fehler beim Starten des E-Mail-Jobs.");
@@ -336,7 +339,7 @@ public final class EmailFactory {
 				yield new ArrayList<>(lehrer);
 			}
 			case KURSLEHRER -> {
-				final ReportingKurs kurs = reportingContext.repositoryLerngruppen().kurse().get(id);
+				final ReportingKurs kurs = reportingContext.repositoryLerngruppen().kurs(id);
 				if (kurs == null) {
 					yield new ArrayList<>();
 				}
@@ -354,7 +357,7 @@ public final class EmailFactory {
 			default -> {
 				reportingContext.logger().logLn(LogLevel.ERROR, 4,
 						"### FEHLER: Es wurde kein gültiger Empfängertyp festgelegt. Der Versand der E-Mails wurde abgebrochen.");
-				throw new ApiOperationException(Status.NOT_FOUND, null, null, MediaType.APPLICATION_JSON);
+				throw new ApiOperationException(Status.BAD_REQUEST, null, null, MediaType.APPLICATION_JSON);
 			}
 		};
 	}
