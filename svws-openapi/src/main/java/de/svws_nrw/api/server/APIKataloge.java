@@ -86,6 +86,7 @@ public class APIKataloge {
 	 * @return die Liste der Strassen
 	 */
 	@GET
+	@GZIP
 	@Path("/allgemein/strassen")
 	@Operation(summary = "Erstellt eine Liste aller in dem Katalog vorhandenen Strassen.",
 			description = "Erstellt eine Liste aller in dem Katalog vorhandenen Strassen. "
