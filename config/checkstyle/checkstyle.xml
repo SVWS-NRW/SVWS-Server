@@ -155,7 +155,7 @@
     </module>
     <module name="NeedBraces">
 		<property name="allowSingleLineStatement" value="false"/>
-		<property name="severity" value="warning"/>
+<!-- 		<property name="severity" value="warning"/> -->
     </module>
     <module name="RightCurly"/>
 
