@@ -4,6 +4,9 @@
 	</Teleport>
 	<div class="page page-grid-cards">
 		<svws-ui-input-wrapper :grid="1">
+			<div v-if="noEntries">
+				Aktuell gibt es keine Einträge im Katalog "Einwilligungsarten".
+			</div>
 			<svws-ui-content-card v-if="hasAbgefragteEinwilligungen" title="Abgefragt" class="col-span-full">
 				<div class="space-y-2">
 					<div v-for="einwilligung of einwilligungen()" :key="einwilligung.idEinwilligungsart">
@@ -62,6 +65,7 @@
 
 	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN));
 	const readonly = computed(() => !hatKompetenzAendern.value);
+	const noEntries = computed<boolean>(() => props.einwilligungen().isEmpty());
 
 	const hasAbgefragteEinwilligungen = computed(() => {
 		for (const einwilligung of props.einwilligungen()) {
