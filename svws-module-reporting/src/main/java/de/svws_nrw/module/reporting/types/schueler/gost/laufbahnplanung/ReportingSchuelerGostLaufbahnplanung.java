@@ -95,6 +95,9 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 	/** Die Prüfungsordnung des Schülers aus dem aktuellen Lernabschnitt */
 	protected String pruefungsordnung;
 
+	/** Gibt an, ob es sich um einen Abiturjahrgang ab 2030 mit dem erweiterten Funktionsumfang (z. B. Projektkurse, GKL, 5. Abiturfach) handelt. */
+	protected boolean istAbiturAb2030;
+
 	/** Wochenstundensumme in der EF.1 */
 	protected int wochenstundenEF1;
 
@@ -168,6 +171,7 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 	 * @param wochenstundenDurchschnittQ2 Wochenstundendurchschnitt in der Q2
 	 * @param wochenstundenDurchschnittQPh Wochenstundendurchschnitt in der Qualifikationsphase
 	 * @param wochenstundenGesamt Wochenstundensumme der gesamten Laufbahn
+	 * @param istAbiturAb2030 Gibt an, ob es sich um einen Abiturjahrgang ab 2030 mit dem erweiterten Funktionsumfang handelt
 	 */
 	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingSchuelerGostLaufbahnplanung(final int abiturjahr, final String aktuelleKlasse, final String aktuellesGOStHalbjahr,
@@ -179,7 +183,7 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 			final int kursanzahlQ22, final int kursanzahlQPh, final String pruefungsordnung, final int wochenstundenEF1, final int wochenstundenEF2,
 			final int wochenstundenQ11, final int wochenstundenQ12, final int wochenstundenQ21, final int wochenstundenQ22,
 			final double wochenstundenDurchschnittEF, final double wochenstundenDurchschnittQ1, final double wochenstundenDurchschnittQ2,
-			final double wochenstundenDurchschnittQPh, final double wochenstundenGesamt) {
+			final double wochenstundenDurchschnittQPh, final double wochenstundenGesamt, final boolean istAbiturAb2030) {
 		this.abiturjahr = abiturjahr;
 		this.aktuellesGOStHalbjahr = ersetzeNullBlankTrim(aktuellesGOStHalbjahr);
 		this.aktuelleKlasse = ersetzeNullBlankTrim(aktuelleKlasse);
@@ -217,6 +221,7 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 		this.wochenstundenDurchschnittQ2 = wochenstundenDurchschnittQ2;
 		this.wochenstundenDurchschnittQPh = wochenstundenDurchschnittQPh;
 		this.wochenstundenGesamt = wochenstundenGesamt;
+		this.istAbiturAb2030 = istAbiturAb2030;
 	}
 
 
@@ -607,6 +612,16 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 	 */
 	public double wochenstundenGesamt() {
 		return wochenstundenGesamt;
+	}
+
+	/**
+	 * Gibt an, ob es sich um einen Abiturjahrgang ab 2030 mit dem erweiterten Funktionsumfang (z. B. Projektkurse mit Referenzfach,
+	 * Gleichwertige Komplexe Lernleistungen, 5. Abiturfach) handelt.
+	 *
+	 * @return Inhalt des Feldes istAbiturAb2030
+	 */
+	public boolean istAbiturAb2030() {
+		return istAbiturAb2030;
 	}
 
 

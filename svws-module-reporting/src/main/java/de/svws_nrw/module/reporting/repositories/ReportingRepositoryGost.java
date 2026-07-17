@@ -9,7 +9,9 @@ import java.util.stream.Collectors;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
+import de.svws_nrw.core.data.gost.GostSchuelerGKLWahl;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
@@ -18,9 +20,15 @@ import de.svws_nrw.data.gost.DataGostJahrgangFachkombinationen;
 import de.svws_nrw.data.gost.DataGostJahrgangsdaten;
 import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
+import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
+import de.svws_nrw.repo.gost.GostRepositoryFactory;
+import de.svws_nrw.repo.gost.klausurplan.GostKlausurenRepositoryFactory;
+import de.svws_nrw.repo.kataloge.KatalogeRepositoryFactory;
 import de.svws_nrw.service.gost.GostServiceFactoryBuilder;
+import de.svws_nrw.service.gost.klausurplan.GostKlausurenServiceFactory;
+import de.svws_nrw.service.gost.klausurplan.GostKlausurenVorgabeService;
 
 /**
  * Domänen-Repository für GOSt-Daten (Abiturjahrgänge, Beratungsdaten, Kursplanung).
@@ -36,6 +44,8 @@ public class ReportingRepositoryGost {
 	private final Map<Long, Abiturdaten> mapBeratungsdatenAbiturdaten = new HashMap<>();
 	private final Map<Long, Abiturdaten> mapSchuelerAbiturdaten = new HashMap<>();
 	private final Map<Integer, List<GostStatistikFachwahl>> mapFachwahlen = new HashMap<>();
+	private final Map<Long, GostSchuelerGKLWahl> mapGklWahlen = new HashMap<>();
+	private final Map<Long, GostKlausurvorgabe> mapKlausurvorgaben = new HashMap<>();
 
 	/** Zwischenspeicher für die Liste der vorhandenen Abiturjahrgänge. */
 	private List<Integer> abiturjahrgaenge = null;
@@ -234,6 +244,97 @@ public class ReportingRepositoryGost {
 				return List.of();
 			}
 		});
+	}
+
+
+	// ##### Gleichwertige Komplexe Lernleistungen (GKL, Abitur ab 2030) #####
+
+	/**
+	 * Liefert die Wahlen zu den Gleichwertigen Komplexen Lernleistungen (GKL) des übergebenen Schülers. Beim ersten Zugriff
+	 * werden die Daten für alle bekannten Schüler gesammelt nachgeladen und im Cache abgelegt.
+	 *
+	 * @param idSchueler Die ID des Schülers.
+	 *
+	 * @return Die GKL-Wahlen des Schülers. Enthält ausschließlich {@code null}-Werte, falls für den Schüler keine Wahlen
+	 *         hinterlegt sind oder das Laden fehlgeschlagen ist.
+	 */
+	public GostSchuelerGKLWahl gklWahl(final long idSchueler) {
+		final List<Long> ids = new ArrayList<>(this.reportingContext.repositorySchueler().stammdaten().keySet());
+		ids.add(idSchueler);
+		ReportingRepositoryUtils.ladeFehlendeWerteInRepositoryMap(
+				ids,
+				mapGklWahlen,
+				this::ladeGklWahlen,
+				"GOSt-GKL-Wahlen",
+				this.reportingContext.logger());
+		final GostSchuelerGKLWahl wahl = mapGklWahlen.get(idSchueler);
+		return (wahl != null) ? wahl : new GostSchuelerGKLWahl();
+	}
+
+	/**
+	 * Lädt die GKL-Wahlen zu den übergebenen Schüler-IDs mit einer gesammelten Datenbankabfrage. Für Schüler ohne
+	 * GOSt-Eintrag wird ein leeres Wahl-Objekt hinterlegt, damit die IDs nicht erneut abgefragt werden.
+	 *
+	 * @param idsSchueler Die IDs der Schüler, deren GKL-Wahlen geladen werden sollen.
+	 *
+	 * @return Map mit Schüler-ID als Schlüssel und den zugehörigen GKL-Wahlen als Wert.
+	 */
+	private Map<Long, GostSchuelerGKLWahl> ladeGklWahlen(final List<Long> idsSchueler) {
+		final Map<Long, DTOGostSchueler> dtos = this.reportingContext.conn()
+				.queryList(DTOGostSchueler.QUERY_LIST_BY_SCHUELER_ID, DTOGostSchueler.class, idsSchueler)
+				.stream().collect(Collectors.toMap(dto -> dto.Schueler_ID, dto -> dto));
+		final Map<Long, GostSchuelerGKLWahl> result = new HashMap<>();
+		for (final Long id : idsSchueler) {
+			final GostSchuelerGKLWahl wahl = new GostSchuelerGKLWahl();
+			wahl.idSchueler = id;
+			final DTOGostSchueler dto = dtos.get(id);
+			if (dto != null) {
+				wahl.idKlausurvorgabeEF_Sprachen = dto.GKL_EF_AF1_Klausurvorgabe_ID;
+				wahl.idKlausurvorgabeEF_GW = dto.GKL_EF_AF2_Klausurvorgabe_ID;
+				wahl.idKlausurvorgabeEF_NW = dto.GKL_EF_AF3_Klausurvorgabe_ID;
+				wahl.idKlausurvorgabeQ_Sprachen = dto.GKL_Q_AF1_Klausurvorgabe_ID;
+				wahl.idKlausurvorgabeQ_GW = dto.GKL_Q_AF2_Klausurvorgabe_ID;
+				wahl.idKlausurvorgabeQ_NW = dto.GKL_Q_AF3_Klausurvorgabe_ID;
+			}
+			result.put(id, wahl);
+		}
+		return result;
+	}
+
+	/**
+	 * Liefert zu den übergebenen IDs die zugehörigen GOSt-Klausurvorgaben. Die Daten werden bei erstem Zugriff aus der
+	 * Datenbank geladen und im Cache gehalten.
+	 *
+	 * @param idsKlausurvorgaben Die IDs der Klausurvorgaben.
+	 *
+	 * @return Map mit der ID der Klausurvorgabe als Schlüssel und der zugehörigen Klausurvorgabe als Wert. IDs, zu denen
+	 *         keine Klausurvorgabe gefunden werden konnte, fehlen in der Map.
+	 */
+	public Map<Long, GostKlausurvorgabe> klausurvorgaben(final List<Long> idsKlausurvorgaben) {
+		ReportingRepositoryUtils.ladeFehlendeWerteInRepositoryMap(
+				idsKlausurvorgaben,
+				mapKlausurvorgaben,
+				ids -> gostKlausurenVorgabeService().getListByIds(ids).stream()
+						.collect(Collectors.toMap(vorgabe -> vorgabe.id, vorgabe -> vorgabe)),
+				"GOSt-Klausurvorgaben",
+				this.reportingContext.logger());
+		return filtereMap(idsKlausurvorgaben, mapKlausurvorgaben);
+	}
+
+	/**
+	 * Erstellt einen neuen Service für den Zugriff auf die GOSt-Klausurvorgaben. Anders als die übrigen GOSt-Services in
+	 * dieser Klasse wird dieser Service nicht über {@link GostServiceFactoryBuilder} bezogen, da dessen
+	 * {@code GostServiceFactory} ihn nicht anbietet — stattdessen wird dieselbe {@link GostKlausurenServiceFactory}
+	 * genutzt, über die auch der Klausurplanungs-Controller den Service erzeugt.
+	 *
+	 * @return der Service
+	 */
+	private static GostKlausurenVorgabeService gostKlausurenVorgabeService() {
+		return GostKlausurenServiceFactory.getNewInstance(
+				GostKlausurenRepositoryFactory.getNewInstance(),
+				GostRepositoryFactory.getNewInstance(),
+				KatalogeRepositoryFactory.getNewInstance())
+				.getGostKlausurenVorgabeService();
 	}
 
 

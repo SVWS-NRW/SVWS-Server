@@ -44,6 +44,9 @@ public class ReportingGostLaufbahnplanungFachwahl extends ReportingBaseType {
 	/** Fach ist eine Fremdsprache: Position in der Fremdsprachenfolge bzw. Prüfungsvermerk */
 	protected String positionFremdsprachenfolge;
 
+	/** Das Referenzfach eines Projektkurses (nur für Abiturjahrgänge ab 2030 relevant). */
+	protected ReportingFach referenzfach;
+
 
 
 	/**
@@ -61,11 +64,13 @@ public class ReportingGostLaufbahnplanungFachwahl extends ReportingBaseType {
 	 * @param fachIstFortfuehrbareFremdspracheInGOSt	Fach ist eine Fremdsprache in der GOSt fortführbare Fremdsprache.
 	 * @param jahrgangFremdsprachenbeginn				Fach ist eine Fremdsprache: Jahrgangsstufe des Beginns der Sprachbelegung.
 	 * @param positionFremdsprachenfolge				Fach ist eine Fremdsprache: Position in der Fremdsprachenfolge bzw. Prüfungsvermerk.
+	 * @param referenzfach								Das Referenzfach eines Projektkurses (nur für Abiturjahrgänge ab 2030 relevant).
 	 */
 	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingGostLaufbahnplanungFachwahl(final String abiturfach, final String belegungEF1, final String belegungEF2, final String belegungQ11,
 			final String belegungQ12, final String belegungQ21, final String belegungQ22, final ReportingFach fach, final Boolean fachIstBelegtInGOSt,
-			final Boolean fachIstFortfuehrbareFremdspracheInGOSt, final String jahrgangFremdsprachenbeginn, final String positionFremdsprachenfolge) {
+			final Boolean fachIstFortfuehrbareFremdspracheInGOSt, final String jahrgangFremdsprachenbeginn, final String positionFremdsprachenfolge,
+			final ReportingFach referenzfach) {
 		this.abiturfach = ersetzeNullBlankTrim(abiturfach);
 		this.belegungEF1 = ersetzeNullBlankTrim(belegungEF1);
 		this.belegungEF2 = ersetzeNullBlankTrim(belegungEF2);
@@ -78,6 +83,7 @@ public class ReportingGostLaufbahnplanungFachwahl extends ReportingBaseType {
 		this.fachIstFortfuehrbareFremdspracheInGOSt = fachIstFortfuehrbareFremdspracheInGOSt;
 		this.jahrgangFremdsprachenbeginn = ersetzeNullBlankTrim(jahrgangFremdsprachenbeginn);
 		this.positionFremdsprachenfolge = ersetzeNullBlankTrim(positionFremdsprachenfolge);
+		this.referenzfach = referenzfach;
 	}
 
 
@@ -190,6 +196,15 @@ public class ReportingGostLaufbahnplanungFachwahl extends ReportingBaseType {
 	 */
 	public String positionFremdsprachenfolge() {
 		return positionFremdsprachenfolge;
+	}
+
+	/**
+	 * Das Referenzfach eines Projektkurses (nur für Abiturjahrgänge ab 2030 relevant).
+	 *
+	 * @return Inhalt des Feldes referenzfach; kann {@code null} sein, wenn kein Referenzfach zugeordnet ist.
+	 */
+	public ReportingFach referenzfach() {
+		return referenzfach;
 	}
 
 }

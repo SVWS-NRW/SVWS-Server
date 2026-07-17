@@ -22,10 +22,13 @@ public class ProxyReportingGostLaufbahnplanungFachwahl extends ReportingGostLauf
 	 * @param fachIstFortfuehrbareFremdspracheInGOSt	Fach ist eine Fremdsprache in der GOSt fortführbare Fremdsprache.
 	 * @param jahrgangFremdsprachenbeginn				Fach ist eine Fremdsprache: Jahrgangsstufe des Beginns der Sprachbelegung.
 	 * @param positionFremdsprachenfolge				Fach ist eine Fremdsprache: Position in der Fremdsprachenfolge bzw. Prüfungsvermerk.
+	 * @param referenzfach								Das Referenzfach eines Projektkurses (nur für Abiturjahrgänge ab 2030 relevant).
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ProxyReportingGostLaufbahnplanungFachwahl(final String abiturfach, final String belegungEF1, final String belegungEF2, final String belegungQ11,
 			final String belegungQ12, final String belegungQ21, final String belegungQ22, final ReportingFach fach, final Boolean fachIstBelegtInGOSt,
-			final Boolean fachIstFortfuehrbareFremdspracheInGOSt, final String jahrgangFremdsprachenbeginn, final String positionFremdsprachenfolge) {
+			final Boolean fachIstFortfuehrbareFremdspracheInGOSt, final String jahrgangFremdsprachenbeginn, final String positionFremdsprachenfolge,
+			final ReportingFach referenzfach) {
 		super(ersetzeNullBlankTrim(abiturfach),
 				ersetzeNullBlankTrim(belegungEF1),
 				ersetzeNullBlankTrim(belegungEF2),
@@ -37,6 +40,7 @@ public class ProxyReportingGostLaufbahnplanungFachwahl extends ReportingGostLauf
 				fachIstBelegtInGOSt,
 				fachIstFortfuehrbareFremdspracheInGOSt,
 				ersetzeNullBlankTrim(jahrgangFremdsprachenbeginn),
-				ersetzeNullBlankTrim(positionFremdsprachenfolge));
+				ersetzeNullBlankTrim(positionFremdsprachenfolge),
+				referenzfach);
 	}
 }
