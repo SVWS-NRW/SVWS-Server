@@ -1,5 +1,6 @@
 package de.svws_nrw.service.schule;
 
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.repo.schule.SchuleRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 
@@ -38,6 +39,15 @@ public final class SchuleService {
 	 */
 	public int getSchuljahr() {
 		return schulejahresabschnitteRepository.getById(schuleRepository.getIdSchuljahresabschnitt()).Jahr;
+	}
+
+	/**
+	 * Liefert die Schulform der Schule
+	 *
+	 * @return die Schulform der Schule
+	 */
+	public Schulform getSchulform() {
+		return schuleRepository.getSchulform();
 	}
 
 }

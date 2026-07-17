@@ -157,7 +157,7 @@
 	});
 
 	function mapLogosByKennung(definedLogos: List<Logo>): HashMap<string, Logo> {
-		const allLogosDefinitions = ReportingBildDefinition.getBySchulform(schuleState.schulform) ?? new ArrayList<ReportingBildDefinition>();
+		const allLogosDefinitions = ReportingBildDefinition.getBySchulform(schuleState.schulform);
 		const logoByKennung = new HashMap<string, Logo>();
 		for (const definition of allLogosDefinitions) {
 			const logo = new Logo();

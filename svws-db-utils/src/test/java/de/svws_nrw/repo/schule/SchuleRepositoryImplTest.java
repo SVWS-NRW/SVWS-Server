@@ -1,19 +1,25 @@
 package de.svws_nrw.repo.schule;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
+import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
+import de.svws_nrw.repo.RepositoryException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class SchuleRepositoryImplTest {
@@ -23,6 +29,11 @@ class SchuleRepositoryImplTest {
 
 	@InjectMocks
 	private SchuleRepositoryImpl repository;
+
+	@BeforeEach
+	void setUp() {
+		ASDCoreTypeUtils.initAll();
+	}
 
 	@Test
 	@DisplayName("Test: Erstelle einen neuen Eintrag und prüfe die Zuweisung der neuen ID.")
@@ -70,6 +81,104 @@ class SchuleRepositoryImplTest {
 
 		assertEquals(idSchuljahresabschnitt, result, "Die ID des Schuljahresabschnitts wurde nicht korrekt ausgelesen.");
 		verify(conn).querySingle(DTOEigeneSchule.class);
+	}
+
+	@Nested
+	@DisplayName("getSchulnummer()")
+	class GetSchulnummer {
+
+		@Test
+		@DisplayName("gibt die Schulnummer aus dem DTO zurück")
+		void getSchulnummer_returnsSchulnummer() {
+			when(conn.querySingle(DTOEigeneSchule.class)).thenReturn(dtoWithSchulnummer(123456));
+
+			assertThat(repository.getSchulnummer()).isEqualTo(123456);
+		}
+
+		@Test
+		@DisplayName("wirft RepositoryException wenn SchulNr null ist")
+		void getSchulnummer_nullSchulNr_throwsRepositoryException() {
+			final var dto = dtoWithSchulnummer(0);
+			dto.SchulNr = null;
+			when(conn.querySingle(DTOEigeneSchule.class)).thenReturn(dto);
+
+			assertThatThrownBy(() -> repository.getSchulnummer())
+					.isInstanceOf(RepositoryException.class)
+					.hasMessageContaining("SchulNr");
+		}
+
+		@Test
+		@DisplayName("wirft RepositoryException wenn kein DTO vorhanden ist")
+		void getSchulnummer_noDto_throwsRepositoryException() {
+			when(conn.querySingle(DTOEigeneSchule.class)).thenReturn(null);
+
+			assertThatThrownBy(() -> repository.getSchulnummer())
+					.isInstanceOf(RepositoryException.class);
+		}
+
+		private static DTOEigeneSchule dtoWithSchulnummer(final int schulNr) {
+			final var dto = new DTOEigeneSchule(1L);
+			dto.SchulNr = schulNr;
+			dto.SchulformKuerzel = "GY";
+			dto.Schuljahresabschnitts_ID = 1L;
+			return dto;
+		}
+	}
+
+
+	@Nested
+	@DisplayName("getSchulform()")
+	class GetSchulform {
+
+		@Test
+		@DisplayName("gibt die Schulform anhand des Kürzels zurück")
+		void getSchulform_validKuerzel_returnsSchulform() {
+			when(conn.querySingle(DTOEigeneSchule.class)).thenReturn(dtoWithSchulform("GY"));
+
+			final var result = repository.getSchulform();
+
+			assertThat(result)
+					.isNotNull()
+					.isEqualTo(Schulform.data().getWertByKuerzel("GY"));
+		}
+
+		@Test
+		@DisplayName("wirft RepositoryException wenn SchulformKuerzel null ist")
+		void getSchulform_nullKuerzel_throwsRepositoryException() {
+			final var dto = dtoWithSchulform(null);
+			when(conn.querySingle(DTOEigeneSchule.class)).thenReturn(dto);
+
+			assertThatThrownBy(() -> repository.getSchulform())
+					.isInstanceOf(RepositoryException.class)
+					.hasMessageContaining("Schulform");
+		}
+
+		@Test
+		@DisplayName("wirft RepositoryException wenn SchulformKuerzel kein gültiges Kürzel ist")
+		void getSchulform_invalidKuerzel_throwsRepositoryException() {
+			when(conn.querySingle(DTOEigeneSchule.class)).thenReturn(dtoWithSchulform("UNGUELTIG"));
+
+			assertThatThrownBy(() -> repository.getSchulform())
+					.isInstanceOf(RepositoryException.class)
+					.hasMessageContaining("gültige Schulform");
+		}
+
+		@Test
+		@DisplayName("wirft RepositoryException wenn kein DTO vorhanden ist")
+		void getSchulform_noDto_throwsRepositoryException() {
+			when(conn.querySingle(DTOEigeneSchule.class)).thenReturn(null);
+
+			assertThatThrownBy(() -> repository.getSchulform())
+					.isInstanceOf(RepositoryException.class);
+		}
+
+		private static DTOEigeneSchule dtoWithSchulform(final String schulformKuerzel) {
+			final var dto = new DTOEigeneSchule(1L);
+			dto.SchulNr = 123456;
+			dto.SchulformKuerzel = schulformKuerzel;
+			dto.Schuljahresabschnitts_ID = 1L;
+			return dto;
+		}
 	}
 
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.svws_nrw.asd.types.schule.Schulform;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse enthält die im Rahmen des Reportings verwendeten Bilddefinitionen, die in der DB unter Nutzung der hier definierten Kennung persistiert werden
@@ -54,7 +55,7 @@ public enum ReportingBildDefinition {
 	private final int hoehe;
 
 	/** Die Schulformen, für die die Bilddefinition gültig ist. Eine leere Liste der Schulformen wird interpretiert als für alle Schulformen gültig. */
-	private final List<Schulform> schulformen;
+	private final @NotNull List<Schulform> schulformen;
 
 	/**
 	 * Erzeugt eine neue Bilddefinition.
@@ -73,7 +74,7 @@ public enum ReportingBildDefinition {
 		this.beschreibung = beschreibung;
 		this.breite = breite;
 		this.hoehe = hoehe;
-		this.schulformen = schulformen;
+		this.schulformen = (schulformen != null) ? schulformen : new ArrayList<>();
 	}
 
 	/**
@@ -87,8 +88,9 @@ public enum ReportingBildDefinition {
 		if (kennung == null) {
 			return null;
 		}
-		for (final ReportingBildDefinition bildDefinition : ReportingBildDefinition.values()) {
-			if (bildDefinition.kennung.equals(kennung)) {
+
+		for (@NotNull final ReportingBildDefinition bildDefinition : ReportingBildDefinition.values()) {
+			if (bildDefinition.getKennung().equals(kennung)) {
 				return bildDefinition;
 			}
 		}
@@ -96,33 +98,44 @@ public enum ReportingBildDefinition {
 	}
 
 	/**
-	 * Diese Methode ermittelt alle Bilddefinitionen, die für die übergebene Schulform gültig sind.
-	 * Bilddefinitionen ohne eingeschränkte Schulformen werden dabei ebenfalls zurückgegeben.
+	 * Diese Methode ermittelt die Bilddefinitionen, die für die übergebene Schulform gültig sind.
 	 *
-	 * @param schulform   die Schulform, für die dei zulässigen Bilddefinitionen gesucht werden sollen.
+	 * @param schulform  die Schulform, für die dei zulässigen Bilddefinitionen gesucht werden sollen.
 	 *
-	 * @return eine Liste mit allen Bilddefinitionen zur angegebenen Schulform
+	 * @return die Bilddefinitionen oder {@code null}, falls die Schulform nicht unterstützt wird.
 	 */
-	public static List<ReportingBildDefinition> getBySchulform(final Schulform schulform) {
-		final List<ReportingBildDefinition> result = new ArrayList<>();
+	public static @NotNull List<ReportingBildDefinition> getBySchulform(final Schulform schulform) {
 		if (schulform == null) {
-			return result;
+			return new ArrayList<>();
 		}
-		for (final ReportingBildDefinition bildDefinition : ReportingBildDefinition.values()) {
-			if ((bildDefinition.schulformen == null) || bildDefinition.schulformen.isEmpty()) {
-				result.add(bildDefinition);
-				continue;
-			}
-			for (final Schulform sf : bildDefinition.schulformen) {
-				if (sf.name().equals(schulform.name())) {
-					result.add(bildDefinition);
-					break;
-				}
+
+		final List<ReportingBildDefinition> bildDefinitionen = new ArrayList<>();
+		for (@NotNull final ReportingBildDefinition bildDefinition : ReportingBildDefinition.values()) {
+			if (isSchulformGueltig(schulform, bildDefinition.getSchulformen())) {
+				bildDefinitionen.add(bildDefinition);
 			}
 		}
-		return result;
+		return bildDefinitionen;
 	}
 
+	/**
+	 * Diese Methode ermittelt die Bilddefinition, die für die übergebene Kennung und Schulform gültig ist.
+	 * Wenn keine gültige Bilddefinition für die Kennung und Schulform gefunden wird, wird {@code Optional.empty()} zurückgegeben.
+	 *
+	 * @param kennung    die Kennung der Bilddefinition für die DB.
+	 * @param schulform   die Schulform, für die dei zulässigen Bilddefinitionen gesucht werden sollen.
+	 *
+	 * @return die Bilddefinition oder {@code Optional.empty()}, falls die Kennung ungültig ist oder die Schulform nicht unterstützt wird. Wenn keine
+	 * Schulform angegeben wird, wird die Bilddefinition für die Kennung ohne Schulform-Filterung zurückgegeben.
+	 */
+	public static ReportingBildDefinition getByKennungAndSchulform(final String kennung, final Schulform schulform) {
+		final var bildDefinition = getByKennung(kennung);
+		return ((bildDefinition != null) && isSchulformGueltig(schulform, bildDefinition.getSchulformen())) ? bildDefinition : null;
+	}
+
+	private static boolean isSchulformGueltig(final Schulform schulform, final List<Schulform> schulformen) {
+		return (schulform == null) || (schulformen == null) || schulformen.isEmpty() || schulformen.contains(schulform);
+	}
 
 	/**
 	 * Gibt die DB-Kennung der Bilddefinition zurück. Diese Kennung dient als eindeutiger technischer Schlüssel

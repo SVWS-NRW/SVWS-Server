@@ -1,9 +1,11 @@
 package de.svws_nrw.repo.schule;
 
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.repo.RepositoryException;
 import de.svws_nrw.repo.RepositoryImpl;
+import jakarta.annotation.Nonnull;
 
 /**
  * Diese Repository-Klasse dient dem Datenbank-Zugriff auf die Schuldaten.
@@ -32,6 +34,22 @@ public final class SchuleRepositoryImpl extends RepositoryImpl<DTOEigeneSchule> 
 			throw new RepositoryException("Die aktuelle Schule hat keine SchulNr hinterlegt");
 		}
 		return schule.SchulNr;
+	}
+
+	@Override
+	@Nonnull
+	public Schulform getSchulform() {
+		final var schule = super.getFirst();
+		if (schule.SchulformKuerzel == null) {
+			throw new RepositoryException("Die aktuelle Schule hat keine Schulform hinterlegt");
+		}
+
+		final var schulform = Schulform.data().getWertByKuerzel(schule.SchulformKuerzel);
+		if (schulform == null) {
+			throw new RepositoryException("Die aktuelle Schule hat keine gültige Schulform hinterlegt");
+		}
+
+		return schulform;
 	}
 
 }

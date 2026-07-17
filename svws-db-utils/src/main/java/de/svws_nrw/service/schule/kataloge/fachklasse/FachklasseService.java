@@ -105,7 +105,7 @@ public final class FachklasseService {
 
 			return repo.delete(entitiesToDelete)
 					.stream()
-					.map(merkmal -> createResponseLog(merkmal.id))
+					.map(merkmal -> SimpleOperationResponse.ofSuccess(merkmal.id))
 					.sorted(Comparator.comparingLong(response -> response.id))
 					.toList();
 		});
@@ -147,13 +147,6 @@ public final class FachklasseService {
 		if (exists) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, KUERZEL_WIRD_BEREITS_VERWENDET.formatted(kuerzel));
 		}
-	}
-
-	private static SimpleOperationResponse createResponseLog(final long id) {
-		final var log = new SimpleOperationResponse();
-		log.id = id;
-		log.success = true;
-		return log;
 	}
 
 }

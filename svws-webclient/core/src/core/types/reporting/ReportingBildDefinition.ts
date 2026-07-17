@@ -61,7 +61,7 @@ export class ReportingBildDefinition extends JavaEnum<ReportingBildDefinition> {
 	/**
 	 * Die Schulformen, für die die Bilddefinition gültig ist. Eine leere Liste der Schulformen wird interpretiert als für alle Schulformen gültig.
 	 */
-	private readonly schulformen: List<Schulform> | null;
+	private readonly schulformen: List<Schulform>;
 
 	/**
 	 * Erzeugt eine neue Bilddefinition.
@@ -82,7 +82,7 @@ export class ReportingBildDefinition extends JavaEnum<ReportingBildDefinition> {
 		this.beschreibung = beschreibung;
 		this.breite = breite;
 		this.hoehe = hoehe;
-		this.schulformen = schulformen;
+		this.schulformen = (schulformen !== null) ? schulformen : new ArrayList();
 	}
 
 	/**
@@ -97,7 +97,7 @@ export class ReportingBildDefinition extends JavaEnum<ReportingBildDefinition> {
 			return null;
 		}
 		for (const bildDefinition of ReportingBildDefinition.values()) {
-			if (JavaObject.equalsTranspiler(bildDefinition.kennung, (kennung))) {
+			if (JavaObject.equalsTranspiler(bildDefinition.getKennung(), (kennung))) {
 				return bildDefinition;
 			}
 		}
@@ -105,31 +105,42 @@ export class ReportingBildDefinition extends JavaEnum<ReportingBildDefinition> {
 	}
 
 	/**
-	 * Diese Methode ermittelt alle Bilddefinitionen, die für die übergebene Schulform gültig sind.
-	 * Bilddefinitionen ohne eingeschränkte Schulformen werden dabei ebenfalls zurückgegeben.
+	 * Diese Methode ermittelt die Bilddefinitionen, die für die übergebene Schulform gültig sind.
 	 *
+	 * @param schulform  die Schulform, für die dei zulässigen Bilddefinitionen gesucht werden sollen.
+	 *
+	 * @return die Bilddefinitionen oder {@code null}, falls die Schulform nicht unterstützt wird.
+	 */
+	public static getBySchulform(schulform: Schulform | null): List<ReportingBildDefinition> {
+		if (schulform === null) {
+			return new ArrayList();
+		}
+		const bildDefinitionen: List<ReportingBildDefinition> | null = new ArrayList<ReportingBildDefinition>();
+		for (const bildDefinition of ReportingBildDefinition.values()) {
+			if (ReportingBildDefinition.isSchulformGueltig(schulform, bildDefinition.getSchulformen())) {
+				bildDefinitionen.add(bildDefinition);
+			}
+		}
+		return bildDefinitionen;
+	}
+
+	/**
+	 * Diese Methode ermittelt die Bilddefinition, die für die übergebene Kennung und Schulform gültig ist.
+	 * Wenn keine gültige Bilddefinition für die Kennung und Schulform gefunden wird, wird {@code Optional.empty()} zurückgegeben.
+	 *
+	 * @param kennung    die Kennung der Bilddefinition für die DB.
 	 * @param schulform   die Schulform, für die dei zulässigen Bilddefinitionen gesucht werden sollen.
 	 *
-	 * @return eine Liste mit allen Bilddefinitionen zur angegebenen Schulform
+	 * @return die Bilddefinition oder {@code Optional.empty()}, falls die Kennung ungültig ist oder die Schulform nicht unterstützt wird. Wenn keine
+	 * Schulform angegeben wird, wird die Bilddefinition für die Kennung ohne Schulform-Filterung zurückgegeben.
 	 */
-	public static getBySchulform(schulform: Schulform | null): List<ReportingBildDefinition> | null {
-		const result: List<ReportingBildDefinition> | null = new ArrayList<ReportingBildDefinition>();
-		if (schulform === null) {
-			return result;
-		}
-		for (const bildDefinition of ReportingBildDefinition.values()) {
-			if ((bildDefinition.schulformen === null) || bildDefinition.schulformen.isEmpty()) {
-				result.add(bildDefinition);
-				continue;
-			}
-			for (const sf of bildDefinition.schulformen) {
-				if (JavaObject.equalsTranspiler(sf.name(), (schulform.name()))) {
-					result.add(bildDefinition);
-					break;
-				}
-			}
-		}
-		return result;
+	public static getByKennungAndSchulform(kennung: string | null, schulform: Schulform | null): ReportingBildDefinition | null {
+		const bildDefinition = ReportingBildDefinition.getByKennung(kennung);
+		return ((bildDefinition !== null) && ReportingBildDefinition.isSchulformGueltig(schulform, bildDefinition.getSchulformen())) ? bildDefinition : null;
+	}
+
+	private static isSchulformGueltig(schulform: Schulform | null, schulformen: List<Schulform> | null): boolean {
+		return (schulform === null) || (schulformen === null) || schulformen.isEmpty() || schulformen.contains(schulform);
 	}
 
 	/**

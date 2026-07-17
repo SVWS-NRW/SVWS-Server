@@ -1,6 +1,7 @@
 package de.svws_nrw.api.server;
 
 import java.io.InputStream;
+import java.util.List;
 
 import de.svws_nrw.asd.data.NoteKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.EinschulungsartKatalogEintrag;
@@ -19,6 +20,7 @@ import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.data.schule.Schulleitung;
 import de.svws_nrw.asd.data.schule.VerkehrsspracheKatalogEintrag;
+import de.svws_nrw.controller.schule.logoverwaltung.LogoverwaltungControllerFactory;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.erzieher.Erzieherart;
 import de.svws_nrw.core.data.kataloge.SchulEintrag;
@@ -85,7 +87,6 @@ import de.svws_nrw.data.schule.DataKatalogSchultraeger;
 import de.svws_nrw.data.schule.DataKatalogVerkehrssprachen;
 import de.svws_nrw.data.schule.DataLeitungsfunktionen;
 import de.svws_nrw.data.schule.DataLernplattformen;
-import de.svws_nrw.data.schule.DataLogoverwaltung;
 import de.svws_nrw.data.schule.DataReligionen;
 import de.svws_nrw.data.schule.DataSchuelerStatus;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
@@ -94,6 +95,8 @@ import de.svws_nrw.data.schule.DataSchulleitung;
 import de.svws_nrw.data.schule.DataTeilstandorte;
 import de.svws_nrw.data.schule.DataTelefonarten;
 import de.svws_nrw.data.schule.DataVermerkarten;
+import de.svws_nrw.service.schule.logoverwaltung.LogoCreateRequest;
+import de.svws_nrw.service.schule.logoverwaltung.LogoPatchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -291,7 +294,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schuldaten zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag für die Schule gefunden")
 	public Response putSchullogo(@PathParam("schema") final String schema, @RequestBody(description = "Das Logo der Schule", required = false,
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuleStammdaten(conn).putSchullogo(is),
 				request, ServerMode.STABLE,
@@ -636,7 +639,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addReligion(@PathParam("schema") final String schema, @RequestBody(description = "Der Post für die Religion-Daten", required = true,
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ReligionEintrag.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ReligionEintrag.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).addAsResponse(is),
 				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
@@ -685,9 +688,10 @@ public class APISchule {
 	@GET
 	@Path("/religionen")
 	@Operation(summary = "Gibt eine Übersicht aller Religionen bzw. Konfessionen im Katalog zurück.",
-			description = "Erstellt eine Liste aller in dem Katalog vorhanden Religionen bzw. Konfessionen unter Angabe der ID, der Bezeichnung sowie der Bezeichnung, "
-					+ "welche auf dem Zeugnis erscheint, einem Statistik-Kürzel, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar bzw. änderbar "
-					+ "sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+			description =
+					"Erstellt eine Liste aller in dem Katalog vorhanden Religionen bzw. Konfessionen unter Angabe der ID, der Bezeichnung sowie der Bezeichnung, "
+							+ "welche auf dem Zeugnis erscheint, einem Statistik-Kürzel, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar bzw. änderbar "
+							+ "sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReligionEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
@@ -697,6 +701,7 @@ public class APISchule {
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
+
 	/**
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Religion-Katalog-Einträge der Schule.
 	 *
@@ -801,7 +806,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response createVermerkart(@PathParam("schema") final String schema, @RequestBody(description = "Der Post für die Vermerkart-Daten", required = true,
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = VermerkartEintrag.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = VermerkartEintrag.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataVermerkarten(conn).addAsResponse(is),
 				request, ServerMode.STABLE,
@@ -2268,6 +2273,7 @@ public class APISchule {
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
+
 	/**
 	 * Die OpenAPI-Methode für die Abfrage aller Leitungsfunktionen der Schule.
 	 *
@@ -2845,7 +2851,7 @@ public class APISchule {
 	 * Die OpenAPI-Methode für das Patchen einer Floskelgruppe.
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
-	 * @param id	    die ID zur Identifikation der Floskelgruppe
+	 * @param id        die ID zur Identifikation der Floskelgruppe
 	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
@@ -2907,7 +2913,8 @@ public class APISchule {
 	 */
 	@DELETE
 	@Path("/floskelgruppen/delete/multiple")
-	@Operation(summary = "Entfernt mehrere Floskelgruppen.", description = "Entfernt mehrere Floskelgruppen, insofern die notwendigen Berechtigungen vorhanden sind.")
+	@Operation(summary = "Entfernt mehrere Floskelgruppen.",
+			description = "Entfernt mehrere Floskelgruppen, insofern die notwendigen Berechtigungen vorhanden sind.")
 	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Floskelgruppen zu entfernen.")
@@ -2948,7 +2955,7 @@ public class APISchule {
 	 * Die OpenAPI-Methode für das Patchen einer Floskeln.
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
-	 * @param id		die ID zur Identifikation der Floskeln
+	 * @param id        die ID zur Identifikation der Floskeln
 	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
@@ -3051,7 +3058,7 @@ public class APISchule {
 	 * Die OpenAPI-Methode für das Patchen einer Betriebe.
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
-	 * @param id		die ID zur Identifikation der Betriebe
+	 * @param id        die ID zur Identifikation der Betriebe
 	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
@@ -3151,7 +3158,7 @@ public class APISchule {
 	 * Die OpenAPI-Methode für das Patchen einer Ansprechpartner.
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
-	 * @param id		die ID zur Identifikation der Ansprechpartner
+	 * @param id        die ID zur Identifikation der Ansprechpartner
 	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
@@ -3170,7 +3177,8 @@ public class APISchule {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
 	public Response patchBetriebAnsprechpartner(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch eines Betriebs", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BetriebeAnsprechpartner.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = BetriebeAnsprechpartner.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
 				conn -> new DataBetriebAnsprechpartner(conn).patchAsResponse(id, is), request, ServerMode.STABLE,
@@ -3196,7 +3204,8 @@ public class APISchule {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addBetriebAnsprechpartner(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten des zu erstellenden Betriebs.", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BetriebeAnsprechpartner.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = BetriebeAnsprechpartner.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
 				conn -> new DataBetriebAnsprechpartner(conn).addAsResponse(is), request, ServerMode.STABLE,
@@ -3214,7 +3223,8 @@ public class APISchule {
 	 */
 	@DELETE
 	@Path("/betriebe-ansprechpartner/delete/multiple")
-	@Operation(summary = "Entfernt mehrere Ansprechpartner.", description = "Entfernt mehrere Ansprechpartner, insofern die notwendigen Berechtigungen vorhanden sind.")
+	@Operation(summary = "Entfernt mehrere Ansprechpartner.",
+			description = "Entfernt mehrere Ansprechpartner, insofern die notwendigen Berechtigungen vorhanden sind.")
 	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Ansprechpartner zu entfernen.")
@@ -3222,8 +3232,8 @@ public class APISchule {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteBetriebAnsprechpartner(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die IDs der zu löschenden Ansprechpartner",
-			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-			array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
+					required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
 				conn -> new DataBetriebAnsprechpartner(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
@@ -3256,7 +3266,7 @@ public class APISchule {
 	 * Die OpenAPI-Methode für das Patchen einer Betriebsart.
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
-	 * @param id		die ID zur Identifikation der Betriebsart
+	 * @param id        die ID zur Identifikation der Betriebsart
 	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
@@ -3319,7 +3329,8 @@ public class APISchule {
 	 */
 	@DELETE
 	@Path("/betriebsarten/delete/multiple")
-	@Operation(summary = "Entfernt mehrere Betriebsarten.", description = "Entfernt mehrere Betriebsarten, insofern die notwendigen Berechtigungen vorhanden sind.")
+	@Operation(summary = "Entfernt mehrere Betriebsarten.",
+			description = "Entfernt mehrere Betriebsarten, insofern die notwendigen Berechtigungen vorhanden sind.")
 	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Betriebsarten zu entfernen.")
@@ -3422,7 +3433,8 @@ public class APISchule {
 	 */
 	@DELETE
 	@Path("/leitungsfunktionen/delete/multiple")
-	@Operation(summary = "Entfernt mehrere Leitungsfunktionen.", description = "Entfernt mehrere Leitungsfunktionen, insofern die notwendigen Berechtigungen vorhanden sind.")
+	@Operation(summary = "Entfernt mehrere Leitungsfunktionen.",
+			description = "Entfernt mehrere Leitungsfunktionen, insofern die notwendigen Berechtigungen vorhanden sind.")
 	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Leitungsfunktionen zu entfernen.")
@@ -3527,7 +3539,8 @@ public class APISchule {
 	 */
 	@DELETE
 	@Path("/teilstandorte/delete/multiple")
-	@Operation(summary = "Entfernt mehrere Teilstandorte.", description = "Entfernt mehrere Teilstandorte, insofern die notwendigen Berechtigungen vorhanden sind.")
+	@Operation(summary = "Entfernt mehrere Teilstandorte.",
+			description = "Entfernt mehrere Teilstandorte, insofern die notwendigen Berechtigungen vorhanden sind.")
 	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Teilstandorte zu entfernen.")
@@ -3561,18 +3574,21 @@ public class APISchule {
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Logo.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Logo-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Logo-Einträge gefunden")
-	public Response getLogos(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLogoverwaltung(conn).getAllAsResponse(),
-				request, ServerMode.DEV,
-				BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN);
+	public Response getLogos(
+			@PathParam("schema") final String schema,
+			@Context final HttpServletRequest request
+	) {
+		return LogoverwaltungControllerFactory.withReadAccess(request)
+				.getController()
+				.getAll();
 	}
 
 	/**
 	 * Die OpenAPI-Methode zum Hinzufügen eines Logos.
 	 *
-	 * @param schema    das Datenbankschema, auf welches die Anfrage ausgeführt werden soll
-	 * @param is        der JSON-Body mit den zu setzenden Feldern
-	 * @param request   die Informationen zur HTTP-Anfrage
+	 * @param schema das Datenbankschema, auf welches die Anfrage ausgeführt werden soll
+	 * @param create die Daten des anzulegenden Logos
+	 * @param request die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das neu hinzugefügte Logo
 	 */
@@ -3585,22 +3601,27 @@ public class APISchule {
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Logo.class)))
 	@ApiResponse(responseCode = "400", description = "Die Anfrage enthält ungültige oder fehlende Daten.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schuldaten zu ändern.")
-	public Response addLogo(@PathParam("schema") final String schema,
-			@RequestBody(description = "Die initialen Daten des Logos", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Logo.class))) final InputStream is,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLogoverwaltung(conn).addAsResponse(is),
-				request, ServerMode.DEV,
-				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+	public Response addLogo(
+			@PathParam("schema") final String schema,
+			@RequestBody(
+					description = "Die initialen Daten des Logos",
+					required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Logo.class))
+			) final LogoCreateRequest create,
+			@Context final HttpServletRequest request
+	) {
+		return LogoverwaltungControllerFactory.withWriteAccess(request)
+				.getController()
+				.create(create);
 	}
 
 	/**
 	 * Die OpenAPI-Methode zum Aktualisieren des Base64-Bildes und der zugehörigen Daten eines Logos.
 	 *
-	 * @param schema    das Datenbankschema, auf welches die Anfrage ausgeführt werden soll
-	 * @param id        die ID des zu aktualisierenden Logos
-	 * @param is        der JSON-Body mit den zu aktualisierenden Feldern (logoBase64, mimeType, hinzugefuegtAm)
-	 * @param request   die Informationen zur HTTP-Anfrage
+	 * @param schema das Datenbankschema, auf welches die Anfrage ausgeführt werden soll
+	 * @param id die ID des zu aktualisierenden Logos
+	 * @param patch der JSON-Body mit den zu aktualisierenden Daten des Logos
+	 * @param request die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das aktualisierte Logo
 	 */
@@ -3613,21 +3634,27 @@ public class APISchule {
 	@ApiResponse(responseCode = "400", description = "Die Anfrage enthält ungültige oder fehlende Daten.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schuldaten zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Kein Logo mit der angegebenen ID gefunden.")
-	public Response patchLogo(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@RequestBody(description = "Die zu aktualisierenden Felder des Logos", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Logo.class))) final InputStream is,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLogoverwaltung(conn).patchAsResponse(id, is),
-				request, ServerMode.DEV,
-				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+	public Response patchLogo(
+			@PathParam("schema") final String schema,
+			@PathParam("id") final long id,
+			@RequestBody(
+					description = "Die zu aktualisierenden Felder des Logos",
+					required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Logo.class))
+			) final LogoPatchRequest patch,
+			@Context final HttpServletRequest request
+	) {
+		return LogoverwaltungControllerFactory.withWriteAccess(request)
+				.getController()
+				.patch(id, patch);
 	}
 
 	/**
 	 * Die OpenAPI-Methode zum Löschen eines hochgeladenen Logos.
 	 *
-	 * @param schema    das Datenbankschema, auf welches die Anfrage ausgeführt werden soll
-	 * @param id        die ID des Logos, welches gelöscht werden soll
-	 * @param request   die Informationen zur HTTP-Anfrage
+	 * @param schema das Datenbankschema, auf welches die Anfrage ausgeführt werden soll
+	 * @param id die ID des zu löschenden Logos
+	 * @param request die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status der Lösch-Operation
 	 */
@@ -3640,18 +3667,22 @@ public class APISchule {
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schuldaten zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Kein Logo mit der angegebenen ID gefunden.")
-	public Response deleteLogo(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLogoverwaltung(conn).deleteAsResponse(id),
-				request, ServerMode.DEV,
-				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+	public Response deleteLogo(
+			@PathParam("schema") final String schema,
+			@PathParam("id") final long id,
+			@Context final HttpServletRequest request
+	) {
+		return LogoverwaltungControllerFactory.withWriteAccess(request)
+				.getController()
+				.delete(id);
 	}
 
 	/**
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Teilstandorte.
 	 *
-	 * @param schema    das Datenbankschema
-	 * @param is        der InputStream, mit der Liste der zu löschenden ids
-	 * @param request   die Informationen zur HTTP-Anfrage
+	 * @param schema das Datenbankschema
+	 * @param ids Liste der IDs der zu löschenden Logos
+	 * @param request die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
 	 */
@@ -3663,14 +3694,17 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Logos zu entfernen.")
 	@ApiResponse(responseCode = "404", description = "Logos nicht vorhanden")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteLogos(@PathParam("schema") final String schema,
-			@RequestBody(description = "Die IDs der zu löschenden Logos",
-					required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
-				conn -> new DataLogoverwaltung(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
-				request, ServerMode.DEV,
-				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+	public Response deleteLogos(
+			@PathParam("schema") final String schema,
+			@RequestBody(
+					description = "Die IDs der zu löschenden Logos",
+					required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))
+			) final List<Long> ids,
+			@Context final HttpServletRequest request
+	) {
+		return LogoverwaltungControllerFactory.withWriteAccess(request)
+				.getController()
+				.delete(ids);
 	}
 }
