@@ -68,7 +68,7 @@ Dazu kommt **ein** Java-Eintrag, der die Vorlage im System bekannt macht (siehe 
 - **Reporting-Typ** – Ein Java-Datenobjekt wie `ReportingSchueler` oder `ReportingKlasse`. Seine Werte holst du über **Methoden mit Klammern**, z. B. `schueler.vorname()`. (Anders als bei normalen Webseiten gibt es hier keine „Felder ohne Klammern".)
 - **VorlageParameter** – Optionen, die der Nutzer vor dem Druck einstellt (Checkboxen, Textfelder …), z. B. „mit Foto". Im Template abgefragt mit `VorlageParameter.get('mitFoto')`.
 - **Fragment** – Ein wiederverwendbarer HTML-Baustein (z. B. der Seitenkopf). Du bindest ihn ein, statt ihn zu kopieren.
-- **Dialekt** – Eine SVWS-Erweiterung von Thymeleaf mit Zusatzfunktionen. Wichtig: `#convert` (Datum, QR-Codes …) und `#inline` (CSS einbetten – brauchst du nur indirekt).
+- **Dialekt** – Eine SVWS-Erweiterung von Thymeleaf mit Zusatzfunktionen. Wichtig: `#convert` (Datum, QR-Codes …), `#icon` (Symbole als Bild) und `#inline` (CSS einbetten – brauchst du nur indirekt).
 - **`.name.tpl`** – Eine kleine Vorlage, die den **Dateinamen** der erzeugten Datei festlegt.
 
 ---
@@ -361,6 +361,25 @@ Die wichtigsten Funktionen:
 
 Die vollständige Liste steht in der Java-Klasse [`html/dialects/ConvertExpressionHelper.java`](html/dialects/ConvertExpressionHelper.java) – jede öffentliche Methode dort ist als `#convert.methodenName(...)` aufrufbar. Siehe auch [Abschnitt 14](#14-referenz-der-dialekt-convert).
 
+### Icons einbinden – der Dialekt #icon
+
+Für kleine Symbole (z. B. die Kennzeichnung externer Schüler) gibt es den Dialekt **`#icon`**. Er liefert ein fertiges `<img>`-Element mit dem Icon als eingebettetem SVG – deshalb immer mit `th:utext` ausgeben (nicht `th:text`):
+
+```html
+<!-- Icon in Standardgröße (14 px): -->
+<span th:utext="${#icon.get('external')}"></span>
+
+<!-- Mit Größe (px) und Farbe (CSS-Farbwert): -->
+<span th:utext="${#icon.get('external', 12, '#c00')}"></span>
+
+<!-- Spezialfall: Extern-Kennzeichnung eines Schülers inkl. Kürzel der Stammschule: -->
+<span th:utext="${#icon.getExtern(12, schueler, true, ' ', '')}"></span>
+```
+
+- Bei unbekanntem Icon-Namen kommt ein leerer String zurück – der Report läuft sauber durch.
+- Welche Icon-Namen es gibt, steht in der Ressource `icons/icons.json` (neue Icons werden dort mit ihren SVG-Pfaddaten ergänzt, Quelle: RemixIcon).
+- `#icon.getExtern(...)` erzeugt nur dann eine Ausgabe, wenn der übergebene Schüler den Status EXTERN hat – eine eigene `th:if`-Prüfung ist nicht nötig.
+
 > Es gibt außerdem den Dialekt `#inline`, der CSS einbettet. Den brauchst du nicht direkt – er steckt schon im Head-Fragment.
 
 ---
@@ -395,11 +414,11 @@ Regeln dazu:
 
 ### Die drei Arten von CSS
 
-1. **Gemeinsame CSS** (im Ordner `css/`) – werden automatisch über das Head-Fragment eingebunden:
+1. **Gemeinsame Basis-CSS** (im Ordner `css/`) – werden automatisch über das Head-Fragment eingebunden:
    - `reporting-pdf.css` – Grundeinstellungen für die PDF-Bibliothek.
    - `reporting-styles.css` – die **wiederverwendbaren Utility-Klassen** (s. u.).
-   - ein **Seitenformat**, das du über `namePageCSS` auswählst.
-2. **Deine eigene Vorlagen-CSS** (`MeinReport.css`, neben der HTML-Datei) – wird automatisch eingebunden und **überschreibt** bei gleichem Selektor die gemeinsamen Styles. Hier kommen Styles rein, die nur diese eine Vorlage braucht.
+2. **Das Seitenformat** (ebenfalls im Ordner `css/`) – genau eine Format-Datei, die du über den Parameter `namePageCSS` im Head-Fragment auswählst (siehe Tabelle unten).
+3. **Deine eigene Vorlagen-CSS** (`MeinReport.css`, neben der HTML-Datei) – wird automatisch eingebunden und **überschreibt** bei gleichem Selektor die gemeinsamen Styles. Hier kommen Styles rein, die nur diese eine Vorlage braucht.
 
 ### Seitenformate (`namePageCSS`)
 
@@ -521,6 +540,8 @@ Aufruf im Template: `#convert.<methode>(<argumente>)`. Die Methoden stehen in `h
   `toBarcodeCode128AsSvgHtmlImageSource(inhalt, breiteMM, hoeheMM)`.
 - **Kompression & Codierung** (für QR-/Barcode-Inhalte): `compressGZipString`, `decompressGZipString`,
   `encodeBase64`/`decodeBase64`, `encodeBase45`/`decodeBase45`, `encodeBase32`/`decodeBase32`.
+
+**Der Dialekt `#icon`** (siehe auch Schritt 6): `#icon.get(name)`, `#icon.get(name, groessePx)`, `#icon.get(name, groessePx, farbe)` liefern ein `<img>`-Element mit dem Icon als SVG-Data-URI (Ausgabe per `th:utext`); `#icon.getExtern(groessePx, schueler, mitKuerzel, fuehrenderText, folgenderText)` erzeugt die Extern-Kennzeichnung eines Schülers. Die Methoden stehen in `html/dialects/IconExpressionHelper.java`, der Icon-Katalog in `icons/icons.json`.
 
 > Die meisten IDE-Plugins kennen diese Dialekte nicht und zeigen sie als „unbekannt" an. Das ist normal – zur Laufzeit funktionieren sie trotzdem. Die `@thymesVar`-Kommentarzeile aus dem Grundgerüst hilft der IDE etwas bei der Autovervollständigung.
 

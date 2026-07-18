@@ -2,9 +2,11 @@
 
 Diese Dokumentation beschreibt den Ablauf der Report-Erzeugung im SVWS-Server und die Verantwortung der einzelnen Klassen-Typen. Sie richtet sich an Entwickler, die das Reporting-Modul erweitern oder warten.
 
-Die zugehörige Dokumentation zur Erstellung von Report-Vorlagen befindet sich in `reporting-template-erstellung.md`.
+Die Doku des Reporting-Moduls ist auf drei Dateien verteilt:
 
-> **Schnellreferenz:** Eine verdichtete Liste der verbindlichen Architektur-Regeln und Konventionen findet sich am Ende in **Abschnitt 11 „Invarianten & Konventionen"**.
+- **`reporting-architektur.md`** (diese Datei) — *beschreibt* Schichten, Klassen und Datenfluss.
+- **[`reporting-konventionen.md`](reporting-konventionen.md)** — die *verbindlichen* Regeln und Invarianten (Schichtentrennung, Null-Sicherheit, Fehlercodes, OGNL-Grenzen). **Vor jeder Änderung am Modul lesen**; bei Konflikt gilt die Konventionen-Datei.
+- **[`reporting-template-erstellung.md`](reporting-template-erstellung.md)** — Schritt-für-Schritt-Anleitung für Vorlagen-Autoren.
 
 ---
 
@@ -103,7 +105,7 @@ Der `ReportingContext` selbst hält keine fachlichen Daten und keinen eigenen Ca
 
 ### 4.2 Die neun Domänen-Repositories
 
-Alle Repositories liegen unter `module.reporting.repositories`. Jedes ist verantwortlich für eine fachliche Domäne. Die meisten Repositories arbeiten konsequent lazy: die Konstruktoren halten lediglich die Referenz auf den `ReportingContext`, alle DB-Zugriffe erfolgen erst beim ersten Aufruf des jeweiligen Getters bzw. der ID-basierten Lookup-Methode und werden anschließend intern gecached. Lediglich `ReportingRepositorySchule` und `ReportingRepositoryStundenplan` laden im Konstruktor kleine, ohnehin in jedem Report benötigte Metadaten (Schulstammdaten, Abschnitt, Stundenplandefinitionen). Die beiden GOSt-Subdomain-Repositories `ReportingRepositoryGostKlausurplanung` und `ReportingRepositoryGostKursplanung` verwalten je einen Manager pro Reporting-Request, der über eine explizite `initManager(...)`-Methode aus der jeweils zuständigen `HtmlFactory`-Branche initialisiert wird; alle Reporting-Objekte (Klausurtermine/Kursklausuren/Schülerklausuren bzw. Blockungsergebnis/Schienen/Kurse) werden anschließend zentral im Repository aufgebaut und gecached.
+Alle Repositories liegen unter `module.reporting.repositories`. Jedes ist verantwortlich für eine fachliche Domäne. Die meisten Repositories arbeiten konsequent lazy: die Konstruktoren halten lediglich die Referenz auf den `ReportingContext`, alle DB-Zugriffe erfolgen erst beim ersten Aufruf des jeweiligen Getters bzw. der ID-basierten Lookup-Methode und werden anschließend intern gecached. Lediglich `ReportingRepositorySchule` und `ReportingRepositoryStundenplan` laden im Konstruktor kleine, ohnehin in jedem Report benötigte Metadaten (Schulstammdaten, Abschnitt, Stundenplandefinitionen). Die beiden GOSt-Subdomain-Repositories `ReportingRepositoryGostKlausurplanung` und `ReportingRepositoryGostKursplanung` verwalten je einen Manager pro Reporting-Request, der über eine explizite `initManager(...)`-Methode initialisiert wird — der Aufruf erfolgt aktuell aus dem Konstruktor des jeweils zuständigen HtmlContext (`HtmlContextGostKlausurplanungKlausurplan` bzw. `HtmlContextGostKursplanungBlockungsergebnis`); alle Reporting-Objekte (Klausurtermine/Kursklausuren/Schülerklausuren bzw. Blockungsergebnis/Schienen/Kurse) werden anschließend zentral im Repository aufgebaut und gecached. **Achtung Temporalkopplung:** Zugriffe auf diese Repositories vor der Context-Erzeugung (z. B. aus der `EmailFactory`) setzen voraus, dass der Manager bereits initialisiert wurde; mit dem geplanten HtmlFactory-Split (`refactoring-plan-3-htmlfactory-split.md`) wandert der `initManager`-Aufruf in die Initializer-Klassen.
 
 | Repository | Verantwortung | Typische Methoden |
 |------------|---------------|-------------------|
@@ -360,6 +362,8 @@ Die "normalen" Reporting-Typen wie `ReportingSchueler`, `ReportingLehrer`, `Repo
 
 Sie kennen weder die Datenbank noch den `ReportingContext`. Sie sind das, was Thymeleaf am Ende rendert.
 
+**Null-Sicherheit (modulweit umgesetzt 2026-06):** Getter liefern non-null per Default — String-/Datums-Felder werden im Basis-Konstruktor auf `""` normalisiert, Listen/Maps auf leere Defensivkopien; Objekt-/Enum-/Boxed-Getter dürfen dokumentiert `null` sein. Die verbindlichen Konstruktor-Regeln inkl. der Rückreferenz-Ausnahme stehen in [`reporting-konventionen.md`](reporting-konventionen.md), Abschnitt 2.
+
 ### 5.3 Proxy-Reporting-Types (Lazy Loading)
 
 Für jeden "schweren" Reporting-Typ existiert eine `ProxyReporting…`-Subklasse (z. B. `ProxyReportingSchueler`, `ProxyReportingLehrer`, `ProxyReportingKlasse`). Diese Proxy-Typen:
@@ -399,7 +403,7 @@ Aufgaben:
 
 1. Validiert die HTML-Vorlage und prüft die Benutzer-Kompetenzen gegen die in der Vorlage hinterlegten Pflicht-Kompetenzen.
 2. Baut über `getContexts()` eine Map `mapHtmlContexts: String → HtmlContext<?>`. Die Schlüssel sind die Bezeichnungen der Thymeleaf-Variablen (z. B. `"Schueler"`, `"Klassen"`, `"GostBlockungsergebnis"`, `"FaecherStundenplaene"`).
-3. Wählt anhand des `ReportingReportvorlageDatenContext` die passende `initContextXxx()`-Methode (Schüler, Klassen, Kurse, Lehrer, GOSt-Kursplanung, GOSt-Klausurplanung, GOSt-Laufbahnplanung, Stundenplanung).
+3. Wählt anhand des `ReportingReportvorlageDatenContext` die passende `initContextXxx()`-Methode (Schüler, Klassen, Kurse, Lehrer, GOSt-Kursplanung, GOSt-Klausurplanung, GOSt-Laufbahnplanung, Stundenplanung). Diese Methoden sind derzeit `public`, haben aber keine externen Aufrufer — sie werden mit dem HtmlFactory-Split (`refactoring-plan-3-htmlfactory-split.md`) durch Initializer-Klassen ersetzt.
 4. Erzeugt mit `createHtmlBuilders()` bzw. `createHtmlResponse()` die `ReportBuilderHtml`-Instanzen und liefert das HTML entweder direkt als Response oder gepackt als ZIP.
 
 Die `HtmlFactory` unterstützt zwei Modi:
@@ -441,10 +445,11 @@ Das Ergebnis ist der gerenderte HTML-String, den die `HtmlFactory` entweder dire
 
 ### 6.4 Eigene Thymeleaf-Dialekte (`html/dialects/`)
 
-Zur Erweiterung des Funktionsumfangs der Templates registriert `ReportBuilderUtils` beim Aufbau der `TemplateEngine` zwei SVWS-eigene Expression-Dialekte aus dem Paket `module.reporting.html.dialects`. Jeder Dialekt stellt ein Expression-Objekt bereit, das im Template über `#<name>` aufgerufen wird:
+Zur Erweiterung des Funktionsumfangs der Templates registriert `ReportBuilderUtils` beim Aufbau der `TemplateEngine` drei SVWS-eigene Expression-Dialekte aus dem Paket `module.reporting.html.dialects`. Jeder Dialekt stellt ein Expression-Objekt bereit, das im Template über `#<name>` aufgerufen wird:
 
 - **`ConvertExpressionDialect`** (`#convert`) — Konvertierungs- und Encoding-Helfer aus `ConvertExpressionHelper`: Datums-Formatierung (`toDateDE`, `toDateDELong`, `toWochentagDE`, `toKalenderwocheDE`, …), Checkbox-/Barcode-/QR-Code-SVGs (`toCheckboxSVG`, `toBarcodeCode128AsSvgHtmlImageSource`, `to2DCodeQRCodeAsSvgHtmlImageSource`) sowie GZip-Kompression und Base32/45/64-Codierung.
 - **`InlineExpressionDialect`** (`#inline`) — über `InlineExpressionHelper.css(relativerCssPfad)` wird eine CSS-Datei inline in das HTML überführt. Das ist Voraussetzung für die PDF-Erzeugung und die iframe-Vorschau im WebClient (vgl. `feedback_reporting_css_inline_xml`).
+- **`IconExpressionDialect`** (`#icon`) — über `IconExpressionHelper` werden Icons als SVG-Data-URI in einem `<img>`-Element erzeugt (Ausgabe per `th:utext`): `get(name)`, `get(name, groessePx)`, `get(name, groessePx, farbe)` sowie der Spezial-Helfer `getExtern(...)` für die Kennzeichnung externer Schüler inkl. optionalem Stammschul-Kürzel. Der Icon-Katalog (RemixIcon-Pfaddaten) liegt in `ReportingIcon` und wird aus der Ressource `icons/icons.json` geladen; neue Icons werden dort ergänzt. Standardgröße 14 px, Standardfarbe `black`; erzeugte Data-URIs werden gecacht.
 
 Jeder Dialekt besteht aus drei Klassen: `…Dialect` (Registrierung + Dialekt-Name), `…Factory` (`IExpressionObjectFactory`, liefert die Expression-Namen und das Helper-Objekt) und `…Helper` (die eigentlichen, aus dem Template aufrufbaren Java-Methoden).
 
@@ -514,36 +519,9 @@ Paket-privater Helper im `repositories`-Paket:
 
 ## 10. Verweis auf weitere Dokumentation
 
-- **`reporting-template-erstellung.md`** — Schritt-für-Schritt-Anleitung zum Erstellen von Reportvorlagen (HTML + Thymeleaf). Richtet sich an Vorlagen-Autoren (auch ohne tiefe Java-Kenntnisse) und ist bewusst eigenständig lesbar, ohne dieses Architektur-Dokument vorauszusetzen.
+- **[`reporting-konventionen.md`](reporting-konventionen.md)** — die verbindlichen Regeln und Invarianten des Moduls (Schichtentrennung, Null-Sicherheit der Typen, Filter-/Sortier-Regeln, Fehlercode-Matrix, OGNL-Grenzen, CSS-/Stil-Regeln). **Normative Referenz** — vor jeder Änderung am Modul lesen; bei Konflikt mit dieser Beschreibung gilt die Konventionen-Datei.
+- **[`reporting-template-erstellung.md`](reporting-template-erstellung.md)** — Schritt-für-Schritt-Anleitung zum Erstellen von Reportvorlagen (HTML + Thymeleaf). Richtet sich an Vorlagen-Autoren (auch ohne tiefe Java-Kenntnisse) und ist bewusst eigenständig lesbar, ohne dieses Architektur-Dokument vorauszusetzen.
 
----
-
-## 11. Invarianten & Konventionen (Kurzreferenz)
-
-Verdichtete Liste der verbindlichen Regeln aus den Abschnitten oben — als Schnellreferenz beim Erweitern oder Warten. Bei Konflikt gilt der jeweils ausführliche Abschnitt.
-
-### Schichtentrennung & Datenzugriff
-- **Nur Domänen-Repositories** rufen `new DataXxx(...)` aus dem `svws-db`-Paket auf oder setzen Queries gegen `conn()` ab. `conn()` ist package-private im `repositories`-Paket. *(4.2, 5.3)*
-- **Proxy-Reporting-Typen, HtmlContexts und alle übrigen Schichten** greifen ausschließlich über Repository-Methoden auf Daten zu — nie direkt auf die DB. *(5.3, 6.2)*
-- **`ProxyReporting…`-Objekte instanziiert ausschließlich das zuständige Repository.** Dadurch existiert jedes Reporting-Objekt pro Lauf nur einmal im Cache; `==`-Identität für gleiche IDs ist garantiert. *(4.2)*
-- **`ReportingContext` hält keine fachlichen Daten und keinen eigenen Cache** — er delegiert an die neun Repositories. Während ihrer Initialisierung im Konstruktor dürfen Repositories nur die Infrastruktur-Getter (`conn()`, `logger()`, `sortierungService()`, `filterService()`) nutzen. *(4.1)*
-
-### Reporting-Typen
-- Reporting-Typen sind **immutable POJOs**, erben von `ReportingBaseType` und kennen weder DB noch `ReportingContext`. *(5.2)*
-- `null`-Werte vorlagensicher über `ersetzeNullBlankTrim(...)` / `ersetzeStringNullDurchEmpty(...)` aufbereiten. **Datums-Felder einheitlich auf `""` statt `null`**, Folge-Logik per `isEmpty()` statt `== null`. *(5.1)*
-
-### Filterung & Sortierung
-- **Beides wird zentral in den Listen-Methoden der Repositories angewandt** — nie im HtmlContext. Der HtmlContext sortiert nur (`HtmlContextSortierung`), filtert nicht. *(4.3.9, 6.2)*
-- **Single-Object-Getter** (`schueler(id)`, `lehrer(id)`, `klasse(id)`, `kurs(id)`) liefern bei aktivem User-Filter `null`. Aufrufer und Proxies müssen null-safe sein; **kein `null` in Listen/Maps** einfügen. *(4.2, 5.3)*
-- Konfiguration typsicher über die Konstanten `Reporting<Typ>.SORTIERUNG` / `Reporting<Typ>.FILTER`; die Begleit-Dateien `Reporting<Typ>Sortierung` / `Reporting<Typ>Filter` liegen direkt neben dem Typ. *(4.3.1, 4.3.5)*
-- Typname an die Services immer per `Reporting<Typ>.class.getSimpleName()` übergeben. *(4.3.9)*
-
-### Fehlerbehandlung & Logging
-- Logging nur über `reportingContext.logger()` / `reportingContext.log()`. *(9.1)*
-- Fehler als `ApiOperationException` (ist `RuntimeException`). In Caller-Lambdas der `ReportingRepositoryUtils` **kein eigenes try/catch** — das würde den pro-ID-Fallback unterbinden. *(9.2)*
-- Reports melden Datenfehler nicht sichtbar; eine NPE in der Druckausgabe ist immer ein Bug, kein „sichtbarer Datenfehler".
-
-### Templates, CSS & Code-Stil
-- **CSS wird inline als XML geparst** (`#inline.css(...)` bzw. `th:utext`): keine rohen `<`, `>`, `&` — auch nicht in Kommentaren. *(6.4)*
-- OGNL im Reporting kennt **keine** Safe-Navigation (`?.`) und **kein** Elvis (`?:`).
-- Auch einzeilige `if`/`else`-Bodys werden mit geschweiften Klammern geschrieben (Linter).
+> Die frühere Kurzreferenz „Abschnitt 11 — Invarianten & Konventionen“ ist vollständig in
+> `reporting-konventionen.md` aufgegangen und dort um die Fehlercode-Matrix, die
+> Null-Sicherheits-Konstruktor-Regeln und die OGNL-Grenzen erweitert worden.
