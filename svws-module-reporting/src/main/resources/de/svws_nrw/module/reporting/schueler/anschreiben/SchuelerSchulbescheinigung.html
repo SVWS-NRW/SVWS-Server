@@ -13,7 +13,7 @@
 				   mitSchullogo = ${VorlageParameter.get('mitSchullogo')},
 				   keineAnschrift = ${VorlageParameter.get('keineAnschrift')},
 				   keinInfoblock = ${VorlageParameter.get('keinInfoblock')},
-				   keineUnterschrift = ${VorlageParameter.get('keineUnterschrift')},
+				   keinUnterzeichner = ${VorlageParameter.get('keinUnterzeichner')},
 				   mitDigitaleSignatur = ${VorlageParameter.get('mitDigitaleSignatur')},
 				   qrCodeBreite = ${VorlageParameter.get('qrCodeBreite')},
 				   qrCodeHoehe = ${VorlageParameter.get('qrCodeHoehe')},
@@ -157,28 +157,19 @@
 
 						</div>
 
-						<!-- Abschnitt II.: Unterschrift. unterzeichner wird einmal definiert, damit "i. A." und "gez." denselben Namen zeigen. -->
-						<div class="bescheinigung-abschnitt" th:with="unterzeichner = ${Benutzer.hatLehrkraftdaten() ? Benutzer.lehrer().unterschriftfeld(false, false) : Benutzer.anzeigename()}">
-							<p class="f-bold" th:text="${'i. A. ' + unterzeichner}">i. A. Sylvester Sekretär</p>
-							<!-- Mit Unterschrift: leeres Unterschrift-/Stempelfeld zum händischen Ausfüllen. -->
-							<table th:unless="${keineUnterschrift}" class="unterschrift-tabelle">
+						<!-- Abschnitt II.: Unterschrift. Unterzeichner wird einmal definiert -->
+						<div class="bescheinigung-abschnitt" th:with="unterzeichner = ${keinUnterzeichner ? 'Unterschrift' : (Benutzer.hatLehrkraftdaten() ? Benutzer.lehrer().unterschriftfeld(true, true) : Benutzer.anzeigename())}">
+							<table class="unterschrift-tabelle">
 								<colgroup>
 									<col style="width: 45%;"/>
-									<col style="width: 10%;"/>
-									<col style="width: 45%;"/>
+									<col style="width: 55%;"/>
 								</colgroup>
-								<tr style="height: 18mm"><td></td><td></td><td></td></tr>
+								<tr style="height: 14mm"><td></td><td></td></tr>
 								<tr>
-									<th class="bo-t-grey f-very-tiny ta-l" scope="col">Unterschrift</th>
-									<td></td>
-									<th class="bo-t-grey f-very-tiny ta-l" scope="col">Stempel der Schule</th>
+									<th class="bo-t-grey f-very-tiny ta-l" scope="col" th:text="${unterzeichner}">Unterschrift</th>
+									<th class="f-very-tiny ta-c" scope="col">(Stempel der Schule)</th>
 								</tr>
 							</table>
-							<!-- Ohne Unterschrift: "gez. <Name>" statt des Unterschriftsfeldes, darunter der Hinweis auf die automatisierte Erstellung. -->
-							<th:block th:if="${keineUnterschrift}">
-								<p class="gez-zeile" th:text="'gez. ' + ${unterzeichner}">gez. Sylvester Sekretär</p>
-								<p class="f-tiny">Dieses Schreiben wurde automatisiert erstellt und ist ohne Unterschrift gültig.</p>
-							</th:block>
 						</div>
 
 						<!-- Hinweis zum optionalen Ordnungsmerkmal -->
