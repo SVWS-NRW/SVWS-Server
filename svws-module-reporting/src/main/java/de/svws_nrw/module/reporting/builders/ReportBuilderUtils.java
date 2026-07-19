@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import de.svws_nrw.module.reporting.html.contexts.HtmlContext;
+import de.svws_nrw.module.reporting.html.dialects.AktuellExpressionDialect;
 import de.svws_nrw.module.reporting.html.dialects.ConvertExpressionDialect;
 import de.svws_nrw.module.reporting.html.dialects.IconExpressionDialect;
 import de.svws_nrw.module.reporting.html.dialects.InlineExpressionDialect;
@@ -49,6 +50,7 @@ public final class ReportBuilderUtils {
 		engine.addDialect(new ConvertExpressionDialect());
 		engine.addDialect(new InlineExpressionDialect());
 		engine.addDialect(new IconExpressionDialect());
+		engine.addDialect(new AktuellExpressionDialect());
 		return engine;
 	}
 
