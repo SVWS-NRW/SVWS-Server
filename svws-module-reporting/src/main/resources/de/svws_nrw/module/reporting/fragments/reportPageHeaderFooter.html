@@ -19,7 +19,7 @@
 				<div class="pageTopRight" th:utext="${headerRight} +
 					'<br/>Abschnitt: ' + ${Schule.auswahlSchuljahresabschnitt() != null ? Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittKurz() : ''} +
 					'<br/>Schulnummer: ' + ${Schule.schulnummer()}">Inhalt oben rechts</div>
-				<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')} + ' von ' + ${Benutzer.benutzername()}">Gedruckt am 02.02.2022 von ABC</div>
+				<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#aktuell.jetztAlsDate(), 'dd.MM.yyyy HH:mm')} + ' von ' + ${Benutzer.benutzername()}">Gedruckt am 02.02.2022 von ABC</div>
 				<!--/*@thymesVar id="footerCenter" type="String"*/-->
 				<div class="pageBottomCenter" th:utext="${footerCenter}">Inhalt unten zentriert</div>
 				<!--/*@thymesVar id="footerRight" type="String"*/-->

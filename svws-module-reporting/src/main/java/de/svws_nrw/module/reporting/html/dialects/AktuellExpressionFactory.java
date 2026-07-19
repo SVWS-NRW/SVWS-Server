@@ -1,0 +1,74 @@
+package de.svws_nrw.module.reporting.html.dialects;
+
+import java.time.Clock;
+import java.util.Set;
+
+import org.thymeleaf.context.IExpressionContext;
+import org.thymeleaf.expression.IExpressionObjectFactory;
+
+/**
+ * Klasse für eine Expression in Thymeleaf zur Bereitstellung aktueller Zeit-/Datumswerte.
+ * Die zu verwendende {@link Clock} wird beim Erzeugen der Factory festgelegt, sodass Reports
+ * pro Aufruf eine eigene (z. B. feste) Uhr verwenden können.
+ */
+public class AktuellExpressionFactory implements IExpressionObjectFactory {
+
+	/**
+	 * Name der Expression
+	 */
+	private static final String EXPRESSION_NAME = "aktuell";
+
+	/**
+	 * Liste, die alle Expression-Namen dieser Klasse enthält
+	 */
+	private static final Set<String> ALL_EXPRESSION_NAMES = Set.of(EXPRESSION_NAME);
+
+	private final Clock clock;
+
+	/**
+	 * Erstellt eine neue AktuellExpressionFactory mit der übergebenen {@link Clock}.
+	 *
+	 * @param clock die Uhr, aus der „heute"/„jetzt" bezogen werden. Darf nicht {@code null} sein.
+	 */
+	public AktuellExpressionFactory(final Clock clock) {
+		this.clock = clock;
+	}
+
+	/**
+	 * Überschreibt die getAllExpressionObjectNames Methode des IExpressionObjectFactory Interfaces.
+	 *
+	 * @return Alle Expression-Namen dieser Klasse
+	 */
+	@Override
+	public Set<String> getAllExpressionObjectNames() {
+		return ALL_EXPRESSION_NAMES;
+	}
+
+	/**
+	 * Überschreibt die buildObject Methode des IExpressionObjectFactory Interfaces.
+	 *
+	 * @param context 				Der Context, mit dem das HTML-Template mit Daten gefüllt wird.
+	 * @param expressionObjectName 	Name des Expression-Objekts, das erzeugt werden soll.
+	 *
+	 * @return 						Das Expression-Objekt, d. h. die Klasse mit den Java-Methoden für die Expression.
+	 */
+	@Override
+	public Object buildObject(final IExpressionContext context, final String expressionObjectName) {
+		if (EXPRESSION_NAME.equals(expressionObjectName)) {
+			return new AktuellExpressionHelper(this.clock);
+		}
+		return null;
+	}
+
+	/**
+	 * Überschreibt das Attribut isCacheable des IExpressionObjectFactory Interfaces.
+	 *
+	 * @param expressionObjectName 	Name des Expression-Objekts.
+	 *
+	 * @return 						Gibt true zurück.
+	 */
+	@Override
+	public boolean isCacheable(final String expressionObjectName) {
+		return true;
+	}
+}

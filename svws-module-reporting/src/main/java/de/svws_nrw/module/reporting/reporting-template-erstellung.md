@@ -268,7 +268,10 @@ Das Muster ist immer gleich: **erst auf `!= null` prüfen, dann den Wert holen, 
 Diese „`#`-Objekte" sind eingebaut und oft nützlich:
 
 - `#strings.isEmpty(text)`, `#strings.trim(text)`, `#strings.length(text)`
-- `#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')` – aktuelles Datum/Uhrzeit
+- `#dates.format(#aktuell.jetztAlsDate(), 'dd.MM.yyyy HH:mm')` – aktuelles Datum/Uhrzeit. Nutze
+  hierfür immer `#aktuell.jetztAlsDate()`, **nicht** `#dates.createNow()` – nur der
+  `#aktuell`-Dialect liefert im DEV-Modus mit `SVWS_REPORTING_FIXED_DATE=true` ein festes Datum
+  und macht Snapshot-Tests damit deterministisch.
 - Für SVWS-Datumswerte (z. B. Geburtsdatum) nimm aber `#convert` – siehe Schritt 6.
 
 ### Zwischenvariablen mit `th:with`
