@@ -47,6 +47,11 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 		},
 	});
 
+	schulformenVorherigeSchule = computed<Schulform | null>(() => {
+		const eintrag = HerkunftSchulform.data().getEintragByID(this.proxy.idHerkunftSchulformVorherigeSchule);
+		return Schulform.data().getWertByKuerzel(eintrag?.kuerzel ?? '');
+	});
+
 	vorherigeSchulform = computed<Schulform | null>(() => Schulform.data().getWertByIDOrNull(this.vorherigeSchule.value?.idSchulform ?? -1));
 
 	schulformVorherigeSchuleKeinAbschluss = computed<HerkunftSonstigeKatalogEintrag | null>({

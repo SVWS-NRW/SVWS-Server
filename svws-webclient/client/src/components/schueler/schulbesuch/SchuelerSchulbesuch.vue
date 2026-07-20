@@ -502,6 +502,7 @@
 	const schulgliederungManager = new CoreTypeSelectManager({
 		clazz: Schulgliederung.class,
 		schuljahr: schuljahr,
+		schulformen: model.schulformenVorherigeSchule.value,
 		optionDisplayText: "kuerzelText",
 		selectionDisplayText: "kuerzelText",
 	});
