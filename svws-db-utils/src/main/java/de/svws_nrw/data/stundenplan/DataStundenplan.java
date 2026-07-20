@@ -213,7 +213,7 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 	}
 
 	/**
-	 * Prüft, ob ein Stundenplan mit der angegegeben ID vorhanden ist und gibt das Datenbank-DTO
+	 * Prüft, ob ein Stundenplan mit der angegeben ID vorhanden ist und gibt das Datenbank-DTO
 	 * ggf. zurück. Ist der Stundenplan nicht vorhanden, so wird eine {@link ApiOperationException}
 	 * geworfen.
 	 *
