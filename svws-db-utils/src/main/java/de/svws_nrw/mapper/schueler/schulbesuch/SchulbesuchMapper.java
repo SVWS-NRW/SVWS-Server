@@ -41,36 +41,36 @@ public interface SchulbesuchMapper {
 	 * @param ctx    der Mapping-Kontext mit Lookup-Maps sowie Merkmalen und bisherigen Schulen
 	 * @return die befüllten {@link SchuelerSchulbesuchsdaten}
 	 */
-	@Mapping(source = "entity.ID",                        		target = "id")
-	@Mapping(source = "entity.Entlassart",   					target = "schluesselHoechsterSchulabschluss")
-	@Mapping(source = "entity.HatBerufsausbildung",   			target = "berufsabschlussVorhanden")
-	@Mapping(source = "entity.LSSchulEntlassDatum",				target = "entlassdatumVorherigeSchule")
-	@Mapping(source = "entity.LSJahrgang",                		target = "kuerzelEntlassjahrgangVorherigeSchule")
-	@Mapping(source = "entity.LSVersetzung",              		target = "idHerkunftsartVersetzungVorherigeSchule")
-	@Mapping(source = "entity.LSBemerkung",               		target = "bemerkungVorherigeSchule")
-	@Mapping(source = "entity.LSSGL_SIM",               		target = "schluesselSchulgliederungVorherigeSchule")
-	@Mapping(source = "entity.Entlassdatum",              		target = "entlassdatumDieseSchule")
-	@Mapping(source = "entity.Entlassjahrgang_ID",        		target = "idEntlassjahrgangDieseSchule")
-	@Mapping(source = "entity.Schulwechseldatum",         		target = "wechseldatumAufnehmendeSchule")
-	@Mapping(source = "entity.WechselBestaetigt",         		target = "wechselBestaetigtAufnehmendeSchule")
-	@Mapping(source = "entity.Einschulungsjahr",          		target = "einschulungsjahrGrundschule")
-	@Mapping(source = "entity.JahrWechsel_SI",            		target = "wechseljahrSekI")
-	@Mapping(source = "entity.ErsteSchulform_SI",         		target = "kuerzelErsteSchulformSek1")
-	@Mapping(source = "entity.JahrWechsel_SII",           		target = "wechseljahrSekII")
-	@Mapping(source = "entity.Kindergarten_ID",           		target = "idKindergarten")
-	@Mapping(source = "entity.VerpflichtungSprachfoerderkurs",	target = "verpflichtungSprachfoerderkurs")
-	@Mapping(source = "entity.TeilnahmeSprachfoerderkurs",     	target = "teilnahmeSprachfoerderkurs")
-	@Mapping(source = "entity.LSSchulNr",                 		target = "idVorherigeSchule",							qualifiedByName = "mapIdSchule")
-	@Mapping(source = "entity.LSEntlassgrund",            		target = "idEntlassgrundVorherigeSchule", 				qualifiedByName = "mapIdEntlassgrund")
-	@Mapping(source = "entity.Entlassgrund",           			target = "idEntlassgrundDieseSchule", 					qualifiedByName = "mapIdEntlassgrund")
-	@Mapping(source = "entity.SchulwechselNr",			        target = "idAufnehmendeSchule",							qualifiedByName = "mapIdSchule")
-	@Mapping(source = "entity.EinschulungsartASD",      		target = "idEinschulungsartGrundschule", 				qualifiedByName = "mapIdEinschulungsart")
-	@Mapping(source = "entity.EPJahre",                   		target = "idEingangsphaseGrundschule",					qualifiedByName = "mapIdEingangsphase")
-	@Mapping(source = "entity.Uebergangsempfehlung_JG5",  		target = "idUebergangsempfehlungGrundschule",			qualifiedByName = "mapIdUebergangsempfehlung")
-	@Mapping(source = "entity.DauerKindergartenbesuch",   		target = "idDauerKindergartenbesuch", 					qualifiedByName = "mapIdKindergartenbesuch")
-	@Mapping(source = "entity.LSSchulform",   					target = "idHerkunftSchulformVorherigeSchule", 			qualifiedByName = "mapIdHerkunftSchulformVorherigeSchule")
-	@Mapping(source = "entity.LSSchulform",   					target = "idHerkunftSonstigeVorherigeSchule", 			qualifiedByName = "mapIdHerkunftSonstigeVorherigeSchule")
-	@Mapping(source = "entity.LSFachklKennung",   				target = "schluesselCoreTypeFachklasseVorherigeSchule", qualifiedByName = "mapSchluesselFachklasse")
+	@Mapping(source = "entity.ID", target = "id")
+	@Mapping(source = "entity.Entlassart", target = "schluesselHoechsterSchulabschluss")
+	@Mapping(source = "entity.HatBerufsausbildung", target = "berufsabschlussVorhanden")
+	@Mapping(source = "entity.LSSchulEntlassDatum", target = "entlassdatumVorherigeSchule")
+	@Mapping(source = "entity.LSJahrgang", target = "kuerzelEntlassjahrgangVorherigeSchule")
+	@Mapping(source = "entity.LSVersetzung", target = "idHerkunftsartVersetzungVorherigeSchule")
+	@Mapping(source = "entity.LSBemerkung", target = "bemerkungVorherigeSchule")
+	@Mapping(source = "entity.LSSGL_SIM", target = "schluesselSchulgliederungVorherigeSchule")
+	@Mapping(source = "entity.Entlassdatum", target = "entlassdatumDieseSchule")
+	@Mapping(source = "entity.Entlassjahrgang_ID", target = "idEntlassjahrgangDieseSchule")
+	@Mapping(source = "entity.Schulwechseldatum", target = "wechseldatumAufnehmendeSchule")
+	@Mapping(source = "entity.WechselBestaetigt", target = "wechselBestaetigtAufnehmendeSchule")
+	@Mapping(source = "entity.Einschulungsjahr", target = "einschulungsjahrGrundschule")
+	@Mapping(source = "entity.JahrWechsel_SI", target = "wechseljahrSekI")
+	@Mapping(source = "entity.ErsteSchulform_SI", target = "kuerzelErsteSchulformSek1")
+	@Mapping(source = "entity.JahrWechsel_SII", target = "wechseljahrSekII")
+	@Mapping(source = "entity.Kindergarten_ID", target = "idKindergarten")
+	@Mapping(source = "entity.VerpflichtungSprachfoerderkurs", target = "verpflichtungSprachfoerderkurs")
+	@Mapping(source = "entity.TeilnahmeSprachfoerderkurs", target = "teilnahmeSprachfoerderkurs")
+	@Mapping(source = "entity.LSSchulNr", target = "idVorherigeSchule", qualifiedByName = "mapIdSchule")
+	@Mapping(source = "entity.LSEntlassgrund", target = "idEntlassgrundVorherigeSchule", qualifiedByName = "mapIdEntlassgrund")
+	@Mapping(source = "entity.Entlassgrund", target = "idEntlassgrundDieseSchule", qualifiedByName = "mapIdEntlassgrund")
+	@Mapping(source = "entity.SchulwechselNr", target = "idAufnehmendeSchule", qualifiedByName = "mapIdSchule")
+	@Mapping(source = "entity.EinschulungsartASD", target = "idEinschulungsartGrundschule", qualifiedByName = "mapIdEinschulungsart")
+	@Mapping(source = "entity.EPJahre", target = "idEingangsphaseGrundschule", qualifiedByName = "mapIdEingangsphase")
+	@Mapping(source = "entity.Uebergangsempfehlung_JG5", target = "idUebergangsempfehlungGrundschule", qualifiedByName = "mapIdUebergangsempfehlung")
+	@Mapping(source = "entity.DauerKindergartenbesuch", target = "idDauerKindergartenbesuch", qualifiedByName = "mapIdKindergartenbesuch")
+	@Mapping(source = "entity.LSSchulform", target = "idHerkunftSchulformVorherigeSchule", qualifiedByName = "mapIdHerkunftSchulformVorherigeSchule")
+	@Mapping(source = "entity.LSSchulform", target = "idHerkunftSonstigeVorherigeSchule", qualifiedByName = "mapIdHerkunftSonstigeVorherigeSchule")
+	@Mapping(source = "entity.LSFachklKennung", target = "schluesselCoreTypeFachklasseVorherigeSchule", qualifiedByName = "mapSchluesselFachklasse")
 	SchuelerSchulbesuchsdaten toApi(
 			DTOSchueler entity,
 			@Context SchulbesuchMappingContext ctx);
@@ -239,19 +239,21 @@ public interface SchulbesuchMapper {
 	/**
 	 * Löst einen HerkunftSchulform-Schlüssel auf die interne ID auf.
 	 *
-	 * @param schluessel der ASD-Schlüssel der HerkunftSchulform
+	 * @param kuerzel das ASD-Kürzel der HerkunftSchulform
 	 * @param ctx         der Mapping-Kontext mit dem jahrEntlassungVorherigeSchule
 	 * @return die interne ID der Herkunftschulform oder {@code null}
 	 */
 	@Named("mapIdHerkunftSchulformVorherigeSchule")
-	default Long mapIdHerkunftSchulformVorherigeSchule(final String schluessel, @Context final SchulbesuchMappingContext ctx) {
-		if (schluessel == null) {
+	default Long mapIdHerkunftSchulformVorherigeSchule(final String kuerzel, @Context final SchulbesuchMappingContext ctx) {
+		if (kuerzel == null) {
 			return null;
 		}
 
-		final var schulform = (ctx.jahrEntlassungVorherigeSchule() != null)
-				? HerkunftSchulform.data().getEintragBySchuljahrUndSchluessel(ctx.jahrEntlassungVorherigeSchule(), schluessel)
-				: HerkunftSchulform.data().getLastEintragBySchluesselOrNull(schluessel);
+		final var schulform = (ctx.jahrEntlassungVorherigeSchule() == null)
+				? HerkunftSchulform.data().getLastEintragBySchluesselOrNull(kuerzel)
+				: Optional.ofNullable(HerkunftSchulform.data().getWertByKuerzel(kuerzel))
+						.map(s -> s.daten(ctx.jahrEntlassungVorherigeSchule()))
+						.orElse(null);
 		if (schulform == null) {
 			return null;
 		}
@@ -262,19 +264,21 @@ public interface SchulbesuchMapper {
 	/**
 	 * Löst einen HerkunftSonstige-Schlüssel auf die interne ID auf.
 	 *
-	 * @param schluessel der ASD-Schlüssel der HerkunftSonstige
+	 * @param kuerzel das ASD-Kürzel der HerkunftSonstige
 	 * @param ctx         der Mapping-Kontext mit dem jahrEntlassungVorherigeSchule
 	 * @return die interne ID der Herkunftschulform oder {@code null}
 	 */
 	@Named("mapIdHerkunftSonstigeVorherigeSchule")
-	default Long mapIdHerkunftSonstigeVorherigeSchule(final String schluessel, @Context final SchulbesuchMappingContext ctx) {
-		if (schluessel == null) {
+	default Long mapIdHerkunftSonstigeVorherigeSchule(final String kuerzel, @Context final SchulbesuchMappingContext ctx) {
+		if (kuerzel == null) {
 			return null;
 		}
 
-		final var schulform = (ctx.jahrEntlassungVorherigeSchule() != null)
-				? HerkunftSonstige.data().getEintragBySchuljahrUndSchluessel(ctx.jahrEntlassungVorherigeSchule(), schluessel)
-				: HerkunftSonstige.data().getLastEintragBySchluesselOrNull(schluessel);
+		final var schulform = (ctx.jahrEntlassungVorherigeSchule() == null)
+				? HerkunftSonstige.data().getLastEintragBySchluesselOrNull(kuerzel)
+				: Optional.ofNullable(HerkunftSonstige.data().getWertByKuerzel(kuerzel))
+						.map(s -> s.daten(ctx.jahrEntlassungVorherigeSchule()))
+						.orElse(null);
 		if (schulform == null) {
 			return null;
 		}
@@ -289,24 +293,24 @@ public interface SchulbesuchMapper {
 	 * @param input                  der Patch-Request mit den zu ändernden Feldern
 	 * @param toPatch                die zu aktualisierende Entity
 	 */
-	@Mapping(source = "berufsabschlussVorhanden",			 		target = "HatBerufsausbildung")
-	@Mapping(source = "entlassdatumVorherigeSchule", 				target = "LSSchulEntlassDatum")
-	@Mapping(source = "schluesselSchulgliederungVorherigeSchule", 	target = "LSSGL_SIM")
-	@Mapping(source = "schluesselSchulgliederungVorherigeSchule", 	target = "LSSGL")
-	@Mapping(source = "kuerzelEntlassjahrgangVorherigeSchule", 		target = "LSJahrgang")
-	@Mapping(source = "idHerkunftsartVersetzungVorherigeSchule", 	target = "LSVersetzung")
-	@Mapping(source = "bemerkungVorherigeSchule", 					target = "LSBemerkung")
-	@Mapping(source = "entlassdatumDieseSchule", 					target = "Entlassdatum")
-	@Mapping(source = "idEntlassjahrgangDieseSchule", 				target = "Entlassjahrgang_ID")
-	@Mapping(source = "wechseldatumAufnehmendeSchule", 				target = "Schulwechseldatum")
-	@Mapping(source = "wechselBestaetigtAufnehmendeSchule", 		target = "WechselBestaetigt")
-	@Mapping(source = "einschulungsjahrGrundschule", 				target = "Einschulungsjahr")
-	@Mapping(source = "wechseljahrSekI", 							target = "JahrWechsel_SI")
-	@Mapping(source = "kuerzelErsteSchulformSek1", 					target = "ErsteSchulform_SI")
-	@Mapping(source = "wechseljahrSekII", 							target = "JahrWechsel_SII")
-	@Mapping(source = "idKindergarten", 							target = "Kindergarten_ID")
-	@Mapping(source = "verpflichtungSprachfoerderkurs",	 			target = "VerpflichtungSprachfoerderkurs")
-	@Mapping(source = "teilnahmeSprachfoerderkurs",			 		target = "TeilnahmeSprachfoerderkurs")
+	@Mapping(source = "berufsabschlussVorhanden", target = "HatBerufsausbildung")
+	@Mapping(source = "entlassdatumVorherigeSchule", target = "LSSchulEntlassDatum")
+	@Mapping(source = "schluesselSchulgliederungVorherigeSchule", target = "LSSGL_SIM")
+	@Mapping(source = "schluesselSchulgliederungVorherigeSchule", target = "LSSGL")
+	@Mapping(source = "kuerzelEntlassjahrgangVorherigeSchule", target = "LSJahrgang")
+	@Mapping(source = "idHerkunftsartVersetzungVorherigeSchule", target = "LSVersetzung")
+	@Mapping(source = "bemerkungVorherigeSchule", target = "LSBemerkung")
+	@Mapping(source = "entlassdatumDieseSchule", target = "Entlassdatum")
+	@Mapping(source = "idEntlassjahrgangDieseSchule", target = "Entlassjahrgang_ID")
+	@Mapping(source = "wechseldatumAufnehmendeSchule", target = "Schulwechseldatum")
+	@Mapping(source = "wechselBestaetigtAufnehmendeSchule", target = "WechselBestaetigt")
+	@Mapping(source = "einschulungsjahrGrundschule", target = "Einschulungsjahr")
+	@Mapping(source = "wechseljahrSekI", target = "JahrWechsel_SI")
+	@Mapping(source = "kuerzelErsteSchulformSek1", target = "ErsteSchulform_SI")
+	@Mapping(source = "wechseljahrSekII", target = "JahrWechsel_SII")
+	@Mapping(source = "idKindergarten", target = "Kindergarten_ID")
+	@Mapping(source = "verpflichtungSprachfoerderkurs", target = "VerpflichtungSprachfoerderkurs")
+	@Mapping(source = "teilnahmeSprachfoerderkurs", target = "TeilnahmeSprachfoerderkurs")
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	void patch(SchulbesuchPatchRequest input, @MappingTarget DTOSchueler toPatch);
 

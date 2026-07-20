@@ -43,7 +43,7 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 		set: (v: SchulEintrag | null) => {
 			this.proxy.idVorherigeSchule = v?.id ?? null;
 			const schulform = Schulform.data().getEintragByID(v?.idSchulform ?? -1) ?? null;
-			this.proxy.idHerkunftSchulformVorherigeSchule = HerkunftSchulform.data().getWertBySchluessel(schulform?.kuerzel ?? '')?.historie().getLast().id ?? null;
+			this.proxy.idHerkunftSchulformVorherigeSchule = HerkunftSchulform.data().getWertByKuerzel(schulform?.kuerzel ?? '')?.historie().getLast().id ?? null;
 		},
 	});
 

@@ -148,8 +148,8 @@ public final class SchulbesuchService {
 		if (schulform == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Keine HerkunftSchulform mit der ID %d gefunden.".formatted(id));
 		}
-		entity.LSSchulform = schulform.schluessel;
-		entity.LSSchulformSIM = schulform.schluessel;
+		entity.LSSchulform = schulform.kuerzel;
+		entity.LSSchulformSIM = schulform.kuerzel;
 	}
 
 	private void patchIdHerkunftSonstigeVorherigeSchule(final DTOSchueler entity, final Long id) {
