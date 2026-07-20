@@ -21,7 +21,7 @@ class FachklasseTest {
 	@DisplayName("getWerte: Prüfe, dass mind. die initiale Anzahl an CoreType Werten vorhanden ist.")
 	void coreTypeValues() {
 		final List<Fachklasse> result = Fachklasse.data().getWerte();
-		assertThat(result).isNotEmpty().hasSize(2161);
+		assertThat(result).isNotEmpty().hasSize(2175);
 	}
 
 	@Test
