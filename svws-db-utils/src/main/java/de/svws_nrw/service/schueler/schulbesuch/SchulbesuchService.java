@@ -162,7 +162,7 @@ public final class SchulbesuchService {
 		if (schulform == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Keine HerkunftSonstige mit der ID %d gefunden.".formatted(id));
 		}
-		entity.LSSchulform = schulform.schluessel;
+		entity.LSSchulform = null;
 		entity.LSSchulformSIM = schulform.schluessel;
 	}
 

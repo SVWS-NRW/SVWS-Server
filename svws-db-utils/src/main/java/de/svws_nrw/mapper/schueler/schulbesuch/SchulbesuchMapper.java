@@ -69,7 +69,7 @@ public interface SchulbesuchMapper {
 	@Mapping(source = "entity.Uebergangsempfehlung_JG5", target = "idUebergangsempfehlungGrundschule", qualifiedByName = "mapIdUebergangsempfehlung")
 	@Mapping(source = "entity.DauerKindergartenbesuch", target = "idDauerKindergartenbesuch", qualifiedByName = "mapIdKindergartenbesuch")
 	@Mapping(source = "entity.LSSchulform", target = "idHerkunftSchulformVorherigeSchule", qualifiedByName = "mapIdHerkunftSchulformVorherigeSchule")
-	@Mapping(source = "entity.LSSchulform", target = "idHerkunftSonstigeVorherigeSchule", qualifiedByName = "mapIdHerkunftSonstigeVorherigeSchule")
+	@Mapping(source = "entity.LSSchulformSIM", target = "idHerkunftSonstigeVorherigeSchule", qualifiedByName = "mapIdHerkunftSonstigeVorherigeSchule")
 	@Mapping(source = "entity.LSFachklKennung", target = "schluesselCoreTypeFachklasseVorherigeSchule", qualifiedByName = "mapSchluesselFachklasse")
 	SchuelerSchulbesuchsdaten toApi(
 			DTOSchueler entity,

@@ -472,7 +472,7 @@ class SchulbesuchServiceTest {
 		schulbesuchService.patch(idSchueler, patchRequest);
 
 		verify(schulbesuchMapper).patch(any(), schuelerCaptor.capture());
-		assertThat(schuelerCaptor.getValue().LSSchulform).isEqualTo("AS");
+		assertThat(schuelerCaptor.getValue().LSSchulform).isNull();
 		assertThat(schuelerCaptor.getValue().LSSchulformSIM).isEqualTo("AS");
 	}
 

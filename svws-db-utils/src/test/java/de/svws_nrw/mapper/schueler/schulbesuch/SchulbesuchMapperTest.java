@@ -148,7 +148,7 @@ class SchulbesuchMapperTest {
 		@DisplayName("map | idSchulformVorherigeschule")
 		void toApi_idSchulformVorherigeSchule() {
 			final var entity = createEntity(1L);
-			entity.LSSchulform = "AS";
+			entity.LSSchulformSIM = "AS";
 			entity.LSSchulEntlassDatum = "2020-06-30";
 
 			final var result = mapper.toApi(entity, emptyContext());
