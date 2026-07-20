@@ -125,7 +125,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const mapJahrgaenge = new Map<number, JahrgangsDaten>();
 		for (const j of listJahrgaenge) {
-			const jg: Jahrgaenge | null = (j.kuerzelStatistik === null) ? null : Jahrgaenge.data().getWertByKuerzel(j.kuerzelStatistik);
+			const jg: Jahrgaenge | null = (j.idJahrgang === null) ? null : Jahrgaenge.data().getWertByID(j.idJahrgang);
 			if (jg?.hatSchulform(schuljahresabschnitt.schuljahr, schuleStateImpl.schulform) ?? false) {
 				mapJahrgaenge.set(j.id, j);
 			}
@@ -310,12 +310,16 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		if (jahrgang === undefined) {
 			throw new DeveloperNotificationException("Konnte den Jahrgang für die ID " + idJahrgang + " nicht bestimmen.");
 		}
-		const schulgliederung: Schulgliederung | null = (jahrgang.kuerzelSchulgliederung === null) ? null : Schulgliederung.data().getWertByKuerzel(jahrgang.kuerzelSchulgliederung);
+		const schulgliederung: Schulgliederung | null = (jahrgang.idSchulgliederung === null) ? null : Schulgliederung.data().getWertByID(jahrgang.idSchulgliederung);
 		if (schulgliederung === null) {
-			throw new DeveloperNotificationException("Dem Jahrgang mit der ID " + idJahrgang + " ist eine unbekannte Schulgliederung " + jahrgang.kuerzelSchulgliederung + " zugeordnet.");
+			throw new DeveloperNotificationException("Dem Jahrgang mit der ID " + idJahrgang + " ist eine unbekannte Schulgliederung " + jahrgang.idSchulgliederung + " zugeordnet.");
 		}
-		const abiturjahr = (jahrgang.kuerzelStatistik === null) ? null
-			: GostAbiturjahrUtils.getGostAbiturjahr(schuleStateImpl.schulform, schulgliederung, abschnittStateImpl.auswahl.schuljahr, jahrgang.kuerzelStatistik);
+		const abiturjahr = (jahrgang.idJahrgang === null) ? null
+			: GostAbiturjahrUtils.getGostAbiturjahr(
+				schuleStateImpl.schulform,
+				schulgliederung,
+				abschnittStateImpl.auswahl.schuljahr,
+				Jahrgaenge.data().getEintragByID(jahrgang.idJahrgang)?.kuerzel ?? '');
 		return abiturjahr ?? null;
 	}
 
@@ -333,7 +337,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 			errorLog.add('Es wurde kein Abiturjahrgang zum Löschen ausgewählt.');
 		}
 		for (const abiturjahrgang of this.selected) {
-			if (abiturjahrgang.istBlockungFestgelegt.some(jg => (jg === true))) {
+			if (abiturjahrgang.istBlockungFestgelegt.some(jg => jg)) {
 				errorLog.add(`Der Abiturjahrgang ${abiturjahrgang.abiturjahr} kann nicht gelöscht werden, da ihm bereits Kurse zugeordnet sind.`);
 			}
 		}

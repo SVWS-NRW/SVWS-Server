@@ -220,10 +220,10 @@
 			return true;
 		}
 		const jgdaten = modelProxy.jahrgang.value;
-		if ((jgdaten === null) || (jgdaten.kuerzelStatistik === null)) {
+		if ((jgdaten === null) || (jgdaten.idJahrgang === null)) {
 			return false;
 		}
-		const jg = Jahrgaenge.data().getWertBySchluessel(jgdaten.kuerzelStatistik);
+		const jg = Jahrgaenge.data().getWertByIDOrNull(jgdaten.idJahrgang);
 		if (jg === null) {
 			return false;
 		}

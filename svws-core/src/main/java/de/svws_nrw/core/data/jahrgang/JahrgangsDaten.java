@@ -25,9 +25,9 @@ public class JahrgangsDaten {
 	@Schema(description = "die schulinterne Kurzbezeichnung", example = "ABC")
 	public String kurzbezeichnung;
 
-	/** Das dem Jahrgang zugeordnete Statistik-Kürzel. */
-	@Schema(description = "das dem Jahrgang zugeordnete Statistik-Kürzel", example = "EF")
-	public String kuerzelStatistik;
+	/** Die Id des ASD-Jahrgangs */
+	@Schema(description = "Die Id des ASD-Jahrgangs", example = "90000")
+	public Long idJahrgang;
 
 	/** Die dem Jahrgang zugeordnete schulinterne Bezeichnung. */
 	@Schema(description = "Die dem Jahrgang zugeordnete schulinterne Bezeichnung.", example = "Einführungsphase")
@@ -37,9 +37,9 @@ public class JahrgangsDaten {
 	@Schema(description = "die Sortierreihenfolge des Jahrgangslisten-Eintrags", example = "1")
 	public int sortierung;
 
-	/** Das Kürzel der Schulgliederung, der der Eintrag zugeordnet ist. */
-	@Schema(description = "Das Kürzel der Schulgliederung, der der Eintrag zugeordnet ist", example = "***")
-	public String kuerzelSchulgliederung;
+	/** Die Id der Schulgliederung, der der Eintrag zugeordnet ist. */
+	@Schema(description = "Die Id der Schulgliederung, der der Eintrag zugeordnet ist.", example = "***")
+	public Long idSchulgliederung;
 
 	/** Die ID des Folgejahrgangs, sofern einer definiert ist, ansonsten null */
 	@Schema(description = "die ID des Folgejahrgangs, sofern einer definiert ist", example = "4712")

@@ -36,8 +36,8 @@ public final class ReportingJahrgangSortierung {
 		reg.registiereComparable(ReportingJahrgang::sortierungEintrag);
 		reg.registiereString(ReportingJahrgang::kuerzel);
 		reg.registiereString(ReportingJahrgang::bezeichnung);
-		reg.registiereString(ReportingJahrgang::kuerzelSchulgliederung);
-		reg.registiereString(ReportingJahrgang::kuerzelStatistik);
+		reg.registiereComparable(ReportingJahrgang::idSchulgliederung);
+		reg.registiereComparable(ReportingJahrgang::idJahrgang);
 		reg.registiereComparable(ReportingJahrgang::istSichtbar);
 		reg.registiereComparable(ReportingJahrgang::anzahlRestabschnitte);
 		reg.registiereComparable(ReportingJahrgang::gueltigVon);

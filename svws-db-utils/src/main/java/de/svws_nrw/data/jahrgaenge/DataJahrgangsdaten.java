@@ -6,10 +6,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.asd.data.jahrgang.JahrgaengeKatalogEintrag;
 import de.svws_nrw.asd.data.schule.BildungsstufeKatalogEintrag;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.schule.Bildungsstufe;
@@ -40,35 +40,52 @@ public final class DataJahrgangsdaten extends DataManagerRevised<Long, DTOJahrga
 	public DataJahrgangsdaten(final DBEntityManager conn) {
 		super(conn);
 		setAttributesNotPatchable("id");
-		setAttributesRequiredOnCreation("kuerzel", "bezeichnung", "kuerzelStatistik");
+		setAttributesRequiredOnCreation("kuerzel", "bezeichnung", "idJahrgang");
 	}
 
 	@Override
 	public JahrgangsDaten map(final DTOJahrgang dto) {
+		final int schuljahr = conn.getUser().schuleGetSchuljahr();
 		final JahrgangsDaten jahrgangsDaten = new JahrgangsDaten();
 		jahrgangsDaten.id = dto.ID;
 		jahrgangsDaten.kuerzel = dto.InternKrz;
-		jahrgangsDaten.kuerzelStatistik = dto.ASDJahrgang;
+		jahrgangsDaten.idJahrgang = mapJahrgang(dto.ASDJahrgang, schuljahr);
 		jahrgangsDaten.bezeichnung = Objects.requireNonNullElse(dto.ASDBezeichnung, "");
 		jahrgangsDaten.kurzbezeichnung = dto.Kurzbezeichnung;
-		jahrgangsDaten.kuerzelSchulgliederung = dto.GliederungKuerzel;
+		jahrgangsDaten.idSchulgliederung = mapGliederung(dto.GliederungKuerzel, schuljahr);
 		jahrgangsDaten.idFolgejahrgang = dto.Folgejahrgang_ID;
 		jahrgangsDaten.anzahlRestabschnitte = dto.AnzahlRestabschnitte;
 		jahrgangsDaten.sortierung = Objects.requireNonNullElse(dto.Sortierung, 32000);
 		jahrgangsDaten.istSichtbar = Boolean.TRUE.equals(dto.Sichtbar);
 		jahrgangsDaten.gueltigVon = dto.GueltigVon;
 		jahrgangsDaten.gueltigBis = dto.GueltigBis;
-		jahrgangsDaten.idBildungsstufe = mapSekundarstufe(dto.Sekundarstufe);
+		jahrgangsDaten.idBildungsstufe = mapSekundarstufe(dto.Sekundarstufe, schuljahr);
 		return jahrgangsDaten;
 	}
 
-	private Long mapSekundarstufe(final String sekundarstufe) {
+	private Long mapJahrgang(final String kuerzel, final int schuljahr) {
+		return Optional.ofNullable(Jahrgaenge.data().getWertByKuerzel(kuerzel))
+				.map(j -> j.daten(schuljahr))
+				.map(d -> d.id)
+				.orElse(null);
+	}
+
+	private Long mapGliederung(final String kuerzel, final int schuljahr) {
+		return Optional.ofNullable((kuerzel == null)
+						? Schulgliederung.getDefault(conn.getUser().schuleGetSchulform())
+						: Schulgliederung.data().getWertByKuerzel(kuerzel))
+				.map(j -> j.daten(schuljahr))
+				.map(d -> d.id)
+				.orElse(null);
+	}
+
+	private Long mapSekundarstufe(final String sekundarstufe, final int schuljahr) {
 		final Bildungsstufe wertByKuerzel = Bildungsstufe.data().getWertByKuerzel(sekundarstufe);
 		if (wertByKuerzel == null) {
 			return null;
 		}
 
-		final BildungsstufeKatalogEintrag daten = wertByKuerzel.daten(this.conn.getUser().schuleGetSchuljahr());
+		final BildungsstufeKatalogEintrag daten = wertByKuerzel.daten(schuljahr);
 		if (daten == null) {
 			return null;
 		}
@@ -118,12 +135,12 @@ public final class DataJahrgangsdaten extends DataManagerRevised<Long, DTOJahrga
 		switch (name) {
 			case "id" -> ValidationUtils.validateId(dto.ID, name, value);
 			case "kuerzel" -> updateKuerzel(dto, name, value);
-			case "kuerzelStatistik" -> updateKuerzelStatistik(dto, value, name);
+			case "idJahrgang" -> updateIdJahrgang(dto, value, name);
 			case "bezeichnung" -> updateBezeichnung(dto, name, value);
 			case "kurzbezeichnung" -> dto.Kurzbezeichnung =
 					JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule_Jahrgaenge.col_Spaltentitel.datenlaenge(), name);
 			case "sortierung" -> dto.Sortierung = JSONMapper.convertToIntegerInRange(value, true, 0, 32001, name);
-			case "kuerzelSchulgliederung" -> updateKuerzelSchulgliederung(dto, value, name);
+			case "idSchulgliederung" -> updateKuerzelSchulgliederung(dto, value, name);
 			case "idFolgejahrgang" -> updateIdFolgejahrgang(dto, value, name);
 			case "anzahlRestabschnitte" -> dto.AnzahlRestabschnitte = JSONMapper.convertToIntegerInRange(value, true, 0, 41, name);
 			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, true, name);
@@ -193,39 +210,28 @@ public final class DataJahrgangsdaten extends DataManagerRevised<Long, DTOJahrga
 	}
 
 	private void updateKuerzelSchulgliederung(final DTOJahrgang dtoJahrgang, final Object value, final String attrName) throws ApiOperationException {
-		final String kuerzelSchuldgliederung = JSONMapper.convertToString(value, true, false, Schema.tab_EigeneSchule_Jahrgaenge.col_SGL.datenlaenge(), attrName);
-		if (kuerzelSchuldgliederung == null) {
-			dtoJahrgang.GliederungKuerzel = null;
+		final var idSchulgliederung = JSONMapper.convertToLong(value, true, attrName);
+		if (idSchulgliederung == null) {
 			return;
 		}
-
-		final Schulgliederung schulgliederung = Schulgliederung.data().getWertBySchluessel(kuerzelSchuldgliederung);
-		if (schulgliederung == null) {
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schulgliederung mit dem Schlüssel %s gefunden.".formatted(kuerzelSchuldgliederung));
+		final var schulgliederung = Optional.ofNullable(Schulgliederung.data().getEintragByID(idSchulgliederung))
+				.orElseThrow(() -> new ApiOperationException(Status.BAD_REQUEST,
+						"Keine Schulgliederung mit der ID %d gefunden.".formatted(idSchulgliederung)));
+		if (!schulgliederungIsValidForSchulform(idSchulgliederung)) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Schulgliederung ist für diese Schulform nicht gültig.");
 		}
-
-		if (!schulgliederung.hatSchulform(conn.getUser().schuleGetSchuljahr(), conn.getUser().schuleGetSchulform())) {
-			throw new ApiOperationException(Status.CONFLICT, "Die Schulgliederung ist für diese Schulform nicht gültig.");
-		}
-
-		dtoJahrgang.GliederungKuerzel = kuerzelSchuldgliederung;
+		dtoJahrgang.GliederungKuerzel = schulgliederung.kuerzel;
 	}
 
-	private void updateKuerzelStatistik(final DTOJahrgang dtoJahrgang, final Object value, final String attrName) throws ApiOperationException {
-		final String kuerzelASDJahrgang = JSONMapper.convertToString(
-				value, true, false, Schema.tab_EigeneSchule_Jahrgaenge.col_ASDJahrgang.datenlaenge(), attrName);
-		if (kuerzelASDJahrgang == null) {
-			throw new ApiOperationException(Status.BAD_REQUEST, "Kein ASD-Jahrgang ausgewählt.");
-		}
+	private boolean schulgliederungIsValidForSchulform(final Long idSchulgliederung) {
+		return Schulgliederung.data().getWertByID(idSchulgliederung).hatSchulform(conn.getUser().schuleGetSchuljahr(), conn.getUser().schuleGetSchulform());
+	}
 
-		final Jahrgaenge jahrgang = Jahrgaenge.data().getWertBySchluessel(kuerzelASDJahrgang);
-		if (jahrgang == null) {
-			throw new ApiOperationException(Status.NOT_FOUND, "Kein Jahrgang mit dem Schlüssel %s gefunden.".formatted(kuerzelASDJahrgang));
-		}
-
-		final int schuljahr = conn.getUser().schuleGetSchuljahr();
-		final JahrgaengeKatalogEintrag eintrag = jahrgang.daten(schuljahr);
-		dtoJahrgang.ASDJahrgang = eintrag.kuerzel;
+	private void updateIdJahrgang(final DTOJahrgang dtoJahrgang, final Object value, final String attrName) throws ApiOperationException {
+		final var idJahrgang = JSONMapper.convertToLong(value, false, attrName);
+		dtoJahrgang.ASDJahrgang = Optional.ofNullable(Jahrgaenge.data().getEintragByID(idJahrgang))
+				.map(j -> j.kuerzel)
+				.orElseThrow(() -> new ApiOperationException(Status.BAD_REQUEST, "Kein Jahrgang mit der ID %d gefunden.".formatted(idJahrgang)));
 	}
 
 	/**

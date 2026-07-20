@@ -182,7 +182,9 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenListeEint
 			return null;
 		}
 		const j: JahrgangsDaten | null = this.jahrgaenge.getOrException(this._daten.idJahrgang);
-		return (j.kuerzelSchulgliederung === null) ? null : this.schulgliederungen.get(j.kuerzelSchulgliederung);
+		return (j.idSchulgliederung === null) ? null : this.schulgliederungen.get(
+			Schulgliederung.data().getEintragByID(j.idSchulgliederung)?.kuerzel ?? ''
+		);
 	}
 
 	/**
@@ -245,7 +247,9 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenListeEint
 				return false;
 			}
 			const j: JahrgangsDaten | null = this.jahrgaenge.getOrException(eintrag.idJahrgang);
-			if ((j.kuerzelSchulgliederung === null) || (!this.schulgliederungen.auswahlHasKey(j.kuerzelSchulgliederung))) {
+			if ((j.idSchulgliederung === null) || (!this.schulgliederungen.auswahlHasKey(
+				Schulgliederung.data().getEintragByID(j.idSchulgliederung)?.kuerzel ?? ''
+			))) {
 				return false;
 			}
 		}

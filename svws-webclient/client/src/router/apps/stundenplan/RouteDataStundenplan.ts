@@ -1,4 +1,5 @@
 import type { List, Raum, JahrgangsDaten, LehrerListeEintrag, StundenplanPausenaufsichtBereichUpdate, StundenplanKalenderwochenzuordnung, StundenplanListeEintrag, SimpleOperationResponse } from "@core";
+import { Jahrgaenge } from "@core";
 import { StundenplanUnterrichtListeManager, StundenplanListeManager, ViewType } from "@ui";
 import { Stundenplan, StundenplanManager, StundenplanKonfiguration, StundenplanPausenaufsicht, Wochentag, StundenplanRaum, StundenplanAufsichtsbereich, StundenplanPausenzeit, StundenplanUnterricht, StundenplanZeitraster, DeveloperNotificationException, ArrayList, StundenplanJahrgang, UserNotificationException } from "@core";
 
@@ -761,14 +762,15 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 
 	addJahrgang = async (id: number) => {
 		api.status.start();
-		const jahrgang = new StundenplanJahrgang();
+		const stundenplanJahrgang = new StundenplanJahrgang();
 		for (const j of this.listJahrgaenge) {
 			if (j.id === id) {
-				jahrgang.kuerzel = j.kuerzel ?? j.kuerzelStatistik ?? '';
-				jahrgang.id = j.id;
+				const jahrgang = Jahrgaenge.data().getEintragByID(j.idJahrgang ?? -1);
+				stundenplanJahrgang.kuerzel = j.kuerzel ?? jahrgang?.kuerzel ?? '';
+				stundenplanJahrgang.id = j.id;
 			}
 		}
-		this.manager.daten().jahrgangAdd(jahrgang);
+		this.manager.daten().jahrgangAdd(stundenplanJahrgang);
 		this.commit();
 		api.status.stop();
 	};

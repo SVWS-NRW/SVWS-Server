@@ -44,14 +44,14 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 				null,
 				null,
 				ersetzeNullBlankTrim(jahrgangsDaten.kuerzel),
-				ersetzeNullBlankTrim(jahrgangsDaten.kuerzelSchulgliederung),
-				ersetzeNullBlankTrim(jahrgangsDaten.kuerzelStatistik),
+				jahrgangsDaten.idSchulgliederung,
+				jahrgangsDaten.idJahrgang,
 				jahrgangsDaten.istSichtbar,
 				null,
 				schuljahresabschnitt,
 				jahrgangsDaten.sortierung);
 
-		this.jahrgang = (jahrgangsDaten.kuerzelStatistik == null) ? null : Jahrgaenge.data().getWertBySchluessel(jahrgangsDaten.kuerzelStatistik);
+		this.jahrgang = (jahrgangsDaten.idJahrgang == null) ? null : Jahrgaenge.data().getWertByID(jahrgangsDaten.idJahrgang);
 		this.reportingContext = reportingContext;
 	}
 

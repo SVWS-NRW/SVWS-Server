@@ -261,7 +261,7 @@
 		data.belegungBisAbschnitt = 2;
 		const schulform = props.schuelerListeManager().schulform();
 		if ((schulform !== Schulform.BK) && (schulform !== Schulform.SB)) {
-			data.belegungVonJahrgang = props.schuelerListeManager().jahrgaenge.get(props.schuelerListeManager().auswahl().idJahrgang)?.kuerzelStatistik;
+			data.belegungVonJahrgang = Jahrgaenge.data().getEintragByID(props.schuelerListeManager().auswahl().idJahrgang)?.kuerzel;
 		}
 		await props.addSprachbelegung(data);
 		selectSprachen.value.reset();

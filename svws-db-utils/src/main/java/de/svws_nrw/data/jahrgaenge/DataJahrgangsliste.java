@@ -1,9 +1,11 @@
 package de.svws_nrw.data.jahrgaenge;
 
 import java.io.InputStream;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
-import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
+import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.data.DataManager;
@@ -31,18 +33,13 @@ public final class DataJahrgangsliste extends DataManager<Long> {
 
 
 	private static JahrgangsDaten map(final DBEntityManager conn, final DTOJahrgang j) {
+		final int schuljahr = conn.getUser().schuleGetSchuljahr();
 		final JahrgangsDaten eintrag = new JahrgangsDaten();
 		eintrag.id = j.ID;
 		eintrag.kuerzel = j.InternKrz;
-		eintrag.kuerzelStatistik = j.ASDJahrgang;
+		eintrag.idJahrgang = mapJahrgang(j.ASDJahrgang, schuljahr);
 		eintrag.bezeichnung = j.ASDBezeichnung;
-		eintrag.kuerzelSchulgliederung = j.GliederungKuerzel;
-		if (eintrag.kuerzelSchulgliederung == null) {
-			// TODO Hier muss das Schuljahres-spezifische Auslesen des Default-Wertes noch angepasst werden
-			final Schulgliederung sgl = Schulgliederung.getDefault(conn.getUser().schuleGetSchulform());
-			final SchulgliederungKatalogEintrag sglke = (sgl == null) ? null : sgl.daten(conn.getUser().schuleGetSchuljahr());
-			eintrag.kuerzelSchulgliederung = (sglke == null) ? null : sglke.schluessel;
-		}
+		eintrag.idSchulgliederung = mapGliederung(j.GliederungKuerzel, schuljahr, conn);
 		eintrag.idFolgejahrgang = j.Folgejahrgang_ID;
 		eintrag.anzahlRestabschnitte = j.AnzahlRestabschnitte;
 		eintrag.sortierung = j.Sortierung;
@@ -52,6 +49,21 @@ public final class DataJahrgangsliste extends DataManager<Long> {
 		return eintrag;
 	}
 
+	private static Long mapJahrgang(final String kuerzel, final int schuljahr) {
+		return Optional.ofNullable(Jahrgaenge.data().getWertByKuerzel(kuerzel))
+				.map(j -> j.daten(schuljahr))
+				.map(d -> d.id)
+				.orElse(null);
+	}
+
+	private static Long mapGliederung(final String kuerzel, final int schuljahr, final DBEntityManager conn) {
+		return Optional.ofNullable((kuerzel == null)
+						? Schulgliederung.getDefault(conn.getUser().schuleGetSchulform())
+						: Schulgliederung.data().getWertByKuerzel(kuerzel))
+				.map(j -> j.daten(schuljahr))
+				.map(d -> d.id)
+				.orElse(null);
+	}
 
 	/**
 	 * Bestimmt eine Liste mit allen Jahrgangsdaten
@@ -67,7 +79,7 @@ public final class DataJahrgangsliste extends DataManager<Long> {
 		if (jahrgaenge == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Jahrgänge gefunden");
 		}
-		return jahrgaenge.stream().map(dto -> map(conn, dto)).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).toList();
+		return jahrgaenge.stream().map(dto -> map(conn, dto)).sorted(Comparator.comparingLong(a -> a.sortierung)).toList();
 	}
 
 

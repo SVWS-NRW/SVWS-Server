@@ -161,10 +161,11 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 				const j = this.jahrgaenge.get(idJahrgang);
 				// einige Schulen haben ungültige Jahrgänge gespeichert, diese müssen herausgefiltert werden
 				if (j !== null) {
-					if (j.kuerzelSchulgliederung !== null) {
-						const gliederung = this.schulgliederungen.get(j.kuerzelSchulgliederung);
+					if (j.idSchulgliederung !== null) {
+						const kuerzel = Schulgliederung.data().getEintragByID(j.idSchulgliederung)?.kuerzel ?? '';
+						const gliederung = this.schulgliederungen.get(kuerzel);
 						if (gliederung !== null) {
-							this._mapKursInSchulgliederung.put(j.kuerzelSchulgliederung, k.id, k);
+							this._mapKursInSchulgliederung.put(kuerzel, k.id, k);
 						}
 					}
 				}
@@ -210,8 +211,10 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 		}
 		for (const idJahrgang of this._daten.idJahrgaenge) {
 			const j: JahrgangsDaten | null = this.jahrgaenge.getOrException(idJahrgang);
-			if (j.kuerzelSchulgliederung !== null) {
-				result.add(this.schulgliederungen.get(j.kuerzelSchulgliederung));
+			if (j.idSchulgliederung !== null) {
+				result.add(this.schulgliederungen.get(
+					Schulgliederung.data().getEintragByID(j.idSchulgliederung)?.kuerzel ?? ''
+				));
 			}
 		}
 		return result;
@@ -350,7 +353,9 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 			let hatEineSchulglierung: boolean = false;
 			for (const idJahrgang of eintrag.idJahrgaenge) {
 				const j: JahrgangsDaten | null = this.jahrgaenge.getOrException(idJahrgang);
-				if ((j.kuerzelSchulgliederung !== null) && (this.schulgliederungen.auswahlHasKey(j.kuerzelSchulgliederung))) {
+				if ((j.idSchulgliederung !== null) && (this.schulgliederungen.auswahlHasKey(
+					Schulgliederung.data().getEintragByID(j.idSchulgliederung)?.kuerzel ?? ''
+				))) {
 					hatEineSchulglierung = true;
 					break;
 				}

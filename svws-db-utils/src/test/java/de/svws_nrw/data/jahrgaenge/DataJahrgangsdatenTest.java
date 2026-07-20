@@ -21,6 +21,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,8 +40,8 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 /**
@@ -59,6 +60,12 @@ class DataJahrgangsdatenTest {
 	@BeforeAll
 	static void setUpAll() {
 		ASDCoreTypeUtils.initAll();
+	}
+
+	@BeforeEach
+	void setUp() {
+		lenient().when(conn.getUser()).thenReturn(mock(Benutzer.class));
+		lenient().when(conn.getUser().schuleGetSchuljahr()).thenReturn(2022);
 	}
 
 	@Test
@@ -146,12 +153,12 @@ class DataJahrgangsdatenTest {
 				.hasFieldOrPropertyWithValue("kuerzel", "intern")
 				.hasFieldOrPropertyWithValue("gueltigBis", 5L)
 				.hasFieldOrPropertyWithValue("gueltigVon", 4L)
-				.hasFieldOrPropertyWithValue("kuerzelStatistik", "ASD")
+				.hasFieldOrPropertyWithValue("idJahrgang", 90000L)
 				.hasFieldOrPropertyWithValue("bezeichnung", "ASD")
 				.hasFieldOrPropertyWithValue("kurzbezeichnung", "12")
 				.hasFieldOrPropertyWithValue("istSichtbar", false)
 				.hasFieldOrPropertyWithValue("sortierung", 10000)
-				.hasFieldOrPropertyWithValue("kuerzelSchulgliederung", "SGL")
+				.hasFieldOrPropertyWithValue("idSchulgliederung", 1001000L)
 				.hasFieldOrPropertyWithValue("anzahlRestabschnitte", 3)
 				.hasFieldOrPropertyWithValue("idFolgejahrgang", 1L);
 	}
@@ -173,10 +180,8 @@ class DataJahrgangsdatenTest {
 		return Stream.of(
 				arguments("id", 2L),
 				arguments("kuerzel", "kl"),
-				arguments("kuerzelStatistik", "00"),
 				arguments("bezeichnung", "bezeichnung"),
 				arguments("sortierung", 10000),
-				arguments("kuerzelSchulgliederung", "A01"),
 				arguments("idFolgejahrgang", 10L),
 				arguments("anzahlRestabschnitte", 3),
 				arguments("istSichtbar", true),
@@ -191,31 +196,14 @@ class DataJahrgangsdatenTest {
 	@MethodSource("provideMappingAttributes")
 	void testMapAttribute(final String key, final Object value) {
 		final var expectedDTO = new DTOJahrgang(2L);
-		switch (key) {
-			case "kuerzelStatistik" -> {
-				when(conn.getUser()).thenReturn(mock(Benutzer.class));
-				when(conn.getUser().schuleGetSchuljahr()).thenReturn(2024);
-			}
-			case "kuerzelSchulgliederung" -> {
-				when(conn.getUser()).thenReturn(mock(Benutzer.class));
-				when(conn.getUser().schuleGetSchuljahr()).thenReturn(2022);
-				when(conn.getUser().schuleGetSchulform()).thenReturn(Schulform.BK);
-			}
-			case "idFolgejahrgang" -> when(conn.queryByKey(DTOJahrgang.class, value)).thenReturn(new DTOJahrgang(10L));
-			default -> {
-				//
-			}
-		}
-
+		lenient().when(conn.queryByKey(DTOJahrgang.class, value)).thenReturn(new DTOJahrgang(10L));
 		final var throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, key, value, null));
 
 		switch (key) {
 			case "id" -> assertThat(expectedDTO.ID).isEqualTo(value);
 			case "kuerzel" -> assertThat(expectedDTO.InternKrz).isEqualTo(value);
-			case "kuerzelStatistik" -> assertThat(expectedDTO.ASDJahrgang).isEqualTo(value);
 			case "bezeichnung" -> assertThat(expectedDTO.ASDBezeichnung).isEqualTo(value);
 			case "sortierung" -> assertThat(expectedDTO.Sortierung).isEqualTo(value);
-			case "kuerzelSchulgliederung" -> assertThat(expectedDTO.GliederungKuerzel).isEqualTo(value);
 			case "idFolgejahrgang" -> assertThat(expectedDTO.Folgejahrgang_ID).isEqualTo(value);
 			case "anzahlRestabschnitte" -> assertThat(expectedDTO.AnzahlRestabschnitte).isEqualTo(value);
 			case "istSichtbar" -> assertThat(expectedDTO.Sichtbar).isEqualTo(value);
@@ -246,11 +234,11 @@ class DataJahrgangsdatenTest {
 	void testMapAttributeKuerzelStatistikIsNull() {
 		final var expectedDTO = new DTOJahrgang(1L);
 
-		final var throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, "kuerzelStatistik", null, null));
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, "idJahrgang", null, null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Kein ASD-Jahrgang ausgewählt.")
+				.hasMessage("Attribut idJahrgang: Der Wert null ist nicht erlaubt")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
@@ -259,12 +247,12 @@ class DataJahrgangsdatenTest {
 	void testMapAttributeFalseKuerzelStatistik() {
 		final DTOJahrgang expectedDTO = new DTOJahrgang(1L);
 
-		final Throwable throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, "kuerzelStatistik", "YK", null));
+		final Throwable throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, "idJahrgang", 9000, null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Kein Jahrgang mit dem Schlüssel YK gefunden.")
-				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
+				.hasMessage("Kein Jahrgang mit der ID 9000 gefunden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
@@ -285,22 +273,22 @@ class DataJahrgangsdatenTest {
 	void testMapAttributeKuerzelSchuldgliederungIsNull() throws ApiOperationException {
 		final DTOJahrgang expectedDTO = new DTOJahrgang(2L);
 
-		this.data.mapAttribute(expectedDTO, "kuerzelSchulgliederung", null, null);
+		this.data.mapAttribute(expectedDTO, "idSchulgliederung", null, null);
 
 		assertThat(expectedDTO.GliederungKuerzel).isNull();
 	}
 
 	@Test
-	@DisplayName("mapAttribute | mapping mit falsches KuerzelSchuldgliederung ")
+	@DisplayName("mapAttribute | mapping mit falscher idSchuldgliederung ")
 	void testMapAttributeFalseKuerzelSchuldgliederung() {
 		final DTOJahrgang expectedDTO = new DTOJahrgang(2L);
 
-		final Throwable throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, "kuerzelSchulgliederung", "A50", null));
+		final Throwable throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, "idSchulgliederung", 123, null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Keine Schulgliederung mit dem Schlüssel A50 gefunden.")
-				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
+				.hasMessage("Keine Schulgliederung mit der ID 123 gefunden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
@@ -311,12 +299,12 @@ class DataJahrgangsdatenTest {
 		when(conn.getUser().schuleGetSchuljahr()).thenReturn(2022);
 		when(conn.getUser().schuleGetSchulform()).thenReturn(Schulform.GE);
 
-		final Throwable throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, "kuerzelSchulgliederung", "A01", null));
+		final Throwable throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, "idSchulgliederung", 1001000, null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
 				.hasMessage("Die Schulgliederung ist für diese Schulform nicht gültig.")
-				.hasFieldOrPropertyWithValue("status", Response.Status.CONFLICT);
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
@@ -378,12 +366,12 @@ class DataJahrgangsdatenTest {
 		dto.InternKrz = "intern";
 		dto.GueltigVon = 4L;
 		dto.GueltigBis = 5L;
-		dto.ASDJahrgang = "ASD";
+		dto.ASDJahrgang = "90";
 		dto.ASDBezeichnung = "ASD";
 		dto.Kurzbezeichnung = "12";
 		dto.Sichtbar = false;
 		dto.Sortierung = 10000;
-		dto.GliederungKuerzel = "SGL";
+		dto.GliederungKuerzel = "A01";
 		dto.AnzahlRestabschnitte = 3;
 		dto.Folgejahrgang_ID = 1L;
 		return dto;
@@ -412,7 +400,6 @@ class DataJahrgangsdatenTest {
 
 		assertThatNoException().isThrownBy(() -> this.data.mapAttribute(dto, "bezeichnung", "abc", null));
 
-		verifyNoInteractions(this.conn);
 		assertThat(dto.ASDBezeichnung).isEqualTo("abc");
 	}
 
@@ -461,7 +448,6 @@ class DataJahrgangsdatenTest {
 
 		assertThatNoException().isThrownBy(() -> this.data.mapAttribute(dto, "kuerzel", "abc", null));
 
-		verifyNoInteractions(this.conn);
 		assertThat(dto.InternKrz).isEqualTo("abc");
 	}
 

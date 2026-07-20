@@ -237,7 +237,7 @@ export class SchuelerLernabschnittManager {
 	 * Initialisiert die internen Datenstrukturen für die Lehrer und führt dabei
 	 * eine Sortierung der internen Liste aus.
 	 *
-	 * @param kurse   die Liste der Lehrer für die Initialisierung
+	 * @param lehrer   die Liste der Lehrer für die Initialisierung
 	 */
 	private initLehrer(lehrer: List<LehrerListeEintrag>): void {
 		this._lehrer.clear();
@@ -246,7 +246,7 @@ export class SchuelerLernabschnittManager {
 		this._mapLehrerByID.clear();
 		for (const l of lehrer) {
 			this._mapLehrerByID.put(l.id, l);
-			if (l.istAktiv === true) {
+			if (l.istAktiv) {
 				this._lehrerAktiv.add(l);
 				if (l.istSichtbar) {
 					this._lehrerAktivUndSichtbar.add(l);
@@ -289,10 +289,10 @@ export class SchuelerLernabschnittManager {
 			return null;
 		}
 		const eintrag: JahrgangsDaten | null = this._mapJahrgangByID.get(this._lernabschnittsdaten.jahrgangID);
-		if ((eintrag === null) || (eintrag.kuerzelStatistik === null)) {
+		if ((eintrag === null) || (eintrag.idJahrgang === null)) {
 			return null;
 		}
-		return Jahrgaenge.data().getWertByKuerzel(eintrag.kuerzelStatistik);
+		return Jahrgaenge.data().getWertByIDOrNull(eintrag.idJahrgang);
 	}
 
 	/**

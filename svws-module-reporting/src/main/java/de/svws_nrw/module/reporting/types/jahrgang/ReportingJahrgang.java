@@ -50,11 +50,11 @@ public class ReportingJahrgang extends ReportingBaseType {
 	/** Das Kürzel des Jahrgangs. */
 	protected String kuerzel;
 
-	/** Das Kürzel der Schulgliederung, der der Eintrag zugeordnet ist. */
-	protected String kuerzelSchulgliederung;
+	/** Die ID der Schulgliederung, die dem Eintrag zugeordnet ist. */
+	protected Long idSchulgliederung;
 
-	/** Das dem Jahrgang zugeordnete Statistik-Kürzel. */
-	protected String kuerzelStatistik;
+	/** Die dem Jahrgang zugeordnete ID. */
+	protected Long idJahrgang;
 
 	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
 	protected boolean istSichtbar;
@@ -81,8 +81,8 @@ public class ReportingJahrgang extends ReportingBaseType {
 	 * @param jahrgang Die grundlegende Jahrgangszuordnung zu diesem Jahrgang.
 	 * @param klassen Liste der Klassen des Jahrgangs.
 	 * @param kuerzel Das Kürzel des Jahrgangs.
-	 * @param kuerzelSchulgliederung Das Kürzel der Schulgliederung, der der Eintrag zugeordnet ist.
-	 * @param kuerzelStatistik Das dem Jahrgang zugeordnete Statistik-Kürzel.
+	 * @param idSchulgliederung Die ID der Schulgliederung, die dem Eintrag zugeordnet ist.
+	 * @param idJahrgang Die dem Jahrgang zugeordnete ID.
 	 * @param istSichtbar Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
 	 * @param schueler Liste der Schüler des Jahrgangs.
 	 * @param schuljahresabschnitt Der Schuljahresabschnitt zu diesem Jahrgang.
@@ -91,7 +91,7 @@ public class ReportingJahrgang extends ReportingBaseType {
 	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingJahrgang(final Integer anzahlRestabschnitte, final String bezeichnung, final Long gueltigBis, final Long gueltigVon,
 			final ReportingJahrgang folgejahrgang, final long id, final Long idFolgejahrgang, final Jahrgaenge jahrgang, final List<ReportingKlasse> klassen,
-			final String kuerzel, final String kuerzelSchulgliederung, final String kuerzelStatistik, final boolean istSichtbar,
+			final String kuerzel, final Long idSchulgliederung, final Long idJahrgang, final boolean istSichtbar,
 			final List<ReportingSchueler> schueler, final ReportingSchuljahresabschnitt schuljahresabschnitt, final int sortierungEintrag) {
 		this.anzahlRestabschnitte = anzahlRestabschnitte;
 		this.bezeichnung = ersetzeNullBlankTrim(bezeichnung);
@@ -103,8 +103,8 @@ public class ReportingJahrgang extends ReportingBaseType {
 		this.jahrgang = jahrgang;
 		this.klassen = (klassen != null) ? new ArrayList<>(klassen.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
 		this.kuerzel = ersetzeNullBlankTrim(kuerzel);
-		this.kuerzelSchulgliederung = ersetzeNullBlankTrim(kuerzelSchulgliederung);
-		this.kuerzelStatistik = ersetzeNullBlankTrim(kuerzelStatistik);
+		this.idSchulgliederung = idSchulgliederung;
+		this.idJahrgang = idJahrgang;
 		this.istSichtbar = istSichtbar;
 		this.schueler = (schueler != null) ? new ArrayList<>(schueler.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
 		this.schuljahresabschnitt = schuljahresabschnitt;
@@ -270,21 +270,21 @@ public class ReportingJahrgang extends ReportingBaseType {
 	}
 
 	/**
-	 * Das Kürzel der Schulgliederung, der der Eintrag zugeordnet ist.
+	 * Die ID der Schulgliederung, die dem Eintrag zugeordnet ist.
 	 *
-	 * @return Inhalt des Feldes kuerzelSchulgliederung; nie {@code null}, bei fehlendem Wert ein leerer String.
+	 * @return Inhalt des Feldes id; bei fehlendem Wert ein null.
 	 */
-	public String kuerzelSchulgliederung() {
-		return kuerzelSchulgliederung;
+	public Long idSchulgliederung() {
+		return idSchulgliederung;
 	}
 
 	/**
-	 * Das dem Jahrgang zugeordnete Statistik-Kürzel.
+	 * Die dem Jahrgang zugeordnete ID.
 	 *
-	 * @return Inhalt des Feldes kuerzelStatistik; nie {@code null}, bei fehlendem Wert ein leerer String.
+	 * @return Inhalt des Feldes ID; bei fehlendem Wert ein null.
 	 */
-	public String kuerzelStatistik() {
-		return kuerzelStatistik;
+	public Long idJahrgang() {
+		return idJahrgang;
 	}
 
 	/**

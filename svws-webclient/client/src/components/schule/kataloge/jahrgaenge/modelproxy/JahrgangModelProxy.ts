@@ -1,11 +1,9 @@
 import type { BildungsstufeKatalogEintrag, JahrgaengeKatalogEintrag, JahrgangsDaten, SchulgliederungKatalogEintrag } from "@core";
 import { Bildungsstufe, Jahrgaenge, Schulgliederung } from "@core";
-import { ModelProxy } from "@ui";
-import { ValidatorNumberRange } from "../../../../../../../ui/src/validation/common/ValidatorNumberRange";
+import { ModelProxy, ValidatorInputRequired, ValidatorNumberRange } from "@ui";
 import { ValidatorJahrgangBezeichnung } from "~/components/schule/kataloge/jahrgaenge/modelproxy/validation/ValidatorJahrgangBezeichnung";
 import { ValidatorJahrgangKuerzel } from "~/components/schule/kataloge/jahrgaenge/modelproxy/validation/ValidatorJahrgangKuerzel";
 import { ValidatorJahrgangKurzbezeichnung } from "~/components/schule/kataloge/jahrgaenge/modelproxy/validation/ValidatorJahrgangKurzbezeichnung";
-import { ValidatorInputRequired } from "../../../../../../../ui/src/validation/common/ValidatorInputRequired";
 import { computed } from "vue";
 
 /**
@@ -31,7 +29,7 @@ export class JahrgangModelProxy extends ModelProxy<JahrgangsDaten> {
 		patch?: (data: Partial<JahrgangsDaten>) => Promise<boolean>
 	) {
 		const listOfAutopatchProps: Iterable<keyof JahrgangsDaten> =
-			["idFolgejahrgang", "kuerzelSchulgliederung", "kuerzelStatistik", "idBildungsstufe", "istSichtbar"];
+			["idFolgejahrgang", "idSchulgliederung", "idJahrgang", "idBildungsstufe", "istSichtbar"];
 		super({ data, patch, listOfAutopatchProps });
 		this.schuljahr = schuljahr;
 		this.jahrgaengeById = this.mapJahrgaenge(jahrgaenge());
@@ -52,7 +50,7 @@ export class JahrgangModelProxy extends ModelProxy<JahrgangsDaten> {
 		this.addBlockingValidator(new ValidatorJahrgangBezeichnung(() => this.proxy, jahrgaenge), "bezeichnung");
 		this.addBlockingValidator(new ValidatorJahrgangKurzbezeichnung(() => this.proxy, jahrgaenge), "kurzbezeichnung");
 		// ASD-Jahrgang
-		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.kuerzelStatistik), "kuerzelStatistik");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idJahrgang), "idJahrgang");
 		// anzahlRestabschnitte
 		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.anzahlRestabschnitte, 0, 40), "anzahlRestabschnitte");
 		// sortierung
@@ -60,13 +58,13 @@ export class JahrgangModelProxy extends ModelProxy<JahrgangsDaten> {
 	}
 
 	schulgliederung = computed<SchulgliederungKatalogEintrag | null>({
-		get: () => Schulgliederung.data().getEintragBySchuljahrUndSchluessel(this.schuljahr, this.proxy.kuerzelSchulgliederung ?? ""),
-		set: (value: SchulgliederungKatalogEintrag | null) => this.proxy.kuerzelSchulgliederung = value?.schluessel ?? null,
+		get: () => Schulgliederung.data().getEintragByID(this.proxy.idSchulgliederung ?? -1),
+		set: (value: SchulgliederungKatalogEintrag | null) => this.proxy.idSchulgliederung = value?.id ?? null,
 	});
 
-	statistikJahrgang = computed<JahrgaengeKatalogEintrag | null>({
-		get: () => Jahrgaenge.data().getEintragBySchuljahrUndSchluessel(this.schuljahr, this.proxy.kuerzelStatistik ?? ""),
-		set: (value: JahrgaengeKatalogEintrag | null) => this.proxy.kuerzelStatistik = value?.schluessel ?? null,
+	asdJahrgang = computed<JahrgaengeKatalogEintrag | null>({
+		get: () => Jahrgaenge.data().getEintragByID(this.proxy.idJahrgang ?? -1),
+		set: (value: JahrgaengeKatalogEintrag | null) => this.proxy.idJahrgang = value?.id ?? null,
 	});
 
 	bildungsstufe = computed<BildungsstufeKatalogEintrag | null>({

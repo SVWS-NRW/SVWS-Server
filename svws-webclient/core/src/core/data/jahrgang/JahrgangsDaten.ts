@@ -19,9 +19,9 @@ export class JahrgangsDaten extends JavaObject {
 	public kurzbezeichnung: string | null = null;
 
 	/**
-	 * Das dem Jahrgang zugeordnete Statistik-Kürzel.
+	 * Die Id des ASD-Jahrgangs
 	 */
-	public kuerzelStatistik: string | null = null;
+	public idJahrgang: number | null = null;
 
 	/**
 	 * Die dem Jahrgang zugeordnete schulinterne Bezeichnung.
@@ -34,9 +34,9 @@ export class JahrgangsDaten extends JavaObject {
 	public sortierung: number = 0;
 
 	/**
-	 * Das Kürzel der Schulgliederung, der der Eintrag zugeordnet ist.
+	 * Die Id der Schulgliederung, der der Eintrag zugeordnet ist.
 	 */
-	public kuerzelSchulgliederung: string | null = null;
+	public idSchulgliederung: number | null = null;
 
 	/**
 	 * Die ID des Folgejahrgangs, sofern einer definiert ist, ansonsten null
@@ -99,12 +99,12 @@ export class JahrgangsDaten extends JavaObject {
 		result.id = obj.id;
 		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
 		result.kurzbezeichnung = (obj.kurzbezeichnung === undefined) ? null : obj.kurzbezeichnung === null ? null : obj.kurzbezeichnung;
-		result.kuerzelStatistik = (obj.kuerzelStatistik === undefined) ? null : obj.kuerzelStatistik === null ? null : obj.kuerzelStatistik;
+		result.idJahrgang = (obj.idJahrgang === undefined) ? null : obj.idJahrgang === null ? null : obj.idJahrgang;
 		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		if (obj.sortierung === undefined)
 			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
-		result.kuerzelSchulgliederung = (obj.kuerzelSchulgliederung === undefined) ? null : obj.kuerzelSchulgliederung === null ? null : obj.kuerzelSchulgliederung;
+		result.idSchulgliederung = (obj.idSchulgliederung === undefined) ? null : obj.idSchulgliederung === null ? null : obj.idSchulgliederung;
 		result.idFolgejahrgang = (obj.idFolgejahrgang === undefined) ? null : obj.idFolgejahrgang === null ? null : obj.idFolgejahrgang;
 		result.idBildungsstufe = (obj.idBildungsstufe === undefined) ? null : obj.idBildungsstufe === null ? null : obj.idBildungsstufe;
 		result.anzahlRestabschnitte = (obj.anzahlRestabschnitte === undefined) ? null : obj.anzahlRestabschnitte === null ? null : obj.anzahlRestabschnitte;
@@ -122,10 +122,10 @@ export class JahrgangsDaten extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		result += '"kurzbezeichnung" : ' + ((obj.kurzbezeichnung === null) ? 'null' : JSON.stringify(obj.kurzbezeichnung)) + ',';
-		result += '"kuerzelStatistik" : ' + ((obj.kuerzelStatistik === null) ? 'null' : JSON.stringify(obj.kuerzelStatistik)) + ',';
+		result += '"idJahrgang" : ' + ((obj.idJahrgang === null) ? 'null' : obj.idJahrgang.toString()) + ',';
 		result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
-		result += '"kuerzelSchulgliederung" : ' + ((obj.kuerzelSchulgliederung === null) ? 'null' : JSON.stringify(obj.kuerzelSchulgliederung)) + ',';
+		result += '"idSchulgliederung" : ' + ((obj.idSchulgliederung === null) ? 'null' : obj.idSchulgliederung.toString()) + ',';
 		result += '"idFolgejahrgang" : ' + ((obj.idFolgejahrgang === null) ? 'null' : obj.idFolgejahrgang.toString()) + ',';
 		result += '"idBildungsstufe" : ' + ((obj.idBildungsstufe === null) ? 'null' : obj.idBildungsstufe.toString()) + ',';
 		result += '"anzahlRestabschnitte" : ' + ((obj.anzahlRestabschnitte === null) ? 'null' : obj.anzahlRestabschnitte.toString()) + ',';
@@ -149,8 +149,8 @@ export class JahrgangsDaten extends JavaObject {
 		if (obj.kurzbezeichnung !== undefined) {
 			result += '"kurzbezeichnung" : ' + ((obj.kurzbezeichnung === null) ? 'null' : JSON.stringify(obj.kurzbezeichnung)) + ',';
 		}
-		if (obj.kuerzelStatistik !== undefined) {
-			result += '"kuerzelStatistik" : ' + ((obj.kuerzelStatistik === null) ? 'null' : JSON.stringify(obj.kuerzelStatistik)) + ',';
+		if (obj.idJahrgang !== undefined) {
+			result += '"idJahrgang" : ' + ((obj.idJahrgang === null) ? 'null' : obj.idJahrgang.toString()) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
@@ -158,8 +158,8 @@ export class JahrgangsDaten extends JavaObject {
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		}
-		if (obj.kuerzelSchulgliederung !== undefined) {
-			result += '"kuerzelSchulgliederung" : ' + ((obj.kuerzelSchulgliederung === null) ? 'null' : JSON.stringify(obj.kuerzelSchulgliederung)) + ',';
+		if (obj.idSchulgliederung !== undefined) {
+			result += '"idSchulgliederung" : ' + ((obj.idSchulgliederung === null) ? 'null' : obj.idSchulgliederung.toString()) + ',';
 		}
 		if (obj.idFolgejahrgang !== undefined) {
 			result += '"idFolgejahrgang" : ' + ((obj.idFolgejahrgang === null) ? 'null' : obj.idFolgejahrgang.toString()) + ',';
