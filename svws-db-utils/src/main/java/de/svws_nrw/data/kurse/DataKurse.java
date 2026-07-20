@@ -440,6 +440,12 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 		for (final @NotNull DTOKurs dtoKurs : kurse) {
 			daten.add(mapInternal(dtoKurs, conn));
 		}
+ 		// Prüfe, ob die Jahrgänge der Kurse in der DB vorhanden. Falls nicht, lösche die Jahrgangs-Referenz des Kurses.
+		final Map<Long, DTOJahrgang> mapAlle = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
+		for (final KursDaten kursDaten : daten) {
+		    kursDaten.idJahrgaenge.removeIf(id -> !mapAlle.containsKey(id));
+		}
+
 		daten.sort((a, b) -> Long.compare(a.sortierung, b.sortierung));
 		if (!mitSchuelerListe) {
 			return daten;
