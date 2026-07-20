@@ -21,6 +21,9 @@ public final class EmailJob {
 	/** Die E-Mail-Adresse des Senders (from) */
 	private final @NotNull String from;
 
+	/** Der Kontext mit den versandbezogenen Einstellungen, mit denen dieser Job gestartet wurde. */
+	private final @NotNull EmailJobContext context;
+
 	/** Der Betreff der E-Mail */
 	private @NotNull String subject = "";
 
@@ -50,21 +53,35 @@ public final class EmailJob {
 
 
 	/**
-	 * Erstellt einen neuen E-Mail-Job zum Versenden einer Mail von der übergebenen Adresse
+	 * Erstellt einen neuen E-Mail-Job zum Versenden einer Mail von der übergebenen Adresse mit dem übergebenen
+	 * Kontext für die versandbezogenen Einstellungen (u. a. die SMTP-Session).
 	 *
-	 * @param from   die E-Mail-Adresse des Senders
+	 * @param from      die E-Mail-Adresse des Senders
+	 * @param context   der Kontext mit den versandbezogenen Einstellungen für diesen Job
 	 */
-	public EmailJob(final @NotNull String from) {
+	public EmailJob(final @NotNull String from, final @NotNull EmailJobContext context) {
 		// @NotNull sichert nicht gegen die Übergabe von null. SonarQube denkt aber so und meldet bei Prüfung mittels "== null" immer
 		// "java:S2589, Remove this expression which always evaluates to true/false.". Daher hier die Prüfung mittels Objects.requireNonNull.
 		try {
 			if (Objects.requireNonNull(from).isBlank()) {
 				throw new IllegalArgumentException("Notwendiger Parameter Absender-E-Mail-Adresse für die Erzeugung eines E-Mail-Jobs ist leer.");
 			}
+			Objects.requireNonNull(context);
 		} catch (final NullPointerException e) {
-			throw new IllegalArgumentException("Notwendiger Parameter Absender-E-Mail-Adresse für die Erzeugung eines E-Mail-Jobs ist null.");
+			throw new IllegalArgumentException("Notwendiger Parameter für die Erzeugung eines E-Mail-Jobs ist null.");
 		}
 		this.from = from;
+		this.context = context;
+	}
+
+
+	/**
+	 * Gibt den Kontext mit den versandbezogenen Einstellungen zurück, mit denen dieser Job gestartet wurde.
+	 *
+	 * @return der Kontext dieses Jobs
+	 */
+	public @NotNull EmailJobContext getContext() {
+		return this.context;
 	}
 
 

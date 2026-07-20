@@ -24,16 +24,16 @@ abstract class AbstractEmailJobManagerSendTestBase {
 	protected static final long POLL_INTERVAL_MS = 10;
 	/** Helferklasse, um ein Mock für die SMTP Verbindung zu erzeugen. */
 	protected MailSmtpSessionMockHelper smtpMockHelper;
-	/** Der Kontext, der für den Manager verwendet werden soll.  */
-	protected EmailJobManagerContext context;
+	/** Der Kontext, der für die Test-Jobs verwendet werden soll.  */
+	protected EmailJobContext context;
 	/** Der E-Mail-Job-Manager für die Tests. */
 	protected EmailJobManager manager;
 
 	@BeforeEach
 	void setupBase() {
 		smtpMockHelper = new MailSmtpSessionMockHelper();
-		context = new EmailJobManagerContext("schemaX", 42L, smtpMockHelper.getMock());
-		manager = EmailJobManagerFactory.getInstance().getManager(context);
+		context = new EmailJobContext(smtpMockHelper.getMock());
+		manager = EmailJobManagerFactory.getInstance().getManager("schemaX", 42L);
 	}
 
 	@AfterEach
@@ -330,14 +330,27 @@ abstract class AbstractEmailJobManagerSendTestBase {
 	}
 
 	/**
-	 * Hilfsmethode zum Erstellen eines einfachen {@link EmailJob}s für Testzwecke.
+	 * Hilfsmethode zum Erstellen eines einfachen {@link EmailJob}s für Testzwecke, welcher den Standard-Kontext
+	 * dieser Testklasse (Feld {@link #context}) verwendet.
 	 *
 	 * @param recipients die E-Mail-Adressen der Empfänger
 	 *
 	 * @return das erzeugte Job-Objekt
 	 */
 	protected EmailJob createSimpleJob(final String... recipients) {
-		final EmailJob job = new EmailJob("from@example.org").withSubject("Test").withBody("Body");
+		return createSimpleJob(this.context, recipients);
+	}
+
+	/**
+	 * Hilfsmethode zum Erstellen eines einfachen {@link EmailJob}s für Testzwecke mit einem übergebenen Kontext.
+	 *
+	 * @param jobContext der Kontext, mit dem der Job erzeugt werden soll
+	 * @param recipients die E-Mail-Adressen der Empfänger
+	 *
+	 * @return das erzeugte Job-Objekt
+	 */
+	protected EmailJob createSimpleJob(final EmailJobContext jobContext, final String... recipients) {
+		final EmailJob job = new EmailJob("from@example.org", jobContext).withSubject("Test").withBody("Body");
 		for (final String recipient : recipients) {
 			job.addRecipient(new EmailJobRecipient(recipient));
 		}

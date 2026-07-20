@@ -20,8 +20,11 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class EmailJobManager {
 
-	/** Der Kontext mit Benutzerinformationen, der SMTP-Session und Manager-Konfigurationseinstellungen*/
-	private final @NotNull EmailJobManagerContext context;
+	/** Der Name des Datenbank-Schemas, dem dieser Manager zugeordnet ist */
+	private final @NotNull String schema;
+
+	/** Die ID des Benutzers aus dem Datenbank-Schema, dem dieser Manager zugeordnet ist. */
+	private final long idUser;
 
 	/** Eine Hilfsklasse, welche die Verwaltung der abgeschlossenen Jobs übernimmt */
 	private final @NotNull EmailJobManagerCompletedJobs completedJobs;
@@ -73,13 +76,14 @@ public final class EmailJobManager {
 	 * Erstellt einen neuen E-Mail-Job-Manager zum Versenden von E-Mails.
 	 * Dieser verwendet einen Worker-Thread, um E-Mails asynchron zu versenden.
 	 *
-	 * @param context   der Kontext für den Manager mit Benutzerinformationen, der SMTP-Session
-	 *                  und Manager-Konfigurationseinstellungen
+	 * @param schema   das SVWS-Datenbank-Schema, dem dieser Manager zugeordnet ist
+	 * @param idUser   die Benutzer-ID aus dem SVWS-Datenbank-Schema, der dieser Manager zugeordnet ist
 	 */
-	EmailJobManager(final @NotNull EmailJobManagerContext context) {
-		this.context = context;
+	EmailJobManager(final @NotNull String schema, final long idUser) {
+		this.schema = schema;
+		this.idUser = idUser;
 		this.completedJobs = new EmailJobManagerCompletedJobs(this);
-		final @NotNull String threadName = "EmailJobManager_" + context.getDBSchema() + "_" + context.getUserId();
+		final @NotNull String threadName = "EmailJobManager_" + schema + "_" + idUser;
 		this.thread = Thread.ofVirtual().name(threadName).start(this::run);
 	}
 
@@ -121,13 +125,22 @@ public final class EmailJobManager {
 
 
 	/**
-	 * Gibt den Kontext des Managers mit den Benutzerinformationen, der SMTP-Session
-	 * und den Konfigurationseinstellungen zurück.
+	 * Gibt den Namen des SVWS-Datenbank-Schemas zurück, dem dieser Manager zugeordnet ist.
 	 *
-	 * @return der Kontext
+	 * @return der Name des SVWS-Datenbank-Schemas
 	 */
-	public @NotNull EmailJobManagerContext getContext() {
-		return this.context;
+	@NotNull String getSchema() {
+		return this.schema;
+	}
+
+
+	/**
+	 * Gibt die ID des Benutzers aus dem SVWS-Datenbank-Schema zurück, dem dieser Manager zugeordnet ist.
+	 *
+	 * @return die Benutzer-ID
+	 */
+	long getIdUser() {
+		return this.idUser;
 	}
 
 
@@ -310,12 +323,16 @@ public final class EmailJobManager {
 	/**
 	 * Diese Methode dient der Einhaltung des Limits für die Anzahl der E-Mails pro Minute.
 	 * Sie wartet blockierend, bis wieder genügend Zeit für das Versenden einer weiteren E-Mail vergangen ist.
+	 * Die Rate-Limit-Werte werden dabei aus dem Kontext des übergebenen Jobs gelesen, während die Zeitstempel
+	 * der zuletzt versendeten Mails jobübergreifend im Manager verwaltet werden (siehe {@link #sendTimestamps}).
+	 *
+	 * @param job   der Job, dessen Kontext die Rate-Limit-Werte für diesen Versand vorgibt
 	 *
 	 * @throws EmailJobCanceledException   falls der wartende Thread durch Thread.interrupt() unterbrochen wurde (siehe shutdown-Methode)
 	 */
-	private void awaitRateLimit() {
+	private void awaitRateLimit(final @NotNull EmailJob job) {
 		// Die Größe des Zeitfensters für den Versand: Anzahl an Millisekunden für eine Minute
-		final long zeitfenster = context.getRateLimitTimeframeMs();
+		final long zeitfenster = job.getContext().getRateLimitTimeframeMs();
 
 		// Synchronisiert den Zugriff auf der Deque bei dem Zugriff durch mehrere Threads. wait und notifyAll benötigen dieselbe Monitor-Instanz.
 		synchronized (sendTimestamps) {
@@ -331,7 +348,7 @@ public final class EmailJobManager {
 
 				// Prüfe, ob die maximale Rate das Senden einer E-Mail erlaubt
 				final Long oldest = sendTimestamps.peekFirst();
-				if ((oldest == null) || (sendTimestamps.size() < context.getMaxEmailsPerMinute())) {
+				if ((oldest == null) || (sendTimestamps.size() < job.getContext().getMaxEmailsPerMinute())) {
 					// Füge den Zeitstempel in die Queue ein, wecken dann ggf. noch wartende andere Threads und verlasse die Methode zum Senden ...
 					sendTimestamps.addLast(now);
 					sendTimestamps.notifyAll();
@@ -384,21 +401,21 @@ public final class EmailJobManager {
 	 */
 	private boolean sendToRecipient(final @NotNull EmailJob job, final @NotNull EmailJobRecipient recipient) {
 		// Prüfe, ob E-Mails ohne Anhänge herausgefiltert werden sollen und der Empfänger keine Anhänge erhält.
-		if (recipient.attachments.isEmpty() && context.isFilterMailsWithoutAttachments()) {
+		if (recipient.attachments.isEmpty() && job.getContext().isFilterMailsWithoutAttachments()) {
 			job.addLogSkipped("- Für Empfänger %s konnten keine Anhänge für den Versand ermittelt werden. Er wird beim Versand übersprungen."
 					.formatted(recipient.email));
 			return false;
 		}
 
 		// Prüfe, ob die Anhänge direkt versendet werden können, da kein Größen-Limit gesetzt ist
-		if (context.getMaxAttachmentSize() <= 0) {
+		if (job.getContext().getMaxAttachmentSize() <= 0) {
 			return sendInternal(job, recipient, recipient.attachments);
 		}
 
 		// Wenn ein Größen-Limit gesetzt ist, unterteile die Anhänge, bilde geeignete Pakete ...
 		final List<List<Integer>> pakete = groupAttachments(job, recipient.attachments, recipient.email);
 		if (pakete.isEmpty()) {
-			if (context.isFilterMailsWithoutAttachments()) {
+			if (job.getContext().isFilterMailsWithoutAttachments()) {
 				job.addLogSkipped("- Für Empfänger %s konnten keine Anhänge für den Versand ermittelt werden. Er wird beim Versand übersprungen."
 						.formatted(recipient.email));
 				return false;
@@ -433,14 +450,14 @@ public final class EmailJobManager {
 	 */
 	private boolean sendInternal(final EmailJob job, final EmailJobRecipient recipient, final @NotNull List<EmailJobAttachment> attachments) {
 		// Prüfe das Rate-Limit für den Versand
-		awaitRateLimit();
+		awaitRateLimit(job);
 		if (job.hasCancellationRequest()) {
 			throw new EmailJobCanceledException();
 		}
 
 		// Versuche die nächste E-Mail an den übergebenen Empfänger und den übergebenen Anhängen zu versenden
 		try {
-			final MailSmtpSession session = context.getSmtpSession();
+			final MailSmtpSession session = job.getContext().getSmtpSession();
 			// Während die SMTP-Sitzung erstellt wurde, kann der Job abgebrochen worden sein. Prüfe daher hier erneut auf einen Abbruch.
 			if (job.hasCancellationRequest()) {
 				throw new EmailJobCanceledException();
@@ -475,12 +492,12 @@ public final class EmailJobManager {
 			final @NotNull String recipient) {
 		// Erstellt die Ergebnis-Liste für die Gruppen
 		final List<List<Integer>> groups = new ArrayList<>();
-		if (attachments.isEmpty() || (context.getMaxAttachmentSize() <= 0)) {
+		if (attachments.isEmpty() || (job.getContext().getMaxAttachmentSize() <= 0)) {
 			return groups;
 		}
 
 		// Lese die maximale Anhangsgröße aus der Job-Definition aus
-		final long maxSize = context.getMaxAttachmentSize();
+		final long maxSize = job.getContext().getMaxAttachmentSize();
 
 		// Bestimme die Größen der Anhänge und speichere diese in einem Array für den schnellen Zugriff auf die Größen
 		final int[] attachmentSizes = new int[attachments.size()];
@@ -499,7 +516,7 @@ public final class EmailJobManager {
 
 			if (size > maxSize) {
 				// Fall 1: Die Größe überschreitet das Limit und dies ist laut Job-Konfiguration untersagt
-				if (context.isForceMaxAttachmentSize()) {
+				if (job.getContext().isForceMaxAttachmentSize()) {
 					// Die maximale Paketgröße darf nicht überschritten werden, verwerfe daher den Anhang und logge das Problem.
 					job.addLogSkipped(("- Für Empfänger %s wurde ein Anhang nicht versendet. Grund: Der Anhang überschreitet die maximale Größe für E-Mail-Anhänge.")
 									.formatted(recipient));

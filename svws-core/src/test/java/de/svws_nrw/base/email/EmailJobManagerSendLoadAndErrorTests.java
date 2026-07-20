@@ -13,7 +13,7 @@ class EmailJobManagerSendLoadAndErrorTests extends AbstractEmailJobManagerSendTe
 		context.withMaxEmailsPerMinute(200);
 
 		// Erzeuge 150 Absender mit Anhang
-		final EmailJob job = new EmailJob("from@example.org").withSubject("S").withBody("B");
+		final EmailJob job = new EmailJob("from@example.org", context).withSubject("S").withBody("B");
 		for (int i = 0; i < 150; i++) {
 			final EmailJobRecipient r = new EmailJobRecipient("to" + i + "@example.org");
 			r.attachments.add(new EmailJobAttachment("a" + i + ".pdf", new byte[64000], "application/pdf"));
@@ -32,13 +32,13 @@ class EmailJobManagerSendLoadAndErrorTests extends AbstractEmailJobManagerSendTe
 		final MailSmtpSessionMockHelper errorMock = new MailSmtpSessionMockHelper();
 		errorMock.throwOnSend(new jakarta.mail.MessagingException("SMTP connection failed"));
 
-		// Erstelle einen neuen Manager mit dem fehlerhaften Mock
+		// Erstelle einen neuen Manager und einen eigenen Job-Kontext mit dem fehlerhaften Mock
 		// WICHTIG: Erhöhe die Zeit zum Halten abgeschlossener Jobs über dem Timeout
-		final EmailJobManagerContext errorContext = new EmailJobManagerContext("schemaError", 99L, errorMock.getMock()).withTimeToKeepCompletedJobs(5000);
-		final EmailJobManager errorManager = EmailJobManagerFactory.getInstance().getManager(errorContext);
+		final EmailJobContext errorContext = new EmailJobContext(errorMock.getMock()).withTimeToKeepCompletedJobs(5000);
+		final EmailJobManager errorManager = EmailJobManagerFactory.getInstance().getManager("schemaError", 99L);
 
 		try {
-			final EmailJob job = createSimpleJob("to_a@example.org");
+			final EmailJob job = createSimpleJob(errorContext, "to_a@example.org");
 			final long id = errorManager.enqueue(job);
 
 			awaitJobStatusForManager(errorManager, id, EmailJobStatus.FAILED, 2000);

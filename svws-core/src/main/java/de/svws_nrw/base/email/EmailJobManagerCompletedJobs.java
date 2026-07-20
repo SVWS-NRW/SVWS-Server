@@ -30,7 +30,7 @@ class EmailJobManagerCompletedJobs {
 	 */
 	EmailJobManagerCompletedJobs(final @NotNull EmailJobManager manager) {
 		this.manager = manager;
-		final @NotNull String threadName = "EmailJobManagerCompletedJobs_" + manager.getContext().getDBSchema() + "_" + manager.getContext().getUserId() + "_";
+		final @NotNull String threadName = "EmailJobManagerCompletedJobs_" + manager.getSchema() + "_" + manager.getIdUser() + "_";
 		this.threadBuilder = Thread.ofVirtual().name(threadName, 1);
 	}
 
@@ -65,7 +65,7 @@ class EmailJobManagerCompletedJobs {
 	 */
 	private void waitForRemoval(final @NotNull EmailJob job) {
 		synchronized (this) {
-			final long zeitEnde = System.currentTimeMillis() + manager.getContext().getTimeToKeepCompletedJobs();
+			final long zeitEnde = System.currentTimeMillis() + job.getContext().getTimeToKeepCompletedJobs();
 
 			long zeitRest = zeitEnde - System.currentTimeMillis();
 			while ((zeitRest > 0) && (jobsCompleted.contains(job))) {

@@ -15,7 +15,7 @@ class EmailJobManagerSendAttachmentGroupingTests extends AbstractEmailJobManager
 		// Maximale Anhangsgröße für den Test setzen: 1 000 Byte und force=false.
 		context.withMaxAttachmentSize(1000).withForceMaxAttachmentSize(false);
 
-		final EmailJob job = new EmailJob("from@example.org").withSubject("S").withBody("B");
+		final EmailJob job = new EmailJob("from@example.org", context).withSubject("S").withBody("B");
 		final EmailJobRecipient r = new EmailJobRecipient("to_a@example.org");
 		// Größen: 700, 400, 300 >>> erwartete Gruppen: [700,300] und [400]
 		r.attachments.add(new EmailJobAttachment("a.pdf", new byte[700], "application/pdf"));
@@ -40,7 +40,7 @@ class EmailJobManagerSendAttachmentGroupingTests extends AbstractEmailJobManager
 		// Maximale Anhangsgröße für den Test setzen: 1 000 Byte und force=true.
 		context.withMaxAttachmentSize(1000).withForceMaxAttachmentSize(true);
 
-		final EmailJob job = new EmailJob("from@example.org");
+		final EmailJob job = new EmailJob("from@example.org", context);
 		final EmailJobRecipient r = new EmailJobRecipient("to_a@example.org");
 		r.attachments.add(new EmailJobAttachment("a.pdf", new byte[200], "application/pdf"));
 		r.attachments.add(new EmailJobAttachment("big.pdf", new byte[1500], "application/pdf"));

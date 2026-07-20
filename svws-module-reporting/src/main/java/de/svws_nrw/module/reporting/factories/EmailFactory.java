@@ -9,8 +9,8 @@ import java.util.Set;
 
 import de.svws_nrw.base.email.EmailJob;
 import de.svws_nrw.base.email.EmailJobAttachment;
+import de.svws_nrw.base.email.EmailJobContext;
 import de.svws_nrw.base.email.EmailJobManager;
-import de.svws_nrw.base.email.EmailJobManagerContext;
 import de.svws_nrw.base.email.EmailJobManagerFactory;
 import de.svws_nrw.base.email.EmailJobRecipient;
 import de.svws_nrw.base.email.EmailJobStatus;
@@ -29,7 +29,6 @@ import de.svws_nrw.module.reporting.types.person.ReportingPerson;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
-import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -79,10 +78,10 @@ public final class EmailFactory {
 			final String subject = buildEMailBetreff(parameter);
 			final String body = buildEMailHTMLBody(parameter);
 
-			final @NotNull EmailJobManagerContext context = reportingContext.repositorySchule().defaultEmailJobManagerContext();
+			final EmailJobContext jobContext = reportingContext.repositorySchule().defaultEmailJobContext();
 			// E-Mail-Context Einstellungen abseits der Standardwerte setzen: Keine E-Mails ohne Anhang versenden.
-			context.withFilterMailsWithoutAttachments(true);
-			reportingContext.logger().logLn(LogLevel.DEBUG, 4, "EmailJobManagerContext mit SMTP Sitzung erstellt.");
+			jobContext.withFilterMailsWithoutAttachments(true);
+			reportingContext.logger().logLn(LogLevel.DEBUG, 4, "EmailJobContext mit SMTP Sitzung erstellt.");
 
 			final String absenderEmail = ermittleAbsenderEmail();
 			reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Absender-E-Mail-Adresse ermittelt.");
@@ -98,8 +97,8 @@ public final class EmailFactory {
 					sammleEmpfaengerUndAnhaenge(parameter, empfaengerTyp, mapGruppiertePdfs, listUebersprungen);
 			reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Empfänger und ihre Anhänge wurden zusammengestellt.");
 
-			final var manager = EmailJobManagerFactory.getInstance().getManager(context);
-			final @NotNull EmailJob job = new EmailJob(absenderEmail)
+			final var manager = EmailJobManagerFactory.getInstance().getManager(reportingContext.schemaName(), reportingContext.benutzer().id());
+			final EmailJob job = new EmailJob(absenderEmail, jobContext)
 					.withSubject(subject)
 					.withBody(body)
 					.addRecipients(mapEmpfaengerEmailAnhaenge)

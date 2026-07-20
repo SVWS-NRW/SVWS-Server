@@ -7,7 +7,7 @@ import java.util.Map;
 
 import de.svws_nrw.asd.data.schule.SchuleStammdaten;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
-import de.svws_nrw.base.email.EmailJobManagerContext;
+import de.svws_nrw.base.email.EmailJobContext;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.email.DataEmailJobs;
 import de.svws_nrw.data.gost.DBUtilsGost;
@@ -30,7 +30,6 @@ public class ReportingRepositorySchule {
 	private final Long idAktuellerSchuljahresabschnitt;
 	private final Long idAuswahlSchuljahresabschnitt;
 	private final Map<Long, ReportingSchuljahresabschnitt> mapSchuljahresabschnitte = new HashMap<>();
-	private EmailJobManagerContext defaultEmailJobManagerContext;
 
 	/** Zwischenspeichert das Ergebnis der GOSt-Schul-Vorbedingung: {@code null} = noch nicht geprüft, {@code true}/{@code false} = geprüft. */
 	private Boolean istSchuleMitGost = null;
@@ -179,19 +178,17 @@ public class ReportingRepositorySchule {
 	// ##### Schul-/Schema-weite E-Mail-Konfiguration #####
 
 	/**
-	 * Gibt den schemaweit gültigen Default-{@link EmailJobManagerContext} der Schule zurück (SMTP-Konfiguration etc.).
-	 * Die Daten werden beim ersten Aufruf aus der Datenbank geladen und für die Lebensdauer des Reporting-Contexts
-	 * zwischengespeichert.
+	 * Gibt einen neuen, schemaweit gültigen Default-{@link EmailJobContext} der Schule zurück (SMTP-Konfiguration
+	 * etc.), welcher als Snapshot beim Erzeugen eines {@link de.svws_nrw.base.email.EmailJob} verwendet wird.
+	 * Die Daten werden bei jedem Aufruf frisch aus der Datenbank gelesen, sodass jeder E-Mail-Job seinen eigenen,
+	 * unabhängigen Kontext erhält.
 	 *
-	 * @return Der Default-Kontext für den E-Mail-Job-Manager.
+	 * @return Der Default-Kontext für einen E-Mail-Job.
 	 *
 	 * @throws ApiOperationException Falls die Default-Konfiguration nicht ermittelt werden kann.
 	 */
-	public EmailJobManagerContext defaultEmailJobManagerContext() throws ApiOperationException {
-		if (defaultEmailJobManagerContext == null) {
-			defaultEmailJobManagerContext = DataEmailJobs.getDefaultJobManagerContext(this.reportingContext.conn());
-		}
-		return defaultEmailJobManagerContext;
+	public EmailJobContext defaultEmailJobContext() throws ApiOperationException {
+		return DataEmailJobs.createDefaultJobContext(this.reportingContext.conn());
 	}
 
 
