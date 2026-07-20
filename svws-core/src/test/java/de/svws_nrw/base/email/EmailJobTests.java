@@ -6,11 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -18,18 +20,26 @@ import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 
 class EmailJobTests {
 
+	private EmailJobContext context;
+
+	@BeforeEach
+	void setup() {
+		context = new EmailJobContext(mock(MailSmtpSession.class));
+	}
+
 	@Test
 	@DisplayName("Job-Constructor mit unzulässigen Werten initialisieren")
 	void testConstructorWithNullEmptyValues() {
-		assertThrows(IllegalArgumentException.class, () -> new EmailJob(""));
-		assertThrows(IllegalArgumentException.class, () -> new EmailJob("   "));
-		assertThrows(IllegalArgumentException.class, () -> new EmailJob("\t\n "));
+		assertThrows(IllegalArgumentException.class, () -> new EmailJob("", context));
+		assertThrows(IllegalArgumentException.class, () -> new EmailJob("   ", context));
+		assertThrows(IllegalArgumentException.class, () -> new EmailJob("\t\n ", context));
+		assertThrows(IllegalArgumentException.class, () -> new EmailJob("from@example.org", null));
 	}
 
 	@Test
 	@DisplayName("Job-Id auslesen und setzen testen: getId/setId")
 	void testJobId() {
-		final EmailJob job = new EmailJob("from@example.org");
+		final EmailJob job = new EmailJob("from@example.org", context);
 		// Die JobId wird vom EmailJobManager gesetzt und nicht bei der Erzeugung. Folglich erzeugt getId einen Fehler, wenn keine ID gesetzt worden ist.
 		assertThrows(DeveloperNotificationException.class, job::getId);
 
@@ -45,7 +55,7 @@ class EmailJobTests {
 	@Test
 	@DisplayName("Job-Builder Getter und Setter testen: withSubject/withBody/addRecipient/addRecipients/getFrom/getSubject/getBody")
 	void testJobBuilderGettersAndSetters() {
-		final EmailJob job = new EmailJob("from@example.org");
+		final EmailJob job = new EmailJob("from@example.org", context);
 		final EmailJobRecipient r1 = new EmailJobRecipient("to_a@example.org");
 		final EmailJobRecipient r2 = new EmailJobRecipient("to_b@example.org");
 		final EmailJobRecipient r3 = new EmailJobRecipient("to_c@example.org");
@@ -76,7 +86,7 @@ class EmailJobTests {
 	@Test
 	@DisplayName("Job-Status setzen und dadurch geänderten Zeitstempel auslesen (setStatus/timeLastChanged)")
 	void testSetStatusUpdatesTime() {
-		final EmailJob job = new EmailJob("from@example.org");
+		final EmailJob job = new EmailJob("from@example.org", context);
 		// Bei der Initialisierung des Jobs werden der Status und der Zeitstempel schon gesetzt. Speichere diesen zwischen.
 		final long t1 = job.getTimeLastChanged();
 		// Warte kurz, bevor Änderungen vorgenommen werden.
@@ -92,7 +102,7 @@ class EmailJobTests {
 	@Test
 	@DisplayName("Benachrichtigung über E-Mail-Versand und damit verbundene Zähleränderung testen (notifyEmailSent/getEmailsSent)")
 	void testNotifyEmailSent() {
-		final EmailJob job = new EmailJob("from@example.org");
+		final EmailJob job = new EmailJob("from@example.org", context);
 		assertEquals(0, job.getEmailsSent());
 		// Jedes notify erhöht den Zähler um 1. Wird normalerweise vom JobManager aufgerufen.
 		job.notifyEmailSent();
@@ -103,7 +113,7 @@ class EmailJobTests {
 	@Test
 	@DisplayName("CancellationRequest testen: requestCancellation/hasCancellationRequest")
 	void testCancellationFlag() {
-		final EmailJob job = new EmailJob("from@example.org");
+		final EmailJob job = new EmailJob("from@example.org", context);
 		assertFalse(job.hasCancellationRequest());
 		job.requestCancellation();
 		assertTrue(job.hasCancellationRequest());

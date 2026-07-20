@@ -69,29 +69,32 @@ public final class EmailJobManagerFactory {
 
 
 	/**
-	 * Liefert die Instanz des Email-Job-Managers für den übergebenen Kontext.
+	 * Liefert die Instanz des Email-Job-Managers für das übergebene Datenbank-Schema und die übergebene Benutzer-ID.
+	 * Existiert noch kein Manager für diese Kombination, wird ein neuer erzeugt.
 	 *
-	 * @param context   der Job-Manager-Kontext mit der Benutzerinformation (Datenbankschemas und Benutzer-ID),
-	 *                  der SMTP-Session und weiteren Konfigurationseinstellungen
+	 * @param schema   das SVWS-Datenbank-Schema
+	 * @param idUser   die Benutzer-ID aus dem SVWS-Datenbank-Schema
 	 *
 	 * @return die Instanz des {@link EmailJobManager}
 	 */
-	public synchronized @NotNull EmailJobManager getManager(final @NotNull EmailJobManagerContext context) {
+	public synchronized @NotNull EmailJobManager getManager(final @NotNull String schema, final long idUser) {
 		// @NotNull sichert nicht gegen die Übergabe von null. SonarQube denkt aber so und meldet bei Prüfung mittels "== null" immer
 		// "java:S2589, Remove this expression which always evaluates to true/false.". Daher hier die Prüfung mittels Objects.requireNonNull.
 		try {
-			Objects.requireNonNull(context);
+			if (Objects.requireNonNull(schema).isBlank()) {
+				throw new IllegalArgumentException("Ohne ein Datenbank-Schema kann kein Job-Manager erzeugt werden.");
+			}
 		} catch (final NullPointerException e) {
-			throw new IllegalArgumentException("Ohne einen Job-Manager-Context kann kein Manager erzeugt werden.");
+			throw new IllegalArgumentException("Ohne ein Datenbank-Schema kann kein Job-Manager erzeugt werden.");
 		}
 		if (!active) {
 			throw new IllegalArgumentException("Die Klasse EmailJobManager ist nicht mehr aktiv. Es kann daher kein neuer Manager mehr erstellt werden.");
 		}
-		final HashMap<Long, EmailJobManager> tmp = mapInstances.computeIfAbsent(context.getDBSchema(), k -> new HashMap<>());
+		final HashMap<Long, EmailJobManager> tmp = mapInstances.computeIfAbsent(schema, k -> new HashMap<>());
 		if (tmp == null) { // kann nicht eintreten
 			throw new IllegalArgumentException("Fehler beim Erstellen einer HashMap in der Methode EmailJobManager.getManager(...)");
 		}
-		final EmailJobManager jobManager = tmp.computeIfAbsent(context.getUserId(), id -> new EmailJobManager(context));
+		final EmailJobManager jobManager = tmp.computeIfAbsent(idUser, id -> new EmailJobManager(schema, id));
 		if (jobManager == null) { // kann nicht eintreten
 			throw new IllegalArgumentException("Fehler beim Erstellen eines neuen Managers in der Methode EmailJobManager.getManager(...)");
 		}

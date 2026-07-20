@@ -3,8 +3,8 @@ package de.svws_nrw.data.email;
 import de.svws_nrw.base.crypto.AES;
 import de.svws_nrw.base.crypto.AESException;
 import de.svws_nrw.base.email.EmailJob;
+import de.svws_nrw.base.email.EmailJobContext;
 import de.svws_nrw.base.email.EmailJobManager;
-import de.svws_nrw.base.email.EmailJobManagerContext;
 import de.svws_nrw.base.email.EmailJobManagerFactory;
 import de.svws_nrw.base.email.EmailJobStatus;
 import de.svws_nrw.base.email.MailSmtpSession;
@@ -177,19 +177,21 @@ public class DataEmailJobs {
 
 
 	/**
-	 * Erstellt für die übergebene Datenbank-Verbindung einen Kontext mit Default-Einstellungen für die
-	 * Verwendung in einem {@link EmailJobManager}. Dabei wird eine SMTP-Session ({@link MailSmtpSession})
-	 * für den Kontext anhand der in der Datenbank gespeicherten SMTP-Konfiguration erzeugt.
+	 * Erstellt für die übergebene Datenbank-Verbindung einen {@link EmailJobContext} mit Default-Einstellungen für
+	 * die Verwendung bei einem einzelnen {@link EmailJob}. Dabei wird eine SMTP-Session ({@link MailSmtpSession})
+	 * für den Kontext anhand der in der Datenbank gespeicherten SMTP-Konfiguration erzeugt. Da dieser Kontext als
+	 * Snapshot beim Erzeugen eines Jobs verwendet wird, liest jeder Aufruf dieser Methode Server-Konfiguration und
+	 * Benutzerdaten frisch aus der Datenbank, sodass Konfigurationsänderungen ohne Server-Neustart wirksam werden.
 	 *
 	 * @param conn   die Datenbank-Verbindung
 	 *
-	 * @return der Kontext
+	 * @return der Job-Kontext
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public static @NotNull EmailJobManagerContext getDefaultJobManagerContext(final DBEntityManager conn) throws ApiOperationException {
+	public static @NotNull EmailJobContext createDefaultJobContext(final DBEntityManager conn) throws ApiOperationException {
 		final MailSmtpSession session = new MailSmtpSession(getSMTPConfig(conn));
-		return new EmailJobManagerContext(conn.getDBSchema(), conn.getUser().getId(), session)
+		return new EmailJobContext(session)
 				.withForceMaxAttachmentSize(false)
 				.withMaxAttachmentSize(8388608) // 8 MByte
 				.withMaxEmailsPerMinute(20)

@@ -15,7 +15,7 @@ class EmailJobManagerSendFilteringTests extends AbstractEmailJobManagerSendTestB
 		// Aktiviere das Filtern von Mails ohne Anhänge
 		context.withFilterMailsWithoutAttachments(true);
 
-		final EmailJob job = new EmailJob("from@example.org").withSubject("Test").withBody("Body");
+		final EmailJob job = new EmailJob("from@example.org", context).withSubject("Test").withBody("Body");
 		final EmailJobRecipient recipient = new EmailJobRecipient("to_a@example.org");
 		// Explizit keine Anhänge hinzufügen
 		job.addRecipient(recipient);
@@ -36,7 +36,7 @@ class EmailJobManagerSendFilteringTests extends AbstractEmailJobManagerSendTestB
 		context.withFilterMailsWithoutAttachments(true).withForceMaxAttachmentSize(true).withMaxAttachmentSize(1000);
 
 		// Empfänger mit passendem Anhang
-		final EmailJob job = new EmailJob("from@example.org").withSubject("Test").withBody("Body");
+		final EmailJob job = new EmailJob("from@example.org", context).withSubject("Test").withBody("Body");
 		final EmailJobRecipient r1 = new EmailJobRecipient("to_a@example.org");
 		r1.attachments.add(new EmailJobAttachment("a.pdf", new byte[700], "application/pdf"));
 		job.addRecipient(r1);
@@ -60,7 +60,7 @@ class EmailJobManagerSendFilteringTests extends AbstractEmailJobManagerSendTestB
 		// Deaktiviere das Filtern von Mails ohne Anhänge (ist Standard, wird aber explizit gesetzt)
 		context.withFilterMailsWithoutAttachments(false);
 
-		final EmailJob job = new EmailJob("from@example.org").withSubject("Test").withBody("Body");
+		final EmailJob job = new EmailJob("from@example.org", context).withSubject("Test").withBody("Body");
 		final EmailJobRecipient recipient = new EmailJobRecipient("to@example.org");
 		// Explizit keine Anhänge hinzufügen
 		job.addRecipient(recipient);

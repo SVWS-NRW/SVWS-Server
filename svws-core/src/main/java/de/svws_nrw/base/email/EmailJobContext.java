@@ -6,18 +6,15 @@ import java.util.Objects;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Diese Klasse definiert den Kontext, in welchem ein zugehöriger {@link EmailJobManager} betrieben wird.
+ * Diese Klasse definiert die versandbezogenen Einstellungen für einen einzelnen {@link EmailJob}. Der Kontext wird
+ * bei der Erzeugung des Jobs als Snapshot der aktuellen Konfiguration übergeben, sodass ein bereits laufender oder
+ * wartender Job stets mit der Konfiguration zu Ende läuft, mit der er gestartet wurde. Der zugehörige
+ * {@link EmailJobManager} bleibt dabei unabhängig von diesem Kontext dauerhaft bestehen.
  */
-public class EmailJobManagerContext {
+public class EmailJobContext {
 
 	/** Mindestlänge des Rate-Limit-Zeitfensters in Millisekunden. Wird nur bei Setzungen im Rahmen von Unit-Tests verwendet. */
 	private static final long MIN_RATELIMIT_TIMEFRAME_MS = 2000L;
-
-	/** Der Name des Datenbank-Schemas, dem dieser Manager zugeordnet ist */
-	private final @NotNull String schema;
-
-	/** Die ID des Benutzers aus dem Datenbank-Schema, dem dieser Manager zugeordnet ist. */
-	private final long idUser;
 
 	/** Die SMTP-Session, welche für den Versand genutzt wird. */
 	private final @NotNull MailSmtpSession session;
@@ -43,26 +40,18 @@ public class EmailJobManagerContext {
 
 
 	/**
-	 * Erstellt einen neuen Kontext für einen Job-Manager. Der Kontext umfasst den Benutzer, welcher eindeutig
-	 * durch das SVWS-Datenbank-Schema und die Benutzer-ID aus dem SVWS-Datenbank-Schema festgelegt ist.
+	 * Erstellt einen neuen Job-Kontext mit den versandbezogenen Einstellungen für einen {@link EmailJob}.
 	 *
-	 * @param schema    das SVWS-Datenbank-Schema
-	 * @param idUser    die Benutzer-ID aus dem SVWS-Datenbank-Schema
 	 * @param session   die Session für das Versenden von Email per SMTP
 	 */
-	public EmailJobManagerContext(final @NotNull String schema, final long idUser, final @NotNull MailSmtpSession session) {
+	public EmailJobContext(final @NotNull MailSmtpSession session) {
 		// @NotNull sichert nicht gegen die Übergabe von null. SonarQube denkt aber so und meldet bei Prüfung mittels "== null" immer
 		// "java:S2589, Remove this expression which always evaluates to true/false.". Daher hier die Prüfung mittels Objects.requireNonNull.
 		try {
 			Objects.requireNonNull(session);
-			if (Objects.requireNonNull(schema).isBlank()) {
-				throw new IllegalArgumentException("Notwendige Parameter für die Erzeugung eines E-Mail-Job-Manager-Contexts sind leer.");
-			}
 		} catch (final NullPointerException e) {
-			throw new IllegalArgumentException("Notwendige Parameter für die Erzeugung eines E-Mail-Job-Manager-Contexts sind null.");
+			throw new IllegalArgumentException("Notwendiger Parameter SMTP-Session für die Erzeugung eines E-Mail-Job-Contexts ist null.");
 		}
-		this.schema = schema;
-		this.idUser = idUser;
 		this.session = session;
 	}
 
@@ -78,7 +67,7 @@ public class EmailJobManagerContext {
 	 * @return dieser Kontext
 	 */
 	@NotNull
-	EmailJobManagerContext withRateLimitTimeframeMs(final long rateLimitTimeframeMs) {
+	EmailJobContext withRateLimitTimeframeMs(final long rateLimitTimeframeMs) {
 		if (rateLimitTimeframeMs >= MIN_RATELIMIT_TIMEFRAME_MS) {
 			this.rateLimitTimeframeMs = rateLimitTimeframeMs;
 		}
@@ -93,7 +82,7 @@ public class EmailJobManagerContext {
 	 *
 	 * @return dieser Kontext
 	 */
-	public @NotNull EmailJobManagerContext withMaxEmailsPerMinute(final int maxEmailsPerMinute) {
+	public @NotNull EmailJobContext withMaxEmailsPerMinute(final int maxEmailsPerMinute) {
 		if (maxEmailsPerMinute > 0) {
 			this.maxEmailsPerMinute = maxEmailsPerMinute;
 		}
@@ -109,7 +98,7 @@ public class EmailJobManagerContext {
 	 *
 	 * @return dieser Kontext
 	 */
-	public @NotNull EmailJobManagerContext withTimeToKeepCompletedJobs(final long time) {
+	public @NotNull EmailJobContext withTimeToKeepCompletedJobs(final long time) {
 		if (time > 0) {
 			this.timeToKeepCompletedJobs = time;
 		}
@@ -125,7 +114,7 @@ public class EmailJobManagerContext {
 	 *
 	 * @return dieser Kontext
 	 */
-	public @NotNull EmailJobManagerContext withMaxAttachmentSize(final long maxAttachmentSize) {
+	public @NotNull EmailJobContext withMaxAttachmentSize(final long maxAttachmentSize) {
 		if (maxAttachmentSize >= 0) {
 			this.maxAttachmentSize = maxAttachmentSize;
 		}
@@ -141,7 +130,7 @@ public class EmailJobManagerContext {
 	 *
 	 * @return dieser Kontext
 	 */
-	public @NotNull EmailJobManagerContext withForceMaxAttachmentSize(final boolean forceMaxAttachmentSize) {
+	public @NotNull EmailJobContext withForceMaxAttachmentSize(final boolean forceMaxAttachmentSize) {
 		this.forceMaxAttachmentSize = forceMaxAttachmentSize;
 		return this;
 	}
@@ -153,36 +142,14 @@ public class EmailJobManagerContext {
 	 *
 	 * @return dieser Kontext
 	 */
-	public @NotNull EmailJobManagerContext withFilterMailsWithoutAttachments(final boolean filterMailsWithoutAttachments) {
+	public @NotNull EmailJobContext withFilterMailsWithoutAttachments(final boolean filterMailsWithoutAttachments) {
 		this.filterMailsWithoutAttachments = filterMailsWithoutAttachments;
 		return this;
 	}
 
 
 	/**
-	 * Gibt den Namen des SVWS-Datenbank-Schema zurück, in welchem der Benutzer angelegt ist, welcher
-	 * die Kontext zugeordnet ist.
-	 *
-	 * @return der Name des SVWS-Datenbank-Schemas.
-	 */
-	public String getDBSchema() {
-		return schema;
-	}
-
-
-	/**
-	 * Gibt die ID des Benutzers aus dem SVWS-Datenbank-Schema zurück, welcher diesem Kontext
-	 * zugeordnet ist.
-	 *
-	 * @return die Benutzer-ID
-	 */
-	public long getUserId() {
-		return idUser;
-	}
-
-
-	/**
-	 * Git die SMTP-Session zurück, die in von dem Manager zum Versenden von Emails verwendet wird.
+	 * Git die SMTP-Session zurück, die von dem Manager zum Versenden von Emails verwendet wird.
 	 *
 	 * @return die SMTP-Session
 	 */

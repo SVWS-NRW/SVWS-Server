@@ -38,10 +38,12 @@ class EmailJobManagerFactoryTests {
 	}
 
 	@Test
-	@DisplayName("getManager mit null-Context wirft Exception")
-	void testGetManagerWithNullContext() {
+	@DisplayName("getManager mit null- oder leerem Schema wirft Exception")
+	void testGetManagerWithBlankSchema() {
 		final EmailJobManagerFactory f = EmailJobManagerFactory.getInstance();
-		assertThrows(IllegalArgumentException.class, () -> f.getManager(null));
+		assertThrows(IllegalArgumentException.class, () -> f.getManager(null, 1L));
+		assertThrows(IllegalArgumentException.class, () -> f.getManager("", 1L));
+		assertThrows(IllegalArgumentException.class, () -> f.getManager("   ", 1L));
 	}
 
 	@Test
@@ -62,8 +64,7 @@ class EmailJobManagerFactoryTests {
 		f.deactivate();
 
 		try {
-			final EmailJobManagerContext ctx = new EmailJobManagerContext("schemaForUser1", 1L, smtp);
-			assertThrows(IllegalArgumentException.class, () -> f.getManager(ctx));
+			assertThrows(IllegalArgumentException.class, () -> f.getManager("schemaForUser1", 1L));
 		} finally {
 			f.activate();
 		}
@@ -73,15 +74,14 @@ class EmailJobManagerFactoryTests {
 	@DisplayName("Job-Manager in Factory ermitteln und Job-Manager im Betrieb schließen (getManagerByUser/freeManager)")
 	void testGetByUserAndFree() {
 		final EmailJobManagerFactory f = EmailJobManagerFactory.getInstance();
-		final EmailJobManagerContext ctx = new EmailJobManagerContext("schemaForUser1", 1L, smtp);
-		final EmailJobManager m = f.getManager(ctx);
+		final EmailJobManager m = f.getManager("schemaForUser1", 1L);
 		assertNotNull(m);
 
 		final EmailJobManager byUser = f.getManagerByUser("schemaForUser1", 1L);
 		assertSame(m, byUser);
 
 		// Enqueue einen Job, damit der Manager genutzt wird.
-		final EmailJob job = new EmailJob("from@example.org");
+		final EmailJob job = new EmailJob("from@example.org", new EmailJobContext(smtp));
 		job.addRecipient(new EmailJobRecipient("to@example.org"));
 		final long id = m.enqueue(job);
 		assertTrue(id > 0);
@@ -95,8 +95,8 @@ class EmailJobManagerFactoryTests {
 	@DisplayName("Schließen aller Job-Manager der Factory (freeAllManager)")
 	void testFreeAll() {
 		final EmailJobManagerFactory f = EmailJobManagerFactory.getInstance();
-		final EmailJobManager m1 = f.getManager(new EmailJobManagerContext("schemaForUser1", 1L, smtp));
-		final EmailJobManager m2 = f.getManager(new EmailJobManagerContext("schemaForUser2", 2L, smtp));
+		final EmailJobManager m1 = f.getManager("schemaForUser1", 1L);
+		final EmailJobManager m2 = f.getManager("schemaForUser2", 2L);
 		assertNotNull(m1);
 		assertNotNull(m2);
 		f.freeAllManager();
@@ -108,10 +108,7 @@ class EmailJobManagerFactoryTests {
 	@DisplayName("Factory liefert gleiche Instanz pro (Schema,Nutzer)")
 	void testFactorySameInstance() {
 		final EmailJobManagerFactory f = EmailJobManagerFactory.getInstance();
-		final EmailJobManagerContext ctx1 = new EmailJobManagerContext("schemaForUser1", 1L, smtp);
-		final EmailJobManagerContext ctx2 = new EmailJobManagerContext("schemaForUser1", 1L, smtp);
-
-		assertSame(f.getManager(ctx1), f.getManager(ctx2));
+		assertSame(f.getManager("schemaForUser1", 1L), f.getManager("schemaForUser1", 1L));
 	}
 
 	@Test
@@ -119,9 +116,9 @@ class EmailJobManagerFactoryTests {
 	void testFactoryDifferentInstances() {
 		final EmailJobManagerFactory f = EmailJobManagerFactory.getInstance();
 
-		final EmailJobManager m1 = f.getManager(new EmailJobManagerContext("schema1", 1L, smtp));
-		final EmailJobManager m2 = f.getManager(new EmailJobManagerContext("schema1", 2L, smtp));
-		final EmailJobManager m3 = f.getManager(new EmailJobManagerContext("schema2", 1L, smtp));
+		final EmailJobManager m1 = f.getManager("schema1", 1L);
+		final EmailJobManager m2 = f.getManager("schema1", 2L);
+		final EmailJobManager m3 = f.getManager("schema2", 1L);
 
 		assertNotSame(m1, m2);
 		assertNotSame(m1, m3);
@@ -140,7 +137,7 @@ class EmailJobManagerFactoryTests {
 				futures.add(executor.submit(() -> {
 					latch.countDown();
 					latch.await();
-					return f.getManager(new EmailJobManagerContext("schema", 1L, smtp));
+					return f.getManager("schema", 1L);
 				}));
 			}
 		}

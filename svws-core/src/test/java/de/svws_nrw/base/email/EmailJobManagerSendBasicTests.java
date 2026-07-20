@@ -25,7 +25,7 @@ class EmailJobManagerSendBasicTests extends AbstractEmailJobManagerSendTestBase 
 	@Test
 	@DisplayName("Job mit mehreren Empfängern versendet an alle Empfänger")
 	void testMultipleRecipients() {
-		final EmailJob job = new EmailJob("from@example.org").withSubject("Test").withBody("Body");
+		final EmailJob job = new EmailJob("from@example.org", context).withSubject("Test").withBody("Body");
 		job.addRecipient(new EmailJobRecipient("to1@example.org"));
 		job.addRecipient(new EmailJobRecipient("to2@example.org"));
 		job.addRecipient(new EmailJobRecipient("to3@example.org"));
@@ -38,7 +38,7 @@ class EmailJobManagerSendBasicTests extends AbstractEmailJobManagerSendTestBase 
 	@Test
 	@DisplayName("Leere Empfängerliste führt zu sofortigem Abschluss")
 	void testEmptyRecipientList() {
-		final EmailJob job = new EmailJob("from@example.org").withSubject("Test").withBody("Body");
+		final EmailJob job = new EmailJob("from@example.org", context).withSubject("Test").withBody("Body");
 		// Keine Empfänger hinzugefügt
 		final long id = manager.enqueue(job);
 		awaitJobStatus(id, EmailJobStatus.COMPLETED_SUCCESSFULLY, 1000);
