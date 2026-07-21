@@ -230,7 +230,6 @@ export class AbiturdatenManager extends JavaObject {
 		pruefungen.add(pruefungFremdsprachen);
 		pruefungen.add(new Abi30BelegpruefungLatinum(this, pruefungsArt));
 		pruefungen.add(new Abi30BelegpruefungLiterarischKuenstlerisch(this, pruefungsArt));
-		pruefungen.add(new Abi30BelegpruefungGesellschaftswissenschaftenUndReligion(this, pruefungsArt));
 		pruefungen.add(new Abi30BelegpruefungMathematik(this, pruefungsArt));
 		const pruefungNaturwissenschaften: Abi30BelegpruefungNaturwissenschaften = new Abi30BelegpruefungNaturwissenschaften(this, pruefungsArt);
 		pruefungen.add(pruefungNaturwissenschaften);
@@ -238,6 +237,7 @@ export class AbiturdatenManager extends JavaObject {
 		const pruefungProjektkurse: Abi30BelegpruefungProjektkurse = new Abi30BelegpruefungProjektkurse(this, pruefungsArt);
 		pruefungen.add(pruefungProjektkurse);
 		pruefungen.add(new Abi30BelegpruefungSchwerpunkt(this, pruefungsArt, pruefungFremdsprachen, pruefungNaturwissenschaften));
+		pruefungen.add(new Abi30BelegpruefungGesellschaftswissenschaftenUndReligion(this, pruefungsArt, pruefungProjektkurse));
 		pruefungen.add(new Abi30BelegpruefungAbiFaecher(this, pruefungsArt, pruefungProjektkurse));
 		this.abi30BelegpruefungKurszahlenUndWochenstunden = new Abi30BelegpruefungKurszahlenUndWochenstunden(this, pruefungsArt, pruefungProjektkurse);
 		pruefungen.add(this.abi30BelegpruefungKurszahlenUndWochenstunden);
